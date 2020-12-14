@@ -5,7 +5,7 @@ load("@io_bazel_rules_docker//go:image.bzl", "go_image")
 load("@bazel_gazelle//:def.bzl", "gazelle")
 
 package(default_visibility = ["//visibility:public"])
-
+#t
 # gazelle:prefix github.com/tilt-dev/tilt-example-bazel
 gazelle(name = "gazelle")
 
