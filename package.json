@@ -1,41 +1,65 @@
 {
   "name": "001",
   "version": "1.0.0",
-  "description": "",
+  "private": true,
   "main": "index.js",
   "scripts": {
-    "build-client": "webpack --config webpack.client.js",
-    "build-server": "webpack --config webpack.server.js",
-    "build": "npm run build-client && npm run build-server",
-    "server": "node build/bundle.js"
+    "start": "yarn run relay; concurrently --kill-others \"yarn run start:server\" \"yarn run start:client\" \"yarn run relay --watch\"",
+    "start:client": "PORT=3001 react-scripts start",
+    "start:server": "NODE_ENV=development node server",
+    "start:prod": "react-scripts build && NODE_ENV=production node server",
+    "build": "yarn run relay && react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "relay": "yarn run relay-compiler --schema ./applications/web/schema/schema.graphql --src ./applications/web/src/ $@"
   },
   "dependencies": {
-    "@babel/polyfill": "^7.8.3",
-    "core-js": "^3.6.4",
-    "express": "^4.17.1",
-    "prop-types": "^15.7.2",
-    "react": "^16.5.2",
-    "react-dom": "^16.5.2",
-    "react-router": "^5.1.2",
-    "react-router-config": "^5.1.1",
-    "react-router-dom": "^5.1.2",
-    "webpack-node-externals": "^1.7.2"
+    "express": "^4.14.0",
+    "husky": "^4.3.6",
+    "ignore-styles": "^5.0.1",
+    "import-export": "^1.0.1",
+    "lint-staged": "^10.5.3",
+    "node-fetch": "^1.6.3",
+    "react": "^0.0.0-experimental-4ead6b530",
+    "react-dom": "^0.0.0-experimental-4ead6b530",
+    "react-relay": "^0.0.0-experimental-0b967d2e",
+    "react-router": "^5.2.0",
+    "relay-runtime": "^10.1.2"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   },
   "devDependencies": {
-    "@babel/core": "^7.8.4",
-    "@babel/preset-env": "^7.1.0",
-    "@babel/preset-react": "^7.0.0",
-    "babel-loader": "^8.0.4",
-    "eslint": "^5.15.2",
-    "eslint-config-airbnb": "^17.1.0",
-    "eslint-plugin-import": "^2.16.0",
-    "eslint-plugin-jsx-a11y": "^6.2.1",
-    "eslint-plugin-react": "^7.12.4",
-    "webpack": "^4.20.2",
-    "webpack-cli": "^3.1.2",
-    "webpack-dev-server": "^3.1.9"
+    "babel-plugin-relay": "^10.1.2",
+    "concurrently": "^5.3.0",
+    "graphql": "^15.4.0",
+    "http-proxy-middleware": "0.17.3",
+    "prettier": "^2.2.1",
+    "react-scripts": "0.9.5",
+    "relay-compiler": "^10.1.2"
   },
-  "keywords": [],
-  "author": "",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,json,css,md}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
   "license": "ISC"
 }
