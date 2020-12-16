@@ -73,3 +73,4 @@ func main() {
 	if err != nil {
 		log.Fatalf("Server exited with: %v", err)
 	}
+}
