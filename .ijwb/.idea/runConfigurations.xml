@@ -29,6 +29,14 @@
         <option value="com.intellij.lang.javascript.buildTools.grunt.rc.GruntRunConfigurationProducer" />
         <option value="com.intellij.lang.javascript.buildTools.gulp.rc.GulpRunConfigurationProducer" />
         <option value="com.intellij.lang.javascript.buildTools.npm.rc.NpmRunConfigurationProducer" />
+        <option value="com.jetbrains.python.run.PythonRunConfigurationProducer" />
+        <option value="com.jetbrains.python.testing.PyTestsConfigurationProducer" />
+        <option value="com.jetbrains.python.testing.PythonTestLegacyConfigurationProducer" />
+        <option value="com.jetbrains.python.testing.doctest.PythonDocTestConfigurationProducer" />
+        <option value="com.jetbrains.python.testing.nosetestLegacy.PythonNoseTestConfigurationProducer" />
+        <option value="com.jetbrains.python.testing.pytestLegacy.PyTestConfigurationProducer" />
+        <option value="com.jetbrains.python.testing.tox.PyToxConfigurationProducer" />
+        <option value="com.jetbrains.python.testing.unittestLegacy.PythonUnitTestConfigurationProducer" />
         <option value="org.jetbrains.kotlin.idea.run.KotlinJUnitRunConfigurationProducer" />
         <option value="org.jetbrains.kotlin.idea.run.KotlinPatternConfigurationProducer" />
         <option value="org.jetbrains.kotlin.idea.run.KotlinRunConfigurationProducer" />

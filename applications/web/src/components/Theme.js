@@ -17,6 +17,9 @@ export function ThemeToggleButton({ onChange }) {
   if (targetTheme !== theme) {
     return "Switching to " + targetTheme + "...";
   }
+
+
+
   return (
     <a className="link" onClick={toggleTheme}>
       Switch to {theme === "light" ? "Dark" : "Light"} theme
