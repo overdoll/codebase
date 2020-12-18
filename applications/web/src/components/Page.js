@@ -12,6 +12,7 @@ const autofocusedInputs = [
 
 export default class Page extends Component {
   state = { active: false };
+
   handleClick = (e) => {
     this.setState({ active: true });
   };
@@ -37,4 +38,5 @@ export default class Page extends Component {
     );
   }
 }
+
 Page.contextType = Theme;

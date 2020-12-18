@@ -1,5 +1,13 @@
 # -*- mode: Python -*-
 
+docker_prune_settings(
+    disable = False,
+    max_age_mins = 360,
+    num_builds = 0,
+    interval_hrs = 1,
+    keep_recent = 2,
+)
+
 # For more on Extensions, see: https://docs.tilt.dev/extensions.html
 load("ext://restart_process", "custom_build_with_restart")
 load("./bazel.Tiltfile", "bazel_sourcefile_deps")
@@ -52,3 +60,12 @@ custom_build_with_restart(
 )
 
 k8s_resource("example-go", port_forwards = 8000, resource_deps = ["example-go-compile"])
+
+load("ext://helm_remote", "helm_remote")
+
+helm_remote(
+    "traefik",
+    release_name = "traefik",
+    repo_name = "traefik",
+    version = "9.11.0",
+)

@@ -13,6 +13,8 @@
     "relay": "yarn run relay-compiler --schema ./applications/web/schema/schema.graphql --src ./applications/web/src/ $@"
   },
   "dependencies": {
+    "@apollo/gateway": "^0.21.4",
+    "apollo-server": "^2.19.0",
     "express": "^4.14.0",
     "husky": "^4.3.6",
     "ignore-styles": "^5.0.1",
