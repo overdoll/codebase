@@ -2,18 +2,13 @@ const { ApolloServer } = require('apollo-server');
 const { ApolloGateway } = require('@apollo/gateway');
 
 const gateway = new ApolloGateway({
-  serviceList: [
-    { name: 'account', url: 'http://localhost:4001/query' },
-    { name: 'products', url: 'http://localhost:4002/query' },
-    { name: 'reviews', url: 'http://localhost:4003/query' },
-  ],
+  serviceList: [{ name: 'go-service', url: 'http://go-service:8000/query' }],
 });
 
 const server = new ApolloServer({
   gateway,
   subscriptions: false,
+  playground: false,
 });
 
-server.listen().then(({ url }) => {
-  console.log(`🚀 Server ready at ${url}`);
-});
+server.listen().then(({ url }) => {});

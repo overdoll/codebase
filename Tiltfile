@@ -1,5 +1,3 @@
-# -*- mode: Python -*-
-
 docker_prune_settings(
     disable = False,
     max_age_mins = 360,
@@ -10,19 +8,16 @@ docker_prune_settings(
 
 # For more on Extensions, see: https://docs.tilt.dev/extensions.html
 load("ext://restart_process", "custom_build_with_restart")
-load("./bazel.Tiltfile", "bazel_sourcefile_deps")
+load("./bazel.Tiltfile", "bazel_buildfile_deps", "bazel_sourcefile_deps")
 
 # Use Bazel to generate the Kubernetes YAML
-for f in bazel_sourcefile_deps("//deployments:example-go"):
+for f in bazel_sourcefile_deps("//deployments:objects"):
     watch_file(f)
 
-for f in bazel_sourcefile_deps("//deployments:example-node"):
+for f in bazel_buildfile_deps("//deployments:objects"):
     watch_file(f)
 
-k8s_yaml(local("bazel run //deployments:example-go"))
-k8s_yaml(local("bazel run //deployments:example-node"))
-
-# Use Bazel to build the image
+k8s_yaml(local("bazel run //deployments:objects"))
 
 # The go_image BUILD rule
 image_target = "//applications/service:example-go-image"
@@ -84,9 +79,8 @@ custom_build_with_restart(
     ],
 )
 
-k8s_resource("example-go", port_forwards = 8000, resource_deps = ["example-go-compile"])
-
-k8s_resource("example-node", port_forwards = 9000)
+k8s_resource("example-go", resource_deps = ["example-go-compile"])
+k8s_resource("example-node")
 
 load("ext://helm_remote", "helm_remote")
 

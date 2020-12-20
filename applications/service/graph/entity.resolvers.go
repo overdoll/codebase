@@ -5,19 +5,17 @@ package graph
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/tilt-dev/tilt-example-bazel/graph/generated"
 	"github.com/tilt-dev/tilt-example-bazel/graph/model"
 )
 
-func (r *queryResolver) Me(ctx context.Context) (*model.User, error) {
-	return &model.User{
-		ID:       "1234",
-		Username: "Me",
-	}, nil
+func (r *entityResolver) FindUserByID(ctx context.Context, id string) (*model.User, error) {
+	panic(fmt.Errorf("not implemented"))
 }
 
-// Query returns generated.QueryResolver implementation.
-func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
+// Entity returns generated.EntityResolver implementation.
+func (r *Resolver) Entity() generated.EntityResolver { return &entityResolver{r} }
 
-type queryResolver struct{ *Resolver }
+type entityResolver struct{ *Resolver }
