@@ -359,6 +359,20 @@ go_repository(
 )
 
 go_repository(
+    name = "com_github_99designs_gqlgen",
+    importpath = "github.com/99designs/gqlgen",
+    sum = "h1:haLTcUp3Vwp80xMVEg5KRNwzfUrgFdRmtBY8fuB8scA=",
+    version = "v0.13.0",
+)
+
+go_repository(
+    name = "com_github_vektah_gqlparser_v2",
+    importpath = "github.com/vektah/gqlparser/v2",
+    sum = "h1:uiKJ+T5HMGGQM2kRKQ8Pxw8+Zq9qhhZhz/lieYvCMns=",
+    version = "v2.1.0",
+)
+
+go_repository(
     name = "com_github_spf13_viper",
     importpath = "github.com/spf13/viper",
     sum = "h1:VUFqw5KcqRf7i70GOzW7N+Q7+gxVBkSSqiXB12+JQ4M=",

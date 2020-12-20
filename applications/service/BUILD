@@ -9,7 +9,7 @@ package(default_visibility = ["//visibility:public"])
 # gazelle:prefix github.com/tilt-dev/tilt-example-bazel
 gazelle(name = "gazelle")
 
-web_sources = glob(["web/**"])
+web_sources = []
 
 go_binary(
     name = "example-go",
@@ -32,9 +32,15 @@ go_image(
 go_library(
     name = "go_default_library",
     srcs = [
-        "main.go",
-        "start.go",
+        "graph/generated/generated.go",
+        "graph/model/models_gen.go",
+        "graph/resolver.go",
+        "graph/schema.resolvers.go",
+        "server.go",
     ],
     importpath = "github.com/tilt-dev/tilt-example-bazel",
-    deps = ["@com_github_gorilla_mux//:go_default_library"],
+    deps = [
+        "@com_github_99designs_gqlgen//:go_default_library",
+        "@com_github_vektah_gqlparser_v2//:go_default_library",
+    ],
 )
