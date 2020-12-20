@@ -88,7 +88,13 @@ load("@io_bazel_rules_docker//go:image.bzl", go_image_repos = "repositories")
 
 go_image_repos()
 
+load(
+    "@io_bazel_rules_docker//nodejs:image.bzl",
+    nodejs_image_repos = "repositories",
+)
 load("@io_bazel_rules_docker//container:container.bzl", "container_pull")
+
+nodejs_image_repos()
 
 yarn_install(
     name = "npm",
@@ -98,13 +104,6 @@ yarn_install(
     ],
     package_json = "//:package.json",
     yarn_lock = "//:yarn.lock",
-)
-
-container_pull(
-    name = "node_base_image",
-    registry = "docker.io",
-    repository = "library/node",
-    tag = "alpine",
 )
 
 container_pull(

@@ -9,7 +9,9 @@ Install a remotely hosted Helm chart in a way that it will be properly uninstall
 Because tilt doesn't have a way to dynamically ignore files, you'll need to add `.helm` to your project's `.tiltignore`
 file in order to prevent recursive re-processing of the main Tiltfile when the helm cache changes/updates.
 
-#### Install a Remote Chart
+#### Install a Remote ChartReact allows you to interface with other libraries and frameworks. This example uses remarkable, an external Markdown library, to convert the <textarea>’s value in real time.
+
+
 
 ```py
 load('ext://helm_remote', 'helm_remote')

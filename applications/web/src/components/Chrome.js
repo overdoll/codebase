@@ -1,11 +1,12 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
-import Theme, { ThemeToggleButton } from "./Theme";
+import Theme, { ThemeToggleButton } from './Theme';
 
-import "./Chrome.css";
+import './Chrome.css';
 
 export default class Chrome extends Component {
-  state = { theme: "light" };
+  state = { theme: 'light' };
+
   render() {
     const assets = this.props.assets;
     return (
@@ -14,7 +15,7 @@ export default class Chrome extends Component {
           <meta charSet="utf-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <link rel="shortcut icon" href="favicon.ico" />
-          <link rel="stylesheet" href={assets["main.css"]} />
+          <link rel="stylesheet" href={assets['main.css']} />
           <title>{this.props.title}</title>
         </head>
         <body className={this.state.theme}>
@@ -40,7 +41,7 @@ export default class Chrome extends Component {
               __html: `assetManifest = ${JSON.stringify(assets)};`,
             }}
           />
-          <script src={assets["main.js"]} />
+          <script src={assets['main.js']} />
         </body>
       </html>
     );

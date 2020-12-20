@@ -5,3 +5,9 @@ k8s_object(
     kind = "deployment",
     template = ":example-go.yaml",
 )
+
+k8s_object(
+    name = "example-node",
+    kind = "deployment",
+    template = ":example-node.yaml",
+)

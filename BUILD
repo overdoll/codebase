@@ -31,7 +31,10 @@ go_image(
 
 go_library(
     name = "go_default_library",
-    srcs = ["main.go", "start.go"],
+    srcs = [
+        "main.go",
+        "start.go",
+    ],
     importpath = "github.com/tilt-dev/tilt-example-bazel",
     deps = ["@com_github_gorilla_mux//:go_default_library"],
 )

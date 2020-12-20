@@ -25,15 +25,15 @@ type ExampleRouter struct {
 func NewExampleRouter() (*ExampleRouter, error) {
 	r := mux.NewRouter()
 
-	tmpl, err := template.ParseGlob("./web/templates/*.tmpl")
-	if err != nil {
-		return nil, err
-	}
+	//tmpl, err := template.ParseGlob("./web/templates/*.tmpl")
+	//if err != nil {
+	//	return nil, err
+	//}
 
 	updateDuration := calcUpdateDuration()
 	router := &ExampleRouter{
-		Router:         r,
-		tmpl:           tmpl,
+		Router: r,
+		//tmpl:           tmpl,
 		updateDuration: updateDuration,
 	}
 

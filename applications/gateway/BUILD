@@ -1,0 +1,56 @@
+# Bazel BUILD file
+
+load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+
+package(default_visibility = ["//visibility:public"])
+
+DEPENDENCIES = [
+    "@npm//apollo-server",
+    "@npm//@apollo/gateway",
+    "@npm//node-fetch",
+]
+
+filegroup(
+    name = "dependencies",
+    srcs = glob(
+        [
+            "**",
+            ".*",
+        ],
+        exclude = [
+            "BUILD",
+        ],
+    ),
+)
+
+# In dev, we use nodemon to allow restarts
+nodejs_binary(
+    name = "nodemon",
+    data = DEPENDENCIES + [
+        # Source code
+        "index.js",
+        ".env",
+        ":dependencies",
+
+        # Dev Dependencies
+        "@npm//nodemon",
+        "@npm//dotenv",
+    ],
+    entry_point = "@npm//:node_modules/nodemon/bin/nodemon.js",
+    templated_args = [
+        "-r",
+        "dotenv/config",
+        "-w",
+        "$(execpath .env)",
+        "-w",
+        "applications/gateway",
+        "$(execpath index.js)",
+        "dotenv_config_path=$(execpath .env)",
+    ],
+)
+
+nodejs_image(
+    name = "example-node-image",
+    binary = ":nodemon",
+)
