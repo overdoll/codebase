@@ -31,16 +31,12 @@ go_image(
 
 go_library(
     name = "go_default_library",
-    srcs = [
-        "graph/generated/generated.go",
-        "graph/model/models_gen.go",
-        "graph/resolver.go",
-        "graph/schema.resolvers.go",
-        "server.go",
-    ],
+    srcs = ["server.go"],
     importpath = "github.com/tilt-dev/tilt-example-bazel",
     deps = [
-        "@com_github_99designs_gqlgen//:go_default_library",
-        "@com_github_vektah_gqlparser_v2//:go_default_library",
+        "//applications/service/graph:go_default_library",
+        "//applications/service/graph/generated:go_default_library",
+        "@com_github_99designs_gqlgen//graphql/handler:go_default_library",
+        "@com_github_99designs_gqlgen//graphql/playground:go_default_library",
     ],
 )
