@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: example-go
+  name: hades-deployment
   labels:
-    app: example-go
+    app: hades-deployment
 spec:
   selector:
     matchLabels:
-      app: example-go
+      app: hades-deployment
   template:
     metadata:
       labels:
-        app: example-go
+        app: hades-deployment
     spec:
       containers:
-        - name: example-go
-          image: example-go-image
+        - name: hades
+          image: hades-image
           ports:
             - containerPort: 8000

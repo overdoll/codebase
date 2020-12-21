@@ -4,11 +4,10 @@ package graph
 // will be copied through when generating and any unknown code will be moved to the end.
 
 import (
+	"application/hades/graph/generated"
+	"application/hades/graph/model"
 	"context"
 	"fmt"
-
-	"github.com/tilt-dev/tilt-example-bazel/graph/generated"
-	"github.com/tilt-dev/tilt-example-bazel/graph/model"
 )
 
 func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error) {

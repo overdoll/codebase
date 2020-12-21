@@ -1,13 +1,13 @@
 package main
 
 import (
+	"application/hades/graph"
+	"application/hades/graph/generated"
 	"log"
 	"net/http"
 	"os"
 
 	"github.com/99designs/gqlgen/graphql/handler"
-	"github.com/tilt-dev/tilt-example-bazel/graph"
-	"github.com/tilt-dev/tilt-example-bazel/graph/generated"
 )
 
 const defaultPort = "8080"

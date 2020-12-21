@@ -5,12 +5,12 @@
   "main": "index.js",
   "scripts": {
     "start": "yarn run relay; concurrently --kill-others \"yarn run start:server\" \"yarn run start:client\" \"yarn run relay --watch\"",
-    "start:client": "PORT=3001 node ./applications/web/scripts/start.js",
-    "start:server": "NODE_ENV=development node ./applications/web/server",
+    "start:client": "PORT=3001 node applications/medusa/scripts/start.js",
+    "start:server": "NODE_ENV=development node applications/medusa/server",
     "start:prod": "node scripts/build.js && NODE_ENV=production node ./applications/server",
     "build": "yarn run relay && node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
-    "relay": "yarn run relay-compiler --schema ./applications/web/schema/schema.graphql --src ./applications/web/src/ $@"
+    "relay": "yarn run relay-compiler --schema applications/medusa/schema/schema.graphql --src applications/medusa/src/ $@"
   },
   "dependencies": {
     "@apollo/gateway": "^0.21.4",

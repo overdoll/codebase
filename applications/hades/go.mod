@@ -1,4 +1,4 @@
-module github.com/tilt-dev/tilt-example-bazel
+module application/hades
 
 go 1.14
 

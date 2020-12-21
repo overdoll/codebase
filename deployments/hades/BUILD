@@ -1,0 +1,22 @@
+load("@io_bazel_rules_k8s//k8s:object.bzl", "k8s_object")
+load("@io_bazel_rules_k8s//k8s:objects.bzl", "k8s_objects")
+
+k8s_objects(
+    name = "objects",
+    objects = [
+        ":hades-service",
+        ":hades-deployment",
+    ],
+)
+
+k8s_object(
+    name = "hades-service",
+    kind = "service",
+    template = ":hades-service.yaml",
+)
+
+k8s_object(
+    name = "hades-deployment",
+    kind = "deployment",
+    template = ":hades-deployment.yaml",
+)

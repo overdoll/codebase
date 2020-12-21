@@ -3,6 +3,6 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["models_gen.go"],
-    importpath = "github.com/tilt-dev/tilt-example-bazel/graph/model",
+    importpath = "application/hades/graph/model",
     visibility = ["//visibility:public"],
 )
