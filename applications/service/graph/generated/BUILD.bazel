@@ -2,17 +2,13 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
-    srcs = [
-        "federation.go",
-        "generated.go",
-    ],
+    srcs = ["generated.go"],
     importpath = "github.com/tilt-dev/tilt-example-bazel/graph/generated",
     visibility = ["//visibility:public"],
     deps = [
         "//applications/service/graph/model:go_default_library",
         "@com_github_99designs_gqlgen//graphql:go_default_library",
         "@com_github_99designs_gqlgen//graphql/introspection:go_default_library",
-        "@com_github_99designs_gqlgen//plugin/federation/fedruntime:go_default_library",
         "@com_github_vektah_gqlparser_v2//:go_default_library",
         "@com_github_vektah_gqlparser_v2//ast:go_default_library",
     ],

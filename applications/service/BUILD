@@ -37,6 +37,5 @@ go_library(
         "//applications/service/graph:go_default_library",
         "//applications/service/graph/generated:go_default_library",
         "@com_github_99designs_gqlgen//graphql/handler:go_default_library",
-        "@com_github_99designs_gqlgen//graphql/playground:go_default_library",
     ],
 )

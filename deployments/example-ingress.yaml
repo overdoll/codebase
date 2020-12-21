@@ -6,7 +6,7 @@ spec:
   rules:
     - http:
         paths:
-          - path: /
+          - path: /api/graphql
             backend:
               serviceName: node-service
               servicePort: 8000
