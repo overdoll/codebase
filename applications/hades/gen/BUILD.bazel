@@ -3,10 +3,10 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["generated.go"],
-    importpath = "application/hades/graph/generated",
+    importpath = "project01101000/codebase/applications/hades/gen",
     visibility = ["//visibility:public"],
     deps = [
-        "//applications/hades/graph/model:go_default_library",
+        "//applications/hades/model:go_default_library",
         "@com_github_99designs_gqlgen//graphql:go_default_library",
         "@com_github_99designs_gqlgen//graphql/introspection:go_default_library",
         "@com_github_vektah_gqlparser_v2//:go_default_library",

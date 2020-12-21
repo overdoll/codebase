@@ -4,8 +4,8 @@ load("@io_bazel_rules_k8s//k8s:objects.bzl", "k8s_objects")
 k8s_objects(
     name = "objects",
     objects = [
-        "hades:objects",
-        "medusa:objects",
+        "//deployments/hades:objects",
+        "//deployments/medusa:objects",
         ":ingress",
     ],
 )

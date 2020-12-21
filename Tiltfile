@@ -1,3 +1,18 @@
+applications = {
+    "hades": {
+        "type": "go",
+        "image_reference": "hades-image",
+        "image_target": "//applications/hades:hades-image",
+        "binary_target": "//applications/hades:hades",
+        "binary_output": "applications/hades/hades_/hades",
+        "container_workdir": "/app/applications/hades/hades-image.binary.runfiles/project01101000/",
+        "container_binary": "applications/hades/hades-image.binary_/hades-image.binary",
+        "bazel_image": "bazel/applications/hades:hades-image",
+        "dependencies": [],
+        "live_update": [],
+    },
+}
+
 docker_prune_settings(
     disable = False,
     max_age_mins = 360,
@@ -10,77 +25,87 @@ docker_prune_settings(
 load("ext://restart_process", "custom_build_with_restart")
 load("./bazel.Tiltfile", "bazel_buildfile_deps", "bazel_sourcefile_deps")
 
-# Use Bazel to generate the Kubernetes YAML
+# Watch YAML kubernetes files
 for f in bazel_sourcefile_deps("//deployments:objects"):
     watch_file(f)
 
 for f in bazel_buildfile_deps("//deployments:objects"):
     watch_file(f)
 
+# Deploy YAML files
 k8s_yaml(local("bazel run //deployments:objects"))
-
-# The go_image BUILD rule
-image_target = "//applications/service:example-go-image"
-binary_target = "//applications/service:example-go"
 
 # Tilt works better if we watch the bazel output tree
 # directly instead of the ./bazel-bin symlinks.
 bazel_bin = str(local("bazel info bazel-bin")).strip()
 
-# Where go_binary puts the binary. You can determine this by building the
-# go_binary target and reading the output log.
-binary_target_local = os.path.join(bazel_bin, "applications/service/example-go_/example-go")
+# Build services with above config
+for item in applications.keys():
+    application = applications[item]
 
-# Where go_image puts the Go binary in the container. You can determine this
-# by shelling into the container with `kubectl exec -it [pod name] -- sh`
-container_workdir = "/app/applications/service/example-go-image.binary.runfiles/project01101000/"
-binary_target_container = container_workdir + "applications/service/example-go-image.binary_/example-go-image.binary"
+    if (application["type"] == "go"):
+        # The go_image BUILD.bazel rule
+        image_target = application["image_target"]
+        binary_target = application["binary_target"]
 
-# Where go_image puts the image in Docker (bazel/path/to/target:name)
-bazel_image = "bazel/applications/service:example-go-image"
+        # Where go_binary puts the binary. You can determine this by building the
+        # go_binary target and reading the output log.
+        binary_target_local = os.path.join(bazel_bin, application["binary_output"])
 
-local_resource(
-    name = "example-go-compile",
-    cmd = "bazel build --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 {binary_target}".format(binary_target = binary_target),
-    deps = bazel_sourcefile_deps(binary_target),
-)
+        # Where go_image puts the Go binary in the container. You can determine this
+        # by shelling into the container with `kubectl exec -it [pod name] -- sh`
+        container_workdir = application["container_workdir"]
+        binary_target_container = container_workdir + application["container_binary"]
 
-custom_build_with_restart(
-    ref = "example-go-image",
-    command = (
-        "bazel run --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 {image_target} -- --norun && " +
-        "docker tag {bazel_image} $EXPECTED_REF"
-    ).format(image_target = image_target, bazel_image = bazel_image),
-    deps = ["applications/service/web", binary_target_local],
-    entrypoint = binary_target_container,
-    live_update = [
-        sync("applications/service/web", container_workdir + "applications/service/web"),
-        sync(binary_target_local, binary_target_container),
-    ],
-)
+        # Where go_image puts the image in Docker (bazel/path/to/target:name)
+        bazel_image = application["bazel_image"]
 
-image_target = "//applications/gateway:example-node-image"
+        local_resource(
+            name = item + "-compile",
+            cmd = "bazel build --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 {binary_target}".format(binary_target = binary_target),
+            deps = bazel_sourcefile_deps(binary_target),
+        )
 
-container_workdir = "/app/applications/gateway/nodemon.runfiles/project01101000"
-binary_target_container = container_workdir + "/applications/gateway/nodemon.sh"
+        custom_build_with_restart(
+            ref = application["image_reference"],
+            command = (
+                "bazel run --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 {image_target} -- --norun && " +
+                "docker tag {bazel_image} $EXPECTED_REF"
+            ).format(image_target = image_target, bazel_image = bazel_image),
+            deps = [binary_target_local] + application["dependencies"],
+            entrypoint = binary_target_container,
+            live_update = application["live_update"] + [
+                sync(binary_target_local, binary_target_container),
+            ],
+        )
 
-bazel_image = "bazel/applications/gateway:example-node-image"
+        k8s_resource(item, resource_deps = [item + "-compile"])
 
-custom_build_with_restart(
-    ref = "example-node-image",
-    command = (
-        "bazel run --platforms=@build_bazel_rules_nodejs//toolchains/node:linux_amd64 {image_target} -- --norun && " +
-        "docker tag {bazel_image} $EXPECTED_REF"
-    ).format(image_target = image_target, bazel_image = bazel_image),
-    deps = bazel_sourcefile_deps("//applications/gateway:dependencies") + ["applications/gateway"],
-    entrypoint = "/app/applications/gateway/nodemon",
-    live_update = [
-        sync("applications/gateway/index.js", container_workdir + "/applications/gateway/index.js"),
-    ],
-)
+    elif (application["type"] == "node"):
+        image_target = application["image_target"]
 
-k8s_resource("example-go", resource_deps = ["example-go-compile"])
-k8s_resource("example-node")
+        container_workdir = application["container_workdir"]
+        binary_target_container = container_workdir + application["container_binary"]
+
+        bazel_image = application["bazel_image"]
+
+        custom_build_with_restart(
+            ref = application["image_reference"],
+            command = (
+                "bazel run --platforms=@build_bazel_rules_nodejs//toolchains/node:linux_amd64 {image_target} -- --norun && " +
+                "docker tag {bazel_image} $EXPECTED_REF"
+            ).format(image_target = image_target, bazel_image = bazel_image),
+            deps = application["dependencies"],
+            #deps = bazel_sourcefile_deps("//applications/gateway:dependencies") + ["applications/gateway"],
+            entrypoint = application["entrypoint"],
+            #entrypoint = "/app/applications/gateway/nodemon",
+            live_update = application["live_update"],
+            #live_update = [
+            #    sync("applications/gateway/index.js", container_workdir + "/applications/gateway/index.js"),
+            #],
+        )
+
+        k8s_resource(item)
 
 load("ext://helm_remote", "helm_remote")
 

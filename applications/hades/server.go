@@ -1,8 +1,8 @@
 package main
 
 import (
-	"application/hades/graph"
-	"application/hades/graph/generated"
+	"project01101000/codebase/applications/hades/gen"
+	"project01101000/codebase/applications/hades/resolvers"
 	"log"
 	"net/http"
 	"os"
@@ -18,7 +18,7 @@ func main() {
 		port = defaultPort
 	}
 
-	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
+	srv := handler.NewDefaultServer(gen.NewExecutableSchema(gen.Config{Resolvers: &resolvers.Resolver{}}))
 
 	http.Handle("/query", srv)
 

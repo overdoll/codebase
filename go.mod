@@ -1,4 +1,4 @@
-module application/hades
+module project01101000/codebase
 
 go 1.14
 
