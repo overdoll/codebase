@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package applications.grpc.books.v1;
 
-// Book definition.
+// Book definition
 message Book {
   string id = 1;
   string author = 2;

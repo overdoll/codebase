@@ -1,0 +1,1 @@
+../../../bazel-out/k8-fastbuild/bin/applications/holders/proto/applications_grpc_holders_v1_go_proto_/project01101000/codebase/applications/holders/proto/holders.pb.go

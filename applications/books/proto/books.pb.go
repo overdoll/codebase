@@ -1,0 +1,1 @@
+../../../bazel-out/k8-fastbuild/bin/applications/books/proto/applications_grpc_books_v1_go_proto_/project01101000/codebase/applications/books/proto/books.pb.go
