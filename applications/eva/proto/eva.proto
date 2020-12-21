@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package applications.grpc.eva.v1;
+
+message User {
+  string id = 1;
+  string username = 2;
+  string email = 3;
+}
+
+service EvaAPI {
+  // Get User by id.
+  rpc GetUser(GetUserRequest) returns (GetUserResponse);
+}
+
+message GetUserRequest {
+  string id = 1;
+}
+
+message GetUserResponse {
+  User user = 1;
+}

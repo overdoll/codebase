@@ -2,33 +2,14 @@
 
 package model
 
-type Book struct {
-	ID     string `json:"id"`
-	Author string `json:"author"`
-	Title  string `json:"title"`
-	Isbn   string `json:"isbn"`
+type User struct {
+	ID       string `json:"id"`
+	Username string `json:"username"`
+	Email    string `json:"email"`
 }
 
-type BookInput struct {
-	ID     *string `json:"id"`
-	Author *string `json:"author"`
-	Title  *string `json:"title"`
-	Isbn   *string `json:"isbn"`
-}
-
-type Holder struct {
-	ID        string  `json:"id"`
-	FirstName string  `json:"firstName"`
-	LastName  string  `json:"lastName"`
-	Phone     string  `json:"phone"`
-	Email     string  `json:"email"`
-	HeldBooks []*Book `json:"heldBooks"`
-}
-
-type HolderInput struct {
-	ID        *string `json:"id"`
-	FirstName *string `json:"firstName"`
-	LastName  *string `json:"lastName"`
-	Phone     *string `json:"phone"`
-	Email     *string `json:"email"`
+type UserInput struct {
+	ID       *string `json:"id"`
+	Username *string `json:"username"`
+	Email    *string `json:"email"`
 }

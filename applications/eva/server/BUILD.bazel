@@ -2,11 +2,12 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
-    srcs = ["services.go"],
-    importpath = "project01101000/codebase/applications/hades/services",
+    srcs = ["server.go"],
+    importpath = "project01101000/codebase/applications/eva/server",
     visibility = ["//visibility:public"],
     deps = [
         "//applications/eva/proto:v1_go_proto",
         "@org_golang_google_grpc//:go_default_library",
+        "@org_golang_google_grpc//reflection:go_default_library",
     ],
 )

@@ -1,5 +1,3 @@
 type Query {
-    # Books
-    books(id: String, isbn: String, holderId: String): [Book!]
-    holders(id: String, bookId: String): [Holder!]
+    users(id: String, username: String, email: String): [User!]
 }
