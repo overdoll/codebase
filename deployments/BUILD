@@ -6,6 +6,7 @@ k8s_objects(
     objects = [
         "//deployments/hades:objects",
         "//deployments/medusa:objects",
+        "//deployments/eva:objects",
         ":ingress",
     ],
 )

@@ -20,12 +20,13 @@ type services struct {
 }
 
 type Services interface {
-	Books() evav1.EvaAPIClient
+	Eva() evav1.EvaAPIClient
 }
 
 func NewServicesKeeper(conf ServicesConfig) (Services, error) {
 	log.Printf("Connection to Eva Service: %s...", conf.EvaSvc)
 	evaConnection, err := grpc.Dial(conf.EvaSvc, grpc.WithInsecure())
+	
 	if err != nil {
 		return nil, err
 	}
@@ -37,14 +38,14 @@ func NewServicesKeeper(conf ServicesConfig) (Services, error) {
 	return ah, nil
 }
 
-func (ah *services) Books() evav1.EvaAPIClient {
+func (ah *services) Eva() evav1.EvaAPIClient {
 	return ah.evaClient
 }
 
 func (ah *services) Close() error {
 	err := ah.evaClientConn.Close()
 	if err != nil {
-		log.Printf("An error occurred while closing connection on Books service: %s", err)
+		log.Printf("An error occurred while closing connection on Eva service: %s", err)
 	}
 
 	return nil

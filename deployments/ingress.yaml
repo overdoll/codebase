@@ -8,5 +8,5 @@ spec:
         paths:
           - path: /api/graphql
             backend:
-              serviceName: node-service
+              serviceName: hades
               servicePort: 8000

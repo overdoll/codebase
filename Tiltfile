@@ -11,6 +11,18 @@ applications = {
         "dependencies": [],
         "live_update": [],
     },
+    "eva": {
+        "type": "go",
+        "image_reference": "eva-image",
+        "image_target": "//applications/eva:eva-image",
+        "binary_target": "//applications/eva:eva",
+        "binary_output": "applications/eva/eva_/eva",
+        "container_workdir": "/app/applications/eva/eva-image.binary.runfiles/project01101000/",
+        "container_binary": "applications/eva/eva-image.binary_/eva-image.binary",
+        "bazel_image": "bazel/applications/eva:eva-image",
+        "dependencies": [],
+        "live_update": [],
+    },
 }
 
 docker_prune_settings(

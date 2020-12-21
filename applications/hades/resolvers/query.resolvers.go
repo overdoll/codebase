@@ -5,16 +5,27 @@ package resolvers
 
 import (
 	"context"
-	"fmt"
-	gen1 "project01101000/codebase/applications/hades/gen"
-	model1 "project01101000/codebase/applications/hades/model"
+	evav1 "project01101000/codebase/applications/eva/proto"
+	"project01101000/codebase/applications/hades/gen"
+	"project01101000/codebase/applications/hades/model"
 )
 
-func (r *queryResolver) Users(ctx context.Context, id *string, username *string, email *string) ([]*model1.User, error) {
-	panic(fmt.Errorf("not implemented"))
+func (r *queryResolver) Users(ctx context.Context, id *string, username *string, email *string) ([]*model.User, error) {
+
+	users := []*model.User{}
+
+	if id != nil {
+		getUserResponse, err := r.services.Eva().GetUser(ctx, &evav1.GetUserRequest{Id: *id})
+		if err != nil {
+			return nil, err
+		}
+		users = append(users, service2GraphUser(getUserResponse.User))
+	}
+
+	return users, nil
 }
 
 // Query returns gen1.QueryResolver implementation.
-func (r *Resolver) Query() gen1.QueryResolver { return &queryResolver{r} }
+func (r *Resolver) Query() gen.QueryResolver { return &queryResolver{r} }
 
 type queryResolver struct{ *Resolver }

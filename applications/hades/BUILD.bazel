@@ -5,8 +5,6 @@ load("@io_bazel_rules_docker//go:image.bzl", "go_image")
 
 package(default_visibility = ["//visibility:public"])
 
-web_sources = []
-
 go_library(
     name = "go_default_library",
     srcs = ["server.go"],
@@ -14,14 +12,15 @@ go_library(
     deps = [
         "//applications/hades/gen:go_default_library",
         "//applications/hades/resolvers:go_default_library",
+        "//applications/hades/services:go_default_library",
         "@com_github_99designs_gqlgen//graphql/handler:go_default_library",
+        "@com_github_gorilla_mux//:go_default_library",
     ],
 )
 
 go_image(
     name = "hades-image",
     base = "@go_base_image//image",
-    data = web_sources,
     embed = [":go_default_library"],
     importpath = "project01101000/codebase/applications/hades",
 )
@@ -29,4 +28,5 @@ go_image(
 go_binary(
     name = "hades",
     embed = [":go_default_library"],
+    importpath = "project01101000/codebase/applications/hades",
 )

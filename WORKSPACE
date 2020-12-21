@@ -435,8 +435,8 @@ go_repository(
 go_repository(
     name = "org_golang_x_sync",
     importpath = "golang.org/x/sync",
-    sum = "h1:8gQV6CLnAEikrhgkHFbMAEhagSSnXWGV915qUMm9mrU=",
-    version = "v0.0.0-20190423024810-112230192c58",
+    sum = "h1:WXEvlFVvvGxCJLG6REjsT03iWnKLEWinaScsxF2Vm2o=",
+    version = "v0.0.0-20200317015054-43a5402ce75a",
 )
 
 go_repository(
@@ -491,8 +491,8 @@ go_repository(
 go_repository(
     name = "com_github_golang_snappy",
     importpath = "github.com/golang/snappy",
-    sum = "h1:K9KHZbXKpGydfDN0aZrsoHpLJlZsBrGMFWbgLDGnPZk=",
-    version = "v0.0.0-20170215233205-553a64147049",
+    sum = "h1:aeE13tS0IiQgFjYdoL8qN3K1N2bXXtI6Vi51/y7BpMw=",
+    version = "v0.0.2",
 )
 
 go_repository(
@@ -640,4 +640,18 @@ go_repository(
     importpath = "golang.org/x/oauth2",
     sum = "h1:vEDujvNQGv4jgYKudGeI/+DAX4Jffq6hpD55MmoEvKs=",
     version = "v0.0.0-20180821212333-d2e6202438be",
+)
+
+go_repository(
+    name = "com_github_scylladb_go_reflectx",
+    importpath = "github.com/scylladb/go-reflectx",
+    sum = "h1:b917wZM7189pZdlND9PbIJ6NQxfDPfBvUaQ7cjj1iZQ=",
+    version = "v1.0.1",
+)
+
+go_repository(
+    name = "com_github_scylladb_gocqlx_v2",
+    importpath = "github.com/scylladb/gocqlx/v2",
+    sum = "h1:/cjDsMjkFYrAe/IXoG0V3oRN3JXyV2YMcpwJqjM/enw=",
+    version = "v2.3.0",
 )

@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hades
+  labels:
+    app: hades
+spec:
+  selector:
+    matchLabels:
+      app: hades
+  template:
+    metadata:
+      labels:
+        app: hades
+    spec:
+      containers:
+        - name: hades
+          image: hades-image
+          ports:
+            - containerPort: 8000
+          env:
+            - name: EVA_SERVICE
+              value: "eva:8000"

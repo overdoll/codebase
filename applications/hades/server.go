@@ -26,9 +26,9 @@ func main() {
 	if port == "" {
 		port = defaultPort
 	}
-	evaSvc := os.Getenv("BOOKS_SERVICE")
+	evaSvc := os.Getenv("EVA_SERVICE")
 	if evaSvc == "" {
-		log.Fatalf("Failed to load environmet variable: %s", "BOOKS_SERVICE")
+		log.Fatalf("Failed to load environment variable: %s", "EVA_SERVICE")
 	}
 
 	// Connect to the services
@@ -41,8 +41,11 @@ func main() {
 
 	// Create graphApi handlers
 	router := mux.NewRouter()
-	graphAPIHandler := handler.NewDefaultServer(gen.NewExecutableSchema(gen.Config{Resolvers: resolvers.NewResolver(svcs)}))
-	router.Handle("/query", graphAPIHandler)
+	graphAPIHandler := handler.NewDefaultServer(gen.NewExecutableSchema(gen.Config{
+		Resolvers: resolvers.NewResolver(svcs),
+	}))
+
+	router.Handle("/api/graphql", graphAPIHandler)
 
 	srv := &http.Server{
 		Addr:         fmt.Sprintf(":%s", port),
@@ -64,7 +67,7 @@ func main() {
 	<-sig
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
 	defer cancel()
-	log.Print("Shutting down graph_api server")
+	log.Print("Shutting down hades")
 
 	if err := srv.Shutdown(ctx); err != nil {
 		log.Print(err)

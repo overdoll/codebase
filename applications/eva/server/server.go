@@ -13,10 +13,14 @@ import (
 )
 
 const (
-	defaultPort = "60001"
+	defaultPort = "8080"
 )
 
 type Server struct {
+}
+
+func NewServer(ctx context.Context) (*Server, error) {
+	return &Server{}, nil
 }
 
 func (s *Server) Run() {
@@ -35,7 +39,7 @@ func (s *Server) Run() {
 	evav1.RegisterEvaAPIServer(grpcServer, s)
 	reflection.Register(grpcServer)
 
-	log.Printf("Starting Books server on port %s", port)
+	log.Printf("Starting Eva server on port %s", port)
 	go func() {
 		grpcServer.Serve(listener)
 	}()

@@ -6,19 +6,19 @@ package(default_visibility = ["//visibility:public"])
 k8s_objects(
     name = "objects",
     objects = [
-        ":hades-service",
-        ":hades-deployment",
+        ":eva-service",
+        ":eva-deployment",
     ],
 )
 
 k8s_object(
-    name = "hades-service",
+    name = "eva-service",
     kind = "service",
-    template = ":hades-service.yaml",
+    template = ":eva-service.yaml",
 )
 
 k8s_object(
-    name = "hades-deployment",
+    name = "eva-deployment",
     kind = "deployment",
-    template = ":hades.yaml",
+    template = ":eva.yaml",
 )
