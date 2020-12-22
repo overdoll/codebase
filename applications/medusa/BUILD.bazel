@@ -1,4 +1,4 @@
-# Bazel BUILD.bazel file
+# Bazel BUILD.bazel.bazel.bazel.bazel.bazel.bazel.bazel file
 
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
@@ -19,7 +19,7 @@ filegroup(
             ".*",
         ],
         exclude = [
-            "BUILD",
+            "BUILD.bazel",
         ],
     ),
 )

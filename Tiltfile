@@ -36,6 +36,10 @@ docker_prune_settings(
 # For more on Extensions, see: https://docs.tilt.dev/extensions.html
 load("ext://restart_process", "custom_build_with_restart")
 load("./bazel.Tiltfile", "bazel_buildfile_deps", "bazel_sourcefile_deps")
+load("ext://cert_manager", "deploy_cert_manager")
+
+# Deploy cert-manager
+deploy_cert_manager()
 
 # Watch YAML kubernetes files
 for f in bazel_sourcefile_deps("//deployments:objects"):
@@ -56,7 +60,7 @@ for item in applications.keys():
     application = applications[item]
 
     if (application["type"] == "go"):
-        # The go_image BUILD.bazel rule
+        # The go_image BUILD.bazel.bazel.bazel.bazel.bazel.bazel.bazel rule
         image_target = application["image_target"]
         binary_target = application["binary_target"]
 

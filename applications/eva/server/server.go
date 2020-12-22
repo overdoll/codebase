@@ -25,6 +25,7 @@ func NewServer(ctx context.Context) (*Server, error) {
 
 func (s *Server) Run() {
 	port := os.Getenv("APP_PORT")
+
 	if port == "" {
 		port = defaultPort
 	}
