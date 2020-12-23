@@ -10,3 +10,7 @@ spec:
             backend:
               serviceName: hades
               servicePort: 8000
+          - path: /
+            backend:
+              serviceName: medusa
+              servicePort: 8000

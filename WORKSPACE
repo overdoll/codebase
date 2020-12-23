@@ -484,8 +484,9 @@ go_repository(
 go_repository(
     name = "com_github_gocql_gocql",
     importpath = "github.com/gocql/gocql",
-    sum = "h1:wSTQK2N221ppLtM8g/2/1LOy+4hblTb17U6F+0aDDXo=",
-    version = "v0.0.0-20201215165327-e49edf966d90",
+    replace = "github.com/scylladb/gocql",
+    sum = "h1:BLQMVhKY1c1dUCwYGj1EdubK8qfFyCtJi8XIQu/5IU0=",
+    version = "v0.0.0-20201029162719-81a4afe636ae",
 )
 
 go_repository(

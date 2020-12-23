@@ -11,3 +11,5 @@ package(default_visibility = ["//visibility:public"])
 gazelle(
     name = "gazelle",
 )
+
+exports_files(["package.json"])

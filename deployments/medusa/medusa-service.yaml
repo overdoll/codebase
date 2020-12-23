@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: node-service
+  name: medusa
 spec:
   selector:
-    app: example-node
+    app: medusa
   ports:
     - protocol: TCP
       port: 8000
-      targetPort: 4000
+      targetPort: 8080

@@ -23,6 +23,24 @@ applications = {
         "dependencies": [],
         "live_update": [],
     },
+    "medusa": {
+        "type": "node",
+        "image_reference": "medusa-image",
+        "image_target": "//applications/medusa:medusa-image",
+        "binary_target": "//applications/medusa:medusa",
+        "binary_output": "applications/medusa/medusa_/medusa",
+        "container_workdir": "/app/applications/medusa/eva-image.binary.runfiles/project01101000/",
+        "container_binary": "applications/medusa/medusa-image.binary_/medusa-image.binary",
+        "bazel_image": "bazel/applications/medusa:medusa-image",
+        "entrypoint": "/app/applications/medusa/medusa",
+        #"entrypoint": "sleep 1d",
+        "dependencies": [
+            "applications/medusa/src",
+        ],
+        "live_update": [
+            sync("applications/medusa/src", "/app/applications/medusa/medusa.runfiles/project01101000/applications/medusa/src"),
+        ],
+    },
 }
 
 docker_prune_settings(
@@ -40,6 +58,8 @@ load("ext://cert_manager", "deploy_cert_manager")
 
 # Deploy cert-manager
 deploy_cert_manager()
+
+k8s_yaml("deployments/scylla-operator.yaml")
 
 # Watch YAML kubernetes files
 for f in bazel_sourcefile_deps("//deployments:objects"):
@@ -105,7 +125,7 @@ for item in applications.keys():
 
         bazel_image = application["bazel_image"]
 
-        custom_build_with_restart(
+        custom_build(
             ref = application["image_reference"],
             command = (
                 "bazel run --platforms=@build_bazel_rules_nodejs//toolchains/node:linux_amd64 {image_target} -- --norun && " +
@@ -114,7 +134,6 @@ for item in applications.keys():
             deps = application["dependencies"],
             #deps = bazel_sourcefile_deps("//applications/gateway:dependencies") + ["applications/gateway"],
             entrypoint = application["entrypoint"],
-            #entrypoint = "/app/applications/gateway/nodemon",
             live_update = application["live_update"],
             #live_update = [
             #    sync("applications/gateway/index.js", container_workdir + "/applications/gateway/index.js"),
@@ -131,3 +150,9 @@ helm_remote(
     repo_name = "traefik",
     version = "9.11.0",
 )
+
+k8s_resource("scylla-operator-controller-manager", pod_readiness = "wait", objects = ["scylla-operator-cluster-webhook:MutatingWebhookConfiguration:default"])
+
+# Have
+k8s_kind("Cluster", api_version = "scylla.scylladb.com/v1alpha1")
+k8s_resource("simple-cluster", extra_pod_selectors = {"scylla/cluster": "simple-cluster"}, resource_deps = ["scylla-operator-controller-manager"])

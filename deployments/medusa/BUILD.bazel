@@ -20,5 +20,5 @@ k8s_object(
 k8s_object(
     name = "medusa-deployment",
     kind = "deployment",
-    template = ":medusa-deployment.yaml",
+    template = ":medusa.yaml",
 )

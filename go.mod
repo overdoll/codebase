@@ -11,3 +11,5 @@ require (
 	github.com/vektah/gqlparser/v2 v2.1.0
 	google.golang.org/grpc v1.29.1
 )
+
+replace github.com/gocql/gocql => github.com/scylladb/gocql v0.0.0-20201029162719-81a4afe636ae

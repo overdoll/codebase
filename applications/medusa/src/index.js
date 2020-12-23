@@ -1,7 +1,12 @@
 import React from 'react';
 import { createRoot } from 'react-dom';
+import App from './App';
 
-import App from './components/App';
+createRoot(document.getElementById('root')).render(<App />);
 
-let root = createRoot(document, { hydrate: true });
-root.render(<App assets={window.assetManifest} />);
+if (module.hot) {
+  module.hot.accept('./App', () => {
+    const NextRoot = require('./App').default;
+    createRoot(document.getElementById('root')).render(<NextRoot />);
+  });
+}

@@ -1,56 +1,80 @@
-# Bazel BUILD.bazel.bazel.bazel.bazel.bazel.bazel.bazel file
-
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
-load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin", "nodejs_binary")
+load("@bazel_skylib//rules:write_file.bzl", "write_file")
 
 package(default_visibility = ["//visibility:public"])
 
-DEPENDENCIES = [
-    "@npm//apollo-server",
-    "@npm//@apollo/gateway",
-    "@npm//node-fetch",
-]
-
-filegroup(
-    name = "dependencies",
+copy_to_bin(
+    name = "copy_static_files",
     srcs = glob(
         [
-            "**",
+            "public/*",
+            "src/**/*",
             ".*",
+            "server/**",
         ],
-        exclude = [
-            "BUILD.bazel",
-        ],
-    ),
+    ) + ["server.js"],
 )
 
-# In dev, we use nodemon to allow restarts
-nodejs_binary(
-    name = "nodemon",
-    data = DEPENDENCIES + [
-        # Source code
-        "index.js",
-        ".env",
-        ":dependencies",
+write_file(
+    name = "write_chdir_script",
+    out = "chdir.js",
+    content = ["process.chdir(__dirname)"],
+)
 
-        # Dev Dependencies
-        "@npm//nodemon",
-        "@npm//dotenv",
-    ],
-    entry_point = "@npm//:node_modules/nodemon/bin/nodemon.js",
+_RUNTIME_DEPS = [
+    "webpack.config.js",
+    "index.html",
+    "server.js",
+    "chdir.js",
+    "copy_static_files",
+    "@npm//react",
+    "@npm//react-dom",
+    "@npm//react-relay",
+    "@npm//react-router",
+    "@npm//react-router-config",
+    "@npm//relay-runtime",
+    "@npm//react-markdown",
+    "@npm//chokidar",
+    "@npm//webpack",
+    "@npm//express",
+    "@npm//webpack-dev-middleware",
+    "@npm//webpack-hot-middleware",
+    "@npm//@babel/polyfill",
+    "@npm//babel-loader",
+    "@npm//@babel/node",
+    "@npm//@babel/preset-env",
+    "@npm//@babel/preset-react",
+    "@npm//@babel/plugin-proposal-function-bind",
+    "@npm//@babel/plugin-proposal-class-properties",
+    "@npm//@babel/plugin-transform-arrow-functions",
+    "@npm//@babel/plugin-transform-runtime",
+    "@npm//@babel/plugin-transform-modules-commonjs",
+    "@npm//css-loader",
+    "@npm//dotenv-webpack",
+    "@npm//html-loader",
+    "@npm//html-webpack-plugin",
+    "@npm//json-loader",
+    "@npm//file-loader",
+    "@npm//style-loader",
+    "@npm//url-loader",
+    "@npm//babel-plugin-relay",
+    "@npm//@pmmmwh/react-refresh-webpack-plugin",
+    "@npm//relay-compiler-webpack-plugin",
+    "@npm//react-refresh",
+]
+
+nodejs_binary(
+    name = "medusa",
+    data = _RUNTIME_DEPS,
+    entry_point = "@npm//:node_modules/@babel/node/bin/babel-node.js",
     templated_args = [
-        "-r",
-        "dotenv/config",
-        "-w",
-        "$(execpath .env)",
-        "-w",
-        "applications/gateway",
-        "$(execpath index.js)",
-        "dotenv_config_path=$(execpath .env)",
+        "--node_options=--require=./$(rootpath chdir.js)",
+        "server.js",
     ],
 )
 
 nodejs_image(
-    name = "example-node-image",
-    binary = ":nodemon",
+    name = "medusa-image",
+    binary = ":medusa",
 )
