@@ -135,12 +135,8 @@ for item in applications.keys():
                 "docker tag {bazel_image} $EXPECTED_REF"
             ).format(image_target = image_target, bazel_image = bazel_image),
             deps = application["dependencies"],
-            #deps = bazel_sourcefile_deps("//applications/gateway:dependencies") + ["applications/gateway"],
             entrypoint = application["entrypoint"],
             live_update = application["live_update"],
-            #live_update = [
-            #    sync("applications/gateway/index.js", container_workdir + "/applications/gateway/index.js"),
-            #],
         )
 
         k8s_resource(item)

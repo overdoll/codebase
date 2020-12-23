@@ -1,7 +1,5 @@
-import React from 'react';
 import { usePreloadedQuery, graphql } from 'react-relay/hooks';
-
-const { Suspense } = React;
+import { Suspense } from 'react';
 
 export default function Root(props) {
   // Defines *what* data the component needs via a query. The responsibility of

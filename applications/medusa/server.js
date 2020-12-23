@@ -5,18 +5,37 @@ const http = require('http');
 const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
+const path = require('path');
 
 const compiler = webpack(config);
 const app = express();
 
 // Serve hot-reloading bundle to client
 app.use(
-  webpackDevMiddleware(compiler, {
+  (this.middleware = webpackDevMiddleware(compiler, {
     publicPath: config.output.publicPath,
     hot: true,
+  })),
+);
+
+app.use(
+  webpackHotMiddleware(compiler, {
+    overlay: true,
+    overlayWarnings: true,
   }),
 );
-app.use(webpackHotMiddleware(compiler));
+
+app.get(
+  '*',
+  function(req, res) {
+    /*eslint-disable */
+    var index = this.middleware.fileSystem.readFileSync(
+      path.join(config.output.path, 'index.html'),
+    );
+    /*eslint-enable */
+    res.end(index);
+  }.bind(this),
+);
 
 // Include server routes as a middleware
 app.use(require('./server/index'));

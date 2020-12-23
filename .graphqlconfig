@@ -1,6 +1,6 @@
 {
   "name": "Untitled GraphQL Schema",
-  "schemaPath": "schema.graphql",
+  "schemaPath": "applications/medusa/schema/schema.graphql",
   "extensions": {
     "endpoints": {
       "Default GraphQL Endpoint": {

@@ -62,6 +62,7 @@ _RUNTIME_DEPS = [
     "@npm//@pmmmwh/react-refresh-webpack-plugin",
     "@npm//relay-compiler-webpack-plugin",
     "@npm//react-refresh",
+    "@npm//@babel/plugin-transform-react-jsx",
 ]
 
 nodejs_binary(

@@ -7,7 +7,7 @@ const path = require('path');
 
 module.exports = {
   mode: 'development',
-  entry: ['webpack-hot-middleware/client', './src/index.js'],
+  entry: ['webpack-hot-middleware/client?overlay=true', './src/index.js'],
   output: {
     path: __dirname,
     filename: 'bundle.js',
@@ -15,7 +15,9 @@ module.exports = {
   },
   target: 'web',
   plugins: [
-    new ReactRefreshWebpackPlugin(),
+    new ReactRefreshWebpackPlugin({
+      overlay: false,
+    }),
     //new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     //new RelayCompilerWebpackPlugin({
@@ -69,6 +71,12 @@ module.exports = {
                 '@babel/plugin-transform-runtime',
                 '@babel/plugin-transform-modules-commonjs',
                 'react-refresh/babel',
+                [
+                  '@babel/plugin-transform-react-jsx',
+                  {
+                    runtime: 'automatic',
+                  },
+                ],
               ],
             },
           },
@@ -76,15 +84,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: [
-          'style-loader',
-          {
-            loader: 'css-loader',
-            query: {
-              modules: true,
-            },
-          },
-        ],
+        use: ['style-loader', 'css-loader'],
       },
     ],
   },
