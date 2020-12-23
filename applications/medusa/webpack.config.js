@@ -28,6 +28,7 @@ module.exports = {
       inject: true,
       hash: true,
     }),
+    new Dotenv(),
   ],
   module: {
     rules: [

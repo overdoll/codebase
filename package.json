@@ -16,7 +16,10 @@
     "react-router-config": "^5.1.1",
     "relay-runtime": "^10.1.2"
   },
-  "scripts": {},
+  "scripts": {
+    "relay": "yarn run relay-compiler --watch --schema ./applications/medusa/schema/schema.graphql --src ./applications/medusa/src/ $@",
+    "graphql": "NODE_TLS_REJECT_UNAUTHORIZED=0 graphql codegen"
+  },
   "eslintConfig": {
     "extends": "react-app"
   },
@@ -35,9 +38,6 @@
   "devDependencies": {
     "@babel/core": "^7.12.10",
     "@babel/node": "^7.12.10",
-    "webpack": "^4.0.0",
-    "webpack-dev-middleware": "^3.7.2",
-    "webpack-hot-middleware": "^2.25.0",
     "@babel/plugin-proposal-class-properties": "^7.12.1",
     "@babel/plugin-proposal-function-bind": "^7.12.1",
     "@babel/plugin-transform-arrow-functions": "^7.12.1",
@@ -46,6 +46,8 @@
     "@babel/polyfill": "^7.12.1",
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-react": "^7.12.10",
+    "@graphql-cli/codegen": "^1.17.17",
+    "@graphql-codegen/schema-ast": "^1.18.1",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
     "babel-loader": "^8.2.2",
     "babel-plugin-relay": "^10.1.2",
@@ -61,10 +63,13 @@
     "json-loader": "^0.5.7",
     "prettier": "^1.18.2",
     "react-refresh": "^0.9.0",
-    "relay-compiler": "^9.0.0",
+    "relay-compiler": "^10.1.2",
     "relay-compiler-webpack-plugin": "^8.1.0",
     "style-loader": "^2.0.0",
-    "url-loader": "^4.1.1"
+    "url-loader": "^4.1.1",
+    "webpack": "^4.0.0",
+    "webpack-dev-middleware": "^3.7.2",
+    "webpack-hot-middleware": "^2.25.0"
   },
   "husky": {
     "hooks": {

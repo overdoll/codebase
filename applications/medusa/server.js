@@ -19,9 +19,7 @@ app.use(
 app.use(webpackHotMiddleware(compiler));
 
 // Include server routes as a middleware
-app.use(function(req, res, next) {
-  require('./server/index')(req, res, next);
-});
+app.use(require('./server/index'));
 
 // Do "hot-reloading" of express stuff on the server
 // Throw away cached modules and re-require next time

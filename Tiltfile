@@ -33,12 +33,15 @@ applications = {
         "container_binary": "applications/medusa/medusa-image.binary_/medusa-image.binary",
         "bazel_image": "bazel/applications/medusa:medusa-image",
         "entrypoint": "/app/applications/medusa/medusa",
-        #"entrypoint": "sleep 1d",
         "dependencies": [
             "applications/medusa/src",
+            "applications/medusa/server",
+            "applications/medusa/public",
         ],
         "live_update": [
             sync("applications/medusa/src", "/app/applications/medusa/medusa.runfiles/project01101000/applications/medusa/src"),
+            sync("applications/medusa/server", "/app/applications/medusa/medusa.runfiles/project01101000/applications/medusa/server"),
+            sync("applications/medusa/public", "/app/applications/medusa/medusa.runfiles/project01101000/applications/medusa/public"),
         ],
     },
 }
@@ -141,6 +144,15 @@ for item in applications.keys():
         )
 
         k8s_resource(item)
+
+local_resource(
+    "generate-graphql",
+    cmd = "yarn run graphql",
+    trigger_mode = TRIGGER_MODE_MANUAL,
+    auto_init = False,
+)
+
+local_resource("relay-compiler", serve_cmd = "yarn run relay")
 
 load("ext://helm_remote", "helm_remote")
 

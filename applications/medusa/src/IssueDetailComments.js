@@ -3,7 +3,8 @@ import { usePaginationFragment, graphql } from 'react-relay/hooks';
 import ReactMarkdown from 'react-markdown';
 import SuspenseImage from './SuspenseImage';
 
-const { useCallback, useTransition, Suspense, SuspenseList } = React;
+const { useCallback, unstable_useTransition, Suspense, SuspenseList } = React;
+const useTransition = unstable_useTransition;
 
 const SUSPENSE_CONFIG = { timeoutMs: 2000 };
 

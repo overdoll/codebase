@@ -3,7 +3,15 @@ import RoutingContext from './RoutingContext';
 import ErrorBoundary from '../ErrorBoundary';
 import './RouteRenderer.css';
 
-const { useContext, useEffect, useTransition, Suspense, useState } = React;
+const {
+  useContext,
+  useEffect,
+  unstable_useTransition,
+  Suspense,
+  useState,
+} = React;
+
+const useTransition = unstable_useTransition;
 
 const SUSPENSE_CONFIG = { timeoutMs: 2000 };
 

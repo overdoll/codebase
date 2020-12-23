@@ -3,7 +3,7 @@ import { loadQuery, graphql } from 'react-relay/hooks';
 import RelayEnvironment from './RelayEnvironment';
 
 const RootQuery = graphql`
-  query RootQuery($owner: String!, $name: String!) {
+  query routesQuery($owner: String!, $name: String!) {
     repository(owner: $owner, name: $name) {
       owner {
         __typename
