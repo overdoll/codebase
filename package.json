@@ -14,6 +14,7 @@
     "react-relay": "^0.0.0-experimental-0b967d2e",
     "react-router": "^5.1.2",
     "react-router-config": "^5.1.1",
+    "rebass": "^4.0.7",
     "relay-runtime": "^10.1.2"
   },
   "scripts": {
