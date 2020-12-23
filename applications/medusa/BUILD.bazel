@@ -34,7 +34,6 @@ _RUNTIME_DEPS = [
     "@npm//react-router",
     "@npm//react-router-config",
     "@npm//relay-runtime",
-    "@npm//react-markdown",
     "@npm//chokidar",
     "@npm//webpack",
     "@npm//express",

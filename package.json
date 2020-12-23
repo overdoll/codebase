@@ -19,7 +19,7 @@
   },
   "scripts": {
     "relay": "yarn run relay-compiler --watch --schema ./applications/medusa/schema/schema.graphql --src ./applications/medusa/src/ $@",
-    "graphql": "NODE_TLS_REJECT_UNAUTHORIZED=0 graphql codegen"
+    "graphql": "yarn graphql-codegen"
   },
   "eslintConfig": {
     "extends": "react-app"

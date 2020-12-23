@@ -6,22 +6,9 @@ import { Environment, Network, RecordSource, Store } from 'relay-runtime';
  * https://relay.dev/docs/en/quick-start-guide#relay-environment.
  */
 async function fetchRelay(params, variables, _cacheConfig) {
-  // Check that the auth token is configured
-  const REACT_APP_GITHUB_AUTH_TOKEN = process.env.REACT_APP_GITHUB_AUTH_TOKEN;
-  if (
-    REACT_APP_GITHUB_AUTH_TOKEN == null ||
-    REACT_APP_GITHUB_AUTH_TOKEN === ''
-  ) {
-    throw new Error(
-      'This app requires a GitHub authentication token to be configured. See readme.md for setup details.',
-    );
-  }
-
-  // Fetch data from GitHub's GraphQL API:
-  const response = await fetch('https://api.github.com/graphql', {
+  const response = await fetch('/api/graphql', {
     method: 'POST',
     headers: {
-      Authorization: `bearer ${REACT_APP_GITHUB_AUTH_TOKEN}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
