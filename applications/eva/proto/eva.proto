@@ -2,21 +2,45 @@ syntax = "proto3";
 
 package applications.grpc.eva.v1;
 
-message User {
-  string id = 1;
+message RegisteredEmails {
+  string email = 1;
   string username = 2;
-  string email = 3;
+}
+
+message AuthenticationCookie {
+  string cookie = 1;
+  bool redeemed = 2;
+  string expiration = 3;
+  string email = 4;
+}
+
+message GetRegisteredEmailRequest {
+  string email = 1;
+}
+
+message CreateAuthenticationCookieRequest {
+  string email = 1;
+}
+
+message CreateAuthenticationCookieResponse {
+  AuthenticationCookie cookie = 1;
+}
+
+message GetAuthenticationCookieRequest {
+  string email = 1;
+}
+
+message GetAuthenticationCookieResponse {
+  string cookie = 1;
+  bool valid = 2;
+}
+
+message GetRegisteredEmailResponse {
+  string username = 1;
 }
 
 service EvaAPI {
-  // Get User by id.
-  rpc GetUser(GetUserRequest) returns (GetUserResponse);
-}
-
-message GetUserRequest {
-  string id = 1;
-}
-
-message GetUserResponse {
-  User user = 1;
+  rpc GetRegisteredEmail(GetRegisteredEmailRequest) returns (GetRegisteredEmailResponse);
+  rpc GetAuthenticationCookie(GetAuthenticationCookieRequest) returns (GetAuthenticationCookieResponse);
+  rpc CreateAuthenticationCookie(CreateAuthenticationCookieRequest) returns (CreateAuthenticationCookieResponse);
 }

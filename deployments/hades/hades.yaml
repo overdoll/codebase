@@ -18,6 +18,3 @@ spec:
           image: hades-image
           ports:
             - containerPort: 8000
-          env:
-            - name: EVA_SERVICE
-              value: "eva:8000"

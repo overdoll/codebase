@@ -1,5 +1,3 @@
-# Bazel BUILD.bazel.bazel.bazel.bazel.bazel.bazel.bazel file
-
 load("@io_bazel_rules_docker//go:image.bzl", "go_image")
 load("@bazel_gazelle//:def.bzl", "gazelle")
 
@@ -11,5 +9,3 @@ package(default_visibility = ["//visibility:public"])
 gazelle(
     name = "gazelle",
 )
-
-exports_files(["package.json"])

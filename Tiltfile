@@ -8,8 +8,12 @@ applications = {
         "container_workdir": "/app/applications/hades/hades-image.binary.runfiles/project01101000/",
         "container_binary": "applications/hades/hades-image.binary_/hades-image.binary",
         "bazel_image": "bazel/applications/hades:hades-image",
-        "dependencies": [],
-        "live_update": [],
+        "dependencies": [
+            "applications/hades/.env",
+        ],
+        "live_update": [
+            sync("applications/hades/.env", "/app/applications/hades/hades-image.binary.runfiles/project01101000/applications/hades/.env"),
+        ],
     },
     "eva": {
         "type": "go",

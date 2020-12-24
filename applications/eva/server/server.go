@@ -3,10 +3,15 @@ package server
 import (
 	"context"
 	"fmt"
+	"github.com/gocql/gocql"
+	"github.com/scylladb/gocqlx/v2"
+	"github.com/scylladb/gocqlx/v2/qb"
 	"log"
 	"net"
 	"os"
 	evav1 "project01101000/codebase/applications/eva/proto"
+	"regexp"
+	"time"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -17,10 +22,22 @@ const (
 )
 
 type Server struct {
+	session gocqlx.Session
 }
 
-func NewServer(ctx context.Context) (*Server, error) {
-	return &Server{}, nil
+type AuthenticationCookie struct {
+	ID         gocql.UUID
+	Email      string
+	Redeemed   bool
+	Expiration time.Time
+}
+
+var emailRegex = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
+
+func NewServer(ctx context.Context, session gocqlx.Session) (*Server, error) {
+	return &Server{
+		session: session,
+	}, nil
 }
 
 func (s *Server) Run() {
@@ -46,12 +63,36 @@ func (s *Server) Run() {
 	}()
 }
 
-func (s *Server) GetUser(ctx context.Context, in *evav1.GetUserRequest) (*evav1.GetUserResponse, error) {
-	if in == nil || in.Id == "" {
-		return nil, fmt.Errorf("User id is not provided")
+func (s *Server) CreateAuthenticationCookie(ctx context.Context, session gocqlx.Session, request *evav1.GetAuthenticationCookieRequest) (*evav1.GetAuthenticationCookieResponse, error) {
+	if request == nil || request.Email == "" {
+		return nil, fmt.Errorf("email is not provided")
 	}
 
-	user := new(evav1.User)
+	if !emailRegex.MatchString(request.Email) {
+		return nil, fmt.Errorf("email is not valid")
+	}
 
-	return &evav1.GetUserResponse{User: user}, nil
+	// run a query to create the authentication token
+	insertCookie := qb.Insert("authentication_cookies").Columns("cookie", "email", "redeemed", "expiration").Query(session)
+
+	authCookie := AuthenticationCookie{
+		ID:       gocql.UUID{},
+		Email:    request.Email,
+		Redeemed: false,
+		// Expires after 5 minutes
+		Expiration: time.Now().Add(time.Minute * 5),
+	}
+
+	insertCookie.BindStruct(authCookie)
+
+	if err := insertCookie.ExecRelease(); err != nil {
+		return nil, fmt.Errorf("ExecRelease() failed: '%s", err)
+	}
+
+	cookie := new(evav1.AuthenticationCookie)
+	cookie.Email = authCookie.Email
+	cookie.Redeemed = authCookie.Redeemed
+	cookie.Expiration = authCookie.Expiration.String()
+
+	return &evav1.GetAuthenticationCookieResponse{Cookie: cookie}, nil
 }

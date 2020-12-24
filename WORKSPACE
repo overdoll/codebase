@@ -656,3 +656,10 @@ go_repository(
     sum = "h1:/cjDsMjkFYrAe/IXoG0V3oRN3JXyV2YMcpwJqjM/enw=",
     version = "v2.3.0",
 )
+
+go_repository(
+    name = "com_github_joho_godotenv",
+    importpath = "github.com/joho/godotenv",
+    sum = "h1:Zjp+RcGpHhGlrMbJzXTrZZPrWj+1vfm90La1wgB6Bhc=",
+    version = "v1.3.0",
+)

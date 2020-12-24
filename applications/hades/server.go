@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/joho/godotenv"
 	"os/signal"
 	"context"
 	"log"
@@ -19,6 +20,14 @@ import (
 )
 
 const defaultPort = "8080"
+
+func init() {
+	err := godotenv.Load("applications/hades/.env")
+
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+}
 
 func main() {
 	// Load environment variables
