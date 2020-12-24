@@ -27,12 +27,11 @@ message CreateAuthenticationCookieResponse {
 }
 
 message GetAuthenticationCookieRequest {
-  string email = 1;
+  string cookie = 1;
 }
 
 message GetAuthenticationCookieResponse {
-  string cookie = 1;
-  bool valid = 2;
+  AuthenticationCookie cookie = 1;
 }
 
 message GetRegisteredEmailResponse {
