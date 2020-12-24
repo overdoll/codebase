@@ -5,6 +5,7 @@ import (
 	"github.com/gocql/gocql"
 	"github.com/joho/godotenv"
 	"github.com/scylladb/gocqlx/v2"
+	"github.com/scylladb/gocqlx/v2/migrate"
 	"log"
 	"os"
 	"os/signal"
@@ -32,6 +33,17 @@ func main() {
 	session, err := gocqlx.WrapSession(cluster.CreateSession())
 	if err != nil {
 		log.Fatalf("Database session failed with error: %s", err)
+	}
+
+	// Run migrations
+	// First run prints data
+	if err := migrate.Migrate(context.Background(), session, "applications/eva/migrations"); err != nil {
+		log.Fatalf("Migrate: %s", err)
+	}
+
+	// Second run skips the processed files
+	if err := migrate.Migrate(context.Background(), session, "applications/eva/migrations"); err != nil {
+		log.Fatalf("Migrate: %s", err)
 	}
 
 	srv, err := server.NewServer(ctx, session)

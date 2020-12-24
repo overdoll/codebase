@@ -3,7 +3,7 @@ load("@io_bazel_rules_docker//go:image.bzl", "go_image")
 
 package(default_visibility = ["//visibility:public"])
 
-web_sources = [".env"]
+web_sources = glob(["migrations/**"]) + [".env"]
 
 go_library(
     name = "go_default_library",

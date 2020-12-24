@@ -6,7 +6,6 @@ import (
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
-	"github.com/scylladb/gocqlx/v2/table"
 	"log"
 	"net"
 	"os"
@@ -69,7 +68,7 @@ func (s *Server) Run() {
 	}()
 }
 
-func (s *Server) CreateAuthenticationCookie(ctx context.Context, session gocqlx.Session, request *evav1.CreateAuthenticationCookieRequest) (*evav1.CreateAuthenticationCookieResponse, error) {
+func (s *Server) CreateAuthenticationCookie(ctx context.Context, request *evav1.CreateAuthenticationCookieRequest) (*evav1.CreateAuthenticationCookieResponse, error) {
 	if request == nil || request.Email == "" {
 		return nil, fmt.Errorf("email is not provided")
 	}
@@ -79,7 +78,7 @@ func (s *Server) CreateAuthenticationCookie(ctx context.Context, session gocqlx.
 	}
 
 	// run a query to create the authentication token
-	insertCookie := qb.Insert("authentication_cookies").Columns("cookie", "email", "redeemed", "expiration").Query(session)
+	insertCookie := qb.Insert("authentication_cookies").Columns("cookie", "email", "redeemed", "expiration").Query(s.session)
 
 	authCookie := AuthenticationCookie{
 		ID:       gocql.UUID{},
@@ -103,7 +102,7 @@ func (s *Server) CreateAuthenticationCookie(ctx context.Context, session gocqlx.
 	return &evav1.CreateAuthenticationCookieResponse{Cookie: cookie}, nil
 }
 
-func (s *Server) GetAuthenticationCookie(ctx context.Context, session gocqlx.Session, request *evav1.GetAuthenticationCookieRequest) (*evav1.GetAuthenticationCookieResponse, error) {
+func (s *Server) GetAuthenticationCookie(ctx context.Context, request *evav1.GetAuthenticationCookieRequest) (*evav1.GetAuthenticationCookieResponse, error) {
 	if request == nil || request.Cookie == "" {
 		return nil, fmt.Errorf("cookie is not provided")
 	}
@@ -114,7 +113,7 @@ func (s *Server) GetAuthenticationCookie(ctx context.Context, session gocqlx.Ses
 		return nil, fmt.Errorf("uuid is not valid")
 	}
 
-	queryCookie := qb.Select("authentication_cookies").Columns("cookie", "email", "redeemed", "expiration").Query(session)
+	queryCookie := qb.Select("authentication_cookies").Columns("cookie", "email", "redeemed", "expiration").Query(s.session)
 
 	// get authentication cookie with this ID
 	authCookie := AuthenticationCookie{
@@ -137,7 +136,7 @@ func (s *Server) GetAuthenticationCookie(ctx context.Context, session gocqlx.Ses
 	return &evav1.GetAuthenticationCookieResponse{Cookie: cookie}, nil
 }
 
-func (s *Server) GetRegisteredEmail(ctx context.Context, session gocqlx.Session, request *evav1.GetRegisteredEmailRequest) (*evav1.GetRegisteredEmailResponse, error) {
+func (s *Server) GetRegisteredEmail(ctx context.Context, request *evav1.GetRegisteredEmailRequest) (*evav1.GetRegisteredEmailResponse, error) {
 	if request == nil || request.Email == "" {
 		return nil, fmt.Errorf("email is not provided")
 	}
@@ -156,7 +155,7 @@ func (s *Server) GetRegisteredEmail(ctx context.Context, session gocqlx.Session,
 		Select("users_emails").
 		Columns("email", "username").
 		Where(qb.Eq("email")).
-		Query(session).
+		Query(s.session).
 		BindStruct(resource)
 
 	var registeredItem *RegisteredUser
