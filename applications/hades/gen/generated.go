@@ -162,14 +162,14 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
-	{Name: "schemas/query.graphql", Input: `type Query {
-    authenticationCookie(cookie: String): [AuthenticationCookie!]
-}`, BuiltIn: false},
-	{Name: "schemas/user.graphql", Input: `type AuthenticationCookie {
+	{Name: "schemas/authentication.graphql", Input: `type AuthenticationCookie {
     cookie: String!
     email: String!
     redeemed: Boolean!
     expiration: String!
+}`, BuiltIn: false},
+	{Name: "schemas/query.graphql", Input: `type Query {
+    authenticationCookie(cookie: String): [AuthenticationCookie!]
 }`, BuiltIn: false},
 }
 var parsedSchema = gqlparser.MustLoadSchema(sources...)

@@ -19,6 +19,7 @@ go_library(
         "//applications/hades/services:go_default_library",
         "@com_github_99designs_gqlgen//graphql/handler:go_default_library",
         "@com_github_99designs_gqlgen//graphql/handler/extension:go_default_library",
+        "@com_github_99designs_gqlgen//graphql/handler/lru:go_default_library",
         "@com_github_99designs_gqlgen//graphql/handler/transport:go_default_library",
         "@com_github_gin_gonic_gin//:go_default_library",
         "@com_github_gorilla_websocket//:go_default_library",

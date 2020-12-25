@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/99designs/gqlgen/graphql/handler/extension"
 	"github.com/99designs/gqlgen/graphql/handler/transport"
+	"github.com/99designs/gqlgen/graphql/handler/lru"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"github.com/joho/godotenv"
@@ -56,6 +57,12 @@ func main() {
 
 	router := gin.Default()
 
+	if os.Getenv("APP_DEBUG") == "true" {
+		gin.SetMode(gin.DebugMode)
+	} else {
+		gin.SetMode(gin.ReleaseMode)
+	}
+
 	// See https://github.com/rs/cors for full option listing
 	router.Use(cors.New(cors.Options{
 		AllowedOrigins:   []string{"http://127.0.0.1:8080"},
@@ -63,12 +70,12 @@ func main() {
 		Debug:            false,
 	}))
 
-	cache, err := QueriesCache()
+	cache, err := NewCache()
 
 	// Create graphApi handlers
 	router.POST("/graphql", func(c *gin.Context) {
 
-		graphAPIHandler := handler.NewDefaultServer(gen.NewExecutableSchema(gen.Config{
+		graphAPIHandler := handler.New(gen.NewExecutableSchema(gen.Config{
 			Resolvers: resolvers.NewResolver(svcs),
 		}))
 
@@ -81,6 +88,14 @@ func main() {
 				WriteBufferSize: 1024,
 			},
 		})
+
+		if os.Getenv("APP_DEBUG") == "true" {
+			graphAPIHandler.Use(extension.Introspection{})
+		}
+
+		graphAPIHandler.AddTransport(transport.POST{})
+		graphAPIHandler.AddTransport(transport.MultipartForm{})
+		graphAPIHandler.SetQueryCache(lru.New(1000))
 
 		graphAPIHandler.Use(extension.AutomaticPersistedQuery{Cache: cache})
 		//test 2
@@ -120,7 +135,7 @@ type Cache struct {
 	queries map[string]interface{}
 }
 
-func QueriesCache() (*Cache, error) {
+func NewCache() (*Cache, error) {
 	// Open our jsonFile
 	jsonFile, err := os.Open("applications/hades/queries.json")
 
