@@ -69,12 +69,6 @@ docker_prune_settings(
 # For more on Extensions, see: https://docs.tilt.dev/extensions.html
 load("ext://restart_process", "custom_build_with_restart")
 load("./bazel.Tiltfile", "bazel_buildfile_deps", "bazel_sourcefile_deps")
-#load("ext://cert_manager", "deploy_cert_manager")
-
-# Deploy cert-manager
-#deploy_cert_manager()
-
-k8s_yaml("deployments/scylla-operator.yaml")
 
 # Watch YAML kubernetes files
 for f in bazel_sourcefile_deps("//deployments:objects"):
@@ -86,11 +80,9 @@ for f in bazel_buildfile_deps("//deployments:objects"):
 # Deploy YAML files
 k8s_yaml(local("bazel run //deployments:objects"))
 
-k8s_resource("scylla-operator-controller-manager", pod_readiness = "wait")
-
-# Have
+# Setup cluster
 k8s_kind("Cluster", api_version = "scylla.scylladb.com/v1alpha1")
-k8s_resource("simple-cluster", extra_pod_selectors = {"scylla/cluster": "simple-cluster"}, resource_deps = ["scylla-operator-controller-manager"])
+k8s_resource("simple-cluster", extra_pod_selectors = {"scylla/cluster": "simple-cluster"})
 
 # Tilt works better if we watch the bazel output tree
 # directly instead of the ./bazel-bin symlinks.
