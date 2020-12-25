@@ -65,7 +65,7 @@ func main() {
 
 	// See https://github.com/rs/cors for full option listing
 	router.Use(cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://127.0.0.1:8080"},
+		AllowedOrigins:   []string{"http://localhost"},
 		AllowCredentials: true,
 		Debug:            false,
 	}))
@@ -82,7 +82,7 @@ func main() {
 		graphAPIHandler.AddTransport(&transport.Websocket{
 			Upgrader: websocket.Upgrader{
 				CheckOrigin: func(r *http.Request) bool {
-					return r.Host == "127.0.0.1"
+					return r.Host == "localhost"
 				},
 				ReadBufferSize:  1024,
 				WriteBufferSize: 1024,
