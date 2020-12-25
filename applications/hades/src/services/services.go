@@ -1,4 +1,4 @@
-package service
+package services
 
 import (
 	"io"
@@ -26,7 +26,7 @@ type Services interface {
 func NewServicesKeeper(conf ServicesConfig) (Services, error) {
 	log.Printf("Connection to Eva Service: %s...", conf.EvaSvc)
 	evaConnection, err := grpc.Dial(conf.EvaSvc, grpc.WithInsecure())
-	
+
 	if err != nil {
 		return nil, err
 	}

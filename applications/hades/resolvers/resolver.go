@@ -5,7 +5,7 @@ package resolvers
 // It serves as dependency injection for your app, add any dependencies you require here.
 
 import (
-	"project01101000/codebase/applications/hades/src/service"
+	"project01101000/codebase/applications/hades/src/services"
 )
 
 type Resolver struct {

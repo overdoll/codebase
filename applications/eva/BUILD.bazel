@@ -7,12 +7,15 @@ web_sources = glob(["migrations/**"]) + [".env"]
 
 go_library(
     name = "go_default_library",
-    srcs = ["main.go"],
+    srcs = [
+        "main.go",
+        "start.go",
+    ],
     data = web_sources,
     importpath = "project01101000/codebase/applications/eva",
     visibility = ["//visibility:private"],
     deps = [
-        "//applications/eva/server:go_default_library",
+        "//applications/eva/src/server:go_default_library",
         "@com_github_gocql_gocql//:go_default_library",
         "@com_github_joho_godotenv//:go_default_library",
         "@com_github_scylladb_gocqlx_v2//:go_default_library",

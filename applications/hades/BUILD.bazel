@@ -10,13 +10,16 @@ web_sources = [
 
 go_library(
     name = "go_default_library",
-    srcs = ["server.go"],
+    srcs = [
+        "main.go",
+        "start.go",
+    ],
     data = web_sources,
     importpath = "project01101000/codebase/applications/hades",
     deps = [
         "//applications/hades/gen:go_default_library",
         "//applications/hades/resolvers:go_default_library",
-        "//applications/hades/src/service:go_default_library",
+        "//applications/hades/src/services:go_default_library",
         "@com_github_99designs_gqlgen//graphql/handler:go_default_library",
         "@com_github_99designs_gqlgen//graphql/handler/extension:go_default_library",
         "@com_github_99designs_gqlgen//graphql/handler/lru:go_default_library",

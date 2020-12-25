@@ -9,13 +9,13 @@ import (
 	"log"
 	"os"
 	"os/signal"
-	"project01101000/codebase/applications/eva/server"
+	"project01101000/codebase/applications/eva/src/server"
 	"syscall"
 	"time"
 )
 
 func init() {
-	err := godotenv.Load("applications/eva/.env")
+	err := godotenv.Load(DIRECTORY + ".env")
 
 	if err != nil {
 		log.Fatal("Error loading .env file")
@@ -37,9 +37,16 @@ func main() {
 		log.Fatalf("Database session failed with errors: %s", err)
 	}
 
-	// Run migrations & stuff
-	if err := migrate.Migrate(context.Background(), session, "applications/eva/migrations"); err != nil {
-		log.Fatalf("Migrate: %s", err)
+	if os.Getenv("RUN_MIGRATIONS_ON_STARTUP") == "true" {
+		// Run migrations
+		if err := migrate.Migrate(context.Background(), session, DIRECTORY+"migrations"); err != nil {
+			log.Fatalf("Migrate: %s", err)
+		}
+	}
+
+	// if server disabled, then dont run it (useful for running migrations, and then stopping the server)
+	if os.Getenv("DISABLE_SERVER") == "true" {
+		return
 	}
 
 	srv, err := server.NewServer(ctx, session)

@@ -2,34 +2,29 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"github.com/99designs/gqlgen/graphql/handler/extension"
-	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"github.com/99designs/gqlgen/graphql/handler/lru"
+	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"github.com/joho/godotenv"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
+	"project01101000/codebase/applications/hades/src/services"
 	"syscall"
 	"time"
 
-	"project01101000/codebase/applications/hades/gen"
-	"project01101000/codebase/applications/hades/resolvers"
-	"project01101000/codebase/applications/hades/src/service"
-
 	"github.com/99designs/gqlgen/graphql/handler"
 	cors "github.com/rs/cors/wrapper/gin"
+	"project01101000/codebase/applications/hades/gen"
+	"project01101000/codebase/applications/hades/resolvers"
 )
 
-const defaultPort = "8080"
-
 func init() {
-	err := godotenv.Load("applications/hades/.env")
+	err := godotenv.Load(DIRECTORY + ".env")
 
 	if err != nil {
 		log.Fatal("Error loading .env file")
@@ -131,35 +126,4 @@ func main() {
 	}
 	<-ctx.Done()
 	os.Exit(0)
-}
-
-type Cache struct {
-	queries map[string]interface{}
-}
-
-func NewCache() (*Cache, error) {
-	// Open our jsonFile
-	jsonFile, err := os.Open("applications/hades/queries.json")
-
-	if err != nil {
-		fmt.Println(err)
-	}
-	// defer the closing of our jsonFile so that we can parse it later on
-	defer jsonFile.Close()
-
-	byteValue, _ := ioutil.ReadAll(jsonFile)
-
-	var result map[string]interface{}
-	json.Unmarshal([]byte(byteValue), &result)
-
-	return &Cache{queries: result}, nil
-}
-
-func (c *Cache) Get(ctx context.Context, key string) (interface{}, bool) {
-	s := c.queries[key]
-	return s, true
-}
-
-func (c *Cache) Add(ctx context.Context, key string, value interface{}) {
-	log.Printf("query not found. please generate the queries.json file")
 }
