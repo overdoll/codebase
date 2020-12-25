@@ -1,6 +1,3 @@
-type AuthenticationCookie {
-    cookie: String!
-    email: String!
-    redeemed: Boolean!
-    expiration: String!
+type Authentication {
+    success: Boolean!
 }

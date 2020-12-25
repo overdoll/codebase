@@ -20,7 +20,7 @@ import (
 
 	"project01101000/codebase/applications/hades/gen"
 	"project01101000/codebase/applications/hades/resolvers"
-	"project01101000/codebase/applications/hades/services"
+	"project01101000/codebase/applications/hades/src/service"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	cors "github.com/rs/cors/wrapper/gin"
@@ -42,6 +42,7 @@ func main() {
 	if port == "" {
 		port = defaultPort
 	}
+
 	evaSvc := os.Getenv("EVA_SERVICE")
 	if evaSvc == "" {
 		log.Fatalf("Failed to load environment variable: %s", "EVA_SERVICE")
@@ -51,6 +52,7 @@ func main() {
 	svcs, err := services.NewServicesKeeper(services.ServicesConfig{
 		EvaSvc: evaSvc,
 	})
+
 	if err != nil {
 		log.Fatalf("Failed to create grpc api holder: %s", err)
 	}

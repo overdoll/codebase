@@ -16,7 +16,7 @@ go_library(
     deps = [
         "//applications/hades/gen:go_default_library",
         "//applications/hades/resolvers:go_default_library",
-        "//applications/hades/services:go_default_library",
+        "//applications/hades/src/service:go_default_library",
         "@com_github_99designs_gqlgen//graphql/handler:go_default_library",
         "@com_github_99designs_gqlgen//graphql/handler/extension:go_default_library",
         "@com_github_99designs_gqlgen//graphql/handler/lru:go_default_library",

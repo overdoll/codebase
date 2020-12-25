@@ -4,6 +4,7 @@ go 1.14
 
 require (
 	github.com/99designs/gqlgen v0.13.0
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
 	github.com/gin-gonic/gin v1.6.3 // indirect
 	github.com/gocql/gocql v0.0.0-20201215165327-e49edf966d90 // indirect
 	github.com/golang/protobuf v1.4.2

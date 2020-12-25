@@ -86,6 +86,12 @@ for f in bazel_buildfile_deps("//deployments:objects"):
 # Deploy YAML files
 k8s_yaml(local("bazel run //deployments:objects"))
 
+k8s_resource("scylla-operator-controller-manager", pod_readiness = "wait")
+
+# Have
+k8s_kind("Cluster", api_version = "scylla.scylladb.com/v1alpha1")
+k8s_resource("simple-cluster", extra_pod_selectors = {"scylla/cluster": "simple-cluster"}, resource_deps = ["scylla-operator-controller-manager"])
+
 # Tilt works better if we watch the bazel output tree
 # directly instead of the ./bazel-bin symlinks.
 bazel_bin = str(local("bazel info bazel-bin")).strip()
@@ -130,7 +136,7 @@ for item in applications.keys():
             ],
         )
 
-        k8s_resource(item, resource_deps = [item + "-compile"])
+        k8s_resource(item, resource_deps = [item + "-compile", "simple-cluster"])
 
     elif (application["type"] == "node"):
         image_target = application["image_target"]
@@ -151,7 +157,7 @@ for item in applications.keys():
             live_update = application["live_update"],
         )
 
-        k8s_resource(item)
+        k8s_resource(item, resource_deps = ["simple-cluster"])
 
 local_resource(
     "generate-graphql",
@@ -171,8 +177,10 @@ helm_remote(
     version = "9.11.0",
 )
 
-k8s_resource("scylla-operator-controller-manager", pod_readiness = "wait", objects = ["scylla-operator-cluster-webhook:MutatingWebhookConfiguration:default"])
-
-# Have
-k8s_kind("Cluster", api_version = "scylla.scylladb.com/v1alpha1")
-k8s_resource("simple-cluster", extra_pod_selectors = {"scylla/cluster": "simple-cluster"}, resource_deps = ["scylla-operator-controller-manager"])
+helm_remote(
+    "redis",
+    release_name = "redis",
+    repo_name = "bitnami",
+    version = "12.2.4",
+    set = ["cluster.enabled=false", "cluster.slaveCount=0"],
+)
