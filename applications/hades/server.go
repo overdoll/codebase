@@ -66,7 +66,7 @@ func main() {
 	cache, err := QueriesCache()
 
 	// Create graphApi handlers
-	router.POST("/api/graphql", func(c *gin.Context) {
+	router.POST("/graphql", func(c *gin.Context) {
 
 		graphAPIHandler := handler.NewDefaultServer(gen.NewExecutableSchema(gen.Config{
 			Resolvers: resolvers.NewResolver(svcs),

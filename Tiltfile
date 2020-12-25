@@ -69,10 +69,10 @@ docker_prune_settings(
 # For more on Extensions, see: https://docs.tilt.dev/extensions.html
 load("ext://restart_process", "custom_build_with_restart")
 load("./bazel.Tiltfile", "bazel_buildfile_deps", "bazel_sourcefile_deps")
-load("ext://cert_manager", "deploy_cert_manager")
+#load("ext://cert_manager", "deploy_cert_manager")
 
 # Deploy cert-manager
-deploy_cert_manager()
+#deploy_cert_manager()
 
 k8s_yaml("deployments/scylla-operator.yaml")
 
