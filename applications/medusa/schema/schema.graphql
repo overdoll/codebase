@@ -1,15 +1,10 @@
-type Query {
-  users(id: String, username: String, email: String): [User!]
-}
-
-type User {
-  id: String!
-  username: String!
+type AuthenticationCookie {
+  cookie: String!
   email: String!
+  redeemed: Boolean!
+  expiration: String!
 }
 
-input UserInput {
-  id: String
-  username: String
-  email: String
+type Query {
+  authenticationCookie(cookie: String): [AuthenticationCookie!]
 }

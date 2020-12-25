@@ -8,11 +8,12 @@ import (
 	//"project01101000/codebase/applications/hades/services"
 )
 
-func service2GraphUser(user *evav1.User) *model.User {
-	return &model.User{
-		ID:       user.Id,
-		Username: user.Username,
-		Email:    user.Email,
+func service2GraphUser(authCookie *evav1.AuthenticationCookie) *model.AuthenticationCookie {
+	return &model.AuthenticationCookie{
+		Cookie:     authCookie.Cookie,
+		Redeemed:   authCookie.Redeemed,
+		Expiration: authCookie.Expiration,
+		Email:      authCookie.Email,
 	}
 }
 

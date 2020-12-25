@@ -1,11 +1,6 @@
-type User {
-    id: String!
-    username: String!
+type AuthenticationCookie {
+    cookie: String!
     email: String!
-}
-
-input UserInput {
-    id: String
-    username: String
-    email: String
+    redeemed: Boolean!
+    expiration: String!
 }

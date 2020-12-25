@@ -1,5 +1,5 @@
 import React from 'react';
-import { RelayEnvironmentProvider } from 'react-relay/hooks';
+import { RelayEnvironmentProvider, graphql } from 'react-relay/hooks';
 import './index.css';
 import RelayEnvironment from './RelayEnvironment';
 import routes from './routes';
@@ -9,6 +9,17 @@ import RouterRenderer from './routing/RouteRenderer';
 
 // Uses the custom router setup to define a router instance that we can pass through context
 const router = createRouter(routes);
+
+const query = graphql`
+  query AppQuery($cookie: String!) {
+    authenticationCookie(cookie: $cookie) {
+      cookie
+      email
+      redeemed
+      expiration
+    }
+  }
+`;
 
 const App = () => {
   return (

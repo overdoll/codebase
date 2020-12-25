@@ -5,27 +5,16 @@ package resolvers
 
 import (
 	"context"
-	evav1 "project01101000/codebase/applications/eva/proto"
+	"fmt"
 	"project01101000/codebase/applications/hades/gen"
 	"project01101000/codebase/applications/hades/model"
 )
 
-func (r *queryResolver) Users(ctx context.Context, id *string, username *string, email *string) ([]*model.User, error) {
-
-	users := []*model.User{}
-
-	if id != nil {
-		getUserResponse, err := r.services.Eva().GetUser(ctx, &evav1.GetUserRequest{Id: *id})
-		if err != nil {
-			return nil, err
-		}
-		users = append(users, service2GraphUser(getUserResponse.User))
-	}
-
-	return users, nil
+func (r *queryResolver) AuthenticationCookie(ctx context.Context, cookie *string) ([]*model.AuthenticationCookie, error) {
+	panic(fmt.Errorf("not implemented"))
 }
 
-// Query returns gen1.QueryResolver implementation.
+// Query returns gen.QueryResolver implementation.
 func (r *Resolver) Query() gen.QueryResolver { return &queryResolver{r} }
 
 type queryResolver struct{ *Resolver }

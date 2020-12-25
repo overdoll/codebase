@@ -26,22 +26,18 @@ func main() {
 	ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancelFn()
 
-	// Create gocql cluster.
+	// Create gocql cluster
 	cluster := gocql.NewCluster(os.Getenv("SCYLLA_DATABASE"))
 	cluster.Keyspace = "eva"
-	// Wrap session on creation, gocqlx session embeds gocql.Session pointer.
+
+	// Wrap session on creation with gocqlx
 	session, err := gocqlx.WrapSession(cluster.CreateSession())
+
 	if err != nil {
 		log.Fatalf("Database session failed with error: %s", err)
 	}
 
 	// Run migrations
-	// First run prints data
-	if err := migrate.Migrate(context.Background(), session, "applications/eva/migrations"); err != nil {
-		log.Fatalf("Migrate: %s", err)
-	}
-
-	// Second run skips the processed files
 	if err := migrate.Migrate(context.Background(), session, "applications/eva/migrations"); err != nil {
 		log.Fatalf("Migrate: %s", err)
 	}

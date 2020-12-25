@@ -1,22 +1,28 @@
 package main
 
 import (
-	"github.com/joho/godotenv"
-	"os/signal"
 	"context"
+	"encoding/json"
+	"fmt"
+	"github.com/99designs/gqlgen/graphql/handler/extension"
+	"github.com/99designs/gqlgen/graphql/handler/transport"
+	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
+	"github.com/joho/godotenv"
+	"io/ioutil"
 	"log"
 	"net/http"
-	"fmt"
 	"os"
+	"os/signal"
 	"syscall"
 	"time"
 
-	"project01101000/codebase/applications/hades/services"
 	"project01101000/codebase/applications/hades/gen"
 	"project01101000/codebase/applications/hades/resolvers"
+	"project01101000/codebase/applications/hades/services"
 
 	"github.com/99designs/gqlgen/graphql/handler"
-	"github.com/gorilla/mux"
+	cors "github.com/rs/cors/wrapper/gin"
 )
 
 const defaultPort = "8080"
@@ -48,13 +54,38 @@ func main() {
 		log.Fatalf("Failed to create grpc api holder: %s", err)
 	}
 
-	// Create graphApi handlers
-	router := mux.NewRouter()
-	graphAPIHandler := handler.NewDefaultServer(gen.NewExecutableSchema(gen.Config{
-		Resolvers: resolvers.NewResolver(svcs),
+	router := gin.Default()
+
+	// See https://github.com/rs/cors for full option listing
+	router.Use(cors.New(cors.Options{
+		AllowedOrigins:   []string{"http://127.0.0.1:8080"},
+		AllowCredentials: true,
+		Debug:            false,
 	}))
 
-	router.Handle("/api/graphql", graphAPIHandler)
+	cache, err := QueriesCache()
+
+	// Create graphApi handlers
+	router.POST("/api/graphql", func(c *gin.Context) {
+
+		graphAPIHandler := handler.NewDefaultServer(gen.NewExecutableSchema(gen.Config{
+			Resolvers: resolvers.NewResolver(svcs),
+		}))
+
+		graphAPIHandler.AddTransport(&transport.Websocket{
+			Upgrader: websocket.Upgrader{
+				CheckOrigin: func(r *http.Request) bool {
+					return r.Host == "127.0.0.1"
+				},
+				ReadBufferSize:  1024,
+				WriteBufferSize: 1024,
+			},
+		})
+
+		graphAPIHandler.Use(extension.AutomaticPersistedQuery{Cache: cache})
+
+		graphAPIHandler.ServeHTTP(c.Writer, c.Request)
+	})
 
 	srv := &http.Server{
 		Addr:         fmt.Sprintf(":%s", port),
@@ -83,4 +114,35 @@ func main() {
 	}
 	<-ctx.Done()
 	os.Exit(0)
+}
+
+type Cache struct {
+	queries map[string]interface{}
+}
+
+func QueriesCache() (*Cache, error) {
+	// Open our jsonFile
+	jsonFile, err := os.Open("applications/hades/queries.json")
+
+	if err != nil {
+		fmt.Println(err)
+	}
+	// defer the closing of our jsonFile so that we can parse it later on
+	defer jsonFile.Close()
+
+	byteValue, _ := ioutil.ReadAll(jsonFile)
+
+	var result map[string]interface{}
+	json.Unmarshal([]byte(byteValue), &result)
+
+	return &Cache{queries: result}, nil
+}
+
+func (c *Cache) Get(ctx context.Context, key string) (interface{}, bool) {
+	s := c.queries[key]
+	return s, true
+}
+
+func (c *Cache) Add(ctx context.Context, key string, value interface{}) {
+	log.Printf("query not found. please generate the queries.json file")
 }

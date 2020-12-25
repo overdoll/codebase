@@ -12,7 +12,7 @@ async function fetchRelay(params, variables, _cacheConfig) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      query: params.text,
+      documentId: operation.id, // NOTE: pass md5 hash to the server
       variables,
     }),
   });

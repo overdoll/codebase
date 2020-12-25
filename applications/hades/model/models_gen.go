@@ -2,14 +2,9 @@
 
 package model
 
-type User struct {
-	ID       string `json:"id"`
-	Username string `json:"username"`
-	Email    string `json:"email"`
-}
-
-type UserInput struct {
-	ID       *string `json:"id"`
-	Username *string `json:"username"`
-	Email    *string `json:"email"`
+type AuthenticationCookie struct {
+	Cookie     string `json:"cookie"`
+	Email      string `json:"email"`
+	Redeemed   bool   `json:"redeemed"`
+	Expiration string `json:"expiration"`
 }

@@ -10,9 +10,11 @@ applications = {
         "bazel_image": "bazel/applications/hades:hades-image",
         "dependencies": [
             "applications/hades/.env",
+            "applications/hades/queries.json",
         ],
         "live_update": [
             sync("applications/hades/.env", "/app/applications/hades/hades-image.binary.runfiles/project01101000/applications/hades/.env"),
+            sync("applications/hades/queries.json", "/app/applications/hades/hades-image.binary.runfiles/project01101000/applications/hades/queries.json"),
         ],
     },
     "eva": {
@@ -24,8 +26,14 @@ applications = {
         "container_workdir": "/app/applications/eva/eva-image.binary.runfiles/project01101000/",
         "container_binary": "applications/eva/eva-image.binary_/eva-image.binary",
         "bazel_image": "bazel/applications/eva:eva-image",
-        "dependencies": [],
-        "live_update": [],
+        "dependencies": [
+            "applications/eva/.env",
+            "applications/eva/migrations",
+        ],
+        "live_update": [
+            sync("applications/eva/migrations", "/app/applications/hades/hades-image.binary.runfiles/project01101000/applications/eva/migrations"),
+            sync("applications/eva/.env", "/app/applications/hades/hades-image.binary.runfiles/project01101000/applications/eva/.env"),
+        ],
     },
     "medusa": {
         "type": "node",
