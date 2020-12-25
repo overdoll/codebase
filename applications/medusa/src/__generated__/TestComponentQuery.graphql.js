@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash c2faed7e5c7b7b69ed90cda551f49998
+ * @relayHash d71b63326a582f6e7277a65655badb6f
  */
 
 /* eslint-disable */
@@ -9,10 +9,10 @@
 
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
-export type AppQueryVariables = {|
+export type TestComponentQueryVariables = {|
   cookie: string
 |};
-export type AppQueryResponse = {|
+export type TestComponentQueryResponse = {|
   +authenticationCookie: ?$ReadOnlyArray<{|
     +cookie: string,
     +email: string,
@@ -20,15 +20,15 @@ export type AppQueryResponse = {|
     +expiration: string,
   |}>
 |};
-export type AppQuery = {|
-  variables: AppQueryVariables,
-  response: AppQueryResponse,
+export type TestComponentQuery = {|
+  variables: TestComponentQueryVariables,
+  response: TestComponentQueryResponse,
 |};
 */
 
 
 /*
-query AppQuery(
+query TestComponentQuery(
   $cookie: String!
 ) {
   authenticationCookie(cookie: $cookie) {
@@ -100,7 +100,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "AppQuery",
+    "name": "TestComponentQuery",
     "selections": (v1/*: any*/),
     "type": "Query",
     "abstractKey": null
@@ -109,19 +109,19 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "AppQuery",
+    "name": "TestComponentQuery",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "a5af2a6bf6cd8b6b29473dddc2ad747d6c2f2d913c8129bd95103cc63f1936c3",
+    "id": "174788e2fbfd9651ea45adf07b50f700cd8e93ab0bfd54799e09a2b0370836ad",
     "metadata": {},
-    "name": "AppQuery",
+    "name": "TestComponentQuery",
     "operationKind": "query",
     "text": null
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '4aa0cbe6f429672eee4b168a496c61fb';
+(node/*: any*/).hash = 'b9d78e451fba8ee21c73ce72f404e84a';
 
 module.exports = node;

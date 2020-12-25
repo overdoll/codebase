@@ -83,7 +83,7 @@ func main() {
 		})
 
 		graphAPIHandler.Use(extension.AutomaticPersistedQuery{Cache: cache})
-
+		//test 2
 		graphAPIHandler.ServeHTTP(c.Writer, c.Request)
 	})
 

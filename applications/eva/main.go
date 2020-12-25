@@ -9,9 +9,9 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"project01101000/codebase/applications/eva/server"
 	"syscall"
 	"time"
-	"project01101000/codebase/applications/eva/server"
 )
 
 func init() {
@@ -34,10 +34,10 @@ func main() {
 	session, err := gocqlx.WrapSession(cluster.CreateSession())
 
 	if err != nil {
-		log.Fatalf("Database session failed with error: %s", err)
+		log.Fatalf("Database session failed with errors: %s", err)
 	}
 
-	// Run migrations
+	// Run migrations & stuff
 	if err := migrate.Migrate(context.Background(), session, "applications/eva/migrations"); err != nil {
 		log.Fatalf("Migrate: %s", err)
 	}
@@ -52,5 +52,5 @@ func main() {
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
 	signal := <-sigChan
-	log.Printf("shutting down eva service with signal: %s", signal)
+	log.Printf("shutting down eva server with signal: %s", signal)
 }

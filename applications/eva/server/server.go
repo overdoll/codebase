@@ -63,9 +63,10 @@ func (s *Server) Run() {
 	reflection.Register(grpcServer)
 
 	log.Printf("Starting Eva server on port %s", port)
-	go func() {
-		grpcServer.Serve(listener)
-	}()
+
+	if err := grpcServer.Serve(listener); err != nil {
+		log.Fatalf("failed to serve: %v", err)
+	}
 }
 
 func (s *Server) CreateAuthenticationCookie(ctx context.Context, request *evav1.CreateAuthenticationCookieRequest) (*evav1.CreateAuthenticationCookieResponse, error) {

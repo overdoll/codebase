@@ -1,7 +1,7 @@
 CREATE TABLE users
 (
     username text,
-    primary key ( username ),
+    primary key ( username )
 );
 
 CREATE TABLE users_emails
