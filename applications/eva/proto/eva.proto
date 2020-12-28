@@ -38,7 +38,18 @@ message GetRegisteredEmailResponse {
   string username = 1;
 }
 
+message RegisterUserRequest {
+  string email = 1;
+  string username = 2;
+}
+
+message RegisterUserResponse {
+  string email = 1;
+  string username = 2;
+}
+
 service EvaAPI {
+  rpc RegisterUser(RegisterUserRequest) returns (RegisterUserResponse);
   rpc GetRegisteredEmail(GetRegisteredEmailRequest) returns (GetRegisteredEmailResponse);
   rpc GetAuthenticationCookie(GetAuthenticationCookieRequest) returns (GetAuthenticationCookieResponse);
   rpc RedeemAuthenticationCookie(GetAuthenticationCookieRequest) returns (GetAuthenticationCookieResponse);

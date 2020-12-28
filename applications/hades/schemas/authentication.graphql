@@ -11,7 +11,7 @@ type JoinState {
 }
 
 type Registration {
-    Success: Boolean!
+    username: String!
 }
 
 type AuthenticationState {

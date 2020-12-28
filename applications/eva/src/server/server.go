@@ -37,6 +37,15 @@ type RegisteredUser struct {
 	Email    string
 }
 
+type UserEmail struct {
+	Username string
+	Email    string
+}
+
+type User struct {
+	Username string
+}
+
 var emailRegex = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
 
 func NewServer(ctx context.Context, session gocqlx.Session) (*Server, error) {
@@ -67,6 +76,51 @@ func (s *Server) Run() {
 	if err := grpcServer.Serve(listener); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
+}
+
+func (s *Server) RegisterUser(ctx context.Context, request *evav1.RegisterUserRequest) (*evav1.RegisterUserResponse, error) {
+	if request == nil || request.Email == "" {
+		return nil, fmt.Errorf("email is not provided")
+	}
+
+	if !emailRegex.MatchString(request.Email) {
+		return nil, fmt.Errorf("email is not valid")
+	}
+
+	if request.Username == "" {
+		return nil, fmt.Errorf("username is not provided")
+	}
+
+	userEmail := UserEmail{
+		Email:    request.Email,
+		Username: request.Username,
+	}
+
+	// First, we do a unique insert into users_emails
+	// This ensures that we capture this email so nobody can use it
+	insertUserEmail := qb.Insert("users_emails").
+		Columns("email", "username").
+		Unique().
+		Query(s.session).
+		SerialConsistency(gocql.Serial).
+		BindStruct(userEmail)
+
+	if err := insertUserEmail.ExecRelease(); err != nil {
+		return nil, fmt.Errorf("ExecRelease() failed: '%s", err)
+	}
+
+	user := User{
+		Username: request.Username,
+	}
+
+	// Now, we actually register the user to our main users table, and set any attributes
+	insertUser := qb.Insert("users").Columns("user").Unique().Query(s.session).BindStruct(user)
+
+	if err := insertUser.ExecRelease(); err != nil {
+		return nil, fmt.Errorf("ExecRelease() failed: '%s", err)
+	}
+
+	return &evav1.RegisterUserResponse{Username: request.Username, Email: request.Email}, nil
 }
 
 func (s *Server) CreateAuthenticationCookie(ctx context.Context, request *evav1.CreateAuthenticationCookieRequest) (*evav1.CreateAuthenticationCookieResponse, error) {

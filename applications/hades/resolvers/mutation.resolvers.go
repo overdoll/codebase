@@ -129,10 +129,37 @@ func (r *mutationResolver) Authorize(ctx context.Context) (*model.AccountData, e
 	// TODO
 
 	return &model.AccountData{Registered: true}, nil
-
 }
 
 func (r *mutationResolver) Register(ctx context.Context, username *string) (*model.Registration, error) {
+
+	gc, err := helpers.GinContextFromContext(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	// Make sure we have the cookie in order to register
+	currentCookie, err := gc.Request.Cookie("otp-cookie")
+
+	if err != nil || currentCookie == nil {
+		return nil, err
+	}
+
+	getAuthenticationCookie, err := r.services.Eva().GetAuthenticationCookie(ctx, &evav1.GetAuthenticationCookieRequest{Cookie: currentCookie.Value})
+
+	if err != nil {
+		return nil, err
+	}
+
+	getRegisteredUser, err := r.services.Eva().RegisterUser(ctx, &evav1.RegisterUserRequest{Username: *username, Email: getAuthenticationCookie.Cookie.Email})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.Registration{Success: getRegisteredUser.Username != ""}, nil
+
 	//service := authentication.JWTAuthService()
 
 	//expiration := time.Now().Add(time.Hour * 48).Unix()
@@ -142,6 +169,12 @@ func (r *mutationResolver) Register(ctx context.Context, username *string) (*mod
 	//if token != "" {
 	//	return nil, err
 	//}
+
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *mutationResolver) Logout(ctx context.Context) (bool, error) {
+	// Log user out from session by removing token from redis and cookie from browser
 
 	panic(fmt.Errorf("not implemented"))
 }

@@ -63,6 +63,7 @@ type ComplexityRoot struct {
 	Mutation struct {
 		Authenticate func(childComplexity int, email *string) int
 		Authorize    func(childComplexity int) int
+		Logout       func(childComplexity int) int
 		RedeemCookie func(childComplexity int, cookie *string) int
 		Register     func(childComplexity int, username *string) int
 	}
@@ -90,6 +91,7 @@ type MutationResolver interface {
 	RedeemCookie(ctx context.Context, cookie *string) (*model.SameSession, error)
 	Authorize(ctx context.Context) (*model.AccountData, error)
 	Register(ctx context.Context, username *string) (*model.Registration, error)
+	Logout(ctx context.Context) (bool, error)
 }
 type QueryResolver interface {
 	User(ctx context.Context, username *string) (*string, error)
@@ -160,6 +162,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.Authorize(childComplexity), true
+
+	case "Mutation.logout":
+		if e.complexity.Mutation.Logout == nil {
+			break
+		}
+
+		return e.complexity.Mutation.Logout(childComplexity), true
 
 	case "Mutation.redeemCookie":
 		if e.complexity.Mutation.RedeemCookie == nil {
@@ -334,6 +343,7 @@ type SameSession {
     redeemCookie(cookie: String): SameSession
     authorize: AccountData
     register(username: String): Registration
+    logout: Boolean!
 }`, BuiltIn: false},
 	{Name: "schemas/query.graphql", Input: `type Query {
     user(username: String): String
@@ -749,6 +759,41 @@ func (ec *executionContext) _Mutation_register(ctx context.Context, field graphq
 	res := resTmp.(*model.Registration)
 	fc.Result = res
 	return ec.marshalORegistration2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋmodelᚐRegistration(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_logout(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().Logout(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_user(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2231,6 +2276,11 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_authorize(ctx, field)
 		case "register":
 			out.Values[i] = ec._Mutation_register(ctx, field)
+		case "logout":
+			out.Values[i] = ec._Mutation_logout(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
