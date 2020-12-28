@@ -9,6 +9,7 @@ require (
 	github.com/gocql/gocql v0.0.0-20201215165327-e49edf966d90 // indirect
 	github.com/golang/protobuf v1.4.2
 	github.com/golang/snappy v0.0.2 // indirect
+	github.com/gomodule/redigo v1.8.3 // indirect
 	github.com/joho/godotenv v1.3.0 // indirect
 	github.com/rs/cors v1.7.0 // indirect
 	github.com/scylladb/gocqlx/v2 v2.3.0 // indirect

@@ -1,12 +1,40 @@
+type AccountData {
+  registered: Boolean!
+}
+
 type Authentication {
   success: Boolean!
 }
 
+type AuthenticationState {
+  Redeemed: Boolean!
+}
+
+type JoinState {
+  existingUser: Boolean!
+}
+
 type Mutation {
-  login(email: String): [Authentication]
-  register(email: String): [Authentication]
+  authenticate(email: String): Authentication
+  redeemCookie(cookie: String): SameSession
+  authorize: AccountData
+  register(username: String): Registration
+  logout: Boolean!
 }
 
 type Query {
   user(username: String): String
+  joinState: JoinState
+}
+
+type Registration {
+  username: String!
+}
+
+type SameSession {
+  same: Boolean!
+}
+
+type Subscription {
+  authenticationState: AuthenticationState
 }

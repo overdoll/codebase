@@ -7,6 +7,7 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler/lru"
 	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"github.com/gin-gonic/gin"
+	"github.com/gomodule/redigo/redis"
 	"github.com/gorilla/websocket"
 	"github.com/joho/godotenv"
 	"log"
@@ -53,6 +54,12 @@ func main() {
 		log.Fatalf("Failed to create grpc api holder: %s", err)
 	}
 
+	redisSvc, err := redis.Dial("tcp", "redis-master:6379")
+
+	if err != nil {
+		log.Fatalf("Failed to connect to redis: %s", err)
+	}
+
 	router := gin.Default()
 
 	if os.Getenv("APP_DEBUG") == "true" {
@@ -77,7 +84,7 @@ func main() {
 	router.POST("/graphql", func(c *gin.Context) {
 
 		graphAPIHandler := handler.New(gen.NewExecutableSchema(gen.Config{
-			Resolvers: resolvers.NewResolver(svcs),
+			Resolvers: resolvers.NewResolver(svcs, redisSvc),
 		}))
 
 		graphAPIHandler.AddTransport(&transport.Websocket{

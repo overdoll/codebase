@@ -6,13 +6,18 @@ go_library(
         "mutation.resolvers.go",
         "query.resolvers.go",
         "resolver.go",
+        "subscription.resolvers.go",
         "utilities.go",
     ],
     importpath = "project01101000/codebase/applications/hades/resolvers",
     visibility = ["//visibility:public"],
     deps = [
+        "//applications/eva/proto:v1_go_proto",
         "//applications/hades/gen:go_default_library",
         "//applications/hades/model:go_default_library",
+        "//applications/hades/src/authentication:go_default_library",
+        "//applications/hades/src/helpers:go_default_library",
         "//applications/hades/src/services:go_default_library",
+        "@com_github_gomodule_redigo//redis:go_default_library",
     ],
 )
