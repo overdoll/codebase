@@ -82,7 +82,7 @@ k8s_yaml(local("bazel run //deployments:objects"))
 
 # Setup cluster
 k8s_kind("Cluster", api_version = "scylla.scylladb.com/v1alpha1")
-k8s_resource("simple-cluster", extra_pod_selectors = {"scylla/cluster": "simple-cluster"})
+k8s_resource("simple-cluster", extra_pod_selectors = {"scylla/cluster": "simple-cluster"}, port_forwards = [9180])
 
 # Tilt works better if we watch the bazel output tree
 # directly instead of the ./bazel-bin symlinks.
@@ -176,3 +176,5 @@ helm_remote(
     version = "12.2.4",
     set = ["cluster.enabled=false", "cluster.slaveCount=0"],
 )
+
+k8s_resource(workload = "redis-master", port_forwards = [6379])

@@ -13,6 +13,7 @@ import (
 
 func (r *subscriptionResolver) AuthenticationState(ctx context.Context) (<-chan *model.AuthenticationState, error) {
 	// AuthenticationState - check the state of our authentication by checking the OTP Cookie header to see if we have redeemed it
+
 	out := make(chan *model.AuthenticationState)
 
 	gc, err := helpers.GinContextFromContext(ctx)

@@ -115,16 +115,22 @@ func (r *mutationResolver) Authorize(ctx context.Context) (*model.AccountData, e
 	http.SetCookie(gc.Writer, &http.Cookie{Name: "otp-cookie", Value: "", MaxAge: -1, HttpOnly: true, Secure: false})
 
 	// Create JWT token
-	jwt := authentication.JWTAuthService()
+	jwtService := authentication.JWTAuthService()
 
 	expiration := time.Now().Add(time.Hour * 120).Unix()
 
-	token := jwt.GenerateToken(getRegisteredUser.Username, expiration)
+	token := jwtService.GenerateToken(getRegisteredUser.Username, expiration)
 
 	// Set session cookie
 	http.SetCookie(gc.Writer, &http.Cookie{Name: "session", Value: token, HttpOnly: true, Secure: false})
 
-	// TODO: add token to redis
+	// Add to redis set for this user's session tokens
+	// TODO: Should capture stuff like IP, location, header so we can show the user the devices that are logged in for them
+	val, err := r.redis.Do("SSAD", getRegisteredUser.Username, token)
+
+	if val == nil || err != nil {
+		return nil, err
+	}
 
 	return &model.AccountData{Registered: true}, nil
 }
@@ -161,13 +167,19 @@ func (r *mutationResolver) Register(ctx context.Context, username *string) (*mod
 	http.SetCookie(gc.Writer, &http.Cookie{Name: "otp-cookie", Value: "", MaxAge: -1, HttpOnly: true, Secure: false})
 
 	// Create JWT token
-	jwt := authentication.JWTAuthService()
+	jwtService := authentication.JWTAuthService()
 
 	expiration := time.Now().Add(time.Hour * 120).Unix()
 
-	token := jwt.GenerateToken(getRegisteredUser.Username, expiration)
+	token := jwtService.GenerateToken(getRegisteredUser.Username, expiration)
 
-	// TODO: add token to redis
+	// Add session to redis
+	// TODO: Should capture stuff like IP, location, header so we can show the user the devices that are logged in for them
+	val, err := r.redis.Do("SSAD", getRegisteredUser.Username, token)
+
+	if val == nil || err != nil {
+		return nil, err
+	}
 
 	// Set session cookie
 	http.SetCookie(gc.Writer, &http.Cookie{Name: "session", Value: token, HttpOnly: true, Secure: false})
@@ -177,6 +189,37 @@ func (r *mutationResolver) Register(ctx context.Context, username *string) (*mod
 
 func (r *mutationResolver) Logout(ctx context.Context) (bool, error) {
 	// Log user out from session by removing token from redis and cookie from browser
+	gc, err := helpers.GinContextFromContext(ctx)
+
+	if err != nil {
+		return false, err
+	}
+
+	currentSession, err := gc.Request.Cookie("session")
+
+	if err != nil || currentSession == nil {
+		return false, err
+	}
+
+	jwtService := authentication.JWTAuthService()
+
+	jwtToken, err := jwtService.ValidateToken(currentSession.Value)
+
+	if err != nil {
+		return false, err
+	}
+
+	claims := jwtToken.Claims.(authentication.AuthCustomClaims)
+
+	// remove session from redis
+	val, err := r.redis.Do("SREM", claims.Username, currentSession.Value)
+
+	if val == nil || err != nil {
+		return false, err
+	}
+
+	// clear session cookie
+	http.SetCookie(gc.Writer, &http.Cookie{Name: "session", Value: "", MaxAge: -1, HttpOnly: true, Secure: false})
 
 	return true, nil
 }
