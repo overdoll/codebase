@@ -74,7 +74,7 @@ type ComplexityRoot struct {
 	}
 
 	Registration struct {
-		Success func(childComplexity int) int
+		Username func(childComplexity int) int
 	}
 
 	SameSession struct {
@@ -213,12 +213,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.User(childComplexity, args["username"].(*string)), true
 
-	case "Registration.Success":
-		if e.complexity.Registration.Success == nil {
+	case "Registration.username":
+		if e.complexity.Registration.Username == nil {
 			break
 		}
 
-		return e.complexity.Registration.Success(childComplexity), true
+		return e.complexity.Registration.Username(childComplexity), true
 
 	case "SameSession.same":
 		if e.complexity.SameSession.Same == nil {
@@ -328,7 +328,7 @@ type JoinState {
 }
 
 type Registration {
-    Success: Boolean!
+    username: String!
 }
 
 type AuthenticationState {
@@ -938,7 +938,7 @@ func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.C
 	return ec.marshalO__Schema2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐSchema(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Registration_Success(ctx context.Context, field graphql.CollectedField, obj *model.Registration) (ret graphql.Marshaler) {
+func (ec *executionContext) _Registration_username(ctx context.Context, field graphql.CollectedField, obj *model.Registration) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -956,7 +956,7 @@ func (ec *executionContext) _Registration_Success(ctx context.Context, field gra
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Success, nil
+		return obj.Username, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -968,9 +968,9 @@ func (ec *executionContext) _Registration_Success(ctx context.Context, field gra
 		}
 		return graphql.Null
 	}
-	res := resTmp.(bool)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SameSession_same(ctx context.Context, field graphql.CollectedField, obj *model.SameSession) (ret graphql.Marshaler) {
@@ -2355,8 +2355,8 @@ func (ec *executionContext) _Registration(ctx context.Context, sel ast.Selection
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Registration")
-		case "Success":
-			out.Values[i] = ec._Registration_Success(ctx, field, obj)
+		case "username":
+			out.Values[i] = ec._Registration_username(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}

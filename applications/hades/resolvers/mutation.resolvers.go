@@ -5,7 +5,6 @@ package resolvers
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	evav1 "project01101000/codebase/applications/eva/proto"
 	"project01101000/codebase/applications/hades/gen"
@@ -125,14 +124,12 @@ func (r *mutationResolver) Authorize(ctx context.Context) (*model.AccountData, e
 	// Set session cookie
 	http.SetCookie(gc.Writer, &http.Cookie{Name: "session", Value: token, HttpOnly: true, Secure: false})
 
-	// Add session to Redis
-	// TODO
+	// TODO: add token to redis
 
 	return &model.AccountData{Registered: true}, nil
 }
 
 func (r *mutationResolver) Register(ctx context.Context, username *string) (*model.Registration, error) {
-
 	gc, err := helpers.GinContextFromContext(ctx)
 
 	if err != nil {
@@ -146,37 +143,42 @@ func (r *mutationResolver) Register(ctx context.Context, username *string) (*mod
 		return nil, err
 	}
 
+	// Get our cookie so we can get our email
 	getAuthenticationCookie, err := r.services.Eva().GetAuthenticationCookie(ctx, &evav1.GetAuthenticationCookieRequest{Cookie: currentCookie.Value})
 
 	if err != nil {
 		return nil, err
 	}
 
+	// Register our user
 	getRegisteredUser, err := r.services.Eva().RegisterUser(ctx, &evav1.RegisterUserRequest{Username: *username, Email: getAuthenticationCookie.Cookie.Email})
 
 	if err != nil {
 		return nil, err
 	}
 
-	return &model.Registration{Success: getRegisteredUser.Username != ""}, nil
+	// Remove OTP token - registration is complete
+	http.SetCookie(gc.Writer, &http.Cookie{Name: "otp-cookie", Value: "", MaxAge: -1, HttpOnly: true, Secure: false})
 
-	//service := authentication.JWTAuthService()
+	// Create JWT token
+	jwt := authentication.JWTAuthService()
 
-	//expiration := time.Now().Add(time.Hour * 48).Unix()
+	expiration := time.Now().Add(time.Hour * 120).Unix()
 
-	//token := service.GenerateToken(getRegisteredResponse.Username, expiration)
+	token := jwt.GenerateToken(getRegisteredUser.Username, expiration)
 
-	//if token != "" {
-	//	return nil, err
-	//}
+	// TODO: add token to redis
 
-	panic(fmt.Errorf("not implemented"))
+	// Set session cookie
+	http.SetCookie(gc.Writer, &http.Cookie{Name: "session", Value: token, HttpOnly: true, Secure: false})
+
+	return &model.Registration{Username: getRegisteredUser.Username}, nil
 }
 
 func (r *mutationResolver) Logout(ctx context.Context) (bool, error) {
 	// Log user out from session by removing token from redis and cookie from browser
 
-	panic(fmt.Errorf("not implemented"))
+	return true, nil
 }
 
 // Mutation returns gen.MutationResolver implementation.
