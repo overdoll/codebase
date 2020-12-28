@@ -13,6 +13,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"project01101000/codebase/applications/hades/src/middleware"
 	"project01101000/codebase/applications/hades/src/services"
 	"syscall"
 	"time"
@@ -66,6 +67,9 @@ func main() {
 		AllowCredentials: true,
 		Debug:            false,
 	}))
+
+	// Add gin context to context
+	router.Use(middleware.GinContextToContextMiddleware())
 
 	cache, err := NewCache()
 

@@ -6,6 +6,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"io"
 	"project01101000/codebase/applications/hades/model"
 	"strconv"
 	"sync"
@@ -34,27 +35,62 @@ type Config struct {
 }
 
 type ResolverRoot interface {
+	Mutation() MutationResolver
 	Query() QueryResolver
+	Subscription() SubscriptionResolver
 }
 
 type DirectiveRoot struct {
 }
 
 type ComplexityRoot struct {
-	AuthenticationCookie struct {
-		Cookie     func(childComplexity int) int
-		Email      func(childComplexity int) int
-		Expiration func(childComplexity int) int
-		Redeemed   func(childComplexity int) int
+	AccountData struct {
+		Registered func(childComplexity int) int
+	}
+
+	Authentication struct {
+		Success func(childComplexity int) int
+	}
+
+	AuthenticationState struct {
+		Redeemed func(childComplexity int) int
+	}
+
+	JoinState struct {
+		ExistingUser func(childComplexity int) int
+	}
+
+	Mutation struct {
+		Authenticate func(childComplexity int, email *string) int
+		Authorize    func(childComplexity int) int
+		Register     func(childComplexity int, username *string) int
 	}
 
 	Query struct {
-		AuthenticationCookie func(childComplexity int, cookie *string) int
+		JoinState func(childComplexity int) int
+		User      func(childComplexity int, username *string) int
+	}
+
+	Registration struct {
+		Success func(childComplexity int) int
+	}
+
+	Subscription struct {
+		AuthenticationState func(childComplexity int) int
 	}
 }
 
+type MutationResolver interface {
+	Authenticate(ctx context.Context, email *string) (*model.Authentication, error)
+	Authorize(ctx context.Context) (*model.AccountData, error)
+	Register(ctx context.Context, username *string) (*model.Registration, error)
+}
 type QueryResolver interface {
-	AuthenticationCookie(ctx context.Context, cookie *string) ([]*model.AuthenticationCookie, error)
+	User(ctx context.Context, username *string) (*string, error)
+	JoinState(ctx context.Context) (*model.JoinState, error)
+}
+type SubscriptionResolver interface {
+	AuthenticationState(ctx context.Context) (<-chan *model.AuthenticationState, error)
 }
 
 type executableSchema struct {
@@ -72,45 +108,97 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	_ = ec
 	switch typeName + "." + field {
 
-	case "AuthenticationCookie.cookie":
-		if e.complexity.AuthenticationCookie.Cookie == nil {
+	case "AccountData.registered":
+		if e.complexity.AccountData.Registered == nil {
 			break
 		}
 
-		return e.complexity.AuthenticationCookie.Cookie(childComplexity), true
+		return e.complexity.AccountData.Registered(childComplexity), true
 
-	case "AuthenticationCookie.email":
-		if e.complexity.AuthenticationCookie.Email == nil {
+	case "Authentication.success":
+		if e.complexity.Authentication.Success == nil {
 			break
 		}
 
-		return e.complexity.AuthenticationCookie.Email(childComplexity), true
+		return e.complexity.Authentication.Success(childComplexity), true
 
-	case "AuthenticationCookie.expiration":
-		if e.complexity.AuthenticationCookie.Expiration == nil {
+	case "AuthenticationState.Redeemed":
+		if e.complexity.AuthenticationState.Redeemed == nil {
 			break
 		}
 
-		return e.complexity.AuthenticationCookie.Expiration(childComplexity), true
+		return e.complexity.AuthenticationState.Redeemed(childComplexity), true
 
-	case "AuthenticationCookie.redeemed":
-		if e.complexity.AuthenticationCookie.Redeemed == nil {
+	case "JoinState.existingUser":
+		if e.complexity.JoinState.ExistingUser == nil {
 			break
 		}
 
-		return e.complexity.AuthenticationCookie.Redeemed(childComplexity), true
+		return e.complexity.JoinState.ExistingUser(childComplexity), true
 
-	case "Query.authenticationCookie":
-		if e.complexity.Query.AuthenticationCookie == nil {
+	case "Mutation.authenticate":
+		if e.complexity.Mutation.Authenticate == nil {
 			break
 		}
 
-		args, err := ec.field_Query_authenticationCookie_args(context.TODO(), rawArgs)
+		args, err := ec.field_Mutation_authenticate_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Query.AuthenticationCookie(childComplexity, args["cookie"].(*string)), true
+		return e.complexity.Mutation.Authenticate(childComplexity, args["email"].(*string)), true
+
+	case "Mutation.authorize":
+		if e.complexity.Mutation.Authorize == nil {
+			break
+		}
+
+		return e.complexity.Mutation.Authorize(childComplexity), true
+
+	case "Mutation.register":
+		if e.complexity.Mutation.Register == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_register_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.Register(childComplexity, args["username"].(*string)), true
+
+	case "Query.joinState":
+		if e.complexity.Query.JoinState == nil {
+			break
+		}
+
+		return e.complexity.Query.JoinState(childComplexity), true
+
+	case "Query.user":
+		if e.complexity.Query.User == nil {
+			break
+		}
+
+		args, err := ec.field_Query_user_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.User(childComplexity, args["username"].(*string)), true
+
+	case "Registration.Success":
+		if e.complexity.Registration.Success == nil {
+			break
+		}
+
+		return e.complexity.Registration.Success(childComplexity), true
+
+	case "Subscription.authenticationState":
+		if e.complexity.Subscription.AuthenticationState == nil {
+			break
+		}
+
+		return e.complexity.Subscription.AuthenticationState(childComplexity), true
 
 	}
 	return 0, false
@@ -130,6 +218,37 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 			first = false
 			data := ec._Query(ctx, rc.Operation.SelectionSet)
 			var buf bytes.Buffer
+			data.MarshalGQL(&buf)
+
+			return &graphql.Response{
+				Data: buf.Bytes(),
+			}
+		}
+	case ast.Mutation:
+		return func(ctx context.Context) *graphql.Response {
+			if !first {
+				return nil
+			}
+			first = false
+			data := ec._Mutation(ctx, rc.Operation.SelectionSet)
+			var buf bytes.Buffer
+			data.MarshalGQL(&buf)
+
+			return &graphql.Response{
+				Data: buf.Bytes(),
+			}
+		}
+	case ast.Subscription:
+		next := ec._Subscription(ctx, rc.Operation.SelectionSet)
+
+		var buf bytes.Buffer
+		return func(ctx context.Context) *graphql.Response {
+			buf.Reset()
+			data := next()
+
+			if data == nil {
+				return nil
+			}
 			data.MarshalGQL(&buf)
 
 			return &graphql.Response{
@@ -162,14 +281,36 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
-	{Name: "schemas/authentication.graphql", Input: `type AuthenticationCookie {
-    cookie: String!
-    email: String!
-    redeemed: Boolean!
-    expiration: String!
+	{Name: "schemas/authentication.graphql", Input: `type Authentication {
+    success: Boolean!
+}
+
+type AccountData {
+    registered: Boolean!
+}
+
+type JoinState {
+    existingUser: Boolean!
+}
+
+type Registration {
+    Success: Boolean!
+}
+
+type AuthenticationState {
+    Redeemed: Boolean!
+}`, BuiltIn: false},
+	{Name: "schemas/mutation.graphql", Input: `type Mutation {
+    authenticate(email: String): Authentication
+    authorize: AccountData
+    register(username: String): Registration
 }`, BuiltIn: false},
 	{Name: "schemas/query.graphql", Input: `type Query {
-    authenticationCookie(cookie: String): [AuthenticationCookie!]
+    user(username: String): String
+    joinState: JoinState
+}`, BuiltIn: false},
+	{Name: "schemas/subscription.graphql", Input: `type Subscription {
+    authenticationState: AuthenticationState
 }`, BuiltIn: false},
 }
 var parsedSchema = gqlparser.MustLoadSchema(sources...)
@@ -177,6 +318,36 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 // endregion ************************** generated!.gotpl **************************
 
 // region    ***************************** args.gotpl *****************************
+
+func (ec *executionContext) field_Mutation_authenticate_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["email"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("email"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["email"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_register_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["username"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("username"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["username"] = arg0
+	return args, nil
+}
 
 func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
@@ -193,18 +364,18 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 	return args, nil
 }
 
-func (ec *executionContext) field_Query_authenticationCookie_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Query_user_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 *string
-	if tmp, ok := rawArgs["cookie"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cookie"))
+	if tmp, ok := rawArgs["username"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("username"))
 		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["cookie"] = arg0
+	args["username"] = arg0
 	return args, nil
 }
 
@@ -246,7 +417,7 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 
 // region    **************************** field.gotpl *****************************
 
-func (ec *executionContext) _AuthenticationCookie_cookie(ctx context.Context, field graphql.CollectedField, obj *model.AuthenticationCookie) (ret graphql.Marshaler) {
+func (ec *executionContext) _AccountData_registered(ctx context.Context, field graphql.CollectedField, obj *model.AccountData) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -254,7 +425,7 @@ func (ec *executionContext) _AuthenticationCookie_cookie(ctx context.Context, fi
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "AuthenticationCookie",
+		Object:     "AccountData",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -264,7 +435,7 @@ func (ec *executionContext) _AuthenticationCookie_cookie(ctx context.Context, fi
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Cookie, nil
+		return obj.Registered, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -276,12 +447,12 @@ func (ec *executionContext) _AuthenticationCookie_cookie(ctx context.Context, fi
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(bool)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AuthenticationCookie_email(ctx context.Context, field graphql.CollectedField, obj *model.AuthenticationCookie) (ret graphql.Marshaler) {
+func (ec *executionContext) _Authentication_success(ctx context.Context, field graphql.CollectedField, obj *model.Authentication) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -289,7 +460,7 @@ func (ec *executionContext) _AuthenticationCookie_email(ctx context.Context, fie
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "AuthenticationCookie",
+		Object:     "Authentication",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -299,7 +470,7 @@ func (ec *executionContext) _AuthenticationCookie_email(ctx context.Context, fie
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Email, nil
+		return obj.Success, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -311,12 +482,12 @@ func (ec *executionContext) _AuthenticationCookie_email(ctx context.Context, fie
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(bool)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AuthenticationCookie_redeemed(ctx context.Context, field graphql.CollectedField, obj *model.AuthenticationCookie) (ret graphql.Marshaler) {
+func (ec *executionContext) _AuthenticationState_Redeemed(ctx context.Context, field graphql.CollectedField, obj *model.AuthenticationState) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -324,7 +495,7 @@ func (ec *executionContext) _AuthenticationCookie_redeemed(ctx context.Context, 
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "AuthenticationCookie",
+		Object:     "AuthenticationState",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -351,7 +522,7 @@ func (ec *executionContext) _AuthenticationCookie_redeemed(ctx context.Context, 
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AuthenticationCookie_expiration(ctx context.Context, field graphql.CollectedField, obj *model.AuthenticationCookie) (ret graphql.Marshaler) {
+func (ec *executionContext) _JoinState_existingUser(ctx context.Context, field graphql.CollectedField, obj *model.JoinState) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -359,7 +530,7 @@ func (ec *executionContext) _AuthenticationCookie_expiration(ctx context.Context
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "AuthenticationCookie",
+		Object:     "JoinState",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -369,7 +540,7 @@ func (ec *executionContext) _AuthenticationCookie_expiration(ctx context.Context
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Expiration, nil
+		return obj.ExistingUser, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -381,12 +552,122 @@ func (ec *executionContext) _AuthenticationCookie_expiration(ctx context.Context
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(bool)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Query_authenticationCookie(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Mutation_authenticate(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_authenticate_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().Authenticate(rctx, args["email"].(*string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Authentication)
+	fc.Result = res
+	return ec.marshalOAuthentication2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋmodelᚐAuthentication(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_authorize(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().Authorize(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.AccountData)
+	fc.Result = res
+	return ec.marshalOAccountData2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋmodelᚐAccountData(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_register(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_register_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().Register(rctx, args["username"].(*string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Registration)
+	fc.Result = res
+	return ec.marshalORegistration2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋmodelᚐRegistration(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_user(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -403,7 +684,7 @@ func (ec *executionContext) _Query_authenticationCookie(ctx context.Context, fie
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Query_authenticationCookie_args(ctx, rawArgs)
+	args, err := ec.field_Query_user_args(ctx, rawArgs)
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
@@ -411,7 +692,7 @@ func (ec *executionContext) _Query_authenticationCookie(ctx context.Context, fie
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().AuthenticationCookie(rctx, args["cookie"].(*string))
+		return ec.resolvers.Query().User(rctx, args["username"].(*string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -420,9 +701,41 @@ func (ec *executionContext) _Query_authenticationCookie(ctx context.Context, fie
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.([]*model.AuthenticationCookie)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalOAuthenticationCookie2ᚕᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋmodelᚐAuthenticationCookieᚄ(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_joinState(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().JoinState(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.JoinState)
+	fc.Result = res
+	return ec.marshalOJoinState2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋmodelᚐJoinState(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -494,6 +807,83 @@ func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.C
 	res := resTmp.(*introspection.Schema)
 	fc.Result = res
 	return ec.marshalO__Schema2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐSchema(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Registration_Success(ctx context.Context, field graphql.CollectedField, obj *model.Registration) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Registration",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Success, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Subscription_authenticationState(ctx context.Context, field graphql.CollectedField) (ret func() graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = nil
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Subscription",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Subscription().AuthenticationState(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return nil
+	}
+	if resTmp == nil {
+		return nil
+	}
+	return func() graphql.Marshaler {
+		res, ok := <-resTmp.(<-chan *model.AuthenticationState)
+		if !ok {
+			return nil
+		}
+		return graphql.WriterFunc(func(w io.Writer) {
+			w.Write([]byte{'{'})
+			graphql.MarshalString(field.Alias).MarshalGQL(w)
+			w.Write([]byte{':'})
+			ec.marshalOAuthenticationState2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋmodelᚐAuthenticationState(ctx, field.Selections, res).MarshalGQL(w)
+			w.Write([]byte{'}'})
+		})
+	}
 }
 
 func (ec *executionContext) ___Directive_name(ctx context.Context, field graphql.CollectedField, obj *introspection.Directive) (ret graphql.Marshaler) {
@@ -1591,37 +1981,135 @@ func (ec *executionContext) ___Type_ofType(ctx context.Context, field graphql.Co
 
 // region    **************************** object.gotpl ****************************
 
-var authenticationCookieImplementors = []string{"AuthenticationCookie"}
+var accountDataImplementors = []string{"AccountData"}
 
-func (ec *executionContext) _AuthenticationCookie(ctx context.Context, sel ast.SelectionSet, obj *model.AuthenticationCookie) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, authenticationCookieImplementors)
+func (ec *executionContext) _AccountData(ctx context.Context, sel ast.SelectionSet, obj *model.AccountData) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, accountDataImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("AuthenticationCookie")
-		case "cookie":
-			out.Values[i] = ec._AuthenticationCookie_cookie(ctx, field, obj)
+			out.Values[i] = graphql.MarshalString("AccountData")
+		case "registered":
+			out.Values[i] = ec._AccountData_registered(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "email":
-			out.Values[i] = ec._AuthenticationCookie_email(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var authenticationImplementors = []string{"Authentication"}
+
+func (ec *executionContext) _Authentication(ctx context.Context, sel ast.SelectionSet, obj *model.Authentication) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, authenticationImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Authentication")
+		case "success":
+			out.Values[i] = ec._Authentication_success(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "redeemed":
-			out.Values[i] = ec._AuthenticationCookie_redeemed(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var authenticationStateImplementors = []string{"AuthenticationState"}
+
+func (ec *executionContext) _AuthenticationState(ctx context.Context, sel ast.SelectionSet, obj *model.AuthenticationState) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, authenticationStateImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("AuthenticationState")
+		case "Redeemed":
+			out.Values[i] = ec._AuthenticationState_Redeemed(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "expiration":
-			out.Values[i] = ec._AuthenticationCookie_expiration(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var joinStateImplementors = []string{"JoinState"}
+
+func (ec *executionContext) _JoinState(ctx context.Context, sel ast.SelectionSet, obj *model.JoinState) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, joinStateImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("JoinState")
+		case "existingUser":
+			out.Values[i] = ec._JoinState_existingUser(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var mutationImplementors = []string{"Mutation"}
+
+func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, mutationImplementors)
+
+	ctx = graphql.WithFieldContext(ctx, &graphql.FieldContext{
+		Object: "Mutation",
+	})
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Mutation")
+		case "authenticate":
+			out.Values[i] = ec._Mutation_authenticate(ctx, field)
+		case "authorize":
+			out.Values[i] = ec._Mutation_authorize(ctx, field)
+		case "register":
+			out.Values[i] = ec._Mutation_register(ctx, field)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -1648,7 +2136,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Query")
-		case "authenticationCookie":
+		case "user":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
 				defer func() {
@@ -1656,7 +2144,18 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_authenticationCookie(ctx, field)
+				res = ec._Query_user(ctx, field)
+				return res
+			})
+		case "joinState":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_joinState(ctx, field)
 				return res
 			})
 		case "__type":
@@ -1672,6 +2171,53 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		return graphql.Null
 	}
 	return out
+}
+
+var registrationImplementors = []string{"Registration"}
+
+func (ec *executionContext) _Registration(ctx context.Context, sel ast.SelectionSet, obj *model.Registration) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, registrationImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Registration")
+		case "Success":
+			out.Values[i] = ec._Registration_Success(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var subscriptionImplementors = []string{"Subscription"}
+
+func (ec *executionContext) _Subscription(ctx context.Context, sel ast.SelectionSet) func() graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, subscriptionImplementors)
+	ctx = graphql.WithFieldContext(ctx, &graphql.FieldContext{
+		Object: "Subscription",
+	})
+	if len(fields) != 1 {
+		ec.Errorf(ctx, "must subscribe to exactly one stream")
+		return nil
+	}
+
+	switch fields[0].Name {
+	case "authenticationState":
+		return ec._Subscription_authenticationState(ctx, fields[0])
+	default:
+		panic("unknown field " + strconv.Quote(fields[0].Name))
+	}
 }
 
 var __DirectiveImplementors = []string{"__Directive"}
@@ -1918,16 +2464,6 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 // endregion **************************** object.gotpl ****************************
 
 // region    ***************************** type.gotpl *****************************
-
-func (ec *executionContext) marshalNAuthenticationCookie2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋmodelᚐAuthenticationCookie(ctx context.Context, sel ast.SelectionSet, v *model.AuthenticationCookie) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	return ec._AuthenticationCookie(ctx, sel, v)
-}
 
 func (ec *executionContext) unmarshalNBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
 	res, err := graphql.UnmarshalBoolean(v)
@@ -2188,44 +2724,25 @@ func (ec *executionContext) marshalN__TypeKind2string(ctx context.Context, sel a
 	return res
 }
 
-func (ec *executionContext) marshalOAuthenticationCookie2ᚕᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋmodelᚐAuthenticationCookieᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.AuthenticationCookie) graphql.Marshaler {
+func (ec *executionContext) marshalOAccountData2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋmodelᚐAccountData(ctx context.Context, sel ast.SelectionSet, v *model.AccountData) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNAuthenticationCookie2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋmodelᚐAuthenticationCookie(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
+	return ec._AccountData(ctx, sel, v)
+}
 
+func (ec *executionContext) marshalOAuthentication2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋmodelᚐAuthentication(ctx context.Context, sel ast.SelectionSet, v *model.Authentication) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
 	}
-	wg.Wait()
-	return ret
+	return ec._Authentication(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOAuthenticationState2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋmodelᚐAuthenticationState(ctx context.Context, sel ast.SelectionSet, v *model.AuthenticationState) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._AuthenticationState(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
@@ -2250,6 +2767,20 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 		return graphql.Null
 	}
 	return graphql.MarshalBoolean(*v)
+}
+
+func (ec *executionContext) marshalOJoinState2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋmodelᚐJoinState(ctx context.Context, sel ast.SelectionSet, v *model.JoinState) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._JoinState(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalORegistration2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋmodelᚐRegistration(ctx context.Context, sel ast.SelectionSet, v *model.Registration) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Registration(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOString2string(ctx context.Context, v interface{}) (string, error) {

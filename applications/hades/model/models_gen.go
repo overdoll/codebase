@@ -2,9 +2,22 @@
 
 package model
 
-type AuthenticationCookie struct {
-	Cookie     string `json:"cookie"`
-	Email      string `json:"email"`
-	Redeemed   bool   `json:"redeemed"`
-	Expiration string `json:"expiration"`
+type AccountData struct {
+	Registered bool `json:"registered"`
+}
+
+type Authentication struct {
+	Success bool `json:"success"`
+}
+
+type AuthenticationState struct {
+	Redeemed bool `json:"Redeemed"`
+}
+
+type JoinState struct {
+	ExistingUser bool `json:"existingUser"`
+}
+
+type Registration struct {
+	Success bool `json:"Success"`
 }

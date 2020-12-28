@@ -1,4 +1,5 @@
 type Mutation {
-    login(email: String): [Authentication]
-    register(email: String): [Authentication]
+    authenticate(email: String): Authentication
+    authorize: AccountData
+    register(username: String): Registration
 }

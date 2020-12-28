@@ -1,10 +1,12 @@
-type AuthenticationCookie {
-  cookie: String!
-  email: String!
-  redeemed: Boolean!
-  expiration: String!
+type Authentication {
+  success: Boolean!
+}
+
+type Mutation {
+  login(email: String): [Authentication]
+  register(email: String): [Authentication]
 }
 
 type Query {
-  authenticationCookie(cookie: String): [AuthenticationCookie!]
+  user(username: String): String
 }

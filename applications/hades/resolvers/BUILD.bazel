@@ -3,6 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = [
+        "mutation.resolvers.go",
         "query.resolvers.go",
         "resolver.go",
         "utilities.go",
@@ -10,7 +11,6 @@ go_library(
     importpath = "project01101000/codebase/applications/hades/resolvers",
     visibility = ["//visibility:public"],
     deps = [
-        "//applications/eva/proto:v1_go_proto",
         "//applications/hades/gen:go_default_library",
         "//applications/hades/model:go_default_library",
         "//applications/hades/src/services:go_default_library",

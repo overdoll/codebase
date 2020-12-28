@@ -8,20 +8,19 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
-//jwt service
 type JWTService interface {
-	GenerateToken(email string, isUser bool) string
+	GenerateToken(email string, expiration int64) string
 	ValidateToken(token string) (*jwt.Token, error)
 }
+
 type authCustomClaims struct {
-	Name string `json:"name"`
-	User bool   `json:"user"`
+	Email string `json:"email"`
 	jwt.StandardClaims
 }
 
 type jwtServices struct {
 	secretKey string
-	issure    string
+	issuer    string
 }
 
 func JWTAuthService() JWTService {
@@ -38,13 +37,12 @@ func getSecretKey() string {
 	return secret
 }
 
-func (service *jwtServices) GenerateToken(email string, isUser bool) string {
+func (service *jwtServices) GenerateToken(email string, expiration int64) string {
 	claims := &authCustomClaims{
 		email,
-		isUser,
 		jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(time.Hour * 48).Unix(),
-			Issuer:    service.issure,
+			ExpiresAt: expiration,
+			Issuer:    service.issuer,
 			IssuedAt:  time.Now().Unix(),
 		},
 	}

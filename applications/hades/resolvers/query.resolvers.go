@@ -10,7 +10,11 @@ import (
 	"project01101000/codebase/applications/hades/model"
 )
 
-func (r *queryResolver) AuthenticationCookie(ctx context.Context, cookie *string) ([]*model.AuthenticationCookie, error) {
+func (r *queryResolver) User(ctx context.Context, username *string) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) JoinState(ctx context.Context) (*model.JoinState, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 

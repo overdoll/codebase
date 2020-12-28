@@ -35,6 +35,7 @@ func NewServicesKeeper(conf ServicesConfig) (Services, error) {
 		evaClientConn: evaConnection,
 		evaClient:     evav1.NewEvaAPIClient(evaConnection),
 	}
+
 	return ah, nil
 }
 

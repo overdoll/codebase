@@ -1,3 +1,19 @@
 type Authentication {
     success: Boolean!
 }
+
+type AccountData {
+    registered: Boolean!
+}
+
+type JoinState {
+    existingUser: Boolean!
+}
+
+type Registration {
+    Success: Boolean!
+}
+
+type AuthenticationState {
+    Redeemed: Boolean!
+}
