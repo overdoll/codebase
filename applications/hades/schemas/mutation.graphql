@@ -1,5 +1,6 @@
 type Mutation {
     authenticate(email: String): Authentication
+    redeemCookie(cookie: String): SameSession
     authorize: AccountData
     register(username: String): Registration
 }

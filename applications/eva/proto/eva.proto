@@ -41,5 +41,6 @@ message GetRegisteredEmailResponse {
 service EvaAPI {
   rpc GetRegisteredEmail(GetRegisteredEmailRequest) returns (GetRegisteredEmailResponse);
   rpc GetAuthenticationCookie(GetAuthenticationCookieRequest) returns (GetAuthenticationCookieResponse);
+  rpc RedeemAuthenticationCookie(GetAuthenticationCookieRequest) returns (GetAuthenticationCookieResponse);
   rpc CreateAuthenticationCookie(CreateAuthenticationCookieRequest) returns (CreateAuthenticationCookieResponse);
 }

@@ -21,3 +21,7 @@ type JoinState struct {
 type Registration struct {
 	Success bool `json:"Success"`
 }
+
+type SameSession struct {
+	Same bool `json:"same"`
+}

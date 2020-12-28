@@ -17,3 +17,7 @@ type Registration {
 type AuthenticationState {
     Redeemed: Boolean!
 }
+
+type SameSession {
+    same: Boolean!
+}

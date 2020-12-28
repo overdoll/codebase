@@ -103,6 +103,45 @@ func (s *Server) CreateAuthenticationCookie(ctx context.Context, request *evav1.
 	return &evav1.CreateAuthenticationCookieResponse{Cookie: cookie}, nil
 }
 
+func (s *Server) RedeemAuthenticationCookie(ctx context.Context, request *evav1.GetAuthenticationCookieRequest) (*evav1.GetAuthenticationCookieResponse, error) {
+	if request == nil || request.Cookie == "" {
+		return nil, fmt.Errorf("cookie is not provided")
+	}
+
+	u, err := gocql.ParseUUID(request.Cookie)
+
+	if err != nil {
+		return nil, fmt.Errorf("uuid is not valid")
+	}
+
+	queryCookie := qb.
+		Update("authentication_cookies").
+		Set("redeemed").
+		Where(qb.Eq("id")).
+		Query(s.session)
+
+	// get authentication cookie with this ID
+	authCookie := AuthenticationCookie{
+		ID:       u,
+		Redeemed: true,
+	}
+
+	queryCookie.BindStruct(authCookie)
+
+	var cookieItem *AuthenticationCookie
+
+	if err := queryCookie.BindStruct(&cookieItem); err != nil {
+		return nil, fmt.Errorf("update() failed: '%s", err)
+	}
+
+	cookie := new(evav1.AuthenticationCookie)
+	cookie.Email = cookieItem.Email
+	cookie.Redeemed = cookieItem.Redeemed
+	cookie.Expiration = cookieItem.Expiration.String()
+
+	return &evav1.GetAuthenticationCookieResponse{Cookie: cookie}, nil
+}
+
 func (s *Server) GetAuthenticationCookie(ctx context.Context, request *evav1.GetAuthenticationCookieRequest) (*evav1.GetAuthenticationCookieResponse, error) {
 	if request == nil || request.Cookie == "" {
 		return nil, fmt.Errorf("cookie is not provided")

@@ -63,6 +63,7 @@ type ComplexityRoot struct {
 	Mutation struct {
 		Authenticate func(childComplexity int, email *string) int
 		Authorize    func(childComplexity int) int
+		RedeemCookie func(childComplexity int, cookie *string) int
 		Register     func(childComplexity int, username *string) int
 	}
 
@@ -75,6 +76,10 @@ type ComplexityRoot struct {
 		Success func(childComplexity int) int
 	}
 
+	SameSession struct {
+		Same func(childComplexity int) int
+	}
+
 	Subscription struct {
 		AuthenticationState func(childComplexity int) int
 	}
@@ -82,6 +87,7 @@ type ComplexityRoot struct {
 
 type MutationResolver interface {
 	Authenticate(ctx context.Context, email *string) (*model.Authentication, error)
+	RedeemCookie(ctx context.Context, cookie *string) (*model.SameSession, error)
 	Authorize(ctx context.Context) (*model.AccountData, error)
 	Register(ctx context.Context, username *string) (*model.Registration, error)
 }
@@ -155,6 +161,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.Authorize(childComplexity), true
 
+	case "Mutation.redeemCookie":
+		if e.complexity.Mutation.RedeemCookie == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_redeemCookie_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.RedeemCookie(childComplexity, args["cookie"].(*string)), true
+
 	case "Mutation.register":
 		if e.complexity.Mutation.Register == nil {
 			break
@@ -192,6 +210,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Registration.Success(childComplexity), true
+
+	case "SameSession.same":
+		if e.complexity.SameSession.Same == nil {
+			break
+		}
+
+		return e.complexity.SameSession.Same(childComplexity), true
 
 	case "Subscription.authenticationState":
 		if e.complexity.Subscription.AuthenticationState == nil {
@@ -299,9 +324,14 @@ type Registration {
 
 type AuthenticationState {
     Redeemed: Boolean!
+}
+
+type SameSession {
+    same: Boolean!
 }`, BuiltIn: false},
 	{Name: "schemas/mutation.graphql", Input: `type Mutation {
     authenticate(email: String): Authentication
+    redeemCookie(cookie: String): SameSession
     authorize: AccountData
     register(username: String): Registration
 }`, BuiltIn: false},
@@ -331,6 +361,21 @@ func (ec *executionContext) field_Mutation_authenticate_args(ctx context.Context
 		}
 	}
 	args["email"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_redeemCookie_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["cookie"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cookie"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["cookie"] = arg0
 	return args, nil
 }
 
@@ -596,6 +641,45 @@ func (ec *executionContext) _Mutation_authenticate(ctx context.Context, field gr
 	return ec.marshalOAuthentication2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋmodelᚐAuthentication(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_redeemCookie(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_redeemCookie_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().RedeemCookie(rctx, args["cookie"].(*string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.SameSession)
+	fc.Result = res
+	return ec.marshalOSameSession2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋmodelᚐSameSession(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Mutation_authorize(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -828,6 +912,41 @@ func (ec *executionContext) _Registration_Success(ctx context.Context, field gra
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.Success, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SameSession_same(ctx context.Context, field graphql.CollectedField, obj *model.SameSession) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SameSession",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Same, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2106,6 +2225,8 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = graphql.MarshalString("Mutation")
 		case "authenticate":
 			out.Values[i] = ec._Mutation_authenticate(ctx, field)
+		case "redeemCookie":
+			out.Values[i] = ec._Mutation_redeemCookie(ctx, field)
 		case "authorize":
 			out.Values[i] = ec._Mutation_authorize(ctx, field)
 		case "register":
@@ -2186,6 +2307,33 @@ func (ec *executionContext) _Registration(ctx context.Context, sel ast.Selection
 			out.Values[i] = graphql.MarshalString("Registration")
 		case "Success":
 			out.Values[i] = ec._Registration_Success(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var sameSessionImplementors = []string{"SameSession"}
+
+func (ec *executionContext) _SameSession(ctx context.Context, sel ast.SelectionSet, obj *model.SameSession) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, sameSessionImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SameSession")
+		case "same":
+			out.Values[i] = ec._SameSession_same(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -2781,6 +2929,13 @@ func (ec *executionContext) marshalORegistration2ᚖproject01101000ᚋcodebase�
 		return graphql.Null
 	}
 	return ec._Registration(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOSameSession2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋmodelᚐSameSession(ctx context.Context, sel ast.SelectionSet, v *model.SameSession) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._SameSession(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOString2string(ctx context.Context, v interface{}) (string, error) {
