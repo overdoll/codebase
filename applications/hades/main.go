@@ -23,7 +23,6 @@ import (
 	"time"
 
 	"github.com/99designs/gqlgen/graphql/handler"
-	cors "github.com/rs/cors/wrapper/gin"
 )
 
 func init() {
@@ -68,13 +67,6 @@ func main() {
 	} else {
 		gin.SetMode(gin.ReleaseMode)
 	}
-
-	// See https://github.com/rs/cors for full option listing
-	router.Use(cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost"},
-		AllowCredentials: true,
-		Debug:            false,
-	}))
 
 	// Add gin context to context
 	router.Use(middleware.GinContextToContextMiddleware())

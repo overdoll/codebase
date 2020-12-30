@@ -61,6 +61,7 @@ func AuthenticationMiddleware(services services.Services, redis redis.Conn) gin.
 
 		if val == nil || err != nil {
 			c.AbortWithStatus(http.StatusInternalServerError)
+			return
 		}
 
 		// put it in context

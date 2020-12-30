@@ -14,6 +14,9 @@ import (
 	"time"
 )
 
+// to prevent collisions between different context uses
+var OTPKey = "user"
+
 func (r *mutationResolver) Authenticate(ctx context.Context, email *string) (*models.Authentication, error) {
 	// Authenticate - Generate an OTP code that will be used to authenticate the user
 	// if user opens the link in the same browser, then we automatically authorize them
@@ -34,7 +37,7 @@ func (r *mutationResolver) Authenticate(ctx context.Context, email *string) (*mo
 	// OTP login cookie - will determine if
 	// Opened in the same browser - log them in that browser if this cookie exists
 	// Otherwise, if opened in another browser (such as the phone), it will log them in on the original browser through a subscription
-	http.SetCookie(gc.Writer, &http.Cookie{Name: "otp-cookie", Value: getCookieResponse.Cookie.Cookie, Expires: expiration, HttpOnly: true, Secure: false})
+	http.SetCookie(gc.Writer, &http.Cookie{Name: OTPKey, Value: getCookieResponse.Cookie.Cookie, Expires: expiration, HttpOnly: true, Secure: false})
 
 	return &models.Authentication{Success: true}, nil
 }
@@ -54,7 +57,7 @@ func (r *mutationResolver) RedeemCookie(ctx context.Context, cookie *string) (*m
 		return nil, err
 	}
 
-	currentCookie, err := gc.Request.Cookie("otp-cookie")
+	currentCookie, err := gc.Request.Cookie(OTPKey)
 
 	if err != nil || currentCookie == nil {
 		// No cookie exists, we want to give a different SameSession response
@@ -76,7 +79,7 @@ func (r *mutationResolver) Authorize(ctx context.Context) (*models.AccountData, 
 	gc := helpers.GinContextFromContext(ctx)
 
 	// We want to make sure that this method is ONLY ran when we have the cookie
-	currentCookie, err := gc.Request.Cookie("otp-cookie")
+	currentCookie, err := gc.Request.Cookie(OTPKey)
 	if err != nil || currentCookie == nil {
 		return nil, err
 	}
@@ -107,7 +110,7 @@ func (r *mutationResolver) Authorize(ctx context.Context) (*models.AccountData, 
 	}
 
 	// Otherwise, we remove the cookie, and create a JWT token
-	http.SetCookie(gc.Writer, &http.Cookie{Name: "otp-cookie", Value: "", MaxAge: -1, HttpOnly: true, Secure: false})
+	http.SetCookie(gc.Writer, &http.Cookie{Name: OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: false})
 
 	// Create JWT token
 	jwtService := authentication.JWTAuthService()
@@ -134,7 +137,7 @@ func (r *mutationResolver) Register(ctx context.Context, username *string) (*mod
 	gc := helpers.GinContextFromContext(ctx)
 
 	// Make sure we have the cookie in order to register
-	currentCookie, err := gc.Request.Cookie("otp-cookie")
+	currentCookie, err := gc.Request.Cookie(OTPKey)
 
 	if err != nil || currentCookie == nil {
 		return nil, err
@@ -162,7 +165,7 @@ func (r *mutationResolver) Register(ctx context.Context, username *string) (*mod
 	}
 
 	// Remove OTP token - registration is complete
-	http.SetCookie(gc.Writer, &http.Cookie{Name: "otp-cookie", Value: "", MaxAge: -1, HttpOnly: true, Secure: false})
+	http.SetCookie(gc.Writer, &http.Cookie{Name: OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: false})
 
 	// Create JWT token
 	jwtService := authentication.JWTAuthService()
