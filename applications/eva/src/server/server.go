@@ -78,6 +78,30 @@ func (s *Server) Run() {
 	}
 }
 
+func (s *Server) GetUser(ctx context.Context, request *evav1.GetUserRequest) (*evav1.User, error) {
+	if request == nil || request.Username == "" {
+		return nil, fmt.Errorf("username is not provided")
+	}
+
+	queryUser := qb.Select("users").Where(qb.Eq("username")).Columns("username").Query(s.session)
+
+	// get user with this username
+	user := User{
+		Username: request.Username,
+	}
+
+	queryUser.BindStruct(user)
+
+	var userItem *User
+
+	if err := queryUser.Select(&userItem); err != nil {
+		return nil, fmt.Errorf("select() failed: '%s", err)
+	}
+
+	return &evav1.User{Username: userItem.Username}, nil
+
+}
+
 func (s *Server) RegisterUser(ctx context.Context, request *evav1.RegisterUserRequest) (*evav1.RegisterUserResponse, error) {
 	if request == nil || request.Email == "" {
 		return nil, fmt.Errorf("email is not provided")

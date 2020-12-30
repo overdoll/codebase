@@ -16,12 +16,7 @@ func (r *subscriptionResolver) AuthenticationState(ctx context.Context) (<-chan 
 
 	out := make(chan *model.AuthenticationState)
 
-	gc, err := helpers.GinContextFromContext(ctx)
-
-	if err != nil {
-		close(out)
-		return nil, err
-	}
+	gc := helpers.GinContextFromContext(ctx)
 
 	currentCookie, err := gc.Request.Cookie("otp-cookie")
 

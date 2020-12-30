@@ -20,11 +20,7 @@ func (r *mutationResolver) Authenticate(ctx context.Context, email *string) (*mo
 	// if not, then we redeem the cookie and the original browser should be logged in,
 	// provided that the tab is still open
 
-	gc, err := helpers.GinContextFromContext(ctx)
-
-	if err != nil {
-		return nil, err
-	}
+	gc := helpers.GinContextFromContext(ctx)
 
 	// Create an authentication cookie
 	getCookieResponse, err := r.services.Eva().CreateAuthenticationCookie(ctx, &evav1.CreateAuthenticationCookieRequest{Email: *email})
@@ -48,11 +44,7 @@ func (r *mutationResolver) RedeemCookie(ctx context.Context, cookie *string) (*m
 	// occurs when the user clicks on the "link" that they get in the email
 	// and will tell them if the target that clicked on it is in the same session
 
-	gc, err := helpers.GinContextFromContext(ctx)
-
-	if err != nil {
-		return nil, err
-	}
+	gc := helpers.GinContextFromContext(ctx)
 
 	// Redeem our authentication cookie
 	getRedeemedCookie, err := r.services.Eva().RedeemAuthenticationCookie(ctx, &evav1.GetAuthenticationCookieRequest{Cookie: *cookie})
@@ -81,11 +73,7 @@ func (r *mutationResolver) Authorize(ctx context.Context) (*model.AccountData, e
 	// If this is a registration (user with email doesn't exist), we keep the cookie, and remove it when we register, so the user
 	// can complete the registration if they've accidentally closed their tab
 
-	gc, err := helpers.GinContextFromContext(ctx)
-
-	if err != nil {
-		return nil, err
-	}
+	gc := helpers.GinContextFromContext(ctx)
 
 	// We want to make sure that this method is ONLY ran when we have the cookie
 	currentCookie, err := gc.Request.Cookie("otp-cookie")
@@ -143,11 +131,7 @@ func (r *mutationResolver) Authorize(ctx context.Context) (*model.AccountData, e
 }
 
 func (r *mutationResolver) Register(ctx context.Context, username *string) (*model.Registration, error) {
-	gc, err := helpers.GinContextFromContext(ctx)
-
-	if err != nil {
-		return nil, err
-	}
+	gc := helpers.GinContextFromContext(ctx)
 
 	// Make sure we have the cookie in order to register
 	currentCookie, err := gc.Request.Cookie("otp-cookie")
@@ -203,30 +187,12 @@ func (r *mutationResolver) Register(ctx context.Context, username *string) (*mod
 
 func (r *mutationResolver) Logout(ctx context.Context) (bool, error) {
 	// Log user out from session by removing token from redis and cookie from browser
-	gc, err := helpers.GinContextFromContext(ctx)
+	gc := helpers.GinContextFromContext(ctx)
 
-	if err != nil {
-		return false, err
-	}
-
-	currentSession, err := gc.Request.Cookie("session")
-
-	if err != nil || currentSession == nil {
-		return false, err
-	}
-
-	jwtService := authentication.JWTAuthService()
-
-	jwtToken, err := jwtService.ValidateToken(currentSession.Value)
-
-	if err != nil {
-		return false, err
-	}
-
-	claims := jwtToken.Claims.(authentication.AuthCustomClaims)
+	user := helpers.UserFromContext(ctx)
 
 	// remove session from redis
-	val, err := r.redis.Do("SREM", "session:"+claims.Username, currentSession.Value)
+	val, err := r.redis.Do("SREM", "session:"+user.Username, user.Token)
 
 	if val == nil || err != nil {
 		return false, err

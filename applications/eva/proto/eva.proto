@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package applications.grpc.eva.v1;
 
+//import "github.com/mwitkow/go-proto-validators/validator.proto";
+
 message RegisteredEmails {
   string email = 1;
   string username = 2;
@@ -52,7 +54,16 @@ message DeleteAuthenticationCookieResponse {
   string success = 1;
 }
 
+message User {
+  string username = 1;
+}
+
+message GetUserRequest {
+  string username = 1;
+}
+
 service EvaAPI {
+  rpc GetUser(GetUserRequest) returns (User);
   rpc RegisterUser(RegisterUserRequest) returns (RegisterUserResponse);
   rpc GetRegisteredEmail(GetRegisteredEmailRequest) returns (GetRegisteredEmailResponse);
   rpc GetAuthenticationCookie(GetAuthenticationCookieRequest) returns (GetAuthenticationCookieResponse);

@@ -78,6 +78,9 @@ func main() {
 	// Add gin context to context
 	router.Use(middleware.GinContextToContextMiddleware())
 
+	// Add user to context, if session cookie exists
+	router.Use(middleware.AuthenticationMiddleware(svcs))
+
 	cache, err := NewCache()
 
 	// Create graphApi handlers

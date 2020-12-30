@@ -128,7 +128,7 @@ for item in applications.keys():
             ],
         )
 
-        k8s_resource(item, resource_deps = [item + "-compile", "simple-cluster"])
+        k8s_resource(item, resource_deps = [item + "-compile", "simple-cluster", "redis-master"])
 
     elif (application["type"] == "node"):
         image_target = application["image_target"]
@@ -149,7 +149,7 @@ for item in applications.keys():
             live_update = application["live_update"],
         )
 
-        k8s_resource(item, resource_deps = ["simple-cluster"])
+        k8s_resource(item, resource_deps = ["simple-cluster", "redis-master"])
 
 local_resource(
     "generate-graphql",
