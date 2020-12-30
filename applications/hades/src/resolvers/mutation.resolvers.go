@@ -15,7 +15,7 @@ import (
 )
 
 // to prevent collisions between different context uses
-var OTPKey = "user"
+var OTPKey = "otp-key"
 
 func (r *mutationResolver) Authenticate(ctx context.Context, email *string) (*models.Authentication, error) {
 	// Authenticate - Generate an OTP code that will be used to authenticate the user

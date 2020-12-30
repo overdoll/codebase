@@ -46,7 +46,9 @@ func (s *Server) CreateAuthenticationCookie(ctx context.Context, request *evav1.
 	}
 
 	// run a query to create the authentication token
-	insertCookie := qb.Insert("authentication_cookies").Columns("cookie", "email", "redeemed", "expiration").Query(s.session)
+	insertCookie := qb.Insert("authentication_cookies").
+		Columns("cookie", "email", "redeemed", "expiration").
+		Query(s.session)
 
 	authCookie := AuthenticationCookie{
 		Cookie:   gocql.UUID{},
@@ -88,7 +90,10 @@ func (s *Server) RedeemAuthenticationCookie(ctx context.Context, request *evav1.
 	}
 
 	// first check cookie to make sure it's not expired
-	queryCookie := qb.Select("authentication_cookies").Where(qb.Eq("cookie")).Columns("expiration").Query(s.session)
+	queryCookie := qb.Select("authentication_cookies").
+		Where(qb.Eq("cookie")).
+		Columns("expiration").
+		Query(s.session)
 
 	queryCookie.BindStruct(authCookie)
 
@@ -103,8 +108,7 @@ func (s *Server) RedeemAuthenticationCookie(ctx context.Context, request *evav1.
 	}
 
 	// if not expired, then update cookie
-	updateCookie := qb.
-		Update("authentication_cookies").
+	updateCookie := qb.Update("authentication_cookies").
 		Set("redeemed").
 		Where(qb.Eq("cookie")).
 		Query(s.session)
@@ -136,7 +140,10 @@ func (s *Server) GetAuthenticationCookie(ctx context.Context, request *evav1.Get
 		return nil, fmt.Errorf("uuid is not valid")
 	}
 
-	queryCookie := qb.Select("authentication_cookies").Where(qb.Eq("cookie")).Columns("cookie", "email", "redeemed", "expiration").Query(s.session)
+	queryCookie := qb.Select("authentication_cookies").
+		Where(qb.Eq("cookie")).
+		Columns("cookie", "email", "redeemed", "expiration").
+		Query(s.session)
 
 	// get authentication cookie with this ID
 	authCookie := AuthenticationCookie{
