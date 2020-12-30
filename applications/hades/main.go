@@ -114,7 +114,7 @@ func main() {
 		graphAPIHandler.Use(extension.AutomaticPersistedQuery{Cache: cache})
 
 		// Query complexity limit
-		graphAPIHandler.Use(extension.FixedComplexityLimit(3))
+		//graphAPIHandler.Use(extension.FixedComplexityLimit(3))
 
 		graphAPIHandler.ServeHTTP(c.Writer, c.Request)
 	})

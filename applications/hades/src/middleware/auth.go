@@ -24,6 +24,7 @@ func AuthenticationMiddleware(services services.Services, redis redis.Conn) gin.
 		// Allow unauthenticated users in
 		if err != nil || cookie == nil {
 			c.Next()
+			return
 		}
 
 		jwtService := authentication.JWTAuthService()
@@ -33,6 +34,7 @@ func AuthenticationMiddleware(services services.Services, redis redis.Conn) gin.
 
 		if err != nil || jwtToken == nil {
 			c.AbortWithStatus(http.StatusForbidden)
+			return
 		}
 
 		claims := jwtToken.Claims.(authentication.AuthCustomClaims)
@@ -67,5 +69,6 @@ func AuthenticationMiddleware(services services.Services, redis redis.Conn) gin.
 		// and call the next with our new context
 		c.Request = c.Request.WithContext(ctx)
 		c.Next()
+		return
 	}
 }
