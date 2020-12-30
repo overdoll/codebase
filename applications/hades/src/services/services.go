@@ -10,8 +10,7 @@ import (
 )
 
 type ServicesConfig struct {
-	EvaSvc   string
-	RedisSvc string
+	EvaSvc string
 }
 
 type services struct {

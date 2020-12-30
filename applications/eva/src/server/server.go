@@ -26,7 +26,7 @@ type Server struct {
 }
 
 type AuthenticationCookie struct {
-	ID         gocql.UUID
+	Cookie     gocql.UUID
 	Email      string
 	Redeemed   bool
 	Expiration time.Time
@@ -123,6 +123,33 @@ func (s *Server) RegisterUser(ctx context.Context, request *evav1.RegisterUserRe
 	return &evav1.RegisterUserResponse{Username: request.Username, Email: request.Email}, nil
 }
 
+// DeleteAuthenticationCookie - Delete cookie because we don't want it to be used anymore
+func (s *Server) DeleteAuthenticationCookie(ctx context.Context, request *evav1.GetAuthenticationCookieRequest) (*evav1.DeleteAuthenticationCookieResponse, error) {
+	if request == nil || request.Cookie == "" {
+		return nil, fmt.Errorf("cookie is not provided")
+	}
+
+	u, err := gocql.ParseUUID(request.Cookie)
+
+	if err != nil {
+		return nil, fmt.Errorf("uuid is not valid")
+	}
+
+	queryCookie := qb.
+		Delete("authentication_cookies").
+		Where(qb.Eq("id")).
+		Query(s.session)
+
+	// get authentication cookie with this ID
+	authCookie := AuthenticationCookie{
+		Cookie: u,
+	}
+
+	queryCookie.BindStruct(authCookie)
+
+	return &evav1.DeleteAuthenticationCookieResponse{Success: "true"}, nil
+}
+
 func (s *Server) CreateAuthenticationCookie(ctx context.Context, request *evav1.CreateAuthenticationCookieRequest) (*evav1.CreateAuthenticationCookieResponse, error) {
 	if request == nil || request.Email == "" {
 		return nil, fmt.Errorf("email is not provided")
@@ -136,7 +163,7 @@ func (s *Server) CreateAuthenticationCookie(ctx context.Context, request *evav1.
 	insertCookie := qb.Insert("authentication_cookies").Columns("cookie", "email", "redeemed", "expiration").Query(s.session)
 
 	authCookie := AuthenticationCookie{
-		ID:       gocql.UUID{},
+		Cookie:   gocql.UUID{},
 		Email:    request.Email,
 		Redeemed: false,
 		// Expires after 5 minutes
@@ -168,19 +195,35 @@ func (s *Server) RedeemAuthenticationCookie(ctx context.Context, request *evav1.
 		return nil, fmt.Errorf("uuid is not valid")
 	}
 
-	queryCookie := qb.
-		Update("authentication_cookies").
-		Set("redeemed").
-		Where(qb.Eq("id")).
-		Query(s.session)
-
 	// get authentication cookie with this ID
 	authCookie := AuthenticationCookie{
-		ID:       u,
+		Cookie:   u,
 		Redeemed: true,
 	}
 
+	// first check cookie to make sure it's not expired
+	queryCookie := qb.Select("authentication_cookies").Where(qb.Eq("cookie")).Columns("expiration").Query(s.session)
+
 	queryCookie.BindStruct(authCookie)
+
+	var queryCookieItem *AuthenticationCookie
+
+	if err := queryCookie.BindStruct(&queryCookieItem); err != nil {
+		return nil, fmt.Errorf("select() failed: '%s", err)
+	}
+
+	if time.Now().After(queryCookieItem.Expiration) {
+		return nil, fmt.Errorf("cookie expired")
+	}
+
+	// if not expired, then update cookie
+	updateCookie := qb.
+		Update("authentication_cookies").
+		Set("redeemed").
+		Where(qb.Eq("cookie")).
+		Query(s.session)
+
+	updateCookie.BindStruct(authCookie)
 
 	var cookieItem *AuthenticationCookie
 
@@ -207,11 +250,11 @@ func (s *Server) GetAuthenticationCookie(ctx context.Context, request *evav1.Get
 		return nil, fmt.Errorf("uuid is not valid")
 	}
 
-	queryCookie := qb.Select("authentication_cookies").Columns("cookie", "email", "redeemed", "expiration").Query(s.session)
+	queryCookie := qb.Select("authentication_cookies").Where(qb.Eq("cookie")).Columns("cookie", "email", "redeemed", "expiration").Query(s.session)
 
 	// get authentication cookie with this ID
 	authCookie := AuthenticationCookie{
-		ID: u,
+		Cookie: u,
 	}
 
 	queryCookie.BindStruct(authCookie)
@@ -220,6 +263,10 @@ func (s *Server) GetAuthenticationCookie(ctx context.Context, request *evav1.Get
 
 	if err := queryCookie.Select(&cookieItem); err != nil {
 		return nil, fmt.Errorf("select() failed: '%s", err)
+	}
+
+	if time.Now().After(cookieItem.Expiration) {
+		return nil, fmt.Errorf("cookie expired")
 	}
 
 	cookie := new(evav1.AuthenticationCookie)

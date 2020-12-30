@@ -106,6 +106,13 @@ func (r *mutationResolver) Authorize(ctx context.Context) (*model.AccountData, e
 		return nil, err
 	}
 
+	// Delete our cookie
+	getDeletedCookie, err := r.services.Eva().DeleteAuthenticationCookie(ctx, &evav1.GetAuthenticationCookieRequest{Cookie: currentCookie.Value})
+
+	if err != nil || getDeletedCookie == nil {
+		return nil, err
+	}
+
 	// User doesn't exist, we ask to register
 	if getRegisteredUser.Username == "" {
 		return &model.AccountData{Registered: false}, nil
@@ -126,7 +133,7 @@ func (r *mutationResolver) Authorize(ctx context.Context) (*model.AccountData, e
 
 	// Add to redis set for this user's session tokens
 	// TODO: Should capture stuff like IP, location, header so we can show the user the devices that are logged in for them
-	val, err := r.redis.Do("SSAD", getRegisteredUser.Username, token)
+	val, err := r.redis.Do("SSAD", "session:"+getRegisteredUser.Username, token)
 
 	if val == nil || err != nil {
 		return nil, err
@@ -163,6 +170,13 @@ func (r *mutationResolver) Register(ctx context.Context, username *string) (*mod
 		return nil, err
 	}
 
+	// Delete our cookie
+	getDeletedCookie, err := r.services.Eva().DeleteAuthenticationCookie(ctx, &evav1.GetAuthenticationCookieRequest{Cookie: currentCookie.Value})
+
+	if err != nil || getDeletedCookie == nil {
+		return nil, err
+	}
+
 	// Remove OTP token - registration is complete
 	http.SetCookie(gc.Writer, &http.Cookie{Name: "otp-cookie", Value: "", MaxAge: -1, HttpOnly: true, Secure: false})
 
@@ -175,7 +189,7 @@ func (r *mutationResolver) Register(ctx context.Context, username *string) (*mod
 
 	// Add session to redis
 	// TODO: Should capture stuff like IP, location, header so we can show the user the devices that are logged in for them
-	val, err := r.redis.Do("SSAD", getRegisteredUser.Username, token)
+	val, err := r.redis.Do("SSAD", "session:"+getRegisteredUser.Username, token)
 
 	if val == nil || err != nil {
 		return nil, err
@@ -212,7 +226,7 @@ func (r *mutationResolver) Logout(ctx context.Context) (bool, error) {
 	claims := jwtToken.Claims.(authentication.AuthCustomClaims)
 
 	// remove session from redis
-	val, err := r.redis.Do("SREM", claims.Username, currentSession.Value)
+	val, err := r.redis.Do("SREM", "session:"+claims.Username, currentSession.Value)
 
 	if val == nil || err != nil {
 		return false, err

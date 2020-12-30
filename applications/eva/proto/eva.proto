@@ -48,10 +48,15 @@ message RegisterUserResponse {
   string username = 2;
 }
 
+message DeleteAuthenticationCookieResponse {
+  string success = 1;
+}
+
 service EvaAPI {
   rpc RegisterUser(RegisterUserRequest) returns (RegisterUserResponse);
   rpc GetRegisteredEmail(GetRegisteredEmailRequest) returns (GetRegisteredEmailResponse);
   rpc GetAuthenticationCookie(GetAuthenticationCookieRequest) returns (GetAuthenticationCookieResponse);
+  rpc DeleteAuthenticationCookie(GetAuthenticationCookieRequest) returns (DeleteAuthenticationCookieResponse);
   rpc RedeemAuthenticationCookie(GetAuthenticationCookieRequest) returns (GetAuthenticationCookieResponse);
   rpc CreateAuthenticationCookie(CreateAuthenticationCookieRequest) returns (CreateAuthenticationCookieResponse);
 }
