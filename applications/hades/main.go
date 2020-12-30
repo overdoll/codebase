@@ -55,7 +55,7 @@ func main() {
 		log.Fatalf("Failed to create grpc api holder: %s", err)
 	}
 
-	redisSvc, err := redis.Dial("tcp", "redis-master:6379")
+	redisSvc, err := redis.Dial("tcp", os.Getenv("REDIS_URL")+":6379")
 
 	if err != nil {
 		log.Fatalf("Failed to connect to redis: %s", err)
@@ -110,8 +110,12 @@ func main() {
 		graphAPIHandler.AddTransport(transport.MultipartForm{})
 		graphAPIHandler.SetQueryCache(lru.New(1000))
 
+		// Add APQ
 		graphAPIHandler.Use(extension.AutomaticPersistedQuery{Cache: cache})
-		//test 2
+
+		// Query complexity limit
+		graphAPIHandler.Use(extension.FixedComplexityLimit(3))
+
 		graphAPIHandler.ServeHTTP(c.Writer, c.Request)
 	})
 
