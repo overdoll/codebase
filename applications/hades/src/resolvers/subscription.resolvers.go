@@ -6,15 +6,15 @@ package resolvers
 import (
 	"context"
 	evav1 "project01101000/codebase/applications/eva/proto"
-	"project01101000/codebase/applications/hades/gen"
-	"project01101000/codebase/applications/hades/model"
+	gen "project01101000/codebase/applications/hades/src"
 	"project01101000/codebase/applications/hades/src/helpers"
+	"project01101000/codebase/applications/hades/src/models"
 )
 
-func (r *subscriptionResolver) AuthenticationState(ctx context.Context) (<-chan *model.AuthenticationState, error) {
+func (r *subscriptionResolver) AuthenticationState(ctx context.Context) (<-chan *models.AuthenticationState, error) {
 	// AuthenticationState - check the state of our authentication by checking the OTP Cookie header to see if we have redeemed it
 
-	out := make(chan *model.AuthenticationState)
+	out := make(chan *models.AuthenticationState)
 
 	gc := helpers.GinContextFromContext(ctx)
 
@@ -33,7 +33,7 @@ func (r *subscriptionResolver) AuthenticationState(ctx context.Context) (<-chan 
 		return nil, err
 	}
 
-	out <- &model.AuthenticationState{Redeemed: getAuthenticationCookie.Cookie.Redeemed}
+	out <- &models.AuthenticationState{Redeemed: getAuthenticationCookie.Cookie.Redeemed}
 
 	return out, nil
 }

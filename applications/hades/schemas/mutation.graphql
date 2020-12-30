@@ -3,5 +3,5 @@ type Mutation {
     redeemCookie(cookie: String): SameSession
     authorize: AccountData
     register(username: String): Registration
-    logout: Boolean!
+    logout: Boolean! @auth
 }

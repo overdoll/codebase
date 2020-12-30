@@ -4,18 +4,18 @@ schema:
 
 # Where should the generated server code go?
 exec:
-  filename: gen/generated.go
+  filename: src/generated.go
   package: gen
 
 # Where should any generated models go?
 model:
-  filename: model/models_gen.go
-  package: model
+  filename: src/models/models_gen.go
+  package: models
 
 # Where should the resolver implementations go?
 resolver:
   layout: follow-schema
-  dir: resolvers
+  dir: src/resolvers
   package: resolvers
 
 # Optional: turn on use `gqlgen:"fieldName"` tags in your models
@@ -30,7 +30,7 @@ resolver:
 # gqlgen will search for any type names in the schema in these go packages
 # if they match it will use them, otherwise it will generate them.
 autobind:
-  - "project01101000/codebase/applications/hades/model"
+  - "project01101000/codebase/applications/hades/src/models"
 
 # This section declares type mapping between the GraphQL and go type systems
 #

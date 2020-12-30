@@ -14,15 +14,16 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	gen "project01101000/codebase/applications/hades/src"
+	"project01101000/codebase/applications/hades/src/directives"
 	"project01101000/codebase/applications/hades/src/middleware"
+	"project01101000/codebase/applications/hades/src/resolvers"
 	"project01101000/codebase/applications/hades/src/services"
 	"syscall"
 	"time"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	cors "github.com/rs/cors/wrapper/gin"
-	"project01101000/codebase/applications/hades/gen"
-	"project01101000/codebase/applications/hades/resolvers"
 )
 
 func init() {
@@ -79,7 +80,7 @@ func main() {
 	router.Use(middleware.GinContextToContextMiddleware())
 
 	// Add user to context, if session cookie exists
-	router.Use(middleware.AuthenticationMiddleware(svcs))
+	router.Use(middleware.AuthenticationMiddleware(svcs, redisSvc))
 
 	cache, err := NewCache()
 
@@ -87,7 +88,8 @@ func main() {
 	router.POST("/graphql", func(c *gin.Context) {
 
 		graphAPIHandler := handler.New(gen.NewExecutableSchema(gen.Config{
-			Resolvers: resolvers.NewResolver(svcs, redisSvc),
+			Resolvers:  resolvers.NewResolver(svcs, redisSvc),
+			Directives: directives.NewDirectives(),
 		}))
 
 		graphAPIHandler.AddTransport(&transport.Websocket{

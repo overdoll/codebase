@@ -6,15 +6,15 @@ package resolvers
 import (
 	"context"
 	"fmt"
-	"project01101000/codebase/applications/hades/gen"
-	"project01101000/codebase/applications/hades/model"
+	gen "project01101000/codebase/applications/hades/src"
+	"project01101000/codebase/applications/hades/src/models"
 )
 
 func (r *queryResolver) User(ctx context.Context, username *string) (*string, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 
-func (r *queryResolver) JoinState(ctx context.Context) (*model.JoinState, error) {
+func (r *queryResolver) JoinState(ctx context.Context) (*models.JoinState, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 

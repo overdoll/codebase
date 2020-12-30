@@ -6,8 +6,9 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"fmt"
 	"io"
-	"project01101000/codebase/applications/hades/model"
+	"project01101000/codebase/applications/hades/src/models"
 	"strconv"
 	"sync"
 
@@ -41,6 +42,7 @@ type ResolverRoot interface {
 }
 
 type DirectiveRoot struct {
+	Auth func(ctx context.Context, obj interface{}, next graphql.Resolver) (res interface{}, err error)
 }
 
 type ComplexityRoot struct {
@@ -87,18 +89,18 @@ type ComplexityRoot struct {
 }
 
 type MutationResolver interface {
-	Authenticate(ctx context.Context, email *string) (*model.Authentication, error)
-	RedeemCookie(ctx context.Context, cookie *string) (*model.SameSession, error)
-	Authorize(ctx context.Context) (*model.AccountData, error)
-	Register(ctx context.Context, username *string) (*model.Registration, error)
+	Authenticate(ctx context.Context, email *string) (*models.Authentication, error)
+	RedeemCookie(ctx context.Context, cookie *string) (*models.SameSession, error)
+	Authorize(ctx context.Context) (*models.AccountData, error)
+	Register(ctx context.Context, username *string) (*models.Registration, error)
 	Logout(ctx context.Context) (bool, error)
 }
 type QueryResolver interface {
 	User(ctx context.Context, username *string) (*string, error)
-	JoinState(ctx context.Context) (*model.JoinState, error)
+	JoinState(ctx context.Context) (*models.JoinState, error)
 }
 type SubscriptionResolver interface {
-	AuthenticationState(ctx context.Context) (<-chan *model.AuthenticationState, error)
+	AuthenticationState(ctx context.Context) (<-chan *models.AuthenticationState, error)
 }
 
 type executableSchema struct {
@@ -338,12 +340,13 @@ type AuthenticationState {
 type SameSession {
     same: Boolean!
 }`, BuiltIn: false},
+	{Name: "schemas/directives.graphql", Input: `directive @auth on FIELD_DEFINITION`, BuiltIn: false},
 	{Name: "schemas/mutation.graphql", Input: `type Mutation {
     authenticate(email: String): Authentication
     redeemCookie(cookie: String): SameSession
     authorize: AccountData
     register(username: String): Registration
-    logout: Boolean!
+    logout: Boolean! @auth
 }`, BuiltIn: false},
 	{Name: "schemas/query.graphql", Input: `type Query {
     user(username: String): String
@@ -472,7 +475,7 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 
 // region    **************************** field.gotpl *****************************
 
-func (ec *executionContext) _AccountData_registered(ctx context.Context, field graphql.CollectedField, obj *model.AccountData) (ret graphql.Marshaler) {
+func (ec *executionContext) _AccountData_registered(ctx context.Context, field graphql.CollectedField, obj *models.AccountData) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -507,7 +510,7 @@ func (ec *executionContext) _AccountData_registered(ctx context.Context, field g
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Authentication_success(ctx context.Context, field graphql.CollectedField, obj *model.Authentication) (ret graphql.Marshaler) {
+func (ec *executionContext) _Authentication_success(ctx context.Context, field graphql.CollectedField, obj *models.Authentication) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -542,7 +545,7 @@ func (ec *executionContext) _Authentication_success(ctx context.Context, field g
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AuthenticationState_Redeemed(ctx context.Context, field graphql.CollectedField, obj *model.AuthenticationState) (ret graphql.Marshaler) {
+func (ec *executionContext) _AuthenticationState_Redeemed(ctx context.Context, field graphql.CollectedField, obj *models.AuthenticationState) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -577,7 +580,7 @@ func (ec *executionContext) _AuthenticationState_Redeemed(ctx context.Context, f
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _JoinState_existingUser(ctx context.Context, field graphql.CollectedField, obj *model.JoinState) (ret graphql.Marshaler) {
+func (ec *executionContext) _JoinState_existingUser(ctx context.Context, field graphql.CollectedField, obj *models.JoinState) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -646,9 +649,9 @@ func (ec *executionContext) _Mutation_authenticate(ctx context.Context, field gr
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.Authentication)
+	res := resTmp.(*models.Authentication)
 	fc.Result = res
-	return ec.marshalOAuthentication2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋmodelᚐAuthentication(ctx, field.Selections, res)
+	return ec.marshalOAuthentication2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐAuthentication(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_redeemCookie(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -685,9 +688,9 @@ func (ec *executionContext) _Mutation_redeemCookie(ctx context.Context, field gr
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.SameSession)
+	res := resTmp.(*models.SameSession)
 	fc.Result = res
-	return ec.marshalOSameSession2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋmodelᚐSameSession(ctx, field.Selections, res)
+	return ec.marshalOSameSession2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐSameSession(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_authorize(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -717,9 +720,9 @@ func (ec *executionContext) _Mutation_authorize(ctx context.Context, field graph
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.AccountData)
+	res := resTmp.(*models.AccountData)
 	fc.Result = res
-	return ec.marshalOAccountData2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋmodelᚐAccountData(ctx, field.Selections, res)
+	return ec.marshalOAccountData2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐAccountData(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_register(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -756,9 +759,9 @@ func (ec *executionContext) _Mutation_register(ctx context.Context, field graphq
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.Registration)
+	res := resTmp.(*models.Registration)
 	fc.Result = res
-	return ec.marshalORegistration2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋmodelᚐRegistration(ctx, field.Selections, res)
+	return ec.marshalORegistration2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐRegistration(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_logout(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -778,8 +781,28 @@ func (ec *executionContext) _Mutation_logout(ctx context.Context, field graphql.
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().Logout(rctx)
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().Logout(rctx)
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			if ec.directives.Auth == nil {
+				return nil, errors.New("directive auth is not implemented")
+			}
+			return ec.directives.Auth(ctx, nil, directive0)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(bool); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be bool`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -862,9 +885,9 @@ func (ec *executionContext) _Query_joinState(ctx context.Context, field graphql.
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.JoinState)
+	res := resTmp.(*models.JoinState)
 	fc.Result = res
-	return ec.marshalOJoinState2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋmodelᚐJoinState(ctx, field.Selections, res)
+	return ec.marshalOJoinState2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐJoinState(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -938,7 +961,7 @@ func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.C
 	return ec.marshalO__Schema2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐSchema(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Registration_username(ctx context.Context, field graphql.CollectedField, obj *model.Registration) (ret graphql.Marshaler) {
+func (ec *executionContext) _Registration_username(ctx context.Context, field graphql.CollectedField, obj *models.Registration) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -973,7 +996,7 @@ func (ec *executionContext) _Registration_username(ctx context.Context, field gr
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _SameSession_same(ctx context.Context, field graphql.CollectedField, obj *model.SameSession) (ret graphql.Marshaler) {
+func (ec *executionContext) _SameSession_same(ctx context.Context, field graphql.CollectedField, obj *models.SameSession) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1036,7 +1059,7 @@ func (ec *executionContext) _Subscription_authenticationState(ctx context.Contex
 		return nil
 	}
 	return func() graphql.Marshaler {
-		res, ok := <-resTmp.(<-chan *model.AuthenticationState)
+		res, ok := <-resTmp.(<-chan *models.AuthenticationState)
 		if !ok {
 			return nil
 		}
@@ -1044,7 +1067,7 @@ func (ec *executionContext) _Subscription_authenticationState(ctx context.Contex
 			w.Write([]byte{'{'})
 			graphql.MarshalString(field.Alias).MarshalGQL(w)
 			w.Write([]byte{':'})
-			ec.marshalOAuthenticationState2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋmodelᚐAuthenticationState(ctx, field.Selections, res).MarshalGQL(w)
+			ec.marshalOAuthenticationState2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐAuthenticationState(ctx, field.Selections, res).MarshalGQL(w)
 			w.Write([]byte{'}'})
 		})
 	}
@@ -2147,7 +2170,7 @@ func (ec *executionContext) ___Type_ofType(ctx context.Context, field graphql.Co
 
 var accountDataImplementors = []string{"AccountData"}
 
-func (ec *executionContext) _AccountData(ctx context.Context, sel ast.SelectionSet, obj *model.AccountData) graphql.Marshaler {
+func (ec *executionContext) _AccountData(ctx context.Context, sel ast.SelectionSet, obj *models.AccountData) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, accountDataImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -2174,7 +2197,7 @@ func (ec *executionContext) _AccountData(ctx context.Context, sel ast.SelectionS
 
 var authenticationImplementors = []string{"Authentication"}
 
-func (ec *executionContext) _Authentication(ctx context.Context, sel ast.SelectionSet, obj *model.Authentication) graphql.Marshaler {
+func (ec *executionContext) _Authentication(ctx context.Context, sel ast.SelectionSet, obj *models.Authentication) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, authenticationImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -2201,7 +2224,7 @@ func (ec *executionContext) _Authentication(ctx context.Context, sel ast.Selecti
 
 var authenticationStateImplementors = []string{"AuthenticationState"}
 
-func (ec *executionContext) _AuthenticationState(ctx context.Context, sel ast.SelectionSet, obj *model.AuthenticationState) graphql.Marshaler {
+func (ec *executionContext) _AuthenticationState(ctx context.Context, sel ast.SelectionSet, obj *models.AuthenticationState) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, authenticationStateImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -2228,7 +2251,7 @@ func (ec *executionContext) _AuthenticationState(ctx context.Context, sel ast.Se
 
 var joinStateImplementors = []string{"JoinState"}
 
-func (ec *executionContext) _JoinState(ctx context.Context, sel ast.SelectionSet, obj *model.JoinState) graphql.Marshaler {
+func (ec *executionContext) _JoinState(ctx context.Context, sel ast.SelectionSet, obj *models.JoinState) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, joinStateImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -2346,7 +2369,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 
 var registrationImplementors = []string{"Registration"}
 
-func (ec *executionContext) _Registration(ctx context.Context, sel ast.SelectionSet, obj *model.Registration) graphql.Marshaler {
+func (ec *executionContext) _Registration(ctx context.Context, sel ast.SelectionSet, obj *models.Registration) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, registrationImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -2373,7 +2396,7 @@ func (ec *executionContext) _Registration(ctx context.Context, sel ast.Selection
 
 var sameSessionImplementors = []string{"SameSession"}
 
-func (ec *executionContext) _SameSession(ctx context.Context, sel ast.SelectionSet, obj *model.SameSession) graphql.Marshaler {
+func (ec *executionContext) _SameSession(ctx context.Context, sel ast.SelectionSet, obj *models.SameSession) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, sameSessionImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -2922,21 +2945,21 @@ func (ec *executionContext) marshalN__TypeKind2string(ctx context.Context, sel a
 	return res
 }
 
-func (ec *executionContext) marshalOAccountData2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋmodelᚐAccountData(ctx context.Context, sel ast.SelectionSet, v *model.AccountData) graphql.Marshaler {
+func (ec *executionContext) marshalOAccountData2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐAccountData(ctx context.Context, sel ast.SelectionSet, v *models.AccountData) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._AccountData(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOAuthentication2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋmodelᚐAuthentication(ctx context.Context, sel ast.SelectionSet, v *model.Authentication) graphql.Marshaler {
+func (ec *executionContext) marshalOAuthentication2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐAuthentication(ctx context.Context, sel ast.SelectionSet, v *models.Authentication) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Authentication(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOAuthenticationState2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋmodelᚐAuthenticationState(ctx context.Context, sel ast.SelectionSet, v *model.AuthenticationState) graphql.Marshaler {
+func (ec *executionContext) marshalOAuthenticationState2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐAuthenticationState(ctx context.Context, sel ast.SelectionSet, v *models.AuthenticationState) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -2967,21 +2990,21 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	return graphql.MarshalBoolean(*v)
 }
 
-func (ec *executionContext) marshalOJoinState2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋmodelᚐJoinState(ctx context.Context, sel ast.SelectionSet, v *model.JoinState) graphql.Marshaler {
+func (ec *executionContext) marshalOJoinState2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐJoinState(ctx context.Context, sel ast.SelectionSet, v *models.JoinState) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._JoinState(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalORegistration2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋmodelᚐRegistration(ctx context.Context, sel ast.SelectionSet, v *model.Registration) graphql.Marshaler {
+func (ec *executionContext) marshalORegistration2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐRegistration(ctx context.Context, sel ast.SelectionSet, v *models.Registration) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Registration(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOSameSession2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋmodelᚐSameSession(ctx context.Context, sel ast.SelectionSet, v *model.SameSession) graphql.Marshaler {
+func (ec *executionContext) marshalOSameSession2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐSameSession(ctx context.Context, sel ast.SelectionSet, v *models.SameSession) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
