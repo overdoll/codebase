@@ -25,10 +25,10 @@ type Server struct {
 }
 
 type AuthenticationCookie struct {
-	Cookie     gocql.UUID
-	Email      string
-	Redeemed   int
-	Expiration time.Time
+	Cookie     gocql.UUID `db:"cookie"`
+	Email      string     `db:"email"`
+	Redeemed   int        `db:"redeemed"`
+	Expiration time.Time  `db:"expiration"`
 }
 
 type RegisteredUser struct {

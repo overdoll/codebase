@@ -84,28 +84,25 @@ func (s *Server) RedeemAuthenticationCookie(ctx context.Context, request *evav1.
 		return nil, fmt.Errorf("uuid is not valid")
 	}
 
-	// get authentication cookie with this ID
-	authCookie := AuthenticationCookie{
-		Cookie:   u,
-		Redeemed: 0,
-	}
-
 	// first check cookie to make sure it's not expired
 	queryCookie := qb.Select("authentication_cookies").
-		Where(qb.Eq("cookie")).
-		Columns("expiration").
+		Where(qb.EqLit("cookie", u.String())).
 		Query(s.session)
 
-	queryCookie.BindStruct(authCookie)
+	var queryCookieItem AuthenticationCookie
 
-	var queryCookieItem *AuthenticationCookie
-
-	if err := queryCookie.BindStruct(&queryCookieItem); err != nil {
+	if err := queryCookie.Get(&queryCookieItem); err != nil {
 		return nil, fmt.Errorf("select() failed: '%s", err)
 	}
 
 	if time.Now().After(queryCookieItem.Expiration) {
 		return nil, fmt.Errorf("cookie expired")
+	}
+
+	// get authentication cookie with this ID
+	authCookie := AuthenticationCookie{
+		Cookie:   u,
+		Redeemed: 1,
 	}
 
 	// if not expired, then update cookie
@@ -116,17 +113,15 @@ func (s *Server) RedeemAuthenticationCookie(ctx context.Context, request *evav1.
 
 	updateCookie.BindStruct(authCookie)
 
-	var cookieItem *AuthenticationCookie
-
-	if err := queryCookie.BindStruct(&cookieItem); err != nil {
+	if err := queryCookie.ExecRelease(); err != nil {
 		return nil, fmt.Errorf("update() failed: '%s", err)
 	}
 
 	cookie := new(evav1.AuthenticationCookie)
-	cookie.Email = cookieItem.Email
-	cookie.Redeemed = cookieItem.Redeemed != 0
-	cookie.Expiration = cookieItem.Expiration.String()
-	cookie.Cookie = cookieItem.Cookie.String()
+	cookie.Email = queryCookieItem.Email
+	cookie.Redeemed = true
+	cookie.Expiration = queryCookieItem.Expiration.String()
+	cookie.Cookie = queryCookieItem.Cookie.String()
 
 	return &evav1.GetAuthenticationCookieResponse{Cookie: cookie}, nil
 }
