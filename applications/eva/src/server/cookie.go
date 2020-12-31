@@ -51,9 +51,9 @@ func (s *Server) CreateAuthenticationCookie(ctx context.Context, request *evav1.
 		Query(s.session)
 
 	authCookie := AuthenticationCookie{
-		Cookie:   gocql.UUID{},
+		Cookie:   gocql.TimeUUID(),
 		Email:    request.Email,
-		Redeemed: false,
+		Redeemed: 0,
 		// Expires after 5 minutes
 		Expiration: time.Now().Add(time.Minute * 5),
 	}
@@ -66,8 +66,9 @@ func (s *Server) CreateAuthenticationCookie(ctx context.Context, request *evav1.
 
 	cookie := new(evav1.AuthenticationCookie)
 	cookie.Email = authCookie.Email
-	cookie.Redeemed = authCookie.Redeemed
+	cookie.Redeemed = authCookie.Redeemed != 0
 	cookie.Expiration = authCookie.Expiration.String()
+	cookie.Cookie = authCookie.Cookie.String()
 
 	return &evav1.CreateAuthenticationCookieResponse{Cookie: cookie}, nil
 }
@@ -86,7 +87,7 @@ func (s *Server) RedeemAuthenticationCookie(ctx context.Context, request *evav1.
 	// get authentication cookie with this ID
 	authCookie := AuthenticationCookie{
 		Cookie:   u,
-		Redeemed: true,
+		Redeemed: 0,
 	}
 
 	// first check cookie to make sure it's not expired
@@ -123,8 +124,9 @@ func (s *Server) RedeemAuthenticationCookie(ctx context.Context, request *evav1.
 
 	cookie := new(evav1.AuthenticationCookie)
 	cookie.Email = cookieItem.Email
-	cookie.Redeemed = cookieItem.Redeemed
+	cookie.Redeemed = cookieItem.Redeemed != 0
 	cookie.Expiration = cookieItem.Expiration.String()
+	cookie.Cookie = cookieItem.Cookie.String()
 
 	return &evav1.GetAuthenticationCookieResponse{Cookie: cookie}, nil
 }
@@ -164,8 +166,9 @@ func (s *Server) GetAuthenticationCookie(ctx context.Context, request *evav1.Get
 
 	cookie := new(evav1.AuthenticationCookie)
 	cookie.Email = cookieItem.Email
-	cookie.Redeemed = cookieItem.Redeemed
+	cookie.Redeemed = cookieItem.Redeemed != 0
 	cookie.Expiration = cookieItem.Expiration.String()
+	cookie.Cookie = cookieItem.Cookie.String()
 
 	return &evav1.GetAuthenticationCookieResponse{Cookie: cookie}, nil
 }

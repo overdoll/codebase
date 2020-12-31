@@ -11,11 +11,12 @@ const resourceMap = new Map();
  * argument - it allows accessing the state of the resource.
  */
 class Resource {
-  constructor(loader) {
+  constructor(loader, moduleId) {
     this._error = null;
     this._loader = loader;
     this._promise = null;
     this._result = null;
+    this._moduleId = moduleId;
   }
 
   /**
@@ -49,6 +50,20 @@ class Resource {
     if (this._result != null) {
       return this._result;
     }
+  }
+
+  /**
+   * Returns the module identification.
+   */
+  getModuleId() {
+    return this._moduleId;
+  }
+
+  /**
+   * Returns the module if it's required.
+   */
+  getModuleIfRequired() {
+    return this.get();
   }
 
   /**
@@ -90,7 +105,7 @@ class Resource {
 export default function JSResource(moduleId, loader) {
   let resource = resourceMap.get(moduleId);
   if (resource == null) {
-    resource = new Resource(loader);
+    resource = new Resource(loader, moduleId);
     resourceMap.set(moduleId, resource);
   }
   return resource;

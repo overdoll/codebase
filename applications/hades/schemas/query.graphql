@@ -1,4 +1,5 @@
 type Query {
     user(username: String): String
+    redeemCookie(cookie: String): SameSession
     joinState: JoinState
 }

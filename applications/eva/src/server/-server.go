@@ -27,7 +27,7 @@ type Server struct {
 type AuthenticationCookie struct {
 	Cookie     gocql.UUID
 	Email      string
-	Redeemed   bool
+	Redeemed   int
 	Expiration time.Time
 }
 

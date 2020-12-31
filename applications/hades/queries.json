@@ -1,5 +1,7 @@
 {
   "a5af2a6bf6cd8b6b29473dddc2ad747d6c2f2d913c8129bd95103cc63f1936c3": "query AppQuery(\n  $cookie: String!\n) {\n  authenticationCookie(cookie: $cookie) {\n    cookie\n    email\n    redeemed\n    expiration\n  }\n}\n",
   "174788e2fbfd9651ea45adf07b50f700cd8e93ab0bfd54799e09a2b0370836ad": "query TestComponentQuery(\n  $cookie: String!\n) {\n  authenticationCookie(cookie: $cookie) {\n    cookie\n    email\n    redeemed\n    expiration\n  }\n}\n",
-  "bc3fee639867972e033491bc2bddb70e03e9e6545ec430da901bf2f5d5562858": "mutation JoinRootMutation(\n  $email: String!\n) {\n  authenticate(email: $email) {\n    success\n  }\n}\n"
+  "bc3fee639867972e033491bc2bddb70e03e9e6545ec430da901bf2f5d5562858": "mutation JoinRootMutation(\n  $email: String!\n) {\n  authenticate(email: $email) {\n    success\n  }\n}\n",
+  "eecf3e45471e0b0b367e92241a54a14e26a8b4aec4e3fe9af3c25b0cf24dd838": "mutation TokenRootMutation(\n  $cookie: String!\n) {\n  redeemCookie(cookie: $cookie) {\n    same\n  }\n}\n",
+  "1495477c5c94f045f032e66340c3c98870c9281766c520f11c90af36f73aa745": "query routesQuery(\n  $cookie: String!\n) {\n  redeemCookie(cookie: $cookie) {\n    same\n  }\n}\n"
 }

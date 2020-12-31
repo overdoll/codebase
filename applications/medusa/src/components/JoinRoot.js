@@ -33,14 +33,16 @@ export default function JoinRoot({ props }) {
     });
   };
 
-  if (isInFlight) {
-    return 'Loading!';
-  }
-
   return (
     <form onSubmit={onSubmit}>
-      <input required type="text" value={email} onChange={onChange} />
-      <input type="submit" value="Submit" />
+      <input
+        disabled={isInFlight}
+        required
+        type="text"
+        value={email}
+        onChange={onChange}
+      />
+      <input disabled={isInFlight} type="submit" value="Submit" />
     </form>
   );
 }
