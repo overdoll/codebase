@@ -58,6 +58,8 @@ applications = {
     },
 }
 
+allow_k8s_contexts('projecth-cluster')
+
 docker_prune_settings(
     disable = False,
     max_age_mins = 360,

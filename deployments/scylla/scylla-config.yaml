@@ -25,7 +25,8 @@ data:
     num_tokens: 256
     partitioner: org.apache.cassandra.dht.Murmur3Partitioner
     read_request_timeout_in_ms: 5000
-    rpc_address: 0.0.0.0
+    rpc_address: 127.0.0.1
+    start_rpc: true
     rpc_port: 9160
     seed_provider:
     - class_name: org.apache.cassandra.locator.SimpleSeedProvider

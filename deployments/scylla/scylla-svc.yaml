@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: simple-cluster-lb
+  namespace: scylla
+spec:
+  ports:
+    - name: cql
+      port: 9042
+      protocol: TCP
+      targetPort: 9042
+  selector:
+    statefulset.kubernetes.io/pod-name: simple-cluster-us-east-1-us-east-1a-0
+  sessionAffinity: None
+  type: LoadBalancer

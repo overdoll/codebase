@@ -13,7 +13,7 @@ if ! k3d -version | grep 'v1' > /dev/null 2>&1; then
 fi
 
 # desired cluster name (default is "k3s-default")
-CLUSTER_NAME="${CLUSTER_NAME:-k3s-default}"
+CLUSTER_NAME="${CLUSTER_NAME:-projecth-cluster}"
 
 # Check if cluster already exists.
 # AFAICT there's no good way to get the registry name/port from a running
@@ -30,7 +30,7 @@ for cluster in $(k3d ls 2>/dev/null | tail -n +4 | head -n -1 | awk '{print $2}'
   fi
 done
 
-k3d create --server-arg='--no-deploy=traefik' -p "80:80" -p "443:443" --enable-registry --name=${CLUSTER_NAME} "$@"
+k3d create --server-arg='--no-deploy=traefik' -p "80:80" -p "443:443" -p "9042:9042" --enable-registry --name=${CLUSTER_NAME} "$@"
 
 echo
 echo "Waiting for Kubeconfig to be ready..."
