@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash b4763c40f5c9c9dfd668e1f888dd61b4
+ * @relayHash 6751386073d08aefe132978ce03eb085
  */
 
 /* eslint-disable */
@@ -9,23 +9,23 @@
 
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
-export type routesQueryVariables = {|
+export type tokenQueryVariables = {|
   cookie: string
 |};
-export type routesQueryResponse = {|
+export type tokenQueryResponse = {|
   +redeemCookie: ?{|
     +same: boolean
   |}
 |};
-export type routesQuery = {|
-  variables: routesQueryVariables,
-  response: routesQueryResponse,
+export type tokenQuery = {|
+  variables: tokenQueryVariables,
+  response: tokenQueryResponse,
 |};
 */
 
 
 /*
-query routesQuery(
+query tokenQuery(
   $cookie: String!
 ) {
   redeemCookie(cookie: $cookie) {
@@ -73,7 +73,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "routesQuery",
+    "name": "tokenQuery",
     "selections": (v1/*: any*/),
     "type": "Query",
     "abstractKey": null
@@ -82,19 +82,19 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "routesQuery",
+    "name": "tokenQuery",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "1495477c5c94f045f032e66340c3c98870c9281766c520f11c90af36f73aa745",
+    "id": "d7df09c81fe1819ec6e54a95b90870d7ef0dd3a4e9fc022400f71b945fa4c5f1",
     "metadata": {},
-    "name": "routesQuery",
+    "name": "tokenQuery",
     "operationKind": "query",
     "text": null
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '85869af23428f69b06fdc394daea91c0';
+(node/*: any*/).hash = '87187f6cdbec88e2252bcdc4bc89fa90';
 
 module.exports = node;
