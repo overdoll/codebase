@@ -7,10 +7,16 @@ k8s_objects(
     name = "objects",
     objects = [
         ":cluster",
+        ":config",
     ],
 )
 
 k8s_object(
     name = "cluster",
     template = ":cluster.yaml",
+)
+
+k8s_object(
+    name = "config",
+    template = ":scylla-config.yaml",
 )

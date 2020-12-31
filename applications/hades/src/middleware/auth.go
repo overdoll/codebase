@@ -39,6 +39,14 @@ func AuthenticationMiddleware(services services.Services, redis redis.Conn) gin.
 
 		claims := jwtToken.Claims.(authentication.AuthCustomClaims)
 
+		// make sure our session token also exists in the Redis Set
+		existing, err := redis.Do("SISMEMBER", "session:"+claims.Username, jwtToken.Raw)
+
+		if err != nil || existing == 0 {
+			c.AbortWithStatus(http.StatusForbidden)
+			return
+		}
+
 		// Verify user exists with this token by grabbing the user
 		user, err := services.Eva().GetUser(c, &evav1.GetUserRequest{Username: claims.Username})
 
@@ -56,7 +64,7 @@ func AuthenticationMiddleware(services services.Services, redis redis.Conn) gin.
 		http.SetCookie(c.Writer, &http.Cookie{Name: "session", Value: token, HttpOnly: true, Secure: false})
 
 		// Add to redis set for this user's session tokens
-		// TODO: Should capture stuff like IP, location, header so we can show the user the devices that are logged in for them
+		// TODO: Should capture stuff like IP, location, agent header so we can show the user the devices that are logged in for them
 		val, err := redis.Do("SSAD", "session:"+claims.Username, token)
 
 		if val == nil || err != nil {
