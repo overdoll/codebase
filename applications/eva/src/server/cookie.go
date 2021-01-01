@@ -103,17 +103,17 @@ func (s *Server) RedeemAuthenticationCookie(ctx context.Context, request *evav1.
 	authCookie := AuthenticationCookie{
 		Cookie:   u,
 		Redeemed: 1,
+		Email:    queryCookieItem.Email,
 	}
 
 	// if not expired, then update cookie
 	updateCookie := qb.Update("authentication_cookies").
 		Set("redeemed").
-		Where(qb.Eq("cookie")).
-		Query(s.session)
+		Where(qb.Eq("cookie"), qb.Eq("email")).
+		Query(s.session).
+		BindStruct(authCookie)
 
-	updateCookie.BindStruct(authCookie)
-
-	if err := queryCookie.ExecRelease(); err != nil {
+	if err := updateCookie.ExecRelease(); err != nil {
 		return nil, fmt.Errorf("update() failed: '%s", err)
 	}
 
