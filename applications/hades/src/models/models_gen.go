@@ -3,7 +3,8 @@
 package models
 
 type AccountData struct {
-	Registered bool `json:"registered"`
+	Registered  bool `json:"registered"`
+	SameSession bool `json:"sameSession"`
 }
 
 type Authentication struct {
@@ -11,7 +12,8 @@ type Authentication struct {
 }
 
 type AuthenticationState struct {
-	Redeemed bool `json:"Redeemed"`
+	Authorized bool `json:"authorized"`
+	Registered bool `json:"registered"`
 }
 
 type JoinState struct {

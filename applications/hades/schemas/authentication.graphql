@@ -4,6 +4,7 @@ type Authentication {
 
 type AccountData {
     registered: Boolean!
+    sameSession: Boolean!
 }
 
 type JoinState {
@@ -15,7 +16,8 @@ type Registration {
 }
 
 type AuthenticationState {
-    Redeemed: Boolean!
+    authorized: Boolean!
+    registered: Boolean!
 }
 
 type SameSession {

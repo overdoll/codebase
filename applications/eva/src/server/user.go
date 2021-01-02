@@ -86,23 +86,21 @@ func (s *Server) GetRegisteredEmail(ctx context.Context, request *evav1.GetRegis
 		return nil, fmt.Errorf("email is not valid")
 	}
 
-	// Check for registered user with this email
-	resource := RegisteredUser{
+	// get authentication cookie with this ID
+	userEmail := UserEmail{
 		Email: request.Email,
 	}
 
 	// check if email is in use
-	queryEmail := qb.
-		Select("users_emails").
-		Columns("email", "username").
+	queryEmail := qb.Select("users_emails").
 		Where(qb.Eq("email")).
 		Query(s.session).
-		BindStruct(resource)
+		BindStruct(userEmail)
 
-	var registeredItem *RegisteredUser
+	var registeredItem UserEmail
 
-	if err := queryEmail.Select(&registeredItem); err != nil {
-		return nil, fmt.Errorf("select() failed: '%s", err)
+	if err := queryEmail.Get(&registeredItem); err != nil {
+		return &evav1.GetRegisteredEmailResponse{Username: ""}, nil
 	}
 
 	return &evav1.GetRegisteredEmailResponse{Username: registeredItem.Username}, nil

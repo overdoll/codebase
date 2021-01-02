@@ -4,5 +4,6 @@
   "bc3fee639867972e033491bc2bddb70e03e9e6545ec430da901bf2f5d5562858": "mutation JoinRootMutation(\n  $email: String!\n) {\n  authenticate(email: $email) {\n    success\n  }\n}\n",
   "eecf3e45471e0b0b367e92241a54a14e26a8b4aec4e3fe9af3c25b0cf24dd838": "mutation TokenRootMutation(\n  $cookie: String!\n) {\n  redeemCookie(cookie: $cookie) {\n    same\n  }\n}\n",
   "1495477c5c94f045f032e66340c3c98870c9281766c520f11c90af36f73aa745": "query routesQuery(\n  $cookie: String!\n) {\n  redeemCookie(cookie: $cookie) {\n    same\n  }\n}\n",
-  "d7df09c81fe1819ec6e54a95b90870d7ef0dd3a4e9fc022400f71b945fa4c5f1": "query tokenQuery(\n  $cookie: String!\n) {\n  redeemCookie(cookie: $cookie) {\n    same\n  }\n}\n"
+  "d7df09c81fe1819ec6e54a95b90870d7ef0dd3a4e9fc022400f71b945fa4c5f1": "query tokenQuery(\n  $cookie: String!\n) {\n  redeemCookie(cookie: $cookie) {\n    same\n  }\n}\n",
+  "6033c5a10fceaf104d411df83fa9336d82398c3f7f789d3170d2319fd5beefa8": "query tokenQuery(\n  $cookie: String!\n) {\n  redeemCookie(cookie: $cookie) {\n    registered\n    sameSession\n  }\n}\n"
 }

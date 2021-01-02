@@ -32,13 +32,13 @@ type AuthenticationCookie struct {
 }
 
 type RegisteredUser struct {
-	Username string
-	Email    string
+	Username string `db:"username"`
+	Email    string `db:"email"`
 }
 
 type UserEmail struct {
-	Username string
-	Email    string
+	Username string `db:"username"`
+	Email    string `db:"email"`
 }
 
 type User struct {

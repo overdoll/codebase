@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 6751386073d08aefe132978ce03eb085
+ * @relayHash 627dbbe48db3856ffa29c3761ad459ed
  */
 
 /* eslint-disable */
@@ -14,7 +14,8 @@ export type tokenQueryVariables = {|
 |};
 export type tokenQueryResponse = {|
   +redeemCookie: ?{|
-    +same: boolean
+    +registered: boolean,
+    +sameSession: boolean,
   |}
 |};
 export type tokenQuery = {|
@@ -29,7 +30,8 @@ query tokenQuery(
   $cookie: String!
 ) {
   redeemCookie(cookie: $cookie) {
-    same
+    registered
+    sameSession
   }
 }
 */
@@ -52,7 +54,7 @@ v1 = [
         "variableName": "cookie"
       }
     ],
-    "concreteType": "SameSession",
+    "concreteType": "AccountData",
     "kind": "LinkedField",
     "name": "redeemCookie",
     "plural": false,
@@ -61,7 +63,14 @@ v1 = [
         "alias": null,
         "args": null,
         "kind": "ScalarField",
-        "name": "same",
+        "name": "registered",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "sameSession",
         "storageKey": null
       }
     ],
@@ -86,7 +95,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "d7df09c81fe1819ec6e54a95b90870d7ef0dd3a4e9fc022400f71b945fa4c5f1",
+    "id": "6033c5a10fceaf104d411df83fa9336d82398c3f7f789d3170d2319fd5beefa8",
     "metadata": {},
     "name": "tokenQuery",
     "operationKind": "query",
@@ -95,6 +104,6 @@ return {
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '87187f6cdbec88e2252bcdc4bc89fa90';
+(node/*: any*/).hash = '1bef598c2f54d9199120131ec185f0c8';
 
 module.exports = node;

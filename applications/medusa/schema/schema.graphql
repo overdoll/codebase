@@ -2,6 +2,7 @@ directive @auth on FIELD_DEFINITION
 
 type AccountData {
   registered: Boolean!
+  sameSession: Boolean!
 }
 
 type Authentication {
@@ -9,7 +10,8 @@ type Authentication {
 }
 
 type AuthenticationState {
-  Redeemed: Boolean!
+  authorized: Boolean!
+  registered: Boolean!
 }
 
 type JoinState {
@@ -18,14 +20,13 @@ type JoinState {
 
 type Mutation {
   authenticate(email: String): Authentication
-  authorize: AccountData
   register(username: String): Registration
   logout: Boolean!
 }
 
 type Query {
   user(username: String): String
-  redeemCookie(cookie: String): SameSession
+  redeemCookie(cookie: String): AccountData
   joinState: JoinState
 }
 

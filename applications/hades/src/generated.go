@@ -47,7 +47,8 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	AccountData struct {
-		Registered func(childComplexity int) int
+		Registered  func(childComplexity int) int
+		SameSession func(childComplexity int) int
 	}
 
 	Authentication struct {
@@ -55,7 +56,8 @@ type ComplexityRoot struct {
 	}
 
 	AuthenticationState struct {
-		Redeemed func(childComplexity int) int
+		Authorized func(childComplexity int) int
+		Registered func(childComplexity int) int
 	}
 
 	JoinState struct {
@@ -64,7 +66,6 @@ type ComplexityRoot struct {
 
 	Mutation struct {
 		Authenticate func(childComplexity int, email *string) int
-		Authorize    func(childComplexity int) int
 		Logout       func(childComplexity int) int
 		Register     func(childComplexity int, username *string) int
 	}
@@ -90,13 +91,12 @@ type ComplexityRoot struct {
 
 type MutationResolver interface {
 	Authenticate(ctx context.Context, email *string) (*models.Authentication, error)
-	Authorize(ctx context.Context) (*models.AccountData, error)
 	Register(ctx context.Context, username *string) (*models.Registration, error)
 	Logout(ctx context.Context) (bool, error)
 }
 type QueryResolver interface {
 	User(ctx context.Context, username *string) (*string, error)
-	RedeemCookie(ctx context.Context, cookie *string) (*models.SameSession, error)
+	RedeemCookie(ctx context.Context, cookie *string) (*models.AccountData, error)
 	JoinState(ctx context.Context) (*models.JoinState, error)
 }
 type SubscriptionResolver interface {
@@ -125,6 +125,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AccountData.Registered(childComplexity), true
 
+	case "AccountData.sameSession":
+		if e.complexity.AccountData.SameSession == nil {
+			break
+		}
+
+		return e.complexity.AccountData.SameSession(childComplexity), true
+
 	case "Authentication.success":
 		if e.complexity.Authentication.Success == nil {
 			break
@@ -132,12 +139,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Authentication.Success(childComplexity), true
 
-	case "AuthenticationState.Redeemed":
-		if e.complexity.AuthenticationState.Redeemed == nil {
+	case "AuthenticationState.authorized":
+		if e.complexity.AuthenticationState.Authorized == nil {
 			break
 		}
 
-		return e.complexity.AuthenticationState.Redeemed(childComplexity), true
+		return e.complexity.AuthenticationState.Authorized(childComplexity), true
+
+	case "AuthenticationState.registered":
+		if e.complexity.AuthenticationState.Registered == nil {
+			break
+		}
+
+		return e.complexity.AuthenticationState.Registered(childComplexity), true
 
 	case "JoinState.existingUser":
 		if e.complexity.JoinState.ExistingUser == nil {
@@ -157,13 +171,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.Authenticate(childComplexity, args["email"].(*string)), true
-
-	case "Mutation.authorize":
-		if e.complexity.Mutation.Authorize == nil {
-			break
-		}
-
-		return e.complexity.Mutation.Authorize(childComplexity), true
 
 	case "Mutation.logout":
 		if e.complexity.Mutation.Logout == nil {
@@ -323,6 +330,7 @@ var sources = []*ast.Source{
 
 type AccountData {
     registered: Boolean!
+    sameSession: Boolean!
 }
 
 type JoinState {
@@ -334,7 +342,8 @@ type Registration {
 }
 
 type AuthenticationState {
-    Redeemed: Boolean!
+    authorized: Boolean!
+    registered: Boolean!
 }
 
 type SameSession {
@@ -343,13 +352,12 @@ type SameSession {
 	{Name: "schemas/directives.graphql", Input: `directive @auth on FIELD_DEFINITION`, BuiltIn: false},
 	{Name: "schemas/mutation.graphql", Input: `type Mutation {
     authenticate(email: String): Authentication
-    authorize: AccountData
     register(username: String): Registration
     logout: Boolean! @auth
 }`, BuiltIn: false},
 	{Name: "schemas/query.graphql", Input: `type Query {
     user(username: String): String
-    redeemCookie(cookie: String): SameSession
+    redeemCookie(cookie: String): AccountData
     joinState: JoinState
 }`, BuiltIn: false},
 	{Name: "schemas/subscription.graphql", Input: `type Subscription {
@@ -510,6 +518,41 @@ func (ec *executionContext) _AccountData_registered(ctx context.Context, field g
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _AccountData_sameSession(ctx context.Context, field graphql.CollectedField, obj *models.AccountData) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AccountData",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SameSession, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Authentication_success(ctx context.Context, field graphql.CollectedField, obj *models.Authentication) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -545,7 +588,7 @@ func (ec *executionContext) _Authentication_success(ctx context.Context, field g
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AuthenticationState_Redeemed(ctx context.Context, field graphql.CollectedField, obj *models.AuthenticationState) (ret graphql.Marshaler) {
+func (ec *executionContext) _AuthenticationState_authorized(ctx context.Context, field graphql.CollectedField, obj *models.AuthenticationState) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -563,7 +606,42 @@ func (ec *executionContext) _AuthenticationState_Redeemed(ctx context.Context, f
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Redeemed, nil
+		return obj.Authorized, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AuthenticationState_registered(ctx context.Context, field graphql.CollectedField, obj *models.AuthenticationState) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AuthenticationState",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Registered, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -652,38 +730,6 @@ func (ec *executionContext) _Mutation_authenticate(ctx context.Context, field gr
 	res := resTmp.(*models.Authentication)
 	fc.Result = res
 	return ec.marshalOAuthentication2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐAuthentication(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Mutation_authorize(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().Authorize(rctx)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*models.AccountData)
-	fc.Result = res
-	return ec.marshalOAccountData2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐAccountData(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_register(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -853,9 +899,9 @@ func (ec *executionContext) _Query_redeemCookie(ctx context.Context, field graph
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*models.SameSession)
+	res := resTmp.(*models.AccountData)
 	fc.Result = res
-	return ec.marshalOSameSession2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐSameSession(ctx, field.Selections, res)
+	return ec.marshalOAccountData2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐAccountData(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_joinState(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2184,6 +2230,11 @@ func (ec *executionContext) _AccountData(ctx context.Context, sel ast.SelectionS
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "sameSession":
+			out.Values[i] = ec._AccountData_sameSession(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -2233,8 +2284,13 @@ func (ec *executionContext) _AuthenticationState(ctx context.Context, sel ast.Se
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("AuthenticationState")
-		case "Redeemed":
-			out.Values[i] = ec._AuthenticationState_Redeemed(ctx, field, obj)
+		case "authorized":
+			out.Values[i] = ec._AuthenticationState_authorized(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "registered":
+			out.Values[i] = ec._AuthenticationState_registered(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -2293,8 +2349,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = graphql.MarshalString("Mutation")
 		case "authenticate":
 			out.Values[i] = ec._Mutation_authenticate(ctx, field)
-		case "authorize":
-			out.Values[i] = ec._Mutation_authorize(ctx, field)
 		case "register":
 			out.Values[i] = ec._Mutation_register(ctx, field)
 		case "logout":
@@ -3011,13 +3065,6 @@ func (ec *executionContext) marshalORegistration2ᚖproject01101000ᚋcodebase�
 		return graphql.Null
 	}
 	return ec._Registration(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOSameSession2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐSameSession(ctx context.Context, sel ast.SelectionSet, v *models.SameSession) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._SameSession(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOString2string(ctx context.Context, v interface{}) (string, error) {
