@@ -28,8 +28,6 @@ func (r *queryResolver) RedeemCookie(ctx context.Context, cookie *string) (*mode
 	// If this is a registration (user with email doesn't exist), we keep the cookie, and remove it when we register, so the user
 	// can complete the registration if they've accidentally closed their tab
 
-	// We want to make sure that this method is ONLY ran when we have the cookie
-
 	gc := helpers.GinContextFromContext(ctx)
 
 	// Redeem our authentication cookie
@@ -47,24 +45,23 @@ func (r *queryResolver) RedeemCookie(ctx context.Context, cookie *string) (*mode
 		return &models.AccountData{Registered: false, SameSession: false}, nil
 	}
 
+	// Check if user is registered
 	getRegisteredUser, err := r.services.Eva().GetRegisteredEmail(ctx, &evav1.GetRegisteredEmailRequest{Email: getRedeemedCookie.Cookie.Email})
 
 	if err != nil {
 		return nil, err
 	}
 
-	// Delete our cookie
-	getDeletedCookie, err := r.services.Eva().DeleteAuthenticationCookie(ctx, &evav1.GetAuthenticationCookieRequest{Cookie: currentCookie.Value})
-
-	fmt.Println("test")
-
-	if err != nil || getDeletedCookie == nil {
-		return nil, err
-	}
-
 	// User doesn't exist, we ask to register
 	if getRegisteredUser.Username == "" {
 		return &models.AccountData{Registered: false, SameSession: true}, nil
+	}
+
+	// Delete our cookie, since we now know this user will be logged in
+	getDeletedCookie, err := r.services.Eva().DeleteAuthenticationCookie(ctx, &evav1.GetAuthenticationCookieRequest{Cookie: currentCookie.Value})
+
+	if err != nil || getDeletedCookie == nil {
+		return nil, err
 	}
 
 	// Otherwise, we remove the cookie, and create a JWT token

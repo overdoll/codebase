@@ -5,6 +5,7 @@
   "dependencies": {
     "chokidar": "^3.4.3",
     "express": "^4.17.1",
+    "graphql-ws": "^3.2.0",
     "history": "^4.10.1",
     "husky": "^3.0.9",
     "lint-staged": "^9.4.2",

@@ -63,6 +63,7 @@ _RUNTIME_DEPS = [
     "@npm//react-refresh",
     "@npm//@babel/plugin-transform-react-jsx",
     "@npm//rebass",
+    "@npm//graphql-ws",
 ]
 
 nodejs_binary(

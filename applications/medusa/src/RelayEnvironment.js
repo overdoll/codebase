@@ -1,4 +1,11 @@
-import { Environment, Network, RecordSource, Store } from 'relay-runtime';
+import {
+  Environment,
+  Network,
+  RecordSource,
+  Store,
+  Observable,
+} from 'relay-runtime';
+import { createClient } from 'graphql-ws';
 
 /**
  * Relay requires developers to configure a "fetch" function that tells Relay how to load
@@ -12,6 +19,7 @@ async function fetchRelay(params, variables, _cacheConfig) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
+      operationName: params.name,
       extensions: {
         persistedQuery: {
           version: 1,
@@ -43,9 +51,52 @@ async function fetchRelay(params, variables, _cacheConfig) {
   return json;
 }
 
+const subscriptionsClient = createClient({
+  url: 'ws://localhost/api/graphql',
+  connectionParams: () => {
+    return {};
+  },
+});
+
+// yes, both fetch AND subscribe handled in one implementation
+function fetchOrSubscribe(params, variables) {
+  return Observable.create(sink => {
+    return subscriptionsClient.subscribe(
+      {
+        operationName: params.name,
+        extensions: {
+          persistedQuery: {
+            version: 1,
+            sha256Hash: params.id,
+          },
+        },
+        variables,
+      },
+      {
+        ...sink,
+        error: err => {
+          if (err instanceof Error) {
+            sink.error(err);
+          } else if (err instanceof CloseEvent) {
+            sink.error(
+              new Error(
+                `Socket closed with event ${err.code}` + err.reason
+                  ? `: ${err.reason}` // reason will be available on clean closes
+                  : '',
+              ),
+            );
+          } else {
+            sink.error(err);
+          }
+        },
+      },
+    );
+  });
+}
+
 // Export a singleton instance of Relay Environment configured with our network layer:
 export default new Environment({
-  network: Network.create(fetchRelay),
+  network: Network.create(fetchRelay, fetchOrSubscribe),
   store: new Store(new RecordSource(), {
     // This property tells Relay to not immediately clear its cache when the user
     // navigates around the app. Relay will hold onto the specified number of

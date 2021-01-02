@@ -99,6 +99,7 @@ func main() {
 		}
 
 		graphAPIHandler.AddTransport(transport.POST{})
+		graphAPIHandler.AddTransport(transport.GET{})
 		graphAPIHandler.AddTransport(transport.MultipartForm{})
 		graphAPIHandler.SetQueryCache(lru.New(1000))
 

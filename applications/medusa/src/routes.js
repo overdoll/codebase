@@ -16,8 +16,17 @@ const routes = [
     routes: [
       {
         path: '/join',
+        exact: true,
         component: JSResource('JoinRoot', () =>
           import('./components/JoinRoot'),
+        ),
+        prepare: function() {},
+      },
+      {
+        path: '/join/queue',
+        exact: true,
+        component: JSResource('JoinSubRoot', () =>
+          import('./components/JoinSubRoot'),
         ),
         prepare: function() {},
       },
