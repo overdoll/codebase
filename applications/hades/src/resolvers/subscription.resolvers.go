@@ -5,7 +5,6 @@ package resolvers
 
 import (
 	"context"
-	"fmt"
 	"github.com/gomodule/redigo/redis"
 	"net/http"
 	evav1 "project01101000/codebase/applications/eva/proto"
@@ -26,9 +25,23 @@ func (r *subscriptionResolver) AuthenticationState(ctx context.Context) (<-chan 
 
 		if err == http.ErrNoCookie {
 			// The program returns this error
-			return nil, nil
+			return nil, err
 		}
 
+		return nil, err
+	}
+
+	// Get our cookie so we can get our email
+	getAuthenticationCookie, err := r.services.Eva().GetAuthenticationCookie(ctx, &evav1.GetAuthenticationCookieRequest{Cookie: currentCookie.Value})
+
+	// It could happen that the cookie was deleted - if so, then we should tell the user that the token has been redeemed
+	if err != nil {
+		return nil, err
+	}
+
+	getRegisteredUser, err := r.services.Eva().GetRegisteredEmail(ctx, &evav1.GetRegisteredEmailRequest{Email: getAuthenticationCookie.Cookie.Email})
+
+	if err != nil {
 		return nil, err
 	}
 
@@ -37,33 +50,39 @@ func (r *subscriptionResolver) AuthenticationState(ctx context.Context) (<-chan 
 	go func() {
 		r.redisPB.Subscribe("otp")
 
+		if getAuthenticationCookie.Cookie.Redeemed == true {
+
+			if getRegisteredUser.Username == "" {
+				channel <- &models.AuthenticationState{Authorized: true, Registered: false, Redirect: false}
+				return
+			}
+
+			// Otherwise, we remove the cookie, and create a JWT token
+			http.SetCookie(gc.Writer, &http.Cookie{Name: OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: false, Path: "/"})
+
+			// Create user session with username
+			_, err := helpers.CreateUserSession(gc, r.redis, getRegisteredUser.Username)
+
+			if err != nil {
+				return
+			}
+
+			channel <- &models.AuthenticationState{Authorized: true, Registered: true, Redirect: false}
+			return
+		}
+
 		for {
 			switch v := r.redisPB.Receive().(type) {
 			case redis.Message:
-				fmt.Printf("%s: message: %s\n", v.Channel, v.Data)
-				if string(v.Data) == "SAME_SESSION" {
-					channel <- &models.AuthenticationState{Authorized: false, Registered: false, Redirect: true}
-					return
-				} else if string(v.Data) == "ANOTHER_SESSION" {
-					// Get our cookie so we can get our email
-					getAuthenticationCookie, err := r.services.Eva().GetAuthenticationCookie(ctx, &evav1.GetAuthenticationCookieRequest{Cookie: currentCookie.Value})
 
-					// It could happen that the cookie was deleted - if so, then we should tell the user that the token has been redeemed
-					if err != nil {
-						close(channel)
-						return
-					}
+				if string(v.Data) == "SAME_SESSION" {
+					channel <- &models.AuthenticationState{Authorized: true, Registered: false, Redirect: true}
+					return
+
+				} else if string(v.Data) == "ANOTHER_SESSION" {
 
 					if getAuthenticationCookie.Cookie.Redeemed == false {
 						channel <- &models.AuthenticationState{Authorized: false, Registered: false, Redirect: false}
-						close(channel)
-						return
-					}
-
-					getRegisteredUser, err := r.services.Eva().GetRegisteredEmail(ctx, &evav1.GetRegisteredEmailRequest{Email: getAuthenticationCookie.Cookie.Email})
-
-					if err != nil {
-						close(channel)
 						return
 					}
 
@@ -71,14 +90,12 @@ func (r *subscriptionResolver) AuthenticationState(ctx context.Context) (<-chan 
 					getDeletedCookie, err := r.services.Eva().DeleteAuthenticationCookie(ctx, &evav1.GetAuthenticationCookieRequest{Cookie: currentCookie.Value})
 
 					if err != nil || getDeletedCookie == nil {
-						close(channel)
 						return
 					}
 
 					// User doesn't exist, we ask to register
 					if getRegisteredUser.Username == "" {
 						channel <- &models.AuthenticationState{Authorized: true, Registered: false, Redirect: false}
-						close(channel)
 						return
 					}
 
@@ -100,17 +117,13 @@ func (r *subscriptionResolver) AuthenticationState(ctx context.Context) (<-chan 
 					val, err := r.redis.Do("SSAD", "session:"+getRegisteredUser.Username, token)
 
 					if val == nil || err != nil {
-						close(channel)
 						return
 					}
 
-					channel <- &models.AuthenticationState{Authorized: true, Registered: false, Redirect: false}
-					close(channel)
+					channel <- &models.AuthenticationState{Authorized: true, Registered: true, Redirect: false}
 					return
 				}
 
-			case redis.Subscription:
-				fmt.Printf("%s: %s %d\n", v.Channel, v.Kind, v.Count)
 			case error:
 				return
 			}

@@ -1,14 +1,14 @@
 package middleware
 
 import (
+	"context"
 	"github.com/gin-gonic/gin"
 	"github.com/gomodule/redigo/redis"
 	"net/http"
-	"context"
 	evav1 "project01101000/codebase/applications/eva/proto"
 	"project01101000/codebase/applications/hades/src/authentication"
+	"project01101000/codebase/applications/hades/src/helpers"
 	"project01101000/codebase/applications/hades/src/services"
-	"time"
 )
 
 type User struct {
@@ -55,25 +55,15 @@ func AuthenticationMiddleware(services services.Services, redis redis.Conn) gin.
 			return
 		}
 
-		// Now, refresh our token since it was used
-		expiration := time.Now().Add(time.Hour * 120).Unix()
+		_, err = helpers.CreateUserSession(c, redis, claims.Username)
 
-		token := jwtService.GenerateToken(claims.Username, expiration)
-
-		// Set session cookie
-		http.SetCookie(c.Writer, &http.Cookie{Name: "session", Value: token, HttpOnly: true, Secure: false})
-
-		// Add to redis set for this user's session tokens
-		// TODO: Should capture stuff like IP, location, agent header so we can show the user the devices that are logged in for them
-		val, err := redis.Do("SSAD", "session:"+claims.Username, token)
-
-		if val == nil || err != nil {
+		if err != nil {
 			c.AbortWithStatus(http.StatusInternalServerError)
 			return
 		}
 
 		// put it in context
-		ctx := context.WithValue(c.Request.Context(), "UserContextKey", &User{Username: user.Username, Token: token})
+		ctx := context.WithValue(c.Request.Context(), "UserContextKey", &User{Username: user.Username, Token: jwtToken.Raw})
 
 		// and call the next with our new context
 		c.Request = c.Request.WithContext(ctx)

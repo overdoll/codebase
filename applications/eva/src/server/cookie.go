@@ -138,20 +138,12 @@ func (s *Server) GetAuthenticationCookie(ctx context.Context, request *evav1.Get
 	}
 
 	queryCookie := qb.Select("authentication_cookies").
-		Where(qb.Eq("cookie")).
-		Columns("cookie", "email", "redeemed", "expiration").
+		Where(qb.EqLit("cookie", u.String())).
 		Query(s.session)
 
-	// get authentication cookie with this ID
-	authCookie := AuthenticationCookie{
-		Cookie: u,
-	}
+	var cookieItem AuthenticationCookie
 
-	queryCookie.BindStruct(authCookie)
-
-	var cookieItem *AuthenticationCookie
-
-	if err := queryCookie.Select(&cookieItem); err != nil {
+	if err := queryCookie.Get(&cookieItem); err != nil {
 		return nil, fmt.Errorf("select() failed: '%s", err)
 	}
 

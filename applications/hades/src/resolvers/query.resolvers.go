@@ -9,10 +9,8 @@ import (
 	"net/http"
 	evav1 "project01101000/codebase/applications/eva/proto"
 	gen "project01101000/codebase/applications/hades/src"
-	"project01101000/codebase/applications/hades/src/authentication"
 	"project01101000/codebase/applications/hades/src/helpers"
 	"project01101000/codebase/applications/hades/src/models"
-	"time"
 )
 
 func (r *queryResolver) User(ctx context.Context, username *string) (*string, error) {
@@ -29,9 +27,6 @@ func (r *queryResolver) RedeemCookie(ctx context.Context, cookie *string) (*mode
 	// can complete the registration if they've accidentally closed their tab
 
 	gc := helpers.GinContextFromContext(ctx)
-
-	r.redis.Send("PUBLISH", "otp", "ANOTHER_SESSION")
-	r.redis.Flush()
 
 	// Redeem our authentication cookie
 	getRedeemedCookie, err := r.services.Eva().RedeemAuthenticationCookie(ctx, &evav1.GetAuthenticationCookieRequest{Cookie: *cookie})
@@ -57,7 +52,8 @@ func (r *queryResolver) RedeemCookie(ctx context.Context, cookie *string) (*mode
 
 	// User doesn't exist, we ask to register
 	if getRegisteredUser.Username == "" {
-		//r.redis.Send("PUBLISH", "otp", "SAME_SESSION")
+		r.redis.Send("PUBLISH", "otp", "SAME_SESSION")
+		r.redis.Flush()
 		return &models.AccountData{Registered: false, SameSession: true}, nil
 	}
 
@@ -71,25 +67,15 @@ func (r *queryResolver) RedeemCookie(ctx context.Context, cookie *string) (*mode
 	// Otherwise, we remove the cookie, and create a JWT token
 	http.SetCookie(gc.Writer, &http.Cookie{Name: OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: false, Path: "/"})
 
-	// Create JWT token
-	jwtService := authentication.JWTAuthService()
+	// Create user session
+	_, err = helpers.CreateUserSession(gc, r.redis, getRegisteredUser.Username)
 
-	expiration := time.Now().Add(time.Hour * 120).Unix()
-
-	token := jwtService.GenerateToken(getRegisteredUser.Username, expiration)
-
-	// Set session cookie
-	http.SetCookie(gc.Writer, &http.Cookie{Name: "session", Value: token, HttpOnly: true, Secure: false, Path: "/"})
-
-	// Add to redis set for this user's session tokens
-	// TODO: Should capture stuff like IP, location, header so we can show the user the devices that are logged in for them
-	val, err := r.redis.Do("SSAD", "session:"+getRegisteredUser.Username, token)
-
-	if val == nil || err != nil {
+	if err != nil {
 		return nil, err
 	}
 
-	//r.redis.Send("PUBLISH", "otp:"+getRedeemedCookie.Cookie.Cookie, "SAME_SESSION")
+	r.redis.Send("PUBLISH", "otp", "SAME_SESSION")
+	r.redis.Flush()
 
 	return &models.AccountData{Registered: true, SameSession: true}, nil
 }
