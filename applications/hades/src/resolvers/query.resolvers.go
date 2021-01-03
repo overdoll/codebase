@@ -52,7 +52,7 @@ func (r *queryResolver) RedeemCookie(ctx context.Context, cookie *string) (*mode
 
 	// User doesn't exist, we ask to register
 	if getRegisteredUser.Username == "" {
-		r.redis.Send("PUBLISH", "otp", "SAME_SESSION")
+		r.redis.Send("PUBLISH", "otp"+currentCookie.Value, "SAME_SESSION")
 		r.redis.Flush()
 		return &models.AccountData{Registered: false, SameSession: true}, nil
 	}
@@ -74,7 +74,7 @@ func (r *queryResolver) RedeemCookie(ctx context.Context, cookie *string) (*mode
 		return nil, err
 	}
 
-	r.redis.Send("PUBLISH", "otp", "SAME_SESSION")
+	r.redis.Send("PUBLISH", "otp"+currentCookie.Value, "SAME_SESSION")
 	r.redis.Flush()
 
 	return &models.AccountData{Registered: true, SameSession: true}, nil

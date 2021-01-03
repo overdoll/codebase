@@ -9,10 +9,8 @@ import (
 	"net/http"
 	evav1 "project01101000/codebase/applications/eva/proto"
 	gen "project01101000/codebase/applications/hades/src"
-	"project01101000/codebase/applications/hades/src/authentication"
 	"project01101000/codebase/applications/hades/src/helpers"
 	"project01101000/codebase/applications/hades/src/models"
-	"time"
 )
 
 func (r *subscriptionResolver) AuthenticationState(ctx context.Context) (<-chan *models.AuthenticationState, error) {
@@ -47,27 +45,33 @@ func (r *subscriptionResolver) AuthenticationState(ctx context.Context) (<-chan 
 
 	channel := make(chan *models.AuthenticationState)
 
+	// Helper function to check what we should do about the user
+	checkState := func() {
+		// User doesn't exist, we ask to register
+		if getRegisteredUser.Username == "" {
+			channel <- &models.AuthenticationState{Authorized: true, Registered: false, Redirect: false}
+			return
+		}
+
+		// Otherwise, we remove the cookie, and create a JWT token
+		http.SetCookie(gc.Writer, &http.Cookie{Name: OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: false, Path: "/"})
+
+		// Create user session with username
+		_, err = helpers.CreateUserSession(gc, r.redis, getRegisteredUser.Username)
+
+		if err != nil {
+			return
+		}
+
+		channel <- &models.AuthenticationState{Authorized: true, Registered: true, Redirect: false}
+		return
+	}
+
 	go func() {
-		r.redisPB.Subscribe("otp")
+		r.redisPB.Subscribe("otp" + getAuthenticationCookie.Cookie.Cookie)
 
 		if getAuthenticationCookie.Cookie.Redeemed == true {
-
-			if getRegisteredUser.Username == "" {
-				channel <- &models.AuthenticationState{Authorized: true, Registered: false, Redirect: false}
-				return
-			}
-
-			// Otherwise, we remove the cookie, and create a JWT token
-			http.SetCookie(gc.Writer, &http.Cookie{Name: OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: false, Path: "/"})
-
-			// Create user session with username
-			_, err := helpers.CreateUserSession(gc, r.redis, getRegisteredUser.Username)
-
-			if err != nil {
-				return
-			}
-
-			channel <- &models.AuthenticationState{Authorized: true, Registered: true, Redirect: false}
+			checkState()
 			return
 		}
 
@@ -93,34 +97,7 @@ func (r *subscriptionResolver) AuthenticationState(ctx context.Context) (<-chan 
 						return
 					}
 
-					// User doesn't exist, we ask to register
-					if getRegisteredUser.Username == "" {
-						channel <- &models.AuthenticationState{Authorized: true, Registered: false, Redirect: false}
-						return
-					}
-
-					// Otherwise, we remove the cookie, and create a JWT token
-					http.SetCookie(gc.Writer, &http.Cookie{Name: OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: false, Path: "/"})
-
-					// Create JWT token
-					jwtService := authentication.JWTAuthService()
-
-					expiration := time.Now().Add(time.Hour * 120).Unix()
-
-					token := jwtService.GenerateToken(getRegisteredUser.Username, expiration)
-
-					// Set session cookie
-					http.SetCookie(gc.Writer, &http.Cookie{Name: "session", Value: token, HttpOnly: true, Secure: false, Path: "/"})
-
-					// Add to redis set for this user's session tokens
-					// TODO: Should capture stuff like IP, location, header so we can show the user the devices that are logged in for them
-					val, err := r.redis.Do("SSAD", "session:"+getRegisteredUser.Username, token)
-
-					if val == nil || err != nil {
-						return
-					}
-
-					channel <- &models.AuthenticationState{Authorized: true, Registered: true, Redirect: false}
+					checkState()
 					return
 				}
 
