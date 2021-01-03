@@ -23,14 +23,6 @@ const routes = [
         prepare: function() {},
       },
       {
-        path: '/join/queue',
-        exact: true,
-        component: JSResource('JoinSubRoot', () =>
-          import('./components/JoinSubRoot'),
-        ),
-        prepare: function() {},
-      },
-      {
         path: '/token/:id',
         component: TokenRoot,
         prepare: params => {

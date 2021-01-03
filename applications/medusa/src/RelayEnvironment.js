@@ -19,6 +19,7 @@ async function fetchRelay(params, variables, _cacheConfig) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
+      query: 'empty',
       operationName: params.name,
       extensions: {
         apq: {
@@ -50,14 +51,14 @@ async function fetchRelay(params, variables, _cacheConfig) {
   return json;
 }
 
-const subscriptionClient = new SubscriptionClient(
-  'ws://localhost/api/graphql',
-  {
-    reconnect: true,
-  },
-);
-
 const subscribe = (params, variables) => {
+  const subscriptionClient = new SubscriptionClient(
+    'ws://localhost/api/graphql',
+    {
+      reconnect: true,
+    },
+  );
+
   const subscribeObservable = subscriptionClient.request({
     operationName: params.name,
     extensions: {
@@ -66,6 +67,7 @@ const subscribe = (params, variables) => {
       },
     },
     variables,
+    query: 'empty',
   });
   // Important: Convert subscriptions-transport-ws observable type to Relay's
   return Observable.from(subscribeObservable);

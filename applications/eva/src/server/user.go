@@ -13,23 +13,22 @@ func (s *Server) GetUser(ctx context.Context, request *evav1.GetUserRequest) (*e
 		return nil, fmt.Errorf("username is not provided")
 	}
 
-	queryUser := qb.Select("users").Where(qb.Eq("username")).Columns("username").Query(s.session)
-
-	// get user with this username
-	user := User{
+	users := User{
 		Username: request.Username,
 	}
 
-	queryUser.BindStruct(user)
+	queryUser := qb.Select("users").
+		Where(qb.Eq("username")).
+		Query(s.session).
+		BindStruct(users)
 
-	var userItem *User
+	var userItem User
 
-	if err := queryUser.Select(&userItem); err != nil {
+	if err := queryUser.Get(&userItem); err != nil {
 		return nil, fmt.Errorf("select() failed: '%s", err)
 	}
 
 	return &evav1.User{Username: userItem.Username}, nil
-
 }
 
 func (s *Server) RegisterUser(ctx context.Context, request *evav1.RegisterUserRequest) (*evav1.RegisterUserResponse, error) {
@@ -68,7 +67,7 @@ func (s *Server) RegisterUser(ctx context.Context, request *evav1.RegisterUserRe
 	}
 
 	// Now, we actually register the user to our main users table, and set any attributes
-	insertUser := qb.Insert("users").Columns("user").Unique().Query(s.session).BindStruct(user)
+	insertUser := qb.Insert("users").Columns("username").Unique().Query(s.session).BindStruct(user)
 
 	if err := insertUser.ExecRelease(); err != nil {
 		return nil, fmt.Errorf("ExecRelease() failed: '%s", err)

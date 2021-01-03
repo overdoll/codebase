@@ -18,16 +18,16 @@ func UserFromContext(ctx context.Context) *models.User {
 func CreateUserSession(gc *gin.Context, redis redis.Conn, username string) (*string, error) {
 	jwtService := authentication.JWTAuthService()
 
-	expiration := time.Now().Add(time.Hour * 120).Unix()
+	expiration := time.Now().Add(time.Hour * 120)
 
-	token := jwtService.GenerateToken(username, expiration)
+	token := jwtService.GenerateToken(username, expiration.Unix())
 
 	// Set session cookies
-	http.SetCookie(gc.Writer, &http.Cookie{Name: "session", Value: token, HttpOnly: true, Secure: false, Path: "/"})
+	http.SetCookie(gc.Writer, &http.Cookie{Name: "session", Value: token, Expires: expiration, HttpOnly: true, Secure: false, Path: "/"})
 
 	// Add to redis set for this user's session tokens
 	// TODO: Should capture stuff like IP, location, header so we can show the user the devices that are logged in for them
-	_, err := redis.Do("SSAD", "session:"+username, token)
+	_, err := redis.Do("SADD", "session:"+username, token)
 
 	if err != nil {
 		return nil, err

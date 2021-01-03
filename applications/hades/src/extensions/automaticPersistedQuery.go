@@ -60,7 +60,7 @@ func (a AutomaticPersistedQuery) MutateOperationParameters(ctx context.Context, 
 	}
 
 	fullQuery := false
-	if rawParams.Query == "" {
+	if rawParams.Query == "" || rawParams.Query == "empty" {
 		// client sent optimistic query hash without query string, get it from the cache
 		query, ok := a.Cache.Get(ctx, extension.Sha256)
 		if !ok {

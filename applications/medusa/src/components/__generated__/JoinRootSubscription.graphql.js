@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 059eea10b5a63e6e5260cee562bad7ca
+ * @relayHash 4c61efbe93f81d3a6bf2216d8f666869
  */
 
 /* eslint-disable */
@@ -9,25 +9,27 @@
 
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
-export type JoinSubRootSubscriptionVariables = {||};
-export type JoinSubRootSubscriptionResponse = {|
+export type JoinRootSubscriptionVariables = {||};
+export type JoinRootSubscriptionResponse = {|
   +authenticationState: ?{|
     +authorized: boolean,
     +registered: boolean,
+    +redirect: boolean,
   |}
 |};
-export type JoinSubRootSubscription = {|
-  variables: JoinSubRootSubscriptionVariables,
-  response: JoinSubRootSubscriptionResponse,
+export type JoinRootSubscription = {|
+  variables: JoinRootSubscriptionVariables,
+  response: JoinRootSubscriptionResponse,
 |};
 */
 
 
 /*
-subscription JoinSubRootSubscription {
+subscription JoinRootSubscription {
   authenticationState {
     authorized
     registered
+    redirect
   }
 }
 */
@@ -55,6 +57,13 @@ var v0 = [
         "kind": "ScalarField",
         "name": "registered",
         "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "redirect",
+        "storageKey": null
       }
     ],
     "storageKey": null
@@ -65,7 +74,7 @@ return {
     "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
-    "name": "JoinSubRootSubscription",
+    "name": "JoinRootSubscription",
     "selections": (v0/*: any*/),
     "type": "Subscription",
     "abstractKey": null
@@ -74,19 +83,19 @@ return {
   "operation": {
     "argumentDefinitions": [],
     "kind": "Operation",
-    "name": "JoinSubRootSubscription",
+    "name": "JoinRootSubscription",
     "selections": (v0/*: any*/)
   },
   "params": {
-    "id": "23bf010da542460b094f7adbf1647484c63df3d02bb92edef7af675af8b1093a",
+    "id": "1348e60dcda31ab0b31f92554afa54cb1779daf54e52420db0765591c1f83ca5",
     "metadata": {},
-    "name": "JoinSubRootSubscription",
+    "name": "JoinRootSubscription",
     "operationKind": "subscription",
     "text": null
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '0d131352cbd60cb584cf0011f3c0d603';
+(node/*: any*/).hash = 'ca31c1da352f590c625171c27966bdeb';
 
 module.exports = node;

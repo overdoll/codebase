@@ -53,6 +53,13 @@ func (r *subscriptionResolver) AuthenticationState(ctx context.Context) (<-chan 
 			return
 		}
 
+		// Delete our cookie
+		getDeletedCookie, err := r.services.Eva().DeleteAuthenticationCookie(ctx, &evav1.GetAuthenticationCookieRequest{Cookie: currentCookie.Value})
+
+		if err != nil || getDeletedCookie == nil {
+			return
+		}
+
 		// Otherwise, we remove the cookie, and create a JWT token
 		http.SetCookie(gc.Writer, &http.Cookie{Name: OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: false, Path: "/"})
 
@@ -84,19 +91,6 @@ func (r *subscriptionResolver) AuthenticationState(ctx context.Context) (<-chan 
 					return
 
 				} else if string(v.Data) == "ANOTHER_SESSION" {
-
-					if getAuthenticationCookie.Cookie.Redeemed == false {
-						channel <- &models.AuthenticationState{Authorized: false, Registered: false, Redirect: false}
-						return
-					}
-
-					// Delete our cookie
-					getDeletedCookie, err := r.services.Eva().DeleteAuthenticationCookie(ctx, &evav1.GetAuthenticationCookieRequest{Cookie: currentCookie.Value})
-
-					if err != nil || getDeletedCookie == nil {
-						return
-					}
-
 					checkState()
 					return
 				}

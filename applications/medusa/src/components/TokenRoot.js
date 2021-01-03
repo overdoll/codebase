@@ -1,5 +1,6 @@
 import { usePreloadedQuery } from 'react-relay/hooks';
 import { TokenQuery } from '../queries/token';
+import Register from './Register';
 
 export default function TokenRoot(props) {
   const result = usePreloadedQuery(
@@ -13,7 +14,7 @@ export default function TokenRoot(props) {
     }
 
     if (!result.redeemCookie.registered) {
-      return 'register now';
+      return <Register {...props} />;
     }
 
     return 'redirect';

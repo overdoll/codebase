@@ -39,6 +39,9 @@ func (r *queryResolver) RedeemCookie(ctx context.Context, cookie *string) (*mode
 	currentCookie, err := gc.Request.Cookie(OTPKey)
 
 	if err != nil || currentCookie == nil {
+		r.redis.Send("PUBLISH", "otp"+getRedeemedCookie.Cookie.Cookie, "ANOTHER_SESSION")
+		r.redis.Flush()
+
 		// No cookie exists, we want to give a different SameSession response
 		return &models.AccountData{Registered: false, SameSession: false}, nil
 	}

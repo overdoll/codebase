@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"context"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gomodule/redigo/redis"
 	"net/http"
@@ -33,10 +34,10 @@ func AuthenticationMiddleware(services services.Services, redis redis.Conn) gin.
 			return
 		}
 
-		claims := jwtToken.Claims.(authentication.AuthCustomClaims)
+		claims := jwtToken.Claims.(*authentication.AuthCustomClaims)
 
 		// make sure our session token also exists in the Redis Set
-		existing, err := redis.Do("SISMEMBER", "session:"+claims.Username, jwtToken.Raw)
+		existing, err := redis.Do("SISMEMBER", "session:"+claims.Username, cookie.Value)
 
 		if err != nil || existing == 0 {
 			c.AbortWithStatus(http.StatusForbidden)
@@ -47,6 +48,7 @@ func AuthenticationMiddleware(services services.Services, redis redis.Conn) gin.
 		user, err := services.Eva().GetUser(c, &evav1.GetUserRequest{Username: claims.Username})
 
 		if err != nil {
+			fmt.Println(err)
 			c.AbortWithStatus(http.StatusForbidden)
 			return
 		}
@@ -55,6 +57,14 @@ func AuthenticationMiddleware(services services.Services, redis redis.Conn) gin.
 
 		if err != nil {
 			c.AbortWithStatus(http.StatusInternalServerError)
+			return
+		}
+
+		// remove old token since its not valid anymore (we "expired" it)
+		existing, err = redis.Do("SREM", "session:"+claims.Username, cookie.Value)
+
+		if err != nil || existing == 0 {
+			c.AbortWithStatus(http.StatusForbidden)
 			return
 		}
 
