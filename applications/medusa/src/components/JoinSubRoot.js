@@ -6,6 +6,7 @@ const subscription = graphql`
     authenticationState {
       authorized
       registered
+      redirect
     }
   }
 `;

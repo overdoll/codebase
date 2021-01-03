@@ -6,6 +6,18 @@ export default function TokenRoot(props) {
     TokenQuery,
     props.prepared.queries.tokenQuery,
   );
-  console.log(result);
+
+  if (result.redeemCookie) {
+    if (!result.redeemCookie.sameSession) {
+      return 'other session';
+    }
+
+    if (!result.redeemCookie.registered) {
+      return 'register now';
+    }
+
+    return 'redirect';
+  }
+
   return null;
 }

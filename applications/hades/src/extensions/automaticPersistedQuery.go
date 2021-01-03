@@ -3,9 +3,8 @@ package extension
 import (
 	"context"
 	"fmt"
-
 	"github.com/99designs/gqlgen/graphql/errcode"
-
+	"github.com/mitchellh/mapstructure"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 
 	"github.com/99designs/gqlgen/graphql"
@@ -48,21 +47,36 @@ func (a AutomaticPersistedQuery) Validate(schema graphql.ExecutableSchema) error
 // We just check the "query" parameter, which contains the string
 // Avoids an incompatibility with a JS library, and we can later customize this transport to be even smaller
 func (a AutomaticPersistedQuery) MutateOperationParameters(ctx context.Context, rawParams *graphql.RawParams) *gqlerror.Error {
-
-	hash := rawParams.Query
-
-	query, ok := a.Cache.Get(ctx, rawParams.Query)
-	if !ok {
-		err := gqlerror.Errorf(rawParams.Query)
-		errcode.Set(err, errPersistedQueryNotFoundCode)
-		return err
+	if rawParams.Extensions["apq"] == nil {
+		return nil
 	}
 
-	rawParams.Query = query.(string)
+	var extension struct {
+		Sha256 string `mapstructure:"hash"`
+	}
+
+	if err := mapstructure.Decode(rawParams.Extensions["apq"], &extension); err != nil {
+		return gqlerror.Errorf("invalid APQ extension data")
+	}
+
+	fullQuery := false
+	if rawParams.Query == "" {
+		// client sent optimistic query hash without query string, get it from the cache
+		query, ok := a.Cache.Get(ctx, extension.Sha256)
+		if !ok {
+			err := gqlerror.Errorf(extension.Sha256)
+			errcode.Set(err, errPersistedQueryNotFoundCode)
+			return err
+		}
+		rawParams.Query = query.(string)
+	} else {
+		// Dont do anything if client sends a full query
+		fullQuery = true
+	}
 
 	graphql.GetOperationContext(ctx).Stats.SetExtension(apqExtension, &ApqStats{
-		Hash:      hash,
-		SentQuery: false,
+		Hash:      extension.Sha256,
+		SentQuery: fullQuery,
 	})
 
 	return nil

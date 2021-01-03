@@ -12,6 +12,7 @@ type Authentication {
 type AuthenticationState {
   authorized: Boolean!
   registered: Boolean!
+  redirect: Boolean!
 }
 
 type JoinState {

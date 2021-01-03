@@ -20,7 +20,11 @@ async function fetchRelay(params, variables, _cacheConfig) {
     },
     body: JSON.stringify({
       operationName: params.name,
-      query: params.id,
+      extensions: {
+        apq: {
+          hash: params.id,
+        },
+      },
       variables,
     }),
   });
@@ -55,8 +59,12 @@ const subscriptionClient = new SubscriptionClient(
 
 const subscribe = (params, variables) => {
   const subscribeObservable = subscriptionClient.request({
-    query: params.id,
     operationName: params.name,
+    extensions: {
+      apq: {
+        hash: params.id,
+      },
+    },
     variables,
   });
   // Important: Convert subscriptions-transport-ws observable type to Relay's

@@ -8,13 +8,9 @@ import (
 	evav1 "project01101000/codebase/applications/eva/proto"
 	"project01101000/codebase/applications/hades/src/authentication"
 	"project01101000/codebase/applications/hades/src/helpers"
+	"project01101000/codebase/applications/hades/src/models"
 	"project01101000/codebase/applications/hades/src/services"
 )
-
-type User struct {
-	Username string
-	Token    string
-}
 
 // Middleware decodes the share session cookie and packs the session into context
 func AuthenticationMiddleware(services services.Services, redis redis.Conn) gin.HandlerFunc {
@@ -63,7 +59,7 @@ func AuthenticationMiddleware(services services.Services, redis redis.Conn) gin.
 		}
 
 		// put it in context
-		ctx := context.WithValue(c.Request.Context(), "UserContextKey", &User{Username: user.Username, Token: jwtToken.Raw})
+		ctx := context.WithValue(c.Request.Context(), "UserContextKey", &models.User{Username: user.Username, Token: jwtToken.Raw})
 
 		// and call the next with our new context
 		c.Request = c.Request.WithContext(ctx)

@@ -8,6 +8,7 @@ go_library(
     deps = [
         "@com_github_99designs_gqlgen//graphql:go_default_library",
         "@com_github_99designs_gqlgen//graphql/errcode:go_default_library",
+        "@com_github_mitchellh_mapstructure//:go_default_library",
         "@com_github_vektah_gqlparser_v2//gqlerror:go_default_library",
     ],
 )

@@ -6,12 +6,12 @@ import (
 	"github.com/gomodule/redigo/redis"
 	"net/http"
 	"project01101000/codebase/applications/hades/src/authentication"
-	"project01101000/codebase/applications/hades/src/middleware"
+	"project01101000/codebase/applications/hades/src/models"
 	"time"
 )
 
-func UserFromContext(ctx context.Context) *middleware.User {
-	raw, _ := ctx.Value("UserContextKey").(*middleware.User)
+func UserFromContext(ctx context.Context) *models.User {
+	raw, _ := ctx.Value("UserContextKey").(*models.User)
 	return raw
 }
 
