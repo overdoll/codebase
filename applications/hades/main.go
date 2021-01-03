@@ -16,6 +16,7 @@ import (
 	"os/signal"
 	gen "project01101000/codebase/applications/hades/src"
 	"project01101000/codebase/applications/hades/src/directives"
+	extension2 "project01101000/codebase/applications/hades/src/extensions"
 	"project01101000/codebase/applications/hades/src/middleware"
 	"project01101000/codebase/applications/hades/src/resolvers"
 	"project01101000/codebase/applications/hades/src/services"
@@ -54,11 +55,19 @@ func main() {
 		log.Fatalf("Failed to create grpc api holder: %s", err)
 	}
 
-	redisSvc, err := redis.Dial("tcp", os.Getenv("REDIS_URL")+":6379")
+	redisSvc, err := redis.Dial("tcp", os.Getenv("REDIS_URL")+":6379", redis.DialDatabase(1))
 
 	if err != nil {
 		log.Fatalf("Failed to connect to redis: %s", err)
 	}
+
+	redisSvc2, err := redis.Dial("tcp", os.Getenv("REDIS_URL")+":6379", redis.DialDatabase(1))
+
+	if err != nil {
+		log.Fatalf("Failed to connect to redis: %s", err)
+	}
+
+	redisPubSub := redis.PubSubConn{Conn: redisSvc2}
 
 	router := gin.Default()
 
@@ -76,41 +85,11 @@ func main() {
 
 	cache, err := NewCache()
 
-	// Create graphApi handlers
-	router.POST("/graphql", func(c *gin.Context) {
+	// Create graphApi handlers - GET and POST
+	gqlHandler := HandleGraphQL(svcs, redisSvc, redisPubSub, cache)
 
-		graphAPIHandler := handler.New(gen.NewExecutableSchema(gen.Config{
-			Resolvers:  resolvers.NewResolver(svcs, redisSvc),
-			Directives: directives.NewDirectives(),
-		}))
-
-		graphAPIHandler.AddTransport(&transport.Websocket{
-			Upgrader: websocket.Upgrader{
-				CheckOrigin: func(r *http.Request) bool {
-					return r.Host == "localhost"
-				},
-				ReadBufferSize:  1024,
-				WriteBufferSize: 1024,
-			},
-		})
-
-		if os.Getenv("APP_DEBUG") == "true" {
-			graphAPIHandler.Use(extension.Introspection{})
-		}
-
-		graphAPIHandler.AddTransport(transport.POST{})
-		graphAPIHandler.AddTransport(transport.GET{})
-		graphAPIHandler.AddTransport(transport.MultipartForm{})
-		graphAPIHandler.SetQueryCache(lru.New(1000))
-
-		// Add APQ
-		graphAPIHandler.Use(extension.AutomaticPersistedQuery{Cache: cache})
-
-		// Query complexity limit
-		//graphAPIHandler.Use(extension.FixedComplexityLimit(3))
-
-		graphAPIHandler.ServeHTTP(c.Writer, c.Request)
-	})
+	router.POST("/graphql", gqlHandler)
+	router.GET("/graphql", gqlHandler)
 
 	srv := &http.Server{
 		Addr:         fmt.Sprintf(":%s", port),
@@ -139,4 +118,41 @@ func main() {
 	}
 	<-ctx.Done()
 	os.Exit(0)
+}
+
+// HandleGraphQL - handle graphQL
+func HandleGraphQL(services services.Services, redisSvc redis.Conn, redisPubSub redis.PubSubConn, cache *Cache) gin.HandlerFunc {
+
+	return func(c *gin.Context) {
+		graphAPIHandler := handler.New(gen.NewExecutableSchema(gen.Config{
+			Resolvers:  resolvers.NewResolver(services, redisSvc, redisPubSub),
+			Directives: directives.NewDirectives(),
+		}))
+
+		graphAPIHandler.AddTransport(&transport.Websocket{
+			KeepAlivePingInterval: 10 * time.Second,
+			Upgrader: websocket.Upgrader{
+				ReadBufferSize:  1024,
+				WriteBufferSize: 1024,
+			},
+		})
+
+		if os.Getenv("APP_DEBUG") == "true" {
+			graphAPIHandler.Use(extension.Introspection{})
+		}
+
+		graphAPIHandler.AddTransport(transport.POST{})
+		graphAPIHandler.AddTransport(transport.GET{})
+		graphAPIHandler.AddTransport(transport.MultipartForm{})
+		graphAPIHandler.SetQueryCache(lru.New(1000))
+
+		// Add APQ
+		graphAPIHandler.Use(extension2.AutomaticPersistedQuery{Cache: cache})
+
+		// Query complexity limit
+		//graphAPIHandler.Use(extension.FixedComplexityLimit(3))
+
+		graphAPIHandler.ServeHTTP(c.Writer, c.Request)
+	}
+
 }

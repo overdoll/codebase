@@ -58,7 +58,7 @@ applications = {
     },
 }
 
-allow_k8s_contexts('projecth-cluster')
+allow_k8s_contexts("projecth-cluster")
 
 docker_prune_settings(
     disable = False,
@@ -176,7 +176,7 @@ helm_remote(
     release_name = "redis",
     repo_name = "bitnami",
     version = "12.2.4",
-    set = ["cluster.enabled=false", "cluster.slaveCount=0"],
+    set = ["cluster.enabled=false", "cluster.slaveCount=0", "usePassword=false"],
 )
 
 k8s_resource(workload = "redis-master", port_forwards = [6379])

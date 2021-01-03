@@ -5,6 +5,8 @@ package resolvers
 
 import (
 	"context"
+	"fmt"
+	"github.com/gomodule/redigo/redis"
 	"net/http"
 	evav1 "project01101000/codebase/applications/eva/proto"
 	gen "project01101000/codebase/applications/hades/src"
@@ -16,74 +18,106 @@ import (
 
 func (r *subscriptionResolver) AuthenticationState(ctx context.Context) (<-chan *models.AuthenticationState, error) {
 	// AuthenticationState - check the state of our authentication by checking the OTP Cookie header to see if we have redeemed it
-
-	out := make(chan *models.AuthenticationState)
-
 	gc := helpers.GinContextFromContext(ctx)
 
-	currentCookie, err := gc.Request.Cookie("otp-cookie")
+	currentCookie, err := gc.Request.Cookie(OTPKey)
 
 	if err != nil || currentCookie == nil {
-		close(out)
+
+		if err == http.ErrNoCookie {
+			// The program returns this error
+			return nil, nil
+		}
+
 		return nil, err
 	}
 
-	// Get our cookie so we can get our email
-	getAuthenticationCookie, err := r.services.Eva().GetAuthenticationCookie(ctx, &evav1.GetAuthenticationCookieRequest{Cookie: currentCookie.Value})
+	channel := make(chan *models.AuthenticationState)
 
-	// It could happen that the cookie was deleted - if so, then we should tell the user that the token has been redeemed
-	if err != nil {
-		close(out)
-		return nil, err
-	}
+	go func() {
+		r.redisPB.Subscribe("otp")
 
-	if getAuthenticationCookie.Cookie.Redeemed == false {
-		out <- &models.AuthenticationState{Authorized: false, Registered: false}
-		return out, nil
-	}
+		for {
+			switch v := r.redisPB.Receive().(type) {
+			case redis.Message:
+				fmt.Printf("%s: message: %s\n", v.Channel, v.Data)
+				if string(v.Data) == "SAME_SESSION" {
+					channel <- &models.AuthenticationState{Authorized: false, Registered: false, Redirect: true}
+					return
+				} else if string(v.Data) == "ANOTHER_SESSION" {
+					// Get our cookie so we can get our email
+					getAuthenticationCookie, err := r.services.Eva().GetAuthenticationCookie(ctx, &evav1.GetAuthenticationCookieRequest{Cookie: currentCookie.Value})
 
-	getRegisteredUser, err := r.services.Eva().GetRegisteredEmail(ctx, &evav1.GetRegisteredEmailRequest{Email: getAuthenticationCookie.Cookie.Email})
+					// It could happen that the cookie was deleted - if so, then we should tell the user that the token has been redeemed
+					if err != nil {
+						close(channel)
+						return
+					}
 
-	if err != nil {
-		return nil, err
-	}
+					if getAuthenticationCookie.Cookie.Redeemed == false {
+						channel <- &models.AuthenticationState{Authorized: false, Registered: false, Redirect: false}
+						close(channel)
+						return
+					}
 
-	// Delete our cookie
-	getDeletedCookie, err := r.services.Eva().DeleteAuthenticationCookie(ctx, &evav1.GetAuthenticationCookieRequest{Cookie: currentCookie.Value})
+					getRegisteredUser, err := r.services.Eva().GetRegisteredEmail(ctx, &evav1.GetRegisteredEmailRequest{Email: getAuthenticationCookie.Cookie.Email})
 
-	if err != nil || getDeletedCookie == nil {
-		return nil, err
-	}
+					if err != nil {
+						close(channel)
+						return
+					}
 
-	// User doesn't exist, we ask to register
-	if getRegisteredUser.Username == "" {
-		out <- &models.AuthenticationState{Authorized: true, Registered: false}
-		return out, nil
-	}
+					// Delete our cookie
+					getDeletedCookie, err := r.services.Eva().DeleteAuthenticationCookie(ctx, &evav1.GetAuthenticationCookieRequest{Cookie: currentCookie.Value})
 
-	// Otherwise, we remove the cookie, and create a JWT token
-	http.SetCookie(gc.Writer, &http.Cookie{Name: OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: false, Path: "/"})
+					if err != nil || getDeletedCookie == nil {
+						close(channel)
+						return
+					}
 
-	// Create JWT token
-	jwtService := authentication.JWTAuthService()
+					// User doesn't exist, we ask to register
+					if getRegisteredUser.Username == "" {
+						channel <- &models.AuthenticationState{Authorized: true, Registered: false, Redirect: false}
+						close(channel)
+						return
+					}
 
-	expiration := time.Now().Add(time.Hour * 120).Unix()
+					// Otherwise, we remove the cookie, and create a JWT token
+					http.SetCookie(gc.Writer, &http.Cookie{Name: OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: false, Path: "/"})
 
-	token := jwtService.GenerateToken(getRegisteredUser.Username, expiration)
+					// Create JWT token
+					jwtService := authentication.JWTAuthService()
 
-	// Set session cookie
-	http.SetCookie(gc.Writer, &http.Cookie{Name: "session", Value: token, HttpOnly: true, Secure: false, Path: "/"})
+					expiration := time.Now().Add(time.Hour * 120).Unix()
 
-	// Add to redis set for this user's session tokens
-	// TODO: Should capture stuff like IP, location, header so we can show the user the devices that are logged in for them
-	val, err := r.redis.Do("SSAD", "session:"+getRegisteredUser.Username, token)
+					token := jwtService.GenerateToken(getRegisteredUser.Username, expiration)
 
-	if val == nil || err != nil {
-		return nil, err
-	}
+					// Set session cookie
+					http.SetCookie(gc.Writer, &http.Cookie{Name: "session", Value: token, HttpOnly: true, Secure: false, Path: "/"})
 
-	out <- &models.AuthenticationState{Authorized: true, Registered: true}
-	return out, nil
+					// Add to redis set for this user's session tokens
+					// TODO: Should capture stuff like IP, location, header so we can show the user the devices that are logged in for them
+					val, err := r.redis.Do("SSAD", "session:"+getRegisteredUser.Username, token)
+
+					if val == nil || err != nil {
+						close(channel)
+						return
+					}
+
+					channel <- &models.AuthenticationState{Authorized: true, Registered: false, Redirect: false}
+					close(channel)
+					return
+				}
+
+			case redis.Subscription:
+				fmt.Printf("%s: %s %d\n", v.Channel, v.Kind, v.Count)
+			case error:
+				return
+			}
+		}
+	}()
+
+	return channel, nil
 }
 
 // Subscription returns gen.SubscriptionResolver implementation.

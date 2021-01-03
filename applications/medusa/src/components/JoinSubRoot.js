@@ -1,8 +1,4 @@
-import {
-  graphql,
-  useSubscription,
-  useRelayEnvironment,
-} from 'react-relay/hooks';
+import { graphql, useSubscription } from 'react-relay/hooks';
 import { useState, useMemo } from 'react';
 
 const subscription = graphql`
@@ -15,7 +11,14 @@ const subscription = graphql`
 `;
 
 export default function JoinSubRoot({ props }) {
-  const config = useMemo(() => ({ variables: {}, subscription }), []);
+  const config = useMemo(
+    () => ({
+      variables: {},
+      subscription,
+      onNext: response => console.log(response),
+    }),
+    [],
+  );
 
   useSubscription(config);
 

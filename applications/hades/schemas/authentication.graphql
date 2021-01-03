@@ -18,6 +18,7 @@ type Registration {
 type AuthenticationState {
     authorized: Boolean!
     registered: Boolean!
+    redirect: Boolean!
 }
 
 type SameSession {

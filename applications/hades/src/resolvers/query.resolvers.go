@@ -30,6 +30,9 @@ func (r *queryResolver) RedeemCookie(ctx context.Context, cookie *string) (*mode
 
 	gc := helpers.GinContextFromContext(ctx)
 
+	r.redis.Send("PUBLISH", "otp", "ANOTHER_SESSION")
+	r.redis.Flush()
+
 	// Redeem our authentication cookie
 	getRedeemedCookie, err := r.services.Eva().RedeemAuthenticationCookie(ctx, &evav1.GetAuthenticationCookieRequest{Cookie: *cookie})
 
@@ -54,6 +57,7 @@ func (r *queryResolver) RedeemCookie(ctx context.Context, cookie *string) (*mode
 
 	// User doesn't exist, we ask to register
 	if getRegisteredUser.Username == "" {
+		//r.redis.Send("PUBLISH", "otp", "SAME_SESSION")
 		return &models.AccountData{Registered: false, SameSession: true}, nil
 	}
 
@@ -84,6 +88,8 @@ func (r *queryResolver) RedeemCookie(ctx context.Context, cookie *string) (*mode
 	if val == nil || err != nil {
 		return nil, err
 	}
+
+	//r.redis.Send("PUBLISH", "otp:"+getRedeemedCookie.Cookie.Cookie, "SAME_SESSION")
 
 	return &models.AccountData{Registered: true, SameSession: true}, nil
 }

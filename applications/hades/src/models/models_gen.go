@@ -14,6 +14,7 @@ type Authentication struct {
 type AuthenticationState struct {
 	Authorized bool `json:"authorized"`
 	Registered bool `json:"registered"`
+	Redirect   bool `json:"redirect"`
 }
 
 type JoinState struct {
