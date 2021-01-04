@@ -19,8 +19,6 @@ func (r *mutationResolver) Authenticate(ctx context.Context, email *string) (*mo
 	// if not, then we redeem the cookie and the original browser should be logged in,
 	// provided that the tab is still open
 
-	gc := helpers.GinContextFromContext(ctx)
-
 	// Create an authentication cookie
 	getCookieResponse, err := r.services.Eva().CreateAuthenticationCookie(ctx, &evav1.CreateAuthenticationCookieRequest{Email: *email})
 
@@ -33,20 +31,29 @@ func (r *mutationResolver) Authenticate(ctx context.Context, email *string) (*mo
 	// OTP login cookie - will determine if
 	// Opened in the same browser - log them in that browser if this cookie exists
 	// Otherwise, if opened in another browser (such as the phone), it will log them in on the original browser through a subscription
-	http.SetCookie(gc.Writer, &http.Cookie{Name: OTPKey, Value: getCookieResponse.Cookie.Cookie, Expires: expiration, HttpOnly: true, Secure: true, Path: "/"})
+	_, err = helpers.SetCookie(ctx, &http.Cookie{
+		Name:    OTPKey,
+		Value:   getCookieResponse.Cookie.Cookie,
+		Expires: expiration,
+	})
+
+	if err != nil {
+		return nil, err
+	}
 
 	return &models.Authentication{Success: true}, nil
 }
 
 func (r *mutationResolver) Register(ctx context.Context, username *string) (*models.Registration, error) {
-	gc := helpers.GinContextFromContext(ctx)
 
 	// Make sure we have the cookie in order to register
-	currentCookie, err := gc.Request.Cookie(OTPKey)
+	currentCookie, err := helpers.ReadCookie(ctx, OTPKey)
 
 	if err != nil || currentCookie == nil {
 		return nil, err
 	}
+
+	gc := helpers.GinContextFromContext(ctx)
 
 	// Get our cookie so we can get our email
 	getAuthenticationCookie, err := r.services.Eva().GetAuthenticationCookie(ctx, &evav1.GetAuthenticationCookieRequest{Cookie: currentCookie.Value})

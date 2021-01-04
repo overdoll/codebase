@@ -4,6 +4,7 @@ go_library(
     name = "go_default_library",
     srcs = [
         "auth.go",
+        "cookies.go",
         "gin.go",
     ],
     importpath = "project01101000/codebase/applications/hades/src/helpers",
@@ -13,5 +14,6 @@ go_library(
         "//applications/hades/src/models:go_default_library",
         "@com_github_gin_gonic_gin//:go_default_library",
         "@com_github_gomodule_redigo//redis:go_default_library",
+        "@com_github_gorilla_securecookie//:go_default_library",
     ],
 )

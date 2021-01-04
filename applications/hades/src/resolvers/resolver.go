@@ -10,9 +10,9 @@ import (
 )
 
 type Resolver struct {
-	services services.Services
-	redis    redis.Conn
-	redisPB redis.PubSubConn
+	services     services.Services
+	redis        redis.Conn
+	redisPB      redis.PubSubConn
 }
 
 func NewResolver(s services.Services, redis redis.Conn, redisPub redis.PubSubConn) *Resolver {

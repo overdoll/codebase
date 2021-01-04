@@ -3,8 +3,8 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = [
-        "-server.go",
         "cookie.go",
+        "server.go",
         "user.go",
     ],
     importpath = "project01101000/codebase/applications/eva/src/server",

@@ -295,8 +295,8 @@ go_repository(
 go_repository(
     name = "com_github_pkg_errors",
     importpath = "github.com/pkg/errors",
-    sum = "h1:iURUrRGxPUNPdy5/HRSm+Yj6okJ6UtLINN0Q9M4+h3I=",
-    version = "v0.8.1",
+    sum = "h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=",
+    version = "v0.9.1",
 )
 
 go_repository(
@@ -767,4 +767,25 @@ go_repository(
     importpath = "github.com/gomodule/redigo",
     sum = "h1:HR0kYDX2RJZvAup8CsiJwxB4dTCSC0AaUq6S4SiLwUc=",
     version = "v1.8.3",
+)
+
+go_repository(
+    name = "com_github_streadway_amqp",
+    importpath = "github.com/streadway/amqp",
+    sum = "h1:kuuDrUJFZL1QYL9hUNuCxNObNzB0bV/ZG5jV3RWAQgo=",
+    version = "v1.0.0",
+)
+
+go_repository(
+    name = "com_github_gorilla_securecookie",
+    importpath = "github.com/gorilla/securecookie",
+    sum = "h1:miw7JPhV+b/lAHSXz4qd/nN9jRiAFV5FwjeKyCS8BvQ=",
+    version = "v1.1.1",
+)
+
+go_repository(
+    name = "com_github_gorilla_csrf",
+    importpath = "github.com/gorilla/csrf",
+    sum = "h1:mMPjV5/3Zd460xCavIkppUdvnl5fPXMpv2uz2Zyg7/Y=",
+    version = "v1.7.0",
 )

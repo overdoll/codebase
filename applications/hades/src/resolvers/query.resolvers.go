@@ -36,7 +36,7 @@ func (r *queryResolver) RedeemCookie(ctx context.Context, cookie *string) (*mode
 		return nil, err
 	}
 
-	currentCookie, err := gc.Request.Cookie(OTPKey)
+	currentCookie, err := helpers.ReadCookie(ctx, OTPKey)
 
 	if err != nil || currentCookie == nil {
 		r.redis.Send("PUBLISH", "otp"+getRedeemedCookie.Cookie.Cookie, "ANOTHER_SESSION")

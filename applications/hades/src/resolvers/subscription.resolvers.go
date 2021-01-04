@@ -17,7 +17,7 @@ func (r *subscriptionResolver) AuthenticationState(ctx context.Context) (<-chan 
 	// AuthenticationState - check the state of our authentication by checking the OTP Cookie header to see if we have redeemed it
 	gc := helpers.GinContextFromContext(ctx)
 
-	currentCookie, err := gc.Request.Cookie(OTPKey)
+	currentCookie, err := helpers.ReadCookie(ctx, OTPKey)
 
 	if err != nil || currentCookie == nil {
 

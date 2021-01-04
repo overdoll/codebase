@@ -179,4 +179,12 @@ helm_remote(
     set = ["cluster.enabled=false", "cluster.slaveCount=0", "usePassword=false"],
 )
 
+helm_remote(
+    "rabbitmq",
+    release_name = "rabbitmq",
+    repo_name = "bitnami",
+    version = "7.6.8",
+    set = ["auth.username=test", "auth.password=test"],
+)
+
 k8s_resource(workload = "redis-master", port_forwards = [6379])
