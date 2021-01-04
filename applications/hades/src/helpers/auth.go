@@ -23,7 +23,7 @@ func CreateUserSession(gc *gin.Context, redis redis.Conn, username string) (*str
 	token := jwtService.GenerateToken(username, expiration.Unix())
 
 	// Set session cookies
-	http.SetCookie(gc.Writer, &http.Cookie{Name: "session", Value: token, Expires: expiration, HttpOnly: true, Secure: false, Path: "/"})
+	http.SetCookie(gc.Writer, &http.Cookie{Name: "session", Value: token, Expires: expiration, HttpOnly: true, Secure: true, Path: "/"})
 
 	// Add to redis set for this user's session tokens
 	// TODO: Should capture stuff like IP, location, header so we can show the user the devices that are logged in for them

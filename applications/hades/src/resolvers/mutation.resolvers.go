@@ -33,7 +33,7 @@ func (r *mutationResolver) Authenticate(ctx context.Context, email *string) (*mo
 	// OTP login cookie - will determine if
 	// Opened in the same browser - log them in that browser if this cookie exists
 	// Otherwise, if opened in another browser (such as the phone), it will log them in on the original browser through a subscription
-	http.SetCookie(gc.Writer, &http.Cookie{Name: OTPKey, Value: getCookieResponse.Cookie.Cookie, Expires: expiration, HttpOnly: true, Secure: false, Path: "/"})
+	http.SetCookie(gc.Writer, &http.Cookie{Name: OTPKey, Value: getCookieResponse.Cookie.Cookie, Expires: expiration, HttpOnly: true, Secure: true, Path: "/"})
 
 	return &models.Authentication{Success: true}, nil
 }
@@ -70,7 +70,7 @@ func (r *mutationResolver) Register(ctx context.Context, username *string) (*mod
 	}
 
 	// Remove OTP token - registration is complete
-	http.SetCookie(gc.Writer, &http.Cookie{Name: OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: false, Path: "/"})
+	http.SetCookie(gc.Writer, &http.Cookie{Name: OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
 
 	_, err = helpers.CreateUserSession(gc, r.redis, getRegisteredUser.Username)
 
@@ -95,7 +95,7 @@ func (r *mutationResolver) Logout(ctx context.Context) (bool, error) {
 	}
 
 	// clear session cookie
-	http.SetCookie(gc.Writer, &http.Cookie{Name: "session", Value: "", MaxAge: -1, HttpOnly: true, Secure: false, Path: "/"})
+	http.SetCookie(gc.Writer, &http.Cookie{Name: "session", Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
 
 	return true, nil
 }

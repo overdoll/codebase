@@ -61,7 +61,7 @@ func (r *subscriptionResolver) AuthenticationState(ctx context.Context) (<-chan 
 		}
 
 		// Otherwise, we remove the cookie, and create a JWT token
-		http.SetCookie(gc.Writer, &http.Cookie{Name: OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: false, Path: "/"})
+		http.SetCookie(gc.Writer, &http.Cookie{Name: OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
 
 		// Create user session with username
 		_, err = helpers.CreateUserSession(gc, r.redis, getRegisteredUser.Username)

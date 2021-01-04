@@ -53,7 +53,7 @@ async function fetchRelay(params, variables, _cacheConfig) {
 
 const subscribe = (params, variables) => {
   const subscriptionClient = new SubscriptionClient(
-    'ws://localhost/api/graphql',
+    `wss://${window.location.hostname}/api/graphql`,
     {
       reconnect: true,
     },

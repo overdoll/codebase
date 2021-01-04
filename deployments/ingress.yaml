@@ -8,20 +8,56 @@ spec:
       - /api
 ---
 apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: redirect-https
+spec:
+  redirectScheme:
+    scheme: https
+    port: "443"
+---
+apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
   name: ingress
 spec:
+  entrypoints:
+    - websecure
   routes:
-    - match: Path(`/api/graphql`)
+    - match: Host(`projecth.test`) &&  Path(`/api/graphql`)
       kind: Rule
       services:
         - name: hades
           port: 8000
       middlewares:
         - name: stripprefix
-    - match: PathPrefix(`/`)
+    - match: Host(`projecth.test`) && PathPrefix(`/`)
       kind: Rule
       services:
         - name: medusa
           port: 8000
+  tls:
+    secretName: projecth-tls
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ingress-redirect
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`projecth.test`) &&  Path(`/api/graphql`)
+      kind: Rule
+      services:
+        - name: hades
+          port: 8000
+      middlewares:
+        - name: redirect-https
+    - match: Host(`projecth.test`) && PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: medusa
+          port: 8000
+      middlewares:
+        - name: redirect-https

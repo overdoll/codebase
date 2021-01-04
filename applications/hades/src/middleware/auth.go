@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"context"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gomodule/redigo/redis"
 	"net/http"
@@ -30,7 +29,10 @@ func AuthenticationMiddleware(services services.Services, redis redis.Conn) gin.
 		jwtToken, err := jwtService.ValidateToken(cookie.Value)
 
 		if err != nil || jwtToken == nil {
-			c.AbortWithStatus(http.StatusForbidden)
+			// If token invalid, remove it
+			// c.AbortWithStatus(http.StatusForbidden)
+			http.SetCookie(c.Writer, &http.Cookie{Name: "session", Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
+			c.Next()
 			return
 		}
 
@@ -39,8 +41,12 @@ func AuthenticationMiddleware(services services.Services, redis redis.Conn) gin.
 		// make sure our session token also exists in the Redis Set
 		existing, err := redis.Do("SISMEMBER", "session:"+claims.Username, cookie.Value)
 
+		// If it doesn't exist in Redis, we remove it
 		if err != nil || existing == 0 {
-			c.AbortWithStatus(http.StatusForbidden)
+			// Instead of a 403 abort, we just remove this invalid session cookie
+			//c.AbortWithStatus(http.StatusForbidden)
+			http.SetCookie(c.Writer, &http.Cookie{Name: "session", Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
+			c.Next()
 			return
 		}
 
@@ -48,8 +54,11 @@ func AuthenticationMiddleware(services services.Services, redis redis.Conn) gin.
 		user, err := services.Eva().GetUser(c, &evav1.GetUserRequest{Username: claims.Username})
 
 		if err != nil {
-			fmt.Println(err)
-			c.AbortWithStatus(http.StatusForbidden)
+			// No user - we just remove this token from our set
+			// c.AbortWithStatus(http.StatusForbidden)
+			http.SetCookie(c.Writer, &http.Cookie{Name: "session", Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
+			redis.Do("SREM", "session:"+claims.Username, cookie.Value)
+			c.Next()
 			return
 		}
 
@@ -63,8 +72,9 @@ func AuthenticationMiddleware(services services.Services, redis redis.Conn) gin.
 		// remove old token since its not valid anymore (we "expired" it)
 		existing, err = redis.Do("SREM", "session:"+claims.Username, cookie.Value)
 
-		if err != nil || existing == 0 {
-			c.AbortWithStatus(http.StatusForbidden)
+		// Redis error
+		if err != nil {
+			c.AbortWithStatus(http.StatusInternalServerError)
 			return
 		}
 
