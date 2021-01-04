@@ -1,4 +1,4 @@
-schema: http://127.0.0.1/api/graphql
+schema: https://projecth.test/api/graphql
 extensions:
   codegen:
     generates:

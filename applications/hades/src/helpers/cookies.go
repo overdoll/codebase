@@ -4,13 +4,14 @@ import (
 	"context"
 	"github.com/gorilla/securecookie"
 	"net/http"
+	"os"
 )
 
 // Create Secure Cookies
 // Hash keys should be at least 32 bytes long
 // Block keys should be 16 bytes (AES-128) or 32 bytes (AES-256) long.
 // Shorter keys may weaken the encryption used.
-var secureCookie = securecookie.New([]byte("i&CGRhIrozlzy7Hk75XM#$NTNtxTl$nU"), []byte("lnoj$x7C*MWq$j9W#x9Y*&DXpS2*@tAX"))
+var secureCookie = securecookie.New([]byte(os.Getenv("COOKIE_KEY")), []byte(os.Getenv("COOKIE_BLOCK_KEY")))
 
 // Set a cookie, encrypt
 func SetCookie(ctx context.Context, cookie *http.Cookie) (bool, error) {

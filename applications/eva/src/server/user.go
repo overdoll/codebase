@@ -67,7 +67,11 @@ func (s *Server) RegisterUser(ctx context.Context, request *evav1.RegisterUserRe
 	}
 
 	// Now, we actually register the user to our main users table, and set any attributes
-	insertUser := qb.Insert("users").Columns("username").Unique().Query(s.session).BindStruct(user)
+	insertUser := qb.Insert("users").
+		Columns("username").
+		Unique().
+		Query(s.session).
+		BindStruct(user)
 
 	if err := insertUser.ExecRelease(); err != nil {
 		return nil, fmt.Errorf("ExecRelease() failed: '%s", err)

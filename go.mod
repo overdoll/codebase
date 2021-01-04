@@ -11,7 +11,8 @@ require (
 	github.com/golang/snappy v0.0.2 // indirect
 	github.com/gomodule/redigo v1.8.3
 	github.com/gorilla/csrf v1.7.0 // indirect
-	github.com/gorilla/securecookie v1.1.1 // indirect
+	github.com/gorilla/securecookie v1.1.1
+	github.com/gwatts/gin-adapter v0.0.0-20170508204228-c44433c485ad // indirect
 	github.com/joho/godotenv v1.3.0 // indirect
 	github.com/rs/cors v1.7.0 // indirect
 	github.com/scylladb/gocqlx/v2 v2.3.0 // indirect

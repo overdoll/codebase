@@ -155,7 +155,7 @@ for item in applications.keys():
 
 local_resource(
     "generate-graphql",
-    cmd = "yarn run graphql",
+    cmd = "NODE_TLS_REJECT_UNAUTHORIZED=0 yarn run graphql",
     trigger_mode = TRIGGER_MODE_MANUAL,
     auto_init = False,
 )

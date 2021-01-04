@@ -5,12 +5,13 @@ package resolvers
 
 import (
 	"context"
-	"github.com/gomodule/redigo/redis"
 	"net/http"
 	evav1 "project01101000/codebase/applications/eva/proto"
 	gen "project01101000/codebase/applications/hades/src"
 	"project01101000/codebase/applications/hades/src/helpers"
 	"project01101000/codebase/applications/hades/src/models"
+
+	"github.com/gomodule/redigo/redis"
 )
 
 func (r *subscriptionResolver) AuthenticationState(ctx context.Context) (<-chan *models.AuthenticationState, error) {

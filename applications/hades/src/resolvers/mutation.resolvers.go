@@ -45,7 +45,6 @@ func (r *mutationResolver) Authenticate(ctx context.Context, email *string) (*mo
 }
 
 func (r *mutationResolver) Register(ctx context.Context, username *string) (*models.Registration, error) {
-
 	// Make sure we have the cookie in order to register
 	currentCookie, err := helpers.ReadCookie(ctx, OTPKey)
 

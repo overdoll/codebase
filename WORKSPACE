@@ -789,3 +789,10 @@ go_repository(
     sum = "h1:mMPjV5/3Zd460xCavIkppUdvnl5fPXMpv2uz2Zyg7/Y=",
     version = "v1.7.0",
 )
+
+go_repository(
+    name = "com_github_gwatts_gin_adapter",
+    importpath = "github.com/gwatts/gin-adapter",
+    sum = "h1:eGCbPkMnsg02jXBIxxXn1Fxep9dAuTUvEi6UdJsbOhg=",
+    version = "v0.0.0-20170508204228-c44433c485ad",
+)
