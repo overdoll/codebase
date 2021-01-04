@@ -6,17 +6,14 @@ spec:
   stripPrefix:
     prefixes:
       - /api
-
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
   name: ingress
 spec:
-  entryPoints:
-    - web
   routes:
-    - match: PathPrefix(`/api/graphql`)
+    - match: Path(`/api/graphql`)
       kind: Rule
       services:
         - name: hades
