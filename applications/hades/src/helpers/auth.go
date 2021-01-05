@@ -10,8 +10,8 @@ import (
 	"time"
 )
 
-func UserFromContext(ctx context.Context) *models.User {
-	raw, _ := ctx.Value("UserContextKey").(*models.User)
+func UserFromContext(ctx context.Context) *models.AuthenticatedUser {
+	raw, _ := ctx.Value("UserContextKey").(*models.AuthenticatedUser)
 	return raw
 }
 

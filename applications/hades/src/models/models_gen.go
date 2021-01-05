@@ -28,3 +28,17 @@ type Registration struct {
 type SameSession struct {
 	Same bool `json:"same"`
 }
+
+type Token struct {
+	Redeemed   bool `json:"redeemed"`
+	Registered bool `json:"registered"`
+}
+
+type User struct {
+	Username string `json:"username"`
+}
+
+type UserState struct {
+	User      *User  `json:"user"`
+	TokenData *Token `json:"tokenData"`
+}

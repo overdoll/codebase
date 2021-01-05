@@ -74,6 +74,7 @@ type ComplexityRoot struct {
 	Query struct {
 		JoinState    func(childComplexity int) int
 		RedeemCookie func(childComplexity int, cookie *string) int
+		State        func(childComplexity int) int
 		User         func(childComplexity int, username *string) int
 	}
 
@@ -88,6 +89,20 @@ type ComplexityRoot struct {
 	Subscription struct {
 		AuthenticationState func(childComplexity int) int
 	}
+
+	Token struct {
+		Redeemed   func(childComplexity int) int
+		Registered func(childComplexity int) int
+	}
+
+	User struct {
+		Username func(childComplexity int) int
+	}
+
+	UserState struct {
+		TokenData func(childComplexity int) int
+		User      func(childComplexity int) int
+	}
 }
 
 type MutationResolver interface {
@@ -99,6 +114,7 @@ type QueryResolver interface {
 	User(ctx context.Context, username *string) (*string, error)
 	RedeemCookie(ctx context.Context, cookie *string) (*models.AccountData, error)
 	JoinState(ctx context.Context) (*models.JoinState, error)
+	State(ctx context.Context) (*models.UserState, error)
 }
 type SubscriptionResolver interface {
 	AuthenticationState(ctx context.Context) (<-chan *models.AuthenticationState, error)
@@ -218,6 +234,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.RedeemCookie(childComplexity, args["cookie"].(*string)), true
 
+	case "Query.state":
+		if e.complexity.Query.State == nil {
+			break
+		}
+
+		return e.complexity.Query.State(childComplexity), true
+
 	case "Query.user":
 		if e.complexity.Query.User == nil {
 			break
@@ -250,6 +273,41 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Subscription.AuthenticationState(childComplexity), true
+
+	case "Token.redeemed":
+		if e.complexity.Token.Redeemed == nil {
+			break
+		}
+
+		return e.complexity.Token.Redeemed(childComplexity), true
+
+	case "Token.registered":
+		if e.complexity.Token.Registered == nil {
+			break
+		}
+
+		return e.complexity.Token.Registered(childComplexity), true
+
+	case "User.username":
+		if e.complexity.User.Username == nil {
+			break
+		}
+
+		return e.complexity.User.Username(childComplexity), true
+
+	case "UserState.tokenData":
+		if e.complexity.UserState.TokenData == nil {
+			break
+		}
+
+		return e.complexity.UserState.TokenData(childComplexity), true
+
+	case "UserState.user":
+		if e.complexity.UserState.User == nil {
+			break
+		}
+
+		return e.complexity.UserState.User(childComplexity), true
 
 	}
 	return 0, false
@@ -357,6 +415,20 @@ type AuthenticationState {
 
 type SameSession {
     same: Boolean!
+}
+
+type User {
+    username: String!
+}
+
+type Token {
+    redeemed: Boolean!
+    registered: Boolean!
+}
+
+type UserState {
+    user: User
+    tokenData: Token
 }`, BuiltIn: false},
 	{Name: "schemas/directives.graphql", Input: `directive @auth on FIELD_DEFINITION`, BuiltIn: false},
 	{Name: "schemas/mutation.graphql", Input: `type Mutation {
@@ -368,6 +440,7 @@ type SameSession {
     user(username: String): String
     redeemCookie(cookie: String): AccountData
     joinState: JoinState
+    state: UserState
 }`, BuiltIn: false},
 	{Name: "schemas/subscription.graphql", Input: `type Subscription {
     authenticationState: AuthenticationState
@@ -980,6 +1053,38 @@ func (ec *executionContext) _Query_joinState(ctx context.Context, field graphql.
 	return ec.marshalOJoinState2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐJoinState(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Query_state(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().State(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.UserState)
+	fc.Result = res
+	return ec.marshalOUserState2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐUserState(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -1161,6 +1266,175 @@ func (ec *executionContext) _Subscription_authenticationState(ctx context.Contex
 			w.Write([]byte{'}'})
 		})
 	}
+}
+
+func (ec *executionContext) _Token_redeemed(ctx context.Context, field graphql.CollectedField, obj *models.Token) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Token",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Redeemed, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Token_registered(ctx context.Context, field graphql.CollectedField, obj *models.Token) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Token",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Registered, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _User_username(ctx context.Context, field graphql.CollectedField, obj *models.User) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "User",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Username, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UserState_user(ctx context.Context, field graphql.CollectedField, obj *models.UserState) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UserState",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.User, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.User)
+	fc.Result = res
+	return ec.marshalOUser2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐUser(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UserState_tokenData(ctx context.Context, field graphql.CollectedField, obj *models.UserState) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UserState",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TokenData, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.Token)
+	fc.Result = res
+	return ec.marshalOToken2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐToken(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) ___Directive_name(ctx context.Context, field graphql.CollectedField, obj *introspection.Directive) (ret graphql.Marshaler) {
@@ -2464,6 +2738,17 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				res = ec._Query_joinState(ctx, field)
 				return res
 			})
+		case "state":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_state(ctx, field)
+				return res
+			})
 		case "__type":
 			out.Values[i] = ec._Query___type(ctx, field)
 		case "__schema":
@@ -2551,6 +2836,91 @@ func (ec *executionContext) _Subscription(ctx context.Context, sel ast.Selection
 	default:
 		panic("unknown field " + strconv.Quote(fields[0].Name))
 	}
+}
+
+var tokenImplementors = []string{"Token"}
+
+func (ec *executionContext) _Token(ctx context.Context, sel ast.SelectionSet, obj *models.Token) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, tokenImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Token")
+		case "redeemed":
+			out.Values[i] = ec._Token_redeemed(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "registered":
+			out.Values[i] = ec._Token_registered(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var userImplementors = []string{"User"}
+
+func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj *models.User) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, userImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("User")
+		case "username":
+			out.Values[i] = ec._User_username(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var userStateImplementors = []string{"UserState"}
+
+func (ec *executionContext) _UserState(ctx context.Context, sel ast.SelectionSet, obj *models.UserState) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, userStateImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UserState")
+		case "user":
+			out.Values[i] = ec._UserState_user(ctx, field, obj)
+		case "tokenData":
+			out.Values[i] = ec._UserState_tokenData(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
 }
 
 var __DirectiveImplementors = []string{"__Directive"}
@@ -3138,6 +3508,27 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 		return graphql.Null
 	}
 	return graphql.MarshalString(*v)
+}
+
+func (ec *executionContext) marshalOToken2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐToken(ctx context.Context, sel ast.SelectionSet, v *models.Token) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Token(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUser2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐUser(ctx context.Context, sel ast.SelectionSet, v *models.User) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._User(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUserState2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐUserState(ctx context.Context, sel ast.SelectionSet, v *models.UserState) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UserState(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalO__EnumValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐEnumValueᚄ(ctx context.Context, sel ast.SelectionSet, v []introspection.EnumValue) graphql.Marshaler {

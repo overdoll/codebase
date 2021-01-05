@@ -87,6 +87,68 @@ func (r *queryResolver) JoinState(ctx context.Context) (*models.JoinState, error
 	panic(fmt.Errorf("not implemented"))
 }
 
+func (r *queryResolver) State(ctx context.Context) (*models.UserState, error) {
+	user := helpers.UserFromContext(ctx)
+	gc := helpers.GinContextFromContext(ctx)
+
+	// User is logged in
+	if user != nil {
+		return &models.UserState{User: &models.User{Username: user.Username}, TokenData: nil}, nil
+	}
+
+	// User is not logged in, let's check for an OTP token
+	otpCookie, err := helpers.ReadCookie(ctx, OTPKey)
+
+	// Error
+	if err != nil {
+
+		// Error says that this cookie doesn't exist
+		if err == http.ErrNoCookie {
+			return &models.UserState{User: nil, TokenData: nil}, nil
+		}
+
+		return nil, err
+	}
+
+	// Get authentication cookie data, so we can check if it's been redeemed yet
+	getAuthenticationCookie, err := r.services.Eva().GetAuthenticationCookie(ctx, &evav1.GetAuthenticationCookieRequest{Cookie: otpCookie.Value})
+
+	// Check to make sure we didn't get an error, and our cookie isn't expired
+	if err != nil {
+		return nil, err
+	}
+
+	// Not yet redeemed, user needs to redeem it still
+	if getAuthenticationCookie.Cookie.Redeemed == false {
+		return &models.UserState{User: nil, TokenData: &models.Token{Redeemed: false, Registered: false}}, nil
+	}
+
+	// Cookie redeemed, check if user is registered
+	getRegisteredUser, err := r.services.Eva().GetRegisteredEmail(ctx, &evav1.GetRegisteredEmailRequest{Email: getAuthenticationCookie.Cookie.Email})
+
+	if err != nil {
+		return nil, err
+	}
+
+	// User not registered, we tell them to register
+	if getRegisteredUser.Username == "" {
+		return &models.UserState{User: nil, TokenData: &models.Token{Redeemed: true, Registered: false}}, nil
+	}
+
+	// Remove OTP cookie - user is registered
+	http.SetCookie(gc.Writer, &http.Cookie{Name: OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
+
+	// User registered, Create user session
+	_, err = helpers.CreateUserSession(gc, r.redis, getRegisteredUser.Username)
+
+	if err != nil {
+		return nil, err
+	}
+
+	// Return user, since we logged in
+	return &models.UserState{User: &models.User{Username: getRegisteredUser.Username}, TokenData: &models.Token{Redeemed: true, Registered: true}}, nil
+}
+
 // Query returns gen.QueryResolver implementation.
 func (r *Resolver) Query() gen.QueryResolver { return &queryResolver{r} }
 

@@ -24,3 +24,17 @@ type AuthenticationState {
 type SameSession {
     same: Boolean!
 }
+
+type User {
+    username: String!
+}
+
+type Token {
+    redeemed: Boolean!
+    registered: Boolean!
+}
+
+type UserState {
+    user: User
+    tokenData: Token
+}
