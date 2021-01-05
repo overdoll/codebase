@@ -11,10 +11,11 @@ import (
 // Hash keys should be at least 32 bytes long
 // Block keys should be 16 bytes (AES-128) or 32 bytes (AES-256) long.
 // Shorter keys may weaken the encryption used.
-var secureCookie = securecookie.New([]byte(os.Getenv("COOKIE_KEY")), []byte(os.Getenv("COOKIE_BLOCK_KEY")))
 
 // Set a cookie, encrypt
 func SetCookie(ctx context.Context, cookie *http.Cookie) (bool, error) {
+	var secureCookie = securecookie.New([]byte(os.Getenv("COOKIE_KEY")), []byte(os.Getenv("COOKIE_BLOCK_KEY")))
+
 	gc := GinContextFromContext(ctx)
 
 	name := cookie.Name
@@ -39,6 +40,8 @@ func SetCookie(ctx context.Context, cookie *http.Cookie) (bool, error) {
 
 // Read cookie
 func ReadCookie(ctx context.Context, name string) (*http.Cookie, error) {
+	var secureCookie = securecookie.New([]byte(os.Getenv("COOKIE_KEY")), []byte(os.Getenv("COOKIE_BLOCK_KEY")))
+
 	gc := GinContextFromContext(ctx)
 
 	currentCookie, err := gc.Request.Cookie(name)

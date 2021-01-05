@@ -9,5 +9,7 @@
   "23bf010da542460b094f7adbf1647484c63df3d02bb92edef7af675af8b1093a": "subscription JoinSubRootSubscription {\n  authenticationState {\n    authorized\n    registered\n  }\n}\n",
   "8b57772a41916e84381ce379be0e0139e2b2a5404aca7b0646099a509e125781": "subscription JoinSubRootSubscription {\n  authenticationState {\n    authorized\n    registered\n    redirect\n  }\n}\n",
   "3f8667a25e1fe365392da1661d93914925a1ad3aad148bef3b92324c28f6cbd1": "mutation RegisterMutation(\n  $username: String!\n) {\n  register(username: $username) {\n    username\n  }\n}\n",
-  "1348e60dcda31ab0b31f92554afa54cb1779daf54e52420db0765591c1f83ca5": "subscription JoinRootSubscription {\n  authenticationState {\n    authorized\n    registered\n    redirect\n  }\n}\n"
+  "1348e60dcda31ab0b31f92554afa54cb1779daf54e52420db0765591c1f83ca5": "subscription JoinRootSubscription {\n  authenticationState {\n    authorized\n    registered\n    redirect\n  }\n}\n",
+  "d9e6d79e856cce2530ef59da9876bc58f164efd935dcc6811f65fd1114dff89a": "query tokenQueryQuery {\n  state {\n    user {\n      username\n    }\n    tokenData {\n      redeemed\n      registered\n    }\n  }\n}\n",
+  "9d2a052e29962f7cce23bb95f873323813d7d4141cb1d3552fcf5f6380075e1b": "query tokenStateQuery {\n  state {\n    user {\n      username\n    }\n    tokenData {\n      redeemed\n      registered\n    }\n  }\n}\n"
 }

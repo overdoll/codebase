@@ -9,7 +9,7 @@ const registerAction = graphql`
   }
 `;
 
-export default function Register({ props }) {
+export default function Register(props) {
   const [commit, isInFlight] = useMutation(registerAction);
 
   const [username, setUserName] = useState('');

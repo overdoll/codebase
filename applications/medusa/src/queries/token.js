@@ -8,3 +8,17 @@ export const TokenQuery = graphql`
     }
   }
 `;
+
+export const StateQuery = graphql`
+  query tokenStateQuery {
+    state {
+      user {
+        username
+      }
+      tokenData {
+        redeemed
+        registered
+      }
+    }
+  }
+`;

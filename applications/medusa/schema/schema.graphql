@@ -29,6 +29,7 @@ type Query {
   user(username: String): String
   redeemCookie(cookie: String): AccountData
   joinState: JoinState
+  state: UserState
 }
 
 type Registration {
@@ -41,4 +42,18 @@ type SameSession {
 
 type Subscription {
   authenticationState: AuthenticationState
+}
+
+type Token {
+  redeemed: Boolean!
+  registered: Boolean!
+}
+
+type User {
+  username: String!
+}
+
+type UserState {
+  user: User
+  tokenData: Token
 }
