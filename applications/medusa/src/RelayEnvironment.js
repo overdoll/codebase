@@ -6,6 +6,7 @@ import {
   Observable,
 } from 'relay-runtime';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
+import axios from 'axios';
 
 /**
  * Relay requires developers to configure a "fetch" function that tells Relay how to load
@@ -13,12 +14,13 @@ import { SubscriptionClient } from 'subscriptions-transport-ws';
  * https://relay.dev/docs/en/quick-start-guide#relay-environment.
  */
 async function fetchRelay(params, variables, _cacheConfig) {
-  const response = await fetch('/api/graphql', {
+  const response = await axios({
+    url: 'http://hades:8000/graphql',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
+    data: {
       query: 'empty',
       operationName: params.name,
       extensions: {
@@ -27,11 +29,10 @@ async function fetchRelay(params, variables, _cacheConfig) {
         },
       },
       variables,
-    }),
+    },
   });
 
-  // Get the response as JSON
-  const json = await response.json();
+  const json = response.data;
 
   // GraphQL returns exceptions (for example, a missing required variable) in the "errors"
   // property of the response. If any exceptions occurred when processing the request,
@@ -75,7 +76,7 @@ const subscribe = (params, variables) => {
 
 // Export a singleton instance of Relay Environment configured with our network layer:
 export default new Environment({
-  network: Network.create(fetchRelay, subscribe),
+  network: Network.create(fetchRelay),
   store: new Store(new RecordSource(), {
     // This property tells Relay to not immediately clear its cache when the user
     // navigates around the app. Relay will hold onto the specified number of

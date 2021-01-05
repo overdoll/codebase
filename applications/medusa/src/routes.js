@@ -1,40 +1,23 @@
 import JSResource from './utilities/JSResource';
 import RelayEnvironment from './RelayEnvironment';
-import { graphql, loadEntryPoint } from 'react-relay/hooks';
+import { loadQuery } from 'react-relay/hooks';
 import { TokenQuery, StateQuery } from './queries/token';
-
-const environmentProvider = { getEnvironment: () => RelayEnvironment };
-
-const Root = JSResource('Root', () => import('./Root'));
-
-const TokenRoot = JSResource('TokenRoot', () =>
-  import('./components/TokenRoot'),
-);
 
 const routes = [
   {
     prepare: () => {
-      return loadEntryPoint(
-        environmentProvider,
-        {
-          root: Root,
-          getPreloadProps(params) {
-            return {
-              extraProps: {},
-              entryPoints: {},
-              queries: {
-                stateQuery: {
-                  parameters: StateQuery,
-                  variables: {},
-                },
-              },
-            };
+      return {
+        stateQuery: loadQuery(
+          RelayEnvironment,
+          StateQuery,
+          {},
+          {
+            fetchPolicy: 'store-or-network',
           },
-        },
-        {},
-      );
+        ),
+      };
     },
-    component: Root,
+    component: JSResource('Root', () => import('./Root')),
     routes: [
       {
         path: '/join',
@@ -46,27 +29,20 @@ const routes = [
       },
       {
         path: '/token/:id',
-        component: TokenRoot,
+        component: JSResource('TokenRoot', () =>
+          import('./components/TokenRoot'),
+        ),
         prepare: params => {
-          return loadEntryPoint(
-            environmentProvider,
-            {
-              root: TokenRoot,
-              getPreloadProps(params) {
-                return {
-                  extraProps: {},
-                  entryPoints: {},
-                  queries: {
-                    tokenQuery: {
-                      parameters: TokenQuery,
-                      variables: { cookie: params.cookie },
-                    },
-                  },
-                };
+          return {
+            tokenQuery: loadQuery(
+              RelayEnvironment,
+              TokenQuery,
+              { cookie: params.id },
+              {
+                fetchPolicy: 'store-or-network',
               },
-            },
-            { cookie: params.id },
-          );
+            ),
+          };
         },
       },
     ],

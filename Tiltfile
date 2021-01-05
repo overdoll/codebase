@@ -47,12 +47,12 @@ applications = {
         "entrypoint": "/app/applications/medusa/medusa",
         "dependencies": [
             "applications/medusa/src",
-            "applications/medusa/server",
             "applications/medusa/public",
+            "applications/medusa/.env",
         ],
         "live_update": [
             sync("applications/medusa/src", "/app/applications/medusa/medusa.runfiles/project01101000/applications/medusa/src"),
-            sync("applications/medusa/server", "/app/applications/medusa/medusa.runfiles/project01101000/applications/medusa/server"),
+            sync("applications/medusa/.env", "/app/applications/medusa/medusa.runfiles/project01101000/applications/medusa/.env"),
             sync("applications/medusa/public", "/app/applications/medusa/medusa.runfiles/project01101000/applications/medusa/public"),
         ],
     },

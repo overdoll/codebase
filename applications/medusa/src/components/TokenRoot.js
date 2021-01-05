@@ -3,10 +3,7 @@ import { TokenQuery } from '../queries/token';
 import Register from './Register';
 
 export default function TokenRoot(props) {
-  const result = usePreloadedQuery(
-    TokenQuery,
-    props.prepared.queries.tokenQuery,
-  );
+  const result = usePreloadedQuery(TokenQuery, props.prepared.tokenQuery);
 
   if (result.redeemCookie) {
     if (!result.redeemCookie.sameSession) {

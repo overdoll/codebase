@@ -11,9 +11,11 @@ copy_to_bin(
             "public/*",
             "src/**/*",
             ".*",
-            "server/**",
         ],
-    ) + ["server.js"],
+    ) + [
+        "package.json",
+        "razzle.config.js",
+    ],
 )
 
 write_file(
@@ -23,9 +25,6 @@ write_file(
 )
 
 _RUNTIME_DEPS = [
-    "webpack.config.js",
-    "index.html",
-    "server.js",
     "chdir.js",
     "copy_static_files",
     "@npm//react",
@@ -64,15 +63,18 @@ _RUNTIME_DEPS = [
     "@npm//@babel/plugin-transform-react-jsx",
     "@npm//rebass",
     "@npm//subscriptions-transport-ws",
+    "@npm//razzle",
+    "@npm//react-ssr-prepass",
+    "@npm//axios",
 ]
 
 nodejs_binary(
     name = "medusa",
     data = _RUNTIME_DEPS,
-    entry_point = "@npm//:node_modules/@babel/node/bin/babel-node.js",
+    entry_point = "@npm//:node_modules/razzle/bin/razzle.js",
     templated_args = [
         "--node_options=--require=./$(rootpath chdir.js)",
-        "server.js",
+        "start",
     ],
 )
 

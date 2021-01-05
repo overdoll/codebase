@@ -6,11 +6,11 @@ import { matchRoutes } from 'react-router-config';
  * contains both a Component and a prepare() function that can preload data for the component.
  * The router watches for changes to the current location via the `history` package, maps the
  * location to the corresponding route entry, and then preloads the code and data for the route.
+ *
+ * Note: History is created by either the server or the client, since we can't use the same history for both.
+ *
  */
-export default function createRouter(routes, options) {
-  // Initialize history
-  const history = createBrowserHistory(options);
-
+export default function createRouter(routes, history) {
   // Find the initial match and prepare it
   const initialMatches = matchRoute(routes, history.location);
   const initialEntries = prepareMatches(initialMatches);

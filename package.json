@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "axios": "^0.21.1",
     "chokidar": "^3.4.3",
     "express": "^4.17.1",
     "history": "^4.10.1",
@@ -14,13 +15,18 @@
     "react-relay": "^0.0.0-experimental-0b967d2e",
     "react-router": "^5.1.2",
     "react-router-config": "^5.1.1",
+    "react-ssr-prepass": "^1.2.1",
     "rebass": "^4.0.7",
     "relay-runtime": "^10.1.2",
     "subscriptions-transport-ws": "^0.9.18"
   },
   "scripts": {
     "relay": "yarn run relay-compiler",
-    "graphql": "yarn graphql-codegen"
+    "graphql": "yarn graphql-codegen",
+    "start": "razzle start",
+    "build": "razzle build",
+    "test": "razzle test --env=jsdom",
+    "start:prod": "NODE_ENV=production node build/server.js"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -65,6 +71,7 @@
     "html-webpack-plugin": "^4.5.0",
     "json-loader": "^0.5.7",
     "prettier": "^1.18.2",
+    "razzle": "^3.3.9",
     "react-refresh": "^0.9.0",
     "relay-compiler": "^10.1.2",
     "relay-compiler-webpack-plugin": "^8.1.0",
