@@ -1,12 +1,12 @@
-import App from './client/App';
+import App from './App';
 import React from 'react';
 import { unstable_createRoot as createRoot } from 'react-dom';
 import { createBrowserHistory } from 'history';
-import createRouter from './client/routing/createRouter';
-import routes from './client/routes';
-import RelayEnvironment from './client/RelayEnvironment';
+import createRouter from './routing/createRouter';
+import routes from './routes';
+import RelayEnvironment from './RelayEnvironment';
 import { RelayEnvironmentProvider } from 'react-relay/hooks';
-import RoutingContext from './client/routing/RoutingContext';
+import RoutingContext from './routing/RoutingContext';
 
 const router = createRouter(routes, createBrowserHistory(), RelayEnvironment);
 
@@ -19,8 +19,8 @@ createRoot(document.getElementById('root')).render(
 );
 
 if (module.hot) {
-  module.hot.accept('./client/App', () => {
-    const NextRoot = require('./client/App').default;
+  module.hot.accept('./App', () => {
+    const NextRoot = require('./App').default;
     createRoot(document.getElementById('root')).render(
       <RelayEnvironmentProvider environment={RelayEnvironment}>
         <RoutingContext.Provider value={router.context}>

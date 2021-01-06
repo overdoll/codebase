@@ -15,35 +15,42 @@ const assets = require(process.env.RAZZLE_ASSETS_MANIFEST);
 
 const chunks = require(process.env.RAZZLE_CHUNKS_MANIFEST);
 
-async function fetchRelay(params, variables, _cacheConfig) {
-  const response = await axios({
-    url: 'http://hades:8000/graphql',
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: {
-      query: 'empty',
-      operationName: params.name,
-      extensions: {
-        apq: {
-          hash: params.id,
-        },
-      },
-      variables,
-    },
-  });
-
-  return response.data;
-}
-
 const index = express();
 index
   .disable('x-powered-by')
   .use(express.static(path.resolve(__dirname, '../public')))
-  .use(express.static(process.env.RAZZLE_PUBLIC_DIR))
   .get('/*', async (req, res) => {
     const context = {};
+
+    let forwardCookies = [];
+
+    async function fetchRelay(params, variables, _cacheConfig) {
+      const response = await axios({
+        url: 'http://hades:8000/graphql',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...req.headers,
+        },
+        data: {
+          query: 'empty',
+          operationName: params.name,
+          extensions: {
+            apq: {
+              hash: params.id,
+            },
+          },
+          variables,
+        },
+      });
+
+      // Need to make sure we forward our cookies from API calls
+      if (response.headers.hasOwnProperty('set-cookie')) {
+        forwardCookies = [...forwardCookies, ...response.headers['set-cookie']];
+      }
+
+      return response.data;
+    }
 
     const environment = new Environment({
       network: Network.create(fetchRelay),
@@ -74,6 +81,8 @@ index
       .getStore()
       .getSource()
       .toJSON();
+
+    res.setHeader('set-cookie', [...forwardCookies]);
 
     if (context.url) {
       res.redirect(context.url);
