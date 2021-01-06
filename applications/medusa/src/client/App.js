@@ -1,5 +1,5 @@
 import './index.css';
-import RouterRenderer from './routing/RouteRenderer';
+import RouterRenderer from '@//:modules/routing/RouteRenderer';
 
 // Uses the custom router setup to define a router instance that we can pass through context
 

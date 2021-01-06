@@ -1,12 +1,11 @@
 import App from './App';
-import React from 'react';
 import { unstable_createRoot as createRoot } from 'react-dom';
 import { createBrowserHistory } from 'history';
-import createRouter from './routing/createRouter';
+import createRouter from '@//:modules/routing/createRouter';
 import routes from './routes';
 import RelayEnvironment from './RelayEnvironment';
 import { RelayEnvironmentProvider } from 'react-relay/hooks';
-import RoutingContext from './routing/RoutingContext';
+import RoutingContext from '@//:modules/routing/RoutingContext';
 
 const router = createRouter(routes, createBrowserHistory(), RelayEnvironment);
 

@@ -1,5 +1,5 @@
-import { graphql, useMutation } from 'react-relay/hooks';
-import { useState } from 'react';
+import { graphql, useMutation } from 'react-relay/hooks'
+import { useState } from 'react'
 
 const registerAction = graphql`
   mutation RegisterMutation($username: String!) {
@@ -7,31 +7,31 @@ const registerAction = graphql`
       username
     }
   }
-`;
+`
 
-export default function Register(props) {
-  const [commit, isInFlight] = useMutation(registerAction);
+export default function Register (props) {
+  const [commit, isInFlight] = useMutation(registerAction)
 
-  const [username, setUserName] = useState('');
+  const [username, setUserName] = useState('')
 
   const onChange = event => {
-    setUserName(event.target.value);
-  };
+    setUserName(event.target.value)
+  }
 
   const onSubmit = async event => {
-    event.preventDefault();
+    event.preventDefault()
     await commit({
       variables: {
-        username: username,
+        username: username
       },
-      onCompleted(data) {
-        console.log(data);
+      onCompleted (data) {
+        console.log(data)
       },
-      onError(data) {
-        console.log(data);
-      },
-    });
-  };
+      onError (data) {
+        console.log(data)
+      }
+    })
+  }
 
   return (
     <>
@@ -47,5 +47,5 @@ export default function Register(props) {
         <input disabled={isInFlight} type="submit" value="Submit" />
       </form>
     </>
-  );
+  )
 }

@@ -4,4 +4,7 @@
     <type id="android" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="11" project-jdk-type="JavaSDK" />
+  <component name="WebPackConfiguration">
+    <option name="path" value="$PROJECT_DIR$/../applications/medusa/webpack.config.js" />
+  </component>
 </project>

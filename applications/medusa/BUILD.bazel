@@ -13,8 +13,8 @@ copy_to_bin(
             ".*",
         ],
     ) + [
-        "package.json",
         "razzle.config.js",
+        "package.json",
     ],
 )
 
@@ -67,6 +67,10 @@ _RUNTIME_DEPS = [
     "@npm//react-ssr-prepass",
     "@npm//axios",
     "@npm//serialize-javascript",
+    "@npm//@loadable/server",
+    "@npm//@loadable/webpack-plugin",
+    "@npm//@loadable/babel-plugin",
+    "@npm//@loadable/component",
 ]
 
 nodejs_binary(

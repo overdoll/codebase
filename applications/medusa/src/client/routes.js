@@ -1,4 +1,4 @@
-import JSResource from './utilities/JSResource';
+import JSResource from '@//:modules/utilities/JSResource';
 import { loadQuery } from 'react-relay/hooks';
 import { TokenQuery, StateQuery } from './queries/token';
 

@@ -1,0 +1,39 @@
+{
+  "extends": [
+    "plugin:react/recommended",
+    "standard",
+    "prettier"
+  ],
+  "plugins": [
+    "react",
+    "relay",
+    "react-hooks",
+    "prettier"
+  ],
+  "rules": {
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "relay/graphql-syntax": "error",
+    "relay/compat-uses-vars": "warn",
+    "relay/graphql-naming": "error",
+    "relay/generated-flow-types": "warn",
+    "relay/must-colocate-fragment-spreads": "warn",
+    "relay/no-future-added-value": "warn",
+    "relay/unused-fields": "warn",
+    "relay/hook-required-argument": "warn",
+    "react/jsx-uses-react": "off",
+    "react/react-in-jsx-scope": "off"
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 2020,
+    "sourceType": "module"
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true
+  }
+}

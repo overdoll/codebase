@@ -1,10 +1,11 @@
 import App from '../client/App';
 import express from 'express';
-import RoutingContext from '../client/routing/RoutingContext';
-import createRouter from '../client/routing/createRouter';
+import RoutingContext from '@//:modules/routing/RoutingContext';
+import createRouter from '@//:modules/routing/createRouter';
 import routes from '../client/routes';
-import { getMockHistory } from '../client/routing/createMockHistory';
+import { getMockHistory } from '@//:modules/routing/createMockHistory';
 import { RelayEnvironmentProvider } from 'react-relay/hooks';
+import { ChunkExtractor, ChunkExtractorManager } from '@loadable/server';
 import serialize from 'serialize-javascript';
 import ssrPrepass from 'react-ssr-prepass';
 import path from 'path';
@@ -21,6 +22,13 @@ index
   .use(express.static(path.resolve(__dirname, '../public')))
   .get('/*', async (req, res) => {
     const context = {};
+
+    console.log(__dirname);
+
+    const extractor = new ChunkExtractor({
+      statsFile: path.resolve(__dirname, 'loadable-stats.json'),
+      entrypoints: [path.resolve(__dirname, '../src/client')],
+    });
 
     let forwardCookies = [];
 
@@ -70,12 +78,18 @@ index
     // pages will load instantly for users without a "loading" screen, which makes for
     // a better experience. In the future, we can also preload any routes that we want to SSR
     await ssrPrepass(
-      <RelayEnvironmentProvider environment={environment}>
-        <RoutingContext.Provider value={router.context}>
-          <App />
-        </RoutingContext.Provider>
-      </RelayEnvironmentProvider>,
+      <ChunkExtractorManager extractor={extractor}>
+        <RelayEnvironmentProvider environment={environment}>
+          <RoutingContext.Provider value={router.context}>
+            <App />
+          </RoutingContext.Provider>
+        </RelayEnvironmentProvider>
+      </ChunkExtractorManager>,
     );
+
+    const scriptTags = extractor.getScriptTags();
+
+    console.log(scriptTags);
 
     const relayData = environment
       .getStore()

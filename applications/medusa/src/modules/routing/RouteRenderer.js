@@ -1,17 +1,13 @@
-import React from 'react';
-import RoutingContext from './RoutingContext';
-import ErrorBoundary from '../utilities/ErrorBoundary';
-import './RouteRenderer.css';
-
-const {
+import {
   useContext,
   useEffect,
-  unstable_useTransition,
+  unstable_useTransition as useTransition,
   Suspense,
   useState,
-} = React;
-
-const useTransition = unstable_useTransition;
+} from 'react';
+import RoutingContext from '@//:modules/routing/RoutingContext';
+import ErrorBoundary from '@//:modules/utilities/ErrorBoundary';
+import '@//:modules/routing/RouteRenderer.css';
 
 const SUSPENSE_CONFIG = { timeoutMs: 2000 };
 

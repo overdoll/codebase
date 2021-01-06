@@ -1,13 +1,7 @@
-import {
-  graphql,
-  useMutation,
-  useSubscription,
-  useRelayEnvironment,
-} from 'react-relay/hooks';
+import { graphql, useMutation, useRelayEnvironment } from 'react-relay/hooks';
 import { requestSubscription } from 'react-relay';
-import { useMemo, useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import Register from './Register';
-import { isNullableType } from 'graphql';
 
 const joinAction = graphql`
   mutation JoinRootMutation($email: String!) {
