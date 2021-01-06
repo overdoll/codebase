@@ -8,14 +8,17 @@ import {
 import { SubscriptionClient } from 'subscriptions-transport-ws';
 import axios from 'axios';
 
+// Get hydrated data from store
+const data = JSON.parse(document.getElementById('relay-store').textContent);
+
 /**
  * Relay requires developers to configure a "fetch" function that tells Relay how to load
- * the results of GraphQL queries from your server (or other data source). See more at
+ * the results of GraphQL queries from your index (or other data source). See more at
  * https://relay.dev/docs/en/quick-start-guide#relay-environment.
  */
 async function fetchRelay(params, variables, _cacheConfig) {
   const response = await axios({
-    url: 'http://hades:8000/graphql',
+    url: '/api/graphql',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -76,8 +79,8 @@ const subscribe = (params, variables) => {
 
 // Export a singleton instance of Relay Environment configured with our network layer:
 export default new Environment({
-  network: Network.create(fetchRelay),
-  store: new Store(new RecordSource(), {
+  network: Network.create(fetchRelay, subscribe),
+  store: new Store(new RecordSource(data), {
     // This property tells Relay to not immediately clear its cache when the user
     // navigates around the app. Relay will hold onto the specified number of
     // query results, allowing the user to return to recently visited pages

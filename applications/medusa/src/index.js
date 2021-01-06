@@ -1,15 +1,12 @@
-import { unstable_createRoot } from 'react-dom';
-import App from './App';
-
 import express from 'express';
 
-let app = require('./server').default;
+let app = require('./server').index;
 
 if (module.hot) {
   module.hot.accept('./server', function() {
     console.log('🔁  HMR Reloading `./server`...');
     try {
-      app = require('./server').default;
+      app = require('./server').index;
     } catch (error) {
       console.error(error);
     }

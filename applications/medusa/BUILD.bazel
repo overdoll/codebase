@@ -66,6 +66,7 @@ _RUNTIME_DEPS = [
     "@npm//razzle",
     "@npm//react-ssr-prepass",
     "@npm//axios",
+    "@npm//serialize-javascript",
 ]
 
 nodejs_binary(

@@ -7,13 +7,13 @@ import { matchRoutes } from 'react-router-config';
  * The router watches for changes to the current location via the `history` package, maps the
  * location to the corresponding route entry, and then preloads the code and data for the route.
  *
- * Note: History is created by either the server or the client, since we can't use the same history for both.
+ * Note: History is created by either the index or the client, since we can't use the same history for both.
  *
  */
-export default function createRouter(routes, history) {
+export default function createRouter(routes, history, relayEnvironment) {
   // Find the initial match and prepare it
   const initialMatches = matchRoute(routes, history.location);
-  const initialEntries = prepareMatches(initialMatches);
+  const initialEntries = prepareMatches(initialMatches, relayEnvironment);
   let currentEntry = {
     location: history.location,
     entries: initialEntries,
@@ -30,8 +30,8 @@ export default function createRouter(routes, history) {
     if (location.pathname === currentEntry.location.pathname) {
       return;
     }
-    const matches = matchRoute(routes, location);
-    const entries = prepareMatches(matches);
+    const matches = matchRoute(routes, location, relayEnvironment);
+    const entries = prepareMatches(matches, relayEnvironment);
     const nextEntry = {
       location,
       entries,
@@ -54,7 +54,7 @@ export default function createRouter(routes, history) {
     preload(pathname) {
       // preload the code and data for a route, without storing the result
       const matches = matchRoutes(routes, pathname);
-      prepareMatches(matches);
+      prepareMatches(matches, relayEnvironment);
     },
     subscribe(cb) {
       const id = nextId++;
@@ -73,7 +73,7 @@ export default function createRouter(routes, history) {
 /**
  * Match the current location to the corresponding route entry.
  */
-function matchRoute(routes, location) {
+function matchRoute(routes, location, relayEnvironment) {
   const matchedRoutes = matchRoutes(routes, location.pathname);
   if (!Array.isArray(matchedRoutes) || matchedRoutes.length === 0) {
     throw new Error('No route for ' + location.pathname);
@@ -83,11 +83,13 @@ function matchRoute(routes, location) {
 
 /**
  * Load the data for the matched route, given the params extracted from the route
+ *
+ * Inject RelayEnvironment
  */
-function prepareMatches(matches) {
+function prepareMatches(matches, relayEnvironment) {
   return matches.map(match => {
     const { route, match: matchData } = match;
-    const prepared = route.prepare(matchData.params);
+    const prepared = route.prepare(matchData.params, relayEnvironment);
     const Component = route.component.get();
     if (Component == null) {
       route.component.load(); // eagerly load

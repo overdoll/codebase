@@ -1,11 +1,10 @@
 import JSResource from './utilities/JSResource';
-import RelayEnvironment from './RelayEnvironment';
 import { loadQuery } from 'react-relay/hooks';
 import { TokenQuery, StateQuery } from './queries/token';
 
 const routes = [
   {
-    prepare: () => {
+    prepare: (params, RelayEnvironment) => {
       return {
         stateQuery: loadQuery(
           RelayEnvironment,
@@ -32,7 +31,7 @@ const routes = [
         component: JSResource('TokenRoot', () =>
           import('./components/TokenRoot'),
         ),
-        prepare: params => {
+        prepare: (params, RelayEnvironment) => {
           return {
             tokenQuery: loadQuery(
               RelayEnvironment,
