@@ -11,6 +11,7 @@ import ssrPrepass from 'react-ssr-prepass';
 import path from 'path';
 import { Environment, Network, RecordSource, Store } from 'relay-runtime';
 import axios from 'axios';
+import fs from 'fs';
 
 const assets = require(process.env.RAZZLE_ASSETS_MANIFEST);
 
@@ -23,11 +24,9 @@ index
   .get('/*', async (req, res) => {
     const context = {};
 
-    console.log(__dirname);
-
     const extractor = new ChunkExtractor({
       statsFile: path.resolve(__dirname, 'loadable-stats.json'),
-      entrypoints: [path.resolve(__dirname, '../src/client')],
+      entrypoints: ['client'],
     });
 
     let forwardCookies = [];
@@ -87,9 +86,14 @@ index
       </ChunkExtractorManager>,
     );
 
+    // collect script tags
     const scriptTags = extractor.getScriptTags();
 
-    console.log(scriptTags);
+    // collect "preload/prefetch" links
+    const linkTags = extractor.getLinkTags();
+
+    // collect style tags
+    const styleTags = extractor.getStyleTags();
 
     const relayData = environment
       .getStore()
@@ -109,23 +113,15 @@ index
         <meta charSet='utf-8' />
         <title>Welcome to Razzle</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        ${linkTags}
+        ${styleTags}
+    </head>
+    <body>
+        <div id="root" />
         <script type="application/json" id="relay-store">
           ${serialize(relayData)}
         </script>
-        ${
-          assets.client.css
-            ? `<link rel="stylesheet" href="${assets.client.css}">`
-            : ''
-        }
-        ${
-          process.env.NODE_ENV === 'production'
-            ? `<script src="${assets.client.js}" defer></script>`
-            : `<script src="${assets.client.js}" defer crossorigin></script>`
-        }
-    </head>
-    <body>
-    
-        <div id="root" />
+        ${scriptTags}
     </body>
 </html>`,
       );

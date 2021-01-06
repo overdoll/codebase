@@ -1,3 +1,5 @@
+import loadable from '@loadable/component';
+
 /**
  * A cache of resources to avoid loading the same module twice. This is important
  * because Webpack dynamic imports only expose an asynchronous API for loading
@@ -105,6 +107,9 @@ class Resource {
 export default function JSResource(moduleId, loader) {
   let resource = resourceMap.get(moduleId);
   if (resource == null) {
+    // Loadable Components - Add
+    loadable(loader);
+
     resource = new Resource(loader, moduleId);
     resourceMap.set(moduleId, resource);
   }

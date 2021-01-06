@@ -30,6 +30,26 @@ module.exports = {
     if (opts.env.target === 'web') {
       const filename = path.resolve(__dirname, 'build');
 
+      config.output.filename = opts.env.dev
+        ? 'static/js/[name].js'
+        : 'static/js/[name].[hash:8].js';
+
+      config.entry.vendor = [
+        require.resolve('react'),
+        require.resolve('react-dom'),
+        // ... add any other vendor packages with require.resolve('xxx')
+      ];
+
+      config.optimization = {
+        splitChunks: {
+          // Chunk splitting optimiztion
+          chunks: 'all',
+          // Switch off name generation, otherwise files would be invalidated
+          // when more chunks with the same vendors are added
+          name: false,
+        },
+      };
+
       // saving stats file to build folder
       // without this, stats files will go into
       // build/public folder
