@@ -71,6 +71,8 @@ _RUNTIME_DEPS = [
     "@npm//@loadable/webpack-plugin",
     "@npm//@loadable/babel-plugin",
     "@npm//@loadable/component",
+    "@npm//ejs",
+    "@npm//helmet",
 ]
 
 nodejs_binary(
