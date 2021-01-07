@@ -73,6 +73,9 @@ _RUNTIME_DEPS = [
     "@npm//@loadable/component",
     "@npm//ejs",
     "@npm//helmet",
+    "@npm//cookie-parser",
+    "@npm//body-parser",
+    "@npm//csurf",
 ]
 
 nodejs_binary(

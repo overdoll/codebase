@@ -5,9 +5,6 @@ const path = require('path');
 module.exports = {
   experimental: {
     newExternals: true,
-    newSplitChunks: true,
-    newContentHash: true,
-    newMainFields: true,
     reactRefresh: true,
   },
   modifyPaths({
@@ -18,6 +15,8 @@ module.exports = {
     paths, // the default paths that will be used by Razzle.
   }) {
     paths.appClientIndexJs = path.join(paths.appPath, 'src/client');
+    paths.appServerJs = path.join(paths.appPath, 'src/server');
+    paths.appServerIndexJs = path.join(paths.appPath, 'src');
     return paths;
   },
   modifyWebpackConfig(opts) {

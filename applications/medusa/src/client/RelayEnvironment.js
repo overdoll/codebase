@@ -11,6 +11,11 @@ import axios from 'axios';
 // Get hydrated data from store
 const data = JSON.parse(document.getElementById('relay-store').textContent);
 
+// Get CSRF token
+const csrfToken = document
+  .querySelector('meta[name="csrf-token"]')
+  .getAttribute('content');
+
 /**
  * Relay requires developers to configure a "fetch" function that tells Relay how to load
  * the results of GraphQL queries from your index (or other data source). See more at
@@ -22,6 +27,7 @@ async function fetchRelay(params, variables, _cacheConfig) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'CSRF-Token': csrfToken,
     },
     data: {
       query: 'empty',

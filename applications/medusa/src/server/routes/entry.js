@@ -21,12 +21,33 @@ const entry = async (req, res, next) => {
 
   let forwardCookies = [];
 
+  const csrfToken = req.csrfToken();
+
+  let ssrCookies = [];
+
+  // Make sure we capture our csrf cookie
+  if (res.get('set-cookie') !== undefined) {
+    ssrCookies = [...res.get('set-cookie')];
+    forwardCookies = [...res.get('set-cookie')];
+  }
+
+  if (req.cookies._csrf !== undefined) {
+    ssrCookies = [
+      ...ssrCookies,
+      `_csrf=${req.cookies._csrf}; Path=/; HttpOnly; Secure`,
+    ];
+  }
+
   async function fetchRelay(params, variables, _cacheConfig) {
     const response = await axios({
       url: 'http://hades:8000/graphql',
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'CSRF-Token': csrfToken,
+        // for SSR, we can't really "set" cookies on the server, so we need to pass these, which our golang
+        // middleware will check
+        'csrf-cookies': [...ssrCookies],
         ...req.headers,
       },
       data: {
@@ -74,21 +95,23 @@ const entry = async (req, res, next) => {
     environment,
   );
 
-  const jsx = extractor.collectChunks(
-    <RelayEnvironmentProvider environment={environment}>
-      <RoutingContext.Provider value={router.context}>
-        <App />
-      </RoutingContext.Provider>
-    </RelayEnvironmentProvider>,
-  );
-
   // Prepass
   // Load all data, and then we pass it to our HTML file as data
   // pages will load instantly for users without a "loading" screen, which makes for
   // a better experience. In the future, we can also preload any routes that we want to SSR
   try {
-    await ssrPrepass(jsx);
+    await ssrPrepass(
+      extractor.collectChunks(
+        <RelayEnvironmentProvider environment={environment}>
+          <RoutingContext.Provider value={router.context}>
+            <App />
+          </RoutingContext.Provider>
+        </RelayEnvironmentProvider>,
+      ),
+    );
   } catch (e) {
+    // TODO: properly handle errors (show 500 page?)
+    console.log(e);
     next();
     return;
   }
@@ -99,7 +122,8 @@ const entry = async (req, res, next) => {
     .getSource()
     .toJSON();
 
-  res.setHeader('set-cookie', [...forwardCookies]);
+  // Add any cookies that may have been added in our API requests, and headers from any possible middleware
+  res.setHeader('set-cookie', forwardCookies);
 
   if (context.url) {
     res.redirect(context.url);
@@ -110,6 +134,7 @@ const entry = async (req, res, next) => {
       scripts: extractor.getScriptTags(),
       preload: extractor.getLinkTags(),
       styles: extractor.getStyleTags(),
+      csrfToken: csrfToken,
       relayStore: serialize(relayData),
     });
   }
