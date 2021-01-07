@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash f73676f64b625e8a4675220e03185d00
+ * @relayHash 7e8a58a7116f261f7b6851f2ffd5b6b9
  */
 
 /* eslint-disable */
@@ -11,13 +11,14 @@
 import type { ConcreteRequest } from 'relay-runtime';
 export type tokenStateQueryVariables = {||};
 export type tokenStateQueryResponse = {|
-  +state: ?{|
+  +authentication: ?{|
     +user: ?{|
       +username: string
     |},
-    +tokenData: ?{|
+    +cookie: ?{|
       +redeemed: boolean,
       +registered: boolean,
+      +sameSession: boolean,
     |},
   |}
 |};
@@ -30,13 +31,14 @@ export type tokenStateQuery = {|
 
 /*
 query tokenStateQuery {
-  state {
+  authentication {
     user {
       username
     }
-    tokenData {
+    cookie {
       redeemed
       registered
+      sameSession
     }
   }
 }
@@ -47,9 +49,9 @@ var v0 = [
   {
     "alias": null,
     "args": null,
-    "concreteType": "UserState",
+    "concreteType": "Authentication",
     "kind": "LinkedField",
-    "name": "state",
+    "name": "authentication",
     "plural": false,
     "selections": [
       {
@@ -73,9 +75,9 @@ var v0 = [
       {
         "alias": null,
         "args": null,
-        "concreteType": "Token",
+        "concreteType": "Cookie",
         "kind": "LinkedField",
-        "name": "tokenData",
+        "name": "cookie",
         "plural": false,
         "selections": [
           {
@@ -90,6 +92,13 @@ var v0 = [
             "args": null,
             "kind": "ScalarField",
             "name": "registered",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "sameSession",
             "storageKey": null
           }
         ],
@@ -117,7 +126,7 @@ return {
     "selections": (v0/*: any*/)
   },
   "params": {
-    "id": "9d2a052e29962f7cce23bb95f873323813d7d4141cb1d3552fcf5f6380075e1b",
+    "id": "9d7faf285807018eb42ec3a20e99010017138ce21c8442d519590bff81539715",
     "metadata": {},
     "name": "tokenStateQuery",
     "operationKind": "query",
@@ -126,6 +135,6 @@ return {
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = 'a4fd4aa56630855526300ec5df3b7648';
+(node/*: any*/).hash = 'cc4ae48e5e1436343b4b674f7eb1bed8';
 
 module.exports = node;

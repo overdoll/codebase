@@ -5,18 +5,18 @@ import Register from './Register';
 
 const joinAction = graphql`
   mutation JoinRootMutation($email: String!) {
-    authenticate(email: $email) {
-      success
-    }
+    authenticate(email: $email)
   }
 `;
 
 const subscription = graphql`
   subscription JoinRootSubscription {
-    authenticationState {
+    authListener {
       authorized
-      registered
       redirect
+      cookie {
+        sameSession
+      }
     }
   }
 `;

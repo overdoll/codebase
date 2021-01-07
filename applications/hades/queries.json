@@ -1,15 +1,8 @@
 {
-  "a5af2a6bf6cd8b6b29473dddc2ad747d6c2f2d913c8129bd95103cc63f1936c3": "query AppQuery(\n  $cookie: String!\n) {\n  authenticationCookie(cookie: $cookie) {\n    cookie\n    email\n    redeemed\n    expiration\n  }\n}\n",
-  "174788e2fbfd9651ea45adf07b50f700cd8e93ab0bfd54799e09a2b0370836ad": "query TestComponentQuery(\n  $cookie: String!\n) {\n  authenticationCookie(cookie: $cookie) {\n    cookie\n    email\n    redeemed\n    expiration\n  }\n}\n",
-  "bc3fee639867972e033491bc2bddb70e03e9e6545ec430da901bf2f5d5562858": "mutation JoinRootMutation(\n  $email: String!\n) {\n  authenticate(email: $email) {\n    success\n  }\n}\n",
-  "eecf3e45471e0b0b367e92241a54a14e26a8b4aec4e3fe9af3c25b0cf24dd838": "mutation TokenRootMutation(\n  $cookie: String!\n) {\n  redeemCookie(cookie: $cookie) {\n    same\n  }\n}\n",
-  "1495477c5c94f045f032e66340c3c98870c9281766c520f11c90af36f73aa745": "query routesQuery(\n  $cookie: String!\n) {\n  redeemCookie(cookie: $cookie) {\n    same\n  }\n}\n",
-  "d7df09c81fe1819ec6e54a95b90870d7ef0dd3a4e9fc022400f71b945fa4c5f1": "query tokenQuery(\n  $cookie: String!\n) {\n  redeemCookie(cookie: $cookie) {\n    same\n  }\n}\n",
-  "6033c5a10fceaf104d411df83fa9336d82398c3f7f789d3170d2319fd5beefa8": "query tokenQuery(\n  $cookie: String!\n) {\n  redeemCookie(cookie: $cookie) {\n    registered\n    sameSession\n  }\n}\n",
-  "23bf010da542460b094f7adbf1647484c63df3d02bb92edef7af675af8b1093a": "subscription JoinSubRootSubscription {\n  authenticationState {\n    authorized\n    registered\n  }\n}\n",
-  "8b57772a41916e84381ce379be0e0139e2b2a5404aca7b0646099a509e125781": "subscription JoinSubRootSubscription {\n  authenticationState {\n    authorized\n    registered\n    redirect\n  }\n}\n",
-  "3f8667a25e1fe365392da1661d93914925a1ad3aad148bef3b92324c28f6cbd1": "mutation RegisterMutation(\n  $username: String!\n) {\n  register(username: $username) {\n    username\n  }\n}\n",
-  "1348e60dcda31ab0b31f92554afa54cb1779daf54e52420db0765591c1f83ca5": "subscription JoinRootSubscription {\n  authenticationState {\n    authorized\n    registered\n    redirect\n  }\n}\n",
-  "d9e6d79e856cce2530ef59da9876bc58f164efd935dcc6811f65fd1114dff89a": "query tokenQueryQuery {\n  state {\n    user {\n      username\n    }\n    tokenData {\n      redeemed\n      registered\n    }\n  }\n}\n",
-  "9d2a052e29962f7cce23bb95f873323813d7d4141cb1d3552fcf5f6380075e1b": "query tokenStateQuery {\n  state {\n    user {\n      username\n    }\n    tokenData {\n      redeemed\n      registered\n    }\n  }\n}\n"
+  "8b821ef05a5415187508346d8e872825b993257ecb5e209246d23bb8302fe3cd": "mutation RegisterMutation(\n  $username: String!\n) {\n  register(username: $username)\n}\n",
+  "ddfba833df99f8f92301eace36c336c026068660f703032e4c3662a482f907a4": "subscription JoinRootSubscription {\n  authListener {\n    authorized\n    redirect\n    cookie {\n      sameSession\n    }\n  }\n}\n",
+  "93bff606cbc51db70befad8600f1e273a52fb645cc9f3b9ebc70821770131470": "mutation JoinRootMutation(\n  $email: String!\n) {\n  authenticate(email: $email)\n}\n",
+  "9d7faf285807018eb42ec3a20e99010017138ce21c8442d519590bff81539715": "query tokenStateQuery {\n  authentication {\n    user {\n      username\n    }\n    cookie {\n      redeemed\n      registered\n      sameSession\n    }\n  }\n}\n",
+  "ba17e0e5aa65763a09b71c780584698ee65676b0a83ed5c305d113ee68d2e481": "query tokenQuery(\n  $cookie: String!\n) {\n  redeemCookie(cookie: $cookie) {\n    sameSession\n    registered\n    redeemed\n  }\n}\n",
+  "ade3de7fe76e5ff56b4a2023dc71c1bba86a762d394782846ad2ca849bf7c392": "query tokenStateQuery {\n  authentication {\n    user {\n      username\n    }\n  }\n}\n"
 }

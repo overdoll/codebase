@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 43a3cfd5ee145445e574ff646593c65f
+ * @relayHash b8d6a45958e94c78ef4cc8048a1996ae
  */
 
 /* eslint-disable */
@@ -13,9 +13,7 @@ export type JoinRootMutationVariables = {|
   email: string
 |};
 export type JoinRootMutationResponse = {|
-  +authenticate: ?{|
-    +success: boolean
-  |}
+  +authenticate: boolean
 |};
 export type JoinRootMutation = {|
   variables: JoinRootMutationVariables,
@@ -28,9 +26,7 @@ export type JoinRootMutation = {|
 mutation JoinRootMutation(
   $email: String!
 ) {
-  authenticate(email: $email) {
-    success
-  }
+  authenticate(email: $email)
 }
 */
 
@@ -52,19 +48,8 @@ v1 = [
         "variableName": "email"
       }
     ],
-    "concreteType": "Authentication",
-    "kind": "LinkedField",
+    "kind": "ScalarField",
     "name": "authenticate",
-    "plural": false,
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "success",
-        "storageKey": null
-      }
-    ],
     "storageKey": null
   }
 ];
@@ -86,7 +71,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "bc3fee639867972e033491bc2bddb70e03e9e6545ec430da901bf2f5d5562858",
+    "id": "93bff606cbc51db70befad8600f1e273a52fb645cc9f3b9ebc70821770131470",
     "metadata": {},
     "name": "JoinRootMutation",
     "operationKind": "mutation",
@@ -95,6 +80,6 @@ return {
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = 'c5d453c53788a1c21c87cb4d6533ce56';
+(node/*: any*/).hash = '208adc4755a5855bb44587f4c92a5640';
 
 module.exports = node;

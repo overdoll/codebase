@@ -3,9 +3,7 @@ import { useState } from 'react'
 
 const registerAction = graphql`
   mutation RegisterMutation($username: String!) {
-    register(username: $username) {
-      username
-    }
+    register(username: $username)
   }
 `
 

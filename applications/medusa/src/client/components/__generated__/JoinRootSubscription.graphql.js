@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 4c61efbe93f81d3a6bf2216d8f666869
+ * @relayHash 1486f53fb71a0deefecfa852416ad2ca
  */
 
 /* eslint-disable */
@@ -11,10 +11,12 @@
 import type { ConcreteRequest } from 'relay-runtime';
 export type JoinRootSubscriptionVariables = {||};
 export type JoinRootSubscriptionResponse = {|
-  +authenticationState: ?{|
+  +authListener: ?{|
     +authorized: boolean,
-    +registered: boolean,
     +redirect: boolean,
+    +cookie: ?{|
+      +sameSession: boolean
+    |},
   |}
 |};
 export type JoinRootSubscription = {|
@@ -26,10 +28,12 @@ export type JoinRootSubscription = {|
 
 /*
 subscription JoinRootSubscription {
-  authenticationState {
+  authListener {
     authorized
-    registered
     redirect
+    cookie {
+      sameSession
+    }
   }
 }
 */
@@ -39,9 +43,9 @@ var v0 = [
   {
     "alias": null,
     "args": null,
-    "concreteType": "AuthenticationState",
+    "concreteType": "AuthListener",
     "kind": "LinkedField",
-    "name": "authenticationState",
+    "name": "authListener",
     "plural": false,
     "selections": [
       {
@@ -55,14 +59,25 @@ var v0 = [
         "alias": null,
         "args": null,
         "kind": "ScalarField",
-        "name": "registered",
+        "name": "redirect",
         "storageKey": null
       },
       {
         "alias": null,
         "args": null,
-        "kind": "ScalarField",
-        "name": "redirect",
+        "concreteType": "Cookie",
+        "kind": "LinkedField",
+        "name": "cookie",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "sameSession",
+            "storageKey": null
+          }
+        ],
         "storageKey": null
       }
     ],
@@ -87,7 +102,7 @@ return {
     "selections": (v0/*: any*/)
   },
   "params": {
-    "id": "1348e60dcda31ab0b31f92554afa54cb1779daf54e52420db0765591c1f83ca5",
+    "id": "ddfba833df99f8f92301eace36c336c026068660f703032e4c3662a482f907a4",
     "metadata": {},
     "name": "JoinRootSubscription",
     "operationKind": "subscription",
@@ -96,6 +111,6 @@ return {
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = 'ca31c1da352f590c625171c27966bdeb';
+(node/*: any*/).hash = '0b513fcd66fd081f08bf3f3fff5d348f';
 
 module.exports = node;

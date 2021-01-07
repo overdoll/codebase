@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash ae8135c5232b49473fd8b9e2a5048150
+ * @relayHash ff65388b538e34d122adce5d9a2c75f0
  */
 
 /* eslint-disable */
@@ -13,9 +13,7 @@ export type RegisterMutationVariables = {|
   username: string
 |};
 export type RegisterMutationResponse = {|
-  +register: ?{|
-    +username: string
-  |}
+  +register: boolean
 |};
 export type RegisterMutation = {|
   variables: RegisterMutationVariables,
@@ -28,9 +26,7 @@ export type RegisterMutation = {|
 mutation RegisterMutation(
   $username: String!
 ) {
-  register(username: $username) {
-    username
-  }
+  register(username: $username)
 }
 */
 
@@ -52,19 +48,8 @@ v1 = [
         "variableName": "username"
       }
     ],
-    "concreteType": "Registration",
-    "kind": "LinkedField",
+    "kind": "ScalarField",
     "name": "register",
-    "plural": false,
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "username",
-        "storageKey": null
-      }
-    ],
     "storageKey": null
   }
 ];
@@ -86,7 +71,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "3f8667a25e1fe365392da1661d93914925a1ad3aad148bef3b92324c28f6cbd1",
+    "id": "8b821ef05a5415187508346d8e872825b993257ecb5e209246d23bb8302fe3cd",
     "metadata": {},
     "name": "RegisterMutation",
     "operationKind": "mutation",
@@ -95,6 +80,6 @@ return {
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = 'f97f7d4f9b7923c1166654d6c7c50894';
+(node/*: any*/).hash = 'dd9f305c44c983b7fd0e178d001ac303';
 
 module.exports = node;
