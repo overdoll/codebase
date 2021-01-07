@@ -9,11 +9,10 @@ import (
 	evav1 "project01101000/codebase/applications/eva/proto"
 	gen "project01101000/codebase/applications/hades/src"
 	"project01101000/codebase/applications/hades/src/helpers"
-	"project01101000/codebase/applications/hades/src/models"
 	"time"
 )
 
-func (r *mutationResolver) Authenticate(ctx context.Context, email *string) (*models.Authentication, error) {
+func (r *mutationResolver) Authenticate(ctx context.Context, email *string) (bool, error) {
 	// Authenticate - Generate an OTP code that will be used to authenticate the user
 	// if user opens the link in the same browser, then we automatically authorize them
 	// if not, then we redeem the cookie and the original browser should be logged in,
@@ -23,7 +22,7 @@ func (r *mutationResolver) Authenticate(ctx context.Context, email *string) (*mo
 	getCookieResponse, err := r.services.Eva().CreateAuthenticationCookie(ctx, &evav1.CreateAuthenticationCookieRequest{Email: *email})
 
 	if err != nil {
-		return nil, err
+		return false, err
 	}
 
 	expiration := time.Now().Add(5 * time.Minute)
@@ -38,18 +37,22 @@ func (r *mutationResolver) Authenticate(ctx context.Context, email *string) (*mo
 	})
 
 	if err != nil {
-		return nil, err
+		return false, err
 	}
 
-	return &models.Authentication{Success: true}, nil
+	return true, err
 }
 
-func (r *mutationResolver) Register(ctx context.Context, username *string) (*models.Registration, error) {
+func (r *mutationResolver) Register(ctx context.Context, username *string) (bool, error) {
+	if username == nil {
+		return false, nil
+	}
+
 	// Make sure we have the cookie in order to register
 	currentCookie, err := helpers.ReadCookie(ctx, OTPKey)
 
 	if err != nil || currentCookie == nil {
-		return nil, err
+		return false, err
 	}
 
 	gc := helpers.GinContextFromContext(ctx)
@@ -58,21 +61,21 @@ func (r *mutationResolver) Register(ctx context.Context, username *string) (*mod
 	getAuthenticationCookie, err := r.services.Eva().GetAuthenticationCookie(ctx, &evav1.GetAuthenticationCookieRequest{Cookie: currentCookie.Value})
 
 	if err != nil {
-		return nil, err
+		return false, err
 	}
 
 	// Register our user
 	getRegisteredUser, err := r.services.Eva().RegisterUser(ctx, &evav1.RegisterUserRequest{Username: *username, Email: getAuthenticationCookie.Cookie.Email})
 
 	if err != nil {
-		return nil, err
+		return false, err
 	}
 
 	// Delete our cookie
 	getDeletedCookie, err := r.services.Eva().DeleteAuthenticationCookie(ctx, &evav1.GetAuthenticationCookieRequest{Cookie: currentCookie.Value})
 
 	if err != nil || getDeletedCookie == nil {
-		return nil, err
+		return false, err
 	}
 
 	// Remove OTP token - registration is complete
@@ -81,10 +84,10 @@ func (r *mutationResolver) Register(ctx context.Context, username *string) (*mod
 	_, err = helpers.CreateUserSession(gc, r.redis, getRegisteredUser.Username)
 
 	if err != nil {
-		return nil, err
+		return false, err
 	}
 
-	return &models.Registration{Username: getRegisteredUser.Username}, nil
+	return true, nil
 }
 
 func (r *mutationResolver) Logout(ctx context.Context) (bool, error) {

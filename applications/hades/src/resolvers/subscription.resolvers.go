@@ -14,7 +14,7 @@ import (
 	"github.com/gomodule/redigo/redis"
 )
 
-func (r *subscriptionResolver) AuthenticationState(ctx context.Context) (<-chan *models.AuthenticationState, error) {
+func (r *subscriptionResolver) AuthListener(ctx context.Context) (<-chan *models.AuthListener, error) {
 	// AuthenticationState - check the state of our authentication by checking the OTP Cookie header to see if we have redeemed it
 	gc := helpers.GinContextFromContext(ctx)
 
@@ -44,13 +44,15 @@ func (r *subscriptionResolver) AuthenticationState(ctx context.Context) (<-chan 
 		return nil, err
 	}
 
-	channel := make(chan *models.AuthenticationState)
+	channel := make(chan *models.AuthListener)
+
+	cookie := &models.Cookie{Registered: getRegisteredUser.Username != "", Redeemed: getAuthenticationCookie.Cookie.Redeemed, SameSession: true}
 
 	// Helper function to check what we should do about the user
 	checkState := func() {
 		// User doesn't exist, we ask to register
 		if getRegisteredUser.Username == "" {
-			channel <- &models.AuthenticationState{Authorized: true, Registered: false, Redirect: false}
+			channel <- &models.AuthListener{Authorized: true, Redirect: false, Cookie: cookie}
 			return
 		}
 
@@ -71,7 +73,7 @@ func (r *subscriptionResolver) AuthenticationState(ctx context.Context) (<-chan 
 			return
 		}
 
-		channel <- &models.AuthenticationState{Authorized: true, Registered: true, Redirect: false}
+		channel <- &models.AuthListener{Authorized: true, Cookie: cookie, Redirect: false}
 		return
 	}
 
@@ -88,7 +90,7 @@ func (r *subscriptionResolver) AuthenticationState(ctx context.Context) (<-chan 
 			case redis.Message:
 
 				if string(v.Data) == "SAME_SESSION" {
-					channel <- &models.AuthenticationState{Authorized: true, Registered: false, Redirect: true}
+					channel <- &models.AuthListener{Authorized: true, Redirect: true, Cookie: cookie}
 					return
 
 				} else if string(v.Data) == "ANOTHER_SESSION" {

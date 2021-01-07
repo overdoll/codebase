@@ -39,7 +39,7 @@ func AuthenticationMiddleware(services services.Services, redis redis.Conn) gin.
 		claims := jwtToken.Claims.(*authentication.AuthCustomClaims)
 
 		// make sure our session token also exists in the Redis Set
-		existing, err := redis.Do("SISMEMBER", "session:"+claims.Username, cookie.Value)
+		existing, err := redis.Do("SISMEMBER", "session:"+claims.Id, cookie.Value)
 
 		// If it doesn't exist in Redis, we remove it
 		if err != nil || existing == 0 {
@@ -51,18 +51,18 @@ func AuthenticationMiddleware(services services.Services, redis redis.Conn) gin.
 		}
 
 		// Verify user exists with this token by grabbing the user
-		user, err := services.Eva().GetUser(c, &evav1.GetUserRequest{Username: claims.Username})
+		user, err := services.Eva().GetUser(c, &evav1.GetUserRequest{Id: claims.Id})
 
 		if err != nil {
 			// No user - we just remove this token from our set
 			// c.AbortWithStatus(http.StatusForbidden)
 			http.SetCookie(c.Writer, &http.Cookie{Name: "session", Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
-			redis.Do("SREM", "session:"+claims.Username, cookie.Value)
+			redis.Do("SREM", "session:"+claims.Id, cookie.Value)
 			c.Next()
 			return
 		}
 
-		_, err = helpers.CreateUserSession(c, redis, claims.Username)
+		_, err = helpers.CreateUserSession(c, redis, claims.Id)
 
 		if err != nil {
 			c.AbortWithStatus(http.StatusInternalServerError)
@@ -70,7 +70,7 @@ func AuthenticationMiddleware(services services.Services, redis redis.Conn) gin.
 		}
 
 		// remove old token since its not valid anymore (we "expired" it)
-		existing, err = redis.Do("SREM", "session:"+claims.Username, cookie.Value)
+		existing, err = redis.Do("SREM", "session:"+claims.Id, cookie.Value)
 
 		// Redis error
 		if err != nil {

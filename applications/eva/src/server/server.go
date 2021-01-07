@@ -39,10 +39,12 @@ type RegisteredUser struct {
 type UserEmail struct {
 	Username string `db:"username"`
 	Email    string `db:"email"`
+ 	UserId   gocql.UUID `db:"user_id"`
 }
 
 type User struct {
-	Username string `db:"username"`
+	Id          gocql.UUID `db:"id"`
+	Username    string     `db:"username"`
 }
 
 var emailRegex = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")

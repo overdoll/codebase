@@ -1,59 +1,37 @@
 directive @auth on FIELD_DEFINITION
 
-type AccountData {
-  registered: Boolean!
-  sameSession: Boolean!
-}
-
 type Authentication {
-  success: Boolean!
+  cookie: Cookie
+  user: User
 }
 
-type AuthenticationState {
+type AuthListener {
   authorized: Boolean!
-  registered: Boolean!
   redirect: Boolean!
+  cookie: Cookie
 }
 
-type JoinState {
-  existingUser: Boolean!
+type Cookie {
+  sameSession: Boolean!
+  registered: Boolean!
+  redeemed: Boolean!
 }
 
 type Mutation {
-  authenticate(email: String): Authentication
-  register(username: String): Registration
+  authenticate(email: String): Boolean!
+  register(username: String): Boolean!
   logout: Boolean!
 }
 
 type Query {
-  user(username: String): String
-  redeemCookie(cookie: String): AccountData
-  joinState: JoinState
-  state: UserState
-}
-
-type Registration {
-  username: String!
-}
-
-type SameSession {
-  same: Boolean!
+  redeemCookie(cookie: String): Cookie
+  authentication: Authentication
 }
 
 type Subscription {
-  authenticationState: AuthenticationState
-}
-
-type Token {
-  redeemed: Boolean!
-  registered: Boolean!
+  authListener: AuthListener
 }
 
 type User {
   username: String!
-}
-
-type UserState {
-  user: User
-  tokenData: Token
 }

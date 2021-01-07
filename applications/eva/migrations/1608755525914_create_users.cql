@@ -1,16 +1,3 @@
-CREATE TABLE users
-(
-    username text,
-    primary key ( username )
-);
-
-CREATE TABLE users_emails
-(
-    email    text,
-    username text,
-    primary key ( email, username )
-);
-
 CREATE TABLE authentication_cookies
 (
     cookie     uuid,
@@ -18,4 +5,19 @@ CREATE TABLE authentication_cookies
     redeemed   int,
     expiration timestamp,
     primary key ( cookie, email )
+);
+
+CREATE TABLE users
+(
+    id           uuid,
+    username     text,
+    primary key ( id )
+);
+
+CREATE TABLE users_emails
+(
+    user_id  uuid,
+    email    text,
+    username text,
+    primary key ( email, username )
 );

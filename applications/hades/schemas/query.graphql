@@ -1,6 +1,4 @@
 type Query {
-    user(username: String): String
-    redeemCookie(cookie: String): AccountData
-    joinState: JoinState
-    state: UserState
+    redeemCookie(cookie: String): Cookie
+    authentication: Authentication
 }

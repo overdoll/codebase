@@ -14,7 +14,7 @@ type JWTService interface {
 }
 
 type AuthCustomClaims struct {
-	Username string `json:"username"`
+	Id string `json:"id"`
 	jwt.StandardClaims
 }
 
@@ -37,9 +37,9 @@ func getSecretKey() string {
 	return secret
 }
 
-func (service *jwtServices) GenerateToken(username string, expiration int64) string {
+func (service *jwtServices) GenerateToken(id string, expiration int64) string {
 	claims := &AuthCustomClaims{
-		username,
+		id,
 		jwt.StandardClaims{
 			ExpiresAt: expiration,
 			Issuer:    service.issuer,

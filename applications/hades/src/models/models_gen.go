@@ -2,43 +2,23 @@
 
 package models
 
-type AccountData struct {
-	Registered  bool `json:"registered"`
-	SameSession bool `json:"sameSession"`
+type AuthListener struct {
+	Authorized bool    `json:"authorized"`
+	Redirect   bool    `json:"redirect"`
+	Cookie     *Cookie `json:"cookie"`
 }
 
 type Authentication struct {
-	Success bool `json:"success"`
+	Cookie *Cookie `json:"cookie"`
+	User   *User   `json:"user"`
 }
 
-type AuthenticationState struct {
-	Authorized bool `json:"authorized"`
-	Registered bool `json:"registered"`
-	Redirect   bool `json:"redirect"`
-}
-
-type JoinState struct {
-	ExistingUser bool `json:"existingUser"`
-}
-
-type Registration struct {
-	Username string `json:"username"`
-}
-
-type SameSession struct {
-	Same bool `json:"same"`
-}
-
-type Token struct {
-	Redeemed   bool `json:"redeemed"`
-	Registered bool `json:"registered"`
+type Cookie struct {
+	SameSession bool `json:"sameSession"`
+	Registered  bool `json:"registered"`
+	Redeemed    bool `json:"redeemed"`
 }
 
 type User struct {
 	Username string `json:"username"`
-}
-
-type UserState struct {
-	User      *User  `json:"user"`
-	TokenData *Token `json:"tokenData"`
 }

@@ -3,22 +3,30 @@ package server
 import (
 	"context"
 	"fmt"
+	"strings"
+
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
 	evav1 "project01101000/codebase/applications/eva/proto"
 )
 
 func (s *Server) GetUser(ctx context.Context, request *evav1.GetUserRequest) (*evav1.User, error) {
-	if request == nil || request.Username == "" {
-		return nil, fmt.Errorf("username is not provided")
+	if request == nil || request.Id == "" {
+		return nil, fmt.Errorf("id is not provided")
+	}
+
+	u, err := gocql.ParseUUID(request.Id)
+
+	if err != nil {
+		return nil, fmt.Errorf("uuid is not valid")
 	}
 
 	users := User{
-		Username: request.Username,
+		Id: u,
 	}
 
 	queryUser := qb.Select("users").
-		Where(qb.Eq("username")).
+		Where(qb.Eq("id")).
 		Query(s.session).
 		BindStruct(users)
 
@@ -31,7 +39,7 @@ func (s *Server) GetUser(ctx context.Context, request *evav1.GetUserRequest) (*e
 	return &evav1.User{Username: userItem.Username}, nil
 }
 
-func (s *Server) RegisterUser(ctx context.Context, request *evav1.RegisterUserRequest) (*evav1.RegisterUserResponse, error) {
+func (s *Server) RegisterUser(ctx context.Context, request *evav1.RegisterUserRequest) (*evav1.User, error) {
 	if request == nil || request.Email == "" {
 		return nil, fmt.Errorf("email is not provided")
 	}
@@ -46,7 +54,10 @@ func (s *Server) RegisterUser(ctx context.Context, request *evav1.RegisterUserRe
 
 	userEmail := UserEmail{
 		Email:    request.Email,
-		Username: request.Username,
+		UserId:   gocql.TimeUUID(),
+		// This piece of data, we want to make sure we use as lowercase, to make sure we don't get collisions
+		// This table always has the username of a user, in lowercase format to make sure that we always have unique usernames
+		Username: strings.ToLower(request.Username),
 	}
 
 	// First, we do a unique insert into users_emails
@@ -64,11 +75,12 @@ func (s *Server) RegisterUser(ctx context.Context, request *evav1.RegisterUserRe
 
 	user := User{
 		Username: request.Username,
+		Id: userEmail.UserId,
 	}
 
 	// Now, we actually register the user to our main users table, and set any attributes
 	insertUser := qb.Insert("users").
-		Columns("username").
+		Columns("username", "id").
 		Unique().
 		Query(s.session).
 		BindStruct(user)
@@ -77,10 +89,10 @@ func (s *Server) RegisterUser(ctx context.Context, request *evav1.RegisterUserRe
 		return nil, fmt.Errorf("ExecRelease() failed: '%s", err)
 	}
 
-	return &evav1.RegisterUserResponse{Username: request.Username, Email: request.Email}, nil
+	return &evav1.User{Username: request.Username, Id: user.Id.String()}, nil
 }
 
-func (s *Server) GetRegisteredEmail(ctx context.Context, request *evav1.GetRegisteredEmailRequest) (*evav1.GetRegisteredEmailResponse, error) {
+func (s *Server) GetRegisteredEmail(ctx context.Context, request *evav1.GetRegisteredEmailRequest) (*evav1.User, error) {
 	if request == nil || request.Email == "" {
 		return nil, fmt.Errorf("email is not provided")
 	}
@@ -103,9 +115,16 @@ func (s *Server) GetRegisteredEmail(ctx context.Context, request *evav1.GetRegis
 	var registeredItem UserEmail
 
 	if err := queryEmail.Get(&registeredItem); err != nil {
-		return &evav1.GetRegisteredEmailResponse{Username: ""}, nil
+		return &evav1.User{Username: "", Id: ""}, nil
 	}
 
-	return &evav1.GetRegisteredEmailResponse{Username: registeredItem.Username}, nil
+	// Get our user using the User Id
+	user, err := s.GetUser(ctx, &evav1.GetUserRequest{Id: registeredItem.UserId.String()})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
 
 }

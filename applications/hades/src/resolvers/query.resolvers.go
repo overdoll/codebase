@@ -5,7 +5,6 @@ package resolvers
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	evav1 "project01101000/codebase/applications/eva/proto"
 	gen "project01101000/codebase/applications/hades/src"
@@ -13,11 +12,7 @@ import (
 	"project01101000/codebase/applications/hades/src/models"
 )
 
-func (r *queryResolver) User(ctx context.Context, username *string) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *queryResolver) RedeemCookie(ctx context.Context, cookie *string) (*models.AccountData, error) {
+func (r *queryResolver) RedeemCookie(ctx context.Context, cookie *string) (*models.Cookie, error) {
 	// RedeemCookie - this is when the user uses the redeemed cookie. This will
 	// occur when the user uses the redeemed cookie in the same browser that has the 'otp-cookie' cookie
 
@@ -43,7 +38,7 @@ func (r *queryResolver) RedeemCookie(ctx context.Context, cookie *string) (*mode
 		r.redis.Flush()
 
 		// No cookie exists, we want to give a different SameSession response
-		return &models.AccountData{Registered: false, SameSession: false}, nil
+		return &models.Cookie{Registered: false, SameSession: false, Redeemed: true}, nil
 	}
 
 	// Check if user is registered
@@ -57,7 +52,7 @@ func (r *queryResolver) RedeemCookie(ctx context.Context, cookie *string) (*mode
 	if getRegisteredUser.Username == "" {
 		r.redis.Send("PUBLISH", "otp"+currentCookie.Value, "SAME_SESSION")
 		r.redis.Flush()
-		return &models.AccountData{Registered: false, SameSession: true}, nil
+		return &models.Cookie{Registered: false, SameSession: true, Redeemed: true}, nil
 	}
 
 	// Delete our cookie, since we now know this user will be logged in
@@ -71,7 +66,7 @@ func (r *queryResolver) RedeemCookie(ctx context.Context, cookie *string) (*mode
 	http.SetCookie(gc.Writer, &http.Cookie{Name: OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
 
 	// Create user session
-	_, err = helpers.CreateUserSession(gc, r.redis, getRegisteredUser.Username)
+	_, err = helpers.CreateUserSession(gc, r.redis, getRegisteredUser.Id)
 
 	if err != nil {
 		return nil, err
@@ -80,20 +75,16 @@ func (r *queryResolver) RedeemCookie(ctx context.Context, cookie *string) (*mode
 	r.redis.Send("PUBLISH", "otp"+currentCookie.Value, "SAME_SESSION")
 	r.redis.Flush()
 
-	return &models.AccountData{Registered: true, SameSession: true}, nil
+	return &models.Cookie{Registered: true, SameSession: true, Redeemed: true}, nil
 }
 
-func (r *queryResolver) JoinState(ctx context.Context) (*models.JoinState, error) {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *queryResolver) State(ctx context.Context) (*models.UserState, error) {
+func (r *queryResolver) Authentication(ctx context.Context) (*models.Authentication, error) {
 	user := helpers.UserFromContext(ctx)
 	gc := helpers.GinContextFromContext(ctx)
 
 	// User is logged in
 	if user != nil {
-		return &models.UserState{User: &models.User{Username: user.Username}, TokenData: nil}, nil
+		return &models.Authentication{User: &models.User{Username: user.Username}, Cookie: nil}, nil
 	}
 
 	// User is not logged in, let's check for an OTP token
@@ -104,7 +95,7 @@ func (r *queryResolver) State(ctx context.Context) (*models.UserState, error) {
 
 		// Error says that this cookie doesn't exist
 		if err == http.ErrNoCookie {
-			return &models.UserState{User: nil, TokenData: nil}, nil
+			return &models.Authentication{User: nil, Cookie: nil}, nil
 		}
 
 		return nil, err
@@ -120,7 +111,7 @@ func (r *queryResolver) State(ctx context.Context) (*models.UserState, error) {
 
 	// Not yet redeemed, user needs to redeem it still
 	if getAuthenticationCookie.Cookie.Redeemed == false {
-		return &models.UserState{User: nil, TokenData: &models.Token{Redeemed: false, Registered: false}}, nil
+		return &models.Authentication{User: nil, Cookie: &models.Cookie{Redeemed: false, Registered: false, SameSession: true}}, nil
 	}
 
 	// Cookie redeemed, check if user is registered
@@ -132,7 +123,7 @@ func (r *queryResolver) State(ctx context.Context) (*models.UserState, error) {
 
 	// User not registered, we tell them to register
 	if getRegisteredUser.Username == "" {
-		return &models.UserState{User: nil, TokenData: &models.Token{Redeemed: true, Registered: false}}, nil
+		return &models.Authentication{User: nil, Cookie: &models.Cookie{Redeemed: true, Registered: false, SameSession: true}}, nil
 	}
 
 	// Remove OTP cookie - user is registered
@@ -146,7 +137,7 @@ func (r *queryResolver) State(ctx context.Context) (*models.UserState, error) {
 	}
 
 	// Return user, since we logged in
-	return &models.UserState{User: &models.User{Username: getRegisteredUser.Username}, TokenData: &models.Token{Redeemed: true, Registered: true}}, nil
+	return &models.Authentication{User: &models.User{Username: getRegisteredUser.Username}, Cookie: &models.Cookie{Redeemed: true, Registered: true, SameSession: true}}, nil
 }
 
 // Query returns gen.QueryResolver implementation.

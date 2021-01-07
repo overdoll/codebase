@@ -1,40 +1,19 @@
-type Authentication {
-    success: Boolean!
-}
-
-type AccountData {
-    registered: Boolean!
+type Cookie {
     sameSession: Boolean!
-}
-
-type JoinState {
-    existingUser: Boolean!
-}
-
-type Registration {
-    username: String!
-}
-
-type AuthenticationState {
-    authorized: Boolean!
     registered: Boolean!
-    redirect: Boolean!
+    redeemed: Boolean!
 }
-
-type SameSession {
-    same: Boolean!
-}
-
 type User {
     username: String!
 }
 
-type Token {
-    redeemed: Boolean!
-    registered: Boolean!
+type Authentication {
+    cookie: Cookie
+    user: User
 }
 
-type UserState {
-    user: User
-    tokenData: Token
+type AuthListener {
+    authorized: Boolean!
+    redirect: Boolean!
+    cookie: Cookie
 }
