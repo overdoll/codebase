@@ -43,7 +43,7 @@ type ResolverRoot interface {
 
 type DirectiveRoot struct {
 	Auth       func(ctx context.Context, obj interface{}, next graphql.Resolver) (res interface{}, err error)
-	Validation func(ctx context.Context, obj interface{}, next graphql.Resolver, rules []*string) (res interface{}, err error)
+	Validation func(ctx context.Context, obj interface{}, next graphql.Resolver, rules []string) (res interface{}, err error)
 }
 
 type ComplexityRoot struct {
@@ -334,7 +334,7 @@ type AuthListener {
 }`, BuiltIn: false},
 	{Name: "schemas/directives.graphql", Input: `directive @auth on FIELD_DEFINITION
 
-directive @validation(rules: [String]) on FIELD | FIELD_DEFINITION
+directive @validation(rules: [String!]!) on FIELD | FIELD_DEFINITION
 `, BuiltIn: false},
 	{Name: "schemas/mutation.graphql", Input: `type Mutation {
     authenticate(email: String): Boolean!
@@ -358,10 +358,10 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 func (ec *executionContext) dir_validation_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 []*string
+	var arg0 []string
 	if tmp, ok := rawArgs["rules"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("rules"))
-		arg0, err = ec.unmarshalOString2ᚕᚖstring(ctx, tmp)
+		arg0, err = ec.unmarshalNString2ᚕstringᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -480,7 +480,7 @@ func (ec *executionContext) _fieldMiddleware(ctx context.Context, obj interface{
 				if ec.directives.Validation == nil {
 					return nil, errors.New("directive validation is not implemented")
 				}
-				return ec.directives.Validation(ctx, obj, n, args["rules"].([]*string))
+				return ec.directives.Validation(ctx, obj, n, args["rules"].([]string))
 			}
 		}
 	}
@@ -2585,6 +2585,36 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 	return res
 }
 
+func (ec *executionContext) unmarshalNString2ᚕstringᚄ(ctx context.Context, v interface{}) ([]string, error) {
+	var vSlice []interface{}
+	if v != nil {
+		if tmp1, ok := v.([]interface{}); ok {
+			vSlice = tmp1
+		} else {
+			vSlice = []interface{}{v}
+		}
+	}
+	var err error
+	res := make([]string, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNString2string(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) marshalNString2ᚕstringᚄ(ctx context.Context, sel ast.SelectionSet, v []string) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	for i := range v {
+		ret[i] = ec.marshalNString2string(ctx, sel, v[i])
+	}
+
+	return ret
+}
+
 func (ec *executionContext) marshalN__Directive2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐDirective(ctx context.Context, sel ast.SelectionSet, v introspection.Directive) graphql.Marshaler {
 	return ec.___Directive(ctx, sel, &v)
 }
@@ -2866,42 +2896,6 @@ func (ec *executionContext) unmarshalOString2string(ctx context.Context, v inter
 
 func (ec *executionContext) marshalOString2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
 	return graphql.MarshalString(v)
-}
-
-func (ec *executionContext) unmarshalOString2ᚕᚖstring(ctx context.Context, v interface{}) ([]*string, error) {
-	if v == nil {
-		return nil, nil
-	}
-	var vSlice []interface{}
-	if v != nil {
-		if tmp1, ok := v.([]interface{}); ok {
-			vSlice = tmp1
-		} else {
-			vSlice = []interface{}{v}
-		}
-	}
-	var err error
-	res := make([]*string, len(vSlice))
-	for i := range vSlice {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalOString2ᚖstring(ctx, vSlice[i])
-		if err != nil {
-			return nil, err
-		}
-	}
-	return res, nil
-}
-
-func (ec *executionContext) marshalOString2ᚕᚖstring(ctx context.Context, sel ast.SelectionSet, v []*string) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	ret := make(graphql.Array, len(v))
-	for i := range v {
-		ret[i] = ec.marshalOString2ᚖstring(ctx, sel, v[i])
-	}
-
-	return ret
 }
 
 func (ec *executionContext) unmarshalOString2ᚖstring(ctx context.Context, v interface{}) (*string, error) {

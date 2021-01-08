@@ -1,19 +1,23 @@
 type Cookie {
-    sameSession: Boolean!
-    registered: Boolean!
-    redeemed: Boolean!
+  sameSession: Boolean!
+  registered: Boolean!
+  redeemed: Boolean!
 }
 type User {
-    username: String!
+  username: String!
 }
 
 type Authentication {
-    cookie: Cookie
-    user: User
+  cookie: Cookie
+  user: User
 }
 
 type AuthListener {
-    authorized: Boolean!
-    redirect: Boolean!
-    cookie: Cookie
+  authorized: Boolean!
+  redirect: Boolean!
+  cookie: Cookie
+}
+
+input RegisterInput {
+  email: String! @validation(rules: ["required", "email"])
 }

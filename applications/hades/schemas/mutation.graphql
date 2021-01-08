@@ -1,5 +1,5 @@
 type Mutation {
-    authenticate(email: String): Boolean!
-    register(username: String): Boolean!
-    logout: Boolean! @auth
+  authenticate(email: String): Boolean!
+  register(data: RegisterInput): Boolean!
+  logout: Boolean! @auth
 }
