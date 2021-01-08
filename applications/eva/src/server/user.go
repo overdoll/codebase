@@ -8,6 +8,7 @@ import (
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
 	eva "project01101000/codebase/applications/eva/proto"
+	"project01101000/codebase/applications/eva/src/models"
 )
 
 func (s *Server) GetUser(ctx context.Context, request *eva.GetUserRequest) (*eva.User, error) {
@@ -18,7 +19,7 @@ func (s *Server) GetUser(ctx context.Context, request *eva.GetUserRequest) (*eva
 		return nil, fmt.Errorf("uuid is not valid")
 	}
 
-	users := User{
+	users := models.User{
 		Id: u,
 	}
 
@@ -27,7 +28,7 @@ func (s *Server) GetUser(ctx context.Context, request *eva.GetUserRequest) (*eva
 		Query(s.session).
 		BindStruct(users)
 
-	var userItem User
+	var userItem models.User
 
 	if err := queryUser.Get(&userItem); err != nil {
 		return nil, fmt.Errorf("select() failed: '%s", err)
@@ -38,7 +39,7 @@ func (s *Server) GetUser(ctx context.Context, request *eva.GetUserRequest) (*eva
 
 func (s *Server) RegisterUser(ctx context.Context, request *eva.RegisterUserRequest) (*eva.User, error) {
 
-	userEmail := UserEmail{
+	userEmail := models.UserEmail{
 		Email:    request.Email,
 		UserId:   gocql.TimeUUID(),
 		// This piece of data, we want to make sure we use as lowercase, to make sure we don't get collisions
@@ -59,7 +60,7 @@ func (s *Server) RegisterUser(ctx context.Context, request *eva.RegisterUserRequ
 		return nil, fmt.Errorf("ExecRelease() failed: '%s", err)
 	}
 
-	user := User{
+	user := models.User{
 		Username: request.Username,
 		Id: userEmail.UserId,
 	}
@@ -81,7 +82,7 @@ func (s *Server) RegisterUser(ctx context.Context, request *eva.RegisterUserRequ
 func (s *Server) GetRegisteredEmail(ctx context.Context, request *eva.GetRegisteredEmailRequest) (*eva.User, error) {
 
 	// get authentication cookie with this ID
-	userEmail := UserEmail{
+	userEmail := models.UserEmail{
 		Email: request.Email,
 	}
 
@@ -91,7 +92,7 @@ func (s *Server) GetRegisteredEmail(ctx context.Context, request *eva.GetRegiste
 		Query(s.session).
 		BindStruct(userEmail)
 
-	var registeredItem UserEmail
+	var registeredItem models.UserEmail
 
 	if err := queryEmail.Get(&registeredItem); err != nil {
 		return &eva.User{Username: "", Id: ""}, nil

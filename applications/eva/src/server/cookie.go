@@ -6,6 +6,8 @@ import (
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
 	eva "project01101000/codebase/applications/eva/proto"
+	"project01101000/codebase/applications/eva/src/models"
+
 	"time"
 )
 
@@ -17,48 +19,49 @@ func (s *Server) DeleteAuthenticationCookie(ctx context.Context, request *eva.Ge
 		return nil, fmt.Errorf("uuid is not valid")
 	}
 
+	// get authentication cookie with this ID
 	queryCookie := qb.
 		Delete("authentication_cookies").
 		Where(qb.Eq("id")).
-		Query(s.session)
+		Query(s.session).
+		BindStruct(&models.AuthenticationCookie{
+			Cookie: u,
+		})
 
-	// get authentication cookie with this ID
-	authCookie := AuthenticationCookie{
-		Cookie: u,
+	if err := queryCookie.ExecRelease(); err != nil {
+		return nil, fmt.Errorf("delete() failed: '%s", err)
 	}
-
-	queryCookie.BindStruct(authCookie)
 
 	return &eva.DeleteAuthenticationCookieResponse{Success: "true"}, nil
 }
 
 func (s *Server) CreateAuthenticationCookie(ctx context.Context, request *eva.CreateAuthenticationCookieRequest) (*eva.AuthenticationCookie, error) {
 	// run a query to create the authentication token
-	insertCookie := qb.Insert("authentication_cookies").
-		Columns("cookie", "email", "redeemed", "expiration").
-		Query(s.session)
-
-	authCookie := AuthenticationCookie{
+	authCookie := models.AuthenticationCookie{
 		Cookie:   gocql.TimeUUID(),
 		Email:    request.Email,
 		Redeemed: 0,
 		// Expires after 5 minutes
 		Expiration: time.Now().Add(time.Minute * 5),
-		Session: request.Session,
+		Session:    request.Session,
 	}
 
-	insertCookie.BindStruct(authCookie)
+	insertCookie := qb.Insert("authentication_cookies").
+		Columns("cookie", "email", "redeemed", "expiration", "session").
+		Query(s.session).
+		BindStruct(authCookie)
 
 	if err := insertCookie.ExecRelease(); err != nil {
 		return nil, fmt.Errorf("ExecRelease() failed: '%s", err)
 	}
 
-	cookie := new(eva.AuthenticationCookie)
-	cookie.Email = authCookie.Email
-	cookie.Redeemed = authCookie.Redeemed != 0
-	cookie.Expiration = authCookie.Expiration.String()
-	cookie.Cookie = authCookie.Cookie.String()
-	cookie.Session = authCookie.Session
+	cookie := &eva.AuthenticationCookie{
+		Email:    authCookie.Email,
+		Redeemed: authCookie.Redeemed != 0,
+		Expiration: authCookie.Expiration.String(),
+		Cookie: authCookie.Cookie.String(),
+		Session: authCookie.Session,
+	}
 
 	return cookie, nil
 }
@@ -75,7 +78,7 @@ func (s *Server) RedeemAuthenticationCookie(ctx context.Context, request *eva.Ge
 		Where(qb.EqLit("cookie", u.String())).
 		Query(s.session)
 
-	var queryCookieItem AuthenticationCookie
+	var queryCookieItem models.AuthenticationCookie
 
 	if err := queryCookie.Get(&queryCookieItem); err != nil {
 		return nil, fmt.Errorf("select() failed: '%s", err)
@@ -86,7 +89,7 @@ func (s *Server) RedeemAuthenticationCookie(ctx context.Context, request *eva.Ge
 	}
 
 	// get authentication cookie with this ID
-	authCookie := AuthenticationCookie{
+	authCookie := models.AuthenticationCookie{
 		Cookie:   u,
 		Redeemed: 1,
 		Email:    queryCookieItem.Email,
@@ -103,13 +106,13 @@ func (s *Server) RedeemAuthenticationCookie(ctx context.Context, request *eva.Ge
 		return nil, fmt.Errorf("update() failed: '%s", err)
 	}
 
-	cookie := new(eva.AuthenticationCookie)
-	cookie.Email = queryCookieItem.Email
-	cookie.Redeemed = true
-	cookie.Expiration = queryCookieItem.Expiration.String()
-	cookie.Cookie = queryCookieItem.Cookie.String()
-	cookie.Session = queryCookieItem.Session
-
+	cookie := &eva.AuthenticationCookie{
+		Cookie:     queryCookieItem.Cookie.String(),
+		Redeemed:   true,
+		Expiration: queryCookieItem.Expiration.String(),
+		Email:      queryCookieItem.Email,
+		Session:    queryCookieItem.Session,
+	}
 	return cookie, nil
 }
 
@@ -124,7 +127,7 @@ func (s *Server) GetAuthenticationCookie(ctx context.Context, request *eva.GetAu
 		Where(qb.EqLit("cookie", u.String())).
 		Query(s.session)
 
-	var cookieItem AuthenticationCookie
+	var cookieItem models.AuthenticationCookie
 
 	if err := queryCookie.Get(&cookieItem); err != nil {
 		return nil, fmt.Errorf("select() failed: '%s", err)
@@ -134,12 +137,13 @@ func (s *Server) GetAuthenticationCookie(ctx context.Context, request *eva.GetAu
 		return nil, fmt.Errorf("cookie expired")
 	}
 
-	cookie := new(eva.AuthenticationCookie)
-	cookie.Email = cookieItem.Email
-	cookie.Redeemed = cookieItem.Redeemed != 0
-	cookie.Expiration = cookieItem.Expiration.String()
-	cookie.Cookie = cookieItem.Cookie.String()
-	cookie.Session = cookieItem.Session
+	cookie := &eva.AuthenticationCookie {
+		Email: cookieItem.Email,
+		Redeemed: cookieItem.Redeemed != 0,
+		Expiration: cookieItem.Expiration.String(),
+		Cookie: cookieItem.Cookie.String(),
+		Session: cookieItem.Session,
+	}
 
 	return cookie, nil
 }

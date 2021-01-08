@@ -6,9 +6,7 @@ import (
 	"log"
 	"net"
 	"os"
-	"time"
 
-	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
 	evav1 "project01101000/codebase/applications/eva/proto"
 
@@ -22,30 +20,6 @@ const (
 
 type Server struct {
 	session gocqlx.Session
-}
-
-type AuthenticationCookie struct {
-	Cookie     gocql.UUID `db:"cookie"`
-	Email      string     `db:"email"`
-	Redeemed   int        `db:"redeemed"`
-	Expiration time.Time  `db:"expiration"`
-	Session    string     `db:"session"`
-}
-
-type RegisteredUser struct {
-	Username string `db:"username"`
-	Email    string `db:"email"`
-}
-
-type UserEmail struct {
-	Username string     `db:"username"`
-	Email    string     `db:"email"`
-	UserId   gocql.UUID `db:"user_id"`
-}
-
-type User struct {
-	Id       gocql.UUID `db:"id"`
-	Username string     `db:"username"`
 }
 
 func NewServer(ctx context.Context, session gocqlx.Session) (*Server, error) {

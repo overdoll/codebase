@@ -36,6 +36,8 @@ module.exports = {
       config.entry.vendor = [
         require.resolve('react'),
         require.resolve('react-dom'),
+        require.resolve('react-relay'),
+        require.resolve('relay-runtime'),
         // ... add any other vendor packages with require.resolve('xxx')
       ];
 

@@ -1,10 +1,7 @@
 {
-  "8b821ef05a5415187508346d8e872825b993257ecb5e209246d23bb8302fe3cd": "mutation RegisterMutation(\n  $username: String!\n) {\n  register(username: $username)\n}\n",
-  "ddfba833df99f8f92301eace36c336c026068660f703032e4c3662a482f907a4": "subscription JoinRootSubscription {\n  authListener {\n    authorized\n    redirect\n    cookie {\n      sameSession\n    }\n  }\n}\n",
-  "93bff606cbc51db70befad8600f1e273a52fb645cc9f3b9ebc70821770131470": "mutation JoinRootMutation(\n  $email: String!\n) {\n  authenticate(email: $email)\n}\n",
-  "9d7faf285807018eb42ec3a20e99010017138ce21c8442d519590bff81539715": "query tokenStateQuery {\n  authentication {\n    user {\n      username\n    }\n    cookie {\n      redeemed\n      registered\n      sameSession\n    }\n  }\n}\n",
-  "ba17e0e5aa65763a09b71c780584698ee65676b0a83ed5c305d113ee68d2e481": "query tokenQuery(\n  $cookie: String!\n) {\n  redeemCookie(cookie: $cookie) {\n    sameSession\n    registered\n    redeemed\n  }\n}\n",
-  "ade3de7fe76e5ff56b4a2023dc71c1bba86a762d394782846ad2ca849bf7c392": "query tokenStateQuery {\n  authentication {\n    user {\n      username\n    }\n  }\n}\n",
-  "ec10dc7924f9764d31e9a06918f9a229f47b51ecd082f993cc38f8ee86f95e24": "mutation RegisterMutation(\n  $data: RegisterInput!\n) {\n  register(data: $data)\n}\n",
-  "01811b6d26104d994f74605d5f80e269a08f21c2b556c714be21b61d202c6b3f": "mutation JoinRootMutation(\n  $data: AuthenticationInput!\n) {\n  authenticate(data: $data)\n}\n"
+  "7e8a58a7116f261f7b6851f2ffd5b6b9": "query tokenStateQuery {\n  authentication {\n    user {\n      username\n    }\n    cookie {\n      redeemed\n      registered\n      sameSession\n    }\n  }\n}\n",
+  "15b6b350ae61fdfbf9dd6eeef348c28b": "query tokenQuery(\n  $cookie: String!\n) {\n  redeemCookie(cookie: $cookie) {\n    sameSession\n    registered\n    redeemed\n  }\n}\n",
+  "1486f53fb71a0deefecfa852416ad2ca": "subscription JoinRootSubscription {\n  authListener {\n    authorized\n    redirect\n    cookie {\n      sameSession\n    }\n  }\n}\n",
+  "a8244d934f532f8ed92a84be68e4a474": "mutation JoinRootMutation(\n  $data: AuthenticationInput!\n) {\n  authenticate(data: $data)\n}\n",
+  "9fa210c33c02dede7049bc27965528c5": "mutation RegisterMutation(\n  $data: RegisterInput!\n) {\n  register(data: $data)\n}\n"
 }

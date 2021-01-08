@@ -63,7 +63,7 @@ const subscribe = (params, variables) => {
   const subscriptionClient = new SubscriptionClient(
     `wss://${window.location.hostname}/api/graphql`,
     {
-      reconnect: true,
+      reconnect: false,
     },
   );
 
