@@ -2,7 +2,7 @@ const config = {
   directives: {
     'default-src': ["'self'"],
     'script-src': ["'self'"],
-    'style-src': ["'self'", "'unsafe-inline'"],
+    'style-src': ["'self'"],
     'font-src': ['data:', '*'],
     'base-uri': ["'self'"],
     'object-src': ["'none'"],
@@ -18,6 +18,8 @@ const config = {
 };
 
 config.directives['script-src'].push("'unsafe-eval'");
+config.directives['script-src'].push("'unsafe-inline'");
 config.directives['style-src'].push("'unsafe-eval'");
+config.directives['style-src'].push("'unsafe-inline'");
 
-module.exports = config;
+export default config;

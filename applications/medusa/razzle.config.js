@@ -33,21 +33,17 @@ module.exports = {
         ? 'static/js/[name].js'
         : 'static/js/[name].[hash:8].js';
 
-      config.entry.vendor = [
-        require.resolve('react'),
-        require.resolve('react-dom'),
-        require.resolve('react-relay'),
-        require.resolve('relay-runtime'),
-        // ... add any other vendor packages with require.resolve('xxx')
-      ];
-
       config.optimization = {
+        moduleIds: 'size',
+        runtimeChunk: 'single',
         splitChunks: {
-          // Chunk splitting optimiztion
-          chunks: 'all',
-          // Switch off name generation, otherwise files would be invalidated
-          // when more chunks with the same vendors are added
-          name: false,
+          cacheGroups: {
+            vendor: {
+              test: /[\\/]node_modules[\\/]/,
+              name: 'vendors',
+              chunks: 'all',
+            },
+          },
         },
       };
 

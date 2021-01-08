@@ -1,9 +1,8 @@
-const helmet = require('helmet');
+import helmet from 'helmet';
+import contentSecurityPolicy from '../config/csp';
+import expectCt from '../config/eCT';
 
-const contentSecurityPolicy = require('../config/csp');
-const expectCt = require('../config/eCT');
-
-module.exports = helmet({
+export default helmet({
   contentSecurityPolicy,
   expectCt,
   hsts: false,

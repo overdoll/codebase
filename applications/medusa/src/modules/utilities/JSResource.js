@@ -109,7 +109,6 @@ export default function JSResource(moduleId, loader) {
   if (resource == null) {
     // Loadable Components - Add
     loadable(loader);
-
     resource = new Resource(loader, moduleId);
     resourceMap.set(moduleId, resource);
   }

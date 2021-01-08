@@ -4,19 +4,13 @@ import { createBrowserHistory } from 'history';
 import createRouter from '@//:modules/routing/createRouter';
 import routes from './routes';
 import RelayEnvironment from './RelayEnvironment';
-import { RelayEnvironmentProvider } from 'react-relay/hooks';
-import RoutingContext from '@//:modules/routing/RoutingContext';
 import { loadableReady } from '@loadable/component';
 
 const router = createRouter(routes, createBrowserHistory(), RelayEnvironment);
 
 loadableReady().then(() => {
   createRoot(document.getElementById('root')).render(
-    <RelayEnvironmentProvider environment={RelayEnvironment}>
-      <RoutingContext.Provider value={router.context}>
-        <App />
-      </RoutingContext.Provider>
-    </RelayEnvironmentProvider>,
+    <App router={router} environment={RelayEnvironment} />,
   );
 });
 
@@ -24,11 +18,7 @@ if (module.hot) {
   module.hot.accept('./App', () => {
     const NextRoot = require('./App').default;
     createRoot(document.getElementById('root')).render(
-      <RelayEnvironmentProvider environment={RelayEnvironment}>
-        <RoutingContext.Provider value={router.context}>
-          <NextRoot />
-        </RoutingContext.Provider>
-      </RelayEnvironmentProvider>,
+      <NextRoot router={router} environment={RelayEnvironment} />,
     );
   });
 }

@@ -1,15 +1,14 @@
 import { ChunkExtractor } from '@loadable/server';
+import React from 'react';
 import axios from 'axios';
 import { Environment, Network, RecordSource, Store } from 'relay-runtime';
 import createRouter from '@//:modules/routing/createRouter';
 import routes from '../../client/routes';
 import { getMockHistory } from '@//:modules/routing/createMockHistory';
-import { RelayEnvironmentProvider } from 'react-relay/hooks';
-import RoutingContext from '@//:modules/routing/RoutingContext';
-import App from '../../client/App';
 import path from 'path';
 import serialize from 'serialize-javascript';
 import ssrPrepass from 'react-ssr-prepass';
+import App from '../../client/App';
 
 const entry = async (req, res, next) => {
   try {
@@ -99,11 +98,7 @@ const entry = async (req, res, next) => {
     // a better experience. In the future, we can also preload any routes that we want to SSR
     await ssrPrepass(
       extractor.collectChunks(
-        <RelayEnvironmentProvider environment={environment}>
-          <RoutingContext.Provider value={router.context}>
-            <App />
-          </RoutingContext.Provider>
-        </RelayEnvironmentProvider>,
+        <App router={router} environment={environment} />,
       ),
     );
 
