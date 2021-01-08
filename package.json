@@ -25,7 +25,8 @@
     "react-ssr-prepass": "^1.2.1",
     "rebass": "^4.0.7",
     "relay-runtime": "^10.1.2",
-    "subscriptions-transport-ws": "^0.9.18"
+    "subscriptions-transport-ws": "^0.9.18",
+    "winston": "^3.3.3"
   },
   "scripts": {
     "relay": "yarn run relay-compiler",

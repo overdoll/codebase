@@ -76,6 +76,7 @@ _RUNTIME_DEPS = [
     "@npm//cookie-parser",
     "@npm//body-parser",
     "@npm//csurf",
+    "@npm//winston",
 ]
 
 nodejs_binary(

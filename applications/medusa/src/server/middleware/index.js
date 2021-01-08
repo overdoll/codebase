@@ -1,4 +1,7 @@
-const helmet = require('./helmet');
-module.exports = {
+import helmet from './helmet';
+import error from './error';
+
+export default {
   helmet,
+  error,
 };

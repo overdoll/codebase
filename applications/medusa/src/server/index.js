@@ -7,8 +7,6 @@ import csrf from 'csurf';
 
 const index = express();
 
-index.disable('x-powered-by');
-
 // Set EJS templating
 index
   .set('views', path.join(__dirname, '../src/server/templates'))
@@ -23,14 +21,27 @@ index.use(middleware.helmet);
 // cookie-parser
 index.use(cookieParser());
 
+index.use((req, res, next) => {
+  req.csrf = {};
+
+  if (req.cookies._csrf !== undefined) {
+    req.csrf.csrfSecret = req.cookies._csrf;
+  }
+
+  next();
+});
+
 // CSRF
 index.use(
   csrf({
-    cookie: { signed: false, secure: true, httpOnly: true },
+    cookie: false,
+    sessionKey: 'csrf',
   }),
 );
 
 // Our entrypoint
 index.get('/*', entry);
+
+index.use(middleware.error);
 
 export default index;

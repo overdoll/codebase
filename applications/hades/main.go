@@ -88,7 +88,8 @@ func main() {
 	// Create graphApi handlers - GET and POST
 	gqlHandler := HandleGraphQL(svcs, redisSvc, redisPubSub, cache)
 
-	router.POST("/graphql", gqlHandler)
+	// We only do CSRF middleware on here, because it doesn't work on WS
+	router.POST("/graphql", middleware.CSRFCheck(), gqlHandler)
 	router.GET("/graphql", gqlHandler)
 
 	srv := &http.Server{

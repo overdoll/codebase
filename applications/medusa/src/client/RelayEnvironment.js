@@ -17,9 +17,7 @@ const csrfToken = document
   .getAttribute('content');
 
 /**
- * Relay requires developers to configure a "fetch" function that tells Relay how to load
- * the results of GraphQL queries from your index (or other data source). See more at
- * https://relay.dev/docs/en/quick-start-guide#relay-environment.
+ * Relay fetch function - uses axios. Passes CSRF token from the document as well
  */
 async function fetchRelay(params, variables, _cacheConfig) {
   const response = await axios({
@@ -78,6 +76,7 @@ const subscribe = (params, variables) => {
     },
     variables,
     query: 'empty',
+    csrf: csrfToken,
   });
   // Important: Convert subscriptions-transport-ws observable type to Relay's
   return Observable.from(subscribeObservable);

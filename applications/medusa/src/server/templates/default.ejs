@@ -1,27 +1,17 @@
-<!doctype html>
-<html class="no-js" lang="">
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title><%= title %></title>
-    <meta name="description" content="<%= description %>">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="csrf-token" content="<%= csrfToken %>">
-    <meta name="theme-color" content="#000000">
-    <link rel="manifest" href="/manifest.json">
     <link rel="shortcut icon" href="/favicon.ico">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="<%= title %>">
-    <meta property="og:description" content="<%= description %>">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=2,shrink-to-fit=no"/>
+    <meta name="csrf-token" content="<%= csrfToken %>">
+    <title><%= title %></title>
     <%- preload %>
     <%- styles %>
+    <script type="application/json" id="relay-store"><%- relayStore %></script>
 </head>
 <body>
-<noscript>You need to enable JavaScript to run this app.</noscript>
 <div id="root"></div>
-<script type="application/json" id="relay-store">
-<%- relayStore %>
-</script>
 <%- scripts %>
 </body>
 </html>
