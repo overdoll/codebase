@@ -14,6 +14,7 @@ message AuthenticationCookie {
   bool redeemed = 2;
   string expiration = 3;
   string email = 4;
+  string session = 5;
 }
 
 message GetRegisteredEmailRequest {
@@ -22,18 +23,11 @@ message GetRegisteredEmailRequest {
 
 message CreateAuthenticationCookieRequest {
   string email = 1;
-}
-
-message CreateAuthenticationCookieResponse {
-  AuthenticationCookie cookie = 1;
+  string session = 2;
 }
 
 message GetAuthenticationCookieRequest {
   string cookie = 1;
-}
-
-message GetAuthenticationCookieResponse {
-  AuthenticationCookie cookie = 1;
 }
 
 message RegisterUserRequest {
@@ -58,8 +52,8 @@ service EvaAPI {
   rpc GetUser(GetUserRequest) returns (User);
   rpc RegisterUser(RegisterUserRequest) returns (User);
   rpc GetRegisteredEmail(GetRegisteredEmailRequest) returns (User);
-  rpc GetAuthenticationCookie(GetAuthenticationCookieRequest) returns (GetAuthenticationCookieResponse);
+  rpc GetAuthenticationCookie(GetAuthenticationCookieRequest) returns (AuthenticationCookie);
   rpc DeleteAuthenticationCookie(GetAuthenticationCookieRequest) returns (DeleteAuthenticationCookieResponse);
-  rpc RedeemAuthenticationCookie(GetAuthenticationCookieRequest) returns (GetAuthenticationCookieResponse);
-  rpc CreateAuthenticationCookie(CreateAuthenticationCookieRequest) returns (CreateAuthenticationCookieResponse);
+  rpc RedeemAuthenticationCookie(GetAuthenticationCookieRequest) returns (AuthenticationCookie);
+  rpc CreateAuthenticationCookie(CreateAuthenticationCookieRequest) returns (AuthenticationCookie);
 }

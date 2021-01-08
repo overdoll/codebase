@@ -5,7 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gomodule/redigo/redis"
 	"net/http"
-	evav1 "project01101000/codebase/applications/eva/proto"
+	eva "project01101000/codebase/applications/eva/proto"
 	"project01101000/codebase/applications/hades/src/authentication"
 	"project01101000/codebase/applications/hades/src/helpers"
 	"project01101000/codebase/applications/hades/src/models"
@@ -51,7 +51,7 @@ func AuthenticationMiddleware(services services.Services, redis redis.Conn) gin.
 		}
 
 		// Verify user exists with this token by grabbing the user
-		user, err := services.Eva().GetUser(c, &evav1.GetUserRequest{Id: claims.Id})
+		user, err := services.Eva().GetUser(c, &eva.GetUserRequest{Id: claims.Id})
 
 		if err != nil {
 			// No user - we just remove this token from our set

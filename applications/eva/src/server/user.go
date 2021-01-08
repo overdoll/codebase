@@ -7,10 +7,10 @@ import (
 
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
-	evav1 "project01101000/codebase/applications/eva/proto"
+	eva "project01101000/codebase/applications/eva/proto"
 )
 
-func (s *Server) GetUser(ctx context.Context, request *evav1.GetUserRequest) (*evav1.User, error) {
+func (s *Server) GetUser(ctx context.Context, request *eva.GetUserRequest) (*eva.User, error) {
 
 	u, err := gocql.ParseUUID(request.Id)
 
@@ -33,10 +33,10 @@ func (s *Server) GetUser(ctx context.Context, request *evav1.GetUserRequest) (*e
 		return nil, fmt.Errorf("select() failed: '%s", err)
 	}
 
-	return &evav1.User{Username: userItem.Username}, nil
+	return &eva.User{Username: userItem.Username}, nil
 }
 
-func (s *Server) RegisterUser(ctx context.Context, request *evav1.RegisterUserRequest) (*evav1.User, error) {
+func (s *Server) RegisterUser(ctx context.Context, request *eva.RegisterUserRequest) (*eva.User, error) {
 
 	userEmail := UserEmail{
 		Email:    request.Email,
@@ -75,10 +75,10 @@ func (s *Server) RegisterUser(ctx context.Context, request *evav1.RegisterUserRe
 		return nil, fmt.Errorf("ExecRelease() failed: '%s", err)
 	}
 
-	return &evav1.User{Username: request.Username, Id: user.Id.String()}, nil
+	return &eva.User{Username: request.Username, Id: user.Id.String()}, nil
 }
 
-func (s *Server) GetRegisteredEmail(ctx context.Context, request *evav1.GetRegisteredEmailRequest) (*evav1.User, error) {
+func (s *Server) GetRegisteredEmail(ctx context.Context, request *eva.GetRegisteredEmailRequest) (*eva.User, error) {
 
 	// get authentication cookie with this ID
 	userEmail := UserEmail{
@@ -94,11 +94,11 @@ func (s *Server) GetRegisteredEmail(ctx context.Context, request *evav1.GetRegis
 	var registeredItem UserEmail
 
 	if err := queryEmail.Get(&registeredItem); err != nil {
-		return &evav1.User{Username: "", Id: ""}, nil
+		return &eva.User{Username: "", Id: ""}, nil
 	}
 
 	// Get our user using the User Id
-	user, err := s.GetUser(ctx, &evav1.GetUserRequest{Id: registeredItem.UserId.String()})
+	user, err := s.GetUser(ctx, &eva.GetUserRequest{Id: registeredItem.UserId.String()})
 
 	if err != nil {
 		return nil, err

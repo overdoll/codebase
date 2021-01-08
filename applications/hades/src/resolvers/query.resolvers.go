@@ -6,7 +6,7 @@ package resolvers
 import (
 	"context"
 	"net/http"
-	evav1 "project01101000/codebase/applications/eva/proto"
+	eva "project01101000/codebase/applications/eva/proto"
 	gen "project01101000/codebase/applications/hades/src"
 	"project01101000/codebase/applications/hades/src/helpers"
 	"project01101000/codebase/applications/hades/src/models"
@@ -24,7 +24,7 @@ func (r *queryResolver) RedeemCookie(ctx context.Context, cookie *string) (*mode
 	gc := helpers.GinContextFromContext(ctx)
 
 	// Redeem our authentication cookie
-	getRedeemedCookie, err := r.services.Eva().RedeemAuthenticationCookie(ctx, &evav1.GetAuthenticationCookieRequest{Cookie: *cookie})
+	getRedeemedCookie, err := r.services.Eva().RedeemAuthenticationCookie(ctx, &eva.GetAuthenticationCookieRequest{Cookie: *cookie})
 
 	// Check to make sure we didn't get an error, and our cookie isn't expired
 	if err != nil || getRedeemedCookie == nil {
@@ -34,7 +34,7 @@ func (r *queryResolver) RedeemCookie(ctx context.Context, cookie *string) (*mode
 	currentCookie, err := helpers.ReadCookie(ctx, OTPKey)
 
 	if err != nil || currentCookie == nil {
-		r.redis.Send("PUBLISH", "otp"+getRedeemedCookie.Cookie.Cookie, "ANOTHER_SESSION")
+		r.redis.Send("PUBLISH", "otp"+getRedeemedCookie.Cookie, "ANOTHER_SESSION")
 		r.redis.Flush()
 
 		// No cookie exists, we want to give a different SameSession response
@@ -42,7 +42,7 @@ func (r *queryResolver) RedeemCookie(ctx context.Context, cookie *string) (*mode
 	}
 
 	// Check if user is registered
-	getRegisteredUser, err := r.services.Eva().GetRegisteredEmail(ctx, &evav1.GetRegisteredEmailRequest{Email: getRedeemedCookie.Cookie.Email})
+	getRegisteredUser, err := r.services.Eva().GetRegisteredEmail(ctx, &eva.GetRegisteredEmailRequest{Email: getRedeemedCookie.Email})
 
 	if err != nil {
 		return nil, err
@@ -56,7 +56,7 @@ func (r *queryResolver) RedeemCookie(ctx context.Context, cookie *string) (*mode
 	}
 
 	// Delete our cookie, since we now know this user will be logged in
-	getDeletedCookie, err := r.services.Eva().DeleteAuthenticationCookie(ctx, &evav1.GetAuthenticationCookieRequest{Cookie: currentCookie.Value})
+	getDeletedCookie, err := r.services.Eva().DeleteAuthenticationCookie(ctx, &eva.GetAuthenticationCookieRequest{Cookie: currentCookie.Value})
 
 	if err != nil || getDeletedCookie == nil {
 		return nil, err
@@ -102,7 +102,7 @@ func (r *queryResolver) Authentication(ctx context.Context) (*models.Authenticat
 	}
 
 	// Get authentication cookie data, so we can check if it's been redeemed yet
-	getAuthenticationCookie, err := r.services.Eva().GetAuthenticationCookie(ctx, &evav1.GetAuthenticationCookieRequest{Cookie: otpCookie.Value})
+	getAuthenticationCookie, err := r.services.Eva().GetAuthenticationCookie(ctx, &eva.GetAuthenticationCookieRequest{Cookie: otpCookie.Value})
 
 	// Check to make sure we didn't get an error, and our cookie isn't expired
 	if err != nil {
@@ -110,12 +110,12 @@ func (r *queryResolver) Authentication(ctx context.Context) (*models.Authenticat
 	}
 
 	// Not yet redeemed, user needs to redeem it still
-	if getAuthenticationCookie.Cookie.Redeemed == false {
+	if getAuthenticationCookie.Redeemed == false {
 		return &models.Authentication{User: nil, Cookie: &models.Cookie{Redeemed: false, Registered: false, SameSession: true}}, nil
 	}
 
 	// Cookie redeemed, check if user is registered
-	getRegisteredUser, err := r.services.Eva().GetRegisteredEmail(ctx, &evav1.GetRegisteredEmailRequest{Email: getAuthenticationCookie.Cookie.Email})
+	getRegisteredUser, err := r.services.Eva().GetRegisteredEmail(ctx, &eva.GetRegisteredEmailRequest{Email: getAuthenticationCookie.Email})
 
 	if err != nil {
 		return nil, err

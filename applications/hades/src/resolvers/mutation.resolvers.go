@@ -5,11 +5,13 @@ package resolvers
 
 import (
 	"context"
+	"encoding/json"
 	"net/http"
-	evav1 "project01101000/codebase/applications/eva/proto"
+	eva "project01101000/codebase/applications/eva/proto"
 	gen "project01101000/codebase/applications/hades/src"
 	"project01101000/codebase/applications/hades/src/helpers"
 	"project01101000/codebase/applications/hades/src/models"
+	"strings"
 	"time"
 )
 
@@ -18,9 +20,23 @@ func (r *mutationResolver) Authenticate(ctx context.Context, data *models.Authen
 	// if user opens the link in the same browser, then we automatically authorize them
 	// if not, then we redeem the cookie and the original browser should be logged in,
 	// provided that the tab is still open
+	gc := helpers.GinContextFromContext(ctx)
+
+	// Capture session data
+	type SessionData struct {
+		UserAgent string
+	}
+
+	sessionData := SessionData{UserAgent: strings.Join(gc.Request.Header["user-agent"], ",")}
+
+	sessionJson, err := json.Marshal(sessionData)
+
+	if err != nil {
+		return false, err
+	}
 
 	// Create an authentication cookie
-	getCookieResponse, err := r.services.Eva().CreateAuthenticationCookie(ctx, &evav1.CreateAuthenticationCookieRequest{Email: data.Email})
+	getCookieResponse, err := r.services.Eva().CreateAuthenticationCookie(ctx, &eva.CreateAuthenticationCookieRequest{Email: data.Email, Session: string(sessionJson)})
 
 	if err != nil {
 		return false, err
@@ -33,7 +49,7 @@ func (r *mutationResolver) Authenticate(ctx context.Context, data *models.Authen
 	// Otherwise, if opened in another browser (such as the phone), it will log them in on the original browser through a subscription
 	_, err = helpers.SetCookie(ctx, &http.Cookie{
 		Name:    OTPKey,
-		Value:   getCookieResponse.Cookie.Cookie,
+		Value:   getCookieResponse.Cookie,
 		Expires: expiration,
 	})
 
@@ -55,21 +71,21 @@ func (r *mutationResolver) Register(ctx context.Context, data *models.RegisterIn
 	gc := helpers.GinContextFromContext(ctx)
 
 	// Get our cookie so we can get our email
-	getAuthenticationCookie, err := r.services.Eva().GetAuthenticationCookie(ctx, &evav1.GetAuthenticationCookieRequest{Cookie: currentCookie.Value})
+	getAuthenticationCookie, err := r.services.Eva().GetAuthenticationCookie(ctx, &eva.GetAuthenticationCookieRequest{Cookie: currentCookie.Value})
 
 	if err != nil {
 		return false, err
 	}
 
 	// Register our user
-	getRegisteredUser, err := r.services.Eva().RegisterUser(ctx, &evav1.RegisterUserRequest{Username: data.Username, Email: getAuthenticationCookie.Cookie.Email})
+	getRegisteredUser, err := r.services.Eva().RegisterUser(ctx, &eva.RegisterUserRequest{Username: data.Username, Email: getAuthenticationCookie.Email})
 
 	if err != nil {
 		return false, err
 	}
 
 	// Delete our cookie
-	getDeletedCookie, err := r.services.Eva().DeleteAuthenticationCookie(ctx, &evav1.GetAuthenticationCookieRequest{Cookie: currentCookie.Value})
+	getDeletedCookie, err := r.services.Eva().DeleteAuthenticationCookie(ctx, &eva.GetAuthenticationCookieRequest{Cookie: currentCookie.Value})
 
 	if err != nil || getDeletedCookie == nil {
 		return false, err

@@ -6,7 +6,7 @@ package resolvers
 import (
 	"context"
 	"net/http"
-	evav1 "project01101000/codebase/applications/eva/proto"
+	eva "project01101000/codebase/applications/eva/proto"
 	gen "project01101000/codebase/applications/hades/src"
 	"project01101000/codebase/applications/hades/src/helpers"
 	"project01101000/codebase/applications/hades/src/models"
@@ -31,14 +31,14 @@ func (r *subscriptionResolver) AuthListener(ctx context.Context) (<-chan *models
 	}
 
 	// Get our cookie so we can get our email
-	getAuthenticationCookie, err := r.services.Eva().GetAuthenticationCookie(ctx, &evav1.GetAuthenticationCookieRequest{Cookie: currentCookie.Value})
+	getAuthenticationCookie, err := r.services.Eva().GetAuthenticationCookie(ctx, &eva.GetAuthenticationCookieRequest{Cookie: currentCookie.Value})
 
 	// It could happen that the cookie was deleted - if so, then we should tell the user that the token has been redeemed
 	if err != nil {
 		return nil, err
 	}
 
-	getRegisteredUser, err := r.services.Eva().GetRegisteredEmail(ctx, &evav1.GetRegisteredEmailRequest{Email: getAuthenticationCookie.Cookie.Email})
+	getRegisteredUser, err := r.services.Eva().GetRegisteredEmail(ctx, &eva.GetRegisteredEmailRequest{Email: getAuthenticationCookie.Email})
 
 	if err != nil {
 		return nil, err
@@ -46,7 +46,7 @@ func (r *subscriptionResolver) AuthListener(ctx context.Context) (<-chan *models
 
 	channel := make(chan *models.AuthListener)
 
-	cookie := &models.Cookie{Registered: getRegisteredUser.Username != "", Redeemed: getAuthenticationCookie.Cookie.Redeemed, SameSession: true}
+	cookie := &models.Cookie{Registered: getRegisteredUser.Username != "", Redeemed: getAuthenticationCookie.Redeemed, SameSession: true}
 
 	// Helper function to check what we should do about the user
 	checkState := func() {
@@ -57,7 +57,7 @@ func (r *subscriptionResolver) AuthListener(ctx context.Context) (<-chan *models
 		}
 
 		// Delete our cookie
-		getDeletedCookie, err := r.services.Eva().DeleteAuthenticationCookie(ctx, &evav1.GetAuthenticationCookieRequest{Cookie: currentCookie.Value})
+		getDeletedCookie, err := r.services.Eva().DeleteAuthenticationCookie(ctx, &eva.GetAuthenticationCookieRequest{Cookie: currentCookie.Value})
 
 		if err != nil || getDeletedCookie == nil {
 			return
@@ -78,9 +78,9 @@ func (r *subscriptionResolver) AuthListener(ctx context.Context) (<-chan *models
 	}
 
 	go func() {
-		r.redisPB.Subscribe("otp" + getAuthenticationCookie.Cookie.Cookie)
+		r.redisPB.Subscribe("otp" + getAuthenticationCookie.Cookie)
 
-		if getAuthenticationCookie.Cookie.Redeemed == true {
+		if getAuthenticationCookie.Redeemed == true {
 			checkState()
 			return
 		}

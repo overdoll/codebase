@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
-	evav1 "project01101000/codebase/applications/eva/proto"
+	eva "project01101000/codebase/applications/eva/proto"
 	"time"
 )
 
 // DeleteAuthenticationCookie - Delete cookie because we don't want it to be used anymore
-func (s *Server) DeleteAuthenticationCookie(ctx context.Context, request *evav1.GetAuthenticationCookieRequest) (*evav1.DeleteAuthenticationCookieResponse, error) {
+func (s *Server) DeleteAuthenticationCookie(ctx context.Context, request *eva.GetAuthenticationCookieRequest) (*eva.DeleteAuthenticationCookieResponse, error) {
 	u, err := gocql.ParseUUID(request.Cookie)
 
 	if err != nil {
@@ -29,10 +29,10 @@ func (s *Server) DeleteAuthenticationCookie(ctx context.Context, request *evav1.
 
 	queryCookie.BindStruct(authCookie)
 
-	return &evav1.DeleteAuthenticationCookieResponse{Success: "true"}, nil
+	return &eva.DeleteAuthenticationCookieResponse{Success: "true"}, nil
 }
 
-func (s *Server) CreateAuthenticationCookie(ctx context.Context, request *evav1.CreateAuthenticationCookieRequest) (*evav1.CreateAuthenticationCookieResponse, error) {
+func (s *Server) CreateAuthenticationCookie(ctx context.Context, request *eva.CreateAuthenticationCookieRequest) (*eva.AuthenticationCookie, error) {
 	// run a query to create the authentication token
 	insertCookie := qb.Insert("authentication_cookies").
 		Columns("cookie", "email", "redeemed", "expiration").
@@ -44,6 +44,7 @@ func (s *Server) CreateAuthenticationCookie(ctx context.Context, request *evav1.
 		Redeemed: 0,
 		// Expires after 5 minutes
 		Expiration: time.Now().Add(time.Minute * 5),
+		Session: request.Session,
 	}
 
 	insertCookie.BindStruct(authCookie)
@@ -52,16 +53,17 @@ func (s *Server) CreateAuthenticationCookie(ctx context.Context, request *evav1.
 		return nil, fmt.Errorf("ExecRelease() failed: '%s", err)
 	}
 
-	cookie := new(evav1.AuthenticationCookie)
+	cookie := new(eva.AuthenticationCookie)
 	cookie.Email = authCookie.Email
 	cookie.Redeemed = authCookie.Redeemed != 0
 	cookie.Expiration = authCookie.Expiration.String()
 	cookie.Cookie = authCookie.Cookie.String()
+	cookie.Session = authCookie.Session
 
-	return &evav1.CreateAuthenticationCookieResponse{Cookie: cookie}, nil
+	return cookie, nil
 }
 
-func (s *Server) RedeemAuthenticationCookie(ctx context.Context, request *evav1.GetAuthenticationCookieRequest) (*evav1.GetAuthenticationCookieResponse, error) {
+func (s *Server) RedeemAuthenticationCookie(ctx context.Context, request *eva.GetAuthenticationCookieRequest) (*eva.AuthenticationCookie, error) {
 	u, err := gocql.ParseUUID(request.Cookie)
 
 	if err != nil {
@@ -101,16 +103,17 @@ func (s *Server) RedeemAuthenticationCookie(ctx context.Context, request *evav1.
 		return nil, fmt.Errorf("update() failed: '%s", err)
 	}
 
-	cookie := new(evav1.AuthenticationCookie)
+	cookie := new(eva.AuthenticationCookie)
 	cookie.Email = queryCookieItem.Email
 	cookie.Redeemed = true
 	cookie.Expiration = queryCookieItem.Expiration.String()
 	cookie.Cookie = queryCookieItem.Cookie.String()
+	cookie.Session = queryCookieItem.Session
 
-	return &evav1.GetAuthenticationCookieResponse{Cookie: cookie}, nil
+	return cookie, nil
 }
 
-func (s *Server) GetAuthenticationCookie(ctx context.Context, request *evav1.GetAuthenticationCookieRequest) (*evav1.GetAuthenticationCookieResponse, error) {
+func (s *Server) GetAuthenticationCookie(ctx context.Context, request *eva.GetAuthenticationCookieRequest) (*eva.AuthenticationCookie, error) {
 	u, err := gocql.ParseUUID(request.Cookie)
 
 	if err != nil {
@@ -131,11 +134,12 @@ func (s *Server) GetAuthenticationCookie(ctx context.Context, request *evav1.Get
 		return nil, fmt.Errorf("cookie expired")
 	}
 
-	cookie := new(evav1.AuthenticationCookie)
+	cookie := new(eva.AuthenticationCookie)
 	cookie.Email = cookieItem.Email
 	cookie.Redeemed = cookieItem.Redeemed != 0
 	cookie.Expiration = cookieItem.Expiration.String()
 	cookie.Cookie = cookieItem.Cookie.String()
+	cookie.Session = cookieItem.Session
 
-	return &evav1.GetAuthenticationCookieResponse{Cookie: cookie}, nil
+	return cookie, nil
 }

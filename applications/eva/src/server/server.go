@@ -29,6 +29,7 @@ type AuthenticationCookie struct {
 	Email      string     `db:"email"`
 	Redeemed   int        `db:"redeemed"`
 	Expiration time.Time  `db:"expiration"`
+	Session    string     `db:"session"`
 }
 
 type RegisteredUser struct {
