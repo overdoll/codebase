@@ -6,9 +6,10 @@ import (
 	"strings"
 
 	"github.com/99designs/gqlgen/graphql"
+	"github.com/go-playground/validator/v10"
+	"github.com/pkg/errors"
 	gen "project01101000/codebase/applications/hades/src"
 	"project01101000/codebase/applications/hades/src/helpers"
-	"github.com/go-playground/validator/v10"
 )
 
 var validate *validator.Validate
@@ -29,16 +30,40 @@ func Auth(ctx context.Context, obj interface{}, next graphql.Resolver) (res inte
 	return next(ctx)
 }
 
-// Validation - perform field validation, using validation plugin
+// Validation - perform field validation, using validation plugin (only works with string values)
 func Validation(ctx context.Context, obj interface{}, next graphql.Resolver, rules []string) (res interface{}, err error) {
 
-	data := strings.Join(rules, ",")
+	validate = validator.New()
 
-	errs := validate.Var(obj, data)
-
-	if errs != nil {
-		return nil, errs
+	obj, err = next(ctx)
+	if err != nil {
+		return nil, err
 	}
 
-	return next(ctx)
+	pathContext := graphql.GetPathContext(ctx)
+	fieldName := ""
+
+	// Get field name first
+	if pathContext != nil {
+		fieldName = *pathContext.Field
+	} else {
+		fieldName = graphql.GetFieldContext(ctx).Field.Name
+	}
+
+	switch value := obj.(type) {
+	// Validation only works on string inputs for now
+	case string:
+		data := strings.Join(rules, ",")
+
+		errs := validate.VarCtx(ctx, value, data)
+
+		if errs != nil {
+			return nil, errs
+		}
+
+		return next(ctx)
+
+	default:
+		return nil, errors.Errorf("field \"%s\" must be a string", fieldName)
+	}
 }

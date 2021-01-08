@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash ff65388b538e34d122adce5d9a2c75f0
+ * @relayHash 9fa210c33c02dede7049bc27965528c5
  */
 
 /* eslint-disable */
@@ -9,8 +9,11 @@
 
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
-export type RegisterMutationVariables = {|
+export type RegisterInput = {|
   username: string
+|};
+export type RegisterMutationVariables = {|
+  data: RegisterInput
 |};
 export type RegisterMutationResponse = {|
   +register: boolean
@@ -24,9 +27,9 @@ export type RegisterMutation = {|
 
 /*
 mutation RegisterMutation(
-  $username: String!
+  $data: RegisterInput!
 ) {
-  register(username: $username)
+  register(data: $data)
 }
 */
 
@@ -35,7 +38,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "username"
+    "name": "data"
   }
 ],
 v1 = [
@@ -44,8 +47,8 @@ v1 = [
     "args": [
       {
         "kind": "Variable",
-        "name": "username",
-        "variableName": "username"
+        "name": "data",
+        "variableName": "data"
       }
     ],
     "kind": "ScalarField",
@@ -71,7 +74,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "8b821ef05a5415187508346d8e872825b993257ecb5e209246d23bb8302fe3cd",
+    "id": "ec10dc7924f9764d31e9a06918f9a229f47b51ecd082f993cc38f8ee86f95e24",
     "metadata": {},
     "name": "RegisterMutation",
     "operationKind": "mutation",
@@ -80,6 +83,6 @@ return {
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = 'dd9f305c44c983b7fd0e178d001ac303';
+(node/*: any*/).hash = '369ba62eb8fbf9c30cc194baec00ed91';
 
 module.exports = node;

@@ -3,14 +3,14 @@ package server
 import (
 	"context"
 	"fmt"
-	"github.com/gocql/gocql"
-	"github.com/scylladb/gocqlx/v2"
 	"log"
 	"net"
 	"os"
-	evav1 "project01101000/codebase/applications/eva/proto"
-	"regexp"
 	"time"
+
+	"github.com/gocql/gocql"
+	"github.com/scylladb/gocqlx/v2"
+	evav1 "project01101000/codebase/applications/eva/proto"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -37,17 +37,15 @@ type RegisteredUser struct {
 }
 
 type UserEmail struct {
-	Username string `db:"username"`
-	Email    string `db:"email"`
- 	UserId   gocql.UUID `db:"user_id"`
+	Username string     `db:"username"`
+	Email    string     `db:"email"`
+	UserId   gocql.UUID `db:"user_id"`
 }
 
 type User struct {
-	Id          gocql.UUID `db:"id"`
-	Username    string     `db:"username"`
+	Id       gocql.UUID `db:"id"`
+	Username string     `db:"username"`
 }
-
-var emailRegex = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
 
 func NewServer(ctx context.Context, session gocqlx.Session) (*Server, error) {
 	return &Server{

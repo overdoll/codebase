@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash b8d6a45958e94c78ef4cc8048a1996ae
+ * @relayHash a8244d934f532f8ed92a84be68e4a474
  */
 
 /* eslint-disable */
@@ -9,8 +9,11 @@
 
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
-export type JoinRootMutationVariables = {|
+export type AuthenticationInput = {|
   email: string
+|};
+export type JoinRootMutationVariables = {|
+  data: AuthenticationInput
 |};
 export type JoinRootMutationResponse = {|
   +authenticate: boolean
@@ -24,9 +27,9 @@ export type JoinRootMutation = {|
 
 /*
 mutation JoinRootMutation(
-  $email: String!
+  $data: AuthenticationInput!
 ) {
-  authenticate(email: $email)
+  authenticate(data: $data)
 }
 */
 
@@ -35,7 +38,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "email"
+    "name": "data"
   }
 ],
 v1 = [
@@ -44,8 +47,8 @@ v1 = [
     "args": [
       {
         "kind": "Variable",
-        "name": "email",
-        "variableName": "email"
+        "name": "data",
+        "variableName": "data"
       }
     ],
     "kind": "ScalarField",
@@ -71,7 +74,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "93bff606cbc51db70befad8600f1e273a52fb645cc9f3b9ebc70821770131470",
+    "id": "01811b6d26104d994f74605d5f80e269a08f21c2b556c714be21b61d202c6b3f",
     "metadata": {},
     "name": "JoinRootMutation",
     "operationKind": "mutation",
@@ -80,6 +83,6 @@ return {
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '208adc4755a5855bb44587f4c92a5640';
+(node/*: any*/).hash = 'f4026d12cb5bf06213009d3f143e4109';
 
 module.exports = node;

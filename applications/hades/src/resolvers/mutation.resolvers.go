@@ -9,17 +9,18 @@ import (
 	evav1 "project01101000/codebase/applications/eva/proto"
 	gen "project01101000/codebase/applications/hades/src"
 	"project01101000/codebase/applications/hades/src/helpers"
+	"project01101000/codebase/applications/hades/src/models"
 	"time"
 )
 
-func (r *mutationResolver) Authenticate(ctx context.Context, email *string) (bool, error) {
+func (r *mutationResolver) Authenticate(ctx context.Context, data *models.AuthenticationInput) (bool, error) {
 	// Authenticate - Generate an OTP code that will be used to authenticate the user
 	// if user opens the link in the same browser, then we automatically authorize them
 	// if not, then we redeem the cookie and the original browser should be logged in,
 	// provided that the tab is still open
 
 	// Create an authentication cookie
-	getCookieResponse, err := r.services.Eva().CreateAuthenticationCookie(ctx, &evav1.CreateAuthenticationCookieRequest{Email: *email})
+	getCookieResponse, err := r.services.Eva().CreateAuthenticationCookie(ctx, &evav1.CreateAuthenticationCookieRequest{Email: data.Email})
 
 	if err != nil {
 		return false, err
@@ -43,11 +44,7 @@ func (r *mutationResolver) Authenticate(ctx context.Context, email *string) (boo
 	return true, err
 }
 
-func (r *mutationResolver) Register(ctx context.Context, username *string) (bool, error) {
-	if username == nil {
-		return false, nil
-	}
-
+func (r *mutationResolver) Register(ctx context.Context, data *models.RegisterInput) (bool, error) {
 	// Make sure we have the cookie in order to register
 	currentCookie, err := helpers.ReadCookie(ctx, OTPKey)
 
@@ -65,7 +62,7 @@ func (r *mutationResolver) Register(ctx context.Context, username *string) (bool
 	}
 
 	// Register our user
-	getRegisteredUser, err := r.services.Eva().RegisterUser(ctx, &evav1.RegisterUserRequest{Username: *username, Email: getAuthenticationCookie.Cookie.Email})
+	getRegisteredUser, err := r.services.Eva().RegisterUser(ctx, &evav1.RegisterUserRequest{Username: data.Username, Email: getAuthenticationCookie.Cookie.Email})
 
 	if err != nil {
 		return false, err

@@ -6,6 +6,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -14,6 +15,12 @@ import (
 // Checks for a CSRF header & token
 func CSRFCheck() gin.HandlerFunc {
 	return func(c *gin.Context) {
+
+		// For local development, we want to disable CSRF because introspection won't work
+		if os.Getenv("DISABLE_CSRF") == "true" {
+			c.Next()
+			return
+		}
 
 		cookie, err := c.Request.Cookie("_csrf")
 

@@ -11,10 +11,6 @@ import (
 
 // DeleteAuthenticationCookie - Delete cookie because we don't want it to be used anymore
 func (s *Server) DeleteAuthenticationCookie(ctx context.Context, request *evav1.GetAuthenticationCookieRequest) (*evav1.DeleteAuthenticationCookieResponse, error) {
-	if request == nil || request.Cookie == "" {
-		return nil, fmt.Errorf("cookie is not provided")
-	}
-
 	u, err := gocql.ParseUUID(request.Cookie)
 
 	if err != nil {
@@ -37,14 +33,6 @@ func (s *Server) DeleteAuthenticationCookie(ctx context.Context, request *evav1.
 }
 
 func (s *Server) CreateAuthenticationCookie(ctx context.Context, request *evav1.CreateAuthenticationCookieRequest) (*evav1.CreateAuthenticationCookieResponse, error) {
-	if request == nil || request.Email == "" {
-		return nil, fmt.Errorf("email is not provided")
-	}
-
-	if !emailRegex.MatchString(request.Email) {
-		return nil, fmt.Errorf("email is not valid")
-	}
-
 	// run a query to create the authentication token
 	insertCookie := qb.Insert("authentication_cookies").
 		Columns("cookie", "email", "redeemed", "expiration").
@@ -74,10 +62,6 @@ func (s *Server) CreateAuthenticationCookie(ctx context.Context, request *evav1.
 }
 
 func (s *Server) RedeemAuthenticationCookie(ctx context.Context, request *evav1.GetAuthenticationCookieRequest) (*evav1.GetAuthenticationCookieResponse, error) {
-	if request == nil || request.Cookie == "" {
-		return nil, fmt.Errorf("cookie is not provided")
-	}
-
 	u, err := gocql.ParseUUID(request.Cookie)
 
 	if err != nil {
@@ -127,10 +111,6 @@ func (s *Server) RedeemAuthenticationCookie(ctx context.Context, request *evav1.
 }
 
 func (s *Server) GetAuthenticationCookie(ctx context.Context, request *evav1.GetAuthenticationCookieRequest) (*evav1.GetAuthenticationCookieResponse, error) {
-	if request == nil || request.Cookie == "" {
-		return nil, fmt.Errorf("cookie is not provided")
-	}
-
 	u, err := gocql.ParseUUID(request.Cookie)
 
 	if err != nil {

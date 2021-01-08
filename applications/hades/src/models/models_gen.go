@@ -13,10 +13,18 @@ type Authentication struct {
 	User   *User   `json:"user"`
 }
 
+type AuthenticationInput struct {
+	Email string `json:"email"`
+}
+
 type Cookie struct {
 	SameSession bool `json:"sameSession"`
 	Registered  bool `json:"registered"`
 	Redeemed    bool `json:"redeemed"`
+}
+
+type RegisterInput struct {
+	Username string `json:"username"`
 }
 
 type User struct {

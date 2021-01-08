@@ -1,8 +1,14 @@
 directive @auth on FIELD_DEFINITION
 
+directive @validation(rules: [String!]!) on INPUT_FIELD_DEFINITION
+
 type Authentication {
   cookie: Cookie
   user: User
+}
+
+input AuthenticationInput {
+  email: String!
 }
 
 type AuthListener {
@@ -18,14 +24,18 @@ type Cookie {
 }
 
 type Mutation {
-  authenticate(email: String): Boolean!
-  register(username: String): Boolean!
+  authenticate(data: AuthenticationInput): Boolean!
+  register(data: RegisterInput): Boolean!
   logout: Boolean!
 }
 
 type Query {
   redeemCookie(cookie: String): Cookie
   authentication: Authentication
+}
+
+input RegisterInput {
+  username: String!
 }
 
 type Subscription {

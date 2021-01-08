@@ -11,9 +11,6 @@ import (
 )
 
 func (s *Server) GetUser(ctx context.Context, request *evav1.GetUserRequest) (*evav1.User, error) {
-	if request == nil || request.Id == "" {
-		return nil, fmt.Errorf("id is not provided")
-	}
 
 	u, err := gocql.ParseUUID(request.Id)
 
@@ -40,17 +37,6 @@ func (s *Server) GetUser(ctx context.Context, request *evav1.GetUserRequest) (*e
 }
 
 func (s *Server) RegisterUser(ctx context.Context, request *evav1.RegisterUserRequest) (*evav1.User, error) {
-	if request == nil || request.Email == "" {
-		return nil, fmt.Errorf("email is not provided")
-	}
-
-	if !emailRegex.MatchString(request.Email) {
-		return nil, fmt.Errorf("email is not valid")
-	}
-
-	if request.Username == "" {
-		return nil, fmt.Errorf("username is not provided")
-	}
 
 	userEmail := UserEmail{
 		Email:    request.Email,
@@ -93,13 +79,6 @@ func (s *Server) RegisterUser(ctx context.Context, request *evav1.RegisterUserRe
 }
 
 func (s *Server) GetRegisteredEmail(ctx context.Context, request *evav1.GetRegisteredEmailRequest) (*evav1.User, error) {
-	if request == nil || request.Email == "" {
-		return nil, fmt.Errorf("email is not provided")
-	}
-
-	if !emailRegex.MatchString(request.Email) {
-		return nil, fmt.Errorf("email is not valid")
-	}
 
 	// get authentication cookie with this ID
 	userEmail := UserEmail{

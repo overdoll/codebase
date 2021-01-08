@@ -19,5 +19,9 @@ type AuthListener {
 }
 
 input RegisterInput {
+  username: String! @validation(rules: ["required"])
+}
+
+input AuthenticationInput {
   email: String! @validation(rules: ["required", "email"])
 }

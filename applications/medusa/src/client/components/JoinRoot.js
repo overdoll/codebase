@@ -4,8 +4,8 @@ import { useState, useRef } from 'react';
 import Register from './Register';
 
 const joinAction = graphql`
-  mutation JoinRootMutation($email: String!) {
-    authenticate(email: $email)
+  mutation JoinRootMutation($data: AuthenticationInput!) {
+    authenticate(data: $data)
   }
 `;
 
@@ -55,11 +55,12 @@ export default function JoinRoot({ props }) {
     event.preventDefault();
     commit({
       variables: {
-        email: email,
+        data: {
+          email: email,
+        },
       },
       onCompleted(data) {
         setWaiting(true);
-        console.log('request');
         disposableRef.current = requestSubscription(relayEnvironment, config);
       },
       onError(data) {},

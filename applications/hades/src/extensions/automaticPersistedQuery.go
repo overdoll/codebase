@@ -3,6 +3,8 @@ package extensions
 import (
 	"context"
 	"fmt"
+	"os"
+
 	"github.com/99designs/gqlgen/graphql/errcode"
 	"github.com/mitchellh/mapstructure"
 	"github.com/vektah/gqlparser/v2/gqlerror"
@@ -70,8 +72,13 @@ func (a AutomaticPersistedQuery) MutateOperationParameters(ctx context.Context, 
 		}
 		rawParams.Query = query.(string)
 	} else {
-		// Dont do anything if client sends a full query
-		fullQuery = true
+
+		// If debug (developing locally), we want to allow full queries
+		if os.Getenv("APP_DEBUG") == "true" {
+			// Dont do anything if client sends a full query
+			fullQuery = true
+		}
+
 	}
 
 	graphql.GetOperationContext(ctx).Stats.SetExtension(apqExtension, &ApqStats{
