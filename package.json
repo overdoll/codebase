@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.1.4",
     "@loadable/component": "^5.14.1",
     "@loadable/server": "^5.14.0",
     "axios": "^0.21.1",
@@ -23,9 +24,9 @@
     "react-router": "^5.1.2",
     "react-router-config": "^5.1.1",
     "react-ssr-prepass": "^1.2.1",
-    "rebass": "^4.0.7",
     "relay-runtime": "^10.1.2",
     "subscriptions-transport-ws": "^0.9.18",
+    "theme-ui": "^0.3.5",
     "winston": "^3.3.3"
   },
   "scripts": {

@@ -61,7 +61,6 @@ _RUNTIME_DEPS = [
     "@npm//relay-compiler-webpack-plugin",
     "@npm//react-refresh",
     "@npm//@babel/plugin-transform-react-jsx",
-    "@npm//rebass",
     "@npm//subscriptions-transport-ws",
     "@npm//razzle",
     "@npm//react-ssr-prepass",
@@ -77,6 +76,8 @@ _RUNTIME_DEPS = [
     "@npm//body-parser",
     "@npm//csurf",
     "@npm//winston",
+    "@npm//@emotion/react",
+    "@npm//theme-ui",
 ]
 
 nodejs_binary(

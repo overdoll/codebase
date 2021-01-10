@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Environment, Network, RecordSource, Store } from 'relay-runtime';
 import createRouter from '@//:modules/routing/createRouter';
 import routes from '../../client/routes';
-import { getMockHistory } from '@//:modules/routing/createMockHistory';
+import createMockHistory from '@//:modules/routing/createMockHistory';
 import path from 'path';
 import serialize from 'serialize-javascript';
 import ssrPrepass from 'react-ssr-prepass';
@@ -83,7 +83,7 @@ const entry = async (req, res, next) => {
 
     const router = createRouter(
       routes,
-      getMockHistory({ context, location: req.url }),
+      createMockHistory({ context, location: req.url }),
       environment,
     );
 
@@ -96,6 +96,8 @@ const entry = async (req, res, next) => {
     // Load all data, and then we pass it to our HTML file as data.
     // Pages will load instantly for users without a "loading" screen, which makes for
     // a better experience. In the future, we can also preload any routes that we want to SSR
+
+    // TODO: initial "app" is HMR-compatible, however, the router routes do not HMR. needs to be investigated.
     await ssrPrepass(
       extractor.collectChunks(
         <App router={router} environment={environment} />,

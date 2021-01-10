@@ -2,7 +2,7 @@ const config = {
   directives: {
     'default-src': ["'self'"],
     'script-src': ["'self'"],
-    'style-src': ["'self'"],
+    'style-src': ["'self'", 'https://fonts.googleapis.com'],
     'font-src': ['data:', '*'],
     'base-uri': ["'self'"],
     'object-src': ["'none'"],

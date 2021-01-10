@@ -1,6 +1,9 @@
 import { createPath, parsePath } from 'history';
 
-export const getMockHistory = ({ context = {}, location: loc = '/' }) => {
+export default function createMockHistory({
+  context = {},
+  location: loc = '/',
+}) {
   if (typeof loc === 'string') loc = parsePath(loc);
 
   const action = 'POP';
@@ -56,4 +59,4 @@ export const getMockHistory = ({ context = {}, location: loc = '/' }) => {
   };
 
   return mockHistory;
-};
+}
