@@ -5,6 +5,7 @@ import { I18nextProvider } from 'react-i18next';
 import { ThemeProvider } from 'theme-ui';
 import theme from './theme';
 import i18next from './utilities/i18next';
+import { NotificationProvider } from '@//:modules/focus';
 
 // Uses the custom router setup to define a router instance that we can pass through context
 export default function App({ environment, router }) {
@@ -13,7 +14,9 @@ export default function App({ environment, router }) {
       <ThemeProvider theme={theme}>
         <RelayEnvironmentProvider environment={environment}>
           <RoutingContext.Provider value={router.context}>
-            <RouterRenderer />
+            <NotificationProvider>
+              <RouterRenderer />
+            </NotificationProvider>
           </RoutingContext.Provider>
         </RelayEnvironmentProvider>
       </ThemeProvider>

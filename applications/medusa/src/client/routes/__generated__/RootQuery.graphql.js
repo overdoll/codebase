@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 7e8a58a7116f261f7b6851f2ffd5b6b9
+ * @relayHash 8538b19af5ba7b6cb6f0169979a9ff45
  */
 
 /* eslint-disable */
@@ -9,8 +9,8 @@
 
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
-export type tokenStateQueryVariables = {||};
-export type tokenStateQueryResponse = {|
+export type RootQueryVariables = {||};
+export type RootQueryResponse = {|
   +authentication: ?{|
     +user: ?{|
       +username: string
@@ -22,15 +22,15 @@ export type tokenStateQueryResponse = {|
     |},
   |}
 |};
-export type tokenStateQuery = {|
-  variables: tokenStateQueryVariables,
-  response: tokenStateQueryResponse,
+export type RootQuery = {|
+  variables: RootQueryVariables,
+  response: RootQueryResponse,
 |};
 */
 
 
 /*
-query tokenStateQuery {
+query RootQuery {
   authentication {
     user {
       username
@@ -113,7 +113,7 @@ return {
     "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
-    "name": "tokenStateQuery",
+    "name": "RootQuery",
     "selections": (v0/*: any*/),
     "type": "Query",
     "abstractKey": null
@@ -122,19 +122,19 @@ return {
   "operation": {
     "argumentDefinitions": [],
     "kind": "Operation",
-    "name": "tokenStateQuery",
+    "name": "RootQuery",
     "selections": (v0/*: any*/)
   },
   "params": {
-    "id": "7e8a58a7116f261f7b6851f2ffd5b6b9",
+    "id": "8538b19af5ba7b6cb6f0169979a9ff45",
     "metadata": {},
-    "name": "tokenStateQuery",
+    "name": "RootQuery",
     "operationKind": "query",
     "text": null
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = 'cc4ae48e5e1436343b4b674f7eb1bed8';
+(node/*: any*/).hash = '6c7d3283f7f24495554db5f38f261778';
 
 module.exports = node;

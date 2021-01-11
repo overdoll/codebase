@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash a8244d934f532f8ed92a84be68e4a474
+ * @relayHash baeb01655c5e1818c7a116ad2e2353f9
  */
 
 /* eslint-disable */
@@ -12,21 +12,21 @@ import type { ConcreteRequest } from 'relay-runtime';
 export type AuthenticationInput = {|
   email: string
 |};
-export type JoinRootMutationVariables = {|
+export type JoinMutationVariables = {|
   data: AuthenticationInput
 |};
-export type JoinRootMutationResponse = {|
+export type JoinMutationResponse = {|
   +authenticate: boolean
 |};
-export type JoinRootMutation = {|
-  variables: JoinRootMutationVariables,
-  response: JoinRootMutationResponse,
+export type JoinMutation = {|
+  variables: JoinMutationVariables,
+  response: JoinMutationResponse,
 |};
 */
 
 
 /*
-mutation JoinRootMutation(
+mutation JoinMutation(
   $data: AuthenticationInput!
 ) {
   authenticate(data: $data)
@@ -61,7 +61,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "JoinRootMutation",
+    "name": "JoinMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -70,19 +70,19 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "JoinRootMutation",
+    "name": "JoinMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "a8244d934f532f8ed92a84be68e4a474",
+    "id": "baeb01655c5e1818c7a116ad2e2353f9",
     "metadata": {},
-    "name": "JoinRootMutation",
+    "name": "JoinMutation",
     "operationKind": "mutation",
     "text": null
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = 'f4026d12cb5bf06213009d3f143e4109';
+(node/*: any*/).hash = '6dc9f42c1136d72b2824160598e75a7e';
 
 module.exports = node;

@@ -9,7 +9,7 @@ export default props => (
       fontSize: 2,
       fontWeight: 'body',
       fontFamily: 'body',
-      borderRadius: 'default',
+      borderRadius: 'defaults',
       ...props.sx,
     }}
   />

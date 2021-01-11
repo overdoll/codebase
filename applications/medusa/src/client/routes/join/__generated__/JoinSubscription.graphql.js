@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 1486f53fb71a0deefecfa852416ad2ca
+ * @relayHash 9fd910c1b2ae055ff9282fa1192b21e1
  */
 
 /* eslint-disable */
@@ -9,8 +9,8 @@
 
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
-export type JoinRootSubscriptionVariables = {||};
-export type JoinRootSubscriptionResponse = {|
+export type JoinSubscriptionVariables = {||};
+export type JoinSubscriptionResponse = {|
   +authListener: ?{|
     +authorized: boolean,
     +redirect: boolean,
@@ -19,15 +19,15 @@ export type JoinRootSubscriptionResponse = {|
     |},
   |}
 |};
-export type JoinRootSubscription = {|
-  variables: JoinRootSubscriptionVariables,
-  response: JoinRootSubscriptionResponse,
+export type JoinSubscription = {|
+  variables: JoinSubscriptionVariables,
+  response: JoinSubscriptionResponse,
 |};
 */
 
 
 /*
-subscription JoinRootSubscription {
+subscription JoinSubscription {
   authListener {
     authorized
     redirect
@@ -89,7 +89,7 @@ return {
     "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
-    "name": "JoinRootSubscription",
+    "name": "JoinSubscription",
     "selections": (v0/*: any*/),
     "type": "Subscription",
     "abstractKey": null
@@ -98,19 +98,19 @@ return {
   "operation": {
     "argumentDefinitions": [],
     "kind": "Operation",
-    "name": "JoinRootSubscription",
+    "name": "JoinSubscription",
     "selections": (v0/*: any*/)
   },
   "params": {
-    "id": "1486f53fb71a0deefecfa852416ad2ca",
+    "id": "9fd910c1b2ae055ff9282fa1192b21e1",
     "metadata": {},
-    "name": "JoinRootSubscription",
+    "name": "JoinSubscription",
     "operationKind": "subscription",
     "text": null
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '0b513fcd66fd081f08bf3f3fff5d348f';
+(node/*: any*/).hash = '720b50015d755fd578f3823ba6ad06e4';
 
 module.exports = node;

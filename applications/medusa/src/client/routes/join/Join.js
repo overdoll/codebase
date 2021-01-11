@@ -6,13 +6,13 @@ import { useTranslation } from 'react-i18next';
 import { Button, Input } from '@//:modules/form';
 
 const joinAction = graphql`
-  mutation JoinRootMutation($data: AuthenticationInput!) {
+  mutation JoinMutation($data: AuthenticationInput!) {
     authenticate(data: $data)
   }
 `;
 
 const subscription = graphql`
-  subscription JoinRootSubscription {
+  subscription JoinSubscription {
     authListener {
       authorized
       redirect
@@ -23,7 +23,7 @@ const subscription = graphql`
   }
 `;
 
-export default function JoinRoot({ props }) {
+export default function Join({ props }) {
   const [t] = useTranslation('auth');
 
   const [commit, isInFlight] = useMutation(joinAction);

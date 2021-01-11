@@ -136,10 +136,10 @@ export default {
     },
   },
   radii: {
-    default: 15,
+    defaults: 15,
   },
   borderWidths: {
-    default: 2,
+    defaults: '2px',
   },
   borders: {
     primary: 'primary.500',

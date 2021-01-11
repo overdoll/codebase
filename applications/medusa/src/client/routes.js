@@ -1,14 +1,14 @@
 import JSResource from '@//:modules/utilities/JSResource';
 import { loadQuery } from 'react-relay/hooks';
-import { TokenQuery, StateQuery } from './queries/token';
 
 const routes = [
   {
     prepare: (params, RelayEnvironment) => {
+      const RootQuery = require('./routes/__generated__/RootQuery.graphql');
       return {
         stateQuery: loadQuery(
           RelayEnvironment,
-          StateQuery,
+          RootQuery,
           {},
           {
             fetchPolicy: 'store-or-network',
@@ -21,17 +21,16 @@ const routes = [
       {
         path: '/join',
         exact: true,
-        component: JSResource('JoinRoot', () =>
-          import('./routes/join/JoinRoot'),
-        ),
+        component: JSResource('JoinRoot', () => import('./routes/join/Join')),
         prepare: function() {},
       },
       {
         path: '/token/:id',
         component: JSResource('TokenRoot', () =>
-          import('./routes/token/TokenRoot'),
+          import('./routes/token/Token'),
         ),
         prepare: (params, RelayEnvironment) => {
+          const TokenQuery = require('./routes/token/__generated__/TokenQuery.graphql');
           return {
             tokenQuery: loadQuery(
               RelayEnvironment,

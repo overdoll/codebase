@@ -1,8 +1,4 @@
-const canUseDOM = !!(
-  typeof window !== 'undefined' &&
-  window.document &&
-  window.document.createElement
-);
+import CanUseDOM from '@//:modules/utilities/CanUseDOM';
 
 /**
  * Sometimes, when the server prefetches data, we want to set an explicit boundary for this.
@@ -17,7 +13,7 @@ const canUseDOM = !!(
  * @constructor
  */
 export default function BailoutBoundary({ children }) {
-  if (canUseDOM) {
+  if (CanUseDOM) {
     return children;
   }
 

@@ -4,14 +4,14 @@ export default props => (
   <Button
     {...props}
     sx={{
-      borderWidth: 'default',
+      borderWidth: 'defaults',
       borderStyle: 'solid',
       pl: 6,
       pr: 6,
       fontSize: 2,
       fontWeight: 'bold',
       fontFamily: 'heading',
-      borderRadius: 'default',
+      borderRadius: 'defaults',
       ...props.sx,
     }}
   />
