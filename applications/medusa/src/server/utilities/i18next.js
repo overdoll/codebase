@@ -4,8 +4,6 @@ import i18nextMiddleware from 'i18next-http-middleware';
 import path from 'path';
 import { initReactI18next } from 'react-i18next';
 
-console.log(path.join(__dirname, '../../locales/{{lng}}/{{ns}}.json'));
-
 i18next
   .use(i18nextMiddleware.LanguageDetector)
   .use(Backend)
@@ -13,12 +11,11 @@ i18next
   .init({
     preload: ['en'],
     fallbackLng: 'en',
-    ns: ['translations'],
-    defaultNS: 'translations',
+    ns: ['auth'],
     lng: 'en',
     load: 'languageOnly',
     backend: {
-      loadPath: path.join(__dirname, '../../locales/{{lng}}/{{ns}}.json'),
+      loadPath: path.join(__dirname, '../src/locales/{{lng}}/{{ns}}.json'),
     },
   });
 

@@ -101,9 +101,7 @@ const entry = async (req, res, next) => {
     // TODO: initial "app" is HMR-compatible, however, the router routes do not HMR. needs to be investigated.
     await ssrPrepass(
       extractor.collectChunks(
-        <I18nextProvider i18n={req.i18n}>
-          <App router={router} environment={environment} />,
-        </I18nextProvider>,
+        <App router={router} environment={environment} />,
       ),
     );
 

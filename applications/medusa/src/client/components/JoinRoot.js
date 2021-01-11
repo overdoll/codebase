@@ -24,7 +24,7 @@ const subscription = graphql`
 `;
 
 export default function JoinRoot({ props }) {
-  const [t] = useTranslation('translations');
+  const [t] = useTranslation('auth');
 
   const [commit, isInFlight] = useMutation(joinAction);
 
@@ -97,7 +97,6 @@ export default function JoinRoot({ props }) {
 
   return (
     <>
-      <h2>{t('message.welcome')}</h2>
       <form onSubmit={onSubmit}>
         <input
           disabled={isInFlight}
@@ -107,7 +106,7 @@ export default function JoinRoot({ props }) {
           onChange={onChange}
         />
         <Button disabled={isInFlight} variant="primary">
-          Continue
+          {t('authenticate.continue')}
         </Button>
       </form>
     </>
