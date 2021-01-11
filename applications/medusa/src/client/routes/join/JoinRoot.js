@@ -1,9 +1,9 @@
 import { graphql, useMutation, useRelayEnvironment } from 'react-relay/hooks';
 import { requestSubscription } from 'react-relay';
 import { useState, useRef } from 'react';
-import Register from './Register';
+import Register from './components/Register';
 import { useTranslation } from 'react-i18next';
-import { Button } from '@//:modules/components';
+import { Button, Input } from '@//:modules/form';
 
 const joinAction = graphql`
   mutation JoinRootMutation($data: AuthenticationInput!) {
@@ -98,14 +98,19 @@ export default function JoinRoot({ props }) {
   return (
     <>
       <form onSubmit={onSubmit}>
-        <input
+        <Input
+          sx={{ variant: 'forms.input.primary' }}
           disabled={isInFlight}
           required
           type="text"
           value={email}
           onChange={onChange}
+          placeholder={t('authenticate.input')}
         />
-        <Button disabled={isInFlight} variant="primary">
+        <Button
+          disabled={isInFlight}
+          sx={{ width: '100%', variant: 'primary', mt: 2 }}
+        >
           {t('authenticate.continue')}
         </Button>
       </form>

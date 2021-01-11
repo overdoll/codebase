@@ -23,6 +23,7 @@
     "lint-staged": "^9.4.2",
     "react": "^0.0.0-experimental-3310209d0",
     "react-dom": "^0.0.0-experimental-3310209d0",
+    "react-hook-form": "^6.14.1",
     "react-i18next": "^11.8.5",
     "react-markdown": "^4.2.2",
     "react-relay": "^0.0.0-experimental-0b967d2e",

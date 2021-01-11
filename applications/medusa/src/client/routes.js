@@ -16,20 +16,20 @@ const routes = [
         ),
       };
     },
-    component: JSResource('Root', () => import('./Root')),
+    component: JSResource('Root', () => import('./routes/Root')),
     routes: [
       {
         path: '/join',
         exact: true,
         component: JSResource('JoinRoot', () =>
-          import('./components/JoinRoot'),
+          import('./routes/join/JoinRoot'),
         ),
         prepare: function() {},
       },
       {
         path: '/token/:id',
         component: JSResource('TokenRoot', () =>
-          import('./components/TokenRoot'),
+          import('./routes/token/TokenRoot'),
         ),
         prepare: (params, RelayEnvironment) => {
           return {

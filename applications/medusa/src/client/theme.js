@@ -146,17 +146,24 @@ export default {
   },
   buttons: {
     primary: {
-      fontSize: 2,
-      fontWeight: 'bold',
       color: 'primary.500',
       bg: 'neutral.900',
-      fontFamily: 'heading',
-      borderRadius: 'default',
       borderColor: 'primary.500',
-      borderWidth: 'default',
-      borderStyle: 'solid',
-      pl: 6,
-      pr: 6,
+    },
+  },
+  sizes: {
+    fill: '100%',
+  },
+  forms: {
+    input: {
+      primary: {
+        color: 'neutral.300',
+        '&::placeholder': {
+          color: 'neutral.300',
+        },
+        bg: 'neutral.800',
+        borderColor: 'neutral.800',
+      },
     },
   },
 };

@@ -1,6 +1,6 @@
 import { usePreloadedQuery } from 'react-relay/hooks';
-import { TokenQuery } from '../queries/token';
-import Register from './Register';
+import { TokenQuery } from '../../queries/token';
+import Register from '../join/components/Register';
 
 export default function TokenRoot(props) {
   const result = usePreloadedQuery(TokenQuery, props.prepared.tokenQuery);
