@@ -4,6 +4,7 @@ import { useState, useRef } from 'react';
 import Register from './components/Register';
 import { useTranslation } from 'react-i18next';
 import { Button, Input } from '@//:modules/form';
+import { useNotify } from '@//:modules/focus';
 
 const joinAction = graphql`
   mutation JoinMutation($data: AuthenticationInput!) {
@@ -27,6 +28,8 @@ export default function Join({ props }) {
   const [t] = useTranslation('auth');
 
   const [commit, isInFlight] = useMutation(joinAction);
+
+  const notify = useNotify();
 
   const disposableRef = useRef(null);
 
@@ -67,7 +70,9 @@ export default function Join({ props }) {
         setWaiting(true);
         disposableRef.current = requestSubscription(relayEnvironment, config);
       },
-      onError(data) {},
+      onError(data) {
+        notify.error('testasdasdasd');
+      },
     });
   };
 

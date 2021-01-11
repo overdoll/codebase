@@ -1,5 +1,7 @@
 import { createContext, useState } from 'react';
+import { createPortal } from 'react-dom';
 import Notification from '../components/Notification';
+import CanUseDOM from '@//:modules/utilities/CanUseDOM';
 
 const NotificationContext = createContext({});
 
@@ -38,25 +40,34 @@ const NotificationProvider = ({ children }) => {
       }}
     >
       {children}
-      <div
-        sx={{
-          position: 'fixed',
-          bottom: 100,
-          right: 10,
-        }}
-      >
-        {active
-          .filter(item => expired.indexOf(item.id) === -1)
-          .map(notification => (
-            <Notification
-              key={notification.id}
-              type={notification.type}
-              duration={notification.duration}
-            >
-              {notification.content}
-            </Notification>
-          ))}
-      </div>
+      {CanUseDOM &&
+        createPortal(
+          <div
+            sx={{
+              position: 'fixed',
+              display: 'flex',
+              pl: 1,
+              pr: 1,
+              width: '100%',
+              flexDirection: 'column',
+              pt: 1,
+            }}
+          >
+            {active
+              .filter(item => expired.indexOf(item.id) === -1)
+              .map(notification => (
+                <Notification
+                  id={notification.id}
+                  key={notification.id}
+                  type={notification.type}
+                  duration={notification.duration}
+                >
+                  {notification.content}
+                </Notification>
+              ))}
+          </div>,
+          document.getElementById('root'),
+        )}
     </NotificationContext.Provider>
   );
 };

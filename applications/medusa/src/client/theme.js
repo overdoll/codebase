@@ -119,6 +119,7 @@ export default {
   styles: {
     root: {
       fontSize: '12px',
+      margin: 'unset',
     },
   },
   variants: {},
@@ -137,6 +138,7 @@ export default {
   },
   radii: {
     defaults: 15,
+    notification: 5,
   },
   borderWidths: {
     defaults: '2px',

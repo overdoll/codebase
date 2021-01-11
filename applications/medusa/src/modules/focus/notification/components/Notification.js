@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect, useContext } from 'react';
-import { NotificationContext } from '@//:modules/focus/notification/provider/NotificationProvider';
+import { NotificationContext } from '../provider/NotificationProvider';
 
-const Notification = ({ type, children, duration }) => {
+const Notification = ({ type, children, duration, id }) => {
   const { onExpire } = useContext(NotificationContext);
 
   const timer = useRef();
@@ -10,7 +10,7 @@ const Notification = ({ type, children, duration }) => {
 
   const onEnd = () => {
     timer.current = null;
-    onExpire();
+    onExpire(id);
   };
 
   const dismiss = () => {
@@ -41,11 +41,21 @@ const Notification = ({ type, children, duration }) => {
   }, []);
 
   return (
-    <div>
+    <div
+      sx={{
+        width: '100%',
+        boxShadow: '200',
+        padding: 1,
+        borderRadius: 'notification',
+        backgroundColor: 'neutral.800',
+        display: 'flex',
+      }}
+    >
       <div>icon</div>
-      <div>
-        <div>{children}</div>
+      <div sx={{ color: 'orange.100', fontFamily: 'body', fontSize: 0 }}>
+        {children}
       </div>
+      <div onClick={() => onExpire(id)}>x</div>
     </div>
   );
 };
