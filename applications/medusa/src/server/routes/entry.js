@@ -8,6 +8,7 @@ import createMockHistory from '@//:modules/routing/createMockHistory';
 import path from 'path';
 import serialize from 'serialize-javascript';
 import ssrPrepass from 'react-ssr-prepass';
+import { I18nextProvider } from 'react-i18next';
 import App from '../../client/App';
 
 const entry = async (req, res, next) => {
@@ -100,7 +101,9 @@ const entry = async (req, res, next) => {
     // TODO: initial "app" is HMR-compatible, however, the router routes do not HMR. needs to be investigated.
     await ssrPrepass(
       extractor.collectChunks(
-        <App router={router} environment={environment} />,
+        <I18nextProvider i18n={req.i18n}>
+          <App router={router} environment={environment} />,
+        </I18nextProvider>,
       ),
     );
 
@@ -127,6 +130,13 @@ const entry = async (req, res, next) => {
       'private, no-cache, no-store, must-revalidate',
     );
 
+    // Get our i18next store, and we will send this to the front-end
+    const initialI18nStore = {};
+
+    req.i18n.languages.forEach(l => {
+      initialI18nStore[l] = req.i18n.services.resourceStore.data[l];
+    });
+
     if (context.url) {
       res.redirect(context.url);
     } else {
@@ -137,6 +147,8 @@ const entry = async (req, res, next) => {
         styles: extractor.getStyleTags(),
         csrfToken: csrfToken,
         relayStore: serialize(relayData),
+        i18nextStore: serialize(initialI18nStore),
+        i18nextLang: req.i18n.language,
       });
     }
   } catch (e) {

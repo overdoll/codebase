@@ -78,6 +78,10 @@ _RUNTIME_DEPS = [
     "@npm//winston",
     "@npm//@emotion/react",
     "@npm//theme-ui",
+    "@npm//react-i18next",
+    "@npm//i18next-http-middleware",
+    "@npm//i18next-fs-backend",
+    "@npm//i18next",
 ]
 
 nodejs_binary(

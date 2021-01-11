@@ -2,6 +2,7 @@ import { graphql, useMutation, useRelayEnvironment } from 'react-relay/hooks';
 import { requestSubscription } from 'react-relay';
 import { useState, useRef } from 'react';
 import Register from './Register';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@//:modules/components';
 
 const joinAction = graphql`
@@ -23,6 +24,8 @@ const subscription = graphql`
 `;
 
 export default function JoinRoot({ props }) {
+  const [t] = useTranslation('translations');
+
   const [commit, isInFlight] = useMutation(joinAction);
 
   const disposableRef = useRef(null);
@@ -94,6 +97,7 @@ export default function JoinRoot({ props }) {
 
   return (
     <>
+      <h2>{t('message.welcome')}</h2>
       <form onSubmit={onSubmit}>
         <input
           disabled={isInFlight}

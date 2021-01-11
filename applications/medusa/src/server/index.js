@@ -4,6 +4,8 @@ import entry from './routes/entry';
 import middleware from './middleware';
 import cookieParser from 'cookie-parser';
 import csrf from 'csurf';
+import i18nextMiddleware from 'i18next-http-middleware';
+import i18next from './utilities/i18next';
 
 const index = express();
 
@@ -14,6 +16,9 @@ index
 
 // Add public routes
 index.use(express.static(path.resolve(__dirname, '../public')));
+
+// Add i18next middleware
+index.use(i18nextMiddleware.handle(i18next));
 
 // helmet (security headers)
 index.use(middleware.helmet);
