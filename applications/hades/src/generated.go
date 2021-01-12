@@ -61,6 +61,7 @@ type ComplexityRoot struct {
 		Redeemed    func(childComplexity int) int
 		Registered  func(childComplexity int) int
 		SameSession func(childComplexity int) int
+		Session     func(childComplexity int) int
 	}
 
 	Mutation struct {
@@ -159,6 +160,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Cookie.SameSession(childComplexity), true
+
+	case "Cookie.session":
+		if e.complexity.Cookie.Session == nil {
+			break
+		}
+
+		return e.complexity.Cookie.Session(childComplexity), true
 
 	case "Mutation.authenticate":
 		if e.complexity.Mutation.Authenticate == nil {
@@ -309,6 +317,7 @@ var sources = []*ast.Source{
   sameSession: Boolean!
   registered: Boolean!
   redeemed: Boolean!
+  session: String!
 }
 type User {
   username: String!
@@ -703,6 +712,41 @@ func (ec *executionContext) _Cookie_redeemed(ctx context.Context, field graphql.
 	res := resTmp.(bool)
 	fc.Result = res
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Cookie_session(ctx context.Context, field graphql.CollectedField, obj *models.Cookie) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Cookie",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Session, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_authenticate(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2312,6 +2356,11 @@ func (ec *executionContext) _Cookie(ctx context.Context, sel ast.SelectionSet, o
 			}
 		case "redeemed":
 			out.Values[i] = ec._Cookie_redeemed(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "session":
+			out.Values[i] = ec._Cookie_session(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}

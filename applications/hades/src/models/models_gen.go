@@ -17,9 +17,10 @@ type AuthenticationInput struct {
 }
 
 type Cookie struct {
-	SameSession bool `json:"sameSession"`
-	Registered  bool `json:"registered"`
-	Redeemed    bool `json:"redeemed"`
+	SameSession bool   `json:"sameSession"`
+	Registered  bool   `json:"registered"`
+	Redeemed    bool   `json:"redeemed"`
+	Session     string `json:"session"`
 }
 
 type RegisterInput struct {

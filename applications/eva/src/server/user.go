@@ -56,6 +56,7 @@ func (s *Server) RegisterUser(ctx context.Context, request *eva.RegisterUserRequ
 		SerialConsistency(gocql.Serial).
 		BindStruct(userEmail)
 
+	// TODO: should error out if user already exists (it doesn't)
 	if err := insertUserEmail.ExecRelease(); err != nil {
 		return nil, fmt.Errorf("ExecRelease() failed: '%s", err)
 	}

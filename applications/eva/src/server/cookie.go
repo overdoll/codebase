@@ -19,14 +19,16 @@ func (s *Server) DeleteAuthenticationCookie(ctx context.Context, request *eva.Ge
 		return nil, fmt.Errorf("uuid is not valid")
 	}
 
-	// get authentication cookie with this ID
+	deleteCookie := models.AuthenticationCookie{
+		Cookie: u,
+	}
+
+	// Delete authentication cookie with this ID
 	queryCookie := qb.
 		Delete("authentication_cookies").
-		Where(qb.Eq("id")).
+		Where(qb.Eq("cookie")).
 		Query(s.session).
-		BindStruct(&models.AuthenticationCookie{
-			Cookie: u,
-		})
+		BindStruct(deleteCookie)
 
 	if err := queryCookie.ExecRelease(); err != nil {
 		return nil, fmt.Errorf("delete() failed: '%s", err)

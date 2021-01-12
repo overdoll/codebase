@@ -2,6 +2,7 @@ type Cookie {
   sameSession: Boolean!
   registered: Boolean!
   redeemed: Boolean!
+  session: String!
 }
 type User {
   username: String!

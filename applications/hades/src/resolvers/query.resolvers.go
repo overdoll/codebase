@@ -38,7 +38,7 @@ func (r *queryResolver) RedeemCookie(ctx context.Context, cookie *string) (*mode
 		r.redis.Flush()
 
 		// No cookie exists, we want to give a different SameSession response
-		return &models.Cookie{Registered: false, SameSession: false, Redeemed: true}, nil
+		return &models.Cookie{Registered: false, SameSession: false, Redeemed: true, Session: getRedeemedCookie.Session}, nil
 	}
 
 	// Check if user is registered
@@ -52,7 +52,7 @@ func (r *queryResolver) RedeemCookie(ctx context.Context, cookie *string) (*mode
 	if getRegisteredUser.Username == "" {
 		r.redis.Send("PUBLISH", "otp"+currentCookie.Value, "SAME_SESSION")
 		r.redis.Flush()
-		return &models.Cookie{Registered: false, SameSession: true, Redeemed: true}, nil
+		return &models.Cookie{Registered: false, SameSession: true, Redeemed: true, Session: getRedeemedCookie.Session}, nil
 	}
 
 	// Delete our cookie, since we now know this user will be logged in
@@ -75,7 +75,7 @@ func (r *queryResolver) RedeemCookie(ctx context.Context, cookie *string) (*mode
 	r.redis.Send("PUBLISH", "otp"+currentCookie.Value, "SAME_SESSION")
 	r.redis.Flush()
 
-	return &models.Cookie{Registered: true, SameSession: true, Redeemed: true}, nil
+	return &models.Cookie{Registered: true, SameSession: true, Redeemed: true, Session: getRedeemedCookie.Session}, nil
 }
 
 func (r *queryResolver) Authentication(ctx context.Context) (*models.Authentication, error) {
@@ -111,7 +111,7 @@ func (r *queryResolver) Authentication(ctx context.Context) (*models.Authenticat
 
 	// Not yet redeemed, user needs to redeem it still
 	if getAuthenticationCookie.Redeemed == false {
-		return &models.Authentication{User: nil, Cookie: &models.Cookie{Redeemed: false, Registered: false, SameSession: true}}, nil
+		return &models.Authentication{User: nil, Cookie: &models.Cookie{Redeemed: false, Registered: false, SameSession: true, Session: getAuthenticationCookie.Session}}, nil
 	}
 
 	// Cookie redeemed, check if user is registered
@@ -123,7 +123,7 @@ func (r *queryResolver) Authentication(ctx context.Context) (*models.Authenticat
 
 	// User not registered, we tell them to register
 	if getRegisteredUser.Username == "" {
-		return &models.Authentication{User: nil, Cookie: &models.Cookie{Redeemed: true, Registered: false, SameSession: true}}, nil
+		return &models.Authentication{User: nil, Cookie: &models.Cookie{Redeemed: true, Registered: false, SameSession: true, Session: getAuthenticationCookie.Session}}, nil
 	}
 
 	// Remove OTP cookie - user is registered
@@ -137,7 +137,7 @@ func (r *queryResolver) Authentication(ctx context.Context) (*models.Authenticat
 	}
 
 	// Return user, since we logged in
-	return &models.Authentication{User: &models.User{Username: getRegisteredUser.Username}, Cookie: &models.Cookie{Redeemed: true, Registered: true, SameSession: true}}, nil
+	return &models.Authentication{User: &models.User{Username: getRegisteredUser.Username}, Cookie: &models.Cookie{Redeemed: true, Registered: true, SameSession: true, Session: getAuthenticationCookie.Session}}, nil
 }
 
 // Query returns gen.QueryResolver implementation.

@@ -13,6 +13,10 @@ const TokenQuery = graphql`
 export default function Token({ prepared }) {
   const result = usePreloadedQuery(TokenQuery, prepared.tokenQuery);
 
+  if (result.redeemCookie === null) {
+    return 'cookie expired or invalid';
+  }
+
   const { sameSession, registered } = result.redeemCookie;
 
   if (!sameSession) {
