@@ -6,7 +6,6 @@ const TokenQuery = graphql`
     redeemCookie(cookie: $cookie) {
       sameSession
       registered
-      redeemed
     }
   }
 `;
@@ -14,17 +13,15 @@ const TokenQuery = graphql`
 export default function Token({ prepared }) {
   const result = usePreloadedQuery(TokenQuery, prepared.tokenQuery);
 
-  if (result.redeemCookie) {
-    if (!result.redeemCookie.sameSession) {
-      return 'other session';
-    }
+  const { sameSession, registered } = result.redeemCookie;
 
-    if (!result.redeemCookie.registered) {
-      return <Register />;
-    }
-
-    return 'redirect';
+  if (sameSession) {
+    return 'check the other session';
   }
 
-  return null;
+  if (registered) {
+    return 'redirect, registered';
+  }
+
+  return <Register />;
 }

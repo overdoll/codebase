@@ -7,4 +7,6 @@ import App from './App';
 const router = createRouter(routes, createBrowserHistory(), RelayEnvironment);
 
 // Client-only initialization - if some things are only available with the DOM, they should be initialized here
-export default props => <App router={router} environment={RelayEnvironment} />;
+export default function Client(props) {
+  return <App router={router} environment={RelayEnvironment} />;
+}

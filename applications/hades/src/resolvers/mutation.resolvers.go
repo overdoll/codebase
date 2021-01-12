@@ -7,13 +7,12 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
-	"strings"
-	"time"
-
 	eva "project01101000/codebase/applications/eva/proto"
 	gen "project01101000/codebase/applications/hades/src"
 	"project01101000/codebase/applications/hades/src/helpers"
 	"project01101000/codebase/applications/hades/src/models"
+	"strings"
+	"time"
 )
 
 func (r *mutationResolver) Authenticate(ctx context.Context, data *models.AuthenticationInput) (bool, error) {

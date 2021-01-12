@@ -58,27 +58,24 @@ export default function Join(props) {
     return <Lobby email={email} onReceive={changeAuth} />;
   }
 
+  // We have received a subscription update - we want to handle the logic here based
+  // on the response we get
   if (authInfo !== null) {
-    if (authInfo.authenticationState) {
-      if (!authInfo.authenticationState.authorized) {
-        return 'not authorized';
-      }
+    const { sameSession, cookie } = authInfo.authListener;
 
-      if (authInfo.authenticationState.redirect) {
-        return 'check opened browser window, or refresh page';
-      }
-
-      if (authInfo.authenticationState.registered) {
-        return 'redirect';
-      } else {
-        return <Register {...props} />;
-      }
+    // Cookie was redeemed in the same session,
+    if (sameSession) {
+      return 'check opened browser window, or refresh page';
     }
 
-    return 'waiting';
-  }
+    // Cookie was not redeemed in the same session, and user is registered
+    if (cookie.registered) {
+      return 'redirect';
+    }
 
-  console.log('test');
+    // User not registered - prompt a registration
+    return <Register />;
+  }
 
   return (
     <form onSubmit={onSubmit}>

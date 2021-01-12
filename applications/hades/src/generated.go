@@ -48,9 +48,8 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	AuthListener struct {
-		Authorized func(childComplexity int) int
-		Cookie     func(childComplexity int) int
-		Redirect   func(childComplexity int) int
+		Cookie      func(childComplexity int) int
+		SameSession func(childComplexity int) int
 	}
 
 	Authentication struct {
@@ -112,13 +111,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	_ = ec
 	switch typeName + "." + field {
 
-	case "AuthListener.authorized":
-		if e.complexity.AuthListener.Authorized == nil {
-			break
-		}
-
-		return e.complexity.AuthListener.Authorized(childComplexity), true
-
 	case "AuthListener.cookie":
 		if e.complexity.AuthListener.Cookie == nil {
 			break
@@ -126,12 +118,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AuthListener.Cookie(childComplexity), true
 
-	case "AuthListener.redirect":
-		if e.complexity.AuthListener.Redirect == nil {
+	case "AuthListener.sameSession":
+		if e.complexity.AuthListener.SameSession == nil {
 			break
 		}
 
-		return e.complexity.AuthListener.Redirect(childComplexity), true
+		return e.complexity.AuthListener.SameSession(childComplexity), true
 
 	case "Authentication.cookie":
 		if e.complexity.Authentication.Cookie == nil {
@@ -328,8 +320,7 @@ type Authentication {
 }
 
 type AuthListener {
-  authorized: Boolean!
-  redirect: Boolean!
+  sameSession: Boolean!
   cookie: Cookie
 }
 
@@ -478,7 +469,7 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 
 // region    **************************** field.gotpl *****************************
 
-func (ec *executionContext) _AuthListener_authorized(ctx context.Context, field graphql.CollectedField, obj *models.AuthListener) (ret graphql.Marshaler) {
+func (ec *executionContext) _AuthListener_sameSession(ctx context.Context, field graphql.CollectedField, obj *models.AuthListener) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -496,42 +487,7 @@ func (ec *executionContext) _AuthListener_authorized(ctx context.Context, field 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Authorized, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(bool)
-	fc.Result = res
-	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _AuthListener_redirect(ctx context.Context, field graphql.CollectedField, obj *models.AuthListener) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "AuthListener",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Redirect, nil
+		return obj.SameSession, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2289,13 +2245,8 @@ func (ec *executionContext) _AuthListener(ctx context.Context, sel ast.Selection
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("AuthListener")
-		case "authorized":
-			out.Values[i] = ec._AuthListener_authorized(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "redirect":
-			out.Values[i] = ec._AuthListener_redirect(ctx, field, obj)
+		case "sameSession":
+			out.Values[i] = ec._AuthListener_sameSession(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}

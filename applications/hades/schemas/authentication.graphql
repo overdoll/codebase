@@ -13,8 +13,7 @@ type Authentication {
 }
 
 type AuthListener {
-  authorized: Boolean!
-  redirect: Boolean!
+  sameSession: Boolean!
   cookie: Cookie
 }
 

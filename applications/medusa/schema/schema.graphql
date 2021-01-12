@@ -1,6 +1,6 @@
-directive @auth on FIELD_DEFINITION
-
 directive @validation(rules: [String!]!) on INPUT_FIELD_DEFINITION
+
+directive @auth on FIELD_DEFINITION
 
 type Authentication {
   cookie: Cookie
@@ -12,8 +12,7 @@ input AuthenticationInput {
 }
 
 type AuthListener {
-  authorized: Boolean!
-  redirect: Boolean!
+  sameSession: Boolean!
   cookie: Cookie
 }
 

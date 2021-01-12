@@ -48,53 +48,42 @@ func (r *subscriptionResolver) AuthListener(ctx context.Context) (<-chan *models
 
 	cookie := &models.Cookie{Registered: getRegisteredUser.Username != "", Redeemed: getAuthenticationCookie.Redeemed, SameSession: true}
 
-	// Helper function to check what we should do about the user
-	checkState := func() {
-		// User doesn't exist, we ask to register
-		if getRegisteredUser.Username == "" {
-			channel <- &models.AuthListener{Authorized: true, Redirect: false, Cookie: cookie}
-			return
-		}
-
-		// Delete our cookie
-		getDeletedCookie, err := r.services.Eva().DeleteAuthenticationCookie(ctx, &eva.GetAuthenticationCookieRequest{Cookie: currentCookie.Value})
-
-		if err != nil || getDeletedCookie == nil {
-			return
-		}
-
-		// Otherwise, we remove the cookie, and create a JWT token
-		http.SetCookie(gc.Writer, &http.Cookie{Name: OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
-
-		// Create user session with username
-		_, err = helpers.CreateUserSession(gc, r.redis, getRegisteredUser.Username)
-
-		if err != nil {
-			return
-		}
-
-		channel <- &models.AuthListener{Authorized: true, Cookie: cookie, Redirect: false}
-		return
-	}
-
 	go func() {
 		r.redisPB.Subscribe("otp" + getAuthenticationCookie.Cookie)
-
-		if getAuthenticationCookie.Redeemed == true {
-			checkState()
-			return
-		}
 
 		for {
 			switch v := r.redisPB.Receive().(type) {
 			case redis.Message:
 
 				if string(v.Data) == "SAME_SESSION" {
-					channel <- &models.AuthListener{Authorized: true, Redirect: true, Cookie: cookie}
+					channel <- &models.AuthListener{SameSession: true, Cookie: cookie}
 					return
 
 				} else if string(v.Data) == "ANOTHER_SESSION" {
-					checkState()
+					// User doesn't exist, we ask to register
+					if getRegisteredUser.Username == "" {
+						channel <- &models.AuthListener{Cookie: cookie, SameSession: false}
+						return
+					}
+
+					// Delete our cookie
+					getDeletedCookie, err := r.services.Eva().DeleteAuthenticationCookie(ctx, &eva.GetAuthenticationCookieRequest{Cookie: currentCookie.Value})
+
+					if err != nil || getDeletedCookie == nil {
+						return
+					}
+
+					// Otherwise, we remove the cookie, and create a JWT token
+					http.SetCookie(gc.Writer, &http.Cookie{Name: OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
+
+					// Create user session with username
+					_, err = helpers.CreateUserSession(gc, r.redis, getRegisteredUser.Username)
+
+					if err != nil {
+						return
+					}
+
+					channel <- &models.AuthListener{Cookie: cookie, SameSession: false}
 					return
 				}
 

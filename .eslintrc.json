@@ -22,8 +22,7 @@
     "relay/unused-fields": "warn",
     "relay/hook-required-argument": "warn",
     "react/jsx-uses-react": "off",
-    "react/react-in-jsx-scope": "off",
-    "react/display-name": "off"
+    "react/react-in-jsx-scope": "off"
   },
   "parserOptions": {
     "ecmaFeatures": {

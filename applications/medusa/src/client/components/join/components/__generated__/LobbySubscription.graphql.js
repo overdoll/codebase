@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 0ea07a4f8818b11fbc26149245590383
+ * @relayHash 827a0c2f647341f9d03cec6a6ab57c14
  */
 
 /* eslint-disable */
@@ -15,7 +15,8 @@ export type LobbySubscriptionResponse = {|
     +authorized: boolean,
     +redirect: boolean,
     +cookie: ?{|
-      +sameSession: boolean
+      +sameSession: boolean,
+      +registered: boolean,
     |},
   |}
 |};
@@ -33,6 +34,7 @@ subscription LobbySubscription {
     redirect
     cookie {
       sameSession
+      registered
     }
   }
 }
@@ -76,6 +78,13 @@ var v0 = [
             "kind": "ScalarField",
             "name": "sameSession",
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "registered",
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -102,7 +111,7 @@ return {
     "selections": (v0/*: any*/)
   },
   "params": {
-    "id": "0ea07a4f8818b11fbc26149245590383",
+    "id": "827a0c2f647341f9d03cec6a6ab57c14",
     "metadata": {},
     "name": "LobbySubscription",
     "operationKind": "subscription",
@@ -111,6 +120,6 @@ return {
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '15a2ca356a95c493437934aa3af18f40';
+(node/*: any*/).hash = '01bc6788f2a60f7f1313f22aa3f1e587';
 
 module.exports = node;

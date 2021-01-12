@@ -3,9 +3,8 @@
 package models
 
 type AuthListener struct {
-	Authorized bool    `json:"authorized"`
-	Redirect   bool    `json:"redirect"`
-	Cookie     *Cookie `json:"cookie"`
+	SameSession bool    `json:"sameSession"`
+	Cookie      *Cookie `json:"cookie"`
 }
 
 type Authentication struct {

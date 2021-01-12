@@ -5,10 +5,9 @@ import { Heading, Text } from '@//:modules/typography';
 const subscription = graphql`
   subscription LobbySubscription {
     authListener {
-      authorized
-      redirect
+      sameSession
       cookie {
-        sameSession
+        registered
       }
     }
   }
