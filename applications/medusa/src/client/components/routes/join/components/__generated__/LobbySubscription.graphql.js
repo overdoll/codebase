@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 827a0c2f647341f9d03cec6a6ab57c14
+ * @relayHash 681b8d7958c1231ee10b34b7b921278f
  */
 
 /* eslint-disable */
@@ -12,11 +12,9 @@ import type { ConcreteRequest } from 'relay-runtime';
 export type LobbySubscriptionVariables = {||};
 export type LobbySubscriptionResponse = {|
   +authListener: ?{|
-    +authorized: boolean,
-    +redirect: boolean,
+    +sameSession: boolean,
     +cookie: ?{|
-      +sameSession: boolean,
-      +registered: boolean,
+      +registered: boolean
     |},
   |}
 |};
@@ -30,10 +28,8 @@ export type LobbySubscription = {|
 /*
 subscription LobbySubscription {
   authListener {
-    authorized
-    redirect
+    sameSession
     cookie {
-      sameSession
       registered
     }
   }
@@ -54,14 +50,7 @@ var v0 = [
         "alias": null,
         "args": null,
         "kind": "ScalarField",
-        "name": "authorized",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "redirect",
+        "name": "sameSession",
         "storageKey": null
       },
       {
@@ -72,13 +61,6 @@ var v0 = [
         "name": "cookie",
         "plural": false,
         "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "sameSession",
-            "storageKey": null
-          },
           {
             "alias": null,
             "args": null,
@@ -111,7 +93,7 @@ return {
     "selections": (v0/*: any*/)
   },
   "params": {
-    "id": "827a0c2f647341f9d03cec6a6ab57c14",
+    "id": "681b8d7958c1231ee10b34b7b921278f",
     "metadata": {},
     "name": "LobbySubscription",
     "operationKind": "subscription",
@@ -120,6 +102,6 @@ return {
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '01bc6788f2a60f7f1313f22aa3f1e587';
+(node/*: any*/).hash = 'b2f669514520bac689e603a89d83765f';
 
 module.exports = node;

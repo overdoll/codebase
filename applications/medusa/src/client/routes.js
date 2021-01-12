@@ -4,7 +4,7 @@ import { loadQuery } from 'react-relay/hooks';
 const routes = [
   {
     prepare: (params, RelayEnvironment) => {
-      const RootQuery = require('./components/__generated__/RootQuery.graphql');
+      const RootQuery = require('./components/routes/__generated__/RootQuery.graphql');
       return {
         stateQuery: loadQuery(
           RelayEnvironment,
@@ -16,23 +16,23 @@ const routes = [
         ),
       };
     },
-    component: JSResource('Root', () => import('./components/Root')),
+    component: JSResource('Root', () => import('./components/routes/Root')),
     routes: [
       {
         path: '/join',
         exact: true,
         component: JSResource('JoinRoot', () =>
-          import('./components/join/Join'),
+          import('./components/routes/join/Join'),
         ),
         prepare: function() {},
       },
       {
         path: '/token/:id',
         component: JSResource('TokenRoot', () =>
-          import('./components/token/Token'),
+          import('./components/routes/token/Token'),
         ),
         prepare: (params, RelayEnvironment) => {
-          const TokenQuery = require('./components/token/__generated__/TokenQuery.graphql');
+          const TokenQuery = require('./components/routes/token/__generated__/TokenQuery.graphql');
           return {
             tokenQuery: loadQuery(
               RelayEnvironment,

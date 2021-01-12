@@ -27,6 +27,7 @@ export default function Register(props) {
       },
       onCompleted(data) {
         console.log(data);
+        console.log('registered');
       },
       onError(data) {
         console.log(data);
@@ -37,13 +38,19 @@ export default function Register(props) {
   return (
     <form onSubmit={onSubmit}>
       <Input
+        sx={{ variant: 'forms.input.primary' }}
         disabled={isInFlight}
         required
         type="text"
         value={username}
         onChange={onChange}
       />
-      <Button disabled={isInFlight}>register</Button>
+      <Button
+        sx={{ width: '100%', variant: 'primary', mt: 2 }}
+        disabled={isInFlight}
+      >
+        register
+      </Button>
     </form>
   );
 }

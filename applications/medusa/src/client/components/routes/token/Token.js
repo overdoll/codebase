@@ -1,5 +1,5 @@
 import { graphql, usePreloadedQuery } from 'react-relay/hooks';
-import Register from '../join/components/Register';
+import Register from '../../register/Register';
 
 const TokenQuery = graphql`
   query TokenQuery($cookie: String!) {
@@ -15,7 +15,7 @@ export default function Token({ prepared }) {
 
   const { sameSession, registered } = result.redeemCookie;
 
-  if (sameSession) {
+  if (!sameSession) {
     return 'check the other session';
   }
 

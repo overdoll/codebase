@@ -1,6 +1,6 @@
 import { graphql, useMutation } from 'react-relay/hooks';
 import { useState } from 'react';
-import Register from './components/Register';
+import Register from '../../register/Register';
 import { useTranslation } from 'react-i18next';
 import { Button, Input } from '@//:modules/form';
 import { useNotify } from '@//:modules/focus';
