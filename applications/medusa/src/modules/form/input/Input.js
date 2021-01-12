@@ -1,7 +1,7 @@
-import { Input } from 'theme-ui';
+import { Input as ThemeUIInput } from 'theme-ui';
 
-export default props => (
-  <Input
+const Input = props => (
+  <ThemeUIInput
     {...props}
     sx={{
       pl: 3,
@@ -14,3 +14,5 @@ export default props => (
     }}
   />
 );
+
+export default Input;

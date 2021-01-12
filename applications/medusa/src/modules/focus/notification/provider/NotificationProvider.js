@@ -50,7 +50,6 @@ const NotificationProvider = ({ children }) => {
               pr: 1,
               width: '100%',
               flexDirection: 'column',
-              pt: 1,
             }}
           >
             {active

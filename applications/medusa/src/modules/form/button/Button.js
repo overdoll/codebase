@@ -1,7 +1,7 @@
-import { Button } from 'theme-ui';
+import { Button as ThemeUIButton } from 'theme-ui';
 
-export default props => (
-  <Button
+const Button = props => (
+  <ThemeUIButton
     {...props}
     sx={{
       borderWidth: 'defaults',
@@ -16,3 +16,5 @@ export default props => (
     }}
   />
 );
+
+export default Button;

@@ -1,58 +1,34 @@
-import { graphql, useMutation, useRelayEnvironment } from 'react-relay/hooks';
-import { requestSubscription } from 'react-relay';
-import { useState, useRef } from 'react';
+import { graphql, useMutation } from 'react-relay/hooks';
+import { useState } from 'react';
 import Register from './components/Register';
 import { useTranslation } from 'react-i18next';
 import { Button, Input } from '@//:modules/form';
 import { useNotify } from '@//:modules/focus';
+import Lobby from './components/Lobby';
 
-const joinAction = graphql`
+const JoinAction = graphql`
   mutation JoinMutation($data: AuthenticationInput!) {
     authenticate(data: $data)
   }
 `;
 
-const subscription = graphql`
-  subscription JoinSubscription {
-    authListener {
-      authorized
-      redirect
-      cookie {
-        sameSession
-      }
-    }
-  }
-`;
-
-export default function Join({ props }) {
+export default function Join(props) {
   const [t] = useTranslation('auth');
 
-  const [commit, isInFlight] = useMutation(joinAction);
+  const [commit, isInFlight] = useMutation(JoinAction);
+
+  const [email, setEmail] = useState('');
 
   const notify = useNotify();
 
-  const disposableRef = useRef(null);
-
-  const relayEnvironment = useRelayEnvironment();
-
-  const [sub, setSub] = useState(null);
+  const [authInfo, setAuthInfo] = useState(null);
 
   const [waiting, setWaiting] = useState(false);
 
-  const changeSub = data => {
-    setSub(data);
+  const changeAuth = data => {
+    setAuthInfo(data);
     setWaiting(false);
-    disposableRef.current.dispose();
   };
-
-  const config = {
-    variables: {},
-    subscription,
-    onNext: response => changeSub(response),
-    // onCompleted: res => disposableRef.current.dispose(),
-  };
-
-  const [email, setEmail] = useState('');
 
   const onChange = event => {
     setEmail(event.target.value);
@@ -68,7 +44,6 @@ export default function Join({ props }) {
       },
       onCompleted(data) {
         setWaiting(true);
-        disposableRef.current = requestSubscription(relayEnvironment, config);
       },
       onError(data) {
         notify.error('testasdasdasd');
@@ -76,21 +51,24 @@ export default function Join({ props }) {
     });
   };
 
+  // If we're waiting on a token, create a subscription for the token
+  // We don't have to send any values because it already knows the token
+  // from a cookie.
   if (waiting) {
-    return 'waiting';
+    return <Lobby email={email} onReceive={changeAuth} />;
   }
 
-  if (sub !== null) {
-    if (sub.authenticationState) {
-      if (!sub.authenticationState.authorized) {
+  if (authInfo !== null) {
+    if (authInfo.authenticationState) {
+      if (!authInfo.authenticationState.authorized) {
         return 'not authorized';
       }
 
-      if (sub.authenticationState.redirect) {
+      if (authInfo.authenticationState.redirect) {
         return 'check opened browser window, or refresh page';
       }
 
-      if (sub.authenticationState.registered) {
+      if (authInfo.authenticationState.registered) {
         return 'redirect';
       } else {
         return <Register {...props} />;
@@ -100,25 +78,25 @@ export default function Join({ props }) {
     return 'waiting';
   }
 
+  console.log('test');
+
   return (
-    <>
-      <form onSubmit={onSubmit}>
-        <Input
-          sx={{ variant: 'forms.input.primary' }}
-          disabled={isInFlight}
-          required
-          type="text"
-          value={email}
-          onChange={onChange}
-          placeholder={t('authenticate.input')}
-        />
-        <Button
-          disabled={isInFlight}
-          sx={{ width: '100%', variant: 'primary', mt: 2 }}
-        >
-          {t('authenticate.continue')}
-        </Button>
-      </form>
-    </>
+    <form onSubmit={onSubmit}>
+      <Input
+        sx={{ variant: 'forms.input.primary' }}
+        disabled={isInFlight}
+        required
+        type="text"
+        value={email}
+        onChange={onChange}
+        placeholder={t('authenticate.input')}
+      />
+      <Button
+        disabled={isInFlight}
+        sx={{ width: '100%', variant: 'primary', mt: 2 }}
+      >
+        {t('authenticate.continue')}
+      </Button>
+    </form>
   );
 }

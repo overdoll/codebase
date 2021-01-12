@@ -49,6 +49,7 @@ const Notification = ({ type, children, duration, id }) => {
         borderRadius: 'notification',
         backgroundColor: 'neutral.800',
         display: 'flex',
+        mt: 1,
       }}
     >
       <div>icon</div>
