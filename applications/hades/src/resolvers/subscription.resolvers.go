@@ -6,6 +6,7 @@ package resolvers
 import (
 	"context"
 	"net/http"
+
 	eva "project01101000/codebase/applications/eva/proto"
 	gen "project01101000/codebase/applications/hades/src"
 	"project01101000/codebase/applications/hades/src/helpers"
@@ -67,14 +68,15 @@ func (r *subscriptionResolver) AuthListener(ctx context.Context) (<-chan *models
 					}
 
 					// Delete our cookie
-					getDeletedCookie, err := r.services.Eva().DeleteAuthenticationCookie(ctx, &eva.GetAuthenticationCookieRequest{Cookie: currentCookie.Value})
+					_, err := r.services.Eva().DeleteAuthenticationCookie(ctx, &eva.GetAuthenticationCookieRequest{Cookie: currentCookie.Value})
 
-					if err != nil || getDeletedCookie == nil {
+					if err != nil  {
 						return
 					}
 
 					// Otherwise, we remove the cookie, and create a JWT token
 					http.SetCookie(gc.Writer, &http.Cookie{Name: OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
+
 
 					// Create user session with username
 					_, err = helpers.CreateUserSession(gc, r.redis, getRegisteredUser.Username)

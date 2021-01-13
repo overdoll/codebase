@@ -1,5 +1,4 @@
 import { ChunkExtractor } from '@loadable/server';
-import React from 'react';
 import axios from 'axios';
 import { Environment, Network, RecordSource, Store } from 'relay-runtime';
 import createRouter from '@//:modules/routing/createRouter';
@@ -8,7 +7,6 @@ import createMockHistory from '@//:modules/routing/createMockHistory';
 import path from 'path';
 import serialize from 'serialize-javascript';
 import ssrPrepass from 'react-ssr-prepass';
-import { I18nextProvider } from 'react-i18next';
 import App from '../../client/App';
 
 const entry = async (req, res, next) => {
@@ -33,6 +31,7 @@ const entry = async (req, res, next) => {
     async function fetchRelay(params, variables, _cacheConfig) {
       const response = await axios({
         url: 'http://hades:8000/graphql',
+        withCredentials: true,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -58,9 +57,9 @@ const entry = async (req, res, next) => {
       }
 
       // TODO: handle the error properly (send to relay store somehow?) (new version of react-ssr-prepass fixes error boundaries?)
-      if (Array.isArray(response.data.errors)) {
-        console.log(response.data.errors);
-      }
+      // if (Array.isArray(response.data.errors)) {
+      //   console.log(response.data.errors);
+      // }
 
       return response.data;
     }

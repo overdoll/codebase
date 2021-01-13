@@ -70,7 +70,7 @@ export default function Join(props) {
 
     // Cookie was not redeemed in the same session, and user is registered
     if (cookie.registered) {
-      return 'redirect';
+      return 'redirect, user is registered';
     }
 
     // User not registered - prompt a registration

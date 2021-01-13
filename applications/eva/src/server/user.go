@@ -50,7 +50,7 @@ func (s *Server) RegisterUser(ctx context.Context, request *eva.RegisterUserRequ
 	// First, we do a unique insert into users_emails
 	// This ensures that we capture this email & username so nobody can use it
 	insertUserEmail := qb.Insert("users_emails").
-		Columns("email", "username").
+		Columns("email", "username", "user_id").
 		Unique().
 		Query(s.session).
 		SerialConsistency(gocql.Serial).

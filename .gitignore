@@ -18,3 +18,7 @@ node_modules
 .helm
 bazel-*
 .env
+
+# IDEA
+.ijwb
+.idea

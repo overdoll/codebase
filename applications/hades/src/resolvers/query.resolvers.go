@@ -63,9 +63,9 @@ func (r *queryResolver) RedeemCookie(ctx context.Context, cookie *string) (*mode
 	}
 
 	// Delete our cookie, since we now know this user will be logged in
-	getDeletedCookie, err := r.services.Eva().DeleteAuthenticationCookie(ctx, &eva.GetAuthenticationCookieRequest{Cookie: currentCookie.Value})
+	_, err = r.services.Eva().DeleteAuthenticationCookie(ctx, &eva.GetAuthenticationCookieRequest{Cookie: currentCookie.Value})
 
-	if err != nil || getDeletedCookie == nil {
+	if err != nil {
 		return nil, err
 	}
 
