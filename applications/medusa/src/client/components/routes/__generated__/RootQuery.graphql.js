@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 9b7970fc56affa255f441b8681c82d38
+ * @relayHash c4b886c1b25a129f86a8fb8cfd427ded
  */
 
 /* eslint-disable */
@@ -9,11 +9,11 @@
 
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
-type JoinFragment$ref = any;
+type RootData$ref = any;
 export type RootQueryVariables = {||};
 export type RootQueryResponse = {|
   +authentication: ?{|
-    +$fragmentRefs: JoinFragment$ref
+    +$fragmentRefs: RootData$ref
   |}
 |};
 export type RootQuery = {|
@@ -26,18 +26,17 @@ export type RootQuery = {|
 /*
 query RootQuery {
   authentication {
-    ...JoinFragment
+    ...RootData
   }
 }
 
-fragment JoinFragment on Authentication {
+fragment RootData on Authentication {
+  ...RootUser
+}
+
+fragment RootUser on Authentication {
   user {
     username
-  }
-  cookie {
-    redeemed
-    registered
-    sameSession
   }
 }
 */
@@ -60,7 +59,7 @@ const node/*: ConcreteRequest*/ = {
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "JoinFragment"
+            "name": "RootData"
           }
         ],
         "storageKey": null
@@ -100,38 +99,6 @@ const node/*: ConcreteRequest*/ = {
               }
             ],
             "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Cookie",
-            "kind": "LinkedField",
-            "name": "cookie",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "redeemed",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "registered",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "sameSession",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
           }
         ],
         "storageKey": null
@@ -139,7 +106,7 @@ const node/*: ConcreteRequest*/ = {
     ]
   },
   "params": {
-    "id": "9b7970fc56affa255f441b8681c82d38",
+    "id": "c4b886c1b25a129f86a8fb8cfd427ded",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",
@@ -147,6 +114,6 @@ const node/*: ConcreteRequest*/ = {
   }
 };
 // prettier-ignore
-(node/*: any*/).hash = '5bf41ea2f57151c4f5cc01c3e758a806';
+(node/*: any*/).hash = 'aa196f2d098417f314d9aca81818df0a';
 
 module.exports = node;

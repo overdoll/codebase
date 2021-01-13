@@ -12,9 +12,6 @@ import type { FragmentReference } from "relay-runtime";
 declare export opaque type JoinFragment$ref: FragmentReference;
 declare export opaque type JoinFragment$fragmentType: JoinFragment$ref;
 export type JoinFragment = {|
-  +user: ?{|
-    +username: string
-  |},
   +cookie: ?{|
     +redeemed: boolean,
     +registered: boolean,
@@ -37,24 +34,6 @@ const node/*: ReaderFragment*/ = {
   "metadata": null,
   "name": "JoinFragment",
   "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "User",
-      "kind": "LinkedField",
-      "name": "user",
-      "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "username",
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
-    },
     {
       "alias": null,
       "args": null,
@@ -92,6 +71,6 @@ const node/*: ReaderFragment*/ = {
   "abstractKey": null
 };
 // prettier-ignore
-(node/*: any*/).hash = '6111609d0ec3d14e24c47a2719eb3166';
+(node/*: any*/).hash = 'c44317f1cbcb79625b51051addf930c6';
 
 module.exports = node;

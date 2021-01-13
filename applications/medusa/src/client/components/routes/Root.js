@@ -4,13 +4,19 @@ import { graphql, usePreloadedQuery, useFragment } from 'react-relay/hooks';
 const RootQuery = graphql`
   query RootQuery {
     authentication {
-      ...UserData
+      ...RootData
     }
   }
 `;
 
-const RootFragment = graphql`
-  fragment UserData on Authentication {
+const RootDataFragment = graphql`
+  fragment RootData on Authentication {
+    ...RootUser
+  }
+`;
+
+const RootUserFragment = graphql`
+  fragment RootUser on Authentication {
     user {
       username
     }
@@ -21,16 +27,17 @@ const RootContext = createContext({});
 
 export default function Root({ children, prepared }) {
   const rootData = usePreloadedQuery(RootQuery, prepared.stateQuery);
-  const userData = useFragment(RootFragment, rootData);
+  const rootFragment = useFragment(RootDataFragment);
+  const userData = useFragment(RootUserFragment, rootFragment);
 
   // TODO: check here to make sure that our user is allowed to be in this route. for now if the user exists, return null
-  if (userData.user !== null) {
+  if (userData !== null) {
     console.log(userData.username);
     return null;
   }
 
   return (
-    <RootContext.Provider value={rootData}>
+    <RootContext.Provider value={rootFragment}>
       <Suspense fallback={<div>loading...</div>}>{children}</Suspense>
     </RootContext.Provider>
   );
