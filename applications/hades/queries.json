@@ -1,16 +1,7 @@
 {
-  "7e8a58a7116f261f7b6851f2ffd5b6b9": "query tokenStateQuery {\n  authentication {\n    user {\n      username\n    }\n    cookie {\n      redeemed\n      registered\n      sameSession\n    }\n  }\n}\n",
-  "15b6b350ae61fdfbf9dd6eeef348c28b": "query tokenQuery(\n  $cookie: String!\n) {\n  redeemCookie(cookie: $cookie) {\n    sameSession\n    registered\n    redeemed\n  }\n}\n",
-  "1486f53fb71a0deefecfa852416ad2ca": "subscription JoinRootSubscription {\n  authListener {\n    authorized\n    redirect\n    cookie {\n      sameSession\n    }\n  }\n}\n",
-  "a8244d934f532f8ed92a84be68e4a474": "mutation JoinRootMutation(\n  $data: AuthenticationInput!\n) {\n  authenticate(data: $data)\n}\n",
   "9fa210c33c02dede7049bc27965528c5": "mutation RegisterMutation(\n  $data: RegisterInput!\n) {\n  register(data: $data)\n}\n",
-  "9fd910c1b2ae055ff9282fa1192b21e1": "subscription JoinSubscription {\n  authListener {\n    authorized\n    redirect\n    cookie {\n      sameSession\n    }\n  }\n}\n",
-  "baeb01655c5e1818c7a116ad2e2353f9": "mutation JoinMutation(\n  $data: AuthenticationInput!\n) {\n  authenticate(data: $data)\n}\n",
-  "03b83a3648886f81749fd4a4905d02bf": "query TokenQuery {\n  authentication {\n    user {\n      username\n    }\n    cookie {\n      redeemed\n      registered\n      sameSession\n    }\n  }\n}\n",
-  "80f21f2b494f8250ca4fac5e57c0ff7c": "query TokenQuery(\n  $cookie: String!\n) {\n  redeemCookie(cookie: $cookie) {\n    sameSession\n    registered\n    redeemed\n  }\n}\n",
   "8538b19af5ba7b6cb6f0169979a9ff45": "query RootQuery {\n  authentication {\n    user {\n      username\n    }\n    cookie {\n      redeemed\n      registered\n      sameSession\n    }\n  }\n}\n",
-  "0ea07a4f8818b11fbc26149245590383": "subscription LobbySubscription {\n  authListener {\n    authorized\n    redirect\n    cookie {\n      sameSession\n    }\n  }\n}\n",
-  "827a0c2f647341f9d03cec6a6ab57c14": "subscription LobbySubscription {\n  authListener {\n    authorized\n    redirect\n    cookie {\n      sameSession\n      registered\n    }\n  }\n}\n",
+  "baeb01655c5e1818c7a116ad2e2353f9": "mutation JoinMutation(\n  $data: AuthenticationInput!\n) {\n  authenticate(data: $data)\n}\n",
   "681b8d7958c1231ee10b34b7b921278f": "subscription LobbySubscription {\n  authListener {\n    sameSession\n    cookie {\n      registered\n    }\n  }\n}\n",
-  "91e99d0f72cc9a5af278a2989768735e": "query TokenQuery(\n  $cookie: String!\n) {\n  redeemCookie(cookie: $cookie) {\n    sameSession\n    registered\n  }\n}\n"
+  "cfa55e171caaf100d02a5c3f65c631b0": "query TokenQuery(\n  $cookie: String!\n) {\n  redeemCookie(cookie: $cookie) {\n    sameSession\n    registered\n    session\n  }\n}\n"
 }

@@ -3,6 +3,7 @@ import { loadQuery } from 'react-relay/hooks';
 
 const routes = [
   {
+    component: JSResource('Root', () => import('./components/routes/Root')),
     prepare: (params, RelayEnvironment) => {
       const RootQuery = require('./components/routes/__generated__/RootQuery.graphql');
       return {
@@ -16,7 +17,6 @@ const routes = [
         ),
       };
     },
-    component: JSResource('Root', () => import('./components/routes/Root')),
     routes: [
       {
         path: '/join',

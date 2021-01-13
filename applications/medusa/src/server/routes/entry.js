@@ -58,16 +58,9 @@ const entry = async (req, res, next) => {
       }
 
       // TODO: handle the error properly (send to relay store somehow?) (new version of react-ssr-prepass fixes error boundaries?)
-      // if (Array.isArray(response.data.errors)) {
-      //   console.log(response.data.errors);
-      //   throw new Error(
-      //     `Error fetching GraphQL query '${
-      //       params.name
-      //     }' with variables '${JSON.stringify(variables)}': ${JSON.stringify(
-      //       response.data.errors,
-      //     )}`,
-      //   );
-      // }
+      if (Array.isArray(response.data.errors)) {
+        console.log(response.data.errors);
+      }
 
       return response.data;
     }

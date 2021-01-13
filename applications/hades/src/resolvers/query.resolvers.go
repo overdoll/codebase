@@ -6,6 +6,7 @@ package resolvers
 import (
 	"context"
 	"net/http"
+
 	eva "project01101000/codebase/applications/eva/proto"
 	gen "project01101000/codebase/applications/hades/src"
 	"project01101000/codebase/applications/hades/src/helpers"
@@ -33,12 +34,18 @@ func (r *queryResolver) RedeemCookie(ctx context.Context, cookie *string) (*mode
 
 	currentCookie, err := helpers.ReadCookie(ctx, OTPKey)
 
-	if err != nil || currentCookie == nil {
-		r.redis.Send("PUBLISH", "otp"+getRedeemedCookie.Cookie, "ANOTHER_SESSION")
-		r.redis.Flush()
+	if err != nil {
 
-		// No cookie exists, we want to give a different SameSession response
-		return &models.Cookie{Registered: false, SameSession: false, Redeemed: true, Session: getRedeemedCookie.Session}, nil
+		// Cookie doesn't exist
+		if err == http.ErrNoCookie {
+
+			r.redis.Send("PUBLISH", "otp"+getRedeemedCookie.Cookie, "ANOTHER_SESSION")
+			r.redis.Flush()
+			// No cookie exists, we want to give a different SameSession response
+			return &models.Cookie{Registered: false, SameSession: false, Redeemed: true, Session: getRedeemedCookie.Session}, nil
+		}
+
+		return nil, err
 	}
 
 	// Check if user is registered

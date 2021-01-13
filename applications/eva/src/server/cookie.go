@@ -115,6 +115,7 @@ func (s *Server) RedeemAuthenticationCookie(ctx context.Context, request *eva.Ge
 		Email:      queryCookieItem.Email,
 		Session:    queryCookieItem.Session,
 	}
+
 	return cookie, nil
 }
 

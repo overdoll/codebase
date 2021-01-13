@@ -20,7 +20,7 @@ func (r *subscriptionResolver) AuthListener(ctx context.Context) (<-chan *models
 
 	currentCookie, err := helpers.ReadCookie(ctx, OTPKey)
 
-	if err != nil || currentCookie == nil {
+	if err != nil {
 
 		if err == http.ErrNoCookie {
 			// The program returns this error

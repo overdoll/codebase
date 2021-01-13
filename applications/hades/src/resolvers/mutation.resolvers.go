@@ -64,7 +64,13 @@ func (r *mutationResolver) Register(ctx context.Context, data *models.RegisterIn
 	// Make sure we have the cookie in order to register
 	currentCookie, err := helpers.ReadCookie(ctx, OTPKey)
 
-	if err != nil || currentCookie == nil {
+	if err != nil {
+
+		// Cookie doesn't exist
+		if err == http.ErrNoCookie {
+			return false, err
+		}
+
 		return false, err
 	}
 
