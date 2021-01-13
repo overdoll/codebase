@@ -68,9 +68,10 @@ export default function Join(props) {
       return 'check opened browser window, or refresh page';
     }
 
-    // Cookie was not redeemed in the same session, and user is registered
+    // Cookie was not redeemed in the same session, and user is registered - refresh to generate a session token
     if (cookie.registered) {
-      return 'redirect, user is registered';
+      window.location.reload();
+      return 'refreshing';
     }
 
     // User not registered - prompt a registration

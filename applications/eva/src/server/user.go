@@ -34,7 +34,7 @@ func (s *Server) GetUser(ctx context.Context, request *eva.GetUserRequest) (*eva
 		return nil, fmt.Errorf("select() failed: '%s", err)
 	}
 
-	return &eva.User{Username: userItem.Username}, nil
+	return &eva.User{Username: userItem.Username, Id: userItem.Id.String()}, nil
 }
 
 func (s *Server) RegisterUser(ctx context.Context, request *eva.RegisterUserRequest) (*eva.User, error) {

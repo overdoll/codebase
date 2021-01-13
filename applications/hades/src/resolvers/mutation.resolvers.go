@@ -100,7 +100,7 @@ func (r *mutationResolver) Register(ctx context.Context, data *models.RegisterIn
 	// Remove OTP token - registration is complete
 	http.SetCookie(gc.Writer, &http.Cookie{Name: OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
 
-	_, err = helpers.CreateUserSession(gc, r.redis, getRegisteredUser.Username)
+	_, err = helpers.CreateUserSession(gc, r.redis, getRegisteredUser.Id)
 
 	if err != nil {
 		return false, err

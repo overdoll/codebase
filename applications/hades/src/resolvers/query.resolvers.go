@@ -133,11 +133,18 @@ func (r *queryResolver) Authentication(ctx context.Context) (*models.Authenticat
 		return &models.Authentication{User: nil, Cookie: &models.Cookie{Redeemed: true, Registered: false, SameSession: true, Session: getAuthenticationCookie.Session}}, nil
 	}
 
+	// make sure we delete this redeemed authentication cookie
+	_, err = r.services.Eva().DeleteAuthenticationCookie(ctx, &eva.GetAuthenticationCookieRequest{Cookie: otpCookie.Value})
+
+	if err != nil {
+		return nil, err
+	}
+
 	// Remove OTP cookie - user is registered
 	http.SetCookie(gc.Writer, &http.Cookie{Name: OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
 
 	// User registered, Create user session
-	_, err = helpers.CreateUserSession(gc, r.redis, getRegisteredUser.Username)
+	_, err = helpers.CreateUserSession(gc, r.redis, getRegisteredUser.Id)
 
 	if err != nil {
 		return nil, err

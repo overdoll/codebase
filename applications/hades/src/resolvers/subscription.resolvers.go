@@ -17,8 +17,6 @@ import (
 
 func (r *subscriptionResolver) AuthListener(ctx context.Context) (<-chan *models.AuthListener, error) {
 	// AuthenticationState - check the state of our authentication by checking the OTP Cookie header to see if we have redeemed it
-	gc := helpers.GinContextFromContext(ctx)
-
 	currentCookie, err := helpers.ReadCookie(ctx, OTPKey)
 
 	if err != nil {
@@ -61,30 +59,10 @@ func (r *subscriptionResolver) AuthListener(ctx context.Context) (<-chan *models
 					return
 
 				} else if string(v.Data) == "ANOTHER_SESSION" {
-					// User doesn't exist, we ask to register
-					if getRegisteredUser.Username == "" {
-						channel <- &models.AuthListener{Cookie: cookie, SameSession: false}
-						return
-					}
 
-					// Delete our cookie
-					_, err := r.services.Eva().DeleteAuthenticationCookie(ctx, &eva.GetAuthenticationCookieRequest{Cookie: currentCookie.Value})
-
-					if err != nil  {
-						return
-					}
-
-					// Otherwise, we remove the cookie, and create a JWT token
-					http.SetCookie(gc.Writer, &http.Cookie{Name: OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
-
-
-					// Create user session with username
-					_, err = helpers.CreateUserSession(gc, r.redis, getRegisteredUser.Username)
-
-					if err != nil {
-						return
-					}
-
+					// If user exists, we can't set auth cookies here.
+					// Because we can't set a cookie in websocket connections, we force the browser to refresh the current page,
+					// and our root function will see that the cookie has been redeemed, and will log the user in
 					channel <- &models.AuthListener{Cookie: cookie, SameSession: false}
 					return
 				}

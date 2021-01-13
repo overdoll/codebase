@@ -2,9 +2,10 @@ package middleware
 
 import (
 	"context"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/gomodule/redigo/redis"
-	"net/http"
 	eva "project01101000/codebase/applications/eva/proto"
 	"project01101000/codebase/applications/hades/src/authentication"
 	"project01101000/codebase/applications/hades/src/helpers"

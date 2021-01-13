@@ -9,7 +9,7 @@ import (
 )
 
 type JWTService interface {
-	GenerateToken(username string, expiration int64) string
+	GenerateToken(id string, expiration int64) string
 	ValidateToken(token string) (*jwt.Token, error)
 }
 
