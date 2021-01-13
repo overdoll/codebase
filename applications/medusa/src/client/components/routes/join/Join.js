@@ -1,14 +1,25 @@
-import { graphql, useMutation } from 'react-relay/hooks';
-import { useState } from 'react';
+import { graphql, useMutation, useFragment } from 'react-relay/hooks';
+import { useState, useContext } from 'react';
 import Register from '../../register/Register';
 import { useTranslation } from 'react-i18next';
 import { Button, Input } from '@//:modules/form';
 import { useNotify } from '@//:modules/focus';
 import Lobby from './components/Lobby';
+import { RootContext } from '../Root';
 
 const JoinAction = graphql`
   mutation JoinMutation($data: AuthenticationInput!) {
     authenticate(data: $data)
+  }
+`;
+
+const RootFragment = graphql`
+  fragment JoinFragment on Authentication {
+    cookie {
+      redeemed
+      registered
+      sameSession
+    }
   }
 `;
 
@@ -17,11 +28,14 @@ export default function Join(props) {
 
   const [commit, isInFlight] = useMutation(JoinAction);
 
+  // Use cookie data for this route to determine what action to perform
+  const currentData = useFragment(RootFragment, useContext(RootContext));
+
   const [email, setEmail] = useState('');
 
   const notify = useNotify();
 
-  const [authInfo, setAuthInfo] = useState(null);
+  const [authInfo, setAuthInfo] = useState({ authListener: null });
 
   const [waiting, setWaiting] = useState(false);
 
@@ -51,16 +65,30 @@ export default function Join(props) {
     });
   };
 
+  // Checks for various types of states
+  const emptySubscriptionResponse = authInfo.authListener === null;
+  const emptyAuthCookie = currentData.cookie === null;
+
   // If we're waiting on a token, create a subscription for the token
   // We don't have to send any values because it already knows the token
   // from a cookie.
-  if (waiting) {
+  if (
+    waiting ||
+    (emptySubscriptionResponse &&
+      !emptyAuthCookie &&
+      !currentData.cookie.redeemed)
+  ) {
     return <Lobby email={email} onReceive={changeAuth} />;
+  }
+
+  // We already have auth cookie data, and it's been redeemed. We want the user to register
+  if (!emptyAuthCookie && currentData.cookie.redeemed) {
+    return <Register />;
   }
 
   // We have received a subscription update - we want to handle the logic here based
   // on the response we get
-  if (authInfo !== null) {
+  if (!emptySubscriptionResponse) {
     const { sameSession, cookie } = authInfo.authListener;
 
     // Cookie was redeemed in the same session,
@@ -78,6 +106,7 @@ export default function Join(props) {
     return <Register />;
   }
 
+  // Ask user to authenticate
   return (
     <form onSubmit={onSubmit}>
       <Input

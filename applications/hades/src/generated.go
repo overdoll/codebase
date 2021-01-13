@@ -72,7 +72,7 @@ type ComplexityRoot struct {
 
 	Query struct {
 		Authentication func(childComplexity int) int
-		RedeemCookie   func(childComplexity int, cookie *string) int
+		RedeemCookie   func(childComplexity int, cookie string) int
 	}
 
 	Subscription struct {
@@ -90,7 +90,7 @@ type MutationResolver interface {
 	Logout(ctx context.Context) (bool, error)
 }
 type QueryResolver interface {
-	RedeemCookie(ctx context.Context, cookie *string) (*models.Cookie, error)
+	RedeemCookie(ctx context.Context, cookie string) (*models.Cookie, error)
 	Authentication(ctx context.Context) (*models.Authentication, error)
 }
 type SubscriptionResolver interface {
@@ -216,7 +216,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.RedeemCookie(childComplexity, args["cookie"].(*string)), true
+		return e.complexity.Query.RedeemCookie(childComplexity, args["cookie"].(string)), true
 
 	case "Subscription.authListener":
 		if e.complexity.Subscription.AuthListener == nil {
@@ -352,9 +352,10 @@ directive @validation(rules: [String!]!) on INPUT_FIELD_DEFINITION
 }
 `, BuiltIn: false},
 	{Name: "schemas/query.graphql", Input: `type Query {
-    redeemCookie(cookie: String): Cookie
-    authentication: Authentication
-}`, BuiltIn: false},
+  redeemCookie(cookie: String!): Cookie
+  authentication: Authentication
+}
+`, BuiltIn: false},
 	{Name: "schemas/subscription.graphql", Input: `type Subscription {
     authListener: AuthListener
 }`, BuiltIn: false},
@@ -428,10 +429,10 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 func (ec *executionContext) field_Query_redeemCookie_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *string
+	var arg0 string
 	if tmp, ok := rawArgs["cookie"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cookie"))
-		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -913,7 +914,7 @@ func (ec *executionContext) _Query_redeemCookie(ctx context.Context, field graph
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().RedeemCookie(rctx, args["cookie"].(*string))
+		return ec.resolvers.Query().RedeemCookie(rctx, args["cookie"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)

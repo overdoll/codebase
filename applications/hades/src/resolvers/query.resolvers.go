@@ -6,14 +6,13 @@ package resolvers
 import (
 	"context"
 	"net/http"
-
 	eva "project01101000/codebase/applications/eva/proto"
 	gen "project01101000/codebase/applications/hades/src"
 	"project01101000/codebase/applications/hades/src/helpers"
 	"project01101000/codebase/applications/hades/src/models"
 )
 
-func (r *queryResolver) RedeemCookie(ctx context.Context, cookie *string) (*models.Cookie, error) {
+func (r *queryResolver) RedeemCookie(ctx context.Context, cookie string) (*models.Cookie, error) {
 	// RedeemCookie - this is when the user uses the redeemed cookie. This will
 	// occur when the user uses the redeemed cookie in the same browser that has the 'otp-cookie' cookie
 
@@ -25,7 +24,7 @@ func (r *queryResolver) RedeemCookie(ctx context.Context, cookie *string) (*mode
 	gc := helpers.GinContextFromContext(ctx)
 
 	// Redeem our authentication cookie
-	getRedeemedCookie, err := r.services.Eva().RedeemAuthenticationCookie(ctx, &eva.GetAuthenticationCookieRequest{Cookie: *cookie})
+	getRedeemedCookie, err := r.services.Eva().RedeemAuthenticationCookie(ctx, &eva.GetAuthenticationCookieRequest{Cookie: cookie})
 
 	// Check to make sure we didn't get an error, and our cookie isn't expired
 	if err != nil || getRedeemedCookie == nil {
@@ -46,6 +45,11 @@ func (r *queryResolver) RedeemCookie(ctx context.Context, cookie *string) (*mode
 		}
 
 		return nil, err
+	}
+
+	// If cookie doesn't match the token used, then we will error out
+	if currentCookie.Value != cookie {
+		return nil, http.ErrNoCookie
 	}
 
 	// Check if user is registered

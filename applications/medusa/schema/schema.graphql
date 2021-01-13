@@ -30,7 +30,7 @@ type Mutation {
 }
 
 type Query {
-  redeemCookie(cookie: String): Cookie
+  redeemCookie(cookie: String!): Cookie
   authentication: Authentication
 }
 
