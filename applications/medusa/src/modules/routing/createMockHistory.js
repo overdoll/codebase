@@ -1,4 +1,4 @@
-import { createPath, parsePath } from 'history';
+import { parsePath } from 'history';
 
 export default function createMockHistory({
   context = {},

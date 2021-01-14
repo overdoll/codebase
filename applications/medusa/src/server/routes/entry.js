@@ -56,10 +56,10 @@ const entry = async (req, res, next) => {
         forwardCookies = [...forwardCookies, ...response.headers['set-cookie']];
       }
 
-      // TODO: handle the error properly (send to relay store somehow?) (new version of react-ssr-prepass fixes error boundaries?)
-      // if (Array.isArray(response.data.errors)) {
-      //   console.log(response.data.errors);
-      // }
+      // TODO: handle the error properly
+      if (Array.isArray(response.data.errors)) {
+        console.log(response.data.errors);
+      }
 
       return response.data;
     }
