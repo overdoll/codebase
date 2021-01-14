@@ -1,6 +1,5 @@
 import RoutingContext from '@//:modules/routing/RoutingContext';
-
-const { useCallback, useContext } = React;
+import { useCallback, useContext } from 'react';
 
 /**
  * An alternative to react-router's Link component that works with

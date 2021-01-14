@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash c4b886c1b25a129f86a8fb8cfd427ded
+ * @relayHash 756ffab91c20e135ba7627f296cc46cc
  */
 
 /* eslint-disable */
@@ -9,11 +9,14 @@
 
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
-type RootData$ref = any;
+type JoinFragment$ref = any;
 export type RootQueryVariables = {||};
 export type RootQueryResponse = {|
   +authentication: ?{|
-    +$fragmentRefs: RootData$ref
+    +user: ?{|
+      +username: string
+    |},
+    +$fragmentRefs: JoinFragment$ref,
   |}
 |};
 export type RootQuery = {|
@@ -26,22 +29,42 @@ export type RootQuery = {|
 /*
 query RootQuery {
   authentication {
-    ...RootData
+    user {
+      username
+    }
+    ...JoinFragment
   }
 }
 
-fragment RootData on Authentication {
-  ...RootUser
-}
-
-fragment RootUser on Authentication {
-  user {
-    username
+fragment JoinFragment on Authentication {
+  cookie {
+    redeemed
+    registered
+    sameSession
   }
 }
 */
 
-const node/*: ConcreteRequest*/ = {
+const node/*: ConcreteRequest*/ = (function(){
+var v0 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "User",
+  "kind": "LinkedField",
+  "name": "user",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "username",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+};
+return {
   "fragment": {
     "argumentDefinitions": [],
     "kind": "Fragment",
@@ -56,10 +79,11 @@ const node/*: ConcreteRequest*/ = {
         "name": "authentication",
         "plural": false,
         "selections": [
+          (v0/*: any*/),
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "RootData"
+            "name": "JoinFragment"
           }
         ],
         "storageKey": null
@@ -82,19 +106,34 @@ const node/*: ConcreteRequest*/ = {
         "name": "authentication",
         "plural": false,
         "selections": [
+          (v0/*: any*/),
           {
             "alias": null,
             "args": null,
-            "concreteType": "User",
+            "concreteType": "Cookie",
             "kind": "LinkedField",
-            "name": "user",
+            "name": "cookie",
             "plural": false,
             "selections": [
               {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "username",
+                "name": "redeemed",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "registered",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "sameSession",
                 "storageKey": null
               }
             ],
@@ -106,14 +145,15 @@ const node/*: ConcreteRequest*/ = {
     ]
   },
   "params": {
-    "id": "c4b886c1b25a129f86a8fb8cfd427ded",
+    "id": "756ffab91c20e135ba7627f296cc46cc",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",
     "text": null
   }
 };
+})();
 // prettier-ignore
-(node/*: any*/).hash = 'aa196f2d098417f314d9aca81818df0a';
+(node/*: any*/).hash = 'adf593c107560e6a6ae7fe774793ac48';
 
 module.exports = node;

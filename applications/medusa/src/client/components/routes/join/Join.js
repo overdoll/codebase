@@ -29,7 +29,8 @@ export default function Join(props) {
   const [commit, isInFlight] = useMutation(JoinAction);
 
   // Use cookie data for this route to determine what action to perform
-  const currentData = useFragment(RootFragment, useContext(RootContext));
+  const rootQuery = useContext(RootContext);
+  const currentData = useFragment(RootFragment, rootQuery.authentication);
 
   const [email, setEmail] = useState('');
 
