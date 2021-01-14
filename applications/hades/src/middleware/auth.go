@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -31,8 +30,6 @@ func AuthenticationMiddleware(services services.Services, redis redis.Conn) gin.
 		jwtToken, err := jwtService.ValidateToken(cookie.Value)
 
 		if err != nil || jwtToken == nil {
-			fmt.Println("bad 1")
-
 			// If token invalid, remove it
 			// c.AbortWithStatus(http.StatusForbidden)
 			http.SetCookie(c.Writer, &http.Cookie{Name: "session", Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
@@ -47,7 +44,6 @@ func AuthenticationMiddleware(services services.Services, redis redis.Conn) gin.
 
 		// If it doesn't exist in Redis, we remove it
 		if err != nil || existing == 0 {
-			fmt.Println("bad 2")
 			// Instead of a 403 abort, we just remove this invalid session cookie
 			//c.AbortWithStatus(http.StatusForbidden)
 			http.SetCookie(c.Writer, &http.Cookie{Name: "session", Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
@@ -59,7 +55,6 @@ func AuthenticationMiddleware(services services.Services, redis redis.Conn) gin.
 		user, err := services.Eva().GetUser(c, &eva.GetUserRequest{Id: claims.Id})
 
 		if err != nil {
-			fmt.Println("bad 3")
 			// No user - we just remove this token from our set
 			// c.AbortWithStatus(http.StatusForbidden)
 			http.SetCookie(c.Writer, &http.Cookie{Name: "session", Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
