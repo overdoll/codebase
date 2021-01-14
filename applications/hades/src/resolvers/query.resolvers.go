@@ -6,6 +6,7 @@ package resolvers
 import (
 	"context"
 	"net/http"
+
 	eva "project01101000/codebase/applications/eva/proto"
 	gen "project01101000/codebase/applications/hades/src"
 	"project01101000/codebase/applications/hades/src/helpers"
@@ -131,7 +132,9 @@ func (r *queryResolver) Authentication(ctx context.Context) (*models.Authenticat
 
 	// Check to make sure we didn't get an error, and our cookie isn't expired
 	if err != nil {
-		return nil, err
+		// Cookie doesn't exist, remove it
+		http.SetCookie(gc.Writer, &http.Cookie{Name: OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
+		return &models.Authentication{User: nil, Cookie: nil}, nil
 	}
 
 	cookie := &models.Cookie{

@@ -1,14 +1,8 @@
 {
   "9fa210c33c02dede7049bc27965528c5": "mutation RegisterMutation(\n  $data: RegisterInput!\n) {\n  register(data: $data)\n}\n",
-  "8538b19af5ba7b6cb6f0169979a9ff45": "query RootQuery {\n  authentication {\n    user {\n      username\n    }\n    cookie {\n      redeemed\n      registered\n      sameSession\n    }\n  }\n}\n",
-  "baeb01655c5e1818c7a116ad2e2353f9": "mutation JoinMutation(\n  $data: AuthenticationInput!\n) {\n  authenticate(data: $data)\n}\n",
-  "681b8d7958c1231ee10b34b7b921278f": "subscription LobbySubscription {\n  authListener {\n    sameSession\n    cookie {\n      registered\n    }\n  }\n}\n",
   "cfa55e171caaf100d02a5c3f65c631b0": "query TokenQuery(\n  $cookie: String!\n) {\n  redeemCookie(cookie: $cookie) {\n    sameSession\n    registered\n    session\n  }\n}\n",
-  "9b7970fc56affa255f441b8681c82d38": "query RootQuery {\n  authentication {\n    ...JoinFragment\n  }\n}\n\nfragment JoinFragment on Authentication {\n  user {\n    username\n  }\n  cookie {\n    redeemed\n    registered\n    sameSession\n  }\n}\n",
-  "42ea912912b7085e621f5dc2f306b7a3": "query RootQuery {\n  authentication {\n    ...RootFragment\n    ...JoinFragment\n  }\n}\n\nfragment JoinFragment on Authentication {\n  cookie {\n    redeemed\n    registered\n    sameSession\n  }\n}\n\nfragment RootFragment on Authentication {\n  user {\n    username\n  }\n}\n",
-  "d4ea5f15ff25e8094612cc73aec36391": "query RootQuery {\n  authentication {\n    ...RootUser\n    ...JoinFragment\n  }\n}\n\nfragment JoinFragment on Authentication {\n  cookie {\n    redeemed\n    registered\n    sameSession\n  }\n}\n\nfragment RootUser on Authentication {\n  user {\n    username\n  }\n}\n",
-  "c4b886c1b25a129f86a8fb8cfd427ded": "query RootQuery {\n  authentication {\n    ...RootData\n  }\n}\n\nfragment RootData on Authentication {\n  ...RootUser\n}\n\nfragment RootUser on Authentication {\n  user {\n    username\n  }\n}\n",
-  "016cf643e8e3b05878c9de228a4e0233": "query RootQuery {\n  authentication {\n    ...RootUser\n  }\n}\n\nfragment RootUser on Authentication {\n  user {\n    username\n  }\n}\n",
-  "756ffab91c20e135ba7627f296cc46cc": "query RootQuery {\n  authentication {\n    user {\n      username\n    }\n    ...JoinFragment\n  }\n}\n\nfragment JoinFragment on Authentication {\n  cookie {\n    redeemed\n    registered\n    sameSession\n  }\n}\n",
-  "fe716f6686c2e2093af181022fb2b2b8": "query RootQuery {\n  authentication {\n    user {\n      username\n    }\n    ...JoinFragment\n  }\n}\n\nfragment JoinFragment on Authentication {\n  cookie {\n    redeemed\n    registered\n    sameSession\n    email\n  }\n}\n"
+  "fe716f6686c2e2093af181022fb2b2b8": "query RootQuery {\n  authentication {\n    user {\n      username\n    }\n    ...JoinFragment\n  }\n}\n\nfragment JoinFragment on Authentication {\n  cookie {\n    redeemed\n    registered\n    sameSession\n    email\n  }\n}\n",
+  "baeb01655c5e1818c7a116ad2e2353f9": "mutation JoinMutation(\n  $data: AuthenticationInput!\n) {\n  authenticate(data: $data)\n}\n",
+  "90f66151793c514fcbbc647a644bec16": "mutation LobbyMutation {\n  authEmail\n}\n",
+  "681b8d7958c1231ee10b34b7b921278f": "subscription LobbySubscription {\n  authListener {\n    sameSession\n    cookie {\n      registered\n    }\n  }\n}\n"
 }

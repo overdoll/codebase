@@ -18,14 +18,6 @@ const routes = [
       };
     },
     routes: [
-      // 404 route
-      {
-        path: '*',
-        component: JSResource('Empty', () =>
-          import('./components/routes/empty/Empty'),
-        ),
-        prepare: () => {},
-      },
       {
         path: '/join',
         exact: true,
@@ -52,6 +44,13 @@ const routes = [
             ),
           };
         },
+      },
+      {
+        path: '*',
+        component: JSResource('Empty', () =>
+          import('./components/routes/empty/Empty'),
+        ),
+        prepare: () => {},
       },
     ],
   },

@@ -27,6 +27,7 @@ type Cookie {
 type Mutation {
   authenticate(data: AuthenticationInput): Boolean!
   register(data: RegisterInput): Boolean!
+  authEmail: Boolean!
   logout: Boolean!
 }
 
