@@ -1,4 +1,3 @@
-import { createBrowserHistory } from 'history';
 import { matchRoutes } from 'react-router-config';
 
 /**

@@ -1,6 +1,6 @@
-directive @validation(rules: [String!]!) on INPUT_FIELD_DEFINITION
-
 directive @auth on FIELD_DEFINITION
+
+directive @validation(rules: [String!]!) on INPUT_FIELD_DEFINITION
 
 type Authentication {
   cookie: Cookie
@@ -21,6 +21,7 @@ type Cookie {
   registered: Boolean!
   redeemed: Boolean!
   session: String!
+  email: String!
 }
 
 type Mutation {

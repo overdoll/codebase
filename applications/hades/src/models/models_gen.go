@@ -21,6 +21,7 @@ type Cookie struct {
 	Registered  bool   `json:"registered"`
 	Redeemed    bool   `json:"redeemed"`
 	Session     string `json:"session"`
+	Email       string `json:"email"`
 }
 
 type RegisterInput struct {

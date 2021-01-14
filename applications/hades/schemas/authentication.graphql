@@ -3,6 +3,7 @@ type Cookie {
   registered: Boolean!
   redeemed: Boolean!
   session: String!
+  email: String!
 }
 type User {
   username: String!

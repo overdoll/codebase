@@ -9,5 +9,6 @@
   "d4ea5f15ff25e8094612cc73aec36391": "query RootQuery {\n  authentication {\n    ...RootUser\n    ...JoinFragment\n  }\n}\n\nfragment JoinFragment on Authentication {\n  cookie {\n    redeemed\n    registered\n    sameSession\n  }\n}\n\nfragment RootUser on Authentication {\n  user {\n    username\n  }\n}\n",
   "c4b886c1b25a129f86a8fb8cfd427ded": "query RootQuery {\n  authentication {\n    ...RootData\n  }\n}\n\nfragment RootData on Authentication {\n  ...RootUser\n}\n\nfragment RootUser on Authentication {\n  user {\n    username\n  }\n}\n",
   "016cf643e8e3b05878c9de228a4e0233": "query RootQuery {\n  authentication {\n    ...RootUser\n  }\n}\n\nfragment RootUser on Authentication {\n  user {\n    username\n  }\n}\n",
-  "756ffab91c20e135ba7627f296cc46cc": "query RootQuery {\n  authentication {\n    user {\n      username\n    }\n    ...JoinFragment\n  }\n}\n\nfragment JoinFragment on Authentication {\n  cookie {\n    redeemed\n    registered\n    sameSession\n  }\n}\n"
+  "756ffab91c20e135ba7627f296cc46cc": "query RootQuery {\n  authentication {\n    user {\n      username\n    }\n    ...JoinFragment\n  }\n}\n\nfragment JoinFragment on Authentication {\n  cookie {\n    redeemed\n    registered\n    sameSession\n  }\n}\n",
+  "fe716f6686c2e2093af181022fb2b2b8": "query RootQuery {\n  authentication {\n    user {\n      username\n    }\n    ...JoinFragment\n  }\n}\n\nfragment JoinFragment on Authentication {\n  cookie {\n    redeemed\n    registered\n    sameSession\n    email\n  }\n}\n"
 }

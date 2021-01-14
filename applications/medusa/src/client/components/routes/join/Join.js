@@ -19,6 +19,7 @@ const RootFragment = graphql`
       redeemed
       registered
       sameSession
+      email
     }
   }
 `;
@@ -61,7 +62,7 @@ export default function Join(props) {
         setWaiting(true);
       },
       onError(data) {
-        notify.error('testasdasdasd');
+        notify.error('error with joining!');
       },
     });
   };
@@ -79,11 +80,21 @@ export default function Join(props) {
       !emptyAuthCookie &&
       !currentData.cookie.redeemed)
   ) {
-    return <Lobby email={email} onReceive={changeAuth} />;
+    return (
+      <Lobby
+        // Use auth cookie's email as backup, since it may not be here after a refresh
+        email={!emptyAuthCookie ? currentData.cookie.email : email}
+        onReceive={changeAuth}
+      />
+    );
   }
 
   // We already have auth cookie data, and it's been redeemed. We want the user to register
-  if (!emptyAuthCookie && currentData.cookie.redeemed) {
+  if (
+    !emptyAuthCookie &&
+    currentData.cookie.redeemed &&
+    !currentData.cookie.registered
+  ) {
     return <Register />;
   }
 

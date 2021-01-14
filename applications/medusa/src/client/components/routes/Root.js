@@ -22,8 +22,7 @@ export default function Root({ children, prepared }) {
 
   // TODO: check here to make sure that our user is allowed to be in this route. for now if the user exists, return null
   if (rootQuery.authentication.user !== null) {
-    console.log(rootQuery.authentication.user);
-    return null;
+    // return null;
   }
 
   return (

@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 756ffab91c20e135ba7627f296cc46cc
+ * @relayHash fe716f6686c2e2093af181022fb2b2b8
  */
 
 /* eslint-disable */
@@ -41,6 +41,7 @@ fragment JoinFragment on Authentication {
     redeemed
     registered
     sameSession
+    email
   }
 }
 */
@@ -135,6 +136,13 @@ return {
                 "kind": "ScalarField",
                 "name": "sameSession",
                 "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "email",
+                "storageKey": null
               }
             ],
             "storageKey": null
@@ -145,7 +153,7 @@ return {
     ]
   },
   "params": {
-    "id": "756ffab91c20e135ba7627f296cc46cc",
+    "id": "fe716f6686c2e2093af181022fb2b2b8",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",

@@ -16,6 +16,7 @@ export type JoinFragment = {|
     +redeemed: boolean,
     +registered: boolean,
     +sameSession: boolean,
+    +email: string,
   |},
   +$refType: JoinFragment$ref,
 |};
@@ -62,6 +63,13 @@ const node/*: ReaderFragment*/ = {
           "kind": "ScalarField",
           "name": "sameSession",
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "email",
+          "storageKey": null
         }
       ],
       "storageKey": null
@@ -71,6 +79,6 @@ const node/*: ReaderFragment*/ = {
   "abstractKey": null
 };
 // prettier-ignore
-(node/*: any*/).hash = 'c44317f1cbcb79625b51051addf930c6';
+(node/*: any*/).hash = '2131db0e895b4149dd09217d251f274d';
 
 module.exports = node;
