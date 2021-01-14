@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash fe716f6686c2e2093af181022fb2b2b8
+ * @relayHash 6b85f710fe7f06344d187e00cc6d00fc
  */
 
 /* eslint-disable */
@@ -40,7 +40,6 @@ fragment JoinFragment on Authentication {
   cookie {
     redeemed
     registered
-    sameSession
     email
   }
 }
@@ -134,13 +133,6 @@ return {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "sameSession",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
                 "name": "email",
                 "storageKey": null
               }
@@ -153,7 +145,7 @@ return {
     ]
   },
   "params": {
-    "id": "fe716f6686c2e2093af181022fb2b2b8",
+    "id": "6b85f710fe7f06344d187e00cc6d00fc",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",

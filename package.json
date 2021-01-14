@@ -6,6 +6,7 @@
     "@emotion/react": "^11.1.4",
     "@loadable/component": "^5.14.1",
     "@loadable/server": "^5.14.0",
+    "@streamlinehq/streamline-bold": "^0.6.1",
     "axios": "^0.21.1",
     "body-parser": "^1.19.0",
     "chokidar": "^3.4.3",

@@ -2,7 +2,7 @@ import { graphql, useMutation, useFragment } from 'react-relay/hooks';
 import { useState, useContext } from 'react';
 import Register from '../../register/Register';
 import { useTranslation } from 'react-i18next';
-import { Button, Input } from '@//:modules/form';
+import { Button, Input, useForm } from '@//:modules/form';
 import { useNotify } from '@//:modules/focus';
 import Lobby from './components/Lobby';
 import { RootContext } from '../Root';
@@ -18,7 +18,6 @@ const RootFragment = graphql`
     cookie {
       redeemed
       registered
-      sameSession
       email
     }
   }
@@ -28,34 +27,33 @@ export default function Join(props) {
   const [t] = useTranslation('auth');
 
   const [commit, isInFlight] = useMutation(JoinAction);
+  const { register, handleSubmit } = useForm();
 
   // Use cookie data for this route to determine what action to perform
   const rootQuery = useContext(RootContext);
   const currentData = useFragment(RootFragment, rootQuery.authentication);
 
-  const [email, setEmail] = useState('');
-
   const notify = useNotify();
 
+  // Receiving a subscription response
   const [authInfo, setAuthInfo] = useState({ authListener: null });
 
+  // Waiting for a subscription
   const [waiting, setWaiting] = useState(false);
+
+  const [email, setEmail] = useState(null);
 
   const changeAuth = data => {
     setAuthInfo(data);
     setWaiting(false);
   };
 
-  const onChange = event => {
-    setEmail(event.target.value);
-  };
-
-  const onSubmit = event => {
-    event.preventDefault();
+  const onSubmit = val => {
+    setEmail(val.email);
     commit({
       variables: {
         data: {
-          email: email,
+          email: val.email,
         },
       },
       onCompleted(data) {
@@ -89,45 +87,31 @@ export default function Join(props) {
     );
   }
 
-  // We already have auth cookie data, and it's been redeemed. We want the user to register
-  if (
+  // User not registered - when we either receive this response from a subscription, or a page refresh
+  const subscriptionNotRegistered =
+    !emptySubscriptionResponse &&
+    authInfo.authListener.cookie.registered === false;
+
+  // Cookie was redeemed, but the user is not registered
+  const cookieRedeemedNotRegistered =
     !emptyAuthCookie &&
     currentData.cookie.redeemed &&
-    !currentData.cookie.registered
-  ) {
-    return <Register />;
-  }
+    !currentData.cookie.registered;
 
-  // We have received a subscription update - we want to handle the logic here based
-  // on the response we get
-  if (!emptySubscriptionResponse) {
-    const { sameSession, cookie } = authInfo.authListener;
-
-    // Cookie was redeemed in the same session,
-    if (sameSession) {
-      return 'check opened browser window, or refresh page';
-    }
-
-    // Cookie was not redeemed in the same session, and user is registered - refresh to generate a session token
-    if (cookie.registered) {
-      window.location.reload();
-      return 'refreshing';
-    }
-
-    // User not registered - prompt a registration
+  // We already have auth cookie data, and it's been redeemed. We want the user to register
+  if (subscriptionNotRegistered || cookieRedeemedNotRegistered) {
     return <Register />;
   }
 
   // Ask user to authenticate
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Input
+        name="email"
         sx={{ variant: 'forms.input.primary' }}
         disabled={isInFlight}
-        required
-        type="text"
-        value={email}
-        onChange={onChange}
+        register={register}
+        validation={{ required: true }}
         placeholder={t('authenticate.input')}
       />
       <Button

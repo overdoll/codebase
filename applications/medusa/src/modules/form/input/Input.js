@@ -1,8 +1,9 @@
 import { Input as ThemeUIInput } from 'theme-ui';
 
-const Input = props => (
+const Input = ({ sx, register, validation, ...rest }) => (
   <ThemeUIInput
-    {...props}
+    {...rest}
+    ref={register(validation)}
     sx={{
       pl: 3,
       pr: 3,
@@ -10,7 +11,7 @@ const Input = props => (
       fontWeight: 'body',
       fontFamily: 'body',
       borderRadius: 'defaults',
-      ...props.sx,
+      ...sx,
     }}
   />
 );

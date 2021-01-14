@@ -21,11 +21,23 @@ const LobbyEmail = graphql`
 `;
 
 export default function Lobby({ onReceive, email }) {
+  // Received a subscription response
+  const onNext = response => {
+    const { sameSession, cookie } = response.authListener;
+
+    // If the cookie was redeemed in the same browser session, or the user is registered, refresh the page
+    if (sameSession || cookie.registered) {
+      window.location.reload();
+    } else {
+      onReceive(response);
+    }
+  };
+
   const config = useMemo(
     () => ({
       variables: {},
       subscription: LobbySubscription,
-      onNext: response => onReceive(response),
+      onNext,
     }),
     [],
   );

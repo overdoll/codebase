@@ -1,6 +1,5 @@
 import { graphql, useMutation } from 'react-relay/hooks';
-import { useState } from 'react';
-import { Button, Input } from '@//:modules/form';
+import { Button, Input, useForm } from '@//:modules/form';
 
 const RegisterMutation = graphql`
   mutation RegisterMutation($data: RegisterInput!) {
@@ -10,24 +9,17 @@ const RegisterMutation = graphql`
 
 export default function Register(props) {
   const [commit, isInFlight] = useMutation(RegisterMutation);
+  const { register, handleSubmit } = useForm();
 
-  const [username, setUserName] = useState('');
-
-  const onChange = event => {
-    setUserName(event.target.value);
-  };
-
-  const onSubmit = async event => {
-    event.preventDefault();
+  const onSubmit = async val => {
     await commit({
       variables: {
         data: {
-          username: username,
+          username: val.username,
         },
       },
       onCompleted(data) {
         console.log(data);
-        console.log('registered');
       },
       onError(data) {
         console.log(data);
@@ -36,14 +28,13 @@ export default function Register(props) {
   };
 
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Input
         sx={{ variant: 'forms.input.primary' }}
+        register={register}
+        validation={{ required: true }}
         disabled={isInFlight}
-        required
         type="text"
-        value={username}
-        onChange={onChange}
       />
       <Button
         sx={{ width: '100%', variant: 'primary', mt: 2 }}

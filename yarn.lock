@@ -908,7 +908,7 @@
     "@babel/helper-create-regexp-features-plugin" "^7.12.1"
     "@babel/helper-plugin-utils" "^7.10.4"
 
-"@babel/polyfill@^7.12.1":
+"@babel/polyfill@^7.12.1", "@babel/polyfill@^7.8.7":
   version "7.12.1"
   resolved "https://registry.yarnpkg.com/@babel/polyfill/-/polyfill-7.12.1.tgz#1f2d6371d1261bbd961f3c5d5909150e12d0bd96"
   integrity sha512-X0pi0V6gxLi6lFZpGmeNa4zxtwEmCs42isWLNjZZDE0Y8yVfgu0T2OAHlzBbdYlqbW/YXVvoBHpATEM+goCj8g==
@@ -1865,6 +1865,13 @@
   version "0.14.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.14.0.tgz#9fb3a3cf3132328151f353de4632e01e52102bea"
   integrity sha512-9NET910DNaIPngYnLLPeg+Ogzqsi9uM4mSboU5y6p8S5DzMTVEsJZrawi+BoDNUVBa2DhJqQYUFvMDfgU062LQ==
+
+"@streamlinehq/streamline-bold@^0.6.1":
+  version "0.6.1"
+  resolved "https://npm.cloudsmith.io/streamlinehq/streamline-icons/@streamlinehq/streamline-bold/-/0.6.1/streamline-bold-0.6.1.tgz#f293c69fb6f4a70d695c909485781114d03d9d11"
+  integrity sha512-DaD1FmzJoeVMxmgpXqt/Ebad5uUpXcCpSx3/DKyYjj0lBiluZsRPvhTjiJJ6xkn4PuJRFvTr/8fiaWKcLlLZaA==
+  dependencies:
+    "@babel/polyfill" "^7.8.7"
 
 "@styled-system/background@^5.1.2":
   version "5.1.2"
