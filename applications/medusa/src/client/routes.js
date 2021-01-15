@@ -1,5 +1,4 @@
 import JSResource from '@//:modules/utilities/JSResource';
-import { loadQuery } from 'react-relay/hooks';
 
 const routes = [
   {

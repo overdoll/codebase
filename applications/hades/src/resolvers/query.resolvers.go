@@ -7,6 +7,7 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/streadway/amqp"
 	eva "project01101000/codebase/applications/eva/proto"
 	gen "project01101000/codebase/applications/hades/src"
 	"project01101000/codebase/applications/hades/src/helpers"
@@ -50,8 +51,7 @@ func (r *queryResolver) RedeemCookie(ctx context.Context, cookie string) (*model
 
 			redeemedCookie.SameSession = false
 
-			r.redis.Send("PUBLISH", "otp"+getRedeemedCookie.Cookie, "ANOTHER_SESSION")
-			r.redis.Flush()
+			r.rabbit.Publish("otp", getRedeemedCookie.Cookie, []byte(`ANOTHER_SESSION`), amqp.Transient)
 
 			// No cookie exists, we want to give a different SameSession response
 			return redeemedCookie, nil
@@ -76,8 +76,7 @@ func (r *queryResolver) RedeemCookie(ctx context.Context, cookie string) (*model
 
 	// User doesn't exist, we ask to register
 	if getRegisteredUser.Username == "" {
-		r.redis.Send("PUBLISH", "otp"+currentCookie.Value, "SAME_SESSION")
-		r.redis.Flush()
+		r.rabbit.Publish("otp", currentCookie.Value, []byte(`SAME_SESSION`), amqp.Transient)
 		return redeemedCookie, nil
 	}
 
@@ -98,8 +97,7 @@ func (r *queryResolver) RedeemCookie(ctx context.Context, cookie string) (*model
 		return nil, err
 	}
 
-	r.redis.Send("PUBLISH", "otp"+currentCookie.Value, "SAME_SESSION")
-	r.redis.Flush()
+	r.rabbit.Publish("otp", currentCookie.Value, []byte(`SAME_SESSION`), amqp.Transient)
 
 	return redeemedCookie, nil
 }

@@ -7,14 +7,15 @@ package resolvers
 import (
 	"github.com/gomodule/redigo/redis"
 	"project01101000/codebase/applications/hades/src/services"
+	"project01101000/codebase/libraries/rabbit"
 )
 
 type Resolver struct {
-	services     services.Services
-	redis        redis.Conn
-	redisPB      redis.PubSubConn
+	services services.Services
+	redis    redis.Conn
+	rabbit   rabbit.Conn
 }
 
-func NewResolver(s services.Services, redis redis.Conn, redisPub redis.PubSubConn) *Resolver {
-	return &Resolver{services: s, redis: redis, redisPB: redisPub}
+func NewResolver(s services.Services, redis redis.Conn, rabbitSvc rabbit.Conn) *Resolver {
+	return &Resolver{services: s, redis: redis, rabbit: rabbitSvc}
 }

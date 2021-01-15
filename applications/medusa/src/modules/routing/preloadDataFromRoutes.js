@@ -3,7 +3,7 @@ import { fetchQuery } from 'react-relay/hooks';
 
 /**
  * A custom function, which, when passed our routes, will take each route's queries, and preload
- * them for us, so that we can use them in our client application.
+ * them for us, so that we can pass them down to our HTML file, while keeping our whole application client-side friendly
  *
  * @param routes
  * @param location
@@ -29,7 +29,8 @@ export default async function preloadDataFromRoutes(
       const { query, variables, options } = queriesToPrepare[queryKeys[ii]];
 
       // If one of our queries errors out
-      // TODO: could we insert the errors into the store and pass them down to the client in the future?
+      // TODO: could we insert the errors into the store and pass them down to the client in the future? right now we do 2 calls,
+      // if it fails, it does one on the server, and catches it here. Then, another one is done in the client, and is caught by the error boundary
       try {
         await fetchQuery(
           relayEnvironment,

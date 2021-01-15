@@ -6,12 +6,11 @@ package resolvers
 import (
 	"context"
 	"net/http"
+
 	eva "project01101000/codebase/applications/eva/proto"
 	gen "project01101000/codebase/applications/hades/src"
 	"project01101000/codebase/applications/hades/src/helpers"
 	"project01101000/codebase/applications/hades/src/models"
-
-	"github.com/gomodule/redigo/redis"
 )
 
 func (r *subscriptionResolver) AuthListener(ctx context.Context) (<-chan *models.AuthListener, error) {
@@ -46,30 +45,50 @@ func (r *subscriptionResolver) AuthListener(ctx context.Context) (<-chan *models
 
 	cookie := &models.Cookie{Registered: getRegisteredUser.Username != "", Redeemed: getAuthenticationCookie.Redeemed, SameSession: true}
 
+	// If OTP queue doesn't exist
+	_, err = r.rabbit.Channel.QueueDeclare("otp", true, false, false, false, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	// bind the queue to the routing key
+	err = r.rabbit.Channel.QueueBind("otp", getAuthenticationCookie.Cookie, "otp", false, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	// Consume RabbitMQ OTP keys
+	msgs, err := r.rabbit.Channel.Consume(
+		"otp", // queue
+		"",    // consumer
+		true, // auto-ack
+		false, // exclusive
+		false, // no-local
+		false, // no-wait
+		nil,   // args
+	)
+	if err != nil {
+		return nil, err
+	}
+
 	go func() {
-		r.redisPB.Subscribe("otp" + getAuthenticationCookie.Cookie)
 
-		for {
-			switch v := r.redisPB.Receive().(type) {
-			case redis.Message:
+		for msg := range msgs {
 
-				if string(v.Data) == "SAME_SESSION" {
-					channel <- &models.AuthListener{SameSession: true, Cookie: cookie}
-					return
+			switch msg.Body {
 
-				} else if string(v.Data) == "ANOTHER_SESSION" {
-
-					// If user exists, we can't set auth cookies here.
-					// Because we can't set a cookie in websocket connections, we force the browser to refresh the current page,
-					// and our root function will see that the cookie has been redeemed, and will log the user in
-					channel <- &models.AuthListener{Cookie: cookie, SameSession: false}
-					return
-				}
-
-			case error:
+			case []byte("SAME_SESSION"):
+				channel <- &models.AuthListener{SameSession: true, Cookie: cookie}
+				return
+			case []byte("ANOTHER_SESSION"):
+				// If user exists, we can't set auth cookies here.
+				// Because we can't set a cookie in websocket connections, we force the browser to refresh the current page,
+				// and our root function will see that the cookie has been redeemed, and will log the user in
+				channel <- &models.AuthListener{Cookie: cookie, SameSession: false}
 				return
 			}
 		}
+
 	}()
 
 	return channel, nil

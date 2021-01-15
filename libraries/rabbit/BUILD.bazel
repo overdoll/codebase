@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "conn.go",
+        "consume.go",
+        "publish.go",
+    ],
+    importpath = "project01101000/codebase/libraries/rabbit",
+    visibility = ["//libraries:__subpackages__"],
+    deps = ["@com_github_streadway_amqp//:go_default_library"],
+)

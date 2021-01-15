@@ -24,6 +24,7 @@ import (
 	"time"
 
 	"github.com/99designs/gqlgen/graphql/handler"
+	"project01101000/codebase/libraries/rabbit"
 )
 
 func init() {
@@ -50,24 +51,21 @@ func main() {
 	svcs, err := services.NewServicesKeeper(services.ServicesConfig{
 		EvaSvc: evaSvc,
 	})
-
 	if err != nil {
 		log.Fatalf("Failed to create grpc api holder: %s", err)
 	}
 
-	redisSvc, err := redis.Dial("tcp", os.Getenv("REDIS_URL")+":6379", redis.DialDatabase(1))
-
+	// Redis
+	redisSvc, err := redis.Dial("tcp", os.Getenv("REDIS_URL"), redis.DialDatabase(1))
 	if err != nil {
 		log.Fatalf("Failed to connect to redis: %s", err)
 	}
 
-	redisSvc2, err := redis.Dial("tcp", os.Getenv("REDIS_URL")+":6379", redis.DialDatabase(1))
-
+	// RabbitMQ
+	rabbitSvc, err := rabbit.GetConn(os.Getenv("RABBITMQ_URL"))
 	if err != nil {
-		log.Fatalf("Failed to connect to redis: %s", err)
+		panic(err)
 	}
-
-	redisPubSub := redis.PubSubConn{Conn: redisSvc2}
 
 	router := gin.Default()
 
@@ -83,10 +81,14 @@ func main() {
 	// Add user to context, if session cookie exists
 	router.Use(middleware.AuthenticationMiddleware(svcs, redisSvc))
 
+	// APQ cache
 	cache, err := NewCache()
 
+	// Create resolver, with services
+	gqlResolver := resolvers.NewResolver(svcs, redisSvc, rabbitSvc)
+
 	// Create graphApi handlers - GET and POST
-	gqlHandler := HandleGraphQL(svcs, redisSvc, redisPubSub, cache)
+	gqlHandler := HandleGraphQL(gqlResolver, cache)
 
 	// We only do CSRF middleware on here, because it doesn't work on WS
 	router.POST("/graphql", middleware.CSRFCheck(), gqlHandler)
@@ -122,11 +124,11 @@ func main() {
 }
 
 // HandleGraphQL - handle graphQL
-func HandleGraphQL(services services.Services, redisSvc redis.Conn, redisPubSub redis.PubSubConn, cache *Cache) gin.HandlerFunc {
+func HandleGraphQL(resolver gen.ResolverRoot, cache *Cache) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 		graphAPIHandler := handler.New(gen.NewExecutableSchema(gen.Config{
-			Resolvers:  resolvers.NewResolver(services, redisSvc, redisPubSub),
+			Resolvers:  resolver,
 			Directives: directives.NewDirectives(),
 		}))
 
