@@ -1,4 +1,5 @@
 import { matchRoutes } from 'react-router-config';
+import { loadQuery } from 'react-relay/hooks';
 
 /**
  * A custom router built from the same primitives as react-router. Each object in `routes`
@@ -88,11 +89,37 @@ function matchRoute(routes, location, relayEnvironment) {
 function prepareMatches(matches, relayEnvironment) {
   return matches.map(match => {
     const { route, match: matchData } = match;
-    const prepared = route.prepare(matchData.params, relayEnvironment);
+
+    const prepared = convertPreparedToQueries(
+      relayEnvironment,
+      route.prepare,
+      matchData.params,
+    );
+
     const Component = route.component.get();
     if (Component == null) {
       route.component.load(); // eagerly load
     }
     return { component: route.component, prepared, routeData: matchData };
   });
+}
+
+/**
+ *
+ * Converts our "prepared" object into an actual routing key
+ *
+ */
+function convertPreparedToQueries(relayEnvironment, prepare, params) {
+  const prepared = {};
+
+  const queriesToPrepare = prepare(params);
+
+  Object.keys(queriesToPrepare).forEach(queryKey => {
+    const { query, variables, options } = queriesToPrepare[queryKey];
+
+    // run a loadQuery for each of our queries
+    prepared[queryKey] = loadQuery(relayEnvironment, query, variables, options);
+  });
+
+  return prepared;
 }

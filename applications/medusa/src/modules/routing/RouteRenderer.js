@@ -18,7 +18,7 @@ const SUSPENSE_CONFIG = { timeoutMs: 2000 };
  *
  * We want to also skip component rendering on the server-side
  */
-export default function RouterRenderer({ preloadQueries = false }) {
+export default function RouterRenderer() {
   // Access the router
   const router = useContext(RoutingContext);
   // Improve the route transition UX by delaying transitions: show the previous route entry
@@ -65,7 +65,7 @@ export default function RouterRenderer({ preloadQueries = false }) {
   // ```
   // <RouteComponent
   //   component={entry[0].component}
-  //   prepared={entrry[0].prepared}>
+  //   prepared={entry[0].prepared}>
   //   <RouteComponent
   //     component={entry[1].component}
   //     prepared={entry[1].prepared}>
@@ -84,7 +84,6 @@ export default function RouterRenderer({ preloadQueries = false }) {
   // (though we could probably just pass null children to it)
   let routeComponent = (
     <RouteComponent
-      preload={preloadQueries}
       component={firstItem.component}
       prepared={firstItem.prepared}
       routeData={firstItem.routeData}
@@ -94,7 +93,6 @@ export default function RouterRenderer({ preloadQueries = false }) {
     const nextItem = reversedItems[ii];
     routeComponent = (
       <RouteComponent
-        preload={preloadQueries}
         component={nextItem.component}
         prepared={nextItem.prepared}
         routeData={nextItem.routeData}
@@ -130,55 +128,11 @@ export default function RouterRenderer({ preloadQueries = false }) {
  * our ErrorBoundary/Suspense components, so we have to ensure that the suspend/error happens
  * in a child component.
  */
-function RouteComponent({
-  children,
-  routeData,
-  component,
-  prepared,
-  preload = false,
-}) {
-  if (preload) {
-    return <PreloadQueries prepared={prepared}>{children}</PreloadQueries>;
-  }
-
-  // We want to fix all prepared objects, since the query reference is only needed when using the server-side
-  const queryKeysToPrepare = Object.keys(prepared);
-
-  const newPrepared = {};
-
-  queryKeysToPrepare.forEach(key => {
-    newPrepared[key] = prepared[key][1];
-  });
-
+function RouteComponent({ children, routeData, component, prepared }) {
   const Component = component.read();
-
   return (
-    <Component routeData={routeData} prepared={newPrepared}>
+    <Component routeData={routeData} prepared={prepared}>
       {children}
     </Component>
   );
-}
-
-/**
- * PreloadQueries - A component which will just preload the route's loadQuery, instead of rendering the component
- *
- * This makes it easier to separate between 'client-only' and 'server-only' - what we really care about is having an instant
- * page load without loading indicators
- *
- * TODO: A hacky function - may be replaced with something much better in the future that will check if the loadQuery was loaded
- *
- */
-function PreloadQueries({ prepared, children }) {
-  const queryKeysToPrepare = Object.keys(prepared);
-
-  // Because relay will "suspend" before loading this, we can ensure that the data will be loaded
-  // before our server completes the request
-  queryKeysToPrepare.forEach(key => {
-    const [query, loadQuery] = prepared[key];
-
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    usePreloadedQuery(query, loadQuery);
-  });
-
-  return children;
 }
