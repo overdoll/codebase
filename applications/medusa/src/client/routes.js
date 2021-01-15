@@ -4,20 +4,16 @@ import { loadQuery } from 'react-relay/hooks';
 const routes = [
   {
     component: JSResource('Root', () => import('./components/routes/Root')),
-    prepare: (params, RelayEnvironment) => {
+    prepare: params => {
       const RootQuery = require('./components/routes/__generated__/RootQuery.graphql');
       return {
-        stateQuery: [
-          RootQuery,
-          loadQuery(
-            RelayEnvironment,
-            RootQuery,
-            {},
-            {
-              fetchPolicy: 'store-or-network',
-            },
-          ),
-        ],
+        stateQuery: {
+          query: RootQuery,
+          variables: {},
+          options: {
+            fetchPolicy: 'store-or-network',
+          },
+        },
       };
     },
     routes: [
@@ -27,27 +23,23 @@ const routes = [
         component: JSResource('JoinRoot', () =>
           import('./components/routes/join/Join'),
         ),
-        prepare: () => ({}),
+        prepare: () => null,
       },
       {
         path: '/token/:id',
         component: JSResource('TokenRoot', () =>
           import('./components/routes/token/Token'),
         ),
-        prepare: (params, RelayEnvironment) => {
+        prepare: params => {
           const TokenQuery = require('./components/routes/token/__generated__/TokenQuery.graphql');
           return {
-            tokenQuery: [
-              TokenQuery,
-              loadQuery(
-                RelayEnvironment,
-                TokenQuery,
-                { cookie: params.id },
-                {
-                  fetchPolicy: 'store-or-network',
-                },
-              ),
-            ],
+            tokenQuery: {
+              query: TokenQuery,
+              variables: { cookie: params.id },
+              options: {
+                fetchPolicy: 'store-or-network',
+              },
+            },
           };
         },
       },
@@ -56,7 +48,7 @@ const routes = [
         component: JSResource('Empty', () =>
           import('./components/routes/empty/Empty'),
         ),
-        prepare: () => ({}),
+        prepare: () => null,
       },
     ],
   },

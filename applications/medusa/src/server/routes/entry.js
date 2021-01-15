@@ -1,15 +1,10 @@
 import { ChunkExtractor } from '@loadable/server';
 import axios from 'axios';
 import { Environment, Network, RecordSource, Store } from 'relay-runtime';
-import createRouter from '@//:modules/routing/createRouter';
 import routes from '../../client/routes';
-import createMockHistory from '@//:modules/routing/createMockHistory';
 import path from 'path';
 import serialize from 'serialize-javascript';
-import ssrPrepass from 'react-ssr-prepass';
-import { RelayEnvironmentProvider } from 'react-relay/hooks';
-import RoutingContext from '@//:modules/routing/RoutingContext';
-import RouterRenderer from '@//:modules/routing/RouteRenderer';
+import preloadDataFromRoutes from '@//:modules/routing/preloadDataFromRoutes';
 
 const entry = async (req, res, next) => {
   try {
@@ -58,18 +53,6 @@ const entry = async (req, res, next) => {
         forwardCookies = [...forwardCookies, ...response.headers['set-cookie']];
       }
 
-      // When we encounter a network error in our server-side rendering,
-      // the Prepass will bailout on that component, and the network call will be done by the client.
-      // This allows us to gracefully handle errors with errorBoundaries on the client. However, this also means the API call is
-      // made twice: once on the server, and once on the client when the client loads the component. This is an okay tradeoff,
-      // because otherwise the server will throw a 500 error, which is not good for user experience. We also can't directly pass down
-      // 'throw new Error' into the client from the server.
-      if (Array.isArray(response.data.errors)) {
-        throw new Error(JSON.stringify(response.data.errors));
-      }
-
-      console.log('loaded');
-
       return response.data;
     }
 
@@ -81,32 +64,10 @@ const entry = async (req, res, next) => {
       }),
     });
 
-    const context = {};
+    // Preload data from our routes
+    await preloadDataFromRoutes(routes, req.url, environment);
 
-    const router = createRouter(
-      routes,
-      createMockHistory({ context, location: req.url }),
-      environment,
-    );
-
-    // Set up our chunk extractor, so that we can preload our resources
-    const extractor = new ChunkExtractor({
-      statsFile: path.resolve(__dirname, 'loadable-stats.json'),
-      entrypoints: ['client'],
-    });
-
-    // Collect relay store data from our routes, so we have faster initial loading times.
-    await ssrPrepass(
-      extractor.collectChunks(
-        <RelayEnvironmentProvider environment={environment}>
-          <RoutingContext.Provider value={router.context}>
-            <RouterRenderer preloadQueries />
-          </RoutingContext.Provider>
-        </RelayEnvironmentProvider>,
-      ),
-    );
-
-    console.log('finish prepass');
+    console.log('done preloading');
 
     // Get our relay store
     const relayData = environment
@@ -138,20 +99,22 @@ const entry = async (req, res, next) => {
       initialI18nStore[l] = req.i18n.services.resourceStore.data[l];
     });
 
-    if (context.url) {
-      res.redirect(context.url);
-    } else {
-      res.render('default', {
-        title: 'Title',
-        scripts: extractor.getScriptTags(),
-        preload: extractor.getLinkTags(),
-        styles: extractor.getStyleTags(),
-        csrfToken: csrfToken,
-        relayStore: serialize(relayData),
-        i18nextStore: serialize(initialI18nStore),
-        i18nextLang: req.i18n.language,
-      });
-    }
+    // Set up our chunk extractor, so that we can preload our resources
+    const extractor = new ChunkExtractor({
+      statsFile: path.resolve(__dirname, 'loadable-stats.json'),
+      entrypoints: ['client'],
+    });
+
+    res.render('default', {
+      title: 'Title',
+      scripts: extractor.getScriptTags(),
+      preload: extractor.getLinkTags(),
+      styles: extractor.getStyleTags(),
+      csrfToken: csrfToken,
+      relayStore: serialize(relayData),
+      i18nextStore: serialize(initialI18nStore),
+      i18nextLang: req.i18n.language,
+    });
   } catch (e) {
     next(e);
   }
