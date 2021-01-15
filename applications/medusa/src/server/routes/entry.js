@@ -7,7 +7,9 @@ import createMockHistory from '@//:modules/routing/createMockHistory';
 import path from 'path';
 import serialize from 'serialize-javascript';
 import ssrPrepass from 'react-ssr-prepass';
-import App from '../../client/App';
+import { RelayEnvironmentProvider } from 'react-relay/hooks';
+import RoutingContext from '@//:modules/routing/RoutingContext';
+import RouterRenderer from '@//:modules/routing/RouteRenderer';
 
 const entry = async (req, res, next) => {
   try {
@@ -56,10 +58,17 @@ const entry = async (req, res, next) => {
         forwardCookies = [...forwardCookies, ...response.headers['set-cookie']];
       }
 
-      // TODO: handle the error properly
+      // When we encounter a network error in our server-side rendering,
+      // the Prepass will bailout on that component, and the network call will be done by the client.
+      // This allows us to gracefully handle errors with errorBoundaries on the client. However, this also means the API call is
+      // made twice: once on the server, and once on the client when the client loads the component. This is an okay tradeoff,
+      // because otherwise the server will throw a 500 error, which is not good for user experience. We also can't directly pass down
+      // 'throw new Error' into the client from the server.
       if (Array.isArray(response.data.errors)) {
-        console.log(response.data.errors);
+        throw new Error(JSON.stringify(response.data.errors));
       }
+
+      console.log('loaded');
 
       return response.data;
     }
@@ -86,16 +95,18 @@ const entry = async (req, res, next) => {
       entrypoints: ['client'],
     });
 
-    // Load all data, and then we pass it to our HTML file as data.
-    // Pages will load instantly for users without a "loading" screen, which makes for
-    // a better experience. In the future, we can also preload any routes that we want to SSR
-
-    // TODO: initial "app" is HMR-compatible, however, the router routes do not HMR. needs to be investigated.
+    // Collect relay store data from our routes, so we have faster initial loading times.
     await ssrPrepass(
       extractor.collectChunks(
-        <App router={router} environment={environment} />,
+        <RelayEnvironmentProvider environment={environment}>
+          <RoutingContext.Provider value={router.context}>
+            <RouterRenderer preloadQueries />
+          </RoutingContext.Provider>
+        </RelayEnvironmentProvider>,
       ),
     );
+
+    console.log('finish prepass');
 
     // Get our relay store
     const relayData = environment

@@ -7,14 +7,17 @@ const routes = [
     prepare: (params, RelayEnvironment) => {
       const RootQuery = require('./components/routes/__generated__/RootQuery.graphql');
       return {
-        stateQuery: loadQuery(
-          RelayEnvironment,
+        stateQuery: [
           RootQuery,
-          {},
-          {
-            fetchPolicy: 'store-or-network',
-          },
-        ),
+          loadQuery(
+            RelayEnvironment,
+            RootQuery,
+            {},
+            {
+              fetchPolicy: 'store-or-network',
+            },
+          ),
+        ],
       };
     },
     routes: [
@@ -24,7 +27,7 @@ const routes = [
         component: JSResource('JoinRoot', () =>
           import('./components/routes/join/Join'),
         ),
-        prepare: function() {},
+        prepare: () => ({}),
       },
       {
         path: '/token/:id',
@@ -34,14 +37,17 @@ const routes = [
         prepare: (params, RelayEnvironment) => {
           const TokenQuery = require('./components/routes/token/__generated__/TokenQuery.graphql');
           return {
-            tokenQuery: loadQuery(
-              RelayEnvironment,
+            tokenQuery: [
               TokenQuery,
-              { cookie: params.id },
-              {
-                fetchPolicy: 'store-or-network',
-              },
-            ),
+              loadQuery(
+                RelayEnvironment,
+                TokenQuery,
+                { cookie: params.id },
+                {
+                  fetchPolicy: 'store-or-network',
+                },
+              ),
+            ],
           };
         },
       },
@@ -50,7 +56,7 @@ const routes = [
         component: JSResource('Empty', () =>
           import('./components/routes/empty/Empty'),
         ),
-        prepare: () => {},
+        prepare: () => ({}),
       },
     ],
   },

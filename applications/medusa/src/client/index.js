@@ -1,16 +1,16 @@
 import { unstable_createRoot as createRoot } from 'react-dom';
 import { loadableReady } from '@loadable/component';
-import Client from './Client';
+import App from './App';
 
 const root = createRoot(document.getElementById('root'));
 
 loadableReady().then(() => {
-  root.render(<Client />);
+  root.render(<App />);
 });
 
 if (module.hot) {
-  module.hot.accept('./Client', () => {
-    const NextRoot = require('./Client').default;
+  module.hot.accept('./App', () => {
+    const NextRoot = require('./App').default;
     root.render(<NextRoot />);
   });
 }

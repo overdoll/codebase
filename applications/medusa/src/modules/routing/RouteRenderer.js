@@ -8,14 +8,17 @@ import {
 import RoutingContext from '@//:modules/routing/RoutingContext';
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary';
 import '@//:modules/routing/RouteRenderer.css';
+import { usePreloadedQuery } from 'react-relay/hooks';
 
 const SUSPENSE_CONFIG = { timeoutMs: 2000 };
 
 /**
  * A component that accesses the current route entry from RoutingContext and renders
  * that entry.
+ *
+ * We want to also skip component rendering on the server-side
  */
-export default function RouterRenderer() {
+export default function RouterRenderer({ preloadQueries = false }) {
   // Access the router
   const router = useContext(RoutingContext);
   // Improve the route transition UX by delaying transitions: show the previous route entry
@@ -74,11 +77,14 @@ export default function RouterRenderer() {
   // component, and iteratively construct parent components w the previous
   // value as the child of the next one:
   const reversedItems = [].concat(routeEntry.entries).reverse(); // reverse is in place, but we want a copy so concat
+
   const firstItem = reversedItems[0];
+
   // the bottom-most component is special since it will have no children
   // (though we could probably just pass null children to it)
   let routeComponent = (
     <RouteComponent
+      preload={preloadQueries}
       component={firstItem.component}
       prepared={firstItem.prepared}
       routeData={firstItem.routeData}
@@ -88,6 +94,7 @@ export default function RouterRenderer() {
     const nextItem = reversedItems[ii];
     routeComponent = (
       <RouteComponent
+        preload={preloadQueries}
         component={nextItem.component}
         prepared={nextItem.prepared}
         routeData={nextItem.routeData}
@@ -101,7 +108,7 @@ export default function RouterRenderer() {
   // Routes can suspend, so wrap in <Suspense>
   return (
     <ErrorBoundary>
-      <Suspense fallback={null}>
+      <Suspense fallback={<div>loading....</div>}>
         {/* Indicate to the user that a transition is pending, even while showing the previous UI */}
         {isPending ? (
           <div className="RouteRenderer-pending">Loading pending...</div>
@@ -123,14 +130,55 @@ export default function RouterRenderer() {
  * our ErrorBoundary/Suspense components, so we have to ensure that the suspend/error happens
  * in a child component.
  */
-function RouteComponent(props) {
-  const Component = props.component.read();
-  const { routeData, prepared } = props;
+function RouteComponent({
+  children,
+  routeData,
+  component,
+  prepared,
+  preload = false,
+}) {
+  if (preload) {
+    return <PreloadQueries prepared={prepared}>{children}</PreloadQueries>;
+  }
+
+  // We want to fix all prepared objects, since the query reference is only needed when using the server-side
+  const queryKeysToPrepare = Object.keys(prepared);
+
+  const newPrepared = {};
+
+  queryKeysToPrepare.forEach(key => {
+    newPrepared[key] = prepared[key][1];
+  });
+
+  const Component = component.read();
+
   return (
-    <Component
-      routeData={routeData}
-      prepared={prepared}
-      children={props.children}
-    />
+    <Component routeData={routeData} prepared={newPrepared}>
+      {children}
+    </Component>
   );
+}
+
+/**
+ * PreloadQueries - A component which will just preload the route's loadQuery, instead of rendering the component
+ *
+ * This makes it easier to separate between 'client-only' and 'server-only' - what we really care about is having an instant
+ * page load without loading indicators
+ *
+ * TODO: A hacky function - may be replaced with something much better in the future that will check if the loadQuery was loaded
+ *
+ */
+function PreloadQueries({ prepared, children }) {
+  const queryKeysToPrepare = Object.keys(prepared);
+
+  // Because relay will "suspend" before loading this, we can ensure that the data will be loaded
+  // before our server completes the request
+  queryKeysToPrepare.forEach(key => {
+    const [query, loadQuery] = prepared[key];
+
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    usePreloadedQuery(query, loadQuery);
+  });
+
+  return children;
 }

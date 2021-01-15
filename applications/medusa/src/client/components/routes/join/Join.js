@@ -23,15 +23,14 @@ const RootFragment = graphql`
   }
 `;
 
-export default function Join(props) {
+export default function Join() {
+  const rootQuery = useContext(RootContext);
+  const data = useFragment(RootFragment, rootQuery.authentication);
+
   const [t] = useTranslation('auth');
 
   const [commit, isInFlight] = useMutation(JoinAction);
   const { register, handleSubmit } = useForm();
-
-  // Use cookie data for this route to determine what action to perform
-  const rootQuery = useContext(RootContext);
-  const currentData = useFragment(RootFragment, rootQuery.authentication);
 
   const notify = useNotify();
 
@@ -67,21 +66,19 @@ export default function Join(props) {
 
   // Checks for various types of states
   const emptySubscriptionResponse = authInfo.authListener === null;
-  const emptyAuthCookie = currentData.cookie === null;
+  const emptyAuthCookie = data.cookie === null;
 
   // If we're waiting on a token, create a subscription for the token
   // We don't have to send any values because it already knows the token
   // from a cookie.
   if (
     waiting ||
-    (emptySubscriptionResponse &&
-      !emptyAuthCookie &&
-      !currentData.cookie.redeemed)
+    (emptySubscriptionResponse && !emptyAuthCookie && !data.cookie.redeemed)
   ) {
     return (
       <Lobby
         // Use auth cookie's email as backup, since it may not be here after a refresh
-        email={!emptyAuthCookie ? currentData.cookie.email : email}
+        email={!emptyAuthCookie ? data.cookie.email : email}
         onReceive={changeAuth}
       />
     );
@@ -94,9 +91,7 @@ export default function Join(props) {
 
   // Cookie was redeemed, but the user is not registered
   const cookieRedeemedNotRegistered =
-    !emptyAuthCookie &&
-    currentData.cookie.redeemed &&
-    !currentData.cookie.registered;
+    !emptyAuthCookie && data.cookie.redeemed && !data.cookie.registered;
 
   // We already have auth cookie data, and it's been redeemed. We want the user to register
   if (subscriptionNotRegistered || cookieRedeemedNotRegistered) {

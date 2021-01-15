@@ -1,6 +1,8 @@
 import { Suspense, createContext } from 'react';
 import { graphql, usePreloadedQuery } from 'react-relay/hooks';
 
+const RootContext = createContext({});
+
 const RootQuery = graphql`
   query RootQuery {
     authentication {
@@ -12,17 +14,15 @@ const RootQuery = graphql`
   }
 `;
 
-const RootContext = createContext({});
-
+/**
+ *
+ * @param children
+ * @param prepared
+ * @returns {JSX.Element}
+ * @constructor
+ */
 export default function Root({ children, prepared }) {
   const rootQuery = usePreloadedQuery(RootQuery, prepared.stateQuery);
-
-  // TODO: check here to make sure that our user is allowed to be in this route. for now if the user exists, return null
-  if (
-    rootQuery.authentication !== null &&
-    rootQuery.authentication.user !== null
-  ) {
-  }
 
   return (
     <RootContext.Provider value={rootQuery}>

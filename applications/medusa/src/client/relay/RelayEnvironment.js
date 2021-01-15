@@ -46,13 +46,7 @@ async function fetchRelay(params, variables, _cacheConfig) {
   // throw an error to indicate to the developer what went wrong.
   if (Array.isArray(json.errors)) {
     console.log(json.errors);
-    throw new Error(
-      `Error fetching GraphQL query '${
-        params.name
-      }' with variables '${JSON.stringify(variables)}': ${JSON.stringify(
-        json.errors,
-      )}`,
-    );
+    throw new Error(JSON.stringify(json.errors));
   }
 
   // Otherwise, return the full payload.

@@ -12,15 +12,16 @@ const TokenQuery = graphql`
   }
 `;
 
-export default function Token({ prepared }) {
-  const result = usePreloadedQuery(TokenQuery, prepared.tokenQuery);
+export default function Root({ prepared }) {
+  const data = usePreloadedQuery(TokenQuery, prepared.tokenQuery);
+
   const history = useHistory();
 
-  if (result.redeemCookie === null) {
+  if (data.redeemCookie === null) {
     return 'token expired or invalid';
   }
 
-  const { sameSession, registered, session } = result.redeemCookie;
+  const { sameSession, registered, session } = data.redeemCookie;
 
   if (!sameSession) {
     return session;

@@ -8,6 +8,7 @@ import CanUseDOM from '@//:modules/utilities/CanUseDOM';
  * so that not all of our GraphQL requests are done on the server. Some requests, like websockets, we want to be done in
  * the client.
  *
+ *
  * @param children
  * @returns {null|*}
  * @constructor
