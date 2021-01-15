@@ -23,7 +23,7 @@ const routes = [
         component: JSResource('JoinRoot', () =>
           import('./components/routes/join/Join'),
         ),
-        prepare: () => null,
+        prepare: () => ({}),
       },
       {
         path: '/token/:id',
@@ -48,7 +48,7 @@ const routes = [
         component: JSResource('Empty', () =>
           import('./components/routes/empty/Empty'),
         ),
-        prepare: () => null,
+        prepare: () => ({}),
       },
     ],
   },

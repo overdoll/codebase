@@ -1,5 +1,5 @@
 import { matchRoutes } from 'react-router-config';
-import { fetchQuery } from 'react-relay/hooks';
+import { fetchQuery, loadQuery } from 'react-relay/hooks';
 
 /**
  * A custom function, which, when passed our routes, will take each route's queries, and preload
@@ -21,12 +21,23 @@ export default async function preloadDataFromRoutes(
   for (let i = 0; i < matches.length; i++) {
     const { route, match: matchData } = matches[i];
 
-    const data = route.prepare(matchData.params);
+    const queriesToPrepare = route.prepare(matchData.params);
+    const queryKeys = Object.keys(queriesToPrepare);
 
-    if (data !== null) {
-      const { query, variables, options } = data[Object.keys(data)[0]];
+    // For each route, fetch the query
+    for (let ii = 0; ii < queryKeys.length; ii++) {
+      const { query, variables, options } = queriesToPrepare[queryKeys[ii]];
 
-      await fetchQuery(relayEnvironment, query, variables, options).toPromise();
+      // If one of our queries errors out
+      // TODO: could we insert the errors into the store and pass them down to the client in the future?
+      try {
+        await fetchQuery(
+          relayEnvironment,
+          query,
+          variables,
+          options,
+        ).toPromise();
+      } catch (e) {}
     }
   }
 }

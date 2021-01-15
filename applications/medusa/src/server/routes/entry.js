@@ -53,6 +53,10 @@ const entry = async (req, res, next) => {
         forwardCookies = [...forwardCookies, ...response.headers['set-cookie']];
       }
 
+      if (Array.isArray(response.data.errors)) {
+        throw new Error(JSON.stringify(response.data.errors));
+      }
+
       return response.data;
     }
 
@@ -66,8 +70,6 @@ const entry = async (req, res, next) => {
 
     // Preload data from our routes
     await preloadDataFromRoutes(routes, req.url, environment);
-
-    console.log('done preloading');
 
     // Get our relay store
     const relayData = environment

@@ -8,7 +8,6 @@ import {
 import RoutingContext from '@//:modules/routing/RoutingContext';
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary';
 import '@//:modules/routing/RouteRenderer.css';
-import { usePreloadedQuery } from 'react-relay/hooks';
 
 const SUSPENSE_CONFIG = { timeoutMs: 2000 };
 
