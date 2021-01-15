@@ -17,6 +17,8 @@ go_library(
         "//applications/hades/src/helpers:go_default_library",
         "//applications/hades/src/models:go_default_library",
         "//applications/hades/src/services:go_default_library",
+        "//libraries/rabbit:go_default_library",
         "@com_github_gomodule_redigo//redis:go_default_library",
+        "@com_github_streadway_amqp//:go_default_library",
     ],
 )

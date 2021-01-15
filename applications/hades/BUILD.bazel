@@ -23,6 +23,7 @@ go_library(
         "//applications/hades/src/middleware:go_default_library",
         "//applications/hades/src/resolvers:go_default_library",
         "//applications/hades/src/services:go_default_library",
+        "//libraries/rabbit:go_default_library",
         "@com_github_99designs_gqlgen//graphql/handler:go_default_library",
         "@com_github_99designs_gqlgen//graphql/handler/extension:go_default_library",
         "@com_github_99designs_gqlgen//graphql/handler/lru:go_default_library",
