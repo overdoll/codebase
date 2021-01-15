@@ -1,4 +1,4 @@
 type Query {
-  redeemCookie(cookie: String!): Cookie
+  redeemCookie(cookie: String!): Cookie @guest
   authentication: Authentication
 }

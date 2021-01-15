@@ -43,6 +43,7 @@ type ResolverRoot interface {
 
 type DirectiveRoot struct {
 	Auth       func(ctx context.Context, obj interface{}, next graphql.Resolver) (res interface{}, err error)
+	Guest      func(ctx context.Context, obj interface{}, next graphql.Resolver) (res interface{}, err error)
 	Validation func(ctx context.Context, obj interface{}, next graphql.Resolver, rules []string) (res interface{}, err error)
 }
 
@@ -360,6 +361,8 @@ input AuthenticationInput {
 }
 `, BuiltIn: false},
 	{Name: "schemas/directives.graphql", Input: `directive @auth on FIELD_DEFINITION
+
+directive @guest on FIELD_DEFINITION
 
 directive @validation(rules: [String!]!) on INPUT_FIELD_DEFINITION
 `, BuiltIn: false},

@@ -6,7 +6,6 @@ package resolvers
 import (
 	"context"
 	"net/http"
-
 	eva "project01101000/codebase/applications/eva/proto"
 	gen "project01101000/codebase/applications/hades/src"
 	"project01101000/codebase/applications/hades/src/helpers"
@@ -18,12 +17,10 @@ func (r *subscriptionResolver) AuthListener(ctx context.Context) (<-chan *models
 	currentCookie, err := helpers.ReadCookie(ctx, OTPKey)
 
 	if err != nil {
-
 		if err == http.ErrNoCookie {
 			// The program returns this error
 			return nil, err
 		}
-
 		return nil, err
 	}
 
@@ -51,7 +48,7 @@ func (r *subscriptionResolver) AuthListener(ctx context.Context) (<-chan *models
 		return nil, err
 	}
 
-	// bind the queue to the routing key
+	// Bind the queue to the routing key
 	err = r.rabbit.Channel.QueueBind("otp", getAuthenticationCookie.Cookie, "otp", false, nil)
 	if err != nil {
 		return nil, err
@@ -61,7 +58,7 @@ func (r *subscriptionResolver) AuthListener(ctx context.Context) (<-chan *models
 	msgs, err := r.rabbit.Channel.Consume(
 		"otp", // queue
 		"",    // consumer
-		true, // auto-ack
+		true,  // auto-ack
 		false, // exclusive
 		false, // no-local
 		false, // no-wait
@@ -75,12 +72,12 @@ func (r *subscriptionResolver) AuthListener(ctx context.Context) (<-chan *models
 
 		for msg := range msgs {
 
-			switch msg.Body {
+			switch string(msg.Body) {
 
-			case []byte("SAME_SESSION"):
+			case "SAME_SESSION":
 				channel <- &models.AuthListener{SameSession: true, Cookie: cookie}
 				return
-			case []byte("ANOTHER_SESSION"):
+			case "ANOTHER_SESSION":
 				// If user exists, we can't set auth cookies here.
 				// Because we can't set a cookie in websocket connections, we force the browser to refresh the current page,
 				// and our root function will see that the cookie has been redeemed, and will log the user in
