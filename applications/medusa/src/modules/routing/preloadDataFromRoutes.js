@@ -1,5 +1,5 @@
 import { matchRoutes } from 'react-router-config';
-import { fetchQuery, loadQuery } from 'react-relay/hooks';
+import { fetchQuery } from 'react-relay/hooks';
 
 /**
  * A custom function, which, when passed our routes, will take each route's queries, and preload
