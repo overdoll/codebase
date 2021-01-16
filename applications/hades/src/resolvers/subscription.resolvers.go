@@ -6,6 +6,7 @@ package resolvers
 import (
 	"context"
 	"net/http"
+
 	eva "project01101000/codebase/applications/eva/proto"
 	gen "project01101000/codebase/applications/hades/src"
 	"project01101000/codebase/applications/hades/src/helpers"
@@ -43,7 +44,7 @@ func (r *subscriptionResolver) AuthListener(ctx context.Context) (<-chan *models
 	cookie := &models.Cookie{Registered: getRegisteredUser.Username != "", Redeemed: getAuthenticationCookie.Redeemed, SameSession: true}
 
 	// If OTP queue doesn't exist
-	_, err = r.rabbit.Channel.QueueDeclare("otp", true, false, false, false, nil)
+	_, err = r.rabbit.Channel.QueueDeclare("otp", false, false, false, false, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -77,6 +78,7 @@ func (r *subscriptionResolver) AuthListener(ctx context.Context) (<-chan *models
 			case "SAME_SESSION":
 				channel <- &models.AuthListener{SameSession: true, Cookie: cookie}
 				return
+
 			case "ANOTHER_SESSION":
 				// If user exists, we can't set auth cookies here.
 				// Because we can't set a cookie in websocket connections, we force the browser to refresh the current page,

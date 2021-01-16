@@ -30,6 +30,7 @@ export default function Register(props) {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Input
+        name="username"
         sx={{ variant: 'forms.input.primary' }}
         register={register}
         validation={{ required: true }}

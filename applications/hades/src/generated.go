@@ -367,14 +367,14 @@ directive @guest on FIELD_DEFINITION
 directive @validation(rules: [String!]!) on INPUT_FIELD_DEFINITION
 `, BuiltIn: false},
 	{Name: "schemas/mutation.graphql", Input: `type Mutation {
-  authenticate(data: AuthenticationInput): Boolean!
-  register(data: RegisterInput): Boolean!
-  authEmail: Boolean!
+  authenticate(data: AuthenticationInput): Boolean! @guest
+  register(data: RegisterInput): Boolean! @guest
+  authEmail: Boolean! @guest
   logout: Boolean! @auth
 }
 `, BuiltIn: false},
 	{Name: "schemas/query.graphql", Input: `type Query {
-  redeemCookie(cookie: String!): Cookie
+  redeemCookie(cookie: String!): Cookie @guest
   authentication: Authentication
 }
 `, BuiltIn: false},
@@ -831,8 +831,28 @@ func (ec *executionContext) _Mutation_authenticate(ctx context.Context, field gr
 	}
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().Authenticate(rctx, args["data"].(*models.AuthenticationInput))
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().Authenticate(rctx, args["data"].(*models.AuthenticationInput))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			if ec.directives.Guest == nil {
+				return nil, errors.New("directive guest is not implemented")
+			}
+			return ec.directives.Guest(ctx, nil, directive0)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(bool); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be bool`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -873,8 +893,28 @@ func (ec *executionContext) _Mutation_register(ctx context.Context, field graphq
 	}
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().Register(rctx, args["data"].(*models.RegisterInput))
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().Register(rctx, args["data"].(*models.RegisterInput))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			if ec.directives.Guest == nil {
+				return nil, errors.New("directive guest is not implemented")
+			}
+			return ec.directives.Guest(ctx, nil, directive0)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(bool); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be bool`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -908,8 +948,28 @@ func (ec *executionContext) _Mutation_authEmail(ctx context.Context, field graph
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().AuthEmail(rctx)
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().AuthEmail(rctx)
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			if ec.directives.Guest == nil {
+				return nil, errors.New("directive guest is not implemented")
+			}
+			return ec.directives.Guest(ctx, nil, directive0)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(bool); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be bool`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1005,8 +1065,28 @@ func (ec *executionContext) _Query_redeemCookie(ctx context.Context, field graph
 	}
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().RedeemCookie(rctx, args["cookie"].(string))
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Query().RedeemCookie(rctx, args["cookie"].(string))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			if ec.directives.Guest == nil {
+				return nil, errors.New("directive guest is not implemented")
+			}
+			return ec.directives.Guest(ctx, nil, directive0)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*models.Cookie); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *project01101000/codebase/applications/hades/src/models.Cookie`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)

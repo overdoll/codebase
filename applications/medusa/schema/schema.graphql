@@ -1,5 +1,7 @@
 directive @auth on FIELD_DEFINITION
 
+directive @guest on FIELD_DEFINITION
+
 directive @validation(rules: [String!]!) on INPUT_FIELD_DEFINITION
 
 type Authentication {
