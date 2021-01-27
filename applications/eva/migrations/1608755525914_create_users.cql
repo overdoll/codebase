@@ -23,9 +23,9 @@ CREATE TABLE users_emails
     primary key ( email )
 );
 
-CREATE TABLE registered_usernames_emails
+CREATE TABLE users_usernames
 (
-    email    text,
+    user_id  uuid,
     username text,
-    primary key ( (username, email) )
+    primary key ( username )
 );
