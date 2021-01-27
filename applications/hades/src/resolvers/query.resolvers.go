@@ -6,6 +6,7 @@ package resolvers
 import (
 	"context"
 	"net/http"
+
 	eva "project01101000/codebase/applications/eva/proto"
 	gen "project01101000/codebase/applications/hades/src"
 	"project01101000/codebase/applications/hades/src/helpers"
@@ -28,9 +29,9 @@ func (r *queryResolver) RedeemCookie(ctx context.Context, cookie string) (*model
 	// Redeem our authentication cookie
 	getRedeemedCookie, err := r.services.Eva().RedeemAuthenticationCookie(ctx, &eva.GetAuthenticationCookieRequest{Cookie: cookie})
 
-	// Check to make sure we didn't get an error, and our cookie isn't expired
-	if err != nil || getRedeemedCookie == nil {
-		return nil, err
+	// Cookie is expired or not valid - send back nil
+	if err != nil {
+		return nil, nil
 	}
 
 	// Our cookie

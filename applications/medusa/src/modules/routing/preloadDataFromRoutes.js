@@ -38,7 +38,9 @@ export default async function preloadDataFromRoutes(
           variables,
           options,
         ).toPromise();
-      } catch (e) {}
+      } catch (e) {
+        console.log(e);
+      }
     }
   }
 }

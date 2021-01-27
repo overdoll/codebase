@@ -20,7 +20,6 @@ type RegisteredUser struct {
 }
 
 type UserEmail struct {
-	Username string     `db:"username"`
 	Email    string     `db:"email"`
 	UserId   gocql.UUID `db:"user_id"`
 }
@@ -28,4 +27,9 @@ type UserEmail struct {
 type User struct {
 	Id       gocql.UUID `db:"id"`
 	Username string     `db:"username"`
+}
+
+type RegisteredUsernameEmail struct {
+	Username string `db:"username"`
+	Email    string `db:"email"`
 }

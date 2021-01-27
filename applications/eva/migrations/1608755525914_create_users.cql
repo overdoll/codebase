@@ -12,13 +12,20 @@ CREATE TABLE users
 (
     id       uuid,
     username text,
+    email    text,
     primary key ( id )
 );
 
 CREATE TABLE users_emails
 (
-    user_id  uuid,
+    user_id uuid,
+    email   text,
+    primary key ( email )
+);
+
+CREATE TABLE registered_usernames_emails
+(
     email    text,
     username text,
-    primary key ( email, username )
+    primary key ( (username, email) )
 );

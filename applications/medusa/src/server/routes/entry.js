@@ -55,7 +55,7 @@ const entry = async (req, res, next) => {
 
       // Throw an error, which will be caught by our server
       if (Array.isArray(response.data.errors)) {
-        throw new Error(JSON.stringify(response.data.errors));
+        throw new Error(response.data.errors);
       }
 
       return response.data;

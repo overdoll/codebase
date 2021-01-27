@@ -39,34 +39,59 @@ func (s *Server) GetUser(ctx context.Context, request *eva.GetUserRequest) (*eva
 
 func (s *Server) RegisterUser(ctx context.Context, request *eva.RegisterUserRequest) (*eva.User, error) {
 
-	userEmail := models.UserEmail{
+	// First, we do a unique insert into registered_usernames_emails
+	// This ensures that we capture this email & username so nobody can use it
+	usernameEmail := models.RegisteredUsernameEmail{
 		Email:    request.Email,
-		UserId:   gocql.TimeUUID(),
 		// This piece of data, we want to make sure we use as lowercase, to make sure we don't get collisions
 		// This table always has the username of a user, in lowercase format to make sure that we always have unique usernames
 		Username: strings.ToLower(request.Username),
 	}
 
-	// First, we do a unique insert into users_emails
-	// This ensures that we capture this email & username so nobody can use it
-	insertUserEmail := qb.Insert("users_emails").
-		Columns("email", "username", "user_id").
+	insertUserEmail := qb.Insert("registered_usernames_emails").
+		Columns("email", "username").
+		Unique().
+		Query(s.session).
+		SerialConsistency(gocql.Serial).
+		BindStruct(usernameEmail)
+
+	applied, err := insertUserEmail.ExecCAS()
+
+	// Do our checks to make sure we got a unique username+email combo
+	if err != nil {
+		return nil, fmt.Errorf("ExecCAS() failed: '%s", err)
+	}
+
+	if !applied {
+		return nil, fmt.Errorf("username or email is not unique")
+	}
+
+	// At this point, we know all of our entries will be unique (due to the above transaction), so we
+	// do our inserts
+	userEmail := models.UserEmail{
+		Email:    request.Email,
+		UserId:   gocql.TimeUUID(),
+	}
+
+	// Create a lookup table that will lookup the user using the ID
+	createUserEmail := qb.Insert("users_emails").
+		Columns("email", "user_id").
 		Unique().
 		Query(s.session).
 		SerialConsistency(gocql.Serial).
 		BindStruct(userEmail)
 
-	// TODO: should error out if user already exists (it doesn't)
-	if err := insertUserEmail.ExecRelease(); err != nil {
+	if err := createUserEmail.ExecRelease(); err != nil {
 		return nil, fmt.Errorf("ExecRelease() failed: '%s", err)
 	}
 
+	// Create a lookup table that will be used to find the user using their unique ID
+	// Will also contain all major information about the user such as permissions, etc...
 	user := models.User{
 		Username: request.Username,
 		Id: userEmail.UserId,
 	}
 
-	// Now, we actually register the user to our main users table, and set any attributes
 	insertUser := qb.Insert("users").
 		Columns("username", "id").
 		Unique().
