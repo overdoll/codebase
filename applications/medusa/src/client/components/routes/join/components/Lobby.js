@@ -4,6 +4,7 @@ import { Heading, Text } from '@//:modules/typography';
 import { Button } from '@//:modules/form';
 import { Frame } from '@//:modules/content';
 import { useNotify } from '@//:modules/focus';
+import { useTranslation } from 'react-i18next';
 
 const LobbySubscription = graphql`
   subscription LobbySubscription {
@@ -24,6 +25,7 @@ const LobbyEmail = graphql`
 
 export default function Lobby({ onReceive, email }) {
   const notify = useNotify();
+  const [t] = useTranslation('auth');
 
   // Received a subscription response
   const onNext = response => {
@@ -38,9 +40,7 @@ export default function Lobby({ onReceive, email }) {
   };
 
   const onError = () => {
-    notify.error(
-      'There was an error with this page. Please refresh when you click on your confirmation email',
-    );
+    notify.error(t('lobby.error'));
   };
 
   const config = useMemo(
@@ -60,7 +60,9 @@ export default function Lobby({ onReceive, email }) {
   const onSubmit = () => {
     sendEmail({
       variables: {},
-      onCompleted(data) {},
+      onCompleted(data) {
+        notify.success(t('lobby.verification'));
+      },
       onError(data) {},
     });
   };
@@ -68,7 +70,7 @@ export default function Lobby({ onReceive, email }) {
   return (
     <Frame>
       <Heading sx={{ textAlign: 'center', fontSize: 2 }}>
-        Click on the link you received in the email to continue
+        {t('lobby.header')}
       </Heading>
       <div
         sx={{
@@ -84,10 +86,10 @@ export default function Lobby({ onReceive, email }) {
       </div>
       <Button
         sx={{ mt: 2, variant: 'buttons.secondary', width: 'fill' }}
-        disabled={isSendingEmail}
+        loading={isSendingEmail}
         onClick={onSubmit}
       >
-        Resend email
+        {t('lobby.resend')}
       </Button>
     </Frame>
   );

@@ -11,7 +11,7 @@ i18next
   .init({
     preload: ['en'],
     fallbackLng: 'en',
-    ns: ['auth'],
+    ns: ['auth', 'token'],
     lng: 'en',
     load: 'languageOnly',
     backend: {

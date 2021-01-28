@@ -1,5 +1,10 @@
 import { useRef, useState, useEffect, useContext } from 'react';
 import { NotificationContext } from '../provider/NotificationProvider';
+import Icon from '@//:modules/content/icon/Icon';
+import {
+  Alerts,
+  FormValidation,
+} from '@streamlinehq/streamline-regular/lib/interface-essential';
 
 const Notification = ({ type, children, duration, id }) => {
   const { onExpire } = useContext(NotificationContext);
@@ -50,13 +55,37 @@ const Notification = ({ type, children, duration, id }) => {
         backgroundColor: 'orange.100',
         display: 'flex',
         mb: 1,
+        position: 'relative',
       }}
     >
-      <div>icon</div>
-      <div sx={{ color: 'orange.900', fontFamily: 'body', fontSize: 0 }}>
+      <Icon
+        icon={Alerts.AlertCircle}
+        stroke="orange.500"
+        sx={{
+          top: '50%',
+          transform: 'translateY(-50%)',
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+        }}
+      />
+      <div sx={{ color: 'orange.900', fontFamily: 'body', fontSize: 0, pl: 4 }}>
         {children}
       </div>
-      <div onClick={() => onExpire(id)}>x</div>
+      <Icon
+        size="18px"
+        onClick={() => onExpire(id)}
+        icon={FormValidation.Close}
+        stroke="orange.300"
+        sx={{
+          top: '50%',
+          transform: 'translateY(-50%)',
+          position: 'absolute',
+          right: 0,
+          bottom: 0,
+          pr: 0,
+        }}
+      />
     </div>
   );
 };

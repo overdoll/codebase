@@ -7,6 +7,7 @@ import { Frame } from '@//:modules/content';
 import { useNotify } from '@//:modules/focus';
 import Lobby from './components/Lobby';
 import { RootContext } from '../Root';
+import { EMAIL } from '@//:modules/regex';
 
 const JoinAction = graphql`
   mutation JoinMutation($data: AuthenticationInput!) {
@@ -23,8 +24,6 @@ const RootFragment = graphql`
     }
   }
 `;
-
-const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 export default function Join() {
   const rootQuery = useContext(RootContext);
@@ -62,7 +61,7 @@ export default function Join() {
         setWaiting(true);
       },
       onError(data) {
-        notify.error('error with joining!');
+        notify.error(t('authenticate.error.join'));
       },
     });
   };
@@ -106,26 +105,25 @@ export default function Join() {
     <Frame>
       <Form instance={instance} onSubmit={onSubmit}>
         <Input
-          title="Email"
+          title={t('authenticate.form.email.title')}
           name="email"
-          disabled={isInFlight}
           validation={{
             required: {
               value: true,
-              message: 'Please enter an email address',
+              message: t('authenticate.form.validation.email.required'),
             },
             pattern: {
-              value: emailRegex,
-              message: 'Please enter a valid email address',
+              value: EMAIL,
+              message: t('authenticate.form.validation.email.pattern'),
             },
           }}
-          placeholder={t('authenticate.input')}
+          placeholder={t('authenticate.form.email.placeholder')}
         />
         <Button
-          disabled={isInFlight}
+          loading={isInFlight}
           sx={{ width: 'fill', variant: 'buttons.primary', mt: 2 }}
         >
-          {t('authenticate.continue')}
+          {t('authenticate.form.continue')}
         </Button>
       </Form>
     </Frame>
