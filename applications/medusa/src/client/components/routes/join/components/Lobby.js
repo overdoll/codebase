@@ -2,6 +2,8 @@ import { graphql, useSubscription, useMutation } from 'react-relay/hooks';
 import { useMemo } from 'react';
 import { Heading, Text } from '@//:modules/typography';
 import { Button } from '@//:modules/form';
+import { Frame } from '@//:modules/content';
+import { useNotify } from '@//:modules/focus';
 
 const LobbySubscription = graphql`
   subscription LobbySubscription {
@@ -21,6 +23,8 @@ const LobbyEmail = graphql`
 `;
 
 export default function Lobby({ onReceive, email }) {
+  const notify = useNotify();
+
   // Received a subscription response
   const onNext = response => {
     const { sameSession, cookie } = response.authListener;
@@ -33,11 +37,18 @@ export default function Lobby({ onReceive, email }) {
     }
   };
 
+  const onError = () => {
+    notify.error(
+      'There was an error with this page. Please refresh when you click on your confirmation email',
+    );
+  };
+
   const config = useMemo(
     () => ({
       variables: {},
       subscription: LobbySubscription,
       onNext,
+      onError,
     }),
     [],
   );
@@ -55,14 +66,29 @@ export default function Lobby({ onReceive, email }) {
   };
 
   return (
-    <>
-      <Heading>Click on the link you received in the email to continue</Heading>
-      <div>
-        <Text>{email}</Text>
+    <Frame>
+      <Heading sx={{ textAlign: 'center', fontSize: 2 }}>
+        Click on the link you received in the email to continue
+      </Heading>
+      <div
+        sx={{
+          mt: 4,
+          width: 'fill',
+          textAlign: 'center',
+          backgroundColor: 'neutral.800',
+          pt: 2,
+          pb: 2,
+        }}
+      >
+        <Text sx={{ color: 'purple.300' }}>{email}</Text>
       </div>
-      <Button disabled={isSendingEmail} onClick={onSubmit}>
-        Re-send email
+      <Button
+        sx={{ mt: 2, variant: 'buttons.secondary', width: 'fill' }}
+        disabled={isSendingEmail}
+        onClick={onSubmit}
+      >
+        Resend email
       </Button>
-    </>
+    </Frame>
   );
 }

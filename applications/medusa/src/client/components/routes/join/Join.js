@@ -2,7 +2,8 @@ import { graphql, useMutation, useFragment } from 'react-relay/hooks';
 import { useState, useContext } from 'react';
 import Register from '../../register/Register';
 import { useTranslation } from 'react-i18next';
-import { Button, Input, useForm } from '@//:modules/form';
+import { Button, Form, Input, useForm } from '@//:modules/form';
+import { Frame } from '@//:modules/content';
 import { useNotify } from '@//:modules/focus';
 import Lobby from './components/Lobby';
 import { RootContext } from '../Root';
@@ -23,6 +24,8 @@ const RootFragment = graphql`
   }
 `;
 
+const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
 export default function Join() {
   const rootQuery = useContext(RootContext);
   const data = useFragment(RootFragment, rootQuery.authentication);
@@ -30,7 +33,7 @@ export default function Join() {
   const [t] = useTranslation('auth');
 
   const [commit, isInFlight] = useMutation(JoinAction);
-  const { register, handleSubmit } = useForm();
+  const instance = useForm();
 
   const notify = useNotify();
 
@@ -100,21 +103,31 @@ export default function Join() {
 
   // Ask user to authenticate
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <Input
-        name="email"
-        sx={{ variant: 'forms.input.primary' }}
-        disabled={isInFlight}
-        register={register}
-        validation={{ required: true }}
-        placeholder={t('authenticate.input')}
-      />
-      <Button
-        disabled={isInFlight}
-        sx={{ width: '100%', variant: 'primary', mt: 2 }}
-      >
-        {t('authenticate.continue')}
-      </Button>
-    </form>
+    <Frame>
+      <Form instance={instance} onSubmit={onSubmit}>
+        <Input
+          title="Email"
+          name="email"
+          disabled={isInFlight}
+          validation={{
+            required: {
+              value: true,
+              message: 'Please enter an email address',
+            },
+            pattern: {
+              value: emailRegex,
+              message: 'Please enter a valid email address',
+            },
+          }}
+          placeholder={t('authenticate.input')}
+        />
+        <Button
+          disabled={isInFlight}
+          sx={{ width: 'fill', variant: 'buttons.primary', mt: 2 }}
+        >
+          {t('authenticate.continue')}
+        </Button>
+      </Form>
+    </Frame>
   );
 }

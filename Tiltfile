@@ -188,3 +188,4 @@ helm_remote(
 )
 
 k8s_resource(workload = "redis-master", port_forwards = [6379])
+k8s_resource(workload = "rabbitmq", port_forwards = [15672])

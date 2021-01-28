@@ -47,13 +47,13 @@ const Notification = ({ type, children, duration, id }) => {
         boxShadow: '200',
         padding: 1,
         borderRadius: 'notification',
-        backgroundColor: 'neutral.800',
+        backgroundColor: 'orange.100',
         display: 'flex',
-        mt: 1,
+        mb: 1,
       }}
     >
       <div>icon</div>
-      <div sx={{ color: 'orange.100', fontFamily: 'body', fontSize: 0 }}>
+      <div sx={{ color: 'orange.900', fontFamily: 'body', fontSize: 0 }}>
         {children}
       </div>
       <div onClick={() => onExpire(id)}>x</div>

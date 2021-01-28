@@ -12,6 +12,10 @@ const Button = props => (
       fontWeight: 'bold',
       fontFamily: 'heading',
       borderRadius: 'defaults',
+      outline: 'none',
+      '&:hover': {
+        cursor: 'pointer',
+      },
       ...props.sx,
     }}
   />

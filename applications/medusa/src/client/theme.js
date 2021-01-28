@@ -129,11 +129,11 @@ export default {
       lineHeight: 'heading',
       fontWeight: 'heading',
     },
-    display: {
-      fontFamily: 'heading',
-      fontWeight: 'heading',
-      lineHeight: 'heading',
-      fontSize: [5, 6, 7],
+    default: {
+      fontFamily: 'body',
+      fontWeight: 'body',
+      lineHeight: 'body',
+      fontSize: 2,
     },
   },
   radii: {
@@ -152,19 +152,28 @@ export default {
       bg: 'neutral.900',
       borderColor: 'primary.500',
     },
+    secondary: {
+      color: 'neutral.100',
+      bg: 'transparent',
+      borderColor: 'transparent',
+      '&:hover': {
+        color: 'neutral.000',
+      },
+    },
   },
   sizes: {
     fill: '100%',
+    regular: '400px',
+    small: '300px',
   },
   forms: {
     input: {
       primary: {
-        color: 'neutral.300',
+        color: 'neutral.100',
         '&::placeholder': {
           color: 'neutral.300',
         },
         bg: 'neutral.800',
-        borderColor: 'neutral.800',
       },
     },
   },
