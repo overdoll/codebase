@@ -140,6 +140,8 @@ function prepareMatches(matches, relayEnvironment) {
 function convertPreparedToQueries(relayEnvironment, prepare, params) {
   const prepared = {};
 
+  if (prepare === undefined) return prepared;
+
   const queriesToPrepare = prepare(params);
 
   Object.keys(queriesToPrepare).forEach(queryKey => {

@@ -114,6 +114,10 @@ const entry = async (req, res, next) => {
       entrypoints: ['client'],
     });
 
+    // TODO: grab the assets from the list, and then
+    console.log(extractor.stats.assets);
+    console.log(await routes[0].component.getModuleId());
+
     res.render('default', {
       title: 'Title',
       scripts: extractor.getScriptTags(),

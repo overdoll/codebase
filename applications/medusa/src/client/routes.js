@@ -27,7 +27,9 @@ const getUserFromEnvironment = environment =>
  */
 const routes = [
   {
-    component: JSResource('Root', () => import('./components/routes/Root')),
+    component: JSResource('Root', () =>
+      import(/* webpackChunkName: "Root" */ './components/routes/Root'),
+    ),
     prepare: params => {
       const RootQuery = require('./components/routes/__generated__/RootQuery.graphql');
       return {
@@ -45,7 +47,9 @@ const routes = [
         path: '/join',
         exact: true,
         component: JSResource('JoinRoot', () =>
-          import('./components/routes/join/Join'),
+          import(
+            /* webpackChunkName: "JoinRoot" */ './components/routes/join/Join'
+          ),
         ),
         // When user is logged in, we just want to redirect them since they're already "logged in"
         middleware: [
@@ -62,12 +66,13 @@ const routes = [
             },
           ]),
         ],
-        prepare: () => ({}),
       },
       {
         path: '/token/:id',
         component: JSResource('TokenRoot', () =>
-          import('./components/routes/token/Token'),
+          import(
+            /* webpackChunkName: "TokenRoot" */ './components/routes/token/Token'
+          ),
         ),
         middleware: [
           // If the user is logged in, we don't do the API call
@@ -127,9 +132,10 @@ const routes = [
       {
         path: '*',
         component: JSResource('Empty', () =>
-          import('./components/routes/empty/Empty'),
+          import(
+            /* webpackChunkName: "Empty" */ './components/routes/empty/Empty'
+          ),
         ),
-        prepare: () => ({}),
       },
     ],
   },

@@ -24,8 +24,6 @@ export default async function preloadDataFromRoutes(
     const { route, match: matchData } = matches[i];
 
     context.params = matchData.params;
-    const queriesToPrepare = route.prepare(matchData.params);
-    const queryKeys = Object.keys(queriesToPrepare);
 
     let beforeMiddleware = [];
     let afterMiddleware = [];
@@ -45,15 +43,21 @@ export default async function preloadDataFromRoutes(
     // Skip if "false" is returned
     if (!Run(beforeMiddleware, environment, context)) continue;
 
-    // For each route, fetch the query
-    for (let ii = 0; ii < queryKeys.length; ii++) {
-      const { query, variables, options } = queriesToPrepare[queryKeys[ii]];
-      // If one of our queries errors out
-      // if it fails, it does one on the server, and catches it here. Then, another one is done in the client, and is caught by the error boundary
-      try {
-        await fetchQuery(environment, query, variables, options).toPromise();
-      } catch (e) {
-        console.log(e);
+    // Only run if the "prepare" attribute exists
+    if (route.hasOwnProperty('prepare')) {
+      const queriesToPrepare = route.prepare(matchData.params);
+      const queryKeys = Object.keys(queriesToPrepare);
+
+      // For each route, fetch the query
+      for (let ii = 0; ii < queryKeys.length; ii++) {
+        const { query, variables, options } = queriesToPrepare[queryKeys[ii]];
+        // If one of our queries errors out
+        // if it fails, it does one on the server, and catches it here. Then, another one is done in the client, and is caught by the error boundary
+        try {
+          await fetchQuery(environment, query, variables, options).toPromise();
+        } catch (e) {
+          console.log(e);
+        }
       }
     }
 
