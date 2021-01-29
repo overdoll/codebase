@@ -13,7 +13,7 @@ if ! k3d -version | grep 'v1' > /dev/null 2>&1; then
 fi
 
 # desired cluster name (default is "k3s-default")
-CLUSTER_NAME="${CLUSTER_NAME:-projecth-cluster}"
+CLUSTER_NAME="${CLUSTER_NAME:-overdoll}"
 
 # Check if cluster already exists.
 # AFAICT there's no good way to get the registry name/port from a running

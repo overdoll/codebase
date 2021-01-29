@@ -58,7 +58,7 @@ applications = {
     },
 }
 
-allow_k8s_contexts("projecth-cluster")
+allow_k8s_contexts("overdoll")
 
 docker_prune_settings(
     disable = False,
