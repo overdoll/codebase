@@ -63,8 +63,8 @@ module.exports = {
       };
 
       config.devServer.index = '';
-      config.devServer.public = 'https://projecth.test';
-      config.devServer.host = 'projecth.test';
+      config.devServer.public = 'https://overdoll.test';
+      config.devServer.host = 'overdoll.test';
       config.devServer.hot = true;
     }
 

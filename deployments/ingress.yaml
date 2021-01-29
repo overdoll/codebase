@@ -24,20 +24,20 @@ spec:
   entrypoints:
     - websecure
   routes:
-    - match: Host(`projecth.test`) &&  Path(`/api/graphql`)
+    - match: Host(`overdoll.test`) &&  Path(`/api/graphql`)
       kind: Rule
       services:
         - name: hades
           port: 8000
       middlewares:
         - name: stripprefix
-    - match: Host(`projecth.test`) && PathPrefix(`/`)
+    - match: Host(`overdoll.test`) && PathPrefix(`/`)
       kind: Rule
       services:
         - name: medusa
           port: 8000
   tls:
-    secretName: projecth-tls
+    secretName: overdoll-tls
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
@@ -47,14 +47,14 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: Host(`projecth.test`) &&  Path(`/api/graphql`)
+    - match: Host(`overdoll.test`) &&  Path(`/api/graphql`)
       kind: Rule
       services:
         - name: hades
           port: 8000
       middlewares:
         - name: redirect-https
-    - match: Host(`projecth.test`) && PathPrefix(`/`)
+    - match: Host(`overdoll.test`) && PathPrefix(`/`)
       kind: Rule
       services:
         - name: medusa

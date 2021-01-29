@@ -1,4 +1,4 @@
-schema: https://projecth.test/api/graphql
+schema: https://overdoll.test/api/graphql
 extensions:
   codegen:
     generates:
