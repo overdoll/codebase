@@ -4,18 +4,22 @@ import i18nextMiddleware from 'i18next-http-middleware';
 import path from 'path';
 import { initReactI18next } from 'react-i18next';
 
+console.log(__dirname);
+
 i18next
   .use(i18nextMiddleware.LanguageDetector)
   .use(Backend)
   .use(initReactI18next)
   .init({
-    preload: ['en'],
     fallbackLng: 'en',
     ns: ['auth', 'token'],
     lng: 'en',
     load: 'languageOnly',
     backend: {
-      loadPath: path.join(__dirname, '../src/locales/{{lng}}/{{ns}}.json'),
+      loadPath: path.join(
+        __dirname,
+        '../src/server/locales/{{lng}}/{{ns}}.json',
+      ),
     },
   });
 

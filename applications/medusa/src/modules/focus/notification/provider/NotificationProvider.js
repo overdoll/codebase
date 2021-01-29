@@ -28,12 +28,17 @@ const NotificationProvider = ({ children }) => {
     create('error', content, duration);
   };
 
+  const success = (content, duration = null) => {
+    create('success', content, duration);
+  };
+
   return (
     <NotificationContext.Provider
       value={{
         actions: {
           warn,
           error,
+          success,
         },
         onExpire,
       }}
