@@ -8,6 +8,7 @@ import preloadDataFromRoutes from '@//:modules/routing/preloadDataFromRoutes';
 
 const entry = async (req, res, next) => {
   try {
+    const context = {};
     let forwardCookies = [];
 
     const csrfToken = req.csrfToken();
@@ -69,13 +70,7 @@ const entry = async (req, res, next) => {
     });
 
     // Preload data from our routes
-    await preloadDataFromRoutes(routes, req.url, environment);
-
-    // Get our relay store
-    const relayData = environment
-      .getStore()
-      .getSource()
-      .toJSON();
+    await preloadDataFromRoutes(routes, req.url, environment, context);
 
     // If no CSRF cookie exists, we set it
     if (req.cookies._csrf === undefined) {
@@ -94,12 +89,24 @@ const entry = async (req, res, next) => {
       'private, no-cache, no-store, must-revalidate',
     );
 
+    // check for redirect first
+    if (context.url) {
+      res.redirect(301, context.url);
+      return;
+    }
+
     // Get our i18next store, and we will send this to the front-end
     const initialI18nStore = {};
 
     req.i18n.languages.forEach(l => {
       initialI18nStore[l] = req.i18n.services.resourceStore.data[l];
     });
+
+    // Get our relay store
+    const relayData = environment
+      .getStore()
+      .getSource()
+      .toJSON();
 
     // Set up our chunk extractor, so that we can preload our resources
     const extractor = new ChunkExtractor({

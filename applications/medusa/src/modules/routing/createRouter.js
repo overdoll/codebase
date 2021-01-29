@@ -1,6 +1,29 @@
 import { matchRoutes } from 'react-router-config';
 import { loadQuery } from 'react-relay/hooks';
 
+// Check if our route is valid (on the client), by running the "accessible" function
+const isRouteValid = (environment, route) => {
+  if (route.hasOwnProperty('accessible')) {
+    const result = route.accessible(environment);
+    // Accessible check failed
+    if (!result) return false;
+  }
+
+  // Accessible check succeeded or didn't exist
+  return true;
+};
+
+// recursive function that filters all routes
+const filterRoute = (environment, route) => {
+  if (!route.hasOwnProperty('routes')) {
+    return isRouteValid(environment, route);
+  }
+
+  return (route.routes = route.routes.filter(route =>
+    filterRoute(environment, route),
+  ));
+};
+
 /**
  * A custom router built from the same primitives as react-router. Each object in `routes`
  * contains both a Component and a prepare() function that can preload data for the component.
@@ -10,10 +33,15 @@ import { loadQuery } from 'react-relay/hooks';
  * Note: History is created by either the index or the client, since we can't use the same history for both.
  *
  */
-export default function createRouter(routes, history, relayEnvironment) {
+export default function createRouter(unparsedRoutes, history, environment) {
+  // Recursively parse route, and use route environment source as a helper
+  const routes = unparsedRoutes.filter(route =>
+    filterRoute(environment, route),
+  );
+
   // Find the initial match and prepare it
   const initialMatches = matchRoute(routes, history.location);
-  const initialEntries = prepareMatches(initialMatches, relayEnvironment);
+  const initialEntries = prepareMatches(initialMatches, environment);
   let currentEntry = {
     location: history.location,
     entries: initialEntries,
@@ -30,8 +58,8 @@ export default function createRouter(routes, history, relayEnvironment) {
     if (location.pathname === currentEntry.location.pathname) {
       return;
     }
-    const matches = matchRoute(routes, location, relayEnvironment);
-    const entries = prepareMatches(matches, relayEnvironment);
+    const matches = matchRoute(routes, location, environment);
+    const entries = prepareMatches(matches, environment);
     const nextEntry = {
       location,
       entries,
@@ -54,7 +82,7 @@ export default function createRouter(routes, history, relayEnvironment) {
     preload(pathname) {
       // preload the code and data for a route, without storing the result
       const matches = matchRoutes(routes, pathname);
-      prepareMatches(matches, relayEnvironment);
+      prepareMatches(matches, environment);
     },
     subscribe(cb) {
       const id = nextId++;

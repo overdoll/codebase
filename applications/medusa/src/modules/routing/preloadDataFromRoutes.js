@@ -14,6 +14,7 @@ export default async function preloadDataFromRoutes(
   routes,
   location,
   relayEnvironment,
+  context,
 ) {
   // Find the initial match for the route
   const matches = matchRoutes(routes, location);
@@ -27,9 +28,7 @@ export default async function preloadDataFromRoutes(
     // For each route, fetch the query
     for (let ii = 0; ii < queryKeys.length; ii++) {
       const { query, variables, options } = queriesToPrepare[queryKeys[ii]];
-
       // If one of our queries errors out
-      // TODO: could we insert the errors into the store and pass them down to the client in the future? right now we do 2 calls,
       // if it fails, it does one on the server, and catches it here. Then, another one is done in the client, and is caught by the error boundary
       try {
         await fetchQuery(
@@ -41,6 +40,12 @@ export default async function preloadDataFromRoutes(
       } catch (e) {
         console.log(e);
       }
+    }
+
+    // Do some "middleware" checks - here on the server we can
+    // perform redirects or send them to another page based on the result
+    if (route.hasOwnProperty('middleware')) {
+      route.middleware(relayEnvironment, context);
     }
   }
 }
