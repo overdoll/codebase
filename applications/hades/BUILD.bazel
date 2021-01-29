@@ -15,7 +15,7 @@ go_library(
         "start.go",
     ],
     data = web_sources,
-    importpath = "project01101000/codebase/applications/hades",
+    importpath = "overdoll/applications/hades",
     deps = [
         "//applications/hades/src:go_default_library",
         "//applications/hades/src/directives:go_default_library",
@@ -40,11 +40,11 @@ go_image(
     base = "@go_base_image//image",
     data = web_sources,
     embed = [":go_default_library"],
-    importpath = "project01101000/codebase/applications/hades",
+    importpath = "overdoll/applications/hades",
 )
 
 go_binary(
     name = "hades",
     embed = [":go_default_library"],
-    importpath = "project01101000/codebase/applications/hades",
+    importpath = "overdoll/applications/hades",
 )

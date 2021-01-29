@@ -10,7 +10,7 @@ proto_library(
 go_proto_library(
     name = "v1_go_proto",
     compilers = ["@io_bazel_rules_go//proto:go_grpc"],
-    importpath = "project01101000/codebase/applications/eva/proto",
+    importpath = "overdoll/applications/eva/proto",
     proto = ":v1_proto",
     visibility = ["//visibility:public"],
 )

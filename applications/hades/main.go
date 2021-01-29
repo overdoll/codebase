@@ -14,17 +14,17 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	gen "project01101000/codebase/applications/hades/src"
-	"project01101000/codebase/applications/hades/src/directives"
-	extension2 "project01101000/codebase/applications/hades/src/extensions"
-	"project01101000/codebase/applications/hades/src/middleware"
-	"project01101000/codebase/applications/hades/src/resolvers"
-	"project01101000/codebase/applications/hades/src/services"
+	gen "overdoll/applications/hades/src"
+	"overdoll/applications/hades/src/directives"
+	extension2 "overdoll/applications/hades/src/extensions"
+	"overdoll/applications/hades/src/middleware"
+	"overdoll/applications/hades/src/resolvers"
+	"overdoll/applications/hades/src/services"
 	"syscall"
 	"time"
 
 	"github.com/99designs/gqlgen/graphql/handler"
-	"project01101000/codebase/libraries/rabbit"
+	"overdoll/libraries/rabbit"
 )
 
 func init() {

@@ -6,8 +6,8 @@ package resolvers
 
 import (
 	"github.com/gomodule/redigo/redis"
-	"project01101000/codebase/applications/hades/src/services"
-	"project01101000/codebase/libraries/rabbit"
+	"overdoll/applications/hades/src/services"
+	"overdoll/libraries/rabbit"
 )
 
 type Resolver struct {

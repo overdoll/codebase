@@ -4,7 +4,7 @@ import (
 	"io"
 	"log"
 
-	evav1 "project01101000/codebase/applications/eva/proto"
+	evav1 "overdoll/applications/eva/proto"
 
 	"google.golang.org/grpc"
 )

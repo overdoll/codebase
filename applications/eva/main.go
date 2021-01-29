@@ -9,7 +9,7 @@ import (
 	"log"
 	"os"
 	"os/signal"
-	"project01101000/codebase/applications/eva/src/server"
+	"overdoll/applications/eva/src/server"
 	"syscall"
 	"time"
 )

@@ -1,4 +1,4 @@
-module project01101000/codebase
+module overdoll
 
 go 1.14
 

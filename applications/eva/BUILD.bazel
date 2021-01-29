@@ -12,7 +12,7 @@ go_library(
         "start.go",
     ],
     data = web_sources,
-    importpath = "project01101000/codebase/applications/eva",
+    importpath = "overdoll/applications/eva",
     visibility = ["//visibility:private"],
     deps = [
         "//applications/eva/src/server:go_default_library",
@@ -34,5 +34,5 @@ go_image(
     base = "@go_base_image//image",
     data = web_sources,
     embed = [":go_default_library"],
-    importpath = "project01101000/codebase/applications/eva",
+    importpath = "overdoll/applications/eva",
 )

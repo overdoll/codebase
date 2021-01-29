@@ -7,7 +7,7 @@ go_library(
         "server.go",
         "user.go",
     ],
-    importpath = "project01101000/codebase/applications/eva/src/server",
+    importpath = "overdoll/applications/eva/src/server",
     visibility = ["//visibility:public"],
     deps = [
         "//applications/eva/proto:v1_go_proto",

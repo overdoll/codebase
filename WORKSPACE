@@ -1,5 +1,5 @@
 workspace(
-    name = "project01101000",
+    name = "overdoll",
     managed_directories = {
         "@npm": ["node_modules"],
     },

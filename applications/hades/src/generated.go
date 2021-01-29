@@ -8,7 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"project01101000/codebase/applications/hades/src/models"
+	"overdoll/applications/hades/src/models"
 	"strconv"
 	"sync"
 
@@ -1086,7 +1086,7 @@ func (ec *executionContext) _Query_redeemCookie(ctx context.Context, field graph
 		if data, ok := tmp.(*models.Cookie); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *project01101000/codebase/applications/hades/src/models.Cookie`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/hades/src/models.Cookie`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)

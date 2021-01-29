@@ -8,8 +8,8 @@ import (
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/go-playground/validator/v10"
 	"github.com/pkg/errors"
-	gen "project01101000/codebase/applications/hades/src"
-	"project01101000/codebase/applications/hades/src/helpers"
+	gen "overdoll/applications/hades/src"
+	"overdoll/applications/hades/src/helpers"
 )
 
 var validate *validator.Validate

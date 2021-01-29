@@ -5,8 +5,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gomodule/redigo/redis"
 	"net/http"
-	"project01101000/codebase/applications/hades/src/authentication"
-	"project01101000/codebase/applications/hades/src/models"
+	"overdoll/applications/hades/src/authentication"
+	"overdoll/applications/hades/src/models"
 	"time"
 )
 

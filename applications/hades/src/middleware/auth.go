@@ -6,11 +6,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gomodule/redigo/redis"
-	eva "project01101000/codebase/applications/eva/proto"
-	"project01101000/codebase/applications/hades/src/authentication"
-	"project01101000/codebase/applications/hades/src/helpers"
-	"project01101000/codebase/applications/hades/src/models"
-	"project01101000/codebase/applications/hades/src/services"
+	eva "overdoll/applications/eva/proto"
+	"overdoll/applications/hades/src/authentication"
+	"overdoll/applications/hades/src/helpers"
+	"overdoll/applications/hades/src/models"
+	"overdoll/applications/hades/src/services"
 )
 
 // Middleware decodes the share session cookie and packs the session into context

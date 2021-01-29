@@ -5,7 +5,7 @@ applications = {
         "image_target": "//applications/hades:hades-image",
         "binary_target": "//applications/hades:hades",
         "binary_output": "applications/hades/hades_/hades",
-        "container_workdir": "/app/applications/hades/hades-image.binary.runfiles/project01101000/",
+        "container_workdir": "/app/applications/hades/hades-image.binary.runfiles/overdoll/",
         "container_binary": "applications/hades/hades-image.binary_/hades-image.binary",
         "bazel_image": "bazel/applications/hades:hades-image",
         "dependencies": [
@@ -13,8 +13,8 @@ applications = {
             "applications/hades/queries.json",
         ],
         "live_update": [
-            sync("applications/hades/.env", "/app/applications/hades/hades-image.binary.runfiles/project01101000/applications/hades/.env"),
-            sync("applications/hades/queries.json", "/app/applications/hades/hades-image.binary.runfiles/project01101000/applications/hades/queries.json"),
+            sync("applications/hades/.env", "/app/applications/hades/hades-image.binary.runfiles/overdoll/applications/hades/.env"),
+            sync("applications/hades/queries.json", "/app/applications/hades/hades-image.binary.runfiles/overdoll/applications/hades/queries.json"),
         ],
     },
     "eva": {
@@ -23,7 +23,7 @@ applications = {
         "image_target": "//applications/eva:eva-image",
         "binary_target": "//applications/eva:eva",
         "binary_output": "applications/eva/eva_/eva",
-        "container_workdir": "/app/applications/eva/eva-image.binary.runfiles/project01101000/",
+        "container_workdir": "/app/applications/eva/eva-image.binary.runfiles/overdoll/",
         "container_binary": "applications/eva/eva-image.binary_/eva-image.binary",
         "bazel_image": "bazel/applications/eva:eva-image",
         "dependencies": [
@@ -31,8 +31,8 @@ applications = {
             "applications/eva/migrations",
         ],
         "live_update": [
-            sync("applications/eva/migrations", "/app/applications/hades/hades-image.binary.runfiles/project01101000/applications/eva/migrations"),
-            sync("applications/eva/.env", "/app/applications/hades/hades-image.binary.runfiles/project01101000/applications/eva/.env"),
+            sync("applications/eva/migrations", "/app/applications/hades/hades-image.binary.runfiles/overdoll/applications/eva/migrations"),
+            sync("applications/eva/.env", "/app/applications/hades/hades-image.binary.runfiles/overdoll/applications/eva/.env"),
         ],
     },
     "medusa": {
@@ -41,7 +41,7 @@ applications = {
         "image_target": "//applications/medusa:medusa-image",
         "binary_target": "//applications/medusa:medusa",
         "binary_output": "applications/medusa/medusa_/medusa",
-        "container_workdir": "/app/applications/medusa/eva-image.binary.runfiles/project01101000/",
+        "container_workdir": "/app/applications/medusa/eva-image.binary.runfiles/overdoll/",
         "container_binary": "applications/medusa/medusa-image.binary_/medusa-image.binary",
         "bazel_image": "bazel/applications/medusa:medusa-image",
         "entrypoint": "/app/applications/medusa/medusa",
@@ -51,9 +51,9 @@ applications = {
             "applications/medusa/.env",
         ],
         "live_update": [
-            sync("applications/medusa/src", "/app/applications/medusa/medusa.runfiles/project01101000/applications/medusa/src"),
-            sync("applications/medusa/.env", "/app/applications/medusa/medusa.runfiles/project01101000/applications/medusa/.env"),
-            sync("applications/medusa/public", "/app/applications/medusa/medusa.runfiles/project01101000/applications/medusa/public"),
+            sync("applications/medusa/src", "/app/applications/medusa/medusa.runfiles/overdoll/applications/medusa/src"),
+            sync("applications/medusa/.env", "/app/applications/medusa/medusa.runfiles/overdoll/applications/medusa/.env"),
+            sync("applications/medusa/public", "/app/applications/medusa/medusa.runfiles/overdoll/applications/medusa/public"),
         ],
     },
 }

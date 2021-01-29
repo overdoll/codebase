@@ -7,8 +7,8 @@ import (
 
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
-	eva "project01101000/codebase/applications/eva/proto"
-	"project01101000/codebase/applications/eva/src/models"
+	eva "overdoll/applications/eva/proto"
+	"overdoll/applications/eva/src/models"
 )
 
 func (s *Server) GetUser(ctx context.Context, request *eva.GetUserRequest) (*eva.User, error) {
