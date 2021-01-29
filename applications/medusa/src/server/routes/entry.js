@@ -24,7 +24,6 @@ const entry = async (req, res, next) => {
       }
     }
 
-    // TODO: add a _csrf cookie to the headers, if one doesn't exist
     async function fetchRelay(params, variables, _cacheConfig) {
       const response = await axios({
         url: 'http://hades:8000/graphql',
