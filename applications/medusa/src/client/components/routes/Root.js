@@ -23,7 +23,7 @@ const RootQuery = graphql`
  */
 export default function Root({ children, prepared }) {
   const rootQuery = usePreloadedQuery(RootQuery, prepared.stateQuery);
-  const [redirecting, setRedirecting] = useState(true);
+  const [redirecting, setRedirecting] = useState(false);
 
   // On the first render of the root component, we need to check to make sure that
   // the route that the user is about to access is one that they should be accessing.
