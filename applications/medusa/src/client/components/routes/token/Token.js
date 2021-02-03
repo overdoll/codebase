@@ -64,5 +64,6 @@ export default function Root({ prepared }) {
   }
 
   // User is registered - should be redirected or something
+  context.url = '/profile';
   return null;
 }

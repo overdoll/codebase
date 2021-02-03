@@ -68,7 +68,7 @@ export default function createRouter(unparsedRoutes, history, environment) {
     subscribers.forEach(cb => cb(nextEntry));
   });
 
-  // The actual object that will be passed on the RoutingConext.
+  // The actual object that will be passed on the RoutingContext.
   const context = {
     history,
     get() {
@@ -128,7 +128,12 @@ function prepareMatches(matches, relayEnvironment) {
     if (Component == null) {
       route.component.load(); // eagerly load
     }
-    return { component: route.component, prepared, routeData: matchData };
+    return {
+      component: route.component,
+      prepared,
+      routeData: matchData,
+      id: route.component.getModuleId(),
+    };
   });
 }
 

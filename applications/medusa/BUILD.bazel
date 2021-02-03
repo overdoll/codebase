@@ -80,6 +80,7 @@ _RUNTIME_DEPS = [
     "@npm//@emotion/react",
     "@npm//@emotion/cache",
     "@npm//@emotion/server",
+    "@npm//@emotion/css",
     "@npm//theme-ui",
     "@npm//react-i18next",
     "@npm//i18next-http-middleware",

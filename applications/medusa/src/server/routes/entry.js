@@ -4,16 +4,20 @@ import { Environment, Network, RecordSource, Store } from 'relay-runtime';
 import routes from '../../client/routes';
 import path from 'path';
 import serialize from 'serialize-javascript';
-import preloadDataFromRoutes from '@//:modules/routing/preloadDataFromRoutes';
+import RouteRenderer from '@//:modules/routing/RouteRenderer';
+import RoutingContext from '@//:modules/routing/RoutingContext';
+import prepass from 'react-ssr-prepass';
+import { RelayEnvironmentProvider } from 'react-relay/hooks';
 import { CacheProvider } from '@emotion/react';
 import { renderToString } from 'react-dom/server';
-
 import createEmotionServer from '@emotion/server/create-instance';
 import createCache from '@emotion/cache';
 
+import createRouter from '@//:modules/routing/createRouter';
+import createMockHistory from '@//:modules/routing/createMockHistory';
+
 const entry = async (req, res, next) => {
   try {
-    const context = {};
     let forwardCookies = [];
 
     const csrfToken = req.csrfToken();
@@ -74,13 +78,25 @@ const entry = async (req, res, next) => {
       }),
     });
 
-    // Preload data from our routes
-    const assets = await preloadDataFromRoutes(
+    const context = {};
+
+    // Create a router
+    const router = createRouter(
       routes,
-      req.url,
+      createMockHistory({ context, location: req.url }),
       environment,
-      context,
     );
+
+    const App = (
+      <RelayEnvironmentProvider environment={environment}>
+        <RoutingContext.Provider value={router.context}>
+          <RouteRenderer />
+        </RoutingContext.Provider>
+      </RelayEnvironmentProvider>
+    );
+
+    // Collect relay App data from our routes, so we have faster initial loading times.
+    await prepass(App);
 
     // If no CSRF cookie exists, we set it
     if (req.cookies._csrf === undefined) {
@@ -118,18 +134,22 @@ const entry = async (req, res, next) => {
       .getSource()
       .toJSON();
 
+    // Get any extra assets we need to load, so that we dont have to import them in-code
+    const assets = router.context.get().entries.map(entry => entry.id);
+
     // Set up our chunk extractor, so that we can preload our resources
     const extractor = new ChunkExtractor({
       statsFile: path.resolve(__dirname, 'loadable-stats.json'),
       entrypoints: ['client', ...assets],
     });
 
-    const key = 'custom';
-    const cache = createCache({ key });
+    const cache = createCache({ key: 'css' });
     const { extractCritical } = createEmotionServer(cache);
 
+    const element = <CacheProvider value={cache}>{App}</CacheProvider>;
+
     const { html, css, ids } = extractCritical(
-      renderToString(<CacheProvider value={cache}></CacheProvider>),
+      renderToString(extractor.collectChunks(element)),
     );
 
     res.render('default', {
@@ -137,6 +157,7 @@ const entry = async (req, res, next) => {
       scripts: extractor.getScriptTags(),
       preload: extractor.getLinkTags(),
       styles: extractor.getStyleTags(),
+      css: `<style data-emotion="css ${ids.join(' ')}">${css}</style>`,
       csrfToken: csrfToken,
       relayStore: serialize(relayData),
       i18nextStore: serialize(initialI18nStore),

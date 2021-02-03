@@ -17,7 +17,7 @@ export default function Register(props) {
   const [t] = useTranslation('auth');
 
   const onSubmit = async val => {
-    await commit({
+    commit({
       variables: {
         data: {
           username: val.username,

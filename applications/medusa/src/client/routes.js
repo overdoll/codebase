@@ -1,12 +1,4 @@
 import JSResource from '@//:modules/utilities/JSResource';
-import { After, Before } from '@//:modules/routing/Middleware';
-
-// Grab the user from the environment using this raw function from the map
-const getUserFromEnvironment = environment =>
-  environment
-    .getStore()
-    .getSource()
-    .get('client:root:authentication:user');
 
 /**
  * Client routes for the application
@@ -51,21 +43,6 @@ const routes = [
             /* webpackChunkName: "JoinRoot" */ './components/routes/join/Join'
           ),
         ),
-        // When user is logged in, we just want to redirect them since they're already "logged in"
-        middleware: [
-          new Before([
-            (environment, context) => {
-              const user = getUserFromEnvironment(environment);
-
-              if (user !== undefined) {
-                context.url = '/profile';
-                return false;
-              }
-
-              return true;
-            },
-          ]),
-        ],
       },
       {
         path: '/token/:id',
@@ -74,47 +51,6 @@ const routes = [
             /* webpackChunkName: "TokenRoot" */ './components/routes/token/Token'
           ),
         ),
-        middleware: [
-          // If the user is logged in, we don't do the API call
-          new Before([
-            (environment, context) => {
-              const user = getUserFromEnvironment(environment);
-
-              if (user !== undefined) {
-                context.url = '/profile';
-                return false;
-              }
-
-              return true;
-            },
-          ]),
-
-          // If the user is not logged in, we use the result to determine if we should redirect them
-          new After([
-            (environment, context) => {
-              const token = environment
-                .getStore()
-                .getSource()
-                .get(
-                  'client:root:redeemCookie(cookie:"' +
-                    context.params.id +
-                    '")',
-                );
-
-              // If registered and in the same session, redirect to profile
-              if (
-                token !== undefined &&
-                token.sameSession &&
-                token.registered
-              ) {
-                context.url = '/profile';
-                return false;
-              }
-
-              return true;
-            },
-          ]),
-        ],
         // When user is logged in, they don't necessarily need this route
         prepare: params => {
           const TokenQuery = require('./components/routes/token/__generated__/TokenQuery.graphql');
