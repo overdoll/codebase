@@ -13,8 +13,6 @@ import RelayEnvironment from './relay/RelayEnvironment';
 
 const router = createRouter(routes, createBrowserHistory(), RelayEnvironment);
 
-// Uses the custom router setup to define a router instance that we can pass through context
-// Global configuration - contexts and other parts should ideally function on both the server-side and client-side
 export default function App() {
   return (
     <I18nextProvider i18n={i18next}>

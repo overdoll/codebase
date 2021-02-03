@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/cache": "^11.1.3",
     "@emotion/react": "^11.1.4",
+    "@emotion/server": "^11.0.0",
     "@loadable/component": "^5.14.1",
     "@loadable/server": "^5.14.0",
     "@streamlinehq/streamline-bold": "^0.6.1",

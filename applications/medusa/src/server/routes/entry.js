@@ -5,6 +5,11 @@ import routes from '../../client/routes';
 import path from 'path';
 import serialize from 'serialize-javascript';
 import preloadDataFromRoutes from '@//:modules/routing/preloadDataFromRoutes';
+import { CacheProvider } from '@emotion/react';
+import { renderToString } from 'react-dom/server';
+
+import createEmotionServer from '@emotion/server/create-instance';
+import createCache from '@emotion/cache';
 
 const entry = async (req, res, next) => {
   try {
@@ -70,7 +75,12 @@ const entry = async (req, res, next) => {
     });
 
     // Preload data from our routes
-    await preloadDataFromRoutes(routes, req.url, environment, context);
+    const assets = await preloadDataFromRoutes(
+      routes,
+      req.url,
+      environment,
+      context,
+    );
 
     // If no CSRF cookie exists, we set it
     if (req.cookies._csrf === undefined) {
@@ -111,12 +121,16 @@ const entry = async (req, res, next) => {
     // Set up our chunk extractor, so that we can preload our resources
     const extractor = new ChunkExtractor({
       statsFile: path.resolve(__dirname, 'loadable-stats.json'),
-      entrypoints: ['client'],
+      entrypoints: ['client', ...assets],
     });
 
-    // TODO: grab the assets from the list, and then
-    console.log(extractor.stats.assets);
-    console.log(await routes[0].component.getModuleId());
+    const key = 'custom';
+    const cache = createCache({ key });
+    const { extractCritical } = createEmotionServer(cache);
+
+    const { html, css, ids } = extractCritical(
+      renderToString(<CacheProvider value={cache}></CacheProvider>),
+    );
 
     res.render('default', {
       title: 'Title',

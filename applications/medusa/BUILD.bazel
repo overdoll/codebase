@@ -1,6 +1,7 @@
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
 load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin", "nodejs_binary")
 load("@bazel_skylib//rules:write_file.bzl", "write_file")
+load("@npm//razzle:index.bzl", "razzle")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -77,6 +78,8 @@ _RUNTIME_DEPS = [
     "@npm//csurf",
     "@npm//winston",
     "@npm//@emotion/react",
+    "@npm//@emotion/cache",
+    "@npm//@emotion/server",
     "@npm//theme-ui",
     "@npm//react-i18next",
     "@npm//i18next-http-middleware",
@@ -86,6 +89,40 @@ _RUNTIME_DEPS = [
     "@npm//@streamlinehq/streamline-bold",
     "@npm//@streamlinehq/streamline-regular",
 ]
+
+# TODO: get build working here
+#razzle(
+#    name = "bundle",
+#    outs = ["build"],
+#    args = [
+#        "--node_options=--require=./$(execpath chdir.js)",
+#        "build",
+#    ],
+#    data = _RUNTIME_DEPS,
+#)
+
+#nodejs_binary(
+#    name = "medusa-bin",
+#    data = _RUNTIME_DEPS,
+#    entry_point = "@npm//:node_modules/razzle/bin/razzle.js",
+#    templated_args = [
+#        "--node_options=--require=./$(rootpath chdir.js)",
+#        "build",
+#    ],
+#)
+
+#nodejs_binary(
+#    name = "medusa",
+#    data = [
+#        "chdir.js",
+#        ":bundle",
+#        "@npm//express",
+#    ],
+#    entry_point = "build/server.js",
+#    templated_args = [
+#        "--node_options=--require=./$(rootpath chdir.js)",
+#    ],
+#)
 
 nodejs_binary(
     name = "medusa",

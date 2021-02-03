@@ -20,6 +20,8 @@ export default async function preloadDataFromRoutes(
   // Find the initial match for the route
   const matches = matchRoutes(routes, location);
 
+  const assets = [];
+
   for (let i = 0; i < matches.length; i++) {
     const { route, match: matchData } = matches[i];
 
@@ -38,6 +40,9 @@ export default async function preloadDataFromRoutes(
         }
       });
     }
+
+    // add our module Ids - we will load scripts from this
+    assets.push(route.component.getModuleId());
 
     // Run middleware "pre" checks
     // Skip if "false" is returned
@@ -64,4 +69,6 @@ export default async function preloadDataFromRoutes(
     // Middleware post checks
     Run(afterMiddleware, environment, context);
   }
+
+  return assets;
 }
