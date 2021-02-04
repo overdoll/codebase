@@ -1,7 +1,5 @@
 import { Suspense, createContext, useState, useEffect } from 'react';
 import { graphql, usePreloadedQuery } from 'react-relay/hooks';
-import { useRoutingContext } from '@//:modules/routing/RoutingContext';
-import { useHistory } from '@//:modules/routing';
 
 const RootContext = createContext({});
 

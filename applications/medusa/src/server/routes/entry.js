@@ -165,7 +165,7 @@ const entry = async (req, res, next) => {
       entrypoints: ['client', ...assets],
     });
 
-    const cache = createCache({ key: 'css' });
+    const cache = createCache({ key: 'css', nonce: res.locals.cspNonce });
     const { extractCritical } = createEmotionServer(cache);
 
     const element = <CacheProvider value={cache}>{App}</CacheProvider>;
@@ -173,12 +173,15 @@ const entry = async (req, res, next) => {
     const { html, css, ids } = extractCritical(
       renderToString(extractor.collectChunks(element)),
     );
+
     res.render('default', {
       title: 'Title',
       scripts: extractor.getScriptTags(),
       preload: extractor.getLinkTags(),
       styles: extractor.getStyleTags(),
-      css: `<style data-emotion="css ${ids.join(' ')}">${css}</style>`,
+      nonce: res.locals.cspNonce,
+      emotionIds: ids.join(' '),
+      emotionCss: css,
       html: html,
       csrfToken: csrfToken,
       relayStore: serialize(relayData),

@@ -20,28 +20,21 @@ index.use(express.static(path.resolve(__dirname, '../public')));
 // Add i18next middleware
 index.use(i18nextMiddleware.handle(i18next));
 
-// helmet (security headers)
-index.use(middleware.helmet);
-
 // cookie-parser
 index.use(cookieParser());
 
-// custom middleware to inject a csrf secret into the session -
-// the default csurf middleware expects some sort of session storage but
-// we also want access to the secret so we can send it on the SSR side
-index.use((req, res, next) => {
-  req.csrf = {};
+// Generate a Nonce tag
+index.use(middleware.nonce);
 
-  if (req.cookies._csrf !== undefined) {
-    req.csrf.csrfSecret = req.cookies._csrf;
-  }
+// helmet (security headers)
+index.use(middleware.helmet);
 
-  next();
-});
+index.use(middleware.csurf);
 
 // CSRF
 index.use(
   csrf({
+    // Disable cookie - however, we set it ourselves later
     cookie: false,
     sessionKey: 'csrf',
   }),

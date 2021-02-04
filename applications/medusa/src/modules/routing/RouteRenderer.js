@@ -7,9 +7,15 @@ import {
 } from 'react';
 import RoutingContext from '@//:modules/routing/RoutingContext';
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary';
-import '@//:modules/routing/RouteRenderer.css';
+import { keyframes } from '@emotion/react';
 
 const SUSPENSE_CONFIG = { timeoutMs: 2000 };
+
+const transition = keyframes`
+  to {
+    visibility: visible;
+  }
+`;
 
 /**
  * A component that accesses the current route entry from RoutingContext and renders
@@ -108,7 +114,17 @@ export default function RouterRenderer() {
       <Suspense fallback={null}>
         {/* Indicate to the user that a transition is pending, even while showing the previous UI */}
         {isPending ? (
-          <div className="RouteRenderer-pending">Loading pending...</div>
+          <div
+            sx={{
+              position: 'absolute',
+              zIndex: '1',
+              backgroundColor: '#fff',
+              animation: `0s linear 0.5s forwards ${transition}`,
+              visibility: 'hidden',
+            }}
+          >
+            Loading pending...
+          </div>
         ) : null}
         {routeComponent}
       </Suspense>

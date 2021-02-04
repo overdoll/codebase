@@ -5,6 +5,7 @@
     <link rel="manifest" href="/manifest.json">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=2,shrink-to-fit=no"/>
     <meta name="csrf-token" content="<%= csrfToken %>">
+    <meta name="nonce" content="<%= nonce %>">
     <meta name="browser-language" content="<%= i18nextLang %>">
     <title><%= title %></title>
     <%- preload %>
@@ -12,10 +13,10 @@
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Nunito:700">
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans+JP:400" rel="stylesheet" type="text/css">
     <link href='https://fonts.googleapis.com/css?family=Nunito:700' rel='stylesheet' type="text/css">
-    <%- css %>
     <%- styles %>
-    <script type="application/json" id="relay-store"><%- relayStore %></script>
-    <script type="application/json" id="i18next-store"><%- i18nextStore %></script>
+    <style nonce="<%= nonce %>" data-emotion="css <%= emotionIds %>"><%= emotionCss %></style>
+    <script nonce="<%= nonce %>" type="application/json" id="relay-store"><%- relayStore %></script>
+    <script nonce="<%= nonce %>" type="application/json" id="i18next-store"><%- i18nextStore %></script>
 </head>
 <body>
 <div id="root"><%- html %></div>

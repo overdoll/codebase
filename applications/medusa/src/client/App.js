@@ -14,7 +14,14 @@ import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
 
 const router = createRouter(routes, createBrowserHistory(), RelayEnvironment);
-const cache = createCache({ key: 'css' });
+
+const nonce = document
+  .querySelector('meta[name="nonce"]')
+  .getAttribute('content');
+
+const cache = createCache({ key: 'css', nonce: nonce });
+
+window.__webpack_nonce__ = nonce;
 
 export default function App() {
   return (
