@@ -1,4 +1,9 @@
 # Table of contents
 
-* [Initial page](README.md)
+* [README](README.md)
+* [Untitled](untitled.md)
+
+## Setup
+
+* [Required Tools](setup/required-tools.md)
 
