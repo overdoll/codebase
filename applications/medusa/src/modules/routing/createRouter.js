@@ -1,27 +1,20 @@
 import { matchRoutes } from 'react-router-config';
-import { loadQuery, fetchQuery } from 'react-relay/hooks';
+import { loadQuery } from 'react-relay/hooks';
 
-// Check if our route is valid (on the client), by running the "accessible" function
-const isRouteValid = (environment, route) => {
-  if (route.hasOwnProperty('accessible')) {
-    const result = route.accessible(environment);
-    // Accessible check failed
-    if (!result) return false;
+// Check if our route is valid (on the client), by running the "middleware" function
+// The middleware function can either return true or false - if false, then the route won't be visible to the user and no API
+// call will be made. If true, an API call will be made, and any other resolutions should be done within
+// the component where the API call is made
+const isRouteValid = (environment, route, history) => {
+  if (route.hasOwnProperty('middleware')) {
+    for (let i = 0; i < route.middleware.length; i++) {
+      // Middleware check failed
+      if (!route.middleware[i](environment, history)) return false;
+    }
   }
 
-  // Accessible check succeeded or didn't exist
+  // Middleware check succeeded or didn't exist
   return true;
-};
-
-// recursive function that filters all routes
-const filterRoute = (environment, route) => {
-  if (!route.hasOwnProperty('routes')) {
-    return isRouteValid(environment, route);
-  }
-
-  return (route.routes = route.routes.filter(route =>
-    filterRoute(environment, route),
-  ));
 };
 
 /**
@@ -33,14 +26,15 @@ const filterRoute = (environment, route) => {
  * Note: History is created by either the index or the client, since we can't use the same history for both.
  *
  */
-export default function createRouter(unparsedRoutes, history, environment) {
-  // Recursively parse route, and use route environment source as a helper
-  const routes = unparsedRoutes.filter(route =>
-    filterRoute(environment, route),
+export default function createRouter(routes, history, environment) {
+  // Find the initial match and prepare it
+  const initialMatches = matchRoute(
+    routes,
+    history,
+    history.location,
+    environment,
   );
 
-  // Find the initial match and prepare it
-  const initialMatches = matchRoute(routes, history.location);
   const initialEntries = prepareMatches(initialMatches, environment);
   let currentEntry = {
     location: history.location,
@@ -58,7 +52,7 @@ export default function createRouter(unparsedRoutes, history, environment) {
     if (location.pathname === currentEntry.location.pathname) {
       return;
     }
-    const matches = matchRoute(routes, location, environment);
+    const matches = matchRoute(routes, history, location, environment);
     const entries = prepareMatches(matches, environment);
     const nextEntry = {
       location,
@@ -101,8 +95,15 @@ export default function createRouter(unparsedRoutes, history, environment) {
 /**
  * Match the current location to the corresponding route entry.
  */
-function matchRoute(routes, location, relayEnvironment) {
-  const matchedRoutes = matchRoutes(routes, location.pathname);
+function matchRoute(routes, history, location, environment) {
+  const unparsedRoutes = matchRoutes(routes, location.pathname);
+
+  // Recursively parse route, and use route environment source as a helper
+  // Make sure that we are allowed to be in a route that we are using
+  const matchedRoutes = unparsedRoutes.filter(route =>
+    isRouteValid(environment, route.route, history),
+  );
+
   if (!Array.isArray(matchedRoutes) || matchedRoutes.length === 0) {
     throw new Error('No route for ' + location.pathname);
   }
@@ -149,31 +150,16 @@ function convertPreparedToQueries(environment, prepare, params, index) {
   if (prepare === undefined) return prepared;
 
   const queriesToPrepare = prepare(params);
-  Object.keys(queriesToPrepare).forEach(queryKey => {
-    const { query, variables, options } = queriesToPrepare[queryKey];
+  const queryKeys = Object.keys(queriesToPrepare);
 
-    // run a loadQuery for each of our queries
-    prepared[queryKey] = loadQuery(environment, query, variables, options);
-  });
+  // For each route, fetch the query
+  for (let ii = 0; ii < queryKeys.length; ii++) {
+    const key = queryKeys[ii];
 
-  // const queryKeys = Object.keys(queriesToPrepare);
-  //
-  // // For each route, fetch the query
-  // for (let ii = 0; ii < queryKeys.length; ii++) {
-  //   const key = queryKeys[ii];
-  //
-  //   console.log(key);
-  //   console.log(ii);
-  //
-  //   const { query, variables, options } = queriesToPrepare[key];
-  //
-  //   // First match is always our root query - we do an await because we want instant access to it
-  //   if (index === 0) {
-  //     await fetchQuery(environment, query, variables, options).toPromise();
-  //   }
-  //
-  //   prepared[key] = loadQuery(environment, query, variables, options);
-  // }
+    const { query, variables, options } = queriesToPrepare[key];
+
+    prepared[key] = loadQuery(environment, query, variables, options);
+  }
 
   return prepared;
 }

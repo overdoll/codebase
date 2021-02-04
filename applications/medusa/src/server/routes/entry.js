@@ -1,6 +1,7 @@
 import { ChunkExtractor } from '@loadable/server';
 import axios from 'axios';
 import { Environment, Network, RecordSource, Store } from 'relay-runtime';
+import { fetchQuery, RelayEnvironmentProvider } from 'react-relay/hooks';
 import routes from '../../client/routes';
 import theme from '../../client/theme';
 import path from 'path';
@@ -8,7 +9,7 @@ import serialize from 'serialize-javascript';
 import RouteRenderer from '@//:modules/routing/RouteRenderer';
 import RoutingContext from '@//:modules/routing/RoutingContext';
 import prepass from 'react-ssr-prepass';
-import { RelayEnvironmentProvider } from 'react-relay/hooks';
+
 import { CacheProvider } from '@emotion/react';
 import { renderToString } from 'react-dom/server';
 import createEmotionServer from '@emotion/server/create-instance';
@@ -76,9 +77,20 @@ const entry = async (req, res, next) => {
     const environment = new Environment({
       network: Network.create(fetchRelay),
       store: new Store(new RecordSource(), {
-        gcReleaseBufferSize: 10,
+        gcReleaseBufferSize: 100,
       }),
     });
+
+    // Before going further and creating our router, we pre-emptively resolve the RootQuery routes, so that the user object
+    // can be available for permission checking & redirecting on the server & client
+    const root = routes[0].prepare({});
+    const rootKeys = Object.keys(root);
+
+    // Get all prepared statements, and wait for fetchQuery to resolve
+    for (let i = 0; i < rootKeys.length; i++) {
+      const { query, variables, options } = root[rootKeys[i]];
+      await fetchQuery(environment, query, variables, options).toPromise();
+    }
 
     const context = {};
 
@@ -88,6 +100,12 @@ const entry = async (req, res, next) => {
       createMockHistory({ context, location: req.url }),
       environment,
     );
+
+    // If our router is asking for a redirect (before we even render the app), accept it
+    if (context.url) {
+      res.redirect(301, context.url);
+      return;
+    }
 
     const App = (
       <ThemeProvider theme={theme}>
@@ -118,9 +136,8 @@ const entry = async (req, res, next) => {
       'cache-control',
       'private, no-cache, no-store, must-revalidate',
     );
-    console.log(context.url);
 
-    // check for redirect first
+    // check for another redirect, this time by the body of the whole app
     if (context.url) {
       res.redirect(301, context.url);
       return;
@@ -156,7 +173,6 @@ const entry = async (req, res, next) => {
     const { html, css, ids } = extractCritical(
       renderToString(extractor.collectChunks(element)),
     );
-
     res.render('default', {
       title: 'Title',
       scripts: extractor.getScriptTags(),

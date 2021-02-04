@@ -3,6 +3,7 @@ import Register from '../../register/Register';
 import { Frame } from '@//:modules/content';
 import { Heading, Text } from '@//:modules/typography';
 import { useTranslation } from 'react-i18next';
+import { useHistory } from '@//:modules/routing';
 
 const TokenQuery = graphql`
   query TokenQuery($cookie: String!) {
@@ -14,9 +15,10 @@ const TokenQuery = graphql`
   }
 `;
 
-export default function Root({ prepared }) {
+export default function Token({ prepared }) {
   const data = usePreloadedQuery(TokenQuery, prepared.tokenQuery);
   const [t] = useTranslation('auth');
+  const history = useHistory();
 
   if (data.redeemCookie === null) {
     return t('expired');
@@ -63,7 +65,7 @@ export default function Root({ prepared }) {
     return <Register />;
   }
 
-  // User is registered - should be redirected or something
-  context.url = '/profile';
+  // User is registered - redirect to profile
+  history.push('/profile');
   return null;
 }

@@ -1,5 +1,11 @@
 import JSResource from '@//:modules/utilities/JSResource';
 
+const getUserFromEnvironment = environment =>
+  environment
+    .getStore()
+    .getSource()
+    .get('client:root:authentication:user');
+
 /**
  * Client routes for the application
  *
@@ -43,7 +49,19 @@ const routes = [
             /* webpackChunkName: "JoinRoot" */ './components/routes/join/Join'
           ),
         ),
-        middleware: [(user, history) => {}],
+        // When user is logged in, we just want to redirect them since they're already "logged in"
+        middleware: [
+          (environment, history) => {
+            const user = getUserFromEnvironment(environment);
+
+            if (user !== undefined) {
+              history.push('/profile');
+              return false;
+            }
+
+            return true;
+          },
+        ],
       },
       {
         path: '/token/:id',
@@ -52,7 +70,6 @@ const routes = [
             /* webpackChunkName: "TokenRoot" */ './components/routes/token/Token'
           ),
         ),
-        // When user is logged in, they don't necessarily need this route
         prepare: params => {
           const TokenQuery = require('./components/routes/token/__generated__/TokenQuery.graphql');
           return {
@@ -65,6 +82,19 @@ const routes = [
             },
           };
         },
+        // When user is logged in, we don't want them to be able to redeem any other tokens
+        middleware: [
+          (environment, history) => {
+            const user = getUserFromEnvironment(environment);
+
+            if (user !== undefined) {
+              history.push('/profile');
+              return false;
+            }
+
+            return true;
+          },
+        ],
       },
       {
         path: '*',

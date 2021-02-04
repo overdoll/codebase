@@ -15,7 +15,7 @@ export default function createMockHistory({
     key: loc.key || 'default',
   };
 
-  const mockHistory = {
+  return {
     get action() {
       return action;
     },
@@ -40,6 +40,4 @@ export default function createMockHistory({
     listen() {},
     block() {},
   };
-
-  return mockHistory;
 }

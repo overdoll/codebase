@@ -45,7 +45,6 @@ async function fetchRelay(params, variables, _cacheConfig) {
   // property of the response. If any exceptions occurred when processing the request,
   // throw an error to indicate to the developer what went wrong.
   if (Array.isArray(json.errors)) {
-    console.log(json.errors);
     throw new Error(JSON.stringify(json.errors));
   }
 
