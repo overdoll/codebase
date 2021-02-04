@@ -4,9 +4,7 @@ import (
 	"crypto/sha1"
 	"crypto/subtle"
 	"encoding/base64"
-	"fmt"
 	"net/http"
-	"os"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -16,8 +14,10 @@ import (
 func CSRFCheck() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
-		// For local development, we want to disable CSRF because introspection won't work
-		if os.Getenv("DISABLE_CSRF") == "true" {
+		// No CSRF validation if session cookie exists
+		_, err := c.Request.Cookie("session")
+
+		if err != nil {
 			c.Next()
 			return
 		}
@@ -48,8 +48,6 @@ func CSRFCheck() gin.HandlerFunc {
 		// If our CSRF token is not the same as our hashed string, then we abort
 		// Time-safe comparison (https://codahale.com/a-lesson-in-timing-attacks/)
 		if subtle.ConstantTimeCompare([]byte(expected), []byte(token)) != 1 {
-			fmt.Println(expected)
-			fmt.Println(token)
 			c.AbortWithStatus(http.StatusUnauthorized)
 			return
 		}
