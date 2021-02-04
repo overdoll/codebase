@@ -1,4 +1,4 @@
-export default {
+const theme = {
   breakpoints: ['40em', '52em', '64em'],
   fontSizes: [
     '1rem', // 12
@@ -178,3 +178,5 @@ export default {
     },
   },
 };
+
+export default theme;

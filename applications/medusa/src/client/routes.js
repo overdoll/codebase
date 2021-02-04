@@ -43,6 +43,7 @@ const routes = [
             /* webpackChunkName: "JoinRoot" */ './components/routes/join/Join'
           ),
         ),
+        middleware: [(user, history) => {}],
       },
       {
         path: '/token/:id',

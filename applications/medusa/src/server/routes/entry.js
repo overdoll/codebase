@@ -2,6 +2,7 @@ import { ChunkExtractor } from '@loadable/server';
 import axios from 'axios';
 import { Environment, Network, RecordSource, Store } from 'relay-runtime';
 import routes from '../../client/routes';
+import theme from '../../client/theme';
 import path from 'path';
 import serialize from 'serialize-javascript';
 import RouteRenderer from '@//:modules/routing/RouteRenderer';
@@ -15,6 +16,7 @@ import createCache from '@emotion/cache';
 
 import createRouter from '@//:modules/routing/createRouter';
 import createMockHistory from '@//:modules/routing/createMockHistory';
+import { ThemeProvider } from 'theme-ui';
 
 const entry = async (req, res, next) => {
   try {
@@ -88,11 +90,13 @@ const entry = async (req, res, next) => {
     );
 
     const App = (
-      <RelayEnvironmentProvider environment={environment}>
-        <RoutingContext.Provider value={router.context}>
-          <RouteRenderer />
-        </RoutingContext.Provider>
-      </RelayEnvironmentProvider>
+      <ThemeProvider theme={theme}>
+        <RelayEnvironmentProvider environment={environment}>
+          <RoutingContext.Provider value={router.context}>
+            <RouteRenderer />
+          </RoutingContext.Provider>
+        </RelayEnvironmentProvider>
+      </ThemeProvider>
     );
 
     // Collect relay App data from our routes, so we have faster initial loading times.
@@ -114,6 +118,7 @@ const entry = async (req, res, next) => {
       'cache-control',
       'private, no-cache, no-store, must-revalidate',
     );
+    console.log(context.url);
 
     // check for redirect first
     if (context.url) {
@@ -158,6 +163,7 @@ const entry = async (req, res, next) => {
       preload: extractor.getLinkTags(),
       styles: extractor.getStyleTags(),
       css: `<style data-emotion="css ${ids.join(' ')}">${css}</style>`,
+      html: html,
       csrfToken: csrfToken,
       relayStore: serialize(relayData),
       i18nextStore: serialize(initialI18nStore),

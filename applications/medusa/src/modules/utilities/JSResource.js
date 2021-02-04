@@ -4,6 +4,8 @@
  * modules, so to be able to access already-loaded modules synchronously we
  * must have stored the previous result somewhere.
  */
+import CanUseDOM from '@//:modules/utilities/CanUseDOM';
+
 const resourceMap = new Map();
 
 /**
@@ -103,10 +105,15 @@ class Resource {
  * @param {*} loader A method to load the resource's data if necessary
  */
 export default function JSResource(moduleId, loader) {
+  // On the server side, we want to always create a new instance, because it won't refresh with changes
+  if (!CanUseDOM) {
+    return new Resource(loader, moduleId);
+  }
+
   let resource = resourceMap.get(moduleId);
   if (resource == null) {
     resource = new Resource(loader, moduleId);
     resourceMap.set(moduleId, resource);
   }
-  return resource;
+  return new Resource(loader, moduleId);
 }

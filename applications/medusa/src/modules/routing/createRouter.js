@@ -1,5 +1,5 @@
 import { matchRoutes } from 'react-router-config';
-import { loadQuery } from 'react-relay/hooks';
+import { loadQuery, fetchQuery } from 'react-relay/hooks';
 
 // Check if our route is valid (on the client), by running the "accessible" function
 const isRouteValid = (environment, route) => {
@@ -115,13 +115,14 @@ function matchRoute(routes, location, relayEnvironment) {
  * Inject RelayEnvironment
  */
 function prepareMatches(matches, relayEnvironment) {
-  return matches.map(match => {
+  return matches.map((match, index) => {
     const { route, match: matchData } = match;
 
     const prepared = convertPreparedToQueries(
       relayEnvironment,
       route.prepare,
       matchData.params,
+      index,
     );
 
     const Component = route.component.get();
@@ -142,19 +143,37 @@ function prepareMatches(matches, relayEnvironment) {
  * Converts our "prepared" object into an actual routing key
  *
  */
-function convertPreparedToQueries(relayEnvironment, prepare, params) {
+function convertPreparedToQueries(environment, prepare, params, index) {
   const prepared = {};
 
   if (prepare === undefined) return prepared;
 
   const queriesToPrepare = prepare(params);
-
   Object.keys(queriesToPrepare).forEach(queryKey => {
     const { query, variables, options } = queriesToPrepare[queryKey];
 
     // run a loadQuery for each of our queries
-    prepared[queryKey] = loadQuery(relayEnvironment, query, variables, options);
+    prepared[queryKey] = loadQuery(environment, query, variables, options);
   });
+
+  // const queryKeys = Object.keys(queriesToPrepare);
+  //
+  // // For each route, fetch the query
+  // for (let ii = 0; ii < queryKeys.length; ii++) {
+  //   const key = queryKeys[ii];
+  //
+  //   console.log(key);
+  //   console.log(ii);
+  //
+  //   const { query, variables, options } = queriesToPrepare[key];
+  //
+  //   // First match is always our root query - we do an await because we want instant access to it
+  //   if (index === 0) {
+  //     await fetchQuery(environment, query, variables, options).toPromise();
+  //   }
+  //
+  //   prepared[key] = loadQuery(environment, query, variables, options);
+  // }
 
   return prepared;
 }
