@@ -4,5 +4,5 @@
 
 ## Setup
 
-* [Required Tools](setup/required-tools.md)
+* [Required Tools](docs/setup/required-tools.md)
 

@@ -4,7 +4,7 @@ description: Setup instructions
 
 # Required Tools
 
-To setup the repository, please download the following:
+To docs.setup the repository, please download the following:
 
 ```
 $ give me super-powers
