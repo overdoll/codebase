@@ -23,7 +23,7 @@
     "husky": "^3.0.9",
     "i18next": "^19.8.4",
     "i18next-fs-backend": "^1.0.7",
-    "i18next-http-backend": "^1.0.21",
+    "i18next-http-backend": "^1.1.0",
     "i18next-http-middleware": "^3.0.6",
     "node-fetch": "^2.6.1",
     "react": "^0.0.0-experimental-3310209d0",
