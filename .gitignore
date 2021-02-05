@@ -15,6 +15,7 @@
 # vendor/
 #
 node_modules
+tilt_modules
 .helm
 bazel-*
 .env

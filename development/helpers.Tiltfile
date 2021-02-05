@@ -1,5 +1,6 @@
 # -*- mode: Python -*-
 
+# Bazel helpers & Configuration
 BAZEL_SOURCES_CMD_TEMPLATE = """
   bazel query 'filter("^//", kind("source file", deps(set(%s))))' --order_output=no
   """.strip()

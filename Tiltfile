@@ -1,3 +1,8 @@
+# For more on Extensions, see: https://docs.tilt.dev/extensions.html
+load("ext://helm_remote", "helm_remote")
+load("ext://restart_process", "custom_build_with_restart")
+load("./development/helpers.Tiltfile", "bazel_buildfile_deps", "bazel_sourcefile_deps")
+
 applications = {
     "hades": {
         "type": "go",
@@ -68,21 +73,17 @@ docker_prune_settings(
     keep_recent = 2,
 )
 
-# For more on Extensions, see: https://docs.tilt.dev/extensions.html
-load("ext://restart_process", "custom_build_with_restart")
-load("./bazel.Tiltfile", "bazel_buildfile_deps", "bazel_sourcefile_deps")
-
 # Watch YAML kubernetes files
-for f in bazel_sourcefile_deps("//deployments:objects"):
+for f in bazel_sourcefile_deps("//development:objects"):
     watch_file(f)
 
-for f in bazel_buildfile_deps("//deployments:objects"):
+for f in bazel_buildfile_deps("//development:objects"):
     watch_file(f)
 
 # Deploy YAML files
-k8s_yaml(local("bazel run //deployments:objects"))
+k8s_yaml(local("bazel run //development:objects"))
 
-# Setup cluster
+# Setup cluster - Need to group some resources or it wil be messy!
 k8s_kind("Cluster", api_version = "scylla.scylladb.com/v1alpha1")
 k8s_resource("simple-cluster", extra_pod_selectors = {"scylla/cluster": "simple-cluster"})
 
@@ -161,8 +162,6 @@ local_resource(
 )
 
 local_resource("relay-compiler", serve_cmd = "yarn run relay")
-
-load("ext://helm_remote", "helm_remote")
 
 helm_remote(
     "traefik",

@@ -3,3 +3,4 @@ build --incompatible_strict_action_env
 run --incompatible_strict_action_env
 run --incompatible_restrict_string_escapes=false
 build --incompatible_restrict_string_escapes=false
+sync --incompatible_restrict_string_escapes=false
