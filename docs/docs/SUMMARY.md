@@ -16,7 +16,9 @@
     * [Relay & Suspense](../infrastructure/services/medusa/relay-and-suspense.md)
     * [Data Preloading & Rendering](../infrastructure/services/medusa/data-preloading-and-rendering.md)
     * [Express & Middleware](../infrastructure/services/medusa/express-and-middleware.md)
-  * [Hades](../infrastructure/services/hades.md)
+  * [Hades](../infrastructure/services/hades/README.md)
+    * [Authentication & Authorization](../infrastructure/services/hades/authentication-and-authorization.md)
+    * [GraphQL](../infrastructure/services/hades/graphql.md)
   * [Eva](../infrastructure/services/eva.md)
 
 ## Development
@@ -29,6 +31,7 @@
 
 * [Backend Services](../maintaining/backend-services/README.md)
   * [Building A Service](../maintaining/backend-services/building-a-service.md)
+  * [Essentials For All](../maintaining/backend-services/essentials-for-all.md)
   * [Communication](../maintaining/backend-services/communication.md)
   * [Code Styling & Formatting](../maintaining/backend-services/code-styling-and-formatting.md)
 * [Frontend](../maintaining/frontend/README.md)
