@@ -17,14 +17,13 @@
     * [Data Preloading & Rendering](../infrastructure/services/medusa/data-preloading-and-rendering.md)
     * [Express & Middleware](../infrastructure/services/medusa/express-and-middleware.md)
   * [Hades](../infrastructure/services/hades/README.md)
-    * [Authentication & Authorization](../infrastructure/services/hades/authentication-and-authorization.md)
     * [GraphQL](../infrastructure/services/hades/graphql.md)
   * [Eva](../infrastructure/services/eva.md)
 
 ## Development
 
 * [Tools](../development/tools.md)
-* [Run Services](../development/run-services.md)
+* [Access Services](../development/run-services.md)
 * [Using Tilt](../development/go-services.md)
 
 ## Maintaining
