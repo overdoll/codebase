@@ -29,9 +29,8 @@
 ## Maintaining
 
 * [Backend Services](../maintaining/backend-services/README.md)
-  * [Building A Service](../maintaining/backend-services/building-a-service.md)
-  * [Essentials For All](../maintaining/backend-services/essentials-for-all.md)
-  * [Communication](../maintaining/backend-services/communication.md)
+  * [Event-Driven Services](../maintaining/backend-services/building-a-service.md)
+  * [Synchronous Services](../maintaining/backend-services/synchronous-services.md)
   * [Code Styling & Formatting](../maintaining/backend-services/code-styling-and-formatting.md)
 * [Frontend](../maintaining/frontend/README.md)
   * [Building Components](../maintaining/frontend/building-components.md)
