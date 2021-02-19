@@ -23,11 +23,12 @@ const Input = ({ sx, validation, title, name, ...rest }) => {
                 ? 'orange.500'
                 : 'neutral.200'
               : 'green.600',
-            fontFamily: 'body',
+            fontFamily: 'heading',
             position: 'absolute',
             fontSize: 0,
             pl: 3,
             pt: 0,
+            transform: 'translateX(3.5%)',
           }}
         >
           {title}
@@ -38,24 +39,28 @@ const Input = ({ sx, validation, title, name, ...rest }) => {
           ref={register(validation)}
           sx={{
             pl: 3,
-            pr: 5,
+            pr: 7,
             fontSize: 2,
-            pt: 3,
+            pt: 5,
             pb: 1,
             fontWeight: 'body',
             fontFamily: 'body',
-            borderRadius: 'defaults',
+            borderRadius: 'forms',
             borderColor: hasError ? 'orange.300' : 'neutral.800',
             variant: 'forms.input.primary',
             borderWidth: '2px',
             borderStyle: 'solid',
             outlineWidth: '0',
+            '&:focus': {
+              borderColor: hasError ? 'orange.300' : 'neutral.300',
+            },
           }}
         />
         {(hasError || success) && (
           <Icon
             icon={success ? FormValidation.CheckDouble1 : Alerts.AlertCircle}
             stroke={success ? 'green.600' : 'orange.500'}
+            strokeWidth={2}
             sx={{
               top: '50%',
               transform: 'translateY(-50%)',
@@ -63,6 +68,7 @@ const Input = ({ sx, validation, title, name, ...rest }) => {
               display: 'inline-block',
               right: 2,
               bottom: 0,
+              strokeWidth: 2,
             }}
           />
         )}

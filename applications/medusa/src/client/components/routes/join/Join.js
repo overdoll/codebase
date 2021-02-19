@@ -8,6 +8,8 @@ import { useNotify } from '@//:modules/focus';
 import Lobby from './components/Lobby';
 import { RootContext } from '../Root';
 import { EMAIL } from '@//:modules/regex';
+import Icon from '@//:modules/content/icon/Icon';
+import { SignShapes } from '@streamlinehq/streamline-regular/lib/maps-navigation';
 
 const JoinAction = graphql`
   mutation JoinMutation($data: AuthenticationInput!) {
@@ -103,6 +105,18 @@ export default function Join() {
   // Ask user to authenticate
   return (
     <Frame>
+      <Icon
+        icon={SignShapes.SignBadgeCircle}
+        strokeWidth={2}
+        stroke={'primary.500'}
+        size={80}
+        sx={{
+          display: 'block',
+          pb: 6,
+          pt: 6,
+          textAlign: 'center',
+        }}
+      />
       <Form instance={instance} onSubmit={onSubmit}>
         <Input
           title={t('authenticate.form.email.title')}

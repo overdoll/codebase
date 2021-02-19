@@ -1,9 +1,10 @@
-const renderPaths = (icon, fill, stroke) =>
+const renderPaths = (icon, fill, stroke, strokeWidth) =>
   icon[4].map((path, index) => (
     <path
       sx={{
         fill: fill || icon[3][index].fill,
         stroke: stroke || icon[3][index].stroke,
+        strokeWidth: strokeWidth || icon[3][index]['stroke-width'],
       }}
       strokeLinecap={icon[3][index]['stroke-linecap']}
       strokeLinejoin={icon[3][index]['stroke-linejoin']}
@@ -20,6 +21,7 @@ export default function Icon({
   width,
   height,
   size,
+  strokeWidth,
   ...rest
 }) {
   let shouldResize = true;
@@ -46,7 +48,12 @@ export default function Icon({
     <i {...rest}>
       <svg
         viewBox={`0 0 ${finalWidth} ${finalHeight}`}
-        style={{ width: finalWidth, height: finalHeight }}
+        style={{
+          width: finalWidth,
+          height: finalHeight,
+          strokeWidth: strokeWidth,
+          overflow: 'visible',
+        }}
         width={finalWidth}
         height={finalHeight}
       >
@@ -55,10 +62,10 @@ export default function Icon({
             transform={`scale(${finalWidth / icon[1]},${finalHeight /
               icon[2]})`}
           >
-            {renderPaths(icon, fill, stroke)}
+            {renderPaths(icon, fill, stroke, strokeWidth)}
           </g>
         ) : (
-          renderPaths(icon, fill, stroke)
+          renderPaths(icon, fill, stroke, strokeWidth)
         )}
       </svg>
     </i>

@@ -11,6 +11,8 @@ const Button = ({ sx, loading, children, ...rest }) => {
         borderStyle: 'solid',
         pl: 6,
         pr: 6,
+        pt: 3,
+        pb: 3,
         fontSize: 2,
         fontWeight: 'bold',
         fontFamily: 'heading',
