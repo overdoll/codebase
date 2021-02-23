@@ -2,11 +2,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
     name = "go_default_library",
-    srcs = [
-        "cookie.go",
-        "server.go",
-        "user.go",
-    ],
+    srcs = ["server.go"],
     importpath = "overdoll/applications/eva/src/server",
     visibility = ["//visibility:public"],
     deps = [
@@ -22,11 +18,7 @@ go_library(
 
 go_test(
     name = "go_default_test",
-    srcs = [
-        "cookie_test.go",
-        "init_test.go",
-        "user_test.go",
-    ],
+    srcs = ["server_test.go"],
     embed = [":go_default_library"],
     deps = [
         "//applications/eva/proto:v1_go_proto",
