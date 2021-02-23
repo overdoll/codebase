@@ -101,12 +101,6 @@ const entry = async (req, res, next) => {
       environment,
     );
 
-    // If our router is asking for a redirect (before we even render the app), accept it
-    if (context.url) {
-      res.redirect(301, context.url);
-      return;
-    }
-
     const App = (
       <ThemeProvider theme={theme}>
         <RelayEnvironmentProvider environment={environment}>

@@ -15,7 +15,7 @@ import (
 )
 
 func init() {
-	err := godotenv.Load(DIRECTORY + ".env")
+	err := godotenv.Load("applications/eva/.env")
 
 	if err != nil {
 		log.Fatal("Error loading .env file")
@@ -39,7 +39,7 @@ func main() {
 
 	if os.Getenv("RUN_MIGRATIONS_ON_STARTUP") == "true" {
 		// Run migrations
-		if err := migrate.Migrate(context.Background(), session, DIRECTORY+"migrations"); err != nil {
+		if err := migrate.Migrate(context.Background(), session, "applications/eva/migrations"); err != nil {
 			log.Fatalf("Migrate: %s", err)
 		}
 	}

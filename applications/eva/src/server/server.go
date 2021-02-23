@@ -25,6 +25,7 @@ type Server struct {
 func NewServer(ctx context.Context, session gocqlx.Session) (*Server, error) {
 	return &Server{
 		session: session,
+
 	}, nil
 }
 
