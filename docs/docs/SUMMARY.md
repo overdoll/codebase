@@ -10,14 +10,32 @@
 ## Infrastructure
 
 * [External Providers](../infrastructure/external-providers.md)
+* [Libraries](../infrastructure/libraries.md)
 * [Services](../infrastructure/services/README.md)
-  * [Medusa](../infrastructure/services/medusa.md)
-  * [Hades](../infrastructure/services/hades.md)
+  * [Medusa](../infrastructure/services/medusa/README.md)
+    * [Relay & Suspense](../infrastructure/services/medusa/relay-and-suspense.md)
+    * [Data Preloading & Rendering](../infrastructure/services/medusa/data-preloading-and-rendering.md)
+    * [Express & Middleware](../infrastructure/services/medusa/express-and-middleware.md)
+  * [Hades](../infrastructure/services/hades/README.md)
+    * [GraphQL](../infrastructure/services/hades/graphql.md)
   * [Eva](../infrastructure/services/eva.md)
 
 ## Development
 
 * [Tools](../development/tools.md)
-* [Javascript Services](../development/javascript-services.md)
-* [Go Services](../development/go-services.md)
+* [Access Services](../development/run-services.md)
+* [Using Tilt](../development/go-services.md)
+
+## Maintaining
+
+* [Backend Services](../maintaining/backend-services/README.md)
+  * [Synchronous Services](../maintaining/backend-services/synchronous-services.md)
+  * [Event-Driven Services](../maintaining/backend-services/building-a-service.md)
+  * [Code Styling & Formatting](../maintaining/backend-services/code-styling-and-formatting.md)
+* [Frontend](../maintaining/frontend/README.md)
+  * [Building Components](../maintaining/frontend/building-components.md)
+  * [Designing Components](../maintaining/frontend/designing-components.md)
+  * [Fetching Data](../maintaining/frontend/fetching-data.md)
+  * [Ensuring Isomorphism](../maintaining/frontend/ensuring-isomorphism.md)
+  * [Coding Styling & Formatting](../maintaining/frontend/coding-styling-and-formatting.md)
 

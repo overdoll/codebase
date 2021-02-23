@@ -9,7 +9,7 @@ To get started with development, you will first need to run a couple of scripts.
 From the root repository, run the following command:
 
 ```text
-./deployments/k3d.sh
+./development/scripts/create-cluster.sh
 ```
 
 This will create a Kubernetes cluster that is compatible with our environment. You should add this kubernetes configuration to your kubeconfig, found in `~/.kube/config`. You can find the configuration by running this command:
@@ -27,7 +27,7 @@ kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v0.1
 This will install cert-manager, which is required by the Scylla database. After this is done, you need to install the Scylla operator:
 
 ```text
-kubectl apply -f deployments/scylla-operator.yaml
+kubectl apply -f development/scylla/scylla-operator.yaml
 ```
 
 This will allow Scylla to run in the environment.

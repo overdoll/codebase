@@ -1,6 +1,4 @@
----
-description: This page will detail how to access each service that is running locally
----
+# Using Tilt
 
-# Go Services
+Tilt is very useful when developing, here are some tips on how to use it to it's full potential:
 
