@@ -1,17 +1,24 @@
+/**
+ * @flow
+ */
 import { graphql, useMutation } from 'react-relay/hooks';
 import { Button, Form, Input, useForm } from '@//:modules/form';
 import { Frame } from '@//:modules/content';
 import { useNotify } from '@//:modules/focus';
 import { useTranslation } from 'react-i18next';
+import type { RegisterMutation } from '@//:artifacts/RegisterMutation.graphql';
+import type { Node } from 'react';
 
-const RegisterMutation = graphql`
+const RegisterMutationGQL = graphql`
   mutation RegisterMutation($data: RegisterInput!) {
     register(data: $data)
   }
 `;
 
-export default function Register(props) {
-  const [commit, isInFlight] = useMutation(RegisterMutation);
+export default function Register(): Node {
+  const [commit, isInFlight] = useMutation<RegisterMutation>(
+    RegisterMutationGQL,
+  );
   const instance = useForm();
   const notify = useNotify();
   const [t] = useTranslation('auth');

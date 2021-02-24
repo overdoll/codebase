@@ -1,3 +1,17 @@
+/**
+ * @flow
+ */
+import type { Node } from 'react';
+
+type Props = {
+  icon: any,
+  fill?: any,
+  width?: number,
+  height?: number,
+  size?: any,
+  stroke?: any,
+};
+
 const renderPaths = (icon, fill, stroke) =>
   icon[4].map((path, index) => (
     <path
@@ -13,18 +27,12 @@ const renderPaths = (icon, fill, stroke) =>
     />
   ));
 
-export default function Icon({
-  icon,
-  fill,
-  stroke,
-  width,
-  height,
-  size,
-  ...rest
-}) {
+export default function Icon(props: Props): Node {
   let shouldResize = true;
-  let finalWidth = icon[1];
-  let finalHeight = icon[2];
+  const { width, icon, fill, stroke, height, size, ...rest } = props;
+
+  let finalWidth: number = icon[1];
+  let finalHeight: number = icon[2];
 
   if (size) {
     shouldResize = size !== finalWidth;

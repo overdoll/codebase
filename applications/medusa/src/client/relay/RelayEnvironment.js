@@ -1,20 +1,26 @@
+/**
+ * @flow
+ */
+import type { IEnvironment } from 'relay-runtime';
 import {
   Environment,
   Network,
+  Observable,
   RecordSource,
   Store,
-  Observable,
 } from 'relay-runtime';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
 import axios from 'axios';
 
 // Get hydrated data from store
-const data = JSON.parse(document.getElementById('relay-store').textContent);
+const data = JSON.parse(
+  document.getElementById('relay-store')?.textContent || '{}',
+);
 
 // Get CSRF token
 const csrfToken = document
   .querySelector('meta[name="csrf-token"]')
-  .getAttribute('content');
+  ?.getAttribute('content');
 
 /**
  * Relay fetch function - uses axios. Passes CSRF token from the document as well
@@ -76,7 +82,7 @@ const subscribe = (params, variables) => {
 };
 
 // Export a singleton instance of Relay Environment configured with our network layer:
-export default new Environment({
+export default (new Environment({
   network: Network.create(fetchRelay, subscribe),
   store: new Store(new RecordSource(data), {
     // This property tells Relay to not immediately clear its cache when the user
@@ -85,4 +91,4 @@ export default new Environment({
     // and reusing cached data if its available/fresh.
     gcReleaseBufferSize: 10,
   }),
-});
+}): IEnvironment);

@@ -33,7 +33,7 @@ const LobbyEmail = graphql`
 
 type Props = {
   onReceive: any,
-  email: string,
+  email: ?string,
 };
 
 export default function Lobby(props: Props): Node {

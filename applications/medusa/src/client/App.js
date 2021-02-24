@@ -1,3 +1,6 @@
+/**
+ * @flow
+ */
 import RouterRenderer from '@//:modules/routing/RouteRenderer';
 import { RelayEnvironmentProvider } from 'react-relay/hooks';
 import RoutingContext from '@//:modules/routing/RoutingContext';
@@ -12,18 +15,19 @@ import { createBrowserHistory } from 'history';
 import RelayEnvironment from './relay/RelayEnvironment';
 import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
+import type { Node } from 'react';
 
 const router = createRouter(routes, createBrowserHistory(), RelayEnvironment);
 
 const nonce = document
   .querySelector('meta[name="nonce"]')
-  .getAttribute('content');
+  ?.getAttribute('content');
 
 const cache = createCache({ key: 'css', nonce: nonce });
 
 window.__webpack_nonce__ = nonce;
 
-export default function App() {
+export default function App(): Node {
   return (
     <CacheProvider value={cache}>
       <I18nextProvider i18n={i18next}>

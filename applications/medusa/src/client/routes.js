@@ -1,3 +1,6 @@
+/**
+ * @flow
+ */
 import JSResource from '@//:modules/utilities/JSResource';
 
 const getUserFromEnvironment = environment =>
@@ -23,8 +26,21 @@ const getUserFromEnvironment = environment =>
  * by the user
  *
  */
-const routes = [
+
+type Route = {
+  component: any,
+  prepare: any,
+  middleware: ?any,
+  exact: boolean,
+  routes: Array<Route>,
+  path: ?string,
+};
+
+const routes: Array<Route> = [
   {
+    path: null,
+    exact: false,
+    middleware: [],
     component: JSResource('Root', () =>
       import(/* webpackChunkName: "Root" */ './components/routes/Root'),
     ),
@@ -44,6 +60,7 @@ const routes = [
       {
         path: '/join',
         exact: true,
+        prepare: () => ({}),
         component: JSResource('JoinRoot', () =>
           import(
             /* webpackChunkName: "JoinRoot" */ './components/routes/join/Join'
@@ -62,9 +79,11 @@ const routes = [
             return true;
           },
         ],
+        routes: [],
       },
       {
         path: '/token/:id',
+        exact: true,
         component: JSResource('TokenRoot', () =>
           import(
             /* webpackChunkName: "TokenRoot" */ './components/routes/token/Token'
@@ -95,14 +114,19 @@ const routes = [
             return true;
           },
         ],
+        routes: [],
       },
       {
         path: '*',
+        exact: false,
         component: JSResource('Empty', () =>
           import(
             /* webpackChunkName: "Empty" */ './components/routes/empty/Empty'
           ),
         ),
+        prepare: () => ({}),
+        middleware: [],
+        routes: [],
       },
     ],
   },
