@@ -1,21 +1,37 @@
-import React from 'react';
+/**
+ * @flow
+ */
+import type { Node } from 'react';
+import { Component } from 'react';
+
+type Props = {
+  children: Node,
+};
+
+type Error = {
+  message: string,
+  source: any,
+};
+
+type State = {
+  error: ?Error,
+};
 
 /**
  * A reusable component for handling errors in a React (sub)tree.
  */
-export default class ErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { error: null };
-  }
+export default class ErrorBoundary extends Component<Props, State> {
+  state: State = {
+    error: null,
+  };
 
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError(error: Error): { error: Error } {
     return {
       error,
     };
   }
 
-  render() {
+  render(): Node {
     if (this.state.error != null) {
       return (
         <div>
@@ -26,6 +42,7 @@ export default class ErrorBoundary extends React.Component {
         </div>
       );
     }
+
     return this.props.children;
   }
 }
