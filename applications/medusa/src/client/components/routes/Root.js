@@ -1,4 +1,4 @@
-import { Suspense, createContext, useState, useEffect } from 'react';
+import { createContext, Suspense } from 'react';
 import { graphql, usePreloadedQuery } from 'react-relay/hooks';
 
 const RootContext = createContext({});

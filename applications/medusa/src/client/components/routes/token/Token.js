@@ -1,11 +1,21 @@
+// @flow
+import * as React from 'react';
 import { graphql, usePreloadedQuery } from 'react-relay/hooks';
 import Register from '../../register/Register';
 import { Frame } from '@//:modules/content';
 import { Heading, Text } from '@//:modules/typography';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from '@//:modules/routing';
+import type { TokenQuery } from './__generated__/TokenQuery.graphql';
+import type { PreloadedQuery } from 'react-relay/relay-experimental';
 
-const TokenQuery = graphql`
+type Props = {
+  prepared: {
+    tokenQuery: PreloadedQuery<TokenQuery>,
+  },
+};
+
+const TokenQueryGQL = graphql`
   query TokenQuery($cookie: String!) {
     redeemCookie(cookie: $cookie) {
       sameSession
@@ -15,8 +25,12 @@ const TokenQuery = graphql`
   }
 `;
 
-export default function Token({ prepared }) {
-  const data = usePreloadedQuery(TokenQuery, prepared.tokenQuery);
+export default function Token(props: Props): ?React.Element<typeof Register> {
+  const data = usePreloadedQuery<TokenQuery>(
+    TokenQueryGQL,
+    props.prepared.tokenQuery,
+  );
+
   const [t] = useTranslation('auth');
   const history = useHistory();
 
@@ -24,11 +38,9 @@ export default function Token({ prepared }) {
     return t('expired');
   }
 
-  const { sameSession, registered, session } = data.redeemCookie;
-
   // Token was not redeemed in the same session, so we tell the user to check
   // the other session
-  if (!sameSession) {
+  if (!data.redeemCookie?.sameSession) {
     return (
       <Frame>
         <Heading sx={{ textAlign: 'center', fontSize: 2 }}>
@@ -45,7 +57,7 @@ export default function Token({ prepared }) {
           }}
         >
           <Text sx={{ color: 'green.300' }}>
-            {JSON.parse(session)['user-agent']}
+            {JSON.parse(data.redeemCookie?.session || '')['user-agent']}
           </Text>
         </div>
         <div
@@ -61,7 +73,7 @@ export default function Token({ prepared }) {
     );
   }
 
-  if (!registered) {
+  if (!data.redeemCookie?.registered) {
     return <Register />;
   }
 

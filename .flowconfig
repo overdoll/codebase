@@ -1,0 +1,19 @@
+[ignore]
+.*/__tests__/.*
+.*/bazel-bin/.*
+.*/bazel-out/.*
+.*/bazel-codebase/.*
+.*/bazel-testlogs/.*
+
+[include]
+applications/medusa/src
+
+[libs]
+
+[lints]
+
+[options]
+react.runtime=automatic
+module.name_mapper='^@//:modules' ->'<PROJECT_ROOT>/applications/medusa/src/modules'
+
+[strict]

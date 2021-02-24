@@ -22,4 +22,4 @@ bazel-*
 
 # IDEA
 .ijwb
-.idea
+.idea.bak
