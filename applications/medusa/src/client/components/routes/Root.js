@@ -1,4 +1,6 @@
-// @flow
+/**
+ * @flow
+ */
 import type { Context, Element, Node } from 'react';
 import { createContext, Suspense } from 'react';
 import { graphql, usePreloadedQuery } from 'react-relay/hooks';
@@ -6,7 +8,7 @@ import type { PreloadedQuery } from 'react-relay/relay-experimental';
 import type {
   RootQuery,
   RootQueryResponse,
-} from './__generated__/RootQuery.graphql';
+} from '@//:artifacts/RootQuery.graphql';
 
 type Props = {
   prepared: {
@@ -27,14 +29,7 @@ const RootQueryGQL = graphql`
 `;
 
 // Must assign a fake value since this will be resolved
-const RootContext: Context<RootQueryResponse> = createContext({
-  authentication: {
-    user: {
-      username: '',
-    },
-    $fragmentRefs: '',
-  },
-});
+const RootContext: Context<?RootQueryResponse> = createContext(null);
 
 export default function Root(
   props: Props,

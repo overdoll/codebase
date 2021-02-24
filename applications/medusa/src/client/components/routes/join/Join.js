@@ -1,4 +1,6 @@
-// @flow
+/**
+ * @flow
+ */
 import { graphql, useMutation, useFragment } from 'react-relay/hooks';
 import type { Node } from 'react';
 import { useState, useContext } from 'react';
@@ -10,7 +12,7 @@ import { useNotify } from '@//:modules/focus';
 import Lobby from './components/Lobby';
 import { RootContext } from '../Root';
 import { EMAIL } from '@//:modules/regex';
-import type { RootFragment } from './__generated__/JoinFragment.graphql';
+import type { JoinFragment$key } from '@//:artifacts/JoinFragment.graphql';
 
 const JoinAction = graphql`
   mutation JoinMutation($data: AuthenticationInput!) {
@@ -30,9 +32,10 @@ const RootFragmentGQL = graphql`
 
 export default function Join(): Node {
   const rootQuery = useContext(RootContext);
-  const data = useFragment<RootFragment>(
+
+  const data = useFragment<?JoinFragment$key>(
     RootFragmentGQL,
-    rootQuery.authentication,
+    rootQuery?.authentication,
   );
 
   const [t] = useTranslation('auth');
@@ -74,19 +77,19 @@ export default function Join(): Node {
 
   // Checks for various types of states
   const emptySubscriptionResponse = authInfo.authListener === null;
-  const emptyAuthCookie = data.cookie === null;
+  const emptyAuthCookie = data?.cookie === null;
 
   // If we're waiting on a token, create a subscription for the token
   // We don't have to send any values because it already knows the token
   // from a cookie.
   if (
     waiting ||
-    (emptySubscriptionResponse && !emptyAuthCookie && !data.cookie.redeemed)
+    (emptySubscriptionResponse && !emptyAuthCookie && !data?.cookie?.redeemed)
   ) {
     return (
       <Lobby
         // Use auth cookie's email as backup, since it may not be here after a refresh
-        email={!emptyAuthCookie ? data.cookie.email : email}
+        email={!emptyAuthCookie ? data?.cookie?.email : email}
         onReceive={changeAuth}
       />
     );
@@ -99,7 +102,7 @@ export default function Join(): Node {
 
   // Cookie was redeemed, but the user is not registered
   const cookieRedeemedNotRegistered =
-    !emptyAuthCookie && data.cookie.redeemed && !data.cookie.registered;
+    !emptyAuthCookie && data?.cookie?.redeemed && !data.cookie?.registered;
 
   // We already have auth cookie data, and it's been redeemed. We want the user to register
   if (subscriptionNotRegistered || cookieRedeemedNotRegistered) {

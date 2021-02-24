@@ -1,12 +1,20 @@
+/**
+ * @flow
+ */
 import { graphql, useSubscription, useMutation } from 'react-relay/hooks';
+import type { Node } from 'react';
 import { useMemo } from 'react';
 import { Heading, Text } from '@//:modules/typography';
 import { Button } from '@//:modules/form';
 import { Frame } from '@//:modules/content';
 import { useNotify } from '@//:modules/focus';
 import { useTranslation } from 'react-i18next';
+import type {
+  LobbySubscription,
+  LobbySubscriptionResponse,
+} from '@//:artifacts/LobbySubscription.graphql';
 
-const LobbySubscription = graphql`
+const LobbySubscriptionGQL = graphql`
   subscription LobbySubscription {
     authListener {
       sameSession
@@ -23,37 +31,42 @@ const LobbyEmail = graphql`
   }
 `;
 
-export default function Lobby({ onReceive, email }) {
+type Props = {
+  onReceive: any,
+  email: string,
+};
+
+export default function Lobby(props: Props): Node {
   const notify = useNotify();
   const [t] = useTranslation('auth');
 
-  // Received a subscription response
-  const onNext = response => {
-    const { sameSession, cookie } = response.authListener;
+  useSubscription<LobbySubscriptionResponse>(
+    useMemo(
+      () => ({
+        variables: {},
+        subscription: LobbySubscriptionGQL,
 
-    // If the cookie was redeemed in the same browser session, or the user is registered, refresh the page
-    if (sameSession || cookie.registered) {
-      window.location.reload();
-    } else {
-      onReceive(response);
-    }
-  };
+        // Received a subscription response
+        onNext: (response: ?LobbySubscriptionResponse) => {
+          // If the cookie was redeemed in the same browser session, or the user is registered, refresh the page
+          if (
+            response?.authListener?.sameSession ||
+            response?.authListener?.cookie?.registered
+          ) {
+            window.location.reload();
+          } else {
+            props.onReceive(response);
+          }
+        },
 
-  const onError = () => {
-    notify.error(t('lobby.error'));
-  };
-
-  const config = useMemo(
-    () => ({
-      variables: {},
-      subscription: LobbySubscription,
-      onNext,
-      onError,
-    }),
-    [],
+        // Subscription error - show to user
+        onError: () => {
+          notify.error(t('lobby.error'));
+        },
+      }),
+      [],
+    ),
   );
-
-  useSubscription(config);
 
   const [sendEmail, isSendingEmail] = useMutation(LobbyEmail);
 
@@ -82,7 +95,7 @@ export default function Lobby({ onReceive, email }) {
           pb: 2,
         }}
       >
-        <Text sx={{ color: 'purple.300' }}>{email}</Text>
+        <Text sx={{ color: 'purple.300' }}>{props.email}</Text>
       </div>
       <Button
         sx={{ mt: 2, variant: 'buttons.secondary', width: 'fill' }}
