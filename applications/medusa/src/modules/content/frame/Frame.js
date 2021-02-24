@@ -5,7 +5,7 @@ import type { Node } from 'react';
 
 type Props = {
   children?: Node,
-  sx: any,
+  sx?: any,
 };
 
 export default function Frame(props: Props): Node {

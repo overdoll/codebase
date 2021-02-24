@@ -30,6 +30,10 @@ const RootFragmentGQL = graphql`
   }
 `;
 
+type JoinValues = {
+  email: string,
+}
+
 export default function Join(): Node {
   const rootQuery = useContext(RootContext);
 
@@ -41,7 +45,7 @@ export default function Join(): Node {
   const [t] = useTranslation('auth');
 
   const [commit, isInFlight] = useMutation(JoinAction);
-  const instance = useForm();
+  const instance = useForm<JoinValues>();
 
   const notify = useNotify();
 
@@ -58,7 +62,7 @@ export default function Join(): Node {
     setWaiting(false);
   };
 
-  const onSubmit = val => {
+  const onSubmit = (val: JoinValues) => {
     setEmail(val.email);
     commit({
       variables: {

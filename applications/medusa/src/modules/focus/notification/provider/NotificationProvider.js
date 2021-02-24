@@ -1,10 +1,31 @@
+/**
+ * @flow
+ */
+import type { Node, Context } from 'react';
 import { createContext, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Notification from '../components/Notification';
 
-const NotificationContext = createContext({});
+type Action = {
+  (string, ?number): void,
+};
 
-const NotificationProvider = ({ children }) => {
+type NotificationActions = {
+  actions: {
+    warn: Action,
+    error: Action,
+    success: Action,
+  },
+  onExpire: any,
+};
+
+type Props = {
+  children?: Node,
+};
+
+const NotificationContext: Context<NotificationActions> = createContext({});
+
+const NotificationProvider = (props: Props): Node => {
   const [id, setId] = useState(0);
 
   const [active, setActive] = useState([]);
@@ -43,7 +64,7 @@ const NotificationProvider = ({ children }) => {
         onExpire,
       }}
     >
-      {children}
+      {props.children}
       {createPortal(
         <div
           sx={{
