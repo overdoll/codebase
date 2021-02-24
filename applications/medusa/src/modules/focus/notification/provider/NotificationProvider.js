@@ -7,7 +7,7 @@ import { createPortal } from 'react-dom';
 import Notification from '../components/Notification';
 
 type Action = {
-  (string, ?number): void,
+  (content: string, duration: ?number): void,
 };
 
 type NotificationActions = {
@@ -25,7 +25,7 @@ type Props = {
 
 const NotificationContext: Context<NotificationActions> = createContext({});
 
-const NotificationProvider = (props: Props): Node => {
+export default function NotificationProvider(props: Props): Node {
   const [id, setId] = useState(0);
 
   const [active, setActive] = useState([]);
@@ -94,8 +94,6 @@ const NotificationProvider = (props: Props): Node => {
       )}
     </NotificationContext.Provider>
   );
-};
-
-export default NotificationProvider;
+}
 
 export { NotificationContext };
