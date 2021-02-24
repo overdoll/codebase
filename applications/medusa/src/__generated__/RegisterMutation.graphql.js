@@ -7,7 +7,6 @@
 
 'use strict';
 
-/*::
 import type { ConcreteRequest } from 'relay-runtime';
 export type RegisterInput = {|
   username: string
@@ -22,7 +21,6 @@ export type RegisterMutation = {|
   variables: RegisterMutationVariables,
   response: RegisterMutationResponse,
 |};
-*/
 
 
 /*
@@ -33,7 +31,7 @@ mutation RegisterMutation(
 }
 */
 
-const node/*: ConcreteRequest*/ = (function(){
+const node: ConcreteRequest = (function(){
 var v0 = [
   {
     "defaultValue": null,
@@ -83,6 +81,5 @@ return {
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '369ba62eb8fbf9c30cc194baec00ed91';
-
+(node: any).hash = '369ba62eb8fbf9c30cc194baec00ed91';
 module.exports = node;

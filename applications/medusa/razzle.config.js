@@ -24,6 +24,7 @@ module.exports = {
 
     config.resolve.alias = {
       '@//:modules': path.resolve(__dirname, 'src/modules'),
+      '@//:artifacts': path.resolve(__dirname, 'src/__generated__'),
     };
 
     if (opts.env.target === 'web') {

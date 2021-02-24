@@ -29,7 +29,7 @@ const routes = [
       import(/* webpackChunkName: "Root" */ './components/routes/Root'),
     ),
     prepare: params => {
-      const RootQuery = require('./components/routes/__generated__/RootQuery.graphql');
+      const RootQuery = require('@//:artifacts/RootQuery.graphql');
       return {
         stateQuery: {
           query: RootQuery,
@@ -71,7 +71,7 @@ const routes = [
           ),
         ),
         prepare: params => {
-          const TokenQuery = require('./components/routes/token/__generated__/TokenQuery.graphql');
+          const TokenQuery = require('@//:artifacts/TokenQuery.graphql');
           return {
             tokenQuery: {
               query: TokenQuery,

@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react';
+import type { Node } from 'react';
 import { graphql, usePreloadedQuery } from 'react-relay/hooks';
 import Register from '../../register/Register';
 import { Frame } from '@//:modules/content';
@@ -25,7 +25,7 @@ const TokenQueryGQL = graphql`
   }
 `;
 
-export default function Token(props: Props): ?React.Element<typeof Register> {
+export default function Token(props: Props): Node {
   const data = usePreloadedQuery<TokenQuery>(
     TokenQueryGQL,
     props.prepared.tokenQuery,

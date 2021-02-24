@@ -7,7 +7,6 @@
 
 'use strict';
 
-/*::
 import type { ConcreteRequest } from 'relay-runtime';
 export type LobbyMutationVariables = {||};
 export type LobbyMutationResponse = {|
@@ -17,7 +16,6 @@ export type LobbyMutation = {|
   variables: LobbyMutationVariables,
   response: LobbyMutationResponse,
 |};
-*/
 
 
 /*
@@ -26,7 +24,7 @@ mutation LobbyMutation {
 }
 */
 
-const node/*: ConcreteRequest*/ = (function(){
+const node: ConcreteRequest = (function(){
 var v0 = [
   {
     "alias": null,
@@ -63,6 +61,5 @@ return {
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = 'dea3b01c7d28227337c212e820a85b25';
-
+(node: any).hash = 'dea3b01c7d28227337c212e820a85b25';
 module.exports = node;

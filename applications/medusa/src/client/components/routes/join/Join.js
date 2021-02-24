@@ -1,4 +1,6 @@
+// @flow
 import { graphql, useMutation, useFragment } from 'react-relay/hooks';
+import type { Node } from 'react';
 import { useState, useContext } from 'react';
 import Register from '../../register/Register';
 import { useTranslation } from 'react-i18next';
@@ -8,6 +10,7 @@ import { useNotify } from '@//:modules/focus';
 import Lobby from './components/Lobby';
 import { RootContext } from '../Root';
 import { EMAIL } from '@//:modules/regex';
+import type { RootFragment } from './__generated__/JoinFragment.graphql';
 
 const JoinAction = graphql`
   mutation JoinMutation($data: AuthenticationInput!) {
@@ -15,7 +18,7 @@ const JoinAction = graphql`
   }
 `;
 
-const RootFragment = graphql`
+const RootFragmentGQL = graphql`
   fragment JoinFragment on Authentication {
     cookie {
       redeemed
@@ -25,9 +28,12 @@ const RootFragment = graphql`
   }
 `;
 
-export default function Join() {
+export default function Join(): Node {
   const rootQuery = useContext(RootContext);
-  const data = useFragment(RootFragment, rootQuery.authentication);
+  const data = useFragment<RootFragment>(
+    RootFragmentGQL,
+    rootQuery.authentication,
+  );
 
   const [t] = useTranslation('auth');
 
@@ -89,7 +95,7 @@ export default function Join() {
   // User not registered - when we either receive this response from a subscription, or a page refresh
   const subscriptionNotRegistered =
     !emptySubscriptionResponse &&
-    authInfo.authListener.cookie.registered === false;
+    authInfo.authListener?.cookie.registered === false;
 
   // Cookie was redeemed, but the user is not registered
   const cookieRedeemedNotRegistered =

@@ -6,6 +6,7 @@ module.exports = {
   resolve: {
     alias: {
       '@//:modules': path.resolve(__dirname, 'src/modules'),
+      '@//:artifacts': path.resolve(__dirname, 'src/__generated__'),
     },
   },
 };

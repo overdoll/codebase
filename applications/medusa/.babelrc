@@ -12,7 +12,7 @@
     ]
   ],
   "plugins": [
-    "relay",
+    ["relay", { "artifactDirectory": "./src/__generated__" }],
     "@babel/plugin-proposal-function-bind",
     "@babel/plugin-proposal-class-properties",
     "@babel/plugin-transform-arrow-functions",

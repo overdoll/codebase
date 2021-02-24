@@ -7,7 +7,6 @@
 
 'use strict';
 
-/*::
 import type { ConcreteRequest } from 'relay-runtime';
 export type TokenQueryVariables = {|
   cookie: string
@@ -23,7 +22,6 @@ export type TokenQuery = {|
   variables: TokenQueryVariables,
   response: TokenQueryResponse,
 |};
-*/
 
 
 /*
@@ -38,7 +36,7 @@ query TokenQuery(
 }
 */
 
-const node/*: ConcreteRequest*/ = (function(){
+const node: ConcreteRequest = (function(){
 var v0 = [
   {
     "defaultValue": null,
@@ -113,6 +111,5 @@ return {
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = 'f2a3652bc410f78ea5a631bb6d4b880b';
-
+(node: any).hash = 'f2a3652bc410f78ea5a631bb6d4b880b';
 module.exports = node;

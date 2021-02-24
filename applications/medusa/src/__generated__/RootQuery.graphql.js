@@ -7,9 +7,8 @@
 
 'use strict';
 
-/*::
 import type { ConcreteRequest } from 'relay-runtime';
-type JoinFragment$ref = any;
+import type { JoinFragment$ref } from "./JoinFragment.graphql";
 export type RootQueryVariables = {||};
 export type RootQueryResponse = {|
   +authentication: ?{|
@@ -23,7 +22,6 @@ export type RootQuery = {|
   variables: RootQueryVariables,
   response: RootQueryResponse,
 |};
-*/
 
 
 /*
@@ -45,7 +43,7 @@ fragment JoinFragment on Authentication {
 }
 */
 
-const node/*: ConcreteRequest*/ = (function(){
+const node: ConcreteRequest = (function(){
 var v0 = {
   "alias": null,
   "args": null,
@@ -154,6 +152,5 @@ return {
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = 'adf593c107560e6a6ae7fe774793ac48';
-
+(node: any).hash = 'adf593c107560e6a6ae7fe774793ac48';
 module.exports = node;
