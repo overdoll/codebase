@@ -37,7 +37,6 @@ func Init(t *testing.T) (gocqlx.Session, context.Context, *Server) {
 	return session, ctx, srv
 }
 
-
 // TestRegisterUser_Accepted - Test user registration with a valid email & username
 func TestRegisterUser_Accepted(t *testing.T) {
 	session, ctx, server := Init(t)
@@ -48,7 +47,7 @@ func TestRegisterUser_Accepted(t *testing.T) {
 	username := "IAmUser1"
 
 	response, err := server.RegisterUser(ctx, &eva.RegisterUserRequest{
-		Email: email,
+		Email:    email,
 		Username: username,
 	})
 
@@ -88,7 +87,7 @@ func TestRegisterUser_Declined_Username(t *testing.T) {
 
 	// Now, we do the actual insertion
 	_, err := server.RegisterUser(ctx, &eva.RegisterUserRequest{
-		Email: "test2@test.com",
+		Email:    "test2@test.com",
 		Username: username,
 	})
 
@@ -108,7 +107,7 @@ func TestRegisterUser_Declined_Email(t *testing.T) {
 
 	userEmail := models.UserEmail{
 		UserId: userId,
-		Email: email,
+		Email:  email,
 	}
 
 	// First, we insert a username that is already taken
@@ -124,7 +123,7 @@ func TestRegisterUser_Declined_Email(t *testing.T) {
 
 	// Now, we do the actual insertion
 	_, err := server.RegisterUser(ctx, &eva.RegisterUserRequest{
-		Email: email,
+		Email:    email,
 		Username: "IAmUser3",
 	})
 
@@ -147,9 +146,9 @@ func TestDeleteAuthenticationCookie_Exists(t *testing.T) {
 		Query(session)
 
 	insertCookie.BindStruct(models.AuthenticationCookie{
-		Cookie:   uuid,
-		Email:    "test@test.com",
-		Redeemed: 0,
+		Cookie:     uuid,
+		Email:      "test@test.com",
+		Redeemed:   0,
 		Expiration: time.Now().Add(time.Minute * 5),
 		Session:    "",
 	})
@@ -180,7 +179,7 @@ func TestCreateNewAuthenticationCookie_New(t *testing.T) {
 	userSession := "{}"
 
 	response, err := server.CreateAuthenticationCookie(ctx, &eva.CreateAuthenticationCookieRequest{
-		Email: email,
+		Email:   email,
 		Session: userSession,
 	})
 
@@ -190,10 +189,10 @@ func TestCreateNewAuthenticationCookie_New(t *testing.T) {
 
 	// Cookie was successfully created
 	assert.Equal(t, response, &eva.AuthenticationCookie{
-		Email: email,
-		Session: userSession,
-		Redeemed: false,
-		Cookie: response.Cookie,
+		Email:      email,
+		Session:    userSession,
+		Redeemed:   false,
+		Cookie:     response.Cookie,
 		Expiration: response.Expiration,
 	})
 }
@@ -213,9 +212,9 @@ func TestRedeemAuthenticationCookie_Not_Expired(t *testing.T) {
 		Query(session)
 
 	insertCookie.BindStruct(models.AuthenticationCookie{
-		Cookie:   uuid,
-		Email:    "test@test.com",
-		Redeemed: 0,
+		Cookie:     uuid,
+		Email:      "test@test.com",
+		Redeemed:   0,
 		Expiration: time.Now().Add(time.Minute * 5),
 		Session:    "",
 	})
@@ -234,10 +233,10 @@ func TestRedeemAuthenticationCookie_Not_Expired(t *testing.T) {
 
 	// Cookie was successfully redeemed
 	assert.Equal(t, response, &eva.AuthenticationCookie{
-		Email: response.Email,
-		Session: response.Session,
-		Redeemed: true,
-		Cookie: response.Cookie,
+		Email:      response.Email,
+		Session:    response.Session,
+		Redeemed:   true,
+		Cookie:     response.Cookie,
 		Expiration: response.Expiration,
 	})
 }
@@ -257,9 +256,9 @@ func TestRedeemAuthenticationCookie_Expired(t *testing.T) {
 		Query(session)
 
 	insertCookie.BindStruct(models.AuthenticationCookie{
-		Cookie:   gocql.TimeUUID(),
-		Email:    "test@test.com",
-		Redeemed: 0,
+		Cookie:     gocql.TimeUUID(),
+		Email:      "test@test.com",
+		Redeemed:   0,
 		Expiration: time.Now().Add(-time.Minute * 5),
 		Session:    "",
 	})

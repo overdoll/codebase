@@ -1,6 +1,14 @@
 # For more on Extensions, see: https://docs.tilt.dev/extensions.html
 allow_k8s_contexts("overdoll")
 
+docker_prune_settings(
+    disable = False,
+    max_age_mins = 360,
+    num_builds = 0,
+    interval_hrs = 1,
+    keep_recent = 2,
+)
+
 load("ext://helm_remote", "helm_remote")
 load("./development/helpers.Tiltfile", "bazel_buildfile_deps", "bazel_sourcefile_deps", "build_applications")
 
@@ -64,40 +72,19 @@ applications = {
     },
 }
 
-docker_prune_settings(
-    disable = False,
-    max_age_mins = 360,
-    num_builds = 0,
-    interval_hrs = 1,
-    keep_recent = 2,
-)
+# Ingress (Traefik)
+k8s_yaml("development/traefik/ingress.yaml")
 
-# Watch YAML kubernetes files
-for f in bazel_sourcefile_deps("//development:objects"):
-    watch_file(f)
-
-for f in bazel_buildfile_deps("//development:objects"):
-    watch_file(f)
-
-# Deploy YAML files
-k8s_yaml(local("bazel run //development:objects"))
+# Scylla
+k8s_yaml("development/scylla/cluster.yaml")
+k8s_yaml("development/scylla/scylla-svc.yaml")
+k8s_yaml("development/scylla/scylla-config.yaml")
 
 # Setup cluster - Need to group some resources or it wil be messy!
 k8s_kind("Cluster", api_version = "scylla.scylladb.com/v1alpha1")
 k8s_resource("simple-cluster", extra_pod_selectors = {"scylla/cluster": "simple-cluster"})
 
-# Build applications with our helper function
-build_applications(applications, ["simple-cluster", "redis-master"])
-
-local_resource(
-    "generate-graphql",
-    cmd = "NODE_TLS_REJECT_UNAUTHORIZED=0 yarn run graphql",
-    trigger_mode = TRIGGER_MODE_MANUAL,
-    auto_init = False,
-)
-
-local_resource("relay-compiler", serve_cmd = "yarn run relay")
-
+# Remote helm charts for external services
 helm_remote(
     "traefik",
     release_name = "traefik",
@@ -120,6 +107,20 @@ helm_remote(
     version = "7.6.8",
     set = ["auth.username=test", "auth.password=test"],
 )
+
+# Build applications with our helper function
+build_applications(applications, ["simple-cluster", "redis-master"])
+
+# GraphQL generator
+local_resource(
+    "generate-graphql",
+    cmd = "NODE_TLS_REJECT_UNAUTHORIZED=0 yarn run graphql",
+    trigger_mode = TRIGGER_MODE_MANUAL,
+    auto_init = False,
+)
+
+# Relay Compiler
+local_resource("relay-compiler", serve_cmd = "yarn run relay")
 
 k8s_resource(workload = "redis-master", port_forwards = [6379])
 k8s_resource(workload = "rabbitmq", port_forwards = [15672])

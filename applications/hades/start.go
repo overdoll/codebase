@@ -2,8 +2,8 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"

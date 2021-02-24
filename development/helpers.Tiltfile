@@ -39,6 +39,15 @@ def bazel_buildfile_deps(target):
 
 def build_applications(applications, dependencies):
     for item in applications.keys():
+        # Deploy helm chart for application
+        k8s_yaml(
+            helm(
+                "development/charts/default-service",
+                name = item,
+                values = ["development/services/" + item + "/values.yaml"],
+            ),
+        )
+
         application = applications[item]
 
         image_target = application["image_target"]

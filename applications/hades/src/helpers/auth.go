@@ -2,12 +2,13 @@ package helpers
 
 import (
 	"context"
+	"net/http"
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"github.com/gomodule/redigo/redis"
-	"net/http"
 	"overdoll/applications/hades/src/authentication"
 	"overdoll/applications/hades/src/models"
-	"time"
 )
 
 func UserFromContext(ctx context.Context) *models.AuthenticatedUser {

@@ -1,0 +1,9 @@
+image:
+  repository: hades-image
+
+nameOverride: "hades"
+
+containerPort: 8080
+
+service:
+  port: 8000

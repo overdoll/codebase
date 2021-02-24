@@ -43,7 +43,7 @@ func CSRFCheck() gin.HandlerFunc {
 		string := strings.Split(token, "-")
 		salt := string[0]
 
-		expected := salt + "-" + hash(salt + "-" + cookie.Value)
+		expected := salt + "-" + hash(salt+"-"+cookie.Value)
 
 		// If our CSRF token is not the same as our hashed string, then we abort
 		// Time-safe comparison (https://codahale.com/a-lesson-in-timing-attacks/)

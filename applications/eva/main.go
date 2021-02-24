@@ -2,16 +2,17 @@ package main
 
 import (
 	"context"
+	"log"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
+
 	"github.com/gocql/gocql"
 	"github.com/joho/godotenv"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/migrate"
-	"log"
-	"os"
-	"os/signal"
 	"overdoll/applications/eva/src/server"
-	"syscall"
-	"time"
 )
 
 func init() {

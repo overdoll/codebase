@@ -30,7 +30,6 @@ type Server struct {
 func NewServer(ctx context.Context, session gocqlx.Session) (*Server, error) {
 	return &Server{
 		session: session,
-
 	}, nil
 }
 
@@ -249,11 +248,11 @@ func (s *Server) CreateAuthenticationCookie(ctx context.Context, request *eva.Cr
 	}
 
 	cookie := &eva.AuthenticationCookie{
-		Email:    authCookie.Email,
-		Redeemed: authCookie.Redeemed != 0,
+		Email:      authCookie.Email,
+		Redeemed:   authCookie.Redeemed != 0,
 		Expiration: authCookie.Expiration.String(),
-		Cookie: authCookie.Cookie.String(),
-		Session: authCookie.Session,
+		Cookie:     authCookie.Cookie.String(),
+		Session:    authCookie.Session,
 	}
 
 	return cookie, nil
@@ -331,12 +330,12 @@ func (s *Server) GetAuthenticationCookie(ctx context.Context, request *eva.GetAu
 		return nil, fmt.Errorf("cookie expired")
 	}
 
-	cookie := &eva.AuthenticationCookie {
-		Email: cookieItem.Email,
-		Redeemed: cookieItem.Redeemed != 0,
+	cookie := &eva.AuthenticationCookie{
+		Email:      cookieItem.Email,
+		Redeemed:   cookieItem.Redeemed != 0,
 		Expiration: cookieItem.Expiration.String(),
-		Cookie: cookieItem.Cookie.String(),
-		Session: cookieItem.Session,
+		Cookie:     cookieItem.Cookie.String(),
+		Session:    cookieItem.Session,
 	}
 
 	return cookie, nil
