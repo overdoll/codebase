@@ -1,8 +1,11 @@
 import { fireEvent, render } from '@testing-library/react';
 import Register from '../Register';
+import withProviders from '@//:modules/testing/withProviders';
 
 it('Register just works', () => {
-  const { queryByLabelText, getByLabelText } = render(<Register />);
+  const Root = withProviders({ Component: Register });
+
+  const { queryByLabelText, getByLabelText } = render(<Root />);
 
   expect(queryByLabelText(/off/i)).toBeTruthy();
 

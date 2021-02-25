@@ -28,7 +28,6 @@ const RootQueryGQL = graphql`
   }
 `;
 
-// Must assign a fake value since this will be resolved
 const RootContext: Context<?RootQueryResponse> = createContext(null);
 
 export default function Root(

@@ -133,3 +133,4 @@ const routes: Array<Route> = [
 ];
 
 export default routes;
+export type { Route };
