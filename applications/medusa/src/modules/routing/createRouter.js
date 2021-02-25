@@ -100,14 +100,9 @@ function matchRoute(routes, history, location, environment) {
 
   // Recursively parse route, and use route environment source as a helper
   // Make sure that we are allowed to be in a route that we are using
-  const matchedRoutes = unparsedRoutes.filter(route =>
+  return unparsedRoutes.filter(route =>
     isRouteValid(environment, route.route, history),
   );
-
-  if (!Array.isArray(matchedRoutes) || matchedRoutes.length === 0) {
-    throw new Error('No route for ' + location.pathname);
-  }
-  return matchedRoutes;
 }
 
 /**

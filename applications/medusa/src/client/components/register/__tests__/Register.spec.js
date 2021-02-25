@@ -1,15 +1,44 @@
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import Register from '../Register';
 import withProviders from '@//:modules/testing/withProviders';
+import { MockPayloadGenerator, createMockEnvironment } from 'relay-test-utils';
 
-it('Register just works', () => {
-  const Root = withProviders({ Component: Register });
+it('Register just works', async () => {
+  const Root = withProviders({ Component: Register, routes: [] });
+  const Environment = createMockEnvironment();
 
-  const { queryByLabelText, getByLabelText } = render(<Root />);
+  const { getByRole, debug } = render(<Root />);
 
-  expect(queryByLabelText(/off/i)).toBeTruthy();
+  const username = 'test-user';
 
-  fireEvent.click(getByLabelText(/off/i));
+  // Change input to have a username
+  // we wait for input to be available (suspense needs to resolve first)
+  const input = getByRole('textbox');
+  fireEvent.change(input, { target: { value: username } });
 
-  expect(queryByLabelText(/on/i)).toBeTruthy();
+  // Click our button
+  const button = getByRole('button');
+  fireEvent.click(button);
+
+  await waitFor(() => expect(button).not.toBeDisabled());
+
+  debug();
+
+  // Add our mocks
+  const customMockResolvers = {
+    register: () => true,
+  };
+
+  // Environment.mock.resolveMostRecentOperation(operation =>
+  //   MockPayloadGenerator.generate(operation, customMockResolvers),
+  // );
+  //
+  // // Await for operation to resolve
+  // await waitFor(() => Environment.mock.getMostRecentOperation());
+  //
+  const mutationOperation = Environment.mock.getMostRecentOperation();
+
+  expect(mutationOperation.fragment.variables.input).toEqual({
+    post: 'test',
+  });
 });

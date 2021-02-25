@@ -5,7 +5,6 @@ import type { Node } from 'react';
 import RelayEnvironment from '@//:modules/relay/RelayEnvironment';
 import { CacheProvider } from '@emotion/react';
 import { I18nextProvider } from 'react-i18next';
-import i18next from './utilities/i18next';
 import { ThemeProvider } from 'theme-ui';
 import theme from './theme';
 import { RelayEnvironmentProvider } from 'react-relay/hooks';
@@ -13,6 +12,7 @@ import createCache from '@emotion/cache';
 
 type Props = {
   environment: typeof RelayEnvironment,
+  i18next: any,
   children: Node,
 };
 
@@ -31,7 +31,7 @@ window.__webpack_nonce__ = nonce;
 export default function Bootstrap(props: Props): Node {
   return (
     <CacheProvider value={cache}>
-      <I18nextProvider i18n={i18next}>
+      <I18nextProvider i18n={props.i18next}>
         <ThemeProvider theme={theme}>
           <RelayEnvironmentProvider environment={props.environment}>
             {props.children}

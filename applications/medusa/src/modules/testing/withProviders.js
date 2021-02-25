@@ -2,7 +2,6 @@
  * @flow
  */
 import { createMemoryHistory } from 'history';
-
 import type { ComponentType } from 'react';
 import { Suspense } from 'react';
 import createRouter from '@//:modules/routing/createRouter';
@@ -12,6 +11,7 @@ import RelayEnvironment from '@//:modules/relay/RelayEnvironment';
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary';
 import Bootstrap from '../../client/Bootstrap';
 import type { Route } from '../../client/routes';
+import i18n from './i18nTesting';
 
 type WithProviders = {
   environment: typeof RelayEnvironment,
@@ -26,6 +26,7 @@ export default function withProviders({
   initialEntries = ['/'],
   routes,
 }: WithProviders): any {
+  // TODO: make this work with RouteRenderer
   const defaultRoutes = [
     {
       path: '/',
@@ -51,10 +52,10 @@ export default function withProviders({
   // eslint-disable-next-line react/display-name
   return props => {
     return (
-      <Bootstrap environment={environment}>
+      <Bootstrap environment={environment} i18next={i18n}>
         <RoutingContext.Provider value={router.context}>
           <ErrorBoundary>
-            <Suspense fallback={'Loading fallback...'}>
+            <Suspense fallback={'fallback'}>
               <Component {...props} />
             </Suspense>
           </ErrorBoundary>
