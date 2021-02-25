@@ -9,10 +9,12 @@ import { Button } from '@//:modules/form';
 import { Frame } from '@//:modules/content';
 import { useNotify } from '@//:modules/focus';
 import { useTranslation } from 'react-i18next';
-import type {
-  LobbySubscription,
-  LobbySubscriptionResponse,
-} from '@//:artifacts/LobbySubscription.graphql';
+import type { LobbySubscriptionResponse } from '@//:artifacts/LobbySubscription.graphql';
+
+type Props = {
+  onReceive: any,
+  email: ?string,
+};
 
 const LobbySubscriptionGQL = graphql`
   subscription LobbySubscription {
@@ -30,11 +32,6 @@ const LobbyEmail = graphql`
     authEmail
   }
 `;
-
-type Props = {
-  onReceive: any,
-  email: ?string,
-};
 
 export default function Lobby(props: Props): Node {
   const notify = useNotify();

@@ -9,18 +9,18 @@ import routes from './routes';
 import { createBrowserHistory } from 'history';
 import RelayEnvironment from '@//:modules/relay/RelayEnvironment';
 import type { Node } from 'react';
-import Providers from './Providers';
+import Bootstrap from './Bootstrap';
 
 const router = createRouter(routes, createBrowserHistory(), RelayEnvironment);
 
 export default function App(): Node {
   return (
-    <Providers environment={RelayEnvironment}>
+    <Bootstrap environment={RelayEnvironment}>
       <RoutingContext.Provider value={router.context}>
         <NotificationProvider>
           <RouterRenderer />
         </NotificationProvider>
       </RoutingContext.Provider>
-    </Providers>
+    </Bootstrap>
   );
 }

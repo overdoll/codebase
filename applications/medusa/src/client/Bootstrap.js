@@ -28,7 +28,7 @@ window.__webpack_nonce__ = nonce;
  * Default Providers
  * Used for bootstrapping client app && a provider for writing tests
  */
-export default function Providers(props: Props): Node {
+export default function Bootstrap(props: Props): Node {
   return (
     <CacheProvider value={cache}>
       <I18nextProvider i18n={i18next}>

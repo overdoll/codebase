@@ -10,7 +10,7 @@ import JSResource from '@//:modules/utilities/JSResource';
 import RoutingContext from '@//:modules/routing/RoutingContext';
 import RelayEnvironment from '@//:modules/relay/RelayEnvironment';
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary';
-import Providers from '../../client/Providers';
+import Bootstrap from '../../client/Bootstrap';
 import type { Route } from '../../client/routes';
 
 type WithProviders = {
@@ -51,7 +51,7 @@ export default function withProviders({
   // eslint-disable-next-line react/display-name
   return props => {
     return (
-      <Providers environment={environment}>
+      <Bootstrap environment={environment}>
         <RoutingContext.Provider value={router.context}>
           <ErrorBoundary>
             <Suspense fallback={'Loading fallback...'}>
@@ -59,7 +59,7 @@ export default function withProviders({
             </Suspense>
           </ErrorBoundary>
         </RoutingContext.Provider>
-      </Providers>
+      </Bootstrap>
     );
   };
 }
