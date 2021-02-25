@@ -3,11 +3,13 @@
  */
 import { graphql, useMutation } from 'react-relay/hooks';
 import { Button, Form, Input, useForm } from '@//:modules/form';
+
 import { Frame } from '@//:modules/content';
 import { useNotify } from '@//:modules/focus';
 import { useTranslation } from 'react-i18next';
 import type { RegisterMutation } from '@//:artifacts/RegisterMutation.graphql';
 import type { Node } from 'react';
+import { useHistory } from '@//:modules/routing';
 
 const RegisterMutationGQL = graphql`
   mutation RegisterMutation($data: RegisterInput!) {
@@ -23,15 +25,17 @@ export default function Register(): Node {
   const notify = useNotify();
   const [t] = useTranslation('auth');
 
-  const onSubmit = async val => {
-    await commit({
+  const history = useHistory();
+
+  const onSubmit = val => {
+    commit({
       variables: {
         data: {
           username: val.username,
         },
       },
       onCompleted(data) {
-        console.log(data);
+        history.replace('/profile');
       },
       onError(data) {
         notify.error(t('register.error'));
