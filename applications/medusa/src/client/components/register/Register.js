@@ -6,7 +6,6 @@ import { Button, Form, Input, useForm } from '@//:modules/form';
 import { Frame } from '@//:modules/content';
 import { useNotify } from '@//:modules/focus';
 import { useTranslation } from 'react-i18next';
-import type { RegisterMutation } from '@//:artifacts/RegisterMutation.graphql';
 import type { Node } from 'react';
 
 const RegisterMutationGQL = graphql`

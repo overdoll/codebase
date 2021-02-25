@@ -3,14 +3,16 @@
     "plugin:react/recommended",
     "standard",
     "prettier",
-    "plugin:flowtype/recommended"
+    "plugin:flowtype/recommended",
+    "plugin:jest/recommended"
   ],
   "plugins": [
     "flowtype",
     "react",
     "relay",
     "react-hooks",
-    "prettier"
+    "prettier",
+    "jest"
   ],
   "rules": {
     "react-hooks/rules-of-hooks": "error",

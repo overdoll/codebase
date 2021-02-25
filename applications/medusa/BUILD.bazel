@@ -2,21 +2,24 @@ load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
 load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin", "nodejs_binary")
 load("@bazel_skylib//rules:write_file.bzl", "write_file")
 load("@npm//razzle:index.bzl", "razzle")
+load(":jest.bzl", "jest_test")
 
 package(default_visibility = ["//visibility:public"])
 
+_SRC = glob(
+    [
+        "public/*",
+        "src/**/*",
+        ".*",
+    ],
+) + [
+    "razzle.config.js",
+    "package.json",
+]
+
 copy_to_bin(
     name = "copy_static_files",
-    srcs = glob(
-        [
-            "public/*",
-            "src/**/*",
-            ".*",
-        ],
-    ) + [
-        "razzle.config.js",
-        "package.json",
-    ],
+    srcs = _SRC,
 )
 
 write_file(
@@ -26,8 +29,6 @@ write_file(
 )
 
 _RUNTIME_DEPS = [
-    "chdir.js",
-    "copy_static_files",
     "@npm//react",
     "@npm//react-dom",
     "@npm//react-relay",
@@ -92,6 +93,42 @@ _RUNTIME_DEPS = [
     "@npm//@streamlinehq/streamline-regular",
 ]
 
+nodejs_binary(
+    name = "medusa",
+    data = [
+        "chdir.js",
+        "copy_static_files",
+    ] + _RUNTIME_DEPS,
+    entry_point = "@npm//:node_modules/razzle/bin/razzle.js",
+    templated_args = [
+        "--node_options=--require=./$(rootpath chdir.js)",
+        "start",
+    ],
+)
+
+nodejs_image(
+    name = "medusa-image",
+    binary = ":medusa",
+)
+
+jest_test(
+    name = "test",
+    srcs = glob(
+        [
+            "src/client/**/*",
+            "src/modules/**/*",
+            "src/__generated__/*",
+            ".*",
+        ],
+    ),
+    deps = ["chdir.js"] + ["jest.config.js"] + _RUNTIME_DEPS + [
+        "@npm//@jest/transform",
+        "@npm//@jest/core",
+        "@npm//@testing-library/react",
+        "@npm//babel-jest",
+    ],
+)
+
 # TODO: get build working here
 #razzle(
 #    name = "bundle",
@@ -125,18 +162,3 @@ _RUNTIME_DEPS = [
 #        "--node_options=--require=./$(rootpath chdir.js)",
 #    ],
 #)
-
-nodejs_binary(
-    name = "medusa",
-    data = _RUNTIME_DEPS,
-    entry_point = "@npm//:node_modules/razzle/bin/razzle.js",
-    templated_args = [
-        "--node_options=--require=./$(rootpath chdir.js)",
-        "start",
-    ],
-)
-
-nodejs_image(
-    name = "medusa-image",
-    binary = ":medusa",
-)
