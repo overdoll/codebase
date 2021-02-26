@@ -12,7 +12,8 @@ def jest_test(name, srcs, deps, **kwargs):
     ]
 
     for src in srcs:
-        templated_args.extend(["--runTestsByPath", "%s" % src])
+        if src.endswith(".spec.js"):
+            templated_args.extend(["--runTestsByPath", "%s" % src])
 
     data = srcs + deps + ["reporter.js"]
     _jest_test(

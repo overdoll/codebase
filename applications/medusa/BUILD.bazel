@@ -117,14 +117,16 @@ jest_test(
         [
             "src/client/**/*",
             "src/modules/**/*",
-            ".*",
         ],
     ),
     deps = [
         "chdir.js",
         "jest.setup.js",
         "jest.config.js",
-    ] + glob(["src/__generated__/*"]) + _RUNTIME_DEPS + [
+    ] + glob([
+        "src/__generated__/*",
+        ".*",
+    ]) + _RUNTIME_DEPS + [
         "@npm//@jest/transform",
         "@npm//@jest/core",
         "@npm//@testing-library/react",

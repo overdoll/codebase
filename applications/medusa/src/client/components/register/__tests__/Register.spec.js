@@ -1,4 +1,8 @@
-import { fireEvent, render, waitFor } from '@testing-library/react';
+import {
+  fireEvent,
+  render,
+  waitFor,
+} from '@testing-library/react';
 import Register from '../Register';
 import withProviders from '@//:modules/testing/withProviders';
 import { createMockEnvironment } from 'relay-test-utils';
@@ -34,4 +38,8 @@ it('Register just works', async () => {
   expect(mutationOperation.fragment.variables.data).toEqual({
     username: username,
   });
+});
+
+it('Register just works2', async () => {
+  expect(true).toEqual(true);
 });
