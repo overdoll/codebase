@@ -29,18 +29,15 @@ const getUserFromEnvironment = environment =>
 
 type Route = {
   component: any,
-  prepare: any,
-  middleware: ?any,
-  exact: boolean,
-  routes: Array<Route>,
-  path: ?string,
+  prepare?: any,
+  middleware?: Array<any>,
+  exact?: boolean,
+  routes?: Array<Route>,
+  path?: string,
 };
 
 const routes: Array<Route> = [
   {
-    path: null,
-    exact: false,
-    middleware: [],
     component: JSResource('Root', () =>
       import(/* webpackChunkName: "Root" */ './components/routes/Root'),
     ),
@@ -79,7 +76,6 @@ const routes: Array<Route> = [
             return true;
           },
         ],
-        routes: [],
       },
       {
         path: '/token/:id',
@@ -114,7 +110,6 @@ const routes: Array<Route> = [
             return true;
           },
         ],
-        routes: [],
       },
       {
         path: '*',
@@ -124,9 +119,6 @@ const routes: Array<Route> = [
             /* webpackChunkName: "Empty" */ './components/routes/empty/Empty'
           ),
         ),
-        prepare: () => ({}),
-        middleware: [],
-        routes: [],
       },
     ],
   },
