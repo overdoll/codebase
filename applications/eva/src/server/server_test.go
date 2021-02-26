@@ -7,13 +7,14 @@ import (
 	"testing"
 	"time"
 
-	"github.com/bmizerany/assert"
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
+	"github.com/stretchr/testify/assert"
 	eva "overdoll/applications/eva/proto"
 	"overdoll/applications/eva/src/models"
 	"overdoll/libraries/testing/scylla"
+	"github.com/bxcodec/faker/v3"
 )
 
 // Init - Create a database session to use for testing, and create a keyspace
@@ -37,25 +38,39 @@ func Init(t *testing.T) (gocqlx.Session, context.Context, *Server) {
 	return session, ctx, srv
 }
 
+type TestUser struct {
+	Email string `faker:"email"`
+	Username string `faker:"username"`
+}
+
 // TestRegisterUser_Accepted - Test user registration with a valid email & username
 func TestRegisterUser_Accepted(t *testing.T) {
 	session, ctx, server := Init(t)
 
 	defer session.Close()
 
-	email := "test1@test.com"
-	username := "IAmUser1"
+	user := TestUser{}
+
+	err := faker.FakeData(&user)
+
+	if err != nil {
+		t.Fatal("error generating fake data: ", err)
+	}
 
 	response, err := server.RegisterUser(ctx, &eva.RegisterUserRequest{
-		Email:    email,
-		Username: username,
+		Email:    user.Email,
+		Username: user.Username,
 	})
 
 	if err != nil {
 		t.Fatal("register user error: ", err)
 	}
 
-	assert.Equal(t, response, &eva.User{Username: username, Id: response.Id})
+	assert.Equal(t, response, &eva.User{Username: user.Username, Id: response.Id})
+
+	t.Cleanup(func() {
+
+	})
 }
 
 // TestRegisterUser_Declined_Username - Test user registration with a failure because the username is taken
@@ -64,14 +79,20 @@ func TestRegisterUser_Declined_Username(t *testing.T) {
 
 	defer session.Close()
 
-	username := "IAmUser2"
+	user := TestUser{}
+
+	err := faker.FakeData(&user)
+
+	if err != nil {
+		t.Fatal("error generating fake data: ", err)
+	}
 
 	userId := gocql.TimeUUID()
 
 	userUsername := models.UserUsername{
 		Id: userId,
 		// This table stores usernames as lowercase so we should have it this way
-		Username: strings.ToLower(username),
+		Username: strings.ToLower(user.Username),
 	}
 
 	// First, we insert a username that is already taken
@@ -86,9 +107,9 @@ func TestRegisterUser_Declined_Username(t *testing.T) {
 	}
 
 	// Now, we do the actual insertion
-	_, err := server.RegisterUser(ctx, &eva.RegisterUserRequest{
-		Email:    "test2@test.com",
-		Username: username,
+	_, err = server.RegisterUser(ctx, &eva.RegisterUserRequest{
+		Email:    user.Email,
+		Username: user.Username,
 	})
 
 	// We should have received an error
@@ -101,13 +122,19 @@ func TestRegisterUser_Declined_Email(t *testing.T) {
 
 	defer session.Close()
 
-	email := "test3@test.com"
+	user := TestUser{}
+
+	err := faker.FakeData(&user)
+
+	if err != nil {
+		t.Fatal("error generating fake data: ", err)
+	}
 
 	userId := gocql.TimeUUID()
 
 	userEmail := models.UserEmail{
 		UserId: userId,
-		Email:  email,
+		Email:  user.Email,
 	}
 
 	// First, we insert a username that is already taken
@@ -122,9 +149,9 @@ func TestRegisterUser_Declined_Email(t *testing.T) {
 	}
 
 	// Now, we do the actual insertion
-	_, err := server.RegisterUser(ctx, &eva.RegisterUserRequest{
-		Email:    email,
-		Username: "IAmUser3",
+	_, err = server.RegisterUser(ctx, &eva.RegisterUserRequest{
+		Email:    user.Email,
+		Username: user.Username,
 	})
 
 	// We should have received an error, since the email is already in-use
@@ -139,6 +166,14 @@ func TestDeleteAuthenticationCookie_Exists(t *testing.T) {
 
 	uuid := gocql.TimeUUID()
 
+	user := TestUser{}
+
+	err := faker.FakeData(&user)
+
+	if err != nil {
+		t.Fatal("error generating fake data: ", err)
+	}
+
 	// Seed a value into authentication_cookies that will be deleted
 	insertCookie := qb.
 		Insert("authentication_cookies").
@@ -147,7 +182,7 @@ func TestDeleteAuthenticationCookie_Exists(t *testing.T) {
 
 	insertCookie.BindStruct(models.AuthenticationCookie{
 		Cookie:     uuid,
-		Email:      "test@test.com",
+		Email:      user.Email,
 		Redeemed:   0,
 		Expiration: time.Now().Add(time.Minute * 5),
 		Session:    "",
@@ -175,11 +210,16 @@ func TestCreateNewAuthenticationCookie_New(t *testing.T) {
 
 	defer session.Close()
 
-	email := "tester@tester.com"
+	user := TestUser{}
+	err := faker.FakeData(&user)
+	if err != nil {
+		t.Fatal("error generating fake data: ", err)
+	}
+
 	userSession := "{}"
 
 	response, err := server.CreateAuthenticationCookie(ctx, &eva.CreateAuthenticationCookieRequest{
-		Email:   email,
+		Email:   user.Email,
 		Session: userSession,
 	})
 
@@ -189,7 +229,7 @@ func TestCreateNewAuthenticationCookie_New(t *testing.T) {
 
 	// Cookie was successfully created
 	assert.Equal(t, response, &eva.AuthenticationCookie{
-		Email:      email,
+		Email:      user.Email,
 		Session:    userSession,
 		Redeemed:   false,
 		Cookie:     response.Cookie,
@@ -205,6 +245,12 @@ func TestRedeemAuthenticationCookie_Not_Expired(t *testing.T) {
 
 	uuid := gocql.TimeUUID()
 
+	user := TestUser{}
+	err := faker.FakeData(&user)
+	if err != nil {
+		t.Fatal("error generating fake data: ", err)
+	}
+
 	// Seed a value into authentication_cookies that will be redeemed
 	insertCookie := qb.
 		Insert("authentication_cookies").
@@ -213,7 +259,7 @@ func TestRedeemAuthenticationCookie_Not_Expired(t *testing.T) {
 
 	insertCookie.BindStruct(models.AuthenticationCookie{
 		Cookie:     uuid,
-		Email:      "test@test.com",
+		Email:      user.Email,
 		Redeemed:   0,
 		Expiration: time.Now().Add(time.Minute * 5),
 		Session:    "",
@@ -247,6 +293,12 @@ func TestRedeemAuthenticationCookie_Expired(t *testing.T) {
 
 	defer session.Close()
 
+	user := TestUser{}
+	err := faker.FakeData(&user)
+	if err != nil {
+		t.Fatal("error generating fake data: ", err)
+	}
+
 	uuid := gocql.TimeUUID()
 
 	// Seed a value into authentication_cookies that will be redeemed
@@ -257,7 +309,7 @@ func TestRedeemAuthenticationCookie_Expired(t *testing.T) {
 
 	insertCookie.BindStruct(models.AuthenticationCookie{
 		Cookie:     gocql.TimeUUID(),
-		Email:      "test@test.com",
+		Email:      user.Email,
 		Redeemed:   0,
 		Expiration: time.Now().Add(-time.Minute * 5),
 		Session:    "",
@@ -267,7 +319,7 @@ func TestRedeemAuthenticationCookie_Expired(t *testing.T) {
 		t.Fatal("ExecRelease() failed:", err)
 	}
 
-	_, err := server.RedeemAuthenticationCookie(ctx, &eva.GetAuthenticationCookieRequest{
+	_, err = server.RedeemAuthenticationCookie(ctx, &eva.GetAuthenticationCookieRequest{
 		Cookie: uuid.String(),
 	})
 

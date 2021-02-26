@@ -24,9 +24,10 @@ go_test(
         "//applications/eva/proto:v1_go_proto",
         "//applications/eva/src/models:go_default_library",
         "//libraries/testing/scylla:go_default_library",
-        "@com_github_bmizerany_assert//:go_default_library",
+        "@com_github_bxcodec_faker_v3//:go_default_library",
         "@com_github_gocql_gocql//:go_default_library",
         "@com_github_scylladb_gocqlx_v2//:go_default_library",
         "@com_github_scylladb_gocqlx_v2//qb:go_default_library",
+        "@com_github_stretchr_testify//assert:go_default_library",
     ],
 )

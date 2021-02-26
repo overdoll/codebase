@@ -796,3 +796,10 @@ go_repository(
     sum = "h1:eGCbPkMnsg02jXBIxxXn1Fxep9dAuTUvEi6UdJsbOhg=",
     version = "v0.0.0-20170508204228-c44433c485ad",
 )
+
+go_repository(
+    name = "com_github_bxcodec_faker_v3",
+    importpath = "github.com/bxcodec/faker/v3",
+    sum = "h1:Meuh+M6pQJsQJwxVALq6H5wpDzkZ4pStV9pmH7gbKKs=",
+    version = "v3.6.0",
+)

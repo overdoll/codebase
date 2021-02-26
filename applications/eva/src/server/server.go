@@ -138,7 +138,6 @@ func (s *Server) RegisterUser(ctx context.Context, request *eva.RegisterUserRequ
 
 		// There was an error or something, so we want to gracefully recover.
 		// Delete our users_usernames entry just in case, so user can try to signup again
-
 		deleteUserUsername := qb.Delete("users_usernames").
 			Where(qb.Eq("username")).
 			Query(s.session).

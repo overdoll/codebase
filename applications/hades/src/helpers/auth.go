@@ -34,5 +34,5 @@ func CreateUserSession(gc *gin.Context, redis redis.Conn, id string) (*string, e
 		return nil, err
 	}
 
-	return nil, nil
+	return &token, nil
 }
