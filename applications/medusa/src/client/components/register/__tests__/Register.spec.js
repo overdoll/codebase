@@ -47,5 +47,5 @@ it('Register just works', async () => {
     ),
   );
 
-  // TODO: check that a route change occured after the operation is resolved (need access to router)
+  // TODO: check that a route change occurred after the operation is resolved (need access to router)
 });

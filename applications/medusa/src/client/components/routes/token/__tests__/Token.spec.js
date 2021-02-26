@@ -91,6 +91,6 @@ it('should redirect if user is already registered', async () => {
 
   const { getByText } = render(<Root />);
 
-  // TODO: change this to check for a route change instead of a text change
+  // TODO: change this to check for a route change instead of a text change - the user would actually never see this text
   expect(getByText('redirecting')).toBeVisible();
 });
