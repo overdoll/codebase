@@ -133,6 +133,7 @@ jest_test(
         "@npm//relay-test-utils",
         "@npm//jest-environment-jsdom-sixteen",
         "@npm//@testing-library/jest-dom",
+        "@npm//c8",
     ],
 )
 

@@ -19,4 +19,5 @@ module.exports = {
       { configFile: path.resolve(__dirname, '.babelrc') },
     ],
   },
+  coverageDirectory: '<rootDir>',
 };

@@ -8,6 +8,7 @@ def jest_test(name, srcs, deps, **kwargs):
         "--ci",
         "--colors",
         "--config $(rootpath jest.config.js)",
+        "--collectCoverage true",
     ]
 
     for src in srcs:
