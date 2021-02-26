@@ -89,14 +89,19 @@ const theme = {
       '100': 'hsla(281,88%,90%,1)',
       '50': 'hsla(281,88%,90%,0.15)',
     },
+    gradient: {
+      primary: 'linear-gradient(45deg, primary.500 50%, primary.400 50%)',
+    },
   },
   space: [
-    '0.3333333333333333rem',
-    '0.6666666666666666rem',
-    '1rem',
-    '1.3333333333333333rem',
-    '2rem',
-    '2.6666666666666665rem',
+    '0.25rem', // 4
+    '0.5rem', // 8
+    '0.75rem', // 12
+    '1rem', // 16
+    '1.25rem', // 20
+    '1.5rem', // 24
+    '2rem', // 32
+    '2.5rem', // 40
     '4rem',
   ],
   fonts: {
@@ -140,10 +145,11 @@ const theme = {
   },
   radii: {
     defaults: 15,
+    forms: 10,
     notification: 5,
   },
   borderWidths: {
-    defaults: '2px',
+    defaults: '3.5px',
   },
   borders: {
     primary: 'primary.500',
@@ -172,10 +178,10 @@ const theme = {
     input: {
       primary: {
         color: 'neutral.100',
+        bg: 'neutral.800',
         '&::placeholder': {
           color: 'neutral.300',
         },
-        bg: 'neutral.800',
       },
     },
   },
