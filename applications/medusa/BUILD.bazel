@@ -120,7 +120,6 @@ jest_test(
         ],
     ),
     deps = [
-        "chdir.js",
         "jest.setup.js",
         "jest.config.js",
     ] + glob([

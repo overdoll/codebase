@@ -75,11 +75,11 @@ export default function Token(props: Props): Node {
     );
   }
 
-  if (!data.redeemCookie?.registered) {
+  if (!!data.redeemCookie?.registered === false) {
     return <Register />;
   }
 
   // User is registered - redirect to profile
   history.push('/profile');
-  return null;
+  return 'redirecting';
 }

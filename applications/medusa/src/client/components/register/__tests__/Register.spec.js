@@ -1,11 +1,7 @@
-import {
-  fireEvent,
-  render,
-  waitFor,
-} from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import Register from '../Register';
 import withProviders from '@//:modules/testing/withProviders';
-import { createMockEnvironment } from 'relay-test-utils';
+import { createMockEnvironment, MockPayloadGenerator } from 'relay-test-utils';
 
 it('Register just works', async () => {
   const Environment = createMockEnvironment();
@@ -29,7 +25,6 @@ it('Register just works', async () => {
   const button = getByRole('button');
   fireEvent.click(button);
 
-  // Wait for operation to resolve
   const mutationOperation = await waitFor(() =>
     Environment.mock.getMostRecentOperation(),
   );
@@ -38,8 +33,19 @@ it('Register just works', async () => {
   expect(mutationOperation.fragment.variables.data).toEqual({
     username: username,
   });
-});
 
-it('Register just works2', async () => {
-  expect(true).toEqual(true);
+  const payload = {
+    register() {
+      return true;
+    },
+  };
+
+  // Resolve our operation
+  await waitFor(() =>
+    Environment.mock.resolveMostRecentOperation(operation =>
+      MockPayloadGenerator.generate(operation, payload),
+    ),
+  );
+
+  // TODO: check that a route change occured after the operation is resolved (need access to router)
 });

@@ -1,4 +1,5 @@
 build --enable_platform_specific_config
+test --incompatible_strict_action_env
 build --incompatible_strict_action_env
 run --incompatible_strict_action_env
 run --incompatible_restrict_string_escapes=false

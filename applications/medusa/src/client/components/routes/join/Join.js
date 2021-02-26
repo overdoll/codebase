@@ -14,6 +14,10 @@ import { RootContext } from '../Root';
 import { EMAIL } from '@//:modules/regex';
 import type { JoinFragment$key } from '@//:artifacts/JoinFragment.graphql';
 
+type JoinValues = {
+  email: string,
+};
+
 const JoinAction = graphql`
   mutation JoinMutation($data: AuthenticationInput!) {
     authenticate(data: $data)
@@ -29,10 +33,6 @@ const RootFragmentGQL = graphql`
     }
   }
 `;
-
-type JoinValues = {
-  email: string,
-}
 
 export default function Join(): Node {
   const rootQuery = useContext(RootContext);
@@ -81,7 +81,7 @@ export default function Join(): Node {
 
   // Checks for various types of states
   const emptySubscriptionResponse = authInfo.authListener === null;
-  const emptyAuthCookie = data?.cookie === null;
+  const emptyAuthCookie = !!data?.cookie === false;
 
   // If we're waiting on a token, create a subscription for the token
   // We don't have to send any values because it already knows the token

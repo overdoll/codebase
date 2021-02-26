@@ -1,5 +1,8 @@
 const path = require('path');
 
+// Have to set chdir here - for some reason it breaks when passed to --node-options
+process.chdir(__dirname);
+
 module.exports = {
   testEnvironment: 'jest-environment-jsdom-sixteen',
   reporters: ['default', './reporter'],

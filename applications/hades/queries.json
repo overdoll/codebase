@@ -5,5 +5,6 @@
   "baeb01655c5e1818c7a116ad2e2353f9": "mutation JoinMutation(\n  $data: AuthenticationInput!\n) {\n  authenticate(data: $data)\n}\n",
   "90f66151793c514fcbbc647a644bec16": "mutation LobbyMutation {\n  authEmail\n}\n",
   "681b8d7958c1231ee10b34b7b921278f": "subscription LobbySubscription {\n  authListener {\n    sameSession\n    cookie {\n      registered\n    }\n  }\n}\n",
-  "6b85f710fe7f06344d187e00cc6d00fc": "query RootQuery {\n  authentication {\n    user {\n      username\n    }\n    ...JoinFragment\n  }\n}\n\nfragment JoinFragment on Authentication {\n  cookie {\n    redeemed\n    registered\n    email\n  }\n}\n"
+  "6b85f710fe7f06344d187e00cc6d00fc": "query RootQuery {\n  authentication {\n    user {\n      username\n    }\n    ...JoinFragment\n  }\n}\n\nfragment JoinFragment on Authentication {\n  cookie {\n    redeemed\n    registered\n    email\n  }\n}\n",
+  "5c0d9e86dd17d6f87d54345f1a8a2d61": "query TokenSpecQuery(\n  $cookie: String!\n) {\n  redeemCookie(cookie: $cookie) {\n    sameSession\n    registered\n    session\n  }\n}\n"
 }
