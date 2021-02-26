@@ -12,8 +12,7 @@ type Props = {
   sx?: any,
 };
 
-export default function Button(props: Props): Node {
-  const { sx, loading, children, ...rest } = props;
+export default function Button({ sx, loading, children, ...rest }: Props): Node {
 
   return (
     <ThemeUIButton

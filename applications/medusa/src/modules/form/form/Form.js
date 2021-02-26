@@ -10,9 +10,7 @@ type Props = {
   onSubmit: any,
 };
 
-export default function Form(props: Props): Node {
-  const { children, instance, onSubmit } = props;
-
+export default function Form({ children, instance, onSubmit }: Props): Node {
   return (
     <FormProvider {...instance}>
       <form onSubmit={instance.handleSubmit(onSubmit)}>{children}</form>

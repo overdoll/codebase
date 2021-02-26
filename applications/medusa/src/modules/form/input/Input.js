@@ -17,9 +17,7 @@ type Props = {
   sx?: any,
 };
 
-export default function Input(props: Props): Node {
-  const { sx, validation, title, name, ...rest } = props;
-
+export default function Input({ sx, validation, title, name, ...rest }: Props): Node {
   const { register, errors, formState } = useFormContext();
 
   const hasError = errors[name] !== null && errors[name] !== undefined;

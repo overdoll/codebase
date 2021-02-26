@@ -128,3 +128,5 @@ export default function JSResource(moduleId: string, loader: any): Resource {
 
   return resource;
 }
+
+export type { Resource };

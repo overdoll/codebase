@@ -1,6 +1,10 @@
+/**
+ * @flow
+ */
 import {
   useContext,
   useEffect,
+  // $FlowIgnore
   unstable_useTransition as useTransition,
   Suspense,
   useState,
@@ -8,6 +12,9 @@ import {
 import RoutingContext from '@//:modules/routing/RoutingContext';
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary';
 import { keyframes } from '@emotion/react';
+import type { Node } from 'react';
+import type { Route } from '../../client/routes';
+import { Resource } from '@//:modules/utilities/JSResource';
 
 const SUSPENSE_CONFIG = { timeoutMs: 2000 };
 
@@ -23,7 +30,7 @@ const transition = keyframes`
  *
  * We want to also skip component rendering on the server-side
  */
-export default function RouterRenderer() {
+export default function RouterRenderer(): Node {
   // Access the router
   const router = useContext(RoutingContext);
   // Improve the route transition UX by delaying transitions: show the previous route entry
@@ -132,6 +139,13 @@ export default function RouterRenderer() {
   );
 }
 
+type RouteComp = {
+  children?: Node,
+  routeData: Route,
+  component: Resource,
+  prepared: any,
+};
+
 /**
  * The `component` property from the route entry is a Resource, which may or may not be ready.
  * We use a helper child component to unwrap the resource with component.read(), and then
@@ -143,7 +157,12 @@ export default function RouterRenderer() {
  * our ErrorBoundary/Suspense components, so we have to ensure that the suspend/error happens
  * in a child component.
  */
-function RouteComponent({ children, routeData, component, prepared }) {
+function RouteComponent({
+  children,
+  routeData,
+  component,
+  prepared,
+}: RouteComp): Node {
   const Component = component.read();
   return (
     <Component routeData={routeData} prepared={prepared}>

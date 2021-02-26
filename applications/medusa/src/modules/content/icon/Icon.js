@@ -27,9 +27,8 @@ const renderPaths = (icon, fill, stroke) =>
     />
   ));
 
-export default function Icon(props: Props): Node {
+export default function Icon({ width, icon, fill, stroke, height, size, ...rest }: Props): Node {
   let shouldResize = true;
-  const { width, icon, fill, stroke, height, size, ...rest } = props;
 
   let finalWidth: number = icon[1];
   let finalHeight: number = icon[2];

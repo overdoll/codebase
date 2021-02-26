@@ -1,9 +1,17 @@
+/**
+ * @flow
+ */
 import { parsePath } from 'history';
+
+type Props = {
+  context: any,
+  location: string,
+};
 
 export default function createMockHistory({
   context = {},
   location: loc = '/',
-}) {
+}: Props): any {
   if (typeof loc === 'string') loc = parsePath(loc);
 
   const action = 'POP';

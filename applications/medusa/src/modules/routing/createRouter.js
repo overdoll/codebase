@@ -1,5 +1,35 @@
+/**
+ * @flow
+ */
 import { matchRoutes } from 'react-router-config';
 import { loadQuery } from 'react-relay/hooks';
+import type { Route } from '../../client/routes';
+import RelayEnvironment from '@//:modules/relay/RelayEnvironment';
+
+type Preload = {
+  (pathname: string): void,
+};
+
+type Subscribe = {
+  (sb: any): any,
+};
+
+type Get = {
+  (): { entries: any, location: any },
+};
+
+type Router = {
+  preloadCode: Preload,
+  preload: Preload,
+  subscribe: Subscribe,
+  get: Get,
+  history: any,
+};
+
+type RouterInstance = {
+  cleanup: any,
+  context: Router,
+};
 
 // Check if our route is valid (on the client), by running the "middleware" function
 // The middleware function can either return true or false - if false, then the route won't be visible to the user and no API
@@ -26,7 +56,11 @@ const isRouteValid = (environment, route, history) => {
  * Note: History is created by either the index or the client, since we can't use the same history for both.
  *
  */
-export default function createRouter(routes, history, environment) {
+export default function createRouter(
+  routes: Array<Route>,
+  history: any,
+  environment: typeof RelayEnvironment,
+): RouterInstance {
   // Find the initial match and prepare it
   const initialMatches = matchRoute(
     routes,
@@ -158,3 +192,5 @@ function convertPreparedToQueries(environment, prepare, params, index) {
 
   return prepared;
 }
+
+export type { Router };

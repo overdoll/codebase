@@ -17,8 +17,7 @@ type Props = {
   id: string,
 };
 
-export default function Notification(props: Props): Node {
-  const { children, duration, id } = props;
+export default function Notification({ children, duration, id }: Props): Node {
 
   const { onExpire } = useContext(NotificationContext);
 

@@ -1,11 +1,20 @@
+/**
+ * @flow
+ */
 import RoutingContext from '@//:modules/routing/RoutingContext';
 import { useCallback, useContext } from 'react';
+import type {Node} from 'react';
+
+type Props = {
+  children: Node,
+  to: string,
+}
 
 /**
  * An alternative to react-router's Link component that works with
  * our custom RoutingContext.
  */
-export default function Link(props) {
+export default function Link(props: Props): Node {
   const router = useContext(RoutingContext);
 
   // When the user clicks, change route

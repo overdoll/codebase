@@ -1,8 +1,11 @@
+/**
+ * @flow
+ */
 import { useCallback } from 'react';
 
 import { useRoutingContext } from './RoutingContext';
 
-export const usePreloadRoute = to => {
+export const usePreloadRoute = (to: string): Array<any> => {
   const router = useRoutingContext();
 
   // Callback to preload just the code for the route:
