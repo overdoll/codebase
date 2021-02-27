@@ -1,11 +1,20 @@
 import { Button as ThemeUIButton } from 'theme-ui';
 import { Icon } from '@//:modules/content';
-import { Loading } from '@streamlinehq/streamline-regular/lib/interface-essential';
+import { Synchronize } from '@streamlinehq/streamline-regular/lib/interface-essential';
 
-const Button = ({ sx, loading, children, ...rest }) => {
+const Button = ({ sx, loading, children, disabled, ...rest }) => {
+  const loadingIcon = (
+    <Icon
+      icon={Synchronize.SynchronizeArrow1}
+      stroke="inherit"
+      sx={{ pl: 1 }}
+    />
+  );
+
   return (
     <ThemeUIButton
       {...rest}
+      disabled={disabled || loading}
       sx={{
         borderWidth: 'defaults',
         borderStyle: 'solid',
@@ -13,7 +22,7 @@ const Button = ({ sx, loading, children, ...rest }) => {
         pr: 6,
         pt: 3,
         pb: 3,
-        fontSize: 2,
+        fontSize: 3,
         fontWeight: 'bold',
         fontFamily: 'heading',
         borderRadius: 'defaults',
@@ -21,20 +30,14 @@ const Button = ({ sx, loading, children, ...rest }) => {
         '&:hover': {
           cursor: 'pointer',
         },
+        '&:disabled': {
+          cursor: 'not-allowed',
+        },
         ...sx,
       }}
     >
       <span sx={{ display: 'flex' }}>
-        <span sx={{ margin: 'auto' }}>
-          {children}
-          {loading && (
-            <Icon
-              icon={Loading.LoadingCircle}
-              stroke="neutral.100"
-              sx={{ pl: 1 }}
-            />
-          )}
-        </span>
+        <span sx={{ margin: 'auto' }}>{loading ? loadingIcon : children}</span>
       </span>
     </ThemeUIButton>
   );

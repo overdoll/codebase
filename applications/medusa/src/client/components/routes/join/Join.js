@@ -107,7 +107,7 @@ export default function Join() {
     <Frame>
       <Icon
         icon={SignShapes.SignBadgeCircle}
-        strokeWidth={2}
+        strokeWidth={2.5}
         stroke={'primary.500'}
         size={80}
         sx={{
