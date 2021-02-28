@@ -1,7 +1,7 @@
 /**
  * @flow
  */
-import type { Context, Element, Node } from 'react';
+import type { Context, Node } from 'react';
 import { createContext, Suspense } from 'react';
 import { graphql, usePreloadedQuery } from 'react-relay/hooks';
 import type { PreloadedQuery } from 'react-relay/relay-experimental';
@@ -30,9 +30,7 @@ const RootQueryGQL = graphql`
 
 const RootContext: Context<?RootQueryResponse> = createContext(null);
 
-export default function Root(
-  props: Props,
-): Element<typeof RootContext.Provider> {
+export default function Root(props: Props): Node {
   const rootQuery = usePreloadedQuery<RootQuery>(
     RootQueryGQL,
     props.prepared.stateQuery,
