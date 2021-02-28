@@ -4,7 +4,7 @@
 import { matchRoutes } from 'react-router-config';
 import { loadQuery } from 'react-relay/hooks';
 import type { Route } from '../../client/routes';
-import RelayEnvironment from '@//:modules/relay/RelayEnvironment';
+import { Environment } from 'relay-runtime';
 
 type Preload = {
   (pathname: string): void,
@@ -59,7 +59,7 @@ const isRouteValid = (environment, route, history) => {
 export default function createRouter(
   routes: Array<Route>,
   history: any,
-  environment: typeof RelayEnvironment,
+  environment: typeof Environment,
 ): RouterInstance {
   // Find the initial match and prepare it
   const initialMatches = matchRoute(
