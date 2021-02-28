@@ -3,7 +3,6 @@
  */
 import { graphql, useSubscription, useMutation } from 'react-relay/hooks';
 import type { Node } from 'react';
-import { useMemo } from 'react';
 import { useMemo, useState } from 'react';
 import { Heading, Text } from '@//:modules/typography';
 import { Button } from '@//:modules/form';
@@ -128,7 +127,7 @@ export default function Lobby(props: Props): Node {
           pb: 3,
         }}
       >
-        <Text sx={{ color: 'purple.300', fontSize: 2 }}>{email}</Text>
+        <Text sx={{ color: 'purple.300', fontSize: 2 }}>{props.email}</Text>
         <Icon
           icon={SignShapes.SignBadgeCircle}
           strokeWidth={2}

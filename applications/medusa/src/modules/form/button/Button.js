@@ -6,7 +6,20 @@ import { Button as ThemeUIButton } from 'theme-ui';
 import { Icon } from '@//:modules/content';
 import { Synchronize } from '@streamlinehq/streamline-regular/lib/interface-essential';
 
-const Button = ({ sx, loading, children, disabled, ...rest }) => {
+type Props = {
+  loading?: boolean,
+  children?: Node,
+  sx?: any,
+  disabled?: boolean,
+};
+
+export default function Button({
+  sx,
+  loading,
+  children,
+  disabled,
+  ...rest
+}: Props): Node {
   const loadingIcon = (
     <Icon
       icon={Synchronize.SynchronizeArrow1}
@@ -14,14 +27,6 @@ const Button = ({ sx, loading, children, disabled, ...rest }) => {
       sx={{ pl: 1 }}
     />
   );
-
-type Props = {
-  loading?: boolean,
-  children?: Node,
-  sx?: any,
-};
-
-export default function Button({ sx, loading, children, ...rest }: Props): Node {
 
   return (
     <ThemeUIButton
