@@ -36,7 +36,7 @@ export default function Input({ sx, validation, title, name, ...rest }: Props): 
               : 'green.600',
             fontFamily: 'heading',
             position: 'absolute',
-            fontSize: 0,
+            fontSize: 1,
             pl: 3,
             pt: 0,
             transform: 'translateX(3.5%)',
@@ -51,7 +51,7 @@ export default function Input({ sx, validation, title, name, ...rest }: Props): 
           sx={{
             pl: 3,
             pr: 7,
-            fontSize: 2,
+            fontSize: 3,
             pt: 5,
             pb: 1,
             fontWeight: 'body',

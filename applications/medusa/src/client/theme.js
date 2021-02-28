@@ -4,7 +4,8 @@
 const theme = {
   breakpoints: ['40em', '52em', '64em'],
   fontSizes: [
-    '1rem', // 12
+    '0.875rem', // 14
+    '1rem', // 16
     '1.1666666666666667rem', // 14
     '1.3333333333333333rem', // 16
     '1.5rem', // 18
@@ -115,7 +116,7 @@ const theme = {
   },
   lineHeights: {
     body: 1.5,
-    heading: 1.25,
+    heading: 1.5,
   },
   shadows: {
     '100': '0px 0px 2px rgba(0, 0, 0, 0.5)',
@@ -126,7 +127,7 @@ const theme = {
   },
   styles: {
     root: {
-      fontSize: '12px',
+      fontSize: 1,
       margin: 'unset',
     },
   },
@@ -140,7 +141,7 @@ const theme = {
       fontFamily: 'body',
       fontWeight: 'body',
       lineHeight: 'body',
-      fontSize: 2,
+      fontSize: 1,
     },
   },
   radii: {
@@ -159,6 +160,9 @@ const theme = {
       color: 'primary.500',
       bg: 'neutral.900',
       borderColor: 'primary.500',
+      '&:disabled': {
+        color: 'primary.700',
+      },
     },
     secondary: {
       color: 'neutral.100',
@@ -167,10 +171,34 @@ const theme = {
       '&:hover': {
         color: 'neutral.000',
       },
+      '&:disabled': {
+        color: 'neutral.200',
+      },
+    },
+  },
+  notifications: {
+    success: {
+      stroke: 'green.600',
+      fill: 'green.600',
+      backgroundColor: 'green.100',
+      color: 'green.900',
+    },
+    error: {
+      stroke: 'orange.300',
+      fill: 'orange.300',
+      backgroundColor: 'orange.100',
+      color: 'orange.900',
+    },
+    warning: {
+      stroke: 'purple.400',
+      fill: 'purple.400',
+      backgroundColor: 'purple.100',
+      color: 'purple.900',
     },
   },
   sizes: {
     fill: '100%',
+    large: '600px',
     regular: '400px',
     small: '300px',
   },

@@ -5,10 +5,12 @@ import type { Node } from 'react';
 import { useRef, useState, useEffect, useContext } from 'react';
 import { NotificationContext } from '../provider/NotificationProvider';
 import Icon from '@//:modules/content/icon/Icon';
+import { FormValidation } from '@streamlinehq/streamline-regular/lib/interface-essential';
 import {
-  Alerts,
-  FormValidation,
-} from '@streamlinehq/streamline-regular/lib/interface-essential';
+  Alerts as AlertsBold,
+  FormValidation as FormValidationBold,
+} from '@streamlinehq/streamline-bold/lib/interface-essential';
+import { Signs } from '@streamlinehq/streamline-bold/lib/transportation';
 
 type Props = {
   type: string,
@@ -22,6 +24,8 @@ export default function Notification({ children, duration, id }: Props): Node {
   const { onExpire } = useContext(NotificationContext);
 
   const timer = useRef();
+
+  const theme = 'notifications.' + type;
 
   const [dismissing, updateDismissing] = useState(false);
 
@@ -53,45 +57,67 @@ export default function Notification({ children, duration, id }: Props): Node {
     };
   }, []);
 
+  const notificationIcon = () => {
+    if (type === 'error') {
+      return Signs.RoadSignNoEntry;
+    } else if (type === 'warning') {
+      return AlertsBold.AlertTriangle;
+    } else if (type === 'success') {
+      return FormValidationBold.CheckCircle1;
+    }
+  };
+
   return (
     <div
       sx={{
-        width: '100%',
+        width: ['fill', 'large'],
         boxShadow: '200',
         padding: 1,
         borderRadius: 'notification',
-        backgroundColor: 'orange.100',
         display: 'flex',
+        margin: 'auto',
         mb: 1,
         position: 'relative',
+        variant: theme,
       }}
     >
       <Icon
-        icon={Alerts.AlertCircle}
-        stroke="orange.500"
+        size={16}
+        icon={notificationIcon()}
+        fill={theme}
         sx={{
           top: '50%',
           transform: 'translateY(-50%)',
           position: 'absolute',
-          bottom: 0,
           left: 0,
+          bottom: 0,
+          pl: 2,
         }}
       />
-      <div sx={{ color: 'orange.900', fontFamily: 'body', fontSize: 0, pl: 4 }}>
+      <div
+        sx={{
+          fontFamily: 'body',
+          fontSize: 0,
+          pl: 7,
+          pr: 7,
+          variant: theme,
+        }}
+      >
         {children}
       </div>
       <Icon
-        size="18px"
+        size={16}
         onClick={() => onExpire(id)}
         icon={FormValidation.Close}
-        stroke="orange.300"
+        stroke={theme}
+        strokeWidth={2}
         sx={{
           top: '50%',
           transform: 'translateY(-50%)',
           position: 'absolute',
           right: 0,
           bottom: 0,
-          pr: 0,
+          pr: 2,
         }}
       />
     </div>
