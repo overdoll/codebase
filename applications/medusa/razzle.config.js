@@ -24,14 +24,27 @@ module.exports = {
 
     config.resolve.alias = {
       '@//:modules': path.resolve(__dirname, 'src/modules'),
+      '@//:artifacts': path.resolve(__dirname, 'src/__generated__'),
     };
 
     if (opts.env.target === 'web') {
       const filename = path.resolve(__dirname, 'build');
 
-      config.output.filename = opts.env.dev
-        ? 'static/js/[name].js'
-        : 'static/js/[name].[hash:8].js';
+      if (opts.env.dev) {
+        config.output.filename = opts.env.dev
+          ? 'static/js/[name].js'
+          : 'static/js/[name].[hash:8].js';
+
+        config.devServer.proxy = {
+          context: () => true,
+          target: 'http://localhost:8080',
+        };
+
+        config.devServer.index = '';
+        config.devServer.public = 'https://overdoll.test';
+        config.devServer.host = 'overdoll.test';
+        config.devServer.hot = true;
+      }
 
       config.optimization = {
         moduleIds: 'size',
@@ -56,16 +69,6 @@ module.exports = {
           writeToDisk: { filename },
         }),
       );
-
-      config.devServer.proxy = {
-        context: () => true,
-        target: 'http://localhost:8080',
-      };
-
-      config.devServer.index = '';
-      config.devServer.public = 'https://overdoll.test';
-      config.devServer.host = 'overdoll.test';
-      config.devServer.hot = true;
     }
 
     return config;

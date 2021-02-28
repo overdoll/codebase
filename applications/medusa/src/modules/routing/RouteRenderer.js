@@ -1,15 +1,28 @@
+/**
+ * @flow
+ */
 import {
   useContext,
   useEffect,
+  // $FlowIgnore
   unstable_useTransition as useTransition,
   Suspense,
   useState,
 } from 'react';
 import RoutingContext from '@//:modules/routing/RoutingContext';
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary';
-import '@//:modules/routing/RouteRenderer.css';
+import { keyframes } from '@emotion/react';
+import type { Node } from 'react';
+import type { Route } from '../../client/routes';
+import { Resource } from '@//:modules/utilities/JSResource';
 
 const SUSPENSE_CONFIG = { timeoutMs: 2000 };
+
+const transition = keyframes`
+  to {
+    visibility: visible;
+  }
+`;
 
 /**
  * A component that accesses the current route entry from RoutingContext and renders
@@ -17,7 +30,7 @@ const SUSPENSE_CONFIG = { timeoutMs: 2000 };
  *
  * We want to also skip component rendering on the server-side
  */
-export default function RouterRenderer() {
+export default function RouterRenderer(): Node {
   // Access the router
   const router = useContext(RoutingContext);
   // Improve the route transition UX by delaying transitions: show the previous route entry
@@ -105,16 +118,33 @@ export default function RouterRenderer() {
   // Routes can suspend, so wrap in <Suspense>
   return (
     <ErrorBoundary>
-      <Suspense fallback={<div>loading....</div>}>
+      <Suspense fallback={null}>
         {/* Indicate to the user that a transition is pending, even while showing the previous UI */}
         {isPending ? (
-          <div className="RouteRenderer-pending">Loading pending...</div>
+          <div
+            sx={{
+              position: 'absolute',
+              zIndex: '1',
+              backgroundColor: '#fff',
+              animation: `0s linear 0.5s forwards ${transition}`,
+              visibility: 'hidden',
+            }}
+          >
+            Loading pending...
+          </div>
         ) : null}
         {routeComponent}
       </Suspense>
     </ErrorBoundary>
   );
 }
+
+type RouteComp = {
+  children?: Node,
+  routeData: Route,
+  component: Resource,
+  prepared: any,
+};
 
 /**
  * The `component` property from the route entry is a Resource, which may or may not be ready.
@@ -127,7 +157,12 @@ export default function RouterRenderer() {
  * our ErrorBoundary/Suspense components, so we have to ensure that the suspend/error happens
  * in a child component.
  */
-function RouteComponent({ children, routeData, component, prepared }) {
+function RouteComponent({
+  children,
+  routeData,
+  component,
+  prepared,
+}: RouteComp): Node {
   const Component = component.read();
   return (
     <Component routeData={routeData} prepared={prepared}>

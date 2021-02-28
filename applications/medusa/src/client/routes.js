@@ -1,7 +1,8 @@
+/**
+ * @flow
+ */
 import JSResource from '@//:modules/utilities/JSResource';
-import { After, Before } from '@//:modules/routing/Middleware';
 
-// Grab the user from the environment using this raw function from the map
 const getUserFromEnvironment = environment =>
   environment
     .getStore()
@@ -25,13 +26,23 @@ const getUserFromEnvironment = environment =>
  * by the user
  *
  */
-const routes = [
+
+type Route = {
+  component: any,
+  prepare?: any,
+  middleware?: Array<any>,
+  exact?: boolean,
+  routes?: Array<Route>,
+  path?: string,
+};
+
+const routes: Array<Route> = [
   {
     component: JSResource('Root', () =>
       import(/* webpackChunkName: "Root" */ './components/routes/Root'),
     ),
     prepare: params => {
-      const RootQuery = require('./components/routes/__generated__/RootQuery.graphql');
+      const RootQuery = require('@//:artifacts/RootQuery.graphql');
       return {
         stateQuery: {
           query: RootQuery,
@@ -46,6 +57,7 @@ const routes = [
       {
         path: '/join',
         exact: true,
+        prepare: () => ({}),
         component: JSResource('JoinRoot', () =>
           import(
             /* webpackChunkName: "JoinRoot" */ './components/routes/join/Join'
@@ -53,71 +65,28 @@ const routes = [
         ),
         // When user is logged in, we just want to redirect them since they're already "logged in"
         middleware: [
-          new Before([
-            (environment, context) => {
-              const user = getUserFromEnvironment(environment);
+          (environment, history) => {
+            const user = getUserFromEnvironment(environment);
 
-              if (user !== undefined) {
-                context.url = '/profile';
-                return false;
-              }
+            if (user !== undefined) {
+              history.push('/profile');
+              return false;
+            }
 
-              return true;
-            },
-          ]),
+            return true;
+          },
         ],
       },
       {
         path: '/token/:id',
+        exact: true,
         component: JSResource('TokenRoot', () =>
           import(
             /* webpackChunkName: "TokenRoot" */ './components/routes/token/Token'
           ),
         ),
-        middleware: [
-          // If the user is logged in, we don't do the API call
-          new Before([
-            (environment, context) => {
-              const user = getUserFromEnvironment(environment);
-
-              if (user !== undefined) {
-                context.url = '/profile';
-                return false;
-              }
-
-              return true;
-            },
-          ]),
-
-          // If the user is not logged in, we use the result to determine if we should redirect them
-          new After([
-            (environment, context) => {
-              const token = environment
-                .getStore()
-                .getSource()
-                .get(
-                  'client:root:redeemCookie(cookie:"' +
-                    context.params.id +
-                    '")',
-                );
-
-              // If registered and in the same session, redirect to profile
-              if (
-                token !== undefined &&
-                token.sameSession &&
-                token.registered
-              ) {
-                context.url = '/profile';
-                return false;
-              }
-
-              return true;
-            },
-          ]),
-        ],
-        // When user is logged in, they don't necessarily need this route
         prepare: params => {
-          const TokenQuery = require('./components/routes/token/__generated__/TokenQuery.graphql');
+          const TokenQuery = require('@//:artifacts/TokenQuery.graphql');
           return {
             tokenQuery: {
               query: TokenQuery,
@@ -128,9 +97,23 @@ const routes = [
             },
           };
         },
+        // When user is logged in, we don't want them to be able to redeem any other tokens
+        middleware: [
+          (environment, history) => {
+            const user = getUserFromEnvironment(environment);
+
+            if (user !== undefined) {
+              history.push('/profile');
+              return false;
+            }
+
+            return true;
+          },
+        ],
       },
       {
         path: '*',
+        exact: false,
         component: JSResource('Empty', () =>
           import(
             /* webpackChunkName: "Empty" */ './components/routes/empty/Empty'
@@ -142,3 +125,4 @@ const routes = [
 ];
 
 export default routes;
+export type { Route };

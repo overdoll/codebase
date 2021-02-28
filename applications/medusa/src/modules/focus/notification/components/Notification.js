@@ -1,3 +1,7 @@
+/**
+ * @flow
+ */
+import type { Node } from 'react';
 import { useRef, useState, useEffect, useContext } from 'react';
 import { NotificationContext } from '../provider/NotificationProvider';
 import Icon from '@//:modules/content/icon/Icon';
@@ -6,7 +10,15 @@ import {
   FormValidation,
 } from '@streamlinehq/streamline-regular/lib/interface-essential';
 
-const Notification = ({ type, children, duration, id }) => {
+type Props = {
+  type: string,
+  children?: Node,
+  duration: ?number,
+  id: string,
+};
+
+export default function Notification({ children, duration, id }: Props): Node {
+
   const { onExpire } = useContext(NotificationContext);
 
   const timer = useRef();
@@ -27,15 +39,11 @@ const Notification = ({ type, children, duration, id }) => {
     }
   };
 
-  const setTimer = () => {
-    timer.current = setTimeout(() => {
-      dismiss();
-    }, duration);
-  };
-
   useEffect(() => {
     if (duration) {
-      setTimer();
+      timer.current = setTimeout(() => {
+        dismiss();
+      }, duration);
     }
 
     return () => {
@@ -88,6 +96,4 @@ const Notification = ({ type, children, duration, id }) => {
       />
     </div>
   );
-};
-
-export default Notification;
+}

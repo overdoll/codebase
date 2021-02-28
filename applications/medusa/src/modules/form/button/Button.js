@@ -1,8 +1,19 @@
+/**
+ * @flow
+ */
+import type { Node } from 'react';
 import { Button as ThemeUIButton } from 'theme-ui';
 import { Icon } from '@//:modules/content';
 import { Loading } from '@streamlinehq/streamline-regular/lib/interface-essential';
 
-const Button = ({ sx, loading, children, ...rest }) => {
+type Props = {
+  loading?: boolean,
+  children?: Node,
+  sx?: any,
+};
+
+export default function Button({ sx, loading, children, ...rest }: Props): Node {
+
   return (
     <ThemeUIButton
       {...rest}
@@ -38,6 +49,4 @@ const Button = ({ sx, loading, children, ...rest }) => {
       </span>
     </ThemeUIButton>
   );
-};
-
-export default Button;
+}

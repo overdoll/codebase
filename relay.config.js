@@ -5,4 +5,9 @@ module.exports = {
   src: resolve(__dirname, 'applications/medusa/src'),
   persistOutput: resolve(__dirname, 'applications/hades/queries.json'),
   watch: true,
+  language: 'js-flow-uncommented',
+  artifactDirectory: resolve(
+    __dirname,
+    'applications/medusa/src/__generated__',
+  ),
 };

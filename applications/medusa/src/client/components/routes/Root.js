@@ -1,9 +1,23 @@
-import { Suspense, createContext } from 'react';
+/**
+ * @flow
+ */
+import type { Context, Node } from 'react';
+import { createContext, Suspense } from 'react';
 import { graphql, usePreloadedQuery } from 'react-relay/hooks';
+import type { PreloadedQuery } from 'react-relay/relay-experimental';
+import type {
+  RootQuery,
+  RootQueryResponse,
+} from '@//:artifacts/RootQuery.graphql';
 
-const RootContext = createContext({});
+type Props = {
+  prepared: {
+    stateQuery: PreloadedQuery<RootQuery>,
+  },
+  children: Node,
+};
 
-const RootQuery = graphql`
+const RootQueryGQL = graphql`
   query RootQuery {
     authentication {
       user {
@@ -14,19 +28,17 @@ const RootQuery = graphql`
   }
 `;
 
-/**
- *
- * @param children
- * @param prepared
- * @returns {JSX.Element}
- * @constructor
- */
-export default function Root({ children, prepared }) {
-  const rootQuery = usePreloadedQuery(RootQuery, prepared.stateQuery);
+const RootContext: Context<?RootQueryResponse> = createContext(null);
+
+export default function Root(props: Props): Node {
+  const rootQuery = usePreloadedQuery<RootQuery>(
+    RootQueryGQL,
+    props.prepared.stateQuery,
+  );
 
   return (
     <RootContext.Provider value={rootQuery}>
-      <Suspense fallback={<div>loading...</div>}>{children}</Suspense>
+      <Suspense fallback={null}>{props.children}</Suspense>
     </RootContext.Provider>
   );
 }

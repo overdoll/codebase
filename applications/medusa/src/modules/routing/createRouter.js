@@ -1,27 +1,50 @@
+/**
+ * @flow
+ */
 import { matchRoutes } from 'react-router-config';
 import { loadQuery } from 'react-relay/hooks';
+import type { Route } from '../../client/routes';
+import RelayEnvironment from '@//:modules/relay/RelayEnvironment';
 
-// Check if our route is valid (on the client), by running the "accessible" function
-const isRouteValid = (environment, route) => {
-  if (route.hasOwnProperty('accessible')) {
-    const result = route.accessible(environment);
-    // Accessible check failed
-    if (!result) return false;
-  }
-
-  // Accessible check succeeded or didn't exist
-  return true;
+type Preload = {
+  (pathname: string): void,
 };
 
-// recursive function that filters all routes
-const filterRoute = (environment, route) => {
-  if (!route.hasOwnProperty('routes')) {
-    return isRouteValid(environment, route);
+type Subscribe = {
+  (sb: any): any,
+};
+
+type Get = {
+  (): { entries: any, location: any },
+};
+
+type Router = {
+  preloadCode: Preload,
+  preload: Preload,
+  subscribe: Subscribe,
+  get: Get,
+  history: any,
+};
+
+type RouterInstance = {
+  cleanup: any,
+  context: Router,
+};
+
+// Check if our route is valid (on the client), by running the "middleware" function
+// The middleware function can either return true or false - if false, then the route won't be visible to the user and no API
+// call will be made. If true, an API call will be made, and any other resolutions should be done within
+// the component where the API call is made
+const isRouteValid = (environment, route, history) => {
+  if (route.hasOwnProperty('middleware')) {
+    for (let i = 0; i < route.middleware.length; i++) {
+      // Middleware check failed
+      if (!route.middleware[i](environment, history)) return false;
+    }
   }
 
-  return (route.routes = route.routes.filter(route =>
-    filterRoute(environment, route),
-  ));
+  // Middleware check succeeded or didn't exist
+  return true;
 };
 
 /**
@@ -33,14 +56,19 @@ const filterRoute = (environment, route) => {
  * Note: History is created by either the index or the client, since we can't use the same history for both.
  *
  */
-export default function createRouter(unparsedRoutes, history, environment) {
-  // Recursively parse route, and use route environment source as a helper
-  const routes = unparsedRoutes.filter(route =>
-    filterRoute(environment, route),
+export default function createRouter(
+  routes: Array<Route>,
+  history: any,
+  environment: typeof RelayEnvironment,
+): RouterInstance {
+  // Find the initial match and prepare it
+  const initialMatches = matchRoute(
+    routes,
+    history,
+    history.location,
+    environment,
   );
 
-  // Find the initial match and prepare it
-  const initialMatches = matchRoute(routes, history.location);
   const initialEntries = prepareMatches(initialMatches, environment);
   let currentEntry = {
     location: history.location,
@@ -58,7 +86,7 @@ export default function createRouter(unparsedRoutes, history, environment) {
     if (location.pathname === currentEntry.location.pathname) {
       return;
     }
-    const matches = matchRoute(routes, location, environment);
+    const matches = matchRoute(routes, history, location, environment);
     const entries = prepareMatches(matches, environment);
     const nextEntry = {
       location,
@@ -68,7 +96,7 @@ export default function createRouter(unparsedRoutes, history, environment) {
     subscribers.forEach(cb => cb(nextEntry));
   });
 
-  // The actual object that will be passed on the RoutingConext.
+  // The actual object that will be passed on the RoutingContext.
   const context = {
     history,
     get() {
@@ -101,12 +129,14 @@ export default function createRouter(unparsedRoutes, history, environment) {
 /**
  * Match the current location to the corresponding route entry.
  */
-function matchRoute(routes, location, relayEnvironment) {
-  const matchedRoutes = matchRoutes(routes, location.pathname);
-  if (!Array.isArray(matchedRoutes) || matchedRoutes.length === 0) {
-    throw new Error('No route for ' + location.pathname);
-  }
-  return matchedRoutes;
+function matchRoute(routes, history, location, environment) {
+  const unparsedRoutes = matchRoutes(routes, location.pathname);
+
+  // Recursively parse route, and use route environment source as a helper
+  // Make sure that we are allowed to be in a route that we are using
+  return unparsedRoutes.filter(route =>
+    isRouteValid(environment, route.route, history),
+  );
 }
 
 /**
@@ -115,20 +145,26 @@ function matchRoute(routes, location, relayEnvironment) {
  * Inject RelayEnvironment
  */
 function prepareMatches(matches, relayEnvironment) {
-  return matches.map(match => {
+  return matches.map((match, index) => {
     const { route, match: matchData } = match;
 
     const prepared = convertPreparedToQueries(
       relayEnvironment,
       route.prepare,
       matchData.params,
+      index,
     );
 
     const Component = route.component.get();
     if (Component == null) {
       route.component.load(); // eagerly load
     }
-    return { component: route.component, prepared, routeData: matchData };
+    return {
+      component: route.component,
+      prepared,
+      routeData: matchData,
+      id: route.component.getModuleId(),
+    };
   });
 }
 
@@ -137,19 +173,24 @@ function prepareMatches(matches, relayEnvironment) {
  * Converts our "prepared" object into an actual routing key
  *
  */
-function convertPreparedToQueries(relayEnvironment, prepare, params) {
+function convertPreparedToQueries(environment, prepare, params, index) {
   const prepared = {};
 
   if (prepare === undefined) return prepared;
 
   const queriesToPrepare = prepare(params);
+  const queryKeys = Object.keys(queriesToPrepare);
 
-  Object.keys(queriesToPrepare).forEach(queryKey => {
-    const { query, variables, options } = queriesToPrepare[queryKey];
+  // For each route, fetch the query
+  for (let ii = 0; ii < queryKeys.length; ii++) {
+    const key = queryKeys[ii];
 
-    // run a loadQuery for each of our queries
-    prepared[queryKey] = loadQuery(relayEnvironment, query, variables, options);
-  });
+    const { query, variables, options } = queriesToPrepare[key];
+
+    prepared[key] = loadQuery(environment, query, variables, options);
+  }
 
   return prepared;
 }
+
+export type { Router };

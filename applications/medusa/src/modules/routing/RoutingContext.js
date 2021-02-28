@@ -1,12 +1,17 @@
+/**
+ * @flow
+ */
 import { createContext, useContext } from 'react';
+import type { Context } from 'react';
+import type { Router } from './createRouter';
 
-const RoutingContext = createContext(null);
+const RoutingContext: Context<Router> = createContext({});
 
 /**
  * A custom context instance for our router type
  */
 export default RoutingContext;
 
-export const useRoutingContext = () => {
-  return useContext(RoutingContext);
+export const useRoutingContext = (): Router => {
+  return useContext<Router>(RoutingContext);
 };

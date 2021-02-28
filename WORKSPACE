@@ -61,8 +61,8 @@ http_archive(
 
 http_archive(
     name = "build_bazel_rules_nodejs",
-    sha256 = "4952ef879704ab4ad6729a29007e7094aef213ea79e9f2e94cbe1c9a753e63ef",
-    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/2.2.0/rules_nodejs-2.2.0.tar.gz"],
+    sha256 = "bfacf15161d96a6a39510e7b3d3b522cf61cb8b82a31e79400a84c5abcab5347",
+    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/3.2.1/rules_nodejs-3.2.1.tar.gz"],
 )
 
 load("@build_bazel_rules_nodejs//:index.bzl", "node_repositories", "yarn_install")
@@ -795,4 +795,11 @@ go_repository(
     importpath = "github.com/gwatts/gin-adapter",
     sum = "h1:eGCbPkMnsg02jXBIxxXn1Fxep9dAuTUvEi6UdJsbOhg=",
     version = "v0.0.0-20170508204228-c44433c485ad",
+)
+
+go_repository(
+    name = "com_github_bxcodec_faker_v3",
+    importpath = "github.com/bxcodec/faker/v3",
+    sum = "h1:Meuh+M6pQJsQJwxVALq6H5wpDzkZ4pStV9pmH7gbKKs=",
+    version = "v3.6.0",
 )

@@ -1,5 +1,14 @@
+/**
+ * @flow
+ */
+import type { Node } from 'react';
+
 import { Text as ThemeUIText } from 'theme-ui';
 
-const Text = props => <ThemeUIText {...props} sx={{ ...props.sx }} />;
+type Props = {
+  sx?: any,
+};
 
-export default Text;
+export default function Text(props: Props): Node {
+  return <ThemeUIText {...props} sx={{ ...props.sx }} />;
+}

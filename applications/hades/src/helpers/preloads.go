@@ -1,8 +1,9 @@
 package helpers
 
 import (
-	"github.com/99designs/gqlgen/graphql"
 	"context"
+
+	"github.com/99designs/gqlgen/graphql"
 )
 
 // GetPreloads - Determine which fields were actually requested, so we don't over-fetch

@@ -1,4 +1,8 @@
+/**
+ * @flow
+ */
 import { graphql, useMutation, useFragment } from 'react-relay/hooks';
+import type { Node } from 'react';
 import { useState, useContext } from 'react';
 import Register from '../../register/Register';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +14,11 @@ import { RootContext } from '../Root';
 import { EMAIL } from '@//:modules/regex';
 import Icon from '@//:modules/content/icon/Icon';
 import { SignShapes } from '@streamlinehq/streamline-regular/lib/maps-navigation';
+import type { JoinFragment$key } from '@//:artifacts/JoinFragment.graphql';
+
+type JoinValues = {
+  email: string,
+};
 
 const JoinAction = graphql`
   mutation JoinMutation($data: AuthenticationInput!) {
@@ -17,7 +26,7 @@ const JoinAction = graphql`
   }
 `;
 
-const RootFragment = graphql`
+const RootFragmentGQL = graphql`
   fragment JoinFragment on Authentication {
     cookie {
       redeemed
@@ -27,14 +36,18 @@ const RootFragment = graphql`
   }
 `;
 
-export default function Join() {
+export default function Join(): Node {
   const rootQuery = useContext(RootContext);
-  const data = useFragment(RootFragment, rootQuery.authentication);
+
+  const data = useFragment<?JoinFragment$key>(
+    RootFragmentGQL,
+    rootQuery?.authentication,
+  );
 
   const [t] = useTranslation('auth');
 
   const [commit, isInFlight] = useMutation(JoinAction);
-  const instance = useForm();
+  const instance = useForm<JoinValues>();
 
   const notify = useNotify();
 
@@ -51,7 +64,7 @@ export default function Join() {
     setWaiting(false);
   };
 
-  const onSubmit = val => {
+  const onSubmit = (val: JoinValues) => {
     setEmail(val.email);
     commit({
       variables: {
@@ -70,19 +83,19 @@ export default function Join() {
 
   // Checks for various types of states
   const emptySubscriptionResponse = authInfo.authListener === null;
-  const emptyAuthCookie = data.cookie === null;
+  const emptyAuthCookie = !!data?.cookie === false;
 
   // If we're waiting on a token, create a subscription for the token
   // We don't have to send any values because it already knows the token
   // from a cookie.
   if (
     waiting ||
-    (emptySubscriptionResponse && !emptyAuthCookie && !data.cookie.redeemed)
+    (emptySubscriptionResponse && !emptyAuthCookie && !data?.cookie?.redeemed)
   ) {
     return (
       <Lobby
         // Use auth cookie's email as backup, since it may not be here after a refresh
-        email={!emptyAuthCookie ? data.cookie.email : email}
+        email={!emptyAuthCookie ? data?.cookie?.email : email}
         onReceive={changeAuth}
       />
     );
@@ -91,11 +104,11 @@ export default function Join() {
   // User not registered - when we either receive this response from a subscription, or a page refresh
   const subscriptionNotRegistered =
     !emptySubscriptionResponse &&
-    authInfo.authListener.cookie.registered === false;
+    authInfo.authListener?.cookie.registered === false;
 
   // Cookie was redeemed, but the user is not registered
   const cookieRedeemedNotRegistered =
-    !emptyAuthCookie && data.cookie.redeemed && !data.cookie.registered;
+    !emptyAuthCookie && data?.cookie?.redeemed && !data.cookie?.registered;
 
   // We already have auth cookie data, and it's been redeemed. We want the user to register
   if (subscriptionNotRegistered || cookieRedeemedNotRegistered) {

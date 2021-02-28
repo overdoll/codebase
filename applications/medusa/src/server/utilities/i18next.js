@@ -4,8 +4,6 @@ import i18nextMiddleware from 'i18next-http-middleware';
 import path from 'path';
 import { initReactI18next } from 'react-i18next';
 
-console.log(__dirname);
-
 i18next
   .use(i18nextMiddleware.LanguageDetector)
   .use(Backend)

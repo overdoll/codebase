@@ -1,5 +1,6 @@
 {
   "presets": [
+    "@babel/preset-flow",
     "@babel/preset-react",
     [
       "@babel/preset-env",
@@ -11,7 +12,7 @@
     ]
   ],
   "plugins": [
-    "relay",
+    ["relay", { "artifactDirectory": "./src/__generated__" }],
     "@babel/plugin-proposal-function-bind",
     "@babel/plugin-proposal-class-properties",
     "@babel/plugin-transform-arrow-functions",

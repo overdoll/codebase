@@ -1,3 +1,6 @@
+/**
+ * @flow
+ */
 import i18n from 'i18next';
 
 const options = {
@@ -22,23 +25,26 @@ if (process && !process.release) {
 
   // Get translations
   const translations = JSON.parse(
-    document.getElementById('i18next-store').textContent,
+    document.getElementById('i18next-store')?.textContent || '{}',
   );
 
   // Get language
   const language = document
     .querySelector('meta[name="browser-language"]')
-    .getAttribute('content');
+    ?.getAttribute('content');
 
   i18n.services.resourceStore.data = translations;
 
   // add namespaces to the config - so a languageChange call loads all namespaces needed
-  i18n.options.ns = Object.values(translations).reduce((mem, lngResources) => {
-    Object.keys(lngResources).forEach(ns => {
-      if (mem.indexOf(ns) < 0) mem.push(ns);
-    });
-    return mem;
-  }, i18n.options.ns);
+  i18n.options.ns = Object.values(translations).reduce(
+    (mem: Array<string>, lngResources: any) => {
+      Object.keys(lngResources).forEach(ns => {
+        if (mem.indexOf(ns) < 0) mem.push(ns);
+      });
+      return mem;
+    },
+    i18n.options.ns,
+  );
 
   i18n.changeLanguage(language);
 }

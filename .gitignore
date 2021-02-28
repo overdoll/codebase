@@ -15,10 +15,12 @@
 # vendor/
 #
 node_modules
+tilt_modules
 .helm
 bazel-*
 .env
 
 # IDEA
 .ijwb
+.idea.bak
 .idea

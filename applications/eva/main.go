@@ -2,20 +2,21 @@ package main
 
 import (
 	"context"
+	"log"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
+
 	"github.com/gocql/gocql"
 	"github.com/joho/godotenv"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/migrate"
-	"log"
-	"os"
-	"os/signal"
 	"overdoll/applications/eva/src/server"
-	"syscall"
-	"time"
 )
 
 func init() {
-	err := godotenv.Load(DIRECTORY + ".env")
+	err := godotenv.Load("applications/eva/.env")
 
 	if err != nil {
 		log.Fatal("Error loading .env file")
@@ -39,7 +40,7 @@ func main() {
 
 	if os.Getenv("RUN_MIGRATIONS_ON_STARTUP") == "true" {
 		// Run migrations
-		if err := migrate.Migrate(context.Background(), session, DIRECTORY+"migrations"); err != nil {
+		if err := migrate.Migrate(context.Background(), session, "applications/eva/migrations"); err != nil {
 			log.Fatalf("Migrate: %s", err)
 		}
 	}

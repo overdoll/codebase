@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "default-service.fullname" . }}
+  labels:
+    {{- include "default-service.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "default-service.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "default-service.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ include "default-service.fullname" . }}
+          image: "{{ .Values.image.repository }}"
+          ports:
+            - name: http
+              containerPort: {{ .Values.containerPort }}
+              protocol: TCP

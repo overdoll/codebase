@@ -1,0 +1,9 @@
+image:
+  repository: medusa-image
+
+nameOverride: "medusa"
+
+containerPort: 8081
+
+service:
+  port: 8000

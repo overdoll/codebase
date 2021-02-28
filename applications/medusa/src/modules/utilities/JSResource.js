@@ -1,9 +1,15 @@
 /**
+ * @flow
+ */
+
+/**
  * A cache of resources to avoid loading the same module twice. This is important
  * because Webpack dynamic imports only expose an asynchronous API for loading
  * modules, so to be able to access already-loaded modules synchronously we
  * must have stored the previous result somewhere.
  */
+import CanUseDOM from '@//:modules/utilities/CanUseDOM';
+
 const resourceMap = new Map();
 
 /**
@@ -11,7 +17,13 @@ const resourceMap = new Map();
  * argument - it allows accessing the state of the resource.
  */
 class Resource {
-  constructor(loader, moduleId) {
+  _error: any;
+  _loader: any;
+  _promise: ?Promise<any>;
+  _result: any;
+  _moduleId: string;
+
+  constructor(loader: any, moduleId: string) {
     this._error = null;
     this._loader = loader;
     this._promise = null;
@@ -22,7 +34,7 @@ class Resource {
   /**
    * Loads the resource if necessary.
    */
-  load() {
+  load(): Promise<any> {
     let promise = this._promise;
     if (promise == null) {
       promise = this._loader()
@@ -46,7 +58,7 @@ class Resource {
    * Returns the result, if available. This can be useful to check if the value
    * is resolved yet.
    */
-  get() {
+  get(): any {
     if (this._result != null) {
       return this._result;
     }
@@ -55,14 +67,14 @@ class Resource {
   /**
    * Returns the module identification.
    */
-  getModuleId() {
+  getModuleId(): string {
     return this._moduleId;
   }
 
   /**
    * Returns the module if it's required.
    */
-  getModuleIfRequired() {
+  getModuleIfRequired(): any {
     return this.get();
   }
 
@@ -74,7 +86,7 @@ class Resource {
    * - Throw an error if the resource failed to load.
    * - Return the data of the resource if available.
    */
-  read() {
+  read(): any {
     if (this._result != null) {
       return this._result;
     } else if (this._error != null) {
@@ -102,11 +114,19 @@ class Resource {
  * @param {*} moduleId A globally unique identifier for the resource used for caching
  * @param {*} loader A method to load the resource's data if necessary
  */
-export default function JSResource(moduleId, loader) {
+export default function JSResource(moduleId: string, loader: any): Resource {
+  // On the server side, we want to always create a new instance, because it won't refresh with changes
+  if (!CanUseDOM) {
+    return new Resource(loader, moduleId);
+  }
+
   let resource = resourceMap.get(moduleId);
   if (resource == null) {
     resource = new Resource(loader, moduleId);
     resourceMap.set(moduleId, resource);
   }
+
   return resource;
 }
+
+export type { Resource };

@@ -1,12 +1,20 @@
+/**
+ * @flow
+ */
+import type { Node } from 'react';
 import { Heading as ThemeUIHeading } from 'theme-ui';
 
-const Heading = props => (
-  <ThemeUIHeading
-    {...props}
-    sx={{
-      ...props.sx,
-    }}
-  />
-);
+type Props = {
+  sx?: any,
+};
 
-export default Heading;
+export default function Heading(props: Props): Node {
+  return (
+    <ThemeUIHeading
+      {...props}
+      sx={{
+        ...props.sx,
+      }}
+    />
+  );
+}

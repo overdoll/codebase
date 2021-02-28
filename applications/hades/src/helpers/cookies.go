@@ -2,9 +2,10 @@ package helpers
 
 import (
 	"context"
-	"github.com/gorilla/securecookie"
 	"net/http"
 	"os"
+
+	"github.com/gorilla/securecookie"
 )
 
 // Create Secure Cookies

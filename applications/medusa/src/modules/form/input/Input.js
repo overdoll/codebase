@@ -1,3 +1,7 @@
+/**
+ * @flow
+ */
+import type { Node } from 'react';
 import { Input as ThemeUIInput, Text as ThemeUIText } from 'theme-ui';
 import { useFormContext } from 'react-hook-form';
 import Icon from '@//:modules/content/icon/Icon';
@@ -6,7 +10,14 @@ import {
   FormValidation,
 } from '@streamlinehq/streamline-regular/lib/interface-essential';
 
-const Input = ({ sx, validation, title, name, ...rest }) => {
+type Props = {
+  validation?: any,
+  title: string,
+  name: string,
+  sx?: any,
+};
+
+export default function Input({ sx, validation, title, name, ...rest }: Props): Node {
   const { register, errors, formState } = useFormContext();
 
   const hasError = errors[name] !== null && errors[name] !== undefined;
@@ -85,6 +96,4 @@ const Input = ({ sx, validation, title, name, ...rest }) => {
       </ThemeUIText>
     </div>
   );
-};
-
-export default Input;
+}

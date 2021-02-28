@@ -1,7 +1,16 @@
+/**
+ * @flow
+ */
+import type { Node } from 'react';
 import JSResource from './JSResource';
 
-export default function SuspenseImage(props) {
-  const { src } = props;
+type Props = {
+  src: string,
+  alt?: string,
+};
+
+export default function SuspenseImage(props: Props): Node {
+  const { src, ...rest } = props;
   if (src != null) {
     // JSResource is meant for loading resources, but the implementation is
     // just cached loading of promises. So we reuse that here as a quick
@@ -25,5 +34,5 @@ export default function SuspenseImage(props) {
     resource.load(); // TODO: JSResource::read() should call load() if necessary
     resource.read(); // suspends while the image is pending
   }
-  return <img alt={props.alt} {...props} />;
+  return <img alt={props.alt} {...rest} />;
 }
