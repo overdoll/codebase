@@ -23,13 +23,9 @@ func Init(t *testing.T) (gocqlx.Session, context.Context, *Server) {
 
 	ctx := context.Background()
 
-	srv, err := NewServer(ctx, session)
+	srv := CreateServer(session)
 
-	if err != nil {
-		t.Fatal("server error: ", err)
-	}
-
-	err = session.ExecStmt(`CREATE KEYSPACE IF NOT EXISTS eva WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1}`)
+	err := session.ExecStmt(`CREATE KEYSPACE IF NOT EXISTS eva WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1}`)
 
 	if err != nil {
 		t.Fatal("create keyspace:", err)

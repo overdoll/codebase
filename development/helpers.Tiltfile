@@ -85,7 +85,7 @@ def build_applications(applications, dependencies):
                 ],
             )
 
-            k8s_resource(item, resource_deps = [item + "-compile", "simple-cluster", "redis-master"])
+            k8s_resource(item, resource_deps = [item + "-compile"])
 
         elif (application["type"] == "node"):
             custom_build(
@@ -99,4 +99,4 @@ def build_applications(applications, dependencies):
                 live_update = application["live_update"],
             )
 
-            k8s_resource(item, resource_deps = ["simple-cluster", "redis-master"])
+            k8s_resource(item, resource_deps = [])

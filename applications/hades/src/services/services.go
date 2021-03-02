@@ -16,11 +16,11 @@ type ServicesConfig struct {
 type services struct {
 	io.Closer
 	evaClientConn *grpc.ClientConn
-	evaClient     evav1.EvaAPIClient
+	evaClient     evav1.EvaClient
 }
 
 type Services interface {
-	Eva() evav1.EvaAPIClient
+	Eva() evav1.EvaClient
 }
 
 func NewServicesKeeper(conf ServicesConfig) (Services, error) {
@@ -33,13 +33,13 @@ func NewServicesKeeper(conf ServicesConfig) (Services, error) {
 
 	ah := &services{
 		evaClientConn: evaConnection,
-		evaClient:     evav1.NewEvaAPIClient(evaConnection),
+		evaClient:     evav1.NewEvaClient(evaConnection),
 	}
 
 	return ah, nil
 }
 
-func (ah *services) Eva() evav1.EvaAPIClient {
+func (ah *services) Eva() evav1.EvaClient {
 	return ah.evaClient
 }
 

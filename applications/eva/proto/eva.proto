@@ -48,7 +48,7 @@ message GetUserRequest {
   string id = 1;
 }
 
-service EvaAPI {
+service Eva {
   rpc GetUser(GetUserRequest) returns (User);
   rpc RegisterUser(RegisterUserRequest) returns (User);
   rpc GetRegisteredEmail(GetRegisteredEmailRequest) returns (User);

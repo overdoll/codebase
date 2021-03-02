@@ -1,19 +1,17 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
 load("@io_bazel_rules_docker//go:image.bzl", "go_image")
 
-package(default_visibility = ["//visibility:public"])
-
 web_sources = glob(["migrations/**"]) + [".env"]
 
 go_library(
     name = "go_default_library",
     srcs = ["main.go"],
     data = web_sources,
-    importpath = "overdoll/applications/eva",
+    importpath = "overdoll/applications/sting",
     visibility = ["//visibility:private"],
     deps = [
-        "//applications/eva/proto:v1_go_proto",
-        "//applications/eva/src/server:go_default_library",
+        "//applications/sting/proto:v1_go_proto",
+        "//applications/sting/src/server:go_default_library",
         "//libraries/bootstrap/synchronous:go_default_library",
         "@com_github_scylladb_gocqlx_v2//:go_default_library",
         "@org_golang_google_grpc//:go_default_library",
@@ -21,15 +19,15 @@ go_library(
 )
 
 go_binary(
-    name = "eva",
+    name = "sting",
     embed = [":go_default_library"],
     visibility = ["//visibility:public"],
 )
 
 go_image(
-    name = "eva-image",
+    name = "sting-image",
     base = "@go_base_image//image",
     data = web_sources,
     embed = [":go_default_library"],
-    importpath = "overdoll/applications/eva",
+    importpath = "overdoll/applications/sting",
 )

@@ -4,6 +4,7 @@ go 1.14
 
 require (
 	github.com/99designs/gqlgen v0.13.0
+	github.com/aws/aws-sdk-go v1.37.21 // indirect
 	github.com/bxcodec/faker/v3 v3.6.0 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.6.3

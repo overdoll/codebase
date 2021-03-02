@@ -9,7 +9,6 @@ docker_prune_settings(
     keep_recent = 2,
 )
 
-load("ext://helm_remote", "helm_remote")
 load("./development/helpers.Tiltfile", "bazel_buildfile_deps", "bazel_sourcefile_deps", "build_applications")
 
 applications = {
@@ -75,41 +74,8 @@ applications = {
 # Ingress (Traefik)
 k8s_yaml("development/traefik/ingress.yaml")
 
-# Scylla
-k8s_yaml("development/scylla/cluster.yaml")
-k8s_yaml("development/scylla/scylla-svc.yaml")
-k8s_yaml("development/scylla/scylla-config.yaml")
-
-# Setup cluster - Need to group some resources or it wil be messy!
-k8s_kind("Cluster", api_version = "scylla.scylladb.com/v1alpha1")
-k8s_resource("simple-cluster", extra_pod_selectors = {"scylla/cluster": "simple-cluster"})
-
-# Remote helm charts for external services
-helm_remote(
-    "traefik",
-    release_name = "traefik",
-    repo_name = "traefik",
-    version = "9.11.0",
-)
-
-helm_remote(
-    "redis",
-    release_name = "redis",
-    repo_name = "bitnami",
-    version = "12.2.4",
-    set = ["cluster.enabled=false", "cluster.slaveCount=0", "usePassword=false"],
-)
-
-helm_remote(
-    "rabbitmq",
-    release_name = "rabbitmq",
-    repo_name = "bitnami",
-    version = "7.6.8",
-    set = ["auth.username=test", "auth.password=test"],
-)
-
 # Build applications with our helper function
-build_applications(applications, ["simple-cluster", "redis-master"])
+build_applications(applications, [])
 
 # GraphQL generator
 local_resource(
@@ -121,6 +87,3 @@ local_resource(
 
 # Relay Compiler
 local_resource("relay-compiler", serve_cmd = "yarn run relay")
-
-k8s_resource(workload = "redis-master", port_forwards = [6379])
-k8s_resource(workload = "rabbitmq", port_forwards = [15672])

@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package applications.grpc.sting.v1;
+
+message Post {
+  string id = 1;
+  string username = 2;
+}
+
+message CreatePostRequest {
+  string id = 1;
+}
+
+service Sting {
+  rpc CreatePost(CreatePostRequest) returns (Post);
+}
