@@ -26,7 +26,6 @@ applications = {
             "applications/hades/queries.json",
         ],
         "live_update": [
-            sync("applications/hades/.env", "/app/applications/hades/hades-image.binary.runfiles/overdoll/applications/hades/.env"),
             sync("applications/hades/queries.json", "/app/applications/hades/hades-image.binary.runfiles/overdoll/applications/hades/queries.json"),
         ],
     },
@@ -43,10 +42,22 @@ applications = {
             "applications/eva/.env",
             "applications/eva/migrations",
         ],
-        "live_update": [
-            sync("applications/eva/migrations", "/app/applications/hades/hades-image.binary.runfiles/overdoll/applications/eva/migrations"),
-            sync("applications/eva/.env", "/app/applications/hades/hades-image.binary.runfiles/overdoll/applications/eva/.env"),
+        "live_update": [],
+    },
+    "sting": {
+        "type": "go",
+        "image_reference": "sting-image",
+        "image_target": "//applications/sting:sting-image",
+        "binary_target": "//applications/sting:sting",
+        "binary_output": "applications/sting/sting_/sting",
+        "container_workdir": "/app/applications/sting/sting-image.binary.runfiles/overdoll/",
+        "container_binary": "applications/sting/sting-image.binary_/sting-image.binary",
+        "bazel_image": "bazel/applications/sting:sting-image",
+        "dependencies": [
+            "applications/sting/.env",
+            "applications/sting/migrations",
         ],
+        "live_update": [],
     },
     "medusa": {
         "type": "node",

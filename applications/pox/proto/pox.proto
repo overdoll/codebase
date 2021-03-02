@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+package applications.grpc.pox.v1;
+
+message PostProcessImageEvent {
+  string postId = 1;
+  repeated string images = 2 [packed = true];
+}
