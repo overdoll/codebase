@@ -49,13 +49,15 @@ CREATE TABLE posts_review
 
 CREATE TABLE posts_pending
 (
-    id              uuid,
-    artist_id       uuid,
-    contributor_id  uuid,
-    images          list<text>,
-    categories      list<text>,
-    characters      list<text>,
-    posted_at       timestamp,
-    review_required boolean,
+    id                   uuid,
+    artist_id            uuid,
+    artist_username      text,
+    contributor_id       uuid,
+    contributor_username text,
+    images               list<text>,
+    categories           list<text>,
+    characters           list<text>,
+    posted_at            timestamp,
+    review_required      boolean,
     primary key (id)
 );

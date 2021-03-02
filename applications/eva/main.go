@@ -32,6 +32,5 @@ func main() {
 
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
-	signal := <-sigChan
-	log.Printf("shutting down server with signal: %s", signal)
+	log.Printf("shutting down server with signal: %s", <-sigChan)
 }

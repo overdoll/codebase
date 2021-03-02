@@ -13,6 +13,7 @@ import (
 	sting "overdoll/applications/sting/proto"
 	"overdoll/applications/sting/src/server"
 	"overdoll/libraries/bootstrap/synchronous"
+	"overdoll/libraries/events"
 )
 
 func main() {
@@ -26,12 +27,14 @@ func main() {
 	}
 
 	init.Initialize(func(session gocqlx.Session, grpcServer *grpc.Server) {
-		s := server.CreateServer(session)
+
+		eventsConn := events.GetConnection(ctx, "sting")
+
+		s := server.CreateServer(session, eventsConn)
 		sting.RegisterStingServer(grpcServer, s)
 	})
 
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
-	signal := <-sigChan
-	log.Printf("shutting down server with signal: %s", signal)
+	log.Printf("shutting down server with signal: %s", <-sigChan)
 }

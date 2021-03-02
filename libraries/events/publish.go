@@ -18,9 +18,16 @@ func (conn Connection) Publish(topic string, event proto.Message) error {
 		Compression: kafka.Snappy,
 	}
 
-	err := w.WriteMessages(conn.context, kafka.Message{
+	// Marshal proto message
+	msg, err := proto.Marshal(event)
+
+	if err != nil {
+		return err
+	}
+
+	err = w.WriteMessages(conn.context, kafka.Message{
 		Key:       []byte(conn.group),
-		Value:     []byte(event.String()),
+		Value:     msg,
 	})
 
 	return err

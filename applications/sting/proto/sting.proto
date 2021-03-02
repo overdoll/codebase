@@ -4,13 +4,30 @@ package applications.grpc.sting.v1;
 
 message Post {
   string id = 1;
-  string username = 2;
+  string artistId = 2;
+  string contributorId = 3;
+  repeated string images = 4;
+  repeated string categories = 5;
+  repeated string characters = 6;
 }
 
-message CreatePostRequest {
+message SchedulePostRequest {
+  string artistId = 1;
+  string artistUsername = 2;
+  string contributorId = 3;
+  string contributorUsername = 4;
+  repeated string images = 5;
+  repeated string categories = 6;
+  repeated string characters = 7;
+  bool reviewRequired = 8;
+}
+
+message ProcessPost {
   string id = 1;
+  repeated string newImages = 2;
 }
 
 service Sting {
-  rpc CreatePost(CreatePostRequest) returns (Post);
+  rpc SchedulePost(SchedulePostRequest) returns (Post);
+  rpc ProcessPost(SchedulePostRequest) returns (Post);
 }

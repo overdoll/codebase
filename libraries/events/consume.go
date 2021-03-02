@@ -4,11 +4,13 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"reflect"
 
+	"github.com/golang/protobuf/proto"
 	"github.com/segmentio/kafka-go"
 )
 
-func (conn Connection) Consume(topic string, handler func(msg kafka.Message) bool) {
+func (conn Connection) Consume(topic string, handler interface{}) {
 	r := kafka.NewReader(kafka.ReaderConfig{
 		Brokers: []string{conn.address},
 		Topic:   topic,
@@ -29,7 +31,17 @@ func (conn Connection) Consume(topic string, handler func(msg kafka.Message) boo
 				os.Exit(1)
 			}
 
-			handler(msg)
+			var message proto.Message
+
+			err = proto.Unmarshal(msg.Value, message)
+
+			if err != nil {
+				// TODO: handle data unmarshal failure
+			}
+
+			if typ := reflect.TypeOf(handler); typ.Kind() == reflect.Func {
+				handler.(func(msg proto.Message))(message)
+			}
 		}
 	}()
 }
