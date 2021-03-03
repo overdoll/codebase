@@ -1,4 +1,4 @@
-package synchronous
+package bootstrap
 
 import (
 	"context"
@@ -34,7 +34,7 @@ func NewBootstrap(ctx context.Context, directory string) (Bootstrap, error) {
 	}, nil
 }
 
-func (b Bootstrap) Initialize(f func(session gocqlx.Session, server *grpc.Server)) {
+func (b Bootstrap) InitializeDatabaseSession() (gocqlx.Session, error) {
 
 	// Create gocql cluster
 	cluster := gocql.NewCluster(os.Getenv("DB_HOST"))
@@ -44,23 +44,26 @@ func (b Bootstrap) Initialize(f func(session gocqlx.Session, server *grpc.Server
 	session, err := gocqlx.WrapSession(cluster.CreateSession())
 
 	if err != nil {
-		log.Fatalf("database session failed with errors: %s", err)
-		return
+		return session, err
 	}
 
 	if os.Getenv("RUN_MIGRATIONS_ON_STARTUP") == "true" {
 		// Run migrations
 		if err := migrate.Migrate(context.Background(), session, b.directory + "/migrations"); err != nil {
-			log.Fatalf("Migrate: %s", err)
-			return
+			return session, err
 		}
 	}
+
+	return session, nil
+}
+
+func (b Bootstrap) InitializeGRPCServer(f func(server *grpc.Server)) {
 
 	grpcServer := grpc.NewServer()
 
 	reflection.Register(grpcServer)
 
-	f(session, grpcServer)
+	f(grpcServer)
 
 	log.Printf("starting server on port %s", "8080")
 

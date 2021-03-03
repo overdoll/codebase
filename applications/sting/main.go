@@ -8,11 +8,10 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/scylladb/gocqlx/v2"
 	"google.golang.org/grpc"
 	sting "overdoll/applications/sting/proto"
 	"overdoll/applications/sting/src/server"
-	"overdoll/libraries/bootstrap/synchronous"
+	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/events"
 )
 
@@ -20,18 +19,24 @@ func main() {
 	ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancelFn()
 
-	init, err := synchronous.NewBootstrap(ctx, "applications/sting")
+	init, err := bootstrap.NewBootstrap(ctx, "applications/sting")
 
 	if err != nil {
 		log.Fatalf("bootstrap failed with errors: %s", err)
 	}
 
-	init.Initialize(func(session gocqlx.Session, grpcServer *grpc.Server) {
+	session, err := init.InitializeDatabaseSession()
 
-		eventsConn := events.GetConnection(ctx, "sting")
+	if err != nil {
+		log.Fatalf("database session failed with errors: %s", err)
+	}
 
-		s := server.CreateServer(session, eventsConn)
-		sting.RegisterStingServer(grpcServer, s)
+	eventsConn := events.GetConnection(ctx, "sting")
+
+	s := server.CreateServer(session, eventsConn)
+
+	init.InitializeGRPCServer(func(server *grpc.Server) {
+		sting.RegisterStingServer(server, s)
 	})
 
 	sigChan := make(chan os.Signal, 1)

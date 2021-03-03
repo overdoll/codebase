@@ -1,6 +1,7 @@
 package events
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"os"
@@ -40,7 +41,7 @@ func (conn Connection) Consume(topic string, handler interface{}) {
 			}
 
 			if typ := reflect.TypeOf(handler); typ.Kind() == reflect.Func {
-				handler.(func(msg proto.Message))(message)
+				handler.(func(context context.Context, msg proto.Message))(conn.context, message)
 			}
 		}
 	}()

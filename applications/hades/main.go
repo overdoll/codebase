@@ -43,15 +43,8 @@ func main() {
 		port = defaultPort
 	}
 
-	evaSvc := os.Getenv("EVA_SERVICE")
-	if evaSvc == "" {
-		log.Fatalf("Failed to load environment variable: %s", "EVA_SERVICE")
-	}
-
 	// Connect to the services
-	svcs, err := services.NewServicesKeeper(services.ServicesConfig{
-		EvaSvc: evaSvc,
-	})
+	svcs, err := services.NewServicesKeeper(context.Background())
 	if err != nil {
 		log.Fatalf("Failed to create grpc api holder: %s", err)
 	}

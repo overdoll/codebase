@@ -1,8 +1,10 @@
 package services
 
 import (
+	"context"
 	"io"
 	"log"
+	"os"
 
 	evav1 "overdoll/applications/eva/proto"
 
@@ -23,9 +25,9 @@ type Services interface {
 	Eva() evav1.EvaClient
 }
 
-func NewServicesKeeper(conf ServicesConfig) (Services, error) {
-	log.Printf("Connection to Eva Service: %s...", conf.EvaSvc)
-	evaConnection, err := grpc.Dial(conf.EvaSvc, grpc.WithInsecure())
+func NewServicesKeeper(ctx context.Context) (Services, error) {
+
+	evaConnection, err := grpc.DialContext(ctx, os.Getenv("EVA_SERVICE"), grpc.WithInsecure())
 
 	if err != nil {
 		return nil, err
