@@ -12,7 +12,7 @@ import (
 	"overdoll/applications/pox/src/services"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/events"
-	"overdoll/libraries/storage"
+	"overdoll/libraries/aws"
 )
 
 func main() {
@@ -25,7 +25,7 @@ func main() {
 		log.Fatalf("bootstrap failed with errors: %s", err)
 	}
 
-	s3Client, err := storage.CreateS3Client()
+	awsSession, err := storage.CreateAWSSession()
 
 	if err != nil {
 		log.Fatalf("failed to create aws session: %s", err)
@@ -37,7 +37,7 @@ func main() {
 		log.Fatalf("failed to create services session: %s", err)
 	}
 
-	srv := server.CreateServer(s3Client, svcs)
+	srv := server.CreateServer(awsSession, svcs)
 
 	eventsConn := events.GetConnection(ctx, "pox")
 

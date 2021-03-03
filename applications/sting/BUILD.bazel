@@ -12,9 +12,8 @@ go_library(
     deps = [
         "//applications/sting/proto:v1_go_proto",
         "//applications/sting/src/server:go_default_library",
-        "//libraries/bootstrap/synchronous:go_default_library",
+        "//libraries/bootstrap:go_default_library",
         "//libraries/events:go_default_library",
-        "@com_github_scylladb_gocqlx_v2//:go_default_library",
         "@org_golang_google_grpc//:go_default_library",
     ],
 )

@@ -873,3 +873,10 @@ go_repository(
     sum = "h1:dUUwHk2QECo/6vqA44rthZ8ie2QXMNeKRTHCNY2nXvo=",
     version = "v3.0.0-20200313102051-9f266ea9e77c",
 )
+
+go_repository(
+    name = "com_github_segmentio_ksuid",
+    importpath = "github.com/segmentio/ksuid",
+    sum = "h1:FoResxvleQwYiPAVKe1tMUlEirodZqlqglIuFsdDntY=",
+    version = "v1.0.3",
+)

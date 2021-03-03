@@ -22,6 +22,7 @@ require (
 	github.com/rs/cors v1.7.0 // indirect
 	github.com/scylladb/gocqlx/v2 v2.3.0 // indirect
 	github.com/segmentio/kafka-go v0.4.10 // indirect
+	github.com/segmentio/ksuid v1.0.3 // indirect
 	github.com/streadway/amqp v1.0.0
 	github.com/vektah/gqlparser/v2 v2.1.0
 	google.golang.org/grpc v1.29.1
