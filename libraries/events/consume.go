@@ -37,7 +37,7 @@ func (conn Connection) Consume(topic string, handler interface{}) {
 			err = proto.Unmarshal(msg.Value, message)
 
 			if err != nil {
-				// TODO: handle data unmarshal failure
+				// TODO: handle data unmarshal failure. for now, it will discard the message
 			}
 
 			if typ := reflect.TypeOf(handler); typ.Kind() == reflect.Func {
