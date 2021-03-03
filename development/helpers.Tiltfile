@@ -68,14 +68,14 @@ def build_applications(applications, dependencies):
 
             local_resource(
                 name = item + "-compile",
-                cmd = "bazel build --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 {binary_target}".format(binary_target = binary_target),
+                cmd = "bazel build {binary_target}".format(binary_target = binary_target),
                 deps = bazel_sourcefile_deps(binary_target),
             )
 
             custom_build_with_restart(
                 ref = application["image_reference"],
                 command = (
-                    "bazel run --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 {image_target} -- --norun && " +
+                    "bazel run {image_target} -- --norun && " +
                     "docker tag {bazel_image} $EXPECTED_REF"
                 ).format(image_target = image_target, bazel_image = bazel_image),
                 deps = [binary_target_local] + application["dependencies"],
@@ -91,7 +91,7 @@ def build_applications(applications, dependencies):
             custom_build(
                 ref = application["image_reference"],
                 command = (
-                    "bazel run --platforms=@build_bazel_rules_nodejs//toolchains/node:linux_amd64 {image_target} -- --norun && " +
+                    "bazel run {image_target} -- --norun && " +
                     "docker tag {bazel_image} $EXPECTED_REF"
                 ).format(image_target = image_target, bazel_image = bazel_image),
                 deps = application["dependencies"],
