@@ -59,6 +59,20 @@ applications = {
         ],
         "live_update": [],
     },
+    "pox": {
+        "type": "go",
+        "image_reference": "pox-image",
+        "image_target": "//applications/pox:pox-image",
+        "binary_target": "//applications/pox:pox",
+        "binary_output": "applications/pox/pox_/pox",
+        "container_workdir": "/app/applications/pox/pox-image.binary.runfiles/overdoll/",
+        "container_binary": "applications/pox/pox-image.binary_/pox-image.binary",
+        "bazel_image": "bazel/applications/pox:pox-image",
+        "dependencies": [
+            "applications/pox/.env",
+        ],
+        "live_update": [],
+    },
     "medusa": {
         "type": "node",
         "image_reference": "medusa-image",
