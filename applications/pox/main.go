@@ -16,7 +16,9 @@ func main() {
 
 	srv := server.CreateServer()
 
-	eventsConn.Consume("pox.topic.posts_image_processing", srv.ProcessMessage)
+	eventsConn.Consume("pox.topic.posts_image_processing", srv.ProcessPost)
+
+	eventsConn.Consume("pox.topic.posts_image_publishing", srv.PublishPost)
 
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)

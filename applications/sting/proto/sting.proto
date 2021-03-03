@@ -22,12 +22,23 @@ message SchedulePostRequest {
   bool reviewRequired = 8;
 }
 
-message ProcessPost {
+message PublishPostRequest {
   string id = 1;
-  repeated string newImages = 2;
+  repeated string images = 2;
+}
+
+message ProcessPostRequest {
+  string id = 1;
+  repeated string images = 2;
+}
+
+message ReviewPostRequest {
+  string id = 1;
 }
 
 service Sting {
   rpc SchedulePost(SchedulePostRequest) returns (Post);
-  rpc ProcessPost(SchedulePostRequest) returns (Post);
+  rpc ProcessPost(ProcessPostRequest) returns (Post);
+  rpc ReviewPost(ReviewPostRequest) returns (Post);
+  rpc PublishPost(PublishPostRequest) returns (Post);
 }

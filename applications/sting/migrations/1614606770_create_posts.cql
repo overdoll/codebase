@@ -32,24 +32,10 @@ CREATE TABLE posts
     primary key ((id), posted_at)
 ) WITH CLUSTERING ORDER BY (posted_at ASC);
 
-CREATE TABLE posts_review
-(
-    id                   uuid,
-    artist_id            uuid,
-    artist_username      text,
-    contributor_id       uuid,
-    contributor_username text,
-    images               list<text>,
-    categories           list<text>,
-    characters           list<text>,
-    posted_at            timestamp,
-    processed_at         timestamp,
-    primary key ((id), processed_at)
-) WITH CLUSTERING ORDER BY (processed_at ASC);
-
 CREATE TABLE posts_pending
 (
     id                   uuid,
+    state                text,
     artist_id            uuid,
     artist_username      text,
     contributor_id       uuid,
@@ -59,5 +45,6 @@ CREATE TABLE posts_pending
     characters           list<text>,
     posted_at            timestamp,
     review_required      boolean,
-    primary key (id)
-);
+    published_post_id    text,
+    primary key ((id), posted_at)
+) WITH CLUSTERING ORDER BY (posted_at ASC);

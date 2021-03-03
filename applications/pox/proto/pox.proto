@@ -6,3 +6,8 @@ message PostProcessImageEvent {
   string postId = 1;
   repeated string images = 2;
 }
+
+message PostPublishImageEvent {
+  string postId = 1;
+  repeated string images = 2;
+}
