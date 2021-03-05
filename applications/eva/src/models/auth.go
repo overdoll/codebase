@@ -38,7 +38,7 @@ type User struct {
 	Username string     `db:"username"`
 	Email    string     `db:"email"`
 	Roles    []string   `db:"roles"`
-	Verified bool       `db:"boolean"`
+	Verified bool       `db:"verified"`
 }
 
 type UserUsername struct {

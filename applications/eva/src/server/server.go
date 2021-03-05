@@ -121,6 +121,7 @@ func (s *Server) RegisterUser(ctx context.Context, request *eva.RegisterUserRequ
 		Username: request.Username,
 		Id:       userEmail.UserId,
 		Email:    userEmail.Email,
+		Verified: false,
 	}
 
 	insertUser := qb.Insert("users").
@@ -287,7 +288,6 @@ func (s *Server) GetAuthenticationCookie(ctx context.Context, request *eva.GetAu
 		BindStruct(cookieItem)
 
 	if err := queryCookie.Get(&cookieItem); err != nil {
-		fmt.Println(err)
 		return nil, fmt.Errorf("select() failed: '%s", err)
 	}
 
