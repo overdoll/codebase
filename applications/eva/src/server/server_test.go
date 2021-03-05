@@ -13,6 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	eva "overdoll/applications/eva/proto"
 	"overdoll/applications/eva/src/models"
+	"overdoll/libraries/ksuid"
 	"overdoll/libraries/testing/scylla"
 	"github.com/bxcodec/faker/v3"
 )
@@ -83,7 +84,7 @@ func TestRegisterUser_Declined_Username(t *testing.T) {
 		t.Fatal("error generating fake data: ", err)
 	}
 
-	userId := gocql.TimeUUID()
+	userId := ksuid.New()
 
 	userUsername := models.UserUsername{
 		Id: userId,
@@ -126,7 +127,7 @@ func TestRegisterUser_Declined_Email(t *testing.T) {
 		t.Fatal("error generating fake data: ", err)
 	}
 
-	userId := gocql.TimeUUID()
+	userId := ksuid.New()
 
 	userEmail := models.UserEmail{
 		UserId: userId,
@@ -177,7 +178,7 @@ func TestDeleteAuthenticationCookie_Exists(t *testing.T) {
 		Query(session)
 
 	insertCookie.BindStruct(models.AuthenticationCookie{
-		Cookie:     uuid,
+		Cookie:     ksuid.New(),
 		Email:      user.Email,
 		Redeemed:   0,
 		Expiration: time.Now().Add(time.Minute * 5),
@@ -239,7 +240,7 @@ func TestRedeemAuthenticationCookie_Not_Expired(t *testing.T) {
 
 	defer session.Close()
 
-	uuid := gocql.TimeUUID()
+	uuid := ksuid.New()
 
 	user := TestUser{}
 	err := faker.FakeData(&user)
@@ -304,7 +305,7 @@ func TestRedeemAuthenticationCookie_Expired(t *testing.T) {
 		Query(session)
 
 	insertCookie.BindStruct(models.AuthenticationCookie{
-		Cookie:     gocql.TimeUUID(),
+		Cookie:     ksuid.New(),
 		Email:      user.Email,
 		Redeemed:   0,
 		Expiration: time.Now().Add(-time.Minute * 5),
