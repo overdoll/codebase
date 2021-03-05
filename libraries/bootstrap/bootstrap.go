@@ -6,6 +6,9 @@ import (
 	"log"
 	"net"
 	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/gocql/gocql"
 	"github.com/joho/godotenv"
@@ -17,7 +20,7 @@ import (
 
 type Bootstrap struct {
 	directory string
-	context context.Context
+	context   context.Context
 }
 
 func NewBootstrap(ctx context.Context, directory string) (Bootstrap, error) {
@@ -30,7 +33,7 @@ func NewBootstrap(ctx context.Context, directory string) (Bootstrap, error) {
 
 	return Bootstrap{
 		directory: directory,
-		context: ctx,
+		context:   ctx,
 	}, nil
 }
 
@@ -49,7 +52,7 @@ func (b Bootstrap) InitializeDatabaseSession() (gocqlx.Session, error) {
 
 	if os.Getenv("RUN_MIGRATIONS_ON_STARTUP") == "true" {
 		// Run migrations
-		if err := migrate.Migrate(context.Background(), session, b.directory + "/migrations"); err != nil {
+		if err := migrate.Migrate(context.Background(), session, b.directory+"/migrations"); err != nil {
 			return session, err
 		}
 	}
@@ -74,8 +77,22 @@ func (b Bootstrap) InitializeGRPCServer(f func(server *grpc.Server)) {
 		return
 	}
 
-	if err := grpcServer.Serve(listener); err != nil {
-		log.Fatalf("failed to serve: %v", err)
-		return
-	}
+	go func() {
+		if err := grpcServer.Serve(listener); err != nil {
+			log.Fatalf("failed to serve: %v", err)
+		}
+	}()
+
+	sig := make(chan os.Signal, 1)
+	signal.Notify(sig, os.Interrupt, syscall.SIGTERM)
+
+	// Block until cancel signal is received.
+	<-sig
+	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+	defer cancel()
+	log.Print("shutting down server")
+	grpcServer.GracefulStop()
+
+	<-ctx.Done()
+	os.Exit(0)
 }

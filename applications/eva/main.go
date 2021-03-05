@@ -3,9 +3,6 @@ package main
 import (
 	"context"
 	"log"
-	"os"
-	"os/signal"
-	"syscall"
 	"time"
 
 	"google.golang.org/grpc"
@@ -35,8 +32,4 @@ func main() {
 	init.InitializeGRPCServer(func(server *grpc.Server) {
 		eva.RegisterEvaServer(server, s)
 	})
-
-	sigChan := make(chan os.Signal, 1)
-	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
-	log.Printf("shutting down server with signal: %s", <-sigChan)
 }
