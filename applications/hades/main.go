@@ -140,7 +140,13 @@ func HandleGraphQL(resolver gen.ResolverRoot, cache *Cache) gin.HandlerFunc {
 
 		graphAPIHandler.AddTransport(transport.POST{})
 		graphAPIHandler.AddTransport(transport.GET{})
-		graphAPIHandler.AddTransport(transport.MultipartForm{})
+
+		var mb int64 = 1 << 20
+		graphAPIHandler.AddTransport(transport.MultipartForm{
+			MaxMemory:     32 * mb,
+			MaxUploadSize: 50 * mb,
+		})
+
 		graphAPIHandler.SetQueryCache(lru.New(1000))
 
 		// Add APQ

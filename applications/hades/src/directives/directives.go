@@ -15,7 +15,44 @@ import (
 var validate *validator.Validate
 
 func NewDirectives() gen.DirectiveRoot {
-	return gen.DirectiveRoot{Auth: Auth, Validation: Validation, Guest: Guest}
+	return gen.DirectiveRoot{Auth: Auth, Validation: Validation, Guest: Guest, Verified: Verified, Role: Role}
+}
+
+// Roles - check if user has some certain roles
+func Role(ctx context.Context, obj interface{}, next graphql.Resolver, roles []string) (res interface{}, err error) {
+
+	user := helpers.UserFromContext(ctx)
+
+	if user == nil {
+		return nil, fmt.Errorf("access denied")
+	}
+
+	// Check to make sure our user has at least one of the roles
+	for _, role := range user.Roles {
+		for _, requiredRole := range roles {
+			if role == requiredRole {
+				return next(ctx)
+			}
+		}
+	}
+
+	return next(ctx)
+}
+
+// Verified - check if user is verified
+func Verified(ctx context.Context, obj interface{}, next graphql.Resolver) (res interface{}, err error) {
+
+	user := helpers.UserFromContext(ctx)
+
+	if user == nil {
+		return nil, fmt.Errorf("access denied")
+	}
+
+	if user.Verified == false {
+		return nil, fmt.Errorf("access denied")
+	}
+
+	return next(ctx)
 }
 
 // Auth - check if user is authenticated - user object is already passed in middleware, so we can access it directly

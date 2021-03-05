@@ -42,6 +42,8 @@ message DeleteAuthenticationCookieResponse {
 message User {
   string id = 1;
   string username = 2;
+  repeated string roles = 3;
+  bool verified = 4;
 }
 
 message GetUserRequest {

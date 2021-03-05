@@ -24,6 +24,7 @@ require (
 	github.com/segmentio/kafka-go v0.4.10 // indirect
 	github.com/segmentio/ksuid v1.0.3 // indirect
 	github.com/streadway/amqp v1.0.0
+	github.com/tus/tusd v1.5.1 // indirect
 	github.com/vektah/gqlparser/v2 v2.1.0
 	google.golang.org/grpc v1.29.1
 	google.golang.org/protobuf v1.23.0

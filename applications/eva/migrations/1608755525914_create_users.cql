@@ -13,6 +13,8 @@ CREATE TABLE users
     id       uuid,
     username text,
     email    text,
+    roles    list<text>,
+    verified boolean,
     primary key ( id )
 );
 

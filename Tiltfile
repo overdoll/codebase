@@ -73,6 +73,20 @@ applications = {
         ],
         "live_update": [],
     },
+    "buffer": {
+        "type": "go",
+        "image_reference": "buffer-image",
+        "image_target": "//applications/buffer:buffer-image",
+        "binary_target": "//applications/buffer:buffer",
+        "binary_output": "applications/buffer/buffer_/buffer",
+        "container_workdir": "/app/applications/buffer/buffer-image.binary.runfiles/overdoll/",
+        "container_binary": "applications/buffer/buffer-image.binary_/buffer-image.binary",
+        "bazel_image": "bazel/applications/buffer:buffer-image",
+        "dependencies": [
+            "applications/buffer/.env",
+        ],
+        "live_update": [],
+    },
     "medusa": {
         "type": "node",
         "image_reference": "medusa-image",

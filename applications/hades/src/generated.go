@@ -44,7 +44,9 @@ type ResolverRoot interface {
 type DirectiveRoot struct {
 	Auth       func(ctx context.Context, obj interface{}, next graphql.Resolver) (res interface{}, err error)
 	Guest      func(ctx context.Context, obj interface{}, next graphql.Resolver) (res interface{}, err error)
+	Role       func(ctx context.Context, obj interface{}, next graphql.Resolver, roles []string) (res interface{}, err error)
 	Validation func(ctx context.Context, obj interface{}, next graphql.Resolver, rules []string) (res interface{}, err error)
+	Verified   func(ctx context.Context, obj interface{}, next graphql.Resolver) (res interface{}, err error)
 }
 
 type ComplexityRoot struct {
@@ -364,7 +366,11 @@ input AuthenticationInput {
 
 directive @guest on FIELD_DEFINITION
 
+directive @verified on FIELD_DEFINITION
+
 directive @validation(rules: [String!]!) on INPUT_FIELD_DEFINITION
+
+directive @role(roles: [String!]!) on FIELD_DEFINITION
 `, BuiltIn: false},
 	{Name: "schemas/mutation.graphql", Input: `type Mutation {
   authenticate(data: AuthenticationInput): Boolean! @guest
@@ -379,14 +385,30 @@ directive @validation(rules: [String!]!) on INPUT_FIELD_DEFINITION
 }
 `, BuiltIn: false},
 	{Name: "schemas/subscription.graphql", Input: `type Subscription {
-    authListener: AuthListener
-}`, BuiltIn: false},
+  authListener: AuthListener
+}
+`, BuiltIn: false},
 }
 var parsedSchema = gqlparser.MustLoadSchema(sources...)
 
 // endregion ************************** generated!.gotpl **************************
 
 // region    ***************************** args.gotpl *****************************
+
+func (ec *executionContext) dir_role_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 []string
+	if tmp, ok := rawArgs["roles"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("roles"))
+		arg0, err = ec.unmarshalNString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["roles"] = arg0
+	return args, nil
+}
 
 func (ec *executionContext) dir_validation_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
@@ -409,7 +431,7 @@ func (ec *executionContext) field_Mutation_authenticate_args(ctx context.Context
 	var arg0 *models.AuthenticationInput
 	if tmp, ok := rawArgs["data"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("data"))
-		arg0, err = ec.unmarshalOAuthenticationInput2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐAuthenticationInput(ctx, tmp)
+		arg0, err = ec.unmarshalOAuthenticationInput2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐAuthenticationInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -424,7 +446,7 @@ func (ec *executionContext) field_Mutation_register_args(ctx context.Context, ra
 	var arg0 *models.RegisterInput
 	if tmp, ok := rawArgs["data"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("data"))
-		arg0, err = ec.unmarshalORegisterInput2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐRegisterInput(ctx, tmp)
+		arg0, err = ec.unmarshalORegisterInput2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐRegisterInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -565,7 +587,7 @@ func (ec *executionContext) _AuthListener_cookie(ctx context.Context, field grap
 	}
 	res := resTmp.(*models.Cookie)
 	fc.Result = res
-	return ec.marshalOCookie2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCookie(ctx, field.Selections, res)
+	return ec.marshalOCookie2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCookie(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Authentication_cookie(ctx context.Context, field graphql.CollectedField, obj *models.Authentication) (ret graphql.Marshaler) {
@@ -597,7 +619,7 @@ func (ec *executionContext) _Authentication_cookie(ctx context.Context, field gr
 	}
 	res := resTmp.(*models.Cookie)
 	fc.Result = res
-	return ec.marshalOCookie2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCookie(ctx, field.Selections, res)
+	return ec.marshalOCookie2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCookie(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Authentication_user(ctx context.Context, field graphql.CollectedField, obj *models.Authentication) (ret graphql.Marshaler) {
@@ -629,7 +651,7 @@ func (ec *executionContext) _Authentication_user(ctx context.Context, field grap
 	}
 	res := resTmp.(*models.User)
 	fc.Result = res
-	return ec.marshalOUser2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐUser(ctx, field.Selections, res)
+	return ec.marshalOUser2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Cookie_sameSession(ctx context.Context, field graphql.CollectedField, obj *models.Cookie) (ret graphql.Marshaler) {
@@ -1097,7 +1119,7 @@ func (ec *executionContext) _Query_redeemCookie(ctx context.Context, field graph
 	}
 	res := resTmp.(*models.Cookie)
 	fc.Result = res
-	return ec.marshalOCookie2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCookie(ctx, field.Selections, res)
+	return ec.marshalOCookie2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCookie(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_authentication(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1129,7 +1151,7 @@ func (ec *executionContext) _Query_authentication(ctx context.Context, field gra
 	}
 	res := resTmp.(*models.Authentication)
 	fc.Result = res
-	return ec.marshalOAuthentication2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐAuthentication(ctx, field.Selections, res)
+	return ec.marshalOAuthentication2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐAuthentication(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1239,7 +1261,7 @@ func (ec *executionContext) _Subscription_authListener(ctx context.Context, fiel
 			w.Write([]byte{'{'})
 			graphql.MarshalString(field.Alias).MarshalGQL(w)
 			w.Write([]byte{':'})
-			ec.marshalOAuthListener2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐAuthListener(ctx, field.Selections, res).MarshalGQL(w)
+			ec.marshalOAuthListener2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐAuthListener(ctx, field.Selections, res).MarshalGQL(w)
 			w.Write([]byte{'}'})
 		})
 	}
@@ -3232,21 +3254,21 @@ func (ec *executionContext) marshalN__TypeKind2string(ctx context.Context, sel a
 	return res
 }
 
-func (ec *executionContext) marshalOAuthListener2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐAuthListener(ctx context.Context, sel ast.SelectionSet, v *models.AuthListener) graphql.Marshaler {
+func (ec *executionContext) marshalOAuthListener2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐAuthListener(ctx context.Context, sel ast.SelectionSet, v *models.AuthListener) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._AuthListener(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOAuthentication2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐAuthentication(ctx context.Context, sel ast.SelectionSet, v *models.Authentication) graphql.Marshaler {
+func (ec *executionContext) marshalOAuthentication2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐAuthentication(ctx context.Context, sel ast.SelectionSet, v *models.Authentication) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Authentication(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOAuthenticationInput2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐAuthenticationInput(ctx context.Context, v interface{}) (*models.AuthenticationInput, error) {
+func (ec *executionContext) unmarshalOAuthenticationInput2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐAuthenticationInput(ctx context.Context, v interface{}) (*models.AuthenticationInput, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -3278,14 +3300,14 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	return graphql.MarshalBoolean(*v)
 }
 
-func (ec *executionContext) marshalOCookie2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCookie(ctx context.Context, sel ast.SelectionSet, v *models.Cookie) graphql.Marshaler {
+func (ec *executionContext) marshalOCookie2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCookie(ctx context.Context, sel ast.SelectionSet, v *models.Cookie) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Cookie(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalORegisterInput2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐRegisterInput(ctx context.Context, v interface{}) (*models.RegisterInput, error) {
+func (ec *executionContext) unmarshalORegisterInput2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐRegisterInput(ctx context.Context, v interface{}) (*models.RegisterInput, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -3317,7 +3339,7 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 	return graphql.MarshalString(*v)
 }
 
-func (ec *executionContext) marshalOUser2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐUser(ctx context.Context, sel ast.SelectionSet, v *models.User) graphql.Marshaler {
+func (ec *executionContext) marshalOUser2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐUser(ctx context.Context, sel ast.SelectionSet, v *models.User) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}

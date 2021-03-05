@@ -7,13 +7,12 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
-	"strings"
-	"time"
-
 	eva "overdoll/applications/eva/proto"
 	gen "overdoll/applications/hades/src"
 	"overdoll/applications/hades/src/helpers"
 	"overdoll/applications/hades/src/models"
+	"strings"
+	"time"
 )
 
 func (r *mutationResolver) Authenticate(ctx context.Context, data *models.AuthenticationInput) (bool, error) {

@@ -24,10 +24,21 @@ type UserEmail struct {
 	UserId gocql.UUID `db:"user_id"`
 }
 
+type UserRole string
+
+const (
+	Artist      UserRole = "artist"
+	Contributor UserRole = "contributor"
+	Moderator   UserRole = "moderator"
+	Staff       UserRole = "staff"
+)
+
 type User struct {
 	Id       gocql.UUID `db:"id"`
 	Username string     `db:"username"`
 	Email    string     `db:"email"`
+	Roles    []string   `db:"roles"`
+	Verified bool       `db:"boolean"`
 }
 
 type UserUsername struct {
