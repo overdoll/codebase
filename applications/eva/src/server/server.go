@@ -45,7 +45,7 @@ func (s *Server) GetUser(ctx context.Context, request *eva.GetUserRequest) (*eva
 		return nil, fmt.Errorf("select() failed: '%s", err)
 	}
 
-	return &eva.User{Username: user.Username, Id: user.Id.String(), Roles: user.Roles, Verified: user.Verified}, nil
+	return &eva.User{Username: user.Username, Id: user.Id.String(), Roles: models.UserRoleToString(user.Roles), Verified: user.Verified}, nil
 }
 
 func (s *Server) RegisterUser(ctx context.Context, request *eva.RegisterUserRequest) (*eva.User, error) {
@@ -134,7 +134,7 @@ func (s *Server) RegisterUser(ctx context.Context, request *eva.RegisterUserRequ
 		return nil, fmt.Errorf("ExecRelease() failed: '%s", err)
 	}
 
-	return &eva.User{Username: request.Username, Id: user.Id.String(), Roles: user.Roles, Verified: user.Verified}, nil
+	return &eva.User{Username: request.Username, Id: user.Id.String(), Roles: models.UserRoleToString(user.Roles), Verified: user.Verified}, nil
 }
 
 func (s *Server) GetRegisteredEmail(ctx context.Context, request *eva.GetRegisteredEmailRequest) (*eva.User, error) {

@@ -33,11 +33,21 @@ const (
 	Staff       UserRole = "staff"
 )
 
+func UserRoleToString(roles []UserRole) []string {
+	var n []string
+
+	for _, role := range roles {
+		n = append(n, string(role))
+	}
+
+	return n
+}
+
 type User struct {
 	Id       ksuid.UUID `db:"id"`
 	Username string     `db:"username"`
 	Email    string     `db:"email"`
-	Roles    []string   `db:"roles"`
+	Roles    []UserRole   `db:"roles"`
 	Verified bool       `db:"verified"`
 }
 
