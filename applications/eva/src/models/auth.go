@@ -3,11 +3,11 @@ package models
 import (
 	"time"
 
-	"github.com/gocql/gocql"
+	"overdoll/libraries/ksuid"
 )
 
 type AuthenticationCookie struct {
-	Cookie     gocql.UUID `db:"cookie"`
+	Cookie     ksuid.UUID `db:"cookie"`
 	Email      string     `db:"email"`
 	Redeemed   int        `db:"redeemed"`
 	Expiration time.Time  `db:"expiration"`
@@ -20,8 +20,8 @@ type RegisteredUser struct {
 }
 
 type UserEmail struct {
+	UserId ksuid.UUID `db:"user_id"`
 	Email  string     `db:"email"`
-	UserId gocql.UUID `db:"user_id"`
 }
 
 type UserRole string
@@ -34,7 +34,7 @@ const (
 )
 
 type User struct {
-	Id       gocql.UUID `db:"id"`
+	Id       ksuid.UUID `db:"id"`
 	Username string     `db:"username"`
 	Email    string     `db:"email"`
 	Roles    []string   `db:"roles"`
@@ -42,6 +42,6 @@ type User struct {
 }
 
 type UserUsername struct {
+	Id       ksuid.UUID `db:"user_id"`
 	Username string     `db:"username"`
-	Id       gocql.UUID `db:"user_id"`
 }

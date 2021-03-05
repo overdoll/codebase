@@ -1,6 +1,6 @@
 CREATE TABLE authentication_cookies
 (
-    cookie     uuid,
+    cookie     text,
     email      text,
     session    text,
     redeemed   int,
@@ -10,7 +10,7 @@ CREATE TABLE authentication_cookies
 
 CREATE TABLE users
 (
-    id       uuid,
+    id       text,
     username text,
     email    text,
     roles    list<text>,
@@ -20,14 +20,14 @@ CREATE TABLE users
 
 CREATE TABLE users_emails
 (
-    user_id uuid,
+    user_id text,
     email   text,
     primary key ( email )
 );
 
 CREATE TABLE users_usernames
 (
-    user_id  uuid,
+    user_id  text,
     username text,
     primary key ( username )
 );

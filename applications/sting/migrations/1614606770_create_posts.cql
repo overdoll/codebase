@@ -1,30 +1,30 @@
 CREATE TABLE categories
 (
-    id    uuid,
+    id    text,
     title text,
     primary key (id)
 );
 
 CREATE TABLE characters
 (
-    id       uuid,
+    id       text,
     name     text,
-    media_id uuid,
+    media_id text,
     primary key (id)
 );
 
 CREATE TABLE media
 (
-    id    uuid,
+    id    text,
     title text,
     primary key (id)
 );
 
 CREATE TABLE posts
 (
-    id             uuid,
-    artist_id      uuid,
-    contributor_id uuid,
+    id             text,
+    artist_id      text,
+    contributor_id text,
     images         list<text>,
     categories     list<text>,
     characters     list<text>,
@@ -34,11 +34,11 @@ CREATE TABLE posts
 
 CREATE TABLE posts_pending
 (
-    id                   uuid,
+    id                   text,
     state                text,
-    artist_id            uuid,
+    artist_id            text,
     artist_username      text,
-    contributor_id       uuid,
+    contributor_id       text,
     contributor_username text,
     images               list<text>,
     categories           list<text>,

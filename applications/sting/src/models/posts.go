@@ -4,17 +4,18 @@ import (
 	"time"
 
 	"github.com/gocql/gocql"
+	"overdoll/libraries/ksuid"
 )
 
 type Category struct {
-	Id    gocql.UUID `db:"id"`
+	Id    ksuid.UUID `db:"id"`
 	Title string     `db:"title"`
 }
 
 type Character struct {
-	Id      gocql.UUID `db:"id"`
+	Id      ksuid.UUID `db:"id"`
 	Title   string     `db:"title"`
-	MediaId gocql.UUID `db:"media_id"`
+	MediaId ksuid.UUID `db:"media_id"`
 }
 
 type Media struct {
@@ -23,9 +24,9 @@ type Media struct {
 }
 
 type Post struct {
-	Id            gocql.UUID `db:"id"`
-	ArtistId      gocql.UUID `db:"artist_id"`
-	ContributorId gocql.UUID `db:"contributor_id"`
+	Id            ksuid.UUID `db:"id"`
+	ArtistId      ksuid.UUID `db:"artist_id"`
+	ContributorId ksuid.UUID `db:"contributor_id"`
 	Images        []string   `db:"images"`
 	Categories    []string   `db:"categories"`
 	Characters    []string   `db:"characters"`
@@ -42,11 +43,11 @@ const (
 )
 
 type PostPending struct {
-	Id                  gocql.UUID       `db:"id"`
+	Id                  ksuid.UUID       `db:"id"`
 	State               PostPendingState `db:"state"`
-	ArtistId            gocql.UUID       `db:"artist_id"`
+	ArtistId            ksuid.UUID       `db:"artist_id"`
 	ArtistUsername      string           `db:"artist_username"`
-	ContributorId       gocql.UUID       `db:"contributor_id"`
+	ContributorId       ksuid.UUID       `db:"contributor_id"`
 	ContributorUsername string           `db:"contributor_username"`
 	Images              []string         `db:"images"`
 	Categories          []string         `db:"categories"`

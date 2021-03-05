@@ -11,6 +11,7 @@ import (
 	"github.com/scylladb/gocqlx/v2/qb"
 	eva "overdoll/applications/eva/proto"
 	"overdoll/applications/eva/src/models"
+	"overdoll/libraries/ksuid"
 )
 
 type Server struct {
@@ -25,33 +26,31 @@ func CreateServer(session gocqlx.Session) *Server {
 
 func (s *Server) GetUser(ctx context.Context, request *eva.GetUserRequest) (*eva.User, error) {
 
-	u, err := gocql.ParseUUID(request.Id)
+	u, err := ksuid.Parse(request.Id)
 
 	if err != nil {
 		return nil, fmt.Errorf("uuid is not valid")
 	}
 
-	users := models.User{
+	user := models.User{
 		Id: u,
 	}
 
 	queryUser := qb.Select("users").
 		Where(qb.Eq("id")).
 		Query(s.session).
-		BindStruct(users)
+		BindStruct(user)
 
-	var userItem models.User
-
-	if err := queryUser.Get(&userItem); err != nil {
+	if err := queryUser.Get(&user); err != nil {
 		return nil, fmt.Errorf("select() failed: '%s", err)
 	}
 
-	return &eva.User{Username: userItem.Username, Id: userItem.Id.String(), Roles: userItem.Roles, Verified: userItem.Verified}, nil
+	return &eva.User{Username: user.Username, Id: user.Id.String(), Roles: user.Roles, Verified: user.Verified}, nil
 }
 
 func (s *Server) RegisterUser(ctx context.Context, request *eva.RegisterUserRequest) (*eva.User, error) {
 
-	userId := gocql.TimeUUID()
+	userId := ksuid.New()
 
 	// First, we do a unique insert into users_usernames
 	// This ensures that we capture the username so nobody else can use it
@@ -150,14 +149,12 @@ func (s *Server) GetRegisteredEmail(ctx context.Context, request *eva.GetRegiste
 		Query(s.session).
 		BindStruct(userEmail)
 
-	var registeredItem models.UserEmail
-
-	if err := queryEmail.Get(&registeredItem); err != nil {
+	if err := queryEmail.Get(&userEmail); err != nil {
 		return &eva.User{Username: "", Id: ""}, nil
 	}
 
 	// Get our user using the User Id
-	user, err := s.GetUser(ctx, &eva.GetUserRequest{Id: registeredItem.UserId.String()})
+	user, err := s.GetUser(ctx, &eva.GetUserRequest{Id: userEmail.UserId.String()})
 
 	if err != nil {
 		return nil, err
@@ -168,7 +165,7 @@ func (s *Server) GetRegisteredEmail(ctx context.Context, request *eva.GetRegiste
 
 // DeleteAuthenticationCookie - Delete cookie because we don't want it to be used anymore
 func (s *Server) DeleteAuthenticationCookie(ctx context.Context, request *eva.GetAuthenticationCookieRequest) (*eva.DeleteAuthenticationCookieResponse, error) {
-	u, err := gocql.ParseUUID(request.Cookie)
+	u, err := ksuid.Parse(request.Cookie)
 
 	if err != nil {
 		return nil, fmt.Errorf("uuid is not valid")
@@ -195,7 +192,7 @@ func (s *Server) DeleteAuthenticationCookie(ctx context.Context, request *eva.Ge
 func (s *Server) CreateAuthenticationCookie(ctx context.Context, request *eva.CreateAuthenticationCookieRequest) (*eva.AuthenticationCookie, error) {
 	// run a query to create the authentication token
 	authCookie := models.AuthenticationCookie{
-		Cookie:   gocql.TimeUUID(),
+		Cookie:   ksuid.New(),
 		Email:    request.Email,
 		Redeemed: 0,
 		// Expires after 5 minutes
@@ -224,18 +221,19 @@ func (s *Server) CreateAuthenticationCookie(ctx context.Context, request *eva.Cr
 }
 
 func (s *Server) RedeemAuthenticationCookie(ctx context.Context, request *eva.GetAuthenticationCookieRequest) (*eva.AuthenticationCookie, error) {
-	u, err := gocql.ParseUUID(request.Cookie)
+	u, err := ksuid.Parse(request.Cookie)
 
 	if err != nil {
 		return nil, fmt.Errorf("uuid is not valid")
 	}
 
+	queryCookieItem := models.AuthenticationCookie{Cookie: u}
+
 	// first check cookie to make sure it's not expired
 	queryCookie := qb.Select("authentication_cookies").
-		Where(qb.EqLit("cookie", u.String())).
-		Query(s.session)
-
-	var queryCookieItem models.AuthenticationCookie
+		Where(qb.Eq("cookie")).
+		Query(s.session).
+		BindStruct(queryCookieItem)
 
 	if err := queryCookie.Get(&queryCookieItem); err != nil {
 		return nil, fmt.Errorf("select() failed: '%s", err)
@@ -275,19 +273,21 @@ func (s *Server) RedeemAuthenticationCookie(ctx context.Context, request *eva.Ge
 }
 
 func (s *Server) GetAuthenticationCookie(ctx context.Context, request *eva.GetAuthenticationCookieRequest) (*eva.AuthenticationCookie, error) {
-	u, err := gocql.ParseUUID(request.Cookie)
+	u, err := ksuid.Parse(request.Cookie)
 
 	if err != nil {
 		return nil, fmt.Errorf("uuid is not valid")
 	}
 
-	queryCookie := qb.Select("authentication_cookies").
-		Where(qb.EqLit("cookie", u.String())).
-		Query(s.session)
+	cookieItem := models.AuthenticationCookie{Cookie: u}
 
-	var cookieItem models.AuthenticationCookie
+	queryCookie := qb.Select("authentication_cookies").
+		Where(qb.Eq("cookie")).
+		Query(s.session).
+		BindStruct(cookieItem)
 
 	if err := queryCookie.Get(&cookieItem); err != nil {
+		fmt.Println(err)
 		return nil, fmt.Errorf("select() failed: '%s", err)
 	}
 

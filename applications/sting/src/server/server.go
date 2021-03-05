@@ -6,13 +6,13 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
 	pox "overdoll/applications/pox/proto"
 	sting "overdoll/applications/sting/proto"
 	"overdoll/applications/sting/src/models"
 	"overdoll/libraries/events"
+	"overdoll/libraries/ksuid"
 )
 
 type Server struct {
@@ -31,13 +31,13 @@ func CreateServer(session gocqlx.Session, events events.Connection) *Server {
 func (s *Server) SchedulePost(ctx context.Context, post *sting.SchedulePostRequest) (*sting.Post, error) {
 
 	// Do some UUID Validation
-	artistUUID, err := gocql.ParseUUID(post.ArtistId)
+	artistUUID, err := ksuid.Parse(post.ArtistId)
 
 	if err != nil {
 		return nil, err
 	}
 
-	contributorId, err := gocql.ParseUUID(post.ContributorId)
+	contributorId, err := ksuid.Parse(post.ContributorId)
 
 	if err != nil {
 		return nil, err
@@ -76,7 +76,7 @@ func (s *Server) SchedulePost(ctx context.Context, post *sting.SchedulePostReque
 	// Create a post in the "pending" state - this is where we can do all of our backend work, such as image processing
 	// before the post is ready for review
 	pendingPost := &models.PostPending{
-		Id:                  gocql.TimeUUID(),
+		Id:                  ksuid.New(),
 		State:               models.Processing,
 		ArtistId:            artistUUID,
 		ArtistUsername:      post.ArtistUsername,
@@ -180,7 +180,7 @@ func (s *Server) PublishPost(ctx context.Context, publish *sting.PublishPostRequ
 
 	// Insert our new post
 	post := &models.Post{
-		Id:            gocql.TimeUUID(),
+		Id:            ksuid.New(),
 		ArtistId:      postPending.ArtistId,
 		ContributorId: postPending.ContributorId,
 		Images:        publish.Images,
