@@ -36,11 +36,14 @@ func main() {
 	}
 
 	srv := server.CreateServer(awsSession, svcs)
+	evt := events.GetConnection(ctx, "pox")
 
-	eventsConn := events.GetConnection(ctx, "pox")
+	// Register our subscribers to topics
+	evt.RegisterSubscriber("pox.topic.posts_image_processing", srv.ProcessPost)
+	evt.RegisterSubscriber("pox.topic.posts_image_publishing", srv.PublishPost)
 
-	go eventsConn.Consume("pox.topic.posts_image_processing", srv.ProcessPost)
-	eventsConn.Consume("pox.topic.posts_image_publishing", srv.PublishPost)
+	// Run subscribers
+	evt.Run()
 
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)

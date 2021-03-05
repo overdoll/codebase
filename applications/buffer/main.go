@@ -1,9 +1,13 @@
 package main
 
 import (
-	"fmt"
+	"context"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/aws/aws-sdk-go/service/s3"
 	tusd "github.com/tus/tusd/pkg/handler"
@@ -12,7 +16,6 @@ import (
 )
 
 func main() {
-
 	session, err := storage.CreateAWSSession()
 
 	if err != nil {
@@ -42,21 +45,31 @@ func main() {
 		log.Fatalf("unable to create handler: %s", err)
 	}
 
-	// Start another goroutine for receiving events from the handler whenever
-	// an upload is completed. The event will contains details about the upload
-	// itself and the relevant HTTP request.
+	srv := &http.Server{
+		Addr: ":8080",
+		Handler: handler,
+	}
+
+	done := make(chan os.Signal, 1)
+	signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
+
 	go func() {
-		for {
-			event := <-handler.CompleteUploads
-			fmt.Printf("Upload %s finished\n", event.Upload.ID)
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			log.Fatalf("listen: %s\n", err)
 		}
 	}()
+	log.Printf("server started on port %s", "8080")
 
-	http.Handle("/upload/", http.StripPrefix("/upload/", handler))
+	<-done
+	log.Print("server stopped")
 
-	err = http.ListenAndServe(":8080", nil)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer func() {
+		// extra handling here
+		cancel()
+	}()
 
-	if err != nil {
-		log.Fatalf("unable to listen: %s", err)
+	if err := srv.Shutdown(ctx); err != nil {
+		log.Fatalf("server shutdown failed:%+v", err)
 	}
 }

@@ -96,7 +96,7 @@ func main() {
 	}
 
 	// Start graph_api server
-	log.Printf("Server started on http://localhost:%s/", port)
+	log.Printf("server started on port %s", port)
 	go func() {
 		log.Fatal(srv.ListenAndServe())
 	}()
