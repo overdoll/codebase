@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package applications.grpc.indigo.v1;
+
+message CategoryIndex {
+  string id = 1;
+}

@@ -1153,3 +1153,10 @@ go_repository(
     sum = "h1:ORx85nbTijNz8ljznvCMR1ZBIPKFn3jQrag10X2AsuM=",
     version = "v1.10.0",
 )
+
+go_repository(
+    name = "com_github_elastic_go_elasticsearch_v7",
+    importpath = "github.com/elastic/go-elasticsearch/v7",
+    sum = "h1:bv+2GqsVrPdX/ChJqAHAFtWgtGvVJ0icN/WdBGAdNuw=",
+    version = "v7.11.0",
+)
