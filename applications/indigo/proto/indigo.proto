@@ -2,6 +2,12 @@ syntax = "proto3";
 
 package applications.grpc.indigo.v1;
 
-message CategoryIndex {
+message PostIndex {
   string id = 1;
+  string artistId = 2;
+  string contributorId = 3;
+  repeated string images = 4;
+  repeated string categories = 5;
+  repeated string characters = 6;
+  string postedAt = 7;
 }

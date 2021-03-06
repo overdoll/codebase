@@ -34,7 +34,7 @@ func main() {
 
 	evt := events.GetConnection(ctx, "indigo")
 
-	evt.RegisterSubscriber("pox.topic.posts_image_processing", srv.IndexCategory)
+	evt.RegisterSubscriber("indigo.topic.post_index", srv.IndexPost)
 
 	evt.Run()
 }

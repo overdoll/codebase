@@ -8,6 +8,7 @@ import (
 
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
+	indigo "overdoll/applications/indigo/proto"
 	pox "overdoll/applications/pox/proto"
 	sting "overdoll/applications/sting/proto"
 	"overdoll/applications/sting/src/models"
@@ -195,6 +196,21 @@ func (s *Server) PublishPost(ctx context.Context, publish *sting.PublishPostRequ
 
 	if err := insertPost.ExecRelease(); err != nil {
 		return nil, fmt.Errorf("ExecRelease() failed: '%s", err)
+	}
+
+	// Tell indigo to index our post
+	err := s.events.Publish("indigo.topic.post_index", &indigo.PostIndex{
+		Id:            post.Id.String(),
+		ArtistId:      post.ArtistId.String(),
+		ContributorId: post.ContributorId.String(),
+		Images:        post.Images,
+		Categories:    post.Categories,
+		Characters:    post.Characters,
+		PostedAt:      post.PostedAt.String(),
+	})
+
+	if err != nil {
+		return nil, err
 	}
 
 	// Update our pending post with the new state and link

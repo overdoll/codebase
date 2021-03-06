@@ -2,7 +2,7 @@ package server
 
 import (
 	"context"
-
+	indigo "overdoll/applications/indigo/proto"
 	"github.com/elastic/go-elasticsearch/v7"
 )
 
@@ -17,6 +17,6 @@ func CreateServer(es *elasticsearch.Client) *Server {
 }
 
 // IndexCategory
-func (s *Server) IndexCategory(ctx context.Context) {
+func (s *Server) IndexPost(ctx context.Context, msg *indigo.PostIndex) {
 
 }

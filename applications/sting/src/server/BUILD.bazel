@@ -6,6 +6,7 @@ go_library(
     importpath = "overdoll/applications/sting/src/server",
     visibility = ["//visibility:public"],
     deps = [
+        "//applications/indigo/proto:v1_go_proto",
         "//applications/pox/proto:v1_go_proto",
         "//applications/sting/proto:v1_go_proto",
         "//applications/sting/src/models:go_default_library",
