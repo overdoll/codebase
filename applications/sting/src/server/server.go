@@ -6,6 +6,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/gocql/gocql"
+	"github.com/golang/protobuf/proto"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
 	indigo "overdoll/applications/indigo/proto"
@@ -50,6 +52,7 @@ func (s *Server) SchedulePost(ctx context.Context, post *sting.SchedulePostReque
 		Query(s.session)
 
 	var characters []models.Character
+	var characterIds []ksuid.UUID
 
 	if err := queryCharacters.Get(&characters); err != nil {
 		return nil, fmt.Errorf("select() failed: '%s", err)
@@ -59,12 +62,17 @@ func (s *Server) SchedulePost(ctx context.Context, post *sting.SchedulePostReque
 		return nil, fmt.Errorf("invalid character chosen")
 	}
 
+	for _, char := range characters {
+		characterIds = append(characterIds, char.Id)
+	}
+
 	// Ensure we set up correct categories (DB entries exist)
 	queryCategories := qb.Select("categories").
 		Where(qb.InLit("id", strings.Join(post.Categories, ","))).
 		Query(s.session)
 
-	var categories []models.Character
+	var categories []models.Category
+	var categoryIds []ksuid.UUID
 
 	if err := queryCategories.Get(&categories); err != nil {
 		return nil, fmt.Errorf("select() failed: '%s", err)
@@ -72,6 +80,10 @@ func (s *Server) SchedulePost(ctx context.Context, post *sting.SchedulePostReque
 
 	if len(categories) != len(post.Categories) {
 		return nil, fmt.Errorf("invalid category chosen")
+	}
+
+	for _, cat := range categories {
+		categoryIds = append(categoryIds, cat.Id)
 	}
 
 	// Create a post in the "pending" state - this is where we can do all of our backend work, such as image processing
@@ -84,8 +96,11 @@ func (s *Server) SchedulePost(ctx context.Context, post *sting.SchedulePostReque
 		ContributorId:       contributorId,
 		ContributorUsername: post.ContributorUsername,
 		Images:              post.Images,
-		Categories:          post.Categories,
-		Characters:          post.Characters,
+		Categories:          categoryIds,
+		Characters:          characterIds,
+		CharactersRequests:  post.CharacterRequests,
+		CategoriesRequests:  post.CategoriesRequests,
+		MediaRequests:       post.MediaRequests,
 		PostedAt:            time.Now(),
 		ReviewRequired:      post.ReviewRequired,
 		PublishedPostId:     "",
@@ -179,14 +194,99 @@ func (s *Server) PublishPost(ctx context.Context, publish *sting.PublishPostRequ
 		return nil, err
 	}
 
+	// Begin BATCH operation:
+	// Will insert categories, characters, media
+	batch := s.session.NewBatch(gocql.LoggedBatch)
+
+	publishMap := make(map[string][]proto.Message)
+
+	var newCategories []ksuid.UUID
+
+	// Go through each category request
+	for _, category := range postPending.CategoriesRequests {
+
+		id := ksuid.New()
+
+		newCategories = append(newCategories, id)
+
+		// Create new categories query
+		batch.Query(qb.Insert("categories").LitColumn("id", id.String()).LitColumn("title", category).ToCql())
+
+		// Add to list of events that will be published later to index the categories
+		publishMap["indigo.topic.category_index"] = append(publishMap["indigo.topic.category_index"], &indigo.CategoryIndex{
+			Id:    id.String(),
+			Title: category,
+		})
+	}
+
+	var newCharacters []ksuid.UUID
+
+	// Go through each character request
+	for character, media := range postPending.CharactersRequests {
+
+		var exists = true
+		var id ksuid.UUID
+		var mediaName string
+		characterId := ksuid.New()
+
+		// Check if the requested media is a media in our list
+		for _, requestedMedia := range postPending.MediaRequests {
+
+			// If the media is on our list, then we create a new media, and append to array of events
+			if media == requestedMedia {
+				id = ksuid.New()
+				mediaName = requestedMedia
+				exists = false
+				break
+			}
+		}
+
+		batch.Query(
+			qb.Insert("characters").
+				LitColumn("id", characterId.String()).
+				LitColumn("name", character).
+				LitColumn("media_id", id.String()).
+				ToCql(),
+		)
+
+		// Index for our characters
+		publishMap["indigo.topic.character_index"] = append(publishMap["indigo.topic.character_index"], &indigo.CharacterIndex{
+			Id:      characterId.String(),
+			Name:    character,
+			MediaId: id.String(),
+		})
+
+		// Media does not exist - we need to make a new one
+		if !exists {
+			batch.Query(qb.Insert("media").LitColumn("id", id.String()).LitColumn("title", mediaName).ToCql())
+
+			// Index for media
+			publishMap["indigo.topic.media_index"] = append(publishMap["indigo.topic.media_index"], &indigo.MediaIndex{Id: id.String(), Title: mediaName})
+		}
+	}
+
+	err := s.session.ExecuteBatch(batch)
+
+	if err != nil {
+		return nil, err
+	}
+
+	// Now that all of our new stuff was batch inserted, we need to tell indigo to index our new characters, categories and media
+	// we bulk publish the events
+	err = s.events.BulkPublish(publishMap)
+
+	if err != nil {
+		return nil, err
+	}
+
 	// Insert our new post
 	post := &models.Post{
 		Id:            ksuid.New(),
 		ArtistId:      postPending.ArtistId,
 		ContributorId: postPending.ContributorId,
 		Images:        publish.Images,
-		Categories:    postPending.Categories,
-		Characters:    postPending.Characters,
+		Categories:    append(postPending.Categories, newCategories...),
+		Characters:    append(postPending.Characters, newCharacters...),
 		PostedAt:      time.Now(),
 	}
 
@@ -199,13 +299,13 @@ func (s *Server) PublishPost(ctx context.Context, publish *sting.PublishPostRequ
 	}
 
 	// Tell indigo to index our post
-	err := s.events.Publish("indigo.topic.post_index", &indigo.PostIndex{
+	err = s.events.Publish("indigo.topic.post_index", &indigo.PostIndex{
 		Id:            post.Id.String(),
 		ArtistId:      post.ArtistId.String(),
 		ContributorId: post.ContributorId.String(),
 		Images:        post.Images,
-		Categories:    post.Categories,
-		Characters:    post.Characters,
+		Categories:    ksuid.ToStringArray(post.Categories),
+		Characters:    ksuid.ToStringArray(post.Characters),
 		PostedAt:      post.PostedAt.String(),
 	})
 
@@ -279,7 +379,7 @@ func (s *Server) ReviewPost(ctx context.Context, review *sting.ReviewPostRequest
 		ArtistId:      postReview.ArtistId.String(),
 		ContributorId: postReview.ContributorId.String(),
 		Images:        postReview.Images,
-		Categories:    postReview.Categories,
-		Characters:    postReview.Characters,
+		Categories:    ksuid.ToStringArray(postReview.Categories),
+		Characters:    ksuid.ToStringArray(postReview.Characters),
 	}, nil
 }

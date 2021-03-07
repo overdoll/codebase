@@ -19,7 +19,10 @@ message SchedulePostRequest {
   repeated string images = 5;
   repeated string categories = 6;
   repeated string characters = 7;
-  bool reviewRequired = 8;
+  repeated string categoriesRequests = 8;
+  repeated string mediaRequests = 9;
+  map<string, string> characterRequests = 10;
+  bool reviewRequired = 11;
 }
 
 message PublishPostRequest {

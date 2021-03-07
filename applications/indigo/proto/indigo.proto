@@ -11,3 +11,19 @@ message PostIndex {
   repeated string characters = 6;
   string postedAt = 7;
 }
+
+message CategoryIndex {
+  string id = 1;
+  string title = 2;
+}
+
+message CharacterIndex {
+  string id = 1;
+  string name = 2;
+  string mediaId = 3;
+}
+
+message MediaIndex {
+  string id = 1;
+  string title = 2;
+}

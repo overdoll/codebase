@@ -46,3 +46,13 @@ func New() UUID {
 	p := ksuid.New()
 	return UUID{p}
 }
+
+func ToStringArray(ids []UUID) []string {
+	var strings []string
+
+	for _, id := range ids {
+		strings = append(strings, id.String())
+	}
+
+	return strings
+}

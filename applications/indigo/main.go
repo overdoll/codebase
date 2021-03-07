@@ -36,5 +36,11 @@ func main() {
 
 	evt.RegisterSubscriber("indigo.topic.post_index", srv.IndexPost)
 
+	evt.RegisterSubscriber("indigo.topic.character_index", srv.IndexCharacter)
+
+	evt.RegisterSubscriber("indigo.topic.category_index", srv.IndexCategory)
+
+	evt.RegisterSubscriber("indigo.topic.media_index", srv.IndexMedia)
+
 	evt.Run()
 }
