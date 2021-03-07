@@ -35,7 +35,7 @@ func CheckIfCharactersAreValid(s gocqlx.Session, chars []string) ([]ksuid.UUID, 
 }
 
 func CheckIfCategoriesAreValid(s gocqlx.Session, cats []string) ([]ksuid.UUID, error) {
-	// Ensure we set up correct characters (DB entries exist)
+	// Ensure we set up correct categories (DB entries exist)
 	queryCategories := qb.Select("categories").
 		Where(qb.InLit("id", strings.Join(cats, ","))).
 		Query(s)

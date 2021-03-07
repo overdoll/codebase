@@ -357,6 +357,9 @@ func (s *Server) ReviewPost(ctx context.Context, review *sting.ReviewPostRequest
 		Set("state", "characters", "categories", "media_requests", "character_requests", "categories_requests", "artist_id", "artist_username").
 		Where(qb.Eq("id")).
 		Query(s.session).
+		// Update must be replicated everywhere or else we risk that the PublishPost method isn't in sync with the
+		// new settings we set up here
+		Consistency(gocql.All).
 		BindStruct(processedPost)
 
 	if err := updatePost.ExecRelease(); err != nil {
@@ -381,4 +384,9 @@ func (s *Server) ReviewPost(ctx context.Context, review *sting.ReviewPostRequest
 		Categories:    ksuid.ToStringArray(postReview.Categories),
 		Characters:    ksuid.ToStringArray(postReview.Characters),
 	}, nil
+}
+
+// GetPost - get a post by the ID
+func (s *Server) GetPost(ctx context.Context, review *sting.GetPostRequest) (*sting.Post, error)  {
+	return nil, nil
 }
