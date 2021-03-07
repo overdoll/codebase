@@ -248,8 +248,7 @@ func (s *Server) PublishPost(ctx context.Context, publish *sting.PublishPostRequ
 
 	if err != nil {
 		return nil, err
-	Media, Character, Category - add image column
-}
+	}
 
 	// Update our pending_post, to make sure that the user sees the updated data points
 	err = qb.Update("post_pending").
@@ -257,8 +256,8 @@ func (s *Server) PublishPost(ctx context.Context, publish *sting.PublishPostRequ
 		Where(qb.Eq("id")).
 		Query(s.session).
 		BindStruct(&models.PostPending{
-			Categories:         append(postPending.Categories, newCategories...),
-			Characters:         append(postPending.Characters, newCharacters...),
+			Categories: append(postPending.Categories, newCategories...),
+			Characters: append(postPending.Characters, newCharacters...),
 			// No more requests - we processed them already
 			CharactersRequests: nil,
 			CategoriesRequests: nil,
