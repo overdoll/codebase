@@ -248,9 +248,27 @@ func (s *Server) PublishPost(ctx context.Context, publish *sting.PublishPostRequ
 
 	if err != nil {
 		return nil, err
-	}
+	Media, Character, Category - add image column
+}
 
-	// TODO: update pending post with new metadata, so users can see the new stuff in action
+	// Update our pending_post, to make sure that the user sees the updated data points
+	err = qb.Update("post_pending").
+		Set("characters", "categories", "media_requests", "character_requests", "categories_requests").
+		Where(qb.Eq("id")).
+		Query(s.session).
+		BindStruct(&models.PostPending{
+			Categories:         append(postPending.Categories, newCategories...),
+			Characters:         append(postPending.Characters, newCharacters...),
+			// No more requests - we processed them already
+			CharactersRequests: nil,
+			CategoriesRequests: nil,
+			MediaRequests:      nil,
+		}).
+		ExecRelease()
+
+	if err != nil {
+		return nil, fmt.Errorf("ExecRelease() failed: '%s", err)
+	}
 
 	// Insert our new post
 	post := &models.Post{
@@ -341,13 +359,13 @@ func (s *Server) ReviewPost(ctx context.Context, review *sting.ReviewPostRequest
 
 	// Update the state of our post
 	processedPost := &models.PostPending{
-		Id:    postReview.Id,
-		State: models.Publishing,
-		ArtistId: artistId.String(),
-		ArtistUsername: review.ArtistUsername,
-		Characters: characterIds,
-		Categories: categoryIds,
-		MediaRequests: review.MediaRequests,
+		Id:                 postReview.Id,
+		State:              models.Publishing,
+		ArtistId:           artistId.String(),
+		ArtistUsername:     review.ArtistUsername,
+		Characters:         characterIds,
+		Categories:         categoryIds,
+		MediaRequests:      review.MediaRequests,
 		CharactersRequests: review.CharacterRequests,
 		CategoriesRequests: review.CategoriesRequests,
 	}
@@ -387,6 +405,6 @@ func (s *Server) ReviewPost(ctx context.Context, review *sting.ReviewPostRequest
 }
 
 // GetPost - get a post by the ID
-func (s *Server) GetPost(ctx context.Context, review *sting.GetPostRequest) (*sting.Post, error)  {
+func (s *Server) GetPost(ctx context.Context, review *sting.GetPostRequest) (*sting.Post, error) {
 	return nil, nil
 }
