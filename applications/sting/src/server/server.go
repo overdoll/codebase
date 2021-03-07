@@ -3,7 +3,6 @@ package server
 import (
 	"context"
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/gocql/gocql"
@@ -13,6 +12,7 @@ import (
 	indigo "overdoll/applications/indigo/proto"
 	pox "overdoll/applications/pox/proto"
 	sting "overdoll/applications/sting/proto"
+	"overdoll/applications/sting/src/helpers"
 	"overdoll/applications/sting/src/models"
 	"overdoll/libraries/events"
 	"overdoll/libraries/ksuid"
@@ -33,57 +33,22 @@ func CreateServer(session gocqlx.Session, events events.Connection) *Server {
 // SchedulePost - Create a pending post, and tell our processing service to process the images
 func (s *Server) SchedulePost(ctx context.Context, post *sting.SchedulePostRequest) (*sting.Post, error) {
 
-	// Do some UUID Validation
-	artistUUID, err := ksuid.Parse(post.ArtistId)
-
-	if err != nil {
-		return nil, err
-	}
-
 	contributorId, err := ksuid.Parse(post.ContributorId)
 
 	if err != nil {
 		return nil, err
 	}
 
-	// Ensure we set up correct characters (DB entries exist)
-	queryCharacters := qb.Select("characters").
-		Where(qb.InLit("id", strings.Join(post.Characters, ","))).
-		Query(s.session)
+	characterIds, err := helpers.CheckIfCharactersAreValid(s.session, post.Characters)
 
-	var characters []models.Character
-	var characterIds []ksuid.UUID
-
-	if err := queryCharacters.Get(&characters); err != nil {
-		return nil, fmt.Errorf("select() failed: '%s", err)
+	if err != nil {
+		return nil, err
 	}
 
-	if len(characters) != len(post.Characters) {
-		return nil, fmt.Errorf("invalid character chosen")
-	}
+	categoryIds, err := helpers.CheckIfCategoriesAreValid(s.session, post.Categories)
 
-	for _, char := range characters {
-		characterIds = append(characterIds, char.Id)
-	}
-
-	// Ensure we set up correct categories (DB entries exist)
-	queryCategories := qb.Select("categories").
-		Where(qb.InLit("id", strings.Join(post.Categories, ","))).
-		Query(s.session)
-
-	var categories []models.Category
-	var categoryIds []ksuid.UUID
-
-	if err := queryCategories.Get(&categories); err != nil {
-		return nil, fmt.Errorf("select() failed: '%s", err)
-	}
-
-	if len(categories) != len(post.Categories) {
-		return nil, fmt.Errorf("invalid category chosen")
-	}
-
-	for _, cat := range categories {
-		categoryIds = append(categoryIds, cat.Id)
+	if err != nil {
+		return nil, err
 	}
 
 	// Create a post in the "pending" state - this is where we can do all of our backend work, such as image processing
@@ -91,7 +56,7 @@ func (s *Server) SchedulePost(ctx context.Context, post *sting.SchedulePostReque
 	pendingPost := &models.PostPending{
 		Id:                  ksuid.New(),
 		State:               models.Processing,
-		ArtistId:            artistUUID,
+		ArtistId:            post.ArtistId,
 		ArtistUsername:      post.ArtistUsername,
 		ContributorId:       contributorId,
 		ContributorUsername: post.ContributorUsername,
@@ -194,6 +159,12 @@ func (s *Server) PublishPost(ctx context.Context, publish *sting.PublishPostRequ
 		return nil, err
 	}
 
+	artistId, err := ksuid.Parse(postPending.ArtistId)
+
+	if err != nil {
+		return nil, err
+	}
+
 	// Begin BATCH operation:
 	// Will insert categories, characters, media
 	batch := s.session.NewBatch(gocql.LoggedBatch)
@@ -265,7 +236,7 @@ func (s *Server) PublishPost(ctx context.Context, publish *sting.PublishPostRequ
 		}
 	}
 
-	err := s.session.ExecuteBatch(batch)
+	err = s.session.ExecuteBatch(batch)
 
 	if err != nil {
 		return nil, err
@@ -279,10 +250,12 @@ func (s *Server) PublishPost(ctx context.Context, publish *sting.PublishPostRequ
 		return nil, err
 	}
 
+	// TODO: update pending post with new metadata, so users can see the new stuff in action
+
 	// Insert our new post
 	post := &models.Post{
 		Id:            ksuid.New(),
-		ArtistId:      postPending.ArtistId,
+		ArtistId:      artistId,
 		ContributorId: postPending.ContributorId,
 		Images:        publish.Images,
 		Categories:    append(postPending.Categories, newCategories...),
@@ -336,6 +309,25 @@ func (s *Server) PublishPost(ctx context.Context, publish *sting.PublishPostRequ
 // ReviewPost - Successfully review the post
 func (s *Server) ReviewPost(ctx context.Context, review *sting.ReviewPostRequest) (*sting.Post, error) {
 
+	// Make sure our artistId is valid
+	artistId, err := ksuid.Parse(review.ArtistId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	characterIds, err := helpers.CheckIfCharactersAreValid(s.session, review.Characters)
+
+	if err != nil {
+		return nil, err
+	}
+
+	categoryIds, err := helpers.CheckIfCategoriesAreValid(s.session, review.Categories)
+
+	if err != nil {
+		return nil, err
+	}
+
 	// Get our post by this ID
 	postReviewQuery := qb.Select("post_pending").
 		Where(qb.EqLit("id", review.Id)).
@@ -351,11 +343,18 @@ func (s *Server) ReviewPost(ctx context.Context, review *sting.ReviewPostRequest
 	processedPost := &models.PostPending{
 		Id:    postReview.Id,
 		State: models.Publishing,
+		ArtistId: artistId.String(),
+		ArtistUsername: review.ArtistUsername,
+		Characters: characterIds,
+		Categories: categoryIds,
+		MediaRequests: review.MediaRequests,
+		CharactersRequests: review.CharacterRequests,
+		CategoriesRequests: review.CategoriesRequests,
 	}
 
 	// Update our post to reflect the new state - in publishing
 	updatePost := qb.Update("post_pending").
-		Set("state").
+		Set("state", "characters", "categories", "media_requests", "character_requests", "categories_requests", "artist_id", "artist_username").
 		Where(qb.Eq("id")).
 		Query(s.session).
 		BindStruct(processedPost)
@@ -364,8 +363,8 @@ func (s *Server) ReviewPost(ctx context.Context, review *sting.ReviewPostRequest
 		return nil, fmt.Errorf("update() failed: '%s", err)
 	}
 
-	// Tell pox to publish the images - this will make the post public once this is finished
-	err := s.events.Publish("pox.topic.posts_image_publishing", &pox.PostPublishImageEvent{
+	// Tell pox to publish the images - this will make the post public & create all the required categories once this is finished
+	err = s.events.Publish("pox.topic.posts_image_publishing", &pox.PostPublishImageEvent{
 		PostId: postReview.Id.String(),
 		Images: postReview.Images,
 	})
@@ -376,7 +375,7 @@ func (s *Server) ReviewPost(ctx context.Context, review *sting.ReviewPostRequest
 
 	return &sting.Post{
 		Id:            postReview.Id.String(),
-		ArtistId:      postReview.ArtistId.String(),
+		ArtistId:      postReview.ArtistId,
 		ContributorId: postReview.ContributorId.String(),
 		Images:        postReview.Images,
 		Categories:    ksuid.ToStringArray(postReview.Categories),

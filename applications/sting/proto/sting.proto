@@ -37,6 +37,17 @@ message ProcessPostRequest {
 
 message ReviewPostRequest {
   string id = 1;
+  string artistId = 2;
+  string artistUsername = 3;
+  repeated string categories = 4;
+  repeated string characters = 5;
+  repeated string categoriesRequests = 6;
+  repeated string mediaRequests = 7;
+  map<string, string> characterRequests = 8;
+}
+
+message GetPostRequest {
+  string id = 1;
 }
 
 service Sting {
@@ -44,4 +55,5 @@ service Sting {
   rpc ProcessPost(ProcessPostRequest) returns (Post);
   rpc ReviewPost(ReviewPostRequest) returns (Post);
   rpc PublishPost(PublishPostRequest) returns (Post);
+  rpc GetPost(GetPostRequest) returns (Post);
 }

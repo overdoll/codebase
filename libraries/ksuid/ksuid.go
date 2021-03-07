@@ -56,3 +56,19 @@ func ToStringArray(ids []UUID) []string {
 
 	return strings
 }
+
+func ToUUIDArray(ids []string) ([]UUID, error) {
+	var uuids []UUID
+
+	for _, str := range ids {
+		id, err := Parse(str)
+
+		if err != nil {
+			return uuids ,err
+		}
+
+		uuids = append(uuids, id)
+	}
+
+	return uuids, nil
+}

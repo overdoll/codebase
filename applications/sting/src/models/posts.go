@@ -43,19 +43,19 @@ const (
 )
 
 type PostPending struct {
-	Id                  ksuid.UUID          `db:"id"`
-	State               PostPendingState    `db:"state"`
-	ArtistId            ksuid.UUID          `db:"artist_id"`
-	ArtistUsername      string              `db:"artist_username"`
-	ContributorId       ksuid.UUID          `db:"contributor_id"`
-	ContributorUsername string              `db:"contributor_username"`
-	Images              []string            `db:"images"`
-	Categories          []ksuid.UUID        `db:"categories"`
-	Characters          []ksuid.UUID        `db:"characters"`
-	CharactersRequests  map[string]string   `db:"characters_requests"`
-	CategoriesRequests  []string            `db:"categories_requests"`
-	MediaRequests       []string            `db:"media_requests"`
-	PostedAt            time.Time           `db:"posted_at"`
-	ReviewRequired      bool                `db:"review_required"`
-	PublishedPostId     string              `db:"published_post_id"`
+	Id                  ksuid.UUID        `db:"id"`
+	State               PostPendingState  `db:"state"`
+	ArtistId            string            `db:"artist_id"`
+	ArtistUsername      string            `db:"artist_username"`
+	ContributorId       ksuid.UUID        `db:"contributor_id"`
+	ContributorUsername string            `db:"contributor_username"`
+	Images              []string          `db:"images"`
+	Categories          []ksuid.UUID      `db:"categories"`
+	Characters          []ksuid.UUID      `db:"characters"`
+	CharactersRequests  map[string]string `db:"characters_requests"`
+	CategoriesRequests  []string          `db:"categories_requests"`
+	MediaRequests       []string          `db:"media_requests"`
+	PostedAt            time.Time         `db:"posted_at"`
+	ReviewRequired      bool              `db:"review_required"`
+	PublishedPostId     string            `db:"published_post_id"`
 }
