@@ -24,6 +24,7 @@ require (
 	github.com/scylladb/gocqlx/v2 v2.3.0 // indirect
 	github.com/segmentio/kafka-go v0.4.10 // indirect
 	github.com/segmentio/ksuid v1.0.3 // indirect
+	github.com/spf13/cobra v1.1.3 // indirect
 	github.com/streadway/amqp v1.0.0
 	github.com/tus/tusd v1.5.1 // indirect
 	github.com/vektah/gqlparser/v2 v2.1.0
