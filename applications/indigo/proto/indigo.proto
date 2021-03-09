@@ -15,15 +15,18 @@ message PostIndex {
 message CategoryIndex {
   string id = 1;
   string title = 2;
+  string thumbnail = 3;
 }
 
 message CharacterIndex {
   string id = 1;
   string name = 2;
-  string mediaId = 3;
+  string thumbnail = 3;
+  MediaIndex media = 4;
 }
 
 message MediaIndex {
   string id = 1;
   string title = 2;
+  string thumbnail = 3;
 }

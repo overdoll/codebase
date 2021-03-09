@@ -222,9 +222,9 @@ func (s *Server) PublishPost(ctx context.Context, publish *sting.PublishPostRequ
 
 		// Index for our characters
 		publishMap["indigo.topic.character_index"] = append(publishMap["indigo.topic.character_index"], &indigo.CharacterIndex{
-			Id:      characterId.String(),
-			Name:    character,
-			MediaId: id.String(),
+			Id:    characterId.String(),
+			Name:  character,
+			Media: &indigo.MediaIndex{Id: id.String(), Title: mediaName},
 		})
 
 		// Media does not exist - we need to make a new one

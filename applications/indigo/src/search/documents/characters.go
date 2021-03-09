@@ -12,3 +12,9 @@ type Character struct {
 	Name      string `json:"name"`
 	Media     Media  `json:"media"`
 }
+
+type Category struct {
+	Id        string `json:"id"`
+	Thumbnail string `json:"thumbnail"`
+	Title     string `json:"title"`
+}

@@ -83,7 +83,7 @@ func (s *Store) CreateIndex(index string, mapping string) error {
 }
 
 // Create indexes a new document into store.
-func (s *Store) Create(index string, item *Document) error {
+func (s *Store) Create(index string, id string, item interface{}) error {
 	payload, err := json.Marshal(item)
 	if err != nil {
 		return err
@@ -91,7 +91,7 @@ func (s *Store) Create(index string, item *Document) error {
 
 	res, err := esapi.CreateRequest{
 		Index:      index,
-		DocumentID: item.ID,
+		DocumentID: id,
 		Body:       bytes.NewReader(payload),
 	}.Do(s.ctx, s.es)
 
