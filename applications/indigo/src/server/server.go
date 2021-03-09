@@ -50,7 +50,6 @@ func (s *Server) IndexMedia(ctx context.Context, msg *indigo.MediaIndex) {
 }
 
 func (s *Server) IndexCharacter(ctx context.Context, msg *indigo.CharacterIndex) {
-
 	err := s.store.Create("character", msg.Id, &documents.Character{
 		Id:        msg.Id,
 		Thumbnail: msg.Thumbnail,
