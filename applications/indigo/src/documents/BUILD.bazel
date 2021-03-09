@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "characters.go",
+        "posts.go",
+    ],
+    importpath = "overdoll/applications/indigo/src/documents",
+    visibility = ["//visibility:public"],
+    deps = ["//libraries/search:go_default_library"],
+)

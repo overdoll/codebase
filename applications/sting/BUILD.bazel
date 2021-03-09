@@ -9,13 +9,7 @@ go_library(
     data = web_sources,
     importpath = "overdoll/applications/sting",
     visibility = ["//visibility:private"],
-    deps = [
-        "//applications/sting/proto:v1_go_proto",
-        "//applications/sting/src/server:go_default_library",
-        "//libraries/bootstrap:go_default_library",
-        "//libraries/events:go_default_library",
-        "@org_golang_google_grpc//:go_default_library",
-    ],
+    deps = ["//applications/sting/src/commands:go_default_library"],
 )
 
 go_binary(

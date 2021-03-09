@@ -1,24 +1,24 @@
 CREATE TABLE categories
 (
-    id    text,
-    title text,
+    id        text,
+    title     text,
     thumbnail text,
     primary key (id)
 );
 
 CREATE TABLE characters
 (
-    id       text,
-    name     text,
-    thumbnail    text,
-    media_id text,
+    id        text,
+    name      text,
+    thumbnail text,
+    media_id  text,
     primary key (id)
 );
 
 CREATE TABLE media
 (
-    id    text,
-    title text,
+    id        text,
+    title     text,
     thumbnail text,
     primary key (id)
 );
@@ -53,6 +53,6 @@ CREATE TABLE posts_pending
     review_required      boolean,
     published_post_id    text,
     primary key ((id), contributor_id, state)
-) WITH CLUSTERING ORDER BY (posted_at ASC);
+) WITH CLUSTERING ORDER BY (contributor_id ASC);
 
 CREATE INDEX posts_pending_state on posts_pending (state);

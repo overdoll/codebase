@@ -57,6 +57,22 @@ applications = {
             "applications/sting/.env",
             "applications/sting/migrations",
         ],
+        "args": "serve",
+        "live_update": [],
+    },
+    "indigo": {
+        "type": "go",
+        "image_reference": "indigo-image",
+        "image_target": "//applications/indigo:indigo-image",
+        "binary_target": "//applications/indigo:indigo",
+        "binary_output": "applications/indigo/indigo_/indigo",
+        "container_workdir": "/app/applications/indigo/indigo-image.binary.runfiles/overdoll/",
+        "container_binary": "applications/indigo/indigo-image.binary_/indigo-image.binary",
+        "bazel_image": "bazel/applications/indigo:indigo-image",
+        "dependencies": [
+            "applications/indigo/.env",
+        ],
+        "args": "serve",
         "live_update": [],
     },
     "pox": {

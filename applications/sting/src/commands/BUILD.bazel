@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["main.go"],
+    importpath = "overdoll/applications/sting/src/commands",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//applications/sting/proto:v1_go_proto",
+        "//applications/sting/src/server:go_default_library",
+        "//libraries/bootstrap:go_default_library",
+        "//libraries/events:go_default_library",
+        "@com_github_spf13_cobra//:go_default_library",
+        "@org_golang_google_grpc//:go_default_library",
+    ],
+)

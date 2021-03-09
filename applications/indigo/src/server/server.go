@@ -2,17 +2,20 @@ package server
 
 import (
 	"context"
+	"github.com/scylladb/gocqlx/v2"
 	indigo "overdoll/applications/indigo/proto"
 	"github.com/elastic/go-elasticsearch/v7"
 )
 
 type Server struct {
 	elasticsearch  *elasticsearch.Client
+	session gocqlx.Session
 }
 
-func CreateServer(es *elasticsearch.Client) *Server {
+func CreateServer(es *elasticsearch.Client, ss gocqlx.Session) *Server {
 	return &Server{
 		elasticsearch:  es,
+		session: ss,
 	}
 }
 
