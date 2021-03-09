@@ -8,13 +8,13 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/elastic/go-elasticsearch/v7"
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/spf13/cobra"
 	"overdoll/applications/indigo/src/server"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/events"
+	"overdoll/libraries/search"
 )
 
 var rootCmd = &cobra.Command{
@@ -46,11 +46,7 @@ func CreateServer(ctx context.Context) (*server.Server, error) {
 		return nil, fmt.Errorf("bootstrap failed with errors: %s", err)
 	}
 
-	client, err := elasticsearch.NewClient(elasticsearch.Config{
-		Addresses: []string{
-			os.Getenv("ELASTICSEARCH_URL"),
-		},
-	})
+	es, err := search.NewStore(ctx)
 
 	if err != nil {
 		return nil, fmt.Errorf("failed to create elasticsearch session: %s", err)
@@ -63,7 +59,7 @@ func CreateServer(ctx context.Context) (*server.Server, error) {
 		return nil, fmt.Errorf("failed to create database session: %s", err)
 	}
 
-	return server.CreateServer(client, session), nil
+	return server.CreateServer(es, session), nil
 }
 
 func Run(cmd *cobra.Command, args []string) {

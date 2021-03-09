@@ -1748,3 +1748,17 @@ go_repository(
     sum = "h1:4+4C/Iv2U4fMZBiMCc98MG1In4gJY5YRhtpDNeDeHWs=",
     version = "v0.0.0-20190719004257-d2bd2a29d028",
 )
+
+go_repository(
+    name = "com_github_cenkalti_backoff_v4",
+    importpath = "github.com/cenkalti/backoff/v4",
+    sum = "h1:c8LkOFQTzuO0WBM/ae5HdGQuZPfPxp7lqBRwQRm4fSc=",
+    version = "v4.1.0",
+)
+
+go_repository(
+    name = "com_github_dustin_go_humanize",
+    importpath = "github.com/dustin/go-humanize",
+    sum = "h1:VSnTsYCnlFHaM2/igO1h6X3HA71jcobQuxemgkq4zYo=",
+    version = "v1.0.0",
+)

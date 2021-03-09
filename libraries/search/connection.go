@@ -8,7 +8,9 @@ import (
 	"io"
 	"os"
 	"strings"
+	"time"
 
+	"github.com/cenkalti/backoff/v4"
 	"github.com/elastic/go-elasticsearch/v7"
 	"github.com/elastic/go-elasticsearch/v7/esapi"
 )
@@ -32,15 +34,25 @@ type Hit struct {
 
 type Store struct {
 	es    *elasticsearch.Client
-	index string
 	ctx   context.Context
 }
 
-func NewStore(context context.Context, index string) (*Store, error) {
+func NewStore(context context.Context) (*Store, error) {
+	retryBackoff := backoff.NewExponentialBackOff()
+
 	client, err := elasticsearch.NewClient(elasticsearch.Config{
 		Addresses: []string{
 			os.Getenv("ELASTICSEARCH_URL"),
 		},
+		RetryOnStatus: []int{502, 503, 504, 429},
+		RetryBackoff: func(i int) time.Duration {
+			if i == 1 {
+				retryBackoff.Reset()
+			}
+			return retryBackoff.NextBackOff()
+		},
+		// Retry up to 5 attempts
+		MaxRetries: 5,
 	})
 
 	if err != nil {
@@ -50,13 +62,17 @@ func NewStore(context context.Context, index string) (*Store, error) {
 	return &Store{
 		es:    client,
 		ctx:   context,
-		index: index,
 	}, nil
 }
 
+// GetClient - get the client instance, useful for manual queries or functions
+func (s *Store) GetClient() *elasticsearch.Client {
+	return s.es
+}
+
 // CreateIndex creates a new index with mapping.
-func (s *Store) CreateIndex(mapping string) error {
-	res, err := s.es.Indices.Create(s.index, s.es.Indices.Create.WithBody(strings.NewReader(mapping)))
+func (s *Store) CreateIndex(index string, mapping string) error {
+	res, err := s.es.Indices.Create(index, s.es.Indices.Create.WithBody(strings.NewReader(mapping)))
 	if err != nil {
 		return err
 	}
@@ -67,14 +83,14 @@ func (s *Store) CreateIndex(mapping string) error {
 }
 
 // Create indexes a new document into store.
-func (s *Store) Create(item *Document) error {
+func (s *Store) Create(index string, item *Document) error {
 	payload, err := json.Marshal(item)
 	if err != nil {
 		return err
 	}
 
 	res, err := esapi.CreateRequest{
-		Index:      s.index,
+		Index:      index,
 		DocumentID: item.ID,
 		Body:       bytes.NewReader(payload),
 	}.Do(s.ctx, s.es)
@@ -97,8 +113,8 @@ func (s *Store) Create(item *Document) error {
 }
 
 // Exists returns true when a document with id already exists in the store.
-func (s *Store) Exists(id string) (bool, error) {
-	res, err := s.es.Exists(s.index, id)
+func (s *Store) Exists(index string, id string) (bool, error) {
+	res, err := s.es.Exists(index, id)
 	if err != nil {
 		return false, err
 	}
@@ -113,12 +129,11 @@ func (s *Store) Exists(id string) (bool, error) {
 }
 
 // Search returns results matching a query, paginated by after.
-//
-func (s *Store) Search(query string, after ...string) (*SearchResults, error) {
+func (s *Store) Search(index string, query string, after ...string) (*SearchResults, error) {
 	var results SearchResults
 
 	res, err := s.es.Search(
-		s.es.Search.WithIndex(s.index),
+		s.es.Search.WithIndex(index),
 		s.es.Search.WithBody(s.BuildQuery(query, after...)),
 	)
 	if err != nil {

@@ -2,12 +2,21 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
-    srcs = ["server.go"],
+    srcs = [
+        "commands.go",
+        "server.go",
+    ],
     importpath = "overdoll/applications/indigo/src/server",
     visibility = ["//visibility:public"],
     deps = [
         "//applications/indigo/proto:v1_go_proto",
-        "@com_github_elastic_go_elasticsearch_v7//:go_default_library",
+        "//applications/indigo/src/search/documents:go_default_library",
+        "//applications/indigo/src/search/indexes:go_default_library",
+        "//applications/sting/src/models:go_default_library",
+        "//libraries/search:go_default_library",
+        "@com_github_dustin_go_humanize//:go_default_library",
+        "@com_github_elastic_go_elasticsearch_v7//esutil:go_default_library",
         "@com_github_scylladb_gocqlx_v2//:go_default_library",
+        "@com_github_scylladb_gocqlx_v2//qb:go_default_library",
     ],
 )

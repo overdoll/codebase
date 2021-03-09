@@ -2,8 +2,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
-    srcs = ["posts.go"],
-    importpath = "overdoll/applications/sting/src/models",
+    srcs = ["characters.go"],
+    importpath = "overdoll/applications/indigo/src/search/indexes",
     visibility = ["//visibility:public"],
-    deps = ["//libraries/ksuid:go_default_library"],
 )

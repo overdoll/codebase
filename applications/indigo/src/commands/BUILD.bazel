@@ -9,7 +9,7 @@ go_library(
         "//applications/indigo/src/server:go_default_library",
         "//libraries/bootstrap:go_default_library",
         "//libraries/events:go_default_library",
-        "@com_github_elastic_go_elasticsearch_v7//:go_default_library",
+        "//libraries/search:go_default_library",
         "@com_github_gocql_gocql//:go_default_library",
         "@com_github_scylladb_gocqlx_v2//:go_default_library",
         "@com_github_spf13_cobra//:go_default_library",

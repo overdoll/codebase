@@ -6,7 +6,9 @@ require (
 	github.com/99designs/gqlgen v0.13.0
 	github.com/aws/aws-sdk-go v1.37.21 // indirect
 	github.com/bxcodec/faker/v3 v3.6.0 // indirect
+	github.com/cenkalti/backoff/v4 v4.1.0 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/dustin/go-humanize v1.0.0 // indirect
 	github.com/elastic/go-elasticsearch/v7 v7.11.0 // indirect
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-playground/validator/v10 v10.4.1 // indirect

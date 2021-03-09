@@ -3,7 +3,6 @@ package models
 import (
 	"time"
 
-	"github.com/gocql/gocql"
 	"overdoll/libraries/ksuid"
 )
 
@@ -15,13 +14,13 @@ type Category struct {
 
 type Character struct {
 	Id        ksuid.UUID `db:"id"`
-	Title     string     `db:"title"`
+	Name      string     `db:"name"`
 	Thumbnail string     `db:"thumbnail"`
 	MediaId   ksuid.UUID `db:"media_id"`
 }
 
 type Media struct {
-	Id        gocql.UUID `db:"id"`
+	Id        ksuid.UUID `db:"id"`
 	Title     string     `db:"title"`
 	Thumbnail string     `db:"thumbnail"`
 }

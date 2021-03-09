@@ -1,6 +1,7 @@
-package documents
+package indexes
 
-var CharacterIndex = `{
+const (
+	CharacterIndex = `{
     "mappings": {
       "character": {
         "dynamic":      "strict",
@@ -20,3 +21,4 @@ var CharacterIndex = `{
       }
     }
 }`
+)
