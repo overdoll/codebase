@@ -333,7 +333,17 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
-	{Name: "schemas/authentication.graphql", Input: `type Cookie {
+	{Name: "schemas/directives.graphql", Input: `directive @auth on FIELD_DEFINITION
+
+directive @guest on FIELD_DEFINITION
+
+directive @verified on FIELD_DEFINITION
+
+directive @validation(rules: [String!]!) on INPUT_FIELD_DEFINITION
+
+directive @role(roles: [String!]!) on FIELD_DEFINITION
+`, BuiltIn: false},
+	{Name: "schemas/user/types.graphql", Input: `type Cookie {
   sameSession: Boolean!
   registered: Boolean!
   redeemed: Boolean!
@@ -362,29 +372,19 @@ input AuthenticationInput {
   email: String! @validation(rules: ["required", "email"])
 }
 `, BuiltIn: false},
-	{Name: "schemas/directives.graphql", Input: `directive @auth on FIELD_DEFINITION
-
-directive @guest on FIELD_DEFINITION
-
-directive @verified on FIELD_DEFINITION
-
-directive @validation(rules: [String!]!) on INPUT_FIELD_DEFINITION
-
-directive @role(roles: [String!]!) on FIELD_DEFINITION
-`, BuiltIn: false},
-	{Name: "schemas/mutation.graphql", Input: `type Mutation {
+	{Name: "schemas/user/user.mutations.graphql", Input: `type Mutation {
   authenticate(data: AuthenticationInput): Boolean! @guest
   register(data: RegisterInput): Boolean! @guest
   authEmail: Boolean! @guest
   logout: Boolean! @auth
 }
 `, BuiltIn: false},
-	{Name: "schemas/query.graphql", Input: `type Query {
+	{Name: "schemas/user/user.queries.graphql", Input: `type Query {
   redeemCookie(cookie: String!): Cookie @guest
   authentication: Authentication
 }
 `, BuiltIn: false},
-	{Name: "schemas/subscription.graphql", Input: `type Subscription {
+	{Name: "schemas/user/user.subscription.graphql", Input: `type Subscription {
   authListener: AuthListener
 }
 `, BuiltIn: false},

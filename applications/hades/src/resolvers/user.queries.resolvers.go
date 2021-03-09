@@ -6,12 +6,12 @@ package resolvers
 import (
 	"context"
 	"net/http"
+
+	"github.com/streadway/amqp"
 	eva "overdoll/applications/eva/proto"
 	gen "overdoll/applications/hades/src"
 	"overdoll/applications/hades/src/helpers"
 	"overdoll/applications/hades/src/models"
-
-	"github.com/streadway/amqp"
 )
 
 func (r *queryResolver) RedeemCookie(ctx context.Context, cookie string) (*models.Cookie, error) {
