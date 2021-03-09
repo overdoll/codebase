@@ -17,11 +17,11 @@ import (
 	"github.com/gomodule/redigo/redis"
 	"github.com/gorilla/websocket"
 	"github.com/joho/godotenv"
-	gen "overdoll/applications/hades/src"
-	"overdoll/applications/hades/src/directives"
-	extension2 "overdoll/applications/hades/src/extensions"
+	gen "overdoll/applications/hades/src/graphql"
+	"overdoll/applications/hades/src/graphql/directives"
+	extension2 "overdoll/applications/hades/src/graphql/extensions"
+	"overdoll/applications/hades/src/graphql/resolver"
 	"overdoll/applications/hades/src/middleware"
-	"overdoll/applications/hades/src/resolvers"
 	"overdoll/applications/hades/src/services"
 
 	"github.com/99designs/gqlgen/graphql/handler"
@@ -79,7 +79,7 @@ func main() {
 	cache, err := NewCache()
 
 	// Create resolver, with services
-	gqlResolver := resolvers.NewResolver(svcs, redisSvc, rabbitSvc)
+	gqlResolver := resolver.NewResolver(svcs, redisSvc, rabbitSvc)
 
 	// Create graphApi handlers - GET and POST
 	gqlHandler := HandleGraphQL(gqlResolver, cache)

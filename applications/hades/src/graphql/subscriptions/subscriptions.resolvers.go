@@ -1,4 +1,4 @@
-package resolvers
+package subscriptions
 
 // This file will be automatically regenerated based on the schema, any resolver implementations
 // will be copied through when generating and any unknown code will be moved to the end.
@@ -7,15 +7,23 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/gomodule/redigo/redis"
 	eva "overdoll/applications/eva/proto"
-	gen "overdoll/applications/hades/src"
 	"overdoll/applications/hades/src/helpers"
 	"overdoll/applications/hades/src/models"
+	"overdoll/applications/hades/src/services"
+	"overdoll/libraries/rabbit"
 )
 
-func (r *subscriptionResolver) AuthListener(ctx context.Context) (<-chan *models.AuthListener, error) {
+type SubscriptionResolver struct{
+	Services services.Services
+	Redis    redis.Conn
+	Rabbit   rabbit.Conn
+}
+
+func (r *SubscriptionResolver) AuthListener(ctx context.Context) (<-chan *models.AuthListener, error) {
 	// AuthenticationState - check the state of our authentication by checking the OTP Cookie header to see if we have redeemed it
-	currentCookie, err := helpers.ReadCookie(ctx, OTPKey)
+	currentCookie, err := helpers.ReadCookie(ctx, helpers.OTPKey)
 
 	if err != nil {
 		if err == http.ErrNoCookie {
@@ -26,14 +34,14 @@ func (r *subscriptionResolver) AuthListener(ctx context.Context) (<-chan *models
 	}
 
 	// Get our cookie so we can get our email
-	getAuthenticationCookie, err := r.services.Eva().GetAuthenticationCookie(ctx, &eva.GetAuthenticationCookieRequest{Cookie: currentCookie.Value})
+	getAuthenticationCookie, err := r.Services.Eva().GetAuthenticationCookie(ctx, &eva.GetAuthenticationCookieRequest{Cookie: currentCookie.Value})
 
 	// It could happen that the cookie was deleted - if so, then we should tell the user that the token has been redeemed
 	if err != nil {
 		return nil, err
 	}
 
-	getRegisteredUser, err := r.services.Eva().GetRegisteredEmail(ctx, &eva.GetRegisteredEmailRequest{Email: getAuthenticationCookie.Email})
+	getRegisteredUser, err := r.Services.Eva().GetRegisteredEmail(ctx, &eva.GetRegisteredEmailRequest{Email: getAuthenticationCookie.Email})
 
 	if err != nil {
 		return nil, err
@@ -44,19 +52,19 @@ func (r *subscriptionResolver) AuthListener(ctx context.Context) (<-chan *models
 	cookie := &models.Cookie{Registered: getRegisteredUser.Username != "", Redeemed: getAuthenticationCookie.Redeemed, SameSession: true}
 
 	// If OTP queue doesn't exist
-	_, err = r.rabbit.Channel.QueueDeclare("otp", false, false, false, false, nil)
+	_, err = r.Rabbit.Channel.QueueDeclare("otp", false, false, false, false, nil)
 	if err != nil {
 		return nil, err
 	}
 
 	// Bind the queue to the routing key
-	err = r.rabbit.Channel.QueueBind("otp", getAuthenticationCookie.Cookie, "otp", false, nil)
+	err = r.Rabbit.Channel.QueueBind("otp", getAuthenticationCookie.Cookie, "otp", false, nil)
 	if err != nil {
 		return nil, err
 	}
 
 	// Consume RabbitMQ OTP keys
-	msgs, err := r.rabbit.Channel.Consume(
+	msgs, err := r.Rabbit.Channel.Consume(
 		"otp", // queue
 		"",    // consumer
 		true,  // auto-ack
@@ -92,8 +100,3 @@ func (r *subscriptionResolver) AuthListener(ctx context.Context) (<-chan *models
 
 	return channel, nil
 }
-
-// Subscription returns gen.SubscriptionResolver implementation.
-func (r *Resolver) Subscription() gen.SubscriptionResolver { return &subscriptionResolver{r} }
-
-type subscriptionResolver struct{ *Resolver }

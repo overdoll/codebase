@@ -1,4 +1,4 @@
-package resolvers
+package queries
 
 // This file will be automatically regenerated based on the schema, any resolver implementations
 // will be copied through when generating and any unknown code will be moved to the end.
@@ -7,14 +7,22 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/gomodule/redigo/redis"
 	"github.com/streadway/amqp"
 	eva "overdoll/applications/eva/proto"
-	gen "overdoll/applications/hades/src"
 	"overdoll/applications/hades/src/helpers"
 	"overdoll/applications/hades/src/models"
+	"overdoll/applications/hades/src/services"
+	"overdoll/libraries/rabbit"
 )
 
-func (r *queryResolver) RedeemCookie(ctx context.Context, cookie string) (*models.Cookie, error) {
+type QueryResolver struct {
+	Services services.Services
+	Redis    redis.Conn
+	Rabbit   rabbit.Conn
+}
+
+func (r *QueryResolver) RedeemCookie(ctx context.Context, cookie string) (*models.Cookie, error) {
 	// RedeemCookie - this is when the user uses the redeemed cookie. This will
 	// occur when the user uses the redeemed cookie in the same browser that has the 'otp-cookie' cookie
 
@@ -26,7 +34,7 @@ func (r *queryResolver) RedeemCookie(ctx context.Context, cookie string) (*model
 	gc := helpers.GinContextFromContext(ctx)
 
 	// Redeem our authentication cookie
-	getRedeemedCookie, err := r.services.Eva().RedeemAuthenticationCookie(ctx, &eva.GetAuthenticationCookieRequest{Cookie: cookie})
+	getRedeemedCookie, err := r.Services.Eva().RedeemAuthenticationCookie(ctx, &eva.GetAuthenticationCookieRequest{Cookie: cookie})
 
 	// Cookie is expired or not valid - send back nil
 	if err != nil {
@@ -42,7 +50,7 @@ func (r *queryResolver) RedeemCookie(ctx context.Context, cookie string) (*model
 		Email:       getRedeemedCookie.Email,
 	}
 
-	currentCookie, err := helpers.ReadCookie(ctx, OTPKey)
+	currentCookie, err := helpers.ReadCookie(ctx, helpers.OTPKey)
 
 	if err != nil {
 
@@ -51,7 +59,7 @@ func (r *queryResolver) RedeemCookie(ctx context.Context, cookie string) (*model
 
 			redeemedCookie.SameSession = false
 
-			r.rabbit.Publish("otp", getRedeemedCookie.Cookie, []byte(`ANOTHER_SESSION`), amqp.Transient)
+			r.Rabbit.Publish("otp", getRedeemedCookie.Cookie, []byte(`ANOTHER_SESSION`), amqp.Transient)
 
 			// No cookie exists, we want to give a different SameSession response
 			return redeemedCookie, nil
@@ -66,7 +74,7 @@ func (r *queryResolver) RedeemCookie(ctx context.Context, cookie string) (*model
 	}
 
 	// Check if user is registered
-	getRegisteredUser, err := r.services.Eva().GetRegisteredEmail(ctx, &eva.GetRegisteredEmailRequest{Email: getRedeemedCookie.Email})
+	getRegisteredUser, err := r.Services.Eva().GetRegisteredEmail(ctx, &eva.GetRegisteredEmailRequest{Email: getRedeemedCookie.Email})
 
 	if err != nil {
 		return nil, err
@@ -76,33 +84,33 @@ func (r *queryResolver) RedeemCookie(ctx context.Context, cookie string) (*model
 
 	// User doesn't exist, we ask to register
 	if getRegisteredUser.Username == "" {
-		r.rabbit.Publish("otp", currentCookie.Value, []byte(`SAME_SESSION`), amqp.Transient)
+		r.Rabbit.Publish("otp", currentCookie.Value, []byte(`SAME_SESSION`), amqp.Transient)
 		return redeemedCookie, nil
 	}
 
 	// Delete our cookie, since we now know this user will be logged in
-	_, err = r.services.Eva().DeleteAuthenticationCookie(ctx, &eva.GetAuthenticationCookieRequest{Cookie: currentCookie.Value})
+	_, err = r.Services.Eva().DeleteAuthenticationCookie(ctx, &eva.GetAuthenticationCookieRequest{Cookie: currentCookie.Value})
 
 	if err != nil {
 		return nil, err
 	}
 
 	// Otherwise, we remove the cookie, and create a JWT token
-	http.SetCookie(gc.Writer, &http.Cookie{Name: OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
+	http.SetCookie(gc.Writer, &http.Cookie{Name: helpers.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
 
 	// Create user session
-	_, err = helpers.CreateUserSession(gc, r.redis, getRegisteredUser.Id)
+	_, err = helpers.CreateUserSession(gc, r.Redis, getRegisteredUser.Id)
 
 	if err != nil {
 		return nil, err
 	}
 
-	r.rabbit.Publish("otp", currentCookie.Value, []byte(`SAME_SESSION`), amqp.Transient)
+	r.Rabbit.Publish("otp", currentCookie.Value, []byte(`SAME_SESSION`), amqp.Transient)
 
 	return redeemedCookie, nil
 }
 
-func (r *queryResolver) Authentication(ctx context.Context) (*models.Authentication, error) {
+func (r *QueryResolver) Authentication(ctx context.Context) (*models.Authentication, error) {
 	user := helpers.UserFromContext(ctx)
 	gc := helpers.GinContextFromContext(ctx)
 
@@ -112,7 +120,7 @@ func (r *queryResolver) Authentication(ctx context.Context) (*models.Authenticat
 	}
 
 	// User is not logged in, let's check for an OTP token
-	otpCookie, err := helpers.ReadCookie(ctx, OTPKey)
+	otpCookie, err := helpers.ReadCookie(ctx, helpers.OTPKey)
 
 	// Error
 	if err != nil {
@@ -126,12 +134,12 @@ func (r *queryResolver) Authentication(ctx context.Context) (*models.Authenticat
 	}
 
 	// Get authentication cookie data, so we can check if it's been redeemed yet
-	getAuthenticationCookie, err := r.services.Eva().GetAuthenticationCookie(ctx, &eva.GetAuthenticationCookieRequest{Cookie: otpCookie.Value})
+	getAuthenticationCookie, err := r.Services.Eva().GetAuthenticationCookie(ctx, &eva.GetAuthenticationCookieRequest{Cookie: otpCookie.Value})
 
 	// Check to make sure we didn't get an error, and our cookie isn't expired
 	if err != nil {
 		// Cookie doesn't exist, remove it
-		http.SetCookie(gc.Writer, &http.Cookie{Name: OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
+		http.SetCookie(gc.Writer, &http.Cookie{Name: helpers.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
 		return &models.Authentication{User: nil, Cookie: nil}, nil
 	}
 
@@ -149,7 +157,7 @@ func (r *queryResolver) Authentication(ctx context.Context) (*models.Authenticat
 	}
 
 	// Cookie redeemed, check if user is registered
-	getRegisteredUser, err := r.services.Eva().GetRegisteredEmail(ctx, &eva.GetRegisteredEmailRequest{Email: getAuthenticationCookie.Email})
+	getRegisteredUser, err := r.Services.Eva().GetRegisteredEmail(ctx, &eva.GetRegisteredEmailRequest{Email: getAuthenticationCookie.Email})
 
 	if err != nil {
 		return nil, err
@@ -163,17 +171,17 @@ func (r *queryResolver) Authentication(ctx context.Context) (*models.Authenticat
 	}
 
 	// make sure we delete this redeemed authentication cookie
-	_, err = r.services.Eva().DeleteAuthenticationCookie(ctx, &eva.GetAuthenticationCookieRequest{Cookie: otpCookie.Value})
+	_, err = r.Services.Eva().DeleteAuthenticationCookie(ctx, &eva.GetAuthenticationCookieRequest{Cookie: otpCookie.Value})
 
 	if err != nil {
 		return nil, err
 	}
 
 	// Remove OTP cookie - user is registered
-	http.SetCookie(gc.Writer, &http.Cookie{Name: OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
+	http.SetCookie(gc.Writer, &http.Cookie{Name: helpers.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
 
 	// User registered, Create user session
-	_, err = helpers.CreateUserSession(gc, r.redis, getRegisteredUser.Id)
+	_, err = helpers.CreateUserSession(gc, r.Redis, getRegisteredUser.Id)
 
 	if err != nil {
 		return nil, err
@@ -182,8 +190,3 @@ func (r *queryResolver) Authentication(ctx context.Context) (*models.Authenticat
 	// Return user, since we logged in
 	return &models.Authentication{User: &models.User{Username: getRegisteredUser.Username}, Cookie: cookie}, nil
 }
-
-// Query returns gen.QueryResolver implementation.
-func (r *Resolver) Query() gen.QueryResolver { return &queryResolver{r} }
-
-type queryResolver struct{ *Resolver }

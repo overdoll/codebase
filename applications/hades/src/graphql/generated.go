@@ -69,7 +69,6 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		AuthEmail    func(childComplexity int) int
 		Authenticate func(childComplexity int, data *models.AuthenticationInput) int
 		Logout       func(childComplexity int) int
 		Register     func(childComplexity int, data *models.RegisterInput) int
@@ -92,7 +91,6 @@ type ComplexityRoot struct {
 type MutationResolver interface {
 	Authenticate(ctx context.Context, data *models.AuthenticationInput) (bool, error)
 	Register(ctx context.Context, data *models.RegisterInput) (bool, error)
-	AuthEmail(ctx context.Context) (bool, error)
 	Logout(ctx context.Context) (bool, error)
 }
 type QueryResolver interface {
@@ -180,13 +178,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Cookie.Session(childComplexity), true
-
-	case "Mutation.authEmail":
-		if e.complexity.Mutation.AuthEmail == nil {
-			break
-		}
-
-		return e.complexity.Mutation.AuthEmail(childComplexity), true
 
 	case "Mutation.authenticate":
 		if e.complexity.Mutation.Authenticate == nil {
@@ -375,7 +366,6 @@ input AuthenticationInput {
 	{Name: "schemas/user/user.mutations.graphql", Input: `type Mutation {
   authenticate(data: AuthenticationInput): Boolean! @guest
   register(data: RegisterInput): Boolean! @guest
-  authEmail: Boolean! @guest
   logout: Boolean! @auth
 }
 `, BuiltIn: false},
@@ -918,61 +908,6 @@ func (ec *executionContext) _Mutation_register(ctx context.Context, field graphq
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
 			return ec.resolvers.Mutation().Register(rctx, args["data"].(*models.RegisterInput))
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			if ec.directives.Guest == nil {
-				return nil, errors.New("directive guest is not implemented")
-			}
-			return ec.directives.Guest(ctx, nil, directive0)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(bool); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be bool`, tmp)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(bool)
-	fc.Result = res
-	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Mutation_authEmail(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().AuthEmail(rctx)
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			if ec.directives.Guest == nil {
@@ -2597,11 +2532,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			}
 		case "register":
 			out.Values[i] = ec._Mutation_register(ctx, field)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "authEmail":
-			out.Values[i] = ec._Mutation_authEmail(ctx, field)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}

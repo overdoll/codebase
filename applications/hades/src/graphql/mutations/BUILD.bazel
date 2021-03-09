@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["mutations.resolvers.go"],
+    importpath = "overdoll/applications/hades/src/graphql/mutations",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//applications/eva/proto:v1_go_proto",
+        "//applications/hades/src/helpers:go_default_library",
+        "//applications/hades/src/models:go_default_library",
+        "//applications/hades/src/services:go_default_library",
+        "//libraries/rabbit:go_default_library",
+        "@com_github_gomodule_redigo//redis:go_default_library",
+    ],
+)

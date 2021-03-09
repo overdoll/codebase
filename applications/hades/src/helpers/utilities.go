@@ -1,4 +1,4 @@
-package resolvers
+package helpers
 
 var OTPKey = "otp-key"
 

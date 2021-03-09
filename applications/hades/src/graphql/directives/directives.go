@@ -8,7 +8,7 @@ import (
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/go-playground/validator/v10"
 	"github.com/pkg/errors"
-	gen "overdoll/applications/hades/src"
+	gen "overdoll/applications/hades/src/graphql"
 	"overdoll/applications/hades/src/helpers"
 )
 
