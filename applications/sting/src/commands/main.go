@@ -53,7 +53,7 @@ func Run(cmd *cobra.Command, args []string) {
 
 	eventsConn := events.GetConnection(ctx, "sting")
 
-	s := server.CreateServer(session, eventsConn)
+	s := server.CreateServer(session, eventsConn, nil)
 
 	init.InitializeGRPCServer(func(server *grpc.Server) {
 		sting.RegisterStingServer(server, s)

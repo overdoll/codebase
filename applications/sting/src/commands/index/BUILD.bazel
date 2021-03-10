@@ -6,10 +6,13 @@ go_library(
         "characters.go",
         "main.go",
     ],
-    importpath = "overdoll/applications/indigo/src/commands/index",
+    importpath = "overdoll/applications/sting/src/commands/index",
     visibility = ["//visibility:public"],
     deps = [
-        "//applications/indigo/src/commands:go_default_library",
+        "//applications/sting/src/server:go_default_library",
+        "//libraries/bootstrap:go_default_library",
+        "//libraries/events:go_default_library",
+        "//libraries/search:go_default_library",
         "@com_github_spf13_cobra//:go_default_library",
     ],
 )

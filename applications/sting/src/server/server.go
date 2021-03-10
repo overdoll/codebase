@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"time"
 
@@ -14,19 +15,23 @@ import (
 	sting "overdoll/applications/sting/proto"
 	"overdoll/applications/sting/src/helpers"
 	"overdoll/applications/sting/src/models"
+	"overdoll/applications/sting/src/search/documents"
 	"overdoll/libraries/events"
 	"overdoll/libraries/ksuid"
+	"overdoll/libraries/search"
 )
 
 type Server struct {
 	session gocqlx.Session
 	events  events.Connection
+	store   *search.Store
 }
 
-func CreateServer(session gocqlx.Session, events events.Connection) *Server {
+func CreateServer(session gocqlx.Session, events events.Connection, store *search.Store) *Server {
 	return &Server{
 		session: session,
 		events:  events,
+		store:   store,
 	}
 }
 
@@ -183,11 +188,21 @@ func (s *Server) PublishPost(ctx context.Context, publish *sting.PublishPostRequ
 		// Create new categories query
 		batch.Query(qb.Insert("categories").LitColumn("id", id.String()).LitColumn("title", category).ToCql())
 
+		// Create a category document, which will be indexed
+		document := &documents.Category{
+			Id:        id.String(),
+			Thumbnail: "",
+			Title:     category,
+		}
+
+		marshal, err := json.Marshal(document)
+
+		if err != nil {
+			return nil, err
+		}
+
 		// Add to list of events that will be published later to index the categories
-		publishMap["indigo.topic.category_index"] = append(publishMap["indigo.topic.category_index"], &indigo.CategoryIndex{
-			Id:    id.String(),
-			Title: category,
-		})
+		publishMap["indigo.topic.create_document"] = append(publishMap["indigo.topic.create_document"], &indigo.CreateDocument{Id: id.String(), Index: "categories", Body: string(marshal)})
 	}
 
 	var newCharacters []ksuid.UUID
@@ -220,19 +235,49 @@ func (s *Server) PublishPost(ctx context.Context, publish *sting.PublishPostRequ
 				ToCql(),
 		)
 
+		// Create a characters document, which will be indexed
+		document := &documents.Character{
+			Id:        characterId.String(),
+			Thumbnail: "",
+			Name:      character,
+			Media: documents.Media{
+				Thumbnail: "",
+				Id:        id.String(),
+				Title:     mediaName,
+			},
+		}
+
+		marshal, err := json.Marshal(document)
+
+		if err != nil {
+			return nil, err
+		}
+
 		// Index for our characters
-		publishMap["indigo.topic.character_index"] = append(publishMap["indigo.topic.character_index"], &indigo.CharacterIndex{
+		publishMap["indigo.topic.create_document"] = append(publishMap["indigo.topic.create_document"], &indigo.CreateDocument{
 			Id:    characterId.String(),
-			Name:  character,
-			Media: &indigo.MediaIndex{Id: id.String(), Title: mediaName},
+			Index: "characters",
+			Body:  string(marshal),
 		})
 
 		// Media does not exist - we need to make a new one
 		if !exists {
 			batch.Query(qb.Insert("media").LitColumn("id", id.String()).LitColumn("title", mediaName).ToCql())
 
+			// Create a media document, which will be indexed
+			document := &documents.Media{
+				Id:    id.String(),
+				Title: mediaName,
+			}
+
+			marshal, err := json.Marshal(document)
+
+			if err != nil {
+				return nil, err
+			}
+
 			// Index for media
-			publishMap["indigo.topic.media_index"] = append(publishMap["indigo.topic.media_index"], &indigo.MediaIndex{Id: id.String(), Title: mediaName})
+			publishMap["indigo.topic.create_document"] = append(publishMap["indigo.topic.create_document"], &indigo.CreateDocument{Id: id.String(), Index: "media", Body: string(marshal)})
 		}
 	}
 
@@ -288,8 +333,7 @@ func (s *Server) PublishPost(ctx context.Context, publish *sting.PublishPostRequ
 		return nil, fmt.Errorf("ExecRelease() failed: '%s", err)
 	}
 
-	// Tell indigo to index our post
-	err = s.events.Publish("indigo.topic.post_index", &indigo.PostIndex{
+	document := &documents.Post{
 		Id:            post.Id.String(),
 		ArtistId:      post.ArtistId.String(),
 		ContributorId: post.ContributorId.String(),
@@ -297,7 +341,16 @@ func (s *Server) PublishPost(ctx context.Context, publish *sting.PublishPostRequ
 		Categories:    ksuid.ToStringArray(post.Categories),
 		Characters:    ksuid.ToStringArray(post.Characters),
 		PostedAt:      post.PostedAt.String(),
-	})
+	}
+
+	marshal, err := json.Marshal(document)
+
+	if err != nil {
+		return nil, err
+	}
+
+	// Tell indigo to index our post
+	err = s.events.Publish("indigo.topic.create_document", &indigo.CreateDocument{Id: post.Id.String(), Index: "posts", Body: string(marshal)})
 
 	if err != nil {
 		return nil, err
@@ -401,9 +454,4 @@ func (s *Server) ReviewPost(ctx context.Context, review *sting.ReviewPostRequest
 		Categories:    ksuid.ToStringArray(postReview.Categories),
 		Characters:    ksuid.ToStringArray(postReview.Characters),
 	}, nil
-}
-
-// GetPost - get a post by the ID
-func (s *Server) GetPost(ctx context.Context, review *sting.GetPostRequest) (*sting.Post, error) {
-	return nil, nil
 }

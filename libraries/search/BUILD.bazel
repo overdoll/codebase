@@ -3,14 +3,18 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = [
+        "bulk.go",
         "connection.go",
-        "document.go",
+        "index.go",
+        "search.go",
     ],
     importpath = "overdoll/libraries/search",
     visibility = ["//visibility:public"],
     deps = [
         "@com_github_cenkalti_backoff_v4//:go_default_library",
+        "@com_github_dustin_go_humanize//:go_default_library",
         "@com_github_elastic_go_elasticsearch_v7//:go_default_library",
         "@com_github_elastic_go_elasticsearch_v7//esapi:go_default_library",
+        "@com_github_elastic_go_elasticsearch_v7//esutil:go_default_library",
     ],
 )

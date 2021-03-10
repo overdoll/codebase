@@ -2,31 +2,8 @@ syntax = "proto3";
 
 package applications.grpc.indigo.v1;
 
-message PostIndex {
-  string id = 1;
-  string artistId = 2;
-  string contributorId = 3;
-  repeated string images = 4;
-  repeated string categories = 5;
-  repeated string characters = 6;
-  string postedAt = 7;
-}
-
-message CategoryIndex {
-  string id = 1;
-  string title = 2;
-  string thumbnail = 3;
-}
-
-message CharacterIndex {
-  string id = 1;
-  string name = 2;
-  string thumbnail = 3;
-  MediaIndex media = 4;
-}
-
-message MediaIndex {
-  string id = 1;
-  string title = 2;
-  string thumbnail = 3;
+message CreateDocument {
+  string index = 1;
+  string id = 2;
+  string body = 3;
 }

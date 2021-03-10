@@ -8,8 +8,6 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/gocql/gocql"
-	"github.com/scylladb/gocqlx/v2"
 	"github.com/spf13/cobra"
 	"overdoll/applications/indigo/src/server"
 	"overdoll/libraries/bootstrap"
@@ -52,14 +50,7 @@ func CreateServer(ctx context.Context) (*server.Server, error) {
 		return nil, fmt.Errorf("failed to create elasticsearch session: %s", err)
 	}
 
-	cluster := gocql.NewCluster(os.Getenv("DB_HOST"))
-	session, err := gocqlx.WrapSession(cluster.CreateSession())
-
-	if err != nil {
-		return nil, fmt.Errorf("failed to create database session: %s", err)
-	}
-
-	return server.CreateServer(es, session), nil
+	return server.CreateServer(es), nil
 }
 
 func Run(cmd *cobra.Command, args []string) {
@@ -74,13 +65,7 @@ func Run(cmd *cobra.Command, args []string) {
 
 	evt := events.GetConnection(ctx, "indigo")
 
-	evt.RegisterSubscriber("indigo.topic.post_index", srv.IndexPost)
-
-	evt.RegisterSubscriber("indigo.topic.character_index", srv.IndexCharacter)
-
-	evt.RegisterSubscriber("indigo.topic.category_index", srv.IndexCategory)
-
-	evt.RegisterSubscriber("indigo.topic.media_index", srv.IndexMedia)
+	evt.RegisterSubscriber("indigo.topic.create_document", srv.CreateDocument)
 
 	evt.Run()
 

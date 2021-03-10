@@ -4,13 +4,12 @@ import (
 	"log"
 
 	"github.com/scylladb/gocqlx/v2/qb"
-	"overdoll/applications/indigo/src/search/documents"
-	"overdoll/applications/indigo/src/search/indexes"
 	"overdoll/applications/sting/src/models"
+	"overdoll/applications/sting/src/search/documents"
+	"overdoll/applications/sting/src/search/indexes"
 )
 
-func (s *Server) IndexAllCharacters() {
-
+func (s *Server) IndexCharacters() {
 	err := s.store.CreateIndex("characters", indexes.CharacterIndex)
 
 	if err != nil {
@@ -27,7 +26,7 @@ func (s *Server) IndexAllCharacters() {
 
 	// Grab all of our characters
 	// Doing a direct database query
-	qc := qb.Select("sting.characters").Columns("id", "media_id", "name", "thumbnail").Query(s.session)
+	qc := qb.Select("characters").Columns("id", "media_id", "name", "thumbnail").Query(s.session)
 
 	if err = qc.Select(&dbChars); err != nil {
 		log.Fatalf("select() failed: %s", err)
@@ -41,7 +40,7 @@ func (s *Server) IndexAllCharacters() {
 	}
 
 	// Get all the medias through a direct database query
-	qm := qb.Select("sting.media").Columns("id", "thumbnail", "title").Query(s.session)
+	qm := qb.Select("media").Columns("id", "thumbnail", "title").Query(s.session)
 
 	if err = qm.Select(&medias); err != nil {
 		log.Fatalf("select() failed: %s", err)

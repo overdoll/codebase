@@ -46,14 +46,9 @@ message ReviewPostRequest {
   map<string, string> characterRequests = 8;
 }
 
-message GetPostRequest {
-  string id = 1;
-}
-
 service Sting {
   rpc SchedulePost(SchedulePostRequest) returns (Post);
   rpc ProcessPost(ProcessPostRequest) returns (Post);
   rpc ReviewPost(ReviewPostRequest) returns (Post);
   rpc PublishPost(PublishPostRequest) returns (Post);
-  rpc GetPost(GetPostRequest) returns (Post);
 }
