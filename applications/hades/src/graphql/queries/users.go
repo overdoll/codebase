@@ -1,26 +1,14 @@
 package queries
 
-// This file will be automatically regenerated based on the schema, any resolver implementations
-// will be copied through when generating and any unknown code will be moved to the end.
-
 import (
 	"context"
 	"net/http"
 
-	"github.com/gomodule/redigo/redis"
 	"github.com/streadway/amqp"
 	eva "overdoll/applications/eva/proto"
 	"overdoll/applications/hades/src/helpers"
 	"overdoll/applications/hades/src/models"
-	"overdoll/applications/hades/src/services"
-	"overdoll/libraries/rabbit"
 )
-
-type QueryResolver struct {
-	Services services.Services
-	Redis    redis.Conn
-	Rabbit   rabbit.Conn
-}
 
 func (r *QueryResolver) RedeemCookie(ctx context.Context, cookie string) (*models.Cookie, error) {
 	// RedeemCookie - this is when the user uses the redeemed cookie. This will

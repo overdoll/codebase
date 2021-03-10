@@ -71,7 +71,12 @@ type ComplexityRoot struct {
 	Mutation struct {
 		Authenticate func(childComplexity int, data *models.AuthenticationInput) int
 		Logout       func(childComplexity int) int
+		Post         func(childComplexity int, data *models.PostInput) int
 		Register     func(childComplexity int, data *models.RegisterInput) int
+	}
+
+	PostResponse struct {
+		Review func(childComplexity int) int
 	}
 
 	Query struct {
@@ -92,6 +97,7 @@ type MutationResolver interface {
 	Authenticate(ctx context.Context, data *models.AuthenticationInput) (bool, error)
 	Register(ctx context.Context, data *models.RegisterInput) (bool, error)
 	Logout(ctx context.Context) (bool, error)
+	Post(ctx context.Context, data *models.PostInput) (*models.PostResponse, error)
 }
 type QueryResolver interface {
 	RedeemCookie(ctx context.Context, cookie string) (*models.Cookie, error)
@@ -198,6 +204,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.Logout(childComplexity), true
 
+	case "Mutation.post":
+		if e.complexity.Mutation.Post == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_post_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.Post(childComplexity, args["data"].(*models.PostInput)), true
+
 	case "Mutation.register":
 		if e.complexity.Mutation.Register == nil {
 			break
@@ -209,6 +227,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.Register(childComplexity, args["data"].(*models.RegisterInput)), true
+
+	case "PostResponse.review":
+		if e.complexity.PostResponse.Review == nil {
+			break
+		}
+
+		return e.complexity.PostResponse.Review(childComplexity), true
 
 	case "Query.authentication":
 		if e.complexity.Query.Authentication == nil {
@@ -334,6 +359,40 @@ directive @validation(rules: [String!]!) on INPUT_FIELD_DEFINITION
 
 directive @role(roles: [String!]!) on FIELD_DEFINITION
 `, BuiltIn: false},
+	{Name: "schemas/posts/mutations.graphql", Input: `extend type Mutation {
+  post(data: PostInput): PostResponse! @auth
+}
+`, BuiltIn: false},
+	{Name: "schemas/posts/types.graphql", Input: `input PostInput {
+  images: [String!] @validation(rules: ["required"])
+  categories: [String!]
+  characters: [String!]
+  categoryRequests: [String!]
+  mediaRequests: [String!]
+  characterRequests: [String!]
+  artistId: String
+  artistUsername: String! @validation(rules: ["required"])
+}
+
+type PostResponse {
+  review: Boolean!
+}
+`, BuiltIn: false},
+	{Name: "schemas/user/mutations.graphql", Input: `type Mutation {
+  authenticate(data: AuthenticationInput): Boolean! @guest
+  register(data: RegisterInput): Boolean! @guest
+  logout: Boolean! @auth
+}
+`, BuiltIn: false},
+	{Name: "schemas/user/queries.graphql", Input: `type Query {
+  redeemCookie(cookie: String!): Cookie @guest
+  authentication: Authentication
+}
+`, BuiltIn: false},
+	{Name: "schemas/user/subscriptions.graphql", Input: `type Subscription {
+  authListener: AuthListener
+}
+`, BuiltIn: false},
 	{Name: "schemas/user/types.graphql", Input: `type Cookie {
   sameSession: Boolean!
   registered: Boolean!
@@ -361,21 +420,6 @@ input RegisterInput {
 
 input AuthenticationInput {
   email: String! @validation(rules: ["required", "email"])
-}
-`, BuiltIn: false},
-	{Name: "schemas/user/user.mutations.graphql", Input: `type Mutation {
-  authenticate(data: AuthenticationInput): Boolean! @guest
-  register(data: RegisterInput): Boolean! @guest
-  logout: Boolean! @auth
-}
-`, BuiltIn: false},
-	{Name: "schemas/user/user.queries.graphql", Input: `type Query {
-  redeemCookie(cookie: String!): Cookie @guest
-  authentication: Authentication
-}
-`, BuiltIn: false},
-	{Name: "schemas/user/user.subscription.graphql", Input: `type Subscription {
-  authListener: AuthListener
 }
 `, BuiltIn: false},
 }
@@ -422,6 +466,21 @@ func (ec *executionContext) field_Mutation_authenticate_args(ctx context.Context
 	if tmp, ok := rawArgs["data"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("data"))
 		arg0, err = ec.unmarshalOAuthenticationInput2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐAuthenticationInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["data"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_post_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *models.PostInput
+	if tmp, ok := rawArgs["data"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("data"))
+		arg0, err = ec.unmarshalOPostInput2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐPostInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -982,6 +1041,103 @@ func (ec *executionContext) _Mutation_logout(ctx context.Context, field graphql.
 			return data, nil
 		}
 		return nil, fmt.Errorf(`unexpected type %T from directive, should be bool`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_post(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_post_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().Post(rctx, args["data"].(*models.PostInput))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			if ec.directives.Auth == nil {
+				return nil, errors.New("directive auth is not implemented")
+			}
+			return ec.directives.Auth(ctx, nil, directive0)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*models.PostResponse); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/hades/src/models.PostResponse`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*models.PostResponse)
+	fc.Result = res
+	return ec.marshalNPostResponse2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐPostResponse(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PostResponse_review(ctx context.Context, field graphql.CollectedField, obj *models.PostResponse) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PostResponse",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Review, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2362,6 +2518,120 @@ func (ec *executionContext) unmarshalInputAuthenticationInput(ctx context.Contex
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputPostInput(ctx context.Context, obj interface{}) (models.PostInput, error) {
+	var it models.PostInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "images":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("images"))
+			directive0 := func(ctx context.Context) (interface{}, error) { return ec.unmarshalOString2ᚕstringᚄ(ctx, v) }
+			directive1 := func(ctx context.Context) (interface{}, error) {
+				rules, err := ec.unmarshalNString2ᚕstringᚄ(ctx, []interface{}{"required"})
+				if err != nil {
+					return nil, err
+				}
+				if ec.directives.Validation == nil {
+					return nil, errors.New("directive validation is not implemented")
+				}
+				return ec.directives.Validation(ctx, obj, directive0, rules)
+			}
+
+			tmp, err := directive1(ctx)
+			if err != nil {
+				return it, graphql.ErrorOnPath(ctx, err)
+			}
+			if data, ok := tmp.([]string); ok {
+				it.Images = data
+			} else if tmp == nil {
+				it.Images = nil
+			} else {
+				err := fmt.Errorf(`unexpected type %T from directive, should be []string`, tmp)
+				return it, graphql.ErrorOnPath(ctx, err)
+			}
+		case "categories":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("categories"))
+			it.Categories, err = ec.unmarshalOString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "characters":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("characters"))
+			it.Characters, err = ec.unmarshalOString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "categoryRequests":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("categoryRequests"))
+			it.CategoryRequests, err = ec.unmarshalOString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "mediaRequests":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("mediaRequests"))
+			it.MediaRequests, err = ec.unmarshalOString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "characterRequests":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("characterRequests"))
+			it.CharacterRequests, err = ec.unmarshalOString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "artistId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("artistId"))
+			it.ArtistID, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "artistUsername":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("artistUsername"))
+			directive0 := func(ctx context.Context) (interface{}, error) { return ec.unmarshalNString2string(ctx, v) }
+			directive1 := func(ctx context.Context) (interface{}, error) {
+				rules, err := ec.unmarshalNString2ᚕstringᚄ(ctx, []interface{}{"required"})
+				if err != nil {
+					return nil, err
+				}
+				if ec.directives.Validation == nil {
+					return nil, errors.New("directive validation is not implemented")
+				}
+				return ec.directives.Validation(ctx, obj, directive0, rules)
+			}
+
+			tmp, err := directive1(ctx)
+			if err != nil {
+				return it, graphql.ErrorOnPath(ctx, err)
+			}
+			if data, ok := tmp.(string); ok {
+				it.ArtistUsername = data
+			} else {
+				err := fmt.Errorf(`unexpected type %T from directive, should be string`, tmp)
+				return it, graphql.ErrorOnPath(ctx, err)
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputRegisterInput(ctx context.Context, obj interface{}) (models.RegisterInput, error) {
 	var it models.RegisterInput
 	var asMap = obj.(map[string]interface{})
@@ -2537,6 +2807,38 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			}
 		case "logout":
 			out.Values[i] = ec._Mutation_logout(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "post":
+			out.Values[i] = ec._Mutation_post(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var postResponseImplementors = []string{"PostResponse"}
+
+func (ec *executionContext) _PostResponse(ctx context.Context, sel ast.SelectionSet, obj *models.PostResponse) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, postResponseImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("PostResponse")
+		case "review":
+			out.Values[i] = ec._PostResponse_review(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -2910,6 +3212,20 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
+func (ec *executionContext) marshalNPostResponse2overdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐPostResponse(ctx context.Context, sel ast.SelectionSet, v models.PostResponse) graphql.Marshaler {
+	return ec._PostResponse(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNPostResponse2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐPostResponse(ctx context.Context, sel ast.SelectionSet, v *models.PostResponse) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._PostResponse(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {
 	res, err := graphql.UnmarshalString(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -3237,6 +3553,14 @@ func (ec *executionContext) marshalOCookie2ᚖoverdollᚋapplicationsᚋhadesᚋ
 	return ec._Cookie(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalOPostInput2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐPostInput(ctx context.Context, v interface{}) (*models.PostInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputPostInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalORegisterInput2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐRegisterInput(ctx context.Context, v interface{}) (*models.RegisterInput, error) {
 	if v == nil {
 		return nil, nil
@@ -3252,6 +3576,42 @@ func (ec *executionContext) unmarshalOString2string(ctx context.Context, v inter
 
 func (ec *executionContext) marshalOString2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
 	return graphql.MarshalString(v)
+}
+
+func (ec *executionContext) unmarshalOString2ᚕstringᚄ(ctx context.Context, v interface{}) ([]string, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var vSlice []interface{}
+	if v != nil {
+		if tmp1, ok := v.([]interface{}); ok {
+			vSlice = tmp1
+		} else {
+			vSlice = []interface{}{v}
+		}
+	}
+	var err error
+	res := make([]string, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNString2string(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) marshalOString2ᚕstringᚄ(ctx context.Context, sel ast.SelectionSet, v []string) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	for i := range v {
+		ret[i] = ec.marshalNString2string(ctx, sel, v[i])
+	}
+
+	return ret
 }
 
 func (ec *executionContext) unmarshalOString2ᚖstring(ctx context.Context, v interface{}) (*string, error) {

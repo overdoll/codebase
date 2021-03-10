@@ -24,6 +24,21 @@ type Cookie struct {
 	Email       string `json:"email"`
 }
 
+type PostInput struct {
+	Images            []string `json:"images"`
+	Categories        []string `json:"categories"`
+	Characters        []string `json:"characters"`
+	CategoryRequests  []string `json:"categoryRequests"`
+	MediaRequests     []string `json:"mediaRequests"`
+	CharacterRequests []string `json:"characterRequests"`
+	ArtistID          *string  `json:"artistId"`
+	ArtistUsername    string   `json:"artistUsername"`
+}
+
+type PostResponse struct {
+	Review bool `json:"review"`
+}
+
 type RegisterInput struct {
 	Username string `json:"username"`
 }

@@ -1,25 +1,13 @@
 package subscriptions
 
-// This file will be automatically regenerated based on the schema, any resolver implementations
-// will be copied through when generating and any unknown code will be moved to the end.
-
 import (
 	"context"
 	"net/http"
 
-	"github.com/gomodule/redigo/redis"
 	eva "overdoll/applications/eva/proto"
 	"overdoll/applications/hades/src/helpers"
 	"overdoll/applications/hades/src/models"
-	"overdoll/applications/hades/src/services"
-	"overdoll/libraries/rabbit"
 )
-
-type SubscriptionResolver struct{
-	Services services.Services
-	Redis    redis.Conn
-	Rabbit   rabbit.Conn
-}
 
 func (r *SubscriptionResolver) AuthListener(ctx context.Context) (<-chan *models.AuthListener, error) {
 	// AuthenticationState - check the state of our authentication by checking the OTP Cookie header to see if we have redeemed it

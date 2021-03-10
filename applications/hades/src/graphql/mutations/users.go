@@ -1,8 +1,5 @@
 package mutations
 
-// This file will be automatically regenerated based on the schema, any resolver implementations
-// will be copied through when generating and any unknown code will be moved to the end.
-
 import (
 	"context"
 	"encoding/json"
@@ -10,19 +7,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gomodule/redigo/redis"
 	eva "overdoll/applications/eva/proto"
 	"overdoll/applications/hades/src/helpers"
 	"overdoll/applications/hades/src/models"
-	"overdoll/applications/hades/src/services"
-	"overdoll/libraries/rabbit"
 )
-
-type MutationResolver struct {
-	Services services.Services
-	Redis    redis.Conn
-	Rabbit   rabbit.Conn
-}
 
 func (r *MutationResolver) Authenticate(ctx context.Context, data *models.AuthenticationInput) (bool, error) {
 	// Authenticate - Generate an OTP code that will be used to authenticate the user
