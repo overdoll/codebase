@@ -525,11 +525,11 @@ type PostResponse {
 }
 
 input CharacterSearchInput {
-  name: String
+  name: String!
 }
 
 input CategorySearchInput {
-  title: String
+  title: String!
 }
 
 type Media {
@@ -3218,7 +3218,7 @@ func (ec *executionContext) unmarshalInputCategorySearchInput(ctx context.Contex
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
-			it.Title, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			it.Title, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -3266,7 +3266,7 @@ func (ec *executionContext) unmarshalInputCharacterSearchInput(ctx context.Conte
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
-			it.Name, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			it.Name, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}

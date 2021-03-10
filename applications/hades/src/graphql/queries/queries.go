@@ -11,5 +11,5 @@ type QueryResolver struct {
 	Services services.Services
 	Redis    redis.Conn
 	Rabbit   rabbit.Conn
-	Search   search.Store
+	Search   *search.Store
 }

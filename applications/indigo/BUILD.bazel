@@ -9,7 +9,13 @@ go_library(
     data = web_sources,
     importpath = "overdoll/applications/indigo",
     visibility = ["//visibility:private"],
-    deps = ["//applications/indigo/src/commands:go_default_library"],
+    deps = [
+        "//applications/indigo/src/server:go_default_library",
+        "//libraries/bootstrap:go_default_library",
+        "//libraries/events:go_default_library",
+        "//libraries/search:go_default_library",
+        "@com_github_spf13_cobra//:go_default_library",
+    ],
 )
 
 go_image(

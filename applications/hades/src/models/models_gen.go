@@ -23,7 +23,7 @@ type Category struct {
 }
 
 type CategorySearchInput struct {
-	Title *string `json:"title"`
+	Title string `json:"title"`
 }
 
 type Character struct {
@@ -39,7 +39,7 @@ type CharacterRequest struct {
 }
 
 type CharacterSearchInput struct {
-	Name *string `json:"name"`
+	Name string `json:"name"`
 }
 
 type Cookie struct {

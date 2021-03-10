@@ -7,34 +7,48 @@ import (
 	"net"
 	"os"
 	"os/signal"
+	"path"
 	"syscall"
 	"time"
 
 	"github.com/gocql/gocql"
 	"github.com/joho/godotenv"
 	"github.com/scylladb/gocqlx/v2"
-	"github.com/scylladb/gocqlx/v2/migrate"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
+	"overdoll/libraries/helpers"
 )
 
 type Bootstrap struct {
-	directory string
 	context   context.Context
+	directory string
 }
 
-func NewBootstrap(ctx context.Context, directory string) (Bootstrap, error) {
 
-	err := godotenv.Load(directory + "/.env")
+func NewBootstrap(ctx context.Context) (Bootstrap, error) {
+
+	dir, err := helpers.GetBinaryDirectory()
 
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Fatal("error loading directory")
+	}
+
+	directory := path.Dir(*dir)
+
+	err = godotenv.Load(directory + "/.env")
+
+	if err != nil {
+		log.Fatal("error loading .env file")
 	}
 
 	return Bootstrap{
-		directory: directory,
 		context:   ctx,
+		directory: directory,
 	}, nil
+}
+
+func (b Bootstrap) GetCurrentDirectory() string {
+	return b.directory
 }
 
 func (b Bootstrap) InitializeDatabaseSession() (gocqlx.Session, error) {
@@ -48,13 +62,6 @@ func (b Bootstrap) InitializeDatabaseSession() (gocqlx.Session, error) {
 
 	if err != nil {
 		return session, err
-	}
-
-	if os.Getenv("RUN_MIGRATIONS_ON_STARTUP") == "true" {
-		// Run migrations
-		if err := migrate.Migrate(context.Background(), session, b.directory+"/migrations"); err != nil {
-			return session, err
-		}
 	}
 
 	return session, nil

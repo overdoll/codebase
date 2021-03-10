@@ -2,15 +2,22 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
-    srcs = ["main.go"],
+    srcs = [
+        "categories.go",
+        "characters.go",
+        "main.go",
+        "media.go",
+    ],
     importpath = "overdoll/applications/sting/src/commands",
     visibility = ["//visibility:public"],
     deps = [
-        "//applications/sting/proto:v1_go_proto",
-        "//applications/sting/src/server/serve:go_default_library",
+        "//applications/sting/src/models:go_default_library",
+        "//applications/sting/src/search/documents:go_default_library",
+        "//applications/sting/src/search/indexes:go_default_library",
         "//libraries/bootstrap:go_default_library",
-        "//libraries/events:go_default_library",
+        "//libraries/search:go_default_library",
+        "@com_github_scylladb_gocqlx_v2//:go_default_library",
+        "@com_github_scylladb_gocqlx_v2//qb:go_default_library",
         "@com_github_spf13_cobra//:go_default_library",
-        "@org_golang_google_grpc//:go_default_library",
     ],
 )

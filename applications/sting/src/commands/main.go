@@ -2,44 +2,28 @@ package commands
 
 import (
 	"context"
-	"fmt"
 	"log"
-	"os"
-	"time"
 
+	"github.com/scylladb/gocqlx/v2"
 	"github.com/spf13/cobra"
-	"google.golang.org/grpc"
-	sting "overdoll/applications/sting/proto"
-	"overdoll/applications/sting/src/server/serve"
 	"overdoll/libraries/bootstrap"
-	"overdoll/libraries/events"
+	"overdoll/libraries/search"
 )
 
-var rootCmd = &cobra.Command{
-	Use: "sting",
+var Root = &cobra.Command{
+	Use: "index",
 }
 
-var s = &cobra.Command{
-	Use: "serve",
-	Run: Run,
+type Server struct {
+	session gocqlx.Session
+	store   *search.Store
 }
 
-func Execute() {
-	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-}
+func CreateServer() *Server {
 
-func init() {
-	rootCmd.AddCommand(s)
-}
+	ctx := context.Background()
 
-func Run(cmd *cobra.Command, args []string) {
-	ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
-	defer cancelFn()
-
-	init, err := bootstrap.NewBootstrap(ctx, "applications/sting")
+	init, err := bootstrap.NewBootstrap(ctx)
 
 	if err != nil {
 		log.Fatalf("bootstrap failed with errors: %s", err)
@@ -51,11 +35,14 @@ func Run(cmd *cobra.Command, args []string) {
 		log.Fatalf("database session failed with errors: %s", err)
 	}
 
-	eventsConn := events.GetConnection(ctx, "sting")
+	es, err := search.NewStore(ctx)
 
-	s := serve.CreateServer(session, eventsConn)
+	if err != nil {
+		log.Fatalf("es session failed with errors: %s", err)
+	}
 
-	init.InitializeGRPCServer(func(server *grpc.Server) {
-		sting.RegisterStingServer(server, s)
-	})
+	return &Server{
+		session: session,
+		store:   es,
+	}
 }

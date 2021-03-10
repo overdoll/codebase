@@ -19,11 +19,11 @@ type PostResponse {
 }
 
 input CharacterSearchInput {
-  name: String
+  name: String!
 }
 
 input CategorySearchInput {
-  title: String
+  title: String!
 }
 
 type Media {

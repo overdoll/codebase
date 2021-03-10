@@ -16,12 +16,10 @@ const SearchCharacters = `
 		}
 	},
 	"size" : 5,
-	"sort" : [ { "characters" : "asc" } ]`
-
+	"sort" : [ { "_doc" : "asc" } ]`
 
 func (r *QueryResolver) Characters(ctx context.Context, data *models.CharacterSearchInput) ([]*models.Character, error) {
-
-	query := fmt.Sprintf(SearchCharacters, *data.Name)
+	query := fmt.Sprintf(SearchCharacters, data.Name)
 
 	response, err := r.Search.Search("characters", models.Character{}, query)
 

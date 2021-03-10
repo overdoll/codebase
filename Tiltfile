@@ -42,6 +42,7 @@ applications = {
             "applications/eva/.env",
             "applications/eva/migrations",
         ],
+        "args": "serve",
         "live_update": [],
     },
     "sting": {
@@ -87,6 +88,7 @@ applications = {
         "dependencies": [
             "applications/pox/.env",
         ],
+        "args": "serve",
         "live_update": [],
     },
     "buffer": {

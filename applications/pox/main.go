@@ -2,11 +2,13 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 	"os/signal"
 	"syscall"
 
+	"github.com/spf13/cobra"
 	"overdoll/applications/pox/src/server"
 	"overdoll/applications/pox/src/services"
 	"overdoll/libraries/aws"
@@ -14,10 +16,30 @@ import (
 	"overdoll/libraries/events"
 )
 
+var rootCmd = &cobra.Command{
+	Use: "pox",
+}
+
+var s = &cobra.Command{
+	Use: "serve",
+	Run: Run,
+}
+
+func init() {
+	rootCmd.AddCommand(s)
+}
+
 func main() {
+	if err := rootCmd.Execute(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+}
+
+func Run(cmd *cobra.Command, args []string) {
 	ctx := context.Background()
 
-	_, err := bootstrap.NewBootstrap(ctx, "applications/pox")
+	_, err := bootstrap.NewBootstrap(ctx)
 
 	if err != nil {
 		log.Fatalf("bootstrap failed with errors: %s", err)

@@ -16,6 +16,7 @@ func (s *Store) Search(index string, inter interface{}, query string, after ...s
 		s.es.Search.WithBody(s.BuildQuery(query, after...)),
 	)
 	if err != nil {
+		fmt.Print(err)
 		return &results, err
 	}
 	defer res.Body.Close()

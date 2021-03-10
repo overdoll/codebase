@@ -31,7 +31,7 @@ func main() {
 
 	ctx := context.Background()
 
-	_, err := bootstrap.NewBootstrap(ctx, "applications/hades")
+	_, err := bootstrap.NewBootstrap(ctx)
 
 	if err != nil {
 		log.Fatalf("failed to bootstrap application: %s", err)
