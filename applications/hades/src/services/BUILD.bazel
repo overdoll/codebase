@@ -7,6 +7,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//applications/eva/proto:v1_go_proto",
+        "//applications/sting/proto:v1_go_proto",
         "@org_golang_google_grpc//:go_default_library",
     ],
 )

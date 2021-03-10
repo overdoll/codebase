@@ -16,9 +16,30 @@ type AuthenticationInput struct {
 	Email string `json:"email"`
 }
 
+type Category struct {
+	ID        string  `json:"id"`
+	Thumbnail *string `json:"thumbnail"`
+	Title     string  `json:"title"`
+}
+
+type CategorySearchInput struct {
+	Title *string `json:"title"`
+}
+
+type Character struct {
+	ID        string  `json:"id"`
+	Thumbnail *string `json:"thumbnail"`
+	Name      string  `json:"name"`
+	Media     *Media  `json:"media"`
+}
+
 type CharacterRequest struct {
 	Name  string `json:"name"`
 	Media string `json:"media"`
+}
+
+type CharacterSearchInput struct {
+	Name *string `json:"name"`
 }
 
 type Cookie struct {
@@ -27,6 +48,12 @@ type Cookie struct {
 	Redeemed    bool   `json:"redeemed"`
 	Session     string `json:"session"`
 	Email       string `json:"email"`
+}
+
+type Media struct {
+	ID        string  `json:"id"`
+	Thumbnail *string `json:"thumbnail"`
+	Title     string  `json:"title"`
 }
 
 type PostInput struct {

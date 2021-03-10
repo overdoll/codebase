@@ -17,3 +17,30 @@ type PostResponse {
   review: Boolean!
   validation: Validation
 }
+
+input CharacterSearchInput {
+  name: String
+}
+
+input CategorySearchInput {
+  title: String
+}
+
+type Media {
+  id: String!
+  thumbnail: String
+  title: String!
+}
+
+type Character {
+  id: String!
+  thumbnail: String
+  name: String!
+  media: Media
+}
+
+type Category {
+  id: String!
+  thumbnail: String
+  title: String!
+}

@@ -1,4 +1,4 @@
-package main
+package extensions
 
 import (
 	"context"
@@ -9,17 +9,13 @@ import (
 	"os"
 )
 
-const DIRECTORY = "applications/hades/"
-
-const defaultPort = "8080"
-
 type Cache struct {
 	queries map[string]interface{}
 }
 
 func NewCache() (*Cache, error) {
 	// Open our jsonFile
-	jsonFile, err := os.Open(DIRECTORY + "queries.json")
+	jsonFile, err := os.Open("applications/hades/queries.json")
 
 	if err != nil {
 		fmt.Println(err)
@@ -43,3 +39,4 @@ func (c *Cache) Get(ctx context.Context, key string) (interface{}, bool) {
 func (c *Cache) Add(ctx context.Context, key string, value interface{}) {
 	log.Printf("query not found. please generate the queries.json file")
 }
+

@@ -12,16 +12,18 @@ import (
 	"overdoll/applications/hades/src/graphql/subscriptions"
 	"overdoll/applications/hades/src/services"
 	"overdoll/libraries/rabbit"
+	"overdoll/libraries/search"
 )
 
 type Resolver struct {
 	services services.Services
 	redis    redis.Conn
 	rabbit   rabbit.Conn
+	search   *search.Store
 }
 
-func NewResolver(s services.Services, redis redis.Conn, rabbitSvc rabbit.Conn) *Resolver {
-	return &Resolver{services: s, redis: redis, rabbit: rabbitSvc}
+func NewResolver(s services.Services, redis redis.Conn, rabbitSvc rabbit.Conn, store *search.Store) *Resolver {
+	return &Resolver{services: s, redis: redis, rabbit: rabbitSvc, search: store}
 }
 
 // Subscription returns gen.SubscriptionResolver implementation.

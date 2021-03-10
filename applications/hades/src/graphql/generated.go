@@ -60,12 +60,31 @@ type ComplexityRoot struct {
 		User   func(childComplexity int) int
 	}
 
+	Category struct {
+		ID        func(childComplexity int) int
+		Thumbnail func(childComplexity int) int
+		Title     func(childComplexity int) int
+	}
+
+	Character struct {
+		ID        func(childComplexity int) int
+		Media     func(childComplexity int) int
+		Name      func(childComplexity int) int
+		Thumbnail func(childComplexity int) int
+	}
+
 	Cookie struct {
 		Email       func(childComplexity int) int
 		Redeemed    func(childComplexity int) int
 		Registered  func(childComplexity int) int
 		SameSession func(childComplexity int) int
 		Session     func(childComplexity int) int
+	}
+
+	Media struct {
+		ID        func(childComplexity int) int
+		Thumbnail func(childComplexity int) int
+		Title     func(childComplexity int) int
 	}
 
 	Mutation struct {
@@ -82,6 +101,8 @@ type ComplexityRoot struct {
 
 	Query struct {
 		Authentication func(childComplexity int) int
+		Categories     func(childComplexity int, data *models.CategorySearchInput) int
+		Characters     func(childComplexity int, data *models.CharacterSearchInput) int
 		RedeemCookie   func(childComplexity int, cookie string) int
 	}
 
@@ -107,6 +128,8 @@ type MutationResolver interface {
 type QueryResolver interface {
 	RedeemCookie(ctx context.Context, cookie string) (*models.Cookie, error)
 	Authentication(ctx context.Context) (*models.Authentication, error)
+	Characters(ctx context.Context, data *models.CharacterSearchInput) ([]*models.Character, error)
+	Categories(ctx context.Context, data *models.CategorySearchInput) ([]*models.Category, error)
 }
 type SubscriptionResolver interface {
 	AuthListener(ctx context.Context) (<-chan *models.AuthListener, error)
@@ -155,6 +178,55 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Authentication.User(childComplexity), true
 
+	case "Category.id":
+		if e.complexity.Category.ID == nil {
+			break
+		}
+
+		return e.complexity.Category.ID(childComplexity), true
+
+	case "Category.thumbnail":
+		if e.complexity.Category.Thumbnail == nil {
+			break
+		}
+
+		return e.complexity.Category.Thumbnail(childComplexity), true
+
+	case "Category.title":
+		if e.complexity.Category.Title == nil {
+			break
+		}
+
+		return e.complexity.Category.Title(childComplexity), true
+
+	case "Character.id":
+		if e.complexity.Character.ID == nil {
+			break
+		}
+
+		return e.complexity.Character.ID(childComplexity), true
+
+	case "Character.media":
+		if e.complexity.Character.Media == nil {
+			break
+		}
+
+		return e.complexity.Character.Media(childComplexity), true
+
+	case "Character.name":
+		if e.complexity.Character.Name == nil {
+			break
+		}
+
+		return e.complexity.Character.Name(childComplexity), true
+
+	case "Character.thumbnail":
+		if e.complexity.Character.Thumbnail == nil {
+			break
+		}
+
+		return e.complexity.Character.Thumbnail(childComplexity), true
+
 	case "Cookie.email":
 		if e.complexity.Cookie.Email == nil {
 			break
@@ -189,6 +261,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Cookie.Session(childComplexity), true
+
+	case "Media.id":
+		if e.complexity.Media.ID == nil {
+			break
+		}
+
+		return e.complexity.Media.ID(childComplexity), true
+
+	case "Media.thumbnail":
+		if e.complexity.Media.Thumbnail == nil {
+			break
+		}
+
+		return e.complexity.Media.Thumbnail(childComplexity), true
+
+	case "Media.title":
+		if e.complexity.Media.Title == nil {
+			break
+		}
+
+		return e.complexity.Media.Title(childComplexity), true
 
 	case "Mutation.authenticate":
 		if e.complexity.Mutation.Authenticate == nil {
@@ -253,6 +346,30 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.Authentication(childComplexity), true
+
+	case "Query.categories":
+		if e.complexity.Query.Categories == nil {
+			break
+		}
+
+		args, err := ec.field_Query_categories_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Categories(childComplexity, args["data"].(*models.CategorySearchInput)), true
+
+	case "Query.characters":
+		if e.complexity.Query.Characters == nil {
+			break
+		}
+
+		args, err := ec.field_Query_characters_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Characters(childComplexity, args["data"].(*models.CharacterSearchInput)), true
 
 	case "Query.redeemCookie":
 		if e.complexity.Query.RedeemCookie == nil {
@@ -382,6 +499,11 @@ directive @role(roles: [String!]!) on FIELD_DEFINITION
   post(data: PostInput): PostResponse! @auth
 }
 `, BuiltIn: false},
+	{Name: "schemas/posts/queries.graphql", Input: `extend type Query {
+  characters(data: CharacterSearchInput): [Character]
+  categories(data: CategorySearchInput): [Category]
+}
+`, BuiltIn: false},
 	{Name: "schemas/posts/types.graphql", Input: `input PostInput {
   images: [String!] @validation(rules: ["required"])
   categories: [String!]
@@ -400,6 +522,33 @@ input CharacterRequest {
 type PostResponse {
   review: Boolean!
   validation: Validation
+}
+
+input CharacterSearchInput {
+  name: String
+}
+
+input CategorySearchInput {
+  title: String
+}
+
+type Media {
+  id: String!
+  thumbnail: String
+  title: String!
+}
+
+type Character {
+  id: String!
+  thumbnail: String
+  name: String!
+  media: Media
+}
+
+type Category {
+  id: String!
+  thumbnail: String
+  title: String!
 }
 `, BuiltIn: false},
 	{Name: "schemas/types.graphql", Input: `type Validation {
@@ -544,6 +693,36 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 		}
 	}
 	args["name"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_categories_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *models.CategorySearchInput
+	if tmp, ok := rawArgs["data"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("data"))
+		arg0, err = ec.unmarshalOCategorySearchInput2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCategorySearchInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["data"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_characters_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *models.CharacterSearchInput
+	if tmp, ok := rawArgs["data"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("data"))
+		arg0, err = ec.unmarshalOCharacterSearchInput2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCharacterSearchInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["data"] = arg0
 	return args, nil
 }
 
@@ -731,6 +910,242 @@ func (ec *executionContext) _Authentication_user(ctx context.Context, field grap
 	return ec.marshalOUser2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐUser(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Category_id(ctx context.Context, field graphql.CollectedField, obj *models.Category) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Category",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Category_thumbnail(ctx context.Context, field graphql.CollectedField, obj *models.Category) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Category",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Thumbnail, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Category_title(ctx context.Context, field graphql.CollectedField, obj *models.Category) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Category",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Title, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Character_id(ctx context.Context, field graphql.CollectedField, obj *models.Character) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Character",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Character_thumbnail(ctx context.Context, field graphql.CollectedField, obj *models.Character) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Character",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Thumbnail, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Character_name(ctx context.Context, field graphql.CollectedField, obj *models.Character) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Character",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Character_media(ctx context.Context, field graphql.CollectedField, obj *models.Character) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Character",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Media, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.Media)
+	fc.Result = res
+	return ec.marshalOMedia2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐMedia(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Cookie_sameSession(ctx context.Context, field graphql.CollectedField, obj *models.Cookie) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -890,6 +1305,108 @@ func (ec *executionContext) _Cookie_email(ctx context.Context, field graphql.Col
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.Email, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Media_id(ctx context.Context, field graphql.CollectedField, obj *models.Media) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Media",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Media_thumbnail(ctx context.Context, field graphql.CollectedField, obj *models.Media) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Media",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Thumbnail, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Media_title(ctx context.Context, field graphql.CollectedField, obj *models.Media) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Media",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Title, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1303,6 +1820,84 @@ func (ec *executionContext) _Query_authentication(ctx context.Context, field gra
 	res := resTmp.(*models.Authentication)
 	fc.Result = res
 	return ec.marshalOAuthentication2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐAuthentication(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_characters(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_characters_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Characters(rctx, args["data"].(*models.CharacterSearchInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*models.Character)
+	fc.Result = res
+	return ec.marshalOCharacter2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCharacter(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_categories(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_categories_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Categories(rctx, args["data"].(*models.CategorySearchInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*models.Category)
+	fc.Result = res
+	return ec.marshalOCategory2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCategory(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2613,6 +3208,26 @@ func (ec *executionContext) unmarshalInputAuthenticationInput(ctx context.Contex
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputCategorySearchInput(ctx context.Context, obj interface{}) (models.CategorySearchInput, error) {
+	var it models.CategorySearchInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "title":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
+			it.Title, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputCharacterRequest(ctx context.Context, obj interface{}) (models.CharacterRequest, error) {
 	var it models.CharacterRequest
 	var asMap = obj.(map[string]interface{})
@@ -2632,6 +3247,26 @@ func (ec *executionContext) unmarshalInputCharacterRequest(ctx context.Context, 
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("media"))
 			it.Media, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputCharacterSearchInput(ctx context.Context, obj interface{}) (models.CharacterSearchInput, error) {
+	var it models.CharacterSearchInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "name":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			it.Name, err = ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -2848,6 +3483,76 @@ func (ec *executionContext) _Authentication(ctx context.Context, sel ast.Selecti
 	return out
 }
 
+var categoryImplementors = []string{"Category"}
+
+func (ec *executionContext) _Category(ctx context.Context, sel ast.SelectionSet, obj *models.Category) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, categoryImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Category")
+		case "id":
+			out.Values[i] = ec._Category_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "thumbnail":
+			out.Values[i] = ec._Category_thumbnail(ctx, field, obj)
+		case "title":
+			out.Values[i] = ec._Category_title(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var characterImplementors = []string{"Character"}
+
+func (ec *executionContext) _Character(ctx context.Context, sel ast.SelectionSet, obj *models.Character) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, characterImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Character")
+		case "id":
+			out.Values[i] = ec._Character_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "thumbnail":
+			out.Values[i] = ec._Character_thumbnail(ctx, field, obj)
+		case "name":
+			out.Values[i] = ec._Character_name(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "media":
+			out.Values[i] = ec._Character_media(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var cookieImplementors = []string{"Cookie"}
 
 func (ec *executionContext) _Cookie(ctx context.Context, sel ast.SelectionSet, obj *models.Cookie) graphql.Marshaler {
@@ -2881,6 +3586,40 @@ func (ec *executionContext) _Cookie(ctx context.Context, sel ast.SelectionSet, o
 			}
 		case "email":
 			out.Values[i] = ec._Cookie_email(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var mediaImplementors = []string{"Media"}
+
+func (ec *executionContext) _Media(ctx context.Context, sel ast.SelectionSet, obj *models.Media) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, mediaImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Media")
+		case "id":
+			out.Values[i] = ec._Media_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "thumbnail":
+			out.Values[i] = ec._Media_thumbnail(ctx, field, obj)
+		case "title":
+			out.Values[i] = ec._Media_title(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -3005,6 +3744,28 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_authentication(ctx, field)
+				return res
+			})
+		case "characters":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_characters(ctx, field)
+				return res
+			})
+		case "categories":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_categories(ctx, field)
 				return res
 			})
 		case "__type":
@@ -3695,6 +4456,108 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	return graphql.MarshalBoolean(*v)
 }
 
+func (ec *executionContext) marshalOCategory2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCategory(ctx context.Context, sel ast.SelectionSet, v []*models.Category) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOCategory2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCategory(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
+}
+
+func (ec *executionContext) marshalOCategory2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCategory(ctx context.Context, sel ast.SelectionSet, v *models.Category) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Category(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOCategorySearchInput2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCategorySearchInput(ctx context.Context, v interface{}) (*models.CategorySearchInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputCategorySearchInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOCharacter2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCharacter(ctx context.Context, sel ast.SelectionSet, v []*models.Character) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOCharacter2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCharacter(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
+}
+
+func (ec *executionContext) marshalOCharacter2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCharacter(ctx context.Context, sel ast.SelectionSet, v *models.Character) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Character(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalOCharacterRequest2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCharacterRequestᚄ(ctx context.Context, v interface{}) ([]*models.CharacterRequest, error) {
 	if v == nil {
 		return nil, nil
@@ -3719,11 +4582,26 @@ func (ec *executionContext) unmarshalOCharacterRequest2ᚕᚖoverdollᚋapplicat
 	return res, nil
 }
 
+func (ec *executionContext) unmarshalOCharacterSearchInput2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCharacterSearchInput(ctx context.Context, v interface{}) (*models.CharacterSearchInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputCharacterSearchInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) marshalOCookie2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCookie(ctx context.Context, sel ast.SelectionSet, v *models.Cookie) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Cookie(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOMedia2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐMedia(ctx context.Context, sel ast.SelectionSet, v *models.Media) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Media(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOPostInput2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐPostInput(ctx context.Context, v interface{}) (*models.PostInput, error) {
