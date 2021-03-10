@@ -29,7 +29,7 @@ func (r *QueryResolver) Characters(ctx context.Context, data *models.CharacterSe
 
 	results := response.Hits
 
-	var resp []*models.Character
+	resp := make([]*models.Character, 0)
 
 	// Cast our results into the correct type
 	for _, result := range results {
