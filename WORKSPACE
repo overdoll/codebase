@@ -225,8 +225,8 @@ go_repository(
 go_repository(
     name = "com_github_kr_pretty",
     importpath = "github.com/kr/pretty",
-    sum = "h1:L/CwN0zerZDmRFUapSPitk6f+Q3+0za1rQkzVuMiMFI=",
-    version = "v0.1.0",
+    sum = "h1:Fmg33tUaq4/8ym9TJN1x7sLJnHVwhP33CNkpYV/7rwI=",
+    version = "v0.2.1",
 )
 
 go_repository(
@@ -309,8 +309,8 @@ go_repository(
 go_repository(
     name = "com_github_rs_cors",
     importpath = "github.com/rs/cors",
-    sum = "h1:+88SsELBHx5r+hZ8TCkggzSstaWNbDvThkVK8H6f9ik=",
-    version = "v1.7.0",
+    sum = "h1:G9tHG9lebljV9mfp9SNPDL36nCDxmo3zTlAf1YgvzmI=",
+    version = "v1.6.0",
 )
 
 go_repository(
@@ -576,8 +576,8 @@ go_repository(
 go_repository(
     name = "com_github_google_go_cmp",
     importpath = "github.com/google/go-cmp",
-    sum = "h1:xsAVV57WRhGj6kEIi8ReJzQlHHqcBYCElAvkovg3B/4=",
-    version = "v0.4.0",
+    sum = "h1:L8R9j+yAqZuZjsqh/z+F1NCffTKKLShY6zXTItVIZ8M=",
+    version = "v0.5.4",
 )
 
 go_repository(
@@ -1761,4 +1761,18 @@ go_repository(
     importpath = "github.com/dustin/go-humanize",
     sum = "h1:VSnTsYCnlFHaM2/igO1h6X3HA71jcobQuxemgkq4zYo=",
     version = "v1.0.0",
+)
+
+go_repository(
+    name = "com_github_elastic_go_elasticsearch_v8",
+    importpath = "github.com/elastic/go-elasticsearch/v8",
+    sum = "h1:wC44APhQ93j2oT1EgK7EdorLe0tTPw4uFdzs1OFOw8Q=",
+    version = "v8.0.0-20210305160311-265434a3b4ca",
+)
+
+go_repository(
+    name = "com_github_frankban_quicktest",
+    importpath = "github.com/frankban/quicktest",
+    sum = "h1:8sXhOn0uLys67V8EsXLc6eszDs8VXWxL3iRvebPhedY=",
+    version = "v1.11.3",
 )
