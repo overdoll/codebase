@@ -1,4 +1,4 @@
-package server
+package serve
 
 import (
 	"context"
@@ -18,20 +18,17 @@ import (
 	"overdoll/applications/sting/src/search/documents"
 	"overdoll/libraries/events"
 	"overdoll/libraries/ksuid"
-	"overdoll/libraries/search"
 )
 
 type Server struct {
 	session gocqlx.Session
 	events  events.Connection
-	store   *search.Store
 }
 
-func CreateServer(session gocqlx.Session, events events.Connection, store *search.Store) *Server {
+func CreateServer(session gocqlx.Session, events events.Connection) *Server {
 	return &Server{
 		session: session,
 		events:  events,
-		store:   store,
 	}
 }
 

@@ -22,3 +22,34 @@ const (
     }
 }`
 )
+
+
+const (
+	MediaIndex = `{
+    "mappings": {
+      "media": {
+        "dynamic":      "strict",
+        "properties": {
+          "id":         { "type": "keyword" },
+          "thumbnail":  { "type": "keyword" },
+          "title":      { "type": "text", "analyzer": "english" },
+        }
+      }
+    }
+}`
+)
+
+const (
+	CategoryIndex = `{
+    "mappings": {
+      "category": {
+        "dynamic":      "strict",
+        "properties": {
+          "id":         { "type": "keyword" },
+          "thumbnail":  { "type": "keyword" },
+          "title":      { "type": "text", "analyzer": "english" },
+        }
+      }
+    }
+}`
+)

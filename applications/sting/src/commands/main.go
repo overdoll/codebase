@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/cobra"
 	"google.golang.org/grpc"
 	sting "overdoll/applications/sting/proto"
-	"overdoll/applications/sting/src/server"
+	"overdoll/applications/sting/src/server/serve"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/events"
 )
@@ -19,7 +19,7 @@ var rootCmd = &cobra.Command{
 	Use: "sting",
 }
 
-var serve = &cobra.Command{
+var s = &cobra.Command{
 	Use: "serve",
 	Run: Run,
 }
@@ -32,7 +32,7 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.AddCommand(serve)
+	rootCmd.AddCommand(s)
 }
 
 func Run(cmd *cobra.Command, args []string) {
@@ -53,7 +53,7 @@ func Run(cmd *cobra.Command, args []string) {
 
 	eventsConn := events.GetConnection(ctx, "sting")
 
-	s := server.CreateServer(session, eventsConn, nil)
+	s := serve.CreateServer(session, eventsConn)
 
 	init.InitializeGRPCServer(func(server *grpc.Server) {
 		sting.RegisterStingServer(server, s)
