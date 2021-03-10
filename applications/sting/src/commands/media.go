@@ -23,7 +23,15 @@ func init() {
 }
 
 func (s *Server) IndexMedia() {
-	err := s.store.CreateIndex("media", indexes.MediaIndex)
+
+	err := s.store.DeleteIndex("media")
+
+	// In case it fails, we don't care since it should still create it
+	if err != nil {
+
+	}
+
+	err = s.store.CreateIndex("media", indexes.MediaIndex)
 
 	if err != nil {
 		log.Fatalf("failed to create media index: %s", err)

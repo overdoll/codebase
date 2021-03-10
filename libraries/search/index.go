@@ -21,6 +21,23 @@ func (s *Store) CreateIndex(index string, mapping string) error {
 	return nil
 }
 
+// DeleteIndex - delete the index
+func (s *Store) DeleteIndex(index string) error {
+
+	var indexes []string
+
+	indexes = append(indexes, index)
+
+	res, err := s.es.Indices.Delete(indexes)
+	if err != nil {
+		return err
+	}
+	if res.IsError() {
+		return fmt.Errorf("error: %s", res)
+	}
+	return nil
+}
+
 // Create indexes a new document into store.
 func (s *Store) Create(index string, id string, item interface{}) error {
 	payload, err := json.Marshal(item)

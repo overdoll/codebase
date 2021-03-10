@@ -23,7 +23,14 @@ func init() {
 }
 
 func (s *Server) IndexCategories() {
-	err := s.store.CreateIndex("categories", indexes.CategoryIndex)
+	err := s.store.DeleteIndex("categories")
+
+	// In case it fails, we don't care since it should still create it
+	if err != nil {
+
+	}
+
+	err = s.store.CreateIndex("categories", indexes.CategoryIndex)
 
 	if err != nil {
 		log.Fatalf("failed to create category index: %s", err)

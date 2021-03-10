@@ -27,7 +27,15 @@ func Run(cmd *cobra.Command, args []string) {
 }
 
 func (s *Server) IndexCharacters() {
-	err := s.store.CreateIndex("characters", indexes.CharacterIndex)
+
+	err := s.store.DeleteIndex("characters")
+
+	// In case it fails, we don't care since it should still create it
+	if err != nil {
+
+	}
+
+	err = s.store.CreateIndex("characters", indexes.CharacterIndex)
 
 	if err != nil {
 		log.Fatalf("failed to create characters index: %s", err)
