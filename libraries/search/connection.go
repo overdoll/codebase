@@ -13,7 +13,7 @@ import (
 // SearchResults wraps the Elasticsearch search response.
 type SearchResults struct {
 	Total int    `json:"total"`
-	Hits  []*Hit `json:"hits"`
+	Hits  []interface{} `json:"hits"`
 }
 
 // Hit wraps the document returned in search response.

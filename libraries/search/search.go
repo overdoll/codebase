@@ -8,7 +8,7 @@ import (
 )
 
 // Search returns results matching a query, paginated by after.
-func (s *Store) Search(index string, query string, after ...string) (*SearchResults, error) {
+func (s *Store) Search(index string, inter interface{}, query string, after ...string) (*SearchResults, error) {
 	var results SearchResults
 
 	res, err := s.es.Search(
@@ -51,26 +51,18 @@ func (s *Store) Search(index string, query string, after ...string) (*SearchResu
 	results.Total = r.Hits.Total.Value
 
 	if len(r.Hits.Hits) < 1 {
-		results.Hits = []*Hit{}
+		results.Hits = []interface{}{}
 		return &results, nil
 	}
 
+	// Unmarshal our hit into an interface
 	for _, hit := range r.Hits.Hits {
-		var h Hit
-		h.Id = hit.ID
-		h.Sort = hit.Sort
-
-		if err := json.Unmarshal(hit.Source, &h); err != nil {
+		ht := inter
+		if err := json.Unmarshal(hit.Source, &ht); err != nil {
 			return &results, err
 		}
 
-		if len(hit.Highlights) > 0 {
-			if err := json.Unmarshal(hit.Highlights, &h.Highlights); err != nil {
-				return &results, err
-			}
-		}
-
-		results.Hits = append(results.Hits, &h)
+		results.Hits = append(results.Hits, &ht)
 	}
 
 	return &results, nil
@@ -81,11 +73,7 @@ func (s *Store) BuildQuery(query string, after ...string) io.Reader {
 
 	b.WriteString("{\n")
 
-	if query == "" {
-		b.WriteString(searchAll)
-	} else {
-		b.WriteString(fmt.Sprintf(searchMatch, query))
-	}
+	b.WriteString(query)
 
 	if len(after) > 0 && after[0] != "" && after[0] != "null" {
 		b.WriteString(",\n")
@@ -97,27 +85,3 @@ func (s *Store) BuildQuery(query string, after ...string) io.Reader {
 	// fmt.Printf("%s\n", b.String())
 	return strings.NewReader(b.String())
 }
-
-// TODO: these are placeholder for now - each instance should be able to set their own payloads (maybe through a struct-to-json conversion instead of pure json)
-const searchAll = `
-	"query" : { "match_all" : {} },
-	"size" : 25,
-	"sort" : { "published" : "desc", "_doc" : "asc" }`
-
-const searchMatch = `
-	"query" : {
-		"multi_match" : {
-			"query" : %q,
-			"fields" : ["title^100", "alt^10", "transcript"],
-			"operator" : "and"
-		}
-	},
-	"highlight" : {
-		"fields" : {
-			"title" : { "number_of_fragments" : 0 },
-			"alt" : { "number_of_fragments" : 0 },
-			"transcript" : { "number_of_fragments" : 5, "fragment_size" : 25 }
-		}
-	},
-	"size" : 25,
-	"sort" : [ { "_score" : "desc" }, { "_doc" : "asc" } ]`

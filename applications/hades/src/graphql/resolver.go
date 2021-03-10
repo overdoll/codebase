@@ -30,7 +30,6 @@ func NewResolver(s services.Services, redis redis.Conn, rabbitSvc rabbit.Conn, s
 func (r *Resolver) Subscription() SubscriptionResolver {
 	return &subscriptions.SubscriptionResolver{
 		Services: r.services,
-		Redis:    r.redis,
 		Rabbit:   r.rabbit,
 	}
 }
@@ -40,7 +39,6 @@ func (r *Resolver) Mutation() MutationResolver {
 	return &mutations.MutationResolver{
 		Services: r.services,
 		Redis:    r.redis,
-		Rabbit:   r.rabbit,
 	}
 }
 
@@ -50,6 +48,7 @@ func (r *Resolver) Query() QueryResolver {
 		Services: r.services,
 		Redis:    r.redis,
 		Rabbit:   r.rabbit,
+		Search:   r.search,
 	}
 }
 
