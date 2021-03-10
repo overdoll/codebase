@@ -17,15 +17,10 @@ import (
 
 var rootCmd = &cobra.Command{
 	Use: "eva",
-}
-
-var serve = &cobra.Command{
-	Use: "serve",
 	Run: Run,
 }
 
 func init() {
-	rootCmd.AddCommand(serve)
 	rootCmd.AddCommand(database.Migrate)
 }
 

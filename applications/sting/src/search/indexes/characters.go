@@ -2,8 +2,11 @@ package indexes
 
 const (
 	CharacterIndex = `{
+  	"settings": {
+      "index.mapping.single_type": true
+    },
     "mappings": {
-      "character": {
+      "_doc": {
         "dynamic":      "strict",
         "properties": {
           "id":         { "type": "keyword" },
@@ -14,7 +17,7 @@ const (
             "properties": {
 				"id": { "type": "keyword" },
  				"thumbnail": { "type": "keyword" },
-                "title": { "type": "text", "analyzer": "english" },
+                "title": { "type": "text", "analyzer": "english" }
             }
           }
         }

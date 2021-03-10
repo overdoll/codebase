@@ -42,7 +42,6 @@ applications = {
             "applications/eva/.env",
             "applications/eva/migrations",
         ],
-        "args": "serve",
         "live_update": [],
     },
     "sting": {
@@ -58,7 +57,6 @@ applications = {
             "applications/sting/.env",
             "applications/sting/migrations",
         ],
-        "args": "serve",
         "live_update": [],
     },
     "indigo": {
@@ -73,7 +71,6 @@ applications = {
         "dependencies": [
             "applications/indigo/.env",
         ],
-        "args": "serve",
         "live_update": [],
     },
     "pox": {
@@ -88,7 +85,6 @@ applications = {
         "dependencies": [
             "applications/pox/.env",
         ],
-        "args": "serve",
         "live_update": [],
     },
     "buffer": {

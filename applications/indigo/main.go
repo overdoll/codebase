@@ -17,15 +17,7 @@ import (
 
 var rootCmd = &cobra.Command{
 	Use: "indigo",
-}
-
-var serve = &cobra.Command{
-	Use: "serve",
 	Run: Run,
-}
-
-func init() {
-	rootCmd.AddCommand(serve)
 }
 
 func main() {

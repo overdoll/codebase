@@ -72,9 +72,6 @@ def build_applications(applications, dependencies):
                 deps = bazel_sourcefile_deps(binary_target),
             )
 
-            if "args" in application:
-                binary_target_container = binary_target_container + " " + application["args"]
-
             custom_build_with_restart(
                 ref = application["image_reference"],
                 command = (

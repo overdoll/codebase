@@ -18,15 +18,7 @@ import (
 
 var rootCmd = &cobra.Command{
 	Use: "pox",
-}
-
-var s = &cobra.Command{
-	Use: "serve",
 	Run: Run,
-}
-
-func init() {
-	rootCmd.AddCommand(s)
 }
 
 func main() {
