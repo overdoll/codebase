@@ -1,4 +1,4 @@
-package resolver
+package gen
 
 // This file will not be regenerated automatically.
 //
@@ -6,7 +6,7 @@ package resolver
 
 import (
 	"github.com/gomodule/redigo/redis"
-	"overdoll/applications/hades/src/graphql"
+	"overdoll/applications/hades/src/graphql/directives"
 	"overdoll/applications/hades/src/graphql/mutations"
 	"overdoll/applications/hades/src/graphql/queries"
 	"overdoll/applications/hades/src/graphql/subscriptions"
@@ -25,7 +25,7 @@ func NewResolver(s services.Services, redis redis.Conn, rabbitSvc rabbit.Conn) *
 }
 
 // Subscription returns gen.SubscriptionResolver implementation.
-func (r *Resolver) Subscription() gen.SubscriptionResolver {
+func (r *Resolver) Subscription() SubscriptionResolver {
 	return &subscriptions.SubscriptionResolver{
 		Services: r.services,
 		Redis:    r.redis,
@@ -34,7 +34,7 @@ func (r *Resolver) Subscription() gen.SubscriptionResolver {
 }
 
 // Mutation returns gen.MutationResolver implementation.
-func (r *Resolver) Mutation() gen.MutationResolver {
+func (r *Resolver) Mutation() MutationResolver {
 	return &mutations.MutationResolver{
 		Services: r.services,
 		Redis:    r.redis,
@@ -43,10 +43,23 @@ func (r *Resolver) Mutation() gen.MutationResolver {
 }
 
 // Query returns gen.QueryResolver implementation.
-func (r *Resolver) Query() gen.QueryResolver {
+func (r *Resolver) Query() QueryResolver {
 	return &queries.QueryResolver{
 		Services: r.services,
 		Redis:    r.redis,
 		Rabbit:   r.rabbit,
+	}
+}
+
+// Directive returns gen.DirectiveRoot
+func Directive() DirectiveRoot {
+
+	resolver := directives.DirectiveResolver{}
+
+	return DirectiveRoot{
+		Auth:     resolver.Auth,
+		Guest:    resolver.Guest,
+		Role:     resolver.Role,
+		Verified: resolver.Verified,
 	}
 }

@@ -80,7 +80,15 @@ func AuthenticationMiddleware(services services.Services, redis redis.Conn) gin.
 		}
 
 		// put it in context
-		ctx := context.WithValue(c.Request.Context(), "UserContextKey", &models.AuthenticatedUser{Username: user.Username, Token: jwtToken.Raw, Roles: user.Roles, Verified: user.Verified})
+		ctx := context.WithValue(c.Request.Context(), "UserContextKey",
+			&models.AuthenticatedUser{
+				Id:       user.Id,
+				Username: user.Username,
+				Token:    jwtToken.Raw,
+				Roles:    user.Roles,
+				Verified: user.Verified,
+			},
+		)
 
 		// and call the next with our new context
 		c.Request = c.Request.WithContext(ctx)

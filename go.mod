@@ -11,7 +11,7 @@ require (
 	github.com/dustin/go-humanize v1.0.0 // indirect
 	github.com/elastic/go-elasticsearch/v7 v7.11.0 // indirect
 	github.com/gin-gonic/gin v1.6.3
-	github.com/go-playground/validator/v10 v10.4.1 // indirect
+	github.com/go-playground/validator/v10 v10.4.1
 	github.com/gocql/gocql v0.0.0-20201215165327-e49edf966d90 // indirect
 	github.com/golang/protobuf v1.4.2
 	github.com/golang/snappy v0.0.3 // indirect
@@ -22,6 +22,7 @@ require (
 	github.com/joho/godotenv v1.3.0 // indirect
 	github.com/klauspost/compress v1.11.9 // indirect
 	github.com/pierrec/lz4 v2.6.0+incompatible // indirect
+	github.com/pkg/errors v0.9.1
 	github.com/rs/cors v1.7.0 // indirect
 	github.com/scylladb/gocqlx/v2 v2.3.0 // indirect
 	github.com/segmentio/kafka-go v0.4.10 // indirect

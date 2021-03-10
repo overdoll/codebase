@@ -76,7 +76,8 @@ type ComplexityRoot struct {
 	}
 
 	PostResponse struct {
-		Review func(childComplexity int) int
+		Review     func(childComplexity int) int
+		Validation func(childComplexity int) int
 	}
 
 	Query struct {
@@ -90,6 +91,10 @@ type ComplexityRoot struct {
 
 	User struct {
 		Username func(childComplexity int) int
+	}
+
+	Validation struct {
+		Code func(childComplexity int) int
 	}
 }
 
@@ -235,6 +240,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.PostResponse.Review(childComplexity), true
 
+	case "PostResponse.validation":
+		if e.complexity.PostResponse.Validation == nil {
+			break
+		}
+
+		return e.complexity.PostResponse.Validation(childComplexity), true
+
 	case "Query.authentication":
 		if e.complexity.Query.Authentication == nil {
 			break
@@ -267,6 +279,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.User.Username(childComplexity), true
+
+	case "Validation.code":
+		if e.complexity.Validation.Code == nil {
+			break
+		}
+
+		return e.complexity.Validation.Code(childComplexity), true
 
 	}
 	return 0, false
@@ -367,33 +386,42 @@ directive @role(roles: [String!]!) on FIELD_DEFINITION
   images: [String!] @validation(rules: ["required"])
   categories: [String!]
   characters: [String!]
-  categoryRequests: [String!]
   mediaRequests: [String!]
-  characterRequests: [String!]
+  characterRequests: [CharacterRequest!]
   artistId: String
   artistUsername: String! @validation(rules: ["required"])
 }
 
+input CharacterRequest {
+  name: String!
+  media: String!
+}
+
 type PostResponse {
   review: Boolean!
+  validation: Validation
 }
 `, BuiltIn: false},
-	{Name: "schemas/user/mutations.graphql", Input: `type Mutation {
+	{Name: "schemas/types.graphql", Input: `type Validation {
+  code: String!
+}
+`, BuiltIn: false},
+	{Name: "schemas/users/mutations.graphql", Input: `type Mutation {
   authenticate(data: AuthenticationInput): Boolean! @guest
   register(data: RegisterInput): Boolean! @guest
   logout: Boolean! @auth
 }
 `, BuiltIn: false},
-	{Name: "schemas/user/queries.graphql", Input: `type Query {
+	{Name: "schemas/users/queries.graphql", Input: `type Query {
   redeemCookie(cookie: String!): Cookie @guest
   authentication: Authentication
 }
 `, BuiltIn: false},
-	{Name: "schemas/user/subscriptions.graphql", Input: `type Subscription {
+	{Name: "schemas/users/subscriptions.graphql", Input: `type Subscription {
   authListener: AuthListener
 }
 `, BuiltIn: false},
-	{Name: "schemas/user/types.graphql", Input: `type Cookie {
+	{Name: "schemas/users/types.graphql", Input: `type Cookie {
   sameSession: Boolean!
   registered: Boolean!
   redeemed: Boolean!
@@ -1154,6 +1182,38 @@ func (ec *executionContext) _PostResponse_review(ctx context.Context, field grap
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _PostResponse_validation(ctx context.Context, field graphql.CollectedField, obj *models.PostResponse) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PostResponse",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Validation, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.Validation)
+	fc.Result = res
+	return ec.marshalOValidation2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐValidation(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Query_redeemCookie(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -1377,6 +1437,41 @@ func (ec *executionContext) _User_username(ctx context.Context, field graphql.Co
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.Username, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Validation_code(ctx context.Context, field graphql.CollectedField, obj *models.Validation) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Validation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Code, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2518,6 +2613,34 @@ func (ec *executionContext) unmarshalInputAuthenticationInput(ctx context.Contex
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputCharacterRequest(ctx context.Context, obj interface{}) (models.CharacterRequest, error) {
+	var it models.CharacterRequest
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "name":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			it.Name, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "media":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("media"))
+			it.Media, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputPostInput(ctx context.Context, obj interface{}) (models.PostInput, error) {
 	var it models.PostInput
 	var asMap = obj.(map[string]interface{})
@@ -2568,14 +2691,6 @@ func (ec *executionContext) unmarshalInputPostInput(ctx context.Context, obj int
 			if err != nil {
 				return it, err
 			}
-		case "categoryRequests":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("categoryRequests"))
-			it.CategoryRequests, err = ec.unmarshalOString2ᚕstringᚄ(ctx, v)
-			if err != nil {
-				return it, err
-			}
 		case "mediaRequests":
 			var err error
 
@@ -2588,7 +2703,7 @@ func (ec *executionContext) unmarshalInputPostInput(ctx context.Context, obj int
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("characterRequests"))
-			it.CharacterRequests, err = ec.unmarshalOString2ᚕstringᚄ(ctx, v)
+			it.CharacterRequests, err = ec.unmarshalOCharacterRequest2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCharacterRequestᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -2842,6 +2957,8 @@ func (ec *executionContext) _PostResponse(ctx context.Context, sel ast.Selection
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "validation":
+			out.Values[i] = ec._PostResponse_validation(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -2938,6 +3055,33 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 			out.Values[i] = graphql.MarshalString("User")
 		case "username":
 			out.Values[i] = ec._User_username(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var validationImplementors = []string{"Validation"}
+
+func (ec *executionContext) _Validation(ctx context.Context, sel ast.SelectionSet, obj *models.Validation) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, validationImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Validation")
+		case "code":
+			out.Values[i] = ec._Validation_code(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -3210,6 +3354,11 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) unmarshalNCharacterRequest2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCharacterRequest(ctx context.Context, v interface{}) (*models.CharacterRequest, error) {
+	res, err := ec.unmarshalInputCharacterRequest(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNPostResponse2overdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐPostResponse(ctx context.Context, sel ast.SelectionSet, v models.PostResponse) graphql.Marshaler {
@@ -3546,6 +3695,30 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	return graphql.MarshalBoolean(*v)
 }
 
+func (ec *executionContext) unmarshalOCharacterRequest2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCharacterRequestᚄ(ctx context.Context, v interface{}) ([]*models.CharacterRequest, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var vSlice []interface{}
+	if v != nil {
+		if tmp1, ok := v.([]interface{}); ok {
+			vSlice = tmp1
+		} else {
+			vSlice = []interface{}{v}
+		}
+	}
+	var err error
+	res := make([]*models.CharacterRequest, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNCharacterRequest2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCharacterRequest(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
 func (ec *executionContext) marshalOCookie2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCookie(ctx context.Context, sel ast.SelectionSet, v *models.Cookie) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -3634,6 +3807,13 @@ func (ec *executionContext) marshalOUser2ᚖoverdollᚋapplicationsᚋhadesᚋsr
 		return graphql.Null
 	}
 	return ec._User(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOValidation2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐValidation(ctx context.Context, sel ast.SelectionSet, v *models.Validation) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Validation(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalO__EnumValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐEnumValueᚄ(ctx context.Context, sel ast.SelectionSet, v []introspection.EnumValue) graphql.Marshaler {

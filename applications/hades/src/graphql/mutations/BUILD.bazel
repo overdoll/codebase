@@ -2,7 +2,11 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
-    srcs = ["mutations.resolvers.go"],
+    srcs = [
+        "mutations.go",
+        "posts.go",
+        "users.go",
+    ],
     importpath = "overdoll/applications/hades/src/graphql/mutations",
     visibility = ["//visibility:public"],
     deps = [

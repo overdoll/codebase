@@ -18,9 +18,7 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/joho/godotenv"
 	gen "overdoll/applications/hades/src/graphql"
-	"overdoll/applications/hades/src/graphql/directives"
 	extension2 "overdoll/applications/hades/src/graphql/extensions"
-	"overdoll/applications/hades/src/graphql/resolver"
 	"overdoll/applications/hades/src/middleware"
 	"overdoll/applications/hades/src/services"
 
@@ -79,7 +77,7 @@ func main() {
 	cache, err := NewCache()
 
 	// Create resolver, with services
-	gqlResolver := resolver.NewResolver(svcs, redisSvc, rabbitSvc)
+	gqlResolver := gen.NewResolver(svcs, redisSvc, rabbitSvc)
 
 	// Create graphApi handlers - GET and POST
 	gqlHandler := HandleGraphQL(gqlResolver, cache)
@@ -123,7 +121,7 @@ func HandleGraphQL(resolver gen.ResolverRoot, cache *Cache) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		graphAPIHandler := handler.New(gen.NewExecutableSchema(gen.Config{
 			Resolvers:  resolver,
-			Directives: directives.NewDirectives(),
+			Directives: gen.Directive(),
 		}))
 
 		graphAPIHandler.AddTransport(&transport.Websocket{

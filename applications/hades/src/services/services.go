@@ -2,30 +2,30 @@ package services
 
 import (
 	"context"
-	"io"
-	"log"
 	"os"
 
-	evav1 "overdoll/applications/eva/proto"
+	eva "overdoll/applications/eva/proto"
+	sting "overdoll/applications/sting/proto"
 
 	"google.golang.org/grpc"
 )
 
-type ServicesConfig struct {
-	EvaSvc string
-}
-
-type services struct {
-	io.Closer
-	evaClientConn *grpc.ClientConn
-	evaClient     evav1.EvaClient
-}
-
 type Services interface {
-	Eva() evav1.EvaClient
+	Sting() sting.StingClient
+	Eva() eva.EvaClient
 }
 
-func NewServicesKeeper(ctx context.Context) (Services, error) {
+type Connections struct {
+	sting sting.StingClient
+	eva   eva.EvaClient
+}
+
+func Dial(ctx context.Context) (Services, error) {
+	stingConn, err := grpc.DialContext(ctx, os.Getenv("STING_SERVICE"), grpc.WithInsecure())
+
+	if err != nil {
+		return nil, err
+	}
 
 	evaConnection, err := grpc.DialContext(ctx, os.Getenv("EVA_SERVICE"), grpc.WithInsecure())
 
@@ -33,23 +33,16 @@ func NewServicesKeeper(ctx context.Context) (Services, error) {
 		return nil, err
 	}
 
-	ah := &services{
-		evaClientConn: evaConnection,
-		evaClient:     evav1.NewEvaClient(evaConnection),
-	}
-
-	return ah, nil
+	return &Connections{
+		sting: sting.NewStingClient(stingConn),
+		eva:   eva.NewEvaClient(evaConnection),
+	}, nil
 }
 
-func (ah *services) Eva() evav1.EvaClient {
-	return ah.evaClient
+func (connections *Connections) Sting() sting.StingClient {
+	return connections.sting
 }
 
-func (ah *services) Close() error {
-	err := ah.evaClientConn.Close()
-	if err != nil {
-		log.Printf("An error occurred while closing connection on Eva service: %s", err)
-	}
-
-	return nil
+func (connections *Connections) Eva() eva.EvaClient {
+	return connections.eva
 }

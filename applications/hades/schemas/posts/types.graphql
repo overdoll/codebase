@@ -2,13 +2,18 @@ input PostInput {
   images: [String!] @validation(rules: ["required"])
   categories: [String!]
   characters: [String!]
-  categoryRequests: [String!]
   mediaRequests: [String!]
-  characterRequests: [String!]
+  characterRequests: [CharacterRequest!]
   artistId: String
   artistUsername: String! @validation(rules: ["required"])
 }
 
+input CharacterRequest {
+  name: String!
+  media: String!
+}
+
 type PostResponse {
   review: Boolean!
+  validation: Validation
 }

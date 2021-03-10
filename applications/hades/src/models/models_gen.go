@@ -16,6 +16,11 @@ type AuthenticationInput struct {
 	Email string `json:"email"`
 }
 
+type CharacterRequest struct {
+	Name  string `json:"name"`
+	Media string `json:"media"`
+}
+
 type Cookie struct {
 	SameSession bool   `json:"sameSession"`
 	Registered  bool   `json:"registered"`
@@ -25,18 +30,18 @@ type Cookie struct {
 }
 
 type PostInput struct {
-	Images            []string `json:"images"`
-	Categories        []string `json:"categories"`
-	Characters        []string `json:"characters"`
-	CategoryRequests  []string `json:"categoryRequests"`
-	MediaRequests     []string `json:"mediaRequests"`
-	CharacterRequests []string `json:"characterRequests"`
-	ArtistID          *string  `json:"artistId"`
-	ArtistUsername    string   `json:"artistUsername"`
+	Images            []string            `json:"images"`
+	Categories        []string            `json:"categories"`
+	Characters        []string            `json:"characters"`
+	MediaRequests     []string            `json:"mediaRequests"`
+	CharacterRequests []*CharacterRequest `json:"characterRequests"`
+	ArtistID          *string             `json:"artistId"`
+	ArtistUsername    string              `json:"artistUsername"`
 }
 
 type PostResponse struct {
-	Review bool `json:"review"`
+	Review     bool        `json:"review"`
+	Validation *Validation `json:"validation"`
 }
 
 type RegisterInput struct {
@@ -45,4 +50,8 @@ type RegisterInput struct {
 
 type User struct {
 	Username string `json:"username"`
+}
+
+type Validation struct {
+	Code string `json:"code"`
 }

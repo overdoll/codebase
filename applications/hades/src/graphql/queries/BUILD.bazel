@@ -2,7 +2,10 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
-    srcs = ["queries.resolvers.go"],
+    srcs = [
+        "queries.go",
+        "users.go",
+    ],
     importpath = "overdoll/applications/hades/src/graphql/queries",
     visibility = ["//visibility:public"],
     deps = [
