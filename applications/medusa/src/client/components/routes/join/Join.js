@@ -10,7 +10,6 @@ import { Button, Form, Input, useForm } from '@//:modules/form';
 import { Frame } from '@//:modules/content';
 import { useNotify } from '@//:modules/focus';
 import Lobby from './components/Lobby';
-import { useLocation } from '@//:modules/routing';
 import { RootContext } from '../Root';
 import { EMAIL } from '@//:modules/regex';
 import Icon from '@//:modules/content/icon/Icon';
@@ -54,9 +53,6 @@ export default function Join(): Node {
 
   // Receiving a subscription response
   const [authInfo, setAuthInfo] = useState({ authListener: null });
-
-  // Get URL of current window
-  const currentURL = new URLSearchParams(useLocation().search);
 
   // Waiting for a subscription
   const [waiting, setWaiting] = useState(false);
@@ -114,13 +110,9 @@ export default function Join(): Node {
   const cookieRedeemedNotRegistered =
     !emptyAuthCookie && data?.cookie?.redeemed && !data.cookie?.registered;
 
-  // We already have auth cookie data, and it's been redeemed. We want the user to register
+  // We already have auth cookie data, and it's been redeemed. We want the user to registers
   if (subscriptionNotRegistered || cookieRedeemedNotRegistered) {
     return <Register />;
-  }
-  // Look for invalid token URL param
-  if (currentURL.get('notify') === 'invalid_token') {
-    notify.error(t('authenticate.error.token'));
   }
 
   // Ask user to authenticate
@@ -156,8 +148,7 @@ export default function Join(): Node {
         />
         <Button
           loading={isInFlight}
-          variant={['huge']}
-          sx={{ width: 'fill', variant: 'buttons.primary.regular', mt: 2 }}
+          sx={{ width: 'fill', variant: 'buttons.primary', mt: 2 }}
         >
           {t('authenticate.form.continue')}
         </Button>
