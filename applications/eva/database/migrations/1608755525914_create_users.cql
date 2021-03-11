@@ -15,6 +15,7 @@ CREATE TABLE users
     email    text,
     roles    list<text>,
     verified boolean,
+    avatar   text,
     primary key ( id )
 );
 

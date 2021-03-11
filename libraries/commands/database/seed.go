@@ -12,7 +12,6 @@ import (
 	"time"
 
 	"github.com/gocql/gocql"
-	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/spf13/cobra"
 	"overdoll/libraries/bootstrap"
 )
@@ -51,7 +50,7 @@ var Seed = &cobra.Command{
 
 		start := time.Now().UTC()
 
-		batch := session.NewBatch(gocql.LoggedBatch)
+		batch := session.NewBatch(gocql.UnloggedBatch).WithContext(ctx)
 
 		count := 0
 
@@ -89,7 +88,7 @@ var Seed = &cobra.Command{
 				continue
 			}
 
-			var obj []map[string]string
+			var obj []map[string]interface{}
 
 			// Unmarshal json into list of interface
 			err = json.Unmarshal(data, &obj)
@@ -101,22 +100,17 @@ var Seed = &cobra.Command{
 			// Insert into table, based on the filename (filename determines table)
 			for _, row := range obj {
 
-				insert := qb.Insert(trimmedName)
+				jsonStr, err := json.Marshal(row)
 
-				for k, val := range row {
-
-					col := k
-
-					if val == "" {
-						insert.LitColumn(col, "null")
-					} else {
-						insert.LitColumn(col, "'"+val+"'")
-					}
+				if err != nil {
+					fmt.Println("error converting to json: ", err)
 				}
 
-				statement, _ := insert.Unique().ToCql()
-
-				batch.Query(statement)
+				batch.Entries = append(batch.Entries, gocql.BatchEntry{
+					Stmt:       "INSERT INTO " + trimmedName + " JSON ? IF NOT EXISTS",
+					Args:       []interface{}{string(jsonStr)},
+					Idempotent: true,
+				})
 			}
 
 			count += len(obj)
