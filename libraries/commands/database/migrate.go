@@ -12,29 +12,27 @@ import (
 
 var Migrate = &cobra.Command{
 	Use: "migrate",
-	Run: Run,
-}
+	Run: func(cmd *cobra.Command, args []string) {
 
-func Run(cmd *cobra.Command, args []string) {
+		ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
+		defer cancelFn()
 
-	ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
-	defer cancelFn()
+		init, err := bootstrap.NewBootstrap(ctx)
 
-	init, err := bootstrap.NewBootstrap(ctx)
+		if err != nil {
+			log.Fatalf("bootstrap failed with errors: %s", err)
+		}
 
-	if err != nil {
-		log.Fatalf("bootstrap failed with errors: %s", err)
-	}
+		session, err := init.InitializeDatabaseSession()
 
-	session, err := init.InitializeDatabaseSession()
+		if err != nil {
+			log.Fatalf("database session failed with errors: %s", err)
+		}
 
-	if err != nil {
-		log.Fatalf("database session failed with errors: %s", err)
-	}
+		if err := migrate.Migrate(context.Background(), session, init.GetCurrentDirectory()+"/database/migrations"); err != nil {
+			log.Fatalf("migrations failed with error: %s", err)
+		}
 
-	if err := migrate.Migrate(context.Background(), session, init.GetCurrentDirectory() + "/migrations"); err != nil {
-		log.Fatalf("migrations failed with error: %s", err)
-	}
-
-	log.Print("migrations successfully completed!")
+		log.Print("migrations successfully completed!")
+	},
 }

@@ -40,9 +40,11 @@ applications = {
         "bazel_image": "bazel/applications/eva:eva-image",
         "dependencies": [
             "applications/eva/.env",
-            "applications/eva/migrations",
+            "applications/eva/database",
         ],
-        "live_update": [],
+        "live_update": [
+            sync("applications/eva/database", "/app/applications/eva/eva-image.binary.runfiles/overdoll/applications/eva/database"),
+        ],
     },
     "sting": {
         "type": "go",
@@ -55,9 +57,11 @@ applications = {
         "bazel_image": "bazel/applications/sting:sting-image",
         "dependencies": [
             "applications/sting/.env",
-            "applications/sting/migrations",
+            "applications/sting/database",
         ],
-        "live_update": [],
+        "live_update": [
+            sync("applications/sting/database", "/app/applications/sting/sting-image.binary.runfiles/overdoll/applications/sting/database"),
+        ],
     },
     "indigo": {
         "type": "go",

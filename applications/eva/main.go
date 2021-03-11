@@ -21,7 +21,7 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(database.Migrate)
+	rootCmd.AddCommand(database.Database)
 }
 
 func main() {
