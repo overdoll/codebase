@@ -4,7 +4,9 @@
 import type { Node } from 'react';
 import { Button as ThemeUIButton } from 'theme-ui';
 import { Icon } from '@//:modules/content';
+import { useSpring, animated } from 'react-spring';
 import { Synchronize } from '@streamlinehq/streamline-regular/lib/interface-essential';
+import { Config } from '@//:modules/animations';
 
 type Props = {
   loading?: boolean,
@@ -21,28 +23,33 @@ export default function Button({
   ...rest
 }: Props): Node {
   const loadingIcon = (
-    <Icon
-      icon={Synchronize.SynchronizeArrow1}
-      stroke="inherit"
-      sx={{ pl: 1 }}
-    />
+    <Icon icon={Synchronize.SynchronizeArrow1} stroke="inherit" />
   );
 
+  const AnimatedThemeUIButton = animated(ThemeUIButton);
+
+  const fullDisable = disabled || loading;
+
+  const [{ bubble }, setBubble] = useSpring(() => ({
+    bubble: 1,
+    config: Config.click,
+  }));
+
   return (
-    <ThemeUIButton
+    <AnimatedThemeUIButton
       {...rest}
-      disabled={disabled || loading}
+      disabled={fullDisable}
+      onTouchStart={
+        !fullDisable
+          ? () => setBubble({ bubble: 0.95 })
+          : () => setBubble({ bubble: 0.99 })
+      }
+      onTouchEnd={() => setBubble({ bubble: 1 })}
+      style={{ transform: bubble.to(v => `scale(${v})`) }}
       sx={{
-        borderWidth: 'defaults',
         borderStyle: 'solid',
-        pl: 6,
-        pr: 6,
-        pt: 3,
-        pb: 3,
-        fontSize: 3,
         fontWeight: 'bold',
         fontFamily: 'heading',
-        borderRadius: 'defaults',
         outline: 'none',
         '&:hover': {
           cursor: 'pointer',
@@ -56,6 +63,6 @@ export default function Button({
       <span sx={{ display: 'flex' }}>
         <span sx={{ margin: 'auto' }}>{loading ? loadingIcon : children}</span>
       </span>
-    </ThemeUIButton>
+    </AnimatedThemeUIButton>
   );
 }

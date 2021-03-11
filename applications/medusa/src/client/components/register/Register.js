@@ -10,6 +10,8 @@ import { useTranslation } from 'react-i18next';
 import type { RegisterMutation } from '@//:artifacts/RegisterMutation.graphql';
 import type { Node } from 'react';
 import { useHistory } from '@//:modules/routing';
+import Icon from '@//:modules/content/icon/Icon';
+import { SignShapes } from '@streamlinehq/streamline-regular/lib/maps-navigation';
 
 const RegisterMutationGQL = graphql`
   mutation RegisterMutation($data: RegisterInput!) {
@@ -45,6 +47,18 @@ export default function Register(): Node {
 
   return (
     <Frame>
+      <Icon
+        icon={SignShapes.SignBadgeCircle}
+        strokeWidth={2.5}
+        stroke={'primary.500'}
+        size={80}
+        sx={{
+          display: 'block',
+          pb: 7,
+          pt: 6,
+          textAlign: 'center',
+        }}
+      />
       <Form instance={instance} onSubmit={onSubmit}>
         <Input
           title={t('register.form.username.title')}
@@ -54,7 +68,8 @@ export default function Register(): Node {
           type="text"
         />
         <Button
-          sx={{ width: '100%', variant: 'primary', mt: 2 }}
+          variant={['huge']}
+          sx={{ width: '100%', variant: 'buttons.primary.regular', mt: 2 }}
           loading={isInFlight}
         >
           {t('register.form.submit')}

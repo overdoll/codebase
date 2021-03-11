@@ -157,23 +157,62 @@ const theme = {
   },
   buttons: {
     primary: {
-      color: 'primary.500',
-      bg: 'neutral.900',
-      borderColor: 'primary.500',
-      '&:disabled': {
-        color: 'primary.700',
+      regular: {
+        color: 'primary.500',
+        bg: 'neutral.900',
+        borderColor: 'primary.500',
+      },
+      alternate: {
+        color: 'neutral.100',
+        bg: 'neutral.900',
+        borderColor: 'neutral.100',
       },
     },
     secondary: {
-      color: 'neutral.100',
-      bg: 'transparent',
-      borderColor: 'transparent',
-      '&:hover': {
-        color: 'neutral.000',
+      regular: {
+        color: 'primary.500',
+        bg: 'neutral.800',
+        borderColor: 'transparent',
       },
-      '&:disabled': {
-        color: 'neutral.200',
+      alternate: {
+        color: 'neutral.100',
+        bg: 'neutral.800',
+        borderColor: 'transparent',
       },
+    },
+    tertiary: {
+      regular: {
+        color: 'neutral.1000',
+        bg: 'transparent',
+        borderColor: 'transparent',
+      },
+    },
+    huge: {
+      borderRadius: 'defaults',
+      borderWidth: 'defaults',
+      fontSize: 3,
+      pl: 6,
+      pr: 6,
+      pt: 3,
+      pb: 3,
+    },
+    large: {
+      borderRadius: 'defaults',
+      borderWidth: 3,
+      fontSize: 2,
+      pl: 5,
+      pr: 5,
+      pt: 2,
+      pb: 2,
+    },
+    medium: {
+      borderRadius: 10,
+      borderWidth: 2,
+      fontSize: 1,
+      pl: 4,
+      pr: 4,
+      pt: 1,
+      pb: 1,
     },
   },
   notifications: {

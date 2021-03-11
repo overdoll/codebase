@@ -19,8 +19,12 @@ type Props = {
   id: string,
 };
 
-export default function Notification({ children, duration, id }: Props): Node {
-
+export default function Notification({
+  type,
+  children,
+  duration,
+  id,
+}: Props): Node {
   const { onExpire } = useContext(NotificationContext);
 
   const timer = useRef();
@@ -57,13 +61,17 @@ export default function Notification({ children, duration, id }: Props): Node {
     };
   }, []);
 
+  // Set notification icon based on the type
   const notificationIcon = () => {
-    if (type === 'error') {
-      return Signs.RoadSignNoEntry;
-    } else if (type === 'warning') {
-      return AlertsBold.AlertTriangle;
-    } else if (type === 'success') {
-      return FormValidationBold.CheckCircle1;
+    switch (type) {
+      case 'error':
+        return Signs.RoadSignNoEntry;
+      case 'warning':
+        return AlertsBold.AlertTriangle;
+      case 'success':
+        return FormValidationBold.CheckCircle1;
+      default:
+        return FormValidationBold.CheckCircle1;
     }
   };
 
@@ -91,15 +99,15 @@ export default function Notification({ children, duration, id }: Props): Node {
           position: 'absolute',
           left: 0,
           bottom: 0,
-          pl: 2,
+          pl: 1,
         }}
       />
       <div
         sx={{
           fontFamily: 'body',
           fontSize: 0,
-          pl: 7,
-          pr: 7,
+          pl: 6,
+          pr: 6,
           variant: theme,
         }}
       >
@@ -117,7 +125,7 @@ export default function Notification({ children, duration, id }: Props): Node {
           position: 'absolute',
           right: 0,
           bottom: 0,
-          pr: 2,
+          pr: 1,
         }}
       />
     </div>

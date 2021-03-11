@@ -1,0 +1,480 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+5c0d9e86dd17d6f87d54345f1a8a2d61	.\applications\hades\queries.json	/^  "5c0d9e86dd17d6f87d54345f1a8a2d61": "query TokenSpecQuery(\\n  $cookie: String!\\n) {\\n  redeemCookie(cookie: $cookie) {\\n    sameSession\\n    registered\\n    session\\n  }\\n}\\n"$/;"	f
+681b8d7958c1231ee10b34b7b921278f	.\applications\hades\queries.json	/^  "681b8d7958c1231ee10b34b7b921278f": "subscription LobbySubscription {\\n  authListener {\\n    sameSession\\n    cookie {\\n      registered\\n    }\\n  }\\n}\\n",$/;"	f
+6b85f710fe7f06344d187e00cc6d00fc	.\applications\hades\queries.json	/^  "6b85f710fe7f06344d187e00cc6d00fc": "query RootQuery {\\n  authentication {\\n    user {\\n      username\\n    }\\n    ...JoinFragment\\n  }\\n}\\n\\nfragment JoinFragment on Authentication {\\n  cookie {\\n    redeemed\\n    registered\\n    email\\n  }\\n}\\n",$/;"	f
+90f66151793c514fcbbc647a644bec16	.\applications\hades\queries.json	/^  "90f66151793c514fcbbc647a644bec16": "mutation LobbyMutation {\\n  authEmail\\n}\\n",$/;"	f
+9fa210c33c02dede7049bc27965528c5	.\applications\hades\queries.json	/^  "9fa210c33c02dede7049bc27965528c5": "mutation RegisterMutation(\\n  $data: RegisterInput!\\n) {\\n  register(data: $data)\\n}\\n",$/;"	f
+@babel/core	.\package.json	/^    "@babel\/core": "^7.12.10",$/;"	f
+@babel/node	.\package.json	/^    "@babel\/node": "^7.12.10",$/;"	f
+@babel/plugin-proposal-class-properties	.\package.json	/^    "@babel\/plugin-proposal-class-properties": "^7.12.1",$/;"	f
+@babel/plugin-proposal-function-bind	.\package.json	/^    "@babel\/plugin-proposal-function-bind": "^7.12.1",$/;"	f
+@babel/plugin-transform-arrow-functions	.\package.json	/^    "@babel\/plugin-transform-arrow-functions": "^7.12.1",$/;"	f
+@babel/plugin-transform-modules-commonjs	.\package.json	/^    "@babel\/plugin-transform-modules-commonjs": "^7.12.1",$/;"	f
+@babel/plugin-transform-react-jsx	.\package.json	/^    "@babel\/plugin-transform-react-jsx": "^7.12.12",$/;"	f
+@babel/plugin-transform-runtime	.\package.json	/^    "@babel\/plugin-transform-runtime": "^7.12.10",$/;"	f
+@babel/polyfill	.\package.json	/^    "@babel\/polyfill": "^7.12.1",$/;"	f
+@babel/preset-env	.\package.json	/^    "@babel\/preset-env": "^7.12.11",$/;"	f
+@babel/preset-flow	.\package.json	/^    "@babel\/preset-flow": "^7.12.13",$/;"	f
+@babel/preset-react	.\package.json	/^    "@babel\/preset-react": "^7.12.10",$/;"	f
+@bazel/bazelisk	.\package.json	/^    "@bazel\/bazelisk": "^1.7.5",$/;"	f
+@emotion/cache	.\package.json	/^    "@emotion\/cache": "^11.1.3",$/;"	f
+@emotion/css	.\package.json	/^    "@emotion\/css": "^11.1.3",$/;"	f
+@emotion/react	.\package.json	/^    "@emotion\/react": "^11.1.4",$/;"	f
+@emotion/server	.\package.json	/^    "@emotion\/server": "^11.0.0",$/;"	f
+@graphql-cli/codegen	.\package.json	/^    "@graphql-cli\/codegen": "^1.17.17",$/;"	f
+@graphql-codegen/schema-ast	.\package.json	/^    "@graphql-codegen\/schema-ast": "^1.18.1",$/;"	f
+@jest/core	.\package.json	/^    "@jest\/core": "^26.6.3",$/;"	f
+@jest/transform	.\package.json	/^    "@jest\/transform": "^26.6.2",$/;"	f
+@loadable/babel-plugin	.\package.json	/^    "@loadable\/babel-plugin": "^5.13.2",$/;"	f
+@loadable/component	.\package.json	/^    "@loadable\/component": "^5.14.1",$/;"	f
+@loadable/server	.\package.json	/^    "@loadable\/server": "^5.14.0",$/;"	f
+@loadable/webpack-plugin	.\package.json	/^    "@loadable\/webpack-plugin": "^5.14.0",$/;"	f
+@pmmmwh/react-refresh-webpack-plugin	.\package.json	/^    "@pmmmwh\/react-refresh-webpack-plugin": "^0.4.3",$/;"	f
+@streamlinehq/streamline-bold	.\package.json	/^    "@streamlinehq\/streamline-bold": "^0.6.1",$/;"	f
+@streamlinehq/streamline-regular	.\package.json	/^    "@streamlinehq\/streamline-regular": "^0.6.1",$/;"	f
+@testing-library/jest-dom	.\package.json	/^    "@testing-library\/jest-dom": "^5.11.9",$/;"	f
+@testing-library/react	.\package.json	/^    "@testing-library\/react": "^11.2.5",$/;"	f
+Add	.\applications\hades\start.go	/^func (c *Cache) Add(ctx context.Context, key string, value interface{}) {$/;"	d
+ApqStats	.\applications\hades\src\extensions\apq.go	/^type ApqStats struct {$/;"	d
+Auth	.\applications\hades\src\directives\directives.go	/^func Auth(ctx context.Context, obj interface{}, next graphql.Resolver) (res interface{}, err error) {$/;"	d
+AuthCustomClaims	.\applications\hades\src\authentication\jwt.go	/^type AuthCustomClaims struct {$/;"	d
+AuthEmail	.\applications\hades\src\resolvers\mutation.resolvers.go	/^func (r *mutationResolver) AuthEmail(ctx context.Context) (bool, error) {$/;"	d
+AuthListener	.\applications\hades\src\generated.go	/^type AuthListener {$/;"	d
+AuthListener	.\applications\hades\src\models\models_gen.go	/^type AuthListener struct {$/;"	d
+AuthListener	.\applications\hades\src\resolvers\subscription.resolvers.go	/^func (r *subscriptionResolver) AuthListener(ctx context.Context) (<-chan *models.AuthListener, error) {$/;"	d
+Authenticate	.\applications\hades\src\resolvers\mutation.resolvers.go	/^func (r *mutationResolver) Authenticate(ctx context.Context, data *models.AuthenticationInput) (bool, error) {$/;"	d
+AuthenticatedUser	.\applications\hades\src\models\auth.go	/^type AuthenticatedUser struct {$/;"	d
+Authentication	.\applications\hades\src\generated.go	/^type Authentication {$/;"	d
+Authentication	.\applications\hades\src\models\models_gen.go	/^type Authentication struct {$/;"	d
+Authentication	.\applications\hades\src\resolvers\query.resolvers.go	/^func (r *queryResolver) Authentication(ctx context.Context) (*models.Authentication, error) {$/;"	d
+AuthenticationCookie	.\applications\eva\src\models\auth.go	/^type AuthenticationCookie struct {$/;"	d
+AuthenticationInput	.\applications\hades\src\models\models_gen.go	/^type AuthenticationInput struct {$/;"	d
+AuthenticationMiddleware	.\applications\hades\src\middleware\auth.go	/^func AuthenticationMiddleware(services services.Services, redis redis.Conn) gin.HandlerFunc {$/;"	d
+AutomaticPersistedQuery	.\applications\hades\src\extensions\apq.go	/^type AutomaticPersistedQuery struct {$/;"	d
+CSRFCheck	.\applications\hades\src\middleware\csrf.go	/^func CSRFCheck() gin.HandlerFunc {$/;"	d
+Cache	.\applications\hades\start.go	/^type Cache struct {$/;"	d
+Close	.\applications\hades\src\services\services.go	/^func (ah *services) Close() error {$/;"	d
+Complexity	.\applications\hades\src\generated.go	/^func (e *executableSchema) Complexity(typeName, field string, childComplexity int, rawArgs map[string]interface{}) (int, bool) {$/;"	d
+ComplexityRoot	.\applications\hades\src\generated.go	/^type ComplexityRoot struct {$/;"	d
+Config	.\applications\hades\src\generated.go	/^type Config struct {$/;"	d
+Conn	.\libraries\rabbit\conn.go	/^type Conn struct {$/;"	d
+Cookie	.\applications\hades\src\generated.go	/^	{Name: "schemas\/authentication.graphql", Input: `type Cookie {$/;"	d
+Cookie	.\applications\hades\src\models\models_gen.go	/^type Cookie struct {$/;"	d
+CreateAuthenticationCookie	.\applications\eva\src\server\server.go	/^func (s *Server) CreateAuthenticationCookie(ctx context.Context, request *eva.CreateAuthenticationCookieRequest) (*eva.AuthenticationCookie, error) {$/;"	d
+CreateScyllaSession	.\libraries\testing\scylla\scylla.go	/^func CreateScyllaSession(t *testing.T, host string, keyspace string) gocqlx.Session {$/;"	d
+CreateUserSession	.\applications\hades\src\helpers\auth.go	/^func CreateUserSession(gc *gin.Context, redis redis.Conn, id string) (*string, error) {$/;"	d
+DeleteAuthenticationCookie	.\applications\eva\src\server\server.go	/^func (s *Server) DeleteAuthenticationCookie(ctx context.Context, request *eva.GetAuthenticationCookieRequest) (*eva.DeleteAuthenticationCookieResponse, error) {$/;"	d
+DirectiveRoot	.\applications\hades\src\generated.go	/^type DirectiveRoot struct {$/;"	d
+Eva	.\applications\hades\src\services\services.go	/^func (ah *services) Eva() evav1.EvaAPIClient {$/;"	d
+Exec	.\applications\hades\src\generated.go	/^func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {$/;"	d
+ExtensionName	.\applications\hades\src\extensions\apq.go	/^func (a AutomaticPersistedQuery) ExtensionName() string {$/;"	d
+GenerateToken	.\applications\hades\src\authentication\jwt.go	/^func (service *jwtServices) GenerateToken(id string, expiration int64) string {$/;"	d
+Get	.\applications\hades\start.go	/^func (c *Cache) Get(ctx context.Context, key string) (interface{}, bool) {$/;"	d
+GetAuthenticationCookie	.\applications\eva\src\server\server.go	/^func (s *Server) GetAuthenticationCookie(ctx context.Context, request *eva.GetAuthenticationCookieRequest) (*eva.AuthenticationCookie, error) {$/;"	d
+GetConn	.\libraries\rabbit\conn.go	/^func GetConn(rabbitURL string) (Conn, error) {$/;"	d
+GetNestedPreloads	.\applications\hades\src\helpers\preloads.go	/^func GetNestedPreloads(ctx *graphql.OperationContext, fields []graphql.CollectedField, prefix string) (preloads []string) {$/;"	d
+GetPreloadString	.\applications\hades\src\helpers\preloads.go	/^func GetPreloadString(prefix, name string) string {$/;"	d
+GetPreloads	.\applications\hades\src\helpers\preloads.go	/^func GetPreloads(ctx context.Context) []string {$/;"	d
+GetRegisteredEmail	.\applications\eva\src\server\server.go	/^func (s *Server) GetRegisteredEmail(ctx context.Context, request *eva.GetRegisteredEmailRequest) (*eva.User, error) {$/;"	d
+GetUser	.\applications\eva\src\server\server.go	/^func (s *Server) GetUser(ctx context.Context, request *eva.GetUserRequest) (*eva.User, error) {$/;"	d
+GinContextFromContext	.\applications\hades\src\helpers\gin.go	/^func GinContextFromContext(ctx context.Context) *gin.Context {$/;"	d
+GinContextToContextMiddleware	.\applications\hades\src\middleware\gin.go	/^func GinContextToContextMiddleware() gin.HandlerFunc {$/;"	d
+Guest	.\applications\hades\src\directives\directives.go	/^func Guest(ctx context.Context, obj interface{}, next graphql.Resolver) (res interface{}, err error) {$/;"	d
+HandleGraphQL	.\applications\hades\main.go	/^func HandleGraphQL(resolver gen.ResolverRoot, cache *Cache) gin.HandlerFunc {$/;"	d
+Init	.\applications\eva\src\server\server_test.go	/^func Init(t *testing.T) (gocqlx.Session, context.Context, *Server) {$/;"	d
+Init	.\applications\hades\__tests__\init.go	/^func Init(t *testing.T) redis.Conn {$/;"	d
+JWTAuthService	.\applications\hades\src\authentication\jwt.go	/^func JWTAuthService() JWTService {$/;"	d
+JWTService	.\applications\hades\src\authentication\jwt.go	/^type JWTService interface {$/;"	d
+JWTTestService	.\applications\hades\src\authentication\jwt_test.go	/^func JWTTestService() JWTService {$/;"	d
+Logout	.\applications\hades\src\resolvers\mutation.resolvers.go	/^func (r *mutationResolver) Logout(ctx context.Context) (bool, error) {$/;"	d
+MutateOperationParameters	.\applications\hades\src\extensions\apq.go	/^func (a AutomaticPersistedQuery) MutateOperationParameters(ctx context.Context, rawParams *graphql.RawParams) *gqlerror.Error {$/;"	d
+Mutation	.\applications\hades\src\generated.go	/^	{Name: "schemas\/mutation.graphql", Input: `type Mutation {$/;"	d
+Mutation	.\applications\hades\src\resolvers\mutation.resolvers.go	/^func (r *Resolver) Mutation() gen.MutationResolver { return &mutationResolver{r} }$/;"	d
+MutationResolver	.\applications\hades\src\generated.go	/^type MutationResolver interface {$/;"	d
+NewCache	.\applications\hades\start.go	/^func NewCache() (*Cache, error) {$/;"	d
+NewDirectives	.\applications\hades\src\directives\directives.go	/^func NewDirectives() gen.DirectiveRoot {$/;"	d
+NewExecutableSchema	.\applications\hades\src\generated.go	/^func NewExecutableSchema(cfg Config) graphql.ExecutableSchema {$/;"	d
+NewResolver	.\applications\hades\src\resolvers\resolver.go	/^func NewResolver(s services.Services, redis redis.Conn, rabbitSvc rabbit.Conn) *Resolver {$/;"	d
+NewServer	.\applications\eva\src\server\server.go	/^func NewServer(ctx context.Context, session gocqlx.Session) (*Server, error) {$/;"	d
+NewServicesKeeper	.\applications\hades\src\services\services.go	/^func NewServicesKeeper(conf ServicesConfig) (Services, error) {$/;"	d
+OTPKey	.\applications\hades\src\resolvers\utilities.go	/^var OTPKey = "otp-key"$/;"	d
+Publish	.\libraries\rabbit\publish.go	/^func (conn Conn) Publish(exchange string, routingKey string, data []byte, delivery uint8) error {$/;"	d
+Query	.\applications\hades\src\generated.go	/^	{Name: "schemas\/query.graphql", Input: `type Query {$/;"	d
+Query	.\applications\hades\src\resolvers\query.resolvers.go	/^func (r *Resolver) Query() gen.QueryResolver { return &queryResolver{r} }$/;"	d
+QueryResolver	.\applications\hades\src\generated.go	/^type QueryResolver interface {$/;"	d
+ReadCookie	.\applications\hades\src\helpers\cookies.go	/^func ReadCookie(ctx context.Context, name string) (*http.Cookie, error) {$/;"	d
+RedeemAuthenticationCookie	.\applications\eva\src\server\server.go	/^func (s *Server) RedeemAuthenticationCookie(ctx context.Context, request *eva.GetAuthenticationCookieRequest) (*eva.AuthenticationCookie, error) {$/;"	d
+RedeemCookie	.\applications\hades\src\resolvers\query.resolvers.go	/^func (r *queryResolver) RedeemCookie(ctx context.Context, cookie string) (*models.Cookie, error) {$/;"	d
+Register	.\applications\hades\src\resolvers\mutation.resolvers.go	/^func (r *mutationResolver) Register(ctx context.Context, data *models.RegisterInput) (bool, error) {$/;"	d
+RegisterInput	.\applications\hades\src\models\models_gen.go	/^type RegisterInput struct {$/;"	d
+RegisterUser	.\applications\eva\src\server\server.go	/^func (s *Server) RegisterUser(ctx context.Context, request *eva.RegisterUserRequest) (*eva.User, error) {$/;"	d
+RegisteredUser	.\applications\eva\src\models\auth.go	/^type RegisteredUser struct {$/;"	d
+Resolver	.\applications\hades\src\resolvers\resolver.go	/^type Resolver struct {$/;"	d
+ResolverRoot	.\applications\hades\src\generated.go	/^type ResolverRoot interface {$/;"	d
+Run	.\applications\eva\src\server\server.go	/^func (s *Server) Run() {$/;"	d
+Schema	.\applications\hades\src\generated.go	/^func (e *executableSchema) Schema() *ast.Schema {$/;"	d
+Server	.\applications\eva\src\server\server.go	/^type Server struct {$/;"	d
+Services	.\applications\hades\src\services\services.go	/^type Services interface {$/;"	d
+ServicesConfig	.\applications\hades\src\services\services.go	/^type ServicesConfig struct {$/;"	d
+SessionData	.\applications\hades\src\resolvers\mutation.resolvers.go	/^	type SessionData struct {$/;"	d
+SetCookie	.\applications\hades\src\helpers\cookies.go	/^func SetCookie(ctx context.Context, cookie *http.Cookie) (bool, error) {$/;"	d
+StartConsumer	.\libraries\rabbit\consume.go	/^func (conn Conn) StartConsumer($/;"	d
+Subscription	.\applications\hades\src\generated.go	/^	{Name: "schemas\/subscription.graphql", Input: `type Subscription {$/;"	d
+Subscription	.\applications\hades\src\resolvers\subscription.resolvers.go	/^func (r *Resolver) Subscription() gen.SubscriptionResolver { return &subscriptionResolver{r} }$/;"	d
+SubscriptionResolver	.\applications\hades\src\generated.go	/^type SubscriptionResolver interface {$/;"	d
+TestCreateNewAuthenticationCookie_New	.\applications\eva\src\server\server_test.go	/^func TestCreateNewAuthenticationCookie_New(t *testing.T) {$/;"	d
+TestCreateUserSession	.\applications\hades\src\helpers\auth_test.go	/^func TestCreateUserSession(t *testing.T) {$/;"	d
+TestDeleteAuthenticationCookie_Exists	.\applications\eva\src\server\server_test.go	/^func TestDeleteAuthenticationCookie_Exists(t *testing.T) {$/;"	d
+TestJWTToken_Generation	.\applications\hades\src\authentication\jwt_test.go	/^func TestJWTToken_Generation(t *testing.T) {$/;"	d
+TestJWTToken_Validation	.\applications\hades\src\authentication\jwt_test.go	/^func TestJWTToken_Validation(t *testing.T) {$/;"	d
+TestRedeemAuthenticationCookie_Expired	.\applications\eva\src\server\server_test.go	/^func TestRedeemAuthenticationCookie_Expired(t *testing.T) {$/;"	d
+TestRedeemAuthenticationCookie_Not_Expired	.\applications\eva\src\server\server_test.go	/^func TestRedeemAuthenticationCookie_Not_Expired(t *testing.T) {$/;"	d
+TestRegisterUser_Accepted	.\applications\eva\src\server\server_test.go	/^func TestRegisterUser_Accepted(t *testing.T) {$/;"	d
+TestRegisterUser_Declined_Email	.\applications\eva\src\server\server_test.go	/^func TestRegisterUser_Declined_Email(t *testing.T) {$/;"	d
+TestRegisterUser_Declined_Username	.\applications\eva\src\server\server_test.go	/^func TestRegisterUser_Declined_Username(t *testing.T) {$/;"	d
+TestSession	.\applications\hades\src\helpers\auth_test.go	/^type TestSession struct {$/;"	d
+TestUser	.\applications\eva\src\server\server_test.go	/^type TestUser struct {$/;"	d
+User	.\applications\eva\src\models\auth.go	/^type User struct {$/;"	d
+User	.\applications\hades\src\generated.go	/^type User {$/;"	d
+User	.\applications\hades\src\models\models_gen.go	/^type User struct {$/;"	d
+UserEmail	.\applications\eva\src\models\auth.go	/^type UserEmail struct {$/;"	d
+UserFromContext	.\applications\hades\src\helpers\auth.go	/^func UserFromContext(ctx context.Context) *models.AuthenticatedUser {$/;"	d
+UserUsername	.\applications\eva\src\models\auth.go	/^type UserUsername struct {$/;"	d
+Validate	.\applications\hades\src\extensions\apq.go	/^func (a AutomaticPersistedQuery) Validate(schema graphql.ExecutableSchema) error {$/;"	d
+ValidateToken	.\applications\hades\src\authentication\jwt.go	/^func (service *jwtServices) ValidateToken(encodedToken string) (*jwt.Token, error) {$/;"	d
+Validation	.\applications\hades\src\directives\directives.go	/^func Validation(ctx context.Context, obj interface{}, next graphql.Resolver, rules []string) (res interface{}, err error) {$/;"	d
+_AuthListener	.\applications\hades\src\generated.go	/^func (ec *executionContext) _AuthListener(ctx context.Context, sel ast.SelectionSet, obj *models.AuthListener) graphql.Marshaler {$/;"	d
+_AuthListener_cookie	.\applications\hades\src\generated.go	/^func (ec *executionContext) _AuthListener_cookie(ctx context.Context, field graphql.CollectedField, obj *models.AuthListener) (ret graphql.Marshaler) {$/;"	d
+_AuthListener_sameSession	.\applications\hades\src\generated.go	/^func (ec *executionContext) _AuthListener_sameSession(ctx context.Context, field graphql.CollectedField, obj *models.AuthListener) (ret graphql.Marshaler) {$/;"	d
+_Authentication	.\applications\hades\src\generated.go	/^func (ec *executionContext) _Authentication(ctx context.Context, sel ast.SelectionSet, obj *models.Authentication) graphql.Marshaler {$/;"	d
+_Authentication_cookie	.\applications\hades\src\generated.go	/^func (ec *executionContext) _Authentication_cookie(ctx context.Context, field graphql.CollectedField, obj *models.Authentication) (ret graphql.Marshaler) {$/;"	d
+_Authentication_user	.\applications\hades\src\generated.go	/^func (ec *executionContext) _Authentication_user(ctx context.Context, field graphql.CollectedField, obj *models.Authentication) (ret graphql.Marshaler) {$/;"	d
+_Cookie	.\applications\hades\src\generated.go	/^func (ec *executionContext) _Cookie(ctx context.Context, sel ast.SelectionSet, obj *models.Cookie) graphql.Marshaler {$/;"	d
+_Cookie_email	.\applications\hades\src\generated.go	/^func (ec *executionContext) _Cookie_email(ctx context.Context, field graphql.CollectedField, obj *models.Cookie) (ret graphql.Marshaler) {$/;"	d
+_Cookie_redeemed	.\applications\hades\src\generated.go	/^func (ec *executionContext) _Cookie_redeemed(ctx context.Context, field graphql.CollectedField, obj *models.Cookie) (ret graphql.Marshaler) {$/;"	d
+_Cookie_registered	.\applications\hades\src\generated.go	/^func (ec *executionContext) _Cookie_registered(ctx context.Context, field graphql.CollectedField, obj *models.Cookie) (ret graphql.Marshaler) {$/;"	d
+_Cookie_sameSession	.\applications\hades\src\generated.go	/^func (ec *executionContext) _Cookie_sameSession(ctx context.Context, field graphql.CollectedField, obj *models.Cookie) (ret graphql.Marshaler) {$/;"	d
+_Cookie_session	.\applications\hades\src\generated.go	/^func (ec *executionContext) _Cookie_session(ctx context.Context, field graphql.CollectedField, obj *models.Cookie) (ret graphql.Marshaler) {$/;"	d
+_Mutation	.\applications\hades\src\generated.go	/^func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet) graphql.Marshaler {$/;"	d
+_Mutation_authEmail	.\applications\hades\src\generated.go	/^func (ec *executionContext) _Mutation_authEmail(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {$/;"	d
+_Mutation_authenticate	.\applications\hades\src\generated.go	/^func (ec *executionContext) _Mutation_authenticate(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {$/;"	d
+_Mutation_logout	.\applications\hades\src\generated.go	/^func (ec *executionContext) _Mutation_logout(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {$/;"	d
+_Mutation_register	.\applications\hades\src\generated.go	/^func (ec *executionContext) _Mutation_register(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {$/;"	d
+_Query	.\applications\hades\src\generated.go	/^func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) graphql.Marshaler {$/;"	d
+_Query___schema	.\applications\hades\src\generated.go	/^func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {$/;"	d
+_Query___type	.\applications\hades\src\generated.go	/^func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {$/;"	d
+_Query_authentication	.\applications\hades\src\generated.go	/^func (ec *executionContext) _Query_authentication(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {$/;"	d
+_Query_redeemCookie	.\applications\hades\src\generated.go	/^func (ec *executionContext) _Query_redeemCookie(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {$/;"	d
+_Subscription	.\applications\hades\src\generated.go	/^func (ec *executionContext) _Subscription(ctx context.Context, sel ast.SelectionSet) func() graphql.Marshaler {$/;"	d
+_Subscription_authListener	.\applications\hades\src\generated.go	/^func (ec *executionContext) _Subscription_authListener(ctx context.Context, field graphql.CollectedField) (ret func() graphql.Marshaler) {$/;"	d
+_User	.\applications\hades\src\generated.go	/^func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj *models.User) graphql.Marshaler {$/;"	d
+_User_username	.\applications\hades\src\generated.go	/^func (ec *executionContext) _User_username(ctx context.Context, field graphql.CollectedField, obj *models.User) (ret graphql.Marshaler) {$/;"	d
+__DirectiveImplementors	.\applications\hades\src\generated.go	/^var __DirectiveImplementors = []string{"__Directive"}$/;"	d
+__EnumValueImplementors	.\applications\hades\src\generated.go	/^var __EnumValueImplementors = []string{"__EnumValue"}$/;"	d
+__FieldImplementors	.\applications\hades\src\generated.go	/^var __FieldImplementors = []string{"__Field"}$/;"	d
+__InputValueImplementors	.\applications\hades\src\generated.go	/^var __InputValueImplementors = []string{"__InputValue"}$/;"	d
+__SchemaImplementors	.\applications\hades\src\generated.go	/^var __SchemaImplementors = []string{"__Schema"}$/;"	d
+__TypeImplementors	.\applications\hades\src\generated.go	/^var __TypeImplementors = []string{"__Type"}$/;"	d
+___Directive	.\applications\hades\src\generated.go	/^func (ec *executionContext) ___Directive(ctx context.Context, sel ast.SelectionSet, obj *introspection.Directive) graphql.Marshaler {$/;"	d
+___Directive_args	.\applications\hades\src\generated.go	/^func (ec *executionContext) ___Directive_args(ctx context.Context, field graphql.CollectedField, obj *introspection.Directive) (ret graphql.Marshaler) {$/;"	d
+___Directive_description	.\applications\hades\src\generated.go	/^func (ec *executionContext) ___Directive_description(ctx context.Context, field graphql.CollectedField, obj *introspection.Directive) (ret graphql.Marshaler) {$/;"	d
+___Directive_locations	.\applications\hades\src\generated.go	/^func (ec *executionContext) ___Directive_locations(ctx context.Context, field graphql.CollectedField, obj *introspection.Directive) (ret graphql.Marshaler) {$/;"	d
+___Directive_name	.\applications\hades\src\generated.go	/^func (ec *executionContext) ___Directive_name(ctx context.Context, field graphql.CollectedField, obj *introspection.Directive) (ret graphql.Marshaler) {$/;"	d
+___EnumValue	.\applications\hades\src\generated.go	/^func (ec *executionContext) ___EnumValue(ctx context.Context, sel ast.SelectionSet, obj *introspection.EnumValue) graphql.Marshaler {$/;"	d
+___EnumValue_deprecationReason	.\applications\hades\src\generated.go	/^func (ec *executionContext) ___EnumValue_deprecationReason(ctx context.Context, field graphql.CollectedField, obj *introspection.EnumValue) (ret graphql.Marshaler) {$/;"	d
+___EnumValue_description	.\applications\hades\src\generated.go	/^func (ec *executionContext) ___EnumValue_description(ctx context.Context, field graphql.CollectedField, obj *introspection.EnumValue) (ret graphql.Marshaler) {$/;"	d
+___EnumValue_isDeprecated	.\applications\hades\src\generated.go	/^func (ec *executionContext) ___EnumValue_isDeprecated(ctx context.Context, field graphql.CollectedField, obj *introspection.EnumValue) (ret graphql.Marshaler) {$/;"	d
+___EnumValue_name	.\applications\hades\src\generated.go	/^func (ec *executionContext) ___EnumValue_name(ctx context.Context, field graphql.CollectedField, obj *introspection.EnumValue) (ret graphql.Marshaler) {$/;"	d
+___Field	.\applications\hades\src\generated.go	/^func (ec *executionContext) ___Field(ctx context.Context, sel ast.SelectionSet, obj *introspection.Field) graphql.Marshaler {$/;"	d
+___Field_args	.\applications\hades\src\generated.go	/^func (ec *executionContext) ___Field_args(ctx context.Context, field graphql.CollectedField, obj *introspection.Field) (ret graphql.Marshaler) {$/;"	d
+___Field_deprecationReason	.\applications\hades\src\generated.go	/^func (ec *executionContext) ___Field_deprecationReason(ctx context.Context, field graphql.CollectedField, obj *introspection.Field) (ret graphql.Marshaler) {$/;"	d
+___Field_description	.\applications\hades\src\generated.go	/^func (ec *executionContext) ___Field_description(ctx context.Context, field graphql.CollectedField, obj *introspection.Field) (ret graphql.Marshaler) {$/;"	d
+___Field_isDeprecated	.\applications\hades\src\generated.go	/^func (ec *executionContext) ___Field_isDeprecated(ctx context.Context, field graphql.CollectedField, obj *introspection.Field) (ret graphql.Marshaler) {$/;"	d
+___Field_name	.\applications\hades\src\generated.go	/^func (ec *executionContext) ___Field_name(ctx context.Context, field graphql.CollectedField, obj *introspection.Field) (ret graphql.Marshaler) {$/;"	d
+___Field_type	.\applications\hades\src\generated.go	/^func (ec *executionContext) ___Field_type(ctx context.Context, field graphql.CollectedField, obj *introspection.Field) (ret graphql.Marshaler) {$/;"	d
+___InputValue	.\applications\hades\src\generated.go	/^func (ec *executionContext) ___InputValue(ctx context.Context, sel ast.SelectionSet, obj *introspection.InputValue) graphql.Marshaler {$/;"	d
+___InputValue_defaultValue	.\applications\hades\src\generated.go	/^func (ec *executionContext) ___InputValue_defaultValue(ctx context.Context, field graphql.CollectedField, obj *introspection.InputValue) (ret graphql.Marshaler) {$/;"	d
+___InputValue_description	.\applications\hades\src\generated.go	/^func (ec *executionContext) ___InputValue_description(ctx context.Context, field graphql.CollectedField, obj *introspection.InputValue) (ret graphql.Marshaler) {$/;"	d
+___InputValue_name	.\applications\hades\src\generated.go	/^func (ec *executionContext) ___InputValue_name(ctx context.Context, field graphql.CollectedField, obj *introspection.InputValue) (ret graphql.Marshaler) {$/;"	d
+___InputValue_type	.\applications\hades\src\generated.go	/^func (ec *executionContext) ___InputValue_type(ctx context.Context, field graphql.CollectedField, obj *introspection.InputValue) (ret graphql.Marshaler) {$/;"	d
+___Schema	.\applications\hades\src\generated.go	/^func (ec *executionContext) ___Schema(ctx context.Context, sel ast.SelectionSet, obj *introspection.Schema) graphql.Marshaler {$/;"	d
+___Schema_directives	.\applications\hades\src\generated.go	/^func (ec *executionContext) ___Schema_directives(ctx context.Context, field graphql.CollectedField, obj *introspection.Schema) (ret graphql.Marshaler) {$/;"	d
+___Schema_mutationType	.\applications\hades\src\generated.go	/^func (ec *executionContext) ___Schema_mutationType(ctx context.Context, field graphql.CollectedField, obj *introspection.Schema) (ret graphql.Marshaler) {$/;"	d
+___Schema_queryType	.\applications\hades\src\generated.go	/^func (ec *executionContext) ___Schema_queryType(ctx context.Context, field graphql.CollectedField, obj *introspection.Schema) (ret graphql.Marshaler) {$/;"	d
+___Schema_subscriptionType	.\applications\hades\src\generated.go	/^func (ec *executionContext) ___Schema_subscriptionType(ctx context.Context, field graphql.CollectedField, obj *introspection.Schema) (ret graphql.Marshaler) {$/;"	d
+___Schema_types	.\applications\hades\src\generated.go	/^func (ec *executionContext) ___Schema_types(ctx context.Context, field graphql.CollectedField, obj *introspection.Schema) (ret graphql.Marshaler) {$/;"	d
+___Type	.\applications\hades\src\generated.go	/^func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, obj *introspection.Type) graphql.Marshaler {$/;"	d
+___Type_description	.\applications\hades\src\generated.go	/^func (ec *executionContext) ___Type_description(ctx context.Context, field graphql.CollectedField, obj *introspection.Type) (ret graphql.Marshaler) {$/;"	d
+___Type_enumValues	.\applications\hades\src\generated.go	/^func (ec *executionContext) ___Type_enumValues(ctx context.Context, field graphql.CollectedField, obj *introspection.Type) (ret graphql.Marshaler) {$/;"	d
+___Type_fields	.\applications\hades\src\generated.go	/^func (ec *executionContext) ___Type_fields(ctx context.Context, field graphql.CollectedField, obj *introspection.Type) (ret graphql.Marshaler) {$/;"	d
+___Type_inputFields	.\applications\hades\src\generated.go	/^func (ec *executionContext) ___Type_inputFields(ctx context.Context, field graphql.CollectedField, obj *introspection.Type) (ret graphql.Marshaler) {$/;"	d
+___Type_interfaces	.\applications\hades\src\generated.go	/^func (ec *executionContext) ___Type_interfaces(ctx context.Context, field graphql.CollectedField, obj *introspection.Type) (ret graphql.Marshaler) {$/;"	d
+___Type_kind	.\applications\hades\src\generated.go	/^func (ec *executionContext) ___Type_kind(ctx context.Context, field graphql.CollectedField, obj *introspection.Type) (ret graphql.Marshaler) {$/;"	d
+___Type_name	.\applications\hades\src\generated.go	/^func (ec *executionContext) ___Type_name(ctx context.Context, field graphql.CollectedField, obj *introspection.Type) (ret graphql.Marshaler) {$/;"	d
+___Type_ofType	.\applications\hades\src\generated.go	/^func (ec *executionContext) ___Type_ofType(ctx context.Context, field graphql.CollectedField, obj *introspection.Type) (ret graphql.Marshaler) {$/;"	d
+___Type_possibleTypes	.\applications\hades\src\generated.go	/^func (ec *executionContext) ___Type_possibleTypes(ctx context.Context, field graphql.CollectedField, obj *introspection.Type) (ret graphql.Marshaler) {$/;"	d
+arg0	.\applications\hades\src\generated.go	/^	var arg0 *models.AuthenticationInput$/;"	d
+arg0	.\applications\hades\src\generated.go	/^	var arg0 *models.RegisterInput$/;"	d
+arg0	.\applications\hades\src\generated.go	/^	var arg0 []string$/;"	d
+arg0	.\applications\hades\src\generated.go	/^	var arg0 bool$/;"	d
+arg0	.\applications\hades\src\generated.go	/^	var arg0 string$/;"	d
+asMap	.\applications\hades\src\generated.go	/^	var asMap = obj.(map[string]interface{})$/;"	d
+authListenerImplementors	.\applications\hades\src\generated.go	/^var authListenerImplementors = []string{"AuthListener"}$/;"	d
+authenticate	.\applications\medusa\src\server\locales\en\auth.json	/^  "authenticate": {$/;"	f
+authenticationImplementors	.\applications\hades\src\generated.go	/^var authenticationImplementors = []string{"Authentication"}$/;"	d
+axios	.\package.json	/^    "axios": "^0.21.1",$/;"	f
+babel-eslint	.\package.json	/^    "babel-eslint": "^10.1.0",$/;"	f
+babel-jest	.\package.json	/^    "babel-jest": "^26.6.3",$/;"	f
+babel-loader	.\package.json	/^    "babel-loader": "^8.2.2",$/;"	f
+babel-plugin-relay	.\package.json	/^    "babel-plugin-relay": "^10.1.2",$/;"	f
+background_color	.\applications\medusa\public\manifest.json	/^  "background_color": "#ffffff"$/;"	f
+baeb01655c5e1818c7a116ad2e2353f9	.\applications\hades\queries.json	/^  "baeb01655c5e1818c7a116ad2e2353f9": "mutation JoinMutation(\\n  $data: AuthenticationInput!\\n) {\\n  authenticate(data: $data)\\n}\\n",$/;"	f
+body-parser	.\package.json	/^    "body-parser": "^1.19.0",$/;"	f
+browser	.\.eslintrc.json	/^    "browser": true,$/;"	f
+browserslist	.\package.json	/^  "browserslist": {$/;"	f
+buf	.\applications\hades\src\generated.go	/^			var buf bytes.Buffer$/;"	d
+buf	.\applications\hades\src\generated.go	/^		var buf bytes.Buffer$/;"	d
+build	.\package.json	/^    "build": "razzle build",$/;"	f
+c8	.\package.json	/^    "c8": "^7.6.0",$/;"	f
+cfa55e171caaf100d02a5c3f65c631b0	.\applications\hades\queries.json	/^  "cfa55e171caaf100d02a5c3f65c631b0": "query TokenQuery(\\n  $cookie: String!\\n) {\\n  redeemCookie(cookie: $cookie) {\\n    sameSession\\n    registered\\n    session\\n  }\\n}\\n",$/;"	f
+chokidar	.\package.json	/^    "chokidar": "^3.4.3",$/;"	f
+close	.\applications\medusa\src\server\locales\en\token.json	/^  "close": "You may safely close this window"$/;"	f
+concurrently	.\package.json	/^    "concurrently": "^5.0.0",$/;"	f
+config.devServer.proxy.context	.\applications\medusa\razzle.config.js	/^          context: () => true,$/;"	p
+config.optimization.moduleIds	.\applications\medusa\razzle.config.js	/^        moduleIds: 'size',$/;"	p
+config.optimization.runtimeChunk	.\applications\medusa\razzle.config.js	/^        runtimeChunk: 'single',$/;"	p
+config.optimization.splitChunks	.\applications\medusa\razzle.config.js	/^        splitChunks: {$/;"	p
+config.resolve.alias.@//:modules	.\applications\medusa\razzle.config.js	/^      '@\/\/:modules': path.resolve(__dirname, 'src\/modules'),$/;"	p
+const.argumentDefinitions	.\applications\medusa\src\__generated__\JoinFragment.graphql.js	/^  "argumentDefinitions": [],$/;"	p
+const.breakpoints	.\applications\medusa\src\client\theme.js	/^  breakpoints: ['40em', '52em', '64em'],$/;"	p
+const.click	.\applications\medusa\src\modules\animations\config\Config.js	/^  click: {$/;"	p
+const.debug	.\applications\medusa\src\client\utilities\i18next.js	/^  debug: false,$/;"	p
+const.directives	.\applications\medusa\src\server\config\csp.js	/^  directives: {$/;"	p
+const.fallbackLng	.\applications\medusa\src\client\utilities\i18next.js	/^  fallbackLng: 'en',$/;"	p
+const.interpolation	.\applications\medusa\src\client\utilities\i18next.js	/^  interpolation: {$/;"	p
+const.load	.\applications\medusa\src\client\utilities\i18next.js	/^  load: 'languageOnly',$/;"	p
+const.pathname	.\applications\medusa\src\modules\routing\createMockHistory.js	/^    pathname: loc.pathname || '\/',$/;"	p
+const.saveMissing	.\applications\medusa\src\client\utilities\i18next.js	/^  saveMissing: true,$/;"	p
+const.timeoutMs	.\applications\medusa\src\modules\routing\RouteRenderer.js	/^const SUSPENSE_CONFIG = { timeoutMs: 2000 };$/;"	p
+continue	.\applications\medusa\src\server\locales\en\auth.json	/^      "continue": "Continue",$/;"	f
+convertPreparedToQueries	.\applications\medusa\src\modules\routing\createRouter.js	/^function convertPreparedToQueries(environment, prepare, params, index) {$/;"	f
+cookie-parser	.\package.json	/^    "cookie-parser": "^1.4.5",$/;"	f
+cookieImplementors	.\applications\hades\src\generated.go	/^var cookieImplementors = []string{"Cookie"}$/;"	d
+cookieItem	.\applications\eva\src\server\server.go	/^	var cookieItem models.AuthenticationCookie$/;"	d
+css-loader	.\package.json	/^    "css-loader": "^5.0.1",$/;"	f
+csurf	.\package.json	/^    "csurf": "^1.11.0",$/;"	f
+dependencies	.\package.json	/^  "dependencies": {$/;"	f
+devDependencies	.\package.json	/^  "devDependencies": {$/;"	f
+development	.\package.json	/^    "development": [$/;"	f
+dir_validation_args	.\applications\hades\src\generated.go	/^func (ec *executionContext) dir_validation_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {$/;"	d
+display	.\applications\medusa\public\manifest.json	/^  "display": "standalone",$/;"	f
+dotenv-webpack	.\package.json	/^    "dotenv-webpack": "^6.0.0",$/;"	f
+ecmaFeatures	.\.eslintrc.json	/^    "ecmaFeatures": {$/;"	f
+ecmaVersion	.\.eslintrc.json	/^    "ecmaVersion": 2020,$/;"	f
+ejs	.\package.json	/^    "ejs": "^3.1.5",$/;"	f
+email	.\applications\medusa\src\server\locales\en\auth.json	/^        "email": {$/;"	f
+email	.\applications\medusa\src\server\locales\en\auth.json	/^      "email": {$/;"	f
+empty	.\applications\medusa\src\server\locales\en\empty.json	/^  "empty": {$/;"	f
+env	.\.eslintrc.json	/^  "env": {$/;"	f
+err	.\applications\hades\src\generated.go	/^			var err error$/;"	d
+err	.\applications\hades\src\generated.go	/^	var err error$/;"	d
+error	.\applications\medusa\src\server\locales\en\auth.json	/^    "error": "There was an error with this page. Please try refreshing.",$/;"	f
+error	.\applications\medusa\src\server\locales\en\auth.json	/^    "error": "There was an issue with registration.",$/;"	f
+error	.\applications\medusa\src\server\locales\en\auth.json	/^    "error": {$/;"	f
+es6	.\.eslintrc.json	/^    "es6": true$/;"	f
+eslint	.\package.json	/^    "eslint": "^7.20.0",$/;"	f
+eslint-config-prettier	.\package.json	/^    "eslint-config-prettier": "^7.1.0",$/;"	f
+eslint-config-standard	.\package.json	/^    "eslint-config-standard": "^16.0.2",$/;"	f
+eslint-plugin-flowtype	.\package.json	/^    "eslint-plugin-flowtype": "^5.3.1",$/;"	f
+eslint-plugin-import	.\package.json	/^    "eslint-plugin-import": "^2.22.1",$/;"	f
+eslint-plugin-jest	.\package.json	/^    "eslint-plugin-jest": "^24.1.5",$/;"	f
+eslint-plugin-node	.\package.json	/^    "eslint-plugin-node": "^11.1.0",$/;"	f
+eslint-plugin-prettier	.\package.json	/^    "eslint-plugin-prettier": "^3.1.1",$/;"	f
+eslint-plugin-promise	.\package.json	/^    "eslint-plugin-promise": "^4.2.1",$/;"	f
+eslint-plugin-react	.\package.json	/^    "eslint-plugin-react": "^7.22.0",$/;"	f
+eslint-plugin-react-hooks	.\package.json	/^    "eslint-plugin-react-hooks": "^4.2.0",$/;"	f
+eslint-plugin-relay	.\package.json	/^    "eslint-plugin-relay": "^1.8.1",$/;"	f
+eslintConfig	.\package.json	/^  "eslintConfig": {$/;"	f
+executableSchema	.\applications\hades\src\generated.go	/^type executableSchema struct {$/;"	d
+executionContext	.\applications\hades\src\generated.go	/^type executionContext struct {$/;"	d
+export.error	.\applications\medusa\src\modules\utilities\ErrorBoundary.js	/^    error: null,$/;"	p
+express	.\package.json	/^    "express": "^4.17.1",$/;"	f
+extends	.\.eslintrc.json	/^  "extends": [$/;"	f
+extends	.\package.json	/^    "extends": "react-app"$/;"	f
+extension	.\applications\hades\src\extensions\apq.go	/^	var extension struct {$/;"	d
+fe716f6686c2e2093af181022fb2b2b8	.\applications\hades\queries.json	/^  "fe716f6686c2e2093af181022fb2b2b8": "query RootQuery {\\n  authentication {\\n    user {\\n      username\\n    }\\n    ...JoinFragment\\n  }\\n}\\n\\nfragment JoinFragment on Authentication {\\n  cookie {\\n    redeemed\\n    registered\\n    sameSession\\n    email\\n  }\\n}\\n",$/;"	f
+field_Mutation_authenticate_args	.\applications\hades\src\generated.go	/^func (ec *executionContext) field_Mutation_authenticate_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {$/;"	d
+field_Mutation_register_args	.\applications\hades\src\generated.go	/^func (ec *executionContext) field_Mutation_register_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {$/;"	d
+field_Query___type_args	.\applications\hades\src\generated.go	/^func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {$/;"	d
+field_Query_redeemCookie_args	.\applications\hades\src\generated.go	/^func (ec *executionContext) field_Query_redeemCookie_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {$/;"	d
+field___Type_enumValues_args	.\applications\hades\src\generated.go	/^func (ec *executionContext) field___Type_enumValues_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {$/;"	d
+field___Type_fields_args	.\applications\hades\src\generated.go	/^func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {$/;"	d
+file-loader	.\package.json	/^    "file-loader": "^6.2.0",$/;"	f
+flow-bin	.\package.json	/^    "flow-bin": "^0.145.0",$/;"	f
+form	.\applications\medusa\src\server\locales\en\auth.json	/^    "form": {$/;"	f
+get-graphql-schema	.\package.json	/^    "get-graphql-schema": "^2.1.2",$/;"	f
+getSecretKey	.\applications\hades\src\authentication\jwt.go	/^func getSecretKey() string {$/;"	d
+graphql	.\package.json	/^    "graphql": "^14.5.8",$/;"	f
+graphql	.\package.json	/^    "graphql": "yarn graphql-codegen",$/;"	f
+hash	.\applications\hades\src\middleware\csrf.go	/^func hash(str string) string {$/;"	d
+header	.\applications\medusa\src\server\locales\en\auth.json	/^    "header": "Click on the link you received in your email to continue",$/;"	f
+header	.\applications\medusa\src\server\locales\en\empty.json	/^    "header": "It doesn't look like there's anything here",$/;"	f
+header	.\applications\medusa\src\server\locales\en\token.json	/^  "header": "You have been successfully logged in to the requested device",$/;"	f
+helmet	.\package.json	/^    "helmet": "^4.3.1",$/;"	f
+history	.\package.json	/^    "history": "^4.10.1",$/;"	f
+home	.\applications\medusa\src\server\locales\en\empty.json	/^    "home": "Home"$/;"	f
+hooks	.\package.json	/^    "hooks": {$/;"	f
+html-loader	.\package.json	/^    "html-loader": "^1.3.2",$/;"	f
+html-webpack-plugin	.\package.json	/^    "html-webpack-plugin": "^4.5.0",$/;"	f
+husky	.\package.json	/^    "husky": "^3.0.9",$/;"	f
+husky	.\package.json	/^  "husky": {$/;"	f
+i18next	.\package.json	/^    "i18next": "^19.8.4",$/;"	f
+i18next-fs-backend	.\package.json	/^    "i18next-fs-backend": "^1.0.7",$/;"	f
+i18next-http-backend	.\package.json	/^    "i18next-http-backend": "^1.0.21",$/;"	f
+i18next-http-middleware	.\package.json	/^    "i18next-http-middleware": "^3.0.6",$/;"	f
+icons	.\applications\medusa\public\manifest.json	/^  "icons": [$/;"	f
+init	.\applications\eva\main.go	/^func init() {$/;"	d
+init	.\applications\hades\main.go	/^func init() {$/;"	d
+introspectSchema	.\applications\hades\src\generated.go	/^func (ec *executionContext) introspectSchema() (*introspection.Schema, error) {$/;"	d
+introspectType	.\applications\hades\src\generated.go	/^func (ec *executionContext) introspectType(name string) (*introspection.Type, error) {$/;"	d
+invalids	.\applications\hades\src\generated.go	/^	var invalids uint32$/;"	d
+it	.\applications\hades\src\generated.go	/^	var it models.AuthenticationInput$/;"	d
+it	.\applications\hades\src\generated.go	/^	var it models.RegisterInput$/;"	d
+jest-cli	.\package.json	/^    "jest-cli": "24.9.0",$/;"	f
+jest-environment-jsdom-sixteen	.\package.json	/^    "jest-environment-jsdom-sixteen": "^1.0.3",$/;"	f
+join	.\applications\medusa\src\server\locales\en\auth.json	/^      "join": "There was an error with joining",$/;"	f
+json-loader	.\package.json	/^    "json-loader": "^0.5.7",$/;"	f
+jsx	.\.eslintrc.json	/^      "jsx": true$/;"	f
+jwtServices	.\applications\hades\src\authentication\jwt.go	/^type jwtServices struct {$/;"	d
+leave	.\applications\medusa\src\server\locales\en\empty.json	/^    "leave": "Back",$/;"	f
+let.location	.\applications\medusa\src\modules\routing\createRouter.js	/^    location: history.location,$/;"	p
+lint-staged	.\package.json	/^    "lint-staged": "^9.4.2",$/;"	f
+lint-staged	.\package.json	/^  "lint-staged": {$/;"	f
+lobby	.\applications\medusa\src\server\locales\en\auth.json	/^  "lobby": {$/;"	f
+main	.\applications\eva\main.go	/^func main() {$/;"	d
+main	.\applications\hades\main.go	/^func main() {$/;"	d
+marshalNBoolean2bool	.\applications\hades\src\generated.go	/^func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.SelectionSet, v bool) graphql.Marshaler {$/;"	d
+marshalNString2	.\applications\hades\src\generated.go	/^func (ec *executionContext) marshalNString2ᚕstringᚄ(ctx context.Context, sel ast.SelectionSet, v []string) graphql.Marshaler {$/;"	d
+marshalNString2string	.\applications\hades\src\generated.go	/^func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {$/;"	d
+marshalN__Directive2	.\applications\hades\src\generated.go	/^func (ec *executionContext) marshalN__Directive2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐDirectiveᚄ(ctx context.Context, sel ast.SelectionSet, v []introspection.Directive) graphql.Marshaler {$/;"	d
+marshalN__Directive2github	.\applications\hades\src\generated.go	/^func (ec *executionContext) marshalN__Directive2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐDirective(ctx context.Context, sel ast.SelectionSet, v introspection.Directive) graphql.Marshaler {$/;"	d
+marshalN__DirectiveLocation2	.\applications\hades\src\generated.go	/^func (ec *executionContext) marshalN__DirectiveLocation2ᚕstringᚄ(ctx context.Context, sel ast.SelectionSet, v []string) graphql.Marshaler {$/;"	d
+marshalN__DirectiveLocation2string	.\applications\hades\src\generated.go	/^func (ec *executionContext) marshalN__DirectiveLocation2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {$/;"	d
+marshalN__EnumValue2github	.\applications\hades\src\generated.go	/^func (ec *executionContext) marshalN__EnumValue2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐEnumValue(ctx context.Context, sel ast.SelectionSet, v introspection.EnumValue) graphql.Marshaler {$/;"	d
+marshalN__Field2github	.\applications\hades\src\generated.go	/^func (ec *executionContext) marshalN__Field2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐField(ctx context.Context, sel ast.SelectionSet, v introspection.Field) graphql.Marshaler {$/;"	d
+marshalN__InputValue2	.\applications\hades\src\generated.go	/^func (ec *executionContext) marshalN__InputValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐInputValueᚄ(ctx context.Context, sel ast.SelectionSet, v []introspection.InputValue) graphql.Marshaler {$/;"	d
+marshalN__InputValue2github	.\applications\hades\src\generated.go	/^func (ec *executionContext) marshalN__InputValue2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐInputValue(ctx context.Context, sel ast.SelectionSet, v introspection.InputValue) graphql.Marshaler {$/;"	d
+marshalN__Type2	.\applications\hades\src\generated.go	/^func (ec *executionContext) marshalN__Type2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐTypeᚄ(ctx context.Context, sel ast.SelectionSet, v []introspection.Type) graphql.Marshaler {$/;"	d
+marshalN__Type2	.\applications\hades\src\generated.go	/^func (ec *executionContext) marshalN__Type2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐType(ctx context.Context, sel ast.SelectionSet, v *introspection.Type) graphql.Marshaler {$/;"	d
+marshalN__Type2github	.\applications\hades\src\generated.go	/^func (ec *executionContext) marshalN__Type2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐType(ctx context.Context, sel ast.SelectionSet, v introspection.Type) graphql.Marshaler {$/;"	d
+marshalN__TypeKind2string	.\applications\hades\src\generated.go	/^func (ec *executionContext) marshalN__TypeKind2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {$/;"	d
+marshalOAuthListener2	.\applications\hades\src\generated.go	/^func (ec *executionContext) marshalOAuthListener2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐAuthListener(ctx context.Context, sel ast.SelectionSet, v *models.AuthListener) graphql.Marshaler {$/;"	d
+marshalOAuthentication2	.\applications\hades\src\generated.go	/^func (ec *executionContext) marshalOAuthentication2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐAuthentication(ctx context.Context, sel ast.SelectionSet, v *models.Authentication) graphql.Marshaler {$/;"	d
+marshalOBoolean2	.\applications\hades\src\generated.go	/^func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast.SelectionSet, v *bool) graphql.Marshaler {$/;"	d
+marshalOBoolean2bool	.\applications\hades\src\generated.go	/^func (ec *executionContext) marshalOBoolean2bool(ctx context.Context, sel ast.SelectionSet, v bool) graphql.Marshaler {$/;"	d
+marshalOCookie2	.\applications\hades\src\generated.go	/^func (ec *executionContext) marshalOCookie2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCookie(ctx context.Context, sel ast.SelectionSet, v *models.Cookie) graphql.Marshaler {$/;"	d
+marshalOString2	.\applications\hades\src\generated.go	/^func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel ast.SelectionSet, v *string) graphql.Marshaler {$/;"	d
+marshalOString2string	.\applications\hades\src\generated.go	/^func (ec *executionContext) marshalOString2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {$/;"	d
+marshalOUser2	.\applications\hades\src\generated.go	/^func (ec *executionContext) marshalOUser2ᚖproject01101000ᚋcodebaseᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐUser(ctx context.Context, sel ast.SelectionSet, v *models.User) graphql.Marshaler {$/;"	d
+marshalO__EnumValue2	.\appl	.\applications\hades\src\resolvers\query.resolvers.go	/^type queryResolver struct{ *Resolver }$/;"	d
+matchRoute	.\applications\medusa\src\modules\routing\createRouter.js	/^function matchRoute(routes, history, location, environment) {$/;"	f
+module.exports.experimental	.\applications\medusa\razzle.config.js	/^  experimental: {$/;"	p
+module.exports.reporters	.\applications\medusa\jest.config.js	/^  reporters: ['default', '.\/reporter'],$/;"	p
+module.exports.resolve	.\applications\medusa\webpack.config.js	/^  resolve: {$/;"	p
+module.exports.testEnvironment	.\applications\medusa\jest.config.js	/^  testEnvironment: 'jest-environment-jsdom-sixteen',$/;"	p
+name	.\applications\medusa\public\manifest.json	/^  "name": "Relay Example App - GitHub Issues Clone",$/;"	f
+name	.\package.json	/^  "name": "ph",$/;"	f
+node-fetch	.\package.json	/^    "node-fetch": "^2.6.1",$/;"	f
+pattern	.\applications\medusa\src\server\locales\en\auth.json	/^          "pattern": "Please enter a valid email address"$/;"	f
+placeholder	.\applications\medusa\src\server\locales\en\auth.json	/^        "placeholder": "Enter a username"$/;"	f
+placeholder	.\applications\medusa\src\server\locales\en\auth.json	/^        "placeholder": "Enter your email"$/;"	f
+prepareMatches	.\applications\medusa\src\modules\routing\createRouter.js	/^function prepareMatches(matches, relayEnvironment) {$/;"	f
+prettier	.\package.json	/^    "prettier": "^1.18.2",$/;"	f
+private	.\package.json	/^  "private": true,$/;"	f
+production	.\package.json	/^    "production": [$/;"	f
+razzle	.\package.json	/^    "razzle": "^3.3.9",$/;"	f
+react	.\package.json	/^    "react": "^0.0.0-experimental-3310209d0",$/;"	f
+react-dom	.\package.json	/^    "react-dom": "^0.0.0-experimental-3310209d0",$/;"	f
+react-hook-form	.\package.json	/^    "react-hook-form": "^6.14.1",$/;"	f
+react-i18next	.\package.json	/^    "react-i18next": "^11.8.5",$/;"	f
+react-markdown	.\package.json	/^    "react-markdown": "^4.2.2",$/;"	f
+react-refresh	.\package.json	/^    "react-refresh": "^0.9.0",$/;"	f
+react-relay	.\package.json	/^    "react-relay": "^0.0.0-experimental-0b967d2e",$/;"	f
+react-router	.\package.json	/^    "react-router": "^5.1.2",$/;"	f
+react-router-config	.\package.json	/^    "react-router-config": "^5.1.1",$/;"	f
+react-spring	.\package.json	/^    "react-spring": "9.0.0-rc.3",$/;"	f
+react-ssr-prepass	.\package.json	/^    "react-ssr-prepass": "^1.3.0-rc.0",$/;"	f
+register	.\applications\medusa\src\server\locales\en\auth.json	/^  "register": {$/;"	f
+relay	.\package.json	/^    "relay": "yarn run relay-compiler",$/;"	f
+relay-compiler	.\package.json	/^    "relay-compiler": "^10.1.2",$/;"	f
+relay-compiler-language-js-flow-uncommented	.\package.json	/^    "relay-compiler-language-js-flow-uncommented": "^2.0.0",$/;"	f
+relay-compiler-webpack-plugin	.\package.json	/^    "relay-compiler-webpack-plugin": "^8.1.0",$/;"	f
+relay-config	.\package.json	/^    "relay-config": "^10.1.2",$/;"	f
+relay-runtime	.\package.json	/^    "relay-runtime": "^10.1.2",$/;"	f
+relay-test-utils	.\package.json	/^    "relay-test-utils": "^10.1.3",$/;"	f
+required	.\applications\medusa\src\server\locales\en\auth.json	/^          "required": "Please enter an email address",$/;"	f
+resend	.\applications\medusa\src\server\locales\en\auth.json	/^    "resend": "Resend email",$/;"	f
+result	.\applications\hades\start.go	/^	var result map[string]interface{}$/;"	d
+scripts	.\package.json	/^  "scripts": {$/;"	f
+serialize-javascript	.\package.json	/^    "serialize-javascript": "^5.0.1",$/;"	f
+short_name	.\applications\medusa\public\manifest.json	/^  "short_name": "Relay Example App",$/;"	f
+sizes	.\applications\medusa\public\manifest.json	/^      "sizes": "192x192"$/;"	f
+sizes	.\applications\medusa\public\manifest.json	/^      "sizes": "512x512"$/;"	f
+sizes	.\applications\medusa\public\manifest.json	/^      "sizes": "64x64 32x32 24x24 16x16",$/;"	f
+src	.\applications\medusa\public\manifest.json	/^      "src": "favicon.ico",$/;"	f
+src	.\applications\medusa\public\manifest.json	/^      "src": "logo192.png",$/;"	f
+src	.\applications\medusa\public\manifest.json	/^      "src": "logo512.png",$/;"	f
+start	.\package.json	/^    "start": "razzle start",$/;"	f
+start:prod	.\package.json	/^    "start:prod": "NODE_ENV=production node build\/server.js"$/;"	f
+start_url	.\applications\medusa\public\manifest.json	/^  "start_url": ".",$/;"	f
+submit	.\applications\medusa\src\server\locales\en\auth.json	/^      "submit": "Register"$/;"	f
+subscriptions-transport-ws	.\package.json	/^    "subscriptions-transport-ws": "^0.9.18",$/;"	f
+test	.\package.json	/^    "test": "razzle test --env=jsdom",$/;"	f
+theme-ui	.\package.json	/^    "theme-ui": "^0.6.0-alpha.4",$/;"	f
+theme_color	.\applications\medusa\public\manifest.json	/^  "theme_color": "#000000",$/;"	f
+title	.\applications\medusa\src\server\locales\en\auth.json	/^        "title": "Email",$/;"	f
+title	.\applications\medusa\src\server\locales\en\auth.json	/^        "title": "Username",$/;"	f
+token	.\applications\medusa\src\server\locales\en\auth.json	/^      "token": "This login link is either invalid or has expired"$/;"	f
+type	.\applications\medusa\public\manifest.json	/^      "type": "image\/png",$/;"	f
+type	.\applications\medusa\public\manifest.json	/^      "type": "image\/x-icon"$/;"	f
+type.actions	.\applications\medusa\src\modules\focus\notification\provider\NotificationProvider.js	/^  actions: {$/;"	p
+type.children	.\applications\medusa\src\modules\routing\Link.js	/^  children: Node,$/;"	p
+type.children	.\applications\medusa\src\modules\utilities\BailoutBoundary.js	/^  children: Node,$/;"	p
+type.children	.\applications\medusa\src\modules\utilities\ErrorBoundary.js	/^  children: Node,$/;"	p
+type.cleanup	.\applications\medusa\src\modules\routing\createRouter.js	/^  cleanup: any,$/;"	p
+type.component	.\applications\medusa\src\client\routes.js	/^  component: any,$/;"	p
+type.context	.\applications\medusa\src\modules\routing\createMockHistory.js	/^  context: any,$/;"	p
+type.context	.\applications\medusa\src\modules\routing\createRouter.js	/^  context: Router,$/;"	p
+type.email	.\applications\medusa\src\client\components\routes\join\Join.js	/^  email: string,$/;"	p
+type.email	.\applications\medusa\src\client\components\routes\join\components\Lobby.js	/^  email: ?string,$/;"	p
+type.environment	.\applications\medusa\src\client\Bootstrap.js	/^  environment: typeof RelayEnvironment,$/;"	p
+type.environment	.\applications\medusa\src\modules\testing\withProviders.js	/^  environment: typeof RelayEnvironment,$/;"	p
+type.error	.\applications\medusa\src\modules\focus\notification\hooks\useNotify.js	/^  error: Action,$/;"	p
+type.error	.\applications\medusa\src\modules\utilities\ErrorBoundary.js	/^  error: ?Error,$/;"	p
+type.get	.\applications\medusa\src\modules\routing\createRouter.js	/^  get: Get,$/;"	p
+type.history	.\applications\medusa\src\modules\routing\createRouter.js	/^  history: any,$/;"	p
+type.icon	.\applications\medusa\src\modules\content\icon\Icon.js	/^  icon: any,$/;"	p
+type.location	.\applications\medusa\src\modules\routing\createMockHistory.js	/^  location: string,$/;"	p
+type.message	.\applications\medusa\src\modules\utilities\ErrorBoundary.js	/^  message: string,$/;"	p
+type.onReceive	.\applications\medusa\src\client\components\routes\join\components\Lobby.js	/^  onReceive: any,$/;"	p
+type.preload	.\applications\medusa\src\modules\routing\createRouter.js	/^  preload: Preload,$/;"	p
+type.preloadCode	.\applications\medusa\src\modules\routing\createRouter.js	/^  preloadCode: Preload,$/;"	p
+type.prepared	.\applications\medusa\src\client\components\routes\Root.js	/^  prepared: {$/;"	p
+type.prepared	.\applications\medusa\src\client\components\routes\token\Token.js	/^  prepared: {$/;"	p
+type.source	.\applications\medusa\src\modules\utilities\ErrorBoundary.js	/^  source: any,$/;"	p
+type.src	.\applications\medusa\src\modules\utilities\SuspenseImage.js	/^  src: string,$/;"	p
+type.subscribe	.\applications\medusa\src\modules\routing\createRouter.js	/^  subscribe: Subscribe,$/;"	p
+type.success	.\applications\medusa\src\modules\focus\notification\hooks\useNotify.js	/^  success: Action,$/;"	p
+type.to	.\applications\medusa\src\modules\routing\Link.js	/^  to: string,$/;"	p
+type.type	.\applications\medusa\src\modules\focus\notification\components\Notification.js	/^  type: string,$/;"	p
+type.warn	.\applications\medusa\src\modules\focus\notification\hooks\useNotify.js	/^  warn: Action,$/;"	p
+username	.\applications\medusa\src\server\locales\en\auth.json	/^      "username": {$/;"	f
+validation	.\applications\medusa\src\server\locales\en\auth.json	/^      "validation": {$/;"	f
+verification	.\applications\medusa\src\server\locales\en\auth.json	/^    "verification": "We've sent another verification email. Check your inbox!"$/;"	f
+version	.\package.json	/^  "version": "0.1.0",$/;"	f
+winston	.\package.json	/^    "winston": "^3.3.3"$/;"	f

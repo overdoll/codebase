@@ -6,10 +6,12 @@ import { graphql, usePreloadedQuery } from 'react-relay/hooks';
 import Register from '../../register/Register';
 import { Frame } from '@//:modules/content';
 import { Heading, Text } from '@//:modules/typography';
+import Icon from '@//:modules/content/icon/Icon';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from '@//:modules/routing';
 import type { TokenQuery } from '@//:artifacts/TokenQuery.graphql';
 import type { PreloadedQuery } from 'react-relay/relay-experimental';
+import { SignShapes } from '@streamlinehq/streamline-regular/lib/maps-navigation';
 
 type Props = {
   prepared: {
@@ -33,11 +35,13 @@ export default function Token(props: Props): Node {
     props.prepared.tokenQuery,
   );
 
-  const [t] = useTranslation('auth');
+  const [t] = useTranslation('token');
   const history = useHistory();
 
   if (data.redeemCookie === null) {
-    return t('expired');
+    // Go back to Join page and send notification of invalid token
+    history.push('/join?notify=invalid_token');
+    return 'redirecting';
   }
 
   // Token was not redeemed in the same session, so we tell the user to check

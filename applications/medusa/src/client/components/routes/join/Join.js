@@ -10,6 +10,7 @@ import { Button, Form, Input, useForm } from '@//:modules/form';
 import { Frame } from '@//:modules/content';
 import { useNotify } from '@//:modules/focus';
 import Lobby from './components/Lobby';
+import { useLocation } from '@//:modules/routing';
 import { RootContext } from '../Root';
 import { EMAIL } from '@//:modules/regex';
 import Icon from '@//:modules/content/icon/Icon';
@@ -53,6 +54,9 @@ export default function Join(): Node {
 
   // Receiving a subscription response
   const [authInfo, setAuthInfo] = useState({ authListener: null });
+
+  // Get URL of current window
+  const currentURL = new URLSearchParams(useLocation().search);
 
   // Waiting for a subscription
   const [waiting, setWaiting] = useState(false);
@@ -114,6 +118,10 @@ export default function Join(): Node {
   if (subscriptionNotRegistered || cookieRedeemedNotRegistered) {
     return <Register />;
   }
+  // Look for invalid token URL param
+  if (currentURL.get('notify') === 'invalid_token') {
+    notify.error(t('authenticate.error.token'));
+  }
 
   // Ask user to authenticate
   return (
@@ -148,7 +156,8 @@ export default function Join(): Node {
         />
         <Button
           loading={isInFlight}
-          sx={{ width: 'fill', variant: 'buttons.primary', mt: 2 }}
+          variant={['huge']}
+          sx={{ width: 'fill', variant: 'buttons.primary.regular', mt: 2 }}
         >
           {t('authenticate.form.continue')}
         </Button>

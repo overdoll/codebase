@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import type { LobbySubscriptionResponse } from '@//:artifacts/LobbySubscription.graphql';
 import Icon from '@//:modules/content/icon/Icon';
 import { SignShapes } from '@streamlinehq/streamline-regular/lib/maps-navigation';
+import { ContentCreation } from '@streamlinehq/streamline-bold/lib/content';
 
 type Props = {
   onReceive: any,
@@ -69,8 +70,8 @@ export default function Lobby(props: Props): Node {
 
   const [sendEmail, isSendingEmail] = useMutation(LobbyEmail);
 
+  // Create a timer and state change for button
   const [buttonDisabled, setButtonDisabled] = useState(false);
-
   const [timer, setTimer] = useState(0);
 
   const onSubmit = () => {
@@ -84,6 +85,7 @@ export default function Lobby(props: Props): Node {
     });
   };
 
+  // Create and set timer for specified timeOut length
   const timeOut = timeOutLength => {
     setButtonDisabled(true);
     setTimer(timeOutLength / 1000);
@@ -95,6 +97,7 @@ export default function Lobby(props: Props): Node {
     }, timeOutLength);
   };
 
+  // Clear timer when it reaches a certain number
   const clearTimeout = interval => {
     setButtonDisabled(false);
     clearInterval(interval);
@@ -125,29 +128,37 @@ export default function Lobby(props: Props): Node {
           backgroundColor: 'neutral.800',
           pt: 3,
           pb: 3,
+          overflow: 'scroll',
+          pl: 3,
+          pr: 3,
         }}
       >
         <Text sx={{ color: 'purple.300', fontSize: 2 }}>{props.email}</Text>
         <Icon
-          icon={SignShapes.SignBadgeCircle}
+          icon={ContentCreation.ContentInkPen}
+          // delete cookie from backend and navigate to join
           strokeWidth={2}
-          stroke={'purple.300'}
+          fill={'purple.300'}
           size={16}
           sx={{
-            right: 0,
+            display: 'inline-block',
+            transform: 'translateY(25%) translateX(400%)',
             position: 'absolute',
-            display: 'block',
           }}
         />
       </div>
       <Button
-        sx={{ mt: 6, variant: 'buttons.secondary', width: 'fill' }}
+        variant={['huge']}
+        sx={{
+          mt: 6,
+          variant: 'buttons.tertiary.regular',
+          width: 'fill',
+        }}
         loading={isSendingEmail}
         onClick={onSubmit}
         disabled={buttonDisabled}
       >
-        {t('lobby.resend') +
-          (buttonDisabled === false ? '' : ' ' + '(' + timer + ')')}
+        {t('lobby.resend') + (!buttonDisabled ? '' : ` (${timer})`)}
       </Button>
     </Frame>
   );
