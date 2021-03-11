@@ -4,24 +4,20 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/tidwall/gjson"
 	"overdoll/applications/hades/src/models"
 )
 
 const SearchCharacters = `
 	"query" : {
-		"multi_match" : {
-			"query" : %q,
-			"fields" : ["name^100"],
-			"operator" : "and"
-		}
+		 "match_all" : {}
 	},
-	"size" : 5,
-	"sort" : [ { "_doc" : "asc" } ]`
+	"size" : 100`
 
 func (r *QueryResolver) Characters(ctx context.Context, data *models.CharacterSearchInput) ([]*models.Character, error) {
-	query := fmt.Sprintf(SearchCharacters, data.Name)
+	//query := fmt.Sprintf(SearchCharacters, data.Name)
 
-	response, err := r.Search.Search("characters", models.Character{}, query)
+	response, err := r.Search.Search("characters", models.Character{}, SearchCharacters)
 
 	if err != nil {
 		return nil, err
@@ -31,10 +27,21 @@ func (r *QueryResolver) Characters(ctx context.Context, data *models.CharacterSe
 
 	resp := make([]*models.Character, 0)
 
-	// Cast our results into the correct type
+	// Unmarshal our json into the correct model
 	for _, result := range results {
-		resp = append(resp, result.(*models.Character))
+
+		str, _ := result.MarshalJSON()
+
+		m, ok := gjson.Parse(string(str)).Value().(*models.Character)
+
+		if !ok {
+
+		}
+
+		resp = append(resp, m)
 	}
+
+	fmt.Print(resp)
 
 	return resp, nil
 }

@@ -38,8 +38,6 @@ func (s *Store) Search(index string, inter interface{}, query string, after ...s
 			Hits []struct {
 				ID         string          `json:"_id"`
 				Source     json.RawMessage `json:"_source"`
-				Highlights json.RawMessage `json:"highlight"`
-				Sort       []interface{}   `json:"sort"`
 			}
 		}
 	}
@@ -52,18 +50,13 @@ func (s *Store) Search(index string, inter interface{}, query string, after ...s
 	results.Total = r.Hits.Total.Value
 
 	if len(r.Hits.Hits) < 1 {
-		results.Hits = []interface{}{}
+		results.Hits = []json.RawMessage{}
 		return &results, nil
 	}
 
-	// Unmarshal our hit into an interface
+	// Add our hits to response
 	for _, hit := range r.Hits.Hits {
-		ht := inter
-		if err := json.Unmarshal(hit.Source, &ht); err != nil {
-			return &results, err
-		}
-
-		results.Hits = append(results.Hits, &ht)
+		results.Hits = append(results.Hits, hit.Source)
 	}
 
 	return &results, nil

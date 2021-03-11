@@ -1,4 +1,4 @@
 extend type Query {
-  characters(data: CharacterSearchInput): [Character]
-  categories(data: CategorySearchInput): [Category]
+  characters(data: CharacterSearchInput): [Character!]
+  categories(data: CategorySearchInput): [Category!]
 }

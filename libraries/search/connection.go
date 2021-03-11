@@ -2,6 +2,7 @@ package search
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"os"
 	"time"
@@ -13,7 +14,7 @@ import (
 // SearchResults wraps the Elasticsearch search response.
 type SearchResults struct {
 	Total int    `json:"total"`
-	Hits  []interface{} `json:"hits"`
+	Hits  []json.RawMessage `json:"hits"`
 }
 
 // Hit wraps the document returned in search response.

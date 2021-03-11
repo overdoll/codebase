@@ -34,13 +34,13 @@ type Media {
 
 type Character {
   id: String!
-  thumbnail: String
+  thumbnail: String!
   name: String!
-  media: Media
+  media: Media!
 }
 
 type Category {
   id: String!
-  thumbnail: String
+  thumbnail: String!
   title: String!
 }

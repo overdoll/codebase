@@ -64,10 +64,6 @@ func TestRegisterUser_Accepted(t *testing.T) {
 	}
 
 	assert.Equal(t, response, &eva.User{Username: user.Username, Id: response.Id})
-
-	t.Cleanup(func() {
-
-	})
 }
 
 // TestRegisterUser_Declined_Username - Test user registration with a failure because the username is taken

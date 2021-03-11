@@ -1776,3 +1776,24 @@ go_repository(
     sum = "h1:8sXhOn0uLys67V8EsXLc6eszDs8VXWxL3iRvebPhedY=",
     version = "v1.11.3",
 )
+
+go_repository(
+    name = "com_github_tidwall_gjson",
+    importpath = "github.com/tidwall/gjson",
+    sum = "h1:CTmXMClGYPAmln7652e69B7OLXfTi5ABcPPwjIWUv7w=",
+    version = "v1.6.8",
+)
+
+go_repository(
+    name = "com_github_tidwall_match",
+    importpath = "github.com/tidwall/match",
+    sum = "h1:FQUVvBImDutD8wJLN6c5eMzWtjgONK9MwIBCOrUJKeE=",
+    version = "v1.0.3",
+)
+
+go_repository(
+    name = "com_github_tidwall_pretty",
+    importpath = "github.com/tidwall/pretty",
+    sum = "h1:K3hMW5epkdAVwibsQEfR/7Zj0Qgt4DxtNumTq/VloO8=",
+    version = "v1.1.0",
+)

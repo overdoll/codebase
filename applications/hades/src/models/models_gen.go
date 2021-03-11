@@ -17,9 +17,9 @@ type AuthenticationInput struct {
 }
 
 type Category struct {
-	ID        string  `json:"id"`
-	Thumbnail *string `json:"thumbnail"`
-	Title     string  `json:"title"`
+	ID        string `json:"id"`
+	Thumbnail string `json:"thumbnail"`
+	Title     string `json:"title"`
 }
 
 type CategorySearchInput struct {
@@ -27,10 +27,10 @@ type CategorySearchInput struct {
 }
 
 type Character struct {
-	ID        string  `json:"id"`
-	Thumbnail *string `json:"thumbnail"`
-	Name      string  `json:"name"`
-	Media     *Media  `json:"media"`
+	ID        string `json:"id"`
+	Thumbnail string `json:"thumbnail"`
+	Name      string `json:"name"`
+	Media     Media `json:"media"`
 }
 
 type CharacterRequest struct {

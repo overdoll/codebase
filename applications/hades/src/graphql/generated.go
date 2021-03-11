@@ -500,8 +500,8 @@ directive @role(roles: [String!]!) on FIELD_DEFINITION
 }
 `, BuiltIn: false},
 	{Name: "schemas/posts/queries.graphql", Input: `extend type Query {
-  characters(data: CharacterSearchInput): [Character]
-  categories(data: CategorySearchInput): [Category]
+  characters(data: CharacterSearchInput): [Character!]
+  categories(data: CategorySearchInput): [Category!]
 }
 `, BuiltIn: false},
 	{Name: "schemas/posts/types.graphql", Input: `input PostInput {
@@ -540,14 +540,14 @@ type Media {
 
 type Character {
   id: String!
-  thumbnail: String
+  thumbnail: String!
   name: String!
-  media: Media
+  media: Media!
 }
 
 type Category {
   id: String!
-  thumbnail: String
+  thumbnail: String!
   title: String!
 }
 `, BuiltIn: false},
@@ -970,11 +970,14 @@ func (ec *executionContext) _Category_thumbnail(ctx context.Context, field graph
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Category_title(ctx context.Context, field graphql.CollectedField, obj *models.Category) (ret graphql.Marshaler) {
@@ -1072,11 +1075,14 @@ func (ec *executionContext) _Character_thumbnail(ctx context.Context, field grap
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Character_name(ctx context.Context, field graphql.CollectedField, obj *models.Character) (ret graphql.Marshaler) {
@@ -1139,11 +1145,14 @@ func (ec *executionContext) _Character_media(ctx context.Context, field graphql.
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.(*models.Media)
 	fc.Result = res
-	return ec.marshalOMedia2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐMedia(ctx, field.Selections, res)
+	return ec.marshalNMedia2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐMedia(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Cookie_sameSession(ctx context.Context, field graphql.CollectedField, obj *models.Cookie) (ret graphql.Marshaler) {
@@ -1858,7 +1867,7 @@ func (ec *executionContext) _Query_characters(ctx context.Context, field graphql
 	}
 	res := resTmp.([]*models.Character)
 	fc.Result = res
-	return ec.marshalOCharacter2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCharacter(ctx, field.Selections, res)
+	return ec.marshalOCharacter2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCharacterᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_categories(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1897,7 +1906,7 @@ func (ec *executionContext) _Query_categories(ctx context.Context, field graphql
 	}
 	res := resTmp.([]*models.Category)
 	fc.Result = res
-	return ec.marshalOCategory2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCategory(ctx, field.Selections, res)
+	return ec.marshalOCategory2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCategoryᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -3501,6 +3510,9 @@ func (ec *executionContext) _Category(ctx context.Context, sel ast.SelectionSet,
 			}
 		case "thumbnail":
 			out.Values[i] = ec._Category_thumbnail(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "title":
 			out.Values[i] = ec._Category_title(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -3535,6 +3547,9 @@ func (ec *executionContext) _Character(ctx context.Context, sel ast.SelectionSet
 			}
 		case "thumbnail":
 			out.Values[i] = ec._Character_thumbnail(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "name":
 			out.Values[i] = ec._Character_name(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -3542,6 +3557,9 @@ func (ec *executionContext) _Character(ctx context.Context, sel ast.SelectionSet
 			}
 		case "media":
 			out.Values[i] = ec._Character_media(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -4117,9 +4135,39 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
+func (ec *executionContext) marshalNCategory2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCategory(ctx context.Context, sel ast.SelectionSet, v *models.Category) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._Category(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNCharacter2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCharacter(ctx context.Context, sel ast.SelectionSet, v *models.Character) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._Character(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNCharacterRequest2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCharacterRequest(ctx context.Context, v interface{}) (*models.CharacterRequest, error) {
 	res, err := ec.unmarshalInputCharacterRequest(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNMedia2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐMedia(ctx context.Context, sel ast.SelectionSet, v *models.Media) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._Media(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNPostResponse2overdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐPostResponse(ctx context.Context, sel ast.SelectionSet, v models.PostResponse) graphql.Marshaler {
@@ -4456,7 +4504,7 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	return graphql.MarshalBoolean(*v)
 }
 
-func (ec *executionContext) marshalOCategory2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCategory(ctx context.Context, sel ast.SelectionSet, v []*models.Category) graphql.Marshaler {
+func (ec *executionContext) marshalOCategory2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCategoryᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.Category) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -4483,7 +4531,7 @@ func (ec *executionContext) marshalOCategory2ᚕᚖoverdollᚋapplicationsᚋhad
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOCategory2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCategory(ctx, sel, v[i])
+			ret[i] = ec.marshalNCategory2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCategory(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -4494,13 +4542,6 @@ func (ec *executionContext) marshalOCategory2ᚕᚖoverdollᚋapplicationsᚋhad
 	}
 	wg.Wait()
 	return ret
-}
-
-func (ec *executionContext) marshalOCategory2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCategory(ctx context.Context, sel ast.SelectionSet, v *models.Category) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._Category(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOCategorySearchInput2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCategorySearchInput(ctx context.Context, v interface{}) (*models.CategorySearchInput, error) {
@@ -4511,7 +4552,7 @@ func (ec *executionContext) unmarshalOCategorySearchInput2ᚖoverdollᚋapplicat
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOCharacter2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCharacter(ctx context.Context, sel ast.SelectionSet, v []*models.Character) graphql.Marshaler {
+func (ec *executionContext) marshalOCharacter2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCharacterᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.Character) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -4538,7 +4579,7 @@ func (ec *executionContext) marshalOCharacter2ᚕᚖoverdollᚋapplicationsᚋha
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOCharacter2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCharacter(ctx, sel, v[i])
+			ret[i] = ec.marshalNCharacter2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCharacter(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -4549,13 +4590,6 @@ func (ec *executionContext) marshalOCharacter2ᚕᚖoverdollᚋapplicationsᚋha
 	}
 	wg.Wait()
 	return ret
-}
-
-func (ec *executionContext) marshalOCharacter2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCharacter(ctx context.Context, sel ast.SelectionSet, v *models.Character) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._Character(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOCharacterRequest2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCharacterRequestᚄ(ctx context.Context, v interface{}) ([]*models.CharacterRequest, error) {
@@ -4595,13 +4629,6 @@ func (ec *executionContext) marshalOCookie2ᚖoverdollᚋapplicationsᚋhadesᚋ
 		return graphql.Null
 	}
 	return ec._Cookie(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOMedia2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐMedia(ctx context.Context, sel ast.SelectionSet, v *models.Media) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._Media(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOPostInput2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐPostInput(ctx context.Context, v interface{}) (*models.PostInput, error) {
