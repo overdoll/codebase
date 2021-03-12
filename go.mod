@@ -30,8 +30,6 @@ require (
 	github.com/spf13/cobra v1.1.3
 	github.com/streadway/amqp v1.0.0
 	github.com/stretchr/testify v1.6.1
-	github.com/tidwall/gjson v1.6.8 // indirect
-	github.com/tidwall/pretty v1.1.0 // indirect
 	github.com/tus/tusd v1.5.1
 	github.com/vektah/gqlparser/v2 v2.1.0
 	google.golang.org/grpc v1.29.1
