@@ -123,7 +123,7 @@ const AllArtists = `
 	"query" : { "match_all" : {} },
 	"size" : 5`
 
-func (r *QueryResolver) Artists(ctx context.Context, data *models.Artist) ([]*models.Artist, error) {
+func (r *QueryResolver) Artists(ctx context.Context, data *models.ArtistSearchInput) ([]*models.Artist, error) {
 	var query string
 
 	if data.Username == "" {
