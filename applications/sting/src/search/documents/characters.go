@@ -6,6 +6,12 @@ type Media struct {
 	Title     string `json:"title"`
 }
 
+type Artist struct {
+	Id       string `json:"id"`
+	Avatar   string `json:"avatar"`
+	Username string `json:"username"`
+}
+
 type Character struct {
 	Id        string `json:"id"`
 	Thumbnail string `json:"thumbnail"`

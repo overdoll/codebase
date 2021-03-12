@@ -2,6 +2,16 @@
 
 package models
 
+type Artist struct {
+	ID       string `json:"id"`
+	Avatar   string `json:"avatar"`
+	Username string `json:"username"`
+}
+
+type ArtistSearchInput struct {
+	Username string `json:"username"`
+}
+
 type AuthListener struct {
 	SameSession bool    `json:"sameSession"`
 	Cookie      *Cookie `json:"cookie"`
@@ -30,7 +40,7 @@ type Character struct {
 	ID        string `json:"id"`
 	Thumbnail string `json:"thumbnail"`
 	Name      string `json:"name"`
-	Media     Media `json:"media"`
+	Media     *Media `json:"media"`
 }
 
 type CharacterRequest struct {

@@ -26,10 +26,20 @@ input CategorySearchInput {
   title: String!
 }
 
+input ArtistSearchInput {
+  username: String!
+}
+
 type Media {
   id: String!
   thumbnail: String
   title: String!
+}
+
+type Artist {
+  id: String!
+  avatar: String!
+  username: String!
 }
 
 type Character {

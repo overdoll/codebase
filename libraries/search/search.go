@@ -8,7 +8,7 @@ import (
 )
 
 // Search returns results matching a query, paginated by after.
-func (s *Store) Search(index string, inter interface{}, query string, after ...string) (*SearchResults, error) {
+func (s *Store) Search(index string, query string, after ...string) (*SearchResults, error) {
 	var results SearchResults
 
 	res, err := s.es.Search(

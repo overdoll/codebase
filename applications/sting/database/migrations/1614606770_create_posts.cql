@@ -23,6 +23,14 @@ CREATE TABLE media
     primary key (id)
 );
 
+CREATE TABLE artists
+(
+    user_id  text,
+    user_username text,
+    user_avatar   text,
+    primary key ( user_id )
+);
+
 CREATE TABLE posts
 (
     id             text,

@@ -31,7 +31,7 @@ func (n *UUID) UnmarshalCQL(info gocql.TypeInfo, data []byte) error {
 		return err
 	}
 
-	n = &UUID{id}
+	n.KSUID = id
 
 	return nil
 }

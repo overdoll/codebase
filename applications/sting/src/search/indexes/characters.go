@@ -53,6 +53,25 @@ const MediaIndex = `
 	}
 }`
 
+const ArtistIndex = `
+{
+	"mappings": {
+		"dynamic": "strict",
+		"properties": {
+			"id": {
+				"type": "keyword"
+			},
+			"avatar": {
+				"type": "keyword"
+			},
+			"username": {
+				"type": "text",
+				"analyzer": "english"
+			}
+		}
+	}
+}`
+
 const CategoryIndex = `
 {
 	"mappings": {

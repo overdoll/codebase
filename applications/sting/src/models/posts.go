@@ -25,6 +25,12 @@ type Media struct {
 	Thumbnail string     `db:"thumbnail"`
 }
 
+type Artist struct {
+	Id       ksuid.UUID `db:"user_id"`
+	Username string     `db:"user_username"`
+	Avatar   string     `db:"user_avatar"`
+}
+
 type Post struct {
 	Id            ksuid.UUID   `db:"id"`
 	ArtistId      ksuid.UUID   `db:"artist_id"`
