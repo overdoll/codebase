@@ -17,10 +17,7 @@ import (
 )
 
 func main() {
-	ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
-	defer cancelFn()
-
-	_, err := bootstrap.NewBootstrap(ctx)
+	_, err := bootstrap.NewBootstrap(context.Background())
 
 	if err != nil {
 		log.Fatalf("failed to bootstrap server: %s", err)
@@ -35,10 +32,12 @@ func main() {
 	s3Client := s3.New(session)
 
 	store := s3store.S3Store{
-		Bucket:             "overdoll-processing",
-		Service:            s3Client,
-		TemporaryDirectory: "temporary",
-		MaxObjectSize:      10000000,
+		Bucket:            "overdoll-processing",
+		Service:           s3Client,
+		MaxPartSize:       5 * 1024 * 1024 * 1024,
+		PreferredPartSize: 5 * 1024 * 1024,
+		MinPartSize:       0,
+		MaxObjectSize:     5 * 1024 * 1024 * 1024 * 1024,
 	}
 
 	composer := tusd.NewStoreComposer()

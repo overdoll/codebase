@@ -31,3 +31,9 @@ export default function Upload(props: Props): Node {
 
   return <input type="file" onChange={onChange} />;
 }
+
+Uppy.on('file-removed', () => {});
+
+Uppy.on('complete', () => {
+  console.log('complete');
+});
