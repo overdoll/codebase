@@ -91,6 +91,8 @@ _RUNTIME_DEPS = [
     "@npm//react-hook-form",
     "@npm//@streamlinehq/streamline-bold",
     "@npm//@streamlinehq/streamline-regular",
+    "@npm//@uppy/core",
+    "@npm//@uppy/tus",
 ]
 
 nodejs_binary(

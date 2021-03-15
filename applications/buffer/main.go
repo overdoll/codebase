@@ -13,9 +13,19 @@ import (
 	tusd "github.com/tus/tusd/pkg/handler"
 	"github.com/tus/tusd/pkg/s3store"
 	storage "overdoll/libraries/aws"
+	"overdoll/libraries/bootstrap"
 )
 
 func main() {
+	ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
+	defer cancelFn()
+
+	_, err := bootstrap.NewBootstrap(ctx)
+
+	if err != nil {
+		log.Fatalf("failed to bootstrap server: %s", err)
+	}
+
 	session, err := storage.CreateAWSSession()
 
 	if err != nil {
@@ -25,9 +35,10 @@ func main() {
 	s3Client := s3.New(session)
 
 	store := s3store.S3Store{
-		Bucket:               "overdoll.processing",
-		Service:              s3Client,
-		TemporaryDirectory:   "temporary",
+		Bucket:             "overdoll-processing",
+		Service:            s3Client,
+		TemporaryDirectory: "temporary",
+		MaxObjectSize:      10000000,
 	}
 
 	composer := tusd.NewStoreComposer()
@@ -36,7 +47,7 @@ func main() {
 	// Create a new HTTP handler for the tusd server by providing a configuration.
 	// The StoreComposer property must be set to allow the handler to function.
 	handler, err := tusd.NewHandler(tusd.Config{
-		BasePath:              "/upload/",
+		BasePath:              "/api/upload/",
 		StoreComposer:         composer,
 		NotifyCompleteUploads: true,
 	})
@@ -45,9 +56,13 @@ func main() {
 		log.Fatalf("unable to create handler: %s", err)
 	}
 
+	mux := http.NewServeMux()
+
+	mux.Handle("/api/upload/", http.StripPrefix("/api/upload/", handler))
+
 	srv := &http.Server{
-		Addr: ":8080",
-		Handler: handler,
+		Addr:    ":8080",
+		Handler: mux,
 	}
 
 	done := make(chan os.Signal, 1)

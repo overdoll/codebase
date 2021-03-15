@@ -13,8 +13,9 @@ func CreateAWSSession() (*session.Session, error) {
 		Credentials:      credentials.NewStaticCredentials(os.Getenv("AWS_ACCESS_KEY"), os.Getenv("AWS_ACCESS_SECRET"), ""),
 		Endpoint:         aws.String(os.Getenv("AWS_ENDPOINT")),
 		Region:           aws.String(os.Getenv("AWS_REGION")),
-		DisableSSL:       aws.Bool(true),
+		DisableSSL:       aws.Bool(false),
 		S3ForcePathStyle: aws.Bool(true),
+
 	})
 
 	if err != nil {
