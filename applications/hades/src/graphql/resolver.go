@@ -58,9 +58,10 @@ func Directive() DirectiveRoot {
 	resolver := directives.DirectiveResolver{}
 
 	return DirectiveRoot{
-		Auth:     resolver.Auth,
-		Guest:    resolver.Guest,
-		Role:     resolver.Role,
-		Verified: resolver.Verified,
+		Auth:       resolver.Auth,
+		Guest:      resolver.Guest,
+		Role:       resolver.Role,
+		Verified:   resolver.Verified,
+		Validation: resolver.Validation,
 	}
 }

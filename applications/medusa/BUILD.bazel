@@ -93,6 +93,8 @@ _RUNTIME_DEPS = [
     "@npm//@streamlinehq/streamline-regular",
     "@npm//@uppy/core",
     "@npm//@uppy/tus",
+    "@npm//@uppy/golden-retriever",
+    "@npm//@uppy/thumbnail-generator",
 ]
 
 nodejs_binary(

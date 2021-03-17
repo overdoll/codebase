@@ -33,6 +33,7 @@ export default function Bootstrap(props: Props): Node {
     <CacheProvider value={cache}>
       <I18nextProvider i18n={props.i18next}>
         <ThemeProvider theme={theme}>
+
           <RelayEnvironmentProvider environment={props.environment}>
             {props.children}
           </RelayEnvironmentProvider>
