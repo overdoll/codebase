@@ -1,11 +1,9 @@
 import Uppy from '@uppy/core';
 import Tus from '@uppy/tus';
-import GoldenRetriever from '@uppy/golden-retriever';
-import CanUseDOM from '@//:modules/utilities/CanUseDOM';
 import ThumbnailGenerator from '@uppy/thumbnail-generator';
 
 const U = new Uppy({
-  restrictions: { maxFileSize: 0 },
+  restrictions: { maxNumberOfFiles: 10 },
   autoProceed: true,
   allowMultipleUploads: true,
 });
@@ -19,10 +17,10 @@ U.use(ThumbnailGenerator, {
   waitForThumbnailsBeforeUpload: false,
 });
 
-if (CanUseDOM) {
-  // Allow resuming uploads if user refreshes or navigates away (browser-only)
-  U.use(GoldenRetriever, { serviceWorker: false });
-}
+// if (CanUseDOM) {
+//   // Allow resuming uploads if user refreshes or navigates away (browser-only)
+//   U.use(GoldenRetriever, { serviceWorker: false });
+// }
 
 // Resume-able uploads on the API
 U.use(Tus, { endpoint: '/api/upload/' });
