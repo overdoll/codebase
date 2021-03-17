@@ -4,6 +4,7 @@
 import type { Node } from 'react';
 import { useEffect } from 'react';
 import Uppy from './components/uppy/Uppy';
+import { useUppy } from '@uppy/react';
 
 type Props = {};
 

@@ -2,6 +2,7 @@
  * @flow
  */
 import type { Node } from 'react';
+import type { PreloadedQueryInner } from 'react-relay/hooks';
 import { graphql, usePreloadedQuery } from 'react-relay/hooks';
 import Register from '../../register/Register';
 import { Frame } from '@//:modules/content';
@@ -9,11 +10,10 @@ import { Heading, Text } from '@//:modules/typography';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from '@//:modules/routing';
 import type { TokenQuery } from '@//:artifacts/TokenQuery.graphql';
-import type { PreloadedQuery } from 'react-relay/relay-experimental';
 
 type Props = {
   prepared: {
-    tokenQuery: PreloadedQuery<TokenQuery>,
+    tokenQuery: PreloadedQueryInner<TokenQuery>,
   },
 };
 
