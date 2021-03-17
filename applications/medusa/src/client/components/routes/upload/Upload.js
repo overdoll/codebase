@@ -18,6 +18,13 @@ const events = {
   PROGRESS: 'PROGRESS',
 };
 
+const steps = {
+  REVIEW: 'REVIEW',
+  ARRANGE: 'ARRANGE',
+  FINISH: 'FINISH',
+  TAG: 'TAG',
+};
+
 const reducer = (state, action) => {
   switch (action.type) {
     case events.THUMBNAILS:
@@ -57,49 +64,48 @@ export default function Upload(props: Props): Node {
   // Create thumbnails
   // Urls - when upload is complete we have semi-public urls (you need to know the URL for it to work)
   useEffect(() => {
-    const thumbnailsQueue = {};
+    let thumbnailsQueue = {};
 
     uppy.on('thumbnail:generated', (file, preview) => {
+      thumbnailsQueue = {
+        ...thumbnailsQueue,
+        [file.id]: preview,
+      };
+
       dispatch({
         type: events.THUMBNAILS,
-        value: {
-          ...thumbnailsQueue,
-          [file.id]: preview,
-        },
+        value: thumbnailsQueue,
       });
     });
 
-    const urlQueue = {};
+    let urlQueue = {};
 
     // On upload success, we update so that we have URLs, and we update the thumbnail to the new URL as well
     uppy.on('upload-success', (file, response) => {
+      urlQueue = {
+        ...urlQueue,
+        [file.id]: response.uploadURL,
+      };
+
       dispatch({
         type: events.URLS,
-        value: {
-          ...urlQueue,
-          [file.id]: response.uploadURL,
-        },
-      });
-      dispatch({
-        type: events.THUMBNAILS,
-        value: {
-          ...thumbnailsQueue,
-          [file.id]: response.uploadURL,
-        },
+        value: urlQueue,
       });
     });
   }, []);
 
   // Upload progress - when a file reports progress, update state so user can see
   useEffect(() => {
-    const progressQueue = {};
+    let progressQueue = {};
     uppy.on('upload-progress', (file, progress) => {
+      progressQueue = {
+        ...progressQueue,
+        [file.id]: { '0': progress.bytesUploaded, '1': progress.bytesTotal },
+      };
+
       dispatch({
         type: events.PROGRESS,
-        value: {
-          ...progressQueue,
-          [file.id]: { '0': progress.bytesUploaded, '1': progress.bytesTotal },
-        },
+        value: progressQueue,
       });
     });
   }, []);
@@ -131,9 +137,39 @@ export default function Upload(props: Props): Node {
   }, []);
 
   // Cleanup - reset uppy uploads and state
-  const onCleanup = () => {
+  const onCancel = () => {
     uppy.reset();
     dispatch({ type: 'ALL', value: initialState });
+  };
+
+  const NextStep = () => {
+    switch (state.step) {
+      case steps.ARRANGE:
+        dispatch({ type: events.STEP, value: steps.TAG });
+        break;
+      case steps.TAG:
+        dispatch({ type: events.STEP, value: steps.REVIEW });
+        break;
+      default:
+        break;
+    }
+  };
+
+  const PrevStep = () => {
+    switch (state.step) {
+      case steps.TAG:
+        dispatch({ type: events.STEP, value: steps.ARRANGE });
+        break;
+      case steps.REVIEW:
+        dispatch({ type: events.STEP, value: steps.TAG });
+        break;
+      default:
+        break;
+    }
+  };
+
+  const onSubmit = () => {
+    console.log('submit');
   };
 
   return (
@@ -141,15 +177,27 @@ export default function Upload(props: Props): Node {
       <Stepper uppy={uppy} state={state} dispatch={dispatch} />
       {state.step !== null && (
         <>
-          {state.step && state.step !== 'arrange' && <button>prev</button>}
-          {state.step === 'arrange' && (
-            <button onClick={onCleanup}>cancel</button>
+          {state.step && state.step !== steps.ARRANGE && (
+            <button onClick={PrevStep}>prev</button>
           )}
-          <button>next</button>
+          {state.step === steps.ARRANGE && (
+            <button onClick={onCancel}>cancel</button>
+          )}
+          {state.step !== steps.REVIEW ? (
+            <button onClick={NextStep}>next</button>
+          ) : (
+            <button
+              onClick={onSubmit}
+              // If the amount of files != the amount of urls (not all files were uploaded), then we can't submit yet
+              disabled={state.files.length !== Object.keys(state.urls).length}
+            >
+              submit
+            </button>
+          )}
         </>
       )}
     </>
   );
 }
 
-export { events };
+export { events, steps };

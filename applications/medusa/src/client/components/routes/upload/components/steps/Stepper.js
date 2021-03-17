@@ -4,7 +4,10 @@
 import type { Node } from 'react';
 import Arrange from './arrange/Arrange';
 import Begin from './begin/Begin';
-import { events } from '../../Upload';
+import { events, steps } from '../../Upload';
+import Tag from './tag/Tag';
+import Review from './review/Review';
+import Finish from './finish/Finish';
 
 type Props = {
   uppy: any,
@@ -16,14 +19,14 @@ export default function Stepper({ uppy, state, dispatch }: Props): Node {
   // Add files
   const onAddFiles = files => {
     if (state.step === null) {
-      dispatch({ type: events.STEP, value: 'arrange' });
+      dispatch({ type: events.STEP, value: steps.ARRANGE });
     }
 
     dispatch({ type: events.FILES, value: uppy.getFiles() });
   };
 
   switch (state.step) {
-    case 'arrange':
+    case steps.ARRANGE:
       return (
         <Arrange
           uppy={uppy}
@@ -32,6 +35,12 @@ export default function Stepper({ uppy, state, dispatch }: Props): Node {
           state={state}
         />
       );
+    case steps.TAG:
+      return <Tag />;
+    case steps.REVIEW:
+      return <Review />;
+    case steps.FINISH:
+      return <Finish />;
     default:
       return <Begin uppy={uppy} onAddFiles={onAddFiles} />;
   }
