@@ -2,49 +2,32 @@
  * @flow
  */
 import type { Node } from 'react';
-import { useEffect } from 'react';
-import Uppy from './components/uppy/Uppy';
 import { useUppy } from '@uppy/react';
+import Uppy from './components/uppy/Uppy';
+import Begin from './components/steps/begin/Begin';
 
 type Props = {};
 
 export default function Upload(props: Props): Node {
-  useEffect(() => {
-    Uppy.on('thumbnail:generated', (file, preview) => {
-      const img = document.createElement('img');
-      img.src = preview;
-      img.width = 100;
-      document.body?.appendChild(img);
-    });
+  const uppy = useUppy(() => {
+    return Uppy;
+  });
 
-    Uppy.on('file-removed', () => {});
+  uppy.on('thumbnail:generated', (file, preview) => {
+    const img = document.createElement('img');
+    img.src = preview;
+    img.width = 100;
+    document.body?.appendChild(img);
+  });
 
-    Uppy.on('complete', () => {
-      console.log('complete');
-    });
-  }, []);
+  uppy.on('file-removed', () => {});
 
-  const onChange = e => {
-    const files = Array.from(e.target.files);
-    files.forEach(file => {
-      try {
-        Uppy.addFile({
-          source: 'file input',
-          name: file.name,
-          type: file.type,
-          data: file,
-        });
-      } catch (err) {
-        if (err.isRestriction) {
-          // handle restrictions
-          console.log('Restriction error:', err);
-        } else {
-          // handle other errors
-          console.error(err);
-        }
-      }
-    });
-  };
+  uppy.on('complete', () => {
+    console.log('complete');
+  });
 
-  return <input type="file" multiple onChange={onChange} />;
+  // Finish selecting files
+  const onSelectFiles = () => {};
+
+  return <Begin uppy={uppy} onSelectFiles={onSelectFiles} />;
 }
