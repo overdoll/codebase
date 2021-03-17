@@ -31,7 +31,7 @@
     "i18next-http-backend": "^1.0.21",
     "i18next-http-middleware": "^3.0.6",
     "node-fetch": "^2.6.1",
-    "react": "^0.0.0-experimental-0203b6567",
+    "react": "^0.14.0",
     "react-dom": "^0.0.0-experimental-0203b6567",
     "react-hook-form": "^6.14.1",
     "react-i18next": "^11.8.5",
