@@ -5,9 +5,8 @@ import type { Node } from 'react';
 import { useEffect, useReducer } from 'react';
 import { useUppy } from '@uppy/react';
 import Uppy from './components/uppy/Uppy';
-import Begin from './components/steps/begin/Begin';
-import Arrange from './components/steps/arrange/Arrange';
 import { useNotify } from '@//:modules/focus';
+import Stepper from './components/steps/Stepper';
 
 type Props = {};
 
@@ -18,6 +17,8 @@ const events = {
   STEP: 'STEP',
   PROGRESS: 'PROGRESS',
 };
+
+export { events };
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -55,11 +56,6 @@ export default function Upload(props: Props): Node {
 
   // Remove files based on ID
   useEffect(() => {
-    uppy.on('file-removed', removed => {
-      const newFiles = state.files.filter(file => file.id !== removed.id);
-      dispatch({ type: events.FILES, value: newFiles });
-    });
-
     // we will have 0 files - go back to previous step
     if (state.files.length === 0) {
       dispatch({ type: events.STEP, value: null });
@@ -94,7 +90,7 @@ export default function Upload(props: Props): Node {
     });
   }, []);
 
-  // Upload progress
+  // Upload progress - when a file reports progress, update state
   useEffect(() => {
     let progressQueue = {};
     uppy.on('upload-progress', (file, progress) => {
@@ -105,7 +101,7 @@ export default function Upload(props: Props): Node {
 
       dispatch({ type: events.PROGRESS, value: progressQueue });
     });
-  }, [state.progress]);
+  }, []);
 
   // Events for errors
   useEffect(() => {
@@ -133,35 +129,5 @@ export default function Upload(props: Props): Node {
     });
   }, []);
 
-  // Add files
-  const onAddFiles = files => {
-    if (state.step === null) {
-      dispatch({ type: events.STEP, value: 'arrange' });
-    }
-
-    dispatch({ type: events.FILES, value: uppy.getFiles() });
-  };
-
-  const onRemoveFile = id => {
-    uppy.removeFile(id);
-  };
-
-  const onArrangeFile = (file, pos) => {};
-
-  switch (state.step) {
-    case 'arrange':
-      return (
-        <Arrange
-          uppy={uppy}
-          onAddFiles={onAddFiles}
-          onRemoveFile={onRemoveFile}
-          files={state.files}
-          thumbnails={state.thumbnails}
-          progress={state.progress}
-          onArrangeFile={onArrangeFile}
-        />
-      );
-    default:
-      return <Begin uppy={uppy} onAddFiles={onAddFiles} />;
-  }
+  return <Stepper uppy={uppy} state={state} dispatch={dispatch} />;
 }
