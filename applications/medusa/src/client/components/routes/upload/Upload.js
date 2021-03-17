@@ -18,13 +18,6 @@ const events = {
   PROGRESS: 'PROGRESS',
 };
 
-const steps = {
-  REVIEW: 'REVIEW',
-  ARRANGE: 'ARRANGE',
-  FINISH: 'FINISH',
-  TAG: 'TAG',
-};
-
 const reducer = (state, action) => {
   switch (action.type) {
     case events.THUMBNAILS:
@@ -136,68 +129,25 @@ export default function Upload(props: Props): Node {
     });
   }, []);
 
+  const onSubmit = () => {
+    console.log('submit');
+  };
+
   // Cleanup - reset uppy uploads and state
   const onCancel = () => {
     uppy.reset();
     dispatch({ type: 'ALL', value: initialState });
   };
 
-  const NextStep = () => {
-    switch (state.step) {
-      case steps.ARRANGE:
-        dispatch({ type: events.STEP, value: steps.TAG });
-        break;
-      case steps.TAG:
-        dispatch({ type: events.STEP, value: steps.REVIEW });
-        break;
-      default:
-        break;
-    }
-  };
-
-  const PrevStep = () => {
-    switch (state.step) {
-      case steps.TAG:
-        dispatch({ type: events.STEP, value: steps.ARRANGE });
-        break;
-      case steps.REVIEW:
-        dispatch({ type: events.STEP, value: steps.TAG });
-        break;
-      default:
-        break;
-    }
-  };
-
-  const onSubmit = () => {
-    console.log('submit');
-  };
-
   return (
-    <>
-      <Stepper uppy={uppy} state={state} dispatch={dispatch} />
-      {state.step !== null && (
-        <>
-          {state.step && state.step !== steps.ARRANGE && (
-            <button onClick={PrevStep}>prev</button>
-          )}
-          {state.step === steps.ARRANGE && (
-            <button onClick={onCancel}>cancel</button>
-          )}
-          {state.step !== steps.REVIEW ? (
-            <button onClick={NextStep}>next</button>
-          ) : (
-            <button
-              onClick={onSubmit}
-              // If the amount of files != the amount of urls (not all files were uploaded), then we can't submit yet
-              disabled={state.files.length !== Object.keys(state.urls).length}
-            >
-              submit
-            </button>
-          )}
-        </>
-      )}
-    </>
+    <Stepper
+      onSubmit={onSubmit}
+      onCancel={onCancel}
+      uppy={uppy}
+      state={state}
+      dispatch={dispatch}
+    />
   );
 }
 
-export { events, steps };
+export { events };
