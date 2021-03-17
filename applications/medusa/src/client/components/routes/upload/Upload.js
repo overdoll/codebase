@@ -18,8 +18,6 @@ const events = {
   PROGRESS: 'PROGRESS',
 };
 
-export { events };
-
 const reducer = (state, action) => {
   switch (action.type) {
     case events.THUMBNAILS:
@@ -32,6 +30,8 @@ const reducer = (state, action) => {
       return { ...state, step: action.value };
     case events.PROGRESS:
       return { ...state, progress: action.value };
+    case 'ALL':
+      return action.value;
     default:
       return state;
   }
@@ -54,52 +54,53 @@ export default function Upload(props: Props): Node {
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  // Remove files based on ID
-  useEffect(() => {
-    // we will have 0 files - go back to previous step
-    if (state.files.length === 0) {
-      dispatch({ type: events.STEP, value: null });
-    }
-  }, [state.files]);
-
   // Create thumbnails
-  useEffect(() => {
-    let thumbnailsQueue = {};
-
-    uppy.on('thumbnail:generated', (file, preview) => {
-      thumbnailsQueue = {
-        ...thumbnailsQueue,
-        [file.id]: preview,
-      };
-
-      dispatch({ type: events.THUMBNAILS, value: thumbnailsQueue });
-    });
-  }, []);
-
   // Urls - when upload is complete we have semi-public urls (you need to know the URL for it to work)
   useEffect(() => {
-    let urlQueue = {};
+    const thumbnailsQueue = {};
 
+    uppy.on('thumbnail:generated', (file, preview) => {
+      dispatch({
+        type: events.THUMBNAILS,
+        value: {
+          ...thumbnailsQueue,
+          [file.id]: preview,
+        },
+      });
+    });
+
+    const urlQueue = {};
+
+    // On upload success, we update so that we have URLs, and we update the thumbnail to the new URL as well
     uppy.on('upload-success', (file, response) => {
-      urlQueue = {
-        ...urlQueue,
-        [file.id]: response.uploadURL,
-      };
-
-      dispatch({ type: events.URLS, value: urlQueue });
+      dispatch({
+        type: events.URLS,
+        value: {
+          ...urlQueue,
+          [file.id]: response.uploadURL,
+        },
+      });
+      dispatch({
+        type: events.THUMBNAILS,
+        value: {
+          ...thumbnailsQueue,
+          [file.id]: response.uploadURL,
+        },
+      });
     });
   }, []);
 
-  // Upload progress - when a file reports progress, update state
+  // Upload progress - when a file reports progress, update state so user can see
   useEffect(() => {
-    let progressQueue = {};
+    const progressQueue = {};
     uppy.on('upload-progress', (file, progress) => {
-      progressQueue = {
-        ...progressQueue,
-        [file.id]: { '0': progress.bytesUploaded, '1': progress.bytesTotal },
-      };
-
-      dispatch({ type: events.PROGRESS, value: progressQueue });
+      dispatch({
+        type: events.PROGRESS,
+        value: {
+          ...progressQueue,
+          [file.id]: { '0': progress.bytesUploaded, '1': progress.bytesTotal },
+        },
+      });
     });
   }, []);
 
@@ -129,5 +130,26 @@ export default function Upload(props: Props): Node {
     });
   }, []);
 
-  return <Stepper uppy={uppy} state={state} dispatch={dispatch} />;
+  // Cleanup - reset uppy uploads and state
+  const onCleanup = () => {
+    uppy.reset();
+    dispatch({ type: 'ALL', value: initialState });
+  };
+
+  return (
+    <>
+      <Stepper uppy={uppy} state={state} dispatch={dispatch} />
+      {state.step !== null && (
+        <>
+          {state.step && state.step !== 'arrange' && <button>prev</button>}
+          {state.step === 'arrange' && (
+            <button onClick={onCleanup}>cancel</button>
+          )}
+          <button>next</button>
+        </>
+      )}
+    </>
+  );
 }
+
+export { events };

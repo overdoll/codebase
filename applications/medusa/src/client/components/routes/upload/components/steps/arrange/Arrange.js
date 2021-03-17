@@ -21,7 +21,36 @@ export default function Arrange({
   // OnRemoveFile - remove a file from the list
   const onRemoveFile = id => {
     uppy.removeFile(id);
+
+    if (uppy.getFiles().length === 0) {
+      dispatch({ type: events.STEP, value: null });
+    }
+
     dispatch({ type: events.FILES, value: uppy.getFiles() });
+
+    // Remove progress & thumbnail & urls from object
+    const newProgress = { ...state.progress };
+    delete newProgress[id];
+    dispatch({
+      type: events.PROGRESS,
+      value: newProgress,
+    });
+
+    const newThumbnails = { ...state.thumbnails };
+    delete newThumbnails[id];
+
+    dispatch({
+      type: events.THUMBNAILS,
+      value: newThumbnails,
+    });
+
+    const newUrls = { ...state.urls };
+    delete newUrls[id];
+
+    dispatch({
+      type: events.URLS,
+      value: newUrls,
+    });
   };
 
   // OnArrangeFile - arrange the file
