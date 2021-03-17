@@ -16,6 +16,7 @@ export default function Picker({ uppy, onSelect }: Props): Node {
     const files = Array.from(e.target.files);
     files.forEach(file => {
       try {
+        console.log(file);
         uppy.addFile({
           source: 'file input',
           name: file.name,
@@ -33,7 +34,7 @@ export default function Picker({ uppy, onSelect }: Props): Node {
       }
     });
 
-    onSelect();
+    onSelect(files);
   };
 
   return <input type="file" multiple onChange={onChange} />;

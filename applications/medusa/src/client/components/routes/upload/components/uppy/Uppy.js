@@ -5,10 +5,12 @@ import CanUseDOM from '@//:modules/utilities/CanUseDOM';
 import ThumbnailGenerator from '@uppy/thumbnail-generator';
 
 const U = new Uppy({
-  restrictions: { maxNumberOfFiles: 10 },
+  restrictions: { maxFileSize: 0 },
   autoProceed: true,
+  allowMultipleUploads: true,
 });
 
+// Generate thumbnails for the user to see
 U.use(ThumbnailGenerator, {
   id: 'ThumbnailGenerator',
   thumbnailWidth: 200,
@@ -18,9 +20,11 @@ U.use(ThumbnailGenerator, {
 });
 
 if (CanUseDOM) {
+  // Allow resuming uploads if user refreshes or navigates away (browser-only)
   U.use(GoldenRetriever, { serviceWorker: false });
 }
 
+// Resume-able uploads on the API
 U.use(Tus, { endpoint: '/api/upload/' });
 
 export default U;
