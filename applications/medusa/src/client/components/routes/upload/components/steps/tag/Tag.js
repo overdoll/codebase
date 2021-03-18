@@ -31,7 +31,6 @@ export default function Tag({ state, dispatch, disabled }: Props): Node {
       <TagArtists state={state} dispatch={dispatch} />
       <TagCharacters dispatch={dispatch} state={state} />
       <TagCategories dispatch={dispatch} state={state} />
-
       {disabled && (
         <div>
           you need to select an artist, 1 character and at least 3 categories

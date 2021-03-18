@@ -10,7 +10,10 @@ import Review from './review/Review';
 import Finish from './finish/Finish';
 import { graphql, useMutation } from 'react-relay/hooks';
 import { useNotify } from '@//:modules/focus';
-import type { StepperMutation } from '@//:artifacts/StepperMutation.graphql';
+import type {
+  StepperMutation,
+  StepperMutationResponse,
+} from '@//:artifacts/StepperMutation.graphql';
 
 type Props = {
   uppy: any,
@@ -115,17 +118,22 @@ export default function Stepper({
 
   // onSubmit - submit post
   const onSubmit = (): void => {
+    // TODO: merge variables properly
+
     commit({
       variables: {
         data: {
-          artistUsername: '',
+          artistUsername: state.artist.username,
           categories: [],
           characters: [],
-          artistId: null,
+          artistId: state.artist.id,
           images: [],
+          characterRequests: null,
+          mediaRequests: null,
         },
       },
       onCompleted(data) {
+        dispatch({ type: events.SUBMIT, value: data.post });
         dispatch({ type: events.STEP, value: steps.FINISH });
       },
       onError(data) {
@@ -141,7 +149,9 @@ export default function Stepper({
         {state.step !== null && (
           <>
             {state.step !== steps.ARRANGE ? (
-              <button onClick={PrevStep}>prev</button>
+              <button disabled={isInFlight} onClick={PrevStep}>
+                prev
+              </button>
             ) : (
               <button onClick={onCancel}>cancel</button>
             )}

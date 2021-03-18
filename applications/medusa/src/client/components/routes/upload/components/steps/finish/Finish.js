@@ -8,5 +8,5 @@ type Props = {
 };
 
 export default function Finish({ state }: Props): Node {
-  return <>finish line</>;
+  return <>review required: {state.submit.review}</>;
 }
