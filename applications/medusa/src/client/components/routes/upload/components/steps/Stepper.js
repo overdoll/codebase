@@ -52,7 +52,7 @@ export default function Stepper({
           />
         );
       case steps.TAG:
-        return <Tag uppy={uppy} dispatch={dispatch} state={state} />;
+        return <Tag dispatch={dispatch} state={state} />;
       case steps.REVIEW:
         return <Review />;
       case steps.FINISH:

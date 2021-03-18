@@ -1,10 +1,11 @@
 /**
  * @flow
  */
-import type { Node, Context } from 'react';
+import type { Context, Node } from 'react';
 import { createContext, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Notification from '../components/Notification';
+import RootElement from '@//:modules/utilities/RootElement';
 
 type Action = {
   (content: string, duration: ?number): void,
@@ -90,7 +91,7 @@ export default function NotificationProvider(props: Props): Node {
               </Notification>
             ))}
         </div>,
-        document.getElementById('root'),
+        RootElement,
       )}
     </NotificationContext.Provider>
   );

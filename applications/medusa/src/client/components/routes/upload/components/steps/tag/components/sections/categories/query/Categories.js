@@ -4,12 +4,16 @@
 import type { Node } from 'react';
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks';
 import type { CategoriesQuery } from '@//:artifacts/CategoriesQuery.graphql';
+import type { VariablesOf } from 'relay-runtime';
+import Element from '../../../element/Element';
 
 type Props = {
   args: {
-    variables: any,
-    options: any,
+    variables: VariablesOf<CategoriesQuery>,
+    options?: any,
   },
+  onSelect: any,
+  selected: Array<string>,
 };
 
 const CategoriesQueryGQL = graphql`
@@ -22,16 +26,24 @@ const CategoriesQueryGQL = graphql`
   }
 `;
 
-export default function Categories({ args }: Props): Node {
+export default function Categories({ args, onSelect, selected }: Props): Node {
   const data = useLazyLoadQuery<CategoriesQuery>(
     CategoriesQueryGQL,
     args.variables,
     args.options,
   );
 
+  if (data.categories.length === 0) {
+    return 'no categories found';
+  }
+
   return data.categories.map(item => (
-    <div key={item.id}>
+    <Element
+      key={item.id}
+      onSelect={() => onSelect(item)}
+      selected={selected.indexOf(item.id) > -1}
+    >
       {item.title}-{item.thumbnail}
-    </div>
+    </Element>
   ));
 }

@@ -4,11 +4,12 @@
 import type { Node } from 'react';
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks';
 import type { CharactersQuery } from '@//:artifacts/CharactersQuery.graphql';
+import type { VariablesOf } from 'relay-runtime';
 
 type Props = {
   args: {
-    variables: any,
-    options: any,
+    variables: VariablesOf<CharactersQuery>,
+    options?: any,
   },
 };
 

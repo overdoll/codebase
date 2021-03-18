@@ -16,7 +16,9 @@ const events = {
   FILES: 'FILES',
   STEP: 'STEP',
   PROGRESS: 'PROGRESS',
-  PROGRESS: 'PROGRESS',
+  TAG_CHARACTERS: 'TAG_CHARACTERS',
+  TAG_ARTIST: 'TAG_ARTIST',
+  TAG_CATEGORIES: 'TAG_CATEGORIES',
 };
 
 const reducer = (state, action) => {
@@ -31,6 +33,12 @@ const reducer = (state, action) => {
       return { ...state, step: action.value };
     case events.PROGRESS:
       return { ...state, progress: action.value };
+    case events.TAG_ARTIST:
+      return { ...state, artist: action.value };
+    case events.TAG_CHARACTERS:
+      return { ...state, characters: action.value };
+    case events.TAG_CATEGORIES:
+      return { ...state, categories: action.value };
     case 'ALL':
       return action.value;
     default:
@@ -44,6 +52,9 @@ const initialState = {
   urls: {},
   step: null,
   progress: {},
+  artist: {},
+  characters: {},
+  categories: {},
 };
 
 export default function Upload(props: Props): Node {

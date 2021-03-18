@@ -7,9 +7,11 @@ import useTransition from '@//:modules/transition/useTransition';
 
 type Props = {
   children: any,
+  onClose?: any,
+  onSubmit?: any,
 };
 
-export default function Search({ children }: Props): Node {
+export default function Search({ children, onClose, onSubmit }: Props): Node {
   const [search, setSearch] = useState('');
   const [startTransition, isPending] = useTransition({ timeoutMs: 10 * 1000 });
 
@@ -50,11 +52,15 @@ export default function Search({ children }: Props): Node {
 
   return (
     <>
-      {isPending ? 'searching' : ''}
-      <Suspense fallback="loading">
-        {children({ arguments: queryArgs })}
-      </Suspense>
-      <input onChange={onChange} />
+      {isPending ? 'loading indicator' : ''}
+      {children({ arguments: queryArgs })}
+      <input value={search} onChange={onChange} />
+      {(onClose || onSubmit) && (
+        <div>
+          {onClose && <button onClick={onClose}>close</button>}
+          {onSubmit && <button onClick={onSubmit}>ok/submit</button>}
+        </div>
+      )}
     </>
   );
 }
