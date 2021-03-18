@@ -40,7 +40,7 @@ export default function Stepper({
     dispatch({ type: events.FILES, value: uppy.getFiles() });
   };
 
-  const Step = () => {
+  const Step = (): Node => {
     switch (state.step) {
       case steps.ARRANGE:
         return (
@@ -52,7 +52,7 @@ export default function Stepper({
           />
         );
       case steps.TAG:
-        return <Tag />;
+        return <Tag uppy={uppy} dispatch={dispatch} state={state} />;
       case steps.REVIEW:
         return <Review />;
       case steps.FINISH:

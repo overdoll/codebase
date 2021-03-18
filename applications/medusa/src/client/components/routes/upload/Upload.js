@@ -16,6 +16,7 @@ const events = {
   FILES: 'FILES',
   STEP: 'STEP',
   PROGRESS: 'PROGRESS',
+  PROGRESS: 'PROGRESS',
 };
 
 const reducer = (state, action) => {

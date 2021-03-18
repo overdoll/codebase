@@ -8,10 +8,6 @@ type Artist struct {
 	Username string `json:"username"`
 }
 
-type ArtistSearchInput struct {
-	Username string `json:"username"`
-}
-
 type AuthListener struct {
 	SameSession bool    `json:"sameSession"`
 	Cookie      *Cookie `json:"cookie"`
@@ -32,10 +28,6 @@ type Category struct {
 	Title     string `json:"title"`
 }
 
-type CategorySearchInput struct {
-	Title string `json:"title"`
-}
-
 type Character struct {
 	ID        string `json:"id"`
 	Thumbnail string `json:"thumbnail"`
@@ -46,10 +38,6 @@ type Character struct {
 type CharacterRequest struct {
 	Name  string `json:"name"`
 	Media string `json:"media"`
-}
-
-type CharacterSearchInput struct {
-	Name string `json:"name"`
 }
 
 type Cookie struct {
@@ -83,6 +71,10 @@ type PostResponse struct {
 
 type RegisterInput struct {
 	Username string `json:"username"`
+}
+
+type SearchInput struct {
+	Search string `json:"search"`
 }
 
 type User struct {

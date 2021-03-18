@@ -18,16 +18,8 @@ type PostResponse {
   validation: Validation
 }
 
-input CharacterSearchInput {
-  name: String!
-}
-
-input CategorySearchInput {
-  title: String!
-}
-
-input ArtistSearchInput {
-  username: String!
+input SearchInput {
+  search: String!
 }
 
 type Media {

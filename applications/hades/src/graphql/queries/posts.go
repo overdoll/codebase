@@ -22,14 +22,14 @@ const AllCharacters = `
 	"query" : { "match_all" : {} },
 	"size" : 5`
 
-func (r *QueryResolver) Characters(ctx context.Context, data *models.CharacterSearchInput) ([]*models.Character, error) {
+func (r *QueryResolver) Characters(ctx context.Context, data models.SearchInput) ([]*models.Character, error) {
 
 	var query string
 
-	if data.Name == "" {
+	if data.Search == "" {
 		query = AllCharacters
 	} else {
-		query = fmt.Sprintf(SearchCharacters, data.Name)
+		query = fmt.Sprintf(SearchCharacters, data.Search)
 	}
 
 	response, err := r.Search.Search("characters", query)
@@ -73,13 +73,13 @@ const AllCategories = `
 	"query" : { "match_all" : {} },
 	"size" : 5`
 
-func (r *QueryResolver) Categories(ctx context.Context, data *models.CategorySearchInput) ([]*models.Category, error) {
+func (r *QueryResolver) Categories(ctx context.Context, data models.SearchInput) ([]*models.Category, error) {
 	var query string
 
-	if data.Title == "" {
+	if data.Search == "" {
 		query = AllCategories
 	} else {
-		query = fmt.Sprintf(SearchCategories, data.Title)
+		query = fmt.Sprintf(SearchCategories, data.Search)
 	}
 
 	response, err := r.Search.Search("categories", query)
@@ -123,13 +123,13 @@ const AllArtists = `
 	"query" : { "match_all" : {} },
 	"size" : 5`
 
-func (r *QueryResolver) Artists(ctx context.Context, data *models.ArtistSearchInput) ([]*models.Artist, error) {
+func (r *QueryResolver) Artists(ctx context.Context, data models.SearchInput) ([]*models.Artist, error) {
 	var query string
 
-	if data.Username == "" {
+	if data.Search == "" {
 		query = AllArtists
 	} else {
-		query = fmt.Sprintf(SearchArtists, data.Username)
+		query = fmt.Sprintf(SearchArtists, data.Search)
 	}
 
 	response, err := r.Search.Search("artists", query)
@@ -158,4 +158,3 @@ func (r *QueryResolver) Artists(ctx context.Context, data *models.ArtistSearchIn
 
 	return resp, nil
 }
-

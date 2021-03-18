@@ -124,3 +124,7 @@ func (r *MutationResolver) Logout(ctx context.Context) (bool, error) {
 
 	return true, nil
 }
+
+func (r *MutationResolver) AuthEmail(ctx context.Context) (*bool, error) {
+	panic("implement me")
+}

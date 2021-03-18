@@ -1,5 +1,5 @@
 extend type Query {
-  characters(data: CharacterSearchInput): [Character!]
-  categories(data: CategorySearchInput): [Category!]
-  artists(data: ArtistSearchInput): [Artist!]
+  characters(data: SearchInput!): [Character!]!
+  categories(data: SearchInput!): [Category!]!
+  artists(data: SearchInput!): [Artist!]!
 }

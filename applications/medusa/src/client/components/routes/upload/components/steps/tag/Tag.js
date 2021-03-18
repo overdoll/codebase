@@ -3,6 +3,12 @@
  */
 import type { Node } from 'react';
 
-export default function Tag(): Node {
+type Props = {
+  uppy: any,
+  dispatch: any,
+  state: any,
+};
+
+export default function Tag({ uppy, state, dispatch }: Props): Node {
   return <>tag file</>;
 }
