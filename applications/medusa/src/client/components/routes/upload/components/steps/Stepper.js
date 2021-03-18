@@ -10,10 +10,7 @@ import Review from './review/Review';
 import Finish from './finish/Finish';
 import { graphql, useMutation } from 'react-relay/hooks';
 import { useNotify } from '@//:modules/focus';
-import type {
-  StepperMutation,
-  StepperMutationResponse,
-} from '@//:artifacts/StepperMutation.graphql';
+import type { StepperMutation } from '@//:artifacts/StepperMutation.graphql';
 
 type Props = {
   uppy: any,
@@ -59,10 +56,10 @@ export default function Stepper({
 
   // Add files
   const onAddFiles = (): void => {
+    // If not in any step, go to the arrange step
     if (state.step === null) {
       dispatch({ type: events.STEP, value: steps.ARRANGE });
     }
-
     dispatch({ type: events.FILES, value: uppy.getFiles() });
   };
 
@@ -124,10 +121,11 @@ export default function Stepper({
       variables: {
         data: {
           artistUsername: state.artist.username,
+          artistId: state.artist.id,
           categories: [],
           characters: [],
-          artistId: state.artist.id,
           images: [],
+          // TODO: add requests
           characterRequests: null,
           mediaRequests: null,
         },

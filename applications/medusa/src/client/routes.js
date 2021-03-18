@@ -87,17 +87,14 @@ const routes: Array<Route> = [
         // If user is not logged in, they can't post - so we redirect to join page
         middleware: [
           (environment, history) => {
-            // const user = getUserFromEnvironment(environment);
+            const user = getUserFromEnvironment(environment);
 
-            // TODO: remove this
+            if (user === undefined) {
+              history.push('/join');
+              return false;
+            }
+
             return true;
-            //
-            // if (user === undefined) {
-            //   history.push('/join');
-            //   return false;
-            // }
-            //
-            // return true;
           },
         ],
       },

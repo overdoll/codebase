@@ -70,7 +70,6 @@ export default function Upload(): Node {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   // Create thumbnails
-  // Urls - when upload is complete we have semi-public urls (you need to know the URL for it to work)
   useEffect(() => {
     let thumbnailsQueue = {};
 
@@ -85,7 +84,10 @@ export default function Upload(): Node {
         value: thumbnailsQueue,
       });
     });
+  }, []);
 
+  // Urls - when upload is complete we have semi-public urls (you need to know the URL for it to work, and you need to be logged in to see it)
+  useEffect(() => {
     let urlQueue = {};
 
     // On upload success, we update so that we have URLs, and we update the thumbnail to the new URL as well
