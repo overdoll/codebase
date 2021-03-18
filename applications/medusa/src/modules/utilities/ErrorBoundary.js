@@ -6,6 +6,7 @@ import { Component } from 'react';
 
 type Props = {
   children: Node,
+  fallback?: any,
 };
 
 type Error = {
@@ -16,6 +17,8 @@ type Error = {
 type State = {
   error: ?Error,
 };
+
+export type { Error };
 
 /**
  * A reusable component for handling errors in a React (sub)tree.
@@ -31,8 +34,19 @@ export default class ErrorBoundary extends Component<Props, State> {
     };
   }
 
+  // Reset error component - attempt a re-render
+  reset: any = (): void => {
+    this.setState({ error: null });
+  };
+
   render(): Node {
     if (this.state.error != null) {
+      if (this.props.fallback) {
+        const Component = this.props.fallback;
+
+        return <Component error={this.state.error} reset={this.reset} />;
+      }
+
       return (
         <div>
           <div>Error: {this.state.error.message}</div>

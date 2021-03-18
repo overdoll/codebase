@@ -9,6 +9,8 @@ import Artists from './query/Artists';
 import Search from '../../search/Search';
 import { events } from '../../../../../../Upload';
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary';
+import ErrorFallback from '@//:modules/fallbacks/error/ErrorFallback';
+import LoadingSearch from '@//:modules/fallbacks/loading/LoadingSearch';
 
 type Props = {
   dispatch: any,
@@ -35,6 +37,7 @@ export default function TagArtists({ state, dispatch }: Props): Node {
   return (
     <>
       <div>current artist: {Object.keys(state.artist).length}</div>
+      DISPLAY SELECTED ARTIST HERE???
       <button onClick={onOpen}>add</button>
       {open &&
         createPortal(
@@ -42,8 +45,8 @@ export default function TagArtists({ state, dispatch }: Props): Node {
             {({ args }) => (
               <>
                 DISPLAY SELECTED ARTIST HERE???
-                <ErrorBoundary>
-                  <Suspense fallback="loading artists">
+                <ErrorBoundary fallback={ErrorFallback}>
+                  <Suspense fallback={<LoadingSearch />}>
                     <Artists
                       args={args}
                       selected={Object.keys(state.artist)}

@@ -2,7 +2,7 @@
  * @flow
  */
 import type { Node } from 'react';
-import { Suspense, useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import useTransition from '@//:modules/transition/useTransition';
 
 type Props = {
@@ -53,7 +53,7 @@ export default function Search({ children, onClose, onSubmit }: Props): Node {
   return (
     <>
       {isPending ? 'loading indicator' : ''}
-      {children({ arguments: queryArgs })}
+      {children({ args: queryArgs })}
       <input value={search} onChange={onChange} />
       {(onClose || onSubmit) && (
         <div>

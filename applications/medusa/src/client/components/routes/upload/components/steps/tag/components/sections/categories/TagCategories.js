@@ -9,6 +9,8 @@ import Search from '../../search/Search';
 import Categories from './query/Categories';
 import { events } from '../../../../../../Upload';
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary';
+import ErrorFallback from '@//:modules/fallbacks/error/ErrorFallback';
+import LoadingSearch from '@//:modules/fallbacks/loading/LoadingSearch';
 
 type Props = {
   dispatch: any,
@@ -26,16 +28,26 @@ export default function TagCategories({ state, dispatch }: Props): Node {
     setOpen(false);
   };
 
+  // OnSelect will remove or add the category based on if it's in the object already or not
   const onSelect = category => {
+    let result = { ...state.categories };
+
+    if (state.categories[category.id] !== undefined) {
+      delete result[category.id];
+    } else {
+      result = { ...state.categories, category };
+    }
+
     dispatch({
       type: events.TAG_CATEGORIES,
-      value: { ...state.categories, category },
+      value: result,
     });
   };
 
   return (
     <>
       <div>current categories: {Object.keys(state.characters).length}</div>
+      DISPLAY SELECTED CATEGORIES HERE???
       <button onClick={onOpen}>add</button>
       {open &&
         createPortal(
@@ -43,8 +55,8 @@ export default function TagCategories({ state, dispatch }: Props): Node {
             {({ args }) => (
               <>
                 DISPLAY SELECTED CATEGORIES HERE???
-                <ErrorBoundary>
-                  <Suspense fallback="loading categories">
+                <ErrorBoundary fallback={ErrorFallback}>
+                  <Suspense fallback={<LoadingSearch />}>
                     <Categories
                       selected={Object.keys(state.categories)}
                       onSelect={onSelect}

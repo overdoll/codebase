@@ -19,8 +19,10 @@ const events = {
   TAG_CHARACTERS: 'TAG_CHARACTERS',
   TAG_ARTIST: 'TAG_ARTIST',
   TAG_CATEGORIES: 'TAG_CATEGORIES',
+  SUBMIT: 'SUBMIT',
 };
 
+// TODO: on each update, save state here in indexeddb, reset storage on SUBMIT
 const reducer = (state, action) => {
   switch (action.type) {
     case events.THUMBNAILS:
@@ -39,6 +41,8 @@ const reducer = (state, action) => {
       return { ...state, characters: action.value };
     case events.TAG_CATEGORIES:
       return { ...state, categories: action.value };
+    case events.SUBMIT:
+      return { ...state, submit: action.value };
     case 'ALL':
       return action.value;
     default:
@@ -55,6 +59,7 @@ const initialState = {
   artist: {},
   characters: {},
   categories: {},
+  submit: {},
 };
 
 export default function Upload(props: Props): Node {
@@ -141,6 +146,7 @@ export default function Upload(props: Props): Node {
     });
   }, []);
 
+  // onSubmit - submit post
   const onSubmit = () => {
     console.log('submit');
   };

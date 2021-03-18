@@ -9,6 +9,8 @@ import Search from '../../search/Search';
 import Characters from './query/Characters';
 import { events } from '../../../../../../Upload';
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary';
+import ErrorFallback from '@//:modules/fallbacks/error/ErrorFallback';
+import LoadingSearch from '@//:modules/fallbacks/loading/LoadingSearch';
 
 type Props = {
   dispatch: any,
@@ -26,16 +28,26 @@ export default function TagCharacters({ state, dispatch }: Props): Node {
     setOpen(false);
   };
 
+  // OnSelect will remove or add the character based on if it's in the object already or not
   const onSelect = character => {
+    let result = { ...state.characters };
+
+    if (state.characters[character.id] !== undefined) {
+      delete result[character.id];
+    } else {
+      result = { ...state.characters, character };
+    }
+
     dispatch({
       type: events.TAG_CHARACTERS,
-      value: { ...state.characters, character },
+      value: result,
     });
   };
 
   return (
     <>
       <div>current characters: {Object.keys(state.characters).length}</div>
+      DISPLAY SELECTED CHARACTERS HERE???
       <button onClick={onOpen}>add</button>
       {open &&
         createPortal(
@@ -43,8 +55,8 @@ export default function TagCharacters({ state, dispatch }: Props): Node {
             {({ args }) => (
               <>
                 DISPLAY SELECTED CHARACTERS HERE???
-                <ErrorBoundary>
-                  <Suspense fallback="loading characters">
+                <ErrorBoundary fallback={ErrorFallback}>
+                  <Suspense fallback={<LoadingSearch />}>
                     <Characters
                       selected={Object.keys(state.characters)}
                       onSelect={onSelect}

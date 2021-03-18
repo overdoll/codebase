@@ -9,9 +9,10 @@ import TagCategories from './components/sections/categories/TagCategories';
 type Props = {
   dispatch: any,
   state: any,
+  disabled: boolean,
 };
 
-export default function Tag({ state, dispatch }: Props): Node {
+export default function Tag({ state, dispatch, disabled }: Props): Node {
   return (
     <>
       <div sx={{ display: 'flex' }}>
@@ -30,6 +31,12 @@ export default function Tag({ state, dispatch }: Props): Node {
       <TagArtists state={state} dispatch={dispatch} />
       <TagCharacters dispatch={dispatch} state={state} />
       <TagCategories dispatch={dispatch} state={state} />
+
+      {disabled && (
+        <div>
+          you need to select an artist, 1 character and at least 3 categories
+        </div>
+      )}
     </>
   );
 }

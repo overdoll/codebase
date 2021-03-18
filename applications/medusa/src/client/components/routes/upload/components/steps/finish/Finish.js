@@ -3,6 +3,10 @@
  */
 import type { Node } from 'react';
 
-export default function Finish(): Node {
+type Props = {
+  state: any,
+};
+
+export default function Finish({ state }: Props): Node {
   return <>finish line</>;
 }

@@ -31,6 +31,16 @@ export default function Stepper({
   onSubmit,
   onCancel,
 }: Props): Node {
+  // Tagging step - disabled if the conditions aren't met
+  const NextDisabled =
+    state.step === steps.TAG &&
+    (Object.keys(state.characters).length < 1 ||
+      Object.keys(state.artists).length < 1 ||
+      Object.keys(state.categories).length < 3);
+
+  // If the amount of files != the amount of urls (not all files were uploaded), then we can't submit yet
+  const SubmitDisabled = state.files.length !== Object.keys(state.urls).length;
+
   // Add files
   const onAddFiles = files => {
     if (state.step === null) {
@@ -52,11 +62,13 @@ export default function Stepper({
           />
         );
       case steps.TAG:
-        return <Tag dispatch={dispatch} state={state} />;
+        return (
+          <Tag disabled={NextDisabled} dispatch={dispatch} state={state} />
+        );
       case steps.REVIEW:
-        return <Review />;
+        return <Review disabled={SubmitDisabled} state={state} />;
       case steps.FINISH:
-        return <Finish />;
+        return <Finish state={state} />;
       default:
         return <Begin uppy={uppy} onAddFiles={onAddFiles} />;
     }
@@ -91,26 +103,26 @@ export default function Stepper({
   return (
     <>
       {Step()}
-      {state.step !== null && (
-        <>
-          {state.step !== steps.ARRANGE ? (
-            <button onClick={PrevStep}>prev</button>
-          ) : (
-            <button onClick={onCancel}>cancel</button>
-          )}
-          {state.step !== steps.REVIEW ? (
-            <button onClick={NextStep}>next</button>
-          ) : (
-            <button
-              onClick={onSubmit}
-              // If the amount of files != the amount of urls (not all files were uploaded), then we can't submit yet
-              disabled={state.files.length !== Object.keys(state.urls).length}
-            >
-              submit
-            </button>
-          )}
-        </>
-      )}
+      <div>
+        {state.step !== null && (
+          <>
+            {state.step !== steps.ARRANGE ? (
+              <button onClick={PrevStep}>prev</button>
+            ) : (
+              <button onClick={onCancel}>cancel</button>
+            )}
+            {state.step !== steps.REVIEW ? (
+              <button disabled={NextDisabled} onClick={NextStep}>
+                next
+              </button>
+            ) : (
+              <button onClick={onSubmit} disabled={SubmitDisabled}>
+                submit
+              </button>
+            )}
+          </>
+        )}
+      </div>
     </>
   );
 }
