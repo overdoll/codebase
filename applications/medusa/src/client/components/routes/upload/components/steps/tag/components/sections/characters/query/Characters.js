@@ -5,12 +5,15 @@ import type { Node } from 'react';
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks';
 import type { CharactersQuery } from '@//:artifacts/CharactersQuery.graphql';
 import type { VariablesOf } from 'relay-runtime';
+import Element from '../../../element/Element';
 
 type Props = {
   args: {
     variables: VariablesOf<CharactersQuery>,
     options?: any,
   },
+  onSelect: any,
+  selected: Array<string>,
 };
 
 const CharactersQueryGQL = graphql`
@@ -28,17 +31,35 @@ const CharactersQueryGQL = graphql`
   }
 `;
 
-export default function Characters({ args }: Props): Node {
+export default function Characters({ args, onSelect, selected }: Props): Node {
   const data = useLazyLoadQuery<CharactersQuery>(
     CharactersQueryGQL,
     args.variables,
     args.options,
   );
 
+  const onAddNewCharacter = () => {};
+
+  // TODO: add ability to add character, with the ability to specify a new media or a current media
+  if (data.characters.length === 0) {
+    return (
+      <>
+        no characters found
+        <button onClick={onAddNewCharacter}>
+          add {args.variables.data.search} character
+        </button>
+      </>
+    );
+  }
+
   return data.characters.map(item => (
-    <div key={item.id}>
+    <Element
+      key={item.id}
+      onSelect={() => onSelect(item)}
+      selected={selected.indexOf(item.id) > -1}
+    >
       {item.name}-{item.thumbnail}
       {item.media.title}-{item.media.id}-{item.media.thumbnail}
-    </div>
+    </Element>
   ));
 }

@@ -33,6 +33,7 @@ export default function Categories({ args, onSelect, selected }: Props): Node {
     args.options,
   );
 
+  // We dont let users add custom categories
   if (data.categories.length === 0) {
     return 'no categories found';
   }

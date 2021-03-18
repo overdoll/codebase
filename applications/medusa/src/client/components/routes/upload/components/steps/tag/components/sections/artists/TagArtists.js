@@ -8,6 +8,7 @@ import RootElement from '@//:modules/utilities/RootElement';
 import Artists from './query/Artists';
 import Search from '../../search/Search';
 import { events } from '../../../../../../Upload';
+import ErrorBoundary from '@//:modules/utilities/ErrorBoundary';
 
 type Props = {
   dispatch: any,
@@ -33,21 +34,23 @@ export default function TagArtists({ state, dispatch }: Props): Node {
 
   return (
     <>
-      <div>artists comp</div>
+      <div>current artist: {Object.keys(state.artist).length}</div>
       <button onClick={onOpen}>add</button>
       {open &&
         createPortal(
           <Search onClose={onClose}>
             {({ args }) => (
               <>
-                selected:
-                <Suspense fallback="loading artists">
-                  <Artists
-                    args={args}
-                    selected={Object.keys(state.artist)}
-                    onSelect={onSelect}
-                  />
-                </Suspense>
+                DISPLAY SELECTED ARTIST HERE???
+                <ErrorBoundary>
+                  <Suspense fallback="loading artists">
+                    <Artists
+                      args={args}
+                      selected={Object.keys(state.artist)}
+                      onSelect={onSelect}
+                    />
+                  </Suspense>
+                </ErrorBoundary>
               </>
             )}
           </Search>,
