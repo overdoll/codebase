@@ -8,12 +8,14 @@ import { events } from '../../Upload';
 import Tag from './tag/Tag';
 import Review from './review/Review';
 import Finish from './finish/Finish';
+import { graphql, useMutation } from 'react-relay/hooks';
+import { useNotify } from '@//:modules/focus';
+import type { StepperMutation } from '@//:artifacts/StepperMutation.graphql';
 
 type Props = {
   uppy: any,
   state: any,
   dispatch: any,
-  onSubmit: any,
   onCancel: any,
 };
 
@@ -24,13 +26,24 @@ const steps = {
   TAG: 'TAG',
 };
 
+const SubmitGraphQL = graphql`
+  mutation StepperMutation($data: PostInput) {
+    post(data: $data) {
+      review
+    }
+  }
+`;
+
 export default function Stepper({
   uppy,
   state,
   dispatch,
-  onSubmit,
   onCancel,
 }: Props): Node {
+  const [commit, isInFlight] = useMutation<StepperMutation>(SubmitGraphQL);
+
+  const notify = useNotify();
+
   // Tagging step - disabled if the conditions aren't met
   const NextDisabled =
     state.step === steps.TAG &&
@@ -42,7 +55,7 @@ export default function Stepper({
   const SubmitDisabled = state.files.length !== Object.keys(state.urls).length;
 
   // Add files
-  const onAddFiles = files => {
+  const onAddFiles = (): void => {
     if (state.step === null) {
       dispatch({ type: events.STEP, value: steps.ARRANGE });
     }
@@ -74,7 +87,7 @@ export default function Stepper({
     }
   };
 
-  const NextStep = () => {
+  const NextStep = (): void => {
     switch (state.step) {
       case steps.ARRANGE:
         dispatch({ type: events.STEP, value: steps.TAG });
@@ -87,7 +100,7 @@ export default function Stepper({
     }
   };
 
-  const PrevStep = () => {
+  const PrevStep = (): void => {
     switch (state.step) {
       case steps.TAG:
         dispatch({ type: events.STEP, value: steps.ARRANGE });
@@ -98,6 +111,27 @@ export default function Stepper({
       default:
         break;
     }
+  };
+
+  // onSubmit - submit post
+  const onSubmit = (): void => {
+    commit({
+      variables: {
+        data: {
+          artistUsername: '',
+          categories: [],
+          characters: [],
+          artistId: null,
+          images: [],
+        },
+      },
+      onCompleted(data) {
+        dispatch({ type: events.STEP, value: steps.FINISH });
+      },
+      onError(data) {
+        notify.error('error with submission');
+      },
+    });
   };
 
   return (
@@ -116,7 +150,10 @@ export default function Stepper({
                 next
               </button>
             ) : (
-              <button onClick={onSubmit} disabled={SubmitDisabled}>
+              <button
+                onClick={onSubmit}
+                disabled={SubmitDisabled || isInFlight}
+              >
                 submit
               </button>
             )}

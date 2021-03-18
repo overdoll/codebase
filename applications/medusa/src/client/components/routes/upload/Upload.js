@@ -8,8 +8,6 @@ import Uppy from './components/uppy/Uppy';
 import { useNotify } from '@//:modules/focus';
 import Stepper from './components/steps/Stepper';
 
-type Props = {};
-
 const events = {
   THUMBNAILS: 'THUMBNAILS',
   URLS: 'URLS',
@@ -22,7 +20,7 @@ const events = {
   SUBMIT: 'SUBMIT',
 };
 
-// TODO: on each update, save state here in indexeddb, reset storage on SUBMIT
+// TODO: on each update, save state here in indexeddb, clean storage on SUBMIT
 const reducer = (state, action) => {
   switch (action.type) {
     case events.THUMBNAILS:
@@ -62,7 +60,7 @@ const initialState = {
   submit: {},
 };
 
-export default function Upload(props: Props): Node {
+export default function Upload(): Node {
   const uppy = useUppy(() => {
     return Uppy;
   });
@@ -146,11 +144,6 @@ export default function Upload(props: Props): Node {
     });
   }, []);
 
-  // onSubmit - submit post
-  const onSubmit = () => {
-    console.log('submit');
-  };
-
   // Cleanup - reset uppy uploads and state
   const onCancel = () => {
     uppy.reset();
@@ -159,7 +152,6 @@ export default function Upload(props: Props): Node {
 
   return (
     <Stepper
-      onSubmit={onSubmit}
       onCancel={onCancel}
       uppy={uppy}
       state={state}

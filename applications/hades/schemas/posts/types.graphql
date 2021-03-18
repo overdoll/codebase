@@ -1,7 +1,7 @@
 input PostInput {
-  images: [String!] @validation(rules: ["required"])
-  categories: [String!]
-  characters: [String!]
+  images: [String!]! @validation(rules: ["required"])
+  categories: [String!]!
+  characters: [String!]!
   mediaRequests: [String!]
   characterRequests: [CharacterRequest!]
   artistId: String

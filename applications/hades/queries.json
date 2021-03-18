@@ -9,5 +9,7 @@
   "5c0d9e86dd17d6f87d54345f1a8a2d61": "query TokenSpecQuery(\n  $cookie: String!\n) {\n  redeemCookie(cookie: $cookie) {\n    sameSession\n    registered\n    session\n  }\n}\n",
   "6e2d77d54dc16c355e924d0626715556": "query ArtistsQuery(\n  $data: SearchInput!\n) {\n  artists(data: $data) {\n    id\n    avatar\n    username\n  }\n}\n",
   "9c029d9eeba88719a2ec4eda2e6f1d8c": "query CategoriesQuery(\n  $data: SearchInput!\n) {\n  categories(data: $data) {\n    id\n    title\n    thumbnail\n  }\n}\n",
-  "95c7173f7ace68e89c3301fac043b20b": "query CharactersQuery(\n  $data: SearchInput!\n) {\n  characters(data: $data) {\n    id\n    name\n    thumbnail\n    media {\n      id\n      title\n      thumbnail\n    }\n  }\n}\n"
+  "95c7173f7ace68e89c3301fac043b20b": "query CharactersQuery(\n  $data: SearchInput!\n) {\n  characters(data: $data) {\n    id\n    name\n    thumbnail\n    media {\n      id\n      title\n      thumbnail\n    }\n  }\n}\n",
+  "72b208dd0bce1758200a795ef776615f": "mutation UploadMutation(\n  $data: PostInput\n) {\n  post(data: $data) {\n    review\n  }\n}\n",
+  "fffe1105c49a303dc3747589e47e7acd": "mutation StepperMutation(\n  $data: PostInput\n) {\n  post(data: $data) {\n    review\n  }\n}\n"
 }

@@ -557,9 +557,9 @@ directive @role(roles: [String!]!) on FIELD_DEFINITION
 }
 `, BuiltIn: false},
 	{Name: "schemas/posts/types.graphql", Input: `input PostInput {
-  images: [String!] @validation(rules: ["required"])
-  categories: [String!]
-  characters: [String!]
+  images: [String!]! @validation(rules: ["required"])
+  categories: [String!]!
+  characters: [String!]!
   mediaRequests: [String!]
   characterRequests: [CharacterRequest!]
   artistId: String
@@ -3510,7 +3510,7 @@ func (ec *executionContext) unmarshalInputPostInput(ctx context.Context, obj int
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("images"))
-			directive0 := func(ctx context.Context) (interface{}, error) { return ec.unmarshalOString2ᚕstringᚄ(ctx, v) }
+			directive0 := func(ctx context.Context) (interface{}, error) { return ec.unmarshalNString2ᚕstringᚄ(ctx, v) }
 			directive1 := func(ctx context.Context) (interface{}, error) {
 				rules, err := ec.unmarshalNString2ᚕstringᚄ(ctx, []interface{}{"required"})
 				if err != nil {
@@ -3538,7 +3538,7 @@ func (ec *executionContext) unmarshalInputPostInput(ctx context.Context, obj int
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("categories"))
-			it.Categories, err = ec.unmarshalOString2ᚕstringᚄ(ctx, v)
+			it.Categories, err = ec.unmarshalNString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -3546,7 +3546,7 @@ func (ec *executionContext) unmarshalInputPostInput(ctx context.Context, obj int
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("characters"))
-			it.Characters, err = ec.unmarshalOString2ᚕstringᚄ(ctx, v)
+			it.Characters, err = ec.unmarshalNString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
