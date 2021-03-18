@@ -34,7 +34,7 @@ export default function Bootstrap(props: Props): Node {
       <I18nextProvider i18n={props.i18next}>
         <ThemeProvider theme={theme}>
           <Global
-            // temporary disable "iframe" - so that the error overlay
+            // temporary disable "iframe" - so that the error overlay in react is not visible during development
             styles={theme => ({
               iframe: {
                 display: 'none',
