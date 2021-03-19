@@ -30,7 +30,7 @@ export default function Picker({ uppy, onSelect }: Props): Node {
       }
     });
 
-    onSelect(files);
+    onSelect();
   };
 
   return <input type="file" multiple onChange={onChange} />;

@@ -47,13 +47,20 @@ export default function Steps({ uppy, state, dispatch }: Props): Node {
   const SubmitDisabled = state.files.length !== Object.keys(state.urls).length;
 
   const onAddFiles = (): void => {
+    const files = uppy.getFiles();
+
+    // no files were uploaded (error occurred)
+    if (files.length === 0) {
+      return;
+    }
+
     // If not in any step, go to the arrange step
     if (state.step === null) {
       dispatch({ type: EVENTS.STEP, value: STEPS.ARRANGE });
     }
 
     // Use Uppy's internal state to get the files since the variable can be unreliable (doesn't contain all values)
-    dispatch({ type: EVENTS.FILES, value: uppy.getFiles() });
+    dispatch({ type: EVENTS.FILES, value: files });
   };
 
   const Step = (): Node => {
