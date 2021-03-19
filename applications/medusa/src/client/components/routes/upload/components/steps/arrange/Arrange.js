@@ -87,7 +87,7 @@ export default function Arrange({
   return (
     <>
       files so far
-      <DragDropContext onDragEnd={onDragEnd}>
+      <DragDropContext nonce={window.__webpack_nonce__} onDragEnd={onDragEnd}>
         <Droppable droppableId="upload">
           {(provided, snapshot) => (
             <div
@@ -97,6 +97,7 @@ export default function Arrange({
                 backgroundColor: snapshot.isDraggingOver ? 'green' : null,
               }}
             >
+              {provided.placeholder}
               {state.files.map((file, index) => (
                 <File
                   key={file.id}

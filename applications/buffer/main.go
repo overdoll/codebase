@@ -38,6 +38,7 @@ func main() {
 		PreferredPartSize: 5 * 1024 * 1024,
 		MinPartSize:       0,
 		MaxObjectSize:     5 * 1024 * 1024 * 1024 * 1024,
+		MaxMultipartParts: 10,
 	}
 
 	composer := tusd.NewStoreComposer()
