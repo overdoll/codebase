@@ -13,6 +13,14 @@ import (
 func (r *MutationResolver) Post(ctx context.Context, data *models.PostInput) (*models.PostResponse, error) {
 	user := helpers.UserFromContext(ctx)
 
+	if len(data.Categories) < 3 {
+		return &models.PostResponse{Validation: &models.Validation{Code: "categories_amount"}}, nil
+	}
+
+	if len(data.Characters) < 1 {
+		return &models.PostResponse{Validation: &models.Validation{Code: "characters_amount"}}, nil
+	}
+
 	artist := ""
 
 	if data.ArtistID != nil {
@@ -35,7 +43,7 @@ func (r *MutationResolver) Post(ctx context.Context, data *models.PostInput) (*m
 	reviewRequired := !user.IsVerified()
 
 	// Even if user is verified, review is required if they requested a new character or media
-	if data.MediaRequests != nil || data.CharacterRequests != nil {
+	if data.MediaRequests != nil || data.CharacterRequests != nil || data.ArtistID == nil {
 		reviewRequired = true
 	}
 

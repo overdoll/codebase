@@ -6,7 +6,7 @@ import { Draggable } from 'react-beautiful-dnd';
 
 type Props = {
   file: any,
-  thumbnail: string,
+  thumbnail: ?string,
   progress: any,
   onRemove: any,
   index: number,

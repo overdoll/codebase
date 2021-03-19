@@ -7,14 +7,15 @@ import { createPortal } from 'react-dom';
 import RootElement from '@//:modules/utilities/RootElement';
 import Search from '../../search/Search';
 import Characters from './query/Characters';
-import { events } from '../../../../../../Upload';
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary';
 import ErrorFallback from '@//:modules/fallbacks/error/ErrorFallback';
 import LoadingSearch from '@//:modules/fallbacks/loading/LoadingSearch';
+import type { Dispatch, State } from '../../../../../../__types__/types';
+import { EVENTS } from '../../../../../../constants/constants';
 
 type Props = {
-  dispatch: any,
-  state: any,
+  dispatch: Dispatch,
+  state: State,
 };
 
 export default function TagCharacters({ state, dispatch }: Props): Node {
@@ -39,7 +40,7 @@ export default function TagCharacters({ state, dispatch }: Props): Node {
     }
 
     dispatch({
-      type: events.TAG_CHARACTERS,
+      type: EVENTS.TAG_CHARACTERS,
       value: result,
     });
   };

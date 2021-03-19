@@ -3,9 +3,7 @@
  */
 import type { Context, Node } from 'react';
 import { createContext, useState } from 'react';
-import { createPortal } from 'react-dom';
 import Notification from '../components/Notification';
-import RootElement from '@//:modules/utilities/RootElement';
 
 type Action = {
   (content: string, duration: ?number): void,
@@ -66,33 +64,30 @@ export default function NotificationProvider(props: Props): Node {
       }}
     >
       {props.children}
-      {createPortal(
-        <div
-          sx={{
-            position: 'fixed',
-            display: 'flex',
-            pl: 1,
-            pr: 1,
-            width: '100%',
-            flexDirection: 'column',
-            bottom: 0,
-          }}
-        >
-          {active
-            .filter(item => expired.indexOf(item.id) === -1)
-            .map(notification => (
-              <Notification
-                id={notification.id}
-                key={notification.id}
-                type={notification.type}
-                duration={notification.duration}
-              >
-                {notification.content}
-              </Notification>
-            ))}
-        </div>,
-        RootElement,
-      )}
+      <div
+        sx={{
+          position: 'fixed',
+          display: 'flex',
+          pl: 1,
+          pr: 1,
+          width: '100%',
+          flexDirection: 'column',
+          bottom: 0,
+        }}
+      >
+        {active
+          .filter(item => expired.indexOf(item.id) === -1)
+          .map(notification => (
+            <Notification
+              id={notification.id}
+              key={notification.id}
+              type={notification.type}
+              duration={notification.duration}
+            >
+              {notification.content}
+            </Notification>
+          ))}
+      </div>
     </NotificationContext.Provider>
   );
 }

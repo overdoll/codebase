@@ -7,48 +7,17 @@ import { useUppy } from '@uppy/react';
 import Uppy from './components/uppy/Uppy';
 import { useNotify } from '@//:modules/focus';
 import Stepper from './components/steps/Stepper';
+import type {
+  Action,
+  Dispatch,
+  Progress,
+  State,
+  Thumbnails,
+  Urls,
+} from './__types__/types';
+import { EVENTS } from './constants/constants';
 
-const events = {
-  THUMBNAILS: 'THUMBNAILS',
-  URLS: 'URLS',
-  FILES: 'FILES',
-  STEP: 'STEP',
-  PROGRESS: 'PROGRESS',
-  TAG_CHARACTERS: 'TAG_CHARACTERS',
-  TAG_ARTIST: 'TAG_ARTIST',
-  TAG_CATEGORIES: 'TAG_CATEGORIES',
-  SUBMIT: 'SUBMIT',
-};
-
-// TODO: on each update, save state here in indexeddb, clean storage on SUBMIT
-const reducer = (state, action) => {
-  switch (action.type) {
-    case events.THUMBNAILS:
-      return { ...state, thumbnails: action.value };
-    case events.URLS:
-      return { ...state, urls: action.value };
-    case events.FILES:
-      return { ...state, files: action.value };
-    case events.STEP:
-      return { ...state, step: action.value };
-    case events.PROGRESS:
-      return { ...state, progress: action.value };
-    case events.TAG_ARTIST:
-      return { ...state, artist: action.value };
-    case events.TAG_CHARACTERS:
-      return { ...state, characters: action.value };
-    case events.TAG_CATEGORIES:
-      return { ...state, categories: action.value };
-    case events.SUBMIT:
-      return { ...state, submit: action.value };
-    case 'ALL':
-      return action.value;
-    default:
-      return state;
-  }
-};
-
-const initialState = {
+const initialState: State = {
   thumbnails: {},
   files: [],
   urls: {},
@@ -60,6 +29,34 @@ const initialState = {
   submit: {},
 };
 
+// TODO: on each update, save state here in indexeddb, clean storage on SUBMIT
+const reducer: any = (state: State, action: Action): State => {
+  switch (action.type) {
+    case EVENTS.THUMBNAILS:
+      return { ...state, thumbnails: action.value };
+    case EVENTS.URLS:
+      return { ...state, urls: action.value };
+    case EVENTS.FILES:
+      return { ...state, files: action.value };
+    case EVENTS.STEP:
+      return { ...state, step: action.value };
+    case EVENTS.PROGRESS:
+      return { ...state, progress: action.value };
+    case EVENTS.TAG_ARTIST:
+      return { ...state, artist: action.value };
+    case EVENTS.TAG_CHARACTERS:
+      return { ...state, characters: action.value };
+    case EVENTS.TAG_CATEGORIES:
+      return { ...state, categories: action.value };
+    case EVENTS.SUBMIT:
+      return { ...state, submit: action.value };
+    case EVENTS.ALL:
+      return action.value;
+    default:
+      return state;
+  }
+};
+
 export default function Upload(): Node {
   const uppy = useUppy(() => {
     return Uppy;
@@ -67,11 +64,14 @@ export default function Upload(): Node {
 
   const notify = useNotify();
 
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state: State, dispatch: Dispatch] = useReducer<State, Action>(
+    reducer,
+    initialState,
+  );
 
   // Create thumbnails
   useEffect(() => {
-    let thumbnailsQueue = {};
+    let thumbnailsQueue: Thumbnails = {};
 
     uppy.on('thumbnail:generated', (file, preview) => {
       thumbnailsQueue = {
@@ -80,7 +80,7 @@ export default function Upload(): Node {
       };
 
       dispatch({
-        type: events.THUMBNAILS,
+        type: EVENTS.THUMBNAILS,
         value: thumbnailsQueue,
       });
     });
@@ -88,7 +88,7 @@ export default function Upload(): Node {
 
   // Urls - when upload is complete we have semi-public urls (you need to know the URL for it to work, and you need to be logged in to see it)
   useEffect(() => {
-    let urlQueue = {};
+    let urlQueue: Urls = {};
 
     // On upload success, we update so that we have URLs, and we update the thumbnail to the new URL as well
     uppy.on('upload-success', (file, response) => {
@@ -98,7 +98,7 @@ export default function Upload(): Node {
       };
 
       dispatch({
-        type: events.URLS,
+        type: EVENTS.URLS,
         value: urlQueue,
       });
     });
@@ -106,7 +106,7 @@ export default function Upload(): Node {
 
   // Upload progress - when a file reports progress, update state so user can see
   useEffect(() => {
-    let progressQueue = {};
+    let progressQueue: Progress = {};
     uppy.on('upload-progress', (file, progress) => {
       progressQueue = {
         ...progressQueue,
@@ -114,7 +114,7 @@ export default function Upload(): Node {
       };
 
       dispatch({
-        type: events.PROGRESS,
+        type: EVENTS.PROGRESS,
         value: progressQueue,
       });
     });
@@ -149,7 +149,7 @@ export default function Upload(): Node {
   // Cleanup - reset uppy uploads and state
   const onCancel = () => {
     uppy.reset();
-    dispatch({ type: 'ALL', value: initialState });
+    dispatch({ type: EVENTS.ALL, value: initialState });
   };
 
   return (
@@ -161,5 +161,3 @@ export default function Upload(): Node {
     />
   );
 }
-
-export { events };

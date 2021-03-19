@@ -2,9 +2,10 @@
  * @flow
  */
 import type { Node } from 'react';
+import type { State } from '../../../__types__/types';
 
 type Props = {
-  state: any,
+  state: State,
   disabled: boolean,
 };
 

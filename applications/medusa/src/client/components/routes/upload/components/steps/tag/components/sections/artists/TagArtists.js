@@ -7,14 +7,15 @@ import { createPortal } from 'react-dom';
 import RootElement from '@//:modules/utilities/RootElement';
 import Artists from './query/Artists';
 import Search from '../../search/Search';
-import { events } from '../../../../../../Upload';
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary';
 import ErrorFallback from '@//:modules/fallbacks/error/ErrorFallback';
 import LoadingSearch from '@//:modules/fallbacks/loading/LoadingSearch';
+import type { Dispatch, State } from '../../../../../../__types__/types';
+import { EVENTS } from '../../../../../../constants/constants';
 
 type Props = {
-  dispatch: any,
-  state: any,
+  dispatch: Dispatch,
+  state: State,
 };
 
 export default function TagArtists({ state, dispatch }: Props): Node {
@@ -30,7 +31,7 @@ export default function TagArtists({ state, dispatch }: Props): Node {
 
   // For selecting an artist, we immediately close since we should only have 1
   const onSelect = artist => {
-    dispatch({ type: events.TAG_ARTIST, value: artist });
+    dispatch({ type: EVENTS.TAG_ARTIST, value: artist });
     onClose();
   };
 

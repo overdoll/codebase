@@ -1,8 +1,8 @@
 import { createMockEnvironment, MockPayloadGenerator } from 'relay-test-utils';
 import withProviders from '@//:modules/testing/withProviders';
 import Token from '../Token';
-import { fireEvent, render, waitFor } from '@testing-library/react';
-import { loadQuery, graphql } from 'react-relay/hooks';
+import { render } from '@testing-library/react';
+import { loadQuery } from 'react-relay/hooks';
 
 const queueOperation = resolver => {
   const Environment = createMockEnvironment();

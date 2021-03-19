@@ -4,26 +4,23 @@
 import type { Node } from 'react';
 import Arrange from './arrange/Arrange';
 import Begin from './begin/Begin';
-import { events } from '../../Upload';
+import { STEPS, EVENTS } from '../../constants/constants';
 import Tag from './tag/Tag';
 import Review from './review/Review';
 import Finish from './finish/Finish';
 import { graphql, useMutation } from 'react-relay/hooks';
 import { useNotify } from '@//:modules/focus';
-import type { StepperMutation } from '@//:artifacts/StepperMutation.graphql';
+import type {
+  StepperMutation,
+  CharacterRequest,
+} from '@//:artifacts/StepperMutation.graphql';
+import type { Dispatch, State } from '../../__types__/types';
 
 type Props = {
   uppy: any,
-  state: any,
-  dispatch: any,
+  state: State,
+  dispatch: Dispatch,
   onCancel: any,
-};
-
-const steps = {
-  REVIEW: 'REVIEW',
-  ARRANGE: 'ARRANGE',
-  FINISH: 'FINISH',
-  TAG: 'TAG',
 };
 
 const SubmitGraphQL = graphql`
@@ -46,9 +43,9 @@ export default function Stepper({
 
   // Tagging step - disabled if the conditions aren't met
   const NextDisabled =
-    state.step === steps.TAG &&
+    state.step === STEPS.TAG &&
     (Object.keys(state.characters).length < 1 ||
-      Object.keys(state.artists).length < 1 ||
+      Object.keys(state.artist).length < 1 ||
       Object.keys(state.categories).length < 3);
 
   // If the amount of files != the amount of urls (not all files were uploaded), then we can't submit yet
@@ -58,14 +55,14 @@ export default function Stepper({
   const onAddFiles = (): void => {
     // If not in any step, go to the arrange step
     if (state.step === null) {
-      dispatch({ type: events.STEP, value: steps.ARRANGE });
+      dispatch({ type: EVENTS.STEP, value: STEPS.ARRANGE });
     }
-    dispatch({ type: events.FILES, value: uppy.getFiles() });
+    dispatch({ type: EVENTS.FILES, value: uppy.getFiles() });
   };
 
   const Step = (): Node => {
     switch (state.step) {
-      case steps.ARRANGE:
+      case STEPS.ARRANGE:
         return (
           <Arrange
             uppy={uppy}
@@ -74,13 +71,13 @@ export default function Stepper({
             state={state}
           />
         );
-      case steps.TAG:
+      case STEPS.TAG:
         return (
           <Tag disabled={NextDisabled} dispatch={dispatch} state={state} />
         );
-      case steps.REVIEW:
+      case STEPS.REVIEW:
         return <Review disabled={SubmitDisabled} state={state} />;
-      case steps.FINISH:
+      case STEPS.FINISH:
         return <Finish state={state} />;
       default:
         return <Begin uppy={uppy} onAddFiles={onAddFiles} />;
@@ -89,11 +86,11 @@ export default function Stepper({
 
   const NextStep = (): void => {
     switch (state.step) {
-      case steps.ARRANGE:
-        dispatch({ type: events.STEP, value: steps.TAG });
+      case STEPS.ARRANGE:
+        dispatch({ type: EVENTS.STEP, value: STEPS.TAG });
         break;
-      case steps.TAG:
-        dispatch({ type: events.STEP, value: steps.REVIEW });
+      case STEPS.TAG:
+        dispatch({ type: EVENTS.STEP, value: STEPS.REVIEW });
         break;
       default:
         break;
@@ -102,11 +99,11 @@ export default function Stepper({
 
   const PrevStep = (): void => {
     switch (state.step) {
-      case steps.TAG:
-        dispatch({ type: events.STEP, value: steps.ARRANGE });
+      case STEPS.TAG:
+        dispatch({ type: EVENTS.STEP, value: STEPS.ARRANGE });
         break;
-      case steps.REVIEW:
-        dispatch({ type: events.STEP, value: steps.TAG });
+      case STEPS.REVIEW:
+        dispatch({ type: EVENTS.STEP, value: STEPS.TAG });
         break;
       default:
         break;
@@ -115,15 +112,15 @@ export default function Stepper({
 
   // onSubmit - submit post
   const onSubmit = (): void => {
-    const urls = [];
+    const urls: Array<string> = [];
 
     // make sure our urls keep their order
     state.files.forEach(file => {
       urls.push(state.urls[file.id]);
     });
 
-    const characterRequests = [];
-    const mediaRequests = [];
+    const characterRequests: Array<CharacterRequest> = [];
+    const mediaRequests: Array<string> = [];
 
     // Sort all characters - if they're a requested character, then filter them out
     // also filter them out if the media is requested
@@ -139,22 +136,21 @@ export default function Stepper({
             ? character.media.title
             : character.media.id,
         });
-        return false;
       }
 
+      // if the media is requested, add it to our list
       if (character.media.request) {
         mediaRequests.push(character.media.title);
-        return false;
       }
 
-      return true;
+      return !(character.media.request || character.request);
     });
 
     // Commit all results
     commit({
       variables: {
         data: {
-          artistUsername: state.artist.username,
+          artistUsername: state.artist.username ?? '',
           artistId: state.artist.id,
           categories: Object.keys(state.categories),
           characters: characters,
@@ -164,8 +160,8 @@ export default function Stepper({
         },
       },
       onCompleted(data) {
-        dispatch({ type: events.SUBMIT, value: data.post });
-        dispatch({ type: events.STEP, value: steps.FINISH });
+        dispatch({ type: EVENTS.SUBMIT, value: data.post });
+        dispatch({ type: EVENTS.STEP, value: STEPS.FINISH });
       },
       onError(data) {
         notify.error('error with submission');
@@ -179,14 +175,14 @@ export default function Stepper({
       <div>
         {state.step !== null && (
           <>
-            {state.step !== steps.ARRANGE ? (
+            {state.step !== STEPS.ARRANGE ? (
               <button disabled={isInFlight} onClick={PrevStep}>
                 prev
               </button>
             ) : (
               <button onClick={onCancel}>cancel</button>
             )}
-            {state.step !== steps.REVIEW ? (
+            {state.step !== STEPS.REVIEW ? (
               <button disabled={NextDisabled} onClick={NextStep}>
                 next
               </button>

@@ -18,6 +18,7 @@ import createCache from '@emotion/cache';
 import createRouter from '@//:modules/routing/createRouter';
 import createMockHistory from '@//:modules/routing/createMockHistory';
 import { ThemeProvider } from 'theme-ui';
+import { NotificationProvider } from '@//:modules/focus';
 
 const entry = async (req, res, next) => {
   try {
@@ -105,9 +106,11 @@ const entry = async (req, res, next) => {
     const App = (
       <ThemeProvider theme={theme}>
         <RelayEnvironmentProvider environment={environment}>
-          <RoutingContext.Provider value={router.context}>
-            <RouteRenderer />
-          </RoutingContext.Provider>
+          <NotificationProvider>
+            <RoutingContext.Provider value={router.context}>
+              <RouteRenderer />
+            </RoutingContext.Provider>
+          </NotificationProvider>
         </RelayEnvironmentProvider>
       </ThemeProvider>
     );

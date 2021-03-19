@@ -3,19 +3,24 @@
  */
 import type { Node } from 'react';
 import Picker from '../../picker/Picker';
-import { events } from '../../../Upload';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import File from './file/File';
+import type { Dispatch, State } from '../../../__types__/types';
+import { EVENTS } from '../../../constants/constants';
 
 type Props = {
   uppy: any,
   onAddFiles: any,
-  dispatch: any,
-  state: any,
+  dispatch: Dispatch,
+  state: State,
 };
 
 // a little function to help us with reordering the result
-const reorder = (list, startIndex, endIndex) => {
+const reorder = (
+  list: Array<any>,
+  startIndex: number,
+  endIndex: number,
+): Array<any> => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);
@@ -34,16 +39,16 @@ export default function Arrange({
     uppy.removeFile(id);
 
     if (uppy.getFiles().length === 0) {
-      dispatch({ type: events.STEP, value: null });
+      dispatch({ type: EVENTS.STEP, value: null });
     }
 
-    dispatch({ type: events.FILES, value: uppy.getFiles() });
+    dispatch({ type: EVENTS.FILES, value: uppy.getFiles() });
 
     // Remove progress & thumbnail & urls from object
     const newProgress = { ...state.progress };
     delete newProgress[id];
     dispatch({
-      type: events.PROGRESS,
+      type: EVENTS.PROGRESS,
       value: newProgress,
     });
 
@@ -51,7 +56,7 @@ export default function Arrange({
     delete newThumbnails[id];
 
     dispatch({
-      type: events.THUMBNAILS,
+      type: EVENTS.THUMBNAILS,
       value: newThumbnails,
     });
 
@@ -59,7 +64,7 @@ export default function Arrange({
     delete newUrls[id];
 
     dispatch({
-      type: events.URLS,
+      type: EVENTS.URLS,
       value: newUrls,
     });
   };
@@ -76,7 +81,7 @@ export default function Arrange({
       result.destination.index,
     );
 
-    dispatch({ type: events.FILES, value: files });
+    dispatch({ type: EVENTS.FILES, value: files });
   };
 
   return (

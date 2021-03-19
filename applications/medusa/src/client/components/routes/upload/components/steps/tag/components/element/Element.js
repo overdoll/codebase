@@ -5,7 +5,7 @@ import type { Node } from 'react';
 
 type Props = {
   selected: boolean,
-  children: any,
+  children: Node,
   onSelect: any,
 };
 
