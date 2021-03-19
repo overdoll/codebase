@@ -32,7 +32,7 @@ func main() {
 	s3Client := s3.New(session)
 
 	store := s3store.S3Store{
-		Bucket:            "overdoll-processing",
+		Bucket:            "overdoll-uploads",
 		Service:           s3Client,
 		MaxPartSize:       5 * 1024 * 1024 * 1024,
 		PreferredPartSize: 5 * 1024 * 1024,
