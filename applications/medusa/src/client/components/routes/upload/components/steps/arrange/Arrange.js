@@ -5,7 +5,7 @@ import type { Node } from 'react';
 import Picker from '../../picker/Picker';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import File from './file/File';
-import type { Dispatch, State } from '../../../__types__/types';
+import type { Dispatch, State } from '@//:types/upload';
 import { EVENTS } from '../../../constants/constants';
 
 type Props = {

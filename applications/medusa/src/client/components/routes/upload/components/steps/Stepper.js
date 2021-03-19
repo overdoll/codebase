@@ -14,7 +14,7 @@ import type {
   StepperMutation,
   CharacterRequest,
 } from '@//:artifacts/StepperMutation.graphql';
-import type { Dispatch, State } from '../../__types__/types';
+import type { Dispatch, State } from '@//:types/upload';
 
 type Props = {
   uppy: any,

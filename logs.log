@@ -1,5 +1,0 @@
-Log file created at: 2021/03/15 18:25:28
-Running on machine: delta
-Binary: Built with gc go1.16 for linux/amd64
-Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
-I0315 18:25:28.007051 1175500 tenant-delete.go:68] delete tenant command started

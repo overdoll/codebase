@@ -14,7 +14,7 @@ import type {
   State,
   Thumbnails,
   Urls,
-} from './__types__/types';
+} from '@//:types/upload';
 import { EVENTS } from './constants/constants';
 
 const initialState: State = {

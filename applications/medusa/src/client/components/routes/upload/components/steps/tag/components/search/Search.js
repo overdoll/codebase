@@ -3,7 +3,7 @@
  */
 import type { Node } from 'react';
 import { useCallback, useState } from 'react';
-import useTransition from '@//:modules/transition/useTransition';
+import { useTransition } from '@//:modules/experimental';
 
 type Props = {
   children: any,

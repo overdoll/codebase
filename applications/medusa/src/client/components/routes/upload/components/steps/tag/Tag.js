@@ -5,7 +5,7 @@ import type { Node } from 'react';
 import TagArtists from './components/sections/artists/TagArtists';
 import TagCharacters from './components/sections/characters/TagCharacters';
 import TagCategories from './components/sections/categories/TagCategories';
-import type { Dispatch, State } from '../../../__types__/types';
+import type { Dispatch, State } from '@//:types/upload';
 
 type Props = {
   dispatch: Dispatch,

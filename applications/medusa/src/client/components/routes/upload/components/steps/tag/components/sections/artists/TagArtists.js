@@ -10,7 +10,7 @@ import Search from '../../search/Search';
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary';
 import ErrorFallback from '@//:modules/fallbacks/error/ErrorFallback';
 import LoadingSearch from '@//:modules/fallbacks/loading/LoadingSearch';
-import type { Dispatch, State } from '../../../../../../__types__/types';
+import type { Dispatch, State } from '@//:types/upload';
 import { EVENTS } from '../../../../../../constants/constants';
 
 type Props = {

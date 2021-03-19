@@ -2,7 +2,7 @@
  * @flow
  */
 import type { Node } from 'react';
-import type { State } from '../../../__types__/types';
+import type { State } from '@//:types/upload';
 
 type Props = {
   state: State,
