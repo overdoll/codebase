@@ -12,7 +12,7 @@ type Props = {
 };
 
 export default function Search({ children, onClose, onSubmit }: Props): Node {
-  const [search, setSearch] = useState('');
+  const [searchInput, setSearch] = useState('');
   const [startTransition, isPending] = useTransition({ timeoutMs: 10 * 1000 });
 
   const [queryArgs, setQueryArgs] = useState({
@@ -35,7 +35,8 @@ export default function Search({ children, onClose, onSubmit }: Props): Node {
       },
       variables: {
         data: {
-          search,
+          // fall back to data in the input if it's a refresh
+          search: search || searchInput,
         },
       },
     }));
@@ -53,8 +54,8 @@ export default function Search({ children, onClose, onSubmit }: Props): Node {
   return (
     <>
       {isPending ? 'loading indicator' : ''}
-      {children({ args: queryArgs })}
-      <input value={search} onChange={onChange} />
+      {children({ args: queryArgs, refetch: refetch })}
+      <input value={searchInput} onChange={onChange} />
       {(onClose || onSubmit) && (
         <div>
           {onClose && <button onClick={onClose}>close</button>}

@@ -8,10 +8,10 @@ import RootElement from '@//:modules/utilities/RootElement';
 import Search from '../../search/Search';
 import Characters from './query/Characters';
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary';
-import ErrorFallback from '@//:modules/fallbacks/error/ErrorFallback';
-import LoadingSearch from '@//:modules/fallbacks/loading/LoadingSearch';
 import type { Dispatch, State } from '@//:types/upload';
 import { EVENTS } from '../../../../../../constants/constants';
+import ErrorFallback from '../../error/ErrorFallback';
+import LoadingSearch from '../../loading/LoadingSearch';
 
 type Props = {
   dispatch: Dispatch,
@@ -53,10 +53,18 @@ export default function TagCharacters({ state, dispatch }: Props): Node {
       {open &&
         createPortal(
           <Search onClose={onClose}>
-            {({ args }) => (
+            {({ args, refetch }) => (
               <>
                 DISPLAY SELECTED CHARACTERS HERE???
-                <ErrorBoundary fallback={ErrorFallback}>
+                <ErrorBoundary
+                  fallback={({ error, reset }) => (
+                    <ErrorFallback
+                      error={error}
+                      reset={reset}
+                      refetch={refetch}
+                    />
+                  )}
+                >
                   <Suspense fallback={<LoadingSearch />}>
                     <Characters
                       selected={Object.keys(state.characters)}
