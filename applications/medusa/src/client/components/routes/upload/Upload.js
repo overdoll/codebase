@@ -6,7 +6,7 @@ import { useEffect, useReducer } from 'react';
 import { useUppy } from '@uppy/react';
 import Uppy from './components/uppy/Uppy';
 import { useNotify } from '@//:modules/focus';
-import Stepper from './components/steps/Stepper';
+import Steps from './components/steps/Steps';
 import type {
   Action,
   Dispatch,
@@ -15,19 +15,7 @@ import type {
   Thumbnails,
   Urls,
 } from '@//:types/upload';
-import { EVENTS } from './constants/constants';
-
-const initialState: State = {
-  thumbnails: {},
-  files: [],
-  urls: {},
-  step: null,
-  progress: {},
-  artist: {},
-  characters: {},
-  categories: {},
-  submit: {},
-};
+import { EVENTS, INITIAL_STATE } from './constants/constants';
 
 // TODO: on each update, save state here in indexeddb, clean storage on SUBMIT
 const reducer: any = (state: State, action: Action): State => {
@@ -57,6 +45,7 @@ const reducer: any = (state: State, action: Action): State => {
   }
 };
 
+// Main upload component - handles all events from Uppy and renders the stepper
 export default function Upload(): Node {
   const uppy = useUppy(() => {
     return Uppy;
@@ -66,10 +55,10 @@ export default function Upload(): Node {
 
   const [state: State, dispatch: Dispatch] = useReducer<State, Action>(
     reducer,
-    initialState,
+    INITIAL_STATE,
   );
 
-  // Create thumbnails
+  // Add to thumbnails state when a new thumbnail is added
   useEffect(() => {
     let thumbnailsQueue: Thumbnails = {};
 
@@ -84,7 +73,7 @@ export default function Upload(): Node {
         value: thumbnailsQueue,
       });
     });
-  }, []);
+  }, [uppy]);
 
   // Urls - when upload is complete we have semi-public urls (you need to know the URL for it to work, and you need to be logged in to see it)
   useEffect(() => {
@@ -102,7 +91,7 @@ export default function Upload(): Node {
         value: urlQueue,
       });
     });
-  }, []);
+  }, [uppy]);
 
   // Upload progress - when a file reports progress, update state so user can see
   useEffect(() => {
@@ -118,7 +107,7 @@ export default function Upload(): Node {
         value: progressQueue,
       });
     });
-  }, []);
+  }, [uppy]);
 
   // Events for errors
   useEffect(() => {
@@ -146,18 +135,5 @@ export default function Upload(): Node {
     });
   }, []);
 
-  // Cleanup - reset uppy uploads and state
-  const onCancel = () => {
-    uppy.reset();
-    dispatch({ type: EVENTS.ALL, value: initialState });
-  };
-
-  return (
-    <Stepper
-      onCancel={onCancel}
-      uppy={uppy}
-      state={state}
-      dispatch={dispatch}
-    />
-  );
+  return <Steps uppy={uppy} state={state} dispatch={dispatch} />;
 }

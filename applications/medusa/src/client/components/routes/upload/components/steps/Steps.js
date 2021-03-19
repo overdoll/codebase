@@ -4,40 +4,35 @@
 import type { Node } from 'react';
 import Arrange from './arrange/Arrange';
 import Begin from './begin/Begin';
-import { STEPS, EVENTS } from '../../constants/constants';
+import { EVENTS, INITIAL_STATE, STEPS } from '../../constants/constants';
 import Tag from './tag/Tag';
 import Review from './review/Review';
 import Finish from './finish/Finish';
 import { graphql, useMutation } from 'react-relay/hooks';
 import { useNotify } from '@//:modules/focus';
 import type {
-  StepperMutation,
   CharacterRequest,
-} from '@//:artifacts/StepperMutation.graphql';
+  StepsMutation,
+} from '@//:artifacts/StepsMutation.graphql';
 import type { Dispatch, State } from '@//:types/upload';
 
 type Props = {
   uppy: any,
   state: State,
   dispatch: Dispatch,
-  onCancel: any,
 };
 
 const SubmitGraphQL = graphql`
-  mutation StepperMutation($data: PostInput) {
+  mutation StepsMutation($data: PostInput) {
     post(data: $data) {
       review
     }
   }
 `;
 
-export default function Stepper({
-  uppy,
-  state,
-  dispatch,
-  onCancel,
-}: Props): Node {
-  const [commit, isInFlight] = useMutation<StepperMutation>(SubmitGraphQL);
+// Stepper - handles all stepping functions
+export default function Steps({ uppy, state, dispatch }: Props): Node {
+  const [commit, isInFlight] = useMutation<StepsMutation>(SubmitGraphQL);
 
   const notify = useNotify();
 
@@ -51,12 +46,13 @@ export default function Stepper({
   // If the amount of files != the amount of urls (not all files were uploaded), then we can't submit yet
   const SubmitDisabled = state.files.length !== Object.keys(state.urls).length;
 
-  // Add files
   const onAddFiles = (): void => {
     // If not in any step, go to the arrange step
     if (state.step === null) {
       dispatch({ type: EVENTS.STEP, value: STEPS.ARRANGE });
     }
+
+    // Use Uppy's internal state to get the files since the variable can be unreliable (doesn't contain all values)
     dispatch({ type: EVENTS.FILES, value: uppy.getFiles() });
   };
 
@@ -167,6 +163,12 @@ export default function Stepper({
         notify.error('error with submission');
       },
     });
+  };
+
+  // Cleanup - reset uppy uploads and state
+  const onCancel = () => {
+    uppy.reset();
+    dispatch({ type: EVENTS.ALL, value: INITIAL_STATE });
   };
 
   return (

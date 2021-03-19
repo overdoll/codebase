@@ -1,3 +1,6 @@
+// @flow
+import type { State } from '@//:types/upload';
+
 const STEPS = {
   REVIEW: 'REVIEW',
   ARRANGE: 'ARRANGE',
@@ -18,4 +21,16 @@ const EVENTS = {
   ALL: 'ALL',
 };
 
-export { STEPS, EVENTS };
+const INITIAL_STATE: State = {
+  thumbnails: {},
+  files: [],
+  urls: {},
+  step: null,
+  progress: {},
+  artist: {},
+  characters: {},
+  categories: {},
+  submit: {},
+};
+
+export { STEPS, EVENTS, INITIAL_STATE };

@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash fffe1105c49a303dc3747589e47e7acd
+ * @relayHash 4007a9c7974da01641f179dd102d6927
  */
 
 /* eslint-disable */
@@ -21,22 +21,22 @@ export type CharacterRequest = {|
   name: string,
   media: string,
 |};
-export type StepperMutationVariables = {|
+export type StepsMutationVariables = {|
   data?: ?PostInput
 |};
-export type StepperMutationResponse = {|
+export type StepsMutationResponse = {|
   +post: {|
     +review: boolean
   |}
 |};
-export type StepperMutation = {|
-  variables: StepperMutationVariables,
-  response: StepperMutationResponse,
+export type StepsMutation = {|
+  variables: StepsMutationVariables,
+  response: StepsMutationResponse,
 |};
 
 
 /*
-mutation StepperMutation(
+mutation StepsMutation(
   $data: PostInput
 ) {
   post(data: $data) {
@@ -84,7 +84,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "StepperMutation",
+    "name": "StepsMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -93,18 +93,18 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "StepperMutation",
+    "name": "StepsMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "fffe1105c49a303dc3747589e47e7acd",
+    "id": "4007a9c7974da01641f179dd102d6927",
     "metadata": {},
-    "name": "StepperMutation",
+    "name": "StepsMutation",
     "operationKind": "mutation",
     "text": null
   }
 };
 })();
 // prettier-ignore
-(node: any).hash = '40149b98eb010b1fc6455912aeec997e';
+(node: any).hash = '465df96394a2d287dcce9d1421d006a4';
 module.exports = node;
