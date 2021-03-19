@@ -47,8 +47,9 @@ type User struct {
 	Id       ksuid.UUID `db:"id"`
 	Username string     `db:"username"`
 	Email    string     `db:"email"`
-	Roles    []UserRole   `db:"roles"`
+	Roles    []UserRole `db:"roles"`
 	Verified bool       `db:"verified"`
+	Avatar   string     `db:"avatar"`
 }
 
 type UserUsername struct {

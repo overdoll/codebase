@@ -115,16 +115,21 @@ export default function Stepper({
 
   // onSubmit - submit post
   const onSubmit = (): void => {
-    // TODO: merge variables properly
+    const urls = [];
+
+    // make sure our urls keep their order
+    state.files.forEach(file => {
+      urls.push(state.urls[file.id]);
+    });
 
     commit({
       variables: {
         data: {
           artistUsername: state.artist.username,
           artistId: state.artist.id,
-          categories: [],
-          characters: [],
-          images: [],
+          categories: Object.keys(state.categories),
+          characters: Object.keys(state.characters),
+          images: urls,
           // TODO: add requests
           characterRequests: null,
           mediaRequests: null,
