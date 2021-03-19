@@ -53,8 +53,8 @@ func Run(cmd *cobra.Command, args []string) {
 	evt := events.GetConnection(ctx, "pox")
 
 	// Register our subscribers to topics
-	evt.RegisterSubscriber("pox.topic.posts_image_processing", srv.ProcessPost)
-	evt.RegisterSubscriber("pox.topic.posts_image_publishing", srv.PublishPost)
+	evt.RegisterSubscriber("pox.topic.posts_content_processing", srv.ProcessPost)
+	evt.RegisterSubscriber("pox.topic.posts_content_publishing", srv.PublishPost)
 
 	// Run subscribers
 	evt.Run()

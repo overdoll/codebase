@@ -55,7 +55,7 @@ type Media struct {
 }
 
 type PostInput struct {
-	Images            []string            `json:"images"`
+	Content           []string            `json:"content"`
 	Categories        []string            `json:"categories"`
 	Characters        []string            `json:"characters"`
 	MediaRequests     []string            `json:"mediaRequests"`

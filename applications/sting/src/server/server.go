@@ -62,7 +62,7 @@ func (s *Server) SchedulePost(ctx context.Context, post *sting.SchedulePostReque
 		ArtistUsername:      post.ArtistUsername,
 		ContributorId:       contributorId,
 		ContributorUsername: post.ContributorUsername,
-		Images:              post.Images,
+		Content:             post.Content,
 		Categories:          categoryIds,
 		Characters:          characterIds,
 		CharactersRequests:  post.CharacterRequests,
@@ -82,9 +82,9 @@ func (s *Server) SchedulePost(ctx context.Context, post *sting.SchedulePostReque
 	}
 
 	// Send a message to pox to process the images on this specific post
-	err = s.events.Publish("pox.topic.posts_image_processing", &pox.PostProcessImageEvent{
-		PostId: pendingPost.Id.String(),
-		Images: pendingPost.Images,
+	err = s.events.Publish("pox.topic.posts_content_processing", &pox.PostProcessContentEvent{
+		PostId:  pendingPost.Id.String(),
+		Content: pendingPost.Content,
 	})
 
 	if err != nil {
@@ -116,14 +116,14 @@ func (s *Server) ProcessPost(ctx context.Context, process *sting.ProcessPostRequ
 	}
 
 	processedPost := &models.PostPending{
-		Id:     postPending.Id,
-		Images: process.Images,
-		State:  postState,
+		Id:      postPending.Id,
+		Content: process.Content,
+		State:   postState,
 	}
 
 	// Update our post to reflect the new state
 	updatePost := qb.Update("post_pending").
-		Set("images", "state").
+		Set("content", "state").
 		Where(qb.Eq("id")).
 		Query(s.session).
 		BindStruct(processedPost)
@@ -134,9 +134,9 @@ func (s *Server) ProcessPost(ctx context.Context, process *sting.ProcessPostRequ
 
 	// Tell pox to publish our images
 	if !postPending.ReviewRequired {
-		err := s.events.Publish("pox.topic.posts_image_publishing", &pox.PostPublishImageEvent{
-			PostId: postPending.Id.String(),
-			Images: postPending.Images,
+		err := s.events.Publish("pox.topic.posts_content_publishing", &pox.PostPublishContentEvent{
+			PostId:  postPending.Id.String(),
+			Content: postPending.Content,
 		})
 
 		if err != nil {
@@ -316,7 +316,7 @@ func (s *Server) PublishPost(ctx context.Context, publish *sting.PublishPostRequ
 		Id:            ksuid.New(),
 		ArtistId:      artistId,
 		ContributorId: postPending.ContributorId,
-		Images:        publish.Images,
+		Content:       publish.Content,
 		Categories:    append(postPending.Categories, newCategories...),
 		Characters:    append(postPending.Characters, newCharacters...),
 		PostedAt:      time.Now(),
@@ -334,7 +334,7 @@ func (s *Server) PublishPost(ctx context.Context, publish *sting.PublishPostRequ
 		Id:            post.Id.String(),
 		ArtistId:      post.ArtistId.String(),
 		ContributorId: post.ContributorId.String(),
-		Images:        post.Images,
+		Content:       post.Content,
 		Categories:    ksuid.ToStringArray(post.Categories),
 		Characters:    ksuid.ToStringArray(post.Characters),
 		PostedAt:      post.PostedAt.String(),
@@ -434,9 +434,9 @@ func (s *Server) ReviewPost(ctx context.Context, review *sting.ReviewPostRequest
 	}
 
 	// Tell pox to publish the images - this will make the post public & create all the required categories once this is finished
-	err = s.events.Publish("pox.topic.posts_image_publishing", &pox.PostPublishImageEvent{
-		PostId: postReview.Id.String(),
-		Images: postReview.Images,
+	err = s.events.Publish("pox.topic.posts_image_publishing", &pox.PostPublishContentEvent{
+		PostId:  postReview.Id.String(),
+		Content: postReview.Content,
 	})
 
 	if err != nil {
@@ -447,7 +447,7 @@ func (s *Server) ReviewPost(ctx context.Context, review *sting.ReviewPostRequest
 		Id:            postReview.Id.String(),
 		ArtistId:      postReview.ArtistId,
 		ContributorId: postReview.ContributorId.String(),
-		Images:        postReview.Images,
+		Content:       postReview.Content,
 		Categories:    ksuid.ToStringArray(postReview.Categories),
 		Characters:    ksuid.ToStringArray(postReview.Characters),
 	}, nil

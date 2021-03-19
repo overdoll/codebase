@@ -12,11 +12,15 @@ export default function Review({ state, disabled }: Props): Node {
   return (
     <>
       {state.files.map(file => {
-        const image = state.urls[file.id];
+        const content = state.urls[file.id];
 
         return (
           <div key={file.id}>
-            {image ? <img alt="url" src={image} /> : 'no image available yet'}
+            {content ? (
+              <img alt="url" src={content} />
+            ) : (
+              'no image available yet'
+            )}
           </div>
         );
       })}

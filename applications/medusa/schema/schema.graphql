@@ -1,5 +1,3 @@
-directive @role(roles: [String!]!) on FIELD_DEFINITION
-
 directive @auth on FIELD_DEFINITION
 
 directive @guest on FIELD_DEFINITION
@@ -7,6 +5,8 @@ directive @guest on FIELD_DEFINITION
 directive @verified on FIELD_DEFINITION
 
 directive @validation(rules: [String!]!) on INPUT_FIELD_DEFINITION
+
+directive @role(roles: [String!]!) on FIELD_DEFINITION
 
 type Artist {
   id: String!
@@ -69,7 +69,7 @@ type Mutation {
 }
 
 input PostInput {
-  images: [String!]!
+  content: [String!]!
   categories: [String!]!
   characters: [String!]!
   mediaRequests: [String!]

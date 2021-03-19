@@ -9,7 +9,7 @@
 
 import type { ConcreteRequest } from 'relay-runtime';
 export type PostInput = {|
-  images: $ReadOnlyArray<string>,
+  content: $ReadOnlyArray<string>,
   categories: $ReadOnlyArray<string>,
   characters: $ReadOnlyArray<string>,
   mediaRequests?: ?$ReadOnlyArray<string>,

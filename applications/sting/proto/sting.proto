@@ -6,7 +6,7 @@ message Post {
   string id = 1;
   string artistId = 2;
   string contributorId = 3;
-  repeated string images = 4;
+  repeated string content = 4;
   repeated string categories = 5;
   repeated string characters = 6;
 }
@@ -16,7 +16,7 @@ message SchedulePostRequest {
   string artistUsername = 2;
   string contributorId = 3;
   string contributorUsername = 4;
-  repeated string images = 5;
+  repeated string content = 5;
   repeated string categories = 6;
   repeated string characters = 7;
   repeated string categoriesRequests = 8;
@@ -27,12 +27,12 @@ message SchedulePostRequest {
 
 message PublishPostRequest {
   string id = 1;
-  repeated string images = 2;
+  repeated string content = 2;
 }
 
 message ProcessPostRequest {
   string id = 1;
-  repeated string images = 2;
+  repeated string content = 2;
 }
 
 message ReviewPostRequest {

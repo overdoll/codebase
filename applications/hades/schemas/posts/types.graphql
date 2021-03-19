@@ -1,5 +1,5 @@
 input PostInput {
-  images: [String!]! @validation(rules: ["required"])
+  content: [String!]! @validation(rules: ["required"])
   categories: [String!]!
   characters: [String!]!
   mediaRequests: [String!]

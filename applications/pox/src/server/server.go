@@ -33,13 +33,13 @@ const (
 
 // ProcessPost - process our images (diff check, resizing, etc...)
 // and then tell Sting that we are finished, so it can put the post in review or call the next message
-func (s *Server) ProcessPost(ctx context.Context, msg *pox.PostProcessImageEvent) {
+func (s *Server) ProcessPost(ctx context.Context, msg *pox.PostProcessContentEvent) {
 
 	// TODO: image processing. for now, just relay back the same images
 
 	_, err := s.services.Sting().ProcessPost(ctx, &sting.ProcessPostRequest{
-		Id:     msg.PostId,
-		Images: msg.Images,
+		Id:      msg.PostId,
+		Content: msg.Content,
 	})
 
 	if err != nil {
@@ -49,12 +49,12 @@ func (s *Server) ProcessPost(ctx context.Context, msg *pox.PostProcessImageEvent
 
 // PublishPost - make the images in the post publicly viewable, and then
 // tell Sting about the images
-func (s *Server) PublishPost(ctx context.Context, msg *pox.PostPublishImageEvent) {
+func (s *Server) PublishPost(ctx context.Context, msg *pox.PostPublishContentEvent) {
 
 	downloader := s3manager.NewDownloader(s.session)
 	s3Client := s3.New(s.session)
 
-	for _, image := range msg.Images {
+	for _, image := range msg.Content {
 
 		file, err := os.Create(image)
 
@@ -90,8 +90,8 @@ func (s *Server) PublishPost(ctx context.Context, msg *pox.PostPublishImageEvent
 
 	// Tell Sting about our new images
 	_, err := s.services.Sting().PublishPost(ctx, &sting.PublishPostRequest{
-		Id:     msg.PostId,
-		Images: msg.Images,
+		Id:      msg.PostId,
+		Content: msg.Content,
 	})
 
 	if err != nil {

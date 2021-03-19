@@ -25,7 +25,7 @@ CREATE TABLE media
 
 CREATE TABLE artists
 (
-    user_id  text,
+    user_id       text,
     user_username text,
     user_avatar   text,
     primary key ( user_id )
@@ -36,7 +36,7 @@ CREATE TABLE posts
     id             text,
     artist_id      text,
     contributor_id text,
-    images         list<text>,
+    content        list<text>,
     categories     list<text>,
     characters     list<text>,
     posted_at      timestamp,
@@ -51,7 +51,7 @@ CREATE TABLE posts_pending
     artist_username      text,
     contributor_id       text,
     contributor_username text,
-    images               list<text>,
+    content              list<text>,
     categories           list<text>,
     characters           list<text>,
     characters_requests  map<text, text>,

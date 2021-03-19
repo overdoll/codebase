@@ -35,7 +35,7 @@ type Post struct {
 	Id            ksuid.UUID   `db:"id"`
 	ArtistId      ksuid.UUID   `db:"artist_id"`
 	ContributorId ksuid.UUID   `db:"contributor_id"`
-	Images        []string     `db:"images"`
+	Content       []string     `db:"content"`
 	Categories    []ksuid.UUID `db:"categories"`
 	Characters    []ksuid.UUID `db:"characters"`
 	PostedAt      time.Time    `db:"posted_at"`
@@ -57,7 +57,7 @@ type PostPending struct {
 	ArtistUsername      string            `db:"artist_username"`
 	ContributorId       ksuid.UUID        `db:"contributor_id"`
 	ContributorUsername string            `db:"contributor_username"`
-	Images              []string          `db:"images"`
+	Content             []string          `db:"content"`
 	Categories          []ksuid.UUID      `db:"categories"`
 	Characters          []ksuid.UUID      `db:"characters"`
 	CharactersRequests  map[string]string `db:"characters_requests"`

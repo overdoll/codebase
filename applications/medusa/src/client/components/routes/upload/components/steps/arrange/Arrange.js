@@ -4,7 +4,8 @@
 import type { Node } from 'react';
 import Picker from '../../picker/Picker';
 import { events } from '../../../Upload';
-import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import File from './file/File';
 
 type Props = {
   uppy: any,
@@ -78,12 +79,11 @@ export default function Arrange({
     dispatch({ type: events.FILES, value: files });
   };
 
-  // TODO: split this up into more components
   return (
     <>
       files so far
       <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="droppable">
+        <Droppable droppableId="upload">
           {(provided, snapshot) => (
             <div
               {...provided.droppableProps}
@@ -92,33 +92,16 @@ export default function Arrange({
                 backgroundColor: snapshot.isDraggingOver ? 'green' : null,
               }}
             >
-              {state.files.map((file, index) => {
-                const thumbnail = state.thumbnails[file.id];
-                const prog = state.progress[file.id];
-
-                return (
-                  <Draggable key={file.id} draggableId={file.id} index={index}>
-                    {(provided, snapshot) => (
-                      <div
-                        sx={{
-                          backgroundColor: snapshot.isDragging ? 'green' : null,
-                        }}
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                      >
-                        {thumbnail ? (
-                          <img alt="thumbnail" src={thumbnail} />
-                        ) : (
-                          'no thumb'
-                        )}
-                        <button onClick={() => onRemoveFile(file.id)}>x</button>
-                        {prog ? `${prog['0']}/${prog['1']}` : 'waiting'}
-                      </div>
-                    )}
-                  </Draggable>
-                );
-              })}
+              {state.files.map((file, index) => (
+                <File
+                  key={file.id}
+                  file={file}
+                  thumbnail={state.thumbnails[file.id]}
+                  progress={state.progress[file.id]}
+                  onRemove={onRemoveFile}
+                  index={index}
+                />
+              ))}
             </div>
           )}
         </Droppable>

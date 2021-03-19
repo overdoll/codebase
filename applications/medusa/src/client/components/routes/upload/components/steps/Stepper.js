@@ -122,17 +122,45 @@ export default function Stepper({
       urls.push(state.urls[file.id]);
     });
 
+    const characterRequests = [];
+    const mediaRequests = [];
+
+    // Sort all characters - if they're a requested character, then filter them out
+    // also filter them out if the media is requested
+    const characters = Object.keys(state.characters).filter(item => {
+      const character = state.characters[item];
+
+      // if the media is custom, use the name. otherwise use the id
+      // the check is done on the backend against mediaRequests
+      if (character.request) {
+        characterRequests.push({
+          name: character.name,
+          media: character.media.request
+            ? character.media.title
+            : character.media.id,
+        });
+        return false;
+      }
+
+      if (character.media.request) {
+        mediaRequests.push(character.media.title);
+        return false;
+      }
+
+      return true;
+    });
+
+    // Commit all results
     commit({
       variables: {
         data: {
           artistUsername: state.artist.username,
           artistId: state.artist.id,
           categories: Object.keys(state.categories),
-          characters: Object.keys(state.characters),
-          images: urls,
-          // TODO: add requests
-          characterRequests: null,
-          mediaRequests: null,
+          characters: characters,
+          content: urls,
+          characterRequests: characterRequests,
+          mediaRequests: mediaRequests,
         },
       },
       onCompleted(data) {

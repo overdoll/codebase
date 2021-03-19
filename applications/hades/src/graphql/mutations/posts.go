@@ -45,7 +45,7 @@ func (r *MutationResolver) Post(ctx context.Context, data *models.PostInput) (*m
 		ArtistUsername:      data.ArtistUsername,
 		ContributorId:       user.Id,
 		ContributorUsername: user.Username,
-		Images:              data.Images,
+		Content:             data.Content,
 		Categories:          data.Categories,
 		Characters:          data.Characters,
 		CategoriesRequests:  nil,

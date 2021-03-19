@@ -553,11 +553,11 @@ directive @role(roles: [String!]!) on FIELD_DEFINITION
 	{Name: "schemas/posts/queries.graphql", Input: `extend type Query {
   characters(data: SearchInput!): [Character!]!
   categories(data: SearchInput!): [Category!]!
-  artists(data: SearchInput!): [Artist!]!
+  artists(data: SearchInput!): [Artist!]! @auth
 }
 `, BuiltIn: false},
 	{Name: "schemas/posts/types.graphql", Input: `input PostInput {
-  images: [String!]! @validation(rules: ["required"])
+  content: [String!]! @validation(rules: ["required"])
   categories: [String!]!
   characters: [String!]!
   mediaRequests: [String!]
@@ -2146,8 +2146,28 @@ func (ec *executionContext) _Query_artists(ctx context.Context, field graphql.Co
 	}
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Artists(rctx, args["data"].(models.SearchInput))
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Query().Artists(rctx, args["data"].(models.SearchInput))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			if ec.directives.Auth == nil {
+				return nil, errors.New("directive auth is not implemented")
+			}
+			return ec.directives.Auth(ctx, nil, directive0)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.([]*models.Artist); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be []*overdoll/applications/hades/src/models.Artist`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3506,10 +3526,10 @@ func (ec *executionContext) unmarshalInputPostInput(ctx context.Context, obj int
 
 	for k, v := range asMap {
 		switch k {
-		case "images":
+		case "content":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("images"))
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("content"))
 			directive0 := func(ctx context.Context) (interface{}, error) { return ec.unmarshalNString2ᚕstringᚄ(ctx, v) }
 			directive1 := func(ctx context.Context) (interface{}, error) {
 				rules, err := ec.unmarshalNString2ᚕstringᚄ(ctx, []interface{}{"required"})
@@ -3527,9 +3547,9 @@ func (ec *executionContext) unmarshalInputPostInput(ctx context.Context, obj int
 				return it, graphql.ErrorOnPath(ctx, err)
 			}
 			if data, ok := tmp.([]string); ok {
-				it.Images = data
+				it.Content = data
 			} else if tmp == nil {
-				it.Images = nil
+				it.Content = nil
 			} else {
 				err := fmt.Errorf(`unexpected type %T from directive, should be []string`, tmp)
 				return it, graphql.ErrorOnPath(ctx, err)
