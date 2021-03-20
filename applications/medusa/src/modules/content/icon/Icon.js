@@ -13,7 +13,6 @@ const renderPaths = (icon, fill, stroke, strokeWidth) =>
       }}
       strokeLinecap={icon[3][index]['stroke-linecap']}
       strokeLinejoin={icon[3][index]['stroke-linejoin']}
-      strokeWidth={icon[3][index]['stroke-width']}
       key={path}
       d={path}
     />
@@ -64,10 +63,9 @@ export default function Icon({
     <i {...rest}>
       <svg
         viewBox={`0 0 ${finalWidth} ${finalHeight}`}
-        style={{
+        sx={{
           width: finalWidth,
           height: finalHeight,
-          strokeWidth: strokeWidth,
           overflow: 'visible',
         }}
         width={finalWidth}

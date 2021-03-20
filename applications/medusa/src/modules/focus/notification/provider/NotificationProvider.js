@@ -34,13 +34,13 @@ export default function NotificationProvider(props: Props): Node {
     setExpired([...expired, id]);
   };
 
-  const create = (type, content, duration = null) => {
+  const create = (type, content, duration = 5000) => {
     setActive([...active, { type, content, duration, id: `${type}-${id}` }]);
 
     setId(id + 1);
   };
 
-  const warn = (content, duration = null) => {
+  const warn = (content, duration = 7000) => {
     create('warn', content, duration);
   };
 
@@ -48,7 +48,7 @@ export default function NotificationProvider(props: Props): Node {
     create('error', content, duration);
   };
 
-  const success = (content, duration = null) => {
+  const success = (content, duration = 3000) => {
     create('success', content, duration);
   };
 
@@ -73,6 +73,7 @@ export default function NotificationProvider(props: Props): Node {
           width: '100%',
           flexDirection: 'column',
           bottom: 0,
+          zIndex: 999,
         }}
       >
         {active

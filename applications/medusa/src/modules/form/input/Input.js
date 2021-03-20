@@ -17,7 +17,13 @@ type Props = {
   sx?: any,
 };
 
-export default function Input({ sx, validation, title, name, ...rest }: Props): Node {
+export default function Input({
+  sx,
+  validation,
+  title,
+  name,
+  ...rest
+}: Props): Node {
   const { register, errors, formState } = useFormContext();
 
   const hasError = errors[name] !== null && errors[name] !== undefined;
@@ -25,7 +31,11 @@ export default function Input({ sx, validation, title, name, ...rest }: Props): 
 
   return (
     <div>
-      <div sx={{ position: 'relative' }}>
+      <div
+        sx={{
+          position: 'relative',
+        }}
+      >
         <span
           sx={{
             fontWeight: 'heading',
@@ -36,7 +46,7 @@ export default function Input({ sx, validation, title, name, ...rest }: Props): 
               : 'green.600',
             fontFamily: 'heading',
             position: 'absolute',
-            fontSize: 0,
+            fontSize: 1,
             pl: 3,
             pt: 0,
             transform: 'translateX(3.5%)',
@@ -51,7 +61,7 @@ export default function Input({ sx, validation, title, name, ...rest }: Props): 
           sx={{
             pl: 3,
             pr: 7,
-            fontSize: 2,
+            fontSize: 3,
             pt: 5,
             pb: 1,
             fontWeight: 'body',
@@ -67,10 +77,11 @@ export default function Input({ sx, validation, title, name, ...rest }: Props): 
             },
           }}
         />
+
         {(hasError || success) && (
           <Icon
             icon={success ? FormValidation.CheckDouble1 : Alerts.AlertCircle}
-            stroke={success ? 'green.600' : 'orange.500'}
+            stroke={success ? `green.600` : `orange.500`}
             strokeWidth={2}
             sx={{
               top: '50%',
@@ -84,6 +95,7 @@ export default function Input({ sx, validation, title, name, ...rest }: Props): 
           />
         )}
       </div>
+
       <ThemeUIText
         sx={{
           color: 'orange.300',
