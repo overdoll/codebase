@@ -4,7 +4,8 @@
 const theme = {
   breakpoints: ['40em', '52em', '64em'],
   fontSizes: [
-    '1rem', // 12
+    '0.875rem', // 14
+    '1rem', // 16
     '1.1666666666666667rem', // 14
     '1.3333333333333333rem', // 16
     '1.5rem', // 18
@@ -115,7 +116,7 @@ const theme = {
   },
   lineHeights: {
     body: 1.5,
-    heading: 1.25,
+    heading: 1.5,
   },
   shadows: {
     '100': '0px 0px 2px rgba(0, 0, 0, 0.5)',
@@ -126,7 +127,7 @@ const theme = {
   },
   styles: {
     root: {
-      fontSize: '12px',
+      fontSize: 1,
       margin: 'unset',
     },
   },
@@ -140,7 +141,7 @@ const theme = {
       fontFamily: 'body',
       fontWeight: 'body',
       lineHeight: 'body',
-      fontSize: 2,
+      fontSize: 1,
     },
   },
   radii: {
@@ -156,21 +157,87 @@ const theme = {
   },
   buttons: {
     primary: {
-      color: 'primary.500',
-      bg: 'neutral.900',
-      borderColor: 'primary.500',
+      regular: {
+        color: 'primary.500',
+        bg: 'neutral.900',
+        borderColor: 'primary.500',
+      },
+      alternate: {
+        color: 'neutral.100',
+        bg: 'neutral.900',
+        borderColor: 'neutral.100',
+      },
     },
     secondary: {
-      color: 'neutral.100',
-      bg: 'transparent',
-      borderColor: 'transparent',
-      '&:hover': {
-        color: 'neutral.000',
+      regular: {
+        color: 'primary.500',
+        bg: 'neutral.800',
+        borderColor: 'transparent',
       },
+      alternate: {
+        color: 'neutral.100',
+        bg: 'neutral.800',
+        borderColor: 'transparent',
+      },
+    },
+    tertiary: {
+      regular: {
+        color: 'neutral.1000',
+        bg: 'transparent',
+        borderColor: 'transparent',
+      },
+    },
+    huge: {
+      borderRadius: 'defaults',
+      borderWidth: 'defaults',
+      fontSize: 3,
+      pl: 6,
+      pr: 6,
+      pt: 3,
+      pb: 3,
+    },
+    large: {
+      borderRadius: 'defaults',
+      borderWidth: 3,
+      fontSize: 2,
+      pl: 5,
+      pr: 5,
+      pt: 2,
+      pb: 2,
+    },
+    medium: {
+      borderRadius: 10,
+      borderWidth: 2,
+      fontSize: 1,
+      pl: 4,
+      pr: 4,
+      pt: 1,
+      pb: 1,
+    },
+  },
+  notifications: {
+    success: {
+      stroke: 'green.600',
+      fill: 'green.600',
+      backgroundColor: 'green.100',
+      color: 'green.900',
+    },
+    error: {
+      stroke: 'orange.300',
+      fill: 'orange.300',
+      backgroundColor: 'orange.100',
+      color: 'orange.900',
+    },
+    warning: {
+      stroke: 'purple.400',
+      fill: 'purple.400',
+      backgroundColor: 'purple.100',
+      color: 'purple.900',
     },
   },
   sizes: {
     fill: '100%',
+    large: '600px',
     regular: '400px',
     small: '300px',
   },

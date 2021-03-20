@@ -110,7 +110,7 @@ export default function Join(): Node {
   const cookieRedeemedNotRegistered =
     !emptyAuthCookie && data?.cookie?.redeemed && !data.cookie?.registered;
 
-  // We already have auth cookie data, and it's been redeemed. We want the user to register
+  // We already have auth cookie data, and it's been redeemed. We want the user to registers
   if (subscriptionNotRegistered || cookieRedeemedNotRegistered) {
     return <Register />;
   }
@@ -120,7 +120,7 @@ export default function Join(): Node {
     <Frame>
       <Icon
         icon={SignShapes.SignBadgeCircle}
-        strokeWidth={2}
+        strokeWidth={2.5}
         stroke={'primary.500'}
         size={80}
         sx={{

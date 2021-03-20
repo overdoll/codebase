@@ -4,49 +4,65 @@
 import type { Node } from 'react';
 import { Button as ThemeUIButton } from 'theme-ui';
 import { Icon } from '@//:modules/content';
-import { Loading } from '@streamlinehq/streamline-regular/lib/interface-essential';
+import { useSpring, animated } from 'react-spring';
+import { Synchronize } from '@streamlinehq/streamline-regular/lib/interface-essential';
+import { Config } from '@//:modules/animations';
 
 type Props = {
   loading?: boolean,
   children?: Node,
   sx?: any,
+  disabled?: boolean,
 };
 
-export default function Button({ sx, loading, children, ...rest }: Props): Node {
+export default function Button({
+  sx,
+  loading,
+  children,
+  disabled,
+  ...rest
+}: Props): Node {
+  const loadingIcon = (
+    <Icon icon={Synchronize.SynchronizeArrow1} stroke="inherit" />
+  );
+
+  const AnimatedThemeUIButton = animated(ThemeUIButton);
+
+  const fullDisable = disabled || loading;
+
+  const [{ bubble }, setBubble] = useSpring(() => ({
+    bubble: 1,
+    config: Config.click,
+  }));
 
   return (
-    <ThemeUIButton
+    <AnimatedThemeUIButton
       {...rest}
+      disabled={fullDisable}
+      onTouchStart={
+        !fullDisable
+          ? () => setBubble({ bubble: 0.95 })
+          : () => setBubble({ bubble: 0.99 })
+      }
+      onTouchEnd={() => setBubble({ bubble: 1 })}
+      style={{ transform: bubble.to(v => `scale(${v})`) }}
       sx={{
-        borderWidth: 'defaults',
         borderStyle: 'solid',
-        pl: 6,
-        pr: 6,
-        pt: 3,
-        pb: 3,
-        fontSize: 2,
         fontWeight: 'bold',
         fontFamily: 'heading',
-        borderRadius: 'defaults',
         outline: 'none',
         '&:hover': {
           cursor: 'pointer',
+        },
+        '&:disabled': {
+          cursor: 'not-allowed',
         },
         ...sx,
       }}
     >
       <span sx={{ display: 'flex' }}>
-        <span sx={{ margin: 'auto' }}>
-          {children}
-          {loading && (
-            <Icon
-              icon={Loading.LoadingCircle}
-              stroke="neutral.100"
-              sx={{ pl: 1 }}
-            />
-          )}
-        </span>
+        <span sx={{ margin: 'auto' }}>{loading ? loadingIcon : children}</span>
       </span>
-    </ThemeUIButton>
+    </AnimatedThemeUIButton>
   );
 }
