@@ -40,38 +40,11 @@ export default function Characters({ args, onSelect, selected }: Props): Node {
     args.options,
   );
 
-  // state to handle how the new character will be added, when requested
-  const [newCharacter, addNewCharacter] = useState(null);
-
   // When we add a "new" character, we will open a modal so that the user can select the media
   const onAddNewCharacter = () => {
     const name: string = args.variables.data.search;
-    addNewCharacter({ id: name, name: name, thumbnail: null, media: null });
+    onSelect({ id: name, name: name, thumbnail: null, media: null });
   };
-
-  // When the user selects a media, we send that back up the chain, where we either get a new media, or a current one
-  // from our list
-  const onAddNewMedia = media => {
-    onSelect({ ...newCharacter, media: media });
-
-    // reset the state back to null
-    addNewCharacter(null);
-  };
-
-  // if user clicks "cancel", we move them back to the list of characters
-  const onCancelNewCharacter = () => {
-    addNewCharacter(null);
-  };
-
-  if (newCharacter !== null) {
-    return (
-      <SearchMedia
-        onSelect={onAddNewMedia}
-        activeCharacter={newCharacter}
-        onClose={onCancelNewCharacter}
-      />
-    );
-  }
 
   if (data.characters.length === 0) {
     return (
