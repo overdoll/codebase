@@ -31,17 +31,10 @@ export default function TagCategories({ state, dispatch }: Props): Node {
 
   // OnSelect will remove or add the category based on if it's in the object already or not
   const onSelect = category => {
-    let result = { ...state.categories };
-
-    if (state.categories[category.id] !== undefined) {
-      delete result[category.id];
-    } else {
-      result = { ...state.categories, category };
-    }
-
     dispatch({
       type: EVENTS.TAG_CATEGORIES,
-      value: result,
+      value: category,
+      remove: state.categories[category.id] !== undefined,
     });
   };
 

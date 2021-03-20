@@ -9,16 +9,16 @@ const STEPS = {
 };
 
 const EVENTS = {
-  THUMBNAILS: 'THUMBNAILS',
-  URLS: 'URLS',
-  FILES: 'FILES',
-  STEP: 'STEP',
-  PROGRESS: 'PROGRESS',
-  TAG_CHARACTERS: 'TAG_CHARACTERS',
-  TAG_ARTIST: 'TAG_ARTIST',
-  TAG_CATEGORIES: 'TAG_CATEGORIES',
-  SUBMIT: 'SUBMIT',
-  ALL: 'ALL',
+  THUMBNAILS: 'thumbnails',
+  URLS: 'urls',
+  FILES: 'files',
+  STEP: 'step',
+  PROGRESS: 'progress',
+  TAG_CHARACTERS: 'characters',
+  TAG_ARTIST: 'artist',
+  TAG_CATEGORIES: 'categories',
+  SUBMIT: 'submit',
+  CLEANUP: 'cleanup',
 };
 
 const INITIAL_STATE: State = {
@@ -31,6 +31,7 @@ const INITIAL_STATE: State = {
   characters: {},
   categories: {},
   submit: {},
+  cleanup: null,
 };
 
 export { STEPS, EVENTS, INITIAL_STATE };

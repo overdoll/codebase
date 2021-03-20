@@ -50,16 +50,16 @@ type Submit = {
 type Step = 'REVIEW' | 'ARRANGE' | 'FINISH' | 'TAG';
 
 type Event =
-  | 'THUMBNAILS'
-  | 'URLS'
-  | 'FILES'
-  | 'STEP'
-  | 'PROGRESS'
-  | 'TAG_CHARACTERS'
-  | 'TAG_ARTIST'
-  | 'TAG_CATEGORIES'
-  | 'SUBMIT'
-  | 'ALL';
+  | 'thumbnails'
+  | 'urls'
+  | 'files'
+  | 'step'
+  | 'progress'
+  | 'characters'
+  | 'artist'
+  | 'categories'
+  | 'submit'
+  | 'cleanup';
 
 type State = {
   thumbnails: Thumbnails,
@@ -71,6 +71,7 @@ type State = {
   characters: Characters,
   categories: Categories,
   submit: Submit,
+  cleanup: any,
 };
 
 type Action = {
@@ -78,6 +79,9 @@ type Action = {
 
   // Type hinted as "any" but its actually any value in "State" or state itself
   value: any,
+
+  // Will remove the value if true
+  remove?: boolean,
 };
 
 type Dispatch = {

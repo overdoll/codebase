@@ -175,7 +175,7 @@ export default function Steps({ uppy, state, dispatch }: Props): Node {
   // Cleanup - reset uppy uploads and state
   const onCancel = () => {
     uppy.reset();
-    dispatch({ type: EVENTS.ALL, value: INITIAL_STATE });
+    dispatch({ type: EVENTS.CLEANUP, value: INITIAL_STATE });
   };
 
   return (

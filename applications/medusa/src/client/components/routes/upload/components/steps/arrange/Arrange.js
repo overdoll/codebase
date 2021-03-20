@@ -45,27 +45,22 @@ export default function Arrange({
     dispatch({ type: EVENTS.FILES, value: uppy.getFiles() });
 
     // Remove progress & thumbnail & urls from object
-    const newProgress = { ...state.progress };
-    delete newProgress[id];
     dispatch({
       type: EVENTS.PROGRESS,
-      value: newProgress,
+      value: state.progress[id],
+      remove: true,
     });
-
-    const newThumbnails = { ...state.thumbnails };
-    delete newThumbnails[id];
 
     dispatch({
       type: EVENTS.THUMBNAILS,
-      value: newThumbnails,
+      value: state.thumbnails[id],
+      remove: true,
     });
-
-    const newUrls = { ...state.urls };
-    delete newUrls[id];
 
     dispatch({
       type: EVENTS.URLS,
-      value: newUrls,
+      value: state.urls[id],
+      remove: true,
     });
   };
 

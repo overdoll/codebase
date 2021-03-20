@@ -31,17 +31,10 @@ export default function TagCharacters({ state, dispatch }: Props): Node {
 
   // OnSelect will remove or add the character based on if it's in the object already or not
   const onSelect = character => {
-    let result = { ...state.characters };
-
-    if (state.characters[character.id] !== undefined) {
-      delete result[character.id];
-    } else {
-      result = { ...state.characters, character };
-    }
-
     dispatch({
       type: EVENTS.TAG_CHARACTERS,
-      value: result,
+      remove: state.characters[character.id] !== undefined,
+      value: character,
     });
   };
 

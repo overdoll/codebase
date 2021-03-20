@@ -19,32 +19,44 @@ import { EVENTS, INITIAL_STATE } from './constants/constants';
 
 // TODO: on each update, save state here in indexeddb, clean storage on SUBMIT
 const reducer: any = (state: State, action: Action): State => {
+  const act: string = action.type;
+
   switch (action.type) {
     case EVENTS.THUMBNAILS:
-      return { ...state, thumbnails: action.value };
     case EVENTS.URLS:
-      return { ...state, urls: action.value };
-    case EVENTS.FILES:
-      return { ...state, files: action.value };
-    case EVENTS.STEP:
-      return { ...state, step: action.value };
     case EVENTS.PROGRESS:
-      return { ...state, progress: action.value };
-    case EVENTS.TAG_ARTIST:
-      return { ...state, artist: action.value };
     case EVENTS.TAG_CHARACTERS:
-      return { ...state, characters: action.value };
-    case EVENTS.TAG_CATEGORIES:
-      return { ...state, categories: action.value };
-    case EVENTS.SUBMIT:
+    case EVENTS.TAG_CATEGORIES: {
+      const id: string = Object.keys(action.value)[0];
+
+      const copy = { ...state[act] };
+
+      if (action.remove) {
+        // TODO: remove record from indexeddb
+        delete copy[id];
+
+        return { ...state, [act]: copy };
+      }
+
+      // TODO: add record to indexeddb
+      return { ...state, [act]: { ...copy, [id]: action.value[id] } };
+    }
+    case EVENTS.TAG_ARTIST:
+    case EVENTS.FILES:
+    case EVENTS.STEP: {
+      // TODO: overwrite all indexeddb records
+      return { ...state, [act]: action.value };
+    }
+    case EVENTS.CLEANUP:
+      // TODO: cleanup indexeddb records
       return { ...state, submit: action.value };
-    case EVENTS.ALL:
+    case EVENTS.SUBMIT:
+      // TODO: cleanup indexeddb records
       return action.value;
     default:
       return state;
   }
 };
-
 // Main upload component - handles all events from Uppy and renders the stepper
 export default function Upload(): Node {
   const uppy = useUppy(() => {
@@ -60,51 +72,33 @@ export default function Upload(): Node {
 
   // Add to thumbnails state when a new thumbnail is added
   useEffect(() => {
-    let thumbnailsQueue: Thumbnails = {};
-
     uppy.on('thumbnail:generated', (file, preview) => {
-      thumbnailsQueue = {
-        ...thumbnailsQueue,
-        [file.id]: preview,
-      };
-
       dispatch({
         type: EVENTS.THUMBNAILS,
-        value: thumbnailsQueue,
+        value: { [file.id]: preview },
       });
     });
   }, [uppy]);
 
   // Urls - when upload is complete we have semi-public urls (you need to know the URL for it to work, and you need to be logged in to see it)
   useEffect(() => {
-    let urlQueue: Urls = {};
-
     // On upload success, we update so that we have URLs, and we update the thumbnail to the new URL as well
     uppy.on('upload-success', (file, response) => {
-      urlQueue = {
-        ...urlQueue,
-        [file.id]: response.uploadURL,
-      };
-
       dispatch({
         type: EVENTS.URLS,
-        value: urlQueue,
+        value: { [file.id]: response.uploadURL },
       });
     });
   }, [uppy]);
 
   // Upload progress - when a file reports progress, update state so user can see
   useEffect(() => {
-    let progressQueue: Progress = {};
     uppy.on('upload-progress', (file, progress) => {
-      progressQueue = {
-        ...progressQueue,
-        [file.id]: { '0': progress.bytesUploaded, '1': progress.bytesTotal },
-      };
-
       dispatch({
         type: EVENTS.PROGRESS,
-        value: progressQueue,
+        value: {
+          [file.id]: { '0': progress.bytesUploaded, '1': progress.bytesTotal },
+        },
       });
     });
   }, [uppy]);
