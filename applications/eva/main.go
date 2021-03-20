@@ -2,63 +2,54 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
-	"os/signal"
-	"syscall"
 	"time"
 
-	"github.com/gocql/gocql"
-	"github.com/joho/godotenv"
-	"github.com/scylladb/gocqlx/v2"
-	"github.com/scylladb/gocqlx/v2/migrate"
+	"github.com/spf13/cobra"
+	"google.golang.org/grpc"
+	eva "overdoll/applications/eva/proto"
 	"overdoll/applications/eva/src/server"
+	"overdoll/libraries/bootstrap"
+	"overdoll/libraries/commands/database"
 )
 
-func init() {
-	err := godotenv.Load("applications/eva/.env")
+var rootCmd = &cobra.Command{
+	Use: "eva",
+	Run: Run,
+}
 
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
+func init() {
+	rootCmd.AddCommand(database.Database)
 }
 
 func main() {
+	if err := rootCmd.Execute(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+}
+
+func Run(cmd *cobra.Command, args []string) {
 	ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancelFn()
 
-	// Create gocql cluster
-	cluster := gocql.NewCluster(os.Getenv("SCYLLA_DATABASE"))
-	cluster.Keyspace = "eva"
-
-	// Wrap session on creation with gocqlx
-	session, err := gocqlx.WrapSession(cluster.CreateSession())
+	init, err := bootstrap.NewBootstrap(ctx)
 
 	if err != nil {
-		log.Fatalf("Database session failed with errors: %s", err)
+		log.Fatalf("bootstrap failed with errors: %s", err)
 	}
 
-	if os.Getenv("RUN_MIGRATIONS_ON_STARTUP") == "true" {
-		// Run migrations
-		if err := migrate.Migrate(context.Background(), session, "applications/eva/migrations"); err != nil {
-			log.Fatalf("Migrate: %s", err)
-		}
-	}
+	session, err := init.InitializeDatabaseSession()
 
-	// if server disabled, then dont run it (useful for running migrations, and then stopping the server)
-	if os.Getenv("DISABLE_SERVER") == "true" {
-		return
-	}
-
-	srv, err := server.NewServer(ctx, session)
 	if err != nil {
-		log.Fatalf("NewServer failed with error: %s", err)
+		log.Fatalf("database session failed with errors: %s", err)
 	}
 
-	srv.Run()
+	s := server.CreateServer(session)
 
-	sigChan := make(chan os.Signal, 1)
-	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
-	signal := <-sigChan
-	log.Printf("shutting down eva server with signal: %s", signal)
+	init.InitializeGRPCServer(func(server *grpc.Server) {
+		eva.RegisterEvaServer(server, s)
+	})
 }

@@ -1,0 +1,33 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+load("@io_bazel_rules_docker//go:image.bzl", "go_image")
+
+web_sources = [".env"]
+
+go_library(
+    name = "go_default_library",
+    srcs = ["main.go"],
+    data = web_sources,
+    importpath = "overdoll/applications/indigo",
+    visibility = ["//visibility:private"],
+    deps = [
+        "//applications/indigo/src/server:go_default_library",
+        "//libraries/bootstrap:go_default_library",
+        "//libraries/events:go_default_library",
+        "//libraries/search:go_default_library",
+        "@com_github_spf13_cobra//:go_default_library",
+    ],
+)
+
+go_image(
+    name = "indigo-image",
+    base = "@go_base_image//image",
+    data = web_sources,
+    embed = [":go_default_library"],
+    importpath = "overdoll/applications/indigo",
+)
+
+go_binary(
+    name = "indigo",
+    embed = [":go_default_library"],
+    visibility = ["//visibility:public"],
+)

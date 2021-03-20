@@ -31,6 +31,16 @@ spec:
           port: 8000
       middlewares:
         - name: stripprefix
+    - match: Host(`overdoll.test`) &&  Path(`/api/upload/{document}`)
+      kind: Rule
+      services:
+        - name: buffer
+          port: 8000
+    - match: Host(`overdoll.test`) &&  Path(`/api/upload/`)
+      kind: Rule
+      services:
+        - name: buffer
+          port: 8000
     - match: Host(`overdoll.test`) && PathPrefix(`/`)
       kind: Rule
       services:
@@ -51,6 +61,20 @@ spec:
       kind: Rule
       services:
         - name: hades
+          port: 8000
+      middlewares:
+        - name: redirect-https
+    - match: Host(`overdoll.test`) &&  Path(`/api/upload/{document}`)
+      kind: Rule
+      services:
+        - name: buffer
+          port: 8000
+      middlewares:
+        - name: redirect-https
+    - match: Host(`overdoll.test`) &&  Path(`/api/upload/`)
+      kind: Rule
+      services:
+        - name: buffer
           port: 8000
       middlewares:
         - name: redirect-https

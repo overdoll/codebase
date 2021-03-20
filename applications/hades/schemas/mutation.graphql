@@ -1,6 +1,0 @@
-type Mutation {
-  authenticate(data: AuthenticationInput): Boolean! @guest
-  register(data: RegisterInput): Boolean! @guest
-  authEmail: Boolean! @guest
-  logout: Boolean! @auth
-}

@@ -1,9 +1,9 @@
 /**
  * @flow
  */
-import { graphql, useMutation, useFragment } from 'react-relay/hooks';
+import { graphql, useFragment, useMutation } from 'react-relay/hooks';
 import type { Node } from 'react';
-import { useState, useContext } from 'react';
+import { useContext, useState } from 'react';
 import Register from '../../register/Register';
 import { useTranslation } from 'react-i18next';
 import { Button, Form, Input, useForm } from '@//:modules/form';

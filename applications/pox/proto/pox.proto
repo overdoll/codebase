@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package applications.grpc.pox.v1;
+
+message PostProcessContentEvent {
+  string postId = 1;
+  repeated string content = 2;
+}
+
+message PostPublishContentEvent {
+  string postId = 1;
+  repeated string content = 2;
+}

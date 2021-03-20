@@ -10,20 +10,17 @@ web_sources = [
 
 go_library(
     name = "go_default_library",
-    srcs = [
-        "main.go",
-        "start.go",
-    ],
+    srcs = ["main.go"],
     data = web_sources,
     importpath = "overdoll/applications/hades",
     deps = [
-        "//applications/hades/src:go_default_library",
-        "//applications/hades/src/directives:go_default_library",
-        "//applications/hades/src/extensions:go_default_library",
+        "//applications/hades/src/graphql:go_default_library",
+        "//applications/hades/src/graphql/extensions:go_default_library",
         "//applications/hades/src/middleware:go_default_library",
-        "//applications/hades/src/resolvers:go_default_library",
         "//applications/hades/src/services:go_default_library",
+        "//libraries/bootstrap:go_default_library",
         "//libraries/rabbit:go_default_library",
+        "//libraries/search:go_default_library",
         "@com_github_99designs_gqlgen//graphql/handler:go_default_library",
         "@com_github_99designs_gqlgen//graphql/handler/extension:go_default_library",
         "@com_github_99designs_gqlgen//graphql/handler/lru:go_default_library",
@@ -31,7 +28,6 @@ go_library(
         "@com_github_gin_gonic_gin//:go_default_library",
         "@com_github_gomodule_redigo//redis:go_default_library",
         "@com_github_gorilla_websocket//:go_default_library",
-        "@com_github_joho_godotenv//:go_default_library",
     ],
 )
 

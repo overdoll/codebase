@@ -7,6 +7,7 @@ go_library(
         "cookies.go",
         "gin.go",
         "preloads.go",
+        "utilities.go",
     ],
     importpath = "overdoll/applications/hades/src/helpers",
     visibility = ["//visibility:public"],

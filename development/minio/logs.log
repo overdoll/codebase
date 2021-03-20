@@ -1,0 +1,24 @@
+Log file created at: 2021/03/15 18:50:22
+Running on machine: delta
+Binary: Built with gc go1.16 for linux/amd64
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0315 18:50:22.949537 1244465 tenant-delete.go:68] delete tenant command started
+W0315 18:50:22.965068 1244465 tenant-delete.go:71] tenants.minio.min.io "tenant" not found
+Log file created at: 2021/03/15 18:53:52
+Running on machine: delta
+Binary: Built with gc go1.16 for linux/amd64
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0315 18:53:52.242660 1253833 tenant-delete.go:68] delete tenant command started
+W0315 18:53:52.260284 1253833 tenant-delete.go:71] tenants.minio.min.io "minio-tenant-1" not found
+Log file created at: 2021/03/15 18:53:57
+Running on machine: delta
+Binary: Built with gc go1.16 for linux/amd64
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0315 18:53:57.878972 1254330 tenant-delete.go:68] delete tenant command started
+W0315 18:53:57.896568 1254330 tenant-delete.go:71] tenants.minio.min.io "minio" not found
+Log file created at: 2021/03/15 18:54:06
+Running on machine: delta
+Binary: Built with gc go1.16 for linux/amd64
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0315 18:54:06.004743 1254778 tenant-delete.go:68] delete tenant command started
+W0315 18:54:06.020591 1254778 tenant-delete.go:71] tenants.minio.min.io "minio" not found

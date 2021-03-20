@@ -1,0 +1,1 @@
+../../../bazel-out/k8-fastbuild/bin/applications/pox/proto/v1_go_proto_/overdoll/applications/pox/proto/pox.pb.go

@@ -91,7 +91,13 @@ _RUNTIME_DEPS = [
     "@npm//react-hook-form",
     "@npm//@streamlinehq/streamline-bold",
     "@npm//@streamlinehq/streamline-regular",
-    "@npm//react-spring"
+    "@npm//react-spring",
+    "@npm//@uppy/core",
+    "@npm//@uppy/tus",
+    "@npm//@uppy/golden-retriever",
+    "@npm//@uppy/thumbnail-generator",
+    "@npm//@uppy/react",
+    "@npm//react-beautiful-dnd",
 ]
 
 nodejs_binary(

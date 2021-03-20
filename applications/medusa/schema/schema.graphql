@@ -2,7 +2,17 @@ directive @auth on FIELD_DEFINITION
 
 directive @guest on FIELD_DEFINITION
 
+directive @verified on FIELD_DEFINITION
+
 directive @validation(rules: [String!]!) on INPUT_FIELD_DEFINITION
+
+directive @role(roles: [String!]!) on FIELD_DEFINITION
+
+type Artist {
+  id: String!
+  avatar: String!
+  username: String!
+}
 
 type Authentication {
   cookie: Cookie
@@ -18,6 +28,24 @@ type AuthListener {
   cookie: Cookie
 }
 
+type Category {
+  id: String!
+  thumbnail: String!
+  title: String!
+}
+
+type Character {
+  id: String!
+  thumbnail: String!
+  name: String!
+  media: Media!
+}
+
+input CharacterRequest {
+  name: String!
+  media: String!
+}
+
 type Cookie {
   sameSession: Boolean!
   registered: Boolean!
@@ -26,20 +54,49 @@ type Cookie {
   email: String!
 }
 
+type Media {
+  id: String!
+  thumbnail: String
+  title: String!
+}
+
 type Mutation {
   authenticate(data: AuthenticationInput): Boolean!
   register(data: RegisterInput): Boolean!
-  authEmail: Boolean!
   logout: Boolean!
+  authEmail: Boolean
+  post(data: PostInput): PostResponse!
+}
+
+input PostInput {
+  content: [String!]!
+  categories: [String!]!
+  characters: [String!]!
+  mediaRequests: [String!]
+  characterRequests: [CharacterRequest!]
+  artistId: String
+  artistUsername: String!
+}
+
+type PostResponse {
+  review: Boolean!
+  validation: Validation
 }
 
 type Query {
   redeemCookie(cookie: String!): Cookie
   authentication: Authentication
+  characters(data: SearchInput!): [Character!]!
+  categories(data: SearchInput!): [Category!]!
+  artists(data: SearchInput!): [Artist!]!
 }
 
 input RegisterInput {
   username: String!
+}
+
+input SearchInput {
+  search: String!
 }
 
 type Subscription {
@@ -48,4 +105,8 @@ type Subscription {
 
 type User {
   username: String!
+}
+
+type Validation {
+  code: String!
 }
