@@ -2,10 +2,12 @@
  * @flow
  */
 import type { Node } from 'react';
+import { useState } from 'react';
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks';
 import type { CharactersQuery } from '@//:artifacts/CharactersQuery.graphql';
 import type { VariablesOf } from 'relay-runtime';
 import Element from '../../../element/Element';
+import SearchMedia from './media/SearchMedia';
 
 type Props = {
   args: {
@@ -38,9 +40,39 @@ export default function Characters({ args, onSelect, selected }: Props): Node {
     args.options,
   );
 
-  const onAddNewCharacter = () => {};
+  // state to handle how the new character will be added, when requested
+  const [newCharacter, addNewCharacter] = useState(null);
 
-  // TODO: add ability to add character, with the ability to specify a new media or a current media
+  // When we add a "new" character, we will open a modal so that the user can select the media
+  const onAddNewCharacter = () => {
+    const name: string = args.variables.data.search;
+    addNewCharacter({ id: name, name: name, thumbnail: null, media: null });
+  };
+
+  // When the user selects a media, we send that back up the chain, where we either get a new media, or a current one
+  // from our list
+  const onAddNewMedia = media => {
+    onSelect({ ...newCharacter, media: media });
+
+    // reset the state back to null
+    addNewCharacter(null);
+  };
+
+  // if user clicks "cancel", we move them back to the list of characters
+  const onCancelNewCharacter = () => {
+    addNewCharacter(null);
+  };
+
+  if (newCharacter !== null) {
+    return (
+      <SearchMedia
+        onSelect={onAddNewMedia}
+        activeCharacter={newCharacter}
+        onClose={onCancelNewCharacter}
+      />
+    );
+  }
+
   if (data.characters.length === 0) {
     return (
       <>
