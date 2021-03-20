@@ -98,6 +98,7 @@ _RUNTIME_DEPS = [
     "@npm//@uppy/thumbnail-generator",
     "@npm//@uppy/react",
     "@npm//react-beautiful-dnd",
+    "@npm//dexie",
 ]
 
 nodejs_binary(

@@ -33,14 +33,7 @@ export default function Bootstrap(props: Props): Node {
     <CacheProvider value={cache}>
       <I18nextProvider i18n={props.i18next}>
         <ThemeProvider theme={theme}>
-          <Global
-            // temporary disable "iframe" - so that the error overlay in react is not visible during development
-            styles={theme => ({
-              iframe: {
-                display: 'none',
-              },
-            })}
-          />
+          <Global styles={theme => ({})} />
           <RelayEnvironmentProvider environment={props.environment}>
             {props.children}
           </RelayEnvironmentProvider>

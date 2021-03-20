@@ -27,7 +27,9 @@ const useUpload = (state: State, dispatch: Dispatch): any => {
   }, [state.step]);
 
   // TODO: reinstate indexedDB state here on mount
-  useEffect(() => {}, []);
+  useEffect(() => {
+    console.log(uppy.current?.getFiles());
+  }, []);
 
   return uppy.current;
 };
