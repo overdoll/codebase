@@ -3,27 +3,25 @@
  */
 import type { Node } from 'react';
 import { useEffect, useReducer } from 'react';
-import { useUppy } from '@uppy/react';
-import Uppy from './components/uppy/Uppy';
-import { useNotify } from '@//:modules/focus';
 import Steps from './components/steps/Steps';
 import type { Action, Dispatch, State } from '@//:types/upload';
 import { EVENTS, INITIAL_STATE } from './constants/constants';
 import reducer from './reducer';
+import { useNotify } from '@//:modules/focus';
+import useUpload from './hooks';
 
 // Main upload component - handles all events from Uppy and renders the stepper
 // also contains the main state and is responsible for recovering state when rendered (if state is available)
 export default function Upload(): Node {
-  const uppy = useUppy(() => {
-    return Uppy;
-  });
-
-  const notify = useNotify();
-
   const [state: State, dispatch: Dispatch] = useReducer<State, Action>(
     reducer,
     INITIAL_STATE,
   );
+
+  // hook controls lifecycle of uppy & restoring indexeddb state
+  const uppy = useUpload(state, dispatch);
+
+  const notify = useNotify();
 
   // Add to thumbnails state when a new thumbnail is added
   useEffect(() => {
@@ -37,7 +35,6 @@ export default function Upload(): Node {
 
   // Urls - when upload is complete we have semi-public urls (you need to know the URL for it to work, and you need to be logged in to see it)
   useEffect(() => {
-    // On upload success, we update so that we have URLs, and we update the thumbnail to the new URL as well
     uppy.on('upload-success', (file, response) => {
       dispatch({
         type: EVENTS.URLS,
@@ -73,16 +70,13 @@ export default function Upload(): Node {
 
       const message = `${info.message} ${info.details}`;
 
-      switch (info.type) {
-        case 'error':
-          notify.error(message);
-          break;
-        default:
-          notify.warn(`${info.message} ${info.details}`);
-          break;
+      if (info.type === 'error') {
+        notify.error(message);
+      } else {
+        notify.warn(message);
       }
     });
-  }, []);
+  }, [notify, uppy]);
 
   return <Steps uppy={uppy} state={state} dispatch={dispatch} />;
 }
