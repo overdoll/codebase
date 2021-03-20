@@ -3,7 +3,7 @@
  */
 
 import type { Dispatch, State } from '@//:types/upload';
-import Uppy from '../components/uppy/Uppy';
+import Uppy from './uppy/Uppy';
 import { STEPS } from '../constants/constants';
 import { useEffect, useRef } from 'react';
 
