@@ -3,8 +3,8 @@
  */
 import type { Context, Node } from 'react';
 import { createContext, Suspense } from 'react';
+import type { PreloadedQueryInner } from 'react-relay/hooks';
 import { graphql, usePreloadedQuery } from 'react-relay/hooks';
-import type { PreloadedQuery } from 'react-relay/relay-experimental';
 import type {
   RootQuery,
   RootQueryResponse,
@@ -12,7 +12,7 @@ import type {
 
 type Props = {
   prepared: {
-    stateQuery: PreloadedQuery<RootQuery>,
+    stateQuery: PreloadedQueryInner<RootQuery>,
   },
   children: Node,
 };

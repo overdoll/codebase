@@ -1,22 +1,16 @@
 # Where are all the schema files located? globs are supported eg  src/**/*.graphqls
 schema:
-  - ./schemas/*.graphql
+  - ./schemas/**/*.graphql
 
 # Where should the generated server code go?
 exec:
-  filename: src/generated.go
+  filename: src/graphql/generated.go
   package: gen
 
 # Where should any generated models go?
 model:
   filename: src/models/models_gen.go
   package: models
-
-# Where should the resolver implementations go?
-resolver:
-  layout: follow-schema
-  dir: src/resolvers
-  package: resolvers
 
 # Optional: turn on use `gqlgen:"fieldName"` tags in your models
 # struct_tag: json

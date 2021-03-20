@@ -20,7 +20,9 @@ spec:
       containers:
         - name: {{ include "default-service.fullname" . }}
           image: "{{ .Values.image.repository }}"
+          {{- if .Values.containerPort }}
           ports:
             - name: http
               containerPort: {{ .Values.containerPort }}
               protocol: TCP
+          {{- end }}

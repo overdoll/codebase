@@ -18,6 +18,7 @@ import createCache from '@emotion/cache';
 import createRouter from '@//:modules/routing/createRouter';
 import createMockHistory from '@//:modules/routing/createMockHistory';
 import { ThemeProvider } from 'theme-ui';
+import { NotificationProvider } from '@//:modules/focus';
 
 const entry = async (req, res, next) => {
   try {
@@ -67,6 +68,7 @@ const entry = async (req, res, next) => {
 
       // Throw an error, which will be caught by our server
       if (Array.isArray(response.data.errors)) {
+        console.log(response.data.errors);
         throw new Error(response.data.errors);
       }
 
@@ -104,9 +106,11 @@ const entry = async (req, res, next) => {
     const App = (
       <ThemeProvider theme={theme}>
         <RelayEnvironmentProvider environment={environment}>
-          <RoutingContext.Provider value={router.context}>
-            <RouteRenderer />
-          </RoutingContext.Provider>
+          <NotificationProvider>
+            <RoutingContext.Provider value={router.context}>
+              <RouteRenderer />
+            </RoutingContext.Provider>
+          </NotificationProvider>
         </RelayEnvironmentProvider>
       </ThemeProvider>
     );

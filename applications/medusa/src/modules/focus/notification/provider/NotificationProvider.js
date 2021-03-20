@@ -1,9 +1,8 @@
 /**
  * @flow
  */
-import type { Node, Context } from 'react';
+import type { Context, Node } from 'react';
 import { createContext, useState } from 'react';
-import { createPortal } from 'react-dom';
 import Notification from '../components/Notification';
 
 type Action = {
@@ -65,34 +64,31 @@ export default function NotificationProvider(props: Props): Node {
       }}
     >
       {props.children}
-      {createPortal(
-        <div
-          sx={{
-            position: 'fixed',
-            display: 'flex',
-            pl: 1,
-            pr: 1,
-            width: '100%',
-            flexDirection: 'column',
-            bottom: 0,
-            zIndex: 999,
-          }}
-        >
-          {active
-            .filter(item => expired.indexOf(item.id) === -1)
-            .map(notification => (
-              <Notification
-                id={notification.id}
-                key={notification.id}
-                type={notification.type}
-                duration={notification.duration}
-              >
-                {notification.content}
-              </Notification>
-            ))}
-        </div>,
-        document.getElementById('root'),
-      )}
+      <div
+        sx={{
+          position: 'fixed',
+          display: 'flex',
+          pl: 1,
+          pr: 1,
+          width: '100%',
+          flexDirection: 'column',
+          bottom: 0,
+          zIndex: 999,
+        }}
+      >
+        {active
+          .filter(item => expired.indexOf(item.id) === -1)
+          .map(notification => (
+            <Notification
+              id={notification.id}
+              key={notification.id}
+              type={notification.type}
+              duration={notification.duration}
+            >
+              {notification.content}
+            </Notification>
+          ))}
+      </div>
     </NotificationContext.Provider>
   );
 }

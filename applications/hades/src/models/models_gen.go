@@ -2,6 +2,12 @@
 
 package models
 
+type Artist struct {
+	ID       string `json:"id"`
+	Avatar   string `json:"avatar"`
+	Username string `json:"username"`
+}
+
 type AuthListener struct {
 	SameSession bool    `json:"sameSession"`
 	Cookie      *Cookie `json:"cookie"`
@@ -16,6 +22,24 @@ type AuthenticationInput struct {
 	Email string `json:"email"`
 }
 
+type Category struct {
+	ID        string `json:"id"`
+	Thumbnail string `json:"thumbnail"`
+	Title     string `json:"title"`
+}
+
+type Character struct {
+	ID        string `json:"id"`
+	Thumbnail string `json:"thumbnail"`
+	Name      string `json:"name"`
+	Media     *Media `json:"media"`
+}
+
+type CharacterRequest struct {
+	Name  string `json:"name"`
+	Media string `json:"media"`
+}
+
 type Cookie struct {
 	SameSession bool   `json:"sameSession"`
 	Registered  bool   `json:"registered"`
@@ -24,10 +48,39 @@ type Cookie struct {
 	Email       string `json:"email"`
 }
 
+type Media struct {
+	ID        string  `json:"id"`
+	Thumbnail *string `json:"thumbnail"`
+	Title     string  `json:"title"`
+}
+
+type PostInput struct {
+	Content           []string            `json:"content"`
+	Categories        []string            `json:"categories"`
+	Characters        []string            `json:"characters"`
+	MediaRequests     []string            `json:"mediaRequests"`
+	CharacterRequests []*CharacterRequest `json:"characterRequests"`
+	ArtistID          *string             `json:"artistId"`
+	ArtistUsername    string              `json:"artistUsername"`
+}
+
+type PostResponse struct {
+	Review     bool        `json:"review"`
+	Validation *Validation `json:"validation"`
+}
+
 type RegisterInput struct {
 	Username string `json:"username"`
 }
 
+type SearchInput struct {
+	Search string `json:"search"`
+}
+
 type User struct {
 	Username string `json:"username"`
+}
+
+type Validation struct {
+	Code string `json:"code"`
 }

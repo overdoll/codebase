@@ -1,0 +1,1 @@
+../../../bazel-out/k8-fastbuild/bin/applications/indigo/proto/v1_go_proto_/overdoll/applications/indigo/proto/indigo.pb.go

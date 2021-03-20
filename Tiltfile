@@ -9,7 +9,6 @@ docker_prune_settings(
     keep_recent = 2,
 )
 
-load("ext://helm_remote", "helm_remote")
 load("./development/helpers.Tiltfile", "bazel_buildfile_deps", "bazel_sourcefile_deps", "build_applications")
 
 applications = {
@@ -27,7 +26,6 @@ applications = {
             "applications/hades/queries.json",
         ],
         "live_update": [
-            sync("applications/hades/.env", "/app/applications/hades/hades-image.binary.runfiles/overdoll/applications/hades/.env"),
             sync("applications/hades/queries.json", "/app/applications/hades/hades-image.binary.runfiles/overdoll/applications/hades/queries.json"),
         ],
     },
@@ -42,12 +40,70 @@ applications = {
         "bazel_image": "bazel/applications/eva:eva-image",
         "dependencies": [
             "applications/eva/.env",
-            "applications/eva/migrations",
+            "applications/eva/database",
         ],
         "live_update": [
-            sync("applications/eva/migrations", "/app/applications/hades/hades-image.binary.runfiles/overdoll/applications/eva/migrations"),
-            sync("applications/eva/.env", "/app/applications/hades/hades-image.binary.runfiles/overdoll/applications/eva/.env"),
+            sync("applications/eva/database", "/app/applications/eva/eva-image.binary.runfiles/overdoll/applications/eva/database"),
         ],
+    },
+    "sting": {
+        "type": "go",
+        "image_reference": "sting-image",
+        "image_target": "//applications/sting:sting-image",
+        "binary_target": "//applications/sting:sting",
+        "binary_output": "applications/sting/sting_/sting",
+        "container_workdir": "/app/applications/sting/sting-image.binary.runfiles/overdoll/",
+        "container_binary": "applications/sting/sting-image.binary_/sting-image.binary",
+        "bazel_image": "bazel/applications/sting:sting-image",
+        "dependencies": [
+            "applications/sting/.env",
+            "applications/sting/database",
+        ],
+        "live_update": [
+            sync("applications/sting/database", "/app/applications/sting/sting-image.binary.runfiles/overdoll/applications/sting/database"),
+        ],
+    },
+    "indigo": {
+        "type": "go",
+        "image_reference": "indigo-image",
+        "image_target": "//applications/indigo:indigo-image",
+        "binary_target": "//applications/indigo:indigo",
+        "binary_output": "applications/indigo/indigo_/indigo",
+        "container_workdir": "/app/applications/indigo/indigo-image.binary.runfiles/overdoll/",
+        "container_binary": "applications/indigo/indigo-image.binary_/indigo-image.binary",
+        "bazel_image": "bazel/applications/indigo:indigo-image",
+        "dependencies": [
+            "applications/indigo/.env",
+        ],
+        "live_update": [],
+    },
+    "pox": {
+        "type": "go",
+        "image_reference": "pox-image",
+        "image_target": "//applications/pox:pox-image",
+        "binary_target": "//applications/pox:pox",
+        "binary_output": "applications/pox/pox_/pox",
+        "container_workdir": "/app/applications/pox/pox-image.binary.runfiles/overdoll/",
+        "container_binary": "applications/pox/pox-image.binary_/pox-image.binary",
+        "bazel_image": "bazel/applications/pox:pox-image",
+        "dependencies": [
+            "applications/pox/.env",
+        ],
+        "live_update": [],
+    },
+    "buffer": {
+        "type": "go",
+        "image_reference": "buffer-image",
+        "image_target": "//applications/buffer:buffer-image",
+        "binary_target": "//applications/buffer:buffer",
+        "binary_output": "applications/buffer/buffer_/buffer",
+        "container_workdir": "/app/applications/buffer/buffer-image.binary.runfiles/overdoll/",
+        "container_binary": "applications/buffer/buffer-image.binary_/buffer-image.binary",
+        "bazel_image": "bazel/applications/buffer:buffer-image",
+        "dependencies": [
+            "applications/buffer/.env",
+        ],
+        "live_update": [],
     },
     "medusa": {
         "type": "node",
@@ -75,41 +131,8 @@ applications = {
 # Ingress (Traefik)
 k8s_yaml("development/traefik/ingress.yaml")
 
-# Scylla
-k8s_yaml("development/scylla/cluster.yaml")
-k8s_yaml("development/scylla/scylla-svc.yaml")
-k8s_yaml("development/scylla/scylla-config.yaml")
-
-# Setup cluster - Need to group some resources or it wil be messy!
-k8s_kind("Cluster", api_version = "scylla.scylladb.com/v1alpha1")
-k8s_resource("simple-cluster", extra_pod_selectors = {"scylla/cluster": "simple-cluster"})
-
-# Remote helm charts for external services
-helm_remote(
-    "traefik",
-    release_name = "traefik",
-    repo_name = "traefik",
-    version = "9.11.0",
-)
-
-helm_remote(
-    "redis",
-    release_name = "redis",
-    repo_name = "bitnami",
-    version = "12.2.4",
-    set = ["cluster.enabled=false", "cluster.slaveCount=0", "usePassword=false"],
-)
-
-helm_remote(
-    "rabbitmq",
-    release_name = "rabbitmq",
-    repo_name = "bitnami",
-    version = "7.6.8",
-    set = ["auth.username=test", "auth.password=test"],
-)
-
 # Build applications with our helper function
-build_applications(applications, ["simple-cluster", "redis-master"])
+build_applications(applications, [])
 
 # GraphQL generator
 local_resource(
@@ -121,6 +144,3 @@ local_resource(
 
 # Relay Compiler
 local_resource("relay-compiler", serve_cmd = "yarn run relay")
-
-k8s_resource(workload = "redis-master", port_forwards = [6379])
-k8s_resource(workload = "rabbitmq", port_forwards = [15672])

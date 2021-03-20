@@ -1,6 +1,8 @@
 package rabbit
 
 import (
+	"os"
+
 	"github.com/streadway/amqp"
 )
 
@@ -10,8 +12,8 @@ type Conn struct {
 }
 
 // GetConn - Get RabbitMQ connection
-func GetConn(rabbitURL string) (Conn, error) {
-	conn, err := amqp.Dial(rabbitURL)
+func GetConn() (Conn, error) {
+	conn, err := amqp.Dial(os.Getenv("RABBITMQ_URL"))
 	if err != nil {
 		return Conn{}, err
 	}

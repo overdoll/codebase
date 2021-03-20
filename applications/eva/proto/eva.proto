@@ -42,13 +42,15 @@ message DeleteAuthenticationCookieResponse {
 message User {
   string id = 1;
   string username = 2;
+  repeated string roles = 3;
+  bool verified = 4;
 }
 
 message GetUserRequest {
   string id = 1;
 }
 
-service EvaAPI {
+service Eva {
   rpc GetUser(GetUserRequest) returns (User);
   rpc RegisterUser(RegisterUserRequest) returns (User);
   rpc GetRegisteredEmail(GetRegisteredEmailRequest) returns (User);

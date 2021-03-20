@@ -1,9 +1,0 @@
-image:
-  repository: ""
-
-nameOverride: "eva"
-
-containerPort: ""
-
-service:
-  port: ""

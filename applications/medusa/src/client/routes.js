@@ -57,7 +57,6 @@ const routes: Array<Route> = [
       {
         path: '/join',
         exact: true,
-        prepare: () => ({}),
         component: JSResource('JoinRoot', () =>
           import(
             /* webpackChunkName: "JoinRoot" */ './components/routes/join/Join'
@@ -70,6 +69,28 @@ const routes: Array<Route> = [
 
             if (user !== undefined) {
               history.push('/profile');
+              return false;
+            }
+
+            return true;
+          },
+        ],
+      },
+      {
+        path: '/upload',
+        exact: true,
+        component: JSResource('UploadRoot', () =>
+          import(
+            /* webpackChunkName: "UploadRoot" */ './components/routes/upload/Upload'
+          ),
+        ),
+        // If user is not logged in, they can't post - so we redirect to join page
+        middleware: [
+          (environment, history) => {
+            const user = getUserFromEnvironment(environment);
+
+            if (user === undefined) {
+              history.push('/join');
               return false;
             }
 

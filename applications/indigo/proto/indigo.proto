@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package applications.grpc.indigo.v1;
+
+message CreateDocument {
+  string index = 1;
+  string id = 2;
+  string body = 3;
+}

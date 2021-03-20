@@ -16,7 +16,7 @@ const config = {
     'report-uri': [],
     'form-action': ["'self'"],
     'img-src': ['blob:', 'data:', '*'],
-    'media-src': ['data:', '*'],
+    'media-src': ['data:', '*', 'blob:'],
     upgradeInsecureRequests: [],
   },
 };

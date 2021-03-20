@@ -16,5 +16,6 @@ applications/medusa/src
 react.runtime=automatic
 module.name_mapper='^@//:modules' ->'<PROJECT_ROOT>/applications/medusa/src/modules'
 module.name_mapper='^@//:artifacts' ->'<PROJECT_ROOT>/applications/medusa/src/__generated__'
+module.name_mapper='^@//:types' ->'<PROJECT_ROOT>/applications/medusa/src/types'
 
 [strict]

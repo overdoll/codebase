@@ -3,7 +3,7 @@
  */
 import type { Node } from 'react';
 import RelayEnvironment from '@//:modules/relay/RelayEnvironment';
-import { CacheProvider } from '@emotion/react';
+import { CacheProvider, Global } from '@emotion/react';
 import { I18nextProvider } from 'react-i18next';
 import { ThemeProvider } from 'theme-ui';
 import theme from './theme';
@@ -33,6 +33,14 @@ export default function Bootstrap(props: Props): Node {
     <CacheProvider value={cache}>
       <I18nextProvider i18n={props.i18next}>
         <ThemeProvider theme={theme}>
+          <Global
+            // temporary disable "iframe" - so that the error overlay in react is not visible during development
+            styles={theme => ({
+              iframe: {
+                display: 'none',
+              },
+            })}
+          />
           <RelayEnvironmentProvider environment={props.environment}>
             {props.children}
           </RelayEnvironmentProvider>
