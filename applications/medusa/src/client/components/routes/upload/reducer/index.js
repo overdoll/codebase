@@ -25,9 +25,23 @@ const reducer: any = (state: State, action: Action): State => {
         return { ...state, [act]: copy };
       }
 
-      // add thumbnail to database && convert blob url to base64 string that can be stored and read later
+      // add thumbnail to database && convert blob url to data string so it can be saved in indexedDB and read later
       db.transaction('rw', db.table('thumbnails'), async () => {
-        db.table(act).put({ id, value: action.value[id] });
+        const url = action.value[id];
+
+        const data = await fetch(url.replace('blob:', ''))
+          .then(response => response.blob())
+          .then(
+            blob =>
+              new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+              }),
+          );
+
+        db.table(act).put({ id, value: data });
       });
 
       return { ...state, [act]: { ...copy, [id]: action.value[id] } };

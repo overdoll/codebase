@@ -7,6 +7,7 @@ import Uppy from './uppy/Uppy';
 import { EVENTS, STEPS } from '../constants/constants';
 import { useEffect, useRef } from 'react';
 import db from '../storage';
+import dataURItoBlob from '@uppy/utils/lib/dataURItoBlob';
 
 // useUpload hook - when the component is unmounted, we want to clean up Uppy & IndexedDB, but
 // we only want to do this if we were on the "finish" step
@@ -29,7 +30,7 @@ const useUpload = (state: State, dispatch: Dispatch): any => {
   }, [state.step]);
 
   // load state from indexeddb on mount
-  // TODO: on hot reload this will re-run this hook - need to stop that from happening
+  // TODO: on hot reload this will re-run this hook - if fixing its recommended to add a return temporarily
   useEffect(() => {
     db.table('step')
       .get(1)
@@ -72,7 +73,7 @@ const useUpload = (state: State, dispatch: Dispatch): any => {
         thumbnails.forEach(thumbnail => {
           dispatch({
             type: EVENTS.THUMBNAILS,
-            value: { [thumbnail.id]: thumbnail.value },
+            value: { [thumbnail.id]: dataURItoBlob(thumbnail.value) },
           });
         });
       });

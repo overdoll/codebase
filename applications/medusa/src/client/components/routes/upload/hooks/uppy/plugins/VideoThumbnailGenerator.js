@@ -375,6 +375,7 @@
     }
     return data;
   }
+
   VideoThumbnails.evalOpts = evalOpts;
 
   /**
@@ -395,6 +396,7 @@
     });
     return dst;
   }
+
   VideoThumbnails.extend = extend;
 
   /**
@@ -427,6 +429,7 @@
       }
     }
   }
+
   VideoThumbnails.each = each;
 
   if (
