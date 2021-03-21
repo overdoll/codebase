@@ -58,9 +58,6 @@ export default function Steps({ uppy, state, dispatch }: Props): Node {
     if (state.step === null) {
       dispatch({ type: EVENTS.STEP, value: STEPS.ARRANGE });
     }
-
-    // Use Uppy's internal state to get the files since the variable can be unreliable (doesn't contain all values)
-    dispatch({ type: EVENTS.FILES, value: files });
   };
 
   const Step = (): Node => {

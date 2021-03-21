@@ -36,32 +36,36 @@ export default function Arrange({
 }: Props): Node {
   // OnRemoveFile - remove a file from the list
   const onRemoveFile = id => {
+    // TODO: check if uppy file is in the list
     uppy.removeFile(id);
 
-    if (uppy.getFiles().length === 0) {
+    dispatch({ type: EVENTS.FILES, value: { id: id }, remove: true });
+
+    if (state.files.length === 1) {
+      // if last file, then we cleanup
+      uppy.clear();
       dispatch({ type: EVENTS.STEP, value: null });
+      dispatch({ type: EVENTS.CLEANUP, value: null });
+    } else {
+      // if not the last file, clean up the state
+      dispatch({
+        type: EVENTS.PROGRESS,
+        value: { [id]: state.progress[id] },
+        remove: true,
+      });
+
+      dispatch({
+        type: EVENTS.THUMBNAILS,
+        value: { [id]: state.thumbnails[id] },
+        remove: true,
+      });
+
+      dispatch({
+        type: EVENTS.URLS,
+        value: { [id]: state.urls[id] },
+        remove: true,
+      });
     }
-
-    dispatch({ type: EVENTS.FILES, value: uppy.getFiles() });
-
-    // Remove progress & thumbnail & urls from object
-    dispatch({
-      type: EVENTS.PROGRESS,
-      value: state.progress[id],
-      remove: true,
-    });
-
-    dispatch({
-      type: EVENTS.THUMBNAILS,
-      value: state.thumbnails[id],
-      remove: true,
-    });
-
-    dispatch({
-      type: EVENTS.URLS,
-      value: state.urls[id],
-      remove: true,
-    });
   };
 
   const onDragEnd = result => {
@@ -76,7 +80,7 @@ export default function Arrange({
       result.destination.index,
     );
 
-    dispatch({ type: EVENTS.FILES, value: files });
+    dispatch({ type: EVENTS.ARRANGE_FILES, value: files });
   };
 
   return (

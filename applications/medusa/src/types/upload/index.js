@@ -59,7 +59,8 @@ type Event =
   | 'artist'
   | 'categories'
   | 'submit'
-  | 'cleanup';
+  | 'cleanup'
+  | 'arrange_files';
 
 type State = {
   thumbnails: Thumbnails,
