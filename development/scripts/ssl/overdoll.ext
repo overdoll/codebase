@@ -6,3 +6,5 @@ subjectAltName = @alt_names
 [alt_names]
 DNS.1 = overdoll.test
 DNS.2 = *.overdoll.test
+DNS.3 = *.dollycdn.test
+DNS.4 = dollycdn.test
