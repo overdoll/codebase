@@ -36,16 +36,14 @@ export default function Arrange({
 }: Props): Node {
   // OnRemoveFile - remove a file from the list
   const onRemoveFile = id => {
-    // TODO: check if uppy file is in the list
     uppy.removeFile(id);
 
     dispatch({ type: EVENTS.FILES, value: { id: id }, remove: true });
 
     if (state.files.length === 1) {
       // if last file, then we cleanup
-      uppy.clear();
+      uppy.reset();
       dispatch({ type: EVENTS.STEP, value: null });
-      dispatch({ type: EVENTS.CLEANUP, value: null });
     } else {
       // if not the last file, clean up the state
       dispatch({

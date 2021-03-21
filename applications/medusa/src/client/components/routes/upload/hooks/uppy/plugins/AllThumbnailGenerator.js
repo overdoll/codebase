@@ -68,7 +68,7 @@ module.exports = class AllThumbnailGenerator extends ThumbnailGenerator {
         thumbnails.capture(file.data);
 
         thumbnails.on('capture', function(image) {
-          resolve(image);
+          resolve(URL.createObjectURL(image));
         });
       });
     }

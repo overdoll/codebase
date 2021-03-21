@@ -2,7 +2,7 @@
  * @flow
  */
 import type { Action, State } from '@//:types/upload';
-import { EVENTS } from '../constants/constants';
+import { EVENTS, INITIAL_STATE } from '../constants/constants';
 import db from '../storage';
 
 // reducer maintains the whole state of the upload form so that we can
@@ -13,7 +13,25 @@ const reducer: any = (state: State, action: Action): State => {
   const copy = { ...state[act] };
 
   switch (action.type) {
-    case EVENTS.THUMBNAILS:
+    case EVENTS.THUMBNAILS: {
+      const id: string = Object.keys(action.value)[0];
+
+      if (action.remove) {
+        // delete item from database
+        db.table(act).delete(id);
+
+        delete copy[id];
+
+        return { ...state, [act]: copy };
+      }
+
+      // add thumbnail to database && convert blob url to base64 string that can be stored and read later
+      db.transaction('rw', db.table('thumbnails'), async () => {
+        db.table(act).put({ id, value: action.value[id] });
+      });
+
+      return { ...state, [act]: { ...copy, [id]: action.value[id] } };
+    }
     case EVENTS.URLS:
     case EVENTS.PROGRESS: {
       const id: string = Object.keys(action.value)[0];
@@ -110,7 +128,7 @@ const reducer: any = (state: State, action: Action): State => {
         db.tables.forEach(table => table.clear());
       });
 
-      return action.value;
+      return INITIAL_STATE;
     case EVENTS.SUBMIT:
       db.transaction('rw', ...db.tables, async () => {
         db.tables.forEach(table => table.clear());
