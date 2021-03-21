@@ -29,7 +29,7 @@ const reducer: any = (state: State, action: Action): State => {
       db.transaction('rw', db.table('thumbnails'), async () => {
         const url = action.value[id];
 
-        const data = await fetch(url.replace('blob:', ''))
+        const data = await fetch(url)
           .then(response => response.blob())
           .then(
             blob =>

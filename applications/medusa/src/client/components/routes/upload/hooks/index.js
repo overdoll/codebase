@@ -73,7 +73,11 @@ const useUpload = (state: State, dispatch: Dispatch): any => {
         thumbnails.forEach(thumbnail => {
           dispatch({
             type: EVENTS.THUMBNAILS,
-            value: { [thumbnail.id]: dataURItoBlob(thumbnail.value) },
+            value: {
+              [thumbnail.id]: URL.createObjectURL(
+                dataURItoBlob(thumbnail.value, {}),
+              ),
+            },
           });
         });
       });

@@ -17,7 +17,7 @@ const config = {
     'font-src': ['data:', '*'],
     'base-uri': ["'self'"],
     'object-src': ["'none'"],
-    'connect-src': ["'self'"],
+    'connect-src': ["'self'", 'blob:'],
     'frame-src': [],
     'frame-ancestors': ["'none'"],
     'report-uri': [],
