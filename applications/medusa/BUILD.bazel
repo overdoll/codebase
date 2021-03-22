@@ -99,6 +99,8 @@ _RUNTIME_DEPS = [
     "@npm//@uppy/react",
     "@npm//react-beautiful-dnd",
     "@npm//dexie",
+    "@npm//use-query-params",
+    "@npm//query-string",
 ]
 
 nodejs_binary(

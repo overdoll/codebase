@@ -56,7 +56,7 @@ func (s *Server) IndexMedia() {
 
 		data := &documents.Media{
 			Id:        media.Id.String(),
-			Thumbnail: media.Thumbnail,
+			Thumbnail: media.Thumbnail.URL,
 			Title:     media.Title,
 		}
 

@@ -56,7 +56,7 @@ func (s *Server) IndexArtists() {
 
 		data := &documents.Artist{
 			Id:       artist.Id.String(),
-			Avatar:   artist.Avatar,
+			Avatar:   artist.Avatar.URL,
 			Username: artist.Username,
 		}
 

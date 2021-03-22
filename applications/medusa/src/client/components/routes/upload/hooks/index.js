@@ -22,9 +22,10 @@ const useUpload = (state: State, dispatch: Dispatch): any => {
   useEffect(() => {
     return () => {
       if (state.step === STEPS.FINISH && uppy.current) {
-        db.clear();
-        db.close();
-        uppy.current?.close();
+        db.transaction('rw', ...db.tables, async () => {
+          db.tables.forEach(table => table.clear());
+        });
+        uppy.current?.reset();
       }
     };
   }, [state.step]);

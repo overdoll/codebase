@@ -125,7 +125,7 @@ export default function RouterRenderer(): Node {
             sx={{
               position: 'absolute',
               zIndex: '1',
-              backgroundColor: '#fff',
+              backgroundColor: '#ffffff',
               animation: `0s linear 0.5s forwards ${transition}`,
               visibility: 'hidden',
             }}
