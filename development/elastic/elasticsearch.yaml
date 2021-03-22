@@ -15,11 +15,17 @@ resources:
 
 # Request smaller persistent volumes.
 volumeClaimTemplate:
-  accessModes: ['ReadWriteOnce']
+  accessModes: [ 'ReadWriteOnce' ]
   storageClassName: 'local-path'
   resources:
     requests:
       storage: 10Gi
+
+enableServiceLinks: false
+
+maxUnavailable: 0
+
+clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
 
 replicas: 1
 minimumMasterNodes: 1

@@ -1,6 +1,7 @@
 package events
 
 import (
+	"context"
 	"log"
 	"os"
 
@@ -10,9 +11,9 @@ import (
 
 func (conn Connection) GetWriter() kafka.Writer {
 	return kafka.Writer{
-		Addr: kafka.TCP(conn.address),
-		Logger: log.New(os.Stdout, "event publisher: ", 0),
-		Balancer: &kafka.Hash{},
+		Addr:        kafka.TCP(conn.address),
+		Logger:      log.New(os.Stdout, "event publisher: ", 0),
+		Balancer:    &kafka.Hash{},
 		Compression: kafka.Snappy,
 	}
 }
@@ -28,10 +29,10 @@ func (conn Connection) Publish(topic string, event proto.Message) error {
 		return err
 	}
 
-	err = w.WriteMessages(conn.context, kafka.Message{
+	err = w.WriteMessages(context.Background(), kafka.Message{
 		Topic: topic,
-		Key:       []byte(conn.group),
-		Value:     msg,
+		Key:   []byte(conn.group),
+		Value: msg,
 	})
 
 	return err
@@ -55,12 +56,12 @@ func (conn Connection) BulkPublish(topicEventsMap map[string][]proto.Message) er
 
 			// Add to message array
 			messages = append(messages, kafka.Message{
-				Topic:     topic,
-				Key:       []byte(conn.group),
-				Value:     msg,
+				Topic: topic,
+				Key:   []byte(conn.group),
+				Value: msg,
 			})
 		}
 	}
 
-	return w.WriteMessages(conn.context, messages...)
+	return w.WriteMessages(context.Background(), messages...)
 }
