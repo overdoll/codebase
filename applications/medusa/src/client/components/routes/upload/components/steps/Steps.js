@@ -26,6 +26,9 @@ const SubmitGraphQL = graphql`
   mutation StepsMutation($data: PostInput) {
     post(data: $data) {
       review
+      validation {
+        code
+      }
     }
   }
 `;
@@ -58,9 +61,6 @@ export default function Steps({ uppy, state, dispatch }: Props): Node {
     if (state.step === null) {
       dispatch({ type: EVENTS.STEP, value: STEPS.ARRANGE });
     }
-
-    // Use Uppy's internal state to get the files since the variable can be unreliable (doesn't contain all values)
-    dispatch({ type: EVENTS.FILES, value: files });
   };
 
   const Step = (): Node => {
@@ -163,8 +163,11 @@ export default function Steps({ uppy, state, dispatch }: Props): Node {
         },
       },
       onCompleted(data) {
-        dispatch({ type: EVENTS.SUBMIT, value: data.post });
-        dispatch({ type: EVENTS.STEP, value: STEPS.FINISH });
+        if (data.post?.validation !== null) {
+          notify.error(data?.post?.validation?.code);
+        } else {
+          dispatch({ type: EVENTS.SUBMIT, value: data.post });
+        }
       },
       onError(data) {
         notify.error('error with submission');
@@ -181,31 +184,26 @@ export default function Steps({ uppy, state, dispatch }: Props): Node {
   return (
     <>
       {Step()}
-      <div>
-        {state.step !== null && (
-          <>
-            {state.step !== STEPS.ARRANGE ? (
-              <button disabled={isInFlight} onClick={PrevStep}>
-                prev
-              </button>
-            ) : (
-              <button onClick={onCancel}>cancel</button>
-            )}
-            {state.step !== STEPS.REVIEW ? (
-              <button disabled={NextDisabled} onClick={NextStep}>
-                next
-              </button>
-            ) : (
-              <button
-                onClick={onSubmit}
-                disabled={SubmitDisabled || isInFlight}
-              >
-                submit
-              </button>
-            )}
-          </>
-        )}
-      </div>
+      {state.step !== null && state.step !== STEPS.FINISH && (
+        <div>
+          {state.step !== STEPS.ARRANGE ? (
+            <button disabled={isInFlight} onClick={PrevStep}>
+              prev
+            </button>
+          ) : (
+            <button onClick={onCancel}>cancel</button>
+          )}
+          {state.step !== STEPS.REVIEW ? (
+            <button disabled={NextDisabled} onClick={NextStep}>
+              next
+            </button>
+          ) : (
+            <button onClick={onSubmit} disabled={SubmitDisabled || isInFlight}>
+              submit
+            </button>
+          )}
+        </div>
+      )}
     </>
   );
 }

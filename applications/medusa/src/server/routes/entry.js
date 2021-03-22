@@ -19,6 +19,8 @@ import createRouter from '@//:modules/routing/createRouter';
 import createMockHistory from '@//:modules/routing/createMockHistory';
 import { ThemeProvider } from 'theme-ui';
 import { NotificationProvider } from '@//:modules/focus';
+import { QueryParamProvider } from 'use-query-params';
+import CompatibilityRoute from '@//:modules/routing/CompatibilityRoute';
 
 const entry = async (req, res, next) => {
   try {
@@ -50,7 +52,6 @@ const entry = async (req, res, next) => {
           cookie: fetchCookies !== null ? fetchCookies : req.headers.cookie,
         },
         data: {
-          query: 'empty',
           operationName: params.name,
           extensions: {
             apq: {
@@ -106,11 +107,13 @@ const entry = async (req, res, next) => {
     const App = (
       <ThemeProvider theme={theme}>
         <RelayEnvironmentProvider environment={environment}>
-          <NotificationProvider>
-            <RoutingContext.Provider value={router.context}>
-              <RouteRenderer />
-            </RoutingContext.Provider>
-          </NotificationProvider>
+          <RoutingContext.Provider value={router.context}>
+            <QueryParamProvider ReactRouterRoute={CompatibilityRoute}>
+              <NotificationProvider>
+                <RouteRenderer />
+              </NotificationProvider>
+            </QueryParamProvider>
+          </RoutingContext.Provider>
         </RelayEnvironmentProvider>
       </ThemeProvider>
     );

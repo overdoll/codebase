@@ -6,9 +6,7 @@ function previewSupported(fileType) {
   const fileTypeSpecific = fileType.split('/')[1];
 
   // extend the default to include mp4 files
-  if (
-    /^(jpe?g|gif|png|svg|svg\+xml|bmp|mp4|webp|avif)$/.test(fileTypeSpecific)
-  ) {
+  if (/^(jpe?g|png|bmp|mp4|webm|webp|avif)$/.test(fileTypeSpecific)) {
     return true;
   }
 
@@ -68,7 +66,7 @@ module.exports = class AllThumbnailGenerator extends ThumbnailGenerator {
         thumbnails.capture(file.data);
 
         thumbnails.on('capture', function(image) {
-          resolve(image);
+          resolve(URL.createObjectURL(image));
         });
       });
     }

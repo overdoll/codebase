@@ -1,11 +1,11 @@
 input PostInput {
-  content: [String!]! @validation(rules: ["required"])
+  content: [String!]!
   categories: [String!]!
   characters: [String!]!
   mediaRequests: [String!]
   characterRequests: [CharacterRequest!]
   artistId: String
-  artistUsername: String! @validation(rules: ["required"])
+  artistUsername: String!
 }
 
 input CharacterRequest {

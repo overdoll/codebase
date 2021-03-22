@@ -12,14 +12,27 @@ import (
 
 func CheckIfCharactersAreValid(s gocqlx.Session, chars []string) ([]ksuid.UUID, error) {
 	// Ensure we set up correct characters (DB entries exist)
-	queryCharacters := qb.Select("characters").
-		Where(qb.InLit("id", strings.Join(chars, ","))).
-		Query(s)
 
-	var characters []models.Character
+	final := []string{}
+
+	for _, str := range chars {
+		final = append(final, `'`+str+`'`)
+	}
+
 	var characterIds []ksuid.UUID
 
-	if err := queryCharacters.Get(&characters); err != nil {
+	// if none then we get out or else the query will fail
+	if len(final) == 0 {
+		return characterIds, nil
+	}
+
+	queryCharacters := qb.Select("characters").
+		Where(qb.InLit("id", "("+strings.Join(final, ",")+")")).
+		Query(s)
+
+	var characters []*models.Character
+
+	if err := queryCharacters.Select(&characters); err != nil {
 		return nil, fmt.Errorf("select() failed: '%s", err)
 	}
 
@@ -35,15 +48,27 @@ func CheckIfCharactersAreValid(s gocqlx.Session, chars []string) ([]ksuid.UUID, 
 }
 
 func CheckIfCategoriesAreValid(s gocqlx.Session, cats []string) ([]ksuid.UUID, error) {
+
+	final := []string{}
+
+	for _, str := range cats {
+		final = append(final, `'`+str+`'`)
+	}
+
+	var categoryIds []ksuid.UUID
+
+	if len(final) == 0 {
+		return categoryIds, nil
+	}
+
 	// Ensure we set up correct categories (DB entries exist)
 	queryCategories := qb.Select("categories").
-		Where(qb.InLit("id", strings.Join(cats, ","))).
+		Where(qb.InLit("id", "("+strings.Join(final, ",")+")")).
 		Query(s)
 
 	var categories []models.Category
-	var categoryIds []ksuid.UUID
 
-	if err := queryCategories.Get(&categories); err != nil {
+	if err := queryCategories.Select(&categories); err != nil {
 		return nil, fmt.Errorf("select() failed: '%s", err)
 	}
 

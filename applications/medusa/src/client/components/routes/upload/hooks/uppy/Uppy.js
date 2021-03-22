@@ -4,6 +4,7 @@ import CanUseDOM from '@//:modules/utilities/CanUseDOM';
 import GoldenRetriever from '@uppy/golden-retriever';
 
 const U = new Uppy({
+  id: 'posts',
   restrictions: {
     maxNumberOfFiles: 10,
     allowedFileTypes: ['image/jpeg', 'image/png', 'video/mp4'],

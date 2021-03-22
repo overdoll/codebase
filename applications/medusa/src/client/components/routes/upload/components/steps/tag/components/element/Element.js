@@ -11,8 +11,14 @@ type Props = {
 
 export default function Element({ selected, children, onSelect }: Props): Node {
   return (
-    <div onClick={onSelect}>
-      {selected && 'selected'}
+    <div
+      onClick={onSelect}
+      sx={{
+        border: selected ? '2px solid red' : '2px solid black',
+        backgroundColor: 'black',
+        marginBottom: '3px',
+      }}
+    >
       {children}
     </div>
   );

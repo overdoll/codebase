@@ -17,7 +17,7 @@ func (r *MutationResolver) Post(ctx context.Context, data *models.PostInput) (*m
 		return &models.PostResponse{Validation: &models.Validation{Code: "categories_amount"}}, nil
 	}
 
-	if len(data.Characters) < 1 {
+	if !(len(data.Characters) >= 1 || len(data.CharacterRequests) >= 1) {
 		return &models.PostResponse{Validation: &models.Validation{Code: "characters_amount"}}, nil
 	}
 
@@ -63,7 +63,7 @@ func (r *MutationResolver) Post(ctx context.Context, data *models.PostInput) (*m
 	})
 
 	if err != nil {
-		return &models.PostResponse{Validation: &models.Validation{Code: "bad_data"}}, nil
+		return &models.PostResponse{Validation: &models.Validation{Code: err.Error()}}, nil
 	}
 
 	return &models.PostResponse{Validation: nil, Review: reviewRequired}, nil

@@ -158,3 +158,53 @@ func (r *QueryResolver) Artists(ctx context.Context, data models.SearchInput) ([
 
 	return resp, nil
 }
+
+const SearchMedia = `
+	"query" : {
+		"multi_match" : {
+			"query" : %q,
+			"fields" : ["title^100"],
+			"operator" : "and"
+		}
+	},
+	"size" : 5`
+
+const AllMedia = `
+	"query" : { "match_all" : {} },
+	"size" : 5`
+
+func (r *QueryResolver) Media(ctx context.Context, data models.SearchInput) ([]*models.Media, error) {
+	var query string
+
+	if data.Search == "" {
+		query = AllMedia
+	} else {
+		query = fmt.Sprintf(SearchMedia, data.Search)
+	}
+
+	response, err := r.Search.Search("media", query)
+
+	if err != nil {
+		return nil, err
+	}
+
+	results := response.Hits
+
+	resp := make([]*models.Media, 0)
+
+	// Unmarshal our json into the correct model
+	for _, result := range results {
+
+		var model *models.Media
+
+		err = json.Unmarshal(result, &model)
+
+		if err != nil {
+			return resp, nil
+		}
+
+		resp = append(resp, model)
+	}
+
+	return resp, nil
+}

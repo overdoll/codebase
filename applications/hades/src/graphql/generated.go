@@ -112,6 +112,7 @@ type ComplexityRoot struct {
 		Authentication func(childComplexity int) int
 		Categories     func(childComplexity int, data models.SearchInput) int
 		Characters     func(childComplexity int, data models.SearchInput) int
+		Media          func(childComplexity int, data models.SearchInput) int
 		RedeemCookie   func(childComplexity int, cookie string) int
 	}
 
@@ -141,6 +142,7 @@ type QueryResolver interface {
 	Characters(ctx context.Context, data models.SearchInput) ([]*models.Character, error)
 	Categories(ctx context.Context, data models.SearchInput) ([]*models.Category, error)
 	Artists(ctx context.Context, data models.SearchInput) ([]*models.Artist, error)
+	Media(ctx context.Context, data models.SearchInput) ([]*models.Media, error)
 }
 type SubscriptionResolver interface {
 	AuthListener(ctx context.Context) (<-chan *models.AuthListener, error)
@@ -422,6 +424,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.Characters(childComplexity, args["data"].(models.SearchInput)), true
 
+	case "Query.media":
+		if e.complexity.Query.Media == nil {
+			break
+		}
+
+		args, err := ec.field_Query_media_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Media(childComplexity, args["data"].(models.SearchInput)), true
+
 	case "Query.redeemCookie":
 		if e.complexity.Query.RedeemCookie == nil {
 			break
@@ -553,17 +567,18 @@ directive @role(roles: [String!]!) on FIELD_DEFINITION
 	{Name: "schemas/posts/queries.graphql", Input: `extend type Query {
   characters(data: SearchInput!): [Character!]!
   categories(data: SearchInput!): [Category!]!
-  artists(data: SearchInput!): [Artist!]! @auth
+  artists(data: SearchInput!): [Artist!]!
+  media(data: SearchInput!): [Media!]!
 }
 `, BuiltIn: false},
 	{Name: "schemas/posts/types.graphql", Input: `input PostInput {
-  content: [String!]! @validation(rules: ["required"])
+  content: [String!]!
   categories: [String!]!
   characters: [String!]!
   mediaRequests: [String!]
   characterRequests: [CharacterRequest!]
   artistId: String
-  artistUsername: String! @validation(rules: ["required"])
+  artistUsername: String!
 }
 
 input CharacterRequest {
@@ -782,6 +797,21 @@ func (ec *executionContext) field_Query_categories_args(ctx context.Context, raw
 }
 
 func (ec *executionContext) field_Query_characters_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 models.SearchInput
+	if tmp, ok := rawArgs["data"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("data"))
+		arg0, err = ec.unmarshalNSearchInput2overdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐSearchInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["data"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_media_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 models.SearchInput
@@ -2146,28 +2176,8 @@ func (ec *executionContext) _Query_artists(ctx context.Context, field graphql.Co
 	}
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Query().Artists(rctx, args["data"].(models.SearchInput))
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			if ec.directives.Auth == nil {
-				return nil, errors.New("directive auth is not implemented")
-			}
-			return ec.directives.Auth(ctx, nil, directive0)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.([]*models.Artist); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be []*overdoll/applications/hades/src/models.Artist`, tmp)
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Artists(rctx, args["data"].(models.SearchInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2182,6 +2192,48 @@ func (ec *executionContext) _Query_artists(ctx context.Context, field graphql.Co
 	res := resTmp.([]*models.Artist)
 	fc.Result = res
 	return ec.marshalNArtist2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐArtistᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_media(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_media_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Media(rctx, args["data"].(models.SearchInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.Media)
+	fc.Result = res
+	return ec.marshalNMedia2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐMediaᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -3530,29 +3582,9 @@ func (ec *executionContext) unmarshalInputPostInput(ctx context.Context, obj int
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("content"))
-			directive0 := func(ctx context.Context) (interface{}, error) { return ec.unmarshalNString2ᚕstringᚄ(ctx, v) }
-			directive1 := func(ctx context.Context) (interface{}, error) {
-				rules, err := ec.unmarshalNString2ᚕstringᚄ(ctx, []interface{}{"required"})
-				if err != nil {
-					return nil, err
-				}
-				if ec.directives.Validation == nil {
-					return nil, errors.New("directive validation is not implemented")
-				}
-				return ec.directives.Validation(ctx, obj, directive0, rules)
-			}
-
-			tmp, err := directive1(ctx)
+			it.Content, err = ec.unmarshalNString2ᚕstringᚄ(ctx, v)
 			if err != nil {
-				return it, graphql.ErrorOnPath(ctx, err)
-			}
-			if data, ok := tmp.([]string); ok {
-				it.Content = data
-			} else if tmp == nil {
-				it.Content = nil
-			} else {
-				err := fmt.Errorf(`unexpected type %T from directive, should be []string`, tmp)
-				return it, graphql.ErrorOnPath(ctx, err)
+				return it, err
 			}
 		case "categories":
 			var err error
@@ -3598,27 +3630,9 @@ func (ec *executionContext) unmarshalInputPostInput(ctx context.Context, obj int
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("artistUsername"))
-			directive0 := func(ctx context.Context) (interface{}, error) { return ec.unmarshalNString2string(ctx, v) }
-			directive1 := func(ctx context.Context) (interface{}, error) {
-				rules, err := ec.unmarshalNString2ᚕstringᚄ(ctx, []interface{}{"required"})
-				if err != nil {
-					return nil, err
-				}
-				if ec.directives.Validation == nil {
-					return nil, errors.New("directive validation is not implemented")
-				}
-				return ec.directives.Validation(ctx, obj, directive0, rules)
-			}
-
-			tmp, err := directive1(ctx)
+			it.ArtistUsername, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
-				return it, graphql.ErrorOnPath(ctx, err)
-			}
-			if data, ok := tmp.(string); ok {
-				it.ArtistUsername = data
-			} else {
-				err := fmt.Errorf(`unexpected type %T from directive, should be string`, tmp)
-				return it, graphql.ErrorOnPath(ctx, err)
+				return it, err
 			}
 		}
 	}
@@ -4095,6 +4109,20 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_artists(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
+		case "media":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_media(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -4593,6 +4621,43 @@ func (ec *executionContext) marshalNCharacter2ᚖoverdollᚋapplicationsᚋhades
 func (ec *executionContext) unmarshalNCharacterRequest2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCharacterRequest(ctx context.Context, v interface{}) (*models.CharacterRequest, error) {
 	res, err := ec.unmarshalInputCharacterRequest(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNMedia2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐMediaᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.Media) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNMedia2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐMedia(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
 }
 
 func (ec *executionContext) marshalNMedia2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐMedia(ctx context.Context, sel ast.SelectionSet, v *models.Media) graphql.Marshaler {

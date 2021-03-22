@@ -13,7 +13,7 @@ type Props = {
     options?: any,
   },
   onSelect: any,
-  selected: Array<string>,
+  selected: any,
 };
 
 const ArtistsQueryGQL = graphql`
@@ -53,7 +53,7 @@ export default function Artists({ args, onSelect, selected }: Props): Node {
     <Element
       key={item.id}
       onSelect={() => onSelect(item)}
-      selected={selected.indexOf(item.id) > -1}
+      selected={selected.id === item.id}
     >
       {item.username}-{item.avatar}
     </Element>

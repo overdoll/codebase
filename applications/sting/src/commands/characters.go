@@ -13,7 +13,7 @@ import (
 var characters = &cobra.Command{
 	Use:   "characters",
 	Short: "Index the whole characters table into elasticsearch",
-	Run: Run,
+	Run:   Run,
 }
 
 func init() {
@@ -84,11 +84,11 @@ func (s *Server) IndexCharacters() {
 
 		data := &documents.Character{
 			Id:        character.Id.String(),
-			Thumbnail: character.Thumbnail,
+			Thumbnail: character.Thumbnail.URL,
 			Name:      character.Name,
 			Media: documents.Media{
 				Id:        media.Id.String(),
-				Thumbnail: media.Thumbnail,
+				Thumbnail: media.Thumbnail.URL,
 				Title:     media.Title,
 			},
 		}

@@ -2,16 +2,15 @@
  * @flow
  */
 import type { Node } from 'react';
-import { Suspense, useState } from 'react';
-import { createPortal } from 'react-dom';
-import RootElement from '@//:modules/utilities/RootElement';
-import Search from '../../search/Search';
+import { useState } from 'react';
 import Characters from './query/Characters';
-import ErrorBoundary from '@//:modules/utilities/ErrorBoundary';
 import type { Dispatch, State } from '@//:types/upload';
 import { EVENTS } from '../../../../../../constants/constants';
-import ErrorFallback from '../../error/ErrorFallback';
-import LoadingSearch from '../../loading/LoadingSearch';
+import Section from '../../section/Section';
+import { createPortal } from 'react-dom';
+import Search from '../../search/Search';
+import RootElement from '@//:modules/utilities/RootElement';
+import Media from './query/Media';
 
 type Props = {
   dispatch: Dispatch,
@@ -19,58 +18,65 @@ type Props = {
 };
 
 export default function TagCharacters({ state, dispatch }: Props): Node {
-  const [open, setOpen] = useState(false);
-
-  const onOpen = () => {
-    setOpen(true);
-  };
-
-  const onClose = () => {
-    setOpen(false);
-  };
+  // state to handle how the new character will be added, when requested
+  const [newCharacter, addNewCharacter] = useState(null);
 
   // OnSelect will remove or add the character based on if it's in the object already or not
   const onSelect = character => {
-    dispatch({
-      type: EVENTS.TAG_CHARACTERS,
-      remove: state.characters[character.id] !== undefined,
-      value: character,
-    });
+    if (character.request) {
+      addNewCharacter(character);
+    } else {
+      dispatch({
+        type: EVENTS.TAG_CHARACTERS,
+        remove: state.characters[character.id] !== undefined,
+        value: character,
+      });
+    }
   };
 
+  // When the user selects a media, we send that back up the chain, where we either get a new media, or a current one
+  // from our list
+  const onAddNewMedia = media => {
+    dispatch({
+      type: EVENTS.TAG_CHARACTERS,
+      remove: false,
+      value: { ...newCharacter, media: media },
+    });
+
+    // reset the state back to null
+    addNewCharacter(null);
+  };
+
+  // if user clicks "cancel", we move them back to the list of characters
+  const onCancelNewCharacter = () => {
+    addNewCharacter(null);
+  };
+
+  // if we are selecting a new character, open a modal for selecting a new media with this
+  if (newCharacter !== null) {
+    return createPortal(
+      <Search
+        header={<div>selected character: {newCharacter.name}</div>}
+        onClose={onCancelNewCharacter}
+      >
+        {args => <Media selected={[]} onSelect={onAddNewMedia} args={args} />}
+      </Search>,
+      RootElement,
+    );
+  }
+
   return (
-    <>
+    <Section
+      search={args => (
+        <Characters
+          selected={Object.keys(state.characters)}
+          onSelect={onSelect}
+          args={args}
+        />
+      )}
+    >
       <div>current characters: {Object.keys(state.characters).length}</div>
       DISPLAY SELECTED CHARACTERS HERE???
-      <button onClick={onOpen}>add</button>
-      {open &&
-        createPortal(
-          <Search onClose={onClose}>
-            {({ args, refetch }) => (
-              <>
-                DISPLAY SELECTED CHARACTERS HERE???
-                <ErrorBoundary
-                  fallback={({ error, reset }) => (
-                    <ErrorFallback
-                      error={error}
-                      reset={reset}
-                      refetch={refetch}
-                    />
-                  )}
-                >
-                  <Suspense fallback={<LoadingSearch />}>
-                    <Characters
-                      selected={Object.keys(state.characters)}
-                      onSelect={onSelect}
-                      args={args}
-                    />
-                  </Suspense>
-                </ErrorBoundary>
-              </>
-            )}
-          </Search>,
-          RootElement,
-        )}
-    </>
+    </Section>
   );
 }

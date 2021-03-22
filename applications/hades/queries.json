@@ -12,5 +12,7 @@
   "95c7173f7ace68e89c3301fac043b20b": "query CharactersQuery(\n  $data: SearchInput!\n) {\n  characters(data: $data) {\n    id\n    name\n    thumbnail\n    media {\n      id\n      title\n      thumbnail\n    }\n  }\n}\n",
   "72b208dd0bce1758200a795ef776615f": "mutation UploadMutation(\n  $data: PostInput\n) {\n  post(data: $data) {\n    review\n  }\n}\n",
   "fffe1105c49a303dc3747589e47e7acd": "mutation StepperMutation(\n  $data: PostInput\n) {\n  post(data: $data) {\n    review\n  }\n}\n",
-  "4007a9c7974da01641f179dd102d6927": "mutation StepsMutation(\n  $data: PostInput\n) {\n  post(data: $data) {\n    review\n  }\n}\n"
+  "4007a9c7974da01641f179dd102d6927": "mutation StepsMutation(\n  $data: PostInput\n) {\n  post(data: $data) {\n    review\n  }\n}\n",
+  "c580e2ec639f896f6891e72f4ce5bb53": "query MediaQuery(\n  $data: SearchInput!\n) {\n  media(data: $data) {\n    id\n    title\n    thumbnail\n  }\n}\n",
+  "3d0383f9dd76ad9089c7b4ff747ceb96": "mutation StepsMutation(\n  $data: PostInput\n) {\n  post(data: $data) {\n    review\n    validation {\n      code\n    }\n  }\n}\n"
 }

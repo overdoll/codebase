@@ -1,16 +1,23 @@
 const config = {
   directives: {
     'default-src': ["'self'"],
-    'script-src': ["'self'", (req, res) => `'nonce-${res.locals.cspNonce}'`],
+    'script-src': [
+      "'self'",
+      // TODO: remove unsafe-inline if in production, this is required for react-error-overlay
+      "'unsafe-inline'",
+      // (req, res) => `'nonce-${res.locals.cspNonce}'`,
+    ],
     'style-src': [
       "'self'",
+      // TODO: remove unsafe-inline if in production, this is required for react-error-overlay
+      "'unsafe-inline'",
       'https://fonts.googleapis.com',
-      (req, res) => `'nonce-${res.locals.cspNonce}'`,
+      // (req, res) => `'nonce-${res.locals.cspNonce}'`,
     ],
     'font-src': ['data:', '*'],
     'base-uri': ["'self'"],
     'object-src': ["'none'"],
-    'connect-src': ["'self'"],
+    'connect-src': ["'self'", 'blob:'],
     'frame-src': [],
     'frame-ancestors': ["'none'"],
     'report-uri': [],

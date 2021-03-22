@@ -55,7 +55,7 @@ func (s *Server) IndexCategories() {
 
 		data := &documents.Category{
 			Id:        category.Id.String(),
-			Thumbnail: category.Thumbnail,
+			Thumbnail: category.Thumbnail.URL,
 			Title:     category.Title,
 		}
 

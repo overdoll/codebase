@@ -10,7 +10,9 @@ import { createBrowserHistory } from 'history';
 import RelayEnvironment from '@//:modules/relay/RelayEnvironment';
 import i18next from './utilities/i18next';
 import type { Node } from 'react';
+import { QueryParamProvider } from 'use-query-params';
 import Bootstrap from './Bootstrap';
+import CompatibilityRoute from '@//:modules/routing/CompatibilityRoute';
 
 const router = createRouter(routes, createBrowserHistory(), RelayEnvironment);
 
@@ -18,9 +20,11 @@ export default function App(): Node {
   return (
     <Bootstrap environment={RelayEnvironment} i18next={i18next}>
       <RoutingContext.Provider value={router.context}>
-        <NotificationProvider>
-          <RouterRenderer />
-        </NotificationProvider>
+        <QueryParamProvider ReactRouterRoute={CompatibilityRoute}>
+          <NotificationProvider>
+            <RouterRenderer />
+          </NotificationProvider>
+        </QueryParamProvider>
       </RoutingContext.Provider>
     </Bootstrap>
   );

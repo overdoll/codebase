@@ -10,6 +10,22 @@ spec:
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
+  name: assetsprefix
+spec:
+  addPrefix:
+    prefix: /overdoll-assets
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: postsprefix
+spec:
+  addPrefix:
+    prefix: /overdoll-posts
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
   name: redirect-https
 spec:
   redirectScheme:
@@ -46,6 +62,22 @@ spec:
       services:
         - name: medusa
           port: 8000
+    - match: Host(`static.dollycdn.test`) && PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: minio
+          namespace: minio
+          port: 80
+      middlewares:
+        - name: assetsprefix
+    - match: Host(`posts.dollycdn.test`) && PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: minio
+          namespace: minio
+          port: 80
+      middlewares:
+        - name: postsprefix
   tls:
     secretName: overdoll-tls
 ---
@@ -85,3 +117,21 @@ spec:
           port: 8000
       middlewares:
         - name: redirect-https
+    - match: Host(`static.dollycdn.test`) && PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: minio
+          namespace: minio
+          port: 80
+      middlewares:
+        - name: redirect-https
+        - name: assetsprefix
+    - match: Host(`posts.dollycdn.test`) && PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: minio
+          namespace: minio
+          port: 80
+      middlewares:
+        - name: redirect-https
+        - name: postsprefix

@@ -254,8 +254,9 @@
      * @param  {canvas} canvas The captured thumb
      */
     save(canvas) {
+      const dataURItoBlob = require('@uppy/utils/lib/dataURItoBlob');
       // Get the shot
-      const theCapture = canvas.toDataURL('image/jpeg', 0.7);
+      const theCapture = dataURItoBlob(canvas.toDataURL('image/jpeg', 0.7), {});
 
       // done
       this.grabComplete(theCapture);
@@ -273,9 +274,9 @@
       const statTime = this.getTime();
 
       // Save it to the array
-      this.captures.push(image);
-      this.capturesDetailed[counter].url = image;
-      this.capturesDetailed[counter].captureTime = statTime.diff;
+      // this.captures.push(image);
+      // this.capturesDetailed[counter].url = image;
+      // this.capturesDetailed[counter].captureTime = statTime.diff;
 
       // Fire the event incase anyone is listening
       this.fire('capture', image);
@@ -374,6 +375,7 @@
     }
     return data;
   }
+
   VideoThumbnails.evalOpts = evalOpts;
 
   /**
@@ -394,6 +396,7 @@
     });
     return dst;
   }
+
   VideoThumbnails.extend = extend;
 
   /**
@@ -426,6 +429,7 @@
       }
     }
   }
+
   VideoThumbnails.each = each;
 
   if (

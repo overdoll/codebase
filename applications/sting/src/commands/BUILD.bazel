@@ -16,6 +16,7 @@ go_library(
         "//applications/sting/src/search/documents:go_default_library",
         "//applications/sting/src/search/indexes:go_default_library",
         "//libraries/bootstrap:go_default_library",
+        "//libraries/ksuid:go_default_library",
         "//libraries/search:go_default_library",
         "@com_github_scylladb_gocqlx_v2//:go_default_library",
         "@com_github_scylladb_gocqlx_v2//qb:go_default_library",

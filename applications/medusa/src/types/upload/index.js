@@ -20,27 +20,33 @@ type Artist = {
   username?: string,
 };
 
+type Media = {
+  id: string,
+  title: string,
+  thumbnail: ?string,
+  request?: boolean,
+};
+
+type Character = {
+  id: string,
+  name: string,
+  thumbnail: string,
+  request?: boolean,
+  media: Media,
+};
+
 type Characters = {
-  [string]: {
-    id: string,
-    name: string,
-    thumbnail: string,
-    request?: boolean,
-    media: {
-      id: string,
-      title: string,
-      thumbnail: ?string,
-      request?: boolean,
-    },
-  },
+  [string]: Character,
+};
+
+type Category = {
+  id: string,
+  title: string,
+  thumbnail: string,
 };
 
 type Categories = {
-  [string]: {
-    id: string,
-    title: string,
-    thumbnail: string,
-  },
+  [string]: Category,
 };
 
 type Submit = {
@@ -59,7 +65,8 @@ type Event =
   | 'artist'
   | 'categories'
   | 'submit'
-  | 'cleanup';
+  | 'cleanup'
+  | 'arrange_files';
 
 type State = {
   thumbnails: Thumbnails,

@@ -9,6 +9,7 @@ const STEPS = {
 };
 
 const EVENTS = {
+  ARRANGE_FILES: 'arrange_files',
   THUMBNAILS: 'thumbnails',
   URLS: 'urls',
   FILES: 'files',

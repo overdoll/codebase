@@ -21,9 +21,9 @@ export default function ErrorFallback({ error, reset, refetch }: Props): Node {
   };
 
   return (
-    <>
+    <div sx={{ backgroundColor: 'red' }}>
       <div>there was an error with loading</div>
       <button onClick={onReset}>retry</button>
-    </>
+    </div>
   );
 }

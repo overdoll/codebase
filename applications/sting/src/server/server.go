@@ -73,7 +73,24 @@ func (s *Server) SchedulePost(ctx context.Context, post *sting.SchedulePostReque
 		PublishedPostId:     "",
 	}
 
-	insertPost := qb.Insert("post_pending").
+	insertPost := qb.Insert("posts_pending").
+		Columns(
+			"id",
+			"state",
+			"artist_id",
+			"artist_username",
+			"contributor_id",
+			"contributor_username",
+			"content",
+			"categories",
+			"characters",
+			"characters_requests",
+			"categories_requests",
+			"media_requests",
+			"posted_at",
+			"review_required",
+			"published_post_id",
+		).
 		Query(s.session).
 		BindStruct(pendingPost)
 
@@ -91,7 +108,7 @@ func (s *Server) SchedulePost(ctx context.Context, post *sting.SchedulePostReque
 		return nil, err
 	}
 
-	return nil, nil
+	return &sting.Post{}, nil
 }
 
 // ProcessPost - Process a post - our pox service will call this once it's finished processing the images
