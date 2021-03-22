@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"fmt"
+	"log"
 	"strings"
 
 	"github.com/scylladb/gocqlx/v2"
@@ -13,8 +14,13 @@ import (
 func CheckIfCharactersAreValid(s gocqlx.Session, chars []string) ([]ksuid.UUID, error) {
 	// Ensure we set up correct characters (DB entries exist)
 	queryCharacters := qb.Select("characters").
-		Where(qb.InLit("id", strings.Join(chars, ","))).
-		Query(s)
+		Where(qb.InTuple("id", len(chars))).
+		Query(s).
+		BindStruct(&struct {
+			id []string
+		}{
+			id: chars,
+		})
 
 	var characters []models.Character
 	var characterIds []ksuid.UUID
@@ -39,6 +45,9 @@ func CheckIfCategoriesAreValid(s gocqlx.Session, cats []string) ([]ksuid.UUID, e
 	queryCategories := qb.Select("categories").
 		Where(qb.InLit("id", strings.Join(cats, ","))).
 		Query(s)
+
+	log.Println(qb.Select("categories").
+		Where(qb.InLit("id", strings.Join(cats, ","))).ToCql())
 
 	var categories []models.Category
 	var categoryIds []ksuid.UUID

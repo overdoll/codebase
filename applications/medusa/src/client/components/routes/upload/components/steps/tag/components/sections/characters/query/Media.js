@@ -35,7 +35,7 @@ export default function Media({ args, onSelect }: Props): Node {
   // add a new media with a custom tag telling us it's custom
   const onAddNewMedia = () => {
     const name: string = args.variables.data.search;
-    onSelect({ id: name, title: name, thumbnail: null, custom: true });
+    onSelect({ id: name, title: name, thumbnail: null, request: true });
   };
 
   return (

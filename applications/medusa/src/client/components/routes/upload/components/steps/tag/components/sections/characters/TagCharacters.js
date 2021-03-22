@@ -23,7 +23,7 @@ export default function TagCharacters({ state, dispatch }: Props): Node {
 
   // OnSelect will remove or add the character based on if it's in the object already or not
   const onSelect = character => {
-    if (character.custom) {
+    if (character.request) {
       addNewCharacter(character);
     } else {
       dispatch({

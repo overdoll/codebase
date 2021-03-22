@@ -46,7 +46,7 @@ export default function Characters({ args, onSelect, selected }: Props): Node {
       name: name,
       thumbnail: null,
       media: null,
-      custom: true,
+      request: true,
     });
   };
 
