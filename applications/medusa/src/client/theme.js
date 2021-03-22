@@ -6,13 +6,13 @@ const theme = {
   fontSizes: [
     '0.875rem', // 14
     '1rem', // 16
-    '1.1666666666666667rem', // 14
-    '1.3333333333333333rem', // 16
-    '1.5rem', // 18
-    '1.6666666666666667rem', // 20
-    '2rem', // 24
-    '2.5rem', // 30
-    '3rem', // 36
+    '1.1666666666666667rem', // 18.667
+    '1.3333333333333333rem', // 21.333
+    '1.5rem', // 24
+    '1.6666666666666667rem', // 26.667
+    '2rem', // 32
+    '2.5rem', // 40
+    '3rem', // 48
   ],
   colors: {
     text: '#ffffff',
@@ -182,7 +182,7 @@ const theme = {
     },
     tertiary: {
       regular: {
-        color: 'neutral.1000',
+        color: 'neutral.100',
         bg: 'transparent',
         borderColor: 'transparent',
       },
@@ -202,8 +202,8 @@ const theme = {
       fontSize: 2,
       pl: 5,
       pr: 5,
-      pt: 2,
-      pb: 2,
+      pt: 3,
+      pb: 3,
     },
     medium: {
       borderRadius: 10,

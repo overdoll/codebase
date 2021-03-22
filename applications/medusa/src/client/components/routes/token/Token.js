@@ -7,11 +7,9 @@ import { graphql, usePreloadedQuery } from 'react-relay/hooks';
 import Register from '../../register/Register';
 import { Frame } from '@//:modules/content';
 import { Heading, Text } from '@//:modules/typography';
-import Icon from '@//:modules/content/icon/Icon';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from '@//:modules/routing';
 import type { TokenQuery } from '@//:artifacts/TokenQuery.graphql';
-import { SignShapes } from '@streamlinehq/streamline-regular/lib/maps-navigation';
 
 type Props = {
   prepared: {

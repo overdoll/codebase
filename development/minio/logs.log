@@ -22,3 +22,9 @@ Binary: Built with gc go1.16 for linux/amd64
 Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
 I0315 18:54:06.004743 1254778 tenant-delete.go:68] delete tenant command started
 W0315 18:54:06.020591 1254778 tenant-delete.go:71] tenants.minio.min.io "minio" not found
+Log file created at: 2021/03/20 14:35:18
+Running on machine: DESKTOP-EG046FC
+Binary: Built with gc go1.16 for linux/amd64
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0320 14:35:18.720572    7244 tenant-delete.go:68] delete tenant command started
+W0320 14:35:18.723535    7244 tenant-delete.go:71] tenants.minio.min.io "minio-tenant-1" not found

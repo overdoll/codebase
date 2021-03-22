@@ -3,7 +3,7 @@
  */
 import { graphql, useFragment, useMutation } from 'react-relay/hooks';
 import type { Node } from 'react';
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import Register from '../../register/Register';
 import { useTranslation } from 'react-i18next';
 import { Button, Form, Input, useForm } from '@//:modules/form';
@@ -15,6 +15,7 @@ import { EMAIL } from '@//:modules/regex';
 import Icon from '@//:modules/content/icon/Icon';
 import { SignShapes } from '@streamlinehq/streamline-regular/lib/maps-navigation';
 import type { JoinFragment$key } from '@//:artifacts/JoinFragment.graphql';
+import { useLocation } from '@//:modules/routing';
 
 type JoinValues = {
   email: string,
@@ -50,6 +51,23 @@ export default function Join(): Node {
   const instance = useForm<JoinValues>();
 
   const notify = useNotify();
+
+  const location = useLocation();
+
+  useEffect(() => {
+    // TODO install UseQueryParams and change
+    const search = new URLSearchParams(location.search);
+
+    if (search.has('notify')) {
+      switch (search.get('notify')) {
+        case 'invalid_token':
+          notify.error(t('authenticate.error.token'));
+          break;
+        default:
+          break;
+      }
+    }
+  }, [location.search]);
 
   // Receiving a subscription response
   const [authInfo, setAuthInfo] = useState({ authListener: null });
@@ -148,7 +166,9 @@ export default function Join(): Node {
         />
         <Button
           loading={isInFlight}
-          sx={{ width: 'fill', variant: 'buttons.primary', mt: 2 }}
+          size={'large'}
+          type={'buttons.primary.regular'}
+          sx={{ width: 'fill', mt: 2 }}
         >
           {t('authenticate.form.continue')}
         </Button>

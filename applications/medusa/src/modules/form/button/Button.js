@@ -3,15 +3,16 @@
  */
 import type { Node } from 'react';
 import { Button as ThemeUIButton } from 'theme-ui';
-import { Icon } from '@//:modules/content';
 import { useSpring, animated } from 'react-spring';
-import { Synchronize } from '@streamlinehq/streamline-regular/lib/interface-essential';
 import { Config } from '@//:modules/animations';
+import { Loading } from '@//:modules/assets';
 
 type Props = {
   loading?: boolean,
   children?: Node,
   sx?: any,
+  size?: any,
+  type?: any,
   disabled?: boolean,
 };
 
@@ -20,12 +21,10 @@ export default function Button({
   loading,
   children,
   disabled,
+  size,
+  type,
   ...rest
 }: Props): Node {
-  const loadingIcon = (
-    <Icon icon={Synchronize.SynchronizeArrow1} stroke="inherit" />
-  );
-
   const AnimatedThemeUIButton = animated(ThemeUIButton);
 
   const fullDisable = disabled || loading;
@@ -46,10 +45,12 @@ export default function Button({
       }
       onTouchEnd={() => setBubble({ bubble: 1 })}
       style={{ transform: bubble.to(v => `scale(${v})`) }}
+      variant={[size]}
       sx={{
         borderStyle: 'solid',
         fontWeight: 'bold',
         fontFamily: 'heading',
+        variant: type,
         outline: 'none',
         '&:hover': {
           cursor: 'pointer',
@@ -61,7 +62,13 @@ export default function Button({
       }}
     >
       <span sx={{ display: 'flex' }}>
-        <span sx={{ margin: 'auto' }}>{loading ? loadingIcon : children}</span>
+        <span sx={{ margin: 'auto' }}>
+          {loading ? (
+            <Loading color={'buttons.primary.regular.color'} />
+          ) : (
+            children
+          )}
+        </span>
       </span>
     </AnimatedThemeUIButton>
   );

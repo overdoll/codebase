@@ -18,7 +18,7 @@ export default function Empty(): Node {
       <Icon
         icon={SignShapes.SignBadgeCircle}
         strokeWidth={2.5}
-        stroke={'primary.500'}
+        stroke="neutral.100"
         size={80}
         sx={{
           display: 'block',
@@ -30,27 +30,14 @@ export default function Empty(): Node {
       <Heading sx={{ textAlign: 'center', fontSize: 3 }}>
         {t('empty.header')}
       </Heading>
-      <div sx={{ mt: 6, width: '100%', textAlign: 'center' }}>
+      <div sx={{ mt: 6, width: 'fill', textAlign: 'center' }}>
         <Button
           onClick={() => {
             history.back();
           }}
-          variant={['large']}
-          sx={{
-            variant: 'buttons.primary.regular',
-          }}
-        >
-          {t('empty.leave')}
-        </Button>
-        <span sx={{ ml: 3, mr: 3 }}></span>
-        <Button
-          onClick={() => {
-            history.back();
-          }}
-          variant={['large']}
-          sx={{
-            variant: 'buttons.secondary.regular',
-          }}
+          size="large"
+          type="buttons.primary.alternate"
+          sx={{ width: 'fill' }}
         >
           {t('empty.home')}
         </Button>

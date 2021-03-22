@@ -86,6 +86,8 @@ export default function Lobby(props: Props): Node {
   };
 
   // Create and set timer for specified timeOut length
+  // TODO make it a separate reusable function
+  // TODO localstorage variable to make sure it cant be pressed on refresh againsdasdsdf
   const timeOut = timeOutLength => {
     setButtonDisabled(true);
     setTimer(timeOutLength / 1000);
@@ -148,10 +150,10 @@ export default function Lobby(props: Props): Node {
         />
       </div>
       <Button
-        variant={['huge']}
+        size={'large'}
+        type={'buttons.tertiary.regular'}
         sx={{
           mt: 6,
-          variant: 'buttons.tertiary.regular',
           width: 'fill',
         }}
         loading={isSendingEmail}

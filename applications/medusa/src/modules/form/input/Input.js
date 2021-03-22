@@ -29,6 +29,9 @@ export default function Input({
   const hasError = errors[name] !== null && errors[name] !== undefined;
   const success = formState.isDirty && !hasError && formState.isSubmitted;
 
+  // Trigger useSpring if there is an error change
+  // useEffect(() => {}, [hasError]);
+
   return (
     <div>
       <div
