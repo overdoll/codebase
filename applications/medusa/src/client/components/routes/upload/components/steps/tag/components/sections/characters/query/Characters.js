@@ -2,12 +2,10 @@
  * @flow
  */
 import type { Node } from 'react';
-import { useState } from 'react';
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks';
 import type { CharactersQuery } from '@//:artifacts/CharactersQuery.graphql';
 import type { VariablesOf } from 'relay-runtime';
 import Element from '../../../element/Element';
-import SearchMedia from './media/SearchMedia';
 
 type Props = {
   args: {

@@ -5,7 +5,7 @@ import type { Node } from 'react';
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks';
 import type { MediaQuery } from '@//:artifacts/MediaQuery.graphql';
 import type { VariablesOf } from 'relay-runtime';
-import Element from '../../../../../element/Element';
+import Element from '../../../element/Element';
 
 type Props = {
   args: {

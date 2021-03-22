@@ -6,8 +6,11 @@ import { useState } from 'react';
 import Characters from './query/Characters';
 import type { Dispatch, State } from '@//:types/upload';
 import { EVENTS } from '../../../../../../constants/constants';
-import SearchMedia from './query/media/SearchMedia';
-import Section from '../Section';
+import Section from '../../section/Section';
+import { createPortal } from 'react-dom';
+import Search from '../../search/Search';
+import RootElement from '@//:modules/utilities/RootElement';
+import Media from './query/Media';
 
 type Props = {
   dispatch: Dispatch,
@@ -49,13 +52,16 @@ export default function TagCharacters({ state, dispatch }: Props): Node {
     addNewCharacter(null);
   };
 
+  // if we are selecting a new character, open a modal for selecting a new media with this
   if (newCharacter !== null) {
-    return (
-      <SearchMedia
-        onSelect={onAddNewMedia}
-        activeCharacter={newCharacter}
+    return createPortal(
+      <Search
+        header={<div>selected character: {newCharacter.name}</div>}
         onClose={onCancelNewCharacter}
-      />
+      >
+        {args => <Media selected={[]} onSelect={onAddNewMedia} args={args} />}
+      </Search>,
+      RootElement,
     );
   }
 

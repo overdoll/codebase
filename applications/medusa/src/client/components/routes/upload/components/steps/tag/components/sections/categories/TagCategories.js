@@ -5,7 +5,7 @@ import type { Node } from 'react';
 import Categories from './query/Categories';
 import type { Dispatch, State } from '@//:types/upload';
 import { EVENTS } from '../../../../../../constants/constants';
-import Section from '../Section';
+import Section from '../../section/Section';
 
 type Props = {
   dispatch: Dispatch,

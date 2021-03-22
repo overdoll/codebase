@@ -2,15 +2,19 @@
  * @flow
  */
 import type { Node } from 'react';
-import { useCallback, useState } from 'react';
+import { Suspense, useCallback, useState } from 'react';
 import { useTransition } from '@//:modules/experimental';
+import ErrorBoundary from '@//:modules/utilities/ErrorBoundary';
+import ErrorFallback from '../error/ErrorFallback';
+import LoadingSearch from '../loading/LoadingSearch';
 
 type Props = {
   children: any,
   onClose?: any,
+  header?: Node,
 };
 
-export default function Search({ children, onClose }: Props): Node {
+export default function Search({ children, onClose, header }: Props): Node {
   const [searchInput, setSearch] = useState('');
   const [startTransition, isPending] = useTransition({ timeoutMs: 10 * 1000 });
 
@@ -53,6 +57,18 @@ export default function Search({ children, onClose }: Props): Node {
   return (
     <>
       {isPending ? 'loading indicator' : ''}
+      <>
+        {header}
+        <ErrorBoundary
+          fallback={({ error, reset }) => (
+            <ErrorFallback error={error} reset={reset} refetch={refetch} />
+          )}
+        >
+          <Suspense fallback={<LoadingSearch />}>
+            {children(queryArgs)}
+          </Suspense>
+        </ErrorBoundary>
+      </>
       {children({ args: queryArgs, refetch: refetch })}
       <input value={searchInput} onChange={onChange} />
       <button onClick={onClose}>close</button>
