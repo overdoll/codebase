@@ -24,7 +24,7 @@ export default function TagArtists({ state, dispatch }: Props): Node {
       search={(args, onClose) => (
         <Artists
           args={args}
-          selected={Object.keys(state.artist)}
+          selected={state.artist}
           onSelect={artist => onSelect(artist, onClose)}
         />
       )}

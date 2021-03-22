@@ -34,7 +34,6 @@ async function fetchRelay(params, variables, _cacheConfig) {
       'CSRF-Token': csrfToken,
     },
     data: {
-      query: 'empty',
       operationName: params.name,
       extensions: {
         apq: {

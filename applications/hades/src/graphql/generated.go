@@ -572,13 +572,13 @@ directive @role(roles: [String!]!) on FIELD_DEFINITION
 }
 `, BuiltIn: false},
 	{Name: "schemas/posts/types.graphql", Input: `input PostInput {
-  content: [String!]! @validation(rules: ["required"])
+  content: [String!]!
   categories: [String!]!
   characters: [String!]!
   mediaRequests: [String!]
   characterRequests: [CharacterRequest!]
   artistId: String
-  artistUsername: String! @validation(rules: ["required"])
+  artistUsername: String!
 }
 
 input CharacterRequest {
@@ -3582,29 +3582,9 @@ func (ec *executionContext) unmarshalInputPostInput(ctx context.Context, obj int
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("content"))
-			directive0 := func(ctx context.Context) (interface{}, error) { return ec.unmarshalNString2ᚕstringᚄ(ctx, v) }
-			directive1 := func(ctx context.Context) (interface{}, error) {
-				rules, err := ec.unmarshalNString2ᚕstringᚄ(ctx, []interface{}{"required"})
-				if err != nil {
-					return nil, err
-				}
-				if ec.directives.Validation == nil {
-					return nil, errors.New("directive validation is not implemented")
-				}
-				return ec.directives.Validation(ctx, obj, directive0, rules)
-			}
-
-			tmp, err := directive1(ctx)
+			it.Content, err = ec.unmarshalNString2ᚕstringᚄ(ctx, v)
 			if err != nil {
-				return it, graphql.ErrorOnPath(ctx, err)
-			}
-			if data, ok := tmp.([]string); ok {
-				it.Content = data
-			} else if tmp == nil {
-				it.Content = nil
-			} else {
-				err := fmt.Errorf(`unexpected type %T from directive, should be []string`, tmp)
-				return it, graphql.ErrorOnPath(ctx, err)
+				return it, err
 			}
 		case "categories":
 			var err error
@@ -3650,27 +3630,9 @@ func (ec *executionContext) unmarshalInputPostInput(ctx context.Context, obj int
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("artistUsername"))
-			directive0 := func(ctx context.Context) (interface{}, error) { return ec.unmarshalNString2string(ctx, v) }
-			directive1 := func(ctx context.Context) (interface{}, error) {
-				rules, err := ec.unmarshalNString2ᚕstringᚄ(ctx, []interface{}{"required"})
-				if err != nil {
-					return nil, err
-				}
-				if ec.directives.Validation == nil {
-					return nil, errors.New("directive validation is not implemented")
-				}
-				return ec.directives.Validation(ctx, obj, directive0, rules)
-			}
-
-			tmp, err := directive1(ctx)
+			it.ArtistUsername, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
-				return it, graphql.ErrorOnPath(ctx, err)
-			}
-			if data, ok := tmp.(string); ok {
-				it.ArtistUsername = data
-			} else {
-				err := fmt.Errorf(`unexpected type %T from directive, should be string`, tmp)
-				return it, graphql.ErrorOnPath(ctx, err)
+				return it, err
 			}
 		}
 	}

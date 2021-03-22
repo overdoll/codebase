@@ -41,7 +41,13 @@ export default function Characters({ args, onSelect, selected }: Props): Node {
   // When we add a "new" character, we will open a modal so that the user can select the media
   const onAddNewCharacter = () => {
     const name: string = args.variables.data.search;
-    onSelect({ id: name, name: name, thumbnail: null, media: null });
+    onSelect({
+      id: name,
+      name: name,
+      thumbnail: null,
+      media: null,
+      custom: true,
+    });
   };
 
   if (data.characters.length === 0) {

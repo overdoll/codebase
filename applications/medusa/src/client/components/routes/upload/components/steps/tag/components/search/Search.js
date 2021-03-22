@@ -69,7 +69,6 @@ export default function Search({ children, onClose, header }: Props): Node {
           </Suspense>
         </ErrorBoundary>
       </>
-      {children({ args: queryArgs, refetch: refetch })}
       <input value={searchInput} onChange={onChange} />
       <button onClick={onClose}>close</button>
     </>

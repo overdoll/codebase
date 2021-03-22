@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 4007a9c7974da01641f179dd102d6927
+ * @relayHash 3d0383f9dd76ad9089c7b4ff747ceb96
  */
 
 /* eslint-disable */
@@ -26,7 +26,10 @@ export type StepsMutationVariables = {|
 |};
 export type StepsMutationResponse = {|
   +post: {|
-    +review: boolean
+    +review: boolean,
+    +validation: ?{|
+      +code: string
+    |},
   |}
 |};
 export type StepsMutation = {|
@@ -41,6 +44,9 @@ mutation StepsMutation(
 ) {
   post(data: $data) {
     review
+    validation {
+      code
+    }
   }
 }
 */
@@ -74,6 +80,24 @@ v1 = [
         "kind": "ScalarField",
         "name": "review",
         "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Validation",
+        "kind": "LinkedField",
+        "name": "validation",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "code",
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
       }
     ],
     "storageKey": null
@@ -97,7 +121,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "4007a9c7974da01641f179dd102d6927",
+    "id": "3d0383f9dd76ad9089c7b4ff747ceb96",
     "metadata": {},
     "name": "StepsMutation",
     "operationKind": "mutation",
@@ -106,5 +130,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '465df96394a2d287dcce9d1421d006a4';
+(node: any).hash = '90f0123660986a0b7f572986f769e9c5';
 module.exports = node;

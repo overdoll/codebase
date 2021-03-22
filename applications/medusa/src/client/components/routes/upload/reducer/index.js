@@ -2,7 +2,7 @@
  * @flow
  */
 import type { Action, State } from '@//:types/upload';
-import { EVENTS, INITIAL_STATE } from '../constants/constants';
+import { EVENTS, INITIAL_STATE, STEPS } from '../constants/constants';
 import db from '../storage';
 
 // reducer maintains the whole state of the upload form so that we can
@@ -148,7 +148,7 @@ const reducer: any = (state: State, action: Action): State => {
         db.tables.forEach(table => table.clear());
       });
 
-      return { ...state, submit: action.value };
+      return { ...state, submit: action.value, step: STEPS.FINISH };
     default:
       return state;
   }

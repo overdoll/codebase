@@ -52,7 +52,6 @@ const entry = async (req, res, next) => {
           cookie: fetchCookies !== null ? fetchCookies : req.headers.cookie,
         },
         data: {
-          query: 'empty',
           operationName: params.name,
           extensions: {
             apq: {
