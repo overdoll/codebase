@@ -2,7 +2,6 @@ package helpers
 
 import (
 	"fmt"
-	"log"
 	"strings"
 
 	"github.com/scylladb/gocqlx/v2"
@@ -45,9 +44,6 @@ func CheckIfCategoriesAreValid(s gocqlx.Session, cats []string) ([]ksuid.UUID, e
 	queryCategories := qb.Select("categories").
 		Where(qb.InLit("id", strings.Join(cats, ","))).
 		Query(s)
-
-	log.Println(qb.Select("categories").
-		Where(qb.InLit("id", strings.Join(cats, ","))).ToCql())
 
 	var categories []models.Category
 	var categoryIds []ksuid.UUID
