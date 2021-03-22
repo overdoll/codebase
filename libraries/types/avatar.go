@@ -6,8 +6,6 @@ import (
 	"github.com/gocql/gocql"
 )
 
-var staticURL = os.Getenv("STATIC_URL")
-
 type Avatar struct {
 	URL string
 }
@@ -17,6 +15,8 @@ func (n Avatar) MarshalCQL(info gocql.TypeInfo) ([]byte, error) {
 }
 
 func (n *Avatar) UnmarshalCQL(info gocql.TypeInfo, data []byte) error {
+
+	var staticURL = os.Getenv("STATIC_URL")
 
 	var s string
 
