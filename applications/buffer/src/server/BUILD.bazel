@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["uploads.go"],
-    importpath = "overdoll/applications/buffer/src/uploads",
+    importpath = "overdoll/applications/buffer/src/server",
     visibility = ["//visibility:public"],
     deps = [
         "@com_github_aws_aws_sdk_go//aws:go_default_library",
