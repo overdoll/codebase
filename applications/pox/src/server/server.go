@@ -90,12 +90,12 @@ func (s *Server) ProcessPost(ctx context.Context, msg *pox.PostProcessContentEve
 			continue
 		}
 
-		fileName := ksuid.New().String() + kind.Extension
+		fileName := ksuid.New().String() + "." + kind.Extension
 		fileKey := msg.Prefix + "/" + fileName
 
 		// move file to private bucket
 		_, err = s3Client.CopyObject(&s3.CopyObjectInput{Bucket: aws.String(ImageProcessingBucket),
-			CopySource: aws.String(url.PathEscape(ImageUploadsBucket + "/" + image)), Key: aws.String(fileKey)})
+			CopySource: aws.String(url.PathEscape(ImageUploadsBucket + "/" + fileId)), Key: aws.String(fileKey)})
 
 		if err != nil {
 			fmt.Printf("unable to copy file %s", err)
@@ -115,14 +115,14 @@ func (s *Server) ProcessPost(ctx context.Context, msg *pox.PostProcessContentEve
 		_ = os.Remove(fileId)
 		// we dont have to worry about deleting the file from s3 since it will be deleted eventually (expiration)
 	}
-
-	_, err := s.services.Sting().ProcessPost(ctx, &sting.ProcessPostRequest{
+	
+	_, err := s.services.Sting().ProcessPost(context.Background(), &sting.ProcessPostRequest{
 		Id:      msg.PostId,
 		Content: content,
 	})
 
 	if err != nil {
-		// TODO: handle error
+		fmt.Printf("error processing post: %s", err)
 	}
 }
 
