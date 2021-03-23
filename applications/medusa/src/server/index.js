@@ -6,8 +6,12 @@ import cookieParser from 'cookie-parser';
 import csrf from 'csurf';
 import i18nextMiddleware from 'i18next-http-middleware';
 import i18next from './utilities/i18next';
+import ejs from 'ejs';
 
 const index = express();
+
+// add EJS as the engine
+index.engine('ejs', ejs.renderFile);
 
 // Set EJS templating
 index
@@ -15,7 +19,10 @@ index
   .set('view engine', 'ejs');
 
 // Add public routes
-index.use(express.static(path.resolve(__dirname, '../public')));
+// when in production, use the build directory's "public" folder since it has everything already in our "public" folder
+process.env.NODE_ENV === 'production'
+  ? index.use(express.static(path.resolve(__dirname, '../build/public')))
+  : index.use(express.static(path.resolve(__dirname, '../public')));
 
 // Add i18next middleware
 index.use(i18nextMiddleware.handle(i18next));

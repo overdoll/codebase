@@ -177,6 +177,8 @@ const entry = async (req, res, next) => {
 
     res.render('default', {
       title: 'Title',
+      manifest: process.env.PUBLIC_PATH + 'manifest.json',
+      favicon: process.env.PUBLIC_PATH + 'favicon.ico',
       scripts: extractor.getScriptTags(),
       preload: extractor.getLinkTags(),
       styles: extractor.getStyleTags(),

@@ -171,8 +171,11 @@ nodejs_binary(
     data = [
         "chdir.js",
         ":bundle",
-        "@npm//ejs",
-    ],
+    ] + glob([
+        "src/server/templates/**",
+        "src/server/locales/**/*",
+        "public/**",
+    ]),
     entry_point = "build/server.js",
     templated_args = [
         "--node_options=--require=./$(rootpath chdir.js)",
