@@ -18,6 +18,13 @@ spec:
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
+  name: compression
+spec:
+  compress: { }
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
   name: postsprefix
 spec:
   addPrefix:
@@ -67,6 +74,8 @@ spec:
       services:
         - name: medusa
           port: 8000
+      middlewares:
+        - name: compression
     - match: Host(`static.dollycdn.test`) && PathPrefix(`/`)
       kind: Rule
       services:
@@ -75,6 +84,7 @@ spec:
           port: 80
       middlewares:
         - name: assetsprefix
+        - name: compression
     - match: Host(`posts.dollycdn.test`) && PathPrefix(`/`)
       kind: Rule
       services:
