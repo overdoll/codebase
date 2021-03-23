@@ -12,6 +12,8 @@ go_library(
     importpath = "overdoll/applications/buffer",
     visibility = ["//visibility:private"],
     deps = [
+        "//applications/buffer/src/middleware:go_default_library",
+        "//applications/buffer/src/uploads:go_default_library",
         "//libraries/aws:go_default_library",
         "//libraries/bootstrap:go_default_library",
         "@com_github_aws_aws_sdk_go//service/s3:go_default_library",

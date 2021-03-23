@@ -13,7 +13,7 @@ import (
 	tusd "github.com/tus/tusd/pkg/handler"
 	"github.com/tus/tusd/pkg/s3store"
 	"overdoll/applications/buffer/src/middleware"
-	"overdoll/applications/buffer/src/uploads"
+	"overdoll/applications/buffer/src/server"
 	storage "overdoll/libraries/aws"
 	"overdoll/libraries/bootstrap"
 )
