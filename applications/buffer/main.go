@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -49,11 +50,20 @@ func main() {
 	handler, err := tusd.NewHandler(tusd.Config{
 		BasePath:      "/api/upload/",
 		StoreComposer: composer,
+		NotifyCompleteUploads: true,
 	})
 
 	if err != nil {
 		log.Fatalf("unable to create handler: %s", err)
 	}
+
+	go func() {
+		for {
+			event := <-handler.CompleteUploads
+			// filetype validation
+			fmt.Printf("Upload %s finished\n", event.Upload.ID)
+		}
+	}()
 
 	mux := http.NewServeMux()
 

@@ -99,8 +99,9 @@ func (s *Server) SchedulePost(ctx context.Context, post *sting.SchedulePostReque
 	}
 
 	// Send a message to pox to process the images on this specific post
-	err = s.events.Publish("pox.topic.posts_content_processing", &pox.PostProcessContentEvent{
+	err = s.events.Publish(ctx, "pox.topic.posts_content_processing", &pox.PostProcessContentEvent{
 		PostId:  pendingPost.Id.String(),
+		Prefix:  pendingPost.ContributorId.String(),
 		Content: pendingPost.Content,
 	})
 
@@ -151,8 +152,9 @@ func (s *Server) ProcessPost(ctx context.Context, process *sting.ProcessPostRequ
 
 	// Tell pox to publish our images
 	if !postPending.ReviewRequired {
-		err := s.events.Publish("pox.topic.posts_content_publishing", &pox.PostPublishContentEvent{
+		err := s.events.Publish(ctx, "pox.topic.posts_content_publishing", &pox.PostPublishContentEvent{
 			PostId:  postPending.Id.String(),
+			Prefix:  postPending.ContributorId.String(),
 			Content: postPending.Content,
 		})
 
@@ -303,7 +305,7 @@ func (s *Server) PublishPost(ctx context.Context, publish *sting.PublishPostRequ
 
 	// Now that all of our new stuff was batch inserted, we need to tell indigo to index our new characters, categories and media
 	// we bulk publish the events
-	err = s.events.BulkPublish(publishMap)
+	err = s.events.BulkPublish(ctx, publishMap)
 
 	if err != nil {
 		return nil, err
@@ -364,7 +366,7 @@ func (s *Server) PublishPost(ctx context.Context, publish *sting.PublishPostRequ
 	}
 
 	// Tell indigo to index our post
-	err = s.events.Publish("indigo.topic.create_document", &indigo.CreateDocument{Id: post.Id.String(), Index: "posts", Body: string(marshal)})
+	err = s.events.Publish(ctx, "indigo.topic.create_document", &indigo.CreateDocument{Id: post.Id.String(), Index: "posts", Body: string(marshal)})
 
 	if err != nil {
 		return nil, err
@@ -451,7 +453,7 @@ func (s *Server) ReviewPost(ctx context.Context, review *sting.ReviewPostRequest
 	}
 
 	// Tell pox to publish the images - this will make the post public & create all the required categories once this is finished
-	err = s.events.Publish("pox.topic.posts_image_publishing", &pox.PostPublishContentEvent{
+	err = s.events.Publish(ctx, "pox.topic.posts_image_publishing", &pox.PostPublishContentEvent{
 		PostId:  postReview.Id.String(),
 		Content: postReview.Content,
 	})

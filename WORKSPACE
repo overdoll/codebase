@@ -1755,3 +1755,10 @@ go_repository(
     sum = "h1:ORx85nbTijNz8ljznvCMR1ZBIPKFn3jQrag10X2AsuM=",
     version = "v1.10.0",
 )
+
+go_repository(
+    name = "com_github_h2non_filetype",
+    importpath = "github.com/h2non/filetype",
+    sum = "h1:xvOwnXKAckvtLWsN398qS9QhlxlnVXBjXBydK2/UFB4=",
+    version = "v1.1.1",
+)

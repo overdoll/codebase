@@ -119,7 +119,10 @@ export default function Steps({ uppy, state, dispatch }: Props): Node {
 
     // make sure our urls keep their order
     state.files.forEach(file => {
-      urls.push(state.urls[file.id]);
+      // get actual upload ID
+      const url = state.urls[file.id].split('/').slice(-1)[0];
+
+      urls.push(url);
     });
 
     const characterRequests: Array<CharacterRequest> = [];

@@ -4,10 +4,12 @@ package applications.grpc.pox.v1;
 
 message PostProcessContentEvent {
   string postId = 1;
-  repeated string content = 2;
+  string prefix = 2;
+  repeated string content = 3;
 }
 
 message PostPublishContentEvent {
   string postId = 1;
-  repeated string content = 2;
+  string prefix = 2;
+  repeated string content = 3;
 }
