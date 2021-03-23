@@ -31,6 +31,7 @@ applications = {
     },
     "eva": {
         "type": "go",
+        "directory": "eva",
         "image_reference": "eva-image",
         "image_target": "//applications/eva:eva-image",
         "binary_target": "//applications/eva:eva",
@@ -48,6 +49,7 @@ applications = {
     },
     "sting": {
         "type": "go",
+        "directory": "sting",
         "image_reference": "sting-image",
         "image_target": "//applications/sting:sting-image",
         "binary_target": "//applications/sting:sting",
@@ -65,6 +67,7 @@ applications = {
     },
     "indigo": {
         "type": "go",
+        "directory": "indigo",
         "image_reference": "indigo-image",
         "image_target": "//applications/indigo:indigo-image",
         "binary_target": "//applications/indigo:indigo",
@@ -79,6 +82,7 @@ applications = {
     },
     "pox": {
         "type": "go",
+        "directory": "pox",
         "image_reference": "pox-image",
         "image_target": "//applications/pox:pox-image",
         "binary_target": "//applications/pox:pox",
@@ -93,6 +97,7 @@ applications = {
     },
     "buffer": {
         "type": "go",
+        "directory": "buffer",
         "image_reference": "buffer-image",
         "image_target": "//applications/buffer:buffer-image",
         "binary_target": "//applications/buffer:buffer",
@@ -107,11 +112,12 @@ applications = {
     },
     "medusa": {
         "type": "node",
+        "directory": "medusa",
         "image_reference": "medusa-image",
         "image_target": "//applications/medusa:medusa-image",
         "binary_target": "//applications/medusa:medusa",
         "binary_output": "applications/medusa/medusa_/medusa",
-        "container_workdir": "/app/applications/medusa/eva-image.binary.runfiles/overdoll/",
+        "container_workdir": "/app/applications/medusa/medusa-image.binary.runfiles/overdoll/",
         "container_binary": "applications/medusa/medusa-image.binary_/medusa-image.binary",
         "bazel_image": "bazel/applications/medusa:medusa-image",
         "entrypoint": "/app/applications/medusa/medusa",
@@ -125,6 +131,20 @@ applications = {
             sync("applications/medusa/.env", "/app/applications/medusa/medusa.runfiles/overdoll/applications/medusa/.env"),
             sync("applications/medusa/public", "/app/applications/medusa/medusa.runfiles/overdoll/applications/medusa/public"),
         ],
+    },
+    "medusa-production": {
+        "type": "node",
+        "directory": "medusa",
+        "image_reference": "medusa-production-image",
+        "image_target": "//applications/medusa:medusa-production-image",
+        "binary_target": "//applications/medusa:medusa-production",
+        "binary_output": "applications/medusa/medusa-production_/medusa-production",
+        "container_workdir": "/app/applications/medusa-production/medusa-production-image.binary.runfiles/overdoll/",
+        "container_binary": "applications/medusa-production/medusa-production-image.binary_/medusa-production-image.binary",
+        "bazel_image": "bazel/applications/medusa:medusa-production-image",
+        "entrypoint": "/app/applications/medusa/medusa-production",
+        "dependencies": [],
+        "live_update": [],
     },
 }
 

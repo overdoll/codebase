@@ -13,7 +13,7 @@ import Lobby from './components/Lobby';
 import { RootContext } from '../Root';
 import { EMAIL } from '@//:modules/regex';
 import Icon from '@//:modules/content/icon/Icon';
-import { SignShapes } from '@streamlinehq/streamline-regular/lib/maps-navigation';
+import SignShapes from '@streamlinehq/streamline-regular/lib/maps-navigation/SignShapes';
 import type { JoinFragment$key } from '@//:artifacts/JoinFragment.graphql';
 
 type JoinValues = {

@@ -11,7 +11,7 @@ import type { RegisterMutation } from '@//:artifacts/RegisterMutation.graphql';
 import type { Node } from 'react';
 import { useHistory } from '@//:modules/routing';
 import Icon from '@//:modules/content/icon/Icon';
-import { SignShapes } from '@streamlinehq/streamline-regular/lib/maps-navigation';
+import SignShapes from '@streamlinehq/streamline-regular/lib/maps-navigation/SignShapes';
 
 const RegisterMutationGQL = graphql`
   mutation RegisterMutation($data: RegisterInput!) {

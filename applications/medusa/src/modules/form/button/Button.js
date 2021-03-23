@@ -5,7 +5,7 @@ import type { Node } from 'react';
 import { Button as ThemeUIButton } from 'theme-ui';
 import { Icon } from '@//:modules/content';
 import { useSpring, animated } from 'react-spring';
-import { Synchronize } from '@streamlinehq/streamline-regular/lib/interface-essential';
+import Synchronize from '@streamlinehq/streamline-regular/lib/interface-essential/Synchronize';
 import { Config } from '@//:modules/animations';
 
 type Props = {

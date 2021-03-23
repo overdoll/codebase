@@ -1,0 +1,6 @@
+image:
+  repository: medusa-production-image
+
+nameOverride: "medusa-production"
+
+containerPort: 8080

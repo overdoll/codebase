@@ -11,8 +11,8 @@ import { useNotify } from '@//:modules/focus';
 import { useTranslation } from 'react-i18next';
 import type { LobbySubscriptionResponse } from '@//:artifacts/LobbySubscription.graphql';
 import Icon from '@//:modules/content/icon/Icon';
-import { SignShapes } from '@streamlinehq/streamline-regular/lib/maps-navigation';
-import { ContentCreation } from '@streamlinehq/streamline-bold/lib/content';
+import SignShapes from '@streamlinehq/streamline-regular/lib/maps-navigation/SignShapes';
+import ContentCreation from '@streamlinehq/streamline-bold/lib/content/ContentCreation';
 
 type Props = {
   onReceive: any,

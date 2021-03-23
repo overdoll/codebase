@@ -4,9 +4,8 @@
 import type { Node } from 'react';
 import { Frame } from '@//:modules/content';
 import Icon from '@//:modules/content/icon/Icon';
-import { SignShapes } from '@streamlinehq/streamline-regular/lib/maps-navigation';
+import SignShapes from '@streamlinehq/streamline-regular/lib/maps-navigation/SignShapes';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from '@//:modules/routing';
 import { Heading } from '@//:modules/typography';
 import { Button } from '@//:modules/form';
 

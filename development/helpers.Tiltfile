@@ -99,4 +99,7 @@ def build_applications(applications, dependencies):
                 live_update = application["live_update"],
             )
 
-            k8s_resource(item, resource_deps = [])
+            if "manual" in application and application["manual"]:
+                k8s_resource(item, resource_deps = [], trigger_mode = TRIGGER_MODE_MANUAL, auto_init = False)
+            else:
+                k8s_resource(item, resource_deps = [])

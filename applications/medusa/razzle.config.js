@@ -1,11 +1,17 @@
 'use strict';
 const LoadableWebpackPlugin = require('@loadable/webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+  .BundleAnalyzerPlugin;
 const path = require('path');
 
 module.exports = {
   experimental: {
     newExternals: true,
     reactRefresh: true,
+  },
+  options: {
+    cssPrefix: 'css',
+    jsPrefix: 'js',
   },
   modifyPaths({
     webpackObject, // the imported webpack node module
@@ -25,16 +31,23 @@ module.exports = {
     config.resolve.alias = {
       '@//:modules': path.resolve(__dirname, 'src/modules'),
       '@//:artifacts': path.resolve(__dirname, 'src/__generated__'),
+      '@//:types': path.resolve(__dirname, 'src/types'),
     };
+
+    if (opts.env.target === 'node') {
+      if (!opts.env.dev) {
+        config.externals = {};
+      }
+    }
 
     if (opts.env.target === 'web') {
       const filename = path.resolve(__dirname, 'build');
 
-      if (opts.env.dev) {
-        config.output.filename = opts.env.dev
-          ? 'static/js/[name].js'
-          : 'static/js/[name].[hash:8].js';
+      config.output.filename = opts.env.dev
+        ? 'js/[name].js'
+        : 'js/[name].[hash:8].js';
 
+      if (opts.env.dev) {
         config.devServer.proxy = {
           context: () => true,
           target: 'http://localhost:8080',
@@ -50,15 +63,11 @@ module.exports = {
         moduleIds: 'size',
         runtimeChunk: 'single',
         splitChunks: {
-          cacheGroups: {
-            vendor: {
-              test: /[\\/]node_modules[\\/]/,
-              name: 'vendors',
-              chunks: 'all',
-            },
-          },
+          chunks: 'all',
         },
       };
+
+      const plugin = new BundleAnalyzerPlugin();
 
       // saving stats file to build folder
       // without this, stats files will go into
@@ -68,6 +77,7 @@ module.exports = {
           outputAsset: false,
           writeToDisk: { filename },
         }),
+        // plugin,
       );
     }
 

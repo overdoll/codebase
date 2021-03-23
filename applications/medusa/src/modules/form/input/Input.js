@@ -5,10 +5,8 @@ import type { Node } from 'react';
 import { Input as ThemeUIInput, Text as ThemeUIText } from 'theme-ui';
 import { useFormContext } from 'react-hook-form';
 import Icon from '@//:modules/content/icon/Icon';
-import {
-  Alerts,
-  FormValidation,
-} from '@streamlinehq/streamline-regular/lib/interface-essential';
+import Alerts from '@streamlinehq/streamline-regular/lib/interface-essential/Alerts';
+import FormValidation from '@streamlinehq/streamline-regular/lib/interface-essential/FormValidation';
 
 type Props = {
   validation?: any,
