@@ -60,7 +60,7 @@ CREATE TABLE posts_pending
     posted_at            timestamp,
     review_required      boolean,
     published_post_id    text,
-    primary key ((id), contributor_id, state)
+    primary key ((id), contributor_id)
 ) WITH CLUSTERING ORDER BY (contributor_id ASC);
 
 CREATE INDEX posts_pending_state on posts_pending (state);

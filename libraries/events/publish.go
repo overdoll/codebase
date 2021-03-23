@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"os"
+	"time"
 
 	"github.com/golang/protobuf/proto"
 	"github.com/segmentio/kafka-go"
@@ -11,10 +12,11 @@ import (
 
 func (conn Connection) GetWriter() kafka.Writer {
 	return kafka.Writer{
-		Addr:        kafka.TCP(conn.address),
-		Logger:      log.New(os.Stdout, "event publisher: ", 0),
-		Balancer:    &kafka.Hash{},
-		Compression: kafka.Snappy,
+		Addr:         kafka.TCP(conn.address),
+		Logger:       log.New(os.Stdout, "event publisher: ", 0),
+		Balancer:     &kafka.Hash{},
+		Compression:  kafka.Snappy,
+		BatchTimeout: 10 * time.Millisecond,
 	}
 }
 
@@ -31,7 +33,7 @@ func (conn Connection) Publish(context context.Context, topic string, event prot
 
 	err = w.WriteMessages(context, kafka.Message{
 		Topic: topic,
-		Key:   []byte(conn.group),
+		Key:   nil,
 		Value: msg,
 	})
 
@@ -57,7 +59,7 @@ func (conn Connection) BulkPublish(context context.Context, topicEventsMap map[s
 			// Add to message array
 			messages = append(messages, kafka.Message{
 				Topic: topic,
-				Key:   []byte(conn.group),
+				Key:   nil,
 				Value: msg,
 			})
 		}

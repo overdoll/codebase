@@ -115,15 +115,24 @@ func (s *Server) SchedulePost(ctx context.Context, post *sting.SchedulePostReque
 // ProcessPost - Process a post - our pox service will call this once it's finished processing the images
 func (s *Server) ProcessPost(ctx context.Context, process *sting.ProcessPostRequest) (*sting.Post, error) {
 
-	// Get our post by this ID
-	postPendingQuery := qb.Select("post_pending").
-		Where(qb.EqLit("id", process.Id)).
-		Query(s.session)
+	id, err := ksuid.Parse(process.Id)
 
-	var postPending models.PostPending
-
-	if err := postPendingQuery.Get(&postPending); err != nil {
+	if err != nil {
 		return nil, err
+	}
+
+	postPending := &models.PostPending{
+		Id: id,
+	}
+
+	// Get our post by this ID
+	postPendingQuery := qb.Select("posts_pending").
+		Where(qb.Eq("id")).
+		Query(s.session).
+		BindStruct(postPending)
+
+	if err := postPendingQuery.Get(postPending); err != nil {
+		return nil, fmt.Errorf("select() failed: '%s", err)
 	}
 
 	postState := models.Review
@@ -134,15 +143,16 @@ func (s *Server) ProcessPost(ctx context.Context, process *sting.ProcessPostRequ
 	}
 
 	processedPost := &models.PostPending{
-		Id:      postPending.Id,
-		Content: process.Content,
-		State:   postState,
+		Id:            postPending.Id,
+		Content:       process.Content,
+		ContributorId: postPending.ContributorId,
+		State:         postState,
 	}
 
 	// Update our post to reflect the new state
-	updatePost := qb.Update("post_pending").
-		Set("content", "state").
-		Where(qb.Eq("id")).
+	updatePost := qb.Update("posts_pending").
+		Set("state", "content").
+		Where(qb.Eq("id"), qb.Eq("contributor_id")).
 		Query(s.session).
 		BindStruct(processedPost)
 
@@ -163,7 +173,7 @@ func (s *Server) ProcessPost(ctx context.Context, process *sting.ProcessPostRequ
 		}
 	}
 
-	return nil, nil
+	return &sting.Post{}, nil
 }
 
 // PublishPost - Publish the post - create a new entry in Post table, and delete the pending post
@@ -389,7 +399,7 @@ func (s *Server) PublishPost(ctx context.Context, publish *sting.PublishPostRequ
 		return nil, fmt.Errorf("update() failed: '%s", err)
 	}
 
-	return nil, nil
+	return &sting.Post{}, nil
 }
 
 // ReviewPost - Successfully review the post

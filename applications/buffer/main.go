@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -13,6 +12,8 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	tusd "github.com/tus/tusd/pkg/handler"
 	"github.com/tus/tusd/pkg/s3store"
+	"overdoll/applications/buffer/src/middleware"
+	"overdoll/applications/buffer/src/uploads"
 	storage "overdoll/libraries/aws"
 	"overdoll/libraries/bootstrap"
 )
@@ -50,24 +51,18 @@ func main() {
 	handler, err := tusd.NewHandler(tusd.Config{
 		BasePath:      "/api/upload/",
 		StoreComposer: composer,
-		NotifyCompleteUploads: true,
 	})
 
 	if err != nil {
 		log.Fatalf("unable to create handler: %s", err)
 	}
 
-	go func() {
-		for {
-			event := <-handler.CompleteUploads
-			// filetype validation
-			fmt.Printf("Upload %s finished\n", event.Upload.ID)
-		}
-	}()
+	upload := uploads.Handler(s3Client)
 
 	mux := http.NewServeMux()
 
-	mux.Handle("/api/upload/", http.StripPrefix("/api/upload/", handler))
+	mux.Handle("/api/uploads/", http.StripPrefix("/api/uploads/", middleware.Authenticate(upload)))
+	mux.Handle("/api/upload/", http.StripPrefix("/api/upload/", middleware.Authenticate(handler)))
 
 	srv := &http.Server{
 		Addr:    ":8080",

@@ -115,7 +115,7 @@ func (s *Server) ProcessPost(ctx context.Context, msg *pox.PostProcessContentEve
 		_ = os.Remove(fileId)
 		// we dont have to worry about deleting the file from s3 since it will be deleted eventually (expiration)
 	}
-	
+
 	_, err := s.services.Sting().ProcessPost(context.Background(), &sting.ProcessPostRequest{
 		Id:      msg.PostId,
 		Content: content,

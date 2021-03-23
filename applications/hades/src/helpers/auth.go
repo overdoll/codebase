@@ -7,8 +7,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gomodule/redigo/redis"
-	"overdoll/applications/hades/src/authentication"
 	"overdoll/applications/hades/src/models"
+	"overdoll/libraries/jwt"
 )
 
 func UserFromContext(ctx context.Context) *models.AuthenticatedUser {
@@ -17,7 +17,7 @@ func UserFromContext(ctx context.Context) *models.AuthenticatedUser {
 }
 
 func CreateUserSession(gc *gin.Context, redis redis.Conn, id string) (*string, error) {
-	jwtService := authentication.JWTAuthService()
+	jwtService := jwt.JWTAuthService()
 
 	expiration := time.Now().Add(time.Hour * 120)
 
