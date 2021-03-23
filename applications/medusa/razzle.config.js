@@ -67,8 +67,6 @@ module.exports = {
         },
       };
 
-      const plugin = new BundleAnalyzerPlugin();
-
       // saving stats file to build folder
       // without this, stats files will go into
       // build/public folder
@@ -77,8 +75,11 @@ module.exports = {
           outputAsset: false,
           writeToDisk: { filename },
         }),
-        // plugin,
       );
+
+      if (process.env.ANALYZE_BUNDLE === 'true') {
+        config.plugins.push(new BundleAnalyzerPlugin());
+      }
     }
 
     return config;

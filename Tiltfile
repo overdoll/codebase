@@ -135,6 +135,7 @@ applications = {
     "medusa-production": {
         "type": "node",
         "directory": "medusa",
+        "manual": True,
         "image_reference": "medusa-production-image",
         "image_target": "//applications/medusa:medusa-production-image",
         "binary_target": "//applications/medusa:medusa-production",

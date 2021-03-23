@@ -6,10 +6,8 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import { NotificationContext } from '../provider/NotificationProvider';
 import Icon from '@//:modules/content/icon/Icon';
 import FormValidation from '@streamlinehq/streamline-regular/lib/interface-essential/FormValidation';
-import {
-  Alerts as AlertsBold,
-  FormValidation as FormValidationBold,
-} from '@streamlinehq/streamline-bold/lib/interface-essential';
+import AlertsBold from '@streamlinehq/streamline-bold/lib/interface-essential/Alerts';
+import FormValidationBold from '@streamlinehq/streamline-bold/lib/interface-essential/FormValidation';
 import Signs from '@streamlinehq/streamline-bold/lib/transportation/Signs';
 
 type Props = {

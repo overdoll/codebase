@@ -19,6 +19,7 @@ tilt_modules
 .helm
 bazel-*
 .env
+build
 
 # IDEA
 .ijwb

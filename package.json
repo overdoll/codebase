@@ -54,7 +54,8 @@
   },
   "scripts": {
     "relay": "yarn run relay-compiler",
-    "graphql": "yarn graphql-codegen"
+    "graphql": "yarn graphql-codegen",
+    "analyze": "cd ./applications/medusa && ANALYZE_BUNDLE=true razzle start --node_options=--require=./chdir.js"
   },
   "eslintConfig": {
     "extends": "react-app"
