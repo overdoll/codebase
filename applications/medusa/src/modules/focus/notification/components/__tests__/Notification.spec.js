@@ -23,7 +23,7 @@ it('notification displays success and dismisses', async () => {
   fireEvent.click(button);
 
   // expect the provider's onExpire method to be called
-  expect(onExpire).toHaveBeenLastCalledWith(1);
+  await waitFor(() => expect(onExpire).toHaveBeenLastCalledWith(1));
 });
 
 it('notification dismisses after a certain amount of time', async () => {
@@ -39,7 +39,7 @@ it('notification dismisses after a certain amount of time', async () => {
     </NotificationContext.Provider>,
   );
 
-  jest.runOnlyPendingTimers();
+  await waitFor(() => jest.runOnlyPendingTimers());
 
   // expect the provider's onExpire method to be called
   await waitFor(() => expect(onExpire).toHaveBeenLastCalledWith(1));

@@ -36,7 +36,7 @@ it('should render the root component children', async () => {
     return <Root prepared={{ stateQuery: preparedQuery }}>children</Root>;
   };
 
-  const RootDefault = withProviders({
+  const [RootDefault] = withProviders({
     Component: RootComponent,
     routes: [],
     environment: Environment,

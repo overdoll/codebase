@@ -14,7 +14,7 @@ it('should run the parent function when subscription completes with desired resu
     <Lobby email={email} onReceive={onReceiveMock} />
   );
 
-  const Root = withProviders({
+  const [Root] = withProviders({
     Component: LobbyComponent,
     routes: [],
     environment: Environment,

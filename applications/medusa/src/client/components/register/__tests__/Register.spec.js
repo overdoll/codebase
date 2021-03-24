@@ -3,10 +3,10 @@ import Register from '../Register';
 import withProviders from '@//:modules/testing/withProviders';
 import { createMockEnvironment, MockPayloadGenerator } from 'relay-test-utils';
 
-it('Register just works', async () => {
+it('register just works', async () => {
   const Environment = createMockEnvironment();
 
-  const Root = withProviders({
+  const [Root, router] = withProviders({
     Component: Register,
     routes: [],
     environment: Environment,
@@ -47,5 +47,6 @@ it('Register just works', async () => {
     ),
   );
 
-  // TODO: check that a route change occurred after the operation is resolved (need access to router)
+  // redirected to profile after registering
+  expect(router.context.history.location.pathname).toEqual('/profile');
 });

@@ -145,6 +145,7 @@ jest_test(
         "@npm//jest-environment-jsdom-sixteen",
         "@npm//@testing-library/jest-dom",
         "@npm//c8",
+        "@npm//axios-mock-adapter",
     ],
 )
 

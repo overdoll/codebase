@@ -53,7 +53,7 @@ it('should ask to register if not registered', async () => {
     }),
   };
 
-  const Root = queueOperation(resolver);
+  const [Root] = queueOperation(resolver);
 
   const { getByRole } = render(<Root />);
 
@@ -69,13 +69,14 @@ it('should redirect if cookie is not valid', async () => {
     }),
   };
 
-  const Root = queueOperation(resolver);
+  const [Root, router] = queueOperation(resolver);
+  render(<Root />);
 
-  const { getByText } = render(<Root />);
-
-  // redirect
-  // TODO: change this to check for a route change instead of a text change - the user would actually never see this text
-  expect(getByText('invalid')).toBeVisible();
+  // user was redirected to join page with a message
+  expect(router.context.history.location.pathname).toEqual('/join');
+  expect(router.context.history.location.search).toEqual(
+    '?notify=invalid_token',
+  );
 });
 
 it('should show session data if token was redeemed in another session', async () => {
@@ -88,7 +89,7 @@ it('should show session data if token was redeemed in another session', async ()
     }),
   };
 
-  const Root = queueOperation(resolver);
+  const [Root] = queueOperation(resolver);
 
   const { getByText } = render(<Root />);
 
@@ -106,10 +107,10 @@ it('should redirect if user is already registered', async () => {
     }),
   };
 
-  const Root = queueOperation(resolver);
+  const [Root, router] = queueOperation(resolver);
 
-  const { getByText } = render(<Root />);
+  render(<Root />);
 
-  // TODO: change this to check for a route change instead of a text change - the user would actually never see this text
-  expect(getByText('redirecting')).toBeVisible();
+  // user was redirected to '/profile'
+  expect(router.context.history.location.pathname).toEqual('/profile');
 });

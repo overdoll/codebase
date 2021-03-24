@@ -6,7 +6,7 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 it('joining redirects to lobby, receives a response and asks to register', async () => {
   const Environment = createMockEnvironment();
 
-  const Root = withProviders({
+  const [Root] = withProviders({
     Component: Join,
     routes: [],
     environment: Environment,
