@@ -1,18 +1,17 @@
 /**
  * @flow
  */
+import type { Node } from 'react';
 import {
+  Suspense,
+  unstable_useTransition as useTransition,
   useContext,
   useEffect,
-  // $FlowIgnore
-  unstable_useTransition as useTransition,
-  Suspense,
   useState,
 } from 'react';
 import RoutingContext from '@//:modules/routing/RoutingContext';
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary';
 import { keyframes } from '@emotion/react';
-import type { Node } from 'react';
 import type { Route } from '../../client/routes';
 import { Resource } from '@//:modules/utilities/JSResource';
 

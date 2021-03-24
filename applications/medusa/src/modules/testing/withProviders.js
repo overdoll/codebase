@@ -22,7 +22,7 @@ type WithProviders = {
 
 export default function withProviders({
   environment,
-  Component,
+  Component = () => null,
   initialEntries = ['/'],
   routes = [],
 }: WithProviders): any {
@@ -42,17 +42,17 @@ export default function withProviders({
     props => {
       return (
         <Bootstrap environment={environment} i18next={i18n}>
-          <RoutingContext.Provider value={router.context}>
-            <ErrorBoundary>
-              <Suspense fallback={'fallback'}>
-                {routes.length === 0 ? (
-                  <Component {...props} />
-                ) : (
+          <ErrorBoundary>
+            <Suspense fallback={'fallback'}>
+              <RoutingContext.Provider value={router.context}>
+                {routes.length > 0 ? (
                   <RouterRenderer />
+                ) : (
+                  <Component {...props} />
                 )}
-              </Suspense>
-            </ErrorBoundary>
-          </RoutingContext.Provider>
+              </RoutingContext.Provider>
+            </Suspense>
+          </ErrorBoundary>
         </Bootstrap>
       );
     },

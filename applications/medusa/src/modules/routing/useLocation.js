@@ -1,5 +1,5 @@
-import { useRoutingContext } from './RoutingContext';
+import { useHistory } from '@//:modules/routing/useHistory';
 
 export const useLocation = () => {
-  return useRoutingContext().history.location;
+  return useHistory().location;
 };
