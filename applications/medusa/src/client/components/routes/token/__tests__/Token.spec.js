@@ -48,6 +48,7 @@ it('should ask to register if not registered', async () => {
     Cookie: () => ({
       sameSession: true,
       registered: false,
+      invalid: false,
       session: '',
     }),
   };
@@ -61,11 +62,28 @@ it('should ask to register if not registered', async () => {
   expect(getByRole('button')).toBeVisible();
 });
 
+it('should redirect if cookie is not valid', async () => {
+  const resolver = {
+    Cookie: () => ({
+      invalid: true,
+    }),
+  };
+
+  const Root = queueOperation(resolver);
+
+  const { getByText } = render(<Root />);
+
+  // redirect
+  // TODO: change this to check for a route change instead of a text change - the user would actually never see this text
+  expect(getByText('invalid')).toBeVisible();
+});
+
 it('should show session data if token was redeemed in another session', async () => {
   const resolver = {
     Cookie: () => ({
       sameSession: false,
       registered: false,
+      invalid: false,
       session: '{ "user-agent": "agent-session" }',
     }),
   };
@@ -83,6 +101,7 @@ it('should redirect if user is already registered', async () => {
     Cookie: () => ({
       sameSession: true,
       registered: true,
+      invalid: false,
       session: '{ "user-agent": "agent-session" }',
     }),
   };

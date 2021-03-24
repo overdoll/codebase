@@ -23,6 +23,7 @@ const TokenQueryGQL = graphql`
       sameSession
       registered
       session
+      invalid
     }
   }
 `;
@@ -36,15 +37,15 @@ export default function Token(props: Props): Node {
   const [t] = useTranslation('token');
   const history = useHistory();
 
-  if (data.redeemCookie === null) {
+  if (data.redeemCookie.invalid) {
     // Go back to Join page and send notification of invalid token
     history.push('/join?notify=invalid_token');
-    return 'redirecting';
+    return 'invalid';
   }
 
   // Token was not redeemed in the same session, so we tell the user to check
   // the other session
-  if (!data.redeemCookie?.sameSession) {
+  if (!data.redeemCookie.sameSession) {
     return (
       <Frame>
         <Heading sx={{ textAlign: 'center', fontSize: 2 }}>
@@ -61,7 +62,7 @@ export default function Token(props: Props): Node {
           }}
         >
           <Text sx={{ color: 'green.300' }}>
-            {JSON.parse(data.redeemCookie?.session || '')['user-agent']}
+            {JSON.parse(data.redeemCookie.session)['user-agent']}
           </Text>
         </div>
         <div
@@ -77,7 +78,7 @@ export default function Token(props: Props): Node {
     );
   }
 
-  if (!!data.redeemCookie?.registered === false) {
+  if (!!data.redeemCookie.registered === false) {
     return <Register />;
   }
 

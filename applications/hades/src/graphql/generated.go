@@ -82,6 +82,7 @@ type ComplexityRoot struct {
 
 	Cookie struct {
 		Email       func(childComplexity int) int
+		Invalid     func(childComplexity int) int
 		Redeemed    func(childComplexity int) int
 		Registered  func(childComplexity int) int
 		SameSession func(childComplexity int) int
@@ -267,6 +268,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Cookie.Email(childComplexity), true
+
+	case "Cookie.invalid":
+		if e.complexity.Cookie.Invalid == nil {
+			break
+		}
+
+		return e.complexity.Cookie.Invalid(childComplexity), true
 
 	case "Cookie.redeemed":
 		if e.complexity.Cookie.Redeemed == nil {
@@ -632,7 +640,7 @@ type Category {
 }
 `, BuiltIn: false},
 	{Name: "schemas/users/queries.graphql", Input: `type Query {
-  redeemCookie(cookie: String!): Cookie @guest
+  redeemCookie(cookie: String!): Cookie! @guest
   authentication: Authentication
 }
 `, BuiltIn: false},
@@ -646,6 +654,7 @@ type Category {
   redeemed: Boolean!
   session: String!
   email: String!
+  invalid: Boolean!
 }
 type User {
   username: String!
@@ -1535,6 +1544,41 @@ func (ec *executionContext) _Cookie_email(ctx context.Context, field graphql.Col
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Cookie_invalid(ctx context.Context, field graphql.CollectedField, obj *models.Cookie) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Cookie",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Invalid, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Media_id(ctx context.Context, field graphql.CollectedField, obj *models.Media) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -2029,11 +2073,14 @@ func (ec *executionContext) _Query_redeemCookie(ctx context.Context, field graph
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.(*models.Cookie)
 	fc.Result = res
-	return ec.marshalOCookie2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCookie(ctx, field.Selections, res)
+	return ec.marshalNCookie2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCookie(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_authentication(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -3913,6 +3960,11 @@ func (ec *executionContext) _Cookie(ctx context.Context, sel ast.SelectionSet, o
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "invalid":
+			out.Values[i] = ec._Cookie_invalid(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -4059,6 +4111,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_redeemCookie(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			})
 		case "authentication":
@@ -4621,6 +4676,20 @@ func (ec *executionContext) marshalNCharacter2ᚖoverdollᚋapplicationsᚋhades
 func (ec *executionContext) unmarshalNCharacterRequest2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCharacterRequest(ctx context.Context, v interface{}) (*models.CharacterRequest, error) {
 	res, err := ec.unmarshalInputCharacterRequest(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNCookie2overdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCookie(ctx context.Context, sel ast.SelectionSet, v models.Cookie) graphql.Marshaler {
+	return ec._Cookie(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNCookie2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCookie(ctx context.Context, sel ast.SelectionSet, v *models.Cookie) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._Cookie(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNMedia2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐMediaᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.Media) graphql.Marshaler {

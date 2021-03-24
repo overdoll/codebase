@@ -3,7 +3,7 @@ import withProviders from '@//:modules/testing/withProviders';
 import Join from '../Join';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 
-it('Joining redirects to lobby', async () => {
+it('joining redirects to lobby, receives a response and asks to register', async () => {
   const Environment = createMockEnvironment();
 
   const Root = withProviders({
@@ -12,7 +12,7 @@ it('Joining redirects to lobby', async () => {
     environment: Environment,
   });
 
-  const { getByRole } = render(<Root />);
+  const { getByRole, debug } = render(<Root />);
 
   const email = 'test-user@test.com';
 
@@ -50,4 +50,24 @@ it('Joining redirects to lobby', async () => {
 
   // Textbox element is gone - we were "redirected" (another component is shown)
   expect(input).not.toBeInTheDocument();
+
+  const operation = Environment.mock.getMostRecentOperation();
+
+  // we got a response from authentication cookie
+  await waitFor(() =>
+    Environment.mock.nextValue(
+      operation,
+      MockPayloadGenerator.generate(operation, {
+        AuthListener: () => ({
+          sameSession: true,
+          cookie: {
+            registered: false,
+          },
+        }),
+      }),
+    ),
+  );
+
+  // expect to see a textbox to register username
+  expect(getByRole('textbox')).toHaveAttribute('name', 'username');
 });

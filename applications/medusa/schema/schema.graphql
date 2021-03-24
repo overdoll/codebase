@@ -52,6 +52,7 @@ type Cookie {
   redeemed: Boolean!
   session: String!
   email: String!
+  invalid: Boolean!
 }
 
 type Media {
@@ -84,7 +85,7 @@ type PostResponse {
 }
 
 type Query {
-  redeemCookie(cookie: String!): Cookie
+  redeemCookie(cookie: String!): Cookie!
   authentication: Authentication
   characters(data: SearchInput!): [Character!]!
   categories(data: SearchInput!): [Category!]!

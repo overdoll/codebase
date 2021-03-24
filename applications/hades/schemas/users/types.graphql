@@ -4,6 +4,7 @@ type Cookie {
   redeemed: Boolean!
   session: String!
   email: String!
+  invalid: Boolean!
 }
 type User {
   username: String!

@@ -26,7 +26,12 @@ func (r *QueryResolver) RedeemCookie(ctx context.Context, cookie string) (*model
 
 	// Cookie is expired or not valid - send back nil
 	if err != nil {
-		return nil, nil
+		return &models.Cookie{
+			Invalid:     true,
+			Registered:  false,
+			SameSession: false,
+			Redeemed:    false,
+		}, nil
 	}
 
 	// Our cookie
@@ -34,6 +39,7 @@ func (r *QueryResolver) RedeemCookie(ctx context.Context, cookie string) (*model
 		Registered:  false,
 		SameSession: true,
 		Redeemed:    true,
+		Invalid:     false,
 		Session:     getRedeemedCookie.Session,
 		Email:       getRedeemedCookie.Email,
 	}

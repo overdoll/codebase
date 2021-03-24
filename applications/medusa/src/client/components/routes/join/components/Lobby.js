@@ -48,10 +48,10 @@ export default function Lobby(props: Props): Node {
 
         // Received a subscription response
         onNext: (response: ?LobbySubscriptionResponse) => {
-          // If the cookie was redeemed in the same browser session, or the user is registered, refresh the page
+          // If the cookie was redeemed in the same browser session, and user is registered, refresh the page
           if (
-            response?.authListener?.sameSession ||
-            response?.authListener?.cookie?.registered
+            response?.authListener?.sameSession &&
+            !!response?.authListener?.cookie?.registered
           ) {
             window.location.reload();
           } else {

@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash cfa55e171caaf100d02a5c3f65c631b0
+ * @relayHash ff3f64652c450fbcaada028f4225e41b
  */
 
 /* eslint-disable */
@@ -12,10 +12,11 @@ export type TokenQueryVariables = {|
   cookie: string
 |};
 export type TokenQueryResponse = {|
-  +redeemCookie: ?{|
+  +redeemCookie: {|
     +sameSession: boolean,
     +registered: boolean,
     +session: string,
+    +invalid: boolean,
   |}
 |};
 export type TokenQuery = {|
@@ -32,6 +33,7 @@ query TokenQuery(
     sameSession
     registered
     session
+    invalid
   }
 }
 */
@@ -79,6 +81,13 @@ v1 = [
         "kind": "ScalarField",
         "name": "session",
         "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "invalid",
+        "storageKey": null
       }
     ],
     "storageKey": null
@@ -102,7 +111,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "cfa55e171caaf100d02a5c3f65c631b0",
+    "id": "ff3f64652c450fbcaada028f4225e41b",
     "metadata": {},
     "name": "TokenQuery",
     "operationKind": "query",
@@ -111,5 +120,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = 'f2a3652bc410f78ea5a631bb6d4b880b';
+(node: any).hash = '899ed8c0b5a3d2eb8dc779a49788b2c8';
 module.exports = node;
