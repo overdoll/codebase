@@ -10,8 +10,10 @@ import AlertsBold from '@streamlinehq/streamline-bold/lib/interface-essential/Al
 import FormValidationBold from '@streamlinehq/streamline-bold/lib/interface-essential/FormValidation';
 import Signs from '@streamlinehq/streamline-bold/lib/transportation/Signs';
 
+type Type = 'success' | 'error' | 'warning';
+
 type Props = {
-  type: string,
+  type: Type,
   children?: Node,
   duration: ?number,
   id: string,
@@ -67,7 +69,6 @@ export default function Notification({
       case 'warning':
         return AlertsBold.AlertTriangle;
       case 'success':
-        return FormValidationBold.CheckCircle1;
       default:
         return FormValidationBold.CheckCircle1;
     }
@@ -112,6 +113,7 @@ export default function Notification({
         {children}
       </div>
       <Icon
+        title="close"
         size={16}
         onClick={() => onExpire(id)}
         icon={FormValidation.Close}

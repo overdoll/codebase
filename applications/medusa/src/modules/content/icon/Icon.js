@@ -26,6 +26,7 @@ type Props = {
   size?: any,
   stroke?: any,
   strokeWidth?: number,
+  title?: any,
 };
 
 export default function Icon({
@@ -36,6 +37,7 @@ export default function Icon({
   height,
   size,
   strokeWidth,
+  title,
   ...rest
 }: Props): Node {
   let shouldResize = true;
@@ -60,7 +62,7 @@ export default function Icon({
   }
 
   return (
-    <i {...rest}>
+    <i data-testid={title} {...rest}>
       <svg
         viewBox={`0 0 ${finalWidth} ${finalHeight}`}
         sx={{
@@ -71,6 +73,7 @@ export default function Icon({
         width={finalWidth}
         height={finalHeight}
       >
+        {title && <title>{title}</title>}
         {shouldResize ? (
           <g
             transform={`scale(${finalWidth / icon[1]},${finalHeight /

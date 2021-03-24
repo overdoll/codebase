@@ -12,7 +12,7 @@ it('joining redirects to lobby, receives a response and asks to register', async
     environment: Environment,
   });
 
-  const { getByRole, debug } = render(<Root />);
+  const { getByRole } = render(<Root />);
 
   const email = 'test-user@test.com';
 
