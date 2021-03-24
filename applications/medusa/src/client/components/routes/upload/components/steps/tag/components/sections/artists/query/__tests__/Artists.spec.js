@@ -38,7 +38,6 @@ it('should render artists when data is available', async () => {
 
   const [Root] = withProviders({
     Component: ArtistsComponent,
-    routes: [],
     environment: Environment,
   });
 
@@ -89,7 +88,6 @@ it('should ask to add a new artist when none are available', async () => {
 
   const [Root] = withProviders({
     Component: ArtistsComponent,
-    routes: [],
     environment: Environment,
   });
 
