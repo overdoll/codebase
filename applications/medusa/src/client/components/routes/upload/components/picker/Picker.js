@@ -3,16 +3,18 @@
  */
 import type { Node } from 'react';
 import { useNotify } from '@//:modules/focus';
+import { useRef } from 'react';
 
 type Props = {
   uppy: any,
   onSelect: any,
+  children?: Node,
 };
 
 /**
  * File picker - select files and add them to the list
  */
-export default function Picker({ uppy, onSelect }: Props): Node {
+export default function Picker({ uppy, onSelect, children }: Props): Node {
   const notify = useNotify();
 
   const onChange = e => {
@@ -26,12 +28,23 @@ export default function Picker({ uppy, onSelect }: Props): Node {
           data: file,
         });
       } catch (err) {
-        notify.error(err.message);
+        notify.warn(err.message);
       }
     });
 
     onSelect();
   };
 
-  return <input type="file" multiple onChange={onChange} />;
+  const fileInput = useRef(null);
+
+  const uploadClick = () => {
+    fileInput.current.click();
+  };
+
+  return (
+    <div onClick={uploadClick}>
+      {children}
+      <input ref={fileInput} hidden type="file" multiple onChange={onChange} />
+    </div>
+  );
 }

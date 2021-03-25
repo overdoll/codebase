@@ -1,0 +1,12 @@
+{
+  "begin": {
+    "header": "Start by uploading an image or a video",
+    "subheader": "Almost all file formats accepted 10 file limit per post",
+    "uploader": "Upload Files",
+    "limit": "max. 10mb per file"
+  },
+  "rules": {
+    "header": "As a reminder...",
+    "subheader": "A few rules here with points"
+  }
+}
