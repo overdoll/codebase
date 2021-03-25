@@ -4,7 +4,9 @@
     "standard",
     "prettier",
     "plugin:flowtype/recommended",
-    "plugin:jest/recommended"
+    "plugin:jest/recommended",
+    "plugin:testing-library/recommended",
+    "plugin:testing-library/react"
   ],
   "plugins": [
     "flowtype",
@@ -12,7 +14,8 @@
     "relay",
     "react-hooks",
     "prettier",
-    "jest"
+    "jest",
+    "testing-library"
   ],
   "rules": {
     "react-hooks/rules-of-hooks": "error",
