@@ -33,5 +33,5 @@ export default function Picker({ uppy, onSelect }: Props): Node {
     onSelect();
   };
 
-  return <input type="file" multiple onChange={onChange} />;
+  return <input data-testid="file" type="file" multiple onChange={onChange} />;
 }

@@ -54,7 +54,7 @@
   },
   "scripts": {
     "relay": "yarn run relay-compiler",
-    "graphql": "yarn graphql-codegen",
+    "graphql": "NODE_TLS_REJECT_UNAUTHORIZED=0 yarn graphql-codegen",
     "analyze": "cd ./applications/medusa && ANALYZE_BUNDLE=true razzle start --node_options=--require=./chdir.js"
   },
   "eslintConfig": {
@@ -93,6 +93,7 @@
     "@loadable/babel-plugin": "^5.13.2",
     "@loadable/webpack-plugin": "^5.14.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
+    "@testing-library/cypress": "^7.0.4",
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^13.0.15",
@@ -103,6 +104,7 @@
     "c8": "^7.6.0",
     "concurrently": "^5.0.0",
     "css-loader": "^5.0.1",
+    "cypress": "^6.8.0",
     "dotenv-webpack": "^6.0.0",
     "eslint": "^7.20.0",
     "eslint-config-prettier": "^7.1.0",

@@ -17,17 +17,6 @@ _SRC = glob(
     "package.json",
 ]
 
-copy_to_bin(
-    name = "copy_static_files",
-    srcs = _SRC,
-)
-
-write_file(
-    name = "write_chdir_script",
-    out = "chdir.js",
-    content = ["process.chdir(__dirname)"],
-)
-
 _RUNTIME_DEPS = [
     "@npm//react",
     "@npm//react-dom",
@@ -104,6 +93,36 @@ _RUNTIME_DEPS = [
     "@npm//webpack-bundle-analyzer",
 ]
 
+TEST_DEPS = [
+    "jest.setup.js",
+    "jest.config.js",
+] + glob([
+    "src/__generated__/*",
+    ".*",
+]) + _RUNTIME_DEPS + [
+    "@npm//@jest/transform",
+    "@npm//@jest/core",
+    "@npm//@testing-library/react",
+    "@npm//babel-jest",
+    "@npm//relay-test-utils",
+    "@npm//jest-environment-jsdom-sixteen",
+    "@npm//@testing-library/jest-dom",
+    "@npm//c8",
+    "@npm//fake-indexeddb",
+    "@npm//@testing-library/user-event",
+]
+
+copy_to_bin(
+    name = "copy_static_files",
+    srcs = _SRC,
+)
+
+write_file(
+    name = "write_chdir_script",
+    out = "chdir.js",
+    content = ["process.chdir(__dirname)"],
+)
+
 nodejs_binary(
     name = "medusa",
     data = [
@@ -130,25 +149,22 @@ jest_test(
             "src/modules/**/*",
         ],
     ),
-    jest_config = "jest.unit.config.js",
-    deps = [
-        "jest.setup.js",
-        "jest.unit.config.js",
-    ] + glob([
-        "src/__generated__/*",
-        ".*",
-    ]) + _RUNTIME_DEPS + [
-        "@npm//@jest/transform",
-        "@npm//@jest/core",
-        "@npm//@testing-library/react",
-        "@npm//babel-jest",
-        "@npm//relay-test-utils",
-        "@npm//jest-environment-jsdom-sixteen",
-        "@npm//@testing-library/jest-dom",
-        "@npm//c8",
-        "@npm//fake-indexeddb",
-        "@npm//@testing-library/user-event",
-    ],
+    file_extension = ".uspec.js",
+    jest_config = "jest.config.js",
+    deps = TEST_DEPS,
+)
+
+jest_test(
+    name = "integration",
+    srcs = glob(
+        [
+            "src/client/**/*",
+            "src/modules/**/*",
+        ],
+    ),
+    file_extension = ".ispec.js",
+    jest_config = "jest.config.js",
+    deps = TEST_DEPS,
 )
 
 razzle(

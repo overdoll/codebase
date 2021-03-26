@@ -3,15 +3,15 @@
  */
 import { createMemoryHistory } from 'history';
 import type { ComponentType } from 'react';
-import { Suspense } from 'react';
 import createRouter from '@//:modules/routing/createRouter';
 import RoutingContext from '@//:modules/routing/RoutingContext';
 import RelayEnvironment from '@//:modules/relay/RelayEnvironment';
-import ErrorBoundary from '@//:modules/utilities/ErrorBoundary';
 import Bootstrap from '../../client/Bootstrap';
 import i18n from './i18nTesting';
 import type { Route } from '../../client/routes';
 import RouterRenderer from '@//:modules/routing/RouteRenderer';
+import { QueryParamProvider } from 'use-query-params';
+import CompatibilityRoute from '@//:modules/routing/CompatibilityRoute';
 
 type WithProviders = {
   environment: typeof RelayEnvironment,
@@ -42,17 +42,15 @@ export default function withProviders({
     props => {
       return (
         <Bootstrap environment={environment} i18next={i18n}>
-          <ErrorBoundary>
-            <Suspense fallback={'fallback'}>
-              <RoutingContext.Provider value={router.context}>
-                {routes.length > 0 ? (
-                  <RouterRenderer />
-                ) : (
-                  <Component {...props} />
-                )}
-              </RoutingContext.Provider>
-            </Suspense>
-          </ErrorBoundary>
+          <RoutingContext.Provider value={router.context}>
+            <QueryParamProvider ReactRouterRoute={CompatibilityRoute}>
+              {routes.length > 0 ? (
+                <RouterRenderer />
+              ) : (
+                <Component {...props} />
+              )}
+            </QueryParamProvider>
+          </RoutingContext.Provider>
         </Bootstrap>
       );
     },

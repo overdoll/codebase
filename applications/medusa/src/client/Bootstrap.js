@@ -9,6 +9,7 @@ import { ThemeProvider } from 'theme-ui';
 import theme from './theme';
 import { RelayEnvironmentProvider } from 'react-relay/hooks';
 import createCache from '@emotion/cache';
+import { NotificationProvider } from '@//:modules/focus';
 
 type Props = {
   environment: typeof RelayEnvironment,
@@ -34,7 +35,7 @@ export default function Bootstrap(props: Props): Node {
       <I18nextProvider i18n={props.i18next}>
         <ThemeProvider theme={theme}>
           <RelayEnvironmentProvider environment={props.environment}>
-            {props.children}
+            <NotificationProvider>{props.children}</NotificationProvider>
           </RelayEnvironmentProvider>
         </ThemeProvider>
       </I18nextProvider>
