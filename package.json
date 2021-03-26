@@ -55,7 +55,12 @@
   "scripts": {
     "relay": "yarn run relay-compiler",
     "graphql": "NODE_TLS_REJECT_UNAUTHORIZED=0 yarn graphql-codegen",
-    "analyze": "cd ./applications/medusa && ANALYZE_BUNDLE=true razzle start --node_options=--require=./chdir.js"
+    "analyze": "cd ./applications/medusa && ANALYZE_BUNDLE=true razzle start --node_options=--require=./chdir.js",
+    "storybook": "start-storybook -p 6006",
+    "test:unit": "bazel test --test_output=all //applications/medusa:unit",
+    "test:integration": "bazel test --test_output=all //applications/medusa:integration",
+    "test:e2e": "cd ./applications/medusa && cypress run --headless",
+    "e2e:open": "cd ./applications/medusa && cypress open"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -93,6 +98,10 @@
     "@loadable/babel-plugin": "^5.13.2",
     "@loadable/webpack-plugin": "^5.14.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
+    "@storybook/addon-actions": "^6.1.21",
+    "@storybook/addon-essentials": "^6.1.21",
+    "@storybook/addon-links": "^6.1.21",
+    "@storybook/react": "^6.1.21",
     "@testing-library/cypress": "^7.0.4",
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",

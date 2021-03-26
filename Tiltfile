@@ -154,14 +154,3 @@ k8s_yaml("development/traefik/ingress.yaml")
 
 # Build applications with our helper function
 build_applications(applications, [])
-
-# GraphQL generator
-local_resource(
-    "generate-graphql",
-    cmd = "NODE_TLS_REJECT_UNAUTHORIZED=0 yarn run graphql",
-    trigger_mode = TRIGGER_MODE_MANUAL,
-    auto_init = False,
-)
-
-# Relay Compiler
-local_resource("relay-compiler", serve_cmd = "yarn run relay")
