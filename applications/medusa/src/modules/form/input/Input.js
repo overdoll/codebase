@@ -22,7 +22,7 @@ export default function Input({
   name,
   ...rest
 }: Props): Node {
-  const { register, errors, formState } = useFormContext();
+  const { register, errors, formState } = useFormContext() || {};
 
   const hasError = errors[name] !== null && errors[name] !== undefined;
   const success = formState.isDirty && !hasError && formState.isSubmitted;

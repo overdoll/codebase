@@ -7,7 +7,15 @@ module.exports = {
     '../src/**/*.stories.mdx',
     '../src/**/*.stories.@(js|jsx|ts|tsx)',
   ],
-  addons: ['@storybook/addon-links', '@storybook/addon-essentials'],
+  addons: [
+    '@storybook/addon-links',
+    '@storybook/addon-essentials',
+    '@storybook/addon-a11y',
+  ],
+  babel: async config => ({
+    ...config,
+    plugins: [...config.plugins],
+  }),
   webpackFinal: async config => {
     return {
       ...config,
