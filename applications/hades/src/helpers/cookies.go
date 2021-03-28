@@ -28,6 +28,15 @@ func SetCookie(ctx context.Context, cookie *http.Cookie) (bool, error) {
 	cookie.Secure = true
 	cookie.Path = "/"
 
+	debug := os.Getenv("APP_DEBUG") == "true"
+
+	// if we're in debug, we dont encrypt cookies since we want to be able to test easily
+	if debug {
+		cookie.Value = value
+		http.SetCookie(gc.Writer, cookie)
+		return true, nil
+	}
+
 	encodedValue, err := secureCookie.Encode(name, value)
 	cookie.Value = encodedValue
 
@@ -52,6 +61,12 @@ func ReadCookie(ctx context.Context, name string) (*http.Cookie, error) {
 	}
 
 	var value string
+
+	debug := os.Getenv("APP_DEBUG") == "true"
+
+	if debug {
+		return currentCookie, nil
+	}
 
 	if err = secureCookie.Decode(name, currentCookie.Value, &value); err == nil {
 		currentCookie.Value = value

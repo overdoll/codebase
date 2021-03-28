@@ -24,4 +24,14 @@ describe('Join', () => {
     // after a reload, we should still see our email on the page
     cy.findByText(email).should('exist');
   });
+
+  it('redirects to profile when redeeming an existing user token', () => {
+    cy.reload();
+
+    cy.getCookie('otp-key').then(cookie => {
+      cy.visit('/token/' + cookie.value);
+
+      cy.url().should('include', '/profile');
+    });
+  });
 });

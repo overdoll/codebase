@@ -47,6 +47,15 @@ index.use(
   }),
 );
 
+// add coverage endpoint if in app_debug
+if (process.env.APP_DEBUG) {
+  index.get('/__coverage__', (req, res) => {
+    res.json({
+      coverage: global.__coverage__ || null,
+    });
+  });
+}
+
 // Our entrypoint
 index.get('/*', entry);
 

@@ -6,6 +6,7 @@ const config = {
       process.env.NODE_ENV === 'production'
         ? (req, res) => `'nonce-${res.locals.cspNonce}'`
         : "'unsafe-inline'",
+      "'unsafe-eval'",
       process.env.PUBLIC_PATH,
     ],
     'style-src': [
