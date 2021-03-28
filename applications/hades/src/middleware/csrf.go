@@ -14,7 +14,7 @@ import (
 func CSRFCheck() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
-		// No CSRF validation if session cookie exists
+		// No CSRF validation if session cookie does not exist (only authenticated users will be affected by csrf)
 		_, err := c.Request.Cookie("session")
 
 		if err != nil {

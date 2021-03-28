@@ -137,7 +137,7 @@ func HandleGraphQL(resolver gen.ResolverRoot, cache *extension2.Cache) gin.Handl
 			},
 		})
 
-		if os.Getenv("APP_DEBUG") == "true" {
+		if os.Getenv("ENABLE_INTROSPECTION") == "true" {
 			graphAPIHandler.Use(extension.Introspection{})
 		}
 

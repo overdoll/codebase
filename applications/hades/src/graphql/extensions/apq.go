@@ -73,8 +73,8 @@ func (a AutomaticPersistedQuery) MutateOperationParameters(ctx context.Context, 
 		rawParams.Query = query.(string)
 	} else {
 
-		// If debug (developing locally), we want to allow full queries
-		if os.Getenv("APP_DEBUG") == "true" {
+		// If introspection enabled, we allow full queries
+		if os.Getenv("ENABLE_INTROSPECTION") == "true" {
 			// Dont do anything if client sends a full query
 			fullQuery = true
 		}
