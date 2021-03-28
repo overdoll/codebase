@@ -12,7 +12,17 @@
     ]
   ],
   "plugins": [
-    "istanbul",
+    [
+      "istanbul",
+      {
+        "exclude": [
+          "**/*.spec.js",
+          "**/*.ispec.js",
+          "**/*.uspec.js",
+          "**/*.stories.js"
+        ]
+      }
+    ],
     [
       "relay",
       {
