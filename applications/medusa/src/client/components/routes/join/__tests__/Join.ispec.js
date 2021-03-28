@@ -1,7 +1,8 @@
 import { createMockEnvironment, MockPayloadGenerator } from 'relay-test-utils';
 import withProviders from '@//:modules/testing/withProviders';
 import Join from '../Join';
-import { fireEvent, render, waitFor } from '@testing-library/react';
+import { render, waitFor, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 it('joining redirects to lobby, receives a response and asks to register', async () => {
   const Environment = createMockEnvironment();
@@ -12,18 +13,18 @@ it('joining redirects to lobby, receives a response and asks to register', async
     environment: Environment,
   });
 
-  const { getByRole } = render(<Root />);
+  render(<Root />);
 
   const email = 'test-user@test.com';
 
   // Change input to have a username
   // we wait for input to be available (suspense needs to resolve first)
-  const input = getByRole('textbox');
-  fireEvent.change(input, { target: { value: email } });
+  const input = screen.getByRole('textbox');
+  userEvent.type(input, email);
 
   // Click our button
-  const button = getByRole('button');
-  fireEvent.click(button);
+  const button = screen.getByRole('button');
+  userEvent.click(button);
 
   // Wait for operation to resolve
   const mutationOperation = await waitFor(() =>
@@ -69,5 +70,5 @@ it('joining redirects to lobby, receives a response and asks to register', async
   );
 
   // expect to see a textbox to register username
-  expect(getByRole('textbox')).toHaveAttribute('name', 'username');
+  expect(screen.getByRole('textbox')).toHaveAttribute('name', 'username');
 });

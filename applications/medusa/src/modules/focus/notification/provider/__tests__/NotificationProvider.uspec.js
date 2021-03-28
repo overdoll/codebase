@@ -1,6 +1,7 @@
-import { fireEvent, render, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import NotificationProvider from '@//:modules/focus/notification/provider/NotificationProvider';
 import { useNotify } from '@//:modules/focus';
+import userEvent from '@testing-library/user-event';
 
 it('creates a warn notification and dismisses', async () => {
   const WrapperComponent = () => {
@@ -8,23 +9,23 @@ it('creates a warn notification and dismisses', async () => {
     return <button onClick={() => notify.warn('warn')} />;
   };
 
-  const { getByText, getByTestId, getByRole } = render(
+  render(
     <NotificationProvider>
       <WrapperComponent />
     </NotificationProvider>,
   );
 
-  const button = getByRole('button');
+  const button = screen.getByRole('button');
 
   // create notification
-  fireEvent.click(button);
+  userEvent.click(button);
 
   // notification is visible with the text
-  await waitFor(() => expect(getByText('warn')).toBeVisible());
+  await waitFor(() => expect(screen.getByText('warn')).toBeVisible());
 
   // dismiss notification
-  const dismiss = getByTestId('close');
-  fireEvent.click(dismiss);
+  const dismiss = screen.getByTestId('close');
+  userEvent.click(dismiss);
 
   await waitFor(() => expect(dismiss).not.toBeInTheDocument());
 });
@@ -35,19 +36,19 @@ it('creates a success notification', async () => {
     return <button onClick={() => notify.success('success')} />;
   };
 
-  const { getByText, getByRole } = render(
+  render(
     <NotificationProvider>
       <WrapperComponent />
     </NotificationProvider>,
   );
 
-  const button = getByRole('button');
+  const button = screen.getByRole('button');
 
   // create notification
-  fireEvent.click(button);
+  userEvent.click(button);
 
   // notification is visible with the text
-  await waitFor(() => expect(getByText('success')).toBeVisible());
+  await waitFor(() => expect(screen.getByText('success')).toBeVisible());
 });
 
 it('creates an error notification', async () => {
@@ -56,17 +57,17 @@ it('creates an error notification', async () => {
     return <button onClick={() => notify.error('error')} />;
   };
 
-  const { getByText, getByRole } = render(
+  render(
     <NotificationProvider>
       <WrapperComponent />
     </NotificationProvider>,
   );
 
-  const button = getByRole('button');
+  const button = screen.getByRole('button');
 
   // create notification
-  fireEvent.click(button);
+  userEvent.click(button);
 
   // notification is visible with the text
-  await waitFor(() => expect(getByText('error')).toBeVisible());
+  await waitFor(() => expect(screen.getByText('error')).toBeVisible());
 });

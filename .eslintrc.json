@@ -29,7 +29,16 @@
     "relay/unused-fields": "warn",
     "relay/hook-required-argument": "warn",
     "react/jsx-uses-react": "off",
-    "react/react-in-jsx-scope": "off"
+    "react/react-in-jsx-scope": "off",
+    "flowtype/no-mixed": 2,
+    "flowtype/no-weak-types": [
+      2,
+      {
+        "any": true,
+        "Object": true,
+        "Function": true
+      }
+    ]
   },
   "parserOptions": {
     "ecmaFeatures": {

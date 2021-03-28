@@ -1,6 +1,6 @@
 import { createMockEnvironment, MockPayloadGenerator } from 'relay-test-utils';
 import withProviders from '@//:modules/testing/withProviders';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { loadQuery } from 'react-relay/hooks';
 import RootQuery from '@//:artifacts/RootQuery.graphql';
 import Root from '../Root';
@@ -42,8 +42,8 @@ it('should render the root component children', async () => {
     environment: Environment,
   });
 
-  const { getByText } = render(<RootDefault />);
+  render(<RootDefault />);
 
   // make sure that the children of "root" are rendered
-  expect(getByText('children')).toBeVisible();
+  expect(screen.getByText('children')).toBeVisible();
 });

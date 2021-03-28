@@ -1,5 +1,6 @@
-import { fireEvent, render, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary';
+import userEvent from '@testing-library/user-event';
 
 const Client = () => {
   throw new Error('error');
@@ -46,10 +47,10 @@ it('should catch error when thrown', async () => {
     </ErrorBoundary>
   );
 
-  const { getByText } = render(<Root />);
+  render(<Root />);
 
   // error thrown by our component
-  await waitFor(() => expect(getByText('Error: error')).toBeVisible());
+  await waitFor(() => expect(screen.getByText('Error: error')).toBeVisible());
 });
 
 it('should render fallback when error is thrown', async () => {
@@ -61,10 +62,10 @@ it('should render fallback when error is thrown', async () => {
     </ErrorBoundary>
   );
 
-  const { getByText } = render(<Root />);
+  render(<Root />);
 
   // error thrown by our component
-  await waitFor(() => expect(getByText('fallback')).toBeVisible());
+  await waitFor(() => expect(screen.getByText('fallback')).toBeVisible());
 });
 
 it('should reset error when pressed', async () => {
@@ -76,15 +77,15 @@ it('should reset error when pressed', async () => {
     </ErrorBoundary>
   );
 
-  const { getByRole } = render(<Root />);
+  render(<Root />);
 
   // reset
-  const button = getByRole('button');
+  const button = screen.getByRole('button');
 
   // error thrown by our component
   await waitFor(() => expect(button).toBeVisible());
 
-  fireEvent.click(button);
+  userEvent.click(button);
 
   // fallback will be visible, but this time the other state will be visible to indicate
   // that the reset actually occurred

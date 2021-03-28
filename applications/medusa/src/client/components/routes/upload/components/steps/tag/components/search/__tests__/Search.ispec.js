@@ -24,12 +24,12 @@ it('should search when input changes', async () => {
     Component: SearchComponent,
   });
 
-  const { getByRole, getByText } = render(<Root />);
+  render(<Root />);
 
   // expect that children were rendered correctly
-  expect(getByText('header')).toBeInTheDocument();
+  expect(screen.getByText('header')).toBeInTheDocument();
 
-  const input = getByRole('textbox');
+  const input = screen.getByRole('textbox');
   userEvent.type(input, search);
 
   await waitFor(() => expect(input).toHaveValue(search));

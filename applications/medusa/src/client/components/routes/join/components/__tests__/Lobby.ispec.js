@@ -1,4 +1,4 @@
-import { render, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { createMockEnvironment, MockPayloadGenerator } from 'relay-test-utils';
 import withProviders from '@//:modules/testing/withProviders';
 import Lobby from '../Lobby';
@@ -20,10 +20,10 @@ it('should run the parent function when subscription completes with desired resu
     environment: Environment,
   });
 
-  const { getByText } = render(<Root />);
+  render(<Root />);
 
   // Expect that our user sees their own "email"
-  expect(getByText(email)).toBeVisible();
+  expect(screen.getByText(email)).toBeVisible();
 
   const payload = {
     AuthListener: () => ({ sameSession: false }),

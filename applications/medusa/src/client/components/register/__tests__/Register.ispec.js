@@ -1,6 +1,7 @@
-import { fireEvent, render, waitFor } from '@testing-library/react';
+import { render, waitFor, screen } from '@testing-library/react';
 import Register from '../Register';
 import withProviders from '@//:modules/testing/withProviders';
+import userEvent from '@testing-library/user-event';
 import { createMockEnvironment, MockPayloadGenerator } from 'relay-test-utils';
 
 it('register just works', async () => {
@@ -12,18 +13,18 @@ it('register just works', async () => {
     environment: Environment,
   });
 
-  const { getByRole } = render(<Root />);
+  render(<Root />);
 
   const username = 'test-user';
 
   // Change input to have a username
   // we wait for input to be available (suspense needs to resolve first)
-  const input = getByRole('textbox');
-  fireEvent.change(input, { target: { value: username } });
+  const input = screen.getByRole('textbox');
+  userEvent.type(input, username);
 
   // Click our button
-  const button = getByRole('button');
-  fireEvent.click(button);
+  const button = screen.getByRole('button');
+  userEvent.click(button);
 
   const mutationOperation = await waitFor(() =>
     Environment.mock.getMostRecentOperation(),

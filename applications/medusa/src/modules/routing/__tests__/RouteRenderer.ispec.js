@@ -1,5 +1,5 @@
 import withProviders from '@//:modules/testing/withProviders';
-import { render, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import JSResource from '@//:modules/utilities/JSResource';
 
 it('renders a root component with children', async () => {
@@ -30,8 +30,8 @@ it('renders a root component with children', async () => {
     initialEntries: ['/test'],
   });
 
-  const { getByText, debug } = render(<Root />);
+  render(<Root />);
 
-  await waitFor(() => expect(getByText('test1')).toBeInTheDocument());
-  await waitFor(() => expect(getByText('test2')).toBeInTheDocument());
+  await waitFor(() => expect(screen.getByText('test1')).toBeInTheDocument());
+  await waitFor(() => expect(screen.getByText('test2')).toBeInTheDocument());
 });

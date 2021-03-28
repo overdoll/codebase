@@ -1,6 +1,7 @@
 import { createMockEnvironment, MockPayloadGenerator } from 'relay-test-utils';
 import withProviders from '@//:modules/testing/withProviders';
-import { fireEvent, render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Artists from '../Artists';
 import ArtistsQuery from '@//:artifacts/ArtistsQuery.graphql';
 
@@ -41,15 +42,15 @@ it('should render artists when data is available', async () => {
     environment: Environment,
   });
 
-  const { getByText, getByRole } = render(<Root />);
+  render(<Root />);
 
-  const button = getByRole('button');
+  const button = screen.getByRole('button');
 
   // expect that we are rendering artists correctly
-  expect(getByText('test-test-id')).toBeVisible();
+  expect(screen.getByText('test-test-id')).toBeVisible();
 
   // click on the button to add an existing artist
-  fireEvent.click(button);
+  userEvent.click(button);
 
   // expect that the request went through
   expect(onSelect).toHaveBeenLastCalledWith({
@@ -91,15 +92,15 @@ it('should ask to add a new artist when none are available', async () => {
     environment: Environment,
   });
 
-  const { getByRole } = render(<Root />);
+  render(<Root />);
 
-  const button = getByRole('button');
+  const button = screen.getByRole('button');
 
   // expect that we are asking to add a new artist with a button
   expect(button).toBeVisible();
 
   // click on the button to add a new artist
-  fireEvent.click(button);
+  userEvent.click(button);
 
   // expect that the request went through
   expect(onSelect).toHaveBeenLastCalledWith({

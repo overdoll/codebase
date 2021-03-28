@@ -31,8 +31,6 @@ it('should allow uploading to occur', async () => {
 });
 
 it('should not allow upload to occur due to bad image format', async () => {
-  const select = jest.fn();
-
   const file = new File(['(⌐□_□)'], 'test.png', { type: 'image/png' });
 
   const uppy = new Uppy({
@@ -44,7 +42,7 @@ it('should not allow upload to occur due to bad image format', async () => {
   });
 
   const PickerComponent = () => {
-    return <Picker uppy={uppy} onSelect={select} />;
+    return <Picker uppy={uppy} onSelect={() => {}} />;
   };
 
   const [Root] = withProviders({
@@ -55,8 +53,6 @@ it('should not allow upload to occur due to bad image format', async () => {
 
   // cant find upload by anything else other than test ID so we use it here
   userEvent.upload(screen.getByTestId('file'), file);
-
-  await waitFor(() => expect(select).toHaveBeenCalled());
 
   await waitFor(() =>
     expect(

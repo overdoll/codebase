@@ -1,6 +1,7 @@
 import withProviders from '@//:modules/testing/withProviders';
 import Link from '@//:modules/routing/Link';
-import { fireEvent, render, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import JSResource from '@//:modules/utilities/JSResource';
 import { createMockEnvironment } from 'relay-test-utils';
 
@@ -39,16 +40,16 @@ it('clicking on the link directs to the route', async () => {
     routes: routes,
   });
 
-  const { getByRole, getByText } = render(<Root />);
+  render(<Root />);
 
-  await waitFor(() => expect(getByRole('link')).toBeInTheDocument());
+  await waitFor(() => expect(screen.getByRole('link')).toBeInTheDocument());
 
-  const link = getByRole('link');
+  const link = screen.getByRole('link');
 
-  fireEvent.click(link);
+  userEvent.click(link);
 
   await waitFor(() =>
-    expect(getByText('rendering component')).toBeInTheDocument(),
+    expect(screen.getByText('rendering component')).toBeInTheDocument(),
   );
 });
 
@@ -75,13 +76,13 @@ it('hovering over the link will preload the component', async () => {
     routes: routes,
   });
 
-  const { getByRole } = render(<Root />);
+  render(<Root />);
 
-  await waitFor(() => expect(getByRole('link')).toBeInTheDocument());
+  await waitFor(() => expect(screen.getByRole('link')).toBeInTheDocument());
 
-  const link = getByRole('link');
+  const link = screen.getByRole('link');
 
-  fireEvent.mouseEnter(link);
+  userEvent.hover(link);
 
   await waitFor(() => expect(func).toHaveBeenCalled());
 });
@@ -125,13 +126,13 @@ it('mouse down on the link will load code and data', async () => {
     environment: Environment,
   });
 
-  const { getByRole } = render(<Root />);
+  render(<Root />);
 
-  await waitFor(() => expect(getByRole('link')).toBeInTheDocument());
+  await waitFor(() => expect(screen.getByRole('link')).toBeInTheDocument());
 
-  const link = getByRole('link');
+  const link = screen.getByRole('link');
 
-  fireEvent.mouseDown(link);
+  userEvent.click(link);
 
   await waitFor(() => expect(func).toHaveBeenCalled());
 

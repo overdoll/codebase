@@ -1,11 +1,12 @@
-import { fireEvent, render, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import Notification from '../Notification';
+import userEvent from '@testing-library/user-event';
 import { NotificationContext } from '@//:modules/focus/notification/provider/NotificationProvider';
 
 it('notification displays success and dismisses', async () => {
   const onExpire = jest.fn();
 
-  const { getByText, getByTestId } = render(
+  render(
     <NotificationContext.Provider value={{ onExpire }}>
       <Notification type="success" duration={null} id={1}>
         success
@@ -13,14 +14,14 @@ it('notification displays success and dismisses', async () => {
     </NotificationContext.Provider>,
   );
 
-  expect(getByText('success')).toBeVisible();
+  expect(screen.getByText('success')).toBeVisible();
 
-  const button = getByTestId('close');
+  const button = screen.getByTestId('close');
 
   expect(button).toBeVisible();
 
   // click the dismiss button
-  fireEvent.click(button);
+  userEvent.click(button);
 
   // expect the provider's onExpire method to be called
   await waitFor(() => expect(onExpire).toHaveBeenLastCalledWith(1));
@@ -46,21 +47,21 @@ it('notification dismisses after a certain amount of time', async () => {
 });
 
 it('notification displays error', async () => {
-  const { getByText } = render(
+  render(
     <Notification type="error" duration={null} id={1}>
       error
     </Notification>,
   );
 
-  expect(getByText('error')).toBeVisible();
+  expect(screen.getByText('error')).toBeVisible();
 });
 
 it('notification displays warning', async () => {
-  const { getByText } = render(
+  render(
     <Notification type="warning" duration={null} id={1}>
       warning
     </Notification>,
   );
 
-  expect(getByText('warning')).toBeVisible();
+  expect(screen.getByText('warning')).toBeVisible();
 });

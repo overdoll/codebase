@@ -1,8 +1,9 @@
 import { createMockEnvironment, MockPayloadGenerator } from 'relay-test-utils';
 import withProviders from '@//:modules/testing/withProviders';
-import { fireEvent, render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import MediaQuery from '@//:artifacts/MediaQuery.graphql';
 import Media from '../Media';
+import userEvent from '@testing-library/user-event';
 
 it('should render media when data is available', async () => {
   const Environment = createMockEnvironment();
@@ -41,15 +42,15 @@ it('should render media when data is available', async () => {
     environment: Environment,
   });
 
-  const { getByText, getByRole } = render(<Root />);
+  render(<Root />);
 
-  const button = getByRole('button');
+  const button = screen.getByRole('button');
 
   // expect that we are rendering characters correctly
-  expect(getByText('test-media-1-thumbnail')).toBeVisible();
+  expect(screen.getByText('test-media-1-thumbnail')).toBeVisible();
 
   // click on the button to add an existing artist
-  fireEvent.click(button);
+  userEvent.click(button);
 
   // expect that the request went through
   expect(onSelect).toHaveBeenLastCalledWith({
@@ -91,15 +92,15 @@ it('should ask to add a new media when none are available', async () => {
     environment: Environment,
   });
 
-  const { getByRole } = render(<Root />);
+  render(<Root />);
 
-  const button = getByRole('button');
+  const button = screen.getByRole('button');
 
   // expect that we are asking to add a new media with a button
   expect(button).toBeVisible();
 
   // click on the button to add a new artist
-  fireEvent.click(button);
+  userEvent.click(button);
 
   // expect that the request went through
   expect(onSelect).toHaveBeenLastCalledWith({

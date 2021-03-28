@@ -1,7 +1,8 @@
 import { createMockEnvironment, MockPayloadGenerator } from 'relay-test-utils';
 import CategoriesQuery from '@//:artifacts/CategoriesQuery.graphql';
 import withProviders from '@//:modules/testing/withProviders';
-import { fireEvent, render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Categories from '../Categories';
 
 it('should render categories when data is available', async () => {
@@ -41,15 +42,15 @@ it('should render categories when data is available', async () => {
     environment: Environment,
   });
 
-  const { getByText, getByRole } = render(<Root />);
+  render(<Root />);
 
-  const button = getByRole('button');
+  const button = screen.getByRole('button');
 
   // expect that we are rendering artists correctly
-  expect(getByText('test-')).toBeVisible();
+  expect(screen.getByText('test-')).toBeVisible();
 
   // click on the button to add an existing artist
-  fireEvent.click(button);
+  userEvent.click(button);
 
   // expect that the request went through
   expect(onSelect).toHaveBeenLastCalledWith({
@@ -91,7 +92,7 @@ it('should show that there are no categories available', async () => {
     environment: Environment,
   });
 
-  const { getByText } = render(<Root />);
+  render(<Root />);
 
-  expect(getByText('no categories found')).toBeVisible();
+  expect(screen.getByText('no categories found')).toBeVisible();
 });

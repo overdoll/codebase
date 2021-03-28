@@ -1,7 +1,7 @@
 import { createMockEnvironment, MockPayloadGenerator } from 'relay-test-utils';
 import withProviders from '@//:modules/testing/withProviders';
 import Token from '../Token';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { loadQuery } from 'react-relay/hooks';
 
 const queueOperation = resolver => {
@@ -55,11 +55,11 @@ it('should ask to register if not registered', async () => {
 
   const [Root] = queueOperation(resolver);
 
-  const { getByRole } = render(<Root />);
+  render(<Root />);
 
   // If there is a button, we are at a registration screen
-  expect(getByRole('textbox')).toBeVisible();
-  expect(getByRole('button')).toBeVisible();
+  expect(screen.getByRole('textbox')).toBeVisible();
+  expect(screen.getByRole('button')).toBeVisible();
 });
 
 it('should redirect if cookie is not valid', async () => {
@@ -91,10 +91,10 @@ it('should show session data if token was redeemed in another session', async ()
 
   const [Root] = queueOperation(resolver);
 
-  const { getByText } = render(<Root />);
+  render(<Root />);
 
   // Expect session data to be visible
-  expect(getByText('agent-session')).toBeVisible();
+  expect(screen.getByText('agent-session')).toBeVisible();
 });
 
 it('should redirect if user is already registered', async () => {
