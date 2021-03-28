@@ -1,4 +1,3 @@
-import withProviders from '@//:modules/testing/withProviders';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Search from '../Search';
@@ -12,19 +11,11 @@ it('should search when input changes', async () => {
     return <div>searchcontent</div>;
   };
 
-  const SearchComponent = () => {
-    return (
-      <Search header={<Header />}>
-        {args => <SearchContainer args={args} />}
-      </Search>
-    );
-  };
-
-  const [Root] = withProviders({
-    Component: SearchComponent,
-  });
-
-  render(<Root />);
+  render(
+    <Search header={<Header />}>
+      {args => <SearchContainer args={args} />}
+    </Search>,
+  );
 
   // expect that children were rendered correctly
   expect(screen.getByText('header')).toBeInTheDocument();
@@ -46,17 +37,9 @@ it('should ask to refetch when error occurs', async () => {
     throw new Error('error');
   };
 
-  const SearchComponent = () => {
-    return (
-      <Search header={null}>{args => <SearchContainer args={args} />}</Search>
-    );
-  };
-
-  const [Root] = withProviders({
-    Component: SearchComponent,
-  });
-
-  render(<Root />);
+  render(
+    <Search header={null}>{args => <SearchContainer args={args} />}</Search>,
+  );
 
   const button = screen.getByRole('button', { name: 'retry' });
 

@@ -34,7 +34,8 @@ export default function Input({
           position: 'relative',
         }}
       >
-        <span
+        <label
+          htmlFor={name}
           sx={{
             fontWeight: 'heading',
             color: !success
@@ -51,9 +52,10 @@ export default function Input({
           }}
         >
           {title}
-        </span>
+        </label>
         <ThemeUIInput
           {...rest}
+          id={name}
           name={name}
           ref={register(validation)}
           sx={{

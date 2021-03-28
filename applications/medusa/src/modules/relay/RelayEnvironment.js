@@ -26,12 +26,9 @@ const csrfToken = document
  * Relay fetch function - uses axios. Passes CSRF token from the document as well
  */
 async function fetchRelay(params, variables, _cacheConfig) {
-  const response = await axios.post('/api/graphql', {
-    headers: {
-      'Content-Type': 'application/json',
-      'CSRF-Token': csrfToken,
-    },
-    data: {
+  const response = await axios.post(
+    '/api/graphql',
+    {
       operationName: params.name,
       extensions: {
         apq: {
@@ -40,7 +37,13 @@ async function fetchRelay(params, variables, _cacheConfig) {
       },
       variables,
     },
-  });
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        'CSRF-Token': csrfToken,
+      },
+    },
+  );
 
   const json = response.data;
 

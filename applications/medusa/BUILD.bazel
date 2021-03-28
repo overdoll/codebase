@@ -91,6 +91,7 @@ _RUNTIME_DEPS = [
     "@npm//use-query-params",
     "@npm//query-string",
     "@npm//webpack-bundle-analyzer",
+    "@npm//babel-plugin-istanbul",
 ]
 
 TEST_DEPS = [

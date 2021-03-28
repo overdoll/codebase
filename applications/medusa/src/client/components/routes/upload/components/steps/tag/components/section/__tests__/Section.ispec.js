@@ -1,4 +1,3 @@
-import withProviders from '@//:modules/testing/withProviders';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Section from '../Section';
@@ -10,21 +9,13 @@ it('should render tag artists', async () => {
     return <button onClick={onClose}>opencomponent</button>;
   };
 
-  const SectionComponent = () => {
-    return (
-      <Section
-        search={(args, onClose) => <Search onClose={onClose} args={args} />}
-      >
-        <Children />
-      </Section>
-    );
-  };
-
-  const [Root] = withProviders({
-    Component: SectionComponent,
-  });
-
-  render(<Root />);
+  render(
+    <Section
+      search={(args, onClose) => <Search onClose={onClose} args={args} />}
+    >
+      <Children />
+    </Section>,
+  );
 
   // expect that children were rendered correctly
   expect(screen.getByText('header')).toBeInTheDocument();
