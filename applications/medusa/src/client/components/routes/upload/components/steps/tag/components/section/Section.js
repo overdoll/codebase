@@ -10,9 +10,16 @@ import Search from '../search/Search';
 type Props = {
   children: Node,
   search: any,
+  label: string,
+  placeholder: string,
 };
 
-export default function Section({ children, search }: Props): Node {
+export default function Section({
+  placeholder,
+  label,
+  children,
+  search,
+}: Props): Node {
   const [open, setOpen] = useState(false);
 
   const onOpen = () => {
@@ -32,10 +39,14 @@ export default function Section({ children, search }: Props): Node {
       }}
     >
       {children}
-      <button onClick={onOpen}>add</button>
+      <button aria-label={label} onClick={onOpen}>
+        add
+      </button>
       {open &&
         createPortal(
-          <Search onClose={onClose}>{args => search(args, onClose)}</Search>,
+          <Search placeholder={placeholder} onClose={onClose}>
+            {args => search(args, onClose)}
+          </Search>,
           RootElement,
         )}
     </div>

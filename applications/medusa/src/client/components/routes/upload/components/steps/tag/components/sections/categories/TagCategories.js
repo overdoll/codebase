@@ -24,6 +24,8 @@ export default function TagCategories({ state, dispatch }: Props): Node {
 
   return (
     <Section
+      label="select category"
+      placeholder="search categories"
       search={args => (
         <Categories
           selected={Object.keys(state.categories)}

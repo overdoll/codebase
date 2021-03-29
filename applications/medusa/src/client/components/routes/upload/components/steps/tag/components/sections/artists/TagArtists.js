@@ -21,6 +21,8 @@ export default function TagArtists({ state, dispatch }: Props): Node {
 
   return (
     <Section
+      label="select artist"
+      placeholder="search artists"
       search={(args, onClose) => (
         <Artists
           args={args}

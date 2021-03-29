@@ -53,5 +53,23 @@
     "browser": true,
     "node": true,
     "es6": true
-  }
+  },
+  "overrides": [
+    {
+      "plugins": [
+        "cypress"
+      ],
+      "files": [
+        "./applications/medusa/cypress/**/*.js"
+      ]
+    },
+    {
+      "plugins": [
+        "jest"
+      ],
+      "files": [
+        "./applications/medusa/src/**/*.js"
+      ]
+    }
+  ]
 }

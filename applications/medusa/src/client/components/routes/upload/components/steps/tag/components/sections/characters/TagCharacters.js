@@ -56,6 +56,7 @@ export default function TagCharacters({ state, dispatch }: Props): Node {
   if (newCharacter !== null) {
     return createPortal(
       <Search
+        placeholder="search media"
         header={<div>selected character: {newCharacter.name}</div>}
         onClose={onCancelNewCharacter}
       >
@@ -67,6 +68,8 @@ export default function TagCharacters({ state, dispatch }: Props): Node {
 
   return (
     <Section
+      label="select character"
+      placeholder="search characters"
       search={args => (
         <Characters
           selected={Object.keys(state.characters)}

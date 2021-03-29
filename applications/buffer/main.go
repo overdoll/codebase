@@ -49,8 +49,9 @@ func main() {
 	// Create a new HTTP handler for the tusd server by providing a configuration.
 	// The StoreComposer property must be set to allow the handler to function.
 	handler, err := tusd.NewHandler(tusd.Config{
-		BasePath:      "/api/upload/",
-		StoreComposer: composer,
+		BasePath:                "/api/upload/",
+		StoreComposer:           composer,
+		RespectForwardedHeaders: true,
 	})
 
 	if err != nil {
