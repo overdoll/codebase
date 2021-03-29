@@ -33,8 +33,8 @@ require (
 	github.com/stretchr/testify v1.6.1
 	github.com/tus/tusd v1.5.1
 	github.com/vektah/gqlparser/v2 v2.1.0
-	google.golang.org/grpc v1.29.1
-	google.golang.org/protobuf v1.23.0
+	google.golang.org/grpc v1.36.1
+	google.golang.org/protobuf v1.25.0
 )
 
 replace github.com/gocql/gocql => github.com/scylladb/gocql v0.0.0-20201029162719-81a4afe636ae
