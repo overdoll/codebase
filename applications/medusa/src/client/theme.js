@@ -90,11 +90,12 @@ const theme = {
       '100': 'hsla(281,88%,90%,1)',
       '50': 'hsla(281,88%,90%,0.15)',
     },
-    gradient: {
-      primary: 'linear-gradient(45deg, primary.500 50%, primary.400 50%)',
+    dimmers: {
+      '300': 'hsla(0,0%,0%,0.75)',
     },
   },
   space: [
+    '0rem', // 0
     '0.25rem', // 4
     '0.5rem', // 8
     '0.75rem', // 12

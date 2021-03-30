@@ -3,7 +3,7 @@
  */
 
 import { Icon } from '@//:modules/content';
-import { Synchronize } from '@streamlinehq/streamline-regular/lib/interface-essential';
+import Synchronize from '@streamlinehq/streamline-regular/lib/interface-essential/Synchronize';
 
 type Props = {
   color?: any,

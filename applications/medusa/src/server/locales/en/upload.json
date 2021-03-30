@@ -8,5 +8,9 @@
   "rules": {
     "header": "As a reminder...",
     "subheader": "A few rules here with points"
+  },
+  "arrange": {
+    "header": "Hold a tile and drag to reorder it",
+    "add": "+ Add media"
   }
 }
