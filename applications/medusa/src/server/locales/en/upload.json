@@ -1,7 +1,7 @@
 {
   "begin": {
     "header": "Start by uploading an image or a video",
-    "subheader": "Almost all file formats accepted 10 file limit per post",
+    "subheader": "Almost all file formats accepted\n10 file limit per post",
     "uploader": "Upload Files",
     "limit": "max. 10mb per file"
   },
@@ -12,5 +12,9 @@
   "arrange": {
     "header": "Hold a tile and drag to reorder it",
     "add": "+ Add media"
+  },
+  "tag": {
+    "header": "Tag your post",
+    "subheader": "Select an artist, 1 character and at least 3 categories"
   }
 }

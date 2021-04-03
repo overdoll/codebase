@@ -16,6 +16,7 @@ export default function Thumbnail({ thumbnail, progress, sx }: Props): Node {
   return (
     <div
       sx={{
+        height: 'fill',
         ...sx,
       }}
     >

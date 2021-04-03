@@ -5,19 +5,18 @@ import type { Node } from 'react';
 
 type Props = {
   src?: string,
-  size?: number,
   sx?: any,
 };
 
-export default function ImageSmall(src, size: Props): Node {
+export default function ImageSmall(src: Props): Node {
   return (
     <img
       alt="thumbnail"
       src={src.link}
       sx={{
         backgroundColor: 'neutral.800',
-        height: '100%',
-        width: '100%',
+        height: 'fill',
+        width: 'fill',
         objectFit: 'cover',
       }}
     />
