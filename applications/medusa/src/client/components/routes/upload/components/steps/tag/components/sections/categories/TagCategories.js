@@ -31,8 +31,9 @@ export default function TagCategories({ state, dispatch }: Props): Node {
           args={args}
         />
       )}
+      title={'Categories'}
+      count={Object.keys(state.categories).length}
     >
-      <div>current categories: {Object.keys(state.categories).length}</div>
       DISPLAY SELECTED CATEGORIES HERE???
     </Section>
   );

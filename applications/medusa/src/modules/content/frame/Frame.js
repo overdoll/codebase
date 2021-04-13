@@ -11,7 +11,7 @@ type Props = {
 export default function Frame(props: Props): Node {
   return (
     <div sx={{ display: 'flex', width: '100%', mt: 5 }}>
-      <div sx={{ margin: 'auto', width: ['small', 'regular'] }}>
+      <div sx={{ margin: 'auto', width: ['small', 'regular', 'large'] }}>
         {props.children}
       </div>
     </div>

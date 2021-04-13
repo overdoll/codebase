@@ -7,7 +7,7 @@ type Props = {
   children: Node,
 };
 
-export default function ImageSmall(props: Props): Node {
+export default function XScrollContainer(props: Props): Node {
   return (
     <div
       sx={{

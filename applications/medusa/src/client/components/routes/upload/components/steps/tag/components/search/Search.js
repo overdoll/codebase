@@ -7,6 +7,7 @@ import { useTransition } from '@//:modules/experimental';
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary';
 import ErrorFallback from '../error/ErrorFallback';
 import LoadingSearch from '../loading/LoadingSearch';
+import Frame from '@//:modules/content/frame/Frame';
 
 type Props = {
   children: any,
@@ -55,9 +56,19 @@ export default function Search({ children, onClose, header }: Props): Node {
   };
 
   return (
-    <>
+    <div
+      sx={{
+        position: 'fixed',
+        zIndex: 1,
+        left: 0,
+        top: 0,
+        height: 'fill',
+        width: 'fill',
+        backgroundColor: 'neutral.800',
+      }}
+    >
       {isPending ? 'loading indicator' : ''}
-      <>
+      <Frame>
         {header}
         <ErrorBoundary
           fallback={({ error, reset }) => (
@@ -68,9 +79,9 @@ export default function Search({ children, onClose, header }: Props): Node {
             {children(queryArgs)}
           </Suspense>
         </ErrorBoundary>
-      </>
-      <input value={searchInput} onChange={onChange} />
-      <button onClick={onClose}>close</button>
-    </>
+        <input value={searchInput} onChange={onChange} />
+        <button onClick={onClose}>close</button>
+      </Frame>
+    </div>
   );
 }

@@ -167,7 +167,7 @@ export default function Join(): Node {
         <Button
           loading={isInFlight}
           size={'large'}
-          type={'buttons.primary.regular'}
+          type={'buttons.tertiary.regular'}
           sx={{ width: 'fill', mt: 2 }}
         >
           {t('authenticate.form.continue')}

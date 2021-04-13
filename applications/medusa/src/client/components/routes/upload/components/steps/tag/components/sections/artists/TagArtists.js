@@ -28,8 +28,9 @@ export default function TagArtists({ state, dispatch }: Props): Node {
           onSelect={artist => onSelect(artist, onClose)}
         />
       )}
+      title={'Artist'}
+      count={Object.keys(state.artist).length}
     >
-      <div>current artist: {Object.keys(state.artist).length}</div>
       DISPLAY SELECTED ARTIST HERE???
     </Section>
   );

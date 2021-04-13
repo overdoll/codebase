@@ -74,8 +74,9 @@ export default function TagCharacters({ state, dispatch }: Props): Node {
           args={args}
         />
       )}
+      title={'Characters'}
+      count={Object.keys(state.characters).length}
     >
-      <div>current characters: {Object.keys(state.characters).length}</div>
       DISPLAY SELECTED CHARACTERS HERE???
     </Section>
   );

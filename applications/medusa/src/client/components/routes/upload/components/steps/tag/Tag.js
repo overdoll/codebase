@@ -9,9 +9,11 @@ import Thumbnail from '../arrange/components/thumbnail/Thumbnail';
 import Frame from '@//:modules/content/frame/Frame';
 import Heading from '@//:modules/typography/heading/Heading';
 import Text from '@//:modules/typography/text/Text';
-import Container from './components/scrollable/container/Container';
+import XScrollContainer from './components/scrollable/container/XScrollContainer';
 import type { Dispatch, State } from '@//:types/upload';
 import { useTranslation } from 'react-i18next';
+import ScrollContent from './components/scrollable/content/ScrollContent';
+import { createPortal } from 'react-dom';
 
 type Props = {
   dispatch: Dispatch,
@@ -30,33 +32,24 @@ export default function Tag({ state, dispatch, disabled }: Props): Node {
         {t('tag.subheader')}
       </Text>
       <div sx={{ display: 'flex', flexDirection: 'column' }}>
-        <Container>
+        <XScrollContainer>
           {state.files.map(file => {
             const thumbnail = state.thumbnails[file.id];
             const prog = state.progress[file.id];
 
             return (
-              <div
+              <ScrollContent
                 key={file.id}
                 sx={{
-                  flex: '0 0 auto',
-                  ml: 1,
-                  mr: 1,
-                  mt: 2,
-                  mb: 4,
                   width: '130px',
                   height: '150px',
-                  objectFit: 'cover',
-                  alignContent: 'stretch',
-                  overflow: 'hidden',
-                  borderRadius: 5,
                 }}
               >
                 <Thumbnail thumbnail={thumbnail} progress={prog} />
-              </div>
+              </ScrollContent>
             );
           })}
-        </Container>
+        </XScrollContainer>
         <div
           sx={{
             display: 'flex',

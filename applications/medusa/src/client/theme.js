@@ -165,7 +165,7 @@ const theme = {
       },
       alternate: {
         color: 'neutral.100',
-        bg: 'neutral.900',
+        bg: 'transparent',
         borderColor: 'neutral.100',
       },
     },
@@ -183,6 +183,11 @@ const theme = {
     },
     tertiary: {
       regular: {
+        color: 'neutral.100',
+        bg: 'transparent',
+        borderColor: 'transparent',
+      },
+      alternate: {
         color: 'neutral.100',
         bg: 'transparent',
         borderColor: 'transparent',
@@ -210,8 +215,8 @@ const theme = {
       borderRadius: 10,
       borderWidth: 2,
       fontSize: 1,
-      pl: 4,
-      pr: 4,
+      pl: 3,
+      pr: 3,
       pt: 1,
       pb: 1,
     },
