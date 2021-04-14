@@ -6,6 +6,7 @@ import RelayEnvironment from '@//:modules/relay/RelayEnvironment';
 import { CacheProvider } from '@emotion/react';
 import { I18nextProvider } from 'react-i18next';
 import theme from './theme';
+import { ThemeProvider } from 'theme-ui';
 import { RelayEnvironmentProvider } from 'react-relay/hooks';
 import createCache from '@emotion/cache';
 import { NotificationProvider } from '@//:modules/focus';
@@ -33,11 +34,13 @@ export default function Bootstrap(props: Props): Node {
   return (
     <CacheProvider value={cache}>
       <I18nextProvider i18n={props.i18next}>
-        <ChakraProvider theme={theme}>
-          <RelayEnvironmentProvider environment={props.environment}>
-            <NotificationProvider>{props.children}</NotificationProvider>
-          </RelayEnvironmentProvider>
-        </ChakraProvider>
+        <ThemeProvider theme={theme}>
+          <ChakraProvider>
+            <RelayEnvironmentProvider environment={props.environment}>
+              <NotificationProvider>{props.children}</NotificationProvider>
+            </RelayEnvironmentProvider>
+          </ChakraProvider>
+        </ThemeProvider>
       </I18nextProvider>
     </CacheProvider>
   );

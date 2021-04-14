@@ -21,6 +21,7 @@ import { ThemeProvider } from 'theme-ui';
 import { NotificationProvider } from '@//:modules/focus';
 import { QueryParamProvider } from 'use-query-params';
 import CompatibilityRoute from '@//:modules/routing/CompatibilityRoute';
+import { ChakraProvider } from '@chakra-ui/react';
 
 const entry = async (req, res, next) => {
   try {
@@ -106,15 +107,17 @@ const entry = async (req, res, next) => {
 
     const App = (
       <ThemeProvider theme={theme}>
-        <RelayEnvironmentProvider environment={environment}>
-          <RoutingContext.Provider value={router.context}>
-            <QueryParamProvider ReactRouterRoute={CompatibilityRoute}>
-              <NotificationProvider>
-                <RouteRenderer />
-              </NotificationProvider>
-            </QueryParamProvider>
-          </RoutingContext.Provider>
-        </RelayEnvironmentProvider>
+        <ChakraProvider>
+          <RelayEnvironmentProvider environment={environment}>
+            <RoutingContext.Provider value={router.context}>
+              <QueryParamProvider ReactRouterRoute={CompatibilityRoute}>
+                <NotificationProvider>
+                  <RouteRenderer />
+                </NotificationProvider>
+              </QueryParamProvider>
+            </RoutingContext.Provider>
+          </RelayEnvironmentProvider>
+        </ChakraProvider>
       </ThemeProvider>
     );
 

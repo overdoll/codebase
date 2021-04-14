@@ -1,10 +1,7 @@
 /**
  * @flow
  */
-
-import { extendTheme } from '@chakra-ui/react';
-
-const theme: any = extendTheme({
+const theme = {
   breakpoints: ['40em', '52em', '64em'],
   fontSizes: [
     '0.875rem', // 14
@@ -255,6 +252,6 @@ const theme: any = extendTheme({
       },
     },
   },
-});
+};
 
 export default theme;
