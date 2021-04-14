@@ -78,8 +78,6 @@ _RUNTIME_DEPS = [
     "@npm//i18next-fs-backend",
     "@npm//i18next",
     "@npm//react-hook-form",
-    "@npm//@streamlinehq/streamline-bold",
-    "@npm//@streamlinehq/streamline-regular",
     "@npm//react-spring",
     "@npm//@uppy/core",
     "@npm//@uppy/tus",
@@ -92,6 +90,10 @@ _RUNTIME_DEPS = [
     "@npm//query-string",
     "@npm//webpack-bundle-analyzer",
     "@npm//babel-plugin-istanbul",
+    "@npm//@chakra-ui/react",
+    "@npm//@emotion/styled",
+    "@npm//framer-motion",
+    "@npm//@streamlinehq/streamlinehq",
 ]
 
 TEST_DEPS = [

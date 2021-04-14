@@ -5,10 +5,10 @@ import type { Node } from 'react';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { NotificationContext } from '../provider/NotificationProvider';
 import Icon from '@//:modules/content/icon/Icon';
-import FormValidation from '@streamlinehq/streamline-regular/lib/interface-essential/FormValidation';
-import AlertsBold from '@streamlinehq/streamline-bold/lib/interface-essential/Alerts';
-import FormValidationBold from '@streamlinehq/streamline-bold/lib/interface-essential/FormValidation';
-import Signs from '@streamlinehq/streamline-bold/lib/transportation/Signs';
+import Close from '@streamlinehq/streamlinehq/img/streamline-regular/close-Jttv3X.svg';
+import AlertTriangle from '@streamlinehq/streamlinehq/img/streamline-bold/alert-triangle-inprQ2.svg';
+import RoadSignNoEntry from '@streamlinehq/streamlinehq/img/streamline-bold/road-sign-no-entry-49rOC0.svg';
+import CheckCircle1 from '@streamlinehq/streamlinehq/img/streamline-bold/check-circle-1-jUA7gT.svg';
 
 type Type = 'success' | 'error' | 'warning';
 
@@ -65,12 +65,12 @@ export default function Notification({
   const notificationIcon = () => {
     switch (type) {
       case 'error':
-        return Signs.RoadSignNoEntry;
+        return RoadSignNoEntry;
       case 'warning':
-        return AlertsBold.AlertTriangle;
+        return AlertTriangle;
       case 'success':
       default:
-        return FormValidationBold.CheckCircle1;
+        return CheckCircle1;
     }
   };
 
@@ -116,7 +116,7 @@ export default function Notification({
         title="close"
         size={16}
         onClick={() => onExpire(id)}
-        icon={FormValidation.Close}
+        icon={Close}
         stroke={theme}
         strokeWidth={2}
         sx={{

@@ -46,7 +46,7 @@
       "@babel/plugin-transform-react-jsx",
       {
         "runtime": "automatic",
-        "importSource": "theme-ui"
+        "importSource": "@chakra-ui/react"
       }
     ],
     "@loadable/babel-plugin"

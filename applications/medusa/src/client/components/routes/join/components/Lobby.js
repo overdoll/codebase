@@ -11,8 +11,8 @@ import { useNotify } from '@//:modules/focus';
 import { useTranslation } from 'react-i18next';
 import type { LobbySubscriptionResponse } from '@//:artifacts/LobbySubscription.graphql';
 import Icon from '@//:modules/content/icon/Icon';
-import SignShapes from '@streamlinehq/streamline-regular/lib/maps-navigation/SignShapes';
-import ContentCreation from '@streamlinehq/streamline-bold/lib/content/ContentCreation';
+import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/sign-badge-circle-K1i3HA.svg';
+import ContentInkPen from '@streamlinehq/streamlinehq/img/streamline-bold/content-ink-pen-jHW3zi.svg';
 
 type Props = {
   onReceive: any,
@@ -106,9 +106,8 @@ export default function Lobby(props: Props): Node {
   return (
     <Frame>
       <Icon
-        icon={SignShapes.SignBadgeCircle}
-        strokeWidth={2.5}
-        stroke={'purple.300'}
+        icon={SignBadgeCircle}
+        stroke="purple.300"
         size={80}
         sx={{
           display: 'block',
@@ -135,10 +134,9 @@ export default function Lobby(props: Props): Node {
       >
         <Text sx={{ color: 'purple.300', fontSize: 2 }}>{props.email}</Text>
         <Icon
-          icon={ContentCreation.ContentInkPen}
+          icon={ContentInkPen}
           // delete cookie from backend and navigate to join
-          strokeWidth={2}
-          fill={'purple.300'}
+          fill="purple.300"
           size={16}
           sx={{
             display: 'inline-block',

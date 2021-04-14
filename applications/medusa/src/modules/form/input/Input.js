@@ -5,8 +5,8 @@ import type { Node } from 'react';
 import { Input as ThemeUIInput, Text as ThemeUIText } from 'theme-ui';
 import { useFormContext } from 'react-hook-form';
 import Icon from '@//:modules/content/icon/Icon';
-import Alerts from '@streamlinehq/streamline-regular/lib/interface-essential/Alerts';
-import FormValidation from '@streamlinehq/streamline-regular/lib/interface-essential/FormValidation';
+import AlertCircle from '@streamlinehq/streamlinehq/img/streamline-regular/alert-circle-eixfzl.svg';
+import CheckDouble1 from '@streamlinehq/streamlinehq/img/streamline-regular/check-double-1-DeGZdc.svg';
 
 type Props = {
   validation?: any,
@@ -80,7 +80,7 @@ export default function Input({
 
         {(hasError || success) && (
           <Icon
-            icon={success ? FormValidation.CheckDouble1 : Alerts.AlertCircle}
+            icon={success ? CheckDouble1 : AlertCircle}
             stroke={success ? `green.600` : `orange.500`}
             strokeWidth={2}
             sx={{

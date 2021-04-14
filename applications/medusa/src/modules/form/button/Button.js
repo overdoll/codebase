@@ -4,8 +4,8 @@
 import type { Node } from 'react';
 import { Button as ThemeUIButton } from 'theme-ui';
 import { Icon } from '@//:modules/content';
-import { useSpring, animated } from 'react-spring';
-import Synchronize from '@streamlinehq/streamline-regular/lib/interface-essential/Synchronize';
+import { animated, useSpring } from 'react-spring';
+import SynchronizeArrow1 from '@streamlinehq/streamlinehq/img/streamline-regular/synchronize-arrow-1-WipT2h.svg';
 import { Config } from '@//:modules/animations';
 
 type Props = {
@@ -22,9 +22,7 @@ export default function Button({
   disabled,
   ...rest
 }: Props): Node {
-  const loadingIcon = (
-    <Icon icon={Synchronize.SynchronizeArrow1} stroke="inherit" />
-  );
+  const loadingIcon = <Icon icon={SynchronizeArrow1} stroke="inherit" />;
 
   const AnimatedThemeUIButton = animated(ThemeUIButton);
 
