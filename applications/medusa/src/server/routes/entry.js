@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Environment, Network, RecordSource, Store } from 'relay-runtime';
 import { fetchQuery, RelayEnvironmentProvider } from 'react-relay/hooks';
 import routes from '../../client/routes';
-import theme from '../../client/theme';
+import oldTheme from '../../client/theme';
 import path from 'path';
 import serialize from 'serialize-javascript';
 import RouteRenderer from '@//:modules/routing/RouteRenderer';
@@ -22,6 +22,7 @@ import { NotificationProvider } from '@//:modules/focus';
 import { QueryParamProvider } from 'use-query-params';
 import CompatibilityRoute from '@//:modules/routing/CompatibilityRoute';
 import { ChakraProvider } from '@chakra-ui/react';
+import theme from '@//:modules/theme';
 
 const entry = async (req, res, next) => {
   try {
@@ -106,8 +107,8 @@ const entry = async (req, res, next) => {
     );
 
     const App = (
-      <ThemeProvider theme={theme}>
-        <ChakraProvider>
+      <ThemeProvider theme={oldTheme}>
+        <ChakraProvider theme={theme}>
           <RelayEnvironmentProvider environment={environment}>
             <RoutingContext.Provider value={router.context}>
               <QueryParamProvider ReactRouterRoute={CompatibilityRoute}>
@@ -169,7 +170,7 @@ const entry = async (req, res, next) => {
       entrypoints: ['client', ...assets],
     });
 
-    const cache = createCache({ key: 'css', nonce: res.locals.cspNonce });
+    const cache = createCache({ key: 'od', nonce: res.locals.cspNonce });
     const { extractCritical } = createEmotionServer(cache);
 
     const element = <CacheProvider value={cache}>{App}</CacheProvider>;
