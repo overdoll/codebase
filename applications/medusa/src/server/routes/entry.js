@@ -3,7 +3,6 @@ import axios from 'axios';
 import { Environment, Network, RecordSource, Store } from 'relay-runtime';
 import { fetchQuery, RelayEnvironmentProvider } from 'react-relay/hooks';
 import routes from '../../client/routes';
-import oldTheme from '../../client/theme';
 import path from 'path';
 import serialize from 'serialize-javascript';
 import RouteRenderer from '@//:modules/routing/RouteRenderer';
@@ -17,8 +16,6 @@ import createCache from '@emotion/cache';
 
 import createRouter from '@//:modules/routing/createRouter';
 import createMockHistory from '@//:modules/routing/createMockHistory';
-import { ThemeProvider } from 'theme-ui';
-import { NotificationProvider } from '@//:modules/focus';
 import { QueryParamProvider } from 'use-query-params';
 import CompatibilityRoute from '@//:modules/routing/CompatibilityRoute';
 import { ChakraProvider } from '@chakra-ui/react';
@@ -107,19 +104,15 @@ const entry = async (req, res, next) => {
     );
 
     const App = (
-      <ThemeProvider theme={oldTheme}>
-        <ChakraProvider theme={theme}>
-          <RelayEnvironmentProvider environment={environment}>
-            <RoutingContext.Provider value={router.context}>
-              <QueryParamProvider ReactRouterRoute={CompatibilityRoute}>
-                <NotificationProvider>
-                  <RouteRenderer />
-                </NotificationProvider>
-              </QueryParamProvider>
-            </RoutingContext.Provider>
-          </RelayEnvironmentProvider>
-        </ChakraProvider>
-      </ThemeProvider>
+      <ChakraProvider theme={theme}>
+        <RelayEnvironmentProvider environment={environment}>
+          <RoutingContext.Provider value={router.context}>
+            <QueryParamProvider ReactRouterRoute={CompatibilityRoute}>
+              <RouteRenderer />
+            </QueryParamProvider>
+          </RoutingContext.Provider>
+        </RelayEnvironmentProvider>
+      </ChakraProvider>
     );
 
     // Collect relay App data from our routes, so we have faster initial loading times.

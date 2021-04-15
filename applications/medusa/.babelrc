@@ -45,8 +45,7 @@
     [
       "@babel/plugin-transform-react-jsx",
       {
-        "runtime": "automatic",
-        "importSource": "theme-ui"
+        "runtime": "automatic"
       }
     ],
     "@loadable/babel-plugin",

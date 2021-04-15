@@ -33,15 +33,7 @@ export default function Button({
       disabled={fullDisable}
       whileTap={{ scale: 1.1 }}
     >
-      <span sx={{ display: 'flex' }}>
-        <span sx={{ margin: 'auto' }}>
-          {loading ? (
-            <Icon icon={SynchronizeArrow1} stroke="inherit" />
-          ) : (
-            children
-          )}
-        </span>
-      </span>
+      {loading ? <Icon icon={SynchronizeArrow1} stroke="inherit" /> : children}
     </AnimatedButton>
   );
 }

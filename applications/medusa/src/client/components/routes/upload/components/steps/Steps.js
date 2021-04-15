@@ -9,12 +9,12 @@ import Tag from './tag/Tag';
 import Review from './review/Review';
 import Finish from './finish/Finish';
 import { graphql, useMutation } from 'react-relay/hooks';
-import { useNotify } from '@//:modules/focus';
 import type {
   CharacterRequest,
   StepsMutation,
 } from '@//:artifacts/StepsMutation.graphql';
 import type { Dispatch, State } from '@//:types/upload';
+import { useToast } from '@chakra-ui/react';
 
 type Props = {
   uppy: any,
@@ -37,7 +37,7 @@ const SubmitGraphQL = graphql`
 export default function Steps({ uppy, state, dispatch }: Props): Node {
   const [commit, isInFlight] = useMutation<StepsMutation>(SubmitGraphQL);
 
-  const notify = useNotify();
+  const notify = useToast();
 
   // Tagging step - disabled if the conditions aren't met
   const NextDisabled =
@@ -167,13 +167,21 @@ export default function Steps({ uppy, state, dispatch }: Props): Node {
       },
       onCompleted(data) {
         if (data.post?.validation !== null) {
-          notify.error(data?.post?.validation?.code);
+          notify({
+            status: 'error',
+            title: data?.post?.validation?.code,
+            isClosable: true,
+          });
         } else {
           dispatch({ type: EVENTS.SUBMIT, value: data.post });
         }
       },
       onError(data) {
-        notify.error('error with submission');
+        notify({
+          status: 'error',
+          title: 'error with submission',
+          isClosable: true,
+        });
       },
     });
   };

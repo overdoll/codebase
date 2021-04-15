@@ -7,9 +7,8 @@ import { useContext, useState } from 'react';
 import Register from '../../register/Register';
 import { useTranslation } from 'react-i18next';
 import { Button, Form, Input, useForm } from '@//:modules/form';
-import { Frame } from '@//:modules/content';
-import { useNotify } from '@//:modules/focus';
 import Lobby from './components/Lobby';
+import { Center, Flex, useToast } from '@chakra-ui/react';
 import { RootContext } from '../Root';
 import { EMAIL } from '@//:modules/regex';
 import Icon from '@//:modules/content/icon/Icon';
@@ -49,7 +48,7 @@ export default function Join(): Node {
   const [commit, isInFlight] = useMutation(JoinAction);
   const instance = useForm<JoinValues>();
 
-  const notify = useNotify();
+  const notify = useToast();
 
   // Receiving a subscription response
   const [authInfo, setAuthInfo] = useState({ authListener: null });
@@ -76,7 +75,11 @@ export default function Join(): Node {
         setWaiting(true);
       },
       onError(data) {
-        notify.error(t('authenticate.error.join'));
+        notify({
+          status: 'error',
+          title: t('authenticate.error.join'),
+          isClosable: true,
+        });
       },
     });
   };
@@ -117,28 +120,37 @@ export default function Join(): Node {
 
   // Ask user to authenticate
   return (
-    <Frame>
-      <Icon icon={SignBadgeCircle} w={100} h={100} ml="auto" mr="auto" mb={5} />
-      <Form instance={instance} onSubmit={onSubmit}>
-        <Input
-          title={t('authenticate.form.email.title')}
-          name="email"
-          validation={{
-            required: {
-              value: true,
-              message: t('authenticate.form.validation.email.required'),
-            },
-            pattern: {
-              value: EMAIL,
-              message: t('authenticate.form.validation.email.pattern'),
-            },
-          }}
-          placeholder={t('authenticate.form.email.placeholder')}
+    <Center mt={8}>
+      <Flex w={['fill', 400]} direction="column">
+        <Icon
+          icon={SignBadgeCircle}
+          w={100}
+          h={100}
+          ml="auto"
+          mr="auto"
+          mb={5}
         />
-        <Button loading={isInFlight} width="100%">
-          {t('authenticate.form.continue')}
-        </Button>
-      </Form>
-    </Frame>
+        <Form instance={instance} onSubmit={onSubmit}>
+          <Input
+            title={t('authenticate.form.email.title')}
+            name="email"
+            validation={{
+              required: {
+                value: true,
+                message: t('authenticate.form.validation.email.required'),
+              },
+              pattern: {
+                value: EMAIL,
+                message: t('authenticate.form.validation.email.pattern'),
+              },
+            }}
+            placeholder={t('authenticate.form.email.placeholder')}
+          />
+          <Button type="submit" loading={isInFlight} width="100%">
+            {t('authenticate.form.continue')}
+          </Button>
+        </Form>
+      </Flex>
+    </Center>
   );
 }

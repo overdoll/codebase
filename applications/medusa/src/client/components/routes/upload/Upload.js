@@ -7,8 +7,8 @@ import Steps from './components/steps/Steps';
 import type { Action, Dispatch, State } from '@//:types/upload';
 import { EVENTS, INITIAL_STATE } from './constants/constants';
 import reducer from './reducer';
-import { useNotify } from '@//:modules/focus';
 import useUpload from './hooks';
+import { useToast } from '@chakra-ui/react';
 
 // Main upload component - handles all events from Uppy and renders the stepper
 // also contains the main state and is responsible for recovering state when rendered (if state is available)
@@ -21,7 +21,7 @@ export default function Upload(): Node {
   // hook controls lifecycle of uppy & restoring indexeddb state
   const uppy = useUpload(state, dispatch);
 
-  const notify = useNotify();
+  const notify = useToast();
 
   // Add to thumbnails state when a new thumbnail is added
   useEffect(() => {
@@ -65,12 +65,14 @@ export default function Upload(): Node {
   // Events for errors
   useEffect(() => {
     uppy.on('upload-error', data => {
-      notify.error('upload error');
+      notify({
+        status: 'error',
+        title: 'upload error',
+        isClosable: true,
+      });
     });
 
-    uppy.on('restriction-failed', (file, error) => {
-      notify.error('restriction failed');
-    });
+    uppy.on('restriction-failed', (file, error) => {});
 
     uppy.on('info-visible', () => {
       const info = uppy.getState().info;
@@ -78,9 +80,17 @@ export default function Upload(): Node {
       const message = `${info.message} ${info.details}`;
 
       if (info.type === 'error') {
-        notify.error(message);
+        notify({
+          status: 'error',
+          title: message,
+          isClosable: true,
+        });
       } else {
-        notify.warn(message);
+        notify({
+          status: 'warning',
+          title: message,
+          isClosable: true,
+        });
       }
     });
   }, [notify, uppy]);

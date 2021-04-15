@@ -2,7 +2,7 @@
  * @flow
  */
 import type { Node } from 'react';
-import { useNotify } from '@//:modules/focus';
+import { useToast } from '@chakra-ui/react';
 
 type Props = {
   uppy: any,
@@ -13,7 +13,7 @@ type Props = {
  * File picker - select files and add them to the list
  */
 export default function Picker({ uppy, onSelect }: Props): Node {
-  const notify = useNotify();
+  const notify = useToast();
 
   const onChange = e => {
     const files = Array.from(e.target.files);
@@ -26,7 +26,11 @@ export default function Picker({ uppy, onSelect }: Props): Node {
           data: file,
         });
       } catch (err) {
-        notify.error(err.message);
+        notify({
+          status: 'error',
+          title: err.message,
+          isClosable: true,
+        });
       }
     });
 

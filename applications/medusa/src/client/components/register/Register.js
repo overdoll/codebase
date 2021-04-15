@@ -3,9 +3,8 @@
  */
 import { graphql, useMutation } from 'react-relay/hooks';
 import { Button, Form, Input, useForm } from '@//:modules/form';
-
 import { Frame } from '@//:modules/content';
-import { useNotify } from '@//:modules/focus';
+import { useToast } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import type { RegisterMutation } from '@//:artifacts/RegisterMutation.graphql';
 import type { Node } from 'react';
@@ -24,7 +23,7 @@ export default function Register(): Node {
     RegisterMutationGQL,
   );
   const instance = useForm();
-  const notify = useNotify();
+  const notify = useToast();
   const [t] = useTranslation('auth');
 
   const history = useHistory();
@@ -40,7 +39,11 @@ export default function Register(): Node {
         history.replace('/profile');
       },
       onError(data) {
-        notify.error(t('register.error'));
+        notify({
+          status: 'error',
+          title: t('register.error'),
+          isClosable: true,
+        });
       },
     });
   };

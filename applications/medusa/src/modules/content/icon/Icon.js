@@ -2,13 +2,14 @@
  * @flow
  */
 import type { Node } from 'react';
-import { chakra, useToken } from '@chakra-ui/react';
+import { chakra } from '@chakra-ui/react';
 
 type Props = {
   alt?: any,
   title?: any,
   icon: any,
   color?: any,
+  sx?: any,
 };
 
 export default function Icon({
@@ -16,9 +17,14 @@ export default function Icon({
   alt,
   icon,
   color,
+  sx,
   ...rest
 }: Props): Node {
-  const [col] = useToken('colors', [color ?? 'red.500']);
-
-  return <chakra.svg as={icon} sx={{ path: { stroke: col } }} {...rest} />;
+  return (
+    <chakra.svg
+      as={icon}
+      sx={{ path: { stroke: color ?? 'red.500' }, ...sx }}
+      {...rest}
+    />
+  );
 }

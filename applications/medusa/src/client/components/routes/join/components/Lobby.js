@@ -7,12 +7,12 @@ import { useMemo, useState } from 'react';
 import { Heading, Text } from '@//:modules/typography';
 import { Button } from '@//:modules/form';
 import { Frame } from '@//:modules/content';
-import { useNotify } from '@//:modules/focus';
 import { useTranslation } from 'react-i18next';
 import type { LobbySubscriptionResponse } from '@//:artifacts/LobbySubscription.graphql';
 import Icon from '@//:modules/content/icon/Icon';
 import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/sign-badge-circle-K1i3HA.svg';
 import ContentInkPen from '@streamlinehq/streamlinehq/img/streamline-bold/content-ink-pen-jHW3zi.svg';
+import { useToast } from '@chakra-ui/react';
 
 type Props = {
   onReceive: any,
@@ -37,7 +37,7 @@ const LobbyEmail = graphql`
 `;
 
 export default function Lobby(props: Props): Node {
-  const notify = useNotify();
+  const notify = useToast();
   const [t] = useTranslation('auth');
 
   useSubscription<LobbySubscriptionResponse>(
@@ -61,7 +61,11 @@ export default function Lobby(props: Props): Node {
 
         // Subscription error - show to user
         onError: () => {
-          notify.error(t('lobby.error'));
+          notify({
+            status: 'error',
+            title: t('lobby.error'),
+            isClosable: true,
+          });
         },
       }),
       [],
@@ -78,7 +82,11 @@ export default function Lobby(props: Props): Node {
     sendEmail({
       variables: {},
       onCompleted(data) {
-        notify.success(t('lobby.verification'));
+        notify({
+          status: 'success',
+          title: t('lobby.verification'),
+          isClosable: true,
+        });
         timeOut(60000);
       },
       onError(data) {},
