@@ -5,11 +5,10 @@ import type { Node } from 'react';
 import type { PreloadedQueryInner } from 'react-relay/hooks';
 import { graphql, usePreloadedQuery } from 'react-relay/hooks';
 import Register from '../../register/Register';
-import { Frame } from '@//:modules/content';
-import { Heading, Text } from '@//:modules/typography';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from '@//:modules/routing';
 import type { TokenQuery } from '@//:artifacts/TokenQuery.graphql';
+import { Center, chakra, Flex, Heading, Text } from '@chakra-ui/react';
 
 type Props = {
   prepared: {
@@ -47,34 +46,36 @@ export default function Token(props: Props): Node {
   // the other session
   if (!data.redeemCookie.sameSession) {
     return (
-      <Frame>
-        <Heading sx={{ textAlign: 'center', fontSize: 2 }}>
-          {t('header')}
-        </Heading>
-        <div
-          sx={{
-            mt: 4,
-            width: 'fill',
-            textAlign: 'center',
-            backgroundColor: 'neutral.800',
-            pt: 2,
-            pb: 2,
-          }}
-        >
-          <Text sx={{ color: 'green.300' }}>
-            {JSON.parse(data.redeemCookie.session)['user-agent']}
-          </Text>
-        </div>
-        <div
-          sx={{
-            mt: 4,
-            width: 'fill',
-            textAlign: 'center',
-          }}
-        >
-          <Text>{t('close')}</Text>
-        </div>
-      </Frame>
+      <Center mt={8}>
+        <Flex w={['fill', 400]} direction="column">
+          <Heading sx={{ textAlign: 'center', fontSize: 2 }}>
+            {t('header')}
+          </Heading>
+          <chakra.div
+            sx={{
+              mt: 4,
+              width: 'fill',
+              textAlign: 'center',
+              backgroundColor: 'grey.800',
+              pt: 2,
+              pb: 2,
+            }}
+          >
+            <Text color="green.300">
+              {JSON.parse(data.redeemCookie.session)['user-agent']}
+            </Text>
+          </chakra.div>
+          <chakra.div
+            sx={{
+              mt: 4,
+              width: 'fill',
+              textAlign: 'center',
+            }}
+          >
+            <Text>{t('close')}</Text>
+          </chakra.div>
+        </Flex>
+      </Center>
     );
   }
 
