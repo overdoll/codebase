@@ -3,8 +3,7 @@
  */
 import { graphql, useMutation } from 'react-relay/hooks';
 import { Button, Form, Input, useForm } from '@//:modules/form';
-import { Frame } from '@//:modules/content';
-import { useToast } from '@chakra-ui/react';
+import { Center, Flex, useToast } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import type { RegisterMutation } from '@//:artifacts/RegisterMutation.graphql';
 import type { Node } from 'react';
@@ -49,34 +48,36 @@ export default function Register(): Node {
   };
 
   return (
-    <Frame>
-      <Icon
-        icon={SignBadgeCircle}
-        stroke="primary.500"
-        size={80}
-        sx={{
-          display: 'block',
-          pb: 7,
-          pt: 6,
-          textAlign: 'center',
-        }}
-      />
-      <Form instance={instance} onSubmit={onSubmit}>
-        <Input
-          title={t('register.form.username.title')}
-          placeholder={t('register.form.username.placeholder')}
-          name="username"
-          validation={{ required: true }}
-          type="text"
+    <Center mt={8}>
+      <Flex w={['fill', 400]} direction="column">
+        <Icon
+          icon={SignBadgeCircle}
+          color="primary.500"
+          size={80}
+          sx={{
+            display: 'block',
+            pb: 7,
+            pt: 6,
+            textAlign: 'center',
+          }}
         />
-        <Button
-          variant={['huge']}
-          sx={{ width: '100%', variant: 'buttons.primary.regular', mt: 2 }}
-          loading={isInFlight}
-        >
-          {t('register.form.submit')}
-        </Button>
-      </Form>
-    </Frame>
+        <Form instance={instance} onSubmit={onSubmit}>
+          <Input
+            title={t('register.form.username.title')}
+            placeholder={t('register.form.username.placeholder')}
+            name="username"
+            validation={{ required: true }}
+            type="text"
+          />
+          <Button
+            variant={['huge']}
+            sx={{ width: '100%', variant: 'buttons.primary.regular', mt: 2 }}
+            loading={isInFlight}
+          >
+            {t('register.form.submit')}
+          </Button>
+        </Form>
+      </Flex>
+    </Center>
   );
 }
