@@ -49,6 +49,22 @@
         "importSource": "theme-ui"
       }
     ],
-    "@loadable/babel-plugin"
+    "@loadable/babel-plugin",
+    [
+      "babel-plugin-inline-react-svg",
+      {
+        "svgo": {
+          "plugins": [
+            {
+              "name": "removeAttrs",
+              "params": {
+                "attrs": "(data-name)"
+              }
+            },
+            "cleanupIDs"
+          ]
+        }
+      }
+    ]
   ]
 }

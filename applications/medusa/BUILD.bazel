@@ -96,6 +96,8 @@ _RUNTIME_DEPS = [
     "@npm//@emotion/styled",
     "@npm//framer-motion",
     "@npm//@streamlinehq/streamlinehq",
+    "@npm//babel-plugin-inline-react-svg",
+    "@npm//svgo",
 ]
 
 TEST_DEPS = [

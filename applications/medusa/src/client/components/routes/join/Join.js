@@ -118,17 +118,7 @@ export default function Join(): Node {
   // Ask user to authenticate
   return (
     <Frame>
-      <Icon
-        icon={SignBadgeCircle}
-        stroke="primary.500"
-        size={80}
-        sx={{
-          display: 'block',
-          pb: 6,
-          pt: 6,
-          textAlign: 'center',
-        }}
-      />
+      <Icon icon={SignBadgeCircle} w={100} h={100} ml="auto" mr="auto" mb={5} />
       <Form instance={instance} onSubmit={onSubmit}>
         <Input
           title={t('authenticate.form.email.title')}
@@ -145,10 +135,7 @@ export default function Join(): Node {
           }}
           placeholder={t('authenticate.form.email.placeholder')}
         />
-        <Button
-          loading={isInFlight}
-          sx={{ width: 'fill', variant: 'buttons.primary', mt: 2 }}
-        >
+        <Button loading={isInFlight} width="100%">
           {t('authenticate.form.continue')}
         </Button>
       </Form>

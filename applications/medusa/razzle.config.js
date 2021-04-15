@@ -28,6 +28,29 @@ module.exports = {
   modifyWebpackConfig(opts) {
     const config = opts.webpackConfig;
 
+    // config.module.rules = config.module.rules.reduce((rules, rule) => {
+    //   if (rule.exclude && rule.loader.indexOf('file-loader') !== -1) {
+    //     const { exclude, options, ...rest } = rule;
+    //
+    //     rules.push({
+    //       ...rest,
+    //       ...{
+    //         exclude: exclude,
+    //         options: {
+    //           ...options,
+    //           name: opts.env.dev
+    //             ? 'media/[name].[ext]'
+    //             : 'media/[contenthash].[ext]',
+    //         },
+    //       },
+    //     });
+    //   } else {
+    //     rules.push(rule);
+    //   }
+    //
+    //   return rules;
+    // }, []);
+
     config.resolve.alias = {
       '@//:modules': path.resolve(__dirname, 'src/modules'),
       '@//:artifacts': path.resolve(__dirname, 'src/__generated__'),
@@ -45,7 +68,7 @@ module.exports = {
 
       config.output.filename = opts.env.dev
         ? 'js/[name].js'
-        : 'js/[name].[hash:8].js';
+        : 'js/[contenthash].js';
 
       if (opts.env.dev) {
         config.devServer.proxy = {
