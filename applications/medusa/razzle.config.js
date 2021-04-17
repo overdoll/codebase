@@ -1,11 +1,17 @@
 'use strict';
 const LoadableWebpackPlugin = require('@loadable/webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+  .BundleAnalyzerPlugin;
 const path = require('path');
 
 module.exports = {
   experimental: {
     newExternals: true,
     reactRefresh: true,
+  },
+  options: {
+    cssPrefix: 'css',
+    jsPrefix: 'js',
   },
   modifyPaths({
     webpackObject, // the imported webpack node module
@@ -22,19 +28,49 @@ module.exports = {
   modifyWebpackConfig(opts) {
     const config = opts.webpackConfig;
 
+    // config.module.rules = config.module.rules.reduce((rules, rule) => {
+    //   if (rule.exclude && rule.loader.indexOf('file-loader') !== -1) {
+    //     const { exclude, options, ...rest } = rule;
+    //
+    //     rules.push({
+    //       ...rest,
+    //       ...{
+    //         exclude: exclude,
+    //         options: {
+    //           ...options,
+    //           name: opts.env.dev
+    //             ? 'media/[name].[ext]'
+    //             : 'media/[contenthash].[ext]',
+    //         },
+    //       },
+    //     });
+    //   } else {
+    //     rules.push(rule);
+    //   }
+    //
+    //   return rules;
+    // }, []);
+
     config.resolve.alias = {
       '@//:modules': path.resolve(__dirname, 'src/modules'),
       '@//:artifacts': path.resolve(__dirname, 'src/__generated__'),
+      '@//:types': path.resolve(__dirname, 'src/types'),
     };
+
+    if (opts.env.target === 'node') {
+      if (!opts.env.dev) {
+        config.externals = {};
+      }
+    }
 
     if (opts.env.target === 'web') {
       const filename = path.resolve(__dirname, 'build');
 
-      if (opts.env.dev) {
-        config.output.filename = opts.env.dev
-          ? 'static/js/[name].js'
-          : 'static/js/[name].[hash:8].js';
+      config.output.filename = opts.env.dev
+        ? 'js/[name].js'
+        : 'js/[contenthash].js';
 
+      if (opts.env.dev) {
         config.devServer.proxy = {
           context: () => true,
           target: 'http://localhost:8080',
@@ -50,13 +86,7 @@ module.exports = {
         moduleIds: 'size',
         runtimeChunk: 'single',
         splitChunks: {
-          cacheGroups: {
-            vendor: {
-              test: /[\\/]node_modules[\\/]/,
-              name: 'vendors',
-              chunks: 'all',
-            },
-          },
+          chunks: 'all',
         },
       };
 
@@ -69,6 +99,10 @@ module.exports = {
           writeToDisk: { filename },
         }),
       );
+
+      if (process.env.ANALYZE_BUNDLE === 'true') {
+        config.plugins.push(new BundleAnalyzerPlugin());
+      }
     }
 
     return config;

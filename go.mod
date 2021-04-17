@@ -19,6 +19,7 @@ require (
 	github.com/gomodule/redigo v1.8.3
 	github.com/gorilla/securecookie v1.1.1
 	github.com/gorilla/websocket v1.4.2
+	github.com/h2non/filetype v1.1.1 // indirect
 	github.com/joho/godotenv v1.3.0
 	github.com/klauspost/compress v1.11.9 // indirect
 	github.com/mitchellh/mapstructure v1.1.2

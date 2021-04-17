@@ -11,7 +11,7 @@ type Props = {
 
 export default function Element({ selected, children, onSelect }: Props): Node {
   return (
-    <div
+    <button
       onClick={onSelect}
       sx={{
         border: selected ? '2px solid red' : '2px solid black',
@@ -20,6 +20,6 @@ export default function Element({ selected, children, onSelect }: Props): Node {
       }}
     >
       {children}
-    </div>
+    </button>
   );
 }

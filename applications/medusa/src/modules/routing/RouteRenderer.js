@@ -1,20 +1,20 @@
 /**
  * @flow
  */
+import type { Node } from 'react';
 import {
+  Suspense,
+  unstable_useTransition as useTransition,
   useContext,
   useEffect,
-  // $FlowIgnore
-  unstable_useTransition as useTransition,
-  Suspense,
   useState,
 } from 'react';
 import RoutingContext from '@//:modules/routing/RoutingContext';
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary';
 import { keyframes } from '@emotion/react';
-import type { Node } from 'react';
 import type { Route } from '../../client/routes';
 import { Resource } from '@//:modules/utilities/JSResource';
+import { chakra } from '@chakra-ui/react';
 
 const SUSPENSE_CONFIG = { timeoutMs: 2000 };
 
@@ -121,7 +121,7 @@ export default function RouterRenderer(): Node {
       <Suspense fallback={null}>
         {/* Indicate to the user that a transition is pending, even while showing the previous UI */}
         {isPending ? (
-          <div
+          <chakra.div
             sx={{
               position: 'absolute',
               zIndex: '1',
@@ -131,7 +131,7 @@ export default function RouterRenderer(): Node {
             }}
           >
             Loading pending...
-          </div>
+          </chakra.div>
         ) : null}
         {routeComponent}
       </Suspense>

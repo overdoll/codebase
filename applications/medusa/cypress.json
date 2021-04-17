@@ -1,0 +1,8 @@
+{
+  "baseUrl": "https://overdoll.test",
+  "env": {
+    "codeCoverage": {
+      "url": "https://overdoll.test/__coverage__"
+    }
+  }
+}

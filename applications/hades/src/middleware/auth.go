@@ -7,10 +7,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gomodule/redigo/redis"
 	eva "overdoll/applications/eva/proto"
-	"overdoll/applications/hades/src/authentication"
 	"overdoll/applications/hades/src/helpers"
 	"overdoll/applications/hades/src/models"
 	"overdoll/applications/hades/src/services"
+	"overdoll/libraries/jwt"
 )
 
 // Middleware decodes the share session cookie and packs the session into context
@@ -24,7 +24,7 @@ func AuthenticationMiddleware(services services.Services, redis redis.Conn) gin.
 			return
 		}
 
-		jwtService := authentication.JWTAuthService()
+		jwtService := jwt.JWTAuthService()
 
 		// Verify JWT token
 		jwtToken, err := jwtService.ValidateToken(cookie.Value)
@@ -37,7 +37,7 @@ func AuthenticationMiddleware(services services.Services, redis redis.Conn) gin.
 			return
 		}
 
-		claims := jwtToken.Claims.(*authentication.AuthCustomClaims)
+		claims := jwtToken.Claims.(*jwt.AuthCustomClaims)
 
 		// make sure our session token also exists in the Redis Set
 		existing, err := redis.Do("SISMEMBER", "session:"+claims.Id, cookie.Value)

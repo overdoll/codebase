@@ -1,18 +1,23 @@
 /**
  * @flow
  */
-import { graphql, useSubscription, useMutation } from 'react-relay/hooks';
+import { graphql, useMutation, useSubscription } from 'react-relay/hooks';
 import type { Node } from 'react';
 import { useMemo, useState } from 'react';
-import { Heading, Text } from '@//:modules/typography';
 import { Button } from '@//:modules/form';
-import { Frame } from '@//:modules/content';
-import { useNotify } from '@//:modules/focus';
 import { useTranslation } from 'react-i18next';
 import type { LobbySubscriptionResponse } from '@//:artifacts/LobbySubscription.graphql';
 import Icon from '@//:modules/content/icon/Icon';
-import { SignShapes } from '@streamlinehq/streamline-regular/lib/maps-navigation';
-import { ContentCreation } from '@streamlinehq/streamline-bold/lib/content';
+import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/sign-badge-circle-K1i3HA.svg';
+import ContentInkPen from '@streamlinehq/streamlinehq/img/streamline-bold/content-ink-pen-jHW3zi.svg';
+import {
+  Center,
+  chakra,
+  Flex,
+  Heading,
+  Text,
+  useToast,
+} from '@chakra-ui/react';
 
 type Props = {
   onReceive: any,
@@ -37,7 +42,7 @@ const LobbyEmail = graphql`
 `;
 
 export default function Lobby(props: Props): Node {
-  const notify = useNotify();
+  const notify = useToast();
   const [t] = useTranslation('auth');
 
   useSubscription<LobbySubscriptionResponse>(
@@ -48,10 +53,10 @@ export default function Lobby(props: Props): Node {
 
         // Received a subscription response
         onNext: (response: ?LobbySubscriptionResponse) => {
-          // If the cookie was redeemed in the same browser session, or the user is registered, refresh the page
+          // If the cookie was redeemed in the same browser session, and user is registered, refresh the page
           if (
-            response?.authListener?.sameSession ||
-            response?.authListener?.cookie?.registered
+            response?.authListener?.sameSession &&
+            !!response?.authListener?.cookie?.registered
           ) {
             window.location.reload();
           } else {
@@ -61,7 +66,11 @@ export default function Lobby(props: Props): Node {
 
         // Subscription error - show to user
         onError: () => {
-          notify.error(t('lobby.error'));
+          notify({
+            status: 'error',
+            title: t('lobby.error'),
+            isClosable: true,
+          });
         },
       }),
       [],
@@ -78,7 +87,11 @@ export default function Lobby(props: Props): Node {
     sendEmail({
       variables: {},
       onCompleted(data) {
-        notify.success(t('lobby.verification'));
+        notify({
+          status: 'success',
+          title: t('lobby.verification'),
+          isClosable: true,
+        });
         timeOut(60000);
       },
       onError(data) {},
@@ -106,62 +119,60 @@ export default function Lobby(props: Props): Node {
   };
 
   return (
-    <Frame>
-      <Icon
-        icon={SignShapes.SignBadgeCircle}
-        strokeWidth={2.5}
-        stroke={'purple.300'}
-        size={80}
-        sx={{
-          display: 'block',
-          pb: 7,
-          pt: 6,
-          textAlign: 'center',
-        }}
-      />
-      <Heading sx={{ textAlign: 'center', fontSize: 3 }}>
-        {t('lobby.header')}
-      </Heading>
-      <div
-        sx={{
-          mt: 6,
-          width: '100%',
-          textAlign: 'center',
-          backgroundColor: 'neutral.800',
-          pt: 3,
-          pb: 3,
-          overflow: 'scroll',
-          pl: 3,
-          pr: 3,
-        }}
-      >
-        <Text sx={{ color: 'purple.300', fontSize: 2 }}>{props.email}</Text>
+    <Center mt={8}>
+      <Flex w={['fill', 400]} direction="column">
         <Icon
-          icon={ContentCreation.ContentInkPen}
-          // delete cookie from backend and navigate to join
-          strokeWidth={2}
-          fill={'purple.300'}
-          size={16}
+          icon={SignBadgeCircle}
+          color="purple.300"
           sx={{
-            display: 'inline-block',
-            transform: 'translateY(25%) translateX(400%)',
-            position: 'absolute',
+            pb: 7,
+            pt: 6,
+            textAlign: 'center',
           }}
         />
-      </div>
-      <Button
-        size={'large'}
-        type={'buttons.tertiary.regular'}
-        sx={{
-          mt: 6,
-          width: 'fill',
-        }}
-        loading={isSendingEmail}
-        onClick={onSubmit}
-        disabled={buttonDisabled}
-      >
-        {t('lobby.resend') + (!buttonDisabled ? '' : ` (${timer})`)}
-      </Button>
-    </Frame>
+        <Heading sx={{ textAlign: 'center', fontSize: 3 }}>
+          {t('lobby.header')}
+        </Heading>
+        <chakra.div
+          sx={{
+            mt: 6,
+            width: '100%',
+            textAlign: 'center',
+            backgroundColor: 'neutral.800',
+            pt: 3,
+            pb: 3,
+            overflow: 'scroll',
+            pl: 3,
+            pr: 3,
+          }}
+        >
+          <Text color="purple.300">{props.email}</Text>
+          <Icon
+            icon={ContentInkPen}
+            // delete cookie from backend and navigate to join
+            fill="purple.300"
+            size={16}
+            sx={{
+              display: 'inline-block',
+              transform: 'translateY(25%) translateX(400%)',
+              position: 'absolute',
+            }}
+          />
+        </chakra.div>
+        <Button
+          variant={['huge']}
+          sx={{
+            mt: 6,
+            variant: 'buttons.tertiary.regular',
+            width: 'fill',
+          }}
+          loading={isSendingEmail}
+          onClick={onSubmit}
+          disabled={buttonDisabled}
+        >
+          {t('lobby.resend') + (!buttonDisabled ? '' : ` (${timer})`)}
+        </Button>
+      </Flex>
+    </Center>
   );
 }

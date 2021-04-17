@@ -13,9 +13,15 @@ type Props = {
   children: any,
   onClose?: any,
   header?: Node,
+  placeholder: string,
 };
 
-export default function Search({ children, onClose, header }: Props): Node {
+export default function Search({
+  placeholder,
+  children,
+  onClose,
+  header,
+}: Props): Node {
   const [searchInput, setSearch] = useState('');
   const [startTransition, isPending] = useTransition({ timeoutMs: 10 * 1000 });
 

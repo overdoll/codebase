@@ -12,6 +12,8 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	tusd "github.com/tus/tusd/pkg/handler"
 	"github.com/tus/tusd/pkg/s3store"
+	"overdoll/applications/buffer/src/middleware"
+	"overdoll/applications/buffer/src/server"
 	storage "overdoll/libraries/aws"
 	"overdoll/libraries/bootstrap"
 )
@@ -47,17 +49,21 @@ func main() {
 	// Create a new HTTP handler for the tusd server by providing a configuration.
 	// The StoreComposer property must be set to allow the handler to function.
 	handler, err := tusd.NewHandler(tusd.Config{
-		BasePath:      "/api/upload/",
-		StoreComposer: composer,
+		BasePath:                "/api/upload/",
+		StoreComposer:           composer,
+		RespectForwardedHeaders: true,
 	})
 
 	if err != nil {
 		log.Fatalf("unable to create handler: %s", err)
 	}
 
+	upload := uploads.Handler(s3Client)
+
 	mux := http.NewServeMux()
 
-	mux.Handle("/api/upload/", http.StripPrefix("/api/upload/", handler))
+	mux.Handle("/api/uploads/", http.StripPrefix("/api/uploads/", middleware.Authenticate(upload)))
+	mux.Handle("/api/upload/", http.StripPrefix("/api/upload/", middleware.Authenticate(handler)))
 
 	srv := &http.Server{
 		Addr:    ":8080",

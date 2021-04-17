@@ -3,16 +3,18 @@ const config = {
     'default-src': ["'self'"],
     'script-src': [
       "'self'",
-      // TODO: remove unsafe-inline if in production, this is required for react-error-overlay
-      "'unsafe-inline'",
-      // (req, res) => `'nonce-${res.locals.cspNonce}'`,
+      process.env.NODE_ENV === 'production'
+        ? (req, res) => `'nonce-${res.locals.cspNonce}'`
+        : "'unsafe-inline'",
+      "'unsafe-eval'",
+      process.env.PUBLIC_PATH,
     ],
     'style-src': [
       "'self'",
-      // TODO: remove unsafe-inline if in production, this is required for react-error-overlay
-      "'unsafe-inline'",
       'https://fonts.googleapis.com',
-      // (req, res) => `'nonce-${res.locals.cspNonce}'`,
+      process.env.NODE_ENV === 'production'
+        ? (req, res) => `'nonce-${res.locals.cspNonce}'`
+        : "'unsafe-inline'",
     ],
     'font-src': ['data:', '*'],
     'base-uri': ["'self'"],

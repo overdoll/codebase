@@ -7,13 +7,12 @@ import { useContext, useState, useEffect } from 'react';
 import Register from '../../register/Register';
 import { useTranslation } from 'react-i18next';
 import { Button, Form, Input, useForm } from '@//:modules/form';
-import { Frame } from '@//:modules/content';
-import { useNotify } from '@//:modules/focus';
 import Lobby from './components/Lobby';
+import { Center, Flex, useToast } from '@chakra-ui/react';
 import { RootContext } from '../Root';
 import { EMAIL } from '@//:modules/regex';
 import Icon from '@//:modules/content/icon/Icon';
-import { SignShapes } from '@streamlinehq/streamline-regular/lib/maps-navigation';
+import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/sign-badge-circle-K1i3HA.svg';
 import type { JoinFragment$key } from '@//:artifacts/JoinFragment.graphql';
 import { useLocation } from '@//:modules/routing';
 
@@ -50,7 +49,7 @@ export default function Join(): Node {
   const [commit, isInFlight] = useMutation(JoinAction);
   const instance = useForm<JoinValues>();
 
-  const notify = useNotify();
+  const notify = useToast();
 
   const location = useLocation();
 
@@ -94,7 +93,11 @@ export default function Join(): Node {
         setWaiting(true);
       },
       onError(data) {
-        notify.error(t('authenticate.error.join'));
+        notify({
+          status: 'error',
+          title: t('authenticate.error.join'),
+          isClosable: true,
+        });
       },
     });
   };
@@ -135,44 +138,37 @@ export default function Join(): Node {
 
   // Ask user to authenticate
   return (
-    <Frame>
-      <Icon
-        icon={SignShapes.SignBadgeCircle}
-        strokeWidth={2.5}
-        stroke={'primary.500'}
-        size={80}
-        sx={{
-          display: 'block',
-          pb: 6,
-          pt: 6,
-          textAlign: 'center',
-        }}
-      />
-      <Form instance={instance} onSubmit={onSubmit}>
-        <Input
-          title={t('authenticate.form.email.title')}
-          name="email"
-          validation={{
-            required: {
-              value: true,
-              message: t('authenticate.form.validation.email.required'),
-            },
-            pattern: {
-              value: EMAIL,
-              message: t('authenticate.form.validation.email.pattern'),
-            },
-          }}
-          placeholder={t('authenticate.form.email.placeholder')}
+    <Center mt={8}>
+      <Flex w={['fill', 'sm']} direction="column">
+        <Icon
+          icon={SignBadgeCircle}
+          w={100}
+          h={100}
+          ml="auto"
+          mr="auto"
+          mb={5}
         />
-        <Button
-          loading={isInFlight}
-          size={'large'}
-          type={'buttons.tertiary.regular'}
-          sx={{ width: 'fill', mt: 2 }}
-        >
-          {t('authenticate.form.continue')}
-        </Button>
-      </Form>
-    </Frame>
+        <Form instance={instance} onSubmit={onSubmit}>
+          <Input
+            title={t('authenticate.form.email.title')}
+            name="email"
+            validation={{
+              required: {
+                value: true,
+                message: t('authenticate.form.validation.email.required'),
+              },
+              pattern: {
+                value: EMAIL,
+                message: t('authenticate.form.validation.email.pattern'),
+              },
+            }}
+            placeholder={t('authenticate.form.email.placeholder')}
+          />
+          <Button type="submit" loading={isInFlight} width="100%">
+            {t('authenticate.form.continue')}
+          </Button>
+        </Form>
+      </Flex>
+    </Center>
   );
 }

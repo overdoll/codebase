@@ -5,6 +5,7 @@
 *.so
 *.dylib
 
+
 # Test binary, built with `go test -c`
 *.test
 
@@ -19,8 +20,14 @@ tilt_modules
 .helm
 bazel-*
 .env
+build
+.nyc_output
+coverage
 
 # IDEA
 .ijwb
 .idea.bak
 .idea
+
+yarn-error.log
+telepresence.log

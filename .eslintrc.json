@@ -4,7 +4,10 @@
     "standard",
     "prettier",
     "plugin:flowtype/recommended",
-    "plugin:jest/recommended"
+    "plugin:jest/recommended",
+    "plugin:testing-library/recommended",
+    "plugin:testing-library/react",
+    "plugin:cypress/recommended"
   ],
   "plugins": [
     "flowtype",
@@ -12,7 +15,9 @@
     "relay",
     "react-hooks",
     "prettier",
-    "jest"
+    "jest",
+    "testing-library",
+    "cypress"
   ],
   "rules": {
     "react-hooks/rules-of-hooks": "error",
@@ -26,7 +31,16 @@
     "relay/unused-fields": "warn",
     "relay/hook-required-argument": "warn",
     "react/jsx-uses-react": "off",
-    "react/react-in-jsx-scope": "off"
+    "react/react-in-jsx-scope": "off",
+    "flowtype/no-mixed": 2,
+    "flowtype/no-weak-types": [
+      2,
+      {
+        "any": true,
+        "Object": true,
+        "Function": true
+      }
+    ]
   },
   "parserOptions": {
     "ecmaFeatures": {
@@ -39,5 +53,23 @@
     "browser": true,
     "node": true,
     "es6": true
-  }
+  },
+  "overrides": [
+    {
+      "plugins": [
+        "cypress"
+      ],
+      "files": [
+        "./applications/medusa/cypress/**/*.js"
+      ]
+    },
+    {
+      "plugins": [
+        "jest"
+      ],
+      "files": [
+        "./applications/medusa/src/**/*.js"
+      ]
+    }
+  ]
 }

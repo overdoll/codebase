@@ -99,8 +99,9 @@ func (s *Server) SchedulePost(ctx context.Context, post *sting.SchedulePostReque
 	}
 
 	// Send a message to pox to process the images on this specific post
-	err = s.events.Publish("pox.topic.posts_content_processing", &pox.PostProcessContentEvent{
+	err = s.events.Publish(ctx, "pox.topic.posts_content_processing", &pox.PostProcessContentEvent{
 		PostId:  pendingPost.Id.String(),
+		Prefix:  pendingPost.ContributorId.String(),
 		Content: pendingPost.Content,
 	})
 
@@ -114,15 +115,24 @@ func (s *Server) SchedulePost(ctx context.Context, post *sting.SchedulePostReque
 // ProcessPost - Process a post - our pox service will call this once it's finished processing the images
 func (s *Server) ProcessPost(ctx context.Context, process *sting.ProcessPostRequest) (*sting.Post, error) {
 
-	// Get our post by this ID
-	postPendingQuery := qb.Select("post_pending").
-		Where(qb.EqLit("id", process.Id)).
-		Query(s.session)
+	id, err := ksuid.Parse(process.Id)
 
-	var postPending models.PostPending
-
-	if err := postPendingQuery.Get(&postPending); err != nil {
+	if err != nil {
 		return nil, err
+	}
+
+	postPending := &models.PostPending{
+		Id: id,
+	}
+
+	// Get our post by this ID
+	postPendingQuery := qb.Select("posts_pending").
+		Where(qb.Eq("id")).
+		Query(s.session).
+		BindStruct(postPending)
+
+	if err := postPendingQuery.Get(postPending); err != nil {
+		return nil, fmt.Errorf("select() failed: '%s", err)
 	}
 
 	postState := models.Review
@@ -133,15 +143,16 @@ func (s *Server) ProcessPost(ctx context.Context, process *sting.ProcessPostRequ
 	}
 
 	processedPost := &models.PostPending{
-		Id:      postPending.Id,
-		Content: process.Content,
-		State:   postState,
+		Id:            postPending.Id,
+		Content:       process.Content,
+		ContributorId: postPending.ContributorId,
+		State:         postState,
 	}
 
 	// Update our post to reflect the new state
-	updatePost := qb.Update("post_pending").
-		Set("content", "state").
-		Where(qb.Eq("id")).
+	updatePost := qb.Update("posts_pending").
+		Set("state", "content").
+		Where(qb.Eq("id"), qb.Eq("contributor_id")).
 		Query(s.session).
 		BindStruct(processedPost)
 
@@ -151,8 +162,9 @@ func (s *Server) ProcessPost(ctx context.Context, process *sting.ProcessPostRequ
 
 	// Tell pox to publish our images
 	if !postPending.ReviewRequired {
-		err := s.events.Publish("pox.topic.posts_content_publishing", &pox.PostPublishContentEvent{
+		err := s.events.Publish(ctx, "pox.topic.posts_content_publishing", &pox.PostPublishContentEvent{
 			PostId:  postPending.Id.String(),
+			Prefix:  postPending.ContributorId.String(),
 			Content: postPending.Content,
 		})
 
@@ -161,7 +173,7 @@ func (s *Server) ProcessPost(ctx context.Context, process *sting.ProcessPostRequ
 		}
 	}
 
-	return nil, nil
+	return &sting.Post{}, nil
 }
 
 // PublishPost - Publish the post - create a new entry in Post table, and delete the pending post
@@ -303,7 +315,7 @@ func (s *Server) PublishPost(ctx context.Context, publish *sting.PublishPostRequ
 
 	// Now that all of our new stuff was batch inserted, we need to tell indigo to index our new characters, categories and media
 	// we bulk publish the events
-	err = s.events.BulkPublish(publishMap)
+	err = s.events.BulkPublish(ctx, publishMap)
 
 	if err != nil {
 		return nil, err
@@ -364,7 +376,7 @@ func (s *Server) PublishPost(ctx context.Context, publish *sting.PublishPostRequ
 	}
 
 	// Tell indigo to index our post
-	err = s.events.Publish("indigo.topic.create_document", &indigo.CreateDocument{Id: post.Id.String(), Index: "posts", Body: string(marshal)})
+	err = s.events.Publish(ctx, "indigo.topic.create_document", &indigo.CreateDocument{Id: post.Id.String(), Index: "posts", Body: string(marshal)})
 
 	if err != nil {
 		return nil, err
@@ -387,7 +399,7 @@ func (s *Server) PublishPost(ctx context.Context, publish *sting.PublishPostRequ
 		return nil, fmt.Errorf("update() failed: '%s", err)
 	}
 
-	return nil, nil
+	return &sting.Post{}, nil
 }
 
 // ReviewPost - Successfully review the post
@@ -451,7 +463,7 @@ func (s *Server) ReviewPost(ctx context.Context, review *sting.ReviewPostRequest
 	}
 
 	// Tell pox to publish the images - this will make the post public & create all the required categories once this is finished
-	err = s.events.Publish("pox.topic.posts_image_publishing", &pox.PostPublishContentEvent{
+	err = s.events.Publish(ctx, "pox.topic.posts_image_publishing", &pox.PostPublishContentEvent{
 		PostId:  postReview.Id.String(),
 		Content: postReview.Content,
 	})

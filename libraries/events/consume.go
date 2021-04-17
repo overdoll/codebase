@@ -1,7 +1,6 @@
 package events
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"os"
@@ -20,9 +19,9 @@ func (conn Connection) RegisterSubscriber(topic string, handler interface{}) {
 func (conn Connection) Run() {
 	for topic, subscriber := range conn.subscribers {
 		r := kafka.NewReader(kafka.ReaderConfig{
-			Brokers: []string{conn.address},
-			Topic:   topic,
-			GroupID: conn.group,
+			Brokers:  []string{conn.address},
+			Topic:    topic,
+			GroupID:  conn.group,
 			MinBytes: 10e3, // 10KB
 			MaxBytes: 10e6, // 10MB
 			// assign the logger to the reader
@@ -42,17 +41,35 @@ func (conn Connection) Run() {
 					os.Exit(1)
 				}
 
-				var message proto.Message
+				typeof := reflect.TypeOf(handler)
+
+				if typeof.Kind() != reflect.Func {
+					fmt.Println("event processor must be a function")
+					continue
+				}
+
+				if typeof.NumIn() != 2 {
+					fmt.Println("event processor must contain 2 arguments")
+					continue
+				}
+
+				msgType := typeof.In(1)
+
+				message := reflect.New(msgType.Elem()).Interface().(proto.Message)
 
 				err = proto.Unmarshal(msg.Value, message)
 
 				if err != nil {
-					// TODO: handle data unmarshal failure. for now, it will discard the message
+					fmt.Printf("failed to unmarshal proto message: %s", err)
+					continue
 				}
 
-				if typ := reflect.TypeOf(handler); typ.Kind() == reflect.Func {
-					handler.(func(context context.Context, msg proto.Message))(conn.context, message)
+				values := []reflect.Value{
+					reflect.ValueOf(conn.context),
+					reflect.ValueOf(message),
 				}
+
+				reflect.ValueOf(handler).Call(values)
 			}
 		}()
 	}

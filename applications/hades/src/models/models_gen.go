@@ -46,6 +46,7 @@ type Cookie struct {
 	Redeemed    bool   `json:"redeemed"`
 	Session     string `json:"session"`
 	Email       string `json:"email"`
+	Invalid     bool   `json:"invalid"`
 }
 
 type Media struct {

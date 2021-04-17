@@ -2,10 +2,12 @@
  * @flow
  */
 import type { Node } from 'react';
-import { Button as ThemeUIButton } from 'theme-ui';
-import { useSpring, animated } from 'react-spring';
-import { Config } from '@//:modules/animations';
-import { Loading } from '@//:modules/assets';
+import { Icon } from '@//:modules/content';
+import SynchronizeArrow1 from '@streamlinehq/streamlinehq/img/streamline-regular/synchronize-arrow-1-WipT2h.svg';
+import { Button as ChakraButton } from '@chakra-ui/react';
+import { motion } from 'framer-motion';
+
+const AnimatedButton = motion(ChakraButton);
 
 type Props = {
   loading?: boolean,
@@ -25,51 +27,17 @@ export default function Button({
   type,
   ...rest
 }: Props): Node {
-  const AnimatedThemeUIButton = animated(ThemeUIButton);
-
   const fullDisable = disabled || loading;
 
-  const [{ bubble }, setBubble] = useSpring(() => ({
-    bubble: 1,
-    config: Config.click,
-  }));
-
   return (
-    <AnimatedThemeUIButton
+    <AnimatedButton
       {...rest}
+      radius="xl"
+      size="lg"
       disabled={fullDisable}
-      onTouchStart={
-        !fullDisable
-          ? () => setBubble({ bubble: 0.95 })
-          : () => setBubble({ bubble: 0.99 })
-      }
-      onTouchEnd={() => setBubble({ bubble: 1 })}
-      style={{ transform: bubble.to(v => `scale(${v})`) }}
-      variant={[size]}
-      sx={{
-        borderStyle: 'solid',
-        fontWeight: 'bold',
-        fontFamily: 'heading',
-        variant: type,
-        outline: 'none',
-        '&:hover': {
-          cursor: 'pointer',
-        },
-        '&:disabled': {
-          cursor: 'not-allowed',
-        },
-        ...sx,
-      }}
+      whileTap={{ scale: 1.1 }}
     >
-      <span sx={{ display: 'flex' }}>
-        <span sx={{ margin: 'auto' }}>
-          {loading ? (
-            <Loading color={'buttons.primary.regular.color'} />
-          ) : (
-            children
-          )}
-        </span>
-      </span>
-    </AnimatedThemeUIButton>
+      {loading ? <Icon icon={SynchronizeArrow1} stroke="inherit" /> : children}
+    </AnimatedButton>
   );
 }

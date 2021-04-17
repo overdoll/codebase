@@ -17,17 +17,6 @@ _SRC = glob(
     "package.json",
 ]
 
-copy_to_bin(
-    name = "copy_static_files",
-    srcs = _SRC,
-)
-
-write_file(
-    name = "write_chdir_script",
-    out = "chdir.js",
-    content = ["process.chdir(__dirname)"],
-)
-
 _RUNTIME_DEPS = [
     "@npm//react",
     "@npm//react-dom",
@@ -51,6 +40,8 @@ _RUNTIME_DEPS = [
     "@npm//@babel/plugin-transform-arrow-functions",
     "@npm//@babel/plugin-transform-runtime",
     "@npm//@babel/plugin-transform-modules-commonjs",
+    "@npm//@babel/plugin-proposal-optional-chaining",
+    "@npm//@babel/plugin-proposal-nullish-coalescing-operator",
     "@npm//css-loader",
     "@npm//dotenv-webpack",
     "@npm//html-loader",
@@ -83,14 +74,11 @@ _RUNTIME_DEPS = [
     "@npm//@emotion/cache",
     "@npm//@emotion/server",
     "@npm//@emotion/css",
-    "@npm//theme-ui",
     "@npm//react-i18next",
     "@npm//i18next-http-middleware",
     "@npm//i18next-fs-backend",
     "@npm//i18next",
     "@npm//react-hook-form",
-    "@npm//@streamlinehq/streamline-bold",
-    "@npm//@streamlinehq/streamline-regular",
     "@npm//react-spring",
     "@npm//@uppy/core",
     "@npm//@uppy/tus",
@@ -101,82 +89,111 @@ _RUNTIME_DEPS = [
     "@npm//dexie",
     "@npm//use-query-params",
     "@npm//query-string",
+    "@npm//webpack-bundle-analyzer",
+    "@npm//babel-plugin-istanbul",
+    "@npm//@chakra-ui/react",
+    "@npm//@emotion/styled",
+    "@npm//framer-motion",
+    "@npm//@streamlinehq/streamlinehq",
+    "@npm//babel-plugin-inline-react-svg",
+    "@npm//svgo",
 ]
 
-nodejs_binary(
-    name = "medusa",
-    data = [
-        "chdir.js",
-        "copy_static_files",
-    ] + _RUNTIME_DEPS,
-    entry_point = "@npm//:node_modules/razzle/bin/razzle.js",
-    templated_args = [
-        "--node_options=--require=./$(rootpath chdir.js)",
-        "start",
-    ],
+TEST_DEPS = [
+    "jest.setup.js",
+    "jest.config.js",
+] + glob([
+    "src/__generated__/*",
+    ".*",
+]) + _RUNTIME_DEPS + [
+    "@npm//@jest/transform",
+    "@npm//@jest/core",
+    "@npm//@testing-library/react",
+    "@npm//babel-jest",
+    "@npm//relay-test-utils",
+    "@npm//jest-environment-jsdom-sixteen",
+    "@npm//@testing-library/jest-dom",
+    "@npm//c8",
+    "@npm//fake-indexeddb",
+    "@npm//@testing-library/user-event",
+]
+
+copy_to_bin(
+    name = "copy_static_files",
+    srcs = _SRC,
 )
 
-nodejs_image(
-    name = "medusa-image",
-    binary = ":medusa",
+write_file(
+    name = "write_chdir_script",
+    out = "chdir.js",
+    content = ["process.chdir(__dirname)"],
 )
 
 jest_test(
-    name = "test",
+    name = "unit",
     srcs = glob(
         [
             "src/client/**/*",
             "src/modules/**/*",
         ],
     ),
-    deps = [
-        "jest.setup.js",
-        "jest.config.js",
+    file_extension = ".uspec.js",
+    jest_config = "jest.config.js",
+    deps = TEST_DEPS,
+)
+
+jest_test(
+    name = "integration",
+    srcs = glob(
+        [
+            "src/client/**/*",
+            "src/modules/**/*",
+        ],
+    ),
+    file_extension = ".ispec.js",
+    jest_config = "jest.config.js",
+    deps = TEST_DEPS,
+)
+
+razzle(
+    name = "bundle",
+    outs = [
+        "build/chunks.json",
+        "build/loadable-stats.json",
+        "build/public",
+        "build/server.js",
+    ],
+    args = [
+        "--node_options=--require=./$(location chdir.js)",
+        "build",
+    ],
+    data = [
+        "copy_static_files",
+        "chdir.js",
+    ] + _RUNTIME_DEPS,
+)
+
+nodejs_binary(
+    name = "medusa-production",
+    data = [
+        "chdir.js",
+        ":bundle",
     ] + glob([
-        "src/__generated__/*",
-        ".*",
-    ]) + _RUNTIME_DEPS + [
-        "@npm//@jest/transform",
-        "@npm//@jest/core",
-        "@npm//@testing-library/react",
-        "@npm//babel-jest",
-        "@npm//relay-test-utils",
-        "@npm//jest-environment-jsdom-sixteen",
-        "@npm//@testing-library/jest-dom",
-        "@npm//c8",
+        "src/server/templates/**",
+        "src/server/locales/**/*",
+        "public/**",
+    ]),
+    entry_point = "build/server.js",
+    templated_args = [
+        "--node_options=--require=./$(rootpath chdir.js)",
     ],
 )
 
-# TODO: get build working here
-#razzle(
-#    name = "bundle",
-#    outs = ["build"],
-#    args = [
-#        "--node_options=--require=./$(execpath chdir.js)",
-#        "build",
-#    ],
-#    data = _RUNTIME_DEPS,
-#)
-
-#nodejs_binary(
-#    name = "medusa-bin",
-#    data = _RUNTIME_DEPS,
-#    entry_point = "@npm//:node_modules/razzle/bin/razzle.js",
-#    templated_args = [
-#        "--node_options=--require=./$(rootpath chdir.js)",
-#        "build",
-#    ],
-#)
-
-#nodejs_binary(
-#    name = "medusa",
-#    data = [
-#        "chdir.js",
-#        ":bundle",
-#        "@npm//express",
-#    ],
-#    entry_point = "build/server.js",
-#    templated_args = [
-#        "--node_options=--require=./$(rootpath chdir.js)",
-#    ],
-#)
+nodejs_image(
+    name = "medusa-production-image",
+    binary = ":medusa-production",
+    env = {
+        "NODE_ENV": "production",
+        "PORT": "8080",
+    },
+)
