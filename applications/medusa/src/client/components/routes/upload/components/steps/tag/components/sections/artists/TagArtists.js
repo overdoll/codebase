@@ -6,6 +6,7 @@ import Artists from './query/Artists';
 import type { Dispatch, State } from '@//:types/upload';
 import { EVENTS } from '../../../../../../constants/constants';
 import Section from '../../section/Section';
+import SmallTag from '../../search/tag/SmallTag';
 
 type Props = {
   dispatch: Dispatch,
@@ -29,9 +30,10 @@ export default function TagArtists({ state, dispatch }: Props): Node {
         />
       )}
       title={'Artist'}
-      count={Object.keys(state.artist).length}
+      count={Object.keys(state.artist).length !== 0 ? 1 : 0}
     >
-      DISPLAY SELECTED ARTIST HERE???
+      123
+      <SmallTag title={'1123'} />
     </Section>
   );
 }
