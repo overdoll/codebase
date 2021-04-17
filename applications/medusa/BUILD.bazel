@@ -129,24 +129,6 @@ write_file(
     content = ["process.chdir(__dirname)"],
 )
 
-nodejs_binary(
-    name = "medusa",
-    data = [
-        "chdir.js",
-        "copy_static_files",
-    ] + _RUNTIME_DEPS,
-    entry_point = "@npm//:node_modules/razzle/bin/razzle.js",
-    templated_args = [
-        "--node_options=--require=./$(rootpath chdir.js)",
-        "start",
-    ],
-)
-
-nodejs_image(
-    name = "medusa-image",
-    binary = ":medusa",
-)
-
 jest_test(
     name = "unit",
     srcs = glob(

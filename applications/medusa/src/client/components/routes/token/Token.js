@@ -47,7 +47,7 @@ export default function Token(props: Props): Node {
   if (!data.redeemCookie.sameSession) {
     return (
       <Center mt={8}>
-        <Flex w={['fill', 400]} direction="column">
+        <Flex w={['fill', 'sm']} direction="column">
           <Heading sx={{ textAlign: 'center', fontSize: 2 }}>
             {t('header')}
           </Heading>

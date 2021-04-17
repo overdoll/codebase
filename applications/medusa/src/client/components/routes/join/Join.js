@@ -121,7 +121,7 @@ export default function Join(): Node {
   // Ask user to authenticate
   return (
     <Center mt={8}>
-      <Flex w={['fill', 400]} direction="column">
+      <Flex w={['fill', 'sm']} direction="column">
         <Icon
           icon={SignBadgeCircle}
           w={100}

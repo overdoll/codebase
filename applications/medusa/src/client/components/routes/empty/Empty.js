@@ -6,51 +6,43 @@ import Icon from '@//:modules/content/icon/Icon';
 import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/sign-badge-circle-K1i3HA.svg';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@//:modules/form';
-import { Center, chakra, Flex, Heading } from '@chakra-ui/react';
+import { Center, Flex, Heading, Stack } from '@chakra-ui/react';
 
 export default function Empty(): Node {
   const [t] = useTranslation('empty');
 
   return (
     <Center mt={8}>
-      <Flex w={['fill', 400]} direction="column">
+      <Flex w={['fill', 'sm']} direction="column">
         <Icon
           icon={SignBadgeCircle}
-          color="primary.500"
-          size={80}
-          sx={{
-            display: 'block',
-            pb: 7,
-            pt: 6,
-            textAlign: 'center',
-          }}
+          w={100}
+          h={100}
+          ml="auto"
+          mr="auto"
+          mb={5}
         />
-        <Heading align="center">{t('empty.header')}</Heading>
-        <chakra.div sx={{ mt: 6, width: '100%', textAlign: 'center' }}>
-          <Button
-            onClick={() => {
-              history.back();
-            }}
-            variant={['large']}
-            sx={{
-              variant: 'buttons.primary.regular',
-            }}
-          >
-            {t('empty.leave')}
-          </Button>
-          <chakra.span sx={{ ml: 3, mr: 3 }} />
-          <Button
-            onClick={() => {
-              history.back();
-            }}
-            variant={['large']}
-            sx={{
-              variant: 'buttons.secondary.regular',
-            }}
-          >
-            {t('empty.home')}
-          </Button>
-        </chakra.div>
+        <Heading size="lg" align="center">
+          {t('empty.header')}
+        </Heading>
+        <Center mt={4}>
+          <Stack direction={['column', 'row']} spacing="24px">
+            <Button
+              onClick={() => {
+                history.back();
+              }}
+            >
+              {t('empty.leave')}
+            </Button>
+            <Button
+              onClick={() => {
+                history.back();
+              }}
+            >
+              {t('empty.home')}
+            </Button>
+          </Stack>
+        </Center>
       </Flex>
     </Center>
   );

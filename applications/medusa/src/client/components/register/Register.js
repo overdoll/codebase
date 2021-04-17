@@ -49,17 +49,14 @@ export default function Register(): Node {
 
   return (
     <Center mt={8}>
-      <Flex w={['fill', 400]} direction="column">
+      <Flex w={['fill', 'sm']} direction="column">
         <Icon
           icon={SignBadgeCircle}
-          color="primary.500"
-          size={80}
-          sx={{
-            display: 'block',
-            pb: 7,
-            pt: 6,
-            textAlign: 'center',
-          }}
+          w={100}
+          h={100}
+          ml="auto"
+          mr="auto"
+          mb={5}
         />
         <Form instance={instance} onSubmit={onSubmit}>
           <Input
@@ -69,11 +66,7 @@ export default function Register(): Node {
             validation={{ required: true }}
             type="text"
           />
-          <Button
-            variant={['huge']}
-            sx={{ width: '100%', variant: 'buttons.primary.regular', mt: 2 }}
-            loading={isInFlight}
-          >
+          <Button width="100%" type="submit" loading={isInFlight}>
             {t('register.form.submit')}
           </Button>
         </Form>
