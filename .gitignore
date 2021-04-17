@@ -30,3 +30,4 @@ coverage
 .idea
 
 yarn-error.log
+telepresence.log

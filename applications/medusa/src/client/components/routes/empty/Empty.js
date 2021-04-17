@@ -16,7 +16,7 @@ export default function Empty(): Node {
       <Flex w={['fill', 400]} direction="column">
         <Icon
           icon={SignBadgeCircle}
-          stroke="primary.500"
+          color="primary.500"
           size={80}
           sx={{
             display: 'block',

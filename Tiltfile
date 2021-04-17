@@ -110,28 +110,6 @@ applications = {
         ],
         "live_update": [],
     },
-    "medusa": {
-        "type": "node",
-        "directory": "medusa",
-        "image_reference": "medusa-image",
-        "image_target": "//applications/medusa:medusa-image",
-        "binary_target": "//applications/medusa:medusa",
-        "binary_output": "applications/medusa/medusa_/medusa",
-        "container_workdir": "/app/applications/medusa/medusa-image.binary.runfiles/overdoll/",
-        "container_binary": "applications/medusa/medusa-image.binary_/medusa-image.binary",
-        "bazel_image": "bazel/applications/medusa:medusa-image",
-        "entrypoint": "/app/applications/medusa/medusa",
-        "dependencies": [
-            "applications/medusa/src",
-            "applications/medusa/public",
-            "applications/medusa/.env",
-        ],
-        "live_update": [
-            sync("applications/medusa/src", "/app/applications/medusa/medusa.runfiles/overdoll/applications/medusa/src"),
-            sync("applications/medusa/.env", "/app/applications/medusa/medusa.runfiles/overdoll/applications/medusa/.env"),
-            sync("applications/medusa/public", "/app/applications/medusa/medusa.runfiles/overdoll/applications/medusa/public"),
-        ],
-    },
     "medusa-production": {
         "type": "node",
         "directory": "medusa",
