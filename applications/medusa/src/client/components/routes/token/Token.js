@@ -8,7 +8,7 @@ import Register from '../../register/Register';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from '@//:modules/routing';
 import type { TokenQuery } from '@//:artifacts/TokenQuery.graphql';
-import { Center, chakra, Flex, Heading, Text } from '@chakra-ui/react';
+import { Center, Flex, Heading, Text, Box } from '@chakra-ui/react';
 
 type Props = {
   prepared: {
@@ -48,32 +48,17 @@ export default function Token(props: Props): Node {
     return (
       <Center mt={8}>
         <Flex w={['fill', 'sm']} direction="column">
-          <Heading sx={{ textAlign: 'center', fontSize: 2 }}>
+          <Heading size="lg" align="center">
             {t('header')}
           </Heading>
-          <chakra.div
-            sx={{
-              mt: 4,
-              width: 'fill',
-              textAlign: 'center',
-              backgroundColor: 'grey.800',
-              pt: 2,
-              pb: 2,
-            }}
-          >
-            <Text color="green.300">
+          <Box mt="4" p="2" backgroundColor="gray.700">
+            <Text color="green.300" fontWeight="bold" align="center">
               {JSON.parse(data.redeemCookie.session)['user-agent']}
             </Text>
-          </chakra.div>
-          <chakra.div
-            sx={{
-              mt: 4,
-              width: 'fill',
-              textAlign: 'center',
-            }}
-          >
+          </Box>
+          <Box mt="3" align="center">
             <Text>{t('close')}</Text>
-          </chakra.div>
+          </Box>
         </Flex>
       </Center>
     );

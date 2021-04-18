@@ -10,14 +10,7 @@ import type { LobbySubscriptionResponse } from '@//:artifacts/LobbySubscription.
 import Icon from '@//:modules/content/icon/Icon';
 import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/sign-badge-circle-K1i3HA.svg';
 import ContentInkPen from '@streamlinehq/streamlinehq/img/streamline-bold/content-ink-pen-jHW3zi.svg';
-import {
-  Center,
-  chakra,
-  Flex,
-  Heading,
-  Text,
-  useToast,
-} from '@chakra-ui/react';
+import { Box, Center, Flex, Heading, Text, useToast } from '@chakra-ui/react';
 
 type Props = {
   onReceive: any,
@@ -122,48 +115,37 @@ export default function Lobby(props: Props): Node {
         <Icon
           icon={SignBadgeCircle}
           color="purple.300"
-          sx={{
-            pb: 7,
-            pt: 6,
-            textAlign: 'center',
-          }}
+          pt="6"
+          pb="7"
+          align="center"
         />
-        <Heading sx={{ textAlign: 'center', fontSize: 3 }}>
+        <Heading size="lg" align="center">
           {t('lobby.header')}
         </Heading>
-        <chakra.div
-          sx={{
-            mt: 6,
-            width: '100%',
-            textAlign: 'center',
-            backgroundColor: 'neutral.800',
-            pt: 3,
-            pb: 3,
-            overflow: 'scroll',
-            pl: 3,
-            pr: 3,
-          }}
+        <Box
+          backgroundColor="gray.700"
+          mt="6"
+          p="3"
+          align="center"
+          position="relative"
         >
-          <Text color="purple.300">{props.email}</Text>
+          <Text fontWeight="bold" color="purple.300">
+            {props.email}
+          </Text>
           <Icon
             icon={ContentInkPen}
             // delete cookie from backend and navigate to join
-            fill="purple.300"
-            size={16}
+            color="purple.300"
             sx={{
-              display: 'inline-block',
-              transform: 'translateY(25%) translateX(400%)',
               position: 'absolute',
+              top: '25%',
+              bottom: '25%',
+              right: '5%',
             }}
           />
-        </chakra.div>
+        </Box>
         <Button
-          variant={['huge']}
-          sx={{
-            mt: 6,
-            variant: 'buttons.tertiary.regular',
-            width: 'fill',
-          }}
+          mt="5"
           loading={isSendingEmail}
           onClick={onSubmit}
           disabled={buttonDisabled}

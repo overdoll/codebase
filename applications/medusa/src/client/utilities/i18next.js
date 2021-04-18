@@ -2,12 +2,14 @@
  * @flow
  */
 import i18n from 'i18next';
+import Backend from 'i18next-http-backend';
 
 const options = {
   fallbackLng: 'en',
   load: 'languageOnly',
   saveMissing: true,
   debug: false,
+  ns: ['auth', 'token', 'empty'],
   interpolation: {
     escapeValue: false, // not needed for react!!
     formatSeparator: ',',
@@ -17,10 +19,15 @@ const options = {
     },
   },
   wait: process && !process.release,
+  backend: {
+    // for all available options read the backend's repository readme file
+    loadPath: '/locales/{{lng}}/{{ns}}.json',
+  },
 };
 
 // In browser, get our translation data from the DOM
 if (process && !process.release) {
+  i18n.use(Backend);
   i18n.init(options);
 
   // Get translations

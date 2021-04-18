@@ -10,7 +10,7 @@ i18next
   .use(initReactI18next)
   .init({
     fallbackLng: 'en',
-    ns: ['auth', 'token'],
+    ns: ['auth', 'token', 'empty'],
     lng: 'en',
     load: 'languageOnly',
     backend: {
