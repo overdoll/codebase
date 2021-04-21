@@ -1,4 +1,4 @@
-package server
+package src
 
 import (
 	"context"
@@ -7,15 +7,15 @@ import (
 	"testing"
 	"time"
 
+	"github.com/bxcodec/faker/v3"
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/stretchr/testify/assert"
 	eva "overdoll/applications/eva/proto"
-	"overdoll/applications/eva/src/models"
+	"overdoll/applications/eva/src/adapters"
 	"overdoll/libraries/ksuid"
 	"overdoll/libraries/testing/scylla"
-	"github.com/bxcodec/faker/v3"
 )
 
 // Init - Create a database session to use for testing, and create a keyspace
@@ -24,7 +24,7 @@ func Init(t *testing.T) (gocqlx.Session, context.Context, *Server) {
 
 	ctx := context.Background()
 
-	srv := CreateServer(session)
+	srv := CreateServer(adapters.NewCassandraRepository(session))
 
 	err := session.ExecStmt(`CREATE KEYSPACE IF NOT EXISTS eva WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1}`)
 
@@ -36,7 +36,7 @@ func Init(t *testing.T) (gocqlx.Session, context.Context, *Server) {
 }
 
 type TestUser struct {
-	Email string `faker:"email"`
+	Email    string `faker:"email"`
 	Username string `faker:"username"`
 }
 
@@ -82,7 +82,7 @@ func TestRegisterUser_Declined_Username(t *testing.T) {
 
 	userId := ksuid.New()
 
-	userUsername := models.UserUsername{
+	userUsername := adapters.UserUsername{
 		Id: userId,
 		// This table stores usernames as lowercase so we should have it this way
 		Username: strings.ToLower(user.Username),
@@ -125,7 +125,7 @@ func TestRegisterUser_Declined_Email(t *testing.T) {
 
 	userId := ksuid.New()
 
-	userEmail := models.UserEmail{
+	userEmail := adapters.UserEmail{
 		UserId: userId,
 		Email:  user.Email,
 	}
@@ -173,7 +173,7 @@ func TestDeleteAuthenticationCookie_Exists(t *testing.T) {
 		Columns("cookie", "email", "redeemed", "expiration", "session").
 		Query(session)
 
-	insertCookie.BindStruct(models.AuthenticationCookie{
+	insertCookie.BindStruct(adapters.AuthenticationCookie{
 		Cookie:     ksuid.New(),
 		Email:      user.Email,
 		Redeemed:   0,
@@ -250,7 +250,7 @@ func TestRedeemAuthenticationCookie_Not_Expired(t *testing.T) {
 		Columns("cookie", "email", "redeemed", "expiration", "session").
 		Query(session)
 
-	insertCookie.BindStruct(models.AuthenticationCookie{
+	insertCookie.BindStruct(adapters.AuthenticationCookie{
 		Cookie:     uuid,
 		Email:      user.Email,
 		Redeemed:   0,
@@ -300,7 +300,7 @@ func TestRedeemAuthenticationCookie_Expired(t *testing.T) {
 		Columns("cookie", "email", "redeemed", "expiration", "session").
 		Query(session)
 
-	insertCookie.BindStruct(models.AuthenticationCookie{
+	insertCookie.BindStruct(adapters.AuthenticationCookie{
 		Cookie:     ksuid.New(),
 		Email:      user.Email,
 		Redeemed:   0,
