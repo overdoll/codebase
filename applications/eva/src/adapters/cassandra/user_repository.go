@@ -1,4 +1,4 @@
-package adapters
+package cassandra
 
 import (
 	"context"
@@ -31,7 +31,7 @@ type UserEmail struct {
 }
 
 // GetUserById - Get user using the ID
-func (r CassandraRepository) GetUserById(ctx context.Context, id ksuid.UUID) (*User, error) {
+func (r Repository) GetUserById(ctx context.Context, id ksuid.UUID) (*User, error) {
 	userInstance := &User{
 		Id: id,
 	}
@@ -49,7 +49,7 @@ func (r CassandraRepository) GetUserById(ctx context.Context, id ksuid.UUID) (*U
 }
 
 // GetUserByEmail - Get user using the email
-func (r CassandraRepository) GetUserByEmail(ctx context.Context, email string) (*User, error) {
+func (r Repository) GetUserByEmail(ctx context.Context, email string) (*User, error) {
 
 	// get authentication cookie with this ID
 	userEmail := UserEmail{
@@ -77,7 +77,7 @@ func (r CassandraRepository) GetUserByEmail(ctx context.Context, email string) (
 }
 
 // CreateUser - Ensure we create a unique user by using lightweight transactions
-func (r CassandraRepository) CreateUser(ctx context.Context, instance *user.User) (*User, error) {
+func (r Repository) CreateUser(ctx context.Context, instance *user.User) (*User, error) {
 
 	// First, we do a unique insert into users_usernames
 	// This ensures that we capture the username so nobody else can use it

@@ -5,21 +5,20 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/scylladb/gocqlx/v2/qb"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	eva "overdoll/applications/eva/proto"
-	"overdoll/applications/eva/src/adapters"
+	"overdoll/applications/eva/src/adapters/cassandra"
 	cookie2 "overdoll/applications/eva/src/domain/cookie"
 	"overdoll/applications/eva/src/domain/user"
 	"overdoll/libraries/ksuid"
 )
 
 type Server struct {
-	db adapters.CassandraRepository
+	db cassandra.Repository
 }
 
-func CreateServer(db adapters.CassandraRepository) *Server {
+func CreateServer(db cassandra.Repository) *Server {
 	return &Server{
 		db: db,
 	}
@@ -40,7 +39,7 @@ func (s *Server) GetUser(ctx context.Context, request *eva.GetUserRequest) (*eva
 	u, err := ksuid.Parse(request.Id)
 
 	if err != nil {
-		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("uuid is not valid: %s", request.Cookie))
+		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("uuid is not valid: %s", request.Id))
 	}
 
 	usr, err := s.db.GetUserById(ctx, u)
@@ -81,7 +80,6 @@ func (s *Server) GetRegisteredEmail(ctx context.Context, request *eva.GetRegiste
 	return &eva.User{Username: usr.Username, Id: usr.Id.String(), Roles: UserRoleToString(usr.Roles), Verified: usr.Verified}, nil
 }
 
-// DeleteAuthenticationCookie - Delete cookie because we don't want it to be used anymore
 func (s *Server) DeleteAuthenticationCookie(ctx context.Context, request *eva.GetAuthenticationCookieRequest) (*eva.DeleteAuthenticationCookieResponse, error) {
 	u, err := ksuid.Parse(request.Cookie)
 
@@ -158,31 +156,23 @@ func (s *Server) RedeemAuthenticationCookie(ctx context.Context, request *eva.Ge
 		return nil, status.Error(codes.Internal, fmt.Sprintf("failed to get cookie: %s", err))
 	}
 
-	// get authentication cookie with this ID
-	authCookie := models.AuthenticationCookie{
-		Cookie:   u,
-		Redeemed: 1,
-		Email:    queryCookieItem.Email,
+	i, err := cookie2.NewCookie(u, cookie.Email, cookie.Expiration)
+
+	if err != nil {
+		return nil, status.Error(codes.Internal, fmt.Sprintf("failed to set cookie: %s", err))
 	}
 
-	// if not expired, then update cookie
-	updateCookie := qb.Update("authentication_cookies").
-		Set("redeemed").
-		Where(qb.Eq("cookie"), qb.Eq("email")).
-		Query(s.session).
-		BindStruct(authCookie)
+	err = s.db.UpdateCookieRedeemed(ctx, i)
 
-	if err := updateCookie.ExecRelease(); err != nil {
-		return nil, fmt.Errorf("update() failed: '%s", err)
+	if err != nil {
+		return nil, status.Error(codes.Internal, fmt.Sprintf("failed to redeem cookie: %s", err))
 	}
 
-	cookie := &eva.AuthenticationCookie{
-		Cookie:     queryCookieItem.Cookie.String(),
+	return &eva.AuthenticationCookie{
+		Cookie:     cookie.Cookie.String(),
 		Redeemed:   true,
-		Expiration: queryCookieItem.Expiration.String(),
-		Email:      queryCookieItem.Email,
-		Session:    queryCookieItem.Session,
-	}
-
-	return cookie, nil
+		Expiration: cookie.Expiration.String(),
+		Email:      cookie.Email,
+		Session:    cookie.Session,
+	}, nil
 }

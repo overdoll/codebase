@@ -1,4 +1,4 @@
-package adapters
+package cassandra
 
 import (
 	"context"
@@ -19,7 +19,7 @@ type AuthenticationCookie struct {
 }
 
 // GetCookieById - Get authentication cookie by ID
-func (r CassandraRepository) GetCookieById(ctx context.Context, id ksuid.UUID) (*AuthenticationCookie, error) {
+func (r Repository) GetCookieById(ctx context.Context, id ksuid.UUID) (*AuthenticationCookie, error) {
 
 	cookieItem := &AuthenticationCookie{Cookie: id}
 
@@ -49,7 +49,7 @@ func (r CassandraRepository) GetCookieById(ctx context.Context, id ksuid.UUID) (
 }
 
 // DeleteCookieById - Delete cookie by ID
-func (r CassandraRepository) DeleteCookieById(ctx context.Context, id ksuid.UUID) error {
+func (r Repository) DeleteCookieById(ctx context.Context, id ksuid.UUID) error {
 
 	deleteCookie := AuthenticationCookie{
 		Cookie: id,
@@ -70,7 +70,7 @@ func (r CassandraRepository) DeleteCookieById(ctx context.Context, id ksuid.UUID
 }
 
 // CreateCookie - Create a Cookie
-func (r CassandraRepository) CreateCookie(ctx context.Context, instance *cookie2.Cookie) (*AuthenticationCookie, error) {
+func (r Repository) CreateCookie(ctx context.Context, instance *cookie2.Cookie) (*AuthenticationCookie, error) {
 
 	// run a query to create the authentication token
 	authCookie := &AuthenticationCookie{
@@ -91,4 +91,26 @@ func (r CassandraRepository) CreateCookie(ctx context.Context, instance *cookie2
 	}
 
 	return authCookie, nil
+}
+
+func (r Repository) UpdateCookieRedeemed(ctx context.Context, instance *cookie2.Cookie) error {
+	// get authentication cookie with this ID
+	authCookie := AuthenticationCookie{
+		Cookie:   instance.Cookie(),
+		Redeemed: 1,
+		Email:    instance.Email(),
+	}
+
+	// if not expired, then update cookie
+	updateCookie := qb.Update("authentication_cookies").
+		Set("redeemed").
+		Where(qb.Eq("cookie"), qb.Eq("email")).
+		Query(r.session).
+		BindStruct(authCookie)
+
+	if err := updateCookie.ExecRelease(); err != nil {
+		return fmt.Errorf("update() failed: '%s", err)
+	}
+
+	return nil
 }

@@ -13,7 +13,7 @@ import (
 	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/stretchr/testify/assert"
 	eva "overdoll/applications/eva/proto"
-	"overdoll/applications/eva/src/adapters"
+	"overdoll/applications/eva/src/adapters/cassandra"
 	"overdoll/libraries/ksuid"
 	"overdoll/libraries/testing/scylla"
 )
@@ -24,7 +24,7 @@ func Init(t *testing.T) (gocqlx.Session, context.Context, *Server) {
 
 	ctx := context.Background()
 
-	srv := CreateServer(adapters.NewCassandraRepository(session))
+	srv := CreateServer(cassandra.NewRepository(session))
 
 	err := session.ExecStmt(`CREATE KEYSPACE IF NOT EXISTS eva WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1}`)
 
@@ -82,7 +82,7 @@ func TestRegisterUser_Declined_Username(t *testing.T) {
 
 	userId := ksuid.New()
 
-	userUsername := adapters.UserUsername{
+	userUsername := cassandra.UserUsername{
 		Id: userId,
 		// This table stores usernames as lowercase so we should have it this way
 		Username: strings.ToLower(user.Username),
@@ -125,7 +125,7 @@ func TestRegisterUser_Declined_Email(t *testing.T) {
 
 	userId := ksuid.New()
 
-	userEmail := adapters.UserEmail{
+	userEmail := cassandra.UserEmail{
 		UserId: userId,
 		Email:  user.Email,
 	}
@@ -173,7 +173,7 @@ func TestDeleteAuthenticationCookie_Exists(t *testing.T) {
 		Columns("cookie", "email", "redeemed", "expiration", "session").
 		Query(session)
 
-	insertCookie.BindStruct(adapters.AuthenticationCookie{
+	insertCookie.BindStruct(cassandra.AuthenticationCookie{
 		Cookie:     ksuid.New(),
 		Email:      user.Email,
 		Redeemed:   0,
@@ -250,7 +250,7 @@ func TestRedeemAuthenticationCookie_Not_Expired(t *testing.T) {
 		Columns("cookie", "email", "redeemed", "expiration", "session").
 		Query(session)
 
-	insertCookie.BindStruct(adapters.AuthenticationCookie{
+	insertCookie.BindStruct(cassandra.AuthenticationCookie{
 		Cookie:     uuid,
 		Email:      user.Email,
 		Redeemed:   0,
@@ -300,7 +300,7 @@ func TestRedeemAuthenticationCookie_Expired(t *testing.T) {
 		Columns("cookie", "email", "redeemed", "expiration", "session").
 		Query(session)
 
-	insertCookie.BindStruct(adapters.AuthenticationCookie{
+	insertCookie.BindStruct(cassandra.AuthenticationCookie{
 		Cookie:     ksuid.New(),
 		Email:      user.Email,
 		Redeemed:   0,
