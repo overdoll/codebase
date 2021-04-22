@@ -1,4 +1,4 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
     name = "go_default_library",
@@ -6,9 +6,26 @@ go_library(
     importpath = "overdoll/applications/eva/src/service",
     visibility = ["//visibility:public"],
     deps = [
+        "//applications/eva/src/adapters:go_default_library",
         "//applications/eva/src/app:go_default_library",
         "//applications/eva/src/app/command:go_default_library",
         "//applications/eva/src/app/query:go_default_library",
         "//libraries/bootstrap:go_default_library",
+    ],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = ["component_test.go"],
+    embed = [":go_default_library"],
+    deps = [
+        "//applications/eva/proto:v1_go_proto",
+        "//applications/eva/src/ports:go_default_library",
+        "//libraries/bootstrap:go_default_library",
+        "//libraries/testing/tests:go_default_library",
+        "@com_github_bxcodec_faker_v3//:go_default_library",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+        "@org_golang_google_grpc//:go_default_library",
     ],
 )
