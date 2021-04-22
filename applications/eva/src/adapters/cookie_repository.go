@@ -1,10 +1,11 @@
-package cassandra
+package adapters
 
 import (
 	"context"
 	"fmt"
 	"time"
 
+	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
 	cookie2 "overdoll/applications/eva/src/domain/cookie"
 	"overdoll/libraries/ksuid"
@@ -18,8 +19,16 @@ type AuthenticationCookie struct {
 	Session    string     `db:"session"`
 }
 
+type CookieRepository struct {
+	session gocqlx.Session
+}
+
+func NewCookieRepository(session gocqlx.Session) CookieRepository {
+	return CookieRepository{session: session}
+}
+
 // GetCookieById - Get authentication cookie by ID
-func (r Repository) GetCookieById(ctx context.Context, id ksuid.UUID) (*AuthenticationCookie, error) {
+func (r CookieRepository) GetCookieById(ctx context.Context, id ksuid.UUID) (*cookie2.Cookie, error) {
 
 	cookieItem := &AuthenticationCookie{Cookie: id}
 
@@ -38,18 +47,11 @@ func (r Repository) GetCookieById(ctx context.Context, id ksuid.UUID) (*Authenti
 		return nil, err
 	}
 
-	// make sure cookie is valid when grabbing it from the database
-	err = ck.IsValid()
-
-	if err != nil {
-		return nil, err
-	}
-
-	return cookieItem, nil
+	return ck, nil
 }
 
 // DeleteCookieById - Delete cookie by ID
-func (r Repository) DeleteCookieById(ctx context.Context, id ksuid.UUID) error {
+func (r CookieRepository) DeleteCookieById(ctx context.Context, id ksuid.UUID) error {
 
 	deleteCookie := AuthenticationCookie{
 		Cookie: id,
@@ -70,7 +72,7 @@ func (r Repository) DeleteCookieById(ctx context.Context, id ksuid.UUID) error {
 }
 
 // CreateCookie - Create a Cookie
-func (r Repository) CreateCookie(ctx context.Context, instance *cookie2.Cookie) (*AuthenticationCookie, error) {
+func (r CookieRepository) CreateCookie(ctx context.Context, instance *cookie2.Cookie) (*cookie2.Cookie, error) {
 
 	// run a query to create the authentication token
 	authCookie := &AuthenticationCookie{
@@ -90,20 +92,28 @@ func (r Repository) CreateCookie(ctx context.Context, instance *cookie2.Cookie) 
 		return nil, fmt.Errorf("ExecRelease() failed: '%s", err)
 	}
 
-	return authCookie, nil
+	return instance, nil
 }
 
-func (r Repository) UpdateCookieRedeemed(ctx context.Context, instance *cookie2.Cookie) error {
+func (r CookieRepository) UpdateCookie(ctx context.Context, instance *cookie2.Cookie) error {
+
+	redeemed := 1
+
+	if !instance.Redeemed() {
+		redeemed = 0
+	}
+
 	// get authentication cookie with this ID
 	authCookie := AuthenticationCookie{
 		Cookie:   instance.Cookie(),
-		Redeemed: 1,
+		Redeemed: redeemed,
 		Email:    instance.Email(),
+		Session:  instance.Session(),
 	}
 
 	// if not expired, then update cookie
 	updateCookie := qb.Update("authentication_cookies").
-		Set("redeemed").
+		Set("redeemed", "email", "session").
 		Where(qb.Eq("cookie"), qb.Eq("email")).
 		Query(r.session).
 		BindStruct(authCookie)

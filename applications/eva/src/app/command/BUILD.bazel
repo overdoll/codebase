@@ -1,0 +1,17 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "create_cookie.go",
+        "redeem_cookie.go",
+        "register_from_cookie.go",
+    ],
+    importpath = "overdoll/applications/eva/src/app/command",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//applications/eva/src/domain/cookie:go_default_library",
+        "//applications/eva/src/domain/user:go_default_library",
+        "//libraries/ksuid:go_default_library",
+    ],
+)

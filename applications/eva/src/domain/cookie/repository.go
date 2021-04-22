@@ -7,8 +7,8 @@ import (
 )
 
 type Repository interface {
-	GetCookieById(ctx context.Context, id ksuid.UUID)
-	DeleteCookieById(ctx context.Context, id ksuid.UUID)
-	CreateCookie(ctx context.Context, instance *Cookie)
-	RedeemCookie(ctx context.Context, instance *Cookie)
+	GetCookieById(ctx context.Context, id ksuid.UUID) (*Cookie, error)
+	DeleteCookieById(ctx context.Context, id ksuid.UUID) error
+	CreateCookie(ctx context.Context, instance *Cookie) (*Cookie, error)
+	UpdateCookie(ctx context.Context, instance *Cookie) error
 }

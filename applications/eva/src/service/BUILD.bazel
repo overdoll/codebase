@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["service.go"],
+    importpath = "overdoll/applications/eva/src/service",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//applications/eva/src/app:go_default_library",
+        "//applications/eva/src/app/command:go_default_library",
+        "//applications/eva/src/app/query:go_default_library",
+        "//libraries/bootstrap:go_default_library",
+    ],
+)

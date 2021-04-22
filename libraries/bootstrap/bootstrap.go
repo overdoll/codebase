@@ -67,7 +67,7 @@ func (b Bootstrap) InitializeDatabaseSession() (gocqlx.Session, error) {
 	return session, nil
 }
 
-func (b Bootstrap) InitializeGRPCServer(f func(server *grpc.Server)) {
+func InitializeGRPCServer(f func(server *grpc.Server)) {
 
 	grpcServer := grpc.NewServer()
 

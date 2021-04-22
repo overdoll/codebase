@@ -1,4 +1,4 @@
-package cassandra
+package adapters
 
 import (
 	"context"
@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/gocql/gocql"
+	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"overdoll/applications/eva/src/domain/user"
 	"overdoll/libraries/ksuid"
@@ -30,8 +31,16 @@ type UserEmail struct {
 	Email  string     `db:"email"`
 }
 
+type UserRepository struct {
+	session gocqlx.Session
+}
+
+func NewUserRepository(session gocqlx.Session) UserRepository {
+	return UserRepository{session: session}
+}
+
 // GetUserById - Get user using the ID
-func (r Repository) GetUserById(ctx context.Context, id ksuid.UUID) (*User, error) {
+func (r UserRepository) GetUserById(ctx context.Context, id ksuid.UUID) (*user.User, error) {
 	userInstance := &User{
 		Id: id,
 	}
@@ -45,11 +54,18 @@ func (r Repository) GetUserById(ctx context.Context, id ksuid.UUID) (*User, erro
 		return nil, fmt.Errorf("select() failed: '%s", err)
 	}
 
-	return userInstance, nil
+	return user.UnmarshalUserFromDatabase(
+		userInstance.Id,
+		userInstance.Username,
+		userInstance.Email,
+		userInstance.Roles,
+		userInstance.Verified,
+		userInstance.Avatar,
+	), nil
 }
 
 // GetUserByEmail - Get user using the email
-func (r Repository) GetUserByEmail(ctx context.Context, email string) (*User, error) {
+func (r UserRepository) GetUserByEmail(ctx context.Context, email string) (*user.User, error) {
 
 	// get authentication cookie with this ID
 	userEmail := UserEmail{
@@ -77,7 +93,7 @@ func (r Repository) GetUserByEmail(ctx context.Context, email string) (*User, er
 }
 
 // CreateUser - Ensure we create a unique user by using lightweight transactions
-func (r Repository) CreateUser(ctx context.Context, instance *user.User) (*User, error) {
+func (r UserRepository) CreateUser(ctx context.Context, instance *user.User) error {
 
 	// First, we do a unique insert into users_usernames
 	// This ensures that we capture the username so nobody else can use it
@@ -99,11 +115,11 @@ func (r Repository) CreateUser(ctx context.Context, instance *user.User) (*User,
 
 	// Do our checks to make sure we got a unique username
 	if err != nil {
-		return nil, fmt.Errorf("ExecCAS() failed: '%s", err)
+		return fmt.Errorf("ExecCAS() failed: '%s", err)
 	}
 
 	if !applied {
-		return nil, fmt.Errorf("username is not unique")
+		return fmt.Errorf("username is not unique")
 	}
 
 	// At this point, we know our username is unique & captured, so we
@@ -136,10 +152,10 @@ func (r Repository) CreateUser(ctx context.Context, instance *user.User) (*User,
 			BindStruct(usernameEmail)
 
 		if err := deleteUserUsername.ExecRelease(); err != nil {
-			return nil, fmt.Errorf("delete() failed: '%s", err)
+			return fmt.Errorf("delete() failed: '%s", err)
 		}
 
-		return nil, fmt.Errorf("ExecRelease() failed: '%s", err)
+		return fmt.Errorf("ExecRelease() failed: '%s", err)
 	}
 
 	// Create a lookup table that will be used to find the user using their unique ID
@@ -158,8 +174,8 @@ func (r Repository) CreateUser(ctx context.Context, instance *user.User) (*User,
 		BindStruct(usr)
 
 	if err := insertUser.ExecRelease(); err != nil {
-		return nil, fmt.Errorf("ExecRelease() failed: '%s", err)
+		return fmt.Errorf("ExecRelease() failed: '%s", err)
 	}
 
-	return usr, nil
+	return nil
 }

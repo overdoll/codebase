@@ -7,8 +7,7 @@ import (
 )
 
 type Repository interface {
-	GetUserById(ctx context.Context, id ksuid.UUID)
-	DeleteCookieById(ctx context.Context, id ksuid.UUID)
-	GetUserByEmail(ctx context.Context, email string)
-	CreateUser(ctx context.Context, instance *User)
+	GetUserById(ctx context.Context, id ksuid.UUID) (*User, error)
+	GetUserByEmail(ctx context.Context, email string) (*User, error)
+	CreateUser(ctx context.Context, instance *User) error
 }

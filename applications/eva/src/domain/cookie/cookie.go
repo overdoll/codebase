@@ -1,7 +1,6 @@
 package cookie
 
 import (
-	"fmt"
 	"time"
 
 	"overdoll/libraries/ksuid"
@@ -15,11 +14,13 @@ type Cookie struct {
 	expiration time.Time
 
 	session string
+
+	registered bool
 }
 
 func NewCookie(id ksuid.UUID, email string, expiration time.Time) (*Cookie, error) {
 
-	// TODO: add some email validation'
+	// TODO: add some email validation?
 
 	ck := &Cookie{
 		cookie:     id,
@@ -47,21 +48,33 @@ func (c *Cookie) Expiration() time.Time {
 	return c.expiration
 }
 
+func (c *Cookie) Registered() bool {
+	return c.registered
+}
+
 func (c *Cookie) Session() string {
 	return c.session
 }
 
-func (c *Cookie) Redeem() {
+func (c *Cookie) Redeemed() bool {
+	return c.redeemed
+}
+
+func (c *Cookie) MakeRedeemed() {
 	c.redeemed = true
 }
 
-func (c *Cookie) IsValid() error {
+func (c *Cookie) MakeRegistered() {
+	c.registered = true
+}
 
-	if !c.redeemed && !time.Now().After(c.expiration) {
-		return nil
+func (c *Cookie) IsExpired() bool {
+
+	if !time.Now().After(c.expiration) {
+		return true
 	}
 
-	return fmt.Errorf("cookie %s is not valid", c.cookie)
+	return false
 }
 
 func (c *Cookie) SetSession(session string) {
