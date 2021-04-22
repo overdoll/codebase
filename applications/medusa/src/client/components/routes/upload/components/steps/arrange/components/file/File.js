@@ -3,10 +3,9 @@
  */
 import type { Node } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
-import Heading from '@//:modules/typography/heading/Heading';
-import Text from '@//:modules/typography/text/Text';
+import { Flex, Heading, Text } from '@chakra-ui/react';
 import Loading from '@//:modules/assets/loading/Loading';
-import Delete from '@streamlinehq/streamline-bold/lib/interface-essential/Delete';
+import Delete2 from '@streamlinehq/streamlinehq/img/streamline-bold/delete-2-n8Opdv.svg';
 import Icon from '@//:modules/content/icon/Icon';
 import Thumbnail from '../thumbnail/Thumbnail';
 
@@ -28,25 +27,20 @@ export default function File({
   return (
     <Draggable draggableId={file.id} index={index}>
       {(provided, snapshot) => (
-        <div
-          sx={{
-            borderColor: snapshot.isDragging ? 'teal.500' : 'neutral.900',
-            borderWidth: 2,
-            borderStyle: 'solid',
-            borderRadius: 5,
-            backgroundColor: 'neutral.800',
-            boxSizing: 'border-box',
-            overflow: 'hidden',
-            objectFit: 'cover',
-            display: 'flex',
-            height: '130px',
-            alignContent: 'stretch',
-          }}
+        <Flex
+          direction="row"
+          h={130}
+          bg="gray.800"
+          borderRadius={5}
+          borderWidth={2}
+          overflow="hidden"
+          objectFit="cover"
+          borderColor={snapshot.isDragging ? 'teal.500' : 'gray.900'}
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
-          <div
+          <Box
             sx={{
               width: '10%',
               display: 'flex',
@@ -59,7 +53,7 @@ export default function File({
             <Heading sx={{ mt: 3, mb: 3, color: 'neutral.100', fontSize: 2 }}>
               {index + 1}
             </Heading>
-          </div>
+          </Box>
           <Thumbnail
             thumbnail={thumbnail}
             progress={progress}
@@ -82,9 +76,8 @@ export default function File({
               }}
             >
               <Icon
-                icon={Delete.Delete2}
-                strokeWidth={2.5}
-                fill={'neutral.50'}
+                icon={Delete2}
+                color="gray.50"
                 size={20}
                 onClick={() => onRemove(file.id)}
               />
@@ -136,7 +129,7 @@ export default function File({
               </Text>
             </span>
           </div>
-        </div>
+        </Flex>
       )}
     </Draggable>
   );

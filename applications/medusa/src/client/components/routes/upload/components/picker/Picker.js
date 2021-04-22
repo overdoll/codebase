@@ -3,6 +3,7 @@
  */
 import type { Node } from 'react';
 import { useToast } from '@chakra-ui/react';
+import { useRef } from 'react';
 
 type Props = {
   uppy: any,
@@ -13,7 +14,7 @@ type Props = {
 /**
  * File picker - select files and add them to the list
  */
-export default function Picker({ uppy, onSelect }: Props): Node {
+export default function Picker({ uppy, onSelect, children }: Props): Node {
   const notify = useToast();
 
   const onChange = e => {

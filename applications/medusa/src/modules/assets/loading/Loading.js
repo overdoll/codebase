@@ -3,7 +3,7 @@
  */
 
 import { Icon } from '@//:modules/content';
-import Synchronize from '@streamlinehq/streamline-regular/lib/interface-essential/Synchronize';
+import SynchronizeArrow1 from '@streamlinehq/streamlinehq/img/streamline-regular/synchronize-arrow-1-WipT2h.svg';
 
 type Props = {
   color?: any,
@@ -12,12 +12,7 @@ type Props = {
 export default function Loading({ color }: Props): Node {
   return (
     <span>
-      <Icon
-        icon={Synchronize.SynchronizeArrow1}
-        size={18}
-        strokeWidth={3}
-        stroke={color}
-      />
+      <Icon icon={SynchronizeArrow1} size={18} strokeWidth={3} stroke={color} />
     </span>
   );
 }

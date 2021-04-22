@@ -2,7 +2,7 @@
  * @flow
  */
 import type { Node } from 'react';
-import Text from '@//:modules/typography/text/Text';
+import { Text } from '@chakra-ui/react';
 
 type Props = {
   title: string,

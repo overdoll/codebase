@@ -1,7 +1,7 @@
 /**
  * @flow
  */
-import Text from '@//:modules/typography/text/Text';
+import { Text } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 
 type Props = {

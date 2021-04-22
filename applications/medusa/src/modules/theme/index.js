@@ -9,6 +9,7 @@ import { spacing } from './spacing';
 import shadows from './shadows';
 import borders from './borders';
 import transition from './transition';
+import global from './global';
 
 const theme = extendTheme({
   config: {
@@ -26,6 +27,9 @@ const theme = extendTheme({
   space: spacing,
   borders,
   transition,
+  styles: {
+    global,
+  },
 });
 
 export default theme;

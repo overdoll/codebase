@@ -7,9 +7,8 @@ import { createPortal } from 'react-dom';
 import RootElement from '@//:modules/utilities/RootElement';
 import Search from '../search/Search';
 import Icon from '@//:modules/content/icon/Icon';
-import Heading from '@//:modules/typography/heading/Heading';
-import Text from '@//:modules/typography/text/Text';
-import { SignShapes } from '@streamlinehq/streamline-regular/lib/maps-navigation';
+import { Heading, chakra } from '@chakra-ui/react';
+import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/sign-badge-circle-K1i3HA.svg';
 import Button from '@//:modules/form/button/Button';
 
 type Props = {
@@ -68,7 +67,7 @@ export default function Section({
             alignItems: 'center',
           }}
         >
-          <span
+          <chakra.span
             sx={{
               display: 'flex',
               alignItems: 'center',
@@ -76,9 +75,9 @@ export default function Section({
             }}
           >
             <Icon
-              icon={SignShapes.SignBadgeCircle}
+              icon={SignBadgeCircle}
               strokeWidth={2.5}
-              stroke={'neutral.50'}
+              stroke="gray.50"
               size={40}
             />
             <Heading
@@ -89,9 +88,9 @@ export default function Section({
             >
               {count}
             </Heading>
-          </span>
+          </chakra.span>
         </span>
-        <span
+        <chakra.span
           sx={{
             flexGrow: 6,
             alignItems: 'center',
@@ -100,7 +99,7 @@ export default function Section({
           }}
         >
           <Heading sx={{ fontSize: 4 }}>{title}</Heading>
-        </span>
+        </chakra.span>
         <span
           onClick={onExpand}
           sx={{
@@ -111,7 +110,7 @@ export default function Section({
           }}
         >
           <Icon
-            icon={SignShapes.SignBadgeCircle}
+            icon={SignBadgeCircle}
             strokeWidth={3}
             stroke={'neutral.50'}
             size={30}
@@ -133,8 +132,8 @@ export default function Section({
         {children}
         <Button
           sx={{ mt: 4, width: '40%' }}
-          size={'medium'}
-          type={'buttons.tertiary.alternate'}
+          size="medium"
+          type="buttons.tertiary.alternate"
           onClick={onOpen}
         >
           Add

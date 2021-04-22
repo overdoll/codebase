@@ -7,7 +7,7 @@ import { useTransition } from '@//:modules/experimental';
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary';
 import ErrorFallback from '../error/ErrorFallback';
 import LoadingSearch from '../loading/LoadingSearch';
-import Frame from '@//:modules/content/frame/Frame';
+import { Center, Flex, Heading, Text } from '@chakra-ui/react';
 
 type Props = {
   children: any,
@@ -74,20 +74,22 @@ export default function Search({
       }}
     >
       {isPending ? 'loading indicator' : ''}
-      <Frame>
-        {header}
-        <ErrorBoundary
-          fallback={({ error, reset }) => (
-            <ErrorFallback error={error} reset={reset} refetch={refetch} />
-          )}
-        >
-          <Suspense fallback={<LoadingSearch />}>
-            {children(queryArgs)}
-          </Suspense>
-        </ErrorBoundary>
-        <input value={searchInput} onChange={onChange} />
-        <button onClick={onClose}>close</button>
-      </Frame>
+      <Center mt={8}>
+        <Flex w={['fill', 'sm']} direction="column">
+          {header}
+          <ErrorBoundary
+            fallback={({ error, reset }) => (
+              <ErrorFallback error={error} reset={reset} refetch={refetch} />
+            )}
+          >
+            <Suspense fallback={<LoadingSearch />}>
+              {children(queryArgs)}
+            </Suspense>
+          </ErrorBoundary>
+          <input value={searchInput} onChange={onChange} />
+          <button onClick={onClose}>close</button>
+        </Flex>
+      </Center>
     </div>
   );
 }
