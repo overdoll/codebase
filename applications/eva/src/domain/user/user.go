@@ -1,6 +1,9 @@
 package user
 
 import (
+	"errors"
+	"fmt"
+
 	"overdoll/libraries/ksuid"
 )
 
@@ -23,6 +26,15 @@ type User struct {
 	avatar   string
 }
 
+var (
+	ErrUsernameNotUnique = errors.New("username is not unique")
+	ErrEmailNotUnique    = errors.New("email is not unique")
+)
+
+type NotFoundError struct {
+	Identifier string
+}
+
 func UnmarshalUserFromDatabase(id ksuid.UUID, username string, email string, roles []UserRole, verified bool, avatar string) *User {
 	return &User{
 		id:       id,
@@ -32,6 +44,10 @@ func UnmarshalUserFromDatabase(id ksuid.UUID, username string, email string, rol
 		verified: verified,
 		avatar:   avatar,
 	}
+}
+
+func (e NotFoundError) Error() string {
+	return fmt.Sprintf("user '%s' not found", e.Identifier)
 }
 
 func NewUser(id ksuid.UUID, username string, email string) (*User, error) {

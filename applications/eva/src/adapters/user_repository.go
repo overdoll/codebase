@@ -51,6 +51,11 @@ func (r UserRepository) GetUserById(ctx context.Context, id ksuid.UUID) (*user.U
 		BindStruct(userInstance)
 
 	if err := queryUser.Get(&userInstance); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return nil, user.NotFoundError{Identifier: id.String()}
+		}
+
 		return nil, fmt.Errorf("select() failed: '%s", err)
 	}
 
@@ -79,6 +84,11 @@ func (r UserRepository) GetUserByEmail(ctx context.Context, email string) (*user
 		BindStruct(userEmail)
 
 	if err := queryEmail.Get(&userEmail); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return nil, user.NotFoundError{Identifier: email}
+		}
+
 		return nil, err
 	}
 
@@ -119,7 +129,7 @@ func (r UserRepository) CreateUser(ctx context.Context, instance *user.User) err
 	}
 
 	if !applied {
-		return fmt.Errorf("username is not unique")
+		return user.ErrUsernameNotUnique
 	}
 
 	// At this point, we know our username is unique & captured, so we
@@ -155,7 +165,7 @@ func (r UserRepository) CreateUser(ctx context.Context, instance *user.User) err
 			return fmt.Errorf("delete() failed: '%s", err)
 		}
 
-		return fmt.Errorf("ExecRelease() failed: '%s", err)
+		return user.ErrEmailNotUnique
 	}
 
 	// Create a lookup table that will be used to find the user using their unique ID

@@ -14,7 +14,7 @@ import (
 type AuthenticationCookie struct {
 	Cookie     ksuid.UUID `db:"cookie"`
 	Email      string     `db:"email"`
-	Redeemed   int        `db:"redeemed"`
+	Redeemed   bool       `db:"redeemed"`
 	Expiration time.Time  `db:"expiration"`
 	Session    string     `db:"session"`
 }
@@ -41,13 +41,13 @@ func (r CookieRepository) GetCookieById(ctx context.Context, id ksuid.UUID) (*co
 		return nil, fmt.Errorf("select() failed: '%s", err)
 	}
 
-	ck, err := cookie2.NewCookie(cookieItem.Cookie, cookieItem.Email, cookieItem.Expiration)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return ck, nil
+	return cookie2.UnmarshalCookieFromDatabase(
+		cookieItem.Cookie,
+		cookieItem.Email,
+		cookieItem.Redeemed,
+		cookieItem.Session,
+		cookieItem.Expiration,
+	), nil
 }
 
 // DeleteCookieById - Delete cookie by ID
@@ -78,7 +78,7 @@ func (r CookieRepository) CreateCookie(ctx context.Context, instance *cookie2.Co
 	authCookie := &AuthenticationCookie{
 		Cookie:     instance.Cookie(),
 		Email:      instance.Email(),
-		Redeemed:   0,
+		Redeemed:   instance.Redeemed(),
 		Expiration: instance.Expiration(),
 		Session:    instance.Session(),
 	}
@@ -97,16 +97,10 @@ func (r CookieRepository) CreateCookie(ctx context.Context, instance *cookie2.Co
 
 func (r CookieRepository) UpdateCookie(ctx context.Context, instance *cookie2.Cookie) error {
 
-	redeemed := 1
-
-	if !instance.Redeemed() {
-		redeemed = 0
-	}
-
 	// get authentication cookie with this ID
 	authCookie := AuthenticationCookie{
 		Cookie:   instance.Cookie(),
-		Redeemed: redeemed,
+		Redeemed: instance.Redeemed(),
 		Email:    instance.Email(),
 		Session:  instance.Session(),
 	}

@@ -33,7 +33,9 @@ func (h RedeemCookieHandler) Handle(ctx context.Context, id string) (*cookie.Coo
 	}
 
 	// Redeem the cookie
-	ck.MakeRedeemed()
+	if err := ck.MakeRedeemed(); err != nil {
+		return nil, err
+	}
 
 	err = h.cr.UpdateCookie(ctx, ck)
 
@@ -48,6 +50,11 @@ func (h RedeemCookieHandler) Handle(ctx context.Context, id string) (*cookie.Coo
 		return ck, nil
 	}
 
+	// Consume the cookie
+	if err := ck.MakeConsumed(); err != nil {
+		return nil, err
+	}
+
 	// Delete cookie - user is registered, so we don't need to wait for another call where the user will
 	// enter a username, since they already have an account and we can log them in
 	err = h.cr.DeleteCookieById(ctx, u)
@@ -55,8 +62,6 @@ func (h RedeemCookieHandler) Handle(ctx context.Context, id string) (*cookie.Coo
 	if err != nil {
 		return nil, fmt.Errorf("failed to delete cookie: %s", err)
 	}
-
-	ck.MakeRegistered()
 
 	return ck, nil
 }

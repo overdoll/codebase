@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 	"google.golang.org/grpc"
 	eva "overdoll/applications/eva/proto"
-	"overdoll/applications/eva/src"
+	"overdoll/applications/eva/src/ports"
 	"overdoll/applications/eva/src/service"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/commands/database"
@@ -39,7 +39,7 @@ func Run(cmd *cobra.Command, args []string) {
 
 	defer cleanup()
 
-	s := src.CreateServer(app)
+	s := ports.CreateServer(app)
 
 	bootstrap.InitializeGRPCServer(func(server *grpc.Server) {
 		eva.RegisterEvaServer(server, s)

@@ -1,6 +1,8 @@
 package cookie
 
 import (
+	"errors"
+	"fmt"
 	"time"
 
 	"overdoll/libraries/ksuid"
@@ -15,25 +17,42 @@ type Cookie struct {
 
 	session string
 
-	registered bool
+	consumed bool
 }
 
-func NewCookie(id ksuid.UUID, email string, expiration time.Time) (*Cookie, error) {
+var (
+	ErrCookieNotRedeemed = errors.New("cookie is not yet redeemed")
+	ErrCookieExpired     = errors.New("cookie is expired")
+)
 
-	// TODO: add some email validation?
+type NotFoundError struct {
+	CookieUUID string
+}
+
+func (e NotFoundError) Error() string {
+	return fmt.Sprintf("cookie '%s' not found", e.CookieUUID)
+}
+
+func NewCookie(id ksuid.UUID, email string) (*Cookie, error) {
 
 	ck := &Cookie{
 		cookie:     id,
-		expiration: expiration,
+		expiration: time.Now().Add(time.Minute * 5),
 		email:      email,
-	}
-
-	// No expiration set - set a new one
-	if ck.expiration.IsZero() {
-		ck.expiration = time.Now().Add(time.Minute * 5)
+		redeemed:   false,
 	}
 
 	return ck, nil
+}
+
+func UnmarshalCookieFromDatabase(cookie ksuid.UUID, email string, redeemed bool, session string, expiration time.Time) *Cookie {
+	return &Cookie{
+		cookie:     cookie,
+		email:      email,
+		redeemed:   redeemed,
+		session:    session,
+		expiration: expiration,
+	}
 }
 
 func (c *Cookie) Cookie() ksuid.UUID {
@@ -48,8 +67,8 @@ func (c *Cookie) Expiration() time.Time {
 	return c.expiration
 }
 
-func (c *Cookie) Registered() bool {
-	return c.registered
+func (c *Cookie) Consumed() bool {
+	return c.consumed
 }
 
 func (c *Cookie) Session() string {
@@ -60,21 +79,34 @@ func (c *Cookie) Redeemed() bool {
 	return c.redeemed
 }
 
-func (c *Cookie) MakeRedeemed() {
+func (c *Cookie) MakeRedeemed() error {
+
+	if c.IsExpired() {
+		return ErrCookieExpired
+	}
+
 	c.redeemed = true
+
+	return nil
 }
 
-func (c *Cookie) MakeRegistered() {
-	c.registered = true
+// MakeConsumed - this will always be ran before a cookie is deleted, i.e. being consumed by the target application (registration, login)
+func (c *Cookie) MakeConsumed() error {
+
+	if !c.Redeemed() {
+		return ErrCookieNotRedeemed
+	}
+
+	if c.IsExpired() {
+		return ErrCookieExpired
+	}
+
+	c.consumed = true
+	return nil
 }
 
 func (c *Cookie) IsExpired() bool {
-
-	if !time.Now().After(c.expiration) {
-		return true
-	}
-
-	return false
+	return time.Now().After(c.expiration)
 }
 
 func (c *Cookie) SetSession(session string) {

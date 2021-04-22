@@ -32,18 +32,15 @@ func (h RegisterFromCookieHandler) Handle(ctx context.Context, cookieId string, 
 		return nil, fmt.Errorf("could not get cookie: %s", err)
 	}
 
-	if !ck.Redeemed() {
-		return nil, fmt.Errorf("cookie not yet redeemed")
-	}
-
-	if !ck.IsExpired() {
-		return nil, fmt.Errorf("cookie is expired")
+	// Cookie should have been redeemed at this point, if we are on this command
+	if err := ck.MakeConsumed(); err == nil {
+		return nil, fmt.Errorf("cookie not valid: %s", err)
 	}
 
 	instance, err := user.NewUser(ksuid.New(), username, ck.Email())
 
 	if err != nil {
-		return nil, fmt.Errorf("cookie is expired %s", err)
+		return nil, fmt.Errorf("bad user %s", err)
 	}
 
 	err = h.ur.CreateUser(ctx, instance)
