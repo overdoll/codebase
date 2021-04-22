@@ -18,6 +18,10 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 		}
 }
 
+func NewComponentTestApplication(ctx context.Context) app.Application {
+	return createApplication(ctx)
+}
+
 func createApplication(ctx context.Context) app.Application {
 
 	init, err := bootstrap.NewBootstrap(ctx)

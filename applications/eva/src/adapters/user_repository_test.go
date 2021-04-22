@@ -99,6 +99,8 @@ func TestUserRepository_CreateUser_conflicting_email(t *testing.T) {
 
 // A parallel execution that will run 20 instances of trying to create the same user, so we expect that only 1 will be created
 func TestUserRepository_CreateUser_parallel(t *testing.T) {
+	t.Parallel()
+
 	workersCount := 20
 	workersDone := sync.WaitGroup{}
 	workersDone.Add(workersCount)
