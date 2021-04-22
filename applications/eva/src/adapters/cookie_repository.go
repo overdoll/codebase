@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
-	cookie2 "overdoll/applications/eva/src/domain/cookie"
+	"overdoll/applications/eva/src/domain/cookie"
 	"overdoll/libraries/ksuid"
 )
 
@@ -28,7 +29,7 @@ func NewCookieRepository(session gocqlx.Session) CookieRepository {
 }
 
 // GetCookieById - Get authentication cookie by ID
-func (r CookieRepository) GetCookieById(ctx context.Context, id ksuid.UUID) (*cookie2.Cookie, error) {
+func (r CookieRepository) GetCookieById(ctx context.Context, id ksuid.UUID) (*cookie.Cookie, error) {
 
 	cookieItem := &AuthenticationCookie{Cookie: id}
 
@@ -38,10 +39,15 @@ func (r CookieRepository) GetCookieById(ctx context.Context, id ksuid.UUID) (*co
 		BindStruct(cookieItem)
 
 	if err := queryCookie.Get(&cookieItem); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return nil, cookie.NotFoundError{CookieUUID: id.String()}
+		}
+
 		return nil, fmt.Errorf("select() failed: '%s", err)
 	}
 
-	return cookie2.UnmarshalCookieFromDatabase(
+	return cookie.UnmarshalCookieFromDatabase(
 		cookieItem.Cookie,
 		cookieItem.Email,
 		cookieItem.Redeemed,
@@ -65,6 +71,11 @@ func (r CookieRepository) DeleteCookieById(ctx context.Context, id ksuid.UUID) e
 		BindStruct(deleteCookie)
 
 	if err := queryCookie.ExecRelease(); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return cookie.NotFoundError{CookieUUID: id.String()}
+		}
+
 		return fmt.Errorf("delete() failed: '%s", err)
 	}
 
@@ -72,7 +83,7 @@ func (r CookieRepository) DeleteCookieById(ctx context.Context, id ksuid.UUID) e
 }
 
 // CreateCookie - Create a Cookie
-func (r CookieRepository) CreateCookie(ctx context.Context, instance *cookie2.Cookie) (*cookie2.Cookie, error) {
+func (r CookieRepository) CreateCookie(ctx context.Context, instance *cookie.Cookie) error {
 
 	// run a query to create the authentication token
 	authCookie := &AuthenticationCookie{
@@ -89,13 +100,13 @@ func (r CookieRepository) CreateCookie(ctx context.Context, instance *cookie2.Co
 		BindStruct(authCookie)
 
 	if err := insertCookie.ExecRelease(); err != nil {
-		return nil, fmt.Errorf("ExecRelease() failed: '%s", err)
+		return fmt.Errorf("ExecRelease() failed: '%s", err)
 	}
 
-	return instance, nil
+	return nil
 }
 
-func (r CookieRepository) UpdateCookie(ctx context.Context, instance *cookie2.Cookie) error {
+func (r CookieRepository) UpdateCookie(ctx context.Context, instance *cookie.Cookie) error {
 
 	// get authentication cookie with this ID
 	authCookie := AuthenticationCookie{
@@ -113,6 +124,11 @@ func (r CookieRepository) UpdateCookie(ctx context.Context, instance *cookie2.Co
 		BindStruct(authCookie)
 
 	if err := updateCookie.ExecRelease(); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return cookie.NotFoundError{CookieUUID: instance.Cookie().String()}
+		}
+
 		return fmt.Errorf("update() failed: '%s", err)
 	}
 

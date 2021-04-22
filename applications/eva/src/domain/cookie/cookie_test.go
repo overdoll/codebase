@@ -11,7 +11,7 @@ import (
 )
 
 func TestCookie_Consume_not_redeemed(t *testing.T) {
-	ck, err := cookie.NewCookie(ksuid.New(), "test-email@test.com")
+	ck, err := cookie.NewCookie(ksuid.New(), "test-email@test.com", "")
 
 	require.NoError(t, err)
 
@@ -19,7 +19,7 @@ func TestCookie_Consume_not_redeemed(t *testing.T) {
 }
 
 func TestCookie_Consume(t *testing.T) {
-	ck, err := cookie.NewCookie(ksuid.New(), "test-email@test.com")
+	ck, err := cookie.NewCookie(ksuid.New(), "test-email@test.com", "")
 
 	require.NoError(t, err)
 

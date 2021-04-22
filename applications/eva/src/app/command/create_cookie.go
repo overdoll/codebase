@@ -18,20 +18,17 @@ func NewCreateCookieHandler(cr cookie.Repository) CreateCookieHandler {
 func (h CreateCookieHandler) Handle(ctx context.Context, email string, session string) (*cookie.Cookie, error) {
 
 	// Create a new cookie
-	instance, err := cookie.NewCookie(ksuid.New(), email)
+	instance, err := cookie.NewCookie(ksuid.New(), email, session)
 
 	if err != nil {
 		return nil, err
 	}
 
-	// Set session variable
-	instance.SetSession(session)
-
-	ck, err := h.cr.CreateCookie(ctx, instance)
+	err = h.cr.CreateCookie(ctx, instance)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return ck, nil
+	return instance, nil
 }

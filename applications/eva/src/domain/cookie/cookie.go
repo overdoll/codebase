@@ -33,13 +33,14 @@ func (e NotFoundError) Error() string {
 	return fmt.Sprintf("cookie '%s' not found", e.CookieUUID)
 }
 
-func NewCookie(id ksuid.UUID, email string) (*Cookie, error) {
+func NewCookie(id ksuid.UUID, email string, session string) (*Cookie, error) {
 
 	ck := &Cookie{
 		cookie:     id,
 		expiration: time.Now().Add(time.Minute * 5),
 		email:      email,
 		redeemed:   false,
+		session:    session,
 	}
 
 	return ck, nil
