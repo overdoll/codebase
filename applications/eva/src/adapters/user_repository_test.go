@@ -2,6 +2,7 @@ package adapters
 
 import (
 	"context"
+	"sync"
 	"testing"
 
 	"github.com/bxcodec/faker/v3"
@@ -68,7 +69,7 @@ func TestUserRepository_CreateUser_conflicting_username(t *testing.T) {
 
 	err = repo.CreateUser(ctx, copyUsr)
 
-	// expect that we get an error that the username isnt unique
+	// expect that we get an error that the username isn't unique
 	assert.Equal(t, err, user.ErrUsernameNotUnique)
 }
 
@@ -94,6 +95,57 @@ func TestUserRepository_CreateUser_conflicting_email(t *testing.T) {
 
 	// expect that we get an error that the email isn't unique
 	assert.Equal(t, err, user.ErrEmailNotUnique)
+}
+
+// A parallel execution that will run 20 instances of trying to create the same user, so we expect that only 1 will be created
+func TestUserRepository_CreateUser_parallel(t *testing.T) {
+	workersCount := 20
+	workersDone := sync.WaitGroup{}
+	workersDone.Add(workersCount)
+
+	repo := newUserRepository(t)
+
+	// closing startWorkers will unblock all workers at once,
+	// thanks to that it will be more likely to have race condition
+	startWorkers := make(chan struct{})
+	// if user was successfully created, number of the worker is sent to this channel
+	usersCreated := make(chan int, workersCount)
+
+	ctx := context.Background()
+
+	// Create fake user
+	usr := newFakeUser(t)
+
+	// we are trying to do race condition, in practice only one worker should be able to finish transaction
+	for worker := 0; worker < workersCount; worker++ {
+		workerNum := worker
+
+		go func() {
+			defer workersDone.Done()
+			<-startWorkers
+
+			err := repo.CreateUser(ctx, usr)
+
+			if err == nil {
+				// user is only created when an error is not returned
+				usersCreated <- workerNum
+			}
+		}()
+	}
+
+	close(startWorkers)
+
+	// we are waiting, when all workers did the job
+	workersDone.Wait()
+	close(usersCreated)
+
+	var workersCreatedUsers []int
+
+	for workerNum := range usersCreated {
+		workersCreatedUsers = append(workersCreatedUsers, workerNum)
+	}
+
+	assert.Len(t, workersCreatedUsers, 1, "only one worker should create a user")
 }
 
 type TestUser struct {
