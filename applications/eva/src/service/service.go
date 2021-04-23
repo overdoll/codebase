@@ -36,8 +36,8 @@ func createApplication(ctx context.Context) app.Application {
 		log.Fatalf("database session failed with errors: %s", err)
 	}
 
-	cookieRepo := adapters.NewCookieRepository(session)
-	userRepo := adapters.NewUserRepository(session)
+	cookieRepo := adapters.NewCookieCassandraRepository(session)
+	userRepo := adapters.NewUserCassandraRepository(session)
 
 	return app.Application{
 		Commands: app.Commands{

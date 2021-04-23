@@ -7,7 +7,7 @@ import (
 )
 
 type Repository interface {
-	GetUserById(ctx context.Context, id ksuid.UUID) (*User, error)
-	GetUserByEmail(ctx context.Context, email string) (*User, error)
-	CreateUser(ctx context.Context, instance *User) error
+	GetUserById(context.Context, ksuid.UUID) (*User, error)
+	GetUserByEmail(context.Context, string) (*User, error)
+	CreateUser(context.Context, *User) error
 }

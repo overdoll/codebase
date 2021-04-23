@@ -1,11 +1,11 @@
-package documents
+package adapters
 
-type Post struct {
+type PostDocument struct {
 	Id            string   `json:"id"`
 	ArtistId      string   `json:"artist_id"`
 	ContributorId string   `json:"contributor_id"`
-	Content        []string `json:"content"`
+	Content       []string `json:"content"`
 	Categories    []string `json:"categories"`
 	Characters    []string `json:"characters"`
-	PostedAt      string `json:"posted_at"`
+	PostedAt      string   `json:"posted_at"`
 }

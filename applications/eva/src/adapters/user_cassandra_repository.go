@@ -35,7 +35,7 @@ type UserRepository struct {
 	session gocqlx.Session
 }
 
-func NewUserRepository(session gocqlx.Session) UserRepository {
+func NewUserCassandraRepository(session gocqlx.Session) UserRepository {
 	return UserRepository{session: session}
 }
 

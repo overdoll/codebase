@@ -24,7 +24,7 @@ type CookieRepository struct {
 	session gocqlx.Session
 }
 
-func NewCookieRepository(session gocqlx.Session) CookieRepository {
+func NewCookieCassandraRepository(session gocqlx.Session) CookieRepository {
 	return CookieRepository{session: session}
 }
 

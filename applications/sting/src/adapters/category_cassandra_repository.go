@@ -1,4 +1,4 @@
-package models
+package adapters
 
 import (
 	"overdoll/libraries/ksuid"
@@ -7,5 +7,5 @@ import (
 type Category struct {
 	Id        ksuid.UUID `db:"id"`
 	Title     string     `db:"title"`
-	Thumbnail Thumbnail  `db:"thumbnail"`
+	Thumbnail string     `db:"thumbnail"`
 }

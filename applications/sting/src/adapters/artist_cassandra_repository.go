@@ -1,4 +1,4 @@
-package models
+package adapters
 
 import (
 	"overdoll/libraries/ksuid"
