@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"overdoll/applications/sting/src/domain/post"
@@ -22,20 +23,19 @@ type Post struct {
 }
 
 type PostPending struct {
-	Id                 ksuid.UUID            `db:"id"`
-	State              post.PostPendingState `db:"state"`
-	ArtistId           string                `db:"artist_id"`
-	ArtistUsername     string                `db:"artist_username"`
-	ContributorId      ksuid.UUID            `db:"contributor_id"`
-	Content            []string              `db:"content"`
-	Categories         []ksuid.UUID          `db:"categories"`
-	Characters         []ksuid.UUID          `db:"characters"`
-	CharactersRequests map[string]string     `db:"characters_requests"`
-	CategoriesRequests []string              `db:"categories_requests"`
-	MediaRequests      []string              `db:"media_requests"`
-	PostedAt           time.Time             `db:"posted_at"`
-	ReviewRequired     bool                  `db:"review_required"`
-	PublishedPostId    string                `db:"published_post_id"`
+	Id                 ksuid.UUID        `db:"id"`
+	State              string            `db:"state"`
+	ArtistId           string            `db:"artist_id"`
+	ArtistUsername     string            `db:"artist_username"`
+	ContributorId      ksuid.UUID        `db:"contributor_id"`
+	Content            []string          `db:"content"`
+	Categories         []ksuid.UUID      `db:"categories"`
+	Characters         []ksuid.UUID      `db:"characters"`
+	CharactersRequests map[string]string `db:"characters_requests"`
+	CategoriesRequests []string          `db:"categories_requests"`
+	MediaRequests      []string          `db:"media_requests"`
+	PostedAt           time.Time         `db:"posted_at"`
+	PublishedPostId    string            `db:"published_post_id"`
 }
 
 type PostsCassandraRepository struct {
@@ -68,7 +68,7 @@ func marshalToDatabase(pending *post.PostPending) *PostPending {
 
 	return &PostPending{
 		Id:                 pending.ID(),
-		State:              pending.State(),
+		State:              string(pending.State()),
 		ArtistId:           pending.ArtistId(),
 		ArtistUsername:     pending.ArtistUsername(),
 		ContributorId:      pending.ContributorId(),
@@ -79,7 +79,6 @@ func marshalToDatabase(pending *post.PostPending) *PostPending {
 		CategoriesRequests: categoryRequests,
 		MediaRequests:      mediaRequests,
 		PostedAt:           pending.PostedAt(),
-		ReviewRequired:     pending.ReviewRequired(),
 		PublishedPostId:    pending.PublishedPostId(),
 	}
 }
@@ -109,6 +108,54 @@ func (r *PostsCassandraRepository) CreatePendingPost(ctx context.Context, pendin
 
 	if err := insertPost.ExecRelease(); err != nil {
 		return fmt.Errorf("ExecRelease() failed: '%s", err)
+	}
+
+	return nil
+}
+
+func (r *PostsCassandraRepository) GetPendingPost(ctx context.Context, id ksuid.UUID) (*post.PostPending, error) {
+
+	postPendingQuery := qb.Select("post_pending").
+		Where(qb.EqLit("id", id.String())).
+		Query(r.session)
+
+	var postPending PostPending
+
+	if err := postPendingQuery.Get(&postPending); err != nil {
+		return nil, err
+	}
+
+	return post.UnmarshalPendingPostFromDatabase(
+		postPending.Id,
+		postPending.State,
+		postPending.ArtistId,
+		postPending.ArtistUsername,
+		postPending.ContributorId,
+		postPending.Content,
+		postPending.Characters,
+		postPending.Categories,
+		postPending.CharactersRequests,
+		postPending.CategoriesRequests,
+		postPending.MediaRequests,
+		postPending.PostedAt,
+		postPending.PublishedPostId,
+	), nil
+}
+
+func (r *PostsCassandraRepository) UpdatePendingPost(ctx context.Context, pending *post.PostPending) error {
+
+	// Update our post to reflect the new state - in publishing
+	updatePost := qb.Update("post_pending").
+		Set("state", "characters", "categories", "media_requests", "character_requests", "categories_requests", "artist_id", "artist_username").
+		Where(qb.Eq("id")).
+		Query(r.session).
+		// Update must be replicated everywhere or else we risk that the PublishPost method isn't in sync with the
+		// new settings we set up here
+		Consistency(gocql.All).
+		BindStruct(marshalToDatabase(pending))
+
+	if err := updatePost.ExecRelease(); err != nil {
+		return fmt.Errorf("update() failed: '%s", err)
 	}
 
 	return nil

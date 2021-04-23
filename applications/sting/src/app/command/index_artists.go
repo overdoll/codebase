@@ -1,29 +1,20 @@
-package commands
+package command
 
 import (
-	"log"
+	"context"
 
 	"github.com/scylladb/gocqlx/v2/qb"
-	"github.com/spf13/cobra"
-	"overdoll/applications/sting/src/models"
-	"overdoll/applications/sting/src/search/documents"
-	"overdoll/applications/sting/src/search/indexes"
+	"overdoll/applications/hades/src/models"
 )
 
-var artists = &cobra.Command{
-	Use:   "artists",
-	Short: "Index the whole artists table into elasticsearch",
-	Run: func(cmd *cobra.Command, args []string) {
-		CreateServer().IndexArtists()
-	},
+type IndexArtistsHandler struct {
 }
 
-func init() {
-	Root.AddCommand(artists)
+func NewIndexArtistsHandler() IndexArtistsHandler {
+	return IndexArtistsHandler{}
 }
 
-func (s *Server) IndexArtists() {
-
+func (h IndexArtistsHandler) Handle(ctx context.Context) error {
 	err := s.store.DeleteIndex("artists")
 
 	// In case it fails, we don't care since it should still create it

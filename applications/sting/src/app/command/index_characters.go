@@ -1,32 +1,20 @@
-package commands
+package command
 
 import (
-	"log"
+	"context"
 
 	"github.com/scylladb/gocqlx/v2/qb"
-	"github.com/spf13/cobra"
-	"overdoll/applications/sting/src/models"
-	"overdoll/applications/sting/src/search/documents"
-	"overdoll/applications/sting/src/search/indexes"
+	"overdoll/applications/hades/src/models"
 )
 
-var characters = &cobra.Command{
-	Use:   "characters",
-	Short: "Index the whole characters table into elasticsearch",
-	Run:   Run,
+type IndexCharactersHandler struct {
 }
 
-func init() {
-	Root.AddCommand(characters)
+func NewIndexCharactersHandler() IndexCharactersHandler {
+	return IndexCharactersHandler{}
 }
 
-func Run(cmd *cobra.Command, args []string) {
-	s := CreateServer()
-
-	s.IndexCharacters()
-}
-
-func (s *Server) IndexCharacters() {
+func (h IndexCharactersHandler) Handle(ctx context.Context) error {
 
 	err := s.store.DeleteIndex("characters")
 

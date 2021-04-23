@@ -12,7 +12,15 @@ type Category struct {
 	thumbnail string
 }
 
-func (c *Category) Category() string {
+func (c *Category) Thumbnail() string {
 	var staticURL = os.Getenv("STATIC_URL")
 	return staticURL + "/thumbnails/" + c.thumbnail
+}
+
+func UnmarshalCategoryFromDatabase(id ksuid.UUID, title string, thumbnail string) *Category {
+	return &Category{
+		id:        id,
+		title:     title,
+		thumbnail: thumbnail,
+	}
 }

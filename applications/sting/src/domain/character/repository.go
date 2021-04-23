@@ -8,6 +8,7 @@ import (
 
 type Repository interface {
 	GetCharacterById(context.Context, ksuid.UUID) (*Character, error)
+	GetCharacters(context.Context, []ksuid.UUID) ([]*Character, error)
 	CreateCharacter(context.Context, *Character) error
 	CreateCharacters(context.Context, []*Character) error
 

@@ -10,8 +10,9 @@ type Application struct {
 }
 
 type Commands struct {
-	NewPost command.NewPostHandler
+	NewPost     command.NewPostHandler
+	ReviewPost  command.ReviewPostHandler
+	PublishPost command.PublishPostHandler
 }
 
-type Queries struct {
-}
+type Queries struct{}

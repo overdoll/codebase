@@ -9,10 +9,8 @@ import (
 type PostPendingState string
 
 const (
-	Processing PostPendingState = "processing"
-	Review     PostPendingState = "review"
-	Publishing PostPendingState = "publishing"
-	Published  PostPendingState = "published"
+	Review    PostPendingState = "review"
+	Published PostPendingState = "published"
 )
 
 type CharacterRequest struct {
@@ -41,23 +39,49 @@ type PostPending struct {
 	categoriesRequests []CategoryRequest
 	mediaRequests      []MediaRequest
 	postedAt           time.Time
-	reviewRequired     bool
 	publishedPostId    string
 }
 
-func NewPendingPost(id ksuid.UUID, artistId string, artistUsername string, contributorId ksuid.UUID, content []string, characters []ksuid.UUID, categories []ksuid.UUID, review bool) (*PostPending, error) {
+func NewPendingPost(id ksuid.UUID, artistId string, artistUsername string, contributorId ksuid.UUID, content []string, characters []ksuid.UUID, categories []ksuid.UUID) (*PostPending, error) {
 	return &PostPending{
 		id:             id,
-		state:          Processing,
 		artistId:       artistId,
 		artistUsername: artistUsername,
 		contributorId:  contributorId,
 		content:        content,
 		characters:     characters,
 		categories:     categories,
-		reviewRequired: review,
 		postedAt:       time.Now(),
 	}, nil
+}
+func UnmarshalPendingPostFromDatabase(id ksuid.UUID, state string, artistId string, artistUsername string, contributorId ksuid.UUID, content []string, characters []ksuid.UUID, categories []ksuid.UUID, charactersRequests map[string]string, categoryRequests []string, mediaRequests []string, postedAt time.Time, publishedPostId string) *PostPending {
+
+	postPending := &PostPending{
+		id:              id,
+		state:           PostPendingState(state),
+		artistId:        artistId,
+		artistUsername:  artistUsername,
+		contributorId:   contributorId,
+		content:         content,
+		characters:      characters,
+		categories:      categories,
+		postedAt:        postedAt,
+		publishedPostId: publishedPostId,
+	}
+
+	for char, med := range charactersRequests {
+		_ = postPending.RequestCharacter(char, med)
+	}
+
+	for _, med := range mediaRequests {
+		_ = postPending.RequestMedia(med)
+	}
+
+	for _, cat := range categoryRequests {
+		_ = postPending.RequestCategory(cat)
+	}
+
+	return postPending
 }
 
 func (p *PostPending) ID() ksuid.UUID {
@@ -96,16 +120,22 @@ func (p *PostPending) PostedAt() time.Time {
 	return p.postedAt
 }
 
-func (p *PostPending) ReviewRequired() bool {
-	return p.reviewRequired
-}
-
 func (p *PostPending) PublishedPostId() string {
 	return p.publishedPostId
 }
 
+// TODO: based on user, either make it public (publish) or put in review
+func (p *PostPending) MakePublic() error {
+	p.state = Review
+	return nil
+}
+
 func (p *PostPending) IsPublished() bool {
 	return p.publishedPostId != ""
+}
+
+func (p *PostPending) UpdateContent(content []string) {
+	p.content = content
 }
 
 func (p *PostPending) CharacterRequests() []CharacterRequest {
@@ -120,19 +150,21 @@ func (p *PostPending) MediaRequests() []MediaRequest {
 	return p.mediaRequests
 }
 
-func (p *PostPending) RequestCharacter(name string, media string, newMedia bool) error {
+func (p *PostPending) RequestCharacter(name string, media string) error {
 
 	p.charactersRequests = append(p.charactersRequests, CharacterRequest{Name: name, Media: media})
-
-	if newMedia {
-		p.mediaRequests = append(p.mediaRequests, MediaRequest{Title: media})
-	}
 
 	return nil
 }
 
 func (p *PostPending) RequestCategory(title string) error {
 	p.categoriesRequests = append(p.categoriesRequests, CategoryRequest{Title: title})
+
+	return nil
+}
+
+func (p *PostPending) RequestMedia(title string) error {
+	p.mediaRequests = append(p.mediaRequests, MediaRequest{Title: title})
 
 	return nil
 }

@@ -1,28 +1,21 @@
-package commands
+package command
 
 import (
-	"log"
+	"context"
 
 	"github.com/scylladb/gocqlx/v2/qb"
-	"github.com/spf13/cobra"
-	"overdoll/applications/sting/src/models"
-	"overdoll/applications/sting/src/search/documents"
-	"overdoll/applications/sting/src/search/indexes"
+	"overdoll/applications/hades/src/models"
 )
 
-var media = &cobra.Command{
-	Use:   "media",
-	Short: "Index the whole media table into elasticsearch",
-	Run: func(cmd *cobra.Command, args []string) {
-		CreateServer().IndexMedia()
-	},
+type IndexMediaHandler struct {
 }
 
-func init() {
-	Root.AddCommand(media)
+func NewIndexMediaHandler() IndexMediaHandler {
+	return IndexMediaHandler{}
 }
 
-func (s *Server) IndexMedia() {
+func (h IndexCharactersHandler) Handle(ctx context.Context) error {
+
 
 	err := s.store.DeleteIndex("media")
 
