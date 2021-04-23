@@ -6,6 +6,7 @@ import (
 
 	"overdoll/applications/sting/src/app"
 	"overdoll/libraries/bootstrap"
+	"overdoll/libraries/search"
 )
 
 func NewApplication(ctx context.Context) (app.Application, func()) {
@@ -31,6 +32,12 @@ func createApplication(ctx context.Context) app.Application {
 
 	if err != nil {
 		log.Fatalf("database session failed with errors: %s", err)
+	}
+
+	es, err := search.NewStore(ctx)
+
+	if err != nil {
+		log.Fatalf("es session failed with errors: %s", err)
 	}
 
 	return app.Application{

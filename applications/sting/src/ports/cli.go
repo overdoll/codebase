@@ -2,6 +2,7 @@ package ports
 
 import (
 	"context"
+	"log"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -21,7 +22,7 @@ func init() {
 	ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancelFn()
 
-	_, cleanup := service.NewApplication(ctx)
+	application, cleanup := service.NewApplication(ctx)
 
 	defer cleanup()
 
@@ -29,7 +30,9 @@ func init() {
 		Use:   "artists",
 		Short: "Index the whole artists table into elasticsearch",
 		Run: func(cmd *cobra.Command, args []string) {
-			// TODO: run index command
+			if err := application.Commands.IndexArtists.Handle(ctx); err != nil {
+				log.Fatalf(err.Error())
+			}
 		},
 	})
 
@@ -37,7 +40,9 @@ func init() {
 		Use:   "categories",
 		Short: "Index the whole categories table into elasticsearch",
 		Run: func(cmd *cobra.Command, args []string) {
-			// TODO: run index command
+			if err := application.Commands.IndexCategories.Handle(ctx); err != nil {
+				log.Fatalf(err.Error())
+			}
 		},
 	})
 
@@ -45,7 +50,9 @@ func init() {
 		Use:   "characters",
 		Short: "Index the whole characters table into elasticsearch",
 		Run: func(cmd *cobra.Command, args []string) {
-			// TODO: run index command
+			if err := application.Commands.IndexCharacters.Handle(ctx); err != nil {
+				log.Fatalf(err.Error())
+			}
 		},
 	})
 
@@ -53,7 +60,9 @@ func init() {
 		Use:   "media",
 		Short: "Index the whole media table into elasticsearch",
 		Run: func(cmd *cobra.Command, args []string) {
-			// TODO: run index command
+			if err := application.Commands.IndexMedia.Handle(ctx); err != nil {
+				log.Fatalf(err.Error())
+			}
 		},
 	})
 }
