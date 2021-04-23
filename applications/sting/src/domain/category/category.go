@@ -12,6 +12,14 @@ type Category struct {
 	thumbnail string
 }
 
+func (c *Category) ID() ksuid.UUID {
+	return c.id
+}
+
+func (c *Category) Title() string {
+	return c.title
+}
+
 func (c *Category) Thumbnail() string {
 	var staticURL = os.Getenv("STATIC_URL")
 	return staticURL + "/thumbnails/" + c.thumbnail

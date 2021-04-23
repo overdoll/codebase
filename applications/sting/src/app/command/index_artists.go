@@ -3,62 +3,37 @@ package command
 import (
 	"context"
 
-	"github.com/scylladb/gocqlx/v2/qb"
-	"overdoll/applications/hades/src/models"
+	"overdoll/applications/sting/src/domain/artist"
 )
 
 type IndexArtistsHandler struct {
+	ar  artist.Repository
+	air artist.IndexRepository
 }
 
-func NewIndexArtistsHandler() IndexArtistsHandler {
-	return IndexArtistsHandler{}
+func NewIndexArtistsHandler(ar artist.Repository, air artist.IndexRepository) IndexArtistsHandler {
+	return IndexArtistsHandler{ar: ar, air: air}
 }
 
 func (h IndexArtistsHandler) Handle(ctx context.Context) error {
-	err := s.store.DeleteIndex("artists")
 
-	// In case it fails, we don't care since it should still create it
+	err := h.air.DeleteIndex(ctx)
+
+	if err != nil {
+
+	}
+
+	artists, err := h.ar.GetArtists(ctx)
+
 	if err != nil {
 
 	}
 
-	err = s.store.CreateIndex("artists", indexes.ArtistIndex)
+	err = h.air.BulkIndex(ctx, artists)
 
 	if err != nil {
-		log.Fatalf("failed to create media index: %s", err)
+
 	}
 
-	err = s.store.CreateBulkIndex("artists")
-
-	if err != nil {
-		log.Fatalf("error creating bulk indexer: %s", err)
-	}
-
-	var dbArtists []models.Artist
-
-	qc := qb.Select("artists").Columns("user_id", "user_username", "user_avatar").Query(s.session)
-
-	if err = qc.Select(&dbArtists); err != nil {
-		log.Fatalf("select() failed: %s", err)
-	}
-
-	// Now we can safely start creating our documents
-	for _, artist := range dbArtists {
-
-		data := &documents.Artist{
-			Id:       artist.Id.String(),
-			Avatar:   artist.Avatar.URL,
-			Username: artist.Username,
-		}
-
-		err = s.store.AddToBulkIndex(data.Id, data)
-
-		if err != nil {
-			log.Fatalf("unexpected error: %s", err)
-		}
-	}
-
-	if err := s.store.CloseBulkIndex(); err != nil {
-		log.Fatalf("unexpected error: %s", err)
-	}
+	return nil
 }

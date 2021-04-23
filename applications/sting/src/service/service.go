@@ -37,8 +37,5 @@ func createApplication(ctx context.Context) app.Application {
 		Commands: app.Commands{
 
 		},
-		Queries: app.Queries{
-
-		},
 	}
 }

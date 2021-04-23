@@ -32,7 +32,7 @@ func NewCharacterCassandraRepository(session gocqlx.Session) CharacterCassandraR
 	return CharacterCassandraRepository{session: session}
 }
 
-func (r *CharacterCassandraRepository) GetCharacters(ctx context.Context, chars []ksuid.UUID) ([]*character.Character, error) {
+func (r *CharacterCassandraRepository) GetCharactersById(ctx context.Context, chars []ksuid.UUID) ([]*character.Character, error) {
 
 	var characters []*character.Character
 
@@ -63,8 +63,85 @@ func (r *CharacterCassandraRepository) GetCharacters(ctx context.Context, chars 
 			cat.Name,
 			cat.Thumbnail,
 			cat.MediaId,
+			"",
+			"",
 		))
 	}
 
 	return characters, nil
+}
+
+func (r *CharacterCassandraRepository) GetCharacters(ctx context.Context) ([]*character.Character, error) {
+	var dbChars []Character
+
+	// Grab all of our characters
+	// Doing a direct database query
+	qc := qb.Select("characters").Columns("id", "media_id", "name", "thumbnail").Query(r.session)
+
+	if err := qc.Select(&dbChars); err != nil {
+		return nil, fmt.Errorf("select() failed: %s", err)
+	}
+
+	var medias []Media
+
+	// Go through each character and grab the media ID, since we need this for the character document
+	for _, char := range dbChars {
+		medias = append(medias, Media{Id: char.MediaId})
+	}
+
+	// Get all the medias through a direct database query
+	qm := qb.Select("media").Columns("id", "thumbnail", "title").Query(r.session)
+
+	if err := qm.Select(&medias); err != nil {
+		return nil, fmt.Errorf("select() failed: %s", err)
+	}
+
+	var characters []*character.Character
+
+	// Now we can safely start creating our documents
+	for _, char := range dbChars {
+
+		var media Media
+
+		for _, med := range medias {
+			if med.Id == char.MediaId {
+				media = med
+			}
+		}
+
+		characters = append(characters, character.UnmarshalCharacterFromDatabase(
+			char.Id,
+			char.Name,
+			char.Thumbnail,
+			char.MediaId,
+			media.Title,
+			media.Thumbnail,
+		))
+	}
+
+	return characters, nil
+}
+
+func (r *CharacterCassandraRepository) GetMedias(ctx context.Context) ([]*character.Media, error) {
+	var dbMed []Media
+
+	qc := qb.Select("media").Columns("id", "title", "thumbnail").Query(r.session)
+
+	if err := qc.Select(&dbMed); err != nil {
+		return nil, fmt.Errorf("select() failed: %s", err)
+	}
+
+	var medias []*character.Media
+
+	// Now we can safely start creating our documents
+	for _, media := range dbMed {
+
+		medias = append(medias, character.UnmarshalMediaFromDatabase(
+			media.Id,
+			media.Title,
+			media.Thumbnail,
+		))
+	}
+
+	return medias, nil
 }

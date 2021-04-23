@@ -19,8 +19,8 @@ type NewPostHandler struct {
 	cr content.Repository
 }
 
-func NewNewPostHandler(pr post.Repository) NewPostHandler {
-	return NewPostHandler{pr: pr}
+func NewNewPostHandler(pr post.Repository, chr character.Repository, ctr category.Repository, cr content.Repository) NewPostHandler {
+	return NewPostHandler{pr: pr, chr: chr, ctr: ctr, cr: cr}
 }
 
 func (h NewPostHandler) Handle(ctx context.Context, artistId string, artistUsername string, contributorId string, content []string, categories []string, characters []string, characterRequests map[string]string, categoryRequests []string, mediaRequests []string) (*post.PostPending, error) {
@@ -31,7 +31,7 @@ func (h NewPostHandler) Handle(ctx context.Context, artistId string, artistUsern
 		return nil, fmt.Errorf("uuids not valid: %s", characters)
 	}
 
-	characterInstances, err := h.chr.GetCharacters(ctx, characterUuids)
+	characterInstances, err := h.chr.GetCharactersById(ctx, characterUuids)
 
 	if err != nil {
 		return nil, err
@@ -48,7 +48,7 @@ func (h NewPostHandler) Handle(ctx context.Context, artistId string, artistUsern
 		return nil, fmt.Errorf("uuids not valid: %s", categories)
 	}
 
-	categoryInstances, err := h.ctr.GetCategories(ctx, categoryUuids)
+	categoryInstances, err := h.ctr.GetCategoriesById(ctx, categoryUuids)
 
 	if err != nil {
 		return nil, err

@@ -17,8 +17,8 @@ type ReviewPostHandler struct {
 	ctr category.Repository
 }
 
-func NewReviewPostHandler() ReviewPostHandler {
-	return ReviewPostHandler{}
+func NewReviewPostHandler(pr post.Repository, chr character.Repository, ctr category.Repository) ReviewPostHandler {
+	return ReviewPostHandler{pr: pr, chr: chr, ctr: ctr}
 }
 
 func (h ReviewPostHandler) Handle(ctx context.Context, id string, artistId string, artistUsername string, categories []string, characters []string, characterRequests map[string]string, categoryRequests []string, mediaRequests []string) (*post.PostPending, error) {
@@ -28,7 +28,7 @@ func (h ReviewPostHandler) Handle(ctx context.Context, id string, artistId strin
 		return nil, fmt.Errorf("uuids not valid: %s", characters)
 	}
 
-	characterInstances, err := h.chr.GetCharacters(ctx, characterUuids)
+	characterInstances, err := h.chr.GetCharactersById(ctx, characterUuids)
 
 	if err != nil {
 		return nil, err
@@ -45,7 +45,7 @@ func (h ReviewPostHandler) Handle(ctx context.Context, id string, artistId strin
 		return nil, fmt.Errorf("uuids not valid: %s", categories)
 	}
 
-	categoryInstances, err := h.ctr.GetCategories(ctx, categoryUuids)
+	categoryInstances, err := h.ctr.GetCategoriesById(ctx, categoryUuids)
 
 	if err != nil {
 		return nil, err
@@ -55,7 +55,7 @@ func (h ReviewPostHandler) Handle(ctx context.Context, id string, artistId strin
 	if len(categoryInstances) != len(categoryUuids) {
 		return nil, fmt.Errorf("invalid category found")
 	}
-	
+
 	// TODO: dispatch job to publish post
 
 	return nil, nil

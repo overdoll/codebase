@@ -25,7 +25,7 @@ func NewCategoryCassandraRepository(session gocqlx.Session) CategoryCassandraRep
 	return CategoryCassandraRepository{session: session}
 }
 
-func (r *CharacterCassandraRepository) GetCategories(ctx context.Context, cats []ksuid.UUID) ([]*category.Category, error) {
+func (r *CategoryCassandraRepository) GetCategoriesById(ctx context.Context, cats []ksuid.UUID) ([]*category.Category, error) {
 
 	var categories []*category.Category
 
@@ -51,6 +51,25 @@ func (r *CharacterCassandraRepository) GetCategories(ctx context.Context, cats [
 
 	for _, cat := range categoriesModels {
 		categories = append(categories, category.UnmarshalCategoryFromDatabase(cat.Id, cat.Title, cat.Thumbnail))
+	}
+
+	return categories, nil
+}
+
+func (r *CategoryCassandraRepository) GetCategories(ctx context.Context) ([]*category.Category, error) {
+
+	var dbCategory []Category
+
+	qc := qb.Select("categories").Columns("id", "title", "thumbnail").Query(r.session)
+
+	if err := qc.Select(&dbCategory); err != nil {
+		return nil, fmt.Errorf("select() failed: %s", err)
+	}
+
+	var categories []*category.Category
+
+	for _, dbCat := range dbCategory {
+		categories = append(categories, category.UnmarshalCategoryFromDatabase(dbCat.Id, dbCat.Title, dbCat.Thumbnail))
 	}
 
 	return categories, nil
