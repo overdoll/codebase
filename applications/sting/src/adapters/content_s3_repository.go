@@ -1,4 +1,4 @@
-package server
+package adapters
 
 import (
 	"context"
@@ -12,23 +12,8 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/h2non/filetype"
-	"github.com/segmentio/ksuid"
-	pox "overdoll/applications/pox/proto"
-	"overdoll/applications/pox/src/services"
-	sting "overdoll/applications/sting/proto"
+	"overdoll/libraries/ksuid"
 )
-
-type Server struct {
-	session  *session.Session
-	services services.Services
-}
-
-func CreateServer(ss *session.Session, services services.Services) *Server {
-	return &Server{
-		session:  ss,
-		services: services,
-	}
-}
 
 const (
 	ImageProcessingBucket = "overdoll-processing"
@@ -36,16 +21,22 @@ const (
 	ImageUploadsBucket    = "overdoll-uploads"
 )
 
-// ProcessPost - process our images (diff check, resizing, etc...)
-// and then tell Sting that we are finished, so it can put the post in review or call the next message
-func (s *Server) ProcessPost(ctx context.Context, msg *pox.PostProcessContentEvent) {
+type ContentS3Repository struct {
+	session *session.Session
+}
 
-	downloader := s3manager.NewDownloader(s.session)
-	s3Client := s3.New(s.session)
+func NewContentS3Repository(session *session.Session) ContentS3Repository {
+	return ContentS3Repository{session: session}
+}
+
+// ProcessContent - do filetype validation, move files to a user private bucket out of the uploading bucket
+func (r *ContentS3Repository) ProcessContent(ctx context.Context, userId string, oldContent []string) ([]string, error) {
+	downloader := s3manager.NewDownloader(r.session)
+	s3Client := s3.New(r.session)
 
 	var content []string
 
-	for _, image := range msg.Content {
+	for _, image := range oldContent {
 
 		// the actual file ID is before the + since that's how tus handles it
 		fileId := strings.Split(image, "+")[0]
@@ -91,7 +82,7 @@ func (s *Server) ProcessPost(ctx context.Context, msg *pox.PostProcessContentEve
 		}
 
 		fileName := ksuid.New().String() + "." + kind.Extension
-		fileKey := msg.Prefix + "/" + fileName
+		fileKey := userId + "/" + fileName
 
 		// move file to private bucket
 		_, err = s3Client.CopyObject(&s3.CopyObjectInput{Bucket: aws.String(ImageProcessingBucket),
@@ -116,32 +107,14 @@ func (s *Server) ProcessPost(ctx context.Context, msg *pox.PostProcessContentEve
 		// we dont have to worry about deleting the file from s3 since it will be deleted eventually (expiration)
 	}
 
-	_, err := s.services.Sting().ProcessPost(context.Background(), &sting.ProcessPostRequest{
-		Id:      msg.PostId,
-		Content: content,
-	})
-
-	if err != nil {
-		fmt.Printf("error processing post: %s", err)
-	}
+	return content, nil
 }
 
-// PublishPost - make the images in the post publicly viewable, and then
-// tell Sting about the images
-func (s *Server) PublishPost(ctx context.Context, msg *pox.PostPublishContentEvent) {
+func (r *ContentS3Repository) PublishContent(ctx context.Context, userId string, content []string) ([]string, error) {
 
-	// TODO: move file, and delete private file
+	_ = s3manager.NewDownloader(r.session)
+	_ = s3.New(r.session)
 
-	_ = s3manager.NewDownloader(s.session)
-	_ = s3.New(s.session)
-
-	// Tell Sting about our new images
-	_, err := s.services.Sting().PublishPost(ctx, &sting.PublishPostRequest{
-		Id:      msg.PostId,
-		Content: msg.Content,
-	})
-
-	if err != nil {
-		// TODO: handle error
-	}
+	// TODO: move files, and delete private file
+	return content, nil
 }
