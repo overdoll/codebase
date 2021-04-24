@@ -48,8 +48,10 @@ func (h PublishPostHandler) Handle(ctx context.Context, c interface{}) error {
 		return fmt.Errorf("could not get pending post: %s", err)
 	}
 
+	cats := pendingPost.ConsumeCustomCategories()
+
 	// Consume custom categories and run commands to create
-	err = h.commandBus.Send(ctx, pendingPost.ConsumeCustomCategories())
+	err = h.commandBus.Send(ctx, category.MarshalToProtoArray(cats))
 
 	if err != nil {
 		return err
@@ -58,13 +60,13 @@ func (h PublishPostHandler) Handle(ctx context.Context, c interface{}) error {
 	// Consume custom characters, and run commands to create these custom characters
 	chars, medias := pendingPost.ConsumeCustomCharacters()
 
-	err = h.commandBus.Send(ctx, chars)
+	err = h.commandBus.Send(ctx, character.MarshalCharacterToProtoArray(chars))
 
 	if err != nil {
 		return err
 	}
 
-	err = h.commandBus.Send(ctx, medias)
+	err = h.commandBus.Send(ctx, character.MarshalMediaToProtoArray(medias))
 
 	if err != nil {
 		return err

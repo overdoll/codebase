@@ -3,6 +3,7 @@ package character
 import (
 	"os"
 
+	sting "overdoll/applications/sting/proto"
 	"overdoll/libraries/ksuid"
 )
 
@@ -41,4 +42,43 @@ func NewCharacter(id ksuid.UUID, name string, thumbnail string, mediaId ksuid.UU
 			thumbnail: mediaThumbnail,
 		},
 	}
+}
+
+func UnmarshalCharacterFromProtoArray(chars []*sting.Character) ([]*Character, error) {
+	var characters []*Character
+
+	for _, char := range chars {
+		id, err := ksuid.Parse(char.Id)
+
+		if err != nil {
+			return nil, err
+		}
+
+		mediaId, err := ksuid.Parse(char.Media.Id)
+
+		if err != nil {
+			return nil, err
+		}
+
+		characters = append(characters, NewCharacter(id, char.Name, char.Thumbnail, mediaId, char.Media.Title, char.Media.Thumbnail))
+	}
+
+	return characters, nil
+}
+
+func MarshalCharacterToProtoArray(chars []*Character) []*sting.Character {
+	var characters []*sting.Character
+
+	for _, char := range chars {
+
+		m := char.Media()
+		
+		characters = append(characters, &sting.Character{Id: char.ID().String(), Name: char.Name(), Thumbnail: char.thumbnail, Media: &sting.Media{
+			Id:        m.ID().String(),
+			Title:     m.Title(),
+			Thumbnail: m.thumbnail,
+		}})
+	}
+
+	return characters
 }

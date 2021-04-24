@@ -3,6 +3,7 @@ package category
 import (
 	"os"
 
+	sting "overdoll/applications/sting/proto"
 	"overdoll/libraries/ksuid"
 )
 
@@ -31,4 +32,30 @@ func NewCategory(id ksuid.UUID, title string, thumbnail string) *Category {
 		title:     title,
 		thumbnail: thumbnail,
 	}
+}
+
+func UnmarshalFromProtoArray(cats []*sting.Category) ([]*Category, error) {
+	var categories []*Category
+
+	for _, cat := range cats {
+		id, err := ksuid.Parse(cat.Id)
+
+		if err != nil {
+			return nil, err
+		}
+
+		categories = append(categories, NewCategory(id, cat.Title, cat.Thumbnail))
+	}
+
+	return categories, nil
+}
+
+func MarshalToProtoArray(cats []*Category) []*sting.Category {
+	var categories []*sting.Category
+
+	for _, cat := range cats {
+		categories = append(categories, &sting.Category{Id: cat.ID().String(), Title: cat.Title(), Thumbnail: cat.thumbnail})
+	}
+
+	return categories
 }

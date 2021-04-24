@@ -5,7 +5,6 @@ import (
 
 	sting "overdoll/applications/sting/proto"
 	"overdoll/applications/sting/src/domain/category"
-	"overdoll/libraries/ksuid"
 )
 
 type CreateCategoryHandler struct {
@@ -28,20 +27,14 @@ func (h CreateCategoryHandler) NewCommand() interface{} {
 func (h CreateCategoryHandler) Handle(ctx context.Context, c interface{}) error {
 	cmd := c.(*sting.CategoryCreated)
 
-	var categories []*category.Category
+	categories, err := category.UnmarshalFromProtoArray(cmd.Categories)
 
-	for _, cat := range cmd.Categories {
-		id, err := ksuid.Parse(cat.Id)
-
-		if err != nil {
-			return err
-		}
-
-		categories = append(categories, category.NewCategory(id, cat.Title, cat.Thumbnail))
+	if err != nil {
+		return err
 	}
 
 	// Create categories (from database)
-	err := h.cr.CreateCategories(ctx, categories)
+	err = h.cr.CreateCategories(ctx, categories)
 
 	if err != nil {
 		return err

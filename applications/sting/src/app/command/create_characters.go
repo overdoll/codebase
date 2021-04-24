@@ -5,7 +5,6 @@ import (
 
 	sting "overdoll/applications/sting/proto"
 	"overdoll/applications/sting/src/domain/character"
-	"overdoll/libraries/ksuid"
 )
 
 type CreateCharactersHandler struct {
@@ -28,26 +27,14 @@ func (h CreateCharactersHandler) NewCommand() interface{} {
 func (h CreateCharactersHandler) Handle(ctx context.Context, c interface{}) error {
 	cmd := c.(*sting.CharacterCreated)
 
-	var characters []*character.Character
+	characters, err := character.UnmarshalCharacterFromProtoArray(cmd.Characters)
 
-	for _, char := range cmd.Characters {
-		id, err := ksuid.Parse(char.Id)
-
-		if err != nil {
-			return err
-		}
-
-		mediaId, err := ksuid.Parse(char.Media.Id)
-
-		if err != nil {
-			return err
-		}
-
-		characters = append(characters, character.NewCharacter(id, char.Name, char.Thumbnail, mediaId, char.Media.Title, char.Media.Thumbnail))
+	if err != nil {
+		return err
 	}
 
 	// Create characters (from database)
-	err := h.cr.CreateCharacters(ctx, characters)
+	err = h.cr.CreateCharacters(ctx, characters)
 
 	if err != nil {
 		return err

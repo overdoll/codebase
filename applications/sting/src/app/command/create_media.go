@@ -5,7 +5,6 @@ import (
 
 	sting "overdoll/applications/sting/proto"
 	"overdoll/applications/sting/src/domain/character"
-	"overdoll/libraries/ksuid"
 )
 
 type CreateMediaHandler struct {
@@ -28,20 +27,14 @@ func (h CreateMediaHandler) NewCommand() interface{} {
 func (h CreateMediaHandler) Handle(ctx context.Context, c interface{}) error {
 	cmd := c.(*sting.MediaCreated)
 
-	var media []*character.Media
+	media, err := character.UnmarshalMediaFromProtoArray(cmd.Media)
 
-	for _, med := range cmd.Media {
-		id, err := ksuid.Parse(med.Id)
-
-		if err != nil {
-			return err
-		}
-
-		media = append(media, character.NewMedia(id, med.Title, med.Thumbnail))
+	if err != nil {
+		return nil
 	}
 
 	// Create Media (from database)
-	err := h.mr.CreateMedias(ctx, media)
+	err = h.mr.CreateMedias(ctx, media)
 
 	if err != nil {
 		return err

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"time"
 
-	sting "overdoll/applications/sting/proto"
 	"overdoll/applications/sting/src/domain/category"
 	"overdoll/applications/sting/src/domain/character"
 	"overdoll/libraries/ksuid"
@@ -194,9 +193,9 @@ func (p *PostPending) MediaRequests() []MediaRequest {
 	return p.mediaRequests
 }
 
-func (p *PostPending) ConsumeCustomCategories() []*sting.Category {
+func (p *PostPending) ConsumeCustomCategories() []*category.Category {
 
-	var categories []*sting.Category
+	var categories []*category.Category
 
 	for _, cat := range p.categoriesRequests {
 
@@ -204,16 +203,16 @@ func (p *PostPending) ConsumeCustomCategories() []*sting.Category {
 
 		p.categories = append(p.categories, id)
 
-		categories = append(categories, &sting.Category{Id: id.String(), Title: cat.Title, Thumbnail: ""})
+		categories = append(categories, category.NewCategory(id, cat.Title, ""))
 	}
 
 	return categories
 }
 
-func (p *PostPending) ConsumeCustomCharacters() ([]*sting.Character, []*sting.Media) {
+func (p *PostPending) ConsumeCustomCharacters() ([]*character.Character, []*character.Media) {
 
-	var characters []*sting.Character
-	var medias []*sting.Media
+	var characters []*character.Character
+	var medias []*character.Media
 
 	for _, char := range p.charactersRequests {
 
@@ -236,27 +235,14 @@ func (p *PostPending) ConsumeCustomCharacters() ([]*sting.Character, []*sting.Me
 			id, _ = ksuid.Parse(char.Media)
 		} else {
 			// otherwise, we create a new media
-			medias = append(medias, &sting.Media{
-				Id:        id.String(),
-				Title:     char.Media,
-				Thumbnail: "",
-			})
+			medias = append(medias, character.NewMedia(id, char.Media, ""))
 		}
 
 		characterId := ksuid.New()
 
 		p.characters = append(p.characters, characterId)
 
-		characters = append(characters, &sting.Character{
-			Id:        characterId.String(),
-			Name:      char.Name,
-			Thumbnail: "",
-			Media: &sting.Media{
-				Id:        id.String(),
-				Title:     "",
-				Thumbnail: "",
-			},
-		})
+		characters = append(characters, character.NewCharacter(characterId, char.Name, "", id, "", ""))
 	}
 
 	return characters, medias
