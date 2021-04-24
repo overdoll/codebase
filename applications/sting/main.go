@@ -33,9 +33,11 @@ func Run(cmd *cobra.Command, args []string) {
 	ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancelFn()
 
-	app, cleanup := service.NewApplication(ctx)
+	_, router, cleanup := service.NewApplication(ctx)
 
 	defer cleanup()
 
-	// TODO: start it (jobs)
+	if err := router.Run(ctx); err != nil {
+		panic(err)
+	}
 }

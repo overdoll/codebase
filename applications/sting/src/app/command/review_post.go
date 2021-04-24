@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/ThreeDotsLabs/watermill/components/cqrs"
+	sting "overdoll/applications/sting/proto"
 	"overdoll/applications/sting/src/domain/category"
 	"overdoll/applications/sting/src/domain/character"
 	"overdoll/applications/sting/src/domain/post"
@@ -15,60 +17,72 @@ type ReviewPostHandler struct {
 
 	chr character.Repository
 	ctr category.Repository
+
+	eventBus *cqrs.EventBus
 }
 
-func NewReviewPostHandler(pr post.Repository, chr character.Repository, ctr category.Repository) ReviewPostHandler {
-	return ReviewPostHandler{pr: pr, chr: chr, ctr: ctr}
+func NewReviewPostHandler(pr post.Repository, chr character.Repository, ctr category.Repository, eventBus *cqrs.EventBus) ReviewPostHandler {
+	return ReviewPostHandler{pr: pr, chr: chr, ctr: ctr, eventBus: eventBus}
 }
 
-func (h ReviewPostHandler) Handle(ctx context.Context, id string, artistId string, artistUsername string, categories []string, characters []string, characterRequests map[string]string, categoryRequests []string, mediaRequests []string) (*post.PostPending, error) {
-	characterUuids, err := ksuid.ToUUIDArray(characters)
+func (h ReviewPostHandler) HandlerName() string {
+	return "ReviewPostHandler"
+}
+
+func (h ReviewPostHandler) NewCommand() interface{} {
+	return &sting.ReviewPost{}
+}
+
+func (h ReviewPostHandler) Handle(ctx context.Context, c interface{}) error {
+	cmd := c.(*sting.ReviewPost)
+
+	characterUuids, err := ksuid.ToUUIDArray(cmd.Characters)
 
 	if err != nil {
-		return nil, fmt.Errorf("uuids not valid: %s", characters)
+		return fmt.Errorf("uuids not valid: %s", cmd.Characters)
 	}
 
-	categoryUuids, err := ksuid.ToUUIDArray(categories)
+	categoryUuids, err := ksuid.ToUUIDArray(cmd.Categories)
 
 	if err != nil {
-		return nil, fmt.Errorf("uuids not valid: %s", categories)
+		return fmt.Errorf("uuids not valid: %s", cmd.Categories)
 	}
 
-	idParse, err := ksuid.Parse(id)
+	idParse, err := ksuid.Parse(cmd.Id)
 
 	if err != nil {
-		return nil, fmt.Errorf("uuid not valid: %s", id)
+		return fmt.Errorf("uuid not valid: %s", cmd.Id)
 	}
 
 	oldPendingPost, err := h.pr.GetPendingPost(ctx, idParse)
 
 	if err != nil {
-		return nil, fmt.Errorf("error grabbing pending post %s", err)
+		return fmt.Errorf("error grabbing pending post %s", err)
 	}
 
-	pendingPost, err := post.NewPendingPost(idParse, artistId, artistUsername, oldPendingPost.ContributorId(), oldPendingPost.Content(), characterUuids, categoryUuids)
+	pendingPost, err := post.NewPendingPost(idParse, cmd.ArtistId, cmd.ArtistUsername, oldPendingPost.ContributorId(), oldPendingPost.Content(), characterUuids, categoryUuids)
 
 	if err != nil {
-		return nil, fmt.Errorf("could not create pending post: %s", err)
+		return fmt.Errorf("could not create pending post: %s", err)
 	}
 
 	err = pendingPost.ValidateCharactersAndCategories(ctx, h.chr, h.ctr)
 
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	// Request new resources - update it
-	pendingPost.RequestResources(characterRequests, categoryRequests, mediaRequests)
+	pendingPost.RequestResources(cmd.CharacterRequests, cmd.CategoriesRequests, cmd.MediaRequests)
 
 	// Update pending post
 	err = h.pr.UpdatePendingPost(ctx, pendingPost)
 
 	if err != nil {
-		return nil, fmt.Errorf("could not update pending post: %s", err)
+		return fmt.Errorf("could not update pending post: %s", err)
 	}
 
 	// TODO: dispatch a job to publish the post
 
-	return pendingPost, nil
+	return nil
 }

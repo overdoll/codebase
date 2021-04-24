@@ -27,3 +27,7 @@ message ReviewPost {
   repeated string mediaRequests = 9;
   map<string, string> characterRequests = 10;
 }
+
+message PostCompleted {
+  string id = 1;
+}

@@ -22,7 +22,7 @@ func init() {
 	ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancelFn()
 
-	application, cleanup := service.NewApplication(ctx)
+	application, _, cleanup := service.NewApplication(ctx)
 
 	defer cleanup()
 
