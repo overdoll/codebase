@@ -2,6 +2,7 @@ package post
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -16,6 +17,10 @@ const (
 	Publishing PostPendingState = "publishing"
 	Review     PostPendingState = "review"
 	Published  PostPendingState = "published"
+)
+
+var (
+	ErrNotPublishing = errors.New("post must be publishing")
 )
 
 type CharacterRequest struct {
@@ -153,11 +158,20 @@ func (p *PostPending) PublishedPostId() string {
 	return p.publishedPostId
 }
 
-func (p *PostPending) Publish() error {
+func (p *PostPending) MakePublish() error {
+
+	// State of the post needs to be "publishing" before "published"
+	if p.state != Publishing {
+		return ErrNotPublishing
+	}
 
 	p.state = Published
 
 	return nil
+}
+
+func (p *PostPending) MakePublishing() {
+	p.state = Publishing
 }
 
 func (p *PostPending) MakePublicOrReview(contributor *Contributor) error {

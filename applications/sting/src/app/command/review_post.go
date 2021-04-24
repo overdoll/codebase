@@ -75,6 +75,9 @@ func (h ReviewPostHandler) Handle(ctx context.Context, c interface{}) error {
 	// Request new resources - update it
 	pendingPost.RequestResources(cmd.CharacterRequests, cmd.CategoriesRequests, cmd.MediaRequests)
 
+	// make the state of the post to publishing
+	pendingPost.MakePublishing()
+
 	// Update pending post
 	err = h.pr.UpdatePendingPost(ctx, pendingPost)
 

@@ -48,6 +48,14 @@ func (h PublishPostHandler) Handle(ctx context.Context, c interface{}) error {
 		return fmt.Errorf("could not get pending post: %s", err)
 	}
 
+	// This will make sure the state of the post is always "publishing" before publishing - we may get an outdated record
+	// from the review stage so it will retry at some point
+	err = pendingPost.MakePublish()
+
+	if err != nil {
+		return err
+	}
+
 	cats := pendingPost.ConsumeCustomCategories()
 
 	// Consume custom categories and run commands to create
@@ -67,13 +75,6 @@ func (h PublishPostHandler) Handle(ctx context.Context, c interface{}) error {
 	}
 
 	err = h.commandBus.Send(ctx, character.MarshalMediaToProtoArray(medias))
-
-	if err != nil {
-		return err
-	}
-
-	// publish post
-	err = pendingPost.Publish()
 
 	if err != nil {
 		return err
