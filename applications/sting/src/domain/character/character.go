@@ -30,7 +30,7 @@ func (c *Character) Thumbnail() string {
 	return staticURL + "/thumbnails/" + c.thumbnail
 }
 
-func UnmarshalCharacterFromDatabase(id ksuid.UUID, name string, thumbnail string, mediaId ksuid.UUID, mediaTitle string, mediaThumbnail string, ) *Character {
+func NewCharacter(id ksuid.UUID, name string, thumbnail string, mediaId ksuid.UUID, mediaTitle string, mediaThumbnail string, ) *Character {
 	return &Character{
 		id:        id,
 		name:      name,

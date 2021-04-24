@@ -82,17 +82,7 @@ func UnmarshalPendingPostFromDatabase(id ksuid.UUID, state string, artistId stri
 		publishedPostId: publishedPostId,
 	}
 
-	for char, med := range charactersRequests {
-		_ = postPending.RequestCharacter(char, med)
-	}
-
-	for _, med := range mediaRequests {
-		_ = postPending.RequestMedia(med)
-	}
-
-	for _, cat := range categoryRequests {
-		_ = postPending.RequestCategory(cat)
-	}
+	postPending.RequestResources(charactersRequests, categoryRequests, mediaRequests)
 
 	return postPending
 }
@@ -203,35 +193,71 @@ func (p *PostPending) MediaRequests() []MediaRequest {
 	return p.mediaRequests
 }
 
+func (p *PostPending) ConsumeCustomCategories() []*category.Category {
+
+	var categories []*category.Category
+
+	for _, cat := range p.categoriesRequests {
+
+		id := ksuid.New()
+
+		p.categories = append(p.categories, id)
+
+		categories = append(categories, category.NewCategory(id, cat.Title, ""))
+	}
+
+	return categories
+}
+
+func (p *PostPending) ConsumeCustomCharacters() ([]*character.Character, []*character.Media) {
+
+	var characters []*character.Character
+	var medias []*character.Media
+
+	for _, char := range p.charactersRequests {
+
+		var exists = true
+		var id ksuid.UUID
+
+		// Check if the requested media is a media in our list
+		for _, requestedMedia := range p.mediaRequests {
+
+			// If the media is on our list, then we create a new media, and append to array of events
+			if char.Media == requestedMedia.Title {
+				id = ksuid.New()
+				exists = false
+				break
+			}
+		}
+
+		// If a media exists (not in media requests), we use the string as the ID
+		if exists {
+			id, _ = ksuid.Parse(char.Media)
+		} else {
+			// otherwise, we create a new media
+			medias = append(medias, character.NewMedia(id, char.Media, ""))
+		}
+
+		characterId := ksuid.New()
+
+		p.characters = append(p.characters, characterId)
+
+		characters = append(characters, character.NewCharacter(characterId, char.Name, "", id, "", ""))
+	}
+
+	return characters, medias
+}
+
 func (p *PostPending) RequestResources(characters map[string]string, categories []string, medias []string) {
 	for char, med := range characters {
-		_ = p.RequestCharacter(char, med)
+		p.charactersRequests = append(p.charactersRequests, CharacterRequest{Name: char, Media: med})
 	}
 
 	for _, cat := range categories {
-		_ = p.RequestCategory(cat)
+		p.categoriesRequests = append(p.categoriesRequests, CategoryRequest{Title: cat})
 	}
 
 	for _, med := range medias {
-		_ = p.RequestMedia(med)
+		p.mediaRequests = append(p.mediaRequests, MediaRequest{Title: med})
 	}
-}
-
-func (p *PostPending) RequestCharacter(name string, media string) error {
-
-	p.charactersRequests = append(p.charactersRequests, CharacterRequest{Name: name, Media: media})
-
-	return nil
-}
-
-func (p *PostPending) RequestCategory(title string) error {
-	p.categoriesRequests = append(p.categoriesRequests, CategoryRequest{Title: title})
-
-	return nil
-}
-
-func (p *PostPending) RequestMedia(title string) error {
-	p.mediaRequests = append(p.mediaRequests, MediaRequest{Title: title})
-
-	return nil
 }

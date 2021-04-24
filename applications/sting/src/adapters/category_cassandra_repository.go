@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"overdoll/applications/sting/src/domain/category"
@@ -50,7 +51,7 @@ func (r *CategoryCassandraRepository) GetCategoriesById(ctx context.Context, cat
 	}
 
 	for _, cat := range categoriesModels {
-		categories = append(categories, category.UnmarshalCategoryFromDatabase(cat.Id, cat.Title, cat.Thumbnail))
+		categories = append(categories, category.NewCategory(cat.Id, cat.Title, cat.Thumbnail))
 	}
 
 	return categories, nil
@@ -69,8 +70,31 @@ func (r *CategoryCassandraRepository) GetCategories(ctx context.Context) ([]*cat
 	var categories []*category.Category
 
 	for _, dbCat := range dbCategory {
-		categories = append(categories, category.UnmarshalCategoryFromDatabase(dbCat.Id, dbCat.Title, dbCat.Thumbnail))
+		categories = append(categories, category.NewCategory(dbCat.Id, dbCat.Title, dbCat.Thumbnail))
 	}
 
 	return categories, nil
+}
+
+func (r *CategoryCassandraRepository) CreateCategories(ctx context.Context, categories []*category.Category) error {
+
+	// Begin BATCH operation:
+	// Will insert categories, characters, media
+	batch := r.session.NewBatch(gocql.LoggedBatch)
+
+	// Go through each category request
+	for _, cat := range categories {
+
+		// Create new categories query
+		batch.Query(qb.Insert("categories").LitColumn("id", cat.ID().String()).LitColumn("title", cat.Title()).ToCql())
+
+	}
+
+	err := r.session.ExecuteBatch(batch)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

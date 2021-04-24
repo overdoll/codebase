@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"overdoll/applications/sting/src/domain/character"
@@ -58,7 +59,7 @@ func (r *CharacterCassandraRepository) GetCharactersById(ctx context.Context, ch
 	}
 
 	for _, cat := range characterModels {
-		characters = append(characters, character.UnmarshalCharacterFromDatabase(
+		characters = append(characters, character.NewCharacter(
 			cat.Id,
 			cat.Name,
 			cat.Thumbnail,
@@ -109,7 +110,7 @@ func (r *CharacterCassandraRepository) GetCharacters(ctx context.Context) ([]*ch
 			}
 		}
 
-		characters = append(characters, character.UnmarshalCharacterFromDatabase(
+		characters = append(characters, character.NewCharacter(
 			char.Id,
 			char.Name,
 			char.Thumbnail,
@@ -136,7 +137,7 @@ func (r *CharacterCassandraRepository) GetMedias(ctx context.Context) ([]*charac
 	// Now we can safely start creating our documents
 	for _, media := range dbMed {
 
-		medias = append(medias, character.UnmarshalMediaFromDatabase(
+		medias = append(medias, character.NewMedia(
 			media.Id,
 			media.Title,
 			media.Thumbnail,
@@ -144,4 +145,47 @@ func (r *CharacterCassandraRepository) GetMedias(ctx context.Context) ([]*charac
 	}
 
 	return medias, nil
+}
+
+func (r *CategoryCassandraRepository) CreateCharacters(ctx context.Context, characters []*character.Character) error {
+
+	batch := r.session.NewBatch(gocql.LoggedBatch)
+
+	for _, chars := range characters {
+
+		media := chars.Media()
+
+		batch.Query(
+			qb.Insert("characters").
+				LitColumn("id", chars.ID().String()).
+				LitColumn("name", chars.Name()).
+				LitColumn("media_id", media.ID().String()).
+				ToCql(),
+		)
+	}
+
+	err := r.session.ExecuteBatch(batch)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *CategoryCassandraRepository) CreateMedias(ctx context.Context, medias []*character.Media) error {
+
+	batch := r.session.NewBatch(gocql.LoggedBatch)
+
+	for _, med := range medias {
+		batch.Query(qb.Insert("media").LitColumn("id", med.ID().String()).LitColumn("title", med.Title()).ToCql())
+	}
+
+	err := r.session.ExecuteBatch(batch)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
