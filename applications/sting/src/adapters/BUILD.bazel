@@ -1,0 +1,36 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "artist_cassandra_repository.go",
+        "artist_index_elasticsearch_repository.go",
+        "category_cassandra_repository.go",
+        "category_index_elasticsearch_repository.go",
+        "character_cassandra_repository.go",
+        "character_index_elasticsearch_repository.go",
+        "content_s3_repository.go",
+        "eva_grpc.go",
+        "index_post_elasticsearch_repository.go",
+        "post_cassandra_repository.go",
+    ],
+    importpath = "overdoll/applications/sting/src/adapters",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//applications/eva/proto:v1_go_proto",
+        "//applications/sting/src/domain/artist:go_default_library",
+        "//applications/sting/src/domain/category:go_default_library",
+        "//applications/sting/src/domain/character:go_default_library",
+        "//applications/sting/src/domain/post:go_default_library",
+        "//libraries/ksuid:go_default_library",
+        "//libraries/search:go_default_library",
+        "@com_github_aws_aws_sdk_go//aws:go_default_library",
+        "@com_github_aws_aws_sdk_go//aws/session:go_default_library",
+        "@com_github_aws_aws_sdk_go//service/s3:go_default_library",
+        "@com_github_aws_aws_sdk_go//service/s3/s3manager:go_default_library",
+        "@com_github_gocql_gocql//:go_default_library",
+        "@com_github_h2non_filetype//:go_default_library",
+        "@com_github_scylladb_gocqlx_v2//:go_default_library",
+        "@com_github_scylladb_gocqlx_v2//qb:go_default_library",
+    ],
+)

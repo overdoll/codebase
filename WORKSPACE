@@ -449,8 +449,8 @@ go_repository(
 go_repository(
     name = "com_github_go_chi_chi",
     importpath = "github.com/go-chi/chi",
-    sum = "h1:uQNcQN3NsV1j4ANsPh42P4ew4t6rnRbJb8frvpp31qQ=",
-    version = "v3.3.2+incompatible",
+    sum = "h1:maB6vn6FqCxrpz4FqWdh4+lwpyZIQS7YEAUcHlgXVRs=",
+    version = "v4.0.2+incompatible",
 )
 
 go_repository(
@@ -765,8 +765,8 @@ go_repository(
 go_repository(
     name = "com_github_hashicorp_go_uuid",
     importpath = "github.com/hashicorp/go-uuid",
-    sum = "h1:fv1ep09latC32wFoVwnqcnKJGnMSdBanPczbHAYm1BE=",
-    version = "v1.0.1",
+    sum = "h1:cfejS+Tpcp13yd5nYHWDI6qVCny6wyX2Mt5SGur2IGE=",
+    version = "v1.0.2",
 )
 
 go_repository(
@@ -1761,4 +1761,123 @@ go_repository(
     importpath = "github.com/h2non/filetype",
     sum = "h1:xvOwnXKAckvtLWsN398qS9QhlxlnVXBjXBydK2/UFB4=",
     version = "v1.1.1",
+)
+
+go_repository(
+    name = "com_github_cenkalti_backoff_v3",
+    importpath = "github.com/cenkalti/backoff/v3",
+    sum = "h1:ske+9nBpD9qZsTBoF41nW5L+AIuFBKMeze18XQ3eG1c=",
+    version = "v3.0.0",
+)
+
+go_repository(
+    name = "com_github_google_uuid",
+    importpath = "github.com/google/uuid",
+    sum = "h1:qJYtXnJRWmpe7m/3XlyhrsLrEURqHRM2kxzoxXqyUDs=",
+    version = "v1.2.0",
+)
+
+go_repository(
+    name = "com_github_lithammer_shortuuid_v3",
+    importpath = "github.com/lithammer/shortuuid/v3",
+    sum = "h1:pr15YQyvhiSX/qPxncFtqk+v4xLEpOZObbsY/mKrcvA=",
+    version = "v3.0.6",
+)
+
+go_repository(
+    name = "com_github_threedotslabs_watermill",
+    importpath = "github.com/ThreeDotsLabs/watermill",
+    sum = "h1:+9NXqWQvplzxBru2CIInvVOZeKUnM+Nysg42fInl5sY=",
+    version = "v1.1.1",
+)
+
+go_repository(
+    name = "com_github_eapache_go_resiliency",
+    importpath = "github.com/eapache/go-resiliency",
+    sum = "h1:v7g92e/KSN71Rq7vSThKaWIq68fL4YHvWyiUKorFR1Q=",
+    version = "v1.2.0",
+)
+
+go_repository(
+    name = "com_github_eapache_queue",
+    importpath = "github.com/eapache/queue",
+    sum = "h1:YOEu7KNc61ntiQlcEeUIoDTJ2o8mQznoNvUhiigpIqc=",
+    version = "v1.1.0",
+)
+
+go_repository(
+    name = "com_github_fortytw2_leaktest",
+    importpath = "github.com/fortytw2/leaktest",
+    sum = "h1:u8491cBMTQ8ft8aeV+adlcytMZylmA5nnwwkRZjI8vw=",
+    version = "v1.3.0",
+)
+
+go_repository(
+    name = "com_github_jcmturner_gofork",
+    importpath = "github.com/jcmturner/gofork",
+    sum = "h1:J7uCkflzTEhUZ64xqKnkDxq3kzc96ajM1Gli5ktUem8=",
+    version = "v1.0.0",
+)
+
+go_repository(
+    name = "com_github_rcrowley_go_metrics",
+    importpath = "github.com/rcrowley/go-metrics",
+    sum = "h1:dY6ETXrvDG7Sa4vE8ZQG4yqWg6UnOcbqTAahkV813vQ=",
+    version = "v0.0.0-20190826022208-cac0b30c2563",
+)
+
+go_repository(
+    name = "com_github_shopify_sarama",
+    importpath = "github.com/Shopify/sarama",
+    sum = "h1:C+zFi+/NJdfeJgZWbu+WaLgk4NcsbmqfFTKsoJmR39U=",
+    version = "v1.26.0",
+)
+
+go_repository(
+    name = "com_github_shopify_toxiproxy",
+    importpath = "github.com/Shopify/toxiproxy",
+    sum = "h1:TKdv8HiTLgE5wdJuEML90aBgNWsokNbMijUGhmcoBJc=",
+    version = "v2.1.4+incompatible",
+)
+
+go_repository(
+    name = "com_github_threedotslabs_watermill_kafka_v2",
+    importpath = "github.com/ThreeDotsLabs/watermill-kafka/v2",
+    sum = "h1:LRTEmcrlLyyonv+mAoDLVV7sDqquOLisN9iEGS2L80c=",
+    version = "v2.2.1",
+)
+
+go_repository(
+    name = "in_gopkg_jcmturner_aescts_v1",
+    importpath = "gopkg.in/jcmturner/aescts.v1",
+    sum = "h1:cVVZBK2b1zY26haWB4vbBiZrfFQnfbTVrE3xZq6hrEw=",
+    version = "v1.0.1",
+)
+
+go_repository(
+    name = "in_gopkg_jcmturner_dnsutils_v1",
+    importpath = "gopkg.in/jcmturner/dnsutils.v1",
+    sum = "h1:cIuC1OLRGZrld+16ZJvvZxVJeKPsvd5eUIvxfoN5hSM=",
+    version = "v1.0.1",
+)
+
+go_repository(
+    name = "in_gopkg_jcmturner_goidentity_v3",
+    importpath = "gopkg.in/jcmturner/goidentity.v3",
+    sum = "h1:1duIyWiTaYvVx3YX2CYtpJbUFd7/UuPYCfgXtQ3VTbI=",
+    version = "v3.0.0",
+)
+
+go_repository(
+    name = "in_gopkg_jcmturner_gokrb5_v7",
+    importpath = "gopkg.in/jcmturner/gokrb5.v7",
+    sum = "h1:93nj3P1OfL8Nv5h8ItQaslmskOqa4ykG5zouRht3Ffo=",
+    version = "v7.4.0",
+)
+
+go_repository(
+    name = "in_gopkg_jcmturner_rpc_v1",
+    importpath = "gopkg.in/jcmturner/rpc.v1",
+    sum = "h1:QHIUxTX1ISuAv9dD2wJ9HWQVuWDX/Zc0PfeC2tjc4rU=",
+    version = "v1.1.0",
 )

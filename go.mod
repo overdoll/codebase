@@ -4,6 +4,8 @@ go 1.14
 
 require (
 	github.com/99designs/gqlgen v0.13.0
+	github.com/ThreeDotsLabs/watermill v1.1.1 // indirect
+	github.com/ThreeDotsLabs/watermill-kafka/v2 v2.2.1 // indirect
 	github.com/aws/aws-sdk-go v1.37.21
 	github.com/bxcodec/faker/v3 v3.6.0
 	github.com/cenkalti/backoff/v4 v4.1.0
@@ -22,6 +24,7 @@ require (
 	github.com/h2non/filetype v1.1.1 // indirect
 	github.com/joho/godotenv v1.3.0
 	github.com/klauspost/compress v1.11.9 // indirect
+	github.com/lithammer/shortuuid/v3 v3.0.6 // indirect
 	github.com/mitchellh/mapstructure v1.1.2
 	github.com/pierrec/lz4 v2.6.0+incompatible // indirect
 	github.com/pkg/errors v0.9.1

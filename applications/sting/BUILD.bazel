@@ -10,14 +10,10 @@ go_library(
     importpath = "overdoll/applications/sting",
     visibility = ["//visibility:private"],
     deps = [
-        "//applications/sting/proto:v1_go_proto",
-        "//applications/sting/src/commands:go_default_library",
-        "//applications/sting/src/server:go_default_library",
-        "//libraries/bootstrap:go_default_library",
+        "//applications/sting/src/ports:go_default_library",
+        "//applications/sting/src/service:go_default_library",
         "//libraries/commands/database:go_default_library",
-        "//libraries/events:go_default_library",
         "@com_github_spf13_cobra//:go_default_library",
-        "@org_golang_google_grpc//:go_default_library",
     ],
 )
 

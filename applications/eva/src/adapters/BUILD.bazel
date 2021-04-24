@@ -3,8 +3,8 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 go_library(
     name = "go_default_library",
     srcs = [
-        "cookie_repository.go",
-        "user_repository.go",
+        "cookie_cassandra_repository.go",
+        "user_cassandra_repository.go",
     ],
     importpath = "overdoll/applications/eva/src/adapters",
     visibility = ["//visibility:public"],
@@ -21,8 +21,8 @@ go_library(
 go_test(
     name = "go_default_test",
     srcs = [
-        "cookie_repository_test.go",
-        "user_repository_test.go",
+        "cookie_cassandra_repository_test.go",
+        "user_cassandra_repository_test.go",
     ],
     embed = [":go_default_library"],
     deps = [

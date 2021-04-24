@@ -1,0 +1,25 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "index_artists.go",
+        "index_categories.go",
+        "index_characters.go",
+        "index_media.go",
+        "new_post.go",
+        "publish_post.go",
+        "review_post.go",
+        "services.go",
+    ],
+    importpath = "overdoll/applications/sting/src/app/command",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//applications/sting/src/domain/artist:go_default_library",
+        "//applications/sting/src/domain/category:go_default_library",
+        "//applications/sting/src/domain/character:go_default_library",
+        "//applications/sting/src/domain/content:go_default_library",
+        "//applications/sting/src/domain/post:go_default_library",
+        "//libraries/ksuid:go_default_library",
+    ],
+)

@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "index_repository.go",
+        "post.go",
+        "post_pending.go",
+        "repository.go",
+    ],
+    importpath = "overdoll/applications/sting/src/domain/post",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//applications/sting/src/domain/category:go_default_library",
+        "//applications/sting/src/domain/character:go_default_library",
+        "//libraries/ksuid:go_default_library",
+    ],
+)
