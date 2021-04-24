@@ -6,16 +6,16 @@ import (
 	"overdoll/applications/sting/src/domain/category"
 )
 
-type IndexCategoriesHandler struct {
+type IndexAllCategoriesHandler struct {
 	cr  category.Repository
 	cir category.IndexRepository
 }
 
-func NewIndexCategoriesHandler(cr category.Repository, cir category.IndexRepository) IndexCategoriesHandler {
-	return IndexCategoriesHandler{cr: cr, cir: cir}
+func NewIndexAllCategoriesHandler(cr category.Repository, cir category.IndexRepository) IndexAllCategoriesHandler {
+	return IndexAllCategoriesHandler{cr: cr, cir: cir}
 }
 
-func (h IndexCategoriesHandler) Handle(ctx context.Context) error {
+func (h IndexAllCategoriesHandler) Handle(ctx context.Context) error {
 	err := h.cir.DeleteIndex(ctx)
 
 	if err != nil {

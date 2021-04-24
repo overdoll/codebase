@@ -89,7 +89,7 @@ func createApplication(ctx context.Context, evaGrpc command.EvaService, router *
 		Brokers:               []string{os.Getenv("KAFKA_URL")},
 		Unmarshaler:           kafka.DefaultMarshaler{},
 		OverwriteSaramaConfig: saramaSubscriberConfig,
-		ConsumerGroup:         "test_consumer_group",
+		ConsumerGroup:         "sting",
 	}
 
 	kafkaPublisherConfig := kafka.PublisherConfig{
@@ -138,6 +138,9 @@ func createApplication(ctx context.Context, evaGrpc command.EvaService, router *
 			return []cqrs.CommandHandler{
 				command.NewNewPostHandler(postRepo, characterRepo, categoryRepo, contentRepo, evaGrpc, eb),
 				command.NewReviewPostHandler(postRepo, characterRepo, categoryRepo, eb),
+				command.NewCreateCategoryHandler(categoryRepo, categoryIndexRepo),
+				command.NewCreateCharacterHandler(characterRepo, characterIndexRepo),
+				command.NewCreateMediaHandler(characterRepo, characterIndexRepo),
 			}
 		},
 		CommandsPublisher: commandsPublisher,
@@ -166,10 +169,10 @@ func createApplication(ctx context.Context, evaGrpc command.EvaService, router *
 
 	return app.Application{
 		Commands: app.Commands{
-			IndexMedia:      command.NewIndexMediaHandler(characterRepo, characterIndexRepo),
-			IndexCharacters: command.NewIndexCharactersHandler(characterRepo, characterIndexRepo),
-			IndexCategories: command.NewIndexCategoriesHandler(categoryRepo, categoryIndexRepo),
-			IndexArtists:    command.NewIndexArtistsHandler(artistRepo, artistIndexRepo),
+			IndexMedia:      command.NewIndexAllMediaHandler(characterRepo, characterIndexRepo),
+			IndexCharacters: command.NewIndexAllCharactersHandler(characterRepo, characterIndexRepo),
+			IndexCategories: command.NewIndexAllCategoriesHandler(categoryRepo, categoryIndexRepo),
+			IndexArtists:    command.NewIndexAllArtistsHandler(artistRepo, artistIndexRepo),
 		},
 	}
 }

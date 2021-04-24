@@ -6,16 +6,16 @@ import (
 	"overdoll/applications/sting/src/domain/artist"
 )
 
-type IndexArtistsHandler struct {
+type IndexAllArtistsHandler struct {
 	ar  artist.Repository
 	air artist.IndexRepository
 }
 
-func NewIndexArtistsHandler(ar artist.Repository, air artist.IndexRepository) IndexArtistsHandler {
-	return IndexArtistsHandler{ar: ar, air: air}
+func NewIndexAllArtistsHandler(ar artist.Repository, air artist.IndexRepository) IndexAllArtistsHandler {
+	return IndexAllArtistsHandler{ar: ar, air: air}
 }
 
-func (h IndexArtistsHandler) Handle(ctx context.Context) error {
+func (h IndexAllArtistsHandler) Handle(ctx context.Context) error {
 
 	err := h.air.DeleteIndex(ctx)
 

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	sting "overdoll/applications/sting/proto"
 	"overdoll/applications/sting/src/domain/category"
 	"overdoll/applications/sting/src/domain/character"
 	"overdoll/libraries/ksuid"
@@ -193,9 +194,9 @@ func (p *PostPending) MediaRequests() []MediaRequest {
 	return p.mediaRequests
 }
 
-func (p *PostPending) ConsumeCustomCategories() []*category.Category {
+func (p *PostPending) ConsumeCustomCategories() []*sting.Category {
 
-	var categories []*category.Category
+	var categories []*sting.Category
 
 	for _, cat := range p.categoriesRequests {
 
@@ -203,16 +204,16 @@ func (p *PostPending) ConsumeCustomCategories() []*category.Category {
 
 		p.categories = append(p.categories, id)
 
-		categories = append(categories, category.NewCategory(id, cat.Title, ""))
+		categories = append(categories, &sting.Category{Id: id.String(), Title: cat.Title, Thumbnail: ""})
 	}
 
 	return categories
 }
 
-func (p *PostPending) ConsumeCustomCharacters() ([]*character.Character, []*character.Media) {
+func (p *PostPending) ConsumeCustomCharacters() ([]*sting.Character, []*sting.Media) {
 
-	var characters []*character.Character
-	var medias []*character.Media
+	var characters []*sting.Character
+	var medias []*sting.Media
 
 	for _, char := range p.charactersRequests {
 
@@ -235,14 +236,27 @@ func (p *PostPending) ConsumeCustomCharacters() ([]*character.Character, []*char
 			id, _ = ksuid.Parse(char.Media)
 		} else {
 			// otherwise, we create a new media
-			medias = append(medias, character.NewMedia(id, char.Media, ""))
+			medias = append(medias, &sting.Media{
+				Id:        id.String(),
+				Title:     char.Media,
+				Thumbnail: "",
+			})
 		}
 
 		characterId := ksuid.New()
 
 		p.characters = append(p.characters, characterId)
 
-		characters = append(characters, character.NewCharacter(characterId, char.Name, "", id, "", ""))
+		characters = append(characters, &sting.Character{
+			Id:        characterId.String(),
+			Name:      char.Name,
+			Thumbnail: "",
+			Media: &sting.Media{
+				Id:        id.String(),
+				Title:     "",
+				Thumbnail: "",
+			},
+		})
 	}
 
 	return characters, medias

@@ -6,16 +6,16 @@ import (
 	"overdoll/applications/sting/src/domain/character"
 )
 
-type IndexCharactersHandler struct {
+type IndexAllCharactersHandler struct {
 	cr  character.Repository
 	cir character.IndexRepository
 }
 
-func NewIndexCharactersHandler(cr character.Repository, cir character.IndexRepository) IndexCharactersHandler {
-	return IndexCharactersHandler{cr: cr, cir: cir}
+func NewIndexAllCharactersHandler(cr character.Repository, cir character.IndexRepository) IndexAllCharactersHandler {
+	return IndexAllCharactersHandler{cr: cr, cir: cir}
 }
 
-func (h IndexCharactersHandler) Handle(ctx context.Context) error {
+func (h IndexAllCharactersHandler) Handle(ctx context.Context) error {
 
 	err := h.cir.DeleteIndexCharacters(ctx)
 

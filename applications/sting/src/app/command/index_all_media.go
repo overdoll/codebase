@@ -6,16 +6,16 @@ import (
 	"overdoll/applications/sting/src/domain/character"
 )
 
-type IndexMediaHandler struct {
+type IndexAllMediaHandler struct {
 	cr  character.Repository
 	cir character.IndexRepository
 }
 
-func NewIndexMediaHandler(cr character.Repository, cir character.IndexRepository) IndexMediaHandler {
-	return IndexMediaHandler{cr: cr, cir: cir}
+func NewIndexAllMediaHandler(cr character.Repository, cir character.IndexRepository) IndexAllMediaHandler {
+	return IndexAllMediaHandler{cr: cr, cir: cir}
 }
 
-func (h IndexMediaHandler) Handle(ctx context.Context) error {
+func (h IndexAllMediaHandler) Handle(ctx context.Context) error {
 	err := h.cir.DeleteIndexMedia(ctx)
 
 	if err != nil {
