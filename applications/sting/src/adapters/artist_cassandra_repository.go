@@ -24,7 +24,7 @@ func NewArtistCassandraRepository(session gocqlx.Session) ArtistCassandraReposit
 	return ArtistCassandraRepository{session: session}
 }
 
-func (r *CharacterCassandraRepository) GetArtists(ctx context.Context) ([]*artist.Artist, error) {
+func (r ArtistCassandraRepository) GetArtists(ctx context.Context) ([]*artist.Artist, error) {
 
 	var dbArtists []Artist
 

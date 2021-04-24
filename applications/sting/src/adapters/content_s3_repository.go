@@ -30,7 +30,7 @@ func NewContentS3Repository(session *session.Session) ContentS3Repository {
 }
 
 // ProcessContent - do filetype validation, move files to a user private bucket out of the uploading bucket
-func (r *ContentS3Repository) ProcessContent(ctx context.Context, userId string, oldContent []string) ([]string, error) {
+func (r ContentS3Repository) ProcessContent(ctx context.Context, userId string, oldContent []string) ([]string, error) {
 	downloader := s3manager.NewDownloader(r.session)
 	s3Client := s3.New(r.session)
 
@@ -110,7 +110,7 @@ func (r *ContentS3Repository) ProcessContent(ctx context.Context, userId string,
 	return content, nil
 }
 
-func (r *ContentS3Repository) PublishContent(ctx context.Context, userId string, content []string) ([]string, error) {
+func (r ContentS3Repository) PublishContent(ctx context.Context, userId string, content []string) ([]string, error) {
 
 	_ = s3manager.NewDownloader(r.session)
 	_ = s3.New(r.session)

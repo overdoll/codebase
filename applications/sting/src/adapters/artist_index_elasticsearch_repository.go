@@ -35,14 +35,14 @@ const ArtistIndex = `
 }`
 
 type ArtistIndexElasticSearchRepository struct {
-	store search.Store
+	store *search.Store
 }
 
-func NewArtistIndexElasticSearchRepository(store search.Store) ArtistIndexElasticSearchRepository {
+func NewArtistIndexElasticSearchRepository(store *search.Store) ArtistIndexElasticSearchRepository {
 	return ArtistIndexElasticSearchRepository{store: store}
 }
 
-func (r ArtistIndexElasticSearchRepository) BulkIndex(ctx context.Context, artists []artist.Artist) error {
+func (r ArtistIndexElasticSearchRepository) BulkIndex(ctx context.Context, artists []*artist.Artist) error {
 	err := r.store.CreateBulkIndex("artists")
 
 	if err != nil {

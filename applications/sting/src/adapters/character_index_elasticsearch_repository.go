@@ -75,10 +75,10 @@ const MediaIndex = `
 }`
 
 type CharacterIndexElasticSearchRepository struct {
-	store search.Store
+	store *search.Store
 }
 
-func NewCharacterIndexElasticSearchRepository(store search.Store) CharacterIndexElasticSearchRepository {
+func NewCharacterIndexElasticSearchRepository(store *search.Store) CharacterIndexElasticSearchRepository {
 	return CharacterIndexElasticSearchRepository{store: store}
 }
 

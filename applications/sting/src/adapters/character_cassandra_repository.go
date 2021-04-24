@@ -33,7 +33,7 @@ func NewCharacterCassandraRepository(session gocqlx.Session) CharacterCassandraR
 	return CharacterCassandraRepository{session: session}
 }
 
-func (r *CharacterCassandraRepository) GetCharactersById(ctx context.Context, chars []ksuid.UUID) ([]*character.Character, error) {
+func (r CharacterCassandraRepository) GetCharactersById(ctx context.Context, chars []ksuid.UUID) ([]*character.Character, error) {
 
 	var characters []*character.Character
 
@@ -72,7 +72,7 @@ func (r *CharacterCassandraRepository) GetCharactersById(ctx context.Context, ch
 	return characters, nil
 }
 
-func (r *CharacterCassandraRepository) GetCharacters(ctx context.Context) ([]*character.Character, error) {
+func (r CharacterCassandraRepository) GetCharacters(ctx context.Context) ([]*character.Character, error) {
 	var dbChars []Character
 
 	// Grab all of our characters
@@ -123,7 +123,7 @@ func (r *CharacterCassandraRepository) GetCharacters(ctx context.Context) ([]*ch
 	return characters, nil
 }
 
-func (r *CharacterCassandraRepository) GetMedias(ctx context.Context) ([]*character.Media, error) {
+func (r CharacterCassandraRepository) GetMedias(ctx context.Context) ([]*character.Media, error) {
 	var dbMed []Media
 
 	qc := qb.Select("media").Columns("id", "title", "thumbnail").Query(r.session)
@@ -147,7 +147,7 @@ func (r *CharacterCassandraRepository) GetMedias(ctx context.Context) ([]*charac
 	return medias, nil
 }
 
-func (r *CategoryCassandraRepository) CreateCharacters(ctx context.Context, characters []*character.Character) error {
+func (r CharacterCassandraRepository) CreateCharacters(ctx context.Context, characters []*character.Character) error {
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
@@ -173,7 +173,7 @@ func (r *CategoryCassandraRepository) CreateCharacters(ctx context.Context, char
 	return nil
 }
 
-func (r *CategoryCassandraRepository) CreateMedias(ctx context.Context, medias []*character.Media) error {
+func (r CharacterCassandraRepository) CreateMedias(ctx context.Context, medias []*character.Media) error {
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 

@@ -34,10 +34,10 @@ const CategoryIndex = `
 }`
 
 type CategoryIndexElasticSearchRepository struct {
-	store search.Store
+	store *search.Store
 }
 
-func NewCategoryIndexElasticSearchRepository(store search.Store) CategoryIndexElasticSearchRepository {
+func NewCategoryIndexElasticSearchRepository(store *search.Store) CategoryIndexElasticSearchRepository {
 	return CategoryIndexElasticSearchRepository{store: store}
 }
 

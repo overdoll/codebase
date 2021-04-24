@@ -7,10 +7,9 @@ import (
 )
 
 type Repository interface {
-	GetPendingPost(context.Context, ksuid.UUID) (*PostPending, error)
+	GetPendingPost(ctx context.Context, id ksuid.UUID) (*PostPending, error)
 	CreatePendingPost(context.Context, *PostPending) error
 	UpdatePendingPost(context.Context, *PostPending) error
-
 
 	CreatePost(context.Context, *Post) error
 }

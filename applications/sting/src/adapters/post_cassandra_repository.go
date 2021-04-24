@@ -42,6 +42,10 @@ type PostsCassandraRepository struct {
 	session gocqlx.Session
 }
 
+func (r PostsCassandraRepository) CreatePost(ctx context.Context, p *post.Post) error {
+	panic("implement me")
+}
+
 func NewPostsCassandraRepository(session gocqlx.Session) PostsCassandraRepository {
 	return PostsCassandraRepository{session: session}
 }
@@ -83,7 +87,7 @@ func marshalToDatabase(pending *post.PostPending) *PostPending {
 	}
 }
 
-func (r *PostsCassandraRepository) CreatePendingPost(ctx context.Context, pending *post.PostPending) error {
+func (r PostsCassandraRepository) CreatePendingPost(ctx context.Context, pending *post.PostPending) error {
 	pendingPost := marshalToDatabase(pending)
 
 	insertPost := qb.Insert("posts_pending").
@@ -113,7 +117,7 @@ func (r *PostsCassandraRepository) CreatePendingPost(ctx context.Context, pendin
 	return nil
 }
 
-func (r *PostsCassandraRepository) GetPendingPost(ctx context.Context, id ksuid.UUID) (*post.PostPending, error) {
+func (r PostsCassandraRepository) GetPendingPost(ctx context.Context, id ksuid.UUID) (*post.PostPending, error) {
 
 	postPendingQuery := qb.Select("post_pending").
 		Where(qb.EqLit("id", id.String())).
@@ -142,7 +146,7 @@ func (r *PostsCassandraRepository) GetPendingPost(ctx context.Context, id ksuid.
 	), nil
 }
 
-func (r *PostsCassandraRepository) UpdatePendingPost(ctx context.Context, pending *post.PostPending) error {
+func (r PostsCassandraRepository) UpdatePendingPost(ctx context.Context, pending *post.PostPending) error {
 
 	// Update our post to reflect the new state - in publishing
 	updatePost := qb.Update("post_pending").

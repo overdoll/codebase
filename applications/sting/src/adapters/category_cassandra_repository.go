@@ -26,7 +26,7 @@ func NewCategoryCassandraRepository(session gocqlx.Session) CategoryCassandraRep
 	return CategoryCassandraRepository{session: session}
 }
 
-func (r *CategoryCassandraRepository) GetCategoriesById(ctx context.Context, cats []ksuid.UUID) ([]*category.Category, error) {
+func (r CategoryCassandraRepository) GetCategoriesById(ctx context.Context, cats []ksuid.UUID) ([]*category.Category, error) {
 
 	var categories []*category.Category
 
@@ -57,7 +57,7 @@ func (r *CategoryCassandraRepository) GetCategoriesById(ctx context.Context, cat
 	return categories, nil
 }
 
-func (r *CategoryCassandraRepository) GetCategories(ctx context.Context) ([]*category.Category, error) {
+func (r CategoryCassandraRepository) GetCategories(ctx context.Context) ([]*category.Category, error) {
 
 	var dbCategory []Category
 
@@ -76,7 +76,7 @@ func (r *CategoryCassandraRepository) GetCategories(ctx context.Context) ([]*cat
 	return categories, nil
 }
 
-func (r *CategoryCassandraRepository) CreateCategories(ctx context.Context, categories []*category.Category) error {
+func (r CategoryCassandraRepository) CreateCategories(ctx context.Context, categories []*category.Category) error {
 
 	// Begin BATCH operation:
 	// Will insert categories, characters, media

@@ -5,8 +5,8 @@ import (
 )
 
 type IndexRepository interface {
-	BulkIndexCharacter(context.Context, []*Character) error
-	DeleteIndexCharacter(context.Context) error
+	BulkIndexCharacters(context.Context, []*Character) error
+	DeleteIndexCharacters(context.Context) error
 
 	BulkIndexMedia(context.Context, []*Media) error
 	DeleteIndexMedia(context.Context) error

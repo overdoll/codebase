@@ -1,5 +1,9 @@
 package adapters
 
+import (
+	"overdoll/libraries/search"
+)
+
 type PostDocument struct {
 	Id            string   `json:"id"`
 	ArtistId      string   `json:"artist_id"`
@@ -8,4 +12,12 @@ type PostDocument struct {
 	Categories    []string `json:"categories"`
 	Characters    []string `json:"characters"`
 	PostedAt      string   `json:"posted_at"`
+}
+
+type PostIndexElasticSearchRepository struct {
+	store *search.Store
+}
+
+func NewPostIndexElasticSearchRepository(store *search.Store) PostIndexElasticSearchRepository {
+	return PostIndexElasticSearchRepository{store: store}
 }
