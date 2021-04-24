@@ -1,16 +1,21 @@
 package post
 
 import (
+	"context"
+	"fmt"
 	"time"
 
+	"overdoll/applications/sting/src/domain/category"
+	"overdoll/applications/sting/src/domain/character"
 	"overdoll/libraries/ksuid"
 )
 
 type PostPendingState string
 
 const (
-	Review    PostPendingState = "review"
-	Published PostPendingState = "published"
+	Publishing PostPendingState = "publishing"
+	Review     PostPendingState = "review"
+	Published  PostPendingState = "published"
 )
 
 type CharacterRequest struct {
@@ -24,6 +29,12 @@ type CategoryRequest struct {
 
 type MediaRequest struct {
 	Title string
+}
+
+type Contributor struct {
+	Id       string
+	Roles    []string
+	Verified bool
 }
 
 type PostPending struct {
@@ -42,9 +53,10 @@ type PostPending struct {
 	publishedPostId    string
 }
 
-func NewPendingPost(id ksuid.UUID, artistId string, artistUsername string, contributorId ksuid.UUID, content []string, characters []ksuid.UUID, categories []ksuid.UUID) (*PostPending, error) {
+func NewPendingPost(id ksuid.UUID, artistId string, artistUsername string, contributorId ksuid.UUID, content []string, characters []ksuid.UUID, categories []ksuid.UUID, ) (*PostPending, error) {
 	return &PostPending{
 		id:             id,
+		state:          Publishing,
 		artistId:       artistId,
 		artistUsername: artistUsername,
 		contributorId:  contributorId,
@@ -54,6 +66,7 @@ func NewPendingPost(id ksuid.UUID, artistId string, artistUsername string, contr
 		postedAt:       time.Now(),
 	}, nil
 }
+
 func UnmarshalPendingPostFromDatabase(id ksuid.UUID, state string, artistId string, artistUsername string, contributorId ksuid.UUID, content []string, characters []ksuid.UUID, categories []ksuid.UUID, charactersRequests map[string]string, categoryRequests []string, mediaRequests []string, postedAt time.Time, publishedPostId string) *PostPending {
 
 	postPending := &PostPending{
@@ -82,6 +95,32 @@ func UnmarshalPendingPostFromDatabase(id ksuid.UUID, state string, artistId stri
 	}
 
 	return postPending
+}
+
+func (p *PostPending) ValidateCharactersAndCategories(ctx context.Context, cRepo character.Repository, catRepo category.Repository) error {
+	characterInstances, err := cRepo.GetCharactersById(ctx, p.characters)
+
+	if err != nil {
+		return err
+	}
+
+	// make sure that the submitted characters are found in the database
+	if len(characterInstances) != len(p.characters) {
+		return fmt.Errorf("invalid character found")
+	}
+
+	categoryInstances, err := catRepo.GetCategoriesById(ctx, p.categories)
+
+	if err != nil {
+		return err
+	}
+
+	// make sure that the submitted categories exist in the database
+	if len(categoryInstances) != len(p.categories) {
+		return fmt.Errorf("invalid category found")
+	}
+
+	return nil
 }
 
 func (p *PostPending) ID() ksuid.UUID {
@@ -124,10 +163,24 @@ func (p *PostPending) PublishedPostId() string {
 	return p.publishedPostId
 }
 
-// TODO: based on user, either make it public (publish) or put in review
-func (p *PostPending) MakePublic() error {
-	p.state = Review
+func (p *PostPending) Publish() error {
+
+	p.state = Published
+
 	return nil
+}
+
+func (p *PostPending) MakePublicOrReview(contributor *Contributor) error {
+
+	if !contributor.Verified {
+		p.state = Review
+	}
+
+	return nil
+}
+
+func (p *PostPending) InReview() bool {
+	return p.state == Review
 }
 
 func (p *PostPending) IsPublished() bool {
@@ -150,6 +203,20 @@ func (p *PostPending) MediaRequests() []MediaRequest {
 	return p.mediaRequests
 }
 
+func (p *PostPending) RequestResources(characters map[string]string, categories []string, medias []string) {
+	for char, med := range characters {
+		_ = p.RequestCharacter(char, med)
+	}
+
+	for _, cat := range categories {
+		_ = p.RequestCategory(cat)
+	}
+
+	for _, med := range medias {
+		_ = p.RequestMedia(med)
+	}
+}
+
 func (p *PostPending) RequestCharacter(name string, media string) error {
 
 	p.charactersRequests = append(p.charactersRequests, CharacterRequest{Name: name, Media: media})
@@ -166,9 +233,5 @@ func (p *PostPending) RequestCategory(title string) error {
 func (p *PostPending) RequestMedia(title string) error {
 	p.mediaRequests = append(p.mediaRequests, MediaRequest{Title: title})
 
-	return nil
-}
-
-func (p *PostPending) ConfirmRequests() error {
 	return nil
 }

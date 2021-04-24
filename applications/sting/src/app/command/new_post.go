@@ -17,10 +17,12 @@ type NewPostHandler struct {
 	ctr category.Repository
 
 	cr content.Repository
+
+	eva EvaService
 }
 
-func NewNewPostHandler(pr post.Repository, chr character.Repository, ctr category.Repository, cr content.Repository) NewPostHandler {
-	return NewPostHandler{pr: pr, chr: chr, ctr: ctr, cr: cr}
+func NewNewPostHandler(pr post.Repository, chr character.Repository, ctr category.Repository, cr content.Repository, eva EvaService) NewPostHandler {
+	return NewPostHandler{pr: pr, chr: chr, ctr: ctr, cr: cr, eva: eva}
 }
 
 func (h NewPostHandler) Handle(ctx context.Context, artistId string, artistUsername string, contributorId string, content []string, categories []string, characters []string, characterRequests map[string]string, categoryRequests []string, mediaRequests []string) (*post.PostPending, error) {
@@ -31,32 +33,10 @@ func (h NewPostHandler) Handle(ctx context.Context, artistId string, artistUsern
 		return nil, fmt.Errorf("uuids not valid: %s", characters)
 	}
 
-	characterInstances, err := h.chr.GetCharactersById(ctx, characterUuids)
-
-	if err != nil {
-		return nil, err
-	}
-
-	// make sure that the submitted characters are found in the database
-	if len(characterInstances) != len(characterUuids) {
-		return nil, fmt.Errorf("invalid character found")
-	}
-
 	categoryUuids, err := ksuid.ToUUIDArray(categories)
 
 	if err != nil {
 		return nil, fmt.Errorf("uuids not valid: %s", categories)
-	}
-
-	categoryInstances, err := h.ctr.GetCategoriesById(ctx, categoryUuids)
-
-	if err != nil {
-		return nil, err
-	}
-
-	// make sure that the submitted categories exist in the database
-	if len(categoryInstances) != len(categoryUuids) {
-		return nil, fmt.Errorf("invalid category found")
 	}
 
 	contributorParse, err := ksuid.Parse(contributorId)
@@ -71,10 +51,22 @@ func (h NewPostHandler) Handle(ctx context.Context, artistId string, artistUsern
 		return nil, fmt.Errorf("could not create pending post: %s", err)
 	}
 
-	// TODO: call users service, to determine if review is required, or do some permission checks
-	_ = pendingPost.MakePublic()
+	err = pendingPost.ValidateCharactersAndCategories(ctx, h.chr, h.ctr)
 
-	// TODO: add media, character, category requests to state
+	if err != nil {
+		return nil, err
+	}
+
+	// Request new resources
+	pendingPost.RequestResources(characterRequests, categoryRequests, mediaRequests)
+
+	usr, err := h.eva.GetUser(ctx, contributorId)
+
+	if err != nil {
+		return nil, fmt.Errorf("could not get user: %s", err)
+	}
+
+	_ = pendingPost.MakePublicOrReview(usr)
 
 	// Process content (mime-type checks, etc...)
 	cnt, err := h.cr.ProcessContent(ctx, contributorId, content)
@@ -93,7 +85,10 @@ func (h NewPostHandler) Handle(ctx context.Context, artistId string, artistUsern
 		return nil, err
 	}
 
-	// TODO: dispatch a job if review not required to publish the post
+	// If not in review ("publishing"), then we dispatch a job to publish the post
+	if !pendingPost.InReview() {
+		// TODO: dispatch a job if review not required to publish the post
+	}
 
 	return pendingPost, nil
 }

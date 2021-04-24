@@ -28,35 +28,47 @@ func (h ReviewPostHandler) Handle(ctx context.Context, id string, artistId strin
 		return nil, fmt.Errorf("uuids not valid: %s", characters)
 	}
 
-	characterInstances, err := h.chr.GetCharactersById(ctx, characterUuids)
-
-	if err != nil {
-		return nil, err
-	}
-
-	// make sure that the submitted characters are found in the database
-	if len(characterInstances) != len(characterUuids) {
-		return nil, fmt.Errorf("invalid character found")
-	}
-
 	categoryUuids, err := ksuid.ToUUIDArray(categories)
 
 	if err != nil {
 		return nil, fmt.Errorf("uuids not valid: %s", categories)
 	}
 
-	categoryInstances, err := h.ctr.GetCategoriesById(ctx, categoryUuids)
+	idParse, err := ksuid.Parse(id)
+
+	if err != nil {
+		return nil, fmt.Errorf("uuid not valid: %s", id)
+	}
+
+	oldPendingPost, err := h.pr.GetPendingPost(ctx, idParse)
+
+	if err != nil {
+		return nil, fmt.Errorf("error grabbing pending post %s", err)
+	}
+
+	pendingPost, err := post.NewPendingPost(idParse, artistId, artistUsername, oldPendingPost.ContributorId(), oldPendingPost.Content(), characterUuids, categoryUuids)
+
+	if err != nil {
+		return nil, fmt.Errorf("could not create pending post: %s", err)
+	}
+
+	err = pendingPost.ValidateCharactersAndCategories(ctx, h.chr, h.ctr)
 
 	if err != nil {
 		return nil, err
 	}
 
-	// make sure that the submitted categories exist in the database
-	if len(categoryInstances) != len(categoryUuids) {
-		return nil, fmt.Errorf("invalid category found")
+	// Request new resources - update it
+	pendingPost.RequestResources(characterRequests, categoryRequests, mediaRequests)
+
+	// Update pending post
+	err = h.pr.UpdatePendingPost(ctx, pendingPost)
+
+	if err != nil {
+		return nil, fmt.Errorf("could not update pending post: %s", err)
 	}
 
-	// TODO: dispatch job to publish post
+	// TODO: dispatch a job to publish the post
 
-	return nil, nil
+	return pendingPost, nil
 }
