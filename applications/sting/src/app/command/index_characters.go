@@ -17,7 +17,7 @@ func NewIndexCharactersHandler(cr character.Repository, cir character.IndexRepos
 
 func (h IndexCharactersHandler) Handle(ctx context.Context) error {
 
-	err := h.cir.DeleteIndexCharacter(ctx)
+	err := h.cir.DeleteIndexCharacters(ctx)
 
 	if err != nil {
 
@@ -29,7 +29,7 @@ func (h IndexCharactersHandler) Handle(ctx context.Context) error {
 
 	}
 
-	err = h.cir.BulkIndexCharacter(ctx, characters)
+	err = h.cir.BulkIndexCharacters(ctx, characters)
 
 	if err != nil {
 

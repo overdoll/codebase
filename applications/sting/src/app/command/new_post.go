@@ -101,7 +101,9 @@ func (h NewPostHandler) Handle(ctx context.Context, c interface{}) error {
 
 	// If not in review ("publishing"), then we dispatch a job to publish the post
 	if !pendingPost.InReview() {
-		// TODO: dispatch a job if review not required to publish the post
+		if err := h.eventBus.Publish(ctx, &sting.PostCompleted{Id: pendingPost.ID().String()}); err != nil {
+			return err
+		}
 	}
 
 	return nil

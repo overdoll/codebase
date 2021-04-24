@@ -82,7 +82,9 @@ func (h ReviewPostHandler) Handle(ctx context.Context, c interface{}) error {
 		return fmt.Errorf("could not update pending post: %s", err)
 	}
 
-	// TODO: dispatch a job to publish the post
+	if err := h.eventBus.Publish(ctx, &sting.PostCompleted{Id: pendingPost.ID().String()}); err != nil {
+		return err
+	}
 
 	return nil
 }
