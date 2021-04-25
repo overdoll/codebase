@@ -53,37 +53,27 @@ func (h PublishPostHandler) Handle(ctx context.Context, c interface{}) error {
 
 	// This will make sure the state of the post is always "publishing" before publishing - we may get an outdated record
 	// from the review stage so it will retry at some point
-	err = pendingPost.MakePublish()
-
-	if err != nil {
+	if err := pendingPost.MakePublish(); err != nil {
 		return err
 	}
 
 	// Consume custom categories and run commands to create
-	err = h.ce.CategoriesCreated(ctx, pendingPost.ConsumeCustomCategories())
-
-	if err != nil {
+	if err := h.ce.CategoriesCreated(ctx, pendingPost.ConsumeCustomCategories()); err != nil {
 		return err
 	}
 
 	// Consume custom characters, and run commands to create these custom characters
 	chars, medias := pendingPost.ConsumeCustomCharacters()
 
-	err = h.che.CharactersCreated(ctx, chars)
-
-	if err != nil {
+	if err := h.che.CharactersCreated(ctx, chars); err != nil {
 		return err
 	}
 
-	err = h.che.MediaCreated(ctx, medias)
-
-	if err != nil {
+	if err := h.che.MediaCreated(ctx, medias); err != nil {
 		return err
 	}
 
-	err = h.pr.UpdatePendingPost(ctx, pendingPost)
-
-	if err != nil {
+	if err := h.pr.UpdatePendingPost(ctx, pendingPost); err != nil {
 		return fmt.Errorf("unable to update pending post: %s", err)
 	}
 

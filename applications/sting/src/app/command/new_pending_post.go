@@ -38,7 +38,7 @@ func (h NewPostHandler) NewCommand() interface{} {
 
 func (h NewPostHandler) Handle(ctx context.Context, c interface{}) error {
 
-	cmd := c.(*sting.SchedulePost)
+	cmd := c.(*sting.SchedulePost).Post
 
 	characterUuids, err := ksuid.ToUUIDArray(cmd.Characters)
 
@@ -73,7 +73,7 @@ func (h NewPostHandler) Handle(ctx context.Context, c interface{}) error {
 	// Request new resources
 	pendingPost.RequestResources(cmd.CharacterRequests, cmd.CategoriesRequests, cmd.MediaRequests)
 
-	usr, err := h.eva.GetUser(ctx, cmd.ContributorId)
+	usr, err := h.eva.GetUser(ctx, contributorParse)
 
 	if err != nil {
 		return fmt.Errorf("could not get user: %s", err)
@@ -92,15 +92,18 @@ func (h NewPostHandler) Handle(ctx context.Context, c interface{}) error {
 	pendingPost.UpdateContent(cnt)
 
 	// create a pending post in the database with all of the data
-	err = h.pr.CreatePendingPost(ctx, pendingPost)
-
-	if err != nil {
+	if err := h.pr.CreatePendingPost(ctx, pendingPost); err != nil {
 		return err
 	}
 
 	// If not in review ("publishing"), then we dispatch a job to publish the post
 	if !pendingPost.InReview() {
 		if err := h.pe.PostCreated(ctx, pendingPost); err != nil {
+			return err
+		}
+	} else {
+		// dispatch a task to update our post, if it's not in review (so moderators can see it)
+		if err := h.pe.PostPendingUpdated(ctx, pendingPost); err != nil {
 			return err
 		}
 	}

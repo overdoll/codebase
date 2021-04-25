@@ -137,6 +137,7 @@ func (r CharacterCassandraRepository) GetCharacters(ctx context.Context) ([]*cha
 		for _, med := range medias {
 			if med.Id == char.MediaId {
 				media = med
+				break
 			}
 		}
 

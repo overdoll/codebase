@@ -37,14 +37,17 @@ type MediaRequest struct {
 }
 
 type PostPending struct {
-	id                 ksuid.UUID
-	state              PostPendingState
+	id    ksuid.UUID
+	state PostPendingState
+
+	characters []*character.Character
+	categories []*category.Category
+
+	contributor *User
+
 	artistId           string
 	artistUsername     string
-	contributorId      ksuid.UUID
 	content            []string
-	categories         []ksuid.UUID
-	characters         []ksuid.UUID
 	charactersRequests []CharacterRequest
 	categoriesRequests []CategoryRequest
 	mediaRequests      []MediaRequest
@@ -52,31 +55,43 @@ type PostPending struct {
 	publishedPostId    string
 }
 
-func NewPendingPost(id ksuid.UUID, artistId string, artistUsername string, contributorId ksuid.UUID, content []string, characters []ksuid.UUID, categories []ksuid.UUID, ) (*PostPending, error) {
+func NewPendingPost(id ksuid.UUID, artistId string, artistUsername string, contributor *User, content []string, characters []*character.Character, categories []*category.Category, postedAt time.Time) (*PostPending, error) {
 	return &PostPending{
 		id:             id,
 		state:          Publishing,
 		artistId:       artistId,
 		artistUsername: artistUsername,
-		contributorId:  contributorId,
+		contributor:    contributor,
 		content:        content,
 		characters:     characters,
 		categories:     categories,
-		postedAt:       time.Now(),
+		postedAt:       postedAt,
 	}, nil
 }
 
 func UnmarshalPendingPostFromDatabase(id ksuid.UUID, state string, artistId string, artistUsername string, contributorId ksuid.UUID, content []string, characters []ksuid.UUID, categories []ksuid.UUID, charactersRequests map[string]string, categoryRequests []string, mediaRequests []string, postedAt time.Time, publishedPostId string) *PostPending {
+
+	var chars []*character.Character
+
+	for _, char := range characters {
+		chars = append(chars, character.NewCharacter(char, "", "", ksuid.New(), "", ""))
+	}
+
+	var cats []*category.Category
+
+	for _, char := range categories {
+		cats = append(cats, category.NewCategory(char, "", ""))
+	}
 
 	postPending := &PostPending{
 		id:              id,
 		state:           PostPendingState(state),
 		artistId:        artistId,
 		artistUsername:  artistUsername,
-		contributorId:   contributorId,
+		contributor:     &User{Id: contributorId},
 		content:         content,
-		characters:      characters,
-		categories:      categories,
+		characters:      chars,
+		categories:      cats,
 		postedAt:        postedAt,
 		publishedPostId: publishedPostId,
 	}
@@ -87,7 +102,7 @@ func UnmarshalPendingPostFromDatabase(id ksuid.UUID, state string, artistId stri
 }
 
 func (p *PostPending) ValidateCharactersAndCategories(ctx context.Context, cRepo character.Repository, catRepo category.Repository) error {
-	characterInstances, err := cRepo.GetCharactersById(ctx, p.characters)
+	characterInstances, err := cRepo.GetCharactersById(ctx, p.CharacterIds())
 
 	if err != nil {
 		return err
@@ -98,7 +113,7 @@ func (p *PostPending) ValidateCharactersAndCategories(ctx context.Context, cRepo
 		return fmt.Errorf("invalid character found")
 	}
 
-	categoryInstances, err := catRepo.GetCategoriesById(ctx, p.categories)
+	categoryInstances, err := catRepo.GetCategoriesById(ctx, p.CategoryIds())
 
 	if err != nil {
 		return err
@@ -128,19 +143,45 @@ func (p *PostPending) ArtistUsername() string {
 	return p.artistUsername
 }
 
-func (p *PostPending) ContributorId() ksuid.UUID {
-	return p.contributorId
+func (p *PostPending) Contributor() *User {
+	return p.contributor
+}
+
+func (p *PostPending) RawContent() []string {
+	return p.content
 }
 
 func (p *PostPending) Content() []string {
 	return p.content
 }
 
-func (p *PostPending) Categories() []ksuid.UUID {
+func (p *PostPending) Categories() []*category.Category {
 	return p.categories
 }
 
-func (p *PostPending) Characters() []ksuid.UUID {
+func (p *PostPending) CategoryIds() []ksuid.UUID {
+
+	var ids []ksuid.UUID
+
+	for _, cats := range p.categories {
+		ids = append(ids, cats.ID())
+	}
+
+	return ids
+}
+
+func (p *PostPending) CharacterIds() []ksuid.UUID {
+
+	var ids []ksuid.UUID
+
+	for _, chars := range p.characters {
+		ids = append(ids, chars.ID())
+	}
+
+	return ids
+}
+
+func (p *PostPending) Characters() []*character.Character {
 	return p.characters
 }
 
@@ -168,7 +209,7 @@ func (p *PostPending) MakePublishing() {
 	p.state = Publishing
 }
 
-func (p *PostPending) MakePublicOrReview(contributor *Contributor) error {
+func (p *PostPending) MakePublicOrReview(contributor *User) error {
 
 	if !contributor.Verified {
 		p.state = Review
@@ -207,11 +248,10 @@ func (p *PostPending) ConsumeCustomCategories() []*category.Category {
 
 	for _, cat := range p.categoriesRequests {
 
-		id := ksuid.New()
+		newCategory := category.NewCategory(ksuid.New(), cat.Title, "")
 
-		p.categories = append(p.categories, id)
-
-		categories = append(categories, category.NewCategory(id, cat.Title, ""))
+		p.categories = append(p.categories, newCategory)
+		categories = append(categories, newCategory)
 	}
 
 	return categories
@@ -246,11 +286,10 @@ func (p *PostPending) ConsumeCustomCharacters() ([]*character.Character, []*char
 			medias = append(medias, character.NewMedia(id, char.Media, ""))
 		}
 
-		characterId := ksuid.New()
+		newCharacter := character.NewCharacter(ksuid.New(), char.Name, "", id, "", "")
 
-		p.characters = append(p.characters, characterId)
-
-		characters = append(characters, character.NewCharacter(characterId, char.Name, "", id, "", ""))
+		p.characters = append(p.characters, newCharacter)
+		characters = append(characters, newCharacter)
 	}
 
 	return characters, medias

@@ -21,6 +21,10 @@ func (m *Media) Title() string {
 	return m.title
 }
 
+func (m *Media) RawThumbnail() string {
+	return m.thumbnail
+}
+
 func (m *Media) Thumbnail() string {
 	var staticURL = os.Getenv("STATIC_URL")
 	return staticURL + "/thumbnails/" + m.thumbnail

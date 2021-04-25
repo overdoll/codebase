@@ -82,6 +82,21 @@ func NewCharacterIndexElasticSearchRepository(store *search.Store) CharacterInde
 	return CharacterIndexElasticSearchRepository{store: store}
 }
 
+func MarshalCharacterToDocument(char *character.Character) *CharacterDocument {
+	media := char.Media()
+
+	return &CharacterDocument{
+		Id:        char.ID().String(),
+		Thumbnail: char.Thumbnail(),
+		Name:      char.Name(),
+		Media: MediaDocument{
+			Id:        media.ID().String(),
+			Thumbnail: media.Thumbnail(),
+			Title:     media.Title(),
+		},
+	}
+}
+
 func (r CharacterIndexElasticSearchRepository) BulkIndexCharacters(ctx context.Context, characters []*character.Character) error {
 
 	err := r.store.CreateBulkIndex("characters")
@@ -93,18 +108,7 @@ func (r CharacterIndexElasticSearchRepository) BulkIndexCharacters(ctx context.C
 	// Now we can safely start creating our documents
 	for _, char := range characters {
 
-		media := char.Media()
-
-		data := &CharacterDocument{
-			Id:        char.ID().String(),
-			Thumbnail: char.Thumbnail(),
-			Name:      char.Name(),
-			Media: MediaDocument{
-				Id:        media.ID().String(),
-				Thumbnail: media.Thumbnail(),
-				Title:     media.Title(),
-			},
-		}
+		data := MarshalCharacterToDocument(char)
 
 		err = r.store.AddToBulkIndex(data.Id, data)
 

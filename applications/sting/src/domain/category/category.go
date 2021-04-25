@@ -21,6 +21,10 @@ func (c *Category) Title() string {
 	return c.title
 }
 
+func (c *Category) RawThumbnail() string {
+	return c.thumbnail
+}
+
 func (c *Category) Thumbnail() string {
 	var staticURL = os.Getenv("STATIC_URL")
 	return staticURL + "/thumbnails/" + c.thumbnail

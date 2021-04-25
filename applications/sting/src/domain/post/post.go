@@ -3,29 +3,31 @@ package post
 import (
 	"time"
 
-	sting "overdoll/applications/sting/proto"
+	"overdoll/applications/sting/src/domain/category"
+	"overdoll/applications/sting/src/domain/character"
 	"overdoll/libraries/ksuid"
 )
 
 type Post struct {
-	id            ksuid.UUID
-	artistId      ksuid.UUID
-	contributorId ksuid.UUID
-	content       []string
-	categories    []ksuid.UUID
-	characters    []ksuid.UUID
-	postedAt      time.Time
+	id         ksuid.UUID
+	content    []string
+	postedAt   time.Time
+	characters []*character.Character
+	categories []*category.Category
+
+	artist      *User
+	contributor *User
 }
 
-func NewPost(id ksuid.UUID, artistId ksuid.UUID, contributorId ksuid.UUID, content []string, categories []ksuid.UUID, characters []ksuid.UUID, postedAt time.Time) *Post {
+func NewPost(id ksuid.UUID, artist *User, contributor *User, content []string, categories []*category.Category, characters []*character.Character) *Post {
 	return &Post{
-		id:            id,
-		artistId:      artistId,
-		contributorId: contributorId,
-		content:       content,
-		categories:    categories,
-		characters:    characters,
-		postedAt:      postedAt,
+		id:          id,
+		artist:      artist,
+		contributor: contributor,
+		content:     content,
+		categories:  categories,
+		characters:  characters,
+		postedAt:    time.Now(),
 	}
 }
 
@@ -33,72 +35,31 @@ func (m *Post) ID() ksuid.UUID {
 	return m.id
 }
 
-func (m *Post) ArtistId() ksuid.UUID {
-	return m.artistId
+func (m *Post) Artist() *User {
+	return m.artist
 }
 
-func (m *Post) ContributorId() ksuid.UUID {
-	return m.contributorId
+func (m *Post) Contributor() *User {
+	return m.contributor
 }
 
+func (m *Post) RawContent() []string {
+	return m.content
+}
+
+// TODO: add content getter
 func (m *Post) Content() []string {
 	return m.content
 }
 
-func (m *Post) Categories() []ksuid.UUID {
+func (m *Post) Categories() []*category.Category {
 	return m.categories
 }
 
-func (m *Post) Characters() []ksuid.UUID {
+func (m *Post) Characters() []*character.Character {
 	return m.characters
 }
 
 func (m *Post) PostedAt() time.Time {
 	return m.postedAt
-}
-
-func UnmarshalPostFromDatabase(id ksuid.UUID, artistId ksuid.UUID, contributorId ksuid.UUID, content []string, characters []ksuid.UUID, categories []ksuid.UUID, postedAt time.Time) *Post {
-	return &Post{
-		id:            id,
-		artistId:      artistId,
-		contributorId: contributorId,
-		content:       content,
-		characters:    characters,
-		categories:    categories,
-		postedAt:      postedAt,
-	}
-}
-
-func UnmarshalPostFromProto(post *sting.Post) (*Post, error) {
-	id, err := ksuid.Parse(post.Id)
-
-	if err != nil {
-		return nil, err
-	}
-
-	artistId, err := ksuid.Parse(post.ArtistId)
-
-	if err != nil {
-		return nil, err
-	}
-
-	contributorId, err := ksuid.Parse(post.ContributorId)
-
-	if err != nil {
-		return nil, err
-	}
-
-	categoryIds, err := ksuid.ToUUIDArray(post.Categories)
-
-	if err != nil {
-		return nil, err
-	}
-
-	characterIds, err := ksuid.ToUUIDArray(post.Characters)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return NewPost(id, artistId, contributorId, post.Content, categoryIds, characterIds, time.Now()), nil
 }

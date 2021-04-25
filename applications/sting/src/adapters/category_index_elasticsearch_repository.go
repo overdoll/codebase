@@ -41,6 +41,14 @@ func NewCategoryIndexElasticSearchRepository(store *search.Store) CategoryIndexE
 	return CategoryIndexElasticSearchRepository{store: store}
 }
 
+func MarshalCategoryToDocument(cat *category.Category) *CategoryDocument {
+	return &CategoryDocument{
+		Id:        cat.ID().String(),
+		Thumbnail: cat.Thumbnail(),
+		Title:     cat.Title(),
+	}
+}
+
 func (r CategoryIndexElasticSearchRepository) BulkIndex(ctx context.Context, categories []*category.Category) error {
 
 	err := r.store.CreateBulkIndex("categories")
@@ -52,11 +60,7 @@ func (r CategoryIndexElasticSearchRepository) BulkIndex(ctx context.Context, cat
 	// Now we can safely start creating our documents
 	for _, cat := range categories {
 
-		data := &CategoryDocument{
-			Id:        cat.ID().String(),
-			Thumbnail: cat.Thumbnail(),
-			Title:     cat.Title(),
-		}
+		data := MarshalCategoryToDocument(cat)
 
 		err = r.store.AddToBulkIndex(data.Id, data)
 

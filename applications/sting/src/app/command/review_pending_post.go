@@ -33,7 +33,7 @@ func (h ReviewPostHandler) NewCommand() interface{} {
 }
 
 func (h ReviewPostHandler) Handle(ctx context.Context, c interface{}) error {
-	cmd := c.(*sting.ReviewPost)
+	cmd := c.(*sting.ReviewPost).Post
 
 	characterUuids, err := ksuid.ToUUIDArray(cmd.Characters)
 

@@ -30,20 +30,7 @@ message Post {
   repeated string characters = 6;
 }
 
-message SchedulePost {
-  string artistId = 1;
-  string artistUsername = 2;
-  string contributorId = 3;
-  string contributorUsername = 4;
-  repeated string content = 5;
-  repeated string categories = 6;
-  repeated string characters = 7;
-  repeated string categoriesRequests = 8;
-  repeated string mediaRequests = 9;
-  map<string, string> characterRequests = 10;
-}
-
-message ReviewPost {
+message PendingPost {
   string id = 1;
   string artistId = 2;
   string artistUsername = 3;
@@ -54,6 +41,15 @@ message ReviewPost {
   repeated string categoriesRequests = 8;
   repeated string mediaRequests = 9;
   map<string, string> characterRequests = 10;
+  string postedAt = 11;
+}
+
+message SchedulePost {
+  PendingPost post = 1;
+}
+
+message ReviewPost {
+  PendingPost post = 1;
 }
 
 message PostPublished {
@@ -74,6 +70,10 @@ message CategoryCreated {
 
 message PostCreated {
   Post post = 1;
+}
+
+message PostPendingUpdated {
+  PendingPost post = 1;
 }
 
 message PostCompleted {

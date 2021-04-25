@@ -20,6 +20,10 @@ func (a *Artist) Username() string {
 	return a.username
 }
 
+func (a *Artist) RawAvatar() string {
+	return a.avatar
+}
+
 func (a *Artist) Avatar() string {
 	var staticURL = os.Getenv("STATIC_URL")
 	return staticURL + "/avatars/" + a.avatar
