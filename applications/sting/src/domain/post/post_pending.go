@@ -36,12 +36,6 @@ type MediaRequest struct {
 	Title string
 }
 
-type Contributor struct {
-	Id       string
-	Roles    []string
-	Verified bool
-}
-
 type PostPending struct {
 	id                 ksuid.UUID
 	state              PostPendingState

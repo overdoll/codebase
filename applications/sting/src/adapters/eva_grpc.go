@@ -28,5 +28,7 @@ func (s EvaGrpc) GetUser(ctx context.Context, id string) (*post.Contributor, err
 		Id:       usr.Id,
 		Roles:    usr.Roles,
 		Verified: usr.Verified,
+		Avatar:   usr.Avatar,
+		Username: usr.Username,
 	}, nil
 }

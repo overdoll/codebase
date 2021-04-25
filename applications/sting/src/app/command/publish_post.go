@@ -86,5 +86,16 @@ func (h PublishPostHandler) Handle(ctx context.Context, c interface{}) error {
 		return fmt.Errorf("unable to update pending post: %s", err)
 	}
 
+	if err := h.commandBus.Send(ctx, &sting.PostCreated{Post: &sting.Post{
+		Id:            ksuid.New().String(),
+		ArtistId:      pendingPost.ArtistId(),
+		ContributorId: pendingPost.ContributorId().String(),
+		Content:       pendingPost.Content(),
+		Categories:    ksuid.ToStringArray(pendingPost.Categories()),
+		Characters:    ksuid.ToStringArray(pendingPost.Characters()),
+	}}); err != nil {
+		return nil
+	}
+
 	return nil
 }

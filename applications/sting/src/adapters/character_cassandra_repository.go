@@ -147,6 +147,42 @@ func (r CharacterCassandraRepository) GetMedias(ctx context.Context) ([]*charact
 	return medias, nil
 }
 
+func (r CharacterCassandraRepository) GetMediasById(ctx context.Context, medi []ksuid.UUID) ([]*character.Media, error) {
+
+	var medias []*character.Media
+
+	final := []string{}
+
+	for _, str := range medi {
+		final = append(final, `'`+str.String()+`'`)
+	}
+
+	// if none then we get out or else the query will fail
+	if len(final) == 0 {
+		return medias, nil
+	}
+
+	queryMedia := qb.Select("media").
+		Where(qb.InLit("id", "("+strings.Join(final, ",")+")")).
+		Query(r.session)
+
+	var mediaModels []*Media
+
+	if err := queryMedia.Select(&mediaModels); err != nil {
+		return nil, fmt.Errorf("select() failed: '%s", err)
+	}
+
+	for _, med := range mediaModels {
+		medias = append(medias, character.NewMedia(
+			med.Id,
+			med.Title,
+			med.Thumbnail,
+		))
+	}
+
+	return medias, nil
+}
+
 func (r CharacterCassandraRepository) CreateCharacters(ctx context.Context, characters []*character.Character) error {
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)

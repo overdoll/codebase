@@ -3,6 +3,7 @@ package user
 import (
 	"errors"
 	"fmt"
+	"os"
 
 	"overdoll/libraries/ksuid"
 )
@@ -75,6 +76,11 @@ func (u User) Username() string {
 
 func (u User) Verified() bool {
 	return u.verified
+}
+
+func (u User) Avatar() string {
+	var staticURL = os.Getenv("STATIC_URL")
+	return staticURL + "/avatars/" + u.avatar
 }
 
 func (u User) UserRolesAsString() []string {

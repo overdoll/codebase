@@ -21,6 +21,15 @@ message Category {
   string thumbnail = 3;
 }
 
+message Post {
+  string id = 1;
+  string artistId = 2;
+  string contributorId = 3;
+  repeated string content = 4;
+  repeated string categories = 5;
+  repeated string characters = 6;
+}
+
 message SchedulePost {
   string artistId = 1;
   string artistUsername = 2;
@@ -61,4 +70,8 @@ message MediaCreated {
 
 message CategoryCreated {
   repeated Category categories = 1;
+}
+
+message PostCreated {
+  Post post = 1;
 }
