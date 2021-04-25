@@ -58,14 +58,44 @@ func (r CharacterCassandraRepository) GetCharactersById(ctx context.Context, cha
 		return nil, fmt.Errorf("select() failed: '%s", err)
 	}
 
+	var mediaIds []string
+
 	for _, cat := range characterModels {
+		mediaIds = append(mediaIds, cat.MediaId.String())
+	}
+
+	queryMedia := qb.Select("media").
+		Where(qb.InLit("id", "("+strings.Join(mediaIds, ",")+")")).
+		Query(r.session)
+
+	var mediaModels []*Media
+
+	if err := queryMedia.Select(&mediaModels); err != nil {
+		return nil, fmt.Errorf("select() failed: '%s", err)
+	}
+
+	for _, char := range characterModels {
+
+		var media *Media
+
+		for _, med := range mediaModels {
+			if med.Id == char.MediaId {
+				media = med
+				break
+			}
+		}
+
+		if media == nil {
+			continue
+		}
+
 		characters = append(characters, character.NewCharacter(
-			cat.Id,
-			cat.Name,
-			cat.Thumbnail,
-			cat.MediaId,
-			"",
-			"",
+			char.Id,
+			char.Name,
+			char.Thumbnail,
+			char.MediaId,
+			media.Title,
+			media.Thumbnail,
 		))
 	}
 
