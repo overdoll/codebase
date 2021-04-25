@@ -57,6 +57,18 @@ func (m *Post) PostedAt() time.Time {
 	return m.postedAt
 }
 
+func UnmarshalPostFromDatabase(id ksuid.UUID, artistId ksuid.UUID, contributorId ksuid.UUID, content []string, characters []ksuid.UUID, categories []ksuid.UUID, postedAt time.Time) *Post {
+	return &Post{
+		id:            id,
+		artistId:      artistId,
+		contributorId: contributorId,
+		content:       content,
+		characters:    characters,
+		categories:    categories,
+		postedAt:      postedAt,
+	}
+}
+
 func UnmarshalPostFromProto(post *sting.Post) (*Post, error) {
 	id, err := ksuid.Parse(post.Id)
 

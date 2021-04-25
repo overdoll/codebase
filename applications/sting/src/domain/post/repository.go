@@ -11,5 +11,6 @@ type Repository interface {
 	CreatePendingPost(context.Context, *PostPending) error
 	UpdatePendingPost(context.Context, *PostPending) error
 
+	GetPost(ctx context.Context, id ksuid.UUID) (*Post, error)
 	CreatePost(context.Context, *Post) error
 }

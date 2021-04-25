@@ -146,6 +146,29 @@ func (r PostsCassandraRepository) GetPendingPost(ctx context.Context, id ksuid.U
 	), nil
 }
 
+func (r PostsCassandraRepository) GetPost(ctx context.Context, id ksuid.UUID) (*post.Post, error) {
+
+	postQuery := qb.Select("post").
+		Where(qb.EqLit("id", id.String())).
+		Query(r.session)
+
+	var postT Post
+
+	if err := postQuery.Get(&postT); err != nil {
+		return nil, err
+	}
+
+	return post.UnmarshalPostFromDatabase(
+		postT.Id,
+		postT.ArtistId,
+		postT.ContributorId,
+		postT.Content,
+		postT.Characters,
+		postT.Categories,
+		postT.PostedAt,
+	), nil
+}
+
 func (r PostsCassandraRepository) UpdatePendingPost(ctx context.Context, pending *post.PostPending) error {
 
 	// Update our post to reflect the new state - in publishing
