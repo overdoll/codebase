@@ -15,3 +15,16 @@ type Repository interface {
 	GetMediasById(context.Context, []ksuid.UUID) ([]*Media, error)
 	GetMedias(context.Context) ([]*Media, error)
 }
+
+type IndexRepository interface {
+	BulkIndexCharacters(context.Context, []*Character) error
+	DeleteIndexCharacters(context.Context) error
+
+	BulkIndexMedia(context.Context, []*Media) error
+	DeleteIndexMedia(context.Context) error
+}
+
+type EventRepository interface {
+	CharactersCreated(context.Context, []*Character) error
+	MediaCreated(context.Context, []*Media) error
+}

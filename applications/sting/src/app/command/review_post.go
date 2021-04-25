@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/ThreeDotsLabs/watermill/components/cqrs"
 	sting "overdoll/applications/sting/proto"
 	"overdoll/applications/sting/src/domain/category"
 	"overdoll/applications/sting/src/domain/character"
@@ -18,11 +17,11 @@ type ReviewPostHandler struct {
 	chr character.Repository
 	ctr category.Repository
 
-	eventBus *cqrs.EventBus
+	pe post.EventRepository
 }
 
-func NewReviewPostHandler(pr post.Repository, chr character.Repository, ctr category.Repository, eventBus *cqrs.EventBus) ReviewPostHandler {
-	return ReviewPostHandler{pr: pr, chr: chr, ctr: ctr, eventBus: eventBus}
+func NewReviewPostHandler(pr post.Repository, chr character.Repository, ctr category.Repository, pe post.EventRepository) ReviewPostHandler {
+	return ReviewPostHandler{pr: pr, chr: chr, ctr: ctr, pe: pe}
 }
 
 func (h ReviewPostHandler) HandlerName() string {
@@ -85,7 +84,7 @@ func (h ReviewPostHandler) Handle(ctx context.Context, c interface{}) error {
 		return fmt.Errorf("could not update pending post: %s", err)
 	}
 
-	if err := h.eventBus.Publish(ctx, &sting.PostCompleted{Id: pendingPost.ID().String()}); err != nil {
+	if err := h.pe.PostCreated(ctx, pendingPost); err != nil {
 		return err
 	}
 

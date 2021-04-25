@@ -42,10 +42,6 @@ type PostsCassandraRepository struct {
 	session gocqlx.Session
 }
 
-func (r PostsCassandraRepository) CreatePost(ctx context.Context, p *post.Post) error {
-	panic("implement me")
-}
-
 func NewPostsCassandraRepository(session gocqlx.Session) PostsCassandraRepository {
 	return PostsCassandraRepository{session: session}
 }

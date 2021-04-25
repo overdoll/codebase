@@ -1,10 +1,9 @@
-package command
+package event
 
 import (
 	"context"
 	"fmt"
 
-	"github.com/ThreeDotsLabs/watermill/components/cqrs"
 	sting "overdoll/applications/sting/proto"
 	"overdoll/applications/sting/src/domain/category"
 	"overdoll/applications/sting/src/domain/character"
@@ -17,11 +16,15 @@ type PublishPostHandler struct {
 	chr character.Repository
 	ctr category.Repository
 
-	commandBus *cqrs.CommandBus
+	ce category.EventRepository
+
+	che character.EventRepository
+
+	pe post.EventRepository
 }
 
-func NewPublishPostHandler(pr post.Repository, chr character.Repository, ctr category.Repository, commandBus *cqrs.CommandBus) PublishPostHandler {
-	return PublishPostHandler{pr: pr, chr: chr, ctr: ctr, commandBus: commandBus}
+func NewPublishPostHandler(pr post.Repository, chr character.Repository, ctr category.Repository, ce category.EventRepository, pe post.EventRepository) PublishPostHandler {
+	return PublishPostHandler{pr: pr, chr: chr, ctr: ctr, ce: ce, pe: pe}
 }
 
 func (h PublishPostHandler) HandlerName() string {
@@ -56,10 +59,8 @@ func (h PublishPostHandler) Handle(ctx context.Context, c interface{}) error {
 		return err
 	}
 
-	cats := pendingPost.ConsumeCustomCategories()
-
 	// Consume custom categories and run commands to create
-	err = h.commandBus.Send(ctx, category.MarshalToProtoArray(cats))
+	err = h.ce.CategoriesCreated(ctx, pendingPost.ConsumeCustomCategories())
 
 	if err != nil {
 		return err
@@ -68,13 +69,13 @@ func (h PublishPostHandler) Handle(ctx context.Context, c interface{}) error {
 	// Consume custom characters, and run commands to create these custom characters
 	chars, medias := pendingPost.ConsumeCustomCharacters()
 
-	err = h.commandBus.Send(ctx, character.MarshalCharacterToProtoArray(chars))
+	err = h.che.CharactersCreated(ctx, chars)
 
 	if err != nil {
 		return err
 	}
 
-	err = h.commandBus.Send(ctx, character.MarshalMediaToProtoArray(medias))
+	err = h.che.MediaCreated(ctx, medias)
 
 	if err != nil {
 		return err
@@ -86,14 +87,7 @@ func (h PublishPostHandler) Handle(ctx context.Context, c interface{}) error {
 		return fmt.Errorf("unable to update pending post: %s", err)
 	}
 
-	if err := h.commandBus.Send(ctx, &sting.PostCreated{Post: &sting.Post{
-		Id:            ksuid.New().String(),
-		ArtistId:      pendingPost.ArtistId(),
-		ContributorId: pendingPost.ContributorId().String(),
-		Content:       pendingPost.Content(),
-		Categories:    ksuid.ToStringArray(pendingPost.Categories()),
-		Characters:    ksuid.ToStringArray(pendingPost.Characters()),
-	}}); err != nil {
+	if err := h.pe.PostCreated(ctx, pendingPost); err != nil {
 		return nil
 	}
 

@@ -49,13 +49,3 @@ func UnmarshalMediaFromProtoArray(medi []*sting.Media) ([]*Media, error) {
 
 	return media, nil
 }
-
-func MarshalMediaToProtoArray(medi []*Media) []*sting.Media {
-	var media []*sting.Media
-
-	for _, med := range medi {
-		media = append(media, &sting.Media{Id: med.ID().String(), Title: med.Title(), Thumbnail: med.thumbnail})
-	}
-
-	return media
-}

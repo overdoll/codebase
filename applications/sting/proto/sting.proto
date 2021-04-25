@@ -56,7 +56,7 @@ message ReviewPost {
   map<string, string> characterRequests = 10;
 }
 
-message PostCompleted {
+message PostPublished {
   string id = 1;
 }
 
@@ -74,4 +74,8 @@ message CategoryCreated {
 
 message PostCreated {
   Post post = 1;
+}
+
+message PostCompleted {
+  string id = 1;
 }

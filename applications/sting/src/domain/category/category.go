@@ -49,13 +49,3 @@ func UnmarshalFromProtoArray(cats []*sting.Category) ([]*Category, error) {
 
 	return categories, nil
 }
-
-func MarshalToProtoArray(cats []*Category) []*sting.Category {
-	var categories []*sting.Category
-
-	for _, cat := range cats {
-		categories = append(categories, &sting.Category{Id: cat.ID().String(), Title: cat.Title(), Thumbnail: cat.thumbnail})
-	}
-
-	return categories
-}

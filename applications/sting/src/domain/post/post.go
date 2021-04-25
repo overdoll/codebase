@@ -102,37 +102,3 @@ func UnmarshalPostFromProto(post *sting.Post) (*Post, error) {
 
 	return NewPost(id, artistId, contributorId, post.Content, categoryIds, characterIds, time.Now()), nil
 }
-
-func UnmarshalPostFromProtoArray(post []*sting.Post) ([]*Post, error) {
-	var posts []*Post
-
-	for _, po := range post {
-
-		res, err := UnmarshalPostFromProto(po)
-
-		if err != nil {
-			return nil, err
-		}
-
-		posts = append(posts, res)
-	}
-
-	return posts, nil
-}
-
-func MarshalPostToProtoArray(post []*Post) []*sting.Post {
-	var posts []*sting.Post
-
-	for _, po := range post {
-		posts = append(posts, &sting.Post{
-			Id:            po.ID().String(),
-			ArtistId:      po.ArtistId().String(),
-			ContributorId: po.ContributorId().String(),
-			Content:       po.content,
-			Categories:    ksuid.ToStringArray(po.categories),
-			Characters:    ksuid.ToStringArray(po.characters),
-		})
-	}
-
-	return posts
-}

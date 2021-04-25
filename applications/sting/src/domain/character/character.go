@@ -65,20 +65,3 @@ func UnmarshalCharacterFromProtoArray(chars []*sting.Character) ([]*Character, e
 
 	return characters, nil
 }
-
-func MarshalCharacterToProtoArray(chars []*Character) []*sting.Character {
-	var characters []*sting.Character
-
-	for _, char := range chars {
-
-		m := char.Media()
-		
-		characters = append(characters, &sting.Character{Id: char.ID().String(), Name: char.Name(), Thumbnail: char.thumbnail, Media: &sting.Media{
-			Id:        m.ID().String(),
-			Title:     m.Title(),
-			Thumbnail: m.thumbnail,
-		}})
-	}
-
-	return characters
-}

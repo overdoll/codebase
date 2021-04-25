@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/ThreeDotsLabs/watermill/components/cqrs"
 	sting "overdoll/applications/sting/proto"
 	"overdoll/applications/sting/src/domain/category"
 	"overdoll/applications/sting/src/domain/character"
@@ -22,11 +21,11 @@ type NewPostHandler struct {
 
 	eva EvaService
 
-	eventBus *cqrs.EventBus
+	pe post.EventRepository
 }
 
-func NewNewPostHandler(pr post.Repository, chr character.Repository, ctr category.Repository, cr content.Repository, eva EvaService, eventBus *cqrs.EventBus) NewPostHandler {
-	return NewPostHandler{pr: pr, chr: chr, ctr: ctr, cr: cr, eva: eva, eventBus: eventBus}
+func NewNewPostHandler(pr post.Repository, chr character.Repository, ctr category.Repository, cr content.Repository, eva EvaService, pe post.EventRepository) NewPostHandler {
+	return NewPostHandler{pr: pr, chr: chr, ctr: ctr, cr: cr, eva: eva, pe: pe}
 }
 
 func (h NewPostHandler) HandlerName() string {
@@ -101,7 +100,7 @@ func (h NewPostHandler) Handle(ctx context.Context, c interface{}) error {
 
 	// If not in review ("publishing"), then we dispatch a job to publish the post
 	if !pendingPost.InReview() {
-		if err := h.eventBus.Publish(ctx, &sting.PostCompleted{Id: pendingPost.ID().String()}); err != nil {
+		if err := h.pe.PostCreated(ctx, pendingPost); err != nil {
 			return err
 		}
 	}
