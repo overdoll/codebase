@@ -5,8 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"overdoll/applications/sting/src/domain/artist"
-	"overdoll/libraries/search"
+	"overdoll/applications/sting/src/domain/post"
 )
 
 type ArtistDocument struct {
@@ -34,15 +33,7 @@ const ArtistIndex = `
 	}
 }`
 
-type ArtistIndexElasticSearchRepository struct {
-	store *search.Store
-}
-
-func NewArtistIndexElasticSearchRepository(store *search.Store) ArtistIndexElasticSearchRepository {
-	return ArtistIndexElasticSearchRepository{store: store}
-}
-
-func (r ArtistIndexElasticSearchRepository) BulkIndex(ctx context.Context, artists []*artist.Artist) error {
+func (r PostIndexElasticSearchRepository) BulkIndex(ctx context.Context, artists []*post.Artist) error {
 	err := r.store.CreateBulkIndex("artists")
 
 	if err != nil {
@@ -72,7 +63,7 @@ func (r ArtistIndexElasticSearchRepository) BulkIndex(ctx context.Context, artis
 	return nil
 }
 
-func (r ArtistIndexElasticSearchRepository) DeleteIndex(ctx context.Context) error {
+func (r PostIndexElasticSearchRepository) DeleteIndex(ctx context.Context) error {
 	err := r.store.DeleteIndex("artists")
 
 	if err != nil {

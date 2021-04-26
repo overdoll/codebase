@@ -14,18 +14,14 @@ import (
 
 type NewPostHandler struct {
 	pr  post.Repository
-	chr character.Repository
-	ctr category.Repository
-
 	cr content.Repository
-
 	eva EvaService
 
 	pe post.EventRepository
 }
 
-func NewNewPostHandler(pr post.Repository, chr character.Repository, ctr category.Repository, cr content.Repository, eva EvaService, pe post.EventRepository) NewPostHandler {
-	return NewPostHandler{pr: pr, chr: chr, ctr: ctr, cr: cr, eva: eva, pe: pe}
+func NewNewPostHandler(pr post.Repository, cr content.Repository, eva EvaService, pe post.EventRepository) NewPostHandler {
+	return NewPostHandler{pr: pr, cr: cr, eva: eva, pe: pe}
 }
 
 func (h NewPostHandler) HandlerName() string {
@@ -64,7 +60,8 @@ func (h NewPostHandler) Handle(ctx context.Context, c interface{}) error {
 		return fmt.Errorf("could not create pending post: %s", err)
 	}
 
-	err = pendingPost.ValidateCharactersAndCategories(ctx, h.chr, h.ctr)
+	// TODO: restructure so that this check is only done when the post is being created (createPendingPost func - will also check the DB to make sure categories + characters exist)
+	err = pr.CheckIfCharactersAndCategoriesExist(ctx, pendingPost)
 
 	if err != nil {
 		return err

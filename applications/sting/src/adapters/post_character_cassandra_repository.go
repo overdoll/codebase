@@ -6,9 +6,8 @@ import (
 	"strings"
 
 	"github.com/gocql/gocql"
-	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
-	"overdoll/applications/sting/src/domain/character"
+	"overdoll/applications/sting/src/domain/post"
 	"overdoll/libraries/ksuid"
 )
 
@@ -25,17 +24,9 @@ type Media struct {
 	Thumbnail string     `db:"thumbnail"`
 }
 
-type CharacterCassandraRepository struct {
-	session gocqlx.Session
-}
+func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars []ksuid.UUID) ([]*post.Character, error) {
 
-func NewCharacterCassandraRepository(session gocqlx.Session) CharacterCassandraRepository {
-	return CharacterCassandraRepository{session: session}
-}
-
-func (r CharacterCassandraRepository) GetCharactersById(ctx context.Context, chars []ksuid.UUID) ([]*character.Character, error) {
-
-	var characters []*character.Character
+	var characters []*post.Character
 
 	final := []string{}
 
@@ -89,7 +80,7 @@ func (r CharacterCassandraRepository) GetCharactersById(ctx context.Context, cha
 			continue
 		}
 
-		characters = append(characters, character.NewCharacter(
+		characters = append(characters, post.NewCharacter(
 			char.Id,
 			char.Name,
 			char.Thumbnail,
@@ -102,7 +93,7 @@ func (r CharacterCassandraRepository) GetCharactersById(ctx context.Context, cha
 	return characters, nil
 }
 
-func (r CharacterCassandraRepository) GetCharacters(ctx context.Context) ([]*character.Character, error) {
+func (r PostsCassandraRepository) GetCharacters(ctx context.Context) ([]*post.Character, error) {
 	var dbChars []Character
 
 	// Grab all of our characters
@@ -127,7 +118,7 @@ func (r CharacterCassandraRepository) GetCharacters(ctx context.Context) ([]*cha
 		return nil, fmt.Errorf("select() failed: %s", err)
 	}
 
-	var characters []*character.Character
+	var characters []*post.Character
 
 	// Now we can safely start creating our documents
 	for _, char := range dbChars {
@@ -141,7 +132,7 @@ func (r CharacterCassandraRepository) GetCharacters(ctx context.Context) ([]*cha
 			}
 		}
 
-		characters = append(characters, character.NewCharacter(
+		characters = append(characters, post.NewCharacter(
 			char.Id,
 			char.Name,
 			char.Thumbnail,
@@ -154,7 +145,7 @@ func (r CharacterCassandraRepository) GetCharacters(ctx context.Context) ([]*cha
 	return characters, nil
 }
 
-func (r CharacterCassandraRepository) GetMedias(ctx context.Context) ([]*character.Media, error) {
+func (r PostsCassandraRepository) GetMedias(ctx context.Context) ([]*post.Media, error) {
 	var dbMed []Media
 
 	qc := qb.Select("media").Columns("id", "title", "thumbnail").Query(r.session)
@@ -163,12 +154,12 @@ func (r CharacterCassandraRepository) GetMedias(ctx context.Context) ([]*charact
 		return nil, fmt.Errorf("select() failed: %s", err)
 	}
 
-	var medias []*character.Media
+	var medias []*post.Media
 
 	// Now we can safely start creating our documents
 	for _, media := range dbMed {
 
-		medias = append(medias, character.NewMedia(
+		medias = append(medias, post.NewMedia(
 			media.Id,
 			media.Title,
 			media.Thumbnail,
@@ -178,9 +169,9 @@ func (r CharacterCassandraRepository) GetMedias(ctx context.Context) ([]*charact
 	return medias, nil
 }
 
-func (r CharacterCassandraRepository) GetMediasById(ctx context.Context, medi []ksuid.UUID) ([]*character.Media, error) {
+func (r PostsCassandraRepository) GetMediasById(ctx context.Context, medi []ksuid.UUID) ([]*post.Media, error) {
 
-	var medias []*character.Media
+	var medias []*post.Media
 
 	final := []string{}
 
@@ -204,7 +195,7 @@ func (r CharacterCassandraRepository) GetMediasById(ctx context.Context, medi []
 	}
 
 	for _, med := range mediaModels {
-		medias = append(medias, character.NewMedia(
+		medias = append(medias, post.NewMedia(
 			med.Id,
 			med.Title,
 			med.Thumbnail,
@@ -214,7 +205,7 @@ func (r CharacterCassandraRepository) GetMediasById(ctx context.Context, medi []
 	return medias, nil
 }
 
-func (r CharacterCassandraRepository) CreateCharacters(ctx context.Context, characters []*character.Character) error {
+func (r PostsCassandraRepository) CreateCharacters(ctx context.Context, characters []*post.Character) error {
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
@@ -226,6 +217,7 @@ func (r CharacterCassandraRepository) CreateCharacters(ctx context.Context, char
 			qb.Insert("characters").
 				LitColumn("id", chars.ID().String()).
 				LitColumn("name", chars.Name()).
+				LitColumn("thumbnail", chars.RawThumbnail()).
 				LitColumn("media_id", media.ID().String()).
 				ToCql(),
 		)
@@ -240,12 +232,16 @@ func (r CharacterCassandraRepository) CreateCharacters(ctx context.Context, char
 	return nil
 }
 
-func (r CharacterCassandraRepository) CreateMedias(ctx context.Context, medias []*character.Media) error {
+func (r PostsCassandraRepository) CreateMedias(ctx context.Context, medias []*post.Media) error {
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
 	for _, med := range medias {
-		batch.Query(qb.Insert("media").LitColumn("id", med.ID().String()).LitColumn("title", med.Title()).ToCql())
+		batch.Query(qb.Insert("media").
+			LitColumn("id", med.ID().String()).
+			LitColumn("title", med.Title()).
+			LitColumn("thumbnail", med.RawThumbnail()).
+			ToCql())
 	}
 
 	err := r.session.ExecuteBatch(batch)

@@ -6,8 +6,6 @@ import (
 	"fmt"
 	"time"
 
-	"overdoll/applications/sting/src/domain/category"
-	"overdoll/applications/sting/src/domain/character"
 	"overdoll/libraries/ksuid"
 )
 
@@ -40,8 +38,8 @@ type PostPending struct {
 	id    ksuid.UUID
 	state PostPendingState
 
-	characters []*character.Character
-	categories []*category.Category
+	characters []*Character
+	categories []*Category
 
 	contributor *User
 
@@ -55,7 +53,7 @@ type PostPending struct {
 	publishedPostId    string
 }
 
-func NewPendingPost(id ksuid.UUID, artistId string, artistUsername string, contributor *User, content []string, characters []*character.Character, categories []*category.Category, postedAt time.Time) (*PostPending, error) {
+func NewPendingPost(id ksuid.UUID, artistId string, artistUsername string, contributor *User, content []string, characters []*Character, categories []*Category, postedAt time.Time) (*PostPending, error) {
 	return &PostPending{
 		id:             id,
 		state:          Publishing,
@@ -71,16 +69,16 @@ func NewPendingPost(id ksuid.UUID, artistId string, artistUsername string, contr
 
 func UnmarshalPendingPostFromDatabase(id ksuid.UUID, state string, artistId string, artistUsername string, contributorId ksuid.UUID, content []string, characters []ksuid.UUID, categories []ksuid.UUID, charactersRequests map[string]string, categoryRequests []string, mediaRequests []string, postedAt time.Time, publishedPostId string) *PostPending {
 
-	var chars []*character.Character
+	var chars []*Character
 
 	for _, char := range characters {
-		chars = append(chars, character.NewCharacter(char, "", "", ksuid.New(), "", ""))
+		chars = append(chars, NewCharacter(char, "", "", ksuid.New(), "", ""))
 	}
 
-	var cats []*category.Category
+	var cats []*Category
 
 	for _, char := range categories {
-		cats = append(cats, category.NewCategory(char, "", ""))
+		cats = append(cats, NewCategory(char, "", ""))
 	}
 
 	postPending := &PostPending{
@@ -101,7 +99,7 @@ func UnmarshalPendingPostFromDatabase(id ksuid.UUID, state string, artistId stri
 	return postPending
 }
 
-func (p *PostPending) ValidateCharactersAndCategories(ctx context.Context, cRepo character.Repository, catRepo category.Repository) error {
+func (p *PostPending) ValidateCharactersAndCategories(ctx context.Context, cRepo Repository, catRepo Repository) error {
 	characterInstances, err := cRepo.GetCharactersById(ctx, p.CharacterIds())
 
 	if err != nil {
@@ -155,7 +153,7 @@ func (p *PostPending) Content() []string {
 	return p.content
 }
 
-func (p *PostPending) Categories() []*category.Category {
+func (p *PostPending) Categories() []*Category {
 	return p.categories
 }
 
@@ -181,7 +179,7 @@ func (p *PostPending) CharacterIds() []ksuid.UUID {
 	return ids
 }
 
-func (p *PostPending) Characters() []*character.Character {
+func (p *PostPending) Characters() []*Character {
 	return p.characters
 }
 
@@ -242,13 +240,13 @@ func (p *PostPending) MediaRequests() []MediaRequest {
 	return p.mediaRequests
 }
 
-func (p *PostPending) ConsumeCustomCategories() []*category.Category {
+func (p *PostPending) ConsumeCustomCategories() []*Category {
 
-	var categories []*category.Category
+	var categories []*Category
 
 	for _, cat := range p.categoriesRequests {
 
-		newCategory := category.NewCategory(ksuid.New(), cat.Title, "")
+		newCategory := NewCategory(ksuid.New(), cat.Title, "")
 
 		p.categories = append(p.categories, newCategory)
 		categories = append(categories, newCategory)
@@ -257,10 +255,10 @@ func (p *PostPending) ConsumeCustomCategories() []*category.Category {
 	return categories
 }
 
-func (p *PostPending) ConsumeCustomCharacters() ([]*character.Character, []*character.Media) {
+func (p *PostPending) ConsumeCustomCharacters() ([]*Character, []*Media) {
 
-	var characters []*character.Character
-	var medias []*character.Media
+	var characters []*Character
+	var medias []*Media
 
 	for _, char := range p.charactersRequests {
 
@@ -283,10 +281,10 @@ func (p *PostPending) ConsumeCustomCharacters() ([]*character.Character, []*char
 			id, _ = ksuid.Parse(char.Media)
 		} else {
 			// otherwise, we create a new media
-			medias = append(medias, character.NewMedia(id, char.Media, ""))
+			medias = append(medias, NewMedia(id, char.Media, ""))
 		}
 
-		newCharacter := character.NewCharacter(ksuid.New(), char.Name, "", id, "", "")
+		newCharacter := NewCharacter(ksuid.New(), char.Name, "", id, "", "")
 
 		p.characters = append(p.characters, newCharacter)
 		characters = append(characters, newCharacter)

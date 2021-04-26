@@ -4,8 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"overdoll/applications/sting/src/domain/category"
-	"overdoll/libraries/search"
+	"overdoll/applications/sting/src/domain/post"
 )
 
 type CategoryDocument struct {
@@ -33,15 +32,7 @@ const CategoryIndex = `
 	}
 }`
 
-type CategoryIndexElasticSearchRepository struct {
-	store *search.Store
-}
-
-func NewCategoryIndexElasticSearchRepository(store *search.Store) CategoryIndexElasticSearchRepository {
-	return CategoryIndexElasticSearchRepository{store: store}
-}
-
-func MarshalCategoryToDocument(cat *category.Category) *CategoryDocument {
+func MarshalCategoryToDocument(cat *post.Category) *CategoryDocument {
 	return &CategoryDocument{
 		Id:        cat.ID().String(),
 		Thumbnail: cat.Thumbnail(),
@@ -49,7 +40,7 @@ func MarshalCategoryToDocument(cat *category.Category) *CategoryDocument {
 	}
 }
 
-func (r CategoryIndexElasticSearchRepository) BulkIndex(ctx context.Context, categories []*category.Category) error {
+func (r PostIndexElasticSearchRepository) BulkIndexCategories(ctx context.Context, categories []*post.Category) error {
 
 	err := r.store.CreateBulkIndex("categories")
 
@@ -76,7 +67,7 @@ func (r CategoryIndexElasticSearchRepository) BulkIndex(ctx context.Context, cat
 	return nil
 }
 
-func (r CategoryIndexElasticSearchRepository) DeleteIndex(ctx context.Context) error {
+func (r PostIndexElasticSearchRepository) DeleteCategoryIndex(ctx context.Context) error {
 	err := r.store.DeleteIndex("categories")
 
 	if err != nil {

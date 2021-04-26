@@ -80,3 +80,55 @@ func (r PostEventRepository) PostPendingUpdated(ctx context.Context, pendingPost
 
 	return nil
 }
+
+func (r PostEventRepository) CategoriesCreated(ctx context.Context, cats []*post.Category) error {
+
+	var categories []*sting.Category
+
+	for _, cat := range cats {
+		categories = append(categories, &sting.Category{Id: cat.ID().String(), Title: cat.Title(), Thumbnail: cat.RawThumbnail()})
+	}
+
+	if err := r.commandBus.Send(ctx, &sting.CategoryCreated{Categories: categories}); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r PostEventRepository) CharactersCreated(ctx context.Context, chars []*post.Character) error {
+
+	var characters []*sting.Character
+
+	for _, char := range chars {
+
+		m := char.Media()
+
+		characters = append(characters, &sting.Character{Id: char.ID().String(), Name: char.Name(), Thumbnail: char.Thumbnail(), Media: &sting.Media{
+			Id:        m.ID().String(),
+			Title:     m.Title(),
+			Thumbnail: m.RawThumbnail(),
+		}})
+	}
+
+	if err := r.commandBus.Send(ctx, &sting.CharacterCreated{Characters: characters}); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r PostEventRepository) MediaCreated(ctx context.Context, medi []*post.Media) error {
+
+	var media []*sting.Media
+
+	for _, med := range medi {
+		media = append(media, &sting.Media{Id: med.ID().String(), Title: med.Title(), Thumbnail: med.RawThumbnail()})
+	}
+
+	if err := r.commandBus.Send(ctx, &sting.MediaCreated{Media: media}); err != nil {
+		return err
+	}
+
+	return nil
+}

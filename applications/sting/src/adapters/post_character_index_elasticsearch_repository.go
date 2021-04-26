@@ -4,8 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"overdoll/applications/sting/src/domain/character"
-	"overdoll/libraries/search"
+	"overdoll/applications/sting/src/domain/post"
 )
 
 type MediaDocument struct {
@@ -74,15 +73,7 @@ const MediaIndex = `
 	}
 }`
 
-type CharacterIndexElasticSearchRepository struct {
-	store *search.Store
-}
-
-func NewCharacterIndexElasticSearchRepository(store *search.Store) CharacterIndexElasticSearchRepository {
-	return CharacterIndexElasticSearchRepository{store: store}
-}
-
-func MarshalCharacterToDocument(char *character.Character) *CharacterDocument {
+func MarshalCharacterToDocument(char *post.Character) *CharacterDocument {
 	media := char.Media()
 
 	return &CharacterDocument{
@@ -97,7 +88,7 @@ func MarshalCharacterToDocument(char *character.Character) *CharacterDocument {
 	}
 }
 
-func (r CharacterIndexElasticSearchRepository) BulkIndexCharacters(ctx context.Context, characters []*character.Character) error {
+func (r PostIndexElasticSearchRepository) BulkIndexCharacters(ctx context.Context, characters []*post.Character) error {
 
 	err := r.store.CreateBulkIndex("characters")
 
@@ -124,7 +115,7 @@ func (r CharacterIndexElasticSearchRepository) BulkIndexCharacters(ctx context.C
 	return nil
 }
 
-func (r CharacterIndexElasticSearchRepository) BulkIndexMedia(ctx context.Context, media []*character.Media) error {
+func (r PostIndexElasticSearchRepository) BulkIndexMedia(ctx context.Context, media []*post.Media) error {
 
 	err := r.store.CreateBulkIndex("media")
 
@@ -155,7 +146,7 @@ func (r CharacterIndexElasticSearchRepository) BulkIndexMedia(ctx context.Contex
 	return nil
 }
 
-func (r CharacterIndexElasticSearchRepository) DeleteIndexCharacters(ctx context.Context) error {
+func (r PostIndexElasticSearchRepository) DeleteIndexCharacters(ctx context.Context) error {
 	err := r.store.DeleteIndex("characters")
 
 	if err != nil {
@@ -171,7 +162,7 @@ func (r CharacterIndexElasticSearchRepository) DeleteIndexCharacters(ctx context
 	return nil
 }
 
-func (r CharacterIndexElasticSearchRepository) DeleteIndexMedia(ctx context.Context) error {
+func (r PostIndexElasticSearchRepository) DeleteIndexMedia(ctx context.Context) error {
 	err := r.store.DeleteIndex("media")
 
 	if err != nil {

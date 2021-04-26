@@ -4,9 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
-	"overdoll/applications/sting/src/domain/artist"
+	"overdoll/applications/sting/src/domain/post"
 	"overdoll/libraries/ksuid"
 )
 
@@ -16,15 +15,7 @@ type Artist struct {
 	Avatar   string     `db:"user_avatar"`
 }
 
-type ArtistCassandraRepository struct {
-	session gocqlx.Session
-}
-
-func NewArtistCassandraRepository(session gocqlx.Session) ArtistCassandraRepository {
-	return ArtistCassandraRepository{session: session}
-}
-
-func (r ArtistCassandraRepository) GetArtists(ctx context.Context) ([]*artist.Artist, error) {
+func (r PostsCassandraRepository) GetArtists(ctx context.Context) ([]*post.Artist, error) {
 
 	var dbArtists []Artist
 
@@ -34,10 +25,10 @@ func (r ArtistCassandraRepository) GetArtists(ctx context.Context) ([]*artist.Ar
 		return nil, fmt.Errorf("select() failed: %s", err)
 	}
 
-	var artists []*artist.Artist
+	var artists []*post.Artist
 
 	for _, dbArt := range dbArtists {
-		artists = append(artists, artist.UnmarshalArtistFromDatabase(dbArt.Id, dbArt.Username, dbArt.Avatar))
+		artists = append(artists, post.UnmarshalArtistFromDatabase(dbArt.Id, dbArt.Username, dbArt.Avatar))
 	}
 
 	return artists, nil

@@ -5,14 +5,15 @@ import (
 
 	sting "overdoll/applications/sting/proto"
 	"overdoll/applications/sting/src/domain/character"
+	"overdoll/applications/sting/src/domain/post"
 )
 
 type CreateCharactersHandler struct {
-	cr  character.Repository
-	cir character.IndexRepository
+	pr post.Repository
+	pi post.IndexRepository
 }
 
-func NewCreateCharacterHandler(cr character.Repository, cir character.IndexRepository) CreateCharactersHandler {
+func NewCreateCharacterHandler(pr post.Repository, pi character.IndexRepository) CreateCharactersHandler {
 	return CreateCharactersHandler{cr: cr, cir: cir}
 }
 

@@ -59,7 +59,7 @@ func (h ReviewPostHandler) Handle(ctx context.Context, c interface{}) error {
 		return fmt.Errorf("error grabbing pending post %s", err)
 	}
 
-	pendingPost, err := post.NewPendingPost(idParse, cmd.ArtistId, cmd.ArtistUsername, oldPendingPost.ContributorId(), oldPendingPost.Content(), characterUuids, categoryUuids)
+	pendingPost, err := post.NewPendingPost(idParse, cmd.ArtistId, cmd.ArtistUsername, oldPendingPost.Contributor(), oldPendingPost.Content(), characterUuids, categoryUuids, oldPendingPost.PostedAt())
 
 	if err != nil {
 		return fmt.Errorf("could not create pending post: %s", err)

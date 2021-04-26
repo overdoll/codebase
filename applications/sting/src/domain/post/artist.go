@@ -1,4 +1,4 @@
-package artist
+package post
 
 import (
 	"os"

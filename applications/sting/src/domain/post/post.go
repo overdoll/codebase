@@ -3,8 +3,6 @@ package post
 import (
 	"time"
 
-	"overdoll/applications/sting/src/domain/category"
-	"overdoll/applications/sting/src/domain/character"
 	"overdoll/libraries/ksuid"
 )
 
@@ -12,14 +10,14 @@ type Post struct {
 	id         ksuid.UUID
 	content    []string
 	postedAt   time.Time
-	characters []*character.Character
-	categories []*category.Category
+	characters []*Character
+	categories []*Category
 
 	artist      *User
 	contributor *User
 }
 
-func NewPost(id ksuid.UUID, artist *User, contributor *User, content []string, categories []*category.Category, characters []*character.Character) *Post {
+func NewPost(id ksuid.UUID, artist *User, contributor *User, content []string, categories []*Category, characters []*Character) *Post {
 	return &Post{
 		id:          id,
 		artist:      artist,
@@ -52,11 +50,11 @@ func (m *Post) Content() []string {
 	return m.content
 }
 
-func (m *Post) Categories() []*category.Category {
+func (m *Post) Categories() []*Category {
 	return m.categories
 }
 
-func (m *Post) Characters() []*character.Character {
+func (m *Post) Characters() []*Character {
 	return m.characters
 }
 

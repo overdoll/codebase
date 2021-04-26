@@ -69,6 +69,7 @@ type PostIndexElasticSearchRepository struct {
 func NewPostIndexElasticSearchRepository(store *search.Store) PostIndexElasticSearchRepository {
 	return PostIndexElasticSearchRepository{store: store}
 }
+
 func (r PostIndexElasticSearchRepository) BulkIndexPendingPosts(ctx context.Context, pendingPosts []*post.PostPending) error {
 	err := r.store.CreateBulkIndex("pending_posts")
 

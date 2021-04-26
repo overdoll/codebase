@@ -6,9 +6,8 @@ import (
 	"strings"
 
 	"github.com/gocql/gocql"
-	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
-	"overdoll/applications/sting/src/domain/category"
+	"overdoll/applications/sting/src/domain/post"
 	"overdoll/libraries/ksuid"
 )
 
@@ -18,17 +17,9 @@ type Category struct {
 	Thumbnail string     `db:"thumbnail"`
 }
 
-type CategoryCassandraRepository struct {
-	session gocqlx.Session
-}
+func (r PostsCassandraRepository) GetCategoriesById(ctx context.Context, cats []ksuid.UUID) ([]*post.Category, error) {
 
-func NewCategoryCassandraRepository(session gocqlx.Session) CategoryCassandraRepository {
-	return CategoryCassandraRepository{session: session}
-}
-
-func (r CategoryCassandraRepository) GetCategoriesById(ctx context.Context, cats []ksuid.UUID) ([]*category.Category, error) {
-
-	var categories []*category.Category
+	var categories []*post.Category
 
 	final := []string{}
 
@@ -51,13 +42,13 @@ func (r CategoryCassandraRepository) GetCategoriesById(ctx context.Context, cats
 	}
 
 	for _, cat := range categoriesModels {
-		categories = append(categories, category.NewCategory(cat.Id, cat.Title, cat.Thumbnail))
+		categories = append(categories, post.NewCategory(cat.Id, cat.Title, cat.Thumbnail))
 	}
 
 	return categories, nil
 }
 
-func (r CategoryCassandraRepository) GetCategories(ctx context.Context) ([]*category.Category, error) {
+func (r PostsCassandraRepository) GetCategories(ctx context.Context) ([]*post.Category, error) {
 
 	var dbCategory []Category
 
@@ -67,16 +58,16 @@ func (r CategoryCassandraRepository) GetCategories(ctx context.Context) ([]*cate
 		return nil, fmt.Errorf("select() failed: %s", err)
 	}
 
-	var categories []*category.Category
+	var categories []*post.Category
 
 	for _, dbCat := range dbCategory {
-		categories = append(categories, category.NewCategory(dbCat.Id, dbCat.Title, dbCat.Thumbnail))
+		categories = append(categories, post.NewCategory(dbCat.Id, dbCat.Title, dbCat.Thumbnail))
 	}
 
 	return categories, nil
 }
 
-func (r CategoryCassandraRepository) CreateCategories(ctx context.Context, categories []*category.Category) error {
+func (r PostsCassandraRepository) CreateCategories(ctx context.Context, categories []*post.Category) error {
 
 	// Begin BATCH operation:
 	// Will insert categories, characters, media
@@ -87,7 +78,6 @@ func (r CategoryCassandraRepository) CreateCategories(ctx context.Context, categ
 
 		// Create new categories query
 		batch.Query(qb.Insert("categories").LitColumn("id", cat.ID().String()).LitColumn("title", cat.Title()).ToCql())
-
 	}
 
 	err := r.session.ExecuteBatch(batch)
