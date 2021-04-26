@@ -1,11 +1,7 @@
 package post
 
-import (
-	"overdoll/libraries/ksuid"
-)
-
 type User struct {
-	Id       ksuid.UUID
+	Id       string
 	Username string
 	Avatar   string
 	Roles    []string

@@ -19,6 +19,7 @@ const (
 
 var (
 	ErrNotPublishing = errors.New("post must be publishing")
+	ErrInvalidId     = errors.New("passed id is not a valid ID")
 )
 
 type CharacterRequest struct {
@@ -35,7 +36,7 @@ type MediaRequest struct {
 }
 
 type PostPending struct {
-	id    ksuid.UUID
+	id    string
 	state PostPendingState
 
 	characters []*Character
@@ -53,7 +54,17 @@ type PostPending struct {
 	publishedPostId    string
 }
 
-func NewPendingPost(id ksuid.UUID, artistId string, artistUsername string, contributor *User, content []string, characters []*Character, categories []*Category, postedAt time.Time) (*PostPending, error) {
+func NewPendingPost(id string, artistId string, artistUsername string, contributor *User, content []string, characters []*Character, categories []*Category, postedAt time.Time) (*PostPending, error) {
+
+	if id != "" {
+		_, err := ksuid.Parse(id)
+
+		if err != nil {
+			return nil, ErrInvalidId
+		}
+
+	}
+
 	return &PostPending{
 		id:             id,
 		state:          Publishing,
@@ -67,12 +78,12 @@ func NewPendingPost(id ksuid.UUID, artistId string, artistUsername string, contr
 	}, nil
 }
 
-func UnmarshalPendingPostFromDatabase(id ksuid.UUID, state string, artistId string, artistUsername string, contributorId ksuid.UUID, content []string, characters []ksuid.UUID, categories []ksuid.UUID, charactersRequests map[string]string, categoryRequests []string, mediaRequests []string, postedAt time.Time, publishedPostId string) *PostPending {
+func UnmarshalPendingPostFromDatabase(id string, state string, artistId string, artistUsername string, contributorId string, content []string, characters []string, categories []string, charactersRequests map[string]string, categoryRequests []string, mediaRequests []string, postedAt time.Time, publishedPostId string) *PostPending {
 
 	var chars []*Character
 
 	for _, char := range characters {
-		chars = append(chars, NewCharacter(char, "", "", ksuid.New(), "", ""))
+		chars = append(chars, NewCharacter(char, "", "", ksuid.New().String(), "", ""))
 	}
 
 	var cats []*Category
@@ -125,7 +136,7 @@ func (p *PostPending) ValidateCharactersAndCategories(ctx context.Context, cRepo
 	return nil
 }
 
-func (p *PostPending) ID() ksuid.UUID {
+func (p *PostPending) ID() string {
 	return p.id
 }
 
@@ -157,9 +168,9 @@ func (p *PostPending) Categories() []*Category {
 	return p.categories
 }
 
-func (p *PostPending) CategoryIds() []ksuid.UUID {
+func (p *PostPending) CategoryIds() []string {
 
-	var ids []ksuid.UUID
+	var ids []string
 
 	for _, cats := range p.categories {
 		ids = append(ids, cats.ID())
@@ -168,9 +179,9 @@ func (p *PostPending) CategoryIds() []ksuid.UUID {
 	return ids
 }
 
-func (p *PostPending) CharacterIds() []ksuid.UUID {
+func (p *PostPending) CharacterIds() []string {
 
-	var ids []ksuid.UUID
+	var ids []string
 
 	for _, chars := range p.characters {
 		ids = append(ids, chars.ID())
@@ -246,7 +257,7 @@ func (p *PostPending) ConsumeCustomCategories() []*Category {
 
 	for _, cat := range p.categoriesRequests {
 
-		newCategory := NewCategory(ksuid.New(), cat.Title, "")
+		newCategory := NewCategory(ksuid.New().String(), cat.Title, "")
 
 		p.categories = append(p.categories, newCategory)
 		categories = append(categories, newCategory)
@@ -263,28 +274,26 @@ func (p *PostPending) ConsumeCustomCharacters() ([]*Character, []*Media) {
 	for _, char := range p.charactersRequests {
 
 		var exists = true
-		var id ksuid.UUID
+		var id string
 
 		// Check if the requested media is a media in our list
 		for _, requestedMedia := range p.mediaRequests {
 
 			// If the media is on our list, then we create a new media, and append to array of events
 			if char.Media == requestedMedia.Title {
-				id = ksuid.New()
+				id = ksuid.New().String()
 				exists = false
 				break
 			}
 		}
 
 		// If a media exists (not in media requests), we use the string as the ID
-		if exists {
-			id, _ = ksuid.Parse(char.Media)
-		} else {
+		if !exists {
 			// otherwise, we create a new media
 			medias = append(medias, NewMedia(id, char.Media, ""))
 		}
 
-		newCharacter := NewCharacter(ksuid.New(), char.Name, "", id, "", "")
+		newCharacter := NewCharacter(ksuid.New().String(), char.Name, "", id, "", "")
 
 		p.characters = append(p.characters, newCharacter)
 		characters = append(characters, newCharacter)

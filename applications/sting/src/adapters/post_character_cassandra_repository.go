@@ -8,30 +8,29 @@ import (
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"overdoll/applications/sting/src/domain/post"
-	"overdoll/libraries/ksuid"
 )
 
 type Character struct {
-	Id        ksuid.UUID `db:"id"`
-	Name      string     `db:"name"`
-	Thumbnail string     `db:"thumbnail"`
-	MediaId   ksuid.UUID `db:"media_id"`
+	Id        string `db:"id"`
+	Name      string `db:"name"`
+	Thumbnail string `db:"thumbnail"`
+	MediaId   string `db:"media_id"`
 }
 
 type Media struct {
-	Id        ksuid.UUID `db:"id"`
-	Title     string     `db:"title"`
-	Thumbnail string     `db:"thumbnail"`
+	Id        string `db:"id"`
+	Title     string `db:"title"`
+	Thumbnail string `db:"thumbnail"`
 }
 
-func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars []ksuid.UUID) ([]*post.Character, error) {
+func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars []string) ([]*post.Character, error) {
 
 	var characters []*post.Character
 
 	final := []string{}
 
 	for _, str := range chars {
-		final = append(final, `'`+str.String()+`'`)
+		final = append(final, `'`+str+`'`)
 	}
 
 	// if none then we get out or else the query will fail
@@ -52,7 +51,7 @@ func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars [
 	var mediaIds []string
 
 	for _, cat := range characterModels {
-		mediaIds = append(mediaIds, cat.MediaId.String())
+		mediaIds = append(mediaIds, cat.MediaId)
 	}
 
 	queryMedia := qb.Select("media").
@@ -169,14 +168,14 @@ func (r PostsCassandraRepository) GetMedias(ctx context.Context) ([]*post.Media,
 	return medias, nil
 }
 
-func (r PostsCassandraRepository) GetMediasById(ctx context.Context, medi []ksuid.UUID) ([]*post.Media, error) {
+func (r PostsCassandraRepository) GetMediasById(ctx context.Context, medi []string) ([]*post.Media, error) {
 
 	var medias []*post.Media
 
 	final := []string{}
 
 	for _, str := range medi {
-		final = append(final, `'`+str.String()+`'`)
+		final = append(final, `'`+str+`'`)
 	}
 
 	// if none then we get out or else the query will fail
@@ -215,10 +214,10 @@ func (r PostsCassandraRepository) CreateCharacters(ctx context.Context, characte
 
 		batch.Query(
 			qb.Insert("characters").
-				LitColumn("id", chars.ID().String()).
+				LitColumn("id", chars.ID()).
 				LitColumn("name", chars.Name()).
 				LitColumn("thumbnail", chars.RawThumbnail()).
-				LitColumn("media_id", media.ID().String()).
+				LitColumn("media_id", media.ID()).
 				ToCql(),
 		)
 	}
@@ -238,7 +237,7 @@ func (r PostsCassandraRepository) CreateMedias(ctx context.Context, medias []*po
 
 	for _, med := range medias {
 		batch.Query(qb.Insert("media").
-			LitColumn("id", med.ID().String()).
+			LitColumn("id", med.ID()).
 			LitColumn("title", med.Title()).
 			LitColumn("thumbnail", med.RawThumbnail()).
 			ToCql())

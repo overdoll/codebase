@@ -4,9 +4,8 @@ import (
 	"context"
 
 	sting "overdoll/applications/sting/proto"
-	"overdoll/applications/sting/src/domain"
+	"overdoll/applications/sting/src/app"
 	"overdoll/applications/sting/src/domain/post"
-	"overdoll/libraries/ksuid"
 )
 
 type CreatePostHandler struct {
@@ -14,7 +13,7 @@ type CreatePostHandler struct {
 	pi post.IndexRepository
 
 	pir post.IndexRepository
-	eva domain.EvaService
+	eva app.EvaService
 }
 
 func NewCreatePostHandler(pr post.Repository, pir post.IndexRepository, eva EvaService) CreatePostHandler {
@@ -33,55 +32,26 @@ func (h CreatePostHandler) Handle(ctx context.Context, c interface{}) error {
 	cmd := c.(*sting.PostCreated).Post
 
 	// TODO: capture all categories, characters & media from DB and insert them
-	id, err := ksuid.Parse(cmd.Id)
+
+	characters, err := h.pr.GetCharactersById(ctx, cmd.Characters)
 
 	if err != nil {
 		return err
 	}
 
-	artistId, err := ksuid.Parse(cmd.ArtistId)
+	categories, err := h.pr.GetCategoriesById(ctx, cmd.Categories)
 
 	if err != nil {
 		return err
 	}
 
-	contributorId, err := ksuid.Parse(cmd.ContributorId)
+	artist, err := h.eva.GetUser(ctx, cmd.ArtistId)
 
 	if err != nil {
 		return err
 	}
 
-	categoryIds, err := ksuid.ToUUIDArray(cmd.Categories)
-
-	if err != nil {
-		return err
-	}
-
-	characterIds, err := ksuid.ToUUIDArray(cmd.Characters)
-
-	if err != nil {
-		return err
-	}
-
-	characters, err := h.pr.GetCharactersById(ctx, characterIds)
-
-	if err != nil {
-		return err
-	}
-
-	categories, err := h.pr.GetCategoriesById(ctx, categoryIds)
-
-	if err != nil {
-		return err
-	}
-
-	artist, err := h.eva.GetUser(ctx, artistId)
-
-	if err != nil {
-		return err
-	}
-
-	contributor, err := h.eva.GetUser(ctx, contributorId)
+	contributor, err := h.eva.GetUser(ctx, cmd.ContributorId)
 
 	if err != nil {
 		return err

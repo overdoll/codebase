@@ -9,28 +9,27 @@ import (
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"overdoll/applications/sting/src/domain/post"
-	"overdoll/libraries/ksuid"
 )
 
 type Post struct {
-	Id            ksuid.UUID   `db:"id"`
-	ArtistId      ksuid.UUID   `db:"artist_id"`
-	ContributorId ksuid.UUID   `db:"contributor_id"`
-	Content       []string     `db:"content"`
-	Categories    []ksuid.UUID `db:"categories"`
-	Characters    []ksuid.UUID `db:"characters"`
-	PostedAt      time.Time    `db:"posted_at"`
+	Id            string    `db:"id"`
+	ArtistId      string    `db:"artist_id"`
+	ContributorId string    `db:"contributor_id"`
+	Content       []string  `db:"content"`
+	Categories    []string  `db:"categories"`
+	Characters    []string  `db:"characters"`
+	PostedAt      time.Time `db:"posted_at"`
 }
 
 type PostPending struct {
-	Id                 ksuid.UUID        `db:"id"`
+	Id                 string            `db:"id"`
 	State              string            `db:"state"`
 	ArtistId           string            `db:"artist_id"`
 	ArtistUsername     string            `db:"artist_username"`
-	ContributorId      ksuid.UUID        `db:"contributor_id"`
+	ContributorId      string            `db:"contributor_id"`
 	Content            []string          `db:"content"`
-	Categories         []ksuid.UUID      `db:"categories"`
-	Characters         []ksuid.UUID      `db:"characters"`
+	Categories         []string          `db:"categories"`
+	Characters         []string          `db:"characters"`
 	CharactersRequests map[string]string `db:"characters_requests"`
 	CategoriesRequests []string          `db:"categories_requests"`
 	MediaRequests      []string          `db:"media_requests"`
@@ -85,13 +84,13 @@ func marshalPendingPostToDatabase(pending *post.PostPending) *PostPending {
 
 func marshalPostToDatabase(post *post.Post) *Post {
 
-	var categoryIds []ksuid.UUID
+	var categoryIds []string
 
 	for _, cat := range post.Categories() {
 		categoryIds = append(categoryIds, cat.ID())
 	}
 
-	var characterIds []ksuid.UUID
+	var characterIds []string
 
 	for _, char := range post.Characters() {
 		characterIds = append(characterIds, char.ID())
@@ -161,10 +160,10 @@ func (r PostsCassandraRepository) CreatePost(ctx context.Context, pending *post.
 	return nil
 }
 
-func (r PostsCassandraRepository) GetPendingPost(ctx context.Context, id ksuid.UUID) (*post.PostPending, error) {
+func (r PostsCassandraRepository) GetPendingPost(ctx context.Context, id string) (*post.PostPending, error) {
 
 	postPendingQuery := qb.Select("post_pending").
-		Where(qb.EqLit("id", id.String())).
+		Where(qb.EqLit("id", id)).
 		Query(r.session)
 
 	var postPending PostPending
@@ -172,6 +171,8 @@ func (r PostsCassandraRepository) GetPendingPost(ctx context.Context, id ksuid.U
 	if err := postPendingQuery.Get(&postPending); err != nil {
 		return nil, err
 	}
+
+	// TODO: parallel query to grab all content, categories, characters
 
 	return post.UnmarshalPendingPostFromDatabase(
 		postPending.Id,
@@ -190,7 +191,19 @@ func (r PostsCassandraRepository) GetPendingPost(ctx context.Context, id ksuid.U
 	), nil
 }
 
-func (r PostsCassandraRepository) UpdatePendingPost(ctx context.Context, pending *post.PostPending) error {
+func (r PostsCassandraRepository) UpdatePendingPost(ctx context.Context, id string, updateFn func(pending *post.PostPending) (*post.PostPending, error)) (*post.PostPending, error) {
+
+	currentPost, err := r.GetPendingPost(ctx, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	pst, err := updateFn(currentPost)
+
+	if err != nil {
+		return nil, err
+	}
 
 	// Update our post to reflect the new state - in publishing
 	updatePost := qb.Update("post_pending").
@@ -200,13 +213,13 @@ func (r PostsCassandraRepository) UpdatePendingPost(ctx context.Context, pending
 		// Update must be replicated everywhere or else we risk that the PublishPost method isn't in sync with the
 		// new settings we set up here
 		Consistency(gocql.All).
-		BindStruct(marshalPendingPostToDatabase(pending))
+		BindStruct(marshalPendingPostToDatabase(pst))
 
 	if err := updatePost.ExecRelease(); err != nil {
-		return fmt.Errorf("update() failed: '%s", err)
+		return nil, fmt.Errorf("update() failed: '%s", err)
 	}
 
-	return nil
+	return nil, nil
 }
 
 func (r PostsCassandraRepository) CheckIfCharactersAndCategoriesExist(ctx context.Context, post *post.PostPending) error {

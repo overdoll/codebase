@@ -29,25 +29,7 @@ func (h ReviewPostHandler) NewCommand() interface{} {
 func (h ReviewPostHandler) Handle(ctx context.Context, c interface{}) error {
 	cmd := c.(*sting.ReviewPost).Post
 
-	characterUuids, err := ksuid.ToUUIDArray(cmd.Characters)
-
-	if err != nil {
-		return fmt.Errorf("uuids not valid: %s", cmd.Characters)
-	}
-
-	categoryUuids, err := ksuid.ToUUIDArray(cmd.Categories)
-
-	if err != nil {
-		return fmt.Errorf("uuids not valid: %s", cmd.Categories)
-	}
-
-	idParse, err := ksuid.Parse(cmd.Id)
-
-	if err != nil {
-		return fmt.Errorf("uuid not valid: %s", cmd.Id)
-	}
-
-	oldPendingPost, err := h.pr.GetPendingPost(ctx, idParse)
+	oldPendingPost, err := h.pr.GetPendingPost(ctx, cmd.Id)
 
 	if err != nil {
 		return fmt.Errorf("error grabbing pending post %s", err)

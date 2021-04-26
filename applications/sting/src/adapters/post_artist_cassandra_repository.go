@@ -6,13 +6,12 @@ import (
 
 	"github.com/scylladb/gocqlx/v2/qb"
 	"overdoll/applications/sting/src/domain/post"
-	"overdoll/libraries/ksuid"
 )
 
 type Artist struct {
-	Id       ksuid.UUID `db:"user_id"`
-	Username string     `db:"user_username"`
-	Avatar   string     `db:"user_avatar"`
+	Id       string `db:"user_id"`
+	Username string `db:"user_username"`
+	Avatar   string `db:"user_avatar"`
 }
 
 func (r PostsCassandraRepository) GetArtists(ctx context.Context) ([]*post.Artist, error) {

@@ -6,7 +6,6 @@ import (
 
 	sting "overdoll/applications/sting/proto"
 	"overdoll/applications/sting/src/domain/post"
-	"overdoll/libraries/ksuid"
 )
 
 type PublishPostHandler struct {
@@ -31,13 +30,7 @@ func (h PublishPostHandler) Handle(ctx context.Context, c interface{}) error {
 
 	cmd := c.(*sting.PostCompleted)
 
-	idParse, err := ksuid.Parse(cmd.Id)
-
-	if err != nil {
-		return fmt.Errorf("uuid not valid: %s", cmd.Id)
-	}
-
-	pendingPost, err := h.pr.GetPendingPost(ctx, idParse)
+	pendingPost, err := h.pr.GetPendingPost(ctx, cmd.Id)
 
 	if err != nil {
 		return fmt.Errorf("could not get pending post: %s", err)

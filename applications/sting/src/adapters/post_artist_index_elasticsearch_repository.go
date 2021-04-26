@@ -44,7 +44,7 @@ func (r PostIndexElasticSearchRepository) BulkIndex(ctx context.Context, artists
 	for _, art := range artists {
 
 		data := &ArtistDocument{
-			Id:       art.ID().String(),
+			Id:       art.ID(),
 			Avatar:   art.Avatar(),
 			Username: art.Username(),
 		}

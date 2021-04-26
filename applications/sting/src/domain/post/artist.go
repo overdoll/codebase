@@ -2,17 +2,15 @@ package post
 
 import (
 	"os"
-
-	"overdoll/libraries/ksuid"
 )
 
 type Artist struct {
-	id       ksuid.UUID
+	id       string
 	username string
 	avatar   string
 }
 
-func (a *Artist) ID() ksuid.UUID {
+func (a *Artist) ID() string {
 	return a.id
 }
 
@@ -29,7 +27,7 @@ func (a *Artist) Avatar() string {
 	return staticURL + "/avatars/" + a.avatar
 }
 
-func UnmarshalArtistFromDatabase(id ksuid.UUID, username string, avatar string) *Artist {
+func UnmarshalArtistFromDatabase(id string, username string, avatar string) *Artist {
 	return &Artist{
 		id:       id,
 		username: username,

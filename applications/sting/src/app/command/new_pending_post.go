@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	sting "overdoll/applications/sting/proto"
-	"overdoll/applications/sting/src/domain"
+	"overdoll/applications/sting/src/app"
 	"overdoll/applications/sting/src/domain/content"
 	"overdoll/applications/sting/src/domain/post"
 	"overdoll/libraries/ksuid"
@@ -14,12 +14,12 @@ import (
 type NewPostHandler struct {
 	pr  post.Repository
 	cr  content.Repository
-	eva domain.EvaService
+	eva app.EvaService
 
 	pe post.EventRepository
 }
 
-func NewNewPostHandler(pr post.Repository, cr content.Repository, eva EvaService, pe post.EventRepository) NewPostHandler {
+func NewNewPostHandler(pr post.Repository, cr content.Repository, eva app.EvaService, pe post.EventRepository) NewPostHandler {
 	return NewPostHandler{pr: pr, cr: cr, eva: eva, pe: pe}
 }
 
@@ -35,32 +35,14 @@ func (h NewPostHandler) Handle(ctx context.Context, c interface{}) error {
 
 	cmd := c.(*sting.SchedulePost).Post
 
-	characterUuids, err := ksuid.ToUUIDArray(cmd.Characters)
-
-	if err != nil {
-		return fmt.Errorf("uuids not valid: %s", cmd.Characters)
-	}
-
-	categoryUuids, err := ksuid.ToUUIDArray(cmd.Categories)
-
-	if err != nil {
-		return fmt.Errorf("uuids not valid: %s", cmd.Categories)
-	}
-
-	contributorParse, err := ksuid.Parse(cmd.ContributorId)
-
-	if err != nil {
-		return fmt.Errorf("uuid not valid: %s", cmd.ContributorId)
-	}
-
-	pendingPost, err := post.NewPendingPost(ksuid.New(), cmd.ArtistId, cmd.ArtistUsername, contributorParse, cmd.Content, characterUuids, categoryUuids)
+	pendingPost, err := post.NewPendingPost(ksuid.New().String(), cmd.ArtistId, cmd.ArtistUsername, contributorParse, cmd.Content, cmd.Characters, cmd.Categories)
 
 	if err != nil {
 		return fmt.Errorf("could not create pending post: %s", err)
 	}
 
 	// TODO: restructure so that this check is only done when the post is being created (createPendingPost func - will also check the DB to make sure categories + characters exist)
-	err = pr.CheckIfCharactersAndCategoriesExist(ctx, pendingPost)
+	err = h.pr.CheckIfCharactersAndCategoriesExist(ctx, pendingPost)
 
 	if err != nil {
 		return err
@@ -69,7 +51,7 @@ func (h NewPostHandler) Handle(ctx context.Context, c interface{}) error {
 	// Request new resources
 	pendingPost.RequestResources(cmd.CharacterRequests, cmd.CategoriesRequests, cmd.MediaRequests)
 
-	usr, err := h.eva.GetUser(ctx, contributorParse)
+	usr, err := h.eva.GetUser(ctx, cmd.ContributorId)
 
 	if err != nil {
 		return fmt.Errorf("could not get user: %s", err)

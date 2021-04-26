@@ -34,7 +34,7 @@ const CategoryIndex = `
 
 func MarshalCategoryToDocument(cat *post.Category) *CategoryDocument {
 	return &CategoryDocument{
-		Id:        cat.ID().String(),
+		Id:        cat.ID(),
 		Thumbnail: cat.Thumbnail(),
 		Title:     cat.Title(),
 	}

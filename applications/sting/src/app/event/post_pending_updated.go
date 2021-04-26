@@ -5,19 +5,18 @@ import (
 	"time"
 
 	sting "overdoll/applications/sting/proto"
-	"overdoll/applications/sting/src/domain"
+	"overdoll/applications/sting/src/app"
 	"overdoll/applications/sting/src/domain/post"
-	"overdoll/libraries/ksuid"
 )
 
 type PostPendingUpdatedHandler struct {
 	pe  post.IndexRepository
 	pr  post.Repository
-	eva domain.EvaService
+	eva app.EvaService
 }
 
-func NewPostPendingUpdatedHandler(pr post.Repository, pe post.IndexRepository) PostPendingUpdatedHandler {
-	return PostPendingUpdatedHandler{pr: pr, pe: pe}
+func NewPostPendingUpdatedHandler(pr post.Repository, pe post.IndexRepository, eva app.EvaService) PostPendingUpdatedHandler {
+	return PostPendingUpdatedHandler{pr: pr, pe: pe, eva: eva}
 }
 
 func (h PostPendingUpdatedHandler) HandlerName() string {
@@ -32,43 +31,19 @@ func (h PostPendingUpdatedHandler) Handle(ctx context.Context, c interface{}) er
 
 	cmd := c.(*sting.PostPendingUpdated).Post
 
-	categoryIds, err := ksuid.ToUUIDArray(cmd.Categories)
+	characters, err := h.pr.GetCharactersById(ctx, cmd.Characters)
 
 	if err != nil {
 		return err
 	}
 
-	characterIds, err := ksuid.ToUUIDArray(cmd.Characters)
+	categories, err := h.pr.GetCategoriesById(ctx, cmd.Categories)
 
 	if err != nil {
 		return err
 	}
 
-	characters, err := h.pr.GetCharactersById(ctx, characterIds)
-
-	if err != nil {
-		return err
-	}
-
-	categories, err := h.pr.GetCategoriesById(ctx, categoryIds)
-
-	if err != nil {
-		return err
-	}
-
-	contributorId, err := ksuid.Parse(cmd.ContributorId)
-
-	if err != nil {
-		return err
-	}
-
-	contributor, err := h.eva.GetUser(ctx, contributorId)
-
-	if err != nil {
-		return err
-	}
-
-	postId, err := ksuid.Parse(cmd.Id)
+	contributor, err := h.eva.GetUser(ctx, cmd.ContributorId)
 
 	if err != nil {
 		return err
@@ -80,7 +55,7 @@ func (h PostPendingUpdatedHandler) Handle(ctx context.Context, c interface{}) er
 		return err
 	}
 
-	pst, err := post.NewPendingPost(postId, cmd.ArtistId, cmd.ArtistUsername, contributor, cmd.Content, characters, categories, tm)
+	pst, err := post.NewPendingPost(cmd.Id, cmd.ArtistId, cmd.ArtistUsername, contributor, cmd.Content, characters, categories, tm)
 
 	if err != nil {
 		return err

@@ -8,23 +8,22 @@ import (
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"overdoll/applications/sting/src/domain/post"
-	"overdoll/libraries/ksuid"
 )
 
 type Category struct {
-	Id        ksuid.UUID `db:"id"`
-	Title     string     `db:"title"`
-	Thumbnail string     `db:"thumbnail"`
+	Id        string `db:"id"`
+	Title     string `db:"title"`
+	Thumbnail string `db:"thumbnail"`
 }
 
-func (r PostsCassandraRepository) GetCategoriesById(ctx context.Context, cats []ksuid.UUID) ([]*post.Category, error) {
+func (r PostsCassandraRepository) GetCategoriesById(ctx context.Context, cats []string) ([]*post.Category, error) {
 
 	var categories []*post.Category
 
 	final := []string{}
 
 	for _, str := range cats {
-		final = append(final, `'`+str.String()+`'`)
+		final = append(final, `'`+str+`'`)
 	}
 
 	if len(final) == 0 {
@@ -77,7 +76,7 @@ func (r PostsCassandraRepository) CreateCategories(ctx context.Context, categori
 	for _, cat := range categories {
 
 		// Create new categories query
-		batch.Query(qb.Insert("categories").LitColumn("id", cat.ID().String()).LitColumn("title", cat.Title()).ToCql())
+		batch.Query(qb.Insert("categories").LitColumn("id", cat.ID()).LitColumn("title", cat.Title()).ToCql())
 	}
 
 	err := r.session.ExecuteBatch(batch)

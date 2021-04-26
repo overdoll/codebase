@@ -2,12 +2,10 @@ package post
 
 import (
 	"context"
-
-	"overdoll/libraries/ksuid"
 )
 
 type Repository interface {
-	GetPendingPost(ctx context.Context, id ksuid.UUID) (*PostPending, error)
+	GetPendingPost(ctx context.Context, id string) (*PostPending, error)
 	CreatePendingPost(context.Context, *PostPending) error
 	UpdatePendingPost(context.Context, *PostPending) error
 
@@ -15,15 +13,15 @@ type Repository interface {
 
 	GetArtists(ctx context.Context) ([]*Artist, error)
 
-	GetCharactersById(context.Context, []ksuid.UUID) ([]*Character, error)
+	GetCharactersById(context.Context, []string) ([]*Character, error)
 	GetCharacters(context.Context) ([]*Character, error)
 	CreateCharacters(context.Context, []*Character) error
 
 	CreateMedias(context.Context, []*Media) error
-	GetMediasById(context.Context, []ksuid.UUID) ([]*Media, error)
+	GetMediasById(context.Context, []string) ([]*Media, error)
 	GetMedias(context.Context) ([]*Media, error)
 
-	GetCategoriesById(context.Context, []ksuid.UUID) ([]*Category, error)
+	GetCategoriesById(context.Context, []string) ([]*Category, error)
 	GetCategories(ctx context.Context) ([]*Category, error)
 	CreateCategories(ctx context.Context, categories []*Category) error
 }
