@@ -3,33 +3,33 @@ package command
 import (
 	"context"
 
-	"overdoll/applications/sting/src/domain/artist"
+	"overdoll/applications/sting/src/domain/post"
 )
 
 type IndexAllArtistsHandler struct {
-	ar  artist.Repository
-	air artist.IndexRepository
+	pr post.Repository
+	pi post.IndexRepository
 }
 
-func NewIndexAllArtistsHandler(ar artist.Repository, air artist.IndexRepository) IndexAllArtistsHandler {
-	return IndexAllArtistsHandler{ar: ar, air: air}
+func NewIndexAllArtistsHandler(pr post.Repository, pi post.IndexRepository) IndexAllArtistsHandler {
+	return IndexAllArtistsHandler{pr: pr, pi: pi}
 }
 
 func (h IndexAllArtistsHandler) Handle(ctx context.Context) error {
 
-	err := h.air.DeleteIndex(ctx)
+	err := h.pi.DeleteArtistIndex(ctx)
 
 	if err != nil {
 
 	}
 
-	artists, err := h.ar.GetArtists(ctx)
+	artists, err := h.pr.GetArtists(ctx)
 
 	if err != nil {
 
 	}
 
-	err = h.air.BulkIndex(ctx, artists)
+	err = h.pi.BulkIndexArtists(ctx, artists)
 
 	if err != nil {
 

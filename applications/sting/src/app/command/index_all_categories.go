@@ -3,32 +3,32 @@ package command
 import (
 	"context"
 
-	"overdoll/applications/sting/src/domain/category"
+	"overdoll/applications/sting/src/domain/post"
 )
 
 type IndexAllCategoriesHandler struct {
-	cr  category.Repository
-	cir category.IndexRepository
+	pr post.Repository
+	pi post.IndexRepository
 }
 
-func NewIndexAllCategoriesHandler(cr category.Repository, cir category.IndexRepository) IndexAllCategoriesHandler {
-	return IndexAllCategoriesHandler{cr: cr, cir: cir}
+func NewIndexAllCategoriesHandler(pr post.Repository, pi post.IndexRepository) IndexAllCategoriesHandler {
+	return IndexAllCategoriesHandler{pr: pr, pi: pi}
 }
 
 func (h IndexAllCategoriesHandler) Handle(ctx context.Context) error {
-	err := h.cir.DeleteIndex(ctx)
+	err := h.pi.DeleteCategoryIndex(ctx)
 
 	if err != nil {
 
 	}
 
-	categories, err := h.cr.GetCategories(ctx)
+	categories, err := h.pr.GetCategories(ctx)
 
 	if err != nil {
 
 	}
 
-	err = h.cir.BulkIndex(ctx, categories)
+	err = h.pi.BulkIndexCategories(ctx, categories)
 
 	if err != nil {
 

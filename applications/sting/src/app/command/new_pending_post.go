@@ -5,8 +5,7 @@ import (
 	"fmt"
 
 	sting "overdoll/applications/sting/proto"
-	"overdoll/applications/sting/src/domain/category"
-	"overdoll/applications/sting/src/domain/character"
+	"overdoll/applications/sting/src/domain"
 	"overdoll/applications/sting/src/domain/content"
 	"overdoll/applications/sting/src/domain/post"
 	"overdoll/libraries/ksuid"
@@ -14,8 +13,8 @@ import (
 
 type NewPostHandler struct {
 	pr  post.Repository
-	cr content.Repository
-	eva EvaService
+	cr  content.Repository
+	eva domain.EvaService
 
 	pe post.EventRepository
 }

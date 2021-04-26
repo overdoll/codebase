@@ -5,22 +5,19 @@ import (
 	"time"
 
 	sting "overdoll/applications/sting/proto"
-	"overdoll/applications/sting/src/app/command"
-	"overdoll/applications/sting/src/domain/category"
-	"overdoll/applications/sting/src/domain/character"
+	"overdoll/applications/sting/src/domain"
 	"overdoll/applications/sting/src/domain/post"
 	"overdoll/libraries/ksuid"
 )
 
 type PostPendingUpdatedHandler struct {
 	pe  post.IndexRepository
-	cr  character.Repository
-	ctr category.Repository
-	eva command.EvaService
+	pr  post.Repository
+	eva domain.EvaService
 }
 
-func NewPostPendingUpdatedHandler(pe post.IndexRepository, cr character.Repository, ctr category.Repository) PostPendingUpdatedHandler {
-	return PostPendingUpdatedHandler{pe: pe, cr: cr, ctr: ctr}
+func NewPostPendingUpdatedHandler(pr post.Repository, pe post.IndexRepository) PostPendingUpdatedHandler {
+	return PostPendingUpdatedHandler{pr: pr, pe: pe}
 }
 
 func (h PostPendingUpdatedHandler) HandlerName() string {
@@ -47,13 +44,13 @@ func (h PostPendingUpdatedHandler) Handle(ctx context.Context, c interface{}) er
 		return err
 	}
 
-	characters, err := h.cr.GetCharactersById(ctx, characterIds)
+	characters, err := h.pr.GetCharactersById(ctx, characterIds)
 
 	if err != nil {
 		return err
 	}
 
-	categories, err := h.ctr.GetCategoriesById(ctx, categoryIds)
+	categories, err := h.pr.GetCategoriesById(ctx, categoryIds)
 
 	if err != nil {
 		return err

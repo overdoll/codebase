@@ -3,33 +3,33 @@ package command
 import (
 	"context"
 
-	"overdoll/applications/sting/src/domain/character"
+	"overdoll/applications/sting/src/domain/post"
 )
 
 type IndexAllCharactersHandler struct {
-	cr  character.Repository
-	cir character.IndexRepository
+	pr post.Repository
+	pi post.IndexRepository
 }
 
-func NewIndexAllCharactersHandler(cr character.Repository, cir character.IndexRepository) IndexAllCharactersHandler {
-	return IndexAllCharactersHandler{cr: cr, cir: cir}
+func NewIndexAllCharactersHandler(pr post.Repository, pi post.IndexRepository) IndexAllCharactersHandler {
+	return IndexAllCharactersHandler{pr: pr, pi: pi}
 }
 
 func (h IndexAllCharactersHandler) Handle(ctx context.Context) error {
 
-	err := h.cir.DeleteIndexCharacters(ctx)
+	err := h.pi.DeleteCharacterIndex(ctx)
 
 	if err != nil {
 
 	}
 
-	characters, err := h.cr.GetCharacters(ctx)
+	characters, err := h.pr.GetCharacters(ctx)
 
 	if err != nil {
 
 	}
 
-	err = h.cir.BulkIndexCharacters(ctx, characters)
+	err = h.pi.BulkIndexCharacters(ctx, characters)
 
 	if err != nil {
 

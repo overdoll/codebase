@@ -5,26 +5,18 @@ import (
 	"fmt"
 
 	sting "overdoll/applications/sting/proto"
-	"overdoll/applications/sting/src/domain/category"
-	"overdoll/applications/sting/src/domain/character"
 	"overdoll/applications/sting/src/domain/post"
 	"overdoll/libraries/ksuid"
 )
 
 type PublishPostHandler struct {
-	pr  post.Repository
-	chr character.Repository
-	ctr category.Repository
-
-	ce category.EventRepository
-
-	che character.EventRepository
-
+	pi post.IndexRepository
 	pe post.EventRepository
+	pr post.Repository
 }
 
-func NewPublishPostHandler(pr post.Repository, chr character.Repository, ctr category.Repository, ce category.EventRepository, pe post.EventRepository) PublishPostHandler {
-	return PublishPostHandler{pr: pr, chr: chr, ctr: ctr, ce: ce, pe: pe}
+func NewPublishPostHandler(pr post.Repository, pi post.IndexRepository, pe post.EventRepository) PublishPostHandler {
+	return PublishPostHandler{pr: pr, pi: pi, pe: pe}
 }
 
 func (h PublishPostHandler) HandlerName() string {
@@ -58,18 +50,18 @@ func (h PublishPostHandler) Handle(ctx context.Context, c interface{}) error {
 	}
 
 	// Consume custom categories and run commands to create
-	if err := h.ce.CategoriesCreated(ctx, pendingPost.ConsumeCustomCategories()); err != nil {
+	if err := h.pe.CategoriesCreated(ctx, pendingPost.ConsumeCustomCategories()); err != nil {
 		return err
 	}
 
 	// Consume custom characters, and run commands to create these custom characters
 	chars, medias := pendingPost.ConsumeCustomCharacters()
 
-	if err := h.che.CharactersCreated(ctx, chars); err != nil {
+	if err := h.pe.CharactersCreated(ctx, chars); err != nil {
 		return err
 	}
 
-	if err := h.che.MediaCreated(ctx, medias); err != nil {
+	if err := h.pe.MediaCreated(ctx, medias); err != nil {
 		return err
 	}
 

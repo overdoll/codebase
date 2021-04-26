@@ -3,32 +3,32 @@ package command
 import (
 	"context"
 
-	"overdoll/applications/sting/src/domain/character"
+	"overdoll/applications/sting/src/domain/post"
 )
 
 type IndexAllMediaHandler struct {
-	cr  character.Repository
-	cir character.IndexRepository
+	pr post.Repository
+	pi post.IndexRepository
 }
 
-func NewIndexAllMediaHandler(cr character.Repository, cir character.IndexRepository) IndexAllMediaHandler {
-	return IndexAllMediaHandler{cr: cr, cir: cir}
+func NewIndexAllMediaHandler(pr post.Repository, pi post.IndexRepository) IndexAllMediaHandler {
+	return IndexAllMediaHandler{pr: pr, pi: pi}
 }
 
 func (h IndexAllMediaHandler) Handle(ctx context.Context) error {
-	err := h.cir.DeleteIndexMedia(ctx)
+	err := h.pi.DeleteIndexMedia(ctx)
 
 	if err != nil {
 
 	}
 
-	medias, err := h.cr.GetMedias(ctx)
+	medias, err := h.pr.GetMedias(ctx)
 
 	if err != nil {
 
 	}
 
-	err = h.cir.BulkIndexMedia(ctx, medias)
+	err = h.pi.BulkIndexMedia(ctx, medias)
 
 	if err != nil {
 

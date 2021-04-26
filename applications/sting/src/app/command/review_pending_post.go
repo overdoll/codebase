@@ -5,23 +5,17 @@ import (
 	"fmt"
 
 	sting "overdoll/applications/sting/proto"
-	"overdoll/applications/sting/src/domain/category"
-	"overdoll/applications/sting/src/domain/character"
 	"overdoll/applications/sting/src/domain/post"
 	"overdoll/libraries/ksuid"
 )
 
 type ReviewPostHandler struct {
 	pr post.Repository
-
-	chr character.Repository
-	ctr category.Repository
-
 	pe post.EventRepository
 }
 
-func NewReviewPostHandler(pr post.Repository, chr character.Repository, ctr category.Repository, pe post.EventRepository) ReviewPostHandler {
-	return ReviewPostHandler{pr: pr, chr: chr, ctr: ctr, pe: pe}
+func NewReviewPostHandler(pr post.Repository, pe post.EventRepository) ReviewPostHandler {
+	return ReviewPostHandler{pr: pr, pe: pe}
 }
 
 func (h ReviewPostHandler) HandlerName() string {
@@ -65,6 +59,7 @@ func (h ReviewPostHandler) Handle(ctx context.Context, c interface{}) error {
 		return fmt.Errorf("could not create pending post: %s", err)
 	}
 
+	// TODO: restructure so that this check is only done when the post is being created (createPendingPost func - will also check the DB to make sure categories + characters exist)
 	err = pendingPost.ValidateCharactersAndCategories(ctx, h.chr, h.ctr)
 
 	if err != nil {

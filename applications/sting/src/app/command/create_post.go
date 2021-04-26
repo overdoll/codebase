@@ -4,24 +4,21 @@ import (
 	"context"
 
 	sting "overdoll/applications/sting/proto"
-	"overdoll/applications/sting/src/domain/category"
-	"overdoll/applications/sting/src/domain/character"
+	"overdoll/applications/sting/src/domain"
 	"overdoll/applications/sting/src/domain/post"
 	"overdoll/libraries/ksuid"
 )
 
 type CreatePostHandler struct {
 	pr post.Repository
-
-	cr  character.Repository
-	ctr category.Repository
+	pi post.IndexRepository
 
 	pir post.IndexRepository
-	eva EvaService
+	eva domain.EvaService
 }
 
-func NewCreatePostHandler(pr post.Repository, pir post.IndexRepository, cr character.Repository, ctr category.Repository, eva EvaService) CreatePostHandler {
-	return CreatePostHandler{pr: pr, pir: pir, cr: cr, ctr: ctr, eva: eva}
+func NewCreatePostHandler(pr post.Repository, pir post.IndexRepository, eva EvaService) CreatePostHandler {
+	return CreatePostHandler{pr: pr, pir: pir, eva: eva}
 }
 
 func (h CreatePostHandler) HandlerName() string {
@@ -66,13 +63,13 @@ func (h CreatePostHandler) Handle(ctx context.Context, c interface{}) error {
 		return err
 	}
 
-	characters, err := h.cr.GetCharactersById(ctx, characterIds)
+	characters, err := h.pr.GetCharactersById(ctx, characterIds)
 
 	if err != nil {
 		return err
 	}
 
-	categories, err := h.ctr.GetCategoriesById(ctx, categoryIds)
+	categories, err := h.pr.GetCategoriesById(ctx, categoryIds)
 
 	if err != nil {
 		return err

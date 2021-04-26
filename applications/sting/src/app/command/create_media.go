@@ -4,16 +4,16 @@ import (
 	"context"
 
 	sting "overdoll/applications/sting/proto"
-	"overdoll/applications/sting/src/domain/character"
+	"overdoll/applications/sting/src/domain/post"
 )
 
 type CreateMediaHandler struct {
-	mr  character.Repository
-	mir character.IndexRepository
+	pr post.Repository
+	pi post.IndexRepository
 }
 
-func NewCreateMediaHandler(mr character.Repository, mir character.IndexRepository) CreateMediaHandler {
-	return CreateMediaHandler{mr: mr, mir: mir}
+func NewCreateMediaHandler(pr post.Repository, pi post.IndexRepository) CreateMediaHandler {
+	return CreateMediaHandler{pr: pr, pi: pi}
 }
 
 func (h CreateMediaHandler) HandlerName() string {
@@ -27,21 +27,21 @@ func (h CreateMediaHandler) NewCommand() interface{} {
 func (h CreateMediaHandler) Handle(ctx context.Context, c interface{}) error {
 	cmd := c.(*sting.MediaCreated)
 
-	media, err := character.UnmarshalMediaFromProtoArray(cmd.Media)
+	media, err := post.UnmarshalMediaFromProtoArray(cmd.Media)
 
 	if err != nil {
 		return nil
 	}
 
 	// Create Media (from database)
-	err = h.mr.CreateMedias(ctx, media)
+	err = h.pr.CreateMedias(ctx, media)
 
 	if err != nil {
 		return err
 	}
 
 	// Bulk index
-	err = h.mir.BulkIndexMedia(ctx, media)
+	err = h.pi.BulkIndexMedia(ctx, media)
 
 	if err != nil {
 		return err

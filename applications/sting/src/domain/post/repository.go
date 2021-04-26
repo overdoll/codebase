@@ -39,7 +39,7 @@ type IndexRepository interface {
 	BulkIndexArtists(ctx context.Context, artists []*Artist) error
 
 	BulkIndexCharacters(context.Context, []*Character) error
-	DeleteIndexCharacters(context.Context) error
+	DeleteCharacterIndex(context.Context) error
 
 	BulkIndexMedia(context.Context, []*Media) error
 	DeleteIndexMedia(context.Context) error

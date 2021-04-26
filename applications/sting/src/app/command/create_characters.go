@@ -4,7 +4,6 @@ import (
 	"context"
 
 	sting "overdoll/applications/sting/proto"
-	"overdoll/applications/sting/src/domain/character"
 	"overdoll/applications/sting/src/domain/post"
 )
 
@@ -13,8 +12,8 @@ type CreateCharactersHandler struct {
 	pi post.IndexRepository
 }
 
-func NewCreateCharacterHandler(pr post.Repository, pi character.IndexRepository) CreateCharactersHandler {
-	return CreateCharactersHandler{cr: cr, cir: cir}
+func NewCreateCharacterHandler(pr post.Repository, pi post.IndexRepository) CreateCharactersHandler {
+	return CreateCharactersHandler{pr: pr, pi: pi}
 }
 
 func (h CreateCharactersHandler) HandlerName() string {
@@ -28,21 +27,21 @@ func (h CreateCharactersHandler) NewCommand() interface{} {
 func (h CreateCharactersHandler) Handle(ctx context.Context, c interface{}) error {
 	cmd := c.(*sting.CharacterCreated)
 
-	characters, err := character.UnmarshalCharacterFromProtoArray(cmd.Characters)
+	characters, err := post.UnmarshalCharacterFromProtoArray(cmd.Characters)
 
 	if err != nil {
 		return err
 	}
 
 	// Create characters (from database)
-	err = h.cr.CreateCharacters(ctx, characters)
+	err = h.pr.CreateCharacters(ctx, characters)
 
 	if err != nil {
 		return err
 	}
 
 	// Bulk index
-	err = h.cir.BulkIndexCharacters(ctx, characters)
+	err = h.pi.BulkIndexCharacters(ctx, characters)
 
 	if err != nil {
 		return err
