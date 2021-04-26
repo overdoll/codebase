@@ -1,9 +1,7 @@
 package post
 
 import (
-	"context"
 	"errors"
-	"fmt"
 	"time"
 
 	"overdoll/libraries/ksuid"
@@ -110,32 +108,6 @@ func UnmarshalPendingPostFromDatabase(id string, state string, artistId string, 
 	return postPending
 }
 
-func (p *PostPending) ValidateCharactersAndCategories(ctx context.Context, cRepo Repository, catRepo Repository) error {
-	characterInstances, err := cRepo.GetCharactersById(ctx, p.CharacterIds())
-
-	if err != nil {
-		return err
-	}
-
-	// make sure that the submitted characters are found in the database
-	if len(characterInstances) != len(p.characters) {
-		return fmt.Errorf("invalid character found")
-	}
-
-	categoryInstances, err := catRepo.GetCategoriesById(ctx, p.CategoryIds())
-
-	if err != nil {
-		return err
-	}
-
-	// make sure that the submitted categories exist in the database
-	if len(categoryInstances) != len(p.categories) {
-		return fmt.Errorf("invalid category found")
-	}
-
-	return nil
-}
-
 func (p *PostPending) ID() string {
 	return p.id
 }
@@ -162,6 +134,16 @@ func (p *PostPending) RawContent() []string {
 
 func (p *PostPending) Content() []string {
 	return p.content
+}
+
+func (p *PostPending) UpdateCategories(categories []*Category) error {
+	p.categories = categories
+	return nil
+}
+
+func (p *PostPending) UpdateCharacters(characters []*Character) error {
+	p.characters = characters
+	return nil
 }
 
 func (p *PostPending) Categories() []*Category {

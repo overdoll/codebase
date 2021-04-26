@@ -7,7 +7,7 @@ import (
 type Repository interface {
 	GetPendingPost(ctx context.Context, id string) (*PostPending, error)
 	CreatePendingPost(context.Context, *PostPending) error
-	UpdatePendingPost(context.Context, *PostPending) error
+	UpdatePendingPost(ctx context.Context, id string, updateFn func(pending *PostPending) (*PostPending, error)) (*PostPending, error)
 
 	CreatePost(context.Context, *Post) error
 

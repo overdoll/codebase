@@ -2,11 +2,9 @@ package command
 
 import (
 	"context"
-	"fmt"
 
 	sting "overdoll/applications/sting/proto"
 	"overdoll/applications/sting/src/domain/post"
-	"overdoll/libraries/ksuid"
 )
 
 type ReviewPostHandler struct {
@@ -29,38 +27,48 @@ func (h ReviewPostHandler) NewCommand() interface{} {
 func (h ReviewPostHandler) Handle(ctx context.Context, c interface{}) error {
 	cmd := c.(*sting.ReviewPost).Post
 
-	oldPendingPost, err := h.pr.GetPendingPost(ctx, cmd.Id)
+	// Update pending post with new values
+	pendingPost, err := h.pr.UpdatePendingPost(ctx, cmd.Id, func(pending *post.PostPending) (*post.PostPending, error) {
 
-	if err != nil {
-		return fmt.Errorf("error grabbing pending post %s", err)
-	}
+		// Need to grab this since our protobuf only contains references to IDs
+		characters, err := h.pr.GetCharactersById(ctx, cmd.Characters)
 
-	pendingPost, err := post.NewPendingPost(idParse, cmd.ArtistId, cmd.ArtistUsername, oldPendingPost.Contributor(), oldPendingPost.Content(), characterUuids, categoryUuids, oldPendingPost.PostedAt())
+		if err != nil {
+			return nil, err
+		}
 
-	if err != nil {
-		return fmt.Errorf("could not create pending post: %s", err)
-	}
+		err = pending.UpdateCharacters(characters)
 
-	// TODO: restructure so that this check is only done when the post is being created (createPendingPost func - will also check the DB to make sure categories + characters exist)
-	err = pendingPost.ValidateCharactersAndCategories(ctx, h.chr, h.ctr)
+		if err != nil {
+			return nil, err
+		}
+
+		categories, err := h.pr.GetCategoriesById(ctx, cmd.Categories)
+
+		if err != nil {
+			return nil, err
+		}
+
+		err = pending.UpdateCategories(categories)
+
+		if err != nil {
+			return nil, err
+		}
+
+		// Update resource requests
+		pending.RequestResources(cmd.CharacterRequests, cmd.CategoriesRequests, cmd.MediaRequests)
+
+		// mark the state of the post to be publishing
+		pending.MakePublishing()
+
+		return pending, nil
+	})
 
 	if err != nil {
 		return err
 	}
 
-	// Request new resources - update it
-	pendingPost.RequestResources(cmd.CharacterRequests, cmd.CategoriesRequests, cmd.MediaRequests)
-
-	// make the state of the post to publishing
-	pendingPost.MakePublishing()
-
-	// Update pending post
-	err = h.pr.UpdatePendingPost(ctx, pendingPost)
-
-	if err != nil {
-		return fmt.Errorf("could not update pending post: %s", err)
-	}
-
+	// New event for post created
 	if err := h.pe.PostCreated(ctx, pendingPost); err != nil {
 		return err
 	}

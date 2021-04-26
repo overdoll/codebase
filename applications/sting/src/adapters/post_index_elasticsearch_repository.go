@@ -110,11 +110,11 @@ func (r PostIndexElasticSearchRepository) BulkIndexPendingPosts(ctx context.Cont
 		}
 
 		data := &PostPendingDocument{
-			Id:             pst.ID().String(),
+			Id:             pst.ID(),
 			ArtistUsername: pst.ArtistUsername(),
 			ArtistId:       pst.ArtistId(),
 			Contributor: ContributorDocument{
-				Id:       pst.Contributor().Id.String(),
+				Id:       pst.Contributor().Id,
 				Avatar:   pst.Contributor().Avatar,
 				Username: pst.Contributor().Username,
 			},
@@ -164,14 +164,14 @@ func (r PostIndexElasticSearchRepository) BulkIndexPosts(ctx context.Context, po
 		}
 
 		data := &PostDocument{
-			Id: pst.ID().String(),
+			Id: pst.ID(),
 			Artist: ArtistDocument{
-				Id:       pst.Artist().Id.String(),
+				Id:       pst.Artist().Id,
 				Avatar:   pst.Artist().Avatar,
 				Username: pst.Artist().Username,
 			},
 			Contributor: ContributorDocument{
-				Id:       pst.Contributor().Id.String(),
+				Id:       pst.Contributor().Id,
 				Avatar:   pst.Contributor().Avatar,
 				Username: pst.Contributor().Username,
 			},

@@ -77,11 +77,11 @@ func MarshalCharacterToDocument(char *post.Character) *CharacterDocument {
 	media := char.Media()
 
 	return &CharacterDocument{
-		Id:        char.ID().String(),
+		Id:        char.ID(),
 		Thumbnail: char.Thumbnail(),
 		Name:      char.Name(),
 		Media: MediaDocument{
-			Id:        media.ID().String(),
+			Id:        media.ID(),
 			Thumbnail: media.Thumbnail(),
 			Title:     media.Title(),
 		},
@@ -127,7 +127,7 @@ func (r PostIndexElasticSearchRepository) BulkIndexMedia(ctx context.Context, me
 	for _, med := range media {
 
 		data := &MediaDocument{
-			Id:        med.ID().String(),
+			Id:        med.ID(),
 			Thumbnail: med.Thumbnail(),
 			Title:     med.Title(),
 		}
