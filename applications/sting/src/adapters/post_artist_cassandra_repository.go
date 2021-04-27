@@ -32,3 +32,16 @@ func (r PostsCassandraRepository) GetArtists(ctx context.Context) ([]*post.Artis
 
 	return artists, nil
 }
+
+func (r PostsCassandraRepository) GetArtistById(ctx context.Context, id string) (*post.Artist, error) {
+
+	var artist *Artist
+
+	qc := qb.Select("artists").Where(qb.EqLit("id", id)).Query(r.session)
+
+	if err := qc.Get(&artist); err != nil {
+		return nil, fmt.Errorf("select() failed: %s", err)
+	}
+
+	return post.UnmarshalArtistFromDatabase(artist.Id, artist.Username, artist.Avatar), nil
+}

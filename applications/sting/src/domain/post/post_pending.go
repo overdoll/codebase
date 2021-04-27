@@ -42,8 +42,8 @@ type PostPending struct {
 
 	contributor *User
 
-	artistId           string
-	artistUsername     string
+	artist *Artist
+
 	content            []string
 	charactersRequests []CharacterRequest
 	categoriesRequests []CategoryRequest
@@ -52,27 +52,17 @@ type PostPending struct {
 	publishedPostId    string
 }
 
-func NewPendingPost(id string, artistId string, artistUsername string, contributor *User, content []string, characters []*Character, categories []*Category, postedAt time.Time) (*PostPending, error) {
-
-	if id != "" {
-		_, err := ksuid.Parse(id)
-
-		if err != nil {
-			return nil, ErrInvalidId
-		}
-
-	}
+func NewPendingPost(artist *Artist, contributor *User, content []string, characters []*Character, categories []*Category) (*PostPending, error) {
 
 	return &PostPending{
-		id:             id,
-		state:          Publishing,
-		artistId:       artistId,
-		artistUsername: artistUsername,
-		contributor:    contributor,
-		content:        content,
-		characters:     characters,
-		categories:     categories,
-		postedAt:       postedAt,
+		id:          ksuid.New().String(),
+		state:       Publishing,
+		artist:      artist,
+		contributor: contributor,
+		content:     content,
+		characters:  characters,
+		categories:  categories,
+		postedAt:    time.Now(),
 	}, nil
 }
 
@@ -81,20 +71,18 @@ func UnmarshalPendingPostFromDatabase(id string, state string, artistId string, 
 	var chars []*Character
 
 	for _, char := range characters {
-		chars = append(chars, NewCharacter(char, "", "", ksuid.New().String(), "", ""))
+		chars = append(chars, NewCharacter(char, &Media{}))
 	}
 
 	var cats []*Category
 
 	for _, char := range categories {
-		cats = append(cats, NewCategory(char, "", ""))
+		cats = append(cats, NewCategory(char))
 	}
 
 	postPending := &PostPending{
 		id:              id,
 		state:           PostPendingState(state),
-		artistId:        artistId,
-		artistUsername:  artistUsername,
 		contributor:     &User{Id: contributorId},
 		content:         content,
 		characters:      chars,
@@ -116,12 +104,8 @@ func (p *PostPending) State() PostPendingState {
 	return p.state
 }
 
-func (p *PostPending) ArtistId() string {
-	return p.artistId
-}
-
-func (p *PostPending) ArtistUsername() string {
-	return p.artistUsername
+func (p *PostPending) Artist() *Artist {
+	return p.artist
 }
 
 func (p *PostPending) Contributor() *User {
@@ -144,6 +128,10 @@ func (p *PostPending) UpdateCategories(categories []*Category) error {
 func (p *PostPending) UpdateCharacters(characters []*Character) error {
 	p.characters = characters
 	return nil
+}
+
+func (p *PostPending) UpdateArtist(artist *Artist) {
+	p.artist = artist
 }
 
 func (p *PostPending) Categories() []*Category {
@@ -200,9 +188,9 @@ func (p *PostPending) MakePublishing() {
 	p.state = Publishing
 }
 
-func (p *PostPending) MakePublicOrReview(contributor *User) error {
+func (p *PostPending) MakePublicOrReview() error {
 
-	if !contributor.Verified {
+	if !p.contributor.Verified {
 		p.state = Review
 	}
 
@@ -233,22 +221,7 @@ func (p *PostPending) MediaRequests() []MediaRequest {
 	return p.mediaRequests
 }
 
-func (p *PostPending) ConsumeCustomCategories() []*Category {
-
-	var categories []*Category
-
-	for _, cat := range p.categoriesRequests {
-
-		newCategory := NewCategory(ksuid.New().String(), cat.Title, "")
-
-		p.categories = append(p.categories, newCategory)
-		categories = append(categories, newCategory)
-	}
-
-	return categories
-}
-
-func (p *PostPending) ConsumeCustomCharacters() ([]*Character, []*Media) {
+func (p *PostPending) ConsumeCustomResources() ([]*Category, []*Character, []*Media) {
 
 	var characters []*Character
 	var medias []*Media
@@ -256,14 +229,14 @@ func (p *PostPending) ConsumeCustomCharacters() ([]*Character, []*Media) {
 	for _, char := range p.charactersRequests {
 
 		var exists = true
-		var id string
+		var newMedia *Media
 
 		// Check if the requested media is a media in our list
 		for _, requestedMedia := range p.mediaRequests {
 
 			// If the media is on our list, then we create a new media, and append to array of events
 			if char.Media == requestedMedia.Title {
-				id = ksuid.New().String()
+				NewMedia(char.Media)
 				exists = false
 				break
 			}
@@ -271,17 +244,32 @@ func (p *PostPending) ConsumeCustomCharacters() ([]*Character, []*Media) {
 
 		// If a media exists (not in media requests), we use the string as the ID
 		if !exists {
-			// otherwise, we create a new media
-			medias = append(medias, NewMedia(id, char.Media, ""))
+			// media exists in DB
+			newMedia = &Media{
+				id:        char.Media,
+				title:     "",
+				thumbnail: "",
+			}
+			medias = append(medias, newMedia)
 		}
 
-		newCharacter := NewCharacter(ksuid.New().String(), char.Name, "", id, "", "")
+		newCharacter := NewCharacter(char.Name, newMedia)
 
 		p.characters = append(p.characters, newCharacter)
 		characters = append(characters, newCharacter)
 	}
 
-	return characters, medias
+	var categories []*Category
+
+	for _, cat := range p.categoriesRequests {
+
+		newCategory := NewCategory(cat.Title)
+
+		p.categories = append(p.categories, newCategory)
+		categories = append(categories, newCategory)
+	}
+
+	return categories, characters, medias
 }
 
 func (p *PostPending) RequestResources(characters map[string]string, categories []string, medias []string) {

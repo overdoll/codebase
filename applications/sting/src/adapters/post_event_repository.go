@@ -31,7 +31,7 @@ func (r PostEventRepository) PostCreated(ctx context.Context, pendingPost *post.
 
 	if err := r.eventBus.Publish(ctx, &sting.PostCreated{Post: &sting.Post{
 		Id:            ksuid.New().String(),
-		ArtistId:      pendingPost.ArtistId(),
+		ArtistId:      pendingPost.Artist().ID(),
 		ContributorId: pendingPost.Contributor().Id,
 		Content:       pendingPost.Content(),
 		Categories:    pendingPost.CategoryIds(),
@@ -65,8 +65,8 @@ func (r PostEventRepository) PostPendingUpdated(ctx context.Context, pendingPost
 
 	if err := r.eventBus.Publish(ctx, &sting.PostPendingUpdated{Post: &sting.PendingPost{
 		Id:                 pendingPost.ID(),
-		ArtistId:           pendingPost.ArtistId(),
-		ArtistUsername:     pendingPost.ArtistUsername(),
+		ArtistId:           pendingPost.Artist().ID(),
+		ArtistUsername:     pendingPost.Artist().Username(),
 		ContributorId:      pendingPost.Contributor().Id,
 		Content:            pendingPost.Content(),
 		Categories:         pendingPost.CategoryIds(),

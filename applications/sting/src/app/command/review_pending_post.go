@@ -55,6 +55,15 @@ func (h ReviewPostHandler) Handle(ctx context.Context, c interface{}) error {
 			return nil, err
 		}
 
+		// need to grab artist, to ensure it's valid
+		artist, err := h.pr.GetArtistById(ctx, cmd.ArtistId)
+
+		if err != nil {
+			return nil, err
+		}
+
+		pending.UpdateArtist(artist)
+
 		// Update resource requests
 		pending.RequestResources(cmd.CharacterRequests, cmd.CategoriesRequests, cmd.MediaRequests)
 
@@ -68,7 +77,7 @@ func (h ReviewPostHandler) Handle(ctx context.Context, c interface{}) error {
 		return err
 	}
 
-	// New event for post created
+	// New event for post created, in order to index it
 	if err := h.pe.PostCreated(ctx, pendingPost); err != nil {
 		return err
 	}

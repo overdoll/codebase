@@ -4,13 +4,14 @@ import (
 	"os"
 
 	sting "overdoll/applications/sting/proto"
+	"overdoll/libraries/ksuid"
 )
 
 type Character struct {
 	id        string
 	name      string
 	thumbnail string
-	media     Media
+	media     *Media
 }
 
 func (c *Character) ID() string {
@@ -21,7 +22,7 @@ func (c *Character) Name() string {
 	return c.name
 }
 
-func (c *Character) Media() Media {
+func (c *Character) Media() *Media {
 	return c.media
 }
 
@@ -34,16 +35,12 @@ func (c *Character) Thumbnail() string {
 	return staticURL + "/thumbnails/" + c.thumbnail
 }
 
-func NewCharacter(id string, name string, thumbnail string, mediaId string, mediaTitle string, mediaThumbnail string, ) *Character {
+func NewCharacter(name string, media *Media) *Character {
 	return &Character{
-		id:        id,
+		id:        ksuid.New().String(),
 		name:      name,
-		thumbnail: thumbnail,
-		media: Media{
-			id:        mediaId,
-			title:     mediaTitle,
-			thumbnail: mediaThumbnail,
-		},
+		thumbnail: "",
+		media:     media,
 	}
 }
 
@@ -51,7 +48,16 @@ func UnmarshalCharacterFromProtoArray(chars []*sting.Character) ([]*Character, e
 	var characters []*Character
 
 	for _, char := range chars {
-		characters = append(characters, NewCharacter(char.Id, char.Name, char.Thumbnail, char.Media.Id, char.Media.Title, char.Media.Thumbnail))
+		characters = append(characters, &Character{
+			id:        char.Id,
+			name:      char.Name,
+			thumbnail: char.Thumbnail,
+			media: &Media{
+				id:        char.Media.Id,
+				title:     char.Media.Title,
+				thumbnail: char.Media.Thumbnail,
+			},
+		})
 	}
 
 	return characters, nil

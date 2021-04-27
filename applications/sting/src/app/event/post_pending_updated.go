@@ -31,6 +31,8 @@ func (h PostPendingUpdatedHandler) Handle(ctx context.Context, c interface{}) er
 
 	cmd := c.(*sting.PostPendingUpdated).Post
 
+	post, err := h.pr.GetPendingPost(ctx, cmd.Id)
+
 	characters, err := h.pr.GetCharactersById(ctx, cmd.Characters)
 
 	if err != nil {
@@ -49,13 +51,19 @@ func (h PostPendingUpdatedHandler) Handle(ctx context.Context, c interface{}) er
 		return err
 	}
 
+	artist, err = h.pr.GetArtistById(ctx, cmd.ArtistId)
+
+	if err != nil {
+		return err
+	}
+
 	tm, err := time.Parse(time.RFC1123, cmd.PostedAt)
 
 	if err != nil {
 		return err
 	}
 
-	pst, err := post.NewPendingPost(cmd.Id, cmd.ArtistId, cmd.ArtistUsername, contributor, cmd.Content, characters, categories, tm)
+	pst, err := post.NewPendingPost(artist, cmd.ArtistUsername, contributor, cmd.Content, characters, categories, tm)
 
 	if err != nil {
 		return err

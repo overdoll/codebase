@@ -4,6 +4,7 @@ import (
 	"os"
 
 	sting "overdoll/applications/sting/proto"
+	"overdoll/libraries/ksuid"
 )
 
 type Category struct {
@@ -29,11 +30,11 @@ func (c *Category) Thumbnail() string {
 	return staticURL + "/thumbnails/" + c.thumbnail
 }
 
-func NewCategory(id string, title string, thumbnail string) *Category {
+func NewCategory(title string) *Category {
 	return &Category{
-		id:        id,
+		id:        ksuid.New().String(),
 		title:     title,
-		thumbnail: thumbnail,
+		thumbnail: "",
 	}
 }
 
@@ -41,7 +42,11 @@ func UnmarshalFromProtoArray(cats []*sting.Category) ([]*Category, error) {
 	var categories []*Category
 
 	for _, cat := range cats {
-		categories = append(categories, NewCategory(cat.Id, cat.Title, cat.Thumbnail))
+		categories = append(categories, &Category{
+			id:        cat.Id,
+			title:     cat.Title,
+			thumbnail: cat.Thumbnail,
+		})
 	}
 
 	return categories, nil

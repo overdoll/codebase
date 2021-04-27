@@ -11,6 +11,7 @@ type Repository interface {
 
 	CreatePost(context.Context, *Post) error
 
+	GetArtistById(ctx context.Context, id string) (*Artist, error)
 	GetArtists(ctx context.Context) ([]*Artist, error)
 
 	GetCharactersById(context.Context, []string) ([]*Character, error)

@@ -68,8 +68,8 @@ func marshalPendingPostToDatabase(pending *post.PostPending) *PostPending {
 	return &PostPending{
 		Id:                 pending.ID(),
 		State:              string(pending.State()),
-		ArtistId:           pending.ArtistId(),
-		ArtistUsername:     pending.ArtistUsername(),
+		ArtistId:           pending.Artist().ID(),
+		ArtistUsername:     pending.Artist().Username(),
 		ContributorId:      pending.Contributor().Id,
 		Content:            pending.Content(),
 		Categories:         pending.CategoryIds(),
@@ -98,7 +98,7 @@ func marshalPostToDatabase(post *post.Post) *Post {
 
 	return &Post{
 		Id:            post.ID(),
-		ArtistId:      post.Artist().Id,
+		ArtistId:      post.Artist().ID(),
 		ContributorId: post.Contributor().Id,
 		Content:       post.Content(),
 		Categories:    categoryIds,
@@ -220,31 +220,4 @@ func (r PostsCassandraRepository) UpdatePendingPost(ctx context.Context, id stri
 	}
 
 	return nil, nil
-}
-
-func (r PostsCassandraRepository) CheckIfCharactersAndCategoriesExist(ctx context.Context, post *post.PostPending) error {
-
-	characterInstances, err := r.GetCharactersById(ctx, post.CharacterIds())
-
-	if err != nil {
-		return err
-
-	}
-	// make sure that the submitted characters are found in the database
-	if len(characterInstances) != len(post.Characters()) {
-		return fmt.Errorf("invalid character found")
-	}
-
-	categoryInstances, err := r.GetCategoriesById(ctx, post.CategoryIds())
-
-	if err != nil {
-		return err
-	}
-
-	// make sure that the submitted categories exist in the database
-	if len(categoryInstances) != len(post.Categories()) {
-		return fmt.Errorf("invalid category found")
-	}
-
-	return nil
 }

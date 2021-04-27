@@ -16,7 +16,7 @@ type CreatePostHandler struct {
 	eva app.EvaService
 }
 
-func NewCreatePostHandler(pr post.Repository, pir post.IndexRepository, eva EvaService) CreatePostHandler {
+func NewCreatePostHandler(pr post.Repository, pir post.IndexRepository, eva app.EvaService) CreatePostHandler {
 	return CreatePostHandler{pr: pr, pir: pir, eva: eva}
 }
 
@@ -45,7 +45,8 @@ func (h CreatePostHandler) Handle(ctx context.Context, c interface{}) error {
 		return err
 	}
 
-	artist, err := h.eva.GetUser(ctx, cmd.ArtistId)
+	// need to grab artist, to ensure it's valid
+	artist, err := h.pr.GetArtistById(ctx, cmd.ArtistId)
 
 	if err != nil {
 		return err
@@ -57,7 +58,7 @@ func (h CreatePostHandler) Handle(ctx context.Context, c interface{}) error {
 		return err
 	}
 
-	pst := post.NewPost(id, artist, contributor, cmd.Content, categories, characters)
+	pst := post.NewPost(artist, contributor, cmd.Content, categories, characters)
 
 	if err := h.pr.CreatePost(ctx, pst); err != nil {
 		return err

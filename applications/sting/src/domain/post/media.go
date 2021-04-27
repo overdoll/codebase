@@ -4,6 +4,7 @@ import (
 	"os"
 
 	sting "overdoll/applications/sting/proto"
+	"overdoll/libraries/ksuid"
 )
 
 type Media struct {
@@ -29,11 +30,11 @@ func (m *Media) Thumbnail() string {
 	return staticURL + "/thumbnails/" + m.thumbnail
 }
 
-func NewMedia(id string, title string, thumbnail string) *Media {
+func NewMedia(title string) *Media {
 	return &Media{
-		id:        id,
+		id:        ksuid.New().String(),
 		title:     title,
-		thumbnail: thumbnail,
+		thumbnail: "",
 	}
 }
 
@@ -41,7 +42,11 @@ func UnmarshalMediaFromProtoArray(medi []*sting.Media) ([]*Media, error) {
 	var media []*Media
 
 	for _, med := range medi {
-		media = append(media, NewMedia(med.Id, med.Title, med.Thumbnail))
+		media = append(media, &Media{
+			id:        med.Id,
+			title:     med.Title,
+			thumbnail: med.Thumbnail,
+		})
 	}
 
 	return media, nil

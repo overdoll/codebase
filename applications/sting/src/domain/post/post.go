@@ -2,6 +2,8 @@ package post
 
 import (
 	"time"
+
+	"overdoll/libraries/ksuid"
 )
 
 type Post struct {
@@ -11,13 +13,13 @@ type Post struct {
 	characters []*Character
 	categories []*Category
 
-	artist      *User
+	artist      *Artist
 	contributor *User
 }
 
-func NewPost(id string, artist *User, contributor *User, content []string, categories []*Category, characters []*Character) *Post {
+func NewPost(artist *Artist, contributor *User, content []string, categories []*Category, characters []*Character) *Post {
 	return &Post{
-		id:          id,
+		id:          ksuid.New().String(),
 		artist:      artist,
 		contributor: contributor,
 		content:     content,
@@ -31,7 +33,7 @@ func (m *Post) ID() string {
 	return m.id
 }
 
-func (m *Post) Artist() *User {
+func (m *Post) Artist() *Artist {
 	return m.artist
 }
 

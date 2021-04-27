@@ -8,7 +8,6 @@ import (
 	"overdoll/applications/sting/src/app"
 	"overdoll/applications/sting/src/domain/content"
 	"overdoll/applications/sting/src/domain/post"
-	"overdoll/libraries/ksuid"
 )
 
 type NewPostHandler struct {
@@ -35,29 +34,47 @@ func (h NewPostHandler) Handle(ctx context.Context, c interface{}) error {
 
 	cmd := c.(*sting.SchedulePost).Post
 
-	pendingPost, err := post.NewPendingPost(ksuid.New().String(), cmd.ArtistId, cmd.ArtistUsername, contributorParse, cmd.Content, cmd.Characters, cmd.Categories)
-
-	if err != nil {
-		return fmt.Errorf("could not create pending post: %s", err)
-	}
-
-	// TODO: restructure so that this check is only done when the post is being created (createPendingPost func - will also check the DB to make sure categories + characters exist)
-	err = h.pr.CheckIfCharactersAndCategoriesExist(ctx, pendingPost)
+	// Grab categories & characters, because protobuf only contains ID references
+	characters, err := h.pr.GetCharactersById(ctx, cmd.Characters)
 
 	if err != nil {
 		return err
 	}
 
-	// Request new resources
-	pendingPost.RequestResources(cmd.CharacterRequests, cmd.CategoriesRequests, cmd.MediaRequests)
+	categories, err := h.pr.GetCategoriesById(ctx, cmd.Categories)
 
+	if err != nil {
+		return err
+	}
+
+	artist := post.NewArtist(cmd.ArtistId, cmd.ArtistUsername)
+
+	// Artist ID is not null, they are not requesting an artist
+	if cmd.ArtistId != "" {
+		artist, err = h.pr.GetArtistById(ctx, cmd.ArtistId)
+
+		if err != nil {
+			return err
+		}
+	}
+
+	// Get our contributor
 	usr, err := h.eva.GetUser(ctx, cmd.ContributorId)
 
 	if err != nil {
 		return fmt.Errorf("could not get user: %s", err)
 	}
 
-	_ = pendingPost.MakePublicOrReview(usr)
+	pendingPost, err := post.NewPendingPost(artist, usr, cmd.Content, characters, categories)
+
+	if err != nil {
+		return fmt.Errorf("could not create pending post: %s", err)
+	}
+
+	// Request new resources
+	pendingPost.RequestResources(cmd.CharacterRequests, cmd.CategoriesRequests, cmd.MediaRequests)
+
+	_ = pendingPost.MakePublicOrReview()
 
 	// Process content (mime-type checks, etc...)
 	cnt, err := h.cr.ProcessContent(ctx, cmd.ContributorId, cmd.Content)
