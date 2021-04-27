@@ -38,6 +38,14 @@ func NewCategory(title string) *Category {
 	}
 }
 
+func UnmarshalCategoryFromDatabase(id string, title string, thumbnail string) *Category {
+	return &Category{
+		id:        id,
+		title:     title,
+		thumbnail: thumbnail,
+	}
+}
+
 func UnmarshalFromProtoArray(cats []*sting.Category) ([]*Category, error) {
 	var categories []*Category
 

@@ -79,13 +79,15 @@ func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars [
 			continue
 		}
 
-		characters = append(characters, post.NewCharacter(
+		characters = append(characters, post.UnmarshalCharacterFromDatabase(
 			char.Id,
 			char.Name,
 			char.Thumbnail,
-			char.MediaId,
-			media.Title,
-			media.Thumbnail,
+			post.UnmarshalMediaFromDatabase(
+				char.MediaId,
+				media.Title,
+				media.Thumbnail,
+			),
 		))
 	}
 
@@ -131,13 +133,15 @@ func (r PostsCassandraRepository) GetCharacters(ctx context.Context) ([]*post.Ch
 			}
 		}
 
-		characters = append(characters, post.NewCharacter(
+		characters = append(characters, post.UnmarshalCharacterFromDatabase(
 			char.Id,
 			char.Name,
 			char.Thumbnail,
-			char.MediaId,
-			media.Title,
-			media.Thumbnail,
+			post.UnmarshalMediaFromDatabase(
+				char.MediaId,
+				media.Title,
+				media.Thumbnail,
+			),
 		))
 	}
 
@@ -158,7 +162,7 @@ func (r PostsCassandraRepository) GetMedias(ctx context.Context) ([]*post.Media,
 	// Now we can safely start creating our documents
 	for _, media := range dbMed {
 
-		medias = append(medias, post.NewMedia(
+		medias = append(medias, post.UnmarshalMediaFromDatabase(
 			media.Id,
 			media.Title,
 			media.Thumbnail,
@@ -194,7 +198,7 @@ func (r PostsCassandraRepository) GetMediasById(ctx context.Context, medi []stri
 	}
 
 	for _, med := range mediaModels {
-		medias = append(medias, post.NewMedia(
+		medias = append(medias, post.UnmarshalMediaFromDatabase(
 			med.Id,
 			med.Title,
 			med.Thumbnail,

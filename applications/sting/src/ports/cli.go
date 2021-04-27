@@ -6,13 +6,9 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
-	"overdoll/applications/sting/src/app"
+	sting "overdoll/applications/sting/proto"
 	"overdoll/applications/sting/src/service"
 )
-
-type CLI struct {
-	app app.Application
-}
 
 var Root = &cobra.Command{
 	Use: "index",
@@ -30,7 +26,7 @@ func init() {
 		Use:   "artists",
 		Short: "Index the whole artists table into elasticsearch",
 		Run: func(cmd *cobra.Command, args []string) {
-			if err := application.Commands.IndexArtists.Handle(ctx); err != nil {
+			if err := application.CommandBus().Send(ctx, &sting.IndexAllArtists{}); err != nil {
 				log.Fatalf(err.Error())
 			}
 		},
@@ -40,7 +36,7 @@ func init() {
 		Use:   "categories",
 		Short: "Index the whole categories table into elasticsearch",
 		Run: func(cmd *cobra.Command, args []string) {
-			if err := application.Commands.IndexCategories.Handle(ctx); err != nil {
+			if err := application.CommandBus().Send(ctx, &sting.IndexAllCategories{}); err != nil {
 				log.Fatalf(err.Error())
 			}
 		},
@@ -50,7 +46,7 @@ func init() {
 		Use:   "characters",
 		Short: "Index the whole characters table into elasticsearch",
 		Run: func(cmd *cobra.Command, args []string) {
-			if err := application.Commands.IndexCharacters.Handle(ctx); err != nil {
+			if err := application.CommandBus().Send(ctx, &sting.IndexAllCharacters{}); err != nil {
 				log.Fatalf(err.Error())
 			}
 		},
@@ -60,7 +56,7 @@ func init() {
 		Use:   "media",
 		Short: "Index the whole media table into elasticsearch",
 		Run: func(cmd *cobra.Command, args []string) {
-			if err := application.Commands.IndexMedia.Handle(ctx); err != nil {
+			if err := application.CommandBus().Send(ctx, &sting.IndexAllMedia{}); err != nil {
 				log.Fatalf(err.Error())
 			}
 		},

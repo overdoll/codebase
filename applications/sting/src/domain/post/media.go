@@ -38,6 +38,14 @@ func NewMedia(title string) *Media {
 	}
 }
 
+func UnmarshalMediaFromDatabase(id string, title string, thumbnail string) *Media {
+	return &Media{
+		id:        id,
+		title:     title,
+		thumbnail: thumbnail,
+	}
+}
+
 func UnmarshalMediaFromProtoArray(medi []*sting.Media) ([]*Media, error) {
 	var media []*Media
 

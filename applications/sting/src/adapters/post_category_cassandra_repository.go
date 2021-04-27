@@ -41,7 +41,7 @@ func (r PostsCassandraRepository) GetCategoriesById(ctx context.Context, cats []
 	}
 
 	for _, cat := range categoriesModels {
-		categories = append(categories, post.NewCategory(cat.Id, cat.Title, cat.Thumbnail))
+		categories = append(categories, post.UnmarshalCategoryFromDatabase(cat.Id, cat.Title, cat.Thumbnail))
 	}
 
 	return categories, nil
@@ -60,7 +60,7 @@ func (r PostsCassandraRepository) GetCategories(ctx context.Context) ([]*post.Ca
 	var categories []*post.Category
 
 	for _, dbCat := range dbCategory {
-		categories = append(categories, post.NewCategory(dbCat.Id, dbCat.Title, dbCat.Thumbnail))
+		categories = append(categories, post.UnmarshalCategoryFromDatabase(dbCat.Id, dbCat.Title, dbCat.Thumbnail))
 	}
 
 	return categories, nil

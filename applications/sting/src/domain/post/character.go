@@ -44,6 +44,15 @@ func NewCharacter(name string, media *Media) *Character {
 	}
 }
 
+func UnmarshalCharacterFromDatabase(id string, name string, thumbnail string, media *Media) *Character {
+	return &Character{
+		id:        id,
+		name:      name,
+		thumbnail: thumbnail,
+		media:     media,
+	}
+}
+
 func UnmarshalCharacterFromProtoArray(chars []*sting.Character) ([]*Character, error) {
 	var characters []*Character
 
