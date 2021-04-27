@@ -18,6 +18,7 @@ import (
 const (
 	ImageProcessingBucket = "overdoll-processing"
 	ImagePublicBucket     = "overdoll-public"
+	PostContentBucket     = "overdoll-post-content"
 	ImageUploadsBucket    = "overdoll-uploads"
 )
 
@@ -110,11 +111,33 @@ func (r ContentS3Repository) ProcessContent(ctx context.Context, userId string, 
 	return content, nil
 }
 
-func (r ContentS3Repository) MakeProcessedContentPublic(ctx context.Context, userId string, content []string) ([]string, error) {
+func (r ContentS3Repository) MakeProcessedContentPublic(ctx context.Context, userId string, oldContent []string) ([]string, error) {
 
-	_ = s3manager.NewDownloader(r.session)
-	_ = s3.New(r.session)
+	s3Client := s3.New(r.session)
+	var content []string
 
-	// TODO: move files, and delete private file
+	for _, image := range oldContent {
+
+		newFileId := ksuid.New().String()
+
+		// move file to private bucket
+		_, err := s3Client.CopyObject(&s3.CopyObjectInput{Bucket: aws.String(PostContentBucket),
+			CopySource: aws.String(url.PathEscape(ImageProcessingBucket + "/" + userId + "/" + image)), Key: aws.String(newFileId)})
+
+		if err != nil {
+			fmt.Printf("unable to copy file %s", err)
+			continue
+		}
+
+		// wait until file is available in private bucket
+		err = s3Client.WaitUntilObjectExists(&s3.HeadObjectInput{Bucket: aws.String(PostContentBucket), Key: aws.String(newFileId)})
+		if err != nil {
+			fmt.Printf("error while waiting for item to be copied %s", err)
+		}
+
+		// add to our list of files
+		content = append(content, newFileId)
+	}
+
 	return content, nil
 }

@@ -1,6 +1,7 @@
 package post
 
 import (
+	"os"
 	"time"
 )
 
@@ -43,9 +44,18 @@ func (m *Post) RawContent() []string {
 	return m.content
 }
 
-// TODO: add content getter
 func (m *Post) Content() []string {
-	return m.content
+	var generatedContent []string
+
+	for _, image := range m.content {
+
+		baseUrl := os.Getenv("POSTS_URL")
+
+		// generate the proper content url
+		generatedContent = append(generatedContent, baseUrl+"/"+image)
+	}
+
+	return generatedContent
 }
 
 func (m *Post) Categories() []*Category {

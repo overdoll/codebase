@@ -2,6 +2,7 @@ package post
 
 import (
 	"errors"
+	"os"
 	"time"
 
 	"overdoll/libraries/ksuid"
@@ -110,7 +111,22 @@ func (p *PostPending) RawContent() []string {
 }
 
 func (p *PostPending) Content() []string {
-	return p.content
+
+	var generatedContent []string
+
+	for _, image := range p.content {
+
+		baseUrl := os.Getenv("UPLOADS_URL")
+
+		if p.state == Published {
+			baseUrl = os.Getenv("POSTS_URL")
+		}
+
+		// generate the proper content url
+		generatedContent = append(generatedContent, baseUrl+"/"+p.Contributor().Id+"/"+image)
+	}
+
+	return generatedContent
 }
 
 func (p *PostPending) UpdateCategories(categories []*Category) error {
