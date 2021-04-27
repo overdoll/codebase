@@ -4,12 +4,10 @@ import (
 	"errors"
 	"fmt"
 	"time"
-
-	"overdoll/libraries/ksuid"
 )
 
 type Cookie struct {
-	cookie ksuid.UUID
+	cookie string
 	email  string
 
 	redeemed   bool
@@ -33,7 +31,7 @@ func (e NotFoundError) Error() string {
 	return fmt.Sprintf("cookie '%s' not found", e.CookieUUID)
 }
 
-func NewCookie(id ksuid.UUID, email string, session string) (*Cookie, error) {
+func NewCookie(id string, email string, session string) (*Cookie, error) {
 
 	ck := &Cookie{
 		cookie:     id,
@@ -46,7 +44,7 @@ func NewCookie(id ksuid.UUID, email string, session string) (*Cookie, error) {
 	return ck, nil
 }
 
-func UnmarshalCookieFromDatabase(cookie ksuid.UUID, email string, redeemed bool, session string, expiration time.Time) *Cookie {
+func UnmarshalCookieFromDatabase(cookie string, email string, redeemed bool, session string, expiration time.Time) *Cookie {
 	return &Cookie{
 		cookie:     cookie,
 		email:      email,
@@ -56,7 +54,7 @@ func UnmarshalCookieFromDatabase(cookie ksuid.UUID, email string, redeemed bool,
 	}
 }
 
-func (c *Cookie) Cookie() ksuid.UUID {
+func (c *Cookie) Cookie() string {
 	return c.cookie
 }
 

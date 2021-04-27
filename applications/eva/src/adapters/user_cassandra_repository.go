@@ -9,11 +9,10 @@ import (
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"overdoll/applications/eva/src/domain/user"
-	"overdoll/libraries/ksuid"
 )
 
 type User struct {
-	Id       ksuid.UUID      `db:"id"`
+	Id       string          `db:"id"`
 	Username string          `db:"username"`
 	Email    string          `db:"email"`
 	Roles    []user.UserRole `db:"roles"`
@@ -22,13 +21,13 @@ type User struct {
 }
 
 type UserUsername struct {
-	Id       ksuid.UUID `db:"user_id"`
-	Username string     `db:"username"`
+	Id       string `db:"user_id"`
+	Username string `db:"username"`
 }
 
 type UserEmail struct {
-	UserId ksuid.UUID `db:"user_id"`
-	Email  string     `db:"email"`
+	UserId string `db:"user_id"`
+	Email  string `db:"email"`
 }
 
 type UserRepository struct {
@@ -40,7 +39,7 @@ func NewUserCassandraRepository(session gocqlx.Session) UserRepository {
 }
 
 // GetUserById - Get user using the ID
-func (r UserRepository) GetUserById(ctx context.Context, id ksuid.UUID) (*user.User, error) {
+func (r UserRepository) GetUserById(ctx context.Context, id string) (*user.User, error) {
 	userInstance := &User{
 		Id: id,
 	}
@@ -53,7 +52,7 @@ func (r UserRepository) GetUserById(ctx context.Context, id ksuid.UUID) (*user.U
 	if err := queryUser.Get(&userInstance); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, user.NotFoundError{Identifier: id.String()}
+			return nil, user.NotFoundError{Identifier: id}
 		}
 
 		return nil, fmt.Errorf("select() failed: '%s", err)

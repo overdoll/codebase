@@ -4,8 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"os"
-
-	"overdoll/libraries/ksuid"
 )
 
 type UserRole string
@@ -18,7 +16,7 @@ const (
 )
 
 type User struct {
-	id ksuid.UUID
+	id string
 
 	username string
 	email    string
@@ -36,7 +34,7 @@ type NotFoundError struct {
 	Identifier string
 }
 
-func UnmarshalUserFromDatabase(id ksuid.UUID, username string, email string, roles []UserRole, verified bool, avatar string) *User {
+func UnmarshalUserFromDatabase(id string, username string, email string, roles []UserRole, verified bool, avatar string) *User {
 	return &User{
 		id:       id,
 		username: username,
@@ -51,7 +49,7 @@ func (e NotFoundError) Error() string {
 	return fmt.Sprintf("user '%s' not found", e.Identifier)
 }
 
-func NewUser(id ksuid.UUID, username string, email string) (*User, error) {
+func NewUser(id string, username string, email string) (*User, error) {
 
 	// TODO: add some validation for the user creation (username, etc...)
 
@@ -62,7 +60,7 @@ func NewUser(id ksuid.UUID, username string, email string) (*User, error) {
 	}, nil
 }
 
-func (u User) ID() ksuid.UUID {
+func (u User) ID() string {
 	return u.id
 }
 

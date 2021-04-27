@@ -9,15 +9,14 @@ import (
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"overdoll/applications/eva/src/domain/cookie"
-	"overdoll/libraries/ksuid"
 )
 
 type AuthenticationCookie struct {
-	Cookie     ksuid.UUID `db:"cookie"`
-	Email      string     `db:"email"`
-	Redeemed   bool       `db:"redeemed"`
-	Expiration time.Time  `db:"expiration"`
-	Session    string     `db:"session"`
+	Cookie     string    `db:"cookie"`
+	Email      string    `db:"email"`
+	Redeemed   bool      `db:"redeemed"`
+	Expiration time.Time `db:"expiration"`
+	Session    string    `db:"session"`
 }
 
 type CookieRepository struct {
@@ -29,7 +28,7 @@ func NewCookieCassandraRepository(session gocqlx.Session) CookieRepository {
 }
 
 // GetCookieById - Get authentication cookie by ID
-func (r CookieRepository) GetCookieById(ctx context.Context, id ksuid.UUID) (*cookie.Cookie, error) {
+func (r CookieRepository) GetCookieById(ctx context.Context, id string) (*cookie.Cookie, error) {
 
 	cookieItem := &AuthenticationCookie{Cookie: id}
 
@@ -41,7 +40,7 @@ func (r CookieRepository) GetCookieById(ctx context.Context, id ksuid.UUID) (*co
 	if err := queryCookie.Get(&cookieItem); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, cookie.NotFoundError{CookieUUID: id.String()}
+			return nil, cookie.NotFoundError{CookieUUID: id}
 		}
 
 		return nil, fmt.Errorf("select() failed: '%s", err)
@@ -57,7 +56,7 @@ func (r CookieRepository) GetCookieById(ctx context.Context, id ksuid.UUID) (*co
 }
 
 // DeleteCookieById - Delete cookie by ID
-func (r CookieRepository) DeleteCookieById(ctx context.Context, id ksuid.UUID) error {
+func (r CookieRepository) DeleteCookieById(ctx context.Context, id string) error {
 
 	deleteCookie := AuthenticationCookie{
 		Cookie: id,
@@ -73,7 +72,7 @@ func (r CookieRepository) DeleteCookieById(ctx context.Context, id ksuid.UUID) e
 	if err := queryCookie.ExecRelease(); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return cookie.NotFoundError{CookieUUID: id.String()}
+			return cookie.NotFoundError{CookieUUID: id}
 		}
 
 		return fmt.Errorf("delete() failed: '%s", err)
@@ -126,7 +125,7 @@ func (r CookieRepository) UpdateCookie(ctx context.Context, instance *cookie.Coo
 	if err := updateCookie.ExecRelease(); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return cookie.NotFoundError{CookieUUID: instance.Cookie().String()}
+			return cookie.NotFoundError{CookieUUID: instance.Cookie()}
 		}
 
 		return fmt.Errorf("update() failed: '%s", err)

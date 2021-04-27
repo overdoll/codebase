@@ -13,7 +13,7 @@ import (
 func TestCookie_Consume_not_redeemed(t *testing.T) {
 	t.Parallel()
 
-	ck, err := cookie.NewCookie(ksuid.New(), "test-email@test.com", "")
+	ck, err := cookie.NewCookie(ksuid.New().String(), "test-email@test.com", "")
 
 	require.NoError(t, err)
 
@@ -23,7 +23,7 @@ func TestCookie_Consume_not_redeemed(t *testing.T) {
 func TestCookie_Consume(t *testing.T) {
 	t.Parallel()
 
-	ck, err := cookie.NewCookie(ksuid.New(), "test-email@test.com", "")
+	ck, err := cookie.NewCookie(ksuid.New().String(), "test-email@test.com", "")
 
 	require.NoError(t, err)
 
@@ -37,7 +37,7 @@ func TestCookie_Consume(t *testing.T) {
 func TestCookie_Redeem_expired(t *testing.T) {
 	t.Parallel()
 
-	ck := cookie.UnmarshalCookieFromDatabase(ksuid.New(), "test-email@test.com", false, "", time.Now())
+	ck := cookie.UnmarshalCookieFromDatabase(ksuid.New().String(), "test-email@test.com", false, "", time.Now())
 
 	assert.Equal(t, cookie.ErrCookieExpired, ck.MakeRedeemed())
 }
@@ -45,7 +45,7 @@ func TestCookie_Redeem_expired(t *testing.T) {
 func TestCookie_Consume_expired(t *testing.T) {
 	t.Parallel()
 
-	ck := cookie.UnmarshalCookieFromDatabase(ksuid.New(), "test-email@test.com", true, "", time.Now())
+	ck := cookie.UnmarshalCookieFromDatabase(ksuid.New().String(), "test-email@test.com", true, "", time.Now())
 
 	assert.Equal(t, cookie.ErrCookieExpired, ck.MakeConsumed())
 }

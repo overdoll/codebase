@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"overdoll/applications/eva/src/domain/user"
-	"overdoll/libraries/ksuid"
 )
 
 type GetUserHandler struct {
@@ -18,13 +17,7 @@ func NewGetUserHandler(ur user.Repository) GetUserHandler {
 
 func (h GetUserHandler) Handle(ctx context.Context, id string) (*user.User, error) {
 
-	u, err := ksuid.Parse(id)
-
-	if err != nil {
-		return nil, fmt.Errorf("uuid is not valid: %s", id)
-	}
-
-	ur, err := h.ur.GetUserById(ctx, u)
+	ur, err := h.ur.GetUserById(ctx, id)
 
 	if err != nil {
 		return nil, fmt.Errorf("could not get user: %s", err)

@@ -28,7 +28,7 @@ func (s *Server) GetUser(ctx context.Context, request *eva.GetUserRequest) (*eva
 		return nil, status.Error(codes.Internal, fmt.Sprintf("failed to get user: %s", err))
 	}
 
-	return &eva.User{Username: usr.Username(), Id: usr.ID().String(), Roles: usr.UserRolesAsString(), Verified: usr.Verified(), Avatar: usr.Avatar()}, nil
+	return &eva.User{Username: usr.Username(), Id: usr.ID(), Roles: usr.UserRolesAsString(), Verified: usr.Verified(), Avatar: usr.Avatar()}, nil
 }
 
 func (s *Server) RegisterUserFromCookie(ctx context.Context, request *eva.RegisterUserRequest) (*eva.User, error) {
@@ -39,7 +39,7 @@ func (s *Server) RegisterUserFromCookie(ctx context.Context, request *eva.Regist
 		return nil, status.Error(codes.Internal, fmt.Sprintf("failed to register user: %s", err))
 	}
 
-	return &eva.User{Username: usr.Username(), Id: usr.ID().String(), Roles: usr.UserRolesAsString(), Verified: usr.Verified(), Avatar: usr.Avatar()}, nil
+	return &eva.User{Username: usr.Username(), Id: usr.ID(), Roles: usr.UserRolesAsString(), Verified: usr.Verified(), Avatar: usr.Avatar()}, nil
 }
 
 func (s *Server) GetAuthenticationCookie(ctx context.Context, request *eva.GetAuthenticationCookieRequest) (*eva.AuthenticationCookie, error) {
@@ -54,7 +54,7 @@ func (s *Server) GetAuthenticationCookie(ctx context.Context, request *eva.GetAu
 		Email:      cookie.Email(),
 		Redeemed:   cookie.Redeemed(),
 		Expiration: cookie.Expiration().String(),
-		Cookie:     cookie.Cookie().String(),
+		Cookie:     cookie.Cookie(),
 		Session:    cookie.Session(),
 	}, nil
 }
@@ -71,7 +71,7 @@ func (s *Server) CreateAuthenticationCookie(ctx context.Context, request *eva.Cr
 		Email:      cookie.Email(),
 		Redeemed:   cookie.Redeemed(),
 		Expiration: cookie.Expiration().String(),
-		Cookie:     cookie.Cookie().String(),
+		Cookie:     cookie.Cookie(),
 		Session:    cookie.Session(),
 	}, nil
 }
@@ -86,7 +86,7 @@ func (s *Server) RedeemAuthenticationCookie(ctx context.Context, request *eva.Ge
 
 	return &eva.RedeemCookieResponse{
 		Cookie: &eva.AuthenticationCookie{
-			Cookie:     cookie.Cookie().String(),
+			Cookie:     cookie.Cookie(),
 			Redeemed:   cookie.Redeemed(),
 			Expiration: cookie.Expiration().String(),
 			Email:      cookie.Email(),

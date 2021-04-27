@@ -37,7 +37,7 @@ func (h RegisterFromCookieHandler) Handle(ctx context.Context, cookieId string, 
 		return nil, fmt.Errorf("cookie not valid: %s", err)
 	}
 
-	instance, err := user.NewUser(ksuid.New(), username, ck.Email())
+	instance, err := user.NewUser(ksuid.New().String(), username, ck.Email())
 
 	if err != nil {
 		return nil, fmt.Errorf("bad user %s", err)

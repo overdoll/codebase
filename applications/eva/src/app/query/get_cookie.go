@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"overdoll/applications/eva/src/domain/cookie"
-	"overdoll/libraries/ksuid"
 )
 
 type GetCookieHandler struct {
@@ -18,13 +17,7 @@ func NewGetCookieHandler(cr cookie.Repository) GetCookieHandler {
 
 func (h GetCookieHandler) Handle(ctx context.Context, id string) (*cookie.Cookie, error) {
 
-	u, err := ksuid.Parse(id)
-
-	if err != nil {
-		return nil, fmt.Errorf("uuid is not valid: %s", id)
-	}
-
-	ck, err := h.cr.GetCookieById(ctx, u)
+	ck, err := h.cr.GetCookieById(ctx, id)
 
 	if err != nil {
 		return nil, fmt.Errorf("could not get cookie: %s", err)

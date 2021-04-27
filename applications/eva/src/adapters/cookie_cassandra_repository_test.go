@@ -17,12 +17,12 @@ func TestCookieRepository_GetCookie_not_exists(t *testing.T) {
 	repo := newCookieRepository(t)
 	ctx := context.Background()
 
-	id := ksuid.New()
+	id := ksuid.New().String()
 
 	usr, err := repo.GetCookieById(ctx, id)
 
 	assert.Nil(t, usr)
-	assert.EqualError(t, err, cookie.NotFoundError{CookieUUID: id.String()}.Error())
+	assert.EqualError(t, err, cookie.NotFoundError{CookieUUID: id}.Error())
 }
 
 func TestCookieRepository_CreateCookie(t *testing.T) {
@@ -31,7 +31,7 @@ func TestCookieRepository_CreateCookie(t *testing.T) {
 	repo := newCookieRepository(t)
 	ctx := context.Background()
 
-	ck, err := cookie.NewCookie(ksuid.New(), "test@test.com", "")
+	ck, err := cookie.NewCookie(ksuid.New().String(), "test@test.com", "")
 
 	require.NoError(t, err)
 
@@ -43,5 +43,5 @@ func TestCookieRepository_CreateCookie(t *testing.T) {
 func newCookieRepository(t *testing.T) CookieRepository {
 	session := scylla.CreateScyllaSession(t, "eva")
 
-	return NewCookieRepository(session)
+	return NewCookieCassandraRepository(session)
 }

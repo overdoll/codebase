@@ -53,19 +53,19 @@ func (u userRepoMock) CreateUser(ctx context.Context, instance *user.User) error
 func TestRedeemCookie_Consume_when_user_exists(t *testing.T) {
 	t.Parallel()
 
-	id := ksuid.New()
+	id := ksuid.New().String()
 
 	ck, err := cookie.NewCookie(id, "test2@test.com", "")
 
 	require.NoError(t, err)
 
-	usr, err := user.NewUser(ksuid.New(), "user", "test@test.com")
+	usr, err := user.NewUser(ksuid.New().String(), "user", "test@test.com")
 
 	require.NoError(t, err)
 
 	handler := command.NewRedeemCookieHandler(&cookieRepoMock{Cookie: ck}, &userRepoMock{User: usr})
 
-	res, err := handler.Handle(context.Background(), id.String())
+	res, err := handler.Handle(context.Background(), id)
 
 	require.NoError(t, err)
 
@@ -77,7 +77,7 @@ func TestRedeemCookie_Consume_when_user_exists(t *testing.T) {
 func TestRedeemCookie_Consume_false_when_user_not_exists(t *testing.T) {
 	t.Parallel()
 
-	id := ksuid.New()
+	id := ksuid.New().String()
 
 	ck, err := cookie.NewCookie(id, "test@test.com", "")
 
@@ -85,7 +85,7 @@ func TestRedeemCookie_Consume_false_when_user_not_exists(t *testing.T) {
 
 	handler := command.NewRedeemCookieHandler(&cookieRepoMock{Cookie: ck}, &userRepoMock{User: nil})
 
-	res, err := handler.Handle(context.Background(), id.String())
+	res, err := handler.Handle(context.Background(), id)
 
 	require.NoError(t, err)
 

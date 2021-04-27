@@ -19,12 +19,12 @@ func TestUserRepository_GetUser_not_exists(t *testing.T) {
 	repo := newUserRepository(t)
 	ctx := context.Background()
 
-	id := ksuid.New()
+	id := ksuid.New().String()
 
 	usr, err := repo.GetUserById(ctx, id)
 
 	assert.Nil(t, usr)
-	assert.EqualError(t, err, user.NotFoundError{Identifier: id.String()}.Error())
+	assert.EqualError(t, err, user.NotFoundError{Identifier: id}.Error())
 }
 
 func TestUserRepository_GetUser_email_exists(t *testing.T) {
@@ -63,7 +63,7 @@ func TestUserRepository_CreateUser_conflicting_username(t *testing.T) {
 	require.NoError(t, err)
 
 	// Create another user, with the same username but different email
-	copyUsr, err := user.NewUser(ksuid.New(), usr.Username(), "test-email@test.com")
+	copyUsr, err := user.NewUser(ksuid.New().String(), usr.Username(), "test-email@test.com")
 
 	require.NoError(t, err)
 
@@ -87,7 +87,7 @@ func TestUserRepository_CreateUser_conflicting_email(t *testing.T) {
 	require.NoError(t, err)
 
 	// Create another user, with the same email but different username
-	copyUsr, err := user.NewUser(ksuid.New(), "ghahah", usr.Email())
+	copyUsr, err := user.NewUser(ksuid.New().String(), "ghahah", usr.Email())
 
 	require.NoError(t, err)
 
@@ -164,7 +164,7 @@ func newFakeUser(t *testing.T) *user.User {
 		t.Fatal("error generating fake data: ", err)
 	}
 
-	usr, err := user.NewUser(ksuid.New(), fake.Username, fake.Email)
+	usr, err := user.NewUser(ksuid.New().String(), fake.Username, fake.Email)
 
 	require.NoError(t, err)
 
@@ -174,5 +174,5 @@ func newFakeUser(t *testing.T) *user.User {
 func newUserRepository(t *testing.T) UserRepository {
 	session := scylla.CreateScyllaSession(t, "eva")
 
-	return NewUserRepository(session)
+	return NewUserCassandraRepository(session)
 }
