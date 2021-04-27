@@ -20,13 +20,7 @@ func NewRegisterFromCookieHandler(cr cookie.Repository, ur user.Repository) Regi
 
 func (h RegisterFromCookieHandler) Handle(ctx context.Context, cookieId string, username string) (*user.User, error) {
 
-	u, err := ksuid.Parse(cookieId)
-
-	if err != nil {
-		return nil, fmt.Errorf("uuid is not valid: %s", cookieId)
-	}
-
-	ck, err := h.cr.GetCookieById(ctx, u)
+	ck, err := h.cr.GetCookieById(ctx, cookieId)
 
 	if err != nil {
 		return nil, fmt.Errorf("could not get cookie: %s", err)
