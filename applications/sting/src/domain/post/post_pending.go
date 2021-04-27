@@ -262,10 +262,29 @@ func (p *PostPending) GetExistingMediaIds() []string {
 	return medias
 }
 
-// ConsumeCustomResources - pass existingMedia so it can use that as arguments. As well, pass an array of IDs, and it will use them, in order
-func (p *PostPending) ConsumeCustomResources(existingMedia []*Media, ids []string) ([]*Category, []*Character, []*Media) {
+// UseCustomIdsForCustomResources - pass an array of IDs, and all custom resources will be modified to use them.
+// good for ensuring idempotency
+func (p *PostPending) UseCustomIdsForCustomResources(ids []string) {
 
-	// TODO: prefer 'ids' over ID from resource
+	var x string
+
+	for _, char := range p.charactersRequests {
+		x, ids = ids[0], ids[1:]
+		char.Id = x
+	}
+
+	for _, cat := range p.categoriesRequests {
+		x, ids = ids[0], ids[1:]
+		cat.Id = x
+	}
+
+	for _, med := range p.mediaRequests {
+		med.Id = x
+	}
+}
+
+// ConsumeCustomResources - pass existingMedia so it can use that as arguments.
+func (p *PostPending) ConsumeCustomResources(existingMedia []*Media) ([]*Category, []*Character, []*Media) {
 
 	var characters []*Character
 	var medias []*Media

@@ -52,7 +52,6 @@ type IndexRepository interface {
 type EventRepository interface {
 	PostCreated(context.Context, *PostPending) error
 	PostCompleted(context.Context, *PostPending) error
-	PostPendingUpdated(context.Context, *PostPending) error
 
 	CharactersCreated(context.Context, []*Character) error
 	MediaCreated(context.Context, []*Media) error

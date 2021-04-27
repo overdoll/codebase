@@ -67,7 +67,10 @@ func (h PublishPostHandler) Handle(ctx context.Context, c interface{}) error {
 			return nil, err
 		}
 
-		categories, chars, medias := pending.ConsumeCustomResources(existingMedias, cmd.GeneratedIds)
+		// use our custom ids from protobuf to ensure idempotency
+		pending.UseCustomIdsForCustomResources(cmd.GeneratedIds)
+
+		categories, chars, medias := pending.ConsumeCustomResources(existingMedias)
 
 		// Dispatch events to create our new resources
 		if err := h.pe.CategoriesCreated(ctx, categories); err != nil {

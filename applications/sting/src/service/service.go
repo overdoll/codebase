@@ -129,7 +129,7 @@ func createApplication(ctx context.Context, eva app.EvaService, router *message.
 		CommandHandlers: func(cb *cqrs.CommandBus, eb *cqrs.EventBus) []cqrs.CommandHandler {
 			eventRepo := adapters.NewPostEventRepository(cb, eb)
 			return []cqrs.CommandHandler{
-				command.NewNewPostHandler(postRepo, contentRepo, eva, eventRepo),
+				command.NewNewPostHandler(postRepo, indexRepo, contentRepo, eva, eventRepo),
 				command.NewCreatePostHandler(postRepo, indexRepo, eva),
 				command.NewReviewPostHandler(postRepo, eventRepo),
 				command.NewCreateCategoryHandler(postRepo, indexRepo),
@@ -151,8 +151,7 @@ func createApplication(ctx context.Context, eva app.EvaService, router *message.
 		EventHandlers: func(cb *cqrs.CommandBus, eb *cqrs.EventBus) []cqrs.EventHandler {
 			eventRepo := adapters.NewPostEventRepository(cb, eb)
 			return []cqrs.EventHandler{
-				event.NewPostPendingUpdatedHandler(postRepo, indexRepo, eva),
-				event.NewPublishPostHandler(postRepo, indexRepo, eventRepo),
+				event.NewPublishPostHandler(postRepo, indexRepo, eventRepo, contentRepo, eva),
 			}
 		},
 		EventsPublisher: eventsPublisher,

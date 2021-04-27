@@ -21,8 +21,21 @@ func NewPostEventRepository(commandBus *cqrs.CommandBus, eventBus *cqrs.EventBus
 func (r PostEventRepository) PostCompleted(ctx context.Context, pending *post.PostPending) error {
 
 	// Go through each requested resource, and add it to our list of Ids so that they can be passed later on consumption
+	var ids []string
 
-	if err := r.eventBus.Publish(ctx, &sting.PostCompleted{PostId: pending.ID()}); err != nil {
+	for _, char := range pending.CharacterRequests() {
+		ids = append(ids, char.Id)
+	}
+
+	for _, med := range pending.MediaRequests() {
+		ids = append(ids, med.Id)
+	}
+
+	for _, cat := range pending.CategoryRequests() {
+		ids = append(ids, cat.Id)
+	}
+
+	if err := r.eventBus.Publish(ctx, &sting.PostCompleted{PostId: pending.ID(), GeneratedIds: ids}); err != nil {
 		return err
 	}
 
