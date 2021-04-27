@@ -70,6 +70,15 @@ func NewPostIndexElasticSearchRepository(store *search.Store) PostIndexElasticSe
 	return PostIndexElasticSearchRepository{store: store}
 }
 
+func (r PostIndexElasticSearchRepository) IndexPendingPost(ctx context.Context, pendingPost *post.PostPending) error {
+
+	var pendingPosts []*post.PostPending
+
+	pendingPosts = append(pendingPosts, pendingPost)
+
+	return r.BulkIndexPendingPosts(ctx, pendingPosts)
+}
+
 func (r PostIndexElasticSearchRepository) BulkIndexPendingPosts(ctx context.Context, pendingPosts []*post.PostPending) error {
 	err := r.store.CreateBulkIndex("pending_posts")
 
@@ -118,7 +127,7 @@ func (r PostIndexElasticSearchRepository) BulkIndexPendingPosts(ctx context.Cont
 				Avatar:   pst.Contributor().Avatar,
 				Username: pst.Contributor().Username,
 			},
-			Content:            pst.Content(),
+			Content:            pst.RawContent(),
 			PostedAt:           pst.PostedAt().String(),
 			Categories:         categoryDocuments,
 			Characters:         characterDocuments,
@@ -139,6 +148,15 @@ func (r PostIndexElasticSearchRepository) BulkIndexPendingPosts(ctx context.Cont
 	}
 
 	return nil
+}
+
+func (r PostIndexElasticSearchRepository) IndexPost(ctx context.Context, pst *post.Post) error {
+
+	// We have only one post - index it
+	var posts []*post.Post
+	posts = append(posts, pst)
+
+	return r.BulkIndexPosts(ctx, posts)
 }
 
 func (r PostIndexElasticSearchRepository) BulkIndexPosts(ctx context.Context, posts []*post.Post) error {

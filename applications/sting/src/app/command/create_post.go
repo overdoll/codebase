@@ -31,15 +31,13 @@ func (h CreatePostHandler) NewCommand() interface{} {
 func (h CreatePostHandler) Handle(ctx context.Context, c interface{}) error {
 	cmd := c.(*sting.PostCreated).Post
 
-	// TODO: capture all categories, characters & media from DB and insert them
-
-	characters, err := h.pr.GetCharactersById(ctx, cmd.Characters)
+	characters, err := h.pr.GetCharactersById(ctx, cmd.CategoryIds)
 
 	if err != nil {
 		return err
 	}
 
-	categories, err := h.pr.GetCategoriesById(ctx, cmd.Categories)
+	categories, err := h.pr.GetCategoriesById(ctx, cmd.CategoryIds)
 
 	if err != nil {
 		return err
@@ -58,17 +56,13 @@ func (h CreatePostHandler) Handle(ctx context.Context, c interface{}) error {
 		return err
 	}
 
-	pst := post.NewPost(artist, contributor, cmd.Content, categories, characters)
+	pst := post.NewPost(cmd.Id, artist, contributor, cmd.Content, categories, characters)
 
 	if err := h.pr.CreatePost(ctx, pst); err != nil {
 		return err
 	}
-
-	// We have only one post - index it
-	var posts []*post.Post
-	posts = append(posts, pst)
-
-	if err := h.pir.BulkIndexPosts(ctx, posts); err != nil {
+	
+	if err := h.pir.IndexPost(ctx, pst); err != nil {
 		return err
 	}
 

@@ -26,34 +26,29 @@ message Post {
   string artistId = 2;
   string contributorId = 3;
   repeated string content = 4;
-  repeated string categories = 5;
-  repeated string characters = 6;
+  repeated string categoryIds = 5;
+  repeated string characterIds = 6;
 }
 
-message PendingPost {
+message NewPendingPost {
   string id = 1;
   string artistId = 2;
   string artistUsername = 3;
   string contributorId = 4;
   repeated string content = 5;
-  repeated string categories = 6;
-  repeated string characters = 7;
-  repeated string categoriesRequests = 8;
-  repeated string mediaRequests = 9;
+  repeated string categoryIds = 6;
+  repeated string characterIds = 7;
+  repeated string mediaRequests = 8;
+  repeated string categoryRequests = 9;
   map<string, string> characterRequests = 10;
-  string postedAt = 11;
 }
 
 message SchedulePost {
-  PendingPost post = 1;
+  NewPendingPost post = 1;
 }
 
 message ReviewPost {
-  PendingPost post = 1;
-}
-
-message PostPublished {
-  string id = 1;
+  NewPendingPost post = 1;
 }
 
 message CharacterCreated {
@@ -73,11 +68,12 @@ message PostCreated {
 }
 
 message PostPendingUpdated {
-  PendingPost post = 1;
+  string postId = 1;
 }
 
 message PostCompleted {
-  string id = 1;
+  string postId = 1;
+  repeated string generatedIds = 2;
 }
 
 message IndexAllArtists {}

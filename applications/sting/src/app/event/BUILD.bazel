@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "post_pending_updated.go",
+        "post_published.go",
+    ],
+    importpath = "overdoll/applications/sting/src/app/event",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//applications/sting/proto:v1_go_proto",
+        "//applications/sting/src/app:go_default_library",
+        "//applications/sting/src/domain/post:go_default_library",
+    ],
+)

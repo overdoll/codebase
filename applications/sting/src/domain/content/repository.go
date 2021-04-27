@@ -6,4 +6,5 @@ import (
 
 type Repository interface {
 	ProcessContent(context.Context, string, []string) ([]string, error)
+	MakeProcessedContentPublic(context.Context, string, []string) ([]string, error)
 }

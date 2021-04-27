@@ -4,7 +4,6 @@ import (
 	"os"
 
 	sting "overdoll/applications/sting/proto"
-	"overdoll/libraries/ksuid"
 )
 
 type Character struct {
@@ -35,9 +34,9 @@ func (c *Character) Thumbnail() string {
 	return staticURL + "/thumbnails/" + c.thumbnail
 }
 
-func NewCharacter(name string, media *Media) *Character {
+func NewCharacter(id string, name string, media *Media) *Character {
 	return &Character{
-		id:        ksuid.New().String(),
+		id:        id,
 		name:      name,
 		thumbnail: "",
 		media:     media,

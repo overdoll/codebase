@@ -20,7 +20,9 @@ func NewPostEventRepository(commandBus *cqrs.CommandBus, eventBus *cqrs.EventBus
 
 func (r PostEventRepository) PostCompleted(ctx context.Context, pending *post.PostPending) error {
 
-	if err := r.eventBus.Publish(ctx, &sting.PostCompleted{Id: pending.ID()}); err != nil {
+	// Go through each requested resource, and add it to our list of Ids so that they can be passed later on consumption
+
+	if err := r.eventBus.Publish(ctx, &sting.PostCompleted{PostId: pending.ID()}); err != nil {
 		return err
 	}
 
@@ -33,47 +35,9 @@ func (r PostEventRepository) PostCreated(ctx context.Context, pendingPost *post.
 		Id:            ksuid.New().String(),
 		ArtistId:      pendingPost.Artist().ID(),
 		ContributorId: pendingPost.Contributor().Id,
-		Content:       pendingPost.Content(),
-		Categories:    pendingPost.CategoryIds(),
-		Characters:    pendingPost.CharacterIds(),
-	}}); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (r PostEventRepository) PostPendingUpdated(ctx context.Context, pendingPost *post.PostPending) error {
-
-	characterRequests := make(map[string]string)
-
-	for _, cr := range pendingPost.CharacterRequests() {
-		characterRequests[cr.Name] = cr.Media
-	}
-
-	var categoryRequests []string
-
-	for _, cr := range pendingPost.CategoryRequests() {
-		categoryRequests = append(categoryRequests, cr.Title)
-	}
-
-	var mediaRequests []string
-
-	for _, cr := range pendingPost.MediaRequests() {
-		mediaRequests = append(mediaRequests, cr.Title)
-	}
-
-	if err := r.eventBus.Publish(ctx, &sting.PostPendingUpdated{Post: &sting.PendingPost{
-		Id:                 pendingPost.ID(),
-		ArtistId:           pendingPost.Artist().ID(),
-		ArtistUsername:     pendingPost.Artist().Username(),
-		ContributorId:      pendingPost.Contributor().Id,
-		Content:            pendingPost.Content(),
-		Categories:         pendingPost.CategoryIds(),
-		Characters:         pendingPost.CharacterIds(),
-		CharacterRequests:  characterRequests,
-		CategoriesRequests: categoryRequests,
-		MediaRequests:      mediaRequests,
+		Content:       pendingPost.RawContent(),
+		CategoryIds:   pendingPost.CategoryIds(),
+		CharacterIds:  pendingPost.CharacterIds(),
 	}}); err != nil {
 		return err
 	}
@@ -104,7 +68,7 @@ func (r PostEventRepository) CharactersCreated(ctx context.Context, chars []*pos
 
 		m := char.Media()
 
-		characters = append(characters, &sting.Character{Id: char.ID(), Name: char.Name(), Thumbnail: char.Thumbnail(), Media: &sting.Media{
+		characters = append(characters, &sting.Character{Id: char.ID(), Name: char.Name(), Thumbnail: char.RawThumbnail(), Media: &sting.Media{
 			Id:        m.ID(),
 			Title:     m.Title(),
 			Thumbnail: m.RawThumbnail(),

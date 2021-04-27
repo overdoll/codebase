@@ -4,7 +4,6 @@ import (
 	"os"
 
 	sting "overdoll/applications/sting/proto"
-	"overdoll/libraries/ksuid"
 )
 
 type Media struct {
@@ -30,9 +29,9 @@ func (m *Media) Thumbnail() string {
 	return staticURL + "/thumbnails/" + m.thumbnail
 }
 
-func NewMedia(title string) *Media {
+func NewMedia(id string, title string) *Media {
 	return &Media{
-		id:        ksuid.New().String(),
+		id:        id,
 		title:     title,
 		thumbnail: "",
 	}

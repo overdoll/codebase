@@ -12,14 +12,15 @@ import (
 
 type NewPostHandler struct {
 	pr  post.Repository
+	pi  post.IndexRepository
 	cr  content.Repository
 	eva app.EvaService
 
 	pe post.EventRepository
 }
 
-func NewNewPostHandler(pr post.Repository, cr content.Repository, eva app.EvaService, pe post.EventRepository) NewPostHandler {
-	return NewPostHandler{pr: pr, cr: cr, eva: eva, pe: pe}
+func NewNewPostHandler(pr post.Repository, pi post.IndexRepository, cr content.Repository, eva app.EvaService, pe post.EventRepository) NewPostHandler {
+	return NewPostHandler{pr: pr, cr: cr, eva: eva, pe: pe, pi: pi}
 }
 
 func (h NewPostHandler) HandlerName() string {
@@ -35,13 +36,13 @@ func (h NewPostHandler) Handle(ctx context.Context, c interface{}) error {
 	cmd := c.(*sting.SchedulePost).Post
 
 	// Grab categories & characters, because protobuf only contains ID references
-	characters, err := h.pr.GetCharactersById(ctx, cmd.Characters)
+	characters, err := h.pr.GetCharactersById(ctx, cmd.CharacterIds)
 
 	if err != nil {
 		return err
 	}
 
-	categories, err := h.pr.GetCategoriesById(ctx, cmd.Categories)
+	categories, err := h.pr.GetCategoriesById(ctx, cmd.CategoryIds)
 
 	if err != nil {
 		return err
@@ -49,7 +50,7 @@ func (h NewPostHandler) Handle(ctx context.Context, c interface{}) error {
 
 	artist := post.NewArtist(cmd.ArtistId, cmd.ArtistUsername)
 
-	// Artist ID is not null, they are not requesting an artist
+	// Artist ID is not null, they are not requesting an artist - look for an existing one in the DB
 	if cmd.ArtistId != "" {
 		artist, err = h.pr.GetArtistById(ctx, cmd.ArtistId)
 
@@ -65,14 +66,14 @@ func (h NewPostHandler) Handle(ctx context.Context, c interface{}) error {
 		return fmt.Errorf("could not get user: %s", err)
 	}
 
-	pendingPost, err := post.NewPendingPost(artist, usr, cmd.Content, characters, categories)
+	pendingPost, err := post.NewPendingPost(cmd.Id, artist, usr, cmd.Content, characters, categories)
 
 	if err != nil {
 		return fmt.Errorf("could not create pending post: %s", err)
 	}
 
 	// Request new resources
-	pendingPost.RequestResources(cmd.CharacterRequests, cmd.CategoriesRequests, cmd.MediaRequests)
+	pendingPost.RequestResources(cmd.CharacterRequests, cmd.CategoryRequests, cmd.MediaRequests)
 
 	_ = pendingPost.MakePublicOrReview()
 
@@ -91,14 +92,14 @@ func (h NewPostHandler) Handle(ctx context.Context, c interface{}) error {
 		return err
 	}
 
+	// Update pending post index
+	if err := h.pi.IndexPendingPost(ctx, pendingPost); err != nil {
+		return err
+	}
+
 	// If not in review ("publishing"), then we dispatch a job to publish the post
 	if !pendingPost.InReview() {
-		if err := h.pe.PostCreated(ctx, pendingPost); err != nil {
-			return err
-		}
-	} else {
-		// dispatch a task to update our post, if it's not in review (so moderators can see it)
-		if err := h.pe.PostPendingUpdated(ctx, pendingPost); err != nil {
+		if err := h.pe.PostCompleted(ctx, pendingPost); err != nil {
 			return err
 		}
 	}

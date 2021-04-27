@@ -71,7 +71,7 @@ func marshalPendingPostToDatabase(pending *post.PostPending) *PostPending {
 		ArtistId:           pending.Artist().ID(),
 		ArtistUsername:     pending.Artist().Username(),
 		ContributorId:      pending.Contributor().Id,
-		Content:            pending.Content(),
+		Content:            pending.RawContent(),
 		Categories:         pending.CategoryIds(),
 		Characters:         pending.CharacterIds(),
 		CharactersRequests: characterRequests,
@@ -100,7 +100,7 @@ func marshalPostToDatabase(post *post.Post) *Post {
 		Id:            post.ID(),
 		ArtistId:      post.Artist().ID(),
 		ContributorId: post.Contributor().Id,
-		Content:       post.Content(),
+		Content:       post.RawContent(),
 		Categories:    categoryIds,
 		Characters:    characterIds,
 		PostedAt:      post.PostedAt(),
@@ -172,17 +172,37 @@ func (r PostsCassandraRepository) GetPendingPost(ctx context.Context, id string)
 		return nil, err
 	}
 
-	// TODO: parallel query to grab all content, categories, characters
+	characters, err := r.GetCharactersById(ctx, postPending.Characters)
+
+	if err != nil {
+		return nil, err
+	}
+
+	categories, err := r.GetCategoriesById(ctx, postPending.Categories)
+
+	if err != nil {
+		return nil, err
+	}
+
+	artist := post.NewArtist(postPending.ArtistId, postPending.ArtistUsername)
+
+	// if artist ID isn't null, grab artist from DB
+	if artist.ID() != "" {
+		artist, err = r.GetArtistById(ctx, artist.ID())
+
+		if err != nil {
+			return nil, err
+		}
+	}
 
 	return post.UnmarshalPendingPostFromDatabase(
 		postPending.Id,
 		postPending.State,
-		postPending.ArtistId,
-		postPending.ArtistUsername,
+		artist,
 		postPending.ContributorId,
 		postPending.Content,
-		postPending.Characters,
-		postPending.Categories,
+		characters,
+		categories,
 		postPending.CharactersRequests,
 		postPending.CategoriesRequests,
 		postPending.MediaRequests,

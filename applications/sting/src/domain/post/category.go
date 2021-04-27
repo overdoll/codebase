@@ -4,7 +4,6 @@ import (
 	"os"
 
 	sting "overdoll/applications/sting/proto"
-	"overdoll/libraries/ksuid"
 )
 
 type Category struct {
@@ -30,9 +29,9 @@ func (c *Category) Thumbnail() string {
 	return staticURL + "/thumbnails/" + c.thumbnail
 }
 
-func NewCategory(title string) *Category {
+func NewCategory(id string, title string) *Category {
 	return &Category{
-		id:        ksuid.New().String(),
+		id:        id,
 		title:     title,
 		thumbnail: "",
 	}

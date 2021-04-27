@@ -20,16 +20,20 @@ var (
 	ErrInvalidId     = errors.New("passed id is not a valid ID")
 )
 
+// Each request type contains space for an "ID" - we pre-generate IDs and pass them in between events to ensure idempotency
 type CharacterRequest struct {
+	Id    string
 	Name  string
 	Media string
 }
 
 type CategoryRequest struct {
+	Id    string
 	Title string
 }
 
 type MediaRequest struct {
+	Id    string
 	Title string
 }
 
@@ -50,12 +54,12 @@ type PostPending struct {
 	mediaRequests      []MediaRequest
 	postedAt           time.Time
 	publishedPostId    string
+	generatedIds       []string
 }
 
-func NewPendingPost(artist *Artist, contributor *User, content []string, characters []*Character, categories []*Category) (*PostPending, error) {
-
+func NewPendingPost(id string, artist *Artist, contributor *User, content []string, characters []*Character, categories []*Category) (*PostPending, error) {
 	return &PostPending{
-		id:          ksuid.New().String(),
+		id:          id,
 		state:       Publishing,
 		artist:      artist,
 		contributor: contributor,
@@ -66,27 +70,16 @@ func NewPendingPost(artist *Artist, contributor *User, content []string, charact
 	}, nil
 }
 
-func UnmarshalPendingPostFromDatabase(id string, state string, artistId string, artistUsername string, contributorId string, content []string, characters []string, categories []string, charactersRequests map[string]string, categoryRequests []string, mediaRequests []string, postedAt time.Time, publishedPostId string) *PostPending {
-
-	var chars []*Character
-
-	for _, char := range characters {
-		chars = append(chars, NewCharacter(char, &Media{}))
-	}
-
-	var cats []*Category
-
-	for _, char := range categories {
-		cats = append(cats, NewCategory(char))
-	}
+func UnmarshalPendingPostFromDatabase(id string, state string, artist *Artist, contributorId string, content []string, characters []*Character, categories []*Category, charactersRequests map[string]string, categoryRequests []string, mediaRequests []string, postedAt time.Time, publishedPostId string) *PostPending {
 
 	postPending := &PostPending{
 		id:              id,
 		state:           PostPendingState(state),
+		artist:          artist,
 		contributor:     &User{Id: contributorId},
 		content:         content,
-		characters:      chars,
-		categories:      cats,
+		characters:      characters,
+		categories:      categories,
 		postedAt:        postedAt,
 		publishedPostId: publishedPostId,
 	}
@@ -132,6 +125,10 @@ func (p *PostPending) UpdateCharacters(characters []*Character) error {
 
 func (p *PostPending) UpdateArtist(artist *Artist) {
 	p.artist = artist
+}
+
+func (p *PostPending) UpdateContributor(contributor *User) {
+	p.contributor = contributor
 }
 
 func (p *PostPending) Categories() []*Category {
@@ -221,7 +218,38 @@ func (p *PostPending) MediaRequests() []MediaRequest {
 	return p.mediaRequests
 }
 
-func (p *PostPending) ConsumeCustomResources() ([]*Category, []*Character, []*Media) {
+// When requesting a new character, you must select a media or request a new media as well
+// This function helps to match against mediaRequests and tell you which of the medias already exist in our database
+// so we can pass it to ConsumeCustomResources
+func (p *PostPending) GetExistingMediaIds() []string {
+
+	var medias []string
+
+	for _, char := range p.charactersRequests {
+		var exists = true
+
+		// Check if the requested media is a media in our list
+		for _, requestedMedia := range p.mediaRequests {
+
+			// If the media is on our list, skip
+			if char.Media == requestedMedia.Title {
+				exists = false
+				break
+			}
+		}
+
+		if exists {
+			medias = append(medias, char.Media)
+		}
+	}
+
+	return medias
+}
+
+// ConsumeCustomResources - pass existingMedia so it can use that as arguments. As well, pass an array of IDs, and it will use them, in order
+func (p *PostPending) ConsumeCustomResources(existingMedia []*Media, ids []string) ([]*Category, []*Character, []*Media) {
+
+	// TODO: prefer 'ids' over ID from resource
 
 	var characters []*Character
 	var medias []*Media
@@ -236,7 +264,7 @@ func (p *PostPending) ConsumeCustomResources() ([]*Category, []*Character, []*Me
 
 			// If the media is on our list, then we create a new media, and append to array of events
 			if char.Media == requestedMedia.Title {
-				NewMedia(char.Media)
+				NewMedia(char.Id, char.Media)
 				exists = false
 				break
 			}
@@ -244,16 +272,18 @@ func (p *PostPending) ConsumeCustomResources() ([]*Category, []*Character, []*Me
 
 		// If a media exists (not in media requests), we use the string as the ID
 		if !exists {
-			// media exists in DB
-			newMedia = &Media{
-				id:        char.Media,
-				title:     "",
-				thumbnail: "",
+			for _, media := range existingMedia {
+				if media.ID() == char.Media {
+					// media exists in DB
+					newMedia = media
+					medias = append(medias, media)
+					break
+				}
 			}
-			medias = append(medias, newMedia)
+
 		}
 
-		newCharacter := NewCharacter(char.Name, newMedia)
+		newCharacter := NewCharacter(char.Id, char.Name, newMedia)
 
 		p.characters = append(p.characters, newCharacter)
 		characters = append(characters, newCharacter)
@@ -263,7 +293,7 @@ func (p *PostPending) ConsumeCustomResources() ([]*Category, []*Character, []*Me
 
 	for _, cat := range p.categoriesRequests {
 
-		newCategory := NewCategory(cat.Title)
+		newCategory := NewCategory(cat.Id, cat.Title)
 
 		p.categories = append(p.categories, newCategory)
 		categories = append(categories, newCategory)
@@ -272,16 +302,17 @@ func (p *PostPending) ConsumeCustomResources() ([]*Category, []*Character, []*Me
 	return categories, characters, medias
 }
 
+// RequestResources will pre-generate IDs for each request type
 func (p *PostPending) RequestResources(characters map[string]string, categories []string, medias []string) {
 	for char, med := range characters {
-		p.charactersRequests = append(p.charactersRequests, CharacterRequest{Name: char, Media: med})
+		p.charactersRequests = append(p.charactersRequests, CharacterRequest{Id: ksuid.New().String(), Name: char, Media: med})
 	}
 
 	for _, cat := range categories {
-		p.categoriesRequests = append(p.categoriesRequests, CategoryRequest{Title: cat})
+		p.categoriesRequests = append(p.categoriesRequests, CategoryRequest{Id: ksuid.New().String(), Title: cat})
 	}
 
 	for _, med := range medias {
-		p.mediaRequests = append(p.mediaRequests, MediaRequest{Title: med})
+		p.mediaRequests = append(p.mediaRequests, MediaRequest{Id: ksuid.New().String(), Title: med})
 	}
 }

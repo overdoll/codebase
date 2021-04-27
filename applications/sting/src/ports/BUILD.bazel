@@ -2,20 +2,12 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
-    srcs = [
-        "cli.go",
-        "events.go",
-    ],
+    srcs = ["cli.go"],
     importpath = "overdoll/applications/sting/src/ports",
     visibility = ["//visibility:public"],
     deps = [
-        "//applications/sting/src/app:go_default_library",
+        "//applications/sting/proto:v1_go_proto",
         "//applications/sting/src/service:go_default_library",
-        "@com_github_go_kit_kit//transport/amqp:go_default_library",
         "@com_github_spf13_cobra//:go_default_library",
-        "@com_github_threedotslabs_watermill//:go_default_library",
-        "@com_github_threedotslabs_watermill//components/cqrs:go_default_library",
-        "@com_github_threedotslabs_watermill//message:go_default_library",
-        "@com_github_threedotslabs_watermill//message/router/middleware:go_default_library",
     ],
 )

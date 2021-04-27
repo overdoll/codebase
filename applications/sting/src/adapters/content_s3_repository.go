@@ -110,7 +110,7 @@ func (r ContentS3Repository) ProcessContent(ctx context.Context, userId string, 
 	return content, nil
 }
 
-func (r ContentS3Repository) PublishContent(ctx context.Context, userId string, content []string) ([]string, error) {
+func (r ContentS3Repository) MakeProcessedContentPublic(ctx context.Context, userId string, content []string) ([]string, error) {
 
 	_ = s3manager.NewDownloader(r.session)
 	_ = s3.New(r.session)
