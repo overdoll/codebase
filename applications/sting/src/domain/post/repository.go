@@ -41,7 +41,7 @@ type IndexRepository interface {
 	DeleteCharacterIndex(context.Context) error
 
 	BulkIndexMedia(context.Context, []*Media) error
-	DeleteIndexMedia(context.Context) error
+	DeleteMediaIndex(context.Context) error
 
 	BulkIndexCategories(ctx context.Context, categories []*Category) error
 	DeleteCategoryIndex(ctx context.Context) error

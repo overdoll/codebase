@@ -38,6 +38,8 @@ func (h PublishPostHandler) Handle(ctx context.Context, c interface{}) error {
 		}
 
 		// Consume custom categories, characters, medias and run commands to create
+
+		// TODO: improve this? - need a way to ensure custom resources are created at least once-
 		categories, chars, medias := pending.ConsumeCustomResources()
 
 		if err := h.pe.CategoriesCreated(ctx, categories); err != nil {

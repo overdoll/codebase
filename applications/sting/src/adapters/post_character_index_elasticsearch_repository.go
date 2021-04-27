@@ -146,7 +146,7 @@ func (r PostIndexElasticSearchRepository) BulkIndexMedia(ctx context.Context, me
 	return nil
 }
 
-func (r PostIndexElasticSearchRepository) DeleteIndexCharacters(ctx context.Context) error {
+func (r PostIndexElasticSearchRepository) DeleteCharacterIndex(ctx context.Context) error {
 	err := r.store.DeleteIndex("characters")
 
 	if err != nil {
@@ -162,7 +162,7 @@ func (r PostIndexElasticSearchRepository) DeleteIndexCharacters(ctx context.Cont
 	return nil
 }
 
-func (r PostIndexElasticSearchRepository) DeleteIndexMedia(ctx context.Context) error {
+func (r PostIndexElasticSearchRepository) DeleteMediaIndex(ctx context.Context) error {
 	err := r.store.DeleteIndex("media")
 
 	if err != nil {

@@ -33,7 +33,7 @@ const ArtistIndex = `
 	}
 }`
 
-func (r PostIndexElasticSearchRepository) BulkIndex(ctx context.Context, artists []*post.Artist) error {
+func (r PostIndexElasticSearchRepository) BulkIndexArtists(ctx context.Context, artists []*post.Artist) error {
 	err := r.store.CreateBulkIndex("artists")
 
 	if err != nil {
@@ -63,7 +63,7 @@ func (r PostIndexElasticSearchRepository) BulkIndex(ctx context.Context, artists
 	return nil
 }
 
-func (r PostIndexElasticSearchRepository) DeleteIndex(ctx context.Context) error {
+func (r PostIndexElasticSearchRepository) DeleteArtistIndex(ctx context.Context) error {
 	err := r.store.DeleteIndex("artists")
 
 	if err != nil {

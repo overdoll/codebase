@@ -3,6 +3,7 @@ package command
 import (
 	"context"
 
+	sting "overdoll/applications/sting/proto"
 	"overdoll/applications/sting/src/domain/post"
 )
 
@@ -15,7 +16,15 @@ func NewIndexAllCharactersHandler(pr post.Repository, pi post.IndexRepository) I
 	return IndexAllCharactersHandler{pr: pr, pi: pi}
 }
 
-func (h IndexAllCharactersHandler) Handle(ctx context.Context) error {
+func (h IndexAllCharactersHandler) HandlerName() string {
+	return "IndexAllCharactersHandler"
+}
+
+func (h IndexAllCharactersHandler) NewCommand() interface{} {
+	return &sting.IndexAllCharacters{}
+}
+
+func (h IndexAllCharactersHandler) Handle(ctx context.Context, c interface{}) error {
 
 	err := h.pi.DeleteCharacterIndex(ctx)
 

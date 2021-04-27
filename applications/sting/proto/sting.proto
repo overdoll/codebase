@@ -79,3 +79,8 @@ message PostPendingUpdated {
 message PostCompleted {
   string id = 1;
 }
+
+message IndexAllArtists {}
+message IndexAllCategories {}
+message IndexAllCharacters {}
+message IndexAllMedia {}

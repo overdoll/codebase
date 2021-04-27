@@ -16,12 +16,13 @@ import (
 	"overdoll/applications/sting/src/adapters"
 	"overdoll/applications/sting/src/app"
 	"overdoll/applications/sting/src/app/command"
+	"overdoll/applications/sting/src/app/event"
 	storage "overdoll/libraries/aws"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/search"
 )
 
-func NewApplication(ctx context.Context) (app.Application, *message.Router, func()) {
+func NewApplication(ctx context.Context) (*cqrs.Facade, *message.Router, func()) {
 
 	evaConnection, err := grpc.DialContext(ctx, os.Getenv("EVA_SERVICE"), grpc.WithInsecure())
 
@@ -47,13 +48,13 @@ func NewApplication(ctx context.Context) (app.Application, *message.Router, func
 		}
 }
 
-func NewComponentTestApplication(ctx context.Context) app.Application {
+func NewComponentTestApplication(ctx context.Context) *cqrs.Facade {
 	router, _ := message.NewRouter(message.RouterConfig{}, watermill.NewStdLogger(false, false))
 
 	return createApplication(ctx, EvaServiceMock{}, router)
 }
 
-func createApplication(ctx context.Context, evaGrpc command.EvaService, router *message.Router) app.Application {
+func createApplication(ctx context.Context, eva app.EvaService, router *message.Router) *cqrs.Facade {
 
 	logger := watermill.NewStdLogger(false, false)
 
@@ -114,33 +115,30 @@ func createApplication(ctx context.Context, evaGrpc command.EvaService, router *
 		panic(err)
 	}
 
-	categoryRepo := adapters.NewCategoryCassandraRepository(session)
-	categoryIndexRepo := adapters.NewCategoryIndexElasticSearchRepository(es)
-
-	characterRepo := adapters.NewCharacterCassandraRepository(session)
-	characterIndexRepo := adapters.NewCharacterIndexElasticSearchRepository(es)
-
-	artistRepo := adapters.NewArtistCassandraRepository(session)
-	artistIndexRepo := adapters.NewArtistIndexElasticSearchRepository(es)
-
 	postRepo := adapters.NewPostsCassandraRepository(session)
-	_ = adapters.NewPostIndexElasticSearchRepository(es)
+	indexRepo := adapters.NewPostIndexElasticSearchRepository(es)
 
 	contentRepo := adapters.NewContentS3Repository(awsSession)
 
 	// cqrs.Facade is facade for Command and Event buses and processors.
 	// You can use facade, or create buses and processors manually (you can inspire with cqrs.NewFacade)
-	_, err = cqrs.NewFacade(cqrs.FacadeConfig{
+	facade, err := cqrs.NewFacade(cqrs.FacadeConfig{
 		GenerateCommandsTopic: func(commandName string) string {
 			return commandName
 		},
 		CommandHandlers: func(cb *cqrs.CommandBus, eb *cqrs.EventBus) []cqrs.CommandHandler {
+			eventRepo := adapters.NewPostEventRepository(cb, eb)
 			return []cqrs.CommandHandler{
-				command.NewNewPostHandler(postRepo, characterRepo, categoryRepo, contentRepo, evaGrpc, eb),
-				command.NewReviewPostHandler(postRepo, characterRepo, categoryRepo, eb),
-				command.NewCreateCategoryHandler(categoryRepo, categoryIndexRepo),
-				command.NewCreateCharacterHandler(characterRepo, characterIndexRepo),
-				command.NewCreateMediaHandler(characterRepo, characterIndexRepo),
+				command.NewNewPostHandler(postRepo, contentRepo, eva, eventRepo),
+				command.NewCreatePostHandler(postRepo, indexRepo, eva),
+				command.NewReviewPostHandler(postRepo, eventRepo),
+				command.NewCreateCategoryHandler(postRepo, indexRepo),
+				command.NewCreateCharacterHandler(postRepo, indexRepo),
+				command.NewCreateMediaHandler(postRepo, indexRepo),
+				command.NewIndexAllArtistsHandler(postRepo, indexRepo),
+				command.NewIndexAllCharactersHandler(postRepo, indexRepo),
+				command.NewIndexAllCategoriesHandler(postRepo, indexRepo),
+				command.NewIndexAllMediaHandler(postRepo, indexRepo),
 			}
 		},
 		CommandsPublisher: commandsPublisher,
@@ -151,8 +149,10 @@ func createApplication(ctx context.Context, evaGrpc command.EvaService, router *
 			return eventName
 		},
 		EventHandlers: func(cb *cqrs.CommandBus, eb *cqrs.EventBus) []cqrs.EventHandler {
+			eventRepo := adapters.NewPostEventRepository(cb, eb)
 			return []cqrs.EventHandler{
-				command.NewPublishPostHandler(postRepo, characterRepo, categoryRepo, cb),
+				event.NewPostPendingUpdatedHandler(postRepo, indexRepo, eva),
+				event.NewPublishPostHandler(postRepo, indexRepo, eventRepo),
 			}
 		},
 		EventsPublisher: eventsPublisher,
@@ -167,12 +167,5 @@ func createApplication(ctx context.Context, evaGrpc command.EvaService, router *
 		Logger:                logger,
 	})
 
-	return app.Application{
-		Commands: app.Commands{
-			IndexMedia:      command.NewIndexAllMediaHandler(characterRepo, characterIndexRepo),
-			IndexCharacters: command.NewIndexAllCharactersHandler(characterRepo, characterIndexRepo),
-			IndexCategories: command.NewIndexAllCategoriesHandler(categoryRepo, categoryIndexRepo),
-			IndexArtists:    command.NewIndexAllArtistsHandler(artistRepo, artistIndexRepo),
-		},
-	}
+	return facade
 }
