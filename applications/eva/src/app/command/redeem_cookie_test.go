@@ -17,11 +17,11 @@ type cookieRepoMock struct {
 	Cookie *cookie.Cookie
 }
 
-func (c cookieRepoMock) GetCookieById(ctx context.Context, id ksuid.UUID) (*cookie.Cookie, error) {
+func (c cookieRepoMock) GetCookieById(ctx context.Context, id string) (*cookie.Cookie, error) {
 	return c.Cookie, nil
 }
 
-func (c cookieRepoMock) DeleteCookieById(ctx context.Context, id ksuid.UUID) error {
+func (c cookieRepoMock) DeleteCookieById(ctx context.Context, id string) error {
 	return nil
 }
 
@@ -38,7 +38,7 @@ type userRepoMock struct {
 	User *user.User
 }
 
-func (u userRepoMock) GetUserById(ctx context.Context, id ksuid.UUID) (*user.User, error) {
+func (u userRepoMock) GetUserById(ctx context.Context, id string) (*user.User, error) {
 	return u.User, nil
 }
 

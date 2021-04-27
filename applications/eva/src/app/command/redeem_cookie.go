@@ -6,7 +6,6 @@ import (
 
 	"overdoll/applications/eva/src/domain/cookie"
 	"overdoll/applications/eva/src/domain/user"
-	"overdoll/libraries/ksuid"
 )
 
 type RedeemCookieHandler struct {
@@ -20,13 +19,7 @@ func NewRedeemCookieHandler(cr cookie.Repository, ur user.Repository) RedeemCook
 
 func (h RedeemCookieHandler) Handle(ctx context.Context, id string) (*cookie.Cookie, error) {
 
-	u, err := ksuid.Parse(id)
-
-	if err != nil {
-		return nil, fmt.Errorf("uuid is not valid: %s", id)
-	}
-
-	ck, err := h.cr.GetCookieById(ctx, u)
+	ck, err := h.cr.GetCookieById(ctx, id)
 
 	if err != nil {
 		return nil, fmt.Errorf("could not get cookie: %s", err)
@@ -57,7 +50,7 @@ func (h RedeemCookieHandler) Handle(ctx context.Context, id string) (*cookie.Coo
 
 	// Delete cookie - user is registered, so we don't need to wait for another call where the user will
 	// enter a username, since they already have an account and we can log them in
-	err = h.cr.DeleteCookieById(ctx, u)
+	err = h.cr.DeleteCookieById(ctx, id)
 
 	if err != nil {
 		return nil, fmt.Errorf("failed to delete cookie: %s", err)
