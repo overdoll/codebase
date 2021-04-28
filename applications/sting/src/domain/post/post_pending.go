@@ -280,6 +280,7 @@ func (p *PostPending) UseCustomIdsForCustomResources(ids []string) {
 	}
 
 	for _, med := range p.mediaRequests {
+		x, ids = ids[0], ids[1:]
 		med.Id = x
 	}
 }
