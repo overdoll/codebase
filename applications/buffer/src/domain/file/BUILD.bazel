@@ -3,10 +3,13 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = [
+        "file.go",
         "repository.go",
-        "user.go",
     ],
     importpath = "overdoll/applications/buffer/src/domain/file",
     visibility = ["//visibility:public"],
-    deps = ["@com_github_tus_tusd//pkg/handler:go_default_library"],
+    deps = [
+        "//libraries/common:go_default_library",
+        "@com_github_tus_tusd//pkg/handler:go_default_library",
+    ],
 )
