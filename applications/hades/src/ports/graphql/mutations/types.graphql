@@ -2,5 +2,6 @@ type Mutation {
   authenticate(data: AuthenticationInput): Boolean! @guest
   register(data: RegisterInput): Boolean! @guest
   logout: Boolean! @auth
-  authEmail: Boolean
+
+  post(data: PostInput): PostResponse! @auth
 }

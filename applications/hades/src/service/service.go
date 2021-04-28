@@ -2,12 +2,11 @@ package service
 
 import (
 	"context"
-	"os"
+	"log"
 
-	"github.com/gomodule/redigo/redis"
-	"google.golang.org/grpc"
+	"overdoll/applications/hades/src/adapters"
 	"overdoll/applications/hades/src/app"
-	"overdoll/applications/hades/src/services"
+	"overdoll/applications/hades/src/app/command"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/common"
 	"overdoll/libraries/rabbit"
@@ -16,21 +15,19 @@ import (
 
 func NewApplication(ctx context.Context) (app.Application, func()) {
 
-	evaGrpc, cleanup := common.NewEvaConnection(ctx)
+	evaClient, cleanup := common.NewEvaClient(ctx)
 
-	return createApplication(ctx, evaGrpc),
+	return createApplication(ctx, adapters.NewEvaGrpc(evaClient)),
 		func() {
 			cleanup()
 		}
 }
 
 func NewComponentTestApplication(ctx context.Context) app.Application {
-	return createApplication(ctx, common.EvaServiceMock{})
+	return createApplication(ctx, EvaServiceMock{})
 }
 
-func createApplication(ctx context.Context, eva common.EvaService) app.Application {
-
-	ctx := context.Background()
+func createApplication(ctx context.Context, eva app.EvaService) app.Application {
 
 	_, err := bootstrap.NewBootstrap(ctx)
 
@@ -54,6 +51,7 @@ func createApplication(ctx context.Context, eva common.EvaService) app.Applicati
 
 	return app.Application{
 		Commands: app.Commands{
+			GetUserSession: command.NewGetUserSessionHandler(eva),
 		},
 		Queries: app.Queries{
 		},

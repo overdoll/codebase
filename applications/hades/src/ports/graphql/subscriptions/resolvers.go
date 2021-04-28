@@ -1,13 +1,12 @@
 package subscriptions
 
 import (
-	"context"
-	"net/http"
-
-	eva "overdoll/applications/eva/proto"
-	"overdoll/applications/hades/src/helpers"
-	"overdoll/applications/hades/src/models"
+	"overdoll/applications/hades/src/app"
 )
+
+type SubscriptionResolver struct {
+	App app.Application
+}
 
 func (r *SubscriptionResolver) AuthListener(ctx context.Context) (<-chan *models.AuthListener, error) {
 	// AuthenticationState - check the state of our authentication by checking the OTP Cookie header to see if we have redeemed it

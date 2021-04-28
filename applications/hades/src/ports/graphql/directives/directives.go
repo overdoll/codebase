@@ -20,7 +20,7 @@ var (
 
 // Roles - check if user has some certain roles
 func (s *DirectiveResolver) Role(ctx context.Context, obj interface{}, next graphql.Resolver, roles []string) (res interface{}, err error) {
-	if !user.UserFromContext(ctx).HasRoles(roles) {
+	if !user.FromContext(ctx).HasRoles(roles) {
 		return nil, ErrorAccessDenied
 	}
 
@@ -29,7 +29,7 @@ func (s *DirectiveResolver) Role(ctx context.Context, obj interface{}, next grap
 
 // Verified - check if user is verified
 func (s *DirectiveResolver) Verified(ctx context.Context, obj interface{}, next graphql.Resolver) (res interface{}, err error) {
-	if !user.UserFromContext(ctx).IsVerified() {
+	if !user.FromContext(ctx).IsVerified() {
 		return nil, ErrorAccessDenied
 	}
 
@@ -39,7 +39,7 @@ func (s *DirectiveResolver) Verified(ctx context.Context, obj interface{}, next 
 // Auth - check if user is authenticated - user object is already passed in middleware, so we can access it directly
 func (s *DirectiveResolver) Auth(ctx context.Context, obj interface{}, next graphql.Resolver) (res interface{}, err error) {
 
-	if user.UserFromContext(ctx).IsGuest() {
+	if user.FromContext(ctx).IsGuest() {
 		return nil, ErrorAccessDenied
 	}
 
@@ -49,7 +49,7 @@ func (s *DirectiveResolver) Auth(ctx context.Context, obj interface{}, next grap
 // Guest - check if user is not authenticated
 func (s *DirectiveResolver) Guest(ctx context.Context, obj interface{}, next graphql.Resolver) (res interface{}, err error) {
 
-	if !user.UserFromContext(ctx).IsGuest() {
+	if !user.FromContext(ctx).IsGuest() {
 		return nil, ErrorAccessDenied
 	}
 

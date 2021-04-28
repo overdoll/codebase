@@ -13,7 +13,6 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
-	eva "overdoll/applications/eva/proto"
 	"overdoll/applications/hades/src/app"
 	gen "overdoll/applications/hades/src/ports/graphql"
 	"overdoll/libraries/extensions"
@@ -39,56 +38,22 @@ func NewGraphQLServer(app app.Application) *http.Server {
 	// Add user to context, if session cookie exists
 	router.Use(func(c *gin.Context) {
 
-		usr, err := app.Commands.GetUserSession(c.Request.Context(), )
+		ck, err := c.Request.Cookie("session")
 
-
-		// If it doesn't exist in Redis, we remove it
-		if err != nil || existing == 0 {
-			// Instead of a 403 abort, we just remove this invalid session cookie
-			//c.AbortWithStatus(http.StatusForbidden)
-			http.SetCookie(c.Writer, &http.Cookie{Name: "session", Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
+		if err != nil {
 			c.Next()
 			return
 		}
 
-		// Verify user exists with this token by grabbing the user
-		user, err := services.Eva().GetUser(c, &eva.GetUserRequest{Id: claims.Id})
+		usr, err := app.Commands.GetUserSession.Handle(c.Request.Context(), ck.Value)
 
 		if err != nil {
-			// No user - we just remove this token from our set
-			// c.AbortWithStatus(http.StatusForbidden)
-			http.SetCookie(c.Writer, &http.Cookie{Name: "session", Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
-			redis.Do("SREM", "session:"+claims.Id, cookie.Value)
 			c.Next()
-			return
-		}
-
-		_, err = helpers.CreateUserSession(c, redis, claims.Id)
-
-		if err != nil {
-			c.AbortWithStatus(http.StatusInternalServerError)
-			return
-		}
-
-		// remove old token since its not valid anymore (we "expired" it)
-		existing, err = redis.Do("SREM", "session:"+claims.Id, cookie.Value)
-
-		// Redis error
-		if err != nil {
-			c.AbortWithStatus(http.StatusInternalServerError)
 			return
 		}
 
 		// put it in context
-		ctx := context.WithValue(c.Request.Context(), "UserContextKey",
-			&domain.AuthenticatedUser{
-				Id:       user.Id,
-				Username: user.Username,
-				Token:    jwtToken.Raw,
-				Roles:    user.Roles,
-				Verified: user.Verified,
-			},
-		)
+		ctx := context.WithValue(c.Request.Context(), "UserContextKey", usr)
 
 		// and call the next with our new context
 		c.Request = c.Request.WithContext(ctx)
