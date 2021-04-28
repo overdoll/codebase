@@ -8,5 +8,4 @@ go_library(
     ],
     importpath = "overdoll/applications/eva/src/domain/user",
     visibility = ["//visibility:public"],
-    deps = ["//libraries/ksuid:go_default_library"],
 )

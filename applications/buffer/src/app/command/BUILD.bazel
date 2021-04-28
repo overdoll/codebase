@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["handle_upload.go"],
+    importpath = "overdoll/applications/buffer/src/app/command",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//applications/buffer/src/domain/file:go_default_library",
+        "@com_github_aws_aws_sdk_go//service/s3:go_default_library",
+        "@com_github_tus_tusd//pkg/handler:go_default_library",
+        "@com_github_tus_tusd//pkg/s3store:go_default_library",
+    ],
+)

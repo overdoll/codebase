@@ -8,7 +8,6 @@ go_library(
     ],
     importpath = "overdoll/applications/eva/src/domain/cookie",
     visibility = ["//visibility:public"],
-    deps = ["//libraries/ksuid:go_default_library"],
 )
 
 go_test(

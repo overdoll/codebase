@@ -11,6 +11,5 @@ go_library(
     deps = [
         "//applications/eva/src/domain/cookie:go_default_library",
         "//applications/eva/src/domain/user:go_default_library",
-        "//libraries/ksuid:go_default_library",
     ],
 )
