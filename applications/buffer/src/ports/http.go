@@ -48,8 +48,7 @@ func (h *HttpServer) HandleUpload() http.Handler {
 		output, err := h.app.Queries.GetFile.Handle(r.Context(), u.(string), user, file)
 
 		if err != nil {
-			fmt.Println(err)
-			w.WriteHeader(http.StatusInternalServerError)
+			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
 

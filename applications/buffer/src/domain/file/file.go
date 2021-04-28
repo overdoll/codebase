@@ -24,5 +24,5 @@ func (f *File) GetLocation() string {
 }
 
 func (f *File) CanViewFile() bool {
-	return true
+	return f.requester.Id == f.prefix
 }

@@ -5,14 +5,14 @@ import (
 )
 
 type Repository interface {
-	GetPendingPost(ctx context.Context, id string) (*PostPending, error)
+	GetPendingPost(context.Context, string) (*PostPending, error)
 	CreatePendingPost(context.Context, *PostPending) error
-	UpdatePendingPost(ctx context.Context, id string, updateFn func(pending *PostPending) (*PostPending, error)) (*PostPending, error)
+	UpdatePendingPost(context.Context, string, func(*PostPending) (*PostPending, error)) (*PostPending, error)
 
 	CreatePost(context.Context, *Post) error
 
-	GetArtistById(ctx context.Context, id string) (*Artist, error)
-	GetArtists(ctx context.Context) ([]*Artist, error)
+	GetArtistById(context.Context, string) (*Artist, error)
+	GetArtists(context.Context) ([]*Artist, error)
 
 	GetCharactersById(context.Context, []string) ([]*Character, error)
 	GetCharacters(context.Context) ([]*Character, error)
@@ -23,21 +23,21 @@ type Repository interface {
 	GetMedias(context.Context) ([]*Media, error)
 
 	GetCategoriesById(context.Context, []string) ([]*Category, error)
-	GetCategories(ctx context.Context) ([]*Category, error)
-	CreateCategories(ctx context.Context, categories []*Category) error
+	GetCategories(context.Context) ([]*Category, error)
+	CreateCategories(context.Context, []*Category) error
 }
 
 type IndexRepository interface {
 	BulkIndexPosts(context.Context, []*Post) error
-	IndexPendingPost(ctx context.Context, pendingPost *PostPending) error
+	IndexPendingPost(context.Context, *PostPending) error
 	BulkIndexPendingPosts(context.Context, []*PostPending) error
 
-	DeletePostIndex(ctx context.Context) error
+	DeletePostIndex(context.Context) error
 	IndexPost(context.Context, *Post) error
-	DeletePendingPostIndex(ctx context.Context) error
+	DeletePendingPostIndex(context.Context) error
 
-	DeleteArtistIndex(ctx context.Context) error
-	BulkIndexArtists(ctx context.Context, artists []*Artist) error
+	DeleteArtistIndex(context.Context) error
+	BulkIndexArtists(context.Context, []*Artist) error
 
 	BulkIndexCharacters(context.Context, []*Character) error
 	DeleteCharacterIndex(context.Context) error
@@ -45,8 +45,8 @@ type IndexRepository interface {
 	BulkIndexMedia(context.Context, []*Media) error
 	DeleteMediaIndex(context.Context) error
 
-	BulkIndexCategories(ctx context.Context, categories []*Category) error
-	DeleteCategoryIndex(ctx context.Context) error
+	BulkIndexCategories(context.Context, []*Category) error
+	DeleteCategoryIndex(context.Context) error
 }
 
 type EventRepository interface {
@@ -56,5 +56,5 @@ type EventRepository interface {
 	CharactersCreated(context.Context, []*Character) error
 	MediaCreated(context.Context, []*Media) error
 
-	CategoriesCreated(ctx context.Context, cats []*Category) error
+	CategoriesCreated(context.Context, []*Category) error
 }

@@ -150,7 +150,7 @@ func createApplication(ctx context.Context, eva common.EvaService, router *messa
 		EventsSubscriberConstructor: func(handlerName string) (message.Subscriber, error) {
 			return kafka.NewSubscriber(
 				kafkaSubscriberConfig,
-				watermill.NewStdLogger(false, false),
+				logger,
 			)
 		},
 		Router:                router,
