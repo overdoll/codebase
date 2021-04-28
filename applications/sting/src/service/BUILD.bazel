@@ -2,21 +2,16 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
-    srcs = [
-        "mocks.go",
-        "service.go",
-    ],
+    srcs = ["service.go"],
     importpath = "overdoll/applications/sting/src/service",
     visibility = ["//visibility:public"],
     deps = [
-        "//applications/eva/proto:v1_go_proto",
         "//applications/sting/src/adapters:go_default_library",
-        "//applications/sting/src/app:go_default_library",
         "//applications/sting/src/app/command:go_default_library",
         "//applications/sting/src/app/event:go_default_library",
-        "//applications/sting/src/domain/post:go_default_library",
         "//libraries/aws:go_default_library",
         "//libraries/bootstrap:go_default_library",
+        "//libraries/common:go_default_library",
         "//libraries/search:go_default_library",
         "@com_github_shopify_sarama//:go_default_library",
         "@com_github_threedotslabs_watermill//:go_default_library",
@@ -24,6 +19,5 @@ go_library(
         "@com_github_threedotslabs_watermill//message:go_default_library",
         "@com_github_threedotslabs_watermill//message/router/middleware:go_default_library",
         "@com_github_threedotslabs_watermill_kafka_v2//pkg/kafka:go_default_library",
-        "@org_golang_google_grpc//:go_default_library",
     ],
 )

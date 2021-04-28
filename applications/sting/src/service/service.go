@@ -11,26 +11,18 @@ import (
 	"github.com/ThreeDotsLabs/watermill/components/cqrs"
 	"github.com/ThreeDotsLabs/watermill/message"
 	"github.com/ThreeDotsLabs/watermill/message/router/middleware"
-	"google.golang.org/grpc"
-	eva "overdoll/applications/eva/proto"
 	"overdoll/applications/sting/src/adapters"
-	"overdoll/applications/sting/src/app"
 	"overdoll/applications/sting/src/app/command"
 	"overdoll/applications/sting/src/app/event"
 	storage "overdoll/libraries/aws"
 	"overdoll/libraries/bootstrap"
+	"overdoll/libraries/common"
 	"overdoll/libraries/search"
 )
 
 func NewApplication(ctx context.Context) (*cqrs.Facade, *message.Router, func()) {
 
-	evaConnection, err := grpc.DialContext(ctx, os.Getenv("EVA_SERVICE"), grpc.WithInsecure())
-
-	if err != nil {
-		panic(err)
-	}
-
-	evaGrpc := adapters.NewEvaGrpc(eva.NewEvaClient(evaConnection))
+	evaGrpc, cleanup := common.NewEvaConnection(ctx)
 
 	logger := watermill.NewStdLogger(false, false)
 
@@ -44,17 +36,17 @@ func NewApplication(ctx context.Context) (*cqrs.Facade, *message.Router, func())
 
 	return createApplication(ctx, evaGrpc, router), router,
 		func() {
-			_ = evaConnection.Close()
+			cleanup()
 		}
 }
 
 func NewComponentTestApplication(ctx context.Context) *cqrs.Facade {
 	router, _ := message.NewRouter(message.RouterConfig{}, watermill.NewStdLogger(false, false))
 
-	return createApplication(ctx, EvaServiceMock{}, router)
+	return createApplication(ctx, common.EvaServiceMock{}, router)
 }
 
-func createApplication(ctx context.Context, eva app.EvaService, router *message.Router) *cqrs.Facade {
+func createApplication(ctx context.Context, eva common.EvaService, router *message.Router) *cqrs.Facade {
 
 	logger := watermill.NewStdLogger(false, false)
 

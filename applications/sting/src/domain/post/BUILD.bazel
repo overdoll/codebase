@@ -10,12 +10,12 @@ go_library(
         "post.go",
         "post_pending.go",
         "repository.go",
-        "user.go",
     ],
     importpath = "overdoll/applications/sting/src/domain/post",
     visibility = ["//visibility:public"],
     deps = [
         "//applications/sting/proto:v1_go_proto",
+        "//libraries/common:go_default_library",
         "//libraries/ksuid:go_default_library",
     ],
 )

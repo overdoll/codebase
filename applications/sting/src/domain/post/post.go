@@ -3,6 +3,8 @@ package post
 import (
 	"os"
 	"time"
+
+	"overdoll/libraries/common"
 )
 
 type Post struct {
@@ -13,10 +15,10 @@ type Post struct {
 	categories []*Category
 
 	artist      *Artist
-	contributor *User
+	contributor *common.User
 }
 
-func NewPost(id string, artist *Artist, contributor *User, content []string, categories []*Category, characters []*Character) *Post {
+func NewPost(id string, artist *Artist, contributor *common.User, content []string, categories []*Category, characters []*Character) *Post {
 	return &Post{
 		id:          id,
 		artist:      artist,
@@ -36,7 +38,7 @@ func (m *Post) Artist() *Artist {
 	return m.artist
 }
 
-func (m *Post) Contributor() *User {
+func (m *Post) Contributor() *common.User {
 	return m.contributor
 }
 

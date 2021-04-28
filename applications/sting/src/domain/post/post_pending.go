@@ -5,6 +5,7 @@ import (
 	"os"
 	"time"
 
+	"overdoll/libraries/common"
 	"overdoll/libraries/ksuid"
 )
 
@@ -45,7 +46,7 @@ type PostPending struct {
 	characters []*Character
 	categories []*Category
 
-	contributor *User
+	contributor *common.User
 
 	artist *Artist
 
@@ -58,7 +59,7 @@ type PostPending struct {
 	generatedIds       []string
 }
 
-func NewPendingPost(id string, artist *Artist, contributor *User, content []string, characters []*Character, categories []*Category) (*PostPending, error) {
+func NewPendingPost(id string, artist *Artist, contributor *common.User, content []string, characters []*Character, categories []*Category) (*PostPending, error) {
 	return &PostPending{
 		id:          id,
 		state:       Publishing,
@@ -77,7 +78,7 @@ func UnmarshalPendingPostFromDatabase(id string, state string, artist *Artist, c
 		id:              id,
 		state:           PostPendingState(state),
 		artist:          artist,
-		contributor:     &User{Id: contributorId},
+		contributor:     &common.User{Id: contributorId},
 		content:         content,
 		characters:      characters,
 		categories:      categories,
@@ -102,7 +103,7 @@ func (p *PostPending) Artist() *Artist {
 	return p.artist
 }
 
-func (p *PostPending) Contributor() *User {
+func (p *PostPending) Contributor() *common.User {
 	return p.contributor
 }
 
@@ -143,7 +144,7 @@ func (p *PostPending) UpdateArtist(artist *Artist) {
 	p.artist = artist
 }
 
-func (p *PostPending) UpdateContributor(contributor *User) {
+func (p *PostPending) UpdateContributor(contributor *common.User) {
 	p.contributor = contributor
 }
 

@@ -4,8 +4,8 @@ import (
 	"context"
 
 	sting "overdoll/applications/sting/proto"
-	"overdoll/applications/sting/src/app"
 	"overdoll/applications/sting/src/domain/post"
+	"overdoll/libraries/common"
 )
 
 type CreatePostHandler struct {
@@ -13,10 +13,10 @@ type CreatePostHandler struct {
 	pi post.IndexRepository
 
 	pir post.IndexRepository
-	eva app.EvaService
+	eva common.EvaService
 }
 
-func NewCreatePostHandler(pr post.Repository, pir post.IndexRepository, eva app.EvaService) CreatePostHandler {
+func NewCreatePostHandler(pr post.Repository, pir post.IndexRepository, eva common.EvaService) CreatePostHandler {
 	return CreatePostHandler{pr: pr, pir: pir, eva: eva}
 }
 
@@ -61,7 +61,7 @@ func (h CreatePostHandler) Handle(ctx context.Context, c interface{}) error {
 	if err := h.pr.CreatePost(ctx, pst); err != nil {
 		return err
 	}
-	
+
 	if err := h.pir.IndexPost(ctx, pst); err != nil {
 		return err
 	}

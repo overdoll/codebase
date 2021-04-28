@@ -8,8 +8,10 @@ go_library(
     deps = [
         "//applications/buffer/src/adapters:go_default_library",
         "//applications/buffer/src/app:go_default_library",
+        "//applications/buffer/src/app/command:go_default_library",
         "//applications/buffer/src/app/query:go_default_library",
         "//libraries/aws:go_default_library",
         "//libraries/bootstrap:go_default_library",
+        "//libraries/common:go_default_library",
     ],
 )

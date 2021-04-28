@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "connection.go",
+        "eva_grpc.go",
+        "mocks.go",
+        "services.go",
+        "user.go",
+    ],
+    importpath = "overdoll/libraries/common",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//applications/eva/proto:v1_go_proto",
+        "@org_golang_google_grpc//:go_default_library",
+    ],
+)

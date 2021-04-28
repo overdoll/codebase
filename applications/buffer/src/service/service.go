@@ -10,20 +10,24 @@ import (
 	"overdoll/applications/buffer/src/app/query"
 	storage "overdoll/libraries/aws"
 	"overdoll/libraries/bootstrap"
+	"overdoll/libraries/common"
 )
 
 func NewApplication(ctx context.Context) (app.Application, func()) {
-	return createApplication(ctx),
-		func() {
 
+	evaGrpc, cleanup := common.NewEvaConnection(ctx)
+
+	return createApplication(ctx, evaGrpc),
+		func() {
+			cleanup()
 		}
 }
 
 func NewComponentTestApplication(ctx context.Context) app.Application {
-	return createApplication(ctx)
+	return createApplication(ctx, common.EvaServiceMock{})
 }
 
-func createApplication(ctx context.Context) app.Application {
+func createApplication(ctx context.Context, eva common.EvaService) app.Application {
 
 	_, err := bootstrap.NewBootstrap(context.Background())
 

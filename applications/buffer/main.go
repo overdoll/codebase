@@ -7,7 +7,6 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-	"time"
 
 	"overdoll/applications/buffer/src/ports"
 	"overdoll/applications/buffer/src/service"
@@ -18,7 +17,6 @@ func main() {
 	ctx := context.Background()
 
 	app, cleanup := service.NewApplication(ctx)
-	defer cleanup()
 
 	srv := ports.NewHttpServer(app)
 
@@ -35,10 +33,9 @@ func main() {
 	<-done
 	log.Print("server stopped")
 
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer func() {
 		// extra handling here
-		cancel()
+		cleanup()
 	}()
 
 	if err := srv.Shutdown(ctx); err != nil {
