@@ -13,7 +13,7 @@ import (
 	eva "overdoll/applications/eva/proto"
 	"overdoll/applications/eva/src/ports"
 	"overdoll/libraries/bootstrap"
-	"overdoll/libraries/testing/tests"
+	"overdoll/libraries/tests"
 )
 
 type TestUser struct {

@@ -9,7 +9,7 @@ import (
 	"overdoll/applications/eva/src/adapters"
 	"overdoll/applications/eva/src/domain/cookie"
 	"overdoll/libraries/ksuid"
-	"overdoll/libraries/testing/scylla"
+	"overdoll/libraries/tests"
 )
 
 func TestCookieRepository_GetCookie_not_exists(t *testing.T) {
@@ -42,7 +42,7 @@ func TestCookieRepository_CreateCookie(t *testing.T) {
 }
 
 func newCookieRepository(t *testing.T) adapters.CookieRepository {
-	session := scylla.CreateScyllaSession(t, "eva")
+	session := tests.CreateScyllaSession(t, "eva")
 
 	return adapters.NewCookieCassandraRepository(session)
 }

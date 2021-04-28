@@ -40,10 +40,10 @@ func NewApplication(ctx context.Context) (*cqrs.Facade, *message.Router, func())
 		}
 }
 
-func NewComponentTestApplication(ctx context.Context) *cqrs.Facade {
+func NewComponentTestApplication(ctx context.Context) (*cqrs.Facade, *message.Router) {
 	router, _ := message.NewRouter(message.RouterConfig{}, watermill.NewStdLogger(false, false))
 
-	return createApplication(ctx, common.EvaServiceMock{}, router)
+	return createApplication(ctx, common.EvaServiceMock{}, router), router
 }
 
 func createApplication(ctx context.Context, eva common.EvaService, router *message.Router) *cqrs.Facade {

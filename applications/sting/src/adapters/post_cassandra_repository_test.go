@@ -10,7 +10,7 @@ import (
 	"overdoll/applications/sting/src/domain/post"
 	"overdoll/libraries/common"
 	"overdoll/libraries/ksuid"
-	"overdoll/libraries/testing/scylla"
+	"overdoll/libraries/tests"
 )
 
 func TestPostsCassandraRepository_create_post(t *testing.T) {
@@ -41,7 +41,7 @@ func TestPostsCassandraRepository_get_pending_post_not_exists(t *testing.T) {
 }
 
 func newPostRepository(t *testing.T) adapters.PostsCassandraRepository {
-	session := scylla.CreateScyllaSession(t, "sting")
+	session := tests.CreateScyllaSession(t, "sting")
 
 	return adapters.NewPostsCassandraRepository(session)
 }

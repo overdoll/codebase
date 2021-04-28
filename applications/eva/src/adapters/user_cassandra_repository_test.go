@@ -11,7 +11,7 @@ import (
 	"overdoll/applications/eva/src/adapters"
 	"overdoll/applications/eva/src/domain/user"
 	"overdoll/libraries/ksuid"
-	"overdoll/libraries/testing/scylla"
+	"overdoll/libraries/tests"
 )
 
 func TestUserRepository_GetUser_not_exists(t *testing.T) {
@@ -173,7 +173,7 @@ func newFakeUser(t *testing.T) *user.User {
 }
 
 func newUserRepository(t *testing.T) adapters.UserRepository {
-	session := scylla.CreateScyllaSession(t, "eva")
+	session := tests.CreateScyllaSession(t, "eva")
 
 	return adapters.NewUserCassandraRepository(session)
 }
