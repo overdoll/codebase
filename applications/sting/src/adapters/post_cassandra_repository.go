@@ -169,6 +169,11 @@ func (r PostsCassandraRepository) GetPendingPost(ctx context.Context, id string)
 	var postPending PostPending
 
 	if err := postPendingQuery.Get(&postPending); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return nil, post.NotFoundError{Identifier: id}
+		}
+
 		return nil, err
 	}
 
@@ -239,5 +244,5 @@ func (r PostsCassandraRepository) UpdatePendingPost(ctx context.Context, id stri
 		return nil, fmt.Errorf("update() failed: '%s", err)
 	}
 
-	return nil, nil
+	return pst, nil
 }

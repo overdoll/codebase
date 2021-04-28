@@ -1,6 +1,7 @@
 package post
 
 import (
+	"fmt"
 	"os"
 	"time"
 
@@ -16,6 +17,14 @@ type Post struct {
 
 	artist      *Artist
 	contributor *common.User
+}
+
+type NotFoundError struct {
+	Identifier string
+}
+
+func (e NotFoundError) Error() string {
+	return fmt.Sprintf("user '%s' not found", e.Identifier)
 }
 
 func NewPost(id string, artist *Artist, contributor *common.User, content []string, categories []*Category, characters []*Character) *Post {

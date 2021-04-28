@@ -1,4 +1,4 @@
-package adapters
+package adapters_test
 
 import (
 	"context"
@@ -8,6 +8,7 @@ import (
 	"github.com/bxcodec/faker/v3"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"overdoll/applications/eva/src/adapters"
 	"overdoll/applications/eva/src/domain/user"
 	"overdoll/libraries/ksuid"
 	"overdoll/libraries/testing/scylla"
@@ -171,8 +172,8 @@ func newFakeUser(t *testing.T) *user.User {
 	return usr
 }
 
-func newUserRepository(t *testing.T) UserRepository {
+func newUserRepository(t *testing.T) adapters.UserRepository {
 	session := scylla.CreateScyllaSession(t, "eva")
 
-	return NewUserCassandraRepository(session)
+	return adapters.NewUserCassandraRepository(session)
 }

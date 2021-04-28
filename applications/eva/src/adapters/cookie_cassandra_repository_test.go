@@ -1,4 +1,4 @@
-package adapters
+package adapters_test
 
 import (
 	"context"
@@ -6,6 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"overdoll/applications/eva/src/adapters"
 	"overdoll/applications/eva/src/domain/cookie"
 	"overdoll/libraries/ksuid"
 	"overdoll/libraries/testing/scylla"
@@ -40,8 +41,8 @@ func TestCookieRepository_CreateCookie(t *testing.T) {
 	require.NoError(t, err)
 }
 
-func newCookieRepository(t *testing.T) CookieRepository {
+func newCookieRepository(t *testing.T) adapters.CookieRepository {
 	session := scylla.CreateScyllaSession(t, "eva")
 
-	return NewCookieCassandraRepository(session)
+	return adapters.NewCookieCassandraRepository(session)
 }
