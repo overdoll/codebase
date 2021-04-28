@@ -2,8 +2,8 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
-    srcs = ["services.go"],
-    importpath = "overdoll/applications/sting/src/app",
+    srcs = ["cookies.go"],
+    importpath = "overdoll/libraries/cookie",
     visibility = ["//visibility:public"],
-    deps = ["//libraries/common:go_default_library"],
+    deps = ["@com_github_gorilla_securecookie//:go_default_library"],
 )

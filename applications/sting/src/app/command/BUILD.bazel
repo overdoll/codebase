@@ -18,9 +18,9 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//applications/sting/proto:v1_go_proto",
+        "//applications/sting/src/app:go_default_library",
         "//applications/sting/src/domain/content:go_default_library",
         "//applications/sting/src/domain/post:go_default_library",
-        "//libraries/common:go_default_library",
     ],
 )
 

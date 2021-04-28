@@ -1,0 +1,21 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "listen_authentication.go",
+        "search_artists.go",
+        "search_categories.go",
+        "search_characters.go",
+        "search_medias.go",
+    ],
+    importpath = "overdoll/applications/hades/src/app/query",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//applications/eva/proto:v1_go_proto",
+        "//applications/hades/src/domain/otp:go_default_library",
+        "//applications/hades/src/domain/search:go_default_library",
+        "//applications/hades/src/ports/graphql/types:go_default_library",
+        "//libraries/cookie:go_default_library",
+    ],
+)

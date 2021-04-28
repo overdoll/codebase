@@ -11,6 +11,7 @@ go_library(
         "//applications/eva/src/app/command:go_default_library",
         "//applications/eva/src/app/query:go_default_library",
         "//libraries/bootstrap:go_default_library",
+        "@com_github_gomodule_redigo//redis:go_default_library",
     ],
 )
 
@@ -22,7 +23,7 @@ go_test(
         "//applications/eva/proto:v1_go_proto",
         "//applications/eva/src/ports:go_default_library",
         "//libraries/bootstrap:go_default_library",
-        "//libraries/testing/tests:go_default_library",
+        "//libraries/tests:go_default_library",
         "@com_github_bxcodec_faker_v3//:go_default_library",
         "@com_github_stretchr_testify//assert:go_default_library",
         "@com_github_stretchr_testify//require:go_default_library",

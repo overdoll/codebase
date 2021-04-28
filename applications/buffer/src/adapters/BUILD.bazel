@@ -2,11 +2,16 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
-    srcs = ["file_s3_repository.go"],
+    srcs = [
+        "eva_grpc.go",
+        "file_s3_repository.go",
+    ],
     importpath = "overdoll/applications/buffer/src/adapters",
     visibility = ["//visibility:public"],
     deps = [
         "//applications/buffer/src/domain/file:go_default_library",
+        "//applications/eva/proto:v1_go_proto",
+        "//libraries/common:go_default_library",
         "@com_github_aws_aws_sdk_go//aws:go_default_library",
         "@com_github_aws_aws_sdk_go//aws/session:go_default_library",
         "@com_github_aws_aws_sdk_go//service/s3:go_default_library",

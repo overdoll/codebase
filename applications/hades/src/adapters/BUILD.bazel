@@ -1,0 +1,20 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "eva_grpc.go",
+        "search_artists_elasticsearch_repository.go",
+        "search_categories_elasticsearch_repository.go",
+        "search_characters_elasticsearch_repository.go",
+        "search_elasticsearch_repository.go",
+        "search_medias_elasticsearch_repository.go",
+    ],
+    importpath = "overdoll/applications/hades/src/adapters",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//applications/eva/proto:v1_go_proto",
+        "//libraries/common:go_default_library",
+        "//libraries/search:go_default_library",
+    ],
+)

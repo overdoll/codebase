@@ -4,6 +4,7 @@ go_library(
     name = "go_default_library",
     srcs = [
         "content_s3_repository.go",
+        "eva_grpc.go",
         "mocks.go",
         "post_artist_cassandra_repository.go",
         "post_artist_index_elasticsearch_repository.go",
@@ -20,6 +21,7 @@ go_library(
     importpath = "overdoll/applications/sting/src/adapters",
     visibility = ["//visibility:public"],
     deps = [
+        "//applications/eva/proto:v1_go_proto",
         "//applications/sting/proto:v1_go_proto",
         "//applications/sting/src/domain/post:go_default_library",
         "//libraries/common:go_default_library",
@@ -50,7 +52,7 @@ go_test(
         "//applications/sting/src/domain/post:go_default_library",
         "//libraries/common:go_default_library",
         "//libraries/ksuid:go_default_library",
-        "//libraries/testing/scylla:go_default_library",
+        "//libraries/tests:go_default_library",
         "@com_github_stretchr_testify//assert:go_default_library",
         "@com_github_stretchr_testify//require:go_default_library",
     ],

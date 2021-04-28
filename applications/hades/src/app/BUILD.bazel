@@ -6,11 +6,11 @@ go_library(
         "app.go",
         "services.go",
     ],
-    importpath = "overdoll/applications/buffer/src/app",
+    importpath = "overdoll/applications/hades/src/app",
     visibility = ["//visibility:public"],
     deps = [
-        "//applications/buffer/src/app/command:go_default_library",
-        "//applications/buffer/src/app/query:go_default_library",
+        "//applications/hades/src/app/command:go_default_library",
+        "//applications/hades/src/app/query:go_default_library",
         "//libraries/common:go_default_library",
     ],
 )

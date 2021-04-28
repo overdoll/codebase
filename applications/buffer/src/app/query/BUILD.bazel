@@ -6,7 +6,7 @@ go_library(
     importpath = "overdoll/applications/buffer/src/app/query",
     visibility = ["//visibility:public"],
     deps = [
+        "//applications/buffer/src/app:go_default_library",
         "//applications/buffer/src/domain/file:go_default_library",
-        "//libraries/common:go_default_library",
     ],
 )

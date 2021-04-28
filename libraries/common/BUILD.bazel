@@ -4,9 +4,6 @@ go_library(
     name = "go_default_library",
     srcs = [
         "connection.go",
-        "eva_grpc.go",
-        "mocks.go",
-        "services.go",
         "user.go",
     ],
     importpath = "overdoll/libraries/common",

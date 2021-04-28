@@ -2,17 +2,11 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
-    srcs = [
-        "subscriptions.go",
-        "users.go",
-    ],
-    importpath = "overdoll/applications/hades/src/graphql/subscriptions",
+    srcs = ["resolvers.go"],
+    importpath = "overdoll/applications/hades/src/ports/graphql/subscriptions",
     visibility = ["//visibility:public"],
     deps = [
-        "//applications/eva/proto:v1_go_proto",
-        "//applications/hades/src/helpers:go_default_library",
-        "//applications/hades/src/models:go_default_library",
-        "//applications/hades/src/services:go_default_library",
-        "//libraries/rabbit:go_default_library",
+        "//applications/hades/src/app:go_default_library",
+        "//applications/hades/src/ports/graphql/types:go_default_library",
     ],
 )

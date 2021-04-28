@@ -17,7 +17,7 @@ func NewListenAuthenticationHandler() ListenAuthenticationHandler {
 	return ListenAuthenticationHandler{}
 }
 
-func (h ListenAuthenticationHandler) Handle(ctx context.Context) ([]string, error) {
+func (h ListenAuthenticationHandler) Handle(ctx context.Context, channel chan *types.AuthListener) error {
 	// AuthenticationState - check the state of our authentication by checking the OTP Cookie header to see if we have redeemed it
 	currentCookie, err := cookie.ReadCookie(ctx, otp.OTPKey)
 
@@ -67,6 +67,27 @@ func (h ListenAuthenticationHandler) Handle(ctx context.Context) ([]string, erro
 		false, // no-wait
 		nil,   // args
 	)
+
+	go func() {
+
+		for msg := range msgs {
+
+			switch string(msg.Body) {
+
+			case "SAME_SESSION":
+				channel <- &types.AuthListener{SameSession: true, Cookie: cookie}
+				return
+
+			case "ANOTHER_SESSION":
+				// If user exists, we can't set auth cookies here.
+				// Because we can't set a cookie in websocket connections, we force the browser to refresh the current page,
+				// and our root function will see that the cookie has been redeemed, and will log the user in
+				channel <- &types.AuthListener{Cookie: cookie, SameSession: false}
+				return
+			}
+		}
+
+	}()
 
 	return msgs, nil
 }

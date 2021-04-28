@@ -4,13 +4,17 @@ go_library(
     name = "go_default_library",
     srcs = [
         "create_cookie.go",
+        "create_session.go",
         "redeem_cookie.go",
         "register_from_cookie.go",
+        "revoke_session.go",
+        "validate_session.go",
     ],
     importpath = "overdoll/applications/eva/src/app/command",
     visibility = ["//visibility:public"],
     deps = [
         "//applications/eva/src/domain/cookie:go_default_library",
+        "//applications/eva/src/domain/session:go_default_library",
         "//applications/eva/src/domain/user:go_default_library",
         "//libraries/ksuid:go_default_library",
     ],

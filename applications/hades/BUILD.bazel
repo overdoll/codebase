@@ -14,10 +14,8 @@ go_library(
     data = web_sources,
     importpath = "overdoll/applications/hades",
     deps = [
-        "//applications/hades/src/graphql:go_default_library",
-        "//applications/hades/src/graphql/extensions:go_default_library",
-        "//applications/hades/src/middleware:go_default_library",
-        "//applications/hades/src/services:go_default_library",
+        "//applications/eva/proto:v1_go_proto",
+        "//applications/hades/src/ports:go_default_library",
         "//libraries/bootstrap:go_default_library",
         "//libraries/rabbit:go_default_library",
         "//libraries/search:go_default_library",

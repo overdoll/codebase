@@ -1,0 +1,25 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "authenticate.go",
+        "authentication.go",
+        "create_post.go",
+        "get_user_session.go",
+        "logout.go",
+        "redeem_cookie.go",
+        "register.go",
+    ],
+    importpath = "overdoll/applications/hades/src/app/command",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//applications/eva/proto:v1_go_proto",
+        "//applications/hades/src/app:go_default_library",
+        "//applications/hades/src/domain/user:go_default_library",
+        "//applications/hades/src/ports/graphql/types:go_default_library",
+        "//libraries/cookie:go_default_library",
+        "//libraries/helpers:go_default_library",
+        "@com_github_streadway_amqp//:go_default_library",
+    ],
+)
