@@ -48,7 +48,7 @@ func createApplication(ctx context.Context, eva common.EvaService) app.Applicati
 			HandleUpload: command.NewHandleUploadHandler(repo),
 		},
 		Queries: app.Queries{
-			GetFile: query.NewGetFileHandler(repo),
+			GetFile: query.NewGetFileHandler(repo, eva),
 		},
 	}
 }

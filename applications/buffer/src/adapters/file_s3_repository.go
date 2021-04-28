@@ -9,6 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	tusd "github.com/tus/tusd/pkg/handler"
 	"github.com/tus/tusd/pkg/s3store"
+	"overdoll/applications/buffer/src/domain/file"
 )
 
 const (
@@ -24,11 +25,11 @@ func NewFileS3Repository(session *session.Session) FileS3Repository {
 	return FileS3Repository{session: session}
 }
 
-func (r FileS3Repository) GetFile(ctx context.Context, key string) (io.ReadCloser, error) {
+func (r FileS3Repository) GetFile(ctx context.Context, file *file.File) (io.ReadCloser, error) {
 
 	s3Client := s3.New(r.session)
 
-	object, err := s3Client.GetObject(&s3.GetObjectInput{Bucket: aws.String(ImageProcessingBucket), Key: aws.String(key)})
+	object, err := s3Client.GetObject(&s3.GetObjectInput{Bucket: aws.String(ImageProcessingBucket), Key: aws.String(file.GetLocation())})
 
 	if err != nil {
 		return nil, err

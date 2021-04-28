@@ -45,15 +45,7 @@ func (h *HttpServer) HandleUpload() http.Handler {
 
 		u := r.Context().Value("user")
 
-		// TODO: call to eva service and get user
-		// if the current user does not match the requested ID
-		if u != user {
-			w.WriteHeader(http.StatusUnauthorized)
-			return
-		}
-
-		// TODO: validate user here
-		output, err := h.app.Queries.GetFile.Handle(r.Context(), key)
+		output, err := h.app.Queries.GetFile.Handle(r.Context(), u.(string), user, file)
 
 		if err != nil {
 			fmt.Println(err)

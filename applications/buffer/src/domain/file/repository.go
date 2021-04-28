@@ -8,6 +8,6 @@ import (
 )
 
 type Repository interface {
-	GetFile(context.Context, string) (io.ReadCloser, error)
+	GetFile(context.Context, *File) (io.ReadCloser, error)
 	GetComposer(ctx context.Context) (*tusd.StoreComposer, error)
 }
