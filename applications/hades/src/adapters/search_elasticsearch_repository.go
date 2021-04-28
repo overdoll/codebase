@@ -4,10 +4,10 @@ import (
 	"overdoll/libraries/search"
 )
 
-type ElasticsearchRepository struct {
+type SearchElasticsearchRepository struct {
 	store *search.Store
 }
 
-func NewElasticsearchRepository(store *search.Store) ElasticsearchRepository {
-	return ElasticsearchRepository{store: store}
+func NewSearchElasticsearchRepository(store *search.Store) SearchElasticsearchRepository {
+	return SearchElasticsearchRepository{store: store}
 }

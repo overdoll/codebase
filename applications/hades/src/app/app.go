@@ -21,8 +21,9 @@ type Commands struct {
 }
 
 type Queries struct {
-	SearchArtist     query.SearchArtistsHandler
-	SearchCategories query.SearchCategoriesHandler
-	SearchCharacters query.SearchCharactersHandler
-	SearchMedias     query.SearchMediasHandler
+	SearchArtist         query.SearchArtistsHandler
+	SearchCategories     query.SearchCategoriesHandler
+	SearchCharacters     query.SearchCharactersHandler
+	SearchMedias         query.SearchMediasHandler
+	ListenAuthentication query.ListenAuthenticationHandler
 }

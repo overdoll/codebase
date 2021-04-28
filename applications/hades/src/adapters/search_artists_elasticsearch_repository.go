@@ -20,7 +20,7 @@ const AllMedia = `
 	"query" : { "match_all" : {} },
 	"size" : 5`
 
-func (r ElasticsearchRepository) SearchMedias(ctx context.Context, search string) ([]json.RawMessage, error) {
+func (r SearchElasticsearchRepository) SearchMedias(ctx context.Context, search string) ([]json.RawMessage, error) {
 	var query string
 
 	if search == "" {

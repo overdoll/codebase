@@ -11,7 +11,7 @@ type SearchCharactersHandler struct {
 	sr search.Repository
 }
 
-func NewAuthenticateHandler(sr search.Repository) SearchCharactersHandler {
+func NewSearchCharactersHandler(sr search.Repository) SearchCharactersHandler {
 	return SearchCharactersHandler{sr: sr}
 }
 

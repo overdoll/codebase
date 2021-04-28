@@ -4,7 +4,8 @@ import (
 	"context"
 	"net/http"
 
-	"overdoll/applications/hades/src/ports/graphql/types"
+	"overdoll/applications/hades/src/domain/user"
+	"overdoll/libraries/helpers"
 )
 
 type RegisterHandler struct{}
@@ -17,7 +18,7 @@ func (h RegisterHandler) Handle(ctx context.Context, username string) (bool, err
 	// Log user out from session by removing token from redis and cookie from browser
 	gc := helpers.GinContextFromContext(ctx)
 
-	user := helpers.UserFromContext(ctx)
+	user := user.FromContext(ctx)
 
 	// remove session from redis
 	val, err := r.Redis.Do("SREM", "session:"+user.Username, user.Token)

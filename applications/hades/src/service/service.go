@@ -7,6 +7,7 @@ import (
 	"overdoll/applications/hades/src/adapters"
 	"overdoll/applications/hades/src/app"
 	"overdoll/applications/hades/src/app/command"
+	"overdoll/applications/hades/src/app/query"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/common"
 	"overdoll/libraries/rabbit"
@@ -49,11 +50,17 @@ func createApplication(ctx context.Context, eva app.EvaService) app.Application 
 		log.Fatalf("failed to connect to elasticsearch: %s", err)
 	}
 
+	srch := adapters.NewSearchElasticsearchRepository(es)
+
 	return app.Application{
 		Commands: app.Commands{
 			GetUserSession: command.NewGetUserSessionHandler(eva),
 		},
 		Queries: app.Queries{
+			SearchArtist:     query.NewSearchArtistsHandler(srch),
+			SearchCategories: query.NewSearchCategoriesHandler(srch),
+			SearchCharacters: query.NewSearchCharactersHandler(srch),
+			SearchMedias:     query.NewSearchMediasHandler(srch),
 		},
 	}
 }

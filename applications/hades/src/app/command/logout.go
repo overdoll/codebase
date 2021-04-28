@@ -6,6 +6,7 @@ import (
 
 	eva "overdoll/applications/eva/proto"
 	"overdoll/libraries/cookie"
+	"overdoll/libraries/helpers"
 )
 
 type LogoutHandler struct{}

@@ -7,6 +7,7 @@ import (
 	"github.com/streadway/amqp"
 	eva "overdoll/applications/eva/proto"
 	"overdoll/applications/hades/src/ports/graphql/types"
+	"overdoll/libraries/helpers"
 )
 
 type RedeemCookieHandler struct{}
@@ -31,7 +32,7 @@ func (h RedeemCookieHandler) Handle(ctx context.Context, cookie string) (*types.
 
 	// Cookie is expired or not valid - send back nil
 	if err != nil {
-		return &models.Cookie{
+		return &types.Cookie{
 			Invalid:     true,
 			Registered:  false,
 			SameSession: false,
@@ -40,7 +41,7 @@ func (h RedeemCookieHandler) Handle(ctx context.Context, cookie string) (*types.
 	}
 
 	// Our cookie
-	redeemedCookie := &models.Cookie{
+	redeemedCookie := &types.Cookie{
 		Registered:  false,
 		SameSession: true,
 		Redeemed:    true,

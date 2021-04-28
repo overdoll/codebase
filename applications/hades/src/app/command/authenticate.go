@@ -8,8 +8,8 @@ import (
 	"time"
 
 	eva "overdoll/applications/eva/proto"
-	"overdoll/applications/hades/src/ports/graphql/types"
 	"overdoll/libraries/cookie"
+	"overdoll/libraries/helpers"
 )
 
 type AuthenticateHandler struct{}

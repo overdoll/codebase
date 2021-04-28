@@ -20,7 +20,7 @@ const AllCategories = `
 	"query" : { "match_all" : {} },
 	"size" : 5`
 
-func (r ElasticsearchRepository) SearchCategories(ctx context.Context, search string) ([]json.RawMessage, error) {
+func (r SearchElasticsearchRepository) SearchCategories(ctx context.Context, search string) ([]json.RawMessage, error) {
 	var query string
 
 	if search == "" {

@@ -20,7 +20,7 @@ const AllArtists = `
 	"query" : { "match_all" : {} },
 	"size" : 5`
 
-func (r ElasticsearchRepository) SearchArtists(ctx context.Context, search string) ([]json.RawMessage, error) {
+func (r SearchElasticsearchRepository) SearchArtists(ctx context.Context, search string) ([]json.RawMessage, error) {
 	var query string
 
 	if search == "" {
