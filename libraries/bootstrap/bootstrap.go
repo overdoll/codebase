@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"net/http"
 	"os"
 	"os/signal"
 	"path"
@@ -23,7 +24,6 @@ type Bootstrap struct {
 	context   context.Context
 	directory string
 }
-
 
 func NewBootstrap(ctx context.Context) (Bootstrap, error) {
 
@@ -100,6 +100,30 @@ func InitializeGRPCServer(f func(server *grpc.Server)) {
 	log.Print("shutting down server")
 	grpcServer.GracefulStop()
 
+	<-ctx.Done()
+	os.Exit(0)
+}
+
+func InitializeHttpServer(server *http.Server, shutdown func()) {
+
+	// Start graph_api server
+	log.Printf("server started on port 8080")
+	go func() {
+		log.Fatal(server.ListenAndServe())
+	}()
+
+	sig := make(chan os.Signal, 1)
+	signal.Notify(sig, os.Interrupt, syscall.SIGTERM)
+
+	// Block until cancel signal is received.
+	<-sig
+	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+	defer cancel()
+	log.Print("Shutting down server")
+
+	if err := server.Shutdown(ctx); err != nil {
+		shutdown()
+	}
 	<-ctx.Done()
 	os.Exit(0)
 }

@@ -4,13 +4,13 @@ schema:
 
 # Where should the generated server code go?
 exec:
-  filename: src/graphql/generated.go
+  filename: src/ports/graphql/generated.go
   package: gen
 
 # Where should any generated models go?
 model:
-  filename: src/models/models_gen.go
-  package: models
+  filename: src/ports/graphql/types/types.go
+  package: types
 
 # Optional: turn on use `gqlgen:"fieldName"` tags in your models
 # struct_tag: json
