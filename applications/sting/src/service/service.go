@@ -12,6 +12,7 @@ import (
 	"github.com/ThreeDotsLabs/watermill/message"
 	"github.com/ThreeDotsLabs/watermill/message/router/middleware"
 	"overdoll/applications/sting/src/adapters"
+	"overdoll/applications/sting/src/app"
 	"overdoll/applications/sting/src/app/command"
 	"overdoll/applications/sting/src/app/event"
 	storage "overdoll/libraries/aws"
@@ -22,7 +23,7 @@ import (
 
 func NewApplication(ctx context.Context) (*cqrs.Facade, *message.Router, func()) {
 
-	evaGrpc, cleanup := common.NewEvaConnection(ctx)
+	evaClient, cleanup := common.NewEvaClient(ctx)
 
 	logger := watermill.NewStdLogger(false, false)
 
@@ -34,7 +35,7 @@ func NewApplication(ctx context.Context) (*cqrs.Facade, *message.Router, func())
 
 	router.AddMiddleware(middleware.Recoverer)
 
-	return createApplication(ctx, evaGrpc, router), router,
+	return createApplication(ctx, adapters.NewEvaGrpc(evaClient), router), router,
 		func() {
 			cleanup()
 		}
@@ -43,10 +44,10 @@ func NewApplication(ctx context.Context) (*cqrs.Facade, *message.Router, func())
 func NewComponentTestApplication(ctx context.Context) (*cqrs.Facade, *message.Router) {
 	router, _ := message.NewRouter(message.RouterConfig{}, watermill.NewStdLogger(false, false))
 
-	return createApplication(ctx, common.EvaServiceMock{}, router), router
+	return createApplication(ctx, EvaServiceMock{}, router), router
 }
 
-func createApplication(ctx context.Context, eva common.EvaService, router *message.Router) *cqrs.Facade {
+func createApplication(ctx context.Context, eva app.EvaService, router *message.Router) *cqrs.Facade {
 
 	logger := watermill.NewStdLogger(false, false)
 

@@ -14,6 +14,10 @@ type Commands struct {
 	CreateCookie       command.CreateCookieHandler
 	RedeemCookie       command.RedeemCookieHandler
 	RegisterFromCookie command.RegisterFromCookieHandler
+
+	RevokeSession   command.RevokeSessionHandler
+	CreateSession   command.CreateSessionHandler
+	ValidateSession command.ValidateSessionHandler
 }
 
 type Queries struct {

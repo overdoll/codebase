@@ -1,11 +1,9 @@
 package subscriptions
 
 import (
-	"overdoll/applications/hades/src/services"
-	"overdoll/libraries/rabbit"
+	"overdoll/applications/hades/src/app"
 )
 
 type SubscriptionResolver struct {
-	Services services.Services
-	Rabbit   rabbit.Conn
+	App app.Application
 }

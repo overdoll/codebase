@@ -41,7 +41,21 @@ message GetUserRequest {
   string id = 1;
 }
 
+message SessionRequest {
+  string token = 1;
+}
+
+message Session {
+  User user = 1;
+  string token = 2;
+}
+
+message Revoke {}
+
 service Eva {
+  rpc ValidateSession(SessionRequest) returns (Session);
+  rpc RevokeSession(SessionRequest) returns (Revoke);
+
   rpc GetUser(GetUserRequest) returns (User);
   rpc RegisterUserFromCookie(RegisterUserRequest) returns (User);
   rpc GetAuthenticationCookie(GetAuthenticationCookieRequest) returns (AuthenticationCookie);

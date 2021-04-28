@@ -43,9 +43,9 @@ func (h *HttpServer) HandleUpload() http.Handler {
 
 		key := user + "/" + file
 
-		u := r.Context().Value("user")
+		cookie, _ := r.Cookie("session")
 
-		output, err := h.app.Queries.GetFile.Handle(r.Context(), u.(string), user, file)
+		output, err := h.app.Queries.GetFile.Handle(r.Context(), cookie.Value, user, file)
 
 		if err != nil {
 			w.WriteHeader(http.StatusUnauthorized)

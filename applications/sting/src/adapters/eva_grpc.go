@@ -1,9 +1,10 @@
-package common
+package adapters
 
 import (
 	"context"
 
 	eva "overdoll/applications/eva/proto"
+	"overdoll/libraries/common"
 )
 
 type EvaGrpc struct {
@@ -14,7 +15,7 @@ func NewEvaGrpc(client eva.EvaClient) EvaGrpc {
 	return EvaGrpc{client: client}
 }
 
-func (s EvaGrpc) GetUser(ctx context.Context, id string) (*User, error) {
+func (s EvaGrpc) GetUser(ctx context.Context, id string) (*common.User, error) {
 	usr, err := s.client.GetUser(ctx, &eva.GetUserRequest{
 		Id: id,
 	})
@@ -23,7 +24,7 @@ func (s EvaGrpc) GetUser(ctx context.Context, id string) (*User, error) {
 		return nil, err
 	}
 
-	return &User{
+	return &common.User{
 		Id:       id,
 		Roles:    usr.Roles,
 		Verified: usr.Verified,

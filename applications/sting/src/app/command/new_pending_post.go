@@ -5,21 +5,21 @@ import (
 	"fmt"
 
 	sting "overdoll/applications/sting/proto"
+	"overdoll/applications/sting/src/app"
 	"overdoll/applications/sting/src/domain/content"
 	"overdoll/applications/sting/src/domain/post"
-	"overdoll/libraries/common"
 )
 
 type NewPostHandler struct {
 	pr  post.Repository
 	pi  post.IndexRepository
 	cr  content.Repository
-	eva common.EvaService
+	eva app.EvaService
 
 	pe post.EventRepository
 }
 
-func NewNewPostHandler(pr post.Repository, pi post.IndexRepository, cr content.Repository, eva common.EvaService, pe post.EventRepository) NewPostHandler {
+func NewNewPostHandler(pr post.Repository, pi post.IndexRepository, cr content.Repository, eva app.EvaService, pe post.EventRepository) NewPostHandler {
 	return NewPostHandler{pr: pr, cr: cr, eva: eva, pe: pe, pi: pi}
 }
 

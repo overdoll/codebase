@@ -1,11 +1,9 @@
 package mutations
 
 import (
-	"github.com/gomodule/redigo/redis"
-	"overdoll/applications/hades/src/services"
+	"overdoll/applications/hades/src/app"
 )
 
 type MutationResolver struct {
-	Services services.Services
-	Redis    redis.Conn
+	App app.Application
 }

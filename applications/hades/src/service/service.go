@@ -38,13 +38,6 @@ func createApplication(ctx context.Context, eva common.EvaService) app.Applicati
 		log.Fatalf("failed to bootstrap application: %s", err)
 	}
 
-	// Redis
-	redisSvc, err := redis.Dial("tcp", os.Getenv("REDIS_URL"), redis.DialDatabase(1))
-
-	if err != nil {
-		log.Fatalf("failed to connect to redis: %s", err)
-	}
-
 	// RabbitMQ
 	rabbitSvc, err := rabbit.GetConn()
 

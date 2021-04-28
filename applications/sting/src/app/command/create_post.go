@@ -4,8 +4,8 @@ import (
 	"context"
 
 	sting "overdoll/applications/sting/proto"
+	"overdoll/applications/sting/src/app"
 	"overdoll/applications/sting/src/domain/post"
-	"overdoll/libraries/common"
 )
 
 type CreatePostHandler struct {
@@ -13,10 +13,10 @@ type CreatePostHandler struct {
 	pi post.IndexRepository
 
 	pir post.IndexRepository
-	eva common.EvaService
+	eva app.EvaService
 }
 
-func NewCreatePostHandler(pr post.Repository, pir post.IndexRepository, eva common.EvaService) CreatePostHandler {
+func NewCreatePostHandler(pr post.Repository, pir post.IndexRepository, eva app.EvaService) CreatePostHandler {
 	return CreatePostHandler{pr: pr, pir: pir, eva: eva}
 }
 

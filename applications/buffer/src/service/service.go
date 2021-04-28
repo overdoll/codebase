@@ -15,19 +15,19 @@ import (
 
 func NewApplication(ctx context.Context) (app.Application, func()) {
 
-	evaGrpc, cleanup := common.NewEvaConnection(ctx)
+	client, cleanup := common.NewEvaClient(ctx)
 
-	return createApplication(ctx, evaGrpc),
+	return createApplication(ctx, adapters.NewEvaGrpc(client)),
 		func() {
 			cleanup()
 		}
 }
 
 func NewComponentTestApplication(ctx context.Context) app.Application {
-	return createApplication(ctx, common.EvaServiceMock{})
+	return createApplication(ctx, EvaServiceMock{})
 }
 
-func createApplication(ctx context.Context, eva common.EvaService) app.Application {
+func createApplication(ctx context.Context, eva query.EvaService) app.Application {
 
 	_, err := bootstrap.NewBootstrap(context.Background())
 

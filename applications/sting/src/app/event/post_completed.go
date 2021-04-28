@@ -4,9 +4,9 @@ import (
 	"context"
 
 	sting "overdoll/applications/sting/proto"
+	"overdoll/applications/sting/src/app"
 	"overdoll/applications/sting/src/domain/content"
 	"overdoll/applications/sting/src/domain/post"
-	"overdoll/libraries/common"
 )
 
 type PublishPostHandler struct {
@@ -14,10 +14,10 @@ type PublishPostHandler struct {
 	pe  post.EventRepository
 	pr  post.Repository
 	cr  content.Repository
-	eva common.EvaService
+	eva app.EvaService
 }
 
-func NewPublishPostHandler(pr post.Repository, pi post.IndexRepository, pe post.EventRepository, cr content.Repository, eva common.EvaService) PublishPostHandler {
+func NewPublishPostHandler(pr post.Repository, pi post.IndexRepository, pe post.EventRepository, cr content.Repository, eva app.EvaService) PublishPostHandler {
 	return PublishPostHandler{pr: pr, pi: pi, pe: pe, cr: cr, eva: eva}
 }
 
