@@ -8,7 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"overdoll/applications/hades/src/models"
+	"overdoll/applications/hades/src/ports/graphql/types"
 	"strconv"
 	"sync"
 	"sync/atomic"
@@ -96,11 +96,10 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		AuthEmail    func(childComplexity int) int
-		Authenticate func(childComplexity int, data *models.AuthenticationInput) int
+		Authenticate func(childComplexity int, data *types.AuthenticationInput) int
 		Logout       func(childComplexity int) int
-		Post         func(childComplexity int, data *models.PostInput) int
-		Register     func(childComplexity int, data *models.RegisterInput) int
+		Post         func(childComplexity int, data *types.PostInput) int
+		Register     func(childComplexity int, data *types.RegisterInput) int
 	}
 
 	PostResponse struct {
@@ -109,11 +108,11 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		Artists        func(childComplexity int, data models.SearchInput) int
+		Artists        func(childComplexity int, data types.SearchInput) int
 		Authentication func(childComplexity int) int
-		Categories     func(childComplexity int, data models.SearchInput) int
-		Characters     func(childComplexity int, data models.SearchInput) int
-		Media          func(childComplexity int, data models.SearchInput) int
+		Categories     func(childComplexity int, data types.SearchInput) int
+		Characters     func(childComplexity int, data types.SearchInput) int
+		Media          func(childComplexity int, data types.SearchInput) int
 		RedeemCookie   func(childComplexity int, cookie string) int
 	}
 
@@ -131,22 +130,21 @@ type ComplexityRoot struct {
 }
 
 type MutationResolver interface {
-	Authenticate(ctx context.Context, data *models.AuthenticationInput) (bool, error)
-	Register(ctx context.Context, data *models.RegisterInput) (bool, error)
+	Authenticate(ctx context.Context, data *types.AuthenticationInput) (bool, error)
+	Register(ctx context.Context, data *types.RegisterInput) (bool, error)
 	Logout(ctx context.Context) (bool, error)
-	AuthEmail(ctx context.Context) (*bool, error)
-	Post(ctx context.Context, data *models.PostInput) (*models.PostResponse, error)
+	Post(ctx context.Context, data *types.PostInput) (*types.PostResponse, error)
 }
 type QueryResolver interface {
-	RedeemCookie(ctx context.Context, cookie string) (*models.Cookie, error)
-	Authentication(ctx context.Context) (*models.Authentication, error)
-	Characters(ctx context.Context, data models.SearchInput) ([]*models.Character, error)
-	Categories(ctx context.Context, data models.SearchInput) ([]*models.Category, error)
-	Artists(ctx context.Context, data models.SearchInput) ([]*models.Artist, error)
-	Media(ctx context.Context, data models.SearchInput) ([]*models.Media, error)
+	RedeemCookie(ctx context.Context, cookie string) (*types.Cookie, error)
+	Authentication(ctx context.Context) (*types.Authentication, error)
+	Characters(ctx context.Context, data types.SearchInput) ([]*types.Character, error)
+	Categories(ctx context.Context, data types.SearchInput) ([]*types.Category, error)
+	Artists(ctx context.Context, data types.SearchInput) ([]*types.Artist, error)
+	Media(ctx context.Context, data types.SearchInput) ([]*types.Media, error)
 }
 type SubscriptionResolver interface {
-	AuthListener(ctx context.Context) (<-chan *models.AuthListener, error)
+	AuthListener(ctx context.Context) (<-chan *types.AuthListener, error)
 }
 
 type executableSchema struct {
@@ -325,13 +323,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Media.Title(childComplexity), true
 
-	case "Mutation.authEmail":
-		if e.complexity.Mutation.AuthEmail == nil {
-			break
-		}
-
-		return e.complexity.Mutation.AuthEmail(childComplexity), true
-
 	case "Mutation.authenticate":
 		if e.complexity.Mutation.Authenticate == nil {
 			break
@@ -342,7 +333,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.Authenticate(childComplexity, args["data"].(*models.AuthenticationInput)), true
+		return e.complexity.Mutation.Authenticate(childComplexity, args["data"].(*types.AuthenticationInput)), true
 
 	case "Mutation.logout":
 		if e.complexity.Mutation.Logout == nil {
@@ -361,7 +352,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.Post(childComplexity, args["data"].(*models.PostInput)), true
+		return e.complexity.Mutation.Post(childComplexity, args["data"].(*types.PostInput)), true
 
 	case "Mutation.register":
 		if e.complexity.Mutation.Register == nil {
@@ -373,7 +364,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.Register(childComplexity, args["data"].(*models.RegisterInput)), true
+		return e.complexity.Mutation.Register(childComplexity, args["data"].(*types.RegisterInput)), true
 
 	case "PostResponse.review":
 		if e.complexity.PostResponse.Review == nil {
@@ -399,7 +390,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Artists(childComplexity, args["data"].(models.SearchInput)), true
+		return e.complexity.Query.Artists(childComplexity, args["data"].(types.SearchInput)), true
 
 	case "Query.authentication":
 		if e.complexity.Query.Authentication == nil {
@@ -418,7 +409,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Categories(childComplexity, args["data"].(models.SearchInput)), true
+		return e.complexity.Query.Categories(childComplexity, args["data"].(types.SearchInput)), true
 
 	case "Query.characters":
 		if e.complexity.Query.Characters == nil {
@@ -430,7 +421,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Characters(childComplexity, args["data"].(models.SearchInput)), true
+		return e.complexity.Query.Characters(childComplexity, args["data"].(types.SearchInput)), true
 
 	case "Query.media":
 		if e.complexity.Query.Media == nil {
@@ -442,7 +433,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Media(childComplexity, args["data"].(models.SearchInput)), true
+		return e.complexity.Query.Media(childComplexity, args["data"].(types.SearchInput)), true
 
 	case "Query.redeemCookie":
 		if e.complexity.Query.RedeemCookie == nil {
@@ -558,7 +549,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
-	{Name: "schemas/directives.graphql", Input: `directive @auth on FIELD_DEFINITION
+	{Name: "src/ports/graphql/directives/directives.graphql", Input: `directive @auth on FIELD_DEFINITION
 
 directive @guest on FIELD_DEFINITION
 
@@ -568,18 +559,29 @@ directive @validation(rules: [String!]!) on INPUT_FIELD_DEFINITION
 
 directive @role(roles: [String!]!) on FIELD_DEFINITION
 `, BuiltIn: false},
-	{Name: "schemas/posts/mutations.graphql", Input: `extend type Mutation {
+	{Name: "src/ports/graphql/mutations/types.graphql", Input: `type Mutation {
+  authenticate(data: AuthenticationInput): Boolean! @guest
+  register(data: RegisterInput): Boolean! @guest
+  logout: Boolean! @auth
+
   post(data: PostInput): PostResponse! @auth
 }
 `, BuiltIn: false},
-	{Name: "schemas/posts/queries.graphql", Input: `extend type Query {
+	{Name: "src/ports/graphql/queries/types.graphql", Input: `type Query {
+  redeemCookie(cookie: String!): Cookie! @guest
+  authentication: Authentication
+
   characters(data: SearchInput!): [Character!]!
   categories(data: SearchInput!): [Category!]!
   artists(data: SearchInput!): [Artist!]!
   media(data: SearchInput!): [Media!]!
 }
 `, BuiltIn: false},
-	{Name: "schemas/posts/types.graphql", Input: `input PostInput {
+	{Name: "src/ports/graphql/subscriptions/types.graphql", Input: `type Subscription {
+  authListener: AuthListener
+}
+`, BuiltIn: false},
+	{Name: "src/ports/graphql/types/posts.types.graphql", Input: `input PostInput {
   content: [String!]!
   categories: [String!]!
   characters: [String!]!
@@ -628,27 +630,11 @@ type Category {
   title: String!
 }
 `, BuiltIn: false},
-	{Name: "schemas/types.graphql", Input: `type Validation {
+	{Name: "src/ports/graphql/types/types.graphql", Input: `type Validation {
   code: String!
 }
 `, BuiltIn: false},
-	{Name: "schemas/users/mutations.graphql", Input: `type Mutation {
-  authenticate(data: AuthenticationInput): Boolean! @guest
-  register(data: RegisterInput): Boolean! @guest
-  logout: Boolean! @auth
-  authEmail: Boolean
-}
-`, BuiltIn: false},
-	{Name: "schemas/users/queries.graphql", Input: `type Query {
-  redeemCookie(cookie: String!): Cookie! @guest
-  authentication: Authentication
-}
-`, BuiltIn: false},
-	{Name: "schemas/users/subscriptions.graphql", Input: `type Subscription {
-  authListener: AuthListener
-}
-`, BuiltIn: false},
-	{Name: "schemas/users/types.graphql", Input: `type Cookie {
+	{Name: "src/ports/graphql/types/users.types.graphql", Input: `type Cookie {
   sameSession: Boolean!
   registered: Boolean!
   redeemed: Boolean!
@@ -718,10 +704,10 @@ func (ec *executionContext) dir_validation_args(ctx context.Context, rawArgs map
 func (ec *executionContext) field_Mutation_authenticate_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *models.AuthenticationInput
+	var arg0 *types.AuthenticationInput
 	if tmp, ok := rawArgs["data"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("data"))
-		arg0, err = ec.unmarshalOAuthenticationInput2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐAuthenticationInput(ctx, tmp)
+		arg0, err = ec.unmarshalOAuthenticationInput2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐAuthenticationInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -733,10 +719,10 @@ func (ec *executionContext) field_Mutation_authenticate_args(ctx context.Context
 func (ec *executionContext) field_Mutation_post_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *models.PostInput
+	var arg0 *types.PostInput
 	if tmp, ok := rawArgs["data"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("data"))
-		arg0, err = ec.unmarshalOPostInput2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐPostInput(ctx, tmp)
+		arg0, err = ec.unmarshalOPostInput2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐPostInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -748,10 +734,10 @@ func (ec *executionContext) field_Mutation_post_args(ctx context.Context, rawArg
 func (ec *executionContext) field_Mutation_register_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *models.RegisterInput
+	var arg0 *types.RegisterInput
 	if tmp, ok := rawArgs["data"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("data"))
-		arg0, err = ec.unmarshalORegisterInput2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐRegisterInput(ctx, tmp)
+		arg0, err = ec.unmarshalORegisterInput2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐRegisterInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -778,10 +764,10 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 func (ec *executionContext) field_Query_artists_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 models.SearchInput
+	var arg0 types.SearchInput
 	if tmp, ok := rawArgs["data"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("data"))
-		arg0, err = ec.unmarshalNSearchInput2overdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐSearchInput(ctx, tmp)
+		arg0, err = ec.unmarshalNSearchInput2overdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐSearchInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -793,10 +779,10 @@ func (ec *executionContext) field_Query_artists_args(ctx context.Context, rawArg
 func (ec *executionContext) field_Query_categories_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 models.SearchInput
+	var arg0 types.SearchInput
 	if tmp, ok := rawArgs["data"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("data"))
-		arg0, err = ec.unmarshalNSearchInput2overdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐSearchInput(ctx, tmp)
+		arg0, err = ec.unmarshalNSearchInput2overdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐSearchInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -808,10 +794,10 @@ func (ec *executionContext) field_Query_categories_args(ctx context.Context, raw
 func (ec *executionContext) field_Query_characters_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 models.SearchInput
+	var arg0 types.SearchInput
 	if tmp, ok := rawArgs["data"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("data"))
-		arg0, err = ec.unmarshalNSearchInput2overdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐSearchInput(ctx, tmp)
+		arg0, err = ec.unmarshalNSearchInput2overdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐSearchInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -823,10 +809,10 @@ func (ec *executionContext) field_Query_characters_args(ctx context.Context, raw
 func (ec *executionContext) field_Query_media_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 models.SearchInput
+	var arg0 types.SearchInput
 	if tmp, ok := rawArgs["data"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("data"))
-		arg0, err = ec.unmarshalNSearchInput2overdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐSearchInput(ctx, tmp)
+		arg0, err = ec.unmarshalNSearchInput2overdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐSearchInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -888,7 +874,7 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 
 // region    **************************** field.gotpl *****************************
 
-func (ec *executionContext) _Artist_id(ctx context.Context, field graphql.CollectedField, obj *models.Artist) (ret graphql.Marshaler) {
+func (ec *executionContext) _Artist_id(ctx context.Context, field graphql.CollectedField, obj *types.Artist) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -923,7 +909,7 @@ func (ec *executionContext) _Artist_id(ctx context.Context, field graphql.Collec
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Artist_avatar(ctx context.Context, field graphql.CollectedField, obj *models.Artist) (ret graphql.Marshaler) {
+func (ec *executionContext) _Artist_avatar(ctx context.Context, field graphql.CollectedField, obj *types.Artist) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -958,7 +944,7 @@ func (ec *executionContext) _Artist_avatar(ctx context.Context, field graphql.Co
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Artist_username(ctx context.Context, field graphql.CollectedField, obj *models.Artist) (ret graphql.Marshaler) {
+func (ec *executionContext) _Artist_username(ctx context.Context, field graphql.CollectedField, obj *types.Artist) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -993,7 +979,7 @@ func (ec *executionContext) _Artist_username(ctx context.Context, field graphql.
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AuthListener_sameSession(ctx context.Context, field graphql.CollectedField, obj *models.AuthListener) (ret graphql.Marshaler) {
+func (ec *executionContext) _AuthListener_sameSession(ctx context.Context, field graphql.CollectedField, obj *types.AuthListener) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1028,7 +1014,7 @@ func (ec *executionContext) _AuthListener_sameSession(ctx context.Context, field
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AuthListener_cookie(ctx context.Context, field graphql.CollectedField, obj *models.AuthListener) (ret graphql.Marshaler) {
+func (ec *executionContext) _AuthListener_cookie(ctx context.Context, field graphql.CollectedField, obj *types.AuthListener) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1055,12 +1041,12 @@ func (ec *executionContext) _AuthListener_cookie(ctx context.Context, field grap
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*models.Cookie)
+	res := resTmp.(*types.Cookie)
 	fc.Result = res
-	return ec.marshalOCookie2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCookie(ctx, field.Selections, res)
+	return ec.marshalOCookie2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐCookie(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Authentication_cookie(ctx context.Context, field graphql.CollectedField, obj *models.Authentication) (ret graphql.Marshaler) {
+func (ec *executionContext) _Authentication_cookie(ctx context.Context, field graphql.CollectedField, obj *types.Authentication) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1087,12 +1073,12 @@ func (ec *executionContext) _Authentication_cookie(ctx context.Context, field gr
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*models.Cookie)
+	res := resTmp.(*types.Cookie)
 	fc.Result = res
-	return ec.marshalOCookie2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCookie(ctx, field.Selections, res)
+	return ec.marshalOCookie2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐCookie(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Authentication_user(ctx context.Context, field graphql.CollectedField, obj *models.Authentication) (ret graphql.Marshaler) {
+func (ec *executionContext) _Authentication_user(ctx context.Context, field graphql.CollectedField, obj *types.Authentication) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1119,12 +1105,12 @@ func (ec *executionContext) _Authentication_user(ctx context.Context, field grap
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*models.User)
+	res := resTmp.(*types.User)
 	fc.Result = res
-	return ec.marshalOUser2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐUser(ctx, field.Selections, res)
+	return ec.marshalOUser2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐUser(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Category_id(ctx context.Context, field graphql.CollectedField, obj *models.Category) (ret graphql.Marshaler) {
+func (ec *executionContext) _Category_id(ctx context.Context, field graphql.CollectedField, obj *types.Category) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1159,7 +1145,7 @@ func (ec *executionContext) _Category_id(ctx context.Context, field graphql.Coll
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Category_thumbnail(ctx context.Context, field graphql.CollectedField, obj *models.Category) (ret graphql.Marshaler) {
+func (ec *executionContext) _Category_thumbnail(ctx context.Context, field graphql.CollectedField, obj *types.Category) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1194,7 +1180,7 @@ func (ec *executionContext) _Category_thumbnail(ctx context.Context, field graph
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Category_title(ctx context.Context, field graphql.CollectedField, obj *models.Category) (ret graphql.Marshaler) {
+func (ec *executionContext) _Category_title(ctx context.Context, field graphql.CollectedField, obj *types.Category) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1229,7 +1215,7 @@ func (ec *executionContext) _Category_title(ctx context.Context, field graphql.C
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Character_id(ctx context.Context, field graphql.CollectedField, obj *models.Character) (ret graphql.Marshaler) {
+func (ec *executionContext) _Character_id(ctx context.Context, field graphql.CollectedField, obj *types.Character) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1264,7 +1250,7 @@ func (ec *executionContext) _Character_id(ctx context.Context, field graphql.Col
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Character_thumbnail(ctx context.Context, field graphql.CollectedField, obj *models.Character) (ret graphql.Marshaler) {
+func (ec *executionContext) _Character_thumbnail(ctx context.Context, field graphql.CollectedField, obj *types.Character) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1299,7 +1285,7 @@ func (ec *executionContext) _Character_thumbnail(ctx context.Context, field grap
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Character_name(ctx context.Context, field graphql.CollectedField, obj *models.Character) (ret graphql.Marshaler) {
+func (ec *executionContext) _Character_name(ctx context.Context, field graphql.CollectedField, obj *types.Character) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1334,7 +1320,7 @@ func (ec *executionContext) _Character_name(ctx context.Context, field graphql.C
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Character_media(ctx context.Context, field graphql.CollectedField, obj *models.Character) (ret graphql.Marshaler) {
+func (ec *executionContext) _Character_media(ctx context.Context, field graphql.CollectedField, obj *types.Character) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1364,12 +1350,12 @@ func (ec *executionContext) _Character_media(ctx context.Context, field graphql.
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*models.Media)
+	res := resTmp.(*types.Media)
 	fc.Result = res
-	return ec.marshalNMedia2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐMedia(ctx, field.Selections, res)
+	return ec.marshalNMedia2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐMedia(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Cookie_sameSession(ctx context.Context, field graphql.CollectedField, obj *models.Cookie) (ret graphql.Marshaler) {
+func (ec *executionContext) _Cookie_sameSession(ctx context.Context, field graphql.CollectedField, obj *types.Cookie) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1404,7 +1390,7 @@ func (ec *executionContext) _Cookie_sameSession(ctx context.Context, field graph
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Cookie_registered(ctx context.Context, field graphql.CollectedField, obj *models.Cookie) (ret graphql.Marshaler) {
+func (ec *executionContext) _Cookie_registered(ctx context.Context, field graphql.CollectedField, obj *types.Cookie) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1439,7 +1425,7 @@ func (ec *executionContext) _Cookie_registered(ctx context.Context, field graphq
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Cookie_redeemed(ctx context.Context, field graphql.CollectedField, obj *models.Cookie) (ret graphql.Marshaler) {
+func (ec *executionContext) _Cookie_redeemed(ctx context.Context, field graphql.CollectedField, obj *types.Cookie) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1474,7 +1460,7 @@ func (ec *executionContext) _Cookie_redeemed(ctx context.Context, field graphql.
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Cookie_session(ctx context.Context, field graphql.CollectedField, obj *models.Cookie) (ret graphql.Marshaler) {
+func (ec *executionContext) _Cookie_session(ctx context.Context, field graphql.CollectedField, obj *types.Cookie) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1509,7 +1495,7 @@ func (ec *executionContext) _Cookie_session(ctx context.Context, field graphql.C
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Cookie_email(ctx context.Context, field graphql.CollectedField, obj *models.Cookie) (ret graphql.Marshaler) {
+func (ec *executionContext) _Cookie_email(ctx context.Context, field graphql.CollectedField, obj *types.Cookie) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1544,7 +1530,7 @@ func (ec *executionContext) _Cookie_email(ctx context.Context, field graphql.Col
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Cookie_invalid(ctx context.Context, field graphql.CollectedField, obj *models.Cookie) (ret graphql.Marshaler) {
+func (ec *executionContext) _Cookie_invalid(ctx context.Context, field graphql.CollectedField, obj *types.Cookie) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1579,7 +1565,7 @@ func (ec *executionContext) _Cookie_invalid(ctx context.Context, field graphql.C
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Media_id(ctx context.Context, field graphql.CollectedField, obj *models.Media) (ret graphql.Marshaler) {
+func (ec *executionContext) _Media_id(ctx context.Context, field graphql.CollectedField, obj *types.Media) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1614,7 +1600,7 @@ func (ec *executionContext) _Media_id(ctx context.Context, field graphql.Collect
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Media_thumbnail(ctx context.Context, field graphql.CollectedField, obj *models.Media) (ret graphql.Marshaler) {
+func (ec *executionContext) _Media_thumbnail(ctx context.Context, field graphql.CollectedField, obj *types.Media) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1646,7 +1632,7 @@ func (ec *executionContext) _Media_thumbnail(ctx context.Context, field graphql.
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Media_title(ctx context.Context, field graphql.CollectedField, obj *models.Media) (ret graphql.Marshaler) {
+func (ec *executionContext) _Media_title(ctx context.Context, field graphql.CollectedField, obj *types.Media) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1707,7 +1693,7 @@ func (ec *executionContext) _Mutation_authenticate(ctx context.Context, field gr
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().Authenticate(rctx, args["data"].(*models.AuthenticationInput))
+			return ec.resolvers.Mutation().Authenticate(rctx, args["data"].(*types.AuthenticationInput))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			if ec.directives.Guest == nil {
@@ -1769,7 +1755,7 @@ func (ec *executionContext) _Mutation_register(ctx context.Context, field graphq
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().Register(rctx, args["data"].(*models.RegisterInput))
+			return ec.resolvers.Mutation().Register(rctx, args["data"].(*types.RegisterInput))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			if ec.directives.Guest == nil {
@@ -1860,38 +1846,6 @@ func (ec *executionContext) _Mutation_logout(ctx context.Context, field graphql.
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Mutation_authEmail(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().AuthEmail(rctx)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*bool)
-	fc.Result = res
-	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _Mutation_post(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -1918,7 +1872,7 @@ func (ec *executionContext) _Mutation_post(ctx context.Context, field graphql.Co
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().Post(rctx, args["data"].(*models.PostInput))
+			return ec.resolvers.Mutation().Post(rctx, args["data"].(*types.PostInput))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			if ec.directives.Auth == nil {
@@ -1934,10 +1888,10 @@ func (ec *executionContext) _Mutation_post(ctx context.Context, field graphql.Co
 		if tmp == nil {
 			return nil, nil
 		}
-		if data, ok := tmp.(*models.PostResponse); ok {
+		if data, ok := tmp.(*types.PostResponse); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/hades/src/models.PostResponse`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/hades/src/ports/graphql/types.PostResponse`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1949,12 +1903,12 @@ func (ec *executionContext) _Mutation_post(ctx context.Context, field graphql.Co
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*models.PostResponse)
+	res := resTmp.(*types.PostResponse)
 	fc.Result = res
-	return ec.marshalNPostResponse2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐPostResponse(ctx, field.Selections, res)
+	return ec.marshalNPostResponse2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐPostResponse(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _PostResponse_review(ctx context.Context, field graphql.CollectedField, obj *models.PostResponse) (ret graphql.Marshaler) {
+func (ec *executionContext) _PostResponse_review(ctx context.Context, field graphql.CollectedField, obj *types.PostResponse) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1989,7 +1943,7 @@ func (ec *executionContext) _PostResponse_review(ctx context.Context, field grap
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _PostResponse_validation(ctx context.Context, field graphql.CollectedField, obj *models.PostResponse) (ret graphql.Marshaler) {
+func (ec *executionContext) _PostResponse_validation(ctx context.Context, field graphql.CollectedField, obj *types.PostResponse) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2016,9 +1970,9 @@ func (ec *executionContext) _PostResponse_validation(ctx context.Context, field 
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*models.Validation)
+	res := resTmp.(*types.Validation)
 	fc.Result = res
-	return ec.marshalOValidation2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐValidation(ctx, field.Selections, res)
+	return ec.marshalOValidation2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐValidation(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_redeemCookie(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2063,10 +2017,10 @@ func (ec *executionContext) _Query_redeemCookie(ctx context.Context, field graph
 		if tmp == nil {
 			return nil, nil
 		}
-		if data, ok := tmp.(*models.Cookie); ok {
+		if data, ok := tmp.(*types.Cookie); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/hades/src/models.Cookie`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/hades/src/ports/graphql/types.Cookie`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2078,9 +2032,9 @@ func (ec *executionContext) _Query_redeemCookie(ctx context.Context, field graph
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*models.Cookie)
+	res := resTmp.(*types.Cookie)
 	fc.Result = res
-	return ec.marshalNCookie2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCookie(ctx, field.Selections, res)
+	return ec.marshalNCookie2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐCookie(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_authentication(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2110,9 +2064,9 @@ func (ec *executionContext) _Query_authentication(ctx context.Context, field gra
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*models.Authentication)
+	res := resTmp.(*types.Authentication)
 	fc.Result = res
-	return ec.marshalOAuthentication2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐAuthentication(ctx, field.Selections, res)
+	return ec.marshalOAuthentication2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐAuthentication(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_characters(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2140,7 +2094,7 @@ func (ec *executionContext) _Query_characters(ctx context.Context, field graphql
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Characters(rctx, args["data"].(models.SearchInput))
+		return ec.resolvers.Query().Characters(rctx, args["data"].(types.SearchInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2152,9 +2106,9 @@ func (ec *executionContext) _Query_characters(ctx context.Context, field graphql
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*models.Character)
+	res := resTmp.([]*types.Character)
 	fc.Result = res
-	return ec.marshalNCharacter2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCharacterᚄ(ctx, field.Selections, res)
+	return ec.marshalNCharacter2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐCharacterᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_categories(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2182,7 +2136,7 @@ func (ec *executionContext) _Query_categories(ctx context.Context, field graphql
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Categories(rctx, args["data"].(models.SearchInput))
+		return ec.resolvers.Query().Categories(rctx, args["data"].(types.SearchInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2194,9 +2148,9 @@ func (ec *executionContext) _Query_categories(ctx context.Context, field graphql
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*models.Category)
+	res := resTmp.([]*types.Category)
 	fc.Result = res
-	return ec.marshalNCategory2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCategoryᚄ(ctx, field.Selections, res)
+	return ec.marshalNCategory2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐCategoryᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_artists(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2224,7 +2178,7 @@ func (ec *executionContext) _Query_artists(ctx context.Context, field graphql.Co
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Artists(rctx, args["data"].(models.SearchInput))
+		return ec.resolvers.Query().Artists(rctx, args["data"].(types.SearchInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2236,9 +2190,9 @@ func (ec *executionContext) _Query_artists(ctx context.Context, field graphql.Co
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*models.Artist)
+	res := resTmp.([]*types.Artist)
 	fc.Result = res
-	return ec.marshalNArtist2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐArtistᚄ(ctx, field.Selections, res)
+	return ec.marshalNArtist2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐArtistᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_media(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2266,7 +2220,7 @@ func (ec *executionContext) _Query_media(ctx context.Context, field graphql.Coll
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Media(rctx, args["data"].(models.SearchInput))
+		return ec.resolvers.Query().Media(rctx, args["data"].(types.SearchInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2278,9 +2232,9 @@ func (ec *executionContext) _Query_media(ctx context.Context, field graphql.Coll
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*models.Media)
+	res := resTmp.([]*types.Media)
 	fc.Result = res
-	return ec.marshalNMedia2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐMediaᚄ(ctx, field.Selections, res)
+	return ec.marshalNMedia2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐMediaᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2382,7 +2336,7 @@ func (ec *executionContext) _Subscription_authListener(ctx context.Context, fiel
 		return nil
 	}
 	return func() graphql.Marshaler {
-		res, ok := <-resTmp.(<-chan *models.AuthListener)
+		res, ok := <-resTmp.(<-chan *types.AuthListener)
 		if !ok {
 			return nil
 		}
@@ -2390,13 +2344,13 @@ func (ec *executionContext) _Subscription_authListener(ctx context.Context, fiel
 			w.Write([]byte{'{'})
 			graphql.MarshalString(field.Alias).MarshalGQL(w)
 			w.Write([]byte{':'})
-			ec.marshalOAuthListener2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐAuthListener(ctx, field.Selections, res).MarshalGQL(w)
+			ec.marshalOAuthListener2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐAuthListener(ctx, field.Selections, res).MarshalGQL(w)
 			w.Write([]byte{'}'})
 		})
 	}
 }
 
-func (ec *executionContext) _User_username(ctx context.Context, field graphql.CollectedField, obj *models.User) (ret graphql.Marshaler) {
+func (ec *executionContext) _User_username(ctx context.Context, field graphql.CollectedField, obj *types.User) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2431,7 +2385,7 @@ func (ec *executionContext) _User_username(ctx context.Context, field graphql.Co
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Validation_code(ctx context.Context, field graphql.CollectedField, obj *models.Validation) (ret graphql.Marshaler) {
+func (ec *executionContext) _Validation_code(ctx context.Context, field graphql.CollectedField, obj *types.Validation) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3553,8 +3507,8 @@ func (ec *executionContext) ___Type_ofType(ctx context.Context, field graphql.Co
 
 // region    **************************** input.gotpl *****************************
 
-func (ec *executionContext) unmarshalInputAuthenticationInput(ctx context.Context, obj interface{}) (models.AuthenticationInput, error) {
-	var it models.AuthenticationInput
+func (ec *executionContext) unmarshalInputAuthenticationInput(ctx context.Context, obj interface{}) (types.AuthenticationInput, error) {
+	var it types.AuthenticationInput
 	var asMap = obj.(map[string]interface{})
 
 	for k, v := range asMap {
@@ -3591,8 +3545,8 @@ func (ec *executionContext) unmarshalInputAuthenticationInput(ctx context.Contex
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputCharacterRequest(ctx context.Context, obj interface{}) (models.CharacterRequest, error) {
-	var it models.CharacterRequest
+func (ec *executionContext) unmarshalInputCharacterRequest(ctx context.Context, obj interface{}) (types.CharacterRequest, error) {
+	var it types.CharacterRequest
 	var asMap = obj.(map[string]interface{})
 
 	for k, v := range asMap {
@@ -3619,8 +3573,8 @@ func (ec *executionContext) unmarshalInputCharacterRequest(ctx context.Context, 
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputPostInput(ctx context.Context, obj interface{}) (models.PostInput, error) {
-	var it models.PostInput
+func (ec *executionContext) unmarshalInputPostInput(ctx context.Context, obj interface{}) (types.PostInput, error) {
+	var it types.PostInput
 	var asMap = obj.(map[string]interface{})
 
 	for k, v := range asMap {
@@ -3661,7 +3615,7 @@ func (ec *executionContext) unmarshalInputPostInput(ctx context.Context, obj int
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("characterRequests"))
-			it.CharacterRequests, err = ec.unmarshalOCharacterRequest2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCharacterRequestᚄ(ctx, v)
+			it.CharacterRequests, err = ec.unmarshalOCharacterRequest2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐCharacterRequestᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -3687,8 +3641,8 @@ func (ec *executionContext) unmarshalInputPostInput(ctx context.Context, obj int
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputRegisterInput(ctx context.Context, obj interface{}) (models.RegisterInput, error) {
-	var it models.RegisterInput
+func (ec *executionContext) unmarshalInputRegisterInput(ctx context.Context, obj interface{}) (types.RegisterInput, error) {
+	var it types.RegisterInput
 	var asMap = obj.(map[string]interface{})
 
 	for k, v := range asMap {
@@ -3725,8 +3679,8 @@ func (ec *executionContext) unmarshalInputRegisterInput(ctx context.Context, obj
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputSearchInput(ctx context.Context, obj interface{}) (models.SearchInput, error) {
-	var it models.SearchInput
+func (ec *executionContext) unmarshalInputSearchInput(ctx context.Context, obj interface{}) (types.SearchInput, error) {
+	var it types.SearchInput
 	var asMap = obj.(map[string]interface{})
 
 	for k, v := range asMap {
@@ -3755,7 +3709,7 @@ func (ec *executionContext) unmarshalInputSearchInput(ctx context.Context, obj i
 
 var artistImplementors = []string{"Artist"}
 
-func (ec *executionContext) _Artist(ctx context.Context, sel ast.SelectionSet, obj *models.Artist) graphql.Marshaler {
+func (ec *executionContext) _Artist(ctx context.Context, sel ast.SelectionSet, obj *types.Artist) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, artistImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -3792,7 +3746,7 @@ func (ec *executionContext) _Artist(ctx context.Context, sel ast.SelectionSet, o
 
 var authListenerImplementors = []string{"AuthListener"}
 
-func (ec *executionContext) _AuthListener(ctx context.Context, sel ast.SelectionSet, obj *models.AuthListener) graphql.Marshaler {
+func (ec *executionContext) _AuthListener(ctx context.Context, sel ast.SelectionSet, obj *types.AuthListener) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, authListenerImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -3821,7 +3775,7 @@ func (ec *executionContext) _AuthListener(ctx context.Context, sel ast.Selection
 
 var authenticationImplementors = []string{"Authentication"}
 
-func (ec *executionContext) _Authentication(ctx context.Context, sel ast.SelectionSet, obj *models.Authentication) graphql.Marshaler {
+func (ec *executionContext) _Authentication(ctx context.Context, sel ast.SelectionSet, obj *types.Authentication) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, authenticationImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -3847,7 +3801,7 @@ func (ec *executionContext) _Authentication(ctx context.Context, sel ast.Selecti
 
 var categoryImplementors = []string{"Category"}
 
-func (ec *executionContext) _Category(ctx context.Context, sel ast.SelectionSet, obj *models.Category) graphql.Marshaler {
+func (ec *executionContext) _Category(ctx context.Context, sel ast.SelectionSet, obj *types.Category) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, categoryImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -3884,7 +3838,7 @@ func (ec *executionContext) _Category(ctx context.Context, sel ast.SelectionSet,
 
 var characterImplementors = []string{"Character"}
 
-func (ec *executionContext) _Character(ctx context.Context, sel ast.SelectionSet, obj *models.Character) graphql.Marshaler {
+func (ec *executionContext) _Character(ctx context.Context, sel ast.SelectionSet, obj *types.Character) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, characterImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -3926,7 +3880,7 @@ func (ec *executionContext) _Character(ctx context.Context, sel ast.SelectionSet
 
 var cookieImplementors = []string{"Cookie"}
 
-func (ec *executionContext) _Cookie(ctx context.Context, sel ast.SelectionSet, obj *models.Cookie) graphql.Marshaler {
+func (ec *executionContext) _Cookie(ctx context.Context, sel ast.SelectionSet, obj *types.Cookie) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, cookieImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -3978,7 +3932,7 @@ func (ec *executionContext) _Cookie(ctx context.Context, sel ast.SelectionSet, o
 
 var mediaImplementors = []string{"Media"}
 
-func (ec *executionContext) _Media(ctx context.Context, sel ast.SelectionSet, obj *models.Media) graphql.Marshaler {
+func (ec *executionContext) _Media(ctx context.Context, sel ast.SelectionSet, obj *types.Media) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, mediaImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -4040,8 +3994,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "authEmail":
-			out.Values[i] = ec._Mutation_authEmail(ctx, field)
 		case "post":
 			out.Values[i] = ec._Mutation_post(ctx, field)
 			if out.Values[i] == graphql.Null {
@@ -4060,7 +4012,7 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 
 var postResponseImplementors = []string{"PostResponse"}
 
-func (ec *executionContext) _PostResponse(ctx context.Context, sel ast.SelectionSet, obj *models.PostResponse) graphql.Marshaler {
+func (ec *executionContext) _PostResponse(ctx context.Context, sel ast.SelectionSet, obj *types.PostResponse) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, postResponseImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -4220,7 +4172,7 @@ func (ec *executionContext) _Subscription(ctx context.Context, sel ast.Selection
 
 var userImplementors = []string{"User"}
 
-func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj *models.User) graphql.Marshaler {
+func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj *types.User) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, userImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -4247,7 +4199,7 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 
 var validationImplementors = []string{"Validation"}
 
-func (ec *executionContext) _Validation(ctx context.Context, sel ast.SelectionSet, obj *models.Validation) graphql.Marshaler {
+func (ec *executionContext) _Validation(ctx context.Context, sel ast.SelectionSet, obj *types.Validation) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, validationImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -4517,7 +4469,7 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 
 // region    ***************************** type.gotpl *****************************
 
-func (ec *executionContext) marshalNArtist2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐArtistᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.Artist) graphql.Marshaler {
+func (ec *executionContext) marshalNArtist2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐArtistᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.Artist) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -4541,7 +4493,7 @@ func (ec *executionContext) marshalNArtist2ᚕᚖoverdollᚋapplicationsᚋhades
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNArtist2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐArtist(ctx, sel, v[i])
+			ret[i] = ec.marshalNArtist2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐArtist(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -4554,7 +4506,7 @@ func (ec *executionContext) marshalNArtist2ᚕᚖoverdollᚋapplicationsᚋhades
 	return ret
 }
 
-func (ec *executionContext) marshalNArtist2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐArtist(ctx context.Context, sel ast.SelectionSet, v *models.Artist) graphql.Marshaler {
+func (ec *executionContext) marshalNArtist2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐArtist(ctx context.Context, sel ast.SelectionSet, v *types.Artist) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -4579,7 +4531,7 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
-func (ec *executionContext) marshalNCategory2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCategoryᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.Category) graphql.Marshaler {
+func (ec *executionContext) marshalNCategory2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐCategoryᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.Category) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -4603,7 +4555,7 @@ func (ec *executionContext) marshalNCategory2ᚕᚖoverdollᚋapplicationsᚋhad
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNCategory2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCategory(ctx, sel, v[i])
+			ret[i] = ec.marshalNCategory2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐCategory(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -4616,7 +4568,7 @@ func (ec *executionContext) marshalNCategory2ᚕᚖoverdollᚋapplicationsᚋhad
 	return ret
 }
 
-func (ec *executionContext) marshalNCategory2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCategory(ctx context.Context, sel ast.SelectionSet, v *models.Category) graphql.Marshaler {
+func (ec *executionContext) marshalNCategory2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐCategory(ctx context.Context, sel ast.SelectionSet, v *types.Category) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -4626,7 +4578,7 @@ func (ec *executionContext) marshalNCategory2ᚖoverdollᚋapplicationsᚋhades�
 	return ec._Category(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNCharacter2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCharacterᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.Character) graphql.Marshaler {
+func (ec *executionContext) marshalNCharacter2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐCharacterᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.Character) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -4650,7 +4602,7 @@ func (ec *executionContext) marshalNCharacter2ᚕᚖoverdollᚋapplicationsᚋha
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNCharacter2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCharacter(ctx, sel, v[i])
+			ret[i] = ec.marshalNCharacter2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐCharacter(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -4663,7 +4615,7 @@ func (ec *executionContext) marshalNCharacter2ᚕᚖoverdollᚋapplicationsᚋha
 	return ret
 }
 
-func (ec *executionContext) marshalNCharacter2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCharacter(ctx context.Context, sel ast.SelectionSet, v *models.Character) graphql.Marshaler {
+func (ec *executionContext) marshalNCharacter2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐCharacter(ctx context.Context, sel ast.SelectionSet, v *types.Character) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -4673,16 +4625,16 @@ func (ec *executionContext) marshalNCharacter2ᚖoverdollᚋapplicationsᚋhades
 	return ec._Character(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNCharacterRequest2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCharacterRequest(ctx context.Context, v interface{}) (*models.CharacterRequest, error) {
+func (ec *executionContext) unmarshalNCharacterRequest2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐCharacterRequest(ctx context.Context, v interface{}) (*types.CharacterRequest, error) {
 	res, err := ec.unmarshalInputCharacterRequest(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNCookie2overdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCookie(ctx context.Context, sel ast.SelectionSet, v models.Cookie) graphql.Marshaler {
+func (ec *executionContext) marshalNCookie2overdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐCookie(ctx context.Context, sel ast.SelectionSet, v types.Cookie) graphql.Marshaler {
 	return ec._Cookie(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNCookie2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCookie(ctx context.Context, sel ast.SelectionSet, v *models.Cookie) graphql.Marshaler {
+func (ec *executionContext) marshalNCookie2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐCookie(ctx context.Context, sel ast.SelectionSet, v *types.Cookie) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -4692,7 +4644,7 @@ func (ec *executionContext) marshalNCookie2ᚖoverdollᚋapplicationsᚋhadesᚋ
 	return ec._Cookie(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNMedia2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐMediaᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.Media) graphql.Marshaler {
+func (ec *executionContext) marshalNMedia2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐMediaᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.Media) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -4716,7 +4668,7 @@ func (ec *executionContext) marshalNMedia2ᚕᚖoverdollᚋapplicationsᚋhades�
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNMedia2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐMedia(ctx, sel, v[i])
+			ret[i] = ec.marshalNMedia2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐMedia(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -4729,7 +4681,7 @@ func (ec *executionContext) marshalNMedia2ᚕᚖoverdollᚋapplicationsᚋhades�
 	return ret
 }
 
-func (ec *executionContext) marshalNMedia2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐMedia(ctx context.Context, sel ast.SelectionSet, v *models.Media) graphql.Marshaler {
+func (ec *executionContext) marshalNMedia2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐMedia(ctx context.Context, sel ast.SelectionSet, v *types.Media) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -4739,11 +4691,11 @@ func (ec *executionContext) marshalNMedia2ᚖoverdollᚋapplicationsᚋhadesᚋs
 	return ec._Media(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNPostResponse2overdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐPostResponse(ctx context.Context, sel ast.SelectionSet, v models.PostResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNPostResponse2overdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐPostResponse(ctx context.Context, sel ast.SelectionSet, v types.PostResponse) graphql.Marshaler {
 	return ec._PostResponse(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNPostResponse2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐPostResponse(ctx context.Context, sel ast.SelectionSet, v *models.PostResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNPostResponse2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐPostResponse(ctx context.Context, sel ast.SelectionSet, v *types.PostResponse) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -4753,7 +4705,7 @@ func (ec *executionContext) marshalNPostResponse2ᚖoverdollᚋapplicationsᚋha
 	return ec._PostResponse(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNSearchInput2overdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐSearchInput(ctx context.Context, v interface{}) (models.SearchInput, error) {
+func (ec *executionContext) unmarshalNSearchInput2overdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐSearchInput(ctx context.Context, v interface{}) (types.SearchInput, error) {
 	res, err := ec.unmarshalInputSearchInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
@@ -5032,21 +4984,21 @@ func (ec *executionContext) marshalN__TypeKind2string(ctx context.Context, sel a
 	return res
 }
 
-func (ec *executionContext) marshalOAuthListener2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐAuthListener(ctx context.Context, sel ast.SelectionSet, v *models.AuthListener) graphql.Marshaler {
+func (ec *executionContext) marshalOAuthListener2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐAuthListener(ctx context.Context, sel ast.SelectionSet, v *types.AuthListener) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._AuthListener(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOAuthentication2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐAuthentication(ctx context.Context, sel ast.SelectionSet, v *models.Authentication) graphql.Marshaler {
+func (ec *executionContext) marshalOAuthentication2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐAuthentication(ctx context.Context, sel ast.SelectionSet, v *types.Authentication) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Authentication(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOAuthenticationInput2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐAuthenticationInput(ctx context.Context, v interface{}) (*models.AuthenticationInput, error) {
+func (ec *executionContext) unmarshalOAuthenticationInput2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐAuthenticationInput(ctx context.Context, v interface{}) (*types.AuthenticationInput, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -5078,7 +5030,7 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	return graphql.MarshalBoolean(*v)
 }
 
-func (ec *executionContext) unmarshalOCharacterRequest2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCharacterRequestᚄ(ctx context.Context, v interface{}) ([]*models.CharacterRequest, error) {
+func (ec *executionContext) unmarshalOCharacterRequest2ᚕᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐCharacterRequestᚄ(ctx context.Context, v interface{}) ([]*types.CharacterRequest, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -5091,10 +5043,10 @@ func (ec *executionContext) unmarshalOCharacterRequest2ᚕᚖoverdollᚋapplicat
 		}
 	}
 	var err error
-	res := make([]*models.CharacterRequest, len(vSlice))
+	res := make([]*types.CharacterRequest, len(vSlice))
 	for i := range vSlice {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNCharacterRequest2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCharacterRequest(ctx, vSlice[i])
+		res[i], err = ec.unmarshalNCharacterRequest2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐCharacterRequest(ctx, vSlice[i])
 		if err != nil {
 			return nil, err
 		}
@@ -5102,14 +5054,14 @@ func (ec *executionContext) unmarshalOCharacterRequest2ᚕᚖoverdollᚋapplicat
 	return res, nil
 }
 
-func (ec *executionContext) marshalOCookie2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐCookie(ctx context.Context, sel ast.SelectionSet, v *models.Cookie) graphql.Marshaler {
+func (ec *executionContext) marshalOCookie2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐCookie(ctx context.Context, sel ast.SelectionSet, v *types.Cookie) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Cookie(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOPostInput2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐPostInput(ctx context.Context, v interface{}) (*models.PostInput, error) {
+func (ec *executionContext) unmarshalOPostInput2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐPostInput(ctx context.Context, v interface{}) (*types.PostInput, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -5117,7 +5069,7 @@ func (ec *executionContext) unmarshalOPostInput2ᚖoverdollᚋapplicationsᚋhad
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalORegisterInput2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐRegisterInput(ctx context.Context, v interface{}) (*models.RegisterInput, error) {
+func (ec *executionContext) unmarshalORegisterInput2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐRegisterInput(ctx context.Context, v interface{}) (*types.RegisterInput, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -5185,14 +5137,14 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 	return graphql.MarshalString(*v)
 }
 
-func (ec *executionContext) marshalOUser2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐUser(ctx context.Context, sel ast.SelectionSet, v *models.User) graphql.Marshaler {
+func (ec *executionContext) marshalOUser2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐUser(ctx context.Context, sel ast.SelectionSet, v *types.User) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._User(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOValidation2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋmodelsᚐValidation(ctx context.Context, sel ast.SelectionSet, v *models.Validation) graphql.Marshaler {
+func (ec *executionContext) marshalOValidation2ᚖoverdollᚋapplicationsᚋhadesᚋsrcᚋportsᚋgraphqlᚋtypesᚐValidation(ctx context.Context, sel ast.SelectionSet, v *types.Validation) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}

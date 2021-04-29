@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/gorilla/securecookie"
+	"overdoll/libraries/helpers"
 )
 
 // Create Secure Cookies
@@ -17,7 +18,7 @@ import (
 func SetCookie(ctx context.Context, cookie *http.Cookie) (bool, error) {
 	var secureCookie = securecookie.New([]byte(os.Getenv("COOKIE_KEY")), []byte(os.Getenv("COOKIE_BLOCK_KEY")))
 
-	gc := GinContextFromContext(ctx)
+	gc := helpers.GinContextFromContext(ctx)
 
 	name := cookie.Name
 	value := cookie.Value
@@ -52,7 +53,7 @@ func SetCookie(ctx context.Context, cookie *http.Cookie) (bool, error) {
 func ReadCookie(ctx context.Context, name string) (*http.Cookie, error) {
 	var secureCookie = securecookie.New([]byte(os.Getenv("COOKIE_KEY")), []byte(os.Getenv("COOKIE_BLOCK_KEY")))
 
-	gc := GinContextFromContext(ctx)
+	gc := helpers.GinContextFromContext(ctx)
 
 	currentCookie, err := gc.Request.Cookie(name)
 
