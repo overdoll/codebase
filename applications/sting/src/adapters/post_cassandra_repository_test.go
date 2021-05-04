@@ -50,13 +50,13 @@ func newFakePost(t *testing.T) *post.Post {
 
 	artist := post.NewArtist(ksuid.New().String(), "test")
 
-	usr := &common.User{
-		Id:       ksuid.New().String(),
-		Username: "asd",
-		Avatar:   "",
-		Roles:    nil,
-		Verified: false,
-	}
+	usr := common.NewUser(
+		ksuid.New().String(),
+		"asd",
+		"",
+		nil,
+		false,
+	)
 
 	category := post.NewCategory(ksuid.New().String(), "asd")
 

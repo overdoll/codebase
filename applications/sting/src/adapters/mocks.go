@@ -85,6 +85,22 @@ func (p PostMock) CreateCategories(ctx context.Context, categories []*post.Categ
 type PostIndexMock struct {
 }
 
+func (p PostIndexMock) SearchArtists(ctx context.Context, s string) ([]*post.Artist, error) {
+	panic("implement me")
+}
+
+func (p PostIndexMock) SearchCharacters(ctx context.Context, s string) ([]*post.Character, error) {
+	panic("implement me")
+}
+
+func (p PostIndexMock) SearchMedias(ctx context.Context, s string) ([]*post.Media, error) {
+	panic("implement me")
+}
+
+func (p PostIndexMock) SearchCategories(ctx context.Context, s string) ([]*post.Category, error) {
+	panic("implement me")
+}
+
 func (p PostIndexMock) BulkIndexPosts(ctx context.Context, posts []*post.Post) error {
 	return nil
 }

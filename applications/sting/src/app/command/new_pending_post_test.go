@@ -26,14 +26,13 @@ func TestNewPendingPost_in_review(t *testing.T) {
 	handler := command.NewNewPostHandler(postMock, &adapters.PostIndexMock{}, &adapters.ContentMock{
 		NewContent: newContent,
 	}, &adapters.EvaServiceMock{
-		User: &common.User{
-			Id:       "some-random-id",
-			Username: "actual-user",
-			Avatar:   "",
-			Roles:    nil,
+		User: common.NewUser(
+			"some-random-id",
+			"actual-user",
+			"",
+			nil,
 			// false for verified - it will dispatch a review event
-			Verified: false,
-		},
+			false),
 	}, events)
 
 	var oldContent []string

@@ -24,11 +24,5 @@ func (s EvaGrpc) GetUser(ctx context.Context, id string) (*common.User, error) {
 		return nil, err
 	}
 
-	return &common.User{
-		Id:       id,
-		Roles:    usr.Roles,
-		Verified: usr.Verified,
-		Avatar:   usr.Avatar,
-		Username: usr.Username,
-	}, nil
+	return common.UnmarshalFromProto(usr), nil
 }

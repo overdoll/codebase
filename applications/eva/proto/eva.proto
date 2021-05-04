@@ -48,6 +48,12 @@ message SessionRequest {
 message Session {
   User user = 1;
   string token = 2;
+  string expiration = 3;
+}
+
+message ConsumeCookieResponse {
+  AuthenticationCookie cookie = 1;
+  Session session = 2;
 }
 
 message Revoke {}
@@ -56,9 +62,15 @@ service Eva {
   rpc ValidateSession(SessionRequest) returns (Session);
   rpc RevokeSession(SessionRequest) returns (Revoke);
 
+  // These two will create a session
+  // RegisterUserFromCookie will allow registration and returns a session
+  rpc RegisterUserFromCookie(RegisterUserRequest) returns (Session);
+
+  // AttemptConsume will only return the session if the user is registered
+  rpc AttemptConsumeCookie(GetAuthenticationCookieRequest) returns (ConsumeCookieResponse);
+
   rpc GetUser(GetUserRequest) returns (User);
-  rpc RegisterUserFromCookie(RegisterUserRequest) returns (User);
-  rpc GetAuthenticationCookie(GetAuthenticationCookieRequest) returns (AuthenticationCookie);
-  rpc RedeemAuthenticationCookie(GetAuthenticationCookieRequest) returns (RedeemCookieResponse);
+
   rpc CreateAuthenticationCookie(CreateAuthenticationCookieRequest) returns (AuthenticationCookie);
+  rpc RedeemAuthenticationCookie(GetAuthenticationCookieRequest) returns (RedeemCookieResponse);
 }

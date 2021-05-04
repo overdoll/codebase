@@ -38,15 +38,19 @@ type IndexRepository interface {
 
 	DeleteArtistIndex(context.Context) error
 	BulkIndexArtists(context.Context, []*Artist) error
+	SearchArtists(context.Context, string) ([]*Artist, error)
 
 	BulkIndexCharacters(context.Context, []*Character) error
 	DeleteCharacterIndex(context.Context) error
+	SearchCharacters(context.Context, string) ([]*Character, error)
 
 	BulkIndexMedia(context.Context, []*Media) error
 	DeleteMediaIndex(context.Context) error
+	SearchMedias(context.Context, string) ([]*Media, error)
 
 	BulkIndexCategories(context.Context, []*Category) error
 	DeleteCategoryIndex(context.Context) error
+	SearchCategories(context.Context, string) ([]*Category, error)
 }
 
 type EventRepository interface {

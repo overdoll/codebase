@@ -36,7 +36,7 @@ func (h PublishPostHandler) Handle(ctx context.Context, c interface{}) error {
 	pendingPost, err := h.pr.UpdatePendingPost(ctx, cmd.PostId, func(pending *post.PostPending) (*post.PostPending, error) {
 
 		// Get our contributor
-		usr, err := h.eva.GetUser(ctx, pending.Contributor().Id)
+		usr, err := h.eva.GetUser(ctx, pending.Contributor().ID())
 
 		if err != nil {
 			return nil, err
@@ -52,7 +52,7 @@ func (h PublishPostHandler) Handle(ctx context.Context, c interface{}) error {
 		}
 
 		// Update content - make the content public by moving it into the public bucket
-		newContent, err := h.cr.MakeProcessedContentPublic(ctx, pending.Contributor().Id, pending.RawContent())
+		newContent, err := h.cr.MakeProcessedContentPublic(ctx, pending.Contributor().ID(), pending.RawContent())
 
 		if err != nil {
 			return nil, err

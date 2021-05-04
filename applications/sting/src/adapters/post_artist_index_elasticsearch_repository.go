@@ -2,6 +2,7 @@ package adapters
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 
@@ -33,8 +34,57 @@ const ArtistIndex = `
 	}
 }`
 
+const SearchArtists = `
+	"query" : {
+		"multi_match" : {
+			"query" : %q,
+			"fields" : ["username^100"],
+			"operator" : "and"
+		}
+	},
+	"size" : 5`
+
+const AllArtists = `
+	"query" : { "match_all" : {} },
+	"size" : 5`
+
+const ArtistIndexName = "artists"
+
+func (r PostIndexElasticSearchRepository) SearchArtists(ctx context.Context, search string) ([]*post.Artist, error) {
+	var query string
+
+	if search == "" {
+		query = AllArtists
+	} else {
+		query = fmt.Sprintf(SearchArtists, search)
+	}
+
+	response, err := r.store.Search(ArtistIndexName, query)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var artists []*post.Artist
+
+	for _, cat := range response.Hits {
+
+		var art *post.Artist
+
+		err := json.Unmarshal(cat, art)
+
+		if err != nil {
+			continue
+		}
+
+		artists = append(artists, art)
+	}
+
+	return artists, nil
+}
+
 func (r PostIndexElasticSearchRepository) BulkIndexArtists(ctx context.Context, artists []*post.Artist) error {
-	err := r.store.CreateBulkIndex("artists")
+	err := r.store.CreateBulkIndex(ArtistIndexName)
 
 	if err != nil {
 		log.Fatalf("error creating bulk indexer: %s", err)
@@ -45,7 +95,7 @@ func (r PostIndexElasticSearchRepository) BulkIndexArtists(ctx context.Context, 
 
 		data := &ArtistDocument{
 			Id:       art.ID(),
-			Avatar:   art.Avatar(),
+			Avatar:   art.RawAvatar(),
 			Username: art.Username(),
 		}
 
@@ -64,13 +114,13 @@ func (r PostIndexElasticSearchRepository) BulkIndexArtists(ctx context.Context, 
 }
 
 func (r PostIndexElasticSearchRepository) DeleteArtistIndex(ctx context.Context) error {
-	err := r.store.DeleteIndex("artists")
+	err := r.store.DeleteIndex(ArtistIndexName)
 
 	if err != nil {
 
 	}
 
-	err = r.store.CreateIndex("artists", ArtistIndex)
+	err = r.store.CreateIndex(ArtistIndexName, ArtistIndex)
 
 	if err != nil {
 		return fmt.Errorf("failed to create artists index: %s", err)

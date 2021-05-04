@@ -9,6 +9,7 @@ import (
 	"github.com/spf13/cobra"
 	"overdoll/applications/sting/src/ports"
 	"overdoll/applications/sting/src/service"
+	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/commands/database"
 )
 
@@ -20,6 +21,14 @@ var rootCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(ports.Root)
 	rootCmd.AddCommand(database.Database)
+	rootCmd.AddCommand(&cobra.Command{
+		Use: "jobs",
+		Run: RunJobs,
+	})
+	rootCmd.AddCommand(&cobra.Command{
+		Use: "http",
+		Run: RunHttp,
+	})
 }
 
 func main() {
@@ -30,6 +39,11 @@ func main() {
 }
 
 func Run(cmd *cobra.Command, args []string) {
+	go RunJobs(cmd, args)
+	RunHttp(cmd, args)
+}
+
+func RunJobs(cmd *cobra.Command, args []string) {
 	ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancelFn()
 
@@ -40,4 +54,17 @@ func Run(cmd *cobra.Command, args []string) {
 	if err := router.Run(ctx); err != nil {
 		panic(err)
 	}
+}
+
+func RunHttp(cmd *cobra.Command, args []string) {
+	ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
+	defer cancelFn()
+
+	app, _, cleanup := service.NewApplication(ctx)
+
+	defer cleanup()
+
+	srv := ports.NewGraphQLServer(app)
+
+	bootstrap.InitializeHttpServer(srv, func() {})
 }

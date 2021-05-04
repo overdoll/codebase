@@ -2,6 +2,7 @@ package adapters
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 
 	"overdoll/applications/sting/src/domain/post"
@@ -32,9 +33,58 @@ const MediaIndex = `
 	}
 }`
 
+const SearchMedia = `
+	"query" : {
+		"multi_match" : {
+			"query" : %q,
+			"fields" : ["title^100"],
+			"operator" : "and"
+		}
+	},
+	"size" : 5`
+
+const AllMedia = `
+	"query" : { "match_all" : {} },
+	"size" : 5`
+
+const MediaIndexName = "media"
+
+func (r PostIndexElasticSearchRepository) SearchMedias(ctx context.Context, search string) ([]*post.Media, error) {
+	var query string
+
+	if search == "" {
+		query = AllMedia
+	} else {
+		query = fmt.Sprintf(SearchMedia, search)
+	}
+
+	response, err := r.store.Search(MediaIndexName, query)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var meds []*post.Media
+
+	for _, med := range response.Hits {
+
+		var md *post.Media
+
+		err := json.Unmarshal(med, md)
+
+		if err != nil {
+			continue
+		}
+
+		meds = append(meds, md)
+	}
+
+	return meds, nil
+}
+
 func (r PostIndexElasticSearchRepository) BulkIndexMedia(ctx context.Context, media []*post.Media) error {
 
-	err := r.store.CreateBulkIndex("media")
+	err := r.store.CreateBulkIndex(MediaIndexName)
 
 	if err != nil {
 		return fmt.Errorf("error creating bulk indexer: %s", err)
@@ -45,7 +95,7 @@ func (r PostIndexElasticSearchRepository) BulkIndexMedia(ctx context.Context, me
 
 		data := &MediaDocument{
 			Id:        med.ID(),
-			Thumbnail: med.Thumbnail(),
+			Thumbnail: med.RawThumbnail(),
 			Title:     med.Title(),
 		}
 
@@ -63,30 +113,14 @@ func (r PostIndexElasticSearchRepository) BulkIndexMedia(ctx context.Context, me
 	return nil
 }
 
-func (r PostIndexElasticSearchRepository) DeleteCharacterIndex(ctx context.Context) error {
-	err := r.store.DeleteIndex("characters")
-
-	if err != nil {
-
-	}
-
-	err = r.store.CreateIndex("characters", CharacterIndex)
-
-	if err != nil {
-		return fmt.Errorf("failed to create character index: %s", err)
-	}
-
-	return nil
-}
-
 func (r PostIndexElasticSearchRepository) DeleteMediaIndex(ctx context.Context) error {
-	err := r.store.DeleteIndex("media")
+	err := r.store.DeleteIndex(MediaIndexName)
 
 	if err != nil {
 
 	}
 
-	err = r.store.CreateIndex("media", MediaIndex)
+	err = r.store.CreateIndex(MediaIndexName, MediaIndex)
 
 	if err != nil {
 		return fmt.Errorf("failed to create media index: %s", err)

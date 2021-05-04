@@ -1,0 +1,14 @@
+schema:
+  - ./schema/**/*.graphql
+
+exec:
+  filename: src/ports/graphql/generated.go
+  package: gen
+
+model:
+  filename: src/ports/graphql/types/types.go
+  package: types
+
+federation:
+  filename: src/ports/graphql/federation.go
+  package: gen

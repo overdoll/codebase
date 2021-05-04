@@ -12,23 +12,6 @@ docker_prune_settings(
 load("./development/helpers.Tiltfile", "bazel_buildfile_deps", "bazel_sourcefile_deps", "build_applications")
 
 applications = {
-    "hades": {
-        "type": "go",
-        "image_reference": "hades-image",
-        "image_target": "//applications/hades:hades-image",
-        "binary_target": "//applications/hades:hades",
-        "binary_output": "applications/hades/hades_/hades",
-        "container_workdir": "/app/applications/hades/hades-image.binary.runfiles/overdoll/",
-        "container_binary": "applications/hades/hades-image.binary_/hades-image.binary",
-        "bazel_image": "bazel/applications/hades:hades-image",
-        "dependencies": [
-            "applications/hades/.env",
-            "applications/hades/queries.json",
-        ],
-        "live_update": [
-            sync("applications/hades/queries.json", "/app/applications/hades/hades-image.binary.runfiles/overdoll/applications/hades/queries.json"),
-        ],
-    },
     "eva": {
         "type": "go",
         "directory": "eva",

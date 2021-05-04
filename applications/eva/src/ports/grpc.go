@@ -31,34 +31,6 @@ func (s *Server) GetUser(ctx context.Context, request *eva.GetUserRequest) (*eva
 	return &eva.User{Username: usr.Username(), Id: usr.ID(), Roles: usr.UserRolesAsString(), Verified: usr.Verified(), Avatar: usr.Avatar()}, nil
 }
 
-func (s *Server) RegisterUserFromCookie(ctx context.Context, request *eva.RegisterUserRequest) (*eva.User, error) {
-
-	usr, err := s.app.Commands.RegisterFromCookie.Handle(ctx, request.CookieId, request.Username)
-
-	if err != nil {
-		return nil, status.Error(codes.Internal, fmt.Sprintf("failed to register user: %s", err))
-	}
-
-	return &eva.User{Username: usr.Username(), Id: usr.ID(), Roles: usr.UserRolesAsString(), Verified: usr.Verified(), Avatar: usr.Avatar()}, nil
-}
-
-func (s *Server) GetAuthenticationCookie(ctx context.Context, request *eva.GetAuthenticationCookieRequest) (*eva.AuthenticationCookie, error) {
-
-	cookie, err := s.app.Queries.GetCookie.Handle(ctx, request.Cookie)
-
-	if err != nil {
-		return nil, status.Error(codes.Internal, fmt.Sprintf("failed to get cookie: %s", err))
-	}
-
-	return &eva.AuthenticationCookie{
-		Email:      cookie.Email(),
-		Redeemed:   cookie.Redeemed(),
-		Expiration: cookie.Expiration().String(),
-		Cookie:     cookie.Cookie(),
-		Session:    cookie.Session(),
-	}, nil
-}
-
 func (s *Server) CreateAuthenticationCookie(ctx context.Context, request *eva.CreateAuthenticationCookieRequest) (*eva.AuthenticationCookie, error) {
 
 	cookie, err := s.app.Commands.CreateCookie.Handle(ctx, request.Email, request.Session)
@@ -94,4 +66,27 @@ func (s *Server) RedeemAuthenticationCookie(ctx context.Context, request *eva.Ge
 		},
 		Registered: cookie.Redeemed(),
 	}, nil
+}
+
+func (s *Server) ValidateSession(ctx context.Context, request *eva.SessionRequest) (*eva.Session, error) {
+	panic("implement me")
+}
+
+func (s *Server) RevokeSession(ctx context.Context, request *eva.SessionRequest) (*eva.Revoke, error) {
+	panic("implement me")
+}
+
+func (s *Server) RegisterUserFromCookie(ctx context.Context, request *eva.RegisterUserRequest) (*eva.Session, error) {
+
+	usr, err := s.app.Commands.RegisterFromCookie.Handle(ctx, request.CookieId, request.Username)
+
+	if err != nil {
+		return nil, status.Error(codes.Internal, fmt.Sprintf("failed to register user: %s", err))
+	}
+
+	return &eva.User{Username: usr.Username(), Id: usr.ID(), Roles: usr.UserRolesAsString(), Verified: usr.Verified(), Avatar: usr.Avatar()}, nil
+}
+
+func (s *Server) AttemptConsumeCookie(ctx context.Context, request *eva.GetAuthenticationCookieRequest) (*eva.ConsumeCookieResponse, error) {
+	panic("implement me")
 }

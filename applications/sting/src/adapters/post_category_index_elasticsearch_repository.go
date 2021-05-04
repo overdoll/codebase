@@ -2,6 +2,7 @@ package adapters
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 
 	"overdoll/applications/sting/src/domain/post"
@@ -32,17 +33,66 @@ const CategoryIndex = `
 	}
 }`
 
+const SearchCategories = `
+	"query" : {
+		"multi_match" : {
+			"query" : %q,
+			"fields" : ["title^100"],
+			"operator" : "and"
+		}
+	},
+	"size" : 5`
+
+const AllCategories = `
+	"query" : { "match_all" : {} },
+	"size" : 5`
+
+const CategoryIndexName = "categories"
+
 func MarshalCategoryToDocument(cat *post.Category) *CategoryDocument {
 	return &CategoryDocument{
 		Id:        cat.ID(),
-		Thumbnail: cat.Thumbnail(),
+		Thumbnail: cat.RawThumbnail(),
 		Title:     cat.Title(),
 	}
 }
 
+func (r PostIndexElasticSearchRepository) SearchCategories(ctx context.Context, search string) ([]*post.Category, error) {
+	var query string
+
+	if search == "" {
+		query = AllCategories
+	} else {
+		query = fmt.Sprintf(SearchCategories, search)
+	}
+
+	response, err := r.store.Search(CategoryIndexName, query)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var cats []*post.Category
+
+	for _, cat := range response.Hits {
+
+		var pst *post.Category
+
+		err := json.Unmarshal(cat, pst)
+
+		if err != nil {
+			continue
+		}
+
+		cats = append(cats, pst)
+	}
+
+	return cats, nil
+}
+
 func (r PostIndexElasticSearchRepository) BulkIndexCategories(ctx context.Context, categories []*post.Category) error {
 
-	err := r.store.CreateBulkIndex("categories")
+	err := r.store.CreateBulkIndex(CategoryIndexName)
 
 	if err != nil {
 		return fmt.Errorf("error creating bulk indexer: %s", err)
@@ -68,13 +118,13 @@ func (r PostIndexElasticSearchRepository) BulkIndexCategories(ctx context.Contex
 }
 
 func (r PostIndexElasticSearchRepository) DeleteCategoryIndex(ctx context.Context) error {
-	err := r.store.DeleteIndex("categories")
+	err := r.store.DeleteIndex(CategoryIndexName)
 
 	if err != nil {
 
 	}
 
-	err = r.store.CreateIndex("categories", CategoryIndex)
+	err = r.store.CreateIndex(CategoryIndexName, CategoryIndex)
 
 	if err != nil {
 		return fmt.Errorf("failed to create category index: %s", err)

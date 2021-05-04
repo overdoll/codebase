@@ -15,13 +15,14 @@ import (
 	"overdoll/applications/sting/src/app"
 	"overdoll/applications/sting/src/app/command"
 	"overdoll/applications/sting/src/app/event"
+	"overdoll/applications/sting/src/app/query"
 	storage "overdoll/libraries/aws"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/common"
 	"overdoll/libraries/search"
 )
 
-func NewApplication(ctx context.Context) (*cqrs.Facade, *message.Router, func()) {
+func NewApplication(ctx context.Context) (app.Application, *message.Router, func()) {
 
 	evaClient, cleanup := common.NewEvaClient(ctx)
 
@@ -41,13 +42,13 @@ func NewApplication(ctx context.Context) (*cqrs.Facade, *message.Router, func())
 		}
 }
 
-func NewComponentTestApplication(ctx context.Context) (*cqrs.Facade, *message.Router) {
+func NewComponentTestApplication(ctx context.Context) (app.Application, *message.Router) {
 	router, _ := message.NewRouter(message.RouterConfig{}, watermill.NewStdLogger(false, false))
 
 	return createApplication(ctx, EvaServiceMock{}, router), router
 }
 
-func createApplication(ctx context.Context, eva app.EvaService, router *message.Router) *cqrs.Facade {
+func createApplication(ctx context.Context, eva app.EvaService, router *message.Router) app.Application {
 
 	logger := watermill.NewStdLogger(false, false)
 
@@ -159,5 +160,15 @@ func createApplication(ctx context.Context, eva app.EvaService, router *message.
 		Logger:                logger,
 	})
 
-	return facade
+	return app.Application{
+		Commands: app.Commands{
+			Bus: facade,
+		},
+		Queries: app.Queries{
+			SearchMedias:     query.NewSearchMediasHandler(indexRepo),
+			SearchCharacters: query.NewSearchCharactersHandler(indexRepo),
+			SearchCategories: query.NewSearchCategoriesHandler(indexRepo),
+			SearchArtist:     query.NewSearchArtistsHandler(indexRepo),
+		},
+	}
 }

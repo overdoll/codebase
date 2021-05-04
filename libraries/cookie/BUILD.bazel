@@ -5,5 +5,8 @@ go_library(
     srcs = ["cookies.go"],
     importpath = "overdoll/libraries/cookie",
     visibility = ["//visibility:public"],
-    deps = ["@com_github_gorilla_securecookie//:go_default_library"],
+    deps = [
+        "//libraries/helpers:go_default_library",
+        "@com_github_gorilla_securecookie//:go_default_library",
+    ],
 )

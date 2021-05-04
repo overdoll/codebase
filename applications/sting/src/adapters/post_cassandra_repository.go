@@ -70,7 +70,7 @@ func marshalPendingPostToDatabase(pending *post.PostPending) *PostPending {
 		State:              string(pending.State()),
 		ArtistId:           pending.Artist().ID(),
 		ArtistUsername:     pending.Artist().Username(),
-		ContributorId:      pending.Contributor().Id,
+		ContributorId:      pending.Contributor().ID(),
 		Content:            pending.RawContent(),
 		Categories:         pending.CategoryIds(),
 		Characters:         pending.CharacterIds(),
@@ -99,7 +99,7 @@ func marshalPostToDatabase(post *post.Post) *Post {
 	return &Post{
 		Id:            post.ID(),
 		ArtistId:      post.Artist().ID(),
-		ContributorId: post.Contributor().Id,
+		ContributorId: post.Contributor().ID(),
 		Content:       post.RawContent(),
 		Categories:    categoryIds,
 		Characters:    characterIds,

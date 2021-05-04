@@ -18,6 +18,12 @@ type Commands struct {
 	RevokeSession   command.RevokeSessionHandler
 	CreateSession   command.CreateSessionHandler
 	ValidateSession command.ValidateSessionHandler
+
+	GetUserSession command.GetUserSessionHandler
+	Authenticate   command.AuthenticateHandler
+	Register       command.RegisterHandler
+	Logout         command.LogoutHandler
+	Authentication command.AuthenticationHandler
 }
 
 type Queries struct {

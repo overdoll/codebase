@@ -7,6 +7,11 @@ import csrf from 'csurf';
 import i18nextMiddleware from 'i18next-http-middleware';
 import i18next from './utilities/i18next';
 import ejs from 'ejs';
+import { ApolloServer } from 'apollo-server-express';
+import { ApolloGateway } from '@apollo/gateway';
+import graphql from './config/graphql';
+import { matchQueryMiddleware } from 'relay-compiler-plus';
+import queryMapJson from './queries.json';
 
 const index = express();
 
@@ -58,6 +63,20 @@ if (process.env.APP_DEBUG) {
 
 // Our entrypoint
 index.get('/*', entry);
+
+const gateway = new ApolloGateway(graphql);
+
+// GraphQL Server
+const server = new ApolloServer({
+  gateway,
+  subscriptions: false,
+});
+
+server.start().then(r =>
+  server.applyMiddleware({
+    app: index.use(matchQueryMiddleware(queryMapJson)),
+  }),
+);
 
 index.use(middleware.error);
 

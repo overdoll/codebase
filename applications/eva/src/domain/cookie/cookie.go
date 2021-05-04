@@ -19,6 +19,10 @@ type Cookie struct {
 }
 
 var (
+	OTPKey = "otp-key"
+)
+
+var (
 	ErrCookieNotRedeemed = errors.New("cookie is not yet redeemed")
 	ErrCookieExpired     = errors.New("cookie is expired")
 )

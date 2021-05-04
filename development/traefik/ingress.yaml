@@ -47,13 +47,6 @@ spec:
   entrypoints:
     - websecure
   routes:
-    - match: Host(`overdoll.test`) &&  Path(`/api/graphql`)
-      kind: Rule
-      services:
-        - name: hades
-          port: 8000
-      middlewares:
-        - name: stripprefix
     - match: Host(`overdoll.test`) &&  Path(`/api/upload/{document}`)
       kind: Rule
       services:
@@ -104,13 +97,6 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: Host(`overdoll.test`) &&  Path(`/api/graphql`)
-      kind: Rule
-      services:
-        - name: hades
-          port: 8000
-      middlewares:
-        - name: redirect-https
     - match: Host(`overdoll.test`) &&  Path(`/api/upload/{document}`)
       kind: Rule
       services:
