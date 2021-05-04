@@ -7,7 +7,17 @@ import { useTransition } from '@//:modules/experimental';
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary';
 import ErrorFallback from '../error/ErrorFallback';
 import LoadingSearch from '../loading/LoadingSearch';
-import { Center, Flex, Heading, Text } from '@chakra-ui/react';
+import {
+  Center,
+  Flex,
+  Container,
+  Box,
+  Wrap,
+  Input,
+  Progress,
+  Spacer,
+} from '@chakra-ui/react';
+import Button from '@//:modules/form/button/Button';
 
 type Props = {
   children: any,
@@ -23,7 +33,7 @@ export default function Search({
   header,
 }: Props): Node {
   const [searchInput, setSearch] = useState('');
-  const [startTransition, isPending] = useTransition({ timeoutMs: 10 * 1000 });
+  const [startTransition, isPending] = useTransition({ timeoutMs: 100000000 });
 
   const [queryArgs, setQueryArgs] = useState({
     options: { fetchKey: 0 },
@@ -62,34 +72,57 @@ export default function Search({
   };
 
   return (
-    <div
-      sx={{
-        position: 'fixed',
-        zIndex: 1,
-        left: 0,
-        top: 0,
-        height: 'fill',
-        width: 'fill',
-        backgroundColor: 'neutral.800',
-      }}
-    >
-      {isPending ? 'loading indicator' : ''}
-      <Center mt={8}>
-        <Flex w={['fill', 'sm']} direction="column">
-          {header}
-          <ErrorBoundary
-            fallback={({ error, reset }) => (
-              <ErrorFallback error={error} reset={reset} refetch={refetch} />
-            )}
+    <Container w="100%" h="100%" bg="gray.800" position="fixed" top={0}>
+      {isPending ? (
+        <Progress size="xs" isIndeterminate colorScheme="purple" />
+      ) : (
+        ''
+      )}
+      <Center>
+        <Flex
+          ml={[1, 0]}
+          mr={[1, 0]}
+          direction="column"
+          w={['sm', 'md', 'lg']}
+          mt={8}
+          align="center"
+          h="100%"
+        >
+          <Flex direction="column" h="100%">
+            {header}
+            <ErrorBoundary
+              fallback={({ error, reset }) => (
+                <ErrorFallback error={error} reset={reset} refetch={refetch} />
+              )}
+            >
+              <Suspense fallback={<LoadingSearch />}>
+                {children(queryArgs)}
+              </Suspense>
+            </ErrorBoundary>
+          </Flex>
+          <Spacer />
+          <Flex
+            w="100%"
+            justify="center"
+            direction="column"
+            align="flex-end"
+            mb={4}
           >
-            <Suspense fallback={<LoadingSearch />}>
-              {children(queryArgs)}
-            </Suspense>
-          </ErrorBoundary>
-          <input value={searchInput} onChange={onChange} />
-          <button onClick={onClose}>close</button>
+            <Input
+              size="md"
+              placeholder="Search something you know..."
+              value={searchInput}
+              onChange={onChange}
+              variant="filled"
+              isDisabled={!!isPending}
+              mb={4}
+            />
+            <Button w="100%" onClick={onClose}>
+              Close
+            </Button>
+          </Flex>
         </Flex>
       </Center>
-    </div>
+    </Container>
   );
 }

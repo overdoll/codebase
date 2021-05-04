@@ -1,0 +1,6 @@
+{
+  "fallback": {
+    "header": "There was an error loading this content",
+    "button": "Retry"
+  }
+}

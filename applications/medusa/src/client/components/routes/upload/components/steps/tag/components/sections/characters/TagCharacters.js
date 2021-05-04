@@ -11,6 +11,7 @@ import { createPortal } from 'react-dom';
 import Search from '../../search/Search';
 import RootElement from '@//:modules/utilities/RootElement';
 import Media from './query/Media';
+import { Tag, TagLabel, TagCloseButton, Text } from '@chakra-ui/react';
 
 type Props = {
   dispatch: Dispatch,
@@ -32,6 +33,14 @@ export default function TagCharacters({ state, dispatch }: Props): Node {
         value: character,
       });
     }
+  };
+
+  const onRemove = character => {
+    dispatch({
+      type: EVENTS.TAG_CHARACTERS,
+      remove: true,
+      value: character,
+    });
   };
 
   // When the user selects a media, we send that back up the chain, where we either get a new media, or a current one
@@ -80,7 +89,24 @@ export default function TagCharacters({ state, dispatch }: Props): Node {
       title={'Characters'}
       count={Object.keys(state.characters).length}
     >
-      DISPLAY SELECTED CHARACTERS HERE???
+      {Object.keys(state.characters).length !== 0 ? (
+        Object.keys(state.characters).map(id => (
+          <Tag
+            size="lg"
+            key="lg"
+            variant="solid"
+            colorScheme="green"
+            borderRadius="full"
+          >
+            <TagLabel>{state.characters[id].name}</TagLabel>
+            <TagCloseButton onClick={() => onRemove(state.characters[id])} />
+          </Tag>
+        ))
+      ) : (
+        <Text as="i" fontSize="md">
+          No characters selected
+        </Text>
+      )}
     </Section>
   );
 }

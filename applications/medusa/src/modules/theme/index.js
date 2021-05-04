@@ -10,6 +10,7 @@ import shadows from './shadows';
 import borders from './borders';
 import transition from './transition';
 import global from './global';
+import input from './components/input';
 
 const theme = extendTheme({
   config: {
@@ -29,6 +30,9 @@ const theme = extendTheme({
   transition,
   styles: {
     global,
+  },
+  components: {
+    Input: input,
   },
 });
 

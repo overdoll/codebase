@@ -6,6 +6,7 @@ import { graphql, useLazyLoadQuery } from 'react-relay/hooks';
 import type { CharactersQuery } from '@//:artifacts/CharactersQuery.graphql';
 import type { VariablesOf } from 'relay-runtime';
 import Element from '../../../element/Element';
+import { Wrap } from '@chakra-ui/react';
 
 type Props = {
   args: {
@@ -61,14 +62,17 @@ export default function Characters({ args, onSelect, selected }: Props): Node {
     );
   }
 
-  return data.characters.map(item => (
-    <Element
-      key={item.id}
-      onSelect={() => onSelect(item)}
-      selected={selected.indexOf(item.id) > -1}
-    >
-      {item.name}-{item.thumbnail}
-      {item.media.title}-{item.media.id}-{item.media.thumbnail}
-    </Element>
-  ));
+  return (
+    <Wrap justify="center">
+      {data.characters.map(item => (
+        <Element
+          key={item.id}
+          onSelect={() => onSelect(item)}
+          selected={selected.indexOf(item.id) > -1}
+          title={item.name}
+          thumbnail={item.thumbnail}
+        />
+      ))}
+    </Wrap>
+  );
 }

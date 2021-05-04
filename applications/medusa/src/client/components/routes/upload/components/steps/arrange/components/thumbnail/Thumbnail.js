@@ -2,52 +2,71 @@
  * @flow
  */
 import type { Node } from 'react';
-import LoadingCircle from '@//:modules/assets/graph/progress/LoadingCircle';
-import Loading from '@//:modules/assets/loading/Loading';
-import ImageSmall from '@//:modules/content/image/ImageSmall';
+import {
+  Flex,
+  Spinner,
+  CircularProgress,
+  CircularProgressLabel,
+  Skeleton,
+  Image,
+} from '@chakra-ui/react';
 
 type Props = {
   thumbnail: any,
   progress: any,
-  sx?: any,
 };
 
-export default function Thumbnail({ thumbnail, progress, sx }: Props): Node {
+export default function Thumbnail({ thumbnail, progress }: Props): Node {
   return (
-    <div
-      sx={{
-        height: 'fill',
-        ...sx,
-      }}
+    <Flex
+      w="100%"
+      h="100%"
+      justifyContent="center"
+      alignItems="center"
+      position="relative"
     >
-      {thumbnail ? <ImageSmall link={thumbnail} /> : <Loading />}
-      {progress ? (
-        progress['0'] !== progress['1'] && (
-          <div
-            sx={{
-              position: 'absolute',
-              top: 0,
-              width: 'fill',
-              height: 'fill',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: 'dimmers.300',
-              opacity: '0.9',
-            }}
-          >
-            <LoadingCircle
-              size={75}
-              strokeWidth={6}
-              color={'teal.500'}
-              min={progress['0']}
-              max={progress['1']}
-            />
-          </div>
-        )
+      {thumbnail ? (
+        <Image
+          alt="thumbnail"
+          src={thumbnail}
+          w="100%"
+          h="100%"
+          objectFit="cover"
+          borderRadius={5}
+        />
       ) : (
-        <Loading />
+        <Skeleton w="100%" h="100%" />
       )}
-    </div>
+      <Flex
+        position="absolute"
+        bg={
+          progress
+            ? (progress['0'] !== progress['1'] && 'dimmers.200': 'transparent')
+            : 'transparent'
+        }
+        w="100%"
+        h="100%"
+      >
+        {progress ? (
+          progress['0'] !== progress['1'] && (
+            <Flex w="100%" h="100%" justifyContent="center" alignItems="center">
+              <CircularProgress
+                value={(progress['0'] / progress['1']) * 100}
+                color="teal.500"
+                size="xl"
+              >
+                <CircularProgressLabel>
+                  {(progress['0'] / progress['1']) * 100}
+                </CircularProgressLabel>
+              </CircularProgress>
+            </Flex>
+          )
+        ) : (
+          <Flex w="100%" h="100%" justifyContent="center" alignItems="center">
+            <Spinner size="xl" />
+          </Flex>
+        )}
+      </Flex>
+    </Flex>
   );
 }

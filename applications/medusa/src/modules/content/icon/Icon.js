@@ -9,6 +9,7 @@ type Props = {
   title?: any,
   icon: any,
   color?: any,
+  fill?: any,
   sx?: any,
 };
 
@@ -17,13 +18,17 @@ export default function Icon({
   alt,
   icon,
   color,
+  fill,
   sx,
   ...rest
 }: Props): Node {
   return (
     <chakra.svg
       as={icon}
-      sx={{ path: { stroke: color ?? 'red.500' }, ...sx }}
+      sx={{
+        path: { stroke: color ?? 'none', fill: fill ?? 'none' },
+        ...sx,
+      }}
       {...rest}
     />
   );

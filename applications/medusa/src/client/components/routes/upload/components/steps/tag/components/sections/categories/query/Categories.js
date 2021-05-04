@@ -6,6 +6,7 @@ import { graphql, useLazyLoadQuery } from 'react-relay/hooks';
 import type { CategoriesQuery } from '@//:artifacts/CategoriesQuery.graphql';
 import type { VariablesOf } from 'relay-runtime';
 import Element from '../../../element/Element';
+import { Wrap, Center } from '@chakra-ui/react';
 
 type Props = {
   args: {
@@ -38,13 +39,17 @@ export default function Categories({ args, onSelect, selected }: Props): Node {
     return 'no categories found';
   }
 
-  return data.categories.map(item => (
-    <Element
-      key={item.id}
-      onSelect={() => onSelect(item)}
-      selected={selected.indexOf(item.id) > -1}
-    >
-      {item.title}-{item.thumbnail}
-    </Element>
-  ));
+  return (
+    <Wrap justify="center">
+      {data.categories.map(item => (
+        <Element
+          key={item.id}
+          onSelect={() => onSelect(item)}
+          selected={selected.indexOf(item.id) > -1}
+          title={item.title}
+          thumbnail={item.thumbnail}
+        />
+      ))}
+    </Wrap>
+  );
 }

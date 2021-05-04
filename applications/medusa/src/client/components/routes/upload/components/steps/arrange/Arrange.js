@@ -4,7 +4,7 @@
 import type { Node } from 'react';
 import Picker from '../../picker/Picker';
 
-import { Center, Flex, Heading, Box } from '@chakra-ui/react';
+import { Center, Flex, Heading, Box, Stack } from '@chakra-ui/react';
 
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import File from './components/file/File';
@@ -90,8 +90,8 @@ export default function Arrange({
 
   return (
     <Center mt={8}>
-      <Flex w={['sm', 'md', 'lg']} direction="column">
-        <Heading fontSize="3xl" color="gray.00">
+      <Flex w={['sm', 'md', 'lg']} ml={[1, 0]} mr={[1, 0]} direction="column">
+        <Heading fontSize="3xl" color="gray.00" mb={4}>
           {t('arrange.header')}
         </Heading>
         <Box>
@@ -102,7 +102,11 @@ export default function Arrange({
             <Droppable droppableId="upload">
               {(provided, snapshot) => (
                 // the list
-                <div {...provided.droppableProps} ref={provided.innerRef}>
+                <Stack
+                  spacing={snapshot.isDragging ? 3 : 1}
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                >
                   {state.files.map((file, index) => (
                     // the item
                     <File
@@ -115,7 +119,7 @@ export default function Arrange({
                     />
                   ))}
                   {provided.placeholder}
-                </div>
+                </Stack>
               )}
             </Droppable>
           </DragDropContext>

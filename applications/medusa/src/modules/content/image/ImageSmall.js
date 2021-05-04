@@ -2,6 +2,7 @@
  * @flow
  */
 import type { Node } from 'react';
+import { Image } from '@chakra-ui/react';
 
 type Props = {
   src?: string,
@@ -10,15 +11,6 @@ type Props = {
 
 export default function ImageSmall(src: Props): Node {
   return (
-    <img
-      alt="thumbnail"
-      src={src.link}
-      sx={{
-        backgroundColor: 'neutral.800',
-        height: 'fill',
-        width: 'fill',
-        objectFit: 'cover',
-      }}
-    />
+    <Image alt="thumbnail" src={src.link} w="100%" h="100%" objectFit="cover" />
   );
 }

@@ -6,7 +6,7 @@ import Artists from './query/Artists';
 import type { Dispatch, State } from '@//:types/upload';
 import { EVENTS } from '../../../../../../constants/constants';
 import Section from '../../section/Section';
-import SmallTag from '../../search/tag/SmallTag';
+import { Tag, TagLabel, TagCloseButton, Text } from '@chakra-ui/react';
 
 type Props = {
   dispatch: Dispatch,
@@ -18,6 +18,14 @@ export default function TagArtists({ state, dispatch }: Props): Node {
   const onSelect = (artist, onClose) => {
     dispatch({ type: EVENTS.TAG_ARTIST, value: artist });
     onClose();
+  };
+
+  const onRemove = artist => {
+    dispatch({
+      type: EVENTS.TAG_ARTIST,
+      remove: true,
+      value: artist,
+    });
   };
 
   return (
@@ -34,8 +42,22 @@ export default function TagArtists({ state, dispatch }: Props): Node {
       title={'Artist'}
       count={Object.keys(state.artist).length !== 0 ? 1 : 0}
     >
-      123
-      <SmallTag title={'1123'} />
+      {Object.keys(state.artist).length !== 0 ? (
+        <Tag
+          size="lg"
+          key="lg"
+          variant="solid"
+          colorScheme="teal"
+          borderRadius="full"
+        >
+          <TagLabel>{state.artist.username}</TagLabel>
+          <TagCloseButton onClick={() => onRemove(state.artist)} />
+        </Tag>
+      ) : (
+        <Text as="i" fontSize="md">
+          No artist selected
+        </Text>
+      )}
     </Section>
   );
 }

@@ -17,7 +17,7 @@ export default function Begin({ uppy, onAddFiles }: Props): Node {
 
   return (
     <Center mt={8}>
-      <Flex w={['sm', 'md', 'lg']} direction="column">
+      <Flex w={['sm', 'md', 'lg']} ml={[1, 0]} mr={[1, 0]} direction="column">
         <Box>
           <Heading fontSize="3xl" color="gray.00">
             {t('begin.header')}

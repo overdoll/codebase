@@ -6,11 +6,17 @@ import TagArtists from './components/sections/artists/TagArtists';
 import TagCharacters from './components/sections/characters/TagCharacters';
 import TagCategories from './components/sections/categories/TagCategories';
 import Thumbnail from '../arrange/components/thumbnail/Thumbnail';
-import XScrollContainer from './components/scrollable/container/XScrollContainer';
 import type { Dispatch, State } from '@//:types/upload';
 import { useTranslation } from 'react-i18next';
-import ScrollContent from './components/scrollable/content/ScrollContent';
-import { Center, Flex, Heading, Text } from '@chakra-ui/react';
+import {
+  Center,
+  Flex,
+  Heading,
+  Text,
+  HStack,
+  Stack,
+  Container,
+} from '@chakra-ui/react';
 
 type Props = {
   dispatch: Dispatch,
@@ -21,51 +27,47 @@ type Props = {
 export default function Tag({ state, dispatch, disabled }: Props): Node {
   const [t] = useTranslation('upload');
   return (
-    <Center mt={8}>
-      <Flex w={['fill', 'sm']} direction="column">
-        <Heading sx={{ textAlign: 'left', fontSize: 5, mb: 2, mt: 2 }}>
-          {t('tag.header')}
-        </Heading>
-        <Text sx={{ textAlign: 'left', fontSize: 2, color: 'neutral.100' }}>
-          {t('tag.subheader')}
-        </Text>
-        <div sx={{ display: 'flex', flexDirection: 'column' }}>
-          <XScrollContainer>
+    <Container w={['sm', 'md', 'lg']}>
+      <Center>
+        <Flex direction="column" w="100%" mt={8} ml={[1, 0]} mr={[1, 0]}>
+          <Heading fontSize="3xl" color="gray.00" mb={2}>
+            {t('tag.header')}
+          </Heading>
+          <Text fontSize="lg" color="gray.100">
+            {t('tag.subheader')}
+          </Text>
+          <HStack flexWrap="nowrap" overflowX="auto" mt={6} mb={6}>
             {state.files.map(file => {
               const thumbnail = state.thumbnails[file.id];
               const prog = state.progress[file.id];
 
               return (
-                <ScrollContent
+                <Flex
                   key={file.id}
-                  sx={{
-                    width: '130px',
-                    height: '150px',
-                  }}
+                  w={130}
+                  h={150}
+                  objectFit="cover"
+                  flex="0 0 auto"
                 >
                   <Thumbnail thumbnail={thumbnail} progress={prog} />
-                </ScrollContent>
+                </Flex>
               );
             })}
-          </XScrollContainer>
-          <div
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <TagArtists state={state} dispatch={dispatch} />
+          </HStack>
+
+          <Stack>
+            <TagArtists dispatch={dispatch} state={state} />
             <TagCharacters dispatch={dispatch} state={state} />
             <TagCategories dispatch={dispatch} state={state} />
-            {disabled && (
-              <div>
-                you need to select an artist, 1 character and at least 3
-                categories
-              </div>
-            )}
-          </div>
-        </div>
-      </Flex>
-    </Center>
+          </Stack>
+          {disabled && (
+            <div>
+              you need to select an artist, 1 character and at least 3
+              categories
+            </div>
+          )}
+        </Flex>
+      </Center>
+    </Container>
   );
 }

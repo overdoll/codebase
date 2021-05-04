@@ -7,8 +7,10 @@ import { createPortal } from 'react-dom';
 import RootElement from '@//:modules/utilities/RootElement';
 import Search from '../search/Search';
 import Icon from '@//:modules/content/icon/Icon';
-import { Heading, chakra } from '@chakra-ui/react';
+import { Heading, Flex, IconButton, Wrap } from '@chakra-ui/react';
 import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/sign-badge-circle-K1i3HA.svg';
+import ArrowUp1 from '@streamlinehq/streamlinehq/img/streamline-bold/arrow-up-1-PopoM3.svg';
+import ArrowDown1 from '@streamlinehq/streamlinehq/img/streamline-bold/arrow-down-1-n8OIDy.svg';
 import Button from '@//:modules/form/button/Button';
 
 type Props = {
@@ -48,88 +50,34 @@ export default function Section({
   };
 
   return (
-    <div
-      sx={{
-        borderRadius: 10,
-        padding: 4,
-        marginBottom: 2,
-        backgroundColor: 'neutral.800',
-        display: 'flex',
-        flexDirection: 'column',
-      }}
-    >
-      <div sx={{ display: 'flex', flexDirection: 'row' }}>
-        <span
-          sx={{
-            flexGrow: 2,
-            justifyContent: 'flex-start',
-            display: 'flex',
-            alignItems: 'center',
-          }}
-        >
-          <chakra.span
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Icon
-              icon={SignBadgeCircle}
-              strokeWidth={2.5}
-              stroke="gray.50"
-              size={40}
-            />
-            <Heading
-              sx={{
-                position: 'absolute',
-                fontSize: 3,
-              }}
-            >
-              {count}
-            </Heading>
-          </chakra.span>
-        </span>
-        <chakra.span
-          sx={{
-            flexGrow: 6,
-            alignItems: 'center',
-            display: 'flex',
-            width: '50%',
-          }}
-        >
-          <Heading sx={{ fontSize: 4 }}>{title}</Heading>
-        </chakra.span>
-        <span
-          onClick={onExpand}
-          sx={{
-            flexGrow: 1,
-            justifyContent: 'flex-end',
-            display: 'flex',
-            alignItems: 'center',
-          }}
-        >
-          <Icon
-            icon={SignBadgeCircle}
-            strokeWidth={3}
-            stroke={'neutral.50'}
-            size={30}
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-            }}
+    <Flex p={4} borderRadius={10} bg="gray.800" flexDirection="column">
+      <Flex direction="row" justify="center">
+        <Flex w="20%" align="center">
+          <Icon icon={SignBadgeCircle} color="gray.50" w={12} h={12} />
+          <Heading fontSize="xl" position="absolute" align="center" w={12}>
+            {count}
+          </Heading>
+        </Flex>
+        <Flex w="60%" align="center">
+          <Heading fontSize="xl">{title}</Heading>
+        </Flex>
+        <Flex w="20%" justify="flex-end">
+          <IconButton
+            aria-label="Expand"
+            variant="ghost"
+            size="lg"
+            onClick={onExpand}
+            icon={<Icon icon={expand ? ArrowUp1 : ArrowDown1} fill="gray.50" />}
+            isRound
           />
-        </span>
-      </div>
-      <div
-        sx={{
-          display: expand ? 'flex' : 'none',
-          marginTop: 4,
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
+        </Flex>
+      </Flex>
+      <Flex
+        display={expand ? 'flex' : 'none'}
+        direction="column"
+        align="center"
       >
-        {children}
+        <Wrap m={4}>{children}</Wrap>
         <Button
           sx={{ mt: 4, width: '40%' }}
           size="medium"
@@ -143,7 +91,7 @@ export default function Section({
             <Search onClose={onClose}>{args => search(args, onClose)}</Search>,
             RootElement,
           )}
-      </div>
-    </div>
+      </Flex>
+    </Flex>
   );
 }

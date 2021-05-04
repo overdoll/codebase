@@ -6,6 +6,7 @@ import { graphql, useLazyLoadQuery } from 'react-relay/hooks';
 import type { ArtistsQuery } from '@//:artifacts/ArtistsQuery.graphql';
 import type { VariablesOf } from 'relay-runtime';
 import Element from '../../../element/Element';
+import { Wrap } from '@chakra-ui/react';
 
 type Props = {
   args: {
@@ -49,13 +50,17 @@ export default function Artists({ args, onSelect, selected }: Props): Node {
     );
   }
 
-  return data.artists.map(item => (
-    <Element
-      key={item.id}
-      onSelect={() => onSelect(item)}
-      selected={selected.id === item.id}
-    >
-      {item.username}-{item.avatar}
-    </Element>
-  ));
+  return (
+    <Wrap justify="center">
+      {data.artists.map(item => (
+        <Element
+          key={item.id}
+          onSelect={() => onSelect(item)}
+          selected={selected.id === item.id}
+          title={item.username}
+          thumbnail={item.avatar}
+        />
+      ))}
+    </Wrap>
+  );
 }
