@@ -3,27 +3,30 @@ package command
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/http"
 
-	eva "overdoll/applications/eva/proto"
-	"overdoll/applications/hades/src/app"
-	"overdoll/applications/hades/src/domain/otp"
-	"overdoll/libraries/cookie"
+	"overdoll/applications/eva/src/domain/cookie"
+	"overdoll/applications/eva/src/domain/session"
+	"overdoll/applications/eva/src/domain/user"
+	"overdoll/libraries/cookies"
 	"overdoll/libraries/helpers"
+	"overdoll/libraries/ksuid"
 )
 
 type RegisterHandler struct {
-	eva app.EvaService
+	cr cookie.Repository
+	ur user.Repository
 }
 
-func NewRegisterHandler(eva app.EvaService) RegisterHandler {
-	return RegisterHandler{eva: eva}
+func NewRegisterHandler(cr cookie.Repository, ur user.Repository) RegisterHandler {
+	return RegisterHandler{cr: cr, ur: ur}
 }
 
-func (h RegisterHandler) Handle(ctx context.Context, username string) (*eva.Session, error) {
+func (h RegisterHandler) Handle(ctx context.Context, username string) (*session.Session, error) {
 	gc := helpers.GinContextFromContext(ctx)
 
-	currentCookie, err := cookie.ReadCookie(ctx, otp.OTPKey)
+	currentCookie, err := cookies.ReadCookie(ctx, cookie.OTPKey)
 
 	if err != nil {
 
@@ -37,13 +40,32 @@ func (h RegisterHandler) Handle(ctx context.Context, username string) (*eva.Sess
 		return nil, errors.New("cannot register - no cookie present")
 	}
 
-	sess, err := h.eva.Register(ctx, currentCookie.Value, username)
+	cookieId := currentCookie.Value
+
+	ck, err := h.cr.GetCookieById(ctx, cookieId)
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("could not get cookie: %s", err)
 	}
 
-	http.SetCookie(gc.Writer, &http.Cookie{Name: otp.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
+	// Cookie should have been redeemed at this point, if we are on this command
+	if err := ck.MakeConsumed(); err == nil {
+		return nil, fmt.Errorf("cookie not valid: %s", err)
+	}
+
+	instance, err := user.NewUser(ksuid.New().String(), username, ck.Email())
+
+	if err != nil {
+		return nil, fmt.Errorf("bad user %s", err)
+	}
+
+	err = h.ur.CreateUser(ctx, instance)
+
+	if err != nil {
+		return nil, fmt.Errorf("could not create user %s", err)
+	}
+
+	http.SetCookie(gc.Writer, &http.Cookie{Name: cookie.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
 
 	// TODO: set session cookie here
 

@@ -350,18 +350,18 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
-	{Name: "src/ports/graphql/mutations/types.graphql", Input: `type Mutation {
+	{Name: "schema/mutations.graphql", Input: `type Mutation {
   post(data: PostInput): PostResponse!
 }
 `, BuiltIn: false},
-	{Name: "src/ports/graphql/queries/types.graphql", Input: `type Query {
+	{Name: "schema/queries.graphql", Input: `type Query {
   characters(data: SearchInput!): [Character!]!
   categories(data: SearchInput!): [Category!]!
   artists(data: SearchInput!): [Artist!]!
   media(data: SearchInput!): [Media!]!
 }
 `, BuiltIn: false},
-	{Name: "src/ports/graphql/types/types.graphql", Input: `input PostInput {
+	{Name: "schema/types.graphql", Input: `input PostInput {
   content: [String!]!
   categories: [String!]!
   characters: [String!]!
@@ -387,7 +387,7 @@ input SearchInput {
 
 type Media {
   id: String!
-  thumbnail: String
+  thumbnail: String!
   title: String!
 }
 
@@ -969,11 +969,14 @@ func (ec *executionContext) _Media_thumbnail(ctx context.Context, field graphql.
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Media_title(ctx context.Context, field graphql.CollectedField, obj *types.Media) (ret graphql.Marshaler) {
@@ -2739,6 +2742,9 @@ func (ec *executionContext) _Media(ctx context.Context, sel ast.SelectionSet, ob
 			}
 		case "thumbnail":
 			out.Values[i] = ec._Media_thumbnail(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "title":
 			out.Values[i] = ec._Media_title(ctx, field, obj)
 			if out.Values[i] == graphql.Null {

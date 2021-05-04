@@ -7,7 +7,9 @@ import (
 
 	"overdoll/applications/eva/src/domain/cookie"
 	"overdoll/applications/eva/src/domain/user"
+	"overdoll/applications/eva/src/ports/graphql/types"
 	"overdoll/applications/hades/src/domain/otp"
+	"overdoll/libraries/cookies"
 	"overdoll/libraries/helpers"
 )
 
@@ -22,8 +24,6 @@ func NewRedeemCookieHandler(cr cookie.Repository, ur user.Repository) RedeemCook
 
 func (h RedeemCookieHandler) Handle(ctx context.Context, id string) (*cookie.Cookie, error) {
 
-	// GRAPHQL
-
 	// RedeemCookie - this is when the user uses the redeemed cookie. This will
 	// occur when the user uses the redeemed cookie in the same browser that has the 'otp-cookie' cookie
 
@@ -34,7 +34,7 @@ func (h RedeemCookieHandler) Handle(ctx context.Context, id string) (*cookie.Coo
 
 	gc := helpers.GinContextFromContext(ctx)
 
-	currentCookie, err := cookie.ReadCookie(ctx, otp.OTPKey)
+	currentCookie, err := cookies.ReadCookie(ctx, cookie.OTPKey)
 
 	if err != nil {
 
@@ -103,7 +103,6 @@ func (h RedeemCookieHandler) Handle(ctx context.Context, id string) (*cookie.Coo
 		Email:       result.Cookie.Email,
 		Invalid:     false,
 	}, err
-
 
 	// RPC
 

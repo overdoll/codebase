@@ -3,21 +3,28 @@ package command
 import (
 	"context"
 
-	"overdoll/applications/hades/src/app"
+	"overdoll/applications/eva/src/domain/session"
+	"overdoll/applications/eva/src/domain/user"
 )
 
 type LogoutHandler struct {
-	eva app.EvaService
+	ur user.Repository
+	sr session.Repository
 }
 
-func NewLogoutHandler(eva app.EvaService) LogoutHandler {
-	return LogoutHandler{eva: eva}
+func NewLogoutHandler(ur user.Repository, sr session.Repository) LogoutHandler {
+	return LogoutHandler{ur: ur, sr: sr}
 }
 
 func (h LogoutHandler) Handle(ctx context.Context) (bool, error) {
 
-	// TODO: get session from cookie to determine what to revoke
-	err := h.eva.RevokeSession(ctx, "id")
+	sess, err := session.NewSessionFromToken(token)
+
+	if err != nil {
+		return false, err
+	}
+
+	err = h.sr.RevokeSession(ctx, sess)
 
 	if err != nil {
 		return false, err

@@ -75,7 +75,7 @@ func InitializeGRPCServer(f func(server *grpc.Server)) {
 
 	f(grpcServer)
 
-	log.Printf("starting server on port %s", "8080")
+	log.Printf("starting grpc server on port %s", "8080")
 
 	listener, err := net.Listen("tcp", fmt.Sprintf("0.0.0.0:%s", "8080"))
 
@@ -97,7 +97,7 @@ func InitializeGRPCServer(f func(server *grpc.Server)) {
 	<-sig
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
 	defer cancel()
-	log.Print("shutting down server")
+	log.Print("shutting down grpc server")
 	grpcServer.GracefulStop()
 
 	<-ctx.Done()
@@ -107,7 +107,7 @@ func InitializeGRPCServer(f func(server *grpc.Server)) {
 func InitializeHttpServer(server *http.Server, shutdown func()) {
 
 	// Start graph_api server
-	log.Printf("server started on port 8080")
+	log.Printf("http server started on %s", server.Addr)
 	go func() {
 		log.Fatal(server.ListenAndServe())
 	}()
@@ -119,7 +119,7 @@ func InitializeHttpServer(server *http.Server, shutdown func()) {
 	<-sig
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
 	defer cancel()
-	log.Print("Shutting down server")
+	log.Print("shutting down http server")
 
 	if err := server.Shutdown(ctx); err != nil {
 		shutdown()

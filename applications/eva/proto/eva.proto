@@ -2,33 +2,6 @@ syntax = "proto3";
 
 package applications.grpc.eva.v1;
 
-message AuthenticationCookie {
-  string cookie = 1;
-  bool redeemed = 2;
-  string expiration = 3;
-  string email = 4;
-  string session = 5;
-}
-
-message RedeemCookieResponse {
-  AuthenticationCookie cookie = 1;
-  bool registered = 2;
-}
-
-message CreateAuthenticationCookieRequest {
-  string email = 1;
-  string session = 2;
-}
-
-message GetAuthenticationCookieRequest {
-  string cookie = 1;
-}
-
-message RegisterUserRequest {
-  string cookieId = 1;
-  string username = 2;
-}
-
 message User {
   string id = 1;
   string username = 2;
@@ -51,26 +24,7 @@ message Session {
   string expiration = 3;
 }
 
-message ConsumeCookieResponse {
-  AuthenticationCookie cookie = 1;
-  Session session = 2;
-}
-
-message Revoke {}
-
 service Eva {
   rpc ValidateSession(SessionRequest) returns (Session);
-  rpc RevokeSession(SessionRequest) returns (Revoke);
-
-  // These two will create a session
-  // RegisterUserFromCookie will allow registration and returns a session
-  rpc RegisterUserFromCookie(RegisterUserRequest) returns (Session);
-
-  // AttemptConsume will only return the session if the user is registered
-  rpc AttemptConsumeCookie(GetAuthenticationCookieRequest) returns (ConsumeCookieResponse);
-
   rpc GetUser(GetUserRequest) returns (User);
-
-  rpc CreateAuthenticationCookie(CreateAuthenticationCookieRequest) returns (AuthenticationCookie);
-  rpc RedeemAuthenticationCookie(GetAuthenticationCookieRequest) returns (RedeemCookieResponse);
 }

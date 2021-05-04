@@ -22,6 +22,14 @@ var rootCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(database.Database)
+	rootCmd.AddCommand(&cobra.Command{
+		Use: "grpc",
+		Run: RunGrpc,
+	})
+	rootCmd.AddCommand(&cobra.Command{
+		Use: "http",
+		Run: RunHttp,
+	})
 }
 
 func main() {
@@ -32,6 +40,11 @@ func main() {
 }
 
 func Run(cmd *cobra.Command, args []string) {
+	go RunGrpc(cmd, args)
+	RunHttp(cmd, args)
+}
+
+func RunGrpc(cmd *cobra.Command, args []string) {
 	ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancelFn()
 
@@ -44,4 +57,17 @@ func Run(cmd *cobra.Command, args []string) {
 	bootstrap.InitializeGRPCServer(func(server *grpc.Server) {
 		eva.RegisterEvaServer(server, s)
 	})
+}
+
+func RunHttp(cmd *cobra.Command, args []string) {
+	ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
+	defer cancelFn()
+
+	app, cleanup := service.NewApplication(ctx)
+
+	defer cleanup()
+
+	srv := ports.NewGraphQLServer(app)
+
+	bootstrap.InitializeHttpServer(srv, func() {})
 }

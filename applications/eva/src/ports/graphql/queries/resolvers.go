@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"overdoll/applications/eva/src/app"
-	"overdoll/applications/hades/src/ports/graphql/types"
+	"overdoll/applications/eva/src/ports/graphql/types"
 )
 
 type QueryResolver struct {

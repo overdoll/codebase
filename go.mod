@@ -5,7 +5,7 @@ go 1.14
 require (
 	github.com/99designs/gqlgen v0.13.0
 	github.com/Shopify/sarama v1.28.0 // indirect
-	github.com/ThreeDotsLabs/watermill v1.1.1 // indirect
+	github.com/ThreeDotsLabs/watermill v1.1.1
 	github.com/ThreeDotsLabs/watermill-kafka/v2 v2.2.1 // indirect
 	github.com/aws/aws-sdk-go v1.37.21
 	github.com/bxcodec/faker/v3 v3.6.0

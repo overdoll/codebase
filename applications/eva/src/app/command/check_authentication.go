@@ -4,16 +4,17 @@ import (
 	"context"
 	"net/http"
 
-	"overdoll/applications/hades/src/app"
-	"overdoll/applications/hades/src/domain/otp"
-	"overdoll/applications/hades/src/domain/user"
-	"overdoll/applications/hades/src/ports/graphql/types"
-	"overdoll/libraries/cookie"
+	"overdoll/applications/eva/src/domain/cookie"
+	"overdoll/applications/eva/src/domain/user"
+	"overdoll/applications/eva/src/ports/graphql/types"
+	"overdoll/libraries/common"
+	"overdoll/libraries/cookies"
 	"overdoll/libraries/helpers"
 )
 
 type AuthenticationHandler struct {
-	eva app.EvaService
+	cr cookie.Repository
+	ur user.Repository
 }
 
 func NewAuthenticationHandler(eva app.EvaService) AuthenticationHandler {
@@ -21,7 +22,7 @@ func NewAuthenticationHandler(eva app.EvaService) AuthenticationHandler {
 }
 
 func (h AuthenticationHandler) Handle(ctx context.Context) (*types.Authentication, error) {
-	usr := user.FromContext(ctx)
+	usr := common.FromContext(ctx)
 
 	gc := helpers.GinContextFromContext(ctx)
 
@@ -31,7 +32,7 @@ func (h AuthenticationHandler) Handle(ctx context.Context) (*types.Authenticatio
 	}
 
 	// User is not logged in, let's check for an OTP token
-	otpCookie, err := cookie.ReadCookie(ctx, otp.OTPKey)
+	otpCookie, err := cookies.ReadCookie(ctx, cookie.OTPKey)
 
 	// Error
 	if err != nil {
@@ -52,7 +53,7 @@ func (h AuthenticationHandler) Handle(ctx context.Context) (*types.Authenticatio
 		// Cookie doesn't exist, remove it
 
 		// TODO: only remove cookie if the response indicates that the cookie is expired or invalid- server errors will be ignored
-		http.SetCookie(gc.Writer, &http.Cookie{Name: otp.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
+		http.SetCookie(gc.Writer, &http.Cookie{Name: cookie.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
 
 		return &types.Authentication{User: nil, Cookie: nil}, nil
 	}
@@ -71,7 +72,7 @@ func (h AuthenticationHandler) Handle(ctx context.Context) (*types.Authenticatio
 	}
 
 	// Remove OTP cookie - no longer needed at this step
-	http.SetCookie(gc.Writer, &http.Cookie{Name: otp.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
+	http.SetCookie(gc.Writer, &http.Cookie{Name: cookie.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
 
 	// TODO: set session cookie here from ck.Session.Token
 
