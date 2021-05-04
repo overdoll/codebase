@@ -87,6 +87,7 @@ export default function Search({
           mt={8}
           align="center"
           h="100%"
+          display="absolute"
         >
           <Flex direction="column" h="100%">
             {header}
@@ -100,14 +101,7 @@ export default function Search({
               </Suspense>
             </ErrorBoundary>
           </Flex>
-          <Spacer />
-          <Flex
-            w="100%"
-            justify="center"
-            direction="column"
-            align="flex-end"
-            mb={4}
-          >
+          <Flex w="100%" justify="center" direction="column" mb={4}>
             <Input
               size="md"
               placeholder="Search something you know..."

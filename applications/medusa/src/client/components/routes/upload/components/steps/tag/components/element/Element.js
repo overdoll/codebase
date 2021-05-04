@@ -2,7 +2,15 @@
  * @flow
  */
 import type { Node } from 'react';
-import { Image, Container, Flex, Box, Text, Heading } from '@chakra-ui/react';
+import {
+  Image,
+  Container,
+  Flex,
+  Box,
+  Text,
+  Heading,
+  Center,
+} from '@chakra-ui/react';
 
 type Props = {
   selected: boolean,
@@ -31,7 +39,7 @@ export default function Element({
       overflow="hidden"
       align="center"
     >
-      <Flex position="relative">
+      <Flex h="100%" w="100%" position="relative">
         <Image
           alt={!!title}
           src={thumbnail}
@@ -46,10 +54,11 @@ export default function Element({
           h="100%"
           align="center"
           justify="center"
+          textAlign="center"
         >
-          <Heading color="gray.00" size="md">
+          <Text color="gray.00" fontSize="xl" m={2} overflowWrap="break-word">
             {title}
-          </Heading>
+          </Text>
         </Flex>
       </Flex>
     </Flex>
