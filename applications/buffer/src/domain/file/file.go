@@ -1,21 +1,14 @@
 package file
 
-import (
-	"overdoll/libraries/user"
-)
-
 type File struct {
-	requester *common.User
-
 	prefix string
 	key    string
 }
 
-func NewFile(user *common.User, prefix string, key string) *File {
+func NewFile(prefix string, key string) *File {
 	return &File{
-		requester: user,
-		prefix:    prefix,
-		key:       key,
+		prefix: prefix,
+		key:    key,
 	}
 }
 
@@ -24,5 +17,5 @@ func (f *File) GetLocation() string {
 }
 
 func (f *File) CanViewFile() bool {
-	return f.requester.ID() == f.prefix
+	return true
 }

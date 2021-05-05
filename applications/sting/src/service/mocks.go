@@ -9,6 +9,6 @@ import (
 type EvaServiceMock struct {
 }
 
-func (t EvaServiceMock) GetUser(ctx context.Context, id string) (*common.User, error) {
+func (t EvaServiceMock) GetUser(ctx context.Context, id string) (*user.User, error) {
 	return nil, nil
 }

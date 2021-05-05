@@ -11,6 +11,10 @@ import (
 	libraries_passport_v1 "overdoll/libraries/passport/proto"
 )
 
+const (
+	MutationKey = "PassportContextMutation"
+)
+
 type Body struct {
 	Passport string `json:"passport"`
 }
@@ -36,9 +40,47 @@ func (p *Passport) SetUser(id string) {
 	p.passport.User = &libraries_passport_v1.User{Id: id}
 }
 
-func NewPassport(ctx context.Context) (*Passport, error) {
-	_ = helpers.GinContextFromContext(ctx)
-	return nil, nil
+func (p *Passport) SerializeToBaseString() string {
+	return base64.StdEncoding.EncodeToString([]byte(p.passport.String()))
+}
+
+// MutatePassport will add the passport to the context, which will eventually be intercepted by an extension
+// and will be added to the response. After that, the serving gateway will propagate the updated passport into the session store
+func (p *Passport) MutatePassport(ctx context.Context, updateFn func(*Passport) error) error {
+
+	err := updateFn(p)
+
+	if err != nil {
+		return err
+	}
+
+	gc := helpers.GinContextFromContext(ctx)
+
+	gc.Request = gc.Request.WithContext(
+		context.WithValue(gc.Request.Context(), MutationKey, p.SerializeToBaseString()),
+	)
+
+	return nil
+}
+
+func NewPassport(ctx context.Context) *Passport {
+	gc := helpers.GinContextFromContext(ctx)
+
+	pass := FreshPassport()
+
+	gc.Request = gc.Request.WithContext(
+		context.WithValue(gc.Request.Context(), MutationKey, pass.SerializeToBaseString()),
+	)
+
+	return pass
+}
+
+func GetModifiedPassport(ctx context.Context) string {
+	gc := helpers.GinContextFromContext(ctx)
+
+	raw, _ := gc.Request.Context().Value(MutationKey).(string)
+
+	return raw
 }
 
 func FreshPassport() *Passport {

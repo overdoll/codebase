@@ -6,7 +6,6 @@ import (
 
 	"overdoll/applications/eva/src/domain/cookie"
 	"overdoll/applications/eva/src/domain/user"
-	"overdoll/applications/eva/src/ports/graphql/types"
 	"overdoll/libraries/cookies"
 	"overdoll/libraries/helpers"
 	"overdoll/libraries/passport"
@@ -21,7 +20,7 @@ func NewAuthenticationHandler(cr cookie.Repository, ur user.Repository) Authenti
 	return AuthenticationHandler{cr: cr, ur: ur}
 }
 
-func (h AuthenticationHandler) Handle(ctx context.Context) (*types.Authentication, error) {
+func (h AuthenticationHandler) Handle(ctx context.Context) (*cookie.Cookie, *user.User, error) {
 	pass := passport.FromContext(ctx)
 
 	// User is logged in
@@ -30,10 +29,10 @@ func (h AuthenticationHandler) Handle(ctx context.Context) (*types.Authenticatio
 		usr, err := h.ur.GetUserById(ctx, pass.UserID())
 
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 
-		return &types.Authentication{User: &types.User{Username: usr.Username()}, Cookie: nil}, nil
+		return nil, usr, nil
 	}
 
 	gc := helpers.GinContextFromContext(ctx)
@@ -46,10 +45,10 @@ func (h AuthenticationHandler) Handle(ctx context.Context) (*types.Authenticatio
 
 		// Error says that this cookie doesn't exist
 		if err == http.ErrNoCookie {
-			return &types.Authentication{User: nil, Cookie: nil}, nil
+			return nil, nil, nil
 		}
 
-		return nil, err
+		return nil, nil, err
 	}
 
 	ck, err := h.cr.GetCookieById(ctx, otpCookie.Value)
@@ -60,41 +59,35 @@ func (h AuthenticationHandler) Handle(ctx context.Context) (*types.Authenticatio
 		// TODO: only remove cookie if the response indicates that the cookie is expired or invalid- server errors will be ignored
 		http.SetCookie(gc.Writer, &http.Cookie{Name: cookie.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
 
-		return &types.Authentication{User: nil, Cookie: nil}, nil
+		return nil, nil, nil
 	}
 
 	// Not yet redeemed, user needs to redeem it still
 	if !ck.Redeemed() {
-		return &types.Authentication{User: nil, Cookie: &types.Cookie{
-			SameSession: true,
-			Registered:  false,
-			Redeemed:    false,
-			Session:     ck.Session(),
-			Email:       ck.Email(),
-			Invalid:     false,
-		}}, nil
+		return ck, nil, nil
 	}
 
 	// Redeemed - check if user exists with this email
-	_, err = h.ur.GetUserByEmail(ctx, ck.Email())
+	usr, err := h.ur.GetUserByEmail(ctx, ck.Email())
 
 	// we weren't able to get our user, so that means that the cookie is not going to be deleted
 	// user has to register
 	if err != nil {
-		return &types.Authentication{User: nil, Cookie: &types.Cookie{
-			SameSession: true,
-			Registered:  false,
-			Redeemed:    true,
-			Session:     ck.Session(),
-			Email:       ck.Email(),
-			Invalid:     false,
-		}}, nil
+		return ck, nil, nil
 	}
 
 	// Remove OTP cookie - no longer needed at this step
 	http.SetCookie(gc.Writer, &http.Cookie{Name: cookie.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
 
-	// TODO: create a new passport here with the authenticated user
+	// Update passport to include our new user
+	err = pass.MutatePassport(ctx, func(p *passport.Passport) error {
+		p.SetUser(usr.ID())
+		return nil
+	})
 
-	return nil, nil
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return ck, usr, nil
 }

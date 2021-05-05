@@ -30,5 +30,38 @@ func (r *QueryResolver) RedeemCookie(ctx context.Context, cookie string) (*types
 }
 
 func (r *QueryResolver) Authentication(ctx context.Context) (*types.Authentication, error) {
-	return r.App.Commands.Authentication.Handle(ctx)
+
+	ck, usr, err := r.App.Commands.Authentication.Handle(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	newCookie := &types.Cookie{
+		SameSession: true,
+		Registered:  usr != nil,
+		Redeemed:    ck.Redeemed(),
+		Session:     ck.Session(),
+		Email:       ck.Email(),
+		Invalid:     false,
+	}
+
+	if usr == nil {
+		return &types.Authentication{
+			Cookie: newCookie,
+			User:   nil,
+		}, nil
+	}
+
+	return &types.Authentication{
+		Cookie: &types.Cookie{
+			SameSession: true,
+			Registered:  true,
+			Redeemed:    ck.Redeemed(),
+			Session:     ck.Session(),
+			Email:       ck.Email(),
+			Invalid:     false,
+		},
+		User: &types.User{Username: usr.Username()},
+	}, nil
 }

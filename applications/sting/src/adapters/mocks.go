@@ -170,10 +170,10 @@ func (c ContentMock) MakeProcessedContentPublic(ctx context.Context, s string, s
 }
 
 type EvaServiceMock struct {
-	User *common.User
+	User *user.User
 }
 
-func (e EvaServiceMock) GetUser(ctx context.Context, id string) (*common.User, error) {
+func (e EvaServiceMock) GetUser(ctx context.Context, id string) (*user.User, error) {
 	return e.User, nil
 }
 

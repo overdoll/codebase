@@ -78,7 +78,7 @@ func (h RedeemCookieHandler) Handle(ctx context.Context, id string) (*cookie.Coo
 	}
 
 	// Redeemed - check if user exists with this email
-	_, err = h.ur.GetUserByEmail(ctx, ck.Email())
+	usr, err := h.ur.GetUserByEmail(ctx, ck.Email())
 
 	// we weren't able to get our user, so that means that the cookie is not going to be deleted
 	// user has to register
@@ -100,7 +100,12 @@ func (h RedeemCookieHandler) Handle(ctx context.Context, id string) (*cookie.Coo
 
 	// Remove OTP cookie
 	http.SetCookie(gc.Writer, &http.Cookie{Name: cookie.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
-	// TODO: set session cookie here
 
-	return nil, nil
+	// Update passport to include our new user
+	err = pass.MutatePassport(ctx, func(p *passport.Passport) error {
+		p.SetUser(usr.ID())
+		return nil
+	})
+
+	return ck, nil
 }

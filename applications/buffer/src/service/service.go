@@ -10,24 +10,21 @@ import (
 	"overdoll/applications/buffer/src/app/query"
 	storage "overdoll/libraries/aws"
 	"overdoll/libraries/bootstrap"
-	client2 "overdoll/libraries/client"
 )
 
 func NewApplication(ctx context.Context) (app.Application, func()) {
 
-	client, cleanup := client2.NewEvaClient(ctx)
-
-	return createApplication(ctx, adapters.NewEvaGrpc(client)),
+	return createApplication(ctx),
 		func() {
-			cleanup()
+
 		}
 }
 
 func NewComponentTestApplication(ctx context.Context) app.Application {
-	return createApplication(ctx, EvaServiceMock{})
+	return createApplication(ctx)
 }
 
-func createApplication(ctx context.Context, eva query.EvaService) app.Application {
+func createApplication(ctx context.Context) app.Application {
 
 	_, err := bootstrap.NewBootstrap(context.Background())
 
@@ -48,7 +45,7 @@ func createApplication(ctx context.Context, eva query.EvaService) app.Applicatio
 			HandleUpload: command.NewHandleUploadHandler(repo),
 		},
 		Queries: app.Queries{
-			GetFile: query.NewGetFileHandler(repo, eva),
+			GetFile: query.NewGetFileHandler(repo),
 		},
 	}
 }

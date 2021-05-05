@@ -15,7 +15,7 @@ func NewEvaGrpc(client eva.EvaClient) EvaGrpc {
 	return EvaGrpc{client: client}
 }
 
-func (s EvaGrpc) GetUser(ctx context.Context, id string) (*common.User, error) {
+func (s EvaGrpc) GetUser(ctx context.Context, id string) (*user.User, error) {
 	usr, err := s.client.GetUser(ctx, &eva.GetUserRequest{
 		Id: id,
 	})
@@ -24,5 +24,5 @@ func (s EvaGrpc) GetUser(ctx context.Context, id string) (*common.User, error) {
 		return nil, err
 	}
 
-	return common.UnmarshalFromProto(usr), nil
+	return user.UnmarshalFromProto(usr), nil
 }

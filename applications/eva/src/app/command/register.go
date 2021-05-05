@@ -73,7 +73,14 @@ func (h RegisterHandler) Handle(ctx context.Context, username string) (bool, err
 
 	http.SetCookie(gc.Writer, &http.Cookie{Name: cookie.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
 
-	// TODO: create a new passport here
+	err = pass.MutatePassport(ctx, func(p *passport.Passport) error {
+		p.SetUser(instance.ID())
+		return nil
+	})
+
+	if err != nil {
+		return false, err
+	}
 
 	return true, err
 }

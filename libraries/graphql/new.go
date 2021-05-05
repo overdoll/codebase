@@ -31,6 +31,8 @@ func HandleGraphQL(schema graphql.ExecutableSchema) gin.HandlerFunc {
 			graphAPIHandler.Use(extension.FixedComplexityLimit(3))
 		}
 
+		graphAPIHandler.Use(PassportInjector{})
+
 		graphAPIHandler.AddTransport(transport.POST{})
 		graphAPIHandler.AddTransport(transport.GET{})
 
