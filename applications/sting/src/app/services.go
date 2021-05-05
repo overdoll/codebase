@@ -3,7 +3,7 @@ package app
 import (
 	"context"
 
-	"overdoll/libraries/common"
+	"overdoll/libraries/user"
 )
 
 type EvaService interface {

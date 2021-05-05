@@ -6,7 +6,7 @@ import (
 	sting "overdoll/applications/sting/proto"
 	"overdoll/applications/sting/src/app"
 	"overdoll/applications/sting/src/ports/graphql/types"
-	"overdoll/libraries/common"
+	"overdoll/libraries/user"
 	"overdoll/libraries/ksuid"
 )
 

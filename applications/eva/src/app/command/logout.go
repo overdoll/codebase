@@ -3,28 +3,23 @@ package command
 import (
 	"context"
 
-	"overdoll/applications/eva/src/domain/session"
 	"overdoll/applications/eva/src/domain/user"
+	"overdoll/libraries/passport"
 )
 
 type LogoutHandler struct {
 	ur user.Repository
-	sr session.Repository
 }
 
-func NewLogoutHandler(ur user.Repository, sr session.Repository) LogoutHandler {
-	return LogoutHandler{ur: ur, sr: sr}
+func NewLogoutHandler(ur user.Repository) LogoutHandler {
+	return LogoutHandler{ur: ur}
 }
 
 func (h LogoutHandler) Handle(ctx context.Context) (bool, error) {
 
-	sess, err := session.NewSessionFromToken(token)
+	pass := passport.FromContext(ctx)
 
-	if err != nil {
-		return false, err
-	}
-
-	err = h.sr.RevokeSession(ctx, sess)
+	err := pass.RevokeUser()
 
 	if err != nil {
 		return false, err

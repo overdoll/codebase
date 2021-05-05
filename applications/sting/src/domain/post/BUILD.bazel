@@ -15,8 +15,8 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//applications/sting/proto:v1_go_proto",
-        "//libraries/common:go_default_library",
         "//libraries/ksuid:go_default_library",
+        "//libraries/user:go_default_library",
     ],
 )
 

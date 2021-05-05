@@ -9,7 +9,7 @@ go_library(
     importpath = "overdoll/applications/buffer/src/domain/file",
     visibility = ["//visibility:public"],
     deps = [
-        "//libraries/common:go_default_library",
+        "//libraries/user:go_default_library",
         "@com_github_tus_tusd//pkg/handler:go_default_library",
     ],
 )

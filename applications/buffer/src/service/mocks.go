@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 
-	"overdoll/libraries/common"
+	"overdoll/libraries/user"
 )
 
 type EvaServiceMock struct {

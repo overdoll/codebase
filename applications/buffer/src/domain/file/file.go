@@ -1,7 +1,7 @@
 package file
 
 import (
-	"overdoll/libraries/common"
+	"overdoll/libraries/user"
 )
 
 type File struct {
@@ -24,5 +24,5 @@ func (f *File) GetLocation() string {
 }
 
 func (f *File) CanViewFile() bool {
-	return f.requester.Id == f.prefix
+	return f.requester.ID() == f.prefix
 }

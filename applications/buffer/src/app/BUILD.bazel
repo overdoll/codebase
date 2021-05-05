@@ -11,6 +11,6 @@ go_library(
     deps = [
         "//applications/buffer/src/app/command:go_default_library",
         "//applications/buffer/src/app/query:go_default_library",
-        "//libraries/common:go_default_library",
+        "//libraries/user:go_default_library",
     ],
 )

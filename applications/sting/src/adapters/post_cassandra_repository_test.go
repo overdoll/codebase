@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/sting/src/adapters"
 	"overdoll/applications/sting/src/domain/post"
-	"overdoll/libraries/common"
+	"overdoll/libraries/user"
 	"overdoll/libraries/ksuid"
 	"overdoll/libraries/tests"
 )

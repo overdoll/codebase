@@ -2,8 +2,15 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
-    srcs = ["services.go"],
+    srcs = [
+        "app.go",
+        "services.go",
+    ],
     importpath = "overdoll/applications/sting/src/app",
     visibility = ["//visibility:public"],
-    deps = ["//libraries/common:go_default_library"],
+    deps = [
+        "//applications/sting/src/app/query:go_default_library",
+        "//libraries/user:go_default_library",
+        "@com_github_threedotslabs_watermill//components/cqrs:go_default_library",
+    ],
 )

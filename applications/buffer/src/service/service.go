@@ -10,12 +10,12 @@ import (
 	"overdoll/applications/buffer/src/app/query"
 	storage "overdoll/libraries/aws"
 	"overdoll/libraries/bootstrap"
-	"overdoll/libraries/common"
+	client2 "overdoll/libraries/client"
 )
 
 func NewApplication(ctx context.Context) (app.Application, func()) {
 
-	client, cleanup := common.NewEvaClient(ctx)
+	client, cleanup := client2.NewEvaClient(ctx)
 
 	return createApplication(ctx, adapters.NewEvaGrpc(client)),
 		func() {

@@ -2,12 +2,19 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
-    srcs = ["cli.go"],
+    srcs = [
+        "cli.go",
+        "http.go",
+    ],
     importpath = "overdoll/applications/sting/src/ports",
     visibility = ["//visibility:public"],
     deps = [
         "//applications/sting/proto:v1_go_proto",
+        "//applications/sting/src/app:go_default_library",
+        "//applications/sting/src/ports/graphql:go_default_library",
         "//applications/sting/src/service:go_default_library",
+        "//libraries/graphql:go_default_library",
+        "//libraries/router:go_default_library",
         "@com_github_spf13_cobra//:go_default_library",
     ],
 )

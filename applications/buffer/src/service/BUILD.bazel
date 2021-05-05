@@ -15,6 +15,7 @@ go_library(
         "//applications/buffer/src/app/query:go_default_library",
         "//libraries/aws:go_default_library",
         "//libraries/bootstrap:go_default_library",
-        "//libraries/common:go_default_library",
+        "//libraries/client:go_default_library",
+        "//libraries/user:go_default_library",
     ],
 )

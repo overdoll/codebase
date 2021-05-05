@@ -10,7 +10,7 @@ import (
 	sting "overdoll/applications/sting/proto"
 	"overdoll/applications/sting/src/adapters"
 	"overdoll/applications/sting/src/app/command"
-	"overdoll/libraries/common"
+	"overdoll/libraries/user"
 )
 
 func TestNewPendingPost_in_review(t *testing.T) {

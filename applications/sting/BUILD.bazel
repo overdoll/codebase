@@ -12,6 +12,7 @@ go_library(
     deps = [
         "//applications/sting/src/ports:go_default_library",
         "//applications/sting/src/service:go_default_library",
+        "//libraries/bootstrap:go_default_library",
         "//libraries/commands/database:go_default_library",
         "@com_github_spf13_cobra//:go_default_library",
     ],

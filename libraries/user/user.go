@@ -1,8 +1,6 @@
-package common
+package user
 
 import (
-	"context"
-
 	eva "overdoll/applications/eva/proto"
 )
 
@@ -59,11 +57,6 @@ func (user *User) IsVerified() bool {
 
 func (user *User) IsGuest() bool {
 	return user.isGuest
-}
-
-func FromContext(ctx context.Context) *User {
-	raw, _ := ctx.Value("UserContextKey").(*User)
-	return raw
 }
 
 func (user *User) HasRoles(roles []string) bool {

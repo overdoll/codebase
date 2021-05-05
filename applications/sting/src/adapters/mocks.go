@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"overdoll/applications/sting/src/domain/post"
-	"overdoll/libraries/common"
+	"overdoll/libraries/user"
 )
 
 type PostMock struct {

@@ -12,7 +12,21 @@ type QueryResolver struct {
 }
 
 func (r *QueryResolver) RedeemCookie(ctx context.Context, cookie string) (*types.Cookie, error) {
-	return r.App.Commands.RedeemCookie.Handle(ctx, cookie)
+
+	ck, err := r.App.Commands.RedeemCookie.Handle(ctx, cookie)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.Cookie{
+		SameSession: false,
+		Registered:  false,
+		Redeemed:    true,
+		Session:     ck.Session(),
+		Email:       ck.Email(),
+		Invalid:     false,
+	}, nil
 }
 
 func (r *QueryResolver) Authentication(ctx context.Context) (*types.Authentication, error) {

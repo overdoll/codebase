@@ -7,9 +7,9 @@ import (
 	"overdoll/applications/eva/src/domain/cookie"
 	"overdoll/applications/eva/src/domain/user"
 	"overdoll/applications/eva/src/ports/graphql/types"
-	"overdoll/libraries/common"
 	"overdoll/libraries/cookies"
 	"overdoll/libraries/helpers"
+	"overdoll/libraries/passport"
 )
 
 type AuthenticationHandler struct {
@@ -22,14 +22,21 @@ func NewAuthenticationHandler(cr cookie.Repository, ur user.Repository) Authenti
 }
 
 func (h AuthenticationHandler) Handle(ctx context.Context) (*types.Authentication, error) {
-	usr := common.FromContext(ctx)
-
-	gc := helpers.GinContextFromContext(ctx)
+	pass := passport.FromContext(ctx)
 
 	// User is logged in
-	if usr != nil {
+	if pass.IsAuthenticated() {
+
+		usr, err := h.ur.GetUserById(ctx, pass.UserID())
+
+		if err != nil {
+			return nil, err
+		}
+
 		return &types.Authentication{User: &types.User{Username: usr.Username()}, Cookie: nil}, nil
 	}
+
+	gc := helpers.GinContextFromContext(ctx)
 
 	// User is not logged in, let's check for an OTP token
 	otpCookie, err := cookies.ReadCookie(ctx, cookie.OTPKey)
@@ -58,7 +65,14 @@ func (h AuthenticationHandler) Handle(ctx context.Context) (*types.Authenticatio
 
 	// Not yet redeemed, user needs to redeem it still
 	if !ck.Redeemed() {
-		return &types.Authentication{User: nil, Cookie: ck}, nil
+		return &types.Authentication{User: nil, Cookie: &types.Cookie{
+			SameSession: true,
+			Registered:  false,
+			Redeemed:    false,
+			Session:     ck.Session(),
+			Email:       ck.Email(),
+			Invalid:     false,
+		}}, nil
 	}
 
 	// Redeemed - check if user exists with this email
@@ -67,13 +81,20 @@ func (h AuthenticationHandler) Handle(ctx context.Context) (*types.Authenticatio
 	// we weren't able to get our user, so that means that the cookie is not going to be deleted
 	// user has to register
 	if err != nil {
-		return ck, nil
+		return &types.Authentication{User: nil, Cookie: &types.Cookie{
+			SameSession: true,
+			Registered:  false,
+			Redeemed:    true,
+			Session:     ck.Session(),
+			Email:       ck.Email(),
+			Invalid:     false,
+		}}, nil
 	}
 
 	// Remove OTP cookie - no longer needed at this step
 	http.SetCookie(gc.Writer, &http.Cookie{Name: cookie.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
 
-	// TODO: set session cookie here
+	// TODO: create a new passport here with the authenticated user
 
 	return nil, nil
 }

@@ -4,7 +4,7 @@ import (
 	"context"
 
 	eva "overdoll/applications/eva/proto"
-	"overdoll/libraries/common"
+	"overdoll/libraries/user"
 )
 
 type EvaGrpc struct {

@@ -12,7 +12,6 @@ import (
 	"github.com/bmizerany/pat"
 	tusd "github.com/tus/tusd/pkg/handler"
 	"overdoll/applications/buffer/src/app"
-	"overdoll/libraries/middleware"
 )
 
 type HttpServer struct {
@@ -24,8 +23,8 @@ func NewHttpServer(app app.Application) *http.Server {
 
 	mx := http.NewServeMux()
 	// Set up routes
-	mx.Handle("/api/uploads/", http.StripPrefix("/api/uploads/", middleware.Authenticate(httpServer.HandleUpload())))
-	mx.Handle("/api/upload/", http.StripPrefix("/api/upload/", middleware.Authenticate(httpServer.HandleTUS())))
+	mx.Handle("/api/uploads/", http.StripPrefix("/api/uploads/", httpServer.HandleUpload()))
+	mx.Handle("/api/upload/", http.StripPrefix("/api/upload/", httpServer.HandleTUS()))
 
 	return &http.Server{
 		Addr:    ":8080",

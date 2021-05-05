@@ -35,7 +35,7 @@ go_test(
         "//applications/sting/proto:v1_go_proto",
         "//applications/sting/src/adapters:go_default_library",
         "//applications/sting/src/domain/post:go_default_library",
-        "//libraries/common:go_default_library",
+        "//libraries/user:go_default_library",
         "@com_github_bmizerany_assert//:go_default_library",
         "@com_github_segmentio_ksuid//:go_default_library",
         "@com_github_stretchr_testify//require:go_default_library",

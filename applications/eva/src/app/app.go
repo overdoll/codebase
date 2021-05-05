@@ -11,15 +11,7 @@ type Application struct {
 }
 
 type Commands struct {
-	CreateCookie       command.CreateCookieHandler
-	RedeemCookie       command.RedeemCookieHandler
-	RegisterFromCookie command.RegisterFromCookieHandler
-
-	RevokeSession   command.RevokeSessionHandler
-	CreateSession   command.CreateSessionHandler
-	ValidateSession command.ValidateSessionHandler
-
-	GetUserSession command.GetUserSessionHandler
+	RedeemCookie   command.RedeemCookieHandler
 	Authenticate   command.AuthenticateHandler
 	Register       command.RegisterHandler
 	Logout         command.LogoutHandler
@@ -27,6 +19,5 @@ type Commands struct {
 }
 
 type Queries struct {
-	GetCookie query.GetCookieHandler
-	GetUser   query.GetUserHandler
+	GetUser query.GetUserHandler
 }

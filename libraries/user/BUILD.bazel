@@ -2,8 +2,8 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
-    srcs = ["gin.go"],
-    importpath = "overdoll/libraries/middleware",
+    srcs = ["user.go"],
+    importpath = "overdoll/libraries/user",
     visibility = ["//visibility:public"],
-    deps = ["@com_github_gin_gonic_gin//:go_default_library"],
+    deps = ["//applications/eva/proto:v1_go_proto"],
 )

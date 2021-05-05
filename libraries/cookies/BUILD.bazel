@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["cookies.go"],
-    importpath = "overdoll/libraries/cookie",
+    importpath = "overdoll/libraries/cookies",
     visibility = ["//visibility:public"],
     deps = [
         "//libraries/helpers:go_default_library",

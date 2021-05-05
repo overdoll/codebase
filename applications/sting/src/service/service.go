@@ -18,13 +18,13 @@ import (
 	"overdoll/applications/sting/src/app/query"
 	storage "overdoll/libraries/aws"
 	"overdoll/libraries/bootstrap"
-	"overdoll/libraries/common"
+	"overdoll/libraries/client"
 	"overdoll/libraries/search"
 )
 
 func NewApplication(ctx context.Context) (app.Application, *message.Router, func()) {
 
-	evaClient, cleanup := common.NewEvaClient(ctx)
+	evaClient, cleanup := client.NewEvaClient(ctx)
 
 	logger := watermill.NewStdLogger(false, false)
 
