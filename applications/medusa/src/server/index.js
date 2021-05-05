@@ -12,6 +12,10 @@ import { ApolloGateway } from '@apollo/gateway';
 import graphql from './config/graphql';
 import { matchQueryMiddleware } from 'relay-compiler-plus';
 import queryMapJson from './queries.json';
+import redis from 'redis';
+import Connect from 'connect-redis';
+import session from 'express-session';
+import sessionCfg from './config/session';
 
 const index = express();
 
@@ -41,28 +45,26 @@ index.use(middleware.nonce);
 // helmet (security headers)
 index.use(middleware.helmet);
 
-index.use(middleware.csurf);
-
 // CSRF
 index.use(
   csrf({
-    // Disable cookie - however, we set it ourselves later
-    cookie: false,
+    cookie: true,
     sessionKey: 'csrf',
+  }),
+);
+
+// Sessions
+index.use(
+  session({
+    store: new Connect(session)({ client: redis.createClient() }),
+    ...sessionCfg,
   }),
 );
 
 // add coverage endpoint if in app_debug
 if (process.env.APP_DEBUG) {
-  index.get('/__coverage__', (req, res) => {
-    res.json({
-      coverage: global.__coverage__ || null,
-    });
-  });
+  index.get('/__coverage__', middleware.coverage);
 }
-
-// Our entrypoint
-index.get('/*', entry);
 
 const gateway = new ApolloGateway(graphql);
 
@@ -74,9 +76,12 @@ const server = new ApolloServer({
 
 server.start().then(r =>
   server.applyMiddleware({
-    app: index.use(matchQueryMiddleware(queryMapJson)),
+    app: index.use(matchQueryMiddleware(queryMapJson)).use(middleware.passport),
   }),
 );
+
+// Our entrypoint
+index.get('/*', entry);
 
 index.use(middleware.error);
 

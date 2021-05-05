@@ -14,17 +14,6 @@ message GetUserRequest {
   string id = 1;
 }
 
-message SessionRequest {
-  string token = 1;
-}
-
-message Session {
-  User user = 1;
-  string token = 2;
-  string expiration = 3;
-}
-
 service Eva {
-  rpc ValidateSession(SessionRequest) returns (Session);
   rpc GetUser(GetUserRequest) returns (User);
 }

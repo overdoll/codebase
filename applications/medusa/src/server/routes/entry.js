@@ -25,20 +25,6 @@ const entry = async (req, res, next) => {
   try {
     let forwardCookies = [];
 
-    const csrfToken = req.csrfToken();
-
-    let fetchCookies = null;
-
-    // Make sure we include a csrf cookie in our fetchRelay function, since
-    // the initial call does not contain it
-    if (req.cookies._csrf === undefined) {
-      if (req.headers.cookie !== undefined) {
-        fetchCookies = `${req.headers.cookie},csrf=${req.csrf.csrfSecret}`;
-      } else {
-        fetchCookies = `_csrf=${req.csrf.csrfSecret}`;
-      }
-    }
-
     async function fetchRelay(params, variables, _cacheConfig) {
       const response = await axios({
         url: '/api/graphql',
@@ -46,9 +32,9 @@ const entry = async (req, res, next) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'CSRF-Token': csrfToken,
+          'CSRF-Token': req.csrfToken(),
           ...req.headers,
-          cookie: fetchCookies !== null ? fetchCookies : req.headers.cookie,
+          cookie: req.headers.cookie,
         },
         data: {
           operationName: params.name,
@@ -64,7 +50,6 @@ const entry = async (req, res, next) => {
 
       // Throw an error, which will be caught by our server
       if (Array.isArray(response.data.errors)) {
-        console.log(response.data.errors);
         throw new Error(response.data.errors);
       }
 
@@ -179,7 +164,7 @@ const entry = async (req, res, next) => {
       emotionIds: ids.join(' '),
       emotionCss: css,
       html: html,
-      csrfToken: csrfToken,
+      csrfToken: req.csrfToken(),
       relayStore: serialize(relayData),
       i18nextStore: serialize(initialI18nStore),
       i18nextLang: req.i18n.language,

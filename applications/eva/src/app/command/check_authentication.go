@@ -17,8 +17,8 @@ type AuthenticationHandler struct {
 	ur user.Repository
 }
 
-func NewAuthenticationHandler(eva app.EvaService) AuthenticationHandler {
-	return AuthenticationHandler{eva: eva}
+func NewAuthenticationHandler(cr cookie.Repository, ur user.Repository) AuthenticationHandler {
+	return AuthenticationHandler{cr: cr, ur: ur}
 }
 
 func (h AuthenticationHandler) Handle(ctx context.Context) (*types.Authentication, error) {
@@ -45,37 +45,35 @@ func (h AuthenticationHandler) Handle(ctx context.Context) (*types.Authenticatio
 		return nil, err
 	}
 
-	// Get authentication cookie data, so we can check if it's been redeemed yet
-	cookieData, err := h.eva.AttemptConsumeCookie(ctx, otpCookie.Value)
+	ck, err := h.cr.GetCookieById(ctx, otpCookie.Value)
 
 	// Check to make sure we didn't get an error, and our cookie isn't expired
 	if err != nil {
 		// Cookie doesn't exist, remove it
-
 		// TODO: only remove cookie if the response indicates that the cookie is expired or invalid- server errors will be ignored
 		http.SetCookie(gc.Writer, &http.Cookie{Name: cookie.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
 
 		return &types.Authentication{User: nil, Cookie: nil}, nil
 	}
 
-	ck := &types.Cookie{
-		Redeemed:    cookieData.Cookie.Redeemed,
-		Registered:  cookieData.Session != nil,
-		SameSession: true,
-		Session:     cookieData.Cookie.Session,
-		Email:       cookieData.Cookie.Email,
+	// Not yet redeemed, user needs to redeem it still
+	if !ck.Redeemed() {
+		return &types.Authentication{User: nil, Cookie: ck}, nil
 	}
 
-	// Not yet redeemed or registered, user needs to redeem it still
-	if !ck.Redeemed || !ck.Registered {
-		return &types.Authentication{User: nil, Cookie: ck}, nil
+	// Redeemed - check if user exists with this email
+	_, err = h.ur.GetUserByEmail(ctx, ck.Email())
+
+	// we weren't able to get our user, so that means that the cookie is not going to be deleted
+	// user has to register
+	if err != nil {
+		return ck, nil
 	}
 
 	// Remove OTP cookie - no longer needed at this step
 	http.SetCookie(gc.Writer, &http.Cookie{Name: cookie.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
 
-	// TODO: set session cookie here from ck.Session.Token
+	// TODO: set session cookie here
 
-	// Return user, since we logged in
-	return &types.Authentication{User: &types.User{Username: cookieData.Session.User.Username}, Cookie: ck}, nil
+	return nil, nil
 }
