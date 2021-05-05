@@ -2,10 +2,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
-    srcs = [
-        "mocks.go",
-        "service.go",
-    ],
+    srcs = ["service.go"],
     importpath = "overdoll/applications/buffer/src/service",
     visibility = ["//visibility:public"],
     deps = [
@@ -15,7 +12,5 @@ go_library(
         "//applications/buffer/src/app/query:go_default_library",
         "//libraries/aws:go_default_library",
         "//libraries/bootstrap:go_default_library",
-        "//libraries/client:go_default_library",
-        "//libraries/user:go_default_library",
     ],
 )

@@ -15,6 +15,7 @@ go_library(
         "//applications/buffer/src/ports:go_default_library",
         "//applications/buffer/src/service:go_default_library",
         "//libraries/bootstrap:go_default_library",
+        "@com_github_spf13_cobra//:go_default_library",
     ],
 )
 
