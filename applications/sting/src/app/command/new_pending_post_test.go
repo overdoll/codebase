@@ -26,7 +26,7 @@ func TestNewPendingPost_in_review(t *testing.T) {
 	handler := command.NewNewPostHandler(postMock, &adapters.PostIndexMock{}, &adapters.ContentMock{
 		NewContent: newContent,
 	}, &adapters.EvaServiceMock{
-		User: common.NewUser(
+		User: user.NewUser(
 			"some-random-id",
 			"actual-user",
 			"",

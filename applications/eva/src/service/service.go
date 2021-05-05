@@ -24,13 +24,13 @@ func NewComponentTestApplication(ctx context.Context) app.Application {
 
 func createApplication(ctx context.Context) app.Application {
 
-	init, err := bootstrap.NewBootstrap(ctx)
+	_, err := bootstrap.NewBootstrap(ctx)
 
 	if err != nil {
 		log.Fatalf("bootstrap failed with errors: %s", err)
 	}
 
-	session, err := init.InitializeDatabaseSession()
+	session, err := bootstrap.InitializeDatabaseSession()
 
 	if err != nil {
 		log.Fatalf("database session failed with errors: %s", err)

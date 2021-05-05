@@ -5,5 +5,9 @@ go_library(
     srcs = ["passport.go"],
     importpath = "overdoll/libraries/passport",
     visibility = ["//visibility:public"],
-    deps = ["@com_github_gin_gonic_gin//:go_default_library"],
+    deps = [
+        "//libraries/helpers:go_default_library",
+        "//libraries/passport/proto:v1_go_proto",
+        "@com_github_golang_protobuf//proto:go_default_library",
+    ],
 )

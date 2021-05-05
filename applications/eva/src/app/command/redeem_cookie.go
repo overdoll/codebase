@@ -10,6 +10,7 @@ import (
 	"overdoll/applications/eva/src/domain/user"
 	"overdoll/libraries/cookies"
 	"overdoll/libraries/helpers"
+	"overdoll/libraries/passport"
 )
 
 type RedeemCookieHandler struct {
@@ -22,6 +23,13 @@ func NewRedeemCookieHandler(cr cookie.Repository, ur user.Repository) RedeemCook
 }
 
 func (h RedeemCookieHandler) Handle(ctx context.Context, id string) (*cookie.Cookie, error) {
+
+	pass := passport.FromContext(ctx)
+
+	// User is logged in
+	if pass.IsAuthenticated() {
+		return nil, errors.New("user is logged in")
+	}
 
 	// RedeemCookie - this is when the user uses the redeemed cookie. This will
 	// occur when the user uses the redeemed cookie in the same browser that has the 'otp-cookie' cookie

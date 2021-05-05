@@ -8,7 +8,6 @@ go_library(
         "logout.go",
         "redeem_cookie.go",
         "register.go",
-        "validate_session.go",
     ],
     importpath = "overdoll/applications/eva/src/app/command",
     visibility = ["//visibility:public"],
@@ -19,7 +18,7 @@ go_library(
         "//libraries/cookies:go_default_library",
         "//libraries/helpers:go_default_library",
         "//libraries/ksuid:go_default_library",
-        "//libraries/user:go_default_library",
+        "//libraries/passport:go_default_library",
     ],
 )
 

@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
-	"errors"
+	"fmt"
 
 	"github.com/golang/protobuf/proto"
 	"overdoll/libraries/helpers"
@@ -29,16 +29,16 @@ func (p *Passport) UserID() string {
 
 // Revoke the currently authenticated user from the passport
 func (p *Passport) RevokeUser() error {
-
+	return nil
 }
 
-func (p *Passport) SetUser() {
-
+func (p *Passport) SetUser(id string) {
+	p.passport.User = &libraries_passport_v1.User{Id: id}
 }
 
 func NewPassport(ctx context.Context) (*Passport, error) {
-	gc := helpers.GinContextFromContext(ctx)
-
+	_ = helpers.GinContextFromContext(ctx)
+	return nil, nil
 }
 
 func FreshPassport() *Passport {
@@ -54,14 +54,14 @@ func FromContext(ctx context.Context) *Passport {
 	err := decoder.Decode(&body)
 
 	if err != nil {
-		errors.New("could not decode response body")
+		fmt.Printf("could not decode response body")
 		return nil
 	}
 
 	if body.Passport != "" {
 		sDec, err := base64.StdEncoding.DecodeString(body.Passport)
 		if err != nil {
-			errors.New("could not decode passport")
+			fmt.Printf("could not decode passport")
 			return nil
 		}
 
@@ -70,7 +70,7 @@ func FromContext(ctx context.Context) *Passport {
 		err = proto.Unmarshal(sDec, msg)
 
 		if err != nil {
-			errors.New("could not unmarshal proto from passport")
+			fmt.Printf("could not unmarshal proto from passport")
 			return FreshPassport()
 		}
 

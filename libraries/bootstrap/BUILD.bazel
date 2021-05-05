@@ -2,7 +2,12 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
-    srcs = ["bootstrap.go"],
+    srcs = [
+        "bootstrap.go",
+        "database.go",
+        "grpc.go",
+        "http.go",
+    ],
     importpath = "overdoll/libraries/bootstrap",
     visibility = ["//visibility:public"],
     deps = [

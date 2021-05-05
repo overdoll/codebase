@@ -26,7 +26,6 @@ func NewRegisterHandler(cr cookie.Repository, ur user.Repository) RegisterHandle
 func (h RegisterHandler) Handle(ctx context.Context, username string) (bool, error) {
 	pass := passport.FromContext(ctx)
 
-
 	if pass.IsAuthenticated() {
 		return false, errors.New("user currently logged in")
 	}

@@ -19,7 +19,7 @@ import (
 	storage "overdoll/libraries/aws"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/client"
-	"overdoll/libraries/search"
+	"overdoll/libraries/elasticsearch"
 )
 
 func NewApplication(ctx context.Context) (app.Application, *message.Router, func()) {
@@ -52,13 +52,13 @@ func createApplication(ctx context.Context, eva app.EvaService, router *message.
 
 	logger := watermill.NewStdLogger(false, false)
 
-	init, err := bootstrap.NewBootstrap(ctx)
+	_, err := bootstrap.NewBootstrap(ctx)
 
 	if err != nil {
 		log.Fatalf("bootstrap failed with errors: %s", err)
 	}
 
-	session, err := init.InitializeDatabaseSession()
+	session, err := bootstrap.InitializeDatabaseSession()
 
 	if err != nil {
 		log.Fatalf("database session failed with errors: %s", err)

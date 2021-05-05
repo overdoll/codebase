@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"overdoll/applications/sting/src/domain/post"
-	"overdoll/libraries/search"
+	"overdoll/libraries/elasticsearch"
 )
 
 type PostDocument struct {

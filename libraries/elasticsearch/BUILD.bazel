@@ -8,7 +8,7 @@ go_library(
         "index.go",
         "search.go",
     ],
-    importpath = "overdoll/libraries/search",
+    importpath = "overdoll/libraries/elasticsearch",
     visibility = ["//visibility:public"],
     deps = [
         "@com_github_cenkalti_backoff_v4//:go_default_library",

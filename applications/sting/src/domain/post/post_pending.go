@@ -5,8 +5,8 @@ import (
 	"os"
 	"time"
 
-	"overdoll/libraries/user"
 	"overdoll/libraries/ksuid"
+	"overdoll/libraries/user"
 )
 
 type PostPendingState string
@@ -46,7 +46,7 @@ type PostPending struct {
 	characters []*Character
 	categories []*Category
 
-	contributor *common.User
+	contributor *user.User
 
 	artist *Artist
 
@@ -59,7 +59,7 @@ type PostPending struct {
 	generatedIds       []string
 }
 
-func NewPendingPost(id string, artist *Artist, contributor *common.User, content []string, characters []*Character, categories []*Category) (*PostPending, error) {
+func NewPendingPost(id string, artist *Artist, contributor *user.User, content []string, characters []*Character, categories []*Category) (*PostPending, error) {
 	return &PostPending{
 		id:          id,
 		state:       Publishing,
@@ -78,7 +78,7 @@ func UnmarshalPendingPostFromDatabase(id string, state string, artist *Artist, c
 		id:              id,
 		state:           PostPendingState(state),
 		artist:          artist,
-		contributor:     &common.User{Id: contributorId},
+		contributor:     user.NewUser(contributorId, "", "", nil, false),
 		content:         content,
 		characters:      characters,
 		categories:      categories,
@@ -103,7 +103,7 @@ func (p *PostPending) Artist() *Artist {
 	return p.artist
 }
 
-func (p *PostPending) Contributor() *common.User {
+func (p *PostPending) Contributor() *user.User {
 	return p.contributor
 }
 
@@ -124,7 +124,7 @@ func (p *PostPending) Content() []string {
 		}
 
 		// generate the proper content url
-		generatedContent = append(generatedContent, baseUrl+"/"+p.Contributor().Id+"/"+image)
+		generatedContent = append(generatedContent, baseUrl+"/"+p.Contributor().ID()+"/"+image)
 	}
 
 	return generatedContent
@@ -144,7 +144,7 @@ func (p *PostPending) UpdateArtist(artist *Artist) {
 	p.artist = artist
 }
 
-func (p *PostPending) UpdateContributor(contributor *common.User) {
+func (p *PostPending) UpdateContributor(contributor *user.User) {
 	p.contributor = contributor
 }
 
@@ -204,7 +204,7 @@ func (p *PostPending) MakePublishing() {
 
 func (p *PostPending) MakePublicOrReview() error {
 
-	if !p.contributor.Verified {
+	if !p.contributor.IsVerified() {
 		p.state = Review
 	}
 
