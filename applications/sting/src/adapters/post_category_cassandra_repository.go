@@ -32,7 +32,8 @@ func (r PostsCassandraRepository) GetCategoriesById(ctx context.Context, cats []
 
 	queryCategories := qb.Select("categories").
 		Where(qb.InLit("id", "("+strings.Join(final, ",")+")")).
-		Query(r.session)
+		Query(r.session).
+		Consistency(gocql.One)
 
 	var categoriesModels []Category
 
@@ -51,7 +52,10 @@ func (r PostsCassandraRepository) GetCategories(ctx context.Context) ([]*post.Ca
 
 	var dbCategory []Category
 
-	qc := qb.Select("categories").Columns("id", "title", "thumbnail").Query(r.session)
+	qc := qb.Select("categories").
+		Columns("id", "title", "thumbnail").
+		Query(r.session).
+		Consistency(gocql.One)
 
 	if err := qc.Select(&dbCategory); err != nil {
 		return nil, fmt.Errorf("select() failed: %s", err)

@@ -34,7 +34,8 @@ func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars [
 
 	queryCharacters := qb.Select("characters").
 		Where(qb.InLit("id", "("+strings.Join(final, ",")+")")).
-		Query(r.session)
+		Query(r.session).
+		Consistency(gocql.One)
 
 	var characterModels []*Character
 
@@ -50,7 +51,8 @@ func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars [
 
 	queryMedia := qb.Select("media").
 		Where(qb.InLit("id", "("+strings.Join(mediaIds, ",")+")")).
-		Query(r.session)
+		Query(r.session).
+		Consistency(gocql.One)
 
 	var mediaModels []*Media
 
@@ -107,7 +109,10 @@ func (r PostsCassandraRepository) GetCharacters(ctx context.Context) ([]*post.Ch
 	}
 
 	// Get all the medias through a direct database query
-	qm := qb.Select("media").Columns("id", "thumbnail", "title").Query(r.session)
+	qm := qb.Select("media").
+		Columns("id", "thumbnail", "title").
+		Query(r.session).
+		Consistency(gocql.One)
 
 	if err := qm.Select(&medias); err != nil {
 		return nil, fmt.Errorf("select() failed: %s", err)

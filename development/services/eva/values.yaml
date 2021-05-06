@@ -3,7 +3,6 @@ image:
 
 nameOverride: "eva"
 
-containerPort: 8080
-
-service:
-  port: 8000
+service: true
+http: true
+grpc: true

@@ -19,7 +19,10 @@ type Media struct {
 func (r PostsCassandraRepository) GetMedias(ctx context.Context) ([]*post.Media, error) {
 	var dbMed []Media
 
-	qc := qb.Select("media").Columns("id", "title", "thumbnail").Query(r.session)
+	qc := qb.Select("media").
+		Columns("id", "title", "thumbnail").
+		Query(r.session).
+		Consistency(gocql.LocalQuorum)
 
 	if err := qc.Select(&dbMed); err != nil {
 		return nil, fmt.Errorf("select() failed: %s", err)
@@ -57,7 +60,8 @@ func (r PostsCassandraRepository) GetMediasById(ctx context.Context, medi []stri
 
 	queryMedia := qb.Select("media").
 		Where(qb.InLit("id", "("+strings.Join(final, ",")+")")).
-		Query(r.session)
+		Query(r.session).
+		Consistency(gocql.One)
 
 	var mediaModels []*Media
 

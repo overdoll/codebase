@@ -1,4 +1,0 @@
-image:
-  repository: indigo-image
-
-nameOverride: "indigo"

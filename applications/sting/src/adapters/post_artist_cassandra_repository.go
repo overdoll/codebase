@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"overdoll/applications/sting/src/domain/post"
 )
@@ -18,7 +19,10 @@ func (r PostsCassandraRepository) GetArtists(ctx context.Context) ([]*post.Artis
 
 	var dbArtists []Artist
 
-	qc := qb.Select("artists").Columns("user_id", "user_username", "user_avatar").Query(r.session)
+	qc := qb.Select("artists").
+		Columns("user_id", "user_username", "user_avatar").
+		Query(r.session).
+		Consistency(gocql.One)
 
 	if err := qc.Select(&dbArtists); err != nil {
 		return nil, fmt.Errorf("select() failed: %s", err)
@@ -37,7 +41,10 @@ func (r PostsCassandraRepository) GetArtistById(ctx context.Context, id string) 
 
 	var artist *Artist
 
-	qc := qb.Select("artists").Where(qb.EqLit("id", id)).Query(r.session)
+	qc := qb.Select("artists").
+		Where(qb.EqLit("id", id)).
+		Query(r.session).
+		Consistency(gocql.One)
 
 	if err := qc.Get(&artist); err != nil {
 		return nil, fmt.Errorf("select() failed: %s", err)

@@ -56,7 +56,9 @@ index.use(
 // Sessions
 index.use(
   session({
-    store: new Connect(session)({ client: redis.createClient() }),
+    store: new Connect(session)({
+      client: redis.createClient({ host: process.env.REDIS_URL }),
+    }),
     ...sessionCfg,
   }),
 );

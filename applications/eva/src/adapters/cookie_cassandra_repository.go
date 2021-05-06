@@ -35,6 +35,7 @@ func (r CookieRepository) GetCookieById(ctx context.Context, id string) (*cookie
 	queryCookie := qb.Select("authentication_cookies").
 		Where(qb.Eq("cookie")).
 		Query(r.session).
+		Consistency(gocql.LocalQuorum).
 		BindStruct(cookieItem)
 
 	if err := queryCookie.Get(&cookieItem); err != nil {
@@ -67,6 +68,7 @@ func (r CookieRepository) DeleteCookieById(ctx context.Context, id string) error
 		Delete("authentication_cookies").
 		Where(qb.Eq("cookie")).
 		Query(r.session).
+		Consistency(gocql.LocalQuorum).
 		BindStruct(deleteCookie)
 
 	if err := queryCookie.ExecRelease(); err != nil {
@@ -96,6 +98,7 @@ func (r CookieRepository) CreateCookie(ctx context.Context, instance *cookie.Coo
 	insertCookie := qb.Insert("authentication_cookies").
 		Columns("cookie", "email", "redeemed", "expiration", "session").
 		Query(r.session).
+		Consistency(gocql.LocalQuorum).
 		BindStruct(authCookie)
 
 	if err := insertCookie.ExecRelease(); err != nil {
@@ -120,6 +123,7 @@ func (r CookieRepository) UpdateCookie(ctx context.Context, instance *cookie.Coo
 		Set("redeemed", "email", "session").
 		Where(qb.Eq("cookie"), qb.Eq("email")).
 		Query(r.session).
+		Consistency(gocql.LocalQuorum).
 		BindStruct(authCookie)
 
 	if err := updateCookie.ExecRelease(); err != nil {

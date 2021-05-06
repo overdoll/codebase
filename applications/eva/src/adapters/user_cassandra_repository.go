@@ -47,6 +47,7 @@ func (r UserRepository) GetUserById(ctx context.Context, id string) (*user.User,
 	queryUser := qb.Select("users").
 		Where(qb.Eq("id")).
 		Query(r.session).
+		Consistency(gocql.LocalOne).
 		BindStruct(userInstance)
 
 	if err := queryUser.Get(&userInstance); err != nil {
@@ -80,6 +81,7 @@ func (r UserRepository) GetUserByEmail(ctx context.Context, email string) (*user
 	queryEmail := qb.Select("users_emails").
 		Where(qb.Eq("email")).
 		Query(r.session).
+		Consistency(gocql.LocalQuorum).
 		BindStruct(userEmail)
 
 	if err := queryEmail.Get(&userEmail); err != nil {

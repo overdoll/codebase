@@ -128,7 +128,8 @@ func (r PostsCassandraRepository) CreatePendingPost(ctx context.Context, pending
 			"published_post_id",
 		).
 		Query(r.session).
-		BindStruct(pendingPost)
+		BindStruct(pendingPost).
+		Consistency(gocql.LocalQuorum)
 
 	if err := insertPost.ExecRelease(); err != nil {
 		return fmt.Errorf("ExecRelease() failed: '%s", err)
@@ -151,6 +152,7 @@ func (r PostsCassandraRepository) CreatePost(ctx context.Context, pending *post.
 			"posted_at",
 		).
 		Query(r.session).
+		Consistency(gocql.One).
 		BindStruct(pst)
 
 	if err := insertPost.ExecRelease(); err != nil {
@@ -164,7 +166,8 @@ func (r PostsCassandraRepository) GetPendingPost(ctx context.Context, id string)
 
 	postPendingQuery := qb.Select("post_pending").
 		Where(qb.EqLit("id", id)).
-		Query(r.session)
+		Query(r.session).
+		Consistency(gocql.LocalQuorum)
 
 	var postPending PostPending
 
@@ -235,9 +238,7 @@ func (r PostsCassandraRepository) UpdatePendingPost(ctx context.Context, id stri
 		Set("state", "characters", "categories", "media_requests", "character_requests", "categories_requests", "artist_id", "artist_username").
 		Where(qb.Eq("id")).
 		Query(r.session).
-		// Update must be replicated everywhere or else we risk that the PublishPost method isn't in sync with the
-		// new settings we set up here
-		Consistency(gocql.All).
+		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalPendingPostToDatabase(pst))
 
 	if err := updatePost.ExecRelease(); err != nil {

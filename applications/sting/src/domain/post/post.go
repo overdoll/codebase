@@ -16,7 +16,7 @@ type Post struct {
 	categories []*Category
 
 	artist      *Artist
-	contributor *common.User
+	contributor *user.User
 }
 
 type NotFoundError struct {
@@ -27,7 +27,7 @@ func (e NotFoundError) Error() string {
 	return fmt.Sprintf("user '%s' not found", e.Identifier)
 }
 
-func NewPost(id string, artist *Artist, contributor *common.User, content []string, categories []*Category, characters []*Character) *Post {
+func NewPost(id string, artist *Artist, contributor *user.User, content []string, categories []*Category, characters []*Character) *Post {
 	return &Post{
 		id:          id,
 		artist:      artist,
@@ -47,7 +47,7 @@ func (m *Post) Artist() *Artist {
 	return m.artist
 }
 
-func (m *Post) Contributor() *common.User {
+func (m *Post) Contributor() *user.User {
 	return m.contributor
 }
 

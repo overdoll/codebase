@@ -1,4 +1,0 @@
-image:
-  repository: pox-image
-
-nameOverride: "pox"

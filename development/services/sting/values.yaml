@@ -3,7 +3,5 @@ image:
 
 nameOverride: "sting"
 
-containerPort: 8080
-
-service:
-  port: 8000
+service: true
+http: true
