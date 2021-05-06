@@ -1,9 +1,8 @@
-package workflow
+package command
 
 import (
 	"context"
 
-	sting "overdoll/applications/sting/proto"
 	"overdoll/applications/sting/src/domain/post"
 )
 
@@ -16,15 +15,7 @@ func NewIndexAllArtistsHandler(pr post.Repository, pi post.IndexRepository) Inde
 	return IndexAllArtistsHandler{pr: pr, pi: pi}
 }
 
-func (h IndexAllArtistsHandler) HandlerName() string {
-	return "IndexAllArtistsHandler"
-}
-
-func (h IndexAllArtistsHandler) NewCommand() interface{} {
-	return &sting.IndexAllArtists{}
-}
-
-func (h IndexAllArtistsHandler) Handle(ctx context.Context, c interface{}) error {
+func (h IndexAllArtistsHandler) Handle(ctx context.Context) error {
 
 	err := h.pi.DeleteArtistIndex(ctx)
 

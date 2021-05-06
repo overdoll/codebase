@@ -33,47 +33,11 @@ func (h NewPostHandler) NewCommand() interface{} {
 
 func (h NewPostHandler) Handle(ctx context.Context, c interface{}) error {
 
-	cmd := c.(*sting.SchedulePost).Post
-
-	// Grab categories & characters, because protobuf only contains ID references
-	characters, err := h.pr.GetCharactersById(ctx, cmd.CharacterIds)
+	pendingPost, err := h.pr.GetPendingPost(ctx, "id")
 
 	if err != nil {
-		return err
+		return fmt.Errorf("could not get pending post: %s", err)
 	}
-
-	categories, err := h.pr.GetCategoriesById(ctx, cmd.CategoryIds)
-
-	if err != nil {
-		return err
-	}
-
-	artist := post.NewArtist(cmd.ArtistId, cmd.ArtistUsername)
-
-	// Artist ID is not null, they are not requesting an artist - look for an existing one in the DB
-	if cmd.ArtistId != "" {
-		artist, err = h.pr.GetArtistById(ctx, cmd.ArtistId)
-
-		if err != nil {
-			return err
-		}
-	}
-
-	// Get our contributor
-	usr, err := h.eva.GetUser(ctx, cmd.ContributorId)
-
-	if err != nil {
-		return fmt.Errorf("could not get user: %s", err)
-	}
-
-	pendingPost, err := post.NewPendingPost(cmd.Id, artist, usr, cmd.Content, characters, categories)
-
-	if err != nil {
-		return fmt.Errorf("could not create pending post: %s", err)
-	}
-
-	// Request new resources
-	pendingPost.RequestResources(cmd.CharacterRequests, cmd.CategoryRequests, cmd.MediaRequests)
 
 	_ = pendingPost.MakePublicOrReview()
 

@@ -11,7 +11,12 @@ type Application struct {
 }
 
 type Commands struct {
-	CreatePendingPost command.CreatePendingPostHandler
+	CreatePendingPost  command.CreatePendingPostHandler
+	ReviewPendingPost  command.ReviewPostHandler
+	IndexAllArtists    command.IndexAllArtistsHandler
+	IndexAllCategories command.IndexAllCategoriesHandler
+	IndexAllCharacters command.IndexAllCharactersHandler
+	IndexAllMedia      command.IndexAllMediaHandler
 }
 
 type Queries struct {

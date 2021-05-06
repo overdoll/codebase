@@ -52,7 +52,12 @@ func createApplication(ctx context.Context, eva app.EvaService) app.Application 
 
 	return app.Application{
 		Commands: app.Commands{
-			CreatePendingPost: command.NewCreatePendingPostHandler(postRepo, eva),
+			CreatePendingPost:  command.NewCreatePendingPostHandler(postRepo, eva),
+			ReviewPendingPost:  command.NewReviewPostHandler(postRepo),
+			IndexAllMedia:      command.NewIndexAllMediaHandler(postRepo, indexRepo),
+			IndexAllCharacters: command.NewIndexAllCharactersHandler(postRepo, indexRepo),
+			IndexAllCategories: command.NewIndexAllCategoriesHandler(postRepo, indexRepo),
+			IndexAllArtists:    command.NewIndexAllArtistsHandler(postRepo, indexRepo),
 		},
 		Queries: app.Queries{
 			SearchMedias:     query.NewSearchMediasHandler(indexRepo),

@@ -1,9 +1,8 @@
-package workflow
+package command
 
 import (
 	"context"
 
-	sting "overdoll/applications/sting/proto"
 	"overdoll/applications/sting/src/domain/post"
 )
 
@@ -16,15 +15,7 @@ func NewIndexAllMediaHandler(pr post.Repository, pi post.IndexRepository) IndexA
 	return IndexAllMediaHandler{pr: pr, pi: pi}
 }
 
-func (h IndexAllMediaHandler) HandlerName() string {
-	return "IndexAllMediaHandler"
-}
-
-func (h IndexAllMediaHandler) NewCommand() interface{} {
-	return &sting.IndexAllMedia{}
-}
-
-func (h IndexAllMediaHandler) Handle(ctx context.Context, c interface{}) error {
+func (h IndexAllMediaHandler) Handle(ctx context.Context) error {
 	err := h.pi.DeleteMediaIndex(ctx)
 
 	if err != nil {
