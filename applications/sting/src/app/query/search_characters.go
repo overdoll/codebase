@@ -3,6 +3,7 @@ package query
 import (
 	"context"
 
+	"go.uber.org/zap"
 	"overdoll/applications/sting/src/domain/post"
 )
 
@@ -15,5 +16,13 @@ func NewSearchCharactersHandler(pr post.IndexRepository) SearchCharactersHandler
 }
 
 func (h SearchCharactersHandler) Handle(ctx context.Context, query string) ([]*post.Character, error) {
-	return h.pr.SearchCharacters(ctx, query)
+
+	chars, err := h.pr.SearchCharacters(ctx, query)
+
+	if err != nil {
+		zap.S().Errorf("failed to get cookie: %s", err)
+		return nil, ErrSearchFailed
+	}
+
+	return chars, nil
 }

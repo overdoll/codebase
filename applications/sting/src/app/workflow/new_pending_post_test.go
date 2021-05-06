@@ -1,4 +1,4 @@
-package command_test
+package workflow_test
 
 import (
 	"context"
@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 	sting "overdoll/applications/sting/proto"
 	"overdoll/applications/sting/src/adapters"
-	"overdoll/applications/sting/src/app/command"
+	"overdoll/applications/sting/src/app/workflow"
 	"overdoll/libraries/user"
 )
 
@@ -23,7 +23,7 @@ func TestNewPendingPost_in_review(t *testing.T) {
 
 	postMock := &adapters.PostMock{}
 
-	handler := command.NewNewPostHandler(postMock, &adapters.PostIndexMock{}, &adapters.ContentMock{
+	handler := workflow.NewNewPostHandler(postMock, &adapters.PostIndexMock{}, &adapters.ContentMock{
 		NewContent: newContent,
 	}, &adapters.EvaServiceMock{
 		User: user.NewUser(

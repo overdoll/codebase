@@ -3,6 +3,7 @@ package query
 import (
 	"context"
 
+	"go.uber.org/zap"
 	"overdoll/applications/sting/src/domain/post"
 )
 
@@ -15,5 +16,13 @@ func NewSearchArtistsHandler(pr post.IndexRepository) SearchArtistsHandler {
 }
 
 func (h SearchArtistsHandler) Handle(ctx context.Context, query string) ([]*post.Artist, error) {
-	return h.pr.SearchArtists(ctx, query)
+
+	arts, err := h.pr.SearchArtists(ctx, query)
+
+	if err != nil {
+		zap.S().Errorf("failed to search: %s", err)
+		return nil, ErrSearchFailed
+	}
+
+	return arts, nil
 }

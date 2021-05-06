@@ -22,7 +22,7 @@ func init() {
 	rootCmd.AddCommand(ports.Root)
 	rootCmd.AddCommand(database.Database)
 	rootCmd.AddCommand(&cobra.Command{
-		Use: "jobs",
+		Use: "worker",
 		Run: RunJobs,
 	})
 	rootCmd.AddCommand(&cobra.Command{
@@ -47,20 +47,18 @@ func RunJobs(cmd *cobra.Command, args []string) {
 	ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancelFn()
 
-	_, router, cleanup := service.NewApplication(ctx)
+	_, cleanup := service.NewApplication(ctx)
 
 	defer cleanup()
 
-	if err := router.Run(ctx); err != nil {
-		panic(err)
-	}
+	panic("worker")
 }
 
 func RunHttp(cmd *cobra.Command, args []string) {
 	ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancelFn()
 
-	app, _, cleanup := service.NewApplication(ctx)
+	app, cleanup := service.NewApplication(ctx)
 
 	defer cleanup()
 

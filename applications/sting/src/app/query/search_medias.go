@@ -2,8 +2,14 @@ package query
 
 import (
 	"context"
+	"errors"
 
+	"go.uber.org/zap"
 	"overdoll/applications/sting/src/domain/post"
+)
+
+var (
+	ErrSearchFailed = errors.New("search failed")
 )
 
 type SearchMediasHandler struct {
@@ -15,5 +21,13 @@ func NewSearchMediasHandler(pr post.IndexRepository) SearchMediasHandler {
 }
 
 func (h SearchMediasHandler) Handle(ctx context.Context, query string) ([]*post.Media, error) {
-	return h.pr.SearchMedias(ctx, query)
+
+	medias, err := h.pr.SearchMedias(ctx, query)
+
+	if err != nil {
+		zap.S().Errorf("failed to search: %s", err)
+		return nil, ErrSearchFailed
+	}
+
+	return medias, nil
 }

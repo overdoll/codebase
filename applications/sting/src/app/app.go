@@ -1,7 +1,7 @@
 package app
 
 import (
-	"github.com/ThreeDotsLabs/watermill/components/cqrs"
+	"overdoll/applications/sting/src/app/command"
 	"overdoll/applications/sting/src/app/query"
 )
 
@@ -11,7 +11,7 @@ type Application struct {
 }
 
 type Commands struct {
-	Bus *cqrs.Facade
+	CreatePendingPost command.CreatePendingPostHandler
 }
 
 type Queries struct {
