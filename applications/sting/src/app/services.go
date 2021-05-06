@@ -7,5 +7,5 @@ import (
 )
 
 type EvaService interface {
-	GetUser(ctx context.Context, id string) (*common.User, error)
+	GetUser(ctx context.Context, id string) (*user.User, error)
 }

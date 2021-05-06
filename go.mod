@@ -38,8 +38,10 @@ require (
 	github.com/stretchr/testify v1.7.0
 	github.com/tus/tusd v1.5.1
 	github.com/vektah/gqlparser/v2 v2.1.0
+	go.uber.org/multierr v1.6.0 // indirect
+	go.uber.org/zap v1.16.0 // indirect
 	golang.org/x/crypto v0.0.0-20210421170649-83a5a9bb288b // indirect
-	golang.org/x/net v0.0.0-20210505024714-0287a6fb4125 // indirect
+	golang.org/x/net v0.0.0-20210505214959-0714010a04ed // indirect
 	golang.org/x/sys v0.0.0-20210503173754-0981d6026fa6 // indirect
 	google.golang.org/genproto v0.0.0-20210505142820-a42aa055cf76 // indirect
 	google.golang.org/grpc v1.37.0
