@@ -16,6 +16,8 @@ type Cookie struct {
 	session string
 
 	consumed bool
+
+	sameSession bool
 }
 
 var (
@@ -38,11 +40,12 @@ func (e NotFoundError) Error() string {
 func NewCookie(id string, email string, session string) (*Cookie, error) {
 
 	ck := &Cookie{
-		cookie:     id,
-		expiration: time.Now().Add(time.Minute * 5),
-		email:      email,
-		redeemed:   false,
-		session:    session,
+		cookie:      id,
+		expiration:  time.Now().Add(time.Minute * 5),
+		email:       email,
+		redeemed:    false,
+		session:     session,
+		sameSession: false,
 	}
 
 	return ck, nil
@@ -50,11 +53,12 @@ func NewCookie(id string, email string, session string) (*Cookie, error) {
 
 func UnmarshalCookieFromDatabase(cookie string, email string, redeemed bool, session string, expiration time.Time) *Cookie {
 	return &Cookie{
-		cookie:     cookie,
-		email:      email,
-		redeemed:   redeemed,
-		session:    session,
-		expiration: expiration,
+		cookie:      cookie,
+		email:       email,
+		redeemed:    redeemed,
+		session:     session,
+		expiration:  expiration,
+		sameSession: false,
 	}
 }
 
@@ -82,6 +86,10 @@ func (c *Cookie) Redeemed() bool {
 	return c.redeemed
 }
 
+func (c *Cookie) SameSession() bool {
+	return c.sameSession
+}
+
 func (c *Cookie) MakeRedeemed() error {
 
 	if c.IsExpired() {
@@ -105,6 +113,11 @@ func (c *Cookie) MakeConsumed() error {
 	}
 
 	c.consumed = true
+	return nil
+}
+
+func (c *Cookie) MakeSameSession() error {
+	c.sameSession = true
 	return nil
 }
 

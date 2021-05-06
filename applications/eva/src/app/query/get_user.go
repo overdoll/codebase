@@ -20,7 +20,7 @@ func (h GetUserHandler) Handle(ctx context.Context, id string) (*user.User, erro
 	ur, err := h.ur.GetUserById(ctx, id)
 
 	if err != nil {
-		return nil, fmt.Errorf("could not get user: %s", err)
+		return nil, fmt.Errorf("could not get user: %s", id)
 	}
 
 	return ur, nil

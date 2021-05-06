@@ -3,9 +3,11 @@ package bootstrap
 import (
 	"context"
 	"log"
+	"os"
 	"path"
 
 	"github.com/joho/godotenv"
+	"go.uber.org/zap"
 	"overdoll/libraries/helpers"
 )
 
@@ -29,6 +31,20 @@ func NewBootstrap(ctx context.Context) (Bootstrap, error) {
 	if err != nil {
 		log.Fatal("error loading .env file")
 	}
+
+	logger, err := zap.NewProduction()
+
+	if os.Getenv("APP_DEBUG") == "true" {
+		logger, err = zap.NewDevelopment()
+	}
+
+	if err != nil {
+		log.Fatalf("can't initialize zap logger: %v", err)
+	}
+
+	defer logger.Sync()
+
+	zap.ReplaceGlobals(logger)
 
 	return Bootstrap{
 		context:   ctx,

@@ -3,10 +3,12 @@ package command
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"strings"
 	"time"
 
+	"go.uber.org/zap"
 	"overdoll/applications/eva/src/domain/cookie"
 	"overdoll/libraries/cookies"
 	"overdoll/libraries/helpers"
@@ -20,6 +22,10 @@ type AuthenticateHandler struct {
 func NewAuthenticateHandler(cr cookie.Repository) AuthenticateHandler {
 	return AuthenticateHandler{cr: cr}
 }
+
+var (
+	ErrFailedAuthenticate = errors.New("failed to authenticate")
+)
 
 func (h AuthenticateHandler) Handle(ctx context.Context, email string) (bool, error) {
 	// Authenticate - Generate an OTP code that will be used to authenticate the user
@@ -38,7 +44,7 @@ func (h AuthenticateHandler) Handle(ctx context.Context, email string) (bool, er
 	sessionJson, err := json.Marshal(sessionData)
 
 	if err != nil {
-		return false, err
+		return false, ErrFailedAuthenticate
 	}
 
 	// Create an authentication cookie
@@ -51,7 +57,8 @@ func (h AuthenticateHandler) Handle(ctx context.Context, email string) (bool, er
 	err = h.cr.CreateCookie(ctx, instance)
 
 	if err != nil {
-		return false, err
+		zap.S().Errorf("failed to create cookie: %s", err)
+		return false, ErrFailedAuthenticate
 	}
 
 	// OTP login cookie - will determine if
@@ -64,8 +71,9 @@ func (h AuthenticateHandler) Handle(ctx context.Context, email string) (bool, er
 	})
 
 	if err != nil {
-		return false, err
+		zap.S().Errorf("failed to set cookie: %s", err)
+		return false, ErrFailedAuthenticate
 	}
 
-	return true, err
+	return true, nil
 }

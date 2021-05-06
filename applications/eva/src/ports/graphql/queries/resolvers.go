@@ -19,9 +19,21 @@ func (r *QueryResolver) RedeemCookie(ctx context.Context, cookie string) (*types
 		return nil, err
 	}
 
+	// If ck is returned as nil, cookie is invalid
+	if ck == nil {
+		return &types.Cookie{
+			SameSession: false,
+			Registered:  false,
+			Redeemed:    false,
+			Session:     "",
+			Email:       "",
+			Invalid:     true,
+		}, nil
+	}
+
 	return &types.Cookie{
-		SameSession: false,
-		Registered:  false,
+		SameSession: ck.SameSession(),
+		Registered:  ck.Consumed(),
 		Redeemed:    true,
 		Session:     ck.Session(),
 		Email:       ck.Email(),
@@ -35,6 +47,13 @@ func (r *QueryResolver) Authentication(ctx context.Context) (*types.Authenticati
 
 	if err != nil {
 		return nil, err
+	}
+
+	if ck == nil {
+		return &types.Authentication{
+			Cookie: nil,
+			User:   nil,
+		}, nil
 	}
 
 	newCookie := &types.Cookie{

@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"go.uber.org/zap"
 	"overdoll/applications/eva/src/domain/user"
 	"overdoll/libraries/passport"
 )
@@ -16,12 +17,16 @@ func NewLogoutHandler(ur user.Repository) LogoutHandler {
 	return LogoutHandler{ur: ur}
 }
 
+var (
+	ErrFailedLogout = errors.New("failed to logout")
+)
+
 func (h LogoutHandler) Handle(ctx context.Context) (bool, error) {
 
 	pass := passport.FromContext(ctx)
 
 	if !pass.IsAuthenticated() {
-		return false, errors.New("user is not logged in")
+		return false, ErrFailedLogout
 	}
 
 	// Update passport to include our new user
@@ -30,7 +35,8 @@ func (h LogoutHandler) Handle(ctx context.Context) (bool, error) {
 	})
 
 	if err != nil {
-		return false, err
+		zap.S().Errorf("failed to revoke passport: %s", err)
+		return false, ErrFailedLogout
 	}
 
 	return true, nil
