@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 	sting "overdoll/applications/sting/proto"
 	"overdoll/applications/sting/src/adapters"
-	"overdoll/applications/sting/src/app/workflow"
+	"overdoll/applications/sting/src/app/workflow_in_progress"
 	"overdoll/applications/sting/src/domain/post"
 )
 

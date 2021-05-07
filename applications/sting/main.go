@@ -23,7 +23,7 @@ func init() {
 	rootCmd.AddCommand(database.Database)
 	rootCmd.AddCommand(&cobra.Command{
 		Use: "worker",
-		Run: RunJobs,
+		Run: RunWorker,
 	})
 	rootCmd.AddCommand(&cobra.Command{
 		Use: "http",
@@ -39,19 +39,17 @@ func main() {
 }
 
 func Run(cmd *cobra.Command, args []string) {
-	go RunJobs(cmd, args)
+	go RunWorker(cmd, args)
 	RunHttp(cmd, args)
 }
 
-func RunJobs(cmd *cobra.Command, args []string) {
-	ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
+func RunWorker(cmd *cobra.Command, args []string) {
+	_, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancelFn()
 
-	_, cleanup := service.NewApplication(ctx)
+	srv := ports.NewWorker()
 
-	defer cleanup()
-
-	panic("worker")
+	bootstrap.InitializeWorkerServer(srv)
 }
 
 func RunHttp(cmd *cobra.Command, args []string) {
