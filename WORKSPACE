@@ -541,8 +541,8 @@ go_repository(
 go_repository(
     name = "com_github_golang_mock",
     importpath = "github.com/golang/mock",
-    sum = "h1:qGJ6qTW+x6xX/my+8YUVl4WNpX9B7+/l2tRsHGZ7f2s=",
-    version = "v1.3.1",
+    sum = "h1:jlYHihg//f7RRwuPfptm04yp4s7O6Kw8EZiVYIGcH0g=",
+    version = "v1.5.0",
 )
 
 go_repository(
@@ -1080,8 +1080,8 @@ go_repository(
 go_repository(
     name = "com_github_opentracing_opentracing_go",
     importpath = "github.com/opentracing/opentracing-go",
-    sum = "h1:pWlfV3Bxv7k65HYwkikxat0+s3pV4bsqf19k25Ur8rU=",
-    version = "v1.1.0",
+    sum = "h1:uEJPy/1a5RIPAJ0Ov+OIO8OxWu77jEv+1B0VhjKrZUs=",
+    version = "v1.2.0",
 )
 
 go_repository(
@@ -1353,8 +1353,8 @@ go_repository(
 go_repository(
     name = "com_github_stretchr_objx",
     importpath = "github.com/stretchr/objx",
-    sum = "h1:2vfRuCMp5sSVIDSqO8oNnWJq7mPa6KVP3iPIwFBuy8A=",
-    version = "v0.1.1",
+    sum = "h1:NGXK3lHquSN08v5vWalVI/L8XU9hdzE/G6xsrze47As=",
+    version = "v0.3.0",
 )
 
 go_repository(
@@ -1717,8 +1717,8 @@ go_repository(
 go_repository(
     name = "org_golang_x_time",
     importpath = "golang.org/x/time",
-    sum = "h1:SvFZT6jyqRaOeXpc5h/JSfZenJ2O330aBsf7JfSUXmQ=",
-    version = "v0.0.0-20190308202827-9d24e82272b4",
+    sum = "h1:O8mE0/t419eoIwhTFpKVkHiTs/Igowgfkj25AcZrtiE=",
+    version = "v0.0.0-20210220033141-f8bda1e9f3ba",
 )
 
 go_repository(
@@ -1950,4 +1950,95 @@ go_repository(
     importpath = "go.uber.org/tools",
     sum = "h1:0mgffUl7nfd+FpvXMVz4IDEaUSmT1ysygQC7qYo7sG4=",
     version = "v0.0.0-20190618225709-2cfd321de3ee",
+)
+
+go_repository(
+    name = "com_github_codahale_hdrhistogram",
+    importpath = "github.com/codahale/hdrhistogram",
+    sum = "h1:qMd81Ts1T2OTKmB4acZcyKaMtRnY5Y44NuXGX2GFJ1w=",
+    version = "v0.0.0-20161010025455-3a0bb77429bd",
+)
+
+go_repository(
+    name = "com_github_facebookgo_clock",
+    importpath = "github.com/facebookgo/clock",
+    sum = "h1:yDWHCSQ40h88yih2JAcL6Ls/kVkSE8GFACTGVnMPruw=",
+    version = "v0.0.0-20150410010913-600d898af40a",
+)
+
+go_repository(
+    name = "com_github_gogo_googleapis",
+    importpath = "github.com/gogo/googleapis",
+    sum = "h1:1Yx4Myt7BxzvUr5ldGSbwYiZG6t9wGBZ+8/fX3Wvtq0=",
+    version = "v1.4.1",
+)
+
+go_repository(
+    name = "com_github_gogo_status",
+    importpath = "github.com/gogo/status",
+    sum = "h1:+eIkrewn5q6b30y+g/BJINVVdi2xH7je5MPJ3ZPK3JA=",
+    version = "v1.1.0",
+)
+
+go_repository(
+    name = "com_github_niemeyer_pretty",
+    importpath = "github.com/niemeyer/pretty",
+    sum = "h1:fD57ERR4JtEqsWbfPhv4DMiApHyliiK5xCTNVSPiaAs=",
+    version = "v0.0.0-20200227124842-a10e7caefd8e",
+)
+
+go_repository(
+    name = "com_github_pborman_uuid",
+    importpath = "github.com/pborman/uuid",
+    sum = "h1:+ZZIw58t/ozdjRaXh/3awHfmWRbzYxJoAdNJxe/3pvw=",
+    version = "v1.2.1",
+)
+
+go_repository(
+    name = "com_github_robfig_cron",
+    importpath = "github.com/robfig/cron",
+    sum = "h1:ZjScXvvxeQ63Dbyxy76Fj3AT3Ut0aKsyd2/tl3DTMuQ=",
+    version = "v1.2.0",
+)
+
+go_repository(
+    name = "com_github_uber_go_tally",
+    importpath = "github.com/uber-go/tally",
+    sum = "h1:nFHIuW3VQ22wItiE9kPXic8dEgExWOsVOHwpmoIvsMw=",
+    version = "v3.3.17+incompatible",
+)
+
+go_repository(
+    name = "com_github_uber_jaeger_client_go",
+    importpath = "github.com/uber/jaeger-client-go",
+    sum = "h1:uArBYHQR0HqLFFAypI7RsWTzPSj/bDpmZZuQjMLSg1A=",
+    version = "v2.23.1+incompatible",
+)
+
+go_repository(
+    name = "com_github_uber_jaeger_lib",
+    importpath = "github.com/uber/jaeger-lib",
+    sum = "h1:MxZXOiR2JuoANZ3J6DE/U0kSFv/eJ/GfSYVCjK7dyaw=",
+    version = "v2.2.0+incompatible",
+)
+
+go_repository(
+    name = "io_temporal_go_api",
+    importpath = "go.temporal.io/api",
+    sum = "h1:TuHm1nX42+u7/5j9N9Mg3eX4jsri7mrpd0FivOciBH0=",
+    version = "v1.4.1-0.20210318194442-3f93fcec559f",
+)
+
+go_repository(
+    name = "io_temporal_go_sdk",
+    importpath = "go.temporal.io/sdk",
+    sum = "h1:uVbyCd6Rs77rk5ohhWRYtPnQ7STZD2xLDAkJn8JnbaQ=",
+    version = "v1.6.0",
+)
+
+go_repository(
+    name = "org_uber_go_goleak",
+    importpath = "go.uber.org/goleak",
+    sum = "h1:qsup4IcBdlmsnGfqyLl4Ntn3C2XCCuKAE7DwHpScyUo=",
+    version = "v1.0.0",
 )

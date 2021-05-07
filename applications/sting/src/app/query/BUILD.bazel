@@ -10,5 +10,8 @@ go_library(
     ],
     importpath = "overdoll/applications/sting/src/app/query",
     visibility = ["//visibility:public"],
-    deps = ["//applications/sting/src/domain/post:go_default_library"],
+    deps = [
+        "//applications/sting/src/domain/post:go_default_library",
+        "@org_uber_go_zap//:go_default_library",
+    ],
 )
