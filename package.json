@@ -50,6 +50,7 @@
     "relay-runtime": "^10.1.2",
     "serialize-javascript": "^5.0.1",
     "subscriptions-transport-ws": "^0.9.18",
+    "swiper": "^6.5.9",
     "use-query-params": "^1.2.0",
     "winston": "^3.3.3"
   },

@@ -101,20 +101,29 @@ export default function Search({
               </Suspense>
             </ErrorBoundary>
           </Flex>
-          <Flex w="100%" justify="center" direction="column" mb={4}>
-            <Input
-              size="md"
-              placeholder="Search something you know..."
-              value={searchInput}
-              onChange={onChange}
-              variant="filled"
-              isDisabled={!!isPending}
-              mb={4}
-            />
-            <Button w="100%" onClick={onClose}>
-              Close
-            </Button>
-          </Flex>
+        </Flex>
+        <Flex
+          justify="center"
+          direction="column"
+          mb={4}
+          position="fixed"
+          bottom={0}
+          w={['sm', 'md', 'lg']}
+          ml={[1, 0]}
+          mr={[1, 0]}
+        >
+          <Input
+            size="md"
+            placeholder="Search something you know..."
+            value={searchInput}
+            onChange={onChange}
+            variant="filled"
+            isDisabled={!!isPending}
+            mb={4}
+          />
+          <Button w="100%" onClick={onClose}>
+            Close
+          </Button>
         </Flex>
       </Center>
     </Container>
