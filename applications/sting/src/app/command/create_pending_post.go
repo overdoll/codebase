@@ -18,11 +18,12 @@ var (
 
 type CreatePendingPostHandler struct {
 	pr  post.Repository
+	pe  post.EventRepository
 	eva app.EvaService
 }
 
-func NewCreatePendingPostHandler(pr post.Repository, eva app.EvaService) CreatePendingPostHandler {
-	return CreatePendingPostHandler{pr: pr, eva: eva}
+func NewCreatePendingPostHandler(pr post.Repository, pe post.EventRepository, eva app.EvaService) CreatePendingPostHandler {
+	return CreatePendingPostHandler{pr: pr, eva: eva, pe: pe}
 }
 
 func (h CreatePendingPostHandler) Handle(ctx context.Context, artistId string, artistUsername string, content []string, characterIds []string, categoryIds []string, characterRequests map[string]string, mediaRequests []string) (*post.PostPending, error) {
@@ -81,10 +82,18 @@ func (h CreatePendingPostHandler) Handle(ctx context.Context, artistId string, a
 	// Request new resources
 	pendingPost.RequestResources(characterRequests, make([]string, 0), mediaRequests)
 
+	_ = pendingPost.MakePublicOrReview()
+
 	// create a pending post in the database with all of the data
 	if err := h.pr.CreatePendingPost(ctx, pendingPost); err != nil {
-		zap.S().Errorf("failed to create pending post: %s", err)
-		return nil, ErrFailedPost
+		return nil, err
+	}
+
+	err = h.pe.CreatePostEvent(ctx, pendingPost)
+
+	if err != nil {
+		// TODO: delete pending post here if event fails
+		return nil, err
 	}
 
 	return pendingPost, nil

@@ -3,12 +3,14 @@ package mutations
 import (
 	"context"
 
+	"go.temporal.io/sdk/client"
 	"overdoll/applications/sting/src/app"
 	"overdoll/applications/sting/src/ports/graphql/types"
 )
 
 type MutationResolver struct {
-	App app.Application
+	App    app.Application
+	Client client.Client
 }
 
 func (r *MutationResolver) Post(ctx context.Context, data *types.PostInput) (*types.PostResponse, error) {

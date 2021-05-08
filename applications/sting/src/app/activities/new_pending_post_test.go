@@ -1,4 +1,4 @@
-package workflow_test
+package activities_test
 
 import (
 	"context"
@@ -7,9 +7,8 @@ import (
 	"github.com/bmizerany/assert"
 	"github.com/segmentio/ksuid"
 	"github.com/stretchr/testify/require"
-	sting "overdoll/applications/sting/proto"
 	"overdoll/applications/sting/src/adapters"
-	"overdoll/applications/sting/src/app/workflow_in_progress"
+	activities2 "overdoll/applications/sting/src/app/activities"
 	"overdoll/libraries/user"
 )
 
@@ -23,7 +22,7 @@ func TestNewPendingPost_in_review(t *testing.T) {
 
 	postMock := &adapters.PostMock{}
 
-	handler := workflow.NewNewPostHandler(postMock, &adapters.PostIndexMock{}, &adapters.ContentMock{
+	handler := activities2.NewNewPostActivityHandler(postMock, &adapters.PostIndexMock{}, &adapters.ContentMock{
 		NewContent: newContent,
 	}, &adapters.EvaServiceMock{
 		User: user.NewUser(
@@ -33,22 +32,12 @@ func TestNewPendingPost_in_review(t *testing.T) {
 			nil,
 			// false for verified - it will dispatch a review event
 			false),
-	}, events)
+	})
 
 	var oldContent []string
 	oldContent = append(oldContent, "asd")
 
-	err := handler.Handle(context.Background(), &sting.SchedulePost{Post: &sting.NewPendingPost{
-		Id:                ksuid.New().String(),
-		ArtistId:          "artist_id",
-		ArtistUsername:    "",
-		ContributorId:     "some-random-id",
-		Content:           oldContent,
-		CharacterIds:      nil,
-		MediaRequests:     nil,
-		CategoryRequests:  nil,
-		CharacterRequests: nil,
-	}})
+	err := handler.Handle(context.Background(), ksuid.New().String())
 
 	require.NoError(t, err)
 

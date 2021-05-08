@@ -1,4 +1,4 @@
-package workflow_test
+package activities_test
 
 import (
 	"context"
@@ -7,9 +7,8 @@ import (
 
 	"github.com/segmentio/ksuid"
 	"github.com/stretchr/testify/require"
-	sting "overdoll/applications/sting/proto"
 	"overdoll/applications/sting/src/adapters"
-	"overdoll/applications/sting/src/app/workflow_in_progress"
+	activities2 "overdoll/applications/sting/src/app/activities"
 	"overdoll/applications/sting/src/domain/post"
 )
 
@@ -23,21 +22,11 @@ func TestPostCompleted_complete_post(t *testing.T) {
 		PendingPost: post.UnmarshalPendingPostFromDatabase("id", string(post.Review), &post.Artist{}, "", nil, nil, nil, make(map[string]string), nil, nil, time.Now(), ""),
 	}
 
-	handler := workflow.NewPublishPostHandler(postMock, &adapters.PostIndexMock{}, &adapters.EventMock{}, &adapters.ContentMock{
+	handler := activities2.NewPublishPostActivityHandler(postMock, &adapters.PostIndexMock{}, &adapters.ContentMock{
 		NewContent: newContent,
 	}, &adapters.EvaServiceMock{})
 
-	err := handler.Handle(context.Background(), &sting.ReviewPost{Post: &sting.NewPendingPost{
-		Id:                ksuid.New().String(),
-		ArtistId:          "artist_id",
-		ArtistUsername:    "",
-		ContributorId:     "some-random-id",
-		Content:           nil,
-		CharacterIds:      nil,
-		MediaRequests:     nil,
-		CategoryRequests:  nil,
-		CharacterRequests: nil,
-	}})
+	err := handler.Handle(context.Background(), ksuid.New().String())
 
 	require.NoError(t, err)
 

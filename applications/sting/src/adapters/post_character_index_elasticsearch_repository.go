@@ -121,6 +121,8 @@ func (r PostIndexElasticSearchRepository) BulkIndexCharacters(ctx context.Contex
 		return fmt.Errorf("error creating bulk indexer: %s", err)
 	}
 
+	// TODO: also bulk index media along with characters
+
 	// Now we can safely start creating our documents
 	for _, char := range characters {
 
