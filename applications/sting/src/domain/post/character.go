@@ -2,8 +2,6 @@ package post
 
 import (
 	"os"
-
-	sting "overdoll/applications/sting/proto"
 )
 
 type Character struct {
@@ -50,23 +48,4 @@ func UnmarshalCharacterFromDatabase(id string, name string, thumbnail string, me
 		thumbnail: thumbnail,
 		media:     media,
 	}
-}
-
-func UnmarshalCharacterFromProtoArray(chars []*sting.Character) ([]*Character, error) {
-	var characters []*Character
-
-	for _, char := range chars {
-		characters = append(characters, &Character{
-			id:        char.Id,
-			name:      char.Name,
-			thumbnail: char.Thumbnail,
-			media: &Media{
-				id:        char.Media.Id,
-				title:     char.Media.Title,
-				thumbnail: char.Media.Thumbnail,
-			},
-		})
-	}
-
-	return characters, nil
 }

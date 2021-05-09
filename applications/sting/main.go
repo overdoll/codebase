@@ -44,10 +44,12 @@ func Run(cmd *cobra.Command, args []string) {
 }
 
 func RunWorker(cmd *cobra.Command, args []string) {
-	_, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
+	ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancelFn()
 
-	srv := ports.NewWorker()
+	app, _ := service.NewApplication(ctx)
+
+	srv := ports.NewWorker(app)
 
 	bootstrap.InitializeWorkerServer(srv)
 }

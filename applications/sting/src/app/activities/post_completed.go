@@ -3,7 +3,7 @@ package activities
 import (
 	"context"
 
-	"overdoll/applications/sting/src/app"
+	"overdoll/applications/sting/src/app/command"
 	"overdoll/applications/sting/src/domain/content"
 	"overdoll/applications/sting/src/domain/post"
 )
@@ -12,10 +12,10 @@ type PublishPostActivityHandler struct {
 	pi  post.IndexRepository
 	pr  post.Repository
 	cr  content.Repository
-	eva app.EvaService
+	eva EvaService
 }
 
-func NewPublishPostActivityHandler(pr post.Repository, pi post.IndexRepository, cr content.Repository, eva app.EvaService) PublishPostActivityHandler {
+func NewPublishPostActivityHandler(pr post.Repository, pi post.IndexRepository, cr content.Repository, eva command.EvaService) PublishPostActivityHandler {
 	return PublishPostActivityHandler{pr: pr, pi: pi, cr: cr, eva: eva}
 }
 

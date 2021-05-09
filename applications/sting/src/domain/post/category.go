@@ -2,8 +2,6 @@ package post
 
 import (
 	"os"
-
-	sting "overdoll/applications/sting/proto"
 )
 
 type Category struct {
@@ -43,18 +41,4 @@ func UnmarshalCategoryFromDatabase(id string, title string, thumbnail string) *C
 		title:     title,
 		thumbnail: thumbnail,
 	}
-}
-
-func UnmarshalFromProtoArray(cats []*sting.Category) ([]*Category, error) {
-	var categories []*Category
-
-	for _, cat := range cats {
-		categories = append(categories, &Category{
-			id:        cat.Id,
-			title:     cat.Title,
-			thumbnail: cat.Thumbnail,
-		})
-	}
-
-	return categories, nil
 }

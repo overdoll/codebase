@@ -2,8 +2,6 @@ package post
 
 import (
 	"os"
-
-	sting "overdoll/applications/sting/proto"
 )
 
 type Media struct {
@@ -43,18 +41,4 @@ func UnmarshalMediaFromDatabase(id string, title string, thumbnail string) *Medi
 		title:     title,
 		thumbnail: thumbnail,
 	}
-}
-
-func UnmarshalMediaFromProtoArray(medi []*sting.Media) ([]*Media, error) {
-	var media []*Media
-
-	for _, med := range medi {
-		media = append(media, &Media{
-			id:        med.Id,
-			title:     med.Title,
-			thumbnail: med.Thumbnail,
-		})
-	}
-
-	return media, nil
 }

@@ -6,7 +6,6 @@ import (
 
 	"github.com/gocql/gocql"
 	"go.uber.org/zap"
-	"overdoll/applications/sting/src/app"
 	"overdoll/applications/sting/src/domain/post"
 	"overdoll/libraries/ksuid"
 	"overdoll/libraries/passport"
@@ -19,10 +18,10 @@ var (
 type CreatePendingPostHandler struct {
 	pr  post.Repository
 	pe  post.EventRepository
-	eva app.EvaService
+	eva EvaService
 }
 
-func NewCreatePendingPostHandler(pr post.Repository, pe post.EventRepository, eva app.EvaService) CreatePendingPostHandler {
+func NewCreatePendingPostHandler(pr post.Repository, pe post.EventRepository, eva EvaService) CreatePendingPostHandler {
 	return CreatePendingPostHandler{pr: pr, eva: eva, pe: pe}
 }
 

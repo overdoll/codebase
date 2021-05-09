@@ -4,7 +4,6 @@ go 1.14
 
 require (
 	github.com/99designs/gqlgen v0.13.0
-	github.com/ThreeDotsLabs/watermill v1.1.1
 	github.com/aws/aws-sdk-go v1.37.21
 	github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869
 	github.com/bmizerany/pat v0.0.0-20170815010413-6226ea591a40
@@ -17,12 +16,12 @@ require (
 	github.com/gocql/gocql v0.0.0-20201215165327-e49edf966d90
 	github.com/golang/protobuf v1.5.2
 	github.com/golang/snappy v0.0.3 // indirect
+	github.com/google/uuid v1.2.0
 	github.com/gorilla/securecookie v1.1.1
 	github.com/gorilla/websocket v1.4.2
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
 	github.com/h2non/filetype v1.1.1
 	github.com/joho/godotenv v1.3.0
-	github.com/lithammer/shortuuid/v3 v3.0.6 // indirect
 	github.com/scylladb/gocqlx/v2 v2.3.0
 	github.com/segmentio/ksuid v1.0.3
 	github.com/spf13/cobra v1.1.3
