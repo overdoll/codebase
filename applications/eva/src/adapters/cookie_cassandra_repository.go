@@ -14,7 +14,7 @@ import (
 type AuthenticationCookie struct {
 	Cookie     string    `db:"cookie"`
 	Email      string    `db:"email"`
-	Redeemed   bool      `db:"redeemed"`
+	Redeemed   int       `db:"redeemed"`
 	Expiration time.Time `db:"expiration"`
 	Session    string    `db:"session"`
 }
@@ -50,7 +50,7 @@ func (r CookieRepository) GetCookieById(ctx context.Context, id string) (*cookie
 	return cookie.UnmarshalCookieFromDatabase(
 		cookieItem.Cookie,
 		cookieItem.Email,
-		cookieItem.Redeemed,
+		cookieItem.Redeemed == 1,
 		cookieItem.Session,
 		cookieItem.Expiration,
 	), nil
@@ -90,7 +90,7 @@ func (r CookieRepository) CreateCookie(ctx context.Context, instance *cookie.Coo
 	authCookie := &AuthenticationCookie{
 		Cookie:     instance.Cookie(),
 		Email:      instance.Email(),
-		Redeemed:   instance.Redeemed(),
+		Redeemed:   0,
 		Expiration: instance.Expiration(),
 		Session:    instance.Session(),
 	}
@@ -110,10 +110,16 @@ func (r CookieRepository) CreateCookie(ctx context.Context, instance *cookie.Coo
 
 func (r CookieRepository) UpdateCookie(ctx context.Context, instance *cookie.Cookie) error {
 
+	redeemed := 0
+
+	if instance.Redeemed() {
+		redeemed = 1
+	}
+
 	// get authentication cookie with this ID
 	authCookie := AuthenticationCookie{
 		Cookie:   instance.Cookie(),
-		Redeemed: instance.Redeemed(),
+		Redeemed: redeemed,
 		Email:    instance.Email(),
 		Session:  instance.Session(),
 	}

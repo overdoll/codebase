@@ -4,9 +4,9 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
-	"fmt"
 
 	"github.com/golang/protobuf/proto"
+	"go.uber.org/zap"
 	"overdoll/libraries/helpers"
 	libraries_passport_v1 "overdoll/libraries/passport/proto"
 )
@@ -92,19 +92,17 @@ func FromContext(ctx context.Context) *Passport {
 
 	var body Body
 
-	decoder := json.NewDecoder(gc.Request.Body)
-	err := decoder.Decode(&body)
+	err := json.NewDecoder(gc.Request.Body).Decode(&body)
 
 	if err != nil {
-		fmt.Printf("could not decode response body")
-		return nil
+		return FreshPassport()
 	}
 
 	if body.Passport != "" {
 		sDec, err := base64.StdEncoding.DecodeString(body.Passport)
 		if err != nil {
-			fmt.Printf("could not decode passport")
-			return nil
+			zap.S().Errorf("could not decode passport: %s", err)
+			return FreshPassport()
 		}
 
 		var msg *libraries_passport_v1.Passport
@@ -112,7 +110,7 @@ func FromContext(ctx context.Context) *Passport {
 		err = proto.Unmarshal(sDec, msg)
 
 		if err != nil {
-			fmt.Printf("could not unmarshal proto from passport")
+			zap.S().Errorf("could not unmarshal passport proto: %s", err)
 			return FreshPassport()
 		}
 
