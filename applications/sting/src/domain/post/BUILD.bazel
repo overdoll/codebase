@@ -14,7 +14,6 @@ go_library(
     importpath = "overdoll/applications/sting/src/domain/post",
     visibility = ["//visibility:public"],
     deps = [
-        "//applications/sting/proto:v1_go_proto",
         "//libraries/ksuid:go_default_library",
         "//libraries/user:go_default_library",
     ],

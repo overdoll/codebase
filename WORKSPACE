@@ -765,8 +765,8 @@ go_repository(
 go_repository(
     name = "com_github_hashicorp_go_uuid",
     importpath = "github.com/hashicorp/go-uuid",
-    sum = "h1:cfejS+Tpcp13yd5nYHWDI6qVCny6wyX2Mt5SGur2IGE=",
-    version = "v1.0.2",
+    sum = "h1:fv1ep09latC32wFoVwnqcnKJGnMSdBanPczbHAYm1BE=",
+    version = "v1.0.1",
 )
 
 go_repository(

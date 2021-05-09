@@ -10,6 +10,7 @@ go_library(
     importpath = "overdoll/applications/sting/src/ports",
     visibility = ["//visibility:public"],
     deps = [
+        "//applications/sting/src/adapters:go_default_library",
         "//applications/sting/src/app:go_default_library",
         "//applications/sting/src/ports/graphql:go_default_library",
         "//applications/sting/src/service:go_default_library",

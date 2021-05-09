@@ -4,9 +4,8 @@ kind: Service
 metadata:
   name: {{ include "default-service.fullname" . }}
   labels:
-    {{- include "default-service.labels" . | nindent 4 }}
+  {{- include "default-service.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.service.type }}
   ports:
     {{- if .Values.http }}
     - port: 8000
@@ -19,7 +18,7 @@ spec:
       targetPort: grpc
       protocol: TCP
       name: grpc
-    {{- end }}
+  {{- end }}
   selector:
-    {{- include "default-service.selectorLabels" . | nindent 4 }}
-{{- end }}
+  {{- include "default-service.selectorLabels" . | nindent 4 }}
+  {{- end }}
