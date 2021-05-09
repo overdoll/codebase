@@ -7,7 +7,7 @@ go_library(
         "migrate.go",
         "seed.go",
     ],
-    importpath = "overdoll/libraries/commands/database",
+    importpath = "overdoll/libraries/commands",
     visibility = ["//visibility:public"],
     deps = [
         "//libraries/bootstrap:go_default_library",

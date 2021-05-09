@@ -1,6 +1,9 @@
 package ports
 
 import (
+	"os"
+
+	"go.temporal.io/sdk/activity"
 	"go.temporal.io/sdk/client"
 	"go.temporal.io/sdk/worker"
 	"go.uber.org/zap"
@@ -15,7 +18,7 @@ type Worker struct {
 func NewWorker(app app.Application) worker.Worker {
 
 	c, err := client.NewClient(client.Options{
-		HostPort: client.DefaultHostPort,
+		HostPort: os.Getenv("TEMPORAL_URL"),
 	})
 
 	if err != nil {
@@ -24,16 +27,18 @@ func NewWorker(app app.Application) worker.Worker {
 
 	defer c.Close()
 
-	w := worker.New(c, "sting", worker.Options{})
+	w := worker.New(c, "sting", worker.Options{
+
+	})
 
 	w.RegisterWorkflow(adapters.ReviewPost)
 	w.RegisterWorkflow(adapters.StartPost)
 
-	w.RegisterActivity(app.Activities.CreatePost)
-	w.RegisterActivity(app.Activities.ReviewPost)
-	w.RegisterActivity(app.Activities.NewPendingPost)
-	w.RegisterActivity(app.Activities.PostCustomResources)
-	w.RegisterActivity(app.Activities.PostCompleted)
+	w.RegisterActivityWithOptions(&app.Activities.CreatePost, activity.RegisterOptions{Name: "CreatePostActivityHandler"})
+	w.RegisterActivityWithOptions(&app.Activities.ReviewPost, activity.RegisterOptions{Name: "ReviewPostActivityHandler"})
+	w.RegisterActivityWithOptions(&app.Activities.NewPendingPost, activity.RegisterOptions{Name: "NewPostActivityHandler"})
+	w.RegisterActivityWithOptions(&app.Activities.PostCustomResources, activity.RegisterOptions{Name: "PostCustomResourcesActivityHandler"})
+	w.RegisterActivityWithOptions(&app.Activities.PostCompleted, activity.RegisterOptions{Name: "PublishPostActivityHandler"})
 
 	return w
 }

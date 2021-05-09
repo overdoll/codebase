@@ -1,4 +1,4 @@
-package database
+package commands
 
 import (
 	"context"
@@ -23,7 +23,7 @@ var Migrate = &cobra.Command{
 			log.Fatalf("bootstrap failed with errors: %s", err)
 		}
 
-		session, err := init.InitializeDatabaseSession()
+		session, err := bootstrap.InitializeDatabaseSession()
 
 		if err != nil {
 			log.Fatalf("database session failed with errors: %s", err)

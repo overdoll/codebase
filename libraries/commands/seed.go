@@ -1,4 +1,4 @@
-package database
+package commands
 
 import (
 	"context"
@@ -30,7 +30,7 @@ var Seed = &cobra.Command{
 			return
 		}
 
-		session, err := init.InitializeDatabaseSession()
+		session, err := bootstrap.InitializeDatabaseSession()
 
 		if err != nil {
 			fmt.Println("database session failed with errors: ", err)

@@ -10,7 +10,7 @@ import (
 	"overdoll/applications/sting/src/ports"
 	"overdoll/applications/sting/src/service"
 	"overdoll/libraries/bootstrap"
-	"overdoll/libraries/commands/database"
+	"overdoll/libraries/commands"
 )
 
 var rootCmd = &cobra.Command{
@@ -20,7 +20,7 @@ var rootCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(ports.Root)
-	rootCmd.AddCommand(database.Database)
+	rootCmd.AddCommand(commands.Database)
 	rootCmd.AddCommand(&cobra.Command{
 		Use: "worker",
 		Run: RunWorker,

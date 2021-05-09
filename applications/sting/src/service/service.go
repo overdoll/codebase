@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"log"
+	"os"
 
 	"go.temporal.io/sdk/client"
 	"overdoll/applications/sting/src/adapters"
@@ -57,8 +58,9 @@ func createApplication(ctx context.Context, eva command.EvaService) app.Applicat
 	}
 
 	c, err := client.NewClient(client.Options{
-		HostPort: client.DefaultHostPort,
+		HostPort: os.Getenv("TEMPORAL_URL"),
 	})
+
 	if err != nil {
 		log.Fatalln("Unable to create client", err)
 	}

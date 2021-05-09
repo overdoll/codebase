@@ -63,21 +63,6 @@ applications = {
         ],
         "live_update": [],
     },
-    "medusa-production": {
-        "type": "node",
-        "directory": "medusa",
-        "manual": True,
-        "image_reference": "medusa-production-image",
-        "image_target": "//applications/medusa:medusa-production-image",
-        "binary_target": "//applications/medusa:medusa-production",
-        "binary_output": "applications/medusa/medusa-production_/medusa-production",
-        "container_workdir": "/app/applications/medusa-production/medusa-production-image.binary.runfiles/overdoll/",
-        "container_binary": "applications/medusa-production/medusa-production-image.binary_/medusa-production-image.binary",
-        "bazel_image": "bazel/applications/medusa:medusa-production-image",
-        "entrypoint": "/app/applications/medusa/medusa-production",
-        "dependencies": [],
-        "live_update": [],
-    },
 }
 
 # Ingress (Traefik)
