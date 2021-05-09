@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"overdoll/applications/sting/src/domain/post"
-	"overdoll/libraries/ksuid"
 )
 
 type CreatePostActivityHandler struct {
@@ -24,7 +23,7 @@ func (h CreatePostActivityHandler) Handle(ctx context.Context, id string) error 
 		return err
 	}
 
-	pst := post.NewPost(ksuid.New().String(), pendingPost.Artist(), pendingPost.Contributor(), pendingPost.Content(), pendingPost.Categories(), pendingPost.Characters())
+	pst := post.NewPost(id, pendingPost.Artist(), pendingPost.Contributor(), pendingPost.Content(), pendingPost.Categories(), pendingPost.Characters())
 
 	if err := h.pr.CreatePost(ctx, pst); err != nil {
 		return err

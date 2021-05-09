@@ -55,7 +55,7 @@ func StartPost(ctx workflow.Context, id string, inReview bool) error {
 		return err
 	}
 
-	// If not in review ("publishing"), then we dispatch a job to publish the post
+	// If not in review ("publishing"), then we run activities to handle this
 	if !inReview {
 		if err := workflow.ExecuteActivity(ctx, "PostCustomResourcesActivityHandler.Handle", id).Get(ctx, nil); err != nil {
 			return err
