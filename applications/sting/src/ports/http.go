@@ -23,10 +23,9 @@ func NewGraphQLServer(app app.Application) *http.Server {
 	})))
 
 	return &http.Server{
-		Addr:         fmt.Sprint(":8080"),
+		Addr:         fmt.Sprint(":8000"),
 		WriteTimeout: time.Second * 10,
 		ReadTimeout:  time.Second * 10,
 		Handler:      rtr,
 	}
 }
-

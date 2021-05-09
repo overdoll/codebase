@@ -32,3 +32,9 @@ type RegisterInput struct {
 type User struct {
 	Username string `json:"username"`
 }
+
+type Workaround1 struct {
+	ID *int `json:"id"`
+}
+
+func (Workaround1) IsEntity() {}

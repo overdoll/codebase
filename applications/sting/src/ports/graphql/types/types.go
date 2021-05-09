@@ -54,3 +54,9 @@ type SearchInput struct {
 type Validation struct {
 	Code string `json:"code"`
 }
+
+type Workaround2 struct {
+	ID *int `json:"id"`
+}
+
+func (Workaround2) IsEntity() {}

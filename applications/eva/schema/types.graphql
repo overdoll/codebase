@@ -27,3 +27,7 @@ input RegisterInput {
 input AuthenticationInput {
   email: String!
 }
+
+type Workaround1 @key(fields: "id") {
+  id: Int
+}

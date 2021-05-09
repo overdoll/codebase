@@ -6,6 +6,7 @@ package gen
 
 import (
 	"overdoll/applications/sting/src/app"
+	"overdoll/applications/sting/src/ports/graphql/entities"
 	"overdoll/applications/sting/src/ports/graphql/mutations"
 	"overdoll/applications/sting/src/ports/graphql/queries"
 )
@@ -28,6 +29,13 @@ func (r *Resolver) Mutation() MutationResolver {
 // Query returns gen.QueryResolver implementation.
 func (r *Resolver) Query() QueryResolver {
 	return &queries.QueryResolver{
+		App: r.app,
+	}
+}
+
+// Query returns gen.QueryResolver implementation.
+func (r *Resolver) Entity() EntityResolver {
+	return &entities.EntityResolver{
 		App: r.app,
 	}
 }

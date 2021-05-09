@@ -50,3 +50,7 @@ type Category {
 type Validation {
   code: String!
 }
+
+type Workaround2 @key(fields: "id") {
+  id: Int
+}

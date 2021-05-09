@@ -13,7 +13,7 @@ import graphql from './config/graphql';
 import { matchQueryMiddleware } from 'relay-compiler-plus';
 import queryMapJson from './queries.json';
 import redis from 'redis';
-import Connect from 'connect-redis';
+import connect from 'connect-redis';
 import session from 'express-session';
 import sessionCfg from './config/session';
 
@@ -53,10 +53,12 @@ index.use(
   }),
 );
 
+const RedisStore = connect(session);
+
 // Sessions
 index.use(
   session({
-    store: new Connect(session)({
+    store: new RedisStore({
       client: redis.createClient({ host: process.env.REDIS_URL }),
     }),
     ...sessionCfg,
@@ -78,6 +80,7 @@ const server = new ApolloServer({
 
 server.start().then(r =>
   server.applyMiddleware({
+    path: '/api/graphql',
     app: index.use(matchQueryMiddleware(queryMapJson)).use(middleware.passport),
   }),
 );

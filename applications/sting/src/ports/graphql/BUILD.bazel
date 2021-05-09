@@ -11,6 +11,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//applications/sting/src/app:go_default_library",
+        "//applications/sting/src/ports/graphql/entities:go_default_library",
         "//applications/sting/src/ports/graphql/mutations:go_default_library",
         "//applications/sting/src/ports/graphql/queries:go_default_library",
         "//applications/sting/src/ports/graphql/types:go_default_library",
