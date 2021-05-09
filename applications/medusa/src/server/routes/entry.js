@@ -20,10 +20,27 @@ import { QueryParamProvider } from 'use-query-params';
 import CompatibilityRoute from '@//:modules/routing/CompatibilityRoute';
 import { ChakraProvider } from '@chakra-ui/react';
 import theme from '@//:modules/theme';
+import setCookie from 'set-cookie-parser';
 
 const entry = async (req, res, next) => {
   try {
     let forwardCookies = [];
+
+    let fetchCookies = null;
+
+    // Make sure we include a csrf cookie in our fetchRelay function, since
+    // the initial call does not contain it
+    if (req.cookies._csrf === undefined) {
+      const csrf = setCookie.parse(res.getHeader('set-cookie'), {
+        map: true,
+      })._csrf.value;
+
+      if (req.headers.cookie !== undefined) {
+        fetchCookies = `${req.headers.cookie},csrf=${csrf}`;
+      } else {
+        fetchCookies = `_csrf=${csrf}`;
+      }
+    }
 
     async function fetchRelay(params, variables, _cacheConfig) {
       const response = await axios({
@@ -34,7 +51,7 @@ const entry = async (req, res, next) => {
           'Content-Type': 'application/json',
           'CSRF-Token': req.csrfToken(),
           ...req.headers,
-          cookie: req.headers.cookie,
+          cookie: fetchCookies !== null ? fetchCookies : req.headers.cookie,
         },
         data: {
           operationName: params.name,
@@ -100,16 +117,17 @@ const entry = async (req, res, next) => {
     // Collect relay App data from our routes, so we have faster initial loading times.
     await prepass(App);
 
-    // If no CSRF cookie exists, we set it
-    if (req.cookies._csrf === undefined) {
-      forwardCookies = [
-        ...forwardCookies,
-        `_csrf=${req.csrf.csrfSecret}; Path=/; HttpOnly; Secure`,
-      ];
-    }
-
     // Add any cookies that may have been added in our API requests, and headers from any possible middleware
-    res.setHeader('set-cookie', forwardCookies);
+    if (forwardCookies.length > 0) {
+      if (res.getHeader('set-cookie')) {
+        res.setHeader('set-cookie', [
+          ...forwardCookies,
+          res.getHeader('set-cookie'),
+        ]);
+      } else {
+        res.setHeader('set-cookie', [...forwardCookies]);
+      }
+    }
 
     // Disable caching for this page - it MUST be regenerated with each request
     res.setHeader(

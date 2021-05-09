@@ -56,6 +56,7 @@
     "relay-compiler-plus": "^1.8.3",
     "relay-runtime": "^10.1.2",
     "serialize-javascript": "^5.0.1",
+    "set-cookie-parser": "^2.4.8",
     "subscriptions-transport-ws": "^0.9.18",
     "use-query-params": "^1.2.0",
     "winston": "^3.3.3"

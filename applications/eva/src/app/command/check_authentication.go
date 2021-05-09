@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"net/http"
+	"time"
 
 	"github.com/gocql/gocql"
 	"go.uber.org/zap"
@@ -28,6 +29,13 @@ var (
 )
 
 func (h AuthenticationHandler) Handle(ctx context.Context) (*cookie.Cookie, *user.User, error) {
+
+	_, _ = cookies.SetCookie(ctx, &http.Cookie{
+		Name:    "asd",
+		Value:   "asds",
+		Expires: time.Now().Add(5 * time.Minute),
+	})
+
 	pass := passport.FromContext(ctx)
 
 	// User is logged in
