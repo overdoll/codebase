@@ -20,7 +20,7 @@ import { QueryParamProvider } from 'use-query-params';
 import CompatibilityRoute from '@//:modules/routing/CompatibilityRoute';
 import { ChakraProvider } from '@chakra-ui/react';
 import theme from '@//:modules/theme';
-import setCookie from 'set-cookie-parser';
+import parseCookies from '../utilities/parseCookies';
 
 const entry = async (req, res, next) => {
   try {
@@ -30,15 +30,19 @@ const entry = async (req, res, next) => {
 
     // Make sure we include a csrf cookie in our fetchRelay function, since
     // the initial call does not contain it
-    if (req.cookies._csrf === undefined) {
-      const csrf = setCookie.parse(res.getHeader('set-cookie'), {
-        map: true,
-      })._csrf.value;
+    if (req.cookies._csrf === undefined && res.getHeader('set-cookie')) {
+      const cookies = parseCookies(
+        res.getHeader('set-cookie').join(','),
+      ).filter(ck => ck.cookieName === '_csrf');
 
-      if (req.headers.cookie !== undefined) {
-        fetchCookies = `${req.headers.cookie},csrf=${csrf}`;
-      } else {
-        fetchCookies = `_csrf=${csrf}`;
+      if (cookies.length > 0) {
+        const csrf = cookies[0].cookieValue;
+
+        if (req.headers.cookie !== undefined) {
+          fetchCookies = `${req.headers.cookie},csrf=${csrf}`;
+        } else {
+          fetchCookies = `_csrf=${csrf}`;
+        }
       }
     }
 
