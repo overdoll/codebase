@@ -33,14 +33,30 @@ function FlashProvider({ override, children }: Props): Node {
     }
   };
 
-  const read = key => {
-    if (override) return key ? override.get(key) : override.get();
+  const read = (key, first = true) => {
+    let result;
 
-    return flashState.hasOwnProperty(key) ? flashState[key] : [];
+    if (override) {
+      result = key ? override.get(key) : override.get();
+    } else {
+      result = flashState.hasOwnProperty(key) ? flashState[key] : [];
+    }
+
+    return first ? result[0] : result;
+  };
+
+  const flush = key => {
+    if (override) return key ? override.flush(key) : override.flush();
+
+    if (flashState.hasOwnProperty(key)) {
+      const copy = { ...flashState };
+      delete copy[key];
+      editFlashState(copy);
+    }
   };
 
   return (
-    <FlashContext.Provider value={{ flash, read }}>
+    <FlashContext.Provider value={{ flash, read, flush }}>
       {children}
     </FlashContext.Provider>
   );
@@ -49,7 +65,7 @@ function FlashProvider({ override, children }: Props): Node {
 const useFlash = () => {
   const values = useContext(FlashContext);
 
-  return [values.read, values.flash];
+  return [values.read, values.flash, values.flush];
 };
 
 export { useFlash, FlashProvider };

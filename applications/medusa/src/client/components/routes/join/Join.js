@@ -8,7 +8,16 @@ import Register from '../../register/Register';
 import { useTranslation } from 'react-i18next';
 import { Button, Form, Input, useForm } from '@//:modules/form';
 import Lobby from './components/Lobby';
-import { Center, Flex, useToast } from '@chakra-ui/react';
+import {
+  Center,
+  Flex,
+  useToast,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+  CloseButton,
+} from '@chakra-ui/react';
 import { RootContext } from '../Root';
 import { EMAIL } from '@//:modules/regex';
 import Icon from '@//:modules/content/icon/Icon';
@@ -50,7 +59,7 @@ export default function Join(): Node {
   const instance = useForm<JoinValues>();
 
   const notify = useToast();
-  const [read] = useFlash();
+  const [read, , flush] = useFlash();
 
   // Receiving a subscription response
   const [authInfo, setAuthInfo] = useState({ authListener: null });
@@ -120,10 +129,11 @@ export default function Join(): Node {
     return <Register />;
   }
 
+  const error = read('login.notify');
+
   // Ask user to authenticate
   return (
     <Center mt={8}>
-      {read('login.notify')[0]}
       <Flex w={['fill', 'sm']} direction="column">
         <Icon
           icon={SignBadgeCircle}
@@ -133,6 +143,19 @@ export default function Join(): Node {
           mr="auto"
           mb={5}
         />
+        {error && (
+          <Alert status="error">
+            <AlertIcon />
+            <AlertTitle mr={2}>{error}</AlertTitle>
+            <AlertDescription>{error}</AlertDescription>
+            <CloseButton
+              position="absolute"
+              right="8px"
+              top="8px"
+              onClick={() => flush('login.notify')}
+            />
+          </Alert>
+        )}
         <Form instance={instance} onSubmit={onSubmit}>
           <Input
             title={t('authenticate.form.email.title')}

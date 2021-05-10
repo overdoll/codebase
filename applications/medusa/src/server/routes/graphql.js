@@ -1,6 +1,7 @@
 import { ApolloGateway, RemoteGraphQLDataSource } from '@apollo/gateway';
 import { ApolloServer } from 'apollo-server-express';
 import parseCookies from '../utilities/parseCookies';
+import services from '../config/services';
 
 // https://github.com/apollographql/apollo-server/issues/3099#issuecomment-671127608 (slightly modified)
 // Forwards cookies from services to our gateway (we place implicit trust on our services that they will use headers in a proper manner)
@@ -41,13 +42,14 @@ class CookieDataSource extends RemoteGraphQLDataSource {
       return;
     }
 
-    if (requestContext.context.req.session.passport) {
+    const passport = requestContext.context.req.session.passport;
+
+    if (passport) {
       if (!requestContext.request.extensions) {
         requestContext.request.extensions = {};
       }
 
-      requestContext.request.extensions.passport =
-        requestContext.context.req.session.passport;
+      requestContext.request.extensions.passport = passport;
     }
 
     // Forward all headers
@@ -62,10 +64,7 @@ class CookieDataSource extends RemoteGraphQLDataSource {
 export default config => {
   const gateway = new ApolloGateway({
     path: config.path,
-    serviceList: [
-      { name: 'eva', url: 'http://eva:8000/graphql' },
-      { name: 'sting', url: 'http://sting:8000/graphql' },
-    ],
+    serviceList: services,
     persistedQueries: true,
     buildService({ url }) {
       return new CookieDataSource({ url });
