@@ -21,7 +21,7 @@ export default function flash(options) {
 
 /**
  *
- * Modified Flash: will not flush messages when they are read - we flush them manually on render
+ * Modified Flash: will not flush messages when they are read - we flush them manually when sending back the page (in case there are some backend failures, messages will be displayed on next view)
  *
  * Queue flash `msg` of the given `type`.
  *
@@ -34,9 +34,7 @@ export default function flash(options) {
  *
  *      req.flash.get('info');
  *      // => ['email sent', 'email re-sent']
- *
- *      req.flash.get('info');
- *      // => []
+
  *
  *      req.flash.get();
  *      // => { error: ['email delivery failed'], info: [] }
