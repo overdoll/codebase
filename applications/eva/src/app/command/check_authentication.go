@@ -91,7 +91,7 @@ func (h AuthenticationHandler) Handle(ctx context.Context) (*cookie.Cookie, *use
 	// user has to register
 	if err != nil {
 
-		if err == gocql.ErrNotFound {
+		if err == user.ErrUserNotFound {
 			return ck, nil, nil
 		}
 

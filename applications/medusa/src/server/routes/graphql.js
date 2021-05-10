@@ -50,12 +50,12 @@ class CookieDataSource extends RemoteGraphQLDataSource {
         requestContext.context.req.session.passport;
     }
 
-    if (requestContext.context.req.headers.cookie) {
-      requestContext.request.http?.headers.set(
-        'cookie',
-        requestContext.context.req.headers.cookie,
-      );
-    }
+    // Forward all headers
+    Object.entries(
+      requestContext.context.req.headers || {},
+    ).forEach(([key, value]) =>
+      requestContext.request.http?.headers.set(key, value),
+    );
   }
 }
 

@@ -2,7 +2,6 @@ package user
 
 import (
 	"errors"
-	"fmt"
 	"os"
 )
 
@@ -28,11 +27,8 @@ type User struct {
 var (
 	ErrUsernameNotUnique = errors.New("username is not unique")
 	ErrEmailNotUnique    = errors.New("email is not unique")
+	ErrUserNotFound      = errors.New("user not found")
 )
-
-type NotFoundError struct {
-	Identifier string
-}
 
 func UnmarshalUserFromDatabase(id string, username string, email string, roles []UserRole, verified bool, avatar string) *User {
 	return &User{
@@ -43,10 +39,6 @@ func UnmarshalUserFromDatabase(id string, username string, email string, roles [
 		verified: verified,
 		avatar:   avatar,
 	}
-}
-
-func (e NotFoundError) Error() string {
-	return fmt.Sprintf("user '%s' not found", e.Identifier)
 }
 
 func NewUser(id string, username string, email string) (*User, error) {

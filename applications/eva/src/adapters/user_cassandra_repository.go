@@ -53,7 +53,7 @@ func (r UserRepository) GetUserById(ctx context.Context, id string) (*user.User,
 	if err := queryUser.Get(&userInstance); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, user.NotFoundError{Identifier: id}
+			return nil, user.ErrUserNotFound
 		}
 
 		return nil, fmt.Errorf("select() failed: '%s", err)
@@ -87,7 +87,7 @@ func (r UserRepository) GetUserByEmail(ctx context.Context, email string) (*user
 	if err := queryEmail.Get(&userEmail); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, user.NotFoundError{Identifier: email}
+			return nil, user.ErrUserNotFound
 		}
 
 		return nil, err

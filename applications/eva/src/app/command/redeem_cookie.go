@@ -48,11 +48,11 @@ func (h RedeemCookieHandler) Handle(ctx context.Context, id string) (*cookie.Coo
 
 	currentCookie, err := cookies.ReadCookie(ctx, cookie.OTPKey)
 
+	isSameSession := err == nil
+
 	if err != nil && err != http.ErrNoCookie {
 		return nil, ErrFailedCookieRedeem
 	}
-
-	isSameSession := err != nil
 
 	// Redeem cookie
 	ck, err := h.cr.GetCookieById(ctx, id)
@@ -101,7 +101,7 @@ func (h RedeemCookieHandler) Handle(ctx context.Context, id string) (*cookie.Coo
 	// user has to register
 	if err != nil {
 
-		if err == gocql.ErrNotFound {
+		if err == user.ErrUserNotFound {
 			return ck, nil
 		}
 

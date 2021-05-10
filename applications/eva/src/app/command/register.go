@@ -59,7 +59,7 @@ func (h RegisterHandler) Handle(ctx context.Context, username string) (bool, err
 	}
 
 	// Cookie should have been redeemed at this point, if we are on this command
-	if err := ck.MakeConsumed(); err == nil {
+	if err = ck.MakeConsumed(); err != nil {
 		return false, err
 	}
 
