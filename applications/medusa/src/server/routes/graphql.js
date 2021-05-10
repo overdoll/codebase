@@ -2,7 +2,7 @@ import { ApolloGateway, RemoteGraphQLDataSource } from '@apollo/gateway';
 import { ApolloServer } from 'apollo-server-express';
 import parseCookies from '../utilities/parseCookies';
 
-// https://github.com/apollographql/apollo-server/issues/3099#issuecomment-671127608
+// https://github.com/apollographql/apollo-server/issues/3099#issuecomment-671127608 (slightly modified)
 // Forwards cookies from services to our gateway (we place implicit trust on our services that they will use headers in a proper manner)
 class CookieDataSource extends RemoteGraphQLDataSource {
   /**
@@ -25,6 +25,23 @@ class CookieDataSource extends RemoteGraphQLDataSource {
 
     return response;
   }
+
+  /**
+   * Sends any cookies found within the clients request headers then
+   * pushes them to the requested services context
+   */
+  willSendRequest(requestContext) {
+    if (!requestContext.context.req) {
+      return;
+    }
+
+    if (requestContext.context.req.headers.cookie) {
+      requestContext.request.http?.headers.set(
+        'cookie',
+        requestContext.context.req.headers.cookie,
+      );
+    }
+  }
 }
 
 export default config => {
@@ -44,7 +61,7 @@ export default config => {
   const server = new ApolloServer({
     gateway,
     subscriptions: false,
-    context: ({ res }) => ({ res }),
+    context: ({ res, req }) => ({ res, req }),
   });
 
   server.start().then(r => server.applyMiddleware(config));
