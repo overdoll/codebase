@@ -1,10 +1,15 @@
 package passport
 
 import (
+	"bytes"
 	"context"
 	"encoding/base64"
 	"encoding/json"
+	"io"
+	"io/ioutil"
+	"net/http"
 
+	"github.com/gin-gonic/gin"
 	"github.com/golang/protobuf/proto"
 	"go.uber.org/zap"
 	"overdoll/libraries/helpers"
@@ -12,11 +17,14 @@ import (
 )
 
 const (
-	MutationKey = "PassportContextMutation"
+	MutationHeader = "X-Modified-Passport"
+	MutationKey    = "PassportContextKey"
 )
 
 type Body struct {
-	Passport string `json:"passport"`
+	Extensions struct {
+		Passport string `json:"passport"`
+	}
 }
 
 type Passport struct {
@@ -41,7 +49,13 @@ func (p *Passport) SetUser(id string) {
 }
 
 func (p *Passport) SerializeToBaseString() string {
-	return base64.StdEncoding.EncodeToString([]byte(p.passport.String()))
+	msg, err := proto.Marshal(p.passport)
+
+	if err != nil {
+		return ""
+	}
+
+	return base64.StdEncoding.EncodeToString(msg)
 }
 
 // MutatePassport will add the passport to the context, which will eventually be intercepted by an extension
@@ -56,65 +70,55 @@ func (p *Passport) MutatePassport(ctx context.Context, updateFn func(*Passport) 
 
 	gc := helpers.GinContextFromContext(ctx)
 
-	gc.Request = gc.Request.WithContext(
-		context.WithValue(gc.Request.Context(), MutationKey, p.SerializeToBaseString()),
-	)
+	gc.Writer.Header().Set(MutationHeader, p.SerializeToBaseString())
 
 	return nil
-}
-
-func NewPassport(ctx context.Context) *Passport {
-	gc := helpers.GinContextFromContext(ctx)
-
-	pass := FreshPassport()
-
-	gc.Request = gc.Request.WithContext(
-		context.WithValue(gc.Request.Context(), MutationKey, pass.SerializeToBaseString()),
-	)
-
-	return pass
-}
-
-func GetModifiedPassport(ctx context.Context) string {
-	gc := helpers.GinContextFromContext(ctx)
-
-	raw, _ := gc.Request.Context().Value(MutationKey).(string)
-
-	return raw
 }
 
 func FreshPassport() *Passport {
 	return &Passport{passport: &libraries_passport_v1.Passport{User: nil}}
 }
 
-func FromContext(ctx context.Context) *Passport {
-	gc := helpers.GinContextFromContext(ctx)
-
+func BodyToContext(c *gin.Context) *http.Request {
 	var body Body
+	var buf bytes.Buffer
 
-	err := json.NewDecoder(gc.Request.Body).Decode(&body)
+	tee := io.TeeReader(c.Request.Body, &buf)
+	err := json.NewDecoder(tee).Decode(&body)
+	c.Request.Body = ioutil.NopCloser(&buf)
 
 	if err != nil {
-		return FreshPassport()
+		return nil
 	}
 
-	if body.Passport != "" {
-		sDec, err := base64.StdEncoding.DecodeString(body.Passport)
+	if body.Extensions.Passport != "" {
+		ctx := context.WithValue(c.Request.Context(), MutationKey, body.Extensions.Passport)
+		return c.Request.WithContext(ctx)
+	}
+
+	return nil
+}
+
+func FromContext(ctx context.Context) *Passport {
+	raw, _ := ctx.Value(MutationKey).(string)
+
+	if raw != "" {
+		sDec, err := base64.StdEncoding.DecodeString(raw)
 		if err != nil {
 			zap.S().Errorf("could not decode passport: %s", err)
 			return FreshPassport()
 		}
 
-		var msg *libraries_passport_v1.Passport
+		var msg libraries_passport_v1.Passport
 
-		err = proto.Unmarshal(sDec, msg)
+		err = proto.Unmarshal(sDec, &msg)
 
 		if err != nil {
 			zap.S().Errorf("could not unmarshal passport proto: %s", err)
 			return FreshPassport()
 		}
 
-		return &Passport{passport: msg}
+		return &Passport{passport: &msg}
 	}
 
 	// If there's no passport in the body, we will use a fresh passport so that implementors have something to work with

@@ -79,7 +79,7 @@ if (process.env.APP_DEBUG) {
 // GraphQL Server
 graphql({
   path: '/api/graphql',
-  app: index.use(matchQueryMiddleware(queryMapJson)).use(middleware.passport),
+  app: index.use(matchQueryMiddleware(queryMapJson)),
 });
 
 // Our entrypoint

@@ -13,6 +13,7 @@ class CookieDataSource extends RemoteGraphQLDataSource {
     const response = await super.process({ request, context });
 
     const cookie = response.http?.headers.get('set-cookie');
+    const passport = response.http?.headers.get('X-Modified-Passport');
 
     if (cookie) {
       const cookies = parseCookies(cookie);
@@ -21,6 +22,11 @@ class CookieDataSource extends RemoteGraphQLDataSource {
           context.res.cookie(cookieName, cookieValue, options);
         }
       });
+    }
+
+    // If the service sends back an X-Modified-Passport, we modify the session's passport
+    if (passport) {
+      context.req.session.passport = passport;
     }
 
     return response;
@@ -33,6 +39,15 @@ class CookieDataSource extends RemoteGraphQLDataSource {
   willSendRequest(requestContext) {
     if (!requestContext.context.req) {
       return;
+    }
+
+    if (requestContext.context.req.session.passport) {
+      if (!requestContext.request.extensions) {
+        requestContext.request.extensions = {};
+      }
+
+      requestContext.request.extensions.passport =
+        requestContext.context.req.session.passport;
     }
 
     if (requestContext.context.req.headers.cookie) {

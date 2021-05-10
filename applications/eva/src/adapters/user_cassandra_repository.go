@@ -40,15 +40,15 @@ func NewUserCassandraRepository(session gocqlx.Session) UserRepository {
 
 // GetUserById - Get user using the ID
 func (r UserRepository) GetUserById(ctx context.Context, id string) (*user.User, error) {
-	userInstance := &User{
-		Id: id,
-	}
+	var userInstance User
 
 	queryUser := qb.Select("users").
 		Where(qb.Eq("id")).
 		Query(r.session).
 		Consistency(gocql.LocalOne).
-		BindStruct(userInstance)
+		BindStruct(&User{
+			Id: id,
+		})
 
 	if err := queryUser.Get(&userInstance); err != nil {
 
@@ -73,16 +73,16 @@ func (r UserRepository) GetUserById(ctx context.Context, id string) (*user.User,
 func (r UserRepository) GetUserByEmail(ctx context.Context, email string) (*user.User, error) {
 
 	// get authentication cookie with this ID
-	userEmail := UserEmail{
-		Email: email,
-	}
+	var userEmail UserEmail
 
 	// check if email is in use
 	queryEmail := qb.Select("users_emails").
 		Where(qb.Eq("email")).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(userEmail)
+		BindStruct(&UserEmail{
+			Email: email,
+		})
 
 	if err := queryEmail.Get(&userEmail); err != nil {
 

@@ -49,38 +49,29 @@ func (r *QueryResolver) Authentication(ctx context.Context) (*types.Authenticati
 		return nil, err
 	}
 
-	if ck == nil {
+	if usr != nil {
 		return &types.Authentication{
 			Cookie: nil,
-			User:   nil,
+			User:   &types.User{Username: usr.Username()},
 		}, nil
 	}
 
-	newCookie := &types.Cookie{
-		SameSession: true,
-		Registered:  usr != nil,
-		Redeemed:    ck.Redeemed(),
-		Session:     ck.Session(),
-		Email:       ck.Email(),
-		Invalid:     false,
-	}
-
-	if usr == nil {
+	if ck != nil {
 		return &types.Authentication{
-			Cookie: newCookie,
-			User:   nil,
+			Cookie: &types.Cookie{
+				SameSession: true,
+				Registered:  false,
+				Redeemed:    ck.Redeemed(),
+				Session:     ck.Session(),
+				Email:       ck.Email(),
+				Invalid:     false,
+			},
+			User: nil,
 		}, nil
 	}
 
 	return &types.Authentication{
-		Cookie: &types.Cookie{
-			SameSession: true,
-			Registered:  true,
-			Redeemed:    ck.Redeemed(),
-			Session:     ck.Session(),
-			Email:       ck.Email(),
-			Invalid:     false,
-		},
-		User: &types.User{Username: usr.Username()},
+		Cookie: nil,
+		User:   nil,
 	}, nil
 }

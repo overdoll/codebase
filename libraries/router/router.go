@@ -19,6 +19,7 @@ func NewGinRouter() *gin.Engine {
 
 	// Add gin context to context
 	router.Use(middleware.GinContextToContextMiddleware())
+	router.Use(middleware.PassportToContext())
 
 	return router
 }

@@ -126,7 +126,7 @@ func (r CookieRepository) UpdateCookie(ctx context.Context, instance *cookie.Coo
 
 	// if not expired, then update cookie
 	updateCookie := qb.Update("authentication_cookies").
-		Set("redeemed", "email", "session").
+		Set("redeemed").
 		Where(qb.Eq("cookie"), qb.Eq("email")).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).

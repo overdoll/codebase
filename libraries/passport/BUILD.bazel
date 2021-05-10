@@ -8,6 +8,7 @@ go_library(
     deps = [
         "//libraries/helpers:go_default_library",
         "//libraries/passport/proto:v1_go_proto",
+        "@com_github_gin_gonic_gin//:go_default_library",
         "@com_github_golang_protobuf//proto:go_default_library",
         "@org_uber_go_zap//:go_default_library",
     ],
