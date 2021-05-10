@@ -20,6 +20,8 @@ const index = express();
 // add EJS as the engine
 index.engine('ejs', ejs.renderFile);
 
+index.set('trust proxy', 1);
+
 // Set EJS templating
 index
   .set('views', path.join(__dirname, '../src/server/templates'))
@@ -35,7 +37,7 @@ process.env.NODE_ENV === 'production'
 index.use(i18nextMiddleware.handle(i18next));
 
 // cookie-parser
-index.use(cookieParser(process.env.COOKIE_SECRET));
+index.use(cookieParser(process.env.SESSION_SECRET));
 
 // Generate a Nonce tag
 index.use(middleware.nonce);
@@ -49,11 +51,14 @@ const RedisStore = connect(session);
 index.use(
   session({
     store: new RedisStore({
-      client: redis.createClient({ host: process.env.REDIS_URL }),
+      client: redis.createClient({ host: 'redis-master', db: 1 }),
     }),
     ...sessionCfg,
   }),
 );
+
+// Flash sessions
+index.use(middleware.flash());
 
 // CSRF
 index.use(

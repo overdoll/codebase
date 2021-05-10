@@ -14,13 +14,14 @@ import { renderToString } from 'react-dom/server';
 import createEmotionServer from '@emotion/server/create-instance';
 import createCache from '@emotion/cache';
 
-import createRouter from '@//:modules/routing/createRouter';
+import { createServerRouter } from '@//:modules/routing/createRouter';
 import createMockHistory from '@//:modules/routing/createMockHistory';
 import { QueryParamProvider } from 'use-query-params';
 import CompatibilityRoute from '@//:modules/routing/CompatibilityRoute';
 import { ChakraProvider } from '@chakra-ui/react';
 import theme from '@//:modules/theme';
 import parseCookies from '../utilities/parseCookies';
+import { FlashProvider } from '@//:modules/flash';
 
 const entry = async (req, res, next) => {
   try {
@@ -99,22 +100,25 @@ const entry = async (req, res, next) => {
     const context = {};
 
     // Create a router
-    const router = createRouter(
+    const router = createServerRouter(
       routes,
       createMockHistory({ context, location: req.url }),
       environment,
+      req,
     );
 
     const App = (
-      <ChakraProvider theme={theme}>
-        <RelayEnvironmentProvider environment={environment}>
-          <RoutingContext.Provider value={router.context}>
-            <QueryParamProvider ReactRouterRoute={CompatibilityRoute}>
-              <RouteRenderer />
-            </QueryParamProvider>
-          </RoutingContext.Provider>
-        </RelayEnvironmentProvider>
-      </ChakraProvider>
+      <FlashProvider override={req.flash}>
+        <ChakraProvider theme={theme}>
+          <RelayEnvironmentProvider environment={environment}>
+            <RoutingContext.Provider value={router.context}>
+              <QueryParamProvider ReactRouterRoute={CompatibilityRoute}>
+                <RouteRenderer />
+              </QueryParamProvider>
+            </RoutingContext.Provider>
+          </RelayEnvironmentProvider>
+        </ChakraProvider>
+      </FlashProvider>
     );
 
     // Collect relay App data from our routes, so we have faster initial loading times.
@@ -189,6 +193,7 @@ const entry = async (req, res, next) => {
       csrfToken: req.csrfToken(),
       relayStore: serialize(relayData),
       i18nextStore: serialize(initialI18nStore),
+      flashStore: serialize(req.flash.flush()),
       i18nextLang: req.i18n.language,
     });
   } catch (e) {

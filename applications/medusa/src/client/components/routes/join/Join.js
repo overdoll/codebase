@@ -14,6 +14,7 @@ import { EMAIL } from '@//:modules/regex';
 import Icon from '@//:modules/content/icon/Icon';
 import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/sign-badge-circle-K1i3HA.svg';
 import type { JoinFragment$key } from '@//:artifacts/JoinFragment.graphql';
+import { useFlash } from '@//:modules/flash';
 
 type JoinValues = {
   email: string,
@@ -49,6 +50,7 @@ export default function Join(): Node {
   const instance = useForm<JoinValues>();
 
   const notify = useToast();
+  const [read] = useFlash();
 
   // Receiving a subscription response
   const [authInfo, setAuthInfo] = useState({ authListener: null });
@@ -121,6 +123,7 @@ export default function Join(): Node {
   // Ask user to authenticate
   return (
     <Center mt={8}>
+      {read('login.notify')[0]}
       <Flex w={['fill', 'sm']} direction="column">
         <Icon
           icon={SignBadgeCircle}

@@ -17,6 +17,7 @@ type Props = {
   email: ?string,
 };
 
+// TODO: not resolved because it was deleted - need to re-implement in the future
 const LobbySubscriptionGQL = graphql`
   subscription LobbySubscription {
     authListener {

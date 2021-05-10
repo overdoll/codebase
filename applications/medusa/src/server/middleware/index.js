@@ -3,6 +3,7 @@ import error from './error';
 import nonce from './nonce';
 import passport from './passport';
 import coverage from './coverage';
+import flash from './flash';
 
 export default {
   helmet,
@@ -10,4 +11,5 @@ export default {
   nonce,
   passport,
   coverage,
+  flash,
 };

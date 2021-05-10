@@ -8,7 +8,8 @@ import Register from '../../register/Register';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from '@//:modules/routing';
 import type { TokenQuery } from '@//:artifacts/TokenQuery.graphql';
-import { Center, Flex, Heading, Text, Box } from '@chakra-ui/react';
+import { Box, Center, Flex, Heading, Text } from '@chakra-ui/react';
+import { useFlash } from '@//:modules/flash';
 
 type Props = {
   prepared: {
@@ -36,9 +37,12 @@ export default function Token(props: Props): Node {
   const [t] = useTranslation('token');
   const history = useHistory();
 
+  const [, push] = useFlash();
+
   if (data.redeemCookie.invalid) {
     // Go back to Join page and send notification of invalid token
-    history.push('/join?notify=invalid_token');
+    push('login.notify', 'invalid_token');
+    history.push('/join');
     return 'invalid';
   }
 

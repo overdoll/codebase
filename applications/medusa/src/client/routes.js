@@ -64,7 +64,7 @@ const routes: Array<Route> = [
         ),
         // When user is logged in, we just want to redirect them since they're already "logged in"
         middleware: [
-          (environment, history) => {
+          ({ environment, history }) => {
             const user = getUserFromEnvironment(environment);
 
             if (user !== undefined) {
@@ -86,7 +86,7 @@ const routes: Array<Route> = [
         ),
         // If user is not logged in, they can't post - so we redirect to join page
         middleware: [
-          (environment, history) => {
+          ({ environment, history }) => {
             const user = getUserFromEnvironment(environment);
 
             if (user === undefined) {
@@ -120,7 +120,7 @@ const routes: Array<Route> = [
         },
         // When user is logged in, we don't want them to be able to redeem any other tokens
         middleware: [
-          (environment, history) => {
+          ({ environment, history }) => {
             const user = getUserFromEnvironment(environment);
 
             if (user !== undefined) {

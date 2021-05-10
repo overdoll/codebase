@@ -30,18 +30,18 @@ func NewCookieCassandraRepository(session gocqlx.Session) CookieRepository {
 // GetCookieById - Get authentication cookie by ID
 func (r CookieRepository) GetCookieById(ctx context.Context, id string) (*cookie.Cookie, error) {
 
-	cookieItem := &AuthenticationCookie{Cookie: id}
+	var cookieItem AuthenticationCookie
 
 	queryCookie := qb.Select("authentication_cookies").
 		Where(qb.Eq("cookie")).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(cookieItem)
+		BindStruct(&AuthenticationCookie{Cookie: id})
 
 	if err := queryCookie.Get(&cookieItem); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, cookie.NotFoundError{CookieUUID: id}
+			return nil, cookie.ErrCookieNotFound
 		}
 
 		return nil, fmt.Errorf("select() failed: '%s", err)
@@ -74,7 +74,7 @@ func (r CookieRepository) DeleteCookieById(ctx context.Context, id string) error
 	if err := queryCookie.ExecRelease(); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return cookie.NotFoundError{CookieUUID: id}
+			return cookie.ErrCookieNotFound
 		}
 
 		return fmt.Errorf("delete() failed: '%s", err)
@@ -135,7 +135,7 @@ func (r CookieRepository) UpdateCookie(ctx context.Context, instance *cookie.Coo
 	if err := updateCookie.ExecRelease(); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return cookie.NotFoundError{CookieUUID: instance.Cookie()}
+			return cookie.ErrCookieNotFound
 		}
 
 		return fmt.Errorf("update() failed: '%s", err)

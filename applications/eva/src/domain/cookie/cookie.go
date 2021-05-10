@@ -2,7 +2,6 @@ package cookie
 
 import (
 	"errors"
-	"fmt"
 	"time"
 )
 
@@ -27,15 +26,8 @@ var (
 var (
 	ErrCookieNotRedeemed = errors.New("cookie is not yet redeemed")
 	ErrCookieExpired     = errors.New("cookie is expired")
+	ErrCookieNotFound = errors.New("cookie not found")
 )
-
-type NotFoundError struct {
-	CookieUUID string
-}
-
-func (e NotFoundError) Error() string {
-	return fmt.Sprintf("cookie '%s' not found", e.CookieUUID)
-}
 
 func NewCookie(id string, email string, session string) (*Cookie, error) {
 

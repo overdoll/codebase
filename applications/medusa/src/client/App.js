@@ -3,7 +3,7 @@
  */
 import RouterRenderer from '@//:modules/routing/RouteRenderer';
 import RoutingContext from '@//:modules/routing/RoutingContext';
-import createRouter from '@//:modules/routing/createRouter';
+import { createClientRouter } from '@//:modules/routing/createRouter';
 import routes from './routes';
 import { createBrowserHistory } from 'history';
 import RelayEnvironment from '@//:modules/relay/RelayEnvironment';
@@ -13,7 +13,11 @@ import Bootstrap from './Bootstrap';
 import { QueryParamProvider } from 'use-query-params';
 import CompatibilityRoute from '@//:modules/routing/CompatibilityRoute';
 
-const router = createRouter(routes, createBrowserHistory(), RelayEnvironment);
+const router = createClientRouter(
+  routes,
+  createBrowserHistory(),
+  RelayEnvironment,
+);
 
 export default function App(): Node {
   return (

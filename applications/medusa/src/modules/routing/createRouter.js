@@ -35,17 +35,64 @@ type RouterInstance = {
 // The middleware function can either return true or false - if false, then the route won't be visible to the user and no API
 // call will be made. If true, an API call will be made, and any other resolutions should be done within
 // the component where the API call is made
-const isRouteValid = (environment, route, history) => {
+const isRouteValid = (data, route) => {
   if (route.hasOwnProperty('middleware')) {
     for (let i = 0; i < route.middleware.length; i++) {
       // Middleware check failed
-      if (!route.middleware[i](environment, history)) return false;
+      if (!route.middleware[i](data)) return false;
     }
   }
 
   // Middleware check succeeded or didn't exist
   return true;
 };
+
+// Server router differs from ClientRouter in that it doesn't "subscribe" to the history, and will
+// run "middleware" on each route to determine if the current user is allowed to access it
+function createServerRouter(
+  routes: Array<Route>,
+  history: any,
+  environment: IEnvironment,
+  req,
+) {
+  const data = {
+    environment,
+    flash: req.flash,
+  };
+
+  // Find the initial match and prepare it
+  const initialMatches = matchRouteWithFilter(
+    routes,
+    history,
+    history.location,
+    data,
+  );
+
+  const initialEntries = prepareMatches(initialMatches, environment);
+
+  // The actual object that will be passed on the RoutingContext.
+  const context = {
+    history,
+    get() {
+      return {
+        location: history.location,
+        entries: initialEntries,
+      };
+    },
+    preloadCode(pathname) {
+      // preload just the code for a route, without storing the result
+      matchRoutes(routes, pathname).forEach(({ route }) =>
+        route.component.load(),
+      );
+    },
+    preload(pathname) {
+      prepareMatches(matchRoutes(routes, pathname), environment);
+    },
+  };
+
+  // Return both the context object and a cleanup function
+  return { context };
+}
 
 /**
  * A custom router built from the same primitives as react-router. Each object in `routes`
@@ -56,20 +103,16 @@ const isRouteValid = (environment, route, history) => {
  * Note: History is created by either the index or the client, since we can't use the same history for both.
  *
  */
-export default function createRouter(
+function createClientRouter(
   routes: Array<Route>,
   history: any,
   environment: IEnvironment,
 ): RouterInstance {
   // Find the initial match and prepare it
-  const initialMatches = matchRoute(
-    routes,
-    history,
-    history.location,
-    environment,
-  );
+  const initialMatches = matchRoutes(routes, history.location.pathname);
 
   const initialEntries = prepareMatches(initialMatches, environment);
+
   let currentEntry = {
     location: history.location,
     entries: initialEntries,
@@ -86,7 +129,7 @@ export default function createRouter(
     if (location.pathname === currentEntry.location.pathname) {
       return;
     }
-    const matches = matchRoute(routes, history, location, environment);
+    const matches = matchRoutes(routes, history.location.pathname);
     const entries = prepareMatches(matches, environment);
     const nextEntry = {
       location,
@@ -129,13 +172,13 @@ export default function createRouter(
 /**
  * Match the current location to the corresponding route entry.
  */
-function matchRoute(routes, history, location, environment) {
+function matchRouteWithFilter(routes, history, location, data) {
   const unparsedRoutes = matchRoutes(routes, location.pathname);
 
   // Recursively parse route, and use route environment source as a helper
   // Make sure that we are allowed to be in a route that we are using
   return unparsedRoutes.filter(route =>
-    isRouteValid(environment, route.route, history),
+    isRouteValid({ ...data, history, location }, route.route),
   );
 }
 
@@ -194,3 +237,5 @@ function convertPreparedToQueries(environment, prepare, params, index) {
 }
 
 export type { Router };
+
+export { createClientRouter, createServerRouter };

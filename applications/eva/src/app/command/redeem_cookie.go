@@ -59,11 +59,11 @@ func (h RedeemCookieHandler) Handle(ctx context.Context, id string) (*cookie.Coo
 
 	if err != nil {
 
-		if err == gocql.ErrNotFound {
+		if err == cookie.ErrCookieNotFound {
 			return nil, nil
 		}
 
-		zap.S().Errorf("failed to get cookie: %s", err)
+		zap.S().Errorf("failed to get cookie: %s", err == gocql.ErrNotFound)
 		return nil, ErrFailedCookieRedeem
 	}
 

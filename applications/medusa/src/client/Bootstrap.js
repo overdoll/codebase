@@ -9,6 +9,7 @@ import { RelayEnvironmentProvider } from 'react-relay/hooks';
 import createCache from '@emotion/cache';
 import { ChakraProvider } from '@chakra-ui/react';
 import theme from '@//:modules/theme';
+import { FlashProvider } from '@//:modules/flash';
 
 type Props = {
   environment: typeof RelayEnvironment,
@@ -30,14 +31,16 @@ window.__webpack_nonce__ = nonce;
  */
 export default function Bootstrap(props: Props): Node {
   return (
-    <CacheProvider value={cache}>
-      <I18nextProvider i18n={props.i18next}>
-        <ChakraProvider theme={theme}>
-          <RelayEnvironmentProvider environment={props.environment}>
-            {props.children}
-          </RelayEnvironmentProvider>
-        </ChakraProvider>
-      </I18nextProvider>
-    </CacheProvider>
+    <FlashProvider>
+      <CacheProvider value={cache}>
+        <I18nextProvider i18n={props.i18next}>
+          <ChakraProvider theme={theme}>
+            <RelayEnvironmentProvider environment={props.environment}>
+              {props.children}
+            </RelayEnvironmentProvider>
+          </ChakraProvider>
+        </I18nextProvider>
+      </CacheProvider>
+    </FlashProvider>
   );
 }
