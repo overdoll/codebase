@@ -31,7 +31,7 @@ func (h AuthenticationHandler) Handle(ctx context.Context) (*cookie.Cookie, *use
 	gc := helpers.GinContextFromContext(ctx)
 
 	pass := passport.FromContext(ctx)
-	
+
 	// User is logged in
 	if pass.IsAuthenticated() {
 

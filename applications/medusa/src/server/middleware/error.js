@@ -6,6 +6,9 @@ export default (err, req, res, next) => {
   // If in debug, we are OK to show it. Otherwise, we just show "Internal Server Error"
   if (process.env.APP_DEBUG === 'true') {
     logger.error(`${err.stack}`);
+
+    console.log(err);
+
     next(err);
   } else {
     logger.error({
