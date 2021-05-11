@@ -144,7 +144,7 @@ export default function Join(): Node {
           mb={5}
         />
         {error && (
-          <Alert status="error">
+          <Alert mb={2} status="error">
             <AlertIcon />
             <AlertTitle mr={2}>{error}</AlertTitle>
             <AlertDescription>{error}</AlertDescription>
