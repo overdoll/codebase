@@ -1,0 +1,18 @@
+kind: Project
+name: overdoll
+environments:
+  - name: dev
+    defaultNamespace: user-${local.username}
+    providers:
+      - name: kubernetes
+        context: nikita@remote.us-east-1.eksctl.io
+defaultEnvironment: dev
+providers:
+  - name: kubernetes
+    buildMode: local-docker
+    environments:
+      - dev
+    deploymentRegistry:
+      hostname: localhost
+      port: 5000
+      namespace: _

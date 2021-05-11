@@ -28,6 +28,9 @@ coverage
 .ijwb
 .idea.bak
 .idea
+.garden
 
 yarn-error.log
+error.log
 telepresence.log
+logs.log

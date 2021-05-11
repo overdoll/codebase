@@ -1,8 +1,0 @@
-image:
-  repository: eva-image
-
-nameOverride: "eva"
-
-service: true
-http: true
-grpc: true

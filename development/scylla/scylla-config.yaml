@@ -1,11 +1,9 @@
 kind: ConfigMap
 metadata:
   name: scylla-config
-  namespace: scylla
 apiVersion: v1
 data:
   scylla.yaml: |-
-
     api_address: 127.0.0.1
     api_doc_dir: /opt/scylladb/api/api-doc/
     api_port: 10000
