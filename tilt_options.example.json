@@ -1,0 +1,5 @@
+{
+  "registry": "localhost:5000",
+  "namespace": "nikita",
+  "context": "nikita@remote.us-east-1.eksctl.io"
+}

@@ -29,7 +29,7 @@ func NewBootstrap(ctx context.Context) (Bootstrap, error) {
 	err = godotenv.Load(directory + "/.env")
 
 	if err != nil {
-		log.Fatal("error loading .env file")
+		// ignore errors for loading env variables
 	}
 
 	logger, err := zap.NewProduction()

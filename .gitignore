@@ -29,8 +29,10 @@ coverage
 .idea.bak
 .idea
 .garden
+tilt_options.json
 
 yarn-error.log
 error.log
 telepresence.log
 logs.log
+tilt_options.json

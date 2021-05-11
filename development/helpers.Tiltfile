@@ -1,4 +1,12 @@
-# -*- mode: Python -*-
+settings = read_json("../tilt_options.json", default = {})
+
+allow_k8s_contexts(settings.get("context", "overdoll"))
+
+user = settings.get("namespace", "")
+
+default_registry(settings.get("registry", "localhost:5000"), single_name = "%s/dev" % user)
+
+ns = "user-%s" % user
 
 load("ext://restart_process", "custom_build_with_restart")
 
@@ -42,9 +50,10 @@ def build_applications(applications, dependencies):
         # Deploy helm chart for application
         k8s_yaml(
             helm(
-                "development/charts/default-service",
+                "development/service",
                 name = item,
                 values = ["development/services/" + item + "/values.yaml"],
+                namespace = ns,
             ),
         )
 
@@ -103,3 +112,6 @@ def build_applications(applications, dependencies):
                 k8s_resource(item, resource_deps = [], trigger_mode = TRIGGER_MODE_MANUAL, auto_init = False)
             else:
                 k8s_resource(item, resource_deps = [])
+
+def get_namespace():
+    return ns

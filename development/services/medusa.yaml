@@ -3,7 +3,15 @@ image:
 
 nameOverride: "medusa"
 
-containerPort: 8081
+service: true
+http: true
 
-service:
-  port: 8000
+env:
+  PUBLIC_PATH: https://overdoll.test/
+  CLIENT_PUBLIC_PATH: https://overdoll.test/
+  PUBLIC_URL: /build
+  APP_DEBUG: true
+  PORT: 8000
+  SESSION_SECRET: secret
+  REDIS_URL: redis-master
+  NODE_TLS_REJECT_UNAUTHORIZED: 0
