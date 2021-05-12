@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# a stolen copy of https://github.com/bazelbuild/continuous-integration/blob/master/buildkite/bazelci.py
+# modified for us
 
 import multiprocessing
 import os
@@ -29,7 +31,7 @@ def common_build_flags():
         "--jobs=" + concurrent_jobs(),
         "--announce_rc",
         "--experimental_repository_cache_hardlinks",
-        "--disk_cache=",
+        # "--disk_cache=",
         "--sandbox_tmpfs_path=/tmp"
     ]
 
