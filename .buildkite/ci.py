@@ -182,7 +182,7 @@ def main(argv=None):
         build_targets = [
             "//applications/eva:eva",
             "//applications/buffer:buffer",
-            "//applications/sting:string",
+            "//applications/sting:sting",
             "//applications/medusa:bundle"
         ]
 
