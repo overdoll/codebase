@@ -144,7 +144,7 @@ def print_expanded_group(name):
 
 def main(argv=None):
     try:
-        execute_bazel_build(None, "bazel", [], [], [])
+        execute_bazel_build(None, "bazel", [], ["//applications/eva:eva"], [])
     except BuildkiteException as e:
         eprint(str(e))
         return 1
