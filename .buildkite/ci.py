@@ -20,6 +20,10 @@ def concurrent_jobs():
     return str(multiprocessing.cpu_count())
 
 
+def concurrent_test_jobs():
+    return "12"
+
+
 def common_build_flags():
     flags = [
         "--show_progress_rate_limit=5",
@@ -102,7 +106,6 @@ def compute_flags(flags, incompatible_flags, bazel_binary, enable_remote_cache=F
 def execute_bazel_build(
         bazel_version, bazel_binary, flags, targets, incompatible_flags
 ):
-    print_collapsed_group(":bazel: Computing flags for build step")
     aggregated_flags = compute_flags(
         flags,
         incompatible_flags,
@@ -121,6 +124,40 @@ def execute_bazel_build(
         )
     except subprocess.CalledProcessError as e:
         handle_bazel_failure(e, "build")
+
+
+def execute_bazel_test(
+        bazel_version,
+        bazel_binary,
+        flags,
+        targets,
+        monitor_flaky_tests,
+        incompatible_flags,
+):
+    aggregated_flags = [
+        "--flaky_test_attempts=3",
+        "--build_tests_only",
+        "--local_test_jobs=" + concurrent_test_jobs(),
+    ]
+
+    aggregated_flags += compute_flags(
+        flags,
+        incompatible_flags,
+        bazel_binary,
+        enable_remote_cache=not monitor_flaky_tests,
+    )
+
+    print_expanded_group(":bazel: Test ({})".format(bazel_version))
+    try:
+        execute_command(
+            [bazel_binary]
+            + ["test"]
+            + aggregated_flags
+            + ["--"]
+            + targets
+        )
+    except subprocess.CalledProcessError as e:
+        handle_bazel_failure(e, "test")
 
 
 def handle_bazel_failure(exception, action):
@@ -144,7 +181,8 @@ def print_expanded_group(name):
 
 def main(argv=None):
     try:
-        execute_bazel_build(None, "bazel", [], ["//applications/eva:eva"], [])
+        execute_command(["pwd"])
+        execute_bazel_build("4.0.0", "bazel", [], ["//applications/eva:eva"], [])
     except BuildkiteException as e:
         eprint(str(e))
         return 1
