@@ -1,7 +1,0 @@
-service:
-  enabled: true
-  type: ClusterIP
-
-rbac:
-  enabled: true
-  namespaced: true

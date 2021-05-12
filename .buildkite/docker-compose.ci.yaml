@@ -106,14 +106,14 @@ services:
       - scylla
     environment:
       - CASSANDRA_SEEDS=cassandra
-      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development.yaml
+      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/temporal.yaml
     image: temporalio/auto-setup:1.9.2
     networks:
       - network
     ports:
       - 7233:7233
     volumes:
-      - ./development/dynamicconfig:/etc/temporal/config/dynamicconfig
+      - ./temporal.yaml:/etc/temporal/config/dynamicconfig/temporal.yaml
 
   scylla:
     image: "scylladb/scylla:4.3.1"
