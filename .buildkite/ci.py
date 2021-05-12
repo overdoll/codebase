@@ -92,16 +92,16 @@ def compute_flags(flags, incompatible_flags, enable_remote_cache=False):
     if incompatible_flags:
         aggregated_flags += incompatible_flags
 
-    # for i, flag in enumerate(aggregated_flags):
-    #     if "$HOME" in flag:
-    #         home = "/var/lib/buildkite-agent"
-    #         aggregated_flags[i] = flag.replace("$HOME", home)
-    #     if "$OUTPUT_BASE" in flag:
-    #         output_base = execute_command_and_get_output(
-    #             [BAZEL_BINARY] + ["info", "output_base"],
-    #             print_output=False,
-    #         ).strip()
-    #         aggregated_flags[i] = flag.replace("$OUTPUT_BASE", output_base)
+    for i, flag in enumerate(aggregated_flags):
+        if "$HOME" in flag:
+            home = "/var/lib/buildkite-agent"
+            aggregated_flags[i] = flag.replace("$HOME", home)
+        if "$OUTPUT_BASE" in flag:
+            output_base = execute_command_and_get_output(
+                [BAZEL_BINARY] + ["info", "output_base"],
+                print_output=False,
+            ).strip()
+            aggregated_flags[i] = flag.replace("$OUTPUT_BASE", output_base)
 
     return aggregated_flags
 
@@ -126,6 +126,8 @@ def execute_bazel_build(
         )
     except subprocess.CalledProcessError as e:
         handle_bazel_failure(e, "build")
+    finally:
+        handle_bazel_failure_generic("build")
 
 
 def execute_bazel_test(
@@ -156,10 +158,16 @@ def execute_bazel_test(
         )
     except subprocess.CalledProcessError as e:
         handle_bazel_failure(e, "test")
+    finally:
+        handle_bazel_failure_generic("build")
 
 
 def handle_bazel_failure(exception, action):
     BuildkiteException("bazel {0} failed with exit code {1}".format(action, exception.returncode))
+
+
+def handle_bazel_failure_generic(action):
+    BuildkiteException("bazel {0} failed".format(action))
 
 
 def eprint(*args, **kwargs):

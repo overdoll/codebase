@@ -97,6 +97,7 @@ _RUNTIME_DEPS = [
     "@npm//@streamlinehq/streamlinehq",
     "@npm//babel-plugin-inline-react-svg",
     "@npm//svgo",
+    "@npm//i18next-http-backend",
 ]
 
 TEST_DEPS = [
