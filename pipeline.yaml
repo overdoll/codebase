@@ -1,0 +1,22 @@
+steps:
+  - label: "Begin"
+    command: "python3.6 ./ci/ci.py runner"
+    agents:
+      queue: "default"
+    plugins:
+      - docker#v3.5.0:
+          image: "gcr.io/bazel-public/ubuntu1604-java8"
+          always-pull: True
+          network: "host"
+          privileged: True
+          propagate-environment: True
+          propagate-uid-gid: True
+          volumes:
+            - /etc/group:/etc/group:ro
+            - /etc/passwd:/etc/passwd:ro
+            - /opt:/opt:ro
+            - /var/lib/buildkite-agent:/var/lib/buildkite-agent
+            - /var/run/docker.sock:/var/run/docker.sock
+
+  - label: "Hello"
+    command: "echo 'hello'"
