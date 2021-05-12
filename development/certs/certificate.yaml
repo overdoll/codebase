@@ -1,0 +1,18 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: selfsigned-crt
+spec:
+  secretName: overdoll-tls
+  duration: 170000h
+  renewBefore: 72h
+  issuerRef:
+    kind: Issuer
+    name: selfsigned
+  commonName: "overdoll.test"
+  isCA: true
+  dnsNames:
+    - "*.overdoll.test"
+    - "overdoll.test"
+    - "*.dollycdn.test"
+    - "dollycdn.test"

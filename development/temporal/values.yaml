@@ -13,7 +13,7 @@ server:
     pullPolicy: IfNotPresent
 
   kafka:
-    host: kafka-kafka-brokers.kafka.svc
+    host: kafka-kafka-brokers
 
   # Global default settings (can be overridden per service)
   replicaCount: 1
@@ -249,7 +249,7 @@ schema:
 
 elasticsearch:
   enabled: false
-  external: true
+  external: false
   host: "elasticsearch-master-headless.elasticsearch.svc"
   port: "9200"
   version: "v7"

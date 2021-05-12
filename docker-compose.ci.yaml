@@ -1,0 +1,140 @@
+version: '3.5'
+services:
+  sting-http:
+    image: bazel/applications/sting:sting-image
+    working_dir: ./applications/sting
+    networks:
+      - network
+    command: >
+      ./sting_ db migrate
+      && ./sting_ db seed
+      && ./sting_ index all
+      && ./sting_ http
+    ports:
+      - "127.0.0.1:3010:$PORT"
+    env_file:
+      - .env.ci
+    depends_on:
+      - elasticsearch
+      - temporal
+
+  buffer-http:
+    image: bazel/applications/buffer:buffer-image
+    working_dir: ./applications/buffer
+    networks:
+      - network
+    command: >
+      ./buffer_ http
+    ports:
+      - "127.0.0.1:3010:$PORT"
+    env_file:
+      - .env.ci
+    depends_on:
+      - temporal
+
+  sting-worker:
+    image: bazel/applications/sting:sting-image
+    working_dir: ./applications/sting
+    networks:
+      - network
+    command: >
+      ./sting_ worker
+    ports:
+      - "127.0.0.1:3010:$PORT"
+    env_file:
+      - .env.ci
+    depends_on:
+      - sting-http
+
+  eva-http:
+    image: bazel/applications/eva:eva-image
+    working_dir: ./applications/eva
+    networks:
+      - network
+    command: >
+      ./eva_ db migrate
+      && ./eva_ db seed
+      && ./eva_ http
+    ports:
+      - "127.0.0.1:3020:$PORT"
+    env_file:
+      - .env.ci
+    depends_on:
+      - scylla
+      - elasticsearch
+
+  eva-grpc:
+    image: bazel/applications/eva:eva-image
+    working_dir: ./applications/eva
+    command: >
+      ./eva_ grpc
+    ports:
+      - "127.0.0.1:3030:$PORT"
+    env_file:
+      - .env.ci
+    networks:
+      - network
+    depends_on:
+      - eva-http
+
+  redis:
+    image: "redis:alpine"
+    networks:
+      - network
+
+  temporal:
+    container_name: temporal
+    restart: unless-stopped
+    depends_on:
+      - scylla
+    environment:
+      - CASSANDRA_SEEDS=cassandra
+      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development.yaml
+    image: temporalio/auto-setup:1.9.2
+    networks:
+      - network
+    ports:
+      - 7233:7233
+    volumes:
+      - ./development/dynamicconfig:/etc/temporal/config/dynamicconfig
+
+  scylla:
+    image: "scylladb/scylla:4.3.1"
+    container_name: scylla
+    restart: unless-stopped
+    networks:
+      - network
+    volumes:
+      - ./target:/var/lib/scylla
+    ports:
+      - "127.0.0.1:9042:9042"
+      - "127.0.0.1:9160:9160"
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.12.1
+    container_name: elasticsearch
+    environment:
+      - xpack.security.enabled=false
+      - discovery.type=single-node
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+      - 9300:9300
+    restart: unless-stopped
+    networks:
+      - network
+
+networks:
+  net:
+    driver: bridge
+    name: network

@@ -19,6 +19,7 @@ func NewWorker(app app.Application) worker.Worker {
 
 	c, err := client.NewClient(client.Options{
 		HostPort: os.Getenv("TEMPORAL_URL"),
+		Namespace: os.Getenv("TEMPORAL_NAMESPACE"),
 	})
 
 	if err != nil {

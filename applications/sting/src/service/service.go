@@ -58,7 +58,8 @@ func createApplication(ctx context.Context, eva command.EvaService) app.Applicat
 	}
 
 	c, err := client.NewClient(client.Options{
-		HostPort: os.Getenv("TEMPORAL_URL"),
+		HostPort:  os.Getenv("TEMPORAL_URL"),
+		Namespace: os.Getenv("TEMPORAL_NAMESPACE"),
 	})
 
 	if err != nil {

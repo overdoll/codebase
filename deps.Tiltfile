@@ -2,7 +2,12 @@ load("./development/helpers.Tiltfile", "get_namespace")
 load("ext://helm_remote", "helm_remote")
 load("ext://namespace", "namespace_create", "namespace_inject")
 
+# TODO: eventually this will be handled by a spinnaker pipeline
+
 namespace_create(get_namespace())
+
+# Should be done first
+# helm install traefik traefik/traefik --values ./development/traefik/values.yaml - needs to be done initially
 
 helm_remote(
     "redis",
@@ -21,44 +26,13 @@ helm_remote(
     namespace = get_namespace(),
 )
 
+k8s_yaml(namespace_inject(read_file("./development/certs/issuer.yaml"), get_namespace()))
+k8s_yaml(namespace_inject(read_file("./development/certs/certificate.yaml"), get_namespace()))
+
 k8s_yaml(namespace_inject(read_file("./development/scylla/role.yaml"), get_namespace()))
 k8s_yaml(namespace_inject(read_file("./development/scylla/scylla-config.yaml"), get_namespace()))
 k8s_yaml(namespace_inject(read_file("./development/scylla/cluster.yaml"), get_namespace()))
 k8s_yaml(namespace_inject(read_file("./development/minio/minio.yaml"), get_namespace()))
-k8s_yaml(namespace_inject(read_file("./development/kafka/persistent.yaml"), get_namespace()))
+#k8s_yaml(namespace_inject(read_file("./development/kafka/persistent.yaml"), get_namespace()))
 
-k8s_yaml(
-    helm(
-        "./development/service",
-        name = "eva",
-        values = ["./development/services/eva.yaml"],
-        namespace = get_namespace(),
-    ),
-)
-
-k8s_yaml(
-    helm(
-        "./development/service",
-        name = "sting",
-        values = ["./development/services/sting.yaml"],
-        namespace = get_namespace(),
-    ),
-)
-
-k8s_yaml(
-    helm(
-        "./development/service",
-        name = "buffer",
-        values = ["./development/services/buffer.yaml"],
-        namespace = get_namespace(),
-    ),
-)
-
-k8s_yaml(
-    helm(
-        "./development/service",
-        name = "medusa",
-        values = ["./development/services/medusa.yaml"],
-        namespace = get_namespace(),
-    ),
-)
+k8s_yaml(namespace_inject(read_file("./development/traefik/ingress.yaml"), get_namespace()))
