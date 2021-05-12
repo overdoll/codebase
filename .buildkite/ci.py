@@ -7,6 +7,9 @@ import os
 import subprocess
 import sys
 
+BAZEL_VERSION = "4.0.0"
+BAZEL_BINARY = "bazel"
+
 
 class BuildkiteException(Exception):
     """
@@ -35,7 +38,7 @@ def common_build_flags():
         "--jobs=" + concurrent_jobs(),
         "--announce_rc",
         "--experimental_repository_cache_hardlinks",
-        # "--disk_cache=",
+        "--disk_cache=",
         "--sandbox_tmpfs_path=/tmp"
     ]
 
@@ -81,7 +84,7 @@ def execute_command_and_get_output(args, shell=False, fail_if_nonzero=True, prin
     return process.stdout
 
 
-def compute_flags(flags, incompatible_flags, bazel_binary, enable_remote_cache=False):
+def compute_flags(flags, incompatible_flags, enable_remote_cache=False):
     aggregated_flags = common_build_flags()
     if not remote_enabled(flags):
         aggregated_flags += remote_caching_flags()
@@ -89,34 +92,33 @@ def compute_flags(flags, incompatible_flags, bazel_binary, enable_remote_cache=F
     if incompatible_flags:
         aggregated_flags += incompatible_flags
 
-    for i, flag in enumerate(aggregated_flags):
-        if "$HOME" in flag:
-            home = "/var/lib/buildkite-agent"
-            aggregated_flags[i] = flag.replace("$HOME", home)
-        if "$OUTPUT_BASE" in flag:
-            output_base = execute_command_and_get_output(
-                [bazel_binary] + ["info", "output_base"],
-                print_output=False,
-            ).strip()
-            aggregated_flags[i] = flag.replace("$OUTPUT_BASE", output_base)
+    # for i, flag in enumerate(aggregated_flags):
+    #     if "$HOME" in flag:
+    #         home = "/var/lib/buildkite-agent"
+    #         aggregated_flags[i] = flag.replace("$HOME", home)
+    #     if "$OUTPUT_BASE" in flag:
+    #         output_base = execute_command_and_get_output(
+    #             [BAZEL_BINARY] + ["info", "output_base"],
+    #             print_output=False,
+    #         ).strip()
+    #         aggregated_flags[i] = flag.replace("$OUTPUT_BASE", output_base)
 
     return aggregated_flags
 
 
 def execute_bazel_build(
-        bazel_version, bazel_binary, flags, targets, incompatible_flags
+        flags, targets, incompatible_flags
 ):
     aggregated_flags = compute_flags(
         flags,
         incompatible_flags,
-        bazel_binary,
         enable_remote_cache=True,
     )
 
-    print_expanded_group(":bazel: Build ({})".format(bazel_version))
+    print_expanded_group(":bazel: Build ({})".format(BAZEL_VERSION))
     try:
         execute_command(
-            [bazel_binary]
+            [BAZEL_BINARY]
             + ["build"]
             + aggregated_flags
             + ["--"]
@@ -127,11 +129,8 @@ def execute_bazel_build(
 
 
 def execute_bazel_test(
-        bazel_version,
-        bazel_binary,
         flags,
         targets,
-        monitor_flaky_tests,
         incompatible_flags,
 ):
     aggregated_flags = [
@@ -143,14 +142,13 @@ def execute_bazel_test(
     aggregated_flags += compute_flags(
         flags,
         incompatible_flags,
-        bazel_binary,
-        enable_remote_cache=not monitor_flaky_tests,
+        enable_remote_cache=True,
     )
 
-    print_expanded_group(":bazel: Test ({})".format(bazel_version))
+    print_expanded_group(":bazel: Test ({})".format(BAZEL_VERSION))
     try:
         execute_command(
-            [bazel_binary]
+            [BAZEL_BINARY]
             + ["test"]
             + aggregated_flags
             + ["--"]
@@ -181,8 +179,22 @@ def print_expanded_group(name):
 
 def main(argv=None):
     try:
-        execute_command(["pwd"])
-        execute_bazel_build("4.0.0", "bazel", [], ["//applications/eva:eva"], [])
+        build_targets = [
+            "//applications/eva:eva",
+            "//applications/buffer:buffer",
+            "//applications/sting:string",
+            "//applications/medusa:bundle"
+        ]
+
+        execute_bazel_build([], build_targets, [])
+
+        test_targets = [
+
+        ]
+
+        execute_bazel_test([], test_targets, [])
+
+
     except BuildkiteException as e:
         eprint(str(e))
         return 1
