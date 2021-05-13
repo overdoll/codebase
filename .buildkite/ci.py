@@ -198,15 +198,36 @@ def main(argv=None):
         execute_bazel_build([], build_targets, [])
 
         test_targets = [
-            "...//applications/eva",
-            "...//applications/buffer",
-            "...//applications/sting",
+            "//applications/eva/src/app/...",
+            "//applications/eva/src/domain/...",
+            "//applications/eva/src/ports/...",
+
+            "//applications/buffer/src/app/...",
+            "//applications/buffer/src/domain/...",
+            "//applications/buffer/src/ports/...",
+
+            "//applications/sting/src/app/...",
+            "//applications/sting/src/domain/...",
+            "//applications/sting/src/ports/...",
+
             "//applications/medusa:unit",
             "//applications/medusa:integration",
         ]
 
         # unit + integration tests for frontend, unit tests for golang
         execute_bazel_test([], test_targets, [])
+
+        # tests under 'adapters' and 'service' usually require 3rd party deps (other services, db, etc...)
+        test_targets_integration = [
+            "//applications/eva/src/adapters/...",
+            "//applications/eva/src/service/...",
+
+            "//applications/buffer/src/adapters/...",
+            "//applications/buffer/src/service/...",
+
+            "//applications/sting/src/adapters/...",
+            "//applications/sting/src/service/...",
+        ]
 
 
     except BuildkiteException as e:
