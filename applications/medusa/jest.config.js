@@ -7,6 +7,8 @@ module.exports = {
   reporters: [
     ['jest-silent-reporter', { showWarnings: true, showPaths: true }],
   ],
+  collectCoverage: true,
+  coverageReporters: ['text'],
   moduleNameMapper: {
     '^@//:modules(.*)$': '<rootDir>/src/modules$1',
     '^@//:artifacts(.*)$': '<rootDir>/src/__generated__$1',

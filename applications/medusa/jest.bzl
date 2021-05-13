@@ -8,9 +8,6 @@ def jest_test(name, srcs, deps, jest_config, file_extension, **kwargs):
         "--ci",
         "--colors",
         "--verbose",
-        "--reporters=jest-silent-reporter",
-        "--collectCoverage",
-        "--coverageReporters=text",
     ]
 
     templated_args.extend(["--config", "$(rootpath %s)" % jest_config])
@@ -19,7 +16,7 @@ def jest_test(name, srcs, deps, jest_config, file_extension, **kwargs):
         if src.endswith(file_extension):
             templated_args.extend(["--runTestsByPath", "%s" % src])
 
-    data = srcs + deps + ["reporter.js"]
+    data = srcs + deps
     _jest_test(
         name = name,
         data = data,
