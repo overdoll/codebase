@@ -122,13 +122,8 @@ def get_json_profile_flags(out_file):
 
 
 def calculate_flags(task_config_key, json_profile_key, tmpdir, test_env_vars):
-    include_json_profile = []
-
-    json_profile_flags = []
-    json_profile_out = None
-    if json_profile_key in include_json_profile:
-        json_profile_out = os.path.join(tmpdir, "{}.profile.gz".format(json_profile_key))
-        json_profile_flags = get_json_profile_flags(json_profile_out)
+    json_profile_out = os.path.join(tmpdir, "{}.profile.gz".format(json_profile_key))
+    json_profile_flags = get_json_profile_flags(json_profile_out)
 
     flags = []
     flags += json_profile_flags
@@ -298,11 +293,11 @@ def eprint(*args, **kwargs):
 
 
 def print_collapsed_group(name):
-    eprint("\n--- {0}\n".format(name))
+    eprint("\n\n--- {0}\n\n".format(name))
 
 
 def print_expanded_group(name):
-    eprint("\n+++ {0}\n".format(name))
+    eprint("\n\n+++ {0}\n\n".format(name))
 
 
 def get_bazelisk_cache_directory():
@@ -327,8 +322,14 @@ def main(argv=None):
             "//applications/medusa:bundle"
         ]
 
+        test_env_vars = ["HOME"]
+
+        build_flags, json_profile_out_build = calculate_flags(
+            "build_flags", "build", tmpdir, test_env_vars
+        )
+
         # Regular build
-        execute_bazel_build(":bazel: Building binaries & bundling application", [], build_targets, [])
+        execute_bazel_build(":bazel: Building binaries & bundling application", build_flags, build_targets, [])
 
         test_targets = [
             "//applications/eva/src/app/...",
@@ -346,7 +347,6 @@ def main(argv=None):
             "//applications/medusa:unit",
             "//applications/medusa:integration",
         ]
-        test_env_vars = ["HOME"]
 
         test_flags, json_profile_out_test = calculate_flags(
             "test_flags", "test", tmpdir, test_env_vars

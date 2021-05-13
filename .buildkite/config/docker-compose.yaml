@@ -113,7 +113,7 @@ services:
     ports:
       - 7233:7233
     volumes:
-      - ./config/temporal.yaml:/etc/temporal/config/temporal.yaml
+      - ./services/temporal.yaml:/etc/temporal/config/temporal.yaml
 
   scylla:
     image: "scylladb/scylla:4.3.1"
