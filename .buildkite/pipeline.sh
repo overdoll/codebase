@@ -3,7 +3,7 @@
 # exit immediately on failure, or if an undefined variable is used
 set -eu
 
-echo whoami
+whoami
 
 sudo usermod -a -G docker $USER
 
