@@ -3,7 +3,7 @@
 # exit immediately on failure, or if an undefined variable is used
 set -eu
 
-groups
+groups buildkite-agent
 
 usermod -a -G docker buildkite-agent
 
