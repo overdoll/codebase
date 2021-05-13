@@ -134,7 +134,6 @@ def execute_bazel_test(
     aggregated_flags = [
         "--flaky_test_attempts=default",
         "--build_tests_only",
-        "--test_output=errors",
         "--local_test_jobs=" + concurrent_jobs(),
     ]
 
