@@ -156,8 +156,6 @@ def execute_bazel_build(
         )
     except subprocess.CalledProcessError as e:
         handle_bazel_failure(e, "build")
-    finally:
-        handle_bazel_failure_generic("build")
 
 
 def execute_bazel_test(
