@@ -198,9 +198,9 @@ def main(argv=None):
         execute_bazel_build([], build_targets, [])
 
         test_targets = [
-            "//applications/eva...",
-            "//applications/buffer...",
-            "//applications/sting...",
+            "...//applications/eva",
+            "...//applications/buffer",
+            "...//applications/sting",
             "//applications/medusa:unit",
             "//applications/medusa:integration",
         ]
