@@ -7,6 +7,7 @@ import json
 import multiprocessing
 import os
 import random
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -297,75 +298,87 @@ def get_bazelisk_cache_directory():
     return os.path.join(os.environ.get("HOME"), ".cache", "bazelisk")
 
 
+def terminate_background_process(process):
+    if process:
+        process.terminate()
+        try:
+            process.wait(timeout=10)
+        except subprocess.TimeoutExpired:
+            process.kill()
+
+
 def execute_commands():
     tmpdir = tempfile.mkdtemp()
 
-    build_targets = [
-        "//applications/eva:eva",
-        "//applications/buffer:buffer",
-        "//applications/sting:sting",
-        "//applications/medusa:bundle"
-    ]
-
-    test_env_vars = ["HOME"]
-
-    build_flags, json_profile_out_build = calculate_flags(
-        "build_flags", "build", tmpdir, test_env_vars
-    )
-
-    execute_bazel_build(":bazel: Building binaries & bundling application", build_flags, build_targets, [])
-
-    # Regular build
-    test_targets = [
-        "//applications/eva/src/app/...",
-        "//applications/eva/src/domain/...",
-        "//applications/eva/src/ports/...",
-
-        "//applications/buffer/src/app/...",
-        "//applications/buffer/src/domain/...",
-        "//applications/buffer/src/ports/...",
-
-        "//applications/sting/src/app/...",
-        "//applications/sting/src/domain/...",
-        "//applications/sting/src/ports/...",
-
-        "//applications/medusa:unit",
-        "//applications/medusa:integration",
-    ]
-
-    test_flags, json_profile_out_test = calculate_flags(
-        "test_flags", "test", tmpdir, test_env_vars
-    )
-
-    bazelisk_cache_dir = get_bazelisk_cache_directory()
-    os.makedirs(bazelisk_cache_dir, mode=0o755, exist_ok=True)
-    test_flags.append("--sandbox_writable_path={}".format(bazelisk_cache_dir))
-
-    test_bep_file = os.path.join(tmpdir, "test_bep.json")
-    stop_request = threading.Event()
-    upload_thread = threading.Thread(
-        target=upload_test_logs_from_bep, args=(test_bep_file, tmpdir, stop_request)
-    )
-
     try:
-        upload_thread.start()
-        # unit + integration tests for frontend, unit tests for golang
-        execute_bazel_test(":bazel: Running unit tests", test_flags, test_targets, [])
+        build_targets = [
+            "//applications/eva:eva",
+            "//applications/buffer:buffer",
+            "//applications/sting:sting",
+            "//applications/medusa:bundle"
+        ]
+
+        test_env_vars = ["HOME"]
+
+        build_flags, json_profile_out_build = calculate_flags(
+            "build_flags", "build", tmpdir, test_env_vars
+        )
+
+        execute_bazel_build(":bazel: Building binaries & bundling application", build_flags, build_targets, [])
+
+        # Regular build
+        test_targets = [
+            "//applications/eva/src/app/...",
+            "//applications/eva/src/domain/...",
+            "//applications/eva/src/ports/...",
+
+            "//applications/buffer/src/app/...",
+            "//applications/buffer/src/domain/...",
+            "//applications/buffer/src/ports/...",
+
+            "//applications/sting/src/app/...",
+            "//applications/sting/src/domain/...",
+            "//applications/sting/src/ports/...",
+
+            "//applications/medusa:unit",
+            "//applications/medusa:integration",
+        ]
+
+        test_flags, json_profile_out_test = calculate_flags(
+            "test_flags", "test", tmpdir, test_env_vars
+        )
+
+        bazelisk_cache_dir = get_bazelisk_cache_directory()
+        os.makedirs(bazelisk_cache_dir, mode=0o755, exist_ok=True)
+        test_flags.append("--sandbox_writable_path={}".format(bazelisk_cache_dir))
+
+        test_bep_file = os.path.join(tmpdir, "test_bep.json")
+        stop_request = threading.Event()
+        upload_thread = threading.Thread(
+            target=upload_test_logs_from_bep, args=(test_bep_file, tmpdir, stop_request)
+        )
+
+        try:
+            upload_thread.start()
+            execute_bazel_test(":bazel: Running unit tests", test_flags, test_targets, [])
+        finally:
+            stop_request.set()
+            upload_thread.join()
+
+        # tests under 'adapters' and 'service' usually require 3rd party deps (other services, db, etc...)
+        test_targets_integration = [
+            "//applications/eva/src/adapters/...",
+            "//applications/eva/src/service/...",
+
+            "//applications/buffer/src/adapters/...",
+            "//applications/buffer/src/service/...",
+
+            "//applications/sting/src/adapters/...",
+            "//applications/sting/src/service/...",
+        ]
     finally:
-        stop_request.set()
-        upload_thread.join()
-
-    # tests under 'adapters' and 'service' usually require 3rd party deps (other services, db, etc...)
-    test_targets_integration = [
-        "//applications/eva/src/adapters/...",
-        "//applications/eva/src/service/...",
-
-        "//applications/buffer/src/adapters/...",
-        "//applications/buffer/src/service/...",
-
-        "//applications/sting/src/adapters/...",
-        "//applications/sting/src/service/...",
-    ]
+        if tmpdir:
+            shutil.rmtree(tmpdir)
 
 
 def main(argv=None):
