@@ -23,10 +23,6 @@ def concurrent_jobs():
     return str(multiprocessing.cpu_count())
 
 
-def concurrent_test_jobs():
-    return "12"
-
-
 def common_build_flags():
     flags = [
         "--show_progress_rate_limit=5",
@@ -139,7 +135,7 @@ def execute_bazel_test(
         "--flaky_test_attempts=default",
         "--build_tests_only",
         "--test_output=errors",
-        "--local_test_jobs=" + concurrent_test_jobs(),
+        "--local_test_jobs=" + concurrent_jobs(),
     ]
 
     aggregated_flags += compute_flags(
