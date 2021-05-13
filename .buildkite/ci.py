@@ -2,10 +2,20 @@
 # a stolen copy of https://github.com/bazelbuild/continuous-integration/blob/master/buildkite/bazelci.py
 # modified for us
 
+import json
 import multiprocessing
 import os
+import random
 import subprocess
 import sys
+import tempfile
+import threading
+import time
+from shutil import copyfile
+from urllib.parse import urlparse
+from urllib.request import url2pathname
+
+random.seed()
 
 BAZEL_VERSION = "4.0.0"
 BAZEL_BINARY = "bazel"
@@ -102,8 +112,36 @@ def compute_flags(flags, incompatible_flags, enable_remote_cache=False):
     return aggregated_flags
 
 
+def get_json_profile_flags(out_file):
+    return [
+        "--experimental_generate_json_trace_profile",
+        "--experimental_profile_cpu_usage",
+        "--experimental_json_trace_compression",
+        "--profile={}".format(out_file),
+    ]
+
+
+def calculate_flags(task_config_key, json_profile_key, tmpdir, test_env_vars):
+    include_json_profile = []
+
+    json_profile_flags = []
+    json_profile_out = None
+    if json_profile_key in include_json_profile:
+        json_profile_out = os.path.join(tmpdir, "{}.profile.gz".format(json_profile_key))
+        json_profile_flags = get_json_profile_flags(json_profile_out)
+
+    flags = []
+    flags += json_profile_flags
+    # We have to add --test_env flags to `build`, too, otherwise Bazel
+    # discards its analysis cache between `build` and `test`.
+    if test_env_vars:
+        flags += ["--test_env={}".format(v) for v in test_env_vars]
+
+    return flags, json_profile_out
+
+
 def execute_bazel_build(
-        flags, targets, incompatible_flags
+        label, flags, targets, incompatible_flags
 ):
     aggregated_flags = compute_flags(
         flags,
@@ -111,7 +149,7 @@ def execute_bazel_build(
         enable_remote_cache=True,
     )
 
-    print_expanded_group(":bazel: Build ({})".format(BAZEL_VERSION))
+    print_expanded_group(label)
     try:
         execute_command(
             [BAZEL_BINARY]
@@ -127,6 +165,7 @@ def execute_bazel_build(
 
 
 def execute_bazel_test(
+        label,
         flags,
         targets,
         incompatible_flags,
@@ -143,7 +182,7 @@ def execute_bazel_test(
         enable_remote_cache=True,
     )
 
-    print_expanded_group(":bazel: Test ({})".format(BAZEL_VERSION))
+    print_expanded_group(label)
     try:
         execute_command(
             [BAZEL_BINARY]
@@ -166,6 +205,91 @@ def handle_bazel_failure_generic(action):
     BuildkiteException("bazel {0} failed".format(action))
 
 
+def test_label_to_path(tmpdir, label, attempt):
+    # remove leading //
+    path = label[2:]
+    path = path.replace("/", os.sep)
+    path = path.replace(":", os.sep)
+    if attempt == 0:
+        path = os.path.join(path, "test.log")
+    else:
+        path = os.path.join(path, "attempt_" + str(attempt) + ".log")
+    return os.path.join(tmpdir, path)
+
+
+def rename_test_logs_for_upload(test_logs, tmpdir):
+    # Rename the test.log files to the target that created them
+    # so that it's easy to associate test.log and target.
+    new_paths = []
+    for label, files in test_logs:
+        attempt = 0
+        if len(files) > 1:
+            attempt = 1
+        for test_log in files:
+            try:
+                new_path = test_label_to_path(tmpdir, label, attempt)
+                os.makedirs(os.path.dirname(new_path), exist_ok=True)
+                copyfile(test_log, new_path)
+                new_paths.append(new_path)
+                attempt += 1
+            except IOError as err:
+                # Log error and ignore.
+                eprint(err)
+    return new_paths
+
+
+def test_logs_for_status(bep_file, status):
+    targets = []
+    with open(bep_file, encoding="utf-8") as f:
+        raw_data = f.read()
+    decoder = json.JSONDecoder()
+
+    pos = 0
+    while pos < len(raw_data):
+        try:
+            bep_obj, size = decoder.raw_decode(raw_data[pos:])
+        except ValueError as e:
+            eprint("JSON decoding error: " + str(e))
+            return targets
+        if "testSummary" in bep_obj:
+            test_target = bep_obj["id"]["testSummary"]["label"]
+            test_status = bep_obj["testSummary"]["overallStatus"]
+            if test_status in status:
+                outputs = bep_obj["testSummary"]["failed"]
+                test_logs = []
+                for output in outputs:
+                    test_logs.append(url2pathname(urlparse(output["uri"]).path))
+                targets.append((test_target, test_logs))
+        pos += size + 1
+    return targets
+
+
+def upload_test_logs_from_bep(bep_file, tmpdir, stop_request):
+    uploaded_targets = set()
+    while True:
+        done = stop_request.isSet()
+        if os.path.exists(bep_file):
+            all_test_logs = test_logs_for_status(bep_file, status=["FAILED", "TIMEOUT", "FLAKY"])
+            test_logs_to_upload = [
+                (target, files) for target, files in all_test_logs if target not in uploaded_targets
+            ]
+
+            if test_logs_to_upload:
+                files_to_upload = rename_test_logs_for_upload(test_logs_to_upload, tmpdir)
+                cwd = os.getcwd()
+                try:
+                    os.chdir(tmpdir)
+                    test_logs = [os.path.relpath(file, tmpdir) for file in files_to_upload]
+                    test_logs = sorted(test_logs)
+                    execute_command(["buildkite-agent", "artifact", "upload", ";".join(test_logs)])
+                finally:
+                    uploaded_targets.update([target for target, _ in test_logs_to_upload])
+                    os.chdir(cwd)
+        if done:
+            break
+        time.sleep(5)
+
+
 def eprint(*args, **kwargs):
     """
     Print to stderr and flush (just in case).
@@ -174,15 +298,28 @@ def eprint(*args, **kwargs):
 
 
 def print_collapsed_group(name):
-    eprint("--- {0}".format(name))
+    eprint("\n--- {0}\n".format(name))
 
 
 def print_expanded_group(name):
-    eprint("+++ {0}".format(name))
+    eprint("\n+++ {0}\n".format(name))
+
+
+def get_bazelisk_cache_directory():
+    return os.path.join(os.environ.get("HOME"), ".cache", "bazelisk")
+
+
+def upload_json_profile(json_profile_path, tmpdir):
+    if not os.path.exists(json_profile_path):
+        return
+    print_collapsed_group(":gcloud: Uploading JSON Profile")
+    execute_command(["buildkite-agent", "artifact", "upload", json_profile_path], cwd=tmpdir)
 
 
 def main(argv=None):
     try:
+        tmpdir = tempfile.mkdtemp()
+
         build_targets = [
             "//applications/eva:eva",
             "//applications/buffer:buffer",
@@ -191,7 +328,7 @@ def main(argv=None):
         ]
 
         # Regular build
-        execute_bazel_build([], build_targets, [])
+        execute_bazel_build(":bazel: Building binaries & bundling application", [], build_targets, [])
 
         test_targets = [
             "//applications/eva/src/app/...",
@@ -209,9 +346,33 @@ def main(argv=None):
             "//applications/medusa:unit",
             "//applications/medusa:integration",
         ]
+        test_env_vars = ["HOME"]
 
-        # unit + integration tests for frontend, unit tests for golang
-        execute_bazel_test([], test_targets, [])
+        test_flags, json_profile_out_test = calculate_flags(
+            "test_flags", "test", tmpdir, test_env_vars
+        )
+
+        bazelisk_cache_dir = get_bazelisk_cache_directory()
+        os.makedirs(bazelisk_cache_dir, mode=0o755, exist_ok=True)
+        test_flags.append("--sandbox_writable_path={}".format(bazelisk_cache_dir))
+
+        test_bep_file = os.path.join(tmpdir, "test_bep.json")
+        stop_request = threading.Event()
+        upload_thread = threading.Thread(
+            target=upload_test_logs_from_bep, args=(test_bep_file, tmpdir, stop_request)
+        )
+
+        try:
+            upload_thread.start()
+            try:
+                # unit + integration tests for frontend, unit tests for golang
+                execute_bazel_test(":bazel: Running unit tests", test_flags, test_targets, [])
+            finally:
+                if json_profile_out_test:
+                    upload_json_profile(json_profile_out_test, tmpdir)
+        finally:
+            stop_request.set()
+            upload_thread.join()
 
         # tests under 'adapters' and 'service' usually require 3rd party deps (other services, db, etc...)
         test_targets_integration = [
