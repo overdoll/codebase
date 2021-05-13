@@ -192,11 +192,7 @@ def execute_bazel_test(
 
 
 def handle_bazel_failure(exception, action):
-    BuildkiteException("bazel {0} failed with exit code {1}".format(action, exception.returncode))
-
-
-def handle_bazel_failure_generic(action):
-    BuildkiteException("bazel {0} failed".format(action))
+    raise BuildkiteException("bazel {0} failed with exit code {1}".format(action, exception.returncode))
 
 
 def test_label_to_path(tmpdir, label, attempt):
@@ -378,7 +374,7 @@ def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
 
-    parser = argparse.ArgumentParser(description="Overdoll CI Script")
+    parser = argparse.ArgumentParser(description="overdoll CI Script")
 
     subparsers = parser.add_subparsers(dest="subparsers_name")
     subparsers.add_parser("run")
@@ -389,7 +385,6 @@ def main(argv=None):
         if args.subparsers_name == "run":
             execute_commands()
     except BuildkiteException as e:
-        print_collapsed_group("an exception occured")
         eprint(str(e))
         return 1
     return 0
