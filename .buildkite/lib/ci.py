@@ -293,11 +293,11 @@ def eprint(*args, **kwargs):
 
 
 def print_collapsed_group(name):
-    eprint("\n\n--- {0}\n\n".format(name))
+    eprint("--- {0}".format(name))
 
 
 def print_expanded_group(name):
-    eprint("\n\n+++ {0}\n\n".format(name))
+    eprint("+++ {0}".format(name))
 
 
 def get_bazelisk_cache_directory():
@@ -368,6 +368,7 @@ def main(argv=None):
                 # unit + integration tests for frontend, unit tests for golang
                 execute_bazel_test(":bazel: Running unit tests", test_flags, test_targets, [])
             finally:
+                print_collapsed_group("errors")
                 if json_profile_out_test:
                     upload_json_profile(json_profile_out_test, tmpdir)
         finally:
