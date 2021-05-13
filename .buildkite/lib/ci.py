@@ -187,9 +187,8 @@ def execute_bazel_test(
             + targets
         )
     except subprocess.CalledProcessError as e:
+        print_collapsed_group("errors")
         handle_bazel_failure(e, "test")
-    finally:
-        handle_bazel_failure_generic("build")
 
 
 def handle_bazel_failure(exception, action):
@@ -307,7 +306,7 @@ def get_bazelisk_cache_directory():
 def upload_json_profile(json_profile_path, tmpdir):
     if not os.path.exists(json_profile_path):
         return
-    print_collapsed_group(":gcloud: Uploading JSON Profile")
+    print_collapsed_group(":bazel: Uploading JSON Profile")
     execute_command(["buildkite-agent", "artifact", "upload", json_profile_path], cwd=tmpdir)
 
 
@@ -327,10 +326,13 @@ def main(argv=None):
         build_flags, json_profile_out_build = calculate_flags(
             "build_flags", "build", tmpdir, test_env_vars
         )
+        try:
+            execute_bazel_build(":bazel: Building binaries & bundling application", build_flags, build_targets, [])
+        finally:
+            if json_profile_out_build:
+                upload_json_profile(json_profile_out_build, tmpdir)
 
         # Regular build
-        execute_bazel_build(":bazel: Building binaries & bundling application", build_flags, build_targets, [])
-
         test_targets = [
             "//applications/eva/src/app/...",
             "//applications/eva/src/domain/...",
@@ -368,7 +370,6 @@ def main(argv=None):
                 # unit + integration tests for frontend, unit tests for golang
                 execute_bazel_test(":bazel: Running unit tests", test_flags, test_targets, [])
             finally:
-                print_collapsed_group("errors")
                 if json_profile_out_test:
                     upload_json_profile(json_profile_out_test, tmpdir)
         finally:
