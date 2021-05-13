@@ -7,8 +7,10 @@ def jest_test(name, srcs, deps, jest_config, file_extension, **kwargs):
         "--no-watchman",
         "--ci",
         "--colors",
-        "--collectCoverage true",
         "--verbose",
+        "--reporters=jest-silent-reporter",
+        "--collectCoverage",
+        "--coverageReporters=text",
     ]
 
     templated_args.extend(["--config", "$(rootpath %s)" % jest_config])

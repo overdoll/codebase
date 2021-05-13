@@ -4,7 +4,9 @@ const path = require('path');
 process.chdir(__dirname);
 
 module.exports = {
-  reporters: ['default', './reporter'],
+  reporters: [
+    ['jest-silent-reporter', { showWarnings: true, showPaths: true }],
+  ],
   moduleNameMapper: {
     '^@//:modules(.*)$': '<rootDir>/src/modules$1',
     '^@//:artifacts(.*)$': '<rootDir>/src/__generated__$1',
