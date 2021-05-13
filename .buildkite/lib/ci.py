@@ -303,18 +303,6 @@ def get_bazelisk_cache_directory():
     return os.path.join(os.environ.get("HOME"), ".cache", "bazelisk")
 
 
-def upload_json_profile(json_profile_path, tmpdir):
-    if not os.path.exists(json_profile_path):
-        return
-
-    # TODO: when eventually we have access to be able to process the JSON profiles to get an in-depth analysis of builds,
-    # we won't upload it yet
-    return
-
-    print_collapsed_group(":bazel: Uploading JSON Profile")
-    execute_command(["buildkite-agent", "artifact", "upload", json_profile_path], cwd=tmpdir)
-
-
 def execute_commands():
     tmpdir = tempfile.mkdtemp()
 
@@ -330,11 +318,8 @@ def execute_commands():
     build_flags, json_profile_out_build = calculate_flags(
         "build_flags", "build", tmpdir, test_env_vars
     )
-    try:
-        execute_bazel_build(":bazel: Building binaries & bundling application", build_flags, build_targets, [])
-    finally:
-        if json_profile_out_build:
-            upload_json_profile(json_profile_out_build, tmpdir)
+
+    execute_bazel_build(":bazel: Building binaries & bundling application", build_flags, build_targets, [])
 
     # Regular build
     test_targets = [
@@ -370,12 +355,8 @@ def execute_commands():
 
     try:
         upload_thread.start()
-        try:
-            # unit + integration tests for frontend, unit tests for golang
-            execute_bazel_test(":bazel: Running unit tests", test_flags, test_targets, [])
-        finally:
-            if json_profile_out_test:
-                upload_json_profile(json_profile_out_test, tmpdir)
+        # unit + integration tests for frontend, unit tests for golang
+        execute_bazel_test(":bazel: Running unit tests", test_flags, test_targets, [])
     finally:
         stop_request.set()
         upload_thread.join()
@@ -408,6 +389,7 @@ def main(argv=None):
         if args.subparsers_name == "run":
             execute_commands()
     except BuildkiteException as e:
+        print_collapsed_group("an exception occured")
         eprint(str(e))
         return 1
     return 0
