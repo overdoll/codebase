@@ -2,6 +2,7 @@
 # a stolen copy of https://github.com/bazelbuild/continuous-integration/blob/master/buildkite/bazelci.py
 # modified for us
 
+import argparse
 import json
 import multiprocessing
 import os
@@ -187,7 +188,6 @@ def execute_bazel_test(
             + targets
         )
     except subprocess.CalledProcessError as e:
-        print_collapsed_group("errors")
         handle_bazel_failure(e, "test")
 
 
@@ -292,11 +292,11 @@ def eprint(*args, **kwargs):
 
 
 def print_collapsed_group(name):
-    eprint("--- {0}".format(name))
+    eprint("\n--- {0}\n".format(name))
 
 
 def print_expanded_group(name):
-    eprint("+++ {0}".format(name))
+    eprint("\n+++ {0}\n".format(name))
 
 
 def get_bazelisk_cache_directory():
@@ -306,93 +306,110 @@ def get_bazelisk_cache_directory():
 def upload_json_profile(json_profile_path, tmpdir):
     if not os.path.exists(json_profile_path):
         return
+
+    # TODO: when eventually we have access to be able to process the JSON profiles to get an in-depth analysis of builds,
+    # we won't upload it yet
+    return
+
     print_collapsed_group(":bazel: Uploading JSON Profile")
     execute_command(["buildkite-agent", "artifact", "upload", json_profile_path], cwd=tmpdir)
 
 
-def main(argv=None):
+def execute_commands():
+    tmpdir = tempfile.mkdtemp()
+
+    build_targets = [
+        "//applications/eva:eva",
+        "//applications/buffer:buffer",
+        "//applications/sting:sting",
+        "//applications/medusa:bundle"
+    ]
+
+    test_env_vars = ["HOME"]
+
+    build_flags, json_profile_out_build = calculate_flags(
+        "build_flags", "build", tmpdir, test_env_vars
+    )
     try:
-        tmpdir = tempfile.mkdtemp()
+        execute_bazel_build(":bazel: Building binaries & bundling application", build_flags, build_targets, [])
+    finally:
+        if json_profile_out_build:
+            upload_json_profile(json_profile_out_build, tmpdir)
 
-        build_targets = [
-            "//applications/eva:eva",
-            "//applications/buffer:buffer",
-            "//applications/sting:sting",
-            "//applications/medusa:bundle"
-        ]
+    # Regular build
+    test_targets = [
+        "//applications/eva/src/app/...",
+        "//applications/eva/src/domain/...",
+        "//applications/eva/src/ports/...",
 
-        test_env_vars = ["HOME"]
+        "//applications/buffer/src/app/...",
+        "//applications/buffer/src/domain/...",
+        "//applications/buffer/src/ports/...",
 
-        build_flags, json_profile_out_build = calculate_flags(
-            "build_flags", "build", tmpdir, test_env_vars
-        )
+        "//applications/sting/src/app/...",
+        "//applications/sting/src/domain/...",
+        "//applications/sting/src/ports/...",
+
+        "//applications/medusa:unit",
+        "//applications/medusa:integration",
+    ]
+
+    test_flags, json_profile_out_test = calculate_flags(
+        "test_flags", "test", tmpdir, test_env_vars
+    )
+
+    bazelisk_cache_dir = get_bazelisk_cache_directory()
+    os.makedirs(bazelisk_cache_dir, mode=0o755, exist_ok=True)
+    test_flags.append("--sandbox_writable_path={}".format(bazelisk_cache_dir))
+
+    test_bep_file = os.path.join(tmpdir, "test_bep.json")
+    stop_request = threading.Event()
+    upload_thread = threading.Thread(
+        target=upload_test_logs_from_bep, args=(test_bep_file, tmpdir, stop_request)
+    )
+
+    try:
+        upload_thread.start()
         try:
-            execute_bazel_build(":bazel: Building binaries & bundling application", build_flags, build_targets, [])
+            # unit + integration tests for frontend, unit tests for golang
+            execute_bazel_test(":bazel: Running unit tests", test_flags, test_targets, [])
         finally:
-            if json_profile_out_build:
-                upload_json_profile(json_profile_out_build, tmpdir)
+            if json_profile_out_test:
+                upload_json_profile(json_profile_out_test, tmpdir)
+    finally:
+        stop_request.set()
+        upload_thread.join()
 
-        # Regular build
-        test_targets = [
-            "//applications/eva/src/app/...",
-            "//applications/eva/src/domain/...",
-            "//applications/eva/src/ports/...",
+    # tests under 'adapters' and 'service' usually require 3rd party deps (other services, db, etc...)
+    test_targets_integration = [
+        "//applications/eva/src/adapters/...",
+        "//applications/eva/src/service/...",
 
-            "//applications/buffer/src/app/...",
-            "//applications/buffer/src/domain/...",
-            "//applications/buffer/src/ports/...",
+        "//applications/buffer/src/adapters/...",
+        "//applications/buffer/src/service/...",
 
-            "//applications/sting/src/app/...",
-            "//applications/sting/src/domain/...",
-            "//applications/sting/src/ports/...",
-
-            "//applications/medusa:unit",
-            "//applications/medusa:integration",
-        ]
-
-        test_flags, json_profile_out_test = calculate_flags(
-            "test_flags", "test", tmpdir, test_env_vars
-        )
-
-        bazelisk_cache_dir = get_bazelisk_cache_directory()
-        os.makedirs(bazelisk_cache_dir, mode=0o755, exist_ok=True)
-        test_flags.append("--sandbox_writable_path={}".format(bazelisk_cache_dir))
-
-        test_bep_file = os.path.join(tmpdir, "test_bep.json")
-        stop_request = threading.Event()
-        upload_thread = threading.Thread(
-            target=upload_test_logs_from_bep, args=(test_bep_file, tmpdir, stop_request)
-        )
-
-        try:
-            upload_thread.start()
-            try:
-                # unit + integration tests for frontend, unit tests for golang
-                execute_bazel_test(":bazel: Running unit tests", test_flags, test_targets, [])
-            finally:
-                if json_profile_out_test:
-                    upload_json_profile(json_profile_out_test, tmpdir)
-        finally:
-            stop_request.set()
-            upload_thread.join()
-
-        # tests under 'adapters' and 'service' usually require 3rd party deps (other services, db, etc...)
-        test_targets_integration = [
-            "//applications/eva/src/adapters/...",
-            "//applications/eva/src/service/...",
-
-            "//applications/buffer/src/adapters/...",
-            "//applications/buffer/src/service/...",
-
-            "//applications/sting/src/adapters/...",
-            "//applications/sting/src/service/...",
-        ]
+        "//applications/sting/src/adapters/...",
+        "//applications/sting/src/service/...",
+    ]
 
 
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv[1:]
+
+    parser = argparse.ArgumentParser(description="Overdoll CI Script")
+
+    subparsers = parser.add_subparsers(dest="subparsers_name")
+    subparsers.add_parser("run")
+
+    args = parser.parse_args(argv)
+
+    try:
+        if args.subparsers_name == "run":
+            execute_commands()
     except BuildkiteException as e:
         eprint(str(e))
         return 1
-
     return 0
 
 
