@@ -24,7 +24,7 @@ def execute_commands():
     tmpdir = tempfile.mkdtemp()
 
     try:
-        exec.execute_command(["docker", "ps"])
+        exec.execute_command(["sudo", "docker", "ps"])
 
         build_targets = [
             "//applications/eva:eva",
