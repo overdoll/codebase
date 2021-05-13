@@ -360,7 +360,10 @@ def execute_commands():
 
         try:
             upload_thread.start()
-            execute_bazel_test(":bazel: Running unit tests", test_flags, test_targets, [])
+            try:
+                execute_bazel_test(":bazel: Running unit tests", test_flags, test_targets, [])
+            finally:
+                print()
         finally:
             stop_request.set()
             upload_thread.join()
