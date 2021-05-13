@@ -5,6 +5,6 @@ set -eu
 
 whoami
 
-sudo usermod -a -G docker buildkite-agent
+usermod -a -G docker buildkite-agent
 
 python3.6 ./.buildkite/lib/main.py "$@"
