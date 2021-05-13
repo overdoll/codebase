@@ -174,11 +174,11 @@ def eprint(*args, **kwargs):
 
 
 def print_collapsed_group(name):
-    eprint("\n\n--- {0}\n\n".format(name))
+    eprint("--- {0}".format(name))
 
 
 def print_expanded_group(name):
-    eprint("\n\n+++ {0}\n\n".format(name))
+    eprint("+++ {0}".format(name))
 
 
 def main(argv=None):
