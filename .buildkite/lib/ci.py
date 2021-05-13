@@ -35,7 +35,7 @@ def concurrent_jobs():
     return str(multiprocessing.cpu_count())
 
 
-def common_build_flags():
+def common_build_flags(bep_file):
     flags = [
         "--show_progress_rate_limit=5",
         "--curses=yes",
@@ -49,6 +49,12 @@ def common_build_flags():
         "--disk_cache=",
         "--sandbox_tmpfs_path=/tmp"
     ]
+
+    if bep_file:
+        flags += [
+            "--experimental_build_event_json_file_path_conversion=false",
+            "--build_event_json_file=" + bep_file,
+        ]
 
     return flags
 
@@ -92,8 +98,8 @@ def execute_command_and_get_output(args, shell=False, fail_if_nonzero=True, prin
     return process.stdout
 
 
-def compute_flags(flags, incompatible_flags, enable_remote_cache=False):
-    aggregated_flags = common_build_flags()
+def compute_flags(flags, incompatible_flags, bep_file, enable_remote_cache=False):
+    aggregated_flags = common_build_flags(bep_file)
     if not remote_enabled(flags):
         aggregated_flags += remote_caching_flags()
     aggregated_flags += flags
@@ -138,11 +144,12 @@ def calculate_flags(task_config_key, json_profile_key, tmpdir, test_env_vars):
 
 
 def execute_bazel_build(
-        label, flags, targets, incompatible_flags
+        label, flags, targets, bep_file, incompatible_flags
 ):
     aggregated_flags = compute_flags(
         flags,
         incompatible_flags,
+        bep_file,
         enable_remote_cache=True,
     )
 
@@ -163,6 +170,7 @@ def execute_bazel_test(
         label,
         flags,
         targets,
+        bep_file,
         incompatible_flags,
 ):
     aggregated_flags = [
@@ -174,6 +182,7 @@ def execute_bazel_test(
     aggregated_flags += compute_flags(
         flags,
         incompatible_flags,
+        bep_file,
         enable_remote_cache=True,
     )
 
@@ -324,7 +333,7 @@ def execute_commands():
             "build_flags", "build", tmpdir, test_env_vars
         )
 
-        execute_bazel_build(":bazel: Building binaries & bundling application", build_flags, build_targets, [])
+        execute_bazel_build(":bazel: Building binaries & bundling application", build_flags, build_targets, None, [])
 
         # Regular build
         test_targets = [
@@ -360,10 +369,7 @@ def execute_commands():
 
         try:
             upload_thread.start()
-            try:
-                execute_bazel_test(":bazel: Running unit tests", test_flags, test_targets, [])
-            finally:
-                print()
+            execute_bazel_test(":bazel: Running unit tests", test_flags, test_targets, test_bep_file, [])
         finally:
             stop_request.set()
             upload_thread.join()
