@@ -1,0 +1,17 @@
+build:
+  targets:
+    - //applications/sting:sting
+
+unit_test:
+  targets:
+    - //applications/sting/src/app/...
+    - //applications/sting/src/domain/...
+    - //applications/sting/src/ports/...
+
+integration_test:
+  setup:
+    target: //applications/sting:buffer-image
+    dockerfile: ./docker-compose.yaml
+  targets:
+    - //applications/sting/src/adapters/...
+    - //applications/sting/src/service/...

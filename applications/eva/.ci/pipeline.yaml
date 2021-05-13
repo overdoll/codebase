@@ -1,0 +1,17 @@
+build:
+  targets:
+    - //applications/eva:eva
+
+unit_test:
+  targets:
+    - //applications/eva/src/app/...
+    - //applications/eva/src/domain/...
+    - //applications/eva/src/ports/...
+
+integration_test:
+  setup:
+    target: //applications/eva:eva-image
+    dockerfile: ./docker-compose.yaml
+  targets:
+    - //applications/eva/src/adapters/...
+    - //applications/eva/src/service/...

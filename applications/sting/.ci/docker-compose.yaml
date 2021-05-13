@@ -1,0 +1,42 @@
+services:
+  sting-init:
+    image: bazel/applications/sting:sting-image
+    working_dir: ../../applications/sting
+    networks:
+      - network
+    command: >
+      ./sting_ db migrate
+      && ./sting_ db seed
+      && ./sting_ index all
+    env_file:
+      - .env.ci
+    depends_on:
+      - elasticsearch
+      - temporal
+
+  sting-http:
+    image: bazel/applications/sting:sting-image
+    working_dir: ../../applications/sting
+    networks:
+      - network
+    command: ./sting_ http
+    ports:
+      - "127.0.0.1:3010:$PORT"
+    env_file:
+      - .env.ci
+    depends_on:
+      - sting-init
+
+  sting-worker:
+    image: bazel/applications/sting:sting-image
+    working_dir: ../../applications/sting
+    networks:
+      - network
+    command: >
+      ./sting_ worker
+    ports:
+      - "127.0.0.1:3010:$PORT"
+    env_file:
+      - .env.ci
+    depends_on:
+      - sting-init

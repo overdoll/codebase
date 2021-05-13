@@ -1,0 +1,17 @@
+build:
+  targets:
+    - //applications/buffer:buffer
+
+unit_test:
+  targets:
+    - //applications/buffer/src/app/...
+    - //applications/buffer/src/domain/...
+    - //applications/buffer/src/ports/...
+
+integration_test:
+  setup:
+    target: //applications/buffer:buffer-image
+    dockerfile: ./docker-compose.yaml
+  targets:
+    - //applications/buffer/src/adapters/...
+    - //applications/buffer/src/service/...

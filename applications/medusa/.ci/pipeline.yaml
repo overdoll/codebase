@@ -1,0 +1,8 @@
+build:
+  targets:
+    - //applications/medusa:bundle
+
+unit_test:
+  targets:
+    - //applications/medusa:unit
+    - //applications/medusa:integration

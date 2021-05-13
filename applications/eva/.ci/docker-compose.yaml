@@ -1,0 +1,40 @@
+services:
+  eva-init:
+    image: bazel/applications/eva:eva-image
+    working_dir: ../applications/eva
+    networks:
+      - network
+    command: >
+      ./eva_ db migrate
+      && ./eva_ db seed
+    env_file:
+      - .env.ci
+    depends_on:
+      - elasticsearch
+      - scylla
+
+  eva-http:
+    image: bazel/applications/eva:eva-image
+    working_dir: ../applications/eva
+    networks:
+      - network
+    command: ./eva_ http
+    ports:
+      - "127.0.0.1:3020:$PORT"
+    env_file:
+      - .env.ci
+    depends_on:
+      - eva-init
+
+  eva-grpc:
+    image: bazel/applications/eva:eva-image
+    working_dir: ../applications/eva
+    command: ./eva_ grpc
+    ports:
+      - "127.0.0.1:3030:$PORT"
+    env_file:
+      - .env.ci
+    networks:
+      - network
+    depends_on:
+      - eva-init
