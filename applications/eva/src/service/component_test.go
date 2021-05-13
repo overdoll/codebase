@@ -6,9 +6,6 @@ import (
 	"os"
 	"testing"
 
-	"github.com/bxcodec/faker/v3"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc"
 	eva "overdoll/applications/eva/proto"
 	"overdoll/applications/eva/src/ports"
@@ -22,36 +19,36 @@ type TestUser struct {
 }
 
 // Test a full 'flow' - create a cookie, redeem the cookie and then register the user
-func TestCreateRedeemRegisterCookie(t *testing.T) {
-	t.Parallel()
-
-	fake := TestUser{}
-
-	err := faker.FakeData(&fake)
-
-	if err != nil {
-		t.Fatal("error generating fake data: ", err)
-	}
-
-	app := NewComponentTestApplication(context.Background())
-
-	srv := ports.CreateServer(app)
-
-	res, err := srv.CreateAuthenticationCookie(context.Background(), &eva.CreateAuthenticationCookieRequest{Email: fake.Email, Session: ""})
-
-	require.NoError(t, err)
-	assert.NotNil(t, res)
-
-	redeem, err := srv.RedeemAuthenticationCookie(context.Background(), &eva.GetAuthenticationCookieRequest{Cookie: res.Cookie})
-
-	require.NoError(t, err)
-	assert.False(t, redeem.Registered)
-
-	create, err := srv.RegisterUserFromCookie(context.Background(), &eva.RegisterUserRequest{Username: fake.Username, CookieId: redeem.Cookie.Cookie})
-
-	require.NoError(t, err)
-	assert.Equal(t, create.Username, fake.Username)
-}
+//func TestCreateRedeemRegisterCookie(t *testing.T) {
+//	t.Parallel()
+//
+//	fake := TestUser{}
+//
+//	err := faker.FakeData(&fake)
+//
+//	if err != nil {
+//		t.Fatal("error generating fake data: ", err)
+//	}
+//
+//	app := NewComponentTestApplication(context.Background())
+//
+//	srv := ports.CreateServer(app)
+//
+//	res, err := srv.CreateAuthenticationCookie(context.Background(), &eva.CreateAuthenticationCookieRequest{Email: fake.Email, Session: ""})
+//
+//	require.NoError(t, err)
+//	assert.NotNil(t, res)
+//
+//	redeem, err := srv.RedeemAuthenticationCookie(context.Background(), &eva.GetAuthenticationCookieRequest{Cookie: res.Cookie})
+//
+//	require.NoError(t, err)
+//	assert.False(t, redeem.Registered)
+//
+//	create, err := srv.RegisterUserFromCookie(context.Background(), &eva.RegisterUserRequest{Username: fake.Username, CookieId: redeem.Cookie.Cookie})
+//
+//	require.NoError(t, err)
+//	assert.Equal(t, create.Username, fake.Username)
+//}
 
 func startService() bool {
 	app := NewComponentTestApplication(context.Background())

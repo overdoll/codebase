@@ -23,7 +23,7 @@ func TestCookieRepository_GetCookie_not_exists(t *testing.T) {
 	usr, err := repo.GetCookieById(ctx, id)
 
 	assert.Nil(t, usr)
-	assert.EqualError(t, err, cookie.NotFoundError{CookieUUID: id}.Error())
+	assert.EqualError(t, err, cookie.ErrCookieNotFound.Error())
 }
 
 func TestCookieRepository_CreateCookie(t *testing.T) {

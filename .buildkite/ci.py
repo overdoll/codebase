@@ -194,12 +194,18 @@ def main(argv=None):
             "//applications/medusa:bundle"
         ]
 
+        # Regular build
         execute_bazel_build([], build_targets, [])
 
         test_targets = [
-
+            "//applications/eva...",
+            "//applications/buffer...",
+            "//applications/sting...",
+            "//applications/medusa:unit",
+            "//applications/medusa:integration",
         ]
 
+        # unit + integration tests for frontend, unit tests for golang
         execute_bazel_test([], test_targets, [])
 
 
