@@ -24,6 +24,8 @@ def execute_commands():
     tmpdir = tempfile.mkdtemp()
 
     try:
+        exec.execute_command(["docker-compose", "-v"])
+
         build_targets = [
             "//applications/eva:eva",
             "//applications/buffer:buffer",
@@ -74,7 +76,6 @@ def execute_commands():
             stop_request.set()
             upload_thread.join()
 
-        exec.execute_command(["docker-compose", "-v"])
 
     finally:
         if tmpdir:
