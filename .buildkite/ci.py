@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.6
 # a stolen copy of https://github.com/bazelbuild/continuous-integration/blob/master/buildkite/bazelci.py
 # modified for us
 
@@ -138,6 +138,7 @@ def execute_bazel_test(
     aggregated_flags = [
         "--flaky_test_attempts=3",
         "--build_tests_only",
+        "--test_output=errors",
         "--local_test_jobs=" + concurrent_test_jobs(),
     ]
 
