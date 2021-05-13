@@ -5,6 +5,6 @@ set -eu
 
 groups buildkite-agent
 
-usermod -a -G docker buildkite-agent
+docker ps
 
 python3.6 ./.buildkite/lib/main.py "$@"
