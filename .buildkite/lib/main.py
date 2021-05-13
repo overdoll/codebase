@@ -12,6 +12,7 @@ import threading
 
 import utils.bazel as bazel
 import utils.exception as exception
+import utils.exec as exec
 import utils.flags as flags
 import utils.terminal_print as terminal_print
 import utils.test_logs as test_logs
@@ -73,6 +74,8 @@ def execute_commands():
             stop_request.set()
             upload_thread.join()
 
+        exec.execute_command(["docker-compose", "-v"])
+
     finally:
         if tmpdir:
             shutil.rmtree(tmpdir)
@@ -82,8 +85,7 @@ def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
 
-    parser = argparse.ArgumentParser(description="overdoll CI Script")
-
+    parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest="subparsers_name")
     subparsers.add_parser("run")
 
