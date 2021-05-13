@@ -2,7 +2,7 @@ version: '3.5'
 services:
   sting-init:
     image: bazel/applications/sting:sting-image
-    working_dir: ../applications/sting
+    working_dir: ../../applications/sting
     networks:
       - network
     command: >
@@ -17,7 +17,7 @@ services:
 
   sting-http:
     image: bazel/applications/sting:sting-image
-    working_dir: ../applications/sting
+    working_dir: ../../applications/sting
     networks:
       - network
     command: ./sting_ http
@@ -30,7 +30,7 @@ services:
 
   sting-worker:
     image: bazel/applications/sting:sting-image
-    working_dir: ../applications/sting
+    working_dir: ../../applications/sting
     networks:
       - network
     command: >
@@ -44,7 +44,7 @@ services:
 
   buffer-http:
     image: bazel/applications/buffer:buffer-image
-    working_dir: ../applications/buffer
+    working_dir: ../../applications/buffer
     networks:
       - network
     command: >
@@ -56,7 +56,7 @@ services:
 
   eva-init:
     image: bazel/applications/eva:eva-image
-    working_dir: ../applications/eva
+    working_dir: ../../applications/eva
     networks:
       - network
     command: >
@@ -70,7 +70,7 @@ services:
 
   eva-http:
     image: bazel/applications/eva:eva-image
-    working_dir: ../applications/eva
+    working_dir: ../../applications/eva
     networks:
       - network
     command: ./eva_ http
@@ -83,7 +83,7 @@ services:
 
   eva-grpc:
     image: bazel/applications/eva:eva-image
-    working_dir: ../applications/eva
+    working_dir: ../../applications/eva
     command: ./eva_ grpc
     ports:
       - "127.0.0.1:3030:$PORT"
