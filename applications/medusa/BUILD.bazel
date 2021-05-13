@@ -98,6 +98,12 @@ _RUNTIME_DEPS = [
     "@npm//babel-plugin-inline-react-svg",
     "@npm//svgo",
     "@npm//i18next-http-backend",
+    "@npm//redis",
+    "@npm//relay-compiler-plus",
+    "@npm//express-session",
+    "@npm//connect-redis",
+    "@npm//apollo-server-express",
+    "@npm//@apollo/gateway",
 ]
 
 TEST_DEPS = [
