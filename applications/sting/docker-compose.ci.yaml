@@ -12,22 +12,12 @@ services:
       - elasticsearch
       - temporal
 
-  sting-http:
+  sting:
     image: $CONTAINER_REGISTRY/sting/dev:$BUILDKITE_COMMIT
-    command: ./sting_ http
+    command: ./sting_
     ports:
-      - "127.0.0.1:3010:8000"
-    env_file:
-      - .env.ci
-    depends_on:
-      - sting-init
-
-  sting-worker:
-    image: $CONTAINER_REGISTRY/sting/dev:$BUILDKITE_COMMIT
-    command: >
-      ./sting_ worker
-    ports:
-      - "127.0.0.1:3010:8080"
+      - 3020:8000
+      - 3030:8080
     env_file:
       - .env.ci
     depends_on:

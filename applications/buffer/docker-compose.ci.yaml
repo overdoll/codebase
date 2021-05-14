@@ -5,6 +5,6 @@ services:
     command: >
       ./buffer_ http
     ports:
-      - "127.0.0.1:3020:8000"
+      - 3020:8000
     env_file:
       - .env.ci

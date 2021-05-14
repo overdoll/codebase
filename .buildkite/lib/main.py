@@ -70,6 +70,9 @@ def load_configs():
             with open(filename, "r") as fd:
                 config = data_merge(config, yaml.safe_load(fd))
 
+    with open('./.buildkite/config/pipeline.yaml', "r") as fd:
+        config = data_merge(config, yaml.safe_load(fd))
+
     return config
 
 
@@ -241,9 +244,10 @@ def execute_integration_tests_commands(configs):
             target=test_logs.upload_test_logs_from_bep, args=(test_bep_file, tmpdir, stop_request)
         )
 
-        # add user-defined environment variables
-        test_flags += ["--test_env={}".format(
-            format_env_vars(configs.get("integration_test", {}).get("config", {}).get("env", {})))]
+        additional_test_env = format_env_vars(configs.get("integration_test", {}).get("setup", {}).get("env", {}))
+
+        for env in additional_test_env:
+            test_flags += ["--test_env={}".format(env)]
 
         try:
             upload_thread.start()

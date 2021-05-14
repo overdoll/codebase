@@ -11,21 +11,12 @@ services:
       - elasticsearch
       - scylla
 
-  eva-http:
+  eva:
     image: $CONTAINER_REGISTRY/eva/dev:$BUILDKITE_COMMIT
-    command: ./eva_ http
+    command: ./eva_
     ports:
-      - "127.0.0.1:3020:8000"
-    env_file:
-      - .env.ci
-    depends_on:
-      - eva-init
-
-  eva-grpc:
-    image: $CONTAINER_REGISTRY/eva/dev:$BUILDKITE_COMMIT
-    command: ./eva_ grpc
-    ports:
-      - "127.0.0.1:3030:8080"
+      - 3020:8000
+      - 3030:8080
     env_file:
       - .env.ci
     depends_on:
