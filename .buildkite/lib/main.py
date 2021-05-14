@@ -301,6 +301,7 @@ def main(argv=None):
     subparsers = parser.add_subparsers(dest="subparsers_name")
     subparsers.add_parser("build")
     subparsers.add_parser("integration_test")
+    subparsers.add_parser("project_pipeline")
 
     args = parser.parse_args(argv)
 
@@ -311,6 +312,8 @@ def main(argv=None):
             execute_build_commands(configs)
         elif args.subparsers_name == "integration_test":
             execute_integration_tests_commands(configs)
+        elif args.subparsers_name == "project_pipeline":
+            print_project_pipeline()
 
     except exception.BuildkiteException as e:
         terminal_print.eprint(str(e))
