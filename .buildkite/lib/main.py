@@ -261,6 +261,8 @@ def execute_build_commands(configs):
     try:
         test_env_vars = ["HOME"]
 
+        print(os.getenv("DOCKER_CONFIG"))
+
         build_flags, json_profile_out_build = flags.calculate_flags(
             "build_flags", "build", tmpdir, test_env_vars
         )
