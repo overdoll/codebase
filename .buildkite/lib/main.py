@@ -133,7 +133,7 @@ def create_docker_step(label, commands, additional_env_vars=None):
                     "/opt:/opt:ro",
                     "/var/lib/buildkite-agent:/var/lib/buildkite-agent",
                     "/var/run/docker.sock:/var/run/docker.sock",
-                    "/tmp:/var/lib/buildkite-agent/tmp",
+                    "/tmp:/tmp",
                 ],
             }
         },
