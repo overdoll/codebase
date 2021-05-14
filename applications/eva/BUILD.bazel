@@ -29,7 +29,7 @@ go_binary(
 )
 
 go_image(
-    name = "eva-image",
+    name = "image",
     base = "@go_base_image//image",
     data = web_sources,
     embed = [":go_default_library"],

@@ -3,19 +3,16 @@
 # modified for us
 
 import argparse
-import os
 import random
 import shutil
 import sys
 import tempfile
-import threading
 
 import utils.bazel as bazel
 import utils.exception as exception
 import utils.exec as exec
 import utils.flags as flags
 import utils.terminal_print as terminal_print
-import utils.test_logs as test_logs
 
 random.seed()
 
@@ -58,24 +55,36 @@ def execute_commands():
             "//applications/medusa:unit",
             "//applications/medusa:integration",
         ]
+        #
+        # test_flags, json_profile_out_test = flags.calculate_flags(
+        #     "test_flags", "test", tmpdir, test_env_vars
+        # )
 
-        test_flags, json_profile_out_test = flags.calculate_flags(
-            "test_flags", "test", tmpdir, test_env_vars
+        # test_bep_file = os.path.join(tmpdir, "test_bep.json")
+        # stop_request = threading.Event()
+        # upload_thread = threading.Thread(
+        #     target=test_logs.upload_test_logs_from_bep, args=(test_bep_file, tmpdir, stop_request)
+        # )
+        #
+        # try:
+        #     upload_thread.start()
+        #     bazel.execute_bazel_test(":bazel: Running unit tests", test_flags, test_targets, test_bep_file, [])
+        # finally:
+        #     stop_request.set()
+        #     upload_thread.join()
+
+        image_targets = [
+            "//applications/eva:image",
+            "//applications/buffer:image",
+            "//applications/sting:image"
+        ]
+
+        run_flags, json_profile_out_test = flags.calculate_flags(
+            "run_flags", "run", tmpdir, test_env_vars
         )
 
-        test_bep_file = os.path.join(tmpdir, "test_bep.json")
-        stop_request = threading.Event()
-        upload_thread = threading.Thread(
-            target=test_logs.upload_test_logs_from_bep, args=(test_bep_file, tmpdir, stop_request)
-        )
-
-        try:
-            upload_thread.start()
-            bazel.execute_bazel_test(":bazel: Running unit tests", test_flags, test_targets, test_bep_file, [])
-        finally:
-            stop_request.set()
-            upload_thread.join()
-
+        for img in image_targets:
+            bazel.execute_bazel_run(":docker: Loading {} into docker daemon".format(img), run_flags, img, [])
 
     finally:
         if tmpdir:
