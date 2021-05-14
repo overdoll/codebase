@@ -121,7 +121,7 @@ def create_docker_step(label, commands, additional_env_vars=None):
         "plugins": {
             "docker#v3.5.0": {
                 "always-pull": True,
-                "environment": format_env_vars(additional_env_vars) + ["CONTAINER_REGISTRY"],
+                "environment": format_env_vars(additional_env_vars) + ["CONTAINER_REGISTRY", "DOCKER_CONFIG"],
                 "image": "gcr.io/bazel-public/ubuntu1804-java11",
                 "network": "host",
                 "privileged": True,
