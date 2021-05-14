@@ -12,9 +12,10 @@ import {
   Modal,
   ModalOverlay,
   ModalContent,
-  ModalHeader,
   ModalBody,
   ModalCloseButton,
+  Avatar,
+  Text,
 } from '@chakra-ui/react';
 import SwiperCore, { Pagination, Navigation } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -22,16 +23,16 @@ import 'swiper/swiper.min.css';
 import 'swiper/components/pagination/pagination.min.css';
 import 'swiper/components/navigation/navigation.min.css';
 
+SwiperCore.use([Pagination, Navigation]);
+
 type Props = {
-  images: any,
+  data: any,
 };
 
-export default function FullPost({ images }: Props): Node {
-  SwiperCore.use([Pagination, Navigation]);
-
+export default function FullPost({ data }: Props): Node {
   const [isOpen, setOpen] = useState(false);
 
-  const [currentSlide, setSlide] = useState(false);
+  const [currentSlide, setSlide] = useState(null);
 
   return (
     <Center>
@@ -42,33 +43,47 @@ export default function FullPost({ images }: Props): Node {
         align="center"
         display="absolute"
       >
-        <Box w="100%" h="100%">
+        <Flex mt={2} direction="row" align="center">
+          <Avatar
+            name={data.artist.username}
+            src={data.artist.avatar}
+            size="sm"
+            mr={2}
+          />
+          <Text>{data.artist.username}</Text>
+        </Flex>
+        <Box w="100%" h="100%" mt={2} mb={2}>
           <Swiper
             pagination={{
               clickable: true,
             }}
             centeredSlides={true}
             navigation={true}
-            onSwiper={swiper => console.log(swiper)}
           >
-            {images.files.map((file, index) => {
-              const content = images.urls[file.id];
+            {data.files.map((file, index) => {
+              const content = data.urls[file.id];
 
               return (
                 <SwiperSlide key={file.id}>
                   {content ? (
-                    <Flex>
+                    <Flex position="relative" align="center" justify="center">
                       <Image
                         alt="thumbnail"
                         w="100%"
                         h="600px"
                         objectFit="cover"
                         src={content}
+                      />
+                      <Box
+                        bg="transparent"
+                        w="40%"
+                        h="50%"
+                        position="absolute"
                         onClick={o => {
+                          setSlide(file.id);
                           setOpen(true);
                         }}
                       />
-                      <Box bg="gray.500" w="50%" h="50%"></Box>
                     </Flex>
                   ) : (
                     <Spinner size="xl" color="red.500" />
@@ -78,6 +93,29 @@ export default function FullPost({ images }: Props): Node {
             })}
           </Swiper>
         </Box>
+        <Flex direction="column">
+          <Flex direction="row">
+            <Text color="gray.300" mr={2}>
+              Characters
+            </Text>
+            {Object.keys(data.characters).map(character => (
+              <Text color="gray.200" mr={1} key={data.characters[character].id}>
+                {data.characters[character].name} (
+                {data.characters[character].media.title})
+              </Text>
+            ))}
+          </Flex>
+          <Flex direction="row">
+            <Text color="gray.300" mr={2}>
+              Categories
+            </Text>
+            {Object.keys(data.categories).map(category => (
+              <Text color="gray.200" mr={1} key={data.categories[category].id}>
+                {data.categories[category].title}
+              </Text>
+            ))}
+          </Flex>
+        </Flex>
       </Flex>
       <Modal
         isOpen={isOpen}
@@ -88,16 +126,26 @@ export default function FullPost({ images }: Props): Node {
       >
         <ModalOverlay />
         <ModalContent m={0} borderRadius={0} bg="shadows.500">
-          <ModalHeader />
           <ModalCloseButton size="lg" />
-          <ModalBody h="100%" p={0}>
-            <Flex align="center" justify="center">
-              {currentSlide ? (
-                <Image alt="thumbnail" w="100%" objectFit="cover" src={'url'} />
-              ) : (
+          <ModalBody
+            h="100%"
+            display="flex"
+            p={0}
+            align="center"
+            justify="center"
+          >
+            {currentSlide ? (
+              <Image
+                alt="thumbnail"
+                w="100%"
+                objectFit="contain"
+                src={data.urls[currentSlide]}
+              />
+            ) : (
+              <Flex w="100%" align="center" justify="center">
                 <Spinner size="xl" color="red.500" />
-              )}
-            </Flex>
+              </Flex>
+            )}
           </ModalBody>
         </ModalContent>
       </Modal>

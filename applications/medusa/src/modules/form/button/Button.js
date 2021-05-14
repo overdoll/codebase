@@ -2,20 +2,18 @@
  * @flow
  */
 import type { Node } from 'react';
-import { Icon } from '@//:modules/content';
-import SynchronizeArrow1 from '@streamlinehq/streamlinehq/img/streamline-regular/synchronize-arrow-1-WipT2h.svg';
 import { Button as ChakraButton } from '@chakra-ui/react';
-import { motion } from 'framer-motion';
 
-const AnimatedButton = motion(ChakraButton);
+const AnimatedButton = ChakraButton;
 
 type Props = {
   loading?: boolean,
   children?: Node,
   sx?: any,
-  size?: any,
-  type?: any,
+  size?: string,
+  variant?: string,
   disabled?: boolean,
+  colorScheme?: string,
 };
 
 export default function Button({
@@ -24,7 +22,8 @@ export default function Button({
   children,
   disabled,
   size,
-  type,
+  variant,
+  colorScheme,
   ...rest
 }: Props): Node {
   const fullDisable = disabled || loading;
@@ -33,11 +32,13 @@ export default function Button({
     <AnimatedButton
       {...rest}
       radius="xl"
-      size="lg"
+      size={!size ? 'sm' : size}
+      variant={!variant ? 'solid' : variant}
+      colorScheme={!colorScheme ? 'gray' : colorScheme}
       disabled={fullDisable}
-      whileTap={{ scale: 1.1 }}
+      isLoading={loading}
     >
-      {loading ? <Icon icon={SynchronizeArrow1} stroke="inherit" /> : children}
+      {children}
     </AnimatedButton>
   );
 }

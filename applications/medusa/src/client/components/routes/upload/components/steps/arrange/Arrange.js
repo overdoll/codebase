@@ -4,7 +4,15 @@
 import type { Node } from 'react';
 import Picker from '../../picker/Picker';
 
-import { Center, Flex, Heading, Box, Stack } from '@chakra-ui/react';
+import {
+  Center,
+  Flex,
+  Heading,
+  Box,
+  Stack,
+  IconButton,
+  Text,
+} from '@chakra-ui/react';
 
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import File from './components/file/File';
@@ -12,6 +20,8 @@ import type { Dispatch, State } from '@//:types/upload';
 import { EVENTS } from '../../../constants/constants';
 import { useTranslation } from 'react-i18next';
 import Button from '@//:modules/form/button/Button';
+import Icon from '@//:modules/content/icon/Icon';
+import AddCircleBoldAlternate from '@streamlinehq/streamlinehq/img/streamline-bold/add-circle-bold-alternate-vhjxKz.svg';
 
 type Props = {
   uppy: any,
@@ -89,47 +99,49 @@ export default function Arrange({
   const [t] = useTranslation('upload');
 
   return (
-    <Center mt={8}>
-      <Flex w={['sm', 'md', 'lg']} ml={[1, 0]} mr={[1, 0]} direction="column">
-        <Heading fontSize="3xl" color="gray.00" mb={4}>
-          {t('arrange.header')}
-        </Heading>
-        <Box>
-          <DragDropContext
-            nonce={window.__webpack_nonce__}
-            onDragEnd={onDragEnd}
-          >
-            <Droppable droppableId="upload">
-              {(provided, snapshot) => (
-                // the list
-                <Stack
-                  spacing={snapshot.isDragging ? 3 : 1}
-                  {...provided.droppableProps}
-                  ref={provided.innerRef}
-                >
-                  {state.files.map((file, index) => (
-                    // the item
-                    <File
-                      key={file.id}
-                      file={file}
-                      thumbnail={state.thumbnails[file.id]}
-                      progress={state.progress[file.id]}
-                      onRemove={onRemoveFile}
-                      index={index}
-                    />
-                  ))}
-                  {provided.placeholder}
-                </Stack>
-              )}
-            </Droppable>
-          </DragDropContext>
-        </Box>
-        <Box mt={4}>
+    <>
+      <Heading fontSize="3xl" color="gray.00" mb={4}>
+        {t('arrange.header')}
+      </Heading>
+      <Box align="right">
+        <Flex mb={2} align="center" justify="space-between">
+          <Text>Posting {state.files.length} media</Text>
           <Picker uppy={uppy} onSelect={onAddFiles}>
-            <Button width="100%">{t('arrange.add')}</Button>
+            <Button
+              leftIcon={<Icon icon={AddCircleBoldAlternate} fill="gray.100" />}
+              size="md"
+              variant="link"
+            >
+              {t('arrange.add')}
+            </Button>
           </Picker>
-        </Box>
-      </Flex>
-    </Center>
+        </Flex>
+        <DragDropContext nonce={window.__webpack_nonce__} onDragEnd={onDragEnd}>
+          <Droppable droppableId="upload">
+            {(provided, snapshot) => (
+              // the list
+              <Stack
+                spacing={snapshot.isDragging ? 3 : 1}
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+              >
+                {state.files.map((file, index) => (
+                  // the item
+                  <File
+                    key={file.id}
+                    file={file}
+                    thumbnail={state.thumbnails[file.id]}
+                    progress={state.progress[file.id]}
+                    onRemove={onRemoveFile}
+                    index={index}
+                  />
+                ))}
+                {provided.placeholder}
+              </Stack>
+            )}
+          </Droppable>
+        </DragDropContext>
+      </Box>
+    </>
   );
 }

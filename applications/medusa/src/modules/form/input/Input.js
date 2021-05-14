@@ -7,6 +7,7 @@ import {
   FormControl,
   FormHelperText,
   FormLabel,
+  Flex,
   Input as ChakraInput,
 } from '@chakra-ui/react';
 import { useFormContext } from 'react-hook-form';
@@ -38,26 +39,18 @@ export default function Input({
 
   return (
     <FormControl isInvalid={hasError} id={name}>
-      <chakra.div
-        sx={{
-          position: 'relative',
-        }}
-      >
+      <Flex position="relative">
         <FormLabel
           htmlFor={name}
-          sx={{
-            color: !success
-              ? hasError
-                ? 'orange.500'
-                : 'gray.200'
-              : 'green.600',
-            fontFamily: 'heading',
-            position: 'absolute',
-            fontSize: 'm',
-            pl: 3,
-            pt: 2,
-            transform: 'translateX(3.5%)',
-          }}
+          color={
+            !success ? (hasError ? 'orange.500' : 'gray.200') : 'green.600'
+          }
+          position="absolute"
+          fontSize="md"
+          fontWeight="md"
+          pl={3}
+          pt={2}
+          transform="translateX(3.5%)"
         >
           {title}
         </FormLabel>
@@ -95,8 +88,8 @@ export default function Input({
             }}
           />
         )}
-      </chakra.div>
-      <FormHelperText fontSize="lg" color="orange.300" pl={3} h={8}>
+      </Flex>
+      <FormHelperText fontSize="lg" color="orange.300" pl={3} h={9}>
         {errors[name]?.message}
       </FormHelperText>
     </FormControl>

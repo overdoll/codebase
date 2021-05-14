@@ -4,6 +4,7 @@ import { createBreakpoints } from '@chakra-ui/theme-tools';
  * Breakpoints for responsive design
  */
 const breakpoints = createBreakpoints({
+  login: '300px',
   sm: '30em',
   md: '48em',
   lg: '62em',

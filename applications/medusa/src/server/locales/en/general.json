@@ -1,0 +1,14 @@
+{
+  "button": {
+    "close": "Close",
+    "next": "Next",
+    "cancel": "Cancel",
+    "back": "Back",
+    "submit": "Submit",
+    "add": "Add",
+    "modify": "Modify"
+  },
+  "input": {
+    "search": "Search something you know..."
+  }
+}

@@ -6,7 +6,11 @@ import { graphql, useLazyLoadQuery } from 'react-relay/hooks';
 import type { CharactersQuery } from '@//:artifacts/CharactersQuery.graphql';
 import type { VariablesOf } from 'relay-runtime';
 import Element from '../../../element/Element';
-import { Wrap } from '@chakra-ui/react';
+import { Flex, Heading, Wrap } from '@chakra-ui/react';
+import CleaningBroom from '@streamlinehq/streamlinehq/img/streamline-regular/cleaning-broom-fSZbre.svg';
+import Icon from '@//:modules/content/icon/Icon';
+import Button from '@//:modules/form/button/Button';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   args: {
@@ -51,14 +55,19 @@ export default function Characters({ args, onSelect, selected }: Props): Node {
     });
   };
 
+  const [t] = useTranslation('upload');
+
   if (data.characters.length === 0) {
     return (
-      <>
-        no characters found
-        <button onClick={onAddNewCharacter}>
-          add {args.variables.data.search} character
-        </button>
-      </>
+      <Flex direction="column" align="center" justify="center" h="70%">
+        <Icon h={100} w={100} icon={CleaningBroom} color="gray.100" mb={8} />
+        <Heading mb={8} color="gray.100" size="lg">
+          {t('tag.character.not_found')}
+        </Heading>
+        <Button size="lg" onClick={onAddNewCharacter}>
+          {t('tag.character.add') + ' ' + args.variables.data.search}
+        </Button>
+      </Flex>
     );
   }
 

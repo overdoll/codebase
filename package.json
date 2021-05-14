@@ -51,6 +51,7 @@
     "serialize-javascript": "^5.0.1",
     "subscriptions-transport-ws": "^0.9.18",
     "swiper": "^6.5.9",
+    "ua-parser-js": "^0.7.28",
     "use-query-params": "^1.2.0",
     "winston": "^3.3.3"
   },

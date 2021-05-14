@@ -7,7 +7,7 @@ const U = new Uppy({
   id: 'posts',
   restrictions: {
     maxNumberOfFiles: 10,
-    allowedFileTypes: ['image/jpeg', 'image/png', 'video/mp4'],
+    allowedFileTypes: ['image/jpeg', 'image/png', 'video/mp4', 'image/jpg'],
   },
   autoProceed: true,
   allowMultipleUploads: true,

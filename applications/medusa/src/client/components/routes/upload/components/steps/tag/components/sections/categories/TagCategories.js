@@ -7,6 +7,7 @@ import type { Dispatch, State } from '@//:types/upload';
 import { EVENTS } from '../../../../../../constants/constants';
 import Section from '../../section/Section';
 import { Tag, TagLabel, Text, TagCloseButton } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   dispatch: Dispatch,
@@ -14,6 +15,8 @@ type Props = {
 };
 
 export default function TagCategories({ state, dispatch }: Props): Node {
+  const [t] = useTranslation('upload');
+
   // OnSelect will remove or add the category based on if it's in the object already or not
   const onSelect = category => {
     dispatch({
@@ -33,8 +36,8 @@ export default function TagCategories({ state, dispatch }: Props): Node {
 
   return (
     <Section
-      label="select category"
-      placeholder="search categories"
+      label={t('tag.category.label')}
+      searchTitle={t('tag.category.search')}
       search={args => (
         <Categories
           selected={Object.keys(state.categories)}
@@ -42,14 +45,14 @@ export default function TagCategories({ state, dispatch }: Props): Node {
           args={args}
         />
       )}
-      title={'Categories'}
+      title={t('tag.category.label')}
       count={Object.keys(state.categories).length}
     >
       {Object.keys(state.categories).length !== 0 ? (
         Object.keys(state.categories).map(id => (
           <Tag
+            key={id}
             size="lg"
-            key="lg"
             variant="solid"
             colorScheme="purple"
             borderRadius="full"
@@ -60,7 +63,7 @@ export default function TagCategories({ state, dispatch }: Props): Node {
         ))
       ) : (
         <Text as="i" fontSize="md">
-          No categories selected
+          {t('tag.category.empty')}
         </Text>
       )}
     </Section>

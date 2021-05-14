@@ -12,22 +12,24 @@ export default function Empty(): Node {
   const [t] = useTranslation('empty');
 
   return (
-    <Center mt={8}>
-      <Flex w={['fill', 'sm']} direction="column">
+    <Center mt={40}>
+      <Flex w={['sm', 'md', 'lg']} direction="column">
         <Icon
           icon={SignBadgeCircle}
+          color="red.500"
           w={100}
           h={100}
           ml="auto"
           mr="auto"
-          mb={5}
+          mb={8}
         />
-        <Heading size="lg" align="center">
+        <Heading size="lg" align="center" color="gray.00">
           {t('empty.header')}
         </Heading>
-        <Center mt={4}>
+        <Center mt={8}>
           <Stack direction={['column', 'row']} spacing="24px">
             <Button
+              size="lg"
               onClick={() => {
                 history.back();
               }}
@@ -35,6 +37,8 @@ export default function Empty(): Node {
               {t('empty.leave')}
             </Button>
             <Button
+              size="lg"
+              colorScheme="red"
               onClick={() => {
                 history.back();
               }}

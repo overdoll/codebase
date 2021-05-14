@@ -8,7 +8,19 @@ import Register from '../../register/Register';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from '@//:modules/routing';
 import type { TokenQuery } from '@//:artifacts/TokenQuery.graphql';
-import { Center, chakra, Flex, Heading, Text } from '@chakra-ui/react';
+import {
+  Center,
+  Flex,
+  Heading,
+  Text,
+  Box,
+  AlertIcon,
+  AlertDescription,
+  Alert,
+} from '@chakra-ui/react';
+import Icon from '@//:modules/content/icon/Icon';
+import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/sign-badge-circle-K1i3HA.svg';
+import UAParser from 'ua-parser-js';
 
 type Props = {
   prepared: {
@@ -45,35 +57,38 @@ export default function Token(props: Props): Node {
   // Token was not redeemed in the same session, so we tell the user to check
   // the other session
   if (!data.redeemCookie.sameSession) {
+    const cookieText = UAParser(
+      JSON.parse(data.redeemCookie.session)['user-agent'],
+    );
+
     return (
       <Center mt={8}>
         <Flex w={['fill', 'sm']} direction="column">
-          <Heading sx={{ textAlign: 'center', fontSize: 2 }}>
+          <Icon
+            icon={SignBadgeCircle}
+            w={100}
+            h={100}
+            color="green.500"
+            ml="auto"
+            mr="auto"
+            mb={8}
+          />
+          <Heading mb={8} align="center" size="md" color="gray.100">
             {t('header')}
           </Heading>
-          <chakra.div
-            sx={{
-              mt: 4,
-              width: 'fill',
-              textAlign: 'center',
-              backgroundColor: 'grey.800',
-              pt: 2,
-              pb: 2,
-            }}
-          >
-            <Text color="green.300">
-              {JSON.parse(data.redeemCookie.session)['user-agent']}
-            </Text>
-          </chakra.div>
-          <chakra.div
-            sx={{
-              mt: 4,
-              width: 'fill',
-              textAlign: 'center',
-            }}
-          >
-            <Text>{t('close')}</Text>
-          </chakra.div>
+          <Box mb={8} pt={3} pb={3} borderRadius={5} bg="gray.800">
+            <Center>
+              <Text fontSize="lg" color="green.300">
+                {cookieText.browser.name} {cookieText.browser.major},{' '}
+                {cookieText.os.name} {cookieText.os.version}
+              </Text>
+            </Center>
+          </Box>
+          <Alert mt={4} borderRadius={5}>
+            <AlertIcon />
+            {t('close')}
+            <AlertDescription />
+          </Alert>
         </Flex>
       </Center>
     );

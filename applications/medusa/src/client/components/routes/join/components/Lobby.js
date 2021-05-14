@@ -9,15 +9,7 @@ import { useTranslation } from 'react-i18next';
 import type { LobbySubscriptionResponse } from '@//:artifacts/LobbySubscription.graphql';
 import Icon from '@//:modules/content/icon/Icon';
 import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/sign-badge-circle-K1i3HA.svg';
-import ContentInkPen from '@streamlinehq/streamlinehq/img/streamline-bold/content-ink-pen-jHW3zi.svg';
-import {
-  Center,
-  chakra,
-  Flex,
-  Heading,
-  Text,
-  useToast,
-} from '@chakra-ui/react';
+import { Center, Flex, Heading, Text, Box, useToast } from '@chakra-ui/react';
 
 type Props = {
   onReceive: any,
@@ -119,59 +111,37 @@ export default function Lobby(props: Props): Node {
   };
 
   return (
-    <Center mt={8}>
-      <Flex w={['fill', 400]} direction="column">
+    <Center mt={40}>
+      <Flex w={['sm', 'md']} direction="column">
         <Icon
           icon={SignBadgeCircle}
+          w={100}
+          h={100}
           color="purple.300"
-          sx={{
-            pb: 7,
-            pt: 6,
-            textAlign: 'center',
-          }}
+          ml="auto"
+          mr="auto"
+          mb={8}
         />
-        <Heading sx={{ textAlign: 'center', fontSize: 3 }}>
+        <Heading mb={8} align="center" size="lg" color="gray.00">
           {t('lobby.header')}
         </Heading>
-        <chakra.div
-          sx={{
-            mt: 6,
-            width: '100%',
-            textAlign: 'center',
-            backgroundColor: 'neutral.800',
-            pt: 3,
-            pb: 3,
-            overflow: 'scroll',
-            pl: 3,
-            pr: 3,
-          }}
-        >
-          <Text color="purple.300">{props.email}</Text>
-          <Icon
-            icon={ContentInkPen}
-            // delete cookie from backend and navigate to join
-            fill="purple.300"
-            size={16}
-            sx={{
-              display: 'inline-block',
-              transform: 'translateY(25%) translateX(400%)',
-              position: 'absolute',
-            }}
-          />
-        </chakra.div>
-        <Button
-          variant={['huge']}
-          sx={{
-            mt: 6,
-            variant: 'buttons.tertiary.regular',
-            width: 'fill',
-          }}
-          loading={isSendingEmail}
-          onClick={onSubmit}
-          disabled={buttonDisabled}
-        >
-          {t('lobby.resend') + (!buttonDisabled ? '' : ` (${timer})`)}
-        </Button>
+        <Box mb={8} pt={3} pb={3} borderRadius={5} bg="gray.800">
+          <Center>
+            <Text fontSize="lg" color="purple.300">
+              {props.email}
+            </Text>
+          </Center>
+        </Box>
+        <Center>
+          <Button
+            size="lg"
+            loading={isSendingEmail}
+            onClick={onSubmit}
+            disabled={buttonDisabled}
+          >
+            {t('lobby.resend') + (!buttonDisabled ? '' : ` (${timer})`)}
+          </Button>
+        </Center>
       </Flex>
     </Center>
   );

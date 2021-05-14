@@ -11,6 +11,7 @@ import borders from './borders';
 import transition from './transition';
 import global from './global';
 import input from './components/input';
+import button from './components/button';
 
 const theme = extendTheme({
   config: {
@@ -20,7 +21,6 @@ const theme = extendTheme({
   colors: colors,
   ...typography,
   radii: radius,
-
   breakpoints,
   zIndices,
   sizes,
@@ -33,6 +33,7 @@ const theme = extendTheme({
   },
   components: {
     Input: input,
+    Button: button,
   },
 });
 

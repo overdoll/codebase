@@ -2,15 +2,7 @@
  * @flow
  */
 import type { Node } from 'react';
-import {
-  Image,
-  Container,
-  Flex,
-  Box,
-  Text,
-  Heading,
-  Center,
-} from '@chakra-ui/react';
+import { Image, Flex, Text } from '@chakra-ui/react';
 
 type Props = {
   selected: boolean,
@@ -38,10 +30,12 @@ export default function Element({
       objectFit="cover"
       overflow="hidden"
       align="center"
+      cursor="pointer"
+      userSelect="none"
     >
       <Flex h="100%" w="100%" position="relative">
         <Image
-          alt={!!title}
+          alt={title}
           src={thumbnail}
           w="100%"
           h="100%"

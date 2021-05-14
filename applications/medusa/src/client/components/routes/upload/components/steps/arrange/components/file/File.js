@@ -57,16 +57,16 @@ export default function File({
               </Heading>
             </Flex>
             <Flex position="relative" alignItems="center" ml={2} mr={2}>
-              <Text color="neutral.100">mp4</Text>
+              <Text color="neutral.100"> </Text>
             </Flex>
             <Flex position="relative" ml={2} mr={2}>
-              <Text fontSize="sm" color="gray.100" isTruncated>
-                {progress ? (
-                  `${(progress['1'] / 1000000).toFixed(2)} mb`
-                ) : (
-                  <Skeleton />
-                )}
-              </Text>
+              {progress ? (
+                <Text fontSize="sm" color="gray.100" isTruncated>
+                  {(progress['1'] / 1000000).toFixed(2)} mb
+                </Text>
+              ) : (
+                <Skeleton />
+              )}
             </Flex>
           </Flex>
         </Flex>

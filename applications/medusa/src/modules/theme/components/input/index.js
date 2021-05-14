@@ -1,3 +1,7 @@
+/**
+ * @flow
+ */
+
 import { getColor, mode } from '@chakra-ui/theme-tools';
 
 const parts = ['field', 'addon'];
@@ -62,7 +66,7 @@ const sizes = {
   },
 };
 
-function getDefaults(props: Record<string, any>) {
+function getDefaults(props) {
   const { focusBorderColor: fc, errorBorderColor: ec } = props;
   return {
     focusBorderColor: fc || mode('blue.700', 'pink.500')(props),
@@ -70,7 +74,7 @@ function getDefaults(props: Record<string, any>) {
   };
 }
 
-function variantOutline(props: Record<string, any>) {
+function variantOutline(props) {
   const { theme } = props;
   const { focusBorderColor: fc, errorBorderColor: ec } = getDefaults(props);
 
@@ -80,7 +84,7 @@ function variantOutline(props: Record<string, any>) {
       borderColor: 'inherit',
       bg: 'inherit',
       _hover: {
-        borderColor: mode('gray.300', 'whiteAlpha.400')(props),
+        borderColor: mode('gray.300', 'gray.400')(props),
       },
       _readOnly: {
         boxShadow: 'none !important',
@@ -102,13 +106,13 @@ function variantOutline(props: Record<string, any>) {
     },
     addon: {
       border: '1px solid',
-      borderColor: mode('inherit', 'whiteAlpha.50')(props),
-      bg: mode('gray.100', 'whiteAlpha.300')(props),
+      borderColor: mode('inherit', 'gray.50')(props),
+      bg: mode('gray.100', 'gray.300')(props),
     },
   };
 }
 
-function variantFilled(props: Record<string, any>) {
+function variantFilled(props) {
   const { theme } = props;
   const { focusBorderColor: fc, errorBorderColor: ec } = getDefaults(props);
 
@@ -116,10 +120,6 @@ function variantFilled(props: Record<string, any>) {
     field: {
       border: '2px solid',
       borderColor: 'transparent',
-      bg: mode('gray.100', 'whiteAlpha.50')(props),
-      _hover: {
-        bg: mode('gray.200', 'whiteAlpha.100')(props),
-      },
       _readOnly: {
         boxShadow: 'none !important',
         userSelect: 'all',
@@ -139,12 +139,12 @@ function variantFilled(props: Record<string, any>) {
     addon: {
       border: '2px solid',
       borderColor: 'transparent',
-      bg: mode('gray.100', 'whiteAlpha.50')(props),
+      bg: mode('gray.100', 'gray.50')(props),
     },
   };
 }
 
-function variantFlushed(props: Record<string, any>) {
+function variantFlushed(props) {
   const { theme } = props;
   const { focusBorderColor: fc, errorBorderColor: ec } = getDefaults(props);
 

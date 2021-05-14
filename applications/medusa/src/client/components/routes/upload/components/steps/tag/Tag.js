@@ -9,13 +9,14 @@ import Thumbnail from '../arrange/components/thumbnail/Thumbnail';
 import type { Dispatch, State } from '@//:types/upload';
 import { useTranslation } from 'react-i18next';
 import {
-  Center,
   Flex,
   Heading,
   Text,
   HStack,
   Stack,
-  Container,
+  Alert,
+  AlertIcon,
+  AlertDescription,
 } from '@chakra-ui/react';
 
 type Props = {
@@ -26,48 +27,45 @@ type Props = {
 
 export default function Tag({ state, dispatch, disabled }: Props): Node {
   const [t] = useTranslation('upload');
+
   return (
-    <Container w={['sm', 'md', 'lg']}>
-      <Center>
-        <Flex direction="column" w="100%" mt={8} ml={[1, 0]} mr={[1, 0]}>
-          <Heading fontSize="3xl" color="gray.00" mb={2}>
-            {t('tag.header')}
-          </Heading>
-          <Text fontSize="lg" color="gray.100">
-            {t('tag.subheader')}
-          </Text>
-          <HStack flexWrap="nowrap" overflowX="auto" mt={6} mb={6}>
-            {state.files.map(file => {
-              const thumbnail = state.thumbnails[file.id];
-              const prog = state.progress[file.id];
+    <Flex direction="column" w="100%">
+      <Heading fontSize="3xl" color="gray.00" mb={2}>
+        {t('tag.header')}
+      </Heading>
+      <Text fontSize="lg" color="gray.100">
+        {t('tag.subheader')}
+      </Text>
+      <HStack flexWrap="nowrap" overflowX="auto" mt={6} mb={6}>
+        {state.files.map(file => {
+          const thumbnail = state.thumbnails[file.id];
+          const prog = state.progress[file.id];
+          return (
+            <Flex
+              key={file.id}
+              w={130}
+              h={150}
+              objectFit="cover"
+              flex="0 0 auto"
+            >
+              <Thumbnail thumbnail={thumbnail} progress={prog} />
+            </Flex>
+          );
+        })}
+      </HStack>
 
-              return (
-                <Flex
-                  key={file.id}
-                  w={130}
-                  h={150}
-                  objectFit="cover"
-                  flex="0 0 auto"
-                >
-                  <Thumbnail thumbnail={thumbnail} progress={prog} />
-                </Flex>
-              );
-            })}
-          </HStack>
-
-          <Stack>
-            <TagArtists dispatch={dispatch} state={state} />
-            <TagCharacters dispatch={dispatch} state={state} />
-            <TagCategories dispatch={dispatch} state={state} />
-          </Stack>
-          {disabled && (
-            <div>
-              you need to select an artist, 1 character and at least 3
-              categories
-            </div>
-          )}
-        </Flex>
-      </Center>
-    </Container>
+      <Stack>
+        <TagArtists dispatch={dispatch} state={state} />
+        <TagCharacters dispatch={dispatch} state={state} />
+        <TagCategories dispatch={dispatch} state={state} />
+      </Stack>
+      {disabled && (
+        <Alert mt={4} borderRadius={5}>
+          <AlertIcon />
+          {t('tag.notice')}
+          <AlertDescription />
+        </Alert>
+      )}
+    </Flex>
   );
 }

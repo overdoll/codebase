@@ -14,7 +14,14 @@ import type {
   StepsMutation,
 } from '@//:artifacts/StepsMutation.graphql';
 import type { Dispatch, State } from '@//:types/upload';
-import { useToast } from '@chakra-ui/react';
+import { useToast, Flex, Spacer, Center } from '@chakra-ui/react';
+import Button from '@//:modules/form/button/Button';
+import { useTranslation } from 'react-i18next';
+import Icon from '@//:modules/content/icon/Icon';
+import ArrowButtonRight2 from '@streamlinehq/streamlinehq/img/streamline-bold/arrow-button-right-2-YBGQeX.svg';
+import ArrowButtonLeft2 from '@streamlinehq/streamlinehq/img/streamline-bold/arrow-button-left-2-SyUczF.svg';
+import CheckCircle from '@streamlinehq/streamlinehq/img/streamline-bold/check-circle-jUATyj.svg';
+import SubtractCircleBold from '@streamlinehq/streamlinehq/img/streamline-bold/subtract-circle-bold-ZOsaRX.svg';
 
 type Props = {
   uppy: any,
@@ -38,6 +45,8 @@ export default function Steps({ uppy, state, dispatch }: Props): Node {
   const [commit, isInFlight] = useMutation<StepsMutation>(SubmitGraphQL);
 
   const notify = useToast();
+
+  const [t] = useTranslation('general');
 
   // Tagging step - disabled if the conditions aren't met
   const NextDisabled =
@@ -194,27 +203,82 @@ export default function Steps({ uppy, state, dispatch }: Props): Node {
 
   return (
     <>
-      {Step()}
-      {state.step !== null && state.step !== STEPS.FINISH && (
-        <div>
-          {state.step !== STEPS.ARRANGE ? (
-            <button disabled={isInFlight} onClick={PrevStep}>
-              prev
-            </button>
-          ) : (
-            <button onClick={onCancel}>cancel</button>
+      <Center mt={8}>
+        <Flex
+          w={['sm', 'md', 'lg']}
+          ml={[1, 0]}
+          mr={[1, 0]}
+          direction="column"
+          mb={6}
+        >
+          {Step()}
+        </Flex>
+      </Center>
+      <Center>
+        <Flex
+          direction="row"
+          w={['sm', 'md', 'lg']}
+          bottom={0}
+          justify="space-between"
+        >
+          {state.step !== null && state.step !== STEPS.FINISH && (
+            <Flex w="100%" justify="space-between">
+              {state.step !== STEPS.ARRANGE ? (
+                <Button
+                  m={2}
+                  size="lg"
+                  disabled={isInFlight}
+                  onClick={PrevStep}
+                  variant="outline"
+                  leftIcon={
+                    <Icon icon={ArrowButtonLeft2} w="75%" fill="gray.50" />
+                  }
+                >
+                  {t('button.back')}
+                </Button>
+              ) : (
+                <Button
+                  m={2}
+                  size="lg"
+                  variant="outline"
+                  onClick={onCancel}
+                  leftIcon={
+                    <Icon icon={SubtractCircleBold} w="80%" fill="gray.50" />
+                  }
+                >
+                  {t('button.cancel')}
+                </Button>
+              )}
+              <Spacer />
+              {state.step !== STEPS.REVIEW ? (
+                <Button
+                  m={2}
+                  size="lg"
+                  disabled={NextDisabled}
+                  onClick={NextStep}
+                  rightIcon={
+                    <Icon icon={ArrowButtonRight2} w="75%" fill="gray.50" />
+                  }
+                >
+                  {t('button.next')}
+                </Button>
+              ) : (
+                <Button
+                  m={2}
+                  size="lg"
+                  onClick={onSubmit}
+                  colorScheme="red"
+                  variant="outline"
+                  disabled={SubmitDisabled || isInFlight}
+                  rightIcon={<Icon icon={CheckCircle} w="85%" fill="red.200" />}
+                >
+                  {t('button.submit')}
+                </Button>
+              )}
+            </Flex>
           )}
-          {state.step !== STEPS.REVIEW ? (
-            <button disabled={NextDisabled} onClick={NextStep}>
-              next
-            </button>
-          ) : (
-            <button onClick={onSubmit} disabled={SubmitDisabled || isInFlight}>
-              submit
-            </button>
-          )}
-        </div>
-      )}
+        </Flex>
+      </Center>
     </>
   );
 }

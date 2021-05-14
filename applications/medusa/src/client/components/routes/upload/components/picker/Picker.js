@@ -2,7 +2,7 @@
  * @flow
  */
 import type { Node } from 'react';
-import { useToast } from '@chakra-ui/react';
+import { useToast, Flex } from '@chakra-ui/react';
 import { useRef } from 'react';
 
 type Props = {
@@ -46,9 +46,9 @@ export default function Picker({ uppy, onSelect, children }: Props): Node {
   };
 
   return (
-    <div onClick={uploadClick}>
+    <Flex onClick={uploadClick} cursor="pointer">
       {children}
       <input ref={fileInput} hidden type="file" multiple onChange={onChange} />
-    </div>
+    </Flex>
   );
 }

@@ -6,7 +6,8 @@ import Artists from './query/Artists';
 import type { Dispatch, State } from '@//:types/upload';
 import { EVENTS } from '../../../../../../constants/constants';
 import Section from '../../section/Section';
-import { Tag, TagLabel, TagCloseButton, Text } from '@chakra-ui/react';
+import { Tag, TagLabel, Text } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   dispatch: Dispatch,
@@ -14,24 +15,18 @@ type Props = {
 };
 
 export default function TagArtists({ state, dispatch }: Props): Node {
+  const [t] = useTranslation('upload');
+
   // For selecting an artist, we immediately close since we should only have 1
   const onSelect = (artist, onClose) => {
     dispatch({ type: EVENTS.TAG_ARTIST, value: artist });
     onClose();
   };
 
-  const onRemove = artist => {
-    dispatch({
-      type: EVENTS.TAG_ARTIST,
-      remove: true,
-      value: artist,
-    });
-  };
-
   return (
     <Section
-      label="select artist"
-      placeholder="search artists"
+      label={t('tag.artist.label')}
+      searchTitle={t('tag.artist.search')}
       search={(args, onClose) => (
         <Artists
           args={args}
@@ -39,23 +34,16 @@ export default function TagArtists({ state, dispatch }: Props): Node {
           onSelect={artist => onSelect(artist, onClose)}
         />
       )}
-      title={'Artist'}
+      title={t('tag.artist.label')}
       count={Object.keys(state.artist).length !== 0 ? 1 : 0}
     >
       {Object.keys(state.artist).length !== 0 ? (
-        <Tag
-          size="lg"
-          key="lg"
-          variant="solid"
-          colorScheme="teal"
-          borderRadius="full"
-        >
+        <Tag size="lg" variant="solid" colorScheme="teal" borderRadius="full">
           <TagLabel>{state.artist.username}</TagLabel>
-          <TagCloseButton onClick={() => onRemove(state.artist)} />
         </Tag>
       ) : (
         <Text as="i" fontSize="md">
-          No artist selected
+          {t('tag.artist.empty')}
         </Text>
       )}
     </Section>
