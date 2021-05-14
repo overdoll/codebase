@@ -133,6 +133,7 @@ def create_docker_step(label, commands, additional_env_vars=None):
                     "/opt:/opt:ro",
                     "/var/lib/buildkite-agent:/var/lib/buildkite-agent",
                     "/var/run/docker.sock:/var/run/docker.sock",
+                    "$DOCKER_CONFIG/config.json:/var/lib/buildkite-agent/.docker/config.json",
                 ],
             }
         },
@@ -260,8 +261,6 @@ def execute_build_commands(configs):
 
     try:
         test_env_vars = ["HOME"]
-
-        print(os.getenv("DOCKER_CONFIG") + "/config.json")
 
         build_flags, json_profile_out_build = flags.calculate_flags(
             "build_flags", "build", tmpdir, test_env_vars
