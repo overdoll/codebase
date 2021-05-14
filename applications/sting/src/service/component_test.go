@@ -9,12 +9,7 @@ import (
 )
 
 func startService() bool {
-	_, router := service.NewComponentTestApplication(context.Background())
-
-	go func() {
-		_ = router.Run(context.Background())
-	}()
-	router.Running()
+	_ = service.NewComponentTestApplication(context.Background())
 
 	return true
 }
