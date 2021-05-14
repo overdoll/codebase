@@ -133,7 +133,7 @@ def create_docker_step(label, commands, additional_env_vars=None):
                     "/opt:/opt:ro",
                     "/var/lib/buildkite-agent:/var/lib/buildkite-agent",
                     "/var/run/docker.sock:/var/run/docker.sock",
-                    "$DOCKER_CONFIG/config.json:/var/lib/buildkite-agent/.docker/config.json",
+                    "${DOCKER_CONFIG}/config.json:/var/lib/buildkite-agent/.docker/config.json",
                 ],
             }
         },
