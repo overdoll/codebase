@@ -32,7 +32,6 @@ def common_build_flags(bep_file, is_test):
         os.makedirs(bazelisk_cache_dir, mode=0o755, exist_ok=True)
 
         flags += [
-            "--flaky_test_attempts=default",
             "--build_tests_only",
             "--local_test_jobs=" + concurrent_jobs(),
             "--sandbox_writable_path={}".format(bazelisk_cache_dir)

@@ -3,7 +3,7 @@
  */
 import { createMemoryHistory } from 'history';
 import type { ComponentType } from 'react';
-import createRouter from '@//:modules/routing/createRouter';
+import { createClientRouter } from '@//:modules/routing/createRouter';
 import RoutingContext from '@//:modules/routing/RoutingContext';
 import RelayEnvironment from '@//:modules/relay/RelayEnvironment';
 import Bootstrap from '../../client/Bootstrap';
@@ -26,7 +26,7 @@ export default function withProviders({
   initialEntries = ['/'],
   routes = [],
 }: WithProviders): any {
-  const router = createRouter(
+  const router = createClientRouter(
     routes,
     createMemoryHistory({
       initialEntries,

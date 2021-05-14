@@ -38,7 +38,7 @@ container_push(
     format = "Docker",
     image = ":image",
     registry = "$(CONTAINER_REGISTRY)",
-    repository = "sting-dev",
+    repository = "sting/dev",
     tag = "$(CONTAINER_TAG)",
 )
 

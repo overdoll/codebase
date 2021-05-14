@@ -23,7 +23,7 @@ var Migrate = &cobra.Command{
 			log.Fatalf("bootstrap failed with errors: %s", err)
 		}
 
-		session, err := bootstrap.InitializeDatabaseSession()
+		session, err := bootstrap.InitializeDatabaseSession("test")
 
 		if err != nil {
 			log.Fatalf("database session failed with errors: %s", err)

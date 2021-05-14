@@ -37,7 +37,7 @@ container_push(
     format = "Docker",
     image = ":image",
     registry = "$(CONTAINER_REGISTRY)",
-    repository = "buffer-dev",
+    repository = "buffer/dev",
     tag = "$(CONTAINER_TAG)",
 )
 

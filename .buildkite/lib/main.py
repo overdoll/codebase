@@ -176,7 +176,7 @@ def print_project_pipeline():
         )
     )
 
-    integration = steps.get("integration_tests", None)
+    integration = steps.get("integration_test", None)
     if not integration:
         raise exception.BuildkiteException("integration step is empty")
 
@@ -187,12 +187,12 @@ def print_project_pipeline():
             platform="docker-compose",
             # Include docker-compose configs from all configurations, plus our custom one - the container in which the
             # integration tests will actually be ran
-            configs=integration.get("config.dockerfile", []) + [
-                ".buildkite/config/docker/docker-compose.integration.yaml"]
+            configs=integration.get("setup", {}).get("dockerfile", []) + [
+                "./.buildkite/config/docker/docker-compose.integration.yaml"]
         )
     )
 
-    e2e = steps.get("e2e_tests", None)
+    e2e = steps.get("e2e_test", None)
     if not e2e:
         raise exception.BuildkiteException("e2e step is empty")
 
@@ -202,8 +202,8 @@ def print_project_pipeline():
             # grab commands to run inside of our container (it will be medusa)
             commands=e2e.get("commands"),
             platform="docker-compose",
-            configs=e2e.get("config.dockerfile", []) + [
-                ".buildkite/config/docker/docker-compose.e2e.yaml"]
+            configs=e2e.get("setup", {}).get("dockerfile", []) + [
+                "./.buildkite/config/docker/docker-compose.e2e.yaml"]
         )
     )
 
@@ -229,11 +229,16 @@ def execute_integration_tests_commands(configs):
             target=test_logs.upload_test_logs_from_bep, args=(test_bep_file, tmpdir, stop_request)
         )
 
+        # add user-defined environment variables
+        test_flags += ["--test_env={}".format(
+            format_env_vars(configs.get("integration_test", {}).get("config", {}).get("env", {})))]
+
         try:
             upload_thread.start()
-            test_targets = configs.get("steps.integration_tests.targets", [])
+            test_targets = configs.get("integration_test", {}).get("targets", [])
 
-            # TODO: need to define environment variables with --test_env so bazel knows to inject them (from config)
+            # integration test MAY be flaky because of external dependencies, so we will attempt retries
+            test_flags += ["--flaky_test_attempts=3"]
             bazel.execute_bazel_test(":bazel: Running integration tests", test_flags, test_targets, test_bep_file, [])
         finally:
             stop_request.set()
@@ -249,13 +254,13 @@ def execute_build_commands(configs):
     tmpdir = tempfile.mkdtemp()
 
     try:
-        test_env_vars = ["HOME"]
+        test_env_vars = ["HOME", "BUILDKITE_COMMIT", "CONTAINER_REGISTRY"]
 
         build_flags, json_profile_out_build = flags.calculate_flags(
             "build_flags", "build", tmpdir, test_env_vars
         )
 
-        build_targets = configs.get("steps.build.targets", [])
+        build_targets = configs.get("build", {}).get("targets", [])
 
         bazel.execute_bazel_build(":bazel: Building applications", build_flags, build_targets, None, [])
 
@@ -271,8 +276,10 @@ def execute_build_commands(configs):
 
         try:
             upload_thread.start()
-            test_targets = configs.get("steps.unit_test.targets", [])
+            test_targets = configs.get("unit_test", {}).get("targets", [])
 
+            # unit tests are not flaky
+            test_flags += ["--flaky_test_attempts=default"]
             bazel.execute_bazel_test(":bazel: Running unit tests", test_flags, test_targets, test_bep_file, [])
         finally:
             stop_request.set()
@@ -282,11 +289,14 @@ def execute_build_commands(configs):
             "run_flags", "run", tmpdir, test_env_vars
         )
 
-        docker_targets = configs.get("steps.push_image.targets", [])
+        docker_targets = configs.get("push_image", {}).get("targets", [])
 
-        # TODO: need to define registry + version with --define flag
+        # flags that will allow the image to be pushed
+        run_flags += ["--define=CONTAINER_TAG={}".format(os.getenv("BUILDKITE_COMMIT", "")),
+                      "--define=CONTAINER_REGISTRY={}".format(os.getenv("CONTAINER_REGISTRY", ""))]
+
         for img in docker_targets:
-            bazel.execute_bazel_run(":docker: Pushing docker images into registry".format(img), run_flags, img, [])
+            bazel.execute_bazel_run(":docker: Pushing docker image {}".format(img), run_flags, img, [])
 
     finally:
         if tmpdir:
@@ -306,7 +316,7 @@ def main(argv=None):
     args = parser.parse_args(argv)
 
     try:
-        configs = load_configs()
+        configs = load_configs().get("steps", {})
 
         if args.subparsers_name == "build":
             execute_build_commands(configs)
