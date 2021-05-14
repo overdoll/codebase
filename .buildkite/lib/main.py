@@ -144,13 +144,20 @@ def create_docker_step(label, commands, additional_env_vars=None):
 
 
 def create_docker_compose_step(label, commands, additional_env_vars=None, configs=None):
+    vars = [
+        "BUILDKITE_JOB_ID",
+        "BUILDKITE_BUILD_ID",
+        "BUILDKITE_AGENT_ACCESS_TOKEN",
+        "CONTAINER_REGISTRY"
+    ]
+
     return {
         "label": label,
         "command": commands,
         "agents": {"queue": "default"},
         "plugins": {
             "docker-compose#v3.7.0": {
-                "env": format_env_vars(additional_env_vars) + ["CONTAINER_REGISTRY"],
+                "env": format_env_vars(additional_env_vars) + vars,
                 "run": "run",
                 "config": configs,
                 "workdir": "/workdir",
