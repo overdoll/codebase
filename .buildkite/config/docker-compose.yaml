@@ -4,7 +4,6 @@ services:
     image: "redis:alpine"
 
   temporal:
-    container_name: temporal
     restart: unless-stopped
     working_dir: ./
     depends_on:
@@ -20,7 +19,6 @@ services:
 
   scylla:
     image: "scylladb/scylla:4.3.1"
-    container_name: scylla
     working_dir: ./
     restart: unless-stopped
     volumes:
@@ -31,7 +29,6 @@ services:
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.12.1
-    container_name: elasticsearch
     working_dir: ./
     environment:
       - xpack.security.enabled=false

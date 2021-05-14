@@ -1,7 +1,6 @@
 package tests
 
 import (
-	"os"
 	"testing"
 
 	"github.com/gocql/gocql"
@@ -11,7 +10,7 @@ import (
 // CreateScyllaSession - Create a scylla session used for testing
 func CreateScyllaSession(t *testing.T, keyspace string) gocqlx.Session {
 
-	cluster := gocql.NewCluster(os.Getenv("DB_HOST"))
+	cluster := gocql.NewCluster("scylla-test")
 	cluster.Keyspace = keyspace
 
 	session, err := gocqlx.WrapSession(cluster.CreateSession())
