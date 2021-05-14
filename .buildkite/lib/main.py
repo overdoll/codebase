@@ -27,7 +27,6 @@ def execute_commands():
             "//applications/eva:eva",
             "//applications/buffer:buffer",
             "//applications/sting:sting",
-            "//applications/medusa:bundle"
         ]
 
         test_env_vars = ["HOME"]
@@ -85,6 +84,17 @@ def execute_commands():
 
         for img in image_targets:
             bazel.execute_bazel_run(":docker: Loading {} into docker daemon".format(img), run_flags, img, [])
+
+        compose_files = [
+            "applications/buffer/.ci/docker-compose.yaml",
+            "applications/eva/.ci/docker-compose.yaml",
+            "applications/sting/.ci/docker-compose.yaml",
+        ]
+
+        exec.execute_command(["docker-compose", "-f", ".buildkite/config/docker-compose.yaml", "-f",
+                              "applications/buffer/.ci/docker-compose.yaml", "-f",
+                              "applications/eva/.ci/docker-compose.yaml", "-f",
+                              "applications/sting/.ci/docker-compose.yaml", "up", "-d"])
 
     finally:
         if tmpdir:
