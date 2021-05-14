@@ -150,6 +150,8 @@ def create_docker_compose_step(label, commands, additional_env_vars=None, config
                 "env": format_env_vars(additional_env_vars) + ["CONTAINER_REGISTRY"],
                 "run": "run",
                 "config": configs,
+                "workdir": "/workdir",
+                "skip-checkout": False,
             }
         },
     }
@@ -189,7 +191,7 @@ def print_project_pipeline():
     pipeline_steps.append(
         create_step(
             label=":test_tube: Integration Test",
-            commands=[".buildkite/pipeline.sh integration_test"],
+            commands=["pwd", ".buildkite/pipeline.sh integration_test"],
             platform="docker-compose",
             # Include docker-compose configs from all configurations, plus our custom one - the container in which the
             # integration tests will actually be ran
