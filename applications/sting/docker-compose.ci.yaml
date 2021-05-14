@@ -1,7 +1,7 @@
 version: '3.5'
 services:
   sting-init:
-    image: $DOCKER_REGISTRY/sting-dev:$CONTAINER_TAG
+    image: $CONTAINER_REGISTRY/sting/dev:$BUILDKITE_COMMIT
     command: >
       ./sting_ db migrate
       && ./sting_ db seed
@@ -13,7 +13,7 @@ services:
       - temporal
 
   sting-http:
-    image: $DOCKER_REGISTRY/sting-dev:$CONTAINER_TAG
+    image: $CONTAINER_REGISTRY/sting/dev:$BUILDKITE_COMMIT
     command: ./sting_ http
     ports:
       - "127.0.0.1:3010:$PORT"
@@ -23,7 +23,7 @@ services:
       - sting-init
 
   sting-worker:
-    image: $DOCKER_REGISTRY/sting-dev:$CONTAINER_TAG
+    image: $CONTAINER_REGISTRY/sting/dev:$BUILDKITE_COMMIT
     command: >
       ./sting_ worker
     ports:

@@ -1,7 +1,7 @@
 version: '3.5'
 services:
   eva-init:
-    image: $DOCKER_REGISTRY/eva-dev:$CONTAINER_TAG
+    image: $CONTAINER_REGISTRY/eva/dev:$BUILDKITE_COMMIT
     command: >
       ./eva_ db migrate
       && ./eva_ db seed
@@ -12,7 +12,7 @@ services:
       - scylla
 
   eva-http:
-    image: $DOCKER_REGISTRY/eva-dev:$CONTAINER_TAG
+    image: $CONTAINER_REGISTRY/eva/dev:$BUILDKITE_COMMIT
     command: ./eva_ http
     ports:
       - "127.0.0.1:3020:$PORT"
@@ -22,7 +22,7 @@ services:
       - eva-init
 
   eva-grpc:
-    image: $DOCKER_REGISTRY/eva-dev:$CONTAINER_TAG
+    image: $CONTAINER_REGISTRY/eva/dev:$BUILDKITE_COMMIT
     command: ./eva_ grpc
     ports:
       - "127.0.0.1:3030:$PORT"

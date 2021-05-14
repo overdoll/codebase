@@ -1,6 +1,6 @@
 version: '3.5'
 services:
   medusa:
-    image: $DOCKER_REGISTRY/medusa-dev:$CONTAINER_TAG
+    image: $CONTAINER_REGISTRY/medusa/dev:$BUILDKITE_COMMIT
     env_file:
       - .env.ci
