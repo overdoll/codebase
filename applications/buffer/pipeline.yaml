@@ -14,7 +14,7 @@ steps:
   integration_test:
     setup:
       dockerfile:
-        - ./applications/buffer/.ci/docker-compose.yaml
+        - ./applications/buffer/docker-compose.ci.yaml
     targets:
       - //applications/buffer/src/adapters/...
       - //applications/buffer/src/service/...
@@ -22,4 +22,4 @@ steps:
   e2e_test:
     setup:
       dockerfile:
-        - ./applications/buffer/.ci/docker-compose.yaml
+        - ./applications/buffer/docker-compose.ci.yaml

@@ -13,4 +13,4 @@ steps:
   e2e_test:
     setup:
       dockerfile:
-        - ./applications/medusa/.ci/docker-compose.yaml
+        - ./applications/medusa/docker-compose.ci.yaml

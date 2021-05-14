@@ -14,7 +14,7 @@ steps:
   integration_test:
     setup:
       dockerfile:
-        - ./applications/sting/.ci/docker-compose.yaml
+        - ./applications/sting/docker-compose.ci.yaml
     targets:
       - //applications/sting/src/adapters/...
       - //applications/sting/src/service/...

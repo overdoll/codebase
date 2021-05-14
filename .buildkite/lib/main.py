@@ -65,7 +65,7 @@ def load_configs():
     config = dict()
 
     # Load each pipeline.yaml, and merge them into a dict
-    for filename in glob.iglob('./applications/**/.ci/pipeline.yaml', recursive=True):
+    for filename in glob.iglob('./applications/**/pipeline.yaml', recursive=True):
         if os.path.isfile(filename):
             with open(filename, "r") as fd:
                 config = data_merge(config, yaml.safe_load(fd))

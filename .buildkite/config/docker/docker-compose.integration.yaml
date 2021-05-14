@@ -1,3 +1,4 @@
+version: '3.5'
 services:
   run:
     image: "gcr.io/bazel-public/ubuntu1804-java11"

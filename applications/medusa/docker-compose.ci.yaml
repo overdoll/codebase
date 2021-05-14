@@ -1,3 +1,4 @@
+version: '3.5'
 services:
   medusa:
     image: $DOCKER_REGISTRY/medusa-dev:$CONTAINER_TAG
