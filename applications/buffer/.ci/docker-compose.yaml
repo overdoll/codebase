@@ -1,7 +1,6 @@
 services:
   buffer-http:
     image: $DOCKER_REGISTRY/buffer-dev:$CONTAINER_TAG
-    working_dir: ./
     command: >
       ./buffer_ http
     env_file:

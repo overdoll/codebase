@@ -1,6 +1,5 @@
 services:
   medusa:
     image: $DOCKER_REGISTRY/medusa-dev:$CONTAINER_TAG
-    working_dir: ./
     env_file:
       - .env.ci
