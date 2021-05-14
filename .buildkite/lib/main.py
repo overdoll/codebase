@@ -162,6 +162,7 @@ def create_docker_compose_step(label, commands, additional_env_vars=None, config
                 "config": configs,
                 "workdir": "/workdir",
                 "skip-checkout": False,
+                "dependencies": True,
             }
         },
     }

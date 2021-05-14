@@ -2,7 +2,6 @@ package adapters_test
 
 import (
 	"context"
-	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -22,8 +21,6 @@ func TestCookieRepository_GetCookie_not_exists(t *testing.T) {
 	id := ksuid.New().String()
 
 	usr, err := repo.GetCookieById(ctx, id)
-
-	fmt.Println("Asdsadasdasdsd")
 
 	assert.Nil(t, usr)
 	assert.EqualError(t, err, cookie.ErrCookieNotFound.Error())
