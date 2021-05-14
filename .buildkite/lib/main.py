@@ -121,7 +121,7 @@ def create_docker_step(label, commands, additional_env_vars=None):
         "plugins": {
             "docker#v3.5.0": {
                 "always-pull": True,
-                "environment": format_env_vars(additional_env_vars),
+                "environment": format_env_vars(additional_env_vars) + ["CONTAINER_REGISTRY"],
                 "image": "gcr.io/bazel-public/ubuntu1804-java11",
                 "network": "host",
                 "privileged": True,
@@ -146,7 +146,7 @@ def create_docker_compose_step(label, commands, additional_env_vars=None, config
         "agents": {"queue": "default"},
         "plugins": {
             "docker-compose#v3.7.0": {
-                "env": format_env_vars(additional_env_vars),
+                "env": format_env_vars(additional_env_vars) + ["CONTAINER_REGISTRY"],
                 "run": "run",
                 "config": configs,
             }
@@ -179,6 +179,8 @@ def print_project_pipeline():
     # unit tests + build must complete first before integration tests && e2e tests start
     pipeline_steps.append("wait")
 
+    default_docker_compose = ["./.buildkite/config/docker-compose.yaml"]
+
     integration = steps.get("integration_test", None)
     if not integration:
         raise exception.BuildkiteException("integration step is empty")
@@ -190,7 +192,7 @@ def print_project_pipeline():
             platform="docker-compose",
             # Include docker-compose configs from all configurations, plus our custom one - the container in which the
             # integration tests will actually be ran
-            configs=integration.get("setup", {}).get("dockerfile", []) + [
+            configs=integration.get("setup", {}).get("dockerfile", []) + default_docker_compose + [
                 "./.buildkite/config/docker/docker-compose.integration.yaml"]
         )
     )
@@ -205,7 +207,7 @@ def print_project_pipeline():
             # grab commands to run inside of our container (it will be medusa)
             commands=e2e.get("commands"),
             platform="docker-compose",
-            configs=e2e.get("setup", {}).get("dockerfile", []) + [
+            configs=e2e.get("setup", {}).get("dockerfile", []) + default_docker_compose + [
                 "./.buildkite/config/docker/docker-compose.e2e.yaml"]
         )
     )
@@ -257,7 +259,7 @@ def execute_build_commands(configs):
     tmpdir = tempfile.mkdtemp()
 
     try:
-        test_env_vars = ["HOME", "BUILDKITE_COMMIT", "CONTAINER_REGISTRY"]
+        test_env_vars = ["HOME"]
 
         build_flags, json_profile_out_build = flags.calculate_flags(
             "build_flags", "build", tmpdir, test_env_vars
