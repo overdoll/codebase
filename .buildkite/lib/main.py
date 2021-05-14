@@ -150,6 +150,7 @@ def create_docker_compose_step(label, commands, additional_env_vars=None, config
                 "env": format_env_vars(additional_env_vars) + ["CONTAINER_REGISTRY"],
                 "run": "run",
                 "config": configs,
+                "propagate-uid-gid": True,
             }
         },
     }
