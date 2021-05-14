@@ -1,5 +1,6 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
 load("@io_bazel_rules_docker//go:image.bzl", "go_image")
+load("@io_bazel_rules_docker//container:container.bzl", "container_push")
 
 web_sources = []
 
@@ -29,4 +30,23 @@ go_image(
     data = web_sources,
     embed = [":go_default_library"],
     importpath = "overdoll/applications/buffer",
+)
+
+container_push(
+    name = "publish-testing",
+    format = "Docker",
+    image = ":image",
+    registry = "$(CONTAINER_REGISTRY)",
+    repository = "buffer-dev",
+    tag = "$(CONTAINER_TAG)",
+)
+
+container_push(
+    name = "publish",
+    format = "Docker",
+    image = ":image",
+    registry = "$(CONTAINER_REGISTRY)",
+    repository = "buffer",
+    skip_unchanged_digest = True,
+    tag = "$(CONTAINER_TAG)",
 )

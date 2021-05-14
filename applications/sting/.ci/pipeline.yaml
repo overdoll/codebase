@@ -10,8 +10,8 @@ unit_test:
 
 integration_test:
   setup:
-    target: //applications/sting:buffer-image
-    dockerfile: ./docker-compose.yaml
+    target: //applications/sting:publish-testing
+    dockerfile: ./applications/sting/.ci/docker-compose.yaml
   targets:
     - //applications/sting/src/adapters/...
     - //applications/sting/src/service/...

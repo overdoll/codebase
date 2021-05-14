@@ -10,8 +10,8 @@ unit_test:
 
 integration_test:
   setup:
-    target: //applications/buffer:buffer-image
-    dockerfile: ./docker-compose.yaml
+    target: //applications/buffer:publish-testing
+    dockerfile: ./applications/buffer/.ci/docker-compose.yaml
   targets:
     - //applications/buffer/src/adapters/...
     - //applications/buffer/src/service/...

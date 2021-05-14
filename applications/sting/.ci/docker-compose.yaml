@@ -1,9 +1,7 @@
 services:
   sting-init:
-    image: bazel/applications/sting:sting-image
-    working_dir: ../../applications/sting
-    networks:
-      - network
+    image: $DOCKER_REGISTRY/sting-dev:$CONTAINER_TAG
+    working_dir: ../
     command: >
       ./sting_ db migrate
       && ./sting_ db seed
@@ -15,10 +13,8 @@ services:
       - temporal
 
   sting-http:
-    image: bazel/applications/sting:sting-image
-    working_dir: ../../applications/sting
-    networks:
-      - network
+    image: $DOCKER_REGISTRY/sting-dev:$CONTAINER_TAG
+    working_dir: ../
     command: ./sting_ http
     ports:
       - "127.0.0.1:3010:$PORT"
@@ -28,10 +24,8 @@ services:
       - sting-init
 
   sting-worker:
-    image: bazel/applications/sting:sting-image
-    working_dir: ../../applications/sting
-    networks:
-      - network
+    image: $DOCKER_REGISTRY/sting-dev:$CONTAINER_TAG
+    working_dir: ../
     command: >
       ./sting_ worker
     ports:

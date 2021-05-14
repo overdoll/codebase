@@ -10,8 +10,8 @@ unit_test:
 
 integration_test:
   setup:
-    target: //applications/eva:eva-image
-    dockerfile: ./docker-compose.yaml
+    target: //applications/eva:publish-testing
+    dockerfile: ./applications/eva/.ci/docker-compose.yaml
   targets:
     - //applications/eva/src/adapters/...
     - //applications/eva/src/service/...

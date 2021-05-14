@@ -3,6 +3,7 @@ load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin", "nodejs_binary")
 load("@bazel_skylib//rules:write_file.bzl", "write_file")
 load("@npm//razzle:index.bzl", "razzle")
 load(":jest.bzl", "jest_test")
+load("@io_bazel_rules_docker//container:container.bzl", "container_push")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -203,4 +204,23 @@ nodejs_image(
         "NODE_ENV": "production",
         "PORT": "8080",
     },
+)
+
+container_push(
+    name = "publish-testing",
+    format = "Docker",
+    image = ":medusa-production-image",
+    registry = "$(CONTAINER_REGISTRY)",
+    repository = "medusa-dev",
+    tag = "$(CONTAINER_TAG)",
+)
+
+container_push(
+    name = "publish",
+    format = "Docker",
+    image = ":medusa-production-image",
+    registry = "$(CONTAINER_REGISTRY)",
+    repository = "medusa",
+    skip_unchanged_digest = True,
+    tag = "$(CONTAINER_TAG)",
 )

@@ -1,12 +1,8 @@
 services:
   buffer-http:
-    image: bazel/applications/buffer:buffer-image
-    working_dir: ../applications/buffer
-    networks:
-      - network
+    image: $DOCKER_REGISTRY/buffer-dev:$CONTAINER_TAG
+    working_dir: ../
     command: >
       ./buffer_ http
-    ports:
-      - "127.0.0.1:3010:$PORT"
     env_file:
       - .env.ci
