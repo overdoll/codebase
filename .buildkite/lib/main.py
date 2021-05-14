@@ -176,6 +176,9 @@ def print_project_pipeline():
         )
     )
 
+    # unit tests + build must complete first before integration tests && e2e tests start
+    pipeline_steps.append("wait")
+
     integration = steps.get("integration_test", None)
     if not integration:
         raise exception.BuildkiteException("integration step is empty")
