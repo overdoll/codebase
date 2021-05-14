@@ -8,9 +8,9 @@ import (
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/sting/src/adapters"
 	"overdoll/applications/sting/src/domain/post"
-	"overdoll/libraries/user"
 	"overdoll/libraries/ksuid"
 	"overdoll/libraries/tests"
+	"overdoll/libraries/user"
 )
 
 func TestPostsCassandraRepository_create_post(t *testing.T) {
@@ -50,7 +50,7 @@ func newFakePost(t *testing.T) *post.Post {
 
 	artist := post.NewArtist(ksuid.New().String(), "test")
 
-	usr := common.NewUser(
+	usr := user.NewUser(
 		ksuid.New().String(),
 		"asd",
 		"",
