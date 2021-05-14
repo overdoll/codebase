@@ -298,8 +298,8 @@ def execute_build_commands(configs):
         docker_targets = configs.get("push_image", {}).get("targets", [])
 
         # flags that will allow the image to be pushed
-        run_flags += ["--define=CONTAINER_TAG={}".format(os.getenv("BUILDKITE_COMMIT", "")),
-                      "--define=CONTAINER_REGISTRY={}".format(os.getenv("CONTAINER_REGISTRY", ""))]
+        run_flags += ["--define=CONTAINER_TAG={}".format(os.getenv("BUILDKITE_COMMIT", ""))]
+        run_flags += ["--define=CONTAINER_REGISTRY={}".format(os.getenv("CONTAINER_REGISTRY", ""))]
 
         for img in docker_targets:
             bazel.execute_bazel_run(":docker: Pushing docker image {}".format(img), run_flags, img, [])

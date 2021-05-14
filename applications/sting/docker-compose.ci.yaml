@@ -16,7 +16,7 @@ services:
     image: $CONTAINER_REGISTRY/sting/dev:$BUILDKITE_COMMIT
     command: ./sting_ http
     ports:
-      - "127.0.0.1:3010:$PORT"
+      - "127.0.0.1:3010:8000"
     env_file:
       - .env.ci
     depends_on:
@@ -27,7 +27,7 @@ services:
     command: >
       ./sting_ worker
     ports:
-      - "127.0.0.1:3010:$PORT"
+      - "127.0.0.1:3010:8080"
     env_file:
       - .env.ci
     depends_on:

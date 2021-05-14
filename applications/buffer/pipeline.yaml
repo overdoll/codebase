@@ -2,14 +2,16 @@ steps:
   build:
     targets:
       - //applications/buffer:buffer
-    push:
-      - //applications/buffer:publish-testing
 
   unit_test:
     targets:
       - //applications/buffer/src/app/...
       - //applications/buffer/src/domain/...
       - //applications/buffer/src/ports/...
+
+  push_image:
+    targets:
+      - //applications/buffer:publish-testing
 
   integration_test:
     setup:
