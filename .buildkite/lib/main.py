@@ -179,7 +179,7 @@ def print_project_pipeline():
         )
     )
 
-    # unit tests + build must complete first before integration tests && e2e tests start
+    # unit tests + build must complete first before integration tests
     pipeline_steps.append("wait")
 
     default_docker_compose = ["./.buildkite/config/docker-compose.yaml"]
@@ -199,6 +199,10 @@ def print_project_pipeline():
                 "./.buildkite/config/docker/docker-compose.integration.yaml"]
         )
     )
+
+    # integration tests must finish first - e2e tests take the longest and we dont want to start up a bunch of services
+    # that might fail
+    pipeline_steps.append("wait")
 
     e2e = steps.get("e2e_test", None)
     if not e2e:
