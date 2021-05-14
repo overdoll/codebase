@@ -1,0 +1,18 @@
+# The initial pipeline.yaml will create pipelines, programmatically
+steps:
+  - command: ".buildkite/pipeline.sh project_pipeline | buildkite-agent pipeline upload"
+    label: ":pipeline:"
+    plugins:
+      - docker#v3.5.0:
+          image: "gcr.io/bazel-public/ubuntu1804-java11"
+          always-pull: True
+          propagate-environment: True
+          network: "host"
+          privileged: True
+          propagate-uid-gid: True
+          volumes:
+            - /etc/group:/etc/group:ro
+            - /etc/passwd:/etc/passwd:ro
+            - /opt:/opt:ro
+            - /var/run/docker.sock:/var/run/docker.sock
+            - /var/lib/buildkite-agent:/var/lib/buildkite-agent

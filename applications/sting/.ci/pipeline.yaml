@@ -1,17 +1,25 @@
-build:
-  targets:
-    - //applications/sting:sting
+steps:
+  build:
+    targets:
+      - //applications/sting:sting
+    push:
+      - //applications/sting:publish-testing
 
-unit_test:
-  targets:
-    - //applications/sting/src/app/...
-    - //applications/sting/src/domain/...
-    - //applications/sting/src/ports/...
+  unit_test:
+    targets:
+      - //applications/sting/src/app/...
+      - //applications/sting/src/domain/...
+      - //applications/sting/src/ports/...
 
-integration_test:
-  setup:
-    target: //applications/sting:publish-testing
-    dockerfile: ./applications/sting/.ci/docker-compose.yaml
-  targets:
-    - //applications/sting/src/adapters/...
-    - //applications/sting/src/service/...
+  integration_test:
+    setup:
+      dockerfile:
+        - ./applications/sting/.ci/docker-compose.yaml
+    targets:
+      - //applications/sting/src/adapters/...
+      - //applications/sting/src/service/...
+
+  e2e_test:
+    setup:
+      dockerfile:
+        - ./applications/sting/.ci/docker-compose.yaml

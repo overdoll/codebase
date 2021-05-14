@@ -39,7 +39,7 @@ func createApplication(ctx context.Context, eva command.EvaService) app.Applicat
 		log.Fatalf("bootstrap failed with errors: %s", err)
 	}
 
-	session, err := bootstrap.InitializeDatabaseSession()
+	session, err := bootstrap.InitializeDatabaseSession("sting")
 
 	if err != nil {
 		log.Fatalf("database session failed with errors: %s", err)

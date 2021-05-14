@@ -1,7 +1,7 @@
 services:
   eva-init:
     image: $DOCKER_REGISTRY/eva-dev:$CONTAINER_TAG
-    working_dir: ../
+    working_dir: ./
     command: >
       ./eva_ db migrate
       && ./eva_ db seed
@@ -13,7 +13,7 @@ services:
 
   eva-http:
     image: $DOCKER_REGISTRY/eva-dev:$CONTAINER_TAG
-    working_dir: ../
+    working_dir: ./
     command: ./eva_ http
     ports:
       - "127.0.0.1:3020:$PORT"
@@ -24,7 +24,7 @@ services:
 
   eva-grpc:
     image: $DOCKER_REGISTRY/eva-dev:$CONTAINER_TAG
-    working_dir: ../
+    working_dir: ./
     command: ./eva_ grpc
     ports:
       - "127.0.0.1:3030:$PORT"

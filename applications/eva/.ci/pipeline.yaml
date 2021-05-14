@@ -1,17 +1,27 @@
-build:
-  targets:
-    - //applications/eva:eva
+steps:
+  build:
+    targets:
+      - //applications/eva:eva
 
-unit_test:
-  targets:
-    - //applications/eva/src/app/...
-    - //applications/eva/src/domain/...
-    - //applications/eva/src/ports/...
+  unit_test:
+    targets:
+      - //applications/eva/src/app/...
+      - //applications/eva/src/domain/...
+      - //applications/eva/src/ports/...
 
-integration_test:
-  setup:
-    target: //applications/eva:publish-testing
-    dockerfile: ./applications/eva/.ci/docker-compose.yaml
-  targets:
-    - //applications/eva/src/adapters/...
-    - //applications/eva/src/service/...
+  push_image:
+    targets:
+      - //applications/eva:publish-testing
+
+  integration_test:
+    setup:
+      dockerfile:
+        - ./applications/eva/.ci/docker-compose.yaml
+    targets:
+      - //applications/eva/src/adapters/...
+      - //applications/eva/src/service/...
+
+  e2e_test:
+    setup:
+      dockerfile:
+        - ./applications/eva/.ci/docker-compose.yaml

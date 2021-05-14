@@ -1,17 +1,25 @@
-build:
-  targets:
-    - //applications/buffer:buffer
+steps:
+  build:
+    targets:
+      - //applications/buffer:buffer
+    push:
+      - //applications/buffer:publish-testing
 
-unit_test:
-  targets:
-    - //applications/buffer/src/app/...
-    - //applications/buffer/src/domain/...
-    - //applications/buffer/src/ports/...
+  unit_test:
+    targets:
+      - //applications/buffer/src/app/...
+      - //applications/buffer/src/domain/...
+      - //applications/buffer/src/ports/...
 
-integration_test:
-  setup:
-    target: //applications/buffer:publish-testing
-    dockerfile: ./applications/buffer/.ci/docker-compose.yaml
-  targets:
-    - //applications/buffer/src/adapters/...
-    - //applications/buffer/src/service/...
+  integration_test:
+    setup:
+      dockerfile:
+        - ./applications/buffer/.ci/docker-compose.yaml
+    targets:
+      - //applications/buffer/src/adapters/...
+      - //applications/buffer/src/service/...
+
+  e2e_test:
+    setup:
+      dockerfile:
+        - ./applications/buffer/.ci/docker-compose.yaml

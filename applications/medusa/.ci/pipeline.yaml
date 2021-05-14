@@ -1,8 +1,16 @@
-build:
-  targets:
-    - //applications/medusa:bundle
+steps:
+  build:
+    targets:
+      - //applications/medusa:bundle
+    push:
+      - //applications/medusa:publish-testing
 
-unit_test:
-  targets:
-    - //applications/medusa:unit
-    - //applications/medusa:integration
+  unit_test:
+    targets:
+      - //applications/medusa:unit
+      - //applications/medusa:integration
+
+  e2e_test:
+    setup:
+      dockerfile:
+        - ./applications/medusa/.ci/docker-compose.yaml

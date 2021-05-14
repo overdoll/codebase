@@ -1,7 +1,7 @@
 services:
   sting-init:
     image: $DOCKER_REGISTRY/sting-dev:$CONTAINER_TAG
-    working_dir: ../
+    working_dir: ./
     command: >
       ./sting_ db migrate
       && ./sting_ db seed
@@ -14,7 +14,7 @@ services:
 
   sting-http:
     image: $DOCKER_REGISTRY/sting-dev:$CONTAINER_TAG
-    working_dir: ../
+    working_dir: ./
     command: ./sting_ http
     ports:
       - "127.0.0.1:3010:$PORT"
@@ -25,7 +25,7 @@ services:
 
   sting-worker:
     image: $DOCKER_REGISTRY/sting-dev:$CONTAINER_TAG
-    working_dir: ../
+    working_dir: ./
     command: >
       ./sting_ worker
     ports:

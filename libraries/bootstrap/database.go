@@ -7,11 +7,11 @@ import (
 	"github.com/scylladb/gocqlx/v2"
 )
 
-func InitializeDatabaseSession() (gocqlx.Session, error) {
+func InitializeDatabaseSession(keyspace string) (gocqlx.Session, error) {
 
 	// Create gocql cluster
 	cluster := gocql.NewCluster(os.Getenv("DB_HOST"))
-	cluster.Keyspace = os.Getenv("DB_KEYSPACE")
+	cluster.Keyspace = keyspace
 
 	// Wrap session on creation with gocqlx
 	session, err := gocqlx.WrapSession(cluster.CreateSession())
