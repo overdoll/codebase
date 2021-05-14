@@ -3,6 +3,8 @@
 # exit immediately on failure, or if an undefined variable is used
 set -eu
 
-cat $DOCKER_CONFIG/config.json
+cat ~/.docker/config.json
+
+ls $DOCKER_CONFIG
 
 python3.6 ./.buildkite/lib/main.py "$@"
