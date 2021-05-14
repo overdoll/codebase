@@ -3,4 +3,4 @@
 # exit immediately on failure, or if an undefined variable is used
 set -eu
 
-python ./.buildkite/lib/main.py "$@"
+python3.6 ./.buildkite/lib/main.py "$@"
