@@ -5,7 +5,7 @@ set -eu
 
 ls ~/.docker
 ls ~/.docker/config.json
-cat ~/.docker/config.json
+cat ~/.docker/config.json/config.json
 
 ls $DOCKER_CONFIG
 
