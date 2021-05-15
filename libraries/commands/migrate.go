@@ -27,7 +27,7 @@ var Migrate = &cobra.Command{
 		}
 
 		for _, arg := range args {
-			if arg == "migrate" {
+			if arg == "keyspace" {
 				session, err := bootstrap.InitializeDatabaseSession("")
 
 				if err != nil {
