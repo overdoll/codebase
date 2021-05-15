@@ -202,7 +202,8 @@ def print_project_pipeline():
     pipeline_steps.append(
         create_step(
             label=":test_tube: Integration Test",
-            commands=["docker logs scylla", ".buildkite/pipeline.sh integration_test"],
+            commands=["docker logs buildkite{}".format(os.getenv("BUILDKITE_JOB_ID")).replace("-", ""),
+                      ".buildkite/pipeline.sh integration_test"],
             platform="docker-compose",
             # Include docker-compose configs from all configurations, plus our custom one - the container in which the
             # integration tests will actually be ran
