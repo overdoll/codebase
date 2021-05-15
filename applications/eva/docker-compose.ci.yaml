@@ -2,7 +2,7 @@ version: '3.9'
 services:
   eva:
     image: $CONTAINER_REGISTRY/eva/dev:$BUILDKITE_COMMIT
-    command: ./eva_ db migrate --keyspace && ./eva_ db seed && ./eva_
+    command: ./eva_ db migrate keyspace && ./eva_ db seed && ./eva_
     ports:
       - 3020:8000
       - 3030:8080
