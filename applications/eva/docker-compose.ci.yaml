@@ -2,7 +2,7 @@ version: '3.9'
 services:
   eva-init:
     image: $CONTAINER_REGISTRY/eva/dev:$BUILDKITE_COMMIT
-    command: db migrate --keyspace && db seed
+    command: ./eva_ db migrate --keyspace && ./eva_ db seed
     env_file: ../../applications/eva/.env.ci
     depends_on:
       - elasticsearch
