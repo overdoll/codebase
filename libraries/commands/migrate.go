@@ -62,7 +62,11 @@ var Migrate = &cobra.Command{
 			log.Fatalf("could not create keyspace: %s", err)
 		}
 
-		_ = f.Close()
+		err = f.Close()
+
+		if err != nil {
+			log.Fatalf("error closing init file: %s", err)
+		}
 
 		session, err = bootstrap.InitializeDatabaseSession(os.Getenv("DB_KEYSPACE"))
 

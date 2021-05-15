@@ -2,15 +2,8 @@ package service
 
 import (
 	"context"
-	"log"
 	"os"
 	"testing"
-
-	"google.golang.org/grpc"
-	eva "overdoll/applications/eva/proto"
-	"overdoll/applications/eva/src/ports"
-	"overdoll/libraries/bootstrap"
-	"overdoll/libraries/tests"
 )
 
 type TestUser struct {
@@ -51,18 +44,13 @@ type TestUser struct {
 //}
 
 func startService() bool {
-	app := NewComponentTestApplication(context.Background())
+	_ = NewComponentTestApplication(context.Background())
 
-	go bootstrap.InitializeGRPCServer(func(server *grpc.Server) {
-		eva.RegisterEvaServer(server, ports.CreateServer(app))
-	})
+	//go bootstrap.InitializeGRPCServer(func(server *grpc.Server) {
+	//	eva.RegisterEvaServer(server, ports.CreateServer(app))
+	//})
 
-	ok := tests.WaitForPort("8080")
-	if !ok {
-		log.Println("Timed out waiting for grpc to come up")
-	}
-
-	return ok
+	return true
 }
 
 func TestMain(m *testing.M) {
