@@ -13,6 +13,7 @@ import threading
 
 import utils.bazel as bazel
 import utils.exception as exception
+import utils.exec as exec
 import utils.flags as flags
 import utils.terminal_print as terminal_print
 import utils.test_logs as test_logs
@@ -203,8 +204,7 @@ def print_project_pipeline():
     pipeline_steps.append(
         create_step(
             label=":test_tube: Integration Test",
-            commands=["docker logs $(docker ps | grep 'scylladb/scylla:4.3.1' | awk '{ print $1 }')",
-                      ".buildkite/pipeline.sh integration_test"],
+            commands=[".buildkite/pipeline.sh integration_test"],
             platform="docker-compose",
             # Include docker-compose configs from all configurations, plus our custom one - the container in which the
             # integration tests will actually be ran
@@ -268,6 +268,8 @@ def execute_integration_tests_commands(configs):
         try:
             upload_thread.start()
             test_targets = configs.get("integration_test", {}).get("targets", [])
+
+            exec.execute_command("docker logs $(docker ps | grep \"scylladb/scylla:4.3.1\" | awk '{ print $1 }')")
 
             # integration test MAY be flaky because of external dependencies, so we will attempt retries
             test_flags += ["--flaky_test_attempts=3"]
