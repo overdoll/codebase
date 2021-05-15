@@ -15,6 +15,34 @@ var Root = &cobra.Command{
 
 func init() {
 	Root.AddCommand(&cobra.Command{
+		Use: "all",
+		Run: func(cmd *cobra.Command, args []string) {
+			ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
+			defer cancelFn()
+
+			application, cleanup := service.NewApplication(ctx)
+
+			defer cleanup()
+
+			if err := application.Commands.IndexAllArtists.Handle(ctx); err != nil {
+				log.Fatalf(err.Error())
+			}
+
+			if err := application.Commands.IndexAllCategories.Handle(ctx); err != nil {
+				log.Fatalf(err.Error())
+			}
+
+			if err := application.Commands.IndexAllCharacters.Handle(ctx); err != nil {
+				log.Fatalf(err.Error())
+			}
+
+			if err := application.Commands.IndexAllMedia.Handle(ctx); err != nil {
+				log.Fatalf(err.Error())
+			}
+		},
+	})
+
+	Root.AddCommand(&cobra.Command{
 		Use:   "artists",
 		Short: "Index the whole artists table into elasticsearch",
 		Run: func(cmd *cobra.Command, args []string) {
