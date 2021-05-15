@@ -10,3 +10,4 @@ steps:
         DB_HOST: scylla
         ELASTICSEARCH_URL: http://elasticsearch:9200
         TEMPORAL_URL: temporal:7233
+        TEMPORAL_NAMESPACE: default
