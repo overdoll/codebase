@@ -18,11 +18,4 @@ go_test(
     name = "go_default_test",
     srcs = ["component_test.go"],
     embed = [":go_default_library"],
-    deps = [
-        "//applications/eva/proto:v1_go_proto",
-        "//applications/eva/src/ports:go_default_library",
-        "//libraries/bootstrap:go_default_library",
-        "//libraries/tests:go_default_library",
-        "@org_golang_google_grpc//:go_default_library",
-    ],
 )
