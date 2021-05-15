@@ -30,7 +30,7 @@ var Seed = &cobra.Command{
 			return
 		}
 
-		session, err := bootstrap.InitializeDatabaseSession(os.Getenv("DB_HOST"))
+		session, err := bootstrap.InitializeDatabaseSession(os.Getenv("DB_KEYSPACE"))
 
 		if err != nil {
 			fmt.Println("database session failed with errors: ", err)

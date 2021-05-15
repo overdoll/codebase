@@ -62,7 +62,7 @@ var Migrate = &cobra.Command{
 
 		_ = f.Close()
 
-		session, err = bootstrap.InitializeDatabaseSession(os.Getenv("DB_HOST"))
+		session, err = bootstrap.InitializeDatabaseSession(os.Getenv("DB_KEYSPACE"))
 
 		if err != nil {
 			log.Fatalf("database session failed with errors: %s", err)
