@@ -21,3 +21,7 @@ services:
       - .env.ci
     depends_on:
       - eva-init
+
+  run:
+    depends_on:
+      - eva

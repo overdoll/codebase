@@ -4,3 +4,9 @@ services:
     image: $CONTAINER_REGISTRY/medusa/dev:$BUILDKITE_COMMIT
     env_file:
       - .env.ci
+    depends_on:
+      - redis
+
+  run:
+    depends_on:
+      - medusa

@@ -22,3 +22,7 @@ services:
       - .env.ci
     depends_on:
       - sting-init
+
+  run:
+    depends_on:
+      - sting
