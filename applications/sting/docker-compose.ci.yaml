@@ -16,8 +16,8 @@ services:
     image: $CONTAINER_REGISTRY/sting/dev:$BUILDKITE_COMMIT
     command: ./sting_
     ports:
-      - 3020:8000
-      - 3030:8080
+      - 3040:8000
+      - 3050:8080
     env_file:
       - .env.ci
     depends_on:
