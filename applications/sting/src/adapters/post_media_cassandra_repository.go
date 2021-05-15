@@ -85,11 +85,11 @@ func (r PostsCassandraRepository) CreateMedias(ctx context.Context, medias []*po
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
 	for _, med := range medias {
-		batch.Query(qb.Insert("media").
-			LitColumn("id", med.ID()).
-			LitColumn("title", med.Title()).
-			LitColumn("thumbnail", med.RawThumbnail()).
-			ToCql())
+		stmt, _ := qb.Insert("media").Columns("id", "title", "thumbnail").ToCql()
+		batch.Query(
+			stmt,
+			[]string{med.ID(), med.Title(), med.RawThumbnail()},
+		)
 	}
 
 	err := r.session.ExecuteBatch(batch)

@@ -78,9 +78,12 @@ func (r PostsCassandraRepository) CreateCategories(ctx context.Context, categori
 
 	// Go through each category request
 	for _, cat := range categories {
-
 		// Create new categories query
-		batch.Query(qb.Insert("categories").LitColumn("id", cat.ID()).LitColumn("title", cat.Title()).ToCql())
+		stmt, _ := qb.Insert("categories").Columns("id", "title", "thumbnail").ToCql()
+		batch.Query(
+			stmt,
+			[]string{cat.ID(), cat.Title(), cat.RawThumbnail()},
+		)
 	}
 
 	err := r.session.ExecuteBatch(batch)

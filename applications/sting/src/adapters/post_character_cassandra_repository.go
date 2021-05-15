@@ -155,13 +155,10 @@ func (r PostsCassandraRepository) CreateCharacters(ctx context.Context, characte
 
 		media := chars.Media()
 
+		stmt, _ := qb.Insert("characters").Columns("id", "name", "thumbnail", "media_id").ToCql()
 		batch.Query(
-			qb.Insert("characters").
-				LitColumn("id", chars.ID()).
-				LitColumn("name", chars.Name()).
-				LitColumn("thumbnail", chars.RawThumbnail()).
-				LitColumn("media_id", media.ID()).
-				ToCql(),
+			stmt,
+			[]string{chars.ID(), chars.Name(), chars.RawThumbnail(), media.ID()},
 		)
 	}
 
