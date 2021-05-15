@@ -13,7 +13,7 @@ import threading
 
 import utils.bazel as bazel
 import utils.exception as exception
-import utils.exec as exec
+import utils.exec as execute
 import utils.flags as flags
 import utils.terminal_print as terminal_print
 import utils.test_logs as test_logs
@@ -269,7 +269,7 @@ def execute_integration_tests_commands(configs):
             upload_thread.start()
             test_targets = configs.get("integration_test", {}).get("targets", [])
 
-            exec.execute_command("docker logs $(docker ps | grep \"scylladb/scylla:4.3.1\" | awk '{ print $1 }')")
+            execute.execute_command(["docker logs $(docker ps | grep \"scylladb/scylla:4.3.1\" | awk '{ print $1 }')"])
 
             # integration test MAY be flaky because of external dependencies, so we will attempt retries
             test_flags += ["--flaky_test_attempts=3"]
