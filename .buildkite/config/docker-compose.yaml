@@ -8,9 +8,9 @@ services:
     depends_on:
       - scylla
     environment:
-      - DB=scylla
+      - DB=cassandra
+      - CASSANDRA_SEEDS=scylla
       - CASSANDRA_HOST=scylla
-      - CASSANDRA_SEEDS=cassandra
       - DYNAMIC_CONFIG_FILE_PATH=config/temporal.yaml
     image: temporalio/auto-setup:1.9.2
     ports:
