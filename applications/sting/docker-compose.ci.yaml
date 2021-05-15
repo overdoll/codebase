@@ -8,7 +8,6 @@ services:
     depends_on:
       - elasticsearch
       - temporal
-      - scylla
     ports:
       - 3040:8000
       - 3050:8080

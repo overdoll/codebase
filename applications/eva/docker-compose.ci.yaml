@@ -7,7 +7,7 @@ services:
     env_file: ../../applications/eva/.env.ci
     depends_on:
       - elasticsearch
-      - scylla
+      - temporal
     ports:
       - 3020:8000
       - 3030:8080
