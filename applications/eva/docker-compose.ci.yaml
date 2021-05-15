@@ -2,14 +2,14 @@ version: '3.9'
 services:
   eva:
     image: $CONTAINER_REGISTRY/eva/dev:$BUILDKITE_COMMIT
-    command: ./eva_ db migrate keyspace && ./eva_ db seed && ./eva_
-    ports:
-      - 3020:8000
-      - 3030:8080
+    command: db migrate keyspace && db seed && eva
     env_file: ../../applications/eva/.env.ci
     depends_on:
       - elasticsearch
       - scylla
+    ports:
+      - 3020:8000
+      - 3030:8080
     deploy:
       restart_policy:
         condition: on-failure

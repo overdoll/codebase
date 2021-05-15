@@ -2,12 +2,15 @@ version: '3.9'
 services:
   sting:
     image: $CONTAINER_REGISTRY/sting/dev:$BUILDKITE_COMMIT
-    command: ./sting_ db migrate keyspace && ./sting_ db seed && ./sting_ index all && ./sting_
+    command: db migrate keyspace && db seed && index all && sting
     env_file: ../../applications/sting/.env.ci
     depends_on:
       - elasticsearch
       - temporal
       - scylla
+    ports:
+      - 3040:8000
+      - 3050:8080
     deploy:
       restart_policy:
         condition: on-failure
