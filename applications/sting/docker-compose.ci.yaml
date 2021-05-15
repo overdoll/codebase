@@ -8,6 +8,12 @@ services:
       - elasticsearch
       - temporal
       - scylla
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
 
   sting:
     image: $CONTAINER_REGISTRY/sting/dev:$BUILDKITE_COMMIT
@@ -17,6 +23,12 @@ services:
     env_file: ../../applications/sting/.env.ci
     depends_on:
       - sting-init
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
 
   run:
     depends_on:
