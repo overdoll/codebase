@@ -11,9 +11,7 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 120s
+        max_attempts: 10
 
   sting:
     image: $CONTAINER_REGISTRY/sting/dev:$BUILDKITE_COMMIT
@@ -26,9 +24,7 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 120s
+        max_attempts: 10
 
   run:
     depends_on:
