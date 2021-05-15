@@ -7,7 +7,7 @@ services:
     depends_on:
       - elasticsearch
       - temporal
-      - scylla-init
+      - scylla
 
   sting:
     image: $CONTAINER_REGISTRY/sting/dev:$BUILDKITE_COMMIT

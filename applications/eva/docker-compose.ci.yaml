@@ -6,7 +6,7 @@ services:
     env_file: ../eva/.env.ci
     depends_on:
       - elasticsearch
-      - scylla-init
+      - scylla
 
   eva:
     image: $CONTAINER_REGISTRY/eva/dev:$BUILDKITE_COMMIT
