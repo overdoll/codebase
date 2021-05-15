@@ -15,6 +15,9 @@ import (
 
 var Migrate = &cobra.Command{
 	Use: "migrate",
+	ValidArgs: []string{
+		"keyspace",
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 
 		ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
