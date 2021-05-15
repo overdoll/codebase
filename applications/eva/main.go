@@ -16,7 +16,7 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use: "sting",
+	Use: "eva",
 	Run: Run,
 }
 
