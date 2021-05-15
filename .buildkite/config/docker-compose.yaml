@@ -9,6 +9,7 @@ services:
       - scylla
     environment:
       - DB=scylla
+      - CASSANDRA_HOST=scylla
       - CASSANDRA_SEEDS=cassandra
       - DYNAMIC_CONFIG_FILE_PATH=config/temporal.yaml
     image: temporalio/auto-setup:1.9.2
