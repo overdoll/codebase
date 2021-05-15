@@ -50,8 +50,6 @@ services:
       - 9200:9200
       - 9300:9300
     restart: unless-stopped
-    depends_on:
-      - temporal
 
 volumes:
   elasticsearch-data:
