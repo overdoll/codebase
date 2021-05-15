@@ -5,17 +5,3 @@ nameOverride: "sting"
 
 service: true
 http: true
-
-env:
-  DB_HOST: simple-cluster-client
-  DB_KEYSPACE: sting
-  ELASTICSEARCH_URL: http://elasticsearch-master:9200
-  TEMPORAL_URL: temporal-frontend-headless.temporal:7233
-  STATIC_URL: https://static.dollycdn.test
-  UPLOADS_URL: https://uploads.dollycdn.test
-  POSTS_URL: https://posts.dollycdn.test
-  APP_DEBUG: true
-  AWS_ACCESS_KEY: overdoll123
-  AWS_ACCESS_SECRET: overdoll123
-  AWS_ENDPOINT: http://minio
-  AWS_REGION: us-east-1

@@ -5,9 +5,3 @@ nameOverride: "buffer"
 
 service: true
 http: true
-
-env:
-  AWS_ACCESS_KEY: overdoll123
-  AWS_ACCESS_SECRET: overdoll123
-  AWS_ENDPOINT: http://minio
-  AWS_REGION: us-east-1

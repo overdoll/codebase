@@ -6,9 +6,3 @@ nameOverride: "eva"
 service: true
 http: true
 grpc: true
-
-env:
-  DB_HOST: simple-cluster-client
-  DB_KEYSPACE: eva
-  APP_DEBUG: true
-  STATIC_URL: https://static.dollycdn.test
