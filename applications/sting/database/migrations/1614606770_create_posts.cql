@@ -57,7 +57,6 @@ CREATE TABLE IF NOT EXISTS posts_pending
     media_requests      list<text>,
     categories_requests list<text>,
     posted_at           timestamp,
-    review_required     boolean,
     published_post_id   text,
     primary key ((id), contributor_id)
 ) WITH CLUSTERING ORDER BY (contributor_id ASC);

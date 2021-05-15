@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"os"
+	"time"
 
 	"go.temporal.io/sdk/client"
 	"overdoll/applications/sting/src/adapters"
@@ -60,6 +61,9 @@ func createApplication(ctx context.Context, eva command.EvaService) app.Applicat
 	c, err := client.NewClient(client.Options{
 		HostPort:  os.Getenv("TEMPORAL_URL"),
 		Namespace: os.Getenv("TEMPORAL_NAMESPACE"),
+		ConnectionOptions: client.ConnectionOptions{
+			HealthCheckTimeout: time.Second * 20,
+		},
 	})
 
 	if err != nil {
