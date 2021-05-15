@@ -8,6 +8,10 @@ def concurrent_jobs():
     return str(multiprocessing.cpu_count())
 
 
+def concurrent_test_jobs():
+    return str(multiprocessing.cpu_count() // 2)
+
+
 def get_bazelisk_cache_directory():
     return os.path.join(os.environ.get("HOME"), ".cache", "bazelisk")
 
@@ -33,7 +37,7 @@ def common_build_flags(bep_file, is_test):
 
         flags += [
             "--build_tests_only",
-            "--local_test_jobs=" + concurrent_jobs(),
+            "--local_test_jobs=" + concurrent_test_jobs(),
             "--sandbox_writable_path={}".format(bazelisk_cache_dir)
         ]
 
