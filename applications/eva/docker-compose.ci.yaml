@@ -2,7 +2,11 @@ version: '3.9'
 services:
   eva:
     image: $CONTAINER_REGISTRY/eva/dev:$BUILDKITE_COMMIT
-    command: db migrate keyspace && db seed && eva
+    entrypoint: ""
+    command: |
+      /app/applications/eva/image.binary db migrate keyspace
+      && /app/applications/eva/image.binary db seed
+      && /app/applications/eva/image.binary
     env_file: ../../applications/eva/.env.ci
     depends_on:
       - elasticsearch

@@ -54,6 +54,8 @@ var Migrate = &cobra.Command{
 			log.Fatalf("could not read init file: %s", err)
 		}
 
+		log.Println(stmt)
+
 		q := session.ContextQuery(ctx, stmt, nil).RetryPolicy(nil)
 
 		if err := q.ExecRelease(); err != nil {
