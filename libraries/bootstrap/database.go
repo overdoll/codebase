@@ -11,7 +11,10 @@ func InitializeDatabaseSession(keyspace string) (gocqlx.Session, error) {
 
 	// Create gocql cluster
 	cluster := gocql.NewCluster(os.Getenv("DB_HOST"))
-	cluster.Keyspace = keyspace
+
+	if keyspace != "" {
+		cluster.Keyspace = keyspace
+	}
 
 	// Wrap session on creation with gocqlx
 	session, err := gocqlx.WrapSession(cluster.CreateSession())

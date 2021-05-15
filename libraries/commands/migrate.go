@@ -1,8 +1,11 @@
 package commands
 
 import (
+	"bytes"
 	"context"
+	"io/ioutil"
 	"log"
+	"os"
 	"time"
 
 	"github.com/scylladb/gocqlx/v2/migrate"
@@ -23,7 +26,44 @@ var Migrate = &cobra.Command{
 			log.Fatalf("bootstrap failed with errors: %s", err)
 		}
 
-		session, err := bootstrap.InitializeDatabaseSession("test")
+		for _, arg := range args {
+			if arg == "migrate" {
+				session, err := bootstrap.InitializeDatabaseSession("")
+
+				if err != nil {
+					log.Fatalf("database session failed with errors: %s", err)
+				}
+
+				f, err := os.Open(init.GetCurrentDirectory() + "/database/__init__.cql")
+				if err != nil {
+					log.Fatalf("could not open init file: %s", err)
+				}
+
+				b, err := ioutil.ReadAll(f)
+
+				if err != nil {
+					log.Fatalf("could not read init file: %s", err)
+				}
+
+				r := bytes.NewBuffer(b)
+
+				stmt, err := r.ReadString(';')
+
+				if err != nil {
+					log.Fatalf("could not read init file: %s", err)
+				}
+
+				q := session.ContextQuery(ctx, stmt, nil).RetryPolicy(nil)
+
+				if err := q.ExecRelease(); err != nil {
+					log.Fatalf("could not create keyspace: %s", err)
+				}
+
+				_ = f.Close()
+			}
+		}
+
+		session, err := bootstrap.InitializeDatabaseSession(os.Getenv("DB_HOST"))
 
 		if err != nil {
 			log.Fatalf("database session failed with errors: %s", err)

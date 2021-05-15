@@ -1,19 +1,20 @@
-version: '3.5'
+version: '3.9'
 services:
   sting-init:
     image: $CONTAINER_REGISTRY/sting/dev:$BUILDKITE_COMMIT
     command: ./sting_ db migrate && ./sting_ db seed && ./sting_ index all
-    env_file: .env.ci
+    env_file: ../sting/.env.ci
     depends_on:
       - elasticsearch
       - temporal
+      - scylla-init
 
   sting:
     image: $CONTAINER_REGISTRY/sting/dev:$BUILDKITE_COMMIT
     ports:
       - 3040:8000
       - 3050:8080
-    env_file: .env.ci
+    env_file: ../sting/.env.ci
     depends_on:
       - sting-init
 

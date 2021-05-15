@@ -1,4 +1,4 @@
-version: '3.5'
+version: '3.9'
 services:
   redis:
     image: "redis:alpine"
@@ -14,16 +14,34 @@ services:
     ports:
       - 7233:7233
     volumes:
-      - ./services/temporal.yaml:/etc/temporal/config/temporal.yaml
+      - ../../.buildkite/config/services/temporal.yaml:/etc/temporal/config/temporal.yaml
 
   scylla:
     image: "scylladb/scylla:4.3.1"
     restart: unless-stopped
+    command:
+      - "--smp"
+      - "2"
     volumes:
       - ./target:/var/lib/scylla
     ports:
       - 9042:9042
       - 9160:9160
+
+  scylla-init:
+    container_name: scylla-init
+    image: cassandra:4.0
+    depends_on:
+      - scylla
+    volumes:
+      - ../../.buildkite/config/services/scylla:/scylla
+    command: /bin/bash -c "cqlsh cassandra -f /scylla/keyspaces.cql"
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.12.1

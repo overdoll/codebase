@@ -1,8 +1,8 @@
-version: '3.5'
+version: '3.9'
 services:
   medusa:
     image: $CONTAINER_REGISTRY/medusa/dev:$BUILDKITE_COMMIT
-    env_file: .env.ci
+    env_file: ../medusa/.env.ci
     depends_on:
       - redis
     ports:
