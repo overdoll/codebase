@@ -1,8 +1,11 @@
 version: '3.9'
 services:
-  eva-init:
+  eva:
     image: $CONTAINER_REGISTRY/eva/dev:$BUILDKITE_COMMIT
-    command: ./eva_ db migrate --keyspace && ./eva_ db seed
+    command: ./eva_ db migrate --keyspace && ./eva_ db seed && ./eva_
+    ports:
+      - 3020:8000
+      - 3030:8080
     env_file: ../../applications/eva/.env.ci
     depends_on:
       - elasticsearch
@@ -10,20 +13,8 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
-        max_attempts: 10
+        max_attempts: 20
 
-  eva:
-    image: $CONTAINER_REGISTRY/eva/dev:$BUILDKITE_COMMIT
-    ports:
-      - 3020:8000
-      - 3030:8080
-    env_file: ../../applications/eva/.env.ci
-    depends_on:
-      - eva-init
-    deploy:
-      restart_policy:
-        condition: on-failure
-        max_attempts: 10
   run:
     depends_on:
       - eva

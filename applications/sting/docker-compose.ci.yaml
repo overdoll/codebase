@@ -1,8 +1,8 @@
 version: '3.9'
 services:
-  sting-init:
+  sting:
     image: $CONTAINER_REGISTRY/sting/dev:$BUILDKITE_COMMIT
-    command: ./sting_ db migrate --keyspace && ./sting_ db seed && ./sting_ index all
+    command: ./sting_ db migrate --keyspace && ./sting_ db seed && ./sting_ index all && ./sting_
     env_file: ../../applications/sting/.env.ci
     depends_on:
       - elasticsearch
@@ -11,20 +11,7 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
-        max_attempts: 10
-
-  sting:
-    image: $CONTAINER_REGISTRY/sting/dev:$BUILDKITE_COMMIT
-    ports:
-      - 3040:8000
-      - 3050:8080
-    env_file: ../../applications/sting/.env.ci
-    depends_on:
-      - sting-init
-    deploy:
-      restart_policy:
-        condition: on-failure
-        max_attempts: 10
+        max_attempts: 20
 
   run:
     depends_on:
