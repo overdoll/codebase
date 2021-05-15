@@ -203,7 +203,7 @@ def print_project_pipeline():
     pipeline_steps.append(
         create_step(
             label=":test_tube: Integration Test",
-            commands=["docker logs $(docker ps | grep \"scylladb/scylla:4.3.1\" | awk '{ print $1 }')",
+            commands=["docker logs $(docker ps | grep 'scylladb/scylla:4.3.1' | awk '{ print $1 }')",
                       ".buildkite/pipeline.sh integration_test"],
             platform="docker-compose",
             # Include docker-compose configs from all configurations, plus our custom one - the container in which the
