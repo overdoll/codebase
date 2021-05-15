@@ -1,4 +1,4 @@
-CREATE TABLE categories
+CREATE TABLE IF NOT EXISTS categories
 (
     id        text,
     title     text,
@@ -6,7 +6,7 @@ CREATE TABLE categories
     primary key (id)
 );
 
-CREATE TABLE characters
+CREATE TABLE IF NOT EXISTS characters
 (
     id        text,
     name      text,
@@ -15,7 +15,7 @@ CREATE TABLE characters
     primary key (id)
 );
 
-CREATE TABLE media
+CREATE TABLE IF NOT EXISTS media
 (
     id        text,
     title     text,
@@ -23,7 +23,7 @@ CREATE TABLE media
     primary key (id)
 );
 
-CREATE TABLE artists
+CREATE TABLE IF NOT EXISTS artists
 (
     user_id       text,
     user_username text,
@@ -31,7 +31,7 @@ CREATE TABLE artists
     primary key ( user_id )
 );
 
-CREATE TABLE posts
+CREATE TABLE IF NOT EXISTS posts
 (
     id             text,
     artist_id      text,
@@ -43,7 +43,7 @@ CREATE TABLE posts
     primary key ((id), posted_at)
 ) WITH CLUSTERING ORDER BY (posted_at ASC);
 
-CREATE TABLE posts_pending
+CREATE TABLE IF NOT EXISTS posts_pending
 (
     id                   text,
     state                text,
@@ -63,4 +63,4 @@ CREATE TABLE posts_pending
     primary key ((id), contributor_id)
 ) WITH CLUSTERING ORDER BY (contributor_id ASC);
 
-CREATE INDEX posts_pending_state on posts_pending (state);
+CREATE INDEX IF NOT EXISTS posts_pending_state on posts_pending (state);

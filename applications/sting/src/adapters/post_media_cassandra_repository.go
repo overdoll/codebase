@@ -88,7 +88,9 @@ func (r PostsCassandraRepository) CreateMedias(ctx context.Context, medias []*po
 		stmt, _ := qb.Insert("media").Columns("id", "title", "thumbnail").ToCql()
 		batch.Query(
 			stmt,
-			[]string{med.ID(), med.Title(), med.RawThumbnail()},
+			med.ID(),
+			med.Title(),
+			med.RawThumbnail(),
 		)
 	}
 

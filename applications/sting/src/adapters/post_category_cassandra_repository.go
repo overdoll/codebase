@@ -82,7 +82,9 @@ func (r PostsCassandraRepository) CreateCategories(ctx context.Context, categori
 		stmt, _ := qb.Insert("categories").Columns("id", "title", "thumbnail").ToCql()
 		batch.Query(
 			stmt,
-			[]string{cat.ID(), cat.Title(), cat.RawThumbnail()},
+			cat.ID(),
+			cat.Title(),
+			cat.RawThumbnail(),
 		)
 	}
 
