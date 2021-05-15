@@ -230,7 +230,17 @@ def print_project_pipeline():
         )
     )
 
-    # TODO: a publish step for publishing images to a production repo
+    # publish when the branch is master
+    if os.getenv("BUILDKITE_BRANCH") == "master":
+        # must complete all steps before publishing
+        pipeline_steps.append("wait")
+        pipeline_steps.append(
+            create_step(
+                label=":aws: Publish Images",
+                commands=[".buildkite/pipeline.sh publish"],
+                platform="docker",
+            )
+        )
 
     print(yaml.dump({"steps": pipeline_steps}))
 
@@ -273,7 +283,6 @@ def execute_integration_tests_commands(configs):
             shutil.rmtree(tmpdir)
 
 
-# Execute commands to build binaries, & unit test them
 def execute_build_commands(configs):
     tmpdir = tempfile.mkdtemp()
 
@@ -309,19 +318,31 @@ def execute_build_commands(configs):
             stop_request.set()
             upload_thread.join()
 
-        run_flags, json_profile_out_test = flags.calculate_flags(
-            "run_flags", "run", tmpdir, test_env_vars
-        )
+        push_images(configs.get("push_image", {}).get("targets", []), tmpdir)
 
-        docker_targets = configs.get("push_image", {}).get("targets", [])
+    finally:
+        if tmpdir:
+            shutil.rmtree(tmpdir)
 
-        # flags that will allow the image to be pushed
-        run_flags += ["--define=CONTAINER_TAG={}".format(os.getenv("BUILDKITE_COMMIT", ""))]
-        run_flags += ["--define=CONTAINER_REGISTRY={}".format(os.getenv("CONTAINER_REGISTRY", ""))]
 
-        for img in docker_targets:
-            bazel.execute_bazel_run(":docker: Pushing docker image {}".format(img), run_flags, img, [])
+def push_images(targets, tmpdir):
+    test_env_vars = ["HOME"]
 
+    run_flags, json_profile_out_test = flags.calculate_flags(
+        "run_flags", "run", tmpdir, test_env_vars
+    )
+
+    run_flags += ["--define=CONTAINER_TAG={}".format(os.getenv("BUILDKITE_COMMIT", ""))]
+    run_flags += ["--define=CONTAINER_REGISTRY={}".format(os.getenv("CONTAINER_REGISTRY", ""))]
+
+    for img in targets:
+        bazel.execute_bazel_run(":docker: Pushing docker image {}".format(img), run_flags, img, [])
+
+
+def execute_publish_commands(configs):
+    tmpdir = tempfile.mkdtemp()
+    try:
+        push_images(configs.get("publish_image", {}).get("targets", []), tmpdir)
     finally:
         if tmpdir:
             shutil.rmtree(tmpdir)
@@ -336,6 +357,7 @@ def main(argv=None):
     subparsers.add_parser("build")
     subparsers.add_parser("integration_test")
     subparsers.add_parser("project_pipeline")
+    subparsers.add_parser("publish")
 
     args = parser.parse_args(argv)
 
@@ -348,6 +370,8 @@ def main(argv=None):
             execute_integration_tests_commands(configs)
         elif args.subparsers_name == "project_pipeline":
             print_project_pipeline()
+        elif args.subparsers_name == "publish":
+            execute_publish_commands(configs)
 
     except exception.BuildkiteException as e:
         terminal_print.eprint(str(e))

@@ -25,3 +25,7 @@ steps:
     setup:
       dockerfile:
         - ./applications/eva/docker-compose.ci.yaml
+
+  publish_image:
+    targets:
+      - //applications/eva:publish

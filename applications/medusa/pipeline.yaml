@@ -16,3 +16,7 @@ steps:
     setup:
       dockerfile:
         - ./applications/medusa/docker-compose.ci.yaml
+
+  publish_image:
+    targets:
+      - //applications/medusa:publish

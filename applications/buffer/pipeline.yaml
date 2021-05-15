@@ -25,3 +25,7 @@ steps:
     setup:
       dockerfile:
         - ./applications/buffer/docker-compose.ci.yaml
+
+  publish_image:
+    targets:
+      - //applications/buffer:publish

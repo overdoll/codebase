@@ -25,3 +25,7 @@ steps:
     setup:
       dockerfile:
         - ./applications/sting/.ci/docker-compose.yaml
+
+  publish_image:
+    targets:
+      - //applications/sting:publish
