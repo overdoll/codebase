@@ -23,7 +23,7 @@ services:
       - "--smp"
       - "1"
     volumes:
-      - ./target:/var/lib/scylla
+      - scylla-data:/var/lib/scylla
     ports:
       - 9042:9042
       - 9160:9160
@@ -51,4 +51,6 @@ services:
 
 volumes:
   elasticsearch-data:
+    driver: local
+  scylla-data:
     driver: local
