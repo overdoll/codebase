@@ -50,9 +50,10 @@ func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars [
 	}
 
 	queryMedia := qb.Select("media").
-		Where(qb.InLit("id", "("+strings.Join(mediaIds, ",")+")")).
+		Where(qb.In("id")).
 		Query(r.session).
-		Consistency(gocql.One)
+		Consistency(gocql.One).
+		Bind(mediaIds)
 
 	var mediaModels []*Media
 
