@@ -3,7 +3,7 @@ services:
   sting-init:
     image: $CONTAINER_REGISTRY/sting/dev:$BUILDKITE_COMMIT
     command: ./sting_ db migrate --keyspace && ./sting_ db seed && ./sting_ index all
-    env_file: ../sting/.env.ci
+    env_file: ../../applications/sting/.env.ci
     depends_on:
       - elasticsearch
       - temporal
@@ -14,7 +14,7 @@ services:
     ports:
       - 3040:8000
       - 3050:8080
-    env_file: ../sting/.env.ci
+    env_file: ../../applications/sting/.env.ci
     depends_on:
       - sting-init
 

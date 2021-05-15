@@ -14,16 +14,16 @@ services:
     ports:
       - 7233:7233
     volumes:
-      - ../../.buildkite/config/services/temporal.yaml:/etc/temporal/config/temporal.yaml
+      - ./services/temporal.yaml:/etc/temporal/config/temporal.yaml
 
   scylla:
     image: "scylladb/scylla:4.3.1"
     restart: unless-stopped
     command:
       - "--smp"
-      - "2"
+      - "1"
     volumes:
-      - ../../target:/var/lib/scylla
+      - ./target:/var/lib/scylla
     ports:
       - 9042:9042
       - 9160:9160

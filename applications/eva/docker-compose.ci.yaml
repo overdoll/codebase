@@ -3,7 +3,7 @@ services:
   eva-init:
     image: $CONTAINER_REGISTRY/eva/dev:$BUILDKITE_COMMIT
     command: db migrate --keyspace && db seed
-    env_file: ../eva/.env.ci
+    env_file: ../../applications/eva/.env.ci
     depends_on:
       - elasticsearch
       - scylla
@@ -13,7 +13,7 @@ services:
     ports:
       - 3020:8000
       - 3030:8080
-    env_file: ../eva/.env.ci
+    env_file: ../../applications/eva/.env.ci
     depends_on:
       - eva-init
 

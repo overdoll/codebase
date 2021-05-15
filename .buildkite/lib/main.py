@@ -206,14 +206,10 @@ def print_project_pipeline():
             platform="docker-compose",
             # Include docker-compose configs from all configurations, plus our custom one - the container in which the
             # integration tests will actually be ran
-            configs=integration.get("setup", {}).get("dockerfile", []) + default_docker_compose + [
+            configs=default_docker_compose + integration.get("setup", {}).get("dockerfile", []) + [
                 "./.buildkite/config/docker/docker-compose.integration.yaml"]
         )
     )
-
-    # integration tests must finish first - e2e tests take the longest and we dont want to start up a bunch of services
-    # that might fail
-    pipeline_steps.append("wait")
 
     e2e = steps.get("e2e_test", None)
     if not e2e:
@@ -225,7 +221,7 @@ def print_project_pipeline():
             # grab commands to run inside of our container (it will be medusa)
             commands=e2e.get("commands"),
             platform="docker-compose",
-            configs=e2e.get("setup", {}).get("dockerfile", []) + default_docker_compose + [
+            configs=default_docker_compose + e2e.get("setup", {}).get("dockerfile", []) + [
                 "./.buildkite/config/docker/docker-compose.e2e.yaml"]
         )
     )
