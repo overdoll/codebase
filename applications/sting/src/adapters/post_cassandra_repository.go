@@ -116,7 +116,6 @@ func (r PostsCassandraRepository) CreatePendingPost(ctx context.Context, pending
 			"state",
 			"artist_id",
 			"artist_username",
-			"contributor_username",
 			"contributor_id",
 			"content",
 			"categories",

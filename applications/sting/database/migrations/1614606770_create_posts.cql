@@ -45,21 +45,20 @@ CREATE TABLE IF NOT EXISTS posts
 
 CREATE TABLE IF NOT EXISTS posts_pending
 (
-    id                   text,
-    state                text,
-    artist_id            text,
-    artist_username      text,
-    contributor_id       text,
-    contributor_username text,
-    content              list<text>,
-    categories           list<text>,
-    characters           list<text>,
-    characters_requests  map<text, text>,
-    media_requests       list<text>,
-    categories_requests  list<text>,
-    posted_at            timestamp,
-    review_required      boolean,
-    published_post_id    text,
+    id                  text,
+    state               text,
+    artist_id           text,
+    artist_username     text,
+    contributor_id      text,
+    content             list<text>,
+    categories          list<text>,
+    characters          list<text>,
+    characters_requests map<text, text>,
+    media_requests      list<text>,
+    categories_requests list<text>,
+    posted_at           timestamp,
+    review_required     boolean,
+    published_post_id   text,
     primary key ((id), contributor_id)
 ) WITH CLUSTERING ORDER BY (contributor_id ASC);
 
