@@ -53,11 +53,8 @@ export default function File({
             </Flex>
             <Flex alignItems="center" position="relative" ml={2} mr={2}>
               <Heading isTruncated fontSize="lg" color="gray.100">
-                {file.id.slice(5)}
+                {file.id.slice(5).split('/')[0]}
               </Heading>
-            </Flex>
-            <Flex position="relative" alignItems="center" ml={2} mr={2}>
-              <Text color="neutral.100"> </Text>
             </Flex>
             <Flex position="relative" ml={2} mr={2}>
               {progress ? (

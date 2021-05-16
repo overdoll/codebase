@@ -3,7 +3,13 @@
  */
 import type { Node } from 'react';
 import type { State } from '@//:types/upload';
-import { Center, Flex, Heading, Text } from '@chakra-ui/react';
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  Heading,
+  Text,
+} from '@chakra-ui/react';
 import FullPost from '@//:modules/content/posts/full/FullPost';
 import { useTranslation } from 'react-i18next';
 
@@ -25,7 +31,13 @@ export default function Review({ state, disabled }: Props): Node {
       </Text>
       <FullPost data={state} />
       <>
-        {disabled && <div>all images must upload first before submitting</div>}
+        {disabled && (
+          <Alert mt={4} borderRadius={5}>
+            <AlertIcon />
+            {t('review.notice')}
+            <AlertDescription />
+          </Alert>
+        )}
       </>
     </>
   );

@@ -12,6 +12,7 @@ import transition from './transition';
 import global from './global';
 import input from './components/input';
 import button from './components/button';
+import 'overlayscrollbars/css/OverlayScrollbars.css';
 
 const theme = extendTheme({
   config: {

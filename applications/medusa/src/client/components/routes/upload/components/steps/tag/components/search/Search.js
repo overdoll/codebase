@@ -67,11 +67,13 @@ export default function Search({
 
   const onChange = e => {
     setSearch(e.target.value);
+    refetch(e.target.value);
 
     // Start transition -
-    startTransition(() => {
-      refetch(e.target.value);
-    });
+    // TODO: breaks inputs - fix it
+    // startTransition(() => {
+    //   refetch(e.target.value);
+    // });
   };
 
   const [t] = useTranslation('general');

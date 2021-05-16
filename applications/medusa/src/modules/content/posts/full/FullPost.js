@@ -7,7 +7,6 @@ import {
   Image,
   Box,
   Flex,
-  Center,
   Spinner,
   Modal,
   ModalOverlay,
@@ -17,6 +16,8 @@ import {
   Avatar,
   Text,
 } from '@chakra-ui/react';
+import { createPortal } from 'react-dom';
+import RootElement from '@//:modules/utilities/RootElement';
 import SwiperCore, { Pagination, Navigation } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper.min.css';
@@ -35,7 +36,7 @@ export default function FullPost({ data }: Props): Node {
   const [currentSlide, setSlide] = useState(null);
 
   return (
-    <Center>
+    <>
       <Flex
         direction="column"
         w="100%"
@@ -43,7 +44,7 @@ export default function FullPost({ data }: Props): Node {
         align="center"
         display="absolute"
       >
-        <Flex mt={2} direction="row" align="center">
+        <Flex mt={2} direction="row" align="center" w="100%">
           <Avatar
             name={data.artist.username}
             src={data.artist.avatar}
@@ -93,7 +94,7 @@ export default function FullPost({ data }: Props): Node {
             })}
           </Swiper>
         </Box>
-        <Flex direction="column">
+        <Flex direction="column" w="100%">
           <Flex direction="row">
             <Text color="gray.300" mr={2}>
               Characters
@@ -117,38 +118,41 @@ export default function FullPost({ data }: Props): Node {
           </Flex>
         </Flex>
       </Flex>
-      <Modal
-        isOpen={isOpen}
-        onClose={o => {
-          setOpen(false);
-        }}
-        size="full"
-      >
-        <ModalOverlay />
-        <ModalContent m={0} borderRadius={0} bg="shadows.500">
-          <ModalCloseButton size="lg" />
-          <ModalBody
-            h="100%"
-            display="flex"
-            p={0}
-            align="center"
-            justify="center"
-          >
-            {currentSlide ? (
-              <Image
-                alt="thumbnail"
-                w="100%"
-                objectFit="contain"
-                src={data.urls[currentSlide]}
-              />
-            ) : (
-              <Flex w="100%" align="center" justify="center">
-                <Spinner size="xl" color="red.500" />
-              </Flex>
-            )}
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-    </Center>
+      {createPortal(
+        <Modal
+          isOpen={isOpen}
+          onClose={o => {
+            setOpen(false);
+          }}
+          size="full"
+        >
+          <ModalOverlay />
+          <ModalContent m={0} borderRadius={0} bg="shadows.500">
+            <ModalCloseButton size="lg" />
+            <ModalBody
+              h="100%"
+              display="flex"
+              p={0}
+              align="center"
+              justify="center"
+            >
+              {currentSlide ? (
+                <Image
+                  alt="thumbnail"
+                  w="100%"
+                  objectFit="contain"
+                  src={data.urls[currentSlide]}
+                />
+              ) : (
+                <Flex w="100%" align="center" justify="center">
+                  <Spinner size="xl" color="red.500" />
+                </Flex>
+              )}
+            </ModalBody>
+          </ModalContent>
+        </Modal>,
+        RootElement,
+      )}
+    </>
   );
 }

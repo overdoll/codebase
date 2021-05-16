@@ -41,6 +41,7 @@
   },
   "review": {
     "header": "Review your post",
-    "subheader": "Make sure you like how it looks before you submit"
+    "subheader": "Make sure you like how it looks before you submit",
+    "notice": "You'll have to wait until all media files are uploaded before submitting."
   }
 }

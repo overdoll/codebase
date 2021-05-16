@@ -4,15 +4,7 @@
 import type { Node } from 'react';
 import Picker from '../../picker/Picker';
 
-import {
-  Center,
-  Flex,
-  Heading,
-  Box,
-  Stack,
-  IconButton,
-  Text,
-} from '@chakra-ui/react';
+import { Flex, Heading, Box, Stack, Text } from '@chakra-ui/react';
 
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import File from './components/file/File';

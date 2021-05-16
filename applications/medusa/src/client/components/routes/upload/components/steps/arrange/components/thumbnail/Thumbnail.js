@@ -10,6 +10,7 @@ import {
   Skeleton,
   Image,
 } from '@chakra-ui/react';
+import SuspenseImage from '@//:modules/utilities/SuspenseImage';
 
 type Props = {
   thumbnail: any,

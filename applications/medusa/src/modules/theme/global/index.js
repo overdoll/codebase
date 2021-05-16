@@ -39,6 +39,9 @@ const global = props => ({
   'input:-webkit-autofill': {
     color: 'gray.800',
   },
+  '.os-scrollbar-handle': {
+    opacity: 0.3,
+  },
 });
 
 export default global;

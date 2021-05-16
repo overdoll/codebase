@@ -12,12 +12,12 @@ import {
   Flex,
   Heading,
   Text,
-  HStack,
   Stack,
   Alert,
   AlertIcon,
   AlertDescription,
 } from '@chakra-ui/react';
+import XScrollContainer from './components/scrollable/container/XScrollContainer';
 
 type Props = {
   dispatch: Dispatch,
@@ -29,30 +29,18 @@ export default function Tag({ state, dispatch, disabled }: Props): Node {
   const [t] = useTranslation('upload');
 
   return (
-    <Flex direction="column" w="100%">
+    <Flex direction="column">
       <Heading fontSize="3xl" color="gray.00" mb={2}>
         {t('tag.header')}
       </Heading>
       <Text fontSize="lg" color="gray.100">
         {t('tag.subheader')}
       </Text>
-      <HStack flexWrap="nowrap" overflowX="auto" mt={6} mb={6}>
-        {state.files.map(file => {
-          const thumbnail = state.thumbnails[file.id];
-          const prog = state.progress[file.id];
-          return (
-            <Flex
-              key={file.id}
-              w={130}
-              h={150}
-              objectFit="cover"
-              flex="0 0 auto"
-            >
-              <Thumbnail thumbnail={thumbnail} progress={prog} />
-            </Flex>
-          );
-        })}
-      </HStack>
+      <XScrollContainer
+        thumbnails={state.thumbnails}
+        progress={state.progress}
+        files={state.files}
+      />
 
       <Stack>
         <TagArtists dispatch={dispatch} state={state} />
@@ -60,7 +48,7 @@ export default function Tag({ state, dispatch, disabled }: Props): Node {
         <TagCategories dispatch={dispatch} state={state} />
       </Stack>
       {disabled && (
-        <Alert mt={4} borderRadius={5}>
+        <Alert mt={4} mb={4} borderRadius={5}>
           <AlertIcon />
           {t('tag.notice')}
           <AlertDescription />
