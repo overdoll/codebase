@@ -99,11 +99,12 @@ def load_configs():
     return config
 
 
-def create_step(label, commands, platform, configs=None, additional_env_vars=None, shards=1, soft_fail=None):
+def create_step(label, commands, platform, configs=None, cache=True, additional_env_vars=None, shards=1,
+                soft_fail=None):
     if platform == "docker":
         step = create_docker_step(label, commands, additional_env_vars)
     elif platform == "docker-compose":
-        step = create_docker_compose_step(label, commands, additional_env_vars, configs)
+        step = create_docker_compose_step(label, commands, additional_env_vars, configs, cache)
     else:
         step = {
             "label": label,
@@ -185,7 +186,7 @@ def create_docker_step(label, commands, additional_env_vars=None):
     }
 
 
-def create_docker_compose_step(label, commands, additional_env_vars=None, configs=None):
+def create_docker_compose_step(label, commands, additional_env_vars=None, configs=None, cache=True):
     vars = [
         "BUILDKITE_JOB_ID",
         "BUILDKITE_BUILD_ID",
@@ -194,12 +195,11 @@ def create_docker_compose_step(label, commands, additional_env_vars=None, config
         "BUILDKITE_BUILD_NUMBER"
     ]
 
-    return {
+    step = {
         "label": label,
         "command": commands,
         "agents": {"queue": "default"},
         "plugins": {
-            "gencer/cache#v2.4.8": get_cache_plugin(),
             "docker-compose#v3.7.0": {
                 "env": format_env_vars(additional_env_vars) + vars,
                 "run": "run",
@@ -210,6 +210,11 @@ def create_docker_compose_step(label, commands, additional_env_vars=None, config
             },
         },
     }
+
+    if cache:
+        step["plugins"]["gencer/cache#v2.4.8"] = get_cache_plugin()
+
+    return step
 
 
 def print_project_pipeline():
@@ -231,6 +236,7 @@ def print_project_pipeline():
             commands=[".buildkite/pipeline.sh build"],
             # Run tests inside of a docker container
             platform="docker",
+            cache=True,
         )
     )
 
@@ -248,6 +254,8 @@ def print_project_pipeline():
             label=":test_tube: Integration Test",
             commands=[".buildkite/pipeline.sh integration_test"],
             platform="docker-compose",
+            # No cache for int tests - these dont include FE tests
+            cache=False,
             # Include docker-compose configs from all configurations, plus our custom one - the container in which the
             # integration tests will actually be ran
             configs=default_docker_compose + integration.get("setup", {}).get("dockerfile", []) + [
@@ -264,6 +272,7 @@ def print_project_pipeline():
             label=":cypress: E2E Test",
             # grab commands to run inside of our container (it will be medusa)
             commands=e2e.get("commands"),
+            cache=True,
             platform="docker-compose",
             configs=default_docker_compose + e2e.get("setup", {}).get("dockerfile", []) + [
                 "./.buildkite/config/docker/docker-compose.e2e.yaml"]
