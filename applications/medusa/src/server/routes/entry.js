@@ -49,7 +49,7 @@ const entry = async (req, res, next) => {
 
     async function fetchRelay(params, variables, _cacheConfig) {
       const response = await axios({
-        url: '/api/graphql',
+        url: process.env.URL + '/api/graphql',
         withCredentials: true,
         method: 'POST',
         headers: {
