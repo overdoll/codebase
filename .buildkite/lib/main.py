@@ -358,6 +358,13 @@ def execute_e2e_tests_commands(configs):
 
     wait_for_network_dependencies(configs)
 
+    terminal_print.print_expanded_group(":cypress: Downloading cypress")
+
+    exec.execute_command([
+        "../../node_modules/.bin/cypress",
+        "install",
+    ])
+
     terminal_print.print_expanded_group(":cypress: Running test suite")
 
     # need to be in the correct directory
