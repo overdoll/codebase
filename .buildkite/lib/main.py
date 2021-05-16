@@ -365,6 +365,9 @@ def execute_e2e_tests_commands(configs):
 
     exec.execute_command([
         "../../node_modules/.bin/cypress",
+        "install",
+        "&&",
+        "../../node_modules/.bin/cypress",
         "run",
         "--",
         "--record",
