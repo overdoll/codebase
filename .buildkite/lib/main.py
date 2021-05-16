@@ -23,6 +23,8 @@ import yaml
 
 random.seed()
 
+DEFAULT_IMAGE = "gcr.io/bazel-public/ubuntu1804-java11@sha256:54af0180aaa595b2a10edce51e3ec71923b2e21c3964ffc0938c6f599f0b35e3"
+
 
 class YamlReaderError(Exception):
     pass
@@ -172,7 +174,7 @@ def create_docker_step(label, commands, additional_env_vars=None):
             "docker#v3.5.0": {
                 "always-pull": True,
                 "environment": format_env_vars(additional_env_vars) + ["CONTAINER_REGISTRY", "DOCKER_CONFIG"],
-                "image": "gcr.io/bazel-public/ubuntu1804-java11@sha256:54af0180aaa595b2a10edce51e3ec71923b2e21c3964ffc0938c6f599f0b35e3",
+                "image": DEFAULT_IMAGE,
                 "network": "host",
                 "privileged": True,
                 "propagate-environment": True,
@@ -212,6 +214,7 @@ def create_docker_compose_step(label, commands, additional_env_vars=None, config
                 "workdir": "/workdir",
                 "skip-checkout": False,
                 "dependencies": True,
+                "build-parallel": True,
             },
         },
     }
