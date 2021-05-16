@@ -358,6 +358,9 @@ def execute_e2e_tests_commands(configs):
 
     wait_for_network_dependencies(configs)
 
+    # need to be in the correct directory
+    os.chdir('./applications/medusa')
+
     terminal_print.print_expanded_group(":cypress: Downloading cypress")
 
     exec.execute_command([
@@ -366,9 +369,6 @@ def execute_e2e_tests_commands(configs):
     ])
 
     terminal_print.print_expanded_group(":cypress: Running test suite")
-
-    # need to be in the correct directory
-    os.chdir('./applications/medusa')
 
     exec.execute_command([
         "../../node_modules/.bin/cypress",
