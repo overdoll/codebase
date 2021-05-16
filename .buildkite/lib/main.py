@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.6
+#!/usr/bin/env python3
 # a stolen copy of https://github.com/bazelbuild/continuous-integration/blob/master/buildkite/bazelci.py
 # modified for us
 
@@ -363,13 +363,6 @@ def execute_e2e_tests_commands(configs):
 
     # need to be in the correct directory
     os.chdir('./applications/medusa')
-
-    terminal_print.print_expanded_group(":cypress: Downloading cypress")
-
-    exec.execute_command([
-        "../../node_modules/.bin/cypress",
-        "install",
-    ])
 
     terminal_print.print_expanded_group(":cypress: Running test suite")
 
