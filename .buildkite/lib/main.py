@@ -374,7 +374,7 @@ def execute_e2e_tests_commands(configs):
         "--parallel",
         "--key={}".format(os.getenv("CYPRESS_API_KEY")),
         "--ci-build-id={}".format(os.getenv("BUILDKITE_BUILD_ID")),
-        "--config-file=cypress.ci.json"
+        "--config-file=/workdir/applications/medusa/cypress.ci.json"
     ])
 
 
