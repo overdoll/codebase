@@ -280,8 +280,9 @@ def print_project_pipeline():
             label=':cypress: :chromium: End-to-End Test',
             # grab commands to run inside of our container (it will be medusa)
             commands=[".buildkite/pipeline.sh e2e_test"],
-            cache=True,
-            shards=2,
+            # E2E tests dont require node-modules cache (our image is preinstalled with everything required)
+            cache=False,
+            shards=1,
             platform="docker-compose",
             artifacts=e2e.get("artifacts", []),
             configs=default_docker_compose + e2e.get("setup", {}).get("dockerfile", []) + [
@@ -375,7 +376,6 @@ def execute_e2e_tests_commands(configs):
         "--parallel",
         "--key={}".format(os.getenv("CYPRESS_API_KEY")),
         "--ci-build-id={}".format(os.getenv("BUILDKITE_BUILD_ID")),
-
     ])
 
 
