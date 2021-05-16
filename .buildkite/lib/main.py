@@ -154,7 +154,6 @@ def get_cache_plugin():
         "s3": {
             "bucket": "buildkite-runner-cache"
         },
-        "pr": "false",
     }
 
 
@@ -289,6 +288,9 @@ def print_project_pipeline():
 # execute commands to run integration tests
 def execute_integration_tests_commands(configs):
     tmpdir = tempfile.mkdtemp()
+
+    wait_for_port(8000, "sting", 30)
+    wait_for_port(8000, "eva", 30)
 
     try:
         test_env_vars = ["HOME"]
