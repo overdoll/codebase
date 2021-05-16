@@ -27,7 +27,7 @@ class YamlReaderError(Exception):
     pass
 
 
-def wait_for_port(port, host='localhost', timeout=5.0):
+def wait_for_port(port, host, timeout=5.0):
     """Wait until a port starts accepting TCP connections.
     Args:
         port (int): Port number.
@@ -44,15 +44,9 @@ def wait_for_port(port, host='localhost', timeout=5.0):
         except OSError as ex:
             time.sleep(0.01)
             if time.perf_counter() - start_time >= timeout:
+                print(ex)
                 raise TimeoutError('Waited too long for the port {} on host {} to start accepting '
                                    'connections.'.format(port, host)) from ex
-
-
-def wait_for(host, port, timeout):
-    sk = socket.socket()
-    if timeout != 0:
-        sk.settimeout(timeout)
-    sk.connect((host, port))
 
 
 def data_merge(a, b):
@@ -305,8 +299,8 @@ def print_project_pipeline():
 def execute_integration_tests_commands(configs):
     tmpdir = tempfile.mkdtemp()
 
-    wait_for("sting", 8000, 60)
-    wait_for("eva", 8000, 60)
+    wait_for_port(8000, "eva", 60)
+    wait_for_port(8000, "sting", 60)
 
     try:
         test_env_vars = ["HOME"]
