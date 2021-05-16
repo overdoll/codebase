@@ -139,12 +139,32 @@ def format_env_vars(variables):
     return []
 
 
+def get_cache_plugin():
+    return {
+        "id": "node",
+        "backend": "s3",
+        "key": "v1-cache-{{ id }}-{{ runner.os }}-{{ checksum 'yarn.lock' }}",
+        "restore-keys": [
+            "v1-cache-{{ id }}-{{ runner.os }}-",
+            "v1-cache-{{ id }}-",
+        ],
+        "paths": [
+            "node_modules"
+        ],
+        "s3": {
+            "bucket": "buildkite-runner-cache"
+        },
+        "pr": "false",
+    }
+
+
 def create_docker_step(label, commands, additional_env_vars=None):
     return {
         "label": label,
         "command": commands,
         "agents": {"queue": "default"},
         "plugins": {
+            "gencer/cache#v2.4.8": get_cache_plugin(),
             "docker#v3.5.0": {
                 "always-pull": True,
                 "environment": format_env_vars(additional_env_vars) + ["CONTAINER_REGISTRY", "DOCKER_CONFIG"],
@@ -161,7 +181,7 @@ def create_docker_step(label, commands, additional_env_vars=None):
                     "/var/run/docker.sock:/var/run/docker.sock",
                     "/tmp:/tmp",
                 ],
-            }
+            },
         },
     }
 
@@ -180,6 +200,7 @@ def create_docker_compose_step(label, commands, additional_env_vars=None, config
         "command": commands,
         "agents": {"queue": "default"},
         "plugins": {
+            "gencer/cache#v2.4.8": get_cache_plugin(),
             "docker-compose#v3.7.0": {
                 "env": format_env_vars(additional_env_vars) + vars,
                 "run": "run",
@@ -187,7 +208,7 @@ def create_docker_compose_step(label, commands, additional_env_vars=None, config
                 "workdir": "/workdir",
                 "skip-checkout": False,
                 "dependencies": True,
-            }
+            },
         },
     }
 

@@ -23,7 +23,7 @@ services:
     restart: unless-stopped
     command:
       - "--smp"
-      - "4"
+      - "2"
     volumes:
       - scylla-data:/var/lib/scylla
     ports:
