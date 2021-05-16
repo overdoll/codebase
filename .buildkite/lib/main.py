@@ -39,10 +39,10 @@ def wait_for_port(port, host, timeout=5.0):
     start_time = time.perf_counter()
     while True:
         try:
-            with socket.create_connection((host, port), timeout=timeout):
+            with socket.create_connection((host, port), timeout=5):
                 break
         except OSError as ex:
-            time.sleep(0.01)
+            time.sleep(1)
             if time.perf_counter() - start_time >= timeout:
                 print(ex)
                 raise TimeoutError('Waited too long for the port {} on host {} to start accepting '
