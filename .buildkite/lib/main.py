@@ -361,10 +361,9 @@ def execute_e2e_tests_commands(configs):
     terminal_print.print_expanded_group(":cypress: Running test suite")
 
     # need to be in the correct directory
+    os.chdir('./applications/medusa')
+
     exec.execute_command([
-        "cd",
-        "./applications/medusa",
-        "&&",
         "../../node_modules/.bin/cypress",
         "run",
         "--",
