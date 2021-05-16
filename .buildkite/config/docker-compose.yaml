@@ -18,11 +18,10 @@ services:
       - ./services/temporal.yaml:/etc/temporal/config/temporal.yaml
 
   scylla:
-    image: scylladb/scylla:4.1.0
+    image: "scylladb/scylla:4.3.1"
     restart: always
-    command: --smp 1 --memory 750M --overprovisioned 1 --api-address 0.0.0.0
+    command: --smp 1 --memory 1G
     volumes:
-      - "./scylla/scylla-replace-node.yaml:/etc/scylla/scylla.yaml"
       - scylla-data:/var/lib/scylla
     ports:
       - 9042:9042
