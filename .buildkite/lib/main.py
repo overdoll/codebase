@@ -353,7 +353,10 @@ def execute_integration_tests_commands(configs):
 
 
 def execute_e2e_tests_commands(configs):
-    wait_for_network_dependencies(configs.get("e2e_test", {}).get("network_dependencies", []))
+    # grab all network deps (these services need to be running first), and sort by priority (some services need to be started first)
+    configs = sorted(configs.get("e2e_test", {}).get("network_dependencies", []), key=lambda k: k['priority'])
+
+    wait_for_network_dependencies(configs)
 
     terminal_print.print_expanded_group(":cypress: Running test suite")
 

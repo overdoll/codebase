@@ -22,6 +22,7 @@ steps:
     network_dependencies:
       - host: medusa
         port: 8080
+        priority: 1
 
   publish_image:
     targets:

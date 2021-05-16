@@ -32,6 +32,7 @@ steps:
     network_dependencies:
       - host: sting
         port: 8000
+        priority: 0
 
   publish_image:
     targets:

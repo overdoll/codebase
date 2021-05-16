@@ -5,6 +5,8 @@ services:
     env_file: ../../applications/medusa/.env.ci
     depends_on:
       - redis
+      - sting
+      - eva
     ports:
       - 8080:8080
 
