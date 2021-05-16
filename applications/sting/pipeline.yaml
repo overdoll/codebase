@@ -28,7 +28,7 @@ steps:
   e2e_test:
     setup:
       dockerfile:
-        - ./applications/sting/docker-compose.yaml
+        - ./applications/sting/docker-compose.ci.yaml
     network_dependencies:
       - host: sting
         port: 8000
