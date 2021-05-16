@@ -6,7 +6,7 @@ services:
     entrypoint: ""
     privileged: true
     environment:
-      - HOME: /var/lib/buildkite-agent
+      - HOME=/var/lib/buildkite-agent
     volumes:
       - $BUILDKITE_BUILD_CHECKOUT_PATH:/workdir
       - /var/lib/buildkite-agent:/var/lib/buildkite-agent
