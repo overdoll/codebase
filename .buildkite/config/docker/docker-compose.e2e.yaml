@@ -3,6 +3,5 @@ services:
   run:
     working_dir: /workdir
     image: "gcr.io/bazel-public/ubuntu1804-java11"
-    entrypoint: /bin/sh
     volumes:
       - $BUILDKITE_BUILD_CHECKOUT_PATH:/workdir

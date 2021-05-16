@@ -357,7 +357,20 @@ def execute_e2e_tests_commands(configs):
 
     terminal_print.print_expanded_group(":cypress: Running test suite")
 
-    exec.execute_command(["yarn", "run", "test:e2e"])
+    # need to be in the correct directory
+    exec.execute_command([
+        "cd",
+        "./applications/medusa",
+        "&&",
+        "../../node_modules/.bin/cypress",
+        "run",
+        "--",
+        "--record",
+        "--parallel",
+        "--key={}".format(os.getenv("CYPRESS_API_KEY")),
+        "--ci-build-id={}".format(os.getenv("BUILDKITE_BUILD_ID")),
+        "--config-file=cypress.ci.json"
+    ])
 
 
 def execute_build_commands(configs):
