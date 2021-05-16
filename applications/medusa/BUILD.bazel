@@ -126,6 +126,8 @@ TEST_DEPS = [
     "@npm//@testing-library/user-event",
 ]
 
+_SERVER_DEPS = []
+
 copy_to_bin(
     name = "copy_static_files",
     srcs = _SRC,
@@ -190,7 +192,7 @@ nodejs_binary(
         "src/server/templates/**",
         "src/server/locales/**/*",
         "public/**",
-    ]),
+    ]) + _SERVER_DEPS,
     entry_point = "build/server.js",
     templated_args = [
         "--node_options=--require=./$(rootpath chdir.js)",

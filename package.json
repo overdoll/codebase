@@ -70,7 +70,7 @@
     "storybook": "cd ./applications/medusa && start-storybook -p 6006",
     "test:unit": "bazel test --test_output=all //applications/medusa:unit",
     "test:integration": "bazel test --test_output=all //applications/medusa:integration",
-    "test:e2e": "cd ./applications/medusa && cypress run --headless",
+    "test:e2e": "cd ./applications/medusa && cypress run -- --record --parallel --key=${CYPRESS_API_KEY} --ci-build-id=${BUILDKITE_BUILD_ID} --config-file=cypress.ci.json",
     "e2e:open": "cd ./applications/medusa && cypress open"
   },
   "eslintConfig": {

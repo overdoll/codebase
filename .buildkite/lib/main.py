@@ -39,10 +39,10 @@ def wait_for_port(host, port, timeout=5.0):
     start_time = time.perf_counter()
     while True:
         try:
-            with socket.create_connection((host, port), timeout=5):
+            with socket.create_connection((host, port), timeout=3):
                 break
         except OSError as ex:
-            time.sleep(1)
+            time.sleep(0.5)
             if time.perf_counter() - start_time >= timeout:
                 print(ex)
                 raise exception.BuildkiteException(
@@ -100,7 +100,7 @@ def load_configs():
     return config
 
 
-def create_step(label, commands, platform, configs=None, cache=True, additional_env_vars=None, shards=1,
+def create_step(label, commands, platform, configs=None, artifacts=None, cache=True, additional_env_vars=None, shards=1,
                 soft_fail=None):
     if platform == "docker":
         step = create_docker_step(label, commands, additional_env_vars)
@@ -112,6 +112,9 @@ def create_step(label, commands, platform, configs=None, cache=True, additional_
             "command": commands,
             "agents": {"queue": "default"},
         }
+
+    if artifacts:
+        step["artifact_paths"] = artifacts
 
     if shards > 1:
         step["label"] += " (shard %n)"
@@ -193,7 +196,8 @@ def create_docker_compose_step(label, commands, additional_env_vars=None, config
         "BUILDKITE_BUILD_ID",
         "BUILDKITE_AGENT_ACCESS_TOKEN",
         "CONTAINER_REGISTRY",
-        "BUILDKITE_BUILD_NUMBER"
+        "BUILDKITE_BUILD_NUMBER",
+        "CYPRESS_API_KEY"
     ]
 
     step = {
@@ -270,11 +274,13 @@ def print_project_pipeline():
 
     pipeline_steps.append(
         create_step(
-            label=":cypress: E2E Test",
+            label=':cypress: :chromium: Run Cypress End-to-End tests',
             # grab commands to run inside of our container (it will be medusa)
             commands=e2e.get("commands"),
             cache=True,
+            shards=2,
             platform="docker-compose",
+            artifacts=e2e.get("artifacts", []),
             configs=default_docker_compose + e2e.get("setup", {}).get("dockerfile", []) + [
                 "./.buildkite/config/docker/docker-compose.e2e.yaml"]
         )
@@ -288,6 +294,8 @@ def print_project_pipeline():
             create_step(
                 label=":aws: Publish Images",
                 commands=[".buildkite/pipeline.sh publish"],
+                # Does not require a cache because we already built our dependencies once - we just publishing to a diff repo
+                cache=False,
                 platform="docker",
             )
         )
@@ -300,7 +308,7 @@ def wait_for_network_dependencies(targets):
         host = connection["host"]
         port = connection["port"]
 
-        terminal_print.print_collapsed_group(":suspect Waiting for {}:{} to be available".format(host, port))
+        terminal_print.print_collapsed_group(":suspect: Waiting for {}:{} to be available".format(host, port))
         wait_for_port(host, port, 60)
 
 

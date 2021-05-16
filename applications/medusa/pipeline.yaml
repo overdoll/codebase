@@ -13,6 +13,9 @@ steps:
       - //applications/medusa:publish-testing
 
   e2e_test:
+    artifacts:
+      - './artifacts/**/*'
+      - './artifacts/*'
     setup:
       dockerfile:
         - ./applications/medusa/docker-compose.ci.yaml

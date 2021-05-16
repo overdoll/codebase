@@ -9,5 +9,10 @@ services:
       - 8080:8080
 
   run:
+    image: "cypress/base:12.6.0"
+    command: "yarn run test:e2e
+    volumes:
+      - ./artifacts/video/:/workdir/applications/medusa/cypress/videos/
+      - ./artifacts/screenshots/:/workdir/applications/medusa/cypress/screenshots/
     depends_on:
       - medusa
