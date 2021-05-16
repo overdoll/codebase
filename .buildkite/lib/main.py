@@ -298,8 +298,8 @@ def print_project_pipeline():
 def execute_integration_tests_commands(configs):
     tmpdir = tempfile.mkdtemp()
 
-    wait_for_port(8000, "sting", 30)
-    wait_for_port(8000, "eva", 30)
+    wait_for_port(8000, "sting", 60)
+    wait_for_port(8000, "eva", 60)
 
     try:
         test_env_vars = ["HOME"]

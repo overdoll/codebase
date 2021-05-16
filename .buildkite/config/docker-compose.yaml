@@ -4,7 +4,6 @@ services:
     image: "redis:alpine"
 
   temporal:
-    restart: unless-stopped
     depends_on:
       - scylla
     environment:
@@ -19,12 +18,11 @@ services:
       - ./services/temporal.yaml:/etc/temporal/config/temporal.yaml
 
   scylla:
-    image: "scylladb/scylla:4.3.1"
-    restart: unless-stopped
-    command:
-      - "--smp"
-      - "2"
+    image: scylladb/scylla:4.1.0
+    restart: always
+    command: --smp 1 --memory 750M --overprovisioned 1 --api-address 0.0.0.0
     volumes:
+      - "./scylla/scylla-replace-node.yaml:/etc/scylla/scylla.yaml"
       - scylla-data:/var/lib/scylla
     ports:
       - 9042:9042
@@ -51,7 +49,6 @@ services:
     ports:
       - 9200:9200
       - 9300:9300
-    restart: unless-stopped
 
 volumes:
   elasticsearch-data:
