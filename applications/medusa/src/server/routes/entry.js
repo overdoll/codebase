@@ -84,6 +84,7 @@ const entry = async (req, res, next) => {
       store: new Store(new RecordSource(), {
         gcReleaseBufferSize: 100,
       }),
+      isServer: true,
     });
 
     // Before going further and creating our router, we pre-emptively resolve the RootQuery routes, so that the user object

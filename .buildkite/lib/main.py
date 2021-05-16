@@ -281,7 +281,7 @@ def print_project_pipeline():
             # grab commands to run inside of our container (it will be medusa)
             commands=[".buildkite/pipeline.sh e2e_test"],
             # E2E tests dont require node-modules cache (our image is preinstalled with everything required)
-            cache=False,
+            cache=True,
             shards=1,
             platform="docker-compose",
             artifacts=e2e.get("artifacts", []),
