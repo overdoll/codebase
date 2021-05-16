@@ -17,14 +17,21 @@ steps:
     setup:
       dockerfile:
         - ./applications/sting/docker-compose.ci.yaml
+    network_dependencies:
+      - host: sting
+        port: 8000
     targets:
       - //applications/sting/src/adapters/...
       - //applications/sting/src/service/...
+
 
   e2e_test:
     setup:
       dockerfile:
         - ./applications/sting/.ci/docker-compose.yaml
+    network_dependencies:
+      - host: sting
+        port: 8000
 
   publish_image:
     targets:

@@ -27,7 +27,7 @@ class YamlReaderError(Exception):
     pass
 
 
-def wait_for_port(port, host, timeout=5.0):
+def wait_for_port(host, port, timeout=5.0):
     """Wait until a port starts accepting TCP connections.
     Args:
         port (int): Port number.
@@ -45,8 +45,8 @@ def wait_for_port(port, host, timeout=5.0):
             time.sleep(1)
             if time.perf_counter() - start_time >= timeout:
                 print(ex)
-                raise TimeoutError('Waited too long for the port {} on host {} to start accepting '
-                                   'connections.'.format(port, host)) from ex
+                raise exception.BuildkiteException(
+                    "Waited too long for the port {} on host {} to start accepting connections.".format(port, host))
 
 
 def data_merge(a, b):
@@ -295,12 +295,20 @@ def print_project_pipeline():
     print(yaml.dump({"steps": pipeline_steps}))
 
 
+def wait_for_network_dependencies(targets):
+    for connection in targets:
+        host = connection["host"]
+        port = connection["port"]
+
+        terminal_print.print_collapsed_group(":suspect Waiting for {}:{} to be available".format(host, port))
+        wait_for_port(host, port, 60)
+
+
 # execute commands to run integration tests
 def execute_integration_tests_commands(configs):
-    tmpdir = tempfile.mkdtemp()
+    wait_for_network_dependencies(configs.get("integration_test", {}).get("network_dependencies", []))
 
-    wait_for_port(8000, "eva", 60)
-    wait_for_port(8000, "sting", 60)
+    tmpdir = tempfile.mkdtemp()
 
     try:
         test_env_vars = ["HOME"]

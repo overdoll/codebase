@@ -17,6 +17,9 @@ steps:
     setup:
       dockerfile:
         - ./applications/eva/docker-compose.ci.yaml
+    network_dependencies:
+      - host: eva
+        port: 8000
     targets:
       - //applications/eva/src/adapters/...
       - //applications/eva/src/service/...
@@ -25,6 +28,9 @@ steps:
     setup:
       dockerfile:
         - ./applications/eva/docker-compose.ci.yaml
+    network_dependencies:
+      - host: eva
+        port: 8000
 
   publish_image:
     targets:

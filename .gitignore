@@ -17,6 +17,7 @@
 #
 node_modules
 tilt_modules
+__pycache__
 .helm
 bazel-*
 .env
