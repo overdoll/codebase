@@ -3,7 +3,7 @@ services:
   run:
     working_dir: /workdir
     image: "cypress/included:7.2.0"
-    entrypoint: /bin/bash
+    entrypoint: ""
     user: 2000:2000
     privileged: true
     group_add:
