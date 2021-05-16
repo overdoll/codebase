@@ -367,7 +367,7 @@ def execute_e2e_tests_commands(configs):
     terminal_print.print_expanded_group(":cypress: Running test suite")
 
     exec.execute_command([
-        "../../node_modules/.bin/cypress",
+        "cypress",
         "run",
         "--",
         "--record",
