@@ -19,6 +19,9 @@ steps:
     setup:
       dockerfile:
         - ./applications/medusa/docker-compose.ci.yaml
+    network_dependencies:
+      - host: medusa
+        port: 8080
 
   publish_image:
     targets:

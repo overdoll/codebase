@@ -274,7 +274,7 @@ def print_project_pipeline():
 
     pipeline_steps.append(
         create_step(
-            label=':cypress: :chromium: Run Cypress tests',
+            label=':cypress: :chromium: E2E Test',
             # grab commands to run inside of our container (it will be medusa)
             commands=[".buildkite/pipeline.sh e2e_test"],
             cache=True,
