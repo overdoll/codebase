@@ -15,6 +15,7 @@ import time
 
 import utils.bazel as bazel
 import utils.exception as exception
+import utils.exec as exec
 import utils.flags as flags
 import utils.terminal_print as terminal_print
 import utils.test_logs as test_logs
@@ -117,7 +118,6 @@ def create_step(label, commands, platform, configs=None, artifacts=None, cache=T
         step["artifact_paths"] = artifacts
 
     if shards > 1:
-        step["label"] += " (shard %n)"
         step["parallelism"] = shards
 
     if soft_fail is not None:
@@ -274,9 +274,9 @@ def print_project_pipeline():
 
     pipeline_steps.append(
         create_step(
-            label=':cypress: :chromium: Run Cypress End-to-End tests',
+            label=':cypress: :chromium: Run Cypress tests',
             # grab commands to run inside of our container (it will be medusa)
-            commands=e2e.get("commands"),
+            commands=[".buildkite/pipeline.sh e2e_test"],
             cache=True,
             shards=2,
             platform="docker-compose",
@@ -352,6 +352,14 @@ def execute_integration_tests_commands(configs):
             shutil.rmtree(tmpdir)
 
 
+def execute_e2e_tests_commands(configs):
+    wait_for_network_dependencies(configs.get("e2e_test", {}).get("network_dependencies", []))
+
+    terminal_print.print_expanded_group(":cypress: Running test suite")
+
+    exec.execute_command(["yarn", "run", "test:e2e"])
+
+
 def execute_build_commands(configs):
     tmpdir = tempfile.mkdtemp()
 
@@ -425,6 +433,7 @@ def main(argv=None):
     subparsers = parser.add_subparsers(dest="subparsers_name")
     subparsers.add_parser("build")
     subparsers.add_parser("integration_test")
+    subparsers.add_parser("e2e_test")
     subparsers.add_parser("project_pipeline")
     subparsers.add_parser("publish")
 
@@ -437,6 +446,8 @@ def main(argv=None):
             execute_build_commands(configs)
         elif args.subparsers_name == "integration_test":
             execute_integration_tests_commands(configs)
+        elif args.subparsers_name == "e2e_test":
+            execute_e2e_tests_commands(configs)
         elif args.subparsers_name == "project_pipeline":
             print_project_pipeline()
         elif args.subparsers_name == "publish":

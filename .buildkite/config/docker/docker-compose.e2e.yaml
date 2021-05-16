@@ -2,5 +2,7 @@ version: '3.9'
 services:
   run:
     working_dir: /workdir
+    image: "cypress/base:12.6.0"
+    entrypoint: /bin/sh
     volumes:
       - $BUILDKITE_BUILD_CHECKOUT_PATH:/workdir
