@@ -48,6 +48,13 @@ def wait_for_port(port, host='localhost', timeout=5.0):
                                    'connections.'.format(port, host)) from ex
 
 
+def wait_for(host, port, timeout):
+    sk = socket.socket()
+    if timeout != 0:
+        sk.settimeout(timeout)
+    sk.connect((host, port))
+
+
 def data_merge(a, b):
     """merges b into a and return merged result
 
@@ -298,8 +305,8 @@ def print_project_pipeline():
 def execute_integration_tests_commands(configs):
     tmpdir = tempfile.mkdtemp()
 
-    wait_for_port(8000, "sting", 60)
-    wait_for_port(8000, "eva", 60)
+    wait_for("sting", 8000, 60)
+    wait_for("eva", 8000, 60)
 
     try:
         test_env_vars = ["HOME"]
