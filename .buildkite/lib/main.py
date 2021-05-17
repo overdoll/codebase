@@ -347,7 +347,14 @@ def execute_integration_tests_commands(configs):
 
             # integration test MAY be flaky because of external dependencies, so we will attempt retries
             test_flags += ["--flaky_test_attempts=3"]
-            bazel.execute_bazel_test(":bazel: Running integration tests", test_flags, test_targets, test_bep_file, [])
+
+            try:
+                bazel.execute_bazel_test(":bazel: Running integration tests", test_flags, test_targets, test_bep_file,
+                                         [])
+            finally:
+                if json_profile_out_test:
+                    upload_json_profile(json_profile_out_test, tmpdir)
+
         finally:
             stop_request.set()
             upload_thread.join()
@@ -379,6 +386,13 @@ def execute_e2e_tests_commands(configs):
     ])
 
 
+def upload_json_profile(json_profile_path, tmpdir):
+    if not os.path.exists(json_profile_path):
+        return
+    terminal_print.print_collapsed_group(":bazel: Uploading JSON Profile")
+    exec.execute_command(["buildkite-agent", "artifact", "upload", json_profile_path], cwd=tmpdir)
+
+
 def execute_build_commands(configs):
     tmpdir = tempfile.mkdtemp()
 
@@ -391,7 +405,11 @@ def execute_build_commands(configs):
 
         build_targets = configs.get("build", {}).get("targets", [])
 
-        bazel.execute_bazel_build(":bazel: Building applications", build_flags, build_targets, None, [])
+        try:
+            bazel.execute_bazel_build(":bazel: Building applications", build_flags, build_targets, None, [])
+        finally:
+            if json_profile_out_build:
+                upload_json_profile(json_profile_out_build, tmpdir)
 
         test_flags, json_profile_out_test = flags.calculate_flags(
             "test_flags", "test", tmpdir, test_env_vars
@@ -409,7 +427,13 @@ def execute_build_commands(configs):
 
             # unit tests are not flaky
             test_flags += ["--flaky_test_attempts=default"]
-            bazel.execute_bazel_test(":bazel: Running unit tests", test_flags, test_targets, test_bep_file, [])
+
+            try:
+                bazel.execute_bazel_test(":bazel: Running unit tests", test_flags, test_targets, test_bep_file, [])
+            finally:
+                if json_profile_out_build:
+                    upload_json_profile(json_profile_out_build, tmpdir)
+
         finally:
             stop_request.set()
             upload_thread.join()

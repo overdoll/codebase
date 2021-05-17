@@ -16,6 +16,8 @@ steps:
     artifacts:
       - cypress/**/*
       - cypress/*
+      - coverage/*
+      - coverage/**
     setup:
       dockerfile:
         - ./applications/medusa/docker-compose.e2e.yaml

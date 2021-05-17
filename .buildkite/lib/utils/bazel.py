@@ -46,7 +46,7 @@ def execute_bazel_test(
     terminal_print.print_expanded_group(label)
     try:
         exec.execute_command(
-            ["bazel", "test"]
+            ["bazel", "coverage"]
             + aggregated_flags
             + ["--"]
             + targets
