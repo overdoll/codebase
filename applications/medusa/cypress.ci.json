@@ -1,8 +1,8 @@
 {
-  "baseUrl": "http://medusa:8080",
+  "baseUrl": "https://medusa:8080",
   "env": {
     "codeCoverage": {
-      "url": "http://medusa:8080/__coverage__"
+      "url": "https://medusa:8080/__coverage__"
     }
   },
   "projectId": "svdd6z"
