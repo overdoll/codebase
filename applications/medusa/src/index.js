@@ -6,11 +6,17 @@ process.env = JSON.parse(JSON.stringify(process.env));
 // Unhandled errors && exceptions should crash the process (if some graph services are unavailable, we sometimes get into an undefined state)
 process.on('uncaughtException', err => {
   console.log(`Uncaught Exception: ${err.message}`);
+
+  // in case process.exit doesn't work
+  process.kill(0, 'SIGINT');
   process.exit(1);
 });
 
 process.on('unhandledRejection', (reason, promise) => {
   console.log('Unhandled rejection at ', promise);
+
+  // in case process.exit doesn't work
+  process.kill(0, 'SIGINT');
   process.exit(1);
 });
 
