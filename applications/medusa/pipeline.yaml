@@ -14,8 +14,8 @@ steps:
 
   e2e_test:
     artifacts:
-      - artifacts/**/*
-      - artifacts/*
+      - cypress/**/*
+      - cypress/*
     setup:
       dockerfile:
         - ./applications/medusa/docker-compose.ci.yaml

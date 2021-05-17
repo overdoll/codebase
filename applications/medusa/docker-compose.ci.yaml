@@ -12,7 +12,7 @@ services:
 
   run:
     volumes:
-      - $BUILDKITE_BUILD_CHECKOUT_PATH/artifacts/video/:/workdir/applications/medusa/cypress/videos/
-      - $BUILDKITE_BUILD_CHECKOUT_PATH/artifacts/screenshots/:/workdir/applications/medusa/cypress/screenshots/
+      - $BUILDKITE_BUILD_CHECKOUT_PATH/cypress/video/:/workdir/applications/medusa/cypress/videos/
+      - $BUILDKITE_BUILD_CHECKOUT_PATH/cypress/screenshots/:/workdir/applications/medusa/cypress/screenshots/
     depends_on:
       - medusa
