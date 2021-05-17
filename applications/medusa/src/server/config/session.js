@@ -5,7 +5,7 @@ export default {
   cookie: {
     path: '/',
     httpOnly: true,
-    secure: true,
+    secure: false,
     maxAge: 28800000,
     signed: true,
   },

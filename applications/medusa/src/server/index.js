@@ -64,7 +64,7 @@ index.use(middleware.flash());
 index.use(
   csrf({
     cookie: {
-      secure: true,
+      secure: false,
       httpOnly: true,
       signed: true,
     },
