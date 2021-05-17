@@ -11,9 +11,10 @@ import {
 } from 'relay-runtime';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
 import axios from 'axios';
+import SafeJSONParse from '@//:modules/json/json';
 
 // Get hydrated data from store
-const data = JSON.parse(
+const data = SafeJSONParse(
   document.getElementById('relay-store')?.textContent || '{}',
 );
 

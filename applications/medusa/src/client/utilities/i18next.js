@@ -3,6 +3,7 @@
  */
 import i18n from 'i18next';
 import Backend from 'i18next-http-backend';
+import SafeJSONParse from '@//:modules/json/json';
 
 const options = {
   fallbackLng: 'en',
@@ -31,8 +32,9 @@ if (process && !process.release) {
   i18n.init(options);
 
   // Get translations
-  const translations = JSON.parse(
+  const translations = SafeJSONParse(
     document.getElementById('i18next-store')?.textContent || '{}',
+    { en: {} },
   );
 
   // Get language

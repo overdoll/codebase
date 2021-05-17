@@ -1,8 +1,8 @@
 import i18next from 'i18next';
 import Backend from 'i18next-fs-backend';
 import i18nextMiddleware from 'i18next-http-middleware';
-import path from 'path';
 import { initReactI18next } from 'react-i18next';
+import path from 'path';
 
 i18next
   .use(i18nextMiddleware.LanguageDetector)
@@ -14,7 +14,7 @@ i18next
     lng: 'en',
     load: 'languageOnly',
     backend: {
-      loadPath: path.join(__dirname, '../locales/{{lng}}/{{ns}}.json'),
+      loadPath: path.join(__dirname, '../public/locales/{{lng}}/{{ns}}.json'),
     },
   });
 

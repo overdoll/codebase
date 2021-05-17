@@ -4,6 +4,7 @@
 import type { Node } from 'react';
 import { createContext, useContext, useState } from 'react';
 import CanUseDOM from '@//:modules/utilities/CanUseDOM';
+import SafeJSONParse from '@//:modules/json/json';
 
 type Props = {
   override?: any,
@@ -13,7 +14,7 @@ type Props = {
 const FlashContext = createContext({});
 
 // On the client, we will attempt to read the flash store from the document
-const initialState = JSON.parse(
+const initialState = SafeJSONParse(
   (CanUseDOM && document.getElementById('flash-store')?.textContent) || '{}',
 );
 

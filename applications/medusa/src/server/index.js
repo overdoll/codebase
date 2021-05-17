@@ -17,6 +17,10 @@ import sessionCfg from './config/session';
 
 const index = express();
 
+// Add public routes - build folder + public folder
+index.use(express.static(path.resolve(__dirname, 'public')));
+index.use(express.static(path.resolve(__dirname, '../public')));
+
 // add EJS as the engine
 index.engine('ejs', ejs.renderFile);
 
@@ -26,12 +30,6 @@ index.set('trust proxy', 1);
 index
   .set('views', path.join(__dirname, '../src/server/templates'))
   .set('view engine', 'ejs');
-
-// Add public routes
-// when in production, use the build directory's "public" folder since it has everything already in our "public" folder
-process.env.NODE_ENV === 'production'
-  ? index.use(express.static(path.resolve(__dirname, '../build/public')))
-  : index.use(express.static(path.resolve(__dirname, '../public')));
 
 // Add i18next middleware
 index.use(i18nextMiddleware.handle(i18next));

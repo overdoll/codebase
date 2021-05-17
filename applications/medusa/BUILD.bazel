@@ -7,12 +7,17 @@ load("@io_bazel_rules_docker//container:container.bzl", "container_push")
 
 package(default_visibility = ["//visibility:public"])
 
+_EXCLUDE = [
+    ".env.example",
+    ".env",
+]
+
 _SRC = glob(
     [
-        "public/*",
         "src/**/*",
         ".*",
     ],
+    exclude = _EXCLUDE,
 ) + [
     "razzle.config.js",
     "package.json",
@@ -110,10 +115,13 @@ _RUNTIME_DEPS = [
 TEST_DEPS = [
     "jest.setup.js",
     "jest.config.js",
-] + glob([
-    "src/__generated__/*",
-    ".*",
-]) + _RUNTIME_DEPS + [
+] + glob(
+    [
+        "src/__generated__/*",
+        ".*",
+    ],
+    exclude = _EXCLUDE,
+) + _RUNTIME_DEPS + [
     "@npm//@jest/transform",
     "@npm//@jest/core",
     "@npm//@testing-library/react",
@@ -191,7 +199,7 @@ nodejs_binary(
     ] + glob([
         "src/server/templates/**",
         "src/server/locales/**/*",
-        "public/**",
+        "public/**/*",
     ]) + _SERVER_DEPS,
     entry_point = "build/server.js",
     templated_args = [
