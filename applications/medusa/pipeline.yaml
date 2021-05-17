@@ -19,9 +19,10 @@ steps:
     setup:
       dockerfile:
         - ./applications/medusa/docker-compose.ci.yaml
+        - ./applications/medusa/docker-compose.e2e.yaml
     network_dependencies:
-      - host: medusa
-        port: 8080
+      - host: overdoll.test
+        port: 80
         priority: 1
 
   publish_image:

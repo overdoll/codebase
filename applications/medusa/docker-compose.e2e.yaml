@@ -1,0 +1,9 @@
+version: '3.9'
+services:
+  medusa:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.buffer.rule=Host(`overdoll.test`) && PathPrefix(`/`)"
+      - "traefik.http.routers.buffer.entrypoints=web"
+    depends_on:
+      - traefik

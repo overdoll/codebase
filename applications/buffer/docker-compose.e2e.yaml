@@ -1,0 +1,9 @@
+version: '3.9'
+services:
+  buffer:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.buffer.rule=Host(`overdoll.test`) && (Path(`/api/upload/{document}`) || Path(`/api/upload/`) || Path(`/api/uploads/{user}/{document}`))"
+      - "traefik.http.routers.buffer.entrypoints=web"
+    depends_on:
+      - traefik

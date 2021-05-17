@@ -7,8 +7,8 @@ import { lstatSync, readdirSync } from 'fs';
 
 i18next
   .use(i18nextMiddleware.LanguageDetector)
-  .use(Backend)
   .use(initReactI18next)
+  .use(Backend)
   .init({
     debug: process.env.APP_DEBUG === 'true',
     fallbackLng: 'en',

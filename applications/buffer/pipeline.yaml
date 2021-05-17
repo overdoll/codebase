@@ -25,6 +25,7 @@ steps:
     setup:
       dockerfile:
         - ./applications/buffer/docker-compose.ci.yaml
+        - ./applications/buffer/docker-compose.e2e.yaml
 
   publish_image:
     targets:
