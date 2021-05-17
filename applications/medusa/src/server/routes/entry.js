@@ -153,7 +153,7 @@ const entry = async (req, res, next) => {
     const initialI18nStore = {};
 
     req.i18n.languages.forEach(l => {
-      initialI18nStore[l] = req.i18n.services.resourceStore.data[l];
+      initialI18nStore[l] = req.i18n.services.resourceStore.data[l] || {};
     });
 
     // Get our relay store
