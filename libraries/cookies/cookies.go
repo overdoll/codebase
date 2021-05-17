@@ -28,7 +28,7 @@ func SetCookie(ctx context.Context, cookie *http.Cookie) (bool, error) {
 	// force HttpOnly and Secure on the cookie
 	// Path must be "/" or it wont be available
 	cookie.HttpOnly = true
-	cookie.Secure = !debug
+	cookie.Secure = true
 	cookie.Path = "/"
 
 	// if we're in debug, we dont encrypt cookies since we want to be able to test easily
