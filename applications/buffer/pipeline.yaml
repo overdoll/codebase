@@ -14,9 +14,6 @@ steps:
       - //applications/buffer:publish-testing
 
   integration_test:
-    setup:
-      dockerfile:
-        - ./applications/buffer/docker-compose.ci.yaml
     targets:
       - //applications/buffer/src/adapters/...
       - //applications/buffer/src/service/...
@@ -24,7 +21,6 @@ steps:
   e2e_test:
     setup:
       dockerfile:
-        - ./applications/buffer/docker-compose.ci.yaml
         - ./applications/buffer/docker-compose.e2e.yaml
 
   publish_image:

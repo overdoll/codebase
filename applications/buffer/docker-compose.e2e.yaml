@@ -1,6 +1,11 @@
 version: '3.9'
 services:
   buffer:
+    image: $CONTAINER_REGISTRY/buffer/dev:$BUILDKITE_COMMIT
+    command: ./buffer_ http
+    ports:
+      - 3010:8000
+    env_file: ../../applications/buffer/.env.ci
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.buffer.rule=Path(`/api/upload/{document}`) || Path(`/api/upload/`) || Path(`/api/uploads/{user}/{document}`)"
@@ -8,3 +13,8 @@ services:
       - "traefik.http.routers.buffer.tls=true"
     depends_on:
       - traefik
+      - minio
+
+  run:
+    depends_on:
+      - buffer

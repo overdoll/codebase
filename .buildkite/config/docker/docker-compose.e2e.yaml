@@ -5,6 +5,22 @@ services:
     ports:
       - 6379:6379
 
+  minio:
+    image: minio/minio:RELEASE.2021-05-16T05-32-34Z
+    volumes:
+      - minio-data:/data
+    command: server /data
+    expose:
+      - "9000:9000"
+    environment:
+      MINIO_ROOT_USER: overdoll123
+      MINIO_ROOT_PASSWORD: overdoll123
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
   traefik:
     image: traefik:v2.1
     command:
@@ -30,3 +46,7 @@ services:
       - /var/lib/buildkite-agent:/var/lib/buildkite-agent
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/bin/buildkite-agent:/usr/bin/buildkite-agent
+
+volumes:
+  minio-data:
+    driver: local
