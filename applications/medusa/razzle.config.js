@@ -77,8 +77,7 @@ module.exports = {
         };
 
         config.devServer.index = '';
-        config.devServer.public = 'https://overdoll.test';
-        config.devServer.host = 'overdoll.test';
+        config.devServer.public = '';
         config.devServer.hot = true;
       }
 
