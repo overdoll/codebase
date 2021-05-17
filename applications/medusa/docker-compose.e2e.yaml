@@ -35,7 +35,7 @@ services:
 
   run:
     volumes:
-      - $BUILDKITE_BUILD_CHECKOUT_PATH/coverage/medusa/clover.xml:/workdir/applications/medusa/coverage/clover.xml
+      - $BUILDKITE_BUILD_CHECKOUT_PATH/coverage/medusa/:/workdir/applications/medusa/coverage/
       - $BUILDKITE_BUILD_CHECKOUT_PATH/cypress/video/:/workdir/applications/medusa/cypress/videos/
       - $BUILDKITE_BUILD_CHECKOUT_PATH/cypress/screenshots/:/workdir/applications/medusa/cypress/screenshots/
     depends_on:

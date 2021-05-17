@@ -16,8 +16,7 @@ steps:
     artifacts:
       - cypress/**/*
       - cypress/*
-      - coverage/**/*
-      - coverage/*
+      - coverage/medusa/clover.xml
     setup:
       dockerfile:
         - ./applications/medusa/docker-compose.e2e.yaml
