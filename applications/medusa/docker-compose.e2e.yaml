@@ -7,7 +7,7 @@ services:
     working_dir: /workdir
     user: 2000:2000
     env_file: ../../applications/medusa/.env.ci
-    command: npm run service:medusa
+    command: npm run service:medusa:e2e
     depends_on:
       - redis
       - sting
