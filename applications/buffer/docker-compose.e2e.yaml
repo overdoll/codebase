@@ -3,7 +3,8 @@ services:
   buffer:
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.buffer.rule=Host(`overdoll.test`) && (Path(`/api/upload/{document}`) || Path(`/api/upload/`) || Path(`/api/uploads/{user}/{document}`))"
-      - "traefik.http.routers.buffer.entrypoints=web"
+      - "traefik.http.routers.buffer.rule=Path(`/api/upload/{document}`) || Path(`/api/upload/`) || Path(`/api/uploads/{user}/{document}`)"
+      - "traefik.http.routers.buffer.entrypoints=websecure"
+      - "traefik.http.routers.buffer.tls=true"
     depends_on:
       - traefik

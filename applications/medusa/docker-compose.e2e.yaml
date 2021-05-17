@@ -3,7 +3,8 @@ services:
   medusa:
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.buffer.rule=Host(`overdoll.test`) && PathPrefix(`/`)"
-      - "traefik.http.routers.buffer.entrypoints=web"
+      - "traefik.http.routers.medusa.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.medusa.entrypoints=websecure"
+      - "traefik.http.routers.medusa.tls=true"
     depends_on:
       - traefik

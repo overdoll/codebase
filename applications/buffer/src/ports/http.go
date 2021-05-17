@@ -27,7 +27,7 @@ func NewHttpServer(app app.Application) *http.Server {
 	mx.Handle("/api/upload/", http.StripPrefix("/api/upload/", httpServer.HandleTUS()))
 
 	return &http.Server{
-		Addr:    ":8080",
+		Addr:    ":8000",
 		Handler: mx,
 	}
 }

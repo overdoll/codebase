@@ -1,8 +1,8 @@
 {
-  "baseUrl": "http://overdoll.test",
+  "baseUrl": "https://traefik",
   "env": {
     "codeCoverage": {
-      "url": "http://overdoll.test/__coverage__"
+      "url": "https://traefik/__coverage__"
     }
   },
   "projectId": "svdd6z"

@@ -10,8 +10,8 @@ services:
     command:
       - --entrypoints.web.address=:80
       - --entrypoints.websecure.address=:443
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
     ports:
       - 8000:80
       - 4343:443
