@@ -9,6 +9,10 @@ services:
       - eva
     ports:
       - 8080:8080
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 20
 
   run:
     volumes:
