@@ -14,10 +14,7 @@ i18next
     lng: 'en',
     load: 'languageOnly',
     backend: {
-      loadPath: path.join(
-        __dirname,
-        '../src/server/locales/{{lng}}/{{ns}}.json',
-      ),
+      loadPath: path.join(__dirname, '../locales/{{lng}}/{{ns}}.json'),
     },
   });
 
