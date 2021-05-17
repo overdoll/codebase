@@ -215,7 +215,7 @@ def create_docker_compose_step(label, commands, additional_env_vars=None, config
                 "skip-checkout": False,
                 "dependencies": True,
                 "build-parallel": True,
-                "upload-container-logs": True,
+                "upload-container-logs": "always",
             },
         },
     }
