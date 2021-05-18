@@ -38,7 +38,8 @@ def common_build_flags(bep_file, is_test):
         flags += [
             "--build_tests_only",
             "--local_test_jobs=" + concurrent_test_jobs(),
-            "--sandbox_writable_path={}".format(bazelisk_cache_dir)
+            "--sandbox_writable_path={}".format(bazelisk_cache_dir),
+            "--coverage_support={}".format("//.patches:collect_coverage"),
         ]
 
     if bep_file:

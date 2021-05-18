@@ -9,15 +9,12 @@ from . import exec
 from . import terminal_print
 
 
-def test_label_to_path(tmpdir, label, attempt):
+def test_label_to_path(tmpdir, label, test_log):
     # remove leading //
     path = label[2:]
     path = path.replace("/", os.sep)
     path = path.replace(":", os.sep)
-    if attempt == 0:
-        path = os.path.join(path, "test.log")
-    else:
-        path = os.path.join(path, "attempt_" + str(attempt) + ".log")
+    path = os.path.join(path, os.path.basename(test_log))
     return os.path.join(tmpdir, path)
 
 
@@ -26,23 +23,19 @@ def rename_test_logs_for_upload(test_logs, tmpdir):
     # so that it's easy to associate test.log and target.
     new_paths = []
     for label, files in test_logs:
-        attempt = 0
-        if len(files) > 1:
-            attempt = 1
         for test_log in files:
             try:
-                new_path = test_label_to_path(tmpdir, label, attempt)
+                new_path = test_label_to_path(tmpdir, label, test_log)
                 os.makedirs(os.path.dirname(new_path), exist_ok=True)
                 copyfile(test_log, new_path)
                 new_paths.append(new_path)
-                attempt += 1
             except IOError as err:
                 # Log error and ignore.
                 terminal_print.eprint(err)
     return new_paths
 
 
-def test_logs_for_status(bep_file, status):
+def test_data_for_status(bep_file, status):
     targets = []
     with open(bep_file, encoding="utf-8") as f:
         raw_data = f.read()
@@ -55,15 +48,22 @@ def test_logs_for_status(bep_file, status):
         except ValueError as e:
             terminal_print.eprint("JSON decoding error: " + str(e))
             return targets
-        if "testSummary" in bep_obj:
-            test_target = bep_obj["id"]["testSummary"]["label"]
-            test_status = bep_obj["testSummary"]["overallStatus"]
+        if "testResult" in bep_obj:
+            test_target = bep_obj["id"]["testResult"]["label"]
+            test_status = bep_obj["testResult"]["status"]
             if test_status in status:
-                outputs = bep_obj["testSummary"]["failed"]
+                outputs = bep_obj["testResult"]["testActionOutput"]
                 test_logs = []
+                exclude = ["test.xml"]
+
+                # For successful tests, we don't include logs
+                if status == "SUCCESS":
+                    exclude.extend(["test.log", "attempt_1.log", "attempt_2.log", "attempt_3.log"])
+
                 for output in outputs:
-                    test_logs.append(url2pathname(urlparse(output["uri"]).path))
-                targets.append((test_target, test_logs))
+                    if outputs["name"] not in exclude:
+                        test_logs.append(url2pathname(urlparse(output["uri"]).path))
+                        targets.append((test_target, test_logs))
         pos += size + 1
     return targets
 
@@ -73,7 +73,7 @@ def upload_test_logs_from_bep(bep_file, tmpdir, stop_request):
     while True:
         done = stop_request.isSet()
         if os.path.exists(bep_file):
-            all_test_logs = test_logs_for_status(bep_file, status=["FAILED", "TIMEOUT", "FLAKY"])
+            all_test_logs = test_data_for_status(bep_file, status=["FAILED", "TIMEOUT", "FLAKY", "SUCCESS"])
             test_logs_to_upload = [
                 (target, files) for target, files in all_test_logs if target not in uploaded_targets
             ]

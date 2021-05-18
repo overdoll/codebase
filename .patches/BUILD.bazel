@@ -1,3 +1,10 @@
-exports_files(["coverage.patch"])
+exports_files([
+    "coverage.patch",
+])
+
+filegroup(
+    name = "collect_coverage",
+    srcs = ["collect_coverage.sh"],
+)
 
 package(default_visibility = ["//visibility:public"])

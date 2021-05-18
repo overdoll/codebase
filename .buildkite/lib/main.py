@@ -352,8 +352,7 @@ def execute_integration_tests_commands(configs):
                 bazel.execute_bazel_test(":bazel: Running integration tests", test_flags, test_targets, test_bep_file,
                                          [])
             finally:
-                if json_profile_out_test:
-                    upload_json_profile(json_profile_out_test, tmpdir)
+                upload_execution_artifacts(json_profile_out_test, tmpdir, test_bep_file)
 
         finally:
             stop_request.set()
@@ -386,11 +385,14 @@ def execute_e2e_tests_commands(configs):
     ])
 
 
-def upload_json_profile(json_profile_path, tmpdir):
-    if not os.path.exists(json_profile_path):
-        return
-    terminal_print.print_collapsed_group(":bazel: Uploading JSON Profile")
-    exec.execute_command(["buildkite-agent", "artifact", "upload", json_profile_path], cwd=tmpdir)
+def upload_execution_artifacts(json_profile_path, tmpdir, json_bep_file=None, ):
+    terminal_print.print_collapsed_group(":speedboat: Uploading Execution Profile")
+
+    if os.path.exists(json_profile_path):
+        exec.execute_command(["buildkite-agent", "artifact", "upload", json_profile_path], cwd=tmpdir)
+
+    if os.path.exists(json_bep_file):
+        exec.execute_command(["buildkite-agent", "artifact", "upload", json_bep_file], cwd=tmpdir)
 
 
 def execute_build_commands(configs):
@@ -408,8 +410,7 @@ def execute_build_commands(configs):
         try:
             bazel.execute_bazel_build(":bazel: Building applications", build_flags, build_targets, None, [])
         finally:
-            if json_profile_out_build:
-                upload_json_profile(json_profile_out_build, tmpdir)
+            upload_execution_artifacts(json_profile_out_build, tmpdir)
 
         test_flags, json_profile_out_test = flags.calculate_flags(
             "test_flags", "test", tmpdir, test_env_vars
@@ -431,8 +432,7 @@ def execute_build_commands(configs):
             try:
                 bazel.execute_bazel_test(":bazel: Running unit tests", test_flags, test_targets, test_bep_file, [])
             finally:
-                if test_bep_file:
-                    upload_json_profile(test_bep_file, tmpdir)
+                upload_execution_artifacts(json_profile_out_test, tmpdir, test_bep_file)
 
         finally:
             stop_request.set()

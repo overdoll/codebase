@@ -3,7 +3,7 @@ const path = require('path');
 module.exports = {
   reporters: ['default'],
   collectCoverage: true,
-  coverageReporters: [['clover', { file: 'coverage.dat' }]],
+  coverageReporters: [['lcovonly', { file: 'coverage.dat' }]],
   moduleNameMapper: {
     '^@//:modules(.*)$': '<rootDir>/src/modules$1',
     '^@//:artifacts(.*)$': '<rootDir>/src/__generated__$1',
