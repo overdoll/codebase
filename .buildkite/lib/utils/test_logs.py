@@ -61,7 +61,7 @@ def test_data_for_status(bep_file, status):
                     exclude.extend(["test.log", "attempt_1.log", "attempt_2.log", "attempt_3.log"])
 
                 for output in outputs:
-                    if outputs["name"] not in exclude:
+                    if output["name"] not in exclude:
                         test_logs.append(url2pathname(urlparse(output["uri"]).path))
                         targets.append((test_target, test_logs))
         pos += size + 1
