@@ -165,7 +165,13 @@ def get_cache_plugin():
 
 
 def create_docker_step(label, commands, additional_env_vars=None):
-    return {
+    vars = [
+        "CONTAINER_REGISTRY",
+        "DOCKER_CONFIG",
+        "CODECOV_API_KEY",
+    ]
+
+    step = {
         "label": label,
         "command": commands,
         "agents": {"queue": "default"},
@@ -173,7 +179,7 @@ def create_docker_step(label, commands, additional_env_vars=None):
             "gencer/cache#v2.4.8": get_cache_plugin(),
             "docker#v3.5.0": {
                 "always-pull": True,
-                "environment": format_env_vars(additional_env_vars) + ["CONTAINER_REGISTRY", "DOCKER_CONFIG"],
+                "environment": format_env_vars(additional_env_vars) + vars,
                 "image": DEFAULT_IMAGE,
                 "network": "host",
                 "privileged": True,
@@ -191,6 +197,8 @@ def create_docker_step(label, commands, additional_env_vars=None):
         },
     }
 
+    return step
+
 
 def create_docker_compose_step(label, commands, additional_env_vars=None, configs=None, cache=True):
     vars = [
@@ -199,7 +207,8 @@ def create_docker_compose_step(label, commands, additional_env_vars=None, config
         "BUILDKITE_AGENT_ACCESS_TOKEN",
         "CONTAINER_REGISTRY",
         "BUILDKITE_BUILD_NUMBER",
-        "CYPRESS_API_KEY"
+        "CYPRESS_API_KEY",
+        "CODECOV_API_KEY",
     ]
 
     step = {
@@ -293,8 +302,9 @@ def print_project_pipeline():
 
     # publish when the branch is master
     if os.getenv("BUILDKITE_BRANCH") == "master":
-        # must complete all steps before publishing
         pipeline_steps.append("wait")
+
+        # must complete all steps before publishing
         pipeline_steps.append(
             create_step(
                 label=":aws: Publish Images",
@@ -358,9 +368,16 @@ def execute_integration_tests_commands(configs):
             stop_request.set()
             upload_thread.join()
 
+        execute_coverage_command(configs)
+
     finally:
         if tmpdir:
             shutil.rmtree(tmpdir)
+
+
+def execute_coverage_command(configs):
+    terminal_print.print_expanded_group(":codecov: Uploading Code Coverage")
+    exec.execute_command(["bash", "<(curl -s https://codecov.io/bash)", "-t", os.getenv("CODECOV_API_KEY", "")])
 
 
 def execute_e2e_tests_commands(configs):
@@ -383,6 +400,8 @@ def execute_e2e_tests_commands(configs):
         "--key={}".format(os.getenv("CYPRESS_API_KEY")),
         "--ci-build-id={}".format(os.getenv("BUILDKITE_BUILD_ID")),
     ])
+
+    execute_coverage_command(configs)
 
 
 def upload_execution_artifacts(json_profile_path, tmpdir, json_bep_file=None, ):
@@ -437,6 +456,8 @@ def execute_build_commands(configs):
         finally:
             stop_request.set()
             upload_thread.join()
+
+        execute_coverage_command(configs)
 
         push_images(configs.get("push_image", {}).get("targets", []), tmpdir)
 
