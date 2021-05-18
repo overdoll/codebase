@@ -431,8 +431,8 @@ def execute_build_commands(configs):
             try:
                 bazel.execute_bazel_test(":bazel: Running unit tests", test_flags, test_targets, test_bep_file, [])
             finally:
-                if json_profile_out_test:
-                    upload_json_profile(json_profile_out_test, tmpdir)
+                if test_bep_file:
+                    upload_json_profile(test_bep_file, tmpdir)
 
         finally:
             stop_request.set()
