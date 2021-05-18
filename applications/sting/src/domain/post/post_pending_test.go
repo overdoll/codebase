@@ -11,7 +11,7 @@ import (
 func TestPostPending_ConsumeCustomResources(t *testing.T) {
 	t.Parallel()
 
-	assert.Equal(t, True, False)
+	assert.Equal(t, "b", "a")
 
 	pst := post.UnmarshalPendingPostFromDatabase("id", string(post.Review), &post.Artist{}, "", nil, nil, nil, make(map[string]string), nil, nil, time.Now(), "")
 
