@@ -3,7 +3,7 @@ const path = require('path');
 module.exports = {
   reporters: ['default'],
   collectCoverage: true,
-  coverageReporters: [['clover', { file: 'coverage.dat' }]],
+  coverageReporters: ['json'],
   moduleNameMapper: {
     '^@//:modules(.*)$': '<rootDir>/src/modules$1',
     '^@//:artifacts(.*)$': '<rootDir>/src/__generated__$1',
@@ -14,6 +14,7 @@ module.exports = {
       { configFile: path.resolve(__dirname, '.babelrc') },
     ],
   },
+  coverageDirectory: process.env.COVERAGE_DIR,
   testEnvironment: 'jest-environment-jsdom-sixteen',
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
 };

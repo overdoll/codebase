@@ -9,6 +9,7 @@ def jest_test(name, srcs, deps, jest_config, file_extension, **kwargs):
         "--colors",
         "--verbose",
         "--node_options=--require=./$(rootpath chdir.js)",
+        "--coverage",
         "--maxWorkers",
         "1",
     ]
