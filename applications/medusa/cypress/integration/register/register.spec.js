@@ -4,7 +4,7 @@ describe('Register', () => {
   beforeEach(() => {
     cy.visit('/join');
 
-    cy.wait(5000);
+    cy.wait(15000);
 
     const email = id + '@test.com';
 

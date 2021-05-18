@@ -9,7 +9,7 @@ describe('Upload', () => {
   it('should be able to upload', () => {
     cy.visit('/upload');
 
-    cy.wait(5000);
+    cy.wait(15000);
 
     cy.findByTestId('file').attachFile('test-post.png');
 
