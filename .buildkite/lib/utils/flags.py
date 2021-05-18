@@ -28,7 +28,9 @@ def common_build_flags(bep_file, is_test):
         "--announce_rc",
         "--experimental_repository_cache_hardlinks",
         "--disk_cache=",
-        "--sandbox_tmpfs_path=/tmp"
+        "--sandbox_tmpfs_path=/tmp",
+        "--coverage_support={}".format("//.patches:collect_coverage"),
+
     ]
 
     if is_test:
@@ -39,7 +41,6 @@ def common_build_flags(bep_file, is_test):
             "--build_tests_only",
             "--local_test_jobs=" + concurrent_test_jobs(),
             "--sandbox_writable_path={}".format(bazelisk_cache_dir),
-            "--coverage_support={}".format("//.patches:collect_coverage"),
         ]
 
     if bep_file:
