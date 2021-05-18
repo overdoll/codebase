@@ -1,5 +1,6 @@
 const path = require('path');
 
+// Have to set chdir here - for some reason it breaks when passed to --node-options
 module.exports = {
   reporters: ['default'],
   collectCoverage: true,

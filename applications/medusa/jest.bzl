@@ -8,9 +8,10 @@ def jest_test(name, srcs, deps, jest_config, file_extension, **kwargs):
         "--ci",
         "--colors",
         "--verbose",
+        "--node_options=--require=./$(rootpath chdir.js)",
+        "--maxWorkers",
+        "1",
     ]
-
-    templated_args.extend(["--config", "$(rootpath %s)" % jest_config])
 
     for src in srcs:
         if src.endswith(file_extension):

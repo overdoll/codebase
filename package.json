@@ -72,6 +72,7 @@
     "storybook": "cd ./applications/medusa && start-storybook -p 6006",
     "test:unit": "bazel test --test_output=all //applications/medusa:unit",
     "test:integration": "bazel test --test_output=all //applications/medusa:integration",
+    "unit": "cd ./applications/medusa && jest --config ./applications/medusa --coverage --runTestsByPath ./src/modules/relay/__tests__/RelayEnvironment.uspec.js",
     "test:e2e": "cd ./applications/medusa && cypress run -- --record --parallel --key=${CYPRESS_API_KEY} --ci-build-id=${BUILDKITE_BUILD_ID} --config-file=cypress.ci.json",
     "e2e:open": "cd ./applications/medusa && cypress open"
   },
@@ -159,7 +160,7 @@
     "graphql": "^14.5.8",
     "html-loader": "^1.3.2",
     "html-webpack-plugin": "^4.5.0",
-    "jest-cli": "24.9.0",
+    "jest-cli": "25.5.1",
     "jest-environment-jsdom-sixteen": "^1.0.3",
     "json-loader": "^0.5.7",
     "lint-staged": "^9.4.2",

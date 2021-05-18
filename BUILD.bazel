@@ -1,7 +1,10 @@
 load("@io_bazel_rules_docker//go:image.bzl", "go_image")
 load("@bazel_gazelle//:def.bzl", "gazelle")
 
-exports_files(["package.json"])
+exports_files([
+    "package.json",
+    "jest.config.js",
+])
 
 package(default_visibility = ["//visibility:public"])
 
