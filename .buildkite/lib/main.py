@@ -391,7 +391,7 @@ def upload_execution_artifacts(json_profile_path, tmpdir, json_bep_file=None, ):
     if os.path.exists(json_profile_path):
         exec.execute_command(["buildkite-agent", "artifact", "upload", json_profile_path], cwd=tmpdir)
 
-    if os.path.exists(json_bep_file):
+    if json_bep_file and os.path.exists(json_bep_file):
         exec.execute_command(["buildkite-agent", "artifact", "upload", json_bep_file], cwd=tmpdir)
 
 
