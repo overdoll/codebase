@@ -129,7 +129,6 @@ TEST_DEPS = [
     "@npm//jest-environment-jsdom-sixteen",
     "@npm//@testing-library/jest-dom",
     "@npm//fake-indexeddb",
-    "@npm//c8",
     "@npm//@testing-library/user-event",
 ]
 
