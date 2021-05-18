@@ -22,7 +22,6 @@ services:
       - /usr/bin/buildkite-agent:/usr/bin/buildkite-agent
       - $BUILDKITE_BUILD_CHECKOUT_PATH:/workdir
     ports:
-      - 8080:8080
       - 8081:8081
     deploy:
       restart_policy:
