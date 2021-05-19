@@ -48,7 +48,7 @@ def test_data_for_status(bep_file, status):
             bep_obj, size = decoder.raw_decode(raw_data[pos:])
         except ValueError as e:
             terminal_print.eprint("JSON decoding error: " + str(e))
-            return targets
+            return targets, coverage_logs
         if "testResult" in bep_obj:
             test_target = bep_obj["id"]["testResult"]["label"]
             test_status = bep_obj["testResult"]["status"]
