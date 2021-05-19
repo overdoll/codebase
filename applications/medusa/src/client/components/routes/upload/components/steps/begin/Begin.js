@@ -2,19 +2,9 @@
  * @flow
  */
 import type { Node } from 'react';
-import {
-  Heading,
-  Text,
-  Box,
-  List,
-  ListItem,
-  ListIcon,
-  UnorderedList,
-} from '@chakra-ui/react';
+import { Heading, Text, Box, ListItem, UnorderedList } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
-import Icon from '@//:modules/content/icon/Icon';
 import LargeUpload from './components/upload/LargeUpload';
-import RoadSignNoEntry from '@streamlinehq/streamlinehq/img/streamline-bold/road-sign-no-entry-49rOC0.svg';
 
 type Props = {
   uppy: any,

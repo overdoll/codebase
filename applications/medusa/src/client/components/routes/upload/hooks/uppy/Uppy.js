@@ -2,7 +2,6 @@ import Uppy from '@uppy/core';
 import Tus from '@uppy/tus';
 import CanUseDOM from '@//:modules/utilities/CanUseDOM';
 import GoldenRetriever from '@uppy/golden-retriever';
-import DropTarget from '@uppy/drop-target';
 
 const U = new Uppy({
   id: 'posts',
@@ -26,8 +25,6 @@ if (CanUseDOM) {
     thumbnailType: 'image/jpeg',
     waitForThumbnailsBeforeUpload: false,
   });
-
-  U.use(DropTarget, {});
 }
 
 // Resume-able uploads on the API

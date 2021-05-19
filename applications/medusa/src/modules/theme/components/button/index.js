@@ -7,6 +7,7 @@ const baseStyle = {
   lineHeight: '1.2',
   borderRadius: 'md',
   fontWeight: 'medium',
+  fontFamily: 'Nunito',
   _focus: {
     boxShadow: 'outline',
   },
