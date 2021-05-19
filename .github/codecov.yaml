@@ -40,6 +40,10 @@ coverage:
         target: 80%
         flags:
           - sting
+      library:
+        target: 80%
+        flags:
+          - library
 
 # fix path for bazel-generated coverage files && cypress
 fixes:
@@ -50,6 +54,9 @@ flags:
   sting:
     paths:
       - ./applications/sting/
+    carryforward: true
+  library:
+    paths:
       - ./libraries/
     carryforward: true
   medusa:
@@ -59,10 +66,8 @@ flags:
   buffer:
     paths:
       - ./applications/buffer/
-      - ./libraries/
     carryforward: true
   eva:
     paths:
       - ./applications/eva/
-      - ./libraries/
     carryforward: true

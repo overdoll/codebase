@@ -98,6 +98,12 @@ def load_configs():
             with open(filename, "r") as fd:
                 config = data_merge(config, yaml.safe_load(fd))
 
+    # also include libraries
+    for filename in glob.iglob('./libraries/**/pipeline.yaml', recursive=True):
+        if os.path.isfile(filename):
+            with open(filename, "r") as fd:
+                config = data_merge(config, yaml.safe_load(fd))
+
     with open('./.buildkite/config/pipeline.yaml', "r") as fd:
         config = data_merge(config, yaml.safe_load(fd))
 
@@ -439,7 +445,7 @@ def execute_coverage_command(configs):
         for file in coverage_flags[flag]:
             cmd.extend(["-f", file])
 
-        terminal_print.print_expanded_group(":codecov: Uploading code coverage for {}".format(flag))
+        terminal_print.print_collapsed_group(":codecov: Uploading code coverage for {}".format(flag))
 
         exec.execute_command(cmd)
 

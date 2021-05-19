@@ -1,0 +1,8 @@
+steps:
+  unit_test:
+    coverage:
+      - name: library
+        paths:
+          - ./libraries/**/coverage.dat
+    targets:
+      - //libraries/...
