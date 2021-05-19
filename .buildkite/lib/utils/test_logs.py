@@ -83,8 +83,9 @@ def upload_test_logs_from_bep(bep_file, tmpdir, stop_request):
                 files_to_upload = rename_test_logs_for_upload(test_logs_to_upload, tmpdir)
                 cwd = os.getcwd()
                 try:
-                    os.chdir(tmpdir)
-                    test_logs = [os.path.relpath(file, tmpdir) for file in files_to_upload]
+                    # place test logs && coverage logs in root for easier access
+                    # os.chdir(tmpdir)
+                    test_logs = [os.path.relpath(file, cwd) for file in files_to_upload]
                     test_logs = sorted(test_logs)
                     exec.execute_command(["buildkite-agent", "artifact", "upload", ";".join(test_logs)])
                 finally:
