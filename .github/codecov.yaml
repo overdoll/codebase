@@ -42,6 +42,7 @@ coverage:
 # Bazel test file paths are weird
 fixes:
   - "overdoll/applications/::applications/"
+  - "*overdoll/codebase/applications/::applications/"
 
 flags:
   sting:

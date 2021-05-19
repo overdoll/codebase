@@ -17,7 +17,7 @@ steps:
       - name: medusa
         paths:
           - ./applications/medusa/**/coverage.dat
-          - ./applications/medusa/coverage/lcov.info
+          - ./applications/medusa/coverage/clover.xml
     artifacts:
       - cypress/**/*
       - cypress/*
