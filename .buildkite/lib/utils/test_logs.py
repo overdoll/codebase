@@ -9,23 +9,23 @@ from . import exec
 from . import terminal_print
 
 
-def test_label_to_path(tmpdir, label, test_log):
+def test_label_to_path(label, test_log):
     # remove leading //
     path = label[2:]
     path = path.replace("/", os.sep)
     path = path.replace(":", os.sep)
     path = os.path.join(path, os.path.basename(test_log))
-    return os.path.join(tmpdir, path)
+    return path
 
 
-def rename_test_logs_for_upload(test_logs, tmpdir):
+def rename_test_logs_for_upload(test_logs):
     # Rename the test.log files to the target that created them
     # so that it's easy to associate test.log and target.
     new_paths = []
     for label, files in test_logs:
         for test_log in files:
             try:
-                new_path = test_label_to_path(tmpdir, label, test_log)
+                new_path = test_label_to_path(label, test_log)
                 os.makedirs(os.path.dirname(new_path), exist_ok=True)
                 copyfile(test_log, new_path)
                 new_paths.append(new_path)
@@ -80,7 +80,7 @@ def upload_test_logs_from_bep(bep_file, tmpdir, stop_request):
             ]
 
             if test_logs_to_upload:
-                files_to_upload = rename_test_logs_for_upload(test_logs_to_upload, tmpdir)
+                files_to_upload = rename_test_logs_for_upload(test_logs_to_upload)
                 cwd = os.getcwd()
                 try:
                     # place test logs && coverage logs in root for easier access
