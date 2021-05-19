@@ -27,7 +27,7 @@ function FlashProvider({ override, children }: Props): Node {
   const flash = (key, value) => {
     if (override) return override.push(key, value);
 
-    if (flashState.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(flashState, key)) {
       editFlashState({ ...flashState, [key]: [...flashState[key], value] });
     } else {
       editFlashState({ ...flashState, [key]: [value] });
@@ -40,7 +40,7 @@ function FlashProvider({ override, children }: Props): Node {
     if (override) {
       result = key ? override.get(key) : override.get();
     } else {
-      result = flashState.hasOwnProperty(key) ? flashState[key] : [];
+      result = Object.prototype.hasOwnProperty.call(flashState, key) ? flashState[key] : [];
     }
 
     return first ? result[0] : result;
@@ -49,7 +49,7 @@ function FlashProvider({ override, children }: Props): Node {
   const flush = key => {
     if (override) return key ? override.flush(key) : override.flush();
 
-    if (flashState.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(flashState, key)) {
       const copy = { ...flashState };
       delete copy[key];
       editFlashState(copy);

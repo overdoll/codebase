@@ -421,7 +421,7 @@
     } else {
       for (key in obj) {
         if (
-          obj.hasOwnProperty(key) &&
+          Object.prototype.hasOwnProperty.call(obj, key) &&
           callback.call(context, obj[key], key) === false
         ) {
           return;
