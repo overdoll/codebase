@@ -26,7 +26,7 @@ it('should render characters when data is available', async () => {
   };
 
   // Set query to return our "fake" data
-  Environment.mock.queueOperationResolver(operation =>
+  Environment.mock.queueOperationResolver((operation) =>
     MockPayloadGenerator.generate(operation, resolver),
   );
 
@@ -81,7 +81,7 @@ it('should ask to add a new character when none are available', async () => {
 
   Environment.mock.queuePendingOperation(CharactersQuery, variables);
 
-  Environment.mock.queueOperationResolver(operation => ({
+  Environment.mock.queueOperationResolver((operation) => ({
     data: {
       characters: [],
     },

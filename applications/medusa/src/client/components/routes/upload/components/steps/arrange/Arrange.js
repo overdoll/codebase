@@ -35,7 +35,7 @@ export default function Arrange({
   dispatch,
 }: Props): Node {
   // OnRemoveFile - remove a file from the list
-  const onRemoveFile = id => {
+  const onRemoveFile = (id) => {
     uppy.removeFile(id);
 
     dispatch({ type: EVENTS.FILES, value: { id: id }, remove: true });
@@ -66,7 +66,7 @@ export default function Arrange({
     }
   };
 
-  const onDragEnd = result => {
+  const onDragEnd = (result) => {
     // dropped outside the list
     if (!result.destination) {
       return;

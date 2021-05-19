@@ -18,7 +18,7 @@ it('should render the root component children', async () => {
   };
 
   // Set query to return our "fake" data
-  Environment.mock.queueOperationResolver(operation =>
+  Environment.mock.queueOperationResolver((operation) =>
     MockPayloadGenerator.generate(operation, resolver),
   );
 

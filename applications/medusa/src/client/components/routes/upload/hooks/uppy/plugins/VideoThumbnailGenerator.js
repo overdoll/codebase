@@ -4,7 +4,7 @@
  *
  * and modified to work without jquery and return async
  */
-(function(window, document, undefined) {
+(function (window, document, undefined) {
   /**
    * Class creation
    * @param  {array} opts  Any overriding options
@@ -51,7 +51,7 @@
      * @param  {name}       event    Function to hook onto
      * @param  {Function}   callback What to call
      */
-    on: function(event, callback) {
+    on: function (event, callback) {
       event = event.toLowerCase();
       if (!this.events.hasOwnProperty(event)) {
         this.events[event] = [];
@@ -65,7 +65,7 @@
      * @param {string} [event] removes all events if not specified
      * @param {Function} [fn] removes all callbacks of event if not specified
      */
-    off: function(event, fn) {
+    off: function (event, fn) {
       if (event !== undefined) {
         event = event.toLowerCase();
         if (fn !== undefined) {
@@ -88,7 +88,7 @@
      * @return {bool} value is false if at least one of the event handlers which handled this event
      * returned false. Otherwise it returns true.
      */
-    fire: function(event, args) {
+    fire: function (event, args) {
       // `arguments` is an object, not array, in FF, so:
       args = Array.prototype.slice.call(arguments);
       event = event.toLowerCase();
@@ -96,7 +96,7 @@
       if (this.events.hasOwnProperty(event)) {
         each(
           this.events[event],
-          function(callback) {
+          function (callback) {
             preventDefault =
               callback.apply(this, args.slice(1)) === false || preventDefault;
           },
@@ -148,22 +148,22 @@
       this.video = videoHtml;
 
       // As soon as the meta is ready, trigger that capture is ready
-      this.video.onloadedmetadata = function() {
+      this.video.onloadedmetadata = function () {
         thisClass.fire('startCapture', this.captures);
         thisClass.video.play();
       };
 
       // Trigger the capture here because the video is ready
-      this.video.onplay = function() {
+      this.video.onplay = function () {
         thisClass.initScreenshot();
       };
 
       // Can't play this video
-      this.video.onerror = function() {
+      this.video.onerror = function () {
         thisClass.fire('unsupported');
       };
 
-      this.video.addEventListener('seeked', function() {
+      this.video.addEventListener('seeked', function () {
         // Check we still have a video (might have been cancelled)
         if (thisClass.video) {
           thisClass.video.pause();
@@ -387,9 +387,9 @@
    * @returns {Object} Reference to `dst`.
    */
   function extend(dst, src) {
-    each(arguments, function(obj) {
+    each(arguments, function (obj) {
       if (obj !== dst) {
-        each(obj, function(value, key) {
+        each(obj, function (value, key) {
           dst[key] = value;
         });
       }

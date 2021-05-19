@@ -36,8 +36,8 @@ func (s *Store) Search(index string, query string, after ...string) (*SearchResu
 				Value int
 			}
 			Hits []struct {
-				ID         string          `json:"_id"`
-				Source     json.RawMessage `json:"_source"`
+				ID     string          `json:"_id"`
+				Source json.RawMessage `json:"_source"`
 			}
 		}
 	}

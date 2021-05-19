@@ -32,7 +32,6 @@ steps:
       - //applications/sting/src/adapters/...
       - //applications/sting/src/service/...
 
-
   e2e_test:
     setup:
       dockerfile:

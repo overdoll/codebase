@@ -11,4 +11,3 @@ Along with Nonce, we use content security policy to restrict script execution to
 ### CSRF
 
 We insert a CSRF token as a cookie and into the document on initial page load. This CSRF token is verified by the backend on each API call, and expects the cookie to be accompanied by a header.
-

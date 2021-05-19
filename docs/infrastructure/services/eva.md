@@ -26,11 +26,10 @@ Eva interacts with the Scylla database. Specifically, it owns the **eva** keyspa
 
 The layout consists of the following:
 
-* **migrations** - CQL files with instructions on how to create the keyspace & table ownership
-* **proto** - protobuf definition files used to construct functions
-* **src** 
-  * **models** - Models created specifically for the server
-  * **server** - Files implementing GRPC functions & calls
+- **migrations** - CQL files with instructions on how to create the keyspace & table ownership
+- **proto** - protobuf definition files used to construct functions
+- **src**
+  - **models** - Models created specifically for the server
+  - **server** - Files implementing GRPC functions & calls
 
-### 
-
+###

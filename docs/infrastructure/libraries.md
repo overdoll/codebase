@@ -13,4 +13,3 @@ We use GRPC for synchronous API calls between services. [Learn more here](https:
 ### Protobuf
 
 We use protobuf for our GRPC payloads. However, protobufs are very useful for event-driven microservices, as we can easily define messages and create jobs to consume them.
-

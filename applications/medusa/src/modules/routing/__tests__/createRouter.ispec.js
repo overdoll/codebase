@@ -13,7 +13,7 @@ it('changes history when middleware is called', async () => {
       component: JSResource(
         'Component4',
         () =>
-          new Promise(resolve => {
+          new Promise((resolve) => {
             resolve(() => '');
           }),
       ),

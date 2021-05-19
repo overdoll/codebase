@@ -43,7 +43,7 @@ it('register just works', async () => {
 
   // Resolve our operation
   await waitFor(() =>
-    Environment.mock.resolveMostRecentOperation(operation =>
+    Environment.mock.resolveMostRecentOperation((operation) =>
       MockPayloadGenerator.generate(operation, payload),
     ),
   );

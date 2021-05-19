@@ -54,7 +54,7 @@ export default function RouterRenderer(): Node {
 
     // If there *wasn't* a concurrent change to the route, then the UI
     // is current: subscribe for subsequent route updates
-    const dispose = router.subscribe(nextEntry => {
+    const dispose = router.subscribe((nextEntry) => {
       // startTransition() delays the effect of the setRouteEntry (setState) call
       // for a brief period, continuing to show the old state while the new
       // state (route) is prepared.

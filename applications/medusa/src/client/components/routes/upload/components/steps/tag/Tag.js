@@ -17,7 +17,7 @@ export default function Tag({ state, dispatch, disabled }: Props): Node {
   return (
     <>
       <div sx={{ display: 'flex' }}>
-        {state.files.map(file => {
+        {state.files.map((file) => {
           const thumbnail = state.thumbnails[file.id];
           const prog = state.progress[file.id];
 

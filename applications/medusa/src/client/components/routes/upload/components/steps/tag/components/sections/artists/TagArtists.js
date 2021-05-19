@@ -27,7 +27,7 @@ export default function TagArtists({ state, dispatch }: Props): Node {
         <Artists
           args={args}
           selected={state.artist}
-          onSelect={artist => onSelect(artist, onClose)}
+          onSelect={(artist) => onSelect(artist, onClose)}
         />
       )}
     >
