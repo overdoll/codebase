@@ -1,7 +1,7 @@
 image:
   repository: medusa-image
 
-nameOverride: "medusa"
+nameOverride: 'medusa'
 
 service: true
 http: true

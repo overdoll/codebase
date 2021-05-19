@@ -23,7 +23,7 @@ module.exports = class AllThumbnailGenerator extends ThumbnailGenerator {
         this.opts.thumbnailWidth,
         this.opts.thumbnailHeight,
       )
-        .then(preview => {
+        .then((preview) => {
           this.setPreviewURL(file.id, preview);
           this.uppy.log(
             `[ThumbnailGenerator] Generated thumbnail for ${file.id}`,
@@ -34,7 +34,7 @@ module.exports = class AllThumbnailGenerator extends ThumbnailGenerator {
             preview,
           );
         })
-        .catch(err => {
+        .catch((err) => {
           this.uppy.log(
             `[ThumbnailGenerator] Failed thumbnail for ${file.id}:`,
             'warning',
@@ -46,7 +46,7 @@ module.exports = class AllThumbnailGenerator extends ThumbnailGenerator {
     return Promise.resolve();
   }
 
-  onFileAdded = file => {
+  onFileAdded = (file) => {
     if (!file.preview && previewSupported(file.type) && !file.isRemote) {
       this.addToQueue(file.id);
     }
@@ -65,7 +65,7 @@ module.exports = class AllThumbnailGenerator extends ThumbnailGenerator {
 
         thumbnails.capture(file.data);
 
-        thumbnails.on('capture', function(image) {
+        thumbnails.on('capture', function (image) {
           resolve(URL.createObjectURL(image));
         });
       });

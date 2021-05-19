@@ -48,7 +48,7 @@ export default function Media({ args, onSelect }: Props): Node {
           </button>
         </div>
       ) : (
-        data.media.map(item => (
+        data.media.map((item) => (
           <Element
             key={item.id}
             onSelect={() => onSelect(item)}

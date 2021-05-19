@@ -1,4 +1,3 @@
 # Code Styling & Formatting
 
 TODO
-

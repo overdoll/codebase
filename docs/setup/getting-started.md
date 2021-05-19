@@ -15,7 +15,7 @@ From the root repository, run the following command:
 This will create a Kubernetes cluster that is compatible with our environment. You should add this kubernetes configuration to your kubeconfig, found in `~/.kube/config`. You can find the configuration by running this command:
 
 ```text
-k3d get-kubeconfig --name=overdoll 
+k3d get-kubeconfig --name=overdoll
 ```
 
 Once this is done, you need to install a few configurations:
@@ -38,9 +38,4 @@ Open your `/etc/hosts` file, and assign a domain to localhost: `127.0.0.1 overdo
 
 Finally, you need to also accept the generated certificates found in `deployments/ssl` in your browser, so you don't get any errors.
 
-
-
 With everything finished, all you need to do is switch to your new kubernetes config by running `kubectl config use-context overdoll` and run `tilt up`
-
-
-
