@@ -241,6 +241,7 @@ def create_docker_compose_step(label, commands, additional_env_vars=None, config
         "BUILDKITE_BUILD_AUTHOR",
         "BUILDKITE_PULL_REQUEST",
         "BUILDKITE_AGENT_ID",
+        "CI"
     ]
 
     step = {
