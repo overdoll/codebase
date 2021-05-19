@@ -50,7 +50,7 @@ flags:
   sting:
     paths:
       - ./applications/sting/
-      - ./libraries
+      - ./libraries/
     carryforward: true
   medusa:
     paths:
@@ -59,10 +59,10 @@ flags:
   buffer:
     paths:
       - ./applications/buffer/
-      - ./libraries
+      - ./libraries/
     carryforward: true
   eva:
     paths:
       - ./applications/eva/
-      - ./libraries
+      - ./libraries/
     carryforward: true
