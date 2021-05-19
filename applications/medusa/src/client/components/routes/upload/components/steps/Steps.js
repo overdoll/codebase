@@ -118,7 +118,7 @@ export default function Steps({ uppy, state, dispatch }: Props): Node {
     const urls: Array<string> = [];
 
     // make sure our urls keep their order
-    state.files.forEach(file => {
+    state.files.forEach((file) => {
       // get actual upload ID
       const url = state.urls[file.id].split('/').slice(-1)[0];
 
@@ -130,7 +130,7 @@ export default function Steps({ uppy, state, dispatch }: Props): Node {
 
     // Sort all characters - if they're a requested character, then filter them out
     // also filter them out if the media is requested
-    const characters = Object.keys(state.characters).filter(item => {
+    const characters = Object.keys(state.characters).filter((item) => {
       const character = state.characters[item];
 
       // if the media is custom, use the name. otherwise use the id

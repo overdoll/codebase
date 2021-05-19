@@ -28,8 +28,8 @@ const reducer: any = (state: State, action: Action): State => {
       const url = action.value[id];
 
       fetch(url)
-        .then(response => response.blob())
-        .then(async blob => {
+        .then((response) => response.blob())
+        .then(async (blob) => {
           const result = await new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.onloadend = () => resolve(reader.result);
@@ -107,7 +107,7 @@ const reducer: any = (state: State, action: Action): State => {
         // delete item from database
         db.table(act).delete(id);
 
-        files = files.filter(file => file.id !== id);
+        files = files.filter((file) => file.id !== id);
 
         return { ...state, [act]: files };
       }
@@ -128,7 +128,7 @@ const reducer: any = (state: State, action: Action): State => {
       // going back to first step - clear all data
       if (EVENTS.STEP === null) {
         db.transaction('rw', ...db.tables, async () => {
-          db.tables.forEach(table => table.clear());
+          db.tables.forEach((table) => table.clear());
         });
 
         return { ...state, step: null };
@@ -138,13 +138,13 @@ const reducer: any = (state: State, action: Action): State => {
       return { ...state, step: action.value };
     case EVENTS.CLEANUP:
       db.transaction('rw', ...db.tables, async () => {
-        db.tables.forEach(table => table.clear());
+        db.tables.forEach((table) => table.clear());
       });
 
       return INITIAL_STATE;
     case EVENTS.SUBMIT:
       db.transaction('rw', ...db.tables, async () => {
-        db.tables.forEach(table => table.clear());
+        db.tables.forEach((table) => table.clear());
       });
 
       return { ...state, submit: action.value, step: STEPS.FINISH };

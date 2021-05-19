@@ -21,7 +21,7 @@ it('should render media when data is available', async () => {
   };
 
   // Set query to return our "fake" data
-  Environment.mock.queueOperationResolver(operation =>
+  Environment.mock.queueOperationResolver((operation) =>
     MockPayloadGenerator.generate(operation, resolver),
   );
 
@@ -69,7 +69,7 @@ it('should ask to add a new media when none are available', async () => {
 
   Environment.mock.queuePendingOperation(MediaQuery, variables);
 
-  Environment.mock.queueOperationResolver(operation => ({
+  Environment.mock.queueOperationResolver((operation) => ({
     data: {
       media: [],
     },

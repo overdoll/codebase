@@ -10,7 +10,7 @@ import { format } from 'util';
  * @api public
  */
 export default function flash(options) {
-  return function(req, res, next) {
+  return function (req, res, next) {
     if (req.flash) {
       return next();
     }
@@ -80,7 +80,7 @@ class Flash {
       const args = Array.prototype.slice.call(arguments, 1);
       msg = format.apply(undefined, args);
     } else if (Array.isArray(msg)) {
-      msg.forEach(function(val) {
+      msg.forEach(function (val) {
         (this.msgs[key] = this.msgs[key] || []).push(val);
       });
       this.session.flash = this.msgs;

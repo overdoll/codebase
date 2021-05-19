@@ -3,11 +3,8 @@
  */
 import JSResource from '@//:modules/utilities/JSResource';
 
-const getUserFromEnvironment = environment =>
-  environment
-    .getStore()
-    .getSource()
-    .get('client:root:authentication:user');
+const getUserFromEnvironment = (environment) =>
+  environment.getStore().getSource().get('client:root:authentication:user');
 
 /**
  * Client routes for the application
@@ -41,7 +38,7 @@ const routes: Array<Route> = [
     component: JSResource('Root', () =>
       import(/* webpackChunkName: "Root" */ './components/routes/Root'),
     ),
-    prepare: params => {
+    prepare: (params) => {
       const RootQuery = require('@//:artifacts/RootQuery.graphql');
       return {
         stateQuery: {
@@ -106,7 +103,7 @@ const routes: Array<Route> = [
             /* webpackChunkName: "TokenRoot" */ './components/routes/token/Token'
           ),
         ),
-        prepare: params => {
+        prepare: (params) => {
           const TokenQuery = require('@//:artifacts/TokenQuery.graphql');
           return {
             tokenQuery: {

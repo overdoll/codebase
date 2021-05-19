@@ -47,7 +47,7 @@ if (process && !process.release) {
   // add namespaces to the config - so a languageChange call loads all namespaces needed
   i18n.options.ns = Object.values(translations).reduce(
     (mem: Array<string>, lngResources: any) => {
-      Object.keys(lngResources).forEach(ns => {
+      Object.keys(lngResources).forEach((ns) => {
         if (mem.indexOf(ns) < 0) mem.push(ns);
       });
       return mem;

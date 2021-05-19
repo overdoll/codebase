@@ -21,7 +21,7 @@ it('should render categories when data is available', async () => {
   };
 
   // Set query to return our "fake" data
-  Environment.mock.queueOperationResolver(operation =>
+  Environment.mock.queueOperationResolver((operation) =>
     MockPayloadGenerator.generate(operation, resolver),
   );
 
@@ -69,7 +69,7 @@ it('should show that there are no categories available', async () => {
 
   Environment.mock.queuePendingOperation(CategoriesQuery, variables);
 
-  Environment.mock.queueOperationResolver(operation => ({
+  Environment.mock.queueOperationResolver((operation) => ({
     data: {
       categories: [],
     },

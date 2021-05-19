@@ -18,7 +18,7 @@ i18next
     load: 'languageOnly',
     initImmediate: false,
     preload: readdirSync(join(__dirname, '../public/locales')).filter(
-      fileName => {
+      (fileName) => {
         const joinedPath = join(join(__dirname, '../public/locales'), fileName);
         return lstatSync(joinedPath).isDirectory();
       },

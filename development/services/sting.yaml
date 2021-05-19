@@ -1,7 +1,7 @@
 image:
   repository: sting-image
 
-nameOverride: "sting"
+nameOverride: 'sting'
 
 service: true
 http: true

@@ -27,7 +27,7 @@ export default function Register(): Node {
 
   const history = useHistory();
 
-  const onSubmit = val => {
+  const onSubmit = (val) => {
     commit({
       variables: {
         data: {
