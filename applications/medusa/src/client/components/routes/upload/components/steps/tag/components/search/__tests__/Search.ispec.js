@@ -13,7 +13,7 @@ it('should search when input changes', async () => {
 
   render(
     <Search header={<Header />}>
-      {args => <SearchContainer args={args} />}
+      {(args) => <SearchContainer args={args} />}
     </Search>,
   );
 
@@ -38,7 +38,7 @@ it('should ask to refetch when error occurs', async () => {
   };
 
   render(
-    <Search header={null}>{args => <SearchContainer args={args} />}</Search>,
+    <Search header={null}>{(args) => <SearchContainer args={args} />}</Search>,
   );
 
   const button = screen.getByRole('button', { name: 'retry' });

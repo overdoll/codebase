@@ -4,7 +4,7 @@ import Token from '../Token';
 import { render, screen } from '@testing-library/react';
 import { loadQuery } from 'react-relay/hooks';
 
-const queueOperation = resolver => {
+const queueOperation = (resolver) => {
   const Environment = createMockEnvironment();
 
   const TokenQuery = require('@//:artifacts/TokenQuery.graphql');
@@ -16,7 +16,7 @@ const queueOperation = resolver => {
   });
 
   // Set query to return our "fake" data
-  Environment.mock.queueOperationResolver(operation =>
+  Environment.mock.queueOperationResolver((operation) =>
     MockPayloadGenerator.generate(operation, resolver),
   );
 

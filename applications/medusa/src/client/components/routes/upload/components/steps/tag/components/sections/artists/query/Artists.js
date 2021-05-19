@@ -49,7 +49,7 @@ export default function Artists({ args, onSelect, selected }: Props): Node {
     );
   }
 
-  return data.artists.map(item => (
+  return data.artists.map((item) => (
     <Element
       key={item.id}
       onSelect={() => onSelect(item)}

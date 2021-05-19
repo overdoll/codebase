@@ -14,7 +14,7 @@ type Props = {
 
 export default function TagCategories({ state, dispatch }: Props): Node {
   // OnSelect will remove or add the category based on if it's in the object already or not
-  const onSelect = category => {
+  const onSelect = (category) => {
     dispatch({
       type: EVENTS.TAG_CATEGORIES,
       value: category,
@@ -26,7 +26,7 @@ export default function TagCategories({ state, dispatch }: Props): Node {
     <Section
       label="select category"
       placeholder="search categories"
-      search={args => (
+      search={(args) => (
         <Categories
           selected={Object.keys(state.categories)}
           onSelect={onSelect}

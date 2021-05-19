@@ -57,14 +57,14 @@ export default function Upload(): Node {
 
   // file-added - uppy file was added
   useEffect(() => {
-    uppy.on('file-added', file => {
+    uppy.on('file-added', (file) => {
       dispatch({ type: EVENTS.FILES, value: { id: file.id } });
     });
   }, [uppy]);
 
   // Events for errors
   useEffect(() => {
-    uppy.on('upload-error', data => {
+    uppy.on('upload-error', (data) => {
       notify({
         status: 'error',
         title: 'upload error',

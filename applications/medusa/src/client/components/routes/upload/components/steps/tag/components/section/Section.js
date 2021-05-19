@@ -45,7 +45,7 @@ export default function Section({
       {open &&
         createPortal(
           <Search placeholder={placeholder} onClose={onClose}>
-            {args => search(args, onClose)}
+            {(args) => search(args, onClose)}
           </Search>,
           RootElement,
         )}
