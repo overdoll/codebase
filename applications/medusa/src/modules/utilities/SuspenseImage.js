@@ -25,7 +25,7 @@ export default function SuspenseImage(props: Props): Node {
           resolve(src);
         };
         img.onerror = error => {
-          console.error(error);
+          
           resolve(src);
         };
         img.src = src;
