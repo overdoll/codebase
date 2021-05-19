@@ -36,7 +36,5 @@ services:
   run:
     volumes:
       - $BUILDKITE_BUILD_CHECKOUT_PATH/applications/medusa/e2e/:/workdir/applications/medusa/coverage/
-      - $BUILDKITE_BUILD_CHECKOUT_PATH/cypress/video/:/workdir/applications/medusa/cypress/videos/
-      - $BUILDKITE_BUILD_CHECKOUT_PATH/cypress/screenshots/:/workdir/applications/medusa/cypress/screenshots/
     depends_on:
       - medusa

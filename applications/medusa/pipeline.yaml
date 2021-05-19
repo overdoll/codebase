@@ -21,9 +21,6 @@ steps:
       - name: medusa
         paths:
           - ./applications/medusa/coverage/clover.xml
-    artifacts:
-      - cypress/**/*
-      - cypress/*
     setup:
       dockerfile:
         - ./applications/medusa/docker-compose.e2e.yaml
