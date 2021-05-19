@@ -7,7 +7,9 @@ test_patterns = [
     "**/*/*.spec.js",
     "**/*/*.ispec.js",
     "**/*/*.uspec.js",
-    "**/__tests__/**"
+    "**/__tests__/**",
+    "tests/*_test.go",
+    "**/*_test.go"
 ]
 
 exclude_patterns = [
