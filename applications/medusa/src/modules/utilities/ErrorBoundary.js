@@ -40,7 +40,7 @@ export default class ErrorBoundary extends Component<Props, State> {
   };
 
   render(): Node {
-    if (this.state.error != null) {
+    if (this.state.error !== null) {
       if (this.props.fallback) {
         const Component = this.props.fallback;
 
