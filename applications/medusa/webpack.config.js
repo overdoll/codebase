@@ -1,5 +1,3 @@
-// This mainly exists just for editor completion to work correctly
-
 const path = require('path');
 
 module.exports = {

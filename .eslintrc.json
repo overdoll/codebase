@@ -1,13 +1,13 @@
 {
   "extends": [
     "plugin:react/recommended",
-    "standard",
     "prettier",
     "plugin:flowtype/recommended",
     "plugin:jest/recommended",
     "plugin:testing-library/recommended",
     "plugin:testing-library/react",
-    "plugin:cypress/recommended"
+    "plugin:cypress/recommended",
+    "airbnb"
   ],
   "plugins": [
     "flowtype",
@@ -20,6 +20,19 @@
     "cypress"
   ],
   "rules": {
+    "import/extensions": "off",
+    "import/no-unresolved": "off",
+    "import/resolver": "off",
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [
+          ".js",
+          ".jsx"
+        ]
+      }
+    ],
+    "import/no-extraneous-dependencies": "off",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
     "relay/graphql-syntax": "error",

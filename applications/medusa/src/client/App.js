@@ -1,16 +1,16 @@
 /**
  * @flow
  */
+import { createBrowserHistory } from 'history';
+import type { Node } from 'react';
+import { QueryParamProvider } from 'use-query-params';
 import RouterRenderer from '@//:modules/routing/RouteRenderer';
 import RoutingContext from '@//:modules/routing/RoutingContext';
 import { createClientRouter } from '@//:modules/routing/createRouter';
 import routes from './routes';
-import { createBrowserHistory } from 'history';
 import RelayEnvironment from '@//:modules/relay/RelayEnvironment';
 import i18next from './utilities/i18next';
-import type { Node } from 'react';
 import Bootstrap from './Bootstrap';
-import { QueryParamProvider } from 'use-query-params';
 import CompatibilityRoute from '@//:modules/routing/CompatibilityRoute';
 
 const router = createClientRouter(

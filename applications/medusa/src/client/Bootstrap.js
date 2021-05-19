@@ -2,12 +2,12 @@
  * @flow
  */
 import type { Node } from 'react';
-import RelayEnvironment from '@//:modules/relay/RelayEnvironment';
 import { CacheProvider } from '@emotion/react';
 import { I18nextProvider } from 'react-i18next';
 import { RelayEnvironmentProvider } from 'react-relay/hooks';
 import createCache from '@emotion/cache';
 import { ChakraProvider } from '@chakra-ui/react';
+import RelayEnvironment from '@//:modules/relay/RelayEnvironment';
 import theme from '@//:modules/theme';
 import { FlashProvider } from '@//:modules/flash';
 
@@ -21,8 +21,9 @@ const nonce = document
   .querySelector('meta[name="nonce"]')
   ?.getAttribute('content');
 
-const cache = createCache({ key: 'od', nonce: nonce });
+const cache = createCache({ key: 'od', nonce });
 
+// eslint-disable-next-line no-underscore-dangle
 window.__webpack_nonce__ = nonce;
 
 /**
