@@ -59,6 +59,9 @@ def test_data_for_status(bep_file, status):
                 # For successful tests, we don't include logs
                 if test_status == "PASSED":
                     exclude.extend(["test.log", "attempt_1.log", "attempt_2.log", "attempt_3.log"])
+                # test is not PASSED, dont include coverage
+                else:
+                    exclude.extend(["coverage.dat"])
 
                 for output in outputs:
                     if output["name"] not in exclude:
