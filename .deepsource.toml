@@ -1,0 +1,38 @@
+version = 1
+
+test_patterns = [
+    "**/*.ispec.js",
+    "**/*.uspec.js",
+    "**/*.spec.js"
+]
+
+exclude_patterns = [
+    "**/__generated__/**",
+    ".buildkite/**",
+    ".github/**",
+    ".patches/**",
+    "applications/medusa/.storybook/**",
+    "applications/medusa/cypress/**"
+]
+
+[[analyzers]]
+name = "go"
+enabled = true
+
+[analyzers.meta]
+import_root = "overdoll"
+
+[[analyzers]]
+name = "javascript"
+enabled = true
+
+[analyzers.meta]
+plugins = ["react"]
+
+[[transformers]]
+name = "prettier"
+enabled = true
+
+[[transformers]]
+name = "gofmt"
+enabled = true
