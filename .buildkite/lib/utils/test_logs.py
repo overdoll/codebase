@@ -57,7 +57,7 @@ def test_data_for_status(bep_file, status):
                 exclude = ["test.xml"]
 
                 # For successful tests, we don't include logs
-                if status == "SUCCESS":
+                if test_status == "PASSED":
                     exclude.extend(["test.log", "attempt_1.log", "attempt_2.log", "attempt_3.log"])
 
                 for output in outputs:
@@ -73,7 +73,8 @@ def upload_test_logs_from_bep(bep_file, tmpdir, stop_request):
     while True:
         done = stop_request.isSet()
         if os.path.exists(bep_file):
-            all_test_logs = test_data_for_status(bep_file, status=["FAILED", "TIMEOUT", "FLAKY", "SUCCESS"])
+            all_test_logs = test_data_for_status(bep_file, status=["FAILED", "TIMEOUT", "FLAKY", "PASSED"])
+
             test_logs_to_upload = [
                 (target, files) for target, files in all_test_logs if target not in uploaded_targets
             ]

@@ -381,6 +381,7 @@ def execute_coverage_command(configs):
 
     coverage_flags = dict()
 
+    # grab all files, group by "name", and get all files matching the glob pattern
     for target in configs:
 
         files = []
@@ -412,7 +413,8 @@ def execute_coverage_command(configs):
 
 def execute_e2e_tests_commands(configs):
     execute_coverage_command(configs.get("e2e_test", {}).get("coverage", []))
-    # grab all network deps (these services need to be running first), and sort by priority (some services need to be started first)
+    # grab all network deps (these services need to be running first),
+    # and sort by priority (some services need to be started first)
     deps = sorted(configs.get("e2e_test", {}).get("network_dependencies", []), key=lambda k: k['priority'])
 
     wait_for_network_dependencies(deps)
