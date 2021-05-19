@@ -69,7 +69,7 @@ export default function Join(): Node {
 
   const [email, setEmail] = useState(null);
 
-  const changeAuth = data => {
+  const changeAuth = (data) => {
     setAuthInfo(data);
     setWaiting(false);
   };

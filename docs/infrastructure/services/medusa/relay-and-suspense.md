@@ -9,4 +9,3 @@ We use Relay as our GraphQL fetching library. Specifically, we use the experimen
 ### React Suspense
 
 We use React suspense for data fetching. React suspense makes it easier for us to write code, by defining specific breakpoints for data fetching & errors. We can easily isolate our logic through components and follow the Single Responsibility Principle. [Learn more here](https://reactjs.org/docs/concurrent-mode-suspense.html)
-

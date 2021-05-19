@@ -34,7 +34,7 @@ it('should run the parent function when subscription completes with desired resu
 
   // Resolve our subscription with our new payload
   await waitFor(() =>
-    Environment.mock.resolveMostRecentOperation(operation =>
+    Environment.mock.resolveMostRecentOperation((operation) =>
       MockPayloadGenerator.generate(operation, payload),
     ),
   );

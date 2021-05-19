@@ -38,7 +38,7 @@ export default function Categories({ args, onSelect, selected }: Props): Node {
     return 'no categories found';
   }
 
-  return data.categories.map(item => (
+  return data.categories.map((item) => (
     <Element
       key={item.id}
       onSelect={() => onSelect(item)}

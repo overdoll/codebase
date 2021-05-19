@@ -22,7 +22,7 @@ export default function TagCharacters({ state, dispatch }: Props): Node {
   const [newCharacter, addNewCharacter] = useState(null);
 
   // OnSelect will remove or add the character based on if it's in the object already or not
-  const onSelect = character => {
+  const onSelect = (character) => {
     if (character.request) {
       addNewCharacter(character);
     } else {
@@ -36,7 +36,7 @@ export default function TagCharacters({ state, dispatch }: Props): Node {
 
   // When the user selects a media, we send that back up the chain, where we either get a new media, or a current one
   // from our list
-  const onAddNewMedia = media => {
+  const onAddNewMedia = (media) => {
     dispatch({
       type: EVENTS.TAG_CHARACTERS,
       remove: false,
@@ -60,7 +60,7 @@ export default function TagCharacters({ state, dispatch }: Props): Node {
         header={<div>selected character: {newCharacter.name}</div>}
         onClose={onCancelNewCharacter}
       >
-        {args => <Media selected={[]} onSelect={onAddNewMedia} args={args} />}
+        {(args) => <Media selected={[]} onSelect={onAddNewMedia} args={args} />}
       </Search>,
       RootElement,
     );
@@ -70,7 +70,7 @@ export default function TagCharacters({ state, dispatch }: Props): Node {
     <Section
       label="select character"
       placeholder="search characters"
-      search={args => (
+      search={(args) => (
         <Characters
           selected={Object.keys(state.characters)}
           onSelect={onSelect}

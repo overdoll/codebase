@@ -39,7 +39,7 @@ export default function withProviders({
   // otherwise, use the native routerenderer in order to be able to test it
   // eslint-disable-next-line react/display-name
   return [
-    props => {
+    (props) => {
       return (
         <Bootstrap environment={environment} i18next={i18n}>
           <RoutingContext.Provider value={router.context}>

@@ -22,4 +22,3 @@ func (r *MutationResolver) Register(ctx context.Context, data *types.RegisterInp
 func (r *MutationResolver) Logout(ctx context.Context) (bool, error) {
 	return r.App.Commands.Logout.Handle(ctx)
 }
-

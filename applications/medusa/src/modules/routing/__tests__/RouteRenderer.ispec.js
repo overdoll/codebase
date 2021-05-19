@@ -8,8 +8,8 @@ it('renders a root component with children', async () => {
       component: JSResource(
         'Root',
         () =>
-          new Promise(resolve =>
-            resolve(props => <div>test1{props.children}</div>),
+          new Promise((resolve) =>
+            resolve((props) => <div>test1{props.children}</div>),
           ),
       ),
       routes: [
@@ -18,7 +18,7 @@ it('renders a root component with children', async () => {
           exact: true,
           component: JSResource(
             'JoinRoot',
-            () => new Promise(resolve => resolve(() => <div>test2</div>)),
+            () => new Promise((resolve) => resolve(() => <div>test2</div>)),
           ),
         },
       ],

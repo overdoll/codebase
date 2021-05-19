@@ -16,7 +16,7 @@ type ReviewPostHandler struct {
 	pe post.EventRepository
 }
 
-func NewReviewPostHandler(pr post.Repository, pe post.EventRepository, ) ReviewPostHandler {
+func NewReviewPostHandler(pr post.Repository, pe post.EventRepository) ReviewPostHandler {
 	return ReviewPostHandler{pr: pr, pe: pe}
 }
 
