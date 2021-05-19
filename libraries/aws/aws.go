@@ -15,7 +15,6 @@ func CreateAWSSession() (*session.Session, error) {
 		Region:           aws.String(os.Getenv("AWS_REGION")),
 		DisableSSL:       aws.Bool(false),
 		S3ForcePathStyle: aws.Bool(true),
-
 	})
 
 	if err != nil {

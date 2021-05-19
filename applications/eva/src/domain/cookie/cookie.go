@@ -26,7 +26,7 @@ var (
 var (
 	ErrCookieNotRedeemed = errors.New("cookie is not yet redeemed")
 	ErrCookieExpired     = errors.New("cookie is expired")
-	ErrCookieNotFound = errors.New("cookie not found")
+	ErrCookieNotFound    = errors.New("cookie not found")
 )
 
 func NewCookie(id string, email string, session string) (*Cookie, error) {
