@@ -7,7 +7,7 @@ import db from '../storage';
 
 // reducer maintains the whole state of the upload form so that we can
 // easily update our indexeddb state in the case of a crash
-const reducer: any = (state: State, action: Action): State => {
+const reducer: any = async (state: State, action: Action): State => {
   const act: string = action.type;
 
   const copy = { ...state[act] };
@@ -25,22 +25,22 @@ const reducer: any = (state: State, action: Action): State => {
         return { ...state, [act]: copy };
       }
 
+      const url = action.value[id];
+
+      const data = await fetch(url)
+        .then(response => response.blob())
+        .then(
+          async blob =>
+            await new Promise((resolve, reject) => {
+              const reader = new FileReader();
+              reader.onloadend = () => resolve(reader.result);
+              reader.onerror = reject;
+              reader.readAsDataURL(blob);
+            }),
+        );
+
       // add thumbnail to database && convert blob url to data string so it can be saved in indexedDB and read later
-      db.transaction('rw', db.table('thumbnails'), async () => {
-        const url = action.value[id];
-
-        const data = await fetch(url)
-          .then(response => response.blob())
-          .then(
-            async blob =>
-              await new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onloadend = () => resolve(reader.result);
-                reader.onerror = reject;
-                reader.readAsDataURL(blob);
-              }),
-          );
-
+      await db.transaction('rw', db.table('thumbnails'), async () => {
         db.table(act).put({ id, value: data });
       });
 
