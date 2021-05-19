@@ -4,6 +4,9 @@ test_patterns = [
     "**/*.ispec.js",
     "**/*.uspec.js",
     "**/*.spec.js",
+    "**/*/*.spec.js",
+    "**/*/*.ispec.js",
+    "**/*/*.uspec.js",
     "**/__tests__/**"
 ]
 
