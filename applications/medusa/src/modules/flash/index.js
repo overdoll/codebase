@@ -46,7 +46,7 @@ function FlashProvider({ override, children }: Props): Node {
     return first ? result[0] : result;
   };
 
-  const flush = key => {
+  const flush = (key) => {
     if (override) return key ? override.flush(key) : override.flush();
 
     if (flashState.hasOwnProperty(key)) {

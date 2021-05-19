@@ -136,7 +136,7 @@ function createClientRouter(
       entries,
     };
     currentEntry = nextEntry;
-    subscribers.forEach(cb => cb(nextEntry));
+    subscribers.forEach((cb) => cb(nextEntry));
   });
 
   // The actual object that will be passed on the RoutingContext.
@@ -177,7 +177,7 @@ function matchRouteWithFilter(routes, history, location, data) {
 
   // Recursively parse route, and use route environment source as a helper
   // Make sure that we are allowed to be in a route that we are using
-  return unparsedRoutes.filter(route =>
+  return unparsedRoutes.filter((route) =>
     isRouteValid({ ...data, history, location }, route.route),
   );
 }

@@ -37,13 +37,6 @@ helm repo add traefik https://helm.traefik.io/traefik
 helm repo add stable https://charts.helm.sh/stable
 ```
 
-
-
 That's it! The rest of the tools are built by Bazel, so we don't have to worry about downloading them.
 
 Follow the next section on how to setup the rest of the environment.
-
-
-
-
-

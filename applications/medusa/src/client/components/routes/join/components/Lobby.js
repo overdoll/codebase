@@ -93,11 +93,11 @@ export default function Lobby(props: Props): Node {
   };
 
   // Create and set timer for specified timeOut length
-  const timeOut = timeOutLength => {
+  const timeOut = (timeOutLength) => {
     setButtonDisabled(true);
     setTimer(timeOutLength / 1000);
     const interval = setInterval(() => {
-      setTimer(x => x - 1);
+      setTimer((x) => x - 1);
     }, 1000);
     setTimeout(() => {
       clearTimeout(interval);
@@ -105,7 +105,7 @@ export default function Lobby(props: Props): Node {
   };
 
   // Clear timer when it reaches a certain number
-  const clearTimeout = interval => {
+  const clearTimeout = (interval) => {
     setButtonDisabled(false);
     clearInterval(interval);
   };

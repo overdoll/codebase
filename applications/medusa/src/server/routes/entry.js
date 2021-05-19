@@ -34,7 +34,7 @@ const entry = async (req, res, next) => {
     if (req.cookies._csrf === undefined && res.getHeader('set-cookie')) {
       const cookies = parseCookies(
         res.getHeader('set-cookie').join(','),
-      ).filter(ck => ck.cookieName === '_csrf');
+      ).filter((ck) => ck.cookieName === '_csrf');
 
       if (cookies.length > 0) {
         const csrf = cookies[0].cookieValue;
@@ -152,18 +152,15 @@ const entry = async (req, res, next) => {
     // Get our i18next store, and we will send this to the front-end
     const initialI18nStore = {};
 
-    req.i18n.languages.forEach(l => {
+    req.i18n.languages.forEach((l) => {
       initialI18nStore[l] = req.i18n.services.resourceStore.data[l] || {};
     });
 
     // Get our relay store
-    const relayData = environment
-      .getStore()
-      .getSource()
-      .toJSON();
+    const relayData = environment.getStore().getSource().toJSON();
 
     // Get any extra assets we need to load, so that we dont have to import them in-code
-    const assets = router.context.get().entries.map(entry => entry.id);
+    const assets = router.context.get().entries.map((entry) => entry.id);
 
     // Set up our chunk extractor, so that we can preload our resources
     const extractor = new ChunkExtractor({

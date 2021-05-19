@@ -44,7 +44,7 @@ it('joining redirects to lobby, receives a response and asks to register', async
 
   // Resolve our operation - the join method was called
   await waitFor(() =>
-    Environment.mock.resolveMostRecentOperation(operation =>
+    Environment.mock.resolveMostRecentOperation((operation) =>
       MockPayloadGenerator.generate(operation, payload),
     ),
   );

@@ -61,7 +61,7 @@ export default function Characters({ args, onSelect, selected }: Props): Node {
     );
   }
 
-  return data.characters.map(item => (
+  return data.characters.map((item) => (
     <Element
       key={item.id}
       onSelect={() => onSelect(item)}
