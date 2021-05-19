@@ -36,7 +36,7 @@ class Resource {
    */
   load(): Promise<any> {
     let promise = this._promise;
-    if (promise == null) {
+    if (promise === null) {
       promise = this._loader()
         .then(result => {
           if (result.default) {
@@ -59,7 +59,7 @@ class Resource {
    * is resolved yet.
    */
   get(): any {
-    if (this._result != null) {
+    if (this._result !== null) {
       return this._result;
     }
   }
@@ -87,9 +87,9 @@ class Resource {
    * - Return the data of the resource if available.
    */
   read(): any {
-    if (this._result != null) {
+    if (this._result !== null) {
       return this._result;
-    } else if (this._error != null) {
+    } else if (this._error !== null) {
       throw this._error;
     } else {
       throw this._promise;
@@ -121,7 +121,7 @@ export default function JSResource(moduleId: string, loader: any): Resource {
   }
 
   let resource = resourceMap.get(moduleId);
-  if (resource == null) {
+  if (resource === null) {
     resource = new Resource(loader, moduleId);
     resourceMap.set(moduleId, resource);
   }

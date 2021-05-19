@@ -199,7 +199,7 @@ function prepareMatches(matches, relayEnvironment) {
     );
 
     const Component = route.component.get();
-    if (Component == null) {
+    if (Component === null) {
       route.component.load(); // eagerly load
     }
     return {
