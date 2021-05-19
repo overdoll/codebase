@@ -64,7 +64,7 @@ func ToUUIDArray(ids []string) ([]UUID, error) {
 		id, err := Parse(str)
 
 		if err != nil {
-			return uuids ,err
+			return uuids, err
 		}
 
 		uuids = append(uuids, id)
