@@ -3,7 +3,8 @@ version = 1
 test_patterns = [
     "**/*.ispec.js",
     "**/*.uspec.js",
-    "**/*.spec.js"
+    "**/*.spec.js",
+    "**/__tests__/**"
 ]
 
 exclude_patterns = [
