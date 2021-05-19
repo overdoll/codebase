@@ -54,20 +54,20 @@ flags:
   sting:
     paths:
       - ./applications/sting/
-    carryforward: true
+    carryforward: false
   library:
     paths:
       - ./libraries/
-    carryforward: true
+    carryforward: false
   medusa:
     paths:
       - ./applications/medusa/
-    carryforward: true
+    carryforward: false
   buffer:
     paths:
       - ./applications/buffer/
-    carryforward: true
+    carryforward: false
   eva:
     paths:
       - ./applications/eva/
-    carryforward: true
+    carryforward: false

@@ -41,6 +41,7 @@ def common_build_flags(bep_file, is_test):
             "--build_tests_only",
             "--local_test_jobs=" + concurrent_test_jobs(),
             "--sandbox_writable_path={}".format(bazelisk_cache_dir),
+            "--instrumentation_filter=^//"
         ]
 
     if bep_file:
