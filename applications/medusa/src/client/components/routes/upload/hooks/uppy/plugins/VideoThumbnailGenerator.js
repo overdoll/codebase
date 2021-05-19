@@ -51,7 +51,7 @@
      * @param  {name}       event    Function to hook onto
      * @param  {Function}   callback What to call
      */
-    on: function(event, callback) {
+    on(event, callback) {
       event = event.toLowerCase();
       if (!this.events.hasOwnProperty(event)) {
         this.events[event] = [];
@@ -65,7 +65,7 @@
      * @param {string} [event] removes all events if not specified
      * @param {Function} [fn] removes all callbacks of event if not specified
      */
-    off: function(event, fn) {
+    off(event, fn) {
       if (event !== undefined) {
         event = event.toLowerCase();
         if (fn !== undefined) {
@@ -88,7 +88,7 @@
      * @return {bool} value is false if at least one of the event handlers which handled this event
      * returned false. Otherwise it returns true.
      */
-    fire: function(event, args) {
+    fire(event, args) {
       // `arguments` is an object, not array, in FF, so:
       args = Array.prototype.slice.call(arguments);
       event = event.toLowerCase();
@@ -163,7 +163,7 @@
         thisClass.fire('unsupported');
       };
 
-      this.video.addEventListener('seeked', function() {
+      this.video.addEventListener('seeked', () => {
         // Check we still have a video (might have been cancelled)
         if (thisClass.video) {
           thisClass.video.pause();
@@ -343,8 +343,8 @@
       this.lastTime = thisTime;
 
       return {
-        diff: diff,
-        fromStart: fromStart,
+        diff,
+        fromStart,
       };
     },
   };
@@ -387,9 +387,9 @@
    * @returns {Object} Reference to `dst`.
    */
   function extend(dst, src) {
-    each(arguments, function(obj) {
+    each(arguments, obj => {
       if (obj !== dst) {
-        each(obj, function(value, key) {
+        each(obj, (value, key) => {
           dst[key] = value;
         });
       }

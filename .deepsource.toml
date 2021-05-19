@@ -29,7 +29,6 @@ enabled = true
 import_root = "overdoll"
 dependencies_vendored = false
 build_tags = ["darwin"]
-cgo_enabled = false
 
 [[analyzers]]
 name = "javascript"
