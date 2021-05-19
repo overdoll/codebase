@@ -30,7 +30,7 @@ func NewCookieCassandraRepository(session gocqlx.Session) CookieRepository {
 // GetCookieById - Get authentication cookie by ID
 func (r CookieRepository) GetCookieById(ctx context.Context, id string) (*cookie.Cookie, error) {
 
-	var cookieItem AuthenticationCookie
+	var cookieItem *AuthenticationCookie
 
 	queryCookie := qb.Select("authentication_cookies").
 		Where(qb.Eq("cookie")).
@@ -117,7 +117,7 @@ func (r CookieRepository) UpdateCookie(ctx context.Context, instance *cookie.Coo
 	}
 
 	// get authentication cookie with this ID
-	authCookie := AuthenticationCookie{
+	authCookie := &AuthenticationCookie{
 		Cookie:   instance.Cookie(),
 		Redeemed: redeemed,
 		Email:    instance.Email(),
