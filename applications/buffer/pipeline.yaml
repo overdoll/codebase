@@ -4,6 +4,10 @@ steps:
       - //applications/buffer:buffer
 
   unit_test:
+    coverage:
+      - name: buffer
+        paths:
+          - ./applications/buffer/**/coverage.dat
     targets:
       - //applications/buffer/src/app/...
       - //applications/buffer/src/domain/...
@@ -14,6 +18,10 @@ steps:
       - //applications/buffer:publish-testing
 
   integration_test:
+    coverage:
+      - name: buffer
+        paths:
+          - ./applications/buffer/**/coverage.dat
     targets:
       - //applications/buffer/src/adapters/...
       - //applications/buffer/src/service/...

@@ -10,7 +10,7 @@ import (
 
 func TestPostPending_ConsumeCustomResources(t *testing.T) {
 	t.Parallel()
-	
+
 	pst := post.UnmarshalPendingPostFromDatabase("id", string(post.Review), &post.Artist{}, "", nil, nil, nil, make(map[string]string), nil, nil, time.Now(), "")
 
 	customCharacters := make(map[string]string)

@@ -13,6 +13,11 @@ steps:
       - //applications/medusa:publish-testing
 
   e2e_test:
+    coverage:
+      - name: medusa
+        paths:
+          - ./applications/medusa/**/coverage.dat
+          - ./applications/medusa/coverage/lcov.info
     artifacts:
       - cypress/**/*
       - cypress/*

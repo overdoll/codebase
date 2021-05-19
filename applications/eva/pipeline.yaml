@@ -4,6 +4,10 @@ steps:
       - //applications/eva:eva
 
   unit_test:
+    coverage:
+      - name: eva
+        paths:
+          - ./applications/eva/**/coverage.dat
     targets:
       - //applications/eva/src/app/...
       - //applications/eva/src/domain/...
@@ -14,6 +18,10 @@ steps:
       - //applications/eva:publish-testing
 
   integration_test:
+    coverage:
+      - name: eva
+        paths:
+          - ./applications/eva/**/coverage.dat
     setup:
       dockerfile:
         - ./applications/eva/docker-compose.ci.yaml

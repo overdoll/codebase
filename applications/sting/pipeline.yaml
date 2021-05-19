@@ -4,6 +4,10 @@ steps:
       - //applications/sting:sting
 
   unit_test:
+    coverage:
+      - name: sting
+        paths:
+          - ./applications/sting/**/coverage.dat
     targets:
       - //applications/sting/src/app/...
       - //applications/sting/src/domain/...
@@ -14,6 +18,10 @@ steps:
       - //applications/sting:publish-testing
 
   integration_test:
+    coverage:
+      - name: sting
+        paths:
+          - ./applications/sting/**/coverage.dat
     setup:
       dockerfile:
         - ./applications/sting/docker-compose.ci.yaml

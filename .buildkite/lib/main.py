@@ -12,6 +12,7 @@ import sys
 import tempfile
 import threading
 import time
+import urllib.request
 
 import utils.bazel as bazel
 import utils.exception as exception
@@ -368,7 +369,7 @@ def execute_integration_tests_commands(configs):
             stop_request.set()
             upload_thread.join()
 
-        execute_coverage_command(configs)
+        execute_coverage_command(configs.get("integration_test", {}).get("coverage", []))
 
     finally:
         if tmpdir:
@@ -376,15 +377,45 @@ def execute_integration_tests_commands(configs):
 
 
 def execute_coverage_command(configs):
-    terminal_print.print_expanded_group(":codecov: Uploading Code Coverage")
-    exec.execute_command(["bash", "<(curl -s https://codecov.io/bash)", "-t", os.getenv("CODECOV_API_KEY", "")])
+    urllib.request.urlretrieve("https://codecov.io/bash", "codecov.sh")
+
+    coverage_flags = dict()
+
+    for target in configs:
+
+        files = []
+
+        for file in target["paths"]:
+            # use glob matching
+            files.extend(glob.glob(file, recursive=True))
+
+        flag = target["name"]
+
+        if target["name"] not in coverage_flags:
+            if len(files) > 0:
+                coverage_flags[flag] = files
+        else:
+            coverage_flags[flag].extend(files)
+
+    for flag in coverage_flags:
+
+        cmd = ["bash", "codecov.sh", "-t", os.getenv("CODECOV_API_KEY", ""), "-F", flag]
+
+        # add each file
+        for file in coverage_flags[flag]:
+            cmd.extend(["-f", file])
+
+        terminal_print.print_expanded_group(":codecov: Uploading Code Coverage for {}".format(flag))
+
+        exec.execute_command(cmd)
 
 
 def execute_e2e_tests_commands(configs):
+    execute_coverage_command(configs.get("e2e_test", {}).get("coverage", []))
     # grab all network deps (these services need to be running first), and sort by priority (some services need to be started first)
-    configs = sorted(configs.get("e2e_test", {}).get("network_dependencies", []), key=lambda k: k['priority'])
+    deps = sorted(configs.get("e2e_test", {}).get("network_dependencies", []), key=lambda k: k['priority'])
 
-    wait_for_network_dependencies(configs)
+    wait_for_network_dependencies(deps)
 
     # need to be in the correct directory
     os.chdir('./applications/medusa')
@@ -401,7 +432,7 @@ def execute_e2e_tests_commands(configs):
         "--ci-build-id={}".format(os.getenv("BUILDKITE_BUILD_ID")),
     ])
 
-    execute_coverage_command(configs)
+    execute_coverage_command(configs.get("e2e_test", {}).get("coverage", []))
 
 
 def upload_execution_artifacts(json_profile_path, tmpdir, json_bep_file=None, ):
@@ -457,7 +488,7 @@ def execute_build_commands(configs):
             stop_request.set()
             upload_thread.join()
 
-        execute_coverage_command(configs)
+        execute_coverage_command(configs.get("unit_test", {}).get("coverage", []))
 
         push_images(configs.get("push_image", {}).get("targets", []), tmpdir)
 
