@@ -24,7 +24,7 @@ describe('Upload', () => {
 
     // select 2 characters
     cy.findByRole('button', { name: /Lylah Barrett/i }).click();
-    cy.findByRole('button', { name: /Ronnie Durham/i }).click();
+    cy.findByRole('button', { name: /Susannah Aguilar/i }).click();
 
     // close out of character selection
     cy.findByRole('button', { name: 'close' }).click();
