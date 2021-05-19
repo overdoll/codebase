@@ -99,15 +99,15 @@ func (r PostIndexElasticSearchRepository) SearchCharacters(ctx context.Context, 
 
 	for _, char := range response.Hits {
 
-		var chr *post.Character
+		var chr CharacterDocument
 
-		err := json.Unmarshal(char, chr)
+		err := json.Unmarshal(char, &chr)
 
 		if err != nil {
-			continue
+			return nil, err
 		}
 
-		characters = append(characters, chr)
+		characters = append(characters, post.UnmarshalCharacterFromDatabase(chr.Id, chr.Name, chr.Thumbnail, post.UnmarshalMediaFromDatabase(chr.Media.Id, chr.Media.Title, chr.Media.Thumbnail)))
 	}
 
 	return characters, nil

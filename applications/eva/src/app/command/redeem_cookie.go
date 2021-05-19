@@ -102,6 +102,15 @@ func (h RedeemCookieHandler) Handle(ctx context.Context, id string) (*cookie.Coo
 	if err != nil {
 
 		if err == user.ErrUserNotFound {
+
+			// We also update the cookie so that it can count as "redeemed
+			err = h.cr.UpdateCookie(ctx, ck)
+
+			if err != nil {
+				zap.S().Errorf("failed to update cookie: %s", err)
+				return nil, ErrFailedCookieRedeem
+			}
+
 			return ck, nil
 		}
 

@@ -69,15 +69,15 @@ func (r PostIndexElasticSearchRepository) SearchArtists(ctx context.Context, sea
 
 	for _, cat := range response.Hits {
 
-		var art *post.Artist
+		var art ArtistDocument
 
-		err := json.Unmarshal(cat, art)
+		err := json.Unmarshal(cat, &art)
 
 		if err != nil {
-			continue
+			return nil, err
 		}
 
-		artists = append(artists, art)
+		artists = append(artists, post.UnmarshalArtistFromDatabase(art.Id, art.Username, art.Avatar))
 	}
 
 	return artists, nil

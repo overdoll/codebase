@@ -68,15 +68,15 @@ func (r PostIndexElasticSearchRepository) SearchMedias(ctx context.Context, sear
 
 	for _, med := range response.Hits {
 
-		var md *post.Media
+		var md MediaDocument
 
-		err := json.Unmarshal(med, md)
+		err := json.Unmarshal(med, &md)
 
 		if err != nil {
-			continue
+			return nil, err
 		}
 
-		meds = append(meds, md)
+		meds = append(meds, post.UnmarshalMediaFromDatabase(md.Id, md.Title, md.Thumbnail))
 	}
 
 	return meds, nil

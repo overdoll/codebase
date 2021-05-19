@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
 
 	"overdoll/applications/sting/src/domain/post"
 )
@@ -74,17 +75,19 @@ func (r PostIndexElasticSearchRepository) SearchCategories(ctx context.Context, 
 
 	var cats []*post.Category
 
+	log.Println(response.Hits)
+
 	for _, cat := range response.Hits {
 
-		var pst *post.Category
+		var pst CategoryDocument
 
-		err := json.Unmarshal(cat, pst)
+		err := json.Unmarshal(cat, &pst)
 
 		if err != nil {
-			continue
+			return nil, err
 		}
 
-		cats = append(cats, pst)
+		cats = append(cats, post.UnmarshalCategoryFromDatabase(pst.Id, pst.Title, pst.Thumbnail))
 	}
 
 	return cats, nil
