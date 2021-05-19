@@ -24,7 +24,6 @@ steps:
     artifacts:
       - cypress/**/*
       - cypress/*
-      - applications/medusa/e2e/lcov.info
     setup:
       dockerfile:
         - ./applications/medusa/docker-compose.e2e.yaml
