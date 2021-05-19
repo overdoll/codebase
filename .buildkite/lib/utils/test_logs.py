@@ -37,7 +37,7 @@ def rename_test_logs_for_upload(test_logs):
 
 def test_data_for_status(bep_file, status):
     targets = []
-    coverage_logs = []
+    coverage_targets = []
     with open(bep_file, encoding="utf-8") as f:
         raw_data = f.read()
     decoder = json.JSONDecoder()
@@ -48,13 +48,14 @@ def test_data_for_status(bep_file, status):
             bep_obj, size = decoder.raw_decode(raw_data[pos:])
         except ValueError as e:
             terminal_print.eprint("JSON decoding error: " + str(e))
-            return targets, coverage_logs
+            return targets, coverage_targets
         if "testResult" in bep_obj:
             test_target = bep_obj["id"]["testResult"]["label"]
             test_status = bep_obj["testResult"]["status"]
             if test_status in status:
                 outputs = bep_obj["testResult"]["testActionOutput"]
                 test_logs = []
+                coverage_logs = []
                 exclude = ["test.xml"]
 
                 # For successful tests, we don't include logs
@@ -66,11 +67,12 @@ def test_data_for_status(bep_file, status):
                     if output["name"] == "test.lcov":
                         # we process coverage files separately
                         coverage_logs.append(url)
+                        coverage_targets.append((test_target, coverage_logs))
                     elif output["name"] not in exclude:
                         test_logs.append(url)
                         targets.append((test_target, test_logs))
         pos += size + 1
-    return targets, coverage_logs
+    return targets, coverage_targets
 
 
 def upload_test_logs_from_bep(bep_file, stop_request):
@@ -85,9 +87,14 @@ def upload_test_logs_from_bep(bep_file, stop_request):
                 (target, files) for target, files in all_test_logs if target not in uploaded_targets
             ]
 
+            coverage_logs_to_process = [
+                (target, files) for target, files in all_coverage_logs if target not in uploaded_targets
+            ]
+
             # move coverage logs, but we dont upload them
-            if all_coverage_logs:
-                rename_test_logs_for_upload(all_coverage_logs)
+            # codecov takes care of this
+            if coverage_logs_to_process:
+                rename_test_logs_for_upload(coverage_logs_to_process)
 
             if test_logs_to_upload:
                 files_to_upload = rename_test_logs_for_upload(test_logs_to_upload)
