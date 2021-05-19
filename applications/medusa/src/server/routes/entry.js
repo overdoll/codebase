@@ -40,7 +40,7 @@ const entry = async (req, res, next) => {
         const csrf = cookies[0].cookieValue;
 
         if (req.headers.cookie !== undefined) {
-          fetchCookies = `${req.headers.cookie},csrf=${csrf}`;
+          fetchCookies = `${req.headers.cookie}; _csrf=${csrf}`;
         } else {
           fetchCookies = `_csrf=${csrf}`;
         }
@@ -54,7 +54,7 @@ const entry = async (req, res, next) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'CSRF-Token': req.csrfToken(),
+          'x-csrf-token': req.csrfToken(),
           ...req.headers,
           cookie: fetchCookies !== null ? fetchCookies : req.headers.cookie,
         },

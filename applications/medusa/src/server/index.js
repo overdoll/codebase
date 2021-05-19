@@ -55,9 +55,6 @@ index.use(
   }),
 );
 
-// Flash sessions
-index.use(middleware.flash());
-
 // CSRF
 index.use(
   csrf({
@@ -68,6 +65,9 @@ index.use(
     },
   }),
 );
+
+// Flash sessions
+index.use(middleware.flash());
 
 // add coverage endpoint if in app_debug
 if (process.env.APP_DEBUG) {
