@@ -1,5 +1,7 @@
 export default {
-  black: '#1a1a1a',
+  black: {
+    '100': '#1a1a1a',
+  },
 
   gray: {
     '900': 'hsla(0,0%,10%,1)',

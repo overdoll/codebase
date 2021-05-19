@@ -30,14 +30,16 @@ const Template = args => <Button {...args}>Click Me</Button>;
 export const Primary = Template.bind({});
 Primary.args = {
   variant: 'outline',
+  size: 'xl',
+  colorScheme: 'red',
 };
 Primary.parameters = {};
 
 export const Secondary = Template.bind({});
-Secondary.args = { variant: 'solid' };
+Secondary.args = { variant: 'solid', size: 'lg', colorScheme: 'red' };
 
 export const Tertiary = Template.bind({});
-Tertiary.args = { variant: 'ghost' };
+Tertiary.args = { variant: 'ghost', size: 'md', colorScheme: 'red' };
 
 export const Link = Template.bind({});
-Link.args = { variant: 'link' };
+Link.args = { variant: 'link', size: 'sm', colorScheme: 'red' };
