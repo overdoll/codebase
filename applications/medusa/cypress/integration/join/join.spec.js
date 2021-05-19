@@ -4,8 +4,6 @@ describe('Join', () => {
   beforeEach(() => {
     cy.visit('/join');
 
-    cy.wait(15000);
-
     cy.get('form')
       .findByRole('textbox', { name: /email/i })
       .type(email);
