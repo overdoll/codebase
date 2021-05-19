@@ -13,13 +13,13 @@ import (
 
 // SearchResults wraps the Elasticsearch search response.
 type SearchResults struct {
-	Total int    `json:"total"`
+	Total int               `json:"total"`
 	Hits  []json.RawMessage `json:"hits"`
 }
 
 // Hit wraps the document returned in search response.
 type Hit struct {
-	Id   string
+	Id         string
 	Sort       []interface{} `json:"sort"`
 	Highlights *struct {
 		Title      []string `json:"title"`

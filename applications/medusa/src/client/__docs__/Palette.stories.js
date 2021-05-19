@@ -4,8 +4,8 @@ export default {
   title: 'Theme/Color Palette',
 };
 
-const RenderPalette = obj =>
-  Object.keys(obj).map(key => (
+const RenderPalette = (obj) =>
+  Object.keys(obj).map((key) => (
     <div key={key} sx={{ display: 'flex' }}>
       <div sx={{ width: '50px', fontWeight: 'bold' }}>{key}</div>
       <div
@@ -19,26 +19,26 @@ const RenderPalette = obj =>
     </div>
   ));
 
-export const Primary = args => {
+export const Primary = (args) => {
   return RenderPalette(theme.colors.primary);
 };
 
-export const Neutral = args => {
+export const Neutral = (args) => {
   return RenderPalette(theme.colors.neutral);
 };
 
-export const Orange = args => {
+export const Orange = (args) => {
   return RenderPalette(theme.colors.orange);
 };
 
-export const Teal = args => {
+export const Teal = (args) => {
   return RenderPalette(theme.colors.teal);
 };
 
-export const Green = args => {
+export const Green = (args) => {
   return RenderPalette(theme.colors.green);
 };
 
-export const Purple = args => {
+export const Purple = (args) => {
   return RenderPalette(theme.colors.purple);
 };

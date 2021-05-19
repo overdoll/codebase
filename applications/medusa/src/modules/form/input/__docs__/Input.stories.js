@@ -6,7 +6,7 @@ export default {
   component: Input,
 };
 
-const Template = args => {
+const Template = (args) => {
   const form = useForm();
 
   return (

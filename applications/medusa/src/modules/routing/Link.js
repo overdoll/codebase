@@ -3,12 +3,12 @@
  */
 import RoutingContext from '@//:modules/routing/RoutingContext';
 import { useCallback, useContext } from 'react';
-import type {Node} from 'react';
+import type { Node } from 'react';
 
 type Props = {
   children: Node,
   to: string,
-}
+};
 
 /**
  * An alternative to react-router's Link component that works with
@@ -19,7 +19,7 @@ export default function Link(props: Props): Node {
 
   // When the user clicks, change route
   const changeRoute = useCallback(
-    event => {
+    (event) => {
       event.preventDefault();
       router.history.push(props.to);
     },

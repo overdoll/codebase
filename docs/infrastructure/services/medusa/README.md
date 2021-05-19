@@ -30,14 +30,9 @@ Razzle is the server-side rendering library used to run the application.[ Check 
 
 The layout consists of the following:
 
-* **public** - Serves any public files required to the client \(favicons, manifest.json, etc...\)
-* **schema** - Contains the GraphQL schema to be used by the javascript framework
-* **src** 
-  * **client** - Contains sourcecode for the isomorphic application
-  * **modules** - Code shared between many parts of the application is placed here for easy inspection & future modifications
-  * **server** - Contains sourcecode for the backend in order to serve the client, add additional headers and perform preloading
-
-
-
-
-
+- **public** - Serves any public files required to the client \(favicons, manifest.json, etc...\)
+- **schema** - Contains the GraphQL schema to be used by the javascript framework
+- **src**
+  - **client** - Contains sourcecode for the isomorphic application
+  - **modules** - Code shared between many parts of the application is placed here for easy inspection & future modifications
+  - **server** - Contains sourcecode for the backend in order to serve the client, add additional headers and perform preloading

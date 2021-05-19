@@ -24,5 +24,4 @@ When you import a new dependency or add a new .go file, you must run the gazelle
 bazel run :gazelle
 ```
 
-### 
-
+###

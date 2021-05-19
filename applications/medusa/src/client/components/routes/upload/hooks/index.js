@@ -23,7 +23,7 @@ const useUpload = (state: State, dispatch: Dispatch): any => {
     return () => {
       if (state.step === STEPS.FINISH && uppy.current) {
         db.transaction('rw', ...db.tables, async () => {
-          db.tables.forEach(table => table.clear());
+          db.tables.forEach((table) => table.clear());
         });
         uppy.current?.reset();
       }
@@ -35,7 +35,7 @@ const useUpload = (state: State, dispatch: Dispatch): any => {
   useEffect(() => {
     db.table('step')
       .get(1)
-      .then(item => {
+      .then((item) => {
         if (item === undefined) {
           return;
         }
@@ -45,7 +45,7 @@ const useUpload = (state: State, dispatch: Dispatch): any => {
 
     db.table('artist')
       .get(1)
-      .then(item => {
+      .then((item) => {
         if (item === undefined) {
           return;
         }
@@ -55,10 +55,10 @@ const useUpload = (state: State, dispatch: Dispatch): any => {
 
     db.table('files')
       .toArray()
-      .then(files => {
+      .then((files) => {
         files
           .sort((a, b) => a - b)
-          .forEach(file => {
+          .forEach((file) => {
             dispatch({
               type: EVENTS.FILES,
               value: {
@@ -70,8 +70,8 @@ const useUpload = (state: State, dispatch: Dispatch): any => {
 
     db.table('thumbnails')
       .toArray()
-      .then(thumbnails => {
-        thumbnails.forEach(thumbnail => {
+      .then((thumbnails) => {
+        thumbnails.forEach((thumbnail) => {
           dispatch({
             type: EVENTS.THUMBNAILS,
             value: {
@@ -85,8 +85,8 @@ const useUpload = (state: State, dispatch: Dispatch): any => {
 
     db.table('urls')
       .toArray()
-      .then(urls => {
-        urls.forEach(url => {
+      .then((urls) => {
+        urls.forEach((url) => {
           dispatch({
             type: EVENTS.URLS,
             value: { [url.id]: url.value },
@@ -96,8 +96,8 @@ const useUpload = (state: State, dispatch: Dispatch): any => {
 
     db.table('progress')
       .toArray()
-      .then(progress => {
-        progress.forEach(progress => {
+      .then((progress) => {
+        progress.forEach((progress) => {
           dispatch({
             type: EVENTS.PROGRESS,
             value: { [progress.id]: progress.value },
@@ -107,8 +107,8 @@ const useUpload = (state: State, dispatch: Dispatch): any => {
 
     db.table('characters')
       .toArray()
-      .then(characters => {
-        characters.forEach(characters => {
+      .then((characters) => {
+        characters.forEach((characters) => {
           dispatch({
             type: EVENTS.TAG_CHARACTERS,
             value: characters,
@@ -118,8 +118,8 @@ const useUpload = (state: State, dispatch: Dispatch): any => {
 
     db.table('categories')
       .toArray()
-      .then(categories => {
-        categories.forEach(category => {
+      .then((categories) => {
+        categories.forEach((category) => {
           dispatch({
             type: EVENTS.TAG_CATEGORIES,
             value: category,

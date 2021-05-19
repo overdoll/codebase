@@ -18,7 +18,7 @@ type Worker struct {
 func NewWorker(app app.Application) worker.Worker {
 
 	c, err := client.NewClient(client.Options{
-		HostPort: os.Getenv("TEMPORAL_URL"),
+		HostPort:  os.Getenv("TEMPORAL_URL"),
 		Namespace: os.Getenv("TEMPORAL_NAMESPACE"),
 	})
 
@@ -28,9 +28,7 @@ func NewWorker(app app.Application) worker.Worker {
 
 	defer c.Close()
 
-	w := worker.New(c, "sting", worker.Options{
-
-	})
+	w := worker.New(c, "sting", worker.Options{})
 
 	w.RegisterWorkflow(adapters.ReviewPost)
 	w.RegisterWorkflow(adapters.StartPost)
