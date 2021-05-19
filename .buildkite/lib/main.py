@@ -345,7 +345,7 @@ def execute_integration_tests_commands(configs):
         test_bep_file = os.path.join(tmpdir, "test_bep.json")
         stop_request = threading.Event()
         upload_thread = threading.Thread(
-            target=test_logs.upload_test_logs_from_bep, args=(test_bep_file, tmpdir, stop_request)
+            target=test_logs.upload_test_logs_from_bep, args=(test_bep_file, stop_request)
         )
 
         additional_test_env = format_env_vars(configs.get("integration_test", {}).get("setup", {}).get("env", {}))
@@ -471,7 +471,7 @@ def execute_build_commands(configs):
         test_bep_file = os.path.join(tmpdir, "test_bep.json")
         stop_request = threading.Event()
         upload_thread = threading.Thread(
-            target=test_logs.upload_test_logs_from_bep, args=(test_bep_file, tmpdir, stop_request)
+            target=test_logs.upload_test_logs_from_bep, args=(test_bep_file, stop_request)
         )
 
         try:

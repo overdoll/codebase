@@ -68,7 +68,7 @@ def test_data_for_status(bep_file, status):
     return targets
 
 
-def upload_test_logs_from_bep(bep_file, tmpdir, stop_request):
+def upload_test_logs_from_bep(bep_file, stop_request):
     uploaded_targets = set()
     while True:
         done = stop_request.isSet()
