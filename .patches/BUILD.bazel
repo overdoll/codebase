@@ -1,5 +1,6 @@
 exports_files([
     "coverage.patch",
+    "collect_coverage.sh",
 ])
 
 filegroup(

@@ -1,4 +1,5 @@
 #!/bin/bash
+set -eu
 
 echo "CUSTOM COVERAGE SCRIPT INIT"
 

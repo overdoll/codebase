@@ -310,7 +310,8 @@ def print_project_pipeline():
             create_step(
                 label=":aws: Publish Images",
                 commands=[".buildkite/pipeline.sh publish"],
-                # Does not require a cache because we already built our dependencies once - we just publishing to a diff repo
+                # Does not require a cache because we already
+                # built our dependencies once - we just publishing to a diff repo
                 cache=False,
                 platform="docker",
             )
@@ -369,7 +370,10 @@ def execute_integration_tests_commands(configs):
             stop_request.set()
             upload_thread.join()
 
+        cwd = os.getcwd()
+        os.chdir(tmpdir)
         execute_coverage_command(configs.get("integration_test", {}).get("coverage", []))
+        os.chdir(cwd)
 
     finally:
         if tmpdir:
@@ -406,13 +410,12 @@ def execute_coverage_command(configs):
         for file in coverage_flags[flag]:
             cmd.extend(["-f", file])
 
-        terminal_print.print_expanded_group(":codecov: Uploading Code Coverage for {}".format(flag))
+        terminal_print.print_expanded_group(":codecov: Uploading code coverage for {}".format(flag))
 
         exec.execute_command(cmd)
 
 
 def execute_e2e_tests_commands(configs):
-    execute_coverage_command(configs.get("e2e_test", {}).get("coverage", []))
     # grab all network deps (these services need to be running first),
     # and sort by priority (some services need to be started first)
     deps = sorted(configs.get("e2e_test", {}).get("network_dependencies", []), key=lambda k: k['priority'])
@@ -490,7 +493,11 @@ def execute_build_commands(configs):
             stop_request.set()
             upload_thread.join()
 
+        # We execute our coverage config in tmpdir because that's where the bazel coverage results are stored
+        cwd = os.getcwd()
+        os.chdir(tmpdir)
         execute_coverage_command(configs.get("unit_test", {}).get("coverage", []))
+        os.chdir(cwd)
 
         push_images(configs.get("push_image", {}).get("targets", []), tmpdir)
 

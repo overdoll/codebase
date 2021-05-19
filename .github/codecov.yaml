@@ -41,8 +41,6 @@ coverage:
 
 # Bazel test file paths are weird
 fixes:
-  - unit.sh.runfiles/overdoll/applications/::applications/
-  - integration.sh.runfiles/overdoll/applications/::applications/
   - "overdoll/applications/::applications/"
 
 flags:
