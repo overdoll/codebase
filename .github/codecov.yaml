@@ -39,10 +39,10 @@ coverage:
         flags:
           - sting
 
-# Bazel test file paths are weird
+# fix path for bazel-generated coverage files && cypress
 fixes:
-  - "overdoll/applications/::applications/"
   - "/workdir/personal/overdoll/::"
+  - "overdoll/applications/::applications/"
 
 flags:
   sting:

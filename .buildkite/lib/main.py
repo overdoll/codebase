@@ -13,6 +13,7 @@ import tempfile
 import threading
 import time
 import urllib.request
+from shutil import copyfile
 
 import utils.bazel as bazel
 import utils.exception as exception
@@ -371,6 +372,7 @@ def execute_integration_tests_commands(configs):
             upload_thread.join()
 
         cwd = os.getcwd()
+        copyfile("./.github/codecov.yaml", tmpdir + '/codecov.yaml')
         os.chdir(tmpdir)
         execute_coverage_command(configs.get("integration_test", {}).get("coverage", []))
         os.chdir(cwd)
@@ -496,6 +498,7 @@ def execute_build_commands(configs):
         # We execute our coverage config in tmpdir because that's where the bazel coverage results are stored
         cwd = os.getcwd()
         os.chdir(tmpdir)
+        copyfile("./.github/codecov.yaml", tmpdir + '/codecov.yaml')
         execute_coverage_command(configs.get("unit_test", {}).get("coverage", []))
         os.chdir(cwd)
 

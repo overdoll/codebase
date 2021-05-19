@@ -4,6 +4,10 @@ steps:
       - //applications/medusa:bundle
 
   unit_test:
+    coverage:
+      - name: medusa
+        paths:
+          - ./applications/medusa/**/coverage.dat
     targets:
       - //applications/medusa:unit
       - //applications/medusa:integration
@@ -16,7 +20,6 @@ steps:
     coverage:
       - name: medusa
         paths:
-          - ./applications/medusa/**/coverage.dat
           - ./applications/medusa/coverage/clover.xml
     artifacts:
       - cypress/**/*
