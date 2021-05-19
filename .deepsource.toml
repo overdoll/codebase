@@ -43,7 +43,7 @@ style_guide = "airbnb"
 
 [[transformers]]
 name = "prettier"
-enabled = true
+enabled = false
 
 [[transformers]]
 name = "gofmt"
