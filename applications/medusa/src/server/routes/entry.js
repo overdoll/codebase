@@ -66,7 +66,7 @@ const entry = async (req, res, next) => {
       });
 
       // Need to make sure we forward our cookies from API calls
-      if (response.headers.hasOwnProperty('set-cookie')) {
+      if (Object.prototype.hasOwnProperty.call(response.headers, 'set-cookie')) {
         forwardCookies = [...forwardCookies, ...response.headers['set-cookie']];
       }
 

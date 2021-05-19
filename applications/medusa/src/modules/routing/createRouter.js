@@ -36,7 +36,7 @@ type RouterInstance = {
 // call will be made. If true, an API call will be made, and any other resolutions should be done within
 // the component where the API call is made
 const isRouteValid = (data, route) => {
-  if (route.hasOwnProperty('middleware')) {
+  if (Object.prototype.hasOwnProperty.call(route, 'middleware')) {
     for (let i = 0; i < route.middleware.length; i++) {
       // Middleware check failed
       if (!route.middleware[i](data)) return false;
