@@ -38,3 +38,4 @@ telepresence.log
 logs.log
 tilt_options.json
 .buildkite/config/target
+codecov.sh
