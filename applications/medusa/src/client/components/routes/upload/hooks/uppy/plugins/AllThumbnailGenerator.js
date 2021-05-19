@@ -6,7 +6,7 @@ function previewSupported(fileType) {
   const fileTypeSpecific = fileType.split('/')[1];
 
   // extend the default to include mp4 files
-  if (/^(jpe?g|png|bmp|mp4|webm|webp|avif)$/.test(fileTypeSpecific)) {
+  if (/^(jpe?g|png|bmp|mp4|webm|webp|avif)$/u.test(fileTypeSpecific)) {
     return true;
   }
 
