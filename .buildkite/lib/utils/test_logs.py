@@ -37,6 +37,7 @@ def rename_test_logs_for_upload(test_logs):
 
 def test_data_for_status(bep_file, status):
     targets = []
+    coverage_logs = []
     with open(bep_file, encoding="utf-8") as f:
         raw_data = f.read()
     decoder = json.JSONDecoder()
@@ -59,16 +60,17 @@ def test_data_for_status(bep_file, status):
                 # For successful tests, we don't include logs
                 if test_status == "PASSED":
                     exclude.extend(["test.log", "attempt_1.log", "attempt_2.log", "attempt_3.log"])
-                # test is not PASSED, dont include coverage
-                else:
-                    exclude.extend(["coverage.dat"])
 
                 for output in outputs:
-                    if output["name"] not in exclude:
-                        test_logs.append(url2pathname(urlparse(output["uri"]).path))
+                    url = url2pathname(urlparse(output["uri"]).path)
+                    if output["name"] == "test.lcov":
+                        # we process coverage files separately
+                        coverage_logs.append(url)
+                    elif output["name"] not in exclude:
+                        test_logs.append(url)
                         targets.append((test_target, test_logs))
         pos += size + 1
-    return targets
+    return targets, coverage_logs
 
 
 def upload_test_logs_from_bep(bep_file, stop_request):
@@ -76,11 +78,16 @@ def upload_test_logs_from_bep(bep_file, stop_request):
     while True:
         done = stop_request.isSet()
         if os.path.exists(bep_file):
-            all_test_logs = test_data_for_status(bep_file, status=["FAILED", "TIMEOUT", "FLAKY", "PASSED"])
+            all_test_logs, all_coverage_logs = test_data_for_status(bep_file,
+                                                                    status=["FAILED", "TIMEOUT", "FLAKY", "PASSED"])
 
             test_logs_to_upload = [
                 (target, files) for target, files in all_test_logs if target not in uploaded_targets
             ]
+
+            # move coverage logs, but we dont upload them
+            if all_coverage_logs:
+                rename_test_logs_for_upload(all_coverage_logs)
 
             if test_logs_to_upload:
                 files_to_upload = rename_test_logs_for_upload(test_logs_to_upload)
@@ -90,6 +97,7 @@ def upload_test_logs_from_bep(bep_file, stop_request):
                     # os.chdir(tmpdir)
                     test_logs = [os.path.relpath(file, cwd) for file in files_to_upload]
                     test_logs = sorted(test_logs)
+
                     exec.execute_command(["buildkite-agent", "artifact", "upload", ";".join(test_logs)])
                 finally:
                     uploaded_targets.update([target for target, _ in test_logs_to_upload])
