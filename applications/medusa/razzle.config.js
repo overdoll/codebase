@@ -78,7 +78,7 @@ module.exports = {
 
         config.devServer.index = '';
         config.devServer.public = '';
-        config.devServer.hot = true;
+        config.devServer.hot = !process.env.DISABLE_HOT;
       }
 
       config.optimization = {

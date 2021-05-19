@@ -12,10 +12,10 @@ services:
     ports:
       - "9000:9000"
     environment:
-      MINIO_ACCESS_KEY: overdoll123
-      MINIO_SECRET_KEY: overdoll123
-      MINIO_ROOT_USER: overdollroot
-      MINIO_ROOT_PASSWORD: password
+      - MINIO_ACCESS_KEY=overdoll123
+      - MINIO_SECRET_KEY=overdoll123
+      - MINIO_ROOT_USER=overdollroot
+      - MINIO_ROOT_PASSWORD=password
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
       interval: 30s
