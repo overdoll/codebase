@@ -62,21 +62,20 @@ it('should ask to register if not registered', async () => {
   expect(screen.getByRole('button')).toBeVisible();
 });
 
-it('should redirect if cookie is not valid', async () => {
-  return;
-  // TODO: fix this test
-  const resolver = {
-    Cookie: () => ({
-      invalid: true,
-    }),
-  };
-
-  const [Root, router] = queueOperation(resolver);
-  render(<Root />);
-
-  // user was redirected to join page with a message
-  expect(router.context.history.location.pathname).toEqual('/join');
-});
+//   // TODO: fix this test
+// it('should redirect if cookie is not valid', async () => {
+//   const resolver = {
+//     Cookie: () => ({
+//       invalid: true,
+//     }),
+//   };
+//
+//   const [Root, router] = queueOperation(resolver);
+//   render(<Root />);
+//
+//   // user was redirected to join page with a message
+//   expect(router.context.history.location.pathname).toEqual('/join');
+// });
 
 it('should show session data if token was redeemed in another session', async () => {
   const resolver = {
