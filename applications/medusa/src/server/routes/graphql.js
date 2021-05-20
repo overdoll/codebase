@@ -42,7 +42,7 @@ class CookieDataSource extends RemoteGraphQLDataSource {
       return;
     }
 
-    const passport = requestContext.context.req.session.passport;
+    const { passport } = requestContext.context.req.session;
 
     if (passport) {
       if (!requestContext.request.extensions) {
@@ -77,5 +77,5 @@ export default config => {
     context: ({ res, req }) => ({ res, req }),
   });
 
-  server.start().then(r => server.applyMiddleware(config));
+  server.start().then(() => server.applyMiddleware(config));
 };

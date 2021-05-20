@@ -1,13 +1,13 @@
 {
   "extends": [
+    "standard",
     "plugin:react/recommended",
     "prettier",
     "plugin:flowtype/recommended",
     "plugin:jest/recommended",
     "plugin:testing-library/recommended",
     "plugin:testing-library/react",
-    "plugin:cypress/recommended",
-    "airbnb"
+    "plugin:cypress/recommended"
   ],
   "plugins": [
     "flowtype",
@@ -33,6 +33,9 @@
       }
     ],
     "arrow-parens": "off",
+    "class-methods-use-this": "off",
+    "no-param-reassign": "off",
+    "no-trailing-spaces": "off",
     "import/no-extraneous-dependencies": "off",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",

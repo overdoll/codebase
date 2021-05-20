@@ -103,7 +103,7 @@
           this,
         );
       }
-      if (event != 'catchall') {
+      if (event !== 'catchall') {
         args.unshift('catchAll');
         preventDefault =
           this.fire.apply(this, args) === false || preventDefault;

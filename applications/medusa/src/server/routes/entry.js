@@ -2,11 +2,8 @@ import { ChunkExtractor } from '@loadable/server';
 import axios from 'axios';
 import { Environment, Network, RecordSource, Store } from 'relay-runtime';
 import { fetchQuery, RelayEnvironmentProvider } from 'react-relay/hooks';
-import routes from '../../client/routes';
 import path from 'path';
 import serialize from 'serialize-javascript';
-import RouteRenderer from '@//:modules/routing/RouteRenderer';
-import RoutingContext from '@//:modules/routing/RoutingContext';
 import prepass from 'react-ssr-prepass';
 
 import { CacheProvider } from '@emotion/react';
@@ -14,11 +11,14 @@ import { renderToString } from 'react-dom/server';
 import createEmotionServer from '@emotion/server/create-instance';
 import createCache from '@emotion/cache';
 
+import { QueryParamProvider } from 'use-query-params';
+import { ChakraProvider } from '@chakra-ui/react';
 import { createServerRouter } from '@//:modules/routing/createRouter';
 import createMockHistory from '@//:modules/routing/createMockHistory';
-import { QueryParamProvider } from 'use-query-params';
 import CompatibilityRoute from '@//:modules/routing/CompatibilityRoute';
-import { ChakraProvider } from '@chakra-ui/react';
+import RoutingContext from '@//:modules/routing/RoutingContext';
+import RouteRenderer from '@//:modules/routing/RouteRenderer';
+import routes from '../../client/routes';
 import theme from '@//:modules/theme';
 import parseCookies from '../utilities/parseCookies';
 import { FlashProvider } from '@//:modules/flash';
@@ -31,6 +31,7 @@ const entry = async (req, res, next) => {
 
     // Make sure we include a csrf cookie in our fetchRelay function, since
     // the initial call does not contain it
+    // eslint-disable-next-line no-underscore-dangle
     if (req.cookies._csrf === undefined && res.getHeader('set-cookie')) {
       const cookies = parseCookies(
         res.getHeader('set-cookie').join(','),
@@ -47,7 +48,8 @@ const entry = async (req, res, next) => {
       }
     }
 
-    async function fetchRelay(params, variables, _cacheConfig) {
+    // eslint-disable-next-line no-inner-declarations
+    async function fetchRelay(params, variables) {
       const response = await axios({
         url: 'http://localhost:8080/api/graphql',
         withCredentials: true,
@@ -66,7 +68,9 @@ const entry = async (req, res, next) => {
       });
 
       // Need to make sure we forward our cookies from API calls
-      if (Object.prototype.hasOwnProperty.call(response.headers, 'set-cookie')) {
+      if (
+        Object.prototype.hasOwnProperty.call(response.headers, 'set-cookie')
+      ) {
         forwardCookies = [...forwardCookies, ...response.headers['set-cookie']];
       }
 
@@ -87,16 +91,23 @@ const entry = async (req, res, next) => {
       isServer: true,
     });
 
-    // Before going further and creating our router, we pre-emptively resolve the RootQuery routes, so that the user object
+    // Before going further and creating
+    // our router, we pre-emptively resolve the RootQuery routes, so that the user object
     // can be available for permission checking & redirecting on the server & client
     const root = routes[0].prepare({});
     const rootKeys = Object.keys(root);
 
     // Get all prepared statements, and wait for fetchQuery to resolve
-    for (let i = 0; i < rootKeys.length; i++) {
-      const { query, variables, options } = root[rootKeys[i]];
-      await fetchQuery(environment, query, variables, options).toPromise();
-    }
+    const promises = [];
+
+    rootKeys.forEach(key => {
+      const { query, variables, options } = root[key];
+      promises.push(
+        fetchQuery(environment, query, variables, options).toPromise(),
+      );
+    });
+
+    await Promise.all(promises);
 
     const context = {};
 
@@ -125,7 +136,8 @@ const entry = async (req, res, next) => {
     // Collect relay App data from our routes, so we have faster initial loading times.
     await prepass(App);
 
-    // Add any cookies that may have been added in our API requests, and headers from any possible middleware
+    // Add any cookies that may have been added in our API requests,
+    // and headers from any possible middleware
     if (forwardCookies.length > 0) {
       if (res.getHeader('set-cookie')) {
         res.setHeader('set-cookie', [
@@ -182,15 +194,15 @@ const entry = async (req, res, next) => {
 
     res.render('default', {
       title: 'Title',
-      manifest: process.env.PUBLIC_PATH + 'manifest.json',
-      favicon: process.env.PUBLIC_PATH + 'favicon.ico',
+      manifest: `${process.env.PUBLIC_PATH}manifest.json`,
+      favicon: `${process.env.PUBLIC_PATH}favicon.ico`,
       scripts: extractor.getScriptTags(),
       preload: extractor.getLinkTags(),
       styles: extractor.getStyleTags(),
       nonce: res.locals.cspNonce,
       emotionIds: ids.join(' '),
       emotionCss: css,
-      html: html,
+      html,
       csrfToken: req.csrfToken(),
       relayStore: serialize(relayData),
       i18nextStore: serialize(initialI18nStore),

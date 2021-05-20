@@ -4,22 +4,6 @@
 import { format } from 'util';
 
 /**
- * Expose `flash()` function on requests.
- *
- * @return {Function}
- * @api public
- */
-export default function flash(options) {
-  return function(req, res, next) {
-    if (req.flash) {
-      return next();
-    }
-    req.flash = new Flash(req, options || {});
-    next();
-  };
-}
-
-/**
  *
  * Modified Flash: will not flush messages when they are read - we flush them manually when sending back the page (in case there are some backend failures, messages will be displayed on next view)
  *
@@ -98,4 +82,20 @@ class Flash {
 
     return this.msgs[key] || [];
   }
+}
+
+/**
+ * Expose `flash()` function on requests.
+ *
+ * @return {Function}
+ * @api public
+ */
+export default function flash(options) {
+  return (req, res, next) => {
+    if (req.flash) {
+      return next();
+    }
+    req.flash = new Flash(req, options || {});
+    return next();
+  };
 }
