@@ -39,12 +39,10 @@ const entry = async (req, res, next) => {
 
       if (cookies.length > 0) {
         const csrf = cookies[0].cookieValue;
-
-        if (req.headers.cookie !== undefined) {
-          fetchCookies = `${req.headers.cookie}; _csrf=${csrf}`;
-        } else {
-          fetchCookies = `_csrf=${csrf}`;
-        }
+        fetchCookies =
+          req.headers.cookie !== undefined
+            ? `${req.headers.cookie}; _csrf=${csrf}`
+            : `_csrf=${csrf}`;
       }
     }
 
