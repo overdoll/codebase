@@ -1,31 +1,31 @@
-import { createMockEnvironment, MockPayloadGenerator } from 'relay-test-utils';
-import withProviders from '@//:modules/testing/withProviders';
-import { render, screen } from '@testing-library/react';
-import MediaQuery from '@//:artifacts/MediaQuery.graphql';
-import Media from '../Media';
-import userEvent from '@testing-library/user-event';
+import { createMockEnvironment, MockPayloadGenerator } from 'relay-test-utils'
+import withProviders from '@//:modules/testing/withProviders'
+import { render, screen } from '@testing-library/react'
+import MediaQuery from '@//:artifacts/MediaQuery.graphql'
+import Media from '../Media'
+import userEvent from '@testing-library/user-event'
 
 it('should render media when data is available', async () => {
-  const Environment = createMockEnvironment();
+  const Environment = createMockEnvironment()
 
-  const variables = { data: { search: '' } };
+  const variables = { data: { search: '' } }
 
-  Environment.mock.queuePendingOperation(MediaQuery, variables);
+  Environment.mock.queuePendingOperation(MediaQuery, variables)
 
   const resolver = {
     Media: (context, generateId) => ({
       id: `media-${generateId()}`,
       title: 'test',
-      thumbnail: 'thumbnail',
-    }),
-  };
+      thumbnail: 'thumbnail'
+    })
+  }
 
   // Set query to return our "fake" data
   Environment.mock.queueOperationResolver(operation =>
-    MockPayloadGenerator.generate(operation, resolver),
-  );
+    MockPayloadGenerator.generate(operation, resolver)
+  )
 
-  const onSelect = jest.fn();
+  const onSelect = jest.fn()
 
   const MediaComponent = () => {
     return (
@@ -34,48 +34,48 @@ it('should render media when data is available', async () => {
         onSelect={onSelect}
         args={{ variables, options: {} }}
       />
-    );
-  };
+    )
+  }
 
   const [Root] = withProviders({
     Component: MediaComponent,
-    environment: Environment,
-  });
+    environment: Environment
+  })
 
-  render(<Root />);
+  render(<Root />)
 
-  const button = screen.getByRole('button');
+  const button = screen.getByRole('button')
 
   // expect that we are rendering characters correctly
-  expect(screen.getByText('test-media-1-thumbnail')).toBeVisible();
+  expect(screen.getByText('test-media-1-thumbnail')).toBeVisible()
 
   // click on the button to add an existing artist
-  userEvent.click(button);
+  userEvent.click(button)
 
   // expect that the request went through
   expect(onSelect).toHaveBeenLastCalledWith({
-    id: `media-1`,
+    id: 'media-1',
     title: 'test',
-    thumbnail: 'thumbnail',
-  });
-});
+    thumbnail: 'thumbnail'
+  })
+})
 
 it('should ask to add a new media when none are available', async () => {
-  const Environment = createMockEnvironment();
+  const Environment = createMockEnvironment()
 
-  const mediaName = 'media-example-name';
+  const mediaName = 'media-example-name'
 
-  const variables = { data: { search: mediaName } };
+  const variables = { data: { search: mediaName } }
 
-  Environment.mock.queuePendingOperation(MediaQuery, variables);
+  Environment.mock.queuePendingOperation(MediaQuery, variables)
 
   Environment.mock.queueOperationResolver(operation => ({
     data: {
-      media: [],
-    },
-  }));
+      media: []
+    }
+  }))
 
-  const onSelect = jest.fn();
+  const onSelect = jest.fn()
 
   const MediaComponent = () => {
     return (
@@ -84,29 +84,29 @@ it('should ask to add a new media when none are available', async () => {
         onSelect={onSelect}
         args={{ variables, options: {} }}
       />
-    );
-  };
+    )
+  }
 
   const [Root] = withProviders({
     Component: MediaComponent,
-    environment: Environment,
-  });
+    environment: Environment
+  })
 
-  render(<Root />);
+  render(<Root />)
 
-  const button = screen.getByRole('button');
+  const button = screen.getByRole('button')
 
   // expect that we are asking to add a new media with a button
-  expect(button).toBeVisible();
+  expect(button).toBeVisible()
 
   // click on the button to add a new artist
-  userEvent.click(button);
+  userEvent.click(button)
 
   // expect that the request went through
   expect(onSelect).toHaveBeenLastCalledWith({
     id: mediaName,
     title: mediaName,
     thumbnail: null,
-    request: true,
-  });
-});
+    request: true
+  })
+})

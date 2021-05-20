@@ -1,5 +1,5 @@
-import { useHistory } from '@//:modules/routing/useHistory';
+import { useHistory } from '@//:modules/routing/useHistory'
 
 export const useLocation = () => {
-  return useHistory().location;
-};
+  return useHistory().location
+}

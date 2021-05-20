@@ -7,6 +7,6 @@ export default {
     httpOnly: true,
     secure: true,
     maxAge: 28800000,
-    signed: true,
-  },
-};
+    signed: true
+  }
+}
