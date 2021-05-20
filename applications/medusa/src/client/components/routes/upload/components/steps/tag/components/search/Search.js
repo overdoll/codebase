@@ -33,12 +33,12 @@ export default function Search({
     },
   });
 
-  const refetch = useCallback(search => {
+  const refetch = useCallback((search) => {
     // Trigger a re-render of useLazyLoadQuery with new variables,
     // *and* an updated fetchKey.
     // The new fetchKey will ensure that the query is fully
     // re-evaluated and refetched.
-    setQueryArgs(prev => ({
+    setQueryArgs((prev) => ({
       options: {
         fetchKey: (prev?.options?.fetchKey ?? 0) + 1,
       },
@@ -51,7 +51,7 @@ export default function Search({
     }));
   }, []);
 
-  const onChange = e => {
+  const onChange = (e) => {
     setSearch(e.target.value);
 
     // Start transition -

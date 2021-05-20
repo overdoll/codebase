@@ -17,8 +17,3 @@ We use RabbitMQ as our queue broker - for creating long-running jobs and running
 ### Kafka
 
 We use Apache Kafka for inter-service event-driven communication. All services that are asynchronous and event driven use Kafka messages for communication.[ Check it out](https://kafka.apache.org/)
-
-
-
-
-

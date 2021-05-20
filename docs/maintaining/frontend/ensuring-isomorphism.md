@@ -10,4 +10,3 @@ If you really must have client-only code, this can easily be achieved with the `
 import CanUseDOM from '@//:modules/utilities/CanUseDOM';
 import BailoutBoundary from '@//:modules/utilities/BailoutBoundary';
 ```
-

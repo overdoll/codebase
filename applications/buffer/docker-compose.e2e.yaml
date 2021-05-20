@@ -7,10 +7,10 @@ services:
       - 3010:8000
     env_file: ../../applications/buffer/.env.ci
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.buffer.rule=Path(`/api/upload/{document}`) || Path(`/api/upload/`) || Path(`/api/uploads/{user}/{document}`)"
-      - "traefik.http.routers.buffer.entrypoints=websecure"
-      - "traefik.http.routers.buffer.tls=true"
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.buffer.rule=Path(`/api/upload/{document}`) || Path(`/api/upload/`) || Path(`/api/uploads/{user}/{document}`)'
+      - 'traefik.http.routers.buffer.entrypoints=websecure'
+      - 'traefik.http.routers.buffer.tls=true'
     depends_on:
       - traefik
       - minio

@@ -10,7 +10,7 @@ You can easily access scylla by using the following credentials:
 
 **host**: localhost:9042 \(or 127.0.0.1:9042\)
 
-**username**: ****test
+**username**: \*\*\*\*test
 
 **password**: test
 
@@ -26,7 +26,7 @@ You can easily access RabbitMQ by using the following credentials \(open the hos
 
 **host**: localhost:15672 \(or 127.0.0.1:15672\)
 
-**username**: ****test
+**username**: \*\*\*\*test
 
 **password**: test
 
@@ -37,4 +37,3 @@ You can access Redis through your client with the following credentials
 **host**: localhost:6379 \(or 127.0.0.1:6379\)
 
 No password or username required!
-

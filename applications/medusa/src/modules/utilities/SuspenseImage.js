@@ -19,13 +19,12 @@ export default function SuspenseImage(props: Props): Node {
     // new loader *functions*, but JSResource will return a cached
     // value and only load the iamge once.
     const resource = JSResource(src, () => {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         const img = new Image();
         img.onload = () => {
           resolve(src);
         };
-        img.onerror = error => {
-          
+        img.onerror = (error) => {
           resolve(src);
         };
         img.src = src;

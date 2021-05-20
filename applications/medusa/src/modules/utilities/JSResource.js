@@ -38,14 +38,14 @@ class Resource {
     let promise = this._promise;
     if (promise === null) {
       promise = this._loader()
-        .then(result => {
+        .then((result) => {
           if (result.default) {
             result = result.default;
           }
           this._result = result;
           return result;
         })
-        .catch(error => {
+        .catch((error) => {
           this._error = error;
           throw error;
         });

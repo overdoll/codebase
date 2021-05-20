@@ -61,7 +61,7 @@ class CookieDataSource extends RemoteGraphQLDataSource {
   }
 }
 
-export default config => {
+export default (config) => {
   const gateway = new ApolloGateway({
     serviceList: services,
     persistedQueries: true,

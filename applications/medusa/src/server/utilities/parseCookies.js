@@ -20,19 +20,14 @@ type ParsedCookie = {
 function hasExpiresField(cookie: string): boolean {
   return cookie
     .split(';')
-    .map(part => {
+    .map((part) => {
       if (part.split('=').length > 1) {
-        return (
-          part
-            .split('=')[0]
-            .trim()
-            .toLowerCase() === 'expires'
-        );
+        return part.split('=')[0].trim().toLowerCase() === 'expires';
       }
 
       return false;
     })
-    .some(bool => bool);
+    .some((bool) => bool);
 }
 
 export default function parseCookies(rawCookies: string): ParsedCookie[] {
@@ -58,13 +53,13 @@ export default function parseCookies(rawCookies: string): ParsedCookie[] {
 
       return rawCookie;
     })
-    .filter(rawCookie => rawCookie !== 'invalid');
+    .filter((rawCookie) => rawCookie !== 'invalid');
 
-  return validRawCookies.map(rawCookie => {
+  return validRawCookies.map((rawCookie) => {
     const [cookieNameAndValue, ...cookieProperties] = rawCookie.split(';');
     const [cookieName, cookieValue] = cookieNameAndValue.split('=');
 
-    const sanitizedCookieProperties = cookieProperties.map(cookieProperty => {
+    const sanitizedCookieProperties = cookieProperties.map((cookieProperty) => {
       const [propertyName, propertyValue] = cookieProperty.split('=');
       const sanitizedPropertyName = propertyName
         .replace('-', '')
@@ -87,7 +82,7 @@ export default function parseCookies(rawCookies: string): ParsedCookie[] {
     });
 
     const objectifyedCookieProperties = sanitizedCookieProperties.map(
-      sanitizedCookieProperty => {
+      (sanitizedCookieProperty) => {
         const [propertyName, propertyValue] = sanitizedCookieProperty.split(
           '=',
         );
@@ -100,7 +95,7 @@ export default function parseCookies(rawCookies: string): ParsedCookie[] {
 
     const options: CookieOptions = {};
 
-    objectifyedCookieProperties.forEach(objectifyedCookieProperty => {
+    objectifyedCookieProperties.forEach((objectifyedCookieProperty) => {
       Object.entries(objectifyedCookieProperty).forEach(([key, value]) => {
         if (key === 'expires') {
           options[key] = new Date(value);

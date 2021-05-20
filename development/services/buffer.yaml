@@ -1,7 +1,7 @@
 image:
   repository: buffer-image
 
-nameOverride: "buffer"
+nameOverride: 'buffer'
 
 service: true
 http: true

@@ -26,16 +26,13 @@ Gin is the router used by Hades. Gin allows us to easily write middleware to han
 
 The layout consists of the following:
 
-* **schemas** - gqlgen schema files. Using these files, Go functions are generated which are then implemented
-* **src** 
-  * **authentication** - Code to handle authentication & authorization
-  * **directives** - GraphQL directive implementations
-  * **extensions** - Custom GraphQL extensions, such as Automatic Persisted Queries
-  * **helpers** - Any helper functions
-  * **middleware** - Custom-written middleware
-  * **models** - GraphQL models & custom models
-  * **resolvers** - GraphQL resolvers
-  * **services** - Registered services for microservices
-
-
-
+- **schemas** - gqlgen schema files. Using these files, Go functions are generated which are then implemented
+- **src**
+  - **authentication** - Code to handle authentication & authorization
+  - **directives** - GraphQL directive implementations
+  - **extensions** - Custom GraphQL extensions, such as Automatic Persisted Queries
+  - **helpers** - Any helper functions
+  - **middleware** - Custom-written middleware
+  - **models** - GraphQL models & custom models
+  - **resolvers** - GraphQL resolvers
+  - **services** - Registered services for microservices

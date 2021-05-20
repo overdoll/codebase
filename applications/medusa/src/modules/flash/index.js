@@ -40,13 +40,15 @@ function FlashProvider({ override, children }: Props): Node {
     if (override) {
       result = key ? override.get(key) : override.get();
     } else {
-      result = Object.prototype.hasOwnProperty.call(flashState, key) ? flashState[key] : [];
+      result = Object.prototype.hasOwnProperty.call(flashState, key)
+        ? flashState[key]
+        : [];
     }
 
     return first ? result[0] : result;
   };
 
-  const flush = key => {
+  const flush = (key) => {
     if (override) return key ? override.flush(key) : override.flush();
 
     if (Object.prototype.hasOwnProperty.call(flashState, key)) {

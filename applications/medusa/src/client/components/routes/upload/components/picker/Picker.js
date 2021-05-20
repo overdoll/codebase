@@ -15,9 +15,9 @@ type Props = {
 export default function Picker({ uppy, onSelect }: Props): Node {
   const notify = useToast();
 
-  const onChange = e => {
+  const onChange = (e) => {
     const files = Array.from(e.target.files);
-    files.forEach(file => {
+    files.forEach((file) => {
       try {
         uppy.addFile({
           source: 'file input',

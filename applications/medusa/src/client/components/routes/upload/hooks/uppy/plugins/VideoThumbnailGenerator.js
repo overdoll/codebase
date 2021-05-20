@@ -4,7 +4,7 @@
  *
  * and modified to work without jquery and return async
  */
-(function(window, document, undefined) {
+(function (window, document, undefined) {
   /**
    * Class creation
    * @param  {array} opts  Any overriding options
@@ -96,7 +96,7 @@
       if (this.events.hasOwnProperty(event)) {
         each(
           this.events[event],
-          function(callback) {
+          function (callback) {
             preventDefault =
               callback.apply(this, args.slice(1)) === false || preventDefault;
           },
@@ -148,18 +148,18 @@
       this.video = videoHtml;
 
       // As soon as the meta is ready, trigger that capture is ready
-      this.video.onloadedmetadata = function() {
+      this.video.onloadedmetadata = function () {
         thisClass.fire('startCapture', this.captures);
         thisClass.video.play();
       };
 
       // Trigger the capture here because the video is ready
-      this.video.onplay = function() {
+      this.video.onplay = function () {
         thisClass.initScreenshot();
       };
 
       // Can't play this video
-      this.video.onerror = function() {
+      this.video.onerror = function () {
         thisClass.fire('unsupported');
       };
 
@@ -387,7 +387,7 @@
    * @returns {Object} Reference to `dst`.
    */
   function extend(dst, src) {
-    each(arguments, obj => {
+    each(arguments, (obj) => {
       if (obj !== dst) {
         each(obj, (value, key) => {
           dst[key] = value;

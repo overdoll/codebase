@@ -18,7 +18,7 @@ const Empty = {
   path: '*',
   component: JSResource(
     'LinkComponent',
-    () => new Promise(resolve => resolve(LinkComponent)),
+    () => new Promise((resolve) => resolve(LinkComponent)),
   ),
 };
 
@@ -30,7 +30,7 @@ it('clicking on the link directs to the route', async () => {
       exact: true,
       component: JSResource(
         'Component',
-        () => new Promise(resolve => resolve(Component)),
+        () => new Promise((resolve) => resolve(Component)),
       ),
     },
     Empty,
@@ -63,7 +63,7 @@ it('hovering over the link will preload the component', async () => {
       component: JSResource(
         'Component2',
         () =>
-          new Promise(resolve => {
+          new Promise((resolve) => {
             func();
             resolve(Component);
           }),
@@ -101,7 +101,7 @@ it('mouse down on the link will load code and data', async () => {
       component: JSResource(
         'Component3',
         () =>
-          new Promise(resolve => {
+          new Promise((resolve) => {
             func();
             resolve(Component);
           }),
@@ -138,6 +138,6 @@ it('mouse down on the link will load code and data', async () => {
 
   // expect that relay has the current query in the store (preload function worked correctly)
   Environment.mock.findOperation(
-    data => data.request.node.hash === RootQuery.hash,
+    (data) => data.request.node.hash === RootQuery.hash,
   );
 });
