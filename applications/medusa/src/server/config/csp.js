@@ -7,14 +7,14 @@ const config = {
         ? (req, res) => `'nonce-${res.locals.cspNonce}'`
         : "'unsafe-inline'",
       "'unsafe-eval'",
-      process.env.PUBLIC_PATH,
+      process.env.PUBLIC_PATH
     ],
     'style-src': [
       "'self'",
       'https://fonts.googleapis.com',
       process.env.NODE_ENV === 'production'
         ? (req, res) => `'nonce-${res.locals.cspNonce}'`
-        : "'unsafe-inline'",
+        : "'unsafe-inline'"
     ],
     'font-src': ['data:', '*'],
     'base-uri': ["'self'"],
@@ -26,8 +26,8 @@ const config = {
     'form-action': ["'self'"],
     'img-src': ['blob:', 'data:', '*'],
     'media-src': ['data:', '*', 'blob:'],
-    upgradeInsecureRequests: [],
-  },
-};
+    upgradeInsecureRequests: []
+  }
+}
 
-export default config;
+export default config

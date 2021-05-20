@@ -1,11 +1,11 @@
-import Button from '../Button';
+import Button from '../Button'
 
 export default {
   title: 'Form/Button',
-  component: Button,
-};
+  component: Button
+}
 
-const Template = args => <Button {...args}>Click Me</Button>;
+const Template = args => <Button {...args}>Click Me</Button>
 
-export const Default = Template.bind({});
-Default.args = {};
+export const Default = Template.bind({})
+Default.args = {}

@@ -1,5 +1,5 @@
 export default (req, res) => {
   res.json({
-    coverage: global.__coverage__ || null,
-  });
-};
+    coverage: global.__coverage__ || null
+  })
+}

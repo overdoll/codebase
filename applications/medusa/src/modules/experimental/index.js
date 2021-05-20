@@ -1,3 +1,3 @@
-import { unstable_useTransition as useTransition } from 'react';
+import { unstable_useTransition as useTransition } from 'react'
 
-export { useTransition };
+export { useTransition }

@@ -1,6 +1,6 @@
-import withProviders from '@//:modules/testing/withProviders';
-import { render, screen, waitFor } from '@testing-library/react';
-import JSResource from '@//:modules/utilities/JSResource';
+import withProviders from '@//:modules/testing/withProviders'
+import { render, screen, waitFor } from '@testing-library/react'
+import JSResource from '@//:modules/utilities/JSResource'
 
 it('renders a root component with children', async () => {
   const routes = [
@@ -9,8 +9,8 @@ it('renders a root component with children', async () => {
         'Root',
         () =>
           new Promise(resolve =>
-            resolve(props => <div>test1{props.children}</div>),
-          ),
+            resolve(props => <div>test1{props.children}</div>)
+          )
       ),
       routes: [
         {
@@ -18,20 +18,20 @@ it('renders a root component with children', async () => {
           exact: true,
           component: JSResource(
             'JoinRoot',
-            () => new Promise(resolve => resolve(() => <div>test2</div>)),
-          ),
-        },
-      ],
-    },
-  ];
+            () => new Promise(resolve => resolve(() => <div>test2</div>))
+          )
+        }
+      ]
+    }
+  ]
 
   const [Root] = withProviders({
     routes: routes,
-    initialEntries: ['/test'],
-  });
+    initialEntries: ['/test']
+  })
 
-  render(<Root />);
+  render(<Root />)
 
-  await waitFor(() => expect(screen.getByText('test1')).toBeInTheDocument());
-  await waitFor(() => expect(screen.getByText('test2')).toBeInTheDocument());
-});
+  await waitFor(() => expect(screen.getByText('test1')).toBeInTheDocument())
+  await waitFor(() => expect(screen.getByText('test2')).toBeInTheDocument())
+})

@@ -1,8 +1,8 @@
-import theme from '../theme';
+import theme from '../theme'
 
 export default {
-  title: 'Theme/Color Palette',
-};
+  title: 'Theme/Color Palette'
+}
 
 const RenderPalette = obj =>
   Object.keys(obj).map(key => (
@@ -13,32 +13,32 @@ const RenderPalette = obj =>
         sx={{
           backgroundColor: obj[key],
           width: '500px',
-          height: '20px',
+          height: '20px'
         }}
       />
     </div>
-  ));
+  ))
 
 export const Primary = args => {
-  return RenderPalette(theme.colors.primary);
-};
+  return RenderPalette(theme.colors.primary)
+}
 
 export const Neutral = args => {
-  return RenderPalette(theme.colors.neutral);
-};
+  return RenderPalette(theme.colors.neutral)
+}
 
 export const Orange = args => {
-  return RenderPalette(theme.colors.orange);
-};
+  return RenderPalette(theme.colors.orange)
+}
 
 export const Teal = args => {
-  return RenderPalette(theme.colors.teal);
-};
+  return RenderPalette(theme.colors.teal)
+}
 
 export const Green = args => {
-  return RenderPalette(theme.colors.green);
-};
+  return RenderPalette(theme.colors.green)
+}
 
 export const Purple = args => {
-  return RenderPalette(theme.colors.purple);
-};
+  return RenderPalette(theme.colors.purple)
+}

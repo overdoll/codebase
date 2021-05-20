@@ -1,7 +1,7 @@
 /**
  * Module dependencies.
  */
-import { format } from 'util';
+import { format } from 'util'
 
 /**
  *
@@ -40,47 +40,47 @@ import { format } from 'util';
  */
 
 class Flash {
-  constructor(req, options = {}) {
-    if (req.session === undefined) throw Error('req.flash() requires sessions');
-    this.msgs = req.session.flash || {};
-    this.session = req.session;
+  constructor (req, options = {}) {
+    if (req.session === undefined) throw Error('req.flash() requires sessions')
+    this.msgs = req.session.flash || {}
+    this.session = req.session
   }
 
-  flush(key) {
+  flush (key) {
     if (!key) {
-      delete this.session.flash;
-      return this.msgs;
+      delete this.session.flash
+      return this.msgs
     }
 
-    const arr = this.msgs[key];
+    const arr = this.msgs[key]
     if (Array.isArray(arr)) {
-      delete this.msgs[key];
-      return arr;
+      delete this.msgs[key]
+      return arr
     }
   }
 
-  push(key, msg) {
+  push (key, msg) {
     if (arguments.length > 2 && format) {
-      const args = Array.prototype.slice.call(arguments, 1);
-      msg = format.apply(undefined, args);
+      const args = Array.prototype.slice.call(arguments, 1)
+      msg = format.apply(undefined, args)
     } else if (Array.isArray(msg)) {
-      msg.forEach(function(val) {
-        (this.msgs[key] = this.msgs[key] || []).push(val);
-      });
-      this.session.flash = this.msgs;
-      return this.msgs[key].length;
+      msg.forEach(function (val) {
+        (this.msgs[key] = this.msgs[key] || []).push(val)
+      })
+      this.session.flash = this.msgs
+      return this.msgs[key].length
     }
-    const ret = (this.msgs[key] = this.msgs[key] || []).push(msg);
-    this.session.flash = this.msgs;
-    return ret;
+    const ret = (this.msgs[key] = this.msgs[key] || []).push(msg)
+    this.session.flash = this.msgs
+    return ret
   }
 
-  get(key) {
+  get (key) {
     if (!key) {
-      return this.msgs;
+      return this.msgs
     }
 
-    return this.msgs[key] || [];
+    return this.msgs[key] || []
   }
 }
 
@@ -90,12 +90,12 @@ class Flash {
  * @return {Function}
  * @api public
  */
-export default function flash(options) {
+export default function flash (options) {
   return (req, res, next) => {
     if (req.flash) {
-      return next();
+      return next()
     }
-    req.flash = new Flash(req, options || {});
-    return next();
-  };
+    req.flash = new Flash(req, options || {})
+    return next()
+  }
 }
