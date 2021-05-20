@@ -37,10 +37,10 @@ enabled = true
 
 [analyzers.meta]
 plugins = ["react"]
+environment = ["jest", "cypress", "nodejs", "browser"]
 module_system = "es-modules"
 dialect = "flow"
 style_guide = "standard"
-environment = ["nodejs", "browser", "jest", "cypress"]
 
 [[transformers]]
 name = "prettier"

@@ -106,7 +106,7 @@ it('mouse down on the link will load code and data', async () => {
             resolve(Component);
           }),
       ),
-      prepare: params => {
+      prepare: () => {
         return {
           stateQuery: {
             query: RootQuery,
