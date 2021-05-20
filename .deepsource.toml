@@ -28,8 +28,7 @@ enabled = true
 
 [analyzers.meta]
 import_root = "overdoll"
-dependencies_vendored = false
-build_tags = ["darwin"]
+dependencies_vendored = true
 
 [[analyzers]]
 name = "javascript"
