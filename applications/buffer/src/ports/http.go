@@ -9,9 +9,10 @@ import (
 	"net/http"
 	"time"
 
+	"overdoll/applications/buffer/src/app"
+
 	"github.com/bmizerany/pat"
 	tusd "github.com/tus/tusd/pkg/handler"
-	"overdoll/applications/buffer/src/app"
 )
 
 type HttpServer struct {
@@ -62,7 +63,7 @@ func (h *HttpServer) HandleUpload() http.Handler {
 		reader := bytes.NewReader(buff)
 
 		http.ServeContent(w, r, key, time.Now(), reader)
-		return
+
 	}))
 
 	return uploadsHandler
