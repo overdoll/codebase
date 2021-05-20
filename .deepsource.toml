@@ -44,7 +44,7 @@ style_guide = "standard"
 
 [[transformers]]
 name = "prettier"
-enabled = true
+enabled = false
 
 [[transformers]]
 name = "gofmt"
