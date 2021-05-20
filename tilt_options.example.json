@@ -1,5 +1,5 @@
 {
-  "registry": "771779017151.dkr.ecr.us-east-1.amazonaws.com",
+  "registry": "REGISTRY_HERE",
   "namespace": "nikita",
-  "context": "nikita@remote.us-east-1.eksctl.io"
+  "context": "CONTEXT_HERE"
 }
