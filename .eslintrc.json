@@ -1,44 +1,21 @@
 {
   "extends": [
-    "standard",
-    "plugin:react/recommended",
-    "prettier",
     "plugin:flowtype/recommended",
     "plugin:jest/recommended",
     "plugin:testing-library/recommended",
     "plugin:testing-library/react",
-    "plugin:cypress/recommended"
+    "plugin:cypress/recommended",
+    "standard",
+    "standard-jsx"
   ],
   "plugins": [
     "flowtype",
-    "react",
     "relay",
-    "react-hooks",
-    "prettier",
     "jest",
     "testing-library",
     "cypress"
   ],
   "rules": {
-    "import/extensions": "off",
-    "import/no-unresolved": "off",
-    "import/resolver": "off",
-    "react/jsx-filename-extension": [
-      1,
-      {
-        "extensions": [
-          ".js",
-          ".jsx"
-        ]
-      }
-    ],
-    "arrow-parens": "off",
-    "class-methods-use-this": "off",
-    "no-param-reassign": "off",
-    "no-trailing-spaces": "off",
-    "import/no-extraneous-dependencies": "off",
-    "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn",
     "relay/graphql-syntax": "error",
     "relay/compat-uses-vars": "warn",
     "relay/graphql-naming": "error",
@@ -47,8 +24,6 @@
     "relay/no-future-added-value": "warn",
     "relay/unused-fields": "warn",
     "relay/hook-required-argument": "warn",
-    "react/jsx-uses-react": "off",
-    "react/react-in-jsx-scope": "off",
     "flowtype/no-mixed": 2,
     "flowtype/no-weak-types": [
       2,
