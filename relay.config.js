@@ -9,5 +9,8 @@ module.exports = {
   ),
   watch: true,
   language: 'js-flow-uncommented',
-  artifactDirectory: resolve(__dirname, 'applications/medusa/src/__generated__')
+  artifactDirectory: resolve(
+    __dirname,
+    'applications/medusa/src/__generated__'
+  )
 }

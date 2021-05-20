@@ -1,7 +1,7 @@
 /**
  * @flow
  */
-import i18n from 'i18next';
+import i18n from 'i18next'
 
 // i18n specifically used for testing - no translations are provided here
 i18n.init({
@@ -11,9 +11,9 @@ i18n.init({
   defaultNS: 'translations',
   debug: false,
   interpolation: {
-    escapeValue: false,
+    escapeValue: false
   },
-  resources: { en: {} },
-});
+  resources: { en: {} }
+})
 
-export default i18n;
+export default i18n

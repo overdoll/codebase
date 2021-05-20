@@ -1,16 +1,16 @@
-import { createMockEnvironment, MockPayloadGenerator } from 'relay-test-utils';
-import withProviders from '@//:modules/testing/withProviders';
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import CharactersQuery from '@//:artifacts/CharactersQuery.graphql';
-import Characters from '../Characters';
+import { createMockEnvironment, MockPayloadGenerator } from 'relay-test-utils'
+import withProviders from '@//:modules/testing/withProviders'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import CharactersQuery from '@//:artifacts/CharactersQuery.graphql'
+import Characters from '../Characters'
 
 it('should render characters when data is available', async () => {
-  const Environment = createMockEnvironment();
+  const Environment = createMockEnvironment()
 
-  const variables = { data: { search: '' } };
+  const variables = { data: { search: '' } }
 
-  Environment.mock.queuePendingOperation(CharactersQuery, variables);
+  Environment.mock.queuePendingOperation(CharactersQuery, variables)
 
   const resolver = {
     Character: (context, generateId) => ({
@@ -20,17 +20,17 @@ it('should render characters when data is available', async () => {
       media: {
         id: 'media-1',
         title: 'title',
-        thumbnail: 'thumbnail',
-      },
-    }),
-  };
+        thumbnail: 'thumbnail'
+      }
+    })
+  }
 
   // Set query to return our "fake" data
   Environment.mock.queueOperationResolver(operation =>
-    MockPayloadGenerator.generate(operation, resolver),
-  );
+    MockPayloadGenerator.generate(operation, resolver)
+  )
 
-  const onSelect = jest.fn();
+  const onSelect = jest.fn()
 
   const CharactersComponent = () => {
     return (
@@ -39,25 +39,25 @@ it('should render characters when data is available', async () => {
         onSelect={onSelect}
         args={{ variables, options: {} }}
       />
-    );
-  };
+    )
+  }
 
   const [Root] = withProviders({
     Component: CharactersComponent,
-    environment: Environment,
-  });
+    environment: Environment
+  })
 
-  render(<Root />);
+  render(<Root />)
 
-  const button = screen.getByRole('button');
+  const button = screen.getByRole('button')
 
   // expect that we are rendering characters correctly
   expect(
-    screen.getByText('test-thumbnailtitle-media-1-thumbnail'),
-  ).toBeVisible();
+    screen.getByText('test-thumbnailtitle-media-1-thumbnail')
+  ).toBeVisible()
 
   // click on the button to add an existing artist
-  userEvent.click(button);
+  userEvent.click(button)
 
   // expect that the request went through
   expect(onSelect).toHaveBeenLastCalledWith({
@@ -67,27 +67,27 @@ it('should render characters when data is available', async () => {
     media: {
       id: 'media-1',
       title: 'title',
-      thumbnail: 'thumbnail',
-    },
-  });
-});
+      thumbnail: 'thumbnail'
+    }
+  })
+})
 
 it('should ask to add a new character when none are available', async () => {
-  const Environment = createMockEnvironment();
+  const Environment = createMockEnvironment()
 
-  const characterName = 'character-example-name';
+  const characterName = 'character-example-name'
 
-  const variables = { data: { search: characterName } };
+  const variables = { data: { search: characterName } }
 
-  Environment.mock.queuePendingOperation(CharactersQuery, variables);
+  Environment.mock.queuePendingOperation(CharactersQuery, variables)
 
   Environment.mock.queueOperationResolver(operation => ({
     data: {
-      characters: [],
-    },
-  }));
+      characters: []
+    }
+  }))
 
-  const onSelect = jest.fn();
+  const onSelect = jest.fn()
 
   const CharactersComponent = () => {
     return (
@@ -96,23 +96,23 @@ it('should ask to add a new character when none are available', async () => {
         onSelect={onSelect}
         args={{ variables, options: {} }}
       />
-    );
-  };
+    )
+  }
 
   const [Root] = withProviders({
     Component: CharactersComponent,
-    environment: Environment,
-  });
+    environment: Environment
+  })
 
-  render(<Root />);
+  render(<Root />)
 
-  const button = screen.getByRole('button');
+  const button = screen.getByRole('button')
 
   // expect that we are asking to add a new artist with a button
-  expect(button).toBeVisible();
+  expect(button).toBeVisible()
 
   // click on the button to add a new artist
-  userEvent.click(button);
+  userEvent.click(button)
 
   // expect that the request went through
   expect(onSelect).toHaveBeenLastCalledWith({
@@ -120,6 +120,6 @@ it('should ask to add a new character when none are available', async () => {
     name: characterName,
     thumbnail: null,
     media: null,
-    request: true,
-  });
-});
+    request: true
+  })
+})
