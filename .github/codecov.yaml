@@ -15,11 +15,9 @@ parsers:
       enable_partials: yes
 
 comment:
-  layout: "reach,diff,flags,files,footer"
+  layout: "reach,diff,files"
   behavior: default
   require_changes: no
-
-
 
 coverage:
   precision: 2
@@ -31,29 +29,24 @@ coverage:
         target: 50%
       medusa:
         target: 60%
-        flags:
-          - medusa
+        paths:
+          - applications/medusa/
       eva:
         target: 20%
-        flags:
-          - eva
+        paths:
+          - applications/eva/
       buffer:
         target: 20%
-        flags:
-          - buffer
+        paths:
+          - applications/buffer/
       sting:
         target: 20%
-        flags:
-          - sting
+        paths:
+          - applications/sting/
       library:
         target: 20%
-        flags:
-          - library
-          - sting
-          - buffer
-          - eva
         paths:
-          - ./libraries
+          - libraries/
 
 # fix path for bazel-generated coverage files && cypress
 fixes:
@@ -62,22 +55,12 @@ fixes:
 
 flags:
   sting:
-    paths:
-      - ./applications/sting/
     carryforward: false
   library:
-    paths:
-      - ./libraries/
     carryforward: false
   medusa:
-    paths:
-      - ./applications/medusa/
     carryforward: false
   buffer:
-    paths:
-      - ./applications/buffer/
     carryforward: false
   eva:
-    paths:
-      - ./applications/eva/
     carryforward: false
