@@ -135,19 +135,19 @@ export default function Join (): Node {
           mb={5}
         />
         {error &&
-         (
-           <Alert mb={2} status='error'>
-             <AlertIcon />
-             <AlertTitle mr={2}>{error}</AlertTitle>
-             <AlertDescription>{error}</AlertDescription>
-             <CloseButton
-               position='absolute'
-               right='8px'
-               top='8px'
-               onClick={() => flush('login.notify')}
-             />
-           </Alert>
-         )}
+        (
+          <Alert mb={2} status='error'>
+            <AlertIcon />
+            <AlertTitle mr={2}>{error}</AlertTitle>
+            <AlertDescription>{error}</AlertDescription>
+            <CloseButton
+              position='absolute'
+              right='8px'
+              top='8px'
+              onClick={() => flush('login.notify')}
+            />
+          </Alert>
+        )}
         <Form instance={instance} onSubmit={onSubmit}>
           <Input
             title={t('authenticate.form.email.title')}

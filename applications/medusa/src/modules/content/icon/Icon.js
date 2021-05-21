@@ -1,8 +1,8 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import { chakra } from '@chakra-ui/react';
+import type { Node } from 'react'
+import { chakra } from '@chakra-ui/react'
 
 type Props = {
   alt?: any,
@@ -12,7 +12,7 @@ type Props = {
   sx?: any,
 };
 
-export default function Icon({
+export default function Icon ({
   title,
   alt,
   icon,
@@ -26,5 +26,5 @@ export default function Icon({
       sx={{ path: { stroke: color ?? 'red.500' }, ...sx }}
       {...rest}
     />
-  );
+  )
 }

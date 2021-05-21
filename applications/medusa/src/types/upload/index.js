@@ -105,5 +105,5 @@ export type {
   Step,
   Event,
   Action,
-  Dispatch,
-};
+  Dispatch
+}

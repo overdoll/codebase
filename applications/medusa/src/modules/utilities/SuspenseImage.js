@@ -1,16 +1,16 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import JSResource from './JSResource';
+import type { Node } from 'react'
+import JSResource from './JSResource'
 
 type Props = {
   src: string,
   alt?: string,
 };
 
-export default function SuspenseImage(props: Props): Node {
-  const { src, ...rest } = props;
+export default function SuspenseImage (props: Props): Node {
+  const { src, ...rest } = props
   if (src !== null) {
     // JSResource is meant for loading resources, but the implementation is
     // just cached loading of promises. So we reuse that here as a quick
@@ -20,19 +20,18 @@ export default function SuspenseImage(props: Props): Node {
     // value and only load the iamge once.
     const resource = JSResource(src, () => {
       return new Promise(resolve => {
-        const img = new Image();
+        const img = new Image()
         img.onload = () => {
-          resolve(src);
-        };
+          resolve(src)
+        }
         img.onerror = error => {
-          
-          resolve(src);
-        };
-        img.src = src;
-      });
-    });
-    resource.load(); // TODO: JSResource::read() should call load() if necessary
-    resource.read(); // suspends while the image is pending
+          resolve(src)
+        }
+        img.src = src
+      })
+    })
+    resource.load() // TODO: JSResource::read() should call load() if necessary
+    resource.read() // suspends while the image is pending
   }
-  return <img alt={props.alt} {...rest} />;
+  return <img alt={props.alt} {...rest} />
 }
