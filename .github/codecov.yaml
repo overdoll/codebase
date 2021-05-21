@@ -29,19 +29,19 @@ coverage:
         flags:
           - medusa
       eva:
-        target: 80%
+        target: 20%
         flags:
           - eva
       buffer:
-        target: 80%
+        target: 20%
         flags:
           - buffer
       sting:
-        target: 80%
+        target: 20%
         flags:
           - sting
       library:
-        target: 80%
+        target: 20%
         flags:
           - library
 
@@ -54,6 +54,7 @@ flags:
   sting:
     paths:
       - ./applications/sting/
+      - ./libraries/
     carryforward: false
   library:
     paths:
@@ -62,12 +63,15 @@ flags:
   medusa:
     paths:
       - ./applications/medusa/
+      - ./libraries/
     carryforward: false
   buffer:
     paths:
       - ./applications/buffer/
+      - ./libraries/
     carryforward: false
   eva:
     paths:
       - ./applications/eva/
+      - ./libraries/
     carryforward: false
