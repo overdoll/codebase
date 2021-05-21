@@ -49,6 +49,7 @@ def get_cache_plugin():
             "v1-cache-{{ id }}-{{ runner.os }}-",
             "v1-cache-{{ id }}-",
         ],
+        "compress": "true",
         "paths": [
             "node_modules"
         ],
