@@ -62,7 +62,7 @@ export default function Upload (): Node {
     })
   }, [uppy])
 
-  // Events for errors
+  // Event for errors
   useEffect(() => {
     uppy.on('upload-error', data => {
       notify({
