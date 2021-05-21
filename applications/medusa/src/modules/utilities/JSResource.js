@@ -7,75 +7,77 @@
  * because Webpack dynamic imports only expose an asynchronous API for loading
  * modules, so to be able to access already-loaded modules synchronously we
  * must have stored the previous result somewhere.
+ *
+ * NOTE: KEEP ALL != and == CHECKS AS-IS OR IT WILL BREAK!
  */
-import CanUseDOM from '@//:modules/utilities/CanUseDOM';
+import CanUseDOM from '@//:modules/utilities/CanUseDOM'
 
-const resourceMap = new Map();
+const resourceMap = new Map()
 
 /**
  * A generic resource: given some method to asynchronously load a value - the loader()
  * argument - it allows accessing the state of the resource.
  */
 class Resource {
-  _error: any;
-  _loader: any;
-  _promise: ?Promise<any>;
-  _result: any;
-  _moduleId: string;
+  _error: any
+  _loader: any
+  _promise: ?Promise<any>
+  _result: any
+  _moduleId: string
 
-  constructor(loader: any, moduleId: string) {
-    this._error = null;
-    this._loader = loader;
-    this._promise = null;
-    this._result = null;
-    this._moduleId = moduleId;
+  constructor (loader: any, moduleId: string) {
+    this._error = null
+    this._loader = loader
+    this._promise = null
+    this._result = null
+    this._moduleId = moduleId
   }
 
   /**
    * Loads the resource if necessary.
    */
-  load(): Promise<any> {
-    let promise = this._promise;
-    if (promise === null) {
+  load (): Promise<any> {
+    let promise = this._promise
+    if (promise == null) {
       promise = this._loader()
         .then(result => {
           if (result.default) {
-            result = result.default;
+            result = result.default
           }
-          this._result = result;
-          return result;
+          this._result = result
+          return result
         })
         .catch(error => {
-          this._error = error;
-          throw error;
-        });
-      this._promise = promise;
+          this._error = error
+          throw error
+        })
+      this._promise = promise
     }
-    return promise;
+    return promise
   }
 
   /**
    * Returns the result, if available. This can be useful to check if the value
    * is resolved yet.
    */
-  get(): any {
+  get (): any {
     if (this._result !== null) {
-      return this._result;
+      return this._result
     }
   }
 
   /**
    * Returns the module identification.
    */
-  getModuleId(): string {
-    return this._moduleId;
+  getModuleId (): string {
+    return this._moduleId
   }
 
   /**
    * Returns the module if it's required.
    */
-  getModuleIfRequired(): any {
-    return this.get();
+  getModuleIfRequired (): any {
+    return this.get()
   }
 
   /**
@@ -86,13 +88,13 @@ class Resource {
    * - Throw an error if the resource failed to load.
    * - Return the data of the resource if available.
    */
-  read(): any {
-    if (this._result !== null) {
-      return this._result;
-    } else if (this._error !== null) {
-      throw this._error;
+  read (): any {
+    if (this._result != null) {
+      return this._result
+    } else if (this._error != null) {
+      throw this._error
     } else {
-      throw this._promise;
+      throw this._promise
     }
   }
 }
@@ -114,19 +116,19 @@ class Resource {
  * @param {*} moduleId A globally unique identifier for the resource used for caching
  * @param {*} loader A method to load the resource's data if necessary
  */
-export default function JSResource(moduleId: string, loader: any): Resource {
+export default function JSResource (moduleId: string, loader: any): Resource {
   // On the server side, we want to always create a new instance, because it won't refresh with changes
   if (!CanUseDOM) {
-    return new Resource(loader, moduleId);
+    return new Resource(loader, moduleId)
   }
 
-  let resource = resourceMap.get(moduleId);
-  if (resource === null) {
-    resource = new Resource(loader, moduleId);
-    resourceMap.set(moduleId, resource);
+  let resource = resourceMap.get(moduleId)
+  if (resource == null) {
+    resource = new Resource(loader, moduleId)
+    resourceMap.set(moduleId, resource)
   }
 
-  return resource;
+  return resource
 }
 
-export type { Resource };
+export type { Resource }

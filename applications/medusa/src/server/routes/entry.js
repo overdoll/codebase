@@ -95,16 +95,12 @@ const entry = async (req, res, next) => {
     const rootKeys = Object.keys(root)
 
     // Get all prepared statements, and wait for fetchQuery to resolve
-    const promises = []
 
-    rootKeys.forEach(key => {
-      const { query, variables, options } = root[key]
-      promises.push(
-        fetchQuery(environment, query, variables, options).toPromise()
-      )
-    })
-
-    await Promise.all(promises)
+    // Get all prepared statements, and wait for fetchQuery to resolve
+    for (let i = 0; i < rootKeys.length; i++) {
+      const { query, variables, options } = root[rootKeys[i]]
+      await fetchQuery(environment, query, variables, options).toPromise()
+    }
 
     const context = {}
 
@@ -207,6 +203,7 @@ const entry = async (req, res, next) => {
       i18nextLang: req.i18n.language
     })
   } catch (e) {
+    console.log(e)
     next(e)
   }
 }
