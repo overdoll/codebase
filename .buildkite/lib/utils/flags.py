@@ -45,7 +45,7 @@ def common_build_flags(bep_file, is_test):
             # will be considered uncovered
             # otherwise, it just scopes the coverage to the package, but we want to make sure we have
             # dependencies covered as well
-            "--instrumentation_filter=^//"
+            # "--instrumentation_filter=^//"
         ]
 
     if bep_file:
