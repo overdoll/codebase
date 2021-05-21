@@ -8,12 +8,11 @@ parsers:
       loop: yes
       method: yes
       macro: yes
-  parsers:
-    javascript:
-      enable_partials: yes
+  javascript:
+    enable_partials: yes
 
 comment:
-  layout: "reach,diff,files"
+  layout: "reach,diff,flags,files"
   behavior: default
   require_changes: no
 
@@ -24,7 +23,7 @@ coverage:
   status:
     project:
       default:
-        target: 50%
+        target: 40%
         paths:
           - "applications"
           - "libraries"
