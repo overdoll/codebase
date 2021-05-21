@@ -46,7 +46,6 @@ const entry = async (req, res, next) => {
       }
     }
 
-    // eslint-disable-next-line no-inner-declarations
     async function fetchRelay (params, variables) {
       const response = await axios({
         url: 'http://localhost:8080/api/graphql',

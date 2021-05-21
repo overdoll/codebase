@@ -27,7 +27,6 @@ _RUNTIME_DEPS = [
     "@npm//react",
     "@npm//react-dom",
     "@npm//react-relay",
-    "@npm//history",
     "@npm//react-router",
     "@npm//query-string",
     "@npm//react-router-config",
