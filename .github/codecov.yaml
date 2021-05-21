@@ -51,7 +51,6 @@ coverage:
           - library
           - sting
           - buffer
-          - medusa
           - eva
         paths:
           - ./libraries
