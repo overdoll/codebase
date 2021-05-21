@@ -98,7 +98,7 @@
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-flow": "^7.12.13",
     "@babel/preset-react": "^7.12.10",
-    "@bazel/bazelisk": "^1.7.5",
+    "@bazel/bazelisk": "^1.9.0",
     "@cypress/code-coverage": "^3.9.3",
     "@graphql-cli/codegen": "^1.17.17",
     "@graphql-codegen/schema-ast": "^1.18.1",
