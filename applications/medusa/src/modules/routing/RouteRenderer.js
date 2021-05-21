@@ -1,28 +1,22 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import {
-  Suspense,
-  unstable_useTransition as useTransition,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
-import RoutingContext from '@//:modules/routing/RoutingContext';
-import ErrorBoundary from '@//:modules/utilities/ErrorBoundary';
-import { keyframes } from '@emotion/react';
-import type { Route } from '../../client/routes';
-import { Resource } from '@//:modules/utilities/JSResource';
-import { chakra } from '@chakra-ui/react';
+import type { Node } from 'react'
+import { Suspense, unstable_useTransition as useTransition, useContext, useEffect, useState } from 'react'
+import RoutingContext from '@//:modules/routing/RoutingContext'
+import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
+import { keyframes } from '@emotion/react'
+import type { Route } from '../../client/routes'
+import { Resource } from '@//:modules/utilities/JSResource'
+import { chakra } from '@chakra-ui/react'
 
-const SUSPENSE_CONFIG = { timeoutMs: 2000 };
+const SUSPENSE_CONFIG = { timeoutMs: 2000 }
 
 const transition = keyframes`
   to {
     visibility: visible;
   }
-`;
+`
 
 /**
  * A component that accesses the current route entry from RoutingContext and renders
@@ -30,26 +24,26 @@ const transition = keyframes`
  *
  * We want to also skip component rendering on the server-side
  */
-export default function RouterRenderer(): Node {
+export default function RouterRenderer (): Node {
   // Access the router
-  const router = useContext(RoutingContext);
+  const router = useContext(RoutingContext)
   // Improve the route transition UX by delaying transitions: show the previous route entry
   // for a brief period while the next route is being prepared. See
   // https://reactjs.org/docs/concurrent-mode-patterns.html#transitions
-  const [startTransition, isPending] = useTransition(SUSPENSE_CONFIG);
+  const [startTransition, isPending] = useTransition(SUSPENSE_CONFIG)
 
   // Store the active entry in state - this allows the renderer to use features like
   // useTransition to delay when state changes become visible to the user.
-  const [routeEntry, setRouteEntry] = useState(router.get());
+  const [routeEntry, setRouteEntry] = useState(router.get())
 
   // On mount subscribe for route changes
   useEffect(() => {
     // Check if the route has changed between the last render and commit:
-    const currentEntry = router.get();
+    const currentEntry = router.get()
     if (currentEntry !== routeEntry) {
       // if there was a concurrent modification, rerender and exit
-      setRouteEntry(currentEntry);
-      return;
+      setRouteEntry(currentEntry)
+      return
     }
 
     // If there *wasn't* a concurrent change to the route, then the UI
@@ -59,16 +53,16 @@ export default function RouterRenderer(): Node {
       // for a brief period, continuing to show the old state while the new
       // state (route) is prepared.
       startTransition(() => {
-        setRouteEntry(nextEntry);
-      });
-    });
-    return () => dispose();
+        setRouteEntry(nextEntry)
+      })
+    })
+    return () => dispose()
 
     // Note: this hook updates routeEntry manually; we exclude that variable
     // from the hook deps to avoid recomputing the effect after each change
     // triggered by the effect itself.
     // eslint-disable-next-line
-  }, [router, startTransition]);
+  }, [router, startTransition])
 
   // The current route value is an array of matching entries - one entry per
   // level of routes (to allow nested routes). We have to map each one to a
@@ -88,9 +82,9 @@ export default function RouterRenderer(): Node {
   // To achieve this, we reverse the list so we can start at the bottom-most
   // component, and iteratively construct parent components w the previous
   // value as the child of the next one:
-  const reversedItems = [].concat(routeEntry.entries).reverse(); // reverse is in place, but we want a copy so concat
+  const reversedItems = [].concat(routeEntry.entries).reverse() // reverse is in place, but we want a copy so concat
 
-  const firstItem = reversedItems[0];
+  const firstItem = reversedItems[0]
 
   // the bottom-most component is special since it will have no children
   // (though we could probably just pass null children to it)
@@ -100,9 +94,9 @@ export default function RouterRenderer(): Node {
       prepared={firstItem.prepared}
       routeData={firstItem.routeData}
     />
-  );
+  )
   for (let ii = 1; ii < reversedItems.length; ii++) {
-    const nextItem = reversedItems[ii];
+    const nextItem = reversedItems[ii]
     routeComponent = (
       <RouteComponent
         component={nextItem.component}
@@ -111,7 +105,7 @@ export default function RouterRenderer(): Node {
       >
         {routeComponent}
       </RouteComponent>
-    );
+    )
   }
 
   // Routes can error so wrap in an <ErrorBoundary>
@@ -120,23 +114,25 @@ export default function RouterRenderer(): Node {
     <ErrorBoundary>
       <Suspense fallback={null}>
         {/* Indicate to the user that a transition is pending, even while showing the previous UI */}
-        {isPending ? (
-          <chakra.div
-            sx={{
-              position: 'absolute',
-              zIndex: '1',
-              backgroundColor: '#ffffff',
-              animation: `0s linear 0.5s forwards ${transition}`,
-              visibility: 'hidden',
-            }}
-          >
-            Loading pending...
-          </chakra.div>
-        ) : null}
+        {isPending
+          ? (
+            <chakra.div
+              sx={{
+                position: 'absolute',
+                zIndex: '1',
+                backgroundColor: '#ffffff',
+                animation: `0s linear 0.5s forwards ${transition}`,
+                visibility: 'hidden'
+              }}
+            >
+              Loading pending...
+            </chakra.div>
+            )
+          : null}
         {routeComponent}
       </Suspense>
     </ErrorBoundary>
-  );
+  )
 }
 
 type RouteComp = {
@@ -157,16 +153,16 @@ type RouteComp = {
  * our ErrorBoundary/Suspense components, so we have to ensure that the suspend/error happens
  * in a child component.
  */
-function RouteComponent({
+function RouteComponent ({
   children,
   routeData,
   component,
-  prepared,
+  prepared
 }: RouteComp): Node {
-  const Component = component.read();
+  const Component = component.read()
   return (
     <Component routeData={routeData} prepared={prepared}>
       {children}
     </Component>
-  );
+  )
 }
