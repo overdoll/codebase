@@ -8,9 +8,8 @@ parsers:
       loop: yes
       method: yes
       macro: yes
-  parsers:
-    javascript:
-      enable_partials: yes
+  javascript:
+    enable_partials: yes
 
 comment:
   layout: "reach,diff,files"
