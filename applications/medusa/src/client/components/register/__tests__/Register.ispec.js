@@ -1,4 +1,4 @@
-import { render, waitFor, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import Register from '../Register'
 import withProviders from '@//:modules/testing/withProviders'
 import userEvent from '@testing-library/user-event'

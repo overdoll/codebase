@@ -1,13 +1,13 @@
 /**
  * @flow
  */
-import JSResource from '@//:modules/utilities/JSResource';
+import JSResource from '@//:modules/utilities/JSResource'
 
 const getUserFromEnvironment = environment =>
   environment
     .getStore()
     .getSource()
-    .get('client:root:authentication:user');
+    .get('client:root:authentication:user')
 
 /**
  * Client routes for the application
@@ -39,19 +39,19 @@ type Route = {
 const routes: Array<Route> = [
   {
     component: JSResource('Root', () =>
-      import(/* webpackChunkName: "Root" */ './components/routes/Root'),
+      import(/* webpackChunkName: "Root" */ './components/routes/Root')
     ),
     prepare: params => {
-      const RootQuery = require('@//:artifacts/RootQuery.graphql');
+      const RootQuery = require('@//:artifacts/RootQuery.graphql')
       return {
         stateQuery: {
           query: RootQuery,
           variables: {},
           options: {
-            fetchPolicy: 'store-or-network',
-          },
-        },
-      };
+            fetchPolicy: 'store-or-network'
+          }
+        }
+      }
     },
     routes: [
       {
@@ -60,21 +60,21 @@ const routes: Array<Route> = [
         component: JSResource('JoinRoot', () =>
           import(
             /* webpackChunkName: "JoinRoot" */ './components/routes/join/Join'
-          ),
+          )
         ),
         // When user is logged in, we just want to redirect them since they're already "logged in"
         middleware: [
           ({ environment, history }) => {
-            const user = getUserFromEnvironment(environment);
+            const user = getUserFromEnvironment(environment)
 
             if (user !== undefined) {
-              history.push('/profile');
-              return false;
+              history.push('/profile')
+              return false
             }
 
-            return true;
-          },
-        ],
+            return true
+          }
+        ]
       },
       {
         path: '/upload',
@@ -82,21 +82,21 @@ const routes: Array<Route> = [
         component: JSResource('UploadRoot', () =>
           import(
             /* webpackChunkName: "UploadRoot" */ './components/routes/upload/Upload'
-          ),
+          )
         ),
         // If user is not logged in, they can't post - so we redirect to join page
         middleware: [
           ({ environment, history }) => {
-            const user = getUserFromEnvironment(environment);
+            const user = getUserFromEnvironment(environment)
 
             if (user === undefined) {
-              history.push('/join');
-              return false;
+              history.push('/join')
+              return false
             }
 
-            return true;
-          },
-        ],
+            return true
+          }
+        ]
       },
       {
         path: '/token/:id',
@@ -104,33 +104,33 @@ const routes: Array<Route> = [
         component: JSResource('TokenRoot', () =>
           import(
             /* webpackChunkName: "TokenRoot" */ './components/routes/token/Token'
-          ),
+          )
         ),
         prepare: params => {
-          const TokenQuery = require('@//:artifacts/TokenQuery.graphql');
+          const TokenQuery = require('@//:artifacts/TokenQuery.graphql')
           return {
             tokenQuery: {
               query: TokenQuery,
               variables: { cookie: params.id },
               options: {
-                fetchPolicy: 'store-or-network',
-              },
-            },
-          };
+                fetchPolicy: 'store-or-network'
+              }
+            }
+          }
         },
         // When user is logged in, we don't want them to be able to redeem any other tokens
         middleware: [
           ({ environment, history }) => {
-            const user = getUserFromEnvironment(environment);
+            const user = getUserFromEnvironment(environment)
 
             if (user !== undefined) {
-              history.push('/profile');
-              return false;
+              history.push('/profile')
+              return false
             }
 
-            return true;
-          },
-        ],
+            return true
+          }
+        ]
       },
       {
         path: '*',
@@ -138,12 +138,12 @@ const routes: Array<Route> = [
         component: JSResource('Empty', () =>
           import(
             /* webpackChunkName: "Empty" */ './components/routes/empty/Empty'
-          ),
-        ),
-      },
-    ],
-  },
-];
+          )
+        )
+      }
+    ]
+  }
+]
 
-export default routes;
-export type { Route };
+export default routes
+export type { Route }

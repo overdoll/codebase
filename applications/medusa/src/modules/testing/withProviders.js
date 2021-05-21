@@ -1,17 +1,17 @@
 /**
  * @flow
  */
-import { createMemoryHistory } from 'history';
-import type { ComponentType } from 'react';
-import { createClientRouter } from '@//:modules/routing/createRouter';
-import RoutingContext from '@//:modules/routing/RoutingContext';
-import RelayEnvironment from '@//:modules/relay/RelayEnvironment';
-import Bootstrap from '../../client/Bootstrap';
-import i18n from './i18nTesting';
-import type { Route } from '../../client/routes';
-import RouterRenderer from '@//:modules/routing/RouteRenderer';
-import { QueryParamProvider } from 'use-query-params';
-import CompatibilityRoute from '@//:modules/routing/CompatibilityRoute';
+import { createMemoryHistory } from 'history'
+import type { ComponentType } from 'react'
+import { createClientRouter } from '@//:modules/routing/createRouter'
+import RoutingContext from '@//:modules/routing/RoutingContext'
+import RelayEnvironment from '@//:modules/relay/RelayEnvironment'
+import Bootstrap from '../../client/Bootstrap'
+import i18n from './i18nTesting'
+import type { Route } from '../../client/routes'
+import RouterRenderer from '@//:modules/routing/RouteRenderer'
+import { QueryParamProvider } from 'use-query-params'
+import CompatibilityRoute from '@//:modules/routing/CompatibilityRoute'
 
 type WithProviders = {
   environment: typeof RelayEnvironment,
@@ -20,20 +20,20 @@ type WithProviders = {
   routes: Array<Route>,
 };
 
-export default function withProviders({
+export default function withProviders ({
   environment,
   Component = () => null,
   initialEntries = ['/'],
-  routes = [],
+  routes = []
 }: WithProviders): any {
   const router = createClientRouter(
     routes,
     createMemoryHistory({
       initialEntries,
-      initialIndex: 0,
+      initialIndex: 0
     }),
-    environment,
-  );
+    environment
+  )
 
   // if we didn't give a list of routes, then we render the component.
   // otherwise, use the native routerenderer in order to be able to test it
@@ -44,16 +44,18 @@ export default function withProviders({
         <Bootstrap environment={environment} i18next={i18n}>
           <RoutingContext.Provider value={router.context}>
             <QueryParamProvider ReactRouterRoute={CompatibilityRoute}>
-              {routes.length > 0 ? (
-                <RouterRenderer />
-              ) : (
-                <Component {...props} />
-              )}
+              {routes.length > 0
+                ? (
+                  <RouterRenderer />
+                  )
+                : (
+                  <Component {...props} />
+                  )}
             </QueryParamProvider>
           </RoutingContext.Provider>
         </Bootstrap>
-      );
+      )
     },
-    router,
-  ];
+    router
+  ]
 }

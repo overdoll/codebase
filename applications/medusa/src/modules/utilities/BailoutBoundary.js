@@ -1,9 +1,9 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
+import type { Node } from 'react'
 
-import CanUseDOM from '@//:modules/utilities/CanUseDOM';
+import CanUseDOM from '@//:modules/utilities/CanUseDOM'
 
 type Props = {
   children: Node,
@@ -17,10 +17,10 @@ type Props = {
  * so that not all of our GraphQL requests are done on the server. Some requests, like websockets, we want to be done in
  * the client.
  */
-export default function BailoutBoundary(props: Props): Node {
+export default function BailoutBoundary (props: Props): Node {
   if (CanUseDOM) {
-    return props.children;
+    return props.children
   }
 
-  return null;
+  return null
 }

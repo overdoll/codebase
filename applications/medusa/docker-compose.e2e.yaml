@@ -2,7 +2,6 @@ version: '3.9'
 services:
   medusa:
     # we cant instrument production code, so we run development code instead
-    #image: $CONTAINER_REGISTRY/medusa/dev:$BUILDKITE_COMMIT
     image: "gcr.io/bazel-public/ubuntu1804-java11@sha256:54af0180aaa595b2a10edce51e3ec71923b2e21c3964ffc0938c6f599f0b35e3"
     working_dir: /workdir
     user: 2000:2000

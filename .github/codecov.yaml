@@ -1,5 +1,3 @@
-# DO NOT move this file please :)
-
 codecov:
   require_ci_to_pass: yes
 
@@ -10,9 +8,12 @@ parsers:
       loop: yes
       method: yes
       macro: yes
+  parsers:
+    javascript:
+      enable_partials: yes
 
 comment:
-  layout: "reach,diff,flags,files,footer"
+  layout: "reach,diff,files"
   behavior: default
   require_changes: no
 
@@ -24,50 +25,31 @@ coverage:
     project:
       default:
         target: 50%
+        paths:
+          - "applications"
+          - "libraries"
       medusa:
         target: 60%
-        flags:
-          - medusa
+        paths:
+          - "applications/medusa"
       eva:
-        target: 80%
-        flags:
-          - eva
+        target: 20%
+        paths:
+          - "applications/eva"
       buffer:
-        target: 80%
-        flags:
-          - buffer
+        target: 20%
+        paths:
+          - "applications/buffer"
       sting:
-        target: 80%
-        flags:
-          - sting
+        target: 20%
+        paths:
+          - "applications/sting"
       library:
-        target: 80%
-        flags:
-          - library
+        target: 10%
+        paths:
+          - "libraries"
 
 # fix path for bazel-generated coverage files && cypress
 fixes:
   - "/workdir/personal/overdoll/::"
   - "overdoll/applications/::applications/"
-
-flags:
-  sting:
-    paths:
-      - ./applications/sting/
-    carryforward: false
-  library:
-    paths:
-      - ./libraries/
-    carryforward: false
-  medusa:
-    paths:
-      - ./applications/medusa/
-    carryforward: false
-  buffer:
-    paths:
-      - ./applications/buffer/
-    carryforward: false
-  eva:
-    paths:
-      - ./applications/eva/
-    carryforward: false
