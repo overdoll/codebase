@@ -44,6 +44,10 @@ coverage:
         target: 20%
         flags:
           - library
+          - sting
+          - buffer
+          - medusa
+          - eva
 
 # fix path for bazel-generated coverage files && cypress
 fixes:
