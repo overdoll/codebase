@@ -10,5 +10,10 @@
   },
   "input": {
     "search": "Search something you know..."
+  },
+  "content": {
+    "artists": "Artists",
+    "characters": "Characters",
+    "categories": "Categories,"
   }
 }

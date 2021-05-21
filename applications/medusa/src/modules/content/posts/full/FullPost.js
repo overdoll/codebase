@@ -15,6 +15,7 @@ import {
   ModalCloseButton,
   Avatar,
   Text,
+  Skeleton,
 } from '@chakra-ui/react';
 import { createPortal } from 'react-dom';
 import RootElement from '@//:modules/utilities/RootElement';
@@ -23,6 +24,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper.min.css';
 import 'swiper/components/pagination/pagination.min.css';
 import 'swiper/components/navigation/navigation.min.css';
+import { useTranslation } from 'react-i18next';
 
 SwiperCore.use([Pagination, Navigation]);
 
@@ -35,23 +37,32 @@ export default function FullPost({ data }: Props): Node {
 
   const [currentSlide, setSlide] = useState(null);
 
+  const [t] = useTranslation('general');
+
   return (
     <>
       <Flex
         direction="column"
         w="100%"
+        maxWidth="lg"
         h="100%"
         align="center"
         display="absolute"
       >
-        <Flex mt={2} direction="row" align="center" w="100%">
-          <Avatar
-            name={data.artist.username}
-            src={data.artist.avatar}
-            size="sm"
-            mr={2}
-          />
-          <Text>{data.artist.username}</Text>
+        <Flex direction="row" align="center" w="100%">
+          {data.artist ? (
+            <>
+              <Avatar
+                name={data.artist.username}
+                src={data.artist.avatar}
+                size="sm"
+                mr={2}
+              />
+              <Text>{data.artist.username}</Text>
+            </>
+          ) : (
+            <Skeleton />
+          )}
         </Flex>
         <Box w="100%" h="100%" mt={2} mb={2}>
           <Swiper
@@ -66,29 +77,42 @@ export default function FullPost({ data }: Props): Node {
 
               return (
                 <SwiperSlide key={file.id}>
-                  {content ? (
-                    <Flex position="relative" align="center" justify="center">
-                      <Image
-                        alt="thumbnail"
-                        w="100%"
-                        h="600px"
-                        objectFit="cover"
-                        src={content}
-                      />
-                      <Box
-                        bg="transparent"
-                        w="40%"
-                        h="50%"
-                        position="absolute"
-                        onClick={o => {
-                          setSlide(file.id);
-                          setOpen(true);
-                        }}
-                      />
-                    </Flex>
-                  ) : (
-                    <Spinner size="xl" color="red.500" />
-                  )}
+                  <Flex
+                    h="600px"
+                    position="relative"
+                    align="center"
+                    justify="center"
+                    bg="gray.800"
+                  >
+                    {content ? (
+                      <Flex
+                        h="100%"
+                        position="relative"
+                        align="center"
+                        justify="center"
+                      >
+                        <Image
+                          alt="thumbnail"
+                          w="100%"
+                          h="100%"
+                          objectFit="cover"
+                          src={content}
+                        />
+                        <Box
+                          bg="transparent"
+                          w="40%"
+                          h="50%"
+                          position="absolute"
+                          onClick={o => {
+                            setSlide(file.id);
+                            setOpen(true);
+                          }}
+                        />
+                      </Flex>
+                    ) : (
+                      <Spinner size="xl" color="red.500" />
+                    )}
+                  </Flex>
                 </SwiperSlide>
               );
             })}
@@ -97,24 +121,41 @@ export default function FullPost({ data }: Props): Node {
         <Flex direction="column" w="100%">
           <Flex direction="row">
             <Text color="gray.300" mr={2}>
-              Characters
+              {t('content.characters')}
             </Text>
-            {Object.keys(data.characters).map(character => (
-              <Text color="gray.200" mr={1} key={data.characters[character].id}>
-                {data.characters[character].name} (
-                {data.characters[character].media.title})
-              </Text>
-            ))}
+            {data.characters ? (
+              Object.keys(data.characters).map(character => (
+                <Text
+                  color="gray.200"
+                  mr={1}
+                  key={data.characters[character].id}
+                >
+                  {data.characters[character].name} (
+                  {data.characters[character].media.title})
+                </Text>
+              ))
+            ) : (
+              <Skeleton />
+            )}
           </Flex>
           <Flex direction="row">
             <Text color="gray.300" mr={2}>
-              Categories
+              {t('content.categories')}
             </Text>
-            {Object.keys(data.categories).map(category => (
-              <Text color="gray.200" mr={1} key={data.categories[category].id}>
-                {data.categories[category].title}
-              </Text>
-            ))}
+
+            {data.categories ? (
+              Object.keys(data.categories).map(category => (
+                <Text
+                  color="gray.200"
+                  mr={1}
+                  key={data.categories[category].id}
+                >
+                  {data.categories[category].title}
+                </Text>
+              ))
+            ) : (
+              <Skeleton />
+            )}
           </Flex>
         </Flex>
       </Flex>
@@ -131,23 +172,24 @@ export default function FullPost({ data }: Props): Node {
             <ModalCloseButton size="lg" />
             <ModalBody
               h="100%"
+              w="100%"
               display="flex"
               p={0}
               align="center"
               justify="center"
             >
-              {currentSlide ? (
-                <Image
-                  alt="thumbnail"
-                  w="100%"
-                  objectFit="contain"
-                  src={data.urls[currentSlide]}
-                />
-              ) : (
-                <Flex w="100%" align="center" justify="center">
+              <Flex w="100%" align="center" justify="center">
+                {currentSlide ? (
+                  <Image
+                    alt="thumbnail"
+                    h="100%"
+                    objectFit="contain"
+                    src={data.urls[currentSlide]}
+                  />
+                ) : (
                   <Spinner size="xl" color="red.500" />
-                </Flex>
-              )}
+                )}
+              </Flex>
             </ModalBody>
           </ModalContent>
         </Modal>,

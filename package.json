@@ -65,7 +65,7 @@
     "analyze": "cd ./applications/medusa && ANALYZE_BUNDLE=true razzle build",
     "proxy:medusa": "telepresence --swap-deployment medusa --run yarn run service:medusa --expose 8080",
     "service:medusa": "cd ./applications/medusa && razzle start",
-    "storybook": "cd ./applications/medusa && start-storybook -p 6006",
+    "storybook": "cd ./applications/medusa && start-storybook -p 6006 -s ../../development/assets, ./applications/medusa/src/client/utilities",
     "test:unit": "bazel test --test_output=all //applications/medusa:unit",
     "test:integration": "bazel test --test_output=all //applications/medusa:integration",
     "test:e2e": "cd ./applications/medusa && cypress run --headless",
