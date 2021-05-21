@@ -55,7 +55,7 @@ export default function Upload (): Node {
     })
   }, [uppy])
 
-  // file-added - uppy file was added
+  // file-added- uppy file was added
   useEffect(() => {
     uppy.on('file-added', file => {
       dispatch({ type: EVENTS.FILES, value: { id: file.id } })
