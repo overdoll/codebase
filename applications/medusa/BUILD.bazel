@@ -28,6 +28,7 @@ _RUNTIME_DEPS = [
     "@npm//react-dom",
     "@npm//react-relay",
     "@npm//history",
+    "@npm//react-router",
     "@npm//react-router-config",
     "@npm//relay-runtime",
     "@npm//webpack",
