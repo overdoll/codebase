@@ -10,11 +10,16 @@ parsers:
       loop: yes
       method: yes
       macro: yes
+  parsers:
+    javascript:
+      enable_partials: yes
 
 comment:
   layout: "reach,diff,flags,files,footer"
   behavior: default
   require_changes: no
+
+
 
 coverage:
   precision: 2
@@ -48,6 +53,8 @@ coverage:
           - buffer
           - medusa
           - eva
+        paths:
+          - ./libraries
 
 # fix path for bazel-generated coverage files && cypress
 fixes:
