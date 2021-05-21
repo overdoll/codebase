@@ -5,7 +5,7 @@ steps:
 
   unit_test:
     coverage:
-      - name: sting
+      - name: sting.unit
         paths:
           - ./applications/sting/**/coverage.dat
     targets:
@@ -19,7 +19,7 @@ steps:
 
   integration_test:
     coverage:
-      - name: sting
+      - name: sting.integration
         paths:
           - ./applications/sting/**/coverage.dat
     setup:

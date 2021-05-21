@@ -5,7 +5,7 @@ steps:
 
   unit_test:
     coverage:
-      - name: buffer
+      - name: buffer.unit
         paths:
           - ./applications/buffer/**/coverage.dat
     targets:
@@ -19,7 +19,7 @@ steps:
 
   integration_test:
     coverage:
-      - name: buffer
+      - name: buffer.integration
         paths:
           - ./applications/buffer/**/coverage.dat
     targets:

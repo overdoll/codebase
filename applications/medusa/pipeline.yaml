@@ -5,9 +5,12 @@ steps:
 
   unit_test:
     coverage:
-      - name: medusa
+      - name: medusa.unit
         paths:
-          - ./applications/medusa/**/coverage.dat
+          - ./applications/medusa/unit/coverage.dat
+      - name: medusa.integration
+        paths:
+          - ./applications/medusa/integration/coverage.dat
     targets:
       - //applications/medusa:unit
       - //applications/medusa:integration
@@ -18,7 +21,7 @@ steps:
 
   e2e_test:
     coverage:
-      - name: medusa
+      - name: medusa.e2e
         paths:
           - ./applications/medusa/coverage/clover.xml
     setup:

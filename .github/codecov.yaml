@@ -1,5 +1,3 @@
-# DO NOT move this file please :)
-
 codecov:
   require_ci_to_pass: yes
 
@@ -27,40 +25,31 @@ coverage:
     project:
       default:
         target: 50%
+        paths:
+          - "applications"
+          - "libraries"
       medusa:
         target: 60%
         paths:
-          - applications/medusa/
+          - "applications/medusa"
       eva:
         target: 20%
         paths:
-          - applications/eva/
+          - "applications/eva"
       buffer:
         target: 20%
         paths:
-          - applications/buffer/
+          - "applications/buffer"
       sting:
         target: 20%
         paths:
-          - applications/sting/
+          - "applications/sting"
       library:
-        target: 20%
+        target: 10%
         paths:
-          - libraries/
+          - "libraries"
 
 # fix path for bazel-generated coverage files && cypress
 fixes:
   - "/workdir/personal/overdoll/::"
   - "overdoll/applications/::applications/"
-
-flags:
-  sting:
-    carryforward: false
-  library:
-    carryforward: false
-  medusa:
-    carryforward: false
-  buffer:
-    carryforward: false
-  eva:
-    carryforward: false
