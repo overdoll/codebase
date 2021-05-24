@@ -29,8 +29,6 @@ def common_build_flags(bep_file, is_test):
         "--experimental_repository_cache_hardlinks",
         "--disk_cache=",
         "--sandbox_tmpfs_path=/tmp",
-        "--coverage_support={}".format("//.patches:collect_coverage"),
-
     ]
 
     if is_test:
