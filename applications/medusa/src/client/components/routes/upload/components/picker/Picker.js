@@ -2,8 +2,9 @@
  * @flow
  */
 import type { Node } from 'react'
-import { useToast } from '@chakra-ui/react'
+import { useToast, Flex } from '@chakra-ui/react'
 import type { Uppy } from '@uppy/core'
+import { useRef } from 'react'
 
 type Props = {
   uppy: Uppy,
@@ -13,8 +14,8 @@ type Props = {
 /**
  * File picker - select files and add them to the list
  */
-export default function Picker({ uppy, onSelect, children }: Props): Node {
-  const notify = useToast();
+export default function Picker ({ uppy, onSelect, children }: Props): Node {
+  const notify = useToast()
 
   const onChange = e => {
     const files = Array.from(e.target.files)
@@ -38,16 +39,16 @@ export default function Picker({ uppy, onSelect, children }: Props): Node {
     onSelect()
   }
 
-  const fileInput = useRef(null);
+  const fileInput = useRef(null)
 
   const uploadClick = () => {
-    fileInput.current.click();
-  };
+    fileInput.current.click()
+  }
 
   return (
-    <Flex onClick={uploadClick} cursor="pointer">
+    <Flex onClick={uploadClick} cursor='pointer'>
       {children}
-      <input ref={fileInput} hidden type="file" multiple onChange={onChange} />
+      <input ref={fileInput} hidden type='file' multiple onChange={onChange} />
     </Flex>
-  );
+  )
 }

@@ -52,23 +52,6 @@ export default function Join (): Node {
   const notify = useToast()
   const [read, , flush] = useFlash()
 
-  const location = useLocation();
-
-  useEffect(() => {
-    // TODO install UseQueryParams and change
-    const search = new URLSearchParams(location.search);
-
-    if (search.has('notify')) {
-      switch (search.get('notify')) {
-        case 'invalid_token':
-          notify.error(t('authenticate.error.token'));
-          break;
-        default:
-          break;
-      }
-    }
-  }, [location.search]);
-
   // Receiving a subscription response
   const [authInfo, setAuthInfo] = useState({ authListener: null })
 
@@ -141,15 +124,16 @@ export default function Join (): Node {
 
   // Ask user to authenticate
   return (
-    <Center mt={8}>
-      <Flex w={['fill', 'sm']} direction='column'>
+    <Center mt={40}>
+      <Flex w={['sm', 'md']} direction='column' align='center'>
         <Icon
           icon={SignBadgeCircle}
           w={100}
           h={100}
+          color='red.500'
           ml='auto'
           mr='auto'
-          mb={5}
+          mb={8}
         />
         {error &&
         (
@@ -165,26 +149,37 @@ export default function Join (): Node {
             />
           </Alert>
         )}
-        <Form instance={instance} onSubmit={onSubmit}>
-          <Input
-            title={t('authenticate.form.email.title')}
-            name='email'
-            validation={{
-              required: {
-                value: true,
-                message: t('authenticate.form.validation.email.required')
-              },
-              pattern: {
-                value: EMAIL,
-                message: t('authenticate.form.validation.email.pattern')
-              }
-            }}
-            placeholder={t('authenticate.form.email.placeholder')}
-          />
-          <Button type='submit' loading={isInFlight} width='100%'>
-            {t('authenticate.form.continue')}
-          </Button>
-        </Form>
+        <Flex>
+          <Form instance={instance} onSubmit={onSubmit}>
+            <Flex direction='column'>
+              <Input
+                title={t('authenticate.form.email.title')}
+                name='email'
+                validation={{
+                  required: {
+                    value: true,
+                    message: t('authenticate.form.validation.email.required')
+                  },
+                  pattern: {
+                    value: EMAIL,
+                    message: t('authenticate.form.validation.email.pattern')
+                  }
+                }}
+                placeholder={t('authenticate.form.email.placeholder')}
+              />
+              <Button
+                size='xl'
+                variant='outline'
+                type='submit'
+                loading={isInFlight}
+                colorScheme='red'
+                w='100%'
+              >
+                {t('authenticate.form.continue')}
+              </Button>
+            </Flex>
+          </Form>
+        </Flex>
       </Flex>
     </Center>
   )

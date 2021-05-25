@@ -17,6 +17,7 @@ import type { Dispatch, State } from '@//:types/upload'
 import { useToast, Flex, Spacer, Center } from '@chakra-ui/react'
 import Button from '@//:modules/form/button/Button'
 import { useTranslation } from 'react-i18next'
+import type { Uppy } from '@uppy/core'
 
 type Props = {
   uppy: Uppy,
