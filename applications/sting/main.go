@@ -49,7 +49,7 @@ func RunWorker(cmd *cobra.Command, args []string) {
 
 	app, _ := service.NewApplication(ctx)
 
-	srv := ports.NewWorker(app)
+	srv := ports.NewWorker(&app)
 
 	bootstrap.InitializeWorkerServer(srv)
 }
@@ -62,7 +62,7 @@ func RunHttp(cmd *cobra.Command, args []string) {
 
 	defer cleanup()
 
-	srv := ports.NewGraphQLServer(app)
+	srv := ports.NewGraphQLServer(&app)
 
 	bootstrap.InitializeHttpServer(srv, func() {})
 }

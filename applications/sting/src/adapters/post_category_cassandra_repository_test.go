@@ -17,8 +17,7 @@ func TestPostsCategoryCassandraRepository_create_category(t *testing.T) {
 
 	var categories []*post.Category
 
-	categories = append(categories, post.NewCategory(ksuid.New().String(), "asd"))
-	categories = append(categories, post.NewCategory(ksuid.New().String(), "asd2"))
+	categories = append(categories, post.NewCategory(ksuid.New().String(), "asd"), post.NewCategory(ksuid.New().String(), "asd2"))
 
 	err := repo.CreateCategories(ctx, categories)
 

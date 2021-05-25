@@ -16,6 +16,8 @@ import (
 	libraries_passport_v1 "overdoll/libraries/passport/proto"
 )
 
+type MutationType string
+
 const (
 	MutationHeader = "X-Modified-Passport"
 	MutationKey    = "PassportContextKey"
@@ -92,7 +94,7 @@ func BodyToContext(c *gin.Context) *http.Request {
 	}
 
 	if body.Extensions.Passport != "" {
-		ctx := context.WithValue(c.Request.Context(), MutationKey, body.Extensions.Passport)
+		ctx := context.WithValue(c.Request.Context(), MutationType(MutationKey), body.Extensions.Passport)
 		return c.Request.WithContext(ctx)
 	}
 

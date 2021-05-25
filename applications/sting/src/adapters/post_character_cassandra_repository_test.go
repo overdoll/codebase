@@ -71,9 +71,5 @@ func TestPostsCharacterCassandraRepository_get_character(t *testing.T) {
 
 func newFakeCharacters(t *testing.T) []*post.Character {
 	var characters []*post.Character
-
-	characters = append(characters, post.NewCharacter(ksuid.New().String(), "asd", post.NewMedia(ksuid.New().String(), "")))
-	characters = append(characters, post.NewCharacter(ksuid.New().String(), "asd2", post.NewMedia(ksuid.New().String(), "")))
-
-	return characters
+	return append(characters, post.NewCharacter(ksuid.New().String(), "asd", post.NewMedia(ksuid.New().String(), "")), post.NewCharacter(ksuid.New().String(), "asd2", post.NewMedia(ksuid.New().String(), "")))
 }

@@ -25,7 +25,7 @@ func NewCreatePendingPostHandler(pr post.Repository, pe post.EventRepository, ev
 	return CreatePendingPostHandler{pr: pr, eva: eva, pe: pe}
 }
 
-func (h CreatePendingPostHandler) Handle(ctx context.Context, artistId string, artistUsername string, content []string, characterIds []string, categoryIds []string, characterRequests map[string]string, mediaRequests []string) (*post.PostPending, error) {
+func (h CreatePendingPostHandler) Handle(ctx context.Context, artistId, artistUsername string, content, characterIds, categoryIds []string, characterRequests map[string]string, mediaRequests []string) (*post.PostPending, error) {
 
 	pass := passport.FromContext(ctx)
 

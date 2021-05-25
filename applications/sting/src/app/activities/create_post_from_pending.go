@@ -29,9 +29,5 @@ func (h CreatePostActivityHandler) Handle(ctx context.Context, id string) error 
 		return err
 	}
 
-	if err := h.pi.IndexPost(ctx, pst); err != nil {
-		return err
-	}
-
-	return nil
+	return h.pi.IndexPost(ctx, pst)
 }

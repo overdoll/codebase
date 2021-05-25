@@ -8,7 +8,6 @@
  * modules, so to be able to access already-loaded modules synchronously we
  * must have stored the previous result somewhere.
  *
- * NOTE: KEEP ALL != and == CHECKS AS-IS OR IT WILL BREAK!
  */
 import CanUseDOM from '@//:modules/utilities/CanUseDOM'
 
@@ -40,7 +39,7 @@ class Resource {
    */
   load (): Promise<string> {
     let promise = this._promise
-    if (promise == null) {
+    if (promise === null) {
       promise = this._loader()
         .then(result => {
           if (result.default) {
@@ -66,6 +65,8 @@ class Resource {
     if (this._result !== null) {
       return this._result
     }
+
+    return null
   }
 
   /**
@@ -91,9 +92,9 @@ class Resource {
    * - Return the data of the resource if available.
    */
   read (): ?Node {
-    if (this._result != null) {
+    if (this._result !== null) {
       return this._result
-    } else if (this._error != null) {
+    } else if (this._error !== null) {
       throw this._error
     } else {
       throw this._promise
@@ -125,7 +126,8 @@ export default function JSResource (moduleId: string, loader: Loader): Resource 
   }
 
   let resource = resourceMap.get(moduleId)
-  if (resource == null) {
+
+  if (!resource) {
     resource = new Resource(loader, moduleId)
     resourceMap.set(moduleId, resource)
   }

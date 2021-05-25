@@ -24,9 +24,5 @@ func TestPostsMediaCassandraRepository_create_media(t *testing.T) {
 
 func newFakeMedia(t *testing.T) []*post.Media {
 	var medias []*post.Media
-
-	medias = append(medias, post.NewMedia(ksuid.New().String(), ""))
-	medias = append(medias, post.NewMedia(ksuid.New().String(), ""))
-
-	return medias
+	return append(medias, post.NewMedia(ksuid.New().String(), ""), post.NewMedia(ksuid.New().String(), ""))
 }

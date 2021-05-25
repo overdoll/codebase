@@ -27,7 +27,7 @@ func (c *Category) Thumbnail() string {
 	return staticURL + "/thumbnails/" + c.thumbnail
 }
 
-func NewCategory(id string, title string) *Category {
+func NewCategory(id, title string) *Category {
 	return &Category{
 		id:        id,
 		title:     title,
@@ -35,7 +35,7 @@ func NewCategory(id string, title string) *Category {
 	}
 }
 
-func UnmarshalCategoryFromDatabase(id string, title string, thumbnail string) *Category {
+func UnmarshalCategoryFromDatabase(id, title, thumbnail string) *Category {
 	return &Category{
 		id:        id,
 		title:     title,

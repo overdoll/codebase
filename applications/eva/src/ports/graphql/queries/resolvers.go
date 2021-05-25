@@ -8,7 +8,7 @@ import (
 )
 
 type QueryResolver struct {
-	App app.Application
+	App *app.Application
 }
 
 func (r *QueryResolver) RedeemCookie(ctx context.Context, cookie string) (*types.Cookie, error) {

@@ -27,7 +27,7 @@ func (m *Media) Thumbnail() string {
 	return staticURL + "/thumbnails/" + m.thumbnail
 }
 
-func NewMedia(id string, title string) *Media {
+func NewMedia(id, title string) *Media {
 	return &Media{
 		id:        id,
 		title:     title,
@@ -35,7 +35,7 @@ func NewMedia(id string, title string) *Media {
 	}
 }
 
-func UnmarshalMediaFromDatabase(id string, title string, thumbnail string) *Media {
+func UnmarshalMediaFromDatabase(id, title, thumbnail string) *Media {
 	return &Media{
 		id:        id,
 		title:     title,

@@ -15,7 +15,7 @@ type GraphQLServer struct {
 	app app.Application
 }
 
-func NewGraphQLServer(app app.Application) *http.Server {
+func NewGraphQLServer(app *app.Application) *http.Server {
 	rtr := router.NewGinRouter()
 
 	rtr.POST("/graphql", graphql.HandleGraphQL(gen.NewExecutableSchema(gen.Config{
