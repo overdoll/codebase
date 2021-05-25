@@ -6,7 +6,9 @@ import { FormProvider } from 'react-hook-form'
 
 type Props = {
   children?: Node,
-  instance: {},
+  instance: {
+    handleSubmit: () => void,
+  },
   onSubmit: () => void,
 };
 

@@ -7,7 +7,12 @@ import CanUseDOM from '@//:modules/utilities/CanUseDOM'
 import SafeJSONParse from '@//:modules/json/json'
 
 type Props = {
-  override?: {},
+  // No flow typings exist for flush (yet) so we create some
+  override?: {
+    push: () => void,
+    get: () => void,
+    flush: () => void
+  },
   children: Node,
 };
 

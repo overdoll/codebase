@@ -8,7 +8,10 @@ import type { UppyFile } from '@uppy/core'
 type Props = {
   file: UppyFile,
   thumbnail: ?string,
-  progress: {},
+  progress: {
+    '1': string,
+    '2': string,
+  },
   onRemove: (string) => void,
   index: number,
 };

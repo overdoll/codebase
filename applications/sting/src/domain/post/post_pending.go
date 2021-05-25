@@ -72,7 +72,7 @@ func NewPendingPost(id string, artist *Artist, contributor *user.User, content [
 	}, nil
 }
 
-func UnmarshalPendingPostFromDatabase(id, state string, artist *Artist, contributorId string, content []string, characters []*Character, categories []*Category, charactersRequests map[string]string, categoryRequests []string, mediaRequests []string, postedAt time.Time, publishedPostId string) *PostPending {
+func UnmarshalPendingPostFromDatabase(id, state string, artist *Artist, contributorId string, content []string, characters []*Character, categories []*Category, charactersRequests map[string]string, categoryRequests, mediaRequests []string, postedAt time.Time, publishedPostId string) *PostPending {
 
 	postPending := &PostPending{
 		id:              id,
