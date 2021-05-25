@@ -29,18 +29,20 @@ module.exports = {
     env,
     options
   }) {
+    const config = options.webpackOptions
+
     if (!env.dev) {
-      options.webpackOptions.fileLoaderOutputName = `${options.razzleOptions.mediaPrefix}/[contenthash].[ext]`
-      options.webpackOptions.urlLoaderOutputName = `${options.razzleOptions.mediaPrefix}/[contenthash].[ext]`
+      config.fileLoaderOutputName = `${options.razzleOptions.mediaPrefix}/[contenthash].[ext]`
+      config.urlLoaderOutputName = `${options.razzleOptions.mediaPrefix}/[contenthash].[ext]`
 
-      options.webpackOptions.cssOutputFilename = `${options.razzleOptions.cssPrefix}/[contenthash].css`
-      options.webpackOptions.cssOutputChunkFilename = `${options.razzleOptions.cssPrefix}/[contenthash].chunk.css`
+      config.cssOutputFilename = `${options.razzleOptions.cssPrefix}/[contenthash].css`
+      config.cssOutputChunkFilename = `${options.razzleOptions.cssPrefix}/[contenthash].chunk.css`
 
-      options.webpackOptions.jsOutputFilename = `${options.razzleOptions.jsPrefix}/[contenthash:8].js`
-      options.webpackOptions.jsOutputChunkFilename = `${options.razzleOptions.jsPrefix}/[contenthash:8].chunk.js`
+      config.jsOutputFilename = `${options.razzleOptions.jsPrefix}/[contenthash].js`
+      config.jsOutputChunkFilename = `${options.razzleOptions.jsPrefix}/[contenthash].chunk.js`
     }
 
-    return options.webpackOptions
+    return config
   },
   modifyWebpackConfig (opts) {
     const config = opts.webpackConfig
@@ -84,7 +86,7 @@ module.exports = {
 
       if (!opts.env.dev) {
         config.output.filename = 'js/[contenthash].js'
-        config.output.filename = 'js/[contenthash].js'
+        config.output.chunkFilename = 'js/[contenthash].js'
       }
 
       if (opts.env.dev) {
