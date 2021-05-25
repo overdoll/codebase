@@ -1,6 +1,7 @@
 /**
  * @flow
  */
+import { UppyFile } from '@uppy/core'
 
 export type Thumbnails = {
   [string]: string,
@@ -72,7 +73,7 @@ export type Event =
 
 export type State = {
   thumbnails: Thumbnails,
-  files: Array<any>,
+  files: Array<UppyFile>,
   urls: Urls,
   step: ?Step,
   progress: Progress,
@@ -80,14 +81,14 @@ export type State = {
   characters: Characters,
   categories: Categories,
   submit: Submit,
-  cleanup: any,
+  cleanup: () => void,
 };
 
 export type Action = {
   type: Event,
 
   // Type hinted as "any" but its actually any value in "State" or state itself
-  value: any,
+  value: {},
 
   // Will remove the value if true
   remove?: boolean,

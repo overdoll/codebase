@@ -16,7 +16,7 @@ import CompatibilityRoute from '@//:modules/routing/CompatibilityRoute'
 
 type WithProviders = {
   environment: typeof RelayEnvironment,
-  Component: ComponentType<any>,
+  Component: ComponentType,
   initialEntries: string[],
   routes: Array<Route>,
 };

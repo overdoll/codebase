@@ -14,7 +14,7 @@ import CanUseDOM from '@//:modules/utilities/CanUseDOM'
 
 const resourceMap = new Map()
 
-type Loader = () => Promise<any>
+type Loader = () => Promise<string>
 
 /**
  * A generic resource: given some method to asynchronously load a value - the loader()
@@ -23,7 +23,7 @@ type Loader = () => Promise<any>
 class Resource {
   _error: ?Error
   _loader: Loader
-  _promise: ?Promise<any>
+  _promise: ?Promise<string>
   _result: ?Node
   _moduleId: string
 
@@ -38,7 +38,7 @@ class Resource {
   /**
    * Loads the resource if necessary.
    */
-  load (): Promise<any> {
+  load (): Promise<string> {
     let promise = this._promise
     if (promise == null) {
       promise = this._loader()

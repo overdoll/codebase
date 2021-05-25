@@ -13,7 +13,7 @@ import ContentInkPen from '@streamlinehq/streamlinehq/img/streamline-bold/conten
 import { Box, Center, Flex, Heading, Text, useToast } from '@chakra-ui/react'
 
 type Props = {
-  onReceive: any,
+  onReceive: () => void,
   email: ?string,
 };
 

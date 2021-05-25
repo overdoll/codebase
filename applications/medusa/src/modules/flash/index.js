@@ -7,7 +7,7 @@ import CanUseDOM from '@//:modules/utilities/CanUseDOM'
 import SafeJSONParse from '@//:modules/json/json'
 
 type Props = {
-  override?: any,
+  override?: {},
   children: Node,
 };
 

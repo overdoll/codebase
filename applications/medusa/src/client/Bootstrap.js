@@ -10,10 +10,11 @@ import { ChakraProvider } from '@chakra-ui/react'
 import RelayEnvironment from '@//:modules/relay/RelayEnvironment'
 import theme from '@//:modules/theme'
 import { FlashProvider } from '@//:modules/flash'
+import type { i18next } from 'i18next'
 
 type Props = {
   environment: typeof RelayEnvironment,
-  i18next: any,
+  i18next: i18next,
   children: Node,
 };
 

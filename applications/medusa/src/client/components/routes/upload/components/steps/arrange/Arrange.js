@@ -11,17 +11,17 @@ import type { Uppy } from '@uppy/core'
 
 type Props = {
   uppy: Uppy,
-  onAddFiles: any,
+  onAddFiles: () => void,
   dispatch: Dispatch,
   state: State,
 };
 
 // a little function to help us with reordering the result
 const reorder = (
-  list: Array<any>,
+  list: Array<string>,
   startIndex: number,
   endIndex: number
-): Array<any> => {
+): Array<string> => {
   const result = Array.from(list)
   const [removed] = result.splice(startIndex, 1)
   result.splice(endIndex, 0, removed)

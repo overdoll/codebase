@@ -4,16 +4,16 @@
 import type { Node } from 'react'
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import type { ArtistsQuery } from '@//:artifacts/ArtistsQuery.graphql'
-import type { VariablesOf } from 'relay-runtime'
+import type { VariablesOf } from 'react-relay/hooks'
 import Element from '../../../element/Element'
 
 type Props = {
   args: {
     variables: VariablesOf<ArtistsQuery>,
-    options?: any,
+    options: {},
   },
-  onSelect: any,
-  selected: any,
+  onSelect: () => void,
+  selected: { id: string },
 };
 
 const ArtistsQueryGQL = graphql`

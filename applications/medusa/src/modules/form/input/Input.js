@@ -9,10 +9,10 @@ import AlertCircle from '@streamlinehq/streamlinehq/img/streamline-regular/alert
 import CheckDouble1 from '@streamlinehq/streamlinehq/img/streamline-regular/check-double-1-DeGZdc.svg'
 
 type Props = {
-  validation?: any,
+  validation?: {},
   title: string,
   name: string,
-  sx?: any,
+  sx?: {},
 };
 
 export default function Input ({

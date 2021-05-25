@@ -2,7 +2,7 @@
  * @flow
  */
 import JSResource from '@//:modules/utilities/JSResource'
-import type { Route } from '@//:modules/routing/createRouter'
+import type { Route } from '@//:modules/routing/router'
 
 const getUserFromEnvironment = environment =>
   environment
