@@ -10,7 +10,7 @@ i18next
   .use(initReactI18next)
   .use(Backend)
   .init({
-    debug: process.env.APP_DEBUG === 'true',
+    debug: false,
     fallbackLng: 'en',
     ns: ['auth', 'token', 'empty'],
     defaultNS: 'auth',

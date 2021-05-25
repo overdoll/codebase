@@ -30,6 +30,14 @@ go_binary(
 )
 
 go_image(
+    name = "local-image",
+    base = "@go_base_image//image",
+    data = web_sources + [".env"],
+    embed = [":go_default_library"],
+    importpath = "overdoll/applications/eva",
+)
+
+go_image(
     name = "image",
     base = "@go_base_image//image",
     data = web_sources,

@@ -77,7 +77,7 @@ module.exports = {
         }
 
         config.devServer.index = ''
-        config.devServer.public = ''
+        config.devServer.public = process.env.URL
         config.devServer.hot = true
       }
 

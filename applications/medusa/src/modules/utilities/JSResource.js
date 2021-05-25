@@ -19,8 +19,8 @@ const resourceMap = new Map()
  * argument - it allows accessing the state of the resource.
  */
 class Resource {
-  _error: any
-  _loader: any
+  _error: Error | null
+  _loader: import
   _promise: ?Promise<any>
   _result: any
   _moduleId: string

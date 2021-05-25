@@ -6,7 +6,8 @@ user = settings.get("namespace", "")
 
 default_registry(settings.get("registry", "localhost:5000"), single_name = "%s/dev" % user)
 
-ns = "user-%s" % user
+#ns = "user-%s" % user
+ns = "default"
 
 load("ext://restart_process", "custom_build_with_restart")
 
@@ -52,7 +53,7 @@ def build_applications(applications, dependencies):
             helm(
                 "development/service",
                 name = item,
-                values = ["development/services/" + item + "/values.yaml"],
+                values = ["development/services/" + item + ".yaml"],
                 namespace = ns,
             ),
         )
