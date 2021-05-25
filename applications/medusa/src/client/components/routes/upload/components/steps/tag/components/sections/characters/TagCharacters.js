@@ -4,7 +4,7 @@
 import type { Node } from 'react'
 import { useState } from 'react'
 import Characters from './query/Characters'
-import type { Dispatch, State } from '@//:types/custom/upload'
+import type { Dispatch, State } from '@//:types/upload'
 import { EVENTS } from '../../../../../../constants/constants'
 import Section from '../../section/Section'
 import { createPortal } from 'react-dom'

@@ -1,41 +1,42 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import { useToast } from '@chakra-ui/react';
+import type { Node } from 'react'
+import { useToast } from '@chakra-ui/react'
+import type { Uppy } from '@uppy/core'
 
 type Props = {
-  uppy: any,
-  onSelect: any,
+  uppy: Uppy,
+  onSelect: () => void,
 };
 
 /**
  * File picker - select files and add them to the list
  */
-export default function Picker({ uppy, onSelect }: Props): Node {
-  const notify = useToast();
+export default function Picker ({ uppy, onSelect }: Props): Node {
+  const notify = useToast()
 
   const onChange = e => {
-    const files = Array.from(e.target.files);
+    const files = Array.from(e.target.files)
     files.forEach(file => {
       try {
         uppy.addFile({
           source: 'file input',
           name: file.name,
           type: file.type,
-          data: file,
-        });
+          data: file
+        })
       } catch (err) {
         notify({
           status: 'error',
           title: err.message,
-          isClosable: true,
-        });
+          isClosable: true
+        })
       }
-    });
+    })
 
-    onSelect();
-  };
+    onSelect()
+  }
 
-  return <input data-testid="file" type="file" multiple onChange={onChange} />;
+  return <input data-testid='file' type='file' multiple onChange={onChange} />
 }

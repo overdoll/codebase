@@ -9,15 +9,13 @@ import Tag from './tag/Tag'
 import Review from './review/Review'
 import Finish from './finish/Finish'
 import { graphql, useMutation } from 'react-relay/hooks'
-import type {
-  CharacterRequest,
-  StepsMutation
-} from '@//:artifacts/StepsMutation.graphql'
-import type { Dispatch, State } from '@//:types/custom/upload'
+import type { CharacterRequest, StepsMutation } from '@//:artifacts/StepsMutation.graphql'
+import type { Dispatch, State } from '@//:types/upload'
 import { useToast } from '@chakra-ui/react'
+import type { Uppy } from '@uppy/core'
 
 type Props = {
-  uppy: any,
+  uppy: Uppy,
   state: State,
   dispatch: Dispatch,
 };

@@ -3,7 +3,7 @@
  */
 import type { Node } from 'react'
 import Artists from './query/Artists'
-import type { Dispatch, State } from '@//:types/custom/upload'
+import type { Dispatch, State } from '@//:types/upload'
 import { EVENTS } from '../../../../../../constants/constants'
 import Section from '../../section/Section'
 

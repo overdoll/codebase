@@ -4,14 +4,14 @@
 import { parsePath } from 'history'
 
 type Props = {
-  context: any,
+  context: ({}),
   location: string,
 };
 
 export default function createMockHistory ({
   context = {},
   location: loc = '/'
-}: Props): any {
+}: Props): History {
   if (typeof loc === 'string') loc = parsePath(loc)
 
   const action = 'POP'

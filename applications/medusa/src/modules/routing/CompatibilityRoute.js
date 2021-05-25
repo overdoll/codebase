@@ -2,10 +2,10 @@
  * @flow
  */
 import { useHistory, useLocation } from '@//:modules/routing'
-import type { BrowserHistory, BrowserLocation } from 'history'
+import type { Location, RouterHistory } from '@//:modules/routing/router'
 
 type Props = {
-  children: ({ history: BrowserHistory, location: BrowserLocation }),
+  children: ({ history: RouterHistory, location: Location }),
 };
 
 /**

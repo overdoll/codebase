@@ -3,8 +3,8 @@
  */
 
 import { useRoutingContext } from './RoutingContext'
-import type { BrowserHistory } from 'history'
+import type { RouterHistory } from '@//:modules/routing/router'
 
-export const useHistory = (): BrowserHistory => {
+export const useHistory = (): RouterHistory => {
   return useRoutingContext().history
 }

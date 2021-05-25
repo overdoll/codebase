@@ -15,6 +15,17 @@
     "testing-library",
     "cypress"
   ],
+  "parser": "@babel/eslint-parser",
+  "parserOptions": {
+    "babelOptions": {
+      "configFile": "./applications/medusa/.babelrc"
+    },
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 2020,
+    "sourceType": "module"
+  },
   "rules": {
     "relay/graphql-syntax": "error",
     "relay/compat-uses-vars": "warn",
@@ -33,13 +44,6 @@
         "Function": true
       }
     ]
-  },
-  "parserOptions": {
-    "ecmaFeatures": {
-      "jsx": true
-    },
-    "ecmaVersion": 2020,
-    "sourceType": "module"
   },
   "env": {
     "browser": true,

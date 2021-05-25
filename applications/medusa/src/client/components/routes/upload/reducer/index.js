@@ -1,13 +1,13 @@
 /**
  * @flow
  */
-import type { Action, State } from '@//:types/custom/upload'
+import type { Action, State } from '@//:types/upload'
 import { EVENTS, INITIAL_STATE, STEPS } from '../constants/constants'
 import db from '../storage'
 
 // reducer maintains the whole state of the upload form so that we can
 // easily update our indexeddb state in the case of a crash
-const reducer: any = (state: State, action: Action): State => {
+const reducer: {} = (state: State, action: Action): State => {
   const act: string = action.type
 
   const copy = { ...state[act] }

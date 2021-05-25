@@ -3,8 +3,8 @@
  */
 
 import { useHistory } from '@//:modules/routing/useHistory'
-import type { BrowserLocation } from 'history'
+import type { Location } from '@//:modules/routing/router'
 
-export const useLocation = (): BrowserLocation => {
+export const useLocation = (): Location => {
   return useHistory().location
 }

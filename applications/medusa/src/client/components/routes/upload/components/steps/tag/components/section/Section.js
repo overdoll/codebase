@@ -1,41 +1,41 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import { useState } from 'react';
-import { createPortal } from 'react-dom';
-import RootElement from '@//:modules/utilities/RootElement';
-import Search from '../search/Search';
+import type { Node } from 'react'
+import { useState } from 'react'
+import { createPortal } from 'react-dom'
+import RootElement from '@//:modules/utilities/RootElement'
+import Search from '../search/Search'
 
 type Props = {
   children: Node,
-  search: any,
+  search: () => void,
   label: string,
   placeholder: string,
 };
 
-export default function Section({
+export default function Section ({
   placeholder,
   label,
   children,
-  search,
+  search
 }: Props): Node {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
 
   const onOpen = () => {
-    setOpen(true);
-  };
+    setOpen(true)
+  }
 
   const onClose = () => {
-    setOpen(false);
-  };
+    setOpen(false)
+  }
 
   return (
     <div
       sx={{
         border: '2px solid blue',
         padding: '2px',
-        marginBottom: '3px',
+        marginBottom: '3px'
       }}
     >
       {children}
@@ -43,12 +43,12 @@ export default function Section({
         add
       </button>
       {open &&
-        createPortal(
-          <Search placeholder={placeholder} onClose={onClose}>
-            {args => search(args, onClose)}
-          </Search>,
-          RootElement,
-        )}
+      createPortal(
+        <Search placeholder={placeholder} onClose={onClose}>
+          {args => search(args, onClose)}
+        </Search>,
+        RootElement
+      )}
     </div>
-  );
+  )
 }

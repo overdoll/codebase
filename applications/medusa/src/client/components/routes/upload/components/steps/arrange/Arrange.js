@@ -5,11 +5,12 @@ import type { Node } from 'react'
 import Picker from '../../picker/Picker'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import File from './file/File'
-import type { Dispatch, State } from '@//:types/custom/upload'
+import type { Dispatch, State } from '@//:types/upload'
 import { EVENTS } from '../../../constants/constants'
+import type { Uppy } from '@uppy/core'
 
 type Props = {
-  uppy: any,
+  uppy: Uppy,
   onAddFiles: any,
   dispatch: Dispatch,
   state: State,

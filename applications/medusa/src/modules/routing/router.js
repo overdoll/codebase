@@ -4,7 +4,99 @@
 import { matchRoutes } from 'react-router-config'
 import { loadQuery } from 'react-relay/hooks'
 import type { IEnvironment } from 'relay-runtime/store/RelayStoreTypes'
-import type { Route, RouteMatch, RouterHistory, RouterInstance } from '@//:modules/routing/router'
+import type { Resource } from '@//:modules/utilities/JSResource'
+
+export type Location = $ReadOnly<{
+  pathname: string,
+  search: string,
+  hash: string,
+  key?: string,
+  ...
+}>;
+
+export type LocationShape = {
+  pathname?: string,
+  search?: string,
+  hash?: string,
+  ...
+};
+
+type HistoryAction = 'PUSH' | 'REPLACE' | 'POP';
+
+type Params = { [key: string]: ?string, ... }
+
+export type Match = {
+  params: Params,
+  isExact: boolean,
+  path: string,
+  url: string,
+  ...
+};
+
+export type RouterHistory = {
+  length: number,
+  location: Location,
+  action: HistoryAction,
+  listen (
+    callback: (location: Location, action: HistoryAction) => void
+  ): () => void,
+  push (path: string | LocationShape): void,
+  replace (path: string | LocationShape): void,
+  go (n: number): void,
+  goBack (): void,
+  goForward (): void,
+  canGo?: (n: number) => boolean,
+  block (
+    callback: string | (location: Location, action: HistoryAction) => ?string
+  ): () => void,
+  ...
+};
+
+export type Middleware = ({ history: RouterHistory, environment: IEnvironment }) => boolean
+
+export type Route = {
+  component: Resource,
+  prepare?: (Params) => {},
+  middleware?: Array<Middleware>,
+  exact?: boolean,
+  routes?: Array<Route>,
+  path?: string,
+};
+
+export type RouteMatch = ({ match: Match, route: Route })
+
+export type Preload = {
+  (pathname: string): void,
+};
+
+export type Subscribe = {
+  (sb: () => void): () => void,
+};
+
+export type PreparedEntry = {
+  component: Node,
+  prepared: Params,
+  routeData: Match,
+  id: string,
+}
+
+export type RouterInit = { entries: Array<PreparedEntry>, location: Location }
+
+export type Get =
+  () => RouterInit
+
+export type Router = {
+  preloadCode: Preload,
+  preload: Preload,
+  subscribe: Subscribe,
+  get: Get,
+  history: RouterHistory,
+};
+
+export type RouterInstance = {
+  cleanup: () => void,
+  context: Router,
+};
 
 // Check if our route is valid (on the client), by running the "middleware" function
 // The middleware function can either return true or false - if false, then the route won't be visible to the user and no API

@@ -2,8 +2,9 @@
  * @flow
  */
 
-import type { Dispatch, State } from '@//:types/custom/upload'
-import Uppy from './uppy/Uppy'
+import type { Dispatch, State } from '@//:types/upload'
+import UppyInstance from './uppy/Uppy'
+import type { Uppy } from '@uppy/core'
 import { EVENTS, STEPS } from '../constants/constants'
 import { useEffect, useRef } from 'react'
 import db from '../storage'
@@ -13,10 +14,10 @@ import dataURItoBlob from '@uppy/utils/lib/dataURItoBlob'
 // we only want to do this if we were on the "finish" step
 // If we are on anything else, we consider the upload flow to be "incomplete" and users can
 // keep their progress if they come back to this page
-const useUpload = (state: State, dispatch: Dispatch): any => {
-  const uppy = useRef(undefined)
+const useUpload = (state: State, dispatch: Dispatch): Uppy => {
+  const uppy = useRef<Uppy>(undefined)
   if (uppy.current === undefined) {
-    uppy.current = Uppy
+    uppy.current = UppyInstance
   }
 
   useEffect(() => {

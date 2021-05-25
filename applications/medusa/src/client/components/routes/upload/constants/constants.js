@@ -1,5 +1,7 @@
-// @flow
-import type { State } from '@//:types/custom/upload'
+/**
+ * @flow
+ */
+import type { State } from '@//:types/upload'
 
 const STEPS = {
   REVIEW: 'REVIEW',
