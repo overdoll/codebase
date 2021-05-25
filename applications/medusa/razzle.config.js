@@ -39,6 +39,8 @@ module.exports = {
       options.webpackOptions.jsOutputFilename = `${options.razzleOptions.jsPrefix}/[contenthash:8].js`
       options.webpackOptions.jsOutputChunkFilename = `${options.razzleOptions.jsPrefix}/[contenthash:8].chunk.js`
     }
+
+    return options.webpackOptions
   },
   modifyWebpackConfig (opts) {
     const config = opts.webpackConfig
