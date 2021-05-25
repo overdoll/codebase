@@ -1,12 +1,12 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import { Draggable } from 'react-beautiful-dnd';
-import { Flex, Heading, Text, Skeleton, CloseButton } from '@chakra-ui/react';
-import Close from '@streamlinehq/streamlinehq/img/streamline-bold/close-sjsGBB.svg';
-import Icon from '@//:modules/content/icon/Icon';
-import Thumbnail from '../thumbnail/Thumbnail';
+import type { Node } from "react";
+import { Draggable } from "react-beautiful-dnd";
+import { Flex, Heading, Text, Skeleton, CloseButton } from "@chakra-ui/react";
+import Close from "@streamlinehq/streamlinehq/img/streamline-bold/close-sjsGBB.svg";
+import Icon from "@//:modules/content/icon/Icon";
+import Thumbnail from "../thumbnail/Thumbnail";
 
 type Props = {
   file: any,
@@ -34,7 +34,7 @@ export default function File({
           borderWidth={2}
           overflow="hidden"
           objectFit="cover"
-          borderColor={snapshot.isDragging ? 'teal.500' : 'gray.900'}
+          borderColor={snapshot.isDragging ? "teal.500" : "gray.900"}
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
@@ -53,13 +53,13 @@ export default function File({
             </Flex>
             <Flex alignItems="center" position="relative" ml={2} mr={2}>
               <Heading isTruncated fontSize="lg" color="gray.100">
-                {file.id.slice(5).split('/')[0]}
+                {file.id.slice(5).split("/")[0]}
               </Heading>
             </Flex>
             <Flex position="relative" ml={2} mr={2}>
               {progress ? (
                 <Text fontSize="sm" color="gray.100" isTruncated>
-                  {(progress['1'] / 1000000).toFixed(2)} mb
+                  {(progress["1"] / 1000000).toFixed(2)} mb
                 </Text>
               ) : (
                 <Skeleton />

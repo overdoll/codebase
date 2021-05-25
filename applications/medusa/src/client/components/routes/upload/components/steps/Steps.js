@@ -1,22 +1,22 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import Arrange from './arrange/Arrange';
-import Begin from './begin/Begin';
-import { EVENTS, INITIAL_STATE, STEPS } from '../../constants/constants';
-import Tag from './tag/Tag';
-import Review from './review/Review';
-import Finish from './finish/Finish';
-import { graphql, useMutation } from 'react-relay/hooks';
+import type { Node } from 'react'
+import Arrange from './arrange/Arrange'
+import Begin from './begin/Begin'
+import { EVENTS, INITIAL_STATE, STEPS } from '../../constants/constants'
+import Tag from './tag/Tag'
+import Review from './review/Review'
+import Finish from './finish/Finish'
+import { graphql, useMutation } from 'react-relay/hooks'
 import type {
   CharacterRequest,
-  StepsMutation,
-} from '@//:artifacts/StepsMutation.graphql';
-import type { Dispatch, State } from '@//:types/upload';
-import { useToast, Flex, Spacer, Center } from '@chakra-ui/react';
-import Button from '@//:modules/form/button/Button';
-import { useTranslation } from 'react-i18next';
+  StepsMutation
+} from '@//:artifacts/StepsMutation.graphql'
+import type { Dispatch, State } from '@//:types/upload'
+import { useToast, Flex, Spacer, Center } from '@chakra-ui/react'
+import Button from '@//:modules/form/button/Button'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
   uppy: Uppy,
@@ -41,7 +41,7 @@ export default function Steps ({ uppy, state, dispatch }: Props): Node {
 
   const notify = useToast()
 
-  const [t] = useTranslation('general');
+  const [t] = useTranslation('general')
 
   // Tagging step - disabled if the conditions aren't met
   const NextDisabled =
@@ -122,7 +122,7 @@ export default function Steps ({ uppy, state, dispatch }: Props): Node {
     const urls: Array<string> = []
 
     // make sure our urls keep their order
-    state.files.forEach(file => {
+    state.files.forEach((file) => {
       // get actual upload ID
       const url = state.urls[file.id].split('/').slice(-1)[0]
 
@@ -134,7 +134,7 @@ export default function Steps ({ uppy, state, dispatch }: Props): Node {
 
     // Sort all characters - if they're a requested character, then filter them out
     // also filter them out if the media is requested
-    const characters = Object.keys(state.characters).filter(item => {
+    const characters = Object.keys(state.characters).filter((item) => {
       const character = state.characters[item]
 
       // if the media is custom, use the name. otherwise use the id
@@ -202,54 +202,58 @@ export default function Steps ({ uppy, state, dispatch }: Props): Node {
         w={['full', 'sm', 'md', 'lg']}
         pl={[1, 0]}
         pr={[1, 0]}
-        direction="column"
+        direction='column'
         mb={6}
       >
         {Step()}
         <Flex>
           {state.step !== null && state.step !== STEPS.FINISH && (
-            <Flex w="100%" justify="space-between">
-              {state.step !== STEPS.ARRANGE ? (
-                <Button
-                  m={2}
-                  size="lg"
-                  disabled={isInFlight}
-                  onClick={PrevStep}
-                  variant="outline"
-                >
-                  {t('button.back')}
-                </Button>
-              ) : (
-                <Button m={2} size="lg" variant="outline" onClick={onCancel}>
-                  {t('button.cancel')}
-                </Button>
-              )}
+            <Flex w='100%' justify='space-between'>
+              {state.step !== STEPS.ARRANGE
+                ? (
+                  <Button
+                    m={2}
+                    size='lg'
+                    disabled={isInFlight}
+                    onClick={PrevStep}
+                    variant='outline'
+                  >
+                    {t('button.back')}
+                  </Button>
+                  )
+                : (
+                  <Button m={2} size='lg' variant='outline' onClick={onCancel}>
+                    {t('button.cancel')}
+                  </Button>
+                  )}
               <Spacer />
-              {state.step !== STEPS.REVIEW ? (
-                <Button
-                  m={2}
-                  size="lg"
-                  disabled={NextDisabled}
-                  onClick={NextStep}
-                >
-                  {t('button.next')}
-                </Button>
-              ) : (
-                <Button
-                  m={2}
-                  size="lg"
-                  onClick={onSubmit}
-                  colorScheme="red"
-                  variant="outline"
-                  disabled={SubmitDisabled || isInFlight}
-                >
-                  {t('button.submit')}
-                </Button>
-              )}
+              {state.step !== STEPS.REVIEW
+                ? (
+                  <Button
+                    m={2}
+                    size='lg'
+                    disabled={NextDisabled}
+                    onClick={NextStep}
+                  >
+                    {t('button.next')}
+                  </Button>
+                  )
+                : (
+                  <Button
+                    m={2}
+                    size='lg'
+                    onClick={onSubmit}
+                    colorScheme='red'
+                    variant='outline'
+                    disabled={SubmitDisabled || isInFlight}
+                  >
+                    {t('button.submit')}
+                  </Button>
+                  )}
             </Flex>
           )}
         </Flex>
       </Flex>
     </Center>
-  );
+  )
 }
