@@ -1,15 +1,7 @@
 {
-  "name": "Untitled GraphQL Schema",
+  "name": "medusa",
   "schemaPath": "./applications/medusa/schema/schema.graphql",
-  "extensions": {
-    "endpoints": {
-      "Default GraphQL Endpoint": {
-        "url": "http://localhost:8080/graphql",
-        "headers": {
-          "user-agent": "JS GraphQL"
-        },
-        "introspect": false
-      }
-    }
-  }
+  "includes": [
+    "./applications/medusa/**/*"
+  ]
 }
