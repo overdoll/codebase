@@ -2,11 +2,11 @@ Cypress.Commands.add('login', email => {
   cy.visit('/join')
 
   cy.get('form')
-    .findByRole('textbox', { name: /email/i })
+    .findByRole('textbox', { name: /email/iu })
     .type(email)
 
   cy.get('form')
-    .findByRole('button', { name: /Continue/i })
+    .findByRole('button', { name: /Continue/iu })
     .click()
 
   cy.getCookie('otp-key').then(cookie => {
