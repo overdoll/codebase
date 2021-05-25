@@ -104,9 +104,5 @@ func ReviewPost(ctx workflow.Context, id string) error {
 		return err
 	}
 
-	if err := workflow.ExecuteActivity(ctx, "CreatePostActivityHandler.Handle", id).Get(ctx, nil); err != nil {
-		return err
-	}
-
-	return nil
+	return workflow.ExecuteActivity(ctx, "CreatePostActivityHandler.Handle", id).Get(ctx, nil)
 }

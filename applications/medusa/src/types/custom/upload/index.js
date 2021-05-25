@@ -1,33 +1,36 @@
-// @flow
+/**
+ * @flow
+ */
+import { UppyFile } from '@uppy/core'
 
-type Thumbnails = {
+export type Thumbnails = {
   [string]: string,
 };
 
-type Urls = {
+export type Urls = {
   [string]: string,
 };
 
-type Progress = {
+export type Progress = {
   [string]: {
     '1': String,
     '2': String,
   },
 };
 
-type Artist = {
+export type Artist = {
   id?: string,
   username?: string,
 };
 
-type Media = {
+export type Media = {
   id: string,
   title: string,
   thumbnail: ?string,
   request?: boolean,
 };
 
-type Character = {
+export type Character = {
   id: string,
   name: string,
   thumbnail: string,
@@ -35,27 +38,27 @@ type Character = {
   media: Media,
 };
 
-type Characters = {
+export type Characters = {
   [string]: Character,
 };
 
-type Category = {
+export type Category = {
   id: string,
   title: string,
   thumbnail: string,
 };
 
-type Categories = {
+export type Categories = {
   [string]: Category,
 };
 
-type Submit = {
+export type Submit = {
   review?: boolean,
 };
 
-type Step = 'REVIEW' | 'ARRANGE' | 'FINISH' | 'TAG';
+export type Step = 'REVIEW' | 'ARRANGE' | 'FINISH' | 'TAG';
 
-type Event =
+export type Event =
   | 'thumbnails'
   | 'urls'
   | 'files'
@@ -68,9 +71,9 @@ type Event =
   | 'cleanup'
   | 'arrange_files';
 
-type State = {
+export type State = {
   thumbnails: Thumbnails,
-  files: Array<any>,
+  files: Array<UppyFile>,
   urls: Urls,
   step: ?Step,
   progress: Progress,
@@ -78,32 +81,19 @@ type State = {
   characters: Characters,
   categories: Categories,
   submit: Submit,
-  cleanup: any,
+  cleanup: () => void,
 };
 
-type Action = {
+export type Action = {
   type: Event,
 
   // Type hinted as "any" but its actually any value in "State" or state itself
-  value: any,
+  value: {},
 
   // Will remove the value if true
   remove?: boolean,
 };
 
-type Dispatch = {
+export type Dispatch = {
   (action: Action): void,
 };
-
-export type {
-  State,
-  Thumbnails,
-  Urls,
-  Progress,
-  Artist,
-  Characters,
-  Step,
-  Event,
-  Action,
-  Dispatch
-}

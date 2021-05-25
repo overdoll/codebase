@@ -32,7 +32,7 @@ func (c *Character) Thumbnail() string {
 	return staticURL + "/thumbnails/" + c.thumbnail
 }
 
-func NewCharacter(id string, name string, media *Media) *Character {
+func NewCharacter(id, name string, media *Media) *Character {
 	return &Character{
 		id:        id,
 		name:      name,
@@ -41,7 +41,7 @@ func NewCharacter(id string, name string, media *Media) *Character {
 	}
 }
 
-func UnmarshalCharacterFromDatabase(id string, name string, thumbnail string, media *Media) *Character {
+func UnmarshalCharacterFromDatabase(id, name, thumbnail string, media *Media) *Character {
 	return &Character{
 		id:        id,
 		name:      name,

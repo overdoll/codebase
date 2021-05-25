@@ -27,7 +27,7 @@ func (a *Artist) Avatar() string {
 	return staticURL + "/avatars/" + a.avatar
 }
 
-func NewArtist(id string, username string) *Artist {
+func NewArtist(id, username string) *Artist {
 	return &Artist{
 		id:       id,
 		username: username,
@@ -35,7 +35,7 @@ func NewArtist(id string, username string) *Artist {
 	}
 }
 
-func UnmarshalArtistFromDatabase(id string, username string, avatar string) *Artist {
+func UnmarshalArtistFromDatabase(id, username, avatar string) *Artist {
 	return &Artist{
 		id:       id,
 		username: username,

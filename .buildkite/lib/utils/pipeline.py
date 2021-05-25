@@ -44,7 +44,7 @@ def get_cache_plugin():
     return {
         "id": "node",
         "backend": "s3",
-        "key": "v1-cache-{{ id }}-{{ runner.os }}-{{ checksum 'yarn.lock' }}",
+        "key": "v1-cache-{{ id }}-{{ runner.os }}-{{ checksum 'yarn.lock' }}-{{ checksum 'streamlinehq.json' }}",
         "restore-keys": [
             "v1-cache-{{ id }}-{{ runner.os }}-",
             "v1-cache-{{ id }}-",

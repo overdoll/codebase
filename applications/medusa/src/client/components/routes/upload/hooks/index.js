@@ -2,33 +2,34 @@
  * @flow
  */
 
-import type { Dispatch, State } from '@//:types/upload';
-import Uppy from './uppy/Uppy';
-import { EVENTS, STEPS } from '../constants/constants';
-import { useEffect, useRef } from 'react';
-import db from '../storage';
-import dataURItoBlob from '@uppy/utils/lib/dataURItoBlob';
+import type { Dispatch, State } from '@//:types/upload'
+import UppyInstance from './uppy/Uppy'
+import type { Uppy } from '@uppy/core'
+import { EVENTS, STEPS } from '../constants/constants'
+import { useEffect, useRef } from 'react'
+import db from '../storage'
+import dataURItoBlob from '@uppy/utils/lib/dataURItoBlob'
 
 // useUpload hook - when the component is unmounted, we want to clean up Uppy & IndexedDB, but
 // we only want to do this if we were on the "finish" step
 // If we are on anything else, we consider the upload flow to be "incomplete" and users can
 // keep their progress if they come back to this page
-const useUpload = (state: State, dispatch: Dispatch): any => {
-  const uppy = useRef(undefined);
+const useUpload = (state: State, dispatch: Dispatch): Uppy => {
+  const uppy = useRef<Uppy>(undefined)
   if (uppy.current === undefined) {
-    uppy.current = Uppy;
+    uppy.current = UppyInstance
   }
 
   useEffect(() => {
     return () => {
       if (state.step === STEPS.FINISH && uppy.current) {
         db.transaction('rw', ...db.tables, async () => {
-          db.tables.forEach(table => table.clear());
-        });
-        uppy.current?.reset();
+          db.tables.forEach(table => table.clear())
+        })
+        uppy.current?.reset()
       }
-    };
-  }, [state.step]);
+    }
+  }, [state.step])
 
   // load state from indexeddb on mount
   // TODO: on hot reload this will re-run this hook - if fixing its recommended to add a return temporarily
@@ -37,21 +38,21 @@ const useUpload = (state: State, dispatch: Dispatch): any => {
       .get(1)
       .then(item => {
         if (item === undefined) {
-          return;
+          return
         }
         // set the step that the user was previously on
-        dispatch({ type: EVENTS.STEP, value: item.step });
-      });
+        dispatch({ type: EVENTS.STEP, value: item.step })
+      })
 
     db.table('artist')
       .get(1)
       .then(item => {
         if (item === undefined) {
-          return;
+          return
         }
         // set the step that the user was previously on
-        dispatch({ type: EVENTS.TAG_ARTIST, value: item.artist });
-      });
+        dispatch({ type: EVENTS.TAG_ARTIST, value: item.artist })
+      })
 
     db.table('files')
       .toArray()
@@ -62,11 +63,11 @@ const useUpload = (state: State, dispatch: Dispatch): any => {
             dispatch({
               type: EVENTS.FILES,
               value: {
-                id: file.id,
-              },
-            });
-          });
-      });
+                id: file.id
+              }
+            })
+          })
+      })
 
     db.table('thumbnails')
       .toArray()
@@ -76,12 +77,12 @@ const useUpload = (state: State, dispatch: Dispatch): any => {
             type: EVENTS.THUMBNAILS,
             value: {
               [thumbnail.id]: URL.createObjectURL(
-                dataURItoBlob(thumbnail.value, {}),
-              ),
-            },
-          });
-        });
-      });
+                dataURItoBlob(thumbnail.value, {})
+              )
+            }
+          })
+        })
+      })
 
     db.table('urls')
       .toArray()
@@ -89,10 +90,10 @@ const useUpload = (state: State, dispatch: Dispatch): any => {
         urls.forEach(url => {
           dispatch({
             type: EVENTS.URLS,
-            value: { [url.id]: url.value },
-          });
-        });
-      });
+            value: { [url.id]: url.value }
+          })
+        })
+      })
 
     db.table('progress')
       .toArray()
@@ -100,10 +101,10 @@ const useUpload = (state: State, dispatch: Dispatch): any => {
         progress.forEach(progress => {
           dispatch({
             type: EVENTS.PROGRESS,
-            value: { [progress.id]: progress.value },
-          });
-        });
-      });
+            value: { [progress.id]: progress.value }
+          })
+        })
+      })
 
     db.table('characters')
       .toArray()
@@ -111,10 +112,10 @@ const useUpload = (state: State, dispatch: Dispatch): any => {
         characters.forEach(characters => {
           dispatch({
             type: EVENTS.TAG_CHARACTERS,
-            value: characters,
-          });
-        });
-      });
+            value: characters
+          })
+        })
+      })
 
     db.table('categories')
       .toArray()
@@ -122,13 +123,13 @@ const useUpload = (state: State, dispatch: Dispatch): any => {
         categories.forEach(category => {
           dispatch({
             type: EVENTS.TAG_CATEGORIES,
-            value: category,
-          });
-        });
-      });
-  }, []);
+            value: category
+          })
+        })
+      })
+  }, [])
 
-  return uppy.current;
-};
+  return uppy.current
+}
 
-export default useUpload;
+export default useUpload

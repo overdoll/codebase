@@ -2,6 +2,7 @@
  * @flow
  */
 import JSResource from '@//:modules/utilities/JSResource'
+import type { Route } from '@//:modules/routing/router'
 
 const getUserFromEnvironment = environment =>
   environment
@@ -26,15 +27,6 @@ const getUserFromEnvironment = environment =>
  * by the user
  *
  */
-
-type Route = {
-  component: any,
-  prepare?: any,
-  middleware?: Array<any>,
-  exact?: boolean,
-  routes?: Array<Route>,
-  path?: string,
-};
 
 const routes: Array<Route> = [
   {

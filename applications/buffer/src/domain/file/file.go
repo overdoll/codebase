@@ -5,7 +5,7 @@ type File struct {
 	key    string
 }
 
-func NewFile(prefix string, key string) *File {
+func NewFile(prefix, key string) *File {
 	return &File{
 		prefix: prefix,
 		key:    key,

@@ -8,24 +8,25 @@
  * modules, so to be able to access already-loaded modules synchronously we
  * must have stored the previous result somewhere.
  *
- * NOTE: KEEP ALL != and == CHECKS AS-IS OR IT WILL BREAK!
  */
 import CanUseDOM from '@//:modules/utilities/CanUseDOM'
 
 const resourceMap = new Map()
+
+type Loader = () => Promise<string>
 
 /**
  * A generic resource: given some method to asynchronously load a value - the loader()
  * argument - it allows accessing the state of the resource.
  */
 class Resource {
-  _error: any
-  _loader: any
-  _promise: ?Promise<any>
-  _result: any
+  _error: ?Error
+  _loader: Loader
+  _promise: ?Promise<string>
+  _result: ?Node
   _moduleId: string
 
-  constructor (loader: any, moduleId: string) {
+  constructor (loader: Loader, moduleId: string) {
     this._error = null
     this._loader = loader
     this._promise = null
@@ -36,9 +37,9 @@ class Resource {
   /**
    * Loads the resource if necessary.
    */
-  load (): Promise<any> {
+  load (): Promise<string> {
     let promise = this._promise
-    if (promise == null) {
+    if (promise === null) {
       promise = this._loader()
         .then(result => {
           if (result.default) {
@@ -60,10 +61,12 @@ class Resource {
    * Returns the result, if available. This can be useful to check if the value
    * is resolved yet.
    */
-  get (): any {
+  get (): ?Node {
     if (this._result !== null) {
       return this._result
     }
+
+    return null
   }
 
   /**
@@ -76,7 +79,7 @@ class Resource {
   /**
    * Returns the module if it's required.
    */
-  getModuleIfRequired (): any {
+  getModuleIfRequired (): ?Node {
     return this.get()
   }
 
@@ -88,10 +91,10 @@ class Resource {
    * - Throw an error if the resource failed to load.
    * - Return the data of the resource if available.
    */
-  read (): any {
-    if (this._result != null) {
+  read (): ?Node {
+    if (this._result !== null) {
       return this._result
-    } else if (this._error != null) {
+    } else if (this._error !== null) {
       throw this._error
     } else {
       throw this._promise
@@ -116,14 +119,15 @@ class Resource {
  * @param {*} moduleId A globally unique identifier for the resource used for caching
  * @param {*} loader A method to load the resource's data if necessary
  */
-export default function JSResource (moduleId: string, loader: any): Resource {
+export default function JSResource (moduleId: string, loader: Loader): Resource {
   // On the server side, we want to always create a new instance, because it won't refresh with changes
   if (!CanUseDOM) {
     return new Resource(loader, moduleId)
   }
 
   let resource = resourceMap.get(moduleId)
-  if (resource == null) {
+
+  if (!resource) {
     resource = new Resource(loader, moduleId)
     resourceMap.set(moduleId, resource)
   }

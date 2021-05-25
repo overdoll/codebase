@@ -20,7 +20,7 @@ func NewReviewPostHandler(pr post.Repository, pe post.EventRepository) ReviewPos
 	return ReviewPostHandler{pr: pr, pe: pe}
 }
 
-func (h ReviewPostHandler) Handle(ctx context.Context, id string, artistId string, characterIds []string, categoryIds []string, characterRequests map[string]string, mediaRequest []string, categoryRequests []string) (*post.PostPending, error) {
+func (h ReviewPostHandler) Handle(ctx context.Context, id, artistId string, characterIds, categoryIds []string, characterRequests map[string]string, mediaRequest, categoryRequests []string) (*post.PostPending, error) {
 
 	// Update pending post with new values
 	pendingPost, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PostPending) (*post.PostPending, error) {

@@ -23,7 +23,7 @@ func UnmarshalFromProto(proto *eva.User) *User {
 	)
 }
 
-func NewUser(id string, username string, avatar string, roles []string, verified bool) *User {
+func NewUser(id, username, avatar string, roles []string, verified bool) *User {
 	return &User{
 		id:       id,
 		username: username,

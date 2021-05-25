@@ -2,7 +2,8 @@
   "families": [
     "streamline-regular",
     "streamline-bold",
-    "streamline-light"
+    "streamline-mini-line",
+    "streamline-mini-bold"
   ],
-  "secret": "2d234503-fbab-401b-9951-eae27da69ddb"
+  "secret": "38d7df61-ea7e-460a-841a-8d590e031c8f"
 }

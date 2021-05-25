@@ -3,7 +3,7 @@
  */
 import type { Context } from 'react'
 import { createContext, useContext } from 'react'
-import type { Router } from './createRouter'
+import type { Router } from './router'
 
 const RoutingContext: Context<Router> = createContext({})
 

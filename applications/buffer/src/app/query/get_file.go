@@ -16,7 +16,7 @@ func NewGetFileHandler(fr file.Repository) GetFileHandler {
 	return GetFileHandler{fr: fr}
 }
 
-func (h GetFileHandler) Handle(ctx context.Context, token string, filePrefix string, key string) (io.ReadCloser, error) {
+func (h GetFileHandler) Handle(ctx context.Context, token, filePrefix, key string) (io.ReadCloser, error) {
 
 	fil := file.NewFile(filePrefix, key)
 

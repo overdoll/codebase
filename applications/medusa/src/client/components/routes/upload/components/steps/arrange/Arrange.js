@@ -1,97 +1,98 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import Picker from '../../picker/Picker';
-import { DragDropContext, Droppable } from 'react-beautiful-dnd';
-import File from './file/File';
-import type { Dispatch, State } from '@//:types/upload';
-import { EVENTS } from '../../../constants/constants';
+import type { Node } from 'react'
+import Picker from '../../picker/Picker'
+import { DragDropContext, Droppable } from 'react-beautiful-dnd'
+import File from './file/File'
+import type { Dispatch, State } from '@//:types/upload'
+import { EVENTS } from '../../../constants/constants'
+import type { Uppy } from '@uppy/core'
 
 type Props = {
-  uppy: any,
-  onAddFiles: any,
+  uppy: Uppy,
+  onAddFiles: () => void,
   dispatch: Dispatch,
   state: State,
 };
 
 // a little function to help us with reordering the result
 const reorder = (
-  list: Array<any>,
+  list: Array<string>,
   startIndex: number,
-  endIndex: number,
-): Array<any> => {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
+  endIndex: number
+): Array<string> => {
+  const result = Array.from(list)
+  const [removed] = result.splice(startIndex, 1)
+  result.splice(endIndex, 0, removed)
 
-  return result;
-};
+  return result
+}
 
-export default function Arrange({
+export default function Arrange ({
   uppy,
   onAddFiles,
   state,
-  dispatch,
+  dispatch
 }: Props): Node {
   // OnRemoveFile - remove a file from the list
   const onRemoveFile = id => {
-    uppy.removeFile(id);
+    uppy.removeFile(id)
 
-    dispatch({ type: EVENTS.FILES, value: { id: id }, remove: true });
+    dispatch({ type: EVENTS.FILES, value: { id: id }, remove: true })
 
     if (state.files.length === 1) {
       // if last file, then we cleanup
-      uppy.reset();
-      dispatch({ type: EVENTS.STEP, value: null });
+      uppy.reset()
+      dispatch({ type: EVENTS.STEP, value: null })
     } else {
       // if not the last file, clean up the state
       dispatch({
         type: EVENTS.PROGRESS,
         value: { [id]: state.progress[id] },
-        remove: true,
-      });
+        remove: true
+      })
 
       dispatch({
         type: EVENTS.THUMBNAILS,
         value: { [id]: state.thumbnails[id] },
-        remove: true,
-      });
+        remove: true
+      })
 
       dispatch({
         type: EVENTS.URLS,
         value: { [id]: state.urls[id] },
-        remove: true,
-      });
+        remove: true
+      })
     }
-  };
+  }
 
   const onDragEnd = result => {
     // dropped outside the list
     if (!result.destination) {
-      return;
+      return
     }
 
     const files = reorder(
       state.files,
       result.source.index,
-      result.destination.index,
-    );
+      result.destination.index
+    )
 
-    dispatch({ type: EVENTS.ARRANGE_FILES, value: files });
-  };
+    dispatch({ type: EVENTS.ARRANGE_FILES, value: files })
+  }
 
   return (
     <>
       files so far
       <DragDropContext nonce={window.__webpack_nonce__} onDragEnd={onDragEnd}>
-        <Droppable droppableId="upload">
+        <Droppable droppableId='upload'>
           {(provided, snapshot) => (
             <div
               {...provided.droppableProps}
               ref={provided.innerRef}
               sx={{
-                backgroundColor: snapshot.isDraggingOver ? 'green' : null,
+                backgroundColor: snapshot.isDraggingOver ? 'green' : null
               }}
             >
               {provided.placeholder}
@@ -113,5 +114,5 @@ export default function Arrange({
       add more files
       <Picker uppy={uppy} onSelect={onAddFiles} />
     </>
-  );
+  )
 }

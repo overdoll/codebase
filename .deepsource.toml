@@ -19,7 +19,8 @@ exclude_patterns = [
     ".github/**",
     ".patches/**",
     "applications/medusa/.storybook/**",
-    "applications/medusa/cypress/**"
+    "applications/medusa/src/cypress/**",
+    "applications/medusa/src/types/external/**"
 ]
 
 [[analyzers]]

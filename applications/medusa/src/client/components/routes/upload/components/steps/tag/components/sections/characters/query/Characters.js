@@ -1,18 +1,18 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import { graphql, useLazyLoadQuery } from 'react-relay/hooks';
-import type { CharactersQuery } from '@//:artifacts/CharactersQuery.graphql';
-import type { VariablesOf } from 'relay-runtime';
-import Element from '../../../element/Element';
+import type { Node } from 'react'
+import type { VariablesOf } from 'react-relay/hooks'
+import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
+import type { CharactersQuery } from '@//:artifacts/CharactersQuery.graphql'
+import Element from '../../../element/Element'
 
 type Props = {
   args: {
     variables: VariablesOf<CharactersQuery>,
-    options?: any,
+    options: {},
   },
-  onSelect: any,
+  onSelect: () => void,
   selected: Array<string>,
 };
 
@@ -29,26 +29,26 @@ const CharactersQueryGQL = graphql`
       }
     }
   }
-`;
+`
 
-export default function Characters({ args, onSelect, selected }: Props): Node {
+export default function Characters ({ args, onSelect, selected }: Props): Node {
   const data = useLazyLoadQuery<CharactersQuery>(
     CharactersQueryGQL,
     args.variables,
-    args.options,
-  );
+    args.options
+  )
 
   // When we add a "new" character, we will open a modal so that the user can select the media
   const onAddNewCharacter = () => {
-    const name: string = args.variables.data.search;
+    const name: string = args.variables.data.search
     onSelect({
       id: name,
       name: name,
       thumbnail: null,
       media: null,
-      request: true,
-    });
-  };
+      request: true
+    })
+  }
 
   if (data.characters.length === 0) {
     return (
@@ -58,7 +58,7 @@ export default function Characters({ args, onSelect, selected }: Props): Node {
           add {args.variables.data.search} character
         </button>
       </>
-    );
+    )
   }
 
   return data.characters.map(item => (
@@ -70,5 +70,5 @@ export default function Characters({ args, onSelect, selected }: Props): Node {
       {item.name}-{item.thumbnail}
       {item.media.title}-{item.media.id}-{item.media.thumbnail}
     </Element>
-  ));
+  ))
 }

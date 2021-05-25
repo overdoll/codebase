@@ -31,9 +31,5 @@ func (h ReviewPostActivityHandler) Handle(ctx context.Context, id string) error 
 	}
 
 	// Update pending post index
-	if err := h.pi.IndexPendingPost(ctx, pendingPost); err != nil {
-		return err
-	}
-
-	return nil
+	return h.pi.IndexPendingPost(ctx, pendingPost)
 }

@@ -1,40 +1,44 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import { Draggable } from 'react-beautiful-dnd';
+import type { Node } from 'react'
+import { Draggable } from 'react-beautiful-dnd'
+import type { UppyFile } from '@uppy/core'
 
 type Props = {
-  file: any,
+  file: UppyFile,
   thumbnail: ?string,
-  progress: any,
-  onRemove: any,
+  progress: {
+    '0': string,
+    '1': string,
+  },
+  onRemove: (string) => void,
   index: number,
 };
 
-export default function File({
+export default function File ({
   file,
   thumbnail,
   progress,
   onRemove,
-  index,
+  index
 }: Props): Node {
   return (
     <Draggable draggableId={file.id} index={index}>
       {(provided, snapshot) => (
         <div
           sx={{
-            backgroundColor: snapshot.isDragging ? 'green' : null,
+            backgroundColor: snapshot.isDragging ? 'green' : null
           }}
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
-          {thumbnail ? <img alt="thumbnail" src={thumbnail} /> : 'no thumb'}
+          {thumbnail ? <img alt='thumbnail' src={thumbnail} /> : 'no thumb'}
           <button onClick={() => onRemove(file.id)}>x</button>
           {progress ? `${progress['0']}/${progress['1']}` : 'waiting'}
         </div>
       )}
     </Draggable>
-  );
+  )
 }

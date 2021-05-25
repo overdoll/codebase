@@ -29,7 +29,7 @@ var (
 	ErrCookieNotFound    = errors.New("cookie not found")
 )
 
-func NewCookie(id string, email string, session string) (*Cookie, error) {
+func NewCookie(id, email, session string) (*Cookie, error) {
 
 	ck := &Cookie{
 		cookie:      id,
@@ -43,7 +43,7 @@ func NewCookie(id string, email string, session string) (*Cookie, error) {
 	return ck, nil
 }
 
-func UnmarshalCookieFromDatabase(cookie string, email string, redeemed bool, session string, expiration time.Time) *Cookie {
+func UnmarshalCookieFromDatabase(cookie, email string, redeemed bool, session string, expiration time.Time) *Cookie {
 	return &Cookie{
 		cookie:      cookie,
 		email:       email,

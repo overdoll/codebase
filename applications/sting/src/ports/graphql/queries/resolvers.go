@@ -8,7 +8,7 @@ import (
 )
 
 type QueryResolver struct {
-	App app.Application
+	App *app.Application
 }
 
 func (r *QueryResolver) Characters(ctx context.Context, data types.SearchInput) ([]*types.Character, error) {

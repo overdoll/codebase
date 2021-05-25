@@ -12,7 +12,7 @@ const AnimatedButton = motion(ChakraButton)
 type Props = {
   loading?: boolean,
   children?: Node,
-  sx?: any,
+  sx?: {},
   disabled?: boolean,
 };
 

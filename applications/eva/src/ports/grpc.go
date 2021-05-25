@@ -11,10 +11,10 @@ import (
 )
 
 type Server struct {
-	app app.Application
+	app *app.Application
 }
 
-func CreateServer(application app.Application) *Server {
+func CreateServer(application *app.Application) *Server {
 	return &Server{
 		app: application,
 	}

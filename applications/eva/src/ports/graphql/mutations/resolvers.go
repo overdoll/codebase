@@ -8,7 +8,7 @@ import (
 )
 
 type MutationResolver struct {
-	App app.Application
+	App *app.Application
 }
 
 func (r *MutationResolver) Authenticate(ctx context.Context, data *types.AuthenticationInput) (bool, error) {

@@ -12,10 +12,10 @@ import (
 )
 
 type Worker struct {
-	app app.Application
+	app *app.Application
 }
 
-func NewWorker(app app.Application) worker.Worker {
+func NewWorker(app *app.Application) worker.Worker {
 
 	c, err := client.NewClient(client.Options{
 		HostPort:  os.Getenv("TEMPORAL_URL"),

@@ -3,31 +3,98 @@
  */
 import { matchRoutes } from 'react-router-config'
 import { loadQuery } from 'react-relay/hooks'
-import type { Route } from '../../client/routes'
-import type { IEnvironment } from 'relay-runtime'
+import type { IEnvironment } from 'relay-runtime/store/RelayStoreTypes'
+import type { Resource } from '@//:modules/utilities/JSResource'
 
-type Preload = {
+export type Location = $ReadOnly<{
+  pathname: string,
+  search: string,
+  hash: string,
+  key?: string,
+  ...
+}>;
+
+export type LocationShape = {
+  pathname?: string,
+  search?: string,
+  hash?: string,
+  ...
+};
+
+type HistoryAction = 'PUSH' | 'REPLACE' | 'POP';
+
+type Params = { [key: string]: ?string, ... }
+
+export type Match = {
+  params: Params,
+  isExact: boolean,
+  path: string,
+  url: string,
+  ...
+};
+
+export type RouterHistory = {
+  length: number,
+  location: Location,
+  action: HistoryAction,
+  listen (
+    callback: (location: Location, action: HistoryAction) => void
+  ): () => void,
+  push (path: string | LocationShape): void,
+  replace (path: string | LocationShape): void,
+  go (n: number): void,
+  goBack (): void,
+  goForward (): void,
+  canGo?: (n: number) => boolean,
+  block (
+    callback: string | (location: Location, action: HistoryAction) => ?string
+  ): () => void,
+  ...
+};
+
+export type Middleware = ({ history: RouterHistory, environment: IEnvironment }) => boolean
+
+export type Route = {
+  component: Resource,
+  prepare?: (Params) => {},
+  middleware?: Array<Middleware>,
+  exact?: boolean,
+  routes?: Array<Route>,
+  path?: string,
+};
+
+export type RouteMatch = ({ match: Match, route: Route })
+
+export type Preload = {
   (pathname: string): void,
 };
 
-type Subscribe = {
-  (sb: any): any,
+export type Subscribe = {
+  (sb: () => void): () => void,
 };
 
-type Get = {
-  (): { entries: any, location: any },
-};
+export type PreparedEntry = {
+  component: Node,
+  prepared: Params,
+  routeData: Match,
+  id: string,
+}
 
-type Router = {
+export type RouterInit = { entries: Array<PreparedEntry>, location: Location }
+
+export type Get =
+  () => RouterInit
+
+export type Router = {
   preloadCode: Preload,
   preload: Preload,
   subscribe: Subscribe,
   get: Get,
-  history: any,
+  history: RouterHistory,
 };
 
-type RouterInstance = {
-  cleanup: any,
+export type RouterInstance = {
+  cleanup: () => void,
   context: Router,
 };
 
@@ -51,10 +118,10 @@ const isRouteValid = (data, route) => {
 // run "middleware" on each route to determine if the current user is allowed to access it
 function createServerRouter (
   routes: Array<Route>,
-  history: any,
+  history: RouterHistory,
   environment: IEnvironment,
   req
-) {
+): RouterInstance {
   const data = {
     environment,
     flash: req.flash
@@ -80,18 +147,22 @@ function createServerRouter (
       }
     },
     preloadCode (pathname) {
+      const matches: Array<RouteMatch> = matchRoutes(routes, pathname)
       // preload just the code for a route, without storing the result
-      matchRoutes(routes, pathname).forEach(({ route }) =>
+      matches.forEach(({ route }) =>
         route.component.load()
       )
     },
     preload (pathname) {
       prepareMatches(matchRoutes(routes, pathname), environment)
+    },
+    subscribe (cb) {
+
     }
   }
 
   // Return both the context object and a cleanup function
-  return { context }
+  return { context, cleanup: () => {} }
 }
 
 /**
@@ -105,7 +176,7 @@ function createServerRouter (
  */
 function createClientRouter (
   routes: Array<Route>,
-  history: any,
+  history: RouterHistory,
   environment: IEnvironment
 ): RouterInstance {
   // Find the initial match and prepare it
@@ -147,7 +218,7 @@ function createClientRouter (
     },
     preloadCode (pathname) {
       // preload just the code for a route, without storing the result
-      const matches = matchRoutes(routes, pathname)
+      const matches: Array<RouteMatch> = matchRoutes(routes, pathname)
       matches.forEach(({ route }) => route.component.load())
     },
     preload (pathname) {
@@ -173,7 +244,7 @@ function createClientRouter (
  * Match the current location to the corresponding route entry.
  */
 function matchRouteWithFilter (routes, history, location, data) {
-  const unparsedRoutes = matchRoutes(routes, location.pathname)
+  const unparsedRoutes: Array<RouteMatch> = matchRoutes(routes, location.pathname)
 
   // Recursively parse route, and use route environment source as a helper
   // Make sure that we are allowed to be in a route that we are using
@@ -199,7 +270,7 @@ function prepareMatches (matches, relayEnvironment) {
     )
 
     const Component = route.component.get()
-    if (Component == null) {
+    if (!Component) {
       route.component.load() // eagerly load
     }
 
@@ -236,7 +307,5 @@ function convertPreparedToQueries (environment, prepare, params, index) {
 
   return prepared
 }
-
-export type { Router }
 
 export { createClientRouter, createServerRouter }

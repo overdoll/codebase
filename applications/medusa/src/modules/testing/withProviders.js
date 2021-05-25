@@ -3,7 +3,8 @@
  */
 import { createMemoryHistory } from 'history'
 import type { ComponentType } from 'react'
-import { createClientRouter } from '@//:modules/routing/createRouter'
+import type { RouterInstance } from '@//:modules/routing/router'
+import { createClientRouter } from '@//:modules/routing/router'
 import RoutingContext from '@//:modules/routing/RoutingContext'
 import RelayEnvironment from '@//:modules/relay/RelayEnvironment'
 import Bootstrap from '../../client/Bootstrap'
@@ -15,17 +16,16 @@ import CompatibilityRoute from '@//:modules/routing/CompatibilityRoute'
 
 type WithProviders = {
   environment: typeof RelayEnvironment,
-  Component: ComponentType<any>,
+  Component: ComponentType,
   initialEntries: string[],
   routes: Array<Route>,
 };
-
 export default function withProviders ({
   environment,
   Component = () => null,
   initialEntries = ['/'],
   routes = []
-}: WithProviders): any {
+}: WithProviders): [ComponentType<Node>, RouterInstance] {
   const router = createClientRouter(
     routes,
     createMemoryHistory({
@@ -45,12 +45,8 @@ export default function withProviders ({
           <RoutingContext.Provider value={router.context}>
             <QueryParamProvider ReactRouterRoute={CompatibilityRoute}>
               {routes.length > 0
-                ? (
-                  <RouterRenderer />
-                  )
-                : (
-                  <Component {...props} />
-                  )}
+                ? <RouterRenderer />
+                : <Component {...props} />}
             </QueryParamProvider>
           </RoutingContext.Provider>
         </Bootstrap>

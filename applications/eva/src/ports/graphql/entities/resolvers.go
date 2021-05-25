@@ -8,9 +8,9 @@ import (
 )
 
 type EntityResolver struct {
-	App app.Application
+	App *app.Application
 }
 
-func (e EntityResolver) FindWorkaround1ByID(ctx context.Context, id *int) (*types.Workaround1, error) {
+func (e *EntityResolver) FindWorkaround1ByID(ctx context.Context, id *int) (*types.Workaround1, error) {
 	panic("implement me")
 }

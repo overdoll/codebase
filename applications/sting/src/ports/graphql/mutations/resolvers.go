@@ -9,7 +9,7 @@ import (
 )
 
 type MutationResolver struct {
-	App    app.Application
+	App    *app.Application
 	Client client.Client
 }
 

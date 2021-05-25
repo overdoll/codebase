@@ -25,6 +25,25 @@ module.exports = {
     paths.appServerIndexJs = path.join(paths.appPath, 'src')
     return paths
   },
+  modifyWebpackOptions ({
+    env,
+    options
+  }) {
+    const config = options.webpackOptions
+
+    if (!env.dev) {
+      config.fileLoaderOutputName = `${options.razzleOptions.mediaPrefix}/[contenthash].[ext]`
+      config.urlLoaderOutputName = `${options.razzleOptions.mediaPrefix}/[contenthash].[ext]`
+
+      config.cssOutputFilename = `${options.razzleOptions.cssPrefix}/[contenthash].css`
+      config.cssOutputChunkFilename = `${options.razzleOptions.cssPrefix}/[contenthash].chunk.css`
+
+      config.jsOutputFilename = `${options.razzleOptions.jsPrefix}/[contenthash].js`
+      config.jsOutputChunkFilename = `${options.razzleOptions.jsPrefix}/[contenthash].chunk.js`
+    }
+
+    return config
+  },
   modifyWebpackConfig (opts) {
     const config = opts.webpackConfig
 
@@ -53,8 +72,7 @@ module.exports = {
 
     config.resolve.alias = {
       '@//:modules': path.resolve(__dirname, 'src/modules'),
-      '@//:artifacts': path.resolve(__dirname, 'src/__generated__'),
-      '@//:types': path.resolve(__dirname, 'src/types')
+      '@//:artifacts': path.resolve(__dirname, 'src/__generated__')
     }
 
     if (opts.env.target === 'node') {
@@ -66,9 +84,10 @@ module.exports = {
     if (opts.env.target === 'web') {
       const filename = path.resolve(__dirname, 'build')
 
-      config.output.filename = opts.env.dev
-        ? 'js/[name].js'
-        : 'js/[contenthash].js'
+      if (!opts.env.dev) {
+        config.output.filename = 'js/[contenthash].js'
+        config.output.chunkFilename = 'js/[contenthash].js'
+      }
 
       if (opts.env.dev) {
         config.devServer.proxy = {
@@ -77,7 +96,7 @@ module.exports = {
         }
 
         config.devServer.index = ''
-        config.devServer.public = ''
+        config.devServer.public = process.env.URL
         config.devServer.hot = true
       }
 

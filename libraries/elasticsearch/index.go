@@ -10,7 +10,7 @@ import (
 )
 
 // CreateIndex creates a new index with mapping.
-func (s *Store) CreateIndex(index string, mapping string) error {
+func (s *Store) CreateIndex(index, mapping string) error {
 	res, err := s.es.Indices.Create(index, s.es.Indices.Create.WithBody(strings.NewReader(mapping)))
 	if err != nil {
 		return err
@@ -39,7 +39,7 @@ func (s *Store) DeleteIndex(index string) error {
 }
 
 // Create indexes a new document into store.
-func (s *Store) Create(index string, id string, item interface{}) error {
+func (s *Store) Create(index, id string, item interface{}) error {
 	payload, err := json.Marshal(item)
 	if err != nil {
 		return err
@@ -69,7 +69,7 @@ func (s *Store) Create(index string, id string, item interface{}) error {
 }
 
 // Exists returns true when a document with id already exists in the store.
-func (s *Store) Exists(index string, id string) (bool, error) {
+func (s *Store) Exists(index, id string) (bool, error) {
 	res, err := s.es.Exists(index, id)
 	if err != nil {
 		return false, err

@@ -1,17 +1,16 @@
 /**
  * @flow
  */
-import type { Node } from 'react'
+import type { ComponentType, Node } from 'react'
 import { Component } from 'react'
 
 type Props = {
   children: Node,
-  fallback?: any,
+  fallback?: ComponentType,
 };
 
 type Error = {
   message: string,
-  source: any,
 };
 
 type State = {
@@ -35,7 +34,7 @@ export default class ErrorBoundary extends Component<Props, State> {
   }
 
   // Reset error component - attempt a re-render
-  reset: any = (): void => {
+  reset = (): void => {
     this.setState({ error: null })
   }
 

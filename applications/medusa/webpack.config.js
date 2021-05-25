@@ -5,7 +5,7 @@ module.exports = {
     alias: {
       '@//:modules': path.resolve(__dirname, 'src/modules'),
       '@//:artifacts': path.resolve(__dirname, 'src/__generated__'),
-      '@//:types': path.resolve(__dirname, 'src/types')
+      '@//:types': path.resolve(__dirname, 'src/types/custom')
     }
   }
 }

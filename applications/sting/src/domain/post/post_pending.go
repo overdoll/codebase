@@ -72,7 +72,7 @@ func NewPendingPost(id string, artist *Artist, contributor *user.User, content [
 	}, nil
 }
 
-func UnmarshalPendingPostFromDatabase(id string, state string, artist *Artist, contributorId string, content []string, characters []*Character, categories []*Category, charactersRequests map[string]string, categoryRequests []string, mediaRequests []string, postedAt time.Time, publishedPostId string) *PostPending {
+func UnmarshalPendingPostFromDatabase(id, state string, artist *Artist, contributorId string, content []string, characters []*Character, categories []*Category, charactersRequests map[string]string, categoryRequests, mediaRequests []string, postedAt time.Time, publishedPostId string) *PostPending {
 
 	postPending := &PostPending{
 		id:              id,
@@ -340,7 +340,7 @@ func (p *PostPending) ConsumeCustomResources(existingMedia []*Media) ([]*Categor
 }
 
 // RequestResources will pre-generate IDs for each request type
-func (p *PostPending) RequestResources(characters map[string]string, categories []string, medias []string) {
+func (p *PostPending) RequestResources(characters map[string]string, categories, medias []string) {
 	for char, med := range characters {
 		p.charactersRequests = append(p.charactersRequests, CharacterRequest{Id: ksuid.New().String(), Name: char, Media: med})
 	}

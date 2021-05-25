@@ -30,7 +30,7 @@ var (
 	ErrUserNotFound      = errors.New("user not found")
 )
 
-func UnmarshalUserFromDatabase(id string, username string, email string, roles []UserRole, verified bool, avatar string) *User {
+func UnmarshalUserFromDatabase(id, username, email string, roles []UserRole, verified bool, avatar string) *User {
 	return &User{
 		id:       id,
 		username: username,
@@ -41,7 +41,7 @@ func UnmarshalUserFromDatabase(id string, username string, email string, roles [
 	}
 }
 
-func NewUser(id string, username string, email string) (*User, error) {
+func NewUser(id, username, email string) (*User, error) {
 
 	// TODO: add some validation for the user creation (username, etc...)
 

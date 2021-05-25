@@ -13,7 +13,7 @@ import createCache from '@emotion/cache'
 
 import { QueryParamProvider } from 'use-query-params'
 import { ChakraProvider } from '@chakra-ui/react'
-import { createServerRouter } from '@//:modules/routing/createRouter'
+import { createServerRouter } from '@//:modules/routing/router'
 import createMockHistory from '@//:modules/routing/createMockHistory'
 import CompatibilityRoute from '@//:modules/routing/CompatibilityRoute'
 import RoutingContext from '@//:modules/routing/RoutingContext'
@@ -203,7 +203,6 @@ const entry = async (req, res, next) => {
       i18nextLang: req.i18n.language
     })
   } catch (e) {
-    console.log(e)
     next(e)
   }
 }
