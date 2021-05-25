@@ -11,7 +11,7 @@ const Template = args => {
 
   return (
     <Form instance={form} onSubmit={() => {}}>
-      <Input name="Title" title="Title" {...args} />
+      <Input name='Title' title='Title' {...args} />
     </Form>
   )
 }
