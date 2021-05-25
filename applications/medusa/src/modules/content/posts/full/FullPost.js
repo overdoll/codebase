@@ -16,15 +16,24 @@ import {
   Avatar,
   Text,
   Skeleton,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  IconButton,
 } from '@chakra-ui/react';
+import Icon from '@//:modules/content/icon/Icon';
 import { createPortal } from 'react-dom';
 import RootElement from '@//:modules/utilities/RootElement';
+import { useTranslation } from 'react-i18next';
+
 import SwiperCore, { Pagination, Navigation } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper.min.css';
 import 'swiper/components/pagination/pagination.min.css';
 import 'swiper/components/navigation/navigation.min.css';
-import { useTranslation } from 'react-i18next';
+import NavigationMenuHorizontal2 from '@streamlinehq/streamlinehq/img/streamline-bold/navigation-menu-horizontal-2-J4viN0.svg';
+import RatingStar from '@streamlinehq/streamlinehq/img/streamline-bold/rating-star-gWaXzP.svg';
 
 SwiperCore.use([Pagination, Navigation]);
 
@@ -119,6 +128,27 @@ export default function FullPost({ data }: Props): Node {
           </Swiper>
         </Box>
         <Flex direction="column" w="100%">
+          <Flex direction="row" justify="space-between" align="center">
+            <IconButton
+              variant="ghost"
+              icon={<Icon icon={RatingStar} w={7} h={7} fill="gray.500" />}
+            />
+
+            <Menu>
+              <MenuButton
+                as={IconButton}
+                icon={
+                  <Icon
+                    icon={NavigationMenuHorizontal2}
+                    w={7}
+                    h={7}
+                    fill="gray.500"
+                  />
+                }
+                variant="ghost"
+              />
+            </Menu>
+          </Flex>
           <Flex direction="row">
             <Text color="gray.300" mr={2}>
               {t('content.characters')}
