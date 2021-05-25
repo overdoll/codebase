@@ -1,18 +1,18 @@
-import { extendTheme } from '@chakra-ui/react';
-import colors from './colors';
-import typography from './typography';
-import radius from './radius';
-import breakpoints from './breakpoints';
-import zIndices from './zIndex';
-import sizes from './sizes';
-import { spacing } from './spacing';
-import shadows from './shadows';
-import borders from './borders';
-import transition from './transition';
-import global from './global';
-import input from './components/input';
-import button from './components/button';
-import 'overlayscrollbars/css/OverlayScrollbars.css';
+import { extendTheme } from '@chakra-ui/react'
+import colors from './colors'
+import typography from './typography'
+import radius from './radius'
+import breakpoints from './breakpoints'
+import zIndices from './zIndex'
+import sizes from './sizes'
+import { spacing } from './spacing'
+import shadows from './shadows'
+import borders from './borders'
+import transition from './transition'
+import global from './global'
+import input from './components/input'
+import button from './components/button'
+import 'overlayscrollbars/css/OverlayScrollbars.css'
 
 const theme = extendTheme({
   config: {
@@ -30,12 +30,12 @@ const theme = extendTheme({
   borders,
   transition,
   styles: {
-    global,
+    global
   },
   components: {
     Input: input,
-    Button: button,
-  },
-});
+    Button: button
+  }
+})
 
 export default theme

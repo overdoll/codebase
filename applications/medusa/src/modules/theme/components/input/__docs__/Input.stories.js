@@ -1,6 +1,6 @@
-import { Input } from '@chakra-ui/react';
-import { Form, useForm } from '@//:modules/form';
-import InputTheme from '@//:modules/theme/components/input/index';
+import { Input } from '@chakra-ui/react'
+import { Form, useForm } from '@//:modules/form'
+import InputTheme from '@//:modules/theme/components/input/index'
 
 export default {
   title: 'Form/ChakraInput',
@@ -9,31 +9,31 @@ export default {
     size: {
       control: {
         type: 'select',
-        options: Object.keys(InputTheme.sizes),
-      },
+        options: Object.keys(InputTheme.sizes)
+      }
     },
     variant: {
       control: {
         type: 'select',
-        options: Object.keys(InputTheme.variants),
-      },
-    },
+        options: Object.keys(InputTheme.variants)
+      }
+    }
   },
   args: {
     size: 'md',
-    variant: 'outline',
-  },
-};
+    variant: 'outline'
+  }
+}
 
 const Template = args => {
-  const form = useForm();
+  const form = useForm()
 
   return (
     <Form instance={form} onSubmit={() => {}}>
-      <Input placeholder="placeholder" {...args} />
+      <Input placeholder='placeholder' {...args} />
     </Form>
-  );
-};
+  )
+}
 
-export const Global = Template.bind({});
-Global.args = {};
+export const Global = Template.bind({})
+Global.args = {}
