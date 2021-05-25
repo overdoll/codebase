@@ -1,29 +1,31 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import type { State } from '@//:types/upload';
+import type { Node } from 'react'
+import type { State } from '@//:types/custom/upload'
 
 type Props = {
   state: State,
   disabled: boolean,
 };
 
-export default function Review({ state, disabled }: Props): Node {
+export default function Review ({ state, disabled }: Props): Node {
   return (
     <>
       {state.files.map(file => {
-        const content = state.urls[file.id];
+        const content = state.urls[file.id]
 
         return (
           <div key={file.id}>
-            {content ? (
-              <img alt="url" src={content} />
-            ) : (
-              'no image available yet'
-            )}
+            {content
+              ? (
+                <img alt='url' src={content} />
+                )
+              : (
+                  'no image available yet'
+                )}
           </div>
-        );
+        )
       })}
       <div>artist: {state.artist.username}</div>
       <div>
@@ -45,5 +47,5 @@ export default function Review({ state, disabled }: Props): Node {
       </div>
       {disabled && <div>all images must upload first before submitting</div>}
     </>
-  );
+  )
 }

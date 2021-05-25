@@ -5,18 +5,10 @@ import type { Node } from 'react'
 import { Suspense, unstable_useTransition as useTransition, useContext, useEffect, useState } from 'react'
 import RoutingContext from '@//:modules/routing/RoutingContext'
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
-import { keyframes } from '@emotion/react'
-import type { Route } from '../../client/routes'
-import { Resource } from '@//:modules/utilities/JSResource'
+import type { PreparedEntry, RouterInit } from '@//:modules/routing/router'
 import { chakra } from '@chakra-ui/react'
 
 const SUSPENSE_CONFIG = { timeoutMs: 2000 }
-
-const transition = keyframes`
-  to {
-    visibility: visible;
-  }
-`
 
 /**
  * A component that accesses the current route entry from RoutingContext and renders
@@ -34,7 +26,7 @@ export default function RouterRenderer (): Node {
 
   // Store the active entry in state - this allows the renderer to use features like
   // useTransition to delay when state changes become visible to the user.
-  const [routeEntry, setRouteEntry] = useState(router.get())
+  const [routeEntry, setRouteEntry] = useState<RouterInit>(router.get())
 
   // On mount subscribe for route changes
   useEffect(() => {
@@ -82,7 +74,7 @@ export default function RouterRenderer (): Node {
   // To achieve this, we reverse the list so we can start at the bottom-most
   // component, and iteratively construct parent components w the previous
   // value as the child of the next one:
-  const reversedItems = [].concat(routeEntry.entries).reverse() // reverse is in place, but we want a copy so concat
+  const reversedItems: Array<PreparedEntry> = [].concat(routeEntry.entries).reverse() // reverse is in place, but we want a copy so concat
 
   const firstItem = reversedItems[0]
 
@@ -90,6 +82,7 @@ export default function RouterRenderer (): Node {
   // (though we could probably just pass null children to it)
   let routeComponent = (
     <RouteComponent
+      id={firstItem.id}
       component={firstItem.component}
       prepared={firstItem.prepared}
       routeData={firstItem.routeData}
@@ -99,6 +92,7 @@ export default function RouterRenderer (): Node {
     const nextItem = reversedItems[ii]
     routeComponent = (
       <RouteComponent
+        id={firstItem.id}
         component={nextItem.component}
         prepared={nextItem.prepared}
         routeData={nextItem.routeData}
@@ -121,7 +115,6 @@ export default function RouterRenderer (): Node {
                 position: 'absolute',
                 zIndex: '1',
                 backgroundColor: '#ffffff',
-                animation: `0s linear 0.5s forwards ${transition}`,
                 visibility: 'hidden'
               }}
             >
@@ -134,13 +127,6 @@ export default function RouterRenderer (): Node {
     </ErrorBoundary>
   )
 }
-
-type RouteComp = {
-  children?: Node,
-  routeData: Route,
-  component: Resource,
-  prepared: any,
-};
 
 /**
  * The `component` property from the route entry is a Resource, which may or may not be ready.
@@ -158,7 +144,7 @@ function RouteComponent ({
   routeData,
   component,
   prepared
-}: RouteComp): Node {
+}: PreparedEntry): Node {
   const Component = component.read()
   return (
     <Component routeData={routeData} prepared={prepared}>

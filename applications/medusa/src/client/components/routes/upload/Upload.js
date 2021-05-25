@@ -4,7 +4,7 @@
 import type { Node } from 'react'
 import { useEffect, useReducer } from 'react'
 import Steps from './components/steps/Steps'
-import type { Action, Dispatch, State } from '@//:types/upload'
+import type { Action, Dispatch, State } from '@//:types/custom/upload'
 import { EVENTS, INITIAL_STATE } from './constants/constants'
 import reducer from './reducer'
 import useUpload from './hooks'

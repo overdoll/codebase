@@ -3,33 +3,8 @@
  */
 import { matchRoutes } from 'react-router-config'
 import { loadQuery } from 'react-relay/hooks'
-import type { Route } from '../../client/routes'
-import type { IEnvironment } from 'relay-runtime'
-
-type Preload = {
-  (pathname: string): void,
-};
-
-type Subscribe = {
-  (sb: any): any,
-};
-
-type Get = {
-  (): { entries: any, location: any },
-};
-
-type Router = {
-  preloadCode: Preload,
-  preload: Preload,
-  subscribe: Subscribe,
-  get: Get,
-  history: any,
-};
-
-type RouterInstance = {
-  cleanup: any,
-  context: Router,
-};
+import type { IEnvironment } from 'relay-runtime/store/RelayStoreTypes'
+import type { Route, RouteMatch, RouterHistory, RouterInstance } from '@//:modules/routing/router'
 
 // Check if our route is valid (on the client), by running the "middleware" function
 // The middleware function can either return true or false - if false, then the route won't be visible to the user and no API
@@ -51,10 +26,10 @@ const isRouteValid = (data, route) => {
 // run "middleware" on each route to determine if the current user is allowed to access it
 function createServerRouter (
   routes: Array<Route>,
-  history: any,
+  history: RouterHistory,
   environment: IEnvironment,
   req
-) {
+): RouterInstance {
   const data = {
     environment,
     flash: req.flash
@@ -80,18 +55,22 @@ function createServerRouter (
       }
     },
     preloadCode (pathname) {
+      const matches: Array<RouteMatch> = matchRoutes(routes, pathname)
       // preload just the code for a route, without storing the result
-      matchRoutes(routes, pathname).forEach(({ route }) =>
+      matches.forEach(({ route }) =>
         route.component.load()
       )
     },
     preload (pathname) {
       prepareMatches(matchRoutes(routes, pathname), environment)
+    },
+    subscribe (cb) {
+
     }
   }
 
   // Return both the context object and a cleanup function
-  return { context }
+  return { context, cleanup: () => {} }
 }
 
 /**
@@ -105,7 +84,7 @@ function createServerRouter (
  */
 function createClientRouter (
   routes: Array<Route>,
-  history: any,
+  history: RouterHistory,
   environment: IEnvironment
 ): RouterInstance {
   // Find the initial match and prepare it
@@ -147,7 +126,7 @@ function createClientRouter (
     },
     preloadCode (pathname) {
       // preload just the code for a route, without storing the result
-      const matches = matchRoutes(routes, pathname)
+      const matches: Array<RouteMatch> = matchRoutes(routes, pathname)
       matches.forEach(({ route }) => route.component.load())
     },
     preload (pathname) {
@@ -173,7 +152,7 @@ function createClientRouter (
  * Match the current location to the corresponding route entry.
  */
 function matchRouteWithFilter (routes, history, location, data) {
-  const unparsedRoutes = matchRoutes(routes, location.pathname)
+  const unparsedRoutes: Array<RouteMatch> = matchRoutes(routes, location.pathname)
 
   // Recursively parse route, and use route environment source as a helper
   // Make sure that we are allowed to be in a route that we are using
@@ -236,7 +215,5 @@ function convertPreparedToQueries (environment, prepare, params, index) {
 
   return prepared
 }
-
-export type { Router }
 
 export { createClientRouter, createServerRouter }

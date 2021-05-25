@@ -5,7 +5,7 @@ import { useCallback } from 'react'
 
 import { useRoutingContext } from './RoutingContext'
 
-export const usePreloadRoute = (to: string): Array<any> => {
+export const usePreloadRoute = (to: string): [() => void, () => void] => {
   const router = useRoutingContext()
 
   // Callback to preload just the code for the route:

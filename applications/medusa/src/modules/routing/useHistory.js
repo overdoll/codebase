@@ -1,5 +1,10 @@
-import { useRoutingContext } from './RoutingContext'
+/**
+ * @flow
+ */
 
-export const useHistory = () => {
+import { useRoutingContext } from './RoutingContext'
+import type { BrowserHistory } from 'history'
+
+export const useHistory = (): BrowserHistory => {
   return useRoutingContext().history
 }

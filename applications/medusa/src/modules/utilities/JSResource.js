@@ -14,18 +14,20 @@ import CanUseDOM from '@//:modules/utilities/CanUseDOM'
 
 const resourceMap = new Map()
 
+type Loader = () => Promise<any>
+
 /**
  * A generic resource: given some method to asynchronously load a value - the loader()
  * argument - it allows accessing the state of the resource.
  */
 class Resource {
-  _error: Error | null
-  _loader: import
+  _error: ?Error
+  _loader: Loader
   _promise: ?Promise<any>
-  _result: any
+  _result: ?Node
   _moduleId: string
 
-  constructor (loader: any, moduleId: string) {
+  constructor (loader: Loader, moduleId: string) {
     this._error = null
     this._loader = loader
     this._promise = null
@@ -60,7 +62,7 @@ class Resource {
    * Returns the result, if available. This can be useful to check if the value
    * is resolved yet.
    */
-  get (): any {
+  get (): ?Node {
     if (this._result !== null) {
       return this._result
     }
@@ -76,7 +78,7 @@ class Resource {
   /**
    * Returns the module if it's required.
    */
-  getModuleIfRequired (): any {
+  getModuleIfRequired (): ?Node {
     return this.get()
   }
 
@@ -88,7 +90,7 @@ class Resource {
    * - Throw an error if the resource failed to load.
    * - Return the data of the resource if available.
    */
-  read (): any {
+  read (): ?Node {
     if (this._result != null) {
       return this._result
     } else if (this._error != null) {
@@ -116,7 +118,7 @@ class Resource {
  * @param {*} moduleId A globally unique identifier for the resource used for caching
  * @param {*} loader A method to load the resource's data if necessary
  */
-export default function JSResource (moduleId: string, loader: any): Resource {
+export default function JSResource (moduleId: string, loader: Loader): Resource {
   // On the server side, we want to always create a new instance, because it won't refresh with changes
   if (!CanUseDOM) {
     return new Resource(loader, moduleId)

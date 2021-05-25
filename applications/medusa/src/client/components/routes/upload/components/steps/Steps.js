@@ -1,20 +1,20 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import Arrange from './arrange/Arrange';
-import Begin from './begin/Begin';
-import { EVENTS, INITIAL_STATE, STEPS } from '../../constants/constants';
-import Tag from './tag/Tag';
-import Review from './review/Review';
-import Finish from './finish/Finish';
-import { graphql, useMutation } from 'react-relay/hooks';
+import type { Node } from 'react'
+import Arrange from './arrange/Arrange'
+import Begin from './begin/Begin'
+import { EVENTS, INITIAL_STATE, STEPS } from '../../constants/constants'
+import Tag from './tag/Tag'
+import Review from './review/Review'
+import Finish from './finish/Finish'
+import { graphql, useMutation } from 'react-relay/hooks'
 import type {
   CharacterRequest,
-  StepsMutation,
-} from '@//:artifacts/StepsMutation.graphql';
-import type { Dispatch, State } from '@//:types/upload';
-import { useToast } from '@chakra-ui/react';
+  StepsMutation
+} from '@//:artifacts/StepsMutation.graphql'
+import type { Dispatch, State } from '@//:types/custom/upload'
+import { useToast } from '@chakra-ui/react'
 
 type Props = {
   uppy: any,
@@ -31,37 +31,37 @@ const SubmitGraphQL = graphql`
       }
     }
   }
-`;
+`
 
 // Stepper - handles all stepping functions
-export default function Steps({ uppy, state, dispatch }: Props): Node {
-  const [commit, isInFlight] = useMutation<StepsMutation>(SubmitGraphQL);
+export default function Steps ({ uppy, state, dispatch }: Props): Node {
+  const [commit, isInFlight] = useMutation<StepsMutation>(SubmitGraphQL)
 
-  const notify = useToast();
+  const notify = useToast()
 
   // Tagging step - disabled if the conditions aren't met
   const NextDisabled =
     state.step === STEPS.TAG &&
     (Object.keys(state.characters).length < 1 ||
       Object.keys(state.artist).length < 1 ||
-      Object.keys(state.categories).length < 3);
+      Object.keys(state.categories).length < 3)
 
   // If the amount of files != the amount of urls (not all files were uploaded), then we can't submit yet
-  const SubmitDisabled = state.files.length !== Object.keys(state.urls).length;
+  const SubmitDisabled = state.files.length !== Object.keys(state.urls).length
 
   const onAddFiles = (): void => {
-    const files = uppy.getFiles();
+    const files = uppy.getFiles()
 
     // no files were uploaded (error occurred)
     if (files.length === 0) {
-      return;
+      return
     }
 
     // If not in any step, go to the arrange step
     if (state.step === null) {
-      dispatch({ type: EVENTS.STEP, value: STEPS.ARRANGE });
+      dispatch({ type: EVENTS.STEP, value: STEPS.ARRANGE })
     }
-  };
+  }
 
   const Step = (): Node => {
     switch (state.step) {
@@ -73,65 +73,65 @@ export default function Steps({ uppy, state, dispatch }: Props): Node {
             onAddFiles={onAddFiles}
             state={state}
           />
-        );
+        )
       case STEPS.TAG:
         return (
           <Tag disabled={NextDisabled} dispatch={dispatch} state={state} />
-        );
+        )
       case STEPS.REVIEW:
-        return <Review disabled={SubmitDisabled} state={state} />;
+        return <Review disabled={SubmitDisabled} state={state} />
       case STEPS.FINISH:
-        return <Finish state={state} />;
+        return <Finish state={state} />
       default:
-        return <Begin uppy={uppy} onAddFiles={onAddFiles} />;
+        return <Begin uppy={uppy} onAddFiles={onAddFiles} />
     }
-  };
+  }
 
   const NextStep = (): void => {
     switch (state.step) {
       case STEPS.ARRANGE:
-        dispatch({ type: EVENTS.STEP, value: STEPS.TAG });
-        break;
+        dispatch({ type: EVENTS.STEP, value: STEPS.TAG })
+        break
       case STEPS.TAG:
-        dispatch({ type: EVENTS.STEP, value: STEPS.REVIEW });
-        break;
+        dispatch({ type: EVENTS.STEP, value: STEPS.REVIEW })
+        break
       default:
-        break;
+        break
     }
-  };
+  }
 
   const PrevStep = (): void => {
     switch (state.step) {
       case STEPS.TAG:
-        dispatch({ type: EVENTS.STEP, value: STEPS.ARRANGE });
-        break;
+        dispatch({ type: EVENTS.STEP, value: STEPS.ARRANGE })
+        break
       case STEPS.REVIEW:
-        dispatch({ type: EVENTS.STEP, value: STEPS.TAG });
-        break;
+        dispatch({ type: EVENTS.STEP, value: STEPS.TAG })
+        break
       default:
-        break;
+        break
     }
-  };
+  }
 
   // onSubmit - submit post
   const onSubmit = (): void => {
-    const urls: Array<string> = [];
+    const urls: Array<string> = []
 
     // make sure our urls keep their order
     state.files.forEach(file => {
       // get actual upload ID
-      const url = state.urls[file.id].split('/').slice(-1)[0];
+      const url = state.urls[file.id].split('/').slice(-1)[0]
 
-      urls.push(url);
-    });
+      urls.push(url)
+    })
 
-    const characterRequests: Array<CharacterRequest> = [];
-    const mediaRequests: Array<string> = [];
+    const characterRequests: Array<CharacterRequest> = []
+    const mediaRequests: Array<string> = []
 
     // Sort all characters - if they're a requested character, then filter them out
     // also filter them out if the media is requested
     const characters = Object.keys(state.characters).filter(item => {
-      const character = state.characters[item];
+      const character = state.characters[item]
 
       // if the media is custom, use the name. otherwise use the id
       // the check is done on the backend against mediaRequests
@@ -140,17 +140,17 @@ export default function Steps({ uppy, state, dispatch }: Props): Node {
           name: character.name,
           media: character.media.request
             ? character.media.title
-            : character.media.id,
-        });
+            : character.media.id
+        })
       }
 
       // if the media is requested, add it to our list
       if (character.media.request) {
-        mediaRequests.push(character.media.title);
+        mediaRequests.push(character.media.title)
       }
 
-      return !(character.media.request || character.request);
-    });
+      return !(character.media.request || character.request)
+    })
 
     // Commit all results
     commit({
@@ -162,59 +162,63 @@ export default function Steps({ uppy, state, dispatch }: Props): Node {
           characters: characters,
           content: urls,
           characterRequests: characterRequests,
-          mediaRequests: mediaRequests,
-        },
+          mediaRequests: mediaRequests
+        }
       },
-      onCompleted(data) {
+      onCompleted (data) {
         if (data.post?.validation !== null) {
           notify({
             status: 'error',
             title: data?.post?.validation?.code,
-            isClosable: true,
-          });
+            isClosable: true
+          })
         } else {
-          dispatch({ type: EVENTS.SUBMIT, value: data.post });
+          dispatch({ type: EVENTS.SUBMIT, value: data.post })
         }
       },
-      onError(data) {
+      onError (data) {
         notify({
           status: 'error',
           title: 'error with submission',
-          isClosable: true,
-        });
-      },
-    });
-  };
+          isClosable: true
+        })
+      }
+    })
+  }
 
   // Cleanup - reset uppy uploads and state
   const onCancel = () => {
-    uppy.reset();
-    dispatch({ type: EVENTS.CLEANUP, value: INITIAL_STATE });
-  };
+    uppy.reset()
+    dispatch({ type: EVENTS.CLEANUP, value: INITIAL_STATE })
+  }
 
   return (
     <>
       {Step()}
       {state.step !== null && state.step !== STEPS.FINISH && (
         <div>
-          {state.step !== STEPS.ARRANGE ? (
-            <button disabled={isInFlight} onClick={PrevStep}>
-              prev
-            </button>
-          ) : (
-            <button onClick={onCancel}>cancel</button>
-          )}
-          {state.step !== STEPS.REVIEW ? (
-            <button disabled={NextDisabled} onClick={NextStep}>
-              next
-            </button>
-          ) : (
-            <button onClick={onSubmit} disabled={SubmitDisabled || isInFlight}>
-              submit
-            </button>
-          )}
+          {state.step !== STEPS.ARRANGE
+            ? (
+              <button disabled={isInFlight} onClick={PrevStep}>
+                prev
+              </button>
+              )
+            : (
+              <button onClick={onCancel}>cancel</button>
+              )}
+          {state.step !== STEPS.REVIEW
+            ? (
+              <button disabled={NextDisabled} onClick={NextStep}>
+                next
+              </button>
+              )
+            : (
+              <button onClick={onSubmit} disabled={SubmitDisabled || isInFlight}>
+                submit
+              </button>
+              )}
         </div>
       )}
     </>
-  );
+  )
 }
