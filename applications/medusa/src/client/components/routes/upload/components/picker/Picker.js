@@ -9,6 +9,7 @@ import { useRef } from 'react'
 type Props = {
   uppy: Uppy,
   onSelect: () => void,
+  children: Node
 };
 
 /**
