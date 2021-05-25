@@ -7,11 +7,11 @@ describe('Register', () => {
     const email = id + '@test.com'
 
     cy.get('form')
-      .findByRole('textbox', { name: /email/i })
+      .findByRole('textbox', { name: /email/iu })
       .type(email)
 
     cy.get('form')
-      .findByRole('button', { name: /Continue/i })
+      .findByRole('button', { name: /Continue/iu })
       .click()
 
     cy.getCookie('otp-key').then(cookie => {
@@ -23,11 +23,11 @@ describe('Register', () => {
 
   it('should be able to register', () => {
     cy.get('form')
-      .findByRole('textbox', { name: /username/i })
+      .findByRole('textbox', { name: /username/iu })
       .type(id)
 
     cy.get('form')
-      .findByRole('button', { name: /Register/i })
+      .findByRole('button', { name: /Register/iu })
       .click()
 
     cy.url().should('include', '/profile')

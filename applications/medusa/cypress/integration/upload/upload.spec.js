@@ -19,16 +19,16 @@ describe('Upload', () => {
     cy.findByRole('button', { name: 'select artist' }).click()
 
     // select the unverified artist
-    cy.findByRole('button', { name: /artist_unverified/i }).click()
+    cy.findByRole('button', { name: /artist_unverified/iu }).click()
 
     // click on 'select character' button
     cy.findByRole('button', { name: 'select character' }).click()
 
     // select 2 characters
-    cy.findByRole('button', { name: /Lylah Barrett/i }).click()
+    cy.findByRole('button', { name: /Lylah Barrett/iu }).click()
 
     // TODO: need to search first before clicking
-    cy.findByRole('button', { name: /Susannah Aguilar/i }).click()
+    cy.findByRole('button', { name: /Susannah Aguilar/iu }).click()
 
     // close out of character selection
     cy.findByRole('button', { name: 'close' }).click()
@@ -38,14 +38,14 @@ describe('Upload', () => {
 
     cy.findByPlaceholderText('search categories').type('Signal')
 
-    cy.findByRole('button', { name: /Signal/i }).click()
+    cy.findByRole('button', { name: /Signal/iu }).click()
 
     // go back to input and un-search
     cy.findByDisplayValue('Signal').clear()
 
     // select 2 categories
-    cy.findByRole('button', { name: /Assure/i }).click()
-    cy.findByRole('button', { name: /Convict/i }).click()
+    cy.findByRole('button', { name: /Assure/iu }).click()
+    cy.findByRole('button', { name: /Convict/iu }).click()
 
     // close window
     cy.findByRole('button', { name: 'close' }).click()
