@@ -54,7 +54,8 @@ export default function Token (props: Props): Node {
   if (data.redeemCookie.invalid) {
     // Go back to Join page and send notification of invalid token
     push('login.notify', 'invalid_token')
-    return history.push('/join')
+    history.push('/join')
+    return null
   }
 
   // Token was not redeemed in the same session, so we tell the user to check
@@ -102,5 +103,6 @@ export default function Token (props: Props): Node {
   }
 
   // User is registered - redirect to profile
-  return history.push('/profile')
+  history.push('/profile')
+  return null
 }
