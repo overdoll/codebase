@@ -1,37 +1,37 @@
 describe('Join', () => {
-  const email = 'artist_verified_test@overdoll.com';
+  const email = 'artist_verified_test@overdoll.com'
 
   beforeEach(() => {
-    cy.visit('/join');
+    cy.visit('/join')
 
     cy.get('form')
-      .findByRole('textbox', { name: /email/i })
-      .type(email);
+      .findByRole('textbox', { name: /email/iu })
+      .type(email)
 
     cy.get('form')
-      .findByRole('button', { name: /Continue/i })
-      .click();
-  });
+      .findByRole('button', { name: /Continue/iu })
+      .click()
+  })
 
   it('asks to check email when joining', () => {
     // our email is shown on the page - we are asked to check it
-    cy.findByText(email).should('exist');
-  });
+    cy.findByText(email).should('exist')
+  })
 
   it('persists state when refreshing', () => {
-    cy.reload();
+    cy.reload()
 
     // after a reload, we should still see our email on the page
-    cy.findByText(email).should('exist');
-  });
+    cy.findByText(email).should('exist')
+  })
 
   it('redirects to profile when redeeming an existing user token', () => {
-    cy.reload();
+    cy.reload()
 
     cy.getCookie('otp-key').then(cookie => {
-      cy.visit('/token/' + cookie.value);
+      cy.visit('/token/' + cookie.value)
 
-      cy.url().should('include', '/profile');
-    });
-  });
-});
+      cy.url().should('include', '/profile')
+    })
+  })
+})

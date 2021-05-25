@@ -11,8 +11,8 @@ import Icon from '@//:modules/content/icon/Icon';
 
 type Props = {
   error: Error,
-  reset: any,
-  refetch: any,
+  reset: () => void,
+  refetch: () => void,
 };
 
 // eslint-disable-next-line node/handle-callback-err
@@ -21,11 +21,11 @@ export default function ErrorFallback({ error, reset, refetch }: Props): Node {
 
   const onReset = () => {
     // Refetch graphql data
-    refetch();
+    refetch()
 
     // reset error boundary to re-render
-    reset();
-  };
+    reset()
+  }
 
   return (
     <Flex direction="column" w="100%" h="100%" align="center" position="center">

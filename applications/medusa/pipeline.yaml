@@ -1,0 +1,37 @@
+steps:
+  build:
+    targets:
+      - //applications/medusa:bundle
+
+  unit_test:
+    coverage:
+      - name: medusa.unit
+        paths:
+          - ./applications/medusa/unit/coverage.dat
+      - name: medusa.integration
+        paths:
+          - ./applications/medusa/integration/coverage.dat
+    targets:
+      - //applications/medusa:unit
+      - //applications/medusa:integration
+
+  push_image:
+    targets:
+      - //applications/medusa:publish-testing
+
+  e2e_test:
+    coverage:
+      - name: medusa.e2e
+        paths:
+          - ./applications/medusa/coverage/clover.xml
+    setup:
+      dockerfile:
+        - ./applications/medusa/docker-compose.e2e.yaml
+    network_dependencies:
+      - host: medusa
+        port: 8080
+        priority: 1
+
+  publish_image:
+    targets:
+      - //applications/medusa:publish

@@ -15,9 +15,9 @@ import { useTranslation } from 'react-i18next';
 type Props = {
   args: {
     variables: VariablesOf<CharactersQuery>,
-    options?: any,
+    options: {},
   },
-  onSelect: any,
+  onSelect: () => void,
   selected: Array<string>,
 };
 
@@ -34,26 +34,26 @@ const CharactersQueryGQL = graphql`
       }
     }
   }
-`;
+`
 
-export default function Characters({ args, onSelect, selected }: Props): Node {
+export default function Characters ({ args, onSelect, selected }: Props): Node {
   const data = useLazyLoadQuery<CharactersQuery>(
     CharactersQueryGQL,
     args.variables,
-    args.options,
-  );
+    args.options
+  )
 
   // When we add a "new" character, we will open a modal so that the user can select the media
   const onAddNewCharacter = () => {
-    const name: string = args.variables.data.search;
+    const name: string = args.variables.data.search
     onSelect({
       id: name,
       name: name,
       thumbnail: null,
       media: null,
-      request: true,
-    });
-  };
+      request: true
+    })
+  }
 
   const [t] = useTranslation('upload');
 

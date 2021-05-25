@@ -1,15 +1,15 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import Icon from '@//:modules/content/icon/Icon';
-import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/sign-badge-circle-K1i3HA.svg';
-import { useTranslation } from 'react-i18next';
-import { Button } from '@//:modules/form';
-import { Center, Flex, Heading, Stack } from '@chakra-ui/react';
+import type { Node } from 'react'
+import Icon from '@//:modules/content/icon/Icon'
+import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/sign-badge-circle-K1i3HA.svg'
+import { useTranslation } from 'react-i18next'
+import { Button } from '@//:modules/form'
+import { Center, Flex, Heading, Stack } from '@chakra-ui/react'
 
-export default function Empty(): Node {
-  const [t] = useTranslation('empty');
+export default function Empty (): Node {
+  const [t] = useTranslation('empty')
 
   return (
     <Center mt={40}>
@@ -31,7 +31,7 @@ export default function Empty(): Node {
             <Button
               size="lg"
               onClick={() => {
-                history.back();
+                history.back()
               }}
             >
               {t('empty.leave')}
@@ -40,7 +40,7 @@ export default function Empty(): Node {
               size="lg"
               colorScheme="red"
               onClick={() => {
-                history.back();
+                history.back()
               }}
             >
               {t('empty.home')}
@@ -49,5 +49,5 @@ export default function Empty(): Node {
         </Center>
       </Flex>
     </Center>
-  );
+  )
 }

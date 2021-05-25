@@ -2,15 +2,26 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
-    srcs = ["bootstrap.go"],
+    srcs = [
+        "bootstrap.go",
+        "database.go",
+        "grpc.go",
+        "http.go",
+        "worker.go",
+    ],
     importpath = "overdoll/libraries/bootstrap",
     visibility = ["//visibility:public"],
     deps = [
         "//libraries/helpers:go_default_library",
         "@com_github_gocql_gocql//:go_default_library",
+        "@com_github_grpc_ecosystem_go_grpc_middleware//:go_default_library",
+        "@com_github_grpc_ecosystem_go_grpc_middleware//logging/zap:go_default_library",
+        "@com_github_grpc_ecosystem_go_grpc_middleware//tags:go_default_library",
         "@com_github_joho_godotenv//:go_default_library",
         "@com_github_scylladb_gocqlx_v2//:go_default_library",
+        "@io_temporal_go_sdk//worker:go_default_library",
         "@org_golang_google_grpc//:go_default_library",
         "@org_golang_google_grpc//reflection:go_default_library",
+        "@org_uber_go_zap//:go_default_library",
     ],
 )

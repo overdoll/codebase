@@ -1,0 +1,47 @@
+steps:
+  build:
+    targets:
+      - //applications/sting:sting
+
+  unit_test:
+    coverage:
+      - name: sting.unit
+        paths:
+          - ./applications/sting/**/coverage.dat
+    targets:
+      - //applications/sting/src/app/...
+      - //applications/sting/src/domain/...
+      - //applications/sting/src/ports/...
+
+  push_image:
+    targets:
+      - //applications/sting:publish-testing
+
+  integration_test:
+    coverage:
+      - name: sting.integration
+        paths:
+          - ./applications/sting/**/coverage.dat
+    setup:
+      dockerfile:
+        - ./applications/sting/docker-compose.ci.yaml
+    network_dependencies:
+      - host: sting
+        port: 8000
+    targets:
+      - //applications/sting/src/adapters/...
+      - //applications/sting/src/service/...
+
+
+  e2e_test:
+    setup:
+      dockerfile:
+        - ./applications/sting/docker-compose.ci.yaml
+    network_dependencies:
+      - host: sting
+        port: 8000
+        priority: 0
+
+  publish_image:
+    targets:
+      - //applications/sting:publish

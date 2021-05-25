@@ -1,10 +1,10 @@
-import CanUseDOM from '@//:modules/utilities/CanUseDOM';
+import CanUseDOM from '@//:modules/utilities/CanUseDOM'
 
-let RootElement = null;
+let RootElement = null
 
 if (CanUseDOM) {
-  RootElement = document.createElement('div');
-  document.body.appendChild(RootElement);
+  RootElement = document.createElement('div')
+  document.body.appendChild(RootElement)
 }
 
-export default RootElement;
+export default RootElement

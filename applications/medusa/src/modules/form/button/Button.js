@@ -9,14 +9,14 @@ const AnimatedButton = ChakraButton;
 type Props = {
   loading?: boolean,
   children?: Node,
-  sx?: any,
+  sx?: {},
   size?: string,
   variant?: string,
   disabled?: boolean,
   colorScheme?: string,
 };
 
-export default function Button({
+export default function Button ({
   sx,
   loading,
   children,
@@ -26,7 +26,7 @@ export default function Button({
   colorScheme,
   ...rest
 }: Props): Node {
-  const fullDisable = disabled || loading;
+  const fullDisable = disabled || loading
 
   return (
     <AnimatedButton
@@ -40,5 +40,5 @@ export default function Button({
     >
       {children}
     </AnimatedButton>
-  );
+  )
 }

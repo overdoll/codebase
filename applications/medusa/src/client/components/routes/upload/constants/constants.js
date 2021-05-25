@@ -1,12 +1,14 @@
-// @flow
-import type { State } from '@//:types/upload';
+/**
+ * @flow
+ */
+import type { State } from '@//:types/upload'
 
 const STEPS = {
   REVIEW: 'REVIEW',
   ARRANGE: 'ARRANGE',
   FINISH: 'FINISH',
-  TAG: 'TAG',
-};
+  TAG: 'TAG'
+}
 
 const EVENTS = {
   ARRANGE_FILES: 'arrange_files',
@@ -19,8 +21,8 @@ const EVENTS = {
   TAG_ARTIST: 'artist',
   TAG_CATEGORIES: 'categories',
   SUBMIT: 'submit',
-  CLEANUP: 'cleanup',
-};
+  CLEANUP: 'cleanup'
+}
 
 const INITIAL_STATE: State = {
   thumbnails: {},
@@ -32,7 +34,7 @@ const INITIAL_STATE: State = {
   characters: {},
   categories: {},
   submit: {},
-  cleanup: null,
-};
+  cleanup: null
+}
 
-export { STEPS, EVENTS, INITIAL_STATE };
+export { STEPS, EVENTS, INITIAL_STATE }

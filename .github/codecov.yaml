@@ -1,0 +1,54 @@
+codecov:
+  require_ci_to_pass: yes
+
+parsers:
+  gcov:
+    branch_detection:
+      conditional: yes
+      loop: yes
+      method: yes
+      macro: yes
+  javascript:
+    enable_partials: yes
+
+comment:
+  layout: "reach,diff,flags,files"
+  behavior: default
+  require_changes: no
+
+coverage:
+  precision: 2
+  round: down
+  range: "70...100"
+  status:
+    project:
+      default:
+        target: 40%
+        paths:
+          - "applications"
+          - "libraries"
+      medusa:
+        target: 60%
+        paths:
+          - "applications/medusa"
+      eva:
+        target: 20%
+        paths:
+          - "applications/eva"
+      buffer:
+        target: 20%
+        paths:
+          - "applications/buffer"
+      sting:
+        target: 20%
+        paths:
+          - "applications/sting"
+      library:
+        target: 10%
+        paths:
+          - "libraries"
+
+# fix path for bazel-generated coverage files && cypress
+fixes:
+  - "/workdir/personal/overdoll/::"
+  - "overdoll/applications/::applications/"

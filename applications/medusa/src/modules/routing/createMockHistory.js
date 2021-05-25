@@ -1,51 +1,51 @@
 /**
  * @flow
  */
-import { parsePath } from 'history';
+import { parsePath } from 'history'
 
 type Props = {
-  context: any,
+  context: ({}),
   location: string,
 };
 
-export default function createMockHistory({
+export default function createMockHistory ({
   context = {},
-  location: loc = '/',
-}: Props): any {
-  if (typeof loc === 'string') loc = parsePath(loc);
+  location: loc = '/'
+}: Props): History {
+  if (typeof loc === 'string') loc = parsePath(loc)
 
-  const action = 'POP';
+  const action = 'POP'
   const location = {
     pathname: loc.pathname || '/',
     search: loc.search || '',
     hash: loc.hash || '',
     state: loc.state || null,
-    key: loc.key || 'default',
-  };
+    key: loc.key || 'default'
+  }
 
   return {
-    get action() {
-      return action;
+    get action () {
+      return action
     },
-    get location() {
-      return location;
+    get location () {
+      return location
     },
-    push(url, state) {
-      context.url = url;
-      context.state = state;
+    push (url, state) {
+      context.url = url
+      context.state = state
     },
-    replace(url, state) {
-      context.url = url;
-      context.state = state;
+    replace (url, state) {
+      context.url = url
+      context.state = state
     },
-    go(n) {
+    go (n) {
       throw new Error(
         `You cannot perform ${n === -1 ? 'GO BACK' : `GO(${n})`} on the ` +
-          `server because it is a stateless environment. This error was probably ` +
-          `triggered when you did a \`navigate(${n})\` somewhere in your app.`,
-      );
+        'server because it is a stateless environment. This error was probably ' +
+        `triggered when you did a \`navigate(${n})\` somewhere in your app.`
+      )
     },
-    listen() {},
-    block() {},
-  };
+    listen () {},
+    block () {}
+  }
 }

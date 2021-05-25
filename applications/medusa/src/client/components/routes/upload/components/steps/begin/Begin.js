@@ -7,8 +7,8 @@ import { useTranslation } from 'react-i18next';
 import LargeUpload from './components/upload/LargeUpload';
 
 type Props = {
-  uppy: any,
-  onAddFiles: any,
+  uppy: Uppy,
+  onAddFiles: () => void,
 };
 
 export default function Begin({ uppy, onAddFiles }: Props): Node {
@@ -40,5 +40,5 @@ export default function Begin({ uppy, onAddFiles }: Props): Node {
         </UnorderedList>
       </Box>
     </>
-  );
+  )
 }

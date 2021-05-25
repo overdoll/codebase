@@ -1,9 +1,0 @@
-image:
-  repository: buffer-image
-
-nameOverride: "buffer"
-
-containerPort: 8080
-
-service:
-  port: 8000

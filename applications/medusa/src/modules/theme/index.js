@@ -17,7 +17,7 @@ import 'overlayscrollbars/css/OverlayScrollbars.css';
 const theme = extendTheme({
   config: {
     cssVarPrefix: 'od',
-    initialColorMode: 'dark',
+    initialColorMode: 'dark'
   },
   colors: colors,
   ...typography,
@@ -38,4 +38,4 @@ const theme = extendTheme({
   },
 });
 
-export default theme;
+export default theme

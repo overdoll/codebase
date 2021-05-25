@@ -7,17 +7,18 @@ def jest_test(name, srcs, deps, jest_config, file_extension, **kwargs):
         "--no-watchman",
         "--ci",
         "--colors",
-        "--collectCoverage true",
         "--verbose",
+        "--node_options=--require=./$(rootpath chdir.js)",
+        "--coverage",
+        "--maxWorkers",
+        "1",
     ]
-
-    templated_args.extend(["--config", "$(rootpath %s)" % jest_config])
 
     for src in srcs:
         if src.endswith(file_extension):
             templated_args.extend(["--runTestsByPath", "%s" % src])
 
-    data = srcs + deps + ["reporter.js"]
+    data = srcs + deps
     _jest_test(
         name = name,
         data = data,

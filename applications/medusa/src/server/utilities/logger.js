@@ -1,4 +1,4 @@
-import winston from 'winston';
+import winston from 'winston'
 
 export default winston.createLogger({
   level: 'info',
@@ -7,8 +7,8 @@ export default winston.createLogger({
     winston.format.colorize(),
     process.env.APP_DEBUG === 'true'
       ? winston.format.simple()
-      : winston.format.json(),
+      : winston.format.json()
   ),
   transports: [new winston.transports.Console()],
-  exceptionHandlers: [new winston.transports.Console()],
-});
+  exceptionHandlers: [new winston.transports.Console()]
+})

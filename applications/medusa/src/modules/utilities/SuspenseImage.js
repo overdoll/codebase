@@ -10,9 +10,9 @@ type Props = {
   alt?: string,
 };
 
-export default function SuspenseImage(props: Props): Node {
-  const { src, ...rest } = props;
-  if (src != null) {
+export default function SuspenseImage (props: Props): Node {
+  const { src, ...rest } = props
+  if (src !== null) {
     // JSResource is meant for loading resources, but the implementation is
     // just cached loading of promises. So we reuse that here as a quick
     // way to suspend while images are loading, with caching in case
@@ -23,10 +23,9 @@ export default function SuspenseImage(props: Props): Node {
       return new Promise(resolve => {
         const img = new window.Image();
         img.onload = () => {
-          resolve(src);
-        };
+          resolve(src)
+        }
         img.onerror = error => {
-          console.error(error);
           resolve(src);
           target;
         };

@@ -1,9 +1,0 @@
-image:
-  repository: sting-image
-
-nameOverride: "sting"
-
-containerPort: 8080
-
-service:
-  port: 8000

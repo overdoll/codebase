@@ -1,9 +1,0 @@
-image:
-  repository: eva-image
-
-nameOverride: "eva"
-
-containerPort: 8080
-
-service:
-  port: 8000

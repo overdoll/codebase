@@ -3,15 +3,21 @@ load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin", "nodejs_binary")
 load("@bazel_skylib//rules:write_file.bzl", "write_file")
 load("@npm//razzle:index.bzl", "razzle")
 load(":jest.bzl", "jest_test")
+load("@io_bazel_rules_docker//container:container.bzl", "container_push")
 
 package(default_visibility = ["//visibility:public"])
 
+_EXCLUDE = [
+    ".env.example",
+    ".env",
+]
+
 _SRC = glob(
     [
-        "public/*",
         "src/**/*",
         ".*",
     ],
+    exclude = _EXCLUDE,
 ) + [
     "razzle.config.js",
     "package.json",
@@ -24,7 +30,6 @@ _RUNTIME_DEPS = [
     "@npm//react-router",
     "@npm//react-router-config",
     "@npm//relay-runtime",
-    "@npm//chokidar",
     "@npm//webpack",
     "@npm//express",
     "@npm//webpack-dev-middleware",
@@ -67,7 +72,6 @@ _RUNTIME_DEPS = [
     "@npm//ejs",
     "@npm//helmet",
     "@npm//cookie-parser",
-    "@npm//body-parser",
     "@npm//csurf",
     "@npm//winston",
     "@npm//@emotion/react",
@@ -79,7 +83,6 @@ _RUNTIME_DEPS = [
     "@npm//i18next-fs-backend",
     "@npm//i18next",
     "@npm//react-hook-form",
-    "@npm//react-spring",
     "@npm//@uppy/core",
     "@npm//@uppy/tus",
     "@npm//@uppy/golden-retriever",
@@ -97,26 +100,36 @@ _RUNTIME_DEPS = [
     "@npm//@streamlinehq/streamlinehq",
     "@npm//babel-plugin-inline-react-svg",
     "@npm//svgo",
+    "@npm//i18next-http-backend",
+    "@npm//redis",
+    "@npm//relay-compiler-plus",
+    "@npm//express-session",
+    "@npm//connect-redis",
+    "@npm//apollo-server-express",
+    "@npm//@apollo/gateway",
 ]
 
 TEST_DEPS = [
     "jest.setup.js",
     "jest.config.js",
-] + glob([
-    "src/__generated__/*",
-    ".*",
-]) + _RUNTIME_DEPS + [
-    "@npm//@jest/transform",
-    "@npm//@jest/core",
+    "chdir.js",
+] + glob(
+    [
+        "src/__generated__/*",
+        ".*",
+    ],
+    exclude = _EXCLUDE,
+) + _RUNTIME_DEPS + [
     "@npm//@testing-library/react",
     "@npm//babel-jest",
     "@npm//relay-test-utils",
     "@npm//jest-environment-jsdom-sixteen",
     "@npm//@testing-library/jest-dom",
-    "@npm//c8",
     "@npm//fake-indexeddb",
     "@npm//@testing-library/user-event",
 ]
+
+_SERVER_DEPS = []
 
 copy_to_bin(
     name = "copy_static_files",
@@ -181,8 +194,8 @@ nodejs_binary(
     ] + glob([
         "src/server/templates/**",
         "src/server/locales/**/*",
-        "public/**",
-    ]),
+        "public/**/*",
+    ]) + _SERVER_DEPS,
     entry_point = "build/server.js",
     templated_args = [
         "--node_options=--require=./$(rootpath chdir.js)",
@@ -196,4 +209,23 @@ nodejs_image(
         "NODE_ENV": "production",
         "PORT": "8080",
     },
+)
+
+container_push(
+    name = "publish-testing",
+    format = "Docker",
+    image = ":medusa-production-image",
+    registry = "$(CONTAINER_REGISTRY)",
+    repository = "medusa/dev",
+    tag = "$(CONTAINER_TAG)",
+)
+
+container_push(
+    name = "publish",
+    format = "Docker",
+    image = ":medusa-production-image",
+    registry = "$(CONTAINER_REGISTRY)",
+    repository = "medusa",
+    skip_unchanged_digest = True,
+    tag = "$(CONTAINER_TAG)",
 )

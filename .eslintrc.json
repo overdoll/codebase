@@ -1,27 +1,32 @@
 {
   "extends": [
-    "plugin:react/recommended",
-    "standard",
-    "prettier",
     "plugin:flowtype/recommended",
     "plugin:jest/recommended",
     "plugin:testing-library/recommended",
     "plugin:testing-library/react",
-    "plugin:cypress/recommended"
+    "plugin:cypress/recommended",
+    "standard",
+    "standard-jsx"
   ],
   "plugins": [
     "flowtype",
-    "react",
     "relay",
-    "react-hooks",
-    "prettier",
     "jest",
     "testing-library",
     "cypress"
   ],
+  "parser": "@babel/eslint-parser",
+  "parserOptions": {
+    "babelOptions": {
+      "configFile": "./applications/medusa/.babelrc"
+    },
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 2020,
+    "sourceType": "module"
+  },
   "rules": {
-    "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn",
     "relay/graphql-syntax": "error",
     "relay/compat-uses-vars": "warn",
     "relay/graphql-naming": "error",
@@ -30,8 +35,6 @@
     "relay/no-future-added-value": "warn",
     "relay/unused-fields": "warn",
     "relay/hook-required-argument": "warn",
-    "react/jsx-uses-react": "off",
-    "react/react-in-jsx-scope": "off",
     "flowtype/no-mixed": 2,
     "flowtype/no-weak-types": [
       2,
@@ -41,13 +44,6 @@
         "Function": true
       }
     ]
-  },
-  "parserOptions": {
-    "ecmaFeatures": {
-      "jsx": true
-    },
-    "ecmaVersion": 2020,
-    "sourceType": "module"
   },
   "env": {
     "browser": true,

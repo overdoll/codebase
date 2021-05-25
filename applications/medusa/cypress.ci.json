@@ -1,0 +1,9 @@
+{
+  "baseUrl": "https://traefik",
+  "env": {
+    "codeCoverage": {
+      "url": "https://traefik/__coverage__"
+    }
+  },
+  "projectId": "svdd6z"
+}

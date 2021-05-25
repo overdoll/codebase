@@ -14,9 +14,9 @@ import { useTranslation } from 'react-i18next';
 type Props = {
   args: {
     variables: VariablesOf<CategoriesQuery>,
-    options?: any,
+    options: {},
   },
-  onSelect: any,
+  onSelect: () => void,
   selected: Array<string>,
 };
 
@@ -28,7 +28,7 @@ const CategoriesQueryGQL = graphql`
       thumbnail
     }
   }
-`;
+`
 
 export default function Categories({ args, onSelect, selected }: Props): Node {
   const [t] = useTranslation('upload');
@@ -36,8 +36,8 @@ export default function Categories({ args, onSelect, selected }: Props): Node {
   const data = useLazyLoadQuery<CategoriesQuery>(
     CategoriesQueryGQL,
     args.variables,
-    args.options,
-  );
+    args.options
+  )
 
   // We dont let users add custom categories
   if (data.categories.length === 0) {

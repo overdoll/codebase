@@ -17,7 +17,7 @@ import { useTranslation } from 'react-i18next';
 
 type Props = {
   children: Node,
-  search: any,
+  search: () => void,
   title: string,
   count: number,
   searchTitle?: string,
@@ -30,17 +30,17 @@ export default function Section({
   count,
   searchTitle,
 }: Props): Node {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
 
   const [expand, setExpand] = useState(false);
 
   const onOpen = () => {
-    setOpen(true);
-  };
+    setOpen(true)
+  }
 
   const onClose = () => {
-    setOpen(false);
-  };
+    setOpen(false)
+  }
 
   const onExpand = () => {
     switch (expand) {

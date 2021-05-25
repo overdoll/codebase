@@ -15,10 +15,10 @@ import Icon from '@//:modules/content/icon/Icon';
 type Props = {
   args: {
     variables: VariablesOf<ArtistsQuery>,
-    options?: any,
+    options: {},
   },
-  onSelect: any,
-  selected: any,
+  onSelect: () => void,
+  selected: { id: string },
 };
 
 const ArtistsQueryGQL = graphql`
@@ -29,19 +29,19 @@ const ArtistsQueryGQL = graphql`
       username
     }
   }
-`;
+`
 
-export default function Artists({ args, onSelect, selected }: Props): Node {
+export default function Artists ({ args, onSelect, selected }: Props): Node {
   const data = useLazyLoadQuery<ArtistsQuery>(
     ArtistsQueryGQL,
     args.variables,
-    args.options,
-  );
+    args.options
+  )
 
   // Add new artist if no artists are available
   const addNewArtist = () => {
-    onSelect({ id: null, username: args.variables.data.search, avatar: null });
-  };
+    onSelect({ id: null, username: args.variables.data.search, avatar: null })
+  }
 
   const [t] = useTranslation('upload');
 

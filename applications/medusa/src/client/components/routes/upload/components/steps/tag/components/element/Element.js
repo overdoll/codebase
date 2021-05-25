@@ -6,7 +6,7 @@ import { Image, Flex, Text } from '@chakra-ui/react';
 
 type Props = {
   selected: boolean,
-  onSelect: any,
+  onSelect: () => void,
   thumbnail?: string,
   title?: string,
 };

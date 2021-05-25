@@ -3,18 +3,14 @@ package main
 import (
 	"context"
 	"fmt"
-	"log"
 	"os"
 	"time"
 
 	"github.com/spf13/cobra"
-	"google.golang.org/grpc"
-	sting "overdoll/applications/sting/proto"
-	"overdoll/applications/sting/src/commands"
-	"overdoll/applications/sting/src/server"
+	"overdoll/applications/sting/src/ports"
+	"overdoll/applications/sting/src/service"
 	"overdoll/libraries/bootstrap"
-	"overdoll/libraries/commands/database"
-	"overdoll/libraries/events"
+	"overdoll/libraries/commands"
 )
 
 var rootCmd = &cobra.Command{
@@ -23,8 +19,16 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(commands.Root)
-	rootCmd.AddCommand(database.Database)
+	rootCmd.AddCommand(ports.Root)
+	rootCmd.AddCommand(commands.Database)
+	rootCmd.AddCommand(&cobra.Command{
+		Use: "worker",
+		Run: RunWorker,
+	})
+	rootCmd.AddCommand(&cobra.Command{
+		Use: "http",
+		Run: RunHttp,
+	})
 }
 
 func main() {
@@ -35,26 +39,30 @@ func main() {
 }
 
 func Run(cmd *cobra.Command, args []string) {
+	go RunWorker(cmd, args)
+	RunHttp(cmd, args)
+}
+
+func RunWorker(cmd *cobra.Command, args []string) {
 	ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancelFn()
 
-	init, err := bootstrap.NewBootstrap(ctx)
+	app, _ := service.NewApplication(ctx)
 
-	if err != nil {
-		log.Fatalf("bootstrap failed with errors: %s", err)
-	}
+	srv := ports.NewWorker(&app)
 
-	session, err := init.InitializeDatabaseSession()
+	bootstrap.InitializeWorkerServer(srv)
+}
 
-	if err != nil {
-		log.Fatalf("database session failed with errors: %s", err)
-	}
+func RunHttp(cmd *cobra.Command, args []string) {
+	ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
+	defer cancelFn()
 
-	eventsConn := events.GetConnection(ctx, "sting")
+	app, cleanup := service.NewApplication(ctx)
 
-	s := server.CreateServer(session, eventsConn)
+	defer cleanup()
 
-	init.InitializeGRPCServer(func(server *grpc.Server) {
-		sting.RegisterStingServer(server, s)
-	})
+	srv := ports.NewGraphQLServer(&app)
+
+	bootstrap.InitializeHttpServer(srv, func() {})
 }

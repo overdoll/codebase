@@ -1,6 +1,0 @@
-extend type Query {
-  characters(data: SearchInput!): [Character!]!
-  categories(data: SearchInput!): [Category!]!
-  artists(data: SearchInput!): [Artist!]!
-  media(data: SearchInput!): [Media!]!
-}

@@ -1,9 +1,10 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
 load("@io_bazel_rules_docker//go:image.bzl", "go_image")
+load("@io_bazel_rules_docker//container:container.bzl", "container_push")
 
 package(default_visibility = ["//visibility:public"])
 
-web_sources = glob(["database/**"]) + [".env"]
+web_sources = glob(["database/**"])
 
 go_library(
     name = "go_default_library",
@@ -13,9 +14,10 @@ go_library(
     visibility = ["//visibility:private"],
     deps = [
         "//applications/eva/proto:v1_go_proto",
-        "//applications/eva/src/server:go_default_library",
+        "//applications/eva/src/ports:go_default_library",
+        "//applications/eva/src/service:go_default_library",
         "//libraries/bootstrap:go_default_library",
-        "//libraries/commands/database:go_default_library",
+        "//libraries/commands:go_default_library",
         "@com_github_spf13_cobra//:go_default_library",
         "@org_golang_google_grpc//:go_default_library",
     ],
@@ -28,9 +30,36 @@ go_binary(
 )
 
 go_image(
-    name = "eva-image",
+    name = "local-image",
+    base = "@go_base_image//image",
+    data = web_sources + [".env"],
+    embed = [":go_default_library"],
+    importpath = "overdoll/applications/eva",
+)
+
+go_image(
+    name = "image",
     base = "@go_base_image//image",
     data = web_sources,
     embed = [":go_default_library"],
     importpath = "overdoll/applications/eva",
+)
+
+container_push(
+    name = "publish-testing",
+    format = "Docker",
+    image = ":image",
+    registry = "$(CONTAINER_REGISTRY)",
+    repository = "eva/dev",
+    tag = "$(CONTAINER_TAG)",
+)
+
+container_push(
+    name = "publish",
+    format = "Docker",
+    image = ":image",
+    registry = "$(CONTAINER_REGISTRY)",
+    repository = "eva",
+    skip_unchanged_digest = True,
+    tag = "$(CONTAINER_TAG)",
 )

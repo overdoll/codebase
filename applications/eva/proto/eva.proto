@@ -2,48 +2,12 @@ syntax = "proto3";
 
 package applications.grpc.eva.v1;
 
-//import "github.com/mwitkow/go-proto-validators/validator.proto";
-
-message RegisteredEmails {
-  string email = 1;
-  string username = 2;
-}
-
-message AuthenticationCookie {
-  string cookie = 1;
-  bool redeemed = 2;
-  string expiration = 3;
-  string email = 4;
-  string session = 5;
-}
-
-message GetRegisteredEmailRequest {
-  string email = 1;
-}
-
-message CreateAuthenticationCookieRequest {
-  string email = 1;
-  string session = 2;
-}
-
-message GetAuthenticationCookieRequest {
-  string cookie = 1;
-}
-
-message RegisterUserRequest {
-  string email = 1;
-  string username = 2;
-}
-
-message DeleteAuthenticationCookieResponse {
-  string success = 1;
-}
-
 message User {
   string id = 1;
   string username = 2;
   repeated string roles = 3;
   bool verified = 4;
+  string avatar = 5;
 }
 
 message GetUserRequest {
@@ -52,10 +16,4 @@ message GetUserRequest {
 
 service Eva {
   rpc GetUser(GetUserRequest) returns (User);
-  rpc RegisterUser(RegisterUserRequest) returns (User);
-  rpc GetRegisteredEmail(GetRegisteredEmailRequest) returns (User);
-  rpc GetAuthenticationCookie(GetAuthenticationCookieRequest) returns (AuthenticationCookie);
-  rpc DeleteAuthenticationCookie(GetAuthenticationCookieRequest) returns (DeleteAuthenticationCookieResponse);
-  rpc RedeemAuthenticationCookie(GetAuthenticationCookieRequest) returns (AuthenticationCookie);
-  rpc CreateAuthenticationCookie(CreateAuthenticationCookieRequest) returns (AuthenticationCookie);
 }

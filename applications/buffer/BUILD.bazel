@@ -1,9 +1,8 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
 load("@io_bazel_rules_docker//go:image.bzl", "go_image")
+load("@io_bazel_rules_docker//container:container.bzl", "container_push")
 
-web_sources = [
-    ".env",
-]
+web_sources = []
 
 go_library(
     name = "go_default_library",
@@ -12,13 +11,10 @@ go_library(
     importpath = "overdoll/applications/buffer",
     visibility = ["//visibility:private"],
     deps = [
-        "//applications/buffer/src/middleware:go_default_library",
-        "//applications/buffer/src/server:go_default_library",
-        "//libraries/aws:go_default_library",
+        "//applications/buffer/src/ports:go_default_library",
+        "//applications/buffer/src/service:go_default_library",
         "//libraries/bootstrap:go_default_library",
-        "@com_github_aws_aws_sdk_go//service/s3:go_default_library",
-        "@com_github_tus_tusd//pkg/handler:go_default_library",
-        "@com_github_tus_tusd//pkg/s3store:go_default_library",
+        "@com_github_spf13_cobra//:go_default_library",
     ],
 )
 
@@ -29,9 +25,36 @@ go_binary(
 )
 
 go_image(
-    name = "buffer-image",
+    name = "local-image",
+    base = "@go_base_image//image",
+    data = web_sources + [".env"],
+    embed = [":go_default_library"],
+    importpath = "overdoll/applications/buffer",
+)
+
+go_image(
+    name = "image",
     base = "@go_base_image//image",
     data = web_sources,
     embed = [":go_default_library"],
     importpath = "overdoll/applications/buffer",
+)
+
+container_push(
+    name = "publish-testing",
+    format = "Docker",
+    image = ":image",
+    registry = "$(CONTAINER_REGISTRY)",
+    repository = "buffer/dev",
+    tag = "$(CONTAINER_TAG)",
+)
+
+container_push(
+    name = "publish",
+    format = "Docker",
+    image = ":image",
+    registry = "$(CONTAINER_REGISTRY)",
+    repository = "buffer",
+    skip_unchanged_digest = True,
+    tag = "$(CONTAINER_TAG)",
 )

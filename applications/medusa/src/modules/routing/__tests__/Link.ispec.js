@@ -1,26 +1,26 @@
-import withProviders from '@//:modules/testing/withProviders';
-import Link from '@//:modules/routing/Link';
-import { render, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import JSResource from '@//:modules/utilities/JSResource';
-import { createMockEnvironment } from 'relay-test-utils';
+import withProviders from '@//:modules/testing/withProviders'
+import Link from '@//:modules/routing/Link'
+import { render, screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import JSResource from '@//:modules/utilities/JSResource'
+import { createMockEnvironment } from 'relay-test-utils'
 
 // components to help with testing
 const LinkComponent = () => {
-  return <Link to="/test">test</Link>;
-};
+  return <Link to='/test'>test</Link>
+}
 
 const Component = () => {
-  return 'rendering component';
-};
+  return 'rendering component'
+}
 
 const Empty = {
   path: '*',
   component: JSResource(
     'LinkComponent',
-    () => new Promise(resolve => resolve(LinkComponent)),
-  ),
-};
+    () => new Promise(resolve => resolve(LinkComponent))
+  )
+}
 
 // tests link actions
 it('clicking on the link directs to the route', async () => {
@@ -30,31 +30,31 @@ it('clicking on the link directs to the route', async () => {
       exact: true,
       component: JSResource(
         'Component',
-        () => new Promise(resolve => resolve(Component)),
-      ),
+        () => new Promise(resolve => resolve(Component))
+      )
     },
-    Empty,
-  ];
+    Empty
+  ]
 
   const [Root] = withProviders({
-    routes: routes,
-  });
+    routes: routes
+  })
 
-  render(<Root />);
+  render(<Root />)
 
-  await waitFor(() => expect(screen.getByRole('link')).toBeInTheDocument());
+  await waitFor(() => expect(screen.getByRole('link')).toBeInTheDocument())
 
-  const link = screen.getByRole('link');
+  const link = screen.getByRole('link')
 
-  userEvent.click(link);
+  userEvent.click(link)
 
   await waitFor(() =>
-    expect(screen.getByText('rendering component')).toBeInTheDocument(),
-  );
-});
+    expect(screen.getByText('rendering component')).toBeInTheDocument()
+  )
+})
 
 it('hovering over the link will preload the component', async () => {
-  const func = jest.fn();
+  const func = jest.fn()
 
   const routes = [
     {
@@ -64,35 +64,35 @@ it('hovering over the link will preload the component', async () => {
         'Component2',
         () =>
           new Promise(resolve => {
-            func();
-            resolve(Component);
-          }),
-      ),
+            func()
+            resolve(Component)
+          })
+      )
     },
-    Empty,
-  ];
+    Empty
+  ]
 
   const [Root] = withProviders({
-    routes: routes,
-  });
+    routes: routes
+  })
 
-  render(<Root />);
+  render(<Root />)
 
-  await waitFor(() => expect(screen.getByRole('link')).toBeInTheDocument());
+  await waitFor(() => expect(screen.getByRole('link')).toBeInTheDocument())
 
-  const link = screen.getByRole('link');
+  const link = screen.getByRole('link')
 
-  userEvent.hover(link);
+  userEvent.hover(link)
 
-  await waitFor(() => expect(func).toHaveBeenCalled());
-});
+  await waitFor(() => expect(func).toHaveBeenCalled())
+})
 
 it('mouse down on the link will load code and data', async () => {
-  const func = jest.fn();
+  const func = jest.fn()
 
-  const Environment = createMockEnvironment();
+  const Environment = createMockEnvironment()
 
-  const RootQuery = require('@//:artifacts/RootQuery.graphql');
+  const RootQuery = require('@//:artifacts/RootQuery.graphql')
 
   const routes = [
     {
@@ -102,42 +102,42 @@ it('mouse down on the link will load code and data', async () => {
         'Component3',
         () =>
           new Promise(resolve => {
-            func();
-            resolve(Component);
-          }),
+            func()
+            resolve(Component)
+          })
       ),
-      prepare: params => {
+      prepare: () => {
         return {
           stateQuery: {
             query: RootQuery,
             variables: {},
             options: {
-              fetchPolicy: 'store-or-network',
-            },
-          },
-        };
-      },
+              fetchPolicy: 'store-or-network'
+            }
+          }
+        }
+      }
     },
-    Empty,
-  ];
+    Empty
+  ]
 
   const [Root] = withProviders({
     routes: routes,
-    environment: Environment,
-  });
+    environment: Environment
+  })
 
-  render(<Root />);
+  render(<Root />)
 
-  await waitFor(() => expect(screen.getByRole('link')).toBeInTheDocument());
+  await waitFor(() => expect(screen.getByRole('link')).toBeInTheDocument())
 
-  const link = screen.getByRole('link');
+  const link = screen.getByRole('link')
 
-  userEvent.click(link);
+  userEvent.click(link)
 
-  await waitFor(() => expect(func).toHaveBeenCalled());
+  await waitFor(() => expect(func).toHaveBeenCalled())
 
   // expect that relay has the current query in the store (preload function worked correctly)
   Environment.mock.findOperation(
-    data => data.request.node.hash === RootQuery.hash,
-  );
-});
+    data => data.request.node.hash === RootQuery.hash
+  )
+})

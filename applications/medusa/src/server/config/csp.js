@@ -1,33 +1,33 @@
 const config = {
   directives: {
-    'default-src': ["'self'"],
+    'default-src': ['\'self\''],
     'script-src': [
-      "'self'",
+      '\'self\'',
       process.env.NODE_ENV === 'production'
         ? (req, res) => `'nonce-${res.locals.cspNonce}'`
-        : "'unsafe-inline'",
-      "'unsafe-eval'",
-      process.env.PUBLIC_PATH,
+        : '\'unsafe-inline\'',
+      '\'unsafe-eval\'',
+      process.env.PUBLIC_PATH
     ],
     'style-src': [
-      "'self'",
+      '\'self\'',
       'https://fonts.googleapis.com',
       process.env.NODE_ENV === 'production'
         ? (req, res) => `'nonce-${res.locals.cspNonce}'`
-        : "'unsafe-inline'",
+        : '\'unsafe-inline\''
     ],
     'font-src': ['data:', '*'],
-    'base-uri': ["'self'"],
-    'object-src': ["'none'"],
-    'connect-src': ["'self'", 'blob:'],
+    'base-uri': ['\'self\''],
+    'object-src': ['\'none\''],
+    'connect-src': ['\'self\'', 'blob:'],
     'frame-src': [],
-    'frame-ancestors': ["'none'"],
+    'frame-ancestors': ['\'none\''],
     'report-uri': [],
-    'form-action': ["'self'"],
+    'form-action': ['\'self\''],
     'img-src': ['blob:', 'data:', '*'],
     'media-src': ['data:', '*', 'blob:'],
-    upgradeInsecureRequests: [],
-  },
-};
+    upgradeInsecureRequests: []
+  }
+}
 
-export default config;
+export default config

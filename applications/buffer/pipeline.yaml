@@ -1,0 +1,36 @@
+steps:
+  build:
+    targets:
+      - //applications/buffer:buffer
+
+  unit_test:
+    coverage:
+      - name: buffer.unit
+        paths:
+          - ./applications/buffer/**/coverage.dat
+    targets:
+      - //applications/buffer/src/app/...
+      - //applications/buffer/src/domain/...
+      - //applications/buffer/src/ports/...
+
+  push_image:
+    targets:
+      - //applications/buffer:publish-testing
+
+  integration_test:
+    coverage:
+      - name: buffer.integration
+        paths:
+          - ./applications/buffer/**/coverage.dat
+    targets:
+      - //applications/buffer/src/adapters/...
+      - //applications/buffer/src/service/...
+
+  e2e_test:
+    setup:
+      dockerfile:
+        - ./applications/buffer/docker-compose.e2e.yaml
+
+  publish_image:
+    targets:
+      - //applications/buffer:publish

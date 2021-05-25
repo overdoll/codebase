@@ -1,0 +1,5 @@
+exports_files([
+    "coverage.patch",
+])
+
+package(default_visibility = ["//visibility:public"])

@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "default-service.fullname" . }}
+  labels:
+  {{- include "default-service.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+  {{- include "default-service.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+    {{- include "default-service.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ include "default-service.fullname" . }}
+          image: "{{ .Values.image.repository }}"
+          ports:
+          {{- if .Values.grpc }}
+            - name: grpc
+              containerPort: 8080
+              protocol: TCP
+            {{- end }}
+            {{- if .Values.http }}
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          {{- end  }}
+          {{- if or $.Values.env $.Values.envSecrets }}
+          env:
+            - name: TEMPORAL_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            {{- range $key, $value := $.Values.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- range $key, $secret := $.Values.envSecrets }}
+            - name: {{ $key }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $secret }}
+                  key: {{ $key | quote }}
+            {{- end }}
+            {{- end }}

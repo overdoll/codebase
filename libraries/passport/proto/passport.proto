@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package libraries.passport.v1;
+
+message Passport {
+  User user = 1;
+}
+
+message User {
+  string id = 1;
+}

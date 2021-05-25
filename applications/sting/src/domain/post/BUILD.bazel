@@ -1,0 +1,27 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "artist.go",
+        "category.go",
+        "character.go",
+        "media.go",
+        "post.go",
+        "post_pending.go",
+        "repository.go",
+    ],
+    importpath = "overdoll/applications/sting/src/domain/post",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libraries/ksuid:go_default_library",
+        "//libraries/user:go_default_library",
+    ],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = ["post_pending_test.go"],
+    embed = [":go_default_library"],
+    deps = ["@com_github_bmizerany_assert//:go_default_library"],
+)

@@ -21,17 +21,17 @@ import Icon from '@//:modules/content/icon/Icon';
 import SearchCircle from '@streamlinehq/streamlinehq/img/streamline-regular/search-circle-sjsJ8a.svg';
 
 type Props = {
-  children: any,
-  onClose?: any,
+  children: Node,
+  onClose?: () => void,
   header?: Node,
   placeholder?: string,
 };
 
-export default function Search({
+export default function Search ({
   placeholder,
   children,
   onClose,
-  header,
+  header
 }: Props): Node {
   const [searchInput, setSearch] = useState('');
   const [startTransition, isPending] = useTransition({ timeoutMs: 100000000 });
@@ -42,10 +42,10 @@ export default function Search({
     options: { fetchKey: 0 },
     variables: {
       data: {
-        search: '',
-      },
-    },
-  });
+        search: ''
+      }
+    }
+  })
 
   const refetch = useCallback(search => {
     // Trigger a re-render of useLazyLoadQuery with new variables,
@@ -54,16 +54,16 @@ export default function Search({
     // re-evaluated and refetched.
     setQueryArgs(prev => ({
       options: {
-        fetchKey: (prev?.options?.fetchKey ?? 0) + 1,
+        fetchKey: (prev?.options?.fetchKey ?? 0) + 1
       },
       variables: {
         data: {
           // fall back to data in the input if it's a refresh
-          search: search || searchInput,
-        },
-      },
-    }));
-  }, []);
+          search: search || searchInput
+        }
+      }
+    }))
+  }, [])
 
   const onChange = e => {
     setSearch(e.target.value);

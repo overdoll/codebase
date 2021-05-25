@@ -1,21 +1,25 @@
-const path = require('path');
-
-// Have to set chdir here - for some reason it breaks when passed to --node-options
-process.chdir(__dirname);
+const path = require('path')
 
 module.exports = {
-  reporters: ['default', './reporter'],
+  reporters: ['default'],
+  collectCoverage: true,
+  coverageReporters: [
+    ['lcovonly', { file: 'coverage.dat', projectRoot: '../../' }]
+  ],
   moduleNameMapper: {
     '^@//:modules(.*)$': '<rootDir>/src/modules$1',
-    '^@//:artifacts(.*)$': '<rootDir>/src/__generated__$1',
+    '^@//:artifacts(.*)$': '<rootDir>/src/__generated__$1'
   },
   transform: {
     '^.+\\.[jt]sx?$': [
       'babel-jest',
-      { configFile: path.resolve(__dirname, '.babelrc') },
-    ],
+      { configFile: path.resolve(__dirname, '.babelrc') }
+    ]
   },
-  coverageDirectory: '<rootDir>',
+  coverageDirectory: process.env.COVERAGE_OUTPUT_FILE.replace(
+    '/coverage.dat',
+    ''
+  ),
   testEnvironment: 'jest-environment-jsdom-sixteen',
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-};
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js']
+}

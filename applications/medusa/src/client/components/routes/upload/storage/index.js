@@ -1,6 +1,6 @@
-import Dexie from 'dexie';
+import Dexie from 'dexie'
 
-const db = new Dexie('overdoll.uploads');
+const db = new Dexie('overdoll.uploads')
 
 db.version(1).stores({
   thumbnails: 'id',
@@ -10,7 +10,7 @@ db.version(1).stores({
   categories: 'id',
   artist: 'id',
   step: 'id',
-  files: 'id',
-});
+  files: 'id'
+})
 
-export default db;
+export default db

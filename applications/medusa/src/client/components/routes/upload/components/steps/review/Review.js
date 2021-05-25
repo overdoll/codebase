@@ -40,5 +40,5 @@ export default function Review({ state, disabled }: Props): Node {
         )}
       </>
     </>
-  );
+  )
 }

@@ -4,11 +4,11 @@ import App from './App';
 import OverlayScrollbars from 'overlayscrollbars';
 
 // create the root, and hydrate from our server
-const root = createRoot(document.getElementById('root'), { hydrate: true });
+const root = createRoot(document.getElementById('root'), { hydrate: true })
 
 loadableReady().then(() => {
-  root.render(<App />);
-});
+  root.render(<App />)
+})
 
 OverlayScrollbars(document.body, {
   className: 'os-theme-light',
@@ -24,7 +24,8 @@ OverlayScrollbars(document.body, {
 
 if (module.hot) {
   module.hot.accept('./App', () => {
-    const NextRoot = require('./App').default;
-    root.render(<NextRoot />);
-  });
+    // eslint-disable-next-line global-require
+    const NextRoot = require('./App').default
+    root.render(<NextRoot />)
+  })
 }

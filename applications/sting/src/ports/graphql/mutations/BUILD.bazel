@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["resolvers.go"],
+    importpath = "overdoll/applications/sting/src/ports/graphql/mutations",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//applications/sting/src/app:go_default_library",
+        "//applications/sting/src/ports/graphql/types:go_default_library",
+        "@io_temporal_go_sdk//client:go_default_library",
+    ],
+)

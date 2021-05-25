@@ -1,18 +1,18 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import { graphql, useLazyLoadQuery } from 'react-relay/hooks';
-import type { MediaQuery } from '@//:artifacts/MediaQuery.graphql';
-import type { VariablesOf } from 'relay-runtime';
-import Element from '../../../element/Element';
+import type { Node } from 'react'
+import type { VariablesOf } from 'react-relay/hooks'
+import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
+import type { MediaQuery } from '@//:artifacts/MediaQuery.graphql'
+import Element from '../../../element/Element'
 
 type Props = {
   args: {
     variables: VariablesOf<MediaQuery>,
-    options?: any,
+    options: {},
   },
-  onSelect: any,
+  onSelect: () => void,
 };
 
 const MediaQueryGQL = graphql`
@@ -23,41 +23,43 @@ const MediaQueryGQL = graphql`
       thumbnail
     }
   }
-`;
+`
 
-export default function Media({ args, onSelect }: Props): Node {
+export default function Media ({ args, onSelect }: Props): Node {
   const data = useLazyLoadQuery<MediaQuery>(
     MediaQueryGQL,
     args.variables,
-    args.options,
-  );
+    args.options
+  )
 
   // add a new media with a custom tag telling us it's custom
   const onAddNewMedia = () => {
-    const name: string = args.variables.data.search;
-    onSelect({ id: name, title: name, thumbnail: null, request: true });
-  };
+    const name: string = args.variables.data.search
+    onSelect({ id: name, title: name, thumbnail: null, request: true })
+  }
 
   return (
     <>
-      {data.media.length === 0 ? (
-        <div>
-          no media found
-          <button onClick={onAddNewMedia}>
-            add {args.variables.data.search} media
-          </button>
-        </div>
-      ) : (
-        data.media.map(item => (
-          <Element
-            key={item.id}
-            onSelect={() => onSelect(item)}
-            selected={false}
-          >
-            {item.title}-{item.id}-{item.thumbnail}
-          </Element>
-        ))
-      )}
+      {data.media.length === 0
+        ? (
+          <div>
+            no media found
+            <button onClick={onAddNewMedia}>
+              add {args.variables.data.search} media
+            </button>
+          </div>
+          )
+        : (
+            data.media.map(item => (
+              <Element
+                key={item.id}
+                onSelect={() => onSelect(item)}
+                selected={false}
+              >
+                {item.title}-{item.id}-{item.thumbnail}
+              </Element>
+            ))
+          )}
     </>
-  );
+  )
 }

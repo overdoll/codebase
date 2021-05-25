@@ -1,21 +1,25 @@
 /**
  * @flow
  */
-import RouterRenderer from '@//:modules/routing/RouteRenderer';
-import RoutingContext from '@//:modules/routing/RoutingContext';
-import createRouter from '@//:modules/routing/createRouter';
-import routes from './routes';
-import { createBrowserHistory } from 'history';
-import RelayEnvironment from '@//:modules/relay/RelayEnvironment';
-import i18next from './utilities/i18next';
-import type { Node } from 'react';
-import Bootstrap from './Bootstrap';
-import { QueryParamProvider } from 'use-query-params';
-import CompatibilityRoute from '@//:modules/routing/CompatibilityRoute';
+import { createBrowserHistory } from 'history'
+import type { Node } from 'react'
+import { QueryParamProvider } from 'use-query-params'
+import RouterRenderer from '@//:modules/routing/RouteRenderer'
+import RoutingContext from '@//:modules/routing/RoutingContext'
+import { createClientRouter } from '@//:modules/routing/router'
+import routes from './routes'
+import RelayEnvironment from '@//:modules/relay/RelayEnvironment'
+import i18next from './utilities/i18next'
+import Bootstrap from './Bootstrap'
+import CompatibilityRoute from '@//:modules/routing/CompatibilityRoute'
 
-const router = createRouter(routes, createBrowserHistory(), RelayEnvironment);
+const router = createClientRouter(
+  routes,
+  createBrowserHistory(),
+  RelayEnvironment
+)
 
-export default function App(): Node {
+export default function App (): Node {
   return (
     <Bootstrap environment={RelayEnvironment} i18next={i18next}>
       <RoutingContext.Provider value={router.context}>
@@ -24,5 +28,5 @@ export default function App(): Node {
         </QueryParamProvider>
       </RoutingContext.Provider>
     </Bootstrap>
-  );
+  )
 }

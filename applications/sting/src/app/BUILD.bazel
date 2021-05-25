@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["app.go"],
+    importpath = "overdoll/applications/sting/src/app",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//applications/sting/src/app/activities:go_default_library",
+        "//applications/sting/src/app/command:go_default_library",
+        "//applications/sting/src/app/query:go_default_library",
+    ],
+)

@@ -9,11 +9,13 @@ import (
 // is much easier to work with since all services have the same binary directory, meaning
 // we only have to work with relative paths
 func GetBinaryDirectory() (*string, error) {
-	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
 
+	ex, err := os.Executable()
 	if err != nil {
 		return nil, err
 	}
 
-	return &dir, nil
+	exPath := filepath.Dir(ex)
+
+	return &exPath, nil
 }

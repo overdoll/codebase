@@ -1,3 +1,0 @@
-extend type Mutation {
-  post(data: PostInput): PostResponse! @auth
-}

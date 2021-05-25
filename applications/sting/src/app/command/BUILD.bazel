@@ -1,0 +1,24 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "create_pending_post.go",
+        "index_all_artists.go",
+        "index_all_categories.go",
+        "index_all_characters.go",
+        "index_all_media.go",
+        "review_pending_post.go",
+        "services.go",
+    ],
+    importpath = "overdoll/applications/sting/src/app/command",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//applications/sting/src/domain/post:go_default_library",
+        "//libraries/ksuid:go_default_library",
+        "//libraries/passport:go_default_library",
+        "//libraries/user:go_default_library",
+        "@com_github_gocql_gocql//:go_default_library",
+        "@org_uber_go_zap//:go_default_library",
+    ],
+)

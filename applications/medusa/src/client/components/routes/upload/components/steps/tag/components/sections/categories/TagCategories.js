@@ -22,9 +22,9 @@ export default function TagCategories({ state, dispatch }: Props): Node {
     dispatch({
       type: EVENTS.TAG_CATEGORIES,
       value: category,
-      remove: state.categories[category.id] !== undefined,
-    });
-  };
+      remove: state.categories[category.id] !== undefined
+    })
+  }
 
   const onRemove = category => {
     dispatch({
@@ -67,5 +67,5 @@ export default function TagCategories({ state, dispatch }: Props): Node {
         </Text>
       )}
     </Section>
-  );
+  )
 }

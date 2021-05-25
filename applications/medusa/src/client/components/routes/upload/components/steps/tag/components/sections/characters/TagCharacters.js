@@ -19,7 +19,7 @@ type Props = {
   state: State,
 };
 
-export default function TagCharacters({ state, dispatch }: Props): Node {
+export default function TagCharacters ({ state, dispatch }: Props): Node {
   // state to handle how the new character will be added, when requested
 
   const [t] = useTranslation('upload');
@@ -29,15 +29,15 @@ export default function TagCharacters({ state, dispatch }: Props): Node {
   // OnSelect will remove or add the character based on if it's in the object already or not
   const onSelect = character => {
     if (character.request) {
-      addNewCharacter(character);
+      addNewCharacter(character)
     } else {
       dispatch({
         type: EVENTS.TAG_CHARACTERS,
         remove: state.characters[character.id] !== undefined,
-        value: character,
-      });
+        value: character
+      })
     }
-  };
+  }
 
   const onRemove = character => {
     dispatch({
@@ -53,30 +53,30 @@ export default function TagCharacters({ state, dispatch }: Props): Node {
     dispatch({
       type: EVENTS.TAG_CHARACTERS,
       remove: false,
-      value: { ...newCharacter, media: media },
-    });
+      value: { ...newCharacter, media: media }
+    })
 
     // reset the state back to null
-    addNewCharacter(null);
-  };
+    addNewCharacter(null)
+  }
 
   // if user clicks "cancel", we move them back to the list of characters
   const onCancelNewCharacter = () => {
-    addNewCharacter(null);
-  };
+    addNewCharacter(null)
+  }
 
   // if we are selecting a new character, open a modal for selecting a new media with this
   if (newCharacter !== null) {
     return createPortal(
       <Search
-        placeholder="search media"
+        placeholder='search media'
         header={<div>selected character: {newCharacter.name}</div>}
         onClose={onCancelNewCharacter}
       >
         {args => <Media selected={[]} onSelect={onAddNewMedia} args={args} />}
       </Search>,
-      RootElement,
-    );
+      RootElement
+    )
   }
 
   return (
@@ -112,5 +112,5 @@ export default function TagCharacters({ state, dispatch }: Props): Node {
         </Text>
       )}
     </Section>
-  );
+  )
 }

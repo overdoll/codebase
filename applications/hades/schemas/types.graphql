@@ -1,3 +1,0 @@
-type Validation {
-  code: String!
-}

@@ -19,9 +19,9 @@ export default function TagArtists({ state, dispatch }: Props): Node {
 
   // For selecting an artist, we immediately close since we should only have 1
   const onSelect = (artist, onClose) => {
-    dispatch({ type: EVENTS.TAG_ARTIST, value: artist });
-    onClose();
-  };
+    dispatch({ type: EVENTS.TAG_ARTIST, value: artist })
+    onClose()
+  }
 
   return (
     <Section
@@ -47,5 +47,5 @@ export default function TagArtists({ state, dispatch }: Props): Node {
         </Text>
       )}
     </Section>
-  );
+  )
 }

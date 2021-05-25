@@ -1,0 +1,25 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "cli.go",
+        "http.go",
+        "worker.go",
+    ],
+    importpath = "overdoll/applications/sting/src/ports",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//applications/sting/src/adapters:go_default_library",
+        "//applications/sting/src/app:go_default_library",
+        "//applications/sting/src/ports/graphql:go_default_library",
+        "//applications/sting/src/service:go_default_library",
+        "//libraries/graphql:go_default_library",
+        "//libraries/router:go_default_library",
+        "@com_github_spf13_cobra//:go_default_library",
+        "@io_temporal_go_sdk//activity:go_default_library",
+        "@io_temporal_go_sdk//client:go_default_library",
+        "@io_temporal_go_sdk//worker:go_default_library",
+        "@org_uber_go_zap//:go_default_library",
+    ],
+)
