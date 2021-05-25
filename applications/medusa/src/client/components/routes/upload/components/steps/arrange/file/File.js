@@ -9,8 +9,8 @@ type Props = {
   file: UppyFile,
   thumbnail: ?string,
   progress: {
+    '0': string,
     '1': string,
-    '2': string,
   },
   onRemove: (string) => void,
   index: number,
