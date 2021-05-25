@@ -116,7 +116,7 @@ yarn_install(
         "--target_platform=linux",
     ],
     data = [
-        "streamlinehq.json",
+        "//:streamlinehq.json",
     ],
     package_json = "//:package.json",
     yarn_lock = "//:yarn.lock",
