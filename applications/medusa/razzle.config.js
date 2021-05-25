@@ -25,6 +25,21 @@ module.exports = {
     paths.appServerIndexJs = path.join(paths.appPath, 'src')
     return paths
   },
+  modifyWebpackOptions ({
+    env,
+    options
+  }) {
+    if (!env.dev) {
+      options.webpackOptions.fileLoaderOutputName = `${options.razzleOptions.mediaPrefix}/[contenthash].[ext]`
+      options.webpackOptions.urlLoaderOutputName = `${options.razzleOptions.mediaPrefix}/[contenthash].[ext]`
+
+      options.webpackOptions.cssOutputFilename = `${options.razzleOptions.cssPrefix}/[contenthash].css`
+      options.webpackOptions.cssOutputChunkFilename = `${options.razzleOptions.cssPrefix}/[contenthash].chunk.css`
+
+      options.webpackOptions.jsOutputFilename = `${options.razzleOptions.jsPrefix}/[contenthash:8].js`
+      options.webpackOptions.jsOutputChunkFilename = `${options.razzleOptions.jsPrefix}/[contenthash:8].chunk.js`
+    }
+  },
   modifyWebpackConfig (opts) {
     const config = opts.webpackConfig
 
@@ -65,9 +80,10 @@ module.exports = {
     if (opts.env.target === 'web') {
       const filename = path.resolve(__dirname, 'build')
 
-      config.output.filename = opts.env.dev
-        ? 'js/[name].js'
-        : 'js/[contenthash].js'
+      if (!opts.env.dev) {
+        config.output.filename = 'js/[contenthash].js'
+        config.output.filename = 'js/[contenthash].js'
+      }
 
       if (opts.env.dev) {
         config.devServer.proxy = {
