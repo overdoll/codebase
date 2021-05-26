@@ -109,6 +109,8 @@ _RUNTIME_DEPS = [
     "@npm//@apollo/gateway",
     "@npm//ua-parser-js",
     "@npm//swiper",
+    "@npm//overlayscrollbars",
+    "@npm//overlayscrollbars-react",
 ]
 
 TEST_DEPS = [

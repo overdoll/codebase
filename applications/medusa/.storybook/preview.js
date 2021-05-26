@@ -1,17 +1,16 @@
-import React from 'react';
-import darkTheme from './dark';
-import { ChakraProvider } from '@chakra-ui/react';
-import theme from '@//:modules/theme';
-import { I18nextProvider } from 'react-i18next';
-import i18next from './i18n';
-import { Suspense } from 'react';
+import React, { Suspense } from 'react'
+import darkTheme from './dark'
+import { ChakraProvider } from '@chakra-ui/react'
+import theme from '@//:modules/theme'
+import { I18nextProvider } from 'react-i18next'
+import i18next from '../src/client/utilities/i18next'
 
 export const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },
   docs: {
-    theme: darkTheme,
-  },
-};
+    theme: darkTheme
+  }
+}
 
 export const decorators = [
   Story => (
@@ -22,5 +21,5 @@ export const decorators = [
         </ChakraProvider>
       </I18nextProvider>
     </Suspense>
-  ),
-];
+  )
+]
