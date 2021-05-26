@@ -12,7 +12,8 @@
   },
   "arrange": {
     "header": "Hold a tile and drag to reorder it",
-    "add": "Add media"
+    "add": "Add media",
+    "count": "Posting {{count}} media"
   },
   "tag": {
     "header": "Tag your post",
