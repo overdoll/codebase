@@ -39,6 +39,7 @@ class CookieDataSource extends RemoteGraphQLDataSource {
    */
   willSendRequest (requestContext) {
     if (!requestContext.context.req) {
+      console.log(requestContext.context)
       return
     }
 
@@ -70,12 +71,17 @@ export default config => {
     }
   })
 
+  const { schema, executor } = await gateway.load()
+
   // GraphQL Server
   const server = new ApolloServer({
-    gateway,
+    schema,
+    executor,
     subscriptions: false,
     context: ({ res, req }) => ({ res, req })
   })
 
-  server.start().then(() => server.applyMiddleware(config))
+  server.applyMiddleware(config)
+
+  return server
 }

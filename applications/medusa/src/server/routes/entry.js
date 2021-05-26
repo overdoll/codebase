@@ -1,5 +1,4 @@
 import { ChunkExtractor } from '@loadable/server'
-import axios from 'axios'
 import { Environment, Network, RecordSource, Store } from 'relay-runtime'
 import { fetchQuery, RelayEnvironmentProvider } from 'react-relay/hooks'
 import path from 'path'
@@ -11,6 +10,7 @@ import { CacheProvider } from '@emotion/react'
 import { renderToString } from 'react-dom/server'
 import createEmotionServer from '@emotion/server/create-instance'
 import createCache from '@emotion/cache'
+import queryMapJson from '../queries.json'
 
 import { QueryParamProvider } from 'use-query-params'
 import { ChakraProvider } from '@chakra-ui/react'
@@ -21,198 +21,150 @@ import RoutingContext from '@//:modules/routing/RoutingContext'
 import RouteRenderer from '@//:modules/routing/RouteRenderer'
 import routes from '../../client/routes'
 import theme from '@//:modules/theme'
-import parseCookies from '../utilities/parseCookies'
 import { FlashProvider } from '@//:modules/flash'
 
-const entry = async (req, res, next) => {
-  try {
-    let forwardCookies = []
+const entry = (apollo) => {
+  return async function (req, res, next) {
+    try {
+      // Set up relay environment
+      const environment = new Environment({
+        network: Network.create(async function (params, variables) {
+          // On the relay environment, we call apollo directly instead of doing an API call
+          // This saves a network request and we don't have to worry about the complexities of
+          // forwarding cookies
+          if (!Object.prototype.hasOwnProperty.call(queryMapJson, params.id)) {
+            throw new Error('no query with id found')
+          }
 
-    let fetchCookies = null
+          const result = await apollo.executeOperation({
+            operationName: params.name,
+            variables: variables,
+            query: queryMapJson[params.id]
+          })
 
-    // Make sure we include a csrf cookie in our fetchRelay function, since
-    // the initial call does not contain it
-    // eslint-disable-next-line no-underscore-dangle
-    if (req.cookies._csrf === undefined && res.getHeader('set-cookie')) {
-      const cookies = parseCookies(
-        res.getHeader('set-cookie').join(',')
-      ).filter(ck => ck.cookieName === '_csrf')
+          // Throw an error, which will be caught by our server
+          if (Array.isArray(result.errors)) {
+            throw new Error(JSON.stringify(result.errors, null, 2))
+          }
 
-      if (cookies.length > 0) {
-        const csrf = cookies[0].cookieValue
-        fetchCookies =
-          req.headers.cookie !== undefined
-            ? `${req.headers.cookie}; _csrf=${csrf}`
-            : `_csrf=${csrf}`
-      }
-    }
-
-    async function fetchRelay (params, variables) {
-      const response = await axios({
-        url: 'http://localhost:8080/api/graphql',
-        withCredentials: true,
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-csrf-token': req.csrfToken(),
-          ...req.headers,
-          cookie: fetchCookies !== null ? fetchCookies : req.headers.cookie
-        },
-        data: {
-          operationName: params.name,
-          queryId: params.id,
-          variables
-        }
+          return { data: JSON.parse(JSON.stringify(result.data)) }
+        }),
+        store: new Store(new RecordSource()),
+        isServer: true
       })
 
-      // Need to make sure we forward our cookies from API calls
-      if (
-        Object.prototype.hasOwnProperty.call(response.headers, 'set-cookie')
-      ) {
-        forwardCookies = [...forwardCookies, ...response.headers['set-cookie']]
+      // Before going further and creating
+      // our router, we pre-emptively resolve the RootQuery routes, so that the user object
+      // can be available for permission checking & redirecting on the server & client
+      const root = routes[0].prepare({})
+      const rootKeys = Object.keys(root)
+
+      // Get all prepared statements, and wait for fetchQuery to resolve
+
+      // Get all prepared statements, and wait for fetchQuery to resolve
+      for (let i = 0; i < rootKeys.length; i++) {
+        const { query, variables, options } = root[rootKeys[i]]
+        await fetchQuery(environment, query, variables, options).toPromise()
       }
 
-      // Throw an error, which will be caught by our server
-      if (Array.isArray(response.data.errors)) {
-        throw new Error(JSON.stringify(response.data.errors, null, 2))
+      const context = {}
+
+      // Create a router
+      const router = createServerRouter(
+        routes,
+        createMockHistory({ context, location: req.url }),
+        environment,
+        req
+      )
+
+      const helmetContext = {}
+
+      const App = (
+        <HelmetProvider context={helmetContext}>
+          <FlashProvider override={req.flash}>
+            <ChakraProvider theme={theme}>
+              <RelayEnvironmentProvider environment={environment}>
+                <RoutingContext.Provider value={router.context}>
+                  <QueryParamProvider ReactRouterRoute={CompatibilityRoute}>
+                    <RouteRenderer />
+                  </QueryParamProvider>
+                </RoutingContext.Provider>
+              </RelayEnvironmentProvider>
+            </ChakraProvider>
+          </FlashProvider>
+        </HelmetProvider>
+      )
+
+      // Collect relay App data from our routes, so we have faster initial loading times.
+      await prepass(App)
+
+      // Disable caching for this page - it MUST be regenerated with each request
+      res.setHeader(
+        'cache-control',
+        'private, no-cache, no-store, must-revalidate'
+      )
+
+      // check for another redirect, this time by the body of the whole app
+      if (context.url) {
+        res.redirect(301, context.url)
+        return
       }
 
-      return response.data
+      // Get our i18next store, and we will send this to the front-end
+      const initialI18nStore = {}
+
+      req.i18n.languages.forEach(l => {
+        initialI18nStore[l] = req.i18n.services.resourceStore.data[l] || {}
+      })
+
+      // Get our relay store
+      const relayData = environment
+        .getStore()
+        .getSource()
+        .toJSON()
+
+      // Get any extra assets we need to load, so that we dont have to import them in-code
+      const assets = router.context.get().entries.map(entry => entry.id)
+
+      // Set up our chunk extractor, so that we can preload our resources
+      const extractor = new ChunkExtractor({
+        statsFile: path.resolve(__dirname, 'loadable-stats.json'),
+        entrypoints: ['client', ...assets]
+      })
+
+      const cache = createCache({ key: 'od', nonce: res.locals.cspNonce })
+      const { extractCritical } = createEmotionServer(cache)
+
+      const element = <CacheProvider value={cache}>{App}</CacheProvider>
+
+      const { html, css, ids } = extractCritical(
+        renderToString(extractor.collectChunks(element))
+      )
+
+      const { helmet } = helmetContext
+
+      res.render('default', {
+        title: helmet.title.toString(),
+        meta: helmet.meta.toString(),
+        link: helmet.link.toString(),
+        manifest: `${process.env.PUBLIC_PATH}manifest.json`,
+        favicon: `${process.env.PUBLIC_PATH}favicon.ico`,
+        scripts: extractor.getScriptTags(),
+        preload: extractor.getLinkTags(),
+        styles: extractor.getStyleTags(),
+        nonce: res.locals.cspNonce,
+        emotionIds: ids.join(' '),
+        emotionCss: css,
+        html,
+        csrfToken: req.csrfToken(),
+        relayStore: serialize(relayData),
+        i18nextStore: serialize(initialI18nStore),
+        flashStore: serialize(req.flash.flush()),
+        i18nextLang: req.i18n.language
+      })
+    } catch (e) {
+      next(e)
     }
-
-    // Set up relay environment
-    const environment = new Environment({
-      network: Network.create(fetchRelay),
-      store: new Store(new RecordSource(), {
-        gcReleaseBufferSize: 100
-      }),
-      isServer: true
-    })
-
-    // Before going further and creating
-    // our router, we pre-emptively resolve the RootQuery routes, so that the user object
-    // can be available for permission checking & redirecting on the server & client
-    const root = routes[0].prepare({})
-    const rootKeys = Object.keys(root)
-
-    // Get all prepared statements, and wait for fetchQuery to resolve
-
-    // Get all prepared statements, and wait for fetchQuery to resolve
-    for (let i = 0; i < rootKeys.length; i++) {
-      const { query, variables, options } = root[rootKeys[i]]
-      await fetchQuery(environment, query, variables, options).toPromise()
-    }
-
-    const context = {}
-
-    // Create a router
-    const router = createServerRouter(
-      routes,
-      createMockHistory({ context, location: req.url }),
-      environment,
-      req
-    )
-
-    const helmetContext = {}
-
-    const App = (
-      <HelmetProvider context={helmetContext}>
-        <FlashProvider override={req.flash}>
-          <ChakraProvider theme={theme}>
-            <RelayEnvironmentProvider environment={environment}>
-              <RoutingContext.Provider value={router.context}>
-                <QueryParamProvider ReactRouterRoute={CompatibilityRoute}>
-                  <RouteRenderer />
-                </QueryParamProvider>
-              </RoutingContext.Provider>
-            </RelayEnvironmentProvider>
-          </ChakraProvider>
-        </FlashProvider>
-      </HelmetProvider>
-    )
-
-    // Collect relay App data from our routes, so we have faster initial loading times.
-    await prepass(App)
-
-    // Add any cookies that may have been added in our API requests,
-    // and headers from any possible middleware
-    if (forwardCookies.length > 0) {
-      if (res.getHeader('set-cookie')) {
-        res.setHeader('set-cookie', [
-          ...forwardCookies,
-          res.getHeader('set-cookie')
-        ])
-      } else {
-        res.setHeader('set-cookie', [...forwardCookies])
-      }
-    }
-
-    // Disable caching for this page - it MUST be regenerated with each request
-    res.setHeader(
-      'cache-control',
-      'private, no-cache, no-store, must-revalidate'
-    )
-
-    // check for another redirect, this time by the body of the whole app
-    if (context.url) {
-      res.redirect(301, context.url)
-      return
-    }
-
-    // Get our i18next store, and we will send this to the front-end
-    const initialI18nStore = {}
-
-    req.i18n.languages.forEach(l => {
-      initialI18nStore[l] = req.i18n.services.resourceStore.data[l] || {}
-    })
-
-    // Get our relay store
-    const relayData = environment
-      .getStore()
-      .getSource()
-      .toJSON()
-
-    // Get any extra assets we need to load, so that we dont have to import them in-code
-    const assets = router.context.get().entries.map(entry => entry.id)
-
-    // Set up our chunk extractor, so that we can preload our resources
-    const extractor = new ChunkExtractor({
-      statsFile: path.resolve(__dirname, 'loadable-stats.json'),
-      entrypoints: ['client', ...assets]
-    })
-
-    const cache = createCache({ key: 'od', nonce: res.locals.cspNonce })
-    const { extractCritical } = createEmotionServer(cache)
-
-    const element = <CacheProvider value={cache}>{App}</CacheProvider>
-
-    const { html, css, ids } = extractCritical(
-      renderToString(extractor.collectChunks(element))
-    )
-
-    const { helmet } = helmetContext
-
-    res.render('default', {
-      title: helmet.title.toString(),
-      meta: helmet.meta.toString(),
-      link: helmet.link.toString(),
-      manifest: `${process.env.PUBLIC_PATH}manifest.json`,
-      favicon: `${process.env.PUBLIC_PATH}favicon.ico`,
-      scripts: extractor.getScriptTags(),
-      preload: extractor.getLinkTags(),
-      styles: extractor.getStyleTags(),
-      nonce: res.locals.cspNonce,
-      emotionIds: ids.join(' '),
-      emotionCss: css,
-      html,
-      csrfToken: req.csrfToken(),
-      relayStore: serialize(relayData),
-      i18nextStore: serialize(initialI18nStore),
-      flashStore: serialize(req.flash.flush()),
-      i18nextLang: req.i18n.language
-    })
-  } catch (e) {
-    next(e)
   }
 }
 

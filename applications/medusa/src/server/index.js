@@ -75,13 +75,13 @@ if (process.env.APP_DEBUG) {
 }
 
 // GraphQL Server
-graphql({
+const server = graphql({
   path: '/api/graphql',
   app: index.use(matchQueryMiddleware(queryMapJson))
 })
 
 // Our entrypoint
-index.get('/*', entry)
+index.get('/*', entry(server))
 
 index.use(middleware.error)
 
