@@ -62,12 +62,13 @@ const entry = (apollo) => {
       const rootKeys = Object.keys(root)
 
       // Get all prepared statements, and wait for fetchQuery to resolve
-
-      // Get all prepared statements, and wait for fetchQuery to resolve
-      for (let i = 0; i < rootKeys.length; i++) {
-        const { query, variables, options } = root[rootKeys[i]]
-        await fetchQuery(environment, query, variables, options).toPromise()
-      }
+      await Promise.all(
+        rootKeys.map(
+          key =>
+            fetchQuery(environment, root[key].query, root[key].variables, root[key].options)
+              .toPromise()
+        )
+      )
 
       const context = {}
 
@@ -119,12 +120,6 @@ const entry = (apollo) => {
         initialI18nStore[l] = req.i18n.services.resourceStore.data[l] || {}
       })
 
-      // Get our relay store
-      const relayData = environment
-        .getStore()
-        .getSource()
-        .toJSON()
-
       // Get any extra assets we need to load, so that we dont have to import them in-code
       const assets = router.context.get().entries.map(entry => entry.id)
 
@@ -159,7 +154,11 @@ const entry = (apollo) => {
         emotionCss: css,
         html,
         csrfToken: req.csrfToken(),
-        relayStore: serialize(relayData),
+        relayStore: serialize(environment
+          .getStore()
+          .getSource()
+          .toJSON()
+        ),
         i18nextStore: serialize(initialI18nStore),
         flashStore: serialize(req.flash.flush()),
         i18nextLang: req.i18n.language
