@@ -9,6 +9,7 @@ import { EVENTS, INITIAL_STATE } from './constants/constants'
 import reducer from './reducer'
 import useUpload from './hooks'
 import { useToast } from '@chakra-ui/react'
+import { Helmet } from 'react-helmet'
 
 // Main upload component - handles all events from Uppy and renders the stepper
 // also contains the main state and is responsible for recovering state when rendered (if state is available)
@@ -95,5 +96,10 @@ export default function Upload (): Node {
     })
   }, [notify, uppy])
 
-  return <Steps uppy={uppy} state={state} dispatch={dispatch} />
+  return (
+    <>
+      <Helmet title='upload' />
+      <Steps uppy={uppy} state={state} dispatch={dispatch} />
+    </>
+  )
 }

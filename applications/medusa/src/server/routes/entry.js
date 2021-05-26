@@ -5,6 +5,7 @@ import { fetchQuery, RelayEnvironmentProvider } from 'react-relay/hooks'
 import path from 'path'
 import serialize from 'serialize-javascript'
 import prepass from 'react-ssr-prepass'
+import { Helmet } from 'react-helmet'
 
 import { CacheProvider } from '@emotion/react'
 import { renderToString } from 'react-dom/server'
@@ -185,8 +186,12 @@ const entry = async (req, res, next) => {
       renderToString(extractor.collectChunks(element))
     )
 
+    const helmet = Helmet.renderStatic()
+
     res.render('default', {
-      title: 'Title',
+      title: helmet.title.toString(),
+      meta: helmet.meta.toString(),
+      link: helmet.link.toString(),
       manifest: `${process.env.PUBLIC_PATH}manifest.json`,
       favicon: `${process.env.PUBLIC_PATH}favicon.ico`,
       scripts: extractor.getScriptTags(),

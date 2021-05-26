@@ -15,6 +15,7 @@ import Icon from '@//:modules/content/icon/Icon'
 import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/sign-badge-circle-K1i3HA.svg'
 import type { JoinFragment$key } from '@//:artifacts/JoinFragment.graphql'
 import { useFlash } from '@//:modules/flash'
+import { Helmet } from 'react-helmet'
 
 type JoinValues = {
   email: string,
@@ -124,51 +125,54 @@ export default function Join (): Node {
 
   // Ask user to authenticate
   return (
-    <Center mt={8}>
-      <Flex w={['fill', 'sm']} direction='column'>
-        <Icon
-          icon={SignBadgeCircle}
-          w={100}
-          h={100}
-          ml='auto'
-          mr='auto'
-          mb={5}
-        />
-        {error &&
-        (
-          <Alert mb={2} status='error'>
-            <AlertIcon />
-            <AlertTitle mr={2}>{error}</AlertTitle>
-            <AlertDescription>{error}</AlertDescription>
-            <CloseButton
-              position='absolute'
-              right='8px'
-              top='8px'
-              onClick={() => flush('login.notify')}
-            />
-          </Alert>
-        )}
-        <Form instance={instance} onSubmit={onSubmit}>
-          <Input
-            title={t('authenticate.form.email.title')}
-            name='email'
-            validation={{
-              required: {
-                value: true,
-                message: t('authenticate.form.validation.email.required')
-              },
-              pattern: {
-                value: EMAIL,
-                message: t('authenticate.form.validation.email.pattern')
-              }
-            }}
-            placeholder={t('authenticate.form.email.placeholder')}
+    <>
+      <Helmet title='join' />
+      <Center mt={8}>
+        <Flex w={['fill', 'sm']} direction='column'>
+          <Icon
+            icon={SignBadgeCircle}
+            w={100}
+            h={100}
+            ml='auto'
+            mr='auto'
+            mb={5}
           />
-          <Button type='submit' loading={isInFlight} width='100%'>
-            {t('authenticate.form.continue')}
-          </Button>
-        </Form>
-      </Flex>
-    </Center>
+          {error &&
+          (
+            <Alert mb={2} status='error'>
+              <AlertIcon />
+              <AlertTitle mr={2}>{error}</AlertTitle>
+              <AlertDescription>{error}</AlertDescription>
+              <CloseButton
+                position='absolute'
+                right='8px'
+                top='8px'
+                onClick={() => flush('login.notify')}
+              />
+            </Alert>
+          )}
+          <Form instance={instance} onSubmit={onSubmit}>
+            <Input
+              title={t('authenticate.form.email.title')}
+              name='email'
+              validation={{
+                required: {
+                  value: true,
+                  message: t('authenticate.form.validation.email.required')
+                },
+                pattern: {
+                  value: EMAIL,
+                  message: t('authenticate.form.validation.email.pattern')
+                }
+              }}
+              placeholder={t('authenticate.form.email.placeholder')}
+            />
+            <Button type='submit' loading={isInFlight} width='100%'>
+              {t('authenticate.form.continue')}
+            </Button>
+          </Form>
+        </Flex>
+      </Center>
+    </>
   )
 }

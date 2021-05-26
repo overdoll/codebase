@@ -107,6 +107,7 @@ _RUNTIME_DEPS = [
     "@npm//connect-redis",
     "@npm//apollo-server-express",
     "@npm//@apollo/gateway",
+    "@npm//react-helmet",
 ]
 
 TEST_DEPS = [
