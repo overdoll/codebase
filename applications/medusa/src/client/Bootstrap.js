@@ -11,6 +11,7 @@ import RelayEnvironment from '@//:modules/relay/RelayEnvironment'
 import theme from '@//:modules/theme'
 import { FlashProvider } from '@//:modules/flash'
 import type { i18next } from 'i18next'
+import { HelmetProvider } from 'react-helmet-async'
 
 type Props = {
   environment: typeof RelayEnvironment,
@@ -33,16 +34,18 @@ window.__webpack_nonce__ = nonce
  */
 export default function Bootstrap (props: Props): Node {
   return (
-    <FlashProvider>
-      <CacheProvider value={cache}>
-        <I18nextProvider i18n={props.i18next}>
-          <ChakraProvider theme={theme}>
-            <RelayEnvironmentProvider environment={props.environment}>
-              {props.children}
-            </RelayEnvironmentProvider>
-          </ChakraProvider>
-        </I18nextProvider>
-      </CacheProvider>
-    </FlashProvider>
+    <HelmetProvider>
+      <FlashProvider>
+        <CacheProvider value={cache}>
+          <I18nextProvider i18n={props.i18next}>
+            <ChakraProvider theme={theme}>
+              <RelayEnvironmentProvider environment={props.environment}>
+                {props.children}
+              </RelayEnvironmentProvider>
+            </ChakraProvider>
+          </I18nextProvider>
+        </CacheProvider>
+      </FlashProvider>
+    </HelmetProvider>
   )
 }

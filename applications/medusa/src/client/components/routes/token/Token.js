@@ -10,7 +10,7 @@ import { useHistory } from '@//:modules/routing'
 import type { TokenQuery } from '@//:artifacts/TokenQuery.graphql'
 import { Box, Center, Flex, Heading, Text } from '@chakra-ui/react'
 import { useFlash } from '@//:modules/flash'
-import { Helmet } from 'react-helmet'
+import { Helmet } from 'react-helmet-async'
 
 type Props = {
   prepared: {

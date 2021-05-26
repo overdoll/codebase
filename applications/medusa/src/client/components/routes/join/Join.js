@@ -15,7 +15,7 @@ import Icon from '@//:modules/content/icon/Icon'
 import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/sign-badge-circle-K1i3HA.svg'
 import type { JoinFragment$key } from '@//:artifacts/JoinFragment.graphql'
 import { useFlash } from '@//:modules/flash'
-import { Helmet } from 'react-helmet'
+import { Helmet } from 'react-helmet-async'
 
 type JoinValues = {
   email: string,

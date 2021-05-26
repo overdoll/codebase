@@ -6,7 +6,7 @@ import { createContext, Suspense } from 'react'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
 import { graphql, usePreloadedQuery } from 'react-relay/hooks'
 import type { RootQuery, RootQueryResponse } from '@//:artifacts/RootQuery.graphql'
-import { Helmet } from 'react-helmet'
+import { Helmet } from 'react-helmet-async'
 
 type Props = {
   prepared: {

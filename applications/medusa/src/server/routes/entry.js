@@ -5,7 +5,7 @@ import { fetchQuery, RelayEnvironmentProvider } from 'react-relay/hooks'
 import path from 'path'
 import serialize from 'serialize-javascript'
 import prepass from 'react-ssr-prepass'
-import { Helmet } from 'react-helmet'
+import { HelmetProvider } from 'react-helmet-async'
 
 import { CacheProvider } from '@emotion/react'
 import { renderToString } from 'react-dom/server'
@@ -113,18 +113,22 @@ const entry = async (req, res, next) => {
       req
     )
 
+    const helmetContext = {}
+
     const App = (
-      <FlashProvider override={req.flash}>
-        <ChakraProvider theme={theme}>
-          <RelayEnvironmentProvider environment={environment}>
-            <RoutingContext.Provider value={router.context}>
-              <QueryParamProvider ReactRouterRoute={CompatibilityRoute}>
-                <RouteRenderer />
-              </QueryParamProvider>
-            </RoutingContext.Provider>
-          </RelayEnvironmentProvider>
-        </ChakraProvider>
-      </FlashProvider>
+      <HelmetProvider context={helmetContext}>
+        <FlashProvider override={req.flash}>
+          <ChakraProvider theme={theme}>
+            <RelayEnvironmentProvider environment={environment}>
+              <RoutingContext.Provider value={router.context}>
+                <QueryParamProvider ReactRouterRoute={CompatibilityRoute}>
+                  <RouteRenderer />
+                </QueryParamProvider>
+              </RoutingContext.Provider>
+            </RelayEnvironmentProvider>
+          </ChakraProvider>
+        </FlashProvider>
+      </HelmetProvider>
     )
 
     // Collect relay App data from our routes, so we have faster initial loading times.
@@ -186,7 +190,7 @@ const entry = async (req, res, next) => {
       renderToString(extractor.collectChunks(element))
     )
 
-    const helmet = Helmet.renderStatic()
+    const { helmet } = helmetContext
 
     res.render('default', {
       title: helmet.title.toString(),
