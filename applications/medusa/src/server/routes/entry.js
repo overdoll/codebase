@@ -32,6 +32,8 @@ const entry = (apollo) => {
           // On the relay environment, we call apollo directly instead of doing an API call
           // This saves a network request and we don't have to worry about the complexities of
           // forwarding cookies
+
+          // here, we grab our queries based on the ID passed by the request
           if (!Object.prototype.hasOwnProperty.call(queryMapJson, params.id)) {
             throw new Error('no query with id found')
           }
@@ -40,7 +42,7 @@ const entry = (apollo) => {
             operationName: params.name,
             variables: variables,
             query: queryMapJson[params.id]
-          })
+          }, { req, res })
 
           // Throw an error, which will be caught by our server
           if (Array.isArray(result.errors)) {
