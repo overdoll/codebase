@@ -2,7 +2,7 @@
  * @flow
  */
 import { matchRoutes } from 'react-router-config'
-import { loadQuery } from 'react-relay/hooks'
+import { fetchQuery, loadQuery } from 'react-relay/hooks'
 import type { IEnvironment } from 'relay-runtime/store/RelayStoreTypes'
 import type { Resource } from '@//:modules/utilities/JSResource'
 
@@ -116,12 +116,29 @@ const isRouteValid = (data, route) => {
 
 // Server router differs from ClientRouter in that it doesn't "subscribe" to the history, and will
 // run "middleware" on each route to determine if the current user is allowed to access it
-function createServerRouter (
+async function createServerRouter (
   routes: Array<Route>,
   history: RouterHistory,
   environment: IEnvironment,
   req
 ): RouterInstance {
+  // Before going further and creating
+  // our router, we pre-emptively resolve the RootQuery routes, so that the user object
+  // can be available for permission checking & redirecting on the server
+  const root = routes[0].prepare({})
+  const rootKeys = Object.keys(root)
+
+  // Get all prepared statements, and wait for loadQuery to resolve
+  await Promise.all(rootKeys.map(
+    key =>
+      fetchQuery(
+        environment,
+        root[key].query,
+        root[key].variables,
+        root[key].options
+      ).toPromise()
+  ))
+
   const data = {
     environment,
     flash: req.flash

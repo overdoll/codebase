@@ -10,7 +10,7 @@ const options = {
   load: 'languageOnly',
   saveMissing: true,
   debug: false,
-  ns: ['auth', 'token', 'empty'],
+  ns: [],
   interpolation: {
     escapeValue: false, // not needed for react!!
     formatSeparator: ',',

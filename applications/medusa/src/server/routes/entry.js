@@ -22,6 +22,7 @@ import RouteRenderer from '@//:modules/routing/RouteRenderer'
 import routes from '../../client/routes'
 import theme from '@//:modules/theme'
 import { FlashProvider } from '@//:modules/flash'
+import { I18nextProvider } from 'react-i18next'
 
 const entry = (apollo) => {
   return async function (req, res, next) {
@@ -55,25 +56,10 @@ const entry = (apollo) => {
         isServer: true
       })
 
-      // Before going further and creating
-      // our router, we pre-emptively resolve the RootQuery routes, so that the user object
-      // can be available for permission checking & redirecting on the server & client
-      const root = routes[0].prepare({})
-      const rootKeys = Object.keys(root)
-
-      // Get all prepared statements, and wait for fetchQuery to resolve
-      await Promise.all(
-        rootKeys.map(
-          key =>
-            fetchQuery(environment, root[key].query, root[key].variables, root[key].options)
-              .toPromise()
-        )
-      )
-
       const context = {}
 
       // Create a router
-      const router = createServerRouter(
+      const router = await createServerRouter(
         routes,
         createMockHistory({ context, location: req.url }),
         environment,
@@ -83,19 +69,21 @@ const entry = (apollo) => {
       const helmetContext = {}
 
       const App = (
-        <HelmetProvider context={helmetContext}>
-          <FlashProvider override={req.flash}>
-            <ChakraProvider theme={theme}>
-              <RelayEnvironmentProvider environment={environment}>
-                <RoutingContext.Provider value={router.context}>
-                  <QueryParamProvider ReactRouterRoute={CompatibilityRoute}>
-                    <RouteRenderer />
-                  </QueryParamProvider>
-                </RoutingContext.Provider>
-              </RelayEnvironmentProvider>
-            </ChakraProvider>
-          </FlashProvider>
-        </HelmetProvider>
+        <I18nextProvider i18n={req.i18n}>
+          <HelmetProvider context={helmetContext}>
+            <FlashProvider override={req.flash}>
+              <ChakraProvider theme={theme}>
+                <RelayEnvironmentProvider environment={environment}>
+                  <RoutingContext.Provider value={router.context}>
+                    <QueryParamProvider ReactRouterRoute={CompatibilityRoute}>
+                      <RouteRenderer />
+                    </QueryParamProvider>
+                  </RoutingContext.Provider>
+                </RelayEnvironmentProvider>
+              </ChakraProvider>
+            </FlashProvider>
+          </HelmetProvider>
+        </I18nextProvider>
       )
 
       // Collect relay App data from our routes, so we have faster initial loading times.
@@ -117,7 +105,19 @@ const entry = (apollo) => {
       const initialI18nStore = {}
 
       req.i18n.languages.forEach(l => {
-        initialI18nStore[l] = req.i18n.services.resourceStore.data[l] || {}
+        // By passing the i18n instance to the provider above, each namespace that is requested
+        // will be passed to reportNamespaces. With reportNamespaces, we filter out
+        // our cached data and make sure that we give the user all the namespaces that were requested
+        const languageData = req.i18n.services.resourceStore.data[l]
+
+        req.i18n.reportNamespaces.getUsedNamespaces().forEach(key => {
+          // If the store doesn't contain key, we need to add it
+          if (!Object.prototype.hasOwnProperty.call(initialI18nStore, l)) {
+            initialI18nStore[l] = {}
+          }
+
+          initialI18nStore[l][key] = languageData[key]
+        })
       })
 
       // Get any extra assets we need to load, so that we dont have to import them in-code

@@ -2,36 +2,55 @@
  * @flow
  */
 import type { Node } from 'react'
+import { Suspense } from 'react'
 import JSResource from './JSResource'
+import CanUseDOM from '@//:modules/utilities/CanUseDOM'
+import { Image, Img } from '@chakra-ui/react'
 
 type Props = {
   src: string,
-  alt?: string,
+  fallback: Node
 };
 
-export default function SuspenseImage (props: Props): Node {
-  const { src, ...rest } = props
-  if (src !== null) {
+function SuspenseImage (props: Props): Node {
+  const { fallback, src, ...rest } = props
+
+  // On the server, we use a regular img
+  if (!CanUseDOM) {
+    return <Img src={src} {...rest} />
+  }
+
+  if (src != null) {
     // JSResource is meant for loading resources, but the implementation is
     // just cached loading of promises. So we reuse that here as a quick
     // way to suspend while images are loading, with caching in case
     // we encouter the same image twice (in that case, we'll create
     // new loader *functions*, but JSResource will return a cached
-    // value and only load the iamge once.
+    // value and only load the image once.
     const resource = JSResource(src, () => {
       return new Promise(resolve => {
-        const img = new Image()
+        const img = new window.Image()
         img.onload = () => {
           resolve(src)
         }
-        img.onerror = error => {
+        img.onerror = () => {
           resolve(src)
         }
         img.src = src
       })
     })
-    resource.load() // TODO: JSResource::read() should call load() if necessary
+
+    resource.load()
     resource.read() // suspends while the image is pending
   }
-  return <img alt={props.alt} {...rest} />
+
+  return <Image src={src} ignoreFallback {...rest} />
+}
+
+export default function SuspenseImageWrapper (props: Props): Node {
+  return (
+    <Suspense fallback={props.fallback}>
+      <SuspenseImage {...props} />
+    </Suspense>
+  )
 }
