@@ -6,7 +6,6 @@ go_library(
     importpath = "overdoll/applications/sting/src/app",
     visibility = ["//visibility:public"],
     deps = [
-        "//applications/sting/src/app/activities:go_default_library",
         "//applications/sting/src/app/command:go_default_library",
         "//applications/sting/src/app/query:go_default_library",
     ],

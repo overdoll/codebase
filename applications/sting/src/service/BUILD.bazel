@@ -11,7 +11,6 @@ go_library(
     deps = [
         "//applications/sting/src/adapters:go_default_library",
         "//applications/sting/src/app:go_default_library",
-        "//applications/sting/src/app/activities:go_default_library",
         "//applications/sting/src/app/command:go_default_library",
         "//applications/sting/src/app/query:go_default_library",
         "//libraries/aws:go_default_library",
