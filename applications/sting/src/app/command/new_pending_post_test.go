@@ -1,4 +1,4 @@
-package activities_test
+package command_test
 
 import (
 	"context"
@@ -8,7 +8,7 @@ import (
 	"github.com/segmentio/ksuid"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/sting/src/adapters"
-	activities2 "overdoll/applications/sting/src/app/activities"
+	"overdoll/applications/sting/src/app/command"
 	"overdoll/libraries/helpers"
 	"overdoll/libraries/user"
 )
@@ -26,7 +26,7 @@ func TestNewPendingPost_in_review(t *testing.T) {
 
 	postMock := &adapters.PostMock{}
 
-	handler := activities2.NewNewPostActivityHandler(postMock, &adapters.PostIndexMock{}, &adapters.ContentMock{
+	handler := command.NewNewPostActivityHandler(postMock, &adapters.PostIndexMock{}, &adapters.ContentMock{
 		NewContent: newContent,
 	}, &adapters.EvaServiceMock{
 		User: user.NewUser(
