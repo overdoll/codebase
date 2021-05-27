@@ -27,7 +27,6 @@ export default function Button ({
 
   return (
     <AnimatedButton
-      type='button'
       {...rest}
       radius='xl'
       size='lg'

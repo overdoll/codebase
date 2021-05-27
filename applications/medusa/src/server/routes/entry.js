@@ -119,6 +119,12 @@ async function request (apollo, req, res) {
     // our cached data and make sure that we give the user all the namespaces that were requested
     const languageData = req.i18n.services.resourceStore.data[l]
 
+    // reportNamespaces may be undefined (namespaces weren't used in a route) so we check for that here
+    if (!req.i18n.reportNamespaces) {
+      initialI18nStore[l] = {}
+      return
+    }
+
     req.i18n.reportNamespaces.getUsedNamespaces().forEach(key => {
       // If the store doesn't contain key, we need to add it
       if (!Object.prototype.hasOwnProperty.call(initialI18nStore, l)) {
