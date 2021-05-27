@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 
+	"github.com/spf13/viper"
 	"overdoll/applications/eva/src/adapters"
 	"overdoll/applications/eva/src/app"
 	"overdoll/applications/eva/src/app/command"
@@ -30,7 +31,7 @@ func createApplication(ctx context.Context) app.Application {
 		log.Fatalf("bootstrap failed with errors: %s", err)
 	}
 
-	session, err := bootstrap.InitializeDatabaseSession("eva")
+	session, err := bootstrap.InitializeDatabaseSession(viper.GetString("db.keyspace"))
 
 	if err != nil {
 		log.Fatalf("database session failed with errors: %s", err)

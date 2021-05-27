@@ -13,10 +13,13 @@ applications = {
         "bazel_image": "bazel/applications/eva:local-image",
         "dependencies": [
             "applications/eva/.env",
+            "applications/eva/config.toml",
             "applications/eva/database",
         ],
         "live_update": [
             sync("applications/eva/database", "/app/applications/eva/local-image.binary.runfiles/overdoll/applications/eva/database"),
+            sync("applications/eva/config.toml", "/app/applications/eva/local-image.binary.runfiles/overdoll/applications/eva/config.toml"),
+            sync("applications/eva/.env", "/app/applications/eva/local-image.binary.runfiles/overdoll/applications/eva/.env"),
         ],
     },
     "sting": {
@@ -34,6 +37,7 @@ applications = {
             "applications/sting/database",
         ],
         "live_update": [
+            sync("applications/sting/.env", "/app/applications/sting/local-image.binary.runfiles/overdoll/applications/sting/.env"),
             sync("applications/sting/database", "/app/applications/sting/local-image.binary.runfiles/overdoll/applications/sting/database"),
         ],
     },

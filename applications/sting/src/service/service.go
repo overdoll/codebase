@@ -6,6 +6,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/spf13/viper"
 	"go.temporal.io/sdk/client"
 	"overdoll/applications/sting/src/adapters"
 	"overdoll/applications/sting/src/app"
@@ -40,7 +41,7 @@ func createApplication(ctx context.Context, eva command.EvaService) app.Applicat
 		log.Fatalf("bootstrap failed with errors: %s", err)
 	}
 
-	session, err := bootstrap.InitializeDatabaseSession("sting")
+	session, err := bootstrap.InitializeDatabaseSession(viper.GetString("db.keyspace"))
 
 	if err != nil {
 		log.Fatalf("database session failed with errors: %s", err)

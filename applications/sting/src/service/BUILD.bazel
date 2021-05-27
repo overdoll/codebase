@@ -19,6 +19,7 @@ go_library(
         "//libraries/client:go_default_library",
         "//libraries/elasticsearch:go_default_library",
         "//libraries/user:go_default_library",
+        "@com_github_spf13_viper//:go_default_library",
         "@io_temporal_go_sdk//client:go_default_library",
     ],
 )
