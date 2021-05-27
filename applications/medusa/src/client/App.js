@@ -12,7 +12,7 @@ import RelayEnvironment from './utilities/relay/RelayEnvironment'
 import i18next from './utilities/i18next'
 import Bootstrap from './Bootstrap'
 import CompatibilityRoute from '@//:modules/routing/CompatibilityRoute'
-import registerUpdateListener from './utilities/update'
+import { registerUpdateListener } from './utilities/update'
 
 const router = createClientRouter(
   routes,
@@ -20,7 +20,7 @@ const router = createClientRouter(
   RelayEnvironment
 )
 
-registerUpdateListener(router)
+registerUpdateListener(router, RelayEnvironment)
 
 export default function App (): Node {
   return (
