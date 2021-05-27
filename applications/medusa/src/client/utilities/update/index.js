@@ -11,7 +11,7 @@ const timer = new BatteryFriendlyTimer(window)
 let UpdateIsScheduled = false
 let PendingRequest = false
 
-export function registerUpdateListener (router: RouterInstance) {
+export function registerUpdateListener (router: RouterInstance): boolean {
   timer.setInterval(
     checkForUpdate,
     10 * 60 * 1000, // check every 10 minutes if network is available
@@ -29,6 +29,8 @@ export function registerUpdateListener (router: RouterInstance) {
 
     timer.fetchHappens()
   })
+
+  return UpdateIsScheduled
 }
 
 // Export a function to refresh the timer so we can use it in other places,

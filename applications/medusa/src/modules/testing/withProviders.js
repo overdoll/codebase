@@ -3,19 +3,18 @@
  */
 import { createMemoryHistory } from 'history'
 import type { ComponentType } from 'react'
-import type { RouterInstance } from '@//:modules/routing/router'
+import type { Route, RouterInstance } from '@//:modules/routing/router'
 import { createClientRouter } from '@//:modules/routing/router'
 import RoutingContext from '@//:modules/routing/RoutingContext'
-import RelayEnvironment from '@//:modules/../../client/utilities/relay/RelayEnvironment'
 import Bootstrap from '../../client/Bootstrap'
 import i18n from './i18nTesting'
-import type { Route } from '../../client/routes'
 import RouterRenderer from '@//:modules/routing/RouteRenderer'
 import { QueryParamProvider } from 'use-query-params'
 import CompatibilityRoute from '@//:modules/routing/CompatibilityRoute'
+import type { IEnvironment } from 'relay-runtime/store/RelayStoreTypes'
 
 type WithProviders = {
-  environment: typeof RelayEnvironment,
+  environment: IEnvironment,
   Component: ComponentType,
   initialEntries: string[],
   routes: Array<Route>,
