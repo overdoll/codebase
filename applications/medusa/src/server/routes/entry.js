@@ -23,6 +23,14 @@ import routes from '../../client/routes'
 import theme from '@//:modules/theme'
 import { FlashProvider } from '@//:modules/flash'
 import { I18nextProvider } from 'react-i18next'
+import { RuntimeProvider } from '@//:modules/runtime'
+
+// All values listed here will be passed down to the client
+// Don't include anything sensitive
+// Useful for passing down runtime variables (i.e. API keys)
+const runtime = {
+  APP_VERSION: process.env.APP_VERSION
+}
 
 const entry = (apollo) => {
   return async function (req, res, next) {
@@ -71,17 +79,19 @@ const entry = (apollo) => {
       const App = (
         <I18nextProvider i18n={req.i18n}>
           <HelmetProvider context={helmetContext}>
-            <FlashProvider override={req.flash}>
-              <ChakraProvider theme={theme}>
-                <RelayEnvironmentProvider environment={environment}>
-                  <RoutingContext.Provider value={router.context}>
-                    <QueryParamProvider ReactRouterRoute={CompatibilityRoute}>
-                      <RouteRenderer />
-                    </QueryParamProvider>
-                  </RoutingContext.Provider>
-                </RelayEnvironmentProvider>
-              </ChakraProvider>
-            </FlashProvider>
+            <RuntimeProvider initial={runtime}>
+              <FlashProvider override={req.flash}>
+                <ChakraProvider theme={theme}>
+                  <RelayEnvironmentProvider environment={environment}>
+                    <RoutingContext.Provider value={router.context}>
+                      <QueryParamProvider ReactRouterRoute={CompatibilityRoute}>
+                        <RouteRenderer />
+                      </QueryParamProvider>
+                    </RoutingContext.Provider>
+                  </RelayEnvironmentProvider>
+                </ChakraProvider>
+              </FlashProvider>
+            </RuntimeProvider>
           </HelmetProvider>
         </I18nextProvider>
       )
@@ -157,8 +167,8 @@ const entry = (apollo) => {
         relayStore: serialize(environment
           .getStore()
           .getSource()
-          .toJSON()
         ),
+        runtimeStore: serialize(runtime),
         i18nextStore: serialize(initialI18nStore),
         flashStore: serialize(req.flash.flush()),
         i18nextLang: req.i18n.language

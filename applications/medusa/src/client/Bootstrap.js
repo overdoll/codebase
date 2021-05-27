@@ -12,6 +12,7 @@ import theme from '@//:modules/theme'
 import { FlashProvider } from '@//:modules/flash'
 import type { i18next } from 'i18next'
 import { HelmetProvider } from 'react-helmet-async'
+import { RuntimeProvider } from '@//:modules/runtime'
 
 type Props = {
   environment: typeof RelayEnvironment,
@@ -25,7 +26,6 @@ const nonce = document
 
 const cache = createCache({ key: 'od', nonce })
 
-// eslint-disable-next-line no-underscore-dangle
 window.__webpack_nonce__ = nonce
 
 /**
@@ -36,15 +36,17 @@ export default function Bootstrap (props: Props): Node {
   return (
     <HelmetProvider>
       <FlashProvider>
-        <CacheProvider value={cache}>
-          <I18nextProvider i18n={props.i18next}>
-            <ChakraProvider theme={theme}>
-              <RelayEnvironmentProvider environment={props.environment}>
-                {props.children}
-              </RelayEnvironmentProvider>
-            </ChakraProvider>
-          </I18nextProvider>
-        </CacheProvider>
+        <RuntimeProvider>
+          <CacheProvider value={cache}>
+            <I18nextProvider i18n={props.i18next}>
+              <ChakraProvider theme={theme}>
+                <RelayEnvironmentProvider environment={props.environment}>
+                  {props.children}
+                </RelayEnvironmentProvider>
+              </ChakraProvider>
+            </I18nextProvider>
+          </CacheProvider>
+        </RuntimeProvider>
       </FlashProvider>
     </HelmetProvider>
   )
