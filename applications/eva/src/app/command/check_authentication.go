@@ -24,7 +24,7 @@ var (
 	ErrFailedCheckAuthentication = errors.New("failed to check auth")
 )
 
-func (h AuthenticationHandler) Handle(ctx context.Context, cookieValue string) (*cookie.Cookie, *user.User, error) {
+func (h AuthenticationHandler) Handle(ctx context.Context, hasCookie bool, cookieValue string) (*cookie.Cookie, *user.User, error) {
 
 	pass := passport.FromContext(ctx)
 
@@ -39,6 +39,10 @@ func (h AuthenticationHandler) Handle(ctx context.Context, cookieValue string) (
 		}
 
 		return nil, usr, nil
+	}
+
+	if !hasCookie {
+		return nil, nil, nil
 	}
 
 	ck, err := h.cr.GetCookieById(ctx, cookieValue)

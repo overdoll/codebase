@@ -83,21 +83,20 @@ func (r *QueryResolver) Authentication(ctx context.Context) (*types.Authenticati
 	otpCookie, err := cookies.ReadCookie(ctx, cookie.OTPKey)
 
 	// Error
-	if err != nil {
-
-		// Error says that this cookie doesn't exist
-		if err == http.ErrNoCookie {
-			return &types.Authentication{
-				Cookie: nil,
-				User:   nil,
-			}, nil
-		}
-
+	if err != nil && err != http.ErrNoCookie {
 		zap.S().Errorf("failed to get cookie header: %s", err)
 		return nil, command.ErrFailedCheckAuthentication
 	}
 
-	ck, usr, err := r.App.Commands.Authentication.Handle(ctx, otpCookie.Value)
+	cookieValue := ""
+
+	if otpCookie != nil {
+		cookieValue = otpCookie.Value
+	}
+
+	hasCookie := err == http.ErrNoCookie
+
+	ck, usr, err := r.App.Commands.Authentication.Handle(ctx, hasCookie, cookieValue)
 
 	if err != nil {
 		return nil, err
@@ -125,7 +124,9 @@ func (r *QueryResolver) Authentication(ctx context.Context) (*types.Authenticati
 	}
 
 	// Remove cookie - probably not valid
-	http.SetCookie(gc.Writer, &http.Cookie{Name: cookie.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
+	if hasCookie {
+		http.SetCookie(gc.Writer, &http.Cookie{Name: cookie.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
+	}
 
 	return &types.Authentication{
 		Cookie: nil,
