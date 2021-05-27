@@ -27,7 +27,7 @@ import { RuntimeProvider } from '@//:modules/runtime'
 
 // All values listed here will be passed down to the client
 // Don't include anything sensitive
-// Useful for passing down runtime variables (i.e. API keys)
+// Useful for passing down runtime variables (i.e. non-sensitive API keys)
 const runtime = {
   APP_VERSION: process.env.APP_VERSION
 }
