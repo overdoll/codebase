@@ -94,8 +94,8 @@ func (r *QueryResolver) Authentication(ctx context.Context) (*types.Authenticati
 		cookieValue = otpCookie.Value
 	}
 
-	hasCookie := err == http.ErrNoCookie
-
+	hasCookie := err == nil
+	
 	ck, usr, err := r.App.Commands.Authentication.Handle(ctx, hasCookie, cookieValue)
 
 	if err != nil {
