@@ -20,7 +20,7 @@ function SuspenseImage (props: Props): Node {
     return <Img src={src} {...rest} />
   }
 
-  if (src != null) {
+  if (src !== null) {
     // JSResource is meant for loading resources, but the implementation is
     // just cached loading of promises. So we reuse that here as a quick
     // way to suspend while images are loading, with caching in case
