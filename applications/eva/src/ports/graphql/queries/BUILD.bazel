@@ -7,6 +7,11 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//applications/eva/src/app:go_default_library",
+        "//applications/eva/src/app/command:go_default_library",
+        "//applications/eva/src/domain/cookie:go_default_library",
         "//applications/eva/src/ports/graphql/types:go_default_library",
+        "//libraries/cookies:go_default_library",
+        "//libraries/helpers:go_default_library",
+        "@org_uber_go_zap//:go_default_library",
     ],
 )

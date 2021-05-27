@@ -3,14 +3,11 @@ package command
 import (
 	"context"
 	"errors"
-	"net/http"
 
 	"github.com/gocql/gocql"
 	"go.uber.org/zap"
 	"overdoll/applications/eva/src/domain/cookie"
 	"overdoll/applications/eva/src/domain/user"
-	"overdoll/libraries/cookies"
-	"overdoll/libraries/helpers"
 	"overdoll/libraries/passport"
 )
 
@@ -27,8 +24,7 @@ var (
 	ErrFailedCheckAuthentication = errors.New("failed to check auth")
 )
 
-func (h AuthenticationHandler) Handle(ctx context.Context) (*cookie.Cookie, *user.User, error) {
-	gc := helpers.GinContextFromContext(ctx)
+func (h AuthenticationHandler) Handle(ctx context.Context, cookieValue string) (*cookie.Cookie, *user.User, error) {
 
 	pass := passport.FromContext(ctx)
 
@@ -45,22 +41,7 @@ func (h AuthenticationHandler) Handle(ctx context.Context) (*cookie.Cookie, *use
 		return nil, usr, nil
 	}
 
-	// User is not logged in, let's check for an OTP token
-	otpCookie, err := cookies.ReadCookie(ctx, cookie.OTPKey)
-
-	// Error
-	if err != nil {
-
-		// Error says that this cookie doesn't exist
-		if err == http.ErrNoCookie {
-			return nil, nil, nil
-		}
-
-		zap.S().Errorf("failed to get cookie header: %s", err)
-		return nil, nil, ErrFailedCheckAuthentication
-	}
-
-	ck, err := h.cr.GetCookieById(ctx, otpCookie.Value)
+	ck, err := h.cr.GetCookieById(ctx, cookieValue)
 
 	// Check to make sure we didn't get an error, and our cookie isn't expired
 	if err != nil {
@@ -75,7 +56,6 @@ func (h AuthenticationHandler) Handle(ctx context.Context) (*cookie.Cookie, *use
 
 	// check if expired
 	if ck.IsExpired() {
-		http.SetCookie(gc.Writer, &http.Cookie{Name: cookie.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
 		return nil, nil, nil
 	}
 
@@ -98,9 +78,6 @@ func (h AuthenticationHandler) Handle(ctx context.Context) (*cookie.Cookie, *use
 		zap.S().Errorf("failed to get user: %s", err)
 		return nil, nil, ErrFailedCheckAuthentication
 	}
-
-	// Remove OTP cookie - no longer needed at this step
-	http.SetCookie(gc.Writer, &http.Cookie{Name: cookie.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
 
 	// Update passport to include our new user
 	err = pass.MutatePassport(ctx, func(p *passport.Passport) error {
