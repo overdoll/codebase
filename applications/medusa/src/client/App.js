@@ -20,7 +20,7 @@ const router = createClientRouter(
   RelayEnvironment
 )
 
-registerUpdateListener(router, RelayEnvironment)
+registerUpdateListener(router)
 
 export default function App (): Node {
   return (
