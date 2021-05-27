@@ -2,7 +2,7 @@
  * @flow
  */
 import type { Location, RouterInstance } from '@//:modules/routing/router'
-import BatteryFriendlyTimer from '@//:modules/timer'
+import BatteryFriendlyTimer from './timer'
 import { getEnv } from '@//:modules/runtime'
 import axios from 'axios'
 
@@ -13,7 +13,7 @@ let PendingRequest = false
 export function registerUpdateListener (router: RouterInstance) {
   timer.setInterval(
     () => checkForUpdate(router),
-    10, // check every 10 minutes if network is available
+    10 * 60 * 1000, // check every 10 minutes if network is available
     24 * 60 * 60 * 1000 // check every day even if no network activity
   )
 
