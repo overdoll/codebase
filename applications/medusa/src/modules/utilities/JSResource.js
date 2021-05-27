@@ -121,7 +121,8 @@ class Resource {
  */
 export default function JSResource (moduleId: string, loader: Loader): Resource {
   // On the server side, we want to always create a new instance, because it won't refresh with changes
-  if (!CanUseDOM) {
+  // also in dev mode, webpack won't pick up changes
+  if (!CanUseDOM || process.env.NODE_ENV === 'development') {
     return new Resource(loader, moduleId)
   }
 

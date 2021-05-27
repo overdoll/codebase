@@ -16,7 +16,6 @@ import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/s
 import type { JoinFragment$key } from '@//:artifacts/JoinFragment.graphql'
 import { useFlash } from '@//:modules/flash'
 import { Helmet } from 'react-helmet-async'
-import { Link } from '@//:modules/routing'
 
 type JoinValues = {
   email: string,

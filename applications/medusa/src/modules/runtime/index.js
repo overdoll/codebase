@@ -31,7 +31,7 @@ function RuntimeProvider ({ initial, children }: Props): Node {
   const getEnv = (key, fallback = null) => {
     const value = initial ? initial[key] : runtimeEnv[key]
 
-    return value === undefined ? value : fallback
+    return value !== undefined ? value : fallback
   }
 
   return (
