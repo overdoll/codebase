@@ -34,10 +34,12 @@ applications = {
         "bazel_image": "bazel/applications/sting:local-image",
         "dependencies": [
             "applications/sting/.env",
+            "applications/sting/config.toml",
             "applications/sting/database",
         ],
         "live_update": [
             sync("applications/sting/.env", "/app/applications/sting/local-image.binary.runfiles/overdoll/applications/sting/.env"),
+            sync("applications/sting/config.toml", "/app/applications/sting/local-image.binary.runfiles/overdoll/applications/sting/config.toml"),
             sync("applications/sting/database", "/app/applications/sting/local-image.binary.runfiles/overdoll/applications/sting/database"),
         ],
     },
