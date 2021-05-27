@@ -128,7 +128,6 @@ export default function Join (): Node {
   return (
     <>
       <Helmet title='join' />
-      <Link to='/asd'>go to empty page</Link>
       <Center mt={8}>
         <Flex w={['fill', 'sm']} direction='column'>
           <Icon

@@ -1,6 +1,6 @@
 import { ChunkExtractor } from '@loadable/server'
 import { Environment, Network, RecordSource, Store } from 'relay-runtime'
-import { fetchQuery, RelayEnvironmentProvider } from 'react-relay/hooks'
+import { RelayEnvironmentProvider } from 'react-relay/hooks'
 import path from 'path'
 import serialize from 'serialize-javascript'
 import prepass from 'react-ssr-prepass'
