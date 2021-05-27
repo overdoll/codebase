@@ -2,12 +2,11 @@
  * @flow
  */
 import type { Context, Node } from 'react'
-import { createContext, Suspense, useEffect } from 'react'
+import { createContext, Suspense } from 'react'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
 import { graphql, usePreloadedQuery } from 'react-relay/hooks'
 import type { RootQuery, RootQueryResponse } from '@//:artifacts/RootQuery.graphql'
 import { Helmet } from 'react-helmet-async'
-import { useRuntime } from '@//:modules/runtime'
 
 type Props = {
   prepared: {
