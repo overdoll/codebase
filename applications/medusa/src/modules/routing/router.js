@@ -201,7 +201,7 @@ function createClientRouter (
 
   const initialEntries = prepareMatches(initialMatches, environment)
 
-  let currentEntry = {
+  let currentEntry: RouterInit = {
     location: history.location,
     entries: initialEntries
   }
@@ -230,7 +230,7 @@ function createClientRouter (
   // The actual object that will be passed on the RoutingContext.
   const context = {
     history,
-    get () {
+    get (): RouterInit {
       return currentEntry
     },
     preloadCode (pathname) {

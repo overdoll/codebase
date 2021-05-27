@@ -121,12 +121,12 @@ class Resource {
  */
 export default function JSResource (moduleId: string, loader: Loader): Resource {
   // On the server side, we want to always create a new instance, because it won't refresh with changes
-  // also in dev mode, webpack won't pick up changes
-  if (!CanUseDOM || process.env.NODE_ENV === 'development') {
+  if (!CanUseDOM) {
     return new Resource(loader, moduleId)
   }
 
-  let resource = resourceMap.get(moduleId)
+  // If in webpack HMR mode, update the resource map everytime
+  let resource = module.hot ? null : resourceMap.get(moduleId)
 
   if (!resource) {
     resource = new Resource(loader, moduleId)

@@ -7,12 +7,15 @@ import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/s
 import { useTranslation } from 'react-i18next'
 import { Button } from '@//:modules/form'
 import { Center, Flex, Heading, Stack } from '@chakra-ui/react'
+import { Link } from '@//:modules/routing'
 
 export default function Empty (): Node {
   const [t] = useTranslation('empty')
 
   return (
     <Center mt={8}>
+      <Link to='/join'>go to link</Link>
+
       <Flex w={['fill', 'sm']} direction='column'>
         <Icon
           icon={SignBadgeCircle}

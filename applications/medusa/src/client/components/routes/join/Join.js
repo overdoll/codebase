@@ -16,6 +16,7 @@ import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/s
 import type { JoinFragment$key } from '@//:artifacts/JoinFragment.graphql'
 import { useFlash } from '@//:modules/flash'
 import { Helmet } from 'react-helmet-async'
+import { Link } from '@//:modules/routing'
 
 type JoinValues = {
   email: string,
@@ -126,6 +127,7 @@ export default function Join (): Node {
   // Ask user to authenticate
   return (
     <>
+      <Link to='/asd'>go to link</Link>
       <Helmet title='join' />
       <Center mt={8}>
         <Flex w={['fill', 'sm']} direction='column'>

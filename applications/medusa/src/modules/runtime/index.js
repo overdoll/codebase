@@ -2,7 +2,7 @@
  * @flow
  */
 import type { Node } from 'react'
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext } from 'react'
 import CanUseDOM from '@//:modules/utilities/CanUseDOM'
 import SafeJSONParse from '@//:modules/json/json'
 
@@ -18,24 +18,21 @@ const initialState = SafeJSONParse(
   (CanUseDOM && document.getElementById('runtime-store')?.textContent) || '{}'
 )
 
+// Read value from the DOM, OR
+// read value from override (used on the server)
+function getEnv (key, fallback = null, stateOverride = null) {
+  const value = stateOverride ? stateOverride[key] : initialState[key]
+  return value !== undefined ? value : fallback
+}
+
 // RuntimeProvider is a universal provider that allows you to grab environment variables while on the server &&
 // the client.
 // On the server, we would pass the 'initial' prop into the context and an element with the name 'runtime-store'
 // containing some JSON.
 // This way, the server controls the variables that are exposed
 function RuntimeProvider ({ initial, children }: Props): Node {
-  const [runtimeEnv] = useState(initialState)
-
-  // Read value either from 'initial' (when used on the server) or from the state
-  // (when used on the client)
-  const getEnv = (key, fallback = null) => {
-    const value = initial ? initial[key] : runtimeEnv[key]
-
-    return value !== undefined ? value : fallback
-  }
-
   return (
-    <RuntimeContext.Provider value={{ getEnv }}>
+    <RuntimeContext.Provider value={{ getEnv: (key, fallback) => getEnv(key, fallback, initial) }}>
       {children}
     </RuntimeContext.Provider>
   )
@@ -46,4 +43,4 @@ const useRuntime = () => {
   return [values.getEnv]
 }
 
-export { useRuntime, RuntimeProvider }
+export { useRuntime, RuntimeProvider, getEnv }

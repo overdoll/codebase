@@ -44,6 +44,7 @@ const entry = (apollo) => {
 
           // here, we grab our queries based on the ID passed by the request
           if (!Object.prototype.hasOwnProperty.call(queryMapJson, params.id)) {
+            // technically this should never occur (unless someone doesn't commit correctly)
             throw new Error('no query with id found')
           }
 
