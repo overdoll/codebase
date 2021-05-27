@@ -3,7 +3,6 @@ import Backend from 'i18next-fs-backend'
 import i18nextMiddleware from 'i18next-http-middleware'
 import { join } from 'path'
 import { initReactI18next } from 'react-i18next'
-import { lstatSync, readdirSync } from 'fs'
 
 i18next
   .use(i18nextMiddleware.LanguageDetector)
@@ -12,17 +11,11 @@ i18next
   .init({
     debug: false,
     fallbackLng: 'en',
-    ns: ['auth', 'token', 'empty'],
-    defaultNS: 'auth',
     lng: 'en',
     load: 'languageOnly',
-    initImmediate: false,
-    preload: readdirSync(join(__dirname, '../public/locales')).filter(
-      fileName => {
-        const joinedPath = join(join(__dirname, '../public/locales'), fileName)
-        return lstatSync(joinedPath).isDirectory()
-      }
-    ),
+    ns: [],
+    initImmediate: true,
+    partialBundledLanguages: true,
     backend: {
       loadPath: join(__dirname, '../public/locales/{{lng}}/{{ns}}.json')
     }

@@ -29,6 +29,7 @@ const initialState = SafeJSONParse(
 function FlashProvider ({ override, children }: Props): Node {
   const [flashState, editFlashState] = useState(initialState)
 
+  // Flash will add the value to the state or the override
   const flash = (key, value) => {
     if (override) return override.push(key, value)
 
@@ -39,6 +40,7 @@ function FlashProvider ({ override, children }: Props): Node {
     }
   }
 
+  // Read will read the value. By default, returns the first value, but can return an array as well
   const read = (key, first = true) => {
     let result
 
@@ -51,6 +53,8 @@ function FlashProvider ({ override, children }: Props): Node {
     return first ? result[0] : result
   }
 
+  // Flush will flush the state (used mainly when passing down on the server)
+  // or when "dismissing" on the client-side
   const flush = key => {
     if (override) return key ? override.flush(key) : override.flush()
 

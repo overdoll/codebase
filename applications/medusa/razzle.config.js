@@ -31,15 +31,15 @@ module.exports = {
   }) {
     const config = options.webpackOptions
 
-    if (!env.dev) {
+    if (!env.dev && env.target === 'web') {
       config.fileLoaderOutputName = `${options.razzleOptions.mediaPrefix}/[contenthash].[ext]`
       config.urlLoaderOutputName = `${options.razzleOptions.mediaPrefix}/[contenthash].[ext]`
 
       config.cssOutputFilename = `${options.razzleOptions.cssPrefix}/[contenthash].css`
-      config.cssOutputChunkFilename = `${options.razzleOptions.cssPrefix}/[contenthash].chunk.css`
+      config.cssOutputChunkFilename = `${options.razzleOptions.cssPrefix}/[contenthash].c.css`
 
       config.jsOutputFilename = `${options.razzleOptions.jsPrefix}/[contenthash].js`
-      config.jsOutputChunkFilename = `${options.razzleOptions.jsPrefix}/[contenthash].chunk.js`
+      config.jsOutputChunkFilename = `${options.razzleOptions.jsPrefix}/[contenthash].c.js`
     }
 
     return config
@@ -83,11 +83,6 @@ module.exports = {
 
     if (opts.env.target === 'web') {
       const filename = path.resolve(__dirname, 'build')
-
-      if (!opts.env.dev) {
-        config.output.filename = 'js/[contenthash].js'
-        config.output.chunkFilename = 'js/[contenthash].js'
-      }
 
       if (opts.env.dev) {
         config.devServer.proxy = {

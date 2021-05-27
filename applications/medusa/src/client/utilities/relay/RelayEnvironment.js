@@ -6,6 +6,7 @@ import { Environment, Network, Observable, RecordSource, Store } from 'relay-run
 import { SubscriptionClient } from 'subscriptions-transport-ws'
 import axios from 'axios'
 import SafeJSONParse from '@//:modules/json/json'
+import { refreshUpdateTimer } from '../update'
 
 // Get hydrated data from store
 const data = SafeJSONParse(
@@ -21,6 +22,9 @@ const csrfToken = document
  * Relay fetch function - uses axios. Passes CSRF token from the document as well
  */
 async function fetchRelay (params, variables) {
+  // call an async function to refresh the update timer
+  refreshUpdateTimer().then(() => {})
+
   const response = await axios.post(
     '/api/graphql',
     {

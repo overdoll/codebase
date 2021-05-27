@@ -102,10 +102,11 @@ func BodyToContext(c *gin.Context) *http.Request {
 }
 
 func FromContext(ctx context.Context) *Passport {
-	raw, _ := ctx.Value(MutationKey).(string)
+	raw, _ := ctx.Value(MutationType(MutationKey)).(string)
 
 	if raw != "" {
 		sDec, err := base64.StdEncoding.DecodeString(raw)
+
 		if err != nil {
 			zap.S().Errorf("could not decode passport: %s", err)
 			return FreshPassport()

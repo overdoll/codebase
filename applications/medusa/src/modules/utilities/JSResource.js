@@ -125,7 +125,8 @@ export default function JSResource (moduleId: string, loader: Loader): Resource 
     return new Resource(loader, moduleId)
   }
 
-  let resource = resourceMap.get(moduleId)
+  // If in webpack HMR mode, update the resource map everytime
+  let resource = module.hot ? null : resourceMap.get(moduleId)
 
   if (!resource) {
     resource = new Resource(loader, moduleId)

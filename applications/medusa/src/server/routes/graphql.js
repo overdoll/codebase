@@ -74,8 +74,10 @@ export default config => {
   const server = new ApolloServer({
     gateway,
     subscriptions: false,
-    context: ({ res, req }) => ({ res, req })
+    context: ({ req, res }) => ({ req, res })
   })
 
-  server.start().then(() => server.applyMiddleware(config))
+  server.applyMiddleware(config)
+
+  return server
 }

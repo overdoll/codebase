@@ -14,6 +14,7 @@ import redis from 'redis'
 import connect from 'connect-redis'
 import session from 'express-session'
 import sessionCfg from './config/session'
+import version from './routes/version'
 
 const index = express()
 
@@ -74,14 +75,17 @@ if (process.env.APP_DEBUG) {
   index.get('/__coverage__', middleware.coverage)
 }
 
+// Version endpoint - used by the client to always stay up-to-date
+index.get('/api/version', version)
+
 // GraphQL Server
-graphql({
+const server = graphql({
   path: '/api/graphql',
   app: index.use(matchQueryMiddleware(queryMapJson))
 })
 
 // Our entrypoint
-index.get('/*', entry)
+index.get('/*', entry(server))
 
 index.use(middleware.error)
 

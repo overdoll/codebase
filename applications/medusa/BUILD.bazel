@@ -107,6 +107,7 @@ _RUNTIME_DEPS = [
     "@npm//connect-redis",
     "@npm//apollo-server-express",
     "@npm//@apollo/gateway",
+    "@npm//react-helmet-async",
 ]
 
 TEST_DEPS = [
@@ -171,7 +172,7 @@ jest_test(
 razzle(
     name = "bundle",
     outs = [
-        "build/chunks.json",
+        "build/assets.json",
         "build/loadable-stats.json",
         "build/public",
         "build/server.js",
@@ -179,6 +180,7 @@ razzle(
     args = [
         "--node_options=--require=./$(location chdir.js)",
         "build",
+        "--noninteractive",
     ],
     data = [
         "copy_static_files",

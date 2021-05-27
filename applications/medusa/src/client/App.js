@@ -8,16 +8,19 @@ import RouterRenderer from '@//:modules/routing/RouteRenderer'
 import RoutingContext from '@//:modules/routing/RoutingContext'
 import { createClientRouter } from '@//:modules/routing/router'
 import routes from './routes'
-import RelayEnvironment from '@//:modules/relay/RelayEnvironment'
+import RelayEnvironment from './utilities/relay/RelayEnvironment'
 import i18next from './utilities/i18next'
 import Bootstrap from './Bootstrap'
 import CompatibilityRoute from '@//:modules/routing/CompatibilityRoute'
+import { registerUpdateListener } from './utilities/update'
 
 const router = createClientRouter(
   routes,
   createBrowserHistory(),
   RelayEnvironment
 )
+
+registerUpdateListener(router)
 
 export default function App (): Node {
   return (
