@@ -109,6 +109,7 @@ _RUNTIME_DEPS = [
     "@npm//@apollo/gateway",
     "@npm//react-helmet-async",
     "@npm//@hookform/resolvers",
+    "@npm//joi",
 ]
 
 TEST_DEPS = [
