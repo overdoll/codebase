@@ -8,11 +8,17 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
-
-	"github.com/gin-gonic/gin"
 )
 
-func InitializeHttpServer(server *http.Server, shutdown func()) {
+func InitializeHttpServer(addr string, handler http.Handler, shutdown func()) {
+
+	server := &http.Server{
+		Addr:         addr,
+		WriteTimeout: time.Second * 10,
+		ReadTimeout:  time.Second * 10,
+		Handler:      handler,
+	}
+
 	// Start graph_api server
 	log.Printf("http server started on %s", server.Addr)
 	go func() {
@@ -35,20 +41,3 @@ func InitializeHttpServer(server *http.Server, shutdown func()) {
 	os.Exit(0)
 }
 
-func InitializeMuxHttpServerOnAddress(addr string, mux *http.ServeMux, shutdown func()) {
-	InitializeHttpServer(&http.Server{
-		Addr:         addr,
-		WriteTimeout: time.Second * 10,
-		ReadTimeout:  time.Second * 10,
-		Handler:      mux,
-	}, shutdown)
-}
-
-func InitializeGinHttpServerOnAddress(addr string, gin *gin.Engine, shutdown func()) {
-	InitializeHttpServer(&http.Server{
-		Addr:         addr,
-		WriteTimeout: time.Second * 10,
-		ReadTimeout:  time.Second * 10,
-		Handler:      gin,
-	}, shutdown)
-}

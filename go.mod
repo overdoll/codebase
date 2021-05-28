@@ -22,6 +22,7 @@ require (
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
 	github.com/h2non/filetype v1.1.1
 	github.com/joho/godotenv v1.3.0
+	github.com/machinebox/graphql v0.2.2 // indirect
 	github.com/scylladb/gocqlx/v2 v2.3.0
 	github.com/segmentio/ksuid v1.0.3
 	github.com/shurcooL/graphql v0.0.0-20200928012149-18c5c3165e3a // indirect

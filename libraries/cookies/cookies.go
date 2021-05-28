@@ -23,16 +23,18 @@ func SetCookie(ctx context.Context, cookie *http.Cookie) (bool, error) {
 	name := cookie.Name
 	value := cookie.Value
 
-	debug := os.Getenv("APP_DEBUG") == "true"
+	encryptCookies := os.Getenv("ENCRYPT_COOKIES") == "true"
 
 	// force HttpOnly and Secure on the cookie
 	// Path must be "/" or it wont be available
 	cookie.HttpOnly = true
-	cookie.Secure = true
+
+	// only secure if cookies are encrypted
+	cookie.Secure = encryptCookies
 	cookie.Path = "/"
 
 	// if we're in debug, we dont encrypt cookies since we want to be able to test easily
-	if debug {
+	if !encryptCookies {
 		cookie.Value = value
 		http.SetCookie(gc.Writer, cookie)
 		return true, nil
@@ -63,9 +65,9 @@ func ReadCookie(ctx context.Context, name string) (*http.Cookie, error) {
 
 	var value string
 
-	debug := os.Getenv("APP_DEBUG") == "true"
+	encryptCookies := os.Getenv("ENCRYPT_COOKIES") == "true"
 
-	if debug {
+	if !encryptCookies {
 		return currentCookie, nil
 	}
 
