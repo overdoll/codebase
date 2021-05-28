@@ -1,4 +1,4 @@
-package activities_test
+package command_test
 
 import (
 	"context"
@@ -8,7 +8,7 @@ import (
 	"github.com/segmentio/ksuid"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/sting/src/adapters"
-	activities2 "overdoll/applications/sting/src/app/activities"
+	"overdoll/applications/sting/src/app/command"
 	"overdoll/applications/sting/src/domain/post"
 	"overdoll/libraries/helpers"
 )
@@ -23,7 +23,7 @@ func TestPostCompleted_complete_post(t *testing.T) {
 		PendingPost: post.UnmarshalPendingPostFromDatabase("id", string(post.Review), &post.Artist{}, "", nil, nil, nil, make(map[string]string), nil, nil, time.Now(), ""),
 	}
 
-	handler := activities2.NewPublishPostActivityHandler(postMock, &adapters.PostIndexMock{}, &adapters.ContentMock{
+	handler := command.NewPublishPostActivityHandler(postMock, &adapters.PostIndexMock{}, &adapters.ContentMock{
 		NewContent: newContent,
 	}, &adapters.EvaServiceMock{})
 

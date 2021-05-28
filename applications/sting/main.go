@@ -11,6 +11,7 @@ import (
 	"overdoll/applications/sting/src/service"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/commands"
+	"overdoll/libraries/config"
 )
 
 var rootCmd = &cobra.Command{
@@ -19,6 +20,8 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
+	config.Read()
+
 	rootCmd.AddCommand(ports.Root)
 	rootCmd.AddCommand(commands.Database)
 	rootCmd.AddCommand(&cobra.Command{

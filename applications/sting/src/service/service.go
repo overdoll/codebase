@@ -6,10 +6,10 @@ import (
 	"os"
 	"time"
 
+	"github.com/spf13/viper"
 	"go.temporal.io/sdk/client"
 	"overdoll/applications/sting/src/adapters"
 	"overdoll/applications/sting/src/app"
-	"overdoll/applications/sting/src/app/activities"
 	"overdoll/applications/sting/src/app/command"
 	"overdoll/applications/sting/src/app/query"
 	storage "overdoll/libraries/aws"
@@ -40,7 +40,7 @@ func createApplication(ctx context.Context, eva command.EvaService) app.Applicat
 		log.Fatalf("bootstrap failed with errors: %s", err)
 	}
 
-	session, err := bootstrap.InitializeDatabaseSession("sting")
+	session, err := bootstrap.InitializeDatabaseSession(viper.GetString("db.keyspace"))
 
 	if err != nil {
 		log.Fatalf("database session failed with errors: %s", err)
@@ -86,19 +86,18 @@ func createApplication(ctx context.Context, eva command.EvaService) app.Applicat
 			IndexAllCharacters: command.NewIndexAllCharactersHandler(postRepo, indexRepo),
 			IndexAllCategories: command.NewIndexAllCategoriesHandler(postRepo, indexRepo),
 			IndexAllArtists:    command.NewIndexAllArtistsHandler(postRepo, indexRepo),
+
+			ReviewPost:          command.NewReviewPostActivityHandler(postRepo, indexRepo, eva),
+			CreatePost:          command.NewCreatePostActivityHandler(postRepo, indexRepo),
+			NewPendingPost:      command.NewNewPostActivityHandler(postRepo, indexRepo, contentRepo, eva),
+			PostCompleted:       command.NewPublishPostActivityHandler(postRepo, indexRepo, contentRepo, eva),
+			PostCustomResources: command.NewPostCustomResourcesActivityHandler(postRepo, indexRepo),
 		},
 		Queries: app.Queries{
 			SearchMedias:     query.NewSearchMediasHandler(indexRepo),
 			SearchCharacters: query.NewSearchCharactersHandler(indexRepo),
 			SearchCategories: query.NewSearchCategoriesHandler(indexRepo),
 			SearchArtist:     query.NewSearchArtistsHandler(indexRepo),
-		},
-		Activities: app.Activities{
-			ReviewPost:          activities.NewReviewPostActivityHandler(postRepo, indexRepo, eva),
-			CreatePost:          activities.NewCreatePostActivityHandler(postRepo, indexRepo),
-			NewPendingPost:      activities.NewNewPostActivityHandler(postRepo, indexRepo, contentRepo, eva),
-			PostCompleted:       activities.NewPublishPostActivityHandler(postRepo, indexRepo, contentRepo, eva),
-			PostCustomResources: activities.NewPostCustomResourcesActivityHandler(postRepo, indexRepo),
 		},
 	}
 }

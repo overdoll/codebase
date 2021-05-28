@@ -1,9 +1,8 @@
-package activities
+package command
 
 import (
 	"context"
 
-	"overdoll/applications/sting/src/app/command"
 	"overdoll/applications/sting/src/domain/post"
 )
 
@@ -13,7 +12,7 @@ type ReviewPostActivityHandler struct {
 	eva EvaService
 }
 
-func NewReviewPostActivityHandler(pr post.Repository, pi post.IndexRepository, eva command.EvaService) ReviewPostActivityHandler {
+func NewReviewPostActivityHandler(pr post.Repository, pi post.IndexRepository, eva EvaService) ReviewPostActivityHandler {
 	return ReviewPostActivityHandler{pr: pr, pi: pi, eva: eva}
 }
 

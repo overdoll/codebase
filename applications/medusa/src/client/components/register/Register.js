@@ -2,7 +2,6 @@
  * @flow
  */
 import { graphql, useMutation } from 'react-relay/hooks'
-import { Button, Form, Input, useForm } from '@//:modules/form'
 import { Center, Flex, useToast } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import type { RegisterMutation } from '@//:artifacts/RegisterMutation.graphql'
@@ -11,6 +10,7 @@ import { useHistory } from '@//:modules/routing'
 import Icon from '@//:modules/content/icon/Icon'
 import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/sign-badge-circle-K1i3HA.svg'
 import { Helmet } from 'react-helmet-async'
+import RegisterForm from './form/RegisterForm'
 
 const RegisterMutationGQL = graphql`
   mutation RegisterMutation($data: RegisterInput!) {
@@ -22,7 +22,7 @@ export default function Register (): Node {
   const [commit, isInFlight] = useMutation<RegisterMutation>(
     RegisterMutationGQL
   )
-  const instance = useForm()
+
   const notify = useToast()
   const [t] = useTranslation('auth')
 
@@ -61,18 +61,7 @@ export default function Register (): Node {
             mr='auto'
             mb={5}
           />
-          <Form instance={instance} onSubmit={onSubmit}>
-            <Input
-              title={t('register.form.username.title')}
-              placeholder={t('register.form.username.placeholder')}
-              name='username'
-              validation={{ required: true }}
-              type='text'
-            />
-            <Button width='100%' type='submit' loading={isInFlight}>
-              {t('register.form.submit')}
-            </Button>
-          </Form>
+          <RegisterForm onSubmit={onSubmit} loading={isInFlight} />
         </Flex>
       </Center>
     </>

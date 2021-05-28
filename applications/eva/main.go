@@ -13,6 +13,7 @@ import (
 	"overdoll/applications/eva/src/service"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/commands"
+	"overdoll/libraries/config"
 )
 
 var rootCmd = &cobra.Command{
@@ -21,6 +22,8 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
+	config.Read()
+
 	rootCmd.AddCommand(commands.Database)
 	rootCmd.AddCommand(&cobra.Command{
 		Use: "grpc",

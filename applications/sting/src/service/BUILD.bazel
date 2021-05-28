@@ -11,7 +11,6 @@ go_library(
     deps = [
         "//applications/sting/src/adapters:go_default_library",
         "//applications/sting/src/app:go_default_library",
-        "//applications/sting/src/app/activities:go_default_library",
         "//applications/sting/src/app/command:go_default_library",
         "//applications/sting/src/app/query:go_default_library",
         "//libraries/aws:go_default_library",
@@ -19,6 +18,7 @@ go_library(
         "//libraries/client:go_default_library",
         "//libraries/elasticsearch:go_default_library",
         "//libraries/user:go_default_library",
+        "@com_github_spf13_viper//:go_default_library",
         "@io_temporal_go_sdk//client:go_default_library",
     ],
 )

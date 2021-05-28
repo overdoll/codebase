@@ -6,20 +6,15 @@ import type { Node } from 'react'
 import { useContext, useState } from 'react'
 import Register from '../../register/Register'
 import { useTranslation } from 'react-i18next'
-import { Button, Form, Input, useForm } from '@//:modules/form'
 import Lobby from './components/Lobby'
 import { Alert, AlertDescription, AlertIcon, AlertTitle, Center, CloseButton, Flex, useToast } from '@chakra-ui/react'
 import { RootContext } from '../Root'
-import { EMAIL } from '@//:modules/regex'
 import Icon from '@//:modules/content/icon/Icon'
 import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/sign-badge-circle-K1i3HA.svg'
 import type { JoinFragment$key } from '@//:artifacts/JoinFragment.graphql'
 import { useFlash } from '@//:modules/flash'
 import { Helmet } from 'react-helmet-async'
-
-type JoinValues = {
-  email: string,
-};
+import JoinForm from './form/JoinForm'
 
 const JoinAction = graphql`
   mutation JoinMutation($data: AuthenticationInput!) {
@@ -48,7 +43,6 @@ export default function Join (): Node {
   const [t] = useTranslation('auth')
 
   const [commit, isInFlight] = useMutation(JoinAction)
-  const instance = useForm<JoinValues>()
 
   const notify = useToast()
   const [read, , flush] = useFlash()
@@ -66,7 +60,7 @@ export default function Join (): Node {
     setWaiting(false)
   }
 
-  const onSubmit = (val: JoinValues) => {
+  const onSubmit = (val) => {
     setEmail(val.email)
     commit({
       variables: {
@@ -151,26 +145,7 @@ export default function Join (): Node {
               />
             </Alert>
           )}
-          <Form instance={instance} onSubmit={onSubmit}>
-            <Input
-              title={t('authenticate.form.email.title')}
-              name='email'
-              validation={{
-                required: {
-                  value: true,
-                  message: t('authenticate.form.validation.email.required')
-                },
-                pattern: {
-                  value: EMAIL,
-                  message: t('authenticate.form.validation.email.pattern')
-                }
-              }}
-              placeholder={t('authenticate.form.email.placeholder')}
-            />
-            <Button type='submit' loading={isInFlight} width='100%'>
-              {t('authenticate.form.continue')}
-            </Button>
-          </Form>
+          <JoinForm onSubmit={onSubmit} loading={isInFlight} />
         </Flex>
       </Center>
     </>

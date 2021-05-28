@@ -3,14 +3,11 @@ package command
 import (
 	"context"
 	"errors"
-	"net/http"
 
 	"github.com/gocql/gocql"
 	"go.uber.org/zap"
 	"overdoll/applications/eva/src/domain/cookie"
 	"overdoll/applications/eva/src/domain/user"
-	"overdoll/libraries/cookies"
-	"overdoll/libraries/helpers"
 	"overdoll/libraries/passport"
 )
 
@@ -27,31 +24,13 @@ var (
 	ErrFailedCookieRedeem = errors.New("failed to redeem cookie")
 )
 
-func (h RedeemCookieHandler) Handle(ctx context.Context, id string) (*cookie.Cookie, error) {
+func (h RedeemCookieHandler) Handle(ctx context.Context, isSameSession bool, id string) (*cookie.Cookie, error) {
 
 	pass := passport.FromContext(ctx)
 
 	// User is logged in
 	if pass.IsAuthenticated() {
 		return nil, nil
-	}
-
-	// RedeemCookie - this is when the user uses the redeemed cookie. This will
-	// occur when the user uses the redeemed cookie in the same browser that has the 'otp-cookie' cookie
-
-	// If this is a login (user with email exists), we remove the otp-cookie & pass account data.
-
-	// If this is a registration (user with email doesn't exist), we keep the cookie, and remove it when we register, so the user
-	// can complete the registration if they've accidentally closed their tab
-
-	gc := helpers.GinContextFromContext(ctx)
-
-	currentCookie, err := cookies.ReadCookie(ctx, cookie.OTPKey)
-
-	isSameSession := err == nil
-
-	if err != nil && err != http.ErrNoCookie {
-		return nil, ErrFailedCookieRedeem
 	}
 
 	// Redeem cookie
@@ -65,11 +44,6 @@ func (h RedeemCookieHandler) Handle(ctx context.Context, id string) (*cookie.Coo
 
 		zap.S().Errorf("failed to get cookie: %s", err == gocql.ErrNotFound)
 		return nil, ErrFailedCookieRedeem
-	}
-
-	// cookie in cookie has to match the url cookie, otherwise any cookie can just be redeemed with an arbitrary value
-	if isSameSession && currentCookie.Value != ck.Cookie() {
-		return nil, nil
 	}
 
 	// Redeem the cookie
@@ -130,9 +104,6 @@ func (h RedeemCookieHandler) Handle(ctx context.Context, id string) (*cookie.Coo
 		zap.S().Errorf("failed to delete cookie: %s", err)
 		return nil, ErrFailedCookieRedeem
 	}
-
-	// Remove OTP cookie
-	http.SetCookie(gc.Writer, &http.Cookie{Name: cookie.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
 
 	// Update passport to include our new user
 	err = pass.MutatePassport(ctx, func(p *passport.Passport) error {

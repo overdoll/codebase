@@ -9,6 +9,7 @@ import { spacing } from './spacing'
 import shadows from './shadows'
 import borders from './borders'
 import transition from './transition'
+import components from './components'
 
 const theme = extendTheme({
   config: {
@@ -18,14 +19,14 @@ const theme = extendTheme({
   colors: colors,
   ...typography,
   radii: radius,
-
   breakpoints,
   zIndices,
   sizes,
   shadows,
   space: spacing,
   borders,
-  transition
+  transition,
+  components
 })
 
 export default theme

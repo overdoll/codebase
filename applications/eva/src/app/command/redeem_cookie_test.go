@@ -66,7 +66,7 @@ func TestRedeemCookie_Consume_when_user_exists(t *testing.T) {
 
 	handler := command.NewRedeemCookieHandler(&cookieRepoMock{Cookie: ck}, &userRepoMock{User: usr})
 
-	_, err = handler.Handle(helpers.GinContextWithTesting(context.Background()), id)
+	_, err = handler.Handle(helpers.GinContextWithTesting(context.Background()), true, id)
 
 	require.NoError(t, err)
 
@@ -87,7 +87,7 @@ func TestRedeemCookie_Consume_false_when_user_not_exists(t *testing.T) {
 
 	handler := command.NewRedeemCookieHandler(&cookieRepoMock{Cookie: ck}, &userRepoMock{User: nil})
 
-	res, err := handler.Handle(helpers.GinContextWithTesting(context.Background()), id)
+	res, err := handler.Handle(helpers.GinContextWithTesting(context.Background()), false, id)
 
 	require.NoError(t, err)
 

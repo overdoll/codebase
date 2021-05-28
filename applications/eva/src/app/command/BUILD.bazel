@@ -14,8 +14,6 @@ go_library(
     deps = [
         "//applications/eva/src/domain/cookie:go_default_library",
         "//applications/eva/src/domain/user:go_default_library",
-        "//libraries/cookies:go_default_library",
-        "//libraries/helpers:go_default_library",
         "//libraries/ksuid:go_default_library",
         "//libraries/passport:go_default_library",
         "@com_github_gocql_gocql//:go_default_library",
