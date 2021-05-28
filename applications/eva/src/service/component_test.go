@@ -28,7 +28,7 @@ func startService() bool {
 
 	evaHttpAddr := fmt.Sprint(":7777")
 
-	go bootstrap.InitializeHttpServerOnAddress(evaHttpAddr, srv, func() {})
+	go bootstrap.InitializeGinHttpServerOnAddress(evaHttpAddr, srv, func() {})
 
 	ok := tests.WaitForPort(evaHttpAddr)
 	if !ok {
