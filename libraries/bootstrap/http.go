@@ -8,9 +8,18 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
-func InitializeHttpServer(server *http.Server, shutdown func()) {
+func InitializeHttpServerOnAddress(addr string, gin *gin.Engine, shutdown func()) {
+
+	server := &http.Server{
+		Addr:         addr,
+		WriteTimeout: time.Second * 10,
+		ReadTimeout:  time.Second * 10,
+		Handler:      gin,
+	}
 
 	// Start graph_api server
 	log.Printf("http server started on %s", server.Addr)

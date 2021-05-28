@@ -23,12 +23,14 @@ go_library(
 
 go_test(
     name = "go_default_test",
-    srcs = ["redeem_cookie_test.go"],
+    srcs = [
+        "mocks_test.go",
+        "redeem_cookie_test.go",
+    ],
     embed = [":go_default_library"],
     deps = [
         "//applications/eva/src/domain/cookie:go_default_library",
         "//applications/eva/src/domain/user:go_default_library",
-        "//libraries/helpers:go_default_library",
         "//libraries/ksuid:go_default_library",
         "@com_github_stretchr_testify//assert:go_default_library",
         "@com_github_stretchr_testify//require:go_default_library",
