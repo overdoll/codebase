@@ -40,4 +40,3 @@ func InitializeHttpServer(addr string, handler http.Handler, shutdown func()) {
 	<-ctx.Done()
 	os.Exit(0)
 }
-
