@@ -4,13 +4,12 @@
 import { graphql, useMutation, useSubscription } from 'react-relay/hooks'
 import type { Node } from 'react'
 import { useMemo, useState } from 'react'
-import { Button } from '@//:modules/form'
 import { useTranslation } from 'react-i18next'
 import type { LobbySubscriptionResponse } from '@//:artifacts/LobbySubscription.graphql'
 import Icon from '@//:modules/content/icon/Icon'
 import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/sign-badge-circle-K1i3HA.svg'
 import ContentInkPen from '@streamlinehq/streamlinehq/img/streamline-bold/content-ink-pen-jHW3zi.svg'
-import { Box, Center, Flex, Heading, Text, useToast } from '@chakra-ui/react'
+import { Box, Center, Flex, Heading, Text, useToast, Button } from '@chakra-ui/react'
 
 type Props = {
   onReceive: () => void,
