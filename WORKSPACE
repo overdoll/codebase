@@ -2080,3 +2080,10 @@ go_repository(
     sum = "h1:KikTa6HtAK8cS1qjvUvvq4QO21QnwC+EfvB+OAuZ/ZU=",
     version = "v0.0.0-20200928012149-18c5c3165e3a",
 )
+
+go_repository(
+    name = "com_github_machinebox_graphql",
+    importpath = "github.com/machinebox/graphql",
+    sum = "h1:dWKpJligYKhYKO5A2gvNhkJdQMNZeChZYyBbrZkBZfo=",
+    version = "v0.2.2",
+)
