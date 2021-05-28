@@ -30,12 +30,19 @@ var (
 	ErrUserNotFound      = errors.New("user not found")
 )
 
-func UnmarshalUserFromDatabase(id, username, email string, roles []UserRole, verified bool, avatar string) *User {
+func UnmarshalUserFromDatabase(id, username, email string, roles []string, verified bool, avatar string) *User {
+
+	var newRoles []UserRole
+
+	for _, role := range roles {
+		newRoles = append(newRoles, UserRole(role))
+	}
+
 	return &User{
 		id:       id,
 		username: username,
 		email:    email,
-		roles:    roles,
+		roles:    newRoles,
 		verified: verified,
 		avatar:   avatar,
 	}

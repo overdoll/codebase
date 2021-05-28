@@ -14,8 +14,13 @@ const (
 )
 
 func GinContextFromContext(ctx context.Context) *gin.Context {
-	raw, _ := ctx.Value(GinContextType(GinKey)).(*gin.Context)
-	return raw
+	raw := ctx.Value(GinContextType(GinKey))
+
+	if raw != nil {
+		return raw.(*gin.Context)
+	}
+
+	return nil
 }
 
 func GinContextWithTesting(ctx context.Context) context.Context {

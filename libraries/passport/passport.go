@@ -60,8 +60,7 @@ func (p *Passport) SerializeToBaseString() string {
 	return base64.StdEncoding.EncodeToString(msg)
 }
 
-// MutatePassport will add the passport to the context, which will eventually be intercepted by an extension
-// and will be added to the response. After that, the serving gateway will propagate the updated passport into the session store
+// MutatePassport will add the passport to the context
 func (p *Passport) MutatePassport(ctx context.Context, updateFn func(*Passport) error) error {
 
 	err := updateFn(p)
@@ -70,9 +69,14 @@ func (p *Passport) MutatePassport(ctx context.Context, updateFn func(*Passport) 
 		return err
 	}
 
+	// TODO: for testing && separation of concerns,
+	// passport should be modified in the current request (context?) and then intercepted
+	// by whatever request type we use (http, etc..)
 	gc := helpers.GinContextFromContext(ctx)
 
-	gc.Writer.Header().Set(MutationHeader, p.SerializeToBaseString())
+	if gc != nil {
+		gc.Writer.Header().Set(MutationHeader, p.SerializeToBaseString())
+	}
 
 	return nil
 }
@@ -81,6 +85,8 @@ func FreshPassport() *Passport {
 	return &Passport{passport: &libraries_passport_v1.Passport{User: nil}}
 }
 
+// BodyToContext is responsible for parsing the incoming passport and
+// adding it to context so the application can access it
 func BodyToContext(c *gin.Context) *http.Request {
 	var body Body
 	var buf bytes.Buffer
