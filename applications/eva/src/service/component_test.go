@@ -2,10 +2,13 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 	"testing"
 
+	"github.com/shurcooL/graphql"
+	"github.com/stretchr/testify/require"
 	"overdoll/applications/eva/src/ports"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/tests"
@@ -17,7 +20,28 @@ type TestUser struct {
 }
 
 func TestGetUser(t *testing.T) {
+	client := getClient()
 
+	var query struct {
+		Authentication struct {
+			User struct {
+				Username graphql.String
+			}
+			Cookie struct {
+				Email graphql.String
+			}
+		}
+	}
+
+	err := client.Query(context.Background(), &query, nil)
+
+	fmt.Println(query)
+
+	require.NoError(t, err)
+}
+
+func getClient() *graphql.Client {
+	return graphql.NewClient("http://:7777/graphql", nil)
 }
 
 func startService() bool {

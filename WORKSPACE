@@ -1966,8 +1966,8 @@ go_repository(
     name = "org_golang_x_net",
     build_file_proto_mode = "disable_global",
     importpath = "golang.org/x/net",
-    sum = "h1:V9kAVxLvz1lkufatrpHuUVyJ/5tR3Ms7rk951P4mI98=",
-    version = "v0.0.0-20210505214959-0714010a04ed",
+    sum = "h1:wjuX4b5yYQnEQHzd+CBcrcC6OVR2J1CN6mUy0oSxIPo=",
+    version = "v0.0.0-20210525063256-abc453219eb5",
 )
 
 go_repository(
@@ -2072,4 +2072,11 @@ go_repository(
     importpath = "go.uber.org/zap",
     sum = "h1:uFRZXykJGK9lLY4HtgSw44DnIcAM+kRBP7x5m+NpAOM=",
     version = "v1.16.0",
+)
+
+go_repository(
+    name = "com_github_shurcool_graphql",
+    importpath = "github.com/shurcooL/graphql",
+    sum = "h1:KikTa6HtAK8cS1qjvUvvq4QO21QnwC+EfvB+OAuZ/ZU=",
+    version = "v0.0.0-20200928012149-18c5c3165e3a",
 )
