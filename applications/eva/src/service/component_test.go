@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"os"
 	"testing"
@@ -26,7 +25,7 @@ func startService() bool {
 
 	srv := ports.NewGraphQLServer(&app)
 
-	evaHttpAddr := fmt.Sprint(":7777")
+	evaHttpAddr := ":7777"
 
 	go bootstrap.InitializeGinHttpServerOnAddress(evaHttpAddr, srv, func() {})
 
