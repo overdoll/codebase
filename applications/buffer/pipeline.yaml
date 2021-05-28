@@ -21,10 +21,9 @@ steps:
     coverage:
       - name: buffer.integration
         paths:
-          - ./applications/buffer/**/coverage.dat
+          - ./applications/buffer/src/adapters/**/coverage.dat
     targets:
       - //applications/buffer/src/adapters/...
-      - //applications/buffer/src/service/...
 
   e2e_test:
     setup:

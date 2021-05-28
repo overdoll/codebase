@@ -19,13 +19,12 @@ steps:
 
   integration_test:
     coverage:
-      coverage:
-        - name: sting.integration
-          paths:
-            - ./applications/sting/src/adapters/**/coverage.dat
-        - name: sting.component
-          paths:
-            - ./applications/sting/src/service/**/coverage.dat
+      - name: sting.integration
+        paths:
+          - ./applications/sting/src/adapters/**/coverage.dat
+      - name: sting.component
+        paths:
+          - ./applications/sting/src/service/**/coverage.dat
     setup:
       dockerfile:
         - ./applications/sting/docker-compose.ci.yaml
