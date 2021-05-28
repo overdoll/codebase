@@ -33,7 +33,7 @@ func Run(cmd *cobra.Command, args []string) {
 
 	srv := ports.NewHttpServer(app)
 
-	bootstrap.InitializeHttpServer(srv, func() {
+	bootstrap.InitializeMuxHttpServerOnAddress(fmt.Sprint(":8000"), srv, func() {
 		cleanup()
 	})
 }

@@ -72,5 +72,5 @@ func RunHttp(cmd *cobra.Command, args []string) {
 
 	srv := ports.NewGraphQLServer(&app)
 
-	bootstrap.InitializeHttpServerOnAddress(fmt.Sprint(":8000"), srv, func() {})
+	bootstrap.InitializeGinHttpServerOnAddress(fmt.Sprint(":8000"), srv, func() {})
 }
