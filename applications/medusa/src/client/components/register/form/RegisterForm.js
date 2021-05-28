@@ -39,7 +39,10 @@ export default function RegisterForm ({ onSubmit, loading }: Props): Node {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <FormControl isInvalid={errors.username} id='username'>
+      <FormControl
+        isInvalid={errors.username}
+        id='username'
+      >
         <FormLabel
           htmlFor='username'
           variant='float'
