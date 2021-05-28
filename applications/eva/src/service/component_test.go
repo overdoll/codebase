@@ -11,7 +11,7 @@ import (
 
 	"github.com/bmizerany/assert"
 	"github.com/bxcodec/faker/v3"
-	"github.com/machinebox/graphql"
+	"github.com/shurcooL/graphql"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/eva/src/domain/cookie"
@@ -26,9 +26,17 @@ type TestUser struct {
 	Username string `faker:"username"`
 }
 
-const authQuery = `
-	
-`
+type AuthQuery struct {
+	Authentication struct {
+		User *struct {
+			Username graphql.String
+		}
+		Cookie *struct {
+			Email    graphql.String
+			Redeemed graphql.Boolean
+		}
+	}
+}
 
 // TestUserRegistration_complete - complete a whole user registration flow using multiple graphql endpoints
 // this is in one test because it requires a persistent state (in this case, it's cookies)
@@ -163,7 +171,7 @@ func getClient(t *testing.T) (*graphql.Client, *http.Client) {
 		Jar: jar,
 	}
 
-	return graphql.NewClient("http://:7777/graphql", graphql.WithHTTPClient(httpUser)), httpUser
+	return graphql.NewClient("http://:7777/graphql", httpUser), httpUser
 }
 
 func startService() bool {
