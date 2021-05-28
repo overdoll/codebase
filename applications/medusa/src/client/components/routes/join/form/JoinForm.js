@@ -9,10 +9,16 @@ import { useForm } from 'react-hook-form'
 import AlertCircle from '@streamlinehq/streamlinehq/img/streamline-regular/alert-circle-eixfzl.svg'
 import CheckDouble1 from '@streamlinehq/streamlinehq/img/streamline-regular/check-double-1-DeGZdc.svg'
 import { joiResolver } from '@hookform/resolvers/joi'
+import type { Node } from 'react'
 
 type JoinValues = {
   email: string,
 };
+
+type Props = {
+  onSubmit: (JoinValues) => void,
+  loading: boolean
+}
 
 const schema = Joi.object({
   email: Joi
@@ -21,7 +27,7 @@ const schema = Joi.object({
     .required()
 })
 
-export default function JoinForm ({ onSubmit, loading }) {
+export default function JoinForm ({ onSubmit, loading }: Props): Node {
   const [t] = useTranslation('auth')
 
   const { register, handleSubmit, formState: { errors, isDirty, isSubmitted } } = useForm<JoinValues>({

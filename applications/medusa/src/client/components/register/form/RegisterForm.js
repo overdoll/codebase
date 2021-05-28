@@ -9,10 +9,16 @@ import { useForm } from 'react-hook-form'
 import AlertCircle from '@streamlinehq/streamlinehq/img/streamline-regular/alert-circle-eixfzl.svg'
 import CheckDouble1 from '@streamlinehq/streamlinehq/img/streamline-regular/check-double-1-DeGZdc.svg'
 import { joiResolver } from '@hookform/resolvers/joi'
+import type { Node } from 'react'
 
 type RegisterValues = {
   username: string,
 };
+
+type Props = {
+  onSubmit: (RegisterValues) => void,
+  loading: boolean
+}
 
 const schema = Joi.object({
   username: Joi
@@ -20,7 +26,7 @@ const schema = Joi.object({
     .required()
 })
 
-export default function RegisterForm ({ onSubmit, loading }) {
+export default function RegisterForm ({ onSubmit, loading }: Props): Node {
   const [t] = useTranslation('auth')
 
   const { register, handleSubmit, formState: { errors, isDirty, isSubmitted } } = useForm<RegisterValues>({

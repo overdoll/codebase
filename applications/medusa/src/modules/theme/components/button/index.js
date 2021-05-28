@@ -23,7 +23,7 @@ const baseStyle = {
 }
 
 function variantGhost (props) {
-  const { colorScheme: c, theme } = props
+  const { colorScheme: c } = props
 
   if (c === 'gray') {
     return {
