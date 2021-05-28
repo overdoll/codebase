@@ -146,7 +146,7 @@ export default function Lobby (props: Props): Node {
         </Box>
         <Button
           mt='5'
-          loading={isSendingEmail}
+          isLoading={isSendingEmail}
           onClick={onSubmit}
           disabled={buttonDisabled}
         >

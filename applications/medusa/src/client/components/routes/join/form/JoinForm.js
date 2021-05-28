@@ -17,7 +17,7 @@ type JoinValues = {
 const schema = Joi.object({
   email: Joi
     .string()
-  // .email({})
+    .email({ minDomainSegments: 2, tlds: {} })
     .required()
 })
 
@@ -64,7 +64,7 @@ export default function JoinForm ({ onSubmit, loading }) {
           )}
         </InputGroup>
         <FormHelperText>
-          {errors.email?.message}
+          {errors.email && t('authenticate.form.validation.email.pattern')}
         </FormHelperText>
       </FormControl>
       <Button

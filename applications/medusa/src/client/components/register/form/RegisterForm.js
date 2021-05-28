@@ -63,7 +63,7 @@ export default function RegisterForm ({ onSubmit, loading }) {
           )}
         </InputGroup>
         <FormHelperText>
-          {errors.username?.message}
+          {errors.username && t('authenticate.form.validation.email.required')}
         </FormHelperText>
       </FormControl>
       <Button
