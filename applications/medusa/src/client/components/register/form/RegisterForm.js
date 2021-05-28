@@ -55,7 +55,6 @@ export default function RegisterForm ({ onSubmit, loading }) {
           {(errors.username || success) && (
             <InputRightElement>
               <Icon
-                size='xl'
                 icon={success ? CheckDouble1 : AlertCircle}
                 color={success ? 'green.600' : 'orange.500'}
               />

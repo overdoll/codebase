@@ -56,7 +56,6 @@ export default function JoinForm ({ onSubmit, loading }) {
           {(errors.email || success) && (
             <InputRightElement>
               <Icon
-                size='xl'
                 icon={success ? CheckDouble1 : AlertCircle}
                 color={success ? 'green.600' : 'orange.500'}
               />
