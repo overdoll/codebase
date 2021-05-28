@@ -19,7 +19,7 @@ type HttpServer struct {
 	app app.Application
 }
 
-func NewHttpServer(app app.Application) *http.Server {
+func NewHttpServer(app app.Application) *http.ServeMux {
 	httpServer := &HttpServer{app: app}
 
 	mx := http.NewServeMux()
@@ -27,10 +27,7 @@ func NewHttpServer(app app.Application) *http.Server {
 	mx.Handle("/api/uploads/", http.StripPrefix("/api/uploads/", httpServer.HandleUpload()))
 	mx.Handle("/api/upload/", http.StripPrefix("/api/upload/", httpServer.HandleTUS()))
 
-	return &http.Server{
-		Addr:    ":8000",
-		Handler: mx,
-	}
+	return mx
 }
 
 func (h *HttpServer) HandleUpload() http.Handler {

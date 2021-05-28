@@ -47,6 +47,10 @@ coverage:
         target: 10%
         paths:
           - "libraries"
+ignore:
+  - "**/generated.go"
+  - "**/*.pb.go"
+  - "**/federation.go"
 
 # fix path for bazel-generated coverage files && cypress
 fixes:

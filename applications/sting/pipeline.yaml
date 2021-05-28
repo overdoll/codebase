@@ -21,7 +21,10 @@ steps:
     coverage:
       - name: sting.integration
         paths:
-          - ./applications/sting/**/coverage.dat
+          - ./applications/sting/src/adapters/**/coverage.dat
+      - name: sting.component
+        paths:
+          - ./applications/sting/src/service/**/coverage.dat
     setup:
       dockerfile:
         - ./applications/sting/docker-compose.ci.yaml

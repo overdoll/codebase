@@ -2,8 +2,13 @@ package service
 
 import (
 	"context"
+	"log"
 	"os"
 	"testing"
+
+	"overdoll/applications/eva/src/ports"
+	"overdoll/libraries/bootstrap"
+	"overdoll/libraries/tests"
 )
 
 type TestUser struct {
@@ -11,44 +16,23 @@ type TestUser struct {
 	Username string `faker:"username"`
 }
 
-// Test a full 'flow' - create a cookie, redeem the cookie and then register the user
-//func TestCreateRedeemRegisterCookie(t *testing.T) {
-//	t.Parallel()
-//
-//	fake := TestUser{}
-//
-//	err := faker.FakeData(&fake)
-//
-//	if err != nil {
-//		t.Fatal("error generating fake data: ", err)
-//	}
-//
-//	app := NewComponentTestApplication(context.Background())
-//
-//	srv := ports.CreateServer(app)
-//
-//	res, err := srv.CreateAuthenticationCookie(context.Background(), &eva.CreateAuthenticationCookieRequest{Email: fake.Email, Session: ""})
-//
-//	require.NoError(t, err)
-//	assert.NotNil(t, res)
-//
-//	redeem, err := srv.RedeemAuthenticationCookie(context.Background(), &eva.GetAuthenticationCookieRequest{Cookie: res.Cookie})
-//
-//	require.NoError(t, err)
-//	assert.False(t, redeem.Registered)
-//
-//	create, err := srv.RegisterUserFromCookie(context.Background(), &eva.RegisterUserRequest{Username: fake.Username, CookieId: redeem.Cookie.Cookie})
-//
-//	require.NoError(t, err)
-//	assert.Equal(t, create.Username, fake.Username)
-//}
+func TestGetUser(t *testing.T) {
+
+}
 
 func startService() bool {
-	_ = NewComponentTestApplication(context.Background())
+	app, _ := NewApplication(context.Background())
 
-	//go bootstrap.InitializeGRPCServer(func(server *grpc.Server) {
-	//	eva.RegisterEvaServer(server, ports.CreateServer(app))
-	//})
+	srv := ports.NewGraphQLServer(&app)
+
+	evaHttpAddr := ":7777"
+
+	go bootstrap.InitializeGinHttpServerOnAddress(evaHttpAddr, srv, func() {})
+
+	ok := tests.WaitForPort(evaHttpAddr)
+	if !ok {
+		log.Println("Timed out waiting for eva HTTP to come up")
+	}
 
 	return true
 }

@@ -21,7 +21,10 @@ steps:
     coverage:
       - name: eva.integration
         paths:
-          - ./applications/eva/**/coverage.dat
+          - ./applications/eva/src/adapters/**/coverage.dat
+      - name: eva.component
+        paths:
+          - ./applications/eva/src/service/**/coverage.dat
     setup:
       dockerfile:
         - ./applications/eva/docker-compose.ci.yaml

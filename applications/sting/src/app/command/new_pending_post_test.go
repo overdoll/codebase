@@ -9,7 +9,6 @@ import (
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/sting/src/adapters"
 	"overdoll/applications/sting/src/app/command"
-	"overdoll/libraries/helpers"
 	"overdoll/libraries/user"
 )
 
@@ -41,7 +40,7 @@ func TestNewPendingPost_in_review(t *testing.T) {
 	var oldContent []string
 	oldContent = append(oldContent, "asd")
 
-	err := handler.Handle(helpers.GinContextWithTesting(context.Background()), ksuid.New().String())
+	err := handler.Handle(context.Background(), ksuid.New().String())
 
 	require.NoError(t, err)
 

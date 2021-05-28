@@ -10,7 +10,6 @@ import (
 	"overdoll/applications/sting/src/adapters"
 	"overdoll/applications/sting/src/app/command"
 	"overdoll/applications/sting/src/domain/post"
-	"overdoll/libraries/helpers"
 )
 
 func TestPostCompleted_complete_post(t *testing.T) {
@@ -27,7 +26,7 @@ func TestPostCompleted_complete_post(t *testing.T) {
 		NewContent: newContent,
 	}, &adapters.EvaServiceMock{})
 
-	err := handler.Handle(helpers.GinContextWithTesting(context.Background()), ksuid.New().String())
+	err := handler.Handle(context.Background(), ksuid.New().String())
 
 	require.NoError(t, err)
 

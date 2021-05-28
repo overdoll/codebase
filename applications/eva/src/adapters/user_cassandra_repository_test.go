@@ -28,6 +28,18 @@ func TestUserRepository_GetUser_not_exists(t *testing.T) {
 	assert.EqualError(t, err, user.ErrUserNotFound.Error())
 }
 
+func TestUserRepository_GetUserByEmail_not_exists(t *testing.T) {
+	t.Parallel()
+
+	repo := newUserRepository(t)
+	ctx := context.Background()
+
+	usr, err := repo.GetUserByEmail(ctx, "some-random-non-existent-email")
+
+	assert.Nil(t, usr)
+	assert.EqualError(t, err, user.ErrUserNotFound.Error())
+}
+
 func TestUserRepository_GetUser_email_exists(t *testing.T) {
 	t.Parallel()
 
@@ -161,9 +173,7 @@ func newFakeUser(t *testing.T) *user.User {
 
 	err := faker.FakeData(&fake)
 
-	if err != nil {
-		t.Fatal("error generating fake data: ", err)
-	}
+	require.NoError(t, err)
 
 	usr, err := user.NewUser(ksuid.New().String(), fake.Username, fake.Email)
 
