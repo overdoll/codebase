@@ -3,8 +3,8 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 go_library(
     name = "go_default_library",
     srcs = [
+        "application.go",
         "mocks.go",
-        "service.go",
     ],
     importpath = "overdoll/applications/sting/src/service",
     visibility = ["//visibility:public"],
@@ -15,7 +15,7 @@ go_library(
         "//applications/sting/src/app/query:go_default_library",
         "//libraries/aws:go_default_library",
         "//libraries/bootstrap:go_default_library",
-        "//libraries/client:go_default_library",
+        "//libraries/clients:go_default_library",
         "//libraries/elasticsearch:go_default_library",
         "//libraries/user:go_default_library",
         "@com_github_spf13_viper//:go_default_library",

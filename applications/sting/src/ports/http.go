@@ -1,9 +1,7 @@
 package ports
 
 import (
-	"fmt"
 	"net/http"
-	"time"
 
 	"overdoll/applications/sting/src/app"
 	gen "overdoll/applications/sting/src/ports/graphql"
@@ -15,17 +13,12 @@ type GraphQLServer struct {
 	app app.Application
 }
 
-func NewGraphQLServer(app *app.Application) *http.Server {
+func NewGraphQLServer(app *app.Application) http.Handler {
 	rtr := router.NewGinRouter()
 
 	rtr.POST("/graphql", graphql.HandleGraphQL(gen.NewExecutableSchema(gen.Config{
 		Resolvers: gen.NewResolver(app),
 	})))
 
-	return &http.Server{
-		Addr:         fmt.Sprint(":8000"),
-		WriteTimeout: time.Second * 10,
-		ReadTimeout:  time.Second * 10,
-		Handler:      rtr,
-	}
+	return rtr
 }

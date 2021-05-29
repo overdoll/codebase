@@ -14,13 +14,13 @@ import (
 	"overdoll/applications/sting/src/app/query"
 	storage "overdoll/libraries/aws"
 	"overdoll/libraries/bootstrap"
-	clients "overdoll/libraries/client"
+	"overdoll/libraries/clients"
 	"overdoll/libraries/elasticsearch"
 )
 
 func NewApplication(ctx context.Context) (app.Application, func()) {
 
-	evaClient, cleanup := clients.NewEvaClient(ctx)
+	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
 
 	return createApplication(ctx, adapters.NewEvaGrpc(evaClient)),
 		func() {

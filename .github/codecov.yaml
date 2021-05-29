@@ -17,34 +17,31 @@ comment:
   require_changes: no
 
 coverage:
-  precision: 2
-  round: down
-  range: "70...100"
   status:
     project:
       default:
-        target: 40%
+        informational: true
         paths:
           - "applications"
           - "libraries"
       medusa:
-        target: 60%
+        informational: true
         paths:
           - "applications/medusa"
       eva:
-        target: 20%
+        informational: true
         paths:
           - "applications/eva"
       buffer:
-        target: 20%
+        informational: true
         paths:
           - "applications/buffer"
       sting:
-        target: 20%
+        informational: true
         paths:
           - "applications/sting"
       library:
-        target: 10%
+        informational: true
         paths:
           - "libraries"
 ignore:

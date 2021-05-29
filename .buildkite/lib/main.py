@@ -262,6 +262,10 @@ def print_project_pipeline():
     if not e2e:
         raise exception.BuildkiteException("e2e step is empty")
 
+    # Integration tests should be ran first - they will ensure the backend works as expected before proceeding with the
+    # front-end
+    pipeline_steps.append("wait")
+
     pipeline_steps.append(
         pipeline.create_step(
             label=':cypress: :chromium: End-to-End Test',

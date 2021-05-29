@@ -55,9 +55,9 @@ func RunGrpc(cmd *cobra.Command, args []string) {
 
 	defer cleanup()
 
-	s := ports.CreateServer(&app)
+	s := ports.NewGrpcServer(&app)
 
-	bootstrap.InitializeGRPCServer(func(server *grpc.Server) {
+	bootstrap.InitializeGRPCServer("0.0.0.0:8080", func(server *grpc.Server) {
 		eva.RegisterEvaServer(server, s)
 	})
 }
@@ -72,5 +72,5 @@ func RunHttp(cmd *cobra.Command, args []string) {
 
 	srv := ports.NewGraphQLServer(&app)
 
-	bootstrap.InitializeGinHttpServerOnAddress(":8000", srv, func() {})
+	bootstrap.InitializeHttpServer(":8000", srv, func() {})
 }
