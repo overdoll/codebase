@@ -28,8 +28,8 @@ import (
 const EvaHttpAddr = ":7777"
 const EvaHttpClientAddr = "http://:7777/graphql"
 
-const EvaGrpcAddr = "0.0.0.0:7778"
-const EvaGrpcClientAddr = "http://0.0.0.0:7778"
+const EvaGrpcAddr = "localhost:7778"
+const EvaGrpcClientAddr = "localhost:7778"
 
 type TestUser struct {
 	Email    string `faker:"email"`
@@ -76,7 +76,7 @@ type Logout struct {
 func TestUserRegistration_complete(t *testing.T) {
 	t.Parallel()
 
-	client, httpUser := getClient(t, nil)
+	client, httpUser, _ := getClient(t, nil)
 
 	var authenticate Authenticate
 
@@ -95,18 +95,7 @@ func TestUserRegistration_complete(t *testing.T) {
 	require.NoError(t, err)
 
 	// get cookies
-	cookies := httpUser.Jar.Cookies(&url.URL{
-		Scheme: "http",
-	})
-
-	var otpCookie *http.Cookie
-
-	// need to grab value from cookie, so we can redeem it
-	for _, ck := range cookies {
-		if ck.Name == cookie.OTPKey {
-			otpCookie = ck
-		}
-	}
+	otpCookie := getOTPCookieFromJar(t, httpUser.Jar)
 
 	// make sure OTPKey is not empty
 	require.True(t, otpCookie != nil)
@@ -130,11 +119,6 @@ func TestUserRegistration_complete(t *testing.T) {
 	})
 
 	require.NoError(t, err)
-
-	httpUser.Jar.SetCookies(&url.URL{
-		Scheme: "http",
-		Path:   "/",
-	}, []*http.Cookie{{Name: otpCookie.Name, Value: otpCookie.Value}})
 
 	// make sure cookie is redeemed
 	assert.Equal(t, bool(redeemCookie.RedeemCookie.Redeemed), true)
@@ -161,21 +145,57 @@ func TestUserRegistration_complete(t *testing.T) {
 	require.NoError(t, err)
 	assert.Equal(t, register.Register, true)
 
-	cookies = httpUser.Jar.Cookies(&url.URL{
-		Scheme: "http",
+	otpCookie = getOTPCookieFromJar(t, httpUser.Jar)
+	// Making sure that with "register" the OTP cookie is removed
+	require.Nil(t, otpCookie)
+}
+
+// TestUserLogin_existing - test is similar to registration, except that we do a login with an
+// existing user
+func TestUserLogin_existing(t *testing.T) {
+
+	client, httpUser, pass := getClient(t, passport.FreshPassport())
+
+	fmt.Println(pass.GetPassport())
+
+	var authenticate Authenticate
+
+	err := client.Mutate(context.Background(), &authenticate, map[string]interface{}{
+		"data": &types.AuthenticationInput{Email: "poisonminion_test@overdoll.com"},
 	})
 
-	// Making sure that with "register" the OTP cookie is removed
-	for _, ck := range cookies {
-		assert.NotEqual(t, ck.Name, cookie.OTPKey)
-	}
+	require.NoError(t, err)
+
+	otpCookie := getOTPCookieFromJar(t, httpUser.Jar)
+
+	assert.Equal(t, authenticate.Authenticate, true)
+
+	var redeemCookie RedeemCookie
+
+	err = client.Query(context.Background(), &redeemCookie, map[string]interface{}{
+		"cookie": graphql.String(otpCookie.Value),
+	})
+
+	require.NoError(t, err)
+
+	// the RedeemCookie function will also log you in, if you redeem a cookie that's for a registered user
+	// so we check for that here
+	assert.Equal(t, true, bool(redeemCookie.RedeemCookie.Registered))
+
+	// the third parameter of getClient contains the most up-to-date version of the passport
+	modified := pass.GetPassport()
+
+	// since our passport is a pointer that is modified from a response, we can use it to check to make sure
+	// that the user is logged into the correct one
+	assert.Equal(t, true, modified.IsAuthenticated())
+	assert.Equal(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6", modified.UserID())
 }
 
 // Test empty authentication - we didnt pass any passport so it shouldn't do anything
 func TestGetUserAuthentication_empty(t *testing.T) {
 	t.Parallel()
 
-	client, _ := getClient(t, nil)
+	client, _, _ := getClient(t, nil)
 
 	var query AuthQuery
 
@@ -196,7 +216,7 @@ func TestGetUserAuthentication_user(t *testing.T) {
 	t.Parallel()
 
 	// userID is from one of our seeders (which will exist during testing)
-	client, _ := getClient(t, passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	client, _, _ := getClient(t, passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 
 	var query AuthQuery
 
@@ -212,7 +232,7 @@ func TestGetUserAuthentication_user(t *testing.T) {
 func TestLogout_user(t *testing.T) {
 	t.Parallel()
 
-	client, _ := getClient(t, passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	client, _, _ := getClient(t, passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 
 	var mutation Logout
 
@@ -225,22 +245,40 @@ func TestLogout_user(t *testing.T) {
 
 // test by grabbing a user
 func TestUser_get(t *testing.T) {
+	t.Parallel()
+
 	evaClient, _ := clients.NewEvaClient(context.Background(), EvaGrpcClientAddr)
 
 	res, err := evaClient.GetUser(context.Background(), &eva.GetUserRequest{Id: "1q7MJ3JkhcdcJJNqZezdfQt5pZ6"})
 
 	require.NoError(t, err)
 
-	fmt.Println(res)
-
-	assert.Equal(t, true, false)
+	assert.Equal(t, res.Username, "poisonminion")
 }
 
-func getClient(t *testing.T, pass *passport.Passport) (*graphql.Client, *http.Client) {
+func getOTPCookieFromJar(t *testing.T, jar http.CookieJar) *http.Cookie {
+	// get cookies
+	cookies := jar.Cookies(&url.URL{
+		Scheme: "http",
+	})
 
-	client := clients.NewHTTPClientWithHeaders(pass)
+	var otpCookie *http.Cookie
 
-	return graphql.NewClient(EvaHttpClientAddr, client), client
+	// need to grab value from cookie, so we can redeem it
+	for _, ck := range cookies {
+		if ck.Name == cookie.OTPKey {
+			otpCookie = ck
+		}
+	}
+
+	return otpCookie
+}
+
+func getClient(t *testing.T, pass *passport.Passport) (*graphql.Client, *http.Client, *clients.ClientPassport) {
+
+	client, transport := clients.NewHTTPClientWithHeaders(pass)
+
+	return graphql.NewClient(EvaHttpClientAddr, client), client, transport
 }
 
 func startService() bool {
@@ -258,9 +296,9 @@ func startService() bool {
 		log.Println("Timed out waiting for eva HTTP to come up")
 		return false
 	}
+	s := ports.NewGrpcServer(&app)
 
-	bootstrap.InitializeGRPCServer(EvaGrpcAddr, func(server *grpc.Server) {
-		s := ports.NewGrpcServer(&app)
+	go bootstrap.InitializeGRPCServer(EvaGrpcAddr, func(server *grpc.Server) {
 		eva.RegisterEvaServer(server, s)
 	})
 

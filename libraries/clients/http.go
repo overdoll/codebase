@@ -7,38 +7,63 @@ import (
 	"overdoll/libraries/passport"
 )
 
-type headerTransport struct {
-	base     http.RoundTripper
-	headers  map[string]string
+type ClientPassport struct {
 	passport *passport.Passport
+}
+
+type headerTransport struct {
+	base           http.RoundTripper
+	headers        map[string]string
+	clientPassport *ClientPassport
 }
 
 // A custom HTTP client
 // Useful for when running GraphQL requests, and you need to attach some sort of authorization
-// In this case, it will be a passport object in the body
-func NewHTTPClientWithHeaders(pass *passport.Passport) *http.Client {
+
+// the client "kind of" simulates a request in and out of the graphql gateway, in that it will add a passport to
+// the request, and modify the passport, when a new one is placed in the header
+// this makes it perfect for testing and ensuring your passport modifications were correct
+func NewHTTPClientWithHeaders(pass *passport.Passport) (*http.Client, *ClientPassport) {
 	jar, _ := cookiejar.New(nil)
 
-	if pass == nil {
-		pass = passport.FreshPassport()
+	clientPassport := &ClientPassport{
+		passport: pass,
+	}
+
+	transport := &headerTransport{
+		base:           http.DefaultTransport,
+		headers:        make(map[string]string),
+		clientPassport: clientPassport,
 	}
 
 	return &http.Client{
-		Transport: &headerTransport{
-			base:     http.DefaultTransport,
-			headers:  make(map[string]string),
-			passport: pass,
-		},
-		Jar: jar,
-	}
+		Transport: transport,
+		Jar:       jar,
+	}, clientPassport
+}
+
+func (h *ClientPassport) GetPassport() *passport.Passport {
+	return h.passport
 }
 
 func (h *headerTransport) RoundTrip(req *http.Request) (*http.Response, error) {
-	req2 := CloneRequest(req, h.passport)
+	req2 := CloneRequest(req, h.clientPassport.passport)
 	for key, val := range h.headers {
 		req2.Header.Set(key, val)
 	}
-	return h.base.RoundTrip(req2)
+	resp, err := h.base.RoundTrip(req2)
+
+	if err != nil {
+		return nil, err
+	}
+
+	nw := passport.FromResponse(resp)
+
+	if nw != nil {
+		h.clientPassport.passport = &*nw
+	}
+
+	return resp, err
 }
 
 // CloneRequest and CloneHeader copied from https://github.com/kubernetes/apimachinery/blob/master/pkg/util/net/http.go#L424
@@ -50,10 +75,12 @@ func CloneRequest(req *http.Request, pass *passport.Passport) *http.Request {
 	// shallow clone
 	*r = *req
 
-	err := passport.AddToBody(r, pass)
+	if pass != nil {
+		err := passport.AddToBody(r, pass)
 
-	if err != nil {
-		panic(err)
+		if err != nil {
+			panic(err)
+		}
 	}
 
 	// deep copy headers

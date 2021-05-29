@@ -145,9 +145,7 @@ func BodyToContext(c *gin.Context) *http.Request {
 	return nil
 }
 
-func FromContext(ctx context.Context) *Passport {
-	raw, _ := ctx.Value(MutationType(MutationKey)).(string)
-
+func FromString(raw string) *Passport {
 	if raw != "" {
 		sDec, err := base64.StdEncoding.DecodeString(raw)
 
@@ -168,6 +166,23 @@ func FromContext(ctx context.Context) *Passport {
 		return &Passport{passport: &msg}
 	}
 
+	return nil
+}
+
+func FromContext(ctx context.Context) *Passport {
+	raw, _ := ctx.Value(MutationType(MutationKey)).(string)
+
+	pass := FromString(raw)
+
 	// If there's no passport in the body, we will use a fresh passport so that implementors have something to work with
-	return FreshPassport()
+
+	if pass == nil {
+		return FreshPassport()
+	}
+
+	return pass
+}
+
+func FromResponse(resp *http.Response) *Passport {
+	return FromString(resp.Header.Get(MutationHeader))
 }
