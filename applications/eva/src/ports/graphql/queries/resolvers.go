@@ -28,17 +28,12 @@ func (r *QueryResolver) RedeemCookie(ctx context.Context, cookieId string) (*typ
 
 	gc := helpers.GinContextFromContext(ctx)
 
-	currentCookie, err := cookies.ReadCookie(ctx, cookie.OTPKey)
+	_, err := cookies.ReadCookie(ctx, cookie.OTPKey)
 
 	isSameSession := err == nil
 
 	if err != nil && err != http.ErrNoCookie {
 		return nil, command.ErrFailedCookieRedeem
-	}
-
-	// cookie in cookie has to match the url cookie, otherwise any cookie can just be redeemed with an arbitrary value
-	if isSameSession && currentCookie != nil && currentCookie.Value != cookieId {
-		return nil, nil
 	}
 
 	ck, err := r.App.Commands.RedeemCookie.Handle(ctx, isSameSession, cookieId)

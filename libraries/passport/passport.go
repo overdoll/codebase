@@ -8,6 +8,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang/protobuf/proto"
@@ -23,7 +24,10 @@ const (
 	MutationKey    = "PassportContextKey"
 )
 
+// Body - parses graphql requests
 type Body struct {
+	Query      string                 `json:"query,omitempty"`
+	Variables  map[string]interface{} `json:"variables,omitempty"`
 	Extensions struct {
 		Passport string `json:"passport"`
 	}
@@ -69,9 +73,6 @@ func (p *Passport) MutatePassport(ctx context.Context, updateFn func(*Passport) 
 		return err
 	}
 
-	// TODO: for testing && separation of concerns,
-	// passport should be modified in the current request (context?) and then intercepted
-	// by whatever request type we use (http, etc..)
 	gc := helpers.GinContextFromContext(ctx)
 
 	if gc != nil {
@@ -83,6 +84,43 @@ func (p *Passport) MutatePassport(ctx context.Context, updateFn func(*Passport) 
 
 func FreshPassport() *Passport {
 	return &Passport{passport: &libraries_passport_v1.Passport{User: nil}}
+}
+
+func FreshPassportWithUser(id string) *Passport {
+
+	pass := &Passport{passport: &libraries_passport_v1.Passport{User: nil}}
+
+	pass.SetUser(id)
+
+	return pass
+}
+
+// AddToBody is responsible for appending passport to the body of the request
+// mainly used for testing (because usually, our graphql gateway appends the passport to the body)
+func AddToBody(r *http.Request, passport *Passport) error {
+	var body Body
+	var buf bytes.Buffer
+
+	tee := io.TeeReader(r.Body, &buf)
+	err := json.NewDecoder(tee).Decode(&body)
+
+	if err != nil {
+		return err
+	}
+
+	body.Extensions.Passport = passport.SerializeToBaseString()
+
+	encode, err := json.Marshal(body)
+
+	if err != nil {
+		return err
+	}
+
+	r.ContentLength = int64(len(encode))
+
+	r.Body = ioutil.NopCloser(strings.NewReader(string(encode)))
+
+	return nil
 }
 
 // BodyToContext is responsible for parsing the incoming passport and

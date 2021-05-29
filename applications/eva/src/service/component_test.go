@@ -2,9 +2,9 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
-	"net/http/cookiejar"
 	"net/url"
 	"os"
 	"testing"
@@ -14,12 +14,22 @@ import (
 	"github.com/shurcooL/graphql"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/require"
+	"google.golang.org/grpc"
+	eva "overdoll/applications/eva/proto"
 	"overdoll/applications/eva/src/domain/cookie"
 	"overdoll/applications/eva/src/ports"
 	"overdoll/applications/eva/src/ports/graphql/types"
 	"overdoll/libraries/bootstrap"
+	"overdoll/libraries/clients"
+	"overdoll/libraries/passport"
 	"overdoll/libraries/tests"
 )
+
+const EvaHttpAddr = ":7777"
+const EvaHttpClientAddr = "http://:7777/graphql"
+
+const EvaGrpcAddr = "0.0.0.0:7778"
+const EvaGrpcClientAddr = "http://0.0.0.0:7778"
 
 type TestUser struct {
 	Email    string `faker:"email"`
@@ -38,16 +48,37 @@ type AuthQuery struct {
 	}
 }
 
+type RedeemCookie struct {
+	RedeemCookie struct {
+		SameSession graphql.Boolean
+		Registered  graphql.Boolean
+		Redeemed    graphql.Boolean
+		Session     graphql.String
+		Email       graphql.String
+		Invalid     graphql.Boolean
+	} `graphql:"redeemCookie(cookie: $cookie)"`
+}
+
+type Authenticate struct {
+	Authenticate bool `graphql:"authenticate(data: $data)"`
+}
+
+type Register struct {
+	Register bool `graphql:"register(data: $data)"`
+}
+
+type Logout struct {
+	Logout bool `graphql:"logout()"`
+}
+
 // TestUserRegistration_complete - complete a whole user registration flow using multiple graphql endpoints
 // this is in one test because it requires a persistent state (in this case, it's cookies)
 func TestUserRegistration_complete(t *testing.T) {
 	t.Parallel()
 
-	client, httpUser := getClient(t)
+	client, httpUser := getClient(t, nil)
 
-	var authenticate struct {
-		Authenticate bool `graphql:"authenticate(data: $data)"`
-	}
+	var authenticate Authenticate
 
 	fake := TestUser{}
 
@@ -92,16 +123,7 @@ func TestUserRegistration_complete(t *testing.T) {
 	// expect that the cookie is not redeemed
 	assert.Equal(t, false, bool(authNotRedeemed.Authentication.Cookie.Redeemed))
 
-	var redeemCookie struct {
-		RedeemCookie struct {
-			SameSession graphql.Boolean
-			Registered  graphql.Boolean
-			Redeemed    graphql.Boolean
-			Session     graphql.String
-			Email       graphql.String
-			Invalid     graphql.Boolean
-		} `graphql:"redeemCookie(cookie: $cookie)"`
-	}
+	var redeemCookie RedeemCookie
 
 	err = client.Query(context.Background(), &redeemCookie, map[string]interface{}{
 		"cookie": graphql.String(otpCookie.Value),
@@ -130,9 +152,7 @@ func TestUserRegistration_complete(t *testing.T) {
 	assert.Equal(t, true, bool(authRedeemed.Authentication.Cookie.Redeemed))
 
 	// now, we register (cookie is redeemed from above query)
-	var register struct {
-		Register bool `graphql:"register(data: $data)"`
-	}
+	var register Register
 
 	err = client.Mutate(context.Background(), &register, map[string]interface{}{
 		"data": &types.RegisterInput{Username: fake.Username},
@@ -141,13 +161,21 @@ func TestUserRegistration_complete(t *testing.T) {
 	require.NoError(t, err)
 	assert.Equal(t, register.Register, true)
 
+	cookies = httpUser.Jar.Cookies(&url.URL{
+		Scheme: "http",
+	})
+
+	// Making sure that with "register" the OTP cookie is removed
+	for _, ck := range cookies {
+		assert.NotEqual(t, ck.Name, cookie.OTPKey)
+	}
 }
 
-// Test empty authentication - we didnt pass any passport so it shouldnt do anything
+// Test empty authentication - we didnt pass any passport so it shouldn't do anything
 func TestGetUserAuthentication_empty(t *testing.T) {
 	t.Parallel()
 
-	client, _ := getClient(t)
+	client, _ := getClient(t, nil)
 
 	var query AuthQuery
 
@@ -160,18 +188,59 @@ func TestGetUserAuthentication_empty(t *testing.T) {
 	require.Nil(t, query.Authentication.User)
 }
 
-// TODO: test GRPC endpoint for grabbing specific users (see how DDD sets it up)
+// TestGetUserAuthentication_user - we assign a passport to our Http client, which will add it to the request body
+// when doing a graphql request
+// normally, passport is stored in session and assigned in the graphql gateway
+// since we can't do this here, we assign it manually
+func TestGetUserAuthentication_user(t *testing.T) {
+	t.Parallel()
 
-func getClient(t *testing.T) (*graphql.Client, *http.Client) {
-	jar, err := cookiejar.New(nil)
+	// userID is from one of our seeders (which will exist during testing)
+	client, _ := getClient(t, passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+
+	var query AuthQuery
+
+	err := client.Query(context.Background(), &query, nil)
 
 	require.NoError(t, err)
 
-	httpUser := &http.Client{
-		Jar: jar,
-	}
+	require.Nil(t, query.Authentication.Cookie)
+	require.Equal(t, "poisonminion", string(query.Authentication.User.Username))
+}
 
-	return graphql.NewClient("http://:7777/graphql", httpUser), httpUser
+// test to make sure logout works (when passport is present)
+func TestLogout_user(t *testing.T) {
+	t.Parallel()
+
+	client, _ := getClient(t, passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+
+	var mutation Logout
+
+	err := client.Mutate(context.Background(), &mutation, nil)
+
+	require.NoError(t, err)
+
+	require.Equal(t, mutation.Logout, true)
+}
+
+// test by grabbing a user
+func TestUser_get(t *testing.T) {
+	evaClient, _ := clients.NewEvaClient(context.Background(), EvaGrpcClientAddr)
+
+	res, err := evaClient.GetUser(context.Background(), &eva.GetUserRequest{Id: "1q7MJ3JkhcdcJJNqZezdfQt5pZ6"})
+
+	require.NoError(t, err)
+
+	fmt.Println(res)
+
+	assert.Equal(t, true, false)
+}
+
+func getClient(t *testing.T, pass *passport.Passport) (*graphql.Client, *http.Client) {
+
+	client := clients.NewHTTPClientWithHeaders(pass)
+
+	return graphql.NewClient(EvaHttpClientAddr, client), client
 }
 
 func startService() bool {
@@ -182,13 +251,23 @@ func startService() bool {
 
 	srv := ports.NewGraphQLServer(&app)
 
-	evaHttpAddr := ":7777"
+	go bootstrap.InitializeHttpServer(EvaHttpAddr, srv, func() {})
 
-	go bootstrap.InitializeHttpServer(evaHttpAddr, srv, func() {})
-
-	ok := tests.WaitForPort(evaHttpAddr)
+	ok := tests.WaitForPort(EvaHttpAddr)
 	if !ok {
 		log.Println("Timed out waiting for eva HTTP to come up")
+		return false
+	}
+
+	bootstrap.InitializeGRPCServer(EvaGrpcAddr, func(server *grpc.Server) {
+		s := ports.NewGrpcServer(&app)
+		eva.RegisterEvaServer(server, s)
+	})
+
+	ok = tests.WaitForPort(EvaGrpcAddr)
+
+	if !ok {
+		log.Println("Timed out waiting for eva GRPC to come up")
 	}
 
 	return true
