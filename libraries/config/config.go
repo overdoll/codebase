@@ -5,22 +5,15 @@ import (
 
 	"github.com/bazelbuild/rules_go/go/tools/bazel"
 	"github.com/spf13/viper"
-	"overdoll/libraries/helpers"
 )
 
 func Read(pt string) {
 
+	// need to use bazel runfiles path - most accurate
 	dir, err := bazel.RunfilesPath()
 
 	if err != nil {
-
-		dir, err = helpers.GetBinaryDirectory()
-
-		if err != nil {
-			panic(err)
-		}
-
-		dir = path.Dir(dir)
+		panic(err)
 	}
 
 	viper.SetConfigFile(path.Join(dir, pt))

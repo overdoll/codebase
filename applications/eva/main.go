@@ -22,7 +22,7 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
-	config.Read("config.toml")
+	config.Read("applications/eva/config.toml")
 
 	rootCmd.AddCommand(commands.Database)
 	rootCmd.AddCommand(&cobra.Command{
