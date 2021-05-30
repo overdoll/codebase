@@ -1406,8 +1406,8 @@ go_repository(
     name = "com_github_scylladb_gocqlx_v2",
     build_file_proto_mode = "disable_global",
     importpath = "github.com/scylladb/gocqlx/v2",
-    sum = "h1:/cjDsMjkFYrAe/IXoG0V3oRN3JXyV2YMcpwJqjM/enw=",
-    version = "v2.3.0",
+    sum = "h1:XkmIf3F++iP8jWCqZuabcF5Vw2bqD7VRpyTVmPFQnks=",
+    version = "v2.4.0",
 )
 
 go_repository(
@@ -2093,4 +2093,11 @@ go_repository(
     importpath = "github.com/bazelbuild/rules_go",
     sum = "h1:KViqR7qKXwz+LrNdIauCDU21kneCk+4DnYjpvlJwH50=",
     version = "v0.27.0",
+)
+
+go_repository(
+    name = "com_github_psanford_memfs",
+    importpath = "github.com/psanford/memfs",
+    sum = "h1:NKxTG6GVGbfMXc2mIk+KphcH6hagbVXhcFkbTgYleTI=",
+    version = "v0.0.0-20210214183328-a001468d78ef",
 )
