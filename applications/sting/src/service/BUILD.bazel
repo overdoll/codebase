@@ -32,8 +32,8 @@ go_test(
         "//libraries/config:go_default_library",
         "//libraries/passport:go_default_library",
         "//libraries/tests:go_default_library",
-        "@com_github_bmizerany_assert//:go_default_library",
         "@com_github_shurcool_graphql//:go_default_library",
+        "@com_github_stretchr_testify//assert:go_default_library",
         "@com_github_stretchr_testify//require:go_default_library",
     ],
 )

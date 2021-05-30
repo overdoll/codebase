@@ -8,9 +8,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/bmizerany/assert"
 	"github.com/bxcodec/faker/v3"
 	"github.com/shurcooL/graphql"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc"
 	eva "overdoll/applications/eva/proto"

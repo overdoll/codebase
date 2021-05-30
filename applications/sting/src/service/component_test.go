@@ -7,8 +7,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/bmizerany/assert"
 	"github.com/shurcooL/graphql"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/sting/src/ports"
 	"overdoll/applications/sting/src/ports/graphql/types"
