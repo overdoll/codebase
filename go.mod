@@ -4,8 +4,9 @@ go 1.14
 
 require (
 	github.com/99designs/gqlgen v0.13.0
-	github.com/aws/aws-sdk-go v1.37.21
+	github.com/aws/aws-sdk-go v1.38.51
 	github.com/bazelbuild/rules_go v0.27.0
+	github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869
 	github.com/bmizerany/pat v0.0.0-20170815010413-6226ea591a40
 	github.com/bxcodec/faker/v3 v3.6.0
 	github.com/cenkalti/backoff/v4 v4.1.0
@@ -38,7 +39,6 @@ require (
 	golang.org/x/sys v0.0.0-20210503173754-0981d6026fa6 // indirect
 	google.golang.org/genproto v0.0.0-20210505142820-a42aa055cf76 // indirect
 	google.golang.org/grpc v1.37.0
-	google.golang.org/protobuf v1.26.0
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 )
 
