@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	"overdoll/libraries/ksuid"
+	"overdoll/libraries/uuid"
 	"overdoll/libraries/user"
 )
 
@@ -342,14 +342,14 @@ func (p *PostPending) ConsumeCustomResources(existingMedia []*Media) ([]*Categor
 // RequestResources will pre-generate IDs for each request type
 func (p *PostPending) RequestResources(characters map[string]string, categories, medias []string) {
 	for char, med := range characters {
-		p.charactersRequests = append(p.charactersRequests, CharacterRequest{Id: ksuid.New().String(), Name: char, Media: med})
+		p.charactersRequests = append(p.charactersRequests, CharacterRequest{Id: uuid.New().String(), Name: char, Media: med})
 	}
 
 	for _, cat := range categories {
-		p.categoriesRequests = append(p.categoriesRequests, CategoryRequest{Id: ksuid.New().String(), Title: cat})
+		p.categoriesRequests = append(p.categoriesRequests, CategoryRequest{Id: uuid.New().String(), Title: cat})
 	}
 
 	for _, med := range medias {
-		p.mediaRequests = append(p.mediaRequests, MediaRequest{Id: ksuid.New().String(), Title: med})
+		p.mediaRequests = append(p.mediaRequests, MediaRequest{Id: uuid.New().String(), Title: med})
 	}
 }

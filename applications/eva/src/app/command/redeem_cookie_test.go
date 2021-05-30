@@ -9,19 +9,19 @@ import (
 	"overdoll/applications/eva/src/app/command"
 	"overdoll/applications/eva/src/domain/cookie"
 	"overdoll/applications/eva/src/domain/user"
-	"overdoll/libraries/ksuid"
+	"overdoll/libraries/uuid"
 )
 
 func TestRedeemCookie_Consume_fails_when_cookie_invalid(t *testing.T) {
 	t.Parallel()
 
-	id := ksuid.New().String()
+	id := uuid.New().String()
 
 	ck, err := cookie.NewCookie(id, "test2@test.com", "")
 
 	require.NoError(t, err)
 
-	usr, err := user.NewUser(ksuid.New().String(), "user", "test@test.com")
+	usr, err := user.NewUser(uuid.New().String(), "user", "test@test.com")
 
 	require.NoError(t, err)
 
@@ -37,7 +37,7 @@ func TestRedeemCookie_Consume_fails_when_cookie_invalid(t *testing.T) {
 func TestRedeemCookie_Consume_when_user_exists(t *testing.T) {
 	t.Parallel()
 
-	id := ksuid.New().String()
+	id := uuid.New().String()
 
 	email := "test2@test.com"
 
@@ -45,7 +45,7 @@ func TestRedeemCookie_Consume_when_user_exists(t *testing.T) {
 
 	require.NoError(t, err)
 
-	usr, err := user.NewUser(ksuid.New().String(), "user", email)
+	usr, err := user.NewUser(uuid.New().String(), "user", email)
 
 	require.NoError(t, err)
 
@@ -63,7 +63,7 @@ func TestRedeemCookie_Consume_when_user_exists(t *testing.T) {
 func TestRedeemCookie_Consume_false_when_user_not_exists(t *testing.T) {
 	t.Parallel()
 
-	id := ksuid.New().String()
+	id := uuid.New().String()
 
 	ck, err := cookie.NewCookie(id, "test@test.com", "")
 

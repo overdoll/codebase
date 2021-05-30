@@ -7,7 +7,7 @@ import (
 	"github.com/gocql/gocql"
 	"go.uber.org/zap"
 	"overdoll/applications/sting/src/domain/post"
-	"overdoll/libraries/ksuid"
+	"overdoll/libraries/uuid"
 	"overdoll/libraries/passport"
 )
 
@@ -72,7 +72,7 @@ func (h CreatePendingPostHandler) Handle(ctx context.Context, artistId, artistUs
 		return nil, nil
 	}
 
-	pendingPost, err := post.NewPendingPost(ksuid.New().String(), artist, usr, content, characters, categories)
+	pendingPost, err := post.NewPendingPost(uuid.New().String(), artist, usr, content, characters, categories)
 
 	if err != nil {
 		return nil, err
