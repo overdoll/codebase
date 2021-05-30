@@ -10,8 +10,8 @@ import (
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/eva/src/adapters"
 	"overdoll/applications/eva/src/domain/user"
-	"overdoll/libraries/uuid"
 	"overdoll/libraries/tests"
+	"overdoll/libraries/uuid"
 )
 
 func TestUserRepository_GetUser_not_exists(t *testing.T) {

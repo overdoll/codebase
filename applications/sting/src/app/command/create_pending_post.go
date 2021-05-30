@@ -7,8 +7,8 @@ import (
 	"github.com/gocql/gocql"
 	"go.uber.org/zap"
 	"overdoll/applications/sting/src/domain/post"
-	"overdoll/libraries/uuid"
 	"overdoll/libraries/passport"
+	"overdoll/libraries/uuid"
 )
 
 var (
