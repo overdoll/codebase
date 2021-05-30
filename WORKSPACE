@@ -501,8 +501,8 @@ go_repository(
     name = "com_github_gin_gonic_gin",
     build_file_proto_mode = "disable_global",
     importpath = "github.com/gin-gonic/gin",
-    sum = "h1:ahKqKTFpO5KTPHxWZjEdPScmYaGtLo8Y4DMHoEsnp14=",
-    version = "v1.6.3",
+    sum = "h1:Tg03T9yM2xa8j6I3Z3oqLaQRSmKvxPd6g/2HJ6zICFA=",
+    version = "v1.7.2",
 )
 
 go_repository(
