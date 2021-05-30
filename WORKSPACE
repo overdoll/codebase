@@ -213,8 +213,8 @@ go_repository(
     name = "com_github_aws_aws_sdk_go",
     build_file_proto_mode = "disable_global",
     importpath = "github.com/aws/aws-sdk-go",
-    sum = "h1:h3DUhpeOT0TQIwaSzXsBl+jwppfNR/Pc2T5k3SHVKPA=",
-    version = "v1.37.21",
+    sum = "h1:aKQmbVbwOCuQSd8+fm/MR3bq0QOsu9Q7S+/QEND36oQ=",
+    version = "v1.38.51",
 )
 
 go_repository(
