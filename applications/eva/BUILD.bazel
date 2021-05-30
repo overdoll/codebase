@@ -4,6 +4,8 @@ load("@io_bazel_rules_docker//container:container.bzl", "container_push")
 
 package(default_visibility = ["//visibility:public"])
 
+exports_files(["config.toml"])
+
 web_sources = glob(["database/**"]) + ["config.toml"]
 
 go_library(

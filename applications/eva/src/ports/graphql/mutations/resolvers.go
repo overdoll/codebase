@@ -52,7 +52,7 @@ func (r *MutationResolver) Authenticate(ctx context.Context, data *types.Authent
 	// OTP login cookie - will determine if
 	// Opened in the same browser - log them in that browser if this cookie exists
 	// Otherwise, if opened in another browser (such as the phone), it will log them in on the original browser through a subscription
-	_, err = cookies.SetCookie(ctx, &http.Cookie{
+	err = cookies.SetCookie(ctx, &http.Cookie{
 		Name:    cookie.OTPKey,
 		Value:   instance.Cookie(),
 		Expires: time.Now().Add(5 * time.Minute),

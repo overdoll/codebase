@@ -6,7 +6,7 @@ import (
 
 	"go.uber.org/zap"
 	"overdoll/applications/eva/src/domain/cookie"
-	"overdoll/libraries/ksuid"
+	"overdoll/libraries/uuid"
 )
 
 type AuthenticateHandler struct {
@@ -24,7 +24,7 @@ var (
 func (h AuthenticateHandler) Handle(ctx context.Context, email, session string) (*cookie.Cookie, error) {
 
 	// Create an authentication cookie
-	instance, err := cookie.NewCookie(ksuid.New().String(), email, session)
+	instance, err := cookie.NewCookie(uuid.New().String(), email, session)
 
 	if err != nil {
 		return nil, err

@@ -124,7 +124,6 @@ func (r PostsCassandraRepository) CreatePendingPost(ctx context.Context, pending
 			"categories_requests",
 			"media_requests",
 			"posted_at",
-			"review_required",
 			"published_post_id",
 		).
 		Query(r.session).

@@ -3,25 +3,20 @@ package config
 import (
 	"path"
 
+	"github.com/bazelbuild/rules_go/go/tools/bazel"
 	"github.com/spf13/viper"
-	"overdoll/libraries/helpers"
 )
 
-const (
-	CONFIG_FILE   = "config"
-	CONFIG_FORMAT = "toml"
-)
+func Read(pt string) {
 
-func Read() {
-	dir, err := helpers.GetBinaryDirectory()
+	// need to use bazel runfiles path - most accurate
+	dir, err := bazel.RunfilesPath()
 
 	if err != nil {
 		panic(err)
 	}
 
-	directory := path.Dir(*dir)
-
-	viper.SetConfigFile(directory + "/config.toml")
+	viper.SetConfigFile(path.Join(dir, pt))
 
 	if err := viper.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {

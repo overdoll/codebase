@@ -7,8 +7,8 @@ import (
 	"go.uber.org/zap"
 	"overdoll/applications/eva/src/domain/cookie"
 	"overdoll/applications/eva/src/domain/user"
-	"overdoll/libraries/ksuid"
 	"overdoll/libraries/passport"
+	"overdoll/libraries/uuid"
 )
 
 type RegisterHandler struct {
@@ -43,7 +43,7 @@ func (h RegisterHandler) Handle(ctx context.Context, cookieId, username string) 
 		return false, err
 	}
 
-	instance, err := user.NewUser(ksuid.New().String(), username, ck.Email())
+	instance, err := user.NewUser(uuid.New().String(), username, ck.Email())
 
 	if err != nil {
 		return false, err

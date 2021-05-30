@@ -8,9 +8,9 @@ import (
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/sting/src/adapters"
 	"overdoll/applications/sting/src/domain/post"
-	"overdoll/libraries/ksuid"
 	"overdoll/libraries/tests"
 	"overdoll/libraries/user"
+	"overdoll/libraries/uuid"
 )
 
 func TestPostsCassandraRepository_create_post(t *testing.T) {
@@ -29,13 +29,10 @@ func TestPostsCassandraRepository_create_post(t *testing.T) {
 func TestPostsCassandraRepository_get_pending_post_not_exists(t *testing.T) {
 	t.Parallel()
 
-	// TODO: skip - keeps failing
-	return
-
 	repo := newPostRepository(t)
 	ctx := context.Background()
 
-	id := ksuid.New().String()
+	id := uuid.New().String()
 
 	usr, err := repo.GetPendingPost(ctx, id)
 
@@ -51,21 +48,21 @@ func newPostRepository(t *testing.T) adapters.PostsCassandraRepository {
 
 func newFakePost(t *testing.T) *post.Post {
 
-	artist := post.NewArtist(ksuid.New().String(), "test")
+	artist := post.NewArtist(uuid.New().String(), "test")
 
 	usr := user.NewUser(
-		ksuid.New().String(),
+		uuid.New().String(),
 		"asd",
 		"",
 		nil,
 		false,
 	)
 
-	category := post.NewCategory(ksuid.New().String(), "asd")
+	category := post.NewCategory(uuid.New().String(), "asd")
 
-	media := post.NewMedia(ksuid.New().String(), "asd")
+	media := post.NewMedia(uuid.New().String(), "asd")
 
-	character := post.NewCharacter(ksuid.New().String(), "char", media)
+	character := post.NewCharacter(uuid.New().String(), "char", media)
 
 	var content []string
 
@@ -75,5 +72,5 @@ func newFakePost(t *testing.T) *post.Post {
 	var categories []*post.Category
 	categories = append(categories, category)
 
-	return post.NewPost(ksuid.New().String(), artist, usr, content, categories, characters)
+	return post.NewPost(uuid.New().String(), artist, usr, content, categories, characters)
 }

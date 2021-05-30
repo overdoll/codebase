@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/sting/src/domain/post"
-	"overdoll/libraries/ksuid"
+	"overdoll/libraries/uuid"
 )
 
 func TestPostsMediaCassandraRepository_create_media(t *testing.T) {
@@ -24,5 +24,5 @@ func TestPostsMediaCassandraRepository_create_media(t *testing.T) {
 
 func newFakeMedia(t *testing.T) []*post.Media {
 	var medias []*post.Media
-	return append(medias, post.NewMedia(ksuid.New().String(), ""), post.NewMedia(ksuid.New().String(), ""))
+	return append(medias, post.NewMedia(uuid.New().String(), ""), post.NewMedia(uuid.New().String(), ""))
 }

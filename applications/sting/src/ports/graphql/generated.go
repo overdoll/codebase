@@ -415,11 +415,11 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
-	{Name: "schema/mutations.graphql", Input: `extend type Mutation {
+	{Name: "schema/mutations.graphql", Input: `type Mutation {
   post(data: PostInput): PostResponse!
 }
 `, BuiltIn: false},
-	{Name: "schema/queries.graphql", Input: `extend type Query {
+	{Name: "schema/queries.graphql", Input: `type Query {
   characters(data: SearchInput!): [Character!]!
   categories(data: SearchInput!): [Category!]!
   artists(data: SearchInput!): [Artist!]!

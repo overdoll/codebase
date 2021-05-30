@@ -5,7 +5,7 @@ go 1.14
 require (
 	github.com/99designs/gqlgen v0.13.0
 	github.com/aws/aws-sdk-go v1.37.21
-	github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869
+	github.com/bazelbuild/rules_go v0.27.0
 	github.com/bmizerany/pat v0.0.0-20170815010413-6226ea591a40
 	github.com/bxcodec/faker/v3 v3.6.0
 	github.com/cenkalti/backoff/v4 v4.1.0
@@ -22,12 +22,11 @@ require (
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
 	github.com/h2non/filetype v1.1.1
 	github.com/joho/godotenv v1.3.0
-	github.com/machinebox/graphql v0.2.2 // indirect
 	github.com/scylladb/gocqlx/v2 v2.3.0
 	github.com/segmentio/ksuid v1.0.3
-	github.com/shurcooL/graphql v0.0.0-20200928012149-18c5c3165e3a // indirect
+	github.com/shurcooL/graphql v0.0.0-20200928012149-18c5c3165e3a
 	github.com/spf13/cobra v1.1.3
-	github.com/spf13/viper v1.7.1 // indirect
+	github.com/spf13/viper v1.7.1
 	github.com/stretchr/testify v1.7.0
 	github.com/tus/tusd v1.5.1
 	github.com/vektah/gqlparser/v2 v2.1.0

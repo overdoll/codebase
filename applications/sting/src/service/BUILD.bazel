@@ -2,10 +2,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
     name = "go_default_library",
-    srcs = [
-        "application.go",
-        "mocks.go",
-    ],
+    srcs = ["application.go"],
     importpath = "overdoll/applications/sting/src/service",
     visibility = ["//visibility:public"],
     deps = [
@@ -17,7 +14,6 @@ go_library(
         "//libraries/bootstrap:go_default_library",
         "//libraries/clients:go_default_library",
         "//libraries/elasticsearch:go_default_library",
-        "//libraries/user:go_default_library",
         "@com_github_spf13_viper//:go_default_library",
         "@io_temporal_go_sdk//client:go_default_library",
     ],
@@ -26,5 +22,18 @@ go_library(
 go_test(
     name = "go_default_test",
     srcs = ["component_test.go"],
+    data = ["//applications/sting:config.toml"],
     embed = [":go_default_library"],
+    deps = [
+        "//applications/sting/src/ports:go_default_library",
+        "//applications/sting/src/ports/graphql/types:go_default_library",
+        "//libraries/bootstrap:go_default_library",
+        "//libraries/clients:go_default_library",
+        "//libraries/config:go_default_library",
+        "//libraries/passport:go_default_library",
+        "//libraries/tests:go_default_library",
+        "@com_github_shurcool_graphql//:go_default_library",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
 )
