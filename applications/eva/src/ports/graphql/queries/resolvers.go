@@ -98,6 +98,10 @@ func (r *QueryResolver) Authentication(ctx context.Context) (*types.Authenticati
 	}
 
 	if usr != nil {
+		if hasCookie {
+			http.SetCookie(gc.Writer, &http.Cookie{Name: cookie.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
+		}
+
 		return &types.Authentication{
 			Cookie: nil,
 			User:   &types.User{Username: usr.Username()},
@@ -116,11 +120,6 @@ func (r *QueryResolver) Authentication(ctx context.Context) (*types.Authenticati
 			},
 			User: nil,
 		}, nil
-	}
-
-	// Remove cookie - probably not valid
-	if hasCookie {
-		http.SetCookie(gc.Writer, &http.Cookie{Name: cookie.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
 	}
 
 	return &types.Authentication{
