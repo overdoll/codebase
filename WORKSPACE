@@ -1590,8 +1590,8 @@ go_repository(
     name = "com_github_tus_tusd",
     build_file_proto_mode = "disable_global",
     importpath = "github.com/tus/tusd",
-    sum = "h1:fDQp2cchziuAak79NppXZUf5e2LRbIwxoF5lkgKdEBM=",
-    version = "v1.5.1",
+    sum = "h1:IU9Z2Z5FZfHIap6NPFbPItyx/eU6aN87z4ya/mPzS4g=",
+    version = "v1.6.0",
 )
 
 go_repository(
