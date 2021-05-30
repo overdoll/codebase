@@ -29,7 +29,7 @@ require (
 	github.com/spf13/cobra v1.1.3
 	github.com/spf13/viper v1.7.1
 	github.com/stretchr/testify v1.7.0
-	github.com/tus/tusd v1.5.1
+	github.com/tus/tusd v1.6.0
 	github.com/vektah/gqlparser/v2 v2.2.0
 	go.temporal.io/sdk v1.6.0
 	go.uber.org/multierr v1.6.0 // indirect
