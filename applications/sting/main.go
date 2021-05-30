@@ -20,7 +20,7 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
-	config.Read()
+	config.Read("config.toml")
 
 	rootCmd.AddCommand(ports.Root)
 	rootCmd.AddCommand(commands.Database)

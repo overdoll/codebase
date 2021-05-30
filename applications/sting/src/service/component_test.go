@@ -9,13 +9,13 @@ import (
 
 	"github.com/bmizerany/assert"
 	"github.com/shurcooL/graphql"
-	"github.com/spf13/viper"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/sting/src/ports"
 	"overdoll/applications/sting/src/ports/graphql/types"
 	"overdoll/applications/sting/src/service"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
+	"overdoll/libraries/config"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/tests"
 )
@@ -163,7 +163,7 @@ func getClient(t *testing.T, pass *passport.Passport) (*graphql.Client, *http.Cl
 }
 
 func startService() bool {
-	viper.Set("db.keyspace", "sting")
+	config.Read("applications/sting/config.toml")
 
 	app, _ := service.NewApplication(context.Background())
 

@@ -5,6 +5,7 @@ go 1.14
 require (
 	github.com/99designs/gqlgen v0.13.0
 	github.com/aws/aws-sdk-go v1.37.21
+	github.com/bazelbuild/rules_go v0.27.0 // indirect
 	github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869
 	github.com/bmizerany/pat v0.0.0-20170815010413-6226ea591a40
 	github.com/bxcodec/faker/v3 v3.6.0

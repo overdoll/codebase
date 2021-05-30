@@ -24,7 +24,7 @@ func NewBootstrap(ctx context.Context) (Bootstrap, error) {
 		log.Fatal("error loading directory")
 	}
 
-	directory := path.Dir(*dir)
+	directory := path.Dir(dir)
 
 	_ = godotenv.Load(directory + "/.env")
 

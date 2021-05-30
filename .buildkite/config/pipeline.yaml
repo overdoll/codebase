@@ -11,3 +11,6 @@ steps:
         ELASTICSEARCH_URL: http://elasticsearch:9200
         TEMPORAL_URL: temporal:7233
         TEMPORAL_NAMESPACE: default
+        GIN_MODE: debug
+        APP_DEBUG: true
+        EVA_SERVICE: eva:8080

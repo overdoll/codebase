@@ -11,7 +11,6 @@ import (
 	"github.com/bmizerany/assert"
 	"github.com/bxcodec/faker/v3"
 	"github.com/shurcooL/graphql"
-	"github.com/spf13/viper"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc"
 	eva "overdoll/applications/eva/proto"
@@ -20,6 +19,7 @@ import (
 	"overdoll/applications/eva/src/ports/graphql/types"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
+	"overdoll/libraries/config"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/tests"
 )
@@ -310,8 +310,8 @@ func getClient(t *testing.T, pass *passport.Passport) (*graphql.Client, *http.Cl
 }
 
 func startService() bool {
-	// in bazel we cant read config file (its not included as part of tests) so we need to set it here
-	viper.Set("db.keyspace", "eva")
+	// config file location (specified in BUILD file) will be absolute from repository path
+	config.Read("applications/eva/config.toml")
 
 	app, _ := NewApplication(context.Background())
 
