@@ -12,7 +12,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/h2non/filetype"
-	"overdoll/libraries/ksuid"
+	"overdoll/libraries/uuid"
 )
 
 const (
@@ -82,7 +82,7 @@ func (r ContentS3Repository) ProcessContent(ctx context.Context, userId string, 
 			continue
 		}
 
-		fileName := ksuid.New().String() + "." + kind.Extension
+		fileName := uuid.New().String() + "." + kind.Extension
 		fileKey := userId + "/" + fileName
 
 		// move file to private bucket
@@ -118,7 +118,7 @@ func (r ContentS3Repository) MakeProcessedContentPublic(ctx context.Context, use
 
 	for _, image := range oldContent {
 
-		newFileId := ksuid.New().String()
+		newFileId := uuid.New().String()
 
 		// move file to private bucket
 		_, err := s3Client.CopyObject(&s3.CopyObjectInput{Bucket: aws.String(PostContentBucket),

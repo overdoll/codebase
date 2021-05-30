@@ -8,13 +8,13 @@ import (
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/eva/src/adapters"
 	"overdoll/applications/eva/src/domain/cookie"
-	"overdoll/libraries/ksuid"
 	"overdoll/libraries/tests"
+	"overdoll/libraries/uuid"
 )
 
 func newFakeCookie(t *testing.T) *cookie.Cookie {
 
-	ck, err := cookie.NewCookie(ksuid.New().String(), "test@test.com", "")
+	ck, err := cookie.NewCookie(uuid.New().String(), "test@test.com", "")
 
 	require.NoError(t, err)
 
@@ -27,7 +27,7 @@ func TestCookieRepository_GetCookie_not_exists(t *testing.T) {
 	repo := newCookieRepository(t)
 	ctx := context.Background()
 
-	id := ksuid.New().String()
+	id := uuid.New().String()
 
 	usr, err := repo.GetCookieById(ctx, id)
 

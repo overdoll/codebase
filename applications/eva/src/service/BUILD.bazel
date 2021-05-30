@@ -18,6 +18,7 @@ go_library(
 go_test(
     name = "go_default_test",
     srcs = ["component_test.go"],
+    data = ["//applications/eva:config.toml"],
     embed = [":go_default_library"],
     deps = [
         "//applications/eva/proto:v1_go_proto",
@@ -26,12 +27,12 @@ go_test(
         "//applications/eva/src/ports/graphql/types:go_default_library",
         "//libraries/bootstrap:go_default_library",
         "//libraries/clients:go_default_library",
+        "//libraries/config:go_default_library",
         "//libraries/passport:go_default_library",
         "//libraries/tests:go_default_library",
-        "@com_github_bmizerany_assert//:go_default_library",
         "@com_github_bxcodec_faker_v3//:go_default_library",
         "@com_github_shurcool_graphql//:go_default_library",
-        "@com_github_spf13_viper//:go_default_library",
+        "@com_github_stretchr_testify//assert:go_default_library",
         "@com_github_stretchr_testify//require:go_default_library",
         "@org_golang_google_grpc//:go_default_library",
     ],

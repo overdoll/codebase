@@ -7,8 +7,8 @@ import (
 	"github.com/gocql/gocql"
 	"go.uber.org/zap"
 	"overdoll/applications/sting/src/domain/post"
-	"overdoll/libraries/ksuid"
 	"overdoll/libraries/passport"
+	"overdoll/libraries/uuid"
 )
 
 var (
@@ -72,7 +72,7 @@ func (h CreatePendingPostHandler) Handle(ctx context.Context, artistId, artistUs
 		return nil, nil
 	}
 
-	pendingPost, err := post.NewPendingPost(ksuid.New().String(), artist, usr, content, characters, categories)
+	pendingPost, err := post.NewPendingPost(uuid.New().String(), artist, usr, content, characters, categories)
 
 	if err != nil {
 		return nil, err
@@ -91,7 +91,7 @@ func (h CreatePendingPostHandler) Handle(ctx context.Context, artistId, artistUs
 	err = h.pe.CreatePostEvent(ctx, pendingPost)
 
 	if err != nil {
-		// TODO: delete pending post here if event fails
+		zap.S().Errorf("failed to create post event: %s", err)
 		return nil, err
 	}
 
