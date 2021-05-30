@@ -91,7 +91,7 @@ func (h CreatePendingPostHandler) Handle(ctx context.Context, artistId, artistUs
 	err = h.pe.CreatePostEvent(ctx, pendingPost)
 
 	if err != nil {
-		// TODO: delete pending post here if event fails
+		zap.S().Errorf("failed to create post event: %s", err)
 		return nil, err
 	}
 

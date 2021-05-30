@@ -29,9 +29,6 @@ func TestPostsCassandraRepository_create_post(t *testing.T) {
 func TestPostsCassandraRepository_get_pending_post_not_exists(t *testing.T) {
 	t.Parallel()
 
-	// TODO: skip - keeps failing
-	return
-
 	repo := newPostRepository(t)
 	ctx := context.Background()
 

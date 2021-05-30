@@ -66,8 +66,6 @@ func createApplication(ctx context.Context, eva command.EvaService) app.Applicat
 		log.Fatalln("Unable to create client", err)
 	}
 
-	defer c.Close()
-
 	postRepo := adapters.NewPostsCassandraRepository(session)
 	indexRepo := adapters.NewPostIndexElasticSearchRepository(es)
 	eventRepo := adapters.NewPostTemporalRepository(c)

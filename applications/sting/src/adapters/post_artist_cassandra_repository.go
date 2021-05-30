@@ -39,11 +39,15 @@ func (r PostsCassandraRepository) GetArtists(ctx context.Context) ([]*post.Artis
 
 func (r PostsCassandraRepository) GetArtistById(ctx context.Context, id string) (*post.Artist, error) {
 
-	var artist *Artist
+	var artist Artist
 
 	qc := qb.Select("artists").
-		Where(qb.EqLit("id", id)).
+		Where(qb.Eq("user_id")).
+		Columns("user_id", "user_username", "user_avatar").
 		Query(r.session).
+		BindStruct(&Artist{
+			Id: id,
+		}).
 		Consistency(gocql.One)
 
 	if err := qc.Get(&artist); err != nil {

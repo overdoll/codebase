@@ -24,9 +24,37 @@ const StingHttpAddr = ":6666"
 const StingHttpClientAddr = "http://:6666/graphql"
 
 type CreatePost struct {
-	CreatePost struct {
+	Post struct {
 		Review graphql.Boolean
-	} `graphql:"createPost(data: $data)"`
+	} `graphql:"post(data: $data)"`
+}
+
+type SearchCharacters struct {
+	Characters []struct {
+		Id   graphql.String
+		Name graphql.String
+	} `graphql:"characters(data: $data)"`
+}
+
+type SearchCategories struct {
+	Categories []struct {
+		Id    graphql.String
+		Title graphql.String
+	} `graphql:"categories(data: $data)"`
+}
+
+type SearchMedia struct {
+	Media []struct {
+		Id    graphql.String
+		Title graphql.String
+	} `graphql:"media(data: $data)"`
+}
+
+type SearchArtist struct {
+	Artists []struct {
+		Id       graphql.String
+		Username graphql.String
+	} `graphql:"artists(data: $data)"`
 }
 
 // TestPost_create_new_post - create a new valid post
@@ -52,7 +80,79 @@ func TestPost_create_new_post(t *testing.T) {
 	})
 
 	require.NoError(t, err)
-	assert.Equal(t, false, bool(createPost.CreatePost.Review))
+	assert.Equal(t, false, bool(createPost.Post.Review))
+}
+
+// TestSearchCharacters - search some characters
+func TestSearchCharacters(t *testing.T) {
+
+	client, _ := getClient(t, nil)
+
+	var search SearchCharacters
+
+	err := client.Query(context.Background(), &search, map[string]interface{}{
+		"data": types.SearchInput{
+			Search: "Aarush Hills",
+		},
+	})
+
+	require.NoError(t, err)
+	require.Len(t, search.Characters, 1)
+	require.Equal(t, "Aarush Hills", string(search.Characters[0].Name))
+}
+
+// TestSearchCategories - search some categories
+func TestSearchCategories(t *testing.T) {
+
+	client, _ := getClient(t, nil)
+
+	var search SearchCategories
+
+	err := client.Query(context.Background(), &search, map[string]interface{}{
+		"data": types.SearchInput{
+			Search: "Convict",
+		},
+	})
+
+	require.NoError(t, err)
+	require.Len(t, search.Categories, 1)
+	require.Equal(t, "Convict", string(search.Categories[0].Title))
+}
+
+// TestSearchMedia - search some media
+func TestSearchMedia(t *testing.T) {
+
+	client, _ := getClient(t, nil)
+
+	var search SearchMedia
+
+	err := client.Query(context.Background(), &search, map[string]interface{}{
+		"data": types.SearchInput{
+			Search: "Foreigner On Mars",
+		},
+	})
+
+	require.NoError(t, err)
+	require.Len(t, search.Media, 1)
+	require.Equal(t, "Foreigner On Mars", string(search.Media[0].Title))
+}
+
+// TestSearchArtist - search some artist
+func TestSearchArtist(t *testing.T) {
+
+	client, _ := getClient(t, nil)
+
+	var search SearchArtist
+
+	err := client.Query(context.Background(), &search, map[string]interface{}{
+		"data": types.SearchInput{
+			Search: "artist_verified",
+		},
+	})
+
+	require.NoError(t, err)
+	require.Len(t, search.Artists, 1)
+	require.Equal(t, "artist_verified", string(search.Artists[0].Username))
 }
 
 func getClient(t *testing.T, pass *passport.Passport) (*graphql.Client, *http.Client) {
