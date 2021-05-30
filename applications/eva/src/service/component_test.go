@@ -163,6 +163,8 @@ func TestUserRegistration_complete(t *testing.T) {
 
 // TestRedeemCookie_invalid - test by redeeming an invalid cookie
 func TestRedeemCookie_invalid(t *testing.T) {
+	t.Parallel()
+
 	client, _, _ := getClient(t, nil)
 
 	redeemCookie := qRedeemCookie(t, client, "some-random-cookie")
@@ -174,6 +176,7 @@ func TestRedeemCookie_invalid(t *testing.T) {
 // TestUserLogin_existing - test is similar to registration, except that we do a login with an
 // existing user
 func TestUserLogin_existing(t *testing.T) {
+	t.Parallel()
 
 	client, httpUser, pass := getClient(t, passport.FreshPassport())
 
@@ -200,6 +203,7 @@ func TestUserLogin_existing(t *testing.T) {
 
 // TestUserLogin_from_another_session - we login, but redeem our cookie from another "session"
 func TestUserLogin_from_another_session(t *testing.T) {
+	t.Parallel()
 
 	client, httpUser, _ := getClient(t, passport.FreshPassport())
 

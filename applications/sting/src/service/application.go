@@ -28,10 +28,6 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 		}
 }
 
-func NewComponentTestApplication(ctx context.Context) app.Application {
-	return createApplication(ctx, EvaServiceMock{})
-}
-
 func createApplication(ctx context.Context, eva command.EvaService) app.Application {
 
 	_, err := bootstrap.NewBootstrap(ctx)
