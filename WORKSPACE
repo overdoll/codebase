@@ -1654,8 +1654,8 @@ go_repository(
     name = "com_github_vektah_gqlparser_v2",
     build_file_proto_mode = "disable_global",
     importpath = "github.com/vektah/gqlparser/v2",
-    sum = "h1:uiKJ+T5HMGGQM2kRKQ8Pxw8+Zq9qhhZhz/lieYvCMns=",
-    version = "v2.1.0",
+    sum = "h1:bAc3slekAAJW6sZTi07aGq0OrfaCjj4jxARAaC7g2EM=",
+    version = "v2.2.0",
 )
 
 go_repository(
