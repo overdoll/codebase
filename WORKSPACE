@@ -213,8 +213,8 @@ go_repository(
     name = "com_github_aws_aws_sdk_go",
     build_file_proto_mode = "disable_global",
     importpath = "github.com/aws/aws-sdk-go",
-    sum = "h1:h3DUhpeOT0TQIwaSzXsBl+jwppfNR/Pc2T5k3SHVKPA=",
-    version = "v1.37.21",
+    sum = "h1:aKQmbVbwOCuQSd8+fm/MR3bq0QOsu9Q7S+/QEND36oQ=",
+    version = "v1.38.51",
 )
 
 go_repository(
@@ -1654,8 +1654,8 @@ go_repository(
     name = "com_github_vektah_gqlparser_v2",
     build_file_proto_mode = "disable_global",
     importpath = "github.com/vektah/gqlparser/v2",
-    sum = "h1:uiKJ+T5HMGGQM2kRKQ8Pxw8+Zq9qhhZhz/lieYvCMns=",
-    version = "v2.1.0",
+    sum = "h1:bAc3slekAAJW6sZTi07aGq0OrfaCjj4jxARAaC7g2EM=",
+    version = "v2.2.0",
 )
 
 go_repository(

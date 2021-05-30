@@ -4,7 +4,7 @@ go 1.14
 
 require (
 	github.com/99designs/gqlgen v0.13.0
-	github.com/aws/aws-sdk-go v1.37.21
+	github.com/aws/aws-sdk-go v1.38.51
 	github.com/bazelbuild/rules_go v0.27.0
 	github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869
 	github.com/bmizerany/pat v0.0.0-20170815010413-6226ea591a40
@@ -30,7 +30,7 @@ require (
 	github.com/spf13/viper v1.7.1
 	github.com/stretchr/testify v1.7.0
 	github.com/tus/tusd v1.6.0
-	github.com/vektah/gqlparser/v2 v2.1.0
+	github.com/vektah/gqlparser/v2 v2.2.0
 	go.temporal.io/sdk v1.6.0
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.16.0
