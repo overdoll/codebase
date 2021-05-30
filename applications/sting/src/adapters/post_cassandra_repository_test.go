@@ -8,9 +8,9 @@ import (
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/sting/src/adapters"
 	"overdoll/applications/sting/src/domain/post"
-	"overdoll/libraries/uuid"
 	"overdoll/libraries/tests"
 	"overdoll/libraries/user"
+	"overdoll/libraries/uuid"
 )
 
 func TestPostsCassandraRepository_create_post(t *testing.T) {

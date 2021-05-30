@@ -8,8 +8,8 @@ import (
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/eva/src/adapters"
 	"overdoll/applications/eva/src/domain/cookie"
-	"overdoll/libraries/uuid"
 	"overdoll/libraries/tests"
+	"overdoll/libraries/uuid"
 )
 
 func newFakeCookie(t *testing.T) *cookie.Cookie {

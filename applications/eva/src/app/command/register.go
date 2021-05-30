@@ -7,8 +7,8 @@ import (
 	"go.uber.org/zap"
 	"overdoll/applications/eva/src/domain/cookie"
 	"overdoll/applications/eva/src/domain/user"
-	"overdoll/libraries/uuid"
 	"overdoll/libraries/passport"
+	"overdoll/libraries/uuid"
 )
 
 type RegisterHandler struct {
