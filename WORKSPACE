@@ -501,8 +501,8 @@ go_repository(
     name = "com_github_gin_gonic_gin",
     build_file_proto_mode = "disable_global",
     importpath = "github.com/gin-gonic/gin",
-    sum = "h1:ahKqKTFpO5KTPHxWZjEdPScmYaGtLo8Y4DMHoEsnp14=",
-    version = "v1.6.3",
+    sum = "h1:Tg03T9yM2xa8j6I3Z3oqLaQRSmKvxPd6g/2HJ6zICFA=",
+    version = "v1.7.2",
 )
 
 go_repository(
@@ -1590,8 +1590,8 @@ go_repository(
     name = "com_github_tus_tusd",
     build_file_proto_mode = "disable_global",
     importpath = "github.com/tus/tusd",
-    sum = "h1:fDQp2cchziuAak79NppXZUf5e2LRbIwxoF5lkgKdEBM=",
-    version = "v1.5.1",
+    sum = "h1:IU9Z2Z5FZfHIap6NPFbPItyx/eU6aN87z4ya/mPzS4g=",
+    version = "v1.6.0",
 )
 
 go_repository(
@@ -1654,8 +1654,8 @@ go_repository(
     name = "com_github_vektah_gqlparser_v2",
     build_file_proto_mode = "disable_global",
     importpath = "github.com/vektah/gqlparser/v2",
-    sum = "h1:uiKJ+T5HMGGQM2kRKQ8Pxw8+Zq9qhhZhz/lieYvCMns=",
-    version = "v2.1.0",
+    sum = "h1:bAc3slekAAJW6sZTi07aGq0OrfaCjj4jxARAaC7g2EM=",
+    version = "v2.2.0",
 )
 
 go_repository(
