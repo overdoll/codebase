@@ -1,24 +1,24 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
-    name = "go_default_library",
+    name = "cookies",
     srcs = ["cookies.go"],
     importpath = "overdoll/libraries/cookies",
     visibility = ["//visibility:public"],
     deps = [
-        "//libraries/helpers:go_default_library",
-        "@com_github_gorilla_securecookie//:go_default_library",
+        "//libraries/helpers",
+        "@com_github_gorilla_securecookie//:securecookie",
     ],
 )
 
 go_test(
-    name = "go_default_test",
+    name = "cookies_test",
     srcs = ["cookies_test.go"],
-    embed = [":go_default_library"],
     deps = [
-        "//libraries/helpers:go_default_library",
-        "@com_github_bmizerany_assert//:go_default_library",
-        "@com_github_gin_gonic_gin//:go_default_library",
-        "@com_github_stretchr_testify//require:go_default_library",
+        ":cookies",
+        "//libraries/helpers",
+        "@com_github_bmizerany_assert//:assert",
+        "@com_github_gin_gonic_gin//:gin",
+        "@com_github_stretchr_testify//require",
     ],
 )

@@ -1,17 +1,17 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
-    name = "go_default_library",
+    name = "mutations",
     srcs = ["resolvers.go"],
     importpath = "overdoll/applications/eva/src/ports/graphql/mutations",
     visibility = ["//visibility:public"],
     deps = [
-        "//applications/eva/src/app:go_default_library",
-        "//applications/eva/src/app/command:go_default_library",
-        "//applications/eva/src/domain/cookie:go_default_library",
-        "//applications/eva/src/ports/graphql/types:go_default_library",
-        "//libraries/cookies:go_default_library",
-        "//libraries/helpers:go_default_library",
-        "@org_uber_go_zap//:go_default_library",
+        "//applications/eva/src/app",
+        "//applications/eva/src/app/command",
+        "//applications/eva/src/domain/cookie",
+        "//applications/eva/src/ports/graphql/types",
+        "//libraries/cookies",
+        "//libraries/helpers",
+        "@org_uber_go_zap//:zap",
     ],
 )
