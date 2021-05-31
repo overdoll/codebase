@@ -20,7 +20,7 @@ const initialState = SafeJSONParse(
 
 // Read value from the DOM, OR
 // read value from override (used on the server)
-function getEnv (key, fallback = null, stateOverride = null) {
+function getEnv (key: string, fallback = null, stateOverride = null): string {
   const value = stateOverride ? stateOverride[key] : initialState[key]
   return value !== undefined ? value : fallback
 }

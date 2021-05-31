@@ -38,7 +38,7 @@ export default function Token (props: Props): Node {
   const [t] = useTranslation('token')
   const history = useHistory()
 
-  const [, push] = useFlash()
+  const { push } = useFlash()
 
   if (data.redeemCookie.invalid) {
     // Go back to Join page and send notification of invalid token
