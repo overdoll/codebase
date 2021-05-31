@@ -3,7 +3,7 @@ import JSResource from '@//:modules/utilities/JSResource'
 import { createClientRouter } from '@//:modules/routing/router'
 import { createMemoryHistory } from 'history'
 import { createMockEnvironment } from 'relay-test-utils'
-import RouterRenderer from '@//:modules/routing/RouteRenderer'
+import RouterRenderer from '../RouteRenderer'
 import RoutingContext from '@//:modules/routing/RoutingContext'
 
 it('renders a root component with children', async () => {

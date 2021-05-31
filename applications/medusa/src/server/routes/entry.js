@@ -8,9 +8,9 @@ import createEmotionServer from '@emotion/server/create-instance'
 import createCache from '@emotion/cache'
 import queryMapJson from '../queries.json'
 import { createServerRouter } from '@//:modules/routing/router'
-import createMockHistory from '@//:modules/routing/createMockHistory'
 import routes from '../../client/routes'
 import Bootstrap from '../../client/Bootstrap'
+import createMockHistory from '../utilities/createMockHistory'
 
 // All values listed here will be passed down to the client
 // Don't include anything sensitive
@@ -19,6 +19,7 @@ const runtime = {
   APP_VERSION: process.env.APP_VERSION
 }
 
+// Request handles a basic request and rendering all routes
 async function request (apollo, req, res) {
   // Set up relay environment
   const environment = new Environment({
@@ -155,12 +156,21 @@ async function request (apollo, req, res) {
   })
 }
 
+// Error - handles errors that may be thrown during rendering, which
+// may either be a server error or a rendering error
+
+// this route will ensure we only render the bare-minimum components, and
+// we do not add any javascript to our document
+async function error (err, req, res, next) {
+  next(err)
+}
+
 export default function entry (apollo) {
   return async function (req, res, next) {
     try {
       await request(apollo, req, res)
     } catch (e) {
-      next(e)
+      await error(e, req, res, next)
     }
   }
 }
