@@ -4,7 +4,7 @@
 import type { Node } from 'react'
 import { createContext, useContext, useState } from 'react'
 import CanUseDOM from '@//:modules/utilities/CanUseDOM'
-import SafeJSONParse from '@//:modules/json/json'
+import SafeJSONParse from '@//:modules/utilities/SafeJSONParse'
 
 type Flash = {
   flash: (key: string, value: string) => void,

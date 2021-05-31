@@ -4,7 +4,7 @@
 import type { Node } from 'react'
 import { createContext, useContext } from 'react'
 import CanUseDOM from '@//:modules/utilities/CanUseDOM'
-import SafeJSONParse from '@//:modules/json/json'
+import SafeJSONParse from '@//:modules/utilities/SafeJSONParse'
 
 type Props = {
   initial?: {},
