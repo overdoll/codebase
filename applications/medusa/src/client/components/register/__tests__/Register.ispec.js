@@ -9,7 +9,6 @@ it('register just works', async () => {
 
   const [Root, router] = withProviders({
     Component: Register,
-    routes: [],
     environment: Environment
   })
 

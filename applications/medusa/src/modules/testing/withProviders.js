@@ -3,31 +3,39 @@
  */
 import { createMemoryHistory } from 'history'
 import type { ComponentType } from 'react'
-import type { Route, RouterInstance } from '@//:modules/routing/router'
+import type { RouterInstance } from '@//:modules/routing/router'
 import { createClientRouter } from '@//:modules/routing/router'
 import Bootstrap from '../../client/Bootstrap'
-import i18n from './i18nTesting'
-import RouterRenderer from '@//:modules/routing/RouteRenderer'
+import i18n from 'i18next'
 import type { IEnvironment } from 'relay-runtime/store/RelayStoreTypes'
 import createCache from '@emotion/cache'
 
 type WithProviders = {
   environment: IEnvironment,
   Component: ComponentType,
-  initialEntries: string[],
-  routes: Array<Route>,
 };
+
+// i18n specifically used for testing - no translations are provided here
+i18n.init({
+  lng: 'en',
+  fallbackLng: 'en',
+  ns: ['translations'],
+  defaultNS: 'translations',
+  debug: false,
+  interpolation: {
+    escapeValue: false
+  },
+  resources: { en: {} }
+})
 
 export default function withProviders ({
   environment,
-  Component = () => null,
-  initialEntries = ['/'],
-  routes = []
+  Component = () => null
 }: WithProviders): [ComponentType<Node>, RouterInstance] {
   const router = createClientRouter(
-    routes,
+    [],
     createMemoryHistory({
-      initialEntries,
+      initialEntries: ['/'],
       initialIndex: 0
     }),
     environment
@@ -44,9 +52,7 @@ export default function withProviders ({
           environment={environment}
           i18next={i18n}
         >
-          {routes.length > 0
-            ? <RouterRenderer />
-            : <Component {...props} />}
+          <Component {...props} />
         </Bootstrap>
       )
     },
