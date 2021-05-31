@@ -146,9 +146,10 @@ async function request (apollo, req, res) {
     emotionCss: css,
     html,
     csrfToken: req.csrfToken(),
-    relayStore: serialize(environment
-      .getStore()
-      .getSource()
+    relayStore: serialize(
+      environment
+        .getStore()
+        .getSource()
     ),
     runtimeStore: serialize(runtime),
     i18nextStore: serialize(initialI18nStore),

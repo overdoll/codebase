@@ -1,7 +1,6 @@
 import express from 'express'
 import path from 'path'
 import entry from './routes/entry'
-import error from './routes/error'
 import middleware from './middleware'
 import cookieParser from 'cookie-parser'
 import csrf from 'csurf'
@@ -16,6 +15,7 @@ import session from 'express-session'
 import sessionCfg from './config/session'
 import version from './routes/version'
 import hbs from 'express-handlebars'
+import coverage from './routes/coverage'
 
 const index = express()
 
@@ -76,7 +76,7 @@ index.use(middleware.flash())
 
 // add coverage endpoint if in app_debug
 if (process.env.APP_DEBUG) {
-  index.get('/__coverage__', middleware.coverage)
+  index.get('/__coverage__', coverage)
 }
 
 // Version endpoint - used by the client to always stay up-to-date
@@ -93,10 +93,6 @@ index.get('/*', entry(server))
 
 // If an error occurs in the entrypoint, this will catch it
 // usually this is because a server error occurred (a service is down, etc..)
-index.use(error())
-
-// In case another error occurs in our error rendering, we will just respond
-// with an error code and our ingress should catch and display a static page
-index.use(middleware.error)
+index.use(middleware.error())
 
 export default index
