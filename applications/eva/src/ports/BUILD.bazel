@@ -1,7 +1,7 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
-    name = "go_default_library",
+    name = "ports",
     srcs = [
         "grpc.go",
         "http.go",
@@ -10,12 +10,12 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//applications/eva/proto:v1_go_proto",
-        "//applications/eva/src/app:go_default_library",
-        "//applications/eva/src/ports/graphql:go_default_library",
-        "//libraries/graphql:go_default_library",
-        "//libraries/router:go_default_library",
-        "@com_github_gin_gonic_gin//:go_default_library",
-        "@org_golang_google_grpc//codes:go_default_library",
-        "@org_golang_google_grpc//status:go_default_library",
+        "//applications/eva/src/app",
+        "//applications/eva/src/ports/graphql",
+        "//libraries/graphql",
+        "//libraries/router",
+        "@com_github_gin_gonic_gin//:gin",
+        "@org_golang_google_grpc//codes",
+        "@org_golang_google_grpc//status",
     ],
 )

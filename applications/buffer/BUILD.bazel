@@ -5,22 +5,22 @@ load("@io_bazel_rules_docker//container:container.bzl", "container_push")
 web_sources = []
 
 go_library(
-    name = "go_default_library",
+    name = "buffer_lib",
     srcs = ["main.go"],
     data = web_sources,
     importpath = "overdoll/applications/buffer",
     visibility = ["//visibility:private"],
     deps = [
-        "//applications/buffer/src/ports:go_default_library",
-        "//applications/buffer/src/service:go_default_library",
-        "//libraries/bootstrap:go_default_library",
-        "@com_github_spf13_cobra//:go_default_library",
+        "//applications/buffer/src/ports",
+        "//applications/buffer/src/service",
+        "//libraries/bootstrap",
+        "@com_github_spf13_cobra//:cobra",
     ],
 )
 
 go_binary(
     name = "buffer",
-    embed = [":go_default_library"],
+    embed = [":buffer_lib"],
     visibility = ["//visibility:public"],
 )
 
@@ -28,7 +28,7 @@ go_image(
     name = "local-image",
     base = "@go_base_image//image",
     data = web_sources + [".env"],
-    embed = [":go_default_library"],
+    embed = [":buffer_lib"],
     importpath = "overdoll/applications/buffer",
 )
 
@@ -36,7 +36,7 @@ go_image(
     name = "image",
     base = "@go_base_image//image",
     data = web_sources,
-    embed = [":go_default_library"],
+    embed = [":buffer_lib"],
     importpath = "overdoll/applications/buffer",
 )
 

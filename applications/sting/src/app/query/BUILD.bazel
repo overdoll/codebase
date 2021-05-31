@@ -1,7 +1,7 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
-    name = "go_default_library",
+    name = "query",
     srcs = [
         "search_artists.go",
         "search_categories.go",
@@ -11,7 +11,7 @@ go_library(
     importpath = "overdoll/applications/sting/src/app/query",
     visibility = ["//visibility:public"],
     deps = [
-        "//applications/sting/src/domain/post:go_default_library",
-        "@org_uber_go_zap//:go_default_library",
+        "//applications/sting/src/domain/post",
+        "@org_uber_go_zap//:zap",
     ],
 )

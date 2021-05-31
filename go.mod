@@ -1,6 +1,6 @@
 module overdoll
 
-go 1.14
+go 1.16
 
 require (
 	github.com/99designs/gqlgen v0.13.0
@@ -13,7 +13,7 @@ require (
 	github.com/dustin/go-humanize v1.0.0
 	github.com/elastic/go-elasticsearch/v8 v8.0.0-20210305160311-265434a3b4ca
 	github.com/gin-gonic/gin v1.7.2
-	github.com/gocql/gocql v0.0.0-20201215165327-e49edf966d90
+	github.com/gocql/gocql v0.0.0-20210515062232-b7ef815b4556
 	github.com/golang/protobuf v1.5.2
 	github.com/golang/snappy v0.0.3 // indirect
 	github.com/google/uuid v1.2.0
@@ -22,7 +22,7 @@ require (
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
 	github.com/h2non/filetype v1.1.1
 	github.com/joho/godotenv v1.3.0
-	github.com/scylladb/gocqlx/v2 v2.3.0
+	github.com/scylladb/gocqlx/v2 v2.4.0
 	github.com/segmentio/ksuid v1.0.3
 	github.com/shurcooL/graphql v0.0.0-20200928012149-18c5c3165e3a
 	github.com/spf13/cobra v1.1.3
