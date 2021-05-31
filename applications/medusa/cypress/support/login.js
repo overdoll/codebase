@@ -1,12 +1,13 @@
 Cypress.Commands.add('login', (email, complete = true) => {
   cy.visit('/join')
 
-  cy.get('form')
-    .findByRole('textbox', { name: /email/iu })
+  // wait until button isn't disabled (it's ready to be interacted with)
+  cy.waitUntil(() => cy.findByRole('button', { name: /Continue/iu }).should('not.be.disabled'))
+
+  cy.findByRole('textbox', { name: /email/iu })
     .type(email)
 
-  cy.get('form')
-    .findByRole('button', { name: /Continue/iu })
+  cy.findByRole('button', { name: /Continue/iu })
     .click()
 
   cy.contains(email)
