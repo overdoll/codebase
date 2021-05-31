@@ -12,13 +12,15 @@ type Flash = {
   flush: (key: string) => void
 }
 
-type Props = {
-  // No flow typings exist for flush (yet) so we create some
-  override?: {
-    push: () => void,
+type FlashOverride = {
+  push: () => void,
     get: () => void,
     flush: () => void
-  },
+}
+
+type Props = {
+  // No flow typings exist for flush (yet) so we create some
+  override?: FlashOverride,
   children: Node,
 };
 
@@ -83,3 +85,4 @@ const useFlash = (): Flash => {
 }
 
 export { useFlash, FlashProvider }
+export type { FlashOverride }

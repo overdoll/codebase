@@ -5,11 +5,7 @@ import logger from '../utilities/logger'
 export default (err, req, res, next) => {
   // If in debug, we are OK to show it. Otherwise, we just show "Internal Server Error"
   if (process.env.APP_DEBUG === 'true') {
-    logger.error(`${err.stack}`)
-
     console.log(err)
-
-    next(err)
   } else {
     logger.error({
       http: err.http,
@@ -17,6 +13,7 @@ export default (err, req, res, next) => {
       error: { message: err.message, kind: err.name, stack: err.stack },
       message: `${err.name}: ${err.message}`
     })
-    res.status(err.status || 500).json({ message: 'Internal Server Error' })
   }
+
+  res.status(err.status || 500)
 }

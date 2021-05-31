@@ -5,7 +5,7 @@ process.env = JSON.parse(JSON.stringify(process.env))
 
 // Unhandled errors && exceptions should crash the process (if some graph services are unavailable, we sometimes get into an undefined state)
 process.on('uncaughtException', err => {
-  console.log(`Uncaught Exception: ${err.message}`)
+  console.log(err)
   process.exit(1)
 })
 
