@@ -1,6 +1,7 @@
 import express from 'express'
 import path from 'path'
 import entry from './routes/entry'
+import error from './routes/error'
 import middleware from './middleware'
 import cookieParser from 'cookie-parser'
 import csrf from 'csurf'
@@ -26,7 +27,8 @@ index.set('trust proxy', 1)
 
 // handlebars engine
 index.engine('hbs', hbs({
-  extname: 'hbs'
+  extname: 'hbs',
+  defaultLayout: 'default'
 }))
 
 // Set handlebars templating
@@ -89,6 +91,12 @@ const server = graphql({
 // Our entrypoint
 index.get('/*', entry(server))
 
+// If an error occurs in the entrypoint, this will catch it
+// usually this is because a server error occurred (a service is down, etc..)
+index.use(error())
+
+// In case another error occurs in our error rendering, we will just respond
+// with an error code and our ingress should catch and display a static page
 index.use(middleware.error)
 
 export default index

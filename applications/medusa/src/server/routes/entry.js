@@ -11,6 +11,7 @@ import { createServerRouter } from '@//:modules/routing/router'
 import routes from '../../client/routes'
 import Bootstrap from '../../client/Bootstrap'
 import createMockHistory from '../utilities/createMockHistory'
+import { EMOTION_CACHE_KEY } from '../constants/emotion'
 
 // All values listed here will be passed down to the client
 // Don't include anything sensitive
@@ -62,8 +63,9 @@ async function request (apollo, req, res) {
   )
 
   const helmetContext = {}
+  const nonce = res.locals.cspNonce
 
-  const cache = createCache({ key: 'od', nonce: res.locals.cspNonce })
+  const cache = createCache({ key: EMOTION_CACHE_KEY, nonce })
   const { extractCritical } = createEmotionServer(cache)
 
   const App = (
@@ -132,16 +134,14 @@ async function request (apollo, req, res) {
   )
 
   res.render('index', {
-    layout: 'default',
     title: helmetContext.helmet.title.toString(),
     meta: helmetContext.helmet.meta.toString(),
     link: helmetContext.helmet.link.toString(),
-    manifest: `${process.env.PUBLIC_PATH}manifest.json`,
-    favicon: `${process.env.PUBLIC_PATH}favicon.ico`,
+    publicPath: process.env.PUBLIC_PATH,
     scripts: extractor.getScriptTags(),
     preload: extractor.getLinkTags(),
     styles: extractor.getStyleTags(),
-    nonce: res.locals.cspNonce,
+    nonce,
     emotionIds: ids.join(' '),
     emotionCss: css,
     html,
@@ -157,21 +157,12 @@ async function request (apollo, req, res) {
   })
 }
 
-// Error - handles errors that may be thrown during rendering, which
-// may either be a server error or a rendering error
-
-// this route will ensure we only render the bare-minimum components, and
-// we do not add any javascript to our document
-async function error (err, req, res, next) {
-  next(err)
-}
-
 export default function entry (apollo) {
   return async function (req, res, next) {
     try {
       await request(apollo, req, res)
     } catch (e) {
-      await error(e, req, res, next)
+      next(e)
     }
   }
 }

@@ -3,10 +3,13 @@ import logger from '../utilities/logger'
 // Handle server errors
 // In the future, we may want to display an HTML page. For now, it will just be a JSON response
 export default (err, req, res, next) => {
-  // If in debug, we are OK to show it. Otherwise, we just show "Internal Server Error"
+  // If in debug, we are OK to show the error that occurred. In production,
+  // they would be deferred to a static error page presented by our ingress
   if (process.env.APP_DEBUG === 'true') {
     console.log(err)
+    next(err)
   } else {
+    // TODO: report error to sentry
     logger.error({
       http: err.http,
       logger: { name: logger.name, thread_name: err.process },
@@ -15,5 +18,5 @@ export default (err, req, res, next) => {
     })
   }
 
-  res.status(err.status || 500)
+  res.status(err.status || 500).end()
 }
