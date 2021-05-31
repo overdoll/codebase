@@ -9,26 +9,26 @@ exports_files(["config.toml"])
 web_sources = glob(["database/**"]) + ["config.toml"]
 
 go_library(
-    name = "go_default_library",
+    name = "eva_lib",
     srcs = ["main.go"],
     data = web_sources,
     importpath = "overdoll/applications/eva",
     visibility = ["//visibility:private"],
     deps = [
         "//applications/eva/proto:v1_go_proto",
-        "//applications/eva/src/ports:go_default_library",
-        "//applications/eva/src/service:go_default_library",
-        "//libraries/bootstrap:go_default_library",
-        "//libraries/commands:go_default_library",
-        "//libraries/config:go_default_library",
-        "@com_github_spf13_cobra//:go_default_library",
+        "//applications/eva/src/ports",
+        "//applications/eva/src/service",
+        "//libraries/bootstrap",
+        "//libraries/commands",
+        "//libraries/config",
+        "@com_github_spf13_cobra//:cobra",
         "@org_golang_google_grpc//:go_default_library",
     ],
 )
 
 go_binary(
     name = "eva",
-    embed = [":go_default_library"],
+    embed = [":eva_lib"],
     visibility = ["//visibility:public"],
 )
 
@@ -36,14 +36,14 @@ go_image(
     name = "local-image",
     base = "@go_base_image//image",
     data = [".env"],
-    embed = [":go_default_library"],
+    embed = [":eva_lib"],
     importpath = "overdoll/applications/eva",
 )
 
 go_image(
     name = "image",
     base = "@go_base_image//image",
-    embed = [":go_default_library"],
+    embed = [":eva_lib"],
     importpath = "overdoll/applications/eva",
 )
 

@@ -1,7 +1,7 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
-    name = "go_default_library",
+    name = "graphql",
     srcs = [
         "federation.go",
         "generated.go",
@@ -10,15 +10,15 @@ go_library(
     importpath = "overdoll/applications/eva/src/ports/graphql",
     visibility = ["//visibility:public"],
     deps = [
-        "//applications/eva/src/app:go_default_library",
-        "//applications/eva/src/ports/graphql/entities:go_default_library",
-        "//applications/eva/src/ports/graphql/mutations:go_default_library",
-        "//applications/eva/src/ports/graphql/queries:go_default_library",
-        "//applications/eva/src/ports/graphql/types:go_default_library",
-        "@com_github_99designs_gqlgen//graphql:go_default_library",
-        "@com_github_99designs_gqlgen//graphql/introspection:go_default_library",
-        "@com_github_99designs_gqlgen//plugin/federation/fedruntime:go_default_library",
-        "@com_github_vektah_gqlparser_v2//:go_default_library",
-        "@com_github_vektah_gqlparser_v2//ast:go_default_library",
+        "//applications/eva/src/app",
+        "//applications/eva/src/ports/graphql/entities",
+        "//applications/eva/src/ports/graphql/mutations",
+        "//applications/eva/src/ports/graphql/queries",
+        "//applications/eva/src/ports/graphql/types",
+        "@com_github_99designs_gqlgen//graphql",
+        "@com_github_99designs_gqlgen//graphql/introspection",
+        "@com_github_99designs_gqlgen//plugin/federation/fedruntime",
+        "@com_github_vektah_gqlparser_v2//:gqlparser",
+        "@com_github_vektah_gqlparser_v2//ast",
     ],
 )

@@ -7,24 +7,24 @@ web_sources = glob(["database/**"]) + ["config.toml"]
 exports_files(["config.toml"])
 
 go_library(
-    name = "go_default_library",
+    name = "sting_lib",
     srcs = ["main.go"],
     data = web_sources,
     importpath = "overdoll/applications/sting",
     visibility = ["//visibility:private"],
     deps = [
-        "//applications/sting/src/ports:go_default_library",
-        "//applications/sting/src/service:go_default_library",
-        "//libraries/bootstrap:go_default_library",
-        "//libraries/commands:go_default_library",
-        "//libraries/config:go_default_library",
-        "@com_github_spf13_cobra//:go_default_library",
+        "//applications/sting/src/ports",
+        "//applications/sting/src/service",
+        "//libraries/bootstrap",
+        "//libraries/commands",
+        "//libraries/config",
+        "@com_github_spf13_cobra//:cobra",
     ],
 )
 
 go_binary(
     name = "sting",
-    embed = [":go_default_library"],
+    embed = [":sting_lib"],
     visibility = ["//visibility:public"],
 )
 
@@ -32,14 +32,14 @@ go_image(
     name = "local-image",
     base = "@go_base_image//image",
     data = [".env"],
-    embed = [":go_default_library"],
+    embed = [":sting_lib"],
     importpath = "overdoll/applications/sting",
 )
 
 go_image(
     name = "image",
     base = "@go_base_image//image",
-    embed = [":go_default_library"],
+    embed = [":sting_lib"],
     importpath = "overdoll/applications/sting",
 )
 
