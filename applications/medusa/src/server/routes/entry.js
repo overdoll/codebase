@@ -131,7 +131,8 @@ async function request (apollo, req, res) {
     renderToString(extractor.collectChunks(App))
   )
 
-  res.render('default', {
+  res.render('index', {
+    layout: 'default',
     title: helmetContext.helmet.title.toString(),
     meta: helmetContext.helmet.meta.toString(),
     link: helmetContext.helmet.link.toString(),

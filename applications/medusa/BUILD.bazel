@@ -110,6 +110,7 @@ _RUNTIME_DEPS = [
     "@npm//react-helmet-async",
     "@npm//@hookform/resolvers",
     "@npm//joi",
+    "@npm//express-handlebars",
 ]
 
 TEST_DEPS = [

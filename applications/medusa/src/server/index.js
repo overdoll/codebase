@@ -6,7 +6,6 @@ import cookieParser from 'cookie-parser'
 import csrf from 'csurf'
 import i18nextMiddleware from 'i18next-http-middleware'
 import i18next from './utilities/i18next'
-import ejs from 'ejs'
 import graphql from './routes/graphql'
 import { matchQueryMiddleware } from 'relay-compiler-plus'
 import queryMapJson from './queries.json'
@@ -15,6 +14,7 @@ import connect from 'connect-redis'
 import session from 'express-session'
 import sessionCfg from './config/session'
 import version from './routes/version'
+import hbs from 'express-handlebars'
 
 const index = express()
 
@@ -22,15 +22,17 @@ const index = express()
 index.use(express.static(path.resolve(__dirname, 'public')))
 index.use(express.static(path.resolve(__dirname, '../public')))
 
-// add EJS as the engine
-index.engine('ejs', ejs.renderFile)
-
 index.set('trust proxy', 1)
 
-// Set EJS templating
+// handlebars engine
+index.engine('hbs', hbs({
+  extname: 'hbs'
+}))
+
+// Set handlebars templating
 index
-  .set('views', path.join(__dirname, '../src/server/templates'))
-  .set('view engine', 'ejs')
+  .set('views', path.join(__dirname, '../src/server/views'))
+  .set('view engine', 'hbs')
 
 // Add i18next middleware
 index.use(i18nextMiddleware.handle(i18next))
