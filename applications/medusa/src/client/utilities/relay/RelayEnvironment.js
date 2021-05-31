@@ -5,7 +5,7 @@ import type { IEnvironment } from 'relay-runtime/store/RelayStoreTypes'
 import { Environment, Network, Observable, RecordSource, Store } from 'relay-runtime'
 import { SubscriptionClient } from 'subscriptions-transport-ws'
 import axios from 'axios'
-import SafeJSONParse from '@//:modules/json/json'
+import SafeJSONParse from '@//:modules/utilities/SafeJSONParse'
 import { refreshUpdateTimer } from '../update'
 
 // Get hydrated data from store
