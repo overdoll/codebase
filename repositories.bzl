@@ -1710,17 +1710,11 @@ def go_repositories():
         sum = "h1:y6IPFStTAIT5Ytl7/XYmHvzXQ7S3g/IeZW9hyZ5thw4=",
         version = "v1.6.0",
     )
-    go_repository(
-        name = "org_uber_go_tools",
-        build_file_proto_mode = "disable",
-        importpath = "go.uber.org/tools",
-        sum = "h1:0mgffUl7nfd+FpvXMVz4IDEaUSmT1ysygQC7qYo7sG4=",
-        version = "v0.0.0-20190618225709-2cfd321de3ee",
-    )
+
     go_repository(
         name = "org_uber_go_zap",
         build_file_proto_mode = "disable",
         importpath = "go.uber.org/zap",
-        sum = "h1:uFRZXykJGK9lLY4HtgSw44DnIcAM+kRBP7x5m+NpAOM=",
-        version = "v1.16.0",
+        sum = "h1:MTjgFu6ZLKvY6Pvaqk97GlxNBuMpV4Hy/3P6tRGlI2U=",
+        version = "v1.17.0",
     )
