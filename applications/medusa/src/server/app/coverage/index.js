@@ -1,6 +1,6 @@
 import express from 'express'
 
-const router = express.router()
+const router = express.Router()
 
 if (process.env.APP_DEBUG) {
   router.get('/__coverage__', (req, res) => res.json({

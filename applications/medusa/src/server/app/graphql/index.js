@@ -4,7 +4,6 @@ import parseCookies from './Domain/parseCookies'
 import services from '../../config/services'
 import { matchQueryMiddleware } from 'relay-compiler-plus'
 import queryMapJson from '../../queries.json'
-import index from '../../index'
 
 // https://github.com/apollographql/apollo-server/issues/3099#issuecomment-671127608 (slightly modified)
 // Forwards cookies from services to our gateway (we place implicit trust on our services that they will use headers in a proper manner)
@@ -79,12 +78,11 @@ const server = new ApolloServer({
   context: ({ req, res }) => ({ req, res })
 })
 
-server.applyMiddleware({
-  path: '/api/graphql',
-  app: index.use(matchQueryMiddleware(queryMapJson))
-})
+export default function (index) {
+  server.applyMiddleware({
+    path: '/api/graphql',
+    app: index.use(matchQueryMiddleware(queryMapJson))
+  })
 
-export default (req, res, next) => {
-  req.apollo = server
-  return next()
+  return server
 }

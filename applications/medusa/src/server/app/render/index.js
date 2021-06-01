@@ -23,7 +23,7 @@ const runtime = {
 }
 
 // Request handles a basic request and rendering all routes
-async function request (req, res) {
+async function request (apollo, req, res) {
   // Set up relay environment
   const environment = new Environment({
     network: Network.create(async function (params, variables) {
@@ -37,7 +37,7 @@ async function request (req, res) {
         throw new Error('no query with id found')
       }
 
-      const result = await req.apollo.executeOperation({
+      const result = await apollo.executeOperation({
         operationName: params.name,
         variables: variables,
         query: queryMapJson[params.id]
@@ -160,14 +160,16 @@ async function request (req, res) {
   })
 }
 
-const router = express.router()
+export default function (apollo) {
+  const router = express.Router()
 
-router.use('/*', async function (req, res, next) {
-  try {
-    await request(req, res)
-  } catch (e) {
-    next(e)
-  }
-})
+  router.get('/*', async function (req, res, next) {
+    try {
+      await request(apollo, req, res)
+    } catch (e) {
+      next(e)
+    }
+  })
 
-export default router
+  return router
+}

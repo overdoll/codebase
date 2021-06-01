@@ -63,10 +63,10 @@ index.use(coverage)
 index.use(version)
 
 // GraphQL Server
-index.use(graphql)
+const server = graphql(index)
 
 // Our entrypoint
-index.use(render)
+index.use(render(server))
 
 // If an error occurs in the entrypoint, this will catch it
 // usually this is because a server error occurred (a service is down, etc..)
