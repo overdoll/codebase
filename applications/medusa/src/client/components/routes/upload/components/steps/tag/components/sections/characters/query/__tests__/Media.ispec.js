@@ -47,7 +47,7 @@ it('should render media when data is available', async () => {
   const button = screen.getByRole('button')
 
   // expect that we are rendering characters correctly
-  expect(screen.getByText('test-media-1-thumbnail')).toBeVisible()
+  expect(screen.getByText('test')).toBeVisible()
 
   // click on the button to add an existing artist
   userEvent.click(button)

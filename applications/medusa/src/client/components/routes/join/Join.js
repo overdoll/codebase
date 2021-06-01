@@ -121,15 +121,16 @@ export default function Join (): Node {
   return (
     <>
       <Helmet title='join' />
-      <Center mt={8}>
-        <Flex w={['fill', 'sm']} direction='column'>
+      <Center mt={40}>
+        <Flex w={['sm', 'md']} direction='column' align='center'>
           <Icon
             icon={SignBadgeCircle}
             w={100}
             h={100}
+            color='red.500'
             ml='auto'
             mr='auto'
-            mb={5}
+            mb={8}
           />
           {error &&
           (

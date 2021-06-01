@@ -10,6 +10,7 @@ import i18next from './utilities/i18next'
 import Bootstrap from './Bootstrap'
 import { registerUpdateListener } from './utilities/update'
 import createCache from '@emotion/cache'
+import { EMOTION_CACHE_KEY } from '@//:modules/constants/emotion'
 
 const router = createClientRouter(
   routes,
@@ -23,7 +24,7 @@ const nonce = document
   .querySelector('meta[name="nonce"]')
   ?.getAttribute('content')
 
-const cache = createCache({ key: 'od', nonce })
+const cache = createCache({ key: EMOTION_CACHE_KEY, nonce })
 
 window.__webpack_nonce__ = nonce
 

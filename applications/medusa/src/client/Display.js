@@ -5,7 +5,7 @@ import type { Node } from 'react'
 import { CacheProvider } from '@emotion/react'
 import { I18nextProvider } from 'react-i18next'
 import { ChakraProvider } from '@chakra-ui/react'
-import theme from '@//:modules/theme'
+import theme from './theme'
 import type { i18next } from 'i18next'
 import { HelmetProvider } from 'react-helmet-async'
 

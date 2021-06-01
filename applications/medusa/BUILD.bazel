@@ -110,6 +110,11 @@ _RUNTIME_DEPS = [
     "@npm//@hookform/resolvers",
     "@npm//joi",
     "@npm//express-handlebars",
+    "@npm//ua-parser-js",
+    "@npm//swiper",
+    "@npm//overlayscrollbars",
+    "@npm//overlayscrollbars-react",
+    "@npm//numbro",
 ]
 
 TEST_DEPS = [
@@ -130,6 +135,7 @@ TEST_DEPS = [
     "@npm//@testing-library/jest-dom",
     "@npm//fake-indexeddb",
     "@npm//@testing-library/user-event",
+    "@npm//identity-obj-proxy",
 ]
 
 _SERVER_DEPS = []

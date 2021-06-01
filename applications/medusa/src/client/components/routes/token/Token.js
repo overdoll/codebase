@@ -8,9 +8,21 @@ import Register from '../../register/Register'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from '@//:modules/routing'
 import type { TokenQuery } from '@//:artifacts/TokenQuery.graphql'
-import { Box, Center, Flex, Heading, Text } from '@chakra-ui/react'
+import { Icon } from '@//:modules/content'
+import UAParser from 'ua-parser-js'
+import {
+  Center,
+  Flex,
+  Heading,
+  Text,
+  Box,
+  AlertIcon,
+  AlertDescription,
+  Alert
+} from '@chakra-ui/react'
 import { useFlash } from '@//:modules/flash'
 import { Helmet } from 'react-helmet-async'
+import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/sign-badge-circle-K1i3HA.svg'
 
 type Props = {
   prepared: {
@@ -50,22 +62,40 @@ export default function Token (props: Props): Node {
   // Token was not redeemed in the same session, so we tell the user to check
   // the other session
   if (!data.redeemCookie.sameSession) {
+    const cookieText = UAParser(
+      JSON.parse(data.redeemCookie.session)['user-agent']
+    )
+
     return (
       <>
         <Helmet title='complete' />
         <Center mt={8}>
           <Flex w={['fill', 'sm']} direction='column'>
-            <Heading size='lg' align='center'>
+            <Icon
+              icon={SignBadgeCircle}
+              w={100}
+              h={100}
+              color='green.500'
+              ml='auto'
+              mr='auto'
+              mb={8}
+            />
+            <Heading mb={8} align='center' size='md' color='gray.100'>
               {t('header')}
             </Heading>
-            <Box mt='4' p='2' backgroundColor='gray.700'>
-              <Text color='green.300' fontWeight='bold' align='center'>
-                {JSON.parse(data.redeemCookie.session)['user-agent']}
-              </Text>
+            <Box mb={8} pt={3} pb={3} borderRadius={5} bg='gray.800'>
+              <Center>
+                <Text fontSize='lg' color='green.300'>
+                  {cookieText.browser.name} {cookieText.browser.major},{' '}
+                  {cookieText.os.name} {cookieText.os.version}
+                </Text>
+              </Center>
             </Box>
-            <Box mt='3' align='center'>
-              <Text>{t('close')}</Text>
-            </Box>
+            <Alert mt={4} borderRadius={5}>
+              <AlertIcon />
+              {t('close')}
+              <AlertDescription />
+            </Alert>
           </Flex>
         </Center>
       </>

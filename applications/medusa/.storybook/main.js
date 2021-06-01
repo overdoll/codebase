@@ -1,5 +1,9 @@
 const cfg = require('../webpack.config');
 
+const path = require('path');
+
+const toPath = _path => path.join(process.cwd(), _path);
+
 module.exports = {
   stories: [
     './stories/**/*.stories.mdx',
@@ -24,6 +28,8 @@ module.exports = {
         alias: {
           ...config.resolve?.alias,
           ...cfg.resolve.alias,
+          '@emotion/core': '@emotion/react',
+          'emotion-theming': '@emotion/react',
         },
       },
     };

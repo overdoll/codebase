@@ -8,7 +8,8 @@ module.exports = {
   ],
   moduleNameMapper: {
     '^@//:modules(.*)$': '<rootDir>/src/modules$1',
-    '^@//:artifacts(.*)$': '<rootDir>/src/__generated__$1'
+    '^@//:artifacts(.*)$': '<rootDir>/src/__generated__$1',
+    '\\.(scss|sass|css)$': 'identity-obj-proxy'
   },
   transform: {
     '^.+\\.[jt]sx?$': [

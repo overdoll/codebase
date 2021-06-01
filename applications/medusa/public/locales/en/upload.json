@@ -1,0 +1,48 @@
+{
+  "begin": {
+    "header": "Start by uploading an image or a video",
+    "subheader": "Almost all file formats accepted\n10 file limit per post",
+    "uploader": "Upload Files",
+    "limit": "max. 10mb per file"
+  },
+  "rules": {
+    "header": "As a reminder, don't upload...",
+    "rule1": "Anything illegal",
+    "rule2": "Anything that infringes on copyright"
+  },
+  "arrange": {
+    "header": "Hold a tile and drag to reorder it",
+    "add": "Add media",
+    "count": "Posting {{count}} media"
+  },
+  "tag": {
+    "header": "Tag your post",
+    "subheader": "Select an artist, 1 character and at least 3 categories",
+    "notice": "To continue, you need to select an artist, at least 1 character and at least 3 categories",
+    "artist": {
+      "label": "Artist",
+      "empty": "No artist selected",
+      "search": "Search for an artist",
+      "not_found": "No artists found",
+      "add": "Add artist"
+    },
+    "character": {
+      "label": "Characters",
+      "empty": "No characters selected",
+      "search": "Search for a character",
+      "not_found": "No characters found",
+      "add": "Add character"
+    },
+    "category": {
+      "label": "Categories",
+      "empty": "No categories selected",
+      "search": "Search for a category",
+      "not_found": "No categories found"
+    }
+  },
+  "review": {
+    "header": "Review your post",
+    "subheader": "Make sure you like how it looks before you submit",
+    "notice": "You'll have to wait until all media files are uploaded before submitting."
+  }
+}

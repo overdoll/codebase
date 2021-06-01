@@ -11,7 +11,7 @@ import { createServerRouter } from '@//:modules/routing/router'
 import routes from '../../client/routes'
 import Bootstrap from '../../client/Bootstrap'
 import createMockHistory from '../utilities/createMockHistory'
-import { EMOTION_CACHE_KEY } from '../constants/emotion'
+import { EMOTION_CACHE_KEY } from '../../modules/constants/emotion'
 
 // All values listed here will be passed down to the client
 // Don't include anything sensitive

@@ -74,10 +74,12 @@ export default function JoinForm ({ onSubmit, loading }: Props): Node {
         </FormHelperText>
       </FormControl>
       <Button
-        size='md'
+        size='xl'
+        variant='outline'
         type='submit'
-        isLoading={loading}
-        width='100%'
+        loading={loading}
+        colorScheme='red'
+        w='100%'
       >
         {t('authenticate.form.continue')}
       </Button>

@@ -8,7 +8,6 @@ import { useTranslation } from 'react-i18next'
 import type { LobbySubscriptionResponse } from '@//:artifacts/LobbySubscription.graphql'
 import Icon from '@//:modules/content/icon/Icon'
 import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/sign-badge-circle-K1i3HA.svg'
-import ContentInkPen from '@streamlinehq/streamlinehq/img/streamline-bold/content-ink-pen-jHW3zi.svg'
 import { Box, Center, Flex, Heading, Text, useToast } from '@chakra-ui/react'
 import Button from '@//:modules/form/button'
 
@@ -93,6 +92,8 @@ export default function Lobby (props: Props): Node {
   }
 
   // Create and set timer for specified timeOut length
+  // TODO make it a separate reusable function
+  // TODO localstorage variable to make sure it cant be pressed on refresh again
   const timeOut = timeOutLength => {
     setButtonDisabled(true)
     setTimer(timeOutLength / 1000)
@@ -111,43 +112,30 @@ export default function Lobby (props: Props): Node {
   }
 
   return (
-    <Center mt={8}>
-      <Flex w={['fill', 400]} direction='column'>
+    <Center mt={40}>
+      <Flex w={['sm', 'md']} direction='column'>
         <Icon
           icon={SignBadgeCircle}
+          w={100}
+          h={100}
           color='purple.300'
-          pt='6'
-          pb='7'
-          align='center'
+          ml='auto'
+          mr='auto'
+          mb={8}
         />
-        <Heading size='lg' align='center'>
+        <Heading mb={8} align='center' size='lg' color='gray.00'>
           {t('lobby.header')}
         </Heading>
-        <Box
-          backgroundColor='gray.700'
-          mt='6'
-          p='3'
-          align='center'
-          position='relative'
-        >
-          <Text fontWeight='bold' color='purple.300'>
-            {props.email}
-          </Text>
-          <Icon
-            icon={ContentInkPen}
-            // delete cookie from backend and navigate to join
-            color='purple.300'
-            sx={{
-              position: 'absolute',
-              top: '25%',
-              bottom: '25%',
-              right: '5%'
-            }}
-          />
+        <Box mb={8} pt={3} pb={3} borderRadius={5} bg='gray.800'>
+          <Center>
+            <Text fontSize='lg' color='purple.300'>
+              {props.email}
+            </Text>
+          </Center>
         </Box>
         <Button
-          mt='5'
-          isLoading={isSendingEmail}
+          size='lg'
+          loading={isSendingEmail}
           onClick={onSubmit}
           disabled={buttonDisabled}
         >

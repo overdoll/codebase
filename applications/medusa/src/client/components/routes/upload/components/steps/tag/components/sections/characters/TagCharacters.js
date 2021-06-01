@@ -11,6 +11,8 @@ import { createPortal } from 'react-dom'
 import Search from '../../search/Search'
 import RootElement from '@//:modules/utilities/RootElement'
 import Media from './query/Media'
+import { Tag, TagLabel, TagCloseButton, Text } from '@chakra-ui/react'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
   dispatch: Dispatch,
@@ -19,6 +21,9 @@ type Props = {
 
 export default function TagCharacters ({ state, dispatch }: Props): Node {
   // state to handle how the new character will be added, when requested
+
+  const [t] = useTranslation('upload')
+
   const [newCharacter, addNewCharacter] = useState(null)
 
   // OnSelect will remove or add the character based on if it's in the object already or not
@@ -32,6 +37,14 @@ export default function TagCharacters ({ state, dispatch }: Props): Node {
         value: character
       })
     }
+  }
+
+  const onRemove = character => {
+    dispatch({
+      type: EVENTS.TAG_CHARACTERS,
+      remove: true,
+      value: character
+    })
   }
 
   // When the user selects a media, we send that back up the chain, where we either get a new media, or a current one
@@ -68,8 +81,8 @@ export default function TagCharacters ({ state, dispatch }: Props): Node {
 
   return (
     <Section
-      label='select character'
-      placeholder='search characters'
+      label={t('tag.character.label')}
+      searchTitle={t('tag.character.search')}
       search={args => (
         <Characters
           selected={Object.keys(state.characters)}
@@ -77,9 +90,29 @@ export default function TagCharacters ({ state, dispatch }: Props): Node {
           args={args}
         />
       )}
+      title={t('tag.character.label')}
+      count={Object.keys(state.characters).length}
     >
-      <div>current characters: {Object.keys(state.characters).length}</div>
-      DISPLAY SELECTED CHARACTERS HERE???
+      {Object.keys(state.characters).length !== 0
+        ? (
+            Object.keys(state.characters).map(id => (
+              <Tag
+                key={id}
+                size='lg'
+                variant='solid'
+                colorScheme='green'
+                borderRadius='full'
+              >
+                <TagLabel>{state.characters[id].name}</TagLabel>
+                <TagCloseButton onClick={() => onRemove(state.characters[id])} />
+              </Tag>
+            ))
+          )
+        : (
+          <Text as='i' fontSize='md'>
+            {t('tag.character.empty')}
+          </Text>
+          )}
     </Section>
   )
 }
