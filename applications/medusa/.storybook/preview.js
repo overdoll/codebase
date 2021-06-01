@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react'
 import darkTheme from './dark'
-import i18next from '../src/client/utilities/i18next'
+import i18next from '../src/client/bootstrap/i18next'
 import Display from '../src/client/Display'
 import createCache from '@emotion/cache'
 import { EMOTION_CACHE_KEY } from '@//:modules/constants/emotion'

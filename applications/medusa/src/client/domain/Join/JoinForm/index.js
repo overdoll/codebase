@@ -12,57 +12,55 @@ import { joiResolver } from '@hookform/resolvers/joi'
 import type { Node } from 'react'
 import Button from '@//:modules/form/button'
 
-type RegisterValues = {
-  username: string,
+type JoinValues = {
+  email: string,
 };
 
 type Props = {
-  onSubmit: (RegisterValues) => void,
+  onSubmit: (JoinValues) => void,
   loading: boolean
 }
 
 const schema = Joi.object({
-  username: Joi
+  email: Joi
     .string()
+    .email({ minDomainSegments: 2, tlds: {} })
     .required()
 })
 
-export default function RegisterForm ({ onSubmit, loading }: Props): Node {
+export default function Index ({ onSubmit, loading }: Props): Node {
   const [t] = useTranslation('auth')
 
-  const { register, handleSubmit, formState: { errors, isDirty, isSubmitted } } = useForm<RegisterValues>({
+  const { register, handleSubmit, formState: { errors, isDirty, isSubmitted } } = useForm<JoinValues>({
     resolver: joiResolver(
       schema
     )
   })
 
-  const success = isDirty && !errors.username && isSubmitted
+  const success = isDirty && !errors.email && isSubmitted
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <FormControl
-        isInvalid={errors.username}
-        id='username'
-      >
+      <FormControl isInvalid={errors.email} id='email'>
         <FormLabel
-          htmlFor='username'
+          htmlFor='email'
           variant='float'
           color={!success
-            ? errors.username
+            ? errors.email
               ? 'orange.500'
               : 'gray.200'
             : 'green.600'}
         >
-          {t('register.form.username.title')}
+          {t('authenticate.form.email.title')}
         </FormLabel>
         <InputGroup size='xl'>
           <Input
-            {...register('username')}
+            {...register('email')}
             variant='filled'
-            placeholder={t('register.form.username.placeholder')}
-            isInvalid={errors.username}
+            placeholder={t('authenticate.form.email.placeholder')}
+            isInvalid={errors.email}
           />
-          {(errors.username || success) && (
+          {(errors.email || success) && (
             <InputRightElement>
               <Icon
                 icon={success ? CheckDouble1 : AlertCircle}
@@ -72,16 +70,18 @@ export default function RegisterForm ({ onSubmit, loading }: Props): Node {
           )}
         </InputGroup>
         <FormHelperText>
-          {errors.username && t('authenticate.form.validation.email.required')}
+          {errors.email && t('authenticate.form.validation.email.pattern')}
         </FormHelperText>
       </FormControl>
       <Button
-        size='md'
+        size='xl'
+        variant='outline'
         type='submit'
-        isLoading={loading}
-        width='100%'
+        loading={loading}
+        colorScheme='red'
+        w='100%'
       >
-        {t('register.form.submit')}
+        {t('authenticate.form.continue')}
       </Button>
     </form>
   )
