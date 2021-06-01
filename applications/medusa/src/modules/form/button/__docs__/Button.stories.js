@@ -1,6 +1,6 @@
 import Button from '../'
-import ButtonTheme from '@//:modules/theme/components/button/index'
-import colors from '@//:modules/theme/colors'
+import ButtonTheme from '@//:modules/../../../../client/theme/components/button/index'
+import colors from '@//:modules/../../../../client/theme/colors'
 
 export default {
   title: 'Form/Button',

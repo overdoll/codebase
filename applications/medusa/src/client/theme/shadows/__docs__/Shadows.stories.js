@@ -1,4 +1,4 @@
-import shadows from '@//:modules/theme/shadows'
+import shadows from '../index'
 import { Stack, Box } from '@chakra-ui/react'
 
 export default {

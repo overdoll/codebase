@@ -1,4 +1,4 @@
-import { spacing } from '@//:modules/theme/spacing'
+import { spacing } from '../index'
 import { Text, Flex, Stack, Box } from '@chakra-ui/react'
 
 export default {

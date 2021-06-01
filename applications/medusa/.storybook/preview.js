@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react'
 import darkTheme from './dark'
 import { ChakraProvider } from '@chakra-ui/react'
-import theme from '@//:modules/theme'
+import theme from '@//:modules/../src/client/theme'
 import { I18nextProvider } from 'react-i18next'
 import i18next from '../src/client/utilities/i18next'
 

@@ -1,4 +1,4 @@
-import radius from '@//:modules/theme/radius'
+import radius from '../index'
 import { Stack, Box } from '@chakra-ui/react'
 
 export default {

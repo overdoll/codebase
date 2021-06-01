@@ -1,5 +1,5 @@
 import { Input } from '@chakra-ui/react'
-import InputTheme from '@//:modules/theme/components/input/index'
+import InputTheme from '../index'
 
 export default {
   title: 'Form/ChakraInput',

@@ -1,4 +1,4 @@
-import typography from '@//:modules/theme/typography/index'
+import typography from '../index'
 import { Text, Flex, Heading, Stack } from '@chakra-ui/react'
 
 export default {

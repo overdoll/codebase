@@ -1,4 +1,4 @@
-import colors from '@//:modules/theme/colors'
+import colors from '../index'
 import ColorCircle from '../../../../../.storybook/components/color/color'
 import { Text, Flex, HStack, Heading, Stack } from '@chakra-ui/react'
 
