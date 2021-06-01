@@ -5,7 +5,7 @@ import { createBrowserHistory } from 'history'
 import type { Node } from 'react'
 import { createClientRouter } from '@//:modules/routing/router'
 import routes from './routes'
-import RelayEnvironment from './bootstrap/relay/RelayEnvironment'
+import environment from './bootstrap/relay'
 import i18next from './bootstrap/i18next'
 import Bootstrap from './Bootstrap'
 import { registerUpdateListener } from './bootstrap/update'
@@ -16,7 +16,7 @@ import OverlayScrollbars from 'overlayscrollbars'
 const router = createClientRouter(
   routes,
   createBrowserHistory(),
-  RelayEnvironment
+  environment
 )
 
 registerUpdateListener(router)
@@ -46,7 +46,7 @@ export default function App (): Node {
     <Bootstrap
       routerContext={router.context}
       emotionCache={cache}
-      environment={RelayEnvironment}
+      environment={environment}
       i18next={i18next}
     />
   )
