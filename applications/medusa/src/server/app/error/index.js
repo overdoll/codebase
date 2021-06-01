@@ -1,11 +1,11 @@
 import { renderToString } from 'react-dom/server'
 import createEmotionServer from '@emotion/server/create-instance'
 import createCache from '@emotion/cache'
-import Display from '../../client/Display'
+import Display from '../../../client/Display'
 import i18next from 'i18next'
-import ErrorDisplay from '../../client/domain/Error/ErrorPage'
+import ErrorDisplay from '../../../client/domain/Error/ErrorPage'
 import { EMOTION_CACHE_KEY } from '@//:modules/constants/emotion'
-import logger from '../utilities/logger'
+import logger from '../../utilities/logger'
 
 // Error - handles errors that may be thrown during rendering, which
 // may either be a server error or a rendering error
@@ -46,25 +46,23 @@ async function request (err, req, res, next) {
 }
 
 // Render error page. If that fails, fallback to just sending a 500 response
-export default function error () {
-  return async function (err, req, res, next) {
-    try {
-      await request(err, req, res, next)
-    } catch (e) {
-      if (process.env.APP_DEBUG === 'true') {
-        console.log(err)
-        next(err)
-      } else {
-        // TODO: report error to sentry
-        logger.error({
-          http: err.http,
-          logger: { name: logger.name, thread_name: err.process },
-          error: { message: err.message, kind: err.name, stack: err.stack },
-          message: `${err.name}: ${err.message}`
-        })
-      }
-
-      res.status(err.status || 500).end()
+export default async function error (err, req, res, next) {
+  try {
+    await request(err, req, res, next)
+  } catch (e) {
+    if (process.env.APP_DEBUG === 'true') {
+      console.log(err)
+      next(err)
+    } else {
+      // TODO: report error to sentry
+      logger.error({
+        http: err.http,
+        logger: { name: logger.name, thread_name: err.process },
+        error: { message: err.message, kind: err.name, stack: err.stack },
+        message: `${err.name}: ${err.message}`
+      })
     }
+
+    res.status(err.status || 500).end()
   }
 }

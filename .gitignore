@@ -23,7 +23,7 @@ bazel-*
 .env
 build
 .nyc_output
-coverage
+applications/medusa/coverage
 
 # IDEA
 .ijwb

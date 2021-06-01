@@ -6,12 +6,14 @@ import prepass from 'react-ssr-prepass'
 import { renderToString } from 'react-dom/server'
 import createEmotionServer from '@emotion/server/create-instance'
 import createCache from '@emotion/cache'
-import queryMapJson from '../queries.json'
+import queryMapJson from '../../queries.json'
 import { createServerRouter } from '@//:modules/routing/router'
-import routes from '../../client/routes'
-import Bootstrap from '../../client/Bootstrap'
-import createMockHistory from '../utilities/createMockHistory'
-import { EMOTION_CACHE_KEY } from '../../modules/constants/emotion'
+import Bootstrap from '../../../client/Bootstrap'
+import createMockHistory from './Domain/createMockHistory'
+
+import express from 'express'
+import routes from '../../../client/routes'
+import { EMOTION_CACHE_KEY } from '@//:modules/constants/emotion'
 
 // All values listed here will be passed down to the client
 // Don't include anything sensitive
@@ -158,12 +160,16 @@ async function request (apollo, req, res) {
   })
 }
 
-export default function entry (apollo) {
-  return async function (req, res, next) {
+export default function (apollo) {
+  const router = express.Router()
+
+  router.get('/*', async function (req, res, next) {
     try {
       await request(apollo, req, res)
     } catch (e) {
       next(e)
     }
-  }
+  })
+
+  return router
 }

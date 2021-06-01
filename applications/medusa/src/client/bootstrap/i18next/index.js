@@ -4,6 +4,7 @@
 import i18n from 'i18next'
 import Backend from 'i18next-http-backend'
 import SafeJSONParse from '@//:modules/utilities/SafeJSONParse'
+import { initReactI18next } from 'react-i18next'
 
 const options = {
   fallbackLng: 'en',
@@ -28,6 +29,7 @@ const options = {
 
 // In browser, get our translation data from the DOM
 if (process && !process.release) {
+  i18n.use(initReactI18next)
   i18n.use(Backend)
   i18n.init(options)
 
