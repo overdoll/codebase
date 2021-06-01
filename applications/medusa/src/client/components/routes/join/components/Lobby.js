@@ -8,7 +8,6 @@ import { useTranslation } from 'react-i18next'
 import type { LobbySubscriptionResponse } from '@//:artifacts/LobbySubscription.graphql'
 import Icon from '@//:modules/content/icon/Icon'
 import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/sign-badge-circle-K1i3HA.svg'
-import ContentInkPen from '@streamlinehq/streamlinehq/img/streamline-bold/content-ink-pen-jHW3zi.svg'
 import { Box, Center, Flex, Heading, Text, useToast } from '@chakra-ui/react'
 import Button from '@//:modules/form/button'
 
@@ -114,29 +113,29 @@ export default function Lobby (props: Props): Node {
 
   return (
     <Center mt={40}>
-      <Flex w={['sm', 'md']} direction="column">
+      <Flex w={['sm', 'md']} direction='column'>
         <Icon
           icon={SignBadgeCircle}
           w={100}
           h={100}
-          color="purple.300"
-          ml="auto"
-          mr="auto"
+          color='purple.300'
+          ml='auto'
+          mr='auto'
           mb={8}
         />
-        <Heading mb={8} align="center" size="lg" color="gray.00">
+        <Heading mb={8} align='center' size='lg' color='gray.00'>
           {t('lobby.header')}
         </Heading>
-        <Box mb={8} pt={3} pb={3} borderRadius={5} bg="gray.800">
+        <Box mb={8} pt={3} pb={3} borderRadius={5} bg='gray.800'>
           <Center>
-            <Text fontSize="lg" color="purple.300">
+            <Text fontSize='lg' color='purple.300'>
               {props.email}
             </Text>
           </Center>
         </Box>
         <Button
-          mt='5'
-          isLoading={isSendingEmail}
+          size='lg'
+          loading={isSendingEmail}
           onClick={onSubmit}
           disabled={buttonDisabled}
         >

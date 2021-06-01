@@ -28,10 +28,10 @@ const theme = extendTheme({
   space: spacing,
   borders,
   transition,
-  components
+  components,
   styles: {
     global
-  },
+  }
 })
 
 export default theme

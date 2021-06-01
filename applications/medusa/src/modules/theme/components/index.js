@@ -1,8 +1,10 @@
 import input from './input'
 import button from './button'
 import form from './form'
+import menu from './menu'
 
 export default {
+  Menu: menu,
   Input: input,
   Button: button,
   Form: form,

@@ -1,5 +1,4 @@
 import { Input } from '@chakra-ui/react'
-import { Form, useForm } from '@//:modules/form'
 import InputTheme from '@//:modules/theme/components/input/index'
 
 export default {
@@ -26,12 +25,8 @@ export default {
 }
 
 const Template = args => {
-  const form = useForm()
-
   return (
-    <Form instance={form} onSubmit={() => {}}>
-      <Input placeholder='placeholder' {...args} />
-    </Form>
+    <Input placeholder='placeholder' {...args} />
   )
 }
 

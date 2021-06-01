@@ -1,4 +1,4 @@
-import Button from '../Button'
+import Button from '../'
 import ButtonTheme from '@//:modules/theme/components/button/index'
 import colors from '@//:modules/theme/colors'
 
