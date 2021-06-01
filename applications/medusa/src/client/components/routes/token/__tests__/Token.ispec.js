@@ -82,7 +82,7 @@ it('should show session data if token was redeemed in another session', async ()
       sameSession: false,
       registered: false,
       invalid: false,
-      session: '{ "user-agent": "agent-session" }'
+      session: '{ "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.135 Safari/537.36" }'
     })
   }
 
@@ -91,7 +91,7 @@ it('should show session data if token was redeemed in another session', async ()
   render(<Root />)
 
   // Expect session data to be visible
-  expect(screen.getByText('agent-session')).toBeVisible()
+  expect(screen.getByText(/Chrome/iu)).toBeVisible()
 })
 
 it('should redirect if user is already registered', async () => {

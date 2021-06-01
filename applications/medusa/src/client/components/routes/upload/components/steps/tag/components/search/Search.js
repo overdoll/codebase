@@ -2,19 +2,12 @@
  * @flow
  */
 import type { Node } from 'react'
-import { Suspense, useCallback, useState, useRef } from 'react'
+import { Suspense, useCallback, useState } from 'react'
 import { useTransition } from '@//:modules/experimental'
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
 import ErrorFallback from '../error/ErrorFallback'
 import LoadingSearch from '../loading/LoadingSearch'
-import {
-  Center,
-  Flex,
-  Input,
-  Progress,
-  InputGroup,
-  InputLeftElement
-} from '@chakra-ui/react'
+import { Center, Flex, Input, InputGroup, InputLeftElement, Progress } from '@chakra-ui/react'
 import Button from '@//:modules/form/button'
 import { useTranslation } from 'react-i18next'
 import Icon from '@//:modules/content/icon/Icon'
@@ -35,8 +28,6 @@ export default function Search ({
 }: Props): Node {
   const [searchInput, setSearch] = useState('')
   const [isPending] = useTransition({ timeoutMs: 100000000 })
-
-  const textInput = useRef(null)
 
   const [queryArgs, setQueryArgs] = useState({
     options: { fetchKey: 0 },
@@ -136,9 +127,6 @@ export default function Search ({
             </InputLeftElement>
             <Input
               size='md'
-              id={placeholder}
-              name={placeholder}
-              ref={textInput}
               placeholder={placeholder || t('input.search')}
               value={searchInput}
               onChange={onChange}

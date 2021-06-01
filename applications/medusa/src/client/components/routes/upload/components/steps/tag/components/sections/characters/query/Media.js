@@ -55,9 +55,9 @@ export default function Media ({ args, onSelect }: Props): Node {
                 key={item.id}
                 onSelect={() => onSelect(item)}
                 selected={false}
-              >
-                {item.title}-{item.id}-{item.thumbnail}
-              </Element>
+                title={item.title}
+                thumbnail={item.thumbnail}
+              />
             ))
           )}
     </>
