@@ -5,17 +5,10 @@ import type { Node } from 'react'
 import { Suspense, unstable_useTransition as useTransition, useContext, useEffect, useState } from 'react'
 import RoutingContext from '@//:modules/routing/RoutingContext'
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
-import { keyframes } from '@emotion/react'
 import type { PreparedEntry, RouterInit } from '@//:modules/routing/router'
 import { chakra, Progress } from '@chakra-ui/react'
 
 const SUSPENSE_CONFIG = { timeoutMs: 2000 }
-
-const transition = keyframes`
-  to {
-    visibility: visible;
-  }
-`
 
 /**
  * A component that accesses the current route entry from RoutingContext and renders

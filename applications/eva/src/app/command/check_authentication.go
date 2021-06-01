@@ -27,7 +27,7 @@ var (
 func (h AuthenticationHandler) Handle(ctx context.Context, hasCookie bool, cookieValue string) (*cookie.Cookie, *user.User, error) {
 
 	pass := passport.FromContext(ctx)
-
+	
 	// User is logged in
 	if pass.IsAuthenticated() {
 

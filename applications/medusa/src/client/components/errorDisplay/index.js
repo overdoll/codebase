@@ -1,4 +1,4 @@
-import { Alert, AlertDescription, AlertTitle, Center, Flex, AlertIcon } from '@chakra-ui/react'
+import { Center, Code, Flex } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
 
 // This component displays an error page when an error occurs on the server
@@ -6,33 +6,21 @@ import { Helmet } from 'react-helmet-async'
 // TODO: also need to report the error to sentry
 export default function ErrorDisplay ({ error }) {
   const debug = process.env.APP_DEBUG === 'true'
+
+  if (debug) console.log(error)
+
   return (
     <>
       <Helmet title='error' />
       <Flex h='100%'>
         <Center w='100%'>
-          <Alert
-            status='error'
-            variant='subtle'
-            flexDirection='column'
-            alignItems='center'
-            justifyContent='center'
-            textAlign='center'
-          >
-            <AlertIcon boxSize='40px' mr={0} />
-            {debug
-              ? (
-                <>
-                  <AlertTitle mt={4} mb={1} fontSize='lg'>
-                    {error.message}
-                  </AlertTitle>
-                  <AlertDescription>
-                    {error.stack}
-                  </AlertDescription>
-                </>
-                )
-              : 'error'}
-          </Alert>
+          {debug
+            ? (
+              <Code colorScheme='red'>
+                {error.stack}
+              </Code>
+              )
+            : 'error'}
         </Center>
       </Flex>
     </>
