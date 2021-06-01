@@ -6,7 +6,7 @@ import type { Node } from 'react'
 import { useContext, useState } from 'react'
 import Register from '../../components/Register/Register'
 import { useTranslation } from 'react-i18next'
-import Lobby from './Lobby'
+import Lobby from './Lobby/Lobby'
 import { Alert, AlertDescription, AlertIcon, AlertTitle, Center, CloseButton, Flex, useToast } from '@chakra-ui/react'
 import { RootContext } from '../Root/Root'
 import Icon from '@//:modules/content/icon/Icon'
@@ -14,7 +14,7 @@ import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/s
 import type { JoinFragment$key } from '@//:artifacts/JoinFragment.graphql'
 import { useFlash } from '@//:modules/flash'
 import { Helmet } from 'react-helmet-async'
-import JoinForm from './index'
+import JoinForm from './JoinForm/JoinForm'
 
 const JoinAction = graphql`
   mutation JoinMutation($data: AuthenticationInput!) {

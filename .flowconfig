@@ -1,5 +1,4 @@
 [ignore]
-.*/__tests__/.*
 .*/bazel-bin/.*
 .*/bazel-out/.*
 .*/bazel-codebase/.*
