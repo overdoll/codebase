@@ -11,7 +11,7 @@ import {
   Text
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
-import FullPost from '../../../../../posts/full/FullPost'
+import FullPost from '../../../../../components/FullPost/FullPost'
 
 type Props = {
   state: State,

@@ -32,7 +32,7 @@ const routes: Array<Route> = [
   {
     component: JSResource('Root', () =>
       import(
-        /* webpackChunkName: "Root" */ './components/routes/Root'
+        /* webpackChunkName: "Root" */ './domain/Root/Root'
       )
     ),
     prepare: params => {
@@ -53,7 +53,7 @@ const routes: Array<Route> = [
         exact: true,
         component: JSResource('JoinRoot', () =>
           import(
-            /* webpackChunkName: "JoinRoot" */ './components/routes/join/Join'
+            /* webpackChunkName: "JoinRoot" */ './domain/Join/Join'
           )
         ),
         // When user is logged in, we just want to redirect them since they're already "logged in"
@@ -75,7 +75,7 @@ const routes: Array<Route> = [
         exact: true,
         component: JSResource('UploadRoot', () =>
           import(
-            /* webpackChunkName: "UploadRoot" */ './components/routes/upload/Upload'
+            /* webpackChunkName: "UploadRoot" */ './domain/Upload/Upload'
           )
         ),
         // If user is not logged in, they can't post - so we redirect to join page
@@ -97,7 +97,7 @@ const routes: Array<Route> = [
         exact: true,
         component: JSResource('TokenRoot', () =>
           import(
-            /* webpackChunkName: "TokenRoot" */ './components/routes/token/Token'
+            /* webpackChunkName: "TokenRoot" */ './domain/Token/Token'
           )
         ),
         prepare: params => {
@@ -131,7 +131,7 @@ const routes: Array<Route> = [
         exact: false,
         component: JSResource('Empty', () =>
           import(
-            /* webpackChunkName: "Empty" */ './components/routes/empty/Empty'
+            /* webpackChunkName: "Empty" */ './domain/Error/NotFound'
           )
         )
       }

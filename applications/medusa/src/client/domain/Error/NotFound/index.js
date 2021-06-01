@@ -8,28 +8,28 @@ import { useTranslation } from 'react-i18next'
 import { Center, Flex, Heading, Stack } from '@chakra-ui/react'
 import Button from '@//:modules/form/button'
 
-export default function Empty (): Node {
+export default function Index (): Node {
   const [t] = useTranslation('empty')
 
   return (
     <Center mt={40}>
-      <Flex w={['sm', 'md', 'lg']} direction="column">
+      <Flex w={['sm', 'md', 'lg']} direction='column'>
         <Icon
           icon={SignBadgeCircle}
-          color="red.500"
+          color='red.500'
           w={100}
           h={100}
-          ml="auto"
-          mr="auto"
+          ml='auto'
+          mr='auto'
           mb={8}
         />
-        <Heading size="lg" align="center" color="gray.00">
+        <Heading size='lg' align='center' color='gray.00'>
           {t('empty.header')}
         </Heading>
         <Center mt={8}>
-          <Stack direction={['column', 'row']} spacing="24px">
+          <Stack direction={['column', 'row']} spacing='24px'>
             <Button
-              size="lg"
+              size='lg'
               onClick={() => {
                 history.back()
               }}
@@ -37,8 +37,8 @@ export default function Empty (): Node {
               {t('empty.leave')}
             </Button>
             <Button
-              size="lg"
-              colorScheme="red"
+              size='lg'
+              colorScheme='red'
               onClick={() => {
                 history.back()
               }}

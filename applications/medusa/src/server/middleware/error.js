@@ -3,7 +3,7 @@ import createEmotionServer from '@emotion/server/create-instance'
 import createCache from '@emotion/cache'
 import Display from '../../client/Display'
 import i18next from 'i18next'
-import ErrorDisplay from '../../client/components/errorDisplay'
+import ErrorDisplay from '../../client/domain/Error/ErrorPage'
 import { EMOTION_CACHE_KEY } from '../../modules/constants/emotion'
 import logger from '../utilities/logger'
 

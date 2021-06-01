@@ -3,22 +3,21 @@
  */
 import type { Node } from 'react'
 import Element
-  from '../../../../../../routes/upload/components/steps/tag/components/element/Element'
+  from '../../../../../../domain/Upload/components/steps/tag/components/element/Element'
 import { Wrap } from '@chakra-ui/react'
 
 type Props = {
-  characters: any,
+  categories: any,
 };
 
-export default function Characters ({ characters }: Props): Node {
+export default function Categories ({ categories }: Props): Node {
   return (
     <Wrap justify='center'>
-      {characters.map(item => (
+      {categories.map(item => (
         <Element
           key={item.id}
           selected={false}
-          title={item.name}
-          subheader={item.media.title}
+          title={item.title}
           thumbnail={item.thumbnail}
         />
       ))}

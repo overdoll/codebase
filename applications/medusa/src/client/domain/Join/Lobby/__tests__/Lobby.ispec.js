@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import { createMockEnvironment, MockPayloadGenerator } from 'relay-test-utils'
 import withProviders from '@//:modules/testing/withProviders'
-import Lobby from '../Lobby'
+import Index from '../Lobby'
 
 it('should run the parent function when subscription completes with desired results', async () => {
   const Environment = createMockEnvironment()
@@ -11,7 +11,7 @@ it('should run the parent function when subscription completes with desired resu
   const email = 'test@test.com'
 
   const LobbyComponent = () => (
-    <Lobby email={email} onReceive={onReceiveMock} />
+    <Index email={email} onReceive={onReceiveMock} />
   )
 
   const [Root] = withProviders({

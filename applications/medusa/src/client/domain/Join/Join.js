@@ -4,17 +4,17 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import type { Node } from 'react'
 import { useContext, useState } from 'react'
-import Register from '../../register/Register'
+import Register from '../../components/Register/Register'
 import { useTranslation } from 'react-i18next'
-import Lobby from './components/Lobby'
+import Lobby from './Lobby'
 import { Alert, AlertDescription, AlertIcon, AlertTitle, Center, CloseButton, Flex, useToast } from '@chakra-ui/react'
-import { RootContext } from '../Root'
+import { RootContext } from '../Root/Root'
 import Icon from '@//:modules/content/icon/Icon'
 import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/sign-badge-circle-K1i3HA.svg'
 import type { JoinFragment$key } from '@//:artifacts/JoinFragment.graphql'
 import { useFlash } from '@//:modules/flash'
 import { Helmet } from 'react-helmet-async'
-import JoinForm from './form/JoinForm'
+import JoinForm from './JoinForm'
 
 const JoinAction = graphql`
   mutation JoinMutation($data: AuthenticationInput!) {
