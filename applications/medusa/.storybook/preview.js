@@ -1,9 +1,9 @@
 import React, { Suspense } from 'react'
 import darkTheme from './dark'
-import { ChakraProvider } from '@chakra-ui/react'
-import theme from '@//:modules/../src/client/theme'
-import { I18nextProvider } from 'react-i18next'
 import i18next from '../src/client/utilities/i18next'
+import Display from '../src/client/Display'
+import createCache from '@emotion/cache'
+import { EMOTION_CACHE_KEY } from '@//:modules/constants/emotion'
 
 export const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },
@@ -12,14 +12,17 @@ export const parameters = {
   }
 }
 
+const cache = createCache({ key: EMOTION_CACHE_KEY })
+
 export const decorators = [
   Story => (
     <Suspense fallback="">
-      <I18nextProvider i18n={i18next}>
-        <ChakraProvider theme={theme}>
-          <Story />
-        </ChakraProvider>
-      </I18nextProvider>
+      <Display
+        emotionCache={cache}
+        i18next={i18next}
+      >
+        <Story />
+      </Display>
     </Suspense>
   )
 ]

@@ -9,6 +9,7 @@ import Bootstrap from '../../client/Bootstrap'
 import i18n from 'i18next'
 import type { IEnvironment } from 'relay-runtime/store/RelayStoreTypes'
 import createCache from '@emotion/cache'
+import { EMOTION_CACHE_KEY } from '@//:modules/constants/emotion'
 
 type WithProviders = {
   environment: IEnvironment,
@@ -41,7 +42,7 @@ export default function withProviders ({
     environment
   )
 
-  const cache = createCache({ key: 'od' })
+  const cache = createCache({ key: EMOTION_CACHE_KEY })
 
   return [
     props => {

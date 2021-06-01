@@ -4,7 +4,7 @@ import createCache from '@emotion/cache'
 import Display from '../../client/Display'
 import i18next from 'i18next'
 import ErrorDisplay from '../../client/components/errorDisplay'
-import { EMOTION_CACHE_KEY } from '../constants/emotion'
+import { EMOTION_CACHE_KEY } from '../../modules/constants/emotion'
 import logger from '../utilities/logger'
 
 // Error - handles errors that may be thrown during rendering, which

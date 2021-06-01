@@ -1,5 +1,0 @@
-Log file created at: 2021/03/20 14:25:10
-Running on machine: DESKTOP-EG046FC
-Binary: Built with gc go1.16 for linux/amd64
-Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
-I0320 14:25:10.419742   30153 init.go:79] init command started

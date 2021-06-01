@@ -1,6 +1,4 @@
 import Button from '../'
-import ButtonTheme from '@//:modules/../../../../client/theme/components/button/index'
-import colors from '@//:modules/../../../../client/theme/colors'
 
 export default {
   title: 'Form/Button',
@@ -9,13 +7,16 @@ export default {
     size: {
       control: {
         type: 'select',
-        options: Object.keys(ButtonTheme.sizes)
+        // TODO: use chakra hooks for grabbing theme?
+        options: []
+        // options: Object.keys(ButtonTheme)
       }
     },
     colorScheme: {
       control: {
         type: 'select',
-        options: Object.keys(colors)
+        options: []
+        // options: Object.keys(colors)
       }
     }
   },
@@ -25,7 +26,7 @@ export default {
   }
 }
 
-const Template = args => <Button {...args}>Click Me</Button>
+const Template = args => (<Button {...args}>Click Me</Button>)
 
 export const Primary = Template.bind({})
 Primary.args = {

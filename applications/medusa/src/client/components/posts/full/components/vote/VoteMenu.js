@@ -35,11 +35,11 @@ export default function VoteMenu ({ onClick, hasVoted, voteCount, disabled }: Pr
           />
         }
       />
-
       <Heading
         display={disabled ? 'none' : 'initial'} color={hasVoted ? 'red.500' : 'gray.500'} pl={2}
         mt={1} size='lg'
-      >{numbro(voteCount).format({ average: true, mantissa: 1, optionalMantissa: true })}
+      >
+        {numbro(voteCount).format({ average: true, mantissa: 1, optionalMantissa: true })}
       </Heading>
     </Flex>
   )
