@@ -1,7 +1,7 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
-    name = "go_default_library",
+    name = "commands",
     srcs = [
         "db.go",
         "migrate.go",
@@ -10,9 +10,10 @@ go_library(
     importpath = "overdoll/libraries/commands",
     visibility = ["//visibility:public"],
     deps = [
-        "//libraries/bootstrap:go_default_library",
-        "@com_github_gocql_gocql//:go_default_library",
-        "@com_github_scylladb_gocqlx_v2//migrate:go_default_library",
-        "@com_github_spf13_cobra//:go_default_library",
+        "//libraries/bootstrap",
+        "@com_github_gocql_gocql//:gocql",
+        "@com_github_scylladb_gocqlx_v2//migrate",
+        "@com_github_spf13_cobra//:cobra",
+        "@com_github_spf13_viper//:viper",
     ],
 )

@@ -45,10 +45,13 @@ def get_cache_plugin():
         "id": "node",
         "backend": "s3",
         "key": "v1-cache-{{ id }}-{{ runner.os }}-{{ checksum 'yarn.lock' }}-{{ checksum 'streamlinehq.json' }}",
-        "restore-keys": [
-            "v1-cache-{{ id }}-{{ runner.os }}-",
-            "v1-cache-{{ id }}-",
-        ],
+        # We dont use restore-keys because the bazel nodejs rules will sometimes
+        # mess up and throw a "target not found error"
+        # so we always do a fresh install of node_modules on each run, if there are new dependencies
+        # "restore-keys": [
+        #     "v1-cache-{{ id }}-{{ runner.os }}-",
+        #     "v1-cache-{{ id }}-",
+        # ],
         "compress": "true",
         "paths": [
             "node_modules"

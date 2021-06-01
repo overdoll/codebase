@@ -13,6 +13,7 @@ import (
 	"overdoll/applications/eva/src/service"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/commands"
+	"overdoll/libraries/config"
 )
 
 var rootCmd = &cobra.Command{
@@ -21,6 +22,8 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
+	config.Read("applications/eva/config.toml")
+
 	rootCmd.AddCommand(commands.Database)
 	rootCmd.AddCommand(&cobra.Command{
 		Use: "grpc",
@@ -52,9 +55,9 @@ func RunGrpc(cmd *cobra.Command, args []string) {
 
 	defer cleanup()
 
-	s := ports.CreateServer(&app)
+	s := ports.NewGrpcServer(&app)
 
-	bootstrap.InitializeGRPCServer(func(server *grpc.Server) {
+	bootstrap.InitializeGRPCServer("0.0.0.0:8080", func(server *grpc.Server) {
 		eva.RegisterEvaServer(server, s)
 	})
 }
@@ -69,5 +72,5 @@ func RunHttp(cmd *cobra.Command, args []string) {
 
 	srv := ports.NewGraphQLServer(&app)
 
-	bootstrap.InitializeHttpServer(srv, func() {})
+	bootstrap.InitializeHttpServer(":8000", srv, func() {})
 }

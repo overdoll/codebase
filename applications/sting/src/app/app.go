@@ -1,15 +1,13 @@
 package app
 
 import (
-	"overdoll/applications/sting/src/app/activities"
 	"overdoll/applications/sting/src/app/command"
 	"overdoll/applications/sting/src/app/query"
 )
 
 type Application struct {
-	Commands   Commands
-	Queries    Queries
-	Activities Activities
+	Commands Commands
+	Queries  Queries
 }
 
 type Commands struct {
@@ -19,6 +17,13 @@ type Commands struct {
 	IndexAllCategories command.IndexAllCategoriesHandler
 	IndexAllCharacters command.IndexAllCharactersHandler
 	IndexAllMedia      command.IndexAllMediaHandler
+
+	// Activities - used by temporal
+	CreatePost          command.CreatePostActivityHandler
+	NewPendingPost      command.NewPostActivityHandler
+	PostCompleted       command.PublishPostActivityHandler
+	PostCustomResources command.PostCustomResourcesActivityHandler
+	ReviewPost          command.ReviewPostActivityHandler
 }
 
 type Queries struct {
@@ -26,12 +31,4 @@ type Queries struct {
 	SearchCategories query.SearchCategoriesHandler
 	SearchCharacters query.SearchCharactersHandler
 	SearchMedias     query.SearchMediasHandler
-}
-
-type Activities struct {
-	CreatePost          activities.CreatePostActivityHandler
-	NewPendingPost      activities.NewPostActivityHandler
-	PostCompleted       activities.PublishPostActivityHandler
-	PostCustomResources activities.PostCustomResourcesActivityHandler
-	ReviewPost          activities.ReviewPostActivityHandler
 }

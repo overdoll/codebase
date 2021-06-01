@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/sting/src/domain/post"
-	"overdoll/libraries/ksuid"
+	"overdoll/libraries/uuid"
 )
 
 func TestPostsCharacterCassandraRepository_create_character(t *testing.T) {
@@ -71,5 +71,5 @@ func TestPostsCharacterCassandraRepository_get_character(t *testing.T) {
 
 func newFakeCharacters(t *testing.T) []*post.Character {
 	var characters []*post.Character
-	return append(characters, post.NewCharacter(ksuid.New().String(), "asd", post.NewMedia(ksuid.New().String(), "")), post.NewCharacter(ksuid.New().String(), "asd2", post.NewMedia(ksuid.New().String(), "")))
+	return append(characters, post.NewCharacter(uuid.New().String(), "asd", post.NewMedia(uuid.New().String(), "")), post.NewCharacter(uuid.New().String(), "asd2", post.NewMedia(uuid.New().String(), "")))
 }

@@ -6,19 +6,15 @@ import type { Node } from 'react'
 import { useContext, useState } from 'react'
 import Register from '../../register/Register'
 import { useTranslation } from 'react-i18next'
-import { Button, Form, Input, useForm } from '@//:modules/form'
 import Lobby from './components/Lobby'
 import { Alert, AlertDescription, AlertIcon, AlertTitle, Center, CloseButton, Flex, useToast } from '@chakra-ui/react'
 import { RootContext } from '../Root'
-import { EMAIL } from '@//:modules/regex'
 import Icon from '@//:modules/content/icon/Icon'
 import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/sign-badge-circle-K1i3HA.svg'
 import type { JoinFragment$key } from '@//:artifacts/JoinFragment.graphql'
 import { useFlash } from '@//:modules/flash'
-
-type JoinValues = {
-  email: string,
-};
+import { Helmet } from 'react-helmet-async'
+import JoinForm from './form/JoinForm'
 
 const JoinAction = graphql`
   mutation JoinMutation($data: AuthenticationInput!) {
@@ -47,10 +43,9 @@ export default function Join (): Node {
   const [t] = useTranslation('auth')
 
   const [commit, isInFlight] = useMutation(JoinAction)
-  const instance = useForm<JoinValues>()
 
   const notify = useToast()
-  const [read, , flush] = useFlash()
+  const { read, flush } = useFlash()
 
   // Receiving a subscription response
   const [authInfo, setAuthInfo] = useState({ authListener: null })
@@ -65,7 +60,7 @@ export default function Join (): Node {
     setWaiting(false)
   }
 
-  const onSubmit = (val: JoinValues) => {
+  const onSubmit = (val) => {
     setEmail(val.email)
     commit({
       variables: {
@@ -124,63 +119,35 @@ export default function Join (): Node {
 
   // Ask user to authenticate
   return (
-    <Center mt={40}>
-      <Flex w={['sm', 'md']} direction='column' align='center'>
-        <Icon
-          icon={SignBadgeCircle}
-          w={100}
-          h={100}
-          color='red.500'
-          ml='auto'
-          mr='auto'
-          mb={8}
-        />
-        {error &&
-        (
-          <Alert mb={2} status='error'>
-            <AlertIcon />
-            <AlertTitle mr={2}>{error}</AlertTitle>
-            <AlertDescription>{error}</AlertDescription>
-            <CloseButton
-              position='absolute'
-              right='8px'
-              top='8px'
-              onClick={() => flush('login.notify')}
-            />
-          </Alert>
-        )}
-        <Flex>
-          <Form instance={instance} onSubmit={onSubmit}>
-            <Flex direction='column'>
-              <Input
-                title={t('authenticate.form.email.title')}
-                name='email'
-                validation={{
-                  required: {
-                    value: true,
-                    message: t('authenticate.form.validation.email.required')
-                  },
-                  pattern: {
-                    value: EMAIL,
-                    message: t('authenticate.form.validation.email.pattern')
-                  }
-                }}
-                placeholder={t('authenticate.form.email.placeholder')}
+    <>
+      <Helmet title='join' />
+      <Center mt={8}>
+        <Flex w={['fill', 'sm']} direction='column'>
+          <Icon
+            icon={SignBadgeCircle}
+            w={100}
+            h={100}
+            ml='auto'
+            mr='auto'
+            mb={5}
+          />
+          {error &&
+          (
+            <Alert mb={2} status='error'>
+              <AlertIcon />
+              <AlertTitle mr={2}>{error}</AlertTitle>
+              <AlertDescription>{error}</AlertDescription>
+              <CloseButton
+                position='absolute'
+                right='8px'
+                top='8px'
+                onClick={() => flush('login.notify')}
               />
-              <Button
-                size='xl'
-                variant='outline'
-                type='submit'
-                loading={isInFlight}
-                colorScheme='red'
-                w='100%'
-              >
-                {t('authenticate.form.continue')}
-              </Button>
-            </Flex>
-          </Form>
+            </Alert>
+          )}
+          <JoinForm onSubmit={onSubmit} loading={isInFlight} />
         </Flex>
-      </Flex>
-    </Center>
+      </Center>
+    </>
   )
 }

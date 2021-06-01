@@ -10,8 +10,8 @@ import (
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/eva/src/adapters"
 	"overdoll/applications/eva/src/domain/user"
-	"overdoll/libraries/ksuid"
 	"overdoll/libraries/tests"
+	"overdoll/libraries/uuid"
 )
 
 func TestUserRepository_GetUser_not_exists(t *testing.T) {
@@ -20,9 +20,21 @@ func TestUserRepository_GetUser_not_exists(t *testing.T) {
 	repo := newUserRepository(t)
 	ctx := context.Background()
 
-	id := ksuid.New().String()
+	id := uuid.New().String()
 
 	usr, err := repo.GetUserById(ctx, id)
+
+	assert.Nil(t, usr)
+	assert.EqualError(t, err, user.ErrUserNotFound.Error())
+}
+
+func TestUserRepository_GetUserByEmail_not_exists(t *testing.T) {
+	t.Parallel()
+
+	repo := newUserRepository(t)
+	ctx := context.Background()
+
+	usr, err := repo.GetUserByEmail(ctx, "some-random-non-existent-email")
 
 	assert.Nil(t, usr)
 	assert.EqualError(t, err, user.ErrUserNotFound.Error())
@@ -64,7 +76,7 @@ func TestUserRepository_CreateUser_conflicting_username(t *testing.T) {
 	require.NoError(t, err)
 
 	// Create another user, with the same username but different email
-	copyUsr, err := user.NewUser(ksuid.New().String(), usr.Username(), "test-email@test.com")
+	copyUsr, err := user.NewUser(uuid.New().String(), usr.Username(), "test-email@test.com")
 
 	require.NoError(t, err)
 
@@ -88,7 +100,7 @@ func TestUserRepository_CreateUser_conflicting_email(t *testing.T) {
 	require.NoError(t, err)
 
 	// Create another user, with the same email but different username
-	copyUsr, err := user.NewUser(ksuid.New().String(), "ghahah", usr.Email())
+	copyUsr, err := user.NewUser(uuid.New().String(), "ghahah", usr.Email())
 
 	require.NoError(t, err)
 
@@ -161,11 +173,9 @@ func newFakeUser(t *testing.T) *user.User {
 
 	err := faker.FakeData(&fake)
 
-	if err != nil {
-		t.Fatal("error generating fake data: ", err)
-	}
+	require.NoError(t, err)
 
-	usr, err := user.NewUser(ksuid.New().String(), fake.Username, fake.Email)
+	usr, err := user.NewUser(uuid.New().String(), fake.Username, fake.Email)
 
 	require.NoError(t, err)
 

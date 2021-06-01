@@ -18,6 +18,15 @@ const baseStyle = {
 }
 
 const size = {
+
+  xl: {
+    fontSize: 'xl',
+    pt: 5,
+    px: 3,
+    h: 16,
+    borderRadius: 'lg'
+  },
+
   lg: {
     fontSize: 'lg',
     px: 4,
@@ -48,6 +57,10 @@ const size = {
 }
 
 const sizes = {
+  xl: {
+    field: size.xl,
+    addon: size.lg
+  },
   lg: {
     field: size.lg,
     addon: size.lg
@@ -65,6 +78,10 @@ const sizes = {
     addon: size.xs
   }
 }
+
+// errorBorderColor: 'orange.300',
+// focusBorderColor: 'gray.300',
+// borderColor: 'gray.800'
 
 function getDefaults (props) {
   const { focusBorderColor: fc, errorBorderColor: ec } = props
@@ -120,6 +137,7 @@ function variantFilled (props) {
     field: {
       border: '2px solid',
       borderColor: 'transparent',
+      bg: mode('gray.100', 'whiteAlpha.50')(props),
       _readOnly: {
         boxShadow: 'none !important',
         userSelect: 'all'
@@ -132,8 +150,7 @@ function variantFilled (props) {
         borderColor: getColor(theme, ec)
       },
       _focus: {
-        bg: 'transparent',
-        borderColor: getColor(theme, fc)
+        borderColor: getColor(theme, fc), bg: mode('gray.100', 'whiteAlpha.50')(props)
       }
     },
     addon: {

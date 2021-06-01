@@ -12,12 +12,12 @@ import (
 )
 
 type User struct {
-	Id       string          `db:"id"`
-	Username string          `db:"username"`
-	Email    string          `db:"email"`
-	Roles    []user.UserRole `db:"roles"`
-	Verified bool            `db:"verified"`
-	Avatar   string          `db:"avatar"`
+	Id       string   `db:"id"`
+	Username string   `db:"username"`
+	Email    string   `db:"email"`
+	Roles    []string `db:"roles"`
+	Verified bool     `db:"verified"`
+	Avatar   string   `db:"avatar"`
 }
 
 type UserUsername struct {

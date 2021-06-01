@@ -19,9 +19,7 @@ import {
   Alert
 } from '@chakra-ui/react'
 import { useFlash } from '@//:modules/flash'
-import UAParser from 'ua-parser-js'
-import Icon from '@//:modules/content/icon/Icon'
-import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/sign-badge-circle-K1i3HA.svg'
+import { Helmet } from 'react-helmet-async'
 
 type Props = {
   prepared: {
@@ -49,11 +47,11 @@ export default function Token (props: Props): Node {
   const [t] = useTranslation('token')
   const history = useHistory()
 
-  const [, push] = useFlash()
+  const { flash } = useFlash()
 
   if (data.redeemCookie.invalid) {
     // Go back to Join page and send notification of invalid token
-    push('login.notify', 'invalid_token')
+    flash('login.notify', 'invalid_token')
     history.push('/join')
     return null
   }
@@ -66,35 +64,24 @@ export default function Token (props: Props): Node {
     )
 
     return (
-      <Center mt={8}>
-        <Flex w={['fill', 'sm']} direction='column'>
-          <Icon
-            icon={SignBadgeCircle}
-            w={100}
-            h={100}
-            color='green.500'
-            ml='auto'
-            mr='auto'
-            mb={8}
-          />
-          <Heading mb={8} align='center' size='md' color='gray.100'>
-            {t('header')}
-          </Heading>
-          <Box mb={8} pt={3} pb={3} borderRadius={5} bg='gray.800'>
-            <Center>
-              <Text fontSize='lg' color='green.300'>
-                {cookieText.browser.name} {cookieText.browser.major},{' '}
-                {cookieText.os.name} {cookieText.os.version}
+      <>
+        <Helmet title='complete' />
+        <Center mt={8}>
+          <Flex w={['fill', 'sm']} direction='column'>
+            <Heading size='lg' align='center'>
+              {t('header')}
+            </Heading>
+            <Box mt='4' p='2' backgroundColor='gray.700'>
+              <Text color='green.300' fontWeight='bold' align='center'>
+                {JSON.parse(data.redeemCookie.session)['user-agent']}
               </Text>
-            </Center>
-          </Box>
-          <Alert mt={4} borderRadius={5}>
-            <AlertIcon />
-            {t('close')}
-            <AlertDescription />
-          </Alert>
-        </Flex>
-      </Center>
+            </Box>
+            <Box mt='3' align='center'>
+              <Text>{t('close')}</Text>
+            </Box>
+          </Flex>
+        </Center>
+      </>
     )
   }
 

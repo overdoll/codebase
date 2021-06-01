@@ -1,7 +1,7 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
-    name = "go_default_library",
+    name = "command",
     srcs = [
         "authenticate.go",
         "check_authentication.go",
@@ -12,27 +12,27 @@ go_library(
     importpath = "overdoll/applications/eva/src/app/command",
     visibility = ["//visibility:public"],
     deps = [
-        "//applications/eva/src/domain/cookie:go_default_library",
-        "//applications/eva/src/domain/user:go_default_library",
-        "//libraries/cookies:go_default_library",
-        "//libraries/helpers:go_default_library",
-        "//libraries/ksuid:go_default_library",
-        "//libraries/passport:go_default_library",
-        "@com_github_gocql_gocql//:go_default_library",
-        "@org_uber_go_zap//:go_default_library",
+        "//applications/eva/src/domain/cookie",
+        "//applications/eva/src/domain/user",
+        "//libraries/passport",
+        "//libraries/uuid",
+        "@com_github_gocql_gocql//:gocql",
+        "@org_uber_go_zap//:zap",
     ],
 )
 
 go_test(
-    name = "go_default_test",
-    srcs = ["redeem_cookie_test.go"],
-    embed = [":go_default_library"],
+    name = "command_test",
+    srcs = [
+        "mocks_test.go",
+        "redeem_cookie_test.go",
+    ],
     deps = [
-        "//applications/eva/src/domain/cookie:go_default_library",
-        "//applications/eva/src/domain/user:go_default_library",
-        "//libraries/helpers:go_default_library",
-        "//libraries/ksuid:go_default_library",
-        "@com_github_stretchr_testify//assert:go_default_library",
-        "@com_github_stretchr_testify//require:go_default_library",
+        ":command",
+        "//applications/eva/src/domain/cookie",
+        "//applications/eva/src/domain/user",
+        "//libraries/uuid",
+        "@com_github_stretchr_testify//assert",
+        "@com_github_stretchr_testify//require",
     ],
 )

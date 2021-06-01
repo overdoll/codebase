@@ -11,6 +11,7 @@ import (
 	"overdoll/applications/sting/src/service"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/commands"
+	"overdoll/libraries/config"
 )
 
 var rootCmd = &cobra.Command{
@@ -19,6 +20,8 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
+	config.Read("applications/sting/config.toml")
+
 	rootCmd.AddCommand(ports.Root)
 	rootCmd.AddCommand(commands.Database)
 	rootCmd.AddCommand(&cobra.Command{
@@ -64,5 +67,5 @@ func RunHttp(cmd *cobra.Command, args []string) {
 
 	srv := ports.NewGraphQLServer(&app)
 
-	bootstrap.InitializeHttpServer(srv, func() {})
+	bootstrap.InitializeHttpServer(":8000", srv, func() {})
 }

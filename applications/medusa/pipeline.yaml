@@ -31,6 +31,9 @@ steps:
       - host: medusa
         port: 8080
         priority: 1
+    artifacts:
+      - cypress/**/*
+      - cypress/*
 
   publish_image:
     targets:

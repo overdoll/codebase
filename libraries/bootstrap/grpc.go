@@ -2,7 +2,6 @@ package bootstrap
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net"
 	"os"
@@ -18,7 +17,7 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-func InitializeGRPCServer(f func(server *grpc.Server)) {
+func InitializeGRPCServer(addr string, f func(server *grpc.Server)) {
 
 	// Make sure that log statements internal to gRPC library are logged using the zapLogger as well.
 	grpc_zap.ReplaceGrpcLoggerV2(zap.L())
@@ -38,9 +37,9 @@ func InitializeGRPCServer(f func(server *grpc.Server)) {
 
 	f(grpcServer)
 
-	log.Printf("starting grpc server on port %s", "8080")
+	log.Printf("starting grpc server on %s", addr)
 
-	listener, err := net.Listen("tcp", fmt.Sprintf("0.0.0.0:%s", "8080"))
+	listener, err := net.Listen("tcp", addr)
 
 	if err != nil {
 		log.Fatal("net.Listen failed")

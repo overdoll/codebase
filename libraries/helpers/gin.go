@@ -2,7 +2,6 @@ package helpers
 
 import (
 	"context"
-	"net/http/httptest"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,12 +13,11 @@ const (
 )
 
 func GinContextFromContext(ctx context.Context) *gin.Context {
-	raw, _ := ctx.Value(GinContextType(GinKey)).(*gin.Context)
-	return raw
-}
+	raw := ctx.Value(GinContextType(GinKey))
 
-func GinContextWithTesting(ctx context.Context) context.Context {
-	c, _ := gin.CreateTestContext(httptest.NewRecorder())
-	c.Request = httptest.NewRequest("POST", "/asd", nil)
-	return context.WithValue(ctx, GinContextType(GinKey), c)
+	if raw != nil {
+		return raw.(*gin.Context)
+	}
+
+	return nil
 }

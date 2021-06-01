@@ -6,6 +6,7 @@ import { createContext, Suspense } from 'react'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
 import { graphql, usePreloadedQuery } from 'react-relay/hooks'
 import type { RootQuery, RootQueryResponse } from '@//:artifacts/RootQuery.graphql'
+import { Helmet } from 'react-helmet-async'
 
 type Props = {
   prepared: {
@@ -35,6 +36,9 @@ export default function Root (props: Props): Node {
 
   return (
     <RootContext.Provider value={rootQuery}>
+      <Helmet
+        title='overdoll'
+      />
       <Suspense fallback={null}>{props.children}</Suspense>
     </RootContext.Provider>
   )

@@ -14,7 +14,7 @@ type Server struct {
 	app *app.Application
 }
 
-func CreateServer(application *app.Application) *Server {
+func NewGrpcServer(application *app.Application) *Server {
 	return &Server{
 		app: application,
 	}

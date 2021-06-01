@@ -69,7 +69,6 @@ _RUNTIME_DEPS = [
     "@npm//@loadable/webpack-plugin",
     "@npm//@loadable/babel-plugin",
     "@npm//@loadable/component",
-    "@npm//ejs",
     "@npm//helmet",
     "@npm//cookie-parser",
     "@npm//csurf",
@@ -107,6 +106,10 @@ _RUNTIME_DEPS = [
     "@npm//connect-redis",
     "@npm//apollo-server-express",
     "@npm//@apollo/gateway",
+    "@npm//react-helmet-async",
+    "@npm//@hookform/resolvers",
+    "@npm//joi",
+    "@npm//express-handlebars",
     "@npm//ua-parser-js",
     "@npm//swiper",
     "@npm//overlayscrollbars",
@@ -176,7 +179,7 @@ jest_test(
 razzle(
     name = "bundle",
     outs = [
-        "build/chunks.json",
+        "build/assets.json",
         "build/loadable-stats.json",
         "build/public",
         "build/server.js",
@@ -184,6 +187,7 @@ razzle(
     args = [
         "--node_options=--require=./$(location chdir.js)",
         "build",
+        "--noninteractive",
     ],
     data = [
         "copy_static_files",

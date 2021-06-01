@@ -33,11 +33,11 @@ func NewWorker(app *app.Application) worker.Worker {
 	w.RegisterWorkflow(adapters.ReviewPost)
 	w.RegisterWorkflow(adapters.StartPost)
 
-	w.RegisterActivityWithOptions(&app.Activities.CreatePost, activity.RegisterOptions{Name: "CreatePostActivityHandler"})
-	w.RegisterActivityWithOptions(&app.Activities.ReviewPost, activity.RegisterOptions{Name: "ReviewPostActivityHandler"})
-	w.RegisterActivityWithOptions(&app.Activities.NewPendingPost, activity.RegisterOptions{Name: "NewPostActivityHandler"})
-	w.RegisterActivityWithOptions(&app.Activities.PostCustomResources, activity.RegisterOptions{Name: "PostCustomResourcesActivityHandler"})
-	w.RegisterActivityWithOptions(&app.Activities.PostCompleted, activity.RegisterOptions{Name: "PublishPostActivityHandler"})
+	w.RegisterActivityWithOptions(&app.Commands.CreatePost, activity.RegisterOptions{Name: "CreatePostActivityHandler"})
+	w.RegisterActivityWithOptions(&app.Commands.ReviewPost, activity.RegisterOptions{Name: "ReviewPostActivityHandler"})
+	w.RegisterActivityWithOptions(&app.Commands.NewPendingPost, activity.RegisterOptions{Name: "NewPostActivityHandler"})
+	w.RegisterActivityWithOptions(&app.Commands.PostCustomResources, activity.RegisterOptions{Name: "PostCustomResourcesActivityHandler"})
+	w.RegisterActivityWithOptions(&app.Commands.PostCompleted, activity.RegisterOptions{Name: "PublishPostActivityHandler"})
 
 	return w
 }

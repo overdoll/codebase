@@ -10,7 +10,14 @@ import (
 	"time"
 )
 
-func InitializeHttpServer(server *http.Server, shutdown func()) {
+func InitializeHttpServer(addr string, handler http.Handler, shutdown func()) {
+
+	server := &http.Server{
+		Addr:         addr,
+		WriteTimeout: time.Second * 10,
+		ReadTimeout:  time.Second * 10,
+		Handler:      handler,
+	}
 
 	// Start graph_api server
 	log.Printf("http server started on %s", server.Addr)

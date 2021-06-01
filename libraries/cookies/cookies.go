@@ -9,49 +9,59 @@ import (
 	"overdoll/libraries/helpers"
 )
 
+const (
+	CookieKey      = "COOKIE_KEY"
+	CookieBlockKey = "COOKIE_BLOCK_KEY"
+)
+
 // Create Secure Cookies
 // Hash keys should be at least 32 bytes long
 // Block keys should be 16 bytes (AES-128) or 32 bytes (AES-256) long.
 // Shorter keys may weaken the encryption used.
 
 // Set a cookie, encrypt
-func SetCookie(ctx context.Context, cookie *http.Cookie) (bool, error) {
-	var secureCookie = securecookie.New([]byte(os.Getenv("COOKIE_KEY")), []byte(os.Getenv("COOKIE_BLOCK_KEY")))
+func SetCookie(ctx context.Context, cookie *http.Cookie) error {
+
+	cookieKey := os.Getenv(CookieKey)
+	encrypt := cookieKey != ""
 
 	gc := helpers.GinContextFromContext(ctx)
 
 	name := cookie.Name
 	value := cookie.Value
 
-	debug := os.Getenv("APP_DEBUG") == "true"
-
 	// force HttpOnly and Secure on the cookie
 	// Path must be "/" or it wont be available
 	cookie.HttpOnly = true
-	cookie.Secure = true
+
+	// only secure if cookies are encrypted
+	cookie.Secure = encrypt
 	cookie.Path = "/"
 
-	// if we're in debug, we dont encrypt cookies since we want to be able to test easily
-	if debug {
+	if encrypt {
+		var secureCookie = securecookie.New([]byte(cookieKey), []byte(os.Getenv(CookieBlockKey)))
+		encodedValue, err := secureCookie.Encode(name, value)
+
+		if err != nil {
+			return err
+		}
+
+		cookie.Value = encodedValue
+
+	} else {
 		cookie.Value = value
-		http.SetCookie(gc.Writer, cookie)
-		return true, nil
 	}
 
-	encodedValue, err := secureCookie.Encode(name, value)
-	cookie.Value = encodedValue
+	http.SetCookie(gc.Writer, cookie)
 
-	if err == nil {
-		http.SetCookie(gc.Writer, cookie)
-		return true, nil
-	}
-
-	return false, err
+	return nil
 }
 
 // Read cookie
 func ReadCookie(ctx context.Context, name string) (*http.Cookie, error) {
-	var secureCookie = securecookie.New([]byte(os.Getenv("COOKIE_KEY")), []byte(os.Getenv("COOKIE_BLOCK_KEY")))
+
+	cookieKey := os.Getenv(CookieKey)
+	encrypt := cookieKey != ""
 
 	gc := helpers.GinContextFromContext(ctx)
 
@@ -62,17 +72,13 @@ func ReadCookie(ctx context.Context, name string) (*http.Cookie, error) {
 	}
 
 	var value string
-
-	debug := os.Getenv("APP_DEBUG") == "true"
-
-	if debug {
-		return currentCookie, nil
+	if encrypt {
+		var secureCookie = securecookie.New([]byte(cookieKey), []byte(os.Getenv(CookieBlockKey)))
+		if err = secureCookie.Decode(name, currentCookie.Value, &value); err == nil {
+			currentCookie.Value = value
+			return currentCookie, nil
+		}
 	}
 
-	if err = secureCookie.Decode(name, currentCookie.Value, &value); err == nil {
-		currentCookie.Value = value
-		return currentCookie, nil
-	}
-
-	return nil, err
+	return currentCookie, nil
 }

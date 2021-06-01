@@ -31,7 +31,9 @@ const getUserFromEnvironment = environment =>
 const routes: Array<Route> = [
   {
     component: JSResource('Root', () =>
-      import(/* webpackChunkName: "Root" */ './components/routes/Root')
+      import(
+        /* webpackChunkName: "Root" */ './components/routes/Root'
+      )
     ),
     prepare: params => {
       const RootQuery = require('@//:artifacts/RootQuery.graphql')
@@ -138,4 +140,3 @@ const routes: Array<Route> = [
 ]
 
 export default routes
-export type { Route }

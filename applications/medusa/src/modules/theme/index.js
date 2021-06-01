@@ -9,11 +9,9 @@ import { spacing } from './spacing'
 import shadows from './shadows'
 import borders from './borders'
 import transition from './transition'
-import global from './global'
-import input from './components/input'
-import button from './components/button'
-import menu from './components/menu'
+import components from './components'
 import 'overlayscrollbars/css/OverlayScrollbars.css'
+import global from './global'
 
 const theme = extendTheme({
   config: {
@@ -30,14 +28,10 @@ const theme = extendTheme({
   space: spacing,
   borders,
   transition,
+  components
   styles: {
     global
   },
-  components: {
-    Input: input,
-    Button: button,
-    Menu: menu
-  }
 })
 
 export default theme

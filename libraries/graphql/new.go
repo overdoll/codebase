@@ -27,8 +27,6 @@ func HandleGraphQL(schema graphql.ExecutableSchema) gin.HandlerFunc {
 
 		if os.Getenv("APP_DEBUG") == "true" {
 			graphAPIHandler.Use(extension.Introspection{})
-		} else {
-			graphAPIHandler.Use(extension.FixedComplexityLimit(3))
 		}
 
 		graphAPIHandler.AddTransport(transport.POST{})

@@ -6,7 +6,6 @@ import cookieParser from 'cookie-parser'
 import csrf from 'csurf'
 import i18nextMiddleware from 'i18next-http-middleware'
 import i18next from './utilities/i18next'
-import ejs from 'ejs'
 import graphql from './routes/graphql'
 import { matchQueryMiddleware } from 'relay-compiler-plus'
 import queryMapJson from './queries.json'
@@ -14,6 +13,9 @@ import redis from 'redis'
 import connect from 'connect-redis'
 import session from 'express-session'
 import sessionCfg from './config/session'
+import version from './routes/version'
+import hbs from 'express-handlebars'
+import coverage from './routes/coverage'
 
 const index = express()
 
@@ -21,15 +23,18 @@ const index = express()
 index.use(express.static(path.resolve(__dirname, 'public')))
 index.use(express.static(path.resolve(__dirname, '../public')))
 
-// add EJS as the engine
-index.engine('ejs', ejs.renderFile)
-
 index.set('trust proxy', 1)
 
-// Set EJS templating
+// handlebars engine
+index.engine('hbs', hbs({
+  extname: 'hbs',
+  defaultLayout: 'default'
+}))
+
+// Set handlebars templating
 index
-  .set('views', path.join(__dirname, '../src/server/templates'))
-  .set('view engine', 'ejs')
+  .set('views', path.join(__dirname, '../src/server/views'))
+  .set('view engine', 'hbs')
 
 // Add i18next middleware
 index.use(i18nextMiddleware.handle(i18next))
@@ -71,18 +76,23 @@ index.use(middleware.flash())
 
 // add coverage endpoint if in app_debug
 if (process.env.APP_DEBUG) {
-  index.get('/__coverage__', middleware.coverage)
+  index.get('/__coverage__', coverage)
 }
 
+// Version endpoint - used by the client to always stay up-to-date
+index.get('/api/version', version)
+
 // GraphQL Server
-graphql({
+const server = graphql({
   path: '/api/graphql',
   app: index.use(matchQueryMiddleware(queryMapJson))
 })
 
 // Our entrypoint
-index.get('/*', entry)
+index.get('/*', entry(server))
 
-index.use(middleware.error)
+// If an error occurs in the entrypoint, this will catch it
+// usually this is because a server error occurred (a service is down, etc..)
+index.use(middleware.error())
 
 export default index

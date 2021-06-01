@@ -1,15 +1,16 @@
 /**
  * @flow
  */
-import { graphql, useMutation, useSubscription } from 'react-relay/hooks';
-import type { Node } from 'react';
-import { useMemo, useState } from 'react';
-import { Button } from '@//:modules/form';
-import { useTranslation } from 'react-i18next';
-import type { LobbySubscriptionResponse } from '@//:artifacts/LobbySubscription.graphql';
-import Icon from '@//:modules/content/icon/Icon';
-import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/sign-badge-circle-K1i3HA.svg';
-import { Center, Flex, Heading, Text, Box, useToast } from '@chakra-ui/react';
+import { graphql, useMutation, useSubscription } from 'react-relay/hooks'
+import type { Node } from 'react'
+import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import type { LobbySubscriptionResponse } from '@//:artifacts/LobbySubscription.graphql'
+import Icon from '@//:modules/content/icon/Icon'
+import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/sign-badge-circle-K1i3HA.svg'
+import ContentInkPen from '@streamlinehq/streamlinehq/img/streamline-bold/content-ink-pen-jHW3zi.svg'
+import { Box, Center, Flex, Heading, Text, useToast } from '@chakra-ui/react'
+import Button from '@//:modules/form/button'
 
 type Props = {
   onReceive: () => void,
@@ -133,16 +134,14 @@ export default function Lobby (props: Props): Node {
             </Text>
           </Center>
         </Box>
-        <Center>
-          <Button
-            size="lg"
-            loading={isSendingEmail}
-            onClick={onSubmit}
-            disabled={buttonDisabled}
-          >
-            {t('lobby.resend') + (!buttonDisabled ? '' : ` (${timer})`)}
-          </Button>
-        </Center>
+        <Button
+          mt='5'
+          isLoading={isSendingEmail}
+          onClick={onSubmit}
+          disabled={buttonDisabled}
+        >
+          {t('lobby.resend') + (!buttonDisabled ? '' : ` (${timer})`)}
+        </Button>
       </Flex>
     </Center>
   )

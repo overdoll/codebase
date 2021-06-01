@@ -1,7 +1,7 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
-    name = "go_default_library",
+    name = "cookie",
     srcs = [
         "cookie.go",
         "repository.go",
@@ -11,12 +11,12 @@ go_library(
 )
 
 go_test(
-    name = "go_default_test",
+    name = "cookie_test",
     srcs = ["cookie_test.go"],
-    embed = [":go_default_library"],
     deps = [
-        "//libraries/ksuid:go_default_library",
-        "@com_github_stretchr_testify//assert:go_default_library",
-        "@com_github_stretchr_testify//require:go_default_library",
+        ":cookie",
+        "//libraries/uuid",
+        "@com_github_stretchr_testify//assert",
+        "@com_github_stretchr_testify//require",
     ],
 )

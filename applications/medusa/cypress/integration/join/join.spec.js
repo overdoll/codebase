@@ -2,15 +2,8 @@ describe('Join', () => {
   const email = 'artist_verified_test@overdoll.com'
 
   beforeEach(() => {
-    cy.visit('/join')
-
-    cy.get('form')
-      .findByRole('textbox', { name: /email/iu })
-      .type(email)
-
-    cy.get('form')
-      .findByRole('button', { name: /Continue/iu })
-      .click()
+    // second argument wont complete the login
+    cy.login(email, false)
   })
 
   it('asks to check email when joining', () => {

@@ -9,77 +9,61 @@ import (
 	"overdoll/applications/eva/src/app/command"
 	"overdoll/applications/eva/src/domain/cookie"
 	"overdoll/applications/eva/src/domain/user"
-	"overdoll/libraries/helpers"
-	"overdoll/libraries/ksuid"
+	"overdoll/libraries/uuid"
 )
 
-// MOCKS
-type cookieRepoMock struct {
-	Cookie *cookie.Cookie
-}
-
-func (c cookieRepoMock) GetCookieById(ctx context.Context, id string) (*cookie.Cookie, error) {
-	return c.Cookie, nil
-}
-
-func (c cookieRepoMock) DeleteCookieById(ctx context.Context, id string) error {
-	return nil
-}
-
-func (c cookieRepoMock) CreateCookie(ctx context.Context, instance *cookie.Cookie) error {
-	return nil
-}
-
-func (c cookieRepoMock) UpdateCookie(ctx context.Context, instance *cookie.Cookie) error {
-	return nil
-}
-
-// MOCKS
-type userRepoMock struct {
-	User *user.User
-}
-
-func (u userRepoMock) GetUserById(ctx context.Context, id string) (*user.User, error) {
-	return u.User, nil
-}
-
-func (u userRepoMock) GetUserByEmail(ctx context.Context, email string) (*user.User, error) {
-	return u.User, nil
-}
-
-func (u userRepoMock) CreateUser(ctx context.Context, instance *user.User) error {
-	return nil
-}
-
-func TestRedeemCookie_Consume_when_user_exists(t *testing.T) {
+func TestRedeemCookie_Consume_fails_when_cookie_invalid(t *testing.T) {
 	t.Parallel()
 
-	id := ksuid.New().String()
+	id := uuid.New().String()
 
 	ck, err := cookie.NewCookie(id, "test2@test.com", "")
 
 	require.NoError(t, err)
 
-	usr, err := user.NewUser(ksuid.New().String(), "user", "test@test.com")
+	usr, err := user.NewUser(uuid.New().String(), "user", "test@test.com")
 
 	require.NoError(t, err)
 
 	handler := command.NewRedeemCookieHandler(&cookieRepoMock{Cookie: ck}, &userRepoMock{User: usr})
 
-	_, err = handler.Handle(helpers.GinContextWithTesting(context.Background()), id)
+	res, err := handler.Handle(context.Background(), true, "some-random-non-existent-cookie")
+
+	// both response and error are nil when the cookie is invalid
+	assert.Nil(t, res)
+	assert.Nil(t, err)
+}
+
+func TestRedeemCookie_Consume_when_user_exists(t *testing.T) {
+	t.Parallel()
+
+	id := uuid.New().String()
+
+	email := "test2@test.com"
+
+	ck, err := cookie.NewCookie(id, email, "")
 
 	require.NoError(t, err)
 
-	// TODO: doesnt work
+	usr, err := user.NewUser(uuid.New().String(), "user", email)
+
+	require.NoError(t, err)
+
+	handler := command.NewRedeemCookieHandler(&cookieRepoMock{Cookie: ck}, &userRepoMock{User: usr})
+
+	res, err := handler.Handle(context.Background(), true, id)
+
+	require.NoError(t, err)
+
 	// user will be found here, so the cookie should be consumed
-	// assert.True(t, res.Consumed())
+	assert.True(t, res.Consumed())
 }
 
 // A case where we have an auth cookie, but the user doesn't exist (not yet registered)
 func TestRedeemCookie_Consume_false_when_user_not_exists(t *testing.T) {
 	t.Parallel()
 
-	id := ksuid.New().String()
+	id := uuid.New().String()
 
 	ck, err := cookie.NewCookie(id, "test@test.com", "")
 
@@ -87,7 +71,15 @@ func TestRedeemCookie_Consume_false_when_user_not_exists(t *testing.T) {
 
 	handler := command.NewRedeemCookieHandler(&cookieRepoMock{Cookie: ck}, &userRepoMock{User: nil})
 
-	res, err := handler.Handle(helpers.GinContextWithTesting(context.Background()), id)
+	res, err := handler.Handle(context.Background(), false, id)
+
+	require.NoError(t, err)
+
+	// Cookie returned as not consumed
+	assert.False(t, res.Consumed())
+
+	// cookie is redeemed in the same session, so we should get the same output
+	res, err = handler.Handle(context.Background(), true, id)
 
 	require.NoError(t, err)
 

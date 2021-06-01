@@ -1,30 +1,39 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
-    name = "go_default_library",
-    srcs = [
-        "mocks.go",
-        "service.go",
-    ],
+    name = "service",
+    srcs = ["application.go"],
     importpath = "overdoll/applications/sting/src/service",
     visibility = ["//visibility:public"],
     deps = [
-        "//applications/sting/src/adapters:go_default_library",
-        "//applications/sting/src/app:go_default_library",
-        "//applications/sting/src/app/activities:go_default_library",
-        "//applications/sting/src/app/command:go_default_library",
-        "//applications/sting/src/app/query:go_default_library",
-        "//libraries/aws:go_default_library",
-        "//libraries/bootstrap:go_default_library",
-        "//libraries/client:go_default_library",
-        "//libraries/elasticsearch:go_default_library",
-        "//libraries/user:go_default_library",
-        "@io_temporal_go_sdk//client:go_default_library",
+        "//applications/sting/src/adapters",
+        "//applications/sting/src/app",
+        "//applications/sting/src/app/command",
+        "//applications/sting/src/app/query",
+        "//libraries/aws",
+        "//libraries/bootstrap",
+        "//libraries/clients",
+        "//libraries/elasticsearch",
+        "@com_github_spf13_viper//:viper",
+        "@io_temporal_go_sdk//client",
     ],
 )
 
 go_test(
-    name = "go_default_test",
+    name = "service_test",
     srcs = ["component_test.go"],
-    embed = [":go_default_library"],
+    data = ["//applications/sting:config.toml"],
+    deps = [
+        ":service",
+        "//applications/sting/src/ports",
+        "//applications/sting/src/ports/graphql/types",
+        "//libraries/bootstrap",
+        "//libraries/clients",
+        "//libraries/config",
+        "//libraries/passport",
+        "//libraries/tests",
+        "@com_github_shurcool_graphql//:graphql",
+        "@com_github_stretchr_testify//assert",
+        "@com_github_stretchr_testify//require",
+    ],
 )

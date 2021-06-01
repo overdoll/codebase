@@ -8,6 +8,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang/protobuf/proto"
@@ -23,7 +24,10 @@ const (
 	MutationKey    = "PassportContextKey"
 )
 
+// Body - parses graphql requests
 type Body struct {
+	Query      string                 `json:"query,omitempty"`
+	Variables  map[string]interface{} `json:"variables,omitempty"`
 	Extensions struct {
 		Passport string `json:"passport"`
 	}
@@ -60,8 +64,7 @@ func (p *Passport) SerializeToBaseString() string {
 	return base64.StdEncoding.EncodeToString(msg)
 }
 
-// MutatePassport will add the passport to the context, which will eventually be intercepted by an extension
-// and will be added to the response. After that, the serving gateway will propagate the updated passport into the session store
+// MutatePassport will add the passport to the context
 func (p *Passport) MutatePassport(ctx context.Context, updateFn func(*Passport) error) error {
 
 	err := updateFn(p)
@@ -72,7 +75,9 @@ func (p *Passport) MutatePassport(ctx context.Context, updateFn func(*Passport) 
 
 	gc := helpers.GinContextFromContext(ctx)
 
-	gc.Writer.Header().Set(MutationHeader, p.SerializeToBaseString())
+	if gc != nil {
+		gc.Writer.Header().Set(MutationHeader, p.SerializeToBaseString())
+	}
 
 	return nil
 }
@@ -81,6 +86,45 @@ func FreshPassport() *Passport {
 	return &Passport{passport: &libraries_passport_v1.Passport{User: nil}}
 }
 
+func FreshPassportWithUser(id string) *Passport {
+
+	pass := &Passport{passport: &libraries_passport_v1.Passport{User: nil}}
+
+	pass.SetUser(id)
+
+	return pass
+}
+
+// AddToBody is responsible for appending passport to the body of the request
+// mainly used for testing (because usually, our graphql gateway appends the passport to the body)
+func AddToBody(r *http.Request, passport *Passport) error {
+	var body Body
+	var buf bytes.Buffer
+
+	tee := io.TeeReader(r.Body, &buf)
+	err := json.NewDecoder(tee).Decode(&body)
+
+	if err != nil {
+		return err
+	}
+
+	body.Extensions.Passport = passport.SerializeToBaseString()
+
+	encode, err := json.Marshal(body)
+
+	if err != nil {
+		return err
+	}
+
+	r.ContentLength = int64(len(encode))
+
+	r.Body = ioutil.NopCloser(strings.NewReader(string(encode)))
+
+	return nil
+}
+
+// BodyToContext is responsible for parsing the incoming passport and
+// adding it to context so the application can access it
 func BodyToContext(c *gin.Context) *http.Request {
 	var body Body
 	var buf bytes.Buffer
@@ -101,11 +145,10 @@ func BodyToContext(c *gin.Context) *http.Request {
 	return nil
 }
 
-func FromContext(ctx context.Context) *Passport {
-	raw, _ := ctx.Value(MutationKey).(string)
-
+func FromString(raw string) *Passport {
 	if raw != "" {
 		sDec, err := base64.StdEncoding.DecodeString(raw)
+
 		if err != nil {
 			zap.S().Errorf("could not decode passport: %s", err)
 			return FreshPassport()
@@ -123,6 +166,23 @@ func FromContext(ctx context.Context) *Passport {
 		return &Passport{passport: &msg}
 	}
 
+	return nil
+}
+
+func FromContext(ctx context.Context) *Passport {
+	raw, _ := ctx.Value(MutationType(MutationKey)).(string)
+
+	pass := FromString(raw)
+
 	// If there's no passport in the body, we will use a fresh passport so that implementors have something to work with
-	return FreshPassport()
+
+	if pass == nil {
+		return FreshPassport()
+	}
+
+	return pass
+}
+
+func FromResponse(resp *http.Response) *Passport {
+	return FromString(resp.Header.Get(MutationHeader))
 }
