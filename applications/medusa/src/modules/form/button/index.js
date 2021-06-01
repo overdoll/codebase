@@ -15,13 +15,9 @@ type Props = {
 };
 
 export default function Button ({
-  sx,
   loading,
   children,
   disabled,
-  size,
-  variant,
-  colorScheme,
   type,
   ...rest
 }: Props): Node {
