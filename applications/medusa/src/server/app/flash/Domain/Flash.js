@@ -39,7 +39,7 @@ import { format } from 'util'
  * @api public
  */
 
-class Flash {
+export default class Flash {
   constructor (req, options = {}) {
     if (req.session === undefined) throw Error('req.flash() requires sessions')
     this.msgs = req.session.flash || {}
@@ -81,21 +81,5 @@ class Flash {
     }
 
     return this.msgs[key] || []
-  }
-}
-
-/**
- * Expose `flash()` function on requests.
- *
- * @return {Function}
- * @api public
- */
-export default function flash (options) {
-  return (req, res, next) => {
-    if (req.flash) {
-      return next()
-    }
-    req.flash = new Flash(req, options || {})
-    return next()
   }
 }

@@ -6,12 +6,14 @@ import prepass from 'react-ssr-prepass'
 import { renderToString } from 'react-dom/server'
 import createEmotionServer from '@emotion/server/create-instance'
 import createCache from '@emotion/cache'
-import queryMapJson from '../queries.json'
+import queryMapJson from '../../queries.json'
 import { createServerRouter } from '@//:modules/routing/router'
-import routes from '../../client/routes'
-import Bootstrap from '../../client/Bootstrap'
-import createMockHistory from '../utilities/createMockHistory'
-import { EMOTION_CACHE_KEY } from '../../modules/constants/emotion'
+import Bootstrap from '../../../client/Bootstrap'
+import createMockHistory from './Domain/createMockHistory'
+
+import express from 'express'
+import routes from '../../../client/routes'
+import { EMOTION_CACHE_KEY } from '@//:modules/constants/emotion'
 
 // All values listed here will be passed down to the client
 // Don't include anything sensitive
@@ -21,7 +23,7 @@ const runtime = {
 }
 
 // Request handles a basic request and rendering all routes
-async function request (apollo, req, res) {
+async function request (req, res) {
   // Set up relay environment
   const environment = new Environment({
     network: Network.create(async function (params, variables) {
@@ -35,7 +37,7 @@ async function request (apollo, req, res) {
         throw new Error('no query with id found')
       }
 
-      const result = await apollo.executeOperation({
+      const result = await req.apollo.executeOperation({
         operationName: params.name,
         variables: variables,
         query: queryMapJson[params.id]
@@ -158,12 +160,14 @@ async function request (apollo, req, res) {
   })
 }
 
-export default function entry (apollo) {
-  return async function (req, res, next) {
-    try {
-      await request(apollo, req, res)
-    } catch (e) {
-      next(e)
-    }
+const router = express.router()
+
+router.use('/*', async function (req, res, next) {
+  try {
+    await request(req, res)
+  } catch (e) {
+    next(e)
   }
-}
+})
+
+export default router

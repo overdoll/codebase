@@ -1,4 +1,13 @@
+import redis from 'redis'
+import connect from 'connect-redis'
+import session from 'express-session'
+
+const RedisStore = connect(session)
+
 export default {
+  store: new RedisStore({
+    client: redis.createClient({ host: process.env.REDIS_URL, db: 1 })
+  }),
   saveUninitialized: false,
   secret: process.env.SESSION_SECRET,
   resave: false,

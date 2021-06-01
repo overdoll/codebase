@@ -1,7 +1,10 @@
 import { ApolloGateway, RemoteGraphQLDataSource } from '@apollo/gateway'
 import { ApolloServer } from 'apollo-server-express'
-import parseCookies from '../utilities/parseCookies'
-import services from '../config/services'
+import parseCookies from './Domain/parseCookies'
+import services from '../../config/services'
+import { matchQueryMiddleware } from 'relay-compiler-plus'
+import queryMapJson from '../../queries.json'
+import index from '../../index'
 
 // https://github.com/apollographql/apollo-server/issues/3099#issuecomment-671127608 (slightly modified)
 // Forwards cookies from services to our gateway (we place implicit trust on our services that they will use headers in a proper manner)
@@ -61,23 +64,27 @@ class CookieDataSource extends RemoteGraphQLDataSource {
   }
 }
 
-export default config => {
-  const gateway = new ApolloGateway({
-    serviceList: services,
-    persistedQueries: true,
-    buildService ({ url }) {
-      return new CookieDataSource({ url })
-    }
-  })
+const gateway = new ApolloGateway({
+  serviceList: services,
+  persistedQueries: true,
+  buildService ({ url }) {
+    return new CookieDataSource({ url })
+  }
+})
 
-  // GraphQL Server
-  const server = new ApolloServer({
-    gateway,
-    subscriptions: false,
-    context: ({ req, res }) => ({ req, res })
-  })
+// GraphQL Server
+const server = new ApolloServer({
+  gateway,
+  subscriptions: false,
+  context: ({ req, res }) => ({ req, res })
+})
 
-  server.applyMiddleware(config)
+server.applyMiddleware({
+  path: '/api/graphql',
+  app: index.use(matchQueryMiddleware(queryMapJson))
+})
 
-  return server
+export default (req, res, next) => {
+  req.apollo = server
+  return next()
 }
