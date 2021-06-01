@@ -135,6 +135,7 @@ TEST_DEPS = [
     "@npm//@testing-library/jest-dom",
     "@npm//fake-indexeddb",
     "@npm//@testing-library/user-event",
+    "@npm//identity-obj-proxy",
 ]
 
 _SERVER_DEPS = []

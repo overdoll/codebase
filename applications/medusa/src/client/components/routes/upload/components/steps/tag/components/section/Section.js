@@ -58,8 +58,10 @@ export default function Section ({
   return (
     <Flex p={4} borderRadius={10} bg='gray.800' flexDirection='column'>
       <Flex
+        role='button'
         direction='row'
         justify='center'
+        aria-label='Expand'
         onClick={onExpand}
         userSelect='none'
         cursor='pointer'
@@ -76,6 +78,7 @@ export default function Section ({
         <Flex w='20%' justify='flex-end'>
           <IconButton
             aria-label='Expand'
+            role='button'
             variant='ghost'
             size='lg'
             onClick={onExpand}

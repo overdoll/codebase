@@ -11,7 +11,7 @@ import borders from './borders'
 import transition from './transition'
 import components from './components'
 import 'overlayscrollbars/css/OverlayScrollbars.css'
-import global from './global'
+import glob from './global'
 
 const theme = extendTheme({
   config: {
@@ -30,7 +30,7 @@ const theme = extendTheme({
   transition,
   components,
   styles: {
-    global
+    global: glob
   }
 })
 

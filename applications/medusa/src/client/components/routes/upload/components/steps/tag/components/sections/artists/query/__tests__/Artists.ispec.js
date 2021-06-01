@@ -47,7 +47,7 @@ it('should render artists when data is available', async () => {
   const button = screen.getByRole('button')
 
   // expect that we are rendering artists correctly
-  expect(screen.getByText('test-test-id')).toBeVisible()
+  expect(screen.getByText('test')).toBeVisible()
 
   // click on the button to add an existing artist
   userEvent.click(button)

@@ -24,7 +24,7 @@ it('should render tag artists', async () => {
   const button = screen.getByRole('button')
   userEvent.click(button)
 
-  const openButton = screen.getByRole('button', { name: 'opencomponent' })
+  const openButton = screen.getByRole('button', { name: 'Expand' })
 
   // expect that our opened component is visible
   await waitFor(() => expect(openButton).toBeInTheDocument())

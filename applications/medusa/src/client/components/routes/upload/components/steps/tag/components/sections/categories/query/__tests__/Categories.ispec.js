@@ -47,7 +47,7 @@ it('should render categories when data is available', async () => {
   const button = screen.getByRole('button')
 
   // expect that we are rendering artists correctly
-  expect(screen.getByText('test-')).toBeVisible()
+  expect(screen.getByText('test')).toBeVisible()
 
   // click on the button to add an existing artist
   userEvent.click(button)
@@ -94,5 +94,5 @@ it('should show that there are no categories available', async () => {
 
   render(<Root />)
 
-  expect(screen.getByText('no categories found')).toBeVisible()
+  expect(screen.getByText('tag.category.not_found')).toBeVisible()
 })

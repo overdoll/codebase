@@ -53,7 +53,11 @@ it('should render characters when data is available', async () => {
 
   // expect that we are rendering characters correctly
   expect(
-    screen.getByText('test-thumbnailtitle-media-1-thumbnail')
+    screen.getByText('test')
+  ).toBeVisible()
+
+  expect(
+    screen.getByText('title')
   ).toBeVisible()
 
   // click on the button to add an existing artist

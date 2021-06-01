@@ -21,6 +21,7 @@ export default function Element ({
 }: Props): Node {
   return (
     <Flex
+      role='button'
       w={[150, 200, 150]}
       h={[180, 220, 200]}
       onClick={onSelect}
