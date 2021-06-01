@@ -16,7 +16,6 @@ it('should run the parent function when subscription completes with desired resu
 
   const [Root] = withProviders({
     Component: LobbyComponent,
-    routes: [],
     environment: Environment
   })
 

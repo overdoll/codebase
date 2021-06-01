@@ -3,13 +3,14 @@
  */
 import Joi from 'joi'
 import { useTranslation } from 'react-i18next'
-import { Button, FormControl, FormHelperText, FormLabel, Input, InputGroup, InputRightElement } from '@chakra-ui/react'
+import { FormControl, FormHelperText, FormLabel, Input, InputGroup, InputRightElement } from '@chakra-ui/react'
 import Icon from '@//:modules/content/icon/Icon'
 import { useForm } from 'react-hook-form'
 import AlertCircle from '@streamlinehq/streamlinehq/img/streamline-regular/alert-circle-eixfzl.svg'
 import CheckDouble1 from '@streamlinehq/streamlinehq/img/streamline-regular/check-double-1-DeGZdc.svg'
 import { joiResolver } from '@hookform/resolvers/joi'
 import type { Node } from 'react'
+import Button from '@//:modules/form/button'
 
 type RegisterValues = {
   username: string,

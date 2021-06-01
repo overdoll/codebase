@@ -9,7 +9,6 @@ it('joining redirects to lobby, receives a response and asks to register', async
 
   const [Root] = withProviders({
     Component: Join,
-    routes: [],
     environment: Environment
   })
 

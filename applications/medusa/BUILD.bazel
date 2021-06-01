@@ -69,7 +69,6 @@ _RUNTIME_DEPS = [
     "@npm//@loadable/webpack-plugin",
     "@npm//@loadable/babel-plugin",
     "@npm//@loadable/component",
-    "@npm//ejs",
     "@npm//helmet",
     "@npm//cookie-parser",
     "@npm//csurf",
@@ -110,6 +109,7 @@ _RUNTIME_DEPS = [
     "@npm//react-helmet-async",
     "@npm//@hookform/resolvers",
     "@npm//joi",
+    "@npm//express-handlebars",
 ]
 
 TEST_DEPS = [

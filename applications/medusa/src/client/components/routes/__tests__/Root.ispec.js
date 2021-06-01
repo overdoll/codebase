@@ -38,7 +38,6 @@ it('should render the root component children', async () => {
 
   const [RootDefault] = withProviders({
     Component: RootComponent,
-    routes: [],
     environment: Environment
   })
 

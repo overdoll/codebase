@@ -9,7 +9,8 @@ import type { LobbySubscriptionResponse } from '@//:artifacts/LobbySubscription.
 import Icon from '@//:modules/content/icon/Icon'
 import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/sign-badge-circle-K1i3HA.svg'
 import ContentInkPen from '@streamlinehq/streamlinehq/img/streamline-bold/content-ink-pen-jHW3zi.svg'
-import { Box, Center, Flex, Heading, Text, useToast, Button } from '@chakra-ui/react'
+import { Box, Center, Flex, Heading, Text, useToast } from '@chakra-ui/react'
+import Button from '@//:modules/form/button'
 
 type Props = {
   onReceive: () => void,

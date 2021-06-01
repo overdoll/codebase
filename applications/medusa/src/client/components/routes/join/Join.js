@@ -45,7 +45,7 @@ export default function Join (): Node {
   const [commit, isInFlight] = useMutation(JoinAction)
 
   const notify = useToast()
-  const [read, , flush] = useFlash()
+  const { read, flush } = useFlash()
 
   // Receiving a subscription response
   const [authInfo, setAuthInfo] = useState({ authListener: null })

@@ -1,9 +1,12 @@
-import withProviders from '@//:modules/testing/withProviders'
 import Link from '@//:modules/routing/Link'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import JSResource from '@//:modules/utilities/JSResource'
 import { createMockEnvironment } from 'relay-test-utils'
+import { createClientRouter } from '@//:modules/routing/router'
+import { createMemoryHistory } from 'history'
+import RoutingContext from '@//:modules/routing/RoutingContext'
+import RouterRenderer from '../RouteRenderer'
 
 // components to help with testing
 const LinkComponent = () => {
@@ -36,11 +39,20 @@ it('clicking on the link directs to the route', async () => {
     Empty
   ]
 
-  const [Root] = withProviders({
-    routes: routes
-  })
+  const router = createClientRouter(
+    routes,
+    createMemoryHistory({
+      initialEntries: ['/'],
+      initialIndex: 0
+    }),
+    createMockEnvironment()
+  )
 
-  render(<Root />)
+  render(
+    <RoutingContext.Provider value={router.context}>
+      <RouterRenderer />
+    </RoutingContext.Provider>
+  )
 
   await waitFor(() => expect(screen.getByRole('link')).toBeInTheDocument())
 
@@ -72,11 +84,20 @@ it('hovering over the link will preload the component', async () => {
     Empty
   ]
 
-  const [Root] = withProviders({
-    routes: routes
-  })
+  const router = createClientRouter(
+    routes,
+    createMemoryHistory({
+      initialEntries: ['/'],
+      initialIndex: 0
+    }),
+    createMockEnvironment()
+  )
 
-  render(<Root />)
+  render(
+    <RoutingContext.Provider value={router.context}>
+      <RouterRenderer />
+    </RoutingContext.Provider>
+  )
 
   await waitFor(() => expect(screen.getByRole('link')).toBeInTheDocument())
 
@@ -121,12 +142,20 @@ it('mouse down on the link will load code and data', async () => {
     Empty
   ]
 
-  const [Root] = withProviders({
-    routes: routes,
-    environment: Environment
-  })
+  const router = createClientRouter(
+    routes,
+    createMemoryHistory({
+      initialEntries: ['/'],
+      initialIndex: 0
+    }),
+    Environment
+  )
 
-  render(<Root />)
+  render(
+    <RoutingContext.Provider value={router.context}>
+      <RouterRenderer />
+    </RoutingContext.Provider>
+  )
 
   await waitFor(() => expect(screen.getByRole('link')).toBeInTheDocument())
 

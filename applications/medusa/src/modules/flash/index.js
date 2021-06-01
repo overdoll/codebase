@@ -4,15 +4,23 @@
 import type { Node } from 'react'
 import { createContext, useContext, useState } from 'react'
 import CanUseDOM from '@//:modules/utilities/CanUseDOM'
-import SafeJSONParse from '@//:modules/json/json'
+import SafeJSONParse from '@//:modules/utilities/SafeJSONParse'
+
+type Flash = {
+  flash: (key: string, value: string) => void,
+  read: (key: string, first: boolean) => Array<string> | string,
+  flush: (key: string) => void
+}
+
+type FlashOverride = {
+  push: () => void,
+    get: () => void,
+    flush: () => void
+}
 
 type Props = {
   // No flow typings exist for flush (yet) so we create some
-  override?: {
-    push: () => void,
-    get: () => void,
-    flush: () => void
-  },
+  override?: FlashOverride,
   children: Node,
 };
 
@@ -30,7 +38,7 @@ function FlashProvider ({ override, children }: Props): Node {
   const [flashState, editFlashState] = useState(initialState)
 
   // Flash will add the value to the state or the override
-  const flash = (key, value) => {
+  const flash = (key: string, value: string): void => {
     if (override) return override.push(key, value)
 
     if (Object.prototype.hasOwnProperty.call(flashState, key)) {
@@ -41,7 +49,7 @@ function FlashProvider ({ override, children }: Props): Node {
   }
 
   // Read will read the value. By default, returns the first value, but can return an array as well
-  const read = (key, first = true) => {
+  const read = (key: string, first: boolean = true): Array<string> | string => {
     let result
 
     if (override) {
@@ -55,7 +63,7 @@ function FlashProvider ({ override, children }: Props): Node {
 
   // Flush will flush the state (used mainly when passing down on the server)
   // or when "dismissing" on the client-side
-  const flush = key => {
+  const flush = (key: string): void => {
     if (override) return key ? override.flush(key) : override.flush()
 
     if (Object.prototype.hasOwnProperty.call(flashState, key)) {
@@ -72,10 +80,9 @@ function FlashProvider ({ override, children }: Props): Node {
   )
 }
 
-const useFlash = () => {
-  const values = useContext(FlashContext)
-
-  return [values.read, values.flash, values.flush]
+const useFlash = (): Flash => {
+  return useContext(FlashContext)
 }
 
 export { useFlash, FlashProvider }
+export type { FlashOverride }

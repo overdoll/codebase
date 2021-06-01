@@ -1,29 +1,17 @@
 import { ChunkExtractor } from '@loadable/server'
 import { Environment, Network, RecordSource, Store } from 'relay-runtime'
-import { RelayEnvironmentProvider } from 'react-relay/hooks'
 import path from 'path'
 import serialize from 'serialize-javascript'
 import prepass from 'react-ssr-prepass'
-import { HelmetProvider } from 'react-helmet-async'
-
-import { CacheProvider } from '@emotion/react'
 import { renderToString } from 'react-dom/server'
 import createEmotionServer from '@emotion/server/create-instance'
 import createCache from '@emotion/cache'
 import queryMapJson from '../queries.json'
-
-import { QueryParamProvider } from 'use-query-params'
-import { ChakraProvider } from '@chakra-ui/react'
 import { createServerRouter } from '@//:modules/routing/router'
-import createMockHistory from '@//:modules/routing/createMockHistory'
-import CompatibilityRoute from '@//:modules/routing/CompatibilityRoute'
-import RoutingContext from '@//:modules/routing/RoutingContext'
-import RouteRenderer from '@//:modules/routing/RouteRenderer'
 import routes from '../../client/routes'
-import theme from '@//:modules/theme'
-import { FlashProvider } from '@//:modules/flash'
-import { I18nextProvider } from 'react-i18next'
-import { RuntimeProvider } from '@//:modules/runtime'
+import Bootstrap from '../../client/Bootstrap'
+import createMockHistory from '../utilities/createMockHistory'
+import { EMOTION_CACHE_KEY } from '../constants/emotion'
 
 // All values listed here will be passed down to the client
 // Don't include anything sensitive
@@ -32,6 +20,7 @@ const runtime = {
   APP_VERSION: process.env.APP_VERSION
 }
 
+// Request handles a basic request and rendering all routes
 async function request (apollo, req, res) {
   // Set up relay environment
   const environment = new Environment({
@@ -74,25 +63,21 @@ async function request (apollo, req, res) {
   )
 
   const helmetContext = {}
+  const nonce = res.locals.cspNonce
+
+  const cache = createCache({ key: EMOTION_CACHE_KEY, nonce })
+  const { extractCritical } = createEmotionServer(cache)
 
   const App = (
-    <I18nextProvider i18n={req.i18n}>
-      <HelmetProvider context={helmetContext}>
-        <RuntimeProvider initial={runtime}>
-          <FlashProvider override={req.flash}>
-            <ChakraProvider theme={theme}>
-              <RelayEnvironmentProvider environment={environment}>
-                <RoutingContext.Provider value={router.context}>
-                  <QueryParamProvider ReactRouterRoute={CompatibilityRoute}>
-                    <RouteRenderer />
-                  </QueryParamProvider>
-                </RoutingContext.Provider>
-              </RelayEnvironmentProvider>
-            </ChakraProvider>
-          </FlashProvider>
-        </RuntimeProvider>
-      </HelmetProvider>
-    </I18nextProvider>
+    <Bootstrap
+      environment={environment}
+      i18next={req.i18n}
+      emotionCache={cache}
+      routerContext={router.context}
+      runtimeContext={runtime}
+      helmetContext={helmetContext}
+      flash={req.flash}
+    />
   )
 
   // Collect relay App data from our routes, so we have faster initial loading times.
@@ -144,34 +129,27 @@ async function request (apollo, req, res) {
     entrypoints: ['client', ...assets]
   })
 
-  const cache = createCache({ key: 'od', nonce: res.locals.cspNonce })
-  const { extractCritical } = createEmotionServer(cache)
-
-  const element = <CacheProvider value={cache}>{App}</CacheProvider>
-
   const { html, css, ids } = extractCritical(
-    renderToString(extractor.collectChunks(element))
+    renderToString(extractor.collectChunks(App))
   )
 
-  const { helmet } = helmetContext
-
-  res.render('default', {
-    title: helmet.title.toString(),
-    meta: helmet.meta.toString(),
-    link: helmet.link.toString(),
-    manifest: `${process.env.PUBLIC_PATH}manifest.json`,
-    favicon: `${process.env.PUBLIC_PATH}favicon.ico`,
+  res.render('index', {
+    title: helmetContext.helmet.title.toString(),
+    meta: helmetContext.helmet.meta.toString(),
+    link: helmetContext.helmet.link.toString(),
+    publicPath: process.env.PUBLIC_PATH,
     scripts: extractor.getScriptTags(),
     preload: extractor.getLinkTags(),
     styles: extractor.getStyleTags(),
-    nonce: res.locals.cspNonce,
+    nonce,
     emotionIds: ids.join(' '),
     emotionCss: css,
     html,
     csrfToken: req.csrfToken(),
-    relayStore: serialize(environment
-      .getStore()
-      .getSource()
+    relayStore: serialize(
+      environment
+        .getStore()
+        .getSource()
     ),
     runtimeStore: serialize(runtime),
     i18nextStore: serialize(initialI18nStore),

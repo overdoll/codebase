@@ -38,7 +38,6 @@ const queueOperation = resolver => {
 
   return withProviders({
     Component: TokenComponent,
-    routes: [],
     environment: Environment
   })
 }
