@@ -3,7 +3,7 @@ import withProviders from '@//:modules/testing/withProviders'
 import { render, screen } from '@testing-library/react'
 import { loadQuery } from 'react-relay/hooks'
 import RootQuery from '@//:artifacts/RootQuery.graphql'
-import Root from './Root'
+import Root from '../Root'
 
 it('should render the root component children', async () => {
   const Environment = createMockEnvironment()

@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { Center, Flex, Heading, Stack } from '@chakra-ui/react'
 import Button from '@//:modules/form/button'
 
-export default function NotFound (): Node {
+export default function Index (): Node {
   const [t] = useTranslation('empty')
 
   return (

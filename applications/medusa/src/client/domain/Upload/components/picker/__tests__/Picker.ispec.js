@@ -2,7 +2,7 @@ import withProviders from '@//:modules/testing/withProviders'
 import { render, screen, waitFor } from '@testing-library/react'
 import Uppy from '@uppy/core'
 import userEvent from '@testing-library/user-event'
-import Picker from './Picker'
+import Picker from '../Picker'
 
 it('should allow uploading to occur', async () => {
   const select = jest.fn()

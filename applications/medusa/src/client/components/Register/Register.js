@@ -10,7 +10,7 @@ import { useHistory } from '@//:modules/routing'
 import Icon from '@//:modules/content/icon/Icon'
 import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/sign-badge-circle-K1i3HA.svg'
 import { Helmet } from 'react-helmet-async'
-import RegisterForm from './RegisterForm/RegisterForm'
+import RegisterForm from './RegisterForm'
 
 const RegisterMutationGQL = graphql`
   mutation RegisterMutation($data: RegisterInput!) {

@@ -1,27 +1,22 @@
 import { createMockEnvironment, MockPayloadGenerator } from 'relay-test-utils'
 import withProviders from '@//:modules/testing/withProviders'
 import { render, screen } from '@testing-library/react'
+import MediaQuery from '@//:artifacts/MediaQuery.graphql'
+import Media from '../Media'
 import userEvent from '@testing-library/user-event'
-import CharactersQuery from '@//:artifacts/CharactersQuery.graphql'
-import Characters from './Characters'
 
-it('should render characters when data is available', async () => {
+it('should render media when data is available', async () => {
   const Environment = createMockEnvironment()
 
   const variables = { data: { search: '' } }
 
-  Environment.mock.queuePendingOperation(CharactersQuery, variables)
+  Environment.mock.queuePendingOperation(MediaQuery, variables)
 
   const resolver = {
-    Character: (context, generateId) => ({
-      id: `character-${generateId()}`,
-      name: 'test',
-      thumbnail: 'thumbnail',
-      media: {
-        id: 'media-1',
-        title: 'title',
-        thumbnail: 'thumbnail'
-      }
+    Media: (context, generateId) => ({
+      id: `media-${generateId()}`,
+      title: 'test',
+      thumbnail: 'thumbnail'
     })
   }
 
@@ -32,9 +27,9 @@ it('should render characters when data is available', async () => {
 
   const onSelect = jest.fn()
 
-  const CharactersComponent = () => {
+  const MediaComponent = () => {
     return (
-      <Characters
+      <Media
         selected={[]}
         onSelect={onSelect}
         args={{ variables, options: {} }}
@@ -43,7 +38,7 @@ it('should render characters when data is available', async () => {
   }
 
   const [Root] = withProviders({
-    Component: CharactersComponent,
+    Component: MediaComponent,
     environment: Environment
   })
 
@@ -52,50 +47,39 @@ it('should render characters when data is available', async () => {
   const button = screen.getByRole('button')
 
   // expect that we are rendering characters correctly
-  expect(
-    screen.getByText('test')
-  ).toBeVisible()
-
-  expect(
-    screen.getByText('title')
-  ).toBeVisible()
+  expect(screen.getByText('test')).toBeVisible()
 
   // click on the button to add an existing artist
   userEvent.click(button)
 
   // expect that the request went through
   expect(onSelect).toHaveBeenLastCalledWith({
-    id: 'character-1',
-    name: 'test',
-    thumbnail: 'thumbnail',
-    media: {
-      id: 'media-1',
-      title: 'title',
-      thumbnail: 'thumbnail'
-    }
+    id: 'media-1',
+    title: 'test',
+    thumbnail: 'thumbnail'
   })
 })
 
-it('should ask to add a new character when none are available', async () => {
+it('should ask to add a new media when none are available', async () => {
   const Environment = createMockEnvironment()
 
-  const characterName = 'character-example-name'
+  const mediaName = 'media-example-name'
 
-  const variables = { data: { search: characterName } }
+  const variables = { data: { search: mediaName } }
 
-  Environment.mock.queuePendingOperation(CharactersQuery, variables)
+  Environment.mock.queuePendingOperation(MediaQuery, variables)
 
   Environment.mock.queueOperationResolver(operation => ({
     data: {
-      characters: []
+      media: []
     }
   }))
 
   const onSelect = jest.fn()
 
-  const CharactersComponent = () => {
+  const MediaComponent = () => {
     return (
-      <Characters
+      <Media
         selected={[]}
         onSelect={onSelect}
         args={{ variables, options: {} }}
@@ -104,7 +88,7 @@ it('should ask to add a new character when none are available', async () => {
   }
 
   const [Root] = withProviders({
-    Component: CharactersComponent,
+    Component: MediaComponent,
     environment: Environment
   })
 
@@ -112,7 +96,7 @@ it('should ask to add a new character when none are available', async () => {
 
   const button = screen.getByRole('button')
 
-  // expect that we are asking to add a new artist with a button
+  // expect that we are asking to add a new media with a button
   expect(button).toBeVisible()
 
   // click on the button to add a new artist
@@ -120,10 +104,9 @@ it('should ask to add a new character when none are available', async () => {
 
   // expect that the request went through
   expect(onSelect).toHaveBeenLastCalledWith({
-    id: characterName,
-    name: characterName,
+    id: mediaName,
+    title: mediaName,
     thumbnail: null,
-    media: null,
     request: true
   })
 })

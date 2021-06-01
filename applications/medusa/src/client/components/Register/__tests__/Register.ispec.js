@@ -1,5 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react'
-import Register from './Register'
+import Register from '../Register'
 import withProviders from '@//:modules/testing/withProviders'
 import userEvent from '@testing-library/user-event'
 import { createMockEnvironment, MockPayloadGenerator } from 'relay-test-utils'
