@@ -34,7 +34,7 @@ const LobbyEmail = graphql`
   }
 `
 
-export default function Index (props: Props): Node {
+export default function Lobby (props: Props): Node {
   const notify = useToast()
   const [t] = useTranslation('auth')
 

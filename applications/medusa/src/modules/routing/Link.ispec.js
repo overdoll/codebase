@@ -6,7 +6,7 @@ import { createMockEnvironment } from 'relay-test-utils'
 import { createClientRouter } from '@//:modules/routing/router'
 import { createMemoryHistory } from 'history'
 import RoutingContext from '@//:modules/routing/RoutingContext'
-import RouterRenderer from '../RouteRenderer'
+import RouterRenderer from './RouteRenderer'
 
 // components to help with testing
 const LinkComponent = () => {

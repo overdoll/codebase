@@ -1,6 +1,6 @@
 import { createMockEnvironment, MockPayloadGenerator } from 'relay-test-utils'
 import withProviders from '@//:modules/testing/withProviders'
-import Join from '../Join'
+import Join from './Join'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 

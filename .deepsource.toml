@@ -7,14 +7,12 @@ test_patterns = [
     "**/*/*.spec.js",
     "**/*/*.ispec.js",
     "**/*/*.uspec.js",
-    "**/__tests__/**",
     "tests/*_test.go",
     "**/*_test.go",
-    "applications/medusa/src/modules/utilities/__tests__/ErrorBoundary.uspec.js"
 ]
 
 exclude_patterns = [
-    "**/__generated__/**",
+    "applications/medusa/src/__generated__/**",
     ".buildkite/**",
     ".github/**",
     ".patches/**",

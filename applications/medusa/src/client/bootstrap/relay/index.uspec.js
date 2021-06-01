@@ -1,4 +1,4 @@
-import { fetchRelay, subscribe } from '../'
+import { fetchRelay, subscribe } from './index'
 import axios from 'axios'
 import { Observable } from 'relay-runtime'
 

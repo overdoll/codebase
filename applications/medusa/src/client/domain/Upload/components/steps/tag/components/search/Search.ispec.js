@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import Search from '../Search'
+import Search from './Search'
 
 // TODO: broken test..
 // it('should search when input changes', async () => {

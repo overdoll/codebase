@@ -28,7 +28,7 @@ const schema = Joi.object({
     .required()
 })
 
-export default function Index ({ onSubmit, loading }: Props): Node {
+export default function JoinForm ({ onSubmit, loading }: Props): Node {
   const [t] = useTranslation('auth')
 
   const { register, handleSubmit, formState: { errors, isDirty, isSubmitted } } = useForm<JoinValues>({

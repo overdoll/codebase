@@ -2,7 +2,7 @@ import { createMockEnvironment, MockPayloadGenerator } from 'relay-test-utils'
 import withProviders from '@//:modules/testing/withProviders'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import Artists from '../Artists'
+import Artists from './Artists'
 import ArtistsQuery from '@//:artifacts/ArtistsQuery.graphql'
 
 it('should render artists when data is available', async () => {

@@ -1,22 +1,22 @@
 import { createMockEnvironment, MockPayloadGenerator } from 'relay-test-utils'
-import CategoriesQuery from '@//:artifacts/CategoriesQuery.graphql'
 import withProviders from '@//:modules/testing/withProviders'
 import { render, screen } from '@testing-library/react'
+import MediaQuery from '@//:artifacts/MediaQuery.graphql'
+import Media from './Media'
 import userEvent from '@testing-library/user-event'
-import Categories from '../Categories'
 
-it('should render categories when data is available', async () => {
+it('should render media when data is available', async () => {
   const Environment = createMockEnvironment()
 
   const variables = { data: { search: '' } }
 
-  Environment.mock.queuePendingOperation(CategoriesQuery, variables)
+  Environment.mock.queuePendingOperation(MediaQuery, variables)
 
   const resolver = {
-    Category: (context, generateId) => ({
-      id: `category-${generateId()}`,
+    Media: (context, generateId) => ({
+      id: `media-${generateId()}`,
       title: 'test',
-      thumbnail: null
+      thumbnail: 'thumbnail'
     })
   }
 
@@ -27,9 +27,9 @@ it('should render categories when data is available', async () => {
 
   const onSelect = jest.fn()
 
-  const CategoryComponent = () => {
+  const MediaComponent = () => {
     return (
-      <Categories
+      <Media
         selected={[]}
         onSelect={onSelect}
         args={{ variables, options: {} }}
@@ -38,7 +38,7 @@ it('should render categories when data is available', async () => {
   }
 
   const [Root] = withProviders({
-    Component: CategoryComponent,
+    Component: MediaComponent,
     environment: Environment
   })
 
@@ -46,7 +46,7 @@ it('should render categories when data is available', async () => {
 
   const button = screen.getByRole('button')
 
-  // expect that we are rendering artists correctly
+  // expect that we are rendering characters correctly
   expect(screen.getByText('test')).toBeVisible()
 
   // click on the button to add an existing artist
@@ -54,32 +54,32 @@ it('should render categories when data is available', async () => {
 
   // expect that the request went through
   expect(onSelect).toHaveBeenLastCalledWith({
-    id: 'category-1',
+    id: 'media-1',
     title: 'test',
-    thumbnail: null
+    thumbnail: 'thumbnail'
   })
 })
 
-it('should show that there are no categories available', async () => {
+it('should ask to add a new media when none are available', async () => {
   const Environment = createMockEnvironment()
 
-  const categoryName = 'category-example-name'
+  const mediaName = 'media-example-name'
 
-  const variables = { data: { search: categoryName } }
+  const variables = { data: { search: mediaName } }
 
-  Environment.mock.queuePendingOperation(CategoriesQuery, variables)
+  Environment.mock.queuePendingOperation(MediaQuery, variables)
 
   Environment.mock.queueOperationResolver(operation => ({
     data: {
-      categories: []
+      media: []
     }
   }))
 
   const onSelect = jest.fn()
 
-  const CategoryComponent = () => {
+  const MediaComponent = () => {
     return (
-      <Categories
+      <Media
         selected={[]}
         onSelect={onSelect}
         args={{ variables, options: {} }}
@@ -88,11 +88,25 @@ it('should show that there are no categories available', async () => {
   }
 
   const [Root] = withProviders({
-    Component: CategoryComponent,
+    Component: MediaComponent,
     environment: Environment
   })
 
   render(<Root />)
 
-  expect(screen.getByText('tag.category.not_found')).toBeVisible()
+  const button = screen.getByRole('button')
+
+  // expect that we are asking to add a new media with a button
+  expect(button).toBeVisible()
+
+  // click on the button to add a new artist
+  userEvent.click(button)
+
+  // expect that the request went through
+  expect(onSelect).toHaveBeenLastCalledWith({
+    id: mediaName,
+    title: mediaName,
+    thumbnail: null,
+    request: true
+  })
 })

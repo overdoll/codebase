@@ -1,6 +1,6 @@
 import { createMockEnvironment, MockPayloadGenerator } from 'relay-test-utils'
 import withProviders from '@//:modules/testing/withProviders'
-import Token from '../Token'
+import Token from './Token'
 import { render, screen } from '@testing-library/react'
 import { loadQuery } from 'react-relay/hooks'
 

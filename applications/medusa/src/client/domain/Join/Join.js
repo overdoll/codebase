@@ -14,7 +14,7 @@ import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/s
 import type { JoinFragment$key } from '@//:artifacts/JoinFragment.graphql'
 import { useFlash } from '@//:modules/flash'
 import { Helmet } from 'react-helmet-async'
-import JoinForm from './JoinForm'
+import JoinForm from './index'
 
 const JoinAction = graphql`
   mutation JoinMutation($data: AuthenticationInput!) {

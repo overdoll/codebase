@@ -1,22 +1,27 @@
 import { createMockEnvironment, MockPayloadGenerator } from 'relay-test-utils'
 import withProviders from '@//:modules/testing/withProviders'
 import { render, screen } from '@testing-library/react'
-import MediaQuery from '@//:artifacts/MediaQuery.graphql'
-import Media from '../Media'
 import userEvent from '@testing-library/user-event'
+import CharactersQuery from '@//:artifacts/CharactersQuery.graphql'
+import Characters from './Characters'
 
-it('should render media when data is available', async () => {
+it('should render characters when data is available', async () => {
   const Environment = createMockEnvironment()
 
   const variables = { data: { search: '' } }
 
-  Environment.mock.queuePendingOperation(MediaQuery, variables)
+  Environment.mock.queuePendingOperation(CharactersQuery, variables)
 
   const resolver = {
-    Media: (context, generateId) => ({
-      id: `media-${generateId()}`,
-      title: 'test',
-      thumbnail: 'thumbnail'
+    Character: (context, generateId) => ({
+      id: `character-${generateId()}`,
+      name: 'test',
+      thumbnail: 'thumbnail',
+      media: {
+        id: 'media-1',
+        title: 'title',
+        thumbnail: 'thumbnail'
+      }
     })
   }
 
@@ -27,9 +32,9 @@ it('should render media when data is available', async () => {
 
   const onSelect = jest.fn()
 
-  const MediaComponent = () => {
+  const CharactersComponent = () => {
     return (
-      <Media
+      <Characters
         selected={[]}
         onSelect={onSelect}
         args={{ variables, options: {} }}
@@ -38,7 +43,7 @@ it('should render media when data is available', async () => {
   }
 
   const [Root] = withProviders({
-    Component: MediaComponent,
+    Component: CharactersComponent,
     environment: Environment
   })
 
@@ -47,39 +52,50 @@ it('should render media when data is available', async () => {
   const button = screen.getByRole('button')
 
   // expect that we are rendering characters correctly
-  expect(screen.getByText('test')).toBeVisible()
+  expect(
+    screen.getByText('test')
+  ).toBeVisible()
+
+  expect(
+    screen.getByText('title')
+  ).toBeVisible()
 
   // click on the button to add an existing artist
   userEvent.click(button)
 
   // expect that the request went through
   expect(onSelect).toHaveBeenLastCalledWith({
-    id: 'media-1',
-    title: 'test',
-    thumbnail: 'thumbnail'
+    id: 'character-1',
+    name: 'test',
+    thumbnail: 'thumbnail',
+    media: {
+      id: 'media-1',
+      title: 'title',
+      thumbnail: 'thumbnail'
+    }
   })
 })
 
-it('should ask to add a new media when none are available', async () => {
+it('should ask to add a new character when none are available', async () => {
   const Environment = createMockEnvironment()
 
-  const mediaName = 'media-example-name'
+  const characterName = 'character-example-name'
 
-  const variables = { data: { search: mediaName } }
+  const variables = { data: { search: characterName } }
 
-  Environment.mock.queuePendingOperation(MediaQuery, variables)
+  Environment.mock.queuePendingOperation(CharactersQuery, variables)
 
   Environment.mock.queueOperationResolver(operation => ({
     data: {
-      media: []
+      characters: []
     }
   }))
 
   const onSelect = jest.fn()
 
-  const MediaComponent = () => {
+  const CharactersComponent = () => {
     return (
-      <Media
+      <Characters
         selected={[]}
         onSelect={onSelect}
         args={{ variables, options: {} }}
@@ -88,7 +104,7 @@ it('should ask to add a new media when none are available', async () => {
   }
 
   const [Root] = withProviders({
-    Component: MediaComponent,
+    Component: CharactersComponent,
     environment: Environment
   })
 
@@ -96,7 +112,7 @@ it('should ask to add a new media when none are available', async () => {
 
   const button = screen.getByRole('button')
 
-  // expect that we are asking to add a new media with a button
+  // expect that we are asking to add a new artist with a button
   expect(button).toBeVisible()
 
   // click on the button to add a new artist
@@ -104,9 +120,10 @@ it('should ask to add a new media when none are available', async () => {
 
   // expect that the request went through
   expect(onSelect).toHaveBeenLastCalledWith({
-    id: mediaName,
-    title: mediaName,
+    id: characterName,
+    name: characterName,
     thumbnail: null,
+    media: null,
     request: true
   })
 })
