@@ -7,7 +7,7 @@ import RoutingContext from '@//:modules/routing/RoutingContext'
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
 import { keyframes } from '@emotion/react'
 import type { PreparedEntry, RouterInit } from '@//:modules/routing/router'
-import { chakra } from '@chakra-ui/react'
+import { chakra, Progress } from '@chakra-ui/react'
 
 const SUSPENSE_CONFIG = { timeoutMs: 2000 }
 
@@ -114,24 +114,10 @@ export default function RouterRenderer (): Node {
   return (
     <ErrorBoundary>
       <Suspense fallback={null}>
-        {/* Indicate to the user that a transition is pending, even while showing the previous UI */}
-        {isPending
-          ? (
-            <chakra.div
-              sx={{
-                position: 'absolute',
-                zIndex: '1',
-                backgroundColor: '#ffffff',
-                visibility: 'hidden',
-                animation: `0s linear 0.5s forwards ${transition}`
-
-              }}
-            >
-              Loading pending...
-            </chakra.div>
-            )
-          : null}
         {routeComponent}
+        <chakra.div position='fixed' w='100%' top='0' opacity={isPending ? 1 : 0}>
+          <Progress colorScheme='red' size='xs' isIndeterminate />
+        </chakra.div>
       </Suspense>
     </ErrorBoundary>
   )
