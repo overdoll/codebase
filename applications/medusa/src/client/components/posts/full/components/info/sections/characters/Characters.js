@@ -3,7 +3,7 @@
  */
 import type { Node } from 'react'
 import Element
-  from '../../../../../../../../client/components/routes/upload/components/steps/tag/components/element/Element'
+  from '../../../../../../routes/upload/components/steps/tag/components/element/Element'
 import { Wrap } from '@chakra-ui/react'
 
 type Props = {

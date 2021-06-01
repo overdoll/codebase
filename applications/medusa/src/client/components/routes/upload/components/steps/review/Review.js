@@ -10,8 +10,8 @@ import {
   Heading,
   Text
 } from '@chakra-ui/react'
-import FullPost from '@//:modules/content/posts/full/FullPost'
 import { useTranslation } from 'react-i18next'
+import FullPost from '../../../../../posts/full/FullPost'
 
 type Props = {
   state: State,

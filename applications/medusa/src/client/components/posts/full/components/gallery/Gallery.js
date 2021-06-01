@@ -18,8 +18,8 @@ import SwiperCore, { Pagination, Navigation } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/swiper.min.css'
 import 'swiper/components/navigation/navigation.min.css'
-import InspectModal from '@//:modules/content/posts/full/components/modal/InspectModal'
-import ExpandButton from '@//:modules/content/posts/full/components/buttons/ExpandButton'
+import InspectModal from '../modal/InspectModal'
+import ExpandButton from '../buttons/ExpandButton'
 
 SwiperCore.use([Pagination, Navigation])
 

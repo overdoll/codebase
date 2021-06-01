@@ -5,19 +5,19 @@ import type { Node } from 'react'
 import { useState } from 'react'
 import { Avatar, Box, Flex, Skeleton, Text } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
-import Gallery from '@//:modules/content/posts/full/components/gallery/Gallery'
-import PostMenu from '@//:modules/content/posts/full/components/menu/PostMenu'
-import Indexer from '@//:modules/content/posts/full/components/indexer/Indexer'
-import VoteMenu from '@//:modules/content/posts/full/components/vote/VoteMenu'
-import ContextMenu from '@//:modules/content/posts/full/components/context/ContextMenu'
-import TagInfo from '@//:modules/content/posts/full/components/info/TagInfo'
+import Gallery from './components/gallery/Gallery'
+import PostMenu from './components/menu/PostMenu'
+import Indexer from './components/indexer/Indexer'
+import VoteMenu from './components/vote/VoteMenu'
+import ContextMenu from './components/context/ContextMenu'
+import TagInfo from './components/info/TagInfo'
 
 import TravelPlacesTheaterMask
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/travel-places-theater-mask-sjsQG5.svg'
 import ShoppingStoreSignage1
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/shopping-store-signage-1-WGy2xT.svg'
-import Characters from '@//:modules/content/posts/full/components/info/sections/characters/Characters'
-import Categories from '@//:modules/content/posts/full/components/info/sections/categories/Categories'
+import Characters from './components/info/sections/characters/Characters'
+import Categories from './components/info/sections/categories/Categories'
 
 type Props = {
   artist: {

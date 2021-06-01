@@ -1,5 +1,5 @@
 import { Center } from '@chakra-ui/react'
-import FullPost from '@//:modules/content/posts/full/FullPost'
+import FullPost from '../FullPost'
 
 const ArtistAvatar = '/avatar/1pcKa98Yh8UrjoN8b14yodwV8AM.png'
 const PostImage1 = '/posts/1pcKibRoqTAUgmOiNpGLIrztM9R.png'

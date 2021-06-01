@@ -4,7 +4,7 @@
 import type { Node } from 'react'
 import { Flex, IconButton, Heading } from '@chakra-ui/react'
 import { useState } from 'react'
-import InspectModal from '@//:modules/content/posts/full/components/modal/InspectModal'
+import InspectModal from '../modal/InspectModal'
 import Icon from '@//:modules/content/icon/Icon'
 import { createPortal } from 'react-dom'
 import RootElement from '@//:modules/utilities/RootElement'
