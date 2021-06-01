@@ -5,7 +5,7 @@ import type { Node } from 'react'
 import { chakra } from '@chakra-ui/react'
 
 type Props = {
-  fill?: any,
+  fill?: string,
   alt?: string,
   title?: string,
   icon: Node,
@@ -27,7 +27,7 @@ export default function Icon ({
       as={icon}
       sx={{
         path: { stroke: color ?? 'none', fill: fill ?? 'none' },
-        ...sx,
+        ...sx
       }}
       {...rest}
     />
