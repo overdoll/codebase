@@ -10,13 +10,13 @@
  * @param  {array} opts  Any overriding options
  */
 function VideoThumbnails (opts) {
-  this.video
-  this.videoHtml
-  this.videoHeight
-  this.videoWidth
-  this.videoDuration
-  this.videoInterval
-  this.videoStart
+  this.video = null
+  this.videoHtml = null
+  this.videoHeight = 0
+  this.videoWidth = 0
+  this.videoDuration = 0
+  this.videoInterval = 0
+  this.videoStart = 0
   this.completed = 0
   this.captures = []
   this.capturesDetailed = {}
