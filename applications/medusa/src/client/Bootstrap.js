@@ -11,9 +11,9 @@ import { QueryParamProvider } from 'use-query-params'
 import RouterRenderer from '@//:modules/routing/RouteRenderer'
 import type { Router } from '@//:modules/routing/router'
 import type { IEnvironment } from 'relay-runtime/store/RelayStoreTypes'
-import { useHistory, useLocation } from '@//:modules/routing'
 import Display from './Display'
 import { RuntimeProvider } from '@//:modules/runtime'
+import Route from '@//:modules/routing/Route'
 
 type Props = {
   environment: IEnvironment,
@@ -52,7 +52,7 @@ const Bootstrap = ({
         <RelayEnvironmentProvider environment={environment}>
           <RoutingContext.Provider value={routerContext}>
             <QueryParamProvider
-              ReactRouterRoute={({ children }) => children({ history: useHistory(), location: useLocation() })}
+              ReactRouterRoute={Route}
             >
               {children ?? <RouterRenderer />}
             </QueryParamProvider>
