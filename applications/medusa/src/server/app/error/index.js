@@ -52,7 +52,7 @@ export default async function error (err, req, res, next) {
   } catch (e) {
     if (process.env.APP_DEBUG === 'true') {
       console.log(err)
-      next(err)
+      return next(err)
     } else {
       // TODO: report error to sentry
       logger.error({
