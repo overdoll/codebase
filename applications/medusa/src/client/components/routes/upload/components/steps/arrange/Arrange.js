@@ -10,7 +10,7 @@ import File from './components/file/File'
 import type { Dispatch, State } from '@//:types/upload'
 import { EVENTS } from '../../../constants/constants'
 import { useTranslation } from 'react-i18next'
-import Button from '@//:modules/form/button/Button'
+import Button from '@//:modules/form/button'
 import Icon from '@//:modules/content/icon/Icon'
 import AddCircleBoldAlternate
   from '@streamlinehq/streamlinehq/img/streamline-bold/add-circle-bold-alternate-vhjxKz.svg'

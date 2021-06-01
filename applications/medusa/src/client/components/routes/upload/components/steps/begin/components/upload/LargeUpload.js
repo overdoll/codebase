@@ -13,17 +13,14 @@ type Props = {
   onSelect: () => void,
   topText: string,
   botText: string,
-  test
 };
 
 export default function LargeUpload ({
   uppy,
   onSelect,
   topText,
-  botText,
-  test,
+  botText
 }: Props): Node {
-
   return (
     <Center>
       <Box bg='gray.800' w='100%' p={4} mt={8} mb={8} borderRadius={10}>

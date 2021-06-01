@@ -15,7 +15,7 @@ import type {
 } from '@//:artifacts/StepsMutation.graphql'
 import type { Dispatch, State } from '@//:types/upload'
 import { useToast, Flex, Spacer, Center } from '@chakra-ui/react'
-import Button from '@//:modules/form/button/Button'
+import Button from '@//:modules/form/button'
 import { useTranslation } from 'react-i18next'
 import type { Uppy } from '@uppy/core'
 

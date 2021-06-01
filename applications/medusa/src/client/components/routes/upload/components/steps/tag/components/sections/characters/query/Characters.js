@@ -9,7 +9,7 @@ import Element from '../../../element/Element'
 import { Flex, Heading, Wrap } from '@chakra-ui/react'
 import CleaningBroom from '@streamlinehq/streamlinehq/img/streamline-regular/cleaning-broom-fSZbre.svg'
 import Icon from '@//:modules/content/icon/Icon'
-import Button from '@//:modules/form/button/Button'
+import Button from '@//:modules/form/button'
 import { useTranslation } from 'react-i18next'
 
 type Props = {

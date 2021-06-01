@@ -15,7 +15,7 @@ import {
   InputGroup,
   InputLeftElement
 } from '@chakra-ui/react'
-import Button from '@//:modules/form/button/Button'
+import Button from '@//:modules/form/button'
 import { useTranslation } from 'react-i18next'
 import Icon from '@//:modules/content/icon/Icon'
 import SearchCircle from '@streamlinehq/streamlinehq/img/streamline-regular/search-circle-sjsJ8a.svg'
