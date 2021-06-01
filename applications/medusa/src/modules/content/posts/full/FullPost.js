@@ -3,13 +3,7 @@
  */
 import type { Node } from 'react'
 import { useState } from 'react'
-import {
-  Box,
-  Flex,
-  Avatar,
-  Text,
-  Skeleton
-} from '@chakra-ui/react'
+import { Avatar, Box, Flex, Skeleton, Text } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import Gallery from '@//:modules/content/posts/full/components/gallery/Gallery'
 import PostMenu from '@//:modules/content/posts/full/components/menu/PostMenu'
@@ -93,9 +87,7 @@ export default function FullPost ({ artist, files, urls, characters, categories,
                 <Text>{artist.username}</Text>
               </>
               )
-            : (
-              <Skeleton />
-              )}
+            : <Skeleton />}
         </Flex>
         <Box w='100%' h='100%' mt={2} mb={2}>
           <Gallery setSwiper={setSwiper} files={files} urls={urls} />
@@ -104,10 +96,15 @@ export default function FullPost ({ artist, files, urls, characters, categories,
           <ContextMenu
             p={1} h={14}
             leftProps={<VoteMenu onClick={onVote} hasVoted={voted} voteCount={voteCount} disabled={disableContext} />}
-            centerProp={<Indexer
-              length={files.length}
-              currentIndex={swiperIndex}
-                        />} rightProps={<PostMenu disabled={disableContext} />}
+            centerProp={
+              <Indexer
+                length={files.length}
+                currentIndex={swiperIndex}
+              />
+            }
+            rightProps={
+              <PostMenu disabled={disableContext} />
+            }
           />
 
           <Flex mt={4} display={disableContext ? 'none' : 'flex'} direction='row' justify='space-evenly'>
@@ -120,7 +117,6 @@ export default function FullPost ({ artist, files, urls, characters, categories,
               icon={ShoppingStoreSignage1}
             />
           </Flex>
-
         </Flex>
       </Flex>
     </>
