@@ -8,6 +8,8 @@ describe('Register', () => {
   })
 
   it('should be able to register', () => {
+    cy.waitUntil(() => cy.findByRole('button', { name: /Register/iu }).should('not.be.disabled'))
+
     cy.get('form')
       .findByRole('textbox', { name: /username/iu })
       .type(id)
