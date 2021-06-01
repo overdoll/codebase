@@ -1,230 +1,131 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import { useState } from 'react';
+import type { Node } from 'react'
+import { useState } from 'react'
 import {
-  Image,
   Box,
   Flex,
-  Spinner,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalBody,
-  ModalCloseButton,
   Avatar,
   Text,
-  Skeleton,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  IconButton,
-} from '@chakra-ui/react';
-import Icon from '@//:modules/content/icon/Icon';
-import { createPortal } from 'react-dom';
-import RootElement from '@//:modules/utilities/RootElement';
-import { useTranslation } from 'react-i18next';
+  Skeleton
+} from '@chakra-ui/react'
+import { useTranslation } from 'react-i18next'
+import Gallery from '@//:modules/content/posts/full/components/gallery/Gallery'
+import PostMenu from '@//:modules/content/posts/full/components/menu/PostMenu'
+import Indexer from '@//:modules/content/posts/full/components/indexer/Indexer'
+import VoteMenu from '@//:modules/content/posts/full/components/vote/VoteMenu'
+import ContextMenu from '@//:modules/content/posts/full/components/context/ContextMenu'
+import TagInfo from '@//:modules/content/posts/full/components/info/TagInfo'
 
-import SwiperCore, { Pagination, Navigation } from 'swiper';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/swiper.min.css';
-import 'swiper/components/pagination/pagination.min.css';
-import 'swiper/components/navigation/navigation.min.css';
-import NavigationMenuHorizontal2 from '@streamlinehq/streamlinehq/img/streamline-bold/navigation-menu-horizontal-2-J4viN0.svg';
-import RatingStar from '@streamlinehq/streamlinehq/img/streamline-bold/rating-star-gWaXzP.svg';
-
-SwiperCore.use([Pagination, Navigation]);
+import TravelPlacesTheaterMask
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/travel-places-theater-mask-sjsQG5.svg'
+import ShoppingStoreSignage1
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/shopping-store-signage-1-WGy2xT.svg'
+import Characters from '@//:modules/content/posts/full/components/info/sections/characters/Characters'
+import Categories from '@//:modules/content/posts/full/components/info/sections/categories/Categories'
 
 type Props = {
-  data: any,
+  artist: {
+    id: string,
+    username: string,
+    avatar: string,
+  },
+  files: {
+    id: string,
+  },
+  urls: {
+    key: string,
+  },
+  characters: {
+    id: string,
+    name: string,
+    media: {
+      id: string,
+      title: string
+    }
+  },
+  categories: {
+    id: string,
+    title: string,
+  },
+  voteCount: number,
+  hasVoted: boolean,
+  disableContext?: boolean,
 };
 
-export default function FullPost({ data }: Props): Node {
-  const [isOpen, setOpen] = useState(false);
+export default function FullPost ({ artist, files, urls, characters, categories, voteCount, hasVoted, disableContext }: Props): Node {
+  const [voted, setVoted] = useState(hasVoted)
 
-  const [currentSlide, setSlide] = useState(null);
+  const [swiperIndex, setSwiperIndex] = useState(0)
 
-  const [t] = useTranslation('general');
+  const [t] = useTranslation('general')
+
+  const setSwiper = (swiper) => {
+    setSwiperIndex(swiper.activeIndex)
+  }
+
+  const onVote = () => {
+    // TODO handle voting on the backend here
+    setVoted(!voted)
+  }
 
   return (
     <>
       <Flex
-        direction="column"
-        w="100%"
-        maxWidth="lg"
-        h="100%"
-        align="center"
-        display="absolute"
+        direction='column'
+        w='100%'
+        maxWidth='lg'
+        h='100%'
+        align='center'
+        display='absolute'
       >
-        <Flex direction="row" align="center" w="100%">
-          {data.artist ? (
-            <>
-              <Avatar
-                name={data.artist.username}
-                src={data.artist.avatar}
-                size="sm"
-                mr={2}
-              />
-              <Text>{data.artist.username}</Text>
-            </>
-          ) : (
-            <Skeleton />
-          )}
+        <Flex direction='row' align='center' w='100%'>
+          {artist
+            ? (
+              <>
+                <Avatar
+                  name={artist.username}
+                  src={artist.avatar}
+                  size='sm'
+                  mr={2}
+                />
+                <Text>{artist.username}</Text>
+              </>
+              )
+            : (
+              <Skeleton />
+              )}
         </Flex>
-        <Box w="100%" h="100%" mt={2} mb={2}>
-          <Swiper
-            pagination={{
-              clickable: true,
-            }}
-            centeredSlides={true}
-            navigation={true}
-          >
-            {data.files.map((file, index) => {
-              const content = data.urls[file.id];
-
-              return (
-                <SwiperSlide key={file.id}>
-                  <Flex
-                    h="600px"
-                    position="relative"
-                    align="center"
-                    justify="center"
-                    bg="gray.800"
-                  >
-                    {content ? (
-                      <Flex
-                        h="100%"
-                        position="relative"
-                        align="center"
-                        justify="center"
-                      >
-                        <Image
-                          alt="thumbnail"
-                          w="100%"
-                          h="100%"
-                          objectFit="cover"
-                          src={content}
-                        />
-                        <Box
-                          bg="transparent"
-                          w="40%"
-                          h="50%"
-                          position="absolute"
-                          onClick={o => {
-                            setSlide(file.id);
-                            setOpen(true);
-                          }}
-                        />
-                      </Flex>
-                    ) : (
-                      <Spinner size="xl" color="red.500" />
-                    )}
-                  </Flex>
-                </SwiperSlide>
-              );
-            })}
-          </Swiper>
+        <Box w='100%' h='100%' mt={2} mb={2}>
+          <Gallery setSwiper={setSwiper} files={files} urls={urls} />
         </Box>
-        <Flex direction="column" w="100%">
-          <Flex direction="row" justify="space-between" align="center">
-            <IconButton
-              variant="ghost"
-              icon={<Icon icon={RatingStar} w={7} h={7} fill="gray.500" />}
+        <Flex direction='column' w='100%'>
+          <ContextMenu
+            p={1} h={14}
+            leftProps={<VoteMenu onClick={onVote} hasVoted={voted} voteCount={voteCount} disabled={disableContext} />}
+            centerProp={<Indexer
+              length={files.length}
+              currentIndex={swiperIndex}
+                        />} rightProps={<PostMenu disabled={disableContext} />}
+          />
+
+          <Flex mt={4} display={disableContext ? 'none' : 'flex'} direction='row' justify='space-evenly'>
+            <TagInfo
+              displayData={<Characters characters={characters} />} count={characters.length}
+              icon={TravelPlacesTheaterMask}
             />
+            <TagInfo
+              displayData={<Categories categories={categories} />} count={categories.length}
+              icon={ShoppingStoreSignage1}
+            />
+          </Flex>
 
-            <Menu>
-              <MenuButton
-                as={IconButton}
-                icon={
-                  <Icon
-                    icon={NavigationMenuHorizontal2}
-                    w={7}
-                    h={7}
-                    fill="gray.500"
-                  />
-                }
-                variant="ghost"
-              />
-            </Menu>
-          </Flex>
-          <Flex direction="row">
-            <Text color="gray.300" mr={2}>
-              {t('content.characters')}
-            </Text>
-            {data.characters ? (
-              Object.keys(data.characters).map(character => (
-                <Text
-                  color="gray.200"
-                  mr={1}
-                  key={data.characters[character].id}
-                >
-                  {data.characters[character].name} (
-                  {data.characters[character].media.title})
-                </Text>
-              ))
-            ) : (
-              <Skeleton />
-            )}
-          </Flex>
-          <Flex direction="row">
-            <Text color="gray.300" mr={2}>
-              {t('content.categories')}
-            </Text>
-
-            {data.categories ? (
-              Object.keys(data.categories).map(category => (
-                <Text
-                  color="gray.200"
-                  mr={1}
-                  key={data.categories[category].id}
-                >
-                  {data.categories[category].title}
-                </Text>
-              ))
-            ) : (
-              <Skeleton />
-            )}
-          </Flex>
         </Flex>
       </Flex>
-      {createPortal(
-        <Modal
-          isOpen={isOpen}
-          onClose={o => {
-            setOpen(false);
-          }}
-          size="full"
-        >
-          <ModalOverlay />
-          <ModalContent m={0} borderRadius={0} bg="shadows.500">
-            <ModalCloseButton size="lg" />
-            <ModalBody
-              h="100%"
-              w="100%"
-              display="flex"
-              p={0}
-              align="center"
-              justify="center"
-            >
-              <Flex w="100%" align="center" justify="center">
-                {currentSlide ? (
-                  <Image
-                    alt="thumbnail"
-                    h="100%"
-                    objectFit="contain"
-                    src={data.urls[currentSlide]}
-                  />
-                ) : (
-                  <Spinner size="xl" color="red.500" />
-                )}
-              </Flex>
-            </ModalBody>
-          </ModalContent>
-        </Modal>,
-        RootElement,
-      )}
     </>
-  );
+  )
+}
+FullPost.defaultProps = {
+  disableContext: false
 }

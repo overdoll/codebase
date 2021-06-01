@@ -1,12 +1,10 @@
 /**
  * @flow
  */
-import type { Node } from "react";
-import { Draggable } from "react-beautiful-dnd";
-import { Flex, Heading, Text, Skeleton, CloseButton } from "@chakra-ui/react";
-import Close from "@streamlinehq/streamlinehq/img/streamline-bold/close-sjsGBB.svg";
-import Icon from "@//:modules/content/icon/Icon";
-import Thumbnail from "../thumbnail/Thumbnail";
+import type { Node } from 'react'
+import { Draggable } from 'react-beautiful-dnd'
+import { Flex, Heading, Text, Skeleton, CloseButton } from '@chakra-ui/react'
+import Thumbnail from '../thumbnail/Thumbnail'
 
 type Props = {
   file: any,
@@ -16,58 +14,60 @@ type Props = {
   index: number,
 };
 
-export default function File({
+export default function File ({
   file,
   thumbnail,
   progress,
   onRemove,
-  index,
+  index
 }: Props): Node {
   return (
     <Draggable draggableId={file.id} index={index}>
       {(provided, snapshot) => (
         <Flex
-          direction="row"
+          direction='row'
           h={130}
-          bg="gray.800"
+          bg='gray.800'
           borderRadius={5}
           borderWidth={2}
-          overflow="hidden"
-          objectFit="cover"
-          borderColor={snapshot.isDragging ? "teal.500" : "gray.900"}
+          overflow='hidden'
+          objectFit='cover'
+          borderColor={snapshot.isDragging ? 'teal.500' : 'gray.900'}
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
-          <Flex w="8%" justifyContent="center" alignItems="center">
-            <Heading fontSize="lg" color="gray.100">
+          <Flex w='8%' justifyContent='center' alignItems='center'>
+            <Heading fontSize='lg' color='gray.100'>
               {index + 1}
             </Heading>
           </Flex>
-          <Flex w="52%">
+          <Flex w='52%'>
             <Thumbnail thumbnail={thumbnail} progress={progress} />
           </Flex>
-          <Flex w="40%" direction="column">
-            <Flex justifyContent="flex-end">
-              <CloseButton size="md" onClick={() => onRemove(file.id)} />
+          <Flex w='40%' direction='column'>
+            <Flex justifyContent='flex-end'>
+              <CloseButton size='md' onClick={() => onRemove(file.id)} />
             </Flex>
-            <Flex alignItems="center" position="relative" ml={2} mr={2}>
-              <Heading isTruncated fontSize="lg" color="gray.100">
-                {file.id.slice(5).split("/")[0]}
+            <Flex alignItems='center' position='relative' ml={2} mr={2}>
+              <Heading isTruncated fontSize='lg' color='gray.100'>
+                {file.id.slice(5).split('/')[0]}
               </Heading>
             </Flex>
-            <Flex position="relative" ml={2} mr={2}>
-              {progress ? (
-                <Text fontSize="sm" color="gray.100" isTruncated>
-                  {(progress["1"] / 1000000).toFixed(2)} mb
-                </Text>
-              ) : (
-                <Skeleton />
-              )}
+            <Flex position='relative' ml={2} mr={2}>
+              {progress
+                ? (
+                  <Text fontSize='sm' color='gray.100' isTruncated>
+                    {(progress['1'] / 1000000).toFixed(2)} mb
+                  </Text>
+                  )
+                : (
+                  <Skeleton />
+                  )}
             </Flex>
           </Flex>
         </Flex>
       )}
     </Draggable>
-  );
+  )
 }

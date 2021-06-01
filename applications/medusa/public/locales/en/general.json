@@ -15,5 +15,8 @@
     "artists": "Artists",
     "characters": "Characters",
     "categories": "Categories,"
+  },
+  "menu": {
+    "copy_link": "Copy Link"
   }
 }

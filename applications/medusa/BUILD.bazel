@@ -111,6 +111,7 @@ _RUNTIME_DEPS = [
     "@npm//swiper",
     "@npm//overlayscrollbars",
     "@npm//overlayscrollbars-react",
+    "@npm//numbro",
 ]
 
 TEST_DEPS = [

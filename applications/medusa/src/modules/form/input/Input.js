@@ -1,19 +1,18 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
+import type { Node } from 'react'
 import {
-  chakra,
   FormControl,
   FormHelperText,
   FormLabel,
   Flex,
-  Input as ChakraInput,
-} from '@chakra-ui/react';
-import { useFormContext } from 'react-hook-form';
-import Icon from '@//:modules/content/icon/Icon';
-import AlertCircle from '@streamlinehq/streamlinehq/img/streamline-regular/alert-circle-eixfzl.svg';
-import CheckDouble1 from '@streamlinehq/streamlinehq/img/streamline-regular/check-double-1-DeGZdc.svg';
+  Input as ChakraInput
+} from '@chakra-ui/react'
+import { useFormContext } from 'react-hook-form'
+import Icon from '@//:modules/content/icon/Icon'
+import AlertCircle from '@streamlinehq/streamlinehq/img/streamline-regular/alert-circle-eixfzl.svg'
+import CheckDouble1 from '@streamlinehq/streamlinehq/img/streamline-regular/check-double-1-DeGZdc.svg'
 
 type Props = {
   validation?: {},
@@ -39,18 +38,18 @@ export default function Input ({
 
   return (
     <FormControl isInvalid={hasError} id={name}>
-      <Flex position="relative">
+      <Flex position='relative'>
         <FormLabel
           htmlFor={name}
           color={
             !success ? (hasError ? 'orange.500' : 'gray.200') : 'green.600'
           }
-          position="absolute"
-          fontSize="md"
-          fontWeight="md"
+          position='absolute'
+          fontSize='md'
+          fontWeight='md'
           pl={3}
           pt={2}
-          transform="translateX(3.5%)"
+          transform='translateX(3.5%)'
         >
           {title}
         </FormLabel>
@@ -89,7 +88,7 @@ export default function Input ({
           />
         )}
       </Flex>
-      <FormHelperText fontSize="lg" color="orange.300" pl={3} h={9}>
+      <FormHelperText fontSize='lg' color='orange.300' pl={3} h={9}>
         {errors[name]?.message}
       </FormHelperText>
     </FormControl>

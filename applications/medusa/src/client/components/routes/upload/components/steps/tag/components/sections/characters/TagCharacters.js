@@ -1,18 +1,18 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import { useState } from 'react';
-import Characters from './query/Characters';
-import type { Dispatch, State } from '@//:types/upload';
-import { EVENTS } from '../../../../../../constants/constants';
-import Section from '../../section/Section';
-import { createPortal } from 'react-dom';
-import Search from '../../search/Search';
-import RootElement from '@//:modules/utilities/RootElement';
-import Media from './query/Media';
-import { Tag, TagLabel, TagCloseButton, Text } from '@chakra-ui/react';
-import { useTranslation } from 'react-i18next';
+import type { Node } from 'react'
+import { useState } from 'react'
+import Characters from './query/Characters'
+import type { Dispatch, State } from '@//:types/upload'
+import { EVENTS } from '../../../../../../constants/constants'
+import Section from '../../section/Section'
+import { createPortal } from 'react-dom'
+import Search from '../../search/Search'
+import RootElement from '@//:modules/utilities/RootElement'
+import Media from './query/Media'
+import { Tag, TagLabel, TagCloseButton, Text } from '@chakra-ui/react'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
   dispatch: Dispatch,
@@ -22,9 +22,9 @@ type Props = {
 export default function TagCharacters ({ state, dispatch }: Props): Node {
   // state to handle how the new character will be added, when requested
 
-  const [t] = useTranslation('upload');
+  const [t] = useTranslation('upload')
 
-  const [newCharacter, addNewCharacter] = useState(null);
+  const [newCharacter, addNewCharacter] = useState(null)
 
   // OnSelect will remove or add the character based on if it's in the object already or not
   const onSelect = character => {
@@ -43,9 +43,9 @@ export default function TagCharacters ({ state, dispatch }: Props): Node {
     dispatch({
       type: EVENTS.TAG_CHARACTERS,
       remove: true,
-      value: character,
-    });
-  };
+      value: character
+    })
+  }
 
   // When the user selects a media, we send that back up the chain, where we either get a new media, or a current one
   // from our list
@@ -93,24 +93,26 @@ export default function TagCharacters ({ state, dispatch }: Props): Node {
       title={t('tag.character.label')}
       count={Object.keys(state.characters).length}
     >
-      {Object.keys(state.characters).length !== 0 ? (
-        Object.keys(state.characters).map(id => (
-          <Tag
-            key={id}
-            size="lg"
-            variant="solid"
-            colorScheme="green"
-            borderRadius="full"
-          >
-            <TagLabel>{state.characters[id].name}</TagLabel>
-            <TagCloseButton onClick={() => onRemove(state.characters[id])} />
-          </Tag>
-        ))
-      ) : (
-        <Text as="i" fontSize="md">
-          {t('tag.character.empty')}
-        </Text>
-      )}
+      {Object.keys(state.characters).length !== 0
+        ? (
+            Object.keys(state.characters).map(id => (
+              <Tag
+                key={id}
+                size='lg'
+                variant='solid'
+                colorScheme='green'
+                borderRadius='full'
+              >
+                <TagLabel>{state.characters[id].name}</TagLabel>
+                <TagCloseButton onClick={() => onRemove(state.characters[id])} />
+              </Tag>
+            ))
+          )
+        : (
+          <Text as='i' fontSize='md'>
+            {t('tag.character.empty')}
+          </Text>
+          )}
     </Section>
   )
 }

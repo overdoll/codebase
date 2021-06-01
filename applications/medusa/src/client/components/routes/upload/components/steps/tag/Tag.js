@@ -1,13 +1,13 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import TagArtists from './components/sections/artists/TagArtists';
-import TagCharacters from './components/sections/characters/TagCharacters';
-import TagCategories from './components/sections/categories/TagCategories';
-import Thumbnail from '../arrange/components/thumbnail/Thumbnail';
-import type { Dispatch, State } from '@//:types/upload';
-import { useTranslation } from 'react-i18next';
+import type { Node } from 'react'
+import TagArtists from './components/sections/artists/TagArtists'
+import TagCharacters from './components/sections/characters/TagCharacters'
+import TagCategories from './components/sections/categories/TagCategories'
+import Thumbnail from '../arrange/components/thumbnail/Thumbnail'
+import type { Dispatch, State } from '@//:types/upload'
+import { useTranslation } from 'react-i18next'
 import {
   Flex,
   Heading,
@@ -15,9 +15,9 @@ import {
   Stack,
   Alert,
   AlertIcon,
-  AlertDescription,
-} from '@chakra-ui/react';
-import XScrollContainer from './components/scrollable/container/XScrollContainer';
+  AlertDescription
+} from '@chakra-ui/react'
+import XScrollContainer from './components/scrollable/container/XScrollContainer'
 
 type Props = {
   dispatch: Dispatch,
@@ -25,15 +25,15 @@ type Props = {
   disabled: boolean,
 };
 
-export default function Tag({ state, dispatch, disabled }: Props): Node {
-  const [t] = useTranslation('upload');
+export default function Tag ({ state, dispatch, disabled }: Props): Node {
+  const [t] = useTranslation('upload')
 
   return (
-    <Flex direction="column">
-      <Heading fontSize="3xl" color="gray.00" mb={2}>
+    <Flex direction='column'>
+      <Heading fontSize='3xl' color='gray.00' mb={2}>
         {t('tag.header')}
       </Heading>
-      <Text fontSize="lg" color="gray.100">
+      <Text fontSize='lg' color='gray.100'>
         {t('tag.subheader')}
       </Text>
       <XScrollContainer
@@ -55,5 +55,5 @@ export default function Tag({ state, dispatch, disabled }: Props): Node {
         </Alert>
       )}
     </Flex>
-  );
+  )
 }

@@ -1,9 +1,9 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import JSResource from './JSResource';
-import { Image } from '@chakra-ui/react';
+import type { Node } from 'react'
+import JSResource from './JSResource'
+import { Image } from '@chakra-ui/react'
 
 type Props = {
   src: string,
@@ -21,19 +21,18 @@ export default function SuspenseImage (props: Props): Node {
     // value and only load the iamge once.
     const resource = JSResource(src, () => {
       return new Promise(resolve => {
-        const img = new window.Image();
+        const img = new window.Image()
         img.onload = () => {
           resolve(src)
         }
         img.onerror = error => {
-          resolve(src);
-          target;
-        };
-        img.src = src;
-      });
-    });
-    resource.load(); // TODO: JSResource::read() should call load() if necessary
-    resource.read(); // suspends while the image is pending
+          resolve(src)
+        }
+        img.src = src
+      })
+    })
+    resource.load() // TODO: JSResource::read() should call load() if necessary
+    resource.read() // suspends while the image is pending
   }
-  return <Image alt={props.alt} {...rest} />;
+  return <Image alt={props.alt} {...rest} />
 }

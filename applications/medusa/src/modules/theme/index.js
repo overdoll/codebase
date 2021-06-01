@@ -12,6 +12,7 @@ import transition from './transition'
 import global from './global'
 import input from './components/input'
 import button from './components/button'
+import menu from './components/menu'
 import 'overlayscrollbars/css/OverlayScrollbars.css'
 
 const theme = extendTheme({
@@ -34,7 +35,8 @@ const theme = extendTheme({
   },
   components: {
     Input: input,
-    Button: button
+    Button: button,
+    Menu: menu
   }
 })
 

@@ -1,19 +1,19 @@
 /**
  * @flow
  */
-import type { Node } from 'react';
-import Picker from '../../picker/Picker';
-
-import { Flex, Heading, Box, Stack, Text } from '@chakra-ui/react';
-
-import { DragDropContext, Droppable } from 'react-beautiful-dnd';
-import File from './components/file/File';
-import type { Dispatch, State } from '@//:types/upload';
-import { EVENTS } from '../../../constants/constants';
-import { useTranslation } from 'react-i18next';
-import Button from '@//:modules/form/button/Button';
-import Icon from '@//:modules/content/icon/Icon';
-import AddCircleBoldAlternate from '@streamlinehq/streamlinehq/img/streamline-bold/add-circle-bold-alternate-vhjxKz.svg';
+import type { Node } from 'react'
+import Picker from '../../picker/Picker'
+import { Flex, Heading, Box, Stack, Text } from '@chakra-ui/react'
+import type { Uppy } from '@uppy/core'
+import { DragDropContext, Droppable } from 'react-beautiful-dnd'
+import File from './components/file/File'
+import type { Dispatch, State } from '@//:types/upload'
+import { EVENTS } from '../../../constants/constants'
+import { useTranslation } from 'react-i18next'
+import Button from '@//:modules/form/button/Button'
+import Icon from '@//:modules/content/icon/Icon'
+import AddCircleBoldAlternate
+  from '@streamlinehq/streamlinehq/img/streamline-bold/add-circle-bold-alternate-vhjxKz.svg'
 
 type Props = {
   uppy: Uppy,
@@ -88,28 +88,28 @@ export default function Arrange ({
     dispatch({ type: EVENTS.ARRANGE_FILES, value: files })
   }
 
-  const [t] = useTranslation('upload');
+  const [t] = useTranslation('upload')
 
   return (
     <>
-      <Heading fontSize="3xl" color="gray.00" mb={4}>
+      <Heading fontSize='3xl' color='gray.00' mb={4}>
         {t('arrange.header')}
       </Heading>
-      <Box align="right">
-        <Flex mb={2} align="center" justify="space-between">
-          <Text>Posting {state.files.length} media</Text>
+      <Box align='right'>
+        <Flex mb={2} align='center' justify='space-between'>
+          <Text>{t('arrange.count', { count: state.files.length })}</Text>
           <Picker uppy={uppy} onSelect={onAddFiles}>
             <Button
-              leftIcon={<Icon icon={AddCircleBoldAlternate} fill="gray.100" />}
-              size="md"
-              variant="link"
+              leftIcon={<Icon icon={AddCircleBoldAlternate} fill='gray.100' />}
+              size='md'
+              variant='link'
             >
               {t('arrange.add')}
             </Button>
           </Picker>
         </Flex>
         <DragDropContext nonce={window.__webpack_nonce__} onDragEnd={onDragEnd}>
-          <Droppable droppableId="upload">
+          <Droppable droppableId='upload'>
             {(provided, snapshot) => (
               // the list
               <Stack
