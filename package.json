@@ -180,7 +180,7 @@
     "svgo": "^2.3.0",
     "url-loader": "^4.1.1",
     "webpack": "4.46.0",
-    "webpack-bundle-analyzer": "^4.4.0",
+    "webpack-bundle-analyzer": "^4.4.2",
     "webpack-dev-middleware": "^3.7.2",
     "webpack-dev-server": "3.11.0",
     "webpack-hot-middleware": "^2.25.0"
