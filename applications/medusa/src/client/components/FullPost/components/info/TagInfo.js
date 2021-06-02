@@ -2,8 +2,7 @@
  * @flow
  */
 import type { Node } from 'react'
-import { Flex, IconButton, Heading } from '@chakra-ui/react'
-import { useState } from 'react'
+import { Flex, IconButton, Heading, useDisclosure } from '@chakra-ui/react'
 import InspectModal from '../modal/InspectModal'
 import Icon from '@//:modules/content/icon/Icon'
 import { createPortal } from 'react-dom'
@@ -12,15 +11,11 @@ import RootElement from '@//:modules/utilities/RootElement'
 type Props = {
   count: number,
   icon: string,
-  displayData: Node,
+  children: Node,
 }
 
-export default function TagInfo ({ count, icon, displayData }: Props): Node {
-  const [open, setOpen] = useState(false)
-
-  const onOpen = () => {
-    setOpen(!open)
-  }
+export default function TagInfo ({ count, icon, children }: Props): Node {
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
     <>
@@ -46,13 +41,11 @@ export default function TagInfo ({ count, icon, displayData }: Props): Node {
           <Heading color='gray.200' size='sm'>{count}</Heading>
         </Flex>
       </Flex>
-      {open &&
+      {isOpen &&
       createPortal(
         <InspectModal
-          onClose={() => {
-            setOpen(false)
-          }} isOpen={open}
-        >{displayData}
+          onClose={onClose} isOpen={isOpen}
+        >{children}
         </InspectModal>,
         RootElement
       )}

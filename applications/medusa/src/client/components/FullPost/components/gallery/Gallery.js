@@ -5,10 +5,10 @@ import type { Node } from 'react'
 import { useState } from 'react'
 import { createPortal } from 'react-dom'
 import RootElement from '@//:modules/utilities/RootElement'
-
 import {
+  useDisclosure,
   Box,
-  Flex,
+  Flex, IconButton,
   Image,
   Spinner
 
@@ -19,7 +19,12 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/swiper.min.css'
 import 'swiper/components/navigation/navigation.min.css'
 import InspectModal from '../modal/InspectModal'
-import ExpandButton from '../buttons/ExpandButton'
+import Icon from '@//:modules/content/icon/Icon'
+
+import InterfaceArrowsVerticalExpand1
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-arrows-vertical-expand-1-7yVV8A.svg'
+import InterfaceArrowsShrinkVertical
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-arrows-shrink-vertical-PvJl2S.svg'
 
 SwiperCore.use([Pagination, Navigation])
 
@@ -34,7 +39,7 @@ type Props = {
 }
 
 export default function Gallery ({ files, urls, setSwiper }: Props): Node {
-  const [isOpen, setOpen] = useState(false)
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   const [currentSlide, setSlide] = useState(null)
 
@@ -86,7 +91,7 @@ export default function Gallery ({ files, urls, setSwiper }: Props): Node {
                         position='absolute'
                         onClick={() => {
                           setSlide(file.id)
-                          setOpen(true)
+                          onOpen()
                         }}
                       />
                     </Flex>
@@ -101,10 +106,22 @@ export default function Gallery ({ files, urls, setSwiper }: Props): Node {
       </Swiper>
       {createPortal(
         <InspectModal
-          isOpen={isOpen} onClose={() => {
-            setOpen(false)
-          }}
-          supplement={<ExpandButton onClick={() => { setPreviewExpand(!previewExpand) }} isExpanded={previewExpand} />}
+          isOpen={isOpen} onClose={onClose}
+          supplement={<IconButton
+            variant='ghost'
+            w='40px'
+            h='40px'
+            m={2}
+            onClick={() => { previewExpand ? setPreviewExpand(false) : setPreviewExpand(true) }}
+            icon={
+              <Icon
+                icon={!previewExpand ? InterfaceArrowsVerticalExpand1 : InterfaceArrowsShrinkVertical}
+                fill='gray.100'
+                w={4}
+                h={4}
+              />
+            }
+                      />}
         >
 
           {currentSlide

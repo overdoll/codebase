@@ -4,12 +4,10 @@
 import type { Node } from 'react'
 import { useState } from 'react'
 import { Avatar, Box, Flex, Skeleton, Text } from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
 import Gallery from './components/gallery/Gallery'
 import PostMenu from './components/menu/PostMenu'
 import Indexer from './components/indexer/Indexer'
 import VoteMenu from './components/vote/VoteMenu'
-import ContextMenu from './components/context/ContextMenu'
 import TagInfo from './components/info/TagInfo'
 
 import TravelPlacesTheaterMask
@@ -53,8 +51,6 @@ export default function FullPost ({ artist, files, urls, characters, categories,
 
   const [swiperIndex, setSwiperIndex] = useState(0)
 
-  const [t] = useTranslation('general')
-
   const setSwiper = (swiper) => {
     setSwiperIndex(swiper.activeIndex)
   }
@@ -92,30 +88,32 @@ export default function FullPost ({ artist, files, urls, characters, categories,
         <Box w='100%' h='100%' mt={2} mb={2}>
           <Gallery setSwiper={setSwiper} files={files} urls={urls} />
         </Box>
-        <Flex direction='column' w='100%'>
-          <ContextMenu
-            p={1} h={14}
-            leftProps={<VoteMenu onClick={onVote} hasVoted={voted} voteCount={voteCount} disabled={disableContext} />}
-            centerProp={
+        <Flex direction='column' w='100%' p={1} h={14}>
+          <Flex direction='row' justify='space-between' position='relative' align='center'>
+            <Flex h='100%' direction='row'>
+              <VoteMenu onClick={onVote} hasVoted={voted} voteCount={voteCount} disabled={disableContext} />
+            </Flex>
+            <Flex zIndex='hide' h='100%' left={0} right={0} margin='auto' w='100%' justify='center' position='absolute'>
               <Indexer
                 length={files.length}
                 currentIndex={swiperIndex}
               />
-            }
-            rightProps={
+            </Flex>
+            <Flex h='100%' direction='row'>
               <PostMenu disabled={disableContext} />
-            }
-          />
-
+            </Flex>
+          </Flex>
           <Flex mt={4} display={disableContext ? 'none' : 'flex'} direction='row' justify='space-evenly'>
             <TagInfo
-              displayData={<Characters characters={characters} />} count={characters.length}
+              count={characters.length}
               icon={TravelPlacesTheaterMask}
-            />
+            ><Characters characters={characters} />
+            </TagInfo>
             <TagInfo
-              displayData={<Categories categories={categories} />} count={categories.length}
+              count={categories.length}
               icon={ShoppingStoreSignage1}
-            />
+            ><Categories categories={categories} />
+            </TagInfo>
           </Flex>
         </Flex>
       </Flex>
