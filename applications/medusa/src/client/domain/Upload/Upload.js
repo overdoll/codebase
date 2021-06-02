@@ -4,7 +4,7 @@
 import type { Node } from 'react'
 import { useEffect, useReducer } from 'react'
 import Steps from './components/steps/Steps'
-import type { Action, Dispatch, State } from '@//:types/upload'
+import type { Action, State } from '@//:types/upload'
 import { EVENTS, INITIAL_STATE } from './constants/constants'
 import reducer from './reducer'
 import useUpload from './hooks'
@@ -14,7 +14,7 @@ import { Helmet } from 'react-helmet-async'
 // Main upload component - handles all events from Uppy and renders the stepper
 // also contains the main state and is responsible for recovering state when rendered (if state is available)
 export default function Upload (): Node {
-  const [state: State, dispatch: Dispatch] = useReducer<State, Action>(
+  const [state, dispatch] = useReducer<State, Action>(
     reducer,
     INITIAL_STATE
   )
