@@ -18,6 +18,8 @@ comment:
 
 coverage:
   status:
+    # no patch status for now
+    patch: off
     project:
       default:
         informational: true
