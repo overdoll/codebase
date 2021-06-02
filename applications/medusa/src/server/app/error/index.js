@@ -3,7 +3,7 @@ import createEmotionServer from '@emotion/server/create-instance'
 import createCache from '@emotion/cache'
 import Display from '../../../client/Display'
 import i18next from 'i18next'
-import ErrorDisplay from '../../../client/domain/Error/ErrorPage'
+import ErrorDisplay from '../../../client/domain/Error/ErrorPage/ErrorPage'
 import { EMOTION_CACHE_KEY } from '@//:modules/constants/emotion'
 import logger from '../../utilities/logger'
 
@@ -52,7 +52,7 @@ export default async function error (err, req, res, next) {
   } catch (e) {
     if (process.env.APP_DEBUG === 'true') {
       console.log(err)
-      next(err)
+      return next(err)
     } else {
       // TODO: report error to sentry
       logger.error({

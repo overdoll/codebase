@@ -16,6 +16,7 @@ import coverage from './app/coverage'
 import csrfConfig from './config/csrf'
 import flash from './app/flash'
 import helmetConfig from './config/helmet'
+import cookieConfig from './config/cookie'
 import error from './app/error'
 import render from './app/render'
 
@@ -39,7 +40,7 @@ index
 index.use(i18nextMiddleware.handle(i18next))
 
 // cookie-parser
-index.use(cookieParser(process.env.SESSION_SECRET))
+index.use(cookieParser(cookieConfig))
 
 // Generate a Nonce tag
 index.use(nonce)
