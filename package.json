@@ -69,16 +69,16 @@
     "winston": "^3.3.3"
   },
   "scripts": {
-    "relay": "yarn run relay-compiler",
+    "docs": "docsify serve docs",
+    "service:medusa:e2e": "wait-port --wait-for-dns eva:8000 && wait-port --wait-for-dns sting:8000 && cd ./applications/medusa && razzle start",
+    "relay": "cd ./applications/medusa && relay-compiler",
     "graphql": "NODE_TLS_REJECT_UNAUTHORIZED=0 yarn graphql-codegen",
     "analyze": "cd ./applications/medusa && ANALYZE_BUNDLE=true razzle build",
     "proxy:medusa": "telepresence --swap-deployment medusa --run yarn run service:medusa --expose 8080",
-    "service:medusa:e2e": "wait-port --wait-for-dns eva:8000 && wait-port --wait-for-dns sting:8000 && cd ./applications/medusa && razzle start",
     "service:medusa": "cd ./applications/medusa && razzle start",
     "storybook": "cd ./applications/medusa && start-storybook -p 6006 -s public,../../development/assets",
     "test:unit": "bazel coverage --test_output=all //applications/medusa:unit",
     "test:integration": "bazel coverage --test_output=all //applications/medusa:integration",
-    "test:e2e": "cd ./applications/medusa && cypress run -- --record --parallel --key=${CYPRESS_API_KEY} --ci-build-id=${BUILDKITE_BUILD_ID} --config-file=cypress.ci.json",
     "e2e:open": "cd ./applications/medusa && cypress open"
   },
   "browserslist": {
@@ -139,6 +139,7 @@
     "cypress": "^6.8.0",
     "cypress-file-upload": "^5.0.3",
     "cypress-wait-until": "^1.7.1",
+    "docsify-cli": "^4.4.3",
     "dotenv-webpack": "^6.0.0",
     "eslint": "^7.20.0",
     "eslint-config-standard": "^16.0.2",
