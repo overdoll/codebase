@@ -131,7 +131,7 @@ const routes: Array<Route> = [
         exact: false,
         component: JSResource('Empty', () =>
           import(
-            /* webpackChunkName: "Empty" */ './domain/Error/ErrorPage/ErrorPage'
+            /* webpackChunkName: "Empty" */ './domain/Error/NotFound/NotFound'
           )
         )
       }
