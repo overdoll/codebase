@@ -112,7 +112,7 @@
     "@graphql-cli/codegen": "^1.17.17",
     "@graphql-codegen/schema-ast": "^1.18.1",
     "@jest/core": "^26.6.3",
-    "@jest/transform": "^26.6.2",
+    "@jest/transform": "^27.0.2",
     "@loadable/babel-plugin": "^5.13.2",
     "@loadable/webpack-plugin": "^5.14.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
