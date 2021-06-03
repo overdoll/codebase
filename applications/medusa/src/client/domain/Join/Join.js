@@ -4,7 +4,7 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import type { Node } from 'react'
 import { useContext, useState } from 'react'
-import Register from '../Register/Register'
+import Register from '../../components/Register/Register'
 import { useTranslation } from 'react-i18next'
 import Lobby from './Lobby/Lobby'
 import { Alert, AlertDescription, AlertIcon, Center, CloseButton, Flex, useToast } from '@chakra-ui/react'

@@ -4,7 +4,7 @@
 import type { Node } from 'react'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
 import { graphql, usePreloadedQuery } from 'react-relay/hooks'
-import Register from '../Register/Register'
+import Register from '../../components/Register/Register'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from '@//:modules/routing'
 import type { TokenQuery } from '@//:artifacts/TokenQuery.graphql'
