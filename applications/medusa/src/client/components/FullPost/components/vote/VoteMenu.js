@@ -20,16 +20,15 @@ type Props = {
 
 export default function VoteMenu ({ onClick, hasVoted, voteCount, disabled }: Props): Node {
   return (
-    <Flex direction='row' align='center' h='100%' userSelect='none'>
+    <Flex direction='row' align='center' userSelect='none'>
       <IconButton
         borderRadius='full'
-        p={2}
         variant='ghost'
-        h='100%'
         disabled={disabled}
         onClick={onClick}
         icon={
           <Icon
+            p={2}
             icon={hasVoted ? InterfaceYesFavoriteStar : InterfaceNoFavoriteStar} w='inherit' h='inherit'
             color={hasVoted ? 'transparent' : 'gray.500'} fill={hasVoted ? 'red.500' : 'transparent'}
           />

@@ -7,18 +7,24 @@ import Element
 import { Wrap } from '@chakra-ui/react'
 
 type Props = {
-  categories: any,
+  categories: {
+    key: {
+      id: string,
+      title: string,
+      thumbnail: string,
+    }
+  },
 };
 
 export default function Categories ({ categories }: Props): Node {
   return (
     <Wrap justify='center'>
-      {categories.map(item => (
+      {Object.keys(categories).map(item => (
         <Element
-          key={item.id}
+          key={categories[item].id}
           selected={false}
-          title={item.title}
-          thumbnail={item.thumbnail}
+          title={categories[item].title}
+          thumbnail={categories[item].thumbnail}
         />
       ))}
     </Wrap>

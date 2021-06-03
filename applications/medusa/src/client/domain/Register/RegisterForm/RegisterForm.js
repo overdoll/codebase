@@ -76,10 +76,12 @@ export default function RegisterForm ({ onSubmit, loading }: Props): Node {
         </FormHelperText>
       </FormControl>
       <Button
-        size='md'
+        size='xl'
+        variant='outline'
         type='submit'
-        isLoading={loading}
-        width='100%'
+        loading={loading}
+        colorScheme='green'
+        w='100%'
       >
         {t('register.form.submit')}
       </Button>

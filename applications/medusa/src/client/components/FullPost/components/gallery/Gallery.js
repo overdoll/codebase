@@ -14,7 +14,7 @@ import {
 
 } from '@chakra-ui/react'
 
-import SwiperCore, { Pagination, Navigation } from 'swiper'
+import SwiperCore, { Navigation } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/swiper.min.css'
 import 'swiper/components/navigation/navigation.min.css'
@@ -26,7 +26,7 @@ import InterfaceArrowsVerticalExpand1
 import InterfaceArrowsShrinkVertical
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-arrows-shrink-vertical-PvJl2S.svg'
 
-SwiperCore.use([Pagination, Navigation])
+SwiperCore.use([Navigation])
 
 type Props = {
   files: {
@@ -35,22 +35,22 @@ type Props = {
   urls: {
     key: string,
   },
-  setSwiper: any,
+  setSwiper: () => void,
 }
 
 export default function Gallery ({ files, urls, setSwiper }: Props): Node {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const [currentSlide, setSlide] = useState(null)
+  const {
+    isOpen: previewExpand,
+    onToggle: setPreviewExpand
+  } = useDisclosure()
 
-  const [previewExpand, setPreviewExpand] = useState(false)
+  const [currentSlide, setSlide] = useState(null)
 
   return (
     <>
       <Swiper
-        pagination={{
-          clickable: true
-        }}
         centeredSlides
         navigation
         onSlideChange={(swiper) => setSwiper(swiper)}

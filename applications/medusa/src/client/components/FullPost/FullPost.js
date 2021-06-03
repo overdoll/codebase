@@ -3,9 +3,8 @@
  */
 import type { Node } from 'react'
 import { useState } from 'react'
-import { Avatar, Box, Flex, Skeleton, Text } from '@chakra-ui/react'
+import { Avatar, Box, Flex, IconButton, Menu, MenuButton, Skeleton, Text } from '@chakra-ui/react'
 import Gallery from './components/gallery/Gallery'
-import PostMenu from './components/menu/PostMenu'
 import Indexer from './components/indexer/Indexer'
 import VoteMenu from './components/vote/VoteMenu'
 import TagInfo from './components/info/TagInfo'
@@ -14,8 +13,12 @@ import TravelPlacesTheaterMask
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/travel-places-theater-mask-sjsQG5.svg'
 import ShoppingStoreSignage1
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/shopping-store-signage-1-WGy2xT.svg'
+import InterfaceSettingMenuVerticalAlternate
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-setting-menu-vertical-alternate-2aEu7b.svg'
+
 import Characters from './components/info/sections/characters/Characters'
 import Categories from './components/info/sections/categories/Categories'
+import Icon from '@//:modules/content/icon/Icon'
 
 type Props = {
   artist: {
@@ -30,23 +33,28 @@ type Props = {
     key: string,
   },
   characters: {
-    id: string,
-    name: string,
-    media: {
+    key: {
       id: string,
-      title: string
+      name: string,
+      media: {
+        id: string,
+        title: string
+      }
     }
   },
   categories: {
-    id: string,
-    title: string,
+    key: {
+      id: string,
+      title: string,
+      thumbnail: string,
+    }
   },
   voteCount: number,
   hasVoted: boolean,
   disableContext?: boolean,
 };
 
-export default function FullPost ({ artist, files, urls, characters, categories, voteCount, hasVoted, disableContext }: Props): Node {
+export default function FullPost ({ artist, files, urls, characters, categories, voteCount, hasVoted, disableContext, ...rest }: Props): Node {
   const [voted, setVoted] = useState(hasVoted)
 
   const [swiperIndex, setSwiperIndex] = useState(0)
@@ -69,6 +77,7 @@ export default function FullPost ({ artist, files, urls, characters, categories,
         h='100%'
         align='center'
         display='absolute'
+        {...rest}
       >
         <Flex direction='row' align='center' w='100%'>
           {artist
@@ -88,8 +97,8 @@ export default function FullPost ({ artist, files, urls, characters, categories,
         <Box w='100%' h='100%' mt={2} mb={2}>
           <Gallery setSwiper={setSwiper} files={files} urls={urls} />
         </Box>
-        <Flex direction='column' w='100%' p={1} h={14}>
-          <Flex direction='row' justify='space-between' position='relative' align='center'>
+        <Flex direction='column' w='100%' p={1}>
+          <Flex direction='row' justify='space-between' align='center'>
             <Flex h='100%' direction='row'>
               <VoteMenu onClick={onVote} hasVoted={voted} voteCount={voteCount} disabled={disableContext} />
             </Flex>
@@ -100,17 +109,38 @@ export default function FullPost ({ artist, files, urls, characters, categories,
               />
             </Flex>
             <Flex h='100%' direction='row'>
-              <PostMenu disabled={disableContext} />
+              <Menu>
+                <MenuButton
+                  as={IconButton}
+                  borderRadius='full'
+                  disabled={disableContext}
+                  pt={2}
+                  pb={2}
+                  icon={
+                    <Icon
+                      p={2}
+                      w='inherit'
+                      h='inherit'
+                      icon={InterfaceSettingMenuVerticalAlternate}
+                      fill='gray.500'
+                    />
+                  }
+                  variant='ghost'
+                />
+              </Menu>
             </Flex>
           </Flex>
-          <Flex mt={4} display={disableContext ? 'none' : 'flex'} direction='row' justify='space-evenly'>
+          <Flex
+            mt={4} display={disableContext ? 'none' : 'flex'} direction='row'
+            justify='space-evenly'
+          >
             <TagInfo
-              count={characters.length}
+              count={Object.keys(characters).length}
               icon={TravelPlacesTheaterMask}
             ><Characters characters={characters} />
             </TagInfo>
             <TagInfo
-              count={categories.length}
+              count={Object.keys(categories).length}
               icon={ShoppingStoreSignage1}
             ><Categories categories={categories} />
             </TagInfo>

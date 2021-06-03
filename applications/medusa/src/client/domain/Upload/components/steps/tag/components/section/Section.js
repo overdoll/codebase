@@ -7,7 +7,7 @@ import { createPortal } from 'react-dom'
 import RootElement from '@//:modules/utilities/RootElement'
 import Search from '../search/Search'
 import Icon from '@//:modules/content/icon/Icon'
-import { Heading, Flex, IconButton, Wrap } from '@chakra-ui/react'
+import { Heading, Flex, IconButton, Wrap, useDisclosure } from '@chakra-ui/react'
 import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/sign-badge-circle-K1i3HA.svg'
 import ArrowUp1 from '@streamlinehq/streamlinehq/img/streamline-bold/arrow-up-1-PopoM3.svg'
 import ArrowDown1 from '@streamlinehq/streamlinehq/img/streamline-bold/arrow-down-1-n8OIDy.svg'
@@ -30,28 +30,13 @@ export default function Section ({
   count,
   searchTitle
 }: Props): Node {
-  const [open, setOpen] = useState(false)
+  const {
+    isOpen: openSearch,
+    onOpen: onOpenSearch,
+    onClose: onCloseSearch
+  } = useDisclosure()
 
-  const [expand, setExpand] = useState(false)
-
-  const onOpen = () => {
-    setOpen(true)
-  }
-
-  const onClose = () => {
-    setOpen(false)
-  }
-
-  const onExpand = () => {
-    switch (expand) {
-      case true:
-        setExpand(false)
-        break
-      case false:
-        setExpand(true)
-        break
-    }
-  }
+  const { isOpen, onToggle } = useDisclosure()
 
   const [t] = useTranslation('general')
 
@@ -62,7 +47,7 @@ export default function Section ({
         direction='row'
         justify='center'
         aria-label='Expand'
-        onClick={onExpand}
+        onClick={onToggle}
         userSelect='none'
         cursor='pointer'
       >
@@ -81,14 +66,14 @@ export default function Section ({
             role='button'
             variant='ghost'
             size='lg'
-            onClick={onExpand}
-            icon={<Icon icon={expand ? ArrowUp1 : ArrowDown1} fill='gray.50' />}
+            onClick={onToggle}
+            icon={<Icon icon={isOpen ? ArrowUp1 : ArrowDown1} fill='gray.50' />}
             isRound
           />
         </Flex>
       </Flex>
       <Flex
-        display={expand ? 'flex' : 'none'}
+        display={isOpen ? 'flex' : 'none'}
         direction='column'
         align='center'
       >
@@ -96,15 +81,15 @@ export default function Section ({
         <Button
           size='md'
           type='buttons.tertiary.alternate'
-          onClick={onOpen}
+          onClick={onOpenSearch}
           leftIcon={<Icon icon={AddCircle1} fill='gray.50' />}
         >
           {t('button.add')}
         </Button>
-        {open &&
+        {openSearch &&
         createPortal(
-          <Search onClose={onClose} placeholder={searchTitle}>
-            {args => search(args, onClose)}
+          <Search isOpen={openSearch} onClose={onCloseSearch} placeholder={searchTitle}>
+            {args => search(args, onCloseSearch)}
           </Search>,
           RootElement
         )}
