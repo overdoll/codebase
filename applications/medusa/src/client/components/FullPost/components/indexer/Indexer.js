@@ -6,13 +6,18 @@ import { Box, HStack } from '@chakra-ui/react'
 
 type Props = {
   length: number,
-  currentIndex: number
+  currentIndex: number,
+  sidesPerView?: number,
 }
 
-export default function Indexer ({ length, currentIndex }: Props): Node {
+export default function Indexer ({ length, currentIndex, slidesPerView, ...rest }: Props): Node {
+  const calculateIndex = (length) => {
+    return length - (slidesPerView - 1) < 0 ? 1 : length - (slidesPerView - 1)
+  }
+
   return (
-    <HStack align='center' justify='center'>
-      {[...Array(length).keys()].map((key) => {
+    <HStack align='center' justify='center' {...rest}>
+      {[...Array(calculateIndex(length)).keys()].map((key) => {
         return (
           <Box
             w={key === currentIndex ? 2 : 1} h={key === currentIndex ? 2 : 1}
@@ -23,4 +28,7 @@ export default function Indexer ({ length, currentIndex }: Props): Node {
       })}
     </HStack>
   )
+}
+Indexer.defaultProps = {
+  slidesPerView: 1
 }

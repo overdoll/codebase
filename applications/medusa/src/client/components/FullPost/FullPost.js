@@ -3,7 +3,7 @@
  */
 import type { Node } from 'react'
 import { useState } from 'react'
-import { Avatar, Box, Flex, IconButton, Menu, MenuButton, Skeleton, Text } from '@chakra-ui/react'
+import { Avatar, Box, Flex, IconButton, Menu, MenuButton, Skeleton, Text, Wrap } from '@chakra-ui/react'
 import Gallery from './components/gallery/Gallery'
 import Indexer from './components/indexer/Indexer'
 import VoteMenu from './components/vote/VoteMenu'
@@ -15,10 +15,8 @@ import ShoppingStoreSignage1
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/shopping-store-signage-1-WGy2xT.svg'
 import InterfaceSettingMenuVerticalAlternate
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-setting-menu-vertical-alternate-2aEu7b.svg'
-
-import Characters from './components/info/sections/characters/Characters'
-import Categories from './components/info/sections/categories/Categories'
 import Icon from '@//:modules/content/icon/Icon'
+import Element from '../Element/Element'
 
 type Props = {
   artist: {
@@ -137,12 +135,33 @@ export default function FullPost ({ artist, files, urls, characters, categories,
             <TagInfo
               count={Object.keys(characters).length}
               icon={TravelPlacesTheaterMask}
-            ><Characters characters={characters} />
+            >
+              <Wrap justify='center'>
+                {Object.keys(characters).map(item => (
+                  <Element
+                    key={characters[item].id}
+                    selected={false}
+                    title={characters[item].name}
+                    subheader={characters[item].media.title}
+                    thumbnail={characters[item].thumbnail}
+                  />
+                ))}
+              </Wrap>
             </TagInfo>
             <TagInfo
               count={Object.keys(categories).length}
               icon={ShoppingStoreSignage1}
-            ><Categories categories={categories} />
+            >
+              <Wrap justify='center'>
+                {Object.keys(categories).map(item => (
+                  <Element
+                    key={categories[item].id}
+                    selected={false}
+                    title={categories[item].title}
+                    thumbnail={categories[item].thumbnail}
+                  />
+                ))}
+              </Wrap>
             </TagInfo>
           </Flex>
         </Flex>

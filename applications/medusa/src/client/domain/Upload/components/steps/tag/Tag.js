@@ -5,7 +5,6 @@ import type { Node } from 'react'
 import TagArtists from './components/sections/artists/TagArtists'
 import TagCharacters from './components/sections/characters/TagCharacters'
 import TagCategories from './components/sections/categories/TagCategories'
-import Thumbnail from '../arrange/components/thumbnail/Thumbnail'
 import type { Dispatch, State } from '@//:types/upload'
 import { useTranslation } from 'react-i18next'
 import {
@@ -15,7 +14,7 @@ import {
   Stack,
   Alert,
   AlertIcon,
-  AlertDescription
+  AlertDescription, Accordion
 } from '@chakra-ui/react'
 import XScrollContainer from './components/scrollable/container/XScrollContainer'
 
@@ -42,11 +41,14 @@ export default function Tag ({ state, dispatch, disabled }: Props): Node {
         files={state.files}
       />
 
-      <Stack>
-        <TagArtists dispatch={dispatch} state={state} />
-        <TagCharacters dispatch={dispatch} state={state} />
-        <TagCategories dispatch={dispatch} state={state} />
-      </Stack>
+      <Accordion allowToggle>
+        <Stack>
+          <TagArtists dispatch={dispatch} state={state} />
+          <TagCharacters dispatch={dispatch} state={state} />
+          <TagCategories dispatch={dispatch} state={state} />
+
+        </Stack>
+      </Accordion>
       {disabled && (
         <Alert mt={4} mb={4} borderRadius={5}>
           <AlertIcon />

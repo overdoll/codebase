@@ -8,11 +8,11 @@ import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
 import ErrorFallback from '../error/ErrorFallback'
 import LoadingSearch from '../loading/LoadingSearch'
 import {
-  Center, Flex, Input, InputGroup, InputLeftElement, Progress, ModalOverlay,
+  Center, Flex, Input, InputGroup, InputLeftElement, ModalOverlay,
   ModalContent,
   ModalCloseButton,
   ModalBody,
-  ModalHeader, Modal
+  ModalHeader, Modal, Heading
 } from '@chakra-ui/react'
 import Button from '@//:modules/form/button'
 import { useTranslation } from 'react-i18next'
@@ -35,8 +35,8 @@ export default function Search ({
   isOpen
 }: Props): Node {
   const [searchInput, setSearch] = useState('')
-  const [isPending] = useTransition({ timeoutMs: 100000000 })
 
+  // useTransition({ timeoutMs: 100000000 })
   const [queryArgs, setQueryArgs] = useState({
     options: { fetchKey: 0 },
     variables: {
@@ -87,15 +87,6 @@ export default function Search ({
       <ModalContent m={0} borderRadius={0} bg='gray.900'>
         <ModalHeader />
         <ModalCloseButton size='lg' />
-        <Flex w='100%' position='fixed' display='absolute'>
-          {isPending
-            ? (
-              <Progress size='xs' isIndeterminate colorScheme='purple' />
-              )
-            : (
-                ''
-              )}
-        </Flex>
         <ModalBody
           h='100%'
           w='100%'
@@ -118,7 +109,9 @@ export default function Search ({
               display='absolute'
             >
               <Flex direction='column' h='100%' w='100%'>
-                {header}
+                <Flex borderRadius={5} bg='gray.800' pt={3} pb={3} mb={4} justify='center'>
+                  <Heading size='md' color='gray.00' isCentered>{header}</Heading>
+                </Flex>
                 <ErrorBoundary
                   fallback={({ error, reset }) => (
                     <ErrorFallback error={error} reset={reset} refetch={refetch} />
@@ -150,7 +143,6 @@ export default function Search ({
                   value={searchInput}
                   onChange={onChange}
                   variant='filled'
-                  isDisabled={!!isPending}
                   mb={4}
                 />
               </InputGroup>

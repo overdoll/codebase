@@ -6,7 +6,7 @@ import { Image, Flex, Text } from '@chakra-ui/react'
 
 type Props = {
   selected: boolean,
-  onSelect: () => void,
+  onSelect?: () => void,
   thumbnail?: string,
   title?: string,
   subheader?: string,
@@ -33,7 +33,7 @@ export default function Element ({
       objectFit='cover'
       overflow='hidden'
       align='center'
-      cursor='pointer'
+      cursor={onSelect ? 'pointer' : 'auto'}
       userSelect='none'
     >
       <Flex h='100%' w='100%' position='relative'>

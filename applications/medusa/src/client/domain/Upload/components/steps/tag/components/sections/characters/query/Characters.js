@@ -6,11 +6,9 @@ import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import type { CharactersQuery } from '@//:artifacts/CharactersQuery.graphql'
 import type { VariablesOf } from 'relay-runtime'
 import Element from '../../../../../../../../../components/Element/Element'
-import { Flex, Heading, Wrap } from '@chakra-ui/react'
-import CleaningBroom from '@streamlinehq/streamlinehq/img/streamline-regular/cleaning-broom-fSZbre.svg'
-import Icon from '@//:modules/content/icon/Icon'
-import Button from '@//:modules/form/button'
+import { Wrap } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
+import Empty from '../../../search/empty/Empty'
 
 type Props = {
   args: {
@@ -59,30 +57,27 @@ export default function Characters ({ args, onSelect, selected }: Props): Node {
 
   if (data.characters.length === 0) {
     return (
-      <Flex direction='column' align='center' justify='center' h='70%'>
-        <Icon h={100} w={100} icon={CleaningBroom} color='gray.100' mb={8} />
-        <Heading mb={8} color='gray.100' size='lg'>
-          {t('tag.character.not_found')}
-        </Heading>
-        <Button size='lg' onClick={onAddNewCharacter}>
-          {t('tag.character.add') + ' ' + args.variables.data.search}
-        </Button>
-      </Flex>
+      <Empty
+        title={t('tag.character.not_found')} button={`${t('tag.character.add')} ${args.variables.data.search}`}
+        onClick={onAddNewCharacter}
+      />
     )
   }
 
   return (
-    <Wrap justify='center'>
-      {data.characters.map(item => (
-        <Element
-          key={item.id}
-          onSelect={() => onSelect(item)}
-          selected={selected.indexOf(item.id) > -1}
-          title={item.name}
-          subheader={item.media.title}
-          thumbnail={item.thumbnail}
-        />
-      ))}
-    </Wrap>
+    <>
+      <Wrap justify='center'>
+        {data.characters.map(item => (
+          <Element
+            key={item.id}
+            onSelect={() => onSelect(item)}
+            selected={selected.indexOf(item.id) > -1}
+            title={item.name}
+            subheader={item.media.title}
+            thumbnail={item.thumbnail}
+          />
+        ))}
+      </Wrap>
+    </>
   )
 }

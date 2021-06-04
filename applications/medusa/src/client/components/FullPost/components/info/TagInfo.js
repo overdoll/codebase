@@ -5,8 +5,6 @@ import type { Node } from 'react'
 import { Flex, IconButton, Heading, useDisclosure } from '@chakra-ui/react'
 import InspectModal from '../modal/InspectModal'
 import Icon from '@//:modules/content/icon/Icon'
-import { createPortal } from 'react-dom'
-import RootElement from '@//:modules/utilities/RootElement'
 
 type Props = {
   count: number,
@@ -41,14 +39,10 @@ export default function TagInfo ({ count, icon, children }: Props): Node {
           <Heading color='gray.200' size='sm'>{count}</Heading>
         </Flex>
       </Flex>
-      {isOpen &&
-      createPortal(
-        <InspectModal
-          onClose={onClose} isOpen={isOpen}
-        >{children}
-        </InspectModal>,
-        RootElement
-      )}
+      <InspectModal
+        onClose={onClose} isOpen={isOpen}
+      >{children}
+      </InspectModal>
     </>
   )
 }

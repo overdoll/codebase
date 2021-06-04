@@ -3,8 +3,6 @@
  */
 import type { Node } from 'react'
 import { useState } from 'react'
-import { createPortal } from 'react-dom'
-import RootElement from '@//:modules/utilities/RootElement'
 import {
   useDisclosure,
   Box,
@@ -104,42 +102,39 @@ export default function Gallery ({ files, urls, setSwiper }: Props): Node {
           )
         })}
       </Swiper>
-      {createPortal(
-        <InspectModal
-          isOpen={isOpen} onClose={onClose}
-          supplement={<IconButton
-            variant='ghost'
-            w='40px'
-            h='40px'
-            m={2}
-            onClick={() => { previewExpand ? setPreviewExpand(false) : setPreviewExpand(true) }}
-            icon={
-              <Icon
-                icon={!previewExpand ? InterfaceArrowsVerticalExpand1 : InterfaceArrowsShrinkVertical}
-                fill='gray.100'
-                w={4}
-                h={4}
-              />
-            }
-                      />}
-        >
+      <InspectModal
+        isOpen={isOpen} onClose={onClose}
+        supplement={<IconButton
+          variant='ghost'
+          w='40px'
+          h='40px'
+          m={2}
+          onClick={() => { previewExpand ? setPreviewExpand(false) : setPreviewExpand(true) }}
+          icon={
+            <Icon
+              icon={!previewExpand ? InterfaceArrowsVerticalExpand1 : InterfaceArrowsShrinkVertical}
+              fill='gray.100'
+              w={4}
+              h={4}
+            />
+          }
+                    />}
+      >
 
-          {currentSlide
-            ? (
-              <Image
-                alt='thumbnail'
-                h={!previewExpand ? '100%' : 'auto'}
-                w={!previewExpand ? 'auto' : '100%'}
-                objectFit={!previewExpand ? 'contain' : 'cover'}
-                src={urls[currentSlide]}
-              />
-              )
-            : (
-              <Spinner size='xl' color='red.500' />
-              )}
-        </InspectModal>,
-        RootElement
-      )}
+        {currentSlide
+          ? (
+            <Image
+              alt='thumbnail'
+              h={!previewExpand ? '100%' : 'auto'}
+              w={!previewExpand ? 'auto' : '100%'}
+              objectFit={!previewExpand ? 'contain' : 'cover'}
+              src={urls[currentSlide]}
+            />
+            )
+          : (
+            <Spinner size='xl' color='red.500' />
+            )}
+      </InspectModal>
     </>
   )
 }

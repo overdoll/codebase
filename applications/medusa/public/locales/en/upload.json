@@ -31,7 +31,13 @@
       "empty": "No characters selected",
       "search": "Search for a character",
       "not_found": "No characters found",
-      "add": "Add character"
+      "add": "Add character",
+      "media": {
+        "selected": "Select the media that the character {{character}} belongs to",
+        "search": "Search Media",
+        "not_found": "No media found",
+        "add": "Add media"
+      }
     },
     "category": {
       "label": "Categories",
