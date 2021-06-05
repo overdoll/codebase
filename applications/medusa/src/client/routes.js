@@ -63,7 +63,7 @@ const routes: Array<Route> = [
           ({ environment, history }) => {
             const user = getUserFromEnvironment(environment)
 
-            if (user !== undefined) {
+            if (user) {
               history.push('/profile')
               return false
             }
@@ -86,7 +86,7 @@ const routes: Array<Route> = [
           ({ environment, history }) => {
             const user = getUserFromEnvironment(environment)
 
-            if (user === undefined) {
+            if (!user) {
               history.push('/join')
               return false
             }
@@ -121,7 +121,7 @@ const routes: Array<Route> = [
           ({ environment, history }) => {
             const user = getUserFromEnvironment(environment)
 
-            if (user !== undefined) {
+            if (user) {
               history.push('/profile')
               return false
             }
