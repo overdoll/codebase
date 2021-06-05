@@ -118,15 +118,16 @@ class Resource {
  *
  * @param {*} moduleId A globally unique identifier for the resource used for caching
  * @param {*} loader A method to load the resource's data if necessary
+ * @param {*} hot a boolean which will force load it everytime
  */
-export default function JSResource (moduleId: string, loader: Loader): Resource {
+export default function JSResource (moduleId: string, loader: Loader, hot: boolean = false): Resource {
   // On the server side, we want to always create a new instance, because it won't refresh with changes
-  if (!CanUseDOM) {
+  if (!CanUseDOM || hot) {
     return new Resource(loader, moduleId)
   }
 
   // If in webpack HMR mode, update the resource map everytime
-  let resource = module.hot ? null : resourceMap.get(moduleId)
+  let resource = resourceMap.get(moduleId)
 
   if (!resource) {
     resource = new Resource(loader, moduleId)

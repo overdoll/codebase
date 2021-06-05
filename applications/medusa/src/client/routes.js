@@ -33,7 +33,8 @@ const routes: Array<Route> = [
     component: JSResource('Root', () =>
       import(
         /* webpackChunkName: "Root" */ './domain/Root/Root'
-      )
+      ),
+    module.hot
     ),
     prepare: params => {
       const RootQuery = require('@//:artifacts/RootQuery.graphql')
@@ -54,7 +55,8 @@ const routes: Array<Route> = [
         component: JSResource('JoinRoot', () =>
           import(
             /* webpackChunkName: "JoinRoot" */ './domain/Join/Join'
-          )
+          ),
+        module.hot
         ),
         // When user is logged in, we just want to redirect them since they're already "logged in"
         middleware: [
@@ -76,7 +78,8 @@ const routes: Array<Route> = [
         component: JSResource('UploadRoot', () =>
           import(
             /* webpackChunkName: "UploadRoot" */ './domain/Upload/Upload'
-          )
+          ),
+        module.hot
         ),
         // If user is not logged in, they can't post - so we redirect to join page
         middleware: [
@@ -98,7 +101,8 @@ const routes: Array<Route> = [
         component: JSResource('TokenRoot', () =>
           import(
             /* webpackChunkName: "TokenRoot" */ './domain/Token/Token'
-          )
+          ),
+        module.hot
         ),
         prepare: params => {
           const TokenQuery = require('@//:artifacts/TokenQuery.graphql')
@@ -132,7 +136,8 @@ const routes: Array<Route> = [
         component: JSResource('Empty', () =>
           import(
             /* webpackChunkName: "Empty" */ './domain/Error/NotFound/NotFound'
-          )
+          ),
+        module.hot
         )
       }
     ]
