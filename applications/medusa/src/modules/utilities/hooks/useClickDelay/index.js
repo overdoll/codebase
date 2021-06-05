@@ -4,7 +4,11 @@
 
 import { useState, useEffect } from 'react'
 
-export default function useClickDelay (storageVariableName = 'hasClickDelay') {
+type Props = {
+  storageVariableName: string,
+}
+
+export default function useClickDelay ({ storageVariableName }: Props) {
   const [currentTimer, setTimer] = useState(0)
   const [isTimedOut, setTimedOut] = useState(false)
   const [localVariable, setLocalVariable] = useState('empty')

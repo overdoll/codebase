@@ -5,7 +5,7 @@
 import { Node } from 'react'
 import { Flex, Heading, IconButton } from '@chakra-ui/react'
 import Icon from '@//:modules/content/icon/Icon'
-import numbro from 'numbro'
+import { abbreviateNumber } from '@//:modules/utilities/functions'
 
 import InterfaceNoFavoriteStar
   from '@streamlinehq/streamlinehq/img/streamline-mini-line/interface-favorite-star-rjt73d.svg'
@@ -38,7 +38,7 @@ export default function VoteMenu ({ onClick, hasVoted, voteCount, disabled }: Pr
         display={disabled ? 'none' : 'initial'} color={hasVoted ? 'red.500' : 'gray.500'} pl={2}
         mt={1} size='lg'
       >
-        {numbro(voteCount).format({ average: true, mantissa: 1, optionalMantissa: true })}
+        {abbreviateNumber(voteCount, 2)}
       </Heading>
     </Flex>
   )

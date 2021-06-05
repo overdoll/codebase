@@ -31,15 +31,15 @@ export default function XScrollContainer ({
         spaceBetween={10} slidesPerView={3}
         onSlideChange={(swiper) => setSwiperIndex(swiper.activeIndex)}
       >
-        {files.map(file => {
-          return (
+        {files.map(file =>
+          (
             <SwiperSlide key={file.id}>
               <Flex h={170}>
                 <Thumbnail thumbnail={thumbnails[file.id]} progress={progress} />
               </Flex>
             </SwiperSlide>
           )
-        })}
+        )}
       </Swiper>
       <Indexer
         mt={4} mb={2} length={files.length} slidesPerView={3}
