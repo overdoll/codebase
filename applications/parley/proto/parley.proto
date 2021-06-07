@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package applications.grpc.parley.v1;
+
+message Moderator {
+  string id = 1;
+}
+
+message GetModeratorRequest {}
+
+service Parley {
+  rpc GetNextModerator(GetModeratorRequest) returns (Moderator);
+}
