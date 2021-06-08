@@ -40,8 +40,9 @@ type MediaRequest struct {
 }
 
 type PostPending struct {
-	id    string
-	state PostPendingState
+	id          string
+	moderatorId string
+	state       PostPendingState
 
 	characters []*Character
 	categories []*Category
@@ -58,9 +59,10 @@ type PostPending struct {
 	generatedIds       []string
 }
 
-func NewPendingPost(id string, artist *Artist, contributor *user.User, content []string, characters []*Character, categories []*Category) (*PostPending, error) {
+func NewPendingPost(id, moderatorId string, artist *Artist, contributor *user.User, content []string, characters []*Character, categories []*Category) (*PostPending, error) {
 	return &PostPending{
 		id:          id,
+		moderatorId: moderatorId,
 		state:       Publishing,
 		artist:      artist,
 		contributor: contributor,
@@ -71,10 +73,11 @@ func NewPendingPost(id string, artist *Artist, contributor *user.User, content [
 	}, nil
 }
 
-func UnmarshalPendingPostFromDatabase(id, state string, artist *Artist, contributorId string, content []string, characters []*Character, categories []*Category, charactersRequests map[string]string, categoryRequests, mediaRequests []string, postedAt time.Time) *PostPending {
+func UnmarshalPendingPostFromDatabase(id, moderatorId, state string, artist *Artist, contributorId string, content []string, characters []*Character, categories []*Category, charactersRequests map[string]string, categoryRequests, mediaRequests []string, postedAt time.Time) *PostPending {
 
 	postPending := &PostPending{
 		id:          id,
+		moderatorId: moderatorId,
 		state:       PostPendingState(state),
 		artist:      artist,
 		contributor: user.NewUser(contributorId, "", "", nil, false),
@@ -91,6 +94,10 @@ func UnmarshalPendingPostFromDatabase(id, state string, artist *Artist, contribu
 
 func (p *PostPending) ID() string {
 	return p.id
+}
+
+func (p *PostPending) ModeratorId() string {
+	return p.moderatorId
 }
 
 func (p *PostPending) State() PostPendingState {

@@ -21,14 +21,16 @@ import (
 func NewApplication(ctx context.Context) (app.Application, func()) {
 
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
+	parleyClient, cleanup2 := clients.NewParleyClient(ctx, os.Getenv("PARLEY_SERVICE"))
 
-	return createApplication(ctx, adapters.NewEvaGrpc(evaClient)),
+	return createApplication(ctx, adapters.NewEvaGrpc(evaClient), adapters.NewParleyGrpc(parleyClient)),
 		func() {
 			cleanup()
+			cleanup2()
 		}
 }
 
-func createApplication(ctx context.Context, eva command.EvaService) app.Application {
+func createApplication(ctx context.Context, eva command.EvaService, parley command.ParleyService) app.Application {
 
 	_, err := bootstrap.NewBootstrap(ctx)
 
@@ -66,15 +68,15 @@ func createApplication(ctx context.Context, eva command.EvaService) app.Applicat
 		log.Fatalln("Unable to create client", err)
 	}
 
-	postRepo := adapters.NewCassandraRepository(session)
-	indexRepo := adapters.NewIndexElasticSearchRepository(es)
+	postRepo := adapters.NewPostsCassandraRepository(session)
+	indexRepo := adapters.NewPostsIndexElasticSearchRepository(es)
 	eventRepo := adapters.NewPostTemporalRepository(c)
 
 	contentRepo := adapters.NewContentS3Repository(awsSession)
 
 	return app.Application{
 		Commands: app.Commands{
-			CreatePendingPost:  command.NewCreatePendingPostHandler(postRepo, eventRepo, eva),
+			CreatePendingPost:  command.NewCreatePendingPostHandler(postRepo, eventRepo, eva, parley),
 			ReviewPendingPost:  command.NewReviewPostHandler(postRepo, eventRepo),
 			IndexAllMedia:      command.NewIndexAllMediaHandler(postRepo, indexRepo),
 			IndexAllCharacters: command.NewIndexAllCharactersHandler(postRepo, indexRepo),

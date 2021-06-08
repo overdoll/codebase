@@ -7,16 +7,16 @@ import (
 	grpc_retry "github.com/grpc-ecosystem/go-grpc-middleware/retry"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
-	eva "overdoll/applications/eva/proto"
+	parley "overdoll/applications/parley/proto"
 )
 
-func NewEvaClient(ctx context.Context, address string) (eva.EvaClient, func()) {
+func NewParleyClient(ctx context.Context, address string) (parley.ParleyClient, func()) {
 	opts := []grpc_retry.CallOption{
 		grpc_retry.WithBackoff(grpc_retry.BackoffExponential(100 * time.Millisecond)),
 		grpc_retry.WithCodes(codes.Aborted, codes.Unavailable),
 	}
 
-	evaConnection, err := grpc.DialContext(ctx, address,
+	parleyConnection, err := grpc.DialContext(ctx, address,
 		grpc.WithInsecure(),
 		grpc.WithStreamInterceptor(grpc_retry.StreamClientInterceptor(opts...)),
 		grpc.WithUnaryInterceptor(grpc_retry.UnaryClientInterceptor(opts...)))
@@ -25,8 +25,7 @@ func NewEvaClient(ctx context.Context, address string) (eva.EvaClient, func()) {
 		panic(err)
 	}
 
-	return eva.NewEvaClient(evaConnection), func() {
-		_ = evaConnection.Close()
+	return parley.NewParleyClient(parleyConnection), func() {
+		_ = parleyConnection.Close()
 	}
 }
-

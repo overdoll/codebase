@@ -15,7 +15,7 @@ type Artist struct {
 	Avatar   string `db:"user_avatar"`
 }
 
-func (r CassandraRepository) GetArtists(ctx context.Context) ([]*post.Artist, error) {
+func (r PostsCassandraRepository) GetArtists(ctx context.Context) ([]*post.Artist, error) {
 
 	var dbArtists []Artist
 
@@ -37,7 +37,7 @@ func (r CassandraRepository) GetArtists(ctx context.Context) ([]*post.Artist, er
 	return artists, nil
 }
 
-func (r CassandraRepository) GetArtistById(ctx context.Context, id string) (*post.Artist, error) {
+func (r PostsCassandraRepository) GetArtistById(ctx context.Context, id string) (*post.Artist, error) {
 
 	var artist Artist
 

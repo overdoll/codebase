@@ -80,7 +80,7 @@ func MarshalCharacterToDocument(char *post.Character) *CharacterDocument {
 	}
 }
 
-func (r IndexElasticSearchRepository) SearchCharacters(ctx context.Context, search string) ([]*post.Character, error) {
+func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context, search string) ([]*post.Character, error) {
 	var query string
 
 	if search == "" {
@@ -113,7 +113,7 @@ func (r IndexElasticSearchRepository) SearchCharacters(ctx context.Context, sear
 	return characters, nil
 }
 
-func (r IndexElasticSearchRepository) BulkIndexCharacters(ctx context.Context, characters []*post.Character) error {
+func (r PostsIndexElasticSearchRepository) BulkIndexCharacters(ctx context.Context, characters []*post.Character) error {
 
 	err := r.store.CreateBulkIndex(CharacterIndexName)
 
@@ -142,7 +142,7 @@ func (r IndexElasticSearchRepository) BulkIndexCharacters(ctx context.Context, c
 	return nil
 }
 
-func (r IndexElasticSearchRepository) DeleteCharacterIndex(ctx context.Context) error {
+func (r PostsIndexElasticSearchRepository) DeleteCharacterIndex(ctx context.Context) error {
 	err := r.store.DeleteIndex(CharacterIndexName)
 
 	if err != nil {

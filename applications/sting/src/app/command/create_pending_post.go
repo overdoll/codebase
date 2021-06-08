@@ -18,11 +18,12 @@ var (
 type CreatePendingPostHandler struct {
 	pr  post.Repository
 	pe  post.EventRepository
+	parley ParleyService
 	eva EvaService
 }
 
-func NewCreatePendingPostHandler(pr post.Repository, pe post.EventRepository, eva EvaService) CreatePendingPostHandler {
-	return CreatePendingPostHandler{pr: pr, eva: eva, pe: pe}
+func NewCreatePendingPostHandler(pr post.Repository, pe post.EventRepository, eva EvaService, parley ParleyService) CreatePendingPostHandler {
+	return CreatePendingPostHandler{pr: pr, eva: eva, pe: pe, parley: parley}
 }
 
 func (h CreatePendingPostHandler) Handle(ctx context.Context, artistId, artistUsername string, content, characterIds, categoryIds []string, characterRequests map[string]string, mediaRequests []string) (*post.PostPending, error) {
@@ -72,7 +73,14 @@ func (h CreatePendingPostHandler) Handle(ctx context.Context, artistId, artistUs
 		return nil, nil
 	}
 
-	pendingPost, err := post.NewPendingPost(uuid.New().String(), artist, usr, content, characters, categories)
+	moderatorId, err := h.parley.GetNextModeratorId(ctx)
+
+	if err != nil {
+		zap.S().Errorf("failed to get moderator: %s", err)
+		return nil, nil
+	}
+
+	pendingPost, err := post.NewPendingPost(uuid.New().String(), moderatorId, artist, usr, content, characters, categories)
 
 	if err != nil {
 		return nil, err

@@ -58,7 +58,7 @@ func MarshalCategoryToDocument(cat *post.Category) *CategoryDocument {
 	}
 }
 
-func (r IndexElasticSearchRepository) SearchCategories(ctx context.Context, search string) ([]*post.Category, error) {
+func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context, search string) ([]*post.Category, error) {
 	var query string
 
 	if search == "" {
@@ -93,7 +93,7 @@ func (r IndexElasticSearchRepository) SearchCategories(ctx context.Context, sear
 	return cats, nil
 }
 
-func (r IndexElasticSearchRepository) BulkIndexCategories(ctx context.Context, categories []*post.Category) error {
+func (r PostsIndexElasticSearchRepository) BulkIndexCategories(ctx context.Context, categories []*post.Category) error {
 
 	err := r.store.CreateBulkIndex(CategoryIndexName)
 
@@ -120,7 +120,7 @@ func (r IndexElasticSearchRepository) BulkIndexCategories(ctx context.Context, c
 	return nil
 }
 
-func (r IndexElasticSearchRepository) DeleteCategoryIndex(ctx context.Context) error {
+func (r PostsIndexElasticSearchRepository) DeleteCategoryIndex(ctx context.Context) error {
 	err := r.store.DeleteIndex(CategoryIndexName)
 
 	if err != nil {

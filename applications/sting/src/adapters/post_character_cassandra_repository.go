@@ -16,7 +16,7 @@ type Character struct {
 	MediaId   string `db:"media_id"`
 }
 
-func (r CassandraRepository) GetCharactersById(ctx context.Context, chars []string) ([]*post.Character, error) {
+func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars []string) ([]*post.Character, error) {
 
 	var characters []*post.Character
 
@@ -85,7 +85,7 @@ func (r CassandraRepository) GetCharactersById(ctx context.Context, chars []stri
 	return characters, nil
 }
 
-func (r CassandraRepository) GetCharacters(ctx context.Context) ([]*post.Character, error) {
+func (r PostsCassandraRepository) GetCharacters(ctx context.Context) ([]*post.Character, error) {
 	var dbChars []Character
 
 	// Grab all of our characters
@@ -142,7 +142,7 @@ func (r CassandraRepository) GetCharacters(ctx context.Context) ([]*post.Charact
 	return characters, nil
 }
 
-func (r CassandraRepository) CreateCharacters(ctx context.Context, characters []*post.Character) error {
+func (r PostsCassandraRepository) CreateCharacters(ctx context.Context, characters []*post.Character) error {
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 

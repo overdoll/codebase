@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"overdoll/applications/sting/src/domain/post"
+	search "overdoll/libraries/elasticsearch"
 )
 
 type PostDocument struct {
@@ -61,7 +62,15 @@ const PostPendingIndex = `
 	}
 }`
 
-func (r IndexElasticSearchRepository) IndexPendingPost(ctx context.Context, pendingPost *post.PostPending) error {
+type PostsIndexElasticSearchRepository struct {
+	store *search.Store
+}
+
+func NewPostsIndexElasticSearchRepository(store *search.Store) PostsIndexElasticSearchRepository {
+	return PostsIndexElasticSearchRepository{store: store}
+}
+
+func (r PostsIndexElasticSearchRepository) IndexPendingPost(ctx context.Context, pendingPost *post.PostPending) error {
 
 	var pendingPosts []*post.PostPending
 
@@ -70,7 +79,7 @@ func (r IndexElasticSearchRepository) IndexPendingPost(ctx context.Context, pend
 	return r.BulkIndexPendingPosts(ctx, pendingPosts)
 }
 
-func (r IndexElasticSearchRepository) BulkIndexPendingPosts(ctx context.Context, pendingPosts []*post.PostPending) error {
+func (r PostsIndexElasticSearchRepository) BulkIndexPendingPosts(ctx context.Context, pendingPosts []*post.PostPending) error {
 	err := r.store.CreateBulkIndex("pending_posts")
 
 	if err != nil {
@@ -141,7 +150,7 @@ func (r IndexElasticSearchRepository) BulkIndexPendingPosts(ctx context.Context,
 	return nil
 }
 
-func (r IndexElasticSearchRepository) IndexPost(ctx context.Context, pst *post.Post) error {
+func (r PostsIndexElasticSearchRepository) IndexPost(ctx context.Context, pst *post.Post) error {
 
 	// We have only one post - index it
 	var posts []*post.Post
@@ -150,7 +159,7 @@ func (r IndexElasticSearchRepository) IndexPost(ctx context.Context, pst *post.P
 	return r.BulkIndexPosts(ctx, posts)
 }
 
-func (r IndexElasticSearchRepository) BulkIndexPosts(ctx context.Context, posts []*post.Post) error {
+func (r PostsIndexElasticSearchRepository) BulkIndexPosts(ctx context.Context, posts []*post.Post) error {
 
 	err := r.store.CreateBulkIndex("post")
 
@@ -204,7 +213,7 @@ func (r IndexElasticSearchRepository) BulkIndexPosts(ctx context.Context, posts 
 	return nil
 }
 
-func (r IndexElasticSearchRepository) DeletePostIndex(ctx context.Context) error {
+func (r PostsIndexElasticSearchRepository) DeletePostIndex(ctx context.Context) error {
 	err := r.store.DeleteIndex("post")
 
 	if err != nil {
@@ -219,7 +228,7 @@ func (r IndexElasticSearchRepository) DeletePostIndex(ctx context.Context) error
 	return nil
 }
 
-func (r IndexElasticSearchRepository) DeletePendingPostIndex(ctx context.Context) error {
+func (r PostsIndexElasticSearchRepository) DeletePendingPostIndex(ctx context.Context) error {
 	err := r.store.DeleteIndex("pending_posts")
 
 	if err != nil {

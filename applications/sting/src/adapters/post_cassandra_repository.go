@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/gocql/gocql"
+	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"overdoll/applications/sting/src/domain/post"
 )
@@ -36,6 +37,14 @@ type PostPending struct {
 	PostedAt           time.Time         `db:"posted_at"`
 }
 
+type PostsCassandraRepository struct {
+	session gocqlx.Session
+}
+
+func NewPostsCassandraRepository(session gocqlx.Session) PostsCassandraRepository {
+	return PostsCassandraRepository{session: session}
+}
+
 func marshalPendingPostToDatabase(pending *post.PostPending) *PostPending {
 
 	characterRequests := make(map[string]string)
@@ -58,6 +67,7 @@ func marshalPendingPostToDatabase(pending *post.PostPending) *PostPending {
 
 	return &PostPending{
 		Id:                 pending.ID(),
+		ModeratorId:        pending.ModeratorId(),
 		State:              string(pending.State()),
 		ArtistId:           pending.Artist().ID(),
 		ArtistUsername:     pending.Artist().Username(),
@@ -97,13 +107,14 @@ func marshalPostToDatabase(post *post.Post) *Post {
 	}
 }
 
-func (r CassandraRepository) CreatePendingPost(ctx context.Context, pending *post.PostPending) error {
+func (r PostsCassandraRepository) CreatePendingPost(ctx context.Context, pending *post.PostPending) error {
 	pendingPost := marshalPendingPostToDatabase(pending)
 
 	insertPost := qb.Insert("posts_pending").
 		Columns(
 			"id",
 			"state",
+			"moderator_user_id",
 			"artist_user_id",
 			"artist_user_username",
 			"contributor_user_id",
@@ -126,7 +137,7 @@ func (r CassandraRepository) CreatePendingPost(ctx context.Context, pending *pos
 	return nil
 }
 
-func (r CassandraRepository) CreatePost(ctx context.Context, pending *post.Post) error {
+func (r PostsCassandraRepository) CreatePost(ctx context.Context, pending *post.Post) error {
 	pst := marshalPostToDatabase(pending)
 
 	insertPost := qb.Insert("posts").
@@ -150,7 +161,7 @@ func (r CassandraRepository) CreatePost(ctx context.Context, pending *post.Post)
 	return nil
 }
 
-func (r CassandraRepository) GetPendingPost(ctx context.Context, id string) (*post.PostPending, error) {
+func (r PostsCassandraRepository) GetPendingPost(ctx context.Context, id string) (*post.PostPending, error) {
 
 	postPendingQuery := qb.Select("posts_pending").
 		Where(qb.Eq("id")).
@@ -194,6 +205,7 @@ func (r CassandraRepository) GetPendingPost(ctx context.Context, id string) (*po
 
 	return post.UnmarshalPendingPostFromDatabase(
 		postPending.Id,
+		postPending.ModeratorId,
 		postPending.State,
 		artist,
 		postPending.ContributorId,
@@ -207,7 +219,7 @@ func (r CassandraRepository) GetPendingPost(ctx context.Context, id string) (*po
 	), nil
 }
 
-func (r CassandraRepository) UpdatePendingPost(ctx context.Context, id string, updateFn func(pending *post.PostPending) (*post.PostPending, error)) (*post.PostPending, error) {
+func (r PostsCassandraRepository) UpdatePendingPost(ctx context.Context, id string, updateFn func(pending *post.PostPending) (*post.PostPending, error)) (*post.PostPending, error) {
 
 	currentPost, err := r.GetPendingPost(ctx, id)
 

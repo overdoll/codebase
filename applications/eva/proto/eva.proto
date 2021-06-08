@@ -14,6 +14,12 @@ message GetUserRequest {
   string id = 1;
 }
 
+message LockUserRequest {
+  string id = 1;
+  uint64 duration = 2;
+}
+
 service Eva {
   rpc GetUser(GetUserRequest) returns (User);
+  rpc LockUser(LockUserRequest) returns (User);
 }

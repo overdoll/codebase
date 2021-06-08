@@ -1,0 +1,17 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "adapters",
+    srcs = [
+        "cassandra_repository.go",
+        "moderator_cassandra_repository.go",
+    ],
+    importpath = "overdoll/applications/parley/src/adapters",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//applications/parley/src/domain/moderator",
+        "@com_github_gocql_gocql//:gocql",
+        "@com_github_scylladb_gocqlx_v2//:gocqlx",
+        "@com_github_scylladb_gocqlx_v2//qb",
+    ],
+)
