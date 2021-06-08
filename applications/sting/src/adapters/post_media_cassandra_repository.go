@@ -16,7 +16,7 @@ type Media struct {
 	Thumbnail string `db:"thumbnail"`
 }
 
-func (r PostsCassandraRepository) GetMedias(ctx context.Context) ([]*post.Media, error) {
+func (r CassandraRepository) GetMedias(ctx context.Context) ([]*post.Media, error) {
 	var dbMed []Media
 
 	qc := qb.Select("media").
@@ -43,7 +43,7 @@ func (r PostsCassandraRepository) GetMedias(ctx context.Context) ([]*post.Media,
 	return medias, nil
 }
 
-func (r PostsCassandraRepository) GetMediasById(ctx context.Context, medi []string) ([]*post.Media, error) {
+func (r CassandraRepository) GetMediasById(ctx context.Context, medi []string) ([]*post.Media, error) {
 
 	var medias []*post.Media
 
@@ -80,7 +80,7 @@ func (r PostsCassandraRepository) GetMediasById(ctx context.Context, medi []stri
 	return medias, nil
 }
 
-func (r PostsCassandraRepository) CreateMedias(ctx context.Context, medias []*post.Media) error {
+func (r CassandraRepository) CreateMedias(ctx context.Context, medias []*post.Media) error {
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 

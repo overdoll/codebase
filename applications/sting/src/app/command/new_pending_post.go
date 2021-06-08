@@ -22,6 +22,8 @@ func (h NewPostActivityHandler) Handle(ctx context.Context, id string) error {
 
 	pendingPost, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PostPending) (*post.PostPending, error) {
 
+		// Get a moderator assigned to the pending post
+
 		// Process content (mime-type checks, etc...)
 		cnt, err := h.cr.ProcessContent(ctx, pending.Contributor().ID(), pending.Content())
 

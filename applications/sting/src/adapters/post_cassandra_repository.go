@@ -6,15 +6,14 @@ import (
 	"time"
 
 	"github.com/gocql/gocql"
-	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"overdoll/applications/sting/src/domain/post"
 )
 
 type Post struct {
 	Id            string    `db:"id"`
-	ArtistId      string    `db:"artist_id"`
-	ContributorId string    `db:"contributor_id"`
+	ArtistId      string    `db:"artist_user_id"`
+	ContributorId string    `db:"contributor_user_id"`
 	Content       []string  `db:"content"`
 	Categories    []string  `db:"categories"`
 	Characters    []string  `db:"characters"`
@@ -24,9 +23,10 @@ type Post struct {
 type PostPending struct {
 	Id                 string            `db:"id"`
 	State              string            `db:"state"`
-	ArtistId           string            `db:"artist_id"`
-	ArtistUsername     string            `db:"artist_username"`
-	ContributorId      string            `db:"contributor_id"`
+	ModeratorId        string            `db:"moderator_user_id"`
+	ArtistId           string            `db:"artist_user_id"`
+	ArtistUsername     string            `db:"artist_user_username"`
+	ContributorId      string            `db:"contributor_user_id"`
 	Content            []string          `db:"content"`
 	Categories         []string          `db:"categories"`
 	Characters         []string          `db:"characters"`
@@ -34,15 +34,6 @@ type PostPending struct {
 	CategoriesRequests []string          `db:"categories_requests"`
 	MediaRequests      []string          `db:"media_requests"`
 	PostedAt           time.Time         `db:"posted_at"`
-	PublishedPostId    string            `db:"published_post_id"`
-}
-
-type PostsCassandraRepository struct {
-	session gocqlx.Session
-}
-
-func NewPostsCassandraRepository(session gocqlx.Session) PostsCassandraRepository {
-	return PostsCassandraRepository{session: session}
 }
 
 func marshalPendingPostToDatabase(pending *post.PostPending) *PostPending {
@@ -78,7 +69,6 @@ func marshalPendingPostToDatabase(pending *post.PostPending) *PostPending {
 		CategoriesRequests: categoryRequests,
 		MediaRequests:      mediaRequests,
 		PostedAt:           pending.PostedAt(),
-		PublishedPostId:    pending.PublishedPostId(),
 	}
 }
 
@@ -107,16 +97,16 @@ func marshalPostToDatabase(post *post.Post) *Post {
 	}
 }
 
-func (r PostsCassandraRepository) CreatePendingPost(ctx context.Context, pending *post.PostPending) error {
+func (r CassandraRepository) CreatePendingPost(ctx context.Context, pending *post.PostPending) error {
 	pendingPost := marshalPendingPostToDatabase(pending)
 
 	insertPost := qb.Insert("posts_pending").
 		Columns(
 			"id",
 			"state",
-			"artist_id",
-			"artist_username",
-			"contributor_id",
+			"artist_user_id",
+			"artist_user_username",
+			"contributor_user_id",
 			"content",
 			"categories",
 			"characters",
@@ -124,7 +114,6 @@ func (r PostsCassandraRepository) CreatePendingPost(ctx context.Context, pending
 			"categories_requests",
 			"media_requests",
 			"posted_at",
-			"published_post_id",
 		).
 		Query(r.session).
 		BindStruct(pendingPost).
@@ -137,14 +126,14 @@ func (r PostsCassandraRepository) CreatePendingPost(ctx context.Context, pending
 	return nil
 }
 
-func (r PostsCassandraRepository) CreatePost(ctx context.Context, pending *post.Post) error {
+func (r CassandraRepository) CreatePost(ctx context.Context, pending *post.Post) error {
 	pst := marshalPostToDatabase(pending)
 
 	insertPost := qb.Insert("posts").
 		Columns(
 			"id",
-			"artist_id",
-			"contributor_id",
+			"artist_user_id",
+			"contributor_user_id",
 			"content",
 			"categories",
 			"characters",
@@ -161,7 +150,7 @@ func (r PostsCassandraRepository) CreatePost(ctx context.Context, pending *post.
 	return nil
 }
 
-func (r PostsCassandraRepository) GetPendingPost(ctx context.Context, id string) (*post.PostPending, error) {
+func (r CassandraRepository) GetPendingPost(ctx context.Context, id string) (*post.PostPending, error) {
 
 	postPendingQuery := qb.Select("posts_pending").
 		Where(qb.Eq("id")).
@@ -215,11 +204,10 @@ func (r PostsCassandraRepository) GetPendingPost(ctx context.Context, id string)
 		postPending.CategoriesRequests,
 		postPending.MediaRequests,
 		postPending.PostedAt,
-		postPending.PublishedPostId,
 	), nil
 }
 
-func (r PostsCassandraRepository) UpdatePendingPost(ctx context.Context, id string, updateFn func(pending *post.PostPending) (*post.PostPending, error)) (*post.PostPending, error) {
+func (r CassandraRepository) UpdatePendingPost(ctx context.Context, id string, updateFn func(pending *post.PostPending) (*post.PostPending, error)) (*post.PostPending, error) {
 
 	currentPost, err := r.GetPendingPost(ctx, id)
 
@@ -235,7 +223,17 @@ func (r PostsCassandraRepository) UpdatePendingPost(ctx context.Context, id stri
 
 	// Update our post to reflect the new state - in publishing
 	updatePost := qb.Update("posts_pending").
-		Set("state", "characters", "categories", "media_requests", "character_requests", "categories_requests", "artist_id", "artist_username").
+		Set(
+			"moderator_user_id",
+			"state",
+			"characters",
+			"categories",
+			"media_requests",
+			"character_requests",
+			"categories_requests",
+			"artist_user_id",
+			"artist_user_username",
+		).
 		Where(qb.Eq("id")).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).

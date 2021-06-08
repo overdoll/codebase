@@ -39,7 +39,7 @@ func (r PostTemporalRepository) CreatePostEvent(ctx context.Context, pendingPost
 		ID:        "NewPendingPostWorkflow_" + uuid.New().String(),
 	}
 
-	_, err := r.client.ExecuteWorkflow(ctx, options, StartPost, pendingPost.ID(), pendingPost.InReview())
+	_, err := r.client.ExecuteWorkflow(ctx, options, StartPost, pendingPost.ID())
 
 	if err != nil {
 		return err
@@ -48,26 +48,11 @@ func (r PostTemporalRepository) CreatePostEvent(ctx context.Context, pendingPost
 	return nil
 }
 
-func StartPost(ctx workflow.Context, id string, inReview bool) error {
+func StartPost(ctx workflow.Context, id string) error {
 	ctx = workflow.WithActivityOptions(ctx, options)
 
 	if err := workflow.ExecuteActivity(ctx, "NewPostActivityHandler.Handle", id).Get(ctx, nil); err != nil {
 		return err
-	}
-
-	// If not in review ("publishing"), then we run activities to handle this
-	if !inReview {
-		if err := workflow.ExecuteActivity(ctx, "PostCustomResourcesActivityHandler.Handle", id).Get(ctx, nil); err != nil {
-			return err
-		}
-
-		if err := workflow.ExecuteActivity(ctx, "PublishPostActivityHandler.Handle", id).Get(ctx, nil); err != nil {
-			return err
-		}
-
-		if err := workflow.ExecuteActivity(ctx, "CreatePostActivityHandler.Handle", id).Get(ctx, nil); err != nil {
-			return err
-		}
 	}
 
 	return nil

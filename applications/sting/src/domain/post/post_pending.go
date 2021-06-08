@@ -55,7 +55,6 @@ type PostPending struct {
 	categoriesRequests []CategoryRequest
 	mediaRequests      []MediaRequest
 	postedAt           time.Time
-	publishedPostId    string
 	generatedIds       []string
 }
 
@@ -72,18 +71,17 @@ func NewPendingPost(id string, artist *Artist, contributor *user.User, content [
 	}, nil
 }
 
-func UnmarshalPendingPostFromDatabase(id, state string, artist *Artist, contributorId string, content []string, characters []*Character, categories []*Category, charactersRequests map[string]string, categoryRequests, mediaRequests []string, postedAt time.Time, publishedPostId string) *PostPending {
+func UnmarshalPendingPostFromDatabase(id, state string, artist *Artist, contributorId string, content []string, characters []*Character, categories []*Category, charactersRequests map[string]string, categoryRequests, mediaRequests []string, postedAt time.Time) *PostPending {
 
 	postPending := &PostPending{
-		id:              id,
-		state:           PostPendingState(state),
-		artist:          artist,
-		contributor:     user.NewUser(contributorId, "", "", nil, false),
-		content:         content,
-		characters:      characters,
-		categories:      categories,
-		postedAt:        postedAt,
-		publishedPostId: publishedPostId,
+		id:          id,
+		state:       PostPendingState(state),
+		artist:      artist,
+		contributor: user.NewUser(contributorId, "", "", nil, false),
+		content:     content,
+		characters:  characters,
+		categories:  categories,
+		postedAt:    postedAt,
 	}
 
 	postPending.RequestResources(charactersRequests, categoryRequests, mediaRequests)
@@ -182,10 +180,6 @@ func (p *PostPending) PostedAt() time.Time {
 	return p.postedAt
 }
 
-func (p *PostPending) PublishedPostId() string {
-	return p.publishedPostId
-}
-
 func (p *PostPending) MakePublish() error {
 
 	// State of the post needs to be "publishing" before "published"
@@ -204,9 +198,11 @@ func (p *PostPending) MakePublishing() {
 
 func (p *PostPending) MakePublicOrReview() error {
 
-	if !p.contributor.IsVerified() {
-		p.state = Review
-	}
+	//if !p.contributor.IsVerified() {
+	//	p.state = Review
+	//}
+
+	p.state = Review
 
 	return nil
 }
@@ -216,7 +212,7 @@ func (p *PostPending) InReview() bool {
 }
 
 func (p *PostPending) IsPublished() bool {
-	return p.publishedPostId != ""
+	return p.state == Published
 }
 
 func (p *PostPending) UpdateContent(content []string) {

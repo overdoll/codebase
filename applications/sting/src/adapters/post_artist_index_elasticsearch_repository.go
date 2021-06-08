@@ -50,7 +50,7 @@ const AllArtists = `
 
 const ArtistIndexName = "artists"
 
-func (r PostIndexElasticSearchRepository) SearchArtists(ctx context.Context, search string) ([]*post.Artist, error) {
+func (r IndexElasticSearchRepository) SearchArtists(ctx context.Context, search string) ([]*post.Artist, error) {
 	var query string
 
 	if search == "" {
@@ -83,7 +83,7 @@ func (r PostIndexElasticSearchRepository) SearchArtists(ctx context.Context, sea
 	return artists, nil
 }
 
-func (r PostIndexElasticSearchRepository) BulkIndexArtists(ctx context.Context, artists []*post.Artist) error {
+func (r IndexElasticSearchRepository) BulkIndexArtists(ctx context.Context, artists []*post.Artist) error {
 	err := r.store.CreateBulkIndex(ArtistIndexName)
 
 	if err != nil {
@@ -113,7 +113,7 @@ func (r PostIndexElasticSearchRepository) BulkIndexArtists(ctx context.Context, 
 	return nil
 }
 
-func (r PostIndexElasticSearchRepository) DeleteArtistIndex(ctx context.Context) error {
+func (r IndexElasticSearchRepository) DeleteArtistIndex(ctx context.Context) error {
 	err := r.store.DeleteIndex(ArtistIndexName)
 
 	if err != nil {

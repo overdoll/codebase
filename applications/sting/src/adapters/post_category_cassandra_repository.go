@@ -16,7 +16,7 @@ type Category struct {
 	Thumbnail string `db:"thumbnail"`
 }
 
-func (r PostsCassandraRepository) GetCategoriesById(ctx context.Context, cats []string) ([]*post.Category, error) {
+func (r CassandraRepository) GetCategoriesById(ctx context.Context, cats []string) ([]*post.Category, error) {
 
 	var categories []*post.Category
 
@@ -48,7 +48,7 @@ func (r PostsCassandraRepository) GetCategoriesById(ctx context.Context, cats []
 	return categories, nil
 }
 
-func (r PostsCassandraRepository) GetCategories(ctx context.Context) ([]*post.Category, error) {
+func (r CassandraRepository) GetCategories(ctx context.Context) ([]*post.Category, error) {
 
 	var dbCategory []Category
 
@@ -70,7 +70,7 @@ func (r PostsCassandraRepository) GetCategories(ctx context.Context) ([]*post.Ca
 	return categories, nil
 }
 
-func (r PostsCassandraRepository) CreateCategories(ctx context.Context, categories []*post.Category) error {
+func (r CassandraRepository) CreateCategories(ctx context.Context, categories []*post.Category) error {
 
 	// Begin BATCH operation:
 	// Will insert categories, characters, media

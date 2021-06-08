@@ -8,28 +8,28 @@ CREATE TABLE IF NOT EXISTS moderators
 
 CREATE TABLE IF NOT EXISTS pending_posts_audit_log
 (
-    id                 text,
-    post_id            text,
-    moderator_id       text,
-    moderator_username text,
-    status             text,
-    reason             text,
-    notes              text,
-    reverted           boolean,
-    primary key ( (id), post_id, moderator_id ),
+    id                      text,
+    post_id                 text,
+    moderator_user_id       text,
+    moderator_user_username text,
+    status                  text,
+    reason                  text,
+    notes                   text,
+    reverted                boolean,
+    primary key ( (id), post_id, moderator_user_id ),
 ) WITH CLUSTERING ORDER BY (id DESC);
 
 CREATE TABLE IF NOT EXISTS users_audit_log
 (
-    id                 text,
-    user_id            text,
-    user_username      text,
-    moderator_id       text,
-    moderator_username text,
-    infraction_id      text,
-    notes              text,
-    reverted           boolean,
-    primary key ( (id), user_id, moderator_id, infraction_id ),
+    id                      text,
+    user_id                 text,
+    user_username           text,
+    moderator_user_id       text,
+    moderator_user_username text,
+    infraction_id           text,
+    notes                   text,
+    reverted                boolean,
+    primary key ( (id), user_id, moderator_user_id, infraction_id ),
 ) WITH CLUSTERING ORDER BY (id DESC);
 
 CREATE TABLE IF NOT EXISTS users_infraction_history

@@ -6,7 +6,9 @@ message Moderator {
   string id = 1;
 }
 
-message GetModeratorRequest {}
+message GetModeratorRequest {
+  bool shuffled = 1;
+}
 
 service Parley {
   rpc GetNextModerator(GetModeratorRequest) returns (Moderator);
