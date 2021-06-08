@@ -54,11 +54,11 @@ export default function Element ({
           textAlign='center'
           direction='column'
         >
-          <Text color='gray.00' fontSize='xl' ml={2} mr={2} overflowWrap='break-word'>
+          <Text color='gray.00' fontSize='xl' ml={1} mr={1} wordBreak='break-all'>
             {title}
           </Text>
           {subheader &&
-            <Text color='gray.100' fontSize='md' ml={2} mr={2} overflowWrap='break-word'>
+            <Text color='gray.100' fontSize='md' ml={1} mr={1} wordBreak='break-all'>
               {subheader}
             </Text>}
         </Flex>

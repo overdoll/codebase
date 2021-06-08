@@ -1,47 +1,58 @@
 import Button from '../'
+import { Center, Stack } from '@chakra-ui/react'
 
 export default {
-
   title: 'Form/Button',
   component: Button,
-  argTypes: {
-    size: {
-      control: {
-        type: 'select',
-        // TODO: use chakra hooks for grabbing theme?
-        options: []
-        // options: Object.keys(ButtonTheme)
-      }
-    },
-    colorScheme: {
-      control: {
-        type: 'select',
-        options: []
-        // options: Object.keys(colors)
-      }
-    }
-  },
-  args: {
-    colorScheme: 'gray',
-    size: 'md'
-  }
+  decorators: [
+    (Story) => (
+      <Center mt={40}>
+        <Story />
+      </Center>
+    )
+  ]
 }
 
-const Template = args => (<Button {...args}>Click Me</Button>)
+const Template = args => (
+  <>
+    <Stack spacing={8}>
+      <Stack w='auto' direction='row' align='center'>
+        <Button {...args} size='sm' colorScheme='gray'>Click Me</Button>
+        <Button {...args} size='md' colorScheme='gray'>Click Me</Button>
+        <Button {...args} size='lg' colorScheme='gray'>Click Me</Button>
+        <Button {...args} size='xl' colorScheme='gray'>Click Me</Button>
+      </Stack>
+      <Stack w='auto' direction='row' align='center'>
+        <Button {...args} size='sm' colorScheme='red'>Click Me</Button>
+        <Button {...args} size='md' colorScheme='red'>Click Me</Button>
+        <Button {...args} size='lg' colorScheme='red'>Click Me</Button>
+        <Button {...args} size='xl' colorScheme='red'>Click Me</Button>
+      </Stack>
+      <Stack w='auto' direction='row' align='center'>
+        <Button {...args} size='sm' colorScheme='orange'>Click Me</Button>
+        <Button {...args} size='md' colorScheme='orange'>Click Me</Button>
+        <Button {...args} size='lg' colorScheme='orange'>Click Me</Button>
+        <Button {...args} size='xl' colorScheme='orange'>Click Me</Button>
+      </Stack>
+    </Stack>
+  </>
+)
 
 export const Primary = Template.bind({})
+
 Primary.args = {
-  variant: 'outline',
-  size: 'xl',
-  colorScheme: 'red'
+  variant: 'outline'
 }
 Primary.parameters = {}
 
 export const Secondary = Template.bind({})
-Secondary.args = { variant: 'solid', size: 'lg', colorScheme: 'red' }
+
+Secondary.args = { variant: 'solid' }
 
 export const Tertiary = Template.bind({})
-Tertiary.args = { variant: 'ghost', size: 'md', colorScheme: 'red' }
+
+Tertiary.args = { variant: 'ghost' }
 
 export const Link = Template.bind({})
+
 Link.args = { variant: 'link', size: 'sm', colorScheme: 'red' }
