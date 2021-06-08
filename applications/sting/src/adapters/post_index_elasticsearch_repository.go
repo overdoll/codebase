@@ -2,7 +2,9 @@ package adapters
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"time"
 
 	"overdoll/applications/sting/src/domain/post"
 	search "overdoll/libraries/elasticsearch"
@@ -20,6 +22,8 @@ type PostDocument struct {
 
 type PostPendingDocument struct {
 	Id                 string               `json:"id"`
+	State              string               `json:"state"`
+	ModeratorId        string               `json:"moderator_id"`
 	ArtistId           string               `json:"artist_id"`
 	ArtistUsername     string               `json:"artist_username"`
 	Contributor        ContributorDocument  `json:"contributor"`
@@ -62,6 +66,22 @@ const PostPendingIndex = `
 	}
 }`
 
+const SearchPostPending = `
+	"query" : {
+		"multi_match" : {
+			"query" : %q,
+			"fields" : ["moderator_id^100"],
+			"operator" : "and"
+		}
+	},
+	"size" : 5`
+
+const AllPostPending = `
+	"query" : { "match_all" : {} },
+	"size" : 5`
+
+const PendingPostIndexName = "pending_posts"
+
 type PostsIndexElasticSearchRepository struct {
 	store *search.Store
 }
@@ -79,8 +99,73 @@ func (r PostsIndexElasticSearchRepository) IndexPendingPost(ctx context.Context,
 	return r.BulkIndexPendingPosts(ctx, pendingPosts)
 }
 
+func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Context, moderatorId string) ([]*post.PostPending, error) {
+
+	var query string
+
+	if moderatorId == "" {
+		query = AllPostPending
+	} else {
+		query = fmt.Sprintf(SearchPostPending, moderatorId)
+	}
+
+	response, err := r.store.Search(PendingPostIndexName, query)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var posts []*post.PostPending
+
+	for _, pest := range response.Hits {
+
+		var pst PostPendingDocument
+
+		err := json.Unmarshal(pest, &pst)
+
+		if err != nil {
+			return nil, err
+		}
+
+		var characters []*post.Character
+
+		for _, char := range pst.Characters {
+			characters = append(characters, post.UnmarshalCharacterFromDatabase(char.Id, char.Name, char.Thumbnail, post.UnmarshalMediaFromDatabase(char.Media.Id, char.Media.Title, char.Media.Thumbnail)))
+		}
+
+		var categories []*post.Category
+
+		for _, cat := range pst.Categories {
+			categories = append(categories, post.UnmarshalCategoryFromDatabase(cat.Id, cat.Title, cat.Thumbnail))
+		}
+
+		tm, err := time.Parse("UTC", pst.PostedAt)
+
+		posts = append(posts,
+			post.UnmarshalPendingPostFromDatabase(
+				pst.Id,
+				pst.ModeratorId,
+				pst.State,
+				post.NewArtist(pst.ArtistId, pst.ArtistUsername),
+				pst.Contributor.Id,
+				pst.Contributor.Username,
+				pst.Contributor.Avatar,
+				pst.Content,
+				characters,
+				categories,
+				pst.CharactersRequests,
+				pst.CategoriesRequests,
+				pst.MediaRequests,
+				tm,
+			),
+		)
+	}
+
+	return posts, nil
+}
+
 func (r PostsIndexElasticSearchRepository) BulkIndexPendingPosts(ctx context.Context, pendingPosts []*post.PostPending) error {
-	err := r.store.CreateBulkIndex("pending_posts")
+	err := r.store.CreateBulkIndex(PendingPostIndexName)
 
 	if err != nil {
 		return fmt.Errorf("error creating bulk indexer: %s", err)

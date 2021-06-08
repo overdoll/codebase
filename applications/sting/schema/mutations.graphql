@@ -1,3 +1,4 @@
 type Mutation {
   post(data: PostInput): PostResponse!
+  updatePost(id: String!, data: PostInput): PostUpdateResponse!
 }

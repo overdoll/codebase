@@ -36,9 +36,8 @@ func (h GetNextModeratorHandler) Handle(ctx context.Context) (*moderator.Moderat
 		return mods[i].LastSelected().Before(mods[j].LastSelected())
 	})
 
-	first := mods[0]
-
 	// get first moderator on the list, and call "select"
+	first := mods[0]
 	m, err := h.mr.UpdateModerator(ctx, first.ID(), func(m *moderator.Moderator) error {
 		m.Select()
 		return nil

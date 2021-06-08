@@ -76,11 +76,16 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		Post func(childComplexity int, data *types.PostInput) int
+		Post       func(childComplexity int, data *types.PostInput) int
+		UpdatePost func(childComplexity int, id string, data *types.PostInput) int
 	}
 
 	PostResponse struct {
 		Review     func(childComplexity int) int
+		Validation func(childComplexity int) int
+	}
+
+	PostUpdateResponse struct {
 		Validation func(childComplexity int) int
 	}
 
@@ -111,6 +116,7 @@ type EntityResolver interface {
 }
 type MutationResolver interface {
 	Post(ctx context.Context, data *types.PostInput) (*types.PostResponse, error)
+	UpdatePost(ctx context.Context, id string, data *types.PostInput) (*types.PostUpdateResponse, error)
 }
 type QueryResolver interface {
 	Characters(ctx context.Context, data types.SearchInput) ([]*types.Character, error)
@@ -249,6 +255,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.Post(childComplexity, args["data"].(*types.PostInput)), true
 
+	case "Mutation.updatePost":
+		if e.complexity.Mutation.UpdatePost == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updatePost_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdatePost(childComplexity, args["id"].(string), args["data"].(*types.PostInput)), true
+
 	case "PostResponse.review":
 		if e.complexity.PostResponse.Review == nil {
 			break
@@ -262,6 +280,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.PostResponse.Validation(childComplexity), true
+
+	case "PostUpdateResponse.validation":
+		if e.complexity.PostUpdateResponse.Validation == nil {
+			break
+		}
+
+		return e.complexity.PostUpdateResponse.Validation(childComplexity), true
 
 	case "Query.artists":
 		if e.complexity.Query.Artists == nil {
@@ -417,6 +442,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 var sources = []*ast.Source{
 	{Name: "schema/mutations.graphql", Input: `type Mutation {
   post(data: PostInput): PostResponse!
+  updatePost(id: String!, data: PostInput): PostUpdateResponse!
 }
 `, BuiltIn: false},
 	{Name: "schema/queries.graphql", Input: `type Query {
@@ -443,6 +469,10 @@ input CharacterRequest {
 
 type PostResponse {
   review: Boolean!
+  validation: Validation
+}
+
+type PostUpdateResponse {
   validation: Validation
 }
 
@@ -546,6 +576,30 @@ func (ec *executionContext) field_Mutation_post_args(ctx context.Context, rawArg
 		}
 	}
 	args["data"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updatePost_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	var arg1 *types.PostInput
+	if tmp, ok := rawArgs["data"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("data"))
+		arg1, err = ec.unmarshalOPostInput2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPostInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["data"] = arg1
 	return args, nil
 }
 
@@ -1216,6 +1270,48 @@ func (ec *executionContext) _Mutation_post(ctx context.Context, field graphql.Co
 	return ec.marshalNPostResponse2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPostResponse(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_updatePost(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updatePost_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdatePost(rctx, args["id"].(string), args["data"].(*types.PostInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.PostUpdateResponse)
+	fc.Result = res
+	return ec.marshalNPostUpdateResponse2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPostUpdateResponse(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _PostResponse_review(ctx context.Context, field graphql.CollectedField, obj *types.PostResponse) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -1260,6 +1356,38 @@ func (ec *executionContext) _PostResponse_validation(ctx context.Context, field 
 	}()
 	fc := &graphql.FieldContext{
 		Object:     "PostResponse",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Validation, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Validation)
+	fc.Result = res
+	return ec.marshalOValidation2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐValidation(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PostUpdateResponse_validation(ctx context.Context, field graphql.CollectedField, obj *types.PostUpdateResponse) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PostUpdateResponse",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -3138,6 +3266,11 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "updatePost":
+			out.Values[i] = ec._Mutation_updatePost(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -3167,6 +3300,30 @@ func (ec *executionContext) _PostResponse(ctx context.Context, sel ast.Selection
 			}
 		case "validation":
 			out.Values[i] = ec._PostResponse_validation(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var postUpdateResponseImplementors = []string{"PostUpdateResponse"}
+
+func (ec *executionContext) _PostUpdateResponse(ctx context.Context, sel ast.SelectionSet, obj *types.PostUpdateResponse) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, postUpdateResponseImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("PostUpdateResponse")
+		case "validation":
+			out.Values[i] = ec._PostUpdateResponse_validation(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -3832,6 +3989,20 @@ func (ec *executionContext) marshalNPostResponse2ᚖoverdollᚋapplicationsᚋst
 		return graphql.Null
 	}
 	return ec._PostResponse(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNPostUpdateResponse2overdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPostUpdateResponse(ctx context.Context, sel ast.SelectionSet, v types.PostUpdateResponse) graphql.Marshaler {
+	return ec._PostUpdateResponse(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNPostUpdateResponse2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPostUpdateResponse(ctx context.Context, sel ast.SelectionSet, v *types.PostUpdateResponse) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._PostUpdateResponse(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNSearchInput2overdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐSearchInput(ctx context.Context, v interface{}) (types.SearchInput, error) {

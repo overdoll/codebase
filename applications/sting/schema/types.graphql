@@ -18,6 +18,10 @@ type PostResponse {
   validation: Validation
 }
 
+type PostUpdateResponse {
+  validation: Validation
+}
+
 input SearchInput {
   search: String!
 }

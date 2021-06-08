@@ -3,6 +3,7 @@ package command
 import (
 	"context"
 	"errors"
+	"time"
 
 	"github.com/gocql/gocql"
 	"go.uber.org/zap"
@@ -80,7 +81,7 @@ func (h CreatePendingPostHandler) Handle(ctx context.Context, artistId, artistUs
 		return nil, nil
 	}
 
-	pendingPost, err := post.NewPendingPost(uuid.New().String(), moderatorId, artist, usr, content, characters, categories)
+	pendingPost, err := post.NewPendingPost(uuid.New().String(), moderatorId, artist, usr, content, characters, categories, time.Now())
 
 	if err != nil {
 		return nil, err

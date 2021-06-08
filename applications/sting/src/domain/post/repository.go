@@ -28,13 +28,14 @@ type Repository interface {
 }
 
 type IndexRepository interface {
-	BulkIndexPosts(context.Context, []*Post) error
 	IndexPendingPost(context.Context, *PostPending) error
 	BulkIndexPendingPosts(context.Context, []*PostPending) error
+	DeletePendingPostIndex(context.Context) error
+	SearchPendingPosts(context.Context, string) ([]*PostPending, error)
 
+	BulkIndexPosts(context.Context, []*Post) error
 	DeletePostIndex(context.Context) error
 	IndexPost(context.Context, *Post) error
-	DeletePendingPostIndex(context.Context) error
 
 	DeleteArtistIndex(context.Context) error
 	BulkIndexArtists(context.Context, []*Artist) error

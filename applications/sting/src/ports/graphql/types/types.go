@@ -47,6 +47,10 @@ type PostResponse struct {
 	Validation *Validation `json:"validation"`
 }
 
+type PostUpdateResponse struct {
+	Validation *Validation `json:"validation"`
+}
+
 type SearchInput struct {
 	Search string `json:"search"`
 }

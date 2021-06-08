@@ -209,6 +209,8 @@ func (r PostsCassandraRepository) GetPendingPost(ctx context.Context, id string)
 		postPending.State,
 		artist,
 		postPending.ContributorId,
+		"",
+		"",
 		postPending.Content,
 		characters,
 		categories,

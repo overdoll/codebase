@@ -13,6 +13,32 @@ type MutationResolver struct {
 	Client client.Client
 }
 
+func (r *MutationResolver) UpdatePost(ctx context.Context, id string, data *types.PostInput) (*types.PostUpdateResponse, error) {
+	requests := make(map[string]string)
+
+	for _, item := range data.CharacterRequests {
+		requests[item.Name] = item.Media
+	}
+
+	_, err := r.App.Commands.UpdatePendingPost.
+		Handle(
+			ctx,
+			id,
+			*data.ArtistID,
+			data.Characters,
+			data.Categories,
+			requests,
+			data.MediaRequests,
+			[]string{},
+		)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.PostUpdateResponse{Validation: nil}, nil
+}
+
 func (r *MutationResolver) Post(ctx context.Context, data *types.PostInput) (*types.PostResponse, error) {
 
 	requests := make(map[string]string)

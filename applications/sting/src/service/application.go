@@ -76,24 +76,33 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 
 	return app.Application{
 		Commands: app.Commands{
-			CreatePendingPost:  command.NewCreatePendingPostHandler(postRepo, eventRepo, eva, parley),
-			ReviewPendingPost:  command.NewReviewPostHandler(postRepo, eventRepo),
+			CreatePendingPost: command.NewCreatePendingPostHandler(postRepo, eventRepo, eva, parley),
+			UpdatePendingPost: command.NewUpdatePendingPostHandler(postRepo, eventRepo),
+
 			IndexAllMedia:      command.NewIndexAllMediaHandler(postRepo, indexRepo),
 			IndexAllCharacters: command.NewIndexAllCharactersHandler(postRepo, indexRepo),
 			IndexAllCategories: command.NewIndexAllCategoriesHandler(postRepo, indexRepo),
 			IndexAllArtists:    command.NewIndexAllArtistsHandler(postRepo, indexRepo),
 
-			ReviewPost:          command.NewReviewPostActivityHandler(postRepo, indexRepo, eva),
+			StartUndoPost:    command.NewStartUndoPostHandler(postRepo, indexRepo, eventRepo),
+			StartPublishPost: command.NewStartPublishPostHandler(postRepo, indexRepo, eventRepo),
+			StartDiscardPost: command.NewStartDiscardPostHandler(postRepo, indexRepo, eventRepo),
+
 			CreatePost:          command.NewCreatePostActivityHandler(postRepo, indexRepo),
 			NewPendingPost:      command.NewNewPostActivityHandler(postRepo, indexRepo, contentRepo, eva),
 			PostCompleted:       command.NewPublishPostActivityHandler(postRepo, indexRepo, contentRepo, eva),
 			PostCustomResources: command.NewPostCustomResourcesActivityHandler(postRepo, indexRepo),
+
+			PublishPost: command.NewPublishPostActivityHandler(postRepo, indexRepo, contentRepo, eva),
+			DiscardPost: command.NewDiscardPostActivityHandler(postRepo, indexRepo, eva),
+			UndoPost:    command.NewUndoPostActivityHandler(postRepo, indexRepo, contentRepo, eva),
 		},
 		Queries: app.Queries{
 			SearchMedias:     query.NewSearchMediasHandler(indexRepo),
 			SearchCharacters: query.NewSearchCharactersHandler(indexRepo),
 			SearchCategories: query.NewSearchCategoriesHandler(indexRepo),
 			SearchArtist:     query.NewSearchArtistsHandler(indexRepo),
+			GetPendingPosts:  query.NewGetPendingPostsHandler(indexRepo),
 		},
 	}
 }
