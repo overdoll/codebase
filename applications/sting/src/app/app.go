@@ -29,6 +29,8 @@ type Commands struct {
 	PostCompleted       command.PublishPostActivityHandler
 	PostCustomResources command.PostCustomResourcesActivityHandler
 	PublishPost         command.PublishPostActivityHandler
+	DiscardPost         command.DiscardPostActivityHandler
+	UndoPost            command.UndoPostActivityHandler
 }
 
 type Queries struct {

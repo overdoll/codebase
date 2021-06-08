@@ -32,9 +32,7 @@ func (h StartDiscardPostHandler) Handle(ctx context.Context, id string) error {
 		return err
 	}
 
-	err = h.pe.DiscardPostEvent(ctx, pendingPost)
-
-	if err != nil {
+	if err := h.pe.DiscardPostEvent(ctx, pendingPost); err != nil {
 		zap.S().Errorf("failed to discard post event: %s", err)
 		return err
 	}

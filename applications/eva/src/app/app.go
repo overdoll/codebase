@@ -16,6 +16,7 @@ type Commands struct {
 	Register       command.RegisterHandler
 	Logout         command.LogoutHandler
 	Authentication command.AuthenticationHandler
+	LockUser       command.LockUserHandler
 }
 
 type Queries struct {

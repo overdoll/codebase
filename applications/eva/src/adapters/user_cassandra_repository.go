@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
@@ -12,12 +13,13 @@ import (
 )
 
 type User struct {
-	Id       string   `db:"id"`
-	Username string   `db:"username"`
-	Email    string   `db:"email"`
-	Roles    []string `db:"roles"`
-	Verified bool     `db:"verified"`
-	Avatar   string   `db:"avatar"`
+	Id          string    `db:"id"`
+	Username    string    `db:"username"`
+	Email       string    `db:"email"`
+	Roles       []string  `db:"roles"`
+	Verified    bool      `db:"verified"`
+	Avatar      string    `db:"avatar"`
+	LockedUntil time.Time `db:"locked_until"`
 }
 
 type UserUsername struct {
@@ -36,6 +38,19 @@ type UserRepository struct {
 
 func NewUserCassandraRepository(session gocqlx.Session) UserRepository {
 	return UserRepository{session: session}
+}
+
+func marshalUserToDatabase(usr *user.User) *User {
+
+	return &User{
+		Id:          usr.ID(),
+		Email:       usr.Email(),
+		Username:    usr.Username(),
+		Roles:       usr.UserRolesAsString(),
+		Avatar:      usr.Avatar(),
+		Verified:    usr.Verified(),
+		LockedUntil: usr.LockedUntil(),
+	}
 }
 
 // GetUserById - Get user using the ID
@@ -189,4 +204,40 @@ func (r UserRepository) CreateUser(ctx context.Context, instance *user.User) err
 	}
 
 	return nil
+}
+
+func (r UserRepository) UpdateUser(ctx context.Context, id string, updateFn func(usr *user.User) error) (*user.User, error) {
+
+	currentUser, err := r.GetUserById(ctx, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	err = updateFn(currentUser)
+
+	if err != nil {
+		return nil, err
+	}
+
+	// update user
+	updateUser := qb.Update("users").
+		Set(
+			"username",
+			"email",
+			"roles",
+			"verified",
+			"locked_until",
+			"avatar",
+		).
+		Where(qb.Eq("id")).
+		Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(marshalUserToDatabase(currentUser))
+
+	if err := updateUser.ExecRelease(); err != nil {
+		return nil, fmt.Errorf("update() failed: '%s", err)
+	}
+
+	return currentUser, nil
 }

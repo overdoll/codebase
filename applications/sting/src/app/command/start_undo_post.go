@@ -33,6 +33,6 @@ func (h StartUndoPostHandler) Handle(ctx context.Context, id string) error {
 		zap.S().Errorf("failed to undo post event: %s", err)
 		return err
 	}
-	
+
 	return nil
 }

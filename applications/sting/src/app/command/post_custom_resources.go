@@ -29,22 +29,16 @@ func (h PostCustomResourcesActivityHandler) Handle(ctx context.Context, id strin
 		categories, characters, medias := pending.ConsumeCustomResources(existingMedias)
 
 		// Create categories (from database)
-		err = h.pr.CreateCategories(ctx, categories)
-
-		if err != nil {
+		if err := h.pr.CreateCategories(ctx, categories); err != nil {
 			return err
 		}
 
-		err = h.pr.CreateCharacters(ctx, characters)
-
-		if err != nil {
+		if err := h.pr.CreateCharacters(ctx, characters); err != nil {
 			return err
 		}
 
 		// Create Media (from database)
-		err = h.pr.CreateMedias(ctx, medias)
-
-		if err != nil {
+		if err := h.pr.CreateMedias(ctx, medias); err != nil {
 			return err
 		}
 

@@ -3,6 +3,7 @@ package user
 import (
 	"errors"
 	"os"
+	"time"
 )
 
 type UserRole string
@@ -22,6 +23,8 @@ type User struct {
 	roles    []UserRole
 	verified bool
 	avatar   string
+
+	lockedUntil time.Time
 }
 
 var (
@@ -39,12 +42,13 @@ func UnmarshalUserFromDatabase(id, username, email string, roles []string, verif
 	}
 
 	return &User{
-		id:       id,
-		username: username,
-		email:    email,
-		roles:    newRoles,
-		verified: verified,
-		avatar:   avatar,
+		id:          id,
+		username:    username,
+		email:       email,
+		roles:       newRoles,
+		verified:    verified,
+		avatar:      avatar,
+		lockedUntil: time.Time{},
 	}
 }
 
@@ -78,6 +82,22 @@ func (u User) Verified() bool {
 func (u User) Avatar() string {
 	var staticURL = os.Getenv("STATIC_URL")
 	return staticURL + "/avatars/" + u.avatar
+}
+
+func (u User) RawAvatar() string {
+	return u.avatar
+}
+
+func (u User) LockedUntil() time.Time {
+	return u.lockedUntil
+}
+
+func (u User) IsLocked() bool {
+	return u.lockedUntil.After(time.Now())
+}
+
+func (u User) LockUser(duration int) {
+	u.lockedUntil = time.Now().Add(time.Duration(duration) * time.Millisecond)
 }
 
 func (u User) UserRolesAsString() []string {

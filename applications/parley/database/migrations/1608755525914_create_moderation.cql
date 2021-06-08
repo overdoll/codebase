@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS users_audit_log
     infraction_id           text,
     notes                   text,
     reverted                boolean,
-    primary key ( id, user_id, moderator_user_id, infraction_id ),
+    primary key ( id, user_id, moderator_user_id ),
 ) WITH CLUSTERING ORDER BY (id DESC);
 
 CREATE TABLE IF NOT EXISTS users_infraction_history

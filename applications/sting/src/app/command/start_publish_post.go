@@ -28,9 +28,7 @@ func (h StartPublishPostHandler) Handle(ctx context.Context, id string) error {
 		return err
 	}
 
-	err = h.pe.PublishPostEvent(ctx, pendingPost)
-
-	if err != nil {
+	if err := h.pe.PublishPostEvent(ctx, pendingPost); err != nil {
 		zap.S().Errorf("failed to create post event: %s", err)
 		return err
 	}

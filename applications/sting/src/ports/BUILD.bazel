@@ -4,12 +4,14 @@ go_library(
     name = "ports",
     srcs = [
         "cli.go",
+        "grpc.go",
         "http.go",
         "worker.go",
     ],
     importpath = "overdoll/applications/sting/src/ports",
     visibility = ["//visibility:public"],
     deps = [
+        "//applications/sting/proto:v1_go_proto",
         "//applications/sting/src/adapters",
         "//applications/sting/src/app",
         "//applications/sting/src/ports/graphql",

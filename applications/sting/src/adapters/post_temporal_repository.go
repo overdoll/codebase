@@ -36,10 +36,10 @@ func (r PostTemporalRepository) CreatePostEvent(ctx context.Context, pendingPost
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: "sting",
-		ID:        "NewPendingPostWorkflow_" + uuid.New().String(),
+		ID:        "NewCreatePendingPostWorkflow_" + uuid.New().String(),
 	}
 
-	_, err := r.client.ExecuteWorkflow(ctx, options, StartPost, pendingPost.ID())
+	_, err := r.client.ExecuteWorkflow(ctx, options, CreatePost, pendingPost.ID())
 
 	if err != nil {
 		return err
@@ -48,7 +48,7 @@ func (r PostTemporalRepository) CreatePostEvent(ctx context.Context, pendingPost
 	return nil
 }
 
-func StartPost(ctx workflow.Context, id string) error {
+func CreatePost(ctx workflow.Context, id string) error {
 	ctx = workflow.WithActivityOptions(ctx, options)
 
 	if err := workflow.ExecuteActivity(ctx, "NewPostActivityHandler.Handle", id).Get(ctx, nil); err != nil {
@@ -110,7 +110,7 @@ func (r PostTemporalRepository) DiscardPostEvent(ctx context.Context, pendingPos
 
 func DiscardPost(ctx workflow.Context, id string) error {
 	ctx = workflow.WithActivityOptions(ctx, options)
-	return nil
+	return workflow.ExecuteActivity(ctx, "DiscardPostActivityHandler.Handle", id).Get(ctx, nil)
 }
 
 func (r PostTemporalRepository) UndoPostEvent(ctx context.Context, pendingPost *post.PostPending) error {
@@ -131,5 +131,6 @@ func (r PostTemporalRepository) UndoPostEvent(ctx context.Context, pendingPost *
 
 func UndoPost(ctx workflow.Context, id string) error {
 	ctx = workflow.WithActivityOptions(ctx, options)
-	return nil
+
+	return workflow.ExecuteActivity(ctx, "UndoPostActivityHandler.Handle", id).Get(ctx, nil)
 }

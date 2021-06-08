@@ -5,6 +5,7 @@ go_library(
     srcs = [
         "authenticate.go",
         "check_authentication.go",
+        "lock_user.go",
         "logout.go",
         "redeem_cookie.go",
         "register.go",
