@@ -7,7 +7,7 @@ import (
 type Repository interface {
 	GetPendingPost(context.Context, string) (*PostPending, error)
 	CreatePendingPost(context.Context, *PostPending) error
-	UpdatePendingPost(context.Context, string, func(*PostPending) (*PostPending, error)) (*PostPending, error)
+	UpdatePendingPost(context.Context, string, func(*PostPending) error) (*PostPending, error)
 
 	CreatePost(context.Context, *Post) error
 
@@ -55,5 +55,7 @@ type IndexRepository interface {
 
 type EventRepository interface {
 	CreatePostEvent(context.Context, *PostPending) error
-	ReviewPostEvent(context.Context, *PostPending) error
+	PublishPostEvent(context.Context, *PostPending) error
+	DiscardPostEvent(context.Context, *PostPending) error
+	UndoPostEvent(context.Context, *PostPending) error
 }

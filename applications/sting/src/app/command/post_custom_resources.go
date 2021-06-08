@@ -17,13 +17,13 @@ func NewPostCustomResourcesActivityHandler(pr post.Repository, pi post.IndexRepo
 
 func (h PostCustomResourcesActivityHandler) Handle(ctx context.Context, id string, ids []string) error {
 
-	_, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PostPending) (*post.PostPending, error) {
+	_, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PostPending) error {
 
 		// Consume custom categories, characters, medias
 		existingMedias, err := h.pr.GetMediasById(ctx, pending.GetExistingMediaIds())
 
 		if err != nil {
-			return nil, err
+			return err
 		}
 
 		categories, characters, medias := pending.ConsumeCustomResources(existingMedias)
@@ -32,23 +32,23 @@ func (h PostCustomResourcesActivityHandler) Handle(ctx context.Context, id strin
 		err = h.pr.CreateCategories(ctx, categories)
 
 		if err != nil {
-			return nil, err
+			return err
 		}
 
 		err = h.pr.CreateCharacters(ctx, characters)
 
 		if err != nil {
-			return nil, err
+			return err
 		}
 
 		// Create Media (from database)
 		err = h.pr.CreateMedias(ctx, medias)
 
 		if err != nil {
-			return nil, err
+			return err
 		}
 
-		return pending, nil
+		return nil
 	})
 
 	if err != nil {

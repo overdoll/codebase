@@ -15,10 +15,12 @@ const (
 	Publishing PostPendingState = "publishing"
 	Review     PostPendingState = "review"
 	Published  PostPendingState = "published"
+	Discarded  PostPendingState = "discarded"
 )
 
 var (
 	ErrNotPublishing = errors.New("post must be publishing")
+	ErrNotComplete   = errors.New("post is incomplete")
 	ErrInvalidId     = errors.New("passed id is not a valid ID")
 )
 
@@ -195,6 +197,26 @@ func (p *PostPending) MakePublish() error {
 	}
 
 	p.state = Published
+
+	return nil
+}
+
+func (p *PostPending) MakeDiscarded() error {
+
+	// State of the post needs to be "publishing" before "published"
+	if p.state != Publishing {
+		return ErrNotPublishing
+	}
+
+	p.state = Discarded
+
+	return nil
+}
+
+func (p *PostPending) MakeUndo() error {
+	if p.state != Discarded && p.state != Published {
+		return ErrNotComplete
+	}
 
 	return nil
 }

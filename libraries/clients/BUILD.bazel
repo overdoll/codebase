@@ -5,11 +5,13 @@ go_library(
     srcs = [
         "eva.go",
         "http.go",
+        "parley.go",
     ],
     importpath = "overdoll/libraries/clients",
     visibility = ["//visibility:public"],
     deps = [
         "//applications/eva/proto:v1_go_proto",
+        "//applications/parley/proto:v1_go_proto",
         "//libraries/passport",
         "@com_github_grpc_ecosystem_go_grpc_middleware//retry",
         "@org_golang_google_grpc//:go_default_library",

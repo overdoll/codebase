@@ -16,10 +16,10 @@ var (
 )
 
 type CreatePendingPostHandler struct {
-	pr  post.Repository
-	pe  post.EventRepository
+	pr     post.Repository
+	pe     post.EventRepository
 	parley ParleyService
-	eva EvaService
+	eva    EvaService
 }
 
 func NewCreatePendingPostHandler(pr post.Repository, pe post.EventRepository, eva EvaService, parley ParleyService) CreatePendingPostHandler {

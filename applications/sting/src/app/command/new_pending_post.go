@@ -20,21 +20,19 @@ func NewNewPostActivityHandler(pr post.Repository, pi post.IndexRepository, cr c
 
 func (h NewPostActivityHandler) Handle(ctx context.Context, id string) error {
 
-	pendingPost, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PostPending) (*post.PostPending, error) {
-
-		// Get a moderator assigned to the pending post
+	pendingPost, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PostPending) error {
 
 		// Process content (mime-type checks, etc...)
 		cnt, err := h.cr.ProcessContent(ctx, pending.Contributor().ID(), pending.Content())
 
 		if err != nil {
-			return nil, err
+			return err
 		}
 
 		// update content
 		pending.UpdateContent(cnt)
 
-		return pending, nil
+		return nil
 	})
 
 	if err != nil {

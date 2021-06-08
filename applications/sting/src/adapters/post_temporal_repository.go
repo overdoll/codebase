@@ -58,14 +58,14 @@ func StartPost(ctx workflow.Context, id string) error {
 	return nil
 }
 
-func (r PostTemporalRepository) ReviewPostEvent(ctx context.Context, pendingPost *post.PostPending) error {
+func (r PostTemporalRepository) PublishPostEvent(ctx context.Context, pendingPost *post.PostPending) error {
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: "sting",
-		ID:        "NewReviewPostWorkflow_" + uuid.New().String(),
+		ID:        "NewPublishPostWorkflow_" + uuid.New().String(),
 	}
 
-	_, err := r.client.ExecuteWorkflow(ctx, options, ReviewPost, pendingPost.ID())
+	_, err := r.client.ExecuteWorkflow(ctx, options, PublishPost, pendingPost.ID())
 
 	if err != nil {
 		return err
@@ -74,7 +74,7 @@ func (r PostTemporalRepository) ReviewPostEvent(ctx context.Context, pendingPost
 	return nil
 }
 
-func ReviewPost(ctx workflow.Context, id string) error {
+func PublishPost(ctx workflow.Context, id string) error {
 	ctx = workflow.WithActivityOptions(ctx, options)
 
 	if err := workflow.ExecuteActivity(ctx, "ReviewPostActivityHandler.Handle", id).Get(ctx, nil); err != nil {
@@ -90,4 +90,46 @@ func ReviewPost(ctx workflow.Context, id string) error {
 	}
 
 	return workflow.ExecuteActivity(ctx, "CreatePostActivityHandler.Handle", id).Get(ctx, nil)
+}
+
+func (r PostTemporalRepository) DiscardPostEvent(ctx context.Context, pendingPost *post.PostPending) error {
+
+	options := client.StartWorkflowOptions{
+		TaskQueue: "sting",
+		ID:        "NewDiscardPostWorkflow_" + uuid.New().String(),
+	}
+
+	_, err := r.client.ExecuteWorkflow(ctx, options, DiscardPost, pendingPost.ID())
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func DiscardPost(ctx workflow.Context, id string) error {
+	ctx = workflow.WithActivityOptions(ctx, options)
+	return nil
+}
+
+func (r PostTemporalRepository) UndoPostEvent(ctx context.Context, pendingPost *post.PostPending) error {
+
+	options := client.StartWorkflowOptions{
+		TaskQueue: "sting",
+		ID:        "NewUndoPostWorkflow_" + uuid.New().String(),
+	}
+
+	_, err := r.client.ExecuteWorkflow(ctx, options, UndoPost, pendingPost.ID())
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func UndoPost(ctx workflow.Context, id string) error {
+	ctx = workflow.WithActivityOptions(ctx, options)
+	return nil
 }

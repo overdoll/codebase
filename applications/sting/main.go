@@ -7,6 +7,8 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
+	"google.golang.org/grpc"
+	sting "overdoll/applications/sting/proto"
 	"overdoll/applications/sting/src/ports"
 	"overdoll/applications/sting/src/service"
 	"overdoll/libraries/bootstrap"
@@ -68,4 +70,19 @@ func RunHttp(cmd *cobra.Command, args []string) {
 	srv := ports.NewGraphQLServer(&app)
 
 	bootstrap.InitializeHttpServer(":8000", srv, func() {})
+}
+
+func Grpc(cmd *cobra.Command, args []string) {
+	ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
+	defer cancelFn()
+
+	app, cleanup := service.NewApplication(ctx)
+
+	defer cleanup()
+
+	s := ports.NewGrpcServer(&app)
+
+	bootstrap.InitializeGRPCServer("0.0.0.0:8080", func(server *grpc.Server) {
+		sting.RegisterStingServer(server, s)
+	})
 }

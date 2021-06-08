@@ -219,7 +219,7 @@ func (r PostsCassandraRepository) GetPendingPost(ctx context.Context, id string)
 	), nil
 }
 
-func (r PostsCassandraRepository) UpdatePendingPost(ctx context.Context, id string, updateFn func(pending *post.PostPending) (*post.PostPending, error)) (*post.PostPending, error) {
+func (r PostsCassandraRepository) UpdatePendingPost(ctx context.Context, id string, updateFn func(pending *post.PostPending) error) (*post.PostPending, error) {
 
 	currentPost, err := r.GetPendingPost(ctx, id)
 
@@ -227,7 +227,7 @@ func (r PostsCassandraRepository) UpdatePendingPost(ctx context.Context, id stri
 		return nil, err
 	}
 
-	pst, err := updateFn(currentPost)
+	err = updateFn(currentPost)
 
 	if err != nil {
 		return nil, err
@@ -249,11 +249,11 @@ func (r PostsCassandraRepository) UpdatePendingPost(ctx context.Context, id stri
 		Where(qb.Eq("id")).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(marshalPendingPostToDatabase(pst))
+		BindStruct(marshalPendingPostToDatabase(currentPost))
 
 	if err := updatePost.ExecRelease(); err != nil {
 		return nil, fmt.Errorf("update() failed: '%s", err)
 	}
 
-	return pst, nil
+	return currentPost, nil
 }

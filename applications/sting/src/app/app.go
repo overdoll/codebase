@@ -11,8 +11,13 @@ type Application struct {
 }
 
 type Commands struct {
-	CreatePendingPost  command.CreatePendingPostHandler
-	ReviewPendingPost  command.ReviewPostHandler
+	CreatePendingPost command.CreatePendingPostHandler
+	UpdatePendingPost command.UpdatePendingPostHandler
+
+	StartDiscardPost command.StartDiscardPostHandler
+	StartPublishPost command.StartPublishPostHandler
+	StartUndoPost    command.StartUndoPostHandler
+
 	IndexAllArtists    command.IndexAllArtistsHandler
 	IndexAllCategories command.IndexAllCategoriesHandler
 	IndexAllCharacters command.IndexAllCharactersHandler
@@ -23,7 +28,7 @@ type Commands struct {
 	NewPendingPost      command.NewPostActivityHandler
 	PostCompleted       command.PublishPostActivityHandler
 	PostCustomResources command.PostCustomResourcesActivityHandler
-	ReviewPost          command.ReviewPostActivityHandler
+	PublishPost         command.PublishPostActivityHandler
 }
 
 type Queries struct {
