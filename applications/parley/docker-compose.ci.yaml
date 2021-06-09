@@ -17,4 +17,4 @@ services:
 
   run:
     depends_on:
-      - sting
+      - parley
