@@ -85,7 +85,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			IndexAllArtists:    command.NewIndexAllArtistsHandler(postRepo, indexRepo),
 
 			StartUndoPost:    command.NewStartUndoPostHandler(postRepo, indexRepo, eventRepo),
-			StartPublishPost: command.NewStartPublishPostHandler(postRepo, indexRepo, eventRepo),
+			StartPublishPost: command.NewStartPublishPostHandler(postRepo, indexRepo, eventRepo, eva),
 			StartDiscardPost: command.NewStartDiscardPostHandler(postRepo, indexRepo, eventRepo),
 			RejectPost:       command.NewRejectPostHandler(postRepo, indexRepo),
 
@@ -94,9 +94,10 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			PostCompleted:       command.NewPublishPostActivityHandler(postRepo, indexRepo, contentRepo, eva),
 			PostCustomResources: command.NewPostCustomResourcesActivityHandler(postRepo, indexRepo),
 
-			PublishPost: command.NewPublishPostActivityHandler(postRepo, indexRepo, contentRepo, eva),
-			DiscardPost: command.NewDiscardPostActivityHandler(postRepo, indexRepo, contentRepo, eva),
-			UndoPost:    command.NewUndoPostActivityHandler(postRepo, indexRepo, contentRepo, eva),
+			PublishPost:       command.NewPublishPostActivityHandler(postRepo, indexRepo, contentRepo, eva),
+			DiscardPost:       command.NewDiscardPostActivityHandler(postRepo, indexRepo, contentRepo, eva),
+			UndoPost:          command.NewUndoPostActivityHandler(postRepo, indexRepo, contentRepo, eva),
+			ReassignModerator: command.NewReassignModeratorActivityHandler(postRepo, indexRepo),
 		},
 		Queries: app.Queries{
 			SearchMedias:     query.NewSearchMediasHandler(indexRepo),

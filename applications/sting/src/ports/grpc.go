@@ -11,18 +11,18 @@ type Server struct {
 	app *app.Application
 }
 
+func NewGrpcServer(application *app.Application) *Server {
+	return &Server{
+		app: application,
+	}
+}
+
 func (s Server) RejectPendingPost(ctx context.Context, request *sting.UpdatePendingPostRequest) (*sting.UpdatePendingPostResponse, error) {
 	if err := s.app.Commands.RejectPost.Handle(ctx, request.Id); err != nil {
 		return nil, err
 	}
 
 	return &sting.UpdatePendingPostResponse{}, nil
-}
-
-func NewGrpcServer(application *app.Application) *Server {
-	return &Server{
-		app: application,
-	}
 }
 
 func (s Server) PublishPendingPost(ctx context.Context, request *sting.UpdatePendingPostRequest) (*sting.UpdatePendingPostResponse, error) {
