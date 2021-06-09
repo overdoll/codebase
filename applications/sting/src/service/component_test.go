@@ -167,7 +167,9 @@ func startService() bool {
 
 	app, _ := service.NewApplication(context.Background())
 
-	srv := ports.NewGraphQLServer(&app)
+	client := clients.NewTemporalClient(context.Background())
+
+	srv := ports.NewGraphQLServer(&app, client)
 
 	go bootstrap.InitializeHttpServer(StingHttpAddr, srv, func() {})
 
