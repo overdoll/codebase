@@ -4,7 +4,6 @@ import (
 	"context"
 	"time"
 
-	"github.com/google/uuid"
 	"go.temporal.io/sdk/client"
 	"go.temporal.io/sdk/temporal"
 	"go.temporal.io/sdk/workflow"
@@ -12,7 +11,7 @@ import (
 )
 
 var options = workflow.ActivityOptions{
-	// Timeout options specify when to automatically timeout Actvitivy functions.
+	// Timeout options specify when to automatically timeout Activity functions.
 	StartToCloseTimeout: time.Minute,
 	// Optionally provide a customized RetryPolicy.
 	// Temporal retries failures by default, this is just an example.
@@ -36,7 +35,7 @@ func (r PostTemporalRepository) CreatePostEvent(ctx context.Context, pendingPost
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: "sting",
-		ID:        "NewCreatePendingPostWorkflow_" + uuid.New().String(),
+		ID:        "NewCreatePendingPostWorkflow_" + pendingPost.ID(),
 	}
 
 	_, err := r.client.ExecuteWorkflow(ctx, options, CreatePost, pendingPost.ID())
@@ -62,7 +61,7 @@ func (r PostTemporalRepository) PublishPostEvent(ctx context.Context, pendingPos
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: "sting",
-		ID:        "NewPublishPostWorkflow_" + uuid.New().String(),
+		ID:        "NewPublishPostWorkflow_" + pendingPost.ID(),
 	}
 
 	_, err := r.client.ExecuteWorkflow(ctx, options, PublishPost, pendingPost.ID())
@@ -96,7 +95,7 @@ func (r PostTemporalRepository) DiscardPostEvent(ctx context.Context, pendingPos
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: "sting",
-		ID:        "NewDiscardPostWorkflow_" + uuid.New().String(),
+		ID:        "NewDiscardPostWorkflow_" + pendingPost.ID(),
 	}
 
 	_, err := r.client.ExecuteWorkflow(ctx, options, DiscardPost, pendingPost.ID())
@@ -117,7 +116,7 @@ func (r PostTemporalRepository) UndoPostEvent(ctx context.Context, pendingPost *
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: "sting",
-		ID:        "NewUndoPostWorkflow_" + uuid.New().String(),
+		ID:        "NewUndoPostWorkflow_" + pendingPost.ID(),
 	}
 
 	_, err := r.client.ExecuteWorkflow(ctx, options, UndoPost, pendingPost.ID())

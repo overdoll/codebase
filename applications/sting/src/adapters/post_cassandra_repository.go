@@ -161,6 +161,69 @@ func (r PostsCassandraRepository) CreatePost(ctx context.Context, pending *post.
 	return nil
 }
 
+func (r PostsCassandraRepository) DeletePost(ctx context.Context, id string) error {
+	deletePost := qb.Delete("posts").
+		Where(qb.Eq("id")).
+		Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&Post{Id: id})
+
+	if err := deletePost.ExecRelease(); err != nil {
+		return fmt.Errorf("ExecRelease() failed: '%s", err)
+	}
+
+	return nil
+}
+
+func (r PostsCassandraRepository) GetPost(ctx context.Context, id string) (*post.Post, error) {
+	postQuery := qb.Select("posts").
+		Where(qb.Eq("id")).
+		Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&Post{Id: id})
+
+	var pst Post
+
+	if err := postQuery.Get(&pst); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return nil, post.NotFoundError{Identifier: id}
+		}
+
+		return nil, err
+	}
+
+	characters, err := r.GetCharactersById(ctx, pst.Characters)
+
+	if err != nil {
+		return nil, err
+	}
+
+	categories, err := r.GetCategoriesById(ctx, pst.Categories)
+
+	if err != nil {
+		return nil, err
+	}
+
+	artist, err := r.GetArtistById(ctx, pst.ArtistId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return post.UnmarshalPostFromDatabase(
+		pst.Id,
+		artist,
+		pst.ContributorId,
+		"",
+		"",
+		pst.Content,
+		characters,
+		categories,
+		pst.PostedAt,
+	), nil
+}
+
 func (r PostsCassandraRepository) GetPendingPost(ctx context.Context, id string) (*post.PostPending, error) {
 
 	postPendingQuery := qb.Select("posts_pending").

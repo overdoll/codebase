@@ -11,6 +11,82 @@ type QueryResolver struct {
 	App *app.Application
 }
 
+func (r *QueryResolver) PendingPosts(ctx context.Context, data types.SearchInput) ([]*types.PendingPost, error) {
+	results, err := r.App.Queries.GetPendingPosts.Handle(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	resp := make([]*types.PendingPost, 0)
+
+	// Unmarshal our json into the correct model
+	for _, result := range results {
+
+		var mediaRequests []string
+
+		for _, med := range result.MediaRequests() {
+			mediaRequests = append(mediaRequests, med.Title)
+		}
+
+		var characterRequests []*types.CharacterRequestType
+
+		for _, med := range result.CharacterRequests() {
+			characterRequests = append(characterRequests, &types.CharacterRequestType{
+				Name:  med.Name,
+				Media: med.Media,
+			})
+		}
+
+		artist := result.Artist()
+		id := artist.ID()
+
+		var categories []*types.Category
+
+		for _, cat := range result.Categories() {
+			categories = append(categories, &types.Category{
+				ID:        cat.ID(),
+				Thumbnail: cat.Thumbnail(),
+				Title:     cat.Title(),
+			})
+		}
+
+		var characters []*types.Character
+
+		for _, char := range result.Characters() {
+			characters = append(characters, &types.Character{
+				ID:        char.ID(),
+				Thumbnail: char.Thumbnail(),
+				Name:      char.Name(),
+				Media: &types.Media{
+					ID:        char.Media().ID(),
+					Thumbnail: char.Media().Thumbnail(),
+					Title:     char.Media().Title(),
+				},
+			})
+		}
+
+		resp = append(resp, &types.PendingPost{
+			ID:        result.ID(),
+			Moderator: result.ModeratorId(),
+			Contributor: &types.Contributor{
+				ID:       result.Contributor().ID(),
+				Username: result.Contributor().Username(),
+				Avatar:   result.Contributor().Avatar(),
+			},
+			Content:           result.Content(),
+			Categories:        categories,
+			Characters:        characters,
+			MediaRequests:     mediaRequests,
+			CharacterRequests: characterRequests,
+			ArtistID:          &id,
+			ArtistUsername:    artist.Username(),
+		})
+	}
+
+	return resp, nil
+}
+
 func (r *QueryResolver) Characters(ctx context.Context, data types.SearchInput) ([]*types.Character, error) {
 
 	results, err := r.App.Queries.SearchCharacters.Handle(ctx, data.Search)

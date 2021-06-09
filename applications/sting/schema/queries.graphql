@@ -3,4 +3,5 @@ type Query {
   categories(data: SearchInput!): [Category!]!
   artists(data: SearchInput!): [Artist!]!
   media(data: SearchInput!): [Media!]!
+  pendingPosts(data: SearchInput!): [PendingPost!]!
 }

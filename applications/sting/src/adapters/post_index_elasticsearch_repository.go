@@ -82,6 +82,8 @@ const AllPostPending = `
 
 const PendingPostIndexName = "pending_posts"
 
+const PostIndexName = "posts"
+
 type PostsIndexElasticSearchRepository struct {
 	store *search.Store
 }
@@ -246,7 +248,7 @@ func (r PostsIndexElasticSearchRepository) IndexPost(ctx context.Context, pst *p
 
 func (r PostsIndexElasticSearchRepository) BulkIndexPosts(ctx context.Context, posts []*post.Post) error {
 
-	err := r.store.CreateBulkIndex("post")
+	err := r.store.CreateBulkIndex(PostIndexName)
 
 	if err != nil {
 		return fmt.Errorf("error creating bulk indexer: %s", err)
@@ -298,13 +300,22 @@ func (r PostsIndexElasticSearchRepository) BulkIndexPosts(ctx context.Context, p
 	return nil
 }
 
+func (r PostsIndexElasticSearchRepository) DeletePostDocument(ctx context.Context, id string) error {
+
+	if err := r.store.Delete(PostIndexName, id); err != nil {
+		return fmt.Errorf("failed to create media index: %s", err)
+	}
+
+	return nil
+}
+
 func (r PostsIndexElasticSearchRepository) DeletePostIndex(ctx context.Context) error {
-	err := r.store.DeleteIndex("post")
+	err := r.store.DeleteIndex(PostIndexName)
 
 	if err != nil {
 	}
 
-	err = r.store.CreateIndex("post", PostIndex)
+	err = r.store.CreateIndex(PostIndexName, PostIndex)
 
 	if err != nil {
 		return fmt.Errorf("failed to create media index: %s", err)
@@ -314,12 +325,12 @@ func (r PostsIndexElasticSearchRepository) DeletePostIndex(ctx context.Context) 
 }
 
 func (r PostsIndexElasticSearchRepository) DeletePendingPostIndex(ctx context.Context) error {
-	err := r.store.DeleteIndex("pending_posts")
+	err := r.store.DeleteIndex(PendingPostIndexName)
 
 	if err != nil {
 	}
 
-	err = r.store.CreateIndex("pending_posts", PostPendingIndex)
+	err = r.store.CreateIndex(PendingPostIndexName, PostPendingIndex)
 
 	if err != nil {
 		return fmt.Errorf("failed to create media index: %s", err)

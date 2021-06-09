@@ -30,11 +30,14 @@ func NewWorker(app *app.Application) worker.Worker {
 
 	w := worker.New(c, "sting", worker.Options{})
 
-	w.RegisterWorkflow(adapters.ReviewPost)
-	w.RegisterWorkflow(adapters.StartPost)
+	w.RegisterWorkflow(adapters.UndoPost)
+	w.RegisterWorkflow(adapters.DiscardPost)
+	w.RegisterWorkflow(adapters.PublishPost)
 
 	w.RegisterActivityWithOptions(&app.Commands.CreatePost, activity.RegisterOptions{Name: "CreatePostActivityHandler"})
-	w.RegisterActivityWithOptions(&app.Commands.ReviewPost, activity.RegisterOptions{Name: "ReviewPostActivityHandler"})
+	w.RegisterActivityWithOptions(&app.Commands.PublishPost, activity.RegisterOptions{Name: "PublishPostActivityHandler"})
+	w.RegisterActivityWithOptions(&app.Commands.DiscardPost, activity.RegisterOptions{Name: "DiscardPostActivityHandler"})
+	w.RegisterActivityWithOptions(&app.Commands.UndoPost, activity.RegisterOptions{Name: "UndoPostActivityHandler"})
 	w.RegisterActivityWithOptions(&app.Commands.NewPendingPost, activity.RegisterOptions{Name: "NewPostActivityHandler"})
 	w.RegisterActivityWithOptions(&app.Commands.PostCustomResources, activity.RegisterOptions{Name: "PostCustomResourcesActivityHandler"})
 	w.RegisterActivityWithOptions(&app.Commands.PostCompleted, activity.RegisterOptions{Name: "PublishPostActivityHandler"})

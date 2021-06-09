@@ -141,3 +141,21 @@ func (r ContentS3Repository) MakeProcessedContentPublic(ctx context.Context, use
 
 	return content, nil
 }
+
+func (r ContentS3Repository) DeletePublicContent(ctx context.Context, content []string) error {
+
+	s3Client := s3.New(r.session)
+
+	for _, image := range content {
+
+		// move file to private bucket
+		_, err := s3Client.DeleteObject(&s3.DeleteObjectInput{Bucket: aws.String(PostContentBucket), Key: aws.String(image)})
+
+		if err != nil {
+			fmt.Printf("unable to delete file %s", err)
+			continue
+		}
+	}
+
+	return nil
+}

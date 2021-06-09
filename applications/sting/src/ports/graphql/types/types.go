@@ -26,10 +26,34 @@ type CharacterRequest struct {
 	Media string `json:"media"`
 }
 
+type CharacterRequestType struct {
+	Name  string `json:"name"`
+	Media string `json:"media"`
+}
+
+type Contributor struct {
+	ID       string `json:"id"`
+	Username string `json:"username"`
+	Avatar   string `json:"avatar"`
+}
+
 type Media struct {
 	ID        string `json:"id"`
 	Thumbnail string `json:"thumbnail"`
 	Title     string `json:"title"`
+}
+
+type PendingPost struct {
+	ID                string                  `json:"id"`
+	Moderator         string                  `json:"moderator"`
+	Contributor       *Contributor            `json:"contributor"`
+	Content           []string                `json:"content"`
+	Categories        []*Category             `json:"categories"`
+	Characters        []*Character            `json:"characters"`
+	MediaRequests     []string                `json:"mediaRequests"`
+	CharacterRequests []*CharacterRequestType `json:"characterRequests"`
+	ArtistID          *string                 `json:"artistId"`
+	ArtistUsername    string                  `json:"artistUsername"`
 }
 
 type PostInput struct {

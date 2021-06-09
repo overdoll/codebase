@@ -11,12 +11,12 @@ import (
 type Post struct {
 	id         string
 	content    []string
-	postedAt   time.Time
 	characters []*Character
 	categories []*Category
 
 	artist      *Artist
 	contributor *user.User
+	postedAt    time.Time
 }
 
 type NotFoundError struct {
@@ -36,6 +36,18 @@ func NewPost(id string, artist *Artist, contributor *user.User, content []string
 		categories:  categories,
 		characters:  characters,
 		postedAt:    time.Now(),
+	}
+}
+
+func UnmarshalPostFromDatabase(id string, artist *Artist, contributorId, contributorUsername, contributorAvatar string, content []string, characters []*Character, categories []*Category, postedAt time.Time) *Post {
+	return &Post{
+		id:          id,
+		artist:      artist,
+		contributor: user.NewUser(contributorId, contributorUsername, contributorAvatar, nil, false, false),
+		content:     content,
+		characters:  characters,
+		categories:  categories,
+		postedAt:    postedAt,
 	}
 }
 
