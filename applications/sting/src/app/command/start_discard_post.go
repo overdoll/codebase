@@ -27,11 +27,6 @@ func (h StartDiscardPostHandler) Handle(ctx context.Context, id string) error {
 		return err
 	}
 
-	if err := h.pi.IndexPendingPost(ctx, pendingPost); err != nil {
-		zap.S().Errorf("failed to index post: %s", err)
-		return err
-	}
-
 	if err := h.pe.DiscardPostEvent(ctx, pendingPost); err != nil {
 		zap.S().Errorf("failed to discard post event: %s", err)
 		return err

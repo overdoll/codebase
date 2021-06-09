@@ -16,6 +16,7 @@ const (
 	Review     PostPendingState = "review"
 	Published  PostPendingState = "published"
 	Discarded  PostPendingState = "discarded"
+	Rejected   PostPendingState = "rejected"
 )
 
 var (
@@ -209,6 +210,13 @@ func (p *PostPending) MakeDiscarded() error {
 	}
 
 	p.state = Discarded
+
+	return nil
+}
+
+func (p *PostPending) MakeRejected() error {
+
+	p.state = Rejected
 
 	return nil
 }

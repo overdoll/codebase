@@ -87,6 +87,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			StartUndoPost:    command.NewStartUndoPostHandler(postRepo, indexRepo, eventRepo),
 			StartPublishPost: command.NewStartPublishPostHandler(postRepo, indexRepo, eventRepo),
 			StartDiscardPost: command.NewStartDiscardPostHandler(postRepo, indexRepo, eventRepo),
+			RejectPost:       command.NewRejectPostHandler(postRepo, indexRepo),
 
 			CreatePost:          command.NewCreatePostActivityHandler(postRepo, indexRepo),
 			NewPendingPost:      command.NewNewPostActivityHandler(postRepo, indexRepo, contentRepo, eva),
@@ -102,7 +103,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			SearchCharacters: query.NewSearchCharactersHandler(indexRepo),
 			SearchCategories: query.NewSearchCategoriesHandler(indexRepo),
 			SearchArtist:     query.NewSearchArtistsHandler(indexRepo),
-			GetPendingPosts:  query.NewGetPendingPostsHandler(indexRepo),
+			GetPendingPosts:  query.NewGetPendingPostsHandler(indexRepo, eva),
 		},
 	}
 }

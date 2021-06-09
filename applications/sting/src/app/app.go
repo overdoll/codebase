@@ -17,6 +17,7 @@ type Commands struct {
 	StartDiscardPost command.StartDiscardPostHandler
 	StartPublishPost command.StartPublishPostHandler
 	StartUndoPost    command.StartUndoPostHandler
+	RejectPost       command.RejectPostHandler
 
 	IndexAllArtists    command.IndexAllArtistsHandler
 	IndexAllCategories command.IndexAllCategoriesHandler
