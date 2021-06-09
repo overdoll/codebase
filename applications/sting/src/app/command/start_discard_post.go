@@ -10,10 +10,10 @@ import (
 type StartDiscardPostHandler struct {
 	pi post.IndexRepository
 	pr post.Repository
-	pe post.EventRepository
+	pe post.WorkflowRepository
 }
 
-func NewStartDiscardPostHandler(pr post.Repository, pi post.IndexRepository, pe post.EventRepository) StartDiscardPostHandler {
+func NewStartDiscardPostHandler(pr post.Repository, pi post.IndexRepository, pe post.WorkflowRepository) StartDiscardPostHandler {
 	return StartDiscardPostHandler{pr: pr, pi: pi, pe: pe}
 }
 
@@ -27,7 +27,7 @@ func (h StartDiscardPostHandler) Handle(ctx context.Context, id string) error {
 		return err
 	}
 
-	if err := h.pe.DiscardPostEvent(ctx, pendingPost); err != nil {
+	if err := h.pe.DiscardPostWorkflow(ctx, pendingPost); err != nil {
 		zap.S().Errorf("failed to discard post event: %s", err)
 		return err
 	}

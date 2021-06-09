@@ -13,10 +13,10 @@ var (
 
 type UpdatePendingPostHandler struct {
 	pr post.Repository
-	pe post.EventRepository
+	pe post.WorkflowRepository
 }
 
-func NewUpdatePendingPostHandler(pr post.Repository, pe post.EventRepository) UpdatePendingPostHandler {
+func NewUpdatePendingPostHandler(pr post.Repository, pe post.WorkflowRepository) UpdatePendingPostHandler {
 	return UpdatePendingPostHandler{pr: pr, pe: pe}
 }
 

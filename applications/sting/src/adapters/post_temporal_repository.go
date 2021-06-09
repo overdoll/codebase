@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/segmentio/ksuid"
 	"go.temporal.io/sdk/client"
 	"go.temporal.io/sdk/temporal"
 	"go.temporal.io/sdk/workflow"
@@ -31,7 +32,7 @@ func NewPostTemporalRepository(client client.Client) PostTemporalRepository {
 	return PostTemporalRepository{client: client}
 }
 
-func (r PostTemporalRepository) CreatePostEvent(ctx context.Context, pendingPost *post.PostPending) error {
+func (r PostTemporalRepository) CreatePostWorkflow(ctx context.Context, pendingPost *post.PostPending) error {
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: "sting",
@@ -54,10 +55,35 @@ func CreatePost(ctx workflow.Context, id string) error {
 		return err
 	}
 
+	// reassign moderator every day
+	for true {
+		if err := workflow.Await(ctx, func() bool {
+			return workflow.Now(ctx).After(time.Now().AddDate(0, 0, 1))
+		}); err != nil {
+			return err
+		}
+
+		newId := workflow.SideEffect(ctx, func(ctx workflow.Context) interface{} {
+			return ksuid.New().String()
+		})
+
+		var requiresNewModerator bool
+
+		err := workflow.ExecuteActivity(ctx, "ReassignModeratorActivityHandler.Handle", id, newId).Get(ctx, &requiresNewModerator)
+
+		if err != nil {
+			return err
+		}
+
+		if !requiresNewModerator {
+			break
+		}
+	}
+
 	return nil
 }
 
-func (r PostTemporalRepository) PublishPostEvent(ctx context.Context, pendingPost *post.PostPending) error {
+func (r PostTemporalRepository) PublishPostWorkflow(ctx context.Context, pendingPost *post.PostPending) error {
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: "sting",
@@ -91,7 +117,7 @@ func PublishPost(ctx workflow.Context, id string) error {
 	return workflow.ExecuteActivity(ctx, "CreatePostActivityHandler.Handle", id).Get(ctx, nil)
 }
 
-func (r PostTemporalRepository) DiscardPostEvent(ctx context.Context, pendingPost *post.PostPending) error {
+func (r PostTemporalRepository) DiscardPostWorkflow(ctx context.Context, pendingPost *post.PostPending) error {
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: "sting",
@@ -112,7 +138,7 @@ func DiscardPost(ctx workflow.Context, id string) error {
 	return workflow.ExecuteActivity(ctx, "DiscardPostActivityHandler.Handle", id).Get(ctx, nil)
 }
 
-func (r PostTemporalRepository) UndoPostEvent(ctx context.Context, pendingPost *post.PostPending) error {
+func (r PostTemporalRepository) UndoPostWorkflow(ctx context.Context, pendingPost *post.PostPending) error {
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: "sting",

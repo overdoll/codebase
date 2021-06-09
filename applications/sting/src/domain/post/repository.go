@@ -57,9 +57,9 @@ type IndexRepository interface {
 	SearchCategories(context.Context, string) ([]*Category, error)
 }
 
-type EventRepository interface {
-	CreatePostEvent(context.Context, *PostPending) error
-	PublishPostEvent(context.Context, *PostPending) error
-	DiscardPostEvent(context.Context, *PostPending) error
-	UndoPostEvent(context.Context, *PostPending) error
+type WorkflowRepository interface {
+	CreatePostWorkflow(context.Context, *PostPending) error
+	PublishPostWorkflow(context.Context, *PostPending) error
+	DiscardPostWorkflow(context.Context, *PostPending) error
+	UndoPostWorkflow(context.Context, *PostPending) error
 }

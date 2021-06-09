@@ -15,7 +15,7 @@ func NewReassignModeratorActivityHandler(pr post.Repository, pi post.IndexReposi
 	return ReassignModeratorActivityHandler{pr: pr, pi: pi}
 }
 
-func (h ReassignModeratorActivityHandler) Handle(ctx context.Context, id string) error {
+func (h ReassignModeratorActivityHandler) Handle(ctx context.Context, oldId, newId string) (bool, error) {
 
-	return nil
+	return true, nil
 }

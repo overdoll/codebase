@@ -10,11 +10,11 @@ import (
 type StartPublishPostHandler struct {
 	pi  post.IndexRepository
 	pr  post.Repository
-	pe  post.EventRepository
+	pe  post.WorkflowRepository
 	eva EvaService
 }
 
-func NewStartPublishPostHandler(pr post.Repository, pi post.IndexRepository, pe post.EventRepository, eva EvaService) StartPublishPostHandler {
+func NewStartPublishPostHandler(pr post.Repository, pi post.IndexRepository, pe post.WorkflowRepository, eva EvaService) StartPublishPostHandler {
 	return StartPublishPostHandler{pr: pr, pi: pi, pe: pe, eva: eva}
 }
 
@@ -40,7 +40,7 @@ func (h StartPublishPostHandler) Handle(ctx context.Context, id string) error {
 		return err
 	}
 
-	if err := h.pe.PublishPostEvent(ctx, pendingPost); err != nil {
+	if err := h.pe.PublishPostWorkflow(ctx, pendingPost); err != nil {
 		zap.S().Errorf("failed to create post event: %s", err)
 		return err
 	}

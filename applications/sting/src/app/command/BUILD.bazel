@@ -13,6 +13,8 @@ go_library(
         "new_pending_post.go",
         "post_custom_resources.go",
         "publish_post.go",
+        "reassign_moderator.go",
+        "reject_post.go",
         "services.go",
         "start_discard_post.go",
         "start_publish_post.go",
