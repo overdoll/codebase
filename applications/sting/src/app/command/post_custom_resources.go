@@ -6,16 +6,16 @@ import (
 	"overdoll/applications/sting/src/domain/post"
 )
 
-type PostCustomResourcesActivityHandler struct {
+type PostCustomResourcesHandler struct {
 	pi post.IndexRepository
 	pr post.Repository
 }
 
-func NewPostCustomResourcesActivityHandler(pr post.Repository, pi post.IndexRepository) PostCustomResourcesActivityHandler {
-	return PostCustomResourcesActivityHandler{pr: pr, pi: pi}
+func NewPostCustomResourcesHandler(pr post.Repository, pi post.IndexRepository) PostCustomResourcesHandler {
+	return PostCustomResourcesHandler{pr: pr, pi: pi}
 }
 
-func (h PostCustomResourcesActivityHandler) Handle(ctx context.Context, id string, ids []string) error {
+func (h PostCustomResourcesHandler) Handle(ctx context.Context, id string, ids []string) error {
 
 	_, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PostPending) error {
 

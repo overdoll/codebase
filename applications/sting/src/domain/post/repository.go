@@ -57,10 +57,3 @@ type IndexRepository interface {
 	DeleteCategoryIndex(context.Context) error
 	SearchCategories(context.Context, string) ([]*Category, error)
 }
-
-type WorkflowRepository interface {
-	CreatePostWorkflow(context.Context, *PostPending) error
-	PublishPostWorkflow(context.Context, *PostPending) error
-	DiscardPostWorkflow(context.Context, *PostPending) error
-	UndoPostWorkflow(context.Context, *PostPending) error
-}

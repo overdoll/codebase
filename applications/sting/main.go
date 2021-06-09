@@ -12,6 +12,7 @@ import (
 	"overdoll/applications/sting/src/ports"
 	"overdoll/applications/sting/src/service"
 	"overdoll/libraries/bootstrap"
+	"overdoll/libraries/clients"
 	"overdoll/libraries/commands"
 	"overdoll/libraries/config"
 )
@@ -34,6 +35,10 @@ func init() {
 		Use: "http",
 		Run: RunHttp,
 	})
+	rootCmd.AddCommand(&cobra.Command{
+		Use: "grpc",
+		Run: RunGrpc,
+	})
 }
 
 func main() {
@@ -45,7 +50,8 @@ func main() {
 
 func Run(cmd *cobra.Command, args []string) {
 	go RunWorker(cmd, args)
-	RunHttp(cmd, args)
+	go RunHttp(cmd, args)
+	RunGrpc(cmd, args)
 }
 
 func RunWorker(cmd *cobra.Command, args []string) {
@@ -67,12 +73,16 @@ func RunHttp(cmd *cobra.Command, args []string) {
 
 	defer cleanup()
 
-	srv := ports.NewGraphQLServer(&app)
+	client := clients.NewTemporalClient(ctx)
+
+	defer client.Close()
+
+	srv := ports.NewGraphQLServer(&app, client)
 
 	bootstrap.InitializeHttpServer(":8000", srv, func() {})
 }
 
-func Grpc(cmd *cobra.Command, args []string) {
+func RunGrpc(cmd *cobra.Command, args []string) {
 	ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancelFn()
 
@@ -80,7 +90,11 @@ func Grpc(cmd *cobra.Command, args []string) {
 
 	defer cleanup()
 
-	s := ports.NewGrpcServer(&app)
+	client := clients.NewTemporalClient(ctx)
+
+	defer client.Close()
+
+	s := ports.NewGrpcServer(&app, client)
 
 	bootstrap.InitializeGRPCServer("0.0.0.0:8080", func(server *grpc.Server) {
 		sting.RegisterStingServer(server, s)

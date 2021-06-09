@@ -6,16 +6,16 @@ import (
 	"overdoll/applications/sting/src/domain/post"
 )
 
-type CreatePostActivityHandler struct {
+type CreatePostHandler struct {
 	pr post.Repository
 	pi post.IndexRepository
 }
 
-func NewCreatePostActivityHandler(pr post.Repository, pi post.IndexRepository) CreatePostActivityHandler {
-	return CreatePostActivityHandler{pr: pr, pi: pi}
+func NewCreatePostHandler(pr post.Repository, pi post.IndexRepository) CreatePostHandler {
+	return CreatePostHandler{pr: pr, pi: pi}
 }
 
-func (h CreatePostActivityHandler) Handle(ctx context.Context, id string) error {
+func (h CreatePostHandler) Handle(ctx context.Context, id string) error {
 
 	pendingPost, err := h.pr.GetPendingPost(ctx, id)
 

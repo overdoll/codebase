@@ -17,13 +17,12 @@ var (
 
 type CreatePendingPostHandler struct {
 	pr     post.Repository
-	pe     post.WorkflowRepository
 	parley ParleyService
 	eva    EvaService
 }
 
-func NewCreatePendingPostHandler(pr post.Repository, pe post.WorkflowRepository, eva EvaService, parley ParleyService) CreatePendingPostHandler {
-	return CreatePendingPostHandler{pr: pr, eva: eva, pe: pe, parley: parley}
+func NewCreatePendingPostHandler(pr post.Repository, eva EvaService, parley ParleyService) CreatePendingPostHandler {
+	return CreatePendingPostHandler{pr: pr, eva: eva, parley: parley}
 }
 
 func (h CreatePendingPostHandler) Handle(ctx context.Context, contributorId, artistId, artistUsername string, content, characterIds, categoryIds []string, characterRequests map[string]string, mediaRequests []string) (*post.PostPending, error) {
@@ -85,13 +84,6 @@ func (h CreatePendingPostHandler) Handle(ctx context.Context, contributorId, art
 
 	// create a pending post in the database with all of the data
 	if err := h.pr.CreatePendingPost(ctx, pendingPost); err != nil {
-		return nil, err
-	}
-
-	err = h.pe.CreatePostWorkflow(ctx, pendingPost)
-
-	if err != nil {
-		zap.S().Errorf("failed to create post event: %s", err)
 		return nil, err
 	}
 

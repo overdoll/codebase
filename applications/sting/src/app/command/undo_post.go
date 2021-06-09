@@ -7,18 +7,18 @@ import (
 	"overdoll/applications/sting/src/domain/post"
 )
 
-type UndoPostActivityHandler struct {
+type UndoPostHandler struct {
 	pi  post.IndexRepository
 	pr  post.Repository
 	cr  content.Repository
 	eva EvaService
 }
 
-func NewUndoPostActivityHandler(pr post.Repository, pi post.IndexRepository, cr content.Repository, eva EvaService) UndoPostActivityHandler {
-	return UndoPostActivityHandler{pr: pr, pi: pi, cr: cr, eva: eva}
+func NewUndoPostHandler(pr post.Repository, pi post.IndexRepository, cr content.Repository, eva EvaService) UndoPostHandler {
+	return UndoPostHandler{pr: pr, pi: pi, cr: cr, eva: eva}
 }
 
-func (h UndoPostActivityHandler) Handle(ctx context.Context, id string) error {
+func (h UndoPostHandler) Handle(ctx context.Context, id string) error {
 
 	// Get public post
 	pst, err := h.pr.GetPost(ctx, id)

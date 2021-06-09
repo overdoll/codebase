@@ -5,7 +5,6 @@ import (
 
 	"go.uber.org/zap"
 	"overdoll/applications/sting/src/domain/post"
-	"overdoll/libraries/passport"
 )
 
 type GetPendingPostsHandler struct {
@@ -17,17 +16,11 @@ func NewGetPendingPostsHandler(pr post.IndexRepository, eva EvaService) GetPendi
 	return GetPendingPostsHandler{pr: pr, eva: eva}
 }
 
-func (h GetPendingPostsHandler) Handle(ctx context.Context) ([]*post.PostPending, error) {
+func (h GetPendingPostsHandler) Handle(ctx context.Context, userId string) ([]*post.PostPending, error) {
 
-	pass := passport.FromContext(ctx)
+	query := userId
 
-	if !pass.IsAuthenticated() {
-		return nil, ErrSearchFailed
-	}
-
-	query := pass.UserID()
-
-	usr, err := h.eva.GetUser(ctx, pass.UserID())
+	usr, err := h.eva.GetUser(ctx, userId)
 
 	if err != nil {
 		zap.S().Errorf("could not get user: %s", err)

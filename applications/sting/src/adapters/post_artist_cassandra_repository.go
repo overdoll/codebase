@@ -29,7 +29,11 @@ func (r PostsCassandraRepository) GetArtists(ctx context.Context) ([]*post.Artis
 	var dbArtists []Artist
 
 	qc := qb.Select("artists").
-		Columns("user_id", "user_username", "user_avatar").
+		Columns(
+			"user_id",
+			"user_username",
+			"user_avatar",
+		).
 		Query(r.session).
 		Consistency(gocql.One)
 
@@ -52,7 +56,11 @@ func (r PostsCassandraRepository) GetArtistById(ctx context.Context, id string) 
 
 	qc := qb.Select("artists").
 		Where(qb.Eq("user_id")).
-		Columns("user_id", "user_username", "user_avatar").
+		Columns(
+			"user_id",
+			"user_username",
+			"user_avatar",
+		).
 		Query(r.session).
 		BindStruct(&Artist{
 			Id: id,

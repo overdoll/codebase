@@ -5,17 +5,17 @@ import (
 
 	"go.temporal.io/sdk/activity"
 	"go.temporal.io/sdk/client"
-	"go.temporal.io/sdk/worker"
+	temporal_worker "go.temporal.io/sdk/worker"
 	"go.uber.org/zap"
-	"overdoll/applications/sting/src/adapters"
 	"overdoll/applications/sting/src/app"
+	"overdoll/applications/sting/src/ports/worker"
 )
 
 type Worker struct {
 	app *app.Application
 }
 
-func NewWorker(app *app.Application) worker.Worker {
+func NewWorker(app *app.Application) temporal_worker.Worker {
 
 	c, err := client.NewClient(client.Options{
 		HostPort:  os.Getenv("TEMPORAL_URL"),
@@ -28,19 +28,20 @@ func NewWorker(app *app.Application) worker.Worker {
 
 	defer c.Close()
 
-	w := worker.New(c, "sting", worker.Options{})
+	w := temporal_worker.New(c, "sting", temporal_worker.Options{})
 
-	w.RegisterWorkflow(adapters.UndoPost)
-	w.RegisterWorkflow(adapters.DiscardPost)
-	w.RegisterWorkflow(adapters.PublishPost)
+	w.RegisterWorkflow(worker.CreatePost)
+	w.RegisterWorkflow(worker.DiscardPost)
+	w.RegisterWorkflow(worker.UndoPost)
+	w.RegisterWorkflow(worker.PublishPost)
 
-	w.RegisterActivityWithOptions(&app.Commands.CreatePost, activity.RegisterOptions{Name: "CreatePostActivityHandler"})
-	w.RegisterActivityWithOptions(&app.Commands.PublishPost, activity.RegisterOptions{Name: "PublishPostActivityHandler"})
-	w.RegisterActivityWithOptions(&app.Commands.DiscardPost, activity.RegisterOptions{Name: "DiscardPostActivityHandler"})
-	w.RegisterActivityWithOptions(&app.Commands.UndoPost, activity.RegisterOptions{Name: "UndoPostActivityHandler"})
-	w.RegisterActivityWithOptions(&app.Commands.NewPendingPost, activity.RegisterOptions{Name: "NewPostActivityHandler"})
-	w.RegisterActivityWithOptions(&app.Commands.PostCustomResources, activity.RegisterOptions{Name: "PostCustomResourcesActivityHandler"})
-	w.RegisterActivityWithOptions(&app.Commands.ReassignModerator, activity.RegisterOptions{Name: "ReassignModeratorActivityHandler"})
+	w.RegisterActivityWithOptions(&app.Commands.CreatePost, activity.RegisterOptions{Name: "CreatePostHandler"})
+	w.RegisterActivityWithOptions(&app.Commands.PublishPost, activity.RegisterOptions{Name: "PublishPostHandler"})
+	w.RegisterActivityWithOptions(&app.Commands.DiscardPost, activity.RegisterOptions{Name: "DiscardPostHandler"})
+	w.RegisterActivityWithOptions(&app.Commands.UndoPost, activity.RegisterOptions{Name: "UndoPostHandler"})
+	w.RegisterActivityWithOptions(&app.Commands.NewPendingPost, activity.RegisterOptions{Name: "NewPostHandler"})
+	w.RegisterActivityWithOptions(&app.Commands.PostCustomResources, activity.RegisterOptions{Name: "PostCustomResourcesHandler"})
+	w.RegisterActivityWithOptions(&app.Commands.ReassignModerator, activity.RegisterOptions{Name: "ReassignModeratorHandler"})
 
 	return w
 }

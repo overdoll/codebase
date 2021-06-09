@@ -6,16 +6,16 @@ import (
 	"overdoll/applications/sting/src/domain/post"
 )
 
-type ReassignModeratorActivityHandler struct {
+type ReassignModeratorHandler struct {
 	pi post.IndexRepository
 	pr post.Repository
 }
 
-func NewReassignModeratorActivityHandler(pr post.Repository, pi post.IndexRepository) ReassignModeratorActivityHandler {
-	return ReassignModeratorActivityHandler{pr: pr, pi: pi}
+func NewReassignModeratorHandler(pr post.Repository, pi post.IndexRepository) ReassignModeratorHandler {
+	return ReassignModeratorHandler{pr: pr, pi: pi}
 }
 
-func (h ReassignModeratorActivityHandler) Handle(ctx context.Context, oldId, newId string) (bool, error) {
+func (h ReassignModeratorHandler) Handle(ctx context.Context, oldId, newId string) (bool, error) {
 
 	return true, nil
 }

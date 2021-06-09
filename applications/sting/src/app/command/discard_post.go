@@ -8,18 +8,18 @@ import (
 	"overdoll/applications/sting/src/domain/post"
 )
 
-type DiscardPostActivityHandler struct {
+type DiscardPostHandler struct {
 	pi  post.IndexRepository
 	pr  post.Repository
 	cnt content.Repository
 	eva EvaService
 }
 
-func NewDiscardPostActivityHandler(pr post.Repository, pi post.IndexRepository, cnt content.Repository, eva EvaService) DiscardPostActivityHandler {
-	return DiscardPostActivityHandler{pr: pr, pi: pi, eva: eva, cnt: cnt}
+func NewDiscardPostHandler(pr post.Repository, pi post.IndexRepository, cnt content.Repository, eva EvaService) DiscardPostHandler {
+	return DiscardPostHandler{pr: pr, pi: pi, eva: eva, cnt: cnt}
 }
 
-func (h DiscardPostActivityHandler) Handle(ctx context.Context, id string) error {
+func (h DiscardPostHandler) Handle(ctx context.Context, id string) error {
 
 	pendingPost, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PostPending) error {
 

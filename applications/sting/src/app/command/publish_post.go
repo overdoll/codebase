@@ -7,18 +7,18 @@ import (
 	"overdoll/applications/sting/src/domain/post"
 )
 
-type PublishPostActivityHandler struct {
+type PublishPostHandler struct {
 	pi  post.IndexRepository
 	pr  post.Repository
 	cr  content.Repository
 	eva EvaService
 }
 
-func NewPublishPostActivityHandler(pr post.Repository, pi post.IndexRepository, cr content.Repository, eva EvaService) PublishPostActivityHandler {
-	return PublishPostActivityHandler{pr: pr, pi: pi, cr: cr, eva: eva}
+func NewPublishPostHandler(pr post.Repository, pi post.IndexRepository, cr content.Repository, eva EvaService) PublishPostHandler {
+	return PublishPostHandler{pr: pr, pi: pi, cr: cr, eva: eva}
 }
 
-func (h PublishPostActivityHandler) Handle(ctx context.Context, id string) error {
+func (h PublishPostHandler) Handle(ctx context.Context, id string) error {
 
 	pendingPost, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PostPending) error {
 

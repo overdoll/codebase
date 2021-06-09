@@ -13,11 +13,10 @@ var (
 
 type UpdatePendingPostHandler struct {
 	pr post.Repository
-	pe post.WorkflowRepository
 }
 
-func NewUpdatePendingPostHandler(pr post.Repository, pe post.WorkflowRepository) UpdatePendingPostHandler {
-	return UpdatePendingPostHandler{pr: pr, pe: pe}
+func NewUpdatePendingPostHandler(pr post.Repository) UpdatePendingPostHandler {
+	return UpdatePendingPostHandler{pr: pr}
 }
 
 func (h UpdatePendingPostHandler) Handle(ctx context.Context, id, artistId string, characterIds, categoryIds []string, characterRequests map[string]string, mediaRequest, categoryRequests []string) (*post.PostPending, error) {

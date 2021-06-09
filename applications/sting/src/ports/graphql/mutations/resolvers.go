@@ -6,6 +6,7 @@ import (
 	"go.temporal.io/sdk/client"
 	"overdoll/applications/sting/src/app"
 	"overdoll/applications/sting/src/ports/graphql/types"
+	"overdoll/applications/sting/src/ports/worker"
 	"overdoll/libraries/passport"
 )
 
@@ -66,6 +67,17 @@ func (r *MutationResolver) Post(ctx context.Context, data *types.PostInput) (*ty
 			requests,
 			data.MediaRequests,
 		)
+
+	if err != nil {
+		return nil, err
+	}
+
+	options := client.StartWorkflowOptions{
+		TaskQueue: "sting",
+		ID:        "NewCreatePendingPostWorkflow_" + post.ID(),
+	}
+
+	_, err = r.Client.ExecuteWorkflow(ctx, options, worker.CreatePost, post.ID())
 
 	if err != nil {
 		return nil, err

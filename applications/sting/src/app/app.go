@@ -24,14 +24,13 @@ type Commands struct {
 	IndexAllCharacters command.IndexAllCharactersHandler
 	IndexAllMedia      command.IndexAllMediaHandler
 
-	// Activities - used by temporal
-	CreatePost          command.CreatePostActivityHandler
-	NewPendingPost      command.NewPostActivityHandler
-	PostCustomResources command.PostCustomResourcesActivityHandler
-	PublishPost         command.PublishPostActivityHandler
-	DiscardPost         command.DiscardPostActivityHandler
-	UndoPost            command.UndoPostActivityHandler
-	ReassignModerator   command.ReassignModeratorActivityHandler
+	CreatePost          command.CreatePostHandler
+	NewPendingPost      command.NewPostHandler
+	PostCustomResources command.PostCustomResourcesHandler
+	PublishPost         command.PublishPostHandler
+	DiscardPost         command.DiscardPostHandler
+	UndoPost            command.UndoPostHandler
+	ReassignModerator   command.ReassignModeratorHandler
 }
 
 type Queries struct {
