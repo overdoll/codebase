@@ -91,7 +91,6 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 
 			CreatePost:          command.NewCreatePostActivityHandler(postRepo, indexRepo),
 			NewPendingPost:      command.NewNewPostActivityHandler(postRepo, indexRepo, contentRepo, eva),
-			PostCompleted:       command.NewPublishPostActivityHandler(postRepo, indexRepo, contentRepo, eva),
 			PostCustomResources: command.NewPostCustomResourcesActivityHandler(postRepo, indexRepo),
 
 			PublishPost:       command.NewPublishPostActivityHandler(postRepo, indexRepo, contentRepo, eva),

@@ -27,7 +27,6 @@ type Commands struct {
 	// Activities - used by temporal
 	CreatePost          command.CreatePostActivityHandler
 	NewPendingPost      command.NewPostActivityHandler
-	PostCompleted       command.PublishPostActivityHandler
 	PostCustomResources command.PostCustomResourcesActivityHandler
 	PublishPost         command.PublishPostActivityHandler
 	DiscardPost         command.DiscardPostActivityHandler

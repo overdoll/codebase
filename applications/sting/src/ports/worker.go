@@ -40,7 +40,7 @@ func NewWorker(app *app.Application) worker.Worker {
 	w.RegisterActivityWithOptions(&app.Commands.UndoPost, activity.RegisterOptions{Name: "UndoPostActivityHandler"})
 	w.RegisterActivityWithOptions(&app.Commands.NewPendingPost, activity.RegisterOptions{Name: "NewPostActivityHandler"})
 	w.RegisterActivityWithOptions(&app.Commands.PostCustomResources, activity.RegisterOptions{Name: "PostCustomResourcesActivityHandler"})
-	w.RegisterActivityWithOptions(&app.Commands.PostCompleted, activity.RegisterOptions{Name: "PublishPostActivityHandler"})
+	w.RegisterActivityWithOptions(&app.Commands.ReassignModerator, activity.RegisterOptions{Name: "ReassignModeratorActivityHandler"})
 
 	return w
 }
