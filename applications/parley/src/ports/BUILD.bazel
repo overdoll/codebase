@@ -9,6 +9,7 @@ go_library(
     importpath = "overdoll/applications/parley/src/ports",
     visibility = ["//visibility:public"],
     deps = [
+        "//applications/parley/proto:v1_go_proto",
         "//applications/parley/src/app",
         "//applications/parley/src/ports/graphql",
         "//libraries/graphql",

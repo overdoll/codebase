@@ -1,17 +1,26 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+load("@io_bazel_rules_docker//go:image.bzl", "go_image")
+load("@io_bazel_rules_docker//container:container.bzl", "container_push")
+
+exports_files(["config.toml"])
+
+web_sources = glob(["database/**"]) + ["config.toml"]
 
 go_library(
     name = "parley_lib",
     srcs = ["main.go"],
+    data = web_sources,
     importpath = "overdoll/applications/parley",
     visibility = ["//visibility:private"],
     deps = [
+        "//applications/parley/proto:v1_go_proto",
         "//applications/parley/src/ports",
         "//applications/parley/src/service",
         "//libraries/bootstrap",
         "//libraries/commands",
         "//libraries/config",
         "@com_github_spf13_cobra//:cobra",
+        "@org_golang_google_grpc//:go_default_library",
     ],
 )
 
@@ -19,4 +28,38 @@ go_binary(
     name = "parley",
     embed = [":parley_lib"],
     visibility = ["//visibility:public"],
+)
+
+go_image(
+    name = "local-image",
+    base = "@go_base_image//image",
+    data = [".env"],
+    embed = [":parley_lib"],
+    importpath = "overdoll/applications/parley",
+)
+
+go_image(
+    name = "image",
+    base = "@go_base_image//image",
+    embed = [":parley_lib"],
+    importpath = "overdoll/applications/parley",
+)
+
+container_push(
+    name = "publish-testing",
+    format = "Docker",
+    image = ":image",
+    registry = "$(CONTAINER_REGISTRY)",
+    repository = "parley/dev",
+    tag = "$(CONTAINER_TAG)",
+)
+
+container_push(
+    name = "publish",
+    format = "Docker",
+    image = ":image",
+    registry = "$(CONTAINER_REGISTRY)",
+    repository = "parley",
+    skip_unchanged_digest = True,
+    tag = "$(CONTAINER_TAG)",
 )

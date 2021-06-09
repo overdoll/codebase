@@ -18,6 +18,12 @@ import (
 
 func NewApplication(ctx context.Context) (app.Application, func()) {
 
+	_, err := bootstrap.NewBootstrap(ctx)
+
+	if err != nil {
+		log.Fatalf("bootstrap failed with errors: %s", err)
+	}
+
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
 	parleyClient, cleanup2 := clients.NewParleyClient(ctx, os.Getenv("PARLEY_SERVICE"))
 
@@ -31,12 +37,6 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 }
 
 func createApplication(ctx context.Context, eva command.EvaService, parley command.ParleyService) app.Application {
-
-	_, err := bootstrap.NewBootstrap(ctx)
-
-	if err != nil {
-		log.Fatalf("bootstrap failed with errors: %s", err)
-	}
 
 	session, err := bootstrap.InitializeDatabaseSession(viper.GetString("db.keyspace"))
 

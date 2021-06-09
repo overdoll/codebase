@@ -5,3 +5,4 @@ nameOverride: "sting"
 
 service: true
 http: true
+grpc: true
