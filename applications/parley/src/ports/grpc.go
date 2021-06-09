@@ -18,5 +18,11 @@ func NewGrpcServer(application *app.Application) *Server {
 }
 
 func (s Server) GetNextModerator(ctx context.Context, request *parley.GetModeratorRequest) (*parley.Moderator, error) {
-	panic("implement me")
+	moderator, err := s.app.Commands.GetNextModerator.Handle(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &parley.Moderator{Id: moderator.ID()}, nil
 }
