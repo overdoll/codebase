@@ -40,10 +40,10 @@ func TestCassandraRepository_get_pending_post_not_exists(t *testing.T) {
 	assert.EqualError(t, err, post.NotFoundError{Identifier: id}.Error())
 }
 
-func newPostRepository(t *testing.T) adapters.CassandraRepository {
+func newPostRepository(t *testing.T) adapters.PostsCassandraRepository {
 	session := tests.CreateScyllaSession(t, "sting")
 
-	return adapters.NewCassandraRepository(session)
+	return adapters.NewPostsCassandraRepository(session)
 }
 
 func newFakePost(t *testing.T) *post.Post {
@@ -55,6 +55,7 @@ func newFakePost(t *testing.T) *post.Post {
 		"asd",
 		"",
 		nil,
+		false,
 		false,
 	)
 
