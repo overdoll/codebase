@@ -12,6 +12,7 @@ go_library(
         "//applications/eva/src/ports/graphql/types",
         "//libraries/cookies",
         "//libraries/helpers",
+        "//libraries/passport",
         "@org_uber_go_zap//:zap",
     ],
 )

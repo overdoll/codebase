@@ -27,7 +27,6 @@ go_library(
     deps = [
         "//applications/sting/src/domain/content",
         "//applications/sting/src/domain/post",
-        "//libraries/passport",
         "//libraries/user",
         "//libraries/uuid",
         "@com_github_gocql_gocql//:gocql",

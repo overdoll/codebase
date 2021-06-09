@@ -8,6 +8,8 @@ go_library(
     deps = [
         "//applications/sting/src/app",
         "//applications/sting/src/ports/graphql/types",
+        "//applications/sting/src/ports/temporal/workflows",
+        "//libraries/passport",
         "@io_temporal_go_sdk//client",
     ],
 )

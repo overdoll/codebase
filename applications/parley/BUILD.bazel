@@ -6,6 +6,9 @@ go_library(
     importpath = "overdoll/applications/parley",
     visibility = ["//visibility:private"],
     deps = [
+        "//applications/parley/src/ports",
+        "//applications/parley/src/service",
+        "//libraries/bootstrap",
         "//libraries/commands",
         "//libraries/config",
         "@com_github_spf13_cobra//:cobra",

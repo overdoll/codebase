@@ -5,5 +5,8 @@ go_library(
     srcs = ["app.go"],
     importpath = "overdoll/applications/parley/src/app",
     visibility = ["//visibility:public"],
-    deps = ["//applications/parley/src/app/command"],
+    deps = [
+        "//applications/parley/src/app/command",
+        "//applications/parley/src/app/query",
+    ],
 )

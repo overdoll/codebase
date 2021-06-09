@@ -17,6 +17,7 @@ go_library(
         "//applications/sting/src/ports",
         "//applications/sting/src/service",
         "//libraries/bootstrap",
+        "//libraries/clients",
         "//libraries/commands",
         "//libraries/config",
         "@com_github_spf13_cobra//:cobra",

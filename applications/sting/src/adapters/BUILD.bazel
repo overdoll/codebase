@@ -17,7 +17,6 @@ go_library(
         "post_index_elasticsearch_repository.go",
         "post_media_cassandra_repository.go",
         "post_media_index_elasticsearch_repository.go",
-        "post_temporal_repository.go",
     ],
     importpath = "overdoll/applications/sting/src/adapters",
     visibility = ["//visibility:public"],
@@ -36,10 +35,6 @@ go_library(
         "@com_github_h2non_filetype//:filetype",
         "@com_github_scylladb_gocqlx_v2//:gocqlx",
         "@com_github_scylladb_gocqlx_v2//qb",
-        "@com_github_segmentio_ksuid//:ksuid",
-        "@io_temporal_go_sdk//client",
-        "@io_temporal_go_sdk//temporal",
-        "@io_temporal_go_sdk//workflow",
     ],
 )
 

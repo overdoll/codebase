@@ -3,6 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "query",
     srcs = [
+        "get_pending_post.go",
         "get_pending_posts.go",
         "search_artists.go",
         "search_categories.go",
@@ -14,7 +15,6 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//applications/sting/src/domain/post",
-        "//libraries/passport",
         "//libraries/user",
         "@org_uber_go_zap//:zap",
     ],

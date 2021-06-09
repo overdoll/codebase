@@ -9,6 +9,7 @@ go_library(
         "//applications/parley/src/adapters",
         "//applications/parley/src/app",
         "//applications/parley/src/app/command",
+        "//applications/parley/src/app/query",
         "//libraries/bootstrap",
         "@com_github_spf13_viper//:viper",
     ],
