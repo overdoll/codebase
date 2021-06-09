@@ -6,6 +6,7 @@ import (
 	"go.temporal.io/sdk/client"
 	"overdoll/applications/sting/src/app"
 	"overdoll/applications/sting/src/ports/graphql/types"
+	"overdoll/libraries/passport"
 )
 
 type MutationResolver struct {
@@ -41,6 +42,12 @@ func (r *MutationResolver) UpdatePost(ctx context.Context, id string, data *type
 
 func (r *MutationResolver) Post(ctx context.Context, data *types.PostInput) (*types.PostResponse, error) {
 
+	pass := passport.FromContext(ctx)
+
+	if !pass.IsAuthenticated() {
+		return nil, passport.ErrNotAuthenticated
+	}
+
 	requests := make(map[string]string)
 
 	for _, item := range data.CharacterRequests {
@@ -50,6 +57,7 @@ func (r *MutationResolver) Post(ctx context.Context, data *types.PostInput) (*ty
 	post, err := r.App.Commands.CreatePendingPost.
 		Handle(
 			ctx,
+			pass.UserID(),
 			*data.ArtistID,
 			data.ArtistUsername,
 			data.Content,

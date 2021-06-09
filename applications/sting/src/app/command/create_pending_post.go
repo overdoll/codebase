@@ -8,7 +8,6 @@ import (
 	"github.com/gocql/gocql"
 	"go.uber.org/zap"
 	"overdoll/applications/sting/src/domain/post"
-	"overdoll/libraries/passport"
 	"overdoll/libraries/uuid"
 )
 
@@ -27,15 +26,7 @@ func NewCreatePendingPostHandler(pr post.Repository, pe post.WorkflowRepository,
 	return CreatePendingPostHandler{pr: pr, eva: eva, pe: pe, parley: parley}
 }
 
-func (h CreatePendingPostHandler) Handle(ctx context.Context, artistId, artistUsername string, content, characterIds, categoryIds []string, characterRequests map[string]string, mediaRequests []string) (*post.PostPending, error) {
-
-	pass := passport.FromContext(ctx)
-
-	if !pass.IsAuthenticated() {
-		return nil, ErrFailedPost
-	}
-
-	contributorId := pass.UserID()
+func (h CreatePendingPostHandler) Handle(ctx context.Context, contributorId, artistId, artistUsername string, content, characterIds, categoryIds []string, characterRequests map[string]string, mediaRequests []string) (*post.PostPending, error) {
 
 	characters, err := h.pr.GetCharactersById(ctx, characterIds)
 
