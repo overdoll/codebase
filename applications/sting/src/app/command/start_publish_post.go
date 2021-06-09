@@ -30,6 +30,7 @@ func (h StartPublishPostHandler) Handle(ctx context.Context, id string) error {
 		}
 
 		pending.MakePublishing()
+
 		pending.UpdateArtist(post.NewArtist(usr.ID(), usr.Username()))
 
 		return nil

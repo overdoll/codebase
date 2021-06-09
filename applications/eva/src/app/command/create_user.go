@@ -21,18 +21,18 @@ var (
 	ErrFailedCreateUser = errors.New("failed to create user")
 )
 
-func (h CreateUserHandler) Handle(ctx context.Context, username, email string) error {
+func (h CreateUserHandler) Handle(ctx context.Context, username, email string) (*user.User, error) {
 
 	instance, err := user.NewUser(uuid.New().String(), username, email)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if err := h.ur.CreateUser(ctx, instance); err != nil {
 		zap.S().Errorf("failed to create user: %s", err)
-		return ErrFailedCreateUser
+		return nil, ErrFailedCreateUser
 	}
 
-	return nil
+	return instance, nil
 }

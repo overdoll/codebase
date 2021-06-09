@@ -54,5 +54,11 @@ func (s *Server) LockUser(ctx context.Context, request *eva.LockUserRequest) (*e
 }
 
 func (s *Server) CreateUser(ctx context.Context, request *eva.CreateUserRequest) (*eva.User, error) {
-	panic("implement me")
+	usr, err := s.app.Commands.CreateUser.Handle(ctx, request.Username, request.Email)
+
+	if err != nil {
+		return nil, status.Error(codes.Internal, fmt.Sprintf("failed to create user: %s", err))
+	}
+
+	return marshalUserToProto(usr), nil
 }
