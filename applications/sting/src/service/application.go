@@ -95,7 +95,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			PostCustomResources: command.NewPostCustomResourcesActivityHandler(postRepo, indexRepo),
 
 			PublishPost: command.NewPublishPostActivityHandler(postRepo, indexRepo, contentRepo, eva),
-			DiscardPost: command.NewDiscardPostActivityHandler(postRepo, indexRepo, eva),
+			DiscardPost: command.NewDiscardPostActivityHandler(postRepo, indexRepo, contentRepo, eva),
 			UndoPost:    command.NewUndoPostActivityHandler(postRepo, indexRepo, contentRepo, eva),
 		},
 		Queries: app.Queries{

@@ -20,7 +20,13 @@ message LockUserRequest {
   uint64 duration = 2;
 }
 
+message CreateUserRequest {
+  string username = 1;
+  string email = 2;
+}
+
 service Eva {
   rpc LockUser(LockUserRequest) returns (User);
   rpc GetUser(GetUserRequest) returns (User);
+  rpc CreateUser(CreateUserRequest) returns (User);
 }

@@ -148,48 +148,55 @@ func (r UserRepository) CreateUser(ctx context.Context, instance *user.User) err
 		return user.ErrUsernameNotUnique
 	}
 
-	// At this point, we know our username is unique & captured, so we
-	// now do our insert, but this time with the email
-	// note: we don't do a unique check for the email first because if they're on this stage, we already
-	// did the check earlier if an account exists with this specific email. however, we will still
-	// do a rollback & deletion of the username if the email is already taken, just in case
-	userEmail := UserEmail{
-		Email:  instance.Email(),
-		UserId: instance.ID(),
-	}
+	email := ""
 
-	// Create a lookup table that will lookup the user using email
-	createUserEmail := qb.Insert("users_emails").
-		Columns("email", "user_id").
-		Unique().
-		Query(r.session).
-		SerialConsistency(gocql.Serial).
-		BindStruct(userEmail)
-
-	applied, err = createUserEmail.ExecCAS()
-
-	if err != nil || !applied {
-
-		// There was an error or something, so we want to gracefully recover.
-		// Delete our users_usernames entry just in case, so user can try to signup again
-		deleteUserUsername := qb.Delete("users_usernames").
-			Where(qb.Eq("username")).
-			Query(r.session).
-			BindStruct(usernameEmail)
-
-		if err := deleteUserUsername.ExecRelease(); err != nil {
-			return fmt.Errorf("delete() failed: '%s", err)
+	// Only add to email table if user is not unclaimed (email is assigned)
+	if !instance.IsUnclaimed() {
+		// At this point, we know our username is unique & captured, so we
+		// now do our insert, but this time with the email
+		// note: we don't do a unique check for the email first because if they're on this stage, we already
+		// did the check earlier if an account exists with this specific email. however, we will still
+		// do a rollback & deletion of the username if the email is already taken, just in case
+		userEmail := UserEmail{
+			Email:  instance.Email(),
+			UserId: instance.ID(),
 		}
 
-		return user.ErrEmailNotUnique
+		// Create a lookup table that will lookup the user using email
+		createUserEmail := qb.Insert("users_emails").
+			Columns("email", "user_id").
+			Unique().
+			Query(r.session).
+			SerialConsistency(gocql.Serial).
+			BindStruct(userEmail)
+
+		applied, err = createUserEmail.ExecCAS()
+
+		if err != nil || !applied {
+
+			// There was an error or something, so we want to gracefully recover.
+			// Delete our users_usernames entry just in case, so user can try to signup again
+			deleteUserUsername := qb.Delete("users_usernames").
+				Where(qb.Eq("username")).
+				Query(r.session).
+				BindStruct(usernameEmail)
+
+			if err := deleteUserUsername.ExecRelease(); err != nil {
+				return fmt.Errorf("delete() failed: '%s", err)
+			}
+
+			return user.ErrEmailNotUnique
+		}
+
+		email = userEmail.Email
 	}
 
 	// Create a lookup table that will be used to find the user using their unique ID
 	// Will also contain all major information about the user such as permissions, etc...
 	usr := &User{
 		Username: instance.Username(),
-		Id:       userEmail.UserId,
-		Email:    userEmail.Email,
+		Id:       instance.ID(),
+		Email:    email,
 		Verified: false,
 	}
 

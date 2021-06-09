@@ -17,6 +17,7 @@ type Commands struct {
 	Logout         command.LogoutHandler
 	Authentication command.AuthenticationHandler
 	LockUser       command.LockUserHandler
+	CreateUser     command.CreateUserHandler
 }
 
 type Queries struct {

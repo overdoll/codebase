@@ -44,6 +44,7 @@ func createApplication(ctx context.Context) app.Application {
 			Authenticate:   command.NewAuthenticateHandler(cookieRepo),
 			Logout:         command.NewLogoutHandler(userRepo),
 			LockUser:       command.NewLockUserHandler(userRepo),
+			CreateUser:     command.NewCreateUserHandler(userRepo),
 		},
 		Queries: app.Queries{
 			GetUser: query.NewGetUserHandler(userRepo),

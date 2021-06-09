@@ -52,3 +52,7 @@ func (s *Server) LockUser(ctx context.Context, request *eva.LockUserRequest) (*e
 
 	return marshalUserToProto(usr), nil
 }
+
+func (s *Server) CreateUser(ctx context.Context, request *eva.CreateUserRequest) (*eva.User, error) {
+	panic("implement me")
+}

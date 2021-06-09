@@ -18,11 +18,12 @@ const (
 type User struct {
 	id string
 
-	username string
-	email    string
-	roles    []UserRole
-	verified bool
-	avatar   string
+	username  string
+	email     string
+	roles     []UserRole
+	verified  bool
+	avatar    string
+	unclaimed bool
 
 	lockedUntil time.Time
 }
@@ -57,9 +58,10 @@ func NewUser(id, username, email string) (*User, error) {
 	// TODO: add some validation for the user creation (username, etc...)
 
 	return &User{
-		id:       id,
-		username: username,
-		email:    email,
+		id:        id,
+		username:  username,
+		email:     email,
+		unclaimed: email == "",
 	}, nil
 }
 
@@ -94,6 +96,10 @@ func (u User) LockedUntil() time.Time {
 
 func (u User) IsLocked() bool {
 	return u.lockedUntil.After(time.Now())
+}
+
+func (u User) IsUnclaimed() bool {
+	return u.unclaimed
 }
 
 func (u User) LockUser(duration int) {
