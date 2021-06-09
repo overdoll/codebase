@@ -32,8 +32,7 @@ type Commands struct {
 	PublishPost         command.PublishPostActivityHandler
 	DiscardPost         command.DiscardPostActivityHandler
 	UndoPost            command.UndoPostActivityHandler
-
-	ReassignModerator command.ReassignModeratorActivityHandler
+	ReassignModerator   command.ReassignModeratorActivityHandler
 }
 
 type Queries struct {
