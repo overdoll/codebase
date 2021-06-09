@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS pending_posts_audit_log
     notes                   text,
     reverted                boolean,
     primary key ( id, post_id, moderator_user_id ),
-) WITH CLUSTERING ORDER BY (id DESC);
+);
 
 CREATE TABLE IF NOT EXISTS users_audit_log
 (
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS users_audit_log
     notes                   text,
     reverted                boolean,
     primary key ( id, user_id, moderator_user_id ),
-) WITH CLUSTERING ORDER BY (id DESC);
+);
 
 CREATE TABLE IF NOT EXISTS users_infraction_history
 (
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS users_infraction_history
     reason     text,
     expiration timestamp,
     primary key ( id, user_id, expiration ),
-) WITH CLUSTERING ORDER BY (id DESC);
+);
 
 CREATE TABLE IF NOT EXISTS pending_posts_rejection_reasons
 (
@@ -46,4 +46,4 @@ CREATE TABLE IF NOT EXISTS pending_posts_rejection_reasons
     reason     text,
     infraction boolean,
     primary key ( (id) ),
-) WITH CLUSTERING ORDER BY (id DESC);
+);

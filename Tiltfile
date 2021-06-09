@@ -70,6 +70,8 @@ applications = {
         "bazel_image": "bazel/applications/parley:local-image",
         "dependencies": [
             "applications/parley/.env",
+            "applications/parley/config.toml",
+            "applications/parley/database",
         ],
         "live_update": [],
     },
