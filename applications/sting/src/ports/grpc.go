@@ -6,7 +6,7 @@ import (
 	"go.temporal.io/sdk/client"
 	sting "overdoll/applications/sting/proto"
 	"overdoll/applications/sting/src/app"
-	"overdoll/applications/sting/src/ports/worker"
+	"overdoll/applications/sting/src/ports/temporal/workflows"
 )
 
 type Server struct {
@@ -52,7 +52,7 @@ func (s Server) PublishPendingPost(ctx context.Context, request *sting.PendingPo
 		ID:        "NewPublishPostWorkflow_" + request.Id,
 	}
 
-	_, err := s.client.ExecuteWorkflow(ctx, options, worker.PublishPost, request.Id)
+	_, err := s.client.ExecuteWorkflow(ctx, options, workflows.PublishPost, request.Id)
 
 	if err != nil {
 		return nil, err
@@ -71,7 +71,7 @@ func (s Server) DiscardPendingPost(ctx context.Context, request *sting.PendingPo
 		ID:        "NewDiscardPostWorkflow_" + request.Id,
 	}
 
-	_, err := s.client.ExecuteWorkflow(ctx, options, worker.DiscardPost, request.Id)
+	_, err := s.client.ExecuteWorkflow(ctx, options, workflows.DiscardPost, request.Id)
 
 	if err != nil {
 		return nil, err
@@ -90,7 +90,7 @@ func (s Server) UndoPendingPost(ctx context.Context, request *sting.PendingPostR
 		ID:        "NewUndoPostWorkflow_" + request.Id,
 	}
 
-	_, err := s.client.ExecuteWorkflow(ctx, options, worker.UndoPost, request.Id)
+	_, err := s.client.ExecuteWorkflow(ctx, options, workflows.UndoPost, request.Id)
 
 	if err != nil {
 		return nil, err
