@@ -1,10 +1,15 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/spf13/cobra"
+	"overdoll/applications/parley/src/ports"
+	"overdoll/applications/parley/src/service"
+	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/commands"
 	"overdoll/libraries/config"
 )
@@ -18,6 +23,10 @@ func init() {
 	config.Read("applications/parley/config.toml")
 
 	rootCmd.AddCommand(commands.Database)
+	rootCmd.AddCommand(&cobra.Command{
+		Use: "http",
+		Run: RunHttp,
+	})
 }
 
 func main() {
@@ -28,5 +37,18 @@ func main() {
 }
 
 func Run(cmd *cobra.Command, args []string) {
+	RunHttp(cmd, args)
+}
 
+func RunHttp(cmd *cobra.Command, args []string) {
+	ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
+	defer cancelFn()
+
+	app, cleanup := service.NewApplication(ctx)
+
+	defer cleanup()
+
+	srv := ports.NewGraphQLServer(&app)
+
+	bootstrap.InitializeHttpServer(":8000", srv, func() {})
 }

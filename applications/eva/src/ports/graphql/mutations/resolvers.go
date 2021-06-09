@@ -15,6 +15,7 @@ import (
 	"overdoll/applications/eva/src/ports/graphql/types"
 	"overdoll/libraries/cookies"
 	"overdoll/libraries/helpers"
+	"overdoll/libraries/passport"
 )
 
 type MutationResolver struct {
@@ -67,6 +68,12 @@ func (r *MutationResolver) Authenticate(ctx context.Context, data *types.Authent
 }
 
 func (r *MutationResolver) Register(ctx context.Context, data *types.RegisterInput) (bool, error) {
+	pass := passport.FromContext(ctx)
+
+	if pass.IsAuthenticated() {
+		return false, errors.New("user currently logged in")
+	}
+
 	gc := helpers.GinContextFromContext(ctx)
 
 	currentCookie, err := cookies.ReadCookie(ctx, cookie.OTPKey)
@@ -82,7 +89,7 @@ func (r *MutationResolver) Register(ctx context.Context, data *types.RegisterInp
 		return false, command.ErrFailedRegister
 	}
 
-	res, err := r.App.Commands.Register.Handle(ctx, currentCookie.Value, data.Username)
+	usr, err := r.App.Commands.Register.Handle(ctx, currentCookie.Value, data.Username)
 
 	if err != nil {
 		return false, err
@@ -90,9 +97,29 @@ func (r *MutationResolver) Register(ctx context.Context, data *types.RegisterInp
 
 	http.SetCookie(gc.Writer, &http.Cookie{Name: cookie.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
 
-	return res, err
+	if err := pass.MutatePassport(ctx, func(p *passport.Passport) error {
+		p.SetUser(usr.ID())
+		return nil
+	}); err != nil {
+		return false, err
+	}
+
+	return true, err
 }
 
 func (r *MutationResolver) Logout(ctx context.Context) (bool, error) {
-	return r.App.Commands.Logout.Handle(ctx)
+	pass := passport.FromContext(ctx)
+
+	if !pass.IsAuthenticated() {
+		return false, passport.ErrNotAuthenticated
+	}
+
+	// logout just revokes the currently-authenticated user from the passport
+	if err := pass.MutatePassport(ctx, func(p *passport.Passport) error {
+		return p.RevokeUser()
+	}); err != nil {
+		return false, err
+	}
+
+	return true, nil
 }

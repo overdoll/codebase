@@ -2,6 +2,7 @@ package app
 
 import (
 	"overdoll/applications/parley/src/app/command"
+	"overdoll/applications/parley/src/app/query"
 )
 
 type Application struct {
@@ -14,4 +15,5 @@ type Commands struct {
 }
 
 type Queries struct {
+	PendingPostRejectionReasons query.PendingPostsRejectionReasonsHandler
 }

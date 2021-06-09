@@ -8,7 +8,6 @@ import (
 	"go.uber.org/zap"
 	"overdoll/applications/eva/src/domain/cookie"
 	"overdoll/applications/eva/src/domain/user"
-	"overdoll/libraries/passport"
 )
 
 type AuthenticationHandler struct {
@@ -24,14 +23,12 @@ var (
 	ErrFailedCheckAuthentication = errors.New("failed to check auth")
 )
 
-func (h AuthenticationHandler) Handle(ctx context.Context, hasCookie bool, cookieValue string) (*cookie.Cookie, *user.User, error) {
-
-	pass := passport.FromContext(ctx)
+func (h AuthenticationHandler) Handle(ctx context.Context, userId string, hasCookie bool, cookieValue string) (*cookie.Cookie, *user.User, error) {
 
 	// User is logged in
-	if pass.IsAuthenticated() {
+	if userId != "" {
 
-		usr, err := h.ur.GetUserById(ctx, pass.UserID())
+		usr, err := h.ur.GetUserById(ctx, userId)
 
 		if err != nil {
 			zap.S().Errorf("failed to get user: %s", err)
@@ -80,17 +77,6 @@ func (h AuthenticationHandler) Handle(ctx context.Context, hasCookie bool, cooki
 		}
 
 		zap.S().Errorf("failed to get user: %s", err)
-		return nil, nil, ErrFailedCheckAuthentication
-	}
-
-	// Update passport to include our new user
-	err = pass.MutatePassport(ctx, func(p *passport.Passport) error {
-		p.SetUser(usr.ID())
-		return nil
-	})
-
-	if err != nil {
-		zap.S().Errorf("failed to mutate passport: %s", err)
 		return nil, nil, ErrFailedCheckAuthentication
 	}
 

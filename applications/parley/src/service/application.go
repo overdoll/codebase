@@ -8,6 +8,7 @@ import (
 	"overdoll/applications/parley/src/adapters"
 	"overdoll/applications/parley/src/app"
 	"overdoll/applications/parley/src/app/command"
+	"overdoll/applications/parley/src/app/query"
 	"overdoll/libraries/bootstrap"
 )
 
@@ -33,12 +34,14 @@ func createApplication(ctx context.Context) app.Application {
 	}
 
 	moderatorRepo := adapters.NewModeratorCassandraRepository(session)
+	infractionRepo := adapters.NewInfractionCassandraRepository(session)
 
 	return app.Application{
 		Commands: app.Commands{
 			GetNextModerator: command.NewGetNextModeratorHandler(moderatorRepo),
 		},
 		Queries: app.Queries{
+			PendingPostRejectionReasons: query.NewPendingPostsRejectionReasonsHandler(infractionRepo),
 		},
 	}
 }

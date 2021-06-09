@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -22,6 +23,10 @@ type MutationType string
 const (
 	MutationHeader = "X-Modified-Passport"
 	MutationKey    = "PassportContextKey"
+)
+
+var (
+	ErrNotAuthenticated = errors.New("not authenticated")
 )
 
 // Body - parses graphql requests
@@ -75,9 +80,7 @@ func (p *Passport) MutatePassport(ctx context.Context, updateFn func(*Passport) 
 
 	gc := helpers.GinContextFromContext(ctx)
 
-	if gc != nil {
-		gc.Writer.Header().Set(MutationHeader, p.SerializeToBaseString())
-	}
+	gc.Writer.Header().Set(MutationHeader, p.SerializeToBaseString())
 
 	return nil
 }

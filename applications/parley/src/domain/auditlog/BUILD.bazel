@@ -1,8 +1,0 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
-
-go_library(
-    name = "auditlog",
-    srcs = ["repository.go"],
-    importpath = "overdoll/applications/parley/src/domain/auditlog",
-    visibility = ["//visibility:public"],
-)

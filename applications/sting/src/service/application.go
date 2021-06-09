@@ -104,6 +104,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			SearchCategories: query.NewSearchCategoriesHandler(indexRepo),
 			SearchArtist:     query.NewSearchArtistsHandler(indexRepo),
 			GetPendingPosts:  query.NewGetPendingPostsHandler(indexRepo, eva),
+			GetPendingPost:   query.NewGetPendingPostHandler(postRepo),
 		},
 	}
 }

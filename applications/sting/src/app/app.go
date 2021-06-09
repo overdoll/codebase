@@ -40,4 +40,5 @@ type Queries struct {
 	SearchCharacters query.SearchCharactersHandler
 	SearchMedias     query.SearchMediasHandler
 	GetPendingPosts  query.GetPendingPostsHandler
+	GetPendingPost   query.GetPendingPostHandler
 }
