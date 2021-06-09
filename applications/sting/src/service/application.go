@@ -4,10 +4,8 @@ import (
 	"context"
 	"log"
 	"os"
-	"time"
 
 	"github.com/spf13/viper"
-	"go.temporal.io/sdk/client"
 	"overdoll/applications/sting/src/adapters"
 	"overdoll/applications/sting/src/app"
 	"overdoll/applications/sting/src/app/command"
@@ -20,21 +18,25 @@ import (
 
 func NewApplication(ctx context.Context) (app.Application, func()) {
 
-	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
-
-	return createApplication(ctx, adapters.NewEvaGrpc(evaClient)),
-		func() {
-			cleanup()
-		}
-}
-
-func createApplication(ctx context.Context, eva command.EvaService) app.Application {
-
 	_, err := bootstrap.NewBootstrap(ctx)
 
 	if err != nil {
 		log.Fatalf("bootstrap failed with errors: %s", err)
 	}
+
+	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
+	parleyClient, cleanup2 := clients.NewParleyClient(ctx, os.Getenv("PARLEY_SERVICE"))
+
+	a := createApplication(ctx, adapters.NewEvaGrpc(evaClient), adapters.NewParleyGrpc(parleyClient))
+
+	return a,
+		func() {
+			cleanup()
+			cleanup2()
+		}
+}
+
+func createApplication(ctx context.Context, eva command.EvaService, parley command.ParleyService) app.Application {
 
 	session, err := bootstrap.InitializeDatabaseSession(viper.GetString("db.keyspace"))
 
@@ -54,44 +56,42 @@ func createApplication(ctx context.Context, eva command.EvaService) app.Applicat
 		log.Fatalf("failed to create aws session: %s", err)
 	}
 
-	c, err := client.NewClient(client.Options{
-		HostPort:  os.Getenv("TEMPORAL_URL"),
-		Namespace: os.Getenv("TEMPORAL_NAMESPACE"),
-		ConnectionOptions: client.ConnectionOptions{
-			HealthCheckTimeout: time.Second * 20,
-		},
-	})
-
-	if err != nil {
-		log.Fatalln("Unable to create client", err)
-	}
-
 	postRepo := adapters.NewPostsCassandraRepository(session)
-	indexRepo := adapters.NewPostIndexElasticSearchRepository(es)
-	eventRepo := adapters.NewPostTemporalRepository(c)
+	indexRepo := adapters.NewPostsIndexElasticSearchRepository(es)
 
 	contentRepo := adapters.NewContentS3Repository(awsSession)
 
 	return app.Application{
 		Commands: app.Commands{
-			CreatePendingPost:  command.NewCreatePendingPostHandler(postRepo, eventRepo, eva),
-			ReviewPendingPost:  command.NewReviewPostHandler(postRepo, eventRepo),
+			CreatePendingPost: command.NewCreatePendingPostHandler(postRepo, eva, parley),
+			UpdatePendingPost: command.NewUpdatePendingPostHandler(postRepo),
+
 			IndexAllMedia:      command.NewIndexAllMediaHandler(postRepo, indexRepo),
 			IndexAllCharacters: command.NewIndexAllCharactersHandler(postRepo, indexRepo),
 			IndexAllCategories: command.NewIndexAllCategoriesHandler(postRepo, indexRepo),
 			IndexAllArtists:    command.NewIndexAllArtistsHandler(postRepo, indexRepo),
 
-			ReviewPost:          command.NewReviewPostActivityHandler(postRepo, indexRepo, eva),
-			CreatePost:          command.NewCreatePostActivityHandler(postRepo, indexRepo),
-			NewPendingPost:      command.NewNewPostActivityHandler(postRepo, indexRepo, contentRepo, eva),
-			PostCompleted:       command.NewPublishPostActivityHandler(postRepo, indexRepo, contentRepo, eva),
-			PostCustomResources: command.NewPostCustomResourcesActivityHandler(postRepo, indexRepo),
+			StartUndoPost:    command.NewStartUndoPostHandler(postRepo, indexRepo),
+			StartPublishPost: command.NewStartPublishPostHandler(postRepo, indexRepo, eva),
+			StartDiscardPost: command.NewStartDiscardPostHandler(postRepo, indexRepo),
+			RejectPost:       command.NewRejectPostHandler(postRepo, indexRepo),
+
+			CreatePost:          command.NewCreatePostHandler(postRepo, indexRepo),
+			NewPendingPost:      command.NewNewPostHandler(postRepo, indexRepo, contentRepo, eva),
+			PostCustomResources: command.NewPostCustomResourcesHandler(postRepo, indexRepo),
+
+			PublishPost:       command.NewPublishPostHandler(postRepo, indexRepo, contentRepo, eva),
+			DiscardPost:       command.NewDiscardPostHandler(postRepo, indexRepo, contentRepo, eva),
+			UndoPost:          command.NewUndoPostHandler(postRepo, indexRepo, contentRepo, eva),
+			ReassignModerator: command.NewReassignModeratorHandler(postRepo, indexRepo),
 		},
 		Queries: app.Queries{
 			SearchMedias:     query.NewSearchMediasHandler(indexRepo),
 			SearchCharacters: query.NewSearchCharactersHandler(indexRepo),
 			SearchCategories: query.NewSearchCategoriesHandler(indexRepo),
 			SearchArtist:     query.NewSearchArtistsHandler(indexRepo),
+			GetPendingPosts:  query.NewGetPendingPostsHandler(indexRepo, eva),
+			GetPendingPost:   query.NewGetPendingPostHandler(postRepo),
 		},
 	}
 }

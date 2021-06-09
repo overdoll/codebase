@@ -11,6 +11,7 @@ import (
 	"overdoll/applications/eva/src/ports/graphql/types"
 	"overdoll/libraries/cookies"
 	"overdoll/libraries/helpers"
+	"overdoll/libraries/passport"
 )
 
 type QueryResolver struct {
@@ -26,6 +27,13 @@ func (r *QueryResolver) RedeemCookie(ctx context.Context, cookieId string) (*typ
 	// If this is a registration (user with email doesn't exist), we keep the cookie, and remove it when we register, so the user
 	// can complete the registration if they've accidentally closed their tab
 
+	pass := passport.FromContext(ctx)
+
+	// User is logged in
+	if pass.IsAuthenticated() {
+		return nil, nil
+	}
+
 	gc := helpers.GinContextFromContext(ctx)
 
 	_, err := cookies.ReadCookie(ctx, cookie.OTPKey)
@@ -36,7 +44,7 @@ func (r *QueryResolver) RedeemCookie(ctx context.Context, cookieId string) (*typ
 		return nil, command.ErrFailedCookieRedeem
 	}
 
-	ck, err := r.App.Commands.RedeemCookie.Handle(ctx, isSameSession, cookieId)
+	usr, ck, err := r.App.Commands.RedeemCookie.Handle(ctx, isSameSession, cookieId)
 
 	if err != nil {
 		return nil, err
@@ -54,10 +62,18 @@ func (r *QueryResolver) RedeemCookie(ctx context.Context, cookieId string) (*typ
 		}, nil
 	}
 
-	// Cookie was consumed and a passport was added to context
+	// Cookie was consumed
 	if ck.Consumed() {
 		// Remove OTP cookie
 		http.SetCookie(gc.Writer, &http.Cookie{Name: cookie.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
+
+		// Update passport to include our new user
+		if err := pass.MutatePassport(ctx, func(p *passport.Passport) error {
+			p.SetUser(usr.ID())
+			return nil
+		}); err != nil {
+			return nil, err
+		}
 	}
 
 	return &types.Cookie{
@@ -71,6 +87,15 @@ func (r *QueryResolver) RedeemCookie(ctx context.Context, cookieId string) (*typ
 }
 
 func (r *QueryResolver) Authentication(ctx context.Context) (*types.Authentication, error) {
+
+	userId := ""
+
+	pass := passport.FromContext(ctx)
+
+	// User is logged in
+	if pass.IsAuthenticated() {
+		userId = pass.UserID()
+	}
 
 	gc := helpers.GinContextFromContext(ctx)
 
@@ -91,15 +116,24 @@ func (r *QueryResolver) Authentication(ctx context.Context) (*types.Authenticati
 
 	hasCookie := err == nil
 
-	ck, usr, err := r.App.Commands.Authentication.Handle(ctx, hasCookie, cookieValue)
+	ck, usr, err := r.App.Commands.Authentication.Handle(ctx, userId, hasCookie, cookieValue)
 
 	if err != nil {
 		return nil, err
 	}
 
 	if usr != nil {
+		// user had cookie and it was used to log in
 		if hasCookie {
 			http.SetCookie(gc.Writer, &http.Cookie{Name: cookie.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
+
+			// Update passport to include our new user
+			if err := pass.MutatePassport(ctx, func(p *passport.Passport) error {
+				p.SetUser(usr.ID())
+				return nil
+			}); err != nil {
+				return nil, err
+			}
 		}
 
 		return &types.Authentication{

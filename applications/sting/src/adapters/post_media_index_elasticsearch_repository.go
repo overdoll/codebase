@@ -49,7 +49,7 @@ const AllMedia = `
 
 const MediaIndexName = "media"
 
-func (r PostIndexElasticSearchRepository) SearchMedias(ctx context.Context, search string) ([]*post.Media, error) {
+func (r PostsIndexElasticSearchRepository) SearchMedias(ctx context.Context, search string) ([]*post.Media, error) {
 	var query string
 
 	if search == "" {
@@ -82,7 +82,7 @@ func (r PostIndexElasticSearchRepository) SearchMedias(ctx context.Context, sear
 	return meds, nil
 }
 
-func (r PostIndexElasticSearchRepository) BulkIndexMedia(ctx context.Context, media []*post.Media) error {
+func (r PostsIndexElasticSearchRepository) BulkIndexMedia(ctx context.Context, media []*post.Media) error {
 
 	err := r.store.CreateBulkIndex(MediaIndexName)
 
@@ -113,7 +113,7 @@ func (r PostIndexElasticSearchRepository) BulkIndexMedia(ctx context.Context, me
 	return nil
 }
 
-func (r PostIndexElasticSearchRepository) DeleteMediaIndex(ctx context.Context) error {
+func (r PostsIndexElasticSearchRepository) DeleteMediaIndex(ctx context.Context) error {
 	err := r.store.DeleteIndex(MediaIndexName)
 
 	if err != nil {

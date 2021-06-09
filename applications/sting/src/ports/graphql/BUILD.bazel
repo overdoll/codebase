@@ -20,5 +20,6 @@ go_library(
         "@com_github_99designs_gqlgen//plugin/federation/fedruntime",
         "@com_github_vektah_gqlparser_v2//:gqlparser",
         "@com_github_vektah_gqlparser_v2//ast",
+        "@io_temporal_go_sdk//client",
     ],
 )

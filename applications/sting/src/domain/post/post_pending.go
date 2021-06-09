@@ -15,10 +15,13 @@ const (
 	Publishing PostPendingState = "publishing"
 	Review     PostPendingState = "review"
 	Published  PostPendingState = "published"
+	Discarded  PostPendingState = "discarded"
+	Rejected   PostPendingState = "rejected"
 )
 
 var (
 	ErrNotPublishing = errors.New("post must be publishing")
+	ErrNotComplete   = errors.New("post is incomplete")
 	ErrInvalidId     = errors.New("passed id is not a valid ID")
 )
 
@@ -40,8 +43,9 @@ type MediaRequest struct {
 }
 
 type PostPending struct {
-	id    string
-	state PostPendingState
+	id          string
+	moderatorId string
+	state       PostPendingState
 
 	characters []*Character
 	categories []*Category
@@ -55,35 +59,35 @@ type PostPending struct {
 	categoriesRequests []CategoryRequest
 	mediaRequests      []MediaRequest
 	postedAt           time.Time
-	publishedPostId    string
 	generatedIds       []string
 }
 
-func NewPendingPost(id string, artist *Artist, contributor *user.User, content []string, characters []*Character, categories []*Category) (*PostPending, error) {
+func NewPendingPost(id, moderatorId string, artist *Artist, contributor *user.User, content []string, characters []*Character, categories []*Category, postedAt time.Time) (*PostPending, error) {
 	return &PostPending{
 		id:          id,
+		moderatorId: moderatorId,
 		state:       Publishing,
 		artist:      artist,
 		contributor: contributor,
 		content:     content,
 		characters:  characters,
 		categories:  categories,
-		postedAt:    time.Now(),
+		postedAt:    postedAt,
 	}, nil
 }
 
-func UnmarshalPendingPostFromDatabase(id, state string, artist *Artist, contributorId string, content []string, characters []*Character, categories []*Category, charactersRequests map[string]string, categoryRequests, mediaRequests []string, postedAt time.Time, publishedPostId string) *PostPending {
+func UnmarshalPendingPostFromDatabase(id, moderatorId, state string, artist *Artist, contributorId, contributorUsername, contributorAvatar string, content []string, characters []*Character, categories []*Category, charactersRequests map[string]string, categoryRequests, mediaRequests []string, postedAt time.Time) *PostPending {
 
 	postPending := &PostPending{
-		id:              id,
-		state:           PostPendingState(state),
-		artist:          artist,
-		contributor:     user.NewUser(contributorId, "", "", nil, false),
-		content:         content,
-		characters:      characters,
-		categories:      categories,
-		postedAt:        postedAt,
-		publishedPostId: publishedPostId,
+		id:          id,
+		moderatorId: moderatorId,
+		state:       PostPendingState(state),
+		artist:      artist,
+		contributor: user.NewUser(contributorId, contributorUsername, contributorAvatar, nil, false, false),
+		content:     content,
+		characters:  characters,
+		categories:  categories,
+		postedAt:    postedAt,
 	}
 
 	postPending.RequestResources(charactersRequests, categoryRequests, mediaRequests)
@@ -93,6 +97,10 @@ func UnmarshalPendingPostFromDatabase(id, state string, artist *Artist, contribu
 
 func (p *PostPending) ID() string {
 	return p.id
+}
+
+func (p *PostPending) ModeratorId() string {
+	return p.moderatorId
 }
 
 func (p *PostPending) State() PostPendingState {
@@ -182,10 +190,6 @@ func (p *PostPending) PostedAt() time.Time {
 	return p.postedAt
 }
 
-func (p *PostPending) PublishedPostId() string {
-	return p.publishedPostId
-}
-
 func (p *PostPending) MakePublish() error {
 
 	// State of the post needs to be "publishing" before "published"
@@ -198,15 +202,44 @@ func (p *PostPending) MakePublish() error {
 	return nil
 }
 
+func (p *PostPending) MakeDiscarded() error {
+
+	// State of the post needs to be "publishing" before "published"
+	if p.state != Publishing {
+		return ErrNotPublishing
+	}
+
+	p.state = Discarded
+
+	return nil
+}
+
+func (p *PostPending) MakeRejected() error {
+
+	p.state = Rejected
+
+	return nil
+}
+
+func (p *PostPending) MakeUndo() error {
+	if p.state != Discarded && p.state != Published {
+		return ErrNotComplete
+	}
+
+	return nil
+}
+
 func (p *PostPending) MakePublishing() {
 	p.state = Publishing
 }
 
 func (p *PostPending) MakePublicOrReview() error {
 
-	if !p.contributor.IsVerified() {
-		p.state = Review
-	}
+	//if !p.contributor.IsVerified() {
+	//	p.state = Review
+	//}
+
+	p.state = Review
 
 	return nil
 }
@@ -216,7 +249,7 @@ func (p *PostPending) InReview() bool {
 }
 
 func (p *PostPending) IsPublished() bool {
-	return p.publishedPostId != ""
+	return p.state == Published
 }
 
 func (p *PostPending) UpdateContent(content []string) {

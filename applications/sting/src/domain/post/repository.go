@@ -7,12 +7,15 @@ import (
 type Repository interface {
 	GetPendingPost(context.Context, string) (*PostPending, error)
 	CreatePendingPost(context.Context, *PostPending) error
-	UpdatePendingPost(context.Context, string, func(*PostPending) (*PostPending, error)) (*PostPending, error)
+	UpdatePendingPost(context.Context, string, func(*PostPending) error) (*PostPending, error)
 
 	CreatePost(context.Context, *Post) error
+	GetPost(context.Context, string) (*Post, error)
+	DeletePost(context.Context, string) error
 
 	GetArtistById(context.Context, string) (*Artist, error)
 	GetArtists(context.Context) ([]*Artist, error)
+	CreateArtist(context.Context, *Artist) error
 
 	GetCharactersById(context.Context, []string) ([]*Character, error)
 	GetCharacters(context.Context) ([]*Character, error)
@@ -28,13 +31,15 @@ type Repository interface {
 }
 
 type IndexRepository interface {
-	BulkIndexPosts(context.Context, []*Post) error
 	IndexPendingPost(context.Context, *PostPending) error
 	BulkIndexPendingPosts(context.Context, []*PostPending) error
-
-	DeletePostIndex(context.Context) error
-	IndexPost(context.Context, *Post) error
 	DeletePendingPostIndex(context.Context) error
+	SearchPendingPosts(context.Context, string) ([]*PostPending, error)
+
+	BulkIndexPosts(context.Context, []*Post) error
+	DeletePostIndex(context.Context) error
+	DeletePostDocument(context.Context, string) error
+	IndexPost(context.Context, *Post) error
 
 	DeleteArtistIndex(context.Context) error
 	BulkIndexArtists(context.Context, []*Artist) error
@@ -51,9 +56,4 @@ type IndexRepository interface {
 	BulkIndexCategories(context.Context, []*Category) error
 	DeleteCategoryIndex(context.Context) error
 	SearchCategories(context.Context, string) ([]*Category, error)
-}
-
-type EventRepository interface {
-	CreatePostEvent(context.Context, *PostPending) error
-	ReviewPostEvent(context.Context, *PostPending) error
 }

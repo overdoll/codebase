@@ -8,5 +8,6 @@ go_library(
     deps = [
         "//applications/sting/src/app",
         "//applications/sting/src/ports/graphql/types",
+        "//libraries/passport",
     ],
 )

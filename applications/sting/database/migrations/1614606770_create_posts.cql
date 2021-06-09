@@ -33,32 +33,32 @@ CREATE TABLE IF NOT EXISTS artists
 
 CREATE TABLE IF NOT EXISTS posts
 (
-    id             text,
-    artist_id      text,
-    contributor_id text,
-    content        list<text>,
-    categories     list<text>,
-    characters     list<text>,
-    posted_at      timestamp,
+    id                  text,
+    artist_user_id      text,
+    contributor_user_id text,
+    content             list<text>,
+    categories          list<text>,
+    characters          list<text>,
+    posted_at           timestamp,
     primary key ((id), posted_at)
 ) WITH CLUSTERING ORDER BY (posted_at ASC);
 
 CREATE TABLE IF NOT EXISTS posts_pending
 (
-    id                  text,
-    state               text,
-    artist_id           text,
-    artist_username     text,
-    contributor_id      text,
-    content             list<text>,
-    categories          list<text>,
-    characters          list<text>,
-    characters_requests map<text, text>,
-    media_requests      list<text>,
-    categories_requests list<text>,
-    posted_at           timestamp,
-    published_post_id   text,
-    primary key ((id), contributor_id)
-) WITH CLUSTERING ORDER BY (contributor_id ASC);
+    id                   text,
+    state                text,
+    moderator_user_id    text,
+    artist_user_id       text,
+    artist_user_username text,
+    contributor_user_id  text,
+    content              list<text>,
+    categories           list<text>,
+    characters           list<text>,
+    characters_requests  map<text, text>,
+    media_requests       list<text>,
+    categories_requests  list<text>,
+    posted_at            timestamp,
+    primary key ((id), contributor_user_id)
+) WITH CLUSTERING ORDER BY (contributor_user_id ASC);
 
 CREATE INDEX IF NOT EXISTS posts_pending_state on posts_pending (state);

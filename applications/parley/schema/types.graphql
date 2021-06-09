@@ -1,0 +1,9 @@
+type PendingPostRejectionReason {
+  id: String!
+  reason: String!
+  infraction: Boolean!
+}
+
+type Workaround3 @key(fields: "id") {
+  id: Int
+}

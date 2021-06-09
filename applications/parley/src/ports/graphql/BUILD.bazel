@@ -1,0 +1,23 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "graphql",
+    srcs = [
+        "federation.go",
+        "generated.go",
+        "resolver.go",
+    ],
+    importpath = "overdoll/applications/parley/src/ports/graphql",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//applications/parley/src/app",
+        "//applications/parley/src/ports/graphql/entities",
+        "//applications/parley/src/ports/graphql/queries",
+        "//applications/parley/src/ports/graphql/types",
+        "@com_github_99designs_gqlgen//graphql",
+        "@com_github_99designs_gqlgen//graphql/introspection",
+        "@com_github_99designs_gqlgen//plugin/federation/fedruntime",
+        "@com_github_vektah_gqlparser_v2//:gqlparser",
+        "@com_github_vektah_gqlparser_v2//ast",
+    ],
+)

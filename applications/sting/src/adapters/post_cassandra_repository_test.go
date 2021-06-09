@@ -13,7 +13,7 @@ import (
 	"overdoll/libraries/uuid"
 )
 
-func TestPostsCassandraRepository_create_post(t *testing.T) {
+func TestCassandraRepository_create_post(t *testing.T) {
 	t.Parallel()
 
 	repo := newPostRepository(t)
@@ -26,7 +26,7 @@ func TestPostsCassandraRepository_create_post(t *testing.T) {
 	require.NoError(t, err)
 }
 
-func TestPostsCassandraRepository_get_pending_post_not_exists(t *testing.T) {
+func TestCassandraRepository_get_pending_post_not_exists(t *testing.T) {
 	t.Parallel()
 
 	repo := newPostRepository(t)
@@ -55,6 +55,7 @@ func newFakePost(t *testing.T) *post.Post {
 		"asd",
 		"",
 		nil,
+		false,
 		false,
 	)
 

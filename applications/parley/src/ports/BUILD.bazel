@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "ports",
+    srcs = [
+        "grpc.go",
+        "http.go",
+    ],
+    importpath = "overdoll/applications/parley/src/ports",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//applications/parley/proto:v1_go_proto",
+        "//applications/parley/src/app",
+        "//applications/parley/src/ports/graphql",
+        "//libraries/graphql",
+        "//libraries/router",
+    ],
+)
