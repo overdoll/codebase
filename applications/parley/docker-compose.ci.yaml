@@ -8,8 +8,8 @@ services:
     depends_on:
       - temporal
     ports:
-      - 3020:8000
-      - 3030:8080
+      - 3060:8000
+      - 3070:8080
     deploy:
       restart_policy:
         condition: on-failure
