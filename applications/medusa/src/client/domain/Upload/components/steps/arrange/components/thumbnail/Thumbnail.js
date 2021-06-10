@@ -7,8 +7,7 @@ import {
   Spinner,
   CircularProgress,
   CircularProgressLabel,
-  Skeleton,
-  Image
+  Skeleton
 } from '@chakra-ui/react'
 
 import SuspenseImage from '@//:modules/utilities/SuspenseImage'

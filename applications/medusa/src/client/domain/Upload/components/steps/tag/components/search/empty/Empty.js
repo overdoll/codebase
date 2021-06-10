@@ -15,7 +15,7 @@ type Props = {
 
 export default function Empty ({ title, button, onClick }: Props): Node {
   return (
-    <Flex direction='column' align='center' justify='center' mt={40}>
+    <Flex direction='column' align='center' justify='center' mt={20}>
       <Icon h={100} w={100} icon={CleaningBroom} color='gray.100' mb={8} />
       <Heading mb={8} color='gray.100' size='lg'>
         {title}

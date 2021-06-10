@@ -78,6 +78,7 @@ export default function Lobby (props: Props): Node {
   // TODO fix submitting as it doesn't work (no success message)
 
   const onSubmit = () => {
+    createTimeout(60000)
     sendEmail({
       variables: {},
       onCompleted (data) {
@@ -86,7 +87,6 @@ export default function Lobby (props: Props): Node {
           title: t('lobby.verification'),
           isClosable: true
         })
-        createTimeout(60000)
       },
       onError (data) {}
     })

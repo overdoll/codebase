@@ -28,7 +28,7 @@ export default function XScrollContainer ({
   return (
     <Box mt={2} mb={2}>
       <Swiper
-        spaceBetween={10} slidesPerView={3}
+        spaceBetween={10} slidesPerView={3} centeredSlides={files.length < 2}
         onSlideChange={(swiper) => setSwiperIndex(swiper.activeIndex)}
       >
         {files.map(file =>

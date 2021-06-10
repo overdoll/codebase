@@ -1,7 +1,7 @@
 {
   "begin": {
     "header": "Start by uploading an image or a video",
-    "subheader": "Almost all file formats accepted\n10 file limit per post",
+    "subheader": "Accepted file formats: .mp4, .jpg, .png",
     "uploader": "Upload Files",
     "limit": "max. 10mb per file"
   },
@@ -13,7 +13,7 @@
   "arrange": {
     "header": "Hold a tile and drag to reorder it",
     "add": "Add media",
-    "count": "Posting {{count}} media"
+    "count": "Uploading {{count}} files"
   },
   "tag": {
     "header": "Tag your post",
@@ -34,7 +34,7 @@
       "add": "Add character",
       "media": {
         "selected": "Select the media that the character {{character}} belongs to",
-        "search": "Search Media",
+        "search": "Search for media",
         "not_found": "No media found",
         "add": "Add media"
       }
@@ -44,6 +44,9 @@
       "empty": "No categories selected",
       "search": "Search for a category",
       "not_found": "No categories found"
+    },
+    "search": {
+      "close": "Close Search"
     }
   },
   "review": {

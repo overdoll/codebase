@@ -2,7 +2,8 @@
  * @flow
  */
 import type { Node } from 'react'
-import { Image, Flex, Text } from '@chakra-ui/react'
+import { Flex, Text, Skeleton } from '@chakra-ui/react'
+import SuspenseImage from '@//:modules/utilities/SuspenseImage'
 
 type Props = {
   selected: boolean,
@@ -37,12 +38,12 @@ export default function Element ({
       userSelect='none'
     >
       <Flex h='100%' w='100%' position='relative'>
-        <Image
-          alt={title}
-          src={thumbnail}
+        <SuspenseImage
           w='100%'
           h='100%'
           objectFit='cover'
+          alt={title}
+          src={thumbnail} fallback={<Skeleton w='100%' h='100%' />}
         />
         <Flex
           bg='dimmers.500'

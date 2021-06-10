@@ -16,7 +16,7 @@ export default function Indexer ({ length, currentIndex, slidesPerView, ...rest 
   }
 
   return (
-    <HStack align='center' justify='center' {...rest}>
+    <HStack display={length <= slidesPerView ? 'none' : 'flex'} align='center' justify='center' {...rest}>
       {[...Array(calculateIndex(length)).keys()].map((key) => {
         return (
           <Box

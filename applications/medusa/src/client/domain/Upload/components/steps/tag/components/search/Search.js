@@ -75,7 +75,7 @@ export default function Search ({
     // });
   }
 
-  const [t] = useTranslation('general')
+  const [t] = useTranslation('upload')
 
   return (
     <Modal
@@ -110,7 +110,7 @@ export default function Search ({
             >
               <Flex direction='column' h='100%' w='100%'>
                 <Flex borderRadius={5} bg='gray.800' pt={3} pb={3} mb={4} justify='center'>
-                  <Heading size='md' color='gray.00' isCentered>{header}</Heading>
+                  <Heading ml={2} mr={2} size='md' color='gray.00' isCentered>{header}</Heading>
                 </Flex>
                 <ErrorBoundary
                   fallback={({ error, reset }) => (
@@ -147,7 +147,7 @@ export default function Search ({
                 />
               </InputGroup>
               <Button size='lg' w='100%' colorScheme='red' onClick={onClose}>
-                {t('button.close')}
+                {t('tag.search.close')}
               </Button>
             </Flex>
           </Center>
