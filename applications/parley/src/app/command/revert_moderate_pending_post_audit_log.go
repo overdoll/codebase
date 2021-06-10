@@ -46,7 +46,7 @@ func (h RevertModeratePendingPostHandler) Handle(ctx context.Context, moderatorI
 
 		infractionId := ""
 
-		// save infraction ID so we can delete it after performing check
+		// save infraction ID so we can delete it after the revert	
 		if log.IsDeniedWithInfraction() {
 			infractionId = log.UserInfraction().ID()
 		}
