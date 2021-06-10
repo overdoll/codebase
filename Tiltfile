@@ -58,6 +58,23 @@ applications = {
         ],
         "live_update": [],
     },
+    "parley": {
+        "type": "go",
+        "directory": "parley",
+        "image_reference": "parley-image",
+        "image_target": "//applications/parley:local-image",
+        "binary_target": "//applications/parley:parley",
+        "binary_output": "applications/parley/parley_/parley",
+        "container_workdir": "/app/applications/parley/local-image.binary.runfiles/overdoll/",
+        "container_binary": "applications/parley/local-image.binary_/local-image.binary",
+        "bazel_image": "bazel/applications/parley:local-image",
+        "dependencies": [
+            "applications/parley/.env",
+            "applications/parley/config.toml",
+            "applications/parley/database",
+        ],
+        "live_update": [],
+    },
 }
 
 k8s_yaml("./development/traefik/ingress.yaml")

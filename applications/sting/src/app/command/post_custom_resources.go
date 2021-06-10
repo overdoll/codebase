@@ -6,49 +6,43 @@ import (
 	"overdoll/applications/sting/src/domain/post"
 )
 
-type PostCustomResourcesActivityHandler struct {
+type PostCustomResourcesHandler struct {
 	pi post.IndexRepository
 	pr post.Repository
 }
 
-func NewPostCustomResourcesActivityHandler(pr post.Repository, pi post.IndexRepository) PostCustomResourcesActivityHandler {
-	return PostCustomResourcesActivityHandler{pr: pr, pi: pi}
+func NewPostCustomResourcesHandler(pr post.Repository, pi post.IndexRepository) PostCustomResourcesHandler {
+	return PostCustomResourcesHandler{pr: pr, pi: pi}
 }
 
-func (h PostCustomResourcesActivityHandler) Handle(ctx context.Context, id string, ids []string) error {
+func (h PostCustomResourcesHandler) Handle(ctx context.Context, id string, ids []string) error {
 
-	_, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PostPending) (*post.PostPending, error) {
+	_, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PostPending) error {
 
 		// Consume custom categories, characters, medias
 		existingMedias, err := h.pr.GetMediasById(ctx, pending.GetExistingMediaIds())
 
 		if err != nil {
-			return nil, err
+			return err
 		}
 
 		categories, characters, medias := pending.ConsumeCustomResources(existingMedias)
 
 		// Create categories (from database)
-		err = h.pr.CreateCategories(ctx, categories)
-
-		if err != nil {
-			return nil, err
+		if err := h.pr.CreateCategories(ctx, categories); err != nil {
+			return err
 		}
 
-		err = h.pr.CreateCharacters(ctx, characters)
-
-		if err != nil {
-			return nil, err
+		if err := h.pr.CreateCharacters(ctx, characters); err != nil {
+			return err
 		}
 
 		// Create Media (from database)
-		err = h.pr.CreateMedias(ctx, medias)
-
-		if err != nil {
-			return nil, err
+		if err := h.pr.CreateMedias(ctx, medias); err != nil {
+			return err
 		}
 
-		return pending, nil
+		return nil
 	})
 
 	if err != nil {

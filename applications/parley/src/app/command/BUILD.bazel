@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "command",
+    srcs = [
+        "get_next_moderator.go",
+        "moderate_pending_post.go",
+        "revert_moderate_pending_post_audit_log.go",
+        "services.go",
+    ],
+    importpath = "overdoll/applications/parley/src/app/command",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//applications/parley/src/domain/infraction",
+        "//applications/parley/src/domain/moderator",
+        "//libraries/user",
+        "@org_uber_go_zap//:zap",
+    ],
+)

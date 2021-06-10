@@ -11,19 +11,26 @@ type Application struct {
 }
 
 type Commands struct {
-	CreatePendingPost  command.CreatePendingPostHandler
-	ReviewPendingPost  command.ReviewPostHandler
+	CreatePendingPost command.CreatePendingPostHandler
+	UpdatePendingPost command.UpdatePendingPostHandler
+
+	StartDiscardPost command.StartDiscardPostHandler
+	StartPublishPost command.StartPublishPostHandler
+	StartUndoPost    command.StartUndoPostHandler
+	RejectPost       command.RejectPostHandler
+
 	IndexAllArtists    command.IndexAllArtistsHandler
 	IndexAllCategories command.IndexAllCategoriesHandler
 	IndexAllCharacters command.IndexAllCharactersHandler
 	IndexAllMedia      command.IndexAllMediaHandler
 
-	// Activities - used by temporal
-	CreatePost          command.CreatePostActivityHandler
-	NewPendingPost      command.NewPostActivityHandler
-	PostCompleted       command.PublishPostActivityHandler
-	PostCustomResources command.PostCustomResourcesActivityHandler
-	ReviewPost          command.ReviewPostActivityHandler
+	CreatePost          command.CreatePostHandler
+	NewPendingPost      command.NewPostHandler
+	PostCustomResources command.PostCustomResourcesHandler
+	PublishPost         command.PublishPostHandler
+	DiscardPost         command.DiscardPostHandler
+	UndoPost            command.UndoPostHandler
+	ReassignModerator   command.ReassignModeratorHandler
 }
 
 type Queries struct {
@@ -31,4 +38,6 @@ type Queries struct {
 	SearchCategories query.SearchCategoriesHandler
 	SearchCharacters query.SearchCharactersHandler
 	SearchMedias     query.SearchMediasHandler
+	GetPendingPosts  query.GetPendingPostsHandler
+	GetPendingPost   query.GetPendingPostHandler
 }

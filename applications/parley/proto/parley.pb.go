@@ -1,0 +1,1 @@
+../../../bazel-out/k8-fastbuild/bin/applications/parley/proto/v1_go_proto_/overdoll/applications/parley/proto/parley.pb.go

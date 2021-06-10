@@ -38,6 +38,10 @@ type userRepoMock struct {
 	User *user.User
 }
 
+func (u userRepoMock) UpdateUser(ctx context.Context, s string, f func(*user.User) error) (*user.User, error) {
+	panic("implement me")
+}
+
 func (u userRepoMock) GetUserById(ctx context.Context, id string) (*user.User, error) {
 	return u.User, nil
 }

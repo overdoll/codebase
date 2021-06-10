@@ -7,7 +7,6 @@ import (
 	"go.uber.org/zap"
 	"overdoll/applications/eva/src/domain/cookie"
 	"overdoll/applications/eva/src/domain/user"
-	"overdoll/libraries/passport"
 	"overdoll/libraries/uuid"
 )
 
@@ -24,48 +23,32 @@ var (
 	ErrFailedRegister = errors.New("failed to register")
 )
 
-func (h RegisterHandler) Handle(ctx context.Context, cookieId, username string) (bool, error) {
-	pass := passport.FromContext(ctx)
-
-	if pass.IsAuthenticated() {
-		return false, errors.New("user currently logged in")
-	}
+func (h RegisterHandler) Handle(ctx context.Context, cookieId, username string) (*user.User, error) {
 
 	ck, err := h.cr.GetCookieById(ctx, cookieId)
 
 	if err != nil {
 		zap.S().Errorf("failed to get cookie: %s", err)
-		return false, ErrFailedRegister
+		return nil, ErrFailedRegister
 	}
 
 	// Cookie should have been redeemed at this point, if we are on this command
 	if err = ck.MakeConsumed(); err != nil {
-		return false, err
+		return nil, err
 	}
 
 	instance, err := user.NewUser(uuid.New().String(), username, ck.Email())
 
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 
 	err = h.ur.CreateUser(ctx, instance)
 
-	// TODO: handle better - if username is taken, etc...
 	if err != nil {
 		zap.S().Errorf("failed to create user: %s", err)
-		return false, ErrFailedRegister
+		return nil, ErrFailedRegister
 	}
 
-	err = pass.MutatePassport(ctx, func(p *passport.Passport) error {
-		p.SetUser(instance.ID())
-		return nil
-	})
-
-	if err != nil {
-		zap.S().Errorf("failed to mutate passport: %s", err)
-		return false, ErrFailedRegister
-	}
-
-	return true, nil
+	return instance, nil
 }

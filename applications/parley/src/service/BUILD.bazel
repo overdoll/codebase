@@ -1,0 +1,17 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "service",
+    srcs = ["application.go"],
+    importpath = "overdoll/applications/parley/src/service",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//applications/parley/src/adapters",
+        "//applications/parley/src/app",
+        "//applications/parley/src/app/command",
+        "//applications/parley/src/app/query",
+        "//libraries/bootstrap",
+        "//libraries/clients",
+        "@com_github_spf13_viper//:viper",
+    ],
+)

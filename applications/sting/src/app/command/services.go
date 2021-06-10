@@ -7,5 +7,10 @@ import (
 )
 
 type EvaService interface {
-	GetUser(ctx context.Context, id string) (*user.User, error)
+	GetUser(context.Context, string) (*user.User, error)
+	CreateUser(context.Context, string, string) (*user.User, error)
+}
+
+type ParleyService interface {
+	GetNextModeratorId(context.Context) (string, error)
 }

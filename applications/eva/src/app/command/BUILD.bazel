@@ -5,7 +5,8 @@ go_library(
     srcs = [
         "authenticate.go",
         "check_authentication.go",
-        "logout.go",
+        "create_user.go",
+        "lock_user.go",
         "redeem_cookie.go",
         "register.go",
     ],
@@ -14,7 +15,6 @@ go_library(
     deps = [
         "//applications/eva/src/domain/cookie",
         "//applications/eva/src/domain/user",
-        "//libraries/passport",
         "//libraries/uuid",
         "@com_github_gocql_gocql//:gocql",
         "@org_uber_go_zap//:zap",

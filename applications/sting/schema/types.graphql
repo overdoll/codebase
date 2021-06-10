@@ -8,6 +8,24 @@ input PostInput {
   artistUsername: String!
 }
 
+type PendingPost {
+  id: String!
+  moderator: String!
+  contributor: Contributor!
+  content: [String!]!
+  categories: [Category!]!
+  characters: [Character!]!
+  mediaRequests: [String!]
+  characterRequests: [CharacterRequestType!]
+  artistId: String
+  artistUsername: String!
+}
+
+type CharacterRequestType {
+  name: String!
+  media: String!
+}
+
 input CharacterRequest {
   name: String!
   media: String!
@@ -18,8 +36,18 @@ type PostResponse {
   validation: Validation
 }
 
+type PostUpdateResponse {
+  validation: Validation
+}
+
 input SearchInput {
   search: String!
+}
+
+type Contributor {
+  id: String!
+  username: String!
+  avatar: String!
 }
 
 type Media {

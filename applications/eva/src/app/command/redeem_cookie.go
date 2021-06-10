@@ -8,7 +8,6 @@ import (
 	"go.uber.org/zap"
 	"overdoll/applications/eva/src/domain/cookie"
 	"overdoll/applications/eva/src/domain/user"
-	"overdoll/libraries/passport"
 )
 
 type RedeemCookieHandler struct {
@@ -24,14 +23,7 @@ var (
 	ErrFailedCookieRedeem = errors.New("failed to redeem cookie")
 )
 
-func (h RedeemCookieHandler) Handle(ctx context.Context, isSameSession bool, id string) (*cookie.Cookie, error) {
-
-	pass := passport.FromContext(ctx)
-
-	// User is logged in
-	if pass.IsAuthenticated() {
-		return nil, nil
-	}
+func (h RedeemCookieHandler) Handle(ctx context.Context, isSameSession bool, id string) (*user.User, *cookie.Cookie, error) {
 
 	// Redeem cookie
 	ck, err := h.cr.GetCookieById(ctx, id)
@@ -39,16 +31,16 @@ func (h RedeemCookieHandler) Handle(ctx context.Context, isSameSession bool, id 
 	if err != nil {
 
 		if err == cookie.ErrCookieNotFound {
-			return nil, nil
+			return nil, nil, nil
 		}
 
 		zap.S().Errorf("failed to get cookie: %s", err == gocql.ErrNotFound)
-		return nil, ErrFailedCookieRedeem
+		return nil, nil, ErrFailedCookieRedeem
 	}
 
 	// Redeem the cookie
 	if err := ck.MakeRedeemed(); err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	// not the same session - just redeem and return out
@@ -57,15 +49,15 @@ func (h RedeemCookieHandler) Handle(ctx context.Context, isSameSession bool, id 
 
 		if err != nil {
 			zap.S().Errorf("failed to update cookie: %s", err)
-			return nil, ErrFailedCookieRedeem
+			return nil, nil, ErrFailedCookieRedeem
 		}
 
-		return ck, nil
+		return nil, ck, nil
 	}
 
 	// Tell us that the cookie is in the same session (exists in http header)
 	if err := ck.MakeSameSession(); err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	// Redeemed - check if user exists with this email
@@ -82,18 +74,18 @@ func (h RedeemCookieHandler) Handle(ctx context.Context, isSameSession bool, id 
 
 			if err != nil {
 				zap.S().Errorf("failed to update cookie: %s", err)
-				return nil, ErrFailedCookieRedeem
+				return nil, nil, ErrFailedCookieRedeem
 			}
 
-			return ck, nil
+			return nil, ck, nil
 		}
 
 		zap.S().Errorf("failed to find user: %s", err)
-		return nil, ErrFailedCookieRedeem
+		return nil, nil, ErrFailedCookieRedeem
 	}
 
 	if err := ck.MakeConsumed(); err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	// Delete cookie - user is registered, so we don't need to wait for another call where the user will
@@ -102,14 +94,8 @@ func (h RedeemCookieHandler) Handle(ctx context.Context, isSameSession bool, id 
 
 	if err != nil {
 		zap.S().Errorf("failed to delete cookie: %s", err)
-		return nil, ErrFailedCookieRedeem
+		return nil, nil, ErrFailedCookieRedeem
 	}
 
-	// Update passport to include our new user
-	err = pass.MutatePassport(ctx, func(p *passport.Passport) error {
-		p.SetUser(usr.ID())
-		return nil
-	})
-
-	return ck, err
+	return usr, ck, err
 }

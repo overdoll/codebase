@@ -1,0 +1,4 @@
+type Mutation {
+  moderatePost(data: ModeratePostInput!): ModeratePost!
+  revertPendingPostAuditLog(data: RevertPostInput!): ModeratePost!
+}

@@ -14,3 +14,4 @@ steps:
         GIN_MODE: debug
         APP_DEBUG: true
         EVA_SERVICE: eva:8080
+        PARLEY_SERVICE: parley:8080

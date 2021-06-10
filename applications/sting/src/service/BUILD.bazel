@@ -15,7 +15,6 @@ go_library(
         "//libraries/clients",
         "//libraries/elasticsearch",
         "@com_github_spf13_viper//:viper",
-        "@io_temporal_go_sdk//client",
     ],
 )
 

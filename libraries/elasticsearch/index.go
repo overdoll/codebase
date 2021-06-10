@@ -68,6 +68,30 @@ func (s *Store) Create(index, id string, item interface{}) error {
 	return nil
 }
 
+// Delete deletes an index by ID
+func (s *Store) Delete(index, id string) error {
+	res, err := esapi.DeleteRequest{
+		Index:      index,
+		DocumentID: id,
+	}.Do(s.ctx, s.es)
+
+	if err != nil {
+		return err
+	}
+
+	defer res.Body.Close()
+
+	if res.IsError() {
+		var e map[string]interface{}
+		if err := json.NewDecoder(res.Body).Decode(&e); err != nil {
+			return err
+		}
+		return fmt.Errorf("[%s] %s: %s", res.Status(), e["error"].(map[string]interface{})["type"], e["error"].(map[string]interface{})["reason"])
+	}
+
+	return nil
+}
+
 // Exists returns true when a document with id already exists in the store.
 func (s *Store) Exists(index, id string) (bool, error) {
 	res, err := s.es.Exists(index, id)

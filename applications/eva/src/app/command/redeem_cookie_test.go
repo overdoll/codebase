@@ -27,7 +27,7 @@ func TestRedeemCookie_Consume_fails_when_cookie_invalid(t *testing.T) {
 
 	handler := command.NewRedeemCookieHandler(&cookieRepoMock{Cookie: ck}, &userRepoMock{User: usr})
 
-	res, err := handler.Handle(context.Background(), true, "some-random-non-existent-cookie")
+	usr, res, err := handler.Handle(context.Background(), true, "some-random-non-existent-cookie")
 
 	// both response and error are nil when the cookie is invalid
 	assert.Nil(t, res)
@@ -51,7 +51,7 @@ func TestRedeemCookie_Consume_when_user_exists(t *testing.T) {
 
 	handler := command.NewRedeemCookieHandler(&cookieRepoMock{Cookie: ck}, &userRepoMock{User: usr})
 
-	res, err := handler.Handle(context.Background(), true, id)
+	_, res, err := handler.Handle(context.Background(), true, id)
 
 	require.NoError(t, err)
 
@@ -71,7 +71,7 @@ func TestRedeemCookie_Consume_false_when_user_not_exists(t *testing.T) {
 
 	handler := command.NewRedeemCookieHandler(&cookieRepoMock{Cookie: ck}, &userRepoMock{User: nil})
 
-	res, err := handler.Handle(context.Background(), false, id)
+	_, res, err := handler.Handle(context.Background(), false, id)
 
 	require.NoError(t, err)
 
@@ -79,7 +79,7 @@ func TestRedeemCookie_Consume_false_when_user_not_exists(t *testing.T) {
 	assert.False(t, res.Consumed())
 
 	// cookie is redeemed in the same session, so we should get the same output
-	res, err = handler.Handle(context.Background(), true, id)
+	_, res, err = handler.Handle(context.Background(), true, id)
 
 	require.NoError(t, err)
 

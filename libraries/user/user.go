@@ -10,7 +10,7 @@ type User struct {
 	avatar   string
 	roles    []string
 	verified bool
-	isGuest  bool
+	locked   bool
 }
 
 func UnmarshalFromProto(proto *eva.User) *User {
@@ -20,17 +20,25 @@ func UnmarshalFromProto(proto *eva.User) *User {
 		proto.Avatar,
 		proto.Roles,
 		proto.Verified,
+		proto.Locked,
 	)
 }
 
-func NewUser(id, username, avatar string, roles []string, verified bool) *User {
+func NewUserOnlyIdAndUsername(id, username string) *User {
+	return &User{
+		id:       id,
+		username: username,
+	}
+}
+
+func NewUser(id, username, avatar string, roles []string, verified, locked bool) *User {
 	return &User{
 		id:       id,
 		username: username,
 		avatar:   avatar,
 		roles:    roles,
 		verified: verified,
-		isGuest:  false,
+		locked:   locked,
 	}
 }
 
@@ -47,24 +55,22 @@ func (user *User) Avatar() string {
 }
 
 func (user *User) IsVerified() bool {
-
-	if user.IsGuest() {
-		return false
-	}
-
 	return user.verified == true
 }
 
-func (user *User) IsGuest() bool {
-	return user.isGuest
+func (user *User) IsLocked() bool {
+	return user.locked
+}
+
+func (user *User) IsStaff() bool {
+	return user.HasRoles([]string{"staff"})
+}
+
+func (user *User) IsModerator() bool {
+	return user.HasRoles([]string{"moderator"})
 }
 
 func (user *User) HasRoles(roles []string) bool {
-
-	if user.IsGuest() {
-		return false
-	}
-
 	for _, role := range user.roles {
 		for _, requiredRole := range roles {
 			if role == requiredRole {

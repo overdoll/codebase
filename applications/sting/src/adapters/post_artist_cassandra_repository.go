@@ -15,12 +15,25 @@ type Artist struct {
 	Avatar   string `db:"user_avatar"`
 }
 
+func marshalArtistToDatabase(artist *post.Artist) *Artist {
+
+	return &Artist{
+		Id:       artist.ID(),
+		Username: artist.Username(),
+		Avatar:   artist.RawAvatar(),
+	}
+}
+
 func (r PostsCassandraRepository) GetArtists(ctx context.Context) ([]*post.Artist, error) {
 
 	var dbArtists []Artist
 
 	qc := qb.Select("artists").
-		Columns("user_id", "user_username", "user_avatar").
+		Columns(
+			"user_id",
+			"user_username",
+			"user_avatar",
+		).
 		Query(r.session).
 		Consistency(gocql.One)
 
@@ -43,7 +56,11 @@ func (r PostsCassandraRepository) GetArtistById(ctx context.Context, id string) 
 
 	qc := qb.Select("artists").
 		Where(qb.Eq("user_id")).
-		Columns("user_id", "user_username", "user_avatar").
+		Columns(
+			"user_id",
+			"user_username",
+			"user_avatar",
+		).
 		Query(r.session).
 		BindStruct(&Artist{
 			Id: id,
@@ -55,4 +72,24 @@ func (r PostsCassandraRepository) GetArtistById(ctx context.Context, id string) 
 	}
 
 	return post.UnmarshalArtistFromDatabase(artist.Id, artist.Username, artist.Avatar), nil
+}
+
+func (r PostsCassandraRepository) CreateArtist(ctx context.Context, artist *post.Artist) error {
+	pendingArtist := marshalArtistToDatabase(artist)
+
+	insertArtist := qb.Insert("artists").
+		Columns(
+			"user_id",
+			"user_username",
+			"user_avatar",
+		).
+		Query(r.session).
+		BindStruct(pendingArtist).
+		Consistency(gocql.LocalQuorum)
+
+	if err := insertArtist.ExecRelease(); err != nil {
+		return fmt.Errorf("ExecRelease() failed: '%s", err)
+	}
+
+	return nil
 }

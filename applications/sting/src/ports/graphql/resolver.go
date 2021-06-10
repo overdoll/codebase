@@ -5,6 +5,7 @@ package gen
 // It serves as dependency injection for your app, add any dependencies you require here.
 
 import (
+	"go.temporal.io/sdk/client"
 	"overdoll/applications/sting/src/app"
 	"overdoll/applications/sting/src/ports/graphql/entities"
 	"overdoll/applications/sting/src/ports/graphql/mutations"
@@ -12,17 +13,19 @@ import (
 )
 
 type Resolver struct {
-	app *app.Application
+	app    *app.Application
+	client client.Client
 }
 
-func NewResolver(app *app.Application) *Resolver {
-	return &Resolver{app: app}
+func NewResolver(app *app.Application, client client.Client) *Resolver {
+	return &Resolver{app: app, client: client}
 }
 
 // Mutation returns gen.MutationResolver implementation.
 func (r *Resolver) Mutation() MutationResolver {
 	return &mutations.MutationResolver{
-		App: r.app,
+		App:    r.app,
+		Client: r.client,
 	}
 }
 
