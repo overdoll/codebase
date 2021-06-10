@@ -25,7 +25,7 @@ type User struct {
 	avatar    string
 	unclaimed bool
 
-	lockedUntil time.Time
+	lockedUntil int
 }
 
 var (
@@ -49,7 +49,7 @@ func UnmarshalUserFromDatabase(id, username, email string, roles []string, verif
 		roles:       newRoles,
 		verified:    verified,
 		avatar:      avatar,
-		lockedUntil: time.Time{},
+		lockedUntil: 0,
 	}
 }
 
@@ -90,12 +90,12 @@ func (u User) RawAvatar() string {
 	return u.avatar
 }
 
-func (u User) LockedUntil() time.Time {
+func (u User) LockedUntil() int {
 	return u.lockedUntil
 }
 
 func (u User) IsLocked() bool {
-	return u.lockedUntil.After(time.Now())
+	return time.Unix(int64(u.lockedUntil), 0).After(time.Now())
 }
 
 func (u User) IsUnclaimed() bool {
@@ -103,7 +103,7 @@ func (u User) IsUnclaimed() bool {
 }
 
 func (u User) LockUser(duration int) {
-	u.lockedUntil = time.Now().Add(time.Duration(duration) * time.Millisecond)
+	u.lockedUntil = duration
 }
 
 func (u User) UserRolesAsString() []string {

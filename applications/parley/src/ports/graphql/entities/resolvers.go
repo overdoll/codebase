@@ -12,5 +12,24 @@ type EntityResolver struct {
 }
 
 func (e EntityResolver) FindUserByID(ctx context.Context, id string) (*types.User, error) {
-	panic("implement me")
+
+	history, err := e.App.Queries.UserInfractionHistory.Handle(ctx, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var infractionHistory []*types.UsersInfractionHistory
+
+	for _, infraction := range history {
+		infractionHistory = append(infractionHistory, &types.UsersInfractionHistory{
+			ID:     infraction.ID(),
+			Reason: infraction.Reason(),
+		})
+	}
+
+	return &types.User{
+		ID:                id,
+		InfractionHistory: infractionHistory,
+	}, nil
 }

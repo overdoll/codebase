@@ -51,9 +51,8 @@ type User struct {
 func (User) IsEntity() {}
 
 type UsersInfractionHistory struct {
-	ID         string `json:"id"`
-	Reason     string `json:"reason"`
-	Expiration string `json:"expiration"`
+	ID     string `json:"id"`
+	Reason string `json:"reason"`
 }
 
 type Validation struct {

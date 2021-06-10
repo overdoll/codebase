@@ -66,11 +66,11 @@ func (q QueryResolver) PendingPostAuditLogs(ctx context.Context, data types.Pend
 		auditLogs = append(auditLogs, &types.PendingPostAuditLog{
 			ID:     log.ID(),
 			PostID: log.PostId(),
-			Contributor: &types.User{
+			Contributor: &types.AuditUser{
 				ID:       log.Contributor().ID(),
 				Username: log.Contributor().Username(),
 			},
-			Moderator: &types.User{
+			Moderator: &types.AuditUser{
 				ID:       log.Moderator().ID(),
 				Username: log.Moderator().Username(),
 			},

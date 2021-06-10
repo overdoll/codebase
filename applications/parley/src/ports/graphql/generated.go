@@ -95,9 +95,8 @@ type ComplexityRoot struct {
 	}
 
 	UsersInfractionHistory struct {
-		Expiration func(childComplexity int) int
-		ID         func(childComplexity int) int
-		Reason     func(childComplexity int) int
+		ID     func(childComplexity int) int
+		Reason func(childComplexity int) int
 	}
 
 	Validation struct {
@@ -329,13 +328,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.User.InfractionHistory(childComplexity), true
 
-	case "UsersInfractionHistory.expiration":
-		if e.complexity.UsersInfractionHistory.Expiration == nil {
-			break
-		}
-
-		return e.complexity.UsersInfractionHistory.Expiration(childComplexity), true
-
 	case "UsersInfractionHistory.id":
 		if e.complexity.UsersInfractionHistory.ID == nil {
 			break
@@ -475,7 +467,6 @@ type PendingPostAuditLog {
 type UsersInfractionHistory {
   id: String!
   reason: String!
-  expiration: String!
 }
 
 type Validation {
@@ -1648,41 +1639,6 @@ func (ec *executionContext) _UsersInfractionHistory_reason(ctx context.Context, 
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.Reason, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _UsersInfractionHistory_expiration(ctx context.Context, field graphql.CollectedField, obj *types.UsersInfractionHistory) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "UsersInfractionHistory",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Expiration, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3319,11 +3275,6 @@ func (ec *executionContext) _UsersInfractionHistory(ctx context.Context, sel ast
 			}
 		case "reason":
 			out.Values[i] = ec._UsersInfractionHistory_reason(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "expiration":
-			out.Values[i] = ec._UsersInfractionHistory_expiration(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}

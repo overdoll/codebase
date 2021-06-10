@@ -137,6 +137,20 @@ func (r PostsCassandraRepository) CreatePendingPost(ctx context.Context, pending
 	return nil
 }
 
+func (r PostsCassandraRepository) DeletePendingPost(ctx context.Context, id string) error {
+	deletePost := qb.Delete("posts_pending").
+		Where(qb.Eq("id")).
+		Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&PostPending{Id: id})
+
+	if err := deletePost.ExecRelease(); err != nil {
+		return fmt.Errorf("ExecRelease() failed: '%s", err)
+	}
+
+	return nil
+}
+
 func (r PostsCassandraRepository) CreatePost(ctx context.Context, pending *post.Post) error {
 	pst := marshalPostToDatabase(pending)
 

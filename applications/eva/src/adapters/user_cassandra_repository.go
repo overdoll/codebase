@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"strings"
-	"time"
 
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
@@ -13,13 +12,13 @@ import (
 )
 
 type User struct {
-	Id          string    `db:"id"`
-	Username    string    `db:"username"`
-	Email       string    `db:"email"`
-	Roles       []string  `db:"roles"`
-	Verified    bool      `db:"verified"`
-	Avatar      string    `db:"avatar"`
-	LockedUntil time.Time `db:"locked_until"`
+	Id          string   `db:"id"`
+	Username    string   `db:"username"`
+	Email       string   `db:"email"`
+	Roles       []string `db:"roles"`
+	Verified    bool     `db:"verified"`
+	Avatar      string   `db:"avatar"`
+	LockedUntil int      `db:"locked_until"`
 }
 
 type UserUsername struct {

@@ -8,6 +8,7 @@ type Repository interface {
 	GetPendingPost(context.Context, string) (*PostPending, error)
 	CreatePendingPost(context.Context, *PostPending) error
 	UpdatePendingPost(context.Context, string, func(*PostPending) error) (*PostPending, error)
+	DeletePendingPost(context.Context, string) error
 
 	CreatePost(context.Context, *Post) error
 	GetPost(context.Context, string) (*Post, error)
@@ -40,6 +41,7 @@ type IndexRepository interface {
 	DeletePostIndex(context.Context) error
 	DeletePostDocument(context.Context, string) error
 	IndexPost(context.Context, *Post) error
+	DeletePendingPostDocument(context.Context, string) error
 
 	DeleteArtistIndex(context.Context) error
 	BulkIndexArtists(context.Context, []*Artist) error

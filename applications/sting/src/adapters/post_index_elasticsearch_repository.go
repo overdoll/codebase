@@ -303,7 +303,16 @@ func (r PostsIndexElasticSearchRepository) BulkIndexPosts(ctx context.Context, p
 func (r PostsIndexElasticSearchRepository) DeletePostDocument(ctx context.Context, id string) error {
 
 	if err := r.store.Delete(PostIndexName, id); err != nil {
-		return fmt.Errorf("failed to create media index: %s", err)
+		return fmt.Errorf("failed to delete pos document: %s", err)
+	}
+
+	return nil
+}
+
+func (r PostsIndexElasticSearchRepository) DeletePendingPostDocument(ctx context.Context, id string) error {
+
+	if err := r.store.Delete(PendingPostIndexName, id); err != nil {
+		return fmt.Errorf("failed to delete pending post document: %s", err)
 	}
 
 	return nil

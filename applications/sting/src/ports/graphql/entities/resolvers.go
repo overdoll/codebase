@@ -12,8 +12,11 @@ type EntityResolver struct {
 }
 
 func (e *EntityResolver) FindUserByID(ctx context.Context, id string) (*types.User, error) {
+
+	var pendingPosts []*types.PendingPost
+
 	return &types.User{
 		ID:           id,
-		PendingPosts: nil,
+		PendingPosts: pendingPosts,
 	}, nil
 }

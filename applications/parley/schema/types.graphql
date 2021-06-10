@@ -22,7 +22,6 @@ type PendingPostAuditLog {
 type UsersInfractionHistory {
   id: String!
   reason: String!
-  expiration: String!
 }
 
 type Validation {

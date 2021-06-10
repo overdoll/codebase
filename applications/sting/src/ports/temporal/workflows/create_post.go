@@ -15,7 +15,7 @@ func CreatePost(ctx workflow.Context, id string) error {
 	}
 
 	// reassign moderator every day
-	for true {
+	for {
 		if err := workflow.Await(ctx, func() bool {
 			return workflow.Now(ctx).After(time.Now().AddDate(0, 0, 1))
 		}); err != nil {

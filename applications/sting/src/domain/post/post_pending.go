@@ -20,9 +20,10 @@ const (
 )
 
 var (
-	ErrNotPublishing = errors.New("post must be publishing")
-	ErrNotComplete   = errors.New("post is incomplete")
-	ErrInvalidId     = errors.New("passed id is not a valid ID")
+	ErrNotPublishing    = errors.New("post must be publishing")
+	ErrNotComplete      = errors.New("post is incomplete")
+	ErrInvalidId        = errors.New("passed id is not a valid ID")
+	ErrAlreadyModerated = errors.New("already moderated")
 )
 
 // Each request type contains space for an "ID" - we pre-generate IDs and pass them in between events to ensure idempotency
@@ -150,6 +151,18 @@ func (p *PostPending) UpdateCharacters(characters []*Character) error {
 
 func (p *PostPending) UpdateArtist(artist *Artist) {
 	p.artist = artist
+}
+
+func (p *PostPending) UpdateModerator(newId, moderatorId string) error {
+
+	if p.state != Review {
+		return ErrAlreadyModerated
+	}
+
+	p.id = newId
+	p.moderatorId = moderatorId
+
+	return nil
 }
 
 func (p *PostPending) UpdateContributor(contributor *user.User) {
