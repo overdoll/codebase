@@ -26,15 +26,16 @@ func CreatePost(ctx workflow.Context, id string) error {
 			return ksuid.New().String()
 		})
 
-		var requiresNewModerator bool
+		var assignedNewModerator bool
 
-		err := workflow.ExecuteActivity(ctx, "ReassignModeratorHandler.Handle", id, newId).Get(ctx, &requiresNewModerator)
+		err := workflow.ExecuteActivity(ctx, "ReassignModeratorHandler.Handle", id, newId).Get(ctx, &assignedNewModerator)
 
 		if err != nil {
 			return err
 		}
 
-		if !requiresNewModerator {
+		// if a moderator was not assigned this loop (post was moderated successfully), then break out of loop
+		if !assignedNewModerator {
 			break
 		}
 	}
