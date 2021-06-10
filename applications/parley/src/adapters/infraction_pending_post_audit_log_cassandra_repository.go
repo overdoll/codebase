@@ -14,6 +14,7 @@ type PendingPostAuditLog struct {
 	PostId            string `db:"post_id"`
 	ModeratorId       string `db:"moderator_user_id"`
 	ModeratorUsername string `db:"moderator_username"`
+	UserInfractionId  string `db:"user_infraction_id"`
 	Status            string `db:"status"`
 	Reason            string `db:"reason"`
 	Notes             string `db:"notes"`
@@ -21,11 +22,19 @@ type PendingPostAuditLog struct {
 }
 
 func marshalPendingPostAuditLogToDatabase(auditLog *infraction.PendingPostAuditLog) *PendingPostAuditLog {
+
+	userInfractionId := ""
+
+	if auditLog.IsDeniedWithInfraction() {
+		userInfractionId = auditLog.UserInfraction().ID()
+	}
+
 	return &PendingPostAuditLog{
 		Id:                auditLog.ID(),
 		PostId:            auditLog.PostId(),
 		ModeratorId:       auditLog.Moderator().ID(),
 		ModeratorUsername: auditLog.Moderator().Username(),
+		UserInfractionId:  userInfractionId,
 		Status:            auditLog.Status(),
 		Reason:            auditLog.RejectionReason().Reason(),
 		Notes:             auditLog.Notes(),
@@ -41,8 +50,8 @@ func (r InfractionCassandraRepository) CreatePendingPostAuditLog(ctx context.Con
 			"post_id",
 			"moderator_user_id",
 			"moderator_username",
+			"user_infraction_id",
 			"status",
-			"contributor_user_id",
 			"reason",
 			"notes",
 			"reverted",
@@ -55,7 +64,7 @@ func (r InfractionCassandraRepository) CreatePendingPostAuditLog(ctx context.Con
 		return fmt.Errorf("ExecRelease() failed: '%s", err)
 	}
 
-	// if denied with infraction, add to infraction history
+	// if denied with infraction, add to infraction history for this user
 	if auditLog.IsDeniedWithInfraction() {
 		if err := r.CreateUserInfractionHistory(ctx, auditLog.UserInfraction()); err != nil {
 			return err
