@@ -2,10 +2,24 @@
 
 package types
 
+type ModeratePost struct {
+	Validation *Validation `json:"validation"`
+}
+
+type ModeratePostInput struct {
+	PendingPostID     string  `json:"pendingPostId"`
+	RejectionReasonID *string `json:"rejectionReasonId"`
+	Notes             string  `json:"notes"`
+}
+
 type PendingPostRejectionReason struct {
 	ID         string `json:"id"`
 	Reason     string `json:"reason"`
 	Infraction bool   `json:"infraction"`
+}
+
+type Validation struct {
+	Code string `json:"code"`
 }
 
 type Workaround3 struct {

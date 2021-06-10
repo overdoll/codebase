@@ -1,3 +1,17 @@
+input ModeratePostInput {
+  pendingPostId: String!
+  rejectionReasonId: String
+  notes: String!
+}
+
+type ModeratePost {
+  validation: Validation
+}
+
+type Validation {
+  code: String!
+}
+
 type PendingPostRejectionReason {
   id: String!
   reason: String!

@@ -12,6 +12,7 @@ type Application struct {
 
 type Commands struct {
 	GetNextModerator command.GetNextModeratorHandler
+	ModeratePost     command.ModeratePendingPostHandler
 }
 
 type Queries struct {

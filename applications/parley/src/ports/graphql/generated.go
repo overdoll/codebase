@@ -38,6 +38,7 @@ type Config struct {
 
 type ResolverRoot interface {
 	Entity() EntityResolver
+	Mutation() MutationResolver
 	Query() QueryResolver
 }
 
@@ -47,6 +48,14 @@ type DirectiveRoot struct {
 type ComplexityRoot struct {
 	Entity struct {
 		FindWorkaround3ByID func(childComplexity int, id *int) int
+	}
+
+	ModeratePost struct {
+		Validation func(childComplexity int) int
+	}
+
+	Mutation struct {
+		ModeratePost func(childComplexity int, data types.ModeratePostInput) int
 	}
 
 	PendingPostRejectionReason struct {
@@ -61,6 +70,10 @@ type ComplexityRoot struct {
 		__resolve_entities func(childComplexity int, representations []map[string]interface{}) int
 	}
 
+	Validation struct {
+		Code func(childComplexity int) int
+	}
+
 	Workaround3 struct {
 		ID func(childComplexity int) int
 	}
@@ -72,6 +85,9 @@ type ComplexityRoot struct {
 
 type EntityResolver interface {
 	FindWorkaround3ByID(ctx context.Context, id *int) (*types.Workaround3, error)
+}
+type MutationResolver interface {
+	ModeratePost(ctx context.Context, data types.ModeratePostInput) (*types.ModeratePost, error)
 }
 type QueryResolver interface {
 	RejectionReasons(ctx context.Context) ([]*types.PendingPostRejectionReason, error)
@@ -103,6 +119,25 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Entity.FindWorkaround3ByID(childComplexity, args["id"].(*int)), true
+
+	case "ModeratePost.validation":
+		if e.complexity.ModeratePost.Validation == nil {
+			break
+		}
+
+		return e.complexity.ModeratePost.Validation(childComplexity), true
+
+	case "Mutation.moderatePost":
+		if e.complexity.Mutation.ModeratePost == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_moderatePost_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.ModeratePost(childComplexity, args["data"].(types.ModeratePostInput)), true
 
 	case "PendingPostRejectionReason.id":
 		if e.complexity.PendingPostRejectionReason.ID == nil {
@@ -151,6 +186,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.__resolve_entities(childComplexity, args["representations"].([]map[string]interface{})), true
 
+	case "Validation.code":
+		if e.complexity.Validation.Code == nil {
+			break
+		}
+
+		return e.complexity.Validation.Code(childComplexity), true
+
 	case "Workaround3.id":
 		if e.complexity.Workaround3.ID == nil {
 			break
@@ -189,6 +231,20 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 				Data: buf.Bytes(),
 			}
 		}
+	case ast.Mutation:
+		return func(ctx context.Context) *graphql.Response {
+			if !first {
+				return nil
+			}
+			first = false
+			data := ec._Mutation(ctx, rc.Operation.SelectionSet)
+			var buf bytes.Buffer
+			data.MarshalGQL(&buf)
+
+			return &graphql.Response{
+				Data: buf.Bytes(),
+			}
+		}
 
 	default:
 		return graphql.OneShot(graphql.ErrorResponse(ctx, "unsupported GraphQL operation"))
@@ -215,11 +271,29 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
+	{Name: "schema/mutations.graphql", Input: `type Mutation {
+  moderatePost(data: ModeratePostInput!): ModeratePost!
+}
+`, BuiltIn: false},
 	{Name: "schema/queries.graphql", Input: `type Query {
   rejectionReasons: [PendingPostRejectionReason!]!
 }
 `, BuiltIn: false},
-	{Name: "schema/types.graphql", Input: `type PendingPostRejectionReason {
+	{Name: "schema/types.graphql", Input: `input ModeratePostInput {
+  pendingPostId: String!
+  rejectionReasonId: String
+  notes: String!
+}
+
+type ModeratePost {
+  validation: Validation
+}
+
+type Validation {
+  code: String!
+}
+
+type PendingPostRejectionReason {
   id: String!
   reason: String!
   infraction: Boolean!
@@ -277,6 +351,21 @@ func (ec *executionContext) field_Entity_findWorkaround3ByID_args(ctx context.Co
 		}
 	}
 	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_moderatePost_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.ModeratePostInput
+	if tmp, ok := rawArgs["data"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("data"))
+		arg0, err = ec.unmarshalNModeratePostInput2overdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐModeratePostInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["data"] = arg0
 	return args, nil
 }
 
@@ -388,6 +477,80 @@ func (ec *executionContext) _Entity_findWorkaround3ByID(ctx context.Context, fie
 	res := resTmp.(*types.Workaround3)
 	fc.Result = res
 	return ec.marshalNWorkaround32ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐWorkaround3(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ModeratePost_validation(ctx context.Context, field graphql.CollectedField, obj *types.ModeratePost) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ModeratePost",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Validation, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Validation)
+	fc.Result = res
+	return ec.marshalOValidation2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐValidation(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_moderatePost(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_moderatePost_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().ModeratePost(rctx, args["data"].(types.ModeratePostInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.ModeratePost)
+	fc.Result = res
+	return ec.marshalNModeratePost2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐModeratePost(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _PendingPostRejectionReason_id(ctx context.Context, field graphql.CollectedField, obj *types.PendingPostRejectionReason) (ret graphql.Marshaler) {
@@ -676,6 +839,41 @@ func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.C
 	res := resTmp.(*introspection.Schema)
 	fc.Result = res
 	return ec.marshalO__Schema2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐSchema(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Validation_code(ctx context.Context, field graphql.CollectedField, obj *types.Validation) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Validation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Code, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Workaround3_id(ctx context.Context, field graphql.CollectedField, obj *types.Workaround3) (ret graphql.Marshaler) {
@@ -1829,6 +2027,42 @@ func (ec *executionContext) ___Type_ofType(ctx context.Context, field graphql.Co
 
 // region    **************************** input.gotpl *****************************
 
+func (ec *executionContext) unmarshalInputModeratePostInput(ctx context.Context, obj interface{}) (types.ModeratePostInput, error) {
+	var it types.ModeratePostInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "pendingPostId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("pendingPostId"))
+			it.PendingPostID, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "rejectionReasonId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("rejectionReasonId"))
+			it.RejectionReasonID, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "notes":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("notes"))
+			it.Notes, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 // endregion **************************** input.gotpl *****************************
 
 // region    ************************** interface.gotpl ***************************
@@ -1882,6 +2116,61 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 				}
 				return res
 			})
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var moderatePostImplementors = []string{"ModeratePost"}
+
+func (ec *executionContext) _ModeratePost(ctx context.Context, sel ast.SelectionSet, obj *types.ModeratePost) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, moderatePostImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ModeratePost")
+		case "validation":
+			out.Values[i] = ec._ModeratePost_validation(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var mutationImplementors = []string{"Mutation"}
+
+func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, mutationImplementors)
+
+	ctx = graphql.WithFieldContext(ctx, &graphql.FieldContext{
+		Object: "Mutation",
+	})
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Mutation")
+		case "moderatePost":
+			out.Values[i] = ec._Mutation_moderatePost(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -1991,6 +2280,33 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Values[i] = ec._Query___type(ctx, field)
 		case "__schema":
 			out.Values[i] = ec._Query___schema(ctx, field)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var validationImplementors = []string{"Validation"}
+
+func (ec *executionContext) _Validation(ctx context.Context, sel ast.SelectionSet, obj *types.Validation) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, validationImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Validation")
+		case "code":
+			out.Values[i] = ec._Validation_code(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -2308,6 +2624,25 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) marshalNModeratePost2overdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐModeratePost(ctx context.Context, sel ast.SelectionSet, v types.ModeratePost) graphql.Marshaler {
+	return ec._ModeratePost(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNModeratePost2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐModeratePost(ctx context.Context, sel ast.SelectionSet, v *types.ModeratePost) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ModeratePost(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNModeratePostInput2overdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐModeratePostInput(ctx context.Context, v interface{}) (types.ModeratePostInput, error) {
+	res, err := ec.unmarshalInputModeratePostInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNPendingPostRejectionReason2ᚕᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostRejectionReasonᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.PendingPostRejectionReason) graphql.Marshaler {
@@ -2783,6 +3118,13 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 		return graphql.Null
 	}
 	return graphql.MarshalString(*v)
+}
+
+func (ec *executionContext) marshalOValidation2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐValidation(ctx context.Context, sel ast.SelectionSet, v *types.Validation) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Validation(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalO_Entity2githubᚗcomᚋ99designsᚋgqlgenᚋpluginᚋfederationᚋfedruntimeᚐEntity(ctx context.Context, sel ast.SelectionSet, v fedruntime.Entity) graphql.Marshaler {
