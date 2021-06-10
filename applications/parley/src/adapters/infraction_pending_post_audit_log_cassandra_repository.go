@@ -10,15 +10,17 @@ import (
 )
 
 type PendingPostAuditLog struct {
-	Id                string `db:"id"`
-	PostId            string `db:"post_id"`
-	ModeratorId       string `db:"moderator_user_id"`
-	ModeratorUsername string `db:"moderator_username"`
-	UserInfractionId  string `db:"user_infraction_id"`
-	Status            string `db:"status"`
-	Reason            string `db:"reason"`
-	Notes             string `db:"notes"`
-	Reverted          bool   `db:"reverted"`
+	Id                  string `db:"id"`
+	PostId              string `db:"post_id"`
+	ContributorId       string `db:"contributor_user_id"`
+	ContributorUsername string `db:"contributor_user_username"`
+	ModeratorId         string `db:"moderator_user_id"`
+	ModeratorUsername   string `db:"moderator_username"`
+	UserInfractionId    string `db:"user_infraction_id"`
+	Status              string `db:"status"`
+	Reason              string `db:"reason"`
+	Notes               string `db:"notes"`
+	Reverted            bool   `db:"reverted"`
 }
 
 func marshalPendingPostAuditLogToDatabase(auditLog *infraction.PendingPostAuditLog) *PendingPostAuditLog {
@@ -30,15 +32,17 @@ func marshalPendingPostAuditLogToDatabase(auditLog *infraction.PendingPostAuditL
 	}
 
 	return &PendingPostAuditLog{
-		Id:                auditLog.ID(),
-		PostId:            auditLog.PostId(),
-		ModeratorId:       auditLog.Moderator().ID(),
-		ModeratorUsername: auditLog.Moderator().Username(),
-		UserInfractionId:  userInfractionId,
-		Status:            auditLog.Status(),
-		Reason:            auditLog.RejectionReason().Reason(),
-		Notes:             auditLog.Notes(),
-		Reverted:          auditLog.Reverted(),
+		Id:                  auditLog.ID(),
+		PostId:              auditLog.PostId(),
+		ModeratorId:         auditLog.Moderator().ID(),
+		ModeratorUsername:   auditLog.Moderator().Username(),
+		ContributorId:       auditLog.Contributor().ID(),
+		ContributorUsername: auditLog.Contributor().Username(),
+		UserInfractionId:    userInfractionId,
+		Status:              auditLog.Status(),
+		Reason:              auditLog.RejectionReason().Reason(),
+		Notes:               auditLog.Notes(),
+		Reverted:            auditLog.Reverted(),
 	}
 }
 
@@ -48,6 +52,8 @@ func (r InfractionCassandraRepository) CreatePendingPostAuditLog(ctx context.Con
 		Columns(
 			"id",
 			"post_id",
+			"contributor_user_id",
+			"contributor_user_username",
 			"moderator_user_id",
 			"moderator_username",
 			"user_infraction_id",
@@ -72,4 +78,56 @@ func (r InfractionCassandraRepository) CreatePendingPostAuditLog(ctx context.Con
 	}
 
 	return nil
+}
+
+func (r InfractionCassandraRepository) GetPendingPostAuditLog(ctx context.Context, id string) (*infraction.PendingPostAuditLog, error) {
+
+	pendingPostAuditLogQuery := qb.Select("pending_posts_audit_log").
+		Columns(
+			"id",
+			"post_id",
+			"contributor_user_id",
+			"contributor_user_username",
+			"moderator_user_id",
+			"moderator_username",
+			"user_infraction_id",
+			"status",
+			"reason",
+			"notes",
+			"reverted",
+		).
+		Query(r.session).
+		Consistency(gocql.LocalQuorum)
+
+	var pendingPostAuditLog PendingPostAuditLog
+
+	if err := pendingPostAuditLogQuery.Get(&pendingPostAuditLog); err != nil {
+		return nil, err
+	}
+
+	var userInfractionHistory *infraction.UserInfractionHistory
+	var err error
+
+	if pendingPostAuditLog.UserInfractionId != "" {
+		userInfractionHistory, err = r.GetUserInfractionHistoryById(ctx, pendingPostAuditLog.UserInfractionId)
+
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return infraction.UnmarshalPendingPostAuditLogFromDatabase(
+		pendingPostAuditLog.Id,
+		pendingPostAuditLog.PostId,
+		pendingPostAuditLog.ModeratorId,
+		pendingPostAuditLog.ModeratorUsername,
+		pendingPostAuditLog.ContributorId,
+		pendingPostAuditLog.ContributorUsername,
+		pendingPostAuditLog.Status,
+		pendingPostAuditLog.UserInfractionId,
+		pendingPostAuditLog.Reason,
+		pendingPostAuditLog.Notes,
+		pendingPostAuditLog.Reverted,
+		userInfractionHistory,
+	), nil
 }

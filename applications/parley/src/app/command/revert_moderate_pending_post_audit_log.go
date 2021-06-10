@@ -11,35 +11,27 @@ import (
 )
 
 var (
-	ErrFailedModeratePendingPost = errors.New("get moderator failed")
+	ErrFailedRevertModeratePendingPost = errors.New("get moderator failed")
 )
 
-type ModeratePendingPostHandler struct {
+type RevertModeratePendingPostHandler struct {
 	mr    moderator.Repository
 	ir    infraction.Repository
 	eva   EvaService
 	sting StingService
 }
 
-func NewModeratePendingPostHandler(mr moderator.Repository, eva EvaService, sting StingService) ModeratePendingPostHandler {
-	return ModeratePendingPostHandler{mr: mr, sting: sting, eva: eva}
+func NewRevertModeratePendingPostHandler(mr moderator.Repository, eva EvaService, sting StingService) RevertModeratePendingPostHandler {
+	return RevertModeratePendingPostHandler{mr: mr, sting: sting, eva: eva}
 }
 
-func (h ModeratePendingPostHandler) Handle(ctx context.Context, moderatorId, pendingPostId, rejectionReasonId, notes string) error {
+func (h RevertModeratePendingPostHandler) Handle(ctx context.Context, moderatorId, auditLogId string) error {
 
 	// Get user, to perform permission checks
 	usr, err := h.eva.GetUser(ctx, moderatorId)
 
 	if err != nil {
 		zap.S().Errorf("failed to get user: %s", err)
-		return ErrFailedModeratePendingPost
-	}
-
-	// Get pending post
-	postModeratorId, postContributorId, err := h.sting.GetPendingPost(ctx, pendingPostId)
-
-	if err != nil {
-		zap.S().Errorf("failed to get post: %s", err)
 		return ErrFailedModeratePendingPost
 	}
 

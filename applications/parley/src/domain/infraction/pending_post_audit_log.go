@@ -19,8 +19,9 @@ var (
 // A class simply used to store the details of a PendingPost that we can use
 // later on
 type PendingPostAuditLog struct {
-	id          string
-	postId      string
+	id     string
+	postId string
+
 	moderator   *user.User
 	contributor *user.User
 	notes       string
@@ -65,6 +66,20 @@ func NewPendingPostAuditLog(user *user.User, userInfractionHistory []*UserInfrac
 		reverted:        false,
 		userInfraction:  userInfraction,
 	}, nil
+}
+
+func UnmarshalPendingPostAuditLogFromDatabase(id, postId, moderatorId, moderatorUsername, contributorId, contributorUsername, status, userInfractionId, reason, notes string, reverted bool, userInfraction *UserInfractionHistory) *PendingPostAuditLog {
+	return &PendingPostAuditLog{
+		id:              id,
+		postId:          postId,
+		moderator:       user.NewUserOnlyIdAndUsername(moderatorId, moderatorUsername),
+		contributor:     user.NewUserOnlyIdAndUsername(contributorId, contributorUsername),
+		status:          status,
+		rejectionReason: UnmarshalPendingPostRejectionReasonFromDatabase(ksuid.New().String(), reason, userInfractionId != ""),
+		notes:           notes,
+		reverted:        reverted,
+		userInfraction:  userInfraction,
+	}
 }
 
 func (m *PendingPostAuditLog) ID() string {

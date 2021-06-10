@@ -24,6 +24,13 @@ func UnmarshalFromProto(proto *eva.User) *User {
 	)
 }
 
+func NewUserOnlyIdAndUsername(id, username string) *User {
+	return &User{
+		id:       id,
+		username: username,
+	}
+}
+
 func NewUser(id, username, avatar string, roles []string, verified, locked bool) *User {
 	return &User{
 		id:       id,
