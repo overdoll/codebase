@@ -109,7 +109,7 @@ func (h ModeratePendingPostHandler) Handle(ctx context.Context, moderatorId, pen
 		}
 
 		// Lock user account
-		if _, err := h.eva.LockUser(ctx, infractionAuditLog.Contributor().ID(), infractionAuditLog.UserInfraction().UserLockLength()); err != nil {
+		if err := h.eva.LockUser(ctx, infractionAuditLog.Contributor().ID(), infractionAuditLog.UserInfraction().UserLockLength()); err != nil {
 			zap.S().Errorf("failed to lock account: %s", err)
 			return ErrFailedModeratePendingPost
 		}

@@ -2,6 +2,7 @@ package infraction
 
 import (
 	"errors"
+	"time"
 
 	"github.com/segmentio/ksuid"
 	"overdoll/libraries/user"
@@ -116,6 +117,30 @@ func (m *PendingPostAuditLog) IsDenied() bool {
 
 func (m *PendingPostAuditLog) Reverted() bool {
 	return m.reverted
+}
+
+// revert log
+func (m *PendingPostAuditLog) Revert() error {
+	parse, err := ksuid.Parse(m.id)
+
+	if err != nil {
+		return err
+	}
+
+	// cant revert after 15 minutes
+	if parse.Time().After(time.Now().Add(time.Minute * 10)) {
+		return errors.New("revert log period has passed")
+	}
+
+	// remove infraction (else we have bad ids)
+	m.userInfraction = nil
+	m.reverted = true
+
+	return nil
+}
+
+func (m *PendingPostAuditLog) UpdateModerator(mod *user.User) {
+	m.moderator = mod
 }
 
 func (m *PendingPostAuditLog) RejectionReason() *PendingPostRejectionReason {

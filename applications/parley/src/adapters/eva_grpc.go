@@ -27,16 +27,16 @@ func (s EvaGrpc) GetUser(ctx context.Context, id string) (*user.User, error) {
 	return user.UnmarshalFromProto(usr), nil
 }
 
-func (s EvaGrpc) LockUser(ctx context.Context, id string, duration int64) (*user.User, error) {
+func (s EvaGrpc) LockUser(ctx context.Context, id string, duration int64) error {
 
-	usr, err := s.client.LockUser(ctx, &eva.LockUserRequest{
+	_, err := s.client.LockUser(ctx, &eva.LockUserRequest{
 		Id:       id,
 		Duration: duration,
 	})
 
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return user.UnmarshalFromProto(usr), nil
+	return nil
 }

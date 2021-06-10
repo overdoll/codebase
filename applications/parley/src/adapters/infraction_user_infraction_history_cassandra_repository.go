@@ -26,6 +26,21 @@ func marshalUserInfractionHistoryToDatabase(infractionHistory *infraction.UserIn
 	}
 }
 
+func (r InfractionCassandraRepository) DeleteUserInfractionHistory(ctx context.Context, id string) error {
+
+	deleteUserInfraction := qb.Delete("users_infraction_history").
+		Where(qb.Eq("id")).
+		Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&UserInfractionHistory{Id: id})
+
+	if err := deleteUserInfraction.ExecRelease(); err != nil {
+		return fmt.Errorf("ExecRelease() failed: '%s", err)
+	}
+
+	return nil
+}
+
 func (r InfractionCassandraRepository) GetUserInfractionHistoryById(ctx context.Context, id string) (*infraction.UserInfractionHistory, error) {
 
 	infractionHistoryQuery := qb.Select("users_infraction_history").

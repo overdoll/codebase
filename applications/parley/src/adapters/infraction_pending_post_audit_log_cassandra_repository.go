@@ -131,3 +131,43 @@ func (r InfractionCassandraRepository) GetPendingPostAuditLog(ctx context.Contex
 		userInfractionHistory,
 	), nil
 }
+
+func (r InfractionCassandraRepository) UpdatePendingPostAuditLog(ctx context.Context, id string, updateFn func(auditLog *infraction.PendingPostAuditLog) error) (*infraction.PendingPostAuditLog, error) {
+	auditLog, err := r.GetPendingPostAuditLog(ctx, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	err = updateFn(auditLog)
+
+	if err != nil {
+		return nil, err
+	}
+
+	updateAuditLog := qb.Update("pending_posts_audit_log").
+		Set(
+			"id",
+			"post_id",
+			"contributor_user_id",
+			"contributor_user_username",
+			"moderator_user_id",
+			"moderator_username",
+			"user_infraction_id",
+			"status",
+			"reason",
+			"notes",
+			"reverted",
+		).
+		Where(qb.Eq("id")).
+		Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(marshalPendingPostAuditLogToDatabase(auditLog))
+
+	if err := updateAuditLog.ExecRelease(); err != nil {
+		return nil, fmt.Errorf("update() failed: '%s", err)
+	}
+
+	return auditLog, nil
+
+}
