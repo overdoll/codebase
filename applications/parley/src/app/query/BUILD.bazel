@@ -6,6 +6,7 @@ go_library(
         "pending_posts_audit_log.go",
         "pending_posts_rejection_reasons.go",
         "services.go",
+        "user_infraction_history.go",
     ],
     importpath = "overdoll/applications/parley/src/app/query",
     visibility = ["//visibility:public"],
