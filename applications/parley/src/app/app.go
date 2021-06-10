@@ -11,9 +11,12 @@ type Application struct {
 }
 
 type Commands struct {
-	GetNextModerator command.GetNextModeratorHandler
+	GetNextModerator   command.GetNextModeratorHandler
+	ModeratePost       command.ModeratePendingPostHandler
+	RevertModeratePost command.RevertModeratePendingPostHandler
 }
 
 type Queries struct {
 	PendingPostRejectionReasons query.PendingPostsRejectionReasonsHandler
+	PendingPostsAuditLog        query.PendingPostsAuditLogHandler
 }

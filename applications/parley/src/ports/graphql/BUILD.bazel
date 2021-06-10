@@ -12,6 +12,7 @@ go_library(
     deps = [
         "//applications/parley/src/app",
         "//applications/parley/src/ports/graphql/entities",
+        "//applications/parley/src/ports/graphql/mutations",
         "//applications/parley/src/ports/graphql/queries",
         "//applications/parley/src/ports/graphql/types",
         "@com_github_99designs_gqlgen//graphql",

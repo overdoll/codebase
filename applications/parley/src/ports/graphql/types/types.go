@@ -2,10 +2,49 @@
 
 package types
 
+type ModeratePost struct {
+	Validation *Validation `json:"validation"`
+}
+
+type ModeratePostInput struct {
+	PendingPostID     string  `json:"pendingPostId"`
+	RejectionReasonID *string `json:"rejectionReasonId"`
+	Notes             string  `json:"notes"`
+}
+
+type PendingPostAuditLog struct {
+	ID           string  `json:"id"`
+	PostID       string  `json:"postId"`
+	Contributor  *User   `json:"contributor"`
+	Moderator    *User   `json:"moderator"`
+	InfractionID *string `json:"infractionId"`
+	Status       string  `json:"status"`
+	Reason       string  `json:"reason"`
+	Notes        string  `json:"notes"`
+	Reverted     bool    `json:"reverted"`
+}
+
+type PendingPostAuditLogInput struct {
+	ModeratorID string `json:"moderatorId"`
+}
+
 type PendingPostRejectionReason struct {
 	ID         string `json:"id"`
 	Reason     string `json:"reason"`
 	Infraction bool   `json:"infraction"`
+}
+
+type RevertPostInput struct {
+	AuditLogID string `json:"auditLogId"`
+}
+
+type User struct {
+	ID       string `json:"id"`
+	Username string `json:"username"`
+}
+
+type Validation struct {
+	Code string `json:"code"`
 }
 
 type Workaround3 struct {

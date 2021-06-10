@@ -24,6 +24,13 @@ func UnmarshalFromProto(proto *eva.User) *User {
 	)
 }
 
+func NewUserOnlyIdAndUsername(id, username string) *User {
+	return &User{
+		id:       id,
+		username: username,
+	}
+}
+
 func NewUser(id, username, avatar string, roles []string, verified, locked bool) *User {
 	return &User{
 		id:       id,
@@ -53,6 +60,14 @@ func (user *User) IsVerified() bool {
 
 func (user *User) IsLocked() bool {
 	return user.locked
+}
+
+func (user *User) IsStaff() bool {
+	return user.HasRoles([]string{"staff"})
+}
+
+func (user *User) IsModerator() bool {
+	return user.HasRoles([]string{"moderator"})
 }
 
 func (user *User) HasRoles(roles []string) bool {

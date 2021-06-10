@@ -7,6 +7,7 @@ package gen
 import (
 	"overdoll/applications/parley/src/app"
 	"overdoll/applications/parley/src/ports/graphql/entities"
+	"overdoll/applications/parley/src/ports/graphql/mutations"
 	"overdoll/applications/parley/src/ports/graphql/queries"
 )
 
@@ -16,6 +17,13 @@ type Resolver struct {
 
 func NewResolver(app *app.Application) *Resolver {
 	return &Resolver{app: app}
+}
+
+// Mutation returns gen.MutationResolver implementation.
+func (r *Resolver) Mutation() MutationResolver {
+	return &mutations.MutationResolver{
+		App: r.app,
+	}
 }
 
 // Query returns gen.QueryResolver implementation.

@@ -1,3 +1,42 @@
+input ModeratePostInput {
+  pendingPostId: String!
+  rejectionReasonId: String
+  notes: String!
+}
+
+input PendingPostAuditLogInput {
+  moderatorId: String!
+}
+
+input RevertPostInput {
+  auditLogId: String!
+}
+
+type ModeratePost {
+  validation: Validation
+}
+
+type User {
+  id: String!
+  username: String!
+}
+
+type PendingPostAuditLog {
+  id: String!
+  postId: String!
+  contributor: User!
+  moderator: User!
+  infractionId: String
+  status: String!
+  reason: String!
+  notes: String!
+  reverted: Boolean!
+}
+
+type Validation {
+  code: String!
+}
+
 type PendingPostRejectionReason {
   id: String!
   reason: String!

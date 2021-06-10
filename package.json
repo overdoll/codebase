@@ -79,7 +79,8 @@
     "storybook": "cd ./applications/medusa && start-storybook -p 6006 -s public,../../development/assets",
     "test:unit": "bazel coverage --test_output=all //applications/medusa:unit",
     "test:integration": "bazel coverage --test_output=all //applications/medusa:integration",
-    "e2e:open": "cd ./applications/medusa && cypress open"
+    "e2e:open": "cd ./applications/medusa && cypress open",
+    "jest": "cd ./applications/medusa && jest src/ --coverage"
   },
   "browserslist": {
     "production": [
