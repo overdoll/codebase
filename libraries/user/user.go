@@ -55,6 +55,10 @@ func (user *User) IsLocked() bool {
 	return user.locked
 }
 
+func (user *User) IsStaff() bool {
+	return user.HasRoles([]string{"staff"})
+}
+
 func (user *User) HasRoles(roles []string) bool {
 	for _, role := range user.roles {
 		for _, requiredRole := range roles {

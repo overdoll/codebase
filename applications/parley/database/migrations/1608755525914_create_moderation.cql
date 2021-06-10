@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS pending_posts_audit_log
     post_id                 text,
     moderator_user_id       text,
     moderator_user_username text,
+    user_infraction_id      text,
     status                  text,
     reason                  text,
     notes                   text,
@@ -37,7 +38,7 @@ CREATE TABLE IF NOT EXISTS users_infraction_history
     user_id    text,
     reason     text,
     expiration timestamp,
-    primary key ( id, user_id, expiration ),
+    primary key ( id, user_id ),
 );
 
 CREATE TABLE IF NOT EXISTS pending_posts_rejection_reasons
