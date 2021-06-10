@@ -14,7 +14,7 @@ export default function NotFound (): Node {
 
   return (
     <>
-      <Helmet title='not found' />
+      <Helmet title='error' />
       <Center mt={40}>
         <Flex w={['sm', 'md', 'lg']} direction='column'>
           <Icon

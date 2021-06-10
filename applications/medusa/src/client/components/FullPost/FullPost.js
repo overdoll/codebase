@@ -78,19 +78,15 @@ export default function FullPost ({ artist, files, urls, characters, categories,
         {...rest}
       >
         <Flex direction='row' align='center' w='100%'>
-          {artist
-            ? (
-              <>
-                <Avatar
-                  name={artist.username}
-                  src={artist.avatar}
-                  size='sm'
-                  mr={2}
-                />
-                <Text>{artist.username}</Text>
-              </>
-              )
-            : <Skeleton />}
+          <>
+            <Avatar
+              name={artist.username}
+              src={artist.avatar}
+              size='sm'
+              mr={2}
+            />
+            <Text>{artist.username}</Text>
+          </>
         </Flex>
         <Box w='100%' h='100%' mt={2} mb={2}>
           <Gallery setSwiper={setSwiper} files={files} urls={urls} />

@@ -13,6 +13,7 @@ const U: UppyType = new Uppy({
   restrictions: {
     maxNumberOfFiles: 10,
     allowedFileTypes: ['image/jpeg', 'image/png', 'video/mp4', 'image/jpg'],
+    maxFileSize: 25000000
   },
   autoProceed: true,
   allowMultipleUploads: true

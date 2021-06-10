@@ -12,12 +12,13 @@ import {
   ModalContent,
   ModalCloseButton,
   ModalBody,
-  ModalHeader, Modal, Heading
+  ModalHeader, Modal, Heading, InputRightElement, IconButton, MenuButton
 } from '@chakra-ui/react'
 import Button from '@//:modules/form/button'
 import { useTranslation } from 'react-i18next'
 import Icon from '@//:modules/content/icon/Icon'
 import SearchCircle from '@streamlinehq/streamlinehq/img/streamline-regular/search-circle-sjsJ8a.svg'
+import InterfaceDelete1 from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-delete-1-n8Oxoc.svg'
 
 type Props = {
   children: Node,
@@ -75,6 +76,11 @@ export default function Search ({
     // });
   }
 
+  const clearSearch = e => {
+    setSearch('')
+    refetch(e.target.value)
+  }
+
   const [t] = useTranslation('upload')
 
   return (
@@ -110,7 +116,7 @@ export default function Search ({
             >
               <Flex direction='column' h='100%' w='100%'>
                 <Flex borderRadius={5} bg='gray.800' pt={3} pb={3} mb={4} justify='center'>
-                  <Heading ml={2} mr={2} size='md' color='gray.00' isCentered>{header}</Heading>
+                  <Heading ml={2} mr={2} size='md' color='gray.00'>{header}</Heading>
                 </Flex>
                 <ErrorBoundary
                   fallback={({ error, reset }) => (
@@ -145,6 +151,23 @@ export default function Search ({
                   variant='filled'
                   mb={4}
                 />
+                <InputRightElement>
+                  <IconButton
+                    aria-label='clear'
+                    hidden={!searchInput}
+                    onClick={clearSearch}
+                    icon={
+                      <Icon
+                        p={2}
+                        w='inherit'
+                        h='inherit'
+                        icon={InterfaceDelete1}
+                        fill='gray.200'
+                      />
+                    }
+                    variant='ghost' h='1.75rem' size='sm'
+                  />
+                </InputRightElement>
               </InputGroup>
               <Button size='lg' w='100%' colorScheme='red' onClick={onClose}>
                 {t('tag.search.close')}

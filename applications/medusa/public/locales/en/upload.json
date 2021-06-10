@@ -3,7 +3,7 @@
     "header": "Start by uploading an image or a video",
     "subheader": "Accepted file formats: .mp4, .jpg, .png",
     "uploader": "Upload Files",
-    "limit": "max. 10mb per file"
+    "limit": "max. 25mb per file"
   },
   "rules": {
     "header": "As a reminder, don't upload...",
@@ -53,5 +53,13 @@
     "header": "Review your post",
     "subheader": "Make sure you like how it looks before you submit",
     "notice": "You'll have to wait until all media files are uploaded before submitting."
+  },
+  "finish": {
+    "review": {
+      "header": "Your post was submitted for approval",
+      "subheader": "Before your post is public, it must be approved to ensure that it follows our Community Guidelines",
+      "again": "Post again",
+      "home": "Go home"
+    }
   }
 }

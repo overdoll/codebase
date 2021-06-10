@@ -24,7 +24,7 @@ export default function Picker ({ uppy, onSelect, children }: Props): Node {
       try {
         uppy.addFile({
           source: 'file input',
-          name: file.name,
+          name: file.name + new Date().getTime(),
           type: file.type,
           data: file
         })
