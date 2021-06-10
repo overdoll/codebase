@@ -55,7 +55,8 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		ModeratePost func(childComplexity int, data types.ModeratePostInput) int
+		ModeratePost              func(childComplexity int, data types.ModeratePostInput) int
+		RevertPendingPostAuditLog func(childComplexity int, data types.RevertPostInput) int
 	}
 
 	PendingPostRejectionReason struct {
@@ -88,6 +89,7 @@ type EntityResolver interface {
 }
 type MutationResolver interface {
 	ModeratePost(ctx context.Context, data types.ModeratePostInput) (*types.ModeratePost, error)
+	RevertPendingPostAuditLog(ctx context.Context, data types.RevertPostInput) (*types.ModeratePost, error)
 }
 type QueryResolver interface {
 	RejectionReasons(ctx context.Context) ([]*types.PendingPostRejectionReason, error)
@@ -138,6 +140,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.ModeratePost(childComplexity, args["data"].(types.ModeratePostInput)), true
+
+	case "Mutation.revertPendingPostAuditLog":
+		if e.complexity.Mutation.RevertPendingPostAuditLog == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_revertPendingPostAuditLog_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.RevertPendingPostAuditLog(childComplexity, args["data"].(types.RevertPostInput)), true
 
 	case "PendingPostRejectionReason.id":
 		if e.complexity.PendingPostRejectionReason.ID == nil {
@@ -273,6 +287,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 var sources = []*ast.Source{
 	{Name: "schema/mutations.graphql", Input: `type Mutation {
   moderatePost(data: ModeratePostInput!): ModeratePost!
+  revertPendingPostAuditLog(data: RevertPostInput!): ModeratePost!
 }
 `, BuiltIn: false},
 	{Name: "schema/queries.graphql", Input: `type Query {
@@ -283,6 +298,10 @@ var sources = []*ast.Source{
   pendingPostId: String!
   rejectionReasonId: String
   notes: String!
+}
+
+input RevertPostInput {
+  auditLogId: String!
 }
 
 type ModeratePost {
@@ -361,6 +380,21 @@ func (ec *executionContext) field_Mutation_moderatePost_args(ctx context.Context
 	if tmp, ok := rawArgs["data"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("data"))
 		arg0, err = ec.unmarshalNModeratePostInput2overdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐModeratePostInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["data"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_revertPendingPostAuditLog_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.RevertPostInput
+	if tmp, ok := rawArgs["data"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("data"))
+		arg0, err = ec.unmarshalNRevertPostInput2overdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐRevertPostInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -537,6 +571,48 @@ func (ec *executionContext) _Mutation_moderatePost(ctx context.Context, field gr
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return ec.resolvers.Mutation().ModeratePost(rctx, args["data"].(types.ModeratePostInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.ModeratePost)
+	fc.Result = res
+	return ec.marshalNModeratePost2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐModeratePost(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_revertPendingPostAuditLog(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_revertPendingPostAuditLog_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().RevertPendingPostAuditLog(rctx, args["data"].(types.RevertPostInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2063,6 +2139,26 @@ func (ec *executionContext) unmarshalInputModeratePostInput(ctx context.Context,
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputRevertPostInput(ctx context.Context, obj interface{}) (types.RevertPostInput, error) {
+	var it types.RevertPostInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "auditLogId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("auditLogId"))
+			it.AuditLogID, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 // endregion **************************** input.gotpl *****************************
 
 // region    ************************** interface.gotpl ***************************
@@ -2168,6 +2264,11 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = graphql.MarshalString("Mutation")
 		case "moderatePost":
 			out.Values[i] = ec._Mutation_moderatePost(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "revertPendingPostAuditLog":
+			out.Values[i] = ec._Mutation_revertPendingPostAuditLog(ctx, field)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -2690,6 +2791,11 @@ func (ec *executionContext) marshalNPendingPostRejectionReason2ᚖoverdollᚋapp
 		return graphql.Null
 	}
 	return ec._PendingPostRejectionReason(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNRevertPostInput2overdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐRevertPostInput(ctx context.Context, v interface{}) (types.RevertPostInput, error) {
+	res, err := ec.unmarshalInputRevertPostInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {

@@ -18,6 +18,10 @@ type PendingPostRejectionReason struct {
 	Infraction bool   `json:"infraction"`
 }
 
+type RevertPostInput struct {
+	AuditLogID string `json:"auditLogId"`
+}
+
 type Validation struct {
 	Code string `json:"code"`
 }

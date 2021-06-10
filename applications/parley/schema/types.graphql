@@ -4,6 +4,10 @@ input ModeratePostInput {
   notes: String!
 }
 
+input RevertPostInput {
+  auditLogId: String!
+}
+
 type ModeratePost {
   validation: Validation
 }
