@@ -2,6 +2,11 @@
 
 package types
 
+type AuditUser struct {
+	ID       string `json:"id"`
+	Username string `json:"username"`
+}
+
 type ModeratePost struct {
 	Validation *Validation `json:"validation"`
 }
@@ -13,15 +18,15 @@ type ModeratePostInput struct {
 }
 
 type PendingPostAuditLog struct {
-	ID           string  `json:"id"`
-	PostID       string  `json:"postId"`
-	Contributor  *User   `json:"contributor"`
-	Moderator    *User   `json:"moderator"`
-	InfractionID *string `json:"infractionId"`
-	Status       string  `json:"status"`
-	Reason       string  `json:"reason"`
-	Notes        string  `json:"notes"`
-	Reverted     bool    `json:"reverted"`
+	ID           string     `json:"id"`
+	PostID       string     `json:"postId"`
+	Contributor  *AuditUser `json:"contributor"`
+	Moderator    *AuditUser `json:"moderator"`
+	InfractionID *string    `json:"infractionId"`
+	Status       string     `json:"status"`
+	Reason       string     `json:"reason"`
+	Notes        string     `json:"notes"`
+	Reverted     bool       `json:"reverted"`
 }
 
 type PendingPostAuditLogInput struct {
@@ -39,16 +44,18 @@ type RevertPostInput struct {
 }
 
 type User struct {
-	ID       string `json:"id"`
-	Username string `json:"username"`
+	ID                string                    `json:"id"`
+	InfractionHistory []*UsersInfractionHistory `json:"infractionHistory"`
+}
+
+func (User) IsEntity() {}
+
+type UsersInfractionHistory struct {
+	ID         string `json:"id"`
+	Reason     string `json:"reason"`
+	Expiration string `json:"expiration"`
 }
 
 type Validation struct {
 	Code string `json:"code"`
 }
-
-type Workaround3 struct {
-	ID *int `json:"id"`
-}
-
-func (Workaround3) IsEntity() {}

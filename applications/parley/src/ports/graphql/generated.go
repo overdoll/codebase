@@ -46,8 +46,13 @@ type DirectiveRoot struct {
 }
 
 type ComplexityRoot struct {
+	AuditUser struct {
+		ID       func(childComplexity int) int
+		Username func(childComplexity int) int
+	}
+
 	Entity struct {
-		FindWorkaround3ByID func(childComplexity int, id *int) int
+		FindUserByID func(childComplexity int, id string) int
 	}
 
 	ModeratePost struct {
@@ -85,16 +90,18 @@ type ComplexityRoot struct {
 	}
 
 	User struct {
-		ID       func(childComplexity int) int
-		Username func(childComplexity int) int
+		ID                func(childComplexity int) int
+		InfractionHistory func(childComplexity int) int
+	}
+
+	UsersInfractionHistory struct {
+		Expiration func(childComplexity int) int
+		ID         func(childComplexity int) int
+		Reason     func(childComplexity int) int
 	}
 
 	Validation struct {
 		Code func(childComplexity int) int
-	}
-
-	Workaround3 struct {
-		ID func(childComplexity int) int
 	}
 
 	Service struct {
@@ -103,7 +110,7 @@ type ComplexityRoot struct {
 }
 
 type EntityResolver interface {
-	FindWorkaround3ByID(ctx context.Context, id *int) (*types.Workaround3, error)
+	FindUserByID(ctx context.Context, id string) (*types.User, error)
 }
 type MutationResolver interface {
 	ModeratePost(ctx context.Context, data types.ModeratePostInput) (*types.ModeratePost, error)
@@ -129,17 +136,31 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	_ = ec
 	switch typeName + "." + field {
 
-	case "Entity.findWorkaround3ByID":
-		if e.complexity.Entity.FindWorkaround3ByID == nil {
+	case "AuditUser.id":
+		if e.complexity.AuditUser.ID == nil {
 			break
 		}
 
-		args, err := ec.field_Entity_findWorkaround3ByID_args(context.TODO(), rawArgs)
+		return e.complexity.AuditUser.ID(childComplexity), true
+
+	case "AuditUser.username":
+		if e.complexity.AuditUser.Username == nil {
+			break
+		}
+
+		return e.complexity.AuditUser.Username(childComplexity), true
+
+	case "Entity.findUserByID":
+		if e.complexity.Entity.FindUserByID == nil {
+			break
+		}
+
+		args, err := ec.field_Entity_findUserByID_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Entity.FindWorkaround3ByID(childComplexity, args["id"].(*int)), true
+		return e.complexity.Entity.FindUserByID(childComplexity, args["id"].(string)), true
 
 	case "ModeratePost.validation":
 		if e.complexity.ModeratePost.Validation == nil {
@@ -301,12 +322,33 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.User.ID(childComplexity), true
 
-	case "User.username":
-		if e.complexity.User.Username == nil {
+	case "User.infractionHistory":
+		if e.complexity.User.InfractionHistory == nil {
 			break
 		}
 
-		return e.complexity.User.Username(childComplexity), true
+		return e.complexity.User.InfractionHistory(childComplexity), true
+
+	case "UsersInfractionHistory.expiration":
+		if e.complexity.UsersInfractionHistory.Expiration == nil {
+			break
+		}
+
+		return e.complexity.UsersInfractionHistory.Expiration(childComplexity), true
+
+	case "UsersInfractionHistory.id":
+		if e.complexity.UsersInfractionHistory.ID == nil {
+			break
+		}
+
+		return e.complexity.UsersInfractionHistory.ID(childComplexity), true
+
+	case "UsersInfractionHistory.reason":
+		if e.complexity.UsersInfractionHistory.Reason == nil {
+			break
+		}
+
+		return e.complexity.UsersInfractionHistory.Reason(childComplexity), true
 
 	case "Validation.code":
 		if e.complexity.Validation.Code == nil {
@@ -314,13 +356,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Validation.Code(childComplexity), true
-
-	case "Workaround3.id":
-		if e.complexity.Workaround3.ID == nil {
-			break
-		}
-
-		return e.complexity.Workaround3.ID(childComplexity), true
 
 	case "_Service.sdl":
 		if e.complexity.Service.SDL == nil {
@@ -421,7 +456,7 @@ type ModeratePost {
   validation: Validation
 }
 
-type User {
+type AuditUser {
   id: String!
   username: String!
 }
@@ -429,13 +464,19 @@ type User {
 type PendingPostAuditLog {
   id: String!
   postId: String!
-  contributor: User!
-  moderator: User!
+  contributor: AuditUser!
+  moderator: AuditUser!
   infractionId: String
   status: String!
   reason: String!
   notes: String!
   reverted: Boolean!
+}
+
+type UsersInfractionHistory {
+  id: String!
+  reason: String!
+  expiration: String!
 }
 
 type Validation {
@@ -448,8 +489,9 @@ type PendingPostRejectionReason {
   infraction: Boolean!
 }
 
-type Workaround3 @key(fields: "id") {
-  id: Int
+extend type User @key(fields: "id") {
+  id: String! @external
+  infractionHistory: [UsersInfractionHistory!]
 }
 `, BuiltIn: false},
 	{Name: "federation/directives.graphql", Input: `
@@ -464,11 +506,11 @@ directive @extends on OBJECT
 `, BuiltIn: true},
 	{Name: "federation/entity.graphql", Input: `
 # a union of all types that use the @key directive
-union _Entity = Workaround3
+union _Entity = User
 
 # fake type to build resolver interfaces for users to implement
 type Entity {
-		findWorkaround3ByID(id: Int,): Workaround3!
+		findUserByID(id: String!,): User!
 
 }
 
@@ -488,13 +530,13 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 
 // region    ***************************** args.gotpl *****************************
 
-func (ec *executionContext) field_Entity_findWorkaround3ByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Entity_findUserByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *int
+	var arg0 string
 	if tmp, ok := rawArgs["id"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -616,7 +658,77 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 
 // region    **************************** field.gotpl *****************************
 
-func (ec *executionContext) _Entity_findWorkaround3ByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _AuditUser_id(ctx context.Context, field graphql.CollectedField, obj *types.AuditUser) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AuditUser",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AuditUser_username(ctx context.Context, field graphql.CollectedField, obj *types.AuditUser) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AuditUser",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Username, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Entity_findUserByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -633,7 +745,7 @@ func (ec *executionContext) _Entity_findWorkaround3ByID(ctx context.Context, fie
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Entity_findWorkaround3ByID_args(ctx, rawArgs)
+	args, err := ec.field_Entity_findUserByID_args(ctx, rawArgs)
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
@@ -641,7 +753,7 @@ func (ec *executionContext) _Entity_findWorkaround3ByID(ctx context.Context, fie
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Entity().FindWorkaround3ByID(rctx, args["id"].(*int))
+		return ec.resolvers.Entity().FindUserByID(rctx, args["id"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -653,9 +765,9 @@ func (ec *executionContext) _Entity_findWorkaround3ByID(ctx context.Context, fie
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*types.Workaround3)
+	res := resTmp.(*types.User)
 	fc.Result = res
-	return ec.marshalNWorkaround32ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐWorkaround3(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _ModeratePost_validation(ctx context.Context, field graphql.CollectedField, obj *types.ModeratePost) (ret graphql.Marshaler) {
@@ -874,9 +986,9 @@ func (ec *executionContext) _PendingPostAuditLog_contributor(ctx context.Context
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*types.User)
+	res := resTmp.(*types.AuditUser)
 	fc.Result = res
-	return ec.marshalNUser2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐUser(ctx, field.Selections, res)
+	return ec.marshalNAuditUser2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐAuditUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _PendingPostAuditLog_moderator(ctx context.Context, field graphql.CollectedField, obj *types.PendingPostAuditLog) (ret graphql.Marshaler) {
@@ -909,9 +1021,9 @@ func (ec *executionContext) _PendingPostAuditLog_moderator(ctx context.Context, 
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*types.User)
+	res := resTmp.(*types.AuditUser)
 	fc.Result = res
-	return ec.marshalNUser2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐUser(ctx, field.Selections, res)
+	return ec.marshalNAuditUser2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐAuditUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _PendingPostAuditLog_infractionId(ctx context.Context, field graphql.CollectedField, obj *types.PendingPostAuditLog) (ret graphql.Marshaler) {
@@ -1451,7 +1563,7 @@ func (ec *executionContext) _User_id(ctx context.Context, field graphql.Collecte
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _User_username(ctx context.Context, field graphql.CollectedField, obj *types.User) (ret graphql.Marshaler) {
+func (ec *executionContext) _User_infractionHistory(ctx context.Context, field graphql.CollectedField, obj *types.User) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1469,7 +1581,109 @@ func (ec *executionContext) _User_username(ctx context.Context, field graphql.Co
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Username, nil
+		return obj.InfractionHistory, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*types.UsersInfractionHistory)
+	fc.Result = res
+	return ec.marshalOUsersInfractionHistory2ᚕᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐUsersInfractionHistoryᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UsersInfractionHistory_id(ctx context.Context, field graphql.CollectedField, obj *types.UsersInfractionHistory) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UsersInfractionHistory",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UsersInfractionHistory_reason(ctx context.Context, field graphql.CollectedField, obj *types.UsersInfractionHistory) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UsersInfractionHistory",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Reason, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UsersInfractionHistory_expiration(ctx context.Context, field graphql.CollectedField, obj *types.UsersInfractionHistory) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UsersInfractionHistory",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Expiration, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1519,38 +1733,6 @@ func (ec *executionContext) _Validation_code(ctx context.Context, field graphql.
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Workaround3_id(ctx context.Context, field graphql.CollectedField, obj *types.Workaround3) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Workaround3",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*int)
-	fc.Result = res
-	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) __Service_sdl(ctx context.Context, field graphql.CollectedField, obj *fedruntime.Service) (ret graphql.Marshaler) {
@@ -2756,13 +2938,13 @@ func (ec *executionContext) __Entity(ctx context.Context, sel ast.SelectionSet, 
 	switch obj := (obj).(type) {
 	case nil:
 		return graphql.Null
-	case types.Workaround3:
-		return ec._Workaround3(ctx, sel, &obj)
-	case *types.Workaround3:
+	case types.User:
+		return ec._User(ctx, sel, &obj)
+	case *types.User:
 		if obj == nil {
 			return graphql.Null
 		}
-		return ec._Workaround3(ctx, sel, obj)
+		return ec._User(ctx, sel, obj)
 	default:
 		panic(fmt.Errorf("unexpected type %T", obj))
 	}
@@ -2771,6 +2953,38 @@ func (ec *executionContext) __Entity(ctx context.Context, sel ast.SelectionSet, 
 // endregion ************************** interface.gotpl ***************************
 
 // region    **************************** object.gotpl ****************************
+
+var auditUserImplementors = []string{"AuditUser"}
+
+func (ec *executionContext) _AuditUser(ctx context.Context, sel ast.SelectionSet, obj *types.AuditUser) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, auditUserImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("AuditUser")
+		case "id":
+			out.Values[i] = ec._AuditUser_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "username":
+			out.Values[i] = ec._AuditUser_username(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
 
 var entityImplementors = []string{"Entity"}
 
@@ -2787,7 +3001,7 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Entity")
-		case "findWorkaround3ByID":
+		case "findUserByID":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
 				defer func() {
@@ -2795,7 +3009,7 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Entity_findWorkaround3ByID(ctx, field)
+				res = ec._Entity_findUserByID(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -3059,7 +3273,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 	return out
 }
 
-var userImplementors = []string{"User"}
+var userImplementors = []string{"User", "_Entity"}
 
 func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj *types.User) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, userImplementors)
@@ -3075,8 +3289,42 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "username":
-			out.Values[i] = ec._User_username(ctx, field, obj)
+		case "infractionHistory":
+			out.Values[i] = ec._User_infractionHistory(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var usersInfractionHistoryImplementors = []string{"UsersInfractionHistory"}
+
+func (ec *executionContext) _UsersInfractionHistory(ctx context.Context, sel ast.SelectionSet, obj *types.UsersInfractionHistory) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, usersInfractionHistoryImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UsersInfractionHistory")
+		case "id":
+			out.Values[i] = ec._UsersInfractionHistory_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "reason":
+			out.Values[i] = ec._UsersInfractionHistory_reason(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "expiration":
+			out.Values[i] = ec._UsersInfractionHistory_expiration(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -3107,30 +3355,6 @@ func (ec *executionContext) _Validation(ctx context.Context, sel ast.SelectionSe
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var workaround3Implementors = []string{"Workaround3", "_Entity"}
-
-func (ec *executionContext) _Workaround3(ctx context.Context, sel ast.SelectionSet, obj *types.Workaround3) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, workaround3Implementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("Workaround3")
-		case "id":
-			out.Values[i] = ec._Workaround3_id(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -3411,6 +3635,16 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 
 // region    ***************************** type.gotpl *****************************
 
+func (ec *executionContext) marshalNAuditUser2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐAuditUser(ctx context.Context, sel ast.SelectionSet, v *types.AuditUser) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._AuditUser(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
 	res, err := graphql.UnmarshalBoolean(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -3564,6 +3798,10 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 	return res
 }
 
+func (ec *executionContext) marshalNUser2overdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐUser(ctx context.Context, sel ast.SelectionSet, v types.User) graphql.Marshaler {
+	return ec._User(ctx, sel, &v)
+}
+
 func (ec *executionContext) marshalNUser2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐUser(ctx context.Context, sel ast.SelectionSet, v *types.User) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -3574,18 +3812,14 @@ func (ec *executionContext) marshalNUser2ᚖoverdollᚋapplicationsᚋparleyᚋs
 	return ec._User(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNWorkaround32overdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐWorkaround3(ctx context.Context, sel ast.SelectionSet, v types.Workaround3) graphql.Marshaler {
-	return ec._Workaround3(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNWorkaround32ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐWorkaround3(ctx context.Context, sel ast.SelectionSet, v *types.Workaround3) graphql.Marshaler {
+func (ec *executionContext) marshalNUsersInfractionHistory2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐUsersInfractionHistory(ctx context.Context, sel ast.SelectionSet, v *types.UsersInfractionHistory) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
 		}
 		return graphql.Null
 	}
-	return ec._Workaround3(ctx, sel, v)
+	return ec._UsersInfractionHistory(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalN_Any2map(ctx context.Context, v interface{}) (map[string]interface{}, error) {
@@ -3948,21 +4182,6 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	return graphql.MarshalBoolean(*v)
 }
 
-func (ec *executionContext) unmarshalOInt2ᚖint(ctx context.Context, v interface{}) (*int, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := graphql.UnmarshalInt(v)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.SelectionSet, v *int) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return graphql.MarshalInt(*v)
-}
-
 func (ec *executionContext) unmarshalOString2string(ctx context.Context, v interface{}) (string, error) {
 	res, err := graphql.UnmarshalString(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -3985,6 +4204,46 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 		return graphql.Null
 	}
 	return graphql.MarshalString(*v)
+}
+
+func (ec *executionContext) marshalOUsersInfractionHistory2ᚕᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐUsersInfractionHistoryᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.UsersInfractionHistory) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNUsersInfractionHistory2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐUsersInfractionHistory(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
 }
 
 func (ec *executionContext) marshalOValidation2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐValidation(ctx context.Context, sel ast.SelectionSet, v *types.Validation) graphql.Marshaler {

@@ -6,7 +6,9 @@ type Cookie {
   email: String!
   invalid: Boolean!
 }
-type User {
+
+type User @key(fields: "id") {
+  id: String!
   username: String!
 }
 
@@ -18,16 +20,4 @@ type Authentication {
 type AuthListener {
   sameSession: Boolean!
   cookie: Cookie
-}
-
-input RegisterInput {
-  username: String!
-}
-
-input AuthenticationInput {
-  email: String!
-}
-
-type Workaround1 @key(fields: "id") {
-  id: Int
 }

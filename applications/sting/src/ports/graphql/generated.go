@@ -77,7 +77,7 @@ type ComplexityRoot struct {
 	}
 
 	Entity struct {
-		FindWorkaround2ByID func(childComplexity int, id *int) int
+		FindUserByID func(childComplexity int, id string) int
 	}
 
 	Media struct {
@@ -123,12 +123,13 @@ type ComplexityRoot struct {
 		__resolve_entities func(childComplexity int, representations []map[string]interface{}) int
 	}
 
-	Validation struct {
-		Code func(childComplexity int) int
+	User struct {
+		ID           func(childComplexity int) int
+		PendingPosts func(childComplexity int) int
 	}
 
-	Workaround2 struct {
-		ID func(childComplexity int) int
+	Validation struct {
+		Code func(childComplexity int) int
 	}
 
 	Service struct {
@@ -137,7 +138,7 @@ type ComplexityRoot struct {
 }
 
 type EntityResolver interface {
-	FindWorkaround2ByID(ctx context.Context, id *int) (*types.Workaround2, error)
+	FindUserByID(ctx context.Context, id string) (*types.User, error)
 }
 type MutationResolver interface {
 	Post(ctx context.Context, data *types.PostInput) (*types.PostResponse, error)
@@ -271,17 +272,17 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Contributor.Username(childComplexity), true
 
-	case "Entity.findWorkaround2ByID":
-		if e.complexity.Entity.FindWorkaround2ByID == nil {
+	case "Entity.findUserByID":
+		if e.complexity.Entity.FindUserByID == nil {
 			break
 		}
 
-		args, err := ec.field_Entity_findWorkaround2ByID_args(context.TODO(), rawArgs)
+		args, err := ec.field_Entity_findUserByID_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Entity.FindWorkaround2ByID(childComplexity, args["id"].(*int)), true
+		return e.complexity.Entity.FindUserByID(childComplexity, args["id"].(string)), true
 
 	case "Media.id":
 		if e.complexity.Media.ID == nil {
@@ -498,19 +499,26 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.__resolve_entities(childComplexity, args["representations"].([]map[string]interface{})), true
 
+	case "User.id":
+		if e.complexity.User.ID == nil {
+			break
+		}
+
+		return e.complexity.User.ID(childComplexity), true
+
+	case "User.pendingPosts":
+		if e.complexity.User.PendingPosts == nil {
+			break
+		}
+
+		return e.complexity.User.PendingPosts(childComplexity), true
+
 	case "Validation.code":
 		if e.complexity.Validation.Code == nil {
 			break
 		}
 
 		return e.complexity.Validation.Code(childComplexity), true
-
-	case "Workaround2.id":
-		if e.complexity.Workaround2.ID == nil {
-			break
-		}
-
-		return e.complexity.Workaround2.ID(childComplexity), true
 
 	case "_Service.sdl":
 		if e.complexity.Service.SDL == nil {
@@ -677,10 +685,10 @@ type Validation {
   code: String!
 }
 
-type Workaround2 @key(fields: "id") {
-  id: Int
-}
-`, BuiltIn: false},
+extend type User @key(fields: "id") {
+  id: String! @external
+  pendingPosts: [PendingPost!]
+}`, BuiltIn: false},
 	{Name: "federation/directives.graphql", Input: `
 scalar _Any
 scalar _FieldSet
@@ -693,11 +701,11 @@ directive @extends on OBJECT
 `, BuiltIn: true},
 	{Name: "federation/entity.graphql", Input: `
 # a union of all types that use the @key directive
-union _Entity = Workaround2
+union _Entity = User
 
 # fake type to build resolver interfaces for users to implement
 type Entity {
-		findWorkaround2ByID(id: Int,): Workaround2!
+		findUserByID(id: String!,): User!
 
 }
 
@@ -717,13 +725,13 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 
 // region    ***************************** args.gotpl *****************************
 
-func (ec *executionContext) field_Entity_findWorkaround2ByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Entity_findUserByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *int
+	var arg0 string
 	if tmp, ok := rawArgs["id"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1439,7 +1447,7 @@ func (ec *executionContext) _Contributor_avatar(ctx context.Context, field graph
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Entity_findWorkaround2ByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Entity_findUserByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1456,7 +1464,7 @@ func (ec *executionContext) _Entity_findWorkaround2ByID(ctx context.Context, fie
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Entity_findWorkaround2ByID_args(ctx, rawArgs)
+	args, err := ec.field_Entity_findUserByID_args(ctx, rawArgs)
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
@@ -1464,7 +1472,7 @@ func (ec *executionContext) _Entity_findWorkaround2ByID(ctx context.Context, fie
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Entity().FindWorkaround2ByID(rctx, args["id"].(*int))
+		return ec.resolvers.Entity().FindUserByID(rctx, args["id"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1476,9 +1484,9 @@ func (ec *executionContext) _Entity_findWorkaround2ByID(ctx context.Context, fie
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*types.Workaround2)
+	res := resTmp.(*types.User)
 	fc.Result = res
-	return ec.marshalNWorkaround22ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐWorkaround2(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Media_id(ctx context.Context, field graphql.CollectedField, obj *types.Media) (ret graphql.Marshaler) {
@@ -2468,6 +2476,73 @@ func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.C
 	return ec.marshalO__Schema2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐSchema(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _User_id(ctx context.Context, field graphql.CollectedField, obj *types.User) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "User",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _User_pendingPosts(ctx context.Context, field graphql.CollectedField, obj *types.User) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "User",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PendingPosts, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*types.PendingPost)
+	fc.Result = res
+	return ec.marshalOPendingPost2ᚕᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostᚄ(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Validation_code(ctx context.Context, field graphql.CollectedField, obj *types.Validation) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -2501,38 +2576,6 @@ func (ec *executionContext) _Validation_code(ctx context.Context, field graphql.
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Workaround2_id(ctx context.Context, field graphql.CollectedField, obj *types.Workaround2) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Workaround2",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*int)
-	fc.Result = res
-	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) __Service_sdl(ctx context.Context, field graphql.CollectedField, obj *fedruntime.Service) (ret graphql.Marshaler) {
@@ -3778,13 +3821,13 @@ func (ec *executionContext) __Entity(ctx context.Context, sel ast.SelectionSet, 
 	switch obj := (obj).(type) {
 	case nil:
 		return graphql.Null
-	case types.Workaround2:
-		return ec._Workaround2(ctx, sel, &obj)
-	case *types.Workaround2:
+	case types.User:
+		return ec._User(ctx, sel, &obj)
+	case *types.User:
 		if obj == nil {
 			return graphql.Null
 		}
-		return ec._Workaround2(ctx, sel, obj)
+		return ec._User(ctx, sel, obj)
 	default:
 		panic(fmt.Errorf("unexpected type %T", obj))
 	}
@@ -3994,7 +4037,7 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Entity")
-		case "findWorkaround2ByID":
+		case "findUserByID":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
 				defer func() {
@@ -4002,7 +4045,7 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Entity_findWorkaround2ByID(ctx, field)
+				res = ec._Entity_findUserByID(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -4336,6 +4379,35 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 	return out
 }
 
+var userImplementors = []string{"User", "_Entity"}
+
+func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj *types.User) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, userImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("User")
+		case "id":
+			out.Values[i] = ec._User_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "pendingPosts":
+			out.Values[i] = ec._User_pendingPosts(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var validationImplementors = []string{"Validation"}
 
 func (ec *executionContext) _Validation(ctx context.Context, sel ast.SelectionSet, obj *types.Validation) graphql.Marshaler {
@@ -4352,30 +4424,6 @@ func (ec *executionContext) _Validation(ctx context.Context, sel ast.SelectionSe
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var workaround2Implementors = []string{"Workaround2", "_Entity"}
-
-func (ec *executionContext) _Workaround2(ctx context.Context, sel ast.SelectionSet, obj *types.Workaround2) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, workaround2Implementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("Workaround2")
-		case "id":
-			out.Values[i] = ec._Workaround2_id(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -5009,18 +5057,18 @@ func (ec *executionContext) marshalNString2ᚕstringᚄ(ctx context.Context, sel
 	return ret
 }
 
-func (ec *executionContext) marshalNWorkaround22overdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐWorkaround2(ctx context.Context, sel ast.SelectionSet, v types.Workaround2) graphql.Marshaler {
-	return ec._Workaround2(ctx, sel, &v)
+func (ec *executionContext) marshalNUser2overdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐUser(ctx context.Context, sel ast.SelectionSet, v types.User) graphql.Marshaler {
+	return ec._User(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNWorkaround22ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐWorkaround2(ctx context.Context, sel ast.SelectionSet, v *types.Workaround2) graphql.Marshaler {
+func (ec *executionContext) marshalNUser2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐUser(ctx context.Context, sel ast.SelectionSet, v *types.User) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
 		}
 		return graphql.Null
 	}
-	return ec._Workaround2(ctx, sel, v)
+	return ec._User(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalN_Any2map(ctx context.Context, v interface{}) (map[string]interface{}, error) {
@@ -5447,19 +5495,44 @@ func (ec *executionContext) marshalOCharacterRequestType2ᚕᚖoverdollᚋapplic
 	return ret
 }
 
-func (ec *executionContext) unmarshalOInt2ᚖint(ctx context.Context, v interface{}) (*int, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := graphql.UnmarshalInt(v)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.SelectionSet, v *int) graphql.Marshaler {
+func (ec *executionContext) marshalOPendingPost2ᚕᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.PendingPost) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
-	return graphql.MarshalInt(*v)
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNPendingPost2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPost(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
 }
 
 func (ec *executionContext) unmarshalOPostInput2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPostInput(ctx context.Context, v interface{}) (*types.PostInput, error) {

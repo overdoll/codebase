@@ -1,0 +1,7 @@
+input RegisterInput {
+  username: String!
+}
+
+input AuthenticationInput {
+  email: String!
+}

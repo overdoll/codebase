@@ -79,12 +79,13 @@ type SearchInput struct {
 	Search string `json:"search"`
 }
 
+type User struct {
+	ID           string         `json:"id"`
+	PendingPosts []*PendingPost `json:"pendingPosts"`
+}
+
+func (User) IsEntity() {}
+
 type Validation struct {
 	Code string `json:"code"`
 }
-
-type Workaround2 struct {
-	ID *int `json:"id"`
-}
-
-func (Workaround2) IsEntity() {}

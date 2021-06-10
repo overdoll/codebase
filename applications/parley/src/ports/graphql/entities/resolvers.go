@@ -11,6 +11,6 @@ type EntityResolver struct {
 	App *app.Application
 }
 
-func (e *EntityResolver) FindWorkaround3ByID(ctx context.Context, id *int) (*types.Workaround3, error) {
+func (e EntityResolver) FindUserByID(ctx context.Context, id string) (*types.User, error) {
 	panic("implement me")
 }

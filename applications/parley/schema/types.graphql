@@ -1,22 +1,8 @@
-input ModeratePostInput {
-  pendingPostId: String!
-  rejectionReasonId: String
-  notes: String!
-}
-
-input PendingPostAuditLogInput {
-  moderatorId: String!
-}
-
-input RevertPostInput {
-  auditLogId: String!
-}
-
 type ModeratePost {
   validation: Validation
 }
 
-type User {
+type AuditUser {
   id: String!
   username: String!
 }
@@ -24,13 +10,19 @@ type User {
 type PendingPostAuditLog {
   id: String!
   postId: String!
-  contributor: User!
-  moderator: User!
+  contributor: AuditUser!
+  moderator: AuditUser!
   infractionId: String
   status: String!
   reason: String!
   notes: String!
   reverted: Boolean!
+}
+
+type UsersInfractionHistory {
+  id: String!
+  reason: String!
+  expiration: String!
 }
 
 type Validation {
@@ -43,6 +35,7 @@ type PendingPostRejectionReason {
   infraction: Boolean!
 }
 
-type Workaround3 @key(fields: "id") {
-  id: Int
+extend type User @key(fields: "id") {
+  id: String! @external
+  infractionHistory: [UsersInfractionHistory!]
 }
