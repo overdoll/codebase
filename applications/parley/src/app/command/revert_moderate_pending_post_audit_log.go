@@ -6,7 +6,6 @@ import (
 
 	"go.uber.org/zap"
 	"overdoll/applications/parley/src/domain/infraction"
-	"overdoll/applications/parley/src/domain/moderator"
 )
 
 var (
@@ -14,14 +13,13 @@ var (
 )
 
 type RevertModeratePendingPostHandler struct {
-	mr    moderator.Repository
 	ir    infraction.Repository
 	eva   EvaService
 	sting StingService
 }
 
-func NewRevertModeratePendingPostHandler(mr moderator.Repository, eva EvaService, sting StingService) RevertModeratePendingPostHandler {
-	return RevertModeratePendingPostHandler{mr: mr, sting: sting, eva: eva}
+func NewRevertModeratePendingPostHandler(ir infraction.Repository, eva EvaService, sting StingService) RevertModeratePendingPostHandler {
+	return RevertModeratePendingPostHandler{ir: ir, sting: sting, eva: eva}
 }
 
 func (h RevertModeratePendingPostHandler) Handle(ctx context.Context, moderatorId, auditLogId string) error {

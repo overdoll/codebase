@@ -6,7 +6,6 @@ import (
 
 	"go.uber.org/zap"
 	"overdoll/applications/parley/src/domain/infraction"
-	"overdoll/applications/parley/src/domain/moderator"
 )
 
 var (
@@ -15,13 +14,12 @@ var (
 
 type PendingPostsAuditLogHandler struct {
 	ir infraction.Repository
-	mr moderator.Repository
 
 	eva EvaService
 }
 
-func NewPendingPostsAuditLogHandler(ir infraction.Repository, eva EvaService, mr moderator.Repository) PendingPostsAuditLogHandler {
-	return PendingPostsAuditLogHandler{ir: ir, eva: eva, mr: mr}
+func NewPendingPostsAuditLogHandler(ir infraction.Repository, eva EvaService) PendingPostsAuditLogHandler {
+	return PendingPostsAuditLogHandler{ir: ir, eva: eva}
 }
 
 func (h PendingPostsAuditLogHandler) Handle(ctx context.Context, userId string, moderatorId string) ([]*infraction.PendingPostAuditLog, error) {

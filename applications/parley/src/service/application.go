@@ -44,12 +44,12 @@ func createApplication(ctx context.Context, eva command.EvaService, sting comman
 	return app.Application{
 		Commands: app.Commands{
 			GetNextModerator:   command.NewGetNextModeratorHandler(moderatorRepo),
-			ModeratePost:       command.NewModeratePendingPostHandler(moderatorRepo, eva, sting),
-			RevertModeratePost: command.NewRevertModeratePendingPostHandler(moderatorRepo, eva, sting),
+			ModeratePost:       command.NewModeratePendingPostHandler(infractionRepo, eva, sting),
+			RevertModeratePost: command.NewRevertModeratePendingPostHandler(infractionRepo, eva, sting),
 		},
 		Queries: app.Queries{
 			PendingPostRejectionReasons: query.NewPendingPostsRejectionReasonsHandler(infractionRepo),
-			PendingPostsAuditLog:        query.NewPendingPostsAuditLogHandler(infractionRepo, eva, moderatorRepo),
+			PendingPostsAuditLog:        query.NewPendingPostsAuditLogHandler(infractionRepo, eva),
 		},
 	}
 }
