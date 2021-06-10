@@ -43,18 +43,16 @@ func (h ModeratePendingPostHandler) Handle(ctx context.Context, moderatorId, pen
 		return ErrFailedModeratePendingPost
 	}
 
-	if !usr.IsStaff() {
-		// Verify moderator (current user) exists
-		_, err := h.mr.GetModerator(ctx, moderatorId)
+	// Verify moderator (current user) exists
+	_, err = h.mr.GetModerator(ctx, moderatorId)
 
-		if err != nil {
-			if err == gocql.ErrNotFound {
-				return ErrFailedModeratePendingPost
-			}
-
-			zap.S().Errorf("failed to get moderator: %s", err)
+	if err != nil {
+		if err == gocql.ErrNotFound {
 			return ErrFailedModeratePendingPost
 		}
+
+		zap.S().Errorf("failed to get moderator: %s", err)
+		return ErrFailedModeratePendingPost
 	}
 
 	postContributor, err := h.eva.GetUser(ctx, postContributorId)
