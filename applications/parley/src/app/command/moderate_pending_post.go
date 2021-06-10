@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 
-	"github.com/gocql/gocql"
 	"go.uber.org/zap"
 	"overdoll/applications/parley/src/domain/infraction"
 	"overdoll/applications/parley/src/domain/moderator"
@@ -35,23 +34,16 @@ func (h ModeratePendingPostHandler) Handle(ctx context.Context, moderatorId, pen
 		return ErrFailedModeratePendingPost
 	}
 
+	// have to have moderator role
+	if !usr.IsModerator() {
+		return ErrFailedModeratePendingPost
+	}
+
 	// Get pending post
 	postModeratorId, postContributorId, err := h.sting.GetPendingPost(ctx, pendingPostId)
 
 	if err != nil {
 		zap.S().Errorf("failed to get post: %s", err)
-		return ErrFailedModeratePendingPost
-	}
-
-	// Verify moderator (current user) exists
-	_, err = h.mr.GetModerator(ctx, moderatorId)
-
-	if err != nil {
-		if err == gocql.ErrNotFound {
-			return ErrFailedModeratePendingPost
-		}
-
-		zap.S().Errorf("failed to get moderator: %s", err)
 		return ErrFailedModeratePendingPost
 	}
 

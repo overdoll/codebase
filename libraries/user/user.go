@@ -66,6 +66,10 @@ func (user *User) IsStaff() bool {
 	return user.HasRoles([]string{"staff"})
 }
 
+func (user *User) IsModerator() bool {
+	return user.HasRoles([]string{"moderator"})
+}
+
 func (user *User) HasRoles(roles []string) bool {
 	for _, role := range user.roles {
 		for _, requiredRole := range roles {

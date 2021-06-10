@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 
-	"github.com/gocql/gocql"
 	"go.uber.org/zap"
 	"overdoll/applications/parley/src/domain/infraction"
 	"overdoll/applications/parley/src/domain/moderator"
@@ -35,18 +34,9 @@ func (h PendingPostsAuditLogHandler) Handle(ctx context.Context, userId string, 
 		return nil, ErrFailedGetRejectionReasons
 	}
 
-	if !usr.IsStaff() {
-		// Verify moderator (current user) exists
-		_, err := h.mr.GetModerator(ctx, moderatorId)
-
-		if err != nil {
-			if err == gocql.ErrNotFound {
-				return nil, ErrFailedGetRejectionReasons
-			}
-
-			zap.S().Errorf("failed to get moderator: %s", err)
-			return nil, ErrFailedGetRejectionReasons
-		}
+	// have to have moderator role
+	if !usr.IsModerator() {
+		return nil, ErrFailedGetRejectionReasons
 	}
 
 	moderatorQuery := userId

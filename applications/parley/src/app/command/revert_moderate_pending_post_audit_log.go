@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 
-	"github.com/gocql/gocql"
 	"go.uber.org/zap"
 	"overdoll/applications/parley/src/domain/infraction"
 	"overdoll/applications/parley/src/domain/moderator"
@@ -32,21 +31,12 @@ func (h RevertModeratePendingPostHandler) Handle(ctx context.Context, moderatorI
 
 	if err != nil {
 		zap.S().Errorf("failed to get user: %s", err)
-		return ErrFailedModeratePendingPost
+		return ErrFailedRevertModeratePendingPost
 	}
 
-	if !usr.IsStaff() {
-		// Verify moderator (current user) exists
-		_, err := h.mr.GetModerator(ctx, moderatorId)
-
-		if err != nil {
-			if err == gocql.ErrNotFound {
-				return ErrFailedModeratePendingPost
-			}
-
-			zap.S().Errorf("failed to get moderator: %s", err)
-			return ErrFailedModeratePendingPost
-		}
+	// have to have moderator role
+	if !usr.IsModerator() {
+		return ErrFailedRevertModeratePendingPost
 	}
 
 	// update audit log to revert any infractions and user locks, as well as mark it as reverted
@@ -84,13 +74,13 @@ func (h RevertModeratePendingPostHandler) Handle(ctx context.Context, moderatorI
 
 	if err != nil {
 		zap.S().Errorf("failed to update audit log: %s", err)
-		return ErrFailedModeratePendingPost
+		return ErrFailedRevertModeratePendingPost
 	}
 
 	// tell sting to undo the pending post
 	if err := h.sting.UndoPendingPost(ctx, auditLog.PostId()); err != nil {
 		zap.S().Errorf("failed to publish pending post: %s", err)
-		return ErrFailedModeratePendingPost
+		return ErrFailedRevertModeratePendingPost
 	}
 
 	return nil
