@@ -17,7 +17,7 @@ const (
 )
 
 const (
-	PostInfraction LockReason = "artist"
+	PostInfraction LockReason = "post_infraction"
 )
 
 type User struct {
@@ -41,7 +41,7 @@ var (
 	ErrUserNotFound      = errors.New("user not found")
 )
 
-func UnmarshalUserFromDatabase(id, username, email string, roles []string, verified bool, avatar string) *User {
+func UnmarshalUserFromDatabase(id, username, email string, roles []string, verified bool, avatar string, locked bool, lockedUntil int, lockedReason string) *User {
 
 	var newRoles []UserRole
 
@@ -56,9 +56,9 @@ func UnmarshalUserFromDatabase(id, username, email string, roles []string, verif
 		roles:        newRoles,
 		verified:     verified,
 		avatar:       avatar,
-		lockedUntil:  0,
-		locked:       false,
-		lockedReason: "",
+		lockedUntil:  lockedUntil,
+		locked:       locked,
+		lockedReason: LockReason(lockedReason),
 	}
 }
 
@@ -115,6 +115,10 @@ func (u User) IsLocked() bool {
 	}
 
 	return time.Unix(int64(u.lockedUntil), 0).After(time.Now())
+}
+
+func (u User) LockedReason() string {
+	return string(u.lockedReason)
 }
 
 func (u User) IsUnclaimed() bool {
