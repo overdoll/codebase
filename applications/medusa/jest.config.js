@@ -1,6 +1,6 @@
 const path = require('path')
 
-module.exports = {
+const expo = {
   reporters: ['default'],
   collectCoverage: true,
   coverageReporters: [
@@ -17,10 +17,15 @@ module.exports = {
       { configFile: path.resolve(__dirname, '.babelrc') }
     ]
   },
-  coverageDirectory: process.env.COVERAGE_OUTPUT_FILE.replace(
-    '/coverage.dat',
-    ''
-  ),
   testEnvironment: 'jest-environment-jsdom-sixteen',
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js']
 }
+
+if (process.env.COVERAGE_OUTPUT_FILE) {
+  expo.coverageDirectory = process.env.COVERAGE_OUTPUT_FILE.replace(
+    '/coverage.dat',
+    ''
+  )
+}
+
+module.exports = expo
