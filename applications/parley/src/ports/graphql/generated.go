@@ -59,6 +59,18 @@ type ComplexityRoot struct {
 		RevertPendingPostAuditLog func(childComplexity int, data types.RevertPostInput) int
 	}
 
+	PendingPostAuditLog struct {
+		Contributor  func(childComplexity int) int
+		ID           func(childComplexity int) int
+		InfractionID func(childComplexity int) int
+		Moderator    func(childComplexity int) int
+		Notes        func(childComplexity int) int
+		PostID       func(childComplexity int) int
+		Reason       func(childComplexity int) int
+		Reverted     func(childComplexity int) int
+		Status       func(childComplexity int) int
+	}
+
 	PendingPostRejectionReason struct {
 		ID         func(childComplexity int) int
 		Infraction func(childComplexity int) int
@@ -66,9 +78,15 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		RejectionReasons   func(childComplexity int) int
-		__resolve__service func(childComplexity int) int
-		__resolve_entities func(childComplexity int, representations []map[string]interface{}) int
+		PendingPostAuditLogs func(childComplexity int, data types.PendingPostAuditLogInput) int
+		RejectionReasons     func(childComplexity int) int
+		__resolve__service   func(childComplexity int) int
+		__resolve_entities   func(childComplexity int, representations []map[string]interface{}) int
+	}
+
+	User struct {
+		ID       func(childComplexity int) int
+		Username func(childComplexity int) int
 	}
 
 	Validation struct {
@@ -93,6 +111,7 @@ type MutationResolver interface {
 }
 type QueryResolver interface {
 	RejectionReasons(ctx context.Context) ([]*types.PendingPostRejectionReason, error)
+	PendingPostAuditLogs(ctx context.Context, data types.PendingPostAuditLogInput) ([]*types.PendingPostAuditLog, error)
 }
 
 type executableSchema struct {
@@ -153,6 +172,69 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.RevertPendingPostAuditLog(childComplexity, args["data"].(types.RevertPostInput)), true
 
+	case "PendingPostAuditLog.contributor":
+		if e.complexity.PendingPostAuditLog.Contributor == nil {
+			break
+		}
+
+		return e.complexity.PendingPostAuditLog.Contributor(childComplexity), true
+
+	case "PendingPostAuditLog.id":
+		if e.complexity.PendingPostAuditLog.ID == nil {
+			break
+		}
+
+		return e.complexity.PendingPostAuditLog.ID(childComplexity), true
+
+	case "PendingPostAuditLog.infractionId":
+		if e.complexity.PendingPostAuditLog.InfractionID == nil {
+			break
+		}
+
+		return e.complexity.PendingPostAuditLog.InfractionID(childComplexity), true
+
+	case "PendingPostAuditLog.moderator":
+		if e.complexity.PendingPostAuditLog.Moderator == nil {
+			break
+		}
+
+		return e.complexity.PendingPostAuditLog.Moderator(childComplexity), true
+
+	case "PendingPostAuditLog.notes":
+		if e.complexity.PendingPostAuditLog.Notes == nil {
+			break
+		}
+
+		return e.complexity.PendingPostAuditLog.Notes(childComplexity), true
+
+	case "PendingPostAuditLog.postId":
+		if e.complexity.PendingPostAuditLog.PostID == nil {
+			break
+		}
+
+		return e.complexity.PendingPostAuditLog.PostID(childComplexity), true
+
+	case "PendingPostAuditLog.reason":
+		if e.complexity.PendingPostAuditLog.Reason == nil {
+			break
+		}
+
+		return e.complexity.PendingPostAuditLog.Reason(childComplexity), true
+
+	case "PendingPostAuditLog.reverted":
+		if e.complexity.PendingPostAuditLog.Reverted == nil {
+			break
+		}
+
+		return e.complexity.PendingPostAuditLog.Reverted(childComplexity), true
+
+	case "PendingPostAuditLog.status":
+		if e.complexity.PendingPostAuditLog.Status == nil {
+			break
+		}
+
+		return e.complexity.PendingPostAuditLog.Status(childComplexity), true
+
 	case "PendingPostRejectionReason.id":
 		if e.complexity.PendingPostRejectionReason.ID == nil {
 			break
@@ -173,6 +255,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.PendingPostRejectionReason.Reason(childComplexity), true
+
+	case "Query.pendingPostAuditLogs":
+		if e.complexity.Query.PendingPostAuditLogs == nil {
+			break
+		}
+
+		args, err := ec.field_Query_pendingPostAuditLogs_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.PendingPostAuditLogs(childComplexity, args["data"].(types.PendingPostAuditLogInput)), true
 
 	case "Query.rejectionReasons":
 		if e.complexity.Query.RejectionReasons == nil {
@@ -199,6 +293,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.__resolve_entities(childComplexity, args["representations"].([]map[string]interface{})), true
+
+	case "User.id":
+		if e.complexity.User.ID == nil {
+			break
+		}
+
+		return e.complexity.User.ID(childComplexity), true
+
+	case "User.username":
+		if e.complexity.User.Username == nil {
+			break
+		}
+
+		return e.complexity.User.Username(childComplexity), true
 
 	case "Validation.code":
 		if e.complexity.Validation.Code == nil {
@@ -292,6 +400,7 @@ var sources = []*ast.Source{
 `, BuiltIn: false},
 	{Name: "schema/queries.graphql", Input: `type Query {
   rejectionReasons: [PendingPostRejectionReason!]!
+  pendingPostAuditLogs(data: PendingPostAuditLogInput!): [PendingPostAuditLog!]!
 }
 `, BuiltIn: false},
 	{Name: "schema/types.graphql", Input: `input ModeratePostInput {
@@ -300,12 +409,33 @@ var sources = []*ast.Source{
   notes: String!
 }
 
+input PendingPostAuditLogInput {
+  moderatorId: String!
+}
+
 input RevertPostInput {
   auditLogId: String!
 }
 
 type ModeratePost {
   validation: Validation
+}
+
+type User {
+  id: String!
+  username: String!
+}
+
+type PendingPostAuditLog {
+  id: String!
+  postId: String!
+  contributor: User!
+  moderator: User!
+  infractionId: String
+  status: String!
+  reason: String!
+  notes: String!
+  reverted: Boolean!
 }
 
 type Validation {
@@ -430,6 +560,21 @@ func (ec *executionContext) field_Query__entities_args(ctx context.Context, rawA
 		}
 	}
 	args["representations"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_pendingPostAuditLogs_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.PendingPostAuditLogInput
+	if tmp, ok := rawArgs["data"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("data"))
+		arg0, err = ec.unmarshalNPendingPostAuditLogInput2overdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostAuditLogInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["data"] = arg0
 	return args, nil
 }
 
@@ -629,6 +774,318 @@ func (ec *executionContext) _Mutation_revertPendingPostAuditLog(ctx context.Cont
 	return ec.marshalNModeratePost2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐModeratePost(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _PendingPostAuditLog_id(ctx context.Context, field graphql.CollectedField, obj *types.PendingPostAuditLog) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PendingPostAuditLog",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PendingPostAuditLog_postId(ctx context.Context, field graphql.CollectedField, obj *types.PendingPostAuditLog) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PendingPostAuditLog",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PostID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PendingPostAuditLog_contributor(ctx context.Context, field graphql.CollectedField, obj *types.PendingPostAuditLog) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PendingPostAuditLog",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Contributor, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.User)
+	fc.Result = res
+	return ec.marshalNUser2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐUser(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PendingPostAuditLog_moderator(ctx context.Context, field graphql.CollectedField, obj *types.PendingPostAuditLog) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PendingPostAuditLog",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Moderator, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.User)
+	fc.Result = res
+	return ec.marshalNUser2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐUser(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PendingPostAuditLog_infractionId(ctx context.Context, field graphql.CollectedField, obj *types.PendingPostAuditLog) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PendingPostAuditLog",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.InfractionID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PendingPostAuditLog_status(ctx context.Context, field graphql.CollectedField, obj *types.PendingPostAuditLog) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PendingPostAuditLog",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PendingPostAuditLog_reason(ctx context.Context, field graphql.CollectedField, obj *types.PendingPostAuditLog) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PendingPostAuditLog",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Reason, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PendingPostAuditLog_notes(ctx context.Context, field graphql.CollectedField, obj *types.PendingPostAuditLog) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PendingPostAuditLog",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Notes, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PendingPostAuditLog_reverted(ctx context.Context, field graphql.CollectedField, obj *types.PendingPostAuditLog) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PendingPostAuditLog",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Reverted, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _PendingPostRejectionReason_id(ctx context.Context, field graphql.CollectedField, obj *types.PendingPostRejectionReason) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -767,6 +1224,48 @@ func (ec *executionContext) _Query_rejectionReasons(ctx context.Context, field g
 	res := resTmp.([]*types.PendingPostRejectionReason)
 	fc.Result = res
 	return ec.marshalNPendingPostRejectionReason2ᚕᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostRejectionReasonᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_pendingPostAuditLogs(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_pendingPostAuditLogs_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().PendingPostAuditLogs(rctx, args["data"].(types.PendingPostAuditLogInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*types.PendingPostAuditLog)
+	fc.Result = res
+	return ec.marshalNPendingPostAuditLog2ᚕᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostAuditLogᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query__entities(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -915,6 +1414,76 @@ func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.C
 	res := resTmp.(*introspection.Schema)
 	fc.Result = res
 	return ec.marshalO__Schema2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐSchema(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _User_id(ctx context.Context, field graphql.CollectedField, obj *types.User) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "User",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _User_username(ctx context.Context, field graphql.CollectedField, obj *types.User) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "User",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Username, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Validation_code(ctx context.Context, field graphql.CollectedField, obj *types.Validation) (ret graphql.Marshaler) {
@@ -2139,6 +2708,26 @@ func (ec *executionContext) unmarshalInputModeratePostInput(ctx context.Context,
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputPendingPostAuditLogInput(ctx context.Context, obj interface{}) (types.PendingPostAuditLogInput, error) {
+	var it types.PendingPostAuditLogInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "moderatorId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("moderatorId"))
+			it.ModeratorID, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputRevertPostInput(ctx context.Context, obj interface{}) (types.RevertPostInput, error) {
 	var it types.RevertPostInput
 	var asMap = obj.(map[string]interface{})
@@ -2283,6 +2872,70 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 	return out
 }
 
+var pendingPostAuditLogImplementors = []string{"PendingPostAuditLog"}
+
+func (ec *executionContext) _PendingPostAuditLog(ctx context.Context, sel ast.SelectionSet, obj *types.PendingPostAuditLog) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, pendingPostAuditLogImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("PendingPostAuditLog")
+		case "id":
+			out.Values[i] = ec._PendingPostAuditLog_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "postId":
+			out.Values[i] = ec._PendingPostAuditLog_postId(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "contributor":
+			out.Values[i] = ec._PendingPostAuditLog_contributor(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "moderator":
+			out.Values[i] = ec._PendingPostAuditLog_moderator(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "infractionId":
+			out.Values[i] = ec._PendingPostAuditLog_infractionId(ctx, field, obj)
+		case "status":
+			out.Values[i] = ec._PendingPostAuditLog_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "reason":
+			out.Values[i] = ec._PendingPostAuditLog_reason(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "notes":
+			out.Values[i] = ec._PendingPostAuditLog_notes(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "reverted":
+			out.Values[i] = ec._PendingPostAuditLog_reverted(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var pendingPostRejectionReasonImplementors = []string{"PendingPostRejectionReason"}
 
 func (ec *executionContext) _PendingPostRejectionReason(ctx context.Context, sel ast.SelectionSet, obj *types.PendingPostRejectionReason) graphql.Marshaler {
@@ -2349,6 +3002,20 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				}
 				return res
 			})
+		case "pendingPostAuditLogs":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_pendingPostAuditLogs(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		case "_entities":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -2381,6 +3048,38 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Values[i] = ec._Query___type(ctx, field)
 		case "__schema":
 			out.Values[i] = ec._Query___schema(ctx, field)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var userImplementors = []string{"User"}
+
+func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj *types.User) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, userImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("User")
+		case "id":
+			out.Values[i] = ec._User_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "username":
+			out.Values[i] = ec._User_username(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -2746,6 +3445,58 @@ func (ec *executionContext) unmarshalNModeratePostInput2overdollᚋapplications�
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) marshalNPendingPostAuditLog2ᚕᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostAuditLogᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.PendingPostAuditLog) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNPendingPostAuditLog2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostAuditLog(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
+}
+
+func (ec *executionContext) marshalNPendingPostAuditLog2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostAuditLog(ctx context.Context, sel ast.SelectionSet, v *types.PendingPostAuditLog) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._PendingPostAuditLog(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNPendingPostAuditLogInput2overdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostAuditLogInput(ctx context.Context, v interface{}) (types.PendingPostAuditLogInput, error) {
+	res, err := ec.unmarshalInputPendingPostAuditLogInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) marshalNPendingPostRejectionReason2ᚕᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostRejectionReasonᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.PendingPostRejectionReason) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -2811,6 +3562,16 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) marshalNUser2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐUser(ctx context.Context, sel ast.SelectionSet, v *types.User) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._User(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNWorkaround32overdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐWorkaround3(ctx context.Context, sel ast.SelectionSet, v types.Workaround3) graphql.Marshaler {

@@ -49,6 +49,7 @@ func createApplication(ctx context.Context, eva command.EvaService, sting comman
 		},
 		Queries: app.Queries{
 			PendingPostRejectionReasons: query.NewPendingPostsRejectionReasonsHandler(infractionRepo),
+			PendingPostsAuditLog:        query.NewPendingPostsAuditLogHandler(infractionRepo, eva, moderatorRepo),
 		},
 	}
 }
