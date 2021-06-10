@@ -25,10 +25,6 @@ type PostUpdateResponse {
   validation: Validation
 }
 
-input SearchInput {
-  search: String!
-}
-
 type Contributor {
   id: String!
   username: String!

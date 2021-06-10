@@ -428,17 +428,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
-	{Name: "schema/mutations.graphql", Input: `type Mutation {
-  moderatePost(data: ModeratePostInput!): ModeratePost!
-  revertPendingPostAuditLog(data: RevertPostInput!): ModeratePost!
-}
-`, BuiltIn: false},
-	{Name: "schema/queries.graphql", Input: `type Query {
-  rejectionReasons: [PendingPostRejectionReason!]!
-  pendingPostAuditLogs(data: PendingPostAuditLogInput!): [PendingPostAuditLog!]!
-}
-`, BuiltIn: false},
-	{Name: "schema/types.graphql", Input: `input ModeratePostInput {
+	{Name: "schema/inputs.graphql", Input: `input ModeratePostInput {
   pendingPostId: String!
   rejectionReasonId: String
   notes: String!
@@ -450,9 +440,18 @@ input PendingPostAuditLogInput {
 
 input RevertPostInput {
   auditLogId: String!
+}`, BuiltIn: false},
+	{Name: "schema/mutations.graphql", Input: `type Mutation {
+  moderatePost(data: ModeratePostInput!): ModeratePost!
+  revertPendingPostAuditLog(data: RevertPostInput!): ModeratePost!
 }
-
-type ModeratePost {
+`, BuiltIn: false},
+	{Name: "schema/queries.graphql", Input: `type Query {
+  rejectionReasons: [PendingPostRejectionReason!]!
+  pendingPostAuditLogs(data: PendingPostAuditLogInput!): [PendingPostAuditLog!]!
+}
+`, BuiltIn: false},
+	{Name: "schema/types.graphql", Input: `type ModeratePost {
   validation: Validation
 }
 

@@ -46,11 +46,6 @@ type DirectiveRoot struct {
 }
 
 type ComplexityRoot struct {
-	AuthListener struct {
-		Cookie      func(childComplexity int) int
-		SameSession func(childComplexity int) int
-	}
-
 	Authentication struct {
 		Cookie func(childComplexity int) int
 		User   func(childComplexity int) int
@@ -119,20 +114,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	ec := executionContext{nil, e}
 	_ = ec
 	switch typeName + "." + field {
-
-	case "AuthListener.cookie":
-		if e.complexity.AuthListener.Cookie == nil {
-			break
-		}
-
-		return e.complexity.AuthListener.Cookie(childComplexity), true
-
-	case "AuthListener.sameSession":
-		if e.complexity.AuthListener.SameSession == nil {
-			break
-		}
-
-		return e.complexity.AuthListener.SameSession(childComplexity), true
 
 	case "Authentication.cookie":
 		if e.complexity.Authentication.Cookie == nil {
@@ -356,6 +337,13 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
+	{Name: "schema/inputs.graphql", Input: `input RegisterInput {
+  username: String!
+}
+
+input AuthenticationInput {
+  email: String!
+}`, BuiltIn: false},
 	{Name: "schema/mutations.graphql", Input: `type Mutation {
   authenticate(data: AuthenticationInput): Boolean!
   register(data: RegisterInput): Boolean!
@@ -375,6 +363,7 @@ var sources = []*ast.Source{
   email: String!
   invalid: Boolean!
 }
+
 type User @key(fields: "id") {
   id: String!
   username: String!
@@ -383,19 +372,6 @@ type User @key(fields: "id") {
 type Authentication {
   cookie: Cookie
   user: User
-}
-
-type AuthListener {
-  sameSession: Boolean!
-  cookie: Cookie
-}
-
-input RegisterInput {
-  username: String!
-}
-
-input AuthenticationInput {
-  email: String!
 }`, BuiltIn: false},
 	{Name: "federation/directives.graphql", Input: `
 scalar _Any
@@ -560,73 +536,6 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 // endregion ************************** directives.gotpl **************************
 
 // region    **************************** field.gotpl *****************************
-
-func (ec *executionContext) _AuthListener_sameSession(ctx context.Context, field graphql.CollectedField, obj *types.AuthListener) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "AuthListener",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.SameSession, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(bool)
-	fc.Result = res
-	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _AuthListener_cookie(ctx context.Context, field graphql.CollectedField, obj *types.AuthListener) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "AuthListener",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Cookie, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.Cookie)
-	fc.Result = res
-	return ec.marshalOCookie2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐCookie(ctx, field.Selections, res)
-}
 
 func (ec *executionContext) _Authentication_cookie(ctx context.Context, field graphql.CollectedField, obj *types.Authentication) (ret graphql.Marshaler) {
 	defer func() {
@@ -2537,35 +2446,6 @@ func (ec *executionContext) __Entity(ctx context.Context, sel ast.SelectionSet, 
 // endregion ************************** interface.gotpl ***************************
 
 // region    **************************** object.gotpl ****************************
-
-var authListenerImplementors = []string{"AuthListener"}
-
-func (ec *executionContext) _AuthListener(ctx context.Context, sel ast.SelectionSet, obj *types.AuthListener) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, authListenerImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("AuthListener")
-		case "sameSession":
-			out.Values[i] = ec._AuthListener_sameSession(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "cookie":
-			out.Values[i] = ec._AuthListener_cookie(ctx, field, obj)
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
 
 var authenticationImplementors = []string{"Authentication"}
 

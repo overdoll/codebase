@@ -591,6 +591,24 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
+	{Name: "schema/inputs.graphql", Input: `input PostInput {
+  content: [String!]!
+  categories: [String!]!
+  characters: [String!]!
+  mediaRequests: [String!]
+  characterRequests: [CharacterRequest!]
+  artistId: String
+  artistUsername: String!
+}
+
+input CharacterRequest {
+  name: String!
+  media: String!
+}
+
+input SearchInput {
+  search: String!
+}`, BuiltIn: false},
 	{Name: "schema/mutations.graphql", Input: `type Mutation {
   post(data: PostInput): PostResponse!
   updatePost(id: String!, data: PostInput): PostUpdateResponse!
@@ -604,17 +622,7 @@ var sources = []*ast.Source{
   pendingPosts(data: SearchInput!): [PendingPost!]!
 }
 `, BuiltIn: false},
-	{Name: "schema/types.graphql", Input: `input PostInput {
-  content: [String!]!
-  categories: [String!]!
-  characters: [String!]!
-  mediaRequests: [String!]
-  characterRequests: [CharacterRequest!]
-  artistId: String
-  artistUsername: String!
-}
-
-type PendingPost {
+	{Name: "schema/types.graphql", Input: `type PendingPost {
   id: String!
   moderator: String!
   contributor: Contributor!
@@ -632,11 +640,6 @@ type CharacterRequestType {
   media: String!
 }
 
-input CharacterRequest {
-  name: String!
-  media: String!
-}
-
 type PostResponse {
   review: Boolean!
   validation: Validation
@@ -644,10 +647,6 @@ type PostResponse {
 
 type PostUpdateResponse {
   validation: Validation
-}
-
-input SearchInput {
-  search: String!
 }
 
 type Contributor {

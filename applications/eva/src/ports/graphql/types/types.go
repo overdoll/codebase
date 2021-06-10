@@ -2,11 +2,6 @@
 
 package types
 
-type AuthListener struct {
-	SameSession bool    `json:"sameSession"`
-	Cookie      *Cookie `json:"cookie"`
-}
-
 type Authentication struct {
 	Cookie *Cookie `json:"cookie"`
 	User   *User   `json:"user"`
