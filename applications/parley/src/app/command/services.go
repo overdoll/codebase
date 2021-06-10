@@ -2,14 +2,13 @@ package command
 
 import (
 	"context"
-	"time"
 
 	"overdoll/libraries/user"
 )
 
 type EvaService interface {
 	GetUser(context.Context, string) (*user.User, error)
-	LockUser(context.Context, string, time.Time) (*user.User, error)
+	LockUser(context.Context, string, int64) (*user.User, error)
 }
 
 type StingService interface {

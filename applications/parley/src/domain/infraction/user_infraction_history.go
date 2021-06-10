@@ -7,21 +7,25 @@ import (
 )
 
 type UserInfractionHistory struct {
-	id         string
-	userId     string
-	reason     string
-	expiration time.Time
+	id             string
+	userId         string
+	reason         string
+	expiration     time.Time
+	userLockLength int64
 }
 
 func NewUserInfractionHistory(userId string, pastUserInfractionHistory []*UserInfractionHistory, reason string) *UserInfractionHistory {
 
 	// TODO: calculate infraction expiration based on past infraction
-
+	// also calculate how long the user's account should be locked
+	// (expiration.UnixNano() / int64(time.Millisecond)) - (time.Now().UnixNano() / int64(time.Millisecond))
+	lockLength := (time.Now().AddDate(0, 0, 1).UnixNano() / int64(time.Millisecond)) - (time.Now().UnixNano() / int64(time.Millisecond))
 	return &UserInfractionHistory{
-		id:         ksuid.New().String(),
-		userId:     userId,
-		reason:     reason,
-		expiration: time.Now().AddDate(0, 0, 1),
+		id:             ksuid.New().String(),
+		userId:         userId,
+		reason:         reason,
+		expiration:     time.Now().AddDate(0, 0, 1),
+		userLockLength: lockLength,
 	}
 }
 
@@ -31,6 +35,10 @@ func (m *UserInfractionHistory) ID() string {
 
 func (m *UserInfractionHistory) UserId() string {
 	return m.userId
+}
+
+func (m *UserInfractionHistory) UserLockLength() int64 {
+	return m.userLockLength
 }
 
 func (m *UserInfractionHistory) Reason() string {

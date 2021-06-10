@@ -2,7 +2,6 @@ package adapters
 
 import (
 	"context"
-	"time"
 
 	eva "overdoll/applications/eva/proto"
 	"overdoll/libraries/user"
@@ -28,12 +27,11 @@ func (s EvaGrpc) GetUser(ctx context.Context, id string) (*user.User, error) {
 	return user.UnmarshalFromProto(usr), nil
 }
 
-func (s EvaGrpc) LockUser(ctx context.Context, id string, expiration time.Time) (*user.User, error) {
+func (s EvaGrpc) LockUser(ctx context.Context, id string, duration int64) (*user.User, error) {
 
 	usr, err := s.client.LockUser(ctx, &eva.LockUserRequest{
-		Id: id,
-		// instead of sending expiration (which is what we get here), we send duration in MS
-		Duration: (expiration.UnixNano() / int64(time.Millisecond)) - (time.Now().UnixNano() / int64(time.Millisecond)),
+		Id:       id,
+		Duration: duration,
 	})
 
 	if err != nil {
