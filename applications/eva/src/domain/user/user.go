@@ -7,12 +7,17 @@ import (
 )
 
 type UserRole string
+type LockReason string
 
 const (
 	Artist      UserRole = "artist"
 	Contributor UserRole = "contributor"
 	Moderator   UserRole = "moderator"
 	Staff       UserRole = "staff"
+)
+
+const (
+	PostInfraction LockReason = "artist"
 )
 
 type User struct {
@@ -24,8 +29,10 @@ type User struct {
 	verified  bool
 	avatar    string
 	unclaimed bool
+	locked    bool
 
-	lockedUntil int
+	lockedUntil  int
+	lockedReason LockReason
 }
 
 var (
@@ -43,13 +50,15 @@ func UnmarshalUserFromDatabase(id, username, email string, roles []string, verif
 	}
 
 	return &User{
-		id:          id,
-		username:    username,
-		email:       email,
-		roles:       newRoles,
-		verified:    verified,
-		avatar:      avatar,
-		lockedUntil: 0,
+		id:           id,
+		username:     username,
+		email:        email,
+		roles:        newRoles,
+		verified:     verified,
+		avatar:       avatar,
+		lockedUntil:  0,
+		locked:       false,
+		lockedReason: "",
 	}
 }
 
@@ -94,7 +103,17 @@ func (u User) LockedUntil() int {
 	return u.lockedUntil
 }
 
+func (u User) CanUnlock() bool {
+	return time.Now().After(time.Unix(int64(u.lockedUntil), 0))
+}
+
 func (u User) IsLocked() bool {
+
+	// indefinite lock
+	if u.lockedUntil == -1 {
+		return true
+	}
+
 	return time.Unix(int64(u.lockedUntil), 0).After(time.Now())
 }
 
@@ -102,8 +121,20 @@ func (u User) IsUnclaimed() bool {
 	return u.unclaimed
 }
 
-func (u User) LockUser(duration int) {
+func (u User) LockUser(duration int, reason string) error {
+
+	if u.lockedUntil == 0 {
+		u.lockedUntil = 0
+		u.lockedReason = ""
+		u.locked = false
+		return nil
+	}
+
 	u.lockedUntil = duration
+	u.lockedReason = LockReason(reason)
+	u.locked = true
+
+	return nil
 }
 
 func (u User) UserRolesAsString() []string {

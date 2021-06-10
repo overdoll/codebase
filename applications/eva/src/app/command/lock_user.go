@@ -20,11 +20,10 @@ var (
 	ErrFailedLock = errors.New("failed to lock")
 )
 
-func (h LockUserHandler) Handle(ctx context.Context, id string, duration int) (*user.User, error) {
+func (h LockUserHandler) Handle(ctx context.Context, id string, duration int, reason string) (*user.User, error) {
 
 	usr, err := h.ur.UpdateUser(ctx, id, func(u *user.User) error {
-		u.LockUser(duration)
-		return nil
+		return u.LockUser(duration, reason)
 	})
 
 	if err != nil {

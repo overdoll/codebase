@@ -44,7 +44,7 @@ func (s *Server) GetUser(ctx context.Context, request *eva.GetUserRequest) (*eva
 }
 
 func (s *Server) LockUser(ctx context.Context, request *eva.LockUserRequest) (*eva.User, error) {
-	usr, err := s.app.Commands.LockUser.Handle(ctx, request.Id, int(request.Duration))
+	usr, err := s.app.Commands.LockUser.Handle(ctx, request.Id, int(request.Duration), string(request.Reason))
 
 	if err != nil {
 		return nil, status.Error(codes.Internal, fmt.Sprintf("failed to lock user: %s", err))
