@@ -6,6 +6,7 @@ import (
 
 type Repository interface {
 	GetPendingPost(context.Context, string) (*PostPending, error)
+	GetPendingPosts(context.Context) ([]*PostPending, error)
 	CreatePendingPost(context.Context, *PostPending) error
 	UpdatePendingPost(context.Context, string, func(*PostPending) error) (*PostPending, error)
 	DeletePendingPost(context.Context, string) error
