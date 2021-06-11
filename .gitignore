@@ -40,3 +40,4 @@ tilt_options.json
 .buildkite/config/target
 codecov.sh
 cache
+applications/sting/src/ports/graphql/queries/resolvers.go

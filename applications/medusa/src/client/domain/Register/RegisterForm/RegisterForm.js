@@ -71,15 +71,17 @@ export default function RegisterForm ({ onSubmit, loading }: Props): Node {
             </InputRightElement>
           )}
         </InputGroup>
-        <FormHelperText>
+        <FormHelperText>1tSSgnJSvYZHcEKlUXRL1jI1ins
           {errors.username && t('authenticate.form.validation.email.required')}
         </FormHelperText>
       </FormControl>
       <Button
-        size='md'
+        size='xl'
+        variant='outline'
         type='submit'
-        isLoading={loading}
-        width='100%'
+        loading={loading}
+        colorScheme='green'
+        w='100%'
       >
         {t('register.form.submit')}
       </Button>

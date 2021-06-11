@@ -1,9 +1,12 @@
 /**
  * @flow
  */
-import { Center, Code, Flex } from '@chakra-ui/react'
+import { Center, Flex, Heading } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
 import type { Node } from 'react'
+import Icon from '@//:modules/content/icon/Icon'
+import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/sign-badge-circle-K1i3HA.svg'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
   error: Error
@@ -13,6 +16,8 @@ type Props = {
 // TODO: make this page look nice, since users may sometimes see this during downtime or crashes
 // TODO: also need to report the error to sentry
 export default function ErrorDisplay ({ error }: Props): Node {
+  const [t] = useTranslation('error')
+
   const debug = process.env.APP_DEBUG === 'true'
 
   if (debug) console.log(error)
@@ -20,17 +25,25 @@ export default function ErrorDisplay ({ error }: Props): Node {
   return (
     <>
       <Helmet title='error' />
-      <Flex h='100%'>
-        <Center w='100%'>
-          {debug
-            ? (
-              <Code colorScheme='red'>
-                {error.stack}
-              </Code>
-              )
-            : 'error'}
-        </Center>
-      </Flex>
+      <Center mt={40}>
+        <Flex w={['sm', 'md', 'lg']} direction='column'>
+          <Icon
+            icon={SignBadgeCircle}
+            color='red.500'
+            w={100}
+            h={100}
+            ml='auto'
+            mr='auto'
+            mb={8}
+          />
+          <Heading size='md' align='center' color='gray.00'>
+            {t('error.header')}
+          </Heading>
+          <Text size='md' align='center' color='gray.200'>
+            {t('error.subheader')}
+          </Text>
+        </Flex>
+      </Center>
     </>
   )
 }

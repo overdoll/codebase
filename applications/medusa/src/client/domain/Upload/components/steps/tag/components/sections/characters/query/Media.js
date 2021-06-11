@@ -5,7 +5,10 @@ import type { Node } from 'react'
 import type { VariablesOf } from 'react-relay/hooks'
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import type { MediaQuery } from '@//:artifacts/MediaQuery.graphql'
-import Element from '../../../element/Element'
+import Element from '../../../../../../../../../components/Element/Element'
+import { Wrap } from '@chakra-ui/react'
+import Empty from '../../../search/empty/Empty'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
   args: {
@@ -26,6 +29,8 @@ const MediaQueryGQL = graphql`
 `
 
 export default function Media ({ args, onSelect }: Props): Node {
+  const [t] = useTranslation('upload')
+
   const data = useLazyLoadQuery<MediaQuery>(
     MediaQueryGQL,
     args.variables,
@@ -42,15 +47,14 @@ export default function Media ({ args, onSelect }: Props): Node {
     <>
       {data.media.length === 0
         ? (
-          <div>
-            no media found
-            <button onClick={onAddNewMedia}>
-              add {args.variables.data.search} media
-            </button>
-          </div>
+          <Empty
+            title={t('tag.character.media.not_found')}
+            button={`${t('tag.character.media.add')} ${args.variables.data.search}`} onClick={onAddNewMedia}
+          />
           )
         : (
-            data.media.map(item => (
+          <Wrap justify='center'>
+            {data.media.map(item => (
               <Element
                 key={item.id}
                 onSelect={() => onSelect(item)}
@@ -58,7 +62,8 @@ export default function Media ({ args, onSelect }: Props): Node {
                 title={item.title}
                 thumbnail={item.thumbnail}
               />
-            ))
+            ))}
+          </Wrap>
           )}
     </>
   )

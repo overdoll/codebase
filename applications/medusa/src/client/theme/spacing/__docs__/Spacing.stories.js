@@ -14,7 +14,7 @@ const Template = () => {
         })
         .map(size => (
           <Flex key={size} direction='row' align='center'>
-            <Box mr={2} h={8} w={size} bg='gray.00' />
+            <Box mr={2} h={8} w={size} bg='gray.800' />
             <Text>{size}</Text>
           </Flex>
         ))}

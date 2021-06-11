@@ -51,15 +51,16 @@ export default function Register (): Node {
   return (
     <>
       <Helmet title='register' />
-      <Center mt={8}>
-        <Flex w={['fill', 'sm']} direction='column'>
+      <Center mt={40}>
+        <Flex w={['sm', 'md']} direction='column' align='center'>
           <Icon
             icon={SignBadgeCircle}
             w={100}
             h={100}
+            color='green.500'
             ml='auto'
             mr='auto'
-            mb={5}
+            mb={8}
           />
           <RegisterForm onSubmit={onSubmit} loading={isInFlight} />
         </Flex>

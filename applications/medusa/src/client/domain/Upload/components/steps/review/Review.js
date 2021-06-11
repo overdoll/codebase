@@ -31,7 +31,7 @@ export default function Review ({ state, disabled }: Props): Node {
       </Text>
       <FullPost
         artist={state.artist} files={state.files} urls={state.urls} characters={state.characters}
-        categories={state.categories}
+        categories={state.categories} mt={2} disableContext
       />
       <>
         {disabled && (

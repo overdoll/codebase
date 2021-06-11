@@ -7,9 +7,7 @@ import Characters from './query/Characters'
 import type { Dispatch, State } from '@//:types/upload'
 import { EVENTS } from '../../../../../../constants/constants'
 import Section from '../../section/Section'
-import { createPortal } from 'react-dom'
 import Search from '../../search/Search'
-import RootElement from '@//:modules/utilities/RootElement'
 import Media from './query/Media'
 import { Tag, TagLabel, TagCloseButton, Text } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
@@ -67,15 +65,15 @@ export default function TagCharacters ({ state, dispatch }: Props): Node {
 
   // if we are selecting a new character, open a modal for selecting a new media with this
   if (newCharacter !== null) {
-    return createPortal(
+    return (
       <Search
-        placeholder='search media'
-        header={<div>selected character: {newCharacter.name}</div>}
+        placeholder={t('tag.character.media.search')}
+        header={t('tag.character.media.selected', { character: newCharacter.name })}
         onClose={onCancelNewCharacter}
+        isOpen
       >
         {args => <Media selected={[]} onSelect={onAddNewMedia} args={args} />}
-      </Search>,
-      RootElement
+      </Search>
     )
   }
 
@@ -103,7 +101,7 @@ export default function TagCharacters ({ state, dispatch }: Props): Node {
                 colorScheme='green'
                 borderRadius='full'
               >
-                <TagLabel>{state.characters[id].name}</TagLabel>
+                <TagLabel>{`${state.characters[id].name} (${state.characters[id].media.title})`}</TagLabel>
                 <TagCloseButton onClick={() => onRemove(state.characters[id])} />
               </Tag>
             ))

@@ -3,13 +3,14 @@
  */
 import { graphql, useMutation, useSubscription } from 'react-relay/hooks'
 import type { Node } from 'react'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { LobbySubscriptionResponse } from '@//:artifacts/LobbySubscription.graphql'
 import Icon from '@//:modules/content/icon/Icon'
 import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/sign-badge-circle-K1i3HA.svg'
 import { Box, Center, Flex, Heading, Text, useToast } from '@chakra-ui/react'
 import Button from '@//:modules/form/button'
+import { useClickDelay } from '@//:modules/utilities/hooks'
 
 type Props = {
   onReceive: () => void,
@@ -36,7 +37,6 @@ const LobbyEmail = graphql`
 
 export default function Lobby (props: Props): Node {
   const notify = useToast()
-  const [t] = useTranslation('auth')
 
   useSubscription<LobbySubscriptionResponse>(
     useMemo(
@@ -69,14 +69,16 @@ export default function Lobby (props: Props): Node {
       []
     )
   )
+  const [t] = useTranslation('auth')
 
   const [sendEmail, isSendingEmail] = useMutation(LobbyEmail)
 
-  // Create a timer and state change for button
-  const [buttonDisabled, setButtonDisabled] = useState(false)
-  const [timer, setTimer] = useState(0)
+  const [isTimedOut, currentTimer, createTimeout] = useClickDelay('lobbyButton')
+
+  // TODO fix submitting as it doesn't work (no success message)
 
   const onSubmit = () => {
+    createTimeout(60000)
     sendEmail({
       variables: {},
       onCompleted (data) {
@@ -85,35 +87,14 @@ export default function Lobby (props: Props): Node {
           title: t('lobby.verification'),
           isClosable: true
         })
-        timeOut(60000)
       },
       onError (data) {}
     })
   }
 
-  // Create and set timer for specified timeOut length
-  // TODO make it a separate reusable function
-  // TODO localstorage variable to make sure it cant be pressed on refresh again
-  const timeOut = timeOutLength => {
-    setButtonDisabled(true)
-    setTimer(timeOutLength / 1000)
-    const interval = setInterval(() => {
-      setTimer(x => x - 1)
-    }, 1000)
-    setTimeout(() => {
-      clearTimeout(interval)
-    }, timeOutLength)
-  }
-
-  // Clear timer when it reaches a certain number
-  const clearTimeout = interval => {
-    setButtonDisabled(false)
-    clearInterval(interval)
-  }
-
   return (
     <Center mt={40}>
-      <Flex w={['sm', 'md']} direction='column'>
+      <Flex w={['sm', 'md']} direction='column' align='center'>
         <Icon
           icon={SignBadgeCircle}
           w={100}
@@ -126,7 +107,7 @@ export default function Lobby (props: Props): Node {
         <Heading mb={8} align='center' size='lg' color='gray.00'>
           {t('lobby.header')}
         </Heading>
-        <Box mb={8} pt={3} pb={3} borderRadius={5} bg='gray.800'>
+        <Box mb={8} pt={3} pb={3} borderRadius={5} bg='gray.800' w='100%'>
           <Center>
             <Text fontSize='lg' color='purple.300'>
               {props.email}
@@ -137,9 +118,9 @@ export default function Lobby (props: Props): Node {
           size='lg'
           loading={isSendingEmail}
           onClick={onSubmit}
-          disabled={buttonDisabled}
+          disabled={isTimedOut}
         >
-          {t('lobby.resend') + (!buttonDisabled ? '' : ` (${timer})`)}
+          {t('lobby.resend') + (isTimedOut ? ` (${currentTimer / 1000})` : '')}
         </Button>
       </Flex>
     </Center>
