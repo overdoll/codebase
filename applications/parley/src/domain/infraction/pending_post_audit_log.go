@@ -9,8 +9,8 @@ import (
 )
 
 const (
-	STATUS_APPROVED = "approved"
-	STATUS_DENIED   = "denied"
+	StatusApproved = "approved"
+	StatusDenied   = "denied"
 )
 
 var (
@@ -46,10 +46,10 @@ func NewPendingPostAuditLog(user *user.User, userInfractionHistory []*UserInfrac
 
 	var userInfraction *UserInfractionHistory
 
-	status := STATUS_DENIED
+	status := StatusApproved
 
 	if rejectionReason != nil {
-		status = STATUS_APPROVED
+		status = StatusDenied
 
 		if rejectionReason.Infraction() {
 			userInfraction = NewUserInfractionHistory(contributor.ID(), userInfractionHistory, rejectionReason.Reason())
@@ -96,7 +96,7 @@ func (m *PendingPostAuditLog) Status() string {
 }
 
 func (m *PendingPostAuditLog) Notes() string {
-	return m.status
+	return m.notes
 }
 
 func (m *PendingPostAuditLog) Moderator() *user.User {
@@ -108,11 +108,11 @@ func (m *PendingPostAuditLog) Contributor() *user.User {
 }
 
 func (m *PendingPostAuditLog) IsApproved() bool {
-	return m.status == STATUS_APPROVED
+	return m.status == StatusApproved
 }
 
 func (m *PendingPostAuditLog) IsDenied() bool {
-	return m.status == STATUS_DENIED
+	return m.status == StatusDenied
 }
 
 func (m *PendingPostAuditLog) Reverted() bool {
@@ -152,5 +152,5 @@ func (m *PendingPostAuditLog) UserInfraction() *UserInfractionHistory {
 }
 
 func (m *PendingPostAuditLog) IsDeniedWithInfraction() bool {
-	return m.status == STATUS_DENIED && m.rejectionReason.Infraction()
+	return m.status == StatusDenied && m.rejectionReason.Infraction()
 }

@@ -3,16 +3,17 @@ package service_test
 import (
 	"context"
 	"log"
-	"net/http"
 	"os"
 	"testing"
 
 	"github.com/shurcooL/graphql"
+	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc"
 	parley "overdoll/applications/parley/proto"
+	"overdoll/applications/parley/src/domain/infraction"
 	"overdoll/applications/parley/src/ports"
+	"overdoll/applications/parley/src/ports/graphql/types"
 	"overdoll/applications/parley/src/service"
-	sting "overdoll/applications/sting/proto"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
 	"overdoll/libraries/config"
@@ -26,24 +27,132 @@ const ParleyHttpClientAddr = "http://:8888/graphql"
 const ParleyGrpcAddr = "localhost:8889"
 const ParleyGrpcClientAddr = "localhost:8889"
 
-func getHttpClient(t *testing.T, pass *passport.Passport) (*graphql.Client, *http.Client) {
+type PendingPostRejectionReasons struct {
+	RejectionReasons []*types.PendingPostRejectionReason `graphql:"rejectionReasons"`
+}
+
+type PendingPostAuditLogs struct {
+	PendingPostAuditLogs []*types.PendingPostAuditLog `graphql:"pendingPostAuditLogs(data: $data)"`
+}
+
+type ModeratePost struct {
+	ModeratePost types.ModeratePost `graphql:"moderatePost(data: $data)"`
+}
+
+func mModeratePost(t *testing.T, client *graphql.Client, rejectionReason *string, notes string) ModeratePost {
+	var modPost ModeratePost
+
+	err := client.Mutate(context.Background(), &modPost, map[string]interface{}{
+		"data": types.ModeratePostInput{
+			PendingPostID:     "1q7MIqqnkzew33q4elXuN1Ri27d",
+			RejectionReasonID: rejectionReason,
+			Notes:             notes,
+		},
+	})
+
+	require.NoError(t, err)
+
+	return modPost
+}
+
+// TestPendingPostRejectionReasons - get some rejection reasons
+func TestPendingPostRejectionReasons(t *testing.T) {
+	t.Parallel()
+
+	client := getHttpClient(t, passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+
+	var search PendingPostRejectionReasons
+
+	err := client.Query(context.Background(), &search, nil)
+
+	require.NoError(t, err)
+	require.Len(t, search.RejectionReasons, 2)
+	require.Equal(t, "Reason with infraction", string(search.RejectionReasons[0].Reason))
+}
+
+// TestPendingPostAuditLogs - get some audit logs
+func TestPendingPostAuditLogs(t *testing.T) {
+	t.Parallel()
+
+	client := getHttpClient(t, passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+
+	var search PendingPostAuditLogs
+
+	err := client.Query(context.Background(), &search, map[string]interface{}{
+		"data": types.PendingPostAuditLogInput{ModeratorID: ""},
+	})
+
+	require.NoError(t, err)
+	require.Equal(t, "0eclipse", string(search.PendingPostAuditLogs[0].Contributor.Username))
+}
+
+// TestGetNextModerator - get next mod id
+func TestGetNextModerator(t *testing.T) {
+	t.Parallel()
+
+	client := getGrpcClient(t)
+
+	item, err := client.GetNextModerator(context.Background(), &parley.GetModeratorRequest{})
+
+	require.NoError(t, err)
+	require.Equal(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6", item.Id)
+}
+
+func TestModeratePost_approve(t *testing.T) {
+	t.Parallel()
+
+	client := getHttpClient(t, passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+
+	res := mModeratePost(t, client, nil, "some notes")
+
+	require.Equal(t, infraction.StatusApproved, res.ModeratePost.AuditLog.Status)
+	require.Equal(t, "some notes", res.ModeratePost.AuditLog.Notes)
+}
+
+func TestModeratePost_reject(t *testing.T) {
+	t.Parallel()
+
+	client := getHttpClient(t, passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	val := "1q7MJ5IyRTV0X4J27F3m5wGD5mj"
+
+	res := mModeratePost(t, client, &val, "some additional notes")
+
+	require.Equal(t, infraction.StatusDenied, res.ModeratePost.AuditLog.Status)
+	require.Equal(t, "some additional notes", res.ModeratePost.AuditLog.Notes)
+	require.Equal(t, "Reason with no infraction", res.ModeratePost.AuditLog.Reason)
+}
+
+func TestModeratePost_reject_infraction(t *testing.T) {
+	t.Parallel()
+
+	client := getHttpClient(t, passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	val := "1q7MJ3JkhcdcJJNqZezdfQt5pZ6"
+
+	res := mModeratePost(t, client, &val, "some additional notes")
+
+	require.Equal(t, infraction.StatusDenied, res.ModeratePost.AuditLog.Status)
+	require.Equal(t, "some additional notes", res.ModeratePost.AuditLog.Notes)
+	require.Equal(t, "Reason with infraction", res.ModeratePost.AuditLog.Reason)
+}
+
+func getHttpClient(t *testing.T, pass *passport.Passport) *graphql.Client {
 
 	client, _ := clients.NewHTTPClientWithHeaders(pass)
 
-	return graphql.NewClient(ParleyHttpClientAddr, client), client
+	return graphql.NewClient(ParleyHttpClientAddr, client)
 }
 
-func getGrpcClient(t *testing.T) sting.StingClient {
+func getGrpcClient(t *testing.T) parley.ParleyClient {
 
-	stingClient, _ := clients.NewStingClient(context.Background(), ParleyGrpcClientAddr)
+	parleyClient, _ := clients.NewParleyClient(context.Background(), ParleyGrpcClientAddr)
 
-	return stingClient
+	return parleyClient
 }
 
 func startService() bool {
-	config.Read("applications/sting/config.toml")
+	config.Read("applications/parley/config.toml")
 
-	application, _ := service.NewApplication(context.Background())
+	application, _ := service.NewComponentTestApplication(context.Background())
 
 	srv := ports.NewGraphQLServer(&application)
 

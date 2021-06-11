@@ -25,11 +25,13 @@ func (m MutationResolver) ModeratePost(ctx context.Context, data types.ModerateP
 		rejectionReasonId = *data.RejectionReasonID
 	}
 
-	if err := m.App.Commands.ModeratePost.Handle(ctx, pass.UserID(), data.PendingPostID, rejectionReasonId, data.Notes); err != nil {
+	auditLog, err := m.App.Commands.ModeratePost.Handle(ctx, pass.UserID(), data.PendingPostID, rejectionReasonId, data.Notes)
+
+	if err != nil {
 		return nil, err
 	}
 
-	return &types.ModeratePost{Validation: nil}, nil
+	return &types.ModeratePost{Validation: nil, AuditLog: types.MarshalPendingPostAuditLogToGraphQL(auditLog)}, nil
 }
 
 func (m MutationResolver) RevertPendingPostAuditLog(ctx context.Context, data types.RevertPostInput) (*types.ModeratePost, error) {
@@ -39,9 +41,11 @@ func (m MutationResolver) RevertPendingPostAuditLog(ctx context.Context, data ty
 		return nil, passport.ErrNotAuthenticated
 	}
 
-	if err := m.App.Commands.RevertModeratePost.Handle(ctx, pass.UserID(), data.AuditLogID); err != nil {
+	auditLog, err := m.App.Commands.RevertModeratePost.Handle(ctx, pass.UserID(), data.AuditLogID)
+
+	if err != nil {
 		return nil, err
 	}
 
-	return &types.ModeratePost{Validation: nil}, nil
+	return &types.ModeratePost{Validation: nil, AuditLog: types.MarshalPendingPostAuditLogToGraphQL(auditLog)}, nil
 }

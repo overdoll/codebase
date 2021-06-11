@@ -56,6 +56,7 @@ type ComplexityRoot struct {
 	}
 
 	ModeratePost struct {
+		AuditLog   func(childComplexity int) int
 		Validation func(childComplexity int) int
 	}
 
@@ -160,6 +161,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Entity.FindUserByID(childComplexity, args["id"].(string)), true
+
+	case "ModeratePost.auditLog":
+		if e.complexity.ModeratePost.AuditLog == nil {
+			break
+		}
+
+		return e.complexity.ModeratePost.AuditLog(childComplexity), true
 
 	case "ModeratePost.validation":
 		if e.complexity.ModeratePost.Validation == nil {
@@ -444,6 +452,7 @@ input RevertPostInput {
 }
 `, BuiltIn: false},
 	{Name: "schema/types.graphql", Input: `type ModeratePost {
+  auditLog: PendingPostAuditLog
   validation: Validation
 }
 
@@ -758,6 +767,38 @@ func (ec *executionContext) _Entity_findUserByID(ctx context.Context, field grap
 	res := resTmp.(*types.User)
 	fc.Result = res
 	return ec.marshalNUser2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐUser(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ModeratePost_auditLog(ctx context.Context, field graphql.CollectedField, obj *types.ModeratePost) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ModeratePost",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.AuditLog, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.PendingPostAuditLog)
+	fc.Result = res
+	return ec.marshalOPendingPostAuditLog2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostAuditLog(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _ModeratePost_validation(ctx context.Context, field graphql.CollectedField, obj *types.ModeratePost) (ret graphql.Marshaler) {
@@ -2992,6 +3033,8 @@ func (ec *executionContext) _ModeratePost(ctx context.Context, sel ast.Selection
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("ModeratePost")
+		case "auditLog":
+			out.Values[i] = ec._ModeratePost_auditLog(ctx, field, obj)
 		case "validation":
 			out.Values[i] = ec._ModeratePost_validation(ctx, field, obj)
 		default:
@@ -4130,6 +4173,13 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 		return graphql.Null
 	}
 	return graphql.MarshalBoolean(*v)
+}
+
+func (ec *executionContext) marshalOPendingPostAuditLog2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostAuditLog(ctx context.Context, sel ast.SelectionSet, v *types.PendingPostAuditLog) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._PendingPostAuditLog(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOString2string(ctx context.Context, v interface{}) (string, error) {

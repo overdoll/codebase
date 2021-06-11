@@ -8,7 +8,8 @@ type AuditUser struct {
 }
 
 type ModeratePost struct {
-	Validation *Validation `json:"validation"`
+	AuditLog   *PendingPostAuditLog `json:"auditLog"`
+	Validation *Validation          `json:"validation"`
 }
 
 type ModeratePostInput struct {

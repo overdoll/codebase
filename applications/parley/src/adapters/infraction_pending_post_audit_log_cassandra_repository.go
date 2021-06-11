@@ -3,6 +3,7 @@ package adapters
 import (
 	"context"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/gocql/gocql"
@@ -16,7 +17,7 @@ type PendingPostAuditLog struct {
 	ContributorId       string `db:"contributor_user_id"`
 	ContributorUsername string `db:"contributor_user_username"`
 	ModeratorId         string `db:"moderator_user_id"`
-	ModeratorUsername   string `db:"moderator_username"`
+	ModeratorUsername   string `db:"moderator_user_username"`
 	UserInfractionId    string `db:"user_infraction_id"`
 	Status              string `db:"status"`
 	Reason              string `db:"reason"`
@@ -27,9 +28,14 @@ type PendingPostAuditLog struct {
 func marshalPendingPostAuditLogToDatabase(auditLog *infraction.PendingPostAuditLog) *PendingPostAuditLog {
 
 	userInfractionId := ""
+	reason := ""
 
 	if auditLog.IsDeniedWithInfraction() {
 		userInfractionId = auditLog.UserInfraction().ID()
+	}
+
+	if auditLog.IsDenied() {
+		reason = auditLog.RejectionReason().Reason()
 	}
 
 	return &PendingPostAuditLog{
@@ -41,7 +47,7 @@ func marshalPendingPostAuditLogToDatabase(auditLog *infraction.PendingPostAuditL
 		ContributorUsername: auditLog.Contributor().Username(),
 		UserInfractionId:    userInfractionId,
 		Status:              auditLog.Status(),
-		Reason:              auditLog.RejectionReason().Reason(),
+		Reason:              reason,
 		Notes:               auditLog.Notes(),
 		Reverted:            auditLog.Reverted(),
 	}
@@ -56,7 +62,7 @@ func (r InfractionCassandraRepository) CreatePendingPostAuditLog(ctx context.Con
 			"contributor_user_id",
 			"contributor_user_username",
 			"moderator_user_id",
-			"moderator_username",
+			"moderator_user_username",
 			"user_infraction_id",
 			"status",
 			"reason",
@@ -81,17 +87,17 @@ func (r InfractionCassandraRepository) CreatePendingPostAuditLog(ctx context.Con
 	return nil
 }
 
-func (r InfractionCassandraRepository) GetPendingPostAuditLog(ctx context.Context, id string) (*infraction.PendingPostAuditLog, error) {
+func (r InfractionCassandraRepository) GetPendingPostAuditLog(ctx context.Context, moderatorId, logId string) (*infraction.PendingPostAuditLog, error) {
 
 	pendingPostAuditLogQuery := qb.Select("pending_posts_audit_log").
-		Where(qb.Eq("id")).
+		Where(qb.Eq("moderator_user_id"), qb.Eq("id")).
 		Columns(
 			"id",
 			"post_id",
 			"contributor_user_id",
 			"contributor_user_username",
 			"moderator_user_id",
-			"moderator_username",
+			"moderator_user_username",
 			"user_infraction_id",
 			"status",
 			"reason",
@@ -100,7 +106,7 @@ func (r InfractionCassandraRepository) GetPendingPostAuditLog(ctx context.Contex
 		).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(&PendingPostAuditLog{Id: id})
+		BindStruct(&PendingPostAuditLog{Id: logId, ModeratorId: moderatorId})
 
 	var pendingPostAuditLog PendingPostAuditLog
 
@@ -120,7 +126,8 @@ func (r InfractionCassandraRepository) GetPendingPostAuditLog(ctx context.Contex
 	}
 
 	return infraction.UnmarshalPendingPostAuditLogFromDatabase(
-		pendingPostAuditLog.Id,
+		// ID is made up of moderator ID + the audit Log ID, so we give both to get precise querying
+		pendingPostAuditLog.ModeratorId+"+"+pendingPostAuditLog.Id+"+",
 		pendingPostAuditLog.PostId,
 		pendingPostAuditLog.ModeratorId,
 		pendingPostAuditLog.ModeratorUsername,
@@ -145,7 +152,7 @@ func (r InfractionCassandraRepository) GetPendingPostAuditLogByModerator(ctx con
 			"contributor_user_id",
 			"contributor_user_username",
 			"moderator_user_id",
-			"moderator_username",
+			"moderator_user_username",
 			"user_infraction_id",
 			"status",
 			"reason",
@@ -180,7 +187,8 @@ func (r InfractionCassandraRepository) GetPendingPostAuditLogByModerator(ctx con
 		//(id, userId, reason string, expiration time.Time)
 		pendingPostAuditLogs = append(pendingPostAuditLogs,
 			infraction.UnmarshalPendingPostAuditLogFromDatabase(
-				pendingPostAuditLog.Id,
+				// ID is made up of moderator ID + the audit Log ID, so we give both to get precise querying
+				pendingPostAuditLog.ModeratorId+"+"+pendingPostAuditLog.Id+"+",
 				pendingPostAuditLog.PostId,
 				pendingPostAuditLog.ModeratorId,
 				pendingPostAuditLog.ModeratorUsername,
@@ -200,7 +208,9 @@ func (r InfractionCassandraRepository) GetPendingPostAuditLogByModerator(ctx con
 }
 
 func (r InfractionCassandraRepository) UpdatePendingPostAuditLog(ctx context.Context, id string, updateFn func(auditLog *infraction.PendingPostAuditLog) error) (*infraction.PendingPostAuditLog, error) {
-	auditLog, err := r.GetPendingPostAuditLog(ctx, id)
+	newId := strings.Split(id, "+")
+
+	auditLog, err := r.GetPendingPostAuditLog(ctx, newId[0], newId[0])
 
 	if err != nil {
 		return nil, err
@@ -214,19 +224,16 @@ func (r InfractionCassandraRepository) UpdatePendingPostAuditLog(ctx context.Con
 
 	updateAuditLog := qb.Update("pending_posts_audit_log").
 		Set(
-			"id",
 			"post_id",
 			"contributor_user_id",
 			"contributor_user_username",
-			"moderator_user_id",
-			"moderator_username",
 			"user_infraction_id",
 			"status",
 			"reason",
 			"notes",
 			"reverted",
 		).
-		Where(qb.Eq("id")).
+		Where(qb.Eq("moderator_user_id"), qb.Eq("id")).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalPendingPostAuditLogToDatabase(auditLog))

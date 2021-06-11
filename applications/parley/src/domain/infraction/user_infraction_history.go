@@ -41,7 +41,13 @@ func NewUserInfractionHistory(userId string, pastUserInfractionHistory []*UserIn
 		}
 	}
 
-	banPeriod := LengthPeriodBans[len(activeInfractions)-1]
+	index := 0
+
+	if len(activeInfractions) > 0 {
+		index = len(activeInfractions) - 1
+	}
+
+	banPeriod := LengthPeriodBans[index]
 
 	// Expiration is 4x the ban length
 	expiration := time.Now().Add(time.Hour * 24 * time.Duration(banPeriod*4))

@@ -55,31 +55,7 @@ func (q QueryResolver) PendingPostAuditLogs(ctx context.Context, data types.Pend
 	var auditLogs []*types.PendingPostAuditLog
 
 	for _, log := range logs {
-
-		var infractionId *string
-
-		if log.IsDeniedWithInfraction() {
-			id := log.UserInfraction().ID()
-			infractionId = &id
-		}
-
-		auditLogs = append(auditLogs, &types.PendingPostAuditLog{
-			ID:     log.ID(),
-			PostID: log.PostId(),
-			Contributor: &types.AuditUser{
-				ID:       log.Contributor().ID(),
-				Username: log.Contributor().Username(),
-			},
-			Moderator: &types.AuditUser{
-				ID:       log.Moderator().ID(),
-				Username: log.Moderator().Username(),
-			},
-			InfractionID: infractionId,
-			Status:       log.Status(),
-			Reason:       log.RejectionReason().Reason(),
-			Notes:        log.Notes(),
-			Reverted:     log.Reverted(),
-		})
+		auditLogs = append(auditLogs, types.MarshalPendingPostAuditLogToGraphQL(log))
 	}
 
 	return auditLogs, nil

@@ -84,7 +84,7 @@ func mCreatePost(s *WorkflowComponentTestSuite, callback func(string) func()) {
 
 	err := client.Mutate(context.Background(), &createPost, map[string]interface{}{
 		"data": &types.PostInput{
-			Content:           []string{"some-random-id", "another-random-id"},
+			Content:           []string{},
 			Categories:        []string{"1q7MJFk9Wof1qyQQORKBrJxGFhJ", "1q7MJFMVgDPo4mFjsfNag6rRwRy", "1q7MJSeEiai3yFN6Ps65eACFde9"},
 			Characters:        []string{"1q7MJnQXAtxer0fboBMHtlC0JMe"},
 			MediaRequests:     nil,

@@ -1,4 +1,5 @@
 type ModeratePost {
+  auditLog: PendingPostAuditLog
   validation: Validation
 }
 
