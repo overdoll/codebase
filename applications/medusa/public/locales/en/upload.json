@@ -1,9 +1,9 @@
 {
   "begin": {
     "header": "Start by uploading an image or a video",
-    "subheader": "Almost all file formats accepted\n10 file limit per post",
+    "subheader": "Accepted file formats: .mp4, .jpg, .png",
     "uploader": "Upload Files",
-    "limit": "max. 10mb per file"
+    "limit": "max. 25mb per file"
   },
   "rules": {
     "header": "As a reminder, don't upload...",
@@ -13,7 +13,7 @@
   "arrange": {
     "header": "Hold a tile and drag to reorder it",
     "add": "Add media",
-    "count": "Posting {{count}} media"
+    "count": "Uploading {{count}} files"
   },
   "tag": {
     "header": "Tag your post",
@@ -31,18 +31,35 @@
       "empty": "No characters selected",
       "search": "Search for a character",
       "not_found": "No characters found",
-      "add": "Add character"
+      "add": "Add character",
+      "media": {
+        "selected": "Select the media that the character {{character}} belongs to",
+        "search": "Search for media",
+        "not_found": "No media found",
+        "add": "Add media"
+      }
     },
     "category": {
       "label": "Categories",
       "empty": "No categories selected",
       "search": "Search for a category",
       "not_found": "No categories found"
+    },
+    "search": {
+      "close": "Close Search"
     }
   },
   "review": {
     "header": "Review your post",
     "subheader": "Make sure you like how it looks before you submit",
     "notice": "You'll have to wait until all media files are uploaded before submitting."
+  },
+  "finish": {
+    "review": {
+      "header": "Your post was submitted for approval",
+      "subheader": "Before your post is public, it must be approved to ensure that it follows our Community Guidelines",
+      "again": "Post again",
+      "home": "Go home"
+    }
   }
 }

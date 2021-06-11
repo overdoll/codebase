@@ -7,13 +7,18 @@ import {
   Spinner,
   CircularProgress,
   CircularProgressLabel,
-  Skeleton,
-  Image
+  Skeleton
 } from '@chakra-ui/react'
 
+import SuspenseImage from '@//:modules/utilities/SuspenseImage'
+
 type Props = {
-  thumbnail: any,
-  progress: any,
+  thumbnail: string,
+  progress: {
+    key: {
+      key: number
+    }
+  },
 };
 
 export default function Thumbnail ({ thumbnail, progress }: Props): Node {
@@ -25,20 +30,12 @@ export default function Thumbnail ({ thumbnail, progress }: Props): Node {
       alignItems='center'
       position='relative'
     >
-      {thumbnail
-        ? (
-          <Image
-            alt='thumbnail'
-            src={thumbnail}
-            w='100%'
-            h='100%'
-            objectFit='cover'
-            borderRadius={5}
-          />
-          )
-        : (
-          <Skeleton w='100%' h='100%' />
-          )}
+      <SuspenseImage
+        w='100%'
+        h='100%'
+        objectFit='cover'
+        borderRadius={5} src={thumbnail} fallback={<Skeleton w='100%' h='100%' />}
+      />
       <Flex
         position='absolute'
         bg={

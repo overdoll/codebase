@@ -4,10 +4,10 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import type { Node } from 'react'
 import { useContext, useState } from 'react'
-import Register from '../../components/Register/Register'
+import Register from '../Register/Register'
 import { useTranslation } from 'react-i18next'
 import Lobby from './Lobby/Lobby'
-import { Alert, AlertDescription, AlertIcon, AlertTitle, Center, CloseButton, Flex, useToast } from '@chakra-ui/react'
+import { Alert, AlertDescription, AlertIcon, Center, CloseButton, Flex, useToast } from '@chakra-ui/react'
 import { RootContext } from '../Root/Root'
 import Icon from '@//:modules/content/icon/Icon'
 import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/sign-badge-circle-K1i3HA.svg'
@@ -136,12 +136,11 @@ export default function Join (): Node {
           (
             <Alert mb={2} status='error'>
               <AlertIcon />
-              <AlertTitle mr={2}>{error}</AlertTitle>
               <AlertDescription>{error}</AlertDescription>
               <CloseButton
                 position='absolute'
-                right='8px'
-                top='8px'
+                right={2}
+                top={2}
                 onClick={() => flush('login.notify')}
               />
             </Alert>

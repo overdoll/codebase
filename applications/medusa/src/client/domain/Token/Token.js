@@ -4,7 +4,7 @@
 import type { Node } from 'react'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
 import { graphql, usePreloadedQuery } from 'react-relay/hooks'
-import Register from '../../components/Register/Register'
+import Register from '../Register/Register'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from '@//:modules/routing'
 import type { TokenQuery } from '@//:artifacts/TokenQuery.graphql'
@@ -54,7 +54,7 @@ export default function Token (props: Props): Node {
 
   if (data.redeemCookie.invalid) {
     // Go back to Join page and send notification of invalid token
-    flash('login.notify', 'invalid_token')
+    flash('login.notify', t('invalid_token'))
     history.push('/join')
     return null
   }

@@ -3,21 +3,20 @@
  */
 import type { Node } from 'react'
 import { useState } from 'react'
-import { Avatar, Box, Flex, Skeleton, Text } from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
+import { Avatar, Box, Flex, IconButton, Menu, MenuButton, Skeleton, Text, Wrap } from '@chakra-ui/react'
 import Gallery from './components/gallery/Gallery'
-import PostMenu from './components/menu/PostMenu'
 import Indexer from './components/indexer/Indexer'
 import VoteMenu from './components/vote/VoteMenu'
-import ContextMenu from './components/context/ContextMenu'
 import TagInfo from './components/info/TagInfo'
 
 import TravelPlacesTheaterMask
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/travel-places-theater-mask-sjsQG5.svg'
 import ShoppingStoreSignage1
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/shopping-store-signage-1-WGy2xT.svg'
-import Characters from './components/info/sections/characters/Characters'
-import Categories from './components/info/sections/categories/Categories'
+import InterfaceSettingMenuVerticalAlternate
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-setting-menu-vertical-alternate-2aEu7b.svg'
+import Icon from '@//:modules/content/icon/Icon'
+import Element from '../Element/Element'
 
 type Props = {
   artist: {
@@ -32,28 +31,31 @@ type Props = {
     key: string,
   },
   characters: {
-    id: string,
-    name: string,
-    media: {
+    key: {
       id: string,
-      title: string
+      name: string,
+      media: {
+        id: string,
+        title: string
+      }
     }
   },
   categories: {
-    id: string,
-    title: string,
+    key: {
+      id: string,
+      title: string,
+      thumbnail: string,
+    }
   },
   voteCount: number,
   hasVoted: boolean,
   disableContext?: boolean,
 };
 
-export default function FullPost ({ artist, files, urls, characters, categories, voteCount, hasVoted, disableContext }: Props): Node {
+export default function FullPost ({ artist, files, urls, characters, categories, voteCount, hasVoted, disableContext, ...rest }: Props): Node {
   const [voted, setVoted] = useState(hasVoted)
 
   const [swiperIndex, setSwiperIndex] = useState(0)
-
-  const [t] = useTranslation('general')
 
   const setSwiper = (swiper) => {
     setSwiperIndex(swiper.activeIndex)
@@ -73,49 +75,90 @@ export default function FullPost ({ artist, files, urls, characters, categories,
         h='100%'
         align='center'
         display='absolute'
+        {...rest}
       >
         <Flex direction='row' align='center' w='100%'>
-          {artist
-            ? (
-              <>
-                <Avatar
-                  name={artist.username}
-                  src={artist.avatar}
-                  size='sm'
-                  mr={2}
-                />
-                <Text>{artist.username}</Text>
-              </>
-              )
-            : <Skeleton />}
+          <>
+            <Avatar
+              name={artist.username}
+              src={artist.avatar}
+              size='sm'
+              mr={2}
+            />
+            <Text>{artist.username}</Text>
+          </>
         </Flex>
         <Box w='100%' h='100%' mt={2} mb={2}>
           <Gallery setSwiper={setSwiper} files={files} urls={urls} />
         </Box>
-        <Flex direction='column' w='100%'>
-          <ContextMenu
-            p={1} h={14}
-            leftProps={<VoteMenu onClick={onVote} hasVoted={voted} voteCount={voteCount} disabled={disableContext} />}
-            centerProp={
+        <Flex direction='column' w='100%' p={1}>
+          <Flex direction='row' justify='space-between' align='center'>
+            <Flex h='100%' direction='row'>
+              <VoteMenu onClick={onVote} hasVoted={voted} voteCount={voteCount} disabled={disableContext} />
+            </Flex>
+            <Flex zIndex='hide' h='100%' left={0} right={0} margin='auto' w='100%' justify='center' position='absolute'>
               <Indexer
                 length={files.length}
                 currentIndex={swiperIndex}
               />
-            }
-            rightProps={
-              <PostMenu disabled={disableContext} />
-            }
-          />
-
-          <Flex mt={4} display={disableContext ? 'none' : 'flex'} direction='row' justify='space-evenly'>
+            </Flex>
+            <Flex h='100%' direction='row'>
+              <Menu>
+                <MenuButton
+                  as={IconButton}
+                  borderRadius='full'
+                  disabled={disableContext}
+                  pt={2}
+                  pb={2}
+                  icon={
+                    <Icon
+                      p={2}
+                      w='inherit'
+                      h='inherit'
+                      icon={InterfaceSettingMenuVerticalAlternate}
+                      fill='gray.500'
+                    />
+                  }
+                  variant='ghost'
+                />
+              </Menu>
+            </Flex>
+          </Flex>
+          <Flex
+            mt={4} display={disableContext ? 'none' : 'flex'} direction='row'
+            justify='space-evenly'
+          >
             <TagInfo
-              displayData={<Characters characters={characters} />} count={characters.length}
+              count={Object.keys(characters).length}
               icon={TravelPlacesTheaterMask}
-            />
+            >
+              <Wrap justify='center'>
+                {Object.keys(characters).map(item => (
+                  <Element
+                    key={characters[item].id}
+                    selected={false}
+                    title={characters[item].name}
+                    subheader={characters[item].media.title}
+                    thumbnail={characters[item].thumbnail}
+                  />
+                ))}
+              </Wrap>
+            </TagInfo>
             <TagInfo
-              displayData={<Categories categories={categories} />} count={categories.length}
+              count={Object.keys(categories).length}
               icon={ShoppingStoreSignage1}
-            />
+            >
+              <Wrap justify='center'>
+                {Object.keys(categories).map(item => (
+                  <Element
+                    key={categories[item].id}
+                    selected={false}
+                    title={categories[item].title}
+                    thumbnail={categories[item].thumbnail}
+                  />
+                ))}
+              </Wrap>
+            </TagInfo>
           </Flex>
         </Flex>
       </Flex>

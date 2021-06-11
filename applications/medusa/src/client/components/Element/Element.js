@@ -2,11 +2,12 @@
  * @flow
  */
 import type { Node } from 'react'
-import { Image, Flex, Text } from '@chakra-ui/react'
+import { Flex, Text, Skeleton } from '@chakra-ui/react'
+import SuspenseImage from '@//:modules/utilities/SuspenseImage'
 
 type Props = {
   selected: boolean,
-  onSelect: () => void,
+  onSelect?: () => void,
   thumbnail?: string,
   title?: string,
   subheader?: string,
@@ -33,16 +34,16 @@ export default function Element ({
       objectFit='cover'
       overflow='hidden'
       align='center'
-      cursor='pointer'
+      cursor={onSelect ? 'pointer' : 'auto'}
       userSelect='none'
     >
       <Flex h='100%' w='100%' position='relative'>
-        <Image
-          alt={title}
-          src={thumbnail}
+        <SuspenseImage
           w='100%'
           h='100%'
           objectFit='cover'
+          alt={title}
+          src={thumbnail} fallback={<Skeleton w='100%' h='100%' />}
         />
         <Flex
           bg='dimmers.500'
@@ -54,11 +55,11 @@ export default function Element ({
           textAlign='center'
           direction='column'
         >
-          <Text color='gray.00' fontSize='xl' m={2} overflowWrap='break-word'>
+          <Text color='gray.00' fontSize='xl' ml={1} mr={1} wordBreak='break-all'>
             {title}
           </Text>
           {subheader &&
-            <Text color='gray.100' fontSize='md' m={2} overflowWrap='break-word'>
+            <Text color='gray.100' fontSize='md' ml={1} mr={1} wordBreak='break-all'>
               {subheader}
             </Text>}
         </Flex>

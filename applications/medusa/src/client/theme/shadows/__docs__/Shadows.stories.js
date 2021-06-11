@@ -13,9 +13,9 @@ const Template = () => {
           key={shadow}
           h={40}
           w={40}
-          bg='gray.00'
+          bg='gray.800'
           align='center'
-          color='gray.900'
+          color='gray.100'
           boxShadow={shadow}
         >
           {shadow}

@@ -3,25 +3,28 @@
  */
 import type { Node } from 'react'
 import { useState } from 'react'
-import { createPortal } from 'react-dom'
-import RootElement from '@//:modules/utilities/RootElement'
-
 import {
+  useDisclosure,
   Box,
-  Flex,
-  Image,
-  Spinner
+  Flex, IconButton,
+  Spinner, Skeleton
 
 } from '@chakra-ui/react'
 
-import SwiperCore, { Pagination, Navigation } from 'swiper'
+import SwiperCore, { Navigation } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/swiper.min.css'
 import 'swiper/components/navigation/navigation.min.css'
 import InspectModal from '../modal/InspectModal'
-import ExpandButton from '../buttons/ExpandButton'
+import Icon from '@//:modules/content/icon/Icon'
 
-SwiperCore.use([Pagination, Navigation])
+import InterfaceArrowsVerticalExpand1
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-arrows-vertical-expand-1-7yVV8A.svg'
+import InterfaceArrowsShrinkVertical
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-arrows-shrink-vertical-PvJl2S.svg'
+import SuspenseImage from '@//:modules/utilities/SuspenseImage'
+
+SwiperCore.use([Navigation])
 
 type Props = {
   files: {
@@ -30,25 +33,26 @@ type Props = {
   urls: {
     key: string,
   },
-  setSwiper: any,
+  setSwiper: () => void,
 }
 
 export default function Gallery ({ files, urls, setSwiper }: Props): Node {
-  const [isOpen, setOpen] = useState(false)
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
+  const {
+    isOpen: previewExpand,
+    onToggle: setPreviewExpand
+  } = useDisclosure()
 
   const [currentSlide, setSlide] = useState(null)
-
-  const [previewExpand, setPreviewExpand] = useState(false)
 
   return (
     <>
       <Swiper
-        pagination={{
-          clickable: true
-        }}
         centeredSlides
-        navigation
+        navigation={!(files.length <= 1)}
         onSlideChange={(swiper) => setSwiper(swiper)}
+        allowTouchMove={!(files.length <= 1)}
 
       >
         {files.map((file) => {
@@ -63,66 +67,66 @@ export default function Gallery ({ files, urls, setSwiper }: Props): Node {
                 justify='center'
                 bg='gray.800'
               >
-                {content
-                  ? (
-                    <Flex
-                      h='100%'
-                      position='relative'
-                      align='center'
-                      justify='center'
-                      userSelect='none'
-                    >
-                      <Image
-                        alt='thumbnail'
-                        w='100%'
-                        h='100%'
-                        objectFit='cover'
-                        src={content}
-                      />
-                      <Box
-                        bg='transparent'
-                        w='40%'
-                        h='50%'
-                        position='absolute'
-                        onClick={() => {
-                          setSlide(file.id)
-                          setOpen(true)
-                        }}
-                      />
-                    </Flex>
-                    )
-                  : (
-                    <Spinner size='xl' color='red.500' />
-                    )}
+
+                <Flex
+                  h='100%'
+                  position='relative'
+                  align='center'
+                  justify='center'
+                  userSelect='none'
+                >
+                  <SuspenseImage
+                    alt='thumbnail'
+                    w='100%'
+                    h='100%'
+                    objectFit='cover'
+                    src={content} fallback={<Skeleton w='100%' h='100%' />}
+                  />
+                  <Box
+                    bg='transparent'
+                    w='40%'
+                    h='50%'
+                    position='absolute'
+                    onClick={() => {
+                      setSlide(file.id)
+                      onOpen()
+                    }}
+                  />
+                </Flex>
+
               </Flex>
             </SwiperSlide>
           )
         })}
       </Swiper>
-      {createPortal(
-        <InspectModal
-          isOpen={isOpen} onClose={() => {
-            setOpen(false)
-          }}
-          supplement={<ExpandButton onClick={() => { setPreviewExpand(!previewExpand) }} isExpanded={previewExpand} />}
-        >
+      <InspectModal
+        isOpen={isOpen} onClose={onClose}
+        supplement={<IconButton
+          variant='ghost'
+          w='40px'
+          h='40px'
+          m={2}
+          onClick={() => { previewExpand ? setPreviewExpand(false) : setPreviewExpand(true) }}
+          icon={
+            <Icon
+              icon={!previewExpand ? InterfaceArrowsVerticalExpand1 : InterfaceArrowsShrinkVertical}
+              fill='gray.100'
+              w={4}
+              h={4}
+            />
+          }
+                    />}
+      >
 
-          {currentSlide
-            ? (
-              <Image
-                alt='thumbnail'
-                h={!previewExpand ? '100%' : 'auto'}
-                w={!previewExpand ? 'auto' : '100%'}
-                objectFit={!previewExpand ? 'contain' : 'cover'}
-                src={urls[currentSlide]}
-              />
-              )
-            : (
-              <Spinner size='xl' color='red.500' />
-              )}
-        </InspectModal>,
-        RootElement
-      )}
+        <SuspenseImage
+          alt='thumbnail'
+          h={!previewExpand ? '100%' : 'auto'}
+          w={!previewExpand ? 'auto' : '100%'}
+          objectFit={!previewExpand ? 'contain' : 'cover'}
+          src={urls[currentSlide]} fallback={<Skeleton w='100%' h='100%' />}
+        />
+
+      </InspectModal>
     </>
   )
 }
