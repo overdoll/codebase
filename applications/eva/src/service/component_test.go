@@ -36,15 +36,7 @@ type TestUser struct {
 }
 
 type AuthQuery struct {
-	Authentication struct {
-		User *struct {
-			Username graphql.String
-		}
-		Cookie *struct {
-			Email    graphql.String
-			Redeemed graphql.Boolean
-		}
-	}
+	Authentication *types.Authentication
 }
 
 type Register struct {
@@ -60,14 +52,7 @@ type Authenticate struct {
 }
 
 type RedeemCookie struct {
-	RedeemCookie struct {
-		SameSession graphql.Boolean
-		Registered  graphql.Boolean
-		Redeemed    graphql.Boolean
-		Session     graphql.String
-		Email       graphql.String
-		Invalid     graphql.Boolean
-	} `graphql:"redeemCookie(cookie: $cookie)"`
+	RedeemCookie *types.Cookie `graphql:"redeemCookie(cookie: $cookie)"`
 }
 
 func mAuthenticate(t *testing.T, client *graphql.Client, email string) Authenticate {

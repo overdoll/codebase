@@ -33,38 +33,23 @@ const StingGrpcAddr = "localhost:6667"
 const StingGrpcClientAddr = "localhost:6667"
 
 type CreatePost struct {
-	Post struct {
-		Review graphql.Boolean
-		Id     graphql.String
-	} `graphql:"post(data: $data)"`
+	Post *types.PostResponse `graphql:"post(data: $data)"`
 }
 
 type SearchCharacters struct {
-	Characters []struct {
-		Id   graphql.String
-		Name graphql.String
-	} `graphql:"characters(data: $data)"`
+	Characters []*types.Character `graphql:"characters(data: $data)"`
 }
 
 type SearchCategories struct {
-	Categories []struct {
-		Id    graphql.String
-		Title graphql.String
-	} `graphql:"categories(data: $data)"`
+	Categories []*types.Category `graphql:"categories(data: $data)"`
 }
 
 type SearchMedia struct {
-	Media []struct {
-		Id    graphql.String
-		Title graphql.String
-	} `graphql:"media(data: $data)"`
+	Media []*types.Media `graphql:"media(data: $data)"`
 }
 
 type SearchArtist struct {
-	Artists []struct {
-		Id       graphql.String
-		Username graphql.String
-	} `graphql:"artists(data: $data)"`
+	Artists []*types.Artist `graphql:"artists(data: $data)"`
 }
 
 type WorkflowComponentTestSuite struct {
@@ -95,9 +80,9 @@ func mCreatePost(s *WorkflowComponentTestSuite, callback func(string) func()) {
 	})
 
 	s.NoError(err)
-	s.Equal(false, bool(createPost.Post.Review))
+	s.Equal(false, createPost.Post.Review)
 
-	postId := string(createPost.Post.Id)
+	postId := createPost.Post.ID
 
 	// execute workflow, since the graphql wont execute it and only put it into a queue
 	// we also get the ability to get workflow state, etc.. in this test
@@ -192,7 +177,7 @@ func TestSearchCharacters(t *testing.T) {
 
 	require.NoError(t, err)
 	require.Len(t, search.Characters, 1)
-	require.Equal(t, "Aarush Hills", string(search.Characters[0].Name))
+	require.Equal(t, "Aarush Hills", search.Characters[0].Name)
 }
 
 // TestSearchCategories - search some categories
@@ -211,7 +196,7 @@ func TestSearchCategories(t *testing.T) {
 
 	require.NoError(t, err)
 	require.Len(t, search.Categories, 1)
-	require.Equal(t, "Convict", string(search.Categories[0].Title))
+	require.Equal(t, "Convict", search.Categories[0].Title)
 }
 
 // TestSearchMedia - search some media
@@ -230,7 +215,7 @@ func TestSearchMedia(t *testing.T) {
 
 	require.NoError(t, err)
 	require.Len(t, search.Media, 1)
-	require.Equal(t, "Foreigner On Mars", string(search.Media[0].Title))
+	require.Equal(t, "Foreigner On Mars", search.Media[0].Title)
 }
 
 // TestSearchArtist - search some artist
@@ -249,7 +234,7 @@ func TestSearchArtist(t *testing.T) {
 
 	require.NoError(t, err)
 	require.Len(t, search.Artists, 1)
-	require.Equal(t, "artist_verified", string(search.Artists[0].Username))
+	require.Equal(t, "artist_verified", search.Artists[0].Username)
 }
 
 func getHttpClient(t *testing.T, pass *passport.Passport) (*graphql.Client, *http.Client) {
