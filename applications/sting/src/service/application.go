@@ -81,7 +81,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			PublishPost:       command.NewPublishPostHandler(postRepo, indexRepo, contentRepo, eva),
 			DiscardPost:       command.NewDiscardPostHandler(postRepo, indexRepo, contentRepo, eva),
 			UndoPost:          command.NewUndoPostHandler(postRepo, indexRepo, contentRepo, eva),
-			ReassignModerator: command.NewReassignModeratorHandler(postRepo, indexRepo),
+			ReassignModerator: command.NewReassignModeratorHandler(postRepo, indexRepo, parley),
 		},
 		Queries: app.Queries{
 			SearchMedias:     query.NewSearchMediasHandler(indexRepo),

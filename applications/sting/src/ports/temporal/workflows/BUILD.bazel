@@ -12,6 +12,7 @@ go_library(
     importpath = "overdoll/applications/sting/src/ports/temporal/workflows",
     visibility = ["//visibility:public"],
     deps = [
+        "//applications/sting/src/app/command",
         "@com_github_segmentio_ksuid//:ksuid",
         "@io_temporal_go_sdk//temporal",
         "@io_temporal_go_sdk//workflow",

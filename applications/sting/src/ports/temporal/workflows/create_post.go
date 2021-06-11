@@ -5,12 +5,13 @@ import (
 
 	"github.com/segmentio/ksuid"
 	"go.temporal.io/sdk/workflow"
+	"overdoll/applications/sting/src/app/command"
 )
 
 func CreatePost(ctx workflow.Context, id string) error {
 	ctx = workflow.WithActivityOptions(ctx, options)
 
-	if err := workflow.ExecuteActivity(ctx, "NewPostHandler.Handle", id).Get(ctx, nil); err != nil {
+	if err := workflow.ExecuteActivity(ctx, command.NewPostHandler.Handle, id).Get(ctx, nil); err != nil {
 		return err
 	}
 
@@ -28,7 +29,7 @@ func CreatePost(ctx workflow.Context, id string) error {
 
 		var assignedNewModerator bool
 
-		err := workflow.ExecuteActivity(ctx, "ReassignModeratorHandler.Handle", id, newId).Get(ctx, &assignedNewModerator)
+		err := workflow.ExecuteActivity(ctx, command.ReassignModeratorHandler.Handle, id, newId).Get(ctx, &assignedNewModerator)
 
 		if err != nil {
 			return err

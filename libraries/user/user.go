@@ -63,14 +63,14 @@ func (user *User) IsLocked() bool {
 }
 
 func (user *User) IsStaff() bool {
-	return user.HasRoles([]string{"staff"}) && !user.IsLocked()
+	return user.hasRoles([]string{"staff"})
 }
 
 func (user *User) IsModerator() bool {
-	return user.HasRoles([]string{"moderator"}) && !user.IsLocked()
+	return user.hasRoles([]string{"moderator"}) && !user.IsLocked()
 }
 
-func (user *User) HasRoles(roles []string) bool {
+func (user *User) hasRoles(roles []string) bool {
 	for _, role := range user.roles {
 		for _, requiredRole := range roles {
 			if role == requiredRole {
