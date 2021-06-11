@@ -221,7 +221,7 @@ func (p *PostPending) MakeDiscarded() error {
 
 	// State of the post needs to be "publishing" before "published"
 	if p.state != Review {
-		return ErrNotPublishing
+		return ErrNotReview
 	}
 
 	p.state = Discarded

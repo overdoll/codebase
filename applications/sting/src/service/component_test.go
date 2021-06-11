@@ -111,9 +111,8 @@ func mCreatePost(s *WorkflowComponentTestSuite, callback func(string) func()) {
 	s.NoError(s.env.GetWorkflowError())
 }
 
-// TestPost_create_new_post - create a new valid post
-func (s *WorkflowComponentTestSuite) Test_CreatePost_Success() {
-	s.T().Parallel()
+// Test_CreatePost_Publish - publish post
+func (s *WorkflowComponentTestSuite) Test_CreatePost_Publish() {
 
 	mCreatePost(s, func(postId string) func() {
 		return func() {
@@ -132,6 +131,48 @@ func (s *WorkflowComponentTestSuite) Test_CreatePost_Success() {
 
 			s.True(newEnv.IsWorkflowCompleted())
 			s.NoError(newEnv.GetWorkflowError())
+		}
+	})
+}
+
+// Test_CreatePost_Discard - discard post
+func (s *WorkflowComponentTestSuite) Test_CreatePost_Discard() {
+
+	mCreatePost(s, func(postId string) func() {
+		return func() {
+			// setup another environment since we cant execute multiple workflows
+			newEnv := s.NewTestWorkflowEnvironment()
+			ports.RegisterActivities(s.app, newEnv)
+
+			stingClient := getGrpcClient(s.T())
+
+			// "discard" pending post
+			_, e := stingClient.DiscardPendingPost(context.Background(), &sting.PendingPostRequest{Id: postId})
+			s.NoError(e)
+
+			// execute workflow manually since it wont be executed right here
+			newEnv.ExecuteWorkflow(workflows.DiscardPost, postId)
+
+			s.True(newEnv.IsWorkflowCompleted())
+			s.NoError(newEnv.GetWorkflowError())
+		}
+	})
+}
+
+// Test_CreatePost_Reject - reject post
+func (s *WorkflowComponentTestSuite) Test_CreatePost_Reject() {
+
+	mCreatePost(s, func(postId string) func() {
+		return func() {
+			// setup another environment since we cant execute multiple workflows
+			newEnv := s.NewTestWorkflowEnvironment()
+			ports.RegisterActivities(s.app, newEnv)
+
+			stingClient := getGrpcClient(s.T())
+
+			// "reject" pending post
+			_, e := stingClient.RejectPendingPost(context.Background(), &sting.PendingPostRequest{Id: postId})
+			s.NoError(e)
 		}
 	})
 }
@@ -156,6 +197,7 @@ func TestSearchCharacters(t *testing.T) {
 
 // TestSearchCategories - search some categories
 func TestSearchCategories(t *testing.T) {
+	t.Parallel()
 
 	client, _ := getHttpClient(t, nil)
 
@@ -174,6 +216,7 @@ func TestSearchCategories(t *testing.T) {
 
 // TestSearchMedia - search some media
 func TestSearchMedia(t *testing.T) {
+	t.Parallel()
 
 	client, _ := getHttpClient(t, nil)
 
@@ -192,6 +235,7 @@ func TestSearchMedia(t *testing.T) {
 
 // TestSearchArtist - search some artist
 func TestSearchArtist(t *testing.T) {
+	t.Parallel()
 
 	client, _ := getHttpClient(t, nil)
 
@@ -246,7 +290,7 @@ func startService() bool {
 
 	ok := tests.WaitForPort(StingHttpAddr)
 	if !ok {
-		log.Println("Timed out waiting for eva HTTP to come up")
+		log.Println("Timed out waiting for sting HTTP to come up")
 		return false
 	}
 
@@ -259,7 +303,7 @@ func startService() bool {
 	ok = tests.WaitForPort(StingGrpcAddr)
 
 	if !ok {
-		log.Println("Timed out waiting for eva GRPC to come up")
+		log.Println("Timed out waiting for sting GRPC to come up")
 	}
 
 	return true
@@ -270,6 +314,8 @@ func (s *WorkflowComponentTestSuite) AfterTest(suiteName, testName string) {
 }
 
 func TestUnitTestSuite(t *testing.T) {
+	t.Parallel()
+
 	suite.Run(t, new(WorkflowComponentTestSuite))
 }
 

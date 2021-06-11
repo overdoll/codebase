@@ -38,7 +38,7 @@ func CreatePost(ctx workflow.Context, id string) error {
 		if err != nil {
 			return err
 		}
-		
+
 		if assignedNewModerator {
 			id = newPostId
 			continue
