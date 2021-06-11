@@ -27,8 +27,12 @@ func (h GetPendingPostsHandler) Handle(ctx context.Context, userId string) ([]*p
 		return nil, ErrSearchFailed
 	}
 
+	if usr.IsLocked() {
+		return nil, ErrSearchFailed
+	}
+
 	// If user is staff, show all posts
-	if usr.HasRoles([]string{"staff"}) {
+	if usr.IsStaff() {
 		query = ""
 	}
 

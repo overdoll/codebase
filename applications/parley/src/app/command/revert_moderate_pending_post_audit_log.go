@@ -32,7 +32,6 @@ func (h RevertModeratePendingPostHandler) Handle(ctx context.Context, moderatorI
 		return ErrFailedRevertModeratePendingPost
 	}
 
-	// have to have moderator role
 	if !usr.IsModerator() {
 		return ErrFailedRevertModeratePendingPost
 	}

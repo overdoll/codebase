@@ -29,12 +29,12 @@ func (h PendingPostsAuditLogHandler) Handle(ctx context.Context, userId string, 
 
 	if err != nil {
 		zap.S().Errorf("failed to get user: %s", err)
-		return nil, ErrFailedGetRejectionReasons
+		return nil, ErrFailedGetPendingPostsAuditLog
 	}
 
 	// have to have moderator role
 	if !usr.IsModerator() {
-		return nil, ErrFailedGetRejectionReasons
+		return nil, ErrFailedGetPendingPostsAuditLog
 	}
 
 	moderatorQuery := userId
@@ -47,8 +47,8 @@ func (h PendingPostsAuditLogHandler) Handle(ctx context.Context, userId string, 
 	auditLogs, err := h.ir.GetPendingPostAuditLogByModerator(ctx, moderatorQuery)
 
 	if err != nil {
-		zap.S().Errorf("failed to get rejection reasons: %s", err)
-		return nil, ErrFailedGetRejectionReasons
+		zap.S().Errorf("failed to get audit log: %s", err)
+		return nil, ErrFailedGetPendingPostsAuditLog
 	}
 
 	return auditLogs, nil
