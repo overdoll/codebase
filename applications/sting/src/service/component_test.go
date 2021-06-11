@@ -108,7 +108,7 @@ func (s *WorkflowComponentTestSuite) Test_CreatePost_Success() {
 
 		// setup another environment since we cant execute multiple workflows
 		newEnv := s.NewTestWorkflowEnvironment()
-		ports.RegisterActivities(s.app, s.env)
+		ports.RegisterActivities(s.app, newEnv)
 
 		stingClient := getGrpcClient(s.T())
 
