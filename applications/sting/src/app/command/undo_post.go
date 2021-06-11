@@ -44,7 +44,7 @@ func (h UndoPostHandler) Handle(ctx context.Context, id string) error {
 
 	// update pending post to back in review
 	pendingPost, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PostPending) error {
-		return pending.MakePublicOrReview()
+		return pending.MakeProcessing()
 	})
 
 	if err != nil {

@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS posts_pending
     media_requests       list<text>,
     categories_requests  list<text>,
     posted_at            timestamp,
-    primary key ((id), contributor_user_id)
-) WITH CLUSTERING ORDER BY (contributor_user_id ASC);
+    primary key (id, moderator_user_id)
+);
 
 CREATE INDEX IF NOT EXISTS posts_pending_state on posts_pending (state);

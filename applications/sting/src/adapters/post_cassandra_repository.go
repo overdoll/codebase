@@ -315,17 +315,19 @@ func (r PostsCassandraRepository) UpdatePendingPost(ctx context.Context, id stri
 	// Update our post to reflect the new state - in publishing
 	updatePost := qb.Update("posts_pending").
 		Set(
-			"moderator_user_id",
 			"state",
-			"characters",
-			"categories",
-			"media_requests",
-			"character_requests",
-			"categories_requests",
+			"moderator_user_id",
 			"artist_user_id",
 			"artist_user_username",
+			"content",
+			"categories",
+			"characters",
+			"characters_requests",
+			"categories_requests",
+			"media_requests",
+			"posted_at",
 		).
-		Where(qb.Eq("id")).
+		Where(qb.Eq("id"), qb.Eq("moderator_user_id")).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalPendingPostToDatabase(currentPost))

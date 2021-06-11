@@ -17,6 +17,7 @@ const (
 	Published  PostPendingState = "published"
 	Discarded  PostPendingState = "discarded"
 	Rejected   PostPendingState = "rejected"
+	Processing PostPendingState = "processing"
 )
 
 var (
@@ -246,13 +247,9 @@ func (p *PostPending) MakePublishing() {
 	p.state = Publishing
 }
 
-func (p *PostPending) MakePublicOrReview() error {
+func (p *PostPending) MakeProcessing() error {
 
-	//if !p.contributor.IsVerified() {
-	//	p.state = Review
-	//}
-
-	p.state = Review
+	p.state = Processing
 
 	return nil
 }
@@ -279,6 +276,12 @@ func (p *PostPending) CategoryRequests() []CategoryRequest {
 
 func (p *PostPending) MediaRequests() []MediaRequest {
 	return p.mediaRequests
+}
+
+func (p *PostPending) MakeReview() error {
+	p.state = Review
+
+	return nil
 }
 
 // When requesting a new character, you must select a media or request a new media as well

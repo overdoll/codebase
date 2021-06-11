@@ -84,7 +84,7 @@ func (h CreatePendingPostHandler) Handle(ctx context.Context, contributorId, art
 	// Request new resources
 	pendingPost.RequestResources(characterRequests, make([]string, 0), mediaRequests)
 
-	_ = pendingPost.MakePublicOrReview()
+	_ = pendingPost.MakeProcessing()
 
 	// create a pending post in the database with all of the data
 	if err := h.pr.CreatePendingPost(ctx, pendingPost); err != nil {
