@@ -46,7 +46,7 @@ func (h PublishPostHandler) Handle(ctx context.Context, id string) error {
 		// Update contributor, since our database doesn't contain the reference
 		pending.UpdateContributor(usr)
 
-		// This will make sure the state of the post is always "publishing" before publishing - we may get an outdated record
+		// This will make sure the state of the post is always "review" before publishing - we may get an outdated record
 		// from the review stage so it will retry at some point
 		if err := pending.MakePublish(); err != nil {
 			return err

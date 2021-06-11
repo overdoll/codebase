@@ -109,7 +109,7 @@ func qAuth(t *testing.T, client *graphql.Client) AuthQuery {
 func TestUserRegistration_complete(t *testing.T) {
 	t.Parallel()
 
-	client, httpUser, _ := getClient(t, nil)
+	client, httpUser, _ := getHttpClient(t, nil)
 
 	fake := TestUser{}
 
@@ -165,7 +165,7 @@ func TestUserRegistration_complete(t *testing.T) {
 func TestRedeemCookie_invalid(t *testing.T) {
 	t.Parallel()
 
-	client, _, _ := getClient(t, nil)
+	client, _, _ := getHttpClient(t, nil)
 
 	redeemCookie := qRedeemCookie(t, client, "some-random-cookie")
 
@@ -178,7 +178,7 @@ func TestRedeemCookie_invalid(t *testing.T) {
 func TestUserLogin_existing(t *testing.T) {
 	t.Parallel()
 
-	client, httpUser, pass := getClient(t, passport.FreshPassport())
+	client, httpUser, pass := getHttpClient(t, passport.FreshPassport())
 
 	authenticate := mAuthenticate(t, client, "poisonminion_test@overdoll.com")
 
@@ -205,7 +205,7 @@ func TestUserLogin_existing(t *testing.T) {
 func TestUserLogin_from_another_session(t *testing.T) {
 	t.Parallel()
 
-	client, httpUser, _ := getClient(t, passport.FreshPassport())
+	client, httpUser, _ := getHttpClient(t, passport.FreshPassport())
 
 	authenticate := mAuthenticate(t, client, "poisonminion_test@overdoll.com")
 
@@ -213,7 +213,7 @@ func TestUserLogin_from_another_session(t *testing.T) {
 
 	assert.Equal(t, authenticate.Authenticate, true)
 
-	clientFromAnotherSession, _, _ := getClient(t, nil)
+	clientFromAnotherSession, _, _ := getHttpClient(t, nil)
 
 	redeemCookie := qRedeemCookie(t, clientFromAnotherSession, otpCookie.Value)
 
@@ -231,7 +231,7 @@ func TestUserLogin_from_another_session(t *testing.T) {
 func TestGetUserAuthentication_empty(t *testing.T) {
 	t.Parallel()
 
-	client, _, _ := getClient(t, nil)
+	client, _, _ := getHttpClient(t, nil)
 
 	query := qAuth(t, client)
 
@@ -248,7 +248,7 @@ func TestGetUserAuthentication_user(t *testing.T) {
 	t.Parallel()
 
 	// userID is from one of our seeders (which will exist during testing)
-	client, _, _ := getClient(t, passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	client, _, _ := getHttpClient(t, passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 
 	query := qAuth(t, client)
 
@@ -260,7 +260,7 @@ func TestGetUserAuthentication_user(t *testing.T) {
 func TestLogout_user(t *testing.T) {
 	t.Parallel()
 
-	client, _, _ := getClient(t, passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	client, _, _ := getHttpClient(t, passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 
 	var mutation Logout
 
@@ -275,9 +275,9 @@ func TestLogout_user(t *testing.T) {
 func TestUser_get(t *testing.T) {
 	t.Parallel()
 
-	evaClient, _ := clients.NewEvaClient(context.Background(), EvaGrpcClientAddr)
+	client := getGrpcClient(t)
 
-	res, err := evaClient.GetUser(context.Background(), &eva.GetUserRequest{Id: "1q7MJ3JkhcdcJJNqZezdfQt5pZ6"})
+	res, err := client.GetUser(context.Background(), &eva.GetUserRequest{Id: "1q7MJ3JkhcdcJJNqZezdfQt5pZ6"})
 
 	require.NoError(t, err)
 
@@ -302,11 +302,18 @@ func getOTPCookieFromJar(t *testing.T, jar http.CookieJar) *http.Cookie {
 	return otpCookie
 }
 
-func getClient(t *testing.T, pass *passport.Passport) (*graphql.Client, *http.Client, *clients.ClientPassport) {
+func getHttpClient(t *testing.T, pass *passport.Passport) (*graphql.Client, *http.Client, *clients.ClientPassport) {
 
 	client, transport := clients.NewHTTPClientWithHeaders(pass)
 
 	return graphql.NewClient(EvaHttpClientAddr, client), client, transport
+}
+
+func getGrpcClient(t *testing.T) eva.EvaClient {
+
+	evaClient, _ := clients.NewEvaClient(context.Background(), EvaGrpcClientAddr)
+
+	return evaClient
 }
 
 func startService() bool {

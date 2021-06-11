@@ -22,6 +22,7 @@ const (
 
 var (
 	ErrNotPublishing    = errors.New("post must be publishing")
+	ErrNotReview        = errors.New("post must be in review")
 	ErrNotComplete      = errors.New("post is incomplete")
 	ErrInvalidId        = errors.New("passed id is not a valid ID")
 	ErrAlreadyModerated = errors.New("already moderated")
@@ -219,7 +220,7 @@ func (p *PostPending) MakePublish() error {
 func (p *PostPending) MakeDiscarded() error {
 
 	// State of the post needs to be "publishing" before "published"
-	if p.state != Publishing {
+	if p.state != Review {
 		return ErrNotPublishing
 	}
 

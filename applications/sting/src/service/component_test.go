@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/assert"
@@ -13,6 +14,9 @@ import (
 	"github.com/stretchr/testify/suite"
 	"go.temporal.io/sdk/activity"
 	"go.temporal.io/sdk/testsuite"
+	"google.golang.org/grpc"
+	sting "overdoll/applications/sting/proto"
+	"overdoll/applications/sting/src/app"
 	"overdoll/applications/sting/src/ports"
 	"overdoll/applications/sting/src/ports/graphql/types"
 	"overdoll/applications/sting/src/ports/temporal/workflows"
@@ -27,6 +31,9 @@ import (
 
 const StingHttpAddr = ":6666"
 const StingHttpClientAddr = "http://:6666/graphql"
+
+const StingGrpcAddr = "localhost:6667"
+const StingGrpcClientAddr = "localhost:6667"
 
 type CreatePost struct {
 	Post struct {
@@ -66,7 +73,7 @@ type SearchArtist struct {
 type WorkflowComponentTestSuite struct {
 	suite.Suite
 	testsuite.WorkflowTestSuite
-
+	app app.Application
 	env *testsuite.TestWorkflowEnvironment
 }
 
@@ -75,7 +82,7 @@ func (s *WorkflowComponentTestSuite) Test_CreatePost_Success() {
 	s.T().Parallel()
 
 	// we have to create a post as an authenticated user, otherwise it won't let us
-	client, _ := getClient(s.T(), passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	client, _ := getHttpClient(s.T(), passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 
 	var createPost CreatePost
 
@@ -96,9 +103,33 @@ func (s *WorkflowComponentTestSuite) Test_CreatePost_Success() {
 	require.NoError(s.T(), err)
 	assert.Equal(s.T(), false, bool(createPost.Post.Review))
 
+	postId := string(createPost.Post.Id)
+
+	// when the timer is called (waited 24 hours to select a new moderator), we will update the post before the activity
+	// function executes so it doesn't keep looping forever
+	callback := func() {
+
+		// setup another environment since we cant execute multiple workflows
+		newEnv := s.NewTestWorkflowEnvironment()
+		setupWorkflowEnv(s.app, newEnv)
+
+		stingClient := getGrpcClient(s.T())
+
+		// "publish" pending post
+		_, err := stingClient.PublishPendingPost(context.Background(), &sting.PendingPostRequest{Id: postId})
+		s.NoError(err)
+
+		// execute workflow manually since it wont be executed right here
+		newEnv.ExecuteWorkflow(workflows.PublishPost, postId)
+
+		s.True(newEnv.IsWorkflowCompleted())
+		s.NoError(newEnv.GetWorkflowError())
+	}
+
 	// execute workflow, since the graphql wont execute it and only put it into a queue
 	// we also get the ability to get workflow state, etc.. in this test
-	s.env.ExecuteWorkflow(workflows.CreatePost, string(createPost.Post.Id))
+	s.env.RegisterDelayedCallback(callback, time.Hour*24)
+	s.env.ExecuteWorkflow(workflows.CreatePost, postId)
 
 	s.True(s.env.IsWorkflowCompleted())
 	s.NoError(s.env.GetWorkflowError())
@@ -107,7 +138,7 @@ func (s *WorkflowComponentTestSuite) Test_CreatePost_Success() {
 // TestSearchCharacters - search some characters
 func TestSearchCharacters(t *testing.T) {
 
-	client, _ := getClient(t, nil)
+	client, _ := getHttpClient(t, nil)
 
 	var search SearchCharacters
 
@@ -125,7 +156,7 @@ func TestSearchCharacters(t *testing.T) {
 // TestSearchCategories - search some categories
 func TestSearchCategories(t *testing.T) {
 
-	client, _ := getClient(t, nil)
+	client, _ := getHttpClient(t, nil)
 
 	var search SearchCategories
 
@@ -143,7 +174,7 @@ func TestSearchCategories(t *testing.T) {
 // TestSearchMedia - search some media
 func TestSearchMedia(t *testing.T) {
 
-	client, _ := getClient(t, nil)
+	client, _ := getHttpClient(t, nil)
 
 	var search SearchMedia
 
@@ -161,7 +192,7 @@ func TestSearchMedia(t *testing.T) {
 // TestSearchArtist - search some artist
 func TestSearchArtist(t *testing.T) {
 
-	client, _ := getClient(t, nil)
+	client, _ := getHttpClient(t, nil)
 
 	var search SearchArtist
 
@@ -176,11 +207,29 @@ func TestSearchArtist(t *testing.T) {
 	require.Equal(t, "artist_verified", string(search.Artists[0].Username))
 }
 
-func getClient(t *testing.T, pass *passport.Passport) (*graphql.Client, *http.Client) {
+func getHttpClient(t *testing.T, pass *passport.Passport) (*graphql.Client, *http.Client) {
 
 	client, _ := clients.NewHTTPClientWithHeaders(pass)
 
 	return graphql.NewClient(StingHttpClientAddr, client), client
+}
+
+func getGrpcClient(t *testing.T) sting.StingClient {
+
+	stingClient, _ := clients.NewStingClient(context.Background(), StingGrpcClientAddr)
+
+	return stingClient
+}
+
+func setupWorkflowEnv(apps app.Application, env *testsuite.TestWorkflowEnvironment) {
+	env.RegisterActivityWithOptions(apps.Commands.CreatePost.Handle, activity.RegisterOptions{Name: helpers.GetStructName(apps.Commands.CreatePost)})
+	env.RegisterActivityWithOptions(apps.Commands.DiscardPost.Handle, activity.RegisterOptions{Name: helpers.GetStructName(apps.Commands.DiscardPost)})
+	env.RegisterActivityWithOptions(apps.Commands.UndoPost.Handle, activity.RegisterOptions{Name: helpers.GetStructName(apps.Commands.UndoPost)})
+	env.RegisterActivityWithOptions(apps.Commands.NewPendingPost.Handle, activity.RegisterOptions{Name: helpers.GetStructName(apps.Commands.NewPendingPost)})
+	env.RegisterActivityWithOptions(apps.Commands.PostCustomResources.Handle, activity.RegisterOptions{Name: helpers.GetStructName(apps.Commands.PostCustomResources)})
+	env.RegisterActivityWithOptions(apps.Commands.ReassignModerator.Handle, activity.RegisterOptions{Name: helpers.GetStructName(apps.Commands.ReassignModerator)})
+	env.RegisterActivityWithOptions(apps.Commands.NewPendingPost.Handle, activity.RegisterOptions{Name: helpers.GetStructName(apps.Commands.NewPendingPost)})
+	env.RegisterActivityWithOptions(apps.Commands.PublishPost.Handle, activity.RegisterOptions{Name: helpers.GetStructName(apps.Commands.PublishPost)})
 }
 
 func (s *WorkflowComponentTestSuite) SetupTest() {
@@ -188,32 +237,39 @@ func (s *WorkflowComponentTestSuite) SetupTest() {
 
 	s.env = s.NewTestWorkflowEnvironment()
 
-	app, _ := service.NewApplication(context.Background())
+	newApp, _ := service.NewApplication(context.Background())
+	setupWorkflowEnv(newApp, s.env)
 
-	s.env.RegisterActivityWithOptions(app.Commands.CreatePost.Handle, activity.RegisterOptions{Name: helpers.GetStructName(app.Commands.CreatePost)})
-	s.env.RegisterActivityWithOptions(app.Commands.PublishPost.Handle, activity.RegisterOptions{Name: helpers.GetStructName(app.Commands.PublishPost)})
-	s.env.RegisterActivityWithOptions(app.Commands.DiscardPost.Handle, activity.RegisterOptions{Name: helpers.GetStructName(app.Commands.DiscardPost)})
-	s.env.RegisterActivityWithOptions(app.Commands.UndoPost.Handle, activity.RegisterOptions{Name: helpers.GetStructName(app.Commands.UndoPost)})
-	s.env.RegisterActivityWithOptions(app.Commands.NewPendingPost.Handle, activity.RegisterOptions{Name: helpers.GetStructName(app.Commands.NewPendingPost)})
-	s.env.RegisterActivityWithOptions(app.Commands.PostCustomResources.Handle, activity.RegisterOptions{Name: helpers.GetStructName(app.Commands.PostCustomResources)})
-	s.env.RegisterActivityWithOptions(app.Commands.ReassignModerator.Handle, activity.RegisterOptions{Name: helpers.GetStructName(app.Commands.ReassignModerator)})
+	s.app = newApp
 }
 
 func startService() bool {
 	config.Read("applications/sting/config.toml")
 
-	app, _ := service.NewApplication(context.Background())
+	application, _ := service.NewApplication(context.Background())
 
 	client := clients.NewTemporalClient(context.Background())
 
-	srv := ports.NewGraphQLServer(&app, client)
+	srv := ports.NewGraphQLServer(&application, client)
 
 	go bootstrap.InitializeHttpServer(StingHttpAddr, srv, func() {})
 
 	ok := tests.WaitForPort(StingHttpAddr)
+	if !ok {
+		log.Println("Timed out waiting for eva HTTP to come up")
+		return false
+	}
+
+	s := ports.NewGrpcServer(&application, client)
+
+	go bootstrap.InitializeGRPCServer(StingGrpcAddr, func(server *grpc.Server) {
+		sting.RegisterStingServer(server, s)
+	})
+
+	ok = tests.WaitForPort(StingGrpcAddr)
 
 	if !ok {
-		log.Println("Timed out waiting for sting HTTP to come up")
+		log.Println("Timed out waiting for eva GRPC to come up")
 	}
 
 	return true

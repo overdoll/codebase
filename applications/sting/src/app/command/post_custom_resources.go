@@ -19,6 +19,9 @@ func (h PostCustomResourcesHandler) Handle(ctx context.Context, id string, ids [
 
 	_, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PostPending) error {
 
+		// put into "publishing"
+		pending.MakePublishing()
+
 		// Consume custom categories, characters, medias
 		existingMedias, err := h.pr.GetMediasById(ctx, pending.GetExistingMediaIds())
 

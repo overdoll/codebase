@@ -38,11 +38,14 @@ func CreatePost(ctx workflow.Context, id string) error {
 		if err != nil {
 			return err
 		}
+		
+		if assignedNewModerator {
+			id = newPostId
+			continue
+		}
 
 		// if a moderator was not assigned this loop (post was moderated successfully), then break out of loop
-		if !assignedNewModerator {
-			break
-		}
+		break
 	}
 
 	return nil
