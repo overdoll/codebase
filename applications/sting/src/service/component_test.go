@@ -74,10 +74,7 @@ type WorkflowComponentTestSuite struct {
 	env *testsuite.TestWorkflowEnvironment
 }
 
-// TestPost_create_new_post - create a new valid post
-func (s *WorkflowComponentTestSuite) Test_CreatePost_Success() {
-	s.T().Parallel()
-
+func mCreatePost(s *WorkflowComponentTestSuite, callback func(string) func()) {
 	// we have to create a post as an authenticated user, otherwise it won't let us
 	client, _ := getHttpClient(s.T(), passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 
@@ -102,34 +99,41 @@ func (s *WorkflowComponentTestSuite) Test_CreatePost_Success() {
 
 	postId := string(createPost.Post.Id)
 
-	// when the timer is called (waited 24 hours to select a new moderator), we will update the post before the activity
-	// function executes so it doesn't keep looping forever
-	callback := func() {
-
-		// setup another environment since we cant execute multiple workflows
-		newEnv := s.NewTestWorkflowEnvironment()
-		ports.RegisterActivities(s.app, newEnv)
-
-		stingClient := getGrpcClient(s.T())
-
-		// "publish" pending post
-		_, e := stingClient.PublishPendingPost(context.Background(), &sting.PendingPostRequest{Id: postId})
-		s.NoError(e)
-
-		// execute workflow manually since it wont be executed right here
-		newEnv.ExecuteWorkflow(workflows.PublishPost, postId)
-
-		s.True(newEnv.IsWorkflowCompleted())
-		s.NoError(newEnv.GetWorkflowError())
-	}
-
 	// execute workflow, since the graphql wont execute it and only put it into a queue
 	// we also get the ability to get workflow state, etc.. in this test
-	s.env.RegisterDelayedCallback(callback, time.Hour*24)
+
+	// when the timer is called (waited 24 hours to select a new moderator), we will update the post before the activity
+	// function executes so it doesn't keep looping forever
+	s.env.RegisterDelayedCallback(callback(postId), time.Hour*24)
 	s.env.ExecuteWorkflow(workflows.CreatePost, postId)
 
 	s.True(s.env.IsWorkflowCompleted())
 	s.NoError(s.env.GetWorkflowError())
+}
+
+// TestPost_create_new_post - create a new valid post
+func (s *WorkflowComponentTestSuite) Test_CreatePost_Success() {
+	s.T().Parallel()
+
+	mCreatePost(s, func(postId string) func() {
+		return func() {
+			// setup another environment since we cant execute multiple workflows
+			newEnv := s.NewTestWorkflowEnvironment()
+			ports.RegisterActivities(s.app, newEnv)
+
+			stingClient := getGrpcClient(s.T())
+
+			// "publish" pending post
+			_, e := stingClient.PublishPendingPost(context.Background(), &sting.PendingPostRequest{Id: postId})
+			s.NoError(e)
+
+			// execute workflow manually since it wont be executed right here
+			newEnv.ExecuteWorkflow(workflows.PublishPost, postId)
+
+			s.True(newEnv.IsWorkflowCompleted())
+			s.NoError(newEnv.GetWorkflowError())
+		}
+	})
 }
 
 // TestSearchCharacters - search some characters
