@@ -3,6 +3,7 @@ package ports
 import (
 	"context"
 
+	"github.com/spf13/viper"
 	"go.temporal.io/sdk/activity"
 	"go.temporal.io/sdk/worker"
 	"overdoll/applications/sting/src/app"
@@ -21,7 +22,7 @@ func NewWorker(app *app.Application) worker.Worker {
 
 	defer client.Close()
 
-	w := worker.New(client, "sting", worker.Options{})
+	w := worker.New(client, viper.GetString("temporal.queue"), worker.Options{})
 
 	w.RegisterWorkflow(workflows.CreatePost)
 	w.RegisterWorkflow(workflows.DiscardPost)
