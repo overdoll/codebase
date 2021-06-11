@@ -32,7 +32,7 @@ func (h ReassignModeratorHandler) Handle(ctx context.Context, oldId, newId strin
 
 	// if this returns an error, then we dont proceed with assigning a new moderator
 	if err := oldPost.UpdateModerator(newId, newModId); err != nil {
-		return true, nil
+		return false, nil
 	}
 
 	// create a new pending post

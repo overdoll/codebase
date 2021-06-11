@@ -9,10 +9,8 @@ import (
 	"time"
 
 	"github.com/shurcooL/graphql"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
-	"go.temporal.io/sdk/activity"
 	"go.temporal.io/sdk/testsuite"
 	"google.golang.org/grpc"
 	sting "overdoll/applications/sting/proto"
@@ -24,7 +22,6 @@ import (
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
 	"overdoll/libraries/config"
-	"overdoll/libraries/helpers"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/tests"
 )
@@ -100,8 +97,8 @@ func (s *WorkflowComponentTestSuite) Test_CreatePost_Success() {
 		},
 	})
 
-	require.NoError(s.T(), err)
-	assert.Equal(s.T(), false, bool(createPost.Post.Review))
+	s.NoError(err)
+	s.Equal(false, bool(createPost.Post.Review))
 
 	postId := string(createPost.Post.Id)
 
@@ -111,13 +108,13 @@ func (s *WorkflowComponentTestSuite) Test_CreatePost_Success() {
 
 		// setup another environment since we cant execute multiple workflows
 		newEnv := s.NewTestWorkflowEnvironment()
-		setupWorkflowEnv(s.app, newEnv)
+		ports.RegisterActivities(s.app, s.env)
 
 		stingClient := getGrpcClient(s.T())
 
 		// "publish" pending post
-		_, err := stingClient.PublishPendingPost(context.Background(), &sting.PendingPostRequest{Id: postId})
-		s.NoError(err)
+		_, e := stingClient.PublishPendingPost(context.Background(), &sting.PendingPostRequest{Id: postId})
+		s.NoError(e)
 
 		// execute workflow manually since it wont be executed right here
 		newEnv.ExecuteWorkflow(workflows.PublishPost, postId)
@@ -221,24 +218,13 @@ func getGrpcClient(t *testing.T) sting.StingClient {
 	return stingClient
 }
 
-func setupWorkflowEnv(apps app.Application, env *testsuite.TestWorkflowEnvironment) {
-	env.RegisterActivityWithOptions(apps.Commands.CreatePost.Handle, activity.RegisterOptions{Name: helpers.GetStructName(apps.Commands.CreatePost)})
-	env.RegisterActivityWithOptions(apps.Commands.DiscardPost.Handle, activity.RegisterOptions{Name: helpers.GetStructName(apps.Commands.DiscardPost)})
-	env.RegisterActivityWithOptions(apps.Commands.UndoPost.Handle, activity.RegisterOptions{Name: helpers.GetStructName(apps.Commands.UndoPost)})
-	env.RegisterActivityWithOptions(apps.Commands.NewPendingPost.Handle, activity.RegisterOptions{Name: helpers.GetStructName(apps.Commands.NewPendingPost)})
-	env.RegisterActivityWithOptions(apps.Commands.PostCustomResources.Handle, activity.RegisterOptions{Name: helpers.GetStructName(apps.Commands.PostCustomResources)})
-	env.RegisterActivityWithOptions(apps.Commands.ReassignModerator.Handle, activity.RegisterOptions{Name: helpers.GetStructName(apps.Commands.ReassignModerator)})
-	env.RegisterActivityWithOptions(apps.Commands.NewPendingPost.Handle, activity.RegisterOptions{Name: helpers.GetStructName(apps.Commands.NewPendingPost)})
-	env.RegisterActivityWithOptions(apps.Commands.PublishPost.Handle, activity.RegisterOptions{Name: helpers.GetStructName(apps.Commands.PublishPost)})
-}
-
 func (s *WorkflowComponentTestSuite) SetupTest() {
 	config.Read("applications/sting/config.toml")
 
 	s.env = s.NewTestWorkflowEnvironment()
 
 	newApp, _ := service.NewApplication(context.Background())
-	setupWorkflowEnv(newApp, s.env)
+	ports.RegisterActivities(newApp, s.env)
 
 	s.app = newApp
 }
