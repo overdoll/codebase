@@ -316,7 +316,7 @@ func (r PostsCassandraRepository) UpdatePendingPost(ctx context.Context, id stri
 	updatePost := qb.Update("posts_pending").
 		Set(
 			"state",
-			"moderator_user_id",
+			"contributor_user_id",
 			"artist_user_id",
 			"artist_user_username",
 			"content",

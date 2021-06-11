@@ -67,6 +67,7 @@ type PostInput struct {
 }
 
 type PostResponse struct {
+	ID         string      `json:"id"`
 	Review     bool        `json:"review"`
 	Validation *Validation `json:"validation"`
 }

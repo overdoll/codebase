@@ -92,6 +92,7 @@ func (r *MutationResolver) Post(ctx context.Context, data *types.PostInput) (*ty
 
 	return &types.PostResponse{
 		Review:     false,
+		ID:         post.ID(),
 		Validation: nil,
 	}, err
 }

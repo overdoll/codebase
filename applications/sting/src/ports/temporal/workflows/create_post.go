@@ -18,9 +18,7 @@ func CreatePost(ctx workflow.Context, id string) error {
 
 	// reassign moderator every day
 	for {
-		if err := workflow.Await(ctx, func() bool {
-			return workflow.Now(ctx).After(time.Now().AddDate(0, 0, 1))
-		}); err != nil {
+		if err := workflow.Sleep(ctx, time.Hour*24); err != nil {
 			return err
 		}
 
@@ -28,9 +26,14 @@ func CreatePost(ctx workflow.Context, id string) error {
 			return ksuid.New().String()
 		})
 
+		var newPostId string
 		var assignedNewModerator bool
 
-		err := workflow.ExecuteActivity(ctx, helpers.GetStructName(command.ReassignModeratorHandler{}), id, newId).Get(ctx, &assignedNewModerator)
+		if err := newId.Get(&newPostId); err != nil {
+			return err
+		}
+
+		err := workflow.ExecuteActivity(ctx, helpers.GetStructName(command.ReassignModeratorHandler{}), id, newPostId).Get(ctx, &assignedNewModerator)
 
 		if err != nil {
 			return err

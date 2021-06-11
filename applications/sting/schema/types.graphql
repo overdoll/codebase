@@ -17,6 +17,7 @@ type CharacterRequestType {
 }
 
 type PostResponse {
+  id: String!
   review: Boolean!
   validation: Validation
 }

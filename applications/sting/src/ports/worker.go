@@ -8,6 +8,7 @@ import (
 	"overdoll/applications/sting/src/app"
 	"overdoll/applications/sting/src/ports/temporal/workflows"
 	"overdoll/libraries/clients"
+	"overdoll/libraries/helpers"
 )
 
 type Worker struct {
@@ -27,13 +28,13 @@ func NewWorker(app *app.Application) worker.Worker {
 	w.RegisterWorkflow(workflows.UndoPost)
 	w.RegisterWorkflow(workflows.PublishPost)
 
-	w.RegisterActivityWithOptions(&app.Commands.CreatePost, activity.RegisterOptions{Name: "CreatePostHandler"})
-	w.RegisterActivityWithOptions(&app.Commands.PublishPost, activity.RegisterOptions{Name: "PublishPostHandler"})
-	w.RegisterActivityWithOptions(&app.Commands.DiscardPost, activity.RegisterOptions{Name: "DiscardPostHandler"})
-	w.RegisterActivityWithOptions(&app.Commands.UndoPost, activity.RegisterOptions{Name: "UndoPostHandler"})
-	w.RegisterActivityWithOptions(&app.Commands.NewPendingPost, activity.RegisterOptions{Name: "NewPostHandler"})
-	w.RegisterActivityWithOptions(&app.Commands.PostCustomResources, activity.RegisterOptions{Name: "PostCustomResourcesHandler"})
-	w.RegisterActivityWithOptions(&app.Commands.ReassignModerator, activity.RegisterOptions{Name: "ReassignModeratorHandler"})
+	w.RegisterActivityWithOptions(app.Commands.CreatePost.Handle, activity.RegisterOptions{Name: helpers.GetStructName(app.Commands.CreatePost)})
+	w.RegisterActivityWithOptions(app.Commands.PublishPost.Handle, activity.RegisterOptions{Name: helpers.GetStructName(app.Commands.PublishPost)})
+	w.RegisterActivityWithOptions(app.Commands.DiscardPost.Handle, activity.RegisterOptions{Name: helpers.GetStructName(app.Commands.DiscardPost)})
+	w.RegisterActivityWithOptions(app.Commands.UndoPost.Handle, activity.RegisterOptions{Name: helpers.GetStructName(app.Commands.UndoPost)})
+	w.RegisterActivityWithOptions(app.Commands.NewPendingPost.Handle, activity.RegisterOptions{Name: helpers.GetStructName(app.Commands.NewPendingPost)})
+	w.RegisterActivityWithOptions(app.Commands.PostCustomResources.Handle, activity.RegisterOptions{Name: helpers.GetStructName(app.Commands.PostCustomResources)})
+	w.RegisterActivityWithOptions(app.Commands.ReassignModerator.Handle, activity.RegisterOptions{Name: helpers.GetStructName(app.Commands.ReassignModerator)})
 
 	return w
 }

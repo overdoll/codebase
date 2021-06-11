@@ -10,12 +10,17 @@ import (
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"github.com/stretchr/testify/suite"
+	"go.temporal.io/sdk/activity"
+	"go.temporal.io/sdk/testsuite"
 	"overdoll/applications/sting/src/ports"
 	"overdoll/applications/sting/src/ports/graphql/types"
+	"overdoll/applications/sting/src/ports/temporal/workflows"
 	"overdoll/applications/sting/src/service"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
 	"overdoll/libraries/config"
+	"overdoll/libraries/helpers"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/tests"
 )
@@ -26,6 +31,7 @@ const StingHttpClientAddr = "http://:6666/graphql"
 type CreatePost struct {
 	Post struct {
 		Review graphql.Boolean
+		Id     graphql.String
 	} `graphql:"post(data: $data)"`
 }
 
@@ -57,11 +63,19 @@ type SearchArtist struct {
 	} `graphql:"artists(data: $data)"`
 }
 
+type WorkflowComponentTestSuite struct {
+	suite.Suite
+	testsuite.WorkflowTestSuite
+
+	env *testsuite.TestWorkflowEnvironment
+}
+
 // TestPost_create_new_post - create a new valid post
-func TestPost_create_new_post(t *testing.T) {
+func (s *WorkflowComponentTestSuite) Test_CreatePost_Success() {
+	s.T().Parallel()
 
 	// we have to create a post as an authenticated user, otherwise it won't let us
-	client, _ := getClient(t, passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	client, _ := getClient(s.T(), passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 
 	var createPost CreatePost
 
@@ -79,8 +93,15 @@ func TestPost_create_new_post(t *testing.T) {
 		},
 	})
 
-	require.NoError(t, err)
-	assert.Equal(t, false, bool(createPost.Post.Review))
+	require.NoError(s.T(), err)
+	assert.Equal(s.T(), false, bool(createPost.Post.Review))
+
+	// execute workflow, since the graphql wont execute it and only put it into a queue
+	// we also get the ability to get workflow state, etc.. in this test
+	s.env.ExecuteWorkflow(workflows.CreatePost, string(createPost.Post.Id))
+
+	s.True(s.env.IsWorkflowCompleted())
+	s.NoError(s.env.GetWorkflowError())
 }
 
 // TestSearchCharacters - search some characters
@@ -162,6 +183,22 @@ func getClient(t *testing.T, pass *passport.Passport) (*graphql.Client, *http.Cl
 	return graphql.NewClient(StingHttpClientAddr, client), client
 }
 
+func (s *WorkflowComponentTestSuite) SetupTest() {
+	config.Read("applications/sting/config.toml")
+
+	s.env = s.NewTestWorkflowEnvironment()
+
+	app, _ := service.NewApplication(context.Background())
+
+	s.env.RegisterActivityWithOptions(app.Commands.CreatePost.Handle, activity.RegisterOptions{Name: helpers.GetStructName(app.Commands.CreatePost)})
+	s.env.RegisterActivityWithOptions(app.Commands.PublishPost.Handle, activity.RegisterOptions{Name: helpers.GetStructName(app.Commands.PublishPost)})
+	s.env.RegisterActivityWithOptions(app.Commands.DiscardPost.Handle, activity.RegisterOptions{Name: helpers.GetStructName(app.Commands.DiscardPost)})
+	s.env.RegisterActivityWithOptions(app.Commands.UndoPost.Handle, activity.RegisterOptions{Name: helpers.GetStructName(app.Commands.UndoPost)})
+	s.env.RegisterActivityWithOptions(app.Commands.NewPendingPost.Handle, activity.RegisterOptions{Name: helpers.GetStructName(app.Commands.NewPendingPost)})
+	s.env.RegisterActivityWithOptions(app.Commands.PostCustomResources.Handle, activity.RegisterOptions{Name: helpers.GetStructName(app.Commands.PostCustomResources)})
+	s.env.RegisterActivityWithOptions(app.Commands.ReassignModerator.Handle, activity.RegisterOptions{Name: helpers.GetStructName(app.Commands.ReassignModerator)})
+}
+
 func startService() bool {
 	config.Read("applications/sting/config.toml")
 
@@ -180,6 +217,14 @@ func startService() bool {
 	}
 
 	return true
+}
+
+func (s *WorkflowComponentTestSuite) AfterTest(suiteName, testName string) {
+	s.env.AssertExpectations(s.T())
+}
+
+func TestUnitTestSuite(t *testing.T) {
+	suite.Run(t, new(WorkflowComponentTestSuite))
 }
 
 func TestMain(m *testing.M) {
