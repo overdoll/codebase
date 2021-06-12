@@ -1,5 +1,6 @@
 schema:
   - ./schema/**/*.graphql
+  - ../../libraries/graphql/relay/schema.graphql
 
 exec:
   filename: src/ports/graphql/generated.go
@@ -12,3 +13,6 @@ model:
 federation:
   filename: src/ports/graphql/federation.go
   package: gen
+
+autobind:
+  - overdoll/libraries/graphql/relay

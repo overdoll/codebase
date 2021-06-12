@@ -1,13 +1,3 @@
-input PostInput {
-  content: [String!]!
-  categories: [String!]!
-  characters: [String!]!
-  mediaRequests: [String!]
-  characterRequests: [CharacterRequest!]
-  artistId: String
-  artistUsername: String!
-}
-
 input CharacterRequest {
   name: String!
   media: String!

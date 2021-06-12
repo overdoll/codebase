@@ -5,4 +5,5 @@ go_library(
     srcs = ["types.go"],
     importpath = "overdoll/applications/sting/src/ports/graphql/types",
     visibility = ["//visibility:public"],
+    deps = ["//libraries/graphql/relay"],
 )

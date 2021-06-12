@@ -5,22 +5,21 @@ import (
 
 	"overdoll/applications/sting/src/app"
 	"overdoll/applications/sting/src/ports/graphql/types"
-	"overdoll/libraries/passport"
 )
 
 type QueryResolver struct {
 	App *app.Application
 }
 
-func (r *QueryResolver) PendingPosts(ctx context.Context, data types.SearchInput) ([]*types.PendingPost, error) {
+func (r *QueryResolver) PendingPosts(ctx context.Context, input types.ConnectionInput, filter types.PendingPostFilters) (*types.PendingPostConnection, error) {
 
-	pass := passport.FromContext(ctx)
+	//pass := passport.FromContext(ctx)
 
-	if !pass.IsAuthenticated() {
-		return nil, passport.ErrNotAuthenticated
-	}
+	//if !pass.IsAuthenticated() {
+	//	return nil, passport.ErrNotAuthenticated
+	//}
 
-	results, err := r.App.Queries.GetPendingPosts.Handle(ctx, pass.UserID())
+	results, err := r.App.Queries.GetPendingPosts.Handle(ctx, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
 
 	if err != nil {
 		return nil, err
@@ -92,7 +91,7 @@ func (r *QueryResolver) PendingPosts(ctx context.Context, data types.SearchInput
 		})
 	}
 
-	return resp, nil
+	return &types.PendingPostConnection{}, nil
 }
 
 func (r *QueryResolver) Characters(ctx context.Context, data types.SearchInput) ([]*types.Character, error) {

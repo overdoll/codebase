@@ -2,6 +2,10 @@
 
 package types
 
+import (
+	"overdoll/libraries/graphql/relay"
+)
+
 type Artist struct {
 	ID       string `json:"id"`
 	Avatar   string `json:"avatar"`
@@ -54,6 +58,23 @@ type PendingPost struct {
 	CharacterRequests []*CharacterRequestType `json:"characterRequests"`
 	ArtistID          *string                 `json:"artistId"`
 	ArtistUsername    string                  `json:"artistUsername"`
+}
+
+type PendingPostConnection struct {
+	Edges      []*PostEdge     `json:"edges"`
+	PageInfo   *relay.PageInfo `json:"pageInfo"`
+	TotalCount int             `json:"totalCount"`
+}
+
+type PendingPostFilters struct {
+	ModeratorID   *string `json:"moderatorId"`
+	ContributorID *string `json:"contributorId"`
+	ArtistID      *string `json:"artistId"`
+}
+
+type PostEdge struct {
+	Cursor string       `json:"cursor"`
+	Node   *PendingPost `json:"node"`
 }
 
 type PostInput struct {
