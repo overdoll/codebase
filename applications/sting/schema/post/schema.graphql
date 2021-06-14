@@ -17,13 +17,13 @@ type Contributor {
   avatar: String!
 }
 
-type PostEdge {
+type PendingPostEdge {
   cursor: String!
   node: PendingPost!
 }
 
 type PendingPostConnection {
-  edges: [PostEdge!]!
+  edges: [PendingPostEdge!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }

@@ -24,5 +24,5 @@ input ConnectionInput {
   first: Int
 
   # Returns the last _n_ elements from the list.
-  last: Int
+  #last: Int
 }

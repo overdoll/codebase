@@ -1,63 +1,38 @@
 package relay
 
 import (
-	"encoding/base64"
 	"fmt"
-	"strconv"
-	"strings"
-
-	"github.com/99designs/gqlgen/example/starwars/models"
-	"overdoll/applications/sting/src/ports/graphql/types"
 )
-
-const cursorPrefix = "cursor:"
-
-type Edge interface {
-	GetCursor() string
-}
-
-// Creates the cursor string from an offset
-func OffsetToCursor(offset int) string {
-	str := fmt.Sprintf("%v%v", cursorPrefix, offset)
-	return base64.StdEncoding.EncodeToString([]byte(str))
-}
-
-// Re-derives the offset from the cursor string.
-func CursorToOffset(cursor string) (int, error) {
-	str := ""
-	b, err := base64.StdEncoding.DecodeString(cursor)
-	if err == nil {
-		str = string(b)
-	}
-	str = strings.Replace(str, cursorPrefix, "", -1)
-	offset, err := strconv.Atoi(str)
-	if err != nil {
-		return 0, fmt.Errorf("invalid cursor")
-	}
-	return offset, nil
-}
 
 type NodeType interface{}
 type EdgeType interface{}
 type ConnectionType interface{}
 
-type NodeTypeEdger func(value NodeType, offset int) Edge
-type NodeTypeConMaker func(edges []EdgeType, info types.PageInfo, totalCount int) (ConnectionType, error)
+type Type interface {
+	Edger(value interface{}, offset int) interface{}
+	ConMaker(edges []EdgeType, info PageInfo, totalCount int) (*ConnectionType, error)
+}
 
-func NodeTypeCon(source []NodeType, edger NodeTypeEdger, conMaker NodeTypeConMaker, input models.ConnectionInput) (ConnectionType, error) {
+func NodeTypeCon(source interface{}, nType Type, input ConnectionInput) (ConnectionType, error) {
 	var edges []EdgeType
-	var pageInfo models.PageInfo
+	var pageInfo PageInfo
 
-	emptyCon, _ := conMaker(edges, pageInfo, 0)
+	emptyCon, _ := nType.ConMaker(edges, pageInfo, 0)
 
 	offset := 0
 
+	src := source.([]*NodeType)
+
 	if input.After != nil {
-		for i, value := range source {
-			edge := edger(value, i)
+		for i, value := range src {
+			edge := nType.Edger(value, i)
+			if edge == nil {
+				continue
+			}
+
 			if edge.GetCursor() == *input.After {
 				// remove all previous element including the "after" one
-				source = source[i+1:]
+				source = src[i+1:]
 				offset = i + 1
 				break
 			}
@@ -65,21 +40,21 @@ func NodeTypeCon(source []NodeType, edger NodeTypeEdger, conMaker NodeTypeConMak
 	}
 
 	if input.Before != nil {
-		for i, value := range source {
-			edge := edger(value, i+offset)
+		for i, value := range src {
+			edge := nType.Edger(value, i+offset)
 
 			if edge.GetCursor() == *input.Before {
 				// remove all after element including the "before" one
 				break
 			}
 
-			edges = append(edges, edge.(EdgeType))
+			edges = append(edges, edge)
 		}
 	} else {
-		edges = make([]EdgeType, len(source))
+		edges = make([]EdgeType, len(src))
 
-		for i, value := range source {
-			edges[i] = edger(value, i+offset).(EdgeType)
+		for i, value := range src {
+			edges[i] = nType.Edger(value, i+offset)
 		}
 	}
 
@@ -107,5 +82,5 @@ func NodeTypeCon(source []NodeType, edger NodeTypeEdger, conMaker NodeTypeConMak
 		}
 	}
 
-	return conMaker(edges, pageInfo, len(source))
+	return nType.ConMaker(edges, pageInfo, len(src))
 }

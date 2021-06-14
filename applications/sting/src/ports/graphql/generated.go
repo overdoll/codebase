@@ -118,7 +118,7 @@ type ComplexityRoot struct {
 		TotalCount func(childComplexity int) int
 	}
 
-	PostEdge struct {
+	PendingPostEdge struct {
 		Cursor func(childComplexity int) int
 		Node   func(childComplexity int) int
 	}
@@ -468,19 +468,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.PendingPostConnection.TotalCount(childComplexity), true
 
-	case "PostEdge.cursor":
-		if e.complexity.PostEdge.Cursor == nil {
+	case "PendingPostEdge.cursor":
+		if e.complexity.PendingPostEdge.Cursor == nil {
 			break
 		}
 
-		return e.complexity.PostEdge.Cursor(childComplexity), true
+		return e.complexity.PendingPostEdge.Cursor(childComplexity), true
 
-	case "PostEdge.node":
-		if e.complexity.PostEdge.Node == nil {
+	case "PendingPostEdge.node":
+		if e.complexity.PendingPostEdge.Node == nil {
 			break
 		}
 
-		return e.complexity.PostEdge.Node(childComplexity), true
+		return e.complexity.PendingPostEdge.Node(childComplexity), true
 
 	case "PostResponse.id":
 		if e.complexity.PostResponse.ID == nil {
@@ -712,13 +712,13 @@ type Contributor {
   avatar: String!
 }
 
-type PostEdge {
+type PendingPostEdge {
   cursor: String!
   node: PendingPost!
 }
 
 type PendingPostConnection {
-  edges: [PostEdge!]!
+  edges: [PendingPostEdge!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
@@ -2329,9 +2329,9 @@ func (ec *executionContext) _PendingPostConnection_edges(ctx context.Context, fi
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*types.PostEdge)
+	res := resTmp.([]*types.PendingPostEdge)
 	fc.Result = res
-	return ec.marshalNPostEdge2ᚕᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPostEdgeᚄ(ctx, field.Selections, res)
+	return ec.marshalNPendingPostEdge2ᚕᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostEdgeᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _PendingPostConnection_pageInfo(ctx context.Context, field graphql.CollectedField, obj *types.PendingPostConnection) (ret graphql.Marshaler) {
@@ -2404,7 +2404,7 @@ func (ec *executionContext) _PendingPostConnection_totalCount(ctx context.Contex
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _PostEdge_cursor(ctx context.Context, field graphql.CollectedField, obj *types.PostEdge) (ret graphql.Marshaler) {
+func (ec *executionContext) _PendingPostEdge_cursor(ctx context.Context, field graphql.CollectedField, obj *types.PendingPostEdge) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2412,7 +2412,7 @@ func (ec *executionContext) _PostEdge_cursor(ctx context.Context, field graphql.
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "PostEdge",
+		Object:     "PendingPostEdge",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -2439,7 +2439,7 @@ func (ec *executionContext) _PostEdge_cursor(ctx context.Context, field graphql.
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _PostEdge_node(ctx context.Context, field graphql.CollectedField, obj *types.PostEdge) (ret graphql.Marshaler) {
+func (ec *executionContext) _PendingPostEdge_node(ctx context.Context, field graphql.CollectedField, obj *types.PendingPostEdge) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2447,7 +2447,7 @@ func (ec *executionContext) _PostEdge_node(ctx context.Context, field graphql.Co
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "PostEdge",
+		Object:     "PendingPostEdge",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -4841,24 +4841,24 @@ func (ec *executionContext) _PendingPostConnection(ctx context.Context, sel ast.
 	return out
 }
 
-var postEdgeImplementors = []string{"PostEdge"}
+var pendingPostEdgeImplementors = []string{"PendingPostEdge"}
 
-func (ec *executionContext) _PostEdge(ctx context.Context, sel ast.SelectionSet, obj *types.PostEdge) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, postEdgeImplementors)
+func (ec *executionContext) _PendingPostEdge(ctx context.Context, sel ast.SelectionSet, obj *types.PendingPostEdge) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, pendingPostEdgeImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("PostEdge")
+			out.Values[i] = graphql.MarshalString("PendingPostEdge")
 		case "cursor":
-			out.Values[i] = ec._PostEdge_cursor(ctx, field, obj)
+			out.Values[i] = ec._PendingPostEdge_cursor(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "node":
-			out.Values[i] = ec._PostEdge_node(ctx, field, obj)
+			out.Values[i] = ec._PendingPostEdge_node(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -5666,12 +5666,7 @@ func (ec *executionContext) marshalNPendingPostConnection2ᚖoverdollᚋapplicat
 	return ec._PendingPostConnection(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNPendingPostFilters2overdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostFilters(ctx context.Context, v interface{}) (types.PendingPostFilters, error) {
-	res, err := ec.unmarshalInputPendingPostFilters(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNPostEdge2ᚕᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPostEdgeᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.PostEdge) graphql.Marshaler {
+func (ec *executionContext) marshalNPendingPostEdge2ᚕᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostEdgeᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.PendingPostEdge) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -5695,7 +5690,7 @@ func (ec *executionContext) marshalNPostEdge2ᚕᚖoverdollᚋapplicationsᚋsti
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNPostEdge2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPostEdge(ctx, sel, v[i])
+			ret[i] = ec.marshalNPendingPostEdge2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostEdge(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -5708,14 +5703,19 @@ func (ec *executionContext) marshalNPostEdge2ᚕᚖoverdollᚋapplicationsᚋsti
 	return ret
 }
 
-func (ec *executionContext) marshalNPostEdge2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPostEdge(ctx context.Context, sel ast.SelectionSet, v *types.PostEdge) graphql.Marshaler {
+func (ec *executionContext) marshalNPendingPostEdge2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostEdge(ctx context.Context, sel ast.SelectionSet, v *types.PendingPostEdge) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
 		}
 		return graphql.Null
 	}
-	return ec._PostEdge(ctx, sel, v)
+	return ec._PendingPostEdge(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNPendingPostFilters2overdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostFilters(ctx context.Context, v interface{}) (types.PendingPostFilters, error) {
+	res, err := ec.unmarshalInputPendingPostFilters(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNPostResponse2overdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPostResponse(ctx context.Context, sel ast.SelectionSet, v types.PostResponse) graphql.Marshaler {

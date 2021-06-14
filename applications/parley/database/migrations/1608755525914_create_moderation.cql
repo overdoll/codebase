@@ -1,8 +1,9 @@
 CREATE TABLE IF NOT EXISTS moderators
 (
+    bucket        text,
     user_id       text,
     last_selected timestamp,
-    primary key ( user_id ),
+    primary key ((bucket), user_id ),
 );
 
 CREATE TABLE IF NOT EXISTS pending_posts_audit_log
@@ -18,8 +19,10 @@ CREATE TABLE IF NOT EXISTS pending_posts_audit_log
     reason                    text,
     notes                     text,
     reverted                  boolean,
-    primary key ( moderator_user_id, id ),
+    primary key ( moderator_user_id, contributor_user_id, post_id, id ),
 );
+
+CREATE INDEX IF NOT EXISTS pending_posts_audit_log_status on pending_posts_audit_log (status);
 
 CREATE TABLE IF NOT EXISTS users_audit_log
 (
@@ -45,8 +48,10 @@ CREATE TABLE IF NOT EXISTS users_infraction_history
 
 CREATE TABLE IF NOT EXISTS pending_posts_rejection_reasons
 (
+    bucket     text,
     id         text,
     reason     text,
     infraction boolean,
-    primary key ( (id) ),
+    primary key ( bucket , id ),
 );
+

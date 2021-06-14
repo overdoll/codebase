@@ -61,20 +61,20 @@ type PendingPost struct {
 }
 
 type PendingPostConnection struct {
-	Edges      []*PostEdge     `json:"edges"`
-	PageInfo   *relay.PageInfo `json:"pageInfo"`
-	TotalCount int             `json:"totalCount"`
+	Edges      []*PendingPostEdge `json:"edges"`
+	PageInfo   *relay.PageInfo    `json:"pageInfo"`
+	TotalCount int                `json:"totalCount"`
+}
+
+type PendingPostEdge struct {
+	Cursor string       `json:"cursor"`
+	Node   *PendingPost `json:"node"`
 }
 
 type PendingPostFilters struct {
 	ModeratorID   *string `json:"moderatorId"`
 	ContributorID *string `json:"contributorId"`
 	ArtistID      *string `json:"artistId"`
-}
-
-type PostEdge struct {
-	Cursor string       `json:"cursor"`
-	Node   *PendingPost `json:"node"`
 }
 
 type PostInput struct {
