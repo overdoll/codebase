@@ -17,7 +17,7 @@ func NewGetPendingPostsHandler(pr post.IndexRepository, eva EvaService) GetPendi
 	return GetPendingPostsHandler{pr: pr, eva: eva}
 }
 
-func (h GetPendingPostsHandler) Handle(ctx context.Context, cursor *paging.Cursor, userId string) (*post.PendingPostConnection, error) {
+func (h GetPendingPostsHandler) Handle(ctx context.Context, cursor *paging.Cursor, moderatorId, contributorId, artistId, userId string) (*post.PendingPostConnection, error) {
 
 	usr, err := h.eva.GetUser(ctx, userId)
 
@@ -30,13 +30,23 @@ func (h GetPendingPostsHandler) Handle(ctx context.Context, cursor *paging.Curso
 		return nil, ErrSearchFailed
 	}
 
-	filters, err := post.NewPendingPostFilters(userId)
+	// only staff can filter
+	if usr.IsStaff() {
+		if moderatorId != "" {
+			userId = moderatorId
+		}
+	} else {
+		contributorId = ""
+		artistId = ""
+	}
+
+	filters, err := post.NewPendingPostFilters(userId, contributorId, artistId)
 
 	if err != nil {
 		return nil, err
 	}
 
-	posts, err := h.pr.SearchPendingPosts(ctx, filters)
+	posts, err := h.pr.SearchPendingPosts(ctx, cursor, filters)
 
 	if err != nil {
 		zap.S().Errorf("failed to search: %s", err)

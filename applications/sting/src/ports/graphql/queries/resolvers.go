@@ -94,19 +94,35 @@ func (r *QueryResolver) PendingPosts(ctx context.Context, input relay.Connection
 	//	return nil, passport.ErrNotAuthenticated
 	//}
 
-	results, err := r.App.Queries.GetPendingPosts.Handle(ctx, input.ToCursor(), "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
+	moderatorId := ""
+
+	if filter.ModeratorID != nil {
+		moderatorId = *filter.ModeratorID
+	}
+
+	contributorId := ""
+
+	if filter.ContributorID != nil {
+		contributorId = *filter.ContributorID
+	}
+
+	artistId := ""
+
+	if filter.ArtistID != nil {
+		artistId = *filter.ArtistID
+	}
+
+	results, err := r.App.Queries.GetPendingPosts.Handle(ctx, input.ToCursor(), moderatorId, contributorId, artistId, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
 
 	if err != nil {
 		return nil, err
 	}
 
 	return &types.PendingPostConnection{
-		Edges:    marshalPendingPostsToGraphQL(results.Edges),
+		Edges: marshalPendingPostsToGraphQL(results.Edges),
 		PageInfo: &relay.PageInfo{
-			HasNextPage:     false,
-			HasPreviousPage: false,
-			StartCursor: nil,
-			EndCursor:       nil,
+			HasNextPage:     results.PageInfo.HasNextPage(),
+			HasPreviousPage: results.PageInfo.HasPrevPage(),
 		},
 	}, nil
 }

@@ -47,18 +47,29 @@ type MediaRequest struct {
 }
 
 type PendingPostFilters struct {
-	moderatorId string
+	moderatorId   string
+	contributorId string
+	artistId      string
 }
 
-func NewPendingPostFilters(moderatorId string) (*PendingPostFilters, error) {
-
+func NewPendingPostFilters(moderatorId, contributorId, artistId string) (*PendingPostFilters, error) {
 	return &PendingPostFilters{
-		moderatorId: moderatorId,
+		moderatorId:   moderatorId,
+		contributorId: contributorId,
+		artistId:      artistId,
 	}, nil
 }
 
 func (e *PendingPostFilters) ModeratorId() string {
 	return e.moderatorId
+}
+
+func (e *PendingPostFilters) ContributorId() string {
+	return e.contributorId
+}
+
+func (e *PendingPostFilters) ArtistId() string {
+	return e.artistId
 }
 
 type PendingPostConnection struct {

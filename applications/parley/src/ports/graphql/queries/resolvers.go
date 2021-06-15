@@ -13,11 +13,11 @@ type QueryResolver struct {
 }
 
 func (q QueryResolver) PendingPostAuditLogs(ctx context.Context, filter types.PendingPostAuditLogFilters) (*types.PendingPostAuditLogConnection, error) {
-	//pass := passport.FromContext(ctx)
-	//
-	//if !pass.IsAuthenticated() {
-	//	return nil, passport.ErrNotAuthenticated
-	//}
+	pass := passport.FromContext(ctx)
+
+	if !pass.IsAuthenticated() {
+		return nil, passport.ErrNotAuthenticated
+	}
 
 	moderatorId := ""
 
@@ -43,7 +43,7 @@ func (q QueryResolver) PendingPostAuditLogs(ctx context.Context, filter types.Pe
 		dateRange = filter.DateRange
 	}
 
-	logs, err := q.App.Queries.PendingPostsAuditLog.Handle(ctx, moderatorId, contributorId, postId, dateRange, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
+	logs, err := q.App.Queries.PendingPostsAuditLog.Handle(ctx, moderatorId, contributorId, postId, dateRange, pass.UserID())
 
 	if err != nil {
 		return nil, err

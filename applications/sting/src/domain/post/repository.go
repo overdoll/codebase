@@ -2,6 +2,8 @@ package post
 
 import (
 	"context"
+
+	"overdoll/libraries/paging"
 )
 
 type Repository interface {
@@ -36,7 +38,7 @@ type IndexRepository interface {
 	IndexPendingPost(context.Context, *PendingPost) error
 	BulkIndexPendingPosts(context.Context, []*PendingPost) error
 	DeletePendingPostIndex(context.Context) error
-	SearchPendingPosts(context.Context, *PendingPostFilters) (*PendingPostConnection, error)
+	SearchPendingPosts(context.Context, *paging.Cursor, *PendingPostFilters) (*PendingPostConnection, error)
 
 	BulkIndexPosts(context.Context, []*Post) error
 	DeletePostIndex(context.Context) error

@@ -218,10 +218,6 @@ const SearchPostPending = `
 	"track_total_hits": true
 `
 
-const AllPostPending = `
-	"query" : { "match_all" : {} },
-	"size" : 5`
-
 const PendingPostIndexName = "pending_posts"
 
 const PostIndexName = "posts"
@@ -243,7 +239,7 @@ func (r PostsIndexElasticSearchRepository) IndexPendingPost(ctx context.Context,
 	return r.BulkIndexPendingPosts(ctx, pendingPosts)
 }
 
-func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Context, filter *post.PendingPostFilters) (*post.PendingPostConnection, error) {
+func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Context, cursor *paging.Cursor, filter *post.PendingPostFilters) (*post.PendingPostConnection, error) {
 
 	query := fmt.Sprintf(SearchPostPending, filter.ModeratorId())
 
@@ -280,7 +276,7 @@ func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Contex
 		tm, err := time.Parse("UTC", pst.PostedAt)
 
 		posts = append(posts, &post.PendingPostEdge{
-			Cursor: pst.Timestamp.String(),
+			Cursor: pst.PostedAt,
 			Node: post.UnmarshalPendingPostFromDatabase(
 				pst.Id,
 				pst.ModeratorId,
@@ -302,7 +298,7 @@ func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Contex
 
 	return &post.PendingPostConnection{
 		Edges:    posts,
-		PageInfo: &paging.PageInfo{},
+		PageInfo: paging.NewPageInfo(response.Total-len(posts) > 0),
 	}, nil
 }
 
