@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS posts
     primary key ((id), posted_at)
 ) WITH CLUSTERING ORDER BY (posted_at ASC);
 
-CREATE TABLE IF NOT EXISTS posts_pending
+CREATE TABLE IF NOT EXISTS pending_posts
 (
     id                   text,
     state                text,
@@ -61,4 +61,4 @@ CREATE TABLE IF NOT EXISTS posts_pending
     primary key (id)
 );
 
-CREATE INDEX IF NOT EXISTS posts_pending_state on posts_pending (state);
+CREATE INDEX IF NOT EXISTS pending_posts_state on pending_posts (state);

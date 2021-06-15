@@ -20,7 +20,7 @@ func NewPublishPostHandler(pr post.Repository, pi post.IndexRepository, cr conte
 
 func (h PublishPostHandler) Handle(ctx context.Context, id string) error {
 
-	pendingPost, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PostPending) error {
+	pendingPost, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PendingPost) error {
 
 		// Bulk index
 		err := h.pi.BulkIndexCategories(ctx, pending.Categories())

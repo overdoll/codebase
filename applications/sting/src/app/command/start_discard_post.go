@@ -17,7 +17,7 @@ func NewStartDiscardPostHandler(pr post.Repository, pi post.IndexRepository) Sta
 
 func (h StartDiscardPostHandler) Handle(ctx context.Context, id string) error {
 
-	_, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PostPending) error {
+	_, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PendingPost) error {
 		return pending.MakeDiscarded()
 	})
 

@@ -14,7 +14,7 @@ type QueryResolver struct {
 	App *app.Application
 }
 
-func marshalPendingPostsToGraphQL(results []*post.PostPending) []*types.PendingPostEdge {
+func marshalPendingPostsToGraphQL(results []*post.PendingPost) []*types.PendingPostEdge {
 	resp := make([]*types.PendingPostEdge, 0)
 
 	// Unmarshal our json into the correct model

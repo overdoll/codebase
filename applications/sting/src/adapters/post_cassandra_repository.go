@@ -45,7 +45,7 @@ func NewPostsCassandraRepository(session gocqlx.Session) PostsCassandraRepositor
 	return PostsCassandraRepository{session: session}
 }
 
-func marshalPendingPostToDatabase(pending *post.PostPending) *PostPending {
+func marshalPendingPostToDatabase(pending *post.PendingPost) *PostPending {
 
 	characterRequests := make(map[string]string)
 
@@ -107,7 +107,7 @@ func marshalPostToDatabase(post *post.Post) *Post {
 	}
 }
 
-func (r PostsCassandraRepository) unmarshalPendingPost(ctx context.Context, postPending PostPending) (*post.PostPending, error) {
+func (r PostsCassandraRepository) unmarshalPendingPost(ctx context.Context, postPending PostPending) (*post.PendingPost, error) {
 	characters, err := r.GetCharactersById(ctx, postPending.Characters)
 
 	if err != nil {
@@ -149,10 +149,10 @@ func (r PostsCassandraRepository) unmarshalPendingPost(ctx context.Context, post
 	), nil
 }
 
-func (r PostsCassandraRepository) CreatePendingPost(ctx context.Context, pending *post.PostPending) error {
+func (r PostsCassandraRepository) CreatePendingPost(ctx context.Context, pending *post.PendingPost) error {
 	pendingPost := marshalPendingPostToDatabase(pending)
 
-	insertPost := qb.Insert("posts_pending").
+	insertPost := qb.Insert("pending_posts").
 		Columns(
 			"id",
 			"state",
@@ -180,7 +180,7 @@ func (r PostsCassandraRepository) CreatePendingPost(ctx context.Context, pending
 }
 
 func (r PostsCassandraRepository) DeletePendingPost(ctx context.Context, id string) error {
-	deletePost := qb.Delete("posts_pending").
+	deletePost := qb.Delete("pending_posts").
 		Where(qb.Eq("id")).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
@@ -280,9 +280,9 @@ func (r PostsCassandraRepository) GetPost(ctx context.Context, id string) (*post
 	), nil
 }
 
-func (r PostsCassandraRepository) GetPendingPosts(ctx context.Context) ([]*post.PostPending, error) {
+func (r PostsCassandraRepository) GetPendingPosts(ctx context.Context) ([]*post.PendingPost, error) {
 
-	postPendingQuery := qb.Select("posts_pending").
+	postPendingQuery := qb.Select("pending_posts").
 		Query(r.session).
 		Consistency(gocql.LocalQuorum)
 
@@ -292,7 +292,7 @@ func (r PostsCassandraRepository) GetPendingPosts(ctx context.Context) ([]*post.
 		return nil, err
 	}
 
-	var pos []*post.PostPending
+	var pos []*post.PendingPost
 
 	for _, pst := range postsPending {
 
@@ -308,9 +308,9 @@ func (r PostsCassandraRepository) GetPendingPosts(ctx context.Context) ([]*post.
 	return pos, nil
 }
 
-func (r PostsCassandraRepository) GetPendingPost(ctx context.Context, id string) (*post.PostPending, error) {
+func (r PostsCassandraRepository) GetPendingPost(ctx context.Context, id string) (*post.PendingPost, error) {
 
-	postPendingQuery := qb.Select("posts_pending").
+	postPendingQuery := qb.Select("pending_posts").
 		Where(qb.Eq("id")).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
@@ -330,7 +330,7 @@ func (r PostsCassandraRepository) GetPendingPost(ctx context.Context, id string)
 	return r.unmarshalPendingPost(ctx, postPending)
 }
 
-func (r PostsCassandraRepository) UpdatePendingPost(ctx context.Context, id string, updateFn func(pending *post.PostPending) error) (*post.PostPending, error) {
+func (r PostsCassandraRepository) UpdatePendingPost(ctx context.Context, id string, updateFn func(pending *post.PendingPost) error) (*post.PendingPost, error) {
 
 	currentPost, err := r.GetPendingPost(ctx, id)
 
@@ -345,7 +345,7 @@ func (r PostsCassandraRepository) UpdatePendingPost(ctx context.Context, id stri
 	}
 
 	// Update our post to reflect the new state - in publishing
-	updatePost := qb.Update("posts_pending").
+	updatePost := qb.Update("pending_posts").
 		Set(
 			"state",
 			"contributor_user_id",
@@ -359,7 +359,7 @@ func (r PostsCassandraRepository) UpdatePendingPost(ctx context.Context, id stri
 			"media_requests",
 			"posted_at",
 		).
-		Where(qb.Eq("id"), qb.Eq("moderator_user_id")).
+		Where(qb.Eq("id")).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalPendingPostToDatabase(currentPost))

@@ -18,7 +18,7 @@ func NewRejectPostHandler(pr post.Repository, pi post.IndexRepository) RejectPos
 
 func (h RejectPostHandler) Handle(ctx context.Context, id string) error {
 
-	pendingPost, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PostPending) error {
+	pendingPost, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PendingPost) error {
 		return pending.MakeRejected()
 	})
 

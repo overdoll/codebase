@@ -17,7 +17,7 @@ func NewPostCustomResourcesHandler(pr post.Repository, pi post.IndexRepository) 
 
 func (h PostCustomResourcesHandler) Handle(ctx context.Context, id string, ids []string) error {
 
-	_, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PostPending) error {
+	_, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PendingPost) error {
 
 		// put into "publishing"
 		pending.MakePublishing()

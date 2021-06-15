@@ -8,7 +8,7 @@ import (
 )
 
 type PostMock struct {
-	PendingPost *post.PostPending
+	PendingPost *post.PendingPost
 	Post        *post.Post
 	Artist      *post.Artist
 	Characters  []*post.Character
@@ -16,16 +16,16 @@ type PostMock struct {
 	Medias      []*post.Media
 }
 
-func (p PostMock) GetPendingPost(ctx context.Context, s string) (*post.PostPending, error) {
+func (p PostMock) GetPendingPost(ctx context.Context, s string) (*post.PendingPost, error) {
 	return p.PendingPost, nil
 }
 
-func (p PostMock) CreatePendingPost(ctx context.Context, pending *post.PostPending) error {
+func (p PostMock) CreatePendingPost(ctx context.Context, pending *post.PendingPost) error {
 	p.PendingPost = pending
 	return nil
 }
 
-func (p PostMock) UpdatePendingPost(ctx context.Context, s string, f func(*post.PostPending) (*post.PostPending, error)) (*post.PostPending, error) {
+func (p PostMock) UpdatePendingPost(ctx context.Context, s string, f func(*post.PendingPost) (*post.PendingPost, error)) (*post.PendingPost, error) {
 
 	pending, _ := p.GetPendingPost(ctx, s)
 
@@ -105,11 +105,11 @@ func (p PostIndexMock) BulkIndexPosts(ctx context.Context, posts []*post.Post) e
 	return nil
 }
 
-func (p PostIndexMock) IndexPendingPost(ctx context.Context, pending *post.PostPending) error {
+func (p PostIndexMock) IndexPendingPost(ctx context.Context, pending *post.PendingPost) error {
 	return nil
 }
 
-func (p PostIndexMock) BulkIndexPendingPosts(ctx context.Context, pendings []*post.PostPending) error {
+func (p PostIndexMock) BulkIndexPendingPosts(ctx context.Context, pendings []*post.PendingPost) error {
 	return nil
 }
 
@@ -175,33 +175,4 @@ type EvaServiceMock struct {
 
 func (e EvaServiceMock) GetUser(ctx context.Context, id string) (*user.User, error) {
 	return e.User, nil
-}
-
-type EventMock struct {
-	DispatchedEvents []string
-}
-
-func (e EventMock) PostCreated(ctx context.Context, pending *post.PostPending) error {
-	e.DispatchedEvents = append(e.DispatchedEvents, "PostCreated")
-	return nil
-}
-
-func (e EventMock) PostCompleted(ctx context.Context, pending *post.PostPending) error {
-	e.DispatchedEvents = append(e.DispatchedEvents, "PostCompleted")
-	return nil
-}
-
-func (e EventMock) CharactersCreated(ctx context.Context, characters []*post.Character) error {
-	e.DispatchedEvents = append(e.DispatchedEvents, "CharactersCreated")
-	return nil
-}
-
-func (e EventMock) MediaCreated(ctx context.Context, media []*post.Media) error {
-	e.DispatchedEvents = append(e.DispatchedEvents, "MediaCreated")
-	return nil
-}
-
-func (e EventMock) CategoriesCreated(ctx context.Context, categories []*post.Category) error {
-	e.DispatchedEvents = append(e.DispatchedEvents, "CategoriesCreated")
-	return nil
 }

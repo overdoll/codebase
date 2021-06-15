@@ -16,42 +16,34 @@ func NewReassignModeratorHandler(pr post.Repository, pi post.IndexRepository, pa
 	return ReassignModeratorHandler{pr: pr, pi: pi, parley: parley}
 }
 
-func (h ReassignModeratorHandler) Handle(ctx context.Context, oldId, newId string) (bool, error) {
+func (h ReassignModeratorHandler) Handle(ctx context.Context, id string) (bool, error) {
 
-	oldPost, err := h.pr.GetPendingPost(ctx, oldId)
+	pst, err := h.pr.UpdatePendingPost(ctx, id, func(pendingPost *post.PendingPost) error {
+
+		newModId, err := h.parley.GetNextModeratorId(ctx)
+
+		if err != nil {
+			return err
+		}
+
+		// if this returns an error, then we dont proceed with assigning a new moderator
+		if err := pendingPost.UpdateModerator(newModId); err != nil {
+			return post.ErrAlreadyModerated
+		}
+
+		return nil
+	})
 
 	if err != nil {
-		return false, err
-	}
+		if err == post.ErrAlreadyModerated {
+			return false, nil
+		}
 
-	newModId, err := h.parley.GetNextModeratorId(ctx)
-
-	if err != nil {
-		return false, err
-	}
-
-	// if this returns an error, then we dont proceed with assigning a new moderator
-	if err := oldPost.UpdateModerator(newId, newModId); err != nil {
-		return false, nil
-	}
-
-	// create a new pending post
-	if err := h.pr.CreatePendingPost(ctx, oldPost); err != nil {
 		return false, err
 	}
 
 	// index pending post
-	if err := h.pi.IndexPendingPost(ctx, oldPost); err != nil {
-		return false, err
-	}
-
-	// delete old post from ES index
-	if err := h.pi.DeletePendingPostDocument(ctx, oldId); err != nil {
-		return false, err
-	}
-
-	// delete old post
-	if err := h.pr.DeletePendingPost(ctx, oldId); err != nil {
+	if err := h.pi.IndexPendingPost(ctx, pst); err != nil {
 		return false, err
 	}
 

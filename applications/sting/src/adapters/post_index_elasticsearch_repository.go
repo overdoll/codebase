@@ -92,16 +92,16 @@ func NewPostsIndexElasticSearchRepository(store *search.Store) PostsIndexElastic
 	return PostsIndexElasticSearchRepository{store: store}
 }
 
-func (r PostsIndexElasticSearchRepository) IndexPendingPost(ctx context.Context, pendingPost *post.PostPending) error {
+func (r PostsIndexElasticSearchRepository) IndexPendingPost(ctx context.Context, pendingPost *post.PendingPost) error {
 
-	var pendingPosts []*post.PostPending
+	var pendingPosts []*post.PendingPost
 
 	pendingPosts = append(pendingPosts, pendingPost)
 
 	return r.BulkIndexPendingPosts(ctx, pendingPosts)
 }
 
-func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Context, moderatorId string) ([]*post.PostPending, error) {
+func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Context, moderatorId string) ([]*post.PendingPost, error) {
 
 	var query string
 
@@ -117,7 +117,7 @@ func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Contex
 		return nil, err
 	}
 
-	var posts []*post.PostPending
+	var posts []*post.PendingPost
 
 	for _, pest := range response.Hits {
 
@@ -166,7 +166,7 @@ func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Contex
 	return posts, nil
 }
 
-func (r PostsIndexElasticSearchRepository) BulkIndexPendingPosts(ctx context.Context, pendingPosts []*post.PostPending) error {
+func (r PostsIndexElasticSearchRepository) BulkIndexPendingPosts(ctx context.Context, pendingPosts []*post.PendingPost) error {
 	err := r.store.CreateBulkIndex(PendingPostIndexName)
 
 	if err != nil {

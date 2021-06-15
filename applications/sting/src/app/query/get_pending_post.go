@@ -17,7 +17,7 @@ func NewGetPendingPostsHandler(pr post.IndexRepository, eva EvaService) GetPendi
 	return GetPendingPostsHandler{pr: pr, eva: eva}
 }
 
-func (h GetPendingPostsHandler) Handle(ctx context.Context, cursor *paging.Cursor, userId string) ([]*post.PostPending, error) {
+func (h GetPendingPostsHandler) Handle(ctx context.Context, cursor *paging.Cursor, userId string) ([]*post.PendingPost, error) {
 
 	query := userId
 

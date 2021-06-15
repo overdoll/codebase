@@ -15,7 +15,7 @@ func NewGetPendingPostHandler(pr post.Repository) GetPendingPostHandler {
 	return GetPendingPostHandler{pr: pr}
 }
 
-func (h GetPendingPostHandler) Handle(ctx context.Context, id string) (*post.PostPending, error) {
+func (h GetPendingPostHandler) Handle(ctx context.Context, id string) (*post.PendingPost, error) {
 
 	pst, err := h.pr.GetPendingPost(ctx, id)
 

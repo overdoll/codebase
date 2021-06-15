@@ -25,7 +25,7 @@ func NewCreatePendingPostHandler(pr post.Repository, eva EvaService, parley Parl
 	return CreatePendingPostHandler{pr: pr, eva: eva, parley: parley}
 }
 
-func (h CreatePendingPostHandler) Handle(ctx context.Context, contributorId, artistId, artistUsername string, content, characterIds, categoryIds []string, characterRequests map[string]string, mediaRequests []string) (*post.PostPending, error) {
+func (h CreatePendingPostHandler) Handle(ctx context.Context, contributorId, artistId, artistUsername string, content, characterIds, categoryIds []string, characterRequests map[string]string, mediaRequests []string) (*post.PendingPost, error) {
 
 	// Get our contributor
 	usr, err := h.eva.GetUser(ctx, contributorId)
