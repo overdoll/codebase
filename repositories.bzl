@@ -275,6 +275,14 @@ def go_repositories():
         version = "v1.0.0",
     )
     go_repository(
+        name = "com_github_elastic_go_elasticsearch_v7",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/elastic/go-elasticsearch/v7",
+        sum = "h1:PaM3V69wPlnwR+ne50rSKKn0RNDYnnOFQcuGEI0ce80=",
+        version = "v7.13.1",
+    )
+
+    go_repository(
         name = "com_github_elastic_go_elasticsearch_v8",
         build_file_proto_mode = "disable",
         importpath = "github.com/elastic/go-elasticsearch/v8",

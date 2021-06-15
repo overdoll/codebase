@@ -215,6 +215,7 @@ const SearchPostPending = `
 		}
 	},
 	"size" : 10,
+    "sort": [{ "post_date" : {"order" : "asc", "format": "strict_date_optional_time_nanos"}}],
 	"track_total_hits": true
 `
 

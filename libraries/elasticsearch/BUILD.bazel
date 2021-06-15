@@ -13,8 +13,8 @@ go_library(
     deps = [
         "@com_github_cenkalti_backoff_v4//:backoff",
         "@com_github_dustin_go_humanize//:go-humanize",
-        "@com_github_elastic_go_elasticsearch_v8//:go-elasticsearch",
-        "@com_github_elastic_go_elasticsearch_v8//esapi",
-        "@com_github_elastic_go_elasticsearch_v8//esutil",
+        "@com_github_elastic_go_elasticsearch_v7//:go-elasticsearch",
+        "@com_github_elastic_go_elasticsearch_v7//esapi",
+        "@com_github_elastic_go_elasticsearch_v7//esutil",
     ],
 )

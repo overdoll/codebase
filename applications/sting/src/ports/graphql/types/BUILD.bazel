@@ -2,10 +2,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "types",
-    srcs = [
-        "edges.go",
-        "types.go",
-    ],
+    srcs = ["types.go"],
     importpath = "overdoll/applications/sting/src/ports/graphql/types",
     visibility = ["//visibility:public"],
     deps = ["//libraries/graphql/relay"],
