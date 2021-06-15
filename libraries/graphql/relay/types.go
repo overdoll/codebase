@@ -1,5 +1,9 @@
 package relay
 
+import (
+	"overdoll/libraries/paging"
+)
+
 type ConnectionInput struct {
 	After  *string `json:"after"`
 	Before *string `json:"before"`
@@ -12,4 +16,9 @@ type PageInfo struct {
 	HasPreviousPage bool    `json:"hasPreviousPage"`
 	StartCursor     *string `json:"startCursor"`
 	EndCursor       *string `json:"endCursor"`
+}
+
+func (c ConnectionInput) ToCursor() *paging.Cursor {
+	// todo: placeholder values for empty cursors
+	return paging.NewCursor(*c.Before, *c.After, *c.First, *c.Last)
 }

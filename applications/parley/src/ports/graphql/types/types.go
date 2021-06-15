@@ -30,6 +30,20 @@ type PendingPostAuditLog struct {
 	Reverted     bool       `json:"reverted"`
 }
 
+type PendingPostAuditLogConnection struct {
+	Edges []*PendingPostAuditLogEdge `json:"edges"`
+}
+
+type PendingPostAuditLogEdge struct {
+	Node *PendingPostAuditLog `json:"node"`
+}
+
+type PendingPostAuditLogFilters struct {
+	ModeratorID   *string `json:"moderatorId"`
+	ContributorID *string `json:"contributorId"`
+	PostID        *string `json:"postId"`
+}
+
 type PendingPostAuditLogInput struct {
 	ModeratorID string `json:"moderatorId"`
 }

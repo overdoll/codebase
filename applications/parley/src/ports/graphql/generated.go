@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"overdoll/applications/parley/src/ports/graphql/types"
+	"overdoll/libraries/graphql/relay"
 	"strconv"
 	"sync"
 	"sync/atomic"
@@ -65,6 +66,13 @@ type ComplexityRoot struct {
 		RevertPendingPostAuditLog func(childComplexity int, data types.RevertPostInput) int
 	}
 
+	PageInfo struct {
+		EndCursor       func(childComplexity int) int
+		HasNextPage     func(childComplexity int) int
+		HasPreviousPage func(childComplexity int) int
+		StartCursor     func(childComplexity int) int
+	}
+
 	PendingPostAuditLog struct {
 		Contributor  func(childComplexity int) int
 		ID           func(childComplexity int) int
@@ -77,6 +85,14 @@ type ComplexityRoot struct {
 		Status       func(childComplexity int) int
 	}
 
+	PendingPostAuditLogConnection struct {
+		Edges func(childComplexity int) int
+	}
+
+	PendingPostAuditLogEdge struct {
+		Node func(childComplexity int) int
+	}
+
 	PendingPostRejectionReason struct {
 		ID         func(childComplexity int) int
 		Infraction func(childComplexity int) int
@@ -84,7 +100,7 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		PendingPostAuditLogs func(childComplexity int, data types.PendingPostAuditLogInput) int
+		PendingPostAuditLogs func(childComplexity int, filter types.PendingPostAuditLogFilters) int
 		RejectionReasons     func(childComplexity int) int
 		__resolve__service   func(childComplexity int) int
 		__resolve_entities   func(childComplexity int, representations []map[string]interface{}) int
@@ -118,7 +134,7 @@ type MutationResolver interface {
 }
 type QueryResolver interface {
 	RejectionReasons(ctx context.Context) ([]*types.PendingPostRejectionReason, error)
-	PendingPostAuditLogs(ctx context.Context, data types.PendingPostAuditLogInput) ([]*types.PendingPostAuditLog, error)
+	PendingPostAuditLogs(ctx context.Context, filter types.PendingPostAuditLogFilters) (*types.PendingPostAuditLogConnection, error)
 }
 
 type executableSchema struct {
@@ -200,6 +216,34 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.RevertPendingPostAuditLog(childComplexity, args["data"].(types.RevertPostInput)), true
 
+	case "PageInfo.endCursor":
+		if e.complexity.PageInfo.EndCursor == nil {
+			break
+		}
+
+		return e.complexity.PageInfo.EndCursor(childComplexity), true
+
+	case "PageInfo.hasNextPage":
+		if e.complexity.PageInfo.HasNextPage == nil {
+			break
+		}
+
+		return e.complexity.PageInfo.HasNextPage(childComplexity), true
+
+	case "PageInfo.hasPreviousPage":
+		if e.complexity.PageInfo.HasPreviousPage == nil {
+			break
+		}
+
+		return e.complexity.PageInfo.HasPreviousPage(childComplexity), true
+
+	case "PageInfo.startCursor":
+		if e.complexity.PageInfo.StartCursor == nil {
+			break
+		}
+
+		return e.complexity.PageInfo.StartCursor(childComplexity), true
+
 	case "PendingPostAuditLog.contributor":
 		if e.complexity.PendingPostAuditLog.Contributor == nil {
 			break
@@ -263,6 +307,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.PendingPostAuditLog.Status(childComplexity), true
 
+	case "PendingPostAuditLogConnection.edges":
+		if e.complexity.PendingPostAuditLogConnection.Edges == nil {
+			break
+		}
+
+		return e.complexity.PendingPostAuditLogConnection.Edges(childComplexity), true
+
+	case "PendingPostAuditLogEdge.node":
+		if e.complexity.PendingPostAuditLogEdge.Node == nil {
+			break
+		}
+
+		return e.complexity.PendingPostAuditLogEdge.Node(childComplexity), true
+
 	case "PendingPostRejectionReason.id":
 		if e.complexity.PendingPostRejectionReason.ID == nil {
 			break
@@ -294,7 +352,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.PendingPostAuditLogs(childComplexity, args["data"].(types.PendingPostAuditLogInput)), true
+		return e.complexity.Query.PendingPostAuditLogs(childComplexity, args["filter"].(types.PendingPostAuditLogFilters)), true
 
 	case "Query.rejectionReasons":
 		if e.complexity.Query.RejectionReasons == nil {
@@ -428,6 +486,45 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
+	{Name: "schema/auditlog/schema.graphql", Input: `type PendingPostAuditLogEdge {
+  node: PendingPostAuditLog!
+}
+
+type PendingPostAuditLogConnection {
+  edges: [PendingPostAuditLogEdge!]!
+}
+
+type PendingPostAuditLog {
+  id: String!
+  postId: String!
+  contributor: AuditUser!
+  moderator: AuditUser!
+  infractionId: String
+  status: String!
+  reason: String!
+  notes: String!
+  reverted: Boolean!
+}
+
+type AuditUser {
+  id: String!
+  username: String!
+}
+
+input PendingPostAuditLogFilters {
+  moderatorId: String
+  contributorId: String
+  postId: String
+}
+
+extend type Query {
+  pendingPostAuditLogs(filter: PendingPostAuditLogFilters!): PendingPostAuditLogConnection!
+}`, BuiltIn: false},
+	{Name: "schema/federation/schema.graphql", Input: `extend type User @key(fields: "id") {
+  id: String! @external
+  infractionHistory: [UsersInfractionHistory!]
+}
+`, BuiltIn: false},
 	{Name: "schema/inputs.graphql", Input: `input ModeratePostInput {
   pendingPostId: String!
   rejectionReasonId: String
@@ -448,29 +545,11 @@ input RevertPostInput {
 `, BuiltIn: false},
 	{Name: "schema/queries.graphql", Input: `type Query {
   rejectionReasons: [PendingPostRejectionReason!]!
-  pendingPostAuditLogs(data: PendingPostAuditLogInput!): [PendingPostAuditLog!]!
 }
 `, BuiltIn: false},
 	{Name: "schema/types.graphql", Input: `type ModeratePost {
   auditLog: PendingPostAuditLog
   validation: Validation
-}
-
-type AuditUser {
-  id: String!
-  username: String!
-}
-
-type PendingPostAuditLog {
-  id: String!
-  postId: String!
-  contributor: AuditUser!
-  moderator: AuditUser!
-  infractionId: String
-  status: String!
-  reason: String!
-  notes: String!
-  reverted: Boolean!
 }
 
 type UsersInfractionHistory {
@@ -487,12 +566,35 @@ type PendingPostRejectionReason {
   reason: String!
   infraction: Boolean!
 }
-
-extend type User @key(fields: "id") {
-  id: String! @external
-  infractionHistory: [UsersInfractionHistory!]
-}
 `, BuiltIn: false},
+	{Name: "../../libraries/graphql/relay/schema.graphql", Input: `# Information about pagination in a connection.
+type PageInfo {
+  # When paginating forwards, are there more items?
+  hasNextPage: Boolean!
+
+  # When paginating backwards, are there more items?
+  hasPreviousPage: Boolean!
+
+  # When paginating backwards, the cursor to continue.
+  startCursor: String
+
+  # When paginating forwards, the cursor to continue.
+  endCursor: String
+}
+
+input ConnectionInput {
+  # Returns the elements in the list that come after the specified cursor.
+  after: String
+
+  # Returns the elements in the list that come before the specified cursor.
+  before: String
+
+  # Returns the first _n_ elements from the list.
+  first: Int
+
+  # Returns the last _n_ elements from the list.
+  last: Int
+}`, BuiltIn: false},
 	{Name: "federation/directives.graphql", Input: `
 scalar _Any
 scalar _FieldSet
@@ -607,15 +709,15 @@ func (ec *executionContext) field_Query__entities_args(ctx context.Context, rawA
 func (ec *executionContext) field_Query_pendingPostAuditLogs_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 types.PendingPostAuditLogInput
-	if tmp, ok := rawArgs["data"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("data"))
-		arg0, err = ec.unmarshalNPendingPostAuditLogInput2overdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostAuditLogInput(ctx, tmp)
+	var arg0 types.PendingPostAuditLogFilters
+	if tmp, ok := rawArgs["filter"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("filter"))
+		arg0, err = ec.unmarshalNPendingPostAuditLogFilters2overdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostAuditLogFilters(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["data"] = arg0
+	args["filter"] = arg0
 	return args, nil
 }
 
@@ -915,6 +1017,140 @@ func (ec *executionContext) _Mutation_revertPendingPostAuditLog(ctx context.Cont
 	res := resTmp.(*types.ModeratePost)
 	fc.Result = res
 	return ec.marshalNModeratePost2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐModeratePost(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PageInfo_hasNextPage(ctx context.Context, field graphql.CollectedField, obj *relay.PageInfo) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PageInfo",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.HasNextPage, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PageInfo_hasPreviousPage(ctx context.Context, field graphql.CollectedField, obj *relay.PageInfo) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PageInfo",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.HasPreviousPage, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PageInfo_startCursor(ctx context.Context, field graphql.CollectedField, obj *relay.PageInfo) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PageInfo",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.StartCursor, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PageInfo_endCursor(ctx context.Context, field graphql.CollectedField, obj *relay.PageInfo) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PageInfo",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.EndCursor, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _PendingPostAuditLog_id(ctx context.Context, field graphql.CollectedField, obj *types.PendingPostAuditLog) (ret graphql.Marshaler) {
@@ -1229,6 +1465,76 @@ func (ec *executionContext) _PendingPostAuditLog_reverted(ctx context.Context, f
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _PendingPostAuditLogConnection_edges(ctx context.Context, field graphql.CollectedField, obj *types.PendingPostAuditLogConnection) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PendingPostAuditLogConnection",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Edges, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*types.PendingPostAuditLogEdge)
+	fc.Result = res
+	return ec.marshalNPendingPostAuditLogEdge2ᚕᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostAuditLogEdgeᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PendingPostAuditLogEdge_node(ctx context.Context, field graphql.CollectedField, obj *types.PendingPostAuditLogEdge) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PendingPostAuditLogEdge",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Node, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.PendingPostAuditLog)
+	fc.Result = res
+	return ec.marshalNPendingPostAuditLog2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostAuditLog(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _PendingPostRejectionReason_id(ctx context.Context, field graphql.CollectedField, obj *types.PendingPostRejectionReason) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -1394,7 +1700,7 @@ func (ec *executionContext) _Query_pendingPostAuditLogs(ctx context.Context, fie
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().PendingPostAuditLogs(rctx, args["data"].(types.PendingPostAuditLogInput))
+		return ec.resolvers.Query().PendingPostAuditLogs(rctx, args["filter"].(types.PendingPostAuditLogFilters))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1406,9 +1712,9 @@ func (ec *executionContext) _Query_pendingPostAuditLogs(ctx context.Context, fie
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*types.PendingPostAuditLog)
+	res := resTmp.(*types.PendingPostAuditLogConnection)
 	fc.Result = res
-	return ec.marshalNPendingPostAuditLog2ᚕᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostAuditLogᚄ(ctx, field.Selections, res)
+	return ec.marshalNPendingPostAuditLogConnection2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostAuditLogConnection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query__entities(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2850,6 +3156,50 @@ func (ec *executionContext) ___Type_ofType(ctx context.Context, field graphql.Co
 
 // region    **************************** input.gotpl *****************************
 
+func (ec *executionContext) unmarshalInputConnectionInput(ctx context.Context, obj interface{}) (relay.ConnectionInput, error) {
+	var it relay.ConnectionInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "after":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
+			it.After, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "before":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
+			it.Before, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "first":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
+			it.First, err = ec.unmarshalOInt2ᚖint(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "last":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
+			it.Last, err = ec.unmarshalOInt2ᚖint(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputModeratePostInput(ctx context.Context, obj interface{}) (types.ModeratePostInput, error) {
 	var it types.ModeratePostInput
 	var asMap = obj.(map[string]interface{})
@@ -2877,6 +3227,42 @@ func (ec *executionContext) unmarshalInputModeratePostInput(ctx context.Context,
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("notes"))
 			it.Notes, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputPendingPostAuditLogFilters(ctx context.Context, obj interface{}) (types.PendingPostAuditLogFilters, error) {
+	var it types.PendingPostAuditLogFilters
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "moderatorId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("moderatorId"))
+			it.ModeratorID, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "contributorId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("contributorId"))
+			it.ContributorID, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "postId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("postId"))
+			it.PostID, err = ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -3084,6 +3470,42 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 	return out
 }
 
+var pageInfoImplementors = []string{"PageInfo"}
+
+func (ec *executionContext) _PageInfo(ctx context.Context, sel ast.SelectionSet, obj *relay.PageInfo) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, pageInfoImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("PageInfo")
+		case "hasNextPage":
+			out.Values[i] = ec._PageInfo_hasNextPage(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "hasPreviousPage":
+			out.Values[i] = ec._PageInfo_hasPreviousPage(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "startCursor":
+			out.Values[i] = ec._PageInfo_startCursor(ctx, field, obj)
+		case "endCursor":
+			out.Values[i] = ec._PageInfo_endCursor(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var pendingPostAuditLogImplementors = []string{"PendingPostAuditLog"}
 
 func (ec *executionContext) _PendingPostAuditLog(ctx context.Context, sel ast.SelectionSet, obj *types.PendingPostAuditLog) graphql.Marshaler {
@@ -3134,6 +3556,60 @@ func (ec *executionContext) _PendingPostAuditLog(ctx context.Context, sel ast.Se
 			}
 		case "reverted":
 			out.Values[i] = ec._PendingPostAuditLog_reverted(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var pendingPostAuditLogConnectionImplementors = []string{"PendingPostAuditLogConnection"}
+
+func (ec *executionContext) _PendingPostAuditLogConnection(ctx context.Context, sel ast.SelectionSet, obj *types.PendingPostAuditLogConnection) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, pendingPostAuditLogConnectionImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("PendingPostAuditLogConnection")
+		case "edges":
+			out.Values[i] = ec._PendingPostAuditLogConnection_edges(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var pendingPostAuditLogEdgeImplementors = []string{"PendingPostAuditLogEdge"}
+
+func (ec *executionContext) _PendingPostAuditLogEdge(ctx context.Context, sel ast.SelectionSet, obj *types.PendingPostAuditLogEdge) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, pendingPostAuditLogEdgeImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("PendingPostAuditLogEdge")
+		case "node":
+			out.Values[i] = ec._PendingPostAuditLogEdge_node(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -3672,7 +4148,31 @@ func (ec *executionContext) unmarshalNModeratePostInput2overdollᚋapplications�
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNPendingPostAuditLog2ᚕᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostAuditLogᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.PendingPostAuditLog) graphql.Marshaler {
+func (ec *executionContext) marshalNPendingPostAuditLog2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostAuditLog(ctx context.Context, sel ast.SelectionSet, v *types.PendingPostAuditLog) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._PendingPostAuditLog(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNPendingPostAuditLogConnection2overdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostAuditLogConnection(ctx context.Context, sel ast.SelectionSet, v types.PendingPostAuditLogConnection) graphql.Marshaler {
+	return ec._PendingPostAuditLogConnection(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNPendingPostAuditLogConnection2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostAuditLogConnection(ctx context.Context, sel ast.SelectionSet, v *types.PendingPostAuditLogConnection) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._PendingPostAuditLogConnection(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNPendingPostAuditLogEdge2ᚕᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostAuditLogEdgeᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.PendingPostAuditLogEdge) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -3696,7 +4196,7 @@ func (ec *executionContext) marshalNPendingPostAuditLog2ᚕᚖoverdollᚋapplica
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNPendingPostAuditLog2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostAuditLog(ctx, sel, v[i])
+			ret[i] = ec.marshalNPendingPostAuditLogEdge2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostAuditLogEdge(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -3709,18 +4209,18 @@ func (ec *executionContext) marshalNPendingPostAuditLog2ᚕᚖoverdollᚋapplica
 	return ret
 }
 
-func (ec *executionContext) marshalNPendingPostAuditLog2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostAuditLog(ctx context.Context, sel ast.SelectionSet, v *types.PendingPostAuditLog) graphql.Marshaler {
+func (ec *executionContext) marshalNPendingPostAuditLogEdge2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostAuditLogEdge(ctx context.Context, sel ast.SelectionSet, v *types.PendingPostAuditLogEdge) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
 		}
 		return graphql.Null
 	}
-	return ec._PendingPostAuditLog(ctx, sel, v)
+	return ec._PendingPostAuditLogEdge(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNPendingPostAuditLogInput2overdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostAuditLogInput(ctx context.Context, v interface{}) (types.PendingPostAuditLogInput, error) {
-	res, err := ec.unmarshalInputPendingPostAuditLogInput(ctx, v)
+func (ec *executionContext) unmarshalNPendingPostAuditLogFilters2overdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostAuditLogFilters(ctx context.Context, v interface{}) (types.PendingPostAuditLogFilters, error) {
+	res, err := ec.unmarshalInputPendingPostAuditLogFilters(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -4173,6 +4673,21 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 		return graphql.Null
 	}
 	return graphql.MarshalBoolean(*v)
+}
+
+func (ec *executionContext) unmarshalOInt2ᚖint(ctx context.Context, v interface{}) (*int, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := graphql.UnmarshalInt(v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.SelectionSet, v *int) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return graphql.MarshalInt(*v)
 }
 
 func (ec *executionContext) marshalOPendingPostAuditLog2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostAuditLog(ctx context.Context, sel ast.SelectionSet, v *types.PendingPostAuditLog) graphql.Marshaler {

@@ -25,7 +25,6 @@ type PendingPostEdge {
 type PendingPostConnection {
   edges: [PendingPostEdge!]!
   pageInfo: PageInfo!
-  totalCount: Int!
 }
 
 input PostInput {

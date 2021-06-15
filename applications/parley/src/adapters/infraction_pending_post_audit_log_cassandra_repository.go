@@ -7,8 +7,11 @@ import (
 	"time"
 
 	"github.com/gocql/gocql"
+	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"overdoll/applications/parley/src/domain/infraction"
+	"overdoll/libraries/paging"
+	"overdoll/libraries/paging/paging_drivers"
 )
 
 type PendingPostAuditLog struct {
@@ -142,10 +145,10 @@ func (r InfractionCassandraRepository) GetPendingPostAuditLog(ctx context.Contex
 	), nil
 }
 
-func (r InfractionCassandraRepository) GetPendingPostAuditLogByModerator(ctx context.Context, moderatorId string) ([]*infraction.PendingPostAuditLog, error) {
+func (r InfractionCassandraRepository) GetPendingPostAuditLogByModerator(ctx context.Context, input *paging.Cursor, moderatorId string) (*infraction.PendingPostAuditLogConnection, error) {
 
 	pendingPostAuditLogQuery := qb.Select("pending_posts_audit_log").
-		Where(qb.Eq("moderator_user_id")).
+		Where(qb.Eq("moderator_user_id"), paging_drivers.TokenCassandra(input)).
 		Columns(
 			"id",
 			"post_id",
@@ -165,11 +168,15 @@ func (r InfractionCassandraRepository) GetPendingPostAuditLogByModerator(ctx con
 
 	var dbPendingPostAuditLogs []*PendingPostAuditLog
 
-	if err := pendingPostAuditLogQuery.Select(&dbPendingPostAuditLogs); err != nil {
+	state, err := paging_drivers.PageCassandra(input, pendingPostAuditLogQuery, func(iter *gocqlx.Iterx) error {
+		return pendingPostAuditLogQuery.Select(&dbPendingPostAuditLogs)
+	})
+
+	if err != nil {
 		return nil, err
 	}
 
-	var pendingPostAuditLogs []*infraction.PendingPostAuditLog
+	var pendingPostAuditLogs []*infraction.PendingPostAuditLogEdge
 
 	for _, pendingPostAuditLog := range dbPendingPostAuditLogs {
 
@@ -184,27 +191,35 @@ func (r InfractionCassandraRepository) GetPendingPostAuditLogByModerator(ctx con
 			)
 		}
 
+		result := infraction.UnmarshalPendingPostAuditLogFromDatabase(
+			// ID is made up of moderator ID + the audit Log ID, so we give both to get precise querying
+			pendingPostAuditLog.Id,
+			pendingPostAuditLog.PostId,
+			pendingPostAuditLog.ModeratorId,
+			pendingPostAuditLog.ModeratorUsername,
+			pendingPostAuditLog.ContributorId,
+			pendingPostAuditLog.ContributorUsername,
+			pendingPostAuditLog.Status,
+			pendingPostAuditLog.UserInfractionId,
+			pendingPostAuditLog.Reason,
+			pendingPostAuditLog.Notes,
+			pendingPostAuditLog.Reverted,
+			userInfractionHistory,
+		)
+
 		//(id, userId, reason string, expiration time.Time)
 		pendingPostAuditLogs = append(pendingPostAuditLogs,
-			infraction.UnmarshalPendingPostAuditLogFromDatabase(
-				// ID is made up of moderator ID + the audit Log ID, so we give both to get precise querying
-				pendingPostAuditLog.ModeratorId+"+"+pendingPostAuditLog.Id+"+",
-				pendingPostAuditLog.PostId,
-				pendingPostAuditLog.ModeratorId,
-				pendingPostAuditLog.ModeratorUsername,
-				pendingPostAuditLog.ContributorId,
-				pendingPostAuditLog.ContributorUsername,
-				pendingPostAuditLog.Status,
-				pendingPostAuditLog.UserInfractionId,
-				pendingPostAuditLog.Reason,
-				pendingPostAuditLog.Notes,
-				pendingPostAuditLog.Reverted,
-				userInfractionHistory,
-			),
+			&infraction.PendingPostAuditLogEdge{
+				Cursor: pendingPostAuditLog.ModeratorId + "+" + pendingPostAuditLog.ContributorId + "+" + pendingPostAuditLog.Id,
+				Node:   result,
+			},
 		)
 	}
 
-	return pendingPostAuditLogs, nil
+	return &infraction.PendingPostAuditLogConnection{
+		Edges:    pendingPostAuditLogs,
+		PageInfo: paging.NewPageInfo(state.HasMore()),
+	}, nil
 }
 
 func (r InfractionCassandraRepository) UpdatePendingPostAuditLog(ctx context.Context, id string, updateFn func(auditLog *infraction.PendingPostAuditLog) error) (*infraction.PendingPostAuditLog, error) {

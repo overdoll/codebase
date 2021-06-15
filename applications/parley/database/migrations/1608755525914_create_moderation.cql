@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS moderators
 CREATE TABLE IF NOT EXISTS pending_posts_audit_log
 (
     id                        text,
+
     post_id                   text,
     contributor_user_id       text,
     contributor_user_username text,
@@ -20,7 +21,7 @@ CREATE TABLE IF NOT EXISTS pending_posts_audit_log
     notes                     text,
     reverted                  boolean,
     primary key ( moderator_user_id, contributor_user_id, post_id, id ),
-);
+) WITH CLUSTERING ORDER BY (contributor_user_id DESC, post_id DESC, id DESC);
 
 CREATE INDEX IF NOT EXISTS pending_posts_audit_log_status on pending_posts_audit_log (status);
 

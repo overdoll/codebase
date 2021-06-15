@@ -3,23 +3,6 @@ type ModeratePost {
   validation: Validation
 }
 
-type AuditUser {
-  id: String!
-  username: String!
-}
-
-type PendingPostAuditLog {
-  id: String!
-  postId: String!
-  contributor: AuditUser!
-  moderator: AuditUser!
-  infractionId: String
-  status: String!
-  reason: String!
-  notes: String!
-  reverted: Boolean!
-}
-
 type UsersInfractionHistory {
   id: String!
   reason: String!
@@ -33,9 +16,4 @@ type PendingPostRejectionReason {
   id: String!
   reason: String!
   infraction: Boolean!
-}
-
-extend type User @key(fields: "id") {
-  id: String! @external
-  infractionHistory: [UsersInfractionHistory!]
 }

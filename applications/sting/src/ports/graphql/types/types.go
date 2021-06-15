@@ -61,9 +61,8 @@ type PendingPost struct {
 }
 
 type PendingPostConnection struct {
-	Edges      []*PendingPostEdge `json:"edges"`
-	PageInfo   *relay.PageInfo    `json:"pageInfo"`
-	TotalCount int                `json:"totalCount"`
+	Edges    []*PendingPostEdge `json:"edges"`
+	PageInfo *relay.PageInfo    `json:"pageInfo"`
 }
 
 type PendingPostEdge struct {

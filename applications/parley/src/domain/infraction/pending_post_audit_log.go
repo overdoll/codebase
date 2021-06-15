@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/segmentio/ksuid"
+	"overdoll/libraries/paging"
 	"overdoll/libraries/user"
 )
 
@@ -16,6 +17,16 @@ const (
 var (
 	ErrInvalidModerator = errors.New("moderator does not match")
 )
+
+type PendingPostAuditLogConnection struct {
+	Edges    []*PendingPostAuditLogEdge
+	PageInfo *paging.PageInfo
+}
+
+type PendingPostAuditLogEdge struct {
+	Cursor string
+	Node   *PendingPostAuditLog
+}
 
 // A class simply used to store the details of a PendingPost that we can use
 // later on

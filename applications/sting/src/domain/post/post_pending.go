@@ -5,6 +5,7 @@ import (
 	"os"
 	"time"
 
+	"overdoll/libraries/paging"
 	"overdoll/libraries/user"
 	"overdoll/libraries/uuid"
 )
@@ -43,6 +44,16 @@ type CategoryRequest struct {
 type MediaRequest struct {
 	Id    string
 	Title string
+}
+
+type PostPendingConnection struct {
+	Edges    []PostPendingEdge
+	PageInfo paging.PageInfo
+}
+
+type PostPendingEdge struct {
+	Cursor string
+	Node   *PostPending
 }
 
 type PostPending struct {

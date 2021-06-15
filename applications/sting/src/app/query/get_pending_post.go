@@ -5,6 +5,7 @@ import (
 
 	"go.uber.org/zap"
 	"overdoll/applications/sting/src/domain/post"
+	"overdoll/libraries/paging"
 )
 
 type GetPendingPostsHandler struct {
@@ -16,7 +17,7 @@ func NewGetPendingPostsHandler(pr post.IndexRepository, eva EvaService) GetPendi
 	return GetPendingPostsHandler{pr: pr, eva: eva}
 }
 
-func (h GetPendingPostsHandler) Handle(ctx context.Context, userId string) ([]*post.PostPending, error) {
+func (h GetPendingPostsHandler) Handle(ctx context.Context, cursor *paging.Cursor, userId string) ([]*post.PostPending, error) {
 
 	query := userId
 

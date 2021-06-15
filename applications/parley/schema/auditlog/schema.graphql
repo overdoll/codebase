@@ -1,0 +1,34 @@
+type PendingPostAuditLogEdge {
+  node: PendingPostAuditLog!
+}
+
+type PendingPostAuditLogConnection {
+  edges: [PendingPostAuditLogEdge!]!
+}
+
+type PendingPostAuditLog {
+  id: String!
+  postId: String!
+  contributor: AuditUser!
+  moderator: AuditUser!
+  infractionId: String
+  status: String!
+  reason: String!
+  notes: String!
+  reverted: Boolean!
+}
+
+type AuditUser {
+  id: String!
+  username: String!
+}
+
+input PendingPostAuditLogFilters {
+  moderatorId: String
+  contributorId: String
+  postId: String
+}
+
+extend type Query {
+  pendingPostAuditLogs(filter: PendingPostAuditLogFilters!): PendingPostAuditLogConnection!
+}
