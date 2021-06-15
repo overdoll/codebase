@@ -64,10 +64,11 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			CreatePendingPost: command.NewCreatePendingPostHandler(postRepo, eva, parley),
 			UpdatePendingPost: command.NewUpdatePendingPostHandler(postRepo),
 
-			IndexAllMedia:      command.NewIndexAllMediaHandler(postRepo, indexRepo),
-			IndexAllCharacters: command.NewIndexAllCharactersHandler(postRepo, indexRepo),
-			IndexAllCategories: command.NewIndexAllCategoriesHandler(postRepo, indexRepo),
-			IndexAllArtists:    command.NewIndexAllArtistsHandler(postRepo, indexRepo),
+			IndexAllPendingPosts: command.NewIndexAllPendingPostsHandler(postRepo, indexRepo),
+			IndexAllMedia:        command.NewIndexAllMediaHandler(postRepo, indexRepo),
+			IndexAllCharacters:   command.NewIndexAllCharactersHandler(postRepo, indexRepo),
+			IndexAllCategories:   command.NewIndexAllCategoriesHandler(postRepo, indexRepo),
+			IndexAllArtists:      command.NewIndexAllArtistsHandler(postRepo, indexRepo),
 
 			StartUndoPost:    command.NewStartUndoPostHandler(postRepo, indexRepo),
 			StartPublishPost: command.NewStartPublishPostHandler(postRepo, indexRepo, eva),

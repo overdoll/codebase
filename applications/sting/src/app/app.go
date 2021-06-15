@@ -19,10 +19,11 @@ type Commands struct {
 	StartUndoPost    command.StartUndoPostHandler
 	RejectPost       command.RejectPostHandler
 
-	IndexAllArtists    command.IndexAllArtistsHandler
-	IndexAllCategories command.IndexAllCategoriesHandler
-	IndexAllCharacters command.IndexAllCharactersHandler
-	IndexAllMedia      command.IndexAllMediaHandler
+	IndexAllArtists      command.IndexAllArtistsHandler
+	IndexAllCategories   command.IndexAllCategoriesHandler
+	IndexAllCharacters   command.IndexAllCharactersHandler
+	IndexAllMedia        command.IndexAllMediaHandler
+	IndexAllPendingPosts command.IndexAllPendingPostsHandler
 
 	CreatePost          command.CreatePostHandler
 	NewPendingPost      command.NewPostHandler

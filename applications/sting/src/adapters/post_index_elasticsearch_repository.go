@@ -8,6 +8,7 @@ import (
 
 	"overdoll/applications/sting/src/domain/post"
 	search "overdoll/libraries/elasticsearch"
+	"overdoll/libraries/paging"
 )
 
 type PostDocument struct {
@@ -34,6 +35,7 @@ type PostPendingDocument struct {
 	CategoriesRequests []string             `json:"categories_requests"`
 	MediaRequests      []string             `json:"media_requests"`
 	PostedAt           string               `json:"posted_at"`
+	Timestamp          time.Time            `json:"timestamp"`
 }
 
 type ContributorDocument struct {
@@ -47,10 +49,76 @@ const PostIndex = `
 	"mappings": {
 		"dynamic": "strict",
 		"properties": {
-			"id": {
-				"type": "keyword"
+				"id": {
+					"type": "keyword"
+				},
+				"artist": {
+					"type": "nested",
+					"properties": {
+						"id": {
+							"type": "keyword"
+						},
+						"avatar": {
+							"type": "keyword"
+						},
+						"username": {
+							"type": "text",
+							"analyzer": "english"
+						}
+					}
+				},
+				"contributor": {
+					"type": "nested",
+					"properties": {
+						"id": {
+							"type": "keyword"
+						},
+						"avatar": {
+							"type": "keyword"
+						},
+						"username": {
+							"type": "text",
+							"analyzer": "english"
+						}
+					}
+				},
+				"categories": {
+					"type": "nested",
+					"properties": {
+						"id": {
+							"type": "keyword"
+						},
+						"thumbnail": {
+							"type": "keyword"
+						},
+						"title": {
+							"type": "text",
+							"analyzer": "english"
+						}
+					}
+				},
+				"characters": {
+					"type": "nested",
+					"properties": {
+						"id": {
+							"type": "keyword"
+						},
+						"thumbnail": {
+							"type": "keyword"
+						},
+						"name": {
+							"type": "text",
+							"analyzer": "english"
+						}
+					}
+				},
+				"content": {
+                     "type": "keyword"
+				},
+				"posted_at": {
+                     "type": "date"
+				},
 			}
-		}
 	}
 }`
 
@@ -59,22 +127,96 @@ const PostPendingIndex = `
 	"mappings": {
 		"dynamic": "strict",
 		"properties": {
-			"id": {
-				"type": "keyword"
+				"id": {
+					"type": "keyword"
+				},
+				"state": {
+					"type": "keyword"
+				},
+				"moderator_id": {
+					"type": "keyword
+				},
+				"artist_id": {
+					"type": "keyword
+				},
+				"artist_username": {
+					"type": "keyword
+				},
+				"contributor": {
+					"type": "nested",
+					"properties": {
+						"id": {
+							"type": "keyword"
+						},
+						"avatar": {
+							"type": "keyword"
+						},
+						"username": {
+							"type": "text",
+							"analyzer": "english"
+						}
+					}
+				},
+				"categories": {
+					"type": "nested",
+					"properties": {
+						"id": {
+							"type": "keyword"
+						},
+						"thumbnail": {
+							"type": "keyword"
+						},
+						"title": {
+							"type": "text",
+							"analyzer": "english"
+						}
+					}
+				},
+				"characters": {
+					"type": "nested",
+					"properties": {
+						"id": {
+							"type": "keyword"
+						},
+						"thumbnail": {
+							"type": "keyword"
+						},
+						"name": {
+							"type": "text",
+							"analyzer": "english"
+						}
+					}
+				},
+				"content": {
+                     "type": "keyword"
+				},
+				"categories_requests": {
+                     "type": "keyword"
+				},
+				"media_requests": {
+                     "type": "keyword"
+				},
+				"characters_requests": {
+                     "type": "object"
+				},
+				"posted_at": {
+                     "type": "date"
+				},
 			}
-		}
 	}
 }`
 
-const SearchPostPending = `
-	"query" : {
+const SearchPostPending = `	
+    "query" : {
 		"multi_match" : {
 			"query" : %q,
-			"fields" : ["moderator_id^100"],
+			"fields" : ["moderator_id"],
 			"operator" : "and"
 		}
 	},
-	"size" : 5`
+	"size" : 10,
+	"track_total_hits": true
+`
 
 const AllPostPending = `
 	"query" : { "match_all" : {} },
@@ -101,15 +243,9 @@ func (r PostsIndexElasticSearchRepository) IndexPendingPost(ctx context.Context,
 	return r.BulkIndexPendingPosts(ctx, pendingPosts)
 }
 
-func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Context, moderatorId string) ([]*post.PendingPost, error) {
+func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Context, filter *post.PendingPostFilters) (*post.PendingPostConnection, error) {
 
-	var query string
-
-	if moderatorId == "" {
-		query = AllPostPending
-	} else {
-		query = fmt.Sprintf(SearchPostPending, moderatorId)
-	}
+	query := fmt.Sprintf(SearchPostPending, filter.ModeratorId())
 
 	response, err := r.store.Search(PendingPostIndexName, query)
 
@@ -117,7 +253,7 @@ func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Contex
 		return nil, err
 	}
 
-	var posts []*post.PendingPost
+	var posts []*post.PendingPostEdge
 
 	for _, pest := range response.Hits {
 
@@ -143,8 +279,9 @@ func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Contex
 
 		tm, err := time.Parse("UTC", pst.PostedAt)
 
-		posts = append(posts,
-			post.UnmarshalPendingPostFromDatabase(
+		posts = append(posts, &post.PendingPostEdge{
+			Cursor: pst.Timestamp.String(),
+			Node: post.UnmarshalPendingPostFromDatabase(
 				pst.Id,
 				pst.ModeratorId,
 				pst.State,
@@ -160,10 +297,13 @@ func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Contex
 				pst.MediaRequests,
 				tm,
 			),
-		)
+		})
 	}
 
-	return posts, nil
+	return &post.PendingPostConnection{
+		Edges:    posts,
+		PageInfo: &paging.PageInfo{},
+	}, nil
 }
 
 func (r PostsIndexElasticSearchRepository) BulkIndexPendingPosts(ctx context.Context, pendingPosts []*post.PendingPost) error {
@@ -207,8 +347,10 @@ func (r PostsIndexElasticSearchRepository) BulkIndexPendingPosts(ctx context.Con
 
 		data := &PostPendingDocument{
 			Id:             pst.ID(),
+			State:          string(pst.State()),
 			ArtistUsername: pst.Artist().Username(),
 			ArtistId:       pst.Artist().ID(),
+			ModeratorId:    pst.ModeratorId(),
 			Contributor: ContributorDocument{
 				Id:       pst.Contributor().ID(),
 				Avatar:   pst.Contributor().Avatar(),

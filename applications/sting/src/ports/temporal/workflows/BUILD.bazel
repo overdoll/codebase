@@ -14,7 +14,6 @@ go_library(
     deps = [
         "//applications/sting/src/app/command",
         "//libraries/helpers",
-        "@com_github_segmentio_ksuid//:ksuid",
         "@io_temporal_go_sdk//temporal",
         "@io_temporal_go_sdk//workflow",
     ],

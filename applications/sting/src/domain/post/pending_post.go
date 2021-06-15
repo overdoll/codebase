@@ -46,9 +46,24 @@ type MediaRequest struct {
 	Title string
 }
 
+type PendingPostFilters struct {
+	moderatorId string
+}
+
+func NewPendingPostFilters(moderatorId string) (*PendingPostFilters, error) {
+
+	return &PendingPostFilters{
+		moderatorId: moderatorId,
+	}, nil
+}
+
+func (e *PendingPostFilters) ModeratorId() string {
+	return e.moderatorId
+}
+
 type PendingPostConnection struct {
-	Edges    []PendingPostEdge
-	PageInfo paging.PageInfo
+	Edges    []*PendingPostEdge
+	PageInfo *paging.PageInfo
 }
 
 type PendingPostEdge struct {

@@ -7,14 +7,13 @@ import (
 	"overdoll/applications/sting/src/domain/post"
 	"overdoll/applications/sting/src/ports/graphql/types"
 	"overdoll/libraries/graphql/relay"
-	"overdoll/libraries/passport"
 )
 
 type QueryResolver struct {
 	App *app.Application
 }
 
-func marshalPendingPostsToGraphQL(results []*post.PendingPost) []*types.PendingPostEdge {
+func marshalPendingPostsToGraphQL(results []*post.PendingPostEdge) []*types.PendingPostEdge {
 	resp := make([]*types.PendingPostEdge, 0)
 
 	// Unmarshal our json into the correct model
@@ -22,25 +21,25 @@ func marshalPendingPostsToGraphQL(results []*post.PendingPost) []*types.PendingP
 
 		var mediaRequests []string
 
-		for _, med := range result.MediaRequests() {
+		for _, med := range result.Node.MediaRequests() {
 			mediaRequests = append(mediaRequests, med.Title)
 		}
 
 		var characterRequests []*types.CharacterRequestType
 
-		for _, med := range result.CharacterRequests() {
+		for _, med := range result.Node.CharacterRequests() {
 			characterRequests = append(characterRequests, &types.CharacterRequestType{
 				Name:  med.Name,
 				Media: med.Media,
 			})
 		}
 
-		artist := result.Artist()
+		artist := result.Node.Artist()
 		id := artist.ID()
 
 		var categories []*types.Category
 
-		for _, cat := range result.Categories() {
+		for _, cat := range result.Node.Categories() {
 			categories = append(categories, &types.Category{
 				ID:        cat.ID(),
 				Thumbnail: cat.Thumbnail(),
@@ -50,7 +49,7 @@ func marshalPendingPostsToGraphQL(results []*post.PendingPost) []*types.PendingP
 
 		var characters []*types.Character
 
-		for _, char := range result.Characters() {
+		for _, char := range result.Node.Characters() {
 			characters = append(characters, &types.Character{
 				ID:        char.ID(),
 				Thumbnail: char.Thumbnail(),
@@ -64,16 +63,16 @@ func marshalPendingPostsToGraphQL(results []*post.PendingPost) []*types.PendingP
 		}
 
 		resp = append(resp, &types.PendingPostEdge{
-			Cursor: result.ID(),
+			Cursor: result.Cursor,
 			Node: &types.PendingPost{
-				ID:        result.ID(),
-				Moderator: result.ModeratorId(),
+				ID:        result.Node.ID(),
+				Moderator: result.Node.ModeratorId(),
 				Contributor: &types.Contributor{
-					ID:       result.Contributor().ID(),
-					Username: result.Contributor().Username(),
-					Avatar:   result.Contributor().Avatar(),
+					ID:       result.Node.Contributor().ID(),
+					Username: result.Node.Contributor().Username(),
+					Avatar:   result.Node.Contributor().Avatar(),
 				},
-				Content:           result.Content(),
+				Content:           result.Node.Content(),
 				Categories:        categories,
 				Characters:        characters,
 				MediaRequests:     mediaRequests,
@@ -89,21 +88,26 @@ func marshalPendingPostsToGraphQL(results []*post.PendingPost) []*types.PendingP
 
 func (r *QueryResolver) PendingPosts(ctx context.Context, input relay.ConnectionInput, filter types.PendingPostFilters) (*types.PendingPostConnection, error) {
 
-	pass := passport.FromContext(ctx)
+	//pass := passport.FromContext(ctx)
+	//
+	//if !pass.IsAuthenticated() {
+	//	return nil, passport.ErrNotAuthenticated
+	//}
 
-	if !pass.IsAuthenticated() {
-		return nil, passport.ErrNotAuthenticated
-	}
-
-	results, err := r.App.Queries.GetPendingPosts.Handle(ctx, input.ToCursor(), pass.UserID())
+	results, err := r.App.Queries.GetPendingPosts.Handle(ctx, input.ToCursor(), "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
 
 	if err != nil {
 		return nil, err
 	}
 
 	return &types.PendingPostConnection{
-		Edges:    marshalPendingPostsToGraphQL(results),
-		PageInfo: nil,
+		Edges:    marshalPendingPostsToGraphQL(results.Edges),
+		PageInfo: &relay.PageInfo{
+			HasNextPage:     false,
+			HasPreviousPage: false,
+			StartCursor: nil,
+			EndCursor:       nil,
+		},
 	}, nil
 }
 

@@ -31,7 +31,7 @@ func (m MutationResolver) ModeratePost(ctx context.Context, data types.ModerateP
 		return nil, err
 	}
 
-	return &types.ModeratePost{Validation: nil, AuditLog: types.MarshalPendingPostAuditLogToGraphQL(auditLog)}, nil
+	return &types.ModeratePost{Validation: nil, AuditLog: types.MarshalPendingPostAuditLogToGraphQL(auditLog).Node}, nil
 }
 
 func (m MutationResolver) RevertPendingPostAuditLog(ctx context.Context, data types.RevertPostInput) (*types.ModeratePost, error) {
@@ -47,5 +47,5 @@ func (m MutationResolver) RevertPendingPostAuditLog(ctx context.Context, data ty
 		return nil, err
 	}
 
-	return &types.ModeratePost{Validation: nil, AuditLog: types.MarshalPendingPostAuditLogToGraphQL(auditLog)}, nil
+	return &types.ModeratePost{Validation: nil, AuditLog: types.MarshalPendingPostAuditLogToGraphQL(auditLog).Node}, nil
 }

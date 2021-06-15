@@ -25,6 +25,7 @@ go_library(
         "//applications/parley/proto:v1_go_proto",
         "//applications/sting/src/domain/post",
         "//libraries/elasticsearch",
+        "//libraries/paging",
         "//libraries/user",
         "//libraries/uuid",
         "@com_github_aws_aws_sdk_go//aws",
