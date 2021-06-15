@@ -3,7 +3,6 @@ package workflows
 import (
 	"time"
 
-	"github.com/segmentio/ksuid"
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/sting/src/app/command"
 	"overdoll/libraries/helpers"
@@ -22,25 +21,15 @@ func CreatePost(ctx workflow.Context, id string) error {
 			return err
 		}
 
-		newId := workflow.SideEffect(ctx, func(ctx workflow.Context) interface{} {
-			return ksuid.New().String()
-		})
-
-		var newPostId string
 		var assignedNewModerator bool
 
-		if err := newId.Get(&newPostId); err != nil {
-			return err
-		}
-
-		err := workflow.ExecuteActivity(ctx, helpers.GetStructName(command.ReassignModeratorHandler{}), id, newPostId).Get(ctx, &assignedNewModerator)
+		err := workflow.ExecuteActivity(ctx, helpers.GetStructName(command.ReassignModeratorHandler{}), id).Get(ctx, &assignedNewModerator)
 
 		if err != nil {
 			return err
 		}
 
 		if assignedNewModerator {
-			id = newPostId
 			continue
 		}
 
