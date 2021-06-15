@@ -1,10 +1,12 @@
 package adapters
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
 	"strconv"
+	"text/template"
 	"time"
 
 	"overdoll/applications/sting/src/domain/post"
@@ -35,7 +37,7 @@ type PostPendingDocument struct {
 	CharactersRequests map[string]string    `json:"characters_requests"`
 	CategoriesRequests []string             `json:"categories_requests"`
 	MediaRequests      []string             `json:"media_requests"`
-	PostedAt string               `json:"posted_at"`
+	PostedAt           string               `json:"posted_at"`
 }
 
 type ContributorDocument struct {
@@ -223,14 +225,21 @@ const PostPendingIndex = `
 
 const SearchPostPending = `	
     "query" : {
-		"multi_match" : {
-			"query" : %q,
-			"fields" : ["moderator_id"],
-			"operator" : "and"
+		"bool": {
+			"must": [
+				{{.Cursor}}
+				{
+					"multi_match": {
+						"query" : "{{.ModeratorId}}",
+						"fields" : ["moderator_id"],
+						"operator" : "and"
+					}
+				}
+			]
 		}
 	},
-	"size" : 10,
-    "sort": ["posted_at"],
+	"size" : {{.Size}},
+    "sort": [{"posted_at": "asc"}],
 	"track_total_hits": true
 `
 
@@ -257,9 +266,45 @@ func (r PostsIndexElasticSearchRepository) IndexPendingPost(ctx context.Context,
 
 func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Context, cursor *paging.Cursor, filter *post.PendingPostFilters) (*post.PendingPostConnection, error) {
 
-	query := fmt.Sprintf(SearchPostPending, filter.ModeratorId())
+	t, err := template.New("SearchPostPending").Parse(SearchPostPending)
 
-	response, err := r.store.Search(PendingPostIndexName, query)
+	if err != nil {
+		return nil, err
+	}
+
+	cont := cursor.First()
+
+	rng := ""
+
+	if cursor.After() != "" {
+		rng = fmt.Sprintf(`{"range": {"posted_at": { "gt": %q } } },`, cursor.After())
+	}
+
+	if cursor.Before() != "" {
+		rng = fmt.Sprintf(`{"range": {"posted_at": { "lt": %q } } },`, cursor.Before())
+	}
+
+	if cursor.Last() > 0 {
+		cont = cursor.Last()
+	}
+
+	data := struct {
+		Cursor      string
+		ModeratorId string
+		Size        int
+	}{
+		Size:        cont,
+		ModeratorId: filter.ModeratorId(),
+		Cursor:      rng,
+	}
+
+	var query bytes.Buffer
+
+	if err := t.Execute(&query, data); err != nil {
+		return nil, err
+	}
+
+	response, err := r.store.Search(PendingPostIndexName, query.String())
 
 	if err != nil {
 		return nil, err
