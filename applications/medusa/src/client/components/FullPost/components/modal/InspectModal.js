@@ -7,7 +7,6 @@ import {
   ModalContent,
   ModalCloseButton,
   ModalBody,
-  ModalHeader,
   Flex, Modal
 } from '@chakra-ui/react'
 
@@ -26,11 +25,11 @@ export default function InspectModal ({ supplement, children, isOpen, onClose }:
       size='full'
     >
       <ModalOverlay />
-      <ModalContent m={0} borderRadius={0} bg='dimmers.200'>
-        {supplement && <Flex direction='row'>{supplement}</Flex>}
-        <ModalHeader />
-        <ModalCloseButton size='lg' />
+      <ModalContent position='relative' m={0} borderRadius={0} bg='dimmers.200'>
+        {supplement && <Flex bottom={0} right={0} position='fixed' direction='row'>{supplement}</Flex>}
+        <ModalCloseButton position='fixed' size='lg' />
         <ModalBody
+          zIndex='hide'
           h='100%'
           w='100%'
           display='flex'

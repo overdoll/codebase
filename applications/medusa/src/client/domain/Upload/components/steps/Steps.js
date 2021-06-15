@@ -171,7 +171,6 @@ export default function Steps ({ uppy, state, dispatch }: Props): Node {
         }
       },
       onCompleted (data) {
-        dispatch({ type: EVENTS.SUBMIT, value: data.post })
         if (data.post?.validation !== null) {
           notify({
             status: 'error',

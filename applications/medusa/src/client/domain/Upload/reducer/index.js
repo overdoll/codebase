@@ -88,11 +88,11 @@ const reducer: {} = (state: State, action: Action): State => {
         db.table('files').bulkPut(
           action.value.map((file, index) => ({
             id: file.id,
+            type: file.type,
             index
           }))
         )
       })
-
       return {
         ...state,
         files: action.value
@@ -113,7 +113,7 @@ const reducer: {} = (state: State, action: Action): State => {
       }
 
       // add item to database
-      db.table(act).put({ id: action.value.id, index: files.length + 1 })
+      db.table(act).put({ id: action.value.id, type: action.value.type, index: files.length + 1 })
 
       return {
         ...state,

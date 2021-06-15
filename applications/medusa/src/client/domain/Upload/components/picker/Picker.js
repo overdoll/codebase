@@ -24,7 +24,7 @@ export default function Picker ({ uppy, onSelect, children }: Props): Node {
       try {
         uppy.addFile({
           source: 'file input',
-          name: file.name + new Date().getTime(),
+          name: file.name,
           type: file.type,
           data: file
         })
@@ -49,7 +49,7 @@ export default function Picker ({ uppy, onSelect, children }: Props): Node {
   return (
     <Flex onClick={uploadClick} cursor='pointer'>
       {children}
-      <input ref={fileInput} data-testid='file' hidden type='file' multiple onChange={onChange} />
+      <input id='file' ref={fileInput} data-testid='file' hidden type='file' multiple onChange={onChange} />
     </Flex>
   )
 }

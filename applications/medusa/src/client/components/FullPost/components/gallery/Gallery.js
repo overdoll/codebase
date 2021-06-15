@@ -6,8 +6,7 @@ import { useState } from 'react'
 import {
   useDisclosure,
   Box,
-  Flex, IconButton,
-  Spinner, Skeleton
+  Flex, IconButton, Skeleton, Spinner
 
 } from '@chakra-ui/react'
 
@@ -18,10 +17,11 @@ import 'swiper/components/navigation/navigation.min.css'
 import InspectModal from '../modal/InspectModal'
 import Icon from '@//:modules/content/icon/Icon'
 
-import InterfaceArrowsVerticalExpand1
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-arrows-vertical-expand-1-7yVV8A.svg'
 import InterfaceArrowsShrinkVertical
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-arrows-shrink-vertical-PvJl2S.svg'
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-shrink-vertical.svg'
+import InterfaceArrowsVerticalExpand1
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-vertical-expand-1.svg'
+
 import SuspenseImage from '@//:modules/utilities/SuspenseImage'
 
 SwiperCore.use([Navigation])
@@ -33,10 +33,13 @@ type Props = {
   urls: {
     key: string,
   },
+  thumbnails: {
+    key: string,
+  },
   setSwiper: () => void,
 }
 
-export default function Gallery ({ files, urls, setSwiper }: Props): Node {
+export default function Gallery ({ files, urls, thumbnails, setSwiper }: Props): Node {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const {
@@ -50,13 +53,13 @@ export default function Gallery ({ files, urls, setSwiper }: Props): Node {
     <>
       <Swiper
         centeredSlides
-        navigation={!(files.length <= 1)}
+        navigation
         onSlideChange={(swiper) => setSwiper(swiper)}
-        allowTouchMove={!(files.length <= 1)}
-
       >
         {files.map((file) => {
           const content = urls[file.id]
+
+          const fileType = file.type.split('/')[0]
 
           return (
             <SwiperSlide key={file.id}>
@@ -75,20 +78,24 @@ export default function Gallery ({ files, urls, setSwiper }: Props): Node {
                   justify='center'
                   userSelect='none'
                 >
-                  <SuspenseImage
-                    alt='thumbnail'
-                    w='100%'
-                    h='100%'
-                    objectFit='cover'
-                    src={content} fallback={<Skeleton w='100%' h='100%' />}
-                  />
+                  {fileType === 'video'
+                    ? <video disableRemotePlayback autoPlay muted loop width='100%' poster={thumbnails[file.id]}>
+                      <source src={urls[file.id]} type={file.type} />
+                    </video>
+                    : <SuspenseImage
+                        alt='thumbnail'
+                        h='100%'
+                        objectFit='cover'
+                        src={content} fallback={<Skeleton w='100%' h='100%' />}
+                      />}
+
                   <Box
                     bg='transparent'
                     w='40%'
                     h='50%'
                     position='absolute'
                     onClick={() => {
-                      setSlide(file.id)
+                      setSlide(file)
                       onOpen()
                     }}
                   />
@@ -106,7 +113,7 @@ export default function Gallery ({ files, urls, setSwiper }: Props): Node {
           w='40px'
           h='40px'
           m={2}
-          onClick={() => { previewExpand ? setPreviewExpand(false) : setPreviewExpand(true) }}
+          onClick={setPreviewExpand}
           icon={
             <Icon
               icon={!previewExpand ? InterfaceArrowsVerticalExpand1 : InterfaceArrowsShrinkVertical}
@@ -117,14 +124,25 @@ export default function Gallery ({ files, urls, setSwiper }: Props): Node {
           }
                     />}
       >
-
-        <SuspenseImage
-          alt='thumbnail'
-          h={!previewExpand ? '100%' : 'auto'}
-          w={!previewExpand ? 'auto' : '100%'}
-          objectFit={!previewExpand ? 'contain' : 'cover'}
-          src={urls[currentSlide]} fallback={<Skeleton w='100%' h='100%' />}
-        />
+        {currentSlide
+          ? currentSlide.type.split('/')[0] === 'video'
+            ? <video
+                disableRemotePlayback
+                autoPlay muted controls loop height={!previewExpand ? '100%' : 'auto'}
+                width={!previewExpand ? 'auto' : '100%'} objectFit={!previewExpand ? 'contain' : 'cover'}
+                poster={thumbnails[currentSlide.id]}
+              >
+              <source src={urls[currentSlide.id]} type={currentSlide.type} />
+            </video>
+            : <SuspenseImage
+                alt='thumbnail'
+                h={!previewExpand ? '100%' : 'auto'}
+                w={!previewExpand ? 'auto' : '100%'}
+                objectFit={!previewExpand ? 'contain' : 'cover'}
+                zIndex='hide'
+                src={urls[currentSlide.id]} fallback={<Skeleton w='100%' h='100%' />}
+              />
+          : <Spinner size='xl' color='red.500' />}
 
       </InspectModal>
     </>

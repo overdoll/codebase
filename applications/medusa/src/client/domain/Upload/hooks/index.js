@@ -63,7 +63,9 @@ const useUpload = (state: State, dispatch: Dispatch): Uppy => {
             dispatch({
               type: EVENTS.FILES,
               value: {
-                id: file.id
+                id: file.id,
+                type: file.type,
+                index: file.index
               }
             })
           })

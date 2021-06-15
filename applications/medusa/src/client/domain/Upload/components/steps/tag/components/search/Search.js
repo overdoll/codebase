@@ -156,6 +156,7 @@ export default function Search ({
                     aria-label='clear'
                     hidden={!searchInput}
                     onClick={clearSearch}
+                    mr={2}
                     icon={
                       <Icon
                         p={2}

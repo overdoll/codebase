@@ -8,9 +8,10 @@ import Icon from '@//:modules/content/icon/Icon'
 import { abbreviateNumber } from '@//:modules/utilities/functions'
 
 import InterfaceNoFavoriteStar
-  from '@streamlinehq/streamlinehq/img/streamline-mini-line/interface-favorite-star-rjt73d.svg'
+  from '@streamlinehq/streamlinehq/img/streamline-mini-line/interface-essential/bookmark-favorite/interface-favorite-star.svg'
+
 import InterfaceYesFavoriteStar
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-favorite-star-gWaZoI.svg'
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/bookmark-favorite/interface-favorite-star.svg'
 
 type Props = {
   hasVoted: boolean,

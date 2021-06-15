@@ -24,6 +24,8 @@ export default function Upload (): Node {
 
   const notify = useToast()
 
+  // TODO add a loading icon that appears before indexeddb state is restored for users on slower machines
+
   // Add to thumbnails state when a new thumbnail is added
   useEffect(() => {
     uppy.on('thumbnail:generated', (file, preview) => {
@@ -59,7 +61,7 @@ export default function Upload (): Node {
   // file-added- uppy file was added
   useEffect(() => {
     uppy.on('file-added', file => {
-      dispatch({ type: EVENTS.FILES, value: { id: file.id } })
+      dispatch({ type: EVENTS.FILES, value: { id: file.id, type: file.type } })
     })
   }, [uppy])
 

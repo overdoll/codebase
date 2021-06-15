@@ -75,20 +75,26 @@ export default function Lobby (props: Props): Node {
 
   const [isTimedOut, currentTimer, createTimeout] = useClickDelay('lobbyButton')
 
-  // TODO fix submitting as it doesn't work (no success message)
+  // TODO fix submitting as it doesn't work and put createTimeout inside instead
 
   const onSubmit = () => {
     createTimeout(60000)
     sendEmail({
       variables: {},
-      onCompleted (data) {
+      onCompleted () {
         notify({
           status: 'success',
           title: t('lobby.verification'),
           isClosable: true
         })
       },
-      onError (data) {}
+      onError () {
+        notify({
+          status: 'error',
+          title: t('lobby.verification_error'),
+          isClosable: true
+        })
+      }
     })
   }
 

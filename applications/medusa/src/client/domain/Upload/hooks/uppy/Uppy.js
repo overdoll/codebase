@@ -6,6 +6,7 @@ import type { Uppy as UppyType } from '@uppy/core'
 import Uppy from '@uppy/core'
 import Tus from '@uppy/tus'
 import CanUseDOM from '@//:modules/utilities/CanUseDOM'
+import DropTarget from '@uppy/drop-target'
 import GoldenRetriever from '@uppy/golden-retriever'
 
 const U: UppyType = new Uppy({
@@ -31,6 +32,9 @@ if (CanUseDOM) {
     thumbnailType: 'image/jpeg',
     waitForThumbnailsBeforeUpload: false
   })
+
+  // TODO Add drag and drop for uploads
+  // U.use(DropTarget, { target: document.getElementById('largeUpload') })
 }
 
 // Resume-able uploads on the API

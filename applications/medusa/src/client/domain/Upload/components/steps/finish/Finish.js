@@ -6,7 +6,8 @@ import type { State } from '@//:types/upload'
 import { Center, Flex, Heading, Text } from '@chakra-ui/react'
 import Icon from '@//:modules/content/icon/Icon'
 import Button from '@//:modules/form/button'
-import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/sign-badge-circle-K1i3HA.svg'
+import SignBadgeCircle
+  from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from '@//:modules/routing'
 
