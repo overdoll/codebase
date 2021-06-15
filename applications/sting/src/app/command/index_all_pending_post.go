@@ -19,19 +19,19 @@ func (h IndexAllPendingPostsHandler) Handle(ctx context.Context) error {
 	err := h.pi.DeletePendingPostIndex(ctx)
 
 	if err != nil {
-
+		return err
 	}
 
 	posts, err := h.pr.GetPendingPosts(ctx)
 
 	if err != nil {
-
+		return err
 	}
 
 	err = h.pi.BulkIndexPendingPosts(ctx, posts)
 
 	if err != nil {
-
+		return err
 	}
 
 	return nil

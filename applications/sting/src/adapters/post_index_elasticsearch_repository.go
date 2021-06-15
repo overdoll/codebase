@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strconv"
 	"time"
 
 	"overdoll/applications/sting/src/domain/post"
@@ -34,8 +35,7 @@ type PostPendingDocument struct {
 	CharactersRequests map[string]string    `json:"characters_requests"`
 	CategoriesRequests []string             `json:"categories_requests"`
 	MediaRequests      []string             `json:"media_requests"`
-	PostedAt           string               `json:"posted_at"`
-	Timestamp          time.Time            `json:"timestamp"`
+	PostedAt string               `json:"posted_at"`
 }
 
 type ContributorDocument struct {
@@ -134,13 +134,13 @@ const PostPendingIndex = `
 					"type": "keyword"
 				},
 				"moderator_id": {
-					"type": "keyword
+					"type": "keyword"
 				},
 				"artist_id": {
-					"type": "keyword
+					"type": "keyword"
 				},
 				"artist_username": {
-					"type": "keyword
+					"type": "keyword"
 				},
 				"contributor": {
 					"type": "nested",
@@ -184,7 +184,22 @@ const PostPendingIndex = `
 						"name": {
 							"type": "text",
 							"analyzer": "english"
-						}
+						},
+					    "media": {
+							"dynamic": "strict",
+							"properties": {
+								"id": {
+									"type": "keyword"
+								},
+								"thumbnail": {
+									"type": "keyword"
+								},
+								"title": {
+									"type": "text",
+									"analyzer": "english"
+								}
+							}		
+						}			
 					}
 				},
 				"content": {
@@ -201,7 +216,7 @@ const PostPendingIndex = `
 				},
 				"posted_at": {
                      "type": "date"
-				},
+				}
 			}
 	}
 }`
@@ -215,7 +230,7 @@ const SearchPostPending = `
 		}
 	},
 	"size" : 10,
-    "sort": [{ "post_date" : {"order" : "asc", "format": "strict_date_optional_time_nanos"}}],
+    "sort": ["posted_at"],
 	"track_total_hits": true
 `
 
@@ -274,7 +289,7 @@ func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Contex
 			categories = append(categories, post.UnmarshalCategoryFromDatabase(cat.Id, cat.Title, cat.Thumbnail))
 		}
 
-		tm, err := time.Parse("UTC", pst.PostedAt)
+		p, err := strconv.ParseInt(pst.PostedAt, 10, 64)
 
 		posts = append(posts, &post.PendingPostEdge{
 			Cursor: pst.PostedAt,
@@ -292,7 +307,7 @@ func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Contex
 				pst.CharactersRequests,
 				pst.CategoriesRequests,
 				pst.MediaRequests,
-				tm,
+				time.Unix(p, 0),
 			),
 		})
 	}
@@ -354,7 +369,7 @@ func (r PostsIndexElasticSearchRepository) BulkIndexPendingPosts(ctx context.Con
 				Username: pst.Contributor().Username(),
 			},
 			Content:            pst.RawContent(),
-			PostedAt:           pst.PostedAt().String(),
+			PostedAt:           strconv.FormatInt(pst.PostedAt().Unix(), 10),
 			Categories:         categoryDocuments,
 			Characters:         characterDocuments,
 			CharactersRequests: characterRequests,
@@ -481,7 +496,7 @@ func (r PostsIndexElasticSearchRepository) DeletePendingPostIndex(ctx context.Co
 	err = r.store.CreateIndex(PendingPostIndexName, PostPendingIndex)
 
 	if err != nil {
-		return fmt.Errorf("failed to create media index: %s", err)
+		return fmt.Errorf("failed to create pending post index: %s", err)
 	}
 
 	return nil

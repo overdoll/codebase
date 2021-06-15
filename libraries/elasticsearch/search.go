@@ -26,6 +26,7 @@ func (s *Store) Search(index, query string, after ...string) (*SearchResults, er
 		if err := json.NewDecoder(res.Body).Decode(&e); err != nil {
 			return &results, err
 		}
+		fmt.Println(e)
 		return &results, fmt.Errorf("[%s] %s: %s", res.Status(), e["error"].(map[string]interface{})["type"], e["error"].(map[string]interface{})["reason"])
 	}
 

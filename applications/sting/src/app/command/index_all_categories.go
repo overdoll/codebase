@@ -19,19 +19,19 @@ func (h IndexAllCategoriesHandler) Handle(ctx context.Context) error {
 	err := h.pi.DeleteCategoryIndex(ctx)
 
 	if err != nil {
-
+		return err
 	}
 
 	categories, err := h.pr.GetCategories(ctx)
 
 	if err != nil {
-
+		return err
 	}
 
 	err = h.pi.BulkIndexCategories(ctx, categories)
 
 	if err != nil {
-
+		return err
 	}
 
 	return nil

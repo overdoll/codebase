@@ -20,19 +20,19 @@ func (h IndexAllCharactersHandler) Handle(ctx context.Context) error {
 	err := h.pi.DeleteCharacterIndex(ctx)
 
 	if err != nil {
-
+		return err
 	}
 
 	characters, err := h.pr.GetCharacters(ctx)
 
 	if err != nil {
-
+		return err
 	}
 
 	err = h.pi.BulkIndexCharacters(ctx, characters)
 
 	if err != nil {
-
+		return err
 	}
 
 	return nil
