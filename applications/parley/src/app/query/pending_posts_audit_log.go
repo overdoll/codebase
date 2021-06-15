@@ -6,7 +6,6 @@ import (
 
 	"go.uber.org/zap"
 	"overdoll/applications/parley/src/domain/infraction"
-	"overdoll/libraries/paging"
 )
 
 var (
@@ -23,7 +22,7 @@ func NewPendingPostsAuditLogHandler(ir infraction.Repository, eva EvaService) Pe
 	return PendingPostsAuditLogHandler{ir: ir, eva: eva}
 }
 
-func (h PendingPostsAuditLogHandler) Handle(ctx context.Context, cursor *paging.Cursor, userId string) ([]*infraction.PendingPostAuditLog, error) {
+func (h PendingPostsAuditLogHandler) Handle(ctx context.Context, moderatorId, contributorId, postId string, dateRange []int, userId string) ([]*infraction.PendingPostAuditLog, error) {
 
 	// user requesting to see audit log
 	usr, err := h.eva.GetUser(ctx, userId)
@@ -41,11 +40,17 @@ func (h PendingPostsAuditLogHandler) Handle(ctx context.Context, cursor *paging.
 	moderatorQuery := userId
 
 	// if staff, allow to query by moderatorID - otherwise we use the currently logged in user's id
-	//if usr.IsStaff() && moderatorId != "" {
-	//	moderatorQuery = moderatorId
-	//}
+	if usr.IsStaff() && moderatorId != "" {
+		moderatorQuery = moderatorId
+	}
 
-	auditLogs, err := h.ir.GetPendingPostAuditLogByModerator(ctx, moderatorQuery)
+	filters, err := infraction.NewPendingPostAuditLogFilters(moderatorQuery, contributorId, postId, dateRange)
+
+	if err != nil {
+		return nil, err
+	}
+
+	auditLogs, err := h.ir.GetPendingPostAuditLogByModerator(ctx, filters)
 
 	if err != nil {
 		zap.S().Errorf("failed to get audit log: %s", err)

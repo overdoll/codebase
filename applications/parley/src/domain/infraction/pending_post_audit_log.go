@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/segmentio/ksuid"
-	"overdoll/libraries/paging"
 	"overdoll/libraries/user"
 )
 
@@ -18,14 +17,54 @@ var (
 	ErrInvalidModerator = errors.New("moderator does not match")
 )
 
-type PendingPostAuditLogConnection struct {
-	Edges    []*PendingPostAuditLogEdge
-	PageInfo *paging.PageInfo
+type PendingPostAuditLogFilters struct {
+	moderatorId   string
+	contributorId string
+	postId        string
+	dateRange     []time.Time
 }
 
-type PendingPostAuditLogEdge struct {
-	Cursor string
-	Node   *PendingPostAuditLog
+func NewPendingPostAuditLogFilters(moderatorId, contributorId, postId string, dateRange []int) (*PendingPostAuditLogFilters, error) {
+
+	// DateRange will be UTC unix timestamps, so we check for that here
+	// if no date range is provided, we take the current time
+
+	if moderatorId == "" {
+		return nil, errors.New("moderator must be specified")
+	}
+
+	var times []time.Time
+
+	if len(dateRange) == 0 {
+		times = append(times, time.Now())
+	} else {
+		for _, item := range dateRange {
+			times = append(times, time.Unix(int64(item), 0))
+		}
+	}
+
+	return &PendingPostAuditLogFilters{
+		moderatorId:   moderatorId,
+		contributorId: contributorId,
+		postId:        postId,
+		dateRange:     times,
+	}, nil
+}
+
+func (e *PendingPostAuditLogFilters) ModeratorId() string {
+	return e.moderatorId
+}
+
+func (e *PendingPostAuditLogFilters) PostId() string {
+	return e.postId
+}
+
+func (e *PendingPostAuditLogFilters) ContributorId() string {
+	return e.contributorId
+}
+
+func (e *PendingPostAuditLogFilters) DateRange() []time.Time {
+	return e.dateRange
 }
 
 // A class simply used to store the details of a PendingPost that we can use

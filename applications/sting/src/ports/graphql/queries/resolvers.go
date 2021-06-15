@@ -64,7 +64,7 @@ func marshalPendingPostsToGraphQL(results []*post.PostPending) []*types.PendingP
 		}
 
 		resp = append(resp, &types.PendingPostEdge{
-			Cursor: "",
+			Cursor: result.ID(),
 			Node: &types.PendingPost{
 				ID:        result.ID(),
 				Moderator: result.ModeratorId(),

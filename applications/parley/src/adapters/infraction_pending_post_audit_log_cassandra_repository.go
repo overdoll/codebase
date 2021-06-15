@@ -3,19 +3,19 @@ package adapters
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
 	"github.com/gocql/gocql"
-	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"overdoll/applications/parley/src/domain/infraction"
-	"overdoll/libraries/paging"
-	"overdoll/libraries/paging/paging_drivers"
+	"overdoll/libraries/bucket"
 )
 
 type PendingPostAuditLog struct {
 	Id                  string `db:"id"`
+	Bucket              int    `db:"bucket"`
 	PostId              string `db:"post_id"`
 	ContributorId       string `db:"contributor_user_id"`
 	ContributorUsername string `db:"contributor_user_username"`
@@ -28,7 +28,35 @@ type PendingPostAuditLog struct {
 	Reverted            bool   `db:"reverted"`
 }
 
-func marshalPendingPostAuditLogToDatabase(auditLog *infraction.PendingPostAuditLog) *PendingPostAuditLog {
+func (e PendingPostAuditLog) getCompositeKey() string {
+
+	ids := []string{
+		e.ModeratorId,
+		string(rune(e.Bucket)),
+		e.ContributorId,
+		e.PostId,
+		e.Id,
+	}
+
+	return strings.Join(ids, "+")
+}
+
+func compositeKeyToStruct(id string) *PendingPostAuditLog {
+
+	ids := strings.Split(id, "+")
+
+	i, _ := strconv.Atoi(ids[1])
+
+	return &PendingPostAuditLog{
+		ModeratorId:   ids[0],
+		Bucket:        i,
+		ContributorId: ids[2],
+		PostId:        ids[3],
+		Id:            ids[4],
+	}
+}
+
+func marshalPendingPostAuditLogToDatabase(auditLog *infraction.PendingPostAuditLog) (*PendingPostAuditLog, error) {
 
 	userInfractionId := ""
 	reason := ""
@@ -41,8 +69,15 @@ func marshalPendingPostAuditLogToDatabase(auditLog *infraction.PendingPostAuditL
 		reason = auditLog.RejectionReason().Reason()
 	}
 
+	buck, err := bucket.MakeBucketFromKSUID(auditLog.ID())
+
+	if err != nil {
+		return nil, err
+	}
+
 	return &PendingPostAuditLog{
 		Id:                  auditLog.ID(),
+		Bucket:              buck,
 		PostId:              auditLog.PostId(),
 		ModeratorId:         auditLog.Moderator().ID(),
 		ModeratorUsername:   auditLog.Moderator().Username(),
@@ -53,10 +88,16 @@ func marshalPendingPostAuditLogToDatabase(auditLog *infraction.PendingPostAuditL
 		Reason:              reason,
 		Notes:               auditLog.Notes(),
 		Reverted:            auditLog.Reverted(),
-	}
+	}, nil
 }
 
 func (r InfractionCassandraRepository) CreatePendingPostAuditLog(ctx context.Context, auditLog *infraction.PendingPostAuditLog) error {
+
+	marhsl, err := marshalPendingPostAuditLogToDatabase(auditLog)
+
+	if err != nil {
+		return err
+	}
 
 	insertPost := qb.Insert("pending_posts_audit_log").
 		Columns(
@@ -71,9 +112,10 @@ func (r InfractionCassandraRepository) CreatePendingPostAuditLog(ctx context.Con
 			"reason",
 			"notes",
 			"reverted",
+			"bucket",
 		).
 		Query(r.session).
-		BindStruct(marshalPendingPostAuditLogToDatabase(auditLog)).
+		BindStruct(marhsl).
 		Consistency(gocql.One)
 
 	if err := insertPost.ExecRelease(); err != nil {
@@ -90,10 +132,16 @@ func (r InfractionCassandraRepository) CreatePendingPostAuditLog(ctx context.Con
 	return nil
 }
 
-func (r InfractionCassandraRepository) GetPendingPostAuditLog(ctx context.Context, moderatorId, logId string) (*infraction.PendingPostAuditLog, error) {
+func (r InfractionCassandraRepository) GetPendingPostAuditLog(ctx context.Context, logId string) (*infraction.PendingPostAuditLog, error) {
 
 	pendingPostAuditLogQuery := qb.Select("pending_posts_audit_log").
-		Where(qb.Eq("moderator_user_id"), qb.Eq("id")).
+		Where(
+			qb.Eq("moderator_user_id"),
+			qb.Eq("bucket"),
+			qb.Eq("contributor_user_id"),
+			qb.Eq("post_id"),
+			qb.Eq("id"),
+		).
 		Columns(
 			"id",
 			"post_id",
@@ -109,7 +157,7 @@ func (r InfractionCassandraRepository) GetPendingPostAuditLog(ctx context.Contex
 		).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(&PendingPostAuditLog{Id: logId, ModeratorId: moderatorId})
+		BindStruct(compositeKeyToStruct(logId))
 
 	var pendingPostAuditLog PendingPostAuditLog
 
@@ -129,8 +177,7 @@ func (r InfractionCassandraRepository) GetPendingPostAuditLog(ctx context.Contex
 	}
 
 	return infraction.UnmarshalPendingPostAuditLogFromDatabase(
-		// ID is made up of moderator ID + the audit Log ID, so we give both to get precise querying
-		pendingPostAuditLog.ModeratorId+"+"+pendingPostAuditLog.Id+"+",
+		pendingPostAuditLog.getCompositeKey(),
 		pendingPostAuditLog.PostId,
 		pendingPostAuditLog.ModeratorId,
 		pendingPostAuditLog.ModeratorUsername,
@@ -145,10 +192,31 @@ func (r InfractionCassandraRepository) GetPendingPostAuditLog(ctx context.Contex
 	), nil
 }
 
-func (r InfractionCassandraRepository) GetPendingPostAuditLogByModerator(ctx context.Context, input *paging.Cursor, moderatorId string) (*infraction.PendingPostAuditLogConnection, error) {
+func (r InfractionCassandraRepository) GetPendingPostAuditLogByModerator(ctx context.Context, filter *infraction.PendingPostAuditLogFilters) ([]*infraction.PendingPostAuditLog, error) {
 
-	pendingPostAuditLogQuery := qb.Select("pending_posts_audit_log").
-		Where(qb.Eq("moderator_user_id"), paging_drivers.TokenCassandra(input)).
+	// build query based on filters
+	builder :=
+		qb.Select("pending_posts_audit_log").
+			Where(qb.Eq("moderator_user_id"), qb.In("bucket"))
+
+	if filter.ContributorId() != "" {
+		builder.Where(qb.Eq("contributor_user_id"))
+
+		if filter.PostId() != "" {
+			builder.Where(qb.Eq("post_id"))
+		}
+	}
+
+	mp := make(map[string]interface{})
+	var times []int
+
+	for _, date := range filter.DateRange() {
+		times = append(times, bucket.MakeBucketFromTimestamp(date))
+	}
+
+	mp["bucket"] = times
+
+	pendingPostAuditLogQuery := builder.
 		Columns(
 			"id",
 			"post_id",
@@ -161,22 +229,26 @@ func (r InfractionCassandraRepository) GetPendingPostAuditLogByModerator(ctx con
 			"reason",
 			"notes",
 			"reverted",
+			"bucket",
 		).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(&PendingPostAuditLog{ModeratorId: moderatorId})
+		BindMap(mp).
+		BindStruct(&
+			PendingPostAuditLog{
+				ModeratorId:   filter.ModeratorId(),
+				ContributorId: filter.ContributorId(),
+				PostId:        filter.PostId(),
+			},
+		)
 
 	var dbPendingPostAuditLogs []*PendingPostAuditLog
 
-	state, err := paging_drivers.PageCassandra(input, pendingPostAuditLogQuery, func(iter *gocqlx.Iterx) error {
-		return pendingPostAuditLogQuery.Select(&dbPendingPostAuditLogs)
-	})
-
-	if err != nil {
+	if err := pendingPostAuditLogQuery.Select(&dbPendingPostAuditLogs); err != nil {
 		return nil, err
 	}
 
-	var pendingPostAuditLogs []*infraction.PendingPostAuditLogEdge
+	var pendingPostAuditLogs []*infraction.PendingPostAuditLog
 
 	for _, pendingPostAuditLog := range dbPendingPostAuditLogs {
 
@@ -208,24 +280,15 @@ func (r InfractionCassandraRepository) GetPendingPostAuditLogByModerator(ctx con
 		)
 
 		//(id, userId, reason string, expiration time.Time)
-		pendingPostAuditLogs = append(pendingPostAuditLogs,
-			&infraction.PendingPostAuditLogEdge{
-				Cursor: pendingPostAuditLog.ModeratorId + "+" + pendingPostAuditLog.ContributorId + "+" + pendingPostAuditLog.Id,
-				Node:   result,
-			},
-		)
+		pendingPostAuditLogs = append(pendingPostAuditLogs, result)
 	}
 
-	return &infraction.PendingPostAuditLogConnection{
-		Edges:    pendingPostAuditLogs,
-		PageInfo: paging.NewPageInfo(state.HasMore()),
-	}, nil
+	return pendingPostAuditLogs, nil
 }
 
 func (r InfractionCassandraRepository) UpdatePendingPostAuditLog(ctx context.Context, id string, updateFn func(auditLog *infraction.PendingPostAuditLog) error) (*infraction.PendingPostAuditLog, error) {
-	newId := strings.Split(id, "+")
 
-	auditLog, err := r.GetPendingPostAuditLog(ctx, newId[0], newId[0])
+	auditLog, err := r.GetPendingPostAuditLog(ctx, id)
 
 	if err != nil {
 		return nil, err
@@ -237,21 +300,30 @@ func (r InfractionCassandraRepository) UpdatePendingPostAuditLog(ctx context.Con
 		return nil, err
 	}
 
+	marhs, err := marshalPendingPostAuditLogToDatabase(auditLog)
+
+	if err != nil {
+		return nil, err
+	}
+
 	updateAuditLog := qb.Update("pending_posts_audit_log").
 		Set(
-			"post_id",
-			"contributor_user_id",
-			"contributor_user_username",
 			"user_infraction_id",
 			"status",
 			"reason",
 			"notes",
 			"reverted",
 		).
-		Where(qb.Eq("moderator_user_id"), qb.Eq("id")).
+		Where(
+			qb.Eq("moderator_user_id"),
+			qb.Eq("bucket"),
+			qb.Eq("contributor_user_id"),
+			qb.Eq("post_id"),
+			qb.Eq("id"),
+		).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(marshalPendingPostAuditLogToDatabase(auditLog))
+		BindStruct(marhs)
 
 	if err := updateAuditLog.ExecRelease(); err != nil {
 		return nil, fmt.Errorf("update() failed: '%s", err)

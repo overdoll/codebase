@@ -42,6 +42,7 @@ type PendingPostAuditLogFilters struct {
 	ModeratorID   *string `json:"moderatorId"`
 	ContributorID *string `json:"contributorId"`
 	PostID        *string `json:"postId"`
+	DateRange     []int   `json:"dateRange"`
 }
 
 type PendingPostAuditLogInput struct {

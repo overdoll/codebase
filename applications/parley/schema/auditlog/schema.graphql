@@ -27,6 +27,7 @@ input PendingPostAuditLogFilters {
   moderatorId: String
   contributorId: String
   postId: String
+  dateRange: [Int!]
 }
 
 extend type Query {

@@ -4,7 +4,7 @@ import (
 	"overdoll/applications/parley/src/domain/infraction"
 )
 
-func MarshalPendingPostAuditLogToGraphQL(log *infraction.PendingPostAuditLog) *PendingPostAuditLog {
+func MarshalPendingPostAuditLogToGraphQL(log *infraction.PendingPostAuditLog) *PendingPostAuditLogEdge {
 	if log != nil {
 		var infractionId *string
 
@@ -19,22 +19,24 @@ func MarshalPendingPostAuditLogToGraphQL(log *infraction.PendingPostAuditLog) *P
 			reason = log.RejectionReason().Reason()
 		}
 
-		return &PendingPostAuditLog{
-			ID:     log.ID(),
-			PostID: log.PostId(),
-			Contributor: &AuditUser{
-				ID:       log.Contributor().ID(),
-				Username: log.Contributor().Username(),
+		return &PendingPostAuditLogEdge{
+			Node: &PendingPostAuditLog{
+				ID:     log.ID(),
+				PostID: log.PostId(),
+				Contributor: &AuditUser{
+					ID:       log.Contributor().ID(),
+					Username: log.Contributor().Username(),
+				},
+				Moderator: &AuditUser{
+					ID:       log.Moderator().ID(),
+					Username: log.Moderator().Username(),
+				},
+				InfractionID: infractionId,
+				Status:       log.Status(),
+				Reason:       reason,
+				Notes:        log.Notes(),
+				Reverted:     log.Reverted(),
 			},
-			Moderator: &AuditUser{
-				ID:       log.Moderator().ID(),
-				Username: log.Moderator().Username(),
-			},
-			InfractionID: infractionId,
-			Status:       log.Status(),
-			Reason:       reason,
-			Notes:        log.Notes(),
-			Reverted:     log.Reverted(),
 		}
 	}
 
