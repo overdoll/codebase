@@ -18,6 +18,7 @@ go_library(
         "//applications/parley/src/domain/infraction",
         "//applications/parley/src/domain/moderator",
         "//applications/sting/proto:v1_go_proto",
+        "//libraries/bucket",
         "//libraries/user",
         "@com_github_gocql_gocql//:gocql",
         "@com_github_scylladb_gocqlx_v2//:gocqlx",

@@ -7,13 +7,14 @@ go_library(
         "category.go",
         "character.go",
         "media.go",
+        "pending_post.go",
         "post.go",
-        "post_pending.go",
         "repository.go",
     ],
     importpath = "overdoll/applications/sting/src/domain/post",
     visibility = ["//visibility:public"],
     deps = [
+        "//libraries/paging",
         "//libraries/user",
         "//libraries/uuid",
     ],
@@ -21,7 +22,7 @@ go_library(
 
 go_test(
     name = "post_test",
-    srcs = ["post_pending_test.go"],
+    srcs = ["pending_post_test.go"],
     deps = [
         ":post",
         "@com_github_stretchr_testify//assert",

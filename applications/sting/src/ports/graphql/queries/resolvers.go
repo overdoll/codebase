@@ -95,7 +95,7 @@ func (r *QueryResolver) PendingPosts(ctx context.Context, input relay.Connection
 		return nil, passport.ErrNotAuthenticated
 	}
 
-	results, err := r.App.Queries.GetPendingPosts.Handle(ctx, input.ToCursor(), "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
+	results, err := r.App.Queries.GetPendingPosts.Handle(ctx, input.ToCursor(), pass.UserID())
 
 	if err != nil {
 		return nil, err
