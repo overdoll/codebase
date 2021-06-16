@@ -394,16 +394,15 @@ func (p *PendingPost) ConsumeCustomResources(existingMedia []*Media) ([]*Categor
 
 	for _, char := range p.charactersRequests {
 
-		var exists = true
+		var exists = false
 		var newMedia *Media
 
 		// Check if the requested media is a media in our list
 		for _, requestedMedia := range p.mediaRequests {
-
 			// If the media is on our list, then we create a new media, and append to array of events
 			if char.Media == requestedMedia.Title {
-				NewMedia(char.Id, char.Media)
-				exists = false
+				newMedia = NewMedia(char.Id, char.Media)
+				exists = true
 				break
 			}
 		}

@@ -34,7 +34,7 @@ func (h DiscardPostHandler) Handle(ctx context.Context, id string) error {
 		// clear any custom fields
 		pending.RequestResources(make(map[string]string), []string{}, []string{})
 
-		return nil
+		return pending.MakeDiscarded()
 	})
 
 	if err != nil {

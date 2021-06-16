@@ -275,13 +275,13 @@ func TestUser_get(t *testing.T) {
 	assert.Equal(t, res.Username, "poisonminion")
 }
 
-func TestUser_lock(t *testing.T) {
+func TestUser_lock_unlock(t *testing.T) {
 	t.Parallel()
 
 	client := getGrpcClient(t)
 
 	res, err := client.LockUser(context.Background(), &eva.LockUserRequest{
-		Id:       "1q7MJ3JkhcdcJJNqZezdfQt5pZ6",
+		Id:       "1q7MIqqnkzew33q4elXuN1Ri27d",
 		Duration: 100000000,
 		Reason:   eva.LockUserReason_POST_INFRACTION,
 	})
@@ -289,15 +289,9 @@ func TestUser_lock(t *testing.T) {
 	require.NoError(t, err)
 
 	assert.Equal(t, true, res.Locked)
-}
 
-func TestUser_unlock(t *testing.T) {
-	t.Parallel()
-
-	client := getGrpcClient(t)
-
-	res, err := client.LockUser(context.Background(), &eva.LockUserRequest{
-		Id:       "1q7MJ3JkhcdcJJNqZezdfQt5pZ6",
+	res, err = client.LockUser(context.Background(), &eva.LockUserRequest{
+		Id:       "1q7MIqqnkzew33q4elXuN1Ri27d",
 		Duration: 0,
 	})
 

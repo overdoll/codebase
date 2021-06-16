@@ -214,7 +214,8 @@ const PostPendingIndex = `
                      "type": "keyword"
 				},
 				"characters_requests": {
-                     "type": "object"
+                     "type": "object",
+					 "dynamic": true
 				},
 				"posted_at": {
                      "type": "date"
