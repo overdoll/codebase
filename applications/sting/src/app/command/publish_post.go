@@ -68,6 +68,6 @@ func (h PublishPostHandler) Handle(ctx context.Context, id string) error {
 		return err
 	}
 
-	// Update pending post index
-	return h.pi.IndexPendingPost(ctx, pendingPost)
+	// delete pending post document since it's no longer needed
+	return h.pi.DeletePendingPostDocument(ctx, pendingPost.ID())
 }

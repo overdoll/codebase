@@ -17,9 +17,7 @@ func NewIndexAllArtistsHandler(pr post.Repository, pi post.IndexRepository) Inde
 
 func (h IndexAllArtistsHandler) Handle(ctx context.Context) error {
 
-	err := h.pi.DeleteArtistIndex(ctx)
-
-	if err != nil {
+	if err := h.pi.DeleteArtistIndex(ctx); err != nil {
 		return err
 	}
 
@@ -29,11 +27,5 @@ func (h IndexAllArtistsHandler) Handle(ctx context.Context) error {
 		return err
 	}
 
-	err = h.pi.BulkIndexArtists(ctx, artists)
-
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return h.pi.BulkIndexArtists(ctx, artists)
 }

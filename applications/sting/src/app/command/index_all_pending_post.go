@@ -7,18 +7,18 @@ import (
 )
 
 type IndexAllPendingPostsHandler struct {
-	pr post.Repository
-	pi post.IndexRepository
+	pr  post.Repository
+	eva EvaService
+	pi  post.IndexRepository
 }
 
-func NewIndexAllPendingPostsHandler(pr post.Repository, pi post.IndexRepository) IndexAllPendingPostsHandler {
-	return IndexAllPendingPostsHandler{pr: pr, pi: pi}
+func NewIndexAllPendingPostsHandler(pr post.Repository, pi post.IndexRepository, eva EvaService) IndexAllPendingPostsHandler {
+	return IndexAllPendingPostsHandler{pr: pr, pi: pi, eva: eva}
 }
 
 func (h IndexAllPendingPostsHandler) Handle(ctx context.Context) error {
-	err := h.pi.DeletePendingPostIndex(ctx)
 
-	if err != nil {
+	if err := h.pi.DeletePendingPostIndex(ctx); err != nil {
 		return err
 	}
 
@@ -28,11 +28,16 @@ func (h IndexAllPendingPostsHandler) Handle(ctx context.Context) error {
 		return err
 	}
 
-	err = h.pi.BulkIndexPendingPosts(ctx, posts)
+	for _, pst := range posts {
+		usr, err := h.eva.GetUser(ctx, pst.Contributor().ID())
 
-	if err != nil {
-		return err
+		if err != nil {
+			return err
+		}
+
+		// get proper contributor data because it's not correct (only ID is returned)
+		pst.UpdateContributor(usr)
 	}
 
-	return nil
+	return h.pi.BulkIndexPendingPosts(ctx, posts)
 }

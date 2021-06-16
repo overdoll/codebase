@@ -42,13 +42,12 @@ func NewUserCassandraRepository(session gocqlx.Session) UserRepository {
 }
 
 func marshalUserToDatabase(usr *user.User) *User {
-
 	return &User{
 		Id:           usr.ID(),
 		Email:        usr.Email(),
 		Username:     usr.Username(),
 		Roles:        usr.UserRolesAsString(),
-		Avatar:       usr.Avatar(),
+		Avatar:       usr.RawAvatar(),
 		Verified:     usr.Verified(),
 		LockedUntil:  usr.LockedUntil(),
 		Locked:       usr.IsLocked(),
