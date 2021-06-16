@@ -8,8 +8,31 @@ CREATE TABLE IF NOT EXISTS moderators
 
 CREATE TABLE IF NOT EXISTS pending_posts_audit_log
 (
+    id                  text,
+    moderator_user_id   text,
+    bucket              int,
+    created_ms          int,
+    post_id             text,
+    contributor_user_id text,
+    primary key ( id ),
+);
+
+CREATE TABLE IF NOT EXISTS pending_posts_audit_logs_by_post
+(
+    post_id             text,
+    id                  text,
+    moderator_user_id   text,
+    bucket              int,
+    created_ms          int,
+    contributor_user_id text,
+    primary key ( post_id ),
+);
+
+CREATE TABLE IF NOT EXISTS pending_posts_audit_logs_by_moderator
+(
     id                        text,
     bucket                    int,
+    created_ms                int,
     post_id                   text,
     contributor_user_id       text,
     contributor_user_username text,
@@ -20,10 +43,10 @@ CREATE TABLE IF NOT EXISTS pending_posts_audit_log
     reason                    text,
     notes                     text,
     reverted                  boolean,
-    primary key ( (moderator_user_id, bucket), contributor_user_id, post_id, id ),
+    primary key ( (moderator_user_id, bucket), created_ms, contributor_user_id, post_id, id ),
 ) WITH CLUSTERING ORDER BY (contributor_user_id DESC, post_id DESC, id DESC);
 
-CREATE INDEX IF NOT EXISTS pending_posts_audit_log_status on pending_posts_audit_log (status);
+CREATE INDEX IF NOT EXISTS pending_posts_audit_logs_by_moderator_status on pending_posts_audit_logs_by_moderator (status);
 
 CREATE TABLE IF NOT EXISTS users_infraction_history
 (

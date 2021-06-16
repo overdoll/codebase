@@ -73,6 +73,8 @@ type PendingPostAuditLog struct {
 	id     string
 	postId string
 
+	createdMs int
+
 	moderator   *user.User
 	contributor *user.User
 	notes       string
@@ -116,10 +118,11 @@ func NewPendingPostAuditLog(user *user.User, userInfractionHistory []*UserInfrac
 		notes:           notes,
 		reverted:        false,
 		userInfraction:  userInfraction,
+		createdMs:       int(time.Now().Unix()),
 	}, nil
 }
 
-func UnmarshalPendingPostAuditLogFromDatabase(id, postId, moderatorId, moderatorUsername, contributorId, contributorUsername, status, userInfractionId, reason, notes string, reverted bool, userInfraction *UserInfractionHistory) *PendingPostAuditLog {
+func UnmarshalPendingPostAuditLogFromDatabase(id, postId, moderatorId, moderatorUsername, contributorId, contributorUsername, status, userInfractionId, reason, notes string, reverted bool, userInfraction *UserInfractionHistory, createdMs int) *PendingPostAuditLog {
 	return &PendingPostAuditLog{
 		id:              id,
 		postId:          postId,
@@ -130,6 +133,7 @@ func UnmarshalPendingPostAuditLogFromDatabase(id, postId, moderatorId, moderator
 		notes:           notes,
 		reverted:        reverted,
 		userInfraction:  userInfraction,
+		createdMs:       createdMs,
 	}
 }
 

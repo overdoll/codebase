@@ -8,12 +8,25 @@ type Cursor struct {
 }
 
 func NewCursor(before, after string, first, last int) *Cursor {
+
+	if first == 0 {
+		first = 10
+	}
+
 	return &Cursor{
 		after:  after,
 		before: before,
 		first:  first,
 		last:   last,
 	}
+}
+
+func (c *Cursor) IsAfterCursor() bool {
+	return c.after != ""
+}
+
+func (c *Cursor) IsBeforeCursor() bool {
+	return c.before != "" && c.last != 0
 }
 
 func (c *Cursor) After() string {

@@ -276,15 +276,12 @@ func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Contex
 
 	rng := ""
 
-	if cursor.After() != "" {
+	if cursor.IsAfterCursor() {
 		rng = fmt.Sprintf(`{"range": {"posted_at": { "gt": %q } } },`, cursor.After())
 	}
 
-	if cursor.Before() != "" {
+	if cursor.IsBeforeCursor() {
 		rng = fmt.Sprintf(`{"range": {"posted_at": { "lt": %q } } },`, cursor.Before())
-	}
-
-	if cursor.Last() > 0 {
 		cont = cursor.Last()
 	}
 
