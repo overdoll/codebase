@@ -2,7 +2,7 @@
   "begin": {
     "header": "Start by uploading an image or a video",
     "formats": ".mp4 .jpg .png",
-    "uploader": "Upload up to 9 files",
+    "uploader": "Upload up to 10 files",
     "limit": "25mb limit per file"
   },
   "rules": {

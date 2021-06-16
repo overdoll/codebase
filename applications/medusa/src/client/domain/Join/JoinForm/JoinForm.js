@@ -6,8 +6,9 @@ import { useTranslation } from 'react-i18next'
 import { FormControl, FormHelperText, FormLabel, Input, InputGroup, InputRightElement } from '@chakra-ui/react'
 import Icon from '@//:modules/content/icon/Icon'
 import { useForm } from 'react-hook-form'
-import AlertCircle from '@streamlinehq/streamlinehq/img/streamline-regular/alert-circle-eixfzl.svg'
-import CheckDouble1 from '@streamlinehq/streamlinehq/img/streamline-regular/check-double-1-DeGZdc.svg'
+import AlertCircle from '@streamlinehq/streamlinehq/img/streamline-regular/interface-essential/alerts/alert-circle.svg'
+import CheckDouble1
+  from '@streamlinehq/streamlinehq/img/streamline-regular/interface-essential/form-validation/check-double-1.svg'
 import { joiResolver } from '@hookform/resolvers/joi'
 import type { Node } from 'react'
 import Button from '@//:modules/form/button'
@@ -63,6 +64,8 @@ export default function JoinForm ({ onSubmit, loading }: Props): Node {
           {(errors.email || success) && (
             <InputRightElement>
               <Icon
+                w={8}
+                h={8}
                 icon={success ? CheckDouble1 : AlertCircle}
                 color={success ? 'green.600' : 'orange.500'}
               />

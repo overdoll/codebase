@@ -49,46 +49,38 @@ export default function Thumbnail ({ thumbnail, progress, type }: Props): Node {
         position='absolute'
         bg={
           progress
-            ? (progress['0'] !== progress['1'] && 'dimmers.200': 'transparent')
+            ? (progress['0'] !== progress['1'] && 'dimmers.800': 'transparent')
             : 'transparent'
         }
         w='100%'
         h='100%'
+        justify='center'
+        align='center'
       >
         {progress
           ? (
-              progress['0'] !== progress['1'] && (
-                <Flex w='100%' h='100%' justifyContent='center' alignItems='center'>
+              progress['0'] !== progress['1']
+                ? (
                   <CircularProgress
                     value={(progress['0'] / progress['1']) * 100}
-                    color='teal.500'
-                    size='xl'
+                    color='red.500'
+                    size='100px'
+                    thickness={4}
                   >
-                    <CircularProgressLabel>
-                      {(progress['0'] / progress['1']) * 100}
+                    <CircularProgressLabel color='gray.00'>
+                      {((progress['0'] / progress['1']) * 100).toFixed(0)}%
                     </CircularProgressLabel>
                   </CircularProgress>
-                </Flex>
-              )
+                  )
+                : (<Box borderRadius={15} bg='dimmers.500'>
+                  <Icon m={2} icon={type === 'video' ? ComputerWebcamVideo : ImageCamera1} fill='gray.00' w={8} h={8} />
+                   </Box>)
             )
           : (
-            <Flex w='100%' h='100%' justifyContent='center' alignItems='center'>
-              <Spinner size='xl' />
-            </Flex>
+            <Spinner color='red.500' />
             )}
       </Flex>
-      <Flex
-        position='absolute'
-        w='100%'
-        h='100%'
-        justify='center'
-        align='center'
 
-      >
-        <Box borderRadius={15} bg='dimmers.500'>
-          <Icon m={2} icon={type === 'video' ? ComputerWebcamVideo : ImageCamera1} fill='gray.00' w={8} h={8} />
-        </Box>
-      </Flex>
     </Flex>
   )
 }

@@ -12,7 +12,6 @@ import { useTranslation } from 'react-i18next'
 
 type Props = {
   uppy: Uppy,
-  onAddFiles: () => void,
   dispatch: Dispatch,
   state: State,
 };

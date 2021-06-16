@@ -6,9 +6,6 @@ import { Heading, Text, Box, ListItem, UnorderedList, Flex, Center } from '@chak
 import { useTranslation } from 'react-i18next'
 import Picker from '../../picker/Picker'
 import Icon from '@//:modules/content/icon/Icon'
-import '@uppy/drop-target/dist/style.css'
-import { createPortal } from 'react-dom'
-import RootElement from '@//:modules/utilities/RootElement'
 
 import Cloud from '@streamlinehq/streamlinehq/img/streamline-regular/internet-networks-servers/cloud/cloud.svg'
 
@@ -26,9 +23,12 @@ export default function Begin ({ uppy }: Props): Node {
           {t('begin.header')}
         </Heading>
       </Box>
-      <Center mt={8} mb={8}>
+      <Center sx={{ id: 'dragdrop' }} id='dragdrop' mt={8} mb={8}>
         <Picker uppy={uppy}>
-          <Box w='100%' boxShadow='md' bg='gray.800' p={4} borderRadius={15}>
+          <Box
+            w='100%' boxShadow='md' bg='gray.800' p={4}
+            borderRadius={15}
+          >
             <Box p={4} borderRadius={15} borderStyle='dashed' borderColor='red.50' borderWidth={4}>
               <Flex ml={2} mr={2} mt={12} mb={12} flexDirection='column' alignItems='center'>
                 <Icon
@@ -36,12 +36,12 @@ export default function Begin ({ uppy }: Props): Node {
                   color='red.300'
                   w={20}
                   h={20}
-                  mb={4}
+                  mb={2}
                 />
-                <Heading fontSize='3xl' color='gray.00' mb={12}>
+                <Heading fontSize='2xl' color='gray.00' mb={8}>
                   {t('begin.uploader')}
                 </Heading>
-                <Text fontSize='lg' color='gray.100' mb={8}>
+                <Text fontSize='lg' color='gray.100' mb={2}>
                   {t('begin.formats')}
                 </Text>
                 <Text fontSize='lg' color='gray.100'>

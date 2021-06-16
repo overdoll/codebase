@@ -38,10 +38,10 @@ export default function ErrorDisplay ({ error }: Props): Node {
             mb={8}
           />
           <Heading size='md' align='center' color='gray.00'>
-            {t('error.page.header')}
+            {t('page.header')}
           </Heading>
           <Text size='md' align='center' color='gray.200'>
-            {t('error.page.subheader')}
+            {t('page.subheader')}
           </Text>
         </Flex>
       </Center>
