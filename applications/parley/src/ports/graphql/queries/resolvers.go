@@ -43,7 +43,7 @@ func (q QueryResolver) PendingPostAuditLogs(ctx context.Context, filter types.Pe
 		dateRange = filter.DateRange
 	}
 
-	logs, err := q.App.Queries.PendingPostsAuditLog.Handle(ctx, moderatorId, contributorId, postId, dateRange, pass.UserID())
+	logs, err := q.App.Queries.PendingPostsAuditLogByModerator.Handle(ctx, moderatorId, contributorId, postId, dateRange, pass.UserID())
 
 	if err != nil {
 		return nil, err

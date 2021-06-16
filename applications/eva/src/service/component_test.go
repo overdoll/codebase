@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"net/url"
@@ -116,20 +117,20 @@ func TestUserRegistration_complete(t *testing.T) {
 	authNotRedeemed := qAuth(t, client)
 
 	// expect that the cookie is not redeemed
-	assert.Equal(t, false, bool(authNotRedeemed.Authentication.Cookie.Redeemed))
+	assert.Equal(t, false, authNotRedeemed.Authentication.Cookie.Redeemed)
 
 	redeemCookie := qRedeemCookie(t, client, otpCookie.Value)
 
 	// make sure cookie is redeemed
-	assert.Equal(t, bool(redeemCookie.RedeemCookie.Redeemed), true)
+	assert.Equal(t, redeemCookie.RedeemCookie.Redeemed, true)
 	// make sure in the same session
-	assert.Equal(t, bool(redeemCookie.RedeemCookie.SameSession), true)
+	assert.Equal(t, redeemCookie.RedeemCookie.SameSession, true)
 
 	// check our auth query and make sure that it returns the correct cookie values
 	authRedeemed := qAuth(t, client)
 
 	// expect that our authentication query sees the cookie as redeemed
-	assert.Equal(t, true, bool(authRedeemed.Authentication.Cookie.Redeemed))
+	assert.Equal(t, true, authRedeemed.Authentication.Cookie.Redeemed)
 
 	// now, we register (cookie is redeemed from above query)
 	var register Register
@@ -203,13 +204,13 @@ func TestUserLogin_from_another_session(t *testing.T) {
 	redeemCookie := qRedeemCookie(t, clientFromAnotherSession, otpCookie.Value)
 
 	// should have indicated that it was redeemed by another session
-	assert.Equal(t, false, bool(redeemCookie.RedeemCookie.SameSession))
+	assert.Equal(t, false, redeemCookie.RedeemCookie.SameSession)
 
 	authRedeemed := qAuth(t, client)
 
 	// since our user's cookie was redeemed from another session, when the user runs this query
 	// the next time, it should just log them in
-	assert.Equal(t, "poisonminion", string(authRedeemed.Authentication.User.Username))
+	assert.Equal(t, "poisonminion", authRedeemed.Authentication.User.Username)
 }
 
 // Test empty authentication - we didnt pass any passport so it shouldn't do anything
@@ -238,14 +239,14 @@ func TestGetUserAuthentication_user(t *testing.T) {
 	query := qAuth(t, client)
 
 	require.Nil(t, query.Authentication.Cookie)
-	require.Equal(t, "poisonminion", string(query.Authentication.User.Username))
+	require.Equal(t, "poisonminion", query.Authentication.User.Username)
 }
 
 // test to make sure logout works (when passport is present)
 func TestLogout_user(t *testing.T) {
 	t.Parallel()
 
-	client, _, _ := getHttpClient(t, passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	client, _, pass := getHttpClient(t, passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 
 	var mutation Logout
 
@@ -253,7 +254,12 @@ func TestLogout_user(t *testing.T) {
 
 	require.NoError(t, err)
 
-	require.Equal(t, mutation.Logout, true)
+	modified := pass.GetPassport()
+
+	fmt.Println(modified)
+
+	require.Equal(t, true, mutation.Logout)
+	require.Nil(t, pass.GetPassport())
 }
 
 // TestUser_get - test GRPC endpoint for grabbing a user
@@ -283,6 +289,21 @@ func TestUser_lock(t *testing.T) {
 	require.NoError(t, err)
 
 	assert.Equal(t, true, res.Locked)
+}
+
+func TestUser_unlock(t *testing.T) {
+	t.Parallel()
+
+	client := getGrpcClient(t)
+
+	res, err := client.LockUser(context.Background(), &eva.LockUserRequest{
+		Id:       "1q7MJ3JkhcdcJJNqZezdfQt5pZ6",
+		Duration: 0,
+	})
+
+	require.NoError(t, err)
+
+	assert.Equal(t, false, res.Locked)
 }
 
 func getOTPCookieFromJar(t *testing.T, jar http.CookieJar) *http.Cookie {

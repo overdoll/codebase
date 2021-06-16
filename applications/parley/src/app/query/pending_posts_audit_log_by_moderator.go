@@ -12,17 +12,17 @@ var (
 	ErrFailedGetPendingPostsAuditLog = errors.New("get audit log failed")
 )
 
-type PendingPostsAuditLogHandler struct {
+type PendingPostsAuditLogByModeratorHandler struct {
 	ir infraction.Repository
 
 	eva EvaService
 }
 
-func NewPendingPostsAuditLogHandler(ir infraction.Repository, eva EvaService) PendingPostsAuditLogHandler {
-	return PendingPostsAuditLogHandler{ir: ir, eva: eva}
+func NewPendingPostsAuditLogByModeratorHandler(ir infraction.Repository, eva EvaService) PendingPostsAuditLogByModeratorHandler {
+	return PendingPostsAuditLogByModeratorHandler{ir: ir, eva: eva}
 }
 
-func (h PendingPostsAuditLogHandler) Handle(ctx context.Context, moderatorId, contributorId, postId string, dateRange []int, userId string) ([]*infraction.PendingPostAuditLog, error) {
+func (h PendingPostsAuditLogByModeratorHandler) Handle(ctx context.Context, moderatorId, contributorId, postId string, dateRange []int, userId string) ([]*infraction.PendingPostAuditLog, error) {
 
 	// user requesting to see audit log
 	usr, err := h.eva.GetUser(ctx, userId)
@@ -33,7 +33,7 @@ func (h PendingPostsAuditLogHandler) Handle(ctx context.Context, moderatorId, co
 	}
 
 	// have to have moderator role
-	if !usr.IsModerator() {
+	if !usr.IsModerator() || usr.IsLocked() {
 		return nil, ErrFailedGetPendingPostsAuditLog
 	}
 

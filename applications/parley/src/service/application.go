@@ -65,8 +65,8 @@ func createApplication(ctx context.Context, eva command.EvaService, sting comman
 			RevertModeratePost: command.NewRevertModeratePendingPostHandler(infractionRepo, eva, sting),
 		},
 		Queries: app.Queries{
-			PendingPostRejectionReasons: query.NewPendingPostsRejectionReasonsHandler(infractionRepo),
-			PendingPostsAuditLog:        query.NewPendingPostsAuditLogHandler(infractionRepo, eva),
+			PendingPostRejectionReasons:     query.NewPendingPostsRejectionReasonsHandler(infractionRepo),
+			PendingPostsAuditLogByModerator: query.NewPendingPostsAuditLogByModeratorHandler(infractionRepo, eva),
 		},
 	}
 }

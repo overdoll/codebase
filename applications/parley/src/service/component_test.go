@@ -59,6 +59,18 @@ func mModeratePost(t *testing.T, client *graphql.Client, rejectionReason *string
 	return modPost
 }
 
+func mRevertModeratePost(t *testing.T, client *graphql.Client, id string) UndoModeratePost {
+	var search UndoModeratePost
+
+	err := client.Mutate(context.Background(), &search, map[string]interface{}{
+		"data": types.RevertPostInput{AuditLogID: id},
+	})
+
+	require.NoError(t, err)
+
+	return search
+}
+
 // TestPendingPostRejectionReasons - get some rejection reasons
 func TestPendingPostRejectionReasons(t *testing.T) {
 	t.Parallel()
@@ -71,7 +83,7 @@ func TestPendingPostRejectionReasons(t *testing.T) {
 
 	require.NoError(t, err)
 	require.Len(t, search.RejectionReasons, 2)
-	require.Equal(t, "Reason with infraction", string(search.RejectionReasons[0].Reason))
+	require.Equal(t, "Reason with infraction", search.RejectionReasons[0].Reason)
 }
 
 // TestPendingPostAuditLogs - get some audit logs
@@ -87,7 +99,7 @@ func TestPendingPostAuditLogs(t *testing.T) {
 	})
 
 	require.NoError(t, err)
-	require.Equal(t, "0eclipse", string(search.PendingPostAuditLogs.Edges[0].Node.Contributor.Username))
+	require.Equal(t, "0eclipse", search.PendingPostAuditLogs.Edges[0].Node.Contributor.Username)
 }
 
 // TestGetNextModerator - get next mod id
@@ -111,6 +123,9 @@ func TestModeratePost_approve(t *testing.T) {
 
 	require.Equal(t, infraction.StatusApproved, res.ModeratePost.AuditLog.Status)
 	require.Equal(t, "some notes", res.ModeratePost.AuditLog.Notes)
+
+	undo := mRevertModeratePost(t, client, res.ModeratePost.AuditLog.ID)
+	require.Equal(t, true, undo.UndoModeratePost.AuditLog.Reverted)
 }
 
 func TestModeratePost_reject(t *testing.T) {
@@ -124,9 +139,13 @@ func TestModeratePost_reject(t *testing.T) {
 	require.Equal(t, infraction.StatusDenied, res.ModeratePost.AuditLog.Status)
 	require.Equal(t, "some additional notes", res.ModeratePost.AuditLog.Notes)
 	require.Equal(t, "Reason with no infraction", res.ModeratePost.AuditLog.Reason)
+
+	undo := mRevertModeratePost(t, client, res.ModeratePost.AuditLog.ID)
+
+	require.Equal(t, true, undo.UndoModeratePost.AuditLog.Reverted)
 }
 
-func TestModeratePost_reject_infraction(t *testing.T) {
+func TestModeratePost_reject_infraction_and_undo(t *testing.T) {
 	t.Parallel()
 
 	client := getHttpClient(t, passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
@@ -137,20 +156,12 @@ func TestModeratePost_reject_infraction(t *testing.T) {
 	require.Equal(t, infraction.StatusDenied, res.ModeratePost.AuditLog.Status)
 	require.Equal(t, "some additional notes", res.ModeratePost.AuditLog.Notes)
 	require.Equal(t, "Reason with infraction", res.ModeratePost.AuditLog.Reason)
-}
 
-func TestModeratePost_undo(t *testing.T) {
-	t.Parallel()
+	undo := mRevertModeratePost(t, client, res.ModeratePost.AuditLog.ID)
 
-	client := getHttpClient(t, passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
-
-	var search UndoModeratePost
-
-	err := client.Mutate(context.Background(), &search, map[string]interface{}{
-		"data": types.RevertPostInput{AuditLogID: "1q7MIqqnkzew33q4elXuN1Ri27d"},
-	})
-
-	require.NoError(t, err)
+	// infraction should have been undone
+	require.Equal(t, nil, undo.UndoModeratePost.AuditLog.InfractionID)
+	require.Equal(t, true, undo.UndoModeratePost.AuditLog.Reverted)
 }
 
 func getHttpClient(t *testing.T, pass *passport.Passport) *graphql.Client {
