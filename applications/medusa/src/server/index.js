@@ -1,7 +1,6 @@
 import express from 'express'
 import path from 'path'
 import cookieParser from 'cookie-parser'
-import csrf from 'csurf'
 import i18nextMiddleware from 'i18next-http-middleware'
 import i18next from './config/i18next'
 import graphql from './app/graphql'
@@ -13,7 +12,6 @@ import helmet from 'helmet'
 import nonce from './app/nonce'
 import hbsConfig from './config/hbs'
 import coverage from './app/coverage'
-import csrfConfig from './config/csrf'
 import flash from './app/flash'
 import helmetConfig from './config/helmet'
 import cookieConfig from './config/cookie'
@@ -52,7 +50,7 @@ index.use(helmet(helmetConfig))
 index.use(session(sessionCfg))
 
 // CSRF
-index.use(csrf(csrfConfig))
+// index.use(csrf(csrfConfig))
 
 // Flash sessions
 index.use(flash)

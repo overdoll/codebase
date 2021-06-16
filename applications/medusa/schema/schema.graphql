@@ -84,6 +84,7 @@ type Mutation {
   authenticate(data: AuthenticationInput): Boolean!
   register(data: RegisterInput): Boolean!
   logout: Boolean!
+  authEmail: Boolean!
   post(data: PostInput): PostResponse!
   updatePost(id: String!, data: PostInput): PostUpdateResponse!
   moderatePost(data: ModeratePostInput!): ModeratePost!

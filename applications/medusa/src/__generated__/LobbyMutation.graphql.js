@@ -10,7 +10,7 @@
 import type { ConcreteRequest } from 'relay-runtime';
 export type LobbyMutationVariables = {||};
 export type LobbyMutationResponse = {|
-  +authEmail: ?boolean
+  +authEmail: boolean
 |};
 export type LobbyMutation = {|
   variables: LobbyMutationVariables,
