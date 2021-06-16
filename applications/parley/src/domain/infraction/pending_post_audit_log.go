@@ -173,6 +173,10 @@ func (m *PendingPostAuditLog) Reverted() bool {
 	return m.reverted
 }
 
+func (m *PendingPostAuditLog) CreatedMs() int {
+	return m.createdMs
+}
+
 // revert log
 func (m *PendingPostAuditLog) Revert() error {
 	parse, err := ksuid.Parse(m.id)

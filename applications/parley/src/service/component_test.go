@@ -32,7 +32,7 @@ type PendingPostRejectionReasons struct {
 }
 
 type PendingPostAuditLogs struct {
-	PendingPostAuditLogs []*types.PendingPostAuditLog `graphql:"pendingPostAuditLogs(data: $data)"`
+	PendingPostAuditLogs *types.PendingPostAuditLogConnection `graphql:"pendingPostAuditLogs(filter: $filter)"`
 }
 
 type ModeratePost struct {
@@ -79,11 +79,11 @@ func TestPendingPostAuditLogs(t *testing.T) {
 	var search PendingPostAuditLogs
 
 	err := client.Query(context.Background(), &search, map[string]interface{}{
-		"data": types.PendingPostAuditLogInput{ModeratorID: ""},
+		"filter": types.PendingPostAuditLogFilters{ModeratorID: nil, DateRange: []int{1623804143}},
 	})
 
 	require.NoError(t, err)
-	require.Equal(t, "0eclipse", string(search.PendingPostAuditLogs[0].Contributor.Username))
+	require.Equal(t, "0eclipse", string(search.PendingPostAuditLogs.Edges[0].Node.Contributor.Username))
 }
 
 // TestGetNextModerator - get next mod id

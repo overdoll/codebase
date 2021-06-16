@@ -78,6 +78,7 @@ func marshalPendingPostAuditLogToDatabase(auditLog *infraction.PendingPostAuditL
 		Reason:              reason,
 		Notes:               auditLog.Notes(),
 		Reverted:            auditLog.Reverted(),
+		CreatedMs:           auditLog.CreatedMs(),
 	}, nil
 }
 
@@ -95,7 +96,7 @@ func (r InfractionCassandraRepository) CreatePendingPostAuditLog(ctx context.Con
 			"post_id",
 			"contributor_user_id",
 			"moderator_user_id",
-			"user_infraction_id",
+			"bucket",
 			"created_ms",
 		).
 		Query(r.session).
@@ -112,7 +113,7 @@ func (r InfractionCassandraRepository) CreatePendingPostAuditLog(ctx context.Con
 			"post_id",
 			"contributor_user_id",
 			"moderator_user_id",
-			"user_infraction_id",
+			"bucket",
 			"created_ms",
 		).
 		Query(r.session).
@@ -127,6 +128,7 @@ func (r InfractionCassandraRepository) CreatePendingPostAuditLog(ctx context.Con
 		Columns(
 			"id",
 			"post_id",
+			"created_ms",
 			"contributor_user_id",
 			"contributor_user_username",
 			"moderator_user_id",
@@ -203,6 +205,7 @@ func (r InfractionCassandraRepository) GetPendingPostAuditLog(ctx context.Contex
 			"notes",
 			"reverted",
 			"bucket",
+			"created_ms",
 		).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
@@ -248,7 +251,7 @@ func (r InfractionCassandraRepository) GetPendingPostAuditLogByModerator(ctx con
 
 	// build query based on filters
 	builder :=
-		qb.Select("pending_posts_audit_log").
+		qb.Select("pending_posts_audit_logs_by_moderator").
 			Where(qb.Eq("moderator_user_id"), qb.In("bucket"), qb.Gt("created_ms"))
 
 	if filter.ContributorId() != "" {
@@ -259,14 +262,13 @@ func (r InfractionCassandraRepository) GetPendingPostAuditLogByModerator(ctx con
 		}
 	}
 
-	mp := make(map[string]interface{})
 	var times []int
 
 	for _, date := range filter.DateRange() {
 		times = append(times, bucket.MakeBucketFromTimestamp(date))
 	}
 
-	mp["bucket"] = times
+	fmt.Println(times)
 
 	pendingPostAuditLogQuery := builder.
 		Columns(
@@ -277,6 +279,7 @@ func (r InfractionCassandraRepository) GetPendingPostAuditLogByModerator(ctx con
 			"moderator_user_id",
 			"moderator_user_username",
 			"user_infraction_id",
+			"created_ms",
 			"status",
 			"reason",
 			"notes",
@@ -285,15 +288,14 @@ func (r InfractionCassandraRepository) GetPendingPostAuditLogByModerator(ctx con
 		).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
-		BindMap(mp).
-		BindStruct(&
-			PendingPostAuditLogByModerator{
-				CreatedMs:     0,
-				ModeratorId:   filter.ModeratorId(),
-				ContributorId: filter.ContributorId(),
-				PostId:        filter.PostId(),
-			},
-		)
+		BindMap(qb.M{
+			"bucket": times,
+			// in the future created_ms will be used as a cursor for pagination for filtering
+			"created_ms":          0,
+			"moderator_user_id":   filter.ModeratorId(),
+			"contributor_user_id": filter.ContributorId(),
+			"post_id":             filter.PostId(),
+		})
 
 	var dbPendingPostAuditLogs []*PendingPostAuditLogByModerator
 
@@ -332,7 +334,6 @@ func (r InfractionCassandraRepository) GetPendingPostAuditLogByModerator(ctx con
 			pendingPostAuditLog.CreatedMs,
 		)
 
-		//(id, userId, reason string, expiration time.Time)
 		pendingPostAuditLogs = append(pendingPostAuditLogs, result)
 	}
 
