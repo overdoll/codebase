@@ -75,7 +75,12 @@ const gateway = new ApolloGateway({
 const server = new ApolloServer({
   gateway,
   subscriptions: false,
-  context: ({ req, res }) => ({ req, res })
+  context: ({ req, res }) => ({ req, res }),
+  playground: {
+    settings: {
+      'request.credentials': 'same-origin'
+    }
+  }
 })
 
 export default function (index) {

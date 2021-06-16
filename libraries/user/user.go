@@ -67,7 +67,7 @@ func (user *User) IsStaff() bool {
 }
 
 func (user *User) IsModerator() bool {
-	return user.hasRoles([]string{"moderator"}) && !user.IsLocked()
+	return (user.hasRoles([]string{"moderator"}) || user.IsStaff()) && !user.IsLocked()
 }
 
 func (user *User) hasRoles(roles []string) bool {

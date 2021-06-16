@@ -7,6 +7,7 @@ import (
 	"overdoll/applications/sting/src/domain/post"
 	"overdoll/applications/sting/src/ports/graphql/types"
 	"overdoll/libraries/graphql/relay"
+	"overdoll/libraries/passport"
 )
 
 type QueryResolver struct {
@@ -88,11 +89,11 @@ func marshalPendingPostsToGraphQL(results []*post.PendingPostEdge) []*types.Pend
 
 func (r *QueryResolver) PendingPosts(ctx context.Context, input relay.ConnectionInput, filter types.PendingPostFilters) (*types.PendingPostConnection, error) {
 
-	//pass := passport.FromContext(ctx)
-	//
-	//if !pass.IsAuthenticated() {
-	//	return nil, passport.ErrNotAuthenticated
-	//}
+	pass := passport.FromContext(ctx)
+
+	if !pass.IsAuthenticated() {
+		return nil, passport.ErrNotAuthenticated
+	}
 
 	moderatorId := ""
 
@@ -112,7 +113,7 @@ func (r *QueryResolver) PendingPosts(ctx context.Context, input relay.Connection
 		artistId = *filter.ArtistID
 	}
 
-	results, err := r.App.Queries.GetPendingPosts.Handle(ctx, input.ToCursor(), moderatorId, contributorId, artistId, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
+	results, err := r.App.Queries.GetPendingPosts.Handle(ctx, input.ToCursor(), moderatorId, contributorId, artistId, pass.UserID())
 
 	if err != nil {
 		return nil, err

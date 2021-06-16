@@ -26,7 +26,7 @@ func (h GetPendingPostsHandler) Handle(ctx context.Context, cursor *paging.Curso
 		return nil, ErrSearchFailed
 	}
 
-	if usr.IsLocked() {
+	if usr.IsLocked() || !usr.IsModerator() {
 		return nil, ErrSearchFailed
 	}
 
