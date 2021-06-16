@@ -42,18 +42,27 @@ go_library(
 go_test(
     name = "adapters_test",
     srcs = [
+        "content_s3_repository_test.go",
         "post_cassandra_repository_test.go",
         "post_category_cassandra_repository_test.go",
         "post_character_cassandra_repository_test.go",
         "post_media_cassandra_repository_test.go",
     ],
+    data = ["//applications/sting/src/adapters/content_fixtures:all"],
     deps = [
         ":adapters",
         "//applications/sting/src/domain/post",
+        "//libraries/aws",
         "//libraries/tests",
         "//libraries/user",
         "//libraries/uuid",
+        "@com_github_aws_aws_sdk_go//aws",
+        "@com_github_aws_aws_sdk_go//aws/awserr",
+        "@com_github_aws_aws_sdk_go//service/s3",
+        "@com_github_aws_aws_sdk_go//service/s3/s3manager",
+        "@com_github_segmentio_ksuid//:ksuid",
         "@com_github_stretchr_testify//assert",
         "@com_github_stretchr_testify//require",
+        "@io_bazel_rules_go//go/tools/bazel:go_default_library",
     ],
 )

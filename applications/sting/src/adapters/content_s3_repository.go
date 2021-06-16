@@ -17,8 +17,7 @@ import (
 
 const (
 	ImageProcessingBucket = "overdoll-processing"
-	ImagePublicBucket     = "overdoll-public"
-	PostContentBucket     = "overdoll-post-content"
+	PostContentBucket     = "overdoll-posts"
 	ImageUploadsBucket    = "overdoll-uploads"
 )
 
@@ -57,16 +56,14 @@ func (r ContentS3Repository) ProcessContent(ctx context.Context, userId string, 
 		)
 
 		if err != nil {
-			fmt.Println("failed to download file", err)
-			continue
+			return nil, err
 		}
 
 		head := make([]byte, 261)
 		_, err = file.Read(head)
 
 		if err != nil {
-			fmt.Printf("could not read file header %s", err)
-			continue
+			return nil, err
 		}
 
 		// do a mime type check on the file to make sure its an accepted file and to get our extension
@@ -90,14 +87,13 @@ func (r ContentS3Repository) ProcessContent(ctx context.Context, userId string, 
 			CopySource: aws.String(url.PathEscape(ImageUploadsBucket + "/" + fileId)), Key: aws.String(fileKey)})
 
 		if err != nil {
-			fmt.Printf("unable to copy file %s", err)
-			continue
+			return nil, err
 		}
 
 		// wait until file is available in private bucket
 		err = s3Client.WaitUntilObjectExists(&s3.HeadObjectInput{Bucket: aws.String(ImageProcessingBucket), Key: aws.String(fileKey)})
 		if err != nil {
-			fmt.Printf("error while waiting for item to be copied %s", err)
+			return nil, err
 		}
 
 		// add to our list of files
