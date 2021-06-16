@@ -162,6 +162,31 @@ func (s *WorkflowComponentTestSuite) Test_CreatePost_Reject() {
 	})
 }
 
+// Test_CreatePost_Undo - undo post - publish post and then undo it
+func (s *WorkflowComponentTestSuite) Test_CreatePost_Undo() {
+
+	var newPostId string
+
+	mCreatePost(s, func(postId string) func() {
+		return func() {
+			newPostId = postId
+			// setup another environment since we cant execute multiple workflows
+			newEnv := s.NewTestWorkflowEnvironment()
+			ports.RegisterActivities(s.app, newEnv)
+
+			stingClient := getGrpcClient(s.T())
+
+			// "undo" pending post
+			_, e := stingClient.PublishPendingPost(context.Background(), &sting.PendingPostRequest{Id: postId})
+			s.NoError(e)
+		}
+	})
+
+	stingClient := getGrpcClient(s.T())
+	_, e := stingClient.UndoPendingPost(context.Background(), &sting.PendingPostRequest{Id: newPostId})
+	s.NoError(e)
+}
+
 // TestSearchCharacters - search some characters
 func TestSearchCharacters(t *testing.T) {
 

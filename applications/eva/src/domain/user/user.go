@@ -74,60 +74,58 @@ func NewUser(id, username, email string) (*User, error) {
 	}, nil
 }
 
-func (u User) ID() string {
+func (u *User) ID() string {
 	return u.id
 }
 
-func (u User) Email() string {
+func (u *User) Email() string {
 	return u.email
 }
 
-func (u User) Username() string {
+func (u *User) Username() string {
 	return u.username
 }
 
-func (u User) Verified() bool {
+func (u *User) Verified() bool {
 	return u.verified
 }
 
-func (u User) Avatar() string {
+func (u *User) Avatar() string {
 	var staticURL = os.Getenv("STATIC_URL")
 	return staticURL + "/avatars/" + u.avatar
 }
 
-func (u User) RawAvatar() string {
+func (u *User) RawAvatar() string {
 	return u.avatar
 }
 
-func (u User) LockedUntil() int {
+func (u *User) LockedUntil() int {
 	return u.lockedUntil
 }
 
-func (u User) CanUnlock() bool {
-	return time.Now().After(time.Unix(int64(u.lockedUntil), 0))
-}
+func (u *User) CanUnlock() bool {
 
-func (u User) IsLocked() bool {
-
-	// indefinite lock
 	if u.lockedUntil == -1 {
 		return true
 	}
 
-	return time.Unix(int64(u.lockedUntil), 0).After(time.Now())
+	return time.Now().After(time.Unix(int64(u.lockedUntil), 0))
 }
 
-func (u User) LockedReason() string {
+func (u *User) IsLocked() bool {
+	return u.locked
+}
+
+func (u *User) LockedReason() string {
 	return string(u.lockedReason)
 }
 
-func (u User) IsUnclaimed() bool {
+func (u *User) IsUnclaimed() bool {
 	return u.unclaimed
 }
 
-func (u User) LockUser(duration int, reason string) error {
-
-	if u.lockedUntil == 0 {
+func (u *User) LockUser(duration int, reason string) error {
+	if duration == 0 {
 		u.lockedUntil = 0
 		u.lockedReason = ""
 		u.locked = false
@@ -141,7 +139,7 @@ func (u User) LockUser(duration int, reason string) error {
 	return nil
 }
 
-func (u User) UserRolesAsString() []string {
+func (u *User) UserRolesAsString() []string {
 	var n []string
 
 	for _, role := range u.roles {

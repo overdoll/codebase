@@ -39,6 +39,10 @@ type ModeratePost struct {
 	ModeratePost types.ModeratePost `graphql:"moderatePost(data: $data)"`
 }
 
+type UndoModeratePost struct {
+	UndoModeratePost types.ModeratePost `graphql:"revertPendingPostAuditLog(data: $data)"`
+}
+
 func mModeratePost(t *testing.T, client *graphql.Client, rejectionReason *string, notes string) ModeratePost {
 	var modPost ModeratePost
 
@@ -133,6 +137,20 @@ func TestModeratePost_reject_infraction(t *testing.T) {
 	require.Equal(t, infraction.StatusDenied, res.ModeratePost.AuditLog.Status)
 	require.Equal(t, "some additional notes", res.ModeratePost.AuditLog.Notes)
 	require.Equal(t, "Reason with infraction", res.ModeratePost.AuditLog.Reason)
+}
+
+func TestModeratePost_undo(t *testing.T) {
+	t.Parallel()
+
+	client := getHttpClient(t, passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+
+	var search UndoModeratePost
+
+	err := client.Mutate(context.Background(), &search, map[string]interface{}{
+		"data": types.RevertPostInput{AuditLogID: "1q7MIqqnkzew33q4elXuN1Ri27d"},
+	})
+
+	require.NoError(t, err)
 }
 
 func getHttpClient(t *testing.T, pass *passport.Passport) *graphql.Client {

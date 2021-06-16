@@ -360,7 +360,7 @@ func (r InfractionCassandraRepository) UpdatePendingPostAuditLog(ctx context.Con
 		return nil, err
 	}
 
-	updateAuditLog := qb.Update("pending_posts_audit_log_by_moderator").
+	updateAuditLog := qb.Update("pending_posts_audit_logs_by_moderator").
 		Set(
 			"user_infraction_id",
 			"status",

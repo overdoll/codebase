@@ -269,6 +269,22 @@ func TestUser_get(t *testing.T) {
 	assert.Equal(t, res.Username, "poisonminion")
 }
 
+func TestUser_lock(t *testing.T) {
+	t.Parallel()
+
+	client := getGrpcClient(t)
+
+	res, err := client.LockUser(context.Background(), &eva.LockUserRequest{
+		Id:       "1q7MJ3JkhcdcJJNqZezdfQt5pZ6",
+		Duration: 100000000,
+		Reason:   eva.LockUserReason_POST_INFRACTION,
+	})
+
+	require.NoError(t, err)
+
+	assert.Equal(t, true, res.Locked)
+}
+
 func getOTPCookieFromJar(t *testing.T, jar http.CookieJar) *http.Cookie {
 	// get cookies
 	cookies := jar.Cookies(&url.URL{
