@@ -38,7 +38,7 @@ export default function File ({
           borderWidth={2}
           overflow='hidden'
           objectFit='cover'
-          borderColor={snapshot.isDragging ? 'teal.500' : 'gray.900'}
+          borderColor={snapshot.isDragging ? 'red.500' : 'gray.900'}
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
@@ -51,7 +51,7 @@ export default function File ({
             <Icon mt={3} icon={InterfaceArrowsButtonDown} fill='gray.600' h={5} w={5} />
           </Flex>
           <Flex w='52%'>
-            <Thumbnail thumbnail={thumbnail} progress={progress} />
+            <Thumbnail type={file.type.split('/')[0]} thumbnail={thumbnail} progress={progress} />
           </Flex>
           <Flex w='40%' direction='column'>
             <Flex justifyContent='flex-end'>
@@ -61,6 +61,11 @@ export default function File ({
               <Heading isTruncated fontSize='lg' color='gray.100'>
                 {file.id.slice(5).split('/')[0]}
               </Heading>
+            </Flex>
+            <Flex position='relative' ml={2} mr={2}>
+              <Text fontSize='sm' color='gray.100' isTruncated>
+                {file.type.replace('/', ' - ')}
+              </Text>
             </Flex>
             <Flex position='relative' ml={2} mr={2}>
               {progress
@@ -73,6 +78,7 @@ export default function File ({
                   <Skeleton />
                   )}
             </Flex>
+
           </Flex>
         </Flex>
       )}

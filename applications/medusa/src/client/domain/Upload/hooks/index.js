@@ -58,14 +58,13 @@ const useUpload = (state: State, dispatch: Dispatch): Uppy => {
       .toArray()
       .then(files => {
         files
-          .sort((a, b) => a - b)
+          .sort((a, b) => a.index - b.index)
           .forEach(file => {
             dispatch({
               type: EVENTS.FILES,
               value: {
                 id: file.id,
-                type: file.type,
-                index: file.index
+                type: file.type
               }
             })
           })

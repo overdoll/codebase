@@ -5,7 +5,7 @@ import type { Node } from 'react'
 import { useEffect, useReducer } from 'react'
 import Steps from './components/steps/Steps'
 import type { Action, State } from '@//:types/upload'
-import { EVENTS, INITIAL_STATE } from './constants/constants'
+import { EVENTS, INITIAL_STATE, STEPS } from './constants/constants'
 import reducer from './reducer'
 import useUpload from './hooks'
 import { useToast } from '@chakra-ui/react'
@@ -61,7 +61,11 @@ export default function Upload (): Node {
   // file-added- uppy file was added
   useEffect(() => {
     uppy.on('file-added', file => {
+      // TODO handle duplicate file uploads - create unique uppy id?
       dispatch({ type: EVENTS.FILES, value: { id: file.id, type: file.type } })
+      if (state.step === null) {
+        dispatch({ type: EVENTS.STEP, value: STEPS.ARRANGE })
+      }
     })
   }, [uppy])
 

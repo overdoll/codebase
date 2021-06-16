@@ -1,9 +1,9 @@
 {
   "begin": {
     "header": "Start by uploading an image or a video",
-    "subheader": "Accepted file formats: .mp4, .jpg, .png",
-    "uploader": "Upload Files",
-    "limit": "max. 25mb per file"
+    "formats": ".mp4 .jpg .png",
+    "uploader": "Upload up to 9 files",
+    "limit": "25mb limit per file"
   },
   "rules": {
     "header": "As a reminder, don't upload...",

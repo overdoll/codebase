@@ -54,20 +54,6 @@ export default function Steps ({ uppy, state, dispatch }: Props): Node {
   // If the amount of files != the amount of urls (not all files were uploaded), then we can't submit yet
   const SubmitDisabled = state.files.length !== Object.keys(state.urls).length
 
-  const onAddFiles = (): void => {
-    const files = uppy.getFiles()
-
-    // no files were uploaded (error occurred)
-    if (files.length === 0) {
-      return
-    }
-
-    // If not in any step, go to the arrange step
-    if (state.step === null) {
-      dispatch({ type: EVENTS.STEP, value: STEPS.ARRANGE })
-    }
-  }
-
   const Step = (): Node => {
     switch (state.step) {
       case STEPS.ARRANGE:
@@ -75,7 +61,6 @@ export default function Steps ({ uppy, state, dispatch }: Props): Node {
           <Arrange
             uppy={uppy}
             dispatch={dispatch}
-            onAddFiles={onAddFiles}
             state={state}
           />
         )
@@ -88,7 +73,9 @@ export default function Steps ({ uppy, state, dispatch }: Props): Node {
       case STEPS.FINISH:
         return <Finish state={state} />
       default:
-        return <Begin uppy={uppy} onAddFiles={onAddFiles} />
+        return (
+          <Begin uppy={uppy} />
+        )
     }
   }
 
@@ -209,11 +196,10 @@ export default function Steps ({ uppy, state, dispatch }: Props): Node {
         {Step()}
         <Flex>
           {state.step !== null && state.step !== STEPS.FINISH && (
-            <Flex w='100%' justify='space-between'>
+            <Flex w='100%' justify='space-between' mt={2}>
               {state.step !== STEPS.ARRANGE
                 ? (
                   <Button
-                    m={2}
                     size='lg'
                     disabled={isInFlight}
                     onClick={PrevStep}
@@ -223,7 +209,7 @@ export default function Steps ({ uppy, state, dispatch }: Props): Node {
                   </Button>
                   )
                 : (
-                  <Button m={2} size='lg' variant='outline' onClick={onCancel}>
+                  <Button size='lg' variant='outline' onClick={onCancel}>
                     {t('button.cancel')}
                   </Button>
                   )}
@@ -231,7 +217,6 @@ export default function Steps ({ uppy, state, dispatch }: Props): Node {
               {state.step !== STEPS.REVIEW
                 ? (
                   <Button
-                    m={2}
                     size='lg'
                     disabled={NextDisabled}
                     onClick={NextStep}
@@ -241,7 +226,6 @@ export default function Steps ({ uppy, state, dispatch }: Props): Node {
                   )
                 : (
                   <Button
-                    m={2}
                     size='lg'
                     onClick={onSubmit}
                     colorScheme='red'

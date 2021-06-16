@@ -26,7 +26,7 @@ export default function InspectModal ({ supplement, children, isOpen, onClose }:
     >
       <ModalOverlay />
       <ModalContent position='relative' m={0} borderRadius={0} bg='dimmers.200'>
-        {supplement && <Flex bottom={0} right={0} position='fixed' direction='row'>{supplement}</Flex>}
+        {supplement && <Flex right={16} position='fixed' direction='row'>{supplement}</Flex>}
         <ModalCloseButton position='fixed' size='lg' />
         <ModalBody
           zIndex='hide'

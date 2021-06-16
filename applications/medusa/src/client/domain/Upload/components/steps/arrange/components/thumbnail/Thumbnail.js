@@ -7,8 +7,16 @@ import {
   Spinner,
   CircularProgress,
   CircularProgressLabel,
-  Skeleton
+  Skeleton,
+  Box
 } from '@chakra-ui/react'
+
+import Icon from '@//:modules/content/icon/Icon'
+
+import ComputerWebcamVideo
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/computer-devices/webcam/computer-webcam-video.svg'
+import ImageCamera1
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/images-photography/camera/image-camera-1.svg'
 
 import SuspenseImage from '@//:modules/utilities/SuspenseImage'
 
@@ -19,15 +27,16 @@ type Props = {
       key: number
     }
   },
+  type?: string,
 };
 
-export default function Thumbnail ({ thumbnail, progress }: Props): Node {
+export default function Thumbnail ({ thumbnail, progress, type }: Props): Node {
   return (
     <Flex
       w='100%'
       h='100%'
-      justifyContent='center'
-      alignItems='center'
+      justify='center'
+      align='center'
       position='relative'
     >
       <SuspenseImage
@@ -67,6 +76,18 @@ export default function Thumbnail ({ thumbnail, progress }: Props): Node {
               <Spinner size='xl' />
             </Flex>
             )}
+      </Flex>
+      <Flex
+        position='absolute'
+        w='100%'
+        h='100%'
+        justify='center'
+        align='center'
+
+      >
+        <Box borderRadius={15} bg='dimmers.500'>
+          <Icon m={2} icon={type === 'video' ? ComputerWebcamVideo : ImageCamera1} fill='gray.00' w={8} h={8} />
+        </Box>
       </Flex>
     </Flex>
   )

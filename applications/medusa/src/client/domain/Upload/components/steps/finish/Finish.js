@@ -20,8 +20,6 @@ export default function Finish ({ state }: Props): Node {
 
   const history = useHistory()
 
-  console.log(state.submit.review)
-
   return (
     <Center mt={40}>
       <Flex w={['sm', 'md', 'lg']} direction='column'>

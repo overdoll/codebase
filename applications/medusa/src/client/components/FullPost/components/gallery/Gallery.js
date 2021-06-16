@@ -6,7 +6,7 @@ import { useState } from 'react'
 import {
   useDisclosure,
   Box,
-  Flex, IconButton, Skeleton, Spinner
+  Flex, IconButton, Skeleton, Spinner, Video
 
 } from '@chakra-ui/react'
 
@@ -79,7 +79,12 @@ export default function Gallery ({ files, urls, thumbnails, setSwiper }: Props):
                   userSelect='none'
                 >
                   {fileType === 'video'
-                    ? <video disableRemotePlayback autoPlay muted loop width='100%' poster={thumbnails[file.id]}>
+                    ? <video
+                        disableRemotePlayback autoPlay muted loop style={{
+                          objectFit: 'cover',
+                          height: '100%'
+                        }} poster={thumbnails[file.id]}
+                      >
                       <source src={urls[file.id]} type={file.type} />
                     </video>
                     : <SuspenseImage
@@ -128,8 +133,12 @@ export default function Gallery ({ files, urls, thumbnails, setSwiper }: Props):
           ? currentSlide.type.split('/')[0] === 'video'
             ? <video
                 disableRemotePlayback
-                autoPlay muted controls loop height={!previewExpand ? '100%' : 'auto'}
-                width={!previewExpand ? 'auto' : '100%'} objectFit={!previewExpand ? 'contain' : 'cover'}
+                autoPlay muted controls loop
+                style={{
+                  objectFit: !previewExpand ? 'contain' : 'cover',
+                  height: !previewExpand ? 'auto' : '100%',
+                  width: !previewExpand ? '100%' : 'auto'
+                }}
                 poster={thumbnails[currentSlide.id]}
               >
               <source src={urls[currentSlide.id]} type={currentSlide.type} />

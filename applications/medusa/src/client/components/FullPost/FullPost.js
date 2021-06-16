@@ -50,8 +50,8 @@ type Props = {
       thumbnail: string,
     }
   },
-  voteCount: number,
-  hasVoted: boolean,
+  voteCount?: number,
+  hasVoted?: boolean,
   disableContext?: boolean,
 };
 
@@ -169,5 +169,7 @@ export default function FullPost ({ artist, files, urls, characters, categories,
   )
 }
 FullPost.defaultProps = {
-  disableContext: false
+  disableContext: false,
+  hasVoted: false,
+  voteCount: 0
 }
