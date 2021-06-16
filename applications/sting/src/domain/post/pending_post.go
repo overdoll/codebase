@@ -165,7 +165,7 @@ func (p *PendingPost) Content() []string {
 
 	for _, image := range p.content {
 
-		baseUrl := os.Getenv("UPLOADS_URL")
+		baseUrl := os.Getenv("STATIC_URL") + "/" + "pending_posts"
 
 		if p.state == Published {
 			baseUrl = os.Getenv("POSTS_URL")

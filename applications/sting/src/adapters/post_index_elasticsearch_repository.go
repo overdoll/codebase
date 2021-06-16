@@ -234,6 +234,13 @@ const SearchPostPending = `
 						"fields" : ["moderator_id"],
 						"operator" : "and"
 					}
+				},
+				{
+					"multi_match": {
+						"query" : "review",
+						"fields" : ["state"],
+						"operator" : "and"
+					}
 				}
 			]
 		}

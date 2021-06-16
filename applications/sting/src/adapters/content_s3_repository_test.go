@@ -18,8 +18,7 @@ import (
 	storage "overdoll/libraries/aws"
 )
 
-// TestContentS3Repository_ProcessContent - process content
-// seeds data before test starts because it expects it to be there already
+// TestContentS3Repository_ProcessContent - process content, put into the public bucket, and finally delete it all at the end
 func TestContentS3Repository_ProcessContent(t *testing.T) {
 	t.Parallel()
 
@@ -27,7 +26,7 @@ func TestContentS3Repository_ProcessContent(t *testing.T) {
 	fileId := ksuid.New().String()
 
 	// upload fixture
-	uploadFileFixture(t, adapters.ImageUploadsBucket, prefix+"/"+fileId, "applications/sting/src/adapters/content_fixtures/test_file_1.png")
+	uploadFileFixture(t, adapters.ImageUploadsBucket, fileId, "applications/sting/src/adapters/content_fixtures/test_file_1.png")
 
 	content := newContentRepository(t)
 
@@ -37,9 +36,33 @@ func TestContentS3Repository_ProcessContent(t *testing.T) {
 	require.NoError(t, err)
 	// uploaded at least 1 file
 	require.Len(t, res, 1)
+
+	// reassign file id to new ID
+	fileId = res[0]
+
+	// make content public
+	res, err = content.MakeProcessedContentPublic(context.Background(), prefix, []string{fileId})
+	require.NoError(t, err)
+	require.Len(t, res, 1)
+
+	// delete public content
+	err = content.DeletePublicContent(context.Background(), []string{res[0]})
+	require.NoError(t, err)
+
+	// delete processed content
+	err = content.DeleteProcessedContent(context.Background(), prefix, []string{fileId})
+	require.NoError(t, err)
+
+}
+func newS3Client(t *testing.T) *s3.S3 {
+	session, err := storage.CreateAWSSession()
+
+	require.NoError(t, err)
+
+	return s3.New(session)
 }
 
-func uploadFileFixture(t *testing.T, bucket, fileKey, key string) {
+func uploadFileFixture(t *testing.T, bucket, fileKey, filePath string) {
 
 	session, err := storage.CreateAWSSession()
 
@@ -51,7 +74,7 @@ func uploadFileFixture(t *testing.T, bucket, fileKey, key string) {
 	dir, err := bazel.RunfilesPath()
 	require.NoError(t, err)
 
-	file, err := os.Open(path.Join(dir, fileKey))
+	file, err := os.Open(path.Join(dir, filePath))
 
 	require.NoError(t, err)
 
@@ -60,7 +83,7 @@ func uploadFileFixture(t *testing.T, bucket, fileKey, key string) {
 	_, err = client.Upload(&s3manager.UploadInput{
 		Body:   file,
 		Bucket: aws.String(bucket),
-		Key:    aws.String(key),
+		Key:    aws.String(fileKey),
 	})
 
 	require.NoError(t, err)
@@ -86,7 +109,7 @@ func seedBuckets() bool {
 
 	s3c := s3.New(session)
 
-	buckets := []string{adapters.ImageProcessingBucket, adapters.ImageUploadsBucket, adapters.PostContentBucket}
+	buckets := []string{adapters.ImageStaticBucket, adapters.ImageUploadsBucket, adapters.PostContentBucket}
 
 	for _, bucket := range buckets {
 		_, err = s3c.CreateBucket(&s3.CreateBucketInput{Bucket: aws.String(bucket)})

@@ -8,6 +8,7 @@ import (
 
 // Bucket package
 // useful for bucketing
+// bucketing logic stolen from https://blog.discord.com/how-discord-stores-billions-of-messages-7fa6ec7ee4c7 :)
 
 const (
 	OverdollEpoch = 1420070400000

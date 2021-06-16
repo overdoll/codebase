@@ -16,9 +16,13 @@ import (
 )
 
 const (
-	ImageProcessingBucket = "overdoll-processing"
-	PostContentBucket     = "overdoll-posts"
-	ImageUploadsBucket    = "overdoll-uploads"
+	ImageStaticBucket  = "overdoll-assets"
+	PostContentBucket  = "overdoll-posts"
+	ImageUploadsBucket = "overdoll-uploads"
+)
+
+const (
+	PendingPostPrefix = "pending_posts/"
 )
 
 type ContentS3Repository struct {
@@ -83,15 +87,15 @@ func (r ContentS3Repository) ProcessContent(ctx context.Context, userId string, 
 		fileKey := userId + "/" + fileName
 
 		// move file to private bucket
-		_, err = s3Client.CopyObject(&s3.CopyObjectInput{Bucket: aws.String(ImageProcessingBucket),
-			CopySource: aws.String(url.PathEscape(ImageUploadsBucket + "/" + fileId)), Key: aws.String(fileKey)})
+		_, err = s3Client.CopyObject(&s3.CopyObjectInput{Bucket: aws.String(ImageStaticBucket),
+			CopySource: aws.String(url.PathEscape(ImageUploadsBucket + "/" + fileId)), Key: aws.String(PendingPostPrefix + fileKey)})
 
 		if err != nil {
 			return nil, err
 		}
 
 		// wait until file is available in private bucket
-		err = s3Client.WaitUntilObjectExists(&s3.HeadObjectInput{Bucket: aws.String(ImageProcessingBucket), Key: aws.String(fileKey)})
+		err = s3Client.WaitUntilObjectExists(&s3.HeadObjectInput{Bucket: aws.String(ImageStaticBucket), Key: aws.String(PendingPostPrefix + fileKey)})
 		if err != nil {
 			return nil, err
 		}
@@ -118,7 +122,7 @@ func (r ContentS3Repository) MakeProcessedContentPublic(ctx context.Context, use
 
 		// move file to private bucket
 		_, err := s3Client.CopyObject(&s3.CopyObjectInput{Bucket: aws.String(PostContentBucket),
-			CopySource: aws.String(url.PathEscape(ImageProcessingBucket + "/" + userId + "/" + image)), Key: aws.String(newFileId)})
+			CopySource: aws.String(url.PathEscape(ImageStaticBucket + "/" + PendingPostPrefix + userId + "/" + image)), Key: aws.String(newFileId)})
 
 		if err != nil {
 			fmt.Printf("unable to copy file %s", err)
@@ -162,10 +166,10 @@ func (r ContentS3Repository) DeleteProcessedContent(ctx context.Context, userId 
 
 	for _, image := range content {
 
-		id := aws.String(url.PathEscape("/" + userId + "/" + image))
+		id := aws.String(PendingPostPrefix + url.PathEscape(userId+"/"+image))
 
 		// move file to private bucket
-		_, err := s3Client.DeleteObject(&s3.DeleteObjectInput{Bucket: aws.String(ImageProcessingBucket), Key: id})
+		_, err := s3Client.DeleteObject(&s3.DeleteObjectInput{Bucket: aws.String(ImageStaticBucket), Key: id})
 
 		if err != nil {
 			fmt.Printf("unable to delete file %s", err)
