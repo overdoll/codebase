@@ -61,10 +61,6 @@ export default function Begin ({ uppy }: Props): Node {
           <ListItem>{t('rules.rule2')}</ListItem>
         </UnorderedList>
       </Box>
-      {createPortal(
-        <Box id='fileUpload' w='100%' h='100%' bg='gray.800' />,
-        RootElement
-      )}
 
     </>
   )
