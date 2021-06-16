@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 	"net/url"
@@ -255,7 +254,6 @@ func TestLogout_user(t *testing.T) {
 	require.NoError(t, err)
 
 	modified := pass.GetPassport()
-	fmt.Println(modified.UserID())
 
 	// should no longer be authenticated
 	require.Equal(t, true, mutation.Logout)

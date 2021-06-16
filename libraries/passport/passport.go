@@ -52,7 +52,7 @@ func (p *Passport) UserID() string {
 
 // Revoke the currently authenticated user from the passport
 func (p *Passport) RevokeUser() error {
-	p.passport.User = nil
+	p.passport = &libraries_passport_v1.Passport{User: nil}
 	return nil
 }
 
@@ -150,27 +150,30 @@ func BodyToContext(c *gin.Context) *http.Request {
 }
 
 func FromString(raw string) *Passport {
-	if raw != "" {
-		sDec, err := base64.StdEncoding.DecodeString(raw)
 
-		if err != nil {
-			zap.S().Errorf("could not decode passport: %s", err)
-			return FreshPassport()
-		}
-
-		var msg libraries_passport_v1.Passport
-
-		err = proto.Unmarshal(sDec, &msg)
-
-		if err != nil {
-			zap.S().Errorf("could not unmarshal passport proto: %s", err)
-			return FreshPassport()
-		}
-
-		return &Passport{passport: &msg}
+	// empty passport in string - use fresh one
+	if raw == "" {
+		return FreshPassport()
 	}
 
-	return nil
+	sDec, err := base64.StdEncoding.DecodeString(raw)
+
+	if err != nil {
+		zap.S().Errorf("could not decode passport: %s", err)
+		return FreshPassport()
+	}
+
+	var msg libraries_passport_v1.Passport
+
+	err = proto.Unmarshal(sDec, &msg)
+
+	if err != nil {
+		zap.S().Errorf("could not unmarshal passport proto: %s", err)
+		return FreshPassport()
+	}
+
+	return &Passport{passport: &msg}
+
 }
 
 func FromContext(ctx context.Context) *Passport {
