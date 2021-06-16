@@ -1,6 +1,7 @@
 package clients
 
 import (
+	"fmt"
 	"net/http"
 	"net/http/cookiejar"
 
@@ -58,6 +59,8 @@ func (h *headerTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 	}
 
 	nw := passport.FromResponse(resp)
+
+	fmt.Println(nw)
 
 	if nw != nil {
 		h.clientPassport.passport = &*nw

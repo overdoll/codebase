@@ -49,6 +49,7 @@ type Media struct {
 
 type PendingPost struct {
 	ID                string                  `json:"id"`
+	State             string                  `json:"state"`
 	Moderator         string                  `json:"moderator"`
 	Contributor       *Contributor            `json:"contributor"`
 	Content           []string                `json:"content"`

@@ -35,10 +35,11 @@ type Commands struct {
 }
 
 type Queries struct {
-	SearchArtist     query.SearchArtistsHandler
-	SearchCategories query.SearchCategoriesHandler
-	SearchCharacters query.SearchCharactersHandler
-	SearchMedias     query.SearchMediasHandler
-	GetPendingPosts  query.GetPendingPostsHandler
-	GetPendingPost   query.GetPendingPostHandler
+	SearchArtist                query.SearchArtistsHandler
+	SearchCategories            query.SearchCategoriesHandler
+	SearchCharacters            query.SearchCharactersHandler
+	SearchMedias                query.SearchMediasHandler
+	GetPendingPosts             query.GetPendingPostsHandler
+	GetPendingPost              query.GetPendingPostHandler
+	GetPendingPostAuthenticated query.GetPendingPostAuthenticatedHandler
 }

@@ -85,12 +85,13 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			ReassignModerator: command.NewReassignModeratorHandler(postRepo, indexRepo, parley),
 		},
 		Queries: app.Queries{
-			SearchMedias:     query.NewSearchMediasHandler(indexRepo),
-			SearchCharacters: query.NewSearchCharactersHandler(indexRepo),
-			SearchCategories: query.NewSearchCategoriesHandler(indexRepo),
-			SearchArtist:     query.NewSearchArtistsHandler(indexRepo),
-			GetPendingPosts:  query.NewGetPendingPostsHandler(indexRepo, eva),
-			GetPendingPost:   query.NewGetPendingPostHandler(postRepo),
+			SearchMedias:                query.NewSearchMediasHandler(indexRepo),
+			SearchCharacters:            query.NewSearchCharactersHandler(indexRepo),
+			SearchCategories:            query.NewSearchCategoriesHandler(indexRepo),
+			SearchArtist:                query.NewSearchArtistsHandler(indexRepo),
+			GetPendingPosts:             query.NewGetPendingPostsHandler(indexRepo, eva),
+			GetPendingPost:              query.NewGetPendingPostHandler(postRepo),
+			GetPendingPostAuthenticated: query.NewGetPendingPostAuthenticatedHandler(postRepo, eva),
 		},
 	}
 }

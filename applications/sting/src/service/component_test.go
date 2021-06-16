@@ -36,6 +36,10 @@ type CreatePost struct {
 	Post *types.PostResponse `graphql:"post(data: $data)"`
 }
 
+type PendingPost struct {
+	PendingPost *types.PendingPost `graphql:"pendingPost(id: $id)"`
+}
+
 type SearchCharacters struct {
 	Characters []*types.Character `graphql:"characters(data: $data)"`
 }
@@ -57,6 +61,21 @@ type WorkflowComponentTestSuite struct {
 	testsuite.WorkflowTestSuite
 	app app.Application
 	env *testsuite.TestWorkflowEnvironment
+}
+
+func qPendingPost(s *WorkflowComponentTestSuite, id string) PendingPost {
+
+	client, _ := getHttpClient(s.T(), passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+
+	var pendingPost PendingPost
+
+	err := client.Query(context.Background(), &pendingPost, map[string]interface{}{
+		"id": id,
+	})
+
+	s.NoError(err)
+
+	return pendingPost
 }
 
 func mCreatePost(s *WorkflowComponentTestSuite, callback func(string) func()) {
@@ -118,6 +137,8 @@ func (s *WorkflowComponentTestSuite) Test_CreatePost_Publish() {
 			s.NoError(newEnv.GetWorkflowError())
 		}
 	})
+
+	// TODO: query contents of post
 }
 
 // Test_CreatePost_Discard - discard post
@@ -142,28 +163,12 @@ func (s *WorkflowComponentTestSuite) Test_CreatePost_Discard() {
 			s.NoError(newEnv.GetWorkflowError())
 		}
 	})
+
+	// TODO: query contents of post
 }
 
 // Test_CreatePost_Reject - reject post
 func (s *WorkflowComponentTestSuite) Test_CreatePost_Reject() {
-
-	mCreatePost(s, func(postId string) func() {
-		return func() {
-			// setup another environment since we cant execute multiple workflows
-			newEnv := s.NewTestWorkflowEnvironment()
-			ports.RegisterActivities(s.app, newEnv)
-
-			stingClient := getGrpcClient(s.T())
-
-			// "reject" pending post
-			_, e := stingClient.RejectPendingPost(context.Background(), &sting.PendingPostRequest{Id: postId})
-			s.NoError(e)
-		}
-	})
-}
-
-// Test_CreatePost_Undo - undo post - publish post and then undo it
-func (s *WorkflowComponentTestSuite) Test_CreatePost_Undo() {
 
 	var newPostId string
 
@@ -176,16 +181,22 @@ func (s *WorkflowComponentTestSuite) Test_CreatePost_Undo() {
 
 			stingClient := getGrpcClient(s.T())
 
-			// "undo" pending post
-			_, e := stingClient.PublishPendingPost(context.Background(), &sting.PendingPostRequest{Id: postId})
+			// "reject" pending post
+			_, e := stingClient.RejectPendingPost(context.Background(), &sting.PendingPostRequest{Id: postId})
 			s.NoError(e)
 		}
 	})
 
-	stingClient := getGrpcClient(s.T())
-	_, e := stingClient.UndoPendingPost(context.Background(), &sting.PendingPostRequest{Id: newPostId})
-	s.NoError(e)
+	pendingPost := qPendingPost(s, newPostId)
+
+	require.Equal(s.T(), "rejected", pendingPost.PendingPost.State)
+
+	// TODO: query contents of post to make sure its correct
 }
+
+//stingClient := getGrpcClient(s.T())
+//_, e := stingClient.UndoPendingPost(context.Background(), &sting.PendingPostRequest{Id: newPostId})
+//s.NoError(e)
 
 // TestSearchCharacters - search some characters
 func TestSearchCharacters(t *testing.T) {

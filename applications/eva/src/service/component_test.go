@@ -255,11 +255,11 @@ func TestLogout_user(t *testing.T) {
 	require.NoError(t, err)
 
 	modified := pass.GetPassport()
+	fmt.Println(modified.UserID())
 
-	fmt.Println(modified)
-
+	// should no longer be authenticated
 	require.Equal(t, true, mutation.Logout)
-	require.Nil(t, pass.GetPassport())
+	require.Equal(t, false, modified.IsAuthenticated())
 }
 
 // TestUser_get - test GRPC endpoint for grabbing a user

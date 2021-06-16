@@ -1,5 +1,6 @@
 type PendingPost {
   id: String!
+  state: String!
   moderator: String!
   contributor: Contributor!
   content: [String!]!
@@ -55,6 +56,7 @@ input PendingPostFilters {
 
 extend type Query {
   pendingPosts(input: ConnectionInput!, filter: PendingPostFilters!): PendingPostConnection!
+  pendingPost(id: String!): PendingPost!
 }
 
 extend type Mutation {

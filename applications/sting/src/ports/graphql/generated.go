@@ -110,6 +110,7 @@ type ComplexityRoot struct {
 		ID                func(childComplexity int) int
 		MediaRequests     func(childComplexity int) int
 		Moderator         func(childComplexity int) int
+		State             func(childComplexity int) int
 	}
 
 	PendingPostConnection struct {
@@ -137,6 +138,7 @@ type ComplexityRoot struct {
 		Categories         func(childComplexity int, data types.SearchInput) int
 		Characters         func(childComplexity int, data types.SearchInput) int
 		Media              func(childComplexity int, data types.SearchInput) int
+		PendingPost        func(childComplexity int, id string) int
 		PendingPosts       func(childComplexity int, input relay.ConnectionInput, filter types.PendingPostFilters) int
 		__resolve__service func(childComplexity int) int
 		__resolve_entities func(childComplexity int, representations []map[string]interface{}) int
@@ -169,6 +171,7 @@ type QueryResolver interface {
 	Artists(ctx context.Context, data types.SearchInput) ([]*types.Artist, error)
 	Media(ctx context.Context, data types.SearchInput) ([]*types.Media, error)
 	PendingPosts(ctx context.Context, input relay.ConnectionInput, filter types.PendingPostFilters) (*types.PendingPostConnection, error)
+	PendingPost(ctx context.Context, id string) (*types.PendingPost, error)
 }
 
 type executableSchema struct {
@@ -446,6 +449,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.PendingPost.Moderator(childComplexity), true
 
+	case "PendingPost.state":
+		if e.complexity.PendingPost.State == nil {
+			break
+		}
+
+		return e.complexity.PendingPost.State(childComplexity), true
+
 	case "PendingPostConnection.edges":
 		if e.complexity.PendingPostConnection.Edges == nil {
 			break
@@ -549,6 +559,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.Media(childComplexity, args["data"].(types.SearchInput)), true
+
+	case "Query.pendingPost":
+		if e.complexity.Query.PendingPost == nil {
+			break
+		}
+
+		args, err := ec.field_Query_pendingPost_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.PendingPost(childComplexity, args["id"].(string)), true
 
 	case "Query.pendingPosts":
 		if e.complexity.Query.PendingPosts == nil {
@@ -687,6 +709,7 @@ input SearchInput {
 }`, BuiltIn: false},
 	{Name: "schema/post/schema.graphql", Input: `type PendingPost {
   id: String!
+  state: String!
   moderator: String!
   contributor: Contributor!
   content: [String!]!
@@ -742,6 +765,7 @@ input PendingPostFilters {
 
 extend type Query {
   pendingPosts(input: ConnectionInput!, filter: PendingPostFilters!): PendingPostConnection!
+  pendingPost(id: String!): PendingPost!
 }
 
 extend type Mutation {
@@ -994,6 +1018,21 @@ func (ec *executionContext) field_Query_media_args(ctx context.Context, rawArgs 
 		}
 	}
 	args["data"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_pendingPost_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
 	return args, nil
 }
 
@@ -1984,6 +2023,41 @@ func (ec *executionContext) _PendingPost_id(ctx context.Context, field graphql.C
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _PendingPost_state(ctx context.Context, field graphql.CollectedField, obj *types.PendingPost) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PendingPost",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.State, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _PendingPost_moderator(ctx context.Context, field graphql.CollectedField, obj *types.PendingPost) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -2772,6 +2846,48 @@ func (ec *executionContext) _Query_pendingPosts(ctx context.Context, field graph
 	res := resTmp.(*types.PendingPostConnection)
 	fc.Result = res
 	return ec.marshalNPendingPostConnection2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostConnection(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_pendingPost(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_pendingPost_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().PendingPost(rctx, args["id"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.PendingPost)
+	fc.Result = res
+	return ec.marshalNPendingPost2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPost(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query__entities(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -4713,6 +4829,11 @@ func (ec *executionContext) _PendingPost(ctx context.Context, sel ast.SelectionS
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "state":
+			out.Values[i] = ec._PendingPost_state(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "moderator":
 			out.Values[i] = ec._PendingPost_moderator(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -4962,6 +5083,20 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_pendingPosts(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
+		case "pendingPost":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_pendingPost(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -5576,6 +5711,10 @@ func (ec *executionContext) marshalNPageInfo2ᚖoverdollᚋlibrariesᚋgraphql�
 		return graphql.Null
 	}
 	return ec._PageInfo(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNPendingPost2overdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPost(ctx context.Context, sel ast.SelectionSet, v types.PendingPost) graphql.Marshaler {
+	return ec._PendingPost(ctx, sel, &v)
 }
 
 func (ec *executionContext) marshalNPendingPost2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPost(ctx context.Context, sel ast.SelectionSet, v *types.PendingPost) graphql.Marshaler {

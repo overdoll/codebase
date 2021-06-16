@@ -52,6 +52,7 @@ func (p *Passport) UserID() string {
 
 // Revoke the currently authenticated user from the passport
 func (p *Passport) RevokeUser() error {
+	p.passport.User = nil
 	return nil
 }
 

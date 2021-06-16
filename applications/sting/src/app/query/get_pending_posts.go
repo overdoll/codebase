@@ -5,24 +5,53 @@ import (
 
 	"go.uber.org/zap"
 	"overdoll/applications/sting/src/domain/post"
+	"overdoll/libraries/paging"
 )
 
-type GetPendingPostHandler struct {
-	pr post.Repository
+type GetPendingPostsHandler struct {
+	pr  post.IndexRepository
+	eva EvaService
 }
 
-func NewGetPendingPostHandler(pr post.Repository) GetPendingPostHandler {
-	return GetPendingPostHandler{pr: pr}
+func NewGetPendingPostsHandler(pr post.IndexRepository, eva EvaService) GetPendingPostsHandler {
+	return GetPendingPostsHandler{pr: pr, eva: eva}
 }
 
-func (h GetPendingPostHandler) Handle(ctx context.Context, id string) (*post.PendingPost, error) {
+func (h GetPendingPostsHandler) Handle(ctx context.Context, cursor *paging.Cursor, moderatorId, contributorId, artistId, userId string) (*post.PendingPostConnection, error) {
 
-	pst, err := h.pr.GetPendingPost(ctx, id)
+	usr, err := h.eva.GetUser(ctx, userId)
+
+	if err != nil {
+		zap.S().Errorf("could not get user: %s", err)
+		return nil, ErrSearchFailed
+	}
+
+	if usr.IsLocked() || !usr.IsModerator() {
+		return nil, ErrSearchFailed
+	}
+
+	// only staff can filter
+	if usr.IsStaff() {
+		if moderatorId != "" {
+			userId = moderatorId
+		}
+	} else {
+		contributorId = ""
+		artistId = ""
+	}
+
+	filters, err := post.NewPendingPostFilters(userId, contributorId, artistId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	posts, err := h.pr.SearchPendingPosts(ctx, cursor, filters)
 
 	if err != nil {
 		zap.S().Errorf("failed to search: %s", err)
 		return nil, ErrSearchFailed
 	}
 
-	return pst, nil
+	return posts, nil
 }

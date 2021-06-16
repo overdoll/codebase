@@ -4,6 +4,7 @@ go_library(
     name = "query",
     srcs = [
         "get_pending_post.go",
+        "get_pending_post_authenticated.go",
         "get_pending_posts.go",
         "search_artists.go",
         "search_categories.go",
