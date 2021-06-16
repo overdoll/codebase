@@ -22,6 +22,7 @@ import (
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
 	"overdoll/libraries/config"
+	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/tests"
 )
@@ -38,6 +39,10 @@ type CreatePost struct {
 
 type PendingPost struct {
 	PendingPost *types.PendingPost `graphql:"pendingPost(id: $id)"`
+}
+
+type PendingPosts struct {
+	PendingPosts *types.PendingPostConnection `graphql:"pendingPosts(filter: $filter, input: $input)"`
 }
 
 type SearchCharacters struct {
@@ -63,6 +68,22 @@ type WorkflowComponentTestSuite struct {
 	env *testsuite.TestWorkflowEnvironment
 }
 
+func qPendingPosts(s *WorkflowComponentTestSuite) PendingPosts {
+
+	client, _ := getHttpClient(s.T(), passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+
+	var pendingPosts PendingPosts
+
+	err := client.Query(context.Background(), &pendingPosts, map[string]interface{}{
+		"filter": types.PendingPostFilters{},
+		"input":  relay.ConnectionInput{},
+	})
+
+	require.NoError(s.T(), err)
+
+	return pendingPosts
+}
+
 func qPendingPost(s *WorkflowComponentTestSuite, id string) PendingPost {
 
 	client, _ := getHttpClient(s.T(), passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
@@ -73,7 +94,7 @@ func qPendingPost(s *WorkflowComponentTestSuite, id string) PendingPost {
 		"id": graphql.String(id),
 	})
 
-	s.NoError(err)
+	require.NoError(s.T(), err)
 
 	return pendingPost
 }
@@ -126,6 +147,21 @@ func (s *WorkflowComponentTestSuite) Test_CreatePost_Publish() {
 		return func() {
 			newPostId = postId
 
+			// at this point, our post is put into the moderation queue. check for existence here
+			// grab all pending posts for our moderator
+			pendingPosts := qPendingPosts(s)
+
+			exists := false
+
+			for _, post := range pendingPosts.PendingPosts.Edges {
+				if post.Node.ID == newPostId {
+					exists = true
+				}
+			}
+
+			// ensure this post will exist and is assigned to our moderator
+			require.True(s.T(), exists)
+
 			// setup another environment since we cant execute multiple workflows
 			newEnv := s.NewTestWorkflowEnvironment()
 			ports.RegisterActivities(s.app, newEnv)
@@ -152,8 +188,6 @@ func (s *WorkflowComponentTestSuite) Test_CreatePost_Publish() {
 	// publishing removes any custom fields and converts them
 	require.Len(s.T(), pendingPost.PendingPost.MediaRequests, 0)
 	require.Nil(s.T(), pendingPost.PendingPost.CharacterRequests)
-
-	// TODO: get pending posts for this moderator and make sure that this pending post exists there
 }
 
 // Test_CreatePost_Discard - discard post

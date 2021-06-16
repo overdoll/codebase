@@ -28,12 +28,6 @@ func (h DiscardPostHandler) Handle(ctx context.Context, id string) error {
 			return err
 		}
 
-		// update content
-		pending.UpdateContent([]string{})
-
-		// clear any custom fields
-		pending.RequestResources(make(map[string]string), []string{}, []string{})
-
 		return pending.MakeDiscarded()
 	})
 

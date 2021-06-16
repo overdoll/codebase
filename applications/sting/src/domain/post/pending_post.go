@@ -273,6 +273,11 @@ func (p *PendingPost) MakeDiscarded() error {
 
 	p.state = Discarded
 
+	p.categoriesRequests = []CategoryRequest{}
+	p.charactersRequests = []CharacterRequest{}
+	p.mediaRequests = []MediaRequest{}
+	p.content = []string{}
+
 	return nil
 }
 
@@ -364,28 +369,6 @@ func (p *PendingPost) GetExistingMediaIds() []string {
 	return medias
 }
 
-// UseCustomIdsForCustomResources - pass an array of IDs, and all custom resources will be modified to use them.
-// good for ensuring idempotency
-func (p *PendingPost) UseCustomIdsForCustomResources(ids []string) {
-
-	var x string
-
-	for _, char := range p.charactersRequests {
-		x, ids = ids[0], ids[1:]
-		char.Id = x
-	}
-
-	for _, cat := range p.categoriesRequests {
-		x, ids = ids[0], ids[1:]
-		cat.Id = x
-	}
-
-	for _, med := range p.mediaRequests {
-		x, ids = ids[0], ids[1:]
-		med.Id = x
-	}
-}
-
 // ConsumeCustomResources - pass existingMedia so it can use that as arguments.
 func (p *PendingPost) ConsumeCustomResources(existingMedia []*Media) ([]*Category, []*Character, []*Media) {
 
@@ -435,6 +418,10 @@ func (p *PendingPost) ConsumeCustomResources(existingMedia []*Media) ([]*Categor
 		p.categories = append(p.categories, newCategory)
 		categories = append(categories, newCategory)
 	}
+
+	p.categoriesRequests = []CategoryRequest{}
+	p.charactersRequests = []CharacterRequest{}
+	p.mediaRequests = []MediaRequest{}
 
 	return categories, characters, medias
 }

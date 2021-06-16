@@ -32,6 +32,7 @@ go_test(
         "//libraries/bootstrap",
         "//libraries/clients",
         "//libraries/config",
+        "//libraries/graphql/relay",
         "//libraries/passport",
         "//libraries/tests",
         "@com_github_shurcool_graphql//:graphql",
