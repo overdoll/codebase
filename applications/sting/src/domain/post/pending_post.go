@@ -16,6 +16,7 @@ const (
 	Publishing PostPendingState = "publishing"
 	Review     PostPendingState = "review"
 	Published  PostPendingState = "published"
+	Discarding PostPendingState = "discarding"
 	Discarded  PostPendingState = "discarded"
 	Rejected   PostPendingState = "rejected"
 	Processing PostPendingState = "processing"
@@ -253,10 +254,20 @@ func (p *PendingPost) MakePublish() error {
 	return nil
 }
 
+func (p *PendingPost) MakeDiscarding() error {
+
+	if p.state != Review {
+		return ErrNotReview
+	}
+
+	p.state = Discarding
+
+	return nil
+}
+
 func (p *PendingPost) MakeDiscarded() error {
 
-	// State of the post needs to be "publishing" before "published"
-	if p.state != Review {
+	if p.state != Discarding {
 		return ErrNotReview
 	}
 
@@ -273,7 +284,7 @@ func (p *PendingPost) MakeRejected() error {
 }
 
 func (p *PendingPost) MakeUndo() error {
-	if p.state != Discarded && p.state != Published {
+	if p.state == Discarded || p.state == Published {
 		return ErrNotComplete
 	}
 
@@ -297,6 +308,10 @@ func (p *PendingPost) InReview() bool {
 
 func (p *PendingPost) IsPublished() bool {
 	return p.state == Published
+}
+
+func (p *PendingPost) IsDiscarded() bool {
+	return p.state == Discarded
 }
 
 func (p *PendingPost) UpdateContent(content []string) {
