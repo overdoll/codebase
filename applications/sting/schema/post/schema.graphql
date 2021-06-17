@@ -52,6 +52,7 @@ input PendingPostFilters {
   moderatorId: String
   contributorId: String
   artistId: String
+  id: String
 }
 
 extend type Query {

@@ -2,7 +2,6 @@ package service_test
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -15,6 +14,7 @@ import (
 	"go.temporal.io/sdk/testsuite"
 	"google.golang.org/grpc"
 	sting "overdoll/applications/sting/proto"
+	"overdoll/applications/sting/src/adapters"
 	"overdoll/applications/sting/src/app"
 	"overdoll/applications/sting/src/ports"
 	"overdoll/applications/sting/src/ports/graphql/types"
@@ -23,6 +23,7 @@ import (
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
 	"overdoll/libraries/config"
+	search "overdoll/libraries/elasticsearch"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/tests"
@@ -70,22 +71,6 @@ type WorkflowComponentTestSuite struct {
 	testsuite.WorkflowTestSuite
 	app app.Application
 	env *testsuite.TestWorkflowEnvironment
-}
-
-func qPendingPosts(s *WorkflowComponentTestSuite) PendingPosts {
-
-	client, _ := getHttpClient(s.T(), passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
-
-	var pendingPosts PendingPosts
-
-	err := client.Query(context.Background(), &pendingPosts, map[string]interface{}{
-		"filter": types.PendingPostFilters{},
-		"input":  relay.ConnectionInput{},
-	})
-
-	require.NoError(s.T(), err)
-
-	return pendingPosts
 }
 
 func qPendingPost(s *WorkflowComponentTestSuite, id string) PendingPost {
@@ -149,23 +134,39 @@ func (s *WorkflowComponentTestSuite) Test_CreatePost_Publish() {
 
 	mCreatePost(s, func(postId string) func() {
 		return func() {
+			// need to refresh the ES index or else the post wont be found
+			es, err := search.NewStore(context.Background())
+			require.NoError(s.T(), err)
+			err = es.Refresh(adapters.PendingPostIndexName)
+			require.NoError(s.T(), err)
+
 			newPostId = postId
 
 			// at this point, our post is put into the moderation queue. check for existence here
 			// grab all pending posts for our moderator
-			pendingPosts := qPendingPosts(s)
+			client, _ := getHttpClient(s.T(), passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+
+			var pendingPosts PendingPosts
+
+			err = client.Query(context.Background(), &pendingPosts, map[string]interface{}{
+				"filter": types.PendingPostFilters{
+					ID: &newPostId,
+				},
+				"input": relay.ConnectionInput{},
+			})
+
+			require.NoError(s.T(), err)
 
 			exists := false
 
 			for _, post := range pendingPosts.PendingPosts.Edges {
-				fmt.Println(post.Node.ID)
 				if post.Node.ID == newPostId {
 					exists = true
 				}
 			}
 
 			// ensure this post will exist and is assigned to our moderator
-			require.False(s.T(), exists)
+			require.True(s.T(), exists)
 
 			// setup another environment since we cant execute multiple workflows
 			newEnv := s.NewTestWorkflowEnvironment()
@@ -179,7 +180,6 @@ func (s *WorkflowComponentTestSuite) Test_CreatePost_Publish() {
 
 			// execute workflow manually since it wont be executed right here
 			newEnv.ExecuteWorkflow(workflows.PublishPost, postId)
-			fmt.Println(newEnv.GetWorkflowError())
 			s.True(newEnv.IsWorkflowCompleted())
 			s.NoError(newEnv.GetWorkflowError())
 		}
@@ -199,7 +199,6 @@ func (s *WorkflowComponentTestSuite) Test_CreatePost_Publish() {
 	customMediaExists := false
 
 	for _, char := range pendingPost.PendingPost.Characters {
-		fmt.Println(char.Name)
 		if char.Name == customCharacterName {
 			customCharacterExists = true
 		}

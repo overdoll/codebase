@@ -59,7 +59,13 @@ func (r *QueryResolver) PendingPosts(ctx context.Context, input relay.Connection
 		artistId = *filter.ArtistID
 	}
 
-	results, err := r.App.Queries.GetPendingPosts.Handle(ctx, input.ToCursor(), moderatorId, contributorId, artistId, pass.UserID())
+	id := ""
+
+	if filter.ID != nil {
+		id = *filter.ID
+	}
+
+	results, err := r.App.Queries.GetPendingPosts.Handle(ctx, input.ToCursor(), moderatorId, contributorId, artistId, id, pass.UserID())
 
 	if err != nil {
 		return nil, err

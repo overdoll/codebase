@@ -25,6 +25,7 @@ go_test(
     deps = [
         ":service",
         "//applications/sting/proto:v1_go_proto",
+        "//applications/sting/src/adapters",
         "//applications/sting/src/app",
         "//applications/sting/src/ports",
         "//applications/sting/src/ports/graphql/types",
@@ -32,6 +33,7 @@ go_test(
         "//libraries/bootstrap",
         "//libraries/clients",
         "//libraries/config",
+        "//libraries/elasticsearch",
         "//libraries/graphql/relay",
         "//libraries/passport",
         "//libraries/tests",

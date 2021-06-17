@@ -75,6 +75,7 @@ type PendingPostFilters struct {
 	ModeratorID   *string `json:"moderatorId"`
 	ContributorID *string `json:"contributorId"`
 	ArtistID      *string `json:"artistId"`
+	ID            *string `json:"id"`
 }
 
 type PostInput struct {

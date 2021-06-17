@@ -229,6 +229,7 @@ const SearchPostPending = `
 		"bool": {
 			"must": [
 				{{.Cursor}}
+				{{.PostId}}
 				{
 					"multi_match": {
 						"query" : "{{.ModeratorId}}",
@@ -293,14 +294,22 @@ func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Contex
 		cont = cursor.Last()
 	}
 
+	postId := ""
+
+	if filter.ID() != "" {
+		postId = fmt.Sprintf(`{"multi_match": {"query" : %q,"fields" : ["id"],"operator" : "and"}},`, filter.ID())
+	}
+
 	data := struct {
 		Cursor      string
 		ModeratorId string
 		Size        int
+		PostId      string
 	}{
 		Size:        cont,
 		ModeratorId: filter.ModeratorId(),
 		Cursor:      rng,
+		PostId:      postId,
 	}
 
 	var query bytes.Buffer
@@ -308,6 +317,8 @@ func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Contex
 	if err := t.Execute(&query, data); err != nil {
 		return nil, err
 	}
+
+	fmt.Println(query.String())
 
 	response, err := r.store.Search(PendingPostIndexName, query.String())
 

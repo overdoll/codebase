@@ -761,6 +761,7 @@ input PendingPostFilters {
   moderatorId: String
   contributorId: String
   artistId: String
+  id: String
 }
 
 extend type Query {
@@ -4358,6 +4359,14 @@ func (ec *executionContext) unmarshalInputPendingPostFilters(ctx context.Context
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("artistId"))
 			it.ArtistID, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}

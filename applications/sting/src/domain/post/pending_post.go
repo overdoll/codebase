@@ -51,14 +51,20 @@ type PendingPostFilters struct {
 	moderatorId   string
 	contributorId string
 	artistId      string
+	id            string
 }
 
-func NewPendingPostFilters(moderatorId, contributorId, artistId string) (*PendingPostFilters, error) {
+func NewPendingPostFilters(moderatorId, contributorId, artistId, id string) (*PendingPostFilters, error) {
 	return &PendingPostFilters{
 		moderatorId:   moderatorId,
 		contributorId: contributorId,
 		artistId:      artistId,
+		id:            id,
 	}, nil
+}
+
+func (e *PendingPostFilters) ID() string {
+	return e.id
 }
 
 func (e *PendingPostFilters) ModeratorId() string {

@@ -17,7 +17,7 @@ func NewGetPendingPostsHandler(pr post.IndexRepository, eva EvaService) GetPendi
 	return GetPendingPostsHandler{pr: pr, eva: eva}
 }
 
-func (h GetPendingPostsHandler) Handle(ctx context.Context, cursor *paging.Cursor, moderatorId, contributorId, artistId, userId string) (*post.PendingPostConnection, error) {
+func (h GetPendingPostsHandler) Handle(ctx context.Context, cursor *paging.Cursor, moderatorId, contributorId, artistId, id, userId string) (*post.PendingPostConnection, error) {
 
 	usr, err := h.eva.GetUser(ctx, userId)
 
@@ -40,7 +40,7 @@ func (h GetPendingPostsHandler) Handle(ctx context.Context, cursor *paging.Curso
 		artistId = ""
 	}
 
-	filters, err := post.NewPendingPostFilters(userId, contributorId, artistId)
+	filters, err := post.NewPendingPostFilters(userId, contributorId, artistId, id)
 
 	if err != nil {
 		return nil, err
