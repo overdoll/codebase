@@ -52,7 +52,7 @@ func NewUserInfractionHistory(userId string, pastUserInfractionHistory []*UserIn
 	// Expiration is 4x the ban length
 	expiration := time.Now().Add(time.Hour * 24 * time.Duration(banPeriod*4))
 	// user account is locked /4 of expiration
-	lockLength := expiration.UnixNano() / int64(time.Millisecond) / int64(4)
+	lockLength := time.Now().Add(time.Hour * 24 * time.Duration(banPeriod)).Unix()
 	return &UserInfractionHistory{
 		id:             ksuid.New().String(),
 		userId:         userId,

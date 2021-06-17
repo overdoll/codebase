@@ -223,7 +223,11 @@ func (r InfractionCassandraRepository) GetPendingPostAuditLog(ctx context.Contex
 	var err error
 
 	if pendingPostAuditLogByModerator.UserInfractionId != "" {
-		userInfractionHistory, err = r.GetUserInfractionHistoryById(ctx, pendingPostAuditLogByModerator.UserInfractionId)
+		userInfractionHistory, err = r.GetUserInfractionHistoryById(
+			ctx,
+			pendingPostAuditLogByModerator.ContributorId,
+			pendingPostAuditLogByModerator.UserInfractionId,
+		)
 
 		if err != nil {
 			return nil, err
@@ -267,8 +271,6 @@ func (r InfractionCassandraRepository) GetPendingPostAuditLogByModerator(ctx con
 	for _, date := range filter.DateRange() {
 		times = append(times, bucket.MakeBucketFromTimestamp(date))
 	}
-
-	fmt.Println(times)
 
 	pendingPostAuditLogQuery := builder.
 		Columns(
@@ -361,20 +363,17 @@ func (r InfractionCassandraRepository) UpdatePendingPostAuditLog(ctx context.Con
 	}
 
 	updateAuditLog := qb.Update("pending_posts_audit_logs_by_moderator").
-		Set(
-			"user_infraction_id",
-			"status",
-			"reason",
-			"notes",
-			"reverted",
-		).
 		Where(
 			qb.Eq("moderator_user_id"),
 			qb.Eq("bucket"),
+			qb.Eq("created_ms"),
 			qb.Eq("contributor_user_id"),
 			qb.Eq("post_id"),
 			qb.Eq("id"),
-			qb.Eq("created_ms"),
+		).
+		Set(
+			"user_infraction_id",
+			"reverted",
 		).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).

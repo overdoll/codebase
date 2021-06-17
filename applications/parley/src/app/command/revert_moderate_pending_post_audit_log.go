@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	ErrFailedRevertModeratePendingPost = errors.New("get moderator failed")
+	ErrFailedRevertModeratePendingPost = errors.New("revert audit log failed")
 )
 
 type RevertModeratePendingPostHandler struct {
@@ -61,7 +61,7 @@ func (h RevertModeratePendingPostHandler) Handle(ctx context.Context, moderatorI
 			}
 
 			// delete infraction from user's history
-			if err := h.ir.DeleteUserInfractionHistory(ctx, infractionId); err != nil {
+			if err := h.ir.DeleteUserInfractionHistory(ctx, log.Contributor().ID(), infractionId); err != nil {
 				return err
 			}
 		}

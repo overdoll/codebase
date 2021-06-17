@@ -15,6 +15,6 @@ type Repository interface {
 
 	CreateUserInfractionHistory(context.Context, *UserInfractionHistory) error
 	GetUserInfractionHistory(context.Context, string) ([]*UserInfractionHistory, error)
-	GetUserInfractionHistoryById(context.Context, string) (*UserInfractionHistory, error)
-	DeleteUserInfractionHistory(context.Context, string) error
+	GetUserInfractionHistoryById(context.Context, string, string) (*UserInfractionHistory, error)
+	DeleteUserInfractionHistory(context.Context, string, string) error
 }

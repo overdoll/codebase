@@ -40,7 +40,7 @@ func (m MutationResolver) RevertPendingPostAuditLog(ctx context.Context, data ty
 	if !pass.IsAuthenticated() {
 		return nil, passport.ErrNotAuthenticated
 	}
-
+	
 	auditLog, err := m.App.Commands.RevertModeratePost.Handle(ctx, pass.UserID(), data.AuditLogID)
 
 	if err != nil {

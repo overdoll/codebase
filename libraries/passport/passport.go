@@ -191,5 +191,15 @@ func FromContext(ctx context.Context) *Passport {
 }
 
 func FromResponse(resp *http.Response) *Passport {
+
+	// check for header existence first, because
+	// we might return an empty string
+	headers := resp.Header
+	_, ok := headers[MutationHeader]
+
+	if !ok {
+		return nil
+	}
+
 	return FromString(resp.Header.Get(MutationHeader))
 }
