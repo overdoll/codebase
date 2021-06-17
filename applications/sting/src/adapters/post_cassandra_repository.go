@@ -108,6 +108,7 @@ func marshalPostToDatabase(post *post.Post) *Post {
 }
 
 func (r PostsCassandraRepository) unmarshalPendingPost(ctx context.Context, postPending PostPending) (*post.PendingPost, error) {
+
 	characters, err := r.GetCharactersById(ctx, postPending.Characters)
 
 	if err != nil {
@@ -344,8 +345,6 @@ func (r PostsCassandraRepository) UpdatePendingPost(ctx context.Context, id stri
 		return nil, err
 	}
 
-	fmt.Println(currentPost.CharacterIds())
-
 	// Update our post to reflect the new state - in publishing
 	upd := qb.Update("pending_posts").
 		Set(
@@ -369,10 +368,6 @@ func (r PostsCassandraRepository) UpdatePendingPost(ctx context.Context, id stri
 	if err := upd.ExecRelease(); err != nil {
 		return nil, fmt.Errorf("update() failed: '%s", err)
 	}
-
-	fmt.Println(upd)
-	fmt.Println(err)
-	fmt.Println(marshalPendingPostToDatabase(currentPost))
 
 	return currentPost, nil
 }

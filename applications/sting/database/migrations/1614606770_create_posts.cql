@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS posts
     categories          list<text>,
     characters          list<text>,
     posted_at           timestamp,
-    primary key ((id), posted_at)
+    primary key (id)
 ) WITH CLUSTERING ORDER BY (posted_at ASC);
 
 CREATE TABLE IF NOT EXISTS pending_posts

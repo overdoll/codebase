@@ -2,6 +2,7 @@ package adapters
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/gocql/gocql"
@@ -28,13 +29,17 @@ func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars [
 	queryCharacters := qb.Select("characters").
 		Where(qb.In("id")).
 		Query(r.session).
-		Consistency(gocql.One).
+		Consistency(gocql.LocalQuorum).
 		Bind(chars)
 
 	var characterModels []*Character
 
 	if err := queryCharacters.Select(&characterModels); err != nil {
 		return nil, fmt.Errorf("select() failed: '%s", err)
+	}
+
+	if len(chars) != len(characterModels) {
+		return nil, errors.New("invalid character found")
 	}
 
 	var mediaIds []string
@@ -46,7 +51,7 @@ func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars [
 	queryMedia := qb.Select("media").
 		Where(qb.In("id")).
 		Query(r.session).
-		Consistency(gocql.One).
+		Consistency(gocql.LocalQuorum).
 		Bind(mediaIds)
 
 	var mediaModels []*Media
@@ -67,7 +72,7 @@ func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars [
 		}
 
 		if media == nil {
-			continue
+			return nil, errors.New("no media found for character")
 		}
 
 		characters = append(characters, post.UnmarshalCharacterFromDatabase(
@@ -75,7 +80,7 @@ func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars [
 			char.Name,
 			char.Thumbnail,
 			post.UnmarshalMediaFromDatabase(
-				char.MediaId,
+				media.Id,
 				media.Title,
 				media.Thumbnail,
 			),
