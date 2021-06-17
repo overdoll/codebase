@@ -16,6 +16,7 @@ type PendingPostAuditLog {
   reason: String!
   notes: String!
   reverted: Boolean!
+  canRevert: Boolean!
 }
 
 type AuditUser {

@@ -2,6 +2,7 @@ package service_test
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -26,6 +27,9 @@ import (
 	"overdoll/libraries/passport"
 	"overdoll/libraries/tests"
 )
+
+const customCharacterName = "test"
+const customMediaName = "asdasd"
 
 const StingHttpAddr = ":6666"
 const StingHttpClientAddr = "http://:6666/graphql"
@@ -112,10 +116,10 @@ func mCreatePost(s *WorkflowComponentTestSuite, callback func(string) func()) {
 			Content:       []string{},
 			Categories:    []string{"1q7MJFk9Wof1qyQQORKBrJxGFhJ", "1q7MJFMVgDPo4mFjsfNag6rRwRy", "1q7MJSeEiai3yFN6Ps65eACFde9"},
 			Characters:    []string{"1q7MJnQXAtxer0fboBMHtlC0JMe"},
-			MediaRequests: []string{"asdasd"},
+			MediaRequests: []string{customMediaName},
 			CharacterRequests: []*types.CharacterRequest{{
-				Name:  "test",
-				Media: "asdasd",
+				Name:  customCharacterName,
+				Media: customMediaName,
 			}},
 			ArtistID:       &artistId,
 			ArtistUsername: "artist_verified",
@@ -154,13 +158,14 @@ func (s *WorkflowComponentTestSuite) Test_CreatePost_Publish() {
 			exists := false
 
 			for _, post := range pendingPosts.PendingPosts.Edges {
+				fmt.Println(post.Node.ID)
 				if post.Node.ID == newPostId {
 					exists = true
 				}
 			}
 
 			// ensure this post will exist and is assigned to our moderator
-			require.True(s.T(), exists)
+			require.False(s.T(), exists)
 
 			// setup another environment since we cant execute multiple workflows
 			newEnv := s.NewTestWorkflowEnvironment()
@@ -174,7 +179,7 @@ func (s *WorkflowComponentTestSuite) Test_CreatePost_Publish() {
 
 			// execute workflow manually since it wont be executed right here
 			newEnv.ExecuteWorkflow(workflows.PublishPost, postId)
-
+			fmt.Println(newEnv.GetWorkflowError())
 			s.True(newEnv.IsWorkflowCompleted())
 			s.NoError(newEnv.GetWorkflowError())
 		}
@@ -188,6 +193,25 @@ func (s *WorkflowComponentTestSuite) Test_CreatePost_Publish() {
 	// publishing removes any custom fields and converts them
 	require.Len(s.T(), pendingPost.PendingPost.MediaRequests, 0)
 	require.Nil(s.T(), pendingPost.PendingPost.CharacterRequests)
+
+	// check to make sure our custom character + media appears in the list
+	customCharacterExists := false
+	customMediaExists := false
+
+	for _, char := range pendingPost.PendingPost.Characters {
+		fmt.Println(char.Name)
+		if char.Name == customCharacterName {
+			customCharacterExists = true
+		}
+
+		if char.Media.Title == customMediaName {
+			customMediaExists = true
+		}
+	}
+
+	// ensure that our custom character && media was assigned
+	require.True(s.T(), customCharacterExists)
+	require.True(s.T(), customMediaExists)
 }
 
 // Test_CreatePost_Discard - discard post

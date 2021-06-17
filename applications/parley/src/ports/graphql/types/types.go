@@ -28,6 +28,7 @@ type PendingPostAuditLog struct {
 	Reason       string     `json:"reason"`
 	Notes        string     `json:"notes"`
 	Reverted     bool       `json:"reverted"`
+	CanRevert    bool       `json:"canRevert"`
 }
 
 type PendingPostAuditLogConnection struct {

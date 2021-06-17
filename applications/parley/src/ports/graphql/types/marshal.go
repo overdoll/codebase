@@ -36,6 +36,7 @@ func MarshalPendingPostAuditLogToGraphQL(log *infraction.PendingPostAuditLog) *P
 				Reason:       reason,
 				Notes:        log.Notes(),
 				Reverted:     log.Reverted(),
+				CanRevert:    log.CanRevert(),
 			},
 		}
 	}

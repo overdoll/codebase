@@ -344,8 +344,10 @@ func (r PostsCassandraRepository) UpdatePendingPost(ctx context.Context, id stri
 		return nil, err
 	}
 
+	fmt.Println(currentPost.CharacterIds())
+
 	// Update our post to reflect the new state - in publishing
-	updatePost := qb.Update("pending_posts").
+	upd := qb.Update("pending_posts").
 		Set(
 			"state",
 			"contributor_user_id",
@@ -364,9 +366,13 @@ func (r PostsCassandraRepository) UpdatePendingPost(ctx context.Context, id stri
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalPendingPostToDatabase(currentPost))
 
-	if err := updatePost.ExecRelease(); err != nil {
+	if err := upd.ExecRelease(); err != nil {
 		return nil, fmt.Errorf("update() failed: '%s", err)
 	}
+
+	fmt.Println(upd)
+	fmt.Println(err)
+	fmt.Println(marshalPendingPostToDatabase(currentPost))
 
 	return currentPost, nil
 }

@@ -2,6 +2,7 @@ package command
 
 import (
 	"context"
+	"fmt"
 
 	"overdoll/applications/sting/src/domain/post"
 )
@@ -15,9 +16,9 @@ func NewPostCustomResourcesHandler(pr post.Repository, pi post.IndexRepository) 
 	return PostCustomResourcesHandler{pr: pr, pi: pi}
 }
 
-func (h PostCustomResourcesHandler) Handle(ctx context.Context, id string, ids []string) error {
+func (h PostCustomResourcesHandler) Handle(ctx context.Context, id string) error {
 
-	_, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PendingPost) error {
+	pe, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PendingPost) error {
 
 		// put into "publishing"
 		pending.MakePublishing()
@@ -30,6 +31,9 @@ func (h PostCustomResourcesHandler) Handle(ctx context.Context, id string, ids [
 		}
 
 		categories, characters, medias := pending.ConsumeCustomResources(existingMedias)
+
+		fmt.Println(characters[0])
+		fmt.Println(pending.CharacterIds())
 
 		// Create categories (from database)
 		if err := h.pr.CreateCategories(ctx, categories); err != nil {
@@ -51,6 +55,8 @@ func (h PostCustomResourcesHandler) Handle(ctx context.Context, id string, ids [
 	if err != nil {
 		return err
 	}
+
+	fmt.Println(pe.CharacterIds())
 
 	return nil
 }
