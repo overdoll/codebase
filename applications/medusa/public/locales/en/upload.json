@@ -2,13 +2,15 @@
   "begin": {
     "header": "Start by uploading an image or a video",
     "formats": ".mp4 .jpg .png",
-    "uploader": "Upload up to 10 files",
-    "limit": "25mb limit per file"
+    "uploader": "Upload up to {{count}} files",
+    "limit": "{{limit}} limit per file",
+    "dropper": "Drop your files here to upload them"
   },
   "rules": {
     "header": "As a reminder, don't upload...",
     "rule1": "Anything illegal",
-    "rule2": "Anything that infringes on copyright"
+    "rule2": "Anything that infringes on copyright",
+    "rule3": "Anything extreme or shocking"
   },
   "arrange": {
     "header": "Hold a tile and drag to reorder it",

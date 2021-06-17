@@ -2,7 +2,7 @@
  * @flow
  */
 import type { Node } from 'react'
-import { useEffect, useReducer } from 'react'
+import { useEffect, useReducer, useState } from 'react'
 import Steps from './components/steps/Steps'
 import type { Action, State } from '@//:types/upload'
 import { EVENTS, INITIAL_STATE, STEPS } from './constants/constants'
@@ -19,8 +19,10 @@ export default function Upload (): Node {
     INITIAL_STATE
   )
 
+  const [stepsLoaded, setStepsLoaded] = useState(false)
+
   // hook controls lifecycle of uppy & restoring indexeddb state
-  const uppy = useUpload(state, dispatch)
+  const uppy = useUpload(state, dispatch, setStepsLoaded)
 
   const notify = useToast()
 
@@ -61,7 +63,6 @@ export default function Upload (): Node {
   // file-added- uppy file was added
   useEffect(() => {
     uppy.on('file-added', file => {
-      // TODO handle duplicate file uploads - create unique uppy id?
       dispatch({ type: EVENTS.FILES, value: { id: file.id, type: file.type } })
       if (state.step === null) {
         dispatch({ type: EVENTS.STEP, value: STEPS.ARRANGE })
@@ -105,7 +106,7 @@ export default function Upload (): Node {
   return (
     <>
       <Helmet title='upload' />
-      <Steps uppy={uppy} state={state} dispatch={dispatch} />
+      <Steps uppy={uppy} state={state} dispatch={dispatch} hasStepsLoaded={stepsLoaded} />
     </>
   )
 }

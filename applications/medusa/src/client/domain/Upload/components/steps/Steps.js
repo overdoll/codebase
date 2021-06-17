@@ -14,7 +14,7 @@ import type {
   StepsMutation
 } from '@//:artifacts/StepsMutation.graphql'
 import type { Dispatch, State } from '@//:types/upload'
-import { useToast, Flex, Spacer, Center } from '@chakra-ui/react'
+import { useToast, Flex, Spacer, Center, Spinner, Heading, Text, Box } from '@chakra-ui/react'
 import Button from '@//:modules/form/button'
 import { useTranslation } from 'react-i18next'
 import type { Uppy } from '@uppy/core'
@@ -23,6 +23,7 @@ type Props = {
   uppy: Uppy,
   state: State,
   dispatch: Dispatch,
+  hasStepsLoaded: boolean,
 };
 
 const SubmitGraphQL = graphql`
@@ -37,7 +38,7 @@ const SubmitGraphQL = graphql`
 `
 
 // Stepper - handles all stepping functions
-export default function Steps ({ uppy, state, dispatch }: Props): Node {
+export default function Steps ({ uppy, state, dispatch, hasStepsLoaded }: Props): Node {
   const [commit, isInFlight] = useMutation<StepsMutation>(SubmitGraphQL)
 
   const notify = useToast()
@@ -169,9 +170,10 @@ export default function Steps ({ uppy, state, dispatch }: Props): Node {
         }
       },
       onError (data) {
+        const message = JSON.parse(data?.message)
         notify({
           status: 'error',
-          title: 'error with submission',
+          title: message[0].message,
           isClosable: true
         })
       }
@@ -193,51 +195,59 @@ export default function Steps ({ uppy, state, dispatch }: Props): Node {
         direction='column'
         mb={6}
       >
-        {Step()}
-        <Flex>
-          {state.step !== null && state.step !== STEPS.FINISH && (
-            <Flex w='100%' justify='space-between' mt={2}>
-              {state.step !== STEPS.ARRANGE
-                ? (
-                  <Button
-                    size='lg'
-                    disabled={isInFlight}
-                    onClick={PrevStep}
-                    variant='outline'
-                  >
-                    {t('button.back')}
-                  </Button>
-                  )
-                : (
-                  <Button size='lg' variant='outline' onClick={onCancel}>
-                    {t('button.cancel')}
-                  </Button>
-                  )}
-              <Spacer />
-              {state.step !== STEPS.REVIEW
-                ? (
-                  <Button
-                    size='lg'
-                    disabled={NextDisabled}
-                    onClick={NextStep}
-                  >
-                    {t('button.next')}
-                  </Button>
-                  )
-                : (
-                  <Button
-                    size='lg'
-                    onClick={onSubmit}
-                    colorScheme='red'
-                    variant='outline'
-                    disabled={SubmitDisabled || isInFlight}
-                  >
-                    {t('button.submit')}
-                  </Button>
-                  )}
+        {!hasStepsLoaded
+          ? <Flex mt={40} h='100%' align='center' justify='center' direction='column'>
+            <Spinner mb={6} thickness={4} size='xl' color='red.500' />
+            <Heading mb={1} size='md' color='gray.00'>{t('loading.header')}</Heading>
+            <Text size='sm' color='gray.100'>{t('loading.subheader')}</Text>
+          </Flex>
+          : <>
+            {Step()}
+            <Flex>
+              {state.step !== null && state.step !== STEPS.FINISH && (
+                <Flex w='100%' justify='space-between' mt={2}>
+                  {state.step !== STEPS.ARRANGE
+                    ? (
+                      <Button
+                        size='lg'
+                        disabled={isInFlight}
+                        onClick={PrevStep}
+                        variant='ghost'
+                      >
+                        {t('button.back')}
+                      </Button>
+                      )
+                    : (
+                      <Button size='lg' variant='ghost' onClick={onCancel}>
+                        {t('button.cancel')}
+                      </Button>
+                      )}
+                  <Spacer />
+                  {state.step !== STEPS.REVIEW
+                    ? (
+                      <Button
+                        size='lg'
+                        disabled={NextDisabled}
+                        onClick={NextStep}
+                      >
+                        {t('button.next')}
+                      </Button>
+                      )
+                    : (
+                      <Button
+                        size='lg'
+                        onClick={onSubmit}
+                        colorScheme='red'
+                        variant='outline'
+                        disabled={SubmitDisabled || isInFlight}
+                      >
+                        {t('button.submit')}
+                      </Button>
+                      )}
+                </Flex>
+              )}
             </Flex>
-          )}
-        </Flex>
+          </>}
       </Flex>
     </Center>
   )

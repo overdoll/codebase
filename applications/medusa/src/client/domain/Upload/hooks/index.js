@@ -14,7 +14,7 @@ import dataURItoBlob from '@uppy/utils/lib/dataURItoBlob'
 // we only want to do this if we were on the "finish" step
 // If we are on anything else, we consider the upload flow to be "incomplete" and users can
 // keep their progress if they come back to this page
-const useUpload = (state: State, dispatch: Dispatch): Uppy => {
+const useUpload = (state: State, dispatch: Dispatch, setStepsLoaded: () => void): Uppy => {
   const uppy = useRef<Uppy>(undefined)
   if (uppy.current === undefined) {
     uppy.current = UppyInstance
@@ -37,6 +37,7 @@ const useUpload = (state: State, dispatch: Dispatch): Uppy => {
     db.table('step')
       .get(1)
       .then(item => {
+        setStepsLoaded(true)
         if (item === undefined) {
           return
         }
@@ -50,7 +51,7 @@ const useUpload = (state: State, dispatch: Dispatch): Uppy => {
         if (item === undefined) {
           return
         }
-        // set the step that the user was previously on
+
         dispatch({ type: EVENTS.TAG_ARTIST, value: item.artist })
       })
 

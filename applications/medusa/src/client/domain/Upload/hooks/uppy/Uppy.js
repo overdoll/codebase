@@ -6,7 +6,6 @@ import type { Uppy as UppyType } from '@uppy/core'
 import Uppy from '@uppy/core'
 import Tus from '@uppy/tus'
 import CanUseDOM from '@//:modules/utilities/CanUseDOM'
-import DropTarget from '@uppy/drop-target'
 import GoldenRetriever from '@uppy/golden-retriever'
 import '@uppy/drop-target/dist/style.css'
 
@@ -43,8 +42,6 @@ if (CanUseDOM) {
     thumbnailType: 'image/jpeg',
     waitForThumbnailsBeforeUpload: false
   })
-  // TODO drop target doesnt work - only for the element 'root'???
-  U.use(DropTarget, { target: document.getElementById('dragdrop') })
 }
 
 // Resume-able uploads on the API

@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next'
 type Props = {
   dispatch: Dispatch,
   state: State,
+  minCharacters: number,
 };
 
 export default function TagCharacters ({ state, dispatch }: Props): Node {

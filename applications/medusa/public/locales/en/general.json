@@ -18,5 +18,9 @@
   },
   "menu": {
     "copy_link": "Copy Link"
+  },
+  "loading": {
+    "header": "Hold on...",
+    "subheader": "We're getting a few things ready for you"
   }
 }
