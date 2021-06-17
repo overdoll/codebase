@@ -55,6 +55,7 @@ func (h RevertModeratePendingPostHandler) Handle(ctx context.Context, moderatorI
 		}
 
 		if infractionId != "" {
+
 			// unlock account - sending "0" unlocks the account
 			if err := h.eva.LockUser(ctx, log.Contributor().ID(), 0); err != nil {
 				return err

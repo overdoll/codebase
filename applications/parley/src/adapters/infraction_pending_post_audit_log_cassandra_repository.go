@@ -374,6 +374,7 @@ func (r InfractionCassandraRepository) UpdatePendingPostAuditLog(ctx context.Con
 		Set(
 			"user_infraction_id",
 			"reverted",
+			"reason",
 		).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).

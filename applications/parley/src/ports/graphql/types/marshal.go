@@ -5,6 +5,7 @@ import (
 )
 
 func MarshalPendingPostAuditLogToGraphQL(log *infraction.PendingPostAuditLog) *PendingPostAuditLogEdge {
+
 	if log != nil {
 		var infractionId *string
 

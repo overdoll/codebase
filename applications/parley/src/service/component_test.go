@@ -2,6 +2,7 @@ package service_test
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 	"testing"
@@ -160,7 +161,9 @@ func TestModeratePost_reject_infraction_and_undo(t *testing.T) {
 	undo := mRevertModeratePost(t, client, res.ModeratePost.AuditLog.ID)
 
 	// infraction should have been undone
-	require.Equal(t, nil, undo.UndoModeratePost.AuditLog.InfractionID)
+	fmt.Println(undo.UndoModeratePost.AuditLog.InfractionID)
+	var str *string
+	require.Equal(t, str, undo.UndoModeratePost.AuditLog.InfractionID)
 	require.Equal(t, true, undo.UndoModeratePost.AuditLog.Reverted)
 }
 
