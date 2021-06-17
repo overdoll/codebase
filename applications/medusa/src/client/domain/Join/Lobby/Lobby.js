@@ -7,10 +7,12 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { LobbySubscriptionResponse } from '@//:artifacts/LobbySubscription.graphql'
 import Icon from '@//:modules/content/icon/Icon'
-import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/sign-badge-circle-K1i3HA.svg'
 import { Box, Center, Flex, Heading, Text, useToast } from '@chakra-ui/react'
 import Button from '@//:modules/form/button'
 import { useClickDelay } from '@//:modules/utilities/hooks'
+
+import SignBadgeCircle
+  from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
 
 type Props = {
   onReceive: () => void,

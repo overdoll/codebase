@@ -51,34 +51,22 @@ export default function Gallery ({ files, urls, thumbnails, setSwiper }: Props):
 
   const [gallerySwiper, setGallerySwiper] = useState(null)
 
+  const [volume, setVolume] = useState(0.5)
+
   const swiper = useRef(null)
 
-  const video = useRef(null)
-
-  // TODO persist all video properties when changing slides, such as volume
-  // TODO and whether or not the next video will play if the previous one was paused
-
   const changeSwiper = (swiper) => {
+    const videoElements = swiper.el.getElementsByTagName('video')
+
     setSwiper(swiper)
     setGallerySwiper(swiper)
 
-    // pause all videos so when you swipe away they aren't still playing
-    for (const item of swiper.el.getElementsByTagName('video')) {
-      item.pause()
-    }
-
-    // play current video
-    // TODO button clicks think that the video is previous for some reason???
-    if (video.current) {
-      video.current.play()
-      console.log(video)
+    for (const video of videoElements) {
+      video.volume = volume
     }
   }
 
-  const initializeSwiper = (swiper) => {
-    setSwiper(swiper)
-    setGallerySwiper(swiper)
-  }
+  // TODO localstorage snippets for saving volume level and autoplay
 
   return (
     <>
@@ -90,8 +78,8 @@ export default function Gallery ({ files, urls, thumbnails, setSwiper }: Props):
             centeredSlides
             onSlideChange={(swiper) =>
               changeSwiper(swiper)}
-            onInit={(swiper) => {
-              initializeSwiper(swiper)
+            onSwiper={(swiper) => {
+              changeSwiper(swiper)
             }}
           >
             {files.map((file, index) => {
@@ -101,66 +89,87 @@ export default function Gallery ({ files, urls, thumbnails, setSwiper }: Props):
 
               return (
                 <SwiperSlide key={file.id}>
-                  <Flex
-                    h='600px'
-                    position='relative'
-                    align='center'
-                    justify='center'
-                    bg='gray.800'
-                  >
-                    <Flex
-                      h='100%'
-                      position='relative'
-                      align='center'
-                      justify='center'
-                      userSelect='none'
-                    >
-                      {fileType === 'video'
-                        ? <video
-                            ref={gallerySwiper ? gallerySwiper.activeIndex === index ? video : null : null}
-                            disableRemotePlayback controls
-                            muted loop preload='auto' style={{
-                              objectFit: 'cover',
-                              height: '100%'
-                            }} poster={thumbnails[file.id]}
-                          >
-                          <source src={urls[file.id]} type={file.type} />
-                        </video>
-                        : <SuspenseImage
-                            alt='thumbnail'
-                            h='100%'
-                            objectFit='cover'
-                            src={content} fallback={<Skeleton w='100%' h='100%' />}
-                          />}
-                      <Box
-                        bg='transparent'
-                        w='40%'
-                        h='50%'
-                        display={fileType === 'video' ? 'none' : 'block'}
-                        position='absolute'
-                        onClick={() => {
-                          setSlide(file)
-                          onOpen()
-                        }}
-                      />
+                  {({ isActive }) => {
+                    const videoRef = useRef(null)
 
-                    </Flex>
-                  </Flex>
+                    if (fileType === 'video') {
+                      if (isActive && videoRef.current) {
+                        videoRef.current.play()
+                      } else if (!isActive && videoRef.current) {
+                        videoRef.current.pause()
+                      }
+                    }
+
+                    return (
+                      <Flex
+                        h='600px'
+                        position='relative'
+                        align='center'
+                        justify='center'
+                        bg='gray.800'
+                      >
+                        <Flex
+                          h='100%'
+                          position='relative'
+                          align='center'
+                          justify='center'
+                          userSelect='none'
+                        >
+                          {fileType === 'video'
+                            ? <video
+                                ref={videoRef}
+                                controls
+                                disablePictureInPicture
+                                controlsList='nodownload noremoteplayback'
+                                onVolumeChange={(e) =>
+                                  setVolume(e.target.volume)}
+                                muted loop preload='auto' style={{
+                                  objectFit: 'cover',
+                                  height: '100%'
+                                }} poster={thumbnails[file.id]}
+                              >
+                              <source src={urls[file.id]} type={file.type} />
+                            </video>
+                            : <SuspenseImage
+                                alt='thumbnail'
+                                h='100%'
+                                objectFit='cover'
+                                src={content} fallback={<Skeleton w='100%' h='100%' />}
+                              />}
+                          <Box
+                            bg='transparent'
+                            w='40%'
+                            h='50%'
+                            display={fileType === 'video' ? 'none' : 'block'}
+                            position='absolute'
+                            onClick={() => {
+                              setSlide(file)
+                              onOpen()
+                            }}
+                          />
+                        </Flex>
+                      </Flex>
+                    )
+                  }}
+
                 </SwiperSlide>
               )
             })}
           </Swiper>
           <Icon
             onClick={() => { gallerySwiper.slidePrev() }}
-            display={gallerySwiper ? gallerySwiper.activeIndex === 0 ? 'none' : 'block' : 'none'}
+            display={gallerySwiper?.activeIndex === 0 ? 'none' : 'flex'}
             pl={1} h='20%' w='30px' zIndex='docked' position='absolute'
             userSelect='none' left={0} icon={ArrowButtonLeft2}
+            cursor='pointer'
             fill='dimmers.300'
           />
           <Icon
-            display={gallerySwiper ? (gallerySwiper.activeIndex + 1) === files.length ? 'none' : 'block' : 'none'}
-            onClick={() => { gallerySwiper.slideNext() }} pr={1} h='20%' w='30px' zIndex='docked' position='absolute'
+            display={(gallerySwiper?.activeIndex + 1) === files.length ? 'none' : 'flex'}
+            onClick={() => { gallerySwiper.slideNext() }} pr={1} h='20%' w='30px' zIndex='docked'
+            position='absolute'
             userSelect='none' right={0} icon={ArrowButtonRight2}
+            cursor='pointer'
             fill='dimmers.300'
           />
         </Flex>}
