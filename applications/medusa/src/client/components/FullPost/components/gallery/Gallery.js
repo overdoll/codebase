@@ -2,7 +2,7 @@
  * @flow
  */
 import type { Node } from 'react'
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import {
   useDisclosure,
   Box,
@@ -53,7 +53,29 @@ export default function Gallery ({ files, urls, thumbnails, setSwiper }: Props):
 
   const swiper = useRef(null)
 
+  const video = useRef(null)
+
+  // TODO persist all video properties when changing slides, such as volume
+  // TODO and whether or not the next video will play if the previous one was paused
+
   const changeSwiper = (swiper) => {
+    setSwiper(swiper)
+    setGallerySwiper(swiper)
+
+    // pause all videos so when you swipe away they aren't still playing
+    for (const item of swiper.el.getElementsByTagName('video')) {
+      item.pause()
+    }
+
+    // play current video
+    // TODO button clicks think that the video is previous for some reason???
+    if (video.current) {
+      video.current.play()
+      console.log(video)
+    }
+  }
+
+  const initializeSwiper = (swiper) => {
     setSwiper(swiper)
     setGallerySwiper(swiper)
   }
@@ -69,7 +91,7 @@ export default function Gallery ({ files, urls, thumbnails, setSwiper }: Props):
             onSlideChange={(swiper) =>
               changeSwiper(swiper)}
             onInit={(swiper) => {
-              setGallerySwiper(swiper)
+              initializeSwiper(swiper)
             }}
           >
             {files.map((file, index) => {
@@ -95,8 +117,8 @@ export default function Gallery ({ files, urls, thumbnails, setSwiper }: Props):
                     >
                       {fileType === 'video'
                         ? <video
+                            ref={gallerySwiper ? gallerySwiper.activeIndex === index ? video : null : null}
                             disableRemotePlayback controls
-                            autoPlay={gallerySwiper ? gallerySwiper.activeIndex === index : 0}
                             muted loop preload='auto' style={{
                               objectFit: 'cover',
                               height: '100%'
