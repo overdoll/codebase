@@ -16,11 +16,9 @@ type Worker struct {
 	app *app.Application
 }
 
-func NewWorker(app *app.Application) worker.Worker {
+func NewWorker(app *app.Application) (worker.Worker, func()) {
 
 	client := clients.NewTemporalClient(context.Background())
-
-	defer client.Close()
 
 	w := worker.New(client, viper.GetString("temporal.queue"), worker.Options{})
 
@@ -31,7 +29,9 @@ func NewWorker(app *app.Application) worker.Worker {
 
 	RegisterActivities(*app, w)
 
-	return w
+	return w, func() {
+		client.Close()
+	}
 }
 
 // needed so we can set it up in tests without having to duplicate code

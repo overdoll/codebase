@@ -49,9 +49,9 @@ func main() {
 }
 
 func Run(cmd *cobra.Command, args []string) {
-	go RunWorker(cmd, args)
 	go RunHttp(cmd, args)
-	RunGrpc(cmd, args)
+	go RunGrpc(cmd, args)
+	RunWorker(cmd, args)
 }
 
 func RunWorker(cmd *cobra.Command, args []string) {
@@ -60,7 +60,9 @@ func RunWorker(cmd *cobra.Command, args []string) {
 
 	app, _ := service.NewApplication(ctx)
 
-	srv := ports.NewWorker(&app)
+	srv, cleanup := ports.NewWorker(&app)
+
+	defer cleanup()
 
 	bootstrap.InitializeWorkerServer(srv)
 }
