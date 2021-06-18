@@ -7,7 +7,9 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//applications/sting/src/app",
+        "//applications/sting/src/domain/post",
         "//applications/sting/src/ports/graphql/types",
+        "//libraries/graphql/relay",
         "//libraries/passport",
     ],
 )

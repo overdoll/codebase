@@ -19,10 +19,10 @@ func NewUpdatePendingPostHandler(pr post.Repository) UpdatePendingPostHandler {
 	return UpdatePendingPostHandler{pr: pr}
 }
 
-func (h UpdatePendingPostHandler) Handle(ctx context.Context, id, artistId string, characterIds, categoryIds []string, characterRequests map[string]string, mediaRequest, categoryRequests []string) (*post.PostPending, error) {
+func (h UpdatePendingPostHandler) Handle(ctx context.Context, id, artistId string, characterIds, categoryIds []string, characterRequests map[string]string, mediaRequest, categoryRequests []string) (*post.PendingPost, error) {
 
 	// Update pending post with new values
-	pendingPost, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PostPending) error {
+	pendingPost, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PendingPost) error {
 
 		// Need to grab this since our protobuf only contains references to IDs
 		characters, err := h.pr.GetCharactersById(ctx, characterIds)

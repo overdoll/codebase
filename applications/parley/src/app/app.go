@@ -17,6 +17,7 @@ type Commands struct {
 }
 
 type Queries struct {
-	PendingPostRejectionReasons query.PendingPostsRejectionReasonsHandler
-	PendingPostsAuditLog        query.PendingPostsAuditLogHandler
+	PendingPostRejectionReasons     query.PendingPostsRejectionReasonsHandler
+	PendingPostsAuditLogByModerator query.PendingPostsAuditLogByModeratorHandler
+	UserInfractionHistory           query.UserInfractionHistoryHandler
 }

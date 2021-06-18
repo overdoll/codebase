@@ -7,37 +7,22 @@ import (
 	"overdoll/applications/sting/src/domain/post"
 )
 
-type GetPendingPostsHandler struct {
-	pr  post.IndexRepository
-	eva EvaService
+type GetPendingPostHandler struct {
+	pr post.Repository
 }
 
-func NewGetPendingPostsHandler(pr post.IndexRepository, eva EvaService) GetPendingPostsHandler {
-	return GetPendingPostsHandler{pr: pr, eva: eva}
+func NewGetPendingPostHandler(pr post.Repository) GetPendingPostHandler {
+	return GetPendingPostHandler{pr: pr}
 }
 
-func (h GetPendingPostsHandler) Handle(ctx context.Context, userId string) ([]*post.PostPending, error) {
+func (h GetPendingPostHandler) Handle(ctx context.Context, postId string) (*post.PendingPost, error) {
 
-	query := userId
-
-	usr, err := h.eva.GetUser(ctx, userId)
-
-	if err != nil {
-		zap.S().Errorf("could not get user: %s", err)
-		return nil, ErrSearchFailed
-	}
-
-	// If user is staff, show all posts
-	if usr.HasRoles([]string{"staff"}) {
-		query = ""
-	}
-
-	posts, err := h.pr.SearchPendingPosts(ctx, query)
+	pst, err := h.pr.GetPendingPost(ctx, postId)
 
 	if err != nil {
 		zap.S().Errorf("failed to search: %s", err)
 		return nil, ErrSearchFailed
 	}
 
-	return posts, nil
+	return pst, nil
 }

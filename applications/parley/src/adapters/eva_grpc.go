@@ -32,6 +32,7 @@ func (s EvaGrpc) LockUser(ctx context.Context, id string, duration int64) error 
 	_, err := s.client.LockUser(ctx, &eva.LockUserRequest{
 		Id:       id,
 		Duration: duration,
+		Reason:   eva.LockUserReason_POST_INFRACTION,
 	})
 
 	if err != nil {

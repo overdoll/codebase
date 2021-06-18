@@ -18,7 +18,7 @@ export type MediaQueryResponse = {|
   +media: $ReadOnlyArray<{|
     +id: string,
     +title: string,
-    +thumbnail: ?string,
+    +thumbnail: string,
   |}>
 |};
 export type MediaQuery = {|

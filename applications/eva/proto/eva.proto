@@ -15,9 +15,14 @@ message GetUserRequest {
   string id = 1;
 }
 
+enum LockUserReason {
+  POST_INFRACTION = 0;
+}
+
 message LockUserRequest {
   string id = 1;
   int64 duration = 2;
+  LockUserReason reason = 3;
 }
 
 message CreateUserRequest {

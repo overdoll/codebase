@@ -1,4 +1,0 @@
-type Query {
-  rejectionReasons: [PendingPostRejectionReason!]!
-  pendingPostAuditLogs(data: PendingPostAuditLogInput!): [PendingPostAuditLog!]!
-}

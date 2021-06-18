@@ -6,7 +6,6 @@ import (
 	"os"
 	"path"
 
-	"github.com/joho/godotenv"
 	"go.uber.org/zap"
 	"overdoll/libraries/helpers"
 )
@@ -25,8 +24,6 @@ func NewBootstrap(ctx context.Context) (Bootstrap, error) {
 	}
 
 	directory := path.Dir(dir)
-
-	_ = godotenv.Load(directory + "/.env")
 
 	logger, err := zap.NewProduction()
 

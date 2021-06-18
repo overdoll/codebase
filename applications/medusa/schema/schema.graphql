@@ -1,16 +1,11 @@
-directive @auth on FIELD_DEFINITION
-
-directive @guest on FIELD_DEFINITION
-
-directive @verified on FIELD_DEFINITION
-
-directive @validation(rules: [String!]!) on INPUT_FIELD_DEFINITION
-
-directive @role(roles: [String!]!) on FIELD_DEFINITION
-
 type Artist {
   id: String!
   avatar: String!
+  username: String!
+}
+
+type AuditUser {
+  id: String!
   username: String!
 }
 
@@ -21,11 +16,6 @@ type Authentication {
 
 input AuthenticationInput {
   email: String!
-}
-
-type AuthListener {
-  sameSession: Boolean!
-  cookie: Cookie
 }
 
 type Category {
@@ -46,6 +36,24 @@ input CharacterRequest {
   media: String!
 }
 
+type CharacterRequestType {
+  name: String!
+  media: String!
+}
+
+input ConnectionInput {
+  after: String
+  before: String
+  first: Int
+  last: Int
+}
+
+type Contributor {
+  id: String!
+  username: String!
+  avatar: String!
+}
+
 type Cookie {
   sameSession: Boolean!
   registered: Boolean!
@@ -57,16 +65,106 @@ type Cookie {
 
 type Media {
   id: String!
-  thumbnail: String
+  thumbnail: String!
   title: String!
+}
+
+type ModeratePost {
+  auditLog: PendingPostAuditLog
+  validation: Validation
+}
+
+input ModeratePostInput {
+  pendingPostId: String!
+  rejectionReasonId: String
+  notes: String!
 }
 
 type Mutation {
   authenticate(data: AuthenticationInput): Boolean!
   register(data: RegisterInput): Boolean!
   logout: Boolean!
-  authEmail: Boolean
+  authEmail: Boolean!
   post(data: PostInput): PostResponse!
+  updatePost(id: String!, data: PostInput): PostUpdateResponse!
+  moderatePost(data: ModeratePostInput!): ModeratePost!
+  revertPendingPostAuditLog(data: RevertPostInput!): ModeratePost!
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+type PendingPost {
+  id: String!
+  state: String!
+  moderator: String!
+  contributor: Contributor!
+  content: [String!]!
+  categories: [Category!]!
+  characters: [Character!]!
+  mediaRequests: [String!]
+  characterRequests: [CharacterRequestType!]
+  artistId: String
+  artistUsername: String!
+}
+
+type PendingPostAuditLog {
+  id: String!
+  postId: String!
+  contributor: AuditUser!
+  moderator: AuditUser!
+  infractionId: String
+  status: String!
+  reason: String!
+  notes: String!
+  reverted: Boolean!
+  canRevert: Boolean!
+}
+
+type PendingPostAuditLogConnection {
+  edges: [PendingPostAuditLogEdge!]!
+}
+
+type PendingPostAuditLogEdge {
+  node: PendingPostAuditLog!
+}
+
+input PendingPostAuditLogFilters {
+  moderatorId: String
+  contributorId: String
+  postId: String
+  dateRange: [Int!]
+}
+
+input PendingPostAuditLogInput {
+  moderatorId: String!
+}
+
+type PendingPostConnection {
+  edges: [PendingPostEdge!]!
+  pageInfo: PageInfo!
+}
+
+type PendingPostEdge {
+  cursor: String!
+  node: PendingPost!
+}
+
+input PendingPostFilters {
+  moderatorId: String
+  contributorId: String
+  artistId: String
+  id: String
+}
+
+type PendingPostRejectionReason {
+  id: String!
+  reason: String!
+  infraction: Boolean!
 }
 
 input PostInput {
@@ -80,33 +178,50 @@ input PostInput {
 }
 
 type PostResponse {
+  id: String!
   review: Boolean!
+  validation: Validation
+}
+
+type PostUpdateResponse {
   validation: Validation
 }
 
 type Query {
   redeemCookie(cookie: String!): Cookie!
   authentication: Authentication
+  pendingPosts(input: ConnectionInput!, filter: PendingPostFilters!): PendingPostConnection!
+  pendingPost(id: String!): PendingPost!
   characters(data: SearchInput!): [Character!]!
   categories(data: SearchInput!): [Category!]!
   artists(data: SearchInput!): [Artist!]!
   media(data: SearchInput!): [Media!]!
+  pendingPostAuditLogs(filter: PendingPostAuditLogFilters!): PendingPostAuditLogConnection!
+  rejectionReasons: [PendingPostRejectionReason!]!
 }
 
 input RegisterInput {
   username: String!
 }
 
+input RevertPostInput {
+  auditLogId: String!
+}
+
 input SearchInput {
   search: String!
 }
 
-type Subscription {
-  authListener: AuthListener
+type User {
+  id: String!
+  username: String!
+  pendingPosts: [PendingPost!]
+  infractionHistory: [UsersInfractionHistory!]
 }
 
-type User {
-  username: String!
+type UsersInfractionHistory {
+  id: String!
+  reason: String!
 }
 
 type Validation {

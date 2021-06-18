@@ -12,15 +12,16 @@ type PendingPostRejectionReason struct {
 	Id         string `db:"id"`
 	Reason     string `db:"reason"`
 	Infraction bool   `db:"infraction"`
+	Bucket     int    `db:"bucket"`
 }
 
 func (r InfractionCassandraRepository) GetRejectionReason(ctx context.Context, id string) (*infraction.PendingPostRejectionReason, error) {
 
 	rejectionReasonQuery := qb.Select("pending_posts_rejection_reasons").
-		Where(qb.Eq("id")).
+		Where(qb.Eq("bucket"), qb.Eq("id")).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(&PendingPostRejectionReason{Id: id})
+		BindStruct(&PendingPostRejectionReason{Id: id, Bucket: 0})
 
 	var rejectionReason PendingPostRejectionReason
 
@@ -34,9 +35,11 @@ func (r InfractionCassandraRepository) GetRejectionReason(ctx context.Context, i
 func (r InfractionCassandraRepository) GetRejectionReasons(ctx context.Context) ([]*infraction.PendingPostRejectionReason, error) {
 
 	rejectionReasonsQuery := qb.Select("pending_posts_rejection_reasons").
+		Where(qb.Eq("bucket")).
 		Columns("id", "reason", "infraction").
 		Query(r.session).
-		Consistency(gocql.LocalQuorum)
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&PendingPostRejectionReason{Bucket: 0})
 
 	var dbRejectionReasons []PendingPostRejectionReason
 

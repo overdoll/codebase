@@ -11,6 +11,12 @@ type EntityResolver struct {
 	App *app.Application
 }
 
-func (e *EntityResolver) FindWorkaround2ByID(ctx context.Context, id *int) (*types.Workaround2, error) {
-	panic("implement me")
+func (e *EntityResolver) FindUserByID(ctx context.Context, id string) (*types.User, error) {
+
+	var pendingPosts []*types.PendingPost
+
+	return &types.User{
+		ID:           id,
+		PendingPosts: pendingPosts,
+	}, nil
 }

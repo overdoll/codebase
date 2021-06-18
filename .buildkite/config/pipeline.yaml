@@ -5,7 +5,7 @@ steps:
       env:
         AWS_ACCESS_KEY: overdoll123
         AWS_ACCESS_SECRET: overdoll123
-        AWS_ENDPOINT: http://minio
+        AWS_ENDPOINT: http://minio:9000
         AWS_REGION: us-east-1
         DB_HOST: scylla
         ELASTICSEARCH_URL: http://elasticsearch:9200
@@ -15,3 +15,4 @@ steps:
         APP_DEBUG: true
         EVA_SERVICE: eva:8080
         PARLEY_SERVICE: parley:8080
+        STING_SERVICE: sting:8080

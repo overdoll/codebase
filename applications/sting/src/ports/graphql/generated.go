@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"overdoll/applications/sting/src/ports/graphql/types"
+	"overdoll/libraries/graphql/relay"
 	"strconv"
 	"sync"
 	"sync/atomic"
@@ -77,7 +78,7 @@ type ComplexityRoot struct {
 	}
 
 	Entity struct {
-		FindWorkaround2ByID func(childComplexity int, id *int) int
+		FindUserByID func(childComplexity int, id string) int
 	}
 
 	Media struct {
@@ -91,6 +92,13 @@ type ComplexityRoot struct {
 		UpdatePost func(childComplexity int, id string, data *types.PostInput) int
 	}
 
+	PageInfo struct {
+		EndCursor       func(childComplexity int) int
+		HasNextPage     func(childComplexity int) int
+		HasPreviousPage func(childComplexity int) int
+		StartCursor     func(childComplexity int) int
+	}
+
 	PendingPost struct {
 		ArtistID          func(childComplexity int) int
 		ArtistUsername    func(childComplexity int) int
@@ -102,9 +110,21 @@ type ComplexityRoot struct {
 		ID                func(childComplexity int) int
 		MediaRequests     func(childComplexity int) int
 		Moderator         func(childComplexity int) int
+		State             func(childComplexity int) int
+	}
+
+	PendingPostConnection struct {
+		Edges    func(childComplexity int) int
+		PageInfo func(childComplexity int) int
+	}
+
+	PendingPostEdge struct {
+		Cursor func(childComplexity int) int
+		Node   func(childComplexity int) int
 	}
 
 	PostResponse struct {
+		ID         func(childComplexity int) int
 		Review     func(childComplexity int) int
 		Validation func(childComplexity int) int
 	}
@@ -118,17 +138,19 @@ type ComplexityRoot struct {
 		Categories         func(childComplexity int, data types.SearchInput) int
 		Characters         func(childComplexity int, data types.SearchInput) int
 		Media              func(childComplexity int, data types.SearchInput) int
-		PendingPosts       func(childComplexity int, data types.SearchInput) int
+		PendingPost        func(childComplexity int, id string) int
+		PendingPosts       func(childComplexity int, input relay.ConnectionInput, filter types.PendingPostFilters) int
 		__resolve__service func(childComplexity int) int
 		__resolve_entities func(childComplexity int, representations []map[string]interface{}) int
 	}
 
-	Validation struct {
-		Code func(childComplexity int) int
+	User struct {
+		ID           func(childComplexity int) int
+		PendingPosts func(childComplexity int) int
 	}
 
-	Workaround2 struct {
-		ID func(childComplexity int) int
+	Validation struct {
+		Code func(childComplexity int) int
 	}
 
 	Service struct {
@@ -137,7 +159,7 @@ type ComplexityRoot struct {
 }
 
 type EntityResolver interface {
-	FindWorkaround2ByID(ctx context.Context, id *int) (*types.Workaround2, error)
+	FindUserByID(ctx context.Context, id string) (*types.User, error)
 }
 type MutationResolver interface {
 	Post(ctx context.Context, data *types.PostInput) (*types.PostResponse, error)
@@ -148,7 +170,8 @@ type QueryResolver interface {
 	Categories(ctx context.Context, data types.SearchInput) ([]*types.Category, error)
 	Artists(ctx context.Context, data types.SearchInput) ([]*types.Artist, error)
 	Media(ctx context.Context, data types.SearchInput) ([]*types.Media, error)
-	PendingPosts(ctx context.Context, data types.SearchInput) ([]*types.PendingPost, error)
+	PendingPosts(ctx context.Context, input relay.ConnectionInput, filter types.PendingPostFilters) (*types.PendingPostConnection, error)
+	PendingPost(ctx context.Context, id string) (*types.PendingPost, error)
 }
 
 type executableSchema struct {
@@ -271,17 +294,17 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Contributor.Username(childComplexity), true
 
-	case "Entity.findWorkaround2ByID":
-		if e.complexity.Entity.FindWorkaround2ByID == nil {
+	case "Entity.findUserByID":
+		if e.complexity.Entity.FindUserByID == nil {
 			break
 		}
 
-		args, err := ec.field_Entity_findWorkaround2ByID_args(context.TODO(), rawArgs)
+		args, err := ec.field_Entity_findUserByID_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Entity.FindWorkaround2ByID(childComplexity, args["id"].(*int)), true
+		return e.complexity.Entity.FindUserByID(childComplexity, args["id"].(string)), true
 
 	case "Media.id":
 		if e.complexity.Media.ID == nil {
@@ -327,6 +350,34 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.UpdatePost(childComplexity, args["id"].(string), args["data"].(*types.PostInput)), true
+
+	case "PageInfo.endCursor":
+		if e.complexity.PageInfo.EndCursor == nil {
+			break
+		}
+
+		return e.complexity.PageInfo.EndCursor(childComplexity), true
+
+	case "PageInfo.hasNextPage":
+		if e.complexity.PageInfo.HasNextPage == nil {
+			break
+		}
+
+		return e.complexity.PageInfo.HasNextPage(childComplexity), true
+
+	case "PageInfo.hasPreviousPage":
+		if e.complexity.PageInfo.HasPreviousPage == nil {
+			break
+		}
+
+		return e.complexity.PageInfo.HasPreviousPage(childComplexity), true
+
+	case "PageInfo.startCursor":
+		if e.complexity.PageInfo.StartCursor == nil {
+			break
+		}
+
+		return e.complexity.PageInfo.StartCursor(childComplexity), true
 
 	case "PendingPost.artistId":
 		if e.complexity.PendingPost.ArtistID == nil {
@@ -398,6 +449,48 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.PendingPost.Moderator(childComplexity), true
 
+	case "PendingPost.state":
+		if e.complexity.PendingPost.State == nil {
+			break
+		}
+
+		return e.complexity.PendingPost.State(childComplexity), true
+
+	case "PendingPostConnection.edges":
+		if e.complexity.PendingPostConnection.Edges == nil {
+			break
+		}
+
+		return e.complexity.PendingPostConnection.Edges(childComplexity), true
+
+	case "PendingPostConnection.pageInfo":
+		if e.complexity.PendingPostConnection.PageInfo == nil {
+			break
+		}
+
+		return e.complexity.PendingPostConnection.PageInfo(childComplexity), true
+
+	case "PendingPostEdge.cursor":
+		if e.complexity.PendingPostEdge.Cursor == nil {
+			break
+		}
+
+		return e.complexity.PendingPostEdge.Cursor(childComplexity), true
+
+	case "PendingPostEdge.node":
+		if e.complexity.PendingPostEdge.Node == nil {
+			break
+		}
+
+		return e.complexity.PendingPostEdge.Node(childComplexity), true
+
+	case "PostResponse.id":
+		if e.complexity.PostResponse.ID == nil {
+			break
+		}
+
+		return e.complexity.PostResponse.ID(childComplexity), true
+
 	case "PostResponse.review":
 		if e.complexity.PostResponse.Review == nil {
 			break
@@ -467,6 +560,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.Media(childComplexity, args["data"].(types.SearchInput)), true
 
+	case "Query.pendingPost":
+		if e.complexity.Query.PendingPost == nil {
+			break
+		}
+
+		args, err := ec.field_Query_pendingPost_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.PendingPost(childComplexity, args["id"].(string)), true
+
 	case "Query.pendingPosts":
 		if e.complexity.Query.PendingPosts == nil {
 			break
@@ -477,7 +582,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.PendingPosts(childComplexity, args["data"].(types.SearchInput)), true
+		return e.complexity.Query.PendingPosts(childComplexity, args["input"].(relay.ConnectionInput), args["filter"].(types.PendingPostFilters)), true
 
 	case "Query._service":
 		if e.complexity.Query.__resolve__service == nil {
@@ -498,19 +603,26 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.__resolve_entities(childComplexity, args["representations"].([]map[string]interface{})), true
 
+	case "User.id":
+		if e.complexity.User.ID == nil {
+			break
+		}
+
+		return e.complexity.User.ID(childComplexity), true
+
+	case "User.pendingPosts":
+		if e.complexity.User.PendingPosts == nil {
+			break
+		}
+
+		return e.complexity.User.PendingPosts(childComplexity), true
+
 	case "Validation.code":
 		if e.complexity.Validation.Code == nil {
 			break
 		}
 
 		return e.complexity.Validation.Code(childComplexity), true
-
-	case "Workaround2.id":
-		if e.complexity.Workaround2.ID == nil {
-			break
-		}
-
-		return e.complexity.Workaround2.ID(childComplexity), true
 
 	case "_Service.sdl":
 		if e.complexity.Service.SDL == nil {
@@ -583,31 +695,21 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
-	{Name: "schema/mutations.graphql", Input: `type Mutation {
-  post(data: PostInput): PostResponse!
-  updatePost(id: String!, data: PostInput): PostUpdateResponse!
-}
-`, BuiltIn: false},
-	{Name: "schema/queries.graphql", Input: `type Query {
-  characters(data: SearchInput!): [Character!]!
-  categories(data: SearchInput!): [Category!]!
-  artists(data: SearchInput!): [Artist!]!
-  media(data: SearchInput!): [Media!]!
-  pendingPosts(data: SearchInput!): [PendingPost!]!
-}
-`, BuiltIn: false},
-	{Name: "schema/types.graphql", Input: `input PostInput {
-  content: [String!]!
-  categories: [String!]!
-  characters: [String!]!
-  mediaRequests: [String!]
-  characterRequests: [CharacterRequest!]
-  artistId: String
-  artistUsername: String!
+	{Name: "schema/federation/schema.graphql", Input: `extend type User @key(fields: "id") {
+  id: String! @external
+  pendingPosts: [PendingPost!]
+}`, BuiltIn: false},
+	{Name: "schema/inputs.graphql", Input: `input CharacterRequest {
+  name: String!
+  media: String!
 }
 
-type PendingPost {
+input SearchInput {
+  search: String!
+}`, BuiltIn: false},
+	{Name: "schema/post/schema.graphql", Input: `type PendingPost {
   id: String!
+  state: String!
   moderator: String!
   contributor: Contributor!
   content: [String!]!
@@ -619,17 +721,34 @@ type PendingPost {
   artistUsername: String!
 }
 
-type CharacterRequestType {
-  name: String!
-  media: String!
+type Contributor {
+  id: String!
+  username: String!
+  avatar: String!
 }
 
-input CharacterRequest {
-  name: String!
-  media: String!
+type PendingPostEdge {
+  cursor: String!
+  node: PendingPost!
+}
+
+type PendingPostConnection {
+  edges: [PendingPostEdge!]!
+  pageInfo: PageInfo!
+}
+
+input PostInput {
+  content: [String!]!
+  categories: [String!]!
+  characters: [String!]!
+  mediaRequests: [String!]
+  characterRequests: [CharacterRequest!]
+  artistId: String
+  artistUsername: String!
 }
 
 type PostResponse {
+  id: String!
   review: Boolean!
   validation: Validation
 }
@@ -638,14 +757,33 @@ type PostUpdateResponse {
   validation: Validation
 }
 
-input SearchInput {
-  search: String!
+input PendingPostFilters {
+  moderatorId: String
+  contributorId: String
+  artistId: String
+  id: String
 }
 
-type Contributor {
-  id: String!
-  username: String!
-  avatar: String!
+extend type Query {
+  pendingPosts(input: ConnectionInput!, filter: PendingPostFilters!): PendingPostConnection!
+  pendingPost(id: String!): PendingPost!
+}
+
+extend type Mutation {
+  post(data: PostInput): PostResponse!
+  updatePost(id: String!, data: PostInput): PostUpdateResponse!
+}
+`, BuiltIn: false},
+	{Name: "schema/queries.graphql", Input: `type Query {
+  characters(data: SearchInput!): [Character!]!
+  categories(data: SearchInput!): [Category!]!
+  artists(data: SearchInput!): [Artist!]!
+  media(data: SearchInput!): [Media!]!
+}
+`, BuiltIn: false},
+	{Name: "schema/types.graphql", Input: `type CharacterRequestType {
+  name: String!
+  media: String!
 }
 
 type Media {
@@ -675,12 +813,35 @@ type Category {
 
 type Validation {
   code: String!
+}`, BuiltIn: false},
+	{Name: "../../libraries/graphql/relay/schema.graphql", Input: `# Information about pagination in a connection.
+type PageInfo {
+  # When paginating forwards, are there more items?
+  hasNextPage: Boolean!
+
+  # When paginating backwards, are there more items?
+  hasPreviousPage: Boolean!
+
+  # When paginating backwards, the cursor to continue.
+  startCursor: String
+
+  # When paginating forwards, the cursor to continue.
+  endCursor: String
 }
 
-type Workaround2 @key(fields: "id") {
-  id: Int
-}
-`, BuiltIn: false},
+input ConnectionInput {
+  # Returns the elements in the list that come after the specified cursor.
+  after: String
+
+  # Returns the elements in the list that come before the specified cursor.
+  before: String
+
+  # Returns the first _n_ elements from the list.
+  first: Int
+
+  # Returns the last _n_ elements from the list.
+  last: Int
+}`, BuiltIn: false},
 	{Name: "federation/directives.graphql", Input: `
 scalar _Any
 scalar _FieldSet
@@ -693,11 +854,11 @@ directive @extends on OBJECT
 `, BuiltIn: true},
 	{Name: "federation/entity.graphql", Input: `
 # a union of all types that use the @key directive
-union _Entity = Workaround2
+union _Entity = User
 
 # fake type to build resolver interfaces for users to implement
 type Entity {
-		findWorkaround2ByID(id: Int,): Workaround2!
+		findUserByID(id: String!,): User!
 
 }
 
@@ -717,13 +878,13 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 
 // region    ***************************** args.gotpl *****************************
 
-func (ec *executionContext) field_Entity_findWorkaround2ByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Entity_findUserByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *int
+	var arg0 string
 	if tmp, ok := rawArgs["id"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -861,18 +1022,42 @@ func (ec *executionContext) field_Query_media_args(ctx context.Context, rawArgs 
 	return args, nil
 }
 
-func (ec *executionContext) field_Query_pendingPosts_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Query_pendingPost_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 types.SearchInput
-	if tmp, ok := rawArgs["data"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("data"))
-		arg0, err = ec.unmarshalNSearchInput2overdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐSearchInput(ctx, tmp)
+	var arg0 string
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["data"] = arg0
+	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_pendingPosts_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 relay.ConnectionInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNConnectionInput2overdollᚋlibrariesᚋgraphqlᚋrelayᚐConnectionInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	var arg1 types.PendingPostFilters
+	if tmp, ok := rawArgs["filter"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("filter"))
+		arg1, err = ec.unmarshalNPendingPostFilters2overdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostFilters(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["filter"] = arg1
 	return args, nil
 }
 
@@ -1439,7 +1624,7 @@ func (ec *executionContext) _Contributor_avatar(ctx context.Context, field graph
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Entity_findWorkaround2ByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Entity_findUserByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1456,7 +1641,7 @@ func (ec *executionContext) _Entity_findWorkaround2ByID(ctx context.Context, fie
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Entity_findWorkaround2ByID_args(ctx, rawArgs)
+	args, err := ec.field_Entity_findUserByID_args(ctx, rawArgs)
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
@@ -1464,7 +1649,7 @@ func (ec *executionContext) _Entity_findWorkaround2ByID(ctx context.Context, fie
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Entity().FindWorkaround2ByID(rctx, args["id"].(*int))
+		return ec.resolvers.Entity().FindUserByID(rctx, args["id"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1476,9 +1661,9 @@ func (ec *executionContext) _Entity_findWorkaround2ByID(ctx context.Context, fie
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*types.Workaround2)
+	res := resTmp.(*types.User)
 	fc.Result = res
-	return ec.marshalNWorkaround22ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐWorkaround2(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Media_id(ctx context.Context, field graphql.CollectedField, obj *types.Media) (ret graphql.Marshaler) {
@@ -1670,6 +1855,140 @@ func (ec *executionContext) _Mutation_updatePost(ctx context.Context, field grap
 	return ec.marshalNPostUpdateResponse2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPostUpdateResponse(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _PageInfo_hasNextPage(ctx context.Context, field graphql.CollectedField, obj *relay.PageInfo) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PageInfo",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.HasNextPage, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PageInfo_hasPreviousPage(ctx context.Context, field graphql.CollectedField, obj *relay.PageInfo) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PageInfo",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.HasPreviousPage, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PageInfo_startCursor(ctx context.Context, field graphql.CollectedField, obj *relay.PageInfo) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PageInfo",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.StartCursor, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PageInfo_endCursor(ctx context.Context, field graphql.CollectedField, obj *relay.PageInfo) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PageInfo",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.EndCursor, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _PendingPost_id(ctx context.Context, field graphql.CollectedField, obj *types.PendingPost) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -1689,6 +2008,41 @@ func (ec *executionContext) _PendingPost_id(ctx context.Context, field graphql.C
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PendingPost_state(ctx context.Context, field graphql.CollectedField, obj *types.PendingPost) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PendingPost",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.State, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2011,6 +2365,181 @@ func (ec *executionContext) _PendingPost_artistUsername(ctx context.Context, fie
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _PendingPostConnection_edges(ctx context.Context, field graphql.CollectedField, obj *types.PendingPostConnection) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PendingPostConnection",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Edges, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*types.PendingPostEdge)
+	fc.Result = res
+	return ec.marshalNPendingPostEdge2ᚕᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostEdgeᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PendingPostConnection_pageInfo(ctx context.Context, field graphql.CollectedField, obj *types.PendingPostConnection) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PendingPostConnection",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PageInfo, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*relay.PageInfo)
+	fc.Result = res
+	return ec.marshalNPageInfo2ᚖoverdollᚋlibrariesᚋgraphqlᚋrelayᚐPageInfo(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PendingPostEdge_cursor(ctx context.Context, field graphql.CollectedField, obj *types.PendingPostEdge) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PendingPostEdge",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Cursor, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PendingPostEdge_node(ctx context.Context, field graphql.CollectedField, obj *types.PendingPostEdge) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PendingPostEdge",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Node, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.PendingPost)
+	fc.Result = res
+	return ec.marshalNPendingPost2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPost(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PostResponse_id(ctx context.Context, field graphql.CollectedField, obj *types.PostResponse) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PostResponse",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _PostResponse_review(ctx context.Context, field graphql.CollectedField, obj *types.PostResponse) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -2303,7 +2832,7 @@ func (ec *executionContext) _Query_pendingPosts(ctx context.Context, field graph
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().PendingPosts(rctx, args["data"].(types.SearchInput))
+		return ec.resolvers.Query().PendingPosts(rctx, args["input"].(relay.ConnectionInput), args["filter"].(types.PendingPostFilters))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2315,9 +2844,51 @@ func (ec *executionContext) _Query_pendingPosts(ctx context.Context, field graph
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*types.PendingPost)
+	res := resTmp.(*types.PendingPostConnection)
 	fc.Result = res
-	return ec.marshalNPendingPost2ᚕᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostᚄ(ctx, field.Selections, res)
+	return ec.marshalNPendingPostConnection2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostConnection(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_pendingPost(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_pendingPost_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().PendingPost(rctx, args["id"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.PendingPost)
+	fc.Result = res
+	return ec.marshalNPendingPost2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPost(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query__entities(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2468,6 +3039,73 @@ func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.C
 	return ec.marshalO__Schema2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐSchema(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _User_id(ctx context.Context, field graphql.CollectedField, obj *types.User) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "User",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _User_pendingPosts(ctx context.Context, field graphql.CollectedField, obj *types.User) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "User",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PendingPosts, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*types.PendingPost)
+	fc.Result = res
+	return ec.marshalOPendingPost2ᚕᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostᚄ(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Validation_code(ctx context.Context, field graphql.CollectedField, obj *types.Validation) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -2501,38 +3139,6 @@ func (ec *executionContext) _Validation_code(ctx context.Context, field graphql.
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Workaround2_id(ctx context.Context, field graphql.CollectedField, obj *types.Workaround2) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Workaround2",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*int)
-	fc.Result = res
-	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) __Service_sdl(ctx context.Context, field graphql.CollectedField, obj *fedruntime.Service) (ret graphql.Marshaler) {
@@ -3682,6 +4288,94 @@ func (ec *executionContext) unmarshalInputCharacterRequest(ctx context.Context, 
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputConnectionInput(ctx context.Context, obj interface{}) (relay.ConnectionInput, error) {
+	var it relay.ConnectionInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "after":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
+			it.After, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "before":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
+			it.Before, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "first":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
+			it.First, err = ec.unmarshalOInt2ᚖint(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "last":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
+			it.Last, err = ec.unmarshalOInt2ᚖint(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputPendingPostFilters(ctx context.Context, obj interface{}) (types.PendingPostFilters, error) {
+	var it types.PendingPostFilters
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "moderatorId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("moderatorId"))
+			it.ModeratorID, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "contributorId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("contributorId"))
+			it.ContributorID, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "artistId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("artistId"))
+			it.ArtistID, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputPostInput(ctx context.Context, obj interface{}) (types.PostInput, error) {
 	var it types.PostInput
 	var asMap = obj.(map[string]interface{})
@@ -3778,13 +4472,13 @@ func (ec *executionContext) __Entity(ctx context.Context, sel ast.SelectionSet, 
 	switch obj := (obj).(type) {
 	case nil:
 		return graphql.Null
-	case types.Workaround2:
-		return ec._Workaround2(ctx, sel, &obj)
-	case *types.Workaround2:
+	case types.User:
+		return ec._User(ctx, sel, &obj)
+	case *types.User:
 		if obj == nil {
 			return graphql.Null
 		}
-		return ec._Workaround2(ctx, sel, obj)
+		return ec._User(ctx, sel, obj)
 	default:
 		panic(fmt.Errorf("unexpected type %T", obj))
 	}
@@ -3994,7 +4688,7 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Entity")
-		case "findWorkaround2ByID":
+		case "findUserByID":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
 				defer func() {
@@ -4002,7 +4696,7 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Entity_findWorkaround2ByID(ctx, field)
+				res = ec._Entity_findUserByID(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -4092,6 +4786,42 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 	return out
 }
 
+var pageInfoImplementors = []string{"PageInfo"}
+
+func (ec *executionContext) _PageInfo(ctx context.Context, sel ast.SelectionSet, obj *relay.PageInfo) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, pageInfoImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("PageInfo")
+		case "hasNextPage":
+			out.Values[i] = ec._PageInfo_hasNextPage(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "hasPreviousPage":
+			out.Values[i] = ec._PageInfo_hasPreviousPage(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "startCursor":
+			out.Values[i] = ec._PageInfo_startCursor(ctx, field, obj)
+		case "endCursor":
+			out.Values[i] = ec._PageInfo_endCursor(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var pendingPostImplementors = []string{"PendingPost"}
 
 func (ec *executionContext) _PendingPost(ctx context.Context, sel ast.SelectionSet, obj *types.PendingPost) graphql.Marshaler {
@@ -4105,6 +4835,11 @@ func (ec *executionContext) _PendingPost(ctx context.Context, sel ast.SelectionS
 			out.Values[i] = graphql.MarshalString("PendingPost")
 		case "id":
 			out.Values[i] = ec._PendingPost_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "state":
+			out.Values[i] = ec._PendingPost_state(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -4155,6 +4890,70 @@ func (ec *executionContext) _PendingPost(ctx context.Context, sel ast.SelectionS
 	return out
 }
 
+var pendingPostConnectionImplementors = []string{"PendingPostConnection"}
+
+func (ec *executionContext) _PendingPostConnection(ctx context.Context, sel ast.SelectionSet, obj *types.PendingPostConnection) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, pendingPostConnectionImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("PendingPostConnection")
+		case "edges":
+			out.Values[i] = ec._PendingPostConnection_edges(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "pageInfo":
+			out.Values[i] = ec._PendingPostConnection_pageInfo(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var pendingPostEdgeImplementors = []string{"PendingPostEdge"}
+
+func (ec *executionContext) _PendingPostEdge(ctx context.Context, sel ast.SelectionSet, obj *types.PendingPostEdge) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, pendingPostEdgeImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("PendingPostEdge")
+		case "cursor":
+			out.Values[i] = ec._PendingPostEdge_cursor(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "node":
+			out.Values[i] = ec._PendingPostEdge_node(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var postResponseImplementors = []string{"PostResponse"}
 
 func (ec *executionContext) _PostResponse(ctx context.Context, sel ast.SelectionSet, obj *types.PostResponse) graphql.Marshaler {
@@ -4166,6 +4965,11 @@ func (ec *executionContext) _PostResponse(ctx context.Context, sel ast.Selection
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("PostResponse")
+		case "id":
+			out.Values[i] = ec._PostResponse_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "review":
 			out.Values[i] = ec._PostResponse_review(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -4293,6 +5097,20 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				}
 				return res
 			})
+		case "pendingPost":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_pendingPost(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		case "_entities":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -4336,6 +5154,35 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 	return out
 }
 
+var userImplementors = []string{"User", "_Entity"}
+
+func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj *types.User) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, userImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("User")
+		case "id":
+			out.Values[i] = ec._User_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "pendingPosts":
+			out.Values[i] = ec._User_pendingPosts(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var validationImplementors = []string{"Validation"}
 
 func (ec *executionContext) _Validation(ctx context.Context, sel ast.SelectionSet, obj *types.Validation) graphql.Marshaler {
@@ -4352,30 +5199,6 @@ func (ec *executionContext) _Validation(ctx context.Context, sel ast.SelectionSe
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var workaround2Implementors = []string{"Workaround2", "_Entity"}
-
-func (ec *executionContext) _Workaround2(ctx context.Context, sel ast.SelectionSet, obj *types.Workaround2) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, workaround2Implementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("Workaround2")
-		case "id":
-			out.Values[i] = ec._Workaround2_id(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -4827,6 +5650,11 @@ func (ec *executionContext) marshalNCharacterRequestType2ᚖoverdollᚋapplicati
 	return ec._CharacterRequestType(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNConnectionInput2overdollᚋlibrariesᚋgraphqlᚋrelayᚐConnectionInput(ctx context.Context, v interface{}) (relay.ConnectionInput, error) {
+	res, err := ec.unmarshalInputConnectionInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) marshalNContributor2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐContributor(ctx context.Context, sel ast.SelectionSet, v *types.Contributor) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -4884,7 +5712,45 @@ func (ec *executionContext) marshalNMedia2ᚖoverdollᚋapplicationsᚋstingᚋs
 	return ec._Media(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNPendingPost2ᚕᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.PendingPost) graphql.Marshaler {
+func (ec *executionContext) marshalNPageInfo2ᚖoverdollᚋlibrariesᚋgraphqlᚋrelayᚐPageInfo(ctx context.Context, sel ast.SelectionSet, v *relay.PageInfo) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._PageInfo(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNPendingPost2overdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPost(ctx context.Context, sel ast.SelectionSet, v types.PendingPost) graphql.Marshaler {
+	return ec._PendingPost(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNPendingPost2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPost(ctx context.Context, sel ast.SelectionSet, v *types.PendingPost) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._PendingPost(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNPendingPostConnection2overdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostConnection(ctx context.Context, sel ast.SelectionSet, v types.PendingPostConnection) graphql.Marshaler {
+	return ec._PendingPostConnection(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNPendingPostConnection2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostConnection(ctx context.Context, sel ast.SelectionSet, v *types.PendingPostConnection) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._PendingPostConnection(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNPendingPostEdge2ᚕᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostEdgeᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.PendingPostEdge) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -4908,7 +5774,7 @@ func (ec *executionContext) marshalNPendingPost2ᚕᚖoverdollᚋapplicationsᚋ
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNPendingPost2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPost(ctx, sel, v[i])
+			ret[i] = ec.marshalNPendingPostEdge2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostEdge(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -4921,14 +5787,19 @@ func (ec *executionContext) marshalNPendingPost2ᚕᚖoverdollᚋapplicationsᚋ
 	return ret
 }
 
-func (ec *executionContext) marshalNPendingPost2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPost(ctx context.Context, sel ast.SelectionSet, v *types.PendingPost) graphql.Marshaler {
+func (ec *executionContext) marshalNPendingPostEdge2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostEdge(ctx context.Context, sel ast.SelectionSet, v *types.PendingPostEdge) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
 		}
 		return graphql.Null
 	}
-	return ec._PendingPost(ctx, sel, v)
+	return ec._PendingPostEdge(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNPendingPostFilters2overdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostFilters(ctx context.Context, v interface{}) (types.PendingPostFilters, error) {
+	res, err := ec.unmarshalInputPendingPostFilters(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNPostResponse2overdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPostResponse(ctx context.Context, sel ast.SelectionSet, v types.PostResponse) graphql.Marshaler {
@@ -5009,18 +5880,18 @@ func (ec *executionContext) marshalNString2ᚕstringᚄ(ctx context.Context, sel
 	return ret
 }
 
-func (ec *executionContext) marshalNWorkaround22overdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐWorkaround2(ctx context.Context, sel ast.SelectionSet, v types.Workaround2) graphql.Marshaler {
-	return ec._Workaround2(ctx, sel, &v)
+func (ec *executionContext) marshalNUser2overdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐUser(ctx context.Context, sel ast.SelectionSet, v types.User) graphql.Marshaler {
+	return ec._User(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNWorkaround22ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐWorkaround2(ctx context.Context, sel ast.SelectionSet, v *types.Workaround2) graphql.Marshaler {
+func (ec *executionContext) marshalNUser2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐUser(ctx context.Context, sel ast.SelectionSet, v *types.User) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
 		}
 		return graphql.Null
 	}
-	return ec._Workaround2(ctx, sel, v)
+	return ec._User(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalN_Any2map(ctx context.Context, v interface{}) (map[string]interface{}, error) {
@@ -5460,6 +6331,46 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 		return graphql.Null
 	}
 	return graphql.MarshalInt(*v)
+}
+
+func (ec *executionContext) marshalOPendingPost2ᚕᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.PendingPost) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNPendingPost2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPost(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
 }
 
 func (ec *executionContext) unmarshalOPostInput2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPostInput(ctx context.Context, v interface{}) (*types.PostInput, error) {

@@ -1,2 +1,5 @@
 [db]
 keyspace = "sting"
+
+[temporal]
+queue = "sting"

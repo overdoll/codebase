@@ -1,0 +1,15 @@
+type Cookie {
+  sameSession: Boolean!
+  registered: Boolean!
+  redeemed: Boolean!
+  session: String!
+  email: String!
+  invalid: Boolean!
+}
+
+extend type Query {
+  """
+  Query for redeeming the cookie - when user receives the cookie from
+  """
+  redeemCookie(cookie: String!): Cookie!
+}

@@ -51,8 +51,8 @@ index.use(helmet(helmetConfig))
 // Sessions
 index.use(session(sessionCfg))
 
-// CSRF
-index.use(csrf(csrfConfig))
+// CSRF - can be disabled (when developing, required for introspection and playground to work)
+if (!process.env.DISABLE_CSRF) index.use(csrf(csrfConfig))
 
 // Flash sessions
 index.use(flash)

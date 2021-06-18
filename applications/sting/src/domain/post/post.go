@@ -24,7 +24,7 @@ type NotFoundError struct {
 }
 
 func (e NotFoundError) Error() string {
-	return fmt.Sprintf("user '%s' not found", e.Identifier)
+	return fmt.Sprintf("post '%s' not found", e.Identifier)
 }
 
 func NewPost(id string, artist *Artist, contributor *user.User, content []string, categories []*Category, characters []*Character) *Post {

@@ -1,0 +1,4 @@
+extend type User @key(fields: "id") {
+  id: String! @external
+  pendingPosts: [PendingPost!]
+}

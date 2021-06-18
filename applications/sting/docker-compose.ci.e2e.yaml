@@ -1,0 +1,20 @@
+version: '3.9'
+services:
+  # for e2e tests, we need a worker
+  sting-worker:
+    image: $CONTAINER_REGISTRY/sting/dev:$BUILDKITE_COMMIT
+    entrypoint: ""
+    command: /bin/sh -c "/app/applications/sting/image.binary db migrate keyspace && /app/applications/sting/image.binary db seed && /app/applications/sting/image.binary index all && /app/applications/sting/image.binary worker"
+    env_file: ../../applications/sting/.env.ci
+    depends_on:
+      - temporal
+      - elasticsearch
+      - minio
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 20
+
+  run:
+    depends_on:
+      - sting-worker

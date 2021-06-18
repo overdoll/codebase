@@ -10,13 +10,15 @@ CREATE TABLE IF NOT EXISTS authentication_cookies
 
 CREATE TABLE IF NOT EXISTS users
 (
-    id           text,
-    username     text,
-    email        text,
-    roles        list<text>,
-    verified     boolean,
-    avatar       text,
-    locked_until timestamp,
+    id            text,
+    username      text,
+    email         text,
+    roles         list<text>,
+    verified      boolean,
+    avatar        text,
+    locked        boolean,
+    locked_until  int,
+    locked_reason text,
     primary key ( id )
 );
 

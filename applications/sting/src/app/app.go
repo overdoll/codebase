@@ -19,10 +19,11 @@ type Commands struct {
 	StartUndoPost    command.StartUndoPostHandler
 	RejectPost       command.RejectPostHandler
 
-	IndexAllArtists    command.IndexAllArtistsHandler
-	IndexAllCategories command.IndexAllCategoriesHandler
-	IndexAllCharacters command.IndexAllCharactersHandler
-	IndexAllMedia      command.IndexAllMediaHandler
+	IndexAllArtists      command.IndexAllArtistsHandler
+	IndexAllCategories   command.IndexAllCategoriesHandler
+	IndexAllCharacters   command.IndexAllCharactersHandler
+	IndexAllMedia        command.IndexAllMediaHandler
+	IndexAllPendingPosts command.IndexAllPendingPostsHandler
 
 	CreatePost          command.CreatePostHandler
 	NewPendingPost      command.NewPostHandler
@@ -34,10 +35,11 @@ type Commands struct {
 }
 
 type Queries struct {
-	SearchArtist     query.SearchArtistsHandler
-	SearchCategories query.SearchCategoriesHandler
-	SearchCharacters query.SearchCharactersHandler
-	SearchMedias     query.SearchMediasHandler
-	GetPendingPosts  query.GetPendingPostsHandler
-	GetPendingPost   query.GetPendingPostHandler
+	SearchArtist                query.SearchArtistsHandler
+	SearchCategories            query.SearchCategoriesHandler
+	SearchCharacters            query.SearchCharactersHandler
+	SearchMedias                query.SearchMediasHandler
+	GetPendingPosts             query.GetPendingPostsHandler
+	GetPendingPost              query.GetPendingPostHandler
+	GetPendingPostAuthenticated query.GetPendingPostAuthenticatedHandler
 }

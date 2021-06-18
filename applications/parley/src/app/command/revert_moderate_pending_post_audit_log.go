@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	ErrFailedRevertModeratePendingPost = errors.New("get moderator failed")
+	ErrFailedRevertModeratePendingPost = errors.New("revert audit log failed")
 )
 
 type RevertModeratePendingPostHandler struct {
@@ -22,19 +22,18 @@ func NewRevertModeratePendingPostHandler(ir infraction.Repository, eva EvaServic
 	return RevertModeratePendingPostHandler{ir: ir, sting: sting, eva: eva}
 }
 
-func (h RevertModeratePendingPostHandler) Handle(ctx context.Context, moderatorId, auditLogId string) error {
+func (h RevertModeratePendingPostHandler) Handle(ctx context.Context, moderatorId, auditLogId string) (*infraction.PendingPostAuditLog, error) {
 
 	// Get user, to perform permission checks
 	usr, err := h.eva.GetUser(ctx, moderatorId)
 
 	if err != nil {
 		zap.S().Errorf("failed to get user: %s", err)
-		return ErrFailedRevertModeratePendingPost
+		return nil, ErrFailedRevertModeratePendingPost
 	}
 
-	// have to have moderator role
 	if !usr.IsModerator() {
-		return ErrFailedRevertModeratePendingPost
+		return nil, ErrFailedRevertModeratePendingPost
 	}
 
 	// update audit log to revert any infractions and user locks, as well as mark it as reverted
@@ -46,7 +45,7 @@ func (h RevertModeratePendingPostHandler) Handle(ctx context.Context, moderatorI
 
 		infractionId := ""
 
-		// save infraction ID so we can delete it after the revert	
+		// save infraction ID so we can delete it after the revert
 		if log.IsDeniedWithInfraction() {
 			infractionId = log.UserInfraction().ID()
 		}
@@ -56,15 +55,22 @@ func (h RevertModeratePendingPostHandler) Handle(ctx context.Context, moderatorI
 		}
 
 		if infractionId != "" {
+
 			// unlock account - sending "0" unlocks the account
 			if err := h.eva.LockUser(ctx, log.Contributor().ID(), 0); err != nil {
 				return err
 			}
 
 			// delete infraction from user's history
-			if err := h.ir.DeleteUserInfractionHistory(ctx, infractionId); err != nil {
+			if err := h.ir.DeleteUserInfractionHistory(ctx, log.Contributor().ID(), infractionId); err != nil {
 				return err
 			}
+		}
+
+		// tell sting to undo the pending post
+		if err := h.sting.UndoPendingPost(ctx, log.PostId()); err != nil {
+			zap.S().Errorf("failed to publish pending post: %s", err)
+			return err
 		}
 
 		return nil
@@ -72,14 +78,8 @@ func (h RevertModeratePendingPostHandler) Handle(ctx context.Context, moderatorI
 
 	if err != nil {
 		zap.S().Errorf("failed to update audit log: %s", err)
-		return ErrFailedRevertModeratePendingPost
+		return nil, ErrFailedRevertModeratePendingPost
 	}
 
-	// tell sting to undo the pending post
-	if err := h.sting.UndoPendingPost(ctx, auditLog.PostId()); err != nil {
-		zap.S().Errorf("failed to publish pending post: %s", err)
-		return ErrFailedRevertModeratePendingPost
-	}
-
-	return nil
+	return auditLog, nil
 }

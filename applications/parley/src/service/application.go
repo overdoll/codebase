@@ -30,6 +30,23 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 		}
 }
 
+func NewComponentTestApplication(ctx context.Context) (app.Application, func()) {
+
+	if _, err := bootstrap.NewBootstrap(ctx); err != nil {
+		log.Fatalf("bootstrap failed with errors: %s", err)
+	}
+
+	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
+
+	// mock sting, because it performs destructive operations and we dont want to
+	// re-seed data every single time we run this test
+	// also, the endpoints are already tested on sting, so we don't worry about potential failures
+	return createApplication(ctx, adapters.NewEvaGrpc(evaClient), StingServiceMock{}),
+		func() {
+			cleanup()
+		}
+}
+
 func createApplication(ctx context.Context, eva command.EvaService, sting command.StingService) app.Application {
 
 	session, err := bootstrap.InitializeDatabaseSession(viper.GetString("db.keyspace"))
@@ -48,8 +65,8 @@ func createApplication(ctx context.Context, eva command.EvaService, sting comman
 			RevertModeratePost: command.NewRevertModeratePendingPostHandler(infractionRepo, eva, sting),
 		},
 		Queries: app.Queries{
-			PendingPostRejectionReasons: query.NewPendingPostsRejectionReasonsHandler(infractionRepo),
-			PendingPostsAuditLog:        query.NewPendingPostsAuditLogHandler(infractionRepo, eva),
+			PendingPostRejectionReasons:     query.NewPendingPostsRejectionReasonsHandler(infractionRepo),
+			PendingPostsAuditLogByModerator: query.NewPendingPostsAuditLogByModeratorHandler(infractionRepo, eva),
 		},
 	}
 }

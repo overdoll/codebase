@@ -12,6 +12,52 @@ type QueryResolver struct {
 	App *app.Application
 }
 
+func (q QueryResolver) PendingPostAuditLogs(ctx context.Context, filter types.PendingPostAuditLogFilters) (*types.PendingPostAuditLogConnection, error) {
+	pass := passport.FromContext(ctx)
+
+	if !pass.IsAuthenticated() {
+		return nil, passport.ErrNotAuthenticated
+	}
+
+	moderatorId := ""
+
+	if filter.ModeratorID != nil {
+		moderatorId = *filter.ModeratorID
+	}
+
+	contributorId := ""
+
+	if filter.ContributorID != nil {
+		contributorId = *filter.ContributorID
+	}
+
+	postId := ""
+
+	if filter.PostID != nil {
+		postId = *filter.PostID
+	}
+
+	var dateRange []int
+
+	if filter.DateRange != nil {
+		dateRange = filter.DateRange
+	}
+
+	logs, err := q.App.Queries.PendingPostsAuditLogByModerator.Handle(ctx, moderatorId, contributorId, postId, dateRange, pass.UserID())
+
+	if err != nil {
+		return nil, err
+	}
+
+	var auditLogs []*types.PendingPostAuditLogEdge
+
+	for _, log := range logs {
+		auditLogs = append(auditLogs, types.MarshalPendingPostAuditLogToGraphQL(log))
+	}
+
+	return &types.PendingPostAuditLogConnection{Edges: auditLogs}, nil
+}
+
 func (q QueryResolver) RejectionReasons(ctx context.Context) ([]*types.PendingPostRejectionReason, error) {
 
 	pass := passport.FromContext(ctx)
@@ -37,50 +83,4 @@ func (q QueryResolver) RejectionReasons(ctx context.Context) ([]*types.PendingPo
 	}
 
 	return rejectionReasons, nil
-}
-
-func (q QueryResolver) PendingPostAuditLogs(ctx context.Context, data types.PendingPostAuditLogInput) ([]*types.PendingPostAuditLog, error) {
-	pass := passport.FromContext(ctx)
-
-	if !pass.IsAuthenticated() {
-		return nil, passport.ErrNotAuthenticated
-	}
-
-	logs, err := q.App.Queries.PendingPostsAuditLog.Handle(ctx, pass.UserID(), data.ModeratorID)
-
-	if err != nil {
-		return nil, err
-	}
-
-	var auditLogs []*types.PendingPostAuditLog
-
-	for _, log := range logs {
-
-		var infractionId *string
-
-		if log.IsDeniedWithInfraction() {
-			id := log.UserInfraction().ID()
-			infractionId = &id
-		}
-
-		auditLogs = append(auditLogs, &types.PendingPostAuditLog{
-			ID:     log.ID(),
-			PostID: log.PostId(),
-			Contributor: &types.User{
-				ID:       log.Contributor().ID(),
-				Username: log.Contributor().Username(),
-			},
-			Moderator: &types.User{
-				ID:       log.Moderator().ID(),
-				Username: log.Moderator().Username(),
-			},
-			InfractionID: infractionId,
-			Status:       log.Status(),
-			Reason:       log.RejectionReason().Reason(),
-			Notes:        log.Notes(),
-			Reverted:     log.Reverted(),
-		})
-	}
-
-	return auditLogs, nil
 }

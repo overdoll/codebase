@@ -3,6 +3,7 @@ package mutations
 import (
 	"context"
 
+	"github.com/spf13/viper"
 	"go.temporal.io/sdk/client"
 	"overdoll/applications/sting/src/app"
 	"overdoll/applications/sting/src/ports/graphql/types"
@@ -73,7 +74,7 @@ func (r *MutationResolver) Post(ctx context.Context, data *types.PostInput) (*ty
 	}
 
 	options := client.StartWorkflowOptions{
-		TaskQueue: "sting",
+		TaskQueue: viper.GetString("temporal.queue"),
 		ID:        "NewCreatePendingPostWorkflow_" + post.ID(),
 	}
 
@@ -92,6 +93,7 @@ func (r *MutationResolver) Post(ctx context.Context, data *types.PostInput) (*ty
 
 	return &types.PostResponse{
 		Review:     false,
+		ID:         post.ID(),
 		Validation: nil,
 	}, err
 }

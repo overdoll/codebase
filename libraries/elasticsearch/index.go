@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/elastic/go-elasticsearch/v8/esapi"
+	"github.com/elastic/go-elasticsearch/v7/esapi"
 )
 
 // CreateIndex creates a new index with mapping.
@@ -73,6 +73,29 @@ func (s *Store) Delete(index, id string) error {
 	res, err := esapi.DeleteRequest{
 		Index:      index,
 		DocumentID: id,
+	}.Do(s.ctx, s.es)
+
+	if err != nil {
+		return err
+	}
+
+	defer res.Body.Close()
+
+	if res.IsError() {
+		var e map[string]interface{}
+		if err := json.NewDecoder(res.Body).Decode(&e); err != nil {
+			return err
+		}
+		return fmt.Errorf("[%s] %s: %s", res.Status(), e["error"].(map[string]interface{})["type"], e["error"].(map[string]interface{})["reason"])
+	}
+
+	return nil
+}
+
+// Refresh refreshes the specified index
+func (s *Store) Refresh(index string) error {
+	res, err := esapi.IndicesRefreshRequest{
+		Index: []string{index},
 	}.Do(s.ctx, s.es)
 
 	if err != nil {

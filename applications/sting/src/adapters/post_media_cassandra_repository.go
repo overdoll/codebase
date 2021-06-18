@@ -3,7 +3,6 @@ package adapters
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
@@ -47,21 +46,16 @@ func (r PostsCassandraRepository) GetMediasById(ctx context.Context, medi []stri
 
 	var medias []*post.Media
 
-	final := []string{}
-
-	for _, str := range medi {
-		final = append(final, `'`+str+`'`)
-	}
-
 	// if none then we get out or else the query will fail
-	if len(final) == 0 {
+	if len(medi) == 0 {
 		return medias, nil
 	}
 
 	queryMedia := qb.Select("media").
-		Where(qb.InLit("id", "("+strings.Join(final, ",")+")")).
+		Where(qb.In("id")).
 		Query(r.session).
-		Consistency(gocql.One)
+		Consistency(gocql.One).
+		BindStruct(medi)
 
 	var mediaModels []*Media
 

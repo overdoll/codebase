@@ -2,6 +2,10 @@
 
 package types
 
+import (
+	"overdoll/libraries/graphql/relay"
+)
+
 type Artist struct {
 	ID       string `json:"id"`
 	Avatar   string `json:"avatar"`
@@ -45,6 +49,7 @@ type Media struct {
 
 type PendingPost struct {
 	ID                string                  `json:"id"`
+	State             string                  `json:"state"`
 	Moderator         string                  `json:"moderator"`
 	Contributor       *Contributor            `json:"contributor"`
 	Content           []string                `json:"content"`
@@ -54,6 +59,23 @@ type PendingPost struct {
 	CharacterRequests []*CharacterRequestType `json:"characterRequests"`
 	ArtistID          *string                 `json:"artistId"`
 	ArtistUsername    string                  `json:"artistUsername"`
+}
+
+type PendingPostConnection struct {
+	Edges    []*PendingPostEdge `json:"edges"`
+	PageInfo *relay.PageInfo    `json:"pageInfo"`
+}
+
+type PendingPostEdge struct {
+	Cursor string       `json:"cursor"`
+	Node   *PendingPost `json:"node"`
+}
+
+type PendingPostFilters struct {
+	ModeratorID   *string `json:"moderatorId"`
+	ContributorID *string `json:"contributorId"`
+	ArtistID      *string `json:"artistId"`
+	ID            *string `json:"id"`
 }
 
 type PostInput struct {
@@ -67,6 +89,7 @@ type PostInput struct {
 }
 
 type PostResponse struct {
+	ID         string      `json:"id"`
 	Review     bool        `json:"review"`
 	Validation *Validation `json:"validation"`
 }
@@ -79,12 +102,13 @@ type SearchInput struct {
 	Search string `json:"search"`
 }
 
+type User struct {
+	ID           string         `json:"id"`
+	PendingPosts []*PendingPost `json:"pendingPosts"`
+}
+
+func (User) IsEntity() {}
+
 type Validation struct {
 	Code string `json:"code"`
 }
-
-type Workaround2 struct {
-	ID *int `json:"id"`
-}
-
-func (Workaround2) IsEntity() {}

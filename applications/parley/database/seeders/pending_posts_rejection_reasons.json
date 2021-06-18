@@ -2,11 +2,13 @@
   {
     "id": "1q7MJ3JkhcdcJJNqZezdfQt5pZ6",
     "reason": "Reason with infraction",
-    "infraction": true
+    "infraction": true,
+    "bucket": 0
   },
   {
     "id": "1q7MJ5IyRTV0X4J27F3m5wGD5mj",
     "reason": "Reason with no infraction",
-    "infraction": false
+    "infraction": false,
+    "bucket": 0
   }
 ]

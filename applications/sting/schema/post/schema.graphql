@@ -1,0 +1,66 @@
+type PendingPost {
+  id: String!
+  state: String!
+  moderator: String!
+  contributor: Contributor!
+  content: [String!]!
+  categories: [Category!]!
+  characters: [Character!]!
+  mediaRequests: [String!]
+  characterRequests: [CharacterRequestType!]
+  artistId: String
+  artistUsername: String!
+}
+
+type Contributor {
+  id: String!
+  username: String!
+  avatar: String!
+}
+
+type PendingPostEdge {
+  cursor: String!
+  node: PendingPost!
+}
+
+type PendingPostConnection {
+  edges: [PendingPostEdge!]!
+  pageInfo: PageInfo!
+}
+
+input PostInput {
+  content: [String!]!
+  categories: [String!]!
+  characters: [String!]!
+  mediaRequests: [String!]
+  characterRequests: [CharacterRequest!]
+  artistId: String
+  artistUsername: String!
+}
+
+type PostResponse {
+  id: String!
+  review: Boolean!
+  validation: Validation
+}
+
+type PostUpdateResponse {
+  validation: Validation
+}
+
+input PendingPostFilters {
+  moderatorId: String
+  contributorId: String
+  artistId: String
+  id: String
+}
+
+extend type Query {
+  pendingPosts(input: ConnectionInput!, filter: PendingPostFilters!): PendingPostConnection!
+  pendingPost(id: String!): PendingPost!
+}
+
+extend type Mutation {
+  post(data: PostInput): PostResponse!
+  updatePost(id: String!, data: PostInput): PostUpdateResponse!
+}

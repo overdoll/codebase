@@ -16,23 +16,16 @@ func NewIndexAllCategoriesHandler(pr post.Repository, pi post.IndexRepository) I
 }
 
 func (h IndexAllCategoriesHandler) Handle(ctx context.Context) error {
-	err := h.pi.DeleteCategoryIndex(ctx)
 
-	if err != nil {
-
+	if err := h.pi.DeleteCategoryIndex(ctx); err != nil {
+		return err
 	}
 
 	categories, err := h.pr.GetCategories(ctx)
 
 	if err != nil {
-
+		return err
 	}
 
-	err = h.pi.BulkIndexCategories(ctx, categories)
-
-	if err != nil {
-
-	}
-
-	return nil
+	return h.pi.BulkIndexCategories(ctx, categories)
 }

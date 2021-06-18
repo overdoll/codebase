@@ -147,7 +147,7 @@ async function request (apollo, req, res) {
     emotionIds: ids.join(' '),
     emotionCss: css,
     html,
-    csrfToken: req.csrfToken(),
+    csrfToken: req.csrfToken ? req.csrfToken() : null,
     relayStore: serialize(
       environment
         .getStore()

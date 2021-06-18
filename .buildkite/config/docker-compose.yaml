@@ -1,5 +1,22 @@
 version: '3.9'
 services:
+  minio:
+    image: minio/minio:RELEASE.2021-06-07T21-40-51Z
+    entrypoint: sh
+    command: -c '/usr/bin/minio server /export'
+    ports:
+      - "9000:9000"
+    environment:
+      - MINIO_ACCESS_KEY=overdollroot
+      - MINIO_SECRET_KEY=overdollpassword
+      - MINIO_ROOT_USER=overdoll123
+      - MINIO_ROOT_PASSWORD=overdoll123
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
   temporal:
     depends_on:
       - scylla

@@ -5,6 +5,7 @@ import (
 	"os"
 	"time"
 
+	"overdoll/libraries/paging"
 	"overdoll/libraries/user"
 	"overdoll/libraries/uuid"
 )
@@ -15,14 +16,18 @@ const (
 	Publishing PostPendingState = "publishing"
 	Review     PostPendingState = "review"
 	Published  PostPendingState = "published"
+	Discarding PostPendingState = "discarding"
 	Discarded  PostPendingState = "discarded"
 	Rejected   PostPendingState = "rejected"
+	Processing PostPendingState = "processing"
 )
 
 var (
-	ErrNotPublishing = errors.New("post must be publishing")
-	ErrNotComplete   = errors.New("post is incomplete")
-	ErrInvalidId     = errors.New("passed id is not a valid ID")
+	ErrNotPublishing    = errors.New("post must be publishing")
+	ErrNotReview        = errors.New("post must be in review")
+	ErrNotComplete      = errors.New("post is incomplete")
+	ErrInvalidId        = errors.New("passed id is not a valid ID")
+	ErrAlreadyModerated = errors.New("already moderated")
 )
 
 // Each request type contains space for an "ID" - we pre-generate IDs and pass them in between events to ensure idempotency
@@ -42,7 +47,49 @@ type MediaRequest struct {
 	Title string
 }
 
-type PostPending struct {
+type PendingPostFilters struct {
+	moderatorId   string
+	contributorId string
+	artistId      string
+	id            string
+}
+
+func NewPendingPostFilters(moderatorId, contributorId, artistId, id string) (*PendingPostFilters, error) {
+	return &PendingPostFilters{
+		moderatorId:   moderatorId,
+		contributorId: contributorId,
+		artistId:      artistId,
+		id:            id,
+	}, nil
+}
+
+func (e *PendingPostFilters) ID() string {
+	return e.id
+}
+
+func (e *PendingPostFilters) ModeratorId() string {
+	return e.moderatorId
+}
+
+func (e *PendingPostFilters) ContributorId() string {
+	return e.contributorId
+}
+
+func (e *PendingPostFilters) ArtistId() string {
+	return e.artistId
+}
+
+type PendingPostConnection struct {
+	Edges    []*PendingPostEdge
+	PageInfo *paging.PageInfo
+}
+
+type PendingPostEdge struct {
+	Cursor string
+	Node   *PendingPost
+}
+
+type PendingPost struct {
 	id          string
 	moderatorId string
 	state       PostPendingState
@@ -62,8 +109,8 @@ type PostPending struct {
 	generatedIds       []string
 }
 
-func NewPendingPost(id, moderatorId string, artist *Artist, contributor *user.User, content []string, characters []*Character, categories []*Category, postedAt time.Time) (*PostPending, error) {
-	return &PostPending{
+func NewPendingPost(id, moderatorId string, artist *Artist, contributor *user.User, content []string, characters []*Character, categories []*Category, postedAt time.Time) (*PendingPost, error) {
+	return &PendingPost{
 		id:          id,
 		moderatorId: moderatorId,
 		state:       Publishing,
@@ -76,9 +123,9 @@ func NewPendingPost(id, moderatorId string, artist *Artist, contributor *user.Us
 	}, nil
 }
 
-func UnmarshalPendingPostFromDatabase(id, moderatorId, state string, artist *Artist, contributorId, contributorUsername, contributorAvatar string, content []string, characters []*Character, categories []*Category, charactersRequests map[string]string, categoryRequests, mediaRequests []string, postedAt time.Time) *PostPending {
+func UnmarshalPendingPostFromDatabase(id, moderatorId, state string, artist *Artist, contributorId, contributorUsername, contributorAvatar string, content []string, characters []*Character, categories []*Category, charactersRequests map[string]string, categoryRequests, mediaRequests []string, postedAt time.Time) *PendingPost {
 
-	postPending := &PostPending{
+	postPending := &PendingPost{
 		id:          id,
 		moderatorId: moderatorId,
 		state:       PostPendingState(state),
@@ -95,37 +142,37 @@ func UnmarshalPendingPostFromDatabase(id, moderatorId, state string, artist *Art
 	return postPending
 }
 
-func (p *PostPending) ID() string {
+func (p *PendingPost) ID() string {
 	return p.id
 }
 
-func (p *PostPending) ModeratorId() string {
+func (p *PendingPost) ModeratorId() string {
 	return p.moderatorId
 }
 
-func (p *PostPending) State() PostPendingState {
+func (p *PendingPost) State() PostPendingState {
 	return p.state
 }
 
-func (p *PostPending) Artist() *Artist {
+func (p *PendingPost) Artist() *Artist {
 	return p.artist
 }
 
-func (p *PostPending) Contributor() *user.User {
+func (p *PendingPost) Contributor() *user.User {
 	return p.contributor
 }
 
-func (p *PostPending) RawContent() []string {
+func (p *PendingPost) RawContent() []string {
 	return p.content
 }
 
-func (p *PostPending) Content() []string {
+func (p *PendingPost) Content() []string {
 
 	var generatedContent []string
 
 	for _, image := range p.content {
 
-		baseUrl := os.Getenv("UPLOADS_URL")
+		baseUrl := os.Getenv("STATIC_URL") + "/" + "pending_posts"
 
 		if p.state == Published {
 			baseUrl = os.Getenv("POSTS_URL")
@@ -138,29 +185,40 @@ func (p *PostPending) Content() []string {
 	return generatedContent
 }
 
-func (p *PostPending) UpdateCategories(categories []*Category) error {
+func (p *PendingPost) UpdateCategories(categories []*Category) error {
 	p.categories = categories
 	return nil
 }
 
-func (p *PostPending) UpdateCharacters(characters []*Character) error {
+func (p *PendingPost) UpdateCharacters(characters []*Character) error {
 	p.characters = characters
 	return nil
 }
 
-func (p *PostPending) UpdateArtist(artist *Artist) {
+func (p *PendingPost) UpdateArtist(artist *Artist) {
 	p.artist = artist
 }
 
-func (p *PostPending) UpdateContributor(contributor *user.User) {
+func (p *PendingPost) UpdateModerator(moderatorId string) error {
+
+	if p.state != Review {
+		return ErrAlreadyModerated
+	}
+
+	p.moderatorId = moderatorId
+
+	return nil
+}
+
+func (p *PendingPost) UpdateContributor(contributor *user.User) {
 	p.contributor = contributor
 }
 
-func (p *PostPending) Categories() []*Category {
+func (p *PendingPost) Categories() []*Category {
 	return p.categories
 }
 
-func (p *PostPending) CategoryIds() []string {
+func (p *PendingPost) CategoryIds() []string {
 
 	var ids []string
 
@@ -171,7 +229,7 @@ func (p *PostPending) CategoryIds() []string {
 	return ids
 }
 
-func (p *PostPending) CharacterIds() []string {
+func (p *PendingPost) CharacterIds() []string {
 
 	var ids []string
 
@@ -182,15 +240,15 @@ func (p *PostPending) CharacterIds() []string {
 	return ids
 }
 
-func (p *PostPending) Characters() []*Character {
+func (p *PendingPost) Characters() []*Character {
 	return p.characters
 }
 
-func (p *PostPending) PostedAt() time.Time {
+func (p *PendingPost) PostedAt() time.Time {
 	return p.postedAt
 }
 
-func (p *PostPending) MakePublish() error {
+func (p *PendingPost) MakePublish() error {
 
 	// State of the post needs to be "publishing" before "published"
 	if p.state != Publishing {
@@ -202,76 +260,97 @@ func (p *PostPending) MakePublish() error {
 	return nil
 }
 
-func (p *PostPending) MakeDiscarded() error {
+func (p *PendingPost) MakeDiscarding() error {
 
-	// State of the post needs to be "publishing" before "published"
-	if p.state != Publishing {
-		return ErrNotPublishing
+	if p.state != Review {
+		return ErrNotReview
 	}
 
-	p.state = Discarded
+	p.state = Discarding
 
 	return nil
 }
 
-func (p *PostPending) MakeRejected() error {
+func (p *PendingPost) MakeDiscarded() error {
+
+	if p.state != Discarding {
+		return ErrNotReview
+	}
+
+	p.state = Discarded
+
+	p.categoriesRequests = []CategoryRequest{}
+	p.charactersRequests = []CharacterRequest{}
+	p.mediaRequests = []MediaRequest{}
+	p.content = []string{}
+
+	return nil
+}
+
+func (p *PendingPost) MakeRejected() error {
 
 	p.state = Rejected
 
 	return nil
 }
 
-func (p *PostPending) MakeUndo() error {
-	if p.state != Discarded && p.state != Published {
+func (p *PendingPost) MakeUndo() error {
+	if p.state == Discarded || p.state == Published {
 		return ErrNotComplete
 	}
 
 	return nil
 }
 
-func (p *PostPending) MakePublishing() {
+func (p *PendingPost) MakePublishing() {
 	p.state = Publishing
 }
 
-func (p *PostPending) MakePublicOrReview() error {
+func (p *PendingPost) MakeProcessing() error {
 
-	//if !p.contributor.IsVerified() {
-	//	p.state = Review
-	//}
+	p.state = Processing
 
+	return nil
+}
+
+func (p *PendingPost) InReview() bool {
+	return p.state == Review
+}
+
+func (p *PendingPost) IsPublished() bool {
+	return p.state == Published
+}
+
+func (p *PendingPost) IsDiscarded() bool {
+	return p.state == Discarded
+}
+
+func (p *PendingPost) UpdateContent(content []string) {
+	p.content = content
+}
+
+func (p *PendingPost) CharacterRequests() []CharacterRequest {
+	return p.charactersRequests
+}
+
+func (p *PendingPost) CategoryRequests() []CategoryRequest {
+	return p.categoriesRequests
+}
+
+func (p *PendingPost) MediaRequests() []MediaRequest {
+	return p.mediaRequests
+}
+
+func (p *PendingPost) MakeReview() error {
 	p.state = Review
 
 	return nil
 }
 
-func (p *PostPending) InReview() bool {
-	return p.state == Review
-}
-
-func (p *PostPending) IsPublished() bool {
-	return p.state == Published
-}
-
-func (p *PostPending) UpdateContent(content []string) {
-	p.content = content
-}
-
-func (p *PostPending) CharacterRequests() []CharacterRequest {
-	return p.charactersRequests
-}
-
-func (p *PostPending) CategoryRequests() []CategoryRequest {
-	return p.categoriesRequests
-}
-
-func (p *PostPending) MediaRequests() []MediaRequest {
-	return p.mediaRequests
-}
-
 // When requesting a new character, you must select a media or request a new media as well
 // This function helps to match against mediaRequests and tell you which of the medias already exist in our database
 // so we can pass it to ConsumeCustomResources
-func (p *PostPending) GetExistingMediaIds() []string {
+func (p *PendingPost) GetExistingMediaIds() []string {
 
 	var medias []string
 
@@ -296,46 +375,24 @@ func (p *PostPending) GetExistingMediaIds() []string {
 	return medias
 }
 
-// UseCustomIdsForCustomResources - pass an array of IDs, and all custom resources will be modified to use them.
-// good for ensuring idempotency
-func (p *PostPending) UseCustomIdsForCustomResources(ids []string) {
-
-	var x string
-
-	for _, char := range p.charactersRequests {
-		x, ids = ids[0], ids[1:]
-		char.Id = x
-	}
-
-	for _, cat := range p.categoriesRequests {
-		x, ids = ids[0], ids[1:]
-		cat.Id = x
-	}
-
-	for _, med := range p.mediaRequests {
-		x, ids = ids[0], ids[1:]
-		med.Id = x
-	}
-}
-
 // ConsumeCustomResources - pass existingMedia so it can use that as arguments.
-func (p *PostPending) ConsumeCustomResources(existingMedia []*Media) ([]*Category, []*Character, []*Media) {
+func (p *PendingPost) ConsumeCustomResources(existingMedia []*Media) ([]*Category, []*Character, []*Media) {
 
 	var characters []*Character
 	var medias []*Media
 
 	for _, char := range p.charactersRequests {
 
-		var exists = true
+		var exists = false
 		var newMedia *Media
 
 		// Check if the requested media is a media in our list
 		for _, requestedMedia := range p.mediaRequests {
-
 			// If the media is on our list, then we create a new media, and append to array of events
 			if char.Media == requestedMedia.Title {
-				NewMedia(char.Id, char.Media)
-				exists = false
+				newMedia = NewMedia(char.Id, requestedMedia.Title)
+				medias = append(medias, newMedia)
+				exists = true
 				break
 			}
 		}
@@ -346,7 +403,6 @@ func (p *PostPending) ConsumeCustomResources(existingMedia []*Media) ([]*Categor
 				if media.ID() == char.Media {
 					// media exists in DB
 					newMedia = media
-					medias = append(medias, media)
 					break
 				}
 			}
@@ -369,11 +425,15 @@ func (p *PostPending) ConsumeCustomResources(existingMedia []*Media) ([]*Categor
 		categories = append(categories, newCategory)
 	}
 
+	p.categoriesRequests = []CategoryRequest{}
+	p.charactersRequests = []CharacterRequest{}
+	p.mediaRequests = []MediaRequest{}
+
 	return categories, characters, medias
 }
 
 // RequestResources will pre-generate IDs for each request type
-func (p *PostPending) RequestResources(characters map[string]string, categories, medias []string) {
+func (p *PendingPost) RequestResources(characters map[string]string, categories, medias []string) {
 	for char, med := range characters {
 		p.charactersRequests = append(p.charactersRequests, CharacterRequest{Id: uuid.New().String(), Name: char, Media: med})
 	}

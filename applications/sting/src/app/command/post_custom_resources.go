@@ -15,9 +15,11 @@ func NewPostCustomResourcesHandler(pr post.Repository, pi post.IndexRepository) 
 	return PostCustomResourcesHandler{pr: pr, pi: pi}
 }
 
-func (h PostCustomResourcesHandler) Handle(ctx context.Context, id string, ids []string) error {
+func (h PostCustomResourcesHandler) Handle(ctx context.Context, id string) error {
 
-	_, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PostPending) error {
+	_, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PendingPost) error {
+		// put into "publishing"
+		pending.MakePublishing()
 
 		// Consume custom categories, characters, medias
 		existingMedias, err := h.pr.GetMediasById(ctx, pending.GetExistingMediaIds())
@@ -38,11 +40,7 @@ func (h PostCustomResourcesHandler) Handle(ctx context.Context, id string, ids [
 		}
 
 		// Create Media (from database)
-		if err := h.pr.CreateMedias(ctx, medias); err != nil {
-			return err
-		}
-
-		return nil
+		return h.pr.CreateMedias(ctx, medias)
 	})
 
 	if err != nil {

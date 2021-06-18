@@ -20,7 +20,12 @@ func NewNewPostHandler(pr post.Repository, pi post.IndexRepository, cr content.R
 
 func (h NewPostHandler) Handle(ctx context.Context, id string) error {
 
-	pendingPost, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PostPending) error {
+	pendingPost, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PendingPost) error {
+
+		// make post in review
+		if err := pending.MakeReview(); err != nil {
+			return err
+		}
 
 		// Process content (mime-type checks, etc...)
 		cnt, err := h.cr.ProcessContent(ctx, pending.Contributor().ID(), pending.Content())

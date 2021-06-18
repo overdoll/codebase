@@ -4,6 +4,7 @@ export default {
       'default-src': ['\'self\''],
       'script-src': [
         '\'self\'',
+        'https://cdn.jsdelivr.net/npm/@apollographql/',
         process.env.NODE_ENV === 'production'
           ? (req, res) => `'nonce-${res.locals.cspNonce}'`
           : '\'unsafe-inline\'',
@@ -12,6 +13,7 @@ export default {
       ],
       'style-src': [
         '\'self\'',
+        'https://cdn.jsdelivr.net/npm/@apollographql/',
         'https://fonts.googleapis.com',
         process.env.NODE_ENV === 'production'
           ? (req, res) => `'nonce-${res.locals.cspNonce}'`

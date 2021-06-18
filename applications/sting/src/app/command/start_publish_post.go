@@ -18,30 +18,33 @@ func NewStartPublishPostHandler(pr post.Repository, pi post.IndexRepository, eva
 
 func (h StartPublishPostHandler) Handle(ctx context.Context, id string) error {
 
-	_, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PostPending) error {
+	pendingPost, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PendingPost) error {
 
-		// create a new user for this artist
-		usr, err := h.eva.CreateUser(ctx, pending.Artist().Username(), "")
+		// if no artist assigned, create it
+		if pending.Artist().ID() == "" {
+			// create a new user for this artist
+			usr, err := h.eva.CreateUser(ctx, pending.Artist().Username(), "")
 
-		if err != nil {
-			return err
-		}
+			if err != nil {
+				return err
+			}
 
-		// add to artist record
-		if err := h.pr.CreateArtist(ctx, post.NewArtist(usr.ID(), usr.Username())); err != nil {
-			return err
+			// add to artist record
+			if err := h.pr.CreateArtist(ctx, post.NewArtist(usr.ID(), usr.Username())); err != nil {
+				return err
+			}
+
+			pending.UpdateArtist(post.NewArtist(usr.ID(), usr.Username()))
 		}
 
 		pending.MakePublishing()
-
-		pending.UpdateArtist(post.NewArtist(usr.ID(), usr.Username()))
 
 		return nil
 	})
 
 	if err != nil {
-		return err
+		return nil
 	}
 
-	return nil
+	return h.pi.IndexPendingPost(ctx, pendingPost)
 }
