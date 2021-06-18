@@ -528,6 +528,11 @@ input PendingPostAuditLogFilters {
 }
 
 extend type Query {
+  """
+  Get pending post for the currently-logged in user
+
+  Filters are available, but the moderatorId filter will only work if you are at least a staff role
+  """
   pendingPostAuditLogs(filter: PendingPostAuditLogFilters!): PendingPostAuditLogConnection!
 }`, BuiltIn: false},
 	{Name: "schema/federation/schema.graphql", Input: `extend type User @key(fields: "id") {
@@ -551,7 +556,19 @@ type ModeratePost {
 }
 
 extend type Mutation {
+  """
+  Moderate a specific pending post
+  Pending post must belong to the moderator
+
+  If rejecting, must input a rejection reason and additional notes
+  """
   moderatePost(data: ModeratePostInput!): ModeratePost!
+
+  """
+  Revert an audit log, in case it was done incorrectly
+
+  Will delete an infraction if there was one, but the rest of the audit log will generally stay intact
+  """
   revertPendingPostAuditLog(data: RevertPostInput!): ModeratePost!
 }
 `, BuiltIn: false},
@@ -571,6 +588,10 @@ type PendingPostRejectionReason {
 }
 
 type Query {
+  """
+  Get rejection reasons. Only available to moderators + staff
+  Used as the input for rejecting a pending post
+  """
   rejectionReasons: [PendingPostRejectionReason!]!
 }
 `, BuiltIn: false},

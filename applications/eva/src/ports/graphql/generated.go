@@ -354,7 +354,6 @@ input AuthenticationInput {
   email: String!
 }
 
-
 type Authentication {
   cookie: Cookie
   user: User
