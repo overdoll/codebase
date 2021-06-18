@@ -7,12 +7,9 @@ type Cookie {
   invalid: Boolean!
 }
 
-type User @key(fields: "id") {
-  id: String!
-  username: String!
-}
-
-type Authentication {
-  cookie: Cookie
-  user: User
+extend type Query {
+  """
+  Query for redeeming the cookie - when user receives the cookie from
+  """
+  redeemCookie(cookie: String!): Cookie!
 }

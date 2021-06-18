@@ -92,14 +92,14 @@ type EntityResolver interface {
 	FindUserByID(ctx context.Context, id string) (*types.User, error)
 }
 type MutationResolver interface {
-	Authenticate(ctx context.Context, data *types.AuthenticationInput) (bool, error)
-	Register(ctx context.Context, data *types.RegisterInput) (bool, error)
 	Logout(ctx context.Context) (bool, error)
 	AuthEmail(ctx context.Context) (bool, error)
+	Authenticate(ctx context.Context, data *types.AuthenticationInput) (bool, error)
+	Register(ctx context.Context, data *types.RegisterInput) (bool, error)
 }
 type QueryResolver interface {
-	RedeemCookie(ctx context.Context, cookie string) (*types.Cookie, error)
 	Authentication(ctx context.Context) (*types.Authentication, error)
+	RedeemCookie(ctx context.Context, cookie string) (*types.Cookie, error)
 }
 
 type executableSchema struct {
@@ -346,26 +346,44 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
-	{Name: "schema/inputs.graphql", Input: `input RegisterInput {
+	{Name: "schema/authenticate/schema.graphql", Input: `input RegisterInput {
   username: String!
 }
 
 input AuthenticationInput {
   email: String!
-}`, BuiltIn: false},
-	{Name: "schema/mutations.graphql", Input: `type Mutation {
-  authenticate(data: AuthenticationInput): Boolean!
-  register(data: RegisterInput): Boolean!
-  logout: Boolean!
-  authEmail: Boolean!
 }
-`, BuiltIn: false},
-	{Name: "schema/queries.graphql", Input: `type Query {
-  redeemCookie(cookie: String!): Cookie!
+
+
+type Authentication {
+  cookie: Cookie
+  user: User
+}
+
+extend type Mutation {
+  """
+  Initiates an authentication flow for the specified user
+  """
+  authenticate(data: AuthenticationInput): Boolean!
+
+  """
+  Registration for the user. Will only work once authenticate is initiated
+  and the cookie is still valid when redeemed (5 minutes)
+  """
+  register(data: RegisterInput): Boolean!
+}
+
+extend type Query {
+  """
+  A query that will allow you to get information about the currently logged-in user
+  or the current state of authentication (cookie)
+
+  Good for persisting state on refresh and authorizing users
+  """
   authentication: Authentication
 }
 `, BuiltIn: false},
-	{Name: "schema/types.graphql", Input: `type Cookie {
+	{Name: "schema/cookie/schema.graphql", Input: `type Cookie {
   sameSession: Boolean!
   registered: Boolean!
   redeemed: Boolean!
@@ -374,14 +392,21 @@ input AuthenticationInput {
   invalid: Boolean!
 }
 
-type User @key(fields: "id") {
+extend type Query {
+  """
+  Query for redeeming the cookie - when user receives the cookie from
+  """
+  redeemCookie(cookie: String!): Cookie!
+}
+`, BuiltIn: false},
+	{Name: "schema/schema.graphql", Input: `type Mutation {
+  logout: Boolean!
+  authEmail: Boolean!
+}
+`, BuiltIn: false},
+	{Name: "schema/user/schema.graphql", Input: `type User @key(fields: "id") {
   id: String!
   username: String!
-}
-
-type Authentication {
-  cookie: Cookie
-  user: User
 }`, BuiltIn: false},
 	{Name: "federation/directives.graphql", Input: `
 scalar _Any
@@ -863,6 +888,76 @@ func (ec *executionContext) _Entity_findUserByID(ctx context.Context, field grap
 	return ec.marshalNUser2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐUser(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_logout(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().Logout(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_authEmail(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().AuthEmail(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Mutation_authenticate(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -947,7 +1042,7 @@ func (ec *executionContext) _Mutation_register(ctx context.Context, field graphq
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Mutation_logout(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Query_authentication(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -955,7 +1050,7 @@ func (ec *executionContext) _Mutation_logout(ctx context.Context, field graphql.
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "Mutation",
+		Object:     "Query",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   true,
@@ -965,56 +1060,18 @@ func (ec *executionContext) _Mutation_logout(ctx context.Context, field graphql.
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().Logout(rctx)
+		return ec.resolvers.Query().Authentication(rctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(bool)
+	res := resTmp.(*types.Authentication)
 	fc.Result = res
-	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Mutation_authEmail(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().AuthEmail(rctx)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(bool)
-	fc.Result = res
-	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+	return ec.marshalOAuthentication2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAuthentication(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_redeemCookie(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1057,38 +1114,6 @@ func (ec *executionContext) _Query_redeemCookie(ctx context.Context, field graph
 	res := resTmp.(*types.Cookie)
 	fc.Result = res
 	return ec.marshalNCookie2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐCookie(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Query_authentication(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Query",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Authentication(rctx)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.Authentication)
-	fc.Result = res
-	return ec.marshalOAuthentication2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAuthentication(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query__entities(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2625,16 +2650,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Mutation")
-		case "authenticate":
-			out.Values[i] = ec._Mutation_authenticate(ctx, field)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "register":
-			out.Values[i] = ec._Mutation_register(ctx, field)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "logout":
 			out.Values[i] = ec._Mutation_logout(ctx, field)
 			if out.Values[i] == graphql.Null {
@@ -2642,6 +2657,16 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			}
 		case "authEmail":
 			out.Values[i] = ec._Mutation_authEmail(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "authenticate":
+			out.Values[i] = ec._Mutation_authenticate(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "register":
+			out.Values[i] = ec._Mutation_register(ctx, field)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -2671,6 +2696,17 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Query")
+		case "authentication":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_authentication(ctx, field)
+				return res
+			})
 		case "redeemCookie":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -2683,17 +2719,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
-				return res
-			})
-		case "authentication":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Query_authentication(ctx, field)
 				return res
 			})
 		case "_entities":
