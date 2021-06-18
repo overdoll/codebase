@@ -50,8 +50,8 @@ func main() {
 
 func Run(cmd *cobra.Command, args []string) {
 	go RunHttp(cmd, args)
-	go RunGrpc(cmd, args)
-	RunWorker(cmd, args)
+	go RunWorker(cmd, args)
+	RunGrpc(cmd, args)
 }
 
 func RunWorker(cmd *cobra.Command, args []string) {
