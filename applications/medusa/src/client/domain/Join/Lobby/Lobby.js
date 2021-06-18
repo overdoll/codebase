@@ -112,7 +112,7 @@ export default function Lobby (props: Props): Node {
           mr='auto'
           mb={8}
         />
-        <Heading mb={8} align='center' size='lg' color='gray.00'>
+        <Heading mb={8} align='center' size='md' color='gray.00'>
           {t('lobby.header')}
         </Heading>
         <Box mb={8} pt={3} pb={3} borderRadius={5} bg='gray.800' w='100%'>

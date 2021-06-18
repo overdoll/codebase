@@ -72,7 +72,7 @@ export default function Gallery ({ files, urls, thumbnails, setSwiper }: Props):
     <>
       {!swiper
         ? <Skeleton h='600px' />
-        : <Flex align='center' position='relative'>
+        : <Box align='center' position='relative'>
           <Swiper
             ref={swiper}
             centeredSlides
@@ -163,6 +163,7 @@ export default function Gallery ({ files, urls, thumbnails, setSwiper }: Props):
             userSelect='none' left={0} icon={ArrowButtonLeft2}
             cursor='pointer'
             fill='dimmers.300'
+            top='40%'
           />
           <Icon
             display={(gallerySwiper?.activeIndex + 1) === files.length ? 'none' : 'flex'}
@@ -171,8 +172,9 @@ export default function Gallery ({ files, urls, thumbnails, setSwiper }: Props):
             userSelect='none' right={0} icon={ArrowButtonRight2}
             cursor='pointer'
             fill='dimmers.300'
+            top='40%'
           />
-        </Flex>}
+        </Box>}
       <InspectModal
         isOpen={isOpen} onClose={onClose}
         supplement={<IconButton
