@@ -22,5 +22,6 @@ func (e EntityResolver) FindUserByID(ctx context.Context, id string) (*types.Use
 	return &types.User{
 		ID:       usr.ID(),
 		Username: usr.Username(),
+		Roles:    usr.UserRolesAsString(),
 	}, nil
 }
