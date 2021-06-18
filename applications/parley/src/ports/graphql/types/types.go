@@ -46,10 +46,6 @@ type PendingPostAuditLogFilters struct {
 	DateRange     []int   `json:"dateRange"`
 }
 
-type PendingPostAuditLogInput struct {
-	ModeratorID string `json:"moderatorId"`
-}
-
 type PendingPostRejectionReason struct {
 	ID         string `json:"id"`
 	Reason     string `json:"reason"`

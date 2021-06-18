@@ -32,5 +32,10 @@ input PendingPostAuditLogFilters {
 }
 
 extend type Query {
+  """
+  Get pending post for the currently-logged in user
+
+  Filters are available, but the moderatorId filter will only work if you are at least a staff role
+  """
   pendingPostAuditLogs(filter: PendingPostAuditLogFilters!): PendingPostAuditLogConnection!
 }

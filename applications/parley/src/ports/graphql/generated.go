@@ -535,34 +535,27 @@ extend type Query {
   infractionHistory: [UsersInfractionHistory!]
 }
 `, BuiltIn: false},
-	{Name: "schema/inputs.graphql", Input: `input ModeratePostInput {
+	{Name: "schema/moderate/schema.graphql", Input: `input ModeratePostInput {
   pendingPostId: String!
   rejectionReasonId: String
   notes: String!
 }
 
-input PendingPostAuditLogInput {
-  moderatorId: String!
-}
-
 input RevertPostInput {
   auditLogId: String!
-}`, BuiltIn: false},
-	{Name: "schema/mutations.graphql", Input: `type Mutation {
-  moderatePost(data: ModeratePostInput!): ModeratePost!
-  revertPendingPostAuditLog(data: RevertPostInput!): ModeratePost!
 }
-`, BuiltIn: false},
-	{Name: "schema/queries.graphql", Input: `type Query {
-  rejectionReasons: [PendingPostRejectionReason!]!
-}
-`, BuiltIn: false},
-	{Name: "schema/types.graphql", Input: `type ModeratePost {
+
+type ModeratePost {
   auditLog: PendingPostAuditLog
   validation: Validation
 }
 
-type UsersInfractionHistory {
+extend type Mutation {
+  moderatePost(data: ModeratePostInput!): ModeratePost!
+  revertPendingPostAuditLog(data: RevertPostInput!): ModeratePost!
+}
+`, BuiltIn: false},
+	{Name: "schema/schema.graphql", Input: `type UsersInfractionHistory {
   id: String!
   reason: String!
 }
@@ -575,6 +568,10 @@ type PendingPostRejectionReason {
   id: String!
   reason: String!
   infraction: Boolean!
+}
+
+type Query {
+  rejectionReasons: [PendingPostRejectionReason!]!
 }
 `, BuiltIn: false},
 	{Name: "../../libraries/graphql/relay/schema.graphql", Input: `# Information about pagination in a connection.
@@ -3316,26 +3313,6 @@ func (ec *executionContext) unmarshalInputPendingPostAuditLogFilters(ctx context
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("dateRange"))
 			it.DateRange, err = ec.unmarshalOInt2ᚕintᚄ(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputPendingPostAuditLogInput(ctx context.Context, obj interface{}) (types.PendingPostAuditLogInput, error) {
-	var it types.PendingPostAuditLogInput
-	var asMap = obj.(map[string]interface{})
-
-	for k, v := range asMap {
-		switch k {
-		case "moderatorId":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("moderatorId"))
-			it.ModeratorID, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}

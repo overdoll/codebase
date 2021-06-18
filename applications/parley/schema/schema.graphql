@@ -1,8 +1,3 @@
-type ModeratePost {
-  auditLog: PendingPostAuditLog
-  validation: Validation
-}
-
 type UsersInfractionHistory {
   id: String!
   reason: String!
@@ -16,4 +11,12 @@ type PendingPostRejectionReason {
   id: String!
   reason: String!
   infraction: Boolean!
+}
+
+type Query {
+  """
+  Get rejection reasons. Only available to moderators + staff
+  Used as the input for rejecting a pending post
+  """
+  rejectionReasons: [PendingPostRejectionReason!]!
 }
