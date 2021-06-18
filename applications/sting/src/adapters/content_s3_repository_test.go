@@ -2,6 +2,7 @@ package adapters_test
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 	"path"
@@ -103,7 +104,7 @@ func seedBuckets() bool {
 	session, err := storage.CreateAWSSession()
 
 	if err != nil {
-		log.Println(err)
+		fmt.Println(err)
 		return false
 	}
 
@@ -119,6 +120,7 @@ func seedBuckets() bool {
 			case s3.ErrCodeBucketAlreadyOwnedByYou:
 				log.Println("already exists")
 			default:
+				fmt.Println(err)
 				return false
 			}
 		}
