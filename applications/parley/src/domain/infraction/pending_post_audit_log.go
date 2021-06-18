@@ -201,7 +201,7 @@ func (m *PendingPostAuditLog) Revert() error {
 	// remove infraction (else we have bad ids)
 	m.userInfraction = nil
 	m.reverted = true
-	m.rejectionReason  = UnmarshalPendingPostRejectionReasonFromDatabase(m.rejectionReason.ID(), m.rejectionReason.Reason(), false)
+	m.rejectionReason = UnmarshalPendingPostRejectionReasonFromDatabase(m.rejectionReason.ID(), m.rejectionReason.Reason(), false)
 
 	return nil
 }
