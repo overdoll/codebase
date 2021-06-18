@@ -765,12 +765,30 @@ input PendingPostFilters {
 }
 
 extend type Query {
+  """
+  Get Pending Posts, specific to a moderator
+
+  Can paginate using ConnectionInput and filter with PendingPostFilters
+
+  All filters will work, except moderatorId, which is staff-only (by default, will grab pending post for logged-in user)
+  """
   pendingPosts(input: ConnectionInput!, filter: PendingPostFilters!): PendingPostConnection!
+
+  """
+  Get a single pending post by ID
+  """
   pendingPost(id: String!): PendingPost!
 }
 
 extend type Mutation {
+  """
+  Post a new post
+  """
   post(data: PostInput): PostResponse!
+
+  """
+  Update post
+  """
   updatePost(id: String!, data: PostInput): PostUpdateResponse!
 }
 `, BuiltIn: false},
