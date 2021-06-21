@@ -60,6 +60,7 @@ func (r ContentS3Repository) ProcessContent(ctx context.Context, userId string, 
 		)
 
 		if err != nil {
+			fmt.Println("failed to download file", err)
 			return nil, err
 		}
 
@@ -91,12 +92,14 @@ func (r ContentS3Repository) ProcessContent(ctx context.Context, userId string, 
 			CopySource: aws.String(url.PathEscape(ImageUploadsBucket + "/" + fileId)), Key: aws.String(PendingPostPrefix + fileKey)})
 
 		if err != nil {
+			fmt.Println("failed to copy file", err)
 			return nil, err
 		}
 
 		// wait until file is available in private bucket
 		err = s3Client.WaitUntilObjectExists(&s3.HeadObjectInput{Bucket: aws.String(ImageStaticBucket), Key: aws.String(PendingPostPrefix + fileKey)})
 		if err != nil {
+			fmt.Println("failed to wait", err)
 			return nil, err
 		}
 
