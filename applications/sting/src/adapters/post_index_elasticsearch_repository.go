@@ -318,8 +318,6 @@ func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Contex
 		return nil, err
 	}
 
-	fmt.Println(query.String())
-
 	response, err := r.store.Search(PendingPostIndexName, query.String())
 
 	if err != nil {
