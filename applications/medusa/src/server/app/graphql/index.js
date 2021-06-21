@@ -50,7 +50,7 @@ class CookieDataSource extends RemoteGraphQLDataSource {
     }
 
     // remove "passport" from request in case user sends it (they could impersonate any user otherwise)
-    if (Object.prototype.hasOwnProperty.call(requestContext.request.extensions.passport, 'passport')) {
+    if (Object.prototype.hasOwnProperty.call(requestContext.request.extensions, 'passport')) {
       delete requestContext.request.extensions.passport
     }
 
