@@ -47,5 +47,9 @@ func (h GetNextModeratorHandler) Handle(ctx context.Context) (*moderator.Moderat
 		return nil
 	})
 
+	if err != nil {
+		return nil, err
+	}
+
 	return m, nil
 }

@@ -1,0 +1,276 @@
+nameOverride: ""
+fullnameOverride: ""
+
+# Chart debug mode
+# (eg. disable helm hook delete policy)
+debug: false
+
+server:
+  enabled: true
+  image:
+    repository: temporalio/server
+    tag: 1.9.2
+    pullPolicy: IfNotPresent
+
+  kafka:
+    host: kafka-kafka-brokers
+
+  # Global default settings (can be overridden per service)
+  replicaCount: 1
+  metrics:
+    # Annotate pods directly with Prometheus annotations.
+    # Use this if you installed Prometheus from a Helm chart.
+    annotations:
+      enabled: true
+    # Enable Prometheus ServiceMonitor
+    # Use this if you installed the Prometheus Operator (https://github.com/coreos/prometheus-operator).
+    serviceMonitor:
+      enabled: false
+      interval: 30s
+      # Set Prometheus metric_relabel_configs via ServiceMonitor
+      # Use metricRelabelings to adjust metric and label names as needed
+      metricRelabelings: [ ]
+      # - action: replace
+      #   sourceLabels:
+      #   - exported_namespace
+      #   targetLabel: temporal_namespace
+      # - action: replace
+      #   regex: service_errors_(.+)
+      #   replacement: ${1}
+      #   sourceLabels:
+      #   - __name__
+      #   targetLabel: temporal_error_kind
+      # - action: replace
+      #   regex: service_errors_.+
+      #   replacement: temporal_service_errors
+      #   sourceLabels:
+      #   - __name__
+      #   targetLabel: __name__
+    prometheus:
+      timerType: histogram
+  podAnnotations: { }
+  resources: { }
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+  nodeSelector: { }
+  tolerations: [ ]
+  affinity: { }
+  additionalVolumes: [ ]
+  additionalVolumeMounts: [ ]
+
+  config:
+    logLevel: "debug,info"
+
+    # IMPORTANT: This value cannot be changed, once it's set.
+    numHistoryShards: 512
+
+    persistence:
+      default:
+        driver: "cassandra"
+
+        cassandra:
+          hosts:
+            [ "simple-cluster-us-east-1-us-east-1a-0.scylla.svc.cluster.local" ]
+          port: 9042
+          keyspace: temporal
+          user: "user"
+          password: "password"
+          existingSecret: ""
+          replicationFactor: 1
+          consistency:
+            default:
+              consistency: "local_quorum"
+              serialConsistency: "local_serial"
+
+      visibility:
+        driver: "cassandra"
+
+        cassandra:
+          hosts:
+            [ "simple-cluster-us-east-1-us-east-1a-0.scylla.svc.cluster.local" ]
+          port: 9042
+          keyspace: temporal_visibility
+          user: "user"
+          password: "password"
+          existingSecret: ""
+          replicationFactor: 1
+          consistency:
+            default:
+              consistency: "local_quorum"
+              serialConsistency: "local_serial"
+
+  frontend:
+    # replicaCount: 1
+    service:
+      annotations: { } # Evaluated as template
+      type: ClusterIP
+      port: 7233
+    metrics:
+      annotations:
+        enabled: true
+      serviceMonitor: { }
+      # enabled: false
+      prometheus: { }
+      # timerType: histogram
+    podAnnotations: { }
+    resources: { }
+    nodeSelector: { }
+    tolerations: [ ]
+    affinity: { }
+
+  history:
+    # replicaCount: 1
+    service:
+      # type: ClusterIP
+      port: 7234
+    metrics:
+      annotations:
+        enabled: true
+      serviceMonitor: { }
+      # enabled: false
+      prometheus: { }
+      # timerType: histogram
+    podAnnotations: { }
+    resources: { }
+    nodeSelector: { }
+    tolerations: [ ]
+    affinity: { }
+
+  matching:
+    # replicaCount: 1
+    service:
+      # type: ClusterIP
+      port: 7235
+    metrics:
+      annotations:
+        enabled: false
+      serviceMonitor: { }
+      # enabled: false
+      prometheus: { }
+      # timerType: histogram
+    podAnnotations: { }
+    resources: { }
+    nodeSelector: { }
+    tolerations: [ ]
+    affinity: { }
+
+  worker:
+    replicaCount: 1
+    service:
+      # type: ClusterIP
+      port: 7239
+    metrics:
+      annotations:
+        enabled: true
+      serviceMonitor: { }
+      # enabled: false
+      prometheus: { }
+      # timerType: histogram
+    podAnnotations: { }
+    resources: { }
+    nodeSelector: { }
+    tolerations: [ ]
+    affinity: { }
+
+admintools:
+  enabled: true
+  image:
+    repository: temporalio/admin-tools
+    tag: 1.9.2
+    pullPolicy: IfNotPresent
+
+  service:
+    type: ClusterIP
+    port: 22
+    annotations: { }
+
+web:
+  enabled: true
+
+  replicaCount: 1
+
+  image:
+    repository: temporalio/web
+    tag: 1.9.0
+    pullPolicy: IfNotPresent
+
+  service:
+    type: ClusterIP
+    port: 8088
+    annotations: { }
+    # loadBalancerIP:
+
+  ingress:
+    enabled: false
+    annotations: { }
+    # kubernetes.io/ingress.class: traefik
+    # ingress.kubernetes.io/ssl-redirect: "false"
+    # traefik.frontend.rule.type: PathPrefix
+    hosts:
+      - "/"
+      # - "domain.com/xyz"
+      # - "domain.com"
+    tls: [ ]
+    #  - secretName: chart-example-tls
+    #    hosts:
+    #      - chart-example.local
+
+  resources: { }
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+  nodeSelector: { }
+
+  tolerations: [ ]
+
+  affinity: { }
+
+schema:
+  setup:
+    enabled: false
+  update:
+    enabled: true
+
+elasticsearch:
+  enabled: false
+  external: false
+  host: "elasticsearch-master-headless.elasticsearch.svc"
+  port: "9200"
+  version: "v7"
+  scheme: "http"
+  logLevel: "error"
+
+prometheus:
+  enabled: false
+
+kafka:
+  enabled: false
+
+grafana:
+  enabled: false
+
+cassandra:
+  enabled: false
+
+mysql:
+  enabled: false
+
+postgresql:
+  enabled: false
+

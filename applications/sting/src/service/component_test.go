@@ -10,12 +10,10 @@ import (
 
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
-	"github.com/stretchr/testify/suite"
 	"go.temporal.io/sdk/testsuite"
 	"google.golang.org/grpc"
 	sting "overdoll/applications/sting/proto"
 	"overdoll/applications/sting/src/adapters"
-	"overdoll/applications/sting/src/app"
 	"overdoll/applications/sting/src/ports"
 	"overdoll/applications/sting/src/ports/graphql/types"
 	"overdoll/applications/sting/src/ports/temporal/workflows"
@@ -66,16 +64,9 @@ type SearchArtist struct {
 	Artists []*types.Artist `graphql:"artists(data: $data)"`
 }
 
-type WorkflowComponentTestSuite struct {
-	suite.Suite
-	testsuite.WorkflowTestSuite
-	app app.Application
-	env *testsuite.TestWorkflowEnvironment
-}
+func qPendingPost(t *testing.T, id string) PendingPost {
 
-func qPendingPost(s *WorkflowComponentTestSuite, id string) PendingPost {
-
-	client, _ := getHttpClient(s.T(), passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	client, _ := getHttpClient(t, passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 
 	var pendingPost PendingPost
 
@@ -83,14 +74,14 @@ func qPendingPost(s *WorkflowComponentTestSuite, id string) PendingPost {
 		"id": graphql.String(id),
 	})
 
-	require.NoError(s.T(), err)
+	require.NoError(t, err)
 
 	return pendingPost
 }
 
-func mCreatePost(s *WorkflowComponentTestSuite, callback func(string) func()) {
+func mCreatePost(t *testing.T, env *testsuite.TestWorkflowEnvironment, callback func(string) func()) {
 	// we have to create a post as an authenticated user, otherwise it won't let us
-	client, _ := getHttpClient(s.T(), passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	client, _ := getHttpClient(t, passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 
 	var createPost CreatePost
 
@@ -111,8 +102,8 @@ func mCreatePost(s *WorkflowComponentTestSuite, callback func(string) func()) {
 		},
 	})
 
-	require.NoError(s.T(), err)
-	s.Equal(false, createPost.Post.Review)
+	require.NoError(t, err)
+	require.Equal(t, false, createPost.Post.Review)
 
 	postId := createPost.Post.ID
 
@@ -121,30 +112,34 @@ func mCreatePost(s *WorkflowComponentTestSuite, callback func(string) func()) {
 
 	// when the timer is called (waited 24 hours to select a new moderator), we will update the post before the activity
 	// function executes so it doesn't keep looping forever
-	s.env.RegisterDelayedCallback(callback(postId), time.Hour*24)
-	s.env.ExecuteWorkflow(workflows.CreatePost, postId)
+	env.RegisterDelayedCallback(callback(postId), time.Hour*24)
+	env.ExecuteWorkflow(workflows.CreatePost, postId)
 
-	s.True(s.env.IsWorkflowCompleted())
-	s.NoError(s.env.GetWorkflowError())
+	require.True(t, env.IsWorkflowCompleted())
+	require.NoError(t, env.GetWorkflowError())
 }
 
 // Test_CreatePost_Publish - publish post
-func (s *WorkflowComponentTestSuite) Test_CreatePost_Publish() {
+func TestCreatePost_Publish(t *testing.T) {
+	t.Parallel()
+
 	var newPostId string
 
-	mCreatePost(s, func(postId string) func() {
+	env := getWorkflowEnvironment(t)
+
+	mCreatePost(t, env, func(postId string) func() {
 		return func() {
 			// need to refresh the ES index or else the post wont be found
 			es, err := search.NewStore(context.Background())
-			require.NoError(s.T(), err)
+			require.NoError(t, err)
 			err = es.Refresh(adapters.PendingPostIndexName)
-			require.NoError(s.T(), err)
+			require.NoError(t, err)
 
 			newPostId = postId
 
 			// at this point, our post is put into the moderation queue. check for existence here
 			// grab all pending posts for our moderator
-			client, _ := getHttpClient(s.T(), passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+			client, _ := getHttpClient(t, passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 
 			var pendingPosts PendingPosts
 
@@ -155,7 +150,7 @@ func (s *WorkflowComponentTestSuite) Test_CreatePost_Publish() {
 				"input": relay.ConnectionInput{},
 			})
 
-			require.NoError(s.T(), err)
+			require.NoError(t, err)
 
 			exists := false
 
@@ -166,33 +161,32 @@ func (s *WorkflowComponentTestSuite) Test_CreatePost_Publish() {
 			}
 
 			// ensure this post will exist and is assigned to our moderator
-			require.True(s.T(), exists)
+			require.True(t, exists)
 
 			// setup another environment since we cant execute multiple workflows
-			newEnv := s.NewTestWorkflowEnvironment()
-			ports.RegisterActivities(s.app, newEnv)
+			newEnv := getWorkflowEnvironment(t)
 
-			stingClient := getGrpcClient(s.T())
+			stingClient := getGrpcClient(t)
 
 			// "publish" pending post
 			_, e := stingClient.PublishPendingPost(context.Background(), &sting.PendingPostRequest{Id: postId})
-			s.NoError(e)
+			require.NoError(t, e)
 
 			// execute workflow manually since it wont be executed right here
 			newEnv.ExecuteWorkflow(workflows.PublishPost, postId)
-			s.True(newEnv.IsWorkflowCompleted())
-			s.NoError(newEnv.GetWorkflowError())
+			require.True(t, newEnv.IsWorkflowCompleted())
+			require.NoError(t, newEnv.GetWorkflowError())
 		}
 	})
 
-	pendingPost := qPendingPost(s, newPostId)
+	pendingPost := qPendingPost(t, newPostId)
 
 	// check to make sure post is in rejected state
-	require.Equal(s.T(), "published", pendingPost.PendingPost.State)
+	require.Equal(t, "published", pendingPost.PendingPost.State)
 
 	// publishing removes any custom fields and converts them
-	require.Len(s.T(), pendingPost.PendingPost.MediaRequests, 0)
-	require.Nil(s.T(), pendingPost.PendingPost.CharacterRequests)
+	require.Len(t, pendingPost.PendingPost.MediaRequests, 0)
+	require.Nil(t, pendingPost.PendingPost.CharacterRequests)
 
 	// check to make sure our custom character + media appears in the list
 	customCharacterExists := false
@@ -209,116 +203,119 @@ func (s *WorkflowComponentTestSuite) Test_CreatePost_Publish() {
 	}
 
 	// ensure that our custom character && media was assigned
-	require.True(s.T(), customCharacterExists)
-	require.True(s.T(), customMediaExists)
+	require.True(t, customCharacterExists)
+	require.True(t, customMediaExists)
 }
 
 // Test_CreatePost_Discard - discard post
-func (s *WorkflowComponentTestSuite) Test_CreatePost_Discard() {
+func TestCreatePost_Discard(t *testing.T) {
+	t.Parallel()
+
+	env := getWorkflowEnvironment(t)
 
 	var newPostId string
 
-	mCreatePost(s, func(postId string) func() {
+	mCreatePost(t, env, func(postId string) func() {
 		return func() {
 			newPostId = postId
 
 			// setup another environment since we cant execute multiple workflows
-			newEnv := s.NewTestWorkflowEnvironment()
-			ports.RegisterActivities(s.app, newEnv)
+			newEnv := getWorkflowEnvironment(t)
 
-			stingClient := getGrpcClient(s.T())
+			stingClient := getGrpcClient(t)
 
 			// "discard" pending post
 			_, e := stingClient.DiscardPendingPost(context.Background(), &sting.PendingPostRequest{Id: postId})
-			s.NoError(e)
+			require.NoError(t, e)
 
 			// execute workflow manually since it wont be executed right here
 			newEnv.ExecuteWorkflow(workflows.DiscardPost, postId)
 
-			s.True(newEnv.IsWorkflowCompleted())
-			s.NoError(newEnv.GetWorkflowError())
+			require.True(t, newEnv.IsWorkflowCompleted())
+			require.NoError(t, newEnv.GetWorkflowError())
 		}
 	})
 
-	pendingPost := qPendingPost(s, newPostId)
+	pendingPost := qPendingPost(t, newPostId)
 
 	// check to make sure post is in rejected state
-	require.Equal(s.T(), "discarded", pendingPost.PendingPost.State)
+	require.Equal(t, "discarded", pendingPost.PendingPost.State)
 
 	// discarding post also completely removes any custom fields
-	require.Len(s.T(), pendingPost.PendingPost.MediaRequests, 0)
-	require.Nil(s.T(), pendingPost.PendingPost.CharacterRequests)
+	require.Len(t, pendingPost.PendingPost.MediaRequests, 0)
+	require.Nil(t, pendingPost.PendingPost.CharacterRequests)
 }
 
 // Test_CreatePost_Reject - reject post
-func (s *WorkflowComponentTestSuite) Test_CreatePost_Reject_undo_reject() {
+func TestCreatePost_Reject_undo_reject(t *testing.T) {
+	t.Parallel()
 
 	var newPostId string
 
-	mCreatePost(s, func(postId string) func() {
+	env := getWorkflowEnvironment(t)
+
+	mCreatePost(t, env, func(postId string) func() {
 		return func() {
 			newPostId = postId
 			// setup another environment since we cant execute multiple workflows
-			newEnv := s.NewTestWorkflowEnvironment()
-			ports.RegisterActivities(s.app, newEnv)
 
-			stingClient := getGrpcClient(s.T())
+			stingClient := getGrpcClient(t)
 
 			// "reject" pending post
 			_, e := stingClient.RejectPendingPost(context.Background(), &sting.PendingPostRequest{Id: postId})
-			s.NoError(e)
+			require.NoError(t, e)
 
-			pendingPost := qPendingPost(s, newPostId)
+			pendingPost := qPendingPost(t, newPostId)
 
 			// make sure post is in rejected state
-			require.Equal(s.T(), "rejected", pendingPost.PendingPost.State)
+			require.Equal(t, "rejected", pendingPost.PendingPost.State)
 
 			// UNDO
 			_, e = stingClient.UndoPendingPost(context.Background(), &sting.PendingPostRequest{Id: postId})
-			s.NoError(e)
+			require.NoError(t, e)
 
-			newEnv2 := s.NewTestWorkflowEnvironment()
-			ports.RegisterActivities(s.app, newEnv2)
-			newEnv2.ExecuteWorkflow(workflows.UndoPost, postId)
+			newEnv := getWorkflowEnvironment(t)
+			newEnv.ExecuteWorkflow(workflows.UndoPost, postId)
 
-			s.True(newEnv2.IsWorkflowCompleted())
-			s.NoError(newEnv2.GetWorkflowError())
+			require.True(t, newEnv.IsWorkflowCompleted())
+			require.NoError(t, newEnv.GetWorkflowError())
 
 			// CHECK STATUS
 
-			pendingPost = qPendingPost(s, newPostId)
+			pendingPost = qPendingPost(t, newPostId)
 
 			// check to make sure post is still in "review" state (since we did the undo)
-			require.Equal(s.T(), "review", pendingPost.PendingPost.State)
+			require.Equal(t, "review", pendingPost.PendingPost.State)
 
 			// need to reject again, or else we will be in an infinite loop
 			_, e = stingClient.RejectPendingPost(context.Background(), &sting.PendingPostRequest{Id: postId})
-			s.NoError(e)
+			require.NoError(t, e)
 		}
 	})
 
-	pendingPost := qPendingPost(s, newPostId)
+	pendingPost := qPendingPost(t, newPostId)
 
 	// check to make sure post is in rejected state
-	require.Equal(s.T(), "rejected", pendingPost.PendingPost.State)
+	require.Equal(t, "rejected", pendingPost.PendingPost.State)
 }
 
 // TestSearchCharacters - search some characters
 func TestSearchCharacters(t *testing.T) {
+	t.Parallel()
 
 	client, _ := getHttpClient(t, nil)
 
-	var search SearchCharacters
+	var searchCharacters SearchCharacters
 
-	err := client.Query(context.Background(), &search, map[string]interface{}{
+	err := client.Query(context.Background(), &searchCharacters, map[string]interface{}{
 		"data": types.SearchInput{
 			Search: "Aarush Hills",
 		},
 	})
 
 	require.NoError(t, err)
-	require.Len(t, search.Characters, 1)
-	require.Equal(t, "Aarush Hills", search.Characters[0].Name)
+	require.Len(t, searchCharacters.Characters, 1)
+	require.Equal(t, "Aarush Hills", searchCharacters.Characters[0].Name)
 }
 
 // TestSearchCategories - search some categories
@@ -327,17 +324,17 @@ func TestSearchCategories(t *testing.T) {
 
 	client, _ := getHttpClient(t, nil)
 
-	var search SearchCategories
+	var searchCategories SearchCategories
 
-	err := client.Query(context.Background(), &search, map[string]interface{}{
+	err := client.Query(context.Background(), &searchCategories, map[string]interface{}{
 		"data": types.SearchInput{
 			Search: "Convict",
 		},
 	})
 
 	require.NoError(t, err)
-	require.Len(t, search.Categories, 1)
-	require.Equal(t, "Convict", search.Categories[0].Title)
+	require.Len(t, searchCategories.Categories, 1)
+	require.Equal(t, "Convict", searchCategories.Categories[0].Title)
 }
 
 // TestSearchMedia - search some media
@@ -346,17 +343,17 @@ func TestSearchMedia(t *testing.T) {
 
 	client, _ := getHttpClient(t, nil)
 
-	var search SearchMedia
+	var searchMedia SearchMedia
 
-	err := client.Query(context.Background(), &search, map[string]interface{}{
+	err := client.Query(context.Background(), &searchMedia, map[string]interface{}{
 		"data": types.SearchInput{
 			Search: "Foreigner On Mars",
 		},
 	})
 
 	require.NoError(t, err)
-	require.Len(t, search.Media, 1)
-	require.Equal(t, "Foreigner On Mars", search.Media[0].Title)
+	require.Len(t, searchMedia.Media, 1)
+	require.Equal(t, "Foreigner On Mars", searchMedia.Media[0].Title)
 }
 
 // TestSearchArtist - search some artist
@@ -365,17 +362,17 @@ func TestSearchArtist(t *testing.T) {
 
 	client, _ := getHttpClient(t, nil)
 
-	var search SearchArtist
+	var searchArtist SearchArtist
 
-	err := client.Query(context.Background(), &search, map[string]interface{}{
+	err := client.Query(context.Background(), &searchArtist, map[string]interface{}{
 		"data": types.SearchInput{
 			Search: "artist_verified",
 		},
 	})
 
 	require.NoError(t, err)
-	require.Len(t, search.Artists, 1)
-	require.Equal(t, "artist_verified", search.Artists[0].Username)
+	require.Len(t, searchArtist.Artists, 1)
+	require.Equal(t, "artist_verified", searchArtist.Artists[0].Username)
 }
 
 func getHttpClient(t *testing.T, pass *passport.Passport) (*graphql.Client, *http.Client) {
@@ -392,15 +389,14 @@ func getGrpcClient(t *testing.T) sting.StingClient {
 	return stingClient
 }
 
-func (s *WorkflowComponentTestSuite) SetupTest() {
-	config.Read("applications/sting/config.toml")
+func getWorkflowEnvironment(t *testing.T) *testsuite.TestWorkflowEnvironment {
 
-	s.env = s.NewTestWorkflowEnvironment()
+	env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
 
 	newApp, _ := service.NewApplication(context.Background())
-	ports.RegisterActivities(newApp, s.env)
+	ports.RegisterActivities(&newApp, env)
 
-	s.app = newApp
+	return env
 }
 
 func startService() bool {
@@ -433,16 +429,6 @@ func startService() bool {
 	}
 
 	return true
-}
-
-func (s *WorkflowComponentTestSuite) AfterTest(suiteName, testName string) {
-	s.env.AssertExpectations(s.T())
-}
-
-func TestUnitTestSuite(t *testing.T) {
-	t.Parallel()
-
-	suite.Run(t, new(WorkflowComponentTestSuite))
 }
 
 func TestMain(m *testing.M) {

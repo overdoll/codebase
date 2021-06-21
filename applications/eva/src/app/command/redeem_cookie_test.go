@@ -32,6 +32,7 @@ func TestRedeemCookie_Consume_fails_when_cookie_invalid(t *testing.T) {
 	// both response and error are nil when the cookie is invalid
 	assert.Nil(t, res)
 	assert.Nil(t, err)
+	assert.Nil(t, usr)
 }
 
 func TestRedeemCookie_Consume_when_user_exists(t *testing.T) {
