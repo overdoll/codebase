@@ -44,13 +44,19 @@ class CookieDataSource extends RemoteGraphQLDataSource {
       return
     }
 
+    // add extensions object if it doesn't exist
+    if (!Object.prototype.hasOwnProperty.call(requestContext.request, 'extensions')) {
+      requestContext.request.extensions = {}
+    }
+
+    // remove "passport" from request in case user sends it (they could impersonate any user otherwise)
+    if (Object.prototype.hasOwnProperty.call(requestContext.request.extensions.passport, 'passport')) {
+      delete requestContext.request.extensions.passport
+    }
+
     const { passport } = requestContext.context.req.session
 
     if (passport) {
-      if (!requestContext.request.extensions) {
-        requestContext.request.extensions = {}
-      }
-
       requestContext.request.extensions.passport = passport
     }
 

@@ -27,7 +27,7 @@ func NewWorker(app *app.Application) (worker.Worker, func()) {
 	w.RegisterWorkflow(workflows.UndoPost)
 	w.RegisterWorkflow(workflows.PublishPost)
 
-	RegisterActivities(*app, w)
+	RegisterActivities(app, w)
 
 	return w, func() {
 		client.Close()
@@ -35,7 +35,7 @@ func NewWorker(app *app.Application) (worker.Worker, func()) {
 }
 
 // needed so we can set it up in tests without having to duplicate code
-func RegisterActivities(app app.Application, w worker.ActivityRegistry) {
+func RegisterActivities(app *app.Application, w worker.ActivityRegistry) {
 	w.RegisterActivityWithOptions(app.Commands.CreatePost.Handle, activity.RegisterOptions{Name: helpers.GetStructName(app.Commands.CreatePost)})
 	w.RegisterActivityWithOptions(app.Commands.DiscardPost.Handle, activity.RegisterOptions{Name: helpers.GetStructName(app.Commands.DiscardPost)})
 	w.RegisterActivityWithOptions(app.Commands.UndoPost.Handle, activity.RegisterOptions{Name: helpers.GetStructName(app.Commands.UndoPost)})
