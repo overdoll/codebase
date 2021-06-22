@@ -27,7 +27,7 @@ func (s EvaGrpc) GetUser(ctx context.Context, id string) (*user.User, error) {
 	return user.UnmarshalFromProto(usr), nil
 }
 
-func (s EvaGrpc) CreateUser(ctx context.Context, username string, email string) (*user.User, error) {
+func (s EvaGrpc) CreateUser(ctx context.Context, username, email string) (*user.User, error) {
 	usr, err := s.client.CreateUser(ctx, &eva.CreateUserRequest{
 		Username: username,
 		Email:    email,

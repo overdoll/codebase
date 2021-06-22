@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"strings"
-	"time"
 
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
@@ -13,13 +12,15 @@ import (
 )
 
 type User struct {
-	Id          string    `db:"id"`
-	Username    string    `db:"username"`
-	Email       string    `db:"email"`
-	Roles       []string  `db:"roles"`
-	Verified    bool      `db:"verified"`
-	Avatar      string    `db:"avatar"`
-	LockedUntil time.Time `db:"locked_until"`
+	Id           string   `db:"id"`
+	Username     string   `db:"username"`
+	Email        string   `db:"email"`
+	Roles        []string `db:"roles"`
+	Verified     bool     `db:"verified"`
+	Avatar       string   `db:"avatar"`
+	Locked       bool     `db:"locked"`
+	LockedUntil  int      `db:"locked_until"`
+	LockedReason string   `db:"locked_reason"`
 }
 
 type UserUsername struct {
@@ -41,15 +42,16 @@ func NewUserCassandraRepository(session gocqlx.Session) UserRepository {
 }
 
 func marshalUserToDatabase(usr *user.User) *User {
-
 	return &User{
-		Id:          usr.ID(),
-		Email:       usr.Email(),
-		Username:    usr.Username(),
-		Roles:       usr.UserRolesAsString(),
-		Avatar:      usr.Avatar(),
-		Verified:    usr.Verified(),
-		LockedUntil: usr.LockedUntil(),
+		Id:           usr.ID(),
+		Email:        usr.Email(),
+		Username:     usr.Username(),
+		Roles:        usr.UserRolesAsString(),
+		Avatar:       usr.RawAvatar(),
+		Verified:     usr.Verified(),
+		LockedUntil:  usr.LockedUntil(),
+		Locked:       usr.IsLocked(),
+		LockedReason: usr.LockedReason(),
 	}
 }
 
@@ -81,6 +83,9 @@ func (r UserRepository) GetUserById(ctx context.Context, id string) (*user.User,
 		userInstance.Roles,
 		userInstance.Verified,
 		userInstance.Avatar,
+		userInstance.Locked,
+		userInstance.LockedUntil,
+		userInstance.LockedReason,
 	), nil
 }
 
@@ -235,6 +240,8 @@ func (r UserRepository) UpdateUser(ctx context.Context, id string, updateFn func
 			"roles",
 			"verified",
 			"locked_until",
+			"locked",
+			"locked_reason",
 			"avatar",
 		).
 		Where(qb.Eq("id")).

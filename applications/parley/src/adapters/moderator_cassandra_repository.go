@@ -14,6 +14,7 @@ import (
 type Moderator struct {
 	UserId       string    `db:"user_id"`
 	LastSelected time.Time `db:"last_selected"`
+	Bucket       int       `db:"bucket"`
 }
 
 type ModeratorCassandraRepository struct {
@@ -28,16 +29,17 @@ func marshaModeratorToDatabase(mod *moderator.Moderator) *Moderator {
 	return &Moderator{
 		UserId:       mod.ID(),
 		LastSelected: mod.LastSelected(),
+		Bucket:       0,
 	}
 }
 
 func (r ModeratorCassandraRepository) GetModerator(ctx context.Context, id string) (*moderator.Moderator, error) {
 
 	moderatorQuery := qb.Select("moderators").
-		Where(qb.Eq("user_id")).
+		Where(qb.Eq("bucket"), qb.Eq("user_id")).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(&Moderator{UserId: id})
+		BindStruct(&Moderator{UserId: id, Bucket: 0})
 
 	var mod Moderator
 
@@ -51,9 +53,11 @@ func (r ModeratorCassandraRepository) GetModerator(ctx context.Context, id strin
 func (r ModeratorCassandraRepository) GetModerators(ctx context.Context) ([]*moderator.Moderator, error) {
 
 	moderatorQuery := qb.Select("moderators").
+		Where(qb.Eq("bucket")).
 		Columns("user_id", "last_selected").
 		Query(r.session).
-		Consistency(gocql.LocalQuorum)
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&Moderator{Bucket: 0})
 
 	var dbModerators []Moderator
 
@@ -87,7 +91,7 @@ func (r ModeratorCassandraRepository) UpdateModerator(ctx context.Context, id st
 		Set(
 			"last_selected",
 		).
-		Where(qb.Eq("user_id")).
+		Where(qb.Eq("bucket"), qb.Eq("user_id")).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshaModeratorToDatabase(currentMod))

@@ -9,6 +9,7 @@ import (
 	"overdoll/applications/buffer/src/ports"
 	"overdoll/applications/buffer/src/service"
 	"overdoll/libraries/bootstrap"
+	"overdoll/libraries/config"
 )
 
 var rootCmd = &cobra.Command{
@@ -17,6 +18,7 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
+	config.Read("applications/buffer/config.toml")
 }
 
 func main() {

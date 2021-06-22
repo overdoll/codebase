@@ -1,8 +1,11 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
     name = "service",
-    srcs = ["application.go"],
+    srcs = [
+        "application.go",
+        "mocks.go",
+    ],
     importpath = "overdoll/applications/parley/src/service",
     visibility = ["//visibility:public"],
     deps = [
@@ -13,5 +16,26 @@ go_library(
         "//libraries/bootstrap",
         "//libraries/clients",
         "@com_github_spf13_viper//:viper",
+    ],
+)
+
+go_test(
+    name = "service_test",
+    srcs = ["component_test.go"],
+    data = ["//applications/parley:config.toml"],
+    deps = [
+        ":service",
+        "//applications/parley/proto:v1_go_proto",
+        "//applications/parley/src/domain/infraction",
+        "//applications/parley/src/ports",
+        "//applications/parley/src/ports/graphql/types",
+        "//libraries/bootstrap",
+        "//libraries/clients",
+        "//libraries/config",
+        "//libraries/passport",
+        "//libraries/tests",
+        "@com_github_shurcool_graphql//:graphql",
+        "@com_github_stretchr_testify//require",
+        "@org_golang_google_grpc//:go_default_library",
     ],
 )

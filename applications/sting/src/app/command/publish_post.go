@@ -20,7 +20,7 @@ func NewPublishPostHandler(pr post.Repository, pi post.IndexRepository, cr conte
 
 func (h PublishPostHandler) Handle(ctx context.Context, id string) error {
 
-	pendingPost, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PostPending) error {
+	pendingPost, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PendingPost) error {
 
 		// Bulk index
 		err := h.pi.BulkIndexCategories(ctx, pending.Categories())
@@ -46,7 +46,7 @@ func (h PublishPostHandler) Handle(ctx context.Context, id string) error {
 		// Update contributor, since our database doesn't contain the reference
 		pending.UpdateContributor(usr)
 
-		// This will make sure the state of the post is always "publishing" before publishing - we may get an outdated record
+		// This will make sure the state of the post is always "review" before publishing - we may get an outdated record
 		// from the review stage so it will retry at some point
 		if err := pending.MakePublish(); err != nil {
 			return err
@@ -68,6 +68,6 @@ func (h PublishPostHandler) Handle(ctx context.Context, id string) error {
 		return err
 	}
 
-	// Update pending post index
-	return h.pi.IndexPendingPost(ctx, pendingPost)
+	// delete pending post document since it's no longer needed
+	return h.pi.DeletePendingPostDocument(ctx, pendingPost.ID())
 }

@@ -18,6 +18,14 @@ spec:
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
+  name: procesingprefix
+spec:
+  addPrefix:
+    prefix: /overdoll-processing
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
   name: compression
 spec:
   compress: { }
@@ -79,6 +87,14 @@ spec:
         - name: assetsprefix
         - name: compression
     - match: Host(`posts.dollycdn.test`) && PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: minio
+          namespace: minio
+          port: 80
+      middlewares:
+        - name: postsprefix
+    - match: Host(`uploads.dollycdn.test`) && PathPrefix(`/`)
       kind: Rule
       services:
         - name: minio

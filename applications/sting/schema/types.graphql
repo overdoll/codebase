@@ -1,53 +1,6 @@
-input PostInput {
-  content: [String!]!
-  categories: [String!]!
-  characters: [String!]!
-  mediaRequests: [String!]
-  characterRequests: [CharacterRequest!]
-  artistId: String
-  artistUsername: String!
-}
-
-type PendingPost {
-  id: String!
-  moderator: String!
-  contributor: Contributor!
-  content: [String!]!
-  categories: [Category!]!
-  characters: [Character!]!
-  mediaRequests: [String!]
-  characterRequests: [CharacterRequestType!]
-  artistId: String
-  artistUsername: String!
-}
-
 type CharacterRequestType {
   name: String!
   media: String!
-}
-
-input CharacterRequest {
-  name: String!
-  media: String!
-}
-
-type PostResponse {
-  review: Boolean!
-  validation: Validation
-}
-
-type PostUpdateResponse {
-  validation: Validation
-}
-
-input SearchInput {
-  search: String!
-}
-
-type Contributor {
-  id: String!
-  username: String!
-  avatar: String!
 }
 
 type Media {
@@ -77,8 +30,4 @@ type Category {
 
 type Validation {
   code: String!
-}
-
-type Workaround2 @key(fields: "id") {
-  id: Int
 }

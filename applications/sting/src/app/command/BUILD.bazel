@@ -10,6 +10,7 @@ go_library(
         "index_all_categories.go",
         "index_all_characters.go",
         "index_all_media.go",
+        "index_all_pending_post.go",
         "new_pending_post.go",
         "post_custom_resources.go",
         "publish_post.go",

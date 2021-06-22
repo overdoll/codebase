@@ -22,6 +22,11 @@ type MutationResolver struct {
 	App *app.Application
 }
 
+// TODO: will be implemented when email is impl.
+func (r *MutationResolver) AuthEmail(ctx context.Context) (bool, error) {
+	return false, nil
+}
+
 // Authenticate - Generate an OTP code that will be used to authenticate the user
 // if user opens the link in the same browser, then we automatically authorize them
 // if not, then we redeem the cookie and the original browser should be logged in,

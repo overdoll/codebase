@@ -66,7 +66,7 @@ def execute_integration_tests_commands(configs):
             test_targets = configs.get("integration_test", {}).get("targets", [])
 
             # integration test MAY be flaky because of external dependencies, so we will attempt retries
-            test_flags += ["--flaky_test_attempts=3"]
+            test_flags += ["--flaky_test_attempts=default"]
 
             try:
                 bazel.execute_bazel_test(":bazel: Running integration tests", test_flags, test_targets, test_bep_file,

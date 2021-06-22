@@ -1,4 +1,0 @@
-type Query {
-  redeemCookie(cookie: String!): Cookie!
-  authentication: Authentication
-}

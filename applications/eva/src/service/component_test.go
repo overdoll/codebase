@@ -36,15 +36,7 @@ type TestUser struct {
 }
 
 type AuthQuery struct {
-	Authentication struct {
-		User *struct {
-			Username graphql.String
-		}
-		Cookie *struct {
-			Email    graphql.String
-			Redeemed graphql.Boolean
-		}
-	}
+	Authentication *types.Authentication
 }
 
 type Register struct {
@@ -60,14 +52,7 @@ type Authenticate struct {
 }
 
 type RedeemCookie struct {
-	RedeemCookie struct {
-		SameSession graphql.Boolean
-		Registered  graphql.Boolean
-		Redeemed    graphql.Boolean
-		Session     graphql.String
-		Email       graphql.String
-		Invalid     graphql.Boolean
-	} `graphql:"redeemCookie(cookie: $cookie)"`
+	RedeemCookie *types.Cookie `graphql:"redeemCookie(cookie: $cookie)"`
 }
 
 func mAuthenticate(t *testing.T, client *graphql.Client, email string) Authenticate {
@@ -109,7 +94,7 @@ func qAuth(t *testing.T, client *graphql.Client) AuthQuery {
 func TestUserRegistration_complete(t *testing.T) {
 	t.Parallel()
 
-	client, httpUser, _ := getClient(t, nil)
+	client, httpUser, _ := getHttpClient(t, nil)
 
 	fake := TestUser{}
 
@@ -131,20 +116,20 @@ func TestUserRegistration_complete(t *testing.T) {
 	authNotRedeemed := qAuth(t, client)
 
 	// expect that the cookie is not redeemed
-	assert.Equal(t, false, bool(authNotRedeemed.Authentication.Cookie.Redeemed))
+	assert.Equal(t, false, authNotRedeemed.Authentication.Cookie.Redeemed)
 
 	redeemCookie := qRedeemCookie(t, client, otpCookie.Value)
 
 	// make sure cookie is redeemed
-	assert.Equal(t, bool(redeemCookie.RedeemCookie.Redeemed), true)
+	assert.Equal(t, redeemCookie.RedeemCookie.Redeemed, true)
 	// make sure in the same session
-	assert.Equal(t, bool(redeemCookie.RedeemCookie.SameSession), true)
+	assert.Equal(t, redeemCookie.RedeemCookie.SameSession, true)
 
 	// check our auth query and make sure that it returns the correct cookie values
 	authRedeemed := qAuth(t, client)
 
 	// expect that our authentication query sees the cookie as redeemed
-	assert.Equal(t, true, bool(authRedeemed.Authentication.Cookie.Redeemed))
+	assert.Equal(t, true, authRedeemed.Authentication.Cookie.Redeemed)
 
 	// now, we register (cookie is redeemed from above query)
 	var register Register
@@ -165,7 +150,7 @@ func TestUserRegistration_complete(t *testing.T) {
 func TestRedeemCookie_invalid(t *testing.T) {
 	t.Parallel()
 
-	client, _, _ := getClient(t, nil)
+	client, _, _ := getHttpClient(t, nil)
 
 	redeemCookie := qRedeemCookie(t, client, "some-random-cookie")
 
@@ -178,7 +163,7 @@ func TestRedeemCookie_invalid(t *testing.T) {
 func TestUserLogin_existing(t *testing.T) {
 	t.Parallel()
 
-	client, httpUser, pass := getClient(t, passport.FreshPassport())
+	client, httpUser, pass := getHttpClient(t, passport.FreshPassport())
 
 	authenticate := mAuthenticate(t, client, "poisonminion_test@overdoll.com")
 
@@ -205,7 +190,7 @@ func TestUserLogin_existing(t *testing.T) {
 func TestUserLogin_from_another_session(t *testing.T) {
 	t.Parallel()
 
-	client, httpUser, _ := getClient(t, passport.FreshPassport())
+	client, httpUser, _ := getHttpClient(t, passport.FreshPassport())
 
 	authenticate := mAuthenticate(t, client, "poisonminion_test@overdoll.com")
 
@@ -213,25 +198,25 @@ func TestUserLogin_from_another_session(t *testing.T) {
 
 	assert.Equal(t, authenticate.Authenticate, true)
 
-	clientFromAnotherSession, _, _ := getClient(t, nil)
+	clientFromAnotherSession, _, _ := getHttpClient(t, nil)
 
 	redeemCookie := qRedeemCookie(t, clientFromAnotherSession, otpCookie.Value)
 
 	// should have indicated that it was redeemed by another session
-	assert.Equal(t, false, bool(redeemCookie.RedeemCookie.SameSession))
+	assert.Equal(t, false, redeemCookie.RedeemCookie.SameSession)
 
 	authRedeemed := qAuth(t, client)
 
 	// since our user's cookie was redeemed from another session, when the user runs this query
 	// the next time, it should just log them in
-	assert.Equal(t, "poisonminion", string(authRedeemed.Authentication.User.Username))
+	assert.Equal(t, "poisonminion", authRedeemed.Authentication.User.Username)
 }
 
 // Test empty authentication - we didnt pass any passport so it shouldn't do anything
 func TestGetUserAuthentication_empty(t *testing.T) {
 	t.Parallel()
 
-	client, _, _ := getClient(t, nil)
+	client, _, _ := getHttpClient(t, nil)
 
 	query := qAuth(t, client)
 
@@ -248,19 +233,19 @@ func TestGetUserAuthentication_user(t *testing.T) {
 	t.Parallel()
 
 	// userID is from one of our seeders (which will exist during testing)
-	client, _, _ := getClient(t, passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	client, _, _ := getHttpClient(t, passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 
 	query := qAuth(t, client)
 
 	require.Nil(t, query.Authentication.Cookie)
-	require.Equal(t, "poisonminion", string(query.Authentication.User.Username))
+	require.Equal(t, "poisonminion", query.Authentication.User.Username)
 }
 
 // test to make sure logout works (when passport is present)
 func TestLogout_user(t *testing.T) {
 	t.Parallel()
 
-	client, _, _ := getClient(t, passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	client, _, pass := getHttpClient(t, passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 
 	var mutation Logout
 
@@ -268,20 +253,49 @@ func TestLogout_user(t *testing.T) {
 
 	require.NoError(t, err)
 
-	require.Equal(t, mutation.Logout, true)
+	modified := pass.GetPassport()
+
+	// should no longer be authenticated
+	require.Equal(t, true, mutation.Logout)
+	require.Equal(t, false, modified.IsAuthenticated())
 }
 
 // TestUser_get - test GRPC endpoint for grabbing a user
 func TestUser_get(t *testing.T) {
 	t.Parallel()
 
-	evaClient, _ := clients.NewEvaClient(context.Background(), EvaGrpcClientAddr)
+	client := getGrpcClient(t)
 
-	res, err := evaClient.GetUser(context.Background(), &eva.GetUserRequest{Id: "1q7MJ3JkhcdcJJNqZezdfQt5pZ6"})
+	res, err := client.GetUser(context.Background(), &eva.GetUserRequest{Id: "1q7MJ3JkhcdcJJNqZezdfQt5pZ6"})
 
 	require.NoError(t, err)
 
 	assert.Equal(t, res.Username, "poisonminion")
+}
+
+func TestUser_lock_unlock(t *testing.T) {
+	t.Parallel()
+
+	client := getGrpcClient(t)
+
+	res, err := client.LockUser(context.Background(), &eva.LockUserRequest{
+		Id:       "1q7MIqqnkzew33q4elXuN1Ri27d",
+		Duration: 100000000,
+		Reason:   eva.LockUserReason_POST_INFRACTION,
+	})
+
+	require.NoError(t, err)
+
+	assert.Equal(t, true, res.Locked)
+
+	res, err = client.LockUser(context.Background(), &eva.LockUserRequest{
+		Id:       "1q7MIqqnkzew33q4elXuN1Ri27d",
+		Duration: 0,
+	})
+
+	require.NoError(t, err)
+
+	assert.Equal(t, false, res.Locked)
 }
 
 func getOTPCookieFromJar(t *testing.T, jar http.CookieJar) *http.Cookie {
@@ -302,11 +316,18 @@ func getOTPCookieFromJar(t *testing.T, jar http.CookieJar) *http.Cookie {
 	return otpCookie
 }
 
-func getClient(t *testing.T, pass *passport.Passport) (*graphql.Client, *http.Client, *clients.ClientPassport) {
+func getHttpClient(t *testing.T, pass *passport.Passport) (*graphql.Client, *http.Client, *clients.ClientPassport) {
 
 	client, transport := clients.NewHTTPClientWithHeaders(pass)
 
 	return graphql.NewClient(EvaHttpClientAddr, client), client, transport
+}
+
+func getGrpcClient(t *testing.T) eva.EvaClient {
+
+	evaClient, _ := clients.NewEvaClient(context.Background(), EvaGrpcClientAddr)
+
+	return evaClient
 }
 
 func startService() bool {

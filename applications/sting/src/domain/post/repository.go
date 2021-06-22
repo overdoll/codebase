@@ -2,12 +2,16 @@ package post
 
 import (
 	"context"
+
+	"overdoll/libraries/paging"
 )
 
 type Repository interface {
-	GetPendingPost(context.Context, string) (*PostPending, error)
-	CreatePendingPost(context.Context, *PostPending) error
-	UpdatePendingPost(context.Context, string, func(*PostPending) error) (*PostPending, error)
+	GetPendingPost(context.Context, string) (*PendingPost, error)
+	GetPendingPosts(context.Context) ([]*PendingPost, error)
+	CreatePendingPost(context.Context, *PendingPost) error
+	UpdatePendingPost(context.Context, string, func(*PendingPost) error) (*PendingPost, error)
+	DeletePendingPost(context.Context, string) error
 
 	CreatePost(context.Context, *Post) error
 	GetPost(context.Context, string) (*Post, error)
@@ -31,15 +35,16 @@ type Repository interface {
 }
 
 type IndexRepository interface {
-	IndexPendingPost(context.Context, *PostPending) error
-	BulkIndexPendingPosts(context.Context, []*PostPending) error
+	IndexPendingPost(context.Context, *PendingPost) error
+	BulkIndexPendingPosts(context.Context, []*PendingPost) error
 	DeletePendingPostIndex(context.Context) error
-	SearchPendingPosts(context.Context, string) ([]*PostPending, error)
+	SearchPendingPosts(context.Context, *paging.Cursor, *PendingPostFilters) (*PendingPostConnection, error)
 
 	BulkIndexPosts(context.Context, []*Post) error
 	DeletePostIndex(context.Context) error
 	DeletePostDocument(context.Context, string) error
 	IndexPost(context.Context, *Post) error
+	DeletePendingPostDocument(context.Context, string) error
 
 	DeleteArtistIndex(context.Context) error
 	BulkIndexArtists(context.Context, []*Artist) error

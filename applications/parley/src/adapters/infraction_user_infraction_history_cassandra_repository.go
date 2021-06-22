@@ -26,13 +26,13 @@ func marshalUserInfractionHistoryToDatabase(infractionHistory *infraction.UserIn
 	}
 }
 
-func (r InfractionCassandraRepository) DeleteUserInfractionHistory(ctx context.Context, id string) error {
+func (r InfractionCassandraRepository) DeleteUserInfractionHistory(ctx context.Context, userId, id string) error {
 
 	deleteUserInfraction := qb.Delete("users_infraction_history").
-		Where(qb.Eq("id")).
+		Where(qb.Eq("id"), qb.Eq("user_id")).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(&UserInfractionHistory{Id: id})
+		BindStruct(&UserInfractionHistory{Id: id, UserId: userId})
 
 	if err := deleteUserInfraction.ExecRelease(); err != nil {
 		return fmt.Errorf("ExecRelease() failed: '%s", err)
@@ -41,14 +41,14 @@ func (r InfractionCassandraRepository) DeleteUserInfractionHistory(ctx context.C
 	return nil
 }
 
-func (r InfractionCassandraRepository) GetUserInfractionHistoryById(ctx context.Context, id string) (*infraction.UserInfractionHistory, error) {
+func (r InfractionCassandraRepository) GetUserInfractionHistoryById(ctx context.Context, userId, id string) (*infraction.UserInfractionHistory, error) {
 
 	infractionHistoryQuery := qb.Select("users_infraction_history").
 		Columns("id", "reason", "user_id", "expiration").
-		Where(qb.Eq("id")).
+		Where(qb.Eq("id"), qb.Eq("user_id")).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(&UserInfractionHistory{Id: id})
+		BindStruct(&UserInfractionHistory{Id: id, UserId: userId})
 
 	var dbUserInfractionHistory UserInfractionHistory
 

@@ -16,6 +16,6 @@ var options = workflow.ActivityOptions{
 		InitialInterval:    time.Second,
 		BackoffCoefficient: 2.0,
 		MaximumInterval:    time.Minute,
-		MaximumAttempts:    500,
+		MaximumAttempts:    5,
 	},
 }

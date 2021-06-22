@@ -25,7 +25,19 @@ func NewCreatePendingPostHandler(pr post.Repository, eva EvaService, parley Parl
 	return CreatePendingPostHandler{pr: pr, eva: eva, parley: parley}
 }
 
-func (h CreatePendingPostHandler) Handle(ctx context.Context, contributorId, artistId, artistUsername string, content, characterIds, categoryIds []string, characterRequests map[string]string, mediaRequests []string) (*post.PostPending, error) {
+func (h CreatePendingPostHandler) Handle(ctx context.Context, contributorId, artistId, artistUsername string, content, characterIds, categoryIds []string, characterRequests map[string]string, mediaRequests []string) (*post.PendingPost, error) {
+
+	// Get our contributor
+	usr, err := h.eva.GetUser(ctx, contributorId)
+
+	if err != nil {
+		zap.S().Errorf("failed to get user: %s", err)
+		return nil, nil
+	}
+
+	if usr.IsLocked() {
+		return nil, ErrFailedPost
+	}
 
 	characters, err := h.pr.GetCharactersById(ctx, characterIds)
 
@@ -56,14 +68,6 @@ func (h CreatePendingPostHandler) Handle(ctx context.Context, contributorId, art
 		}
 	}
 
-	// Get our contributor
-	usr, err := h.eva.GetUser(ctx, contributorId)
-
-	if err != nil {
-		zap.S().Errorf("failed to get user: %s", err)
-		return nil, nil
-	}
-
 	moderatorId, err := h.parley.GetNextModeratorId(ctx)
 
 	if err != nil {
@@ -80,7 +84,7 @@ func (h CreatePendingPostHandler) Handle(ctx context.Context, contributorId, art
 	// Request new resources
 	pendingPost.RequestResources(characterRequests, make([]string, 0), mediaRequests)
 
-	_ = pendingPost.MakePublicOrReview()
+	_ = pendingPost.MakeProcessing()
 
 	// create a pending post in the database with all of the data
 	if err := h.pr.CreatePendingPost(ctx, pendingPost); err != nil {

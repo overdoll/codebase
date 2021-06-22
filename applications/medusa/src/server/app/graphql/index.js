@@ -44,13 +44,19 @@ class CookieDataSource extends RemoteGraphQLDataSource {
       return
     }
 
+    // add extensions object if it doesn't exist
+    if (!Object.prototype.hasOwnProperty.call(requestContext.request, 'extensions')) {
+      requestContext.request.extensions = {}
+    }
+
+    // remove "passport" from request in case user sends it (they could impersonate any user otherwise)
+    if (Object.prototype.hasOwnProperty.call(requestContext.request.extensions, 'passport')) {
+      delete requestContext.request.extensions.passport
+    }
+
     const { passport } = requestContext.context.req.session
 
     if (passport) {
-      if (!requestContext.request.extensions) {
-        requestContext.request.extensions = {}
-      }
-
       requestContext.request.extensions.passport = passport
     }
 
@@ -75,7 +81,12 @@ const gateway = new ApolloGateway({
 const server = new ApolloServer({
   gateway,
   subscriptions: false,
-  context: ({ req, res }) => ({ req, res })
+  context: ({ req, res }) => ({ req, res }),
+  playground: {
+    settings: {
+      'request.credentials': 'same-origin'
+    }
+  }
 })
 
 export default function (index) {

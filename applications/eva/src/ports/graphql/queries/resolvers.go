@@ -138,7 +138,7 @@ func (r *QueryResolver) Authentication(ctx context.Context) (*types.Authenticati
 
 		return &types.Authentication{
 			Cookie: nil,
-			User:   &types.User{Username: usr.Username()},
+			User:   &types.User{ID: usr.ID(), Username: usr.Username(), Roles: usr.UserRolesAsString()},
 		}, nil
 	}
 

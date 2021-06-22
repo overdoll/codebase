@@ -15,7 +15,7 @@ func TestUser_creates_properly(t *testing.T) {
 	email := "test-email@test-email.com"
 	avatar := "test-avatar"
 
-	ck := user.UnmarshalUserFromDatabase(uuid.New().String(), "test-username", email, roles, false, avatar)
+	ck := user.UnmarshalUserFromDatabase(uuid.New().String(), "test-username", email, roles, false, avatar, false, 0, "")
 
 	assert.Equal(t, ck.UserRolesAsString(), roles)
 	assert.Equal(t, ck.Email(), email)

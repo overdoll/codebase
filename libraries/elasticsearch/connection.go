@@ -8,24 +8,13 @@ import (
 	"time"
 
 	"github.com/cenkalti/backoff/v4"
-	"github.com/elastic/go-elasticsearch/v8"
+	"github.com/elastic/go-elasticsearch/v7"
 )
 
 // SearchResults wraps the Elasticsearch search response.
 type SearchResults struct {
 	Total int               `json:"total"`
 	Hits  []json.RawMessage `json:"hits"`
-}
-
-// Hit wraps the document returned in search response.
-type Hit struct {
-	Id         string
-	Sort       []interface{} `json:"sort"`
-	Highlights *struct {
-		Title      []string `json:"title"`
-		Alt        []string `json:"alt"`
-		Transcript []string `json:"transcript"`
-	} `json:"highlights,omitempty"`
 }
 
 type Store struct {

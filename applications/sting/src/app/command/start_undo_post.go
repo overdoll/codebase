@@ -23,9 +23,5 @@ func (h StartUndoPostHandler) Handle(ctx context.Context, id string) error {
 		return err
 	}
 
-	if err := pst.MakeUndo(); err != nil {
-		return err
-	}
-
-	return nil
+	return pst.MakeUndo()
 }

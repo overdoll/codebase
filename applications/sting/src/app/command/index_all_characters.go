@@ -17,23 +17,15 @@ func NewIndexAllCharactersHandler(pr post.Repository, pi post.IndexRepository) I
 
 func (h IndexAllCharactersHandler) Handle(ctx context.Context) error {
 
-	err := h.pi.DeleteCharacterIndex(ctx)
-
-	if err != nil {
-
+	if err := h.pi.DeleteCharacterIndex(ctx); err != nil {
+		return err
 	}
 
 	characters, err := h.pr.GetCharacters(ctx)
 
 	if err != nil {
-
+		return err
 	}
 
-	err = h.pi.BulkIndexCharacters(ctx, characters)
-
-	if err != nil {
-
-	}
-
-	return nil
+	return h.pi.BulkIndexCharacters(ctx, characters)
 }

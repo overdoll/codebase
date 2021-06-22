@@ -22,7 +22,7 @@ export type CharactersQueryResponse = {|
     +media: {|
       +id: string,
       +title: string,
-      +thumbnail: ?string,
+      +thumbnail: string,
     |},
   |}>
 |};

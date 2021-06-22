@@ -1,0 +1,41 @@
+type PendingPostAuditLogEdge {
+  node: PendingPostAuditLog!
+}
+
+type PendingPostAuditLogConnection {
+  edges: [PendingPostAuditLogEdge!]!
+}
+
+type PendingPostAuditLog {
+  id: String!
+  postId: String!
+  contributor: AuditUser!
+  moderator: AuditUser!
+  infractionId: String
+  status: String!
+  reason: String!
+  notes: String!
+  reverted: Boolean!
+  canRevert: Boolean!
+}
+
+type AuditUser {
+  id: String!
+  username: String!
+}
+
+input PendingPostAuditLogFilters {
+  moderatorId: String
+  contributorId: String
+  postId: String
+  dateRange: [Int!]
+}
+
+extend type Query {
+  """
+  Get pending post for the currently-logged in user
+
+  Filters are available, but the moderatorId filter will only work if you are at least a staff role
+  """
+  pendingPostAuditLogs(filter: PendingPostAuditLogFilters!): PendingPostAuditLogConnection!
+}

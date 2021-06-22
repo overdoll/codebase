@@ -11,12 +11,11 @@ require (
 	github.com/bxcodec/faker/v3 v3.6.0
 	github.com/cenkalti/backoff/v4 v4.1.0
 	github.com/dustin/go-humanize v1.0.0
-	github.com/elastic/go-elasticsearch/v8 v8.0.0-20210305160311-265434a3b4ca
+	github.com/elastic/go-elasticsearch/v7 v7.13.1
 	github.com/gin-gonic/gin v1.7.2
 	github.com/gocql/gocql v0.0.0-20210515062232-b7ef815b4556
 	github.com/golang/protobuf v1.5.2
 	github.com/golang/snappy v0.0.3 // indirect
-	github.com/google/uuid v1.2.0
 	github.com/gorilla/securecookie v1.1.1
 	github.com/gorilla/websocket v1.4.2
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0

@@ -2,11 +2,6 @@
 
 package types
 
-type AuthListener struct {
-	SameSession bool    `json:"sameSession"`
-	Cookie      *Cookie `json:"cookie"`
-}
-
 type Authentication struct {
 	Cookie *Cookie `json:"cookie"`
 	User   *User   `json:"user"`
@@ -30,11 +25,9 @@ type RegisterInput struct {
 }
 
 type User struct {
-	Username string `json:"username"`
+	ID       string   `json:"id"`
+	Username string   `json:"username"`
+	Roles    []string `json:"roles"`
 }
 
-type Workaround1 struct {
-	ID *int `json:"id"`
-}
-
-func (Workaround1) IsEntity() {}
+func (User) IsEntity() {}

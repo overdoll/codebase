@@ -14,6 +14,10 @@ type UserInfractionHistory struct {
 	userLockLength int64
 }
 
+var (
+	LengthPeriodBans = []int64{0, 1, 3, 5, 7}
+)
+
 func NewUserInfractionHistory(userId string, pastUserInfractionHistory []*UserInfractionHistory, reason string) *UserInfractionHistory {
 
 	var activeInfractions []*UserInfractionHistory
@@ -26,11 +30,29 @@ func NewUserInfractionHistory(userId string, pastUserInfractionHistory []*UserIn
 		}
 	}
 
-	// How long the next infraction will take to expire (considers all past infractions that are active)
-	expiration := time.Now().Add(time.Hour * 24 * time.Duration(len(activeInfractions)))
+	// This will be the user's last ban (this one locks account indefinitely)
+	if len(activeInfractions)+1 > len(LengthPeriodBans) {
+		return &UserInfractionHistory{
+			id:             ksuid.New().String(),
+			userId:         userId,
+			reason:         reason,
+			expiration:     time.Now(),
+			userLockLength: -1,
+		}
+	}
 
-	// TODO: how long should the user account be locked for??
-	lockLength := (expiration.UnixNano() / int64(time.Millisecond) / int64(4)) - (time.Now().UnixNano() / int64(time.Millisecond))
+	index := 0
+
+	if len(activeInfractions) > 0 {
+		index = len(activeInfractions) - 1
+	}
+
+	banPeriod := LengthPeriodBans[index]
+
+	// Expiration is 4x the ban length
+	expiration := time.Now().Add(time.Hour * 24 * time.Duration(banPeriod*4))
+	// user account is locked /4 of expiration
+	lockLength := time.Now().Add(time.Hour * 24 * time.Duration(banPeriod)).Unix()
 	return &UserInfractionHistory{
 		id:             ksuid.New().String(),
 		userId:         userId,

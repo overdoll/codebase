@@ -2,8 +2,14 @@
 
 package types
 
+type AuditUser struct {
+	ID       string `json:"id"`
+	Username string `json:"username"`
+}
+
 type ModeratePost struct {
-	Validation *Validation `json:"validation"`
+	AuditLog   *PendingPostAuditLog `json:"auditLog"`
+	Validation *Validation          `json:"validation"`
 }
 
 type ModeratePostInput struct {
@@ -13,19 +19,31 @@ type ModeratePostInput struct {
 }
 
 type PendingPostAuditLog struct {
-	ID           string  `json:"id"`
-	PostID       string  `json:"postId"`
-	Contributor  *User   `json:"contributor"`
-	Moderator    *User   `json:"moderator"`
-	InfractionID *string `json:"infractionId"`
-	Status       string  `json:"status"`
-	Reason       string  `json:"reason"`
-	Notes        string  `json:"notes"`
-	Reverted     bool    `json:"reverted"`
+	ID           string     `json:"id"`
+	PostID       string     `json:"postId"`
+	Contributor  *AuditUser `json:"contributor"`
+	Moderator    *AuditUser `json:"moderator"`
+	InfractionID *string    `json:"infractionId"`
+	Status       string     `json:"status"`
+	Reason       string     `json:"reason"`
+	Notes        string     `json:"notes"`
+	Reverted     bool       `json:"reverted"`
+	CanRevert    bool       `json:"canRevert"`
 }
 
-type PendingPostAuditLogInput struct {
-	ModeratorID string `json:"moderatorId"`
+type PendingPostAuditLogConnection struct {
+	Edges []*PendingPostAuditLogEdge `json:"edges"`
+}
+
+type PendingPostAuditLogEdge struct {
+	Node *PendingPostAuditLog `json:"node"`
+}
+
+type PendingPostAuditLogFilters struct {
+	ModeratorID   *string `json:"moderatorId"`
+	ContributorID *string `json:"contributorId"`
+	PostID        *string `json:"postId"`
+	DateRange     []int   `json:"dateRange"`
 }
 
 type PendingPostRejectionReason struct {
@@ -39,16 +57,17 @@ type RevertPostInput struct {
 }
 
 type User struct {
-	ID       string `json:"id"`
-	Username string `json:"username"`
+	ID                string                    `json:"id"`
+	InfractionHistory []*UsersInfractionHistory `json:"infractionHistory"`
+}
+
+func (User) IsEntity() {}
+
+type UsersInfractionHistory struct {
+	ID     string `json:"id"`
+	Reason string `json:"reason"`
 }
 
 type Validation struct {
 	Code string `json:"code"`
 }
-
-type Workaround3 struct {
-	ID *int `json:"id"`
-}
-
-func (Workaround3) IsEntity() {}

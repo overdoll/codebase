@@ -3,6 +3,7 @@ package ports
 import (
 	"context"
 
+	"github.com/spf13/viper"
 	"go.temporal.io/sdk/client"
 	sting "overdoll/applications/sting/proto"
 	"overdoll/applications/sting/src/app"
@@ -48,7 +49,7 @@ func (s Server) PublishPendingPost(ctx context.Context, request *sting.PendingPo
 	}
 
 	options := client.StartWorkflowOptions{
-		TaskQueue: "sting",
+		TaskQueue: viper.GetString("temporal.queue"),
 		ID:        "NewPublishPostWorkflow_" + request.Id,
 	}
 
@@ -67,7 +68,7 @@ func (s Server) DiscardPendingPost(ctx context.Context, request *sting.PendingPo
 	}
 
 	options := client.StartWorkflowOptions{
-		TaskQueue: "sting",
+		TaskQueue: viper.GetString("temporal.queue"),
 		ID:        "NewDiscardPostWorkflow_" + request.Id,
 	}
 
@@ -86,7 +87,7 @@ func (s Server) UndoPendingPost(ctx context.Context, request *sting.PendingPostR
 	}
 
 	options := client.StartWorkflowOptions{
-		TaskQueue: "sting",
+		TaskQueue: viper.GetString("temporal.queue"),
 		ID:        "NewUndoPostWorkflow_" + request.Id,
 	}
 

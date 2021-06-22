@@ -1,13 +1,38 @@
 CREATE TABLE IF NOT EXISTS moderators
 (
+    bucket        int,
     user_id       text,
     last_selected timestamp,
-    primary key ( user_id ),
+    primary key ( bucket, user_id ),
 );
 
 CREATE TABLE IF NOT EXISTS pending_posts_audit_log
 (
+    id                  text,
+    moderator_user_id   text,
+    bucket              int,
+    created_ms          int,
+    post_id             text,
+    contributor_user_id text,
+    primary key ( id ),
+);
+
+CREATE TABLE IF NOT EXISTS pending_posts_audit_logs_by_post
+(
+    post_id             text,
+    id                  text,
+    moderator_user_id   text,
+    bucket              int,
+    created_ms          int,
+    contributor_user_id text,
+    primary key ( post_id ),
+);
+
+CREATE TABLE IF NOT EXISTS pending_posts_audit_logs_by_moderator
+(
     id                        text,
+    bucket                    int,
+    created_ms                int,
     post_id                   text,
     contributor_user_id       text,
     contributor_user_username text,
@@ -18,21 +43,10 @@ CREATE TABLE IF NOT EXISTS pending_posts_audit_log
     reason                    text,
     notes                     text,
     reverted                  boolean,
-    primary key ( id, post_id, moderator_user_id, contributor_user_id ),
-);
+    primary key ( (moderator_user_id, bucket), created_ms, contributor_user_id, post_id, id ),
+) WITH CLUSTERING ORDER BY (created_ms DESC, contributor_user_id DESC, post_id DESC, id DESC);
 
-CREATE TABLE IF NOT EXISTS users_audit_log
-(
-    id                      text,
-    user_id                 text,
-    user_username           text,
-    moderator_user_id       text,
-    moderator_user_username text,
-    infraction_id           text,
-    notes                   text,
-    reverted                boolean,
-    primary key ( id, user_id, moderator_user_id ),
-);
+CREATE INDEX IF NOT EXISTS pending_posts_audit_logs_by_moderator_status on pending_posts_audit_logs_by_moderator (status);
 
 CREATE TABLE IF NOT EXISTS users_infraction_history
 (
@@ -40,13 +54,15 @@ CREATE TABLE IF NOT EXISTS users_infraction_history
     user_id    text,
     reason     text,
     expiration timestamp,
-    primary key ( id, user_id, expiration ),
-) WITH CLUSTERING ORDER BY (user_id DESC, expiration DESC);
+    primary key ( user_id, id),
+) WITH CLUSTERING ORDER BY (id DESC);
 
 CREATE TABLE IF NOT EXISTS pending_posts_rejection_reasons
 (
+    bucket     int,
     id         text,
     reason     text,
     infraction boolean,
-    primary key ( (id) ),
+    primary key ( bucket , id ),
 );
+
