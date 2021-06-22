@@ -15,8 +15,11 @@ import InterfaceArrowsButtonDown
 type Props = {
   file: any,
   thumbnail: ?string,
-  progress: any,
-  onRemove: any,
+  progress: {
+    0: number,
+    1: number
+  },
+  onRemove: () => void,
   index: number,
 };
 
@@ -39,6 +42,7 @@ export default function File ({
           overflow='hidden'
           objectFit='cover'
           borderColor={snapshot.isDragging ? 'red.500' : 'gray.900'}
+          userSelect='none'
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}

@@ -24,9 +24,9 @@ const U: UppyType = new Uppy({
         return {
           ...currentFile,
           name: currentFile.name + '__' + Date.now()
+
         }
       }
-
 }
 )
 

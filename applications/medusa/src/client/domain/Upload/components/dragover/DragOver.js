@@ -2,8 +2,8 @@
  * @flow
  */
 import type { Node } from 'react'
-import { useRef, useState } from 'react'
-import { Flex, useToast, Heading, useDisclosure, Box } from '@chakra-ui/react'
+import { useState } from 'react'
+import { Flex, useToast, Heading, useDisclosure } from '@chakra-ui/react'
 import type { Uppy } from '@uppy/core'
 import Icon from '@//:modules/content/icon/Icon'
 import InterfaceContentArchive

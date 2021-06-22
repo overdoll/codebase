@@ -63,5 +63,8 @@
       "again": "Post again",
       "home": "Go home"
     }
+  },
+  "uppy": {
+    "limit": "You have exceeded the file upload limit."
   }
 }

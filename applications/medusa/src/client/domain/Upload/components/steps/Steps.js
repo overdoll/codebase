@@ -182,8 +182,11 @@ export default function Steps ({ uppy, state, dispatch, hasStepsLoaded }: Props)
 
   // Cleanup - reset uppy uploads and state
   const onCancel = () => {
-    uppy.reset()
-    dispatch({ type: EVENTS.CLEANUP, value: INITIAL_STATE })
+    const cancel = confirm(t('confirm.cancel'))
+    if (cancel) {
+      uppy.reset()
+      dispatch({ type: EVENTS.CLEANUP, value: INITIAL_STATE })
+    }
   }
 
   return (

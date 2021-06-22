@@ -22,5 +22,8 @@
   "loading": {
     "header": "Hold on...",
     "subheader": "We're getting a few things ready for you"
+  },
+  "confirm": {
+    "cancel": "Are you sure you would like to cancel?"
   }
 }
