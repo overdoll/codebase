@@ -2,7 +2,7 @@
  * @flow
  */
 import type { Node } from 'react'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import {
   useDisclosure,
   Box,

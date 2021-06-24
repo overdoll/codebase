@@ -4,7 +4,6 @@
 import type { Node } from 'react'
 import {
   Flex,
-  Spinner,
   CircularProgress,
   CircularProgressLabel,
   Skeleton,
@@ -23,9 +22,8 @@ import SuspenseImage from '@//:modules/utilities/SuspenseImage'
 type Props = {
   thumbnail: string,
   progress: {
-    key: {
-      key: number
-    }
+    0: number,
+    1: number,
   },
   type?: string,
 };

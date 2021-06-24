@@ -22,7 +22,7 @@ const U: UppyType = new Uppy({
       (currentFile, files) => {
         return {
           ...currentFile,
-          name: currentFile.name + '__' + Date.now()
+          name: `${currentFile.name}__${Date.now()}`
 
         }
       }

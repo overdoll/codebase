@@ -2,7 +2,6 @@
  * @flow
  */
 import type { Node } from 'react'
-import { useRef } from 'react'
 import Arrange from './arrange/Arrange'
 import Begin from './begin/Begin'
 import { EVENTS, INITIAL_STATE, STEPS } from '../../constants/constants'
@@ -16,7 +15,7 @@ import type {
 } from '@//:artifacts/StepsMutation.graphql'
 import type { Dispatch, State } from '@//:types/upload'
 import {
-  useToast, Flex, Spacer, Center, Spinner, Heading, Text, AlertDialog,
+  useToast, Flex, Spacer, Center, AlertDialog,
   AlertDialogBody,
   AlertDialogFooter,
   AlertDialogHeader,

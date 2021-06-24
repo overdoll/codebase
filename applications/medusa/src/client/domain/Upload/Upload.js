@@ -100,6 +100,11 @@ export default function Upload (): Node {
     })
 
     uppy.on('restriction-failed', (file, error) => {
+      notify({
+        status: 'error',
+        title: 'restriction error',
+        isClosable: true
+      })
     })
 
     uppy.on('info-visible', () => {
