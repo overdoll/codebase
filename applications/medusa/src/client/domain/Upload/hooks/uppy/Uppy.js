@@ -7,7 +7,6 @@ import Uppy from '@uppy/core'
 import Tus from '@uppy/tus'
 import CanUseDOM from '@//:modules/utilities/CanUseDOM'
 import GoldenRetriever from '@uppy/golden-retriever'
-import '@uppy/drop-target/dist/style.css'
 
 const U: UppyType = new Uppy({
   id: 'posts',

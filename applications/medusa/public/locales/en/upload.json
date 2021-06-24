@@ -66,5 +66,13 @@
   },
   "uppy": {
     "limit": "You have exceeded the file upload limit."
+  },
+  "steps": {
+    "cancel_modal": {
+      "header": "Cancel Upload",
+      "subheader": "Are you sure you would like to cancel your upload?",
+      "confirm": "Cancel Upload",
+      "back": "Go Back"
+    }
   }
 }

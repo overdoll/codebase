@@ -2,6 +2,7 @@
  * @flow
  */
 import type { Node } from 'react'
+import { useRef } from 'react'
 import Arrange from './arrange/Arrange'
 import Begin from './begin/Begin'
 import { EVENTS, INITIAL_STATE, STEPS } from '../../constants/constants'
@@ -14,7 +15,14 @@ import type {
   StepsMutation
 } from '@//:artifacts/StepsMutation.graphql'
 import type { Dispatch, State } from '@//:types/upload'
-import { useToast, Flex, Spacer, Center, Spinner, Heading, Text, Box } from '@chakra-ui/react'
+import {
+  useToast, Flex, Spacer, Center, Spinner, Heading, Text, AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay, useDisclosure
+} from '@chakra-ui/react'
 import Button from '@//:modules/form/button'
 import { useTranslation } from 'react-i18next'
 import type { Uppy } from '@uppy/core'
@@ -43,7 +51,11 @@ export default function Steps ({ uppy, state, dispatch, hasStepsLoaded }: Props)
 
   const notify = useToast()
 
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
   const [t] = useTranslation('general')
+
+  const [u] = useTranslation('upload')
 
   // Tagging step - disabled if the conditions aren't met
   const NextDisabled =
@@ -182,11 +194,9 @@ export default function Steps ({ uppy, state, dispatch, hasStepsLoaded }: Props)
 
   // Cleanup - reset uppy uploads and state
   const onCancel = () => {
-    const cancel = confirm(t('confirm.cancel'))
-    if (cancel) {
-      uppy.reset()
-      dispatch({ type: EVENTS.CLEANUP, value: INITIAL_STATE })
-    }
+    onClose()
+    uppy.reset()
+    dispatch({ type: EVENTS.CLEANUP, value: INITIAL_STATE })
   }
 
   return (
@@ -221,9 +231,36 @@ export default function Steps ({ uppy, state, dispatch, hasStepsLoaded }: Props)
                       </Button>
                       )
                     : (
-                      <Button size='lg' variant='ghost' onClick={onCancel}>
-                        {t('button.cancel')}
-                      </Button>
+                      <>
+                        <Button size='lg' variant='ghost' onClick={onOpen}>
+                          {t('button.cancel')}
+                        </Button>
+                        <AlertDialog
+                          isOpen={isOpen}
+                          onClose={onClose}
+                        >
+                          <AlertDialogOverlay>
+                            <AlertDialogContent>
+                              <AlertDialogHeader fontSize='lg'>
+                                {u('steps.cancel_modal.header')}
+                              </AlertDialogHeader>
+
+                              <AlertDialogBody>
+                                {u('steps.cancel_modal.subheader')}
+                              </AlertDialogBody>
+
+                              <AlertDialogFooter>
+                                <Button size='lg' onClick={onClose}>
+                                  {u('steps.cancel_modal.back')}
+                                </Button>
+                                <Button size='lg' variant='outline' colorScheme='orange' onClick={onCancel} ml={3}>
+                                  {u('steps.cancel_modal.confirm')}
+                                </Button>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialogOverlay>
+                        </AlertDialog>
+                      </>
                       )}
                   <Spacer />
                   {state.step !== STEPS.REVIEW

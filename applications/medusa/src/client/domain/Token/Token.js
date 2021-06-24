@@ -22,7 +22,8 @@ import {
 } from '@chakra-ui/react'
 import { useFlash } from '@//:modules/flash'
 import { Helmet } from 'react-helmet-async'
-import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/sign-badge-circle-K1i3HA.svg'
+import SignBadgeCircle
+  from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
 
 type Props = {
   prepared: {

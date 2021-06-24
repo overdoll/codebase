@@ -201,6 +201,12 @@ describe('Upload', () => {
   it('should be able to cancel upload by clicking back button', () => {
     cy.findByRole('button', { name: /Cancel/u }).click()
 
+    cy.findByRole('button', { name: /Go Back/u }).click()
+
+    cy.findByRole('button', { name: /Cancel/u }).click()
+
+    cy.findByRole('button', { name: /Cancel Upload/u }).click()
+
     cy.findByText(/Upload up to/u).should('exist')
   })
 })

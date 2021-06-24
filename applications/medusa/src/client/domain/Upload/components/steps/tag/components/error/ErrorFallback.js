@@ -4,8 +4,8 @@
 import type { Node } from 'react'
 import type { Error } from '@//:modules/utilities/ErrorBoundary'
 import { Flex, Heading, IconButton } from '@chakra-ui/react'
-import ButtonRefreshArrows from '@streamlinehq/streamlinehq/img/streamline-bold/button-refresh-arrows-08UlnL.svg'
-
+import ButtonRefreshArrows
+  from '@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/multimedia-controls/button-refresh-arrows.svg'
 import { useTranslation } from 'react-i18next'
 import Icon from '@//:modules/content/icon/Icon'
 

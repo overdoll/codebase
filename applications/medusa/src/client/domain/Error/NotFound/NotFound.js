@@ -3,7 +3,8 @@
  */
 import type { Node } from 'react'
 import Icon from '@//:modules/content/icon/Icon'
-import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/sign-badge-circle-K1i3HA.svg'
+import SignBadgeCircle
+  from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
 import { useTranslation } from 'react-i18next'
 import { Center, Flex, Heading, Stack } from '@chakra-ui/react'
 import Button from '@//:modules/form/button'

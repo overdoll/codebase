@@ -5,9 +5,7 @@
 import type { Node } from 'react'
 import { IconButton, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react'
 import Icon from '@//:modules/content/icon/Icon'
-
-import InterfaceSettingMenuVerticalAlternate
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-setting-menu-vertical-alternate-2aEu7b.svg'
+import InterfaceSettingMenuVerticalAlternate from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/setting/interface-setting-menu-vertical-alternate.svg'
 import { useTranslation } from 'react-i18next'
 
 type Props = {

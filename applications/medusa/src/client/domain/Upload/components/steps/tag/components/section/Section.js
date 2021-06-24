@@ -10,10 +10,11 @@ import {
   AccordionButton,
   AccordionPanel
 } from '@chakra-ui/react'
-import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/sign-badge-circle-K1i3HA.svg'
-import ArrowUp1 from '@streamlinehq/streamlinehq/img/streamline-bold/arrow-up-1-PopoM3.svg'
-import ArrowDown1 from '@streamlinehq/streamlinehq/img/streamline-bold/arrow-down-1-n8OIDy.svg'
-import AddCircle1 from '@streamlinehq/streamlinehq/img/streamline-bold/add-circle-1-J4vPX8.svg'
+import SignBadgeCircle
+  from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
+import ArrowUp1 from '@streamlinehq/streamlinehq/img/streamline-bold/arrows-diagrams/arrows/arrow-up-1.svg'
+import ArrowDown1 from '@streamlinehq/streamlinehq/img/streamline-bold/arrows-diagrams/arrows/arrow-down-1.svg'
+import AddCircle1 from '@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/remove-add/add-circle-1.svg'
 import Button from '@//:modules/form/button'
 import { useTranslation } from 'react-i18next'
 
