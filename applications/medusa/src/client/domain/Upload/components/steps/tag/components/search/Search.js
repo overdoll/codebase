@@ -3,7 +3,6 @@
  */
 import type { Node } from 'react'
 import { Suspense, useCallback, useState } from 'react'
-import { useTransition } from '@//:modules/experimental'
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
 import ErrorFallback from '../error/ErrorFallback'
 import LoadingSearch from '../loading/LoadingSearch'
@@ -12,13 +11,15 @@ import {
   ModalContent,
   ModalCloseButton,
   ModalBody,
-  ModalHeader, Modal, Heading, InputRightElement, IconButton, MenuButton
+  ModalHeader, Modal, Heading, InputRightElement, IconButton
 } from '@chakra-ui/react'
 import Button from '@//:modules/form/button'
 import { useTranslation } from 'react-i18next'
 import Icon from '@//:modules/content/icon/Icon'
-import SearchCircle from '@streamlinehq/streamlinehq/img/streamline-regular/search-circle-sjsJ8a.svg'
-import InterfaceDelete1 from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-delete-1-n8Oxoc.svg'
+import SearchCircle
+  from '@streamlinehq/streamlinehq/img/streamline-regular/interface-essential/search/search-circle.svg'
+import InterfaceDelete1
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/add-remove-delete/interface-delete-1.svg'
 
 type Props = {
   children: Node,
