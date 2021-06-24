@@ -142,7 +142,7 @@ export default function Search ({
             >
               <InputGroup>
                 <InputLeftElement pointerEvents='none'>
-                  <Icon icon={SearchCircle} color='red.500' />
+                  <Icon h={6} w={6} icon={SearchCircle} color='red.500' />
                 </InputLeftElement>
                 <Input
                   size='md'

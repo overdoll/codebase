@@ -57,7 +57,7 @@ export default function Section ({
                 <Heading fontSize='xl'>{title}</Heading>
               </Flex>
               <Flex w='20%' justify='flex-end'>
-                <Icon icon={isExpanded ? ArrowUp1 : ArrowDown1} fill='gray.50' />
+                <Icon w={8} h={8} icon={isExpanded ? ArrowUp1 : ArrowDown1} fill='gray.50' />
               </Flex>
             </AccordionButton>
             <AccordionPanel align='center' direction='row' border='hidden'>
@@ -66,7 +66,7 @@ export default function Section ({
                 size='md'
                 type='buttons.tertiary.alternate'
                 onClick={onOpenSearch}
-                leftIcon={<Icon icon={AddCircle1} fill='gray.50' />}
+                leftIcon={<Icon w={6} h={6} icon={AddCircle1} fill='gray.50' />}
               >
                 {t('button.add')}
               </Button>

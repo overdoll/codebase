@@ -14,7 +14,7 @@ import dataURItoBlob from '@uppy/utils/lib/dataURItoBlob'
 // we only want to do this if we were on the "finish" step
 // If we are on anything else, we consider the upload flow to be "incomplete" and users can
 // keep their progress if they come back to this page
-const useUpload = (state: State, dispatch: Dispatch, setStepsLoaded: () => void): Uppy => {
+const useUpload = (state: State, dispatch: Dispatch): Uppy => {
   const uppy = useRef<Uppy>(undefined)
   if (uppy.current === undefined) {
     uppy.current = UppyInstance
@@ -23,12 +23,6 @@ const useUpload = (state: State, dispatch: Dispatch, setStepsLoaded: () => void)
   const [uppyStateLoaded, setUppyStateLoaded] = useState(false)
 
   const [filesLoaded, setFilesLoaded] = useState(false)
-
-  useEffect(() => {
-    if (uppyStateLoaded && filesLoaded) {
-      setStepsLoaded(true)
-    }
-  }, [uppyStateLoaded, filesLoaded])
 
   useEffect(() => {
     return () => {
@@ -168,7 +162,7 @@ const useUpload = (state: State, dispatch: Dispatch, setStepsLoaded: () => void)
       })
   }, [])
 
-  return uppy.current
+  return [uppy.current, uppyStateLoaded && filesLoaded]
 }
 
 export default useUpload

@@ -2,13 +2,13 @@
  * @flow
  */
 import type { Node } from 'react'
-import { useEffect, useReducer, useState } from 'react'
+import { useEffect, useReducer } from 'react'
 import Steps from './components/steps/Steps'
 import type { Action, State } from '@//:types/upload'
 import { EVENTS, INITIAL_STATE, STEPS } from './constants/constants'
 import reducer from './reducer'
 import useUpload from './hooks'
-import { useToast } from '@chakra-ui/react'
+import { Flex, Heading, Spinner, Text, useToast } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
 
@@ -20,14 +20,12 @@ export default function Upload (): Node {
     INITIAL_STATE
   )
 
-  const [stepsLoaded, setStepsLoaded] = useState(false)
-
   // hook controls lifecycle of uppy & restoring indexeddb state
-  const uppy = useUpload(state, dispatch, setStepsLoaded)
+  const [uppy, isLoaded] = useUpload(state, dispatch)
+
+  const [t] = useTranslation('general')
 
   const notify = useToast()
-
-  const [t] = useTranslation('upload')
 
   // Add to thumbnails state when a new thumbnail is added
   useEffect(() => {
@@ -125,10 +123,20 @@ export default function Upload (): Node {
     })
   }, [notify, uppy])
 
+  if (!isLoaded) {
+    return (
+      <Flex mt={40} h='100%' align='center' justify='center' direction='column'>
+        <Spinner mb={6} thickness={4} size='xl' color='red.500' />
+        <Heading mb={1} size='md' color='gray.00'>{t('loading.header')}</Heading>
+        <Text size='sm' color='gray.100'>{t('loading.subheader')}</Text>
+      </Flex>
+    )
+  }
+
   return (
     <>
       <Helmet title='upload' />
-      <Steps uppy={uppy} state={state} dispatch={dispatch} hasStepsLoaded={stepsLoaded} />
+      <Steps uppy={uppy} state={state} dispatch={dispatch} />
     </>
   )
 }

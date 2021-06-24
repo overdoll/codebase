@@ -57,28 +57,25 @@ export default function Thumbnail ({ thumbnail, progress, type }: Props): Node {
         justify='center'
         align='center'
       >
-        {progress
-          ? (
-              progress['0'] !== progress['1']
-                ? (
-                  <CircularProgress
-                    value={(progress['0'] / progress['1']) * 100}
-                    color='red.500'
-                    size='100px'
-                    thickness={4}
-                  >
-                    <CircularProgressLabel color='gray.00'>
-                      {((progress['0'] / progress['1']) * 100).toFixed(0)}%
-                    </CircularProgressLabel>
-                  </CircularProgress>
-                  )
-                : (<Box borderRadius={15} bg='dimmers.500'>
-                  <Icon m={2} icon={type === 'video' ? ComputerWebcamVideo : ImageCamera1} fill='gray.00' w={8} h={8} />
-                   </Box>)
-            )
-          : (
-            <Spinner color='red.500' />
-            )}
+        {
+          progress && progress['0'] !== progress['1']
+            ? (
+              <CircularProgress
+                value={(progress['0'] / progress['1']) * 100}
+                color='red.500'
+                size='100px'
+                thickness={4}
+              >
+                <CircularProgressLabel color='gray.00'>
+                  {((progress['0'] / progress['1']) * 100).toFixed(0)}%
+                </CircularProgressLabel>
+              </CircularProgress>
+              )
+            : (<Box borderRadius={15} bg='dimmers.500'>
+              <Icon m={2} icon={type === 'video' ? ComputerWebcamVideo : ImageCamera1} fill='gray.00' w={8} h={8} />
+            </Box>
+              )
+        }
       </Flex>
 
     </Flex>

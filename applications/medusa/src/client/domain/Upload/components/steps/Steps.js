@@ -31,7 +31,6 @@ type Props = {
   uppy: Uppy,
   state: State,
   dispatch: Dispatch,
-  hasStepsLoaded: boolean,
 };
 
 const SubmitGraphQL = graphql`
@@ -46,7 +45,7 @@ const SubmitGraphQL = graphql`
 `
 
 // Stepper - handles all stepping functions
-export default function Steps ({ uppy, state, dispatch, hasStepsLoaded }: Props): Node {
+export default function Steps ({ uppy, state, dispatch }: Props): Node {
   const [commit, isInFlight] = useMutation<StepsMutation>(SubmitGraphQL)
 
   const notify = useToast()
@@ -208,86 +207,80 @@ export default function Steps ({ uppy, state, dispatch, hasStepsLoaded }: Props)
         direction='column'
         mb={6}
       >
-        {!hasStepsLoaded
-          ? <Flex mt={40} h='100%' align='center' justify='center' direction='column'>
-            <Spinner mb={6} thickness={4} size='xl' color='red.500' />
-            <Heading mb={1} size='md' color='gray.00'>{t('loading.header')}</Heading>
-            <Text size='sm' color='gray.100'>{t('loading.subheader')}</Text>
+        <>
+          {Step()}
+          <Flex>
+            {state.step !== null && state.step !== STEPS.FINISH && (
+              <Flex w='100%' justify='space-between' mt={2}>
+                {state.step !== STEPS.ARRANGE
+                  ? (
+                    <Button
+                      size='lg'
+                      disabled={isInFlight}
+                      onClick={PrevStep}
+                      variant='ghost'
+                    >
+                      {t('button.back')}
+                    </Button>
+                    )
+                  : (
+                    <>
+                      <Button size='lg' variant='ghost' onClick={onOpen}>
+                        {t('button.cancel')}
+                      </Button>
+                      <AlertDialog
+                        isOpen={isOpen}
+                        onClose={onClose}
+                      >
+                        <AlertDialogOverlay>
+                          <AlertDialogContent>
+                            <AlertDialogHeader fontSize='lg'>
+                              {u('steps.cancel_modal.header')}
+                            </AlertDialogHeader>
+
+                            <AlertDialogBody>
+                              {u('steps.cancel_modal.subheader')}
+                            </AlertDialogBody>
+
+                            <AlertDialogFooter>
+                              <Button size='lg' onClick={onClose}>
+                                {u('steps.cancel_modal.back')}
+                              </Button>
+                              <Button size='lg' variant='outline' colorScheme='orange' onClick={onCancel} ml={3}>
+                                {u('steps.cancel_modal.confirm')}
+                              </Button>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialogOverlay>
+                      </AlertDialog>
+                    </>
+                    )}
+                <Spacer />
+                {state.step !== STEPS.REVIEW
+                  ? (
+                    <Button
+                      size='lg'
+                      disabled={NextDisabled}
+                      onClick={NextStep}
+                    >
+                      {t('button.next')}
+                    </Button>
+                    )
+                  : (
+                    <Button
+                      size='lg'
+                      onClick={onSubmit}
+                      colorScheme='red'
+                      variant='outline'
+                      disabled={SubmitDisabled || isInFlight}
+                    >
+                      {t('button.submit')}
+                    </Button>
+                    )}
+              </Flex>
+            )}
           </Flex>
-          : <>
-            {Step()}
-            <Flex>
-              {state.step !== null && state.step !== STEPS.FINISH && (
-                <Flex w='100%' justify='space-between' mt={2}>
-                  {state.step !== STEPS.ARRANGE
-                    ? (
-                      <Button
-                        size='lg'
-                        disabled={isInFlight}
-                        onClick={PrevStep}
-                        variant='ghost'
-                      >
-                        {t('button.back')}
-                      </Button>
-                      )
-                    : (
-                      <>
-                        <Button size='lg' variant='ghost' onClick={onOpen}>
-                          {t('button.cancel')}
-                        </Button>
-                        <AlertDialog
-                          isOpen={isOpen}
-                          onClose={onClose}
-                        >
-                          <AlertDialogOverlay>
-                            <AlertDialogContent>
-                              <AlertDialogHeader fontSize='lg'>
-                                {u('steps.cancel_modal.header')}
-                              </AlertDialogHeader>
-
-                              <AlertDialogBody>
-                                {u('steps.cancel_modal.subheader')}
-                              </AlertDialogBody>
-
-                              <AlertDialogFooter>
-                                <Button size='lg' onClick={onClose}>
-                                  {u('steps.cancel_modal.back')}
-                                </Button>
-                                <Button size='lg' variant='outline' colorScheme='orange' onClick={onCancel} ml={3}>
-                                  {u('steps.cancel_modal.confirm')}
-                                </Button>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialogOverlay>
-                        </AlertDialog>
-                      </>
-                      )}
-                  <Spacer />
-                  {state.step !== STEPS.REVIEW
-                    ? (
-                      <Button
-                        size='lg'
-                        disabled={NextDisabled}
-                        onClick={NextStep}
-                      >
-                        {t('button.next')}
-                      </Button>
-                      )
-                    : (
-                      <Button
-                        size='lg'
-                        onClick={onSubmit}
-                        colorScheme='red'
-                        variant='outline'
-                        disabled={SubmitDisabled || isInFlight}
-                      >
-                        {t('button.submit')}
-                      </Button>
-                      )}
-                </Flex>
-              )}
-            </Flex>
-          </>}
+        </>
       </Flex>
     </Center>
   )
