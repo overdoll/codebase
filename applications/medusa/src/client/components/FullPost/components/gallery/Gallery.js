@@ -26,10 +26,12 @@ import ArrowButtonLeft2
 
 import SuspenseImage from '@//:modules/utilities/SuspenseImage'
 
+type File = {
+  id: string,
+}
+
 type Props = {
-  files: {
-    id: string,
-  },
+  files: Array<File>,
   urls: {
     key: string,
   },
@@ -83,6 +85,7 @@ export default function Gallery ({ files, urls, thumbnails, setSwiper }: Props):
             }}
           >
             {files.map((file, index) => {
+              // TODO make into its own componenet
               const content = urls[file.id]
 
               const fileType = file.type.split('/')[0]
