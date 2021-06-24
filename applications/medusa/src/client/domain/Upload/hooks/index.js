@@ -6,7 +6,7 @@ import type { Dispatch, State } from '@//:types/upload'
 import UppyInstance from './uppy/Uppy'
 import type { Uppy } from '@uppy/core'
 import { EVENTS, STEPS } from '../constants/constants'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import db from '../storage'
 import dataURItoBlob from '@uppy/utils/lib/dataURItoBlob'
 
@@ -19,6 +19,10 @@ const useUpload = (state: State, dispatch: Dispatch): Uppy => {
   if (uppy.current === undefined) {
     uppy.current = UppyInstance
   }
+
+  const [uppyStateLoaded, setUppyStateLoaded] = useState(false)
+
+  const [filesLoaded, setFilesLoaded] = useState(false)
 
   useEffect(() => {
     return () => {
@@ -50,23 +54,52 @@ const useUpload = (state: State, dispatch: Dispatch): Uppy => {
         if (item === undefined) {
           return
         }
-        // set the step that the user was previously on
+
         dispatch({ type: EVENTS.TAG_ARTIST, value: item.artist })
+      })
+
+    // retrieve uppy state on refresh
+    db.table('urls')
+      .toArray()
+      .then(files => {
+        files.forEach(file => {
+          fetch(file.value)
+            .then((response) => response.blob()) // returns a Blob
+            .then((blob) => {
+              const uppyFileId = uppy.current?.addFile({
+                id: file.id,
+                name: file.id,
+                type: blob.type,
+                data: blob,
+                source: 'indexeddb'
+              })
+              const fileFromUppy = uppy.current?.getFile(uppyFileId)
+              uppy.current?.emit('upload-started', fileFromUppy)
+              uppy.current?.emit('upload-progress', fileFromUppy, {
+                bytesUploaded: file.size,
+                bytesTotal: file.size
+              })
+              uppy.current?.emit('upload-success', fileFromUppy, 'success')
+            })
+        })
+        setUppyStateLoaded(true)
       })
 
     db.table('files')
       .toArray()
       .then(files => {
         files
-          .sort((a, b) => a - b)
+          .sort((a, b) => a.index - b.index)
           .forEach(file => {
             dispatch({
               type: EVENTS.FILES,
               value: {
-                id: file.id
+                id: file.id,
+                type: file.type
               }
             })
           })
+        setFilesLoaded(true)
       })
 
     db.table('thumbnails')
@@ -129,7 +162,7 @@ const useUpload = (state: State, dispatch: Dispatch): Uppy => {
       })
   }, [])
 
-  return uppy.current
+  return [uppy.current, uppyStateLoaded && filesLoaded]
 }
 
 export default useUpload

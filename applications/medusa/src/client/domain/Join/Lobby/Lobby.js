@@ -7,10 +7,12 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { LobbySubscriptionResponse } from '@//:artifacts/LobbySubscription.graphql'
 import Icon from '@//:modules/content/icon/Icon'
-import SignBadgeCircle from '@streamlinehq/streamlinehq/img/streamline-regular/sign-badge-circle-K1i3HA.svg'
 import { Box, Center, Flex, Heading, Text, useToast } from '@chakra-ui/react'
 import Button from '@//:modules/form/button'
 import { useClickDelay } from '@//:modules/utilities/hooks'
+
+import SignBadgeCircle
+  from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
 
 type Props = {
   onReceive: () => void,
@@ -64,20 +66,26 @@ export default function Lobby (props: Props): Node {
 
   const [isTimedOut, currentTimer, createTimeout] = useClickDelay('lobbyButton')
 
-  // TODO fix submitting as it doesn't work (no success message)
+  // TODO fix submitting as it doesn't work and put createTimeout inside instead
 
   const onSubmit = () => {
-    createTimeout(60000)
     sendEmail({
       variables: {},
-      onCompleted (data) {
+      onCompleted () {
+        createTimeout(60000)
         notify({
           status: 'success',
           title: t('lobby.verification'),
           isClosable: true
         })
       },
-      onError (data) {}
+      onError () {
+        notify({
+          status: 'error',
+          title: t('lobby.verification_error'),
+          isClosable: true
+        })
+      }
     })
   }
 
@@ -93,7 +101,7 @@ export default function Lobby (props: Props): Node {
           mr='auto'
           mb={8}
         />
-        <Heading mb={8} align='center' size='lg' color='gray.00'>
+        <Heading mb={8} align='center' size='md' color='gray.00'>
           {t('lobby.header')}
         </Heading>
         <Box mb={8} pt={3} pb={3} borderRadius={5} bg='gray.800' w='100%'>

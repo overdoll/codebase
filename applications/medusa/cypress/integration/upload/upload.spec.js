@@ -133,6 +133,9 @@ describe('Upload', () => {
 
     cy.findByRole('button', { name: /Add/u }).click()
 
+    cy.findByRole('textbox', { placeholder: /Search for a category/u })
+      .type('Signal')
+
     cy.findByText('Signal').first().click()
 
     cy.findByRole('button', { name: /Close Search/u }).click()
@@ -141,9 +144,27 @@ describe('Upload', () => {
 
     cy.findByRole('button', { name: /Add/u }).click()
 
+    cy.findByRole('textbox', { placeholder: /Search for a category/u })
+      .clear()
+
+    cy.findByRole('textbox', { placeholder: /Search for a character/u })
+      .type('Assure')
+
     cy.findByText('Assure').first().click()
 
+    cy.findByRole('textbox', { placeholder: /Search for a category/u })
+      .clear()
+
+    cy.findByRole('textbox', { placeholder: /Search for a character/u })
+      .type('Carry')
+
     cy.findByText('Carry').first().click()
+
+    cy.findByRole('textbox', { placeholder: /Search for a category/u })
+      .clear()
+
+    cy.findByRole('textbox', { placeholder: /Search for a character/u })
+      .type('Alter')
 
     cy.findByText('Alter').first().click()
 
@@ -174,12 +195,18 @@ describe('Upload', () => {
   it('should be able to cancel upload by removing tile', () => {
     cy.findByRole('button', { name: /Close/u }).click()
 
-    cy.findByText(/Upload Files/u).should('exist')
+    cy.findByText(/Upload up to/u).should('exist')
   })
 
   it('should be able to cancel upload by clicking back button', () => {
     cy.findByRole('button', { name: /Cancel/u }).click()
 
-    cy.findByText(/Upload Files/u).should('exist')
+    cy.findByRole('button', { name: /Go Back/u }).click()
+
+    cy.findByRole('button', { name: /Cancel/u }).click()
+
+    cy.findByRole('button', { name: /Cancel Upload/u }).click()
+
+    cy.findByText(/Upload up to/u).should('exist')
   })
 })

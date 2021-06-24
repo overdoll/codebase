@@ -4,7 +4,7 @@
     "button": "Retry"
   },
   "page": {
-    "title": "Oops... looks like something went really wrong on our end",
+    "header": "Oops... looks like something went really wrong on our end",
     "subheader": "Don't worry - our best engineers are on it!"
   }
 }

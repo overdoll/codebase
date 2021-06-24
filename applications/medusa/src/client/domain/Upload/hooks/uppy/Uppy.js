@@ -16,8 +16,18 @@ const U: UppyType = new Uppy({
     maxFileSize: 25000000
   },
   autoProceed: true,
-  allowMultipleUploads: true
-})
+  allowMultipleUploads: true,
+
+  onBeforeFileAdded:
+      (currentFile, files) => {
+        return {
+          ...currentFile,
+          name: `${currentFile.name}__${Date.now()}`
+
+        }
+      }
+}
+)
 
 if (CanUseDOM) {
   // Allow resuming uploads if user refreshes or navigates away (browser-only)

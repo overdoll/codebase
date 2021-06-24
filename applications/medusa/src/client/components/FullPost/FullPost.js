@@ -3,18 +3,18 @@
  */
 import type { Node } from 'react'
 import { useState } from 'react'
-import { Avatar, Box, Flex, IconButton, Menu, MenuButton, Skeleton, Text, Wrap } from '@chakra-ui/react'
+import { Avatar, Box, Flex, IconButton, Menu, MenuButton, Text, Wrap } from '@chakra-ui/react'
 import Gallery from './components/gallery/Gallery'
 import Indexer from './components/indexer/Indexer'
 import VoteMenu from './components/vote/VoteMenu'
 import TagInfo from './components/info/TagInfo'
 
 import TravelPlacesTheaterMask
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/travel-places-theater-mask-sjsQG5.svg'
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/maps-travel/places/travel-places-theater-mask.svg'
 import ShoppingStoreSignage1
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/shopping-store-signage-1-WGy2xT.svg'
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/money-shopping/building-store/shopping-store-signage-1.svg'
 import InterfaceSettingMenuVerticalAlternate
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-setting-menu-vertical-alternate-2aEu7b.svg'
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/setting/interface-setting-menu-vertical-alternate.svg'
 import Icon from '@//:modules/content/icon/Icon'
 import Element from '../Element/Element'
 
@@ -28,6 +28,9 @@ type Props = {
     id: string,
   },
   urls: {
+    key: string,
+  },
+  thumbnails: {
     key: string,
   },
   characters: {
@@ -47,12 +50,12 @@ type Props = {
       thumbnail: string,
     }
   },
-  voteCount: number,
-  hasVoted: boolean,
+  voteCount?: number,
+  hasVoted?: boolean,
   disableContext?: boolean,
 };
 
-export default function FullPost ({ artist, files, urls, characters, categories, voteCount, hasVoted, disableContext, ...rest }: Props): Node {
+export default function FullPost ({ artist, files, urls, characters, categories, voteCount, thumbnails, hasVoted, disableContext, ...rest }: Props): Node {
   const [voted, setVoted] = useState(hasVoted)
 
   const [swiperIndex, setSwiperIndex] = useState(0)
@@ -78,18 +81,17 @@ export default function FullPost ({ artist, files, urls, characters, categories,
         {...rest}
       >
         <Flex direction='row' align='center' w='100%'>
-          <>
-            <Avatar
-              name={artist.username}
-              src={artist.avatar}
-              size='sm'
-              mr={2}
-            />
-            <Text>{artist.username}</Text>
-          </>
+          <Avatar
+            name={artist.username}
+            src={artist.avatar}
+            size='sm'
+            mr={2}
+          />
+          <Text>{artist.username}</Text>
+
         </Flex>
         <Box w='100%' h='100%' mt={2} mb={2}>
-          <Gallery setSwiper={setSwiper} files={files} urls={urls} />
+          <Gallery setSwiper={setSwiper} files={files} urls={urls} thumbnails={thumbnails} />
         </Box>
         <Flex direction='column' w='100%' p={1}>
           <Flex direction='row' justify='space-between' align='center'>
@@ -166,5 +168,7 @@ export default function FullPost ({ artist, files, urls, characters, categories,
   )
 }
 FullPost.defaultProps = {
-  disableContext: false
+  disableContext: false,
+  hasVoted: false,
+  voteCount: 0
 }

@@ -14,12 +14,14 @@ export default function useClickDelay ({ storageVariableName }: Props) {
   const [localVariable, setLocalVariable] = useState('empty')
   const [checked, setChecked] = useState(false)
 
+  const subValue = 1000
+
   useEffect(() => {
     setLocalVariable(sessionStorage.getItem(storageVariableName))
     if (localVariable !== 'empty' && !checked) {
-      if (localVariable != null) {
-        setTimer(parseInt(localVariable))
-        createTimer(parseInt(localVariable))
+      if (localVariable !== null) {
+        setTimer(localVariable)
+        createTimer(localVariable)
         setTimedOut(true)
       }
       setChecked(true)
@@ -29,10 +31,10 @@ export default function useClickDelay ({ storageVariableName }: Props) {
   const createTimer = (time: number) => {
     const interval = setInterval(() => {
       setTimer(x => {
-        sessionStorage.setItem(storageVariableName, x - 1000)
-        return x - 1000
+        sessionStorage.setItem(storageVariableName, x - subValue)
+        return x - subValue
       })
-    }, 1000)
+    }, subValue)
 
     setTimeout(() => {
       clearTimeout(interval)

@@ -5,7 +5,7 @@ import type { Node } from 'react'
 import { Flex, Heading } from '@chakra-ui/react'
 import Icon from '@//:modules/content/icon/Icon'
 import Button from '@//:modules/form/button'
-import CleaningBroom from '@streamlinehq/streamlinehq/img/streamline-regular/cleaning-broom-fSZbre.svg'
+import CleaningBroom from '@streamlinehq/streamlinehq/img/streamline-regular/wayfinding/cleaning/cleaning-broom.svg'
 
 type Props = {
   title: string,

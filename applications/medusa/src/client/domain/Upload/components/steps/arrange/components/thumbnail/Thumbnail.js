@@ -4,30 +4,37 @@
 import type { Node } from 'react'
 import {
   Flex,
-  Spinner,
   CircularProgress,
   CircularProgressLabel,
-  Skeleton
+  Skeleton,
+  Box
 } from '@chakra-ui/react'
+
+import Icon from '@//:modules/content/icon/Icon'
+
+import ComputerWebcamVideo
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/computer-devices/webcam/computer-webcam-video.svg'
+import ImageCamera1
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/images-photography/camera/image-camera-1.svg'
 
 import SuspenseImage from '@//:modules/utilities/SuspenseImage'
 
 type Props = {
   thumbnail: string,
   progress: {
-    key: {
-      key: number
-    }
+    0: number,
+    1: number,
   },
+  type?: string,
 };
 
-export default function Thumbnail ({ thumbnail, progress }: Props): Node {
+export default function Thumbnail ({ thumbnail, progress, type }: Props): Node {
   return (
     <Flex
       w='100%'
       h='100%'
-      justifyContent='center'
-      alignItems='center'
+      justify='center'
+      align='center'
       position='relative'
     >
       <SuspenseImage
@@ -40,34 +47,35 @@ export default function Thumbnail ({ thumbnail, progress }: Props): Node {
         position='absolute'
         bg={
           progress
-            ? (progress['0'] !== progress['1'] && 'dimmers.200': 'transparent')
+            ? (progress['0'] !== progress['1'] && 'dimmers.800': 'transparent')
             : 'transparent'
         }
         w='100%'
         h='100%'
+        justify='center'
+        align='center'
       >
-        {progress
-          ? (
-              progress['0'] !== progress['1'] && (
-                <Flex w='100%' h='100%' justifyContent='center' alignItems='center'>
-                  <CircularProgress
-                    value={(progress['0'] / progress['1']) * 100}
-                    color='teal.500'
-                    size='xl'
-                  >
-                    <CircularProgressLabel>
-                      {(progress['0'] / progress['1']) * 100}
-                    </CircularProgressLabel>
-                  </CircularProgress>
-                </Flex>
+        {
+          progress && progress['0'] !== progress['1']
+            ? (
+              <CircularProgress
+                value={(progress['0'] / progress['1']) * 100}
+                color='red.500'
+                size='100px'
+                thickness={4}
+              >
+                <CircularProgressLabel color='gray.00'>
+                  {((progress['0'] / progress['1']) * 100).toFixed(0)}%
+                </CircularProgressLabel>
+              </CircularProgress>
               )
-            )
-          : (
-            <Flex w='100%' h='100%' justifyContent='center' alignItems='center'>
-              <Spinner size='xl' />
-            </Flex>
-            )}
+            : (<Box borderRadius={15} bg='dimmers.500'>
+              <Icon m={2} icon={type === 'video' ? ComputerWebcamVideo : ImageCamera1} fill='gray.00' w={8} h={8} />
+            </Box>
+              )
+        }
       </Flex>
+
     </Flex>
   )
 }

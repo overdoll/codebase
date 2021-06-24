@@ -8,14 +8,14 @@ import type { Uppy } from '@uppy/core'
 
 type Props = {
   uppy: Uppy,
-  onSelect: () => void,
+  onSelect?: () => void,
   children: Node
 };
 
 /**
  * File picker - select files and add them to the list
  */
-export default function Picker ({ uppy, onSelect, children }: Props): Node {
+export default function Picker ({ uppy, onSelect, children, ...rest }: Props): Node {
   const notify = useToast()
 
   const onChange = e => {
@@ -24,7 +24,7 @@ export default function Picker ({ uppy, onSelect, children }: Props): Node {
       try {
         uppy.addFile({
           source: 'file input',
-          name: file.name + new Date().getTime(),
+          name: file.name,
           type: file.type,
           data: file
         })
@@ -36,8 +36,6 @@ export default function Picker ({ uppy, onSelect, children }: Props): Node {
         })
       }
     })
-
-    onSelect()
   }
 
   const fileInput = useRef(null)
@@ -47,9 +45,9 @@ export default function Picker ({ uppy, onSelect, children }: Props): Node {
   }
 
   return (
-    <Flex onClick={uploadClick} cursor='pointer'>
+    <Flex w='100%' onClick={uploadClick} cursor='pointer' {...rest}>
       {children}
-      <input ref={fileInput} data-testid='file' hidden type='file' multiple onChange={onChange} />
+      <input id='file' ref={fileInput} data-testid='file' hidden type='file' multiple onChange={onChange} />
     </Flex>
   )
 }

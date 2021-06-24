@@ -14,7 +14,14 @@ import type {
   StepsMutation
 } from '@//:artifacts/StepsMutation.graphql'
 import type { Dispatch, State } from '@//:types/upload'
-import { useToast, Flex, Spacer, Center } from '@chakra-ui/react'
+import {
+  useToast, Flex, Spacer, Center, AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay, useDisclosure
+} from '@chakra-ui/react'
 import Button from '@//:modules/form/button'
 import { useTranslation } from 'react-i18next'
 import type { Uppy } from '@uppy/core'
@@ -42,7 +49,11 @@ export default function Steps ({ uppy, state, dispatch }: Props): Node {
 
   const notify = useToast()
 
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
   const [t] = useTranslation('general')
+
+  const [u] = useTranslation('upload')
 
   // Tagging step - disabled if the conditions aren't met
   const NextDisabled =
@@ -54,20 +65,6 @@ export default function Steps ({ uppy, state, dispatch }: Props): Node {
   // If the amount of files != the amount of urls (not all files were uploaded), then we can't submit yet
   const SubmitDisabled = state.files.length !== Object.keys(state.urls).length
 
-  const onAddFiles = (): void => {
-    const files = uppy.getFiles()
-
-    // no files were uploaded (error occurred)
-    if (files.length === 0) {
-      return
-    }
-
-    // If not in any step, go to the arrange step
-    if (state.step === null) {
-      dispatch({ type: EVENTS.STEP, value: STEPS.ARRANGE })
-    }
-  }
-
   const Step = (): Node => {
     switch (state.step) {
       case STEPS.ARRANGE:
@@ -75,7 +72,6 @@ export default function Steps ({ uppy, state, dispatch }: Props): Node {
           <Arrange
             uppy={uppy}
             dispatch={dispatch}
-            onAddFiles={onAddFiles}
             state={state}
           />
         )
@@ -88,7 +84,9 @@ export default function Steps ({ uppy, state, dispatch }: Props): Node {
       case STEPS.FINISH:
         return <Finish state={state} />
       default:
-        return <Begin uppy={uppy} onAddFiles={onAddFiles} />
+        return (
+          <Begin uppy={uppy} />
+        )
     }
   }
 
@@ -171,7 +169,6 @@ export default function Steps ({ uppy, state, dispatch }: Props): Node {
         }
       },
       onCompleted (data) {
-        dispatch({ type: EVENTS.SUBMIT, value: data.post })
         if (data.post?.validation !== null) {
           notify({
             status: 'error',
@@ -183,9 +180,10 @@ export default function Steps ({ uppy, state, dispatch }: Props): Node {
         }
       },
       onError (data) {
+        const message = JSON.parse(data?.message)
         notify({
           status: 'error',
-          title: 'error with submission',
+          title: message[0].message,
           isClosable: true
         })
       }
@@ -194,6 +192,7 @@ export default function Steps ({ uppy, state, dispatch }: Props): Node {
 
   // Cleanup - reset uppy uploads and state
   const onCancel = () => {
+    onClose()
     uppy.reset()
     dispatch({ type: EVENTS.CLEANUP, value: INITIAL_STATE })
   }
@@ -207,54 +206,80 @@ export default function Steps ({ uppy, state, dispatch }: Props): Node {
         direction='column'
         mb={6}
       >
-        {Step()}
-        <Flex>
-          {state.step !== null && state.step !== STEPS.FINISH && (
-            <Flex w='100%' justify='space-between'>
-              {state.step !== STEPS.ARRANGE
-                ? (
-                  <Button
-                    m={2}
-                    size='lg'
-                    disabled={isInFlight}
-                    onClick={PrevStep}
-                    variant='outline'
-                  >
-                    {t('button.back')}
-                  </Button>
-                  )
-                : (
-                  <Button m={2} size='lg' variant='outline' onClick={onCancel}>
-                    {t('button.cancel')}
-                  </Button>
-                  )}
-              <Spacer />
-              {state.step !== STEPS.REVIEW
-                ? (
-                  <Button
-                    m={2}
-                    size='lg'
-                    disabled={NextDisabled}
-                    onClick={NextStep}
-                  >
-                    {t('button.next')}
-                  </Button>
-                  )
-                : (
-                  <Button
-                    m={2}
-                    size='lg'
-                    onClick={onSubmit}
-                    colorScheme='red'
-                    variant='outline'
-                    disabled={SubmitDisabled || isInFlight}
-                  >
-                    {t('button.submit')}
-                  </Button>
-                  )}
-            </Flex>
-          )}
-        </Flex>
+        <>
+          {Step()}
+          <Flex>
+            {state.step !== null && state.step !== STEPS.FINISH && (
+              <Flex w='100%' justify='space-between' mt={2}>
+                {state.step !== STEPS.ARRANGE
+                  ? (
+                    <Button
+                      size='lg'
+                      disabled={isInFlight}
+                      onClick={PrevStep}
+                      variant='ghost'
+                    >
+                      {t('button.back')}
+                    </Button>
+                    )
+                  : (
+                    <>
+                      <Button size='lg' variant='ghost' onClick={onOpen}>
+                        {t('button.cancel')}
+                      </Button>
+                      <AlertDialog
+                        isOpen={isOpen}
+                        onClose={onClose}
+                      >
+                        <AlertDialogOverlay>
+                          <AlertDialogContent>
+                            <AlertDialogHeader fontSize='lg'>
+                              {u('steps.cancel_modal.header')}
+                            </AlertDialogHeader>
+
+                            <AlertDialogBody>
+                              {u('steps.cancel_modal.subheader')}
+                            </AlertDialogBody>
+
+                            <AlertDialogFooter>
+                              <Button size='lg' onClick={onClose}>
+                                {u('steps.cancel_modal.back')}
+                              </Button>
+                              <Button size='lg' variant='outline' colorScheme='orange' onClick={onCancel} ml={3}>
+                                {u('steps.cancel_modal.confirm')}
+                              </Button>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialogOverlay>
+                      </AlertDialog>
+                    </>
+                    )}
+                <Spacer />
+                {state.step !== STEPS.REVIEW
+                  ? (
+                    <Button
+                      size='lg'
+                      disabled={NextDisabled}
+                      onClick={NextStep}
+                    >
+                      {t('button.next')}
+                    </Button>
+                    )
+                  : (
+                    <Button
+                      size='lg'
+                      onClick={onSubmit}
+                      colorScheme='red'
+                      variant='outline'
+                      disabled={SubmitDisabled || isInFlight}
+                    >
+                      {t('button.submit')}
+                    </Button>
+                    )}
+              </Flex>
+            )}
+          </Flex>
+        </>
       </Flex>
     </Center>
   )

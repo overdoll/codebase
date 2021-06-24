@@ -7,7 +7,7 @@ import { Box, HStack } from '@chakra-ui/react'
 type Props = {
   length: number,
   currentIndex: number,
-  sidesPerView?: number,
+  slidesPerView?: number,
 }
 
 export default function Indexer ({ length, currentIndex, slidesPerView, ...rest }: Props): Node {
@@ -16,7 +16,7 @@ export default function Indexer ({ length, currentIndex, slidesPerView, ...rest 
   }
 
   return (
-    <HStack display={length <= slidesPerView ? 'none' : 'flex'} align='center' justify='center' {...rest}>
+    <HStack spacing='6px' display={length <= slidesPerView ? 'none' : 'flex'} align='center' justify='center' {...rest}>
       {[...Array(calculateIndex(length)).keys()].map((key) => {
         return (
           <Box

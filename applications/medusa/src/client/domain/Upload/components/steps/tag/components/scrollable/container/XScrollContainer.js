@@ -35,7 +35,10 @@ export default function XScrollContainer ({
           (
             <SwiperSlide key={file.id}>
               <Flex h={170}>
-                <Thumbnail thumbnail={thumbnails[file.id]} progress={progress} />
+                <Thumbnail
+                  boxShadow='lg' type={file.type.split('/')[0]} thumbnail={thumbnails[file.id]}
+                  progress={progress}
+                />
               </Flex>
             </SwiperSlide>
           )
