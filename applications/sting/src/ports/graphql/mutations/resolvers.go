@@ -56,12 +56,24 @@ func (r *MutationResolver) Post(ctx context.Context, data *types.PostInput) (*ty
 		requests[item.Name] = item.Media
 	}
 
+	artistId := ""
+
+	if data.ArtistID != nil {
+		artistId = *data.ArtistID
+	}
+
+	artistUsername := ""
+
+	if data.ArtistUsername != nil {
+		artistUsername = *data.ArtistUsername
+	}
+
 	post, err := r.App.Commands.CreatePendingPost.
 		Handle(
 			ctx,
 			pass.UserID(),
-			*data.ArtistID,
-			data.ArtistUsername,
+			artistId,
+			artistUsername,
 			data.Content,
 			data.Characters,
 			data.Categories,

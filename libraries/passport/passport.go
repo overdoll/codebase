@@ -43,21 +43,21 @@ type Passport struct {
 }
 
 func (p *Passport) IsAuthenticated() bool {
-	return p.passport.User != nil
+	return p.passport.Account != nil
 }
 
 func (p *Passport) UserID() string {
-	return p.passport.User.Id
+	return p.passport.Account.Id
 }
 
 // Revoke the currently authenticated user from the passport
-func (p *Passport) RevokeUser() error {
-	p.passport = &libraries_passport_v1.Passport{User: nil}
+func (p *Passport) RevokeAccount() error {
+	p.passport = &libraries_passport_v1.Passport{Account: nil}
 	return nil
 }
 
-func (p *Passport) SetUser(id string) {
-	p.passport.User = &libraries_passport_v1.User{Id: id}
+func (p *Passport) SetAccount(id string) {
+	p.passport.Account = &libraries_passport_v1.Account{Id: id}
 }
 
 func (p *Passport) SerializeToBaseString() string {
@@ -87,14 +87,14 @@ func (p *Passport) MutatePassport(ctx context.Context, updateFn func(*Passport) 
 }
 
 func FreshPassport() *Passport {
-	return &Passport{passport: &libraries_passport_v1.Passport{User: nil}}
+	return &Passport{passport: &libraries_passport_v1.Passport{Account: nil}}
 }
 
 func FreshPassportWithUser(id string) *Passport {
 
-	pass := &Passport{passport: &libraries_passport_v1.Passport{User: nil}}
+	pass := &Passport{passport: &libraries_passport_v1.Passport{Account: nil}}
 
-	pass.SetUser(id)
+	pass.SetAccount(id)
 
 	return pass
 }

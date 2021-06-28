@@ -16,8 +16,8 @@ type PendingPostAuditLog struct {
 	Bucket        int    `db:"bucket"`
 	CreatedMs     int    `db:"created_ms"`
 	PostId        string `db:"post_id"`
-	ContributorId string `db:"contributor_user_id"`
-	ModeratorId   string `db:"moderator_user_id"`
+	ContributorId string `db:"contributor_account_id"`
+	ModeratorId   string `db:"moderator_account_id"`
 }
 
 type PendingPostAuditLogByPost struct {
@@ -25,8 +25,8 @@ type PendingPostAuditLogByPost struct {
 	Bucket        int    `db:"bucket"`
 	CreatedMs     int    `db:"created_ms"`
 	PostId        string `db:"post_id"`
-	ContributorId string `db:"contributor_user_id"`
-	ModeratorId   string `db:"moderator_user_id"`
+	ContributorId string `db:"contributor_account_id"`
+	ModeratorId   string `db:"moderator_account_id"`
 }
 
 type PendingPostAuditLogByModerator struct {
@@ -34,11 +34,11 @@ type PendingPostAuditLogByModerator struct {
 	Bucket        int    `db:"bucket"`
 	CreatedMs     int    `db:"created_ms"`
 	PostId        string `db:"post_id"`
-	ContributorId string `db:"contributor_user_id"`
-	ModeratorId   string `db:"moderator_user_id"`
+	ContributorId string `db:"contributor_account_id"`
+	ModeratorId   string `db:"moderator_account_id"`
 
-	ContributorUsername string `db:"contributor_user_username"`
-	ModeratorUsername   string `db:"moderator_user_username"`
+	ContributorUsername string `db:"contributor_account_username"`
+	ModeratorUsername   string `db:"moderator_account_username"`
 	UserInfractionId    string `db:"user_infraction_id"`
 	Status              string `db:"status"`
 	Reason              string `db:"reason"`
@@ -94,8 +94,8 @@ func (r InfractionCassandraRepository) CreatePendingPostAuditLog(ctx context.Con
 		Columns(
 			"id",
 			"post_id",
-			"contributor_user_id",
-			"moderator_user_id",
+			"contributor_account_id",
+			"moderator_account_id",
 			"bucket",
 			"created_ms",
 		).
@@ -111,8 +111,8 @@ func (r InfractionCassandraRepository) CreatePendingPostAuditLog(ctx context.Con
 		Columns(
 			"id",
 			"post_id",
-			"contributor_user_id",
-			"moderator_user_id",
+			"contributor_account_id",
+			"moderator_account_id",
 			"bucket",
 			"created_ms",
 		).
@@ -129,10 +129,10 @@ func (r InfractionCassandraRepository) CreatePendingPostAuditLog(ctx context.Con
 			"id",
 			"post_id",
 			"created_ms",
-			"contributor_user_id",
-			"contributor_user_username",
-			"moderator_user_id",
-			"moderator_user_username",
+			"contributor_account_id",
+			"contributor_account_username",
+			"moderator_account_id",
+			"moderator_account_username",
 			"user_infraction_id",
 			"status",
 			"reason",
@@ -167,8 +167,8 @@ func (r InfractionCassandraRepository) GetPendingPostAuditLog(ctx context.Contex
 			"id",
 			"bucket",
 			"post_id",
-			"contributor_user_id",
-			"moderator_user_id",
+			"contributor_account_id",
+			"moderator_account_id",
 			"created_ms",
 		).
 		Query(r.session).
@@ -185,9 +185,9 @@ func (r InfractionCassandraRepository) GetPendingPostAuditLog(ctx context.Contex
 
 	pendingPostAuditLogByModeratorQuery := qb.Select("pending_posts_audit_logs_by_moderator").
 		Where(
-			qb.Eq("moderator_user_id"),
+			qb.Eq("moderator_account_id"),
 			qb.Eq("bucket"),
-			qb.Eq("contributor_user_id"),
+			qb.Eq("contributor_account_id"),
 			qb.Eq("post_id"),
 			qb.Eq("id"),
 			qb.Eq("created_ms"),
@@ -195,10 +195,10 @@ func (r InfractionCassandraRepository) GetPendingPostAuditLog(ctx context.Contex
 		Columns(
 			"id",
 			"post_id",
-			"contributor_user_id",
-			"contributor_user_username",
-			"moderator_user_id",
-			"moderator_user_username",
+			"contributor_account_id",
+			"contributor_account_username",
+			"moderator_account_id",
+			"moderator_account_username",
 			"user_infraction_id",
 			"status",
 			"reason",
@@ -256,10 +256,10 @@ func (r InfractionCassandraRepository) GetPendingPostAuditLogByModerator(ctx con
 	// build query based on filters
 	builder :=
 		qb.Select("pending_posts_audit_logs_by_moderator").
-			Where(qb.Eq("moderator_user_id"), qb.In("bucket"), qb.Gt("created_ms"))
+			Where(qb.Eq("moderator_account_id"), qb.In("bucket"), qb.Gt("created_ms"))
 
 	if filter.ContributorId() != "" {
-		builder.Where(qb.Eq("contributor_user_id"))
+		builder.Where(qb.Eq("contributor_account_id"))
 
 		if filter.PostId() != "" {
 			builder.Where(qb.Eq("post_id"))
@@ -276,10 +276,10 @@ func (r InfractionCassandraRepository) GetPendingPostAuditLogByModerator(ctx con
 		Columns(
 			"id",
 			"post_id",
-			"contributor_user_id",
-			"contributor_user_username",
-			"moderator_user_id",
-			"moderator_user_username",
+			"contributor_account_id",
+			"contributor_account_username",
+			"moderator_account_id",
+			"moderator_account_username",
 			"user_infraction_id",
 			"created_ms",
 			"status",
@@ -294,8 +294,8 @@ func (r InfractionCassandraRepository) GetPendingPostAuditLogByModerator(ctx con
 			"bucket": times,
 			// in the future created_ms will be used as a cursor for pagination for filtering
 			"created_ms":          0,
-			"moderator_user_id":   filter.ModeratorId(),
-			"contributor_user_id": filter.ContributorId(),
+			"moderator_account_id":   filter.ModeratorId(),
+			"contributor_account_id": filter.ContributorId(),
 			"post_id":             filter.PostId(),
 		})
 
@@ -364,10 +364,10 @@ func (r InfractionCassandraRepository) UpdatePendingPostAuditLog(ctx context.Con
 
 	updateAuditLog := qb.Update("pending_posts_audit_logs_by_moderator").
 		Where(
-			qb.Eq("moderator_user_id"),
+			qb.Eq("moderator_account_id"),
 			qb.Eq("bucket"),
 			qb.Eq("created_ms"),
-			qb.Eq("contributor_user_id"),
+			qb.Eq("contributor_account_id"),
 			qb.Eq("post_id"),
 			qb.Eq("id"),
 		).

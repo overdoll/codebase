@@ -1,10 +1,10 @@
-package user
+package account
 
 import (
 	eva "overdoll/applications/eva/proto"
 )
 
-type User struct {
+type Account struct {
 	id       string
 	username string
 	avatar   string
@@ -13,7 +13,7 @@ type User struct {
 	locked   bool
 }
 
-func UnmarshalFromProto(proto *eva.User) *User {
+func UnmarshalFromProto(proto *eva.Account) *Account {
 	return NewUser(
 		proto.Id,
 		proto.Username,
@@ -24,15 +24,15 @@ func UnmarshalFromProto(proto *eva.User) *User {
 	)
 }
 
-func NewUserOnlyIdAndUsername(id, username string) *User {
-	return &User{
+func NewUserOnlyIdAndUsername(id, username string) *Account {
+	return &Account{
 		id:       id,
 		username: username,
 	}
 }
 
-func NewUser(id, username, avatar string, roles []string, verified, locked bool) *User {
-	return &User{
+func NewUser(id, username, avatar string, roles []string, verified, locked bool) *Account {
+	return &Account{
 		id:       id,
 		username: username,
 		avatar:   avatar,
@@ -42,35 +42,35 @@ func NewUser(id, username, avatar string, roles []string, verified, locked bool)
 	}
 }
 
-func (user *User) ID() string {
+func (user *Account) ID() string {
 	return user.id
 }
 
-func (user *User) Username() string {
+func (user *Account) Username() string {
 	return user.username
 }
 
-func (user *User) Avatar() string {
+func (user *Account) Avatar() string {
 	return user.avatar
 }
 
-func (user *User) IsVerified() bool {
+func (user *Account) IsVerified() bool {
 	return user.verified == true
 }
 
-func (user *User) IsLocked() bool {
+func (user *Account) IsLocked() bool {
 	return user.locked
 }
 
-func (user *User) IsStaff() bool {
+func (user *Account) IsStaff() bool {
 	return user.hasRoles([]string{"staff"})
 }
 
-func (user *User) IsModerator() bool {
+func (user *Account) IsModerator() bool {
 	return (user.hasRoles([]string{"moderator"}) || user.IsStaff()) && !user.IsLocked()
 }
 
-func (user *User) hasRoles(roles []string) bool {
+func (user *Account) hasRoles(roles []string) bool {
 	for _, role := range user.roles {
 		for _, requiredRole := range roles {
 			if role == requiredRole {

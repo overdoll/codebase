@@ -1,4 +1,4 @@
-package user
+package account
 
 import (
 	"errors"
@@ -6,26 +6,26 @@ import (
 	"time"
 )
 
-type UserRole string
+type AccountRole string
 type LockReason string
 
 const (
-	Artist      UserRole = "artist"
-	Contributor UserRole = "contributor"
-	Moderator   UserRole = "moderator"
-	Staff       UserRole = "staff"
+	Artist      AccountRole = "artist"
+	Contributor AccountRole = "contributor"
+	Moderator   AccountRole = "moderator"
+	Staff       AccountRole = "staff"
 )
 
 const (
 	PostInfraction LockReason = "post_infraction"
 )
 
-type User struct {
+type Account struct {
 	id string
 
 	username  string
 	email     string
-	roles     []UserRole
+	roles     []AccountRole
 	verified  bool
 	avatar    string
 	unclaimed bool
@@ -38,18 +38,18 @@ type User struct {
 var (
 	ErrUsernameNotUnique = errors.New("username is not unique")
 	ErrEmailNotUnique    = errors.New("email is not unique")
-	ErrUserNotFound      = errors.New("user not found")
+	ErrAccountNotFound   = errors.New("account not found")
 )
 
-func UnmarshalUserFromDatabase(id, username, email string, roles []string, verified bool, avatar string, locked bool, lockedUntil int, lockedReason string) *User {
+func UnmarshalAccountFromDatabase(id, username, email string, roles []string, verified bool, avatar string, locked bool, lockedUntil int, lockedReason string) *Account {
 
-	var newRoles []UserRole
+	var newRoles []AccountRole
 
 	for _, role := range roles {
-		newRoles = append(newRoles, UserRole(role))
+		newRoles = append(newRoles, AccountRole(role))
 	}
 
-	return &User{
+	return &Account{
 		id:           id,
 		username:     username,
 		email:        email,
@@ -62,11 +62,11 @@ func UnmarshalUserFromDatabase(id, username, email string, roles []string, verif
 	}
 }
 
-func NewUser(id, username, email string) (*User, error) {
+func NewAccount(id, username, email string) (*Account, error) {
 
 	// TODO: add some validation for the user creation (username, etc...)
 
-	return &User{
+	return &Account{
 		id:        id,
 		username:  username,
 		email:     email,
@@ -74,36 +74,36 @@ func NewUser(id, username, email string) (*User, error) {
 	}, nil
 }
 
-func (u *User) ID() string {
+func (u *Account) ID() string {
 	return u.id
 }
 
-func (u *User) Email() string {
+func (u *Account) Email() string {
 	return u.email
 }
 
-func (u *User) Username() string {
+func (u *Account) Username() string {
 	return u.username
 }
 
-func (u *User) Verified() bool {
+func (u *Account) Verified() bool {
 	return u.verified
 }
 
-func (u *User) Avatar() string {
+func (u *Account) Avatar() string {
 	var staticURL = os.Getenv("STATIC_URL")
 	return staticURL + "/avatars/" + u.avatar
 }
 
-func (u *User) RawAvatar() string {
+func (u *Account) RawAvatar() string {
 	return u.avatar
 }
 
-func (u *User) LockedUntil() int {
+func (u *Account) LockedUntil() int {
 	return u.lockedUntil
 }
 
-func (u *User) CanUnlock() bool {
+func (u *Account) CanUnlock() bool {
 
 	if u.lockedUntil == -1 {
 		return true
@@ -112,19 +112,19 @@ func (u *User) CanUnlock() bool {
 	return time.Now().After(time.Unix(int64(u.lockedUntil), 0))
 }
 
-func (u *User) IsLocked() bool {
+func (u *Account) IsLocked() bool {
 	return u.locked
 }
 
-func (u *User) LockedReason() string {
+func (u *Account) LockedReason() string {
 	return string(u.lockedReason)
 }
 
-func (u *User) IsUnclaimed() bool {
+func (u *Account) IsUnclaimed() bool {
 	return u.unclaimed
 }
 
-func (u *User) LockUser(duration int, reason string) error {
+func (u *Account) Lock(duration int, reason string) error {
 	if duration == 0 {
 		u.lockedUntil = 0
 		u.lockedReason = ""
@@ -139,7 +139,7 @@ func (u *User) LockUser(duration int, reason string) error {
 	return nil
 }
 
-func (u *User) UserRolesAsString() []string {
+func (u *Account) RolesAsString() []string {
 	var n []string
 
 	for _, role := range u.roles {

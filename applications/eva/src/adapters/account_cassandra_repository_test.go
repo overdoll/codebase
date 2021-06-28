@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/eva/src/adapters"
-	"overdoll/applications/eva/src/domain/user"
+	"overdoll/applications/eva/src/domain/account"
 	"overdoll/libraries/tests"
 	"overdoll/libraries/uuid"
 )
@@ -17,44 +17,44 @@ import (
 func TestUserRepository_GetUser_not_exists(t *testing.T) {
 	t.Parallel()
 
-	repo := newUserRepository(t)
+	repo := newAccountRepository(t)
 	ctx := context.Background()
 
 	id := uuid.New().String()
 
-	usr, err := repo.GetUserById(ctx, id)
+	usr, err := repo.GetAccountById(ctx, id)
 
 	assert.Nil(t, usr)
-	assert.EqualError(t, err, user.ErrUserNotFound.Error())
+	assert.EqualError(t, err, account.ErrAccountNotFound.Error())
 }
 
 func TestUserRepository_GetUserByEmail_not_exists(t *testing.T) {
 	t.Parallel()
 
-	repo := newUserRepository(t)
+	repo := newAccountRepository(t)
 	ctx := context.Background()
 
-	usr, err := repo.GetUserByEmail(ctx, "some-random-non-existent-email")
+	usr, err := repo.GetAccountByEmail(ctx, "some-random-non-existent-email")
 
 	assert.Nil(t, usr)
-	assert.EqualError(t, err, user.ErrUserNotFound.Error())
+	assert.EqualError(t, err, account.ErrAccountNotFound.Error())
 }
 
 func TestUserRepository_GetUser_email_exists(t *testing.T) {
 	t.Parallel()
 
-	repo := newUserRepository(t)
+	repo := newAccountRepository(t)
 	ctx := context.Background()
 
 	// Create fake user
-	usr := newFakeUser(t)
+	usr := newFakeAccount(t)
 
-	err := repo.CreateUser(ctx, usr)
+	err := repo.CreateAccount(ctx, usr)
 
 	require.NoError(t, err)
 
 	// Attempt to find user by email
-	findUser, err := repo.GetUserByEmail(ctx, usr.Email())
+	findUser, err := repo.GetAccountByEmail(ctx, usr.Email())
 
 	require.NoError(t, err)
 
@@ -65,49 +65,49 @@ func TestUserRepository_GetUser_email_exists(t *testing.T) {
 func TestUserRepository_CreateUser_conflicting_username(t *testing.T) {
 	t.Parallel()
 
-	repo := newUserRepository(t)
+	repo := newAccountRepository(t)
 	ctx := context.Background()
 
 	// Create fake user
-	usr := newFakeUser(t)
+	usr := newFakeAccount(t)
 
-	err := repo.CreateUser(ctx, usr)
+	err := repo.CreateAccount(ctx, usr)
 
 	require.NoError(t, err)
 
 	// Create another user, with the same username but different email
-	copyUsr, err := user.NewUser(uuid.New().String(), usr.Username(), "test-email@test.com")
+	copyUsr, err := account.NewAccount(uuid.New().String(), usr.Username(), "test-email@test.com")
 
 	require.NoError(t, err)
 
-	err = repo.CreateUser(ctx, copyUsr)
+	err = repo.CreateAccount(ctx, copyUsr)
 
 	// expect that we get an error that the username isn't unique
-	assert.Equal(t, err, user.ErrUsernameNotUnique)
+	assert.Equal(t, err, account.ErrUsernameNotUnique)
 }
 
 func TestUserRepository_CreateUser_conflicting_email(t *testing.T) {
 	t.Parallel()
 
-	repo := newUserRepository(t)
+	repo := newAccountRepository(t)
 	ctx := context.Background()
 
 	// Create fake user
-	usr := newFakeUser(t)
+	usr := newFakeAccount(t)
 
-	err := repo.CreateUser(ctx, usr)
+	err := repo.CreateAccount(ctx, usr)
 
 	require.NoError(t, err)
 
 	// Create another user, with the same email but different username
-	copyUsr, err := user.NewUser(uuid.New().String(), "ghahah", usr.Email())
+	copyUsr, err := account.NewAccount(uuid.New().String(), "ghahah", usr.Email())
 
 	require.NoError(t, err)
 
-	err = repo.CreateUser(ctx, copyUsr)
+	err = repo.CreateAccount(ctx, copyUsr)
 
 	// expect that we get an error that the email isn't unique
-	assert.Equal(t, err, user.ErrEmailNotUnique)
+	assert.Equal(t, err, account.ErrEmailNotUnique)
 }
 
 // A parallel execution that will run 20 instances of trying to create the same user, so we expect that only 1 will be created
@@ -118,7 +118,7 @@ func TestUserRepository_CreateUser_parallel(t *testing.T) {
 	workersDone := sync.WaitGroup{}
 	workersDone.Add(workersCount)
 
-	repo := newUserRepository(t)
+	repo := newAccountRepository(t)
 
 	// closing startWorkers will unblock all workers at once,
 	// thanks to that it will be more likely to have race condition
@@ -129,7 +129,7 @@ func TestUserRepository_CreateUser_parallel(t *testing.T) {
 	ctx := context.Background()
 
 	// Create fake user
-	usr := newFakeUser(t)
+	usr := newFakeAccount(t)
 
 	// we are trying to do race condition, in practice only one worker should be able to finish transaction
 	for worker := 0; worker < workersCount; worker++ {
@@ -139,7 +139,7 @@ func TestUserRepository_CreateUser_parallel(t *testing.T) {
 			defer workersDone.Done()
 			<-startWorkers
 
-			err := repo.CreateUser(ctx, usr)
+			err := repo.CreateAccount(ctx, usr)
 
 			if err == nil {
 				// user is only created when an error is not returned
@@ -163,27 +163,27 @@ func TestUserRepository_CreateUser_parallel(t *testing.T) {
 	assert.Len(t, workersCreatedUsers, 1, "only one worker should create a user")
 }
 
-type TestUser struct {
+type TestAccount struct {
 	Email    string `faker:"email"`
 	Username string `faker:"username"`
 }
 
-func newFakeUser(t *testing.T) *user.User {
-	fake := TestUser{}
+func newFakeAccount(t *testing.T) *account.Account {
+	fake := TestAccount{}
 
 	err := faker.FakeData(&fake)
 
 	require.NoError(t, err)
 
-	usr, err := user.NewUser(uuid.New().String(), fake.Username, fake.Email)
+	usr, err := account.NewAccount(uuid.New().String(), fake.Username, fake.Email)
 
 	require.NoError(t, err)
 
 	return usr
 }
 
-func newUserRepository(t *testing.T) adapters.UserRepository {
+func newAccountRepository(t *testing.T) adapters.AccountRepository {
 	session := tests.CreateScyllaSession(t, "eva")
 
-	return adapters.NewUserCassandraRepository(session)
+	return adapters.NewAccountCassandraRepository(session)
 }

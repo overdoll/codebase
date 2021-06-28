@@ -103,7 +103,7 @@ func (r *MutationResolver) Register(ctx context.Context, data *types.RegisterInp
 	http.SetCookie(gc.Writer, &http.Cookie{Name: cookie.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
 
 	if err := pass.MutatePassport(ctx, func(p *passport.Passport) error {
-		p.SetUser(usr.ID())
+		p.SetAccount(usr.ID())
 		return nil
 	}); err != nil {
 		return false, err
@@ -121,7 +121,7 @@ func (r *MutationResolver) Logout(ctx context.Context) (bool, error) {
 
 	// logout just revokes the currently-authenticated user from the passport
 	if err := pass.MutatePassport(ctx, func(p *passport.Passport) error {
-		return p.RevokeUser()
+		return p.RevokeAccount()
 	}); err != nil {
 		return false, err
 	}

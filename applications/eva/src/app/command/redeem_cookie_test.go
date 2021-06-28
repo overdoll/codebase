@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/eva/src/app/command"
 	"overdoll/applications/eva/src/domain/cookie"
-	"overdoll/applications/eva/src/domain/user"
+	"overdoll/applications/eva/src/domain/account"
 	"overdoll/libraries/uuid"
 )
 
@@ -21,7 +21,7 @@ func TestRedeemCookie_Consume_fails_when_cookie_invalid(t *testing.T) {
 
 	require.NoError(t, err)
 
-	usr, err := user.NewUser(uuid.New().String(), "user", "test@test.com")
+	usr, err := account.NewAccount(uuid.New().String(), "user", "test@test.com")
 
 	require.NoError(t, err)
 
@@ -46,7 +46,7 @@ func TestRedeemCookie_Consume_when_user_exists(t *testing.T) {
 
 	require.NoError(t, err)
 
-	usr, err := user.NewUser(uuid.New().String(), "user", email)
+	usr, err := account.NewAccount(uuid.New().String(), "user", email)
 
 	require.NoError(t, err)
 

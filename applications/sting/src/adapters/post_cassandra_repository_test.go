@@ -9,7 +9,7 @@ import (
 	"overdoll/applications/sting/src/adapters"
 	"overdoll/applications/sting/src/domain/post"
 	"overdoll/libraries/tests"
-	"overdoll/libraries/user"
+	"overdoll/libraries/account"
 	"overdoll/libraries/uuid"
 )
 
@@ -50,7 +50,7 @@ func newFakePost(t *testing.T) *post.Post {
 
 	artist := post.NewArtist(uuid.New().String(), "test")
 
-	usr := user.NewUser(
+	usr := account.NewUser(
 		uuid.New().String(),
 		"asd",
 		"",

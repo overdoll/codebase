@@ -10,9 +10,9 @@ import (
 )
 
 type Artist struct {
-	Id       string `db:"user_id"`
-	Username string `db:"user_username"`
-	Avatar   string `db:"user_avatar"`
+	Id       string `db:"account_id"`
+	Username string `db:"account_username"`
+	Avatar   string `db:"account_avatar"`
 }
 
 func marshalArtistToDatabase(artist *post.Artist) *Artist {
@@ -30,9 +30,9 @@ func (r PostsCassandraRepository) GetArtists(ctx context.Context) ([]*post.Artis
 
 	qc := qb.Select("artists").
 		Columns(
-			"user_id",
-			"user_username",
-			"user_avatar",
+			"account_id",
+			"account_username",
+			"account_avatar",
 		).
 		Query(r.session).
 		Consistency(gocql.One)
@@ -55,11 +55,11 @@ func (r PostsCassandraRepository) GetArtistById(ctx context.Context, id string) 
 	var artist Artist
 
 	qc := qb.Select("artists").
-		Where(qb.Eq("user_id")).
+		Where(qb.Eq("account_id")).
 		Columns(
-			"user_id",
-			"user_username",
-			"user_avatar",
+			"account_id",
+			"account_username",
+			"account_avatar",
 		).
 		Query(r.session).
 		BindStruct(&Artist{
@@ -79,9 +79,9 @@ func (r PostsCassandraRepository) CreateArtist(ctx context.Context, artist *post
 
 	insertArtist := qb.Insert("artists").
 		Columns(
-			"user_id",
-			"user_username",
-			"user_avatar",
+			"account_id",
+			"account_username",
+			"account_avatar",
 		).
 		Query(r.session).
 		BindStruct(pendingArtist).

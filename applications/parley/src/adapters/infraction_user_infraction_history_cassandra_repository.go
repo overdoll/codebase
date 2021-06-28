@@ -12,7 +12,7 @@ import (
 
 type UserInfractionHistory struct {
 	Id         string    `db:"id"`
-	UserId     string    `db:"user_id"`
+	UserId     string    `db:"account_id"`
 	Reason     string    `db:"reason"`
 	Expiration time.Time `db:"expiration"`
 }
@@ -29,7 +29,7 @@ func marshalUserInfractionHistoryToDatabase(infractionHistory *infraction.UserIn
 func (r InfractionCassandraRepository) DeleteUserInfractionHistory(ctx context.Context, userId, id string) error {
 
 	deleteUserInfraction := qb.Delete("users_infraction_history").
-		Where(qb.Eq("id"), qb.Eq("user_id")).
+		Where(qb.Eq("id"), qb.Eq("account_id")).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&UserInfractionHistory{Id: id, UserId: userId})
@@ -44,8 +44,8 @@ func (r InfractionCassandraRepository) DeleteUserInfractionHistory(ctx context.C
 func (r InfractionCassandraRepository) GetUserInfractionHistoryById(ctx context.Context, userId, id string) (*infraction.UserInfractionHistory, error) {
 
 	infractionHistoryQuery := qb.Select("users_infraction_history").
-		Columns("id", "reason", "user_id", "expiration").
-		Where(qb.Eq("id"), qb.Eq("user_id")).
+		Columns("id", "reason", "account_id", "expiration").
+		Where(qb.Eq("id"), qb.Eq("account_id")).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&UserInfractionHistory{Id: id, UserId: userId})
@@ -62,8 +62,8 @@ func (r InfractionCassandraRepository) GetUserInfractionHistoryById(ctx context.
 func (r InfractionCassandraRepository) GetUserInfractionHistory(ctx context.Context, userId string) ([]*infraction.UserInfractionHistory, error) {
 
 	infractionHistoryQuery := qb.Select("users_infraction_history").
-		Columns("id", "reason", "user_id", "expiration").
-		Where(qb.Eq("user_id")).
+		Columns("id", "reason", "account_id", "expiration").
+		Where(qb.Eq("account_id")).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&UserInfractionHistory{UserId: userId})
@@ -87,7 +87,7 @@ func (r InfractionCassandraRepository) CreateUserInfractionHistory(ctx context.C
 	insertInfractionHistory := qb.Insert("users_infraction_history").
 		Columns(
 			"id",
-			"user_id",
+			"account_id",
 			"reason",
 			"expiration",
 		).

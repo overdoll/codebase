@@ -85,7 +85,7 @@ type PostInput struct {
 	MediaRequests     []string            `json:"mediaRequests"`
 	CharacterRequests []*CharacterRequest `json:"characterRequests"`
 	ArtistID          *string             `json:"artistId"`
-	ArtistUsername    string              `json:"artistUsername"`
+	ArtistUsername    *string             `json:"artistUsername"`
 }
 
 type PostResponse struct {

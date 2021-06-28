@@ -69,7 +69,7 @@ func (r *QueryResolver) RedeemCookie(ctx context.Context, cookieId string) (*typ
 
 		// Update passport to include our new user
 		if err := pass.MutatePassport(ctx, func(p *passport.Passport) error {
-			p.SetUser(usr.ID())
+			p.SetAccount(usr.ID())
 			return nil
 		}); err != nil {
 			return nil, err
@@ -129,7 +129,7 @@ func (r *QueryResolver) Authentication(ctx context.Context) (*types.Authenticati
 
 			// Update passport to include our new user
 			if err := pass.MutatePassport(ctx, func(p *passport.Passport) error {
-				p.SetUser(usr.ID())
+				p.SetAccount(usr.ID())
 				return nil
 			}); err != nil {
 				return nil, err
@@ -138,7 +138,7 @@ func (r *QueryResolver) Authentication(ctx context.Context) (*types.Authenticati
 
 		return &types.Authentication{
 			Cookie: nil,
-			User:   &types.User{ID: usr.ID(), Username: usr.Username(), Roles: usr.UserRolesAsString()},
+			User:   &types.User{ID: usr.ID(), Username: usr.Username(), Roles: usr.RolesAsString()},
 		}, nil
 	}
 

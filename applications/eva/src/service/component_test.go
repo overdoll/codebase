@@ -266,7 +266,7 @@ func TestUser_get(t *testing.T) {
 
 	client := getGrpcClient(t)
 
-	res, err := client.GetUser(context.Background(), &eva.GetUserRequest{Id: "1q7MJ3JkhcdcJJNqZezdfQt5pZ6"})
+	res, err := client.GetAccount(context.Background(), &eva.GetAccountRequest{Id: "1q7MJ3JkhcdcJJNqZezdfQt5pZ6"})
 
 	require.NoError(t, err)
 
@@ -278,17 +278,17 @@ func TestUser_lock_unlock(t *testing.T) {
 
 	client := getGrpcClient(t)
 
-	res, err := client.LockUser(context.Background(), &eva.LockUserRequest{
+	res, err := client.LockAccount(context.Background(), &eva.LockAccountRequest{
 		Id:       "1q7MIqqnkzew33q4elXuN1Ri27d",
 		Duration: 100000000,
-		Reason:   eva.LockUserReason_POST_INFRACTION,
+		Reason:   eva.LockAccountReason_POST_INFRACTION,
 	})
 
 	require.NoError(t, err)
 
 	assert.Equal(t, true, res.Locked)
 
-	res, err = client.LockUser(context.Background(), &eva.LockUserRequest{
+	res, err = client.LockAccount(context.Background(), &eva.LockAccountRequest{
 		Id:       "1q7MIqqnkzew33q4elXuN1Ri27d",
 		Duration: 0,
 	})

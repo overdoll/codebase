@@ -13,7 +13,7 @@ type EntityResolver struct {
 
 func (e EntityResolver) FindUserByID(ctx context.Context, id string) (*types.User, error) {
 
-	usr, err := e.App.Queries.GetUser.Handle(ctx, id)
+	usr, err := e.App.Queries.GetAccount.Handle(ctx, id)
 
 	if err != nil {
 		return nil, err
@@ -22,6 +22,6 @@ func (e EntityResolver) FindUserByID(ctx context.Context, id string) (*types.Use
 	return &types.User{
 		ID:       usr.ID(),
 		Username: usr.Username(),
-		Roles:    usr.UserRolesAsString(),
+		Roles:    usr.RolesAsString(),
 	}, nil
 }

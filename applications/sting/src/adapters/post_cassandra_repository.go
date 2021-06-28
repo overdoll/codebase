@@ -13,8 +13,8 @@ import (
 
 type Post struct {
 	Id            string    `db:"id"`
-	ArtistId      string    `db:"artist_user_id"`
-	ContributorId string    `db:"contributor_user_id"`
+	ArtistId      string    `db:"artist_account_id"`
+	ContributorId string    `db:"contributor_account_id"`
 	Content       []string  `db:"content"`
 	Categories    []string  `db:"categories"`
 	Characters    []string  `db:"characters"`
@@ -24,10 +24,10 @@ type Post struct {
 type PostPending struct {
 	Id                 string            `db:"id"`
 	State              string            `db:"state"`
-	ModeratorId        string            `db:"moderator_user_id"`
-	ArtistId           string            `db:"artist_user_id"`
-	ArtistUsername     string            `db:"artist_user_username"`
-	ContributorId      string            `db:"contributor_user_id"`
+	ModeratorId        string            `db:"moderator_account_id"`
+	ArtistId           string            `db:"artist_account_id"`
+	ArtistUsername     string            `db:"artist_account_username"`
+	ContributorId      string            `db:"contributor_account_id"`
 	Content            []string          `db:"content"`
 	Categories         []string          `db:"categories"`
 	Characters         []string          `db:"characters"`
@@ -157,10 +157,10 @@ func (r PostsCassandraRepository) CreatePendingPost(ctx context.Context, pending
 		Columns(
 			"id",
 			"state",
-			"moderator_user_id",
-			"artist_user_id",
-			"artist_user_username",
-			"contributor_user_id",
+			"moderator_account_id",
+			"artist_account_id",
+			"artist_account_username",
+			"contributor_account_id",
 			"content",
 			"categories",
 			"characters",
@@ -200,8 +200,8 @@ func (r PostsCassandraRepository) CreatePost(ctx context.Context, pending *post.
 	insertPost := qb.Insert("posts").
 		Columns(
 			"id",
-			"artist_user_id",
-			"contributor_user_id",
+			"artist_account_id",
+			"contributor_account_id",
 			"content",
 			"categories",
 			"characters",
@@ -349,9 +349,9 @@ func (r PostsCassandraRepository) UpdatePendingPost(ctx context.Context, id stri
 	upd := qb.Update("pending_posts").
 		Set(
 			"state",
-			"contributor_user_id",
-			"artist_user_id",
-			"artist_user_username",
+			"contributor_account_id",
+			"artist_account_id",
+			"artist_account_username",
 			"content",
 			"categories",
 			"characters",

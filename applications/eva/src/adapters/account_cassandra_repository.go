@@ -8,10 +8,10 @@ import (
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
-	"overdoll/applications/eva/src/domain/user"
+	"overdoll/applications/eva/src/domain/account"
 )
 
-type User struct {
+type Account struct {
 	Id           string   `db:"id"`
 	Username     string   `db:"username"`
 	Email        string   `db:"email"`
@@ -23,30 +23,30 @@ type User struct {
 	LockedReason string   `db:"locked_reason"`
 }
 
-type UserUsername struct {
-	Id       string `db:"user_id"`
+type AccountUsername struct {
+	Id       string `db:"account_id"`
 	Username string `db:"username"`
 }
 
-type UserEmail struct {
-	UserId string `db:"user_id"`
+type AccountEmail struct {
+	UserId string `db:"account_id"`
 	Email  string `db:"email"`
 }
 
-type UserRepository struct {
+type AccountRepository struct {
 	session gocqlx.Session
 }
 
-func NewUserCassandraRepository(session gocqlx.Session) UserRepository {
-	return UserRepository{session: session}
+func NewAccountCassandraRepository(session gocqlx.Session) AccountRepository {
+	return AccountRepository{session: session}
 }
 
-func marshalUserToDatabase(usr *user.User) *User {
-	return &User{
+func marshalUserToDatabase(usr *account.Account) *Account {
+	return &Account{
 		Id:           usr.ID(),
 		Email:        usr.Email(),
 		Username:     usr.Username(),
-		Roles:        usr.UserRolesAsString(),
+		Roles:        usr.RolesAsString(),
 		Avatar:       usr.RawAvatar(),
 		Verified:     usr.Verified(),
 		LockedUntil:  usr.LockedUntil(),
@@ -55,66 +55,66 @@ func marshalUserToDatabase(usr *user.User) *User {
 	}
 }
 
-// GetUserById - Get user using the ID
-func (r UserRepository) GetUserById(ctx context.Context, id string) (*user.User, error) {
-	var userInstance User
+// GetAccountById - Get user using the ID
+func (r AccountRepository) GetAccountById(ctx context.Context, id string) (*account.Account, error) {
+	var accountInstance Account
 
-	queryUser := qb.Select("users").
+	queryUser := qb.Select("accounts").
 		Where(qb.Eq("id")).
 		Query(r.session).
 		Consistency(gocql.LocalOne).
-		BindStruct(&User{
+		BindStruct(&Account{
 			Id: id,
 		})
 
-	if err := queryUser.Get(&userInstance); err != nil {
+	if err := queryUser.Get(&accountInstance); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, user.ErrUserNotFound
+			return nil, account.ErrAccountNotFound
 		}
 
 		return nil, fmt.Errorf("select() failed: '%s", err)
 	}
 
-	return user.UnmarshalUserFromDatabase(
-		userInstance.Id,
-		userInstance.Username,
-		userInstance.Email,
-		userInstance.Roles,
-		userInstance.Verified,
-		userInstance.Avatar,
-		userInstance.Locked,
-		userInstance.LockedUntil,
-		userInstance.LockedReason,
+	return account.UnmarshalAccountFromDatabase(
+		accountInstance.Id,
+		accountInstance.Username,
+		accountInstance.Email,
+		accountInstance.Roles,
+		accountInstance.Verified,
+		accountInstance.Avatar,
+		accountInstance.Locked,
+		accountInstance.LockedUntil,
+		accountInstance.LockedReason,
 	), nil
 }
 
-// GetUserByEmail - Get user using the email
-func (r UserRepository) GetUserByEmail(ctx context.Context, email string) (*user.User, error) {
+// GetAccountByEmail - Get user using the email
+func (r AccountRepository) GetAccountByEmail(ctx context.Context, email string) (*account.Account, error) {
 
 	// get authentication cookie with this ID
-	var userEmail UserEmail
+	var accountEmail AccountEmail
 
 	// check if email is in use
-	queryEmail := qb.Select("users_emails").
+	queryEmail := qb.Select("accounts_emails").
 		Where(qb.Eq("email")).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(&UserEmail{
+		BindStruct(&AccountEmail{
 			Email: email,
 		})
 
-	if err := queryEmail.Get(&userEmail); err != nil {
+	if err := queryEmail.Get(&accountEmail); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, user.ErrUserNotFound
+			return nil, account.ErrAccountNotFound
 		}
 
 		return nil, err
 	}
 
-	// Get our user using the User Id, from the user email instance
-	usr, err := r.GetUserById(ctx, userEmail.UserId)
+	// Get our user using the Account Id, from the user email instance
+	usr, err := r.GetAccountById(ctx, accountEmail.UserId)
 
 	if err != nil {
 		return nil, err
@@ -123,19 +123,19 @@ func (r UserRepository) GetUserByEmail(ctx context.Context, email string) (*user
 	return usr, nil
 }
 
-// CreateUser - Ensure we create a unique user by using lightweight transactions
-func (r UserRepository) CreateUser(ctx context.Context, instance *user.User) error {
+// CreateAccount - Ensure we create a unique user by using lightweight transactions
+func (r AccountRepository) CreateAccount(ctx context.Context, instance *account.Account) error {
 
 	// First, we do a unique insert into users_usernames
 	// This ensures that we capture the username so nobody else can use it
-	usernameEmail := UserUsername{
+	usernameEmail := AccountUsername{
 		Id: instance.ID(),
 		// This piece of data, we want to make sure we use as lowercase, to make sure we don't get collisions
 		// This table always has the username of a user, in lowercase format to make sure that we always have unique usernames
 		Username: strings.ToLower(instance.Username()),
 	}
 
-	insertUserEmail := qb.Insert("users_usernames").
+	insertUserEmail := qb.Insert("accounts_usernames").
 		Columns("user_id", "username").
 		Unique().
 		Query(r.session).
@@ -150,7 +150,7 @@ func (r UserRepository) CreateUser(ctx context.Context, instance *user.User) err
 	}
 
 	if !applied {
-		return user.ErrUsernameNotUnique
+		return account.ErrUsernameNotUnique
 	}
 
 	email := ""
@@ -162,54 +162,54 @@ func (r UserRepository) CreateUser(ctx context.Context, instance *user.User) err
 		// note: we don't do a unique check for the email first because if they're on this stage, we already
 		// did the check earlier if an account exists with this specific email. however, we will still
 		// do a rollback & deletion of the username if the email is already taken, just in case
-		userEmail := UserEmail{
+		accountEmail := AccountEmail{
 			Email:  instance.Email(),
 			UserId: instance.ID(),
 		}
 
 		// Create a lookup table that will lookup the user using email
-		createUserEmail := qb.Insert("users_emails").
+		createAccountEmail := qb.Insert("accounts_emails").
 			Columns("email", "user_id").
 			Unique().
 			Query(r.session).
 			SerialConsistency(gocql.Serial).
-			BindStruct(userEmail)
+			BindStruct(accountEmail)
 
-		applied, err = createUserEmail.ExecCAS()
+		applied, err = createAccountEmail.ExecCAS()
 
 		if err != nil || !applied {
 
 			// There was an error or something, so we want to gracefully recover.
 			// Delete our users_usernames entry just in case, so user can try to signup again
-			deleteUserUsername := qb.Delete("users_usernames").
+			deleteAccountUsername := qb.Delete("accounts_usernames").
 				Where(qb.Eq("username")).
 				Query(r.session).
 				BindStruct(usernameEmail)
 
-			if err := deleteUserUsername.ExecRelease(); err != nil {
+			if err := deleteAccountUsername.ExecRelease(); err != nil {
 				return fmt.Errorf("delete() failed: '%s", err)
 			}
 
-			return user.ErrEmailNotUnique
+			return account.ErrEmailNotUnique
 		}
 
-		email = userEmail.Email
+		email = accountEmail.Email
 	}
 
 	// Create a lookup table that will be used to find the user using their unique ID
 	// Will also contain all major information about the user such as permissions, etc...
-	usr := &User{
+	acc := &Account{
 		Username: instance.Username(),
 		Id:       instance.ID(),
 		Email:    email,
 		Verified: false,
 	}
 
-	insertUser := qb.Insert("users").
+	insertUser := qb.Insert("accounts").
 		Columns("username", "id", "email").
 		Unique().
 		Query(r.session).
-		BindStruct(usr)
+		BindStruct(acc)
 
 	if err := insertUser.ExecRelease(); err != nil {
 		return fmt.Errorf("ExecRelease() failed: '%s", err)
@@ -218,9 +218,9 @@ func (r UserRepository) CreateUser(ctx context.Context, instance *user.User) err
 	return nil
 }
 
-func (r UserRepository) UpdateUser(ctx context.Context, id string, updateFn func(usr *user.User) error) (*user.User, error) {
+func (r AccountRepository) UpdateAccount(ctx context.Context, id string, updateFn func(usr *account.Account) error) (*account.Account, error) {
 
-	currentUser, err := r.GetUserById(ctx, id)
+	currentUser, err := r.GetAccountById(ctx, id)
 
 	if err != nil {
 		return nil, err
@@ -233,7 +233,7 @@ func (r UserRepository) UpdateUser(ctx context.Context, id string, updateFn func
 	}
 
 	// update user
-	updateUser := qb.Update("users").
+	updateUser := qb.Update("accounts").
 		Set(
 			"username",
 			"email",

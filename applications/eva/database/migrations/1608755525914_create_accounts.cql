@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS authentication_cookies
     primary key ( cookie, email )
 );
 
-CREATE TABLE IF NOT EXISTS users
+CREATE TABLE IF NOT EXISTS accounts
 (
     id            text,
     username      text,
@@ -22,16 +22,16 @@ CREATE TABLE IF NOT EXISTS users
     primary key ( id )
 );
 
-CREATE TABLE IF NOT EXISTS users_emails
+CREATE TABLE IF NOT EXISTS account_emails
 (
-    user_id text,
-    email   text,
+    account_id text,
+    email      text,
     primary key ( email )
 );
 
-CREATE TABLE IF NOT EXISTS users_usernames
+CREATE TABLE IF NOT EXISTS account_usernames
 (
-    user_id  text,
-    username text,
+    account_id text,
+    username   text,
     primary key ( username )
 );

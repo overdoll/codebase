@@ -15,10 +15,10 @@ type Commands struct {
 	Authenticate   command.AuthenticateHandler
 	Register       command.RegisterHandler
 	Authentication command.AuthenticationHandler
-	LockUser       command.LockUserHandler
-	CreateUser     command.CreateUserHandler
+	LockAccount    command.LockAccountHandler
+	CreateAccount  command.CreateAccountHandler
 }
 
 type Queries struct {
-	GetUser query.GetUserHandler
+	GetAccount query.GetAccountHandler
 }

@@ -744,7 +744,7 @@ input PostInput {
   mediaRequests: [String!]
   characterRequests: [CharacterRequest!]
   artistId: String
-  artistUsername: String!
+  artistUsername: String
 }
 
 type PostResponse {
@@ -4452,7 +4452,7 @@ func (ec *executionContext) unmarshalInputPostInput(ctx context.Context, obj int
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("artistUsername"))
-			it.ArtistUsername, err = ec.unmarshalNString2string(ctx, v)
+			it.ArtistUsername, err = ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}

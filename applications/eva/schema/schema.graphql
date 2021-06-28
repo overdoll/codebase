@@ -1,4 +1,5 @@
 type Mutation {
   logout: Boolean!
   authEmail: Boolean!
+  unlockAccount: Boolean!
 }

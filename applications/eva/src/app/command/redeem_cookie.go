@@ -7,15 +7,15 @@ import (
 	"github.com/gocql/gocql"
 	"go.uber.org/zap"
 	"overdoll/applications/eva/src/domain/cookie"
-	"overdoll/applications/eva/src/domain/user"
+	"overdoll/applications/eva/src/domain/account"
 )
 
 type RedeemCookieHandler struct {
 	cr cookie.Repository
-	ur user.Repository
+	ur account.Repository
 }
 
-func NewRedeemCookieHandler(cr cookie.Repository, ur user.Repository) RedeemCookieHandler {
+func NewRedeemCookieHandler(cr cookie.Repository, ur account.Repository) RedeemCookieHandler {
 	return RedeemCookieHandler{cr: cr, ur: ur}
 }
 
@@ -23,7 +23,7 @@ var (
 	ErrFailedCookieRedeem = errors.New("failed to redeem cookie")
 )
 
-func (h RedeemCookieHandler) Handle(ctx context.Context, isSameSession bool, id string) (*user.User, *cookie.Cookie, error) {
+func (h RedeemCookieHandler) Handle(ctx context.Context, isSameSession bool, id string) (*account.Account, *cookie.Cookie, error) {
 
 	// Redeem cookie
 	ck, err := h.cr.GetCookieById(ctx, id)
@@ -61,13 +61,13 @@ func (h RedeemCookieHandler) Handle(ctx context.Context, isSameSession bool, id 
 	}
 
 	// Redeemed - check if user exists with this email
-	usr, err := h.ur.GetUserByEmail(ctx, ck.Email())
+	usr, err := h.ur.GetAccountByEmail(ctx, ck.Email())
 
 	// we weren't able to get our user, so that means that the cookie is not going to be deleted
 	// user has to register
 	if err != nil {
 
-		if err == user.ErrUserNotFound {
+		if err == account.ErrAccountNotFound {
 
 			// We also update the cookie so that it can count as "redeemed
 			err = h.cr.UpdateCookie(ctx, ck)

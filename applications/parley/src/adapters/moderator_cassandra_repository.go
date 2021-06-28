@@ -12,7 +12,7 @@ import (
 )
 
 type Moderator struct {
-	UserId       string    `db:"user_id"`
+	UserId       string    `db:"account_id"`
 	LastSelected time.Time `db:"last_selected"`
 	Bucket       int       `db:"bucket"`
 }
@@ -36,7 +36,7 @@ func marshaModeratorToDatabase(mod *moderator.Moderator) *Moderator {
 func (r ModeratorCassandraRepository) GetModerator(ctx context.Context, id string) (*moderator.Moderator, error) {
 
 	moderatorQuery := qb.Select("moderators").
-		Where(qb.Eq("bucket"), qb.Eq("user_id")).
+		Where(qb.Eq("bucket"), qb.Eq("account_id")).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&Moderator{UserId: id, Bucket: 0})
@@ -54,7 +54,7 @@ func (r ModeratorCassandraRepository) GetModerators(ctx context.Context) ([]*mod
 
 	moderatorQuery := qb.Select("moderators").
 		Where(qb.Eq("bucket")).
-		Columns("user_id", "last_selected").
+		Columns("account_id", "last_selected").
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&Moderator{Bucket: 0})
@@ -91,7 +91,7 @@ func (r ModeratorCassandraRepository) UpdateModerator(ctx context.Context, id st
 		Set(
 			"last_selected",
 		).
-		Where(qb.Eq("bucket"), qb.Eq("user_id")).
+		Where(qb.Eq("bucket"), qb.Eq("account_id")).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshaModeratorToDatabase(currentMod))

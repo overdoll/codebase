@@ -19,7 +19,7 @@ func NewGetPendingPostsHandler(pr post.IndexRepository, eva EvaService) GetPendi
 
 func (h GetPendingPostsHandler) Handle(ctx context.Context, cursor *paging.Cursor, moderatorId, contributorId, artistId, id, userId string) (*post.PendingPostConnection, error) {
 
-	usr, err := h.eva.GetUser(ctx, userId)
+	usr, err := h.eva.GetAccount(ctx, userId)
 
 	if err != nil {
 		zap.S().Errorf("could not get user: %s", err)

@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"overdoll/libraries/paging"
-	"overdoll/libraries/user"
+	"overdoll/libraries/account"
 	"overdoll/libraries/uuid"
 )
 
@@ -97,7 +97,7 @@ type PendingPost struct {
 	characters []*Character
 	categories []*Category
 
-	contributor *user.User
+	contributor *account.Account
 
 	artist *Artist
 
@@ -109,7 +109,7 @@ type PendingPost struct {
 	generatedIds       []string
 }
 
-func NewPendingPost(id, moderatorId string, artist *Artist, contributor *user.User, content []string, characters []*Character, categories []*Category, postedAt time.Time) (*PendingPost, error) {
+func NewPendingPost(id, moderatorId string, artist *Artist, contributor *account.Account, content []string, characters []*Character, categories []*Category, postedAt time.Time) (*PendingPost, error) {
 	return &PendingPost{
 		id:          id,
 		moderatorId: moderatorId,
@@ -130,7 +130,7 @@ func UnmarshalPendingPostFromDatabase(id, moderatorId, state string, artist *Art
 		moderatorId: moderatorId,
 		state:       PostPendingState(state),
 		artist:      artist,
-		contributor: user.NewUser(contributorId, contributorUsername, contributorAvatar, nil, false, false),
+		contributor: account.NewUser(contributorId, contributorUsername, contributorAvatar, nil, false, false),
 		content:     content,
 		characters:  characters,
 		categories:  categories,
@@ -158,7 +158,7 @@ func (p *PendingPost) Artist() *Artist {
 	return p.artist
 }
 
-func (p *PendingPost) Contributor() *user.User {
+func (p *PendingPost) Contributor() *account.Account {
 	return p.contributor
 }
 
@@ -210,7 +210,7 @@ func (p *PendingPost) UpdateModerator(moderatorId string) error {
 	return nil
 }
 
-func (p *PendingPost) UpdateContributor(contributor *user.User) {
+func (p *PendingPost) UpdateContributor(contributor *account.Account) {
 	p.contributor = contributor
 }
 
