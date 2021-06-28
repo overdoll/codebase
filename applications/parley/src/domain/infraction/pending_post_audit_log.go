@@ -83,10 +83,10 @@ type PendingPostAuditLog struct {
 	status string
 
 	rejectionReason *PendingPostRejectionReason
-	userInfraction  *UserInfractionHistory
+	userInfraction  *AccountInfractionHistory
 }
 
-func NewPendingPostAuditLog(user *account.Account, userInfractionHistory []*UserInfractionHistory, postId, moderatorId string, contributor *account.Account, rejectionReason *PendingPostRejectionReason, notes string) (*PendingPostAuditLog, error) {
+func NewPendingPostAuditLog(user *account.Account, userInfractionHistory []*AccountInfractionHistory, postId, moderatorId string, contributor *account.Account, rejectionReason *PendingPostRejectionReason, notes string) (*PendingPostAuditLog, error) {
 	// Do some permission checks here to make sure the proper user is doing everything
 
 	if !user.IsStaff() {
@@ -96,7 +96,7 @@ func NewPendingPostAuditLog(user *account.Account, userInfractionHistory []*User
 		}
 	}
 
-	var userInfraction *UserInfractionHistory
+	var userInfraction *AccountInfractionHistory
 
 	status := StatusApproved
 
@@ -104,7 +104,7 @@ func NewPendingPostAuditLog(user *account.Account, userInfractionHistory []*User
 		status = StatusDenied
 
 		if rejectionReason.Infraction() {
-			userInfraction = NewUserInfractionHistory(contributor.ID(), userInfractionHistory, rejectionReason.Reason())
+			userInfraction = NewAccountInfractionHistory(contributor.ID(), userInfractionHistory, rejectionReason.Reason())
 		}
 	}
 
@@ -122,7 +122,7 @@ func NewPendingPostAuditLog(user *account.Account, userInfractionHistory []*User
 	}, nil
 }
 
-func UnmarshalPendingPostAuditLogFromDatabase(id, postId, moderatorId, moderatorUsername, contributorId, contributorUsername, status, userInfractionId, reason, notes string, reverted bool, userInfraction *UserInfractionHistory, createdMs int) *PendingPostAuditLog {
+func UnmarshalPendingPostAuditLogFromDatabase(id, postId, moderatorId, moderatorUsername, contributorId, contributorUsername, status, userInfractionId, reason, notes string, reverted bool, userInfraction *AccountInfractionHistory, createdMs int) *PendingPostAuditLog {
 	return &PendingPostAuditLog{
 		id:              id,
 		postId:          postId,
@@ -214,7 +214,7 @@ func (m *PendingPostAuditLog) RejectionReason() *PendingPostRejectionReason {
 	return m.rejectionReason
 }
 
-func (m *PendingPostAuditLog) UserInfraction() *UserInfractionHistory {
+func (m *PendingPostAuditLog) UserInfraction() *AccountInfractionHistory {
 	return m.userInfraction
 }
 

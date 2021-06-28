@@ -2,4 +2,10 @@ type User @key(fields: "id") {
   id: String!
   username: String!
   roles: [String!]!
+  lock: AccountLock
+}
+
+type AccountLock {
+  expires: Int!
+  reason: String!
 }

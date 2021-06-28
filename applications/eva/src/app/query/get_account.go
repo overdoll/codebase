@@ -11,7 +11,7 @@ type GetAccountHandler struct {
 	ur account.Repository
 }
 
-func NewGetUserHandler(ur account.Repository) GetAccountHandler {
+func NewGetAccountHandler(ur account.Repository) GetAccountHandler {
 	return GetAccountHandler{ur: ur}
 }
 

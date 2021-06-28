@@ -34,19 +34,20 @@ func createApplication(ctx context.Context) app.Application {
 	}
 
 	cookieRepo := adapters.NewCookieCassandraRepository(session)
-	userRepo := adapters.NewAccountCassandraRepository(session)
+	accountRepo := adapters.NewAccountCassandraRepository(session)
 
 	return app.Application{
 		Commands: app.Commands{
-			RedeemCookie:   command.NewRedeemCookieHandler(cookieRepo, userRepo),
-			Register:       command.NewRegisterHandler(cookieRepo, userRepo),
-			Authentication: command.NewAuthenticationHandler(cookieRepo, userRepo),
+			RedeemCookie:   command.NewRedeemCookieHandler(cookieRepo, accountRepo),
+			Register:       command.NewRegisterHandler(cookieRepo, accountRepo),
+			Authentication: command.NewAuthenticationHandler(cookieRepo, accountRepo),
 			Authenticate:   command.NewAuthenticateHandler(cookieRepo),
-			LockAccount:    command.NewLockUserHandler(userRepo),
-			CreateAccount:  command.NewCreateUserHandler(userRepo),
+			LockAccount:    command.NewLockUserHandler(accountRepo),
+			CreateAccount:  command.NewCreateUserHandler(accountRepo),
+			UnlockAccount: command.NewUnlockUserHandler(accountRepo),
 		},
 		Queries: app.Queries{
-			GetAccount: query.NewGetUserHandler(userRepo),
+			GetAccount: query.NewGetAccountHandler(accountRepo),
 		},
 	}
 }

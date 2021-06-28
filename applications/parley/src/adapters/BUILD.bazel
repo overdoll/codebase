@@ -4,10 +4,10 @@ go_library(
     name = "adapters",
     srcs = [
         "eva_grpc.go",
+        "infraction_account_infraction_history_cassandra_repository.go",
         "infraction_cassandra_repository.go",
         "infraction_pending_post_audit_log_cassandra_repository.go",
         "infraction_pending_rejection_reason_cassandra_repository.go",
-        "infraction_user_infraction_history_cassandra_repository.go",
         "moderator_cassandra_repository.go",
         "sting_grpc.go",
     ],

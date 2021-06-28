@@ -39,7 +39,7 @@ type PendingPostAuditLogByModerator struct {
 
 	ContributorUsername string `db:"contributor_account_username"`
 	ModeratorUsername   string `db:"moderator_account_username"`
-	UserInfractionId    string `db:"user_infraction_id"`
+	AccountInfractionId string `db:"account_infraction_id"`
 	Status              string `db:"status"`
 	Reason              string `db:"reason"`
 	Notes               string `db:"notes"`
@@ -73,7 +73,7 @@ func marshalPendingPostAuditLogToDatabase(auditLog *infraction.PendingPostAuditL
 		ModeratorUsername:   auditLog.Moderator().Username(),
 		ContributorId:       auditLog.Contributor().ID(),
 		ContributorUsername: auditLog.Contributor().Username(),
-		UserInfractionId:    userInfractionId,
+		AccountInfractionId: userInfractionId,
 		Status:              auditLog.Status(),
 		Reason:              reason,
 		Notes:               auditLog.Notes(),
@@ -133,7 +133,7 @@ func (r InfractionCassandraRepository) CreatePendingPostAuditLog(ctx context.Con
 			"contributor_account_username",
 			"moderator_account_id",
 			"moderator_account_username",
-			"user_infraction_id",
+			"account_infraction_id",
 			"status",
 			"reason",
 			"notes",
@@ -199,7 +199,7 @@ func (r InfractionCassandraRepository) GetPendingPostAuditLog(ctx context.Contex
 			"contributor_account_username",
 			"moderator_account_id",
 			"moderator_account_username",
-			"user_infraction_id",
+			"account_infraction_id",
 			"status",
 			"reason",
 			"notes",
@@ -219,14 +219,14 @@ func (r InfractionCassandraRepository) GetPendingPostAuditLog(ctx context.Contex
 
 	// grab the final audit log, which is stored in the moderator spot
 
-	var userInfractionHistory *infraction.UserInfractionHistory
+	var userInfractionHistory *infraction.AccountInfractionHistory
 	var err error
 
-	if pendingPostAuditLogByModerator.UserInfractionId != "" {
-		userInfractionHistory, err = r.GetUserInfractionHistoryById(
+	if pendingPostAuditLogByModerator.AccountInfractionId != "" {
+		userInfractionHistory, err = r.GetAccountInfractionHistoryById(
 			ctx,
 			pendingPostAuditLogByModerator.ContributorId,
-			pendingPostAuditLogByModerator.UserInfractionId,
+			pendingPostAuditLogByModerator.AccountInfractionId,
 		)
 
 		if err != nil {
@@ -242,7 +242,7 @@ func (r InfractionCassandraRepository) GetPendingPostAuditLog(ctx context.Contex
 		pendingPostAuditLogByModerator.ContributorId,
 		pendingPostAuditLogByModerator.ContributorUsername,
 		pendingPostAuditLogByModerator.Status,
-		pendingPostAuditLogByModerator.UserInfractionId,
+		pendingPostAuditLogByModerator.AccountInfractionId,
 		pendingPostAuditLogByModerator.Reason,
 		pendingPostAuditLogByModerator.Notes,
 		pendingPostAuditLogByModerator.Reverted,
@@ -280,7 +280,7 @@ func (r InfractionCassandraRepository) GetPendingPostAuditLogByModerator(ctx con
 			"contributor_account_username",
 			"moderator_account_id",
 			"moderator_account_username",
-			"user_infraction_id",
+			"account_infraction_id",
 			"created_ms",
 			"status",
 			"reason",
@@ -309,11 +309,11 @@ func (r InfractionCassandraRepository) GetPendingPostAuditLogByModerator(ctx con
 
 	for _, pendingPostAuditLog := range dbPendingPostAuditLogs {
 
-		var userInfractionHistory *infraction.UserInfractionHistory
+		var userInfractionHistory *infraction.AccountInfractionHistory
 
-		if pendingPostAuditLog.UserInfractionId != "" {
-			userInfractionHistory = infraction.UnmarshalUserInfractionHistoryFromDatabase(
-				pendingPostAuditLog.UserInfractionId,
+		if pendingPostAuditLog.AccountInfractionId != "" {
+			userInfractionHistory = infraction.UnmarshalAccountInfractionHistoryFromDatabase(
+				pendingPostAuditLog.AccountInfractionId,
 				pendingPostAuditLog.ContributorId,
 				pendingPostAuditLog.Reason,
 				time.Now(),
@@ -328,7 +328,7 @@ func (r InfractionCassandraRepository) GetPendingPostAuditLogByModerator(ctx con
 			pendingPostAuditLog.ContributorId,
 			pendingPostAuditLog.ContributorUsername,
 			pendingPostAuditLog.Status,
-			pendingPostAuditLog.UserInfractionId,
+			pendingPostAuditLog.AccountInfractionId,
 			pendingPostAuditLog.Reason,
 			pendingPostAuditLog.Notes,
 			pendingPostAuditLog.Reverted,
@@ -372,7 +372,7 @@ func (r InfractionCassandraRepository) UpdatePendingPostAuditLog(ctx context.Con
 			qb.Eq("id"),
 		).
 		Set(
-			"user_infraction_id",
+			"account_infraction_id",
 			"reverted",
 			"reason",
 		).

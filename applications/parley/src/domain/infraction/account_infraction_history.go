@@ -6,7 +6,7 @@ import (
 	"github.com/segmentio/ksuid"
 )
 
-type UserInfractionHistory struct {
+type AccountInfractionHistory struct {
 	id             string
 	userId         string
 	reason         string
@@ -18,9 +18,9 @@ var (
 	LengthPeriodBans = []int64{0, 1, 3, 5, 7}
 )
 
-func NewUserInfractionHistory(userId string, pastUserInfractionHistory []*UserInfractionHistory, reason string) *UserInfractionHistory {
+func NewAccountInfractionHistory(userId string, pastUserInfractionHistory []*AccountInfractionHistory, reason string) *AccountInfractionHistory {
 
-	var activeInfractions []*UserInfractionHistory
+	var activeInfractions []*AccountInfractionHistory
 
 	// Only get infraction if not expired yet (so we can add to the next infraction)
 	for _, pastInfraction := range pastUserInfractionHistory {
@@ -32,7 +32,7 @@ func NewUserInfractionHistory(userId string, pastUserInfractionHistory []*UserIn
 
 	// This will be the user's last ban (this one locks account indefinitely)
 	if len(activeInfractions)+1 > len(LengthPeriodBans) {
-		return &UserInfractionHistory{
+		return &AccountInfractionHistory{
 			id:             ksuid.New().String(),
 			userId:         userId,
 			reason:         reason,
@@ -53,7 +53,7 @@ func NewUserInfractionHistory(userId string, pastUserInfractionHistory []*UserIn
 	expiration := time.Now().Add(time.Hour * 24 * time.Duration(banPeriod*4))
 	// user account is locked /4 of expiration
 	lockLength := time.Now().Add(time.Hour * 24 * time.Duration(banPeriod)).Unix()
-	return &UserInfractionHistory{
+	return &AccountInfractionHistory{
 		id:             ksuid.New().String(),
 		userId:         userId,
 		reason:         reason,
@@ -62,28 +62,28 @@ func NewUserInfractionHistory(userId string, pastUserInfractionHistory []*UserIn
 	}
 }
 
-func (m *UserInfractionHistory) ID() string {
+func (m *AccountInfractionHistory) ID() string {
 	return m.id
 }
 
-func (m *UserInfractionHistory) UserId() string {
+func (m *AccountInfractionHistory) UserId() string {
 	return m.userId
 }
 
-func (m *UserInfractionHistory) UserLockLength() int64 {
+func (m *AccountInfractionHistory) UserLockLength() int64 {
 	return m.userLockLength
 }
 
-func (m *UserInfractionHistory) Reason() string {
+func (m *AccountInfractionHistory) Reason() string {
 	return m.reason
 }
 
-func (m *UserInfractionHistory) Expiration() time.Time {
+func (m *AccountInfractionHistory) Expiration() time.Time {
 	return m.expiration
 }
 
-func UnmarshalUserInfractionHistoryFromDatabase(id, userId, reason string, expiration time.Time) *UserInfractionHistory {
-	return &UserInfractionHistory{
+func UnmarshalAccountInfractionHistoryFromDatabase(id, userId, reason string, expiration time.Time) *AccountInfractionHistory {
+	return &AccountInfractionHistory{
 		id:         id,
 		userId:     userId,
 		reason:     reason,

@@ -20,9 +20,9 @@ func NewUserInfractionHistoryHandler(ir infraction.Repository) UserInfractionHis
 	return UserInfractionHistoryHandler{ir: ir}
 }
 
-func (h UserInfractionHistoryHandler) Handle(ctx context.Context, id string) ([]*infraction.UserInfractionHistory, error) {
+func (h UserInfractionHistoryHandler) Handle(ctx context.Context, id string) ([]*infraction.AccountInfractionHistory, error) {
 
-	history, err := h.ir.GetUserInfractionHistory(ctx, id)
+	history, err := h.ir.GetAccountInfractionHistory(ctx, id)
 
 	if err != nil {
 		zap.S().Errorf("failed to get infraction history: %s", err)

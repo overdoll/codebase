@@ -116,20 +116,20 @@ func (r *QueryResolver) Authentication(ctx context.Context) (*types.Authenticati
 
 	hasCookie := err == nil
 
-	ck, usr, err := r.App.Commands.Authentication.Handle(ctx, userId, hasCookie, cookieValue)
+	ck, acc, err := r.App.Commands.Authentication.Handle(ctx, userId, hasCookie, cookieValue)
 
 	if err != nil {
 		return nil, err
 	}
 
-	if usr != nil {
+	if acc != nil {
 		// user had cookie and it was used to log in
 		if hasCookie {
 			http.SetCookie(gc.Writer, &http.Cookie{Name: cookie.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
 
 			// Update passport to include our new user
 			if err := pass.MutatePassport(ctx, func(p *passport.Passport) error {
-				p.SetAccount(usr.ID())
+				p.SetAccount(acc.ID())
 				return nil
 			}); err != nil {
 				return nil, err
@@ -138,7 +138,7 @@ func (r *QueryResolver) Authentication(ctx context.Context) (*types.Authenticati
 
 		return &types.Authentication{
 			Cookie: nil,
-			User:   &types.User{ID: usr.ID(), Username: usr.Username(), Roles: usr.RolesAsString()},
+			User:   types.MarshalUserToGraphQL(acc),
 		}, nil
 	}
 

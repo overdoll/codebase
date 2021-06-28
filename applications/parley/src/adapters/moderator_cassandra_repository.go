@@ -12,7 +12,7 @@ import (
 )
 
 type Moderator struct {
-	UserId       string    `db:"account_id"`
+	AccountId    string    `db:"account_id"`
 	LastSelected time.Time `db:"last_selected"`
 	Bucket       int       `db:"bucket"`
 }
@@ -27,7 +27,7 @@ func NewModeratorCassandraRepository(session gocqlx.Session) ModeratorCassandraR
 
 func marshaModeratorToDatabase(mod *moderator.Moderator) *Moderator {
 	return &Moderator{
-		UserId:       mod.ID(),
+		AccountId:    mod.ID(),
 		LastSelected: mod.LastSelected(),
 		Bucket:       0,
 	}
@@ -39,7 +39,7 @@ func (r ModeratorCassandraRepository) GetModerator(ctx context.Context, id strin
 		Where(qb.Eq("bucket"), qb.Eq("account_id")).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(&Moderator{UserId: id, Bucket: 0})
+		BindStruct(&Moderator{AccountId: id, Bucket: 0})
 
 	var mod Moderator
 
@@ -47,7 +47,7 @@ func (r ModeratorCassandraRepository) GetModerator(ctx context.Context, id strin
 		return nil, err
 	}
 
-	return moderator.UnmarshalModeratorFromDatabase(mod.UserId, mod.LastSelected), nil
+	return moderator.UnmarshalModeratorFromDatabase(mod.AccountId, mod.LastSelected), nil
 }
 
 func (r ModeratorCassandraRepository) GetModerators(ctx context.Context) ([]*moderator.Moderator, error) {
@@ -67,7 +67,7 @@ func (r ModeratorCassandraRepository) GetModerators(ctx context.Context) ([]*mod
 
 	var moderators []*moderator.Moderator
 	for _, dbMod := range dbModerators {
-		moderators = append(moderators, moderator.UnmarshalModeratorFromDatabase(dbMod.UserId, dbMod.LastSelected))
+		moderators = append(moderators, moderator.UnmarshalModeratorFromDatabase(dbMod.AccountId, dbMod.LastSelected))
 	}
 
 	return moderators, nil

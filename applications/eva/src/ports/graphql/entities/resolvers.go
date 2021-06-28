@@ -13,15 +13,11 @@ type EntityResolver struct {
 
 func (e EntityResolver) FindUserByID(ctx context.Context, id string) (*types.User, error) {
 
-	usr, err := e.App.Queries.GetAccount.Handle(ctx, id)
+	acc, err := e.App.Queries.GetAccount.Handle(ctx, id)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return &types.User{
-		ID:       usr.ID(),
-		Username: usr.Username(),
-		Roles:    usr.RolesAsString(),
-	}, nil
+	return types.MarshalUserToGraphQL(acc), nil
 }

@@ -16,6 +16,7 @@ type Commands struct {
 	Register       command.RegisterHandler
 	Authentication command.AuthenticationHandler
 	LockAccount    command.LockAccountHandler
+	UnlockAccount  command.UnlockAccountHandler
 	CreateAccount  command.CreateAccountHandler
 }
 

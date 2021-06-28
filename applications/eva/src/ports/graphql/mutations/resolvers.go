@@ -128,3 +128,19 @@ func (r *MutationResolver) Logout(ctx context.Context) (bool, error) {
 
 	return true, nil
 }
+
+func (r *MutationResolver) UnlockAccount(ctx context.Context) (bool, error) {
+	pass := passport.FromContext(ctx)
+
+	if !pass.IsAuthenticated() {
+		return false, passport.ErrNotAuthenticated
+	}
+
+	_, err := r.App.Commands.UnlockAccount.Handle(ctx, pass.UserID())
+
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}

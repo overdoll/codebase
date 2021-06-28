@@ -2,6 +2,11 @@
 
 package types
 
+type AccountLock struct {
+	Expires int    `json:"expires"`
+	Reason  string `json:"reason"`
+}
+
 type Authentication struct {
 	Cookie *Cookie `json:"cookie"`
 	User   *User   `json:"user"`
@@ -25,9 +30,10 @@ type RegisterInput struct {
 }
 
 type User struct {
-	ID       string   `json:"id"`
-	Username string   `json:"username"`
-	Roles    []string `json:"roles"`
+	ID       string       `json:"id"`
+	Username string       `json:"username"`
+	Roles    []string     `json:"roles"`
+	Lock     *AccountLock `json:"lock"`
 }
 
 func (User) IsEntity() {}

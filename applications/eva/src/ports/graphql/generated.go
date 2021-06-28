@@ -46,6 +46,11 @@ type DirectiveRoot struct {
 }
 
 type ComplexityRoot struct {
+	AccountLock struct {
+		Expires func(childComplexity int) int
+		Reason  func(childComplexity int) int
+	}
+
 	Authentication struct {
 		Cookie func(childComplexity int) int
 		User   func(childComplexity int) int
@@ -65,10 +70,11 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		AuthEmail    func(childComplexity int) int
-		Authenticate func(childComplexity int, data *types.AuthenticationInput) int
-		Logout       func(childComplexity int) int
-		Register     func(childComplexity int, data *types.RegisterInput) int
+		AuthEmail     func(childComplexity int) int
+		Authenticate  func(childComplexity int, data *types.AuthenticationInput) int
+		Logout        func(childComplexity int) int
+		Register      func(childComplexity int, data *types.RegisterInput) int
+		UnlockAccount func(childComplexity int) int
 	}
 
 	Query struct {
@@ -80,6 +86,7 @@ type ComplexityRoot struct {
 
 	User struct {
 		ID       func(childComplexity int) int
+		Lock     func(childComplexity int) int
 		Roles    func(childComplexity int) int
 		Username func(childComplexity int) int
 	}
@@ -95,6 +102,7 @@ type EntityResolver interface {
 type MutationResolver interface {
 	Logout(ctx context.Context) (bool, error)
 	AuthEmail(ctx context.Context) (bool, error)
+	UnlockAccount(ctx context.Context) (bool, error)
 	Authenticate(ctx context.Context, data *types.AuthenticationInput) (bool, error)
 	Register(ctx context.Context, data *types.RegisterInput) (bool, error)
 }
@@ -117,6 +125,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	ec := executionContext{nil, e}
 	_ = ec
 	switch typeName + "." + field {
+
+	case "AccountLock.expires":
+		if e.complexity.AccountLock.Expires == nil {
+			break
+		}
+
+		return e.complexity.AccountLock.Expires(childComplexity), true
+
+	case "AccountLock.reason":
+		if e.complexity.AccountLock.Reason == nil {
+			break
+		}
+
+		return e.complexity.AccountLock.Reason(childComplexity), true
 
 	case "Authentication.cookie":
 		if e.complexity.Authentication.Cookie == nil {
@@ -224,6 +246,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.Register(childComplexity, args["data"].(*types.RegisterInput)), true
 
+	case "Mutation.unlockAccount":
+		if e.complexity.Mutation.UnlockAccount == nil {
+			break
+		}
+
+		return e.complexity.Mutation.UnlockAccount(childComplexity), true
+
 	case "Query.authentication":
 		if e.complexity.Query.Authentication == nil {
 			break
@@ -268,6 +297,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.User.ID(childComplexity), true
+
+	case "User.lock":
+		if e.complexity.User.Lock == nil {
+			break
+		}
+
+		return e.complexity.User.Lock(childComplexity), true
 
 	case "User.roles":
 		if e.complexity.User.Roles == nil {
@@ -354,6 +390,17 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
+	{Name: "schema/account/schema.graphql", Input: `type User @key(fields: "id") {
+  id: String!
+  username: String!
+  roles: [String!]!
+  lock: AccountLock
+}
+
+type AccountLock {
+  expires: Int!
+  reason: String!
+}`, BuiltIn: false},
 	{Name: "schema/authenticate/schema.graphql", Input: `input RegisterInput {
   username: String!
 }
@@ -409,13 +456,9 @@ extend type Query {
 	{Name: "schema/schema.graphql", Input: `type Mutation {
   logout: Boolean!
   authEmail: Boolean!
+  unlockAccount: Boolean!
 }
 `, BuiltIn: false},
-	{Name: "schema/user/schema.graphql", Input: `type User @key(fields: "id") {
-  id: String!
-  username: String!
-  roles: [String!]!
-}`, BuiltIn: false},
 	{Name: "federation/directives.graphql", Input: `
 scalar _Any
 scalar _FieldSet
@@ -579,6 +622,76 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 // endregion ************************** directives.gotpl **************************
 
 // region    **************************** field.gotpl *****************************
+
+func (ec *executionContext) _AccountLock_expires(ctx context.Context, field graphql.CollectedField, obj *types.AccountLock) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AccountLock",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Expires, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AccountLock_reason(ctx context.Context, field graphql.CollectedField, obj *types.AccountLock) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AccountLock",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Reason, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
 
 func (ec *executionContext) _Authentication_cookie(ctx context.Context, field graphql.CollectedField, obj *types.Authentication) (ret graphql.Marshaler) {
 	defer func() {
@@ -950,6 +1063,41 @@ func (ec *executionContext) _Mutation_authEmail(ctx context.Context, field graph
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return ec.resolvers.Mutation().AuthEmail(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_unlockAccount(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UnlockAccount(rctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1375,6 +1523,38 @@ func (ec *executionContext) _User_roles(ctx context.Context, field graphql.Colle
 	res := resTmp.([]string)
 	fc.Result = res
 	return ec.marshalNString2ᚕstringᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _User_lock(ctx context.Context, field graphql.CollectedField, obj *types.User) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "User",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Lock, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.AccountLock)
+	fc.Result = res
+	return ec.marshalOAccountLock2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountLock(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) __Service_sdl(ctx context.Context, field graphql.CollectedField, obj *fedruntime.Service) (ret graphql.Marshaler) {
@@ -2560,6 +2740,38 @@ func (ec *executionContext) __Entity(ctx context.Context, sel ast.SelectionSet, 
 
 // region    **************************** object.gotpl ****************************
 
+var accountLockImplementors = []string{"AccountLock"}
+
+func (ec *executionContext) _AccountLock(ctx context.Context, sel ast.SelectionSet, obj *types.AccountLock) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, accountLockImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("AccountLock")
+		case "expires":
+			out.Values[i] = ec._AccountLock_expires(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "reason":
+			out.Values[i] = ec._AccountLock_reason(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var authenticationImplementors = []string{"Authentication"}
 
 func (ec *executionContext) _Authentication(ctx context.Context, sel ast.SelectionSet, obj *types.Authentication) graphql.Marshaler {
@@ -2703,6 +2915,11 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "unlockAccount":
+			out.Values[i] = ec._Mutation_unlockAccount(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "authenticate":
 			out.Values[i] = ec._Mutation_authenticate(ctx, field)
 			if out.Values[i] == graphql.Null {
@@ -2833,6 +3050,8 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "lock":
+			out.Values[i] = ec._User_lock(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -3140,6 +3359,21 @@ func (ec *executionContext) marshalNCookie2ᚖoverdollᚋapplicationsᚋevaᚋsr
 		return graphql.Null
 	}
 	return ec._Cookie(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNInt2int(ctx context.Context, v interface{}) (int, error) {
+	res, err := graphql.UnmarshalInt(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.SelectionSet, v int) graphql.Marshaler {
+	res := graphql.MarshalInt(v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
 }
 
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {
@@ -3535,6 +3769,13 @@ func (ec *executionContext) marshalN__TypeKind2string(ctx context.Context, sel a
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) marshalOAccountLock2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountLock(ctx context.Context, sel ast.SelectionSet, v *types.AccountLock) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._AccountLock(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOAuthentication2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAuthentication(ctx context.Context, sel ast.SelectionSet, v *types.Authentication) graphql.Marshaler {

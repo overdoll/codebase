@@ -139,6 +139,15 @@ func (u *Account) Lock(duration int, reason string) error {
 	return nil
 }
 
+func (u *Account) Unlock() error {
+
+	if !u.CanUnlock() {
+		return errors.New("cannot unlock yet")
+	}
+
+	return u.Lock(0, "")
+}
+
 func (u *Account) RolesAsString() []string {
 	var n []string
 
