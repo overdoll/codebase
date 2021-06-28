@@ -1,0 +1,16 @@
+{
+  "title": "overdoll",
+  "nav": {
+    "mod": "Moderation",
+    "upload": "Upload",
+    "profile": "Profile",
+    "menu": "Menu",
+    "join": "join"
+  },
+  "menu": {
+    "profile": "Go to my profile",
+    "settings": "Settings",
+    "logout": "Log out",
+    "join": "Join the community"
+  }
+}

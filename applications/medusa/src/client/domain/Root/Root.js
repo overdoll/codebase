@@ -8,7 +8,7 @@ import { graphql, usePreloadedQuery } from 'react-relay/hooks'
 import type { RootQuery, RootQueryResponse } from '@//:artifacts/RootQuery.graphql'
 import { Helmet } from 'react-helmet-async'
 import NavigationBar from '../../components/NavigationBar/NavigationBar'
-import { Navigation } from 'swiper'
+import { useLocation } from '@//:modules/routing'
 
 type Props = {
   prepared: {
@@ -31,6 +31,8 @@ const RootQueryGQL = graphql`
 const RootContext: Context<?RootQueryResponse> = createContext(null)
 
 export default function Root (props: Props): Node {
+  const currentLocation = useLocation()
+
   const rootQuery = usePreloadedQuery<RootQuery>(
     RootQueryGQL,
     props.prepared.stateQuery
@@ -41,8 +43,11 @@ export default function Root (props: Props): Node {
       <Helmet
         title='overdoll'
       />
+      <NavigationBar
+        user={rootQuery.authentication.user} currentRoute={currentLocation.pathname}
+        disabledRoutes={['/join']}
+      />
       <Suspense fallback={null}>{props.children}</Suspense>
-      <NavigationBar />
     </RootContext.Provider>
   )
 }
