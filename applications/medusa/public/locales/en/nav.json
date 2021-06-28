@@ -12,5 +12,10 @@
     "settings": "Settings",
     "logout": "Log out",
     "join": "Join the community"
+  },
+  "upload_locked": "You must be logged in to upload",
+  "logout": {
+    "success": "You have been logged out",
+    "error": "There was an error logging out"
   }
 }
