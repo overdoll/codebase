@@ -10,6 +10,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/eva/src/adapters"
 	"overdoll/applications/eva/src/domain/account"
+	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/tests"
 	"overdoll/libraries/uuid"
 )
@@ -184,6 +185,7 @@ func newFakeAccount(t *testing.T) *account.Account {
 
 func newAccountRepository(t *testing.T) adapters.AccountRepository {
 	session := tests.CreateScyllaSession(t, "eva")
+	redis, _ := bootstrap.InitializeRedisSession(1)
 
-	return adapters.NewAccountCassandraRepository(session)
+	return adapters.NewAccountCassandraRedisRepository(session, redis)
 }

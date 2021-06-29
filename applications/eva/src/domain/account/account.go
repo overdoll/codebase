@@ -38,6 +38,7 @@ type Account struct {
 var (
 	ErrUsernameNotUnique = errors.New("username is not unique")
 	ErrEmailNotUnique    = errors.New("email is not unique")
+	ErrEmailCodeInvalid    = errors.New("email confirmation expired or invalid")
 	ErrAccountNotFound   = errors.New("account not found")
 )
 

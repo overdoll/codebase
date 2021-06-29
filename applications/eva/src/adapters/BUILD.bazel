@@ -3,7 +3,8 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 go_library(
     name = "adapters",
     srcs = [
-        "account_cassandra_repository.go",
+        "account_cassandra_redis_repository.go",
+        "account_email_cassandra_repository.go",
         "cookie_redis_repository.go",
     ],
     importpath = "overdoll/applications/eva/src/adapters",
@@ -11,6 +12,7 @@ go_library(
     deps = [
         "//applications/eva/src/domain/account",
         "//applications/eva/src/domain/cookie",
+        "//libraries/passport",
         "@com_github_go_redis_redis_v8//:redis",
         "@com_github_gocql_gocql//:gocql",
         "@com_github_scylladb_gocqlx_v2//:gocqlx",
@@ -21,7 +23,7 @@ go_library(
 go_test(
     name = "adapters_test",
     srcs = [
-        "account_cassandra_repository_test.go",
+        "account_cassandra_redis_repository_test.go",
         "cookie_redis_repository_test.go",
     ],
     deps = [

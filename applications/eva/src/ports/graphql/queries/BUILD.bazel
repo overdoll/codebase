@@ -8,6 +8,7 @@ go_library(
     deps = [
         "//applications/eva/src/app",
         "//applications/eva/src/app/command",
+        "//applications/eva/src/domain/account",
         "//applications/eva/src/domain/cookie",
         "//applications/eva/src/ports/graphql/types",
         "//libraries/cookies",

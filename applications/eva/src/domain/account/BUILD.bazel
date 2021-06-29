@@ -24,10 +24,13 @@ go_library(
     name = "account",
     srcs = [
         "account.go",
+        "email.go",
+        "email_confirmation.go",
         "repository.go",
     ],
     importpath = "overdoll/applications/eva/src/domain/account",
     visibility = ["//visibility:public"],
+    deps = ["@com_github_segmentio_ksuid//:ksuid"],
 )
 
 go_test(

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/go-redis/redis/v8"
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
@@ -29,16 +30,17 @@ type AccountUsername struct {
 }
 
 type AccountEmail struct {
-	UserId string `db:"account_id"`
-	Email  string `db:"email"`
+	AccountId string `db:"account_id"`
+	Email     string `db:"email"`
 }
 
 type AccountRepository struct {
 	session gocqlx.Session
+	client  *redis.Client
 }
 
-func NewAccountCassandraRepository(session gocqlx.Session) AccountRepository {
-	return AccountRepository{session: session}
+func NewAccountCassandraRedisRepository(session gocqlx.Session, client *redis.Client) AccountRepository {
+	return AccountRepository{session: session, client: client}
 }
 
 func marshalUserToDatabase(usr *account.Account) *Account {
@@ -114,7 +116,7 @@ func (r AccountRepository) GetAccountByEmail(ctx context.Context, email string) 
 	}
 
 	// Get our user using the Account Id, from the user email instance
-	usr, err := r.GetAccountById(ctx, accountEmail.UserId)
+	usr, err := r.GetAccountById(ctx, accountEmail.AccountId)
 
 	if err != nil {
 		return nil, err
@@ -136,7 +138,7 @@ func (r AccountRepository) CreateAccount(ctx context.Context, instance *account.
 	}
 
 	insertUserEmail := qb.Insert("accounts_usernames").
-		Columns("user_id", "username").
+		Columns("account_id", "username").
 		Unique().
 		Query(r.session).
 		SerialConsistency(gocql.Serial).
@@ -163,13 +165,13 @@ func (r AccountRepository) CreateAccount(ctx context.Context, instance *account.
 		// did the check earlier if an account exists with this specific email. however, we will still
 		// do a rollback & deletion of the username if the email is already taken, just in case
 		accountEmail := AccountEmail{
-			Email:  instance.Email(),
-			UserId: instance.ID(),
+			Email:     instance.Email(),
+			AccountId: instance.ID(),
 		}
 
 		// Create a lookup table that will lookup the user using email
 		createAccountEmail := qb.Insert("accounts_emails").
-			Columns("email", "user_id").
+			Columns("email", "account_id").
 			Unique().
 			Query(r.session).
 			SerialConsistency(gocql.Serial).
@@ -187,6 +189,47 @@ func (r AccountRepository) CreateAccount(ctx context.Context, instance *account.
 				BindStruct(usernameEmail)
 
 			if err := deleteAccountUsername.ExecRelease(); err != nil {
+				return fmt.Errorf("delete() failed: '%s", err)
+			}
+
+			return account.ErrEmailNotUnique
+		}
+
+		emailByAccount := EmailByAccount{
+			Email:     instance.Email(),
+			AccountId: instance.ID(),
+			Status:    1,
+		}
+
+		// create a table that holds all of the user's emails
+		createAccountByEmail := qb.Insert("emails_by_account").
+			Columns("email", "account_id", "status").
+			Unique().
+			Query(r.session).
+			SerialConsistency(gocql.Serial).
+			BindStruct(emailByAccount)
+
+		applied, err = createAccountByEmail.ExecCAS()
+
+		if err != nil || !applied {
+
+			// There was an error or something, so we want to gracefully recover.
+			// Delete our users_usernames entry just in case, so user can try to signup again
+			deleteAccountUsername := qb.Delete("accounts_usernames").
+				Where(qb.Eq("username")).
+				Query(r.session).
+				BindStruct(usernameEmail)
+
+			if err := deleteAccountUsername.ExecRelease(); err != nil {
+				return fmt.Errorf("delete() failed: '%s", err)
+			}
+
+			deleteAccountEmail := qb.Delete("accounts_emails").
+				Where(qb.Eq("email")).
+				Query(r.session).
+				BindStruct(accountEmail)
+
+			if err := deleteAccountEmail.ExecRelease(); err != nil {
 				return fmt.Errorf("delete() failed: '%s", err)
 			}
 

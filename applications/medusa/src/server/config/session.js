@@ -6,7 +6,7 @@ const RedisStore = connect(session)
 
 export default {
   store: new RedisStore({
-    client: redis.createClient({ host: process.env.REDIS_URL, db: 1 })
+    client: redis.createClient({ host: process.env.REDIS_URL, db: 0 })
   }),
   saveUninitialized: false,
   secret: process.env.SESSION_SECRET,

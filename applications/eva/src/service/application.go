@@ -40,20 +40,23 @@ func createApplication(ctx context.Context) app.Application {
 	}
 
 	cookieRepo := adapters.NewCookieRedisRepository(redis)
-	accountRepo := adapters.NewAccountCassandraRepository(session)
+	accountRepo := adapters.NewAccountCassandraRedisRepository(session, redis)
 
 	return app.Application{
 		Commands: app.Commands{
-			RedeemCookie:   command.NewRedeemCookieHandler(cookieRepo, accountRepo),
-			Register:       command.NewRegisterHandler(cookieRepo, accountRepo),
-			Authentication: command.NewAuthenticationHandler(cookieRepo, accountRepo),
-			Authenticate:   command.NewAuthenticateHandler(cookieRepo),
-			LockAccount:    command.NewLockUserHandler(accountRepo),
-			CreateAccount:  command.NewCreateUserHandler(accountRepo),
-			UnlockAccount:  command.NewUnlockUserHandler(accountRepo),
+			RedeemCookie:        command.NewRedeemCookieHandler(cookieRepo, accountRepo),
+			Register:            command.NewRegisterHandler(cookieRepo, accountRepo),
+			Authentication:      command.NewAuthenticationHandler(cookieRepo, accountRepo),
+			Authenticate:        command.NewAuthenticateHandler(cookieRepo),
+			LockAccount:         command.NewLockUserHandler(accountRepo),
+			CreateAccount:       command.NewCreateUserHandler(accountRepo),
+			UnlockAccount:       command.NewUnlockUserHandler(accountRepo),
+			AddAccountEmail:     command.NewAddAccountEmailHandler(accountRepo),
+			ConfirmAccountEmail: command.NewConfirmAccountEmailHandler(accountRepo),
 		},
 		Queries: app.Queries{
-			GetAccount: query.NewGetAccountHandler(accountRepo),
+			GetAccount:       query.NewGetAccountHandler(accountRepo),
+			GetAccountEmails: query.NewGetAccountEmailsHandler(accountRepo),
 		},
 	}
 }

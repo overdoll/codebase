@@ -7,6 +7,7 @@ import (
 	"go.uber.org/zap"
 	"overdoll/applications/eva/src/app"
 	"overdoll/applications/eva/src/app/command"
+	"overdoll/applications/eva/src/domain/account"
 	"overdoll/applications/eva/src/domain/cookie"
 	"overdoll/applications/eva/src/ports/graphql/types"
 	"overdoll/libraries/cookies"
@@ -159,5 +160,70 @@ func (r *QueryResolver) Authentication(ctx context.Context) (*types.Authenticati
 	return &types.Authentication{
 		Cookie: nil,
 		User:   nil,
+	}, nil
+}
+
+func (r *QueryResolver) AccountSettings(ctx context.Context) (*types.AccountSettings, error) {
+	pass := passport.FromContext(ctx)
+
+	if !pass.IsAuthenticated() {
+		return nil, passport.ErrNotAuthenticated
+	}
+
+	emails, err := r.App.Queries.GetAccountEmails.Handle(ctx, pass.AccountID())
+
+	if err != nil {
+		return nil, err
+	}
+
+	var accEmails []*types.AccountEmail
+
+	for _, email := range emails {
+
+		var status types.AccountEmailStatusEnum
+
+		if email.Status() == account.EmailConfirmed {
+			status = types.AccountEmailStatusEnumConfirmed
+		}
+
+		if email.Status() == account.EmailUnconfirmed {
+			status = types.AccountEmailStatusEnumUnconfirmed
+		}
+
+		accEmails = append(accEmails, &types.AccountEmail{
+			Email:  email.Email(),
+			Status: status,
+		})
+	}
+
+	return &types.AccountSettings{
+		General:   &types.AccountGeneralSettings{Emails: accEmails},
+		Moderator: nil,
+	}, nil
+}
+
+func (r *QueryResolver) ConfirmAccountEmail(ctx context.Context, id string) (*types.Response, error) {
+	pass := passport.FromContext(ctx)
+
+	if !pass.IsAuthenticated() {
+		return nil, passport.ErrNotAuthenticated
+	}
+
+	validation, err := r.App.Commands.ConfirmAccountEmail.Handle(ctx, pass.AccountID(), id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if validation != "" {
+		return &types.Response{
+			Validation: &types.Validation{Code: validation},
+			Ok:         false,
+		}, nil
+	}
+
+	return &types.Response{
+		Validation: nil,
+		Ok:         true,
 	}, nil
 }

@@ -2,9 +2,33 @@
 
 package types
 
+import (
+	"fmt"
+	"io"
+	"strconv"
+)
+
+type AccountEmail struct {
+	Email  string                 `json:"email"`
+	Status AccountEmailStatusEnum `json:"status"`
+}
+
+type AccountGeneralSettings struct {
+	Emails []*AccountEmail `json:"emails"`
+}
+
 type AccountLock struct {
 	Expires int    `json:"expires"`
 	Reason  string `json:"reason"`
+}
+
+type AccountModeratorSettings struct {
+	InQueue bool `json:"inQueue"`
+}
+
+type AccountSettings struct {
+	General   *AccountGeneralSettings   `json:"general"`
+	Moderator *AccountModeratorSettings `json:"moderator"`
 }
 
 type Authentication struct {
@@ -29,11 +53,63 @@ type RegisterInput struct {
 	Username string `json:"username"`
 }
 
+type Response struct {
+	Validation *Validation `json:"validation"`
+	Ok         bool        `json:"ok"`
+}
+
 type User struct {
 	ID       string       `json:"id"`
 	Username string       `json:"username"`
 	Roles    []string     `json:"roles"`
+	Avatar   string       `json:"avatar"`
+	Verified bool         `json:"verified"`
 	Lock     *AccountLock `json:"lock"`
 }
 
 func (User) IsEntity() {}
+
+type Validation struct {
+	Code string `json:"code"`
+}
+
+type AccountEmailStatusEnum string
+
+const (
+	AccountEmailStatusEnumConfirmed   AccountEmailStatusEnum = "CONFIRMED"
+	AccountEmailStatusEnumUnconfirmed AccountEmailStatusEnum = "UNCONFIRMED"
+)
+
+var AllAccountEmailStatusEnum = []AccountEmailStatusEnum{
+	AccountEmailStatusEnumConfirmed,
+	AccountEmailStatusEnumUnconfirmed,
+}
+
+func (e AccountEmailStatusEnum) IsValid() bool {
+	switch e {
+	case AccountEmailStatusEnumConfirmed, AccountEmailStatusEnumUnconfirmed:
+		return true
+	}
+	return false
+}
+
+func (e AccountEmailStatusEnum) String() string {
+	return string(e)
+}
+
+func (e *AccountEmailStatusEnum) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = AccountEmailStatusEnum(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid AccountEmailStatusEnum", str)
+	}
+	return nil
+}
+
+func (e AccountEmailStatusEnum) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}

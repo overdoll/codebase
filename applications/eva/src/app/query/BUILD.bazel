@@ -2,8 +2,14 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "query",
-    srcs = ["get_account.go"],
+    srcs = [
+        "get_account.go",
+        "get_account_emails.go",
+    ],
     importpath = "overdoll/applications/eva/src/app/query",
     visibility = ["//visibility:public"],
-    deps = ["//applications/eva/src/domain/account"],
+    deps = [
+        "//applications/eva/src/domain/account",
+        "@org_uber_go_zap//:zap",
+    ],
 )

@@ -19,6 +19,14 @@ CREATE TABLE IF NOT EXISTS account_emails
     primary key ( email )
 );
 
+CREATE TABLE IF NOT EXISTS emails_by_account
+(
+    account_id text,
+    email      text,
+    status     int,
+    primary key ( account_id, email )
+);
+
 CREATE TABLE IF NOT EXISTS account_usernames
 (
     account_id text,

@@ -15,5 +15,5 @@ func MarshalUserToGraphQL(result *account.Account) *User {
 		}
 	}
 
-	return &User{ID: result.ID(), Username: result.Username(), Roles: result.RolesAsString(), Lock: lock}
+	return &User{ID: result.ID(), Username: result.Username(), Roles: result.RolesAsString(), Lock: lock, Avatar: result.Avatar(), Verified: result.Verified()}
 }

@@ -144,3 +144,29 @@ func (r *MutationResolver) UnlockAccount(ctx context.Context) (bool, error) {
 
 	return true, nil
 }
+
+func (r *MutationResolver) AddAccountEmail(ctx context.Context, email string) (*types.Response, error) {
+	pass := passport.FromContext(ctx)
+
+	if !pass.IsAuthenticated() {
+		return nil, passport.ErrNotAuthenticated
+	}
+
+	validation, err := r.App.Commands.AddAccountEmail.Handle(ctx, pass.AccountID(), email)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if validation != "" {
+		return &types.Response{
+			Validation: &types.Validation{Code: validation},
+			Ok:         false,
+		}, nil
+	}
+
+	return &types.Response{
+		Validation: nil,
+		Ok:         true,
+	}, nil
+}

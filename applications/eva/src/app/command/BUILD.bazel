@@ -3,8 +3,10 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 go_library(
     name = "command",
     srcs = [
+        "add_account_email.go",
         "authenticate.go",
         "check_authentication.go",
+        "confirm_account_email.go",
         "create_account.go",
         "lock_account.go",
         "redeem_cookie.go",

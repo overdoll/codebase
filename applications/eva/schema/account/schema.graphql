@@ -2,10 +2,48 @@ type User @key(fields: "id") {
   id: String!
   username: String!
   roles: [String!]!
+  avatar: String!
+  verified: Boolean!
   lock: AccountLock
 }
 
 type AccountLock {
   expires: Int!
   reason: String!
+}
+
+input RegisterInput {
+  username: String!
+}
+
+input AuthenticationInput {
+  email: String!
+}
+
+type Authentication {
+  cookie: Cookie
+  user: User
+}
+
+extend type Mutation {
+  """
+  Initiates an authentication flow for the specified account
+  """
+  authenticate(data: AuthenticationInput): Boolean!
+
+  """
+  Registration for the account. Will only work once authenticate is initiated
+  and the cookie is still valid when redeemed (5 minutes)
+  """
+  register(data: RegisterInput): Boolean!
+}
+
+extend type Query {
+  """
+  A query that will allow you to get information about the currently logged-in account
+  or the current state of authentication (cookie)
+
+  Good for persisting state on refresh and authorizing accounts
+  """
+  authentication: Authentication
 }

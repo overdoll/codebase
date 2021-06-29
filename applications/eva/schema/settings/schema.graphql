@@ -1,0 +1,41 @@
+enum AccountEmailStatusEnum {
+  CONFIRMED
+  UNCONFIRMED
+}
+
+type AccountEmail {
+  email: String!
+  status: AccountEmailStatusEnum!
+}
+
+type AccountGeneralSettings {
+  emails: [AccountEmail!]!
+}
+
+type AccountModeratorSettings {
+  inQueue: Boolean!
+}
+
+type AccountSettings {
+  general: AccountGeneralSettings!
+  moderator: AccountModeratorSettings
+}
+
+extend type Mutation {
+  """
+  Add an email to the account, will need to be confirmed
+  """
+  addAccountEmail(email: String!): Response!
+}
+
+extend type Query {
+  """
+  Get current settings for the account
+  """
+  accountSettings: AccountSettings!
+
+  """
+  Confirm account email, so it may be used
+  """
+  confirmAccountEmail(id: String!): Response!
+}

@@ -3,3 +3,12 @@ type Mutation {
   authEmail: Boolean!
   unlockAccount: Boolean!
 }
+
+type Response {
+  validation: Validation
+  ok: Boolean!
+}
+
+type Validation {
+  code: String!
+}

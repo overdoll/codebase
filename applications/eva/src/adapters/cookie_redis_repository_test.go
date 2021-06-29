@@ -96,7 +96,7 @@ func TestCookieRepository_UpdateCookie_make_redeemed(t *testing.T) {
 }
 
 func newCookieRepository(t *testing.T) adapters.CookieRepository {
-	redis, _ := bootstrap.InitializeRedisSession(2)
+	redis, _ := bootstrap.InitializeRedisSession(1)
 
 	return adapters.NewCookieRedisRepository(redis)
 }
