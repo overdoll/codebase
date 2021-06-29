@@ -47,13 +47,23 @@ type DirectiveRoot struct {
 }
 
 type ComplexityRoot struct {
+	AccountModeratorSettings struct {
+		InQueue func(childComplexity int) int
+	}
+
+	AccountSettings struct {
+		AccountID func(childComplexity int) int
+		Moderator func(childComplexity int) int
+	}
+
 	AuditUser struct {
 		ID       func(childComplexity int) int
 		Username func(childComplexity int) int
 	}
 
 	Entity struct {
-		FindUserByID func(childComplexity int, id string) int
+		FindAccountSettingsByAccountID func(childComplexity int, accountID string) int
+		FindUserByID                   func(childComplexity int, id string) int
 	}
 
 	ModeratePost struct {
@@ -64,6 +74,7 @@ type ComplexityRoot struct {
 	Mutation struct {
 		ModeratePost              func(childComplexity int, data types.ModeratePostInput) int
 		RevertPendingPostAuditLog func(childComplexity int, data types.RevertPostInput) int
+		ToggleModeratorStatus     func(childComplexity int) int
 	}
 
 	PageInfo struct {
@@ -107,6 +118,11 @@ type ComplexityRoot struct {
 		__resolve_entities   func(childComplexity int, representations []map[string]interface{}) int
 	}
 
+	Response struct {
+		Ok         func(childComplexity int) int
+		Validation func(childComplexity int) int
+	}
+
 	User struct {
 		ID                func(childComplexity int) int
 		InfractionHistory func(childComplexity int) int
@@ -127,11 +143,13 @@ type ComplexityRoot struct {
 }
 
 type EntityResolver interface {
+	FindAccountSettingsByAccountID(ctx context.Context, accountID string) (*types.AccountSettings, error)
 	FindUserByID(ctx context.Context, id string) (*types.User, error)
 }
 type MutationResolver interface {
 	ModeratePost(ctx context.Context, data types.ModeratePostInput) (*types.ModeratePost, error)
 	RevertPendingPostAuditLog(ctx context.Context, data types.RevertPostInput) (*types.ModeratePost, error)
+	ToggleModeratorStatus(ctx context.Context) (*types.Response, error)
 }
 type QueryResolver interface {
 	RejectionReasons(ctx context.Context) ([]*types.PendingPostRejectionReason, error)
@@ -153,6 +171,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	_ = ec
 	switch typeName + "." + field {
 
+	case "AccountModeratorSettings.inQueue":
+		if e.complexity.AccountModeratorSettings.InQueue == nil {
+			break
+		}
+
+		return e.complexity.AccountModeratorSettings.InQueue(childComplexity), true
+
+	case "AccountSettings.accountId":
+		if e.complexity.AccountSettings.AccountID == nil {
+			break
+		}
+
+		return e.complexity.AccountSettings.AccountID(childComplexity), true
+
+	case "AccountSettings.moderator":
+		if e.complexity.AccountSettings.Moderator == nil {
+			break
+		}
+
+		return e.complexity.AccountSettings.Moderator(childComplexity), true
+
 	case "AuditUser.id":
 		if e.complexity.AuditUser.ID == nil {
 			break
@@ -166,6 +205,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.AuditUser.Username(childComplexity), true
+
+	case "Entity.findAccountSettingsByAccountID":
+		if e.complexity.Entity.FindAccountSettingsByAccountID == nil {
+			break
+		}
+
+		args, err := ec.field_Entity_findAccountSettingsByAccountID_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Entity.FindAccountSettingsByAccountID(childComplexity, args["accountId"].(string)), true
 
 	case "Entity.findUserByID":
 		if e.complexity.Entity.FindUserByID == nil {
@@ -216,6 +267,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.RevertPendingPostAuditLog(childComplexity, args["data"].(types.RevertPostInput)), true
+
+	case "Mutation.toggleModeratorStatus":
+		if e.complexity.Mutation.ToggleModeratorStatus == nil {
+			break
+		}
+
+		return e.complexity.Mutation.ToggleModeratorStatus(childComplexity), true
 
 	case "PageInfo.endCursor":
 		if e.complexity.PageInfo.EndCursor == nil {
@@ -388,6 +446,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.__resolve_entities(childComplexity, args["representations"].([]map[string]interface{})), true
 
+	case "Response.ok":
+		if e.complexity.Response.Ok == nil {
+			break
+		}
+
+		return e.complexity.Response.Ok(childComplexity), true
+
+	case "Response.validation":
+		if e.complexity.Response.Validation == nil {
+			break
+		}
+
+		return e.complexity.Response.Validation(childComplexity), true
+
 	case "User.id":
 		if e.complexity.User.ID == nil {
 			break
@@ -539,6 +611,16 @@ extend type Query {
   id: String! @external
   infractionHistory: [UsersInfractionHistory!]
 }
+
+extend type AccountSettings @key(fields: "accountId") {
+  accountId: String! @external
+  moderator: AccountModeratorSettings
+}
+
+type AccountModeratorSettings {
+  inQueue: Boolean!
+}
+
 `, BuiltIn: false},
 	{Name: "schema/moderate/schema.graphql", Input: `input ModeratePostInput {
   pendingPostId: String!
@@ -570,6 +652,15 @@ extend type Mutation {
   Will delete an infraction if there was one, but the rest of the audit log will generally stay intact
   """
   revertPendingPostAuditLog(data: RevertPostInput!): ModeratePost!
+
+  """
+  Toggle moderator status
+
+  Will remove or add the moderator from the queue
+
+  Current status can be queried from AccountModeratorSettings
+  """
+  toggleModeratorStatus: Response!
 }
 `, BuiltIn: false},
 	{Name: "schema/schema.graphql", Input: `type UsersInfractionHistory {
@@ -585,6 +676,11 @@ type PendingPostRejectionReason {
   id: String!
   reason: String!
   infraction: Boolean!
+}
+
+type Response {
+  ok: Boolean!
+  validation: Validation
 }
 
 type Query {
@@ -635,11 +731,12 @@ directive @extends on OBJECT
 `, BuiltIn: true},
 	{Name: "federation/entity.graphql", Input: `
 # a union of all types that use the @key directive
-union _Entity = User
+union _Entity = AccountSettings | User
 
 # fake type to build resolver interfaces for users to implement
 type Entity {
-		findUserByID(id: String!,): User!
+		findAccountSettingsByAccountID(accountId: String!,): AccountSettings!
+	findUserByID(id: String!,): User!
 
 }
 
@@ -658,6 +755,21 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 // endregion ************************** generated!.gotpl **************************
 
 // region    ***************************** args.gotpl *****************************
+
+func (ec *executionContext) field_Entity_findAccountSettingsByAccountID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["accountId"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("accountId"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["accountId"] = arg0
+	return args, nil
+}
 
 func (ec *executionContext) field_Entity_findUserByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
@@ -787,6 +899,108 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 
 // region    **************************** field.gotpl *****************************
 
+func (ec *executionContext) _AccountModeratorSettings_inQueue(ctx context.Context, field graphql.CollectedField, obj *types.AccountModeratorSettings) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AccountModeratorSettings",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.InQueue, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AccountSettings_accountId(ctx context.Context, field graphql.CollectedField, obj *types.AccountSettings) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AccountSettings",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.AccountID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AccountSettings_moderator(ctx context.Context, field graphql.CollectedField, obj *types.AccountSettings) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AccountSettings",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Moderator, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.AccountModeratorSettings)
+	fc.Result = res
+	return ec.marshalOAccountModeratorSettings2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountModeratorSettings(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _AuditUser_id(ctx context.Context, field graphql.CollectedField, obj *types.AuditUser) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -855,6 +1069,48 @@ func (ec *executionContext) _AuditUser_username(ctx context.Context, field graph
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Entity_findAccountSettingsByAccountID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Entity",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Entity_findAccountSettingsByAccountID_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Entity().FindAccountSettingsByAccountID(rctx, args["accountId"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.AccountSettings)
+	fc.Result = res
+	return ec.marshalNAccountSettings2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountSettings(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Entity_findUserByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1045,6 +1301,41 @@ func (ec *executionContext) _Mutation_revertPendingPostAuditLog(ctx context.Cont
 	res := resTmp.(*types.ModeratePost)
 	fc.Result = res
 	return ec.marshalNModeratePost2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐModeratePost(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_toggleModeratorStatus(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().ToggleModeratorStatus(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.Response)
+	fc.Result = res
+	return ec.marshalNResponse2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _PageInfo_hasNextPage(ctx context.Context, field graphql.CollectedField, obj *relay.PageInfo) (ret graphql.Marshaler) {
@@ -1926,6 +2217,73 @@ func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.C
 	res := resTmp.(*introspection.Schema)
 	fc.Result = res
 	return ec.marshalO__Schema2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐSchema(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Response_ok(ctx context.Context, field graphql.CollectedField, obj *types.Response) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Response",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Ok, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Response_validation(ctx context.Context, field graphql.CollectedField, obj *types.Response) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Response",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Validation, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Validation)
+	fc.Result = res
+	return ec.marshalOValidation2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐValidation(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _User_id(ctx context.Context, field graphql.CollectedField, obj *types.User) (ret graphql.Marshaler) {
@@ -3371,6 +3729,13 @@ func (ec *executionContext) __Entity(ctx context.Context, sel ast.SelectionSet, 
 	switch obj := (obj).(type) {
 	case nil:
 		return graphql.Null
+	case types.AccountSettings:
+		return ec._AccountSettings(ctx, sel, &obj)
+	case *types.AccountSettings:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._AccountSettings(ctx, sel, obj)
 	case types.User:
 		return ec._User(ctx, sel, &obj)
 	case *types.User:
@@ -3386,6 +3751,62 @@ func (ec *executionContext) __Entity(ctx context.Context, sel ast.SelectionSet, 
 // endregion ************************** interface.gotpl ***************************
 
 // region    **************************** object.gotpl ****************************
+
+var accountModeratorSettingsImplementors = []string{"AccountModeratorSettings"}
+
+func (ec *executionContext) _AccountModeratorSettings(ctx context.Context, sel ast.SelectionSet, obj *types.AccountModeratorSettings) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, accountModeratorSettingsImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("AccountModeratorSettings")
+		case "inQueue":
+			out.Values[i] = ec._AccountModeratorSettings_inQueue(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var accountSettingsImplementors = []string{"AccountSettings", "_Entity"}
+
+func (ec *executionContext) _AccountSettings(ctx context.Context, sel ast.SelectionSet, obj *types.AccountSettings) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, accountSettingsImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("AccountSettings")
+		case "accountId":
+			out.Values[i] = ec._AccountSettings_accountId(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "moderator":
+			out.Values[i] = ec._AccountSettings_moderator(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
 
 var auditUserImplementors = []string{"AuditUser"}
 
@@ -3434,6 +3855,20 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Entity")
+		case "findAccountSettingsByAccountID":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Entity_findAccountSettingsByAccountID(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		case "findUserByID":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -3507,6 +3942,11 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			}
 		case "revertPendingPostAuditLog":
 			out.Values[i] = ec._Mutation_revertPendingPostAuditLog(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "toggleModeratorStatus":
+			out.Values[i] = ec._Mutation_toggleModeratorStatus(ctx, field)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -3792,6 +4232,35 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Values[i] = ec._Query___type(ctx, field)
 		case "__schema":
 			out.Values[i] = ec._Query___schema(ctx, field)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var responseImplementors = []string{"Response"}
+
+func (ec *executionContext) _Response(ctx context.Context, sel ast.SelectionSet, obj *types.Response) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, responseImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Response")
+		case "ok":
+			out.Values[i] = ec._Response_ok(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "validation":
+			out.Values[i] = ec._Response_validation(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -4160,6 +4629,20 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 
 // region    ***************************** type.gotpl *****************************
 
+func (ec *executionContext) marshalNAccountSettings2overdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountSettings(ctx context.Context, sel ast.SelectionSet, v types.AccountSettings) graphql.Marshaler {
+	return ec._AccountSettings(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNAccountSettings2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountSettings(ctx context.Context, sel ast.SelectionSet, v *types.AccountSettings) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._AccountSettings(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNAuditUser2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐAuditUser(ctx context.Context, sel ast.SelectionSet, v *types.AuditUser) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -4340,6 +4823,20 @@ func (ec *executionContext) marshalNPendingPostRejectionReason2ᚖoverdollᚋapp
 		return graphql.Null
 	}
 	return ec._PendingPostRejectionReason(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNResponse2overdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐResponse(ctx context.Context, sel ast.SelectionSet, v types.Response) graphql.Marshaler {
+	return ec._Response(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNResponse2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐResponse(ctx context.Context, sel ast.SelectionSet, v *types.Response) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._Response(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNRevertPostInput2overdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐRevertPostInput(ctx context.Context, v interface{}) (types.RevertPostInput, error) {
@@ -4720,6 +5217,13 @@ func (ec *executionContext) marshalN__TypeKind2string(ctx context.Context, sel a
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) marshalOAccountModeratorSettings2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountModeratorSettings(ctx context.Context, sel ast.SelectionSet, v *types.AccountModeratorSettings) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._AccountModeratorSettings(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOBoolean2bool(ctx context.Context, v interface{}) (bool, error) {

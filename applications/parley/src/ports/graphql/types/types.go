@@ -2,6 +2,17 @@
 
 package types
 
+type AccountModeratorSettings struct {
+	InQueue bool `json:"inQueue"`
+}
+
+type AccountSettings struct {
+	AccountID string                    `json:"accountId"`
+	Moderator *AccountModeratorSettings `json:"moderator"`
+}
+
+func (AccountSettings) IsEntity() {}
+
 type AuditUser struct {
 	ID       string `json:"id"`
 	Username string `json:"username"`
@@ -50,6 +61,11 @@ type PendingPostRejectionReason struct {
 	ID         string `json:"id"`
 	Reason     string `json:"reason"`
 	Infraction bool   `json:"infraction"`
+}
+
+type Response struct {
+	Ok         bool        `json:"ok"`
+	Validation *Validation `json:"validation"`
 }
 
 type RevertPostInput struct {

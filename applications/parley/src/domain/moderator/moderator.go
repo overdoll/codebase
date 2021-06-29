@@ -1,7 +1,12 @@
 package moderator
 
 import (
+	"errors"
 	"time"
+)
+
+var (
+	ErrModeratorNotFound = errors.New("moderator not found")
 )
 
 type Moderator struct {

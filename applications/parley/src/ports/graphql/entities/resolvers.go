@@ -11,6 +11,19 @@ type EntityResolver struct {
 	App *app.Application
 }
 
+func (e EntityResolver) FindAccountSettingsByAccountID(ctx context.Context, accountID string) (*types.AccountSettings, error) {
+	res, err := e.App.Queries.ModeratorInQueue.Handle(ctx, accountID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.AccountSettings{
+		AccountID: accountID,
+		Moderator: &types.AccountModeratorSettings{InQueue: res},
+	}, nil
+}
+
 func (e EntityResolver) FindUserByID(ctx context.Context, id string) (*types.User, error) {
 
 	history, err := e.App.Queries.UserInfractionHistory.Handle(ctx, id)

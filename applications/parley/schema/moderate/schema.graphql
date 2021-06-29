@@ -28,4 +28,13 @@ extend type Mutation {
   Will delete an infraction if there was one, but the rest of the audit log will generally stay intact
   """
   revertPendingPostAuditLog(data: RevertPostInput!): ModeratePost!
+
+  """
+  Toggle moderator status
+
+  Will remove or add the moderator from the queue
+
+  Current status can be queried from AccountModeratorSettings
+  """
+  toggleModeratorStatus: Response!
 }

@@ -12,6 +12,25 @@ type MutationResolver struct {
 	App *app.Application
 }
 
+func (m MutationResolver) ToggleModeratorStatus(ctx context.Context) (*types.Response, error) {
+	pass := passport.FromContext(ctx)
+
+	if !pass.IsAuthenticated() {
+		return nil, passport.ErrNotAuthenticated
+	}
+
+	err := m.App.Commands.ToggleModerator.Handle(ctx, pass.AccountID())
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.Response{
+		Ok:         true,
+		Validation: nil,
+	}, nil
+}
+
 func (m MutationResolver) ModeratePost(ctx context.Context, data types.ModeratePostInput) (*types.ModeratePost, error) {
 	pass := passport.FromContext(ctx)
 

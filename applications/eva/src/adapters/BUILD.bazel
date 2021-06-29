@@ -4,7 +4,7 @@ go_library(
     name = "adapters",
     srcs = [
         "account_cassandra_redis_repository.go",
-        "account_email_cassandra_repository.go",
+        "account_email_cassandra_redis_repository.go",
         "cookie_redis_repository.go",
     ],
     importpath = "overdoll/applications/eva/src/adapters",

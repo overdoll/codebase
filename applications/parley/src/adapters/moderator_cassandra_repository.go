@@ -44,6 +44,11 @@ func (r ModeratorCassandraRepository) GetModerator(ctx context.Context, id strin
 	var mod Moderator
 
 	if err := moderatorQuery.Get(&mod); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return nil, moderator.ErrModeratorNotFound
+		}
+
 		return nil, err
 	}
 
@@ -71,6 +76,25 @@ func (r ModeratorCassandraRepository) GetModerators(ctx context.Context) ([]*mod
 	}
 
 	return moderators, nil
+}
+
+func (r ModeratorCassandraRepository) AddModerator(ctx context.Context, mod *moderator.Moderator) error {
+
+	insertModerator := qb.Insert("moderators").
+		Columns("account_id", "last_selected", "bucket").
+		Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&Moderator{
+			AccountId:    mod.ID(),
+			LastSelected: time.Now(),
+			Bucket:       0,
+		})
+
+	if err := insertModerator.ExecRelease(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (r ModeratorCassandraRepository) UpdateModerator(ctx context.Context, id string, updateFn func(moderator *moderator.Moderator) error) (*moderator.Moderator, error) {
@@ -101,4 +125,21 @@ func (r ModeratorCassandraRepository) UpdateModerator(ctx context.Context, id st
 	}
 
 	return currentMod, nil
+}
+
+func (r ModeratorCassandraRepository) RemoveModerator(ctx context.Context, accountId string) error {
+	updateMod := qb.Delete("moderators").
+		Where(qb.Eq("bucket"), qb.Eq("account_id")).
+		Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&Moderator{
+			AccountId: accountId,
+			Bucket:    0,
+		})
+
+	if err := updateMod.ExecRelease(); err != nil {
+		return fmt.Errorf("update() failed: '%s", err)
+	}
+
+	return nil
 }

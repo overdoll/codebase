@@ -63,6 +63,7 @@ func createApplication(ctx context.Context, eva command.EvaService, sting comman
 			GetNextModerator:   command.NewGetNextModeratorHandler(moderatorRepo),
 			ModeratePost:       command.NewModeratePendingPostHandler(infractionRepo, eva, sting),
 			RevertModeratePost: command.NewRevertModeratePendingPostHandler(infractionRepo, eva, sting),
+			ToggleModerator:    command.NewToggleModeratorHandler(moderatorRepo, eva),
 		},
 		Queries: app.Queries{
 			PendingPostRejectionReasons:     query.NewPendingPostsRejectionReasonsHandler(infractionRepo),
