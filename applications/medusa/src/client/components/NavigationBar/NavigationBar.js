@@ -5,12 +5,13 @@ import type { Node } from 'react'
 import {
   Flex, Spacer, Avatar, Button,
   IconButton,
-  HStack, Box, useDisclosure, List, ListItem, Stack, Heading
+  HStack, Box, useDisclosure, Stack, Heading
 } from '@chakra-ui/react'
-import { useState } from 'react'
+import { Fragment } from 'react'
 import Icon from '@//:modules/content/icon/Icon'
 import { useTranslation } from 'react-i18next'
 import Link from '@//:modules/routing/Link'
+import { Switch, Route, Router } from 'react-router'
 
 import LoginKeys
   from '@streamlinehq/streamlinehq/img/streamline-regular/interface-essential/login-logout/login-keys.svg'
@@ -25,12 +26,14 @@ import InterfaceArrowsTurnBackward
 import Login2 from '@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/login-logout/login-2.svg'
 import BirdHouse from '@streamlinehq/streamlinehq/img/streamline-regular/interface-essential/home/bird-house.svg'
 import BirdHouseBold from '@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/home/bird-house.svg'
-import InterfaceSettingMenu1
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/setting/interface-setting-menu-1.svg'
-import Close from '@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/form-validation/close.svg'
+import InterfaceArrowsButtonLeft
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-button-left.svg'
+import InterfaceArrowsButtonRight
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-button-right.svg'
 
-import MainNav from './components/mainnav/MainNav'
+import NavItem from './components/navitem/NavItem'
 import NavMenu from './components/navmenu/NavMenu'
+import Items from './components/sidebar/items/Items'
 import { useHistory } from '@//:modules/routing'
 
 type Props = {
@@ -45,19 +48,15 @@ type Props = {
 export default function NavigationBar ({ currentRoute, disabledRoutes, user, children }: Props): Node {
   const [t] = useTranslation('nav')
 
-  const { isOpen, onToggle, onOpen, onClose } = useDisclosure()
-
-  const [currentSidebar, setCurrentSidebar] = useState(null)
-
   const history = useHistory()
 
   const modSidebar = [
     {
-      title: 'Queue',
+      title: t('sidebar.mod.queue'),
       route: '/mod/queue'
     },
     {
-      title: 'History',
+      title: t('sidebar.mod.history'),
       route: '/mod/history'
     }
   ]
@@ -79,7 +78,8 @@ export default function NavigationBar ({ currentRoute, disabledRoutes, user, chi
       route: '/mod',
       loginRequired: true,
       locked: false,
-      sidebar: modSidebar
+      sidebar: modSidebar,
+      sidebarTitle: t('sidebar.mod.title')
     },
     {
       iconActive: ContentBrushPenBold,
@@ -92,75 +92,35 @@ export default function NavigationBar ({ currentRoute, disabledRoutes, user, chi
     }
   ]
 
-  const onChangeSidebar = (sidebar) => {
-    if (isOpen) {
-      onClose()
-    }
-    setCurrentSidebar(sidebar)
-    if (sidebar) {
-      history.replace(sidebar[0].route)
-    }
+  const onChangeSidebar = () => {
+
   }
 
   return (
-    <>
+    <Router history={history}>
       <Flex
         align='center' right={0} left={0} top={0} h='54px'
       />
       {disabledRoutes.includes(currentRoute)
-        ? <Flex
-            zIndex='docked' boxShadow='sm' align='center' right={0} left={0} top={0} position='fixed' h='54px'
-            bg='transparent'
-          >
-          <Link to='/'>
-            <Button ml={2}>{t('title')}</Button>
-          </Link>
-          <Spacer />
-          <IconButton
-            onClick={() => history.back()}
-            variant='solid'
-            colorScheme='red'
-            size='md'
-            mr={2}
-            icon={
-              <Icon
-                icon={InterfaceArrowsTurnBackward} m={2} w='fill' h='fill' p={1}
-                fill='gray.100'
-              />
-            }
-          />
-        </Flex>
+        ? <SimplifiedNav history={history} t={t} />
         : <>
           <Flex
-            zIndex='docked' boxShadow='sm' align='center' right={0} left={0} top={0} position='fixed' h='54px'
+            zIndex='docked' boxShadow='sm' align='center' right={0} left={0} top={0}
+            position='fixed' h='54px'
             bg='gray.800'
           >
-            <Flex display={{ base: 'none', md: 'flex' }} left={0} ml={2}>
-              <Link to='/'>
-                <Button textColor='red.500' variant='link' colorScheme='red'>{t('title')}</Button>
-              </Link>
-            </Flex>
-            <Flex display={{ base: currentSidebar ? 'flex' : 'none', md: 'none' }} left={0} ml={2}>
-              <IconButton
-                bg='transparent'
-                borderRadius={10}
-                onClick={onToggle}
-                h='42px' w='42px'
-                display={{ base: 'flex', md: 'none' }}
-                aria-label={t('nav.profile')}
-                icon={<Icon
-                  icon={isOpen ? Close : InterfaceSettingMenu1} fill={isOpen ? 'gray.100' : 'gray.300'}
-                  m={3}
-                      />}
-              />
-            </Flex>
-            <Flex zIndex={-1} position='absolute' w='100%' justify='center' margin='auto'>
+            <LeftMenu t={t} />
+            <Flex
+              zIndex={-1} position='absolute' w='100%' justify='center'
+              margin='auto'
+            >
               <HStack spacing={{ base: 2, md: 12, lg: 28 }}>
                 {navLinks.map((item) => (
-                  <MainNav
+                  <NavItem
                     key={item.route}
-                    currentRoute={currentRoute} user={!!user} navRoute={item.route} iconActive={item.iconActive}
+                    user={!!user} route={item.route} iconActive={item.iconActive}
                     iconInactive={item.iconInactive} label={item.label}
+                    selected={currentRoute === item.route}
                     locked={item.locked}
                     loginRequired={item.loginRequired}
                     onInteract={() => (onChangeSidebar(item.sidebar))}
@@ -168,92 +128,165 @@ export default function NavigationBar ({ currentRoute, disabledRoutes, user, chi
                 ))}
               </HStack>
             </Flex>
-            <Flex m='auto' right={0} mr={1}>
-              <Flex
-                borderRadius={10} bg={{ base: 'transparent', md: 'gray.900' }}
-                align='center'
-              >
-                <Flex m={1}>
-                  {user
-                    ? <Link to='/profile'>
-                      <Button
-                        bg='transparent'
-                        borderRadius={10}
-                        h='42px' w='42px' mr={1}
-                        display={{ base: 'none', md: 'flex' }}
-                        aria-label={t('nav.profile')}
-                      >
-                        <Avatar m={0} borderRadius={10} w='38px' h='38px' />
-                      </Button>
-                    </Link>
-                    : <Link to='/join'>
-                      <IconButton
-                        bg='transparent'
-                        borderRadius={10}
-                        h='42px' w='42px' mr={1}
-                        display={['none', 'none', 'flex']}
-                        aria-label={t('nav.profile')}
-                        icon={<Icon icon={Login2} fill='gray.300' w='38px' m={1} h='38px' />}
-                      />
-                    </Link>}
-                  <NavMenu user={user} />
-                </Flex>
-              </Flex>
-            </Flex>
-
+            <RightMenu user={user} t={t} />
           </Flex>
-          <Flex direction='row'>
-            {currentSidebar
-              ? <Box
+        </>}
+      <Flex direction='row'>
+        <Switch>
+          {navLinks.map((item, index) => {
+            const { isOpen, onToggle, onOpen, onClose } = useDisclosure()
+
+            return (
+              <Route key={index} path={item.route}>
+                <Flex
+                  display={{
+                    base: !isOpen && item.sidebar ? 'block' : 'none',
+                    md: isOpen && item.sidebar ? 'block' : 'none'
+                  }} position='fixed'
+                >
+                  <IconButton
+                    mt={4}
+                    ml={2}
+                    bg='transparent'
+                    onClick={onToggle}
+                    h='42px' w='42px'
+                    icon={
+                      <Icon
+                        icon={InterfaceArrowsButtonRight} fill='gray.300'
+                        m={3}
+                      />
+                    }
+                  />
+                </Flex>
+                <Box
                   as='nav'
-                  aria-label='Main Navigation'
                   pos='sticky'
                   bg='gray.800'
-                  sx={{
-                    overscrollBehavior: 'contain'
-                  }}
                   w='260px'
                   h='calc(100vh - 54px)'
-                  pr='4'
-                  pb='6'
-                  pl='2'
-                  pt='4'
+                  pr={4}
+                  pb={6}
+                  pl={2}
+                  pt={4}
                   overflowY='auto'
                   flexShrink={0}
                   position={{ base: 'absolute', md: 'sticky' }}
                   zIndex='sidebar'
-                  display={{ base: isOpen ? 'block' : 'none', md: 'block' }}
+                  display={{
+                    base: isOpen && item.sidebar ? 'block' : 'none',
+                    md: !isOpen && item.sidebar ? 'block' : 'none'
+                  }}
                 >
-                <Stack spacing={2}>
-                  {currentSidebar.map((item) => (
-                    <Link key={item.title} to={item.route}>
-                      <Button
-                        borderRadius={5} pt={3} pb={3}
-                        textAlign='left' w='100%'
-                        variant={currentRoute === item.route ? 'solid' : 'ghost'}
-                      >
-                        <Heading
-                          color={currentRoute === item.route ? 'gray.100' : 'gray.300'} size='sm' w='100%'
-                          textAlign='left'
-                        >
-                          {item.title}
-                        </Heading>
-                      </Button>
-                    </Link>
-                  ))}
-                </Stack>
-              </Box>
-              : null}
-            <Flex w='100%' direction='column'>
-              {children}
-            </Flex>
-            <Flex
-              display={{ base: isOpen ? 'flex' : 'none', md: 'none' }} bg='dimmers.500' w='100%' h='calc(100vh - 54px)'
-              position='absolute' overflow='hidden'
-              onClick={onClose}
-            />
-          </Flex>
-        </>}
+                  <Flex mb={2} align='center' justify='space-between'>
+                    <Heading size='md'>{item.sidebarTitle}</Heading>
+                    <IconButton
+                      bg='transparent'
+                      onClick={onToggle}
+                      h='42px' w='42px'
+                      icon={
+                        <Icon
+                          icon={InterfaceArrowsButtonLeft} fill='gray.300'
+                          m={3}
+                        />
+                      }
+                    />
+                  </Flex>
+                  <Stack spacing={2}>
+                    {item.sidebar?.map((sidebarItem, sidebarIndex) => (
+                      <Fragment key={sidebarIndex}>
+                        <Items
+                          title={sidebarItem.title} route={sidebarItem.route}
+                          selected={currentRoute === sidebarItem.route}
+                        />
+                      </Fragment>
+                    ))}
+                  </Stack>
+                </Box>
+              </Route>
+            )
+          })}
+        </Switch>
+        <Flex w='100%' direction='column'>
+          {children}
+        </Flex>
+      </Flex>
+    </Router>
+  )
+}
+
+const SimplifiedNav = ({ history, t }) => {
+  return (
+    <Flex
+      zIndex='docked' boxShadow='sm' align='center' right={0} left={0} top={0} position='fixed' h='54px'
+      bg='transparent'
+    >
+      <Link to='/'>
+        <Button ml={2}>{t('title')}</Button>
+      </Link>
+      <Spacer />
+      <IconButton
+        onClick={() => history.back()}
+        variant='solid'
+        colorScheme='red'
+        size='md'
+        mr={2}
+        icon={
+          <Icon
+            icon={InterfaceArrowsTurnBackward} m={2} w='fill' h='fill' p={1}
+            fill='gray.100'
+          />
+        }
+      />
+    </Flex>
+  )
+}
+
+const LeftMenu = ({ t }) => {
+  return (
+    <>
+      <Flex display={{ base: 'none', md: 'flex' }} left={0} ml={2}>
+        <Link to='/'>
+          <Button textColor='red.500' variant='link' colorScheme='red'>{t('title')}</Button>
+        </Link>
+      </Flex>
+
     </>
+  )
+}
+
+const RightMenu = ({ user, t }) => {
+  return (
+    <Flex m='auto' right={0} mr={1}>
+      <Flex
+        borderRadius={10} bg={{ base: 'transparent', md: 'gray.900' }}
+        align='center'
+      >
+        <Flex m={1}>
+          {user
+            ? <Link to='/profile'>
+              <Button
+                bg='transparent'
+                borderRadius={10}
+                h='42px' w='42px' mr={1}
+                display={{ base: 'none', md: 'flex' }}
+                aria-label={t('nav.profile')}
+              >
+                <Avatar m={0} borderRadius={10} w='38px' h='38px' />
+              </Button>
+            </Link>
+            : <Link to='/join'>
+              <IconButton
+                bg='transparent'
+                borderRadius={10}
+                h='42px' w='42px' mr={1}
+                display={['none', 'none', 'flex']}
+                aria-label={t('nav.profile')}
+                icon={<Icon icon={Login2} fill='gray.300' w='38px' m={1} h='38px' />}
+              />
+            </Link>}
+          <NavMenu user={user} />
+        </Flex>
+      </Flex>
+    </Flex>
   )
 }

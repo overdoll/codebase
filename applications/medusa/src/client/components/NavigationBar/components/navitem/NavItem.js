@@ -13,24 +13,21 @@ import InterfaceLock
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/lock-unlock/interface-lock.svg'
 
 type Props = {
-  currentRoute: string,
   user: boolean,
-  navRoute: string,
-  iconActive: any,
-  iconInactive: any,
+  iconActive: () => void,
+  iconInactive: () => void,
   label: string,
   loginRequired: boolean,
   locked: boolean,
+  route: string,
   onInteract: () => void,
 }
 
-export default function MainNav ({ user, navRoute, iconActive, iconInactive, locked, currentRoute, label, loginRequired, onInteract }: Props): Node {
+export default function NavItem ({ user, route, iconActive, iconInactive, locked, selected, label, loginRequired, onInteract }: Props): Node {
   const [t] = useTranslation('nav')
   const history = useHistory()
 
   const { flash } = useFlash()
-
-  const selected = currentRoute === navRoute
 
   const checkLogin = () => {
     if (locked && !user) {
@@ -46,7 +43,7 @@ export default function MainNav ({ user, navRoute, iconActive, iconInactive, loc
   }
 
   return (
-    <Link to={locked && !user ? '/join' : navRoute}>
+    <Link to={locked && !user ? '/join' : route}>
       <Flex
         borderRadius={10}
         bg={selected ? 'gray.500' : 'transparent'}

@@ -17,5 +17,12 @@
   "logout": {
     "success": "You have been logged out",
     "error": "There was an error logging out"
+  },
+  "sidebar": {
+    "mod": {
+      "title": "Moderation",
+      "queue": "Queue",
+      "history": "History"
+    }
   }
 }
