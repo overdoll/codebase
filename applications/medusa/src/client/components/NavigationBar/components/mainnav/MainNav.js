@@ -21,9 +21,10 @@ type Props = {
   label: string,
   loginRequired: boolean,
   locked: boolean,
+  onInteract: () => void,
 }
 
-export default function MainNav ({ user, navRoute, iconActive, iconInactive, locked, currentRoute, label, loginRequired }: Props): Node {
+export default function MainNav ({ user, navRoute, iconActive, iconInactive, locked, currentRoute, label, loginRequired, onInteract }: Props): Node {
   const [t] = useTranslation('nav')
   const history = useHistory()
 
@@ -52,7 +53,12 @@ export default function MainNav ({ user, navRoute, iconActive, iconInactive, loc
         mt={2} mb={2} w='58px' h='40px' pl={4} pr={4}
         aria-label={label}
         position='relative'
-        onClick={() => checkLogin()}
+        onClick={
+          () => {
+            checkLogin()
+            onInteract()
+          }
+        }
       >
         <Icon
           icon={selected ? iconActive : iconInactive} w='fill' h='fill'

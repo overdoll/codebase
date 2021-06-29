@@ -46,8 +46,8 @@ export default function Root (props: Props): Node {
       <NavigationBar
         user={rootQuery.authentication.user} currentRoute={currentLocation.pathname}
         disabledRoutes={['/join']}
-      />
-      <Suspense fallback={null}>{props.children}</Suspense>
+      ><Suspense fallback={null}>{props.children}</Suspense>
+      </NavigationBar>
     </RootContext.Provider>
   )
 }

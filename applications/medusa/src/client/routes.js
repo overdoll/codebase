@@ -96,6 +96,29 @@ const routes: Array<Route> = [
         ]
       },
       {
+        path: '/mod',
+        exact: true,
+        component: JSResource('ModRoot', () =>
+          import(
+            /* webpackChunkName: "ModRoot" */ './domain/Mod/Mod'
+          ),
+        module.hot
+        ),
+        // If user is not logged in, they can't post - so we redirect to join page
+        middleware: [
+          ({ environment, history }) => {
+            const user = getUserFromEnvironment(environment)
+
+            if (!user) {
+              history.push('/join')
+              return false
+            }
+
+            return true
+          }
+        ]
+      },
+      {
         path: '/token/:id',
         exact: true,
         component: JSResource('TokenRoot', () =>

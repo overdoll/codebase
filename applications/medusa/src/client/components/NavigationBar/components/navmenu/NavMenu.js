@@ -17,8 +17,11 @@ import Link from '@//:modules/routing/Link'
 import LoginKey2
   from '@streamlinehq/streamlinehq/img/streamline-regular/interface-essential/login-logout/login-key-2.svg'
 import Login2 from '@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/login-logout/login-2.svg'
-import LayoutCornersDashboard1
-  from '@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/dashboard/layout-corners-dashboard-1.svg'
+import InterfacePageControllerSettings
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/page-controller/interface-page-controller-settings.svg'
+import InterfaceArrowsShrink3
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-shrink-3.svg'
+
 import { useHistory } from '@//:modules/routing'
 import { graphql, useMutation } from 'react-relay/hooks'
 
@@ -75,7 +78,7 @@ export default function NavMenu ({ user }: Props): Node {
             aria-label={t('nav.menu')}
             icon={
               <Icon
-                icon={LayoutCornersDashboard1} w='fill' h='fill'
+                icon={isOpen ? InterfaceArrowsShrink3 : InterfacePageControllerSettings} w='fill' h='fill'
                 fill={isOpen ? 'gray.100' : 'gray.300'}
               />
             }
