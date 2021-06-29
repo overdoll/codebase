@@ -11,13 +11,13 @@ type EntityResolver struct {
 	App *app.Application
 }
 
+// this entity would never be resolved - it's the base entity
+func (e EntityResolver) FindAccountSettingsByAccountID(ctx context.Context, accountID string) (*types.AccountSettings, error) {
+	panic("implement me")
+}
+
+// this entity would never be resolved - it's the base entity
 func (e EntityResolver) FindUserByID(ctx context.Context, id string) (*types.User, error) {
+	panic("implement me")
 
-	acc, err := e.App.Queries.GetAccount.Handle(ctx, id)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return types.MarshalUserToGraphQL(acc), nil
 }

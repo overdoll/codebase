@@ -2,3 +2,13 @@ extend type User @key(fields: "id") {
   id: String! @external
   infractionHistory: [UsersInfractionHistory!]
 }
+
+extend type AccountSettings @key(fields: "accountId") {
+  accountId: String! @external
+  moderator: AccountModeratorSettings
+}
+
+type AccountModeratorSettings {
+  inQueue: Boolean!
+}
+

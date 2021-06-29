@@ -12,13 +12,9 @@ type AccountGeneralSettings {
   emails: [AccountEmail!]!
 }
 
-type AccountModeratorSettings {
-  inQueue: Boolean!
-}
-
-type AccountSettings {
+type AccountSettings @key(fields: "accountId") {
+  accountId: String!
   general: AccountGeneralSettings!
-  moderator: AccountModeratorSettings
 }
 
 extend type Mutation {

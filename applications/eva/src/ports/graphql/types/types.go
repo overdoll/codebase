@@ -22,14 +22,12 @@ type AccountLock struct {
 	Reason  string `json:"reason"`
 }
 
-type AccountModeratorSettings struct {
-	InQueue bool `json:"inQueue"`
+type AccountSettings struct {
+	AccountID string                  `json:"accountId"`
+	General   *AccountGeneralSettings `json:"general"`
 }
 
-type AccountSettings struct {
-	General   *AccountGeneralSettings   `json:"general"`
-	Moderator *AccountModeratorSettings `json:"moderator"`
-}
+func (AccountSettings) IsEntity() {}
 
 type Authentication struct {
 	Cookie *Cookie `json:"cookie"`

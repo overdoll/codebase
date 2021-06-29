@@ -197,8 +197,8 @@ func (r *QueryResolver) AccountSettings(ctx context.Context) (*types.AccountSett
 	}
 
 	return &types.AccountSettings{
+		AccountID: pass.AccountID(),
 		General:   &types.AccountGeneralSettings{Emails: accEmails},
-		Moderator: nil,
 	}, nil
 }
 

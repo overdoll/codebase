@@ -45,6 +45,9 @@ func (h AddAccountEmailHandler) Handle(ctx context.Context, userId, email string
 		if err == account.ErrEmailNotUnique {
 			return ValidationErrEmailNotUnique, nil
 		}
+
+		zap.S().Errorf("failed to add email: %s", err)
+		return "", ErrFailedAddEmail
 	}
 
 	// TODO: send an email confirmation here

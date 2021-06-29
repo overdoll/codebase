@@ -39,6 +39,9 @@ func (h ConfirmAccountEmailHandler) Handle(ctx context.Context, userId, id strin
 		if err == account.ErrEmailCodeInvalid {
 			return ValidationErrEmailCodeInvalid, nil
 		}
+
+		zap.S().Errorf("failed to confirm email: %s", err)
+		return "", ErrFailedConfirmAccountEmail
 	}
 
 	return "", nil

@@ -60,13 +60,9 @@ type ComplexityRoot struct {
 		Reason  func(childComplexity int) int
 	}
 
-	AccountModeratorSettings struct {
-		InQueue func(childComplexity int) int
-	}
-
 	AccountSettings struct {
+		AccountID func(childComplexity int) int
 		General   func(childComplexity int) int
-		Moderator func(childComplexity int) int
 	}
 
 	Authentication struct {
@@ -84,7 +80,8 @@ type ComplexityRoot struct {
 	}
 
 	Entity struct {
-		FindUserByID func(childComplexity int, id string) int
+		FindAccountSettingsByAccountID func(childComplexity int, accountID string) int
+		FindUserByID                   func(childComplexity int, id string) int
 	}
 
 	Mutation struct {
@@ -129,6 +126,7 @@ type ComplexityRoot struct {
 }
 
 type EntityResolver interface {
+	FindAccountSettingsByAccountID(ctx context.Context, accountID string) (*types.AccountSettings, error)
 	FindUserByID(ctx context.Context, id string) (*types.User, error)
 }
 type MutationResolver interface {
@@ -196,12 +194,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AccountLock.Reason(childComplexity), true
 
-	case "AccountModeratorSettings.inQueue":
-		if e.complexity.AccountModeratorSettings.InQueue == nil {
+	case "AccountSettings.accountId":
+		if e.complexity.AccountSettings.AccountID == nil {
 			break
 		}
 
-		return e.complexity.AccountModeratorSettings.InQueue(childComplexity), true
+		return e.complexity.AccountSettings.AccountID(childComplexity), true
 
 	case "AccountSettings.general":
 		if e.complexity.AccountSettings.General == nil {
@@ -209,13 +207,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.AccountSettings.General(childComplexity), true
-
-	case "AccountSettings.moderator":
-		if e.complexity.AccountSettings.Moderator == nil {
-			break
-		}
-
-		return e.complexity.AccountSettings.Moderator(childComplexity), true
 
 	case "Authentication.cookie":
 		if e.complexity.Authentication.Cookie == nil {
@@ -272,6 +263,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Cookie.Session(childComplexity), true
+
+	case "Entity.findAccountSettingsByAccountID":
+		if e.complexity.Entity.FindAccountSettingsByAccountID == nil {
+			break
+		}
+
+		args, err := ec.field_Entity_findAccountSettingsByAccountID_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Entity.FindAccountSettingsByAccountID(childComplexity, args["accountId"].(string)), true
 
 	case "Entity.findUserByID":
 		if e.complexity.Entity.FindUserByID == nil {
@@ -627,13 +630,9 @@ type AccountGeneralSettings {
   emails: [AccountEmail!]!
 }
 
-type AccountModeratorSettings {
-  inQueue: Boolean!
-}
-
-type AccountSettings {
+type AccountSettings @key(fields: "accountId") {
+  accountId: String!
   general: AccountGeneralSettings!
-  moderator: AccountModeratorSettings
 }
 
 extend type Mutation {
@@ -667,11 +666,12 @@ directive @extends on OBJECT
 `, BuiltIn: true},
 	{Name: "federation/entity.graphql", Input: `
 # a union of all types that use the @key directive
-union _Entity = User
+union _Entity = AccountSettings | User
 
 # fake type to build resolver interfaces for users to implement
 type Entity {
-		findUserByID(id: String!,): User!
+		findAccountSettingsByAccountID(accountId: String!,): AccountSettings!
+	findUserByID(id: String!,): User!
 
 }
 
@@ -690,6 +690,21 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 // endregion ************************** generated!.gotpl **************************
 
 // region    ***************************** args.gotpl *****************************
+
+func (ec *executionContext) field_Entity_findAccountSettingsByAccountID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["accountId"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("accountId"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["accountId"] = arg0
+	return args, nil
+}
 
 func (ec *executionContext) field_Entity_findUserByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
@@ -1024,7 +1039,7 @@ func (ec *executionContext) _AccountLock_reason(ctx context.Context, field graph
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AccountModeratorSettings_inQueue(ctx context.Context, field graphql.CollectedField, obj *types.AccountModeratorSettings) (ret graphql.Marshaler) {
+func (ec *executionContext) _AccountSettings_accountId(ctx context.Context, field graphql.CollectedField, obj *types.AccountSettings) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1032,7 +1047,7 @@ func (ec *executionContext) _AccountModeratorSettings_inQueue(ctx context.Contex
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "AccountModeratorSettings",
+		Object:     "AccountSettings",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -1042,7 +1057,7 @@ func (ec *executionContext) _AccountModeratorSettings_inQueue(ctx context.Contex
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.InQueue, nil
+		return obj.AccountID, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1054,9 +1069,9 @@ func (ec *executionContext) _AccountModeratorSettings_inQueue(ctx context.Contex
 		}
 		return graphql.Null
 	}
-	res := resTmp.(bool)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccountSettings_general(ctx context.Context, field graphql.CollectedField, obj *types.AccountSettings) (ret graphql.Marshaler) {
@@ -1092,38 +1107,6 @@ func (ec *executionContext) _AccountSettings_general(ctx context.Context, field 
 	res := resTmp.(*types.AccountGeneralSettings)
 	fc.Result = res
 	return ec.marshalNAccountGeneralSettings2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountGeneralSettings(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _AccountSettings_moderator(ctx context.Context, field graphql.CollectedField, obj *types.AccountSettings) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "AccountSettings",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Moderator, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.AccountModeratorSettings)
-	fc.Result = res
-	return ec.marshalOAccountModeratorSettings2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountModeratorSettings(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Authentication_cookie(ctx context.Context, field graphql.CollectedField, obj *types.Authentication) (ret graphql.Marshaler) {
@@ -1398,6 +1381,48 @@ func (ec *executionContext) _Cookie_invalid(ctx context.Context, field graphql.C
 	res := resTmp.(bool)
 	fc.Result = res
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Entity_findAccountSettingsByAccountID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Entity",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Entity_findAccountSettingsByAccountID_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Entity().FindAccountSettingsByAccountID(rctx, args["accountId"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.AccountSettings)
+	fc.Result = res
+	return ec.marshalNAccountSettings2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountSettings(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Entity_findUserByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -3448,6 +3473,13 @@ func (ec *executionContext) __Entity(ctx context.Context, sel ast.SelectionSet, 
 	switch obj := (obj).(type) {
 	case nil:
 		return graphql.Null
+	case types.AccountSettings:
+		return ec._AccountSettings(ctx, sel, &obj)
+	case *types.AccountSettings:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._AccountSettings(ctx, sel, obj)
 	case types.User:
 		return ec._User(ctx, sel, &obj)
 	case *types.User:
@@ -3555,34 +3587,7 @@ func (ec *executionContext) _AccountLock(ctx context.Context, sel ast.SelectionS
 	return out
 }
 
-var accountModeratorSettingsImplementors = []string{"AccountModeratorSettings"}
-
-func (ec *executionContext) _AccountModeratorSettings(ctx context.Context, sel ast.SelectionSet, obj *types.AccountModeratorSettings) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, accountModeratorSettingsImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("AccountModeratorSettings")
-		case "inQueue":
-			out.Values[i] = ec._AccountModeratorSettings_inQueue(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var accountSettingsImplementors = []string{"AccountSettings"}
+var accountSettingsImplementors = []string{"AccountSettings", "_Entity"}
 
 func (ec *executionContext) _AccountSettings(ctx context.Context, sel ast.SelectionSet, obj *types.AccountSettings) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, accountSettingsImplementors)
@@ -3593,13 +3598,16 @@ func (ec *executionContext) _AccountSettings(ctx context.Context, sel ast.Select
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("AccountSettings")
+		case "accountId":
+			out.Values[i] = ec._AccountSettings_accountId(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "general":
 			out.Values[i] = ec._AccountSettings_general(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "moderator":
-			out.Values[i] = ec._AccountSettings_moderator(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -3704,6 +3712,20 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Entity")
+		case "findAccountSettingsByAccountID":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Entity_findAccountSettingsByAccountID(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		case "findUserByID":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -4809,13 +4831,6 @@ func (ec *executionContext) marshalOAccountLock2ᚖoverdollᚋapplicationsᚋeva
 		return graphql.Null
 	}
 	return ec._AccountLock(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOAccountModeratorSettings2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountModeratorSettings(ctx context.Context, sel ast.SelectionSet, v *types.AccountModeratorSettings) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._AccountModeratorSettings(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOAuthentication2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAuthentication(ctx context.Context, sel ast.SelectionSet, v *types.Authentication) graphql.Marshaler {
