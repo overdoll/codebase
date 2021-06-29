@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/eva/src/adapters"
 	"overdoll/applications/eva/src/domain/cookie"
-	"overdoll/libraries/tests"
+	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/uuid"
 )
 
@@ -96,7 +96,7 @@ func TestCookieRepository_UpdateCookie_make_redeemed(t *testing.T) {
 }
 
 func newCookieRepository(t *testing.T) adapters.CookieRepository {
-	session := tests.CreateScyllaSession(t, "eva")
+	redis, _ := bootstrap.InitializeRedisSession(2)
 
-	return adapters.NewCookieCassandraRepository(session)
+	return adapters.NewCookieRedisRepository(redis)
 }

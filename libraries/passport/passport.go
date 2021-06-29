@@ -46,7 +46,7 @@ func (p *Passport) IsAuthenticated() bool {
 	return p.passport.Account != nil
 }
 
-func (p *Passport) UserID() string {
+func (p *Passport) AccountID() string {
 	return p.passport.Account.Id
 }
 

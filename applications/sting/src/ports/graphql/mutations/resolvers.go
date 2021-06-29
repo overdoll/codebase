@@ -71,7 +71,7 @@ func (r *MutationResolver) Post(ctx context.Context, data *types.PostInput) (*ty
 	post, err := r.App.Commands.CreatePendingPost.
 		Handle(
 			ctx,
-			pass.UserID(),
+			pass.AccountID(),
 			artistId,
 			artistUsername,
 			data.Content,

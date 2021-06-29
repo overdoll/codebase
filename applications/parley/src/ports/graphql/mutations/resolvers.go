@@ -25,7 +25,7 @@ func (m MutationResolver) ModeratePost(ctx context.Context, data types.ModerateP
 		rejectionReasonId = *data.RejectionReasonID
 	}
 
-	auditLog, err := m.App.Commands.ModeratePost.Handle(ctx, pass.UserID(), data.PendingPostID, rejectionReasonId, data.Notes)
+	auditLog, err := m.App.Commands.ModeratePost.Handle(ctx, pass.AccountID(), data.PendingPostID, rejectionReasonId, data.Notes)
 
 	if err != nil {
 		return nil, err
@@ -41,7 +41,7 @@ func (m MutationResolver) RevertPendingPostAuditLog(ctx context.Context, data ty
 		return nil, passport.ErrNotAuthenticated
 	}
 
-	auditLog, err := m.App.Commands.RevertModeratePost.Handle(ctx, pass.UserID(), data.AuditLogID)
+	auditLog, err := m.App.Commands.RevertModeratePost.Handle(ctx, pass.AccountID(), data.AuditLogID)
 
 	if err != nil {
 		return nil, err

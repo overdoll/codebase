@@ -1,13 +1,3 @@
-CREATE TABLE IF NOT EXISTS authentication_cookies
-(
-    cookie     text,
-    email      text,
-    session    text,
-    redeemed   int,
-    expiration timestamp,
-    primary key ( cookie, email )
-);
-
 CREATE TABLE IF NOT EXISTS accounts
 (
     id            text,

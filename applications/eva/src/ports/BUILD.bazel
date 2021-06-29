@@ -11,7 +11,7 @@ go_library(
     deps = [
         "//applications/eva/proto:v1_go_proto",
         "//applications/eva/src/app",
-        "//applications/eva/src/domain/user",
+        "//applications/eva/src/domain/account",
         "//applications/eva/src/ports/graphql",
         "//libraries/graphql",
         "//libraries/router",

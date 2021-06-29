@@ -136,7 +136,7 @@ func (r *MutationResolver) UnlockAccount(ctx context.Context) (bool, error) {
 		return false, passport.ErrNotAuthenticated
 	}
 
-	_, err := r.App.Commands.UnlockAccount.Handle(ctx, pass.UserID())
+	_, err := r.App.Commands.UnlockAccount.Handle(ctx, pass.AccountID())
 
 	if err != nil {
 		return false, err

@@ -2,8 +2,8 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "query",
-    srcs = ["get_user.go"],
+    srcs = ["get_account.go"],
     importpath = "overdoll/applications/eva/src/app/query",
     visibility = ["//visibility:public"],
-    deps = ["//applications/eva/src/domain/user"],
+    deps = ["//applications/eva/src/domain/account"],
 )

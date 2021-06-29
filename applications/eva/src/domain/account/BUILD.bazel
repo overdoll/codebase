@@ -19,3 +19,23 @@ go_test(
         "@com_github_stretchr_testify//assert",
     ],
 )
+
+go_library(
+    name = "account",
+    srcs = [
+        "account.go",
+        "repository.go",
+    ],
+    importpath = "overdoll/applications/eva/src/domain/account",
+    visibility = ["//visibility:public"],
+)
+
+go_test(
+    name = "account_test",
+    srcs = ["account_test.go"],
+    deps = [
+        ":account",
+        "//libraries/uuid",
+        "@com_github_stretchr_testify//assert",
+    ],
+)

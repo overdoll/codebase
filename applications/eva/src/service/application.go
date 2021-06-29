@@ -33,7 +33,13 @@ func createApplication(ctx context.Context) app.Application {
 		log.Fatalf("database session failed with errors: %s", err)
 	}
 
-	cookieRepo := adapters.NewCookieCassandraRepository(session)
+	redis, err := bootstrap.InitializeRedisSession(viper.GetInt("redis.db"))
+
+	if err != nil {
+		log.Fatalf("redis session failed with errors: %s", err)
+	}
+
+	cookieRepo := adapters.NewCookieRedisRepository(redis)
 	accountRepo := adapters.NewAccountCassandraRepository(session)
 
 	return app.Application{
@@ -44,7 +50,7 @@ func createApplication(ctx context.Context) app.Application {
 			Authenticate:   command.NewAuthenticateHandler(cookieRepo),
 			LockAccount:    command.NewLockUserHandler(accountRepo),
 			CreateAccount:  command.NewCreateUserHandler(accountRepo),
-			UnlockAccount: command.NewUnlockUserHandler(accountRepo),
+			UnlockAccount:  command.NewUnlockUserHandler(accountRepo),
 		},
 		Queries: app.Queries{
 			GetAccount: query.NewGetAccountHandler(accountRepo),

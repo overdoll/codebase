@@ -6,8 +6,8 @@ import (
 
 	"github.com/gocql/gocql"
 	"go.uber.org/zap"
-	"overdoll/applications/eva/src/domain/cookie"
 	"overdoll/applications/eva/src/domain/account"
+	"overdoll/applications/eva/src/domain/cookie"
 )
 
 type AuthenticationHandler struct {
@@ -53,11 +53,6 @@ func (h AuthenticationHandler) Handle(ctx context.Context, userId string, hasCoo
 
 		zap.S().Errorf("failed to get cookie: %s", err)
 		return nil, nil, ErrFailedCheckAuthentication
-	}
-
-	// check if expired
-	if ck.IsExpired() {
-		return nil, nil, nil
 	}
 
 	// Not yet redeemed, user needs to redeem it still

@@ -94,7 +94,7 @@ func (r *QueryResolver) Authentication(ctx context.Context) (*types.Authenticati
 
 	// User is logged in
 	if pass.IsAuthenticated() {
-		userId = pass.UserID()
+		userId = pass.AccountID()
 	}
 
 	gc := helpers.GinContextFromContext(ctx)

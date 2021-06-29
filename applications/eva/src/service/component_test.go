@@ -183,7 +183,7 @@ func TestUserLogin_existing(t *testing.T) {
 	// since our passport is a pointer that is modified from a response, we can use it to check to make sure
 	// that the user is logged into the correct one
 	assert.Equal(t, true, modified.IsAuthenticated())
-	assert.Equal(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6", modified.UserID())
+	assert.Equal(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6", modified.AccountID())
 }
 
 // TestUserLogin_from_another_session - we login, but redeem our cookie from another "session"

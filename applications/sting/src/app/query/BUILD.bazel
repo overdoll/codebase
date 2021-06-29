@@ -16,8 +16,8 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//applications/sting/src/domain/post",
+        "//libraries/account",
         "//libraries/paging",
-        "//libraries/user",
         "@org_uber_go_zap//:zap",
     ],
 )

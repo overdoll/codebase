@@ -1,2 +1,5 @@
 [db]
 keyspace = "eva"
+
+[redis]
+db = 2
