@@ -20,6 +20,10 @@ var (
 	ErrFailedConfirmAccountEmail = errors.New("failed to confirm email")
 )
 
+const (
+	ValidationErrEmailCodeInvalid = "email_code_invalid"
+)
+
 func (h ConfirmAccountEmailHandler) Handle(ctx context.Context, userId, id string) (string, error) {
 
 	acc, err := h.ar.GetAccountById(ctx, userId)
@@ -33,7 +37,7 @@ func (h ConfirmAccountEmailHandler) Handle(ctx context.Context, userId, id strin
 
 	if err != nil {
 		if err == account.ErrEmailCodeInvalid {
-			return "email_code_invalid", nil
+			return ValidationErrEmailCodeInvalid, nil
 		}
 	}
 

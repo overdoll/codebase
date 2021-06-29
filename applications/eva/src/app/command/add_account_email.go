@@ -20,6 +20,10 @@ var (
 	ErrFailedAddEmail = errors.New("failed to add email to account")
 )
 
+const (
+	ValidationErrEmailNotUnique = "email_not_unique"
+)
+
 func (h AddAccountEmailHandler) Handle(ctx context.Context, userId, email string) (string, error) {
 
 	acc, err := h.ar.GetAccountById(ctx, userId)
@@ -39,9 +43,11 @@ func (h AddAccountEmailHandler) Handle(ctx context.Context, userId, email string
 
 	if err != nil {
 		if err == account.ErrEmailNotUnique {
-			return "email_not_unique", nil
+			return ValidationErrEmailNotUnique, nil
 		}
 	}
+
+	// TODO: send an email confirmation here
 
 	return "", nil
 }

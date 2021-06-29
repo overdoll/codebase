@@ -37,5 +37,7 @@ func (h AuthenticateHandler) Handle(ctx context.Context, email, session string) 
 		return nil, ErrFailedAuthenticate
 	}
 
+	// TODO: send an email here
+
 	return instance, nil
 }
