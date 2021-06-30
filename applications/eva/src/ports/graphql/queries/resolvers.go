@@ -196,9 +196,19 @@ func (r *QueryResolver) AccountSettings(ctx context.Context) (*types.AccountSett
 		})
 	}
 
+	usernames, err := r.App.Queries.GetAccountUsernames.Handle(ctx, pass.AccountID())
+
+	var accUsernames []*types.AccountUsername
+
+	for _, username := range usernames {
+		accUsernames = append(accUsernames, &types.AccountUsername{
+			Username: username.Username(),
+		})
+	}
+
 	return &types.AccountSettings{
 		AccountID: pass.AccountID(),
-		General:   &types.AccountGeneralSettings{Emails: accEmails},
+		General:   &types.AccountGeneralSettings{Emails: accEmails, Usernames: accUsernames},
 	}, nil
 }
 

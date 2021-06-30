@@ -14,7 +14,8 @@ type AccountEmail struct {
 }
 
 type AccountGeneralSettings struct {
-	Emails []*AccountEmail `json:"emails"`
+	Emails    []*AccountEmail    `json:"emails"`
+	Usernames []*AccountUsername `json:"usernames"`
 }
 
 type AccountLock struct {
@@ -28,6 +29,10 @@ type AccountSettings struct {
 }
 
 func (AccountSettings) IsEntity() {}
+
+type AccountUsername struct {
+	Username string `json:"username"`
+}
 
 type Authentication struct {
 	Cookie *Cookie `json:"cookie"`

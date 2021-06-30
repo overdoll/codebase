@@ -44,19 +44,21 @@ func createApplication(ctx context.Context) app.Application {
 
 	return app.Application{
 		Commands: app.Commands{
-			RedeemCookie:        command.NewRedeemCookieHandler(cookieRepo, accountRepo),
-			Register:            command.NewRegisterHandler(cookieRepo, accountRepo),
-			Authentication:      command.NewAuthenticationHandler(cookieRepo, accountRepo),
-			Authenticate:        command.NewAuthenticateHandler(cookieRepo),
-			LockAccount:         command.NewLockUserHandler(accountRepo),
-			CreateAccount:       command.NewCreateUserHandler(accountRepo),
-			UnlockAccount:       command.NewUnlockUserHandler(accountRepo),
-			AddAccountEmail:     command.NewAddAccountEmailHandler(accountRepo),
-			ConfirmAccountEmail: command.NewConfirmAccountEmailHandler(accountRepo),
+			RedeemCookie:          command.NewRedeemCookieHandler(cookieRepo, accountRepo),
+			Register:              command.NewRegisterHandler(cookieRepo, accountRepo),
+			Authentication:        command.NewAuthenticationHandler(cookieRepo, accountRepo),
+			Authenticate:          command.NewAuthenticateHandler(cookieRepo),
+			LockAccount:           command.NewLockUserHandler(accountRepo),
+			CreateAccount:         command.NewCreateUserHandler(accountRepo),
+			UnlockAccount:         command.NewUnlockUserHandler(accountRepo),
+			AddAccountEmail:       command.NewAddAccountEmailHandler(accountRepo),
+			ConfirmAccountEmail:   command.NewConfirmAccountEmailHandler(accountRepo),
+			ModifyAccountUsername: command.NewModifyAccountUsernameHandler(accountRepo),
 		},
 		Queries: app.Queries{
-			GetAccount:       query.NewGetAccountHandler(accountRepo),
-			GetAccountEmails: query.NewGetAccountEmailsHandler(accountRepo),
+			GetAccount:          query.NewGetAccountHandler(accountRepo),
+			GetAccountEmails:    query.NewGetAccountEmailsHandler(accountRepo),
+			GetAccountUsernames: query.NewGetAccountUsernamesHandler(accountRepo),
 		},
 	}
 }

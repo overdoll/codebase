@@ -150,7 +150,7 @@ func (r AccountRepository) ConfirmAccountEmail(ctx context.Context, confirmId st
 }
 
 // GetAccountEmails - get emails for account
-func (r AccountRepository) GetAccountEmails(ctx context.Context, acc *account.Account) ([]*account.Email, error) {
+func (r AccountRepository) GetAccountEmails(ctx context.Context, id string) ([]*account.Email, error) {
 
 	var accountEmails []*EmailByAccount
 
@@ -161,7 +161,7 @@ func (r AccountRepository) GetAccountEmails(ctx context.Context, acc *account.Ac
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&EmailByAccount{
-			AccountId: acc.ID(),
+			AccountId: id,
 		})
 
 	if err := queryEmails.Select(&accountEmails); err != nil {

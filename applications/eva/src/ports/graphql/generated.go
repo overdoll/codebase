@@ -52,7 +52,8 @@ type ComplexityRoot struct {
 	}
 
 	AccountGeneralSettings struct {
-		Emails func(childComplexity int) int
+		Emails    func(childComplexity int) int
+		Usernames func(childComplexity int) int
 	}
 
 	AccountLock struct {
@@ -63,6 +64,10 @@ type ComplexityRoot struct {
 	AccountSettings struct {
 		AccountID func(childComplexity int) int
 		General   func(childComplexity int) int
+	}
+
+	AccountUsername struct {
+		Username func(childComplexity int) int
 	}
 
 	Authentication struct {
@@ -85,12 +90,13 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		AddAccountEmail func(childComplexity int, email string) int
-		AuthEmail       func(childComplexity int) int
-		Authenticate    func(childComplexity int, data *types.AuthenticationInput) int
-		Logout          func(childComplexity int) int
-		Register        func(childComplexity int, data *types.RegisterInput) int
-		UnlockAccount   func(childComplexity int) int
+		AddAccountEmail       func(childComplexity int, email string) int
+		AuthEmail             func(childComplexity int) int
+		Authenticate          func(childComplexity int, data *types.AuthenticationInput) int
+		Logout                func(childComplexity int) int
+		ModifyAccountUsername func(childComplexity int, username string) int
+		Register              func(childComplexity int, data *types.RegisterInput) int
+		UnlockAccount         func(childComplexity int) int
 	}
 
 	Query struct {
@@ -136,6 +142,7 @@ type MutationResolver interface {
 	Authenticate(ctx context.Context, data *types.AuthenticationInput) (bool, error)
 	Register(ctx context.Context, data *types.RegisterInput) (bool, error)
 	AddAccountEmail(ctx context.Context, email string) (*types.Response, error)
+	ModifyAccountUsername(ctx context.Context, username string) (*types.Response, error)
 }
 type QueryResolver interface {
 	Authentication(ctx context.Context) (*types.Authentication, error)
@@ -180,6 +187,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AccountGeneralSettings.Emails(childComplexity), true
 
+	case "AccountGeneralSettings.usernames":
+		if e.complexity.AccountGeneralSettings.Usernames == nil {
+			break
+		}
+
+		return e.complexity.AccountGeneralSettings.Usernames(childComplexity), true
+
 	case "AccountLock.expires":
 		if e.complexity.AccountLock.Expires == nil {
 			break
@@ -207,6 +221,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.AccountSettings.General(childComplexity), true
+
+	case "AccountUsername.username":
+		if e.complexity.AccountUsername.Username == nil {
+			break
+		}
+
+		return e.complexity.AccountUsername.Username(childComplexity), true
 
 	case "Authentication.cookie":
 		if e.complexity.Authentication.Cookie == nil {
@@ -325,6 +346,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.Logout(childComplexity), true
+
+	case "Mutation.modifyAccountUsername":
+		if e.complexity.Mutation.ModifyAccountUsername == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_modifyAccountUsername_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.ModifyAccountUsername(childComplexity, args["username"].(string)), true
 
 	case "Mutation.register":
 		if e.complexity.Mutation.Register == nil {
@@ -626,8 +659,13 @@ type AccountEmail {
   status: AccountEmailStatusEnum!
 }
 
+type AccountUsername {
+  username: String!
+}
+
 type AccountGeneralSettings {
   emails: [AccountEmail!]!
+  usernames: [AccountUsername!]!
 }
 
 type AccountSettings @key(fields: "accountId") {
@@ -640,6 +678,11 @@ extend type Mutation {
   Add an email to the account, will need to be confirmed
   """
   addAccountEmail(email: String!): Response!
+
+  """
+  Modify the current account's username
+  """
+  modifyAccountUsername(username: String!): Response!
 }
 
 extend type Query {
@@ -748,6 +791,21 @@ func (ec *executionContext) field_Mutation_authenticate_args(ctx context.Context
 		}
 	}
 	args["data"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_modifyAccountUsername_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["username"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("username"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["username"] = arg0
 	return args, nil
 }
 
@@ -969,6 +1027,41 @@ func (ec *executionContext) _AccountGeneralSettings_emails(ctx context.Context, 
 	return ec.marshalNAccountEmail2ᚕᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountEmailᚄ(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _AccountGeneralSettings_usernames(ctx context.Context, field graphql.CollectedField, obj *types.AccountGeneralSettings) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AccountGeneralSettings",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Usernames, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*types.AccountUsername)
+	fc.Result = res
+	return ec.marshalNAccountUsername2ᚕᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountUsernameᚄ(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _AccountLock_expires(ctx context.Context, field graphql.CollectedField, obj *types.AccountLock) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -1107,6 +1200,41 @@ func (ec *executionContext) _AccountSettings_general(ctx context.Context, field 
 	res := resTmp.(*types.AccountGeneralSettings)
 	fc.Result = res
 	return ec.marshalNAccountGeneralSettings2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountGeneralSettings(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AccountUsername_username(ctx context.Context, field graphql.CollectedField, obj *types.AccountUsername) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AccountUsername",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Username, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Authentication_cookie(ctx context.Context, field graphql.CollectedField, obj *types.Authentication) (ret graphql.Marshaler) {
@@ -1682,6 +1810,48 @@ func (ec *executionContext) _Mutation_addAccountEmail(ctx context.Context, field
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return ec.resolvers.Mutation().AddAccountEmail(rctx, args["email"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.Response)
+	fc.Result = res
+	return ec.marshalNResponse2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐResponse(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_modifyAccountUsername(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_modifyAccountUsername_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().ModifyAccountUsername(rctx, args["username"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3544,6 +3714,11 @@ func (ec *executionContext) _AccountGeneralSettings(ctx context.Context, sel ast
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "usernames":
+			out.Values[i] = ec._AccountGeneralSettings_usernames(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -3605,6 +3780,33 @@ func (ec *executionContext) _AccountSettings(ctx context.Context, sel ast.Select
 			}
 		case "general":
 			out.Values[i] = ec._AccountSettings_general(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var accountUsernameImplementors = []string{"AccountUsername"}
+
+func (ec *executionContext) _AccountUsername(ctx context.Context, sel ast.SelectionSet, obj *types.AccountUsername) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, accountUsernameImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("AccountUsername")
+		case "username":
+			out.Values[i] = ec._AccountUsername_username(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -3793,6 +3995,11 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			}
 		case "addAccountEmail":
 			out.Values[i] = ec._Mutation_addAccountEmail(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "modifyAccountUsername":
+			out.Values[i] = ec._Mutation_modifyAccountUsername(ctx, field)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -4371,6 +4578,53 @@ func (ec *executionContext) marshalNAccountSettings2ᚖoverdollᚋapplications�
 		return graphql.Null
 	}
 	return ec._AccountSettings(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNAccountUsername2ᚕᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountUsernameᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.AccountUsername) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNAccountUsername2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountUsername(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
+}
+
+func (ec *executionContext) marshalNAccountUsername2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountUsername(ctx context.Context, sel ast.SelectionSet, v *types.AccountUsername) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._AccountUsername(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNBoolean2bool(ctx context.Context, v interface{}) (bool, error) {

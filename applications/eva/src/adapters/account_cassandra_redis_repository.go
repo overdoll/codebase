@@ -13,20 +13,16 @@ import (
 )
 
 type Account struct {
-	Id           string   `db:"id"`
-	Username     string   `db:"username"`
-	Email        string   `db:"email"`
-	Roles        []string `db:"roles"`
-	Verified     bool     `db:"verified"`
-	Avatar       string   `db:"avatar"`
-	Locked       bool     `db:"locked"`
-	LockedUntil  int      `db:"locked_until"`
-	LockedReason string   `db:"locked_reason"`
-}
-
-type AccountUsername struct {
-	Id       string `db:"account_id"`
-	Username string `db:"username"`
+	Id               string   `db:"id"`
+	Username         string   `db:"username"`
+	Email            string   `db:"email"`
+	Roles            []string `db:"roles"`
+	Verified         bool     `db:"verified"`
+	Avatar           string   `db:"avatar"`
+	Locked           bool     `db:"locked"`
+	LockedUntil      int      `db:"locked_until"`
+	LockedReason     string   `db:"locked_reason"`
+	LastUsernameEdit int      `db:"last_username_edit"`
 }
 
 type AccountEmail struct {
@@ -155,6 +151,19 @@ func (r AccountRepository) CreateAccount(ctx context.Context, instance *account.
 		return account.ErrUsernameNotUnique
 	}
 
+	insertUserUsername := qb.Insert("usernames_by_account").
+		Columns("account_id", "username").
+		Unique().
+		Query(r.session).
+		SerialConsistency(gocql.Serial).
+		BindStruct(usernameEmail)
+
+	applied, err = insertUserUsername.ExecCAS()
+
+	if err != nil || !applied {
+		return r.deleteAccountUsername(ctx, instance)
+	}
+
 	email := ""
 
 	// Only add to email table if user is not unclaimed (email is assigned)
@@ -180,19 +189,9 @@ func (r AccountRepository) CreateAccount(ctx context.Context, instance *account.
 		applied, err = createAccountEmail.ExecCAS()
 
 		if err != nil || !applied {
-
 			// There was an error or something, so we want to gracefully recover.
 			// Delete our users_usernames entry just in case, so user can try to signup again
-			deleteAccountUsername := qb.Delete("accounts_usernames").
-				Where(qb.Eq("username")).
-				Query(r.session).
-				BindStruct(usernameEmail)
-
-			if err := deleteAccountUsername.ExecRelease(); err != nil {
-				return fmt.Errorf("delete() failed: '%s", err)
-			}
-
-			return account.ErrEmailNotUnique
+			return r.deleteAccountUsername(ctx, instance)
 		}
 
 		emailByAccount := EmailByAccount{
@@ -215,13 +214,8 @@ func (r AccountRepository) CreateAccount(ctx context.Context, instance *account.
 
 			// There was an error or something, so we want to gracefully recover.
 			// Delete our users_usernames entry just in case, so user can try to signup again
-			deleteAccountUsername := qb.Delete("accounts_usernames").
-				Where(qb.Eq("username")).
-				Query(r.session).
-				BindStruct(usernameEmail)
-
-			if err := deleteAccountUsername.ExecRelease(); err != nil {
-				return fmt.Errorf("delete() failed: '%s", err)
+			if err := r.deleteAccountUsername(ctx, instance); err != nil {
+				return err
 			}
 
 			deleteAccountEmail := qb.Delete("accounts_emails").

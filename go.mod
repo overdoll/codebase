@@ -4,10 +4,8 @@ go 1.16
 
 require (
 	github.com/99designs/gqlgen v0.13.0
-	github.com/DataDog/sketches-go v0.0.0-20190923095040-43f19ad77ff7 // indirect
 	github.com/aws/aws-sdk-go v1.38.51
 	github.com/bazelbuild/rules_go v0.27.0
-	github.com/benbjohnson/clock v1.0.0 // indirect
 	github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869
 	github.com/bmizerany/pat v0.0.0-20170815010413-6226ea591a40
 	github.com/bxcodec/faker/v3 v3.6.0
@@ -15,7 +13,8 @@ require (
 	github.com/dustin/go-humanize v1.0.0
 	github.com/elastic/go-elasticsearch/v7 v7.13.1
 	github.com/gin-gonic/gin v1.7.2
-	github.com/go-redis/redis/v8 v8.10.0 // indirect
+	github.com/go-playground/validator/v10 v10.6.1 // indirect
+	github.com/go-redis/redis/v8 v8.10.0
 	github.com/gocql/gocql v0.0.0-20210515062232-b7ef815b4556
 	github.com/golang/protobuf v1.5.2
 	github.com/golang/snappy v0.0.3 // indirect

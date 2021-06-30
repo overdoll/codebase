@@ -85,13 +85,6 @@ def go_repositories():
         sum = "h1:KViqR7qKXwz+LrNdIauCDU21kneCk+4DnYjpvlJwH50=",
         version = "v0.27.0",
     )
-    go_repository(
-        name = "com_github_benbjohnson_clock",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/benbjohnson/clock",
-        sum = "h1:78Jk/r6m4wCi6sndMpty7A//t4dw/RW5fV4ZgDVfX1w=",
-        version = "v1.0.0",
-    )
 
     go_repository(
         name = "com_github_beorn7_perks",
@@ -255,13 +248,6 @@ def go_repositories():
         sum = "h1:uDmaGzcdjhF4i/plgjmEsriH11Y0o7RKapEf/LDaM3w=",
         version = "v1.1.9",
     )
-    go_repository(
-        name = "com_github_datadog_sketches_go",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/DataDog/sketches-go",
-        sum = "h1:qELHH0AWCvf98Yf+CNIJx9vOZOfHFDDzgDRYsnNk/vs=",
-        version = "v0.0.0-20190923095040-43f19ad77ff7",
-    )
 
     go_repository(
         name = "com_github_davecgh_go_spew",
@@ -419,12 +405,13 @@ def go_repositories():
         sum = "h1:icxd5fm+REJzpZx7ZfpaD876Lmtgy7VtROAbHHXk8no=",
         version = "v0.17.0",
     )
+
     go_repository(
         name = "com_github_go_playground_validator_v10",
         build_file_proto_mode = "disable",
         importpath = "github.com/go-playground/validator/v10",
-        sum = "h1:pH2c5ADXtd66mxoE0Zm9SUhxE20r7aM3F26W0hOn+GE=",
-        version = "v10.4.1",
+        sum = "h1:W6TRDXt4WcWp4c4nf/G+6BkGdhiIo0k417gfr+V6u4I=",
+        version = "v10.6.1",
     )
     go_repository(
         name = "com_github_go_redis_redis_v8",

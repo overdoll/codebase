@@ -8,8 +8,13 @@ type AccountEmail {
   status: AccountEmailStatusEnum!
 }
 
+type AccountUsername {
+  username: String!
+}
+
 type AccountGeneralSettings {
   emails: [AccountEmail!]!
+  usernames: [AccountUsername!]!
 }
 
 type AccountSettings @key(fields: "accountId") {
@@ -22,6 +27,11 @@ extend type Mutation {
   Add an email to the account, will need to be confirmed
   """
   addAccountEmail(email: String!): Response!
+
+  """
+  Modify the current account's username
+  """
+  modifyAccountUsername(username: String!): Response!
 }
 
 extend type Query {

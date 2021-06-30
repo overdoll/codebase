@@ -4,6 +4,8 @@ import (
 	"errors"
 	"os"
 	"time"
+
+	"github.com/go-playground/validator/v10"
 )
 
 type AccountRole string
@@ -33,12 +35,14 @@ type Account struct {
 
 	lockedUntil  int
 	lockedReason LockReason
+
+	lastUsernameEdit int
 }
 
 var (
 	ErrUsernameNotUnique = errors.New("username is not unique")
 	ErrEmailNotUnique    = errors.New("email is not unique")
-	ErrEmailCodeInvalid    = errors.New("email confirmation expired or invalid")
+	ErrEmailCodeInvalid  = errors.New("email confirmation expired or invalid")
 	ErrAccountNotFound   = errors.New("account not found")
 )
 
@@ -65,7 +69,9 @@ func UnmarshalAccountFromDatabase(id, username, email string, roles []string, ve
 
 func NewAccount(id, username, email string) (*Account, error) {
 
-	// TODO: add some validation for the user creation (username, etc...)
+	if err := validateUsername(username); err != nil {
+		return nil, err
+	}
 
 	return &Account{
 		id:        id,
@@ -149,6 +155,22 @@ func (u *Account) Unlock() error {
 	return u.Lock(0, "")
 }
 
+func (u *Account) LastUsernameEdit() int {
+	return u.lastUsernameEdit
+}
+
+func (u *Account) EditUsername(username string) error {
+
+	if err := validateUsername(username); err != nil {
+		return err
+	}
+
+	u.username = username
+	u.lastUsernameEdit = int(time.Now().Unix())
+
+	return nil
+}
+
 func (u *Account) RolesAsString() []string {
 	var n []string
 
@@ -157,4 +179,14 @@ func (u *Account) RolesAsString() []string {
 	}
 
 	return n
+}
+
+func validateUsername(username string) error {
+	err := validator.New().Var(username, "required,alphanum")
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
