@@ -28,15 +28,8 @@ func (h IndexAllPendingPostsHandler) Handle(ctx context.Context) error {
 		return err
 	}
 
-	for _, pst := range posts {
-		usr, err := h.eva.GetAccount(ctx, pst.Contributor().ID())
-
-		if err != nil {
-			return err
-		}
-
-		// get proper contributor data because it's not correct (only ID is returned)
-		pst.UpdateContributor(usr)
+	for _, _ = range posts {
+		// TODO: need to grab contributor + artist to populate pending post
 	}
 
 	return h.pi.BulkIndexPendingPosts(ctx, posts)

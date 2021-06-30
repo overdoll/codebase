@@ -36,16 +36,6 @@ func (h PublishPostHandler) Handle(ctx context.Context, id string) error {
 			return err
 		}
 
-		// Get our contributor
-		usr, err := h.eva.GetAccount(ctx, pending.Contributor().ID())
-
-		if err != nil {
-			return err
-		}
-
-		// Update contributor, since our database doesn't contain the reference
-		pending.UpdateContributor(usr)
-
 		// This will make sure the state of the post is always "review" before publishing - we may get an outdated record
 		// from the review stage so it will retry at some point
 		if err := pending.MakePublish(); err != nil {
@@ -53,7 +43,7 @@ func (h PublishPostHandler) Handle(ctx context.Context, id string) error {
 		}
 
 		// Update content - make the content public by moving it into the public bucket
-		newContent, err := h.cr.MakeProcessedContentPublic(ctx, pending.Contributor().ID(), pending.RawContent())
+		newContent, err := h.cr.MakeProcessedContentPublic(ctx, pending.ContributorId(), pending.RawContent())
 
 		if err != nil {
 			return err
