@@ -4,6 +4,8 @@ import parseCookies from './Domain/parseCookies'
 import services from '../../config/services'
 import { matchQueryMiddleware } from 'relay-compiler-plus'
 import queryMapJson from '../../queries.json'
+import protobuf from 'protobufjs'
+import passportJSON from './passport.json'
 
 // https://github.com/apollographql/apollo-server/issues/3099#issuecomment-671127608 (slightly modified)
 // Forwards cookies from services to our gateway (we place implicit trust on our services that they will use headers in a proper manner)
@@ -28,8 +30,53 @@ class CookieDataSource extends RemoteGraphQLDataSource {
     }
 
     // If the service sends back an X-Modified-Passport, we modify the session's passport
+    // we will validate the passport by parsing it
+    // TODO: passport && sessions for accounts should eventually be handled by an ingress service
     if (passport) {
-      context.req.session.passport = passport
+      let validPassport = false
+
+      // if an account modification is made (different ID) we set it in the request object
+      // so the session can be regenerated with this new account ID
+      if (passport !== '') {
+        const root = protobuf.Root.fromJSON(passportJSON)
+
+        const Passport = root.lookupType('libraries.passport.v1.Passport')
+
+        const buffer = Buffer.from(passport, 'base64').toString('utf-8')
+
+        try {
+          const message = Passport.decode(buffer)
+
+          const object = Passport.toObject(message, {
+            longs: String,
+            enums: String,
+            bytes: String
+          })
+
+          context.req.accountId = object?.account?.id
+
+          validPassport = true
+        } catch (e) {
+          if (e instanceof protobuf.util.ProtocolError) {
+            // e.instance holds the so far decoded message with missing required fields
+          } else {
+            // wire format is invalid
+          }
+        }
+      }
+
+      if (validPassport) {
+        // if X-Modified-Passport is sent back, regenerate the session
+        context.req.session.regenerate(() => {
+          // add passport, as well as the user agent and IP to track sessions
+          context.req.session.passport = passport
+          context.req.session.userAgent = context.req.headers['user-agent']
+          context.req.session.ip = context.req.headers['x-forwarded-for'] || context.req.connection.remoteAddress
+          context.req.session.created = new Date().toISOString()
+        })
+      } else {
+        context.req.session.destroy()
+      }
     }
 
     return response

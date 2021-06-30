@@ -25,7 +25,6 @@ func (h GetAccountEmailsHandler) Handle(ctx context.Context, userId string) ([]*
 	emails, err := h.ar.GetAccountEmails(ctx, userId)
 
 	if err != nil {
-
 		zap.S().Errorf("failed to get account emails: %s", err)
 		return nil, ErrFailedGetEmails
 	}

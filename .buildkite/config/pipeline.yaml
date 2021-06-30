@@ -16,3 +16,4 @@ steps:
         EVA_SERVICE: eva:8080
         PARLEY_SERVICE: parley:8080
         STING_SERVICE: sting:8080
+        SESSION_SECRET: secret

@@ -14,7 +14,9 @@ type AccountEmail struct {
 }
 
 type AccountGeneralSettings struct {
-	Emails    []*AccountEmail    `json:"emails"`
+	// Emails for account (multiple emails per account)
+	Emails []*AccountEmail `json:"emails"`
+	// Usernames for account (history)
 	Usernames []*AccountUsername `json:"usernames"`
 }
 
@@ -23,9 +25,24 @@ type AccountLock struct {
 	Reason  string `json:"reason"`
 }
 
+type AccountSecuritySettings struct {
+	// Sessions linked to this account
+	Sessions []*AccountSession `json:"sessions"`
+}
+
+type AccountSession struct {
+	UserAgent string `json:"userAgent"`
+	IP        string `json:"ip"`
+	Created   string `json:"created"`
+	ID        string `json:"id"`
+}
+
 type AccountSettings struct {
-	AccountID string                  `json:"accountId"`
-	General   *AccountGeneralSettings `json:"general"`
+	AccountID string `json:"accountId"`
+	// General account settings for the user
+	General *AccountGeneralSettings `json:"general"`
+	// Security settings for the user
+	Security *AccountSecuritySettings `json:"security"`
 }
 
 func (AccountSettings) IsEntity() {}

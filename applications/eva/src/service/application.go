@@ -40,6 +40,7 @@ func createApplication(ctx context.Context) app.Application {
 	}
 
 	cookieRepo := adapters.NewCookieRedisRepository(redis)
+	sessionRepo := adapters.NewSessionRepository(redis)
 	accountRepo := adapters.NewAccountCassandraRedisRepository(session, redis)
 
 	return app.Application{
@@ -54,11 +55,13 @@ func createApplication(ctx context.Context) app.Application {
 			AddAccountEmail:       command.NewAddAccountEmailHandler(accountRepo),
 			ConfirmAccountEmail:   command.NewConfirmAccountEmailHandler(accountRepo),
 			ModifyAccountUsername: command.NewModifyAccountUsernameHandler(accountRepo),
+			RevokeAccountSession:  command.NewRevokeAccountSessionHandler(sessionRepo),
 		},
 		Queries: app.Queries{
 			GetAccount:          query.NewGetAccountHandler(accountRepo),
 			GetAccountEmails:    query.NewGetAccountEmailsHandler(accountRepo),
 			GetAccountUsernames: query.NewGetAccountUsernamesHandler(accountRepo),
+			GetAccountSessions:  query.NewGetAccountSessionsHandler(sessionRepo),
 		},
 	}
 }

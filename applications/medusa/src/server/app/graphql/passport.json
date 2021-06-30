@@ -1,0 +1,32 @@
+{
+  "nested": {
+    "libraries": {
+      "nested": {
+        "passport": {
+          "nested": {
+            "v1": {
+              "nested": {
+                "Passport": {
+                  "fields": {
+                    "account": {
+                      "type": "Account",
+                      "id": 1
+                    }
+                  }
+                },
+                "Account": {
+                  "fields": {
+                    "id": {
+                      "type": "string",
+                      "id": 1
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

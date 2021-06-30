@@ -196,3 +196,22 @@ func (r *MutationResolver) ModifyAccountUsername(ctx context.Context, username s
 		Ok:         true,
 	}, nil
 }
+
+func (r *MutationResolver) RevokeSession(ctx context.Context, id string) (*types.Response, error) {
+	pass := passport.FromContext(ctx)
+
+	if !pass.IsAuthenticated() {
+		return nil, passport.ErrNotAuthenticated
+	}
+
+	err := r.App.Commands.RevokeAccountSession.Handle(ctx, pass.AccountID(), id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.Response{
+		Validation: nil,
+		Ok:         true,
+	}, nil
+}

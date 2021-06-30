@@ -21,10 +21,12 @@ type Commands struct {
 	AddAccountEmail       command.AddAccountEmailHandler
 	ModifyAccountUsername command.ModifyAccountUsernameHandler
 	ConfirmAccountEmail   command.ConfirmAccountEmailHandler
+	RevokeAccountSession  command.RevokeAccountSessionHandler
 }
 
 type Queries struct {
 	GetAccount          query.GetAccountHandler
 	GetAccountEmails    query.GetAccountEmailsHandler
 	GetAccountUsernames query.GetAccountUsernamesHandler
+	GetAccountSessions  query.GetAccountSessionsHandler
 }

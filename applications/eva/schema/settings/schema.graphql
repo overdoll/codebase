@@ -8,18 +8,49 @@ type AccountEmail {
   status: AccountEmailStatusEnum!
 }
 
+type AccountSession {
+  userAgent: String!
+  ip: String!
+  created: String!
+  id: String!
+}
+
 type AccountUsername {
   username: String!
 }
 
 type AccountGeneralSettings {
+  """
+  Emails for account (multiple emails per account)
+  """
   emails: [AccountEmail!]!
+
+  """
+  Usernames for account (history)
+  """
   usernames: [AccountUsername!]!
+}
+
+
+type AccountSecuritySettings {
+  """
+  Sessions linked to this account
+  """
+  sessions: [AccountSession!]!
 }
 
 type AccountSettings @key(fields: "accountId") {
   accountId: String!
+
+  """
+  General account settings for the user
+  """
   general: AccountGeneralSettings!
+
+  """
+  Security settings for the user
+  """
+  security: AccountSecuritySettings!
 }
 
 extend type Mutation {
@@ -32,6 +63,11 @@ extend type Mutation {
   Modify the current account's username
   """
   modifyAccountUsername(username: String!): Response!
+
+  """
+  Revoke a session for this user
+  """
+  revokeSession(id: String!): Response!
 }
 
 extend type Query {

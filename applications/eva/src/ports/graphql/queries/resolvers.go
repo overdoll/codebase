@@ -206,9 +206,23 @@ func (r *QueryResolver) AccountSettings(ctx context.Context) (*types.AccountSett
 		})
 	}
 
+	sessions, err := r.App.Queries.GetAccountSessions.Handle(ctx, pass.AccountID())
+
+	var accSessions []*types.AccountSession
+
+	for _, session := range sessions {
+		accSessions = append(accSessions, &types.AccountSession{
+			UserAgent: session.UserAgent(),
+			IP:        session.IP(),
+			Created:   session.Created(),
+			ID:        session.ID(),
+		})
+	}
+
 	return &types.AccountSettings{
 		AccountID: pass.AccountID(),
 		General:   &types.AccountGeneralSettings{Emails: accEmails, Usernames: accUsernames},
+		Security:  &types.AccountSecuritySettings{Sessions: accSessions},
 	}, nil
 }
 
