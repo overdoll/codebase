@@ -48,7 +48,7 @@ func newPostRepository(t *testing.T) adapters.PostsCassandraRepository {
 
 func newFakePost(t *testing.T) *post.Post {
 
-	artist := post.NewArtist(uuid.New().String())
+	artist := post.NewArtist(uuid.New().String(), "test")
 
 	usr := account.NewUser(
 		uuid.New().String(),

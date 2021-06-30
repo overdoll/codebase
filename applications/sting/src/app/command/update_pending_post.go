@@ -50,11 +50,13 @@ func (h UpdatePendingPostHandler) Handle(ctx context.Context, id, artistId strin
 		}
 
 		// need to grab artist, to ensure it's valid
-		_, err = h.pr.GetArtistById(ctx, artistId)
+		artist, err := h.pr.GetArtistById(ctx, artistId)
 
 		if err != nil {
 			return err
 		}
+
+		pending.UpdateArtist(artist)
 
 		// Update resource requests
 		pending.RequestResources(characterRequests, categoryIds, mediaRequest)

@@ -1,28 +1,44 @@
 package post
 
+import (
+	"os"
+)
+
 type Artist struct {
-	id        string
-	doNotPost bool
+	id       string
+	username string
+	avatar   string
 }
 
 func (a *Artist) ID() string {
 	return a.id
 }
 
-func (a *Artist) DoNotPost() bool {
-	return a.doNotPost
+func (a *Artist) Username() string {
+	return a.username
 }
 
-func NewArtist(id string) *Artist {
+func (a *Artist) RawAvatar() string {
+	return a.avatar
+}
+
+func (a *Artist) Avatar() string {
+	var staticURL = os.Getenv("STATIC_URL")
+	return staticURL + "/avatars/" + a.avatar
+}
+
+func NewArtist(id, username string) *Artist {
 	return &Artist{
-		id:        id,
-		doNotPost: false,
+		id:       id,
+		username: username,
+		avatar:   "",
 	}
 }
 
-func UnmarshalArtistFromDatabase(id string, doNotPost bool) *Artist {
+func UnmarshalArtistFromDatabase(id, username, avatar string) *Artist {
 	return &Artist{
-		id:        id,
-		doNotPost: doNotPost,
+		id:       id,
+		username: username,
+		avatar:   avatar,
 	}
 }

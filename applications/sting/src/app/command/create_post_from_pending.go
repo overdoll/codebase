@@ -23,7 +23,7 @@ func (h CreatePostHandler) Handle(ctx context.Context, id string) error {
 		return err
 	}
 
-	pst := post.NewPost(id, pendingPost.ArtistId(), pendingPost.ContributorId(), pendingPost.Content(), pendingPost.Categories(), pendingPost.Characters())
+	pst := post.NewPost(id, pendingPost.Artist(), pendingPost.Contributor(), pendingPost.Content(), pendingPost.Categories(), pendingPost.Characters())
 
 	if err := h.pr.CreatePost(ctx, pst); err != nil {
 		return err

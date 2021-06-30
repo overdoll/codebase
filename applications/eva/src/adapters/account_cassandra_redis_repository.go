@@ -115,7 +115,7 @@ func (r AccountRepository) GetAccountByEmail(ctx context.Context, email string) 
 		return nil, err
 	}
 
-	// Get our user using the Account AccountId, from the user email instance
+	// Get our user using the Account Id, from the user email instance
 	usr, err := r.GetAccountById(ctx, accountEmail.AccountId)
 
 	if err != nil {

@@ -25,8 +25,9 @@ CREATE TABLE IF NOT EXISTS media
 
 CREATE TABLE IF NOT EXISTS artists
 (
-    account_id  text,
-    do_not_post boolean,
+    account_id       text,
+    account_username text,
+    account_avatar   text,
     primary key ( account_id )
 );
 

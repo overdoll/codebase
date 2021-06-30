@@ -3,10 +3,12 @@ package command
 import (
 	"context"
 	"errors"
+	"time"
 
 	"github.com/gocql/gocql"
 	"go.uber.org/zap"
 	"overdoll/applications/sting/src/domain/post"
+	"overdoll/libraries/uuid"
 )
 
 var (
@@ -58,9 +60,11 @@ func (h CreatePendingPostHandler) Handle(ctx context.Context, contributorId, art
 		contributorIsArtist = true
 	}
 
+	artist := post.NewArtist(artistId, artistUsername)
+
 	// Artist ID is not null, they are not requesting an artist - look for an existing one in the DB
 	if artistId != "" && !contributorIsArtist {
-		_, err := h.pr.GetArtistById(ctx, artistId)
+		artist, err = h.pr.GetArtistById(ctx, artistId)
 
 		if err != nil {
 
@@ -80,7 +84,7 @@ func (h CreatePendingPostHandler) Handle(ctx context.Context, contributorId, art
 		return nil, nil
 	}
 
-	pendingPost, err := post.NewPendingPost(moderatorId, artistId, artistUsername, contributorId, content, characters, categories)
+	pendingPost, err := post.NewPendingPost(uuid.New().String(), moderatorId, artist, usr, content, characters, categories, time.Now())
 
 	if err != nil {
 		return nil, err

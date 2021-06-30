@@ -5,8 +5,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/segmentio/ksuid"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/account"
 	"overdoll/libraries/uuid"
 )
 
@@ -97,10 +97,9 @@ type PendingPost struct {
 	characters []*Character
 	categories []*Category
 
-	contributorId string
+	contributor *account.Account
 
-	artistId       string
-	artistUsername string
+	artist *Artist
 
 	content            []string
 	charactersRequests []CharacterRequest
@@ -110,34 +109,32 @@ type PendingPost struct {
 	generatedIds       []string
 }
 
-func NewPendingPost(moderatorId, artistId, artistUsername, contributorId string, content []string, characters []*Character, categories []*Category) (*PendingPost, error) {
+func NewPendingPost(id, moderatorId string, artist *Artist, contributor *account.Account, content []string, characters []*Character, categories []*Category, postedAt time.Time) (*PendingPost, error) {
 	return &PendingPost{
-		id:             ksuid.New().String(),
-		moderatorId:    moderatorId,
-		state:          Publishing,
-		artistId:       artistId,
-		artistUsername: artistUsername,
-		contributorId:  contributorId,
-		content:        content,
-		characters:     characters,
-		categories:     categories,
-		postedAt:       time.Now(),
+		id:          id,
+		moderatorId: moderatorId,
+		state:       Publishing,
+		artist:      artist,
+		contributor: contributor,
+		content:     content,
+		characters:  characters,
+		categories:  categories,
+		postedAt:    postedAt,
 	}, nil
 }
 
-func UnmarshalPendingPostFromDatabase(id, moderatorId, state, artistId, artistUsername, contributorId string, content []string, characters []*Character, categories []*Category, charactersRequests map[string]string, categoryRequests, mediaRequests []string, postedAt time.Time) *PendingPost {
+func UnmarshalPendingPostFromDatabase(id, moderatorId, state string, artist *Artist, contributorId, contributorUsername, contributorAvatar string, content []string, characters []*Character, categories []*Category, charactersRequests map[string]string, categoryRequests, mediaRequests []string, postedAt time.Time) *PendingPost {
 
 	postPending := &PendingPost{
-		id:             id,
-		moderatorId:    moderatorId,
-		state:          PostPendingState(state),
-		artistId:       artistId,
-		artistUsername: artistUsername,
-		contributorId:  contributorId,
-		content:        content,
-		characters:     characters,
-		categories:     categories,
-		postedAt:       postedAt,
+		id:          id,
+		moderatorId: moderatorId,
+		state:       PostPendingState(state),
+		artist:      artist,
+		contributor: account.NewUser(contributorId, contributorUsername, contributorAvatar, nil, false, false),
+		content:     content,
+		characters:  characters,
+		categories:  categories,
+		postedAt:    postedAt,
 	}
 
 	postPending.RequestResources(charactersRequests, categoryRequests, mediaRequests)
@@ -157,24 +154,16 @@ func (p *PendingPost) State() PostPendingState {
 	return p.state
 }
 
-func (p *PendingPost) ArtistId() string {
-	return p.artistId
+func (p *PendingPost) Artist() *Artist {
+	return p.artist
 }
 
-func (p *PendingPost) ArtistUsername() string {
-	return p.artistUsername
-}
-
-func (p *PendingPost) ContributorId() string {
-	return p.contributorId
+func (p *PendingPost) Contributor() *account.Account {
+	return p.contributor
 }
 
 func (p *PendingPost) RawContent() []string {
 	return p.content
-}
-
-func (p *PendingPost) UpdateArtistId(id string) {
-	p.artistId = id
 }
 
 func (p *PendingPost) Content() []string {
@@ -190,7 +179,7 @@ func (p *PendingPost) Content() []string {
 		}
 
 		// generate the proper content url
-		generatedContent = append(generatedContent, baseUrl+"/"+p.contributorId+"/"+image)
+		generatedContent = append(generatedContent, baseUrl+"/"+p.Contributor().ID()+"/"+image)
 	}
 
 	return generatedContent
@@ -206,6 +195,10 @@ func (p *PendingPost) UpdateCharacters(characters []*Character) error {
 	return nil
 }
 
+func (p *PendingPost) UpdateArtist(artist *Artist) {
+	p.artist = artist
+}
+
 func (p *PendingPost) UpdateModerator(moderatorId string) error {
 
 	if p.state != Review {
@@ -215,6 +208,10 @@ func (p *PendingPost) UpdateModerator(moderatorId string) error {
 	p.moderatorId = moderatorId
 
 	return nil
+}
+
+func (p *PendingPost) UpdateContributor(contributor *account.Account) {
+	p.contributor = contributor
 }
 
 func (p *PendingPost) Categories() []*Category {

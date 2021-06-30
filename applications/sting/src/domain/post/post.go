@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"time"
+
+	"overdoll/libraries/account"
 )
 
 type Post struct {
@@ -12,9 +14,9 @@ type Post struct {
 	characters []*Character
 	categories []*Category
 
-	artistId      string
-	contributorId string
-	postedAt      time.Time
+	artist      *Artist
+	contributor *account.Account
+	postedAt    time.Time
 }
 
 type NotFoundError struct {
@@ -25,27 +27,27 @@ func (e NotFoundError) Error() string {
 	return fmt.Sprintf("post '%s' not found", e.Identifier)
 }
 
-func NewPost(id, artistId, contributorId string, content []string, categories []*Category, characters []*Character) *Post {
+func NewPost(id string, artist *Artist, contributor *account.Account, content []string, categories []*Category, characters []*Character) *Post {
 	return &Post{
-		id:            id,
-		artistId:      artistId,
-		contributorId: contributorId,
-		content:       content,
-		categories:    categories,
-		characters:    characters,
-		postedAt:      time.Now(),
+		id:          id,
+		artist:      artist,
+		contributor: contributor,
+		content:     content,
+		categories:  categories,
+		characters:  characters,
+		postedAt:    time.Now(),
 	}
 }
 
-func UnmarshalPostFromDatabase(id, artistId, contributorId string, content []string, characters []*Character, categories []*Category, postedAt time.Time) *Post {
+func UnmarshalPostFromDatabase(id string, artist *Artist, contributorId, contributorUsername, contributorAvatar string, content []string, characters []*Character, categories []*Category, postedAt time.Time) *Post {
 	return &Post{
-		id:            id,
-		artistId:      artistId,
-		contributorId: contributorId,
-		content:       content,
-		characters:    characters,
-		categories:    categories,
-		postedAt:      postedAt,
+		id:          id,
+		artist:      artist,
+		contributor: account.NewUser(contributorId, contributorUsername, contributorAvatar, nil, false, false),
+		content:     content,
+		characters:  characters,
+		categories:  categories,
+		postedAt:    postedAt,
 	}
 }
 
@@ -53,12 +55,12 @@ func (m *Post) ID() string {
 	return m.id
 }
 
-func (m *Post) ArtistId() string {
-	return m.artistId
+func (m *Post) Artist() *Artist {
+	return m.artist
 }
 
-func (m *Post) ContributorId() string {
-	return m.contributorId
+func (m *Post) Contributor() *account.Account {
+	return m.contributor
 }
 
 func (m *Post) RawContent() []string {
