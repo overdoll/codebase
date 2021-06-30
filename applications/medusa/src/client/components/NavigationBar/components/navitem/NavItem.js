@@ -3,7 +3,7 @@
  */
 import { useTranslation } from 'react-i18next'
 import {
-  Flex
+  Flex, Tooltip
 } from '@chakra-ui/react'
 import Icon from '@//:modules/content/icon/Icon'
 import Link from '@//:modules/routing/Link'
@@ -20,10 +20,9 @@ type Props = {
   loginRequired: boolean,
   locked: boolean,
   route: string,
-  onInteract: () => void,
 }
 
-export default function NavItem ({ user, route, iconActive, iconInactive, locked, selected, label, loginRequired, onInteract }: Props): Node {
+export default function NavItem ({ user, route, iconActive, iconInactive, locked, selected, label, loginRequired }: Props): Node {
   const [t] = useTranslation('nav')
   const history = useHistory()
 
@@ -44,33 +43,36 @@ export default function NavItem ({ user, route, iconActive, iconInactive, locked
 
   return (
     <Link to={locked && !user ? '/join' : route}>
-      <Flex
-        borderRadius={10}
-        bg={selected ? 'gray.500' : 'transparent'}
-        mt={2} mb={2} w='58px' h='40px' pl={4} pr={4}
-        aria-label={label}
-        position='relative'
-        onClick={
-          () => {
-            checkLogin()
-            onInteract()
+      <Tooltip hasArrow label={label} placement='bottom'>
+        <Flex
+          borderRadius={10}
+          bg={selected ? 'gray.500' : 'transparent'}
+          mt={2} mb={2} w='58px' h='40px' pl={4} pr={4}
+          aria-label={label}
+          position='relative'
+          onClick={
+            () => {
+              checkLogin()
+            }
           }
-        }
-      >
-        <Icon
-          icon={selected ? iconActive : iconInactive} w='fill' h='fill'
-          color={selected ? 'transparent' : 'gray.300'}
-          fill={selected ? 'gray.100' : 'transparent'}
-        />
-        <Icon
-          position='absolute'
-          display={locked && !user ? 'flex' : 'none'}
-          bottom={1}
-          right={3}
-          icon={InterfaceLock} w='12px' h='12px'
-          fill='orange.300'
-        />
-      </Flex>
+        >
+
+          <Icon
+            icon={selected ? iconActive : iconInactive} w='fill' h='fill'
+            color={selected ? 'transparent' : 'gray.300'}
+            fill={selected ? 'gray.100' : 'transparent'}
+          />
+
+          <Icon
+            position='absolute'
+            display={locked && !user ? 'flex' : 'none'}
+            bottom={1}
+            right={3}
+            icon={InterfaceLock} w='12px' h='12px'
+            fill='orange.300'
+          />
+        </Flex>
+      </Tooltip>
     </Link>
   )
 }

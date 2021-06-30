@@ -97,7 +97,6 @@ const routes: Array<Route> = [
       },
       {
         path: '/mod',
-        exact: true,
         component: JSResource('ModRoot', () =>
           import(
             /* webpackChunkName: "ModRoot" */ './domain/Mod/Mod'
@@ -115,6 +114,60 @@ const routes: Array<Route> = [
             }
 
             return true
+          }
+        ],
+        // first item is the top level. here, it defines the title of the nav bar
+        // and the general title of the sidebar
+        navigation: {
+          firstRoute: true,
+          side: {
+            title: 'nav.123.asd'
+            // icons?
+          },
+          top: {
+            title: '123',
+            icon: 'streamlineimport'
+          }
+        },
+        routes: [
+          {
+            path: '/mod/queue',
+            component: JSResource('JoinRoot', () =>
+              import(
+                /* webpackChunkName: "JoinRoot" */ './domain/Join/Join'
+              ),
+            module.hot
+            ),
+            navigation: {
+              // if there is a firstroute after the main level and its visible on the sidebar
+              // the parent becomes a dropdown "reveal" grouping that is not a separate page
+              firstRoute: true,
+              side: {
+                title: 'nav.123.asd'
+              }
+            },
+            // middleware is inherited from top level
+            // extra checks can be added to make a sidebar item visible based on permissions
+            middleware: [],
+            routes: [
+              {
+                path: '/mod/queue/extra',
+                component: JSResource('JoinRoot', () =>
+                  import(
+                    /* webpackChunkName: "JoinRoot" */ './domain/Join/Join'
+                  ),
+                module.hot
+                ),
+                navigation: {
+                  side: {
+                    title: 'nav.123.asd'
+                  }
+                },
+                // middleware is inherited from top level
+                // extra checks can be added to make a sidebar item visible based on permissions
+                middleware: []
+              }
+            ]
           }
         ]
       },

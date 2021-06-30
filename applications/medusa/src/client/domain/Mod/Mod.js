@@ -1,7 +1,7 @@
 /**
  * @flow
  */
-import { Center, Heading } from '@chakra-ui/react'
+import { Redirect } from 'react-router'
 import type { Node } from 'react'
 import { Helmet } from 'react-helmet-async'
 

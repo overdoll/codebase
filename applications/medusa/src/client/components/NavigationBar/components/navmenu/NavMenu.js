@@ -10,7 +10,7 @@ import {
   Menu,
   MenuButton, MenuDivider,
   MenuItem,
-  MenuList, Text, useToast
+  MenuList, Text, Tooltip, useToast
 } from '@chakra-ui/react'
 import Icon from '@//:modules/content/icon/Icon'
 import Link from '@//:modules/routing/Link'
@@ -71,18 +71,20 @@ export default function NavMenu ({ user }: Props): Node {
     <Menu autoSelect={false}>
       {({ isOpen }) => (
         <>
-          <MenuButton
-            bg='transparent'
-            borderRadius={10}
-            h='42px' w='42px' pr={2} pl={2} as={IconButton}
-            aria-label={t('nav.menu')}
-            icon={
-              <Icon
-                icon={isOpen ? InterfaceArrowsShrink3 : InterfacePageControllerSettings} w='fill' h='fill'
-                fill={isOpen ? 'gray.100' : 'gray.300'}
-              />
-            }
-          />
+          <Tooltip hasArrow label={t('nav.menu')} placement='bottom'>
+            <MenuButton
+              bg='transparent'
+              borderRadius={10}
+              h='42px' w='42px' pr={2} pl={2} as={IconButton}
+              aria-label={t('nav.menu')}
+              icon={
+                <Icon
+                  icon={isOpen ? InterfaceArrowsShrink3 : InterfacePageControllerSettings} w='fill' h='fill'
+                  fill={isOpen ? 'gray.100' : 'gray.300'}
+                />
+              }
+            />
+          </Tooltip>
           <MenuList minW='300px' boxShadow='xs'>
             {user
               ? (

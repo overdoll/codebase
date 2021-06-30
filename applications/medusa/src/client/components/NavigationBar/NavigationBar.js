@@ -5,12 +5,13 @@ import type { Node } from 'react'
 import {
   Flex, Spacer, Avatar, Button,
   IconButton,
-  HStack, Box, useDisclosure, Stack, Heading
+  HStack, Box, useDisclosure, Stack, Heading, Tooltip
 } from '@chakra-ui/react'
 import { Fragment } from 'react'
 import Icon from '@//:modules/content/icon/Icon'
 import { useTranslation } from 'react-i18next'
 import Link from '@//:modules/routing/Link'
+
 import { Switch, Route, Router } from 'react-router'
 
 import LoginKeys
@@ -35,6 +36,7 @@ import NavItem from './components/navitem/NavItem'
 import NavMenu from './components/navmenu/NavMenu'
 import Items from './components/sidebar/items/Items'
 import { useHistory } from '@//:modules/routing'
+import { sidebar as modSidebar } from '../../domain/Mod/sidebar/items'
 
 type Props = {
   currentRoute: string,
@@ -49,17 +51,6 @@ export default function NavigationBar ({ currentRoute, disabledRoutes, user, chi
   const [t] = useTranslation('nav')
 
   const history = useHistory()
-
-  const modSidebar = [
-    {
-      title: t('sidebar.mod.queue'),
-      route: '/mod/queue'
-    },
-    {
-      title: t('sidebar.mod.history'),
-      route: '/mod/history'
-    }
-  ]
 
   const navLinks = [
     {
@@ -78,7 +69,7 @@ export default function NavigationBar ({ currentRoute, disabledRoutes, user, chi
       route: '/mod',
       loginRequired: true,
       locked: false,
-      sidebar: modSidebar,
+      sidebar: modSidebar(),
       sidebarTitle: t('sidebar.mod.title')
     },
     {
@@ -91,10 +82,6 @@ export default function NavigationBar ({ currentRoute, disabledRoutes, user, chi
       sidebar: null
     }
   ]
-
-  const onChangeSidebar = () => {
-
-  }
 
   return (
     <Router history={history}>
@@ -115,17 +102,24 @@ export default function NavigationBar ({ currentRoute, disabledRoutes, user, chi
               margin='auto'
             >
               <HStack spacing={{ base: 2, md: 12, lg: 28 }}>
-                {navLinks.map((item) => (
-                  <NavItem
-                    key={item.route}
-                    user={!!user} route={item.route} iconActive={item.iconActive}
-                    iconInactive={item.iconInactive} label={item.label}
-                    selected={currentRoute === item.route}
-                    locked={item.locked}
-                    loginRequired={item.loginRequired}
-                    onInteract={() => (onChangeSidebar(item.sidebar))}
-                  />
-                ))}
+                {navLinks.map((item, index) => {
+                  return (
+                    <Fragment key={index}>
+                      <Route path={item.route}>
+                        {({ match }) => (
+                          <NavItem
+                            key={item.route}
+                            user={!!user} route={item.route} iconActive={item.iconActive}
+                            iconInactive={item.iconInactive} label={item.label}
+                            selected={!!match}
+                            locked={item.locked}
+                            loginRequired={item.loginRequired}
+                          />
+                        )}
+                      </Route>
+                    </Fragment>
+                  )
+                })}
               </HStack>
             </Flex>
             <RightMenu user={user} t={t} />
@@ -134,7 +128,7 @@ export default function NavigationBar ({ currentRoute, disabledRoutes, user, chi
       <Flex direction='row'>
         <Switch>
           {navLinks.map((item, index) => {
-            const { isOpen, onToggle, onOpen, onClose } = useDisclosure()
+            const { isOpen, onToggle } = useDisclosure()
 
             return (
               <Route key={index} path={item.route}>
@@ -177,29 +171,35 @@ export default function NavigationBar ({ currentRoute, disabledRoutes, user, chi
                     md: !isOpen && item.sidebar ? 'block' : 'none'
                   }}
                 >
-                  <Flex mb={2} align='center' justify='space-between'>
-                    <Heading size='md'>{item.sidebarTitle}</Heading>
-                    <IconButton
-                      bg='transparent'
-                      onClick={onToggle}
-                      h='42px' w='42px'
-                      icon={
-                        <Icon
-                          icon={InterfaceArrowsButtonLeft} fill='gray.300'
-                          m={3}
-                        />
-                      }
-                    />
-                  </Flex>
+                  <Button
+                    bg='transparent'
+                    pl={1} w='100%'
+                    mb={4}
+                    pr={1}
+                    onClick={onToggle}
+                  >
+                    <Flex
+                      w='100%'
+                      align='center' justify='space-between'
+                    >
+                      <Heading ml={1} size='md'>{item.sidebarTitle}</Heading>
+                      <Icon
+                        mr={1}
+                        icon={InterfaceArrowsButtonLeft} fill='gray.300'
+                        h='18px' w='18px'
+                      />
+                    </Flex>
+                  </Button>
                   <Stack spacing={2}>
-                    {item.sidebar?.map((sidebarItem, sidebarIndex) => (
-                      <Fragment key={sidebarIndex}>
-                        <Items
-                          title={sidebarItem.title} route={sidebarItem.route}
-                          selected={currentRoute === sidebarItem.route}
-                        />
-                      </Fragment>
-                    ))}
+                    {item.sidebar?.map((sidebarItem, sidebarIndex) =>
+                      (
+                        <Fragment key={sidebarIndex}>
+                          <Items
+                            title={sidebarItem.title} route={sidebarItem.route}
+                            selected={currentRoute === sidebarItem.route}
+                          />
+                        </Fragment>
+                      ))}
                   </Stack>
                 </Box>
               </Route>
@@ -244,7 +244,7 @@ const SimplifiedNav = ({ history, t }) => {
 const LeftMenu = ({ t }) => {
   return (
     <>
-      <Flex display={{ base: 'none', md: 'flex' }} left={0} ml={2}>
+      <Flex display={{ base: 'none', md: 'flex' }} left={0} ml={3}>
         <Link to='/'>
           <Button textColor='red.500' variant='link' colorScheme='red'>{t('title')}</Button>
         </Link>
@@ -264,15 +264,17 @@ const RightMenu = ({ user, t }) => {
         <Flex m={1}>
           {user
             ? <Link to='/profile'>
-              <Button
-                bg='transparent'
-                borderRadius={10}
-                h='42px' w='42px' mr={1}
-                display={{ base: 'none', md: 'flex' }}
-                aria-label={t('nav.profile')}
-              >
-                <Avatar m={0} borderRadius={10} w='38px' h='38px' />
-              </Button>
+              <Tooltip hasArrow label={t('nav.profile')} placement='bottom'>
+                <Button
+                  bg='transparent'
+                  borderRadius={10}
+                  h='42px' w='42px' mr={1}
+                  display={{ base: 'none', md: 'flex' }}
+                  aria-label={t('nav.profile')}
+                >
+                  <Avatar m={0} borderRadius={10} w='38px' h='38px' />
+                </Button>
+              </Tooltip>
             </Link>
             : <Link to='/join'>
               <IconButton

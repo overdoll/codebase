@@ -20,7 +20,8 @@ export default function Items ({ selected, route, title }: Props): Node {
       <Button
         borderRadius={5} pt={3} pb={3}
         textAlign='left' w='100%'
-        variant={selected ? 'solid' : 'ghost'}
+        bg={selected ? 'gray.700' : 'transparent'}
+        variant='solid'
       >
         <Heading
           color={selected ? 'gray.100' : 'gray.300'} size='sm' w='100%'
