@@ -3,6 +3,7 @@
  */
 import JSResource from '@//:modules/utilities/JSResource'
 import type { Route } from '@//:modules/routing/router'
+import { useTranslation } from 'react-i18next'
 
 const getUserFromEnvironment = environment =>
   environment
@@ -27,6 +28,8 @@ const getUserFromEnvironment = environment =>
  * by the user
  *
  */
+
+// const [t] = useTranslation('nav')
 
 const routes: Array<Route> = [
   {
@@ -73,27 +76,20 @@ const routes: Array<Route> = [
         ]
       },
       {
-        path: '/upload',
+        path: '/',
         exact: true,
-        component: JSResource('UploadRoot', () =>
+        component: JSResource('HomeRoot', () =>
           import(
-            /* webpackChunkName: "UploadRoot" */ './domain/Upload/Upload'
+            /* webpackChunkName: "HomeRoot" */ './domain/Home/Home'
           ),
         module.hot
         ),
-        // If user is not logged in, they can't post - so we redirect to join page
-        middleware: [
-          ({ environment, history }) => {
-            const user = getUserFromEnvironment(environment)
-
-            if (!user) {
-              history.push('/join')
-              return false
-            }
-
-            return true
+        navigation: {
+          top: {
+            title: 'nav.home',
+            icon: import('@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/home/bird-house.svg')
           }
-        ]
+        }
       },
       {
         path: '/mod',
@@ -119,57 +115,98 @@ const routes: Array<Route> = [
         // first item is the top level. here, it defines the title of the nav bar
         // and the general title of the sidebar
         navigation: {
+          hidden: true,
           firstRoute: true,
-          side: {
-            title: 'nav.123.asd'
-            // icons?
-          },
           top: {
-            title: '123',
-            icon: 'streamlineimport'
+            title: 'nav.mod',
+            icon: import('@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/home/bird-house.svg')
+          },
+          side: {
+            title: 'nav.home'
           }
         },
         routes: [
           {
             path: '/mod/queue',
-            component: JSResource('JoinRoot', () =>
+            component: JSResource('ModRoot', () =>
               import(
-                /* webpackChunkName: "JoinRoot" */ './domain/Join/Join'
+                /* webpackChunkName: "ModRoot" */ './domain/Mod/Mod'
               ),
             module.hot
             ),
             navigation: {
-              // if there is a firstroute after the main level and its visible on the sidebar
-              // the parent becomes a dropdown "reveal" grouping that is not a separate page
+              // if there are any child routes after the parent in the "side" section, the parent
+              // becomes an accordion menu that holds the children.
+              // when firstRoute is enabled, clicking the accordion only opens the children
+              // and does not go to a separate page afterwards
               firstRoute: true,
               side: {
-                title: 'nav.123.asd'
+                title: 'nav.home',
+                icon: import('@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/home/bird-house.svg')
               }
             },
             // middleware is inherited from top level
             // extra checks can be added to make a sidebar item visible based on permissions
-            middleware: [],
             routes: [
               {
-                path: '/mod/queue/extra',
-                component: JSResource('JoinRoot', () =>
+                path: '/mod/queue/extra1',
+                component: JSResource('ModRoot', () =>
                   import(
-                    /* webpackChunkName: "JoinRoot" */ './domain/Join/Join'
+                    /* webpackChunkName: "ModRoot" */ './domain/Mod/Mod'
                   ),
                 module.hot
                 ),
                 navigation: {
                   side: {
-                    title: 'nav.123.asd'
+                    title: 'nav.home'
                   }
-                },
-                // middleware is inherited from top level
-                // extra checks can be added to make a sidebar item visible based on permissions
-                middleware: []
+                }
+              },
+              {
+                path: '/mod/queue/extra2',
+                component: JSResource('ModRoot', () =>
+                  import(
+                    /* webpackChunkName: "ModRoot" */ './domain/Mod/Mod'
+                  ),
+                module.hot
+                ),
+                navigation: {
+                  side: {
+                    title: 'nav.home'
+                  }
+                }
               }
             ]
           }
         ]
+      },
+      {
+        path: '/upload',
+        component: JSResource('UploadRoot', () =>
+          import(
+            /* webpackChunkName: "UploadRoot" */ './domain/Upload/Upload'
+          ),
+        module.hot
+        ),
+        // If user is not logged in, they can't post - so we redirect to join page
+        middleware: [
+          ({ environment, history }) => {
+            const user = getUserFromEnvironment(environment)
+
+            if (!user) {
+              history.push('/join')
+              return false
+            }
+
+            return true
+          }
+        ],
+        navigation: {
+          top: {
+            title: 'nav.upload',
+            icon: JSResource('BirdHouseBold', () => import('@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/home/bird-house.svg'))
+          }
+        }
       },
       {
         path: '/token/:id',
@@ -198,7 +235,7 @@ const routes: Array<Route> = [
             const user = getUserFromEnvironment(environment)
 
             if (user) {
-              history.push('/profile')
+              history.push('/')
               return false
             }
 

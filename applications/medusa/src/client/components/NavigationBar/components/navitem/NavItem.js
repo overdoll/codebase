@@ -14,24 +14,21 @@ import InterfaceLock
 
 type Props = {
   user: boolean,
-  iconActive: () => void,
-  iconInactive: () => void,
+  icon: () => void,
   label: string,
   loginRequired: boolean,
   locked: boolean,
   route: string,
 }
 
-export default function NavItem ({ user, route, iconActive, iconInactive, locked, selected, label, loginRequired }: Props): Node {
+export default function NavItem ({ user, route, icon, locked, selected, label, loginRequired }: Props): Node {
   const [t] = useTranslation('nav')
-  const history = useHistory()
 
   const { flash } = useFlash()
 
   const checkLogin = () => {
     if (locked && !user) {
       flash('login.notify', t('upload_locked'))
-      history.push('/join')
     }
   }
 
@@ -58,9 +55,8 @@ export default function NavItem ({ user, route, iconActive, iconInactive, locked
         >
 
           <Icon
-            icon={selected ? iconActive : iconInactive} w='fill' h='fill'
-            color={selected ? 'transparent' : 'gray.300'}
-            fill={selected ? 'gray.100' : 'transparent'}
+            icon={icon} w='fill' h='fill'
+            fill={selected ? 'gray.100' : 'gray.300'}
           />
 
           <Icon

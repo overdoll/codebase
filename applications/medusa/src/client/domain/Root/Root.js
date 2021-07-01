@@ -2,13 +2,14 @@
  * @flow
  */
 import type { Context, Node } from 'react'
-import { createContext, Suspense } from 'react'
+import { createContext, Suspense, useMemo } from 'react'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
 import { graphql, usePreloadedQuery } from 'react-relay/hooks'
 import type { RootQuery, RootQueryResponse } from '@//:artifacts/RootQuery.graphql'
 import { Helmet } from 'react-helmet-async'
 import NavigationBar from '../../components/NavigationBar/NavigationBar'
-import { useLocation } from '@//:modules/routing'
+import defineAbility from './helpers/defineAbility'
+import { AbilityContext } from './helpers/AbilityContext'
 
 type Props = {
   prepared: {
@@ -22,6 +23,7 @@ const RootQueryGQL = graphql`
     authentication {
       user {
         username
+        roles
       }
       ...JoinFragment
     }
@@ -31,23 +33,26 @@ const RootQueryGQL = graphql`
 const RootContext: Context<?RootQueryResponse> = createContext(null)
 
 export default function Root (props: Props): Node {
-  const currentLocation = useLocation()
-
   const rootQuery = usePreloadedQuery<RootQuery>(
     RootQueryGQL,
     props.prepared.stateQuery
   )
 
+  const ability = defineAbility(rootQuery.authentication?.user)
+
+  // set up permissions library here
+
   return (
     <RootContext.Provider value={rootQuery}>
-      <Helmet
-        title='overdoll'
-      />
-      <NavigationBar
-        user={rootQuery.authentication.user} currentRoute={currentLocation.pathname}
-        disabledRoutes={['/join']}
-      ><Suspense fallback={null}>{props.children}</Suspense>
-      </NavigationBar>
+      <AbilityContext.Provider value={ability}>
+        <Helmet
+          title='overdoll'
+        />
+        <NavigationBar
+          user={rootQuery.authentication.user}
+        ><Suspense fallback={null}>{props.children}</Suspense>
+        </NavigationBar>
+      </AbilityContext.Provider>
     </RootContext.Provider>
   )
 }

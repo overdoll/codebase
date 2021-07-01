@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 6b85f710fe7f06344d187e00cc6d00fc
+ * @relayHash f33061051379fc907ac5f36512f5dcaf
  */
 
 /* eslint-disable */
@@ -13,7 +13,8 @@ export type RootQueryVariables = {||};
 export type RootQueryResponse = {|
   +authentication: ?{|
     +user: ?{|
-      +username: string
+      +username: string,
+      +roles: $ReadOnlyArray<string>,
     |},
     +$fragmentRefs: JoinFragment$ref,
   |}
@@ -29,6 +30,7 @@ query RootQuery {
   authentication {
     user {
       username
+      roles
     }
     ...JoinFragment
   }
@@ -57,6 +59,13 @@ var v0 = {
       "args": null,
       "kind": "ScalarField",
       "name": "username",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "roles",
       "storageKey": null
     }
   ],
@@ -143,7 +152,7 @@ return {
     ]
   },
   "params": {
-    "id": "6b85f710fe7f06344d187e00cc6d00fc",
+    "id": "f33061051379fc907ac5f36512f5dcaf",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",
@@ -152,5 +161,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = 'adf593c107560e6a6ae7fe774793ac48';
+(node: any).hash = 'c1c93a83a2d5384537168d8ca133f594';
 module.exports = node;

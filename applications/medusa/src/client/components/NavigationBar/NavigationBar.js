@@ -7,12 +7,14 @@ import {
   IconButton,
   HStack, Box, useDisclosure, Stack, Heading, Tooltip
 } from '@chakra-ui/react'
-import { Fragment } from 'react'
+import { Fragment, useMemo, useContext, useState } from 'react'
 import Icon from '@//:modules/content/icon/Icon'
 import { useTranslation } from 'react-i18next'
 import Link from '@//:modules/routing/Link'
-
 import { Switch, Route, Router } from 'react-router'
+import { useHistory, useLocation } from '@//:modules/routing'
+import computeCurrentActiveRoutes from './helpers/computeCurrentActiveRoutes'
+import { AbilityContext } from '../../domain/Root/helpers/AbilityContext'
 
 import LoginKeys
   from '@streamlinehq/streamlinehq/img/streamline-regular/interface-essential/login-logout/login-keys.svg'
@@ -35,32 +37,51 @@ import InterfaceArrowsButtonRight
 import NavItem from './components/navitem/NavItem'
 import NavMenu from './components/navmenu/NavMenu'
 import Items from './components/sidebar/items/Items'
-import { useHistory } from '@//:modules/routing'
 import { sidebar as modSidebar } from '../../domain/Mod/sidebar/items'
 
 type Props = {
-  currentRoute: string,
-  disabledRoutes: Array<String>,
   user: {
     username: string,
   },
   children: Node
 }
 
-export default function NavigationBar ({ currentRoute, disabledRoutes, user, children }: Props): Node {
+export default function NavigationBar ({ user, children }: Props): Node {
   const [t] = useTranslation('nav')
 
+  const navigationSettings = useMemo(() => computeCurrentActiveRoutes())
+
+  const ability = useContext(AbilityContext)
+
+  // console.log(ability.can('read', 'Article'))
+
+  // console.log(navigationSettings)
+
+  const disabledRoutes = ['/join']
+
   const history = useHistory()
+
+  const location = useLocation()
+
+  const getIcon = (resource) => {
+    const [icon, setIcon] = useState('')
+
+    resource.load().then((result) => {
+      setIcon(result.default)
+    })
+
+    return icon
+  }
 
   const navLinks = [
     {
       iconActive: BirdHouseBold,
       iconInactive: BirdHouse,
       label: t('nav.home'),
-      route: '/home',
+      route: '/',
       loginRequired: false,
       locked: false,
-      sidebar: null
+      exact: true
     },
     {
       iconActive: LoginKeysBold,
@@ -78,8 +99,7 @@ export default function NavigationBar ({ currentRoute, disabledRoutes, user, chi
       label: t('nav.upload'),
       route: '/upload',
       loginRequired: false,
-      locked: true,
-      sidebar: null
+      locked: true
     }
   ]
 
@@ -88,7 +108,7 @@ export default function NavigationBar ({ currentRoute, disabledRoutes, user, chi
       <Flex
         align='center' right={0} left={0} top={0} h='54px'
       />
-      {disabledRoutes.includes(currentRoute)
+      {disabledRoutes.includes(location.pathname)
         ? <SimplifiedNav history={history} t={t} />
         : <>
           <Flex
@@ -102,18 +122,19 @@ export default function NavigationBar ({ currentRoute, disabledRoutes, user, chi
               margin='auto'
             >
               <HStack spacing={{ base: 2, md: 12, lg: 28 }}>
-                {navLinks.map((item, index) => {
+                {navigationSettings.map((item, index) => {
+                  const label = t(item.title)
+                  console.log(item.icon)
+
                   return (
                     <Fragment key={index}>
-                      <Route path={item.route}>
+                      <Route exact={item.exact} path={item.route}>
                         {({ match }) => (
                           <NavItem
                             key={item.route}
-                            user={!!user} route={item.route} iconActive={item.iconActive}
-                            iconInactive={item.iconInactive} label={item.label}
+                            icon={item.icon}
+                            user={!!user} route={item.route} label={label}
                             selected={!!match}
-                            locked={item.locked}
-                            loginRequired={item.loginRequired}
                           />
                         )}
                       </Route>
@@ -131,77 +152,81 @@ export default function NavigationBar ({ currentRoute, disabledRoutes, user, chi
             const { isOpen, onToggle } = useDisclosure()
 
             return (
-              <Route key={index} path={item.route}>
-                <Flex
-                  display={{
-                    base: !isOpen && item.sidebar ? 'block' : 'none',
-                    md: isOpen && item.sidebar ? 'block' : 'none'
-                  }} position='fixed'
-                >
-                  <IconButton
-                    mt={4}
-                    ml={2}
-                    bg='transparent'
-                    onClick={onToggle}
-                    h='42px' w='42px'
-                    icon={
-                      <Icon
-                        icon={InterfaceArrowsButtonRight} fill='gray.300'
-                        m={3}
-                      />
-                    }
-                  />
-                </Flex>
-                <Box
-                  as='nav'
-                  pos='sticky'
-                  bg='gray.800'
-                  w='260px'
-                  h='calc(100vh - 54px)'
-                  pr={4}
-                  pb={6}
-                  pl={2}
-                  pt={4}
-                  overflowY='auto'
-                  flexShrink={0}
-                  position={{ base: 'absolute', md: 'sticky' }}
-                  zIndex='sidebar'
-                  display={{
-                    base: isOpen && item.sidebar ? 'block' : 'none',
-                    md: !isOpen && item.sidebar ? 'block' : 'none'
-                  }}
-                >
-                  <Button
-                    bg='transparent'
-                    pl={1} w='100%'
-                    mb={4}
-                    pr={1}
-                    onClick={onToggle}
-                  >
+              <Route exact={item.exact} key={index} path={item.route}>
+                {({ match }) => (
+                  <>
                     <Flex
-                      w='100%'
-                      align='center' justify='space-between'
+                      display={{
+                        base: !isOpen && item.sidebar ? 'block' : 'none',
+                        md: isOpen && item.sidebar ? 'block' : 'none'
+                      }} position='fixed'
                     >
-                      <Heading ml={1} size='md'>{item.sidebarTitle}</Heading>
-                      <Icon
-                        mr={1}
-                        icon={InterfaceArrowsButtonLeft} fill='gray.300'
-                        h='18px' w='18px'
+                      <IconButton
+                        mt={4}
+                        ml={2}
+                        bg='transparent'
+                        onClick={onToggle}
+                        h='42px' w='42px'
+                        icon={
+                          <Icon
+                            icon={InterfaceArrowsButtonRight} fill='gray.300'
+                            m={3}
+                          />
+                        }
                       />
                     </Flex>
-                  </Button>
-                  <Stack spacing={2}>
-                    {item.sidebar?.map((sidebarItem, sidebarIndex) =>
-                      (
-                        <Fragment key={sidebarIndex}>
-                          <Items
-                            title={sidebarItem.title} route={sidebarItem.route}
-                            selected={currentRoute === sidebarItem.route}
+                    <Box
+                      as='nav'
+                      pos='sticky'
+                      bg='gray.800'
+                      w='260px'
+                      h='calc(100vh - 54px)'
+                      pr={4}
+                      pb={6}
+                      pl={2}
+                      pt={4}
+                      overflowY='auto'
+                      flexShrink={0}
+                      position={{ base: 'absolute', md: 'sticky' }}
+                      zIndex='sidebar'
+                      display={{
+                        base: isOpen && item.sidebar ? 'block' : 'none',
+                        md: !isOpen && item.sidebar ? 'block' : 'none'
+                      }}
+                    >
+                      <Button
+                        bg='transparent'
+                        pl={1} w='100%'
+                        mb={4}
+                        pr={1}
+                        onClick={onToggle}
+                      >
+                        <Flex
+                          w='100%'
+                          align='center' justify='space-between'
+                        >
+                          <Heading ml={1} size='md'>{item.sidebarTitle}</Heading>
+                          <Icon
+                            mr={1}
+                            icon={InterfaceArrowsButtonLeft} fill='gray.300'
+                            h='18px' w='18px'
                           />
-                        </Fragment>
-                      ))}
-                  </Stack>
-                </Box>
+                        </Flex>
+                      </Button>
+                      <Stack spacing={2}>
+                        {item.sidebar?.map((sidebarItem, sidebarIndex) =>
+                          (
+                            <Fragment key={sidebarIndex}>
+                              <Items
+                                title={sidebarItem.title} route={sidebarItem.route}
+                                selected={match}
+                              />
+                            </Fragment>
+                          ))}
+                      </Stack>
+                    </Box>
+                  </>
+                )}
               </Route>
             )
           })}
@@ -225,7 +250,7 @@ const SimplifiedNav = ({ history, t }) => {
       </Link>
       <Spacer />
       <IconButton
-        onClick={() => history.back()}
+        onClick={() => history.goBack()}
         variant='solid'
         colorScheme='red'
         size='md'

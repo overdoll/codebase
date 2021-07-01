@@ -16,5 +16,6 @@
   "c580e2ec639f896f6891e72f4ce5bb53": "query MediaQuery(\n  $data: SearchInput!\n) {\n  media(data: $data) {\n    id\n    title\n    thumbnail\n  }\n}\n",
   "3d0383f9dd76ad9089c7b4ff747ceb96": "mutation StepsMutation(\n  $data: PostInput\n) {\n  post(data: $data) {\n    review\n    validation {\n      code\n    }\n  }\n}\n",
   "ff3f64652c450fbcaada028f4225e41b": "query TokenQuery(\n  $cookie: String!\n) {\n  redeemCookie(cookie: $cookie) {\n    sameSession\n    registered\n    session\n    invalid\n  }\n}\n",
-  "2d5391180cfa5ba29e2940ce0529f58a": "mutation NavMenuMutation {\n  logout\n}\n"
+  "2d5391180cfa5ba29e2940ce0529f58a": "mutation NavMenuMutation {\n  logout\n}\n",
+  "f33061051379fc907ac5f36512f5dcaf": "query RootQuery {\n  authentication {\n    user {\n      username\n      roles\n    }\n    ...JoinFragment\n  }\n}\n\nfragment JoinFragment on Authentication {\n  cookie {\n    redeemed\n    registered\n    email\n  }\n}\n"
 }
