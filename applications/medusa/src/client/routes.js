@@ -4,6 +4,12 @@
 import JSResource from '@//:modules/utilities/JSResource'
 import type { Route } from '@//:modules/routing/router'
 import { useTranslation } from 'react-i18next'
+import createMockHistory from '../server/app/render/Domain/createMockHistory'
+import BirdHouse from '@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/home/bird-house.svg'
+import LoginKeys
+  from '@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/login-logout/login-keys.svg'
+import ContentBrushPen
+  from '@streamlinehq/streamlinehq/img/streamline-bold/content/content-creation/content-brush-pen.svg'
 
 const getUserFromEnvironment = environment =>
   environment
@@ -54,6 +60,7 @@ const routes: Array<Route> = [
     routes: [
       {
         path: '/join',
+        hidden: true,
         exact: true,
         component: JSResource('JoinRoot', () =>
           import(
@@ -63,7 +70,8 @@ const routes: Array<Route> = [
         ),
         // When user is logged in, we just want to redirect them since they're already "logged in"
         middleware: [
-          ({ environment, history }) => {
+          ({ environment, history, ability }) => {
+            // TODO get rid of user and just check ability of logged in
             const user = getUserFromEnvironment(environment)
 
             if (user) {
@@ -87,7 +95,7 @@ const routes: Array<Route> = [
         navigation: {
           top: {
             title: 'nav.home',
-            icon: import('@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/home/bird-house.svg')
+            icon: BirdHouse
           }
         }
       },
@@ -101,28 +109,24 @@ const routes: Array<Route> = [
         ),
         // If user is not logged in, they can't post - so we redirect to join page
         middleware: [
-          ({ environment, history }) => {
-            const user = getUserFromEnvironment(environment)
-
-            if (!user) {
-              history.push('/join')
-              return false
+          ({ environment, history, ability }) => {
+            if (ability.can('access', 'modtools')) {
+              return true
             }
-
-            return true
+            history.push('/join')
+            return false
           }
         ],
         // first item is the top level. here, it defines the title of the nav bar
         // and the general title of the sidebar
         navigation: {
-          hidden: true,
           firstRoute: true,
           top: {
             title: 'nav.mod',
-            icon: import('@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/home/bird-house.svg')
+            icon: LoginKeys
           },
           side: {
-            title: 'nav.home'
+            title: 'sidebar.mod.title'
           }
         },
         routes: [
@@ -141,42 +145,28 @@ const routes: Array<Route> = [
               // and does not go to a separate page afterwards
               firstRoute: true,
               side: {
-                title: 'nav.home',
-                icon: import('@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/home/bird-house.svg')
+                title: 'sidebar.mod.queue'
               }
-            },
-            // middleware is inherited from top level
-            // extra checks can be added to make a sidebar item visible based on permissions
-            routes: [
-              {
-                path: '/mod/queue/extra1',
-                component: JSResource('ModRoot', () =>
-                  import(
-                    /* webpackChunkName: "ModRoot" */ './domain/Mod/Mod'
-                  ),
-                module.hot
-                ),
-                navigation: {
-                  side: {
-                    title: 'nav.home'
-                  }
-                }
-              },
-              {
-                path: '/mod/queue/extra2',
-                component: JSResource('ModRoot', () =>
-                  import(
-                    /* webpackChunkName: "ModRoot" */ './domain/Mod/Mod'
-                  ),
-                module.hot
-                ),
-                navigation: {
-                  side: {
-                    title: 'nav.home'
-                  }
-                }
+            }
+          },
+          {
+            path: '/mod/history',
+            component: JSResource('ModRoot', () =>
+              import(
+                /* webpackChunkName: "ModRoot" */ './domain/Mod/Mod'
+              ),
+            module.hot
+            ),
+            navigation: {
+              // if there are any child routes after the parent in the "side" section, the parent
+              // becomes an accordion menu that holds the children.
+              // when firstRoute is enabled, clicking the accordion only opens the children
+              // and does not go to a separate page afterwards
+              firstRoute: true,
+              side: {
+                title: 'sidebar.mod.history'
               }
-            ]
+            }
           }
         ]
       },
@@ -190,7 +180,7 @@ const routes: Array<Route> = [
         ),
         // If user is not logged in, they can't post - so we redirect to join page
         middleware: [
-          ({ environment, history }) => {
+          ({ environment, history, ability }) => {
             const user = getUserFromEnvironment(environment)
 
             if (!user) {
@@ -204,7 +194,7 @@ const routes: Array<Route> = [
         navigation: {
           top: {
             title: 'nav.upload',
-            icon: JSResource('BirdHouseBold', () => import('@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/home/bird-house.svg'))
+            icon: ContentBrushPen
           }
         }
       },
@@ -231,8 +221,10 @@ const routes: Array<Route> = [
         },
         // When user is logged in, we don't want them to be able to redeem any other tokens
         middleware: [
-          ({ environment, history }) => {
+          ({ environment, history, location }) => {
             const user = getUserFromEnvironment(environment)
+            const context = {}
+            const mockHistory = createMockHistory({ context, location: location.pathname })
 
             if (user) {
               history.push('/')

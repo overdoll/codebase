@@ -17,7 +17,7 @@ export default function defineAbility (user) {
     can('manage', 'Upload')
 
     if (roles.includes('moderator')) {
-      can('access', 'Mod')
+      can('access', 'modtools')
     }
 
     if (roles.includes('staff')) {

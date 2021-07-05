@@ -7,7 +7,7 @@ import {
   IconButton,
   HStack, Box, useDisclosure, Stack, Heading, Tooltip
 } from '@chakra-ui/react'
-import { Fragment, useMemo, useContext, useState } from 'react'
+import { Fragment, useMemo, useContext } from 'react'
 import Icon from '@//:modules/content/icon/Icon'
 import { useTranslation } from 'react-i18next'
 import Link from '@//:modules/routing/Link'
@@ -15,20 +15,11 @@ import { Switch, Route, Router } from 'react-router'
 import { useHistory, useLocation } from '@//:modules/routing'
 import computeCurrentActiveRoutes from './helpers/computeCurrentActiveRoutes'
 import { AbilityContext } from '../../domain/Root/helpers/AbilityContext'
+import { useRelayEnvironment } from 'react-relay'
 
-import LoginKeys
-  from '@streamlinehq/streamlinehq/img/streamline-regular/interface-essential/login-logout/login-keys.svg'
-import LoginKeysBold
-  from '@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/login-logout/login-keys.svg'
-import ContentBrushPen
-  from '@streamlinehq/streamlinehq/img/streamline-regular/content/content-creation/content-brush-pen.svg'
-import ContentBrushPenBold
-  from '@streamlinehq/streamlinehq/img/streamline-bold/content/content-creation/content-brush-pen.svg'
 import InterfaceArrowsTurnBackward
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-turn-backward.svg'
 import Login2 from '@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/login-logout/login-2.svg'
-import BirdHouse from '@streamlinehq/streamlinehq/img/streamline-regular/interface-essential/home/bird-house.svg'
-import BirdHouseBold from '@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/home/bird-house.svg'
 import InterfaceArrowsButtonLeft
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-button-left.svg'
 import InterfaceArrowsButtonRight
@@ -37,7 +28,6 @@ import InterfaceArrowsButtonRight
 import NavItem from './components/navitem/NavItem'
 import NavMenu from './components/navmenu/NavMenu'
 import Items from './components/sidebar/items/Items'
-import { sidebar as modSidebar } from '../../domain/Mod/sidebar/items'
 
 type Props = {
   user: {
@@ -49,66 +39,27 @@ type Props = {
 export default function NavigationBar ({ user, children }: Props): Node {
   const [t] = useTranslation('nav')
 
-  const navigationSettings = useMemo(() => computeCurrentActiveRoutes())
-
-  const ability = useContext(AbilityContext)
-
-  // console.log(ability.can('read', 'Article'))
-
-  // console.log(navigationSettings)
-
-  const disabledRoutes = ['/join']
-
   const history = useHistory()
 
   const location = useLocation()
 
-  const getIcon = (resource) => {
-    const [icon, setIcon] = useState('')
+  const environment = useRelayEnvironment()
 
-    resource.load().then((result) => {
-      setIcon(result.default)
-    })
+  const ability = useContext(AbilityContext)
 
-    return icon
-  }
-
-  const navLinks = [
-    {
-      iconActive: BirdHouseBold,
-      iconInactive: BirdHouse,
-      label: t('nav.home'),
-      route: '/',
-      loginRequired: false,
-      locked: false,
-      exact: true
-    },
-    {
-      iconActive: LoginKeysBold,
-      iconInactive: LoginKeys,
-      label: t('nav.mod'),
-      route: '/mod',
-      loginRequired: true,
-      locked: false,
-      sidebar: modSidebar(),
-      sidebarTitle: t('sidebar.mod.title')
-    },
-    {
-      iconActive: ContentBrushPenBold,
-      iconInactive: ContentBrushPen,
-      label: t('nav.upload'),
-      route: '/upload',
-      loginRequired: false,
-      locked: true
-    }
-  ]
+  const [navigationSettings, navigationFiltered] = useMemo(() => computeCurrentActiveRoutes({
+    history,
+    location,
+    ability,
+    environment
+  }), [ability])
 
   return (
     <Router history={history}>
       <Flex
         align='center' right={0} left={0} top={0} h='54px'
       />
-      {disabledRoutes.includes(location.pathname)
+      {navigationFiltered.includes(location.pathname)
         ? <SimplifiedNav history={history} t={t} />
         : <>
           <Flex
@@ -124,7 +75,8 @@ export default function NavigationBar ({ user, children }: Props): Node {
               <HStack spacing={{ base: 2, md: 12, lg: 28 }}>
                 {navigationSettings.map((item, index) => {
                   const label = t(item.title)
-                  console.log(item.icon)
+
+                  const route = item.firstRoute ? item.sidebar.routes[0].route : item.route
 
                   return (
                     <Fragment key={index}>
@@ -133,7 +85,7 @@ export default function NavigationBar ({ user, children }: Props): Node {
                           <NavItem
                             key={item.route}
                             icon={item.icon}
-                            user={!!user} route={item.route} label={label}
+                            user={!!user} route={route} label={label}
                             selected={!!match}
                           />
                         )}
@@ -148,17 +100,16 @@ export default function NavigationBar ({ user, children }: Props): Node {
         </>}
       <Flex direction='row'>
         <Switch>
-          {navLinks.map((item, index) => {
+          {navigationSettings.map((item, index) => {
             const { isOpen, onToggle } = useDisclosure()
-
-            return (
-              <Route exact={item.exact} key={index} path={item.route}>
+            return item.sidebar &&
+              (<Route exact={item.exact} key={index} path={item.route}>
                 {({ match }) => (
                   <>
                     <Flex
                       display={{
-                        base: !isOpen && item.sidebar ? 'block' : 'none',
-                        md: isOpen && item.sidebar ? 'block' : 'none'
+                        base: !isOpen ? 'block' : 'none',
+                        md: isOpen ? 'block' : 'none'
                       }} position='fixed'
                     >
                       <IconButton
@@ -176,7 +127,6 @@ export default function NavigationBar ({ user, children }: Props): Node {
                       />
                     </Flex>
                     <Box
-                      as='nav'
                       pos='sticky'
                       bg='gray.800'
                       w='260px'
@@ -190,8 +140,8 @@ export default function NavigationBar ({ user, children }: Props): Node {
                       position={{ base: 'absolute', md: 'sticky' }}
                       zIndex='sidebar'
                       display={{
-                        base: isOpen && item.sidebar ? 'block' : 'none',
-                        md: !isOpen && item.sidebar ? 'block' : 'none'
+                        base: isOpen ? 'block' : 'none',
+                        md: !isOpen ? 'block' : 'none'
                       }}
                     >
                       <Button
@@ -205,7 +155,7 @@ export default function NavigationBar ({ user, children }: Props): Node {
                           w='100%'
                           align='center' justify='space-between'
                         >
-                          <Heading ml={1} size='md'>{item.sidebarTitle}</Heading>
+                          <Heading ml={1} size='md'>{t(item.sidebar.title)}</Heading>
                           <Icon
                             mr={1}
                             icon={InterfaceArrowsButtonLeft} fill='gray.300'
@@ -213,22 +163,17 @@ export default function NavigationBar ({ user, children }: Props): Node {
                           />
                         </Flex>
                       </Button>
-                      <Stack spacing={2}>
-                        {item.sidebar?.map((sidebarItem, sidebarIndex) =>
-                          (
-                            <Fragment key={sidebarIndex}>
-                              <Items
-                                title={sidebarItem.title} route={sidebarItem.route}
-                                selected={match}
-                              />
-                            </Fragment>
-                          ))}
-                      </Stack>
+                      {item.sidebar &&
+                        <Stack spacing={2}>
+                          <Items
+                            location={location.pathname}
+                            items={item.sidebar.routes}
+                          />
+                        </Stack>}
                     </Box>
                   </>
                 )}
-              </Route>
-            )
+              </Route>)
           })}
         </Switch>
         <Flex w='100%' direction='column'>

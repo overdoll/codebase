@@ -40,8 +40,6 @@ export default function Root (props: Props): Node {
 
   const ability = defineAbility(rootQuery.authentication?.user)
 
-  // set up permissions library here
-
   return (
     <RootContext.Provider value={rootQuery}>
       <AbilityContext.Provider value={ability}>

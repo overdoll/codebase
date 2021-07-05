@@ -4,15 +4,35 @@
 
 import routes from '../../../routes'
 
-export default function computeCurrentActiveRoutes () {
+export default function computeCurrentActiveRoutes ({ history, location, ability, environment }) {
   const activeRoutes = routes[0].routes
+
+  const isRouteValid = (data, route) => {
+    if (Object.prototype.hasOwnProperty.call(route, 'middleware')) {
+      for (let i = 0; i < route.middleware.length; i++) {
+        if (!route.middleware[i](data)) return false
+      }
+    }
+    return true
+  }
+
+  const navDisabled = (routes) => {
+    const disabled = routes.filter((item) => item.hidden)
+    return disabled.map((item) => { return item.path }
+    )
+  }
 
   const navRoutes = (routes) => {
     const navHeaders = []
 
     for (const route of routes) {
       const nav = {}
-      if (route.navigation?.top) {
+
+      const valid = isRouteValid({ history, location, ability, environment }, route)
+
+      console.log(valid)
+
+      if (route.navigation?.top && valid) {
         Object.assign(nav, {
           route: route.path,
           title: route.navigation.top.title,
@@ -26,7 +46,9 @@ export default function computeCurrentActiveRoutes () {
             const parsed = []
 
             for (const route of childRoutes) {
-              if (route.navigation.side) {
+              const validChild = isRouteValid({ history, location }, route.path)
+
+              if (route.navigation.side && validChild) {
                 parsed.push({
                   title: route.navigation.side.title,
                   route: route.path,
@@ -54,5 +76,5 @@ export default function computeCurrentActiveRoutes () {
     return navHeaders
   }
 
-  return navRoutes(activeRoutes)
+  return [navRoutes(activeRoutes), navDisabled(activeRoutes)]
 }
