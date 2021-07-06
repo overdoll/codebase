@@ -39,5 +39,5 @@ CREATE TABLE IF NOT EXISTS usernames_by_account
 (
     account_id text,
     username   text,
-    primary key ( account_id )
+    primary key ( account_id, username )
 );

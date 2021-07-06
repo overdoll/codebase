@@ -215,3 +215,29 @@ func (r *MutationResolver) RevokeSession(ctx context.Context, id string) (*types
 		Ok:         true,
 	}, nil
 }
+
+func (r *MutationResolver) MakeEmailPrimary(ctx context.Context, email string) (*types.Response, error) {
+	pass := passport.FromContext(ctx)
+
+	if !pass.IsAuthenticated() {
+		return nil, passport.ErrNotAuthenticated
+	}
+
+	validation, err := r.App.Commands.MakeAccountEmailPrimary.Handle(ctx, pass.AccountID(), email)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if validation != "" {
+		return &types.Response{
+			Validation: &types.Validation{Code: validation},
+			Ok:         false,
+		}, nil
+	}
+
+	return &types.Response{
+		Validation: nil,
+		Ok:         true,
+	}, nil
+}

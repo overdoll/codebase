@@ -5,11 +5,14 @@ go_library(
     srcs = [
         "get_account.go",
         "get_account_emails.go",
+        "get_account_sessions.go",
+        "get_account_usernames.go",
     ],
     importpath = "overdoll/applications/eva/src/app/query",
     visibility = ["//visibility:public"],
     deps = [
         "//applications/eva/src/domain/account",
+        "//applications/eva/src/domain/session",
         "@org_uber_go_zap//:zap",
     ],
 )

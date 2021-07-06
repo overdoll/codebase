@@ -27,10 +27,14 @@ go_library(
         "email.go",
         "email_confirmation.go",
         "repository.go",
+        "username.go",
     ],
     importpath = "overdoll/applications/eva/src/domain/account",
     visibility = ["//visibility:public"],
-    deps = ["@com_github_segmentio_ksuid//:ksuid"],
+    deps = [
+        "@com_github_go_playground_validator_v10//:validator",
+        "@com_github_segmentio_ksuid//:ksuid",
+    ],
 )
 
 go_test(

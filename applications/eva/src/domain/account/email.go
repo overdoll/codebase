@@ -1,16 +1,25 @@
 package account
 
+import (
+	"errors"
+)
+
 type EmailStatus string
 
 const (
 	EmailConfirmed   EmailStatus = "confirmed"
 	EmailUnconfirmed EmailStatus = "unconfirmed"
+	EmailPrimary     EmailStatus = "primary"
 )
 
 type Email struct {
 	email  string
 	status EmailStatus
 }
+
+var (
+	ErrEmailNotConfirmed = errors.New("email not confirmed")
+)
 
 func UnmarshalEmailFromDatabase(email string, status int) *Email {
 	var st EmailStatus
@@ -21,6 +30,10 @@ func UnmarshalEmailFromDatabase(email string, status int) *Email {
 
 	if status == 1 {
 		st = EmailConfirmed
+	}
+
+	if status == 2 {
+		st = EmailPrimary
 	}
 
 	return &Email{
@@ -35,4 +48,16 @@ func (c *Email) Email() string {
 
 func (c *Email) Status() EmailStatus {
 	return c.status
+}
+
+func (c *Email) IsConfirmed() bool {
+	return c.status == EmailConfirmed
+}
+
+func (c *Email) IsUnconfirmed() bool {
+	return c.status == EmailUnconfirmed
+}
+
+func (c *Email) IsPrimary() bool {
+	return c.status == EmailPrimary
 }

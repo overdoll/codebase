@@ -11,17 +11,18 @@ type Application struct {
 }
 
 type Commands struct {
-	RedeemCookie          command.RedeemCookieHandler
-	Authenticate          command.AuthenticateHandler
-	Register              command.RegisterHandler
-	Authentication        command.AuthenticationHandler
-	LockAccount           command.LockAccountHandler
-	UnlockAccount         command.UnlockAccountHandler
-	CreateAccount         command.CreateAccountHandler
-	AddAccountEmail       command.AddAccountEmailHandler
-	ModifyAccountUsername command.ModifyAccountUsernameHandler
-	ConfirmAccountEmail   command.ConfirmAccountEmailHandler
-	RevokeAccountSession  command.RevokeAccountSessionHandler
+	RedeemCookie            command.RedeemCookieHandler
+	Authenticate            command.AuthenticateHandler
+	Register                command.RegisterHandler
+	Authentication          command.AuthenticationHandler
+	LockAccount             command.LockAccountHandler
+	UnlockAccount           command.UnlockAccountHandler
+	CreateAccount           command.CreateAccountHandler
+	AddAccountEmail         command.AddAccountEmailHandler
+	ModifyAccountUsername   command.ModifyAccountUsernameHandler
+	ConfirmAccountEmail     command.ConfirmAccountEmailHandler
+	RevokeAccountSession    command.RevokeAccountSessionHandler
+	MakeAccountEmailPrimary command.MakeAccountEmailPrimaryHandler
 }
 
 type Queries struct {

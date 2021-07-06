@@ -5,13 +5,17 @@ go_library(
     srcs = [
         "account_cassandra_redis_repository.go",
         "account_email_cassandra_redis_repository.go",
+        "account_username_cassandra_repository.go",
         "cookie_redis_repository.go",
+        "session_redis_repository.go",
     ],
     importpath = "overdoll/applications/eva/src/adapters",
     visibility = ["//visibility:public"],
     deps = [
         "//applications/eva/src/domain/account",
         "//applications/eva/src/domain/cookie",
+        "//applications/eva/src/domain/session",
+        "//libraries/crypt",
         "//libraries/passport",
         "@com_github_go_redis_redis_v8//:redis",
         "@com_github_gocql_gocql//:gocql",

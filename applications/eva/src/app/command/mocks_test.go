@@ -48,7 +48,7 @@ func (u userRepoMock) GetAccountById(ctx context.Context, id string) (*account.A
 
 func (u userRepoMock) GetAccountByEmail(ctx context.Context, email string) (*account.Account, error) {
 
-	if u.User == nil || email != u.User.Email() {
+	if u.User == nil || email != u.User.PrimaryEmail() {
 		return nil, account.ErrAccountNotFound
 	}
 

@@ -152,6 +152,12 @@ func (r AccountRepository) ConfirmAccountEmail(ctx context.Context, confirmId st
 // GetAccountEmails - get emails for account
 func (r AccountRepository) GetAccountEmails(ctx context.Context, id string) ([]*account.Email, error) {
 
+	usr, err := r.GetAccountById(ctx, id)
+
+	if err != nil {
+		return nil, err
+	}
+
 	var accountEmails []*EmailByAccount
 
 	// get account emails and status
@@ -176,7 +182,14 @@ func (r AccountRepository) GetAccountEmails(ctx context.Context, id string) ([]*
 	var emails []*account.Email
 
 	for _, email := range accountEmails {
-		emails = append(emails, account.UnmarshalEmailFromDatabase(email.Email, email.Status))
+
+		status := email.Status
+
+		if usr.Email() == email.Email {
+			status = 2
+		}
+
+		emails = append(emails, account.UnmarshalEmailFromDatabase(email.Email, status))
 	}
 
 	return emails, nil

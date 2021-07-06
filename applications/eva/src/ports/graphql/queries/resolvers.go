@@ -7,7 +7,6 @@ import (
 	"go.uber.org/zap"
 	"overdoll/applications/eva/src/app"
 	"overdoll/applications/eva/src/app/command"
-	"overdoll/applications/eva/src/domain/account"
 	"overdoll/applications/eva/src/domain/cookie"
 	"overdoll/applications/eva/src/ports/graphql/types"
 	"overdoll/libraries/cookies"
@@ -182,12 +181,16 @@ func (r *QueryResolver) AccountSettings(ctx context.Context) (*types.AccountSett
 
 		var status types.AccountEmailStatusEnum
 
-		if email.Status() == account.EmailConfirmed {
+		if email.IsConfirmed() {
 			status = types.AccountEmailStatusEnumConfirmed
 		}
 
-		if email.Status() == account.EmailUnconfirmed {
+		if email.IsUnconfirmed() {
 			status = types.AccountEmailStatusEnumUnconfirmed
+		}
+
+		if email.IsPrimary() {
+			status = types.AccountEmailStatusEnumPrimary
 		}
 
 		accEmails = append(accEmails, &types.AccountEmail{

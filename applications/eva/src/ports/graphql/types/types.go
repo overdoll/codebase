@@ -98,16 +98,18 @@ type AccountEmailStatusEnum string
 const (
 	AccountEmailStatusEnumConfirmed   AccountEmailStatusEnum = "CONFIRMED"
 	AccountEmailStatusEnumUnconfirmed AccountEmailStatusEnum = "UNCONFIRMED"
+	AccountEmailStatusEnumPrimary     AccountEmailStatusEnum = "PRIMARY"
 )
 
 var AllAccountEmailStatusEnum = []AccountEmailStatusEnum{
 	AccountEmailStatusEnumConfirmed,
 	AccountEmailStatusEnumUnconfirmed,
+	AccountEmailStatusEnumPrimary,
 }
 
 func (e AccountEmailStatusEnum) IsValid() bool {
 	switch e {
-	case AccountEmailStatusEnumConfirmed, AccountEmailStatusEnumUnconfirmed:
+	case AccountEmailStatusEnumConfirmed, AccountEmailStatusEnumUnconfirmed, AccountEmailStatusEnumPrimary:
 		return true
 	}
 	return false

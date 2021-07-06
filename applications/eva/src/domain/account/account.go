@@ -181,6 +181,18 @@ func (u *Account) RolesAsString() []string {
 	return n
 }
 
+func (u *Account) UpdateEmail(emails []*Email, email string) error {
+	for _, current := range emails {
+		if current.Email() == email {
+			if current.IsConfirmed() {
+				return nil
+			}
+		}
+	}
+
+	return ErrEmailNotConfirmed
+}
+
 func validateUsername(username string) error {
 	err := validator.New().Var(username, "required,alphanum")
 

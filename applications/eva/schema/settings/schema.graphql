@@ -1,6 +1,7 @@
 enum AccountEmailStatusEnum {
   CONFIRMED
   UNCONFIRMED
+  PRIMARY
 }
 
 type AccountEmail {
@@ -68,6 +69,11 @@ extend type Mutation {
   Revoke a session for this user
   """
   revokeSession(id: String!): Response!
+
+  """
+  Make account email primary
+  """
+  makeEmailPrimary(email: String!): Response!
 }
 
 extend type Query {
