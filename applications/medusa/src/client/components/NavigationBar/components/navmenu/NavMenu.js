@@ -37,7 +37,7 @@ type Props = {
   }
 }
 
-export default function NavMenu ({ user }: Props): Node {
+export default function NavMenu ({ user, refresh }: Props): Node {
   const [logout, isLoggingOut] = useMutation(logoutGQL)
 
   const [t] = useTranslation('nav')
@@ -49,6 +49,7 @@ export default function NavMenu ({ user }: Props): Node {
       variables: {},
       onCompleted () {
         history.push('/')
+        refresh()
         notify({
           status: 'success',
           title: t('logout.success'),

@@ -70,7 +70,7 @@ const routes: Array<Route> = [
         ),
         // When user is logged in, we just want to redirect them since they're already "logged in"
         middleware: [
-          ({ environment, history, ability }) => {
+          ({ environment, ability, location, history }) => {
             // TODO get rid of user and just check ability of logged in
             const user = getUserFromEnvironment(environment)
 
@@ -109,7 +109,7 @@ const routes: Array<Route> = [
         ),
         // If user is not logged in, they can't post - so we redirect to join page
         middleware: [
-          ({ environment, history, ability }) => {
+          ({ environment, ability, location, history }) => {
             if (ability.can('access', 'modtools')) {
               return true
             }
@@ -132,9 +132,9 @@ const routes: Array<Route> = [
         routes: [
           {
             path: '/mod/queue',
-            component: JSResource('ModRoot', () =>
+            component: JSResource('ModQueueRoot', () =>
               import(
-                /* webpackChunkName: "ModRoot" */ './domain/Mod/Mod'
+                /* webpackChunkName: "ModQueueRoot" */ './domain/Mod/routes/Queue/Queue'
               ),
             module.hot
             ),
@@ -151,9 +151,9 @@ const routes: Array<Route> = [
           },
           {
             path: '/mod/history',
-            component: JSResource('ModRoot', () =>
+            component: JSResource('ModHistoryRoot', () =>
               import(
-                /* webpackChunkName: "ModRoot" */ './domain/Mod/Mod'
+                /* webpackChunkName: "ModHistoryRoot" */ './domain/Mod/routes/History/History'
               ),
             module.hot
             ),
@@ -180,7 +180,7 @@ const routes: Array<Route> = [
         ),
         // If user is not logged in, they can't post - so we redirect to join page
         middleware: [
-          ({ environment, history, ability }) => {
+          ({ environment, ability, history, location }) => {
             const user = getUserFromEnvironment(environment)
 
             if (!user) {
@@ -221,10 +221,10 @@ const routes: Array<Route> = [
         },
         // When user is logged in, we don't want them to be able to redeem any other tokens
         middleware: [
-          ({ environment, history, location }) => {
+          ({ environment, location }) => {
             const user = getUserFromEnvironment(environment)
             const context = {}
-            const mockHistory = createMockHistory({ context, location: location.pathname })
+            const history = createMockHistory({ context, location: location.pathname })
 
             if (user) {
               history.push('/')

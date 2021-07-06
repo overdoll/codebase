@@ -1,15 +1,14 @@
 /**
  * @flow
  */
-import { Redirect } from 'react-router'
 import type { Node } from 'react'
 import { Helmet } from 'react-helmet-async'
 
-export default function Mod (): Node {
+export default function Queue (): Node {
   return (
     <>
-      <Helmet title='mod' />
-
+      <Helmet title='queue' />
+      queue
     </>
   )
 }

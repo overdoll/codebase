@@ -36,7 +36,7 @@ type Props = {
   children: Node
 }
 
-export default function NavigationBar ({ user, children }: Props): Node {
+export default function NavigationBar ({ user, children, refreshUserQuery }: Props): Node {
   const [t] = useTranslation('nav')
 
   const history = useHistory()
@@ -48,7 +48,6 @@ export default function NavigationBar ({ user, children }: Props): Node {
   const ability = useContext(AbilityContext)
 
   const [navigationSettings, navigationFiltered] = useMemo(() => computeCurrentActiveRoutes({
-    history,
     location,
     ability,
     environment
@@ -95,7 +94,7 @@ export default function NavigationBar ({ user, children }: Props): Node {
                 })}
               </HStack>
             </Flex>
-            <RightMenu user={user} t={t} />
+            <RightMenu user={user} t={t} refresh={refreshUserQuery} />
           </Flex>
         </>}
       <Flex direction='row'>
@@ -224,7 +223,7 @@ const LeftMenu = ({ t }) => {
   )
 }
 
-const RightMenu = ({ user, t }) => {
+const RightMenu = ({ user, t, refresh }) => {
   return (
     <Flex m='auto' right={0} mr={1}>
       <Flex
@@ -256,7 +255,7 @@ const RightMenu = ({ user, t }) => {
                 icon={<Icon icon={Login2} fill='gray.300' w='38px' m={1} h='38px' />}
               />
             </Link>}
-          <NavMenu user={user} />
+          <NavMenu user={user} refresh={refresh} />
         </Flex>
       </Flex>
     </Flex>

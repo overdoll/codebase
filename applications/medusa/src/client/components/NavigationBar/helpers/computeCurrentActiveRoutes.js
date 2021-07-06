@@ -3,9 +3,13 @@
  */
 
 import routes from '../../../routes'
+import createMockHistory from '../../../../server/app/render/Domain/createMockHistory'
 
-export default function computeCurrentActiveRoutes ({ history, location, ability, environment }) {
+export default function computeCurrentActiveRoutes ({ location, ability, environment }) {
   const activeRoutes = routes[0].routes
+
+  const context = {}
+  const history = createMockHistory({ context, location: location.pathname })
 
   const isRouteValid = (data, route) => {
     if (Object.prototype.hasOwnProperty.call(route, 'middleware')) {
@@ -28,9 +32,7 @@ export default function computeCurrentActiveRoutes ({ history, location, ability
     for (const route of routes) {
       const nav = {}
 
-      const valid = isRouteValid({ history, location, ability, environment }, route)
-
-      console.log(valid)
+      const valid = isRouteValid({ history, location: history.location, ability, environment }, route)
 
       if (route.navigation?.top && valid) {
         Object.assign(nav, {
