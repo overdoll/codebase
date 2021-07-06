@@ -13,16 +13,17 @@ import (
 )
 
 type Account struct {
-	Id               string   `db:"id"`
-	Username         string   `db:"username"`
-	Email            string   `db:"email"`
-	Roles            []string `db:"roles"`
-	Verified         bool     `db:"verified"`
-	Avatar           string   `db:"avatar"`
-	Locked           bool     `db:"locked"`
-	LockedUntil      int      `db:"locked_until"`
-	LockedReason     string   `db:"locked_reason"`
-	LastUsernameEdit int      `db:"last_username_edit"`
+	Id                 string   `db:"id"`
+	Username           string   `db:"username"`
+	Email              string   `db:"email"`
+	Roles              []string `db:"roles"`
+	Verified           bool     `db:"verified"`
+	Avatar             string   `db:"avatar"`
+	Locked             bool     `db:"locked"`
+	LockedUntil        int      `db:"locked_until"`
+	LockedReason       string   `db:"locked_reason"`
+	LastUsernameEdit   int      `db:"last_username_edit"`
+	MultiFactorEnabled bool     `db:"multi_factor_enabled"`
 }
 
 type AccountEmail struct {
@@ -41,15 +42,16 @@ func NewAccountCassandraRedisRepository(session gocqlx.Session, client *redis.Cl
 
 func marshalUserToDatabase(usr *account.Account) *Account {
 	return &Account{
-		Id:           usr.ID(),
-		Email:        usr.Email(),
-		Username:     usr.Username(),
-		Roles:        usr.RolesAsString(),
-		Avatar:       usr.RawAvatar(),
-		Verified:     usr.Verified(),
-		LockedUntil:  usr.LockedUntil(),
-		Locked:       usr.IsLocked(),
-		LockedReason: usr.LockedReason(),
+		Id:                 usr.ID(),
+		Email:              usr.Email(),
+		Username:           usr.Username(),
+		Roles:              usr.RolesAsString(),
+		Avatar:             usr.RawAvatar(),
+		Verified:           usr.Verified(),
+		LockedUntil:        usr.LockedUntil(),
+		Locked:             usr.IsLocked(),
+		LockedReason:       usr.LockedReason(),
+		MultiFactorEnabled: usr.MultiFactorEnabled(),
 	}
 }
 

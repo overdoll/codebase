@@ -1,15 +1,16 @@
 CREATE TABLE IF NOT EXISTS accounts
 (
-    id                 text,
-    username           text,
-    email              text,
-    roles              list<text>,
-    verified           boolean,
-    avatar             text,
-    locked             boolean,
-    locked_until       int,
-    locked_reason      text,
-    last_username_edit int,
+    id                   text,
+    username             text,
+    email                text,
+    roles                list<text>,
+    verified             boolean,
+    avatar               text,
+    locked               boolean,
+    locked_until         int,
+    locked_reason        text,
+    last_username_edit   int,
+    multi_factor_enabled boolean,
     primary key ( id )
 );
 
@@ -40,4 +41,18 @@ CREATE TABLE IF NOT EXISTS usernames_by_account
     account_id text,
     username   text,
     primary key ( account_id, username )
+);
+
+CREATE TABLE IF NOT EXISTS account_multi_factor_totp
+(
+    account_id text,
+    secret     text,
+    primary key ( account_id )
+);
+
+CREATE TABLE IF NOT EXISTS account_multi_factor_recovery_codes
+(
+    account_id text,
+    code       text,
+    primary key ( account_id, code )
 );

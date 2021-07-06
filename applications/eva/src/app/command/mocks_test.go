@@ -3,8 +3,8 @@ package command_test
 import (
 	"context"
 
-	"overdoll/applications/eva/src/domain/cookie"
 	"overdoll/applications/eva/src/domain/account"
+	"overdoll/applications/eva/src/domain/cookie"
 )
 
 // MOCKS
@@ -48,7 +48,7 @@ func (u userRepoMock) GetAccountById(ctx context.Context, id string) (*account.A
 
 func (u userRepoMock) GetAccountByEmail(ctx context.Context, email string) (*account.Account, error) {
 
-	if u.User == nil || email != u.User.PrimaryEmail() {
+	if u.User == nil || email != u.User.Email() {
 		return nil, account.ErrAccountNotFound
 	}
 

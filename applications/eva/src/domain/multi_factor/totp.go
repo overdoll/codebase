@@ -1,0 +1,104 @@
+package multi_factor
+
+import (
+	"bytes"
+	"encoding/base64"
+	"errors"
+	"image/png"
+	"os"
+	"time"
+
+	"github.com/pquerna/otp"
+	"github.com/pquerna/otp/totp"
+	"overdoll/libraries/crypt"
+)
+
+type TOTP struct {
+	secret string
+}
+
+var (
+	ErrTOTPCodeInvalid   = errors.New("TOTP code not valid")
+	ErrTOTPNotConfigured = errors.New("TOTP not configured")
+)
+
+// OTP will be returned from the DB as encrypted (because the getter returns it as so)
+func UnmarshalTOTPFromDatabase(secret string) *TOTP {
+	return &TOTP{
+		secret: string(crypt.Decrypt([]byte(secret), os.Getenv("APP_KEY"))),
+	}
+}
+
+func (c *TOTP) GenerateCode() (string, error) {
+	key, err := totp.GenerateCode(c.secret, time.Now())
+
+	if err != nil {
+		return "", err
+	}
+
+	return key, nil
+}
+
+func (c *TOTP) ValidateCode(code string) bool {
+	return totp.Validate(code, c.secret)
+}
+
+// Secret - not encrypted
+func (c *TOTP) RawSecret() string {
+	return c.secret
+}
+
+// Should be used when storing in the database
+func (c *TOTP) Secret() string {
+	return string(crypt.Encrypt([]byte(c.secret), os.Getenv("APP_KEY")))
+}
+
+// Image - returns an image URL that can be easily used in HTML as an image SRC (base64 encoded)
+func (c *TOTP) Image() (string, error) {
+
+	key, err := otp.NewKeyFromURL(c.secret)
+
+	if err != nil {
+		return "", err
+	}
+
+	img, err := key.Image(100, 100)
+
+	if err != nil {
+		return "", err
+	}
+
+	var buff bytes.Buffer
+
+	if err := png.Encode(&buff, img); err != nil {
+		return "", err
+	}
+
+	encodedString := base64.StdEncoding.EncodeToString(buff.Bytes())
+
+	return "data:image/png;base64," + encodedString, nil
+}
+
+func NewTOTP(username string) (*TOTP, error) {
+
+	key, _ := totp.Generate(totp.GenerateOpts{
+		Issuer:      "overdoll",
+		AccountName: username,
+	})
+
+	return &TOTP{
+		secret: key.Secret(),
+	}, nil
+}
+
+// should be used when enrolling users in OTP
+func EnrollTOTP(secret, code string) (*TOTP, error) {
+
+	if !totp.Validate(code, secret) {
+		return nil, ErrTOTPCodeInvalid
+	}
+
+	return &TOTP{
+		secret: secret,
+	}, nil
+}

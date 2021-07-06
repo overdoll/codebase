@@ -65,7 +65,7 @@ func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, accountId
 		sessionID := strings.Split(key, ":")
 
 		// we want to encrypt our session key
-		encryptedKey := crypt.Encrypt([]byte(sessionID[1]), os.Getenv("SESSION_SECRET"))
+		encryptedKey := crypt.Encrypt([]byte(sessionID[1]), os.Getenv("APP_KEY"))
 
 		session.UnmarshalSessionFromDatabase(string(encryptedKey), sessionItem.UserAgent, sessionItem.Ip, sessionItem.Created)
 	}
@@ -77,7 +77,7 @@ func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, accountId
 func (r SessionRepository) RevokeSessionById(ctx context.Context, accountId, sessionId string) error {
 
 	// decrypt, since we send it as encrypted
-	key := crypt.Decrypt([]byte(sessionId), os.Getenv("SESSION_SECRET"))
+	key := crypt.Decrypt([]byte(sessionId), os.Getenv("APP_KEY"))
 	// make sure that we delete the session that belongs to this user only
 	_, err := r.client.Del(ctx, SessionPrefix+string(key)+":"+accountId).Result()
 

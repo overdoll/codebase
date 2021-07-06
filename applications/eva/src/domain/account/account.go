@@ -37,6 +37,8 @@ type Account struct {
 	lockedReason LockReason
 
 	lastUsernameEdit int
+
+	multiFactorEnabled bool
 }
 
 var (
@@ -46,7 +48,7 @@ var (
 	ErrAccountNotFound   = errors.New("account not found")
 )
 
-func UnmarshalAccountFromDatabase(id, username, email string, roles []string, verified bool, avatar string, locked bool, lockedUntil int, lockedReason string) *Account {
+func UnmarshalAccountFromDatabase(id, username, email string, roles []string, verified bool, avatar string, locked bool, lockedUntil int, lockedReason string, multiFactorEnabled bool) *Account {
 
 	var newRoles []AccountRole
 
@@ -55,15 +57,16 @@ func UnmarshalAccountFromDatabase(id, username, email string, roles []string, ve
 	}
 
 	return &Account{
-		id:           id,
-		username:     username,
-		email:        email,
-		roles:        newRoles,
-		verified:     verified,
-		avatar:       avatar,
-		lockedUntil:  lockedUntil,
-		locked:       locked,
-		lockedReason: LockReason(lockedReason),
+		id:                 id,
+		username:           username,
+		email:              email,
+		roles:              newRoles,
+		verified:           verified,
+		avatar:             avatar,
+		lockedUntil:        lockedUntil,
+		locked:             locked,
+		lockedReason:       LockReason(lockedReason),
+		multiFactorEnabled: multiFactorEnabled,
 	}
 }
 
@@ -129,6 +132,10 @@ func (u *Account) LockedReason() string {
 
 func (u *Account) IsUnclaimed() bool {
 	return u.unclaimed
+}
+
+func (u *Account) MultiFactorEnabled() bool {
+	return u.multiFactorEnabled
 }
 
 func (u *Account) Lock(duration int, reason string) error {

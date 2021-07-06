@@ -32,12 +32,38 @@ type AccountGeneralSettings {
   usernames: [AccountUsername!]!
 }
 
+type AccountMultiFactorSecuritySettings {
+  """
+  Have recovery codes been generated? Required in order to configure TOTP
+  """
+  recoveryCodesGenerated: Boolean!
+
+  """
+  Is multi factor enabled - can be toggled off if they want to
+  """
+  multiFactorEnabled: Boolean!
+
+  """
+  Privileged users cannot disable MFA (moderators, staff)
+  """
+  canDisableMultiFactor: Boolean!
+
+  """
+  Has TOTP been configured? Recovery codes must be generated before configuring
+  """
+  multiFactorTOTPConfigured: Boolean!
+}
 
 type AccountSecuritySettings {
   """
   Sessions linked to this account
   """
   sessions: [AccountSession!]!
+
+  """
+  Multi factor account settings
+  """
+  multiFactor: AccountMultiFactorSecuritySettings!
 }
 
 type AccountSettings @key(fields: "accountId") {
