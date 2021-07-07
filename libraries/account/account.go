@@ -14,7 +14,7 @@ type Account struct {
 }
 
 func UnmarshalFromProto(proto *eva.Account) *Account {
-	return NewUser(
+	return NewAccount(
 		proto.Id,
 		proto.Username,
 		proto.Avatar,
@@ -31,7 +31,7 @@ func NewUserOnlyIdAndUsername(id, username string) *Account {
 	}
 }
 
-func NewUser(id, username, avatar string, roles []string, verified, locked bool) *Account {
+func NewAccount(id, username, avatar string, roles []string, verified, locked bool) *Account {
 	return &Account{
 		id:       id,
 		username: username,

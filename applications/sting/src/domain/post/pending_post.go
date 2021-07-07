@@ -130,7 +130,7 @@ func UnmarshalPendingPostFromDatabase(id, moderatorId, state string, artist *Art
 		moderatorId: moderatorId,
 		state:       PostPendingState(state),
 		artist:      artist,
-		contributor: account.NewUser(contributorId, contributorUsername, contributorAvatar, nil, false, false),
+		contributor: account.NewAccount(contributorId, contributorUsername, contributorAvatar, nil, false, false),
 		content:     content,
 		characters:  characters,
 		categories:  categories,

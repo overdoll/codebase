@@ -50,7 +50,7 @@ func newFakePost(t *testing.T) *post.Post {
 
 	artist := post.NewArtist(uuid.New().String(), "test")
 
-	usr := account.NewUser(
+	usr := account.NewAccount(
 		uuid.New().String(),
 		"asd",
 		"",

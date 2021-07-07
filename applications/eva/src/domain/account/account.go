@@ -46,6 +46,7 @@ var (
 	ErrEmailNotUnique    = errors.New("email is not unique")
 	ErrEmailCodeInvalid  = errors.New("email confirmation expired or invalid")
 	ErrAccountNotFound   = errors.New("account not found")
+	ErrAccountPrivileged = errors.New("account is privileged")
 )
 
 func UnmarshalAccountFromDatabase(id, username, email string, roles []string, verified bool, avatar string, locked bool, lockedUntil int, lockedReason string, multiFactorEnabled bool) *Account {
@@ -138,6 +139,16 @@ func (u *Account) MultiFactorEnabled() bool {
 	return u.multiFactorEnabled
 }
 
+func (u *Account) ToggleMultiFactor() error {
+
+	if u.multiFactorEnabled && u.IsPrivileged() {
+		return ErrAccountPrivileged
+	}
+
+	u.multiFactorEnabled = !u.multiFactorEnabled
+	return nil
+}
+
 func (u *Account) Lock(duration int, reason string) error {
 	if duration == 0 {
 		u.lockedUntil = 0
@@ -164,6 +175,30 @@ func (u *Account) Unlock() error {
 
 func (u *Account) LastUsernameEdit() int {
 	return u.lastUsernameEdit
+}
+
+func (u *Account) IsPrivileged() bool {
+	return u.IsStaff() || u.IsModerator()
+}
+
+func (u *Account) IsStaff() bool {
+	return u.hasRoles([]string{"staff"})
+}
+
+func (u *Account) IsModerator() bool {
+	return (u.hasRoles([]string{"moderator"}) || u.IsStaff()) && !u.IsLocked()
+}
+
+func (u *Account) hasRoles(roles []string) bool {
+	for _, role := range u.roles {
+		for _, requiredRole := range roles {
+			if string(role) == requiredRole {
+				return true
+			}
+		}
+	}
+
+	return false
 }
 
 func (u *Account) EditUsername(username string) error {

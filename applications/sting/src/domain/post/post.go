@@ -43,7 +43,7 @@ func UnmarshalPostFromDatabase(id string, artist *Artist, contributorId, contrib
 	return &Post{
 		id:          id,
 		artist:      artist,
-		contributor: account.NewUser(contributorId, contributorUsername, contributorAvatar, nil, false, false),
+		contributor: account.NewAccount(contributorId, contributorUsername, contributorAvatar, nil, false, false),
 		content:     content,
 		characters:  characters,
 		categories:  categories,

@@ -86,6 +86,7 @@ func (r AccountRepository) GetAccountById(ctx context.Context, id string) (*acco
 		accountInstance.Locked,
 		accountInstance.LockedUntil,
 		accountInstance.LockedReason,
+		accountInstance.MultiFactorEnabled,
 	), nil
 }
 
@@ -282,6 +283,7 @@ func (r AccountRepository) UpdateAccount(ctx context.Context, id string, updateF
 			"locked",
 			"locked_reason",
 			"avatar",
+			"multi_factor_enabled",
 		).
 		Where(qb.Eq("id")).
 		Query(r.session).

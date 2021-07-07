@@ -18,8 +18,9 @@ type TOTP struct {
 }
 
 var (
-	ErrTOTPCodeInvalid   = errors.New("TOTP code not valid")
-	ErrTOTPNotConfigured = errors.New("TOTP not configured")
+	ErrTOTPCodeInvalid            = errors.New("TOTP code not valid")
+	ErrTOTPNotConfigured          = errors.New("TOTP not configured")
+	ErrRecoveryCodesNotConfigured = errors.New("recovery codes not configured")
 )
 
 // OTP will be returned from the DB as encrypted (because the getter returns it as so)
@@ -79,7 +80,11 @@ func (c *TOTP) Image() (string, error) {
 	return "data:image/png;base64," + encodedString, nil
 }
 
-func NewTOTP(username string) (*TOTP, error) {
+func NewTOTP(recoveryCodes []*RecoveryCode, username string) (*TOTP, error) {
+
+	if len(recoveryCodes) == 0 {
+		return nil, ErrRecoveryCodesNotConfigured
+	}
 
 	key, _ := totp.Generate(totp.GenerateOpts{
 		Issuer:      "overdoll",
@@ -92,7 +97,11 @@ func NewTOTP(username string) (*TOTP, error) {
 }
 
 // should be used when enrolling users in OTP
-func EnrollTOTP(secret, code string) (*TOTP, error) {
+func EnrollTOTP(recoveryCodes []*RecoveryCode, secret, code string) (*TOTP, error) {
+
+	if len(recoveryCodes) == 0 {
+		return nil, ErrRecoveryCodesNotConfigured
+	}
 
 	if !totp.Validate(code, secret) {
 		return nil, ErrTOTPCodeInvalid

@@ -18,7 +18,7 @@ func NewCreateUserHandler(ur account.Repository) CreateAccountHandler {
 }
 
 var (
-	ErrFailedCreateUser = errors.New("failed to create user")
+	ErrFailedCreateAccount = errors.New("failed to create account")
 )
 
 func (h CreateAccountHandler) Handle(ctx context.Context, username, email string) (*account.Account, error) {
@@ -30,8 +30,8 @@ func (h CreateAccountHandler) Handle(ctx context.Context, username, email string
 	}
 
 	if err := h.ur.CreateAccount(ctx, instance); err != nil {
-		zap.S().Errorf("failed to create user: %s", err)
-		return nil, ErrFailedCreateUser
+		zap.S().Errorf("failed to create account: %s", err)
+		return nil, ErrFailedCreateAccount
 	}
 
 	return instance, nil

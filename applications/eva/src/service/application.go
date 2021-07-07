@@ -42,27 +42,33 @@ func createApplication(ctx context.Context) app.Application {
 	cookieRepo := adapters.NewCookieRedisRepository(redis)
 	sessionRepo := adapters.NewSessionRepository(redis)
 	accountRepo := adapters.NewAccountCassandraRedisRepository(session, redis)
+	mfaRepo := adapters.NewMultiFactorCassandraRepository(session)
 
 	return app.Application{
 		Commands: app.Commands{
-			RedeemCookie:            command.NewRedeemCookieHandler(cookieRepo, accountRepo),
-			Register:                command.NewRegisterHandler(cookieRepo, accountRepo),
-			Authentication:          command.NewAuthenticationHandler(cookieRepo, accountRepo),
-			Authenticate:            command.NewAuthenticateHandler(cookieRepo),
-			LockAccount:             command.NewLockUserHandler(accountRepo),
-			CreateAccount:           command.NewCreateUserHandler(accountRepo),
-			UnlockAccount:           command.NewUnlockUserHandler(accountRepo),
-			AddAccountEmail:         command.NewAddAccountEmailHandler(accountRepo),
-			ConfirmAccountEmail:     command.NewConfirmAccountEmailHandler(accountRepo),
-			ModifyAccountUsername:   command.NewModifyAccountUsernameHandler(accountRepo),
-			RevokeAccountSession:    command.NewRevokeAccountSessionHandler(sessionRepo),
-			MakeAccountEmailPrimary: command.NewMakeAccountEmailPrimaryHandler(accountRepo),
+			RedeemCookie:                   command.NewRedeemCookieHandler(cookieRepo, accountRepo),
+			Register:                       command.NewRegisterHandler(cookieRepo, accountRepo),
+			Authentication:                 command.NewAuthenticationHandler(cookieRepo, accountRepo),
+			Authenticate:                   command.NewAuthenticateHandler(cookieRepo),
+			LockAccount:                    command.NewLockUserHandler(accountRepo),
+			CreateAccount:                  command.NewCreateUserHandler(accountRepo),
+			UnlockAccount:                  command.NewUnlockUserHandler(accountRepo),
+			AddAccountEmail:                command.NewAddAccountEmailHandler(accountRepo),
+			ConfirmAccountEmail:            command.NewConfirmAccountEmailHandler(accountRepo),
+			ModifyAccountUsername:          command.NewModifyAccountUsernameHandler(accountRepo),
+			RevokeAccountSession:           command.NewRevokeAccountSessionHandler(sessionRepo),
+			MakeAccountEmailPrimary:        command.NewMakeAccountEmailPrimaryHandler(accountRepo),
+			GenerateAccountRecoveryCodes:   command.NewGenerateAccountRecoveryCodesHandler(mfaRepo),
+			GenerateAccountMultiFactorTOTP: command.NewGenerateAccountMultiFactorTOTP(mfaRepo, accountRepo),
+			EnrollAccountMultiFactorTOTP:   command.NewEnrollAccountMultiFactorTOTPHandler(mfaRepo, accountRepo),
+			ToggleAccountMultiFactor:       command.NewToggleAccountMultiFactorHandler(mfaRepo, accountRepo),
 		},
 		Queries: app.Queries{
-			GetAccount:          query.NewGetAccountHandler(accountRepo),
-			GetAccountEmails:    query.NewGetAccountEmailsHandler(accountRepo),
-			GetAccountUsernames: query.NewGetAccountUsernamesHandler(accountRepo),
-			GetAccountSessions:  query.NewGetAccountSessionsHandler(sessionRepo),
+			GetAccount:              query.NewGetAccountHandler(accountRepo),
+			GetAccountEmails:        query.NewGetAccountEmailsHandler(accountRepo),
+			GetAccountUsernames:     query.NewGetAccountUsernamesHandler(accountRepo),
+			GetAccountSessions:      query.NewGetAccountSessionsHandler(sessionRepo),
+			GetAccountRecoveryCodes: query.NewGetAccountRecoveryCodesHandler(mfaRepo),
 		},
 	}
 }

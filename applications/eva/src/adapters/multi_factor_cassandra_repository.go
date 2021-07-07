@@ -7,7 +7,6 @@ import (
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
-	"overdoll/applications/eva/src/domain/account"
 	"overdoll/applications/eva/src/domain/multi_factor"
 )
 
@@ -30,14 +29,14 @@ func NewMultiFactorCassandraRepository(session gocqlx.Session) MultiFactorCassan
 }
 
 // CreateAccountRecoveryCodes - create recovery codes for the account
-func (r MultiFactorCassandraRepository) CreateAccountRecoveryCodes(ctx context.Context, instance *account.Account, codes []*multi_factor.RecoveryCode) error {
+func (r MultiFactorCassandraRepository) CreateAccountRecoveryCodes(ctx context.Context, accountId string, codes []*multi_factor.RecoveryCode) error {
 
 	// delete all current MFA codes
 	deleteAccountMultiFactorCodes := qb.Delete("account_multi_factor_recovery_codes").
 		Where(qb.Eq("account_id")).
 		Query(r.session).
 		BindStruct(&AccountMultiFactorTOTP{
-			AccountId: instance.ID(),
+			AccountId: accountId,
 		})
 
 	if err := deleteAccountMultiFactorCodes.ExecRelease(); err != nil {
@@ -48,7 +47,7 @@ func (r MultiFactorCassandraRepository) CreateAccountRecoveryCodes(ctx context.C
 
 	for _, code := range codes {
 		mfaCodes = append(mfaCodes, &AccountMultiFactorRecoveryCodes{
-			AccountId: instance.ID(),
+			AccountId: accountId,
 			Code:      code.Code(),
 		})
 	}
@@ -67,7 +66,7 @@ func (r MultiFactorCassandraRepository) CreateAccountRecoveryCodes(ctx context.C
 }
 
 // GetAccountRecoveryCodes - get account recovery codes
-func (r MultiFactorCassandraRepository) GetAccountRecoveryCodes(ctx context.Context, instance *account.Account) ([]*multi_factor.RecoveryCode, error) {
+func (r MultiFactorCassandraRepository) GetAccountRecoveryCodes(ctx context.Context, accountId string) ([]*multi_factor.RecoveryCode, error) {
 
 	var recoveryCodes []*AccountMultiFactorRecoveryCodes
 
@@ -77,7 +76,7 @@ func (r MultiFactorCassandraRepository) GetAccountRecoveryCodes(ctx context.Cont
 		Columns("account_id", "code").
 		Query(r.session).
 		BindStruct(&AccountMultiFactorRecoveryCodes{
-			AccountId: instance.ID(),
+			AccountId: accountId,
 		})
 
 	if err := getAccountMultiFactorRecoveryCodes.Select(&recoveryCodes); err != nil {
@@ -93,14 +92,14 @@ func (r MultiFactorCassandraRepository) GetAccountRecoveryCodes(ctx context.Cont
 	return codes, nil
 }
 
-// RedeemRecoveryCode - redeem recovery code - basically just deletes the recovery code from the database
-func (r MultiFactorCassandraRepository) RedeemRecoveryCode(ctx context.Context, instance *account.Account, recoveryCode *multi_factor.RecoveryCode) error {
+// RedeemAccountRecoveryCode - redeem recovery code - basically just deletes the recovery code from the database
+func (r MultiFactorCassandraRepository) RedeemAccountRecoveryCode(ctx context.Context, accountId string, recoveryCode *multi_factor.RecoveryCode) error {
 
 	deleteAccountMultiFactorCodes := qb.Delete("account_multi_factor_recovery_codes").
 		Where(qb.Eq("account_id"), qb.Eq("code")).
 		Query(r.session).
 		BindStruct(&AccountMultiFactorRecoveryCodes{
-			AccountId: instance.ID(),
+			AccountId: accountId,
 			Code:      recoveryCode.Code(),
 		})
 
@@ -112,7 +111,7 @@ func (r MultiFactorCassandraRepository) RedeemRecoveryCode(ctx context.Context, 
 }
 
 // GetAccountMultiFactorTOTP - get TOTP associated with account
-func (r MultiFactorCassandraRepository) GetAccountMultiFactorTOTP(ctx context.Context, instance *account.Account) (*multi_factor.TOTP, error) {
+func (r MultiFactorCassandraRepository) GetAccountMultiFactorTOTP(ctx context.Context, accountId string) (*multi_factor.TOTP, error) {
 
 	var multiTOTP *AccountMultiFactorTOTP
 
@@ -121,7 +120,7 @@ func (r MultiFactorCassandraRepository) GetAccountMultiFactorTOTP(ctx context.Co
 		Where(qb.Eq("account_id")).
 		Query(r.session).
 		BindStruct(&AccountMultiFactorTOTP{
-			AccountId: instance.ID(),
+			AccountId: accountId,
 		})
 
 	if err := getMultiFactorTOTP.Get(&multiTOTP); err != nil {
@@ -137,13 +136,13 @@ func (r MultiFactorCassandraRepository) GetAccountMultiFactorTOTP(ctx context.Co
 }
 
 // CreateAccountMultiFactorTOTP - create MFA for user
-func (r MultiFactorCassandraRepository) CreateAccountMultiFactorTOTP(ctx context.Context, instance *account.Account, totp *multi_factor.TOTP) error {
+func (r MultiFactorCassandraRepository) CreateAccountMultiFactorTOTP(ctx context.Context, accountId string, totp *multi_factor.TOTP) error {
 
 	createMultiFactorTOTP := qb.Insert("account_multi_factor_totp").
 		Columns("account_id", "secret").
 		Query(r.session).
 		BindStruct(&AccountMultiFactorTOTP{
-			AccountId: instance.ID(),
+			AccountId: accountId,
 			Secret:    totp.Secret(),
 		})
 
@@ -154,14 +153,14 @@ func (r MultiFactorCassandraRepository) CreateAccountMultiFactorTOTP(ctx context
 	return nil
 }
 
-func (r MultiFactorCassandraRepository) UpdateAccountMultiFactorTOTP(ctx context.Context, instance *account.Account, totp *multi_factor.TOTP) error {
+func (r MultiFactorCassandraRepository) UpdateAccountMultiFactorTOTP(ctx context.Context, accountId string, totp *multi_factor.TOTP) error {
 
 	updateMultiFactorTOTP := qb.Update("account_multi_factor_totp").
 		Where(qb.Eq("account_id")).
 		Set("secret").
 		Query(r.session).
 		BindStruct(&AccountMultiFactorTOTP{
-			AccountId: instance.ID(),
+			AccountId: accountId,
 			Secret:    totp.Secret(),
 		})
 
