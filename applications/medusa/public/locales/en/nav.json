@@ -1,6 +1,7 @@
 {
   "title": "overdoll",
   "nav": {
+    "home": "Home",
     "mod": "Moderation",
     "upload": "Upload",
     "profile": "Profile",

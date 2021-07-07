@@ -5,19 +5,11 @@ export default function defineAbility (user) {
 
   const roles = user?.roles
 
-  can('access', 'Home')
-
-  can('read', 'Upload')
-
-  can('read', 'Profile')
-
   if (user) {
-    can('access', 'Profile')
-
-    can('manage', 'Upload')
+    can('manage', 'account')
 
     if (roles.includes('moderator')) {
-      can('access', 'modtools')
+      can(['read', 'manage'], 'pendingPosts')
     }
 
     if (roles.includes('staff')) {

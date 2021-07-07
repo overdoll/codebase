@@ -126,7 +126,6 @@ export default function NavigationBar ({ user, children, refreshUserQuery }: Pro
                       />
                     </Flex>
                     <Box
-                      pos='sticky'
                       bg='gray.800'
                       w='260px'
                       h='calc(100vh - 54px)'
@@ -136,7 +135,7 @@ export default function NavigationBar ({ user, children, refreshUserQuery }: Pro
                       pt={4}
                       overflowY='auto'
                       flexShrink={0}
-                      position={{ base: 'absolute', md: 'sticky' }}
+                      position={{ base: 'absolute', md: 'sticky', lg: 'absolute' }}
                       zIndex='sidebar'
                       display={{
                         base: isOpen ? 'block' : 'none',

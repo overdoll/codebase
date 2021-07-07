@@ -100,10 +100,10 @@ const routes: Array<Route> = [
         }
       },
       {
-        path: '/mod',
+        path: '/m',
         component: JSResource('ModRoot', () =>
           import(
-            /* webpackChunkName: "ModRoot" */ './domain/Mod/Mod'
+            /* webpackChunkName: "ModRoot" */ './domain/Moderation/Moderation'
           ),
         module.hot
         ),
@@ -131,10 +131,10 @@ const routes: Array<Route> = [
         },
         routes: [
           {
-            path: '/mod/queue',
+            path: '/m/queue',
             component: JSResource('ModQueueRoot', () =>
               import(
-                /* webpackChunkName: "ModQueueRoot" */ './domain/Mod/routes/Queue/Queue'
+                /* webpackChunkName: "ModQueueRoot" */ './domain/Moderation/routes/Queue/Queue'
               ),
             module.hot
             ),
@@ -150,10 +150,10 @@ const routes: Array<Route> = [
             }
           },
           {
-            path: '/mod/history',
+            path: '/m/history',
             component: JSResource('ModHistoryRoot', () =>
               import(
-                /* webpackChunkName: "ModHistoryRoot" */ './domain/Mod/routes/History/History'
+                /* webpackChunkName: "ModHistoryRoot" */ './domain/Moderation/routes/History/History'
               ),
             module.hot
             ),

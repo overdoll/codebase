@@ -78,6 +78,8 @@ export default function RouterRenderer (): Node {
 
   const firstItem = reversedItems[0]
 
+  console.log(reversedItems)
+
   // the bottom-most component is special since it will have no children
   // (though we could probably just pass null children to it)
   let routeComponent = (
