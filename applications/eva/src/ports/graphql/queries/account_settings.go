@@ -7,6 +7,7 @@ import (
 	"overdoll/libraries/passport"
 )
 
+// TODO: only load if fields are requested?
 func (r *QueryResolver) AccountSettings(ctx context.Context) (*types.AccountSettings, error) {
 	pass := passport.FromContext(ctx)
 

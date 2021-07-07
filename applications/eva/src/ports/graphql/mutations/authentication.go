@@ -56,7 +56,7 @@ func (r *MutationResolver) Authenticate(ctx context.Context, data *types.Authent
 	err = cookies.SetCookie(ctx, &http.Cookie{
 		Name:    cookie.OTPKey,
 		Value:   instance.Cookie(),
-		Expires: time.Now().Add(5 * time.Minute),
+		Expires: time.Now().Add(instance.Expiration()),
 	})
 
 	if err != nil {
