@@ -141,7 +141,7 @@ func (u *Account) MultiFactorEnabled() bool {
 
 func (u *Account) ToggleMultiFactor() error {
 
-	if u.multiFactorEnabled && u.IsPrivileged() {
+	if u.multiFactorEnabled && !u.CanDisableMultiFactor() {
 		return ErrAccountPrivileged
 	}
 
@@ -177,7 +177,11 @@ func (u *Account) LastUsernameEdit() int {
 	return u.lastUsernameEdit
 }
 
-func (u *Account) IsPrivileged() bool {
+func (u *Account) CanDisableMultiFactor() bool {
+	return !u.isPrivileged()
+}
+
+func (u *Account) isPrivileged() bool {
 	return u.IsStaff() || u.IsModerator()
 }
 

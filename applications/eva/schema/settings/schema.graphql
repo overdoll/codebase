@@ -20,6 +20,19 @@ type AccountUsername {
   username: String!
 }
 
+type AccountMultiFactorRecoveryCode {
+  code: String!
+}
+
+type AccountMultiFactorTOTP {
+  secret: String!
+
+  """
+  Always html image compatible. Just set SRC tag to this and it will work!
+  """
+  imageSrc: String!
+}
+
 type AccountGeneralSettings {
   """
   Emails for account (multiple emails per account)
@@ -100,6 +113,35 @@ extend type Mutation {
   Make account email primary
   """
   makeEmailPrimary(email: String!): Response!
+
+  """
+  Generates a new set of recovery codes. The previous set (whatever it was) will be deleted!
+  """
+  generateAccountMultiFactorRecoveryCodes: [AccountMultiFactorRecoveryCode!]!
+
+  """
+  Get MFA recovery codes
+  """
+  getAccountMultiFactorRecoveryCodes: [AccountMultiFactorRecoveryCode!]!
+
+  """
+  Generate a TOTP key for the current user. Recovery codes must be generated first.
+  """
+  generateAccountMultiFactorTOTP: AccountMultiFactorTOTP!
+
+  """
+  Enroll into TOTP. Code must be passed from previously-generated TOTP to validate that they have set it up
+  """
+  enrollAccountMultiFactorTOTP(code: String!): Response!
+
+  """
+  Toggle Multi-Factor for the user (enable or disable)
+
+  Privileged users cannot disable
+
+  If it's disabled, all MFA settings will be removed and it will need to be set up again next time
+  """
+  toggleMultiFactor: Response!
 }
 
 extend type Query {

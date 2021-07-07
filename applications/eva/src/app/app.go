@@ -30,9 +30,10 @@ type Commands struct {
 }
 
 type Queries struct {
-	GetAccount              query.GetAccountHandler
-	GetAccountEmails        query.GetAccountEmailsHandler
-	GetAccountUsernames     query.GetAccountUsernamesHandler
-	GetAccountSessions      query.GetAccountSessionsHandler
-	GetAccountRecoveryCodes query.GetAccountRecoveryCodesHandler
+	GetAccount                      query.GetAccountHandler
+	GetAccountEmails                query.GetAccountEmailsHandler
+	GetAccountUsernames             query.GetAccountUsernamesHandler
+	GetAccountSessions              query.GetAccountSessionsHandler
+	GetAccountRecoveryCodes         query.GetAccountRecoveryCodesHandler
+	IsAccountMultiFactorTOTPEnabled query.IsAccountTOTPMultiFactorEnabledHandler
 }

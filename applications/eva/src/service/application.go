@@ -64,11 +64,12 @@ func createApplication(ctx context.Context) app.Application {
 			ToggleAccountMultiFactor:       command.NewToggleAccountMultiFactorHandler(mfaRepo, accountRepo),
 		},
 		Queries: app.Queries{
-			GetAccount:              query.NewGetAccountHandler(accountRepo),
-			GetAccountEmails:        query.NewGetAccountEmailsHandler(accountRepo),
-			GetAccountUsernames:     query.NewGetAccountUsernamesHandler(accountRepo),
-			GetAccountSessions:      query.NewGetAccountSessionsHandler(sessionRepo),
-			GetAccountRecoveryCodes: query.NewGetAccountRecoveryCodesHandler(mfaRepo),
+			GetAccount:                      query.NewGetAccountHandler(accountRepo),
+			GetAccountEmails:                query.NewGetAccountEmailsHandler(accountRepo),
+			GetAccountUsernames:             query.NewGetAccountUsernamesHandler(accountRepo),
+			GetAccountSessions:              query.NewGetAccountSessionsHandler(sessionRepo),
+			GetAccountRecoveryCodes:         query.NewGetAccountRecoveryCodesHandler(mfaRepo),
+			IsAccountMultiFactorTOTPEnabled: query.NewIsAccountTOTPMultiFactorEnabledHandler(mfaRepo),
 		},
 	}
 }

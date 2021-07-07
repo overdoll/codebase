@@ -25,9 +25,32 @@ type AccountLock struct {
 	Reason  string `json:"reason"`
 }
 
+type AccountMultiFactorRecoveryCode struct {
+	Code string `json:"code"`
+}
+
+type AccountMultiFactorSecuritySettings struct {
+	// Have recovery codes been generated? Required in order to configure TOTP
+	RecoveryCodesGenerated bool `json:"recoveryCodesGenerated"`
+	// Is multi factor enabled - can be toggled off if they want to
+	MultiFactorEnabled bool `json:"multiFactorEnabled"`
+	// Privileged users cannot disable MFA (moderators, staff)
+	CanDisableMultiFactor bool `json:"canDisableMultiFactor"`
+	// Has TOTP been configured? Recovery codes must be generated before configuring
+	MultiFactorTOTPConfigured bool `json:"multiFactorTOTPConfigured"`
+}
+
+type AccountMultiFactorTotp struct {
+	Secret string `json:"secret"`
+	// Always html image compatible. Just set SRC tag to this and it will work!
+	ImageSrc string `json:"imageSrc"`
+}
+
 type AccountSecuritySettings struct {
 	// Sessions linked to this account
 	Sessions []*AccountSession `json:"sessions"`
+	// Multi factor account settings
+	MultiFactor *AccountMultiFactorSecuritySettings `json:"multiFactor"`
 }
 
 type AccountSession struct {

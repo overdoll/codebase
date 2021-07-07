@@ -17,6 +17,10 @@ type TOTP struct {
 	secret string
 }
 
+const (
+	TOTPCookieKey = "enroll-totp"
+)
+
 var (
 	ErrTOTPCodeInvalid            = errors.New("TOTP code not valid")
 	ErrTOTPNotConfigured          = errors.New("TOTP not configured")

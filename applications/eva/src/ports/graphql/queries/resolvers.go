@@ -169,6 +169,12 @@ func (r *QueryResolver) AccountSettings(ctx context.Context) (*types.AccountSett
 		return nil, passport.ErrNotAuthenticated
 	}
 
+	acc, err := r.App.Queries.GetAccount.Handle(ctx, pass.AccountID())
+
+	if err != nil {
+		return nil, err
+	}
+
 	emails, err := r.App.Queries.GetAccountEmails.Handle(ctx, pass.AccountID())
 
 	if err != nil {
@@ -201,6 +207,10 @@ func (r *QueryResolver) AccountSettings(ctx context.Context) (*types.AccountSett
 
 	usernames, err := r.App.Queries.GetAccountUsernames.Handle(ctx, pass.AccountID())
 
+	if err != nil {
+		return nil, err
+	}
+
 	var accUsernames []*types.AccountUsername
 
 	for _, username := range usernames {
@@ -210,6 +220,10 @@ func (r *QueryResolver) AccountSettings(ctx context.Context) (*types.AccountSett
 	}
 
 	sessions, err := r.App.Queries.GetAccountSessions.Handle(ctx, pass.AccountID())
+
+	if err != nil {
+		return nil, err
+	}
 
 	var accSessions []*types.AccountSession
 
@@ -222,10 +236,30 @@ func (r *QueryResolver) AccountSettings(ctx context.Context) (*types.AccountSett
 		})
 	}
 
+	codes, err := r.App.Queries.GetAccountRecoveryCodes.Handle(ctx, pass.AccountID())
+
+	if err != nil {
+		return nil, err
+	}
+
+	totpEnabled, err := r.App.Queries.IsAccountMultiFactorTOTPEnabled.Handle(ctx, pass.AccountID())
+
+	if err != nil {
+		return nil, err
+	}
+
 	return &types.AccountSettings{
 		AccountID: pass.AccountID(),
 		General:   &types.AccountGeneralSettings{Emails: accEmails, Usernames: accUsernames},
-		Security:  &types.AccountSecuritySettings{Sessions: accSessions},
+		Security: &types.AccountSecuritySettings{
+			Sessions: accSessions,
+			MultiFactor: &types.AccountMultiFactorSecuritySettings{
+				RecoveryCodesGenerated:    len(codes) > 0,
+				MultiFactorEnabled:        acc.MultiFactorEnabled(),
+				CanDisableMultiFactor:     acc.CanDisableMultiFactor(),
+				MultiFactorTOTPConfigured: totpEnabled,
+			},
+		},
 	}, nil
 }
 

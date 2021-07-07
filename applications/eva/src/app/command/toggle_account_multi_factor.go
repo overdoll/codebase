@@ -19,7 +19,7 @@ func NewToggleAccountMultiFactorHandler(mr multi_factor.Repository, ar account.R
 }
 
 var (
-	ErrFailedToggleAccountMultiFactor            = errors.New("failed to toggle multi factor")
+	ErrFailedToggleAccountMultiFactor = errors.New("failed to toggle multi factor")
 )
 
 func (h ToggleAccountMultiFactorHandler) Handle(ctx context.Context, accountId string) error {
@@ -38,8 +38,13 @@ func (h ToggleAccountMultiFactorHandler) Handle(ctx context.Context, accountId s
 				return ErrFailedToggleAccountMultiFactor
 			}
 
-
 			return a.ToggleMultiFactor()
+		}
+
+		// if user toggled "off", delete TOTP settings
+		if err := h.mr.DeleteAccountMultiFactorTOTP(ctx, accountId); err != nil {
+			zap.S().Errorf("failed to delete totp: %s", err)
+			return ErrFailedToggleAccountMultiFactor
 		}
 
 		return a.ToggleMultiFactor()

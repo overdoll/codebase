@@ -170,3 +170,19 @@ func (r MultiFactorCassandraRepository) UpdateAccountMultiFactorTOTP(ctx context
 
 	return nil
 }
+
+func (r MultiFactorCassandraRepository) DeleteAccountMultiFactorTOTP(ctx context.Context, accountId string) error {
+
+	deleteMultiFactorTOTP := qb.Delete("account_multi_factor_totp").
+		Where(qb.Eq("account_id")).
+		Query(r.session).
+		BindStruct(&AccountMultiFactorTOTP{
+			AccountId: accountId,
+		})
+
+	if err := deleteMultiFactorTOTP.ExecRelease(); err != nil {
+		return fmt.Errorf("delete() failed: '%s", err)
+	}
+
+	return nil
+}
