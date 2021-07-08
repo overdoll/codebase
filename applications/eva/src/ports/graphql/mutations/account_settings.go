@@ -59,7 +59,7 @@ func (r *MutationResolver) ModifyAccountUsername(ctx context.Context, username s
 	}, nil
 }
 
-func (r *MutationResolver) RevokeSession(ctx context.Context, id string) (*types.Response, error) {
+func (r *MutationResolver) RevokeAccountSession(ctx context.Context, id string) (*types.Response, error) {
 	pass := passport.FromContext(ctx)
 
 	if !pass.IsAuthenticated() {
@@ -78,7 +78,7 @@ func (r *MutationResolver) RevokeSession(ctx context.Context, id string) (*types
 	}, nil
 }
 
-func (r *MutationResolver) MakeEmailPrimary(ctx context.Context, email string) (*types.Response, error) {
+func (r *MutationResolver) MakeAccountEmailPrimary(ctx context.Context, email string) (*types.Response, error) {
 	pass := passport.FromContext(ctx)
 
 	if !pass.IsAuthenticated() {

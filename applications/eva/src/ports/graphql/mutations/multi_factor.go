@@ -36,28 +36,6 @@ func (r *MutationResolver) GenerateAccountMultiFactorRecoveryCodes(ctx context.C
 	return recoveryCodes, nil
 }
 
-func (r *MutationResolver) GetAccountMultiFactorRecoveryCodes(ctx context.Context) ([]*types.AccountMultiFactorRecoveryCode, error) {
-	pass := passport.FromContext(ctx)
-
-	if !pass.IsAuthenticated() {
-		return nil, passport.ErrNotAuthenticated
-	}
-
-	codes, err := r.App.Queries.GetAccountRecoveryCodes.Handle(ctx, pass.AccountID())
-
-	if err != nil {
-		return nil, err
-	}
-
-	var recoveryCodes []*types.AccountMultiFactorRecoveryCode
-
-	for _, code := range codes {
-		recoveryCodes = append(recoveryCodes, &types.AccountMultiFactorRecoveryCode{Code: code.RawCode()})
-	}
-
-	return recoveryCodes, nil
-}
-
 func (r *MutationResolver) GenerateAccountMultiFactorTotp(ctx context.Context) (*types.AccountMultiFactorTotp, error) {
 	pass := passport.FromContext(ctx)
 
@@ -138,7 +116,7 @@ func (r *MutationResolver) EnrollAccountMultiFactorTotp(ctx context.Context, cod
 	}, nil
 }
 
-func (r *MutationResolver) ToggleMultiFactor(ctx context.Context) (*types.Response, error) {
+func (r *MutationResolver) ToggleAccountMultiFactor(ctx context.Context) (*types.Response, error) {
 	pass := passport.FromContext(ctx)
 
 	if !pass.IsAuthenticated() {

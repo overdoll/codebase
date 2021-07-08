@@ -9,8 +9,10 @@ import (
 	"os"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/bxcodec/faker/v3"
+	"github.com/pquerna/otp/totp"
 	"github.com/shurcooL/graphql"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
@@ -63,12 +65,40 @@ type ConfirmAccountEmail struct {
 	ConfirmAccountEmail types.Response `graphql:"confirmAccountEmail(id: $id)"`
 }
 
-type MakeEmailPrimary struct {
-	MakeEmailPrimary types.Response `graphql:"makeEmailPrimary(email: $email)"`
+type MakeAccountEmailPrimary struct {
+	MakeAccountEmailPrimary types.Response `graphql:"makeAccountEmailPrimary(email: $email)"`
 }
 
 type ModifyAccountUsername struct {
 	ModifyAccountUsername types.Response `graphql:"modifyAccountUsername(username: $username)"`
+}
+
+type GenerateAccountRecoveryCodes struct {
+	GenerateAccountRecoveryCodes []types.AccountMultiFactorRecoveryCode `graphql:"modifyAccountUsername(username: $username)"`
+}
+
+type AccountMultiFactorRecoveryCodes struct {
+	AccountMultiFactorRecoveryCodes []types.AccountMultiFactorRecoveryCode `graphql:"accountMultiFactorRecoveryCodes()"`
+}
+
+type GenerateAccountMultiFactorTOTP struct {
+	GenerateAccountMultiFactorTOTP types.AccountMultiFactorTotp `graphql:"generateAccountMultiFactorTOTP()"`
+}
+
+type EnrollAccountMultiFactorTOTP struct {
+	EnrollAccountMultiFactorTOTP types.Response `graphql:"enrollAccountMultiFactorTOTP(code: $code)"`
+}
+
+type ToggleAccountMultiFactor struct {
+	ToggleAccountMultiFactor types.Response `graphql:"toggleAccountMultiFactor()"`
+}
+
+type AuthenticateTOTP struct {
+	AuthenticateTOTP types.Response `graphql:"authenticateTOTP(code: $code)"`
+}
+
+type AuthenticateRecoveryCode struct {
+	AuthenticateRecoveryCode types.Response `graphql:"authenticateRecoveryCode(code: $code)"`
 }
 
 type AccountSettings struct {
@@ -257,7 +287,7 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 	t.Parallel()
 
 	// use passport with user
-	client, _, _ := getHttpClient(t, passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	client, _, _ := getHttpClient(t, passport.FreshPassportWithUser("1pcKibRoqTAUgmOiNpGLIrztM9R"))
 
 	fake := TestUser{}
 
@@ -318,7 +348,7 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 
 	require.True(t, foundConfirmedEmail)
 
-	var makeEmailPrimary MakeEmailPrimary
+	var makeEmailPrimary MakeAccountEmailPrimary
 
 	// mark email as primary
 	err = client.Mutate(context.Background(), &makeEmailPrimary, map[string]interface{}{
@@ -326,7 +356,7 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 	})
 
 	require.NoError(t, err)
-	require.True(t, makeEmailPrimary.MakeEmailPrimary.Ok)
+	require.True(t, makeEmailPrimary.MakeAccountEmailPrimary.Ok)
 
 	foundPrimaryEmail := false
 
@@ -338,6 +368,162 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 	}
 
 	require.True(t, foundPrimaryEmail)
+}
+
+// TestAccountLogin_setup_multi_factor_and_login - fully test the MFA flow
+// first we generate recovery codes, check the setting and make sure that our recovery codes are visible
+// then we enroll into multi-factor authentication, and ensure that MFA is enabled in the settings
+// finally, we will attempt a login with MFA TOTP and also attempt a login with one of the recovery codes
+// last, we will disable MFA and login without MFA
+func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
+	t.Parallel()
+
+	// use passport with user
+	client, _, _ := getHttpClient(t, passport.FreshPassportWithUser("1q7MJ5IyRTV0X4J27F3m5wGD5mj"))
+
+	var generateAccountRecoveryCodes GenerateAccountRecoveryCodes
+
+	// generate some recovery codes
+	err := client.Mutate(context.Background(), &generateAccountRecoveryCodes, nil)
+	require.NoError(t, err)
+
+	// make sure recovery codes are at least greater
+	require.Greater(t, len(generateAccountRecoveryCodes.GenerateAccountRecoveryCodes), 0)
+
+	// look up to make sure recovery code generation is true
+	settings := qAccountSettings(t, client)
+
+	require.True(t, settings.AccountSettings.Security.MultiFactor.RecoveryCodesGenerated)
+
+	var accountMultiFactorRecoveryCodes AccountMultiFactorRecoveryCodes
+
+	// get recovery codes
+	err = client.Query(context.Background(), &accountMultiFactorRecoveryCodes, nil)
+	require.NoError(t, err)
+
+	// ensure recovery code set is the same as the one we generated
+	for _, code := range accountMultiFactorRecoveryCodes.AccountMultiFactorRecoveryCodes {
+
+		foundCode := false
+
+		// check for code in set
+		for _, codeTarget := range generateAccountRecoveryCodes.GenerateAccountRecoveryCodes {
+			if codeTarget.Code == code.Code {
+				foundCode = true
+			}
+		}
+
+		require.True(t, foundCode)
+	}
+
+	var generateAccountMultiFactorTOTP GenerateAccountMultiFactorTOTP
+
+	// generate TOTP secret
+	err = client.Mutate(context.Background(), &generateAccountMultiFactorTOTP, nil)
+	require.NoError(t, err)
+
+	require.NotEmpty(t, generateAccountMultiFactorTOTP.GenerateAccountMultiFactorTOTP.ImageSrc)
+
+	// save for later (logging in)
+	totpSecret := generateAccountMultiFactorTOTP.GenerateAccountMultiFactorTOTP.Secret
+
+	// generate a TOTP code (usually, this would happen from a user's authenticator app or something else that does TOTP
+	// so we use a library here to do exactly that)
+	otp, err := totp.GenerateCode(totpSecret, time.Now())
+	require.NoError(t, err)
+
+	var enrollAccountMultiFactorTOTP EnrollAccountMultiFactorTOTP
+
+	// submit the TOTP code so MFA can be setup correctly
+	err = client.Mutate(context.Background(), &enrollAccountMultiFactorTOTP, map[string]interface{}{
+		"code": otp,
+	})
+
+	require.NoError(t, err)
+	require.True(t, enrollAccountMultiFactorTOTP.EnrollAccountMultiFactorTOTP.Ok)
+
+	settings = qAccountSettings(t, client)
+
+	// look up settings and ensure MFA is now enabled
+	require.True(t, settings.AccountSettings.Security.MultiFactor.MultiFactorEnabled)
+	// totp should be configured (since this is what we set up)
+	require.True(t, settings.AccountSettings.Security.MultiFactor.MultiFactorTOTPConfigured)
+
+	// log in with TOTP
+	client, httpUser, pass := getHttpClient(t, passport.FreshPassport())
+
+	_ = mAuthenticate(t, client, "poisonminion_test@overdoll.com")
+	otpCookie := getOTPCookieFromJar(t, httpUser.Jar)
+	redeemCookie := qRedeemCookie(t, client, otpCookie.Value)
+
+	assert.NotNil(t, redeemCookie.RedeemCookie.MultiFactor)
+	// when we try to login, TOTP should be in here to tell the user that they need to authenticate with MFA
+	assert.Contains(t, redeemCookie.RedeemCookie.MultiFactor, types.MultiFactorTypeEnumTotp)
+
+	// generate the OTP code for authentication
+	otp, err = totp.GenerateCode(totpSecret, time.Now())
+	require.NoError(t, err)
+
+	var authenticateTOTP AuthenticateTOTP
+	err = client.Mutate(context.Background(), &authenticateTOTP, map[string]interface{}{
+		"code": otp,
+	})
+
+	modified := pass.GetPassport()
+
+	// ensure user is authenticated
+	assert.Equal(t, true, modified.IsAuthenticated())
+	assert.Equal(t, "1q7MJ5IyRTV0X4J27F3m5wGD5mj", modified.AccountID())
+
+	// log in with a Recovery Code
+	client, httpUser, pass = getHttpClient(t, passport.FreshPassport())
+
+	_ = mAuthenticate(t, client, "0eclipse_test@overdoll.com")
+	otpCookie = getOTPCookieFromJar(t, httpUser.Jar)
+	redeemCookie = qRedeemCookie(t, client, otpCookie.Value)
+
+	var authenticateRecoveryCode AuthenticateRecoveryCode
+	err = client.Mutate(context.Background(), &authenticateRecoveryCode, map[string]interface{}{
+		// earlier we got a list of recovery codes for this account
+		// we are going to go in and grab the first one and use it
+		"code": accountMultiFactorRecoveryCodes.AccountMultiFactorRecoveryCodes[0].Code,
+	})
+
+	modified = pass.GetPassport()
+
+	// ensure user is now authenticated
+	assert.Equal(t, true, modified.IsAuthenticated())
+	assert.Equal(t, "1q7MJ5IyRTV0X4J27F3m5wGD5mj", modified.AccountID())
+
+	// go in and disable MFA
+	var toggleAccountMultiFactor ToggleAccountMultiFactor
+	err = client.Mutate(context.Background(), &toggleAccountMultiFactor, nil)
+	require.NoError(t, err)
+
+	settings = qAccountSettings(t, client)
+
+	// look up settings and ensure MFA is now disabled
+	require.False(t, settings.AccountSettings.Security.MultiFactor.MultiFactorEnabled)
+	// totp should also be no longer configured (since turning off MFA will remove all multi factor configuration)
+	require.False(t, settings.AccountSettings.Security.MultiFactor.MultiFactorTOTPConfigured)
+
+	// attempt one last login and ensure it doesn't ask for a MFA code
+	client, httpUser, pass = getHttpClient(t, passport.FreshPassport())
+
+	authenticate := mAuthenticate(t, client, "0eclipse_test@overdoll.com")
+
+	otpCookie = getOTPCookieFromJar(t, httpUser.Jar)
+
+	assert.Equal(t, authenticate.Authenticate, true)
+
+	redeemCookie = qRedeemCookie(t, client, otpCookie.Value)
+
+	assert.Equal(t, true, redeemCookie.RedeemCookie.Registered)
+
+	modified = pass.GetPassport()
+
+	assert.Equal(t, true, modified.IsAuthenticated())
+	assert.Equal(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6", modified.AccountID())
 }
 
 // TestRedeemCookie_invalid - test by redeeming an invalid cookie

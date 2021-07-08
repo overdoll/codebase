@@ -128,23 +128,23 @@ type ComplexityRoot struct {
 		EnrollAccountMultiFactorTotp            func(childComplexity int, code string) int
 		GenerateAccountMultiFactorRecoveryCodes func(childComplexity int) int
 		GenerateAccountMultiFactorTotp          func(childComplexity int) int
-		GetAccountMultiFactorRecoveryCodes      func(childComplexity int) int
 		Logout                                  func(childComplexity int) int
-		MakeEmailPrimary                        func(childComplexity int, email string) int
+		MakeAccountEmailPrimary                 func(childComplexity int, email string) int
 		ModifyAccountUsername                   func(childComplexity int, username string) int
 		Register                                func(childComplexity int, data *types.RegisterInput) int
-		RevokeSession                           func(childComplexity int, id string) int
-		ToggleMultiFactor                       func(childComplexity int) int
+		RevokeAccountSession                    func(childComplexity int, id string) int
+		ToggleAccountMultiFactor                func(childComplexity int) int
 		UnlockAccount                           func(childComplexity int) int
 	}
 
 	Query struct {
-		AccountSettings     func(childComplexity int) int
-		Authentication      func(childComplexity int) int
-		ConfirmAccountEmail func(childComplexity int, id string) int
-		RedeemCookie        func(childComplexity int, cookie string) int
-		__resolve__service  func(childComplexity int) int
-		__resolve_entities  func(childComplexity int, representations []map[string]interface{}) int
+		AccountMultiFactorRecoveryCodes func(childComplexity int) int
+		AccountSettings                 func(childComplexity int) int
+		Authentication                  func(childComplexity int) int
+		ConfirmAccountEmail             func(childComplexity int, id string) int
+		RedeemCookie                    func(childComplexity int, cookie string) int
+		__resolve__service              func(childComplexity int) int
+		__resolve_entities              func(childComplexity int, representations []map[string]interface{}) int
 	}
 
 	Response struct {
@@ -184,19 +184,19 @@ type MutationResolver interface {
 	AuthenticateRecoveryCode(ctx context.Context, code string) (*types.Response, error)
 	AddAccountEmail(ctx context.Context, email string) (*types.Response, error)
 	ModifyAccountUsername(ctx context.Context, username string) (*types.Response, error)
-	RevokeSession(ctx context.Context, id string) (*types.Response, error)
-	MakeEmailPrimary(ctx context.Context, email string) (*types.Response, error)
+	RevokeAccountSession(ctx context.Context, id string) (*types.Response, error)
+	MakeAccountEmailPrimary(ctx context.Context, email string) (*types.Response, error)
 	GenerateAccountMultiFactorRecoveryCodes(ctx context.Context) ([]*types.AccountMultiFactorRecoveryCode, error)
-	GetAccountMultiFactorRecoveryCodes(ctx context.Context) ([]*types.AccountMultiFactorRecoveryCode, error)
 	GenerateAccountMultiFactorTotp(ctx context.Context) (*types.AccountMultiFactorTotp, error)
 	EnrollAccountMultiFactorTotp(ctx context.Context, code string) (*types.Response, error)
-	ToggleMultiFactor(ctx context.Context) (*types.Response, error)
+	ToggleAccountMultiFactor(ctx context.Context) (*types.Response, error)
 }
 type QueryResolver interface {
 	Authentication(ctx context.Context) (*types.Authentication, error)
 	RedeemCookie(ctx context.Context, cookie string) (*types.Cookie, error)
 	AccountSettings(ctx context.Context) (*types.AccountSettings, error)
 	ConfirmAccountEmail(ctx context.Context, id string) (*types.Response, error)
+	AccountMultiFactorRecoveryCodes(ctx context.Context) ([]*types.AccountMultiFactorRecoveryCode, error)
 }
 
 type executableSchema struct {
@@ -543,13 +543,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.GenerateAccountMultiFactorTotp(childComplexity), true
 
-	case "Mutation.getAccountMultiFactorRecoveryCodes":
-		if e.complexity.Mutation.GetAccountMultiFactorRecoveryCodes == nil {
-			break
-		}
-
-		return e.complexity.Mutation.GetAccountMultiFactorRecoveryCodes(childComplexity), true
-
 	case "Mutation.logout":
 		if e.complexity.Mutation.Logout == nil {
 			break
@@ -557,17 +550,17 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.Logout(childComplexity), true
 
-	case "Mutation.makeEmailPrimary":
-		if e.complexity.Mutation.MakeEmailPrimary == nil {
+	case "Mutation.makeAccountEmailPrimary":
+		if e.complexity.Mutation.MakeAccountEmailPrimary == nil {
 			break
 		}
 
-		args, err := ec.field_Mutation_makeEmailPrimary_args(context.TODO(), rawArgs)
+		args, err := ec.field_Mutation_makeAccountEmailPrimary_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Mutation.MakeEmailPrimary(childComplexity, args["email"].(string)), true
+		return e.complexity.Mutation.MakeAccountEmailPrimary(childComplexity, args["email"].(string)), true
 
 	case "Mutation.modifyAccountUsername":
 		if e.complexity.Mutation.ModifyAccountUsername == nil {
@@ -593,24 +586,24 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.Register(childComplexity, args["data"].(*types.RegisterInput)), true
 
-	case "Mutation.revokeSession":
-		if e.complexity.Mutation.RevokeSession == nil {
+	case "Mutation.revokeAccountSession":
+		if e.complexity.Mutation.RevokeAccountSession == nil {
 			break
 		}
 
-		args, err := ec.field_Mutation_revokeSession_args(context.TODO(), rawArgs)
+		args, err := ec.field_Mutation_revokeAccountSession_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Mutation.RevokeSession(childComplexity, args["id"].(string)), true
+		return e.complexity.Mutation.RevokeAccountSession(childComplexity, args["id"].(string)), true
 
-	case "Mutation.toggleMultiFactor":
-		if e.complexity.Mutation.ToggleMultiFactor == nil {
+	case "Mutation.toggleAccountMultiFactor":
+		if e.complexity.Mutation.ToggleAccountMultiFactor == nil {
 			break
 		}
 
-		return e.complexity.Mutation.ToggleMultiFactor(childComplexity), true
+		return e.complexity.Mutation.ToggleAccountMultiFactor(childComplexity), true
 
 	case "Mutation.unlockAccount":
 		if e.complexity.Mutation.UnlockAccount == nil {
@@ -618,6 +611,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.UnlockAccount(childComplexity), true
+
+	case "Query.accountMultiFactorRecoveryCodes":
+		if e.complexity.Query.AccountMultiFactorRecoveryCodes == nil {
+			break
+		}
+
+		return e.complexity.Query.AccountMultiFactorRecoveryCodes(childComplexity), true
 
 	case "Query.accountSettings":
 		if e.complexity.Query.AccountSettings == nil {
@@ -1014,22 +1014,17 @@ extend type Mutation {
   """
   Revoke a session for this user
   """
-  revokeSession(id: String!): Response!
+  revokeAccountSession(id: String!): Response!
 
   """
   Make account email primary
   """
-  makeEmailPrimary(email: String!): Response!
+  makeAccountEmailPrimary(email: String!): Response!
 
   """
   Generates a new set of recovery codes. The previous set (whatever it was) will be deleted!
   """
   generateAccountMultiFactorRecoveryCodes: [AccountMultiFactorRecoveryCode!]!
-
-  """
-  Get MFA recovery codes
-  """
-  getAccountMultiFactorRecoveryCodes: [AccountMultiFactorRecoveryCode!]!
 
   """
   Generate a TOTP key for the current user. Recovery codes must be generated first.
@@ -1048,7 +1043,7 @@ extend type Mutation {
 
   If it's disabled, all MFA settings will be removed and it will need to be set up again next time
   """
-  toggleMultiFactor: Response!
+  toggleAccountMultiFactor: Response!
 }
 
 extend type Query {
@@ -1061,6 +1056,11 @@ extend type Query {
   Confirm account email, so it may be used
   """
   confirmAccountEmail(id: String!): Response!
+
+  """
+  Get MFA recovery codes
+  """
+  accountMultiFactorRecoveryCodes: [AccountMultiFactorRecoveryCode!]!
 }
 `, BuiltIn: false},
 	{Name: "federation/directives.graphql", Input: `
@@ -1205,7 +1205,7 @@ func (ec *executionContext) field_Mutation_enrollAccountMultiFactorTOTP_args(ctx
 	return args, nil
 }
 
-func (ec *executionContext) field_Mutation_makeEmailPrimary_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Mutation_makeAccountEmailPrimary_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 string
@@ -1250,7 +1250,7 @@ func (ec *executionContext) field_Mutation_register_args(ctx context.Context, ra
 	return args, nil
 }
 
-func (ec *executionContext) field_Mutation_revokeSession_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Mutation_revokeAccountSession_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 string
@@ -2915,7 +2915,7 @@ func (ec *executionContext) _Mutation_modifyAccountUsername(ctx context.Context,
 	return ec.marshalNResponse2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐResponse(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Mutation_revokeSession(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Mutation_revokeAccountSession(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2932,7 +2932,7 @@ func (ec *executionContext) _Mutation_revokeSession(ctx context.Context, field g
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_revokeSession_args(ctx, rawArgs)
+	args, err := ec.field_Mutation_revokeAccountSession_args(ctx, rawArgs)
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
@@ -2940,7 +2940,7 @@ func (ec *executionContext) _Mutation_revokeSession(ctx context.Context, field g
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().RevokeSession(rctx, args["id"].(string))
+		return ec.resolvers.Mutation().RevokeAccountSession(rctx, args["id"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2957,7 +2957,7 @@ func (ec *executionContext) _Mutation_revokeSession(ctx context.Context, field g
 	return ec.marshalNResponse2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐResponse(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Mutation_makeEmailPrimary(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Mutation_makeAccountEmailPrimary(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2974,7 +2974,7 @@ func (ec *executionContext) _Mutation_makeEmailPrimary(ctx context.Context, fiel
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_makeEmailPrimary_args(ctx, rawArgs)
+	args, err := ec.field_Mutation_makeAccountEmailPrimary_args(ctx, rawArgs)
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
@@ -2982,7 +2982,7 @@ func (ec *executionContext) _Mutation_makeEmailPrimary(ctx context.Context, fiel
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().MakeEmailPrimary(rctx, args["email"].(string))
+		return ec.resolvers.Mutation().MakeAccountEmailPrimary(rctx, args["email"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3018,41 +3018,6 @@ func (ec *executionContext) _Mutation_generateAccountMultiFactorRecoveryCodes(ct
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return ec.resolvers.Mutation().GenerateAccountMultiFactorRecoveryCodes(rctx)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.([]*types.AccountMultiFactorRecoveryCode)
-	fc.Result = res
-	return ec.marshalNAccountMultiFactorRecoveryCode2ᚕᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountMultiFactorRecoveryCodeᚄ(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Mutation_getAccountMultiFactorRecoveryCodes(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().GetAccountMultiFactorRecoveryCodes(rctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3146,7 +3111,7 @@ func (ec *executionContext) _Mutation_enrollAccountMultiFactorTOTP(ctx context.C
 	return ec.marshalNResponse2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐResponse(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Mutation_toggleMultiFactor(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Mutation_toggleAccountMultiFactor(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3164,7 +3129,7 @@ func (ec *executionContext) _Mutation_toggleMultiFactor(ctx context.Context, fie
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().ToggleMultiFactor(rctx)
+		return ec.resolvers.Mutation().ToggleAccountMultiFactor(rctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3330,6 +3295,41 @@ func (ec *executionContext) _Query_confirmAccountEmail(ctx context.Context, fiel
 	res := resTmp.(*types.Response)
 	fc.Result = res
 	return ec.marshalNResponse2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐResponse(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_accountMultiFactorRecoveryCodes(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().AccountMultiFactorRecoveryCodes(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*types.AccountMultiFactorRecoveryCode)
+	fc.Result = res
+	return ec.marshalNAccountMultiFactorRecoveryCode2ᚕᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountMultiFactorRecoveryCodeᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query__entities(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -5508,23 +5508,18 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "revokeSession":
-			out.Values[i] = ec._Mutation_revokeSession(ctx, field)
+		case "revokeAccountSession":
+			out.Values[i] = ec._Mutation_revokeAccountSession(ctx, field)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "makeEmailPrimary":
-			out.Values[i] = ec._Mutation_makeEmailPrimary(ctx, field)
+		case "makeAccountEmailPrimary":
+			out.Values[i] = ec._Mutation_makeAccountEmailPrimary(ctx, field)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "generateAccountMultiFactorRecoveryCodes":
 			out.Values[i] = ec._Mutation_generateAccountMultiFactorRecoveryCodes(ctx, field)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "getAccountMultiFactorRecoveryCodes":
-			out.Values[i] = ec._Mutation_getAccountMultiFactorRecoveryCodes(ctx, field)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -5538,8 +5533,8 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "toggleMultiFactor":
-			out.Values[i] = ec._Mutation_toggleMultiFactor(ctx, field)
+		case "toggleAccountMultiFactor":
+			out.Values[i] = ec._Mutation_toggleAccountMultiFactor(ctx, field)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -5617,6 +5612,20 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_confirmAccountEmail(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
+		case "accountMultiFactorRecoveryCodes":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_accountMultiFactorRecoveryCodes(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}

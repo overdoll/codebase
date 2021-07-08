@@ -107,22 +107,17 @@ extend type Mutation {
   """
   Revoke a session for this user
   """
-  revokeSession(id: String!): Response!
+  revokeAccountSession(id: String!): Response!
 
   """
   Make account email primary
   """
-  makeEmailPrimary(email: String!): Response!
+  makeAccountEmailPrimary(email: String!): Response!
 
   """
   Generates a new set of recovery codes. The previous set (whatever it was) will be deleted!
   """
   generateAccountMultiFactorRecoveryCodes: [AccountMultiFactorRecoveryCode!]!
-
-  """
-  Get MFA recovery codes
-  """
-  getAccountMultiFactorRecoveryCodes: [AccountMultiFactorRecoveryCode!]!
 
   """
   Generate a TOTP key for the current user. Recovery codes must be generated first.
@@ -141,7 +136,7 @@ extend type Mutation {
 
   If it's disabled, all MFA settings will be removed and it will need to be set up again next time
   """
-  toggleMultiFactor: Response!
+  toggleAccountMultiFactor: Response!
 }
 
 extend type Query {
@@ -154,4 +149,9 @@ extend type Query {
   Confirm account email, so it may be used
   """
   confirmAccountEmail(id: String!): Response!
+
+  """
+  Get MFA recovery codes
+  """
+  accountMultiFactorRecoveryCodes: [AccountMultiFactorRecoveryCode!]!
 }
