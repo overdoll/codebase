@@ -104,6 +104,11 @@ func (r MultiFactorCassandraRepository) RedeemAccountRecoveryCode(ctx context.Co
 		})
 
 	if err := deleteAccountMultiFactorCodes.ExecRelease(); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return multi_factor.ErrRecoveryCodeInvalid
+		}
+
 		return fmt.Errorf("delete() failed: '%s", err)
 	}
 

@@ -84,12 +84,13 @@ type AuthenticationInput struct {
 }
 
 type Cookie struct {
-	SameSession bool   `json:"sameSession"`
-	Registered  bool   `json:"registered"`
-	Redeemed    bool   `json:"redeemed"`
-	Session     string `json:"session"`
-	Email       string `json:"email"`
-	Invalid     bool   `json:"invalid"`
+	SameSession bool                  `json:"sameSession"`
+	Registered  bool                  `json:"registered"`
+	Redeemed    bool                  `json:"redeemed"`
+	Session     string                `json:"session"`
+	Email       string                `json:"email"`
+	Invalid     bool                  `json:"invalid"`
+	MultiFactor []MultiFactorTypeEnum `json:"multiFactor"`
 }
 
 type RegisterInput struct {
@@ -156,5 +157,44 @@ func (e *AccountEmailStatusEnum) UnmarshalGQL(v interface{}) error {
 }
 
 func (e AccountEmailStatusEnum) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type MultiFactorTypeEnum string
+
+const (
+	MultiFactorTypeEnumTotp MultiFactorTypeEnum = "TOTP"
+)
+
+var AllMultiFactorTypeEnum = []MultiFactorTypeEnum{
+	MultiFactorTypeEnumTotp,
+}
+
+func (e MultiFactorTypeEnum) IsValid() bool {
+	switch e {
+	case MultiFactorTypeEnumTotp:
+		return true
+	}
+	return false
+}
+
+func (e MultiFactorTypeEnum) String() string {
+	return string(e)
+}
+
+func (e *MultiFactorTypeEnum) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = MultiFactorTypeEnum(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid MultiFactorTypeEnum", str)
+	}
+	return nil
+}
+
+func (e MultiFactorTypeEnum) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }

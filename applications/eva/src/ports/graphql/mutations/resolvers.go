@@ -7,3 +7,4 @@ import (
 type MutationResolver struct {
 	App *app.Application
 }
+

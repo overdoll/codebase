@@ -27,6 +27,8 @@ type Commands struct {
 	GenerateAccountMultiFactorTOTP command.GenerateAccountMultiFactorTOTPHandler
 	EnrollAccountMultiFactorTOTP   command.EnrollAccountMultiFactorTOTPHandler
 	ToggleAccountMultiFactor       command.ToggleAccountMultiFactorHandler
+	AuthenticateTOTP               command.AuthenticateTotpHandler
+	AuthenticateRecoveryCode       command.AuthenticateRecoveryCodeHandler
 }
 
 type Queries struct {

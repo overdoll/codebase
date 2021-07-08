@@ -17,6 +17,8 @@ type Cookie struct {
 	consumed bool
 
 	sameSession bool
+
+	multiFactorTOTP bool
 }
 
 var (
@@ -86,6 +88,14 @@ func (c *Cookie) MakeRedeemed() error {
 	c.redeemed = true
 
 	return nil
+}
+
+func (c *Cookie) IsTOTPRequired() bool {
+	return c.multiFactorTOTP
+}
+
+func (c *Cookie) RequireMultiFactor(totp bool) {
+	c.multiFactorTOTP = totp
 }
 
 // MakeConsumed - this will always be ran before a cookie is deleted, i.e. being consumed by the target application (registration, login)

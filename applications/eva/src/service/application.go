@@ -62,6 +62,8 @@ func createApplication(ctx context.Context) app.Application {
 			GenerateAccountMultiFactorTOTP: command.NewGenerateAccountMultiFactorTOTP(mfaRepo, accountRepo),
 			EnrollAccountMultiFactorTOTP:   command.NewEnrollAccountMultiFactorTOTPHandler(mfaRepo, accountRepo),
 			ToggleAccountMultiFactor:       command.NewToggleAccountMultiFactorHandler(mfaRepo, accountRepo),
+			AuthenticateTOTP:               command.NewAuthenticateTotpHandler(cookieRepo, accountRepo, mfaRepo),
+			AuthenticateRecoveryCode:       command.NewAuthenticateRecoveryCodeHandler(cookieRepo, accountRepo, mfaRepo),
 		},
 		Queries: app.Queries{
 			GetAccount:                      query.NewGetAccountHandler(accountRepo),

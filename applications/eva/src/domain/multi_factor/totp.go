@@ -25,6 +25,7 @@ var (
 	ErrTOTPCodeInvalid            = errors.New("TOTP code not valid")
 	ErrTOTPNotConfigured          = errors.New("TOTP not configured")
 	ErrRecoveryCodesNotConfigured = errors.New("recovery codes not configured")
+	ErrRecoveryCodeInvalid = errors.New("recovery code invalid")
 )
 
 // OTP will be returned from the DB as encrypted (because the getter returns it as so)

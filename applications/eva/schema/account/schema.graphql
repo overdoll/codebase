@@ -36,6 +36,16 @@ extend type Mutation {
   and the cookie is still valid when redeemed (5 minutes)
   """
   register(data: RegisterInput): Boolean!
+
+  """
+  Authenticate with a TOTP code - should be used after a cookie is redeemed
+  """
+  authenticateTOTP(code: String!): Response!
+
+  """
+  Authenticate with a recovery code - should be used after a cookie is redeemed but user does not remember their credentials
+  """
+  authenticateRecoveryCode(code: String!): Response!
 }
 
 extend type Query {

@@ -25,7 +25,6 @@ func (r *MutationResolver) AuthEmail(ctx context.Context) (bool, error) {
 // Authenticate - Generate an OTP code that will be used to authenticate the user
 // if user opens the link in the same browser, then we automatically authorize them
 // if not, then we redeem the cookie and the original browser should be logged in,
-// provided that the tab is still open
 func (r *MutationResolver) Authenticate(ctx context.Context, data *types.AuthenticationInput) (bool, error) {
 
 	gc := helpers.GinContextFromContext(ctx)
@@ -105,6 +104,106 @@ func (r *MutationResolver) Register(ctx context.Context, data *types.RegisterInp
 	}
 
 	return true, err
+}
+
+func (r *MutationResolver) AuthenticateTotp(ctx context.Context, code string) (*types.Response, error) {
+	pass := passport.FromContext(ctx)
+
+	if pass.IsAuthenticated() {
+		return nil, errors.New("user currently logged in")
+	}
+
+	gc := helpers.GinContextFromContext(ctx)
+
+	currentCookie, err := cookies.ReadCookie(ctx, cookie.OTPKey)
+
+	if err != nil {
+
+		// Cookie doesn't exist
+		if err == http.ErrNoCookie {
+			return nil, command.ErrFailedAuthenticateTOTP
+		}
+
+		zap.S().Errorf("failed to get cookie: %s", err)
+		return nil, command.ErrFailedAuthenticateTOTP
+	}
+
+	usr, validation, err := r.App.Commands.AuthenticateTOTP.Handle(ctx, currentCookie.Value, code)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if validation != "" {
+		return &types.Response{
+			Validation: &types.Validation{Code: validation},
+			Ok:         false,
+		}, nil
+	}
+
+	http.SetCookie(gc.Writer, &http.Cookie{Name: cookie.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
+
+	if err := pass.MutatePassport(ctx, func(p *passport.Passport) error {
+		p.SetAccount(usr.ID())
+		return nil
+	}); err != nil {
+		return nil, err
+	}
+
+	return &types.Response{
+		Validation: nil,
+		Ok:         true,
+	}, nil
+}
+
+func (r *MutationResolver) AuthenticateRecoveryCode(ctx context.Context, code string) (*types.Response, error) {
+	pass := passport.FromContext(ctx)
+
+	if pass.IsAuthenticated() {
+		return nil, errors.New("user currently logged in")
+	}
+
+	gc := helpers.GinContextFromContext(ctx)
+
+	currentCookie, err := cookies.ReadCookie(ctx, cookie.OTPKey)
+
+	if err != nil {
+
+		// Cookie doesn't exist
+		if err == http.ErrNoCookie {
+			return nil, command.ErrFailedAuthenticateTOTP
+		}
+
+		zap.S().Errorf("failed to get cookie: %s", err)
+		return nil, command.ErrFailedAuthenticateTOTP
+	}
+
+	usr, validation, err := r.App.Commands.AuthenticateRecoveryCode.Handle(ctx, currentCookie.Value, code)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if validation != "" {
+		return &types.Response{
+			Validation: &types.Validation{Code: validation},
+			Ok:         false,
+		}, nil
+	}
+
+	http.SetCookie(gc.Writer, &http.Cookie{Name: cookie.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
+
+	if err := pass.MutatePassport(ctx, func(p *passport.Passport) error {
+		p.SetAccount(usr.ID())
+		return nil
+	}); err != nil {
+		return nil, err
+	}
+
+	return &types.Response{
+		Validation: nil,
+		Ok:         true,
+	}, nil
 }
 
 func (r *MutationResolver) Logout(ctx context.Context) (bool, error) {

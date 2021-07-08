@@ -71,6 +71,13 @@ func (r *QueryResolver) RedeemCookie(ctx context.Context, cookieId string) (*typ
 		}
 	}
 
+	// send back MFA types
+	var multiFactorTypes []types.MultiFactorTypeEnum
+
+	if ck.IsTOTPRequired() {
+		multiFactorTypes = append(multiFactorTypes, types.MultiFactorTypeEnumTotp)
+	}
+
 	return &types.Cookie{
 		SameSession: ck.SameSession(),
 		Registered:  ck.Consumed(),
@@ -78,6 +85,7 @@ func (r *QueryResolver) RedeemCookie(ctx context.Context, cookieId string) (*typ
 		Session:     ck.Session(),
 		Email:       ck.Email(),
 		Invalid:     false,
+		MultiFactor: multiFactorTypes,
 	}, nil
 }
 
@@ -138,6 +146,14 @@ func (r *QueryResolver) Authentication(ctx context.Context) (*types.Authenticati
 	}
 
 	if ck != nil {
+
+		// send back MFA types
+		var multiFactorTypes []types.MultiFactorTypeEnum
+
+		if ck.IsTOTPRequired() {
+			multiFactorTypes = append(multiFactorTypes, types.MultiFactorTypeEnumTotp)
+		}
+
 		return &types.Authentication{
 			Cookie: &types.Cookie{
 				SameSession: true,
@@ -146,6 +162,7 @@ func (r *QueryResolver) Authentication(ctx context.Context) (*types.Authenticati
 				Session:     ck.Session(),
 				Email:       ck.Email(),
 				Invalid:     false,
+				MultiFactor: multiFactorTypes,
 			},
 			User: nil,
 		}, nil

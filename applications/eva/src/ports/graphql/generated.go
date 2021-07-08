@@ -107,6 +107,7 @@ type ComplexityRoot struct {
 	Cookie struct {
 		Email       func(childComplexity int) int
 		Invalid     func(childComplexity int) int
+		MultiFactor func(childComplexity int) int
 		Redeemed    func(childComplexity int) int
 		Registered  func(childComplexity int) int
 		SameSession func(childComplexity int) int
@@ -122,6 +123,8 @@ type ComplexityRoot struct {
 		AddAccountEmail                         func(childComplexity int, email string) int
 		AuthEmail                               func(childComplexity int) int
 		Authenticate                            func(childComplexity int, data *types.AuthenticationInput) int
+		AuthenticateRecoveryCode                func(childComplexity int, code string) int
+		AuthenticateTotp                        func(childComplexity int, code string) int
 		EnrollAccountMultiFactorTotp            func(childComplexity int, code string) int
 		GenerateAccountMultiFactorRecoveryCodes func(childComplexity int) int
 		GenerateAccountMultiFactorTotp          func(childComplexity int) int
@@ -177,6 +180,8 @@ type MutationResolver interface {
 	UnlockAccount(ctx context.Context) (bool, error)
 	Authenticate(ctx context.Context, data *types.AuthenticationInput) (bool, error)
 	Register(ctx context.Context, data *types.RegisterInput) (bool, error)
+	AuthenticateTotp(ctx context.Context, code string) (*types.Response, error)
+	AuthenticateRecoveryCode(ctx context.Context, code string) (*types.Response, error)
 	AddAccountEmail(ctx context.Context, email string) (*types.Response, error)
 	ModifyAccountUsername(ctx context.Context, username string) (*types.Response, error)
 	RevokeSession(ctx context.Context, id string) (*types.Response, error)
@@ -398,6 +403,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Cookie.Invalid(childComplexity), true
 
+	case "Cookie.multiFactor":
+		if e.complexity.Cookie.MultiFactor == nil {
+			break
+		}
+
+		return e.complexity.Cookie.MultiFactor(childComplexity), true
+
 	case "Cookie.redeemed":
 		if e.complexity.Cookie.Redeemed == nil {
 			break
@@ -480,6 +492,30 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.Authenticate(childComplexity, args["data"].(*types.AuthenticationInput)), true
+
+	case "Mutation.authenticateRecoveryCode":
+		if e.complexity.Mutation.AuthenticateRecoveryCode == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_authenticateRecoveryCode_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.AuthenticateRecoveryCode(childComplexity, args["code"].(string)), true
+
+	case "Mutation.authenticateTOTP":
+		if e.complexity.Mutation.AuthenticateTotp == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_authenticateTOTP_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.AuthenticateTotp(childComplexity, args["code"].(string)), true
 
 	case "Mutation.enrollAccountMultiFactorTOTP":
 		if e.complexity.Mutation.EnrollAccountMultiFactorTotp == nil {
@@ -812,6 +848,16 @@ extend type Mutation {
   and the cookie is still valid when redeemed (5 minutes)
   """
   register(data: RegisterInput): Boolean!
+
+  """
+  Authenticate with a TOTP code - should be used after a cookie is redeemed
+  """
+  authenticateTOTP(code: String!): Response!
+
+  """
+  Authenticate with a recovery code - should be used after a cookie is redeemed but user does not remember their credentials
+  """
+  authenticateRecoveryCode(code: String!): Response!
 }
 
 extend type Query {
@@ -824,13 +870,18 @@ extend type Query {
   authentication: Authentication
 }
 `, BuiltIn: false},
-	{Name: "schema/cookie/schema.graphql", Input: `type Cookie {
+	{Name: "schema/cookie/schema.graphql", Input: `enum MultiFactorTypeEnum {
+  TOTP
+}
+
+type Cookie {
   sameSession: Boolean!
   registered: Boolean!
   redeemed: Boolean!
   session: String!
   email: String!
   invalid: Boolean!
+  multiFactor: [MultiFactorTypeEnum!]
 }
 
 extend type Query {
@@ -1091,6 +1142,36 @@ func (ec *executionContext) field_Mutation_addAccountEmail_args(ctx context.Cont
 		}
 	}
 	args["email"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_authenticateRecoveryCode_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["code"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("code"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["code"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_authenticateTOTP_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["code"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("code"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["code"] = arg0
 	return args, nil
 }
 
@@ -2361,6 +2442,38 @@ func (ec *executionContext) _Cookie_invalid(ctx context.Context, field graphql.C
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Cookie_multiFactor(ctx context.Context, field graphql.CollectedField, obj *types.Cookie) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Cookie",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.MultiFactor, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]types.MultiFactorTypeEnum)
+	fc.Result = res
+	return ec.marshalOMultiFactorTypeEnum2ᚕoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐMultiFactorTypeEnumᚄ(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Entity_findAccountSettingsByAccountID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -2632,6 +2745,90 @@ func (ec *executionContext) _Mutation_register(ctx context.Context, field graphq
 	res := resTmp.(bool)
 	fc.Result = res
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_authenticateTOTP(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_authenticateTOTP_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().AuthenticateTotp(rctx, args["code"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.Response)
+	fc.Result = res
+	return ec.marshalNResponse2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐResponse(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_authenticateRecoveryCode(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_authenticateRecoveryCode_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().AuthenticateRecoveryCode(rctx, args["code"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.Response)
+	fc.Result = res
+	return ec.marshalNResponse2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_addAccountEmail(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -5184,6 +5381,8 @@ func (ec *executionContext) _Cookie(ctx context.Context, sel ast.SelectionSet, o
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "multiFactor":
+			out.Values[i] = ec._Cookie_multiFactor(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -5286,6 +5485,16 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			}
 		case "register":
 			out.Values[i] = ec._Mutation_register(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "authenticateTOTP":
+			out.Values[i] = ec._Mutation_authenticateTOTP(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "authenticateRecoveryCode":
+			out.Values[i] = ec._Mutation_authenticateRecoveryCode(ctx, field)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -6130,6 +6339,16 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 	return res
 }
 
+func (ec *executionContext) unmarshalNMultiFactorTypeEnum2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐMultiFactorTypeEnum(ctx context.Context, v interface{}) (types.MultiFactorTypeEnum, error) {
+	var res types.MultiFactorTypeEnum
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNMultiFactorTypeEnum2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐMultiFactorTypeEnum(ctx context.Context, sel ast.SelectionSet, v types.MultiFactorTypeEnum) graphql.Marshaler {
+	return v
+}
+
 func (ec *executionContext) marshalNResponse2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐResponse(ctx context.Context, sel ast.SelectionSet, v types.Response) graphql.Marshaler {
 	return ec._Response(ctx, sel, &v)
 }
@@ -6590,6 +6809,70 @@ func (ec *executionContext) marshalOCookie2ᚖoverdollᚋapplicationsᚋevaᚋsr
 		return graphql.Null
 	}
 	return ec._Cookie(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOMultiFactorTypeEnum2ᚕoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐMultiFactorTypeEnumᚄ(ctx context.Context, v interface{}) ([]types.MultiFactorTypeEnum, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var vSlice []interface{}
+	if v != nil {
+		if tmp1, ok := v.([]interface{}); ok {
+			vSlice = tmp1
+		} else {
+			vSlice = []interface{}{v}
+		}
+	}
+	var err error
+	res := make([]types.MultiFactorTypeEnum, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNMultiFactorTypeEnum2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐMultiFactorTypeEnum(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) marshalOMultiFactorTypeEnum2ᚕoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐMultiFactorTypeEnumᚄ(ctx context.Context, sel ast.SelectionSet, v []types.MultiFactorTypeEnum) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNMultiFactorTypeEnum2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐMultiFactorTypeEnum(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
 }
 
 func (ec *executionContext) unmarshalORegisterInput2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐRegisterInput(ctx context.Context, v interface{}) (*types.RegisterInput, error) {
