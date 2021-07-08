@@ -1,4 +1,4 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "command",
@@ -31,21 +31,5 @@ go_library(
         "//libraries/uuid",
         "@com_github_gocql_gocql//:gocql",
         "@org_uber_go_zap//:zap",
-    ],
-)
-
-go_test(
-    name = "command_test",
-    srcs = [
-        "mocks_test.go",
-        "redeem_cookie_test.go",
-    ],
-    deps = [
-        ":command",
-        "//applications/eva/src/domain/account",
-        "//applications/eva/src/domain/cookie",
-        "//libraries/uuid",
-        "@com_github_stretchr_testify//assert",
-        "@com_github_stretchr_testify//require",
     ],
 )

@@ -32,19 +32,3 @@ func TestCookie_Consume(t *testing.T) {
 
 	require.NoError(t, ck.MakeConsumed())
 }
-
-func TestCookie_Redeem_expired(t *testing.T) {
-	t.Parallel()
-
-	ck := cookie.UnmarshalCookieFromDatabase(uuid.New().String(), "test-email@test.com", false, "")
-
-	assert.Equal(t, cookie.ErrCookieExpired, ck.MakeRedeemed())
-}
-
-func TestCookie_Consume_expired(t *testing.T) {
-	t.Parallel()
-
-	ck := cookie.UnmarshalCookieFromDatabase(uuid.New().String(), "test-email@test.com", true, "")
-
-	assert.Equal(t, cookie.ErrCookieExpired, ck.MakeConsumed())
-}
