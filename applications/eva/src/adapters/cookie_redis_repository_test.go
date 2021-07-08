@@ -74,27 +74,6 @@ func TestCookieRepository_DeleteCookie(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-func TestCookieRepository_UpdateCookie_make_redeemed(t *testing.T) {
-	t.Parallel()
-
-	repo := newCookieRepository(t)
-	ctx := context.Background()
-
-	ck := newFakeCookie(t)
-
-	err := repo.CreateCookie(ctx, ck)
-
-	require.NoError(t, err)
-
-	err = ck.MakeRedeemed()
-
-	require.NoError(t, err)
-
-	err = repo.UpdateCookie(ctx, ck)
-
-	require.NoError(t, err)
-}
-
 func newCookieRepository(t *testing.T) adapters.CookieRepository {
 	redis, _ := bootstrap.InitializeRedisSession(1)
 

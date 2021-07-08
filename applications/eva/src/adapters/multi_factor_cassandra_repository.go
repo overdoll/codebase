@@ -31,35 +31,33 @@ func NewMultiFactorCassandraRepository(session gocqlx.Session) MultiFactorCassan
 // CreateAccountRecoveryCodes - create recovery codes for the account
 func (r MultiFactorCassandraRepository) CreateAccountRecoveryCodes(ctx context.Context, accountId string, codes []*multi_factor.RecoveryCode) error {
 
+	batch := r.session.NewBatch(gocql.LoggedBatch)
+
 	// delete all current MFA codes
-	deleteAccountMultiFactorCodes := qb.Delete("account_multi_factor_recovery_codes").
+	q := qb.Delete("account_multi_factor_recovery_codes").
 		Where(qb.Eq("account_id")).
 		Query(r.session).
 		BindStruct(&AccountMultiFactorTOTP{
 			AccountId: accountId,
 		})
 
-	if err := deleteAccountMultiFactorCodes.ExecRelease(); err != nil {
-		return fmt.Errorf("delete() failed: '%s", err)
-	}
-
-	var mfaCodes []*AccountMultiFactorRecoveryCodes
-
-	for _, code := range codes {
-		mfaCodes = append(mfaCodes, &AccountMultiFactorRecoveryCodes{
-			AccountId: accountId,
-			Code:      code.Code(),
-		})
-	}
+	batch.Query(q.Statement())
 
 	// insert recovery codes
-	insertAccountMultiFactorRecoveryCodes := qb.Insert("account_multi_factor_recovery_codes").
-		Columns("account_id", "code").
-		Query(r.session).
-		BindStruct(mfaCodes)
+	for _, code := range codes {
+		q = qb.Insert("account_multi_factor_recovery_codes").
+			Columns("account_id", "code").
+			Query(r.session).
+			BindStruct(AccountMultiFactorRecoveryCodes{
+				AccountId: accountId,
+				Code:      code.Code(),
+			})
 
-	if err := insertAccountMultiFactorRecoveryCodes.ExecRelease(); err != nil {
-		return fmt.Errorf("insert() failed: '%s", err)
+		batch.Query(q.Statement())
+	}
+
+	if err := r.session.ExecuteBatch(batch); err == nil {
+		return fmt.Errorf("batch() failed: %s", err)
 	}
 
 	return nil

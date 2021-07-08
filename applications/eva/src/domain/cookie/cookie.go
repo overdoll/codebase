@@ -34,11 +34,11 @@ var (
 func NewCookie(id, email, session string) (*Cookie, error) {
 
 	ck := &Cookie{
-		cookie:      id,
-		expiration:  time.Minute * 5,
-		email:       email,
-		redeemed:    false,
-		session:     session,
+		cookie:     id,
+		expiration: time.Minute * 15,
+		email:      email,
+		redeemed:   false,
+		session:    session,
 	}
 
 	return ck, nil
