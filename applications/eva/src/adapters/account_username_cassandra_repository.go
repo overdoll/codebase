@@ -23,32 +23,32 @@ type UsernameByAccount struct {
 // AddAccountEmail - add an email to the account
 func (r AccountRepository) deleteAccountUsername(ctx context.Context, instance *account.Account) error {
 
-	usernameAccount := AccountUsername{
-		Id:       instance.ID(),
-		Username: strings.ToLower(instance.Username()),
-	}
+	batch := r.session.NewBatch(gocql.LoggedBatch)
 
-	usernameByAccount := UsernameByAccount{
-		Id:       instance.ID(),
-		Username: instance.Username(),
-	}
-
-	deleteUsernameAccount := qb.Delete("usernames_by_account").
+	// delete username
+	q := qb.Delete("usernames_by_account").
 		Where(qb.Eq("username"), qb.Eq("account_id")).
 		Query(r.session).
-		BindStruct(usernameByAccount)
+		BindStruct(AccountUsername{
+			Id:       instance.ID(),
+			Username: strings.ToLower(instance.Username()),
+		})
 
-	if err := deleteUsernameAccount.ExecRelease(); err != nil {
-		return fmt.Errorf("delete() failed: '%s", err)
-	}
+	batch.Query(q.Statement())
 
-	deleteAccountUsername := qb.Delete("accounts_usernames").
+	// delete from other table
+	q = qb.Delete("accounts_usernames").
 		Where(qb.Eq("username")).
 		Query(r.session).
-		BindStruct(usernameAccount)
+		BindStruct(UsernameByAccount{
+			Id:       instance.ID(),
+			Username: instance.Username(),
+		})
 
-	if err := deleteAccountUsername.ExecRelease(); err != nil {
-		return fmt.Errorf("delete() failed: '%s", err)
+	batch.Query(q.Statement())
+
+	if err := r.session.ExecuteBatch(batch); err == nil {
+		return fmt.Errorf("batch() failed: %s", err)
 	}
 
 	return nil

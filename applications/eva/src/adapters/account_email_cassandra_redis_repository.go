@@ -45,53 +45,35 @@ func (r AccountRepository) AddAccountEmail(ctx context.Context, acc *account.Acc
 		return err
 	}
 
-	accountEmail := AccountEmail{
-		Email:     confirm.Email(),
-		AccountId: acc.ID(),
-	}
+	batch := r.session.NewBatch(gocql.LoggedBatch)
 
-	// Create a lookup table that will lookup the user using email
-	createAccountEmail := qb.Insert("accounts_emails").
+	q := qb.Insert("accounts_emails").
 		Columns("email", "account_id").
 		Unique().
 		Query(r.session).
 		SerialConsistency(gocql.Serial).
-		BindStruct(accountEmail)
+		BindStruct(AccountEmail{
+			Email:     confirm.Email(),
+			AccountId: acc.ID(),
+		})
 
-	applied, err := createAccountEmail.ExecCAS()
+	batch.Query(q.Statement())
 
-	if err != nil || !applied {
-		return account.ErrEmailNotUnique
-	}
-
-	emailByAccount := EmailByAccount{
-		Email:     confirm.Email(),
-		AccountId: acc.ID(),
-		Status:    0,
-	}
-
-	// add emails to account
-	addAccountEmail := qb.Insert("emails_by_account").
+	q = qb.Insert("emails_by_account").
 		Columns("email", "account_id", "status").
 		Unique().
 		Query(r.session).
 		SerialConsistency(gocql.Serial).
-		BindStruct(emailByAccount)
+		BindStruct(EmailByAccount{
+			Email:     confirm.Email(),
+			AccountId: acc.ID(),
+			Status:    0,
+		})
 
-	applied, err = addAccountEmail.ExecCAS()
+	batch.Query(q.Statement())
 
-	if err != nil || !applied {
-
-		deleteAccountUsername := qb.Delete("accounts_emails").
-			Where(qb.Eq("email")).
-			Query(r.session).
-			BindStruct(accountEmail)
-
-		if err := deleteAccountUsername.ExecRelease(); err != nil {
-			return fmt.Errorf("delete() failed: '%s", err)
-		}
-
-		return account.ErrEmailNotUnique
+	if err := r.session.ExecuteBatch(batch); err == nil {
+		return fmt.Errorf("batch() failed: %s", err)
 	}
 
 	return nil

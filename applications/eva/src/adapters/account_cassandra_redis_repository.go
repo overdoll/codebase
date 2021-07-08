@@ -127,132 +127,92 @@ func (r AccountRepository) GetAccountByEmail(ctx context.Context, email string) 
 // CreateAccount - Ensure we create a unique user by using lightweight transactions
 func (r AccountRepository) CreateAccount(ctx context.Context, instance *account.Account) error {
 
+	batch := r.session.NewBatch(gocql.LoggedBatch)
+
 	// First, we do a unique insert into users_usernames
 	// This ensures that we capture the username so nobody else can use it
-	usernameEmail := AccountUsername{
-		Id: instance.ID(),
-		// This piece of data, we want to make sure we use as lowercase, to make sure we don't get collisions
-		// This table always has the username of a user, in lowercase format to make sure that we always have unique usernames
-		Username: strings.ToLower(instance.Username()),
-	}
-
-	insertUserEmail := qb.Insert("accounts_usernames").
+	q := qb.Insert("accounts_usernames").
 		Columns("account_id", "username").
 		Unique().
 		Query(r.session).
 		SerialConsistency(gocql.Serial).
-		BindStruct(usernameEmail)
+		BindStruct(AccountUsername{
+			Id: instance.ID(),
+			// This piece of data, we want to make sure we use as lowercase, to make sure we don't get collisions
+			// This table always has the username of a user, in lowercase format to make sure that we always have unique usernames
+			Username: strings.ToLower(instance.Username()),
+		})
 
-	applied, err := insertUserEmail.ExecCAS()
+	batch.Query(q.Statement())
 
-	// Do our checks to make sure we got a unique username
-	if err != nil {
-		return fmt.Errorf("ExecCAS() failed: '%s", err)
-	}
-
-	if !applied {
-		return account.ErrUsernameNotUnique
-	}
-
-	insertUserUsername := qb.Insert("usernames_by_account").
+	q = qb.Insert("usernames_by_account").
 		Columns("account_id", "username").
 		Unique().
 		Query(r.session).
 		SerialConsistency(gocql.Serial).
-		BindStruct(usernameEmail)
+		BindStruct(AccountUsername{
+			Id:       instance.ID(),
+			Username: instance.Username(),
+		})
 
-	applied, err = insertUserUsername.ExecCAS()
-
-	if err != nil || !applied {
-		return r.deleteAccountUsername(ctx, instance)
-	}
+	batch.Query(q.Statement())
 
 	email := ""
 
 	// Only add to email table if user is not unclaimed (email is assigned)
 	if !instance.IsUnclaimed() {
+
 		// At this point, we know our username is unique & captured, so we
 		// now do our insert, but this time with the email
 		// note: we don't do a unique check for the email first because if they're on this stage, we already
 		// did the check earlier if an account exists with this specific email. however, we will still
 		// do a rollback & deletion of the username if the email is already taken, just in case
-		accountEmail := AccountEmail{
-			Email:     instance.Email(),
-			AccountId: instance.ID(),
-		}
-
-		// Create a lookup table that will lookup the user using email
-		createAccountEmail := qb.Insert("accounts_emails").
+		q = qb.Insert("accounts_emails").
 			Columns("email", "account_id").
 			Unique().
 			Query(r.session).
 			SerialConsistency(gocql.Serial).
-			BindStruct(accountEmail)
+			BindStruct(AccountEmail{
+				Email:     instance.Email(),
+				AccountId: instance.ID(),
+			})
 
-		applied, err = createAccountEmail.ExecCAS()
-
-		if err != nil || !applied {
-			// There was an error or something, so we want to gracefully recover.
-			// Delete our users_usernames entry just in case, so user can try to signup again
-			return r.deleteAccountUsername(ctx, instance)
-		}
-
-		emailByAccount := EmailByAccount{
-			Email:     instance.Email(),
-			AccountId: instance.ID(),
-			Status:    1,
-		}
+		batch.Query(q.Statement())
 
 		// create a table that holds all of the user's emails
-		createAccountByEmail := qb.Insert("emails_by_account").
+		q = qb.Insert("emails_by_account").
 			Columns("email", "account_id", "status").
 			Unique().
 			Query(r.session).
 			SerialConsistency(gocql.Serial).
-			BindStruct(emailByAccount)
+			BindStruct(EmailByAccount{
+				Email:     instance.Email(),
+				AccountId: instance.ID(),
+				Status:    1,
+			})
 
-		applied, err = createAccountByEmail.ExecCAS()
+		batch.Query(q.Statement())
 
-		if err != nil || !applied {
-
-			// There was an error or something, so we want to gracefully recover.
-			// Delete our users_usernames entry just in case, so user can try to signup again
-			if err := r.deleteAccountUsername(ctx, instance); err != nil {
-				return err
-			}
-
-			deleteAccountEmail := qb.Delete("accounts_emails").
-				Where(qb.Eq("email")).
-				Query(r.session).
-				BindStruct(accountEmail)
-
-			if err := deleteAccountEmail.ExecRelease(); err != nil {
-				return fmt.Errorf("delete() failed: '%s", err)
-			}
-
-			return account.ErrEmailNotUnique
-		}
-
-		email = accountEmail.Email
+		email = instance.Username()
 	}
 
 	// Create a lookup table that will be used to find the user using their unique ID
 	// Will also contain all major information about the user such as permissions, etc...
-	acc := &Account{
-		Username: instance.Username(),
-		Id:       instance.ID(),
-		Email:    email,
-		Verified: false,
-	}
-
-	insertUser := qb.Insert("accounts").
+	q = qb.Insert("accounts").
 		Columns("username", "id", "email").
 		Unique().
 		Query(r.session).
-		BindStruct(acc)
+		BindStruct(&Account{
+			Username: instance.Username(),
+			Id:       instance.ID(),
+			Email:    email,
+			Verified: false,
+		})
 
-	if err := insertUser.ExecRelease(); err != nil {
-		return fmt.Errorf("ExecRelease() failed: '%s", err)
+	batch.Query(q.Statement())
+
+	if err := r.session.ExecuteBatch(batch); err == nil {
+		return fmt.Errorf("batch() failed: %s", err)
 	}
 
 	return nil
