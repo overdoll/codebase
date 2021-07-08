@@ -48,7 +48,7 @@ func (h AuthenticateRecoveryCodeHandler) Handle(ctx context.Context, cookieId, r
 
 	if err != nil {
 		if err == account.ErrAccountNotFound {
-			return nil, "", ErrFailedAuthenticateTOTP
+			return nil, "", ErrFailedAuthenticateRecoveryCode
 		}
 
 		zap.S().Errorf("failed get account: %s", err)
