@@ -134,7 +134,7 @@ func (r *QueryResolver) Authentication(ctx context.Context) (*types.Authenticati
 	// Error
 	if err != nil && err != http.ErrNoCookie {
 		zap.S().Errorf("failed to get cookie header: %s", err)
-		return nil, command.ErrFailedCheckAuthentication
+		return nil, command.ErrFailedAuthenticate
 	}
 
 	if err != nil && err == http.ErrNoCookie || otpCookie == nil {

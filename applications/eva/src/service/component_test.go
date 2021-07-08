@@ -2,18 +2,22 @@ package service
 
 import (
 	"context"
+	"encoding/json"
 	"log"
 	"net/http"
 	"net/url"
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/bxcodec/faker/v3"
 	"github.com/shurcooL/graphql"
+	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc"
 	eva "overdoll/applications/eva/proto"
+	"overdoll/applications/eva/src/adapters"
 	"overdoll/applications/eva/src/domain/cookie"
 	"overdoll/applications/eva/src/ports"
 	"overdoll/applications/eva/src/ports/graphql/types"
@@ -51,6 +55,26 @@ type Authenticate struct {
 	Authenticate bool `graphql:"authenticate(data: $data)"`
 }
 
+type AddAccountEmail struct {
+	AddAccountEmail types.Response `graphql:"addAccountEmail(email: $email)"`
+}
+
+type ConfirmAccountEmail struct {
+	ConfirmAccountEmail types.Response `graphql:"confirmAccountEmail(id: $id)"`
+}
+
+type MakeEmailPrimary struct {
+	MakeEmailPrimary types.Response `graphql:"makeEmailPrimary(email: $email)"`
+}
+
+type ModifyAccountUsername struct {
+	ModifyAccountUsername types.Response `graphql:"modifyAccountUsername(username: $username)"`
+}
+
+type AccountSettings struct {
+	AccountSettings types.AccountSettings `graphql:"accountSettings()"`
+}
+
 type RedeemCookie struct {
 	RedeemCookie *types.Cookie `graphql:"redeemCookie(cookie: $cookie)"`
 }
@@ -79,6 +103,16 @@ func qRedeemCookie(t *testing.T, client *graphql.Client, cookie string) RedeemCo
 	return redeemCookie
 }
 
+func qAccountSettings(t *testing.T, client *graphql.Client) AccountSettings {
+	var accountSettings AccountSettings
+
+	err := client.Query(context.Background(), &accountSettings, nil)
+
+	require.NoError(t, err)
+
+	return accountSettings
+}
+
 func qAuth(t *testing.T, client *graphql.Client) AuthQuery {
 	var authRedeemed AuthQuery
 
@@ -89,9 +123,39 @@ func qAuth(t *testing.T, client *graphql.Client) AuthQuery {
 	return authRedeemed
 }
 
-// TestUserRegistration_complete - complete a whole user registration flow using multiple graphql endpoints
+// TODO: this is kind of dependent on whatever adapter we are using at the time to generate email confirmation IDs
+// we should probably make this lookup easier?? (by looking for the email directly?)
+func getEmailConfirmation(t *testing.T, targetEmail string) string {
+
+	// here, we initialize redis to get our one-time email confirmation since we dont have another way
+	// to access this unless we use an email service (which would slow down this test)
+	client, err := bootstrap.InitializeRedisSession(viper.GetInt("redis.db"))
+	require.NoError(t, err)
+
+	keys, err := client.Keys(context.Background(), adapters.ConfirmEmailPrefix).Result()
+	require.NoError(t, err)
+
+	for _, key := range keys {
+
+		// get each key's value
+		val, err := client.Get(context.Background(), key).Result()
+		require.NoError(t, err)
+
+		var emailConfirmation adapters.EmailConfirmation
+		err = json.Unmarshal([]byte(val), &emailConfirmation)
+		require.NoError(t, err)
+
+		if emailConfirmation.Email == targetEmail {
+			return strings.Split(key, ":")[0]
+		}
+	}
+
+	return ""
+}
+
+// TestAccountRegistration_complete - complete a whole user registration flow using multiple graphql endpoints
 // this is in one test because it requires a persistent state (in this case, it's cookies)
-func TestUserRegistration_complete(t *testing.T) {
+func TestAccountRegistration_complete(t *testing.T) {
 	t.Parallel()
 
 	client, httpUser, _ := getHttpClient(t, nil)
@@ -146,6 +210,136 @@ func TestUserRegistration_complete(t *testing.T) {
 	require.Nil(t, otpCookie)
 }
 
+func TestAccountUsername_modify(t *testing.T) {
+	t.Parallel()
+
+	client, _, _ := getHttpClient(t, passport.FreshPassportWithUser("1pcKibRoqTAUgmOiNpGLIrztM9R"))
+
+	fake := TestUser{}
+
+	err := faker.FakeData(&fake)
+
+	require.NoError(t, err)
+
+	targetUsername := fake.Username
+
+	var modifyAccountUsername ModifyAccountUsername
+
+	// modify account's username
+	err = client.Mutate(context.Background(), &modifyAccountUsername, map[string]interface{}{
+		"username": targetUsername,
+	})
+
+	require.NoError(t, err)
+	require.True(t, modifyAccountUsername.ModifyAccountUsername.Ok)
+
+	settings := qAccountSettings(t, client)
+
+	foundNewUsername := false
+
+	// go through the account's usernames and make sure the username exists here
+	for _, email := range settings.AccountSettings.General.Usernames {
+		if email.Username == targetUsername {
+			foundNewUsername = true
+		}
+	}
+
+	require.True(t, foundNewUsername)
+
+	auth := qAuth(t, client)
+
+	// make sure that the username is modified as well for the "authentication" query
+	assert.Equal(t, targetUsername, auth.Authentication.User.Username)
+}
+
+// Go through a full flow of adding a new email to an account, confirming the email and making it the primary email
+func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
+	t.Parallel()
+
+	// use passport with user
+	client, _, _ := getHttpClient(t, passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+
+	fake := TestUser{}
+
+	err := faker.FakeData(&fake)
+
+	require.NoError(t, err)
+
+	targetEmail := fake.Email
+
+	var addAccountEmail AddAccountEmail
+
+	// add an email to our account
+	err = client.Mutate(context.Background(), &addAccountEmail, map[string]interface{}{
+		"email": targetEmail,
+	})
+
+	require.NoError(t, err)
+	require.True(t, addAccountEmail.AddAccountEmail.Ok)
+
+	settings := qAccountSettings(t, client)
+
+	foundUnconfirmedEmail := false
+
+	// query account's settings and ensure this email is here, and unconfirmed
+	for _, email := range settings.AccountSettings.General.Emails {
+		if email.Email == targetEmail && email.Status == types.AccountEmailStatusEnumUnconfirmed {
+			foundUnconfirmedEmail = true
+		}
+	}
+
+	require.True(t, foundUnconfirmedEmail)
+
+	// get confirmation key (this would be found in the email, but here we query our redis DB directly)
+	confirmationKey := getEmailConfirmation(t, targetEmail)
+
+	require.NotEmpty(t, confirmationKey)
+
+	var confirmAccountEmail ConfirmAccountEmail
+
+	// confirm the account's new email
+	err = client.Query(context.Background(), &confirmAccountEmail, map[string]interface{}{
+		"id": confirmationKey,
+	})
+
+	require.NoError(t, err)
+	require.True(t, confirmAccountEmail.ConfirmAccountEmail.Ok)
+
+	settings = qAccountSettings(t, client)
+
+	foundConfirmedEmail := false
+
+	// go through account settings and make sure that this email is now confirmed
+	for _, email := range settings.AccountSettings.General.Emails {
+		if email.Email == targetEmail && email.Status == types.AccountEmailStatusEnumConfirmed {
+			foundConfirmedEmail = true
+		}
+	}
+
+	require.True(t, foundConfirmedEmail)
+
+	var makeEmailPrimary MakeEmailPrimary
+
+	// mark email as primary
+	err = client.Mutate(context.Background(), &makeEmailPrimary, map[string]interface{}{
+		"email": targetEmail,
+	})
+
+	require.NoError(t, err)
+	require.True(t, makeEmailPrimary.MakeEmailPrimary.Ok)
+
+	foundPrimaryEmail := false
+
+	// go through account settings and make sure that this email is now the primary email
+	for _, email := range settings.AccountSettings.General.Emails {
+		if email.Email == targetEmail && email.Status == types.AccountEmailStatusEnumPrimary {
+			foundPrimaryEmail = true
+		}
+	}
+
+	require.True(t, foundPrimaryEmail)
+}
+
 // TestRedeemCookie_invalid - test by redeeming an invalid cookie
 func TestRedeemCookie_invalid(t *testing.T) {
 	t.Parallel()
@@ -155,12 +349,12 @@ func TestRedeemCookie_invalid(t *testing.T) {
 	redeemCookie := qRedeemCookie(t, client, "some-random-cookie")
 
 	// check to make sure its returned as invalid
-	assert.Equal(t, bool(redeemCookie.RedeemCookie.Invalid), true)
+	assert.Equal(t, redeemCookie.RedeemCookie.Invalid, true)
 }
 
-// TestUserLogin_existing - test is similar to registration, except that we do a login with an
+// TestAccountLogin_existing - test is similar to registration, except that we do a login with an
 // existing user
-func TestUserLogin_existing(t *testing.T) {
+func TestAccountLogin_existing(t *testing.T) {
 	t.Parallel()
 
 	client, httpUser, pass := getHttpClient(t, passport.FreshPassport())
@@ -175,7 +369,7 @@ func TestUserLogin_existing(t *testing.T) {
 
 	// the RedeemCookie function will also log you in, if you redeem a cookie that's for a registered user
 	// so we check for that here
-	assert.Equal(t, true, bool(redeemCookie.RedeemCookie.Registered))
+	assert.Equal(t, true, redeemCookie.RedeemCookie.Registered)
 
 	// the third parameter of getClient contains the most up-to-date version of the passport
 	modified := pass.GetPassport()
@@ -213,7 +407,7 @@ func TestUserLogin_from_another_session(t *testing.T) {
 }
 
 // Test empty authentication - we didnt pass any passport so it shouldn't do anything
-func TestGetUserAuthentication_empty(t *testing.T) {
+func TestGetAccountAuthentication_empty(t *testing.T) {
 	t.Parallel()
 
 	client, _, _ := getHttpClient(t, nil)
@@ -225,11 +419,11 @@ func TestGetUserAuthentication_empty(t *testing.T) {
 	require.Nil(t, query.Authentication.User)
 }
 
-// TestGetUserAuthentication_user - we assign a passport to our Http client, which will add it to the request body
+// TestGetAccountAuthentication_user - we assign a passport to our Http client, which will add it to the request body
 // when doing a graphql request
 // normally, passport is stored in session and assigned in the graphql gateway
 // since we can't do this here, we assign it manually
-func TestGetUserAuthentication_user(t *testing.T) {
+func TestGetAccountAuthentication_user(t *testing.T) {
 	t.Parallel()
 
 	// userID is from one of our seeders (which will exist during testing)
@@ -260,8 +454,8 @@ func TestLogout_user(t *testing.T) {
 	require.Equal(t, false, modified.IsAuthenticated())
 }
 
-// TestUser_get - test GRPC endpoint for grabbing a user
-func TestUser_get(t *testing.T) {
+// TestAccount_get - test GRPC endpoint for grabbing a user
+func TestAccount_get(t *testing.T) {
 	t.Parallel()
 
 	client := getGrpcClient(t)
@@ -273,7 +467,7 @@ func TestUser_get(t *testing.T) {
 	assert.Equal(t, res.Username, "poisonminion")
 }
 
-func TestUser_lock_unlock(t *testing.T) {
+func TestAccount_lock_unlock(t *testing.T) {
 	t.Parallel()
 
 	client := getGrpcClient(t)
