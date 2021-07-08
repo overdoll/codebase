@@ -10,7 +10,7 @@ go_library(
 
 go_library(
     name = "account",
-    srcs = ["user.go"],
+    srcs = ["account.go"],
     importpath = "overdoll/libraries/account",
     visibility = ["//visibility:public"],
     deps = ["//applications/eva/proto:v1_go_proto"],

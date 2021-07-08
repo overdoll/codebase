@@ -36,13 +36,3 @@ go_library(
         "@com_github_segmentio_ksuid//:ksuid",
     ],
 )
-
-go_test(
-    name = "account_test",
-    srcs = ["account_test.go"],
-    deps = [
-        ":account",
-        "//libraries/uuid",
-        "@com_github_stretchr_testify//assert",
-    ],
-)

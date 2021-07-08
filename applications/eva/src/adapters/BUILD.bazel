@@ -7,6 +7,7 @@ go_library(
         "account_email_cassandra_redis_repository.go",
         "account_username_cassandra_repository.go",
         "cookie_redis_repository.go",
+        "multi_factor_cassandra_repository.go",
         "session_redis_repository.go",
     ],
     importpath = "overdoll/applications/eva/src/adapters",
@@ -14,6 +15,7 @@ go_library(
     deps = [
         "//applications/eva/src/domain/account",
         "//applications/eva/src/domain/cookie",
+        "//applications/eva/src/domain/multi_factor",
         "//applications/eva/src/domain/session",
         "//libraries/crypt",
         "//libraries/passport",

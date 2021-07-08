@@ -38,6 +38,30 @@ type userRepoMock struct {
 	User *account.Account
 }
 
+func (u userRepoMock) GetAccountByUsername(ctx context.Context, s string) (*account.Account, error) {
+	panic("implement me")
+}
+
+func (u userRepoMock) UpdateAccountUsername(ctx context.Context, s string, f func(*account.Account) error) (*account.Account, error) {
+	panic("implement me")
+}
+
+func (u userRepoMock) GetAccountUsernames(ctx context.Context, s string) ([]*account.Username, error) {
+	panic("implement me")
+}
+
+func (u userRepoMock) AddAccountEmail(ctx context.Context, a *account.Account, confirmation *account.EmailConfirmation) error {
+	panic("implement me")
+}
+
+func (u userRepoMock) ConfirmAccountEmail(ctx context.Context, s string, a *account.Account) error {
+	panic("implement me")
+}
+
+func (u userRepoMock) GetAccountEmails(ctx context.Context, s string) ([]*account.Email, error) {
+	panic("implement me")
+}
+
 func (u userRepoMock) UpdateAccount(ctx context.Context, s string, f func(*account.Account) error) (*account.Account, error) {
 	panic("implement me")
 }

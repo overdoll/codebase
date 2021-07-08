@@ -129,6 +129,14 @@ def go_repositories():
         version = "v0.0.0-20170815010413-6226ea591a40",
     )
     go_repository(
+        name = "com_github_boombuler_barcode",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/boombuler/barcode",
+        sum = "h1:biVzkmvwrH8WK8raXaxBx6fRVTlJILwEwQGL1I/ByEI=",
+        version = "v1.0.1-0.20190219062509-6c824513bacc",
+    )
+
+    go_repository(
         name = "com_github_burntsushi_toml",
         build_file_proto_mode = "disable",
         importpath = "github.com/BurntSushi/toml",
@@ -1097,6 +1105,14 @@ def go_repositories():
         sum = "h1:ccV59UEOTzVDnDUEFdT95ZzHVZ+5+158q8+SJb2QV5w=",
         version = "v1.1.1",
     )
+    go_repository(
+        name = "com_github_pquerna_otp",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/pquerna/otp",
+        sum = "h1:oJV/SkzR33anKXwQU3Of42rL4wbrffP4uvUf1SvS5Xs=",
+        version = "v1.3.0",
+    )
+
     go_repository(
         name = "com_github_prometheus_client_golang",
         build_file_proto_mode = "disable",
