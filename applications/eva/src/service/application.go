@@ -47,8 +47,8 @@ func createApplication(ctx context.Context) app.Application {
 	return app.Application{
 		Commands: app.Commands{
 			RedeemCookie:                   command.NewRedeemCookieHandler(cookieRepo, accountRepo),
+			ConsumeCookie:                  command.NewConsumeCookieHandler(cookieRepo, accountRepo),
 			Register:                       command.NewRegisterHandler(cookieRepo, accountRepo),
-			Authentication:                 command.NewAuthenticationHandler(cookieRepo, accountRepo),
 			Authenticate:                   command.NewAuthenticateHandler(cookieRepo),
 			LockAccount:                    command.NewLockUserHandler(accountRepo),
 			CreateAccount:                  command.NewCreateUserHandler(accountRepo),
@@ -62,7 +62,7 @@ func createApplication(ctx context.Context) app.Application {
 			GenerateAccountMultiFactorTOTP: command.NewGenerateAccountMultiFactorTOTP(mfaRepo, accountRepo),
 			EnrollAccountMultiFactorTOTP:   command.NewEnrollAccountMultiFactorTOTPHandler(mfaRepo, accountRepo),
 			ToggleAccountMultiFactor:       command.NewToggleAccountMultiFactorHandler(mfaRepo, accountRepo),
-			AuthenticateTOTP:               command.NewAuthenticateTotpHandler(cookieRepo, accountRepo, mfaRepo),
+			FinishAuthenticateMultiFactor:  command.NewFinishAuthenticateMultiFactorHandler(cookieRepo, accountRepo, mfaRepo),
 			AuthenticateRecoveryCode:       command.NewAuthenticateRecoveryCodeHandler(cookieRepo, accountRepo, mfaRepo),
 		},
 		Queries: app.Queries{

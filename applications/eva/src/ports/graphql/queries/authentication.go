@@ -39,13 +39,31 @@ func (r *QueryResolver) RedeemCookie(ctx context.Context, cookieId string) (*typ
 		return nil, command.ErrFailedCookieRedeem
 	}
 
-	usr, ck, err := r.App.Commands.RedeemCookie.Handle(ctx, isSameSession, cookieId)
+	// cookie redeemed not in the same session, just redeem it
+	if !isSameSession {
+		ck, err := r.App.Commands.RedeemCookie.Handle(ctx, cookieId)
+
+		if err != nil {
+			return nil, err
+		}
+
+		return &types.Cookie{
+			SameSession: isSameSession,
+			Registered:  false,
+			Redeemed:    ck.Redeemed(),
+			Session:     ck.Session(),
+			Email:       ck.Email(),
+			Invalid:     false,
+		}, nil
+	}
+
+	// consume cookie
+	usr, ck, err := r.App.Commands.ConsumeCookie.Handle(ctx, cookieId)
 
 	if err != nil {
 		return nil, err
 	}
 
-	// If ck is returned as nil, cookie is invalid
 	if ck == nil {
 		return &types.Cookie{
 			SameSession: false,
@@ -79,7 +97,7 @@ func (r *QueryResolver) RedeemCookie(ctx context.Context, cookieId string) (*typ
 	}
 
 	return &types.Cookie{
-		SameSession: ck.SameSession(),
+		SameSession: true,
 		Registered:  ck.Consumed(),
 		Redeemed:    true,
 		Session:     ck.Session(),
@@ -91,13 +109,21 @@ func (r *QueryResolver) RedeemCookie(ctx context.Context, cookieId string) (*typ
 
 func (r *QueryResolver) Authentication(ctx context.Context) (*types.Authentication, error) {
 
-	userId := ""
-
 	pass := passport.FromContext(ctx)
 
 	// User is logged in
 	if pass.IsAuthenticated() {
-		userId = pass.AccountID()
+
+		acc, err := r.App.Queries.GetAccount.Handle(ctx, pass.AccountID())
+
+		if err != nil {
+			return nil, err
+		}
+
+		return &types.Authentication{
+			Cookie: nil,
+			User:   types.MarshalUserToGraphQL(acc),
+		}, nil
 	}
 
 	gc := helpers.GinContextFromContext(ctx)
@@ -111,15 +137,14 @@ func (r *QueryResolver) Authentication(ctx context.Context) (*types.Authenticati
 		return nil, command.ErrFailedCheckAuthentication
 	}
 
-	cookieValue := ""
-
-	if otpCookie != nil {
-		cookieValue = otpCookie.Value
+	if err != nil && err == http.ErrNoCookie || otpCookie == nil {
+		return &types.Authentication{
+			Cookie: nil,
+			User:   nil,
+		}, nil
 	}
 
-	hasCookie := err == nil
-
-	ck, acc, err := r.App.Commands.Authentication.Handle(ctx, userId, hasCookie, cookieValue)
+	acc, ck, err := r.App.Commands.ConsumeCookie.Handle(ctx, otpCookie.Value)
 
 	if err != nil {
 		return nil, err
@@ -127,16 +152,14 @@ func (r *QueryResolver) Authentication(ctx context.Context) (*types.Authenticati
 
 	if acc != nil {
 		// user had cookie and it was used to log in
-		if hasCookie {
-			http.SetCookie(gc.Writer, &http.Cookie{Name: cookie.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
+		http.SetCookie(gc.Writer, &http.Cookie{Name: cookie.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
 
-			// Update passport to include our new user
-			if err := pass.MutatePassport(ctx, func(p *passport.Passport) error {
-				p.SetAccount(acc.ID())
-				return nil
-			}); err != nil {
-				return nil, err
-			}
+		// Update passport to include our new user
+		if err := pass.MutatePassport(ctx, func(p *passport.Passport) error {
+			p.SetAccount(acc.ID())
+			return nil
+		}); err != nil {
+			return nil, err
 		}
 
 		return &types.Authentication{
@@ -145,31 +168,30 @@ func (r *QueryResolver) Authentication(ctx context.Context) (*types.Authenticati
 		}, nil
 	}
 
-	if ck != nil {
-
-		// send back MFA types
-		var multiFactorTypes []types.MultiFactorTypeEnum
-
-		if ck.IsTOTPRequired() {
-			multiFactorTypes = append(multiFactorTypes, types.MultiFactorTypeEnumTotp)
-		}
-
+	if ck == nil {
 		return &types.Authentication{
-			Cookie: &types.Cookie{
-				SameSession: true,
-				Registered:  false,
-				Redeemed:    ck.Redeemed(),
-				Session:     ck.Session(),
-				Email:       ck.Email(),
-				Invalid:     false,
-				MultiFactor: multiFactorTypes,
-			},
-			User: nil,
+			Cookie: nil,
+			User:   nil,
 		}, nil
 	}
 
+	// send back MFA types
+	var multiFactorTypes []types.MultiFactorTypeEnum
+
+	if ck.IsTOTPRequired() {
+		multiFactorTypes = append(multiFactorTypes, types.MultiFactorTypeEnumTotp)
+	}
+
 	return &types.Authentication{
-		Cookie: nil,
-		User:   nil,
+		Cookie: &types.Cookie{
+			SameSession: true,
+			Registered:  false,
+			Redeemed:    ck.Redeemed(),
+			Session:     ck.Session(),
+			Email:       ck.Email(),
+			Invalid:     false,
+			MultiFactor: multiFactorTypes,
+		},
+		User: nil,
 	}, nil
 }

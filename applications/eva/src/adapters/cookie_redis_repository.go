@@ -92,7 +92,19 @@ func (r CookieRepository) CreateCookie(ctx context.Context, instance *cookie.Coo
 	return nil
 }
 
-func (r CookieRepository) UpdateCookie(ctx context.Context, instance *cookie.Cookie) error {
+func (r CookieRepository) UpdateCookie(ctx context.Context, cookieId string, updateFn func(instance *cookie.Cookie) error) (*cookie.Cookie, error) {
+
+	instance, err := r.GetCookieById(ctx, cookieId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	err = updateFn(instance)
+
+	if err != nil {
+		return nil, err
+	}
 
 	redeemed := 0
 
@@ -110,14 +122,14 @@ func (r CookieRepository) UpdateCookie(ctx context.Context, instance *cookie.Coo
 	val, err := json.Marshal(authCookie)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	_, err = r.client.SetNX(ctx, CookiePrefix+instance.Cookie(), val, instance.Expiration()).Result()
 
 	if err != nil {
-		return fmt.Errorf("set failed: '%s", err)
+		return nil, fmt.Errorf("set failed: '%s", err)
 	}
 
-	return nil
+	return instance, nil
 }

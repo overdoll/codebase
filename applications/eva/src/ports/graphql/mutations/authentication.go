@@ -121,14 +121,14 @@ func (r *MutationResolver) AuthenticateTotp(ctx context.Context, code string) (*
 
 		// Cookie doesn't exist
 		if err == http.ErrNoCookie {
-			return nil, command.ErrFailedAuthenticateTOTP
+			return nil, command.ErrFailedAuthenticateMultiFactor
 		}
 
 		zap.S().Errorf("failed to get cookie: %s", err)
-		return nil, command.ErrFailedAuthenticateTOTP
+		return nil, command.ErrFailedAuthenticateMultiFactor
 	}
 
-	usr, validation, err := r.App.Commands.AuthenticateTOTP.Handle(ctx, currentCookie.Value, code)
+	usr, validation, err := r.App.Commands.FinishAuthenticateMultiFactor.Handle(ctx, false, currentCookie.Value, code)
 
 	if err != nil {
 		return nil, err
@@ -171,14 +171,14 @@ func (r *MutationResolver) AuthenticateRecoveryCode(ctx context.Context, code st
 
 		// Cookie doesn't exist
 		if err == http.ErrNoCookie {
-			return nil, command.ErrFailedAuthenticateTOTP
+			return nil, command.ErrFailedAuthenticateMultiFactor
 		}
 
 		zap.S().Errorf("failed to get cookie: %s", err)
-		return nil, command.ErrFailedAuthenticateTOTP
+		return nil, command.ErrFailedAuthenticateMultiFactor
 	}
 
-	usr, validation, err := r.App.Commands.AuthenticateRecoveryCode.Handle(ctx, currentCookie.Value, code)
+	usr, validation, err := r.App.Commands.FinishAuthenticateMultiFactor.Handle(ctx, true, currentCookie.Value, code)
 
 	if err != nil {
 		return nil, err

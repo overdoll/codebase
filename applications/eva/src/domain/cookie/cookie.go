@@ -39,7 +39,6 @@ func NewCookie(id, email, session string) (*Cookie, error) {
 		email:       email,
 		redeemed:    false,
 		session:     session,
-		sameSession: false,
 	}
 
 	return ck, nil
@@ -79,10 +78,6 @@ func (c *Cookie) Redeemed() bool {
 	return c.redeemed
 }
 
-func (c *Cookie) SameSession() bool {
-	return c.sameSession
-}
-
 func (c *Cookie) MakeRedeemed() error {
 
 	c.redeemed = true
@@ -106,11 +101,6 @@ func (c *Cookie) MakeConsumed() error {
 	}
 
 	c.consumed = true
-	return nil
-}
-
-func (c *Cookie) MakeSameSession() error {
-	c.sameSession = true
 	return nil
 }
 
