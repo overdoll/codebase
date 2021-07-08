@@ -5,6 +5,7 @@ go_library(
     srcs = [
         "account_settings.go",
         "authentication.go",
+        "multi_factor.go",
         "resolvers.go",
     ],
     importpath = "overdoll/applications/eva/src/ports/graphql/queries",
