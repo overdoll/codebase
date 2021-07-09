@@ -18,7 +18,7 @@ import {
   Box,
   AlertIcon,
   AlertDescription,
-  Alert
+  Alert, useToast
 } from '@chakra-ui/react'
 import { useFlash } from '@//:modules/flash'
 import { Helmet } from 'react-helmet-async'
@@ -50,6 +50,8 @@ export default function Token (props: Props): Node {
 
   const [t] = useTranslation('token')
   const history = useHistory()
+
+  const notify = useToast()
 
   const { flash } = useFlash()
 
@@ -108,6 +110,11 @@ export default function Token (props: Props): Node {
   }
 
   // User is registered - redirect to profile
-  history.push('/profile')
+  history.push('/')
+  notify({
+    status: 'success',
+    title: t('login_success'),
+    isClosable: true
+  })
   return null
 }

@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 483f02c6691e775f580985fa7dd3281a
+ * @relayHash 7443eb8018b9947b071f783c15b2706b
  */
 
 /* eslint-disable */
@@ -8,17 +8,40 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-export type QueuePendingPostsQueryVariables = {||};
+export type QueuePendingPostsQueryVariables = {|
+  before?: ?string,
+  after?: ?string,
+  first?: ?number,
+  last?: ?number,
+|};
 export type QueuePendingPostsQueryResponse = {|
   +pendingPosts: {|
     +edges: $ReadOnlyArray<{|
+      +cursor: string,
       +node: {|
         +id: string,
+        +state: string,
         +contributor: {|
           +username: string,
           +avatar: string,
         |},
-      |}
+        +content: $ReadOnlyArray<string>,
+        +categories: $ReadOnlyArray<{|
+          +title: string
+        |}>,
+        +characters: $ReadOnlyArray<{|
+          +name: string,
+          +media: {|
+            +title: string
+          |},
+        |}>,
+        +mediaRequests: ?$ReadOnlyArray<string>,
+        +characterRequests: ?$ReadOnlyArray<{|
+          +name: string,
+          +media: string,
+        |}>,
+        +artistUsername: string,
+      |},
     |}>,
     +pageInfo: {|
       +startCursor: ?string,
@@ -35,15 +58,38 @@ export type QueuePendingPostsQuery = {|
 
 
 /*
-query QueuePendingPostsQuery {
-  pendingPosts(input: {first: 1}, filter: {}) {
+query QueuePendingPostsQuery(
+  $before: String
+  $after: String
+  $first: Int
+  $last: Int
+) {
+  pendingPosts(input: {first: $first, before: $before, after: $after, last: $last}, filter: {}) {
     edges {
+      cursor
       node {
         id
+        state
         contributor {
           username
           avatar
         }
+        content
+        categories {
+          title
+        }
+        characters {
+          name
+          media {
+            title
+          }
+        }
+        mediaRequests
+        characterRequests {
+          name
+          media
+        }
+        artistUsername
       }
     }
     pageInfo {
@@ -57,7 +103,43 @@ query QueuePendingPostsQuery {
 */
 
 const node: ConcreteRequest = (function(){
-var v0 = [
+var v0 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "after"
+},
+v1 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "before"
+},
+v2 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "first"
+},
+v3 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "last"
+},
+v4 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "title",
+    "storageKey": null
+  }
+],
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v6 = [
   {
     "alias": null,
     "args": [
@@ -67,11 +149,30 @@ var v0 = [
         "value": {}
       },
       {
-        "kind": "Literal",
-        "name": "input",
-        "value": {
-          "first": 1
-        }
+        "fields": [
+          {
+            "kind": "Variable",
+            "name": "after",
+            "variableName": "after"
+          },
+          {
+            "kind": "Variable",
+            "name": "before",
+            "variableName": "before"
+          },
+          {
+            "kind": "Variable",
+            "name": "first",
+            "variableName": "first"
+          },
+          {
+            "kind": "Variable",
+            "name": "last",
+            "variableName": "last"
+          }
+        ],
+        "kind": "ObjectValue",
+        "name": "input"
       }
     ],
     "concreteType": "PendingPostConnection",
@@ -90,6 +191,13 @@ var v0 = [
           {
             "alias": null,
             "args": null,
+            "kind": "ScalarField",
+            "name": "cursor",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
             "concreteType": "PendingPost",
             "kind": "LinkedField",
             "name": "node",
@@ -100,6 +208,13 @@ var v0 = [
                 "args": null,
                 "kind": "ScalarField",
                 "name": "id",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "state",
                 "storageKey": null
               },
               {
@@ -125,6 +240,78 @@ var v0 = [
                     "storageKey": null
                   }
                 ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "content",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Category",
+                "kind": "LinkedField",
+                "name": "categories",
+                "plural": true,
+                "selections": (v4/*: any*/),
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Character",
+                "kind": "LinkedField",
+                "name": "characters",
+                "plural": true,
+                "selections": [
+                  (v5/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Media",
+                    "kind": "LinkedField",
+                    "name": "media",
+                    "plural": false,
+                    "selections": (v4/*: any*/),
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "mediaRequests",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "CharacterRequestType",
+                "kind": "LinkedField",
+                "name": "characterRequests",
+                "plural": true,
+                "selections": [
+                  (v5/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "media",
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "artistUsername",
                 "storageKey": null
               }
             ],
@@ -173,28 +360,38 @@ var v0 = [
         "storageKey": null
       }
     ],
-    "storageKey": "pendingPosts(filter:{},input:{\"first\":1})"
+    "storageKey": null
   }
 ];
 return {
   "fragment": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": [
+      (v0/*: any*/),
+      (v1/*: any*/),
+      (v2/*: any*/),
+      (v3/*: any*/)
+    ],
     "kind": "Fragment",
     "metadata": null,
     "name": "QueuePendingPostsQuery",
-    "selections": (v0/*: any*/),
+    "selections": (v6/*: any*/),
     "type": "Query",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": [
+      (v1/*: any*/),
+      (v0/*: any*/),
+      (v2/*: any*/),
+      (v3/*: any*/)
+    ],
     "kind": "Operation",
     "name": "QueuePendingPostsQuery",
-    "selections": (v0/*: any*/)
+    "selections": (v6/*: any*/)
   },
   "params": {
-    "id": "483f02c6691e775f580985fa7dd3281a",
+    "id": "7443eb8018b9947b071f783c15b2706b",
     "metadata": {},
     "name": "QueuePendingPostsQuery",
     "operationKind": "query",
@@ -203,5 +400,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = 'af0b36c79857e192bb3d401733ff4049';
+(node: any).hash = '8832bf2303a8b59d716a3e4f3f9d72b8';
 module.exports = node;

@@ -1,0 +1,13 @@
+{
+  "queue": {
+    "title": "Moderation Queue",
+    "case": "Case",
+    "empty": {
+      "header": "All Clear",
+      "subheader": "There are no posts in your queue at the moment. Try checking again tomorrow?"
+    },
+    "post": {
+      "content": "Post Uploads"
+    }
+  }
+}
