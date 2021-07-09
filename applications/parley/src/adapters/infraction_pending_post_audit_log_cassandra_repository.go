@@ -84,13 +84,15 @@ func marshalPendingPostAuditLogToDatabase(auditLog *infraction.PendingPostAuditL
 
 func (r InfractionCassandraRepository) CreatePendingPostAuditLog(ctx context.Context, auditLog *infraction.PendingPostAuditLog) error {
 
-	marhsl, err := marshalPendingPostAuditLogToDatabase(auditLog)
+	marshalledAuditLog, err := marshalPendingPostAuditLogToDatabase(auditLog)
 
 	if err != nil {
 		return err
 	}
 
-	insertPost := qb.Insert("pending_posts_audit_log").
+	batch := r.session.NewBatch(gocql.LoggedBatch)
+
+	q := qb.Insert("pending_posts_audit_log").
 		Columns(
 			"id",
 			"post_id",
@@ -98,16 +100,13 @@ func (r InfractionCassandraRepository) CreatePendingPostAuditLog(ctx context.Con
 			"moderator_account_id",
 			"bucket",
 			"created_ms",
-		).
-		Query(r.session).
-		BindStruct(marhsl).
-		Consistency(gocql.One)
+		)
 
-	if err := insertPost.ExecRelease(); err != nil {
-		return fmt.Errorf("ExecRelease() failed: '%s", err)
-	}
+	stmt, _ := q.ToCql()
 
-	insertPostByPost := qb.Insert("pending_posts_audit_logs_by_post").
+	batch.Query(stmt, marshalledAuditLog.Id, marshalledAuditLog.PostId, marshalledAuditLog.ContributorId, marshalledAuditLog.ModeratorId, marshalledAuditLog.Bucket, marshalledAuditLog.CreatedMs)
+
+	q = qb.Insert("pending_posts_audit_logs_by_post").
 		Columns(
 			"id",
 			"post_id",
@@ -115,16 +114,13 @@ func (r InfractionCassandraRepository) CreatePendingPostAuditLog(ctx context.Con
 			"moderator_account_id",
 			"bucket",
 			"created_ms",
-		).
-		Query(r.session).
-		BindStruct(marhsl).
-		Consistency(gocql.One)
+		)
 
-	if err := insertPostByPost.ExecRelease(); err != nil {
-		return fmt.Errorf("ExecRelease() failed: '%s", err)
-	}
+	stmt, _ = q.ToCql()
 
-	insertPostByModerator := qb.Insert("pending_posts_audit_logs_by_moderator").
+	batch.Query(stmt, marshalledAuditLog.Id, marshalledAuditLog.PostId, marshalledAuditLog.ContributorId, marshalledAuditLog.ModeratorId, marshalledAuditLog.Bucket, marshalledAuditLog.CreatedMs)
+
+	q = qb.Insert("pending_posts_audit_logs_by_moderator").
 		Columns(
 			"id",
 			"post_id",
@@ -139,13 +135,28 @@ func (r InfractionCassandraRepository) CreatePendingPostAuditLog(ctx context.Con
 			"notes",
 			"reverted",
 			"bucket",
-		).
-		Query(r.session).
-		BindStruct(marhsl).
-		Consistency(gocql.One)
+		)
 
-	if err := insertPostByModerator.ExecRelease(); err != nil {
-		return fmt.Errorf("ExecRelease() failed: '%s", err)
+	stmt, _ = q.ToCql()
+
+	batch.Query(stmt,
+		marshalledAuditLog.Id,
+		marshalledAuditLog.PostId,
+		marshalledAuditLog.CreatedMs,
+		marshalledAuditLog.ContributorId,
+		marshalledAuditLog.ContributorUsername,
+		marshalledAuditLog.ModeratorId,
+		marshalledAuditLog.ModeratorUsername,
+		marshalledAuditLog.AccountInfractionId,
+		marshalledAuditLog.Status,
+		marshalledAuditLog.Reason,
+		marshalledAuditLog.Notes,
+		marshalledAuditLog.Reverted,
+		marshalledAuditLog.Bucket,
+	)
+
+	if err := r.session.ExecuteBatch(batch); err != nil {
+		return err
 	}
 
 	// if denied with infraction, add to infraction history for this user
@@ -293,10 +304,10 @@ func (r InfractionCassandraRepository) GetPendingPostAuditLogByModerator(ctx con
 		BindMap(qb.M{
 			"bucket": times,
 			// in the future created_ms will be used as a cursor for pagination for filtering
-			"created_ms":          0,
+			"created_ms":             0,
 			"moderator_account_id":   filter.ModeratorId(),
 			"contributor_account_id": filter.ContributorId(),
-			"post_id":             filter.PostId(),
+			"post_id":                filter.PostId(),
 		})
 
 	var dbPendingPostAuditLogs []*PendingPostAuditLogByModerator
