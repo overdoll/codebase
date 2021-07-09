@@ -37,7 +37,7 @@ type AccountMultiFactorSecuritySettings struct {
 	// Privileged users cannot disable MFA (moderators, staff)
 	CanDisableMultiFactor bool `json:"canDisableMultiFactor"`
 	// Has TOTP been configured? Recovery codes must be generated before configuring
-	MultiFactorTOTPConfigured bool `json:"multiFactorTOTPConfigured"`
+	MultiFactorTotpConfigured bool `json:"multiFactorTotpConfigured"`
 }
 
 type AccountMultiFactorTotp struct {

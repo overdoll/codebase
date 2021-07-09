@@ -100,8 +100,10 @@ func TestUserRepository_CreateUser_conflicting_email(t *testing.T) {
 
 	require.NoError(t, err)
 
+	usr2 := newFakeAccount(t)
+
 	// Create another user, with the same email but different username
-	copyUsr, err := account.NewAccount(uuid.New().String(), "ghahah", usr.Email())
+	copyUsr, err := account.NewAccount(uuid.New().String(), usr2.Username(), usr.Email())
 
 	require.NoError(t, err)
 

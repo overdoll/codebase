@@ -129,7 +129,7 @@ func (r *QueryResolver) AccountSettings(ctx context.Context) (*types.AccountSett
 				RecoveryCodesGenerated:    len(codes) > 0,
 				MultiFactorEnabled:        acc.MultiFactorEnabled(),
 				CanDisableMultiFactor:     acc.CanDisableMultiFactor(),
-				MultiFactorTOTPConfigured: totpEnabled,
+				MultiFactorTotpConfigured: totpEnabled,
 			}
 
 		}

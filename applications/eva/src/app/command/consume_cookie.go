@@ -46,19 +46,7 @@ func (h ConsumeCookieHandler) Handle(ctx context.Context, cookieId string) (*acc
 	// we weren't able to get our user, so that means that the cookie is not going to be deleted
 	// user has to register
 	if err != nil {
-
 		if err == account.ErrAccountNotFound {
-
-			// We also update the cookie so that it can count as "redeemed
-			ck, err = h.cr.UpdateCookie(ctx, cookieId, func(c *cookie.Cookie) error {
-				return c.MakeConsumed()
-			})
-
-			if err != nil {
-				zap.S().Errorf("failed to update cookie: %s", err)
-				return nil, nil, ErrFailedCookieConsume
-			}
-
 			return nil, ck, nil
 		}
 
@@ -67,7 +55,7 @@ func (h ConsumeCookieHandler) Handle(ctx context.Context, cookieId string) (*acc
 	}
 
 	if err := ck.MakeConsumed(); err != nil {
-		return nil, nil, err
+		return nil, ck, err
 	}
 
 	// multi-factor auth is enabled, we get the auth types and figure out which ones the user has
@@ -91,9 +79,7 @@ func (h ConsumeCookieHandler) Handle(ctx context.Context, cookieId string) (*acc
 
 	// Delete cookie - user is registered, so we don't need to wait for another call where the user will
 	// enter a username, since they already have an account and we can log them in
-	err = h.cr.DeleteCookieById(ctx, cookieId)
-
-	if err != nil {
+	if err := h.cr.DeleteCookieById(ctx, cookieId); err != nil {
 		zap.S().Errorf("failed to delete cookie: %s", err)
 		return nil, nil, ErrFailedCookieConsume
 	}

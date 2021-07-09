@@ -68,7 +68,7 @@ type ComplexityRoot struct {
 	AccountMultiFactorSecuritySettings struct {
 		CanDisableMultiFactor     func(childComplexity int) int
 		MultiFactorEnabled        func(childComplexity int) int
-		MultiFactorTOTPConfigured func(childComplexity int) int
+		MultiFactorTotpConfigured func(childComplexity int) int
 		RecoveryCodesGenerated    func(childComplexity int) int
 	}
 
@@ -277,12 +277,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AccountMultiFactorSecuritySettings.MultiFactorEnabled(childComplexity), true
 
-	case "AccountMultiFactorSecuritySettings.multiFactorTOTPConfigured":
-		if e.complexity.AccountMultiFactorSecuritySettings.MultiFactorTOTPConfigured == nil {
+	case "AccountMultiFactorSecuritySettings.multiFactorTotpConfigured":
+		if e.complexity.AccountMultiFactorSecuritySettings.MultiFactorTotpConfigured == nil {
 			break
 		}
 
-		return e.complexity.AccountMultiFactorSecuritySettings.MultiFactorTOTPConfigured(childComplexity), true
+		return e.complexity.AccountMultiFactorSecuritySettings.MultiFactorTotpConfigured(childComplexity), true
 
 	case "AccountMultiFactorSecuritySettings.recoveryCodesGenerated":
 		if e.complexity.AccountMultiFactorSecuritySettings.RecoveryCodesGenerated == nil {
@@ -291,14 +291,14 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AccountMultiFactorSecuritySettings.RecoveryCodesGenerated(childComplexity), true
 
-	case "AccountMultiFactorTOTP.imageSrc":
+	case "AccountMultiFactorTotp.imageSrc":
 		if e.complexity.AccountMultiFactorTotp.ImageSrc == nil {
 			break
 		}
 
 		return e.complexity.AccountMultiFactorTotp.ImageSrc(childComplexity), true
 
-	case "AccountMultiFactorTOTP.secret":
+	case "AccountMultiFactorTotp.secret":
 		if e.complexity.AccountMultiFactorTotp.Secret == nil {
 			break
 		}
@@ -517,12 +517,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.AuthenticateTotp(childComplexity, args["code"].(string)), true
 
-	case "Mutation.enrollAccountMultiFactorTOTP":
+	case "Mutation.enrollAccountMultiFactorTotp":
 		if e.complexity.Mutation.EnrollAccountMultiFactorTotp == nil {
 			break
 		}
 
-		args, err := ec.field_Mutation_enrollAccountMultiFactorTOTP_args(context.TODO(), rawArgs)
+		args, err := ec.field_Mutation_enrollAccountMultiFactorTotp_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
@@ -536,7 +536,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.GenerateAccountMultiFactorRecoveryCodes(childComplexity), true
 
-	case "Mutation.generateAccountMultiFactorTOTP":
+	case "Mutation.generateAccountMultiFactorTotp":
 		if e.complexity.Mutation.GenerateAccountMultiFactorTotp == nil {
 			break
 		}
@@ -931,7 +931,7 @@ type AccountMultiFactorRecoveryCode {
   code: String!
 }
 
-type AccountMultiFactorTOTP {
+type AccountMultiFactorTotp {
   secret: String!
 
   """
@@ -971,7 +971,7 @@ type AccountMultiFactorSecuritySettings {
   """
   Has TOTP been configured? Recovery codes must be generated before configuring
   """
-  multiFactorTOTPConfigured: Boolean!
+  multiFactorTotpConfigured: Boolean!
 }
 
 type AccountSecuritySettings {
@@ -1029,12 +1029,12 @@ extend type Mutation {
   """
   Generate a TOTP key for the current user. Recovery codes must be generated first.
   """
-  generateAccountMultiFactorTOTP: AccountMultiFactorTOTP!
+  generateAccountMultiFactorTotp: AccountMultiFactorTotp!
 
   """
   Enroll into TOTP. Code must be passed from previously-generated TOTP to validate that they have set it up
   """
-  enrollAccountMultiFactorTOTP(code: String!): Response!
+  enrollAccountMultiFactorTotp(code: String!): Response!
 
   """
   Toggle Multi-Factor for the user (enable or disable)
@@ -1190,7 +1190,7 @@ func (ec *executionContext) field_Mutation_authenticate_args(ctx context.Context
 	return args, nil
 }
 
-func (ec *executionContext) field_Mutation_enrollAccountMultiFactorTOTP_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Mutation_enrollAccountMultiFactorTotp_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 string
@@ -1713,7 +1713,7 @@ func (ec *executionContext) _AccountMultiFactorSecuritySettings_canDisableMultiF
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AccountMultiFactorSecuritySettings_multiFactorTOTPConfigured(ctx context.Context, field graphql.CollectedField, obj *types.AccountMultiFactorSecuritySettings) (ret graphql.Marshaler) {
+func (ec *executionContext) _AccountMultiFactorSecuritySettings_multiFactorTotpConfigured(ctx context.Context, field graphql.CollectedField, obj *types.AccountMultiFactorSecuritySettings) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1731,7 +1731,7 @@ func (ec *executionContext) _AccountMultiFactorSecuritySettings_multiFactorTOTPC
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.MultiFactorTOTPConfigured, nil
+		return obj.MultiFactorTotpConfigured, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1748,7 +1748,7 @@ func (ec *executionContext) _AccountMultiFactorSecuritySettings_multiFactorTOTPC
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AccountMultiFactorTOTP_secret(ctx context.Context, field graphql.CollectedField, obj *types.AccountMultiFactorTotp) (ret graphql.Marshaler) {
+func (ec *executionContext) _AccountMultiFactorTotp_secret(ctx context.Context, field graphql.CollectedField, obj *types.AccountMultiFactorTotp) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1756,7 +1756,7 @@ func (ec *executionContext) _AccountMultiFactorTOTP_secret(ctx context.Context, 
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "AccountMultiFactorTOTP",
+		Object:     "AccountMultiFactorTotp",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -1783,7 +1783,7 @@ func (ec *executionContext) _AccountMultiFactorTOTP_secret(ctx context.Context, 
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AccountMultiFactorTOTP_imageSrc(ctx context.Context, field graphql.CollectedField, obj *types.AccountMultiFactorTotp) (ret graphql.Marshaler) {
+func (ec *executionContext) _AccountMultiFactorTotp_imageSrc(ctx context.Context, field graphql.CollectedField, obj *types.AccountMultiFactorTotp) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1791,7 +1791,7 @@ func (ec *executionContext) _AccountMultiFactorTOTP_imageSrc(ctx context.Context
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "AccountMultiFactorTOTP",
+		Object:     "AccountMultiFactorTotp",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -3034,7 +3034,7 @@ func (ec *executionContext) _Mutation_generateAccountMultiFactorRecoveryCodes(ct
 	return ec.marshalNAccountMultiFactorRecoveryCode2ᚕᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountMultiFactorRecoveryCodeᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Mutation_generateAccountMultiFactorTOTP(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Mutation_generateAccountMultiFactorTotp(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3066,10 +3066,10 @@ func (ec *executionContext) _Mutation_generateAccountMultiFactorTOTP(ctx context
 	}
 	res := resTmp.(*types.AccountMultiFactorTotp)
 	fc.Result = res
-	return ec.marshalNAccountMultiFactorTOTP2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountMultiFactorTotp(ctx, field.Selections, res)
+	return ec.marshalNAccountMultiFactorTotp2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountMultiFactorTotp(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Mutation_enrollAccountMultiFactorTOTP(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Mutation_enrollAccountMultiFactorTotp(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3086,7 +3086,7 @@ func (ec *executionContext) _Mutation_enrollAccountMultiFactorTOTP(ctx context.C
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_enrollAccountMultiFactorTOTP_args(ctx, rawArgs)
+	args, err := ec.field_Mutation_enrollAccountMultiFactorTotp_args(ctx, rawArgs)
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
@@ -5128,8 +5128,8 @@ func (ec *executionContext) _AccountMultiFactorSecuritySettings(ctx context.Cont
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "multiFactorTOTPConfigured":
-			out.Values[i] = ec._AccountMultiFactorSecuritySettings_multiFactorTOTPConfigured(ctx, field, obj)
+		case "multiFactorTotpConfigured":
+			out.Values[i] = ec._AccountMultiFactorSecuritySettings_multiFactorTotpConfigured(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -5144,24 +5144,24 @@ func (ec *executionContext) _AccountMultiFactorSecuritySettings(ctx context.Cont
 	return out
 }
 
-var accountMultiFactorTOTPImplementors = []string{"AccountMultiFactorTOTP"}
+var accountMultiFactorTotpImplementors = []string{"AccountMultiFactorTotp"}
 
-func (ec *executionContext) _AccountMultiFactorTOTP(ctx context.Context, sel ast.SelectionSet, obj *types.AccountMultiFactorTotp) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, accountMultiFactorTOTPImplementors)
+func (ec *executionContext) _AccountMultiFactorTotp(ctx context.Context, sel ast.SelectionSet, obj *types.AccountMultiFactorTotp) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, accountMultiFactorTotpImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("AccountMultiFactorTOTP")
+			out.Values[i] = graphql.MarshalString("AccountMultiFactorTotp")
 		case "secret":
-			out.Values[i] = ec._AccountMultiFactorTOTP_secret(ctx, field, obj)
+			out.Values[i] = ec._AccountMultiFactorTotp_secret(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "imageSrc":
-			out.Values[i] = ec._AccountMultiFactorTOTP_imageSrc(ctx, field, obj)
+			out.Values[i] = ec._AccountMultiFactorTotp_imageSrc(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -5523,13 +5523,13 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "generateAccountMultiFactorTOTP":
-			out.Values[i] = ec._Mutation_generateAccountMultiFactorTOTP(ctx, field)
+		case "generateAccountMultiFactorTotp":
+			out.Values[i] = ec._Mutation_generateAccountMultiFactorTotp(ctx, field)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "enrollAccountMultiFactorTOTP":
-			out.Values[i] = ec._Mutation_enrollAccountMultiFactorTOTP(ctx, field)
+		case "enrollAccountMultiFactorTotp":
+			out.Values[i] = ec._Mutation_enrollAccountMultiFactorTotp(ctx, field)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -6172,18 +6172,18 @@ func (ec *executionContext) marshalNAccountMultiFactorSecuritySettings2ᚖoverdo
 	return ec._AccountMultiFactorSecuritySettings(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNAccountMultiFactorTOTP2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountMultiFactorTotp(ctx context.Context, sel ast.SelectionSet, v types.AccountMultiFactorTotp) graphql.Marshaler {
-	return ec._AccountMultiFactorTOTP(ctx, sel, &v)
+func (ec *executionContext) marshalNAccountMultiFactorTotp2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountMultiFactorTotp(ctx context.Context, sel ast.SelectionSet, v types.AccountMultiFactorTotp) graphql.Marshaler {
+	return ec._AccountMultiFactorTotp(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNAccountMultiFactorTOTP2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountMultiFactorTotp(ctx context.Context, sel ast.SelectionSet, v *types.AccountMultiFactorTotp) graphql.Marshaler {
+func (ec *executionContext) marshalNAccountMultiFactorTotp2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountMultiFactorTotp(ctx context.Context, sel ast.SelectionSet, v *types.AccountMultiFactorTotp) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
 		}
 		return graphql.Null
 	}
-	return ec._AccountMultiFactorTOTP(ctx, sel, v)
+	return ec._AccountMultiFactorTotp(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNAccountSecuritySettings2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountSecuritySettings(ctx context.Context, sel ast.SelectionSet, v *types.AccountSecuritySettings) graphql.Marshaler {

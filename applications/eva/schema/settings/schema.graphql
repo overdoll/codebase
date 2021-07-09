@@ -24,7 +24,7 @@ type AccountMultiFactorRecoveryCode {
   code: String!
 }
 
-type AccountMultiFactorTOTP {
+type AccountMultiFactorTotp {
   secret: String!
 
   """
@@ -64,7 +64,7 @@ type AccountMultiFactorSecuritySettings {
   """
   Has TOTP been configured? Recovery codes must be generated before configuring
   """
-  multiFactorTOTPConfigured: Boolean!
+  multiFactorTotpConfigured: Boolean!
 }
 
 type AccountSecuritySettings {
@@ -122,12 +122,12 @@ extend type Mutation {
   """
   Generate a TOTP key for the current user. Recovery codes must be generated first.
   """
-  generateAccountMultiFactorTOTP: AccountMultiFactorTOTP!
+  generateAccountMultiFactorTotp: AccountMultiFactorTotp!
 
   """
   Enroll into TOTP. Code must be passed from previously-generated TOTP to validate that they have set it up
   """
-  enrollAccountMultiFactorTOTP(code: String!): Response!
+  enrollAccountMultiFactorTotp(code: String!): Response!
 
   """
   Toggle Multi-Factor for the user (enable or disable)

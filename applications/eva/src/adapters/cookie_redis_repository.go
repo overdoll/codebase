@@ -3,6 +3,7 @@ package adapters
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 
 	"github.com/go-redis/redis/v8"
@@ -83,10 +84,14 @@ func (r CookieRepository) CreateCookie(ctx context.Context, instance *cookie.Coo
 		return err
 	}
 
-	_, err = r.client.SetNX(ctx, CookiePrefix+instance.Cookie(), val, instance.Expiration()).Result()
+	ok, err := r.client.SetNX(ctx, CookiePrefix+instance.Cookie(), val, instance.Expiration()).Result()
 
 	if err != nil {
 		return fmt.Errorf("set failed: '%s", err)
+	}
+
+	if !ok {
+		return errors.New("duplicate key")
 	}
 
 	return nil
@@ -125,7 +130,9 @@ func (r CookieRepository) UpdateCookie(ctx context.Context, cookieId string, upd
 		return nil, err
 	}
 
-	_, err = r.client.SetNX(ctx, CookiePrefix+instance.Cookie(), val, instance.Expiration()).Result()
+	bo, err := r.client.Set(ctx, CookiePrefix+instance.Cookie(), val, instance.Expiration()).Result()
+
+	fmt.Println(bo)
 
 	if err != nil {
 		return nil, fmt.Errorf("set failed: '%s", err)

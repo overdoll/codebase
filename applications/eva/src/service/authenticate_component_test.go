@@ -89,7 +89,7 @@ func TestAccountAuthenticate_from_another_session(t *testing.T) {
 
 	assert.Equal(t, authenticate.Authenticate, true)
 
-	clientFromAnotherSession, _, _ := getHttpClient(t, nil)
+	clientFromAnotherSession, _, _ := getHttpClient(t, passport.FreshPassport())
 
 	redeemCookie := qRedeemCookie(t, clientFromAnotherSession, otpCookie.Value)
 
@@ -197,7 +197,7 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 
 	// submit the TOTP code so MFA can be setup correctly
 	err = client.Mutate(context.Background(), &enrollAccountMultiFactorTOTP, map[string]interface{}{
-		"code": otp,
+		"code": graphql.String(otp),
 	})
 
 	require.NoError(t, err)
@@ -208,7 +208,7 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 	// look up settings and ensure MFA is now enabled
 	require.True(t, settings.AccountSettings.Security.MultiFactor.MultiFactorEnabled)
 	// totp should be configured (since this is what we set up)
-	require.True(t, settings.AccountSettings.Security.MultiFactor.MultiFactorTOTPConfigured)
+	require.True(t, settings.AccountSettings.Security.MultiFactor.MultiFactorTotpConfigured)
 
 	// log in with TOTP
 	redeemCookie, client, pass := authenticateAndRedeemCookie(t, "0eclipse_test@overdoll.com")
@@ -223,7 +223,7 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 
 	var authenticateTOTP AuthenticateTOTP
 	err = client.Mutate(context.Background(), &authenticateTOTP, map[string]interface{}{
-		"code": otp,
+		"code": graphql.String(otp),
 	})
 
 	modified := pass.GetPassport()
@@ -241,7 +241,7 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 	err = client.Mutate(context.Background(), &authenticateRecoveryCode, map[string]interface{}{
 		// earlier we got a list of recovery codes for this account
 		// we are going to go in and grab the first one and use it
-		"code": accountMultiFactorRecoveryCodes.AccountMultiFactorRecoveryCodes[0].Code,
+		"code": graphql.String(accountMultiFactorRecoveryCodes.AccountMultiFactorRecoveryCodes[0].Code),
 	})
 
 	modified = pass.GetPassport()
@@ -260,7 +260,7 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 	// look up settings and ensure MFA is now disabled
 	require.False(t, settings.AccountSettings.Security.MultiFactor.MultiFactorEnabled)
 	// totp should also be no longer configured (since turning off MFA will remove all multi factor configuration)
-	require.False(t, settings.AccountSettings.Security.MultiFactor.MultiFactorTOTPConfigured)
+	require.False(t, settings.AccountSettings.Security.MultiFactor.MultiFactorTotpConfigured)
 
 	// attempt one last login and ensure it doesn't ask for a MFA code
 	redeemCookie, client, pass = authenticateAndRedeemCookie(t, "0eclipse_test@overdoll.com")

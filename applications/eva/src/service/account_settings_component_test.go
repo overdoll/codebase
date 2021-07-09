@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/bxcodec/faker/v3"
+	"github.com/shurcooL/graphql"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -77,7 +78,7 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 
 	// add an email to our account
 	err = client.Mutate(context.Background(), &addAccountEmail, map[string]interface{}{
-		"email": targetEmail,
+		"email": graphql.String(targetEmail),
 	})
 
 	require.NoError(t, err)
@@ -105,7 +106,7 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 
 	// confirm the account's new email
 	err = client.Query(context.Background(), &confirmAccountEmail, map[string]interface{}{
-		"id": confirmationKey,
+		"id": graphql.String(confirmationKey),
 	})
 
 	require.NoError(t, err)
@@ -128,7 +129,7 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 
 	// mark email as primary
 	err = client.Mutate(context.Background(), &makeEmailPrimary, map[string]interface{}{
-		"email": targetEmail,
+		"email": graphql.String(targetEmail),
 	})
 
 	require.NoError(t, err)
@@ -167,7 +168,7 @@ func TestAccountUsername_modify(t *testing.T) {
 
 	// modify account's username
 	err = client.Mutate(context.Background(), &modifyAccountUsername, map[string]interface{}{
-		"username": targetUsername,
+		"username": graphql.String(targetUsername),
 	})
 
 	require.NoError(t, err)

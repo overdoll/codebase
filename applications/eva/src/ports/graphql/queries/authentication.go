@@ -39,14 +39,26 @@ func (r *QueryResolver) RedeemCookie(ctx context.Context, cookieId string) (*typ
 		return nil, command.ErrFailedCookieRedeem
 	}
 
+	// redeemCookie first
+	ck, err := r.App.Commands.RedeemCookie.Handle(ctx, cookieId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if ck == nil {
+		return &types.Cookie{
+			SameSession: false,
+			Registered:  false,
+			Redeemed:    false,
+			Session:     "",
+			Email:       "",
+			Invalid:     true,
+		}, nil
+	}
+
 	// cookie redeemed not in the same session, just redeem it
 	if !isSameSession {
-		ck, err := r.App.Commands.RedeemCookie.Handle(ctx, cookieId)
-
-		if err != nil {
-			return nil, err
-		}
-
 		return &types.Cookie{
 			SameSession: isSameSession,
 			Registered:  false,
@@ -64,19 +76,7 @@ func (r *QueryResolver) RedeemCookie(ctx context.Context, cookieId string) (*typ
 		return nil, err
 	}
 
-	if ck == nil {
-		return &types.Cookie{
-			SameSession: false,
-			Registered:  false,
-			Redeemed:    false,
-			Session:     "",
-			Email:       "",
-			Invalid:     true,
-		}, nil
-	}
-
-	// Cookie was consumed
-	if ck.Consumed() {
+	if usr != nil {
 		// Remove OTP cookie
 		http.SetCookie(gc.Writer, &http.Cookie{Name: cookie.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
 
@@ -87,6 +87,15 @@ func (r *QueryResolver) RedeemCookie(ctx context.Context, cookieId string) (*typ
 		}); err != nil {
 			return nil, err
 		}
+
+		return &types.Cookie{
+			SameSession: true,
+			Registered:  true,
+			Redeemed:    ck.Redeemed(),
+			Session:     ck.Session(),
+			Email:       ck.Email(),
+			Invalid:     false,
+		}, nil
 	}
 
 	// send back MFA types
@@ -98,8 +107,8 @@ func (r *QueryResolver) RedeemCookie(ctx context.Context, cookieId string) (*typ
 
 	return &types.Cookie{
 		SameSession: true,
-		Registered:  ck.Consumed(),
-		Redeemed:    true,
+		Registered:  false,
+		Redeemed:    ck.Redeemed(),
 		Session:     ck.Session(),
 		Email:       ck.Email(),
 		Invalid:     false,
@@ -147,6 +156,20 @@ func (r *QueryResolver) Authentication(ctx context.Context) (*types.Authenticati
 	acc, ck, err := r.App.Commands.ConsumeCookie.Handle(ctx, otpCookie.Value)
 
 	if err != nil {
+		if err == cookie.ErrCookieNotRedeemed && ck != nil {
+			return &types.Authentication{
+				Cookie: &types.Cookie{
+					SameSession: true,
+					Registered:  false,
+					Redeemed:    ck.Redeemed(),
+					Session:     ck.Session(),
+					Email:       ck.Email(),
+					Invalid:     false,
+				},
+				User: nil,
+			}, nil
+		}
+
 		return nil, err
 	}
 
@@ -168,30 +191,30 @@ func (r *QueryResolver) Authentication(ctx context.Context) (*types.Authenticati
 		}, nil
 	}
 
-	if ck == nil {
+	if ck != nil {
+		// send back MFA types
+		var multiFactorTypes []types.MultiFactorTypeEnum
+
+		if ck.IsTOTPRequired() {
+			multiFactorTypes = append(multiFactorTypes, types.MultiFactorTypeEnumTotp)
+		}
+
 		return &types.Authentication{
-			Cookie: nil,
-			User:   nil,
+			Cookie: &types.Cookie{
+				SameSession: true,
+				Registered:  false,
+				Redeemed:    ck.Redeemed(),
+				Session:     ck.Session(),
+				Email:       ck.Email(),
+				Invalid:     false,
+				MultiFactor: multiFactorTypes,
+			},
+			User: nil,
 		}, nil
 	}
 
-	// send back MFA types
-	var multiFactorTypes []types.MultiFactorTypeEnum
-
-	if ck.IsTOTPRequired() {
-		multiFactorTypes = append(multiFactorTypes, types.MultiFactorTypeEnumTotp)
-	}
-
 	return &types.Authentication{
-		Cookie: &types.Cookie{
-			SameSession: true,
-			Registered:  false,
-			Redeemed:    ck.Redeemed(),
-			Session:     ck.Session(),
-			Email:       ck.Email(),
-			Invalid:     false,
-			MultiFactor: multiFactorTypes,
-		},
-		User: nil,
+		Cookie: nil,
+		User:   nil,
 	}, nil
 }

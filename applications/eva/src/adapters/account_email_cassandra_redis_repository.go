@@ -3,6 +3,7 @@ package adapters
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 
 	"github.com/go-redis/redis/v8"
@@ -50,10 +51,14 @@ func (r AccountRepository) AddAccountEmail(ctx context.Context, acc *account.Acc
 		return err
 	}
 
-	_, err = r.client.SetNX(ctx, ConfirmEmailPrefix+confirm.ID(), val, confirm.Expires()).Result()
+	ok, err := r.client.SetNX(ctx, ConfirmEmailPrefix+confirm.ID(), val, confirm.Expires()).Result()
 
 	if err != nil {
 		return err
+	}
+
+	if !ok {
+		return errors.New("duplicate key")
 	}
 
 	// create a unique email

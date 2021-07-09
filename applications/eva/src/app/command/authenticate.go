@@ -30,9 +30,7 @@ func (h AuthenticateHandler) Handle(ctx context.Context, email, session string) 
 		return nil, err
 	}
 
-	err = h.cr.CreateCookie(ctx, instance)
-
-	if err != nil {
+	if err := h.cr.CreateCookie(ctx, instance); err != nil {
 		zap.S().Errorf("failed to create cookie: %s", err)
 		return nil, ErrFailedAuthenticate
 	}
