@@ -120,7 +120,7 @@ func (r AccountRepository) ConfirmAccountEmail(ctx context.Context, confirmId st
 		Set("status").
 		Where(qb.Eq("email"), qb.Eq("account_id")).
 		Query(r.session).
-		SerialConsistency(gocql.LocalQuorum).
+		Consistency(gocql.LocalQuorum).
 		BindStruct(EmailByAccount{
 			Email:     confirmItem.Email,
 			AccountId: acc.ID(),

@@ -7,6 +7,7 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"io"
+	"os"
 )
 
 func createHash(key string) string {
@@ -15,7 +16,8 @@ func createHash(key string) string {
 	return hex.EncodeToString(hasher.Sum(nil))
 }
 
-func Encrypt(data []byte, passphrase string) []byte {
+func Encrypt(data string) string {
+	passphrase := os.Getenv("APP_KEY")
 	block, _ := aes.NewCipher([]byte(createHash(passphrase)))
 	gcm, err := cipher.NewGCM(block)
 	if err != nil {
@@ -25,11 +27,16 @@ func Encrypt(data []byte, passphrase string) []byte {
 	if _, err = io.ReadFull(rand.Reader, nonce); err != nil {
 		panic(err.Error())
 	}
-	ciphertext := gcm.Seal(nonce, nonce, data, nil)
-	return ciphertext
+	ciphertext := gcm.Seal(nonce, nonce, []byte(data), nil)
+	return hex.EncodeToString(ciphertext)
 }
 
-func Decrypt(data []byte, passphrase string) []byte {
+func Decrypt(data string) string {
+	passphrase := os.Getenv("APP_KEY")
+	newData, err := hex.DecodeString(data)
+	if err != nil {
+		panic(err.Error())
+	}
 	key := []byte(createHash(passphrase))
 	block, err := aes.NewCipher(key)
 	if err != nil {
@@ -40,10 +47,10 @@ func Decrypt(data []byte, passphrase string) []byte {
 		panic(err.Error())
 	}
 	nonceSize := gcm.NonceSize()
-	nonce, ciphertext := data[:nonceSize], data[nonceSize:]
+	nonce, ciphertext := newData[:nonceSize], newData[nonceSize:]
 	plaintext, err := gcm.Open(nil, nonce, ciphertext, nil)
 	if err != nil {
 		panic(err.Error())
 	}
-	return plaintext
+	return string(plaintext)
 }

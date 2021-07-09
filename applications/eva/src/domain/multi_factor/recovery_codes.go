@@ -2,7 +2,6 @@ package multi_factor
 
 import (
 	"math/rand"
-	"os"
 
 	"overdoll/libraries/crypt"
 )
@@ -25,7 +24,7 @@ func NewRecoveryCode(code string) *RecoveryCode {
 }
 
 func (c *RecoveryCode) Code() string {
-	return string(crypt.Encrypt([]byte(c.code), os.Getenv("APP_KEY")))
+	return crypt.Encrypt(c.code)
 }
 
 func (c *RecoveryCode) RawCode() string {
@@ -34,7 +33,7 @@ func (c *RecoveryCode) RawCode() string {
 
 func UnmarshalRecoveryCodeFromDatabase(code string) *RecoveryCode {
 	return &RecoveryCode{
-		code: string(crypt.Decrypt([]byte(code), os.Getenv("APP_KEY"))),
+		code: crypt.Decrypt(code),
 	}
 }
 

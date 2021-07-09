@@ -103,20 +103,20 @@ func TestAccountAuthenticate_from_another_session(t *testing.T) {
 	assert.Equal(t, "poisonminion", authRedeemed.Authentication.User.Username)
 }
 
-type GenerateAccountRecoveryCodes struct {
-	GenerateAccountRecoveryCodes []types.AccountMultiFactorRecoveryCode `graphql:"modifyAccountUsername(username: $username)"`
+type GenerateAccountMultiFactorRecoveryCodes struct {
+	GenerateAccountMultiFactorRecoveryCodes []types.AccountMultiFactorRecoveryCode `graphql:"generateAccountMultiFactorRecoveryCodes()"`
 }
 
 type AccountMultiFactorRecoveryCodes struct {
 	AccountMultiFactorRecoveryCodes []types.AccountMultiFactorRecoveryCode `graphql:"accountMultiFactorRecoveryCodes()"`
 }
 
-type GenerateAccountMultiFactorTOTP struct {
-	GenerateAccountMultiFactorTOTP types.AccountMultiFactorTotp `graphql:"generateAccountMultiFactorTOTP()"`
+type GenerateAccountMultiFactorTotp struct {
+	GenerateAccountMultiFactorTotp types.AccountMultiFactorTotp `graphql:"generateAccountMultiFactorTotp()"`
 }
 
-type EnrollAccountMultiFactorTOTP struct {
-	EnrollAccountMultiFactorTOTP types.Response `graphql:"enrollAccountMultiFactorTOTP(code: $code)"`
+type EnrollAccountMultiFactorTotp struct {
+	EnrollAccountMultiFactorTotp types.Response `graphql:"enrollAccountMultiFactorTotp(code: $code)"`
 }
 
 type ToggleAccountMultiFactor struct {
@@ -142,14 +142,14 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 	// use passport with user
 	client, _, _ := getHttpClient(t, passport.FreshPassportWithUser("1q7MJ5IyRTV0X4J27F3m5wGD5mj"))
 
-	var generateAccountRecoveryCodes GenerateAccountRecoveryCodes
+	var generateAccountRecoveryCodes GenerateAccountMultiFactorRecoveryCodes
 
 	// generate some recovery codes
 	err := client.Mutate(context.Background(), &generateAccountRecoveryCodes, nil)
 	require.NoError(t, err)
 
 	// make sure recovery codes are at least greater
-	require.Greater(t, len(generateAccountRecoveryCodes.GenerateAccountRecoveryCodes), 0)
+	require.Greater(t, len(generateAccountRecoveryCodes.GenerateAccountMultiFactorRecoveryCodes), 0)
 
 	// look up to make sure recovery code generation is true
 	settings := qAccountSettings(t, client)
@@ -168,7 +168,7 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 		foundCode := false
 
 		// check for code in set
-		for _, codeTarget := range generateAccountRecoveryCodes.GenerateAccountRecoveryCodes {
+		for _, codeTarget := range generateAccountRecoveryCodes.GenerateAccountMultiFactorRecoveryCodes {
 			if codeTarget.Code == code.Code {
 				foundCode = true
 			}
@@ -177,23 +177,23 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 		require.True(t, foundCode)
 	}
 
-	var generateAccountMultiFactorTOTP GenerateAccountMultiFactorTOTP
+	var generateAccountMultiFactorTOTP GenerateAccountMultiFactorTotp
 
 	// generate TOTP secret
 	err = client.Mutate(context.Background(), &generateAccountMultiFactorTOTP, nil)
 	require.NoError(t, err)
 
-	require.NotEmpty(t, generateAccountMultiFactorTOTP.GenerateAccountMultiFactorTOTP.ImageSrc)
+	require.NotEmpty(t, generateAccountMultiFactorTOTP.GenerateAccountMultiFactorTotp.ImageSrc)
 
 	// save for later (logging in)
-	totpSecret := generateAccountMultiFactorTOTP.GenerateAccountMultiFactorTOTP.Secret
+	totpSecret := generateAccountMultiFactorTOTP.GenerateAccountMultiFactorTotp.Secret
 
 	// generate a TOTP code (usually, this would happen from a user's authenticator app or something else that does TOTP
 	// so we use a library here to do exactly that)
 	otp, err := totp.GenerateCode(totpSecret, time.Now())
 	require.NoError(t, err)
 
-	var enrollAccountMultiFactorTOTP EnrollAccountMultiFactorTOTP
+	var enrollAccountMultiFactorTOTP EnrollAccountMultiFactorTotp
 
 	// submit the TOTP code so MFA can be setup correctly
 	err = client.Mutate(context.Background(), &enrollAccountMultiFactorTOTP, map[string]interface{}{
@@ -201,7 +201,7 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 	})
 
 	require.NoError(t, err)
-	require.True(t, enrollAccountMultiFactorTOTP.EnrollAccountMultiFactorTOTP.Ok)
+	require.True(t, enrollAccountMultiFactorTOTP.EnrollAccountMultiFactorTotp.Ok)
 
 	settings = qAccountSettings(t, client)
 

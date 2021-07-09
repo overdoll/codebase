@@ -130,9 +130,7 @@ func (r CookieRepository) UpdateCookie(ctx context.Context, cookieId string, upd
 		return nil, err
 	}
 
-	bo, err := r.client.Set(ctx, CookiePrefix+instance.Cookie(), val, instance.Expiration()).Result()
-
-	fmt.Println(bo)
+	_, err = r.client.Set(ctx, CookiePrefix+instance.Cookie(), val, instance.Expiration()).Result()
 
 	if err != nil {
 		return nil, fmt.Errorf("set failed: '%s", err)

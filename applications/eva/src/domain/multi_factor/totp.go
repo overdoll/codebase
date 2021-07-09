@@ -5,7 +5,6 @@ import (
 	"encoding/base64"
 	"errors"
 	"image/png"
-	"os"
 	"time"
 
 	"github.com/pquerna/otp"
@@ -25,13 +24,13 @@ var (
 	ErrTOTPCodeInvalid            = errors.New("TOTP code not valid")
 	ErrTOTPNotConfigured          = errors.New("TOTP not configured")
 	ErrRecoveryCodesNotConfigured = errors.New("recovery codes not configured")
-	ErrRecoveryCodeInvalid = errors.New("recovery code invalid")
+	ErrRecoveryCodeInvalid        = errors.New("recovery code invalid")
 )
 
 // OTP will be returned from the DB as encrypted (because the getter returns it as so)
 func UnmarshalTOTPFromDatabase(secret string) *TOTP {
 	return &TOTP{
-		secret: string(crypt.Decrypt([]byte(secret), os.Getenv("APP_KEY"))),
+		secret: crypt.Decrypt(secret),
 	}
 }
 
@@ -56,7 +55,7 @@ func (c *TOTP) RawSecret() string {
 
 // Should be used when storing in the database
 func (c *TOTP) Secret() string {
-	return string(crypt.Encrypt([]byte(c.secret), os.Getenv("APP_KEY")))
+	return crypt.Encrypt(c.secret)
 }
 
 // Image - returns an image URL that can be easily used in HTML as an image SRC (base64 encoded)

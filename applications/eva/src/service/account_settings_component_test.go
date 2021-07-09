@@ -26,7 +26,7 @@ func getEmailConfirmation(t *testing.T, targetEmail string) string {
 	client, err := bootstrap.InitializeRedisSession(viper.GetInt("redis.db"))
 	require.NoError(t, err)
 
-	keys, err := client.Keys(context.Background(), adapters.ConfirmEmailPrefix).Result()
+	keys, err := client.Keys(context.Background(), adapters.ConfirmEmailPrefix+"*").Result()
 	require.NoError(t, err)
 
 	for _, key := range keys {
@@ -40,7 +40,7 @@ func getEmailConfirmation(t *testing.T, targetEmail string) string {
 		require.NoError(t, err)
 
 		if emailConfirmation.Email == targetEmail {
-			return strings.Split(key, ":")[0]
+			return strings.Split(key, ":")[1]
 		}
 	}
 
@@ -134,6 +134,9 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 
 	require.NoError(t, err)
 	require.True(t, makeEmailPrimary.MakeAccountEmailPrimary.Ok)
+
+	// query account settings once more
+	settings = qAccountSettings(t, client)
 
 	foundPrimaryEmail := false
 

@@ -121,7 +121,7 @@ func (r AccountRepository) UpdateAccountUsername(ctx context.Context, id string,
 	stmt, _ = qUpdate.ToCql()
 
 	// finally, update account
-	batch.Query(stmt, instance.ID(), instance.Username(), instance.LastUsernameEdit())
+	batch.Query(stmt, instance.Username(), instance.LastUsernameEdit(), instance.ID())
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
 		return nil, fmt.Errorf("batch() failed: %s", err)

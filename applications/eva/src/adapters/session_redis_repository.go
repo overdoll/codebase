@@ -4,8 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"os"
-	"strings"
 
 	"github.com/go-redis/redis/v8"
 	"overdoll/applications/eva/src/domain/session"
@@ -46,10 +44,10 @@ func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, accountId
 
 	var sessions []*session.Session
 
-	for _, key := range keys {
+	for _, sessionID := range keys {
 
 		// get each key's value
-		val, err := r.client.Get(ctx, key).Result()
+		val, err := r.client.Get(ctx, sessionID).Result()
 
 		if err != nil {
 			return nil, err
@@ -61,13 +59,10 @@ func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, accountId
 			return nil, err
 		}
 
-		// we grab the SessionID, which is the middle of the array
-		sessionID := strings.Split(key, ":")
-
 		// we want to encrypt our session key
-		encryptedKey := crypt.Encrypt([]byte(sessionID[1]), os.Getenv("APP_KEY"))
+		encryptedKey := crypt.Encrypt(sessionID)
 
-		session.UnmarshalSessionFromDatabase(string(encryptedKey), sessionItem.UserAgent, sessionItem.Ip, sessionItem.Created)
+		session.UnmarshalSessionFromDatabase(encryptedKey, sessionItem.UserAgent, sessionItem.Ip, sessionItem.Created)
 	}
 
 	return sessions, nil
@@ -77,9 +72,9 @@ func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, accountId
 func (r SessionRepository) RevokeSessionById(ctx context.Context, accountId, sessionId string) error {
 
 	// decrypt, since we send it as encrypted
-	key := crypt.Decrypt([]byte(sessionId), os.Getenv("APP_KEY"))
+	key := crypt.Decrypt(sessionId)
 	// make sure that we delete the session that belongs to this user only
-	_, err := r.client.Del(ctx, SessionPrefix+string(key)+":"+accountId).Result()
+	_, err := r.client.Del(ctx, SessionPrefix+key+":"+accountId).Result()
 
 	if err != nil {
 
