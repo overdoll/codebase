@@ -12,6 +12,32 @@ type QueryResolver struct {
 	App *app.Application
 }
 
+func (q QueryResolver) AccountInfractionHistory(ctx context.Context) ([]*types.UsersInfractionHistory, error) {
+
+	pass := passport.FromContext(ctx)
+
+	if !pass.IsAuthenticated() {
+		return nil, passport.ErrNotAuthenticated
+	}
+
+	history, err := q.App.Queries.UserInfractionHistory.Handle(ctx, pass.AccountID())
+
+	if err != nil {
+		return nil, err
+	}
+
+	var infractionHistory []*types.UsersInfractionHistory
+
+	for _, infraction := range history {
+		infractionHistory = append(infractionHistory, &types.UsersInfractionHistory{
+			ID:     infraction.ID(),
+			Reason: infraction.Reason(),
+		})
+	}
+
+	return infractionHistory, nil
+}
+
 func (q QueryResolver) PendingPostAuditLogs(ctx context.Context, filter types.PendingPostAuditLogFilters) (*types.PendingPostAuditLogConnection, error) {
 	pass := passport.FromContext(ctx)
 

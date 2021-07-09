@@ -15,8 +15,9 @@ import (
 	"overdoll/libraries/passport"
 )
 
+// helper function - basically runs the "authentication" flow - run authenticate mutation, grab cookie from jar, and redeem the cookie
 func authenticateAndRedeemCookie(t *testing.T, email string) (RedeemCookie, *graphql.Client, *clients.ClientPassport) {
-	// attempt one last login and ensure it doesn't ask for a MFA code
+
 	client, httpUser, pass := getHttpClient(t, passport.FreshPassport())
 
 	authenticate := mAuthenticate(t, client, email)
@@ -25,7 +26,12 @@ func authenticateAndRedeemCookie(t *testing.T, email string) (RedeemCookie, *gra
 
 	assert.Equal(t, authenticate.Authenticate, true)
 
-	return qRedeemCookie(t, client, otpCookie.Value), client, pass
+	cookie := qRedeemCookie(t, client, otpCookie.Value)
+
+	// make sure cookie is valid
+	require.False(t, cookie.RedeemCookie.Invalid)
+
+	return cookie, client, pass
 }
 
 type Logout struct {

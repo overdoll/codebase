@@ -24,4 +24,9 @@ type Query {
   Used as the input for rejecting a pending post
   """
   rejectionReasons: [PendingPostRejectionReason!]!
+
+  """
+  Infraction history for the currently logged-in account
+  """
+  accountInfractionHistory: [UsersInfractionHistory!]
 }

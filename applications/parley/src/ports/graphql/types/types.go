@@ -72,13 +72,6 @@ type RevertPostInput struct {
 	AuditLogID string `json:"auditLogId"`
 }
 
-type User struct {
-	ID                string                    `json:"id"`
-	InfractionHistory []*UsersInfractionHistory `json:"infractionHistory"`
-}
-
-func (User) IsEntity() {}
-
 type UsersInfractionHistory struct {
 	ID     string `json:"id"`
 	Reason string `json:"reason"`
