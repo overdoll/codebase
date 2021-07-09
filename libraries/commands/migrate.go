@@ -10,7 +10,6 @@ import (
 
 	"github.com/scylladb/gocqlx/v2/migrate"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"overdoll/libraries/bootstrap"
 )
 
@@ -33,7 +32,7 @@ var Migrate = &cobra.Command{
 		// if "keyspace" arg is passed, it will create the keyspace before running migrations
 		for _, arg := range args {
 			if arg == "keyspace" {
-				session, err := bootstrap.InitializeDatabaseSession("")
+				session, err := bootstrap.InitializeDatabaseSessionNoKeyspace()
 
 				if err != nil {
 					log.Fatalf("database session failed with errors: %s", err)
@@ -74,7 +73,7 @@ var Migrate = &cobra.Command{
 			}
 		}
 
-		session, err := bootstrap.InitializeDatabaseSession(viper.GetString("db.keyspace"))
+		session, err := bootstrap.InitializeDatabaseSession()
 
 		if err != nil {
 			log.Fatalf("database session failed with errors: %s", err)

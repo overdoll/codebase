@@ -42,7 +42,7 @@ type Logout struct {
 func TestLogout_user(t *testing.T) {
 	t.Parallel()
 
-	client, _, pass := getHttpClient(t, passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	client, _, pass := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 
 	var mutation Logout
 
@@ -139,8 +139,11 @@ type AuthenticateRecoveryCode struct {
 func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 	t.Parallel()
 
+	testAccountId := "1q7MIw0U6TEpELH0FqnxrcXt3E0"
+	testAccountEmail := "artist_verified_test@overdoll.com"
+
 	// use passport with user
-	client, _, _ := getHttpClient(t, passport.FreshPassportWithUser("1q7MJ5IyRTV0X4J27F3m5wGD5mj"))
+	client, _, _ := getHttpClient(t, passport.FreshPassportWithAccount(testAccountId))
 
 	var generateAccountRecoveryCodes GenerateAccountMultiFactorRecoveryCodes
 
@@ -211,7 +214,7 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 	require.True(t, settings.AccountSettings.Security.MultiFactor.MultiFactorTotpConfigured)
 
 	// log in with TOTP
-	redeemCookie, client, pass := authenticateAndRedeemCookie(t, "0eclipse_test@overdoll.com")
+	redeemCookie, client, pass := authenticateAndRedeemCookie(t, testAccountEmail)
 
 	assert.NotNil(t, redeemCookie.RedeemCookie.MultiFactor)
 	// when we try to login, TOTP should be in here to tell the user that they need to authenticate with MFA
@@ -230,10 +233,10 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 
 	// ensure user is authenticated
 	assert.Equal(t, true, modified.IsAuthenticated())
-	assert.Equal(t, "1q7MJ5IyRTV0X4J27F3m5wGD5mj", modified.AccountID())
+	assert.Equal(t, testAccountId, modified.AccountID())
 
 	// log in with a Recovery Code
-	redeemCookie, client, pass = authenticateAndRedeemCookie(t, "0eclipse_test@overdoll.com")
+	redeemCookie, client, pass = authenticateAndRedeemCookie(t, testAccountEmail)
 
 	assert.NotNil(t, redeemCookie.RedeemCookie.MultiFactor)
 
@@ -248,7 +251,7 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 
 	// ensure user is now authenticated
 	assert.Equal(t, true, modified.IsAuthenticated())
-	assert.Equal(t, "1q7MJ5IyRTV0X4J27F3m5wGD5mj", modified.AccountID())
+	assert.Equal(t, testAccountId, modified.AccountID())
 
 	// go in and disable MFA
 	var toggleAccountMultiFactor ToggleAccountMultiFactor
@@ -263,14 +266,14 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 	require.False(t, settings.AccountSettings.Security.MultiFactor.MultiFactorTotpConfigured)
 
 	// attempt one last login and ensure it doesn't ask for a MFA code
-	redeemCookie, client, pass = authenticateAndRedeemCookie(t, "0eclipse_test@overdoll.com")
+	redeemCookie, client, pass = authenticateAndRedeemCookie(t, testAccountEmail)
 
 	assert.Equal(t, true, redeemCookie.RedeemCookie.Registered)
 
 	modified = pass.GetPassport()
 
 	assert.Equal(t, true, modified.IsAuthenticated())
-	assert.Equal(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6", modified.AccountID())
+	assert.Equal(t, testAccountId, modified.AccountID())
 }
 
 type Register struct {

@@ -90,7 +90,7 @@ func FreshPassport() *Passport {
 	return &Passport{passport: &libraries_passport_v1.Passport{Account: nil}}
 }
 
-func FreshPassportWithUser(id string) *Passport {
+func FreshPassportWithAccount(id string) *Passport {
 
 	pass := &Passport{passport: &libraries_passport_v1.Passport{Account: nil}}
 

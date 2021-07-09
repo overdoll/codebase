@@ -11,7 +11,7 @@ import (
 	"overdoll/applications/eva/src/adapters"
 	"overdoll/applications/eva/src/domain/account"
 	"overdoll/libraries/bootstrap"
-	"overdoll/libraries/tests"
+	"overdoll/libraries/config"
 	"overdoll/libraries/uuid"
 )
 
@@ -186,8 +186,10 @@ func newFakeAccount(t *testing.T) *account.Account {
 }
 
 func newAccountRepository(t *testing.T) adapters.AccountRepository {
-	session := tests.CreateScyllaSession(t, "eva")
-	redis, _ := bootstrap.InitializeRedisSession(1)
+	config.Read("applications/eva/config.toml")
+
+	session, _ := bootstrap.InitializeDatabaseSession()
+	redis, _ := bootstrap.InitializeRedisSession()
 
 	return adapters.NewAccountCassandraRedisRepository(session, redis)
 }

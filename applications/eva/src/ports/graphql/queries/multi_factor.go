@@ -23,7 +23,7 @@ func (r *QueryResolver) AccountMultiFactorRecoveryCodes(ctx context.Context) ([]
 	var recoveryCodes []*types.AccountMultiFactorRecoveryCode
 
 	for _, code := range codes {
-		recoveryCodes = append(recoveryCodes, &types.AccountMultiFactorRecoveryCode{Code: code.RawCode()})
+		recoveryCodes = append(recoveryCodes, &types.AccountMultiFactorRecoveryCode{Code: code.Code()})
 	}
 
 	return recoveryCodes, nil

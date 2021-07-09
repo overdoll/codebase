@@ -48,13 +48,16 @@ go_test(
         "post_character_cassandra_repository_test.go",
         "post_media_cassandra_repository_test.go",
     ],
-    data = ["//applications/sting/src/adapters/content_fixtures:all"],
+    data = [
+        "//applications/sting:config.toml",
+        "//applications/sting/src/adapters/content_fixtures:all",
+    ],
     deps = [
         ":adapters",
         "//applications/sting/src/domain/post",
         "//libraries/account",
         "//libraries/aws",
-        "//libraries/tests",
+        "//libraries/bootstrap",
         "//libraries/uuid",
         "@com_github_aws_aws_sdk_go//aws",
         "@com_github_aws_aws_sdk_go//aws/awserr",

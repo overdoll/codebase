@@ -8,6 +8,7 @@ import (
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"overdoll/applications/eva/src/domain/multi_factor"
+	"overdoll/libraries/crypt"
 )
 
 type AccountMultiFactorTOTP struct {
@@ -52,7 +53,7 @@ func (r MultiFactorCassandraRepository) CreateAccountRecoveryCodes(ctx context.C
 
 		stmt, _ := qCodes.ToCql()
 
-		batch.Query(stmt, accountId, code.Code())
+		batch.Query(stmt, accountId, crypt.Encrypt(code.Code()))
 	}
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
@@ -83,7 +84,7 @@ func (r MultiFactorCassandraRepository) GetAccountRecoveryCodes(ctx context.Cont
 	var codes []*multi_factor.RecoveryCode
 
 	for _, cd := range recoveryCodes {
-		codes = append(codes, multi_factor.UnmarshalRecoveryCodeFromDatabase(cd.Code))
+		codes = append(codes, multi_factor.UnmarshalRecoveryCodeFromDatabase(crypt.Decrypt(cd.Code)))
 	}
 
 	return codes, nil
@@ -97,7 +98,7 @@ func (r MultiFactorCassandraRepository) RedeemAccountRecoveryCode(ctx context.Co
 		Query(r.session).
 		BindStruct(&AccountMultiFactorRecoveryCodes{
 			AccountId: accountId,
-			Code:      recoveryCode.Code(),
+			Code:      crypt.Encrypt(recoveryCode.Code()),
 		})
 
 	if err := deleteAccountMultiFactorCodes.ExecRelease(); err != nil {
@@ -134,7 +135,7 @@ func (r MultiFactorCassandraRepository) GetAccountMultiFactorTOTP(ctx context.Co
 		return nil, fmt.Errorf("select() failed: '%s", err)
 	}
 
-	return multi_factor.UnmarshalTOTPFromDatabase(multiTOTP.Secret), nil
+	return multi_factor.UnmarshalTOTPFromDatabase(crypt.Decrypt(multiTOTP.Secret)), nil
 }
 
 // CreateAccountMultiFactorTOTP - create MFA for user
@@ -145,29 +146,11 @@ func (r MultiFactorCassandraRepository) CreateAccountMultiFactorTOTP(ctx context
 		Query(r.session).
 		BindStruct(&AccountMultiFactorTOTP{
 			AccountId: accountId,
-			Secret:    totp.Secret(),
+			Secret:    crypt.Encrypt(totp.Secret()),
 		})
 
 	if err := createMultiFactorTOTP.ExecRelease(); err != nil {
 		return fmt.Errorf("insert() failed: '%s", err)
-	}
-
-	return nil
-}
-
-func (r MultiFactorCassandraRepository) UpdateAccountMultiFactorTOTP(ctx context.Context, accountId string, totp *multi_factor.TOTP) error {
-
-	updateMultiFactorTOTP := qb.Update("account_multi_factor_totp").
-		Where(qb.Eq("account_id")).
-		Set("secret").
-		Query(r.session).
-		BindStruct(&AccountMultiFactorTOTP{
-			AccountId: accountId,
-			Secret:    totp.Secret(),
-		})
-
-	if err := updateMultiFactorTOTP.ExecRelease(); err != nil {
-		return fmt.Errorf("update() failed: '%s", err)
 	}
 
 	return nil

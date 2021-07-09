@@ -17,8 +17,8 @@ type ConsumeCookieHandler struct {
 	mr multi_factor.Repository
 }
 
-func NewConsumeCookieHandler(cr cookie.Repository, ur account.Repository) ConsumeCookieHandler {
-	return ConsumeCookieHandler{cr: cr, ur: ur}
+func NewConsumeCookieHandler(cr cookie.Repository, ur account.Repository, mr multi_factor.Repository) ConsumeCookieHandler {
+	return ConsumeCookieHandler{cr: cr, ur: ur, mr: mr}
 }
 
 var (
@@ -68,7 +68,7 @@ func (h ConsumeCookieHandler) Handle(ctx context.Context, cookieId string) (*acc
 		if err == nil {
 			// tell cookie that multi factor TOTP type is required, and we don't consume the cookie yet
 			ck.RequireMultiFactor(true)
-			return nil, ck, err
+			return nil, ck, nil
 		}
 
 		if err != multi_factor.ErrTOTPNotConfigured {

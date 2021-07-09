@@ -9,7 +9,6 @@ import (
 
 	"github.com/pquerna/otp"
 	"github.com/pquerna/otp/totp"
-	"overdoll/libraries/crypt"
 )
 
 type TOTP struct {
@@ -30,7 +29,7 @@ var (
 // OTP will be returned from the DB as encrypted (because the getter returns it as so)
 func UnmarshalTOTPFromDatabase(secret string) *TOTP {
 	return &TOTP{
-		secret: crypt.Decrypt(secret),
+		secret: secret,
 	}
 }
 
@@ -48,14 +47,8 @@ func (c *TOTP) ValidateCode(code string) bool {
 	return totp.Validate(code, c.secret)
 }
 
-// Secret - not encrypted
-func (c *TOTP) RawSecret() string {
-	return c.secret
-}
-
-// Should be used when storing in the database
 func (c *TOTP) Secret() string {
-	return crypt.Encrypt(c.secret)
+	return c.secret
 }
 
 // Image - returns an image URL that can be easily used in HTML as an image SRC (base64 encoded)

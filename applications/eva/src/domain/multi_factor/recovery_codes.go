@@ -2,8 +2,6 @@ package multi_factor
 
 import (
 	"math/rand"
-
-	"overdoll/libraries/crypt"
 )
 
 type RecoveryCode struct {
@@ -24,16 +22,12 @@ func NewRecoveryCode(code string) *RecoveryCode {
 }
 
 func (c *RecoveryCode) Code() string {
-	return crypt.Encrypt(c.code)
-}
-
-func (c *RecoveryCode) RawCode() string {
 	return c.code
 }
 
 func UnmarshalRecoveryCodeFromDatabase(code string) *RecoveryCode {
 	return &RecoveryCode{
-		code: crypt.Decrypt(code),
+		code: code,
 	}
 }
 

@@ -66,7 +66,7 @@ type SearchArtist struct {
 
 func qPendingPost(t *testing.T, id string) PendingPost {
 
-	client, _ := getHttpClient(t, passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	client, _ := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 
 	var pendingPost PendingPost
 
@@ -81,11 +81,12 @@ func qPendingPost(t *testing.T, id string) PendingPost {
 
 func mCreatePost(t *testing.T, env *testsuite.TestWorkflowEnvironment, callback func(string) func()) {
 	// we have to create a post as an authenticated user, otherwise it won't let us
-	client, _ := getHttpClient(t, passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	client, _ := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 
 	var createPost CreatePost
 
 	artistId := "1q7MIw0U6TEpELH0FqnxrcXt3E0"
+	artistUsername := "artist_verified"
 
 	err := client.Mutate(context.Background(), &createPost, map[string]interface{}{
 		"data": &types.PostInput{
@@ -98,7 +99,7 @@ func mCreatePost(t *testing.T, env *testsuite.TestWorkflowEnvironment, callback 
 				Media: customMediaName,
 			}},
 			ArtistID:       &artistId,
-			ArtistUsername: "artist_verified",
+			ArtistUsername: &artistUsername,
 		},
 	})
 
@@ -139,7 +140,7 @@ func TestCreatePost_Publish(t *testing.T) {
 
 			// at this point, our post is put into the moderation queue. check for existence here
 			// grab all pending posts for our moderator
-			client, _ := getHttpClient(t, passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+			client, _ := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 
 			var pendingPosts PendingPosts
 

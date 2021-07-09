@@ -11,6 +11,5 @@ type Repository interface {
 
 	GetAccountMultiFactorTOTP(context.Context, string) (*TOTP, error)
 	CreateAccountMultiFactorTOTP(context.Context, string, *TOTP) error
-	UpdateAccountMultiFactorTOTP(context.Context, string, *TOTP) error
 	DeleteAccountMultiFactorTOTP(context.Context, string) error
 }

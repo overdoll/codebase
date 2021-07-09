@@ -8,8 +8,8 @@ import (
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/sting/src/adapters"
 	"overdoll/applications/sting/src/domain/post"
-	"overdoll/libraries/tests"
 	"overdoll/libraries/account"
+	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/uuid"
 )
 
@@ -41,7 +41,7 @@ func TestCassandraRepository_get_pending_post_not_exists(t *testing.T) {
 }
 
 func newPostRepository(t *testing.T) adapters.PostsCassandraRepository {
-	session := tests.CreateScyllaSession(t, "sting")
+	session, _ := bootstrap.InitializeDatabaseSession()
 
 	return adapters.NewPostsCassandraRepository(session)
 }

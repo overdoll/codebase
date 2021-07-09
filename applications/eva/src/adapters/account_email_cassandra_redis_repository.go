@@ -5,11 +5,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/go-redis/redis/v8"
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"overdoll/applications/eva/src/domain/account"
+	"overdoll/libraries/crypt"
 	"overdoll/libraries/passport"
 )
 
@@ -51,7 +53,9 @@ func (r AccountRepository) AddAccountEmail(ctx context.Context, acc *account.Acc
 		return err
 	}
 
-	ok, err := r.client.SetNX(ctx, ConfirmEmailPrefix+confirm.ID(), val, confirm.Expires()).Result()
+	valReal := crypt.Encrypt(string(val))
+
+	ok, err := r.client.SetNX(ctx, ConfirmEmailPrefix+confirm.ID(), valReal, confirm.Expires()).Result()
 
 	if err != nil {
 		return err
@@ -84,6 +88,39 @@ func (r AccountRepository) AddAccountEmail(ctx context.Context, acc *account.Acc
 	return nil
 }
 
+// GetEmailConfirmationByEmail - a method that is used to get the email confirmation ID by only passing the email
+// NOTE: this should only be used in tests! This is here purely because it is used for testing and any future
+// changes to how email confirmations will work would make this change easier
+func (r AccountRepository) GetEmailConfirmationByEmail(ctx context.Context, email string) (string, error) {
+	keys, err := r.client.Keys(ctx, ConfirmEmailPrefix+"*").Result()
+
+	if err != nil {
+		return "", err
+	}
+
+	for _, key := range keys {
+
+		// get each key's value
+		val, err := r.client.Get(ctx, key).Result()
+		if err != nil {
+			return "", err
+		}
+
+		val = crypt.Decrypt(val)
+
+		var emailConfirmation EmailConfirmation
+		if err := json.Unmarshal([]byte(val), &emailConfirmation); err != nil {
+			return "", err
+		}
+
+		if emailConfirmation.Email == email {
+			return strings.Split(key, ":")[1], nil
+		}
+	}
+
+	return "", account.ErrEmailCodeInvalid
+}
+
 // ConfirmAccountEmail - confirm account email
 func (r AccountRepository) ConfirmAccountEmail(ctx context.Context, confirmId string, acc *account.Account) error {
 
@@ -97,6 +134,8 @@ func (r AccountRepository) ConfirmAccountEmail(ctx context.Context, confirmId st
 
 		return fmt.Errorf("get failed: '%s", err)
 	}
+
+	val = crypt.Decrypt(val)
 
 	var confirmItem EmailConfirmation
 
@@ -129,6 +168,13 @@ func (r AccountRepository) ConfirmAccountEmail(ctx context.Context, confirmId st
 
 	if err := updateAccountEmail.ExecRelease(); err != nil {
 		return fmt.Errorf("update() failed: '%s", err)
+	}
+
+	// delete confirmation (it has been used up)
+	_, err = r.client.Del(ctx, ConfirmEmailPrefix+confirmId).Result()
+
+	if err != nil {
+		return fmt.Errorf("get failed: '%s", err)
 	}
 
 	return nil

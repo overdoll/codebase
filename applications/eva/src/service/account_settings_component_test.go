@@ -2,13 +2,10 @@ package service
 
 import (
 	"context"
-	"encoding/json"
-	"strings"
 	"testing"
 
 	"github.com/bxcodec/faker/v3"
 	"github.com/shurcooL/graphql"
-	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/eva/src/adapters"
@@ -17,34 +14,18 @@ import (
 	"overdoll/libraries/passport"
 )
 
-// TODO: this is kind of dependent on whatever adapter we are using at the time to generate email confirmation IDs
-// we should probably make this lookup easier?? (by looking for the email directly?)
 func getEmailConfirmation(t *testing.T, targetEmail string) string {
 
-	// here, we initialize redis to get our one-time email confirmation since we dont have another way
-	// to access this unless we use an email service (which would slow down this test)
-	client, err := bootstrap.InitializeRedisSession(viper.GetInt("redis.db"))
+	client, err := bootstrap.InitializeRedisSession()
+	require.NoError(t, err)
+	session, err := bootstrap.InitializeDatabaseSession()
 	require.NoError(t, err)
 
-	keys, err := client.Keys(context.Background(), adapters.ConfirmEmailPrefix+"*").Result()
-	require.NoError(t, err)
+	accountRepo := adapters.NewAccountCassandraRedisRepository(session, client)
 
-	for _, key := range keys {
+	res, err := accountRepo.GetEmailConfirmationByEmail(context.Background(), targetEmail)
 
-		// get each key's value
-		val, err := client.Get(context.Background(), key).Result()
-		require.NoError(t, err)
-
-		var emailConfirmation adapters.EmailConfirmation
-		err = json.Unmarshal([]byte(val), &emailConfirmation)
-		require.NoError(t, err)
-
-		if emailConfirmation.Email == targetEmail {
-			return strings.Split(key, ":")[1]
-		}
-	}
-
-	return ""
+	return res
 }
 
 type AddAccountEmail struct {
@@ -63,8 +44,10 @@ type MakeAccountEmailPrimary struct {
 func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 	t.Parallel()
 
+	testAccountId := "1pcKibRoqTAUgmOiNpGLIrztM9R"
+
 	// use passport with user
-	client, _, _ := getHttpClient(t, passport.FreshPassportWithUser("1pcKibRoqTAUgmOiNpGLIrztM9R"))
+	client, _, _ := getHttpClient(t, passport.FreshPassportWithAccount(testAccountId))
 
 	fake := TestUser{}
 
@@ -157,7 +140,9 @@ type ModifyAccountUsername struct {
 func TestAccountUsername_modify(t *testing.T) {
 	t.Parallel()
 
-	client, _, _ := getHttpClient(t, passport.FreshPassportWithUser("1pcKibRoqTAUgmOiNpGLIrztM9R"))
+	testAccountId := "1pcKibRoqTAUgmOiNpGLIrztM9R"
+
+	client, _, _ := getHttpClient(t, passport.FreshPassportWithAccount(testAccountId))
 
 	fake := TestUser{}
 

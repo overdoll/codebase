@@ -4,7 +4,6 @@ import (
 	"context"
 	"log"
 
-	"github.com/spf13/viper"
 	"overdoll/applications/eva/src/adapters"
 	"overdoll/applications/eva/src/app"
 	"overdoll/applications/eva/src/app/command"
@@ -27,13 +26,13 @@ func createApplication(ctx context.Context) app.Application {
 		log.Fatalf("bootstrap failed with errors: %s", err)
 	}
 
-	session, err := bootstrap.InitializeDatabaseSession(viper.GetString("db.keyspace"))
+	session, err := bootstrap.InitializeDatabaseSession()
 
 	if err != nil {
 		log.Fatalf("database session failed with errors: %s", err)
 	}
 
-	redis, err := bootstrap.InitializeRedisSession(viper.GetInt("redis.db"))
+	redis, err := bootstrap.InitializeRedisSession()
 
 	if err != nil {
 		log.Fatalf("redis session failed with errors: %s", err)
@@ -47,7 +46,7 @@ func createApplication(ctx context.Context) app.Application {
 	return app.Application{
 		Commands: app.Commands{
 			RedeemCookie:                   command.NewRedeemCookieHandler(cookieRepo, accountRepo),
-			ConsumeCookie:                  command.NewConsumeCookieHandler(cookieRepo, accountRepo),
+			ConsumeCookie:                  command.NewConsumeCookieHandler(cookieRepo, accountRepo, mfaRepo),
 			Register:                       command.NewRegisterHandler(cookieRepo, accountRepo),
 			Authenticate:                   command.NewAuthenticateHandler(cookieRepo),
 			LockAccount:                    command.NewLockUserHandler(accountRepo),

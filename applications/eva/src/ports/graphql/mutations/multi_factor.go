@@ -30,7 +30,7 @@ func (r *MutationResolver) GenerateAccountMultiFactorRecoveryCodes(ctx context.C
 	var recoveryCodes []*types.AccountMultiFactorRecoveryCode
 
 	for _, code := range codes {
-		recoveryCodes = append(recoveryCodes, &types.AccountMultiFactorRecoveryCode{Code: code.RawCode()})
+		recoveryCodes = append(recoveryCodes, &types.AccountMultiFactorRecoveryCode{Code: code.Code()})
 	}
 
 	return recoveryCodes, nil
@@ -52,7 +52,7 @@ func (r *MutationResolver) GenerateAccountMultiFactorTotp(ctx context.Context) (
 	// add TOTP secret to cookie, which will be read when enrolling
 	err = cookies.SetCookie(ctx, &http.Cookie{
 		Name:  multi_factor.TOTPCookieKey,
-		Value: totp.RawSecret(),
+		Value: totp.Secret(),
 	})
 
 	if err != nil {
@@ -68,7 +68,7 @@ func (r *MutationResolver) GenerateAccountMultiFactorTotp(ctx context.Context) (
 	}
 
 	return &types.AccountMultiFactorTotp{
-		Secret:   totp.RawSecret(),
+		Secret:   totp.Secret(),
 		ImageSrc: img,
 	}, nil
 }

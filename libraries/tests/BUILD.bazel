@@ -2,14 +2,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "tests",
-    srcs = [
-        "scylla.go",
-        "wait.go",
-    ],
+    srcs = ["wait.go"],
     importpath = "overdoll/libraries/tests",
     visibility = ["//visibility:public"],
-    deps = [
-        "@com_github_gocql_gocql//:gocql",
-        "@com_github_scylladb_gocqlx_v2//:gocqlx",
-    ],
 )

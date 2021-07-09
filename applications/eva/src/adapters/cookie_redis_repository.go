@@ -8,6 +8,7 @@ import (
 
 	"github.com/go-redis/redis/v8"
 	"overdoll/applications/eva/src/domain/cookie"
+	"overdoll/libraries/crypt"
 )
 
 const (
@@ -42,6 +43,8 @@ func (r CookieRepository) GetCookieById(ctx context.Context, id string) (*cookie
 		return nil, fmt.Errorf("get failed: '%s", err)
 	}
 
+	val = crypt.Decrypt(val)
+
 	var cookieItem AuthenticationCookie
 
 	if err := json.Unmarshal([]byte(val), &cookieItem); err != nil {
@@ -59,7 +62,11 @@ func (r CookieRepository) GetCookieById(ctx context.Context, id string) (*cookie
 // DeleteCookieById - Delete cookie by ID
 func (r CookieRepository) DeleteCookieById(ctx context.Context, id string) error {
 
-	_, err := r.client.Del(ctx, CookiePrefix+id).Result()
+	res, err := r.client.Del(ctx, CookiePrefix+id).Result()
+
+	if res == 0 {
+		return errors.New("no match found")
+	}
 
 	if err != nil {
 		return fmt.Errorf("del failed: '%s", err)
@@ -84,7 +91,9 @@ func (r CookieRepository) CreateCookie(ctx context.Context, instance *cookie.Coo
 		return err
 	}
 
-	ok, err := r.client.SetNX(ctx, CookiePrefix+instance.Cookie(), val, instance.Expiration()).Result()
+	newVal := crypt.Encrypt(string(val))
+
+	ok, err := r.client.SetNX(ctx, CookiePrefix+instance.Cookie(), newVal, instance.Expiration()).Result()
 
 	if err != nil {
 		return fmt.Errorf("set failed: '%s", err)
@@ -130,7 +139,9 @@ func (r CookieRepository) UpdateCookie(ctx context.Context, cookieId string, upd
 		return nil, err
 	}
 
-	_, err = r.client.Set(ctx, CookiePrefix+instance.Cookie(), val, instance.Expiration()).Result()
+	newVal := crypt.Encrypt(string(val))
+
+	_, err = r.client.Set(ctx, CookiePrefix+instance.Cookie(), newVal, instance.Expiration()).Result()
 
 	if err != nil {
 		return nil, fmt.Errorf("set failed: '%s", err)

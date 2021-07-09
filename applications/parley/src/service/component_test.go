@@ -76,7 +76,7 @@ func mRevertModeratePost(t *testing.T, client *graphql.Client, id string) UndoMo
 func TestPendingPostRejectionReasons(t *testing.T) {
 	t.Parallel()
 
-	client := getHttpClient(t, passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	client := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 
 	var search PendingPostRejectionReasons
 
@@ -91,7 +91,7 @@ func TestPendingPostRejectionReasons(t *testing.T) {
 func TestPendingPostAuditLogs(t *testing.T) {
 	t.Parallel()
 
-	client := getHttpClient(t, passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	client := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 
 	var search PendingPostAuditLogs
 
@@ -118,7 +118,7 @@ func TestGetNextModerator(t *testing.T) {
 func TestModeratePost_approve(t *testing.T) {
 	t.Parallel()
 
-	client := getHttpClient(t, passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	client := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 
 	res := mModeratePost(t, client, nil, "some notes")
 
@@ -132,7 +132,7 @@ func TestModeratePost_approve(t *testing.T) {
 func TestModeratePost_reject(t *testing.T) {
 	t.Parallel()
 
-	client := getHttpClient(t, passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	client := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 	val := "1q7MJ5IyRTV0X4J27F3m5wGD5mj"
 
 	res := mModeratePost(t, client, &val, "some additional notes")
@@ -149,7 +149,7 @@ func TestModeratePost_reject(t *testing.T) {
 func TestModeratePost_reject_infraction_and_undo(t *testing.T) {
 	t.Parallel()
 
-	client := getHttpClient(t, passport.FreshPassportWithUser("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	client := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 	val := "1q7MJ3JkhcdcJJNqZezdfQt5pZ6"
 
 	res := mModeratePost(t, client, &val, "some additional notes")

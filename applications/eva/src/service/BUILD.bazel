@@ -11,7 +11,6 @@ go_library(
         "//applications/eva/src/app/command",
         "//applications/eva/src/app/query",
         "//libraries/bootstrap",
-        "@com_github_spf13_viper//:viper",
     ],
 )
 
@@ -39,7 +38,6 @@ go_test(
         "@com_github_bxcodec_faker_v3//:faker",
         "@com_github_pquerna_otp//totp",
         "@com_github_shurcool_graphql//:graphql",
-        "@com_github_spf13_viper//:viper",
         "@com_github_stretchr_testify//assert",
         "@com_github_stretchr_testify//require",
         "@org_golang_google_grpc//:go_default_library",
