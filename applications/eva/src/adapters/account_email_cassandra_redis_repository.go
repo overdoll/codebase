@@ -29,6 +29,17 @@ const (
 // AddAccountEmail - add an email to the account
 func (r AccountRepository) AddAccountEmail(ctx context.Context, acc *account.Account, confirm *account.EmailConfirmation) error {
 
+	// check to make sure this email is not taken
+	existingAcc, err := r.GetAccountByEmail(ctx, confirm.Email())
+
+	if err != nil && err != account.ErrAccountNotFound {
+		return err
+	}
+
+	if existingAcc != nil {
+		return account.ErrEmailNotUnique
+	}
+
 	authCookie := &EmailConfirmation{
 		Email: confirm.Email(),
 	}
@@ -45,21 +56,12 @@ func (r AccountRepository) AddAccountEmail(ctx context.Context, acc *account.Acc
 		return err
 	}
 
-	batch := r.session.NewBatch(gocql.LoggedBatch)
+	// create a unique email
+	if err := r.createUniqueAccountEmail(ctx, acc, confirm.Email()); err != nil {
+		return err
+	}
 
-	q := qb.Insert("accounts_emails").
-		Columns("email", "account_id").
-		Unique().
-		Query(r.session).
-		SerialConsistency(gocql.Serial).
-		BindStruct(AccountEmail{
-			Email:     confirm.Email(),
-			AccountId: acc.ID(),
-		})
-
-	batch.Query(q.Statement())
-
-	q = qb.Insert("emails_by_account").
+	insertEmailByAccount := qb.Insert("emails_by_account").
 		Columns("email", "account_id", "status").
 		Unique().
 		Query(r.session).
@@ -70,10 +72,8 @@ func (r AccountRepository) AddAccountEmail(ctx context.Context, acc *account.Acc
 			Status:    0,
 		})
 
-	batch.Query(q.Statement())
-
-	if err := r.session.ExecuteBatch(batch); err == nil {
-		return fmt.Errorf("batch() failed: %s", err)
+	if err := insertEmailByAccount.ExecRelease(); err != nil {
+		return r.deleteAccountEmail(ctx, acc, confirm.Email())
 	}
 
 	return nil
@@ -110,19 +110,17 @@ func (r AccountRepository) ConfirmAccountEmail(ctx context.Context, confirmId st
 		return passport.ErrNotAuthenticated
 	}
 
-	emailByAccount := EmailByAccount{
-		Email:     confirmItem.Email,
-		AccountId: acc.ID(),
-		Status:    1,
-	}
-
 	// update to indicate that it's "confirmed" (status 1)
 	updateAccountEmail := qb.Update("emails_by_account").
 		Set("status").
 		Where(qb.Eq("email"), qb.Eq("account_id")).
 		Query(r.session).
 		SerialConsistency(gocql.LocalQuorum).
-		BindStruct(emailByAccount)
+		BindStruct(EmailByAccount{
+			Email:     confirmItem.Email,
+			AccountId: acc.ID(),
+			Status:    1,
+		})
 
 	if err := updateAccountEmail.ExecRelease(); err != nil {
 		return fmt.Errorf("update() failed: '%s", err)

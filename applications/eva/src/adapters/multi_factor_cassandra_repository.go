@@ -56,7 +56,7 @@ func (r MultiFactorCassandraRepository) CreateAccountRecoveryCodes(ctx context.C
 		batch.Query(q.Statement())
 	}
 
-	if err := r.session.ExecuteBatch(batch); err == nil {
+	if err := r.session.ExecuteBatch(batch); err != nil {
 		return fmt.Errorf("batch() failed: %s", err)
 	}
 

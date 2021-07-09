@@ -21,33 +21,54 @@ type UsernameByAccount struct {
 }
 
 // AddAccountEmail - add an email to the account
-func (r AccountRepository) deleteAccountUsername(ctx context.Context, instance *account.Account) error {
+func (r AccountRepository) deleteAccountUsername(ctx context.Context, instance *account.Account, username string) error {
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
 	// delete username
 	q := qb.Delete("usernames_by_account").
-		Where(qb.Eq("username"), qb.Eq("account_id")).
-		Query(r.session).
-		BindStruct(AccountUsername{
-			Id:       instance.ID(),
-			Username: strings.ToLower(instance.Username()),
-		})
+		Where(qb.Eq("username"), qb.Eq("account_id"))
 
-	batch.Query(q.Statement())
+	stmt, _ := q.ToCql()
+
+	batch.Query(stmt, instance.Username(), instance.ID())
 
 	// delete from other table
-	q = qb.Delete("accounts_usernames").
-		Where(qb.Eq("username")).
-		Query(r.session).
-		BindStruct(UsernameByAccount{
-			Id:       instance.ID(),
-			Username: instance.Username(),
-		})
+	q = qb.Delete("account_usernames").
+		Where(qb.Eq("username"))
 
-	batch.Query(q.Statement())
+	stmt, _ = q.ToCql()
 
-	if err := r.session.ExecuteBatch(batch); err == nil {
+	batch.Query(stmt, strings.ToLower(instance.Username()))
+
+	if err := r.session.ExecuteBatch(batch); err != nil {
+		return fmt.Errorf("batch() failed: %s", err)
+	}
+
+	return nil
+}
+
+func (r AccountRepository) deleteAccountEmail(ctx context.Context, instance *account.Account, email string) error {
+
+	batch := r.session.NewBatch(gocql.LoggedBatch)
+
+	// delete username
+	q := qb.Delete("emails_by_account").
+		Where(qb.Eq("email"), qb.Eq("account_id"))
+
+	stmt, _ := q.ToCql()
+
+	batch.Query(stmt, email, instance.ID())
+
+	// delete from other table
+	q = qb.Delete("account_emails").
+		Where(qb.Eq("email"))
+
+	stmt, _ = q.ToCql()
+
+	batch.Query(stmt, strings.ToLower(email))
+
+	if err := r.session.ExecuteBatch(batch); err != nil {
 		return fmt.Errorf("batch() failed: %s", err)
 	}
 
@@ -72,53 +93,37 @@ func (r AccountRepository) UpdateAccountUsername(ctx context.Context, id string,
 		return nil, err
 	}
 
-	batch := r.session.NewBatch(gocql.LoggedBatch)
-
 	// if we dont change the casings (extra letters, etc..) we need to add it to our lookup table
 	if oldUsername != strings.ToLower(instance.Username()) {
-		// add to account usernames
-		q := qb.Insert("accounts_usernames").
-			Columns("account_id", "username").
-			Unique().
-			Query(r.session).
-			BindStruct(AccountUsername{
-				Id:       instance.ID(),
-				Username: strings.ToLower(instance.Username()),
-			})
-
-		batch.Query(q.Statement())
+		if err := r.createUniqueAccountUsername(ctx, instance, instance.Username()); err != nil {
+			return nil, err
+		}
 	}
+
+	batch := r.session.NewBatch(gocql.LoggedBatch)
 
 	// add to usernames table
 	q := qb.Insert("usernames_by_account").
-		Columns("account_id", "username").
-		Unique().
-		Query(r.session).
-		BindStruct(UsernameByAccount{
-			Id:       instance.ID(),
-			Username: instance.Username(),
-		})
+		Columns("account_id", "username")
+
+	stmt, _ := q.ToCql()
 
 	// add to account's usernames list
-	batch.Query(q.Statement())
+	batch.Query(stmt, instance.ID(), instance.Username())
 
-	q = qb.Update("accounts").
+	qUpdate := qb.Update("accounts").
 		Set(
 			"username",
 			"last_username_edit",
 		).
-		Where(qb.Eq("id")).
-		Query(r.session).
-		BindStruct(Account{
-			Id:               instance.ID(),
-			Username:         instance.Username(),
-			LastUsernameEdit: instance.LastUsernameEdit(),
-		})
+		Where(qb.Eq("id"))
+
+	stmt, _ = qUpdate.ToCql()
 
 	// finally, update account
-	batch.Query(q.Statement())
+	batch.Query(stmt, instance.ID(), instance.Username(), instance.LastUsernameEdit())
 
-	if err := r.session.ExecuteBatch(batch); err == nil {
+	if err := r.session.ExecuteBatch(batch); err != nil {
 		return nil, fmt.Errorf("batch() failed: %s", err)
 	}
 
@@ -132,7 +137,7 @@ func (r AccountRepository) GetAccountByUsername(ctx context.Context, username st
 	var accountUsername AccountUsername
 
 	// check if email is in use
-	queryEmail := qb.Select("accounts_usernames").
+	queryEmail := qb.Select("account_usernames").
 		Where(qb.Eq("username")).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).

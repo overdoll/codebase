@@ -84,7 +84,7 @@ func TestUserRepository_CreateUser_conflicting_username(t *testing.T) {
 	err = repo.CreateAccount(ctx, copyUsr)
 
 	// expect that we get an error that the username isn't unique
-	assert.Equal(t, err, account.ErrUsernameNotUnique)
+	assert.Equal(t, account.ErrUsernameNotUnique, err)
 }
 
 func TestUserRepository_CreateUser_conflicting_email(t *testing.T) {
@@ -108,7 +108,7 @@ func TestUserRepository_CreateUser_conflicting_email(t *testing.T) {
 	err = repo.CreateAccount(ctx, copyUsr)
 
 	// expect that we get an error that the email isn't unique
-	assert.Equal(t, err, account.ErrEmailNotUnique)
+	assert.Equal(t, account.ErrEmailNotUnique, err)
 }
 
 // A parallel execution that will run 20 instances of trying to create the same user, so we expect that only 1 will be created

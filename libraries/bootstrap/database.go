@@ -18,6 +18,8 @@ func InitializeDatabaseSession(keyspace string) (gocqlx.Session, error) {
 	}
 
 	cluster.ReconnectInterval = 60 * time.Second
+	cluster.Timeout = 20 * time.Second
+	cluster.ConnectTimeout = 20 * time.Second
 	cluster.ReconnectionPolicy = &gocql.ConstantReconnectionPolicy{MaxRetries: 10, Interval: 5 * time.Second}
 
 	// Wrap session on creation with gocqlx
