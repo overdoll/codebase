@@ -62,11 +62,7 @@ func (r CookieRepository) GetCookieById(ctx context.Context, id string) (*cookie
 // DeleteCookieById - Delete cookie by ID
 func (r CookieRepository) DeleteCookieById(ctx context.Context, id string) error {
 
-	res, err := r.client.Del(ctx, CookiePrefix+id).Result()
-
-	if res == 0 {
-		return errors.New("no match found")
-	}
+	_, err := r.client.Del(ctx, CookiePrefix+id).Result()
 
 	if err != nil {
 		return fmt.Errorf("del failed: '%s", err)
