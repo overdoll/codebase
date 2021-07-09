@@ -2,11 +2,11 @@
  * @flow
  */
 
-import routes from '../../../routes'
+import routes from '../components/navigation/navigation'
 import createMockHistory from '../../../../server/app/render/Domain/createMockHistory'
 
-export default function computeCurrentActiveRoutes ({ location, ability, environment }) {
-  const activeRoutes = routes[0].routes
+export default function computeCurrentActiveRoutes ({ location, environment }) {
+  const activeRoutes = routes
 
   const context = {}
   const history = createMockHistory({ context, location: location.pathname })
@@ -32,7 +32,7 @@ export default function computeCurrentActiveRoutes ({ location, ability, environ
     for (const route of routes) {
       const nav = {}
 
-      const valid = isRouteValid({ history, location: history.location, ability, environment }, route)
+      const valid = isRouteValid({ history, location: history.location, environment }, route)
 
       if (route.navigation?.top && valid) {
         Object.assign(nav, {

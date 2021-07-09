@@ -5,7 +5,7 @@ import { matchRoutes } from 'react-router-config'
 import { fetchQuery, loadQuery } from 'react-relay/hooks'
 import type { IEnvironment } from 'relay-runtime/store/RelayStoreTypes'
 import type { Resource } from '@//:modules/utilities/JSResource'
-import defineAbility from '../../client/domain/Root/helpers/defineAbility'
+import defineAbility from '../utilities/functions/defineAbility/defineAbility'
 
 export type Location = $ReadOnly<{
   pathname: string,
@@ -140,15 +140,9 @@ async function createServerRouter (
       ).toPromise()
   ))
 
-  const user = environment
-    .getStore()
-    .getSource()
-    .get('client:root:authentication:user')
-
   const data = {
     environment,
-    flash: req.flash,
-    ability: defineAbility(user)
+    flash: req.flash
   }
 
   // Find the initial match and prepare it

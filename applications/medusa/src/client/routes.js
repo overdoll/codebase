@@ -3,19 +3,17 @@
  */
 import JSResource from '@//:modules/utilities/JSResource'
 import type { Route } from '@//:modules/routing/router'
-import { useTranslation } from 'react-i18next'
-import createMockHistory from '../server/app/render/Domain/createMockHistory'
-import BirdHouse from '@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/home/bird-house.svg'
-import LoginKeys
-  from '@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/login-logout/login-keys.svg'
-import ContentBrushPen
-  from '@streamlinehq/streamlinehq/img/streamline-bold/content/content-creation/content-brush-pen.svg'
+import defineAbility from '@//:modules/utilities/functions/defineAbility/defineAbility'
 
 const getUserFromEnvironment = environment =>
   environment
     .getStore()
     .getSource()
     .get('client:root:authentication:user')
+
+const getAbilityFromUser = (environment) => {
+  return defineAbility(getUserFromEnvironment(environment))
+}
 
 /**
  * Client routes for the application
@@ -34,8 +32,6 @@ const getUserFromEnvironment = environment =>
  * by the user
  *
  */
-
-// const [t] = useTranslation('nav')
 
 const routes: Array<Route> = [
   {
@@ -60,7 +56,6 @@ const routes: Array<Route> = [
     routes: [
       {
         path: '/join',
-        hidden: true,
         exact: true,
         component: JSResource('JoinRoot', () =>
           import(
@@ -70,11 +65,10 @@ const routes: Array<Route> = [
         ),
         // When user is logged in, we just want to redirect them since they're already "logged in"
         middleware: [
-          ({ environment, ability, location, history }) => {
-            // TODO get rid of user and just check ability of logged in
-            const user = getUserFromEnvironment(environment)
+          ({ environment, history }) => {
+            const ability = getAbilityFromUser(environment)
 
-            if (user) {
+            if (ability.can('manage', 'account')) {
               history.push('/profile')
               return false
             }
@@ -91,13 +85,7 @@ const routes: Array<Route> = [
             /* webpackChunkName: "HomeRoot" */ './domain/Home/Home'
           ),
         module.hot
-        ),
-        navigation: {
-          top: {
-            title: 'nav.home',
-            icon: BirdHouse
-          }
-        }
+        )
       },
       {
         path: '/m',
@@ -109,26 +97,16 @@ const routes: Array<Route> = [
         ),
         // If user is not logged in, they can't post - so we redirect to join page
         middleware: [
-          ({ environment, ability, location, history }) => {
-            if (ability.can('access', 'modtools')) {
+          ({ environment, history }) => {
+            const ability = getAbilityFromUser(environment)
+
+            if (ability.can('read', 'pendingPosts')) {
               return true
             }
             history.push('/join')
             return false
           }
         ],
-        // first item is the top level. here, it defines the title of the nav bar
-        // and the general title of the sidebar
-        navigation: {
-          firstRoute: true,
-          top: {
-            title: 'nav.mod',
-            icon: LoginKeys
-          },
-          side: {
-            title: 'sidebar.mod.title'
-          }
-        },
         routes: [
           {
             path: '/m/queue',
@@ -137,17 +115,7 @@ const routes: Array<Route> = [
                 /* webpackChunkName: "ModQueueRoot" */ './domain/Moderation/routes/Queue/Queue'
               ),
             module.hot
-            ),
-            navigation: {
-              // if there are any child routes after the parent in the "side" section, the parent
-              // becomes an accordion menu that holds the children.
-              // when firstRoute is enabled, clicking the accordion only opens the children
-              // and does not go to a separate page afterwards
-              firstRoute: true,
-              side: {
-                title: 'sidebar.mod.queue'
-              }
-            }
+            )
           },
           {
             path: '/m/history',
@@ -156,17 +124,7 @@ const routes: Array<Route> = [
                 /* webpackChunkName: "ModHistoryRoot" */ './domain/Moderation/routes/History/History'
               ),
             module.hot
-            ),
-            navigation: {
-              // if there are any child routes after the parent in the "side" section, the parent
-              // becomes an accordion menu that holds the children.
-              // when firstRoute is enabled, clicking the accordion only opens the children
-              // and does not go to a separate page afterwards
-              firstRoute: true,
-              side: {
-                title: 'sidebar.mod.history'
-              }
-            }
+            )
           }
         ]
       },
@@ -180,23 +138,16 @@ const routes: Array<Route> = [
         ),
         // If user is not logged in, they can't post - so we redirect to join page
         middleware: [
-          ({ environment, ability, history, location }) => {
-            const user = getUserFromEnvironment(environment)
+          ({ environment, history }) => {
+            const ability = getAbilityFromUser(environment)
 
-            if (!user) {
-              history.push('/join')
-              return false
+            if (ability.can('manage', 'account')) {
+              return true
             }
-
-            return true
+            history.push('/join')
+            return false
           }
-        ],
-        navigation: {
-          top: {
-            title: 'nav.upload',
-            icon: ContentBrushPen
-          }
-        }
+        ]
       },
       {
         path: '/token/:id',
@@ -221,12 +172,10 @@ const routes: Array<Route> = [
         },
         // When user is logged in, we don't want them to be able to redeem any other tokens
         middleware: [
-          ({ environment, location }) => {
-            const user = getUserFromEnvironment(environment)
-            const context = {}
-            const history = createMockHistory({ context, location: location.pathname })
+          ({ environment, history }) => {
+            const ability = getAbilityFromUser(environment)
 
-            if (user) {
+            if (ability.can('manage', 'account')) {
               history.push('/')
               return false
             }

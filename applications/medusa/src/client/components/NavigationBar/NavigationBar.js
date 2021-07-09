@@ -133,6 +133,7 @@ export default function NavigationBar ({ user, children, refreshUserQuery }: Pro
                       pb={6}
                       pl={2}
                       pt={4}
+                      boxShadow='md'
                       overflowY='auto'
                       flexShrink={0}
                       position={{ base: 'absolute', md: 'sticky', lg: 'absolute' }}
@@ -153,7 +154,7 @@ export default function NavigationBar ({ user, children, refreshUserQuery }: Pro
                           w='100%'
                           align='center' justify='space-between'
                         >
-                          <Heading ml={1} size='md'>{t(item.sidebar.title)}</Heading>
+                          <Heading color='gray.00' ml={1} size='md'>{t(item.sidebar.title)}</Heading>
                           <Icon
                             mr={1}
                             icon={InterfaceArrowsButtonLeft} fill='gray.300'

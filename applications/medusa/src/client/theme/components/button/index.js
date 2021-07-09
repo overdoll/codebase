@@ -22,6 +22,50 @@ const baseStyle = {
   }
 }
 
+function variantSolid (props) {
+  const { colorScheme: c } = props
+
+  if (c === 'gray') {
+    const bg = mode('gray.500', 'gray.700')(props)
+
+    return {
+      bg,
+      _hover: {
+        bg: mode('gray.200', 'gray.600')(props),
+        _disabled: {
+          bg
+        }
+      },
+      _active: { bg: mode('gray.300', 'gray.800')(props) }
+    }
+  }
+
+  const {
+    bg = `${c}.500`,
+    color = 'white',
+    hoverBg = `${c}.600`,
+    activeBg = `${c}.700`
+  } = accessibleColorMap[c] || {}
+
+  const background = mode(bg, 'gray.700')(props)
+
+  return {
+    bg: background,
+    color: mode(color, `${c}.500`)(props),
+    _hover: {
+      bg: background,
+      color: mode(hoverBg, `${c}.400`)(props),
+      _disabled: {
+        bg: background
+      }
+    },
+    _active: {
+      bg: background,
+      color: mode(activeBg, `${c}.600`)(props)
+    }
+  }
+}
+
 function variantGhost (props) {
   const { colorScheme: c } = props
 
@@ -29,9 +73,9 @@ function variantGhost (props) {
     return {
       color: mode('inherit', 'gray.100')(props),
       _hover: {
-        bg: mode('gray.100', 'gray.200')(props)
+        bg: mode('gray.200', 'gray.600')(props)
       },
-      _active: { bg: mode('gray.200', 'gray.300')(props) }
+      _active: { bg: mode('gray.300', 'gray.800')(props) }
     }
   }
 
@@ -105,50 +149,6 @@ const accessibleColorMap: { [key: string]: AccessibleColor } = {
     color: 'black',
     hoverBg: 'red.500',
     activeBg: 'red.600'
-  }
-}
-
-function variantSolid (props) {
-  const { colorScheme: c } = props
-
-  if (c === 'gray') {
-    const bg = mode('gray.500', 'gray.700')(props)
-
-    return {
-      bg,
-      _hover: {
-        bg: mode('gray.200', 'gray.600')(props),
-        _disabled: {
-          bg
-        }
-      },
-      _active: { bg: mode('gray.300', 'gray.800')(props) }
-    }
-  }
-
-  const {
-    bg = `${c}.500`,
-    color = 'white',
-    hoverBg = `${c}.600`,
-    activeBg = `${c}.700`
-  } = accessibleColorMap[c] || {}
-
-  const background = mode(bg, 'gray.700')(props)
-
-  return {
-    bg: background,
-    color: mode(color, `${c}.500`)(props),
-    _hover: {
-      bg: background,
-      color: mode(hoverBg, `${c}.400`)(props),
-      _disabled: {
-        bg: background
-      }
-    },
-    _active: {
-      bg: background,
-      color: mode(activeBg, `${c}.600`)(props)
-    }
   }
 }
 

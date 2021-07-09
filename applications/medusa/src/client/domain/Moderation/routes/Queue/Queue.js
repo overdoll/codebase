@@ -3,17 +3,57 @@
  */
 import type { Node } from 'react'
 import { Helmet } from 'react-helmet-async'
+import { Suspense, useEffect } from 'react'
+import type { QueuePendingPostsQuery } from '@//:artifacts/QueuePendingPostsQuery.graphql'
+import { PreloadedQuery } from 'react-relay/hooks'
 import {
   Heading, Center,
-  Flex, Stack, Text, CircularProgress, CircularProgressLabel
+  Flex, Stack, Text, CircularProgress, CircularProgressLabel, Skeleton, IconButton
 } from '@chakra-ui/react'
 import Icon from '@//:modules/content/icon/Icon'
 import Button from '@//:modules/form/button'
+import InterfaceArrowsSynchronize
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-synchronize.svg'
 
-import InterfaceArrowsButtonRight
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-button-right.svg'
+import { graphql, usePreloadedQuery, useLazyLoadQuery, useQueryLoader } from 'react-relay'
+import PendingPosts from './components/PendingPosts/PendingPosts'
 
-export default function Queue (): Node {
+type Props = {
+  pendingPostsQueryRef: PreloadedQuery<QueuePendingPostsQuery>
+}
+
+const pendingPostsGQL = graphql`
+  query QueuePendingPostsQuery {
+    pendingPosts (input: {first: 1}, filter: {}) {
+      edges {
+        node {
+          id
+          contributor {
+            username
+            avatar
+          }
+        }
+      }
+      pageInfo {
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
+    }
+  }
+`
+
+export default function Queue (props: Props): Node {
+  const [pendingPostsQueryRef, loadQuery] = useQueryLoader<QueuePendingPostsQuery>(
+    pendingPostsGQL,
+    props.pendingPostsQueryRef
+  )
+
+  useEffect(() => {
+    loadQuery()
+  }, [])
+
   return (
     <>
       <Helmet title='queue' />
@@ -25,27 +65,22 @@ export default function Queue (): Node {
           direction='column'
           mb={6}
         >
-          <Heading size='lg' color='gray.00'>Moderation Queue</Heading>
-          <Text size='sm' color='gray.100'>Click on a case to begin reviewing it</Text>
-          <Stack mt={2}>
-            <Button
-              fontFamily='Noto Sans JP' variant='solid' borderRadius={5} pl={2} pr={2} pt={1} pb={1} bg='gray.800'
-              h={12} align='center'
-              justify='space-between'
-            >
-              <Flex align='center' ml={2} mr={2} w='100%' justify='space-between'>
-                <Text color='gray.100' fontWeight='medium' size='md'>Case 13212332</Text>
-                <Flex align='center'>
-                  <CircularProgress size={8} value={50} color='green.500'>
-                    <CircularProgressLabel fontSize='xs'>
-                      12h
-                    </CircularProgressLabel>
-                  </CircularProgress>
-                </Flex>
-              </Flex>
-              <Icon fill='gray.300' icon={InterfaceArrowsButtonRight} w={5} h='fill' />
-            </Button>
-          </Stack>
+          <Flex align='center' justify='space-between'>
+            <Heading size='lg' color='gray.00'>Moderation Queue</Heading><IconButton
+              icon={
+                <Icon icon={InterfaceArrowsSynchronize} w='fill' h='fill' fill='gray.500' />
+            }
+              variant='solid' borderRadius={5} pl={2} pr={2} pt={1} pb={1} bg='transparent'
+                                                                         />
+          </Flex>
+
+          {pendingPostsQueryRef != null
+            ? <PendingPosts queryRef={pendingPostsQueryRef} query={pendingPostsGQL} />
+            : <Stack mt={2}>
+              <Skeleton borderRadius={5} h={12} />
+              <Skeleton borderRadius={5} h={12} />
+              <Skeleton borderRadius={5} h={12} />
+            </Stack>}
         </Flex>
       </Center>
     </>
