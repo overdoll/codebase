@@ -7,7 +7,6 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"io"
-	"os"
 )
 
 func createHash(key string) string {
@@ -16,8 +15,7 @@ func createHash(key string) string {
 	return hex.EncodeToString(hasher.Sum(nil))
 }
 
-func Encrypt(data string) string {
-	passphrase := os.Getenv("APP_KEY")
+func encrypt(data, passphrase string) string {
 	block, _ := aes.NewCipher([]byte(createHash(passphrase)))
 	gcm, err := cipher.NewGCM(block)
 	if err != nil {
@@ -31,8 +29,7 @@ func Encrypt(data string) string {
 	return hex.EncodeToString(ciphertext)
 }
 
-func Decrypt(data string) string {
-	passphrase := os.Getenv("APP_KEY")
+func decrypt(data, passphrase string) string {
 	newData, err := hex.DecodeString(data)
 	if err != nil {
 		panic(err.Error())

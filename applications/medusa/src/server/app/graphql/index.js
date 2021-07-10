@@ -42,10 +42,8 @@ class CookieDataSource extends RemoteGraphQLDataSource {
 
         const Passport = root.lookupType('libraries.passport.v1.Passport')
 
-        const buffer = Buffer.from(passport, 'base64').toString('utf-8')
-
         try {
-          const message = Passport.decode(buffer)
+          const message = Passport.decode(Uint8Array.from(atob(passport), c => c.charCodeAt(0)))
 
           const object = Passport.toObject(message, {
             longs: String,
@@ -66,16 +64,14 @@ class CookieDataSource extends RemoteGraphQLDataSource {
       }
 
       if (validPassport) {
-        // if X-Modified-Passport is sent back, regenerate the session
-        context.req.session.regenerate(() => {
-          // add passport, as well as the user agent and IP to track sessions
-          context.req.session.passport = passport
-          context.req.session.userAgent = context.req.headers['user-agent']
-          context.req.session.ip = context.req.headers['x-forwarded-for'] || context.req.connection.remoteAddress
-          context.req.session.created = new Date().toISOString()
-        })
-      } else {
-        context.req.session.destroy()
+        // await session regeneration or else it bugs out
+        await new Promise(resolve => context.req.session.regenerate(resolve))
+        context.req.session.passport = passport
+        context.req.session.details = {
+          userAgent: context.req.headers['user-agent'],
+          ip: context.req.headers['x-forwarded-for'] || context.req.connection.remoteAddress,
+          created: new Date().toISOString()
+        }
       }
     }
 

@@ -38,8 +38,15 @@ func createApplication(ctx context.Context) app.Application {
 		log.Fatalf("redis session failed with errors: %s", err)
 	}
 
+	// need to use a custom DB redis session because sessions are stored in db 0 in express-session
+	redis2, err := bootstrap.InitializeRedisSessionWithCustomDB(0)
+
+	if err != nil {
+		log.Fatalf("redis session failed with errors: %s", err)
+	}
+
 	cookieRepo := adapters.NewCookieRedisRepository(redis)
-	sessionRepo := adapters.NewSessionRepository(redis)
+	sessionRepo := adapters.NewSessionRepository(redis2)
 	accountRepo := adapters.NewAccountCassandraRedisRepository(session, redis)
 	mfaRepo := adapters.NewMultiFactorCassandraRepository(session)
 

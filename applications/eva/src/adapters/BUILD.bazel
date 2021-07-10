@@ -23,6 +23,7 @@ go_library(
         "@com_github_gocql_gocql//:gocql",
         "@com_github_scylladb_gocqlx_v2//:gocqlx",
         "@com_github_scylladb_gocqlx_v2//qb",
+        "@com_github_segmentio_ksuid//:ksuid",
     ],
 )
 

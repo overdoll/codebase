@@ -2,6 +2,10 @@ package session
 
 import (
 	"errors"
+	"time"
+
+	"github.com/segmentio/ksuid"
+	"overdoll/libraries/passport"
 )
 
 type Session struct {
@@ -9,27 +13,32 @@ type Session struct {
 	userAgent string
 	ip        string
 	created   string
+
+	passport *passport.Passport
 }
 
 var (
-	ErrSessionsNotFound    = errors.New("sessions not found")
+	ErrSessionsNotFound = errors.New("sessions not found")
 )
 
-func UnmarshalSessionFromDatabase(id, userAgent, ip, created string) *Session {
+func UnmarshalSessionFromDatabase(id, pass, userAgent, ip, created string) *Session {
+
 	return &Session{
 		id:        id,
 		userAgent: userAgent,
 		ip:        ip,
 		created:   created,
+		passport:  passport.FromString(pass),
 	}
 }
 
-func NewSession(id, userAgent, ip, created string) *Session {
+func NewSession(accountId, userAgent, ip string) *Session {
 	return &Session{
-		id:        id,
+		id:        ksuid.New().String(),
 		userAgent: userAgent,
 		ip:        ip,
-		created:   created,
+		created:   time.Now().String(),
+		passport:  passport.FreshPassportWithAccount(accountId),
 	}
 }
 
@@ -43,6 +52,10 @@ func (s *Session) UserAgent() string {
 
 func (s *Session) IP() string {
 	return s.ip
+}
+
+func (s *Session) Passport() *passport.Passport {
+	return s.passport
 }
 
 func (s *Session) Created() string {

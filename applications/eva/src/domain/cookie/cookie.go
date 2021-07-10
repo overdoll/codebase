@@ -27,7 +27,6 @@ var (
 
 var (
 	ErrCookieNotRedeemed = errors.New("cookie is not yet redeemed")
-	ErrCookieExpired     = errors.New("cookie is expired")
 	ErrCookieNotFound    = errors.New("cookie not found")
 )
 
@@ -51,6 +50,7 @@ func UnmarshalCookieFromDatabase(cookie, email string, redeemed bool, session st
 		redeemed:    redeemed,
 		session:     session,
 		sameSession: false,
+		expiration:  time.Minute * 15,
 	}
 }
 

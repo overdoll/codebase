@@ -8,12 +8,20 @@ import (
 )
 
 func InitializeRedisSession() (*redis.Client, error) {
+	return initializeRedisSession(viper.GetInt("redis.db"))
+}
+
+func initializeRedisSession(db int) (*redis.Client, error) {
 
 	rdb := redis.NewClient(&redis.Options{
 		Addr:     os.Getenv("REDIS_HOST") + ":6379",
-		Password: "",                       // no password set
-		DB:       viper.GetInt("redis.db"), // use default DB
+		Password: "", // no password set
+		DB:       db, // use default DB
 	})
 
 	return rdb, nil
+}
+
+func InitializeRedisSessionWithCustomDB(db int) (*redis.Client, error) {
+	return initializeRedisSession(db)
 }

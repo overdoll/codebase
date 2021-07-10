@@ -8,4 +8,8 @@ go_library(
     ],
     importpath = "overdoll/applications/eva/src/domain/session",
     visibility = ["//visibility:public"],
+    deps = [
+        "//libraries/passport",
+        "@com_github_segmentio_ksuid//:ksuid",
+    ],
 )

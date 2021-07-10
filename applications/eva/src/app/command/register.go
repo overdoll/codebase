@@ -5,8 +5,8 @@ import (
 	"errors"
 
 	"go.uber.org/zap"
-	"overdoll/applications/eva/src/domain/cookie"
 	"overdoll/applications/eva/src/domain/account"
+	"overdoll/applications/eva/src/domain/cookie"
 	"overdoll/libraries/uuid"
 )
 
@@ -33,7 +33,7 @@ func (h RegisterHandler) Handle(ctx context.Context, cookieId, username string) 
 	}
 
 	// Cookie should have been redeemed at this point, if we are on this command
-	if err = ck.MakeConsumed(); err != nil {
+	if err := ck.MakeConsumed(); err != nil {
 		return nil, err
 	}
 
@@ -43,10 +43,13 @@ func (h RegisterHandler) Handle(ctx context.Context, cookieId, username string) 
 		return nil, err
 	}
 
-	err = h.ur.CreateAccount(ctx, instance)
-
-	if err != nil {
+	if err := h.ur.CreateAccount(ctx, instance); err != nil {
 		zap.S().Errorf("failed to create user: %s", err)
+		return nil, ErrFailedRegister
+	}
+
+	if err := h.cr.DeleteCookieById(ctx, cookieId); err != nil {
+		zap.S().Errorf("failed to delete cookie: %s", err)
 		return nil, ErrFailedRegister
 	}
 
