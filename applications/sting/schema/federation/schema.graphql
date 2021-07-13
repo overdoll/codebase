@@ -1,4 +1,4 @@
 extend type Account @key(fields: "id") {
   id: String! @external
-  pendingPosts: [PendingPost!]
+  testField: String!
 }

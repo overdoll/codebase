@@ -1,6 +1,13 @@
+enum PendingPostStateEnum {
+  Review
+  Published
+  Discarded
+  Rejected
+}
+
 type PendingPost {
   id: String!
-  state: String!
+  state: PendingPostStateEnum!
   moderator: String!
   contributor: Contributor!
   content: [String!]!

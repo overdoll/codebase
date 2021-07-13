@@ -15,5 +15,15 @@ func MarshalAccountToGraphQL(result *account.Account) *Account {
 		}
 	}
 
-	return &Account{ID: result.ID(), Username: result.Username(), Roles: result.RolesAsString(), Lock: lock, Avatar: result.Avatar(), Verified: result.Verified()}
+	var roles []AccountRoleEnum
+
+	if result.IsModerator() {
+		roles = append(roles, AccountRoleEnumModerator)
+	}
+
+	if result.IsStaff() {
+		roles = append(roles, AccountRoleEnumStaff)
+	}
+
+	return &Account{ID: result.ID(), Username: result.Username(), Roles: roles, Lock: lock, Avatar: result.Avatar(), Verified: result.Verified()}
 }

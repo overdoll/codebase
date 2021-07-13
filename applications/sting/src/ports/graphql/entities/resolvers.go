@@ -11,12 +11,6 @@ type EntityResolver struct {
 	App *app.Application
 }
 
-func (e *EntityResolver) FindAccountByID(ctx context.Context, id string) (*types.Account, error) {
-
-	var pendingPosts []*types.PendingPost
-
-	return &types.Account{
-		ID:           id,
-		PendingPosts: pendingPosts,
-	}, nil
+func (e EntityResolver) FindAccountByID(ctx context.Context, id string) (*types.Account, error) {
+	panic("implement me")
 }

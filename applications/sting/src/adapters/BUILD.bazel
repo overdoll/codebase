@@ -58,6 +58,7 @@ go_test(
         "//libraries/account",
         "//libraries/aws",
         "//libraries/bootstrap",
+        "//libraries/config",
         "//libraries/uuid",
         "@com_github_aws_aws_sdk_go//aws",
         "@com_github_aws_aws_sdk_go//aws/awserr",

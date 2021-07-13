@@ -3,12 +3,15 @@
 package types
 
 import (
+	"fmt"
+	"io"
 	"overdoll/libraries/graphql/relay"
+	"strconv"
 )
 
 type Account struct {
-	ID           string         `json:"id"`
-	PendingPosts []*PendingPost `json:"pendingPosts"`
+	ID        string `json:"id"`
+	TestField string `json:"testField"`
 }
 
 func (Account) IsEntity() {}
@@ -56,7 +59,7 @@ type Media struct {
 
 type PendingPost struct {
 	ID                string                  `json:"id"`
-	State             string                  `json:"state"`
+	State             PendingPostStateEnum    `json:"state"`
 	Moderator         string                  `json:"moderator"`
 	Contributor       *Contributor            `json:"contributor"`
 	Content           []string                `json:"content"`
@@ -112,4 +115,49 @@ type SearchInput struct {
 
 type Validation struct {
 	Code string `json:"code"`
+}
+
+type PendingPostStateEnum string
+
+const (
+	PendingPostStateEnumReview    PendingPostStateEnum = "Review"
+	PendingPostStateEnumPublished PendingPostStateEnum = "Published"
+	PendingPostStateEnumDiscarded PendingPostStateEnum = "Discarded"
+	PendingPostStateEnumRejected  PendingPostStateEnum = "Rejected"
+)
+
+var AllPendingPostStateEnum = []PendingPostStateEnum{
+	PendingPostStateEnumReview,
+	PendingPostStateEnumPublished,
+	PendingPostStateEnumDiscarded,
+	PendingPostStateEnumRejected,
+}
+
+func (e PendingPostStateEnum) IsValid() bool {
+	switch e {
+	case PendingPostStateEnumReview, PendingPostStateEnumPublished, PendingPostStateEnumDiscarded, PendingPostStateEnumRejected:
+		return true
+	}
+	return false
+}
+
+func (e PendingPostStateEnum) String() string {
+	return string(e)
+}
+
+func (e *PendingPostStateEnum) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = PendingPostStateEnum(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid PendingPostStateEnum", str)
+	}
+	return nil
+}
+
+func (e PendingPostStateEnum) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
 }

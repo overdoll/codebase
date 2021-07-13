@@ -48,8 +48,8 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Account struct {
-		ID           func(childComplexity int) int
-		PendingPosts func(childComplexity int) int
+		ID        func(childComplexity int) int
+		TestField func(childComplexity int) int
 	}
 
 	Artist struct {
@@ -197,12 +197,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Account.ID(childComplexity), true
 
-	case "Account.pendingPosts":
-		if e.complexity.Account.PendingPosts == nil {
+	case "Account.testField":
+		if e.complexity.Account.TestField == nil {
 			break
 		}
 
-		return e.complexity.Account.PendingPosts(childComplexity), true
+		return e.complexity.Account.TestField(childComplexity), true
 
 	case "Artist.avatar":
 		if e.complexity.Artist.Avatar == nil {
@@ -705,7 +705,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 var sources = []*ast.Source{
 	{Name: "schema/federation/schema.graphql", Input: `extend type Account @key(fields: "id") {
   id: String! @external
-  pendingPosts: [PendingPost!]
+  testField: String!
 }`, BuiltIn: false},
 	{Name: "schema/inputs.graphql", Input: `input CharacterRequest {
   name: String!
@@ -715,9 +715,16 @@ var sources = []*ast.Source{
 input SearchInput {
   search: String!
 }`, BuiltIn: false},
-	{Name: "schema/post/schema.graphql", Input: `type PendingPost {
+	{Name: "schema/post/schema.graphql", Input: `enum PendingPostStateEnum {
+  Review
+  Published
+  Discarded
+  Rejected
+}
+
+type PendingPost {
   id: String!
-  state: String!
+  state: PendingPostStateEnum!
   moderator: String!
   contributor: Contributor!
   content: [String!]!
@@ -1161,7 +1168,7 @@ func (ec *executionContext) _Account_id(ctx context.Context, field graphql.Colle
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Account_pendingPosts(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
+func (ec *executionContext) _Account_testField(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1179,18 +1186,21 @@ func (ec *executionContext) _Account_pendingPosts(ctx context.Context, field gra
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.PendingPosts, nil
+		return obj.TestField, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.([]*types.PendingPost)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOPendingPost2ᚕᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostᚄ(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Artist_id(ctx context.Context, field graphql.CollectedField, obj *types.Artist) (ret graphql.Marshaler) {
@@ -2148,9 +2158,9 @@ func (ec *executionContext) _PendingPost_state(ctx context.Context, field graphq
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(types.PendingPostStateEnum)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNPendingPostStateEnum2overdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostStateEnum(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _PendingPost_moderator(ctx context.Context, field graphql.CollectedField, obj *types.PendingPost) (ret graphql.Marshaler) {
@@ -4566,8 +4576,11 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "pendingPosts":
-			out.Values[i] = ec._Account_pendingPosts(ctx, field, obj)
+		case "testField":
+			out.Values[i] = ec._Account_testField(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -5883,6 +5896,16 @@ func (ec *executionContext) unmarshalNPendingPostFilters2overdollᚋapplications
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNPendingPostStateEnum2overdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostStateEnum(ctx context.Context, v interface{}) (types.PendingPostStateEnum, error) {
+	var res types.PendingPostStateEnum
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNPendingPostStateEnum2overdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostStateEnum(ctx context.Context, sel ast.SelectionSet, v types.PendingPostStateEnum) graphql.Marshaler {
+	return v
+}
+
 func (ec *executionContext) marshalNPostResponse2overdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPostResponse(ctx context.Context, sel ast.SelectionSet, v types.PostResponse) graphql.Marshaler {
 	return ec._PostResponse(ctx, sel, &v)
 }
@@ -6398,46 +6421,6 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 		return graphql.Null
 	}
 	return graphql.MarshalInt(*v)
-}
-
-func (ec *executionContext) marshalOPendingPost2ᚕᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.PendingPost) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNPendingPost2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPost(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-	return ret
 }
 
 func (ec *executionContext) unmarshalOPostInput2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPostInput(ctx context.Context, v interface{}) (*types.PostInput, error) {

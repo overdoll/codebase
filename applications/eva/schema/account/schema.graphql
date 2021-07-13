@@ -1,7 +1,12 @@
+enum AccountRoleEnum {
+  Moderator
+  Staff
+}
+
 type Account @key(fields: "id") {
   id: String!
   username: String!
-  roles: [String!]!
+  roles: [AccountRoleEnum!]!
   avatar: String!
   verified: Boolean!
   lock: AccountLock

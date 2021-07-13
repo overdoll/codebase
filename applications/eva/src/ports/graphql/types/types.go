@@ -9,12 +9,12 @@ import (
 )
 
 type Account struct {
-	ID       string       `json:"id"`
-	Username string       `json:"username"`
-	Roles    []string     `json:"roles"`
-	Avatar   string       `json:"avatar"`
-	Verified bool         `json:"verified"`
-	Lock     *AccountLock `json:"lock"`
+	ID       string            `json:"id"`
+	Username string            `json:"username"`
+	Roles    []AccountRoleEnum `json:"roles"`
+	Avatar   string            `json:"avatar"`
+	Verified bool              `json:"verified"`
+	Lock     *AccountLock      `json:"lock"`
 }
 
 func (Account) IsEntity() {}
@@ -158,6 +158,47 @@ func (e *AccountEmailStatusEnum) UnmarshalGQL(v interface{}) error {
 }
 
 func (e AccountEmailStatusEnum) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type AccountRoleEnum string
+
+const (
+	AccountRoleEnumModerator AccountRoleEnum = "Moderator"
+	AccountRoleEnumStaff     AccountRoleEnum = "Staff"
+)
+
+var AllAccountRoleEnum = []AccountRoleEnum{
+	AccountRoleEnumModerator,
+	AccountRoleEnumStaff,
+}
+
+func (e AccountRoleEnum) IsValid() bool {
+	switch e {
+	case AccountRoleEnumModerator, AccountRoleEnumStaff:
+		return true
+	}
+	return false
+}
+
+func (e AccountRoleEnum) String() string {
+	return string(e)
+}
+
+func (e *AccountRoleEnum) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = AccountRoleEnum(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid AccountRoleEnum", str)
+	}
+	return nil
+}
+
+func (e AccountRoleEnum) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

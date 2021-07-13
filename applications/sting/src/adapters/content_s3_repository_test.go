@@ -17,6 +17,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/sting/src/adapters"
 	storage "overdoll/libraries/aws"
+	"overdoll/libraries/config"
 )
 
 // TestContentS3Repository_ProcessContent - process content, put into the public bucket, and finally delete it all at the end
@@ -101,6 +102,8 @@ func newContentRepository(t *testing.T) adapters.ContentS3Repository {
 
 // create buckets before running tests
 func seedBuckets() bool {
+	config.Read("applications/sting/config.toml")
+
 	session, err := storage.CreateAWSSession()
 
 	if err != nil {

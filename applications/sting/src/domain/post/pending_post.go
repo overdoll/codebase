@@ -5,8 +5,8 @@ import (
 	"os"
 	"time"
 
-	"overdoll/libraries/paging"
 	"overdoll/libraries/account"
+	"overdoll/libraries/paging"
 	"overdoll/libraries/uuid"
 )
 
@@ -319,6 +319,10 @@ func (p *PendingPost) InReview() bool {
 
 func (p *PendingPost) IsPublished() bool {
 	return p.state == Published
+}
+
+func (p *PendingPost) IsRejected() bool {
+	return p.state == Rejected
 }
 
 func (p *PendingPost) IsDiscarded() bool {
