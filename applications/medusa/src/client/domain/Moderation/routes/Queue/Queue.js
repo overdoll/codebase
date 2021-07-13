@@ -14,65 +14,49 @@ import Icon from '@//:modules/content/icon/Icon'
 import Button from '@//:modules/form/button'
 import InterfaceArrowsSynchronize
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-synchronize.svg'
-import { graphql, usePreloadedQuery, useLazyLoadQuery, useQueryLoader } from 'react-relay'
+import { graphql, usePreloadedQuery, useLazyLoadQuery, useQueryLoader, usePaginationFragment } from 'react-relay'
 import PendingPosts from './components/PendingPosts/PendingPosts'
 import { useTranslation } from 'react-i18next'
 
 type Props = {
-  pendingPostsQueryRef: PreloadedQuery<QueuePendingPostsQuery>
+  pendingPosts: PendingPostsComponent_pendingPosts$key
 }
 
 const pendingPostsGQL = graphql`
-  query QueuePendingPostsQuery ($before: String, $after: String, $first: Int, $last: Int) {
-    pendingPosts (input: {first: $first, before: $before, after: $after, last: $last}, filter: {}) {
+  fragment QueuePostsFragment on Query @refetchable(queryName: "PendingPostsPaginationQuery" ) {
+    pendingPosts (input: {first: $first, before: $before, after: $after, last: $last}, filter: {})
+    @connection(key: "PostsFragment_post") {
       edges {
-        cursor
         node {
           id
-          state
-          contributor {
-            username
-            avatar
-          }
-          content
-          categories {
-            title
-          }
-          characters {
-            name
-            media {
-              title
-            }
-          }
-          mediaRequests
-          characterRequests {
-            name
-            media
-          }
-          artistUsername
         }
-      }
-      pageInfo {
-        startCursor
-        endCursor
-        hasNextPage
-        hasPreviousPage
       }
     }
   }
 `
 
 export default function Queue (props: Props): Node {
+  const [t] = useTranslation('moderation')
+
+  const { data, loadNext, hasNext, hasPrevious, loadPrevious } = usePaginationFragment<PendingPostsPaginationQuery, _>(
+    pendingPostsGQL,
+    props.pendingPosts
+  )
+
+  /*
   const [pendingPostsQueryRef, loadQuery] = useQueryLoader<QueuePendingPostsQuery>(
     pendingPostsGQL,
     props.pendingPostsQueryRef
   )
 
-  const [t] = useTranslation('moderation')
+   */
 
+  /*
   useEffect(() => {
-    loadQuery({ first: 1, last: null, before: null, after: '1622477504' })
+    loadQuery({ first: 1, last: null, before: null, after: null })
   }, [])
+
+   */
 
   return (
     <>
@@ -90,15 +74,10 @@ export default function Queue (props: Props): Node {
             <IconButton
               icon={<Icon icon={InterfaceArrowsSynchronize} w='fill' h='fill' fill='gray.500' />}
               variant='solid' borderRadius={5} pl={2} pr={2} pt={1} pb={1}
-              bg='transparent' onClick={() => loadQuery()}
-              disabled={!pendingPostsQueryRef}
+              bg='transparent'
             />
           </Flex>
-          <Suspense fallback={<PostSuspense />}>
-            {pendingPostsQueryRef != null
-              ? <PendingPosts queryRef={pendingPostsQueryRef} query={pendingPostsGQL} refresh={loadQuery} />
-              : <PostSuspense />}
-          </Suspense>
+          <Suspense fallback={<PostSuspense />} />
         </Flex>
       </Center>
     </>

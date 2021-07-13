@@ -20,7 +20,7 @@ import {
 } from '@chakra-ui/react'
 import Icon from '@//:modules/content/icon/Icon'
 import { useEffect, useState } from 'react'
-import { graphql, usePreloadedQuery, useLazyLoadQuery, useQueryLoader } from 'react-relay'
+import { graphql, usePreloadedQuery, useLazyLoadQuery, useQueryLoader, usePaginationFragment } from 'react-relay'
 
 import InterfaceArrowsButtonRight
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-button-right.svg'
@@ -34,19 +34,24 @@ import InterfaceValidationCheckSquare1
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/validation/interface-validation-check-square-1.svg'
 import { useTranslation } from 'react-i18next'
 
-type Props = {
-  query: QueuePendingPostsQuery,
+type Props = {}
+
+/*
   queryRef: PreloadedQuery<QueuePendingPostsQuery>,
   refresh: () => void,
-}
+ */
 
 export default function (props: Props): Node {
+  const [t] = useTranslation('moderation')
+
+  /*
   const postsQuery = usePreloadedQuery<QueuePendingPostsQuery>(
     props.query,
     props.queryRef
   )
+  */
 
-  const [t] = useTranslation('moderation')
+  /*
 
   const currentPost = postsQuery.pendingPosts?.edges[0]?.node
 
@@ -55,9 +60,8 @@ export default function (props: Props): Node {
   }
   const nextPage = (cursor) => {
     props.refresh({ first: 1, after: cursor })
-  }
-
-  console.log(postsQuery)
+     }
+   */
 
   return (
     postsQuery.pendingPosts.edges.length > 0
