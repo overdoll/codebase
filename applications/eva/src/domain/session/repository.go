@@ -5,6 +5,6 @@ import (
 )
 
 type Repository interface {
-	GetSessionsByAccountId(context.Context, string) ([]*Session, error)
-	RevokeSessionById(context.Context, string) error
+	GetSessionsByAccountId(context.Context, string, string) ([]*Session, error)
+	RevokeSessionById(context.Context, string, string) error
 }

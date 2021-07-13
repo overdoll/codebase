@@ -8,7 +8,7 @@ import (
 
 type AccountInfractionHistory struct {
 	id             string
-	userId         string
+	accountId      string
 	reason         string
 	expiration     time.Time
 	userLockLength int64
@@ -34,7 +34,7 @@ func NewAccountInfractionHistory(userId string, pastUserInfractionHistory []*Acc
 	if len(activeInfractions)+1 > len(LengthPeriodBans) {
 		return &AccountInfractionHistory{
 			id:             ksuid.New().String(),
-			userId:         userId,
+			accountId:      userId,
 			reason:         reason,
 			expiration:     time.Now(),
 			userLockLength: -1,
@@ -55,7 +55,7 @@ func NewAccountInfractionHistory(userId string, pastUserInfractionHistory []*Acc
 	lockLength := time.Now().Add(time.Hour * 24 * time.Duration(banPeriod)).Unix()
 	return &AccountInfractionHistory{
 		id:             ksuid.New().String(),
-		userId:         userId,
+		accountId:      userId,
 		reason:         reason,
 		expiration:     expiration,
 		userLockLength: lockLength,
@@ -66,8 +66,8 @@ func (m *AccountInfractionHistory) ID() string {
 	return m.id
 }
 
-func (m *AccountInfractionHistory) UserId() string {
-	return m.userId
+func (m *AccountInfractionHistory) AccountId() string {
+	return m.accountId
 }
 
 func (m *AccountInfractionHistory) UserLockLength() int64 {
@@ -85,7 +85,7 @@ func (m *AccountInfractionHistory) Expiration() time.Time {
 func UnmarshalAccountInfractionHistoryFromDatabase(id, userId, reason string, expiration time.Time) *AccountInfractionHistory {
 	return &AccountInfractionHistory{
 		id:         id,
-		userId:     userId,
+		accountId:  userId,
 		reason:     reason,
 		expiration: expiration,
 	}

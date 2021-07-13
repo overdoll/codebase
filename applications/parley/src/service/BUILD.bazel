@@ -20,7 +20,11 @@ go_library(
 
 go_test(
     name = "service_test",
-    srcs = ["component_test.go"],
+    srcs = [
+        "account_settings_component_test.go",
+        "component_test.go",
+        "moderate_component_test.go",
+    ],
     data = ["//applications/parley:config.toml"],
     deps = [
         ":service",
@@ -33,6 +37,7 @@ go_test(
         "//libraries/config",
         "//libraries/passport",
         "//libraries/tests",
+        "@com_github_99designs_gqlgen//plugin/federation/fedruntime",
         "@com_github_shurcool_graphql//:graphql",
         "@com_github_stretchr_testify//require",
         "@org_golang_google_grpc//:go_default_library",

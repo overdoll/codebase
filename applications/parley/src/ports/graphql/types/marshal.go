@@ -24,11 +24,11 @@ func MarshalPendingPostAuditLogToGraphQL(log *infraction.PendingPostAuditLog) *P
 			Node: &PendingPostAuditLog{
 				ID:     log.ID(),
 				PostID: log.PostId(),
-				Contributor: &AuditUser{
+				Contributor: &AuditAccount{
 					ID:       log.Contributor().ID(),
 					Username: log.Contributor().Username(),
 				},
-				Moderator: &AuditUser{
+				Moderator: &AuditAccount{
 					ID:       log.Moderator().ID(),
 					Username: log.Moderator().Username(),
 				},

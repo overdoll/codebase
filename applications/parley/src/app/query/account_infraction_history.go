@@ -12,15 +12,15 @@ var (
 	ErrFailedGetUserInfractionHistory = errors.New("get rejection reasons failed")
 )
 
-type UserInfractionHistoryHandler struct {
+type AccountInfractionHistoryHandler struct {
 	ir infraction.Repository
 }
 
-func NewUserInfractionHistoryHandler(ir infraction.Repository) UserInfractionHistoryHandler {
-	return UserInfractionHistoryHandler{ir: ir}
+func NewAccountInfractionHistoryHandler(ir infraction.Repository) AccountInfractionHistoryHandler {
+	return AccountInfractionHistoryHandler{ir: ir}
 }
 
-func (h UserInfractionHistoryHandler) Handle(ctx context.Context, id string) ([]*infraction.AccountInfractionHistory, error) {
+func (h AccountInfractionHistoryHandler) Handle(ctx context.Context, id string) ([]*infraction.AccountInfractionHistory, error) {
 
 	history, err := h.ir.GetAccountInfractionHistory(ctx, id)
 

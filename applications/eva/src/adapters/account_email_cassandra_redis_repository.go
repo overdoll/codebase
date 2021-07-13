@@ -72,9 +72,8 @@ func (r AccountRepository) AddAccountEmail(ctx context.Context, acc *account.Acc
 
 	insertEmailByAccount := qb.Insert("emails_by_account").
 		Columns("email", "account_id", "status").
-		Unique().
 		Query(r.session).
-		SerialConsistency(gocql.Serial).
+		Consistency(gocql.LocalQuorum).
 		BindStruct(EmailByAccount{
 			Email:     confirm.Email(),
 			AccountId: acc.ID(),

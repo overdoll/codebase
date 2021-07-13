@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/eva/src/adapters"
+	"overdoll/applications/eva/src/domain/session"
 	"overdoll/applications/eva/src/ports/graphql/types"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/passport"
@@ -18,14 +19,26 @@ func getEmailConfirmation(t *testing.T, targetEmail string) string {
 
 	client, err := bootstrap.InitializeRedisSession()
 	require.NoError(t, err)
-	session, err := bootstrap.InitializeDatabaseSession()
+	sess, err := bootstrap.InitializeDatabaseSession()
 	require.NoError(t, err)
 
-	accountRepo := adapters.NewAccountCassandraRedisRepository(session, client)
+	accountRepo := adapters.NewAccountCassandraRedisRepository(sess, client)
 
 	res, err := accountRepo.GetEmailConfirmationByEmail(context.Background(), targetEmail)
 
 	return res
+}
+
+func createSession(t *testing.T, accountId, userAgent, ip string) {
+
+	client, err := bootstrap.InitializeRedisSessionWithCustomDB(0)
+	require.NoError(t, err)
+
+	sessionRepo := adapters.NewSessionRepository(client)
+
+	err = sessionRepo.CreateSessionForAccount(context.Background(), session.NewSession(accountId, userAgent, ip))
+
+	require.NoError(t, err)
 }
 
 type AddAccountEmail struct {
@@ -179,4 +192,66 @@ func TestAccountUsername_modify(t *testing.T) {
 
 	// make sure that the username is modified as well for the "authentication" query
 	assert.Equal(t, targetUsername, auth.Authentication.User.Username)
+}
+
+type TestSession struct {
+	Ip string `faker:"ipv4"`
+}
+
+type RevokeAccountSession struct {
+	RevokeAccountSession types.Response `graphql:"revokeAccountSession(id: $id)"`
+}
+
+func TestAccountSessions_view_and_revoke(t *testing.T) {
+	t.Parallel()
+
+	fakeSession := TestSession{}
+
+	err := faker.FakeData(&fakeSession)
+	require.NoError(t, err)
+
+	testAccountId := "1pcKibRoqTAUgmOiNpGLIrztM9R"
+
+	createSession(t, testAccountId, "user-agent", fakeSession.Ip)
+
+	client, _, _ := getHttpClient(t, passport.FreshPassportWithAccount(testAccountId))
+
+	// query account settings once more
+	settings := qAccountSettings(t, client)
+
+	foundSession := false
+	sessionId := ""
+
+	// go through sessions and find by IP
+	for _, sess := range settings.AccountSettings.Security.Sessions {
+		if sess.IP == fakeSession.Ip {
+			foundSession = true
+			sessionId = sess.ID
+		}
+	}
+
+	require.True(t, foundSession)
+
+	var revokeAccountSession RevokeAccountSession
+
+	// revoke the session
+	err = client.Mutate(context.Background(), &revokeAccountSession, map[string]interface{}{
+		"id": graphql.String(sessionId),
+	})
+
+	require.NoError(t, err)
+	require.True(t, revokeAccountSession.RevokeAccountSession.Ok)
+
+	// now test to make sure the session does not exist
+	settings = qAccountSettings(t, client)
+	foundSession = false
+
+	for _, sess := range settings.AccountSettings.Security.Sessions {
+		if sess.IP == fakeSession.Ip {
+			foundSession = true
+		}
+	}
+
+	// make sure its false
+	require.False(t, foundSession)
 }

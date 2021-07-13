@@ -8,6 +8,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/bmizerany/assert"
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc"
@@ -63,6 +64,25 @@ func qRedeemCookie(t *testing.T, client *graphql.Client, cookie string) RedeemCo
 	require.NoError(t, err)
 
 	return redeemCookie
+}
+
+// helper function - basically runs the "authentication" flow - run authenticate mutation, grab cookie from jar, and redeem the cookie
+func authenticateAndRedeemCookie(t *testing.T, email string) (RedeemCookie, *graphql.Client, *clients.ClientPassport) {
+
+	client, httpUser, pass := getHttpClient(t, passport.FreshPassport())
+
+	authenticate := mAuthenticate(t, client, email)
+
+	otpCookie := getOTPCookieFromJar(t, httpUser.Jar)
+
+	assert.Equal(t, authenticate.Authenticate, true)
+
+	ck := qRedeemCookie(t, client, otpCookie.Value)
+
+	// make sure cookie is valid
+	require.False(t, ck.RedeemCookie.Invalid)
+
+	return ck, client, pass
 }
 
 type AccountSettings struct {

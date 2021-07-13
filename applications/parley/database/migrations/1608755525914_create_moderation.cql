@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS pending_posts_audit_logs_by_moderator
     contributor_account_username text,
     moderator_account_id         text,
     moderator_account_username   text,
-    user_infraction_id           text,
+    account_infraction_id        text,
     status                       text,
     reason                       text,
     notes                        text,
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS pending_posts_audit_logs_by_moderator
 
 CREATE INDEX IF NOT EXISTS pending_posts_audit_logs_by_moderator_status on pending_posts_audit_logs_by_moderator (status);
 
-CREATE TABLE IF NOT EXISTS accounts_infraction_history
+CREATE TABLE IF NOT EXISTS account_infraction_history
 (
     id         text,
     account_id text,

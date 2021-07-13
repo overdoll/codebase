@@ -13,6 +13,7 @@ type Session struct {
 	userAgent string
 	ip        string
 	created   string
+	current   bool
 
 	passport *passport.Passport
 }
@@ -28,6 +29,7 @@ func UnmarshalSessionFromDatabase(id, pass, userAgent, ip, created string) *Sess
 		userAgent: userAgent,
 		ip:        ip,
 		created:   created,
+		current:   false,
 		passport:  passport.FromString(pass),
 	}
 }
@@ -37,6 +39,7 @@ func NewSession(accountId, userAgent, ip string) *Session {
 		id:        ksuid.New().String(),
 		userAgent: userAgent,
 		ip:        ip,
+		current:   false,
 		created:   time.Now().String(),
 		passport:  passport.FreshPassportWithAccount(accountId),
 	}
@@ -60,4 +63,12 @@ func (s *Session) Passport() *passport.Passport {
 
 func (s *Session) Created() string {
 	return s.created
+}
+
+func (s *Session) MakeCurrent() {
+	s.current = true
+}
+
+func (s *Session) IsCurrent() bool {
+	return s.current
 }

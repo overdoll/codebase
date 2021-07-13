@@ -58,6 +58,7 @@ type AccountSession struct {
 	IP        string `json:"ip"`
 	Created   string `json:"created"`
 	ID        string `json:"id"`
+	Current   bool   `json:"current"`
 }
 
 type AccountSettings struct {

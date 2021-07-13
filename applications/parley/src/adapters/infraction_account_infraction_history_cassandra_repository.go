@@ -10,17 +10,17 @@ import (
 	"overdoll/applications/parley/src/domain/infraction"
 )
 
-type UserInfractionHistory struct {
+type AccountInfractionHistory struct {
 	Id         string    `db:"id"`
 	AccountId  string    `db:"account_id"`
 	Reason     string    `db:"reason"`
 	Expiration time.Time `db:"expiration"`
 }
 
-func marshalAccountInfractionHistoryToDatabase(infractionHistory *infraction.AccountInfractionHistory) *UserInfractionHistory {
-	return &UserInfractionHistory{
+func marshalAccountInfractionHistoryToDatabase(infractionHistory *infraction.AccountInfractionHistory) *AccountInfractionHistory {
+	return &AccountInfractionHistory{
 		Id:         infractionHistory.ID(),
-		AccountId:  infractionHistory.UserId(),
+		AccountId:  infractionHistory.AccountId(),
 		Reason:     infractionHistory.Reason(),
 		Expiration: infractionHistory.Expiration(),
 	}
@@ -28,11 +28,11 @@ func marshalAccountInfractionHistoryToDatabase(infractionHistory *infraction.Acc
 
 func (r InfractionCassandraRepository) DeleteAccountInfractionHistory(ctx context.Context, userId, id string) error {
 
-	deleteAccountInfraction := qb.Delete("accounts_infraction_history").
+	deleteAccountInfraction := qb.Delete("account_infraction_history").
 		Where(qb.Eq("id"), qb.Eq("account_id")).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(&UserInfractionHistory{Id: id, AccountId: userId})
+		BindStruct(&AccountInfractionHistory{Id: id, AccountId: userId})
 
 	if err := deleteAccountInfraction.ExecRelease(); err != nil {
 		return fmt.Errorf("ExecRelease() failed: '%s", err)
@@ -43,14 +43,14 @@ func (r InfractionCassandraRepository) DeleteAccountInfractionHistory(ctx contex
 
 func (r InfractionCassandraRepository) GetAccountInfractionHistoryById(ctx context.Context, userId, id string) (*infraction.AccountInfractionHistory, error) {
 
-	infractionHistoryQuery := qb.Select("accounts_infraction_history").
+	infractionHistoryQuery := qb.Select("account_infraction_history").
 		Columns("id", "reason", "account_id", "expiration").
 		Where(qb.Eq("id"), qb.Eq("account_id")).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(&UserInfractionHistory{Id: id, AccountId: userId})
+		BindStruct(&AccountInfractionHistory{Id: id, AccountId: userId})
 
-	var dbUserInfractionHistory UserInfractionHistory
+	var dbUserInfractionHistory AccountInfractionHistory
 
 	if err := infractionHistoryQuery.Get(&dbUserInfractionHistory); err != nil {
 		return nil, err
@@ -59,16 +59,16 @@ func (r InfractionCassandraRepository) GetAccountInfractionHistoryById(ctx conte
 	return infraction.UnmarshalAccountInfractionHistoryFromDatabase(dbUserInfractionHistory.Id, dbUserInfractionHistory.AccountId, dbUserInfractionHistory.Reason, dbUserInfractionHistory.Expiration), nil
 }
 
-func (r InfractionCassandraRepository) GetAccountInfractionHistory(ctx context.Context, userId string) ([]*infraction.AccountInfractionHistory, error) {
+func (r InfractionCassandraRepository) GetAccountInfractionHistory(ctx context.Context, accountId string) ([]*infraction.AccountInfractionHistory, error) {
 
-	infractionHistoryQuery := qb.Select("accounts_infraction_history").
+	infractionHistoryQuery := qb.Select("account_infraction_history").
 		Columns("id", "reason", "account_id", "expiration").
 		Where(qb.Eq("account_id")).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(&UserInfractionHistory{AccountId: userId})
+		BindStruct(&AccountInfractionHistory{AccountId: accountId})
 
-	var dbUserInfractionHistory []UserInfractionHistory
+	var dbUserInfractionHistory []AccountInfractionHistory
 
 	if err := infractionHistoryQuery.Select(&dbUserInfractionHistory); err != nil {
 		return nil, err
@@ -84,7 +84,7 @@ func (r InfractionCassandraRepository) GetAccountInfractionHistory(ctx context.C
 
 func (r InfractionCassandraRepository) CreateUserInfractionHistory(ctx context.Context, infractionHistory *infraction.AccountInfractionHistory) error {
 
-	insertInfractionHistory := qb.Insert("accounts_infraction_history").
+	insertInfractionHistory := qb.Insert("account_infraction_history").
 		Columns(
 			"id",
 			"account_id",

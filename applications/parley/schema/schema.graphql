@@ -1,4 +1,4 @@
-type UsersInfractionHistory {
+type AccountInfractionHistory {
   id: String!
   reason: String!
 }
@@ -28,5 +28,5 @@ type Query {
   """
   Infraction history for the currently logged-in account
   """
-  accountInfractionHistory: [UsersInfractionHistory!]
+  accountInfractionHistory: [AccountInfractionHistory!]
 }

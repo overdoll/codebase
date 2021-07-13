@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/go-redis/redis/v8"
@@ -67,7 +68,7 @@ func (r SessionRepository) getSessionById(ctx context.Context, sessionId string)
 }
 
 // GetSessionsByAccountId - Get sessions
-func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, accountId string) ([]*session.Session, error) {
+func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, sessionCookie, accountId string) ([]*session.Session, error) {
 
 	keys, err := r.client.Keys(ctx, SessionPrefix+"*:"+AccountPrefix+accountId).Result()
 
@@ -87,6 +88,10 @@ func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, accountId
 
 		if err != nil {
 			return nil, err
+		}
+
+		if sess.ID() == strings.Split(sessionCookie, ".")[0] {
+			sess.MakeCurrent()
 		}
 
 		sessions = append(sessions, sess)

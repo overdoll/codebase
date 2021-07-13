@@ -5,6 +5,7 @@ import (
 
 	"overdoll/applications/eva/src/ports/graphql/types"
 	"overdoll/libraries/graphql"
+	"overdoll/libraries/helpers"
 	"overdoll/libraries/passport"
 )
 
@@ -91,7 +92,18 @@ func (r *QueryResolver) AccountSettings(ctx context.Context) (*types.AccountSett
 
 		if preload == "security.sessions" {
 
-			sessions, err := r.App.Queries.GetAccountSessions.Handle(ctx, pass.AccountID())
+			accountSession := ""
+
+			gc := helpers.GinContextFromContext(ctx)
+
+			// get current session from connect.sid cookie
+			currentCookie, err := gc.Request.Cookie("connect.sid")
+
+			if err == nil && currentCookie != nil {
+				accountSession = currentCookie.Value
+			}
+
+			sessions, err := r.App.Queries.GetAccountSessions.Handle(ctx, accountSession, pass.AccountID())
 
 			if err != nil {
 				return nil, err
@@ -105,6 +117,7 @@ func (r *QueryResolver) AccountSettings(ctx context.Context) (*types.AccountSett
 					IP:        session.IP(),
 					Created:   session.Created(),
 					ID:        session.ID(),
+					Current:   session.IsCurrent(),
 				})
 			}
 

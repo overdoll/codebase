@@ -11,28 +11,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/eva/src/ports/graphql/types"
-	"overdoll/libraries/clients"
 	"overdoll/libraries/passport"
 )
-
-// helper function - basically runs the "authentication" flow - run authenticate mutation, grab cookie from jar, and redeem the cookie
-func authenticateAndRedeemCookie(t *testing.T, email string) (RedeemCookie, *graphql.Client, *clients.ClientPassport) {
-
-	client, httpUser, pass := getHttpClient(t, passport.FreshPassport())
-
-	authenticate := mAuthenticate(t, client, email)
-
-	otpCookie := getOTPCookieFromJar(t, httpUser.Jar)
-
-	assert.Equal(t, authenticate.Authenticate, true)
-
-	cookie := qRedeemCookie(t, client, otpCookie.Value)
-
-	// make sure cookie is valid
-	require.False(t, cookie.RedeemCookie.Invalid)
-
-	return cookie, client, pass
-}
 
 type Logout struct {
 	Logout bool `graphql:"logout()"`

@@ -2,6 +2,11 @@
 
 package types
 
+type AccountInfractionHistory struct {
+	ID     string `json:"id"`
+	Reason string `json:"reason"`
+}
+
 type AccountModeratorSettings struct {
 	InQueue bool `json:"inQueue"`
 }
@@ -13,7 +18,7 @@ type AccountSettings struct {
 
 func (AccountSettings) IsEntity() {}
 
-type AuditUser struct {
+type AuditAccount struct {
 	ID       string `json:"id"`
 	Username string `json:"username"`
 }
@@ -30,16 +35,16 @@ type ModeratePostInput struct {
 }
 
 type PendingPostAuditLog struct {
-	ID           string     `json:"id"`
-	PostID       string     `json:"postId"`
-	Contributor  *AuditUser `json:"contributor"`
-	Moderator    *AuditUser `json:"moderator"`
-	InfractionID *string    `json:"infractionId"`
-	Status       string     `json:"status"`
-	Reason       string     `json:"reason"`
-	Notes        string     `json:"notes"`
-	Reverted     bool       `json:"reverted"`
-	CanRevert    bool       `json:"canRevert"`
+	ID           string        `json:"id"`
+	PostID       string        `json:"postId"`
+	Contributor  *AuditAccount `json:"contributor"`
+	Moderator    *AuditAccount `json:"moderator"`
+	InfractionID *string       `json:"infractionId"`
+	Status       string        `json:"status"`
+	Reason       string        `json:"reason"`
+	Notes        string        `json:"notes"`
+	Reverted     bool          `json:"reverted"`
+	CanRevert    bool          `json:"canRevert"`
 }
 
 type PendingPostAuditLogConnection struct {
@@ -70,11 +75,6 @@ type Response struct {
 
 type RevertPostInput struct {
 	AuditLogID string `json:"auditLogId"`
-}
-
-type UsersInfractionHistory struct {
-	ID     string `json:"id"`
-	Reason string `json:"reason"`
 }
 
 type Validation struct {

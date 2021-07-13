@@ -20,9 +20,9 @@ var (
 	ErrFailedGetSessions = errors.New("failed to get emails")
 )
 
-func (h GetAccountSessionsHandler) Handle(ctx context.Context, id string) ([]*session.Session, error) {
+func (h GetAccountSessionsHandler) Handle(ctx context.Context, sessionCookie, id string) ([]*session.Session, error) {
 
-	ur, err := h.sr.GetSessionsByAccountId(ctx, id)
+	ur, err := h.sr.GetSessionsByAccountId(ctx, sessionCookie, id)
 
 	if err != nil {
 		zap.S().Errorf("failed to get sessions: %s", err)
