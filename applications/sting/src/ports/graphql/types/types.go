@@ -6,6 +6,13 @@ import (
 	"overdoll/libraries/graphql/relay"
 )
 
+type Account struct {
+	ID           string         `json:"id"`
+	PendingPosts []*PendingPost `json:"pendingPosts"`
+}
+
+func (Account) IsEntity() {}
+
 type Artist struct {
 	ID       string `json:"id"`
 	Avatar   string `json:"avatar"`
@@ -94,20 +101,14 @@ type PostResponse struct {
 	Validation *Validation `json:"validation"`
 }
 
-type PostUpdateResponse struct {
+type Response struct {
 	Validation *Validation `json:"validation"`
+	Ok         bool        `json:"ok"`
 }
 
 type SearchInput struct {
 	Search string `json:"search"`
 }
-
-type User struct {
-	ID           string         `json:"id"`
-	PendingPosts []*PendingPost `json:"pendingPosts"`
-}
-
-func (User) IsEntity() {}
 
 type Validation struct {
 	Code string `json:"code"`

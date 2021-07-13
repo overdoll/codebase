@@ -31,3 +31,8 @@ type Category {
 type Validation {
   code: String!
 }
+
+type Response {
+  validation: Validation
+  ok: Boolean!
+}

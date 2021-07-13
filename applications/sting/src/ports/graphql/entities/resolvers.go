@@ -11,11 +11,11 @@ type EntityResolver struct {
 	App *app.Application
 }
 
-func (e *EntityResolver) FindUserByID(ctx context.Context, id string) (*types.User, error) {
+func (e *EntityResolver) FindAccountByID(ctx context.Context, id string) (*types.Account, error) {
 
 	var pendingPosts []*types.PendingPost
 
-	return &types.User{
+	return &types.Account{
 		ID:           id,
 		PendingPosts: pendingPosts,
 	}, nil

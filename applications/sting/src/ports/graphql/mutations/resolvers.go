@@ -16,7 +16,7 @@ type MutationResolver struct {
 	Client client.Client
 }
 
-func (r *MutationResolver) UpdatePost(ctx context.Context, id string, data *types.PostInput) (*types.PostUpdateResponse, error) {
+func (r *MutationResolver) UpdatePost(ctx context.Context, id string, data *types.PostInput) (*types.Response, error) {
 	requests := make(map[string]string)
 
 	for _, item := range data.CharacterRequests {
@@ -39,7 +39,7 @@ func (r *MutationResolver) UpdatePost(ctx context.Context, id string, data *type
 		return nil, err
 	}
 
-	return &types.PostUpdateResponse{Validation: nil}, nil
+	return &types.Response{Validation: nil, Ok: true}, nil
 }
 
 func (r *MutationResolver) Post(ctx context.Context, data *types.PostInput) (*types.PostResponse, error) {
