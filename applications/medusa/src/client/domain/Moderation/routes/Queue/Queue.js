@@ -18,6 +18,8 @@ import { graphql, usePreloadedQuery, useLazyLoadQuery, useQueryLoader, usePagina
 import PendingPosts from './components/PendingPosts/PendingPosts'
 import { useTranslation } from 'react-i18next'
 
+/*
+
 type Props = {
   pendingPosts: PendingPostsComponent_pendingPosts$key
 }
@@ -34,29 +36,18 @@ const pendingPostsGQL = graphql`
     }
   }
 `
+*/
 
 export default function Queue (props: Props): Node {
   const [t] = useTranslation('moderation')
+
+  /*
 
   const { data, loadNext, hasNext, hasPrevious, loadPrevious } = usePaginationFragment<PendingPostsPaginationQuery, _>(
     pendingPostsGQL,
     props.pendingPosts
   )
-
-  /*
-  const [pendingPostsQueryRef, loadQuery] = useQueryLoader<QueuePendingPostsQuery>(
-    pendingPostsGQL,
-    props.pendingPostsQueryRef
-  )
-
-   */
-
-  /*
-  useEffect(() => {
-    loadQuery({ first: 1, last: null, before: null, after: null })
-  }, [])
-
-   */
+  */
 
   return (
     <>

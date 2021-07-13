@@ -8,6 +8,9 @@
     },
     "post": {
       "content": "Post Uploads"
+    },
+    "history": {
+      "title": "Moderation History"
     }
   }
 }
