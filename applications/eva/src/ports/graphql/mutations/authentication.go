@@ -17,11 +17,6 @@ import (
 	"overdoll/libraries/passport"
 )
 
-// TODO: will be implemented when email is impl.
-func (r *MutationResolver) AuthEmail(ctx context.Context) (bool, error) {
-	return false, nil
-}
-
 // Authenticate - Generate an OTP code that will be used to authenticate the user
 // if user opens the link in the same browser, then we automatically authorize them
 // if not, then we redeem the cookie and the original browser should be logged in,
@@ -212,35 +207,45 @@ func (r *MutationResolver) AuthenticateRecoveryCode(ctx context.Context, code st
 	}, nil
 }
 
-func (r *MutationResolver) Logout(ctx context.Context) (bool, error) {
+func (r *MutationResolver) AuthenticateEmail(ctx context.Context) (*types.Response, error) {
+	panic("implement me")
+}
+
+func (r *MutationResolver) Logout(ctx context.Context) (*types.Response, error) {
 	pass := passport.FromContext(ctx)
 
 	if !pass.IsAuthenticated() {
-		return false, passport.ErrNotAuthenticated
+		return nil, passport.ErrNotAuthenticated
 	}
 
 	// logout just revokes the currently-authenticated user from the passport
 	if err := pass.MutatePassport(ctx, func(p *passport.Passport) error {
 		return p.RevokeAccount()
 	}); err != nil {
-		return false, err
+		return nil, err
 	}
 
-	return true, nil
+	return &types.Response{
+		Validation: nil,
+		Ok:         true,
+	}, nil
 }
 
-func (r *MutationResolver) UnlockAccount(ctx context.Context) (bool, error) {
+func (r *MutationResolver) UnlockAccount(ctx context.Context) (*types.Response, error) {
 	pass := passport.FromContext(ctx)
 
 	if !pass.IsAuthenticated() {
-		return false, passport.ErrNotAuthenticated
+		return nil, passport.ErrNotAuthenticated
 	}
 
 	_, err := r.App.Commands.UnlockAccount.Handle(ctx, pass.AccountID())
 
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 
-	return true, nil
+	return &types.Response{
+		Validation: nil,
+		Ok:         true,
+	}, nil
 }

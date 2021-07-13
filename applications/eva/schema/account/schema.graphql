@@ -37,6 +37,11 @@ extend type Mutation {
   authenticate(data: AuthenticationInput): Response!
 
   """
+  Re-send the authentication email
+  """
+  authenticateEmail: Response!
+
+  """
   Registration for the account. Will only work once authenticate is initiated
   and the cookie is still valid when redeemed (5 minutes)
   """
@@ -51,6 +56,16 @@ extend type Mutation {
   Authenticate with a recovery code - should be used after a cookie is redeemed but user does not remember their credentials
   """
   authenticateRecoveryCode(code: String!): Response!
+
+  """
+  Unlock Account - account may be locked for any reason. Use this endpoint to unlock the currently-logged in account (time must be after the expiration of the unlock)
+  """
+  unlockAccount: Response!
+
+  """
+  Logout the current account
+  """
+  logout: Response!
 }
 
 extend type Query {

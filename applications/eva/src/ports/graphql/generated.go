@@ -131,8 +131,8 @@ type ComplexityRoot struct {
 
 	Mutation struct {
 		AddAccountEmail                         func(childComplexity int, email string) int
-		AuthEmail                               func(childComplexity int) int
 		Authenticate                            func(childComplexity int, data *types.AuthenticationInput) int
+		AuthenticateEmail                       func(childComplexity int) int
 		AuthenticateRecoveryCode                func(childComplexity int, code string) int
 		AuthenticateTotp                        func(childComplexity int, code string) int
 		EnrollAccountMultiFactorTotp            func(childComplexity int, code string) int
@@ -176,13 +176,13 @@ type EntityResolver interface {
 	FindAccountSettingsByAccountID(ctx context.Context, accountID string) (*types.AccountSettings, error)
 }
 type MutationResolver interface {
-	Logout(ctx context.Context) (bool, error)
-	AuthEmail(ctx context.Context) (bool, error)
-	UnlockAccount(ctx context.Context) (bool, error)
 	Authenticate(ctx context.Context, data *types.AuthenticationInput) (*types.Response, error)
+	AuthenticateEmail(ctx context.Context) (*types.Response, error)
 	Register(ctx context.Context, data *types.RegisterInput) (*types.Response, error)
 	AuthenticateTotp(ctx context.Context, code string) (*types.Response, error)
 	AuthenticateRecoveryCode(ctx context.Context, code string) (*types.Response, error)
+	UnlockAccount(ctx context.Context) (*types.Response, error)
+	Logout(ctx context.Context) (*types.Response, error)
 	AddAccountEmail(ctx context.Context, email string) (*types.Response, error)
 	ModifyAccountUsername(ctx context.Context, username string) (*types.Response, error)
 	RevokeAccountSession(ctx context.Context, id string) (*types.Response, error)
@@ -524,13 +524,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.AddAccountEmail(childComplexity, args["email"].(string)), true
 
-	case "Mutation.authEmail":
-		if e.complexity.Mutation.AuthEmail == nil {
-			break
-		}
-
-		return e.complexity.Mutation.AuthEmail(childComplexity), true
-
 	case "Mutation.authenticate":
 		if e.complexity.Mutation.Authenticate == nil {
 			break
@@ -542,6 +535,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.Authenticate(childComplexity, args["data"].(*types.AuthenticationInput)), true
+
+	case "Mutation.authenticateEmail":
+		if e.complexity.Mutation.AuthenticateEmail == nil {
+			break
+		}
+
+		return e.complexity.Mutation.AuthenticateEmail(childComplexity), true
 
 	case "Mutation.authenticateRecoveryCode":
 		if e.complexity.Mutation.AuthenticateRecoveryCode == nil {
@@ -857,6 +857,11 @@ extend type Mutation {
   authenticate(data: AuthenticationInput): Response!
 
   """
+  Re-send the authentication email
+  """
+  authenticateEmail: Response!
+
+  """
   Registration for the account. Will only work once authenticate is initiated
   and the cookie is still valid when redeemed (5 minutes)
   """
@@ -871,6 +876,16 @@ extend type Mutation {
   Authenticate with a recovery code - should be used after a cookie is redeemed but user does not remember their credentials
   """
   authenticateRecoveryCode(code: String!): Response!
+
+  """
+  Unlock Account - account may be locked for any reason. Use this endpoint to unlock the currently-logged in account (time must be after the expiration of the unlock)
+  """
+  unlockAccount: Response!
+
+  """
+  Logout the current account
+  """
+  logout: Response!
 }
 
 extend type Query {
@@ -904,13 +919,7 @@ extend type Query {
   redeemCookie(cookie: String!): Cookie!
 }
 `, BuiltIn: false},
-	{Name: "schema/schema.graphql", Input: `type Mutation {
-  logout: Boolean!
-  authEmail: Boolean!
-  unlockAccount: Boolean!
-}
-
-type Response {
+	{Name: "schema/schema.graphql", Input: `type Response {
   validation: Validation
   ok: Boolean!
 }
@@ -2814,111 +2823,6 @@ func (ec *executionContext) _Entity_findAccountSettingsByAccountID(ctx context.C
 	return ec.marshalNAccountSettings2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountSettings(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Mutation_logout(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().Logout(rctx)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(bool)
-	fc.Result = res
-	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Mutation_authEmail(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().AuthEmail(rctx)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(bool)
-	fc.Result = res
-	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Mutation_unlockAccount(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UnlockAccount(rctx)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(bool)
-	fc.Result = res
-	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _Mutation_authenticate(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -2945,6 +2849,41 @@ func (ec *executionContext) _Mutation_authenticate(ctx context.Context, field gr
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return ec.resolvers.Mutation().Authenticate(rctx, args["data"].(*types.AuthenticationInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.Response)
+	fc.Result = res
+	return ec.marshalNResponse2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐResponse(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_authenticateEmail(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().AuthenticateEmail(rctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3071,6 +3010,76 @@ func (ec *executionContext) _Mutation_authenticateRecoveryCode(ctx context.Conte
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return ec.resolvers.Mutation().AuthenticateRecoveryCode(rctx, args["code"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.Response)
+	fc.Result = res
+	return ec.marshalNResponse2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐResponse(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_unlockAccount(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UnlockAccount(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.Response)
+	fc.Result = res
+	return ec.marshalNResponse2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐResponse(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_logout(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().Logout(rctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5566,23 +5575,13 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Mutation")
-		case "logout":
-			out.Values[i] = ec._Mutation_logout(ctx, field)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "authEmail":
-			out.Values[i] = ec._Mutation_authEmail(ctx, field)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "unlockAccount":
-			out.Values[i] = ec._Mutation_unlockAccount(ctx, field)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "authenticate":
 			out.Values[i] = ec._Mutation_authenticate(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "authenticateEmail":
+			out.Values[i] = ec._Mutation_authenticateEmail(ctx, field)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -5598,6 +5597,16 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			}
 		case "authenticateRecoveryCode":
 			out.Values[i] = ec._Mutation_authenticateRecoveryCode(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "unlockAccount":
+			out.Values[i] = ec._Mutation_unlockAccount(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "logout":
+			out.Values[i] = ec._Mutation_logout(ctx, field)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
