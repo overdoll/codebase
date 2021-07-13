@@ -2,7 +2,6 @@ package service_test
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"os"
 	"testing"
@@ -29,14 +28,14 @@ const ParleyGrpcClientAddr = "localhost:8889"
 
 // query is weird here because we query the entities field directly
 type AccountSettings struct {
-	Entities struct {
+	Entities []struct {
 		AccountSettings types.AccountSettings `graphql:"... on AccountSettings"`
 	} `graphql:"_entities(representations: $representations)"`
 }
 
 type _Any map[string]interface{}
 
-func qAccountSettings(t *testing.T, client *graphql.Client, accountId string) AccountSettings {
+func qAccountSettings(t *testing.T, client *graphql.Client, accountId string) types.AccountSettings {
 	var accountSettings AccountSettings
 
 	err := client.Query(context.Background(), &accountSettings, map[string]interface{}{
@@ -48,12 +47,9 @@ func qAccountSettings(t *testing.T, client *graphql.Client, accountId string) Ac
 		},
 	})
 
-	fmt.Println(err)
-	fmt.Println(accountSettings)
-
 	require.NoError(t, err)
 
-	return accountSettings
+	return accountSettings.Entities[0].AccountSettings
 }
 
 type ModeratePost struct {

@@ -73,11 +73,16 @@ func ReadCookie(ctx context.Context, name string) (*http.Cookie, error) {
 
 	var value string
 	if encrypt {
-		var secureCookie = securecookie.New([]byte(cookieKey), []byte(os.Getenv(CookieBlockKey)))
+		secureCookie := securecookie.New([]byte(cookieKey), []byte(os.Getenv(CookieBlockKey)))
+
+		// no restriction on maxAge
+		secureCookie.MaxAge(0)
 		if err = secureCookie.Decode(name, currentCookie.Value, &value); err == nil {
 			currentCookie.Value = value
 			return currentCookie, nil
 		}
+
+		return nil, err
 	}
 
 	return currentCookie, nil

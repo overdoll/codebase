@@ -25,7 +25,7 @@ func (r *MutationResolver) AuthEmail(ctx context.Context) (bool, error) {
 // Authenticate - Generate an OTP code that will be used to authenticate the user
 // if user opens the link in the same browser, then we automatically authorize them
 // if not, then we redeem the cookie and the original browser should be logged in,
-func (r *MutationResolver) Authenticate(ctx context.Context, data *types.AuthenticationInput) (bool, error) {
+func (r *MutationResolver) Authenticate(ctx context.Context, data *types.AuthenticationInput) (*types.Response, error) {
 
 	gc := helpers.GinContextFromContext(ctx)
 
@@ -40,13 +40,13 @@ func (r *MutationResolver) Authenticate(ctx context.Context, data *types.Authent
 
 	if err != nil {
 		zap.S().Errorf("failed to unmarshal: %s", err)
-		return false, errors.New("error")
+		return nil, errors.New("error")
 	}
 
 	instance, err := r.App.Commands.Authenticate.Handle(ctx, data.Email, string(sessionJson))
 
 	if err != nil {
-		return false, nil
+		return nil, nil
 	}
 
 	// OTP login cookie - will determine if
@@ -60,17 +60,20 @@ func (r *MutationResolver) Authenticate(ctx context.Context, data *types.Authent
 
 	if err != nil {
 		zap.S().Errorf("failed to set cookie: %s", err)
-		return false, command.ErrFailedAuthenticate
+		return nil, command.ErrFailedAuthenticate
 	}
 
-	return true, nil
+	return &types.Response{
+		Validation: nil,
+		Ok:         true,
+	}, nil
 }
 
-func (r *MutationResolver) Register(ctx context.Context, data *types.RegisterInput) (bool, error) {
+func (r *MutationResolver) Register(ctx context.Context, data *types.RegisterInput) (*types.Response, error) {
 	pass := passport.FromContext(ctx)
 
 	if pass.IsAuthenticated() {
-		return false, errors.New("user currently logged in")
+		return nil, errors.New("user currently logged in")
 	}
 
 	gc := helpers.GinContextFromContext(ctx)
@@ -81,17 +84,17 @@ func (r *MutationResolver) Register(ctx context.Context, data *types.RegisterInp
 
 		// Cookie doesn't exist
 		if err == http.ErrNoCookie {
-			return false, command.ErrFailedRegister
+			return nil, command.ErrFailedRegister
 		}
 
 		zap.S().Errorf("failed to get cookie: %s", err)
-		return false, command.ErrFailedRegister
+		return nil, command.ErrFailedRegister
 	}
 
 	usr, err := r.App.Commands.Register.Handle(ctx, currentCookie.Value, data.Username)
 
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 
 	http.SetCookie(gc.Writer, &http.Cookie{Name: cookie.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
@@ -100,10 +103,13 @@ func (r *MutationResolver) Register(ctx context.Context, data *types.RegisterInp
 		p.SetAccount(usr.ID())
 		return nil
 	}); err != nil {
-		return false, err
+		return nil, err
 	}
 
-	return true, err
+	return &types.Response{
+		Validation: nil,
+		Ok:         true,
+	}, err
 }
 
 func (r *MutationResolver) AuthenticateTotp(ctx context.Context, code string) (*types.Response, error) {

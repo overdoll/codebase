@@ -11,13 +11,11 @@ type EntityResolver struct {
 	App *app.Application
 }
 
-// this entity would never be resolved - it's the base entity
-func (e EntityResolver) FindAccountSettingsByAccountID(ctx context.Context, accountID string) (*types.AccountSettings, error) {
+// these entities are the base entities so they are never resolved
+func (e EntityResolver) FindAccountByID(ctx context.Context, id string) (*types.Account, error) {
 	panic("implement me")
 }
 
-// this entity would never be resolved - it's the base entity
-func (e EntityResolver) FindUserByID(ctx context.Context, id string) (*types.User, error) {
+func (e EntityResolver) FindAccountSettingsByAccountID(ctx context.Context, accountID string) (*types.AccountSettings, error) {
 	panic("implement me")
-
 }

@@ -1,9 +1,10 @@
 package service_test
 
 import (
-	"fmt"
+	"context"
 	"testing"
 
+	"github.com/stretchr/testify/require"
 	"overdoll/applications/parley/src/ports/graphql/types"
 	"overdoll/libraries/passport"
 )
@@ -20,14 +21,28 @@ func TestToggleModeratorStatus(t *testing.T) {
 
 	settings := qAccountSettings(t, client, "1q7MJ5IyRTV0X4J27F3m5wGD5mj")
 
-	fmt.Println(settings.Entities)
+	oldInQueue := settings.Moderator.InQueue
 
-	//var toggleModeratorStatus ToggleModeratorStatus
-	//
-	//// because this is an entity in apollo federation, we have to query the entities field
-	//err := client.Mutate(context.Background(), &toggleModeratorStatus, nil)
-	//
-	//require.NoError(t, err)
-	//
-	//require.True(t, settings.AccountSettings.Moderator.InQueue)
+	var toggleModeratorStatus ToggleModeratorStatus
+
+	err := client.Mutate(context.Background(), &toggleModeratorStatus, nil)
+
+	require.NoError(t, err)
+	require.True(t, toggleModeratorStatus.ToggleModeratorStatus.Ok)
+
+	settings = qAccountSettings(t, client, "1q7MJ5IyRTV0X4J27F3m5wGD5mj")
+
+	// compare that the old result of inqueue is the opposite of the new inqueue
+	require.Equal(t, !oldInQueue, settings.Moderator.InQueue)
+	oldInQueue = settings.Moderator.InQueue
+
+	err = client.Mutate(context.Background(), &toggleModeratorStatus, nil)
+
+	require.NoError(t, err)
+	require.True(t, toggleModeratorStatus.ToggleModeratorStatus.Ok)
+
+	settings = qAccountSettings(t, client, "1q7MJ5IyRTV0X4J27F3m5wGD5mj")
+
+	// same comparison, but we toggle off again
+	require.Equal(t, !oldInQueue, settings.Moderator.InQueue)
 }

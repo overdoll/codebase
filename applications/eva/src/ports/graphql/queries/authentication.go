@@ -130,8 +130,8 @@ func (r *QueryResolver) Authentication(ctx context.Context) (*types.Authenticati
 		}
 
 		return &types.Authentication{
-			Cookie: nil,
-			User:   types.MarshalUserToGraphQL(acc),
+			Cookie:  nil,
+			Account: types.MarshalAccountToGraphQL(acc),
 		}, nil
 	}
 
@@ -148,8 +148,8 @@ func (r *QueryResolver) Authentication(ctx context.Context) (*types.Authenticati
 
 	if err != nil && err == http.ErrNoCookie || otpCookie == nil {
 		return &types.Authentication{
-			Cookie: nil,
-			User:   nil,
+			Cookie:  nil,
+			Account: nil,
 		}, nil
 	}
 
@@ -166,7 +166,7 @@ func (r *QueryResolver) Authentication(ctx context.Context) (*types.Authenticati
 					Email:       ck.Email(),
 					Invalid:     false,
 				},
-				User: nil,
+				Account: nil,
 			}, nil
 		}
 
@@ -186,8 +186,8 @@ func (r *QueryResolver) Authentication(ctx context.Context) (*types.Authenticati
 		}
 
 		return &types.Authentication{
-			Cookie: nil,
-			User:   types.MarshalUserToGraphQL(acc),
+			Cookie:  nil,
+			Account: types.MarshalAccountToGraphQL(acc),
 		}, nil
 	}
 
@@ -209,12 +209,12 @@ func (r *QueryResolver) Authentication(ctx context.Context) (*types.Authenticati
 				Invalid:     false,
 				MultiFactor: multiFactorTypes,
 			},
-			User: nil,
+			Account: nil,
 		}, nil
 	}
 
 	return &types.Authentication{
-		Cookie: nil,
-		User:   nil,
+		Cookie:  nil,
+		Account: nil,
 	}, nil
 }

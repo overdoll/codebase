@@ -37,7 +37,6 @@ go_test(
         "//libraries/config",
         "//libraries/passport",
         "//libraries/tests",
-        "@com_github_99designs_gqlgen//plugin/federation/fedruntime",
         "@com_github_shurcool_graphql//:graphql",
         "@com_github_stretchr_testify//require",
         "@org_golang_google_grpc//:go_default_library",

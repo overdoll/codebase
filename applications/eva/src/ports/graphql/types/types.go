@@ -8,6 +8,17 @@ import (
 	"strconv"
 )
 
+type Account struct {
+	ID       string       `json:"id"`
+	Username string       `json:"username"`
+	Roles    []string     `json:"roles"`
+	Avatar   string       `json:"avatar"`
+	Verified bool         `json:"verified"`
+	Lock     *AccountLock `json:"lock"`
+}
+
+func (Account) IsEntity() {}
+
 type AccountEmail struct {
 	Email  string                 `json:"email"`
 	Status AccountEmailStatusEnum `json:"status"`
@@ -76,8 +87,8 @@ type AccountUsername struct {
 }
 
 type Authentication struct {
-	Cookie *Cookie `json:"cookie"`
-	User   *User   `json:"user"`
+	Cookie  *Cookie  `json:"cookie"`
+	Account *Account `json:"account"`
 }
 
 type AuthenticationInput struct {
@@ -102,17 +113,6 @@ type Response struct {
 	Validation *Validation `json:"validation"`
 	Ok         bool        `json:"ok"`
 }
-
-type User struct {
-	ID       string       `json:"id"`
-	Username string       `json:"username"`
-	Roles    []string     `json:"roles"`
-	Avatar   string       `json:"avatar"`
-	Verified bool         `json:"verified"`
-	Lock     *AccountLock `json:"lock"`
-}
-
-func (User) IsEntity() {}
 
 type Validation struct {
 	Code string `json:"code"`

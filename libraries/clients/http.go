@@ -82,7 +82,7 @@ func CloneRequest(req *http.Request, pass *passport.Passport) *http.Request {
 			panic(err)
 		}
 	}
-	
+
 	// deep copy headers
 	r.Header = CloneHeader(req.Header)
 

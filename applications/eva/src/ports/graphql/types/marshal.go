@@ -4,7 +4,7 @@ import (
 	"overdoll/applications/eva/src/domain/account"
 )
 
-func MarshalUserToGraphQL(result *account.Account) *User {
+func MarshalAccountToGraphQL(result *account.Account) *Account {
 
 	var lock *AccountLock
 
@@ -15,5 +15,5 @@ func MarshalUserToGraphQL(result *account.Account) *User {
 		}
 	}
 
-	return &User{ID: result.ID(), Username: result.Username(), Roles: result.RolesAsString(), Lock: lock, Avatar: result.Avatar(), Verified: result.Verified()}
+	return &Account{ID: result.ID(), Username: result.Username(), Roles: result.RolesAsString(), Lock: lock, Avatar: result.Avatar(), Verified: result.Verified()}
 }

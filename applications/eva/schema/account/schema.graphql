@@ -1,4 +1,4 @@
-type User @key(fields: "id") {
+type Account @key(fields: "id") {
   id: String!
   username: String!
   roles: [String!]!
@@ -22,20 +22,20 @@ input AuthenticationInput {
 
 type Authentication {
   cookie: Cookie
-  user: User
+  account: Account
 }
 
 extend type Mutation {
   """
   Initiates an authentication flow for the specified account
   """
-  authenticate(data: AuthenticationInput): Boolean!
+  authenticate(data: AuthenticationInput): Response!
 
   """
   Registration for the account. Will only work once authenticate is initiated
   and the cookie is still valid when redeemed (5 minutes)
   """
-  register(data: RegisterInput): Boolean!
+  register(data: RegisterInput): Response!
 
   """
   Authenticate with a TOTP code - should be used after a cookie is redeemed
