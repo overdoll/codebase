@@ -15,5 +15,9 @@
   "4007a9c7974da01641f179dd102d6927": "mutation StepsMutation(\n  $data: PostInput\n) {\n  post(data: $data) {\n    review\n  }\n}\n",
   "c580e2ec639f896f6891e72f4ce5bb53": "query MediaQuery(\n  $data: SearchInput!\n) {\n  media(data: $data) {\n    id\n    title\n    thumbnail\n  }\n}\n",
   "3d0383f9dd76ad9089c7b4ff747ceb96": "mutation StepsMutation(\n  $data: PostInput\n) {\n  post(data: $data) {\n    review\n    validation {\n      code\n    }\n  }\n}\n",
-  "ff3f64652c450fbcaada028f4225e41b": "query TokenQuery(\n  $cookie: String!\n) {\n  redeemCookie(cookie: $cookie) {\n    sameSession\n    registered\n    session\n    invalid\n  }\n}\n"
+  "ff3f64652c450fbcaada028f4225e41b": "query TokenQuery(\n  $cookie: String!\n) {\n  redeemCookie(cookie: $cookie) {\n    sameSession\n    registered\n    session\n    invalid\n  }\n}\n",
+  "ea4cbdb02f4888cdd14a5b393f55addb": "mutation LobbyMutation {\n  authenticateEmail {\n    ok\n  }\n}\n",
+  "f1604fee51167235daafe362f3b58e6a": "mutation JoinMutation(\n  $data: AuthenticationInput!\n) {\n  authenticate(data: $data) {\n    ok\n  }\n}\n",
+  "17fc34667c96526b459013e2d2ad7416": "mutation RegisterMutation(\n  $data: RegisterInput!\n) {\n  register(data: $data) {\n    ok\n    validation {\n      code\n    }\n  }\n}\n",
+  "7e5c372c223c18cbc199e631a798e33e": "query RootQuery {\n  authentication {\n    account {\n      username\n    }\n    ...JoinFragment\n  }\n}\n\nfragment JoinFragment on Authentication {\n  cookie {\n    redeemed\n    registered\n    email\n  }\n}\n"
 }

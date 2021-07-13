@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash baeb01655c5e1818c7a116ad2e2353f9
+ * @relayHash f1604fee51167235daafe362f3b58e6a
  */
 
 /* eslint-disable */
@@ -15,7 +15,9 @@ export type JoinMutationVariables = {|
   data: AuthenticationInput
 |};
 export type JoinMutationResponse = {|
-  +authenticate: boolean
+  +authenticate: {|
+    +ok: boolean
+  |}
 |};
 export type JoinMutation = {|
   variables: JoinMutationVariables,
@@ -27,7 +29,9 @@ export type JoinMutation = {|
 mutation JoinMutation(
   $data: AuthenticationInput!
 ) {
-  authenticate(data: $data)
+  authenticate(data: $data) {
+    ok
+  }
 }
 */
 
@@ -49,8 +53,19 @@ v1 = [
         "variableName": "data"
       }
     ],
-    "kind": "ScalarField",
+    "concreteType": "Response",
+    "kind": "LinkedField",
     "name": "authenticate",
+    "plural": false,
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "ok",
+        "storageKey": null
+      }
+    ],
     "storageKey": null
   }
 ];
@@ -72,7 +87,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "baeb01655c5e1818c7a116ad2e2353f9",
+    "id": "f1604fee51167235daafe362f3b58e6a",
     "metadata": {},
     "name": "JoinMutation",
     "operationKind": "mutation",
@@ -81,5 +96,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '6dc9f42c1136d72b2824160598e75a7e';
+(node: any).hash = '74e50d9a9bf4fd8efac9a08300ebf1de';
 module.exports = node;

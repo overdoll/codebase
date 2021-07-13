@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 90f66151793c514fcbbc647a644bec16
+ * @relayHash ea4cbdb02f4888cdd14a5b393f55addb
  */
 
 /* eslint-disable */
@@ -10,7 +10,9 @@
 import type { ConcreteRequest } from 'relay-runtime';
 export type LobbyMutationVariables = {||};
 export type LobbyMutationResponse = {|
-  +authEmail: boolean
+  +authenticateEmail: {|
+    +ok: boolean
+  |}
 |};
 export type LobbyMutation = {|
   variables: LobbyMutationVariables,
@@ -20,7 +22,9 @@ export type LobbyMutation = {|
 
 /*
 mutation LobbyMutation {
-  authEmail
+  authenticateEmail {
+    ok
+  }
 }
 */
 
@@ -29,8 +33,19 @@ var v0 = [
   {
     "alias": null,
     "args": null,
-    "kind": "ScalarField",
-    "name": "authEmail",
+    "concreteType": "Response",
+    "kind": "LinkedField",
+    "name": "authenticateEmail",
+    "plural": false,
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "ok",
+        "storageKey": null
+      }
+    ],
     "storageKey": null
   }
 ];
@@ -52,7 +67,7 @@ return {
     "selections": (v0/*: any*/)
   },
   "params": {
-    "id": "90f66151793c514fcbbc647a644bec16",
+    "id": "ea4cbdb02f4888cdd14a5b393f55addb",
     "metadata": {},
     "name": "LobbyMutation",
     "operationKind": "mutation",
@@ -61,5 +76,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = 'dea3b01c7d28227337c212e820a85b25';
+(node: any).hash = '883b88813dc01d00e36725fa88437d2f';
 module.exports = node;

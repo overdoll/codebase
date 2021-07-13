@@ -8,7 +8,7 @@ const getUserFromEnvironment = environment =>
   environment
     .getStore()
     .getSource()
-    .get('client:root:authentication:user')
+    .get('client:root:authentication:account')
 
 /**
  * Client routes for the application

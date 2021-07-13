@@ -19,7 +19,9 @@ import JoinForm from './JoinForm/JoinForm'
 
 const JoinAction = graphql`
   mutation JoinMutation($data: AuthenticationInput!) {
-    authenticate(data: $data)
+    authenticate(data: $data) {
+      ok
+    }
   }
 `
 
