@@ -42,7 +42,9 @@ export default {
     const cipher = _crypto.createCipheriv('aes-256-gcm', masterkey, iv)
 
     // generate output
-    return Buffer.concat([iv, cipher.update(text), cipher.final(), cipher.getAuthTag()])
+    return Buffer.concat([iv, cipher.update(text), cipher.final(), cipher.getAuthTag()]).toString(
+      'hex'
+    )
   },
 
   /**
@@ -67,6 +69,6 @@ export default {
     decipher.setAuthTag(tag)
 
     // encrypt the given text
-    return decipher.update(input, 'binary', 'utf8') + decipher.final('utf8')
+    return decipher.update(data, null, 'utf8') + decipher.final('utf8')
   }
 }

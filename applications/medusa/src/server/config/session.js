@@ -10,8 +10,8 @@ export default {
   store: new RedisStore({
     client: redis.createClient({ host: process.env.REDIS_URL, db: 0 }),
     serializer: {
-      parse: (string) => JSON.parse(gcm.decrypt(string, Buffer.from(process.env.SESSION_SECRET, 'base64'))),
-      stringify: (object) => gcm.encrypt(JSON.stringify(object), Buffer.from(process.env.SESSION_SECRET, 'base64'))
+      parse: (string) => JSON.parse(gcm.decrypt(string, process.env.SESSION_SECRET)),
+      stringify: (object) => gcm.encrypt(JSON.stringify(object), process.env.SESSION_SECRET)
     },
     prefix: 'session:'
   }),

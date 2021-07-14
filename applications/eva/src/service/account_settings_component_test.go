@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"fmt"
 	"testing"
 
 	"github.com/bxcodec/faker/v3"
@@ -227,13 +226,10 @@ func TestAccountSessions_view_and_revoke(t *testing.T) {
 	for _, sess := range settings.AccountSettings.Security.Sessions {
 		if sess.IP == fakeSession.Ip {
 			foundSession = true
-			fmt.Println(sess.IP)
 			sessionId = sess.ID
 		}
 	}
-
-	require.False(t, true)
-
+	
 	require.True(t, foundSession)
 
 	var revokeAccountSession RevokeAccountSession
