@@ -9,13 +9,12 @@ import LoginKeys
   from '@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/login-logout/login-keys.svg'
 import ContentBrushPen
   from '@streamlinehq/streamlinehq/img/streamline-bold/content/content-creation/content-brush-pen.svg'
-import JSResource from '@//:modules/utilities/JSResource'
 
 const getUserFromEnvironment = environment =>
   environment
     .getStore()
     .getSource()
-    .get('client:root:authentication:account')
+    .get('client:root:authenticatedAccount')
 
 const getAbilityFromUser = (environment) => {
   return defineAbility(getUserFromEnvironment(environment))
@@ -43,6 +42,8 @@ const getAbilityFromUser = (environment) => {
  *
  * Adding "firstRoute" means that when the user clicks on a nav item on the top bar,
  * it will route them to the first item in the sub-routes instead of the route itself
+ * Add "hidden" to hide a route from the nav bar if you want to have it somewhere else,
+ * like the right menu
  */
 
 const routes: Array<Route> = [

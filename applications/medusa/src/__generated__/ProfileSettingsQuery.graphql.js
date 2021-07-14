@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash eb650c16a159b6ed8659f08df8a1248f
+ * @relayHash 56027daea69761bfeba11ec29b5fd4f9
  */
 
 /* eslint-disable */
@@ -23,10 +23,8 @@ export type ProfileSettingsQueryResponse = {|
       |}>,
     |},
   |},
-  +authentication: ?{|
-    +account: ?{|
-      +username: string
-    |}
+  +authenticatedAccount: ?{|
+    +username: string
   |},
 |};
 export type ProfileSettingsQuery = {|
@@ -49,10 +47,8 @@ query ProfileSettingsQuery {
       }
     }
   }
-  authentication {
-    account {
-      username
-    }
+  authenticatedAccount {
+    username
   }
 }
 */
@@ -135,22 +131,11 @@ v1 = [
   {
     "alias": null,
     "args": null,
-    "concreteType": "Authentication",
+    "concreteType": "Account",
     "kind": "LinkedField",
-    "name": "authentication",
+    "name": "authenticatedAccount",
     "plural": false,
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "Account",
-        "kind": "LinkedField",
-        "name": "account",
-        "plural": false,
-        "selections": (v0/*: any*/),
-        "storageKey": null
-      }
-    ],
+    "selections": (v0/*: any*/),
     "storageKey": null
   }
 ];
@@ -172,7 +157,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "eb650c16a159b6ed8659f08df8a1248f",
+    "id": "56027daea69761bfeba11ec29b5fd4f9",
     "metadata": {},
     "name": "ProfileSettingsQuery",
     "operationKind": "query",
@@ -181,5 +166,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = 'dd44c40556bff1d930b4b2bf7e165497';
+(node: any).hash = 'e8630eb729855fe77bfdaa18e1a37dfc';
 module.exports = node;

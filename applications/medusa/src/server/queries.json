@@ -26,5 +26,9 @@
   "056ce15445e4c4ea31c0ad915d66f0e6": "query JoinQuery {\n  authenticationTokenStatus {\n    redeemed\n    email\n    accountStatus {\n      registered\n      authenticated\n      multiFactor\n    }\n  }\n}\n",
   "310060b52c63cc09be5b62f5f3f9a25d": "query JoinQuery {\n  authenticationTokenStatus {\n    redeemed\n    email\n    accountStatus {\n      registered\n      multiFactor\n    }\n  }\n}\n",
   "821963d9c28b3acebec24eb50b86d328": "query TokenQuery(\n  $token: String!\n) {\n  redeemAuthenticationToken(token: $token) {\n    redeemed\n    email\n    session\n    accountStatus {\n      registered\n      authenticated\n      multiFactor\n    }\n  }\n}\n",
-  "d660dc6770c44c1877ca917fb555406c": "query TokenQuery(\n  $token: String!\n) {\n  redeemAuthenticationToken(token: $token) {\n    redeemed\n    email\n    session\n    sameSession\n    accountStatus {\n      registered\n      authenticated\n      multiFactor\n    }\n  }\n}\n"
+  "d660dc6770c44c1877ca917fb555406c": "query TokenQuery(\n  $token: String!\n) {\n  redeemAuthenticationToken(token: $token) {\n    redeemed\n    email\n    session\n    sameSession\n    accountStatus {\n      registered\n      authenticated\n      multiFactor\n    }\n  }\n}\n",
+  "f00a2e79d26efad10f0bc4e1ac9a0220": "mutation NavMenuMutation {\n  logout {\n    validation {\n      code\n    }\n    ok\n  }\n}\n",
+  "56027daea69761bfeba11ec29b5fd4f9": "query ProfileSettingsQuery {\n  accountSettings {\n    accountId\n    general {\n      emails {\n        email\n        status\n      }\n      usernames {\n        username\n      }\n    }\n  }\n  authenticatedAccount {\n    username\n  }\n}\n",
+  "3d3673577f14370a1fc3e68435019568": "query RootQuery {\n  authenticatedAccount {\n    username\n    roles\n    avatar\n    lock {\n      reason\n      expires\n    }\n  }\n}\n",
+  "f9188dfb615ff6bfba6490f704b2bda7": "query HistoryPendingPostAuditLogsQuery {\n  pendingPostAuditLogs(filter: {}) {\n    edges {\n      node {\n        id\n      }\n    }\n  }\n}\n"
 }

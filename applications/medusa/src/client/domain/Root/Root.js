@@ -49,7 +49,7 @@ export default function Root (props: Props): Node {
   }
 
   const ability = defineAbility(rootQuery.authenticatedAccount)
-
+  
   return (
     <>
       <AbilityContext.Provider value={ability}>

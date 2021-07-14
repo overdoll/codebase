@@ -6,6 +6,9 @@ export default function (props) {
       bg: 'gray.900',
       lineHeight: 'base'
     },
+    heading: {
+      fontWeight: 600
+    },
     '*::placeholder': {
       color: 'gray.400'
     },
