@@ -2,7 +2,6 @@ package cookie_test
 
 import (
 	"testing"
-	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -32,20 +31,4 @@ func TestCookie_Consume(t *testing.T) {
 	require.NoError(t, err)
 
 	require.NoError(t, ck.MakeConsumed())
-}
-
-func TestCookie_Redeem_expired(t *testing.T) {
-	t.Parallel()
-
-	ck := cookie.UnmarshalCookieFromDatabase(uuid.New().String(), "test-email@test.com", false, "", time.Now())
-
-	assert.Equal(t, cookie.ErrCookieExpired, ck.MakeRedeemed())
-}
-
-func TestCookie_Consume_expired(t *testing.T) {
-	t.Parallel()
-
-	ck := cookie.UnmarshalCookieFromDatabase(uuid.New().String(), "test-email@test.com", true, "", time.Now())
-
-	assert.Equal(t, cookie.ErrCookieExpired, ck.MakeConsumed())
 }

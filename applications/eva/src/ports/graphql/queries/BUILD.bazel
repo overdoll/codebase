@@ -2,7 +2,12 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "queries",
-    srcs = ["resolvers.go"],
+    srcs = [
+        "account_settings.go",
+        "authentication.go",
+        "multi_factor.go",
+        "resolvers.go",
+    ],
     importpath = "overdoll/applications/eva/src/ports/graphql/queries",
     visibility = ["//visibility:public"],
     deps = [
@@ -11,6 +16,7 @@ go_library(
         "//applications/eva/src/domain/cookie",
         "//applications/eva/src/ports/graphql/types",
         "//libraries/cookies",
+        "//libraries/graphql",
         "//libraries/helpers",
         "//libraries/passport",
         "@org_uber_go_zap//:zap",

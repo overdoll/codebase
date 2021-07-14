@@ -15,13 +15,16 @@ go_library(
         "//applications/parley/src/app/query",
         "//libraries/bootstrap",
         "//libraries/clients",
-        "@com_github_spf13_viper//:viper",
     ],
 )
 
 go_test(
     name = "service_test",
-    srcs = ["component_test.go"],
+    srcs = [
+        "account_settings_component_test.go",
+        "component_test.go",
+        "moderate_component_test.go",
+    ],
     data = ["//applications/parley:config.toml"],
     deps = [
         ":service",

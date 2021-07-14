@@ -3,9 +3,9 @@ syntax = "proto3";
 package libraries.passport.v1;
 
 message Passport {
-  User user = 1;
+  Account account = 1;
 }
 
-message User {
+message Account {
   string id = 1;
 }

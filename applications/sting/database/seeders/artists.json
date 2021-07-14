@@ -1,12 +1,12 @@
 [
   {
-    "user_id": "1q7MIqqnkzew33q4elXuN1Ri27d",
-    "user_username": "artist_unverified",
-    "user_avatar": "1pcKaM9zDCZB3TTVYChSqsJZVqt.png"
+    "account_id": "1q7MIqqnkzew33q4elXuN1Ri27d",
+    "account_username": "artist_unverified",
+    "account_avatar": "1pcKaM9zDCZB3TTVYChSqsJZVqt.png"
   },
   {
-    "user_id": "1q7MIw0U6TEpELH0FqnxrcXt3E0",
-    "user_username": "artist_verified",
-    "user_avatar": "1pcKZxqh6vKnun2ZBXxEKEi686B.png"
+    "account_id": "1q7MIw0U6TEpELH0FqnxrcXt3E0",
+    "account_username": "artist_verified",
+    "account_avatar": "1pcKZxqh6vKnun2ZBXxEKEi686B.png"
   }
 ]

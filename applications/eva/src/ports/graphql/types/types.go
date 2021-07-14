@@ -2,9 +2,93 @@
 
 package types
 
+import (
+	"fmt"
+	"io"
+	"strconv"
+)
+
+type Account struct {
+	ID       string            `json:"id"`
+	Username string            `json:"username"`
+	Roles    []AccountRoleEnum `json:"roles"`
+	Avatar   string            `json:"avatar"`
+	Verified bool              `json:"verified"`
+	Lock     *AccountLock      `json:"lock"`
+}
+
+func (Account) IsEntity() {}
+
+type AccountEmail struct {
+	Email  string                 `json:"email"`
+	Status AccountEmailStatusEnum `json:"status"`
+}
+
+type AccountGeneralSettings struct {
+	// Emails for account (multiple emails per account)
+	Emails []*AccountEmail `json:"emails"`
+	// Usernames for account (history)
+	Usernames []*AccountUsername `json:"usernames"`
+}
+
+type AccountLock struct {
+	Expires int    `json:"expires"`
+	Reason  string `json:"reason"`
+}
+
+type AccountMultiFactorRecoveryCode struct {
+	Code string `json:"code"`
+}
+
+type AccountMultiFactorSecuritySettings struct {
+	// Have recovery codes been generated? Required in order to configure TOTP
+	RecoveryCodesGenerated bool `json:"recoveryCodesGenerated"`
+	// Is multi factor enabled - can be toggled off if they want to
+	MultiFactorEnabled bool `json:"multiFactorEnabled"`
+	// Privileged users cannot disable MFA (moderators, staff)
+	CanDisableMultiFactor bool `json:"canDisableMultiFactor"`
+	// Has TOTP been configured? Recovery codes must be generated before configuring
+	MultiFactorTotpConfigured bool `json:"multiFactorTotpConfigured"`
+}
+
+type AccountMultiFactorTotp struct {
+	Secret string `json:"secret"`
+	// Always html image compatible. Just set SRC tag to this and it will work!
+	ImageSrc string `json:"imageSrc"`
+}
+
+type AccountSecuritySettings struct {
+	// Sessions linked to this account
+	Sessions []*AccountSession `json:"sessions"`
+	// Multi factor account settings
+	MultiFactor *AccountMultiFactorSecuritySettings `json:"multiFactor"`
+}
+
+type AccountSession struct {
+	UserAgent string `json:"userAgent"`
+	IP        string `json:"ip"`
+	Created   string `json:"created"`
+	ID        string `json:"id"`
+	Current   bool   `json:"current"`
+}
+
+type AccountSettings struct {
+	AccountID string `json:"accountId"`
+	// General account settings for the user
+	General *AccountGeneralSettings `json:"general"`
+	// Security settings for the user
+	Security *AccountSecuritySettings `json:"security"`
+}
+
+func (AccountSettings) IsEntity() {}
+
+type AccountUsername struct {
+	Username string `json:"username"`
+}
+
 type Authentication struct {
-	Cookie *Cookie `json:"cookie"`
-	User   *User   `json:"user"`
+	Cookie  *Cookie  `json:"cookie"`
+	Account *Account `json:"account"`
 }
 
 type AuthenticationInput struct {
@@ -12,22 +96,147 @@ type AuthenticationInput struct {
 }
 
 type Cookie struct {
-	SameSession bool   `json:"sameSession"`
-	Registered  bool   `json:"registered"`
-	Redeemed    bool   `json:"redeemed"`
-	Session     string `json:"session"`
-	Email       string `json:"email"`
-	Invalid     bool   `json:"invalid"`
+	SameSession bool                  `json:"sameSession"`
+	Registered  bool                  `json:"registered"`
+	Redeemed    bool                  `json:"redeemed"`
+	Session     string                `json:"session"`
+	Email       string                `json:"email"`
+	Invalid     bool                  `json:"invalid"`
+	MultiFactor []MultiFactorTypeEnum `json:"multiFactor"`
 }
 
 type RegisterInput struct {
 	Username string `json:"username"`
 }
 
-type User struct {
-	ID       string   `json:"id"`
-	Username string   `json:"username"`
-	Roles    []string `json:"roles"`
+type Response struct {
+	Validation *Validation `json:"validation"`
+	Ok         bool        `json:"ok"`
 }
 
-func (User) IsEntity() {}
+type Validation struct {
+	Code string `json:"code"`
+}
+
+type AccountEmailStatusEnum string
+
+const (
+	AccountEmailStatusEnumConfirmed   AccountEmailStatusEnum = "CONFIRMED"
+	AccountEmailStatusEnumUnconfirmed AccountEmailStatusEnum = "UNCONFIRMED"
+	AccountEmailStatusEnumPrimary     AccountEmailStatusEnum = "PRIMARY"
+)
+
+var AllAccountEmailStatusEnum = []AccountEmailStatusEnum{
+	AccountEmailStatusEnumConfirmed,
+	AccountEmailStatusEnumUnconfirmed,
+	AccountEmailStatusEnumPrimary,
+}
+
+func (e AccountEmailStatusEnum) IsValid() bool {
+	switch e {
+	case AccountEmailStatusEnumConfirmed, AccountEmailStatusEnumUnconfirmed, AccountEmailStatusEnumPrimary:
+		return true
+	}
+	return false
+}
+
+func (e AccountEmailStatusEnum) String() string {
+	return string(e)
+}
+
+func (e *AccountEmailStatusEnum) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = AccountEmailStatusEnum(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid AccountEmailStatusEnum", str)
+	}
+	return nil
+}
+
+func (e AccountEmailStatusEnum) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type AccountRoleEnum string
+
+const (
+	AccountRoleEnumModerator AccountRoleEnum = "Moderator"
+	AccountRoleEnumStaff     AccountRoleEnum = "Staff"
+)
+
+var AllAccountRoleEnum = []AccountRoleEnum{
+	AccountRoleEnumModerator,
+	AccountRoleEnumStaff,
+}
+
+func (e AccountRoleEnum) IsValid() bool {
+	switch e {
+	case AccountRoleEnumModerator, AccountRoleEnumStaff:
+		return true
+	}
+	return false
+}
+
+func (e AccountRoleEnum) String() string {
+	return string(e)
+}
+
+func (e *AccountRoleEnum) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = AccountRoleEnum(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid AccountRoleEnum", str)
+	}
+	return nil
+}
+
+func (e AccountRoleEnum) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type MultiFactorTypeEnum string
+
+const (
+	MultiFactorTypeEnumTotp MultiFactorTypeEnum = "TOTP"
+)
+
+var AllMultiFactorTypeEnum = []MultiFactorTypeEnum{
+	MultiFactorTypeEnumTotp,
+}
+
+func (e MultiFactorTypeEnum) IsValid() bool {
+	switch e {
+	case MultiFactorTypeEnumTotp:
+		return true
+	}
+	return false
+}
+
+func (e MultiFactorTypeEnum) String() string {
+	return string(e)
+}
+
+func (e *MultiFactorTypeEnum) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = MultiFactorTypeEnum(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid MultiFactorTypeEnum", str)
+	}
+	return nil
+}
+
+func (e MultiFactorTypeEnum) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}

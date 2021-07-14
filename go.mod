@@ -13,6 +13,8 @@ require (
 	github.com/dustin/go-humanize v1.0.0
 	github.com/elastic/go-elasticsearch/v7 v7.13.1
 	github.com/gin-gonic/gin v1.7.2
+	github.com/go-playground/validator/v10 v10.6.1 // indirect
+	github.com/go-redis/redis/v8 v8.10.0
 	github.com/gocql/gocql v0.0.0-20210515062232-b7ef815b4556
 	github.com/golang/protobuf v1.5.2
 	github.com/golang/snappy v0.0.3 // indirect
@@ -21,6 +23,7 @@ require (
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
 	github.com/h2non/filetype v1.1.1
 	github.com/joho/godotenv v1.3.0
+	github.com/pquerna/otp v1.3.0 // indirect
 	github.com/scylladb/gocqlx/v2 v2.4.0
 	github.com/segmentio/ksuid v1.0.3
 	github.com/shurcooL/graphql v0.0.0-20200928012149-18c5c3165e3a

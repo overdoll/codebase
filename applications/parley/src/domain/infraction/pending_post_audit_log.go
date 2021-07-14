@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/segmentio/ksuid"
-	"overdoll/libraries/user"
+	"overdoll/libraries/account"
 )
 
 const (
@@ -75,18 +75,18 @@ type PendingPostAuditLog struct {
 
 	createdMs int
 
-	moderator   *user.User
-	contributor *user.User
+	moderator   *account.Account
+	contributor *account.Account
 	notes       string
 	reverted    bool
 
 	status string
 
 	rejectionReason *PendingPostRejectionReason
-	userInfraction  *UserInfractionHistory
+	userInfraction  *AccountInfractionHistory
 }
 
-func NewPendingPostAuditLog(user *user.User, userInfractionHistory []*UserInfractionHistory, postId, moderatorId string, contributor *user.User, rejectionReason *PendingPostRejectionReason, notes string) (*PendingPostAuditLog, error) {
+func NewPendingPostAuditLog(user *account.Account, userInfractionHistory []*AccountInfractionHistory, postId, moderatorId string, contributor *account.Account, rejectionReason *PendingPostRejectionReason, notes string) (*PendingPostAuditLog, error) {
 	// Do some permission checks here to make sure the proper user is doing everything
 
 	if !user.IsStaff() {
@@ -96,7 +96,7 @@ func NewPendingPostAuditLog(user *user.User, userInfractionHistory []*UserInfrac
 		}
 	}
 
-	var userInfraction *UserInfractionHistory
+	var userInfraction *AccountInfractionHistory
 
 	status := StatusApproved
 
@@ -104,7 +104,7 @@ func NewPendingPostAuditLog(user *user.User, userInfractionHistory []*UserInfrac
 		status = StatusDenied
 
 		if rejectionReason.Infraction() {
-			userInfraction = NewUserInfractionHistory(contributor.ID(), userInfractionHistory, rejectionReason.Reason())
+			userInfraction = NewAccountInfractionHistory(contributor.ID(), userInfractionHistory, rejectionReason.Reason())
 		}
 	}
 
@@ -122,12 +122,12 @@ func NewPendingPostAuditLog(user *user.User, userInfractionHistory []*UserInfrac
 	}, nil
 }
 
-func UnmarshalPendingPostAuditLogFromDatabase(id, postId, moderatorId, moderatorUsername, contributorId, contributorUsername, status, userInfractionId, reason, notes string, reverted bool, userInfraction *UserInfractionHistory, createdMs int) *PendingPostAuditLog {
+func UnmarshalPendingPostAuditLogFromDatabase(id, postId, moderatorId, moderatorUsername, contributorId, contributorUsername, status, userInfractionId, reason, notes string, reverted bool, userInfraction *AccountInfractionHistory, createdMs int) *PendingPostAuditLog {
 	return &PendingPostAuditLog{
 		id:              id,
 		postId:          postId,
-		moderator:       user.NewUserOnlyIdAndUsername(moderatorId, moderatorUsername),
-		contributor:     user.NewUserOnlyIdAndUsername(contributorId, contributorUsername),
+		moderator:       account.NewUserOnlyIdAndUsername(moderatorId, moderatorUsername),
+		contributor:     account.NewUserOnlyIdAndUsername(contributorId, contributorUsername),
 		status:          status,
 		rejectionReason: UnmarshalPendingPostRejectionReasonFromDatabase(ksuid.New().String(), reason, userInfractionId != ""),
 		notes:           notes,
@@ -153,11 +153,11 @@ func (m *PendingPostAuditLog) Notes() string {
 	return m.notes
 }
 
-func (m *PendingPostAuditLog) Moderator() *user.User {
+func (m *PendingPostAuditLog) Moderator() *account.Account {
 	return m.moderator
 }
 
-func (m *PendingPostAuditLog) Contributor() *user.User {
+func (m *PendingPostAuditLog) Contributor() *account.Account {
 	return m.contributor
 }
 
@@ -206,7 +206,7 @@ func (m *PendingPostAuditLog) Revert() error {
 	return nil
 }
 
-func (m *PendingPostAuditLog) UpdateModerator(mod *user.User) {
+func (m *PendingPostAuditLog) UpdateModerator(mod *account.Account) {
 	m.moderator = mod
 }
 
@@ -214,7 +214,7 @@ func (m *PendingPostAuditLog) RejectionReason() *PendingPostRejectionReason {
 	return m.rejectionReason
 }
 
-func (m *PendingPostAuditLog) UserInfraction() *UserInfractionHistory {
+func (m *PendingPostAuditLog) UserInfraction() *AccountInfractionHistory {
 	return m.userInfraction
 }
 

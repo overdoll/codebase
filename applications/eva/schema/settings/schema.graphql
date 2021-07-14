@@ -1,0 +1,158 @@
+enum AccountEmailStatusEnum {
+  CONFIRMED
+  UNCONFIRMED
+  PRIMARY
+}
+
+type AccountEmail {
+  email: String!
+  status: AccountEmailStatusEnum!
+}
+
+type AccountSession {
+  userAgent: String!
+  ip: String!
+  created: String!
+  id: String!
+  current: Boolean!
+}
+
+type AccountUsername {
+  username: String!
+}
+
+type AccountMultiFactorRecoveryCode {
+  code: String!
+}
+
+type AccountMultiFactorTotp {
+  secret: String!
+
+  """
+  Always html image compatible. Just set SRC tag to this and it will work!
+  """
+  imageSrc: String!
+}
+
+type AccountGeneralSettings {
+  """
+  Emails for account (multiple emails per account)
+  """
+  emails: [AccountEmail!]!
+
+  """
+  Usernames for account (history)
+  """
+  usernames: [AccountUsername!]!
+}
+
+type AccountMultiFactorSecuritySettings {
+  """
+  Have recovery codes been generated? Required in order to configure TOTP
+  """
+  recoveryCodesGenerated: Boolean!
+
+  """
+  Is multi factor enabled - can be toggled off if they want to
+  """
+  multiFactorEnabled: Boolean!
+
+  """
+  Privileged users cannot disable MFA (moderators, staff)
+  """
+  canDisableMultiFactor: Boolean!
+
+  """
+  Has TOTP been configured? Recovery codes must be generated before configuring
+  """
+  multiFactorTotpConfigured: Boolean!
+}
+
+type AccountSecuritySettings {
+  """
+  Sessions linked to this account
+  """
+  sessions: [AccountSession!]!
+
+  """
+  Multi factor account settings
+  """
+  multiFactor: AccountMultiFactorSecuritySettings!
+}
+
+type AccountSettings @key(fields: "accountId") {
+  accountId: String!
+
+  """
+  General account settings for the user
+  """
+  general: AccountGeneralSettings!
+
+  """
+  Security settings for the user
+  """
+  security: AccountSecuritySettings!
+}
+
+extend type Mutation {
+  """
+  Add an email to the account, will need to be confirmed
+  """
+  addAccountEmail(email: String!): Response!
+
+  """
+  Modify the current account's username
+  """
+  modifyAccountUsername(username: String!): Response!
+
+  """
+  Revoke a session for this user
+  """
+  revokeAccountSession(id: String!): Response!
+
+  """
+  Make account email primary
+  """
+  makeAccountEmailPrimary(email: String!): Response!
+
+  """
+  Generates a new set of recovery codes. The previous set (whatever it was) will be deleted!
+  """
+  generateAccountMultiFactorRecoveryCodes: [AccountMultiFactorRecoveryCode!]!
+
+  """
+  Generate a TOTP key for the current user. Recovery codes must be generated first.
+  """
+  generateAccountMultiFactorTotp: AccountMultiFactorTotp!
+
+  """
+  Enroll into TOTP. Code must be passed from previously-generated TOTP to validate that they have set it up
+  """
+  enrollAccountMultiFactorTotp(code: String!): Response!
+
+  """
+  Toggle Multi-Factor for the user (enable or disable)
+
+  Privileged users cannot disable
+
+  If it's disabled, all MFA settings will be removed and it will need to be set up again next time
+  """
+  toggleAccountMultiFactor: Response!
+}
+
+extend type Query {
+  """
+  Get current settings for the account
+  """
+  accountSettings: AccountSettings!
+
+  """
+  Confirm account email, so it may be used
+  """
+  confirmAccountEmail(id: String!): Response!
+
+  """
+  Get MFA recovery codes
+  """
+  accountMultiFactorRecoveryCodes: [AccountMultiFactorRecoveryCode!]!
+}

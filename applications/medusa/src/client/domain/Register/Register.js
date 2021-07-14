@@ -15,7 +15,12 @@ import RegisterForm from './RegisterForm/RegisterForm'
 
 const RegisterMutationGQL = graphql`
   mutation RegisterMutation($data: RegisterInput!) {
-    register(data: $data)
+    register(data: $data) {
+      ok
+      validation {
+        code
+      }
+    }
   }
 `
 

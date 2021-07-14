@@ -1,6 +1,13 @@
+enum PendingPostStateEnum {
+  Review
+  Published
+  Discarded
+  Rejected
+}
+
 type PendingPost {
   id: String!
-  state: String!
+  state: PendingPostStateEnum!
   moderator: String!
   contributor: Contributor!
   content: [String!]!
@@ -35,16 +42,12 @@ input PostInput {
   mediaRequests: [String!]
   characterRequests: [CharacterRequest!]
   artistId: String
-  artistUsername: String!
+  artistUsername: String
 }
 
 type PostResponse {
   id: String!
   review: Boolean!
-  validation: Validation
-}
-
-type PostUpdateResponse {
   validation: Validation
 }
 
@@ -80,5 +83,5 @@ extend type Mutation {
   """
   Update post
   """
-  updatePost(id: String!, data: PostInput): PostUpdateResponse!
+  updatePost(id: String!, data: PostInput): Response!
 }

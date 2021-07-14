@@ -1,0 +1,79 @@
+enum AccountRoleEnum {
+  Moderator
+  Staff
+}
+
+type Account @key(fields: "id") {
+  id: String!
+  username: String!
+  roles: [AccountRoleEnum!]!
+  avatar: String!
+  verified: Boolean!
+  lock: AccountLock
+}
+
+type AccountLock {
+  expires: Int!
+  reason: String!
+}
+
+input RegisterInput {
+  username: String!
+}
+
+input AuthenticationInput {
+  email: String!
+}
+
+type Authentication {
+  cookie: Cookie
+  account: Account
+}
+
+extend type Mutation {
+  """
+  Initiates an authentication flow for the specified account
+  """
+  authenticate(data: AuthenticationInput): Response!
+
+  """
+  Re-send the authentication email
+  """
+  authenticateEmail: Response!
+
+  """
+  Registration for the account. Will only work once authenticate is initiated
+  and the cookie is still valid when redeemed (5 minutes)
+  """
+  register(data: RegisterInput): Response!
+
+  """
+  Authenticate with a TOTP code - should be used after a cookie is redeemed
+  """
+  authenticateTOTP(code: String!): Response!
+
+  """
+  Authenticate with a recovery code - should be used after a cookie is redeemed but user does not remember their credentials
+  """
+  authenticateRecoveryCode(code: String!): Response!
+
+  """
+  Unlock Account - account may be locked for any reason. Use this endpoint to unlock the currently-logged in account (time must be after the expiration of the unlock)
+  """
+  unlockAccount: Response!
+
+  """
+  Logout the current account
+  """
+  logout: Response!
+}
+
+extend type Query {
+  """
+  A query that will allow you to get information about the currently logged-in account
+  or the current state of authentication (cookie)
+
+  Good for persisting state on refresh and authorizing accounts
+  """
+  authentication: Authentication
+}

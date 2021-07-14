@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"overdoll/applications/sting/src/domain/post"
-	"overdoll/libraries/user"
+	"overdoll/libraries/account"
 )
 
 type PostMock struct {
@@ -170,9 +170,9 @@ func (c ContentMock) MakeProcessedContentPublic(ctx context.Context, s string, s
 }
 
 type EvaServiceMock struct {
-	User *user.User
+	User *account.Account
 }
 
-func (e EvaServiceMock) GetUser(ctx context.Context, id string) (*user.User, error) {
+func (e EvaServiceMock) GetAccount(ctx context.Context, id string) (*account.Account, error) {
 	return e.User, nil
 }

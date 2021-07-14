@@ -1,38 +1,35 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "command",
     srcs = [
+        "add_account_email.go",
         "authenticate.go",
-        "check_authentication.go",
-        "create_user.go",
-        "lock_user.go",
+        "confirm_account_email.go",
+        "consume_cookie.go",
+        "create_account.go",
+        "enroll_account_multi_factor_totp.go",
+        "finish_authenticate_multi_factor.go",
+        "generate_account_multi_factor_totp.go",
+        "generate_account_recovery_codes.go",
+        "lock_account.go",
+        "make_account_email_primary.go",
+        "modify_account_username.go",
         "redeem_cookie.go",
         "register.go",
+        "revoke_account_session.go",
+        "toggle_account_multi_factor.go",
+        "unlock_account.go",
     ],
     importpath = "overdoll/applications/eva/src/app/command",
     visibility = ["//visibility:public"],
     deps = [
+        "//applications/eva/src/domain/account",
         "//applications/eva/src/domain/cookie",
-        "//applications/eva/src/domain/user",
+        "//applications/eva/src/domain/multi_factor",
+        "//applications/eva/src/domain/session",
         "//libraries/uuid",
         "@com_github_gocql_gocql//:gocql",
         "@org_uber_go_zap//:zap",
-    ],
-)
-
-go_test(
-    name = "command_test",
-    srcs = [
-        "mocks_test.go",
-        "redeem_cookie_test.go",
-    ],
-    deps = [
-        ":command",
-        "//applications/eva/src/domain/cookie",
-        "//applications/eva/src/domain/user",
-        "//libraries/uuid",
-        "@com_github_stretchr_testify//assert",
-        "@com_github_stretchr_testify//require",
     ],
 )

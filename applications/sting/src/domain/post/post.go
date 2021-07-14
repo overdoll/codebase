@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	"overdoll/libraries/user"
+	"overdoll/libraries/account"
 )
 
 type Post struct {
@@ -15,7 +15,7 @@ type Post struct {
 	categories []*Category
 
 	artist      *Artist
-	contributor *user.User
+	contributor *account.Account
 	postedAt    time.Time
 }
 
@@ -27,7 +27,7 @@ func (e NotFoundError) Error() string {
 	return fmt.Sprintf("post '%s' not found", e.Identifier)
 }
 
-func NewPost(id string, artist *Artist, contributor *user.User, content []string, categories []*Category, characters []*Character) *Post {
+func NewPost(id string, artist *Artist, contributor *account.Account, content []string, categories []*Category, characters []*Character) *Post {
 	return &Post{
 		id:          id,
 		artist:      artist,
@@ -43,7 +43,7 @@ func UnmarshalPostFromDatabase(id string, artist *Artist, contributorId, contrib
 	return &Post{
 		id:          id,
 		artist:      artist,
-		contributor: user.NewUser(contributorId, contributorUsername, contributorAvatar, nil, false, false),
+		contributor: account.NewAccount(contributorId, contributorUsername, contributorAvatar, nil, false, false),
 		content:     content,
 		characters:  characters,
 		categories:  categories,
@@ -59,7 +59,7 @@ func (m *Post) Artist() *Artist {
 	return m.artist
 }
 
-func (m *Post) Contributor() *user.User {
+func (m *Post) Contributor() *account.Account {
 	return m.contributor
 }
 

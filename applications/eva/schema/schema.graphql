@@ -1,4 +1,8 @@
-type Mutation {
-  logout: Boolean!
-  authEmail: Boolean!
+type Response {
+  validation: Validation
+  ok: Boolean!
+}
+
+type Validation {
+  code: String!
 }

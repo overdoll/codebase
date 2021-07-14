@@ -4,7 +4,7 @@ import (
 	"context"
 
 	eva "overdoll/applications/eva/proto"
-	"overdoll/libraries/user"
+	"overdoll/libraries/account"
 )
 
 type EvaGrpc struct {
@@ -15,8 +15,8 @@ func NewEvaGrpc(client eva.EvaClient) EvaGrpc {
 	return EvaGrpc{client: client}
 }
 
-func (s EvaGrpc) GetUser(ctx context.Context, id string) (*user.User, error) {
-	usr, err := s.client.GetUser(ctx, &eva.GetUserRequest{
+func (s EvaGrpc) GetAccount(ctx context.Context, id string) (*account.Account, error) {
+	usr, err := s.client.GetAccount(ctx, &eva.GetAccountRequest{
 		Id: id,
 	})
 
@@ -24,15 +24,15 @@ func (s EvaGrpc) GetUser(ctx context.Context, id string) (*user.User, error) {
 		return nil, err
 	}
 
-	return user.UnmarshalFromProto(usr), nil
+	return account.UnmarshalFromProto(usr), nil
 }
 
-func (s EvaGrpc) LockUser(ctx context.Context, id string, duration int64) error {
+func (s EvaGrpc) LockAccount(ctx context.Context, id string, duration int64) error {
 
-	_, err := s.client.LockUser(ctx, &eva.LockUserRequest{
+	_, err := s.client.LockAccount(ctx, &eva.LockAccountRequest{
 		Id:       id,
 		Duration: duration,
-		Reason:   eva.LockUserReason_POST_INFRACTION,
+		Reason:   eva.LockAccountReason_POST_INFRACTION,
 	})
 
 	if err != nil {

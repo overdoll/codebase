@@ -28,7 +28,7 @@ func NewCreatePendingPostHandler(pr post.Repository, eva EvaService, parley Parl
 func (h CreatePendingPostHandler) Handle(ctx context.Context, contributorId, artistId, artistUsername string, content, characterIds, categoryIds []string, characterRequests map[string]string, mediaRequests []string) (*post.PendingPost, error) {
 
 	// Get our contributor
-	usr, err := h.eva.GetUser(ctx, contributorId)
+	usr, err := h.eva.GetAccount(ctx, contributorId)
 
 	if err != nil {
 		zap.S().Errorf("failed to get user: %s", err)
@@ -51,10 +51,19 @@ func (h CreatePendingPostHandler) Handle(ctx context.Context, contributorId, art
 		return nil, ErrFailedPost
 	}
 
+	contributorIsArtist := false
+
+	// no artist ID or username, contributor is our artist
+	if artistId == "" && artistUsername == "" {
+		artistId = usr.ID()
+		artistUsername = usr.Username()
+		contributorIsArtist = true
+	}
+
 	artist := post.NewArtist(artistId, artistUsername)
 
 	// Artist ID is not null, they are not requesting an artist - look for an existing one in the DB
-	if artistId != "" {
+	if artistId != "" && !contributorIsArtist {
 		artist, err = h.pr.GetArtistById(ctx, artistId)
 
 		if err != nil {

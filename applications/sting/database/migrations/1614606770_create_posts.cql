@@ -25,39 +25,39 @@ CREATE TABLE IF NOT EXISTS media
 
 CREATE TABLE IF NOT EXISTS artists
 (
-    user_id       text,
-    user_username text,
-    user_avatar   text,
-    primary key ( user_id )
+    account_id       text,
+    account_username text,
+    account_avatar   text,
+    primary key ( account_id )
 );
 
 CREATE TABLE IF NOT EXISTS posts
 (
-    id                  text,
-    artist_user_id      text,
-    contributor_user_id text,
-    content             list<text>,
-    categories          list<text>,
-    characters          list<text>,
-    posted_at           timestamp,
+    id                     text,
+    artist_account_id      text,
+    contributor_account_id text,
+    content                list<text>,
+    categories             list<text>,
+    characters             list<text>,
+    posted_at              timestamp,
     primary key (id)
 );
 
 CREATE TABLE IF NOT EXISTS pending_posts
 (
-    id                   text,
-    state                text,
-    moderator_user_id    text,
-    artist_user_id       text,
-    artist_user_username text,
-    contributor_user_id  text,
-    content              list<text>,
-    categories           list<text>,
-    characters           list<text>,
-    characters_requests  map<text, text>,
-    media_requests       list<text>,
-    categories_requests  list<text>,
-    posted_at            timestamp,
+    id                      text,
+    state                   text,
+    moderator_account_id    text,
+    artist_account_id       text,
+    artist_account_username text,
+    contributor_account_id  text,
+    content                 list<text>,
+    categories              list<text>,
+    characters              list<text>,
+    characters_requests     map<text, text>,
+    media_requests          list<text>,
+    categories_requests     list<text>,
+    posted_at               timestamp,
     primary key (id)
 );
 

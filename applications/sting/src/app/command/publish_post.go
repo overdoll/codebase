@@ -37,7 +37,7 @@ func (h PublishPostHandler) Handle(ctx context.Context, id string) error {
 		}
 
 		// Get our contributor
-		usr, err := h.eva.GetUser(ctx, pending.Contributor().ID())
+		usr, err := h.eva.GetAccount(ctx, pending.Contributor().ID())
 
 		if err != nil {
 			return err

@@ -12,6 +12,25 @@ type MutationResolver struct {
 	App *app.Application
 }
 
+func (m MutationResolver) ToggleModeratorStatus(ctx context.Context) (*types.Response, error) {
+	pass := passport.FromContext(ctx)
+
+	if !pass.IsAuthenticated() {
+		return nil, passport.ErrNotAuthenticated
+	}
+
+	err := m.App.Commands.ToggleModerator.Handle(ctx, pass.AccountID())
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.Response{
+		Ok:         true,
+		Validation: nil,
+	}, nil
+}
+
 func (m MutationResolver) ModeratePost(ctx context.Context, data types.ModeratePostInput) (*types.ModeratePost, error) {
 	pass := passport.FromContext(ctx)
 
@@ -25,7 +44,7 @@ func (m MutationResolver) ModeratePost(ctx context.Context, data types.ModerateP
 		rejectionReasonId = *data.RejectionReasonID
 	}
 
-	auditLog, err := m.App.Commands.ModeratePost.Handle(ctx, pass.UserID(), data.PendingPostID, rejectionReasonId, data.Notes)
+	auditLog, err := m.App.Commands.ModeratePost.Handle(ctx, pass.AccountID(), data.PendingPostID, rejectionReasonId, data.Notes)
 
 	if err != nil {
 		return nil, err
@@ -41,7 +60,7 @@ func (m MutationResolver) RevertPendingPostAuditLog(ctx context.Context, data ty
 		return nil, passport.ErrNotAuthenticated
 	}
 
-	auditLog, err := m.App.Commands.RevertModeratePost.Handle(ctx, pass.UserID(), data.AuditLogID)
+	auditLog, err := m.App.Commands.RevertModeratePost.Handle(ctx, pass.AccountID(), data.AuditLogID)
 
 	if err != nil {
 		return nil, err

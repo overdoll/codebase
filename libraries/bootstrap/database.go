@@ -6,9 +6,10 @@ import (
 
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
+	"github.com/spf13/viper"
 )
 
-func InitializeDatabaseSession(keyspace string) (gocqlx.Session, error) {
+func initializeDatabaseSession(keyspace string) (gocqlx.Session, error) {
 
 	// Create gocql cluster
 	cluster := gocql.NewCluster(os.Getenv("DB_HOST"))
@@ -18,6 +19,8 @@ func InitializeDatabaseSession(keyspace string) (gocqlx.Session, error) {
 	}
 
 	cluster.ReconnectInterval = 60 * time.Second
+	cluster.Timeout = 20 * time.Second
+	cluster.ConnectTimeout = 20 * time.Second
 	cluster.ReconnectionPolicy = &gocql.ConstantReconnectionPolicy{MaxRetries: 10, Interval: 5 * time.Second}
 
 	// Wrap session on creation with gocqlx
@@ -28,4 +31,16 @@ func InitializeDatabaseSession(keyspace string) (gocqlx.Session, error) {
 	}
 
 	return session, nil
+}
+
+func InitializeDatabaseSession() (gocqlx.Session, error) {
+
+	keyspace := viper.GetString("db.keyspace")
+
+	return initializeDatabaseSession(keyspace)
+}
+
+func InitializeDatabaseSessionNoKeyspace() (gocqlx.Session, error) {
+
+	return initializeDatabaseSession("")
 }

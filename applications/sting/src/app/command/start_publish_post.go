@@ -23,7 +23,7 @@ func (h StartPublishPostHandler) Handle(ctx context.Context, id string) error {
 		// if no artist assigned, create it
 		if pending.Artist().ID() == "" {
 			// create a new user for this artist
-			usr, err := h.eva.CreateUser(ctx, pending.Artist().Username(), "")
+			usr, err := h.eva.CreateAccount(ctx, pending.Artist().Username(), "")
 
 			if err != nil {
 				return err

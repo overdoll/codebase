@@ -3,16 +3,18 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "query",
     srcs = [
+        "account_infraction_history.go",
+        "moderator_in_queue.go",
         "pending_posts_audit_log_by_moderator.go",
         "pending_posts_rejection_reasons.go",
         "services.go",
-        "user_infraction_history.go",
     ],
     importpath = "overdoll/applications/parley/src/app/query",
     visibility = ["//visibility:public"],
     deps = [
         "//applications/parley/src/domain/infraction",
-        "//libraries/user",
+        "//applications/parley/src/domain/moderator",
+        "//libraries/account",
         "@org_uber_go_zap//:zap",
     ],
 )

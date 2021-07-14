@@ -25,7 +25,7 @@ func NewPendingPostsAuditLogByModeratorHandler(ir infraction.Repository, eva Eva
 func (h PendingPostsAuditLogByModeratorHandler) Handle(ctx context.Context, moderatorId, contributorId, postId string, dateRange []int, userId string) ([]*infraction.PendingPostAuditLog, error) {
 
 	// user requesting to see audit log
-	usr, err := h.eva.GetUser(ctx, userId)
+	acc, err := h.eva.GetAccount(ctx, userId)
 
 	if err != nil {
 		zap.S().Errorf("failed to get user: %s", err)
@@ -33,14 +33,14 @@ func (h PendingPostsAuditLogByModeratorHandler) Handle(ctx context.Context, mode
 	}
 
 	// have to have moderator role
-	if !usr.IsModerator() || usr.IsLocked() {
+	if !acc.IsModerator() || acc.IsLocked() {
 		return nil, ErrFailedGetPendingPostsAuditLog
 	}
 
 	moderatorQuery := userId
 
 	// if staff, allow to query by moderatorID - otherwise we use the currently logged in user's id
-	if usr.IsStaff() && moderatorId != "" {
+	if acc.IsStaff() && moderatorId != "" {
 		moderatorQuery = moderatorId
 	}
 

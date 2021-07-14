@@ -50,12 +50,30 @@ func MarshalPendingPostToGraphQL(result *post.PendingPostEdge) *PendingPostEdge 
 		})
 	}
 
+	var state PendingPostStateEnum
+
+	if result.Node.InReview() {
+		state = PendingPostStateEnumReview
+	}
+
+	if result.Node.IsDiscarded() {
+		state = PendingPostStateEnumDiscarded
+	}
+
+	if result.Node.IsPublished() {
+		state = PendingPostStateEnumPublished
+	}
+
+	if result.Node.IsRejected() {
+		state = PendingPostStateEnumRejected
+	}
+
 	return &PendingPostEdge{
 		Cursor: result.Cursor,
 		Node: &PendingPost{
 			ID:        result.Node.ID(),
 			Moderator: result.Node.ModeratorId(),
-			State:     string(result.Node.State()),
+			State:     state,
 			Contributor: &Contributor{
 				ID:       result.Node.Contributor().ID(),
 				Username: result.Node.Contributor().Username(),

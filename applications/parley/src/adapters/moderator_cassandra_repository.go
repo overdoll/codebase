@@ -12,7 +12,7 @@ import (
 )
 
 type Moderator struct {
-	UserId       string    `db:"user_id"`
+	AccountId    string    `db:"account_id"`
 	LastSelected time.Time `db:"last_selected"`
 	Bucket       int       `db:"bucket"`
 }
@@ -27,7 +27,7 @@ func NewModeratorCassandraRepository(session gocqlx.Session) ModeratorCassandraR
 
 func marshaModeratorToDatabase(mod *moderator.Moderator) *Moderator {
 	return &Moderator{
-		UserId:       mod.ID(),
+		AccountId:    mod.ID(),
 		LastSelected: mod.LastSelected(),
 		Bucket:       0,
 	}
@@ -36,25 +36,30 @@ func marshaModeratorToDatabase(mod *moderator.Moderator) *Moderator {
 func (r ModeratorCassandraRepository) GetModerator(ctx context.Context, id string) (*moderator.Moderator, error) {
 
 	moderatorQuery := qb.Select("moderators").
-		Where(qb.Eq("bucket"), qb.Eq("user_id")).
+		Where(qb.Eq("bucket"), qb.Eq("account_id")).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(&Moderator{UserId: id, Bucket: 0})
+		BindStruct(&Moderator{AccountId: id, Bucket: 0})
 
 	var mod Moderator
 
 	if err := moderatorQuery.Get(&mod); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return nil, moderator.ErrModeratorNotFound
+		}
+
 		return nil, err
 	}
 
-	return moderator.UnmarshalModeratorFromDatabase(mod.UserId, mod.LastSelected), nil
+	return moderator.UnmarshalModeratorFromDatabase(mod.AccountId, mod.LastSelected), nil
 }
 
 func (r ModeratorCassandraRepository) GetModerators(ctx context.Context) ([]*moderator.Moderator, error) {
 
 	moderatorQuery := qb.Select("moderators").
 		Where(qb.Eq("bucket")).
-		Columns("user_id", "last_selected").
+		Columns("account_id", "last_selected").
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&Moderator{Bucket: 0})
@@ -67,10 +72,29 @@ func (r ModeratorCassandraRepository) GetModerators(ctx context.Context) ([]*mod
 
 	var moderators []*moderator.Moderator
 	for _, dbMod := range dbModerators {
-		moderators = append(moderators, moderator.UnmarshalModeratorFromDatabase(dbMod.UserId, dbMod.LastSelected))
+		moderators = append(moderators, moderator.UnmarshalModeratorFromDatabase(dbMod.AccountId, dbMod.LastSelected))
 	}
 
 	return moderators, nil
+}
+
+func (r ModeratorCassandraRepository) AddModerator(ctx context.Context, mod *moderator.Moderator) error {
+
+	insertModerator := qb.Insert("moderators").
+		Columns("account_id", "last_selected", "bucket").
+		Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&Moderator{
+			AccountId:    mod.ID(),
+			LastSelected: time.Now(),
+			Bucket:       0,
+		})
+
+	if err := insertModerator.ExecRelease(); err != nil {
+		return fmt.Errorf("insert() failed: '%s", err)
+	}
+
+	return nil
 }
 
 func (r ModeratorCassandraRepository) UpdateModerator(ctx context.Context, id string, updateFn func(moderator *moderator.Moderator) error) (*moderator.Moderator, error) {
@@ -91,7 +115,7 @@ func (r ModeratorCassandraRepository) UpdateModerator(ctx context.Context, id st
 		Set(
 			"last_selected",
 		).
-		Where(qb.Eq("bucket"), qb.Eq("user_id")).
+		Where(qb.Eq("bucket"), qb.Eq("account_id")).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshaModeratorToDatabase(currentMod))
@@ -101,4 +125,21 @@ func (r ModeratorCassandraRepository) UpdateModerator(ctx context.Context, id st
 	}
 
 	return currentMod, nil
+}
+
+func (r ModeratorCassandraRepository) RemoveModerator(ctx context.Context, accountId string) error {
+	updateMod := qb.Delete("moderators").
+		Where(qb.Eq("bucket"), qb.Eq("account_id")).
+		Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&Moderator{
+			AccountId: accountId,
+			Bucket:    0,
+		})
+
+	if err := updateMod.ExecRelease(); err != nil {
+		return fmt.Errorf("update() failed: '%s", err)
+	}
+
+	return nil
 }

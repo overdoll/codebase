@@ -10,13 +10,15 @@ type Cookie struct {
 	email  string
 
 	redeemed   bool
-	expiration time.Time
+	expiration time.Duration
 
 	session string
 
 	consumed bool
 
 	sameSession bool
+
+	multiFactorTOTP bool
 }
 
 var (
@@ -25,32 +27,30 @@ var (
 
 var (
 	ErrCookieNotRedeemed = errors.New("cookie is not yet redeemed")
-	ErrCookieExpired     = errors.New("cookie is expired")
 	ErrCookieNotFound    = errors.New("cookie not found")
 )
 
 func NewCookie(id, email, session string) (*Cookie, error) {
 
 	ck := &Cookie{
-		cookie:      id,
-		expiration:  time.Now().Add(time.Minute * 5),
-		email:       email,
-		redeemed:    false,
-		session:     session,
-		sameSession: false,
+		cookie:     id,
+		expiration: time.Minute * 15,
+		email:      email,
+		redeemed:   false,
+		session:    session,
 	}
 
 	return ck, nil
 }
 
-func UnmarshalCookieFromDatabase(cookie, email string, redeemed bool, session string, expiration time.Time) *Cookie {
+func UnmarshalCookieFromDatabase(cookie, email string, redeemed bool, session string) *Cookie {
 	return &Cookie{
 		cookie:      cookie,
 		email:       email,
 		redeemed:    redeemed,
 		session:     session,
-		expiration:  expiration,
 		sameSession: false,
+		expiration:  time.Minute * 15,
 	}
 }
 
@@ -62,7 +62,7 @@ func (c *Cookie) Email() string {
 	return c.email
 }
 
-func (c *Cookie) Expiration() time.Time {
+func (c *Cookie) Expiration() time.Duration {
 	return c.expiration
 }
 
@@ -78,19 +78,19 @@ func (c *Cookie) Redeemed() bool {
 	return c.redeemed
 }
 
-func (c *Cookie) SameSession() bool {
-	return c.sameSession
-}
-
 func (c *Cookie) MakeRedeemed() error {
-
-	if c.IsExpired() {
-		return ErrCookieExpired
-	}
 
 	c.redeemed = true
 
 	return nil
+}
+
+func (c *Cookie) IsTOTPRequired() bool {
+	return c.multiFactorTOTP
+}
+
+func (c *Cookie) RequireMultiFactor(totp bool) {
+	c.multiFactorTOTP = totp
 }
 
 // MakeConsumed - this will always be ran before a cookie is deleted, i.e. being consumed by the target application (registration, login)
@@ -100,21 +100,8 @@ func (c *Cookie) MakeConsumed() error {
 		return ErrCookieNotRedeemed
 	}
 
-	if c.IsExpired() {
-		return ErrCookieExpired
-	}
-
 	c.consumed = true
 	return nil
-}
-
-func (c *Cookie) MakeSameSession() error {
-	c.sameSession = true
-	return nil
-}
-
-func (c *Cookie) IsExpired() bool {
-	return time.Now().After(c.expiration)
 }
 
 func (c *Cookie) SetSession(session string) {

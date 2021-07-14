@@ -2,7 +2,23 @@
 
 package types
 
-type AuditUser struct {
+type AccountInfractionHistory struct {
+	ID     string `json:"id"`
+	Reason string `json:"reason"`
+}
+
+type AccountModeratorSettings struct {
+	InQueue bool `json:"inQueue"`
+}
+
+type AccountSettings struct {
+	AccountID string                    `json:"accountId"`
+	Moderator *AccountModeratorSettings `json:"moderator"`
+}
+
+func (AccountSettings) IsEntity() {}
+
+type AuditAccount struct {
 	ID       string `json:"id"`
 	Username string `json:"username"`
 }
@@ -19,16 +35,16 @@ type ModeratePostInput struct {
 }
 
 type PendingPostAuditLog struct {
-	ID           string     `json:"id"`
-	PostID       string     `json:"postId"`
-	Contributor  *AuditUser `json:"contributor"`
-	Moderator    *AuditUser `json:"moderator"`
-	InfractionID *string    `json:"infractionId"`
-	Status       string     `json:"status"`
-	Reason       string     `json:"reason"`
-	Notes        string     `json:"notes"`
-	Reverted     bool       `json:"reverted"`
-	CanRevert    bool       `json:"canRevert"`
+	ID           string        `json:"id"`
+	PostID       string        `json:"postId"`
+	Contributor  *AuditAccount `json:"contributor"`
+	Moderator    *AuditAccount `json:"moderator"`
+	InfractionID *string       `json:"infractionId"`
+	Status       string        `json:"status"`
+	Reason       string        `json:"reason"`
+	Notes        string        `json:"notes"`
+	Reverted     bool          `json:"reverted"`
+	CanRevert    bool          `json:"canRevert"`
 }
 
 type PendingPostAuditLogConnection struct {
@@ -52,20 +68,13 @@ type PendingPostRejectionReason struct {
 	Infraction bool   `json:"infraction"`
 }
 
+type Response struct {
+	Ok         bool        `json:"ok"`
+	Validation *Validation `json:"validation"`
+}
+
 type RevertPostInput struct {
 	AuditLogID string `json:"auditLogId"`
-}
-
-type User struct {
-	ID                string                    `json:"id"`
-	InfractionHistory []*UsersInfractionHistory `json:"infractionHistory"`
-}
-
-func (User) IsEntity() {}
-
-type UsersInfractionHistory struct {
-	ID     string `json:"id"`
-	Reason string `json:"reason"`
 }
 
 type Validation struct {

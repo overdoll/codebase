@@ -11,17 +11,10 @@ type EntityResolver struct {
 	App *app.Application
 }
 
-func (e EntityResolver) FindUserByID(ctx context.Context, id string) (*types.User, error) {
+func (e EntityResolver) FindAccountByID(ctx context.Context, id string) (*types.Account, error) {
+	panic("implement me")
+}
 
-	usr, err := e.App.Queries.GetUser.Handle(ctx, id)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &types.User{
-		ID:       usr.ID(),
-		Username: usr.Username(),
-		Roles:    usr.UserRolesAsString(),
-	}, nil
+func (e EntityResolver) FindAccountSettingsByAccountID(ctx context.Context, accountID string) (*types.AccountSettings, error) {
+	panic("implement me")
 }

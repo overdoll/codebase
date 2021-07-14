@@ -3,12 +3,12 @@ package command
 import (
 	"context"
 
-	"overdoll/libraries/user"
+	"overdoll/libraries/account"
 )
 
 type EvaService interface {
-	GetUser(context.Context, string) (*user.User, error)
-	LockUser(context.Context, string, int64) error
+	GetAccount(context.Context, string) (*account.Account, error)
+	LockAccount(context.Context, string, int64) error
 }
 type StingService interface {
 	GetPendingPost(context.Context, string) (string, string, error)

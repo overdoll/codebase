@@ -2,13 +2,12 @@ package ports
 
 import (
 	"context"
-	"fmt"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	eva "overdoll/applications/eva/proto"
 	"overdoll/applications/eva/src/app"
-	"overdoll/applications/eva/src/domain/user"
+	"overdoll/applications/eva/src/domain/account"
 )
 
 type Server struct {
@@ -21,44 +20,44 @@ func NewGrpcServer(application *app.Application) *Server {
 	}
 }
 
-func marshalUserToProto(usr *user.User) *eva.User {
-	return &eva.User{
+func marshalAccountToProto(usr *account.Account) *eva.Account {
+	return &eva.Account{
 		Username: usr.Username(),
 		Id:       usr.ID(),
-		Roles:    usr.UserRolesAsString(),
+		Roles:    usr.RolesAsString(),
 		Verified: usr.Verified(),
 		Avatar:   usr.Avatar(),
 		Locked:   usr.IsLocked(),
 	}
 }
 
-func (s *Server) GetUser(ctx context.Context, request *eva.GetUserRequest) (*eva.User, error) {
+func (s *Server) GetAccount(ctx context.Context, request *eva.GetAccountRequest) (*eva.Account, error) {
 
-	usr, err := s.app.Queries.GetUser.Handle(ctx, request.Id)
+	acc, err := s.app.Queries.GetAccount.Handle(ctx, request.Id)
 
 	if err != nil {
-		return nil, status.Error(codes.Internal, fmt.Sprintf("failed to get user: %s", err))
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return marshalUserToProto(usr), nil
+	return marshalAccountToProto(acc), nil
 }
 
-func (s *Server) LockUser(ctx context.Context, request *eva.LockUserRequest) (*eva.User, error) {
-	usr, err := s.app.Commands.LockUser.Handle(ctx, request.Id, int(request.Duration), request.Reason.String())
+func (s *Server) LockAccount(ctx context.Context, request *eva.LockAccountRequest) (*eva.Account, error) {
+	acc, err := s.app.Commands.LockAccount.Handle(ctx, request.Id, int(request.Duration), request.Reason.String())
 
 	if err != nil {
-		return nil, status.Error(codes.Internal, fmt.Sprintf("failed to lock user: %s", err))
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return marshalUserToProto(usr), nil
+	return marshalAccountToProto(acc), nil
 }
 
-func (s *Server) CreateUser(ctx context.Context, request *eva.CreateUserRequest) (*eva.User, error) {
-	usr, err := s.app.Commands.CreateUser.Handle(ctx, request.Username, request.Email)
+func (s *Server) CreateAccount(ctx context.Context, request *eva.CreateAccountRequest) (*eva.Account, error) {
+	acc, err := s.app.Commands.CreateAccount.Handle(ctx, request.Username, request.Email)
 
 	if err != nil {
-		return nil, status.Error(codes.Internal, fmt.Sprintf("failed to create user: %s", err))
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return marshalUserToProto(usr), nil
+	return marshalAccountToProto(acc), nil
 }
