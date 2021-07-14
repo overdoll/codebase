@@ -2,6 +2,10 @@
 
 package types
 
+import (
+	"overdoll/libraries/graphql/relay"
+)
+
 type AccountInfractionHistory struct {
 	ID     string `json:"id"`
 	Reason string `json:"reason"`
@@ -48,11 +52,13 @@ type PendingPostAuditLog struct {
 }
 
 type PendingPostAuditLogConnection struct {
-	Edges []*PendingPostAuditLogEdge `json:"edges"`
+	Edges    []*PendingPostAuditLogEdge `json:"edges"`
+	PageInfo *relay.PageInfo            `json:"pageInfo"`
 }
 
 type PendingPostAuditLogEdge struct {
-	Node *PendingPostAuditLog `json:"node"`
+	Node   *PendingPostAuditLog `json:"node"`
+	Cursor string               `json:"cursor"`
 }
 
 type PendingPostAuditLogFilters struct {

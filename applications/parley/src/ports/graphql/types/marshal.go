@@ -21,6 +21,7 @@ func MarshalPendingPostAuditLogToGraphQL(log *infraction.PendingPostAuditLog) *P
 		}
 
 		return &PendingPostAuditLogEdge{
+			Cursor: log.ID(),
 			Node: &PendingPostAuditLog{
 				ID:     log.ID(),
 				PostID: log.PostId(),

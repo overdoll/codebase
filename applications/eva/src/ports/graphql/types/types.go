@@ -32,8 +32,8 @@ type AccountGeneralSettings struct {
 }
 
 type AccountLock struct {
-	Expires int    `json:"expires"`
-	Reason  string `json:"reason"`
+	Expires int                   `json:"expires"`
+	Reason  AccountLockReasonEnum `json:"reason"`
 }
 
 type AccountMultiFactorRecoveryCode struct {
@@ -158,6 +158,45 @@ func (e *AccountEmailStatusEnum) UnmarshalGQL(v interface{}) error {
 }
 
 func (e AccountEmailStatusEnum) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type AccountLockReasonEnum string
+
+const (
+	AccountLockReasonEnumPostInfraction AccountLockReasonEnum = "PostInfraction"
+)
+
+var AllAccountLockReasonEnum = []AccountLockReasonEnum{
+	AccountLockReasonEnumPostInfraction,
+}
+
+func (e AccountLockReasonEnum) IsValid() bool {
+	switch e {
+	case AccountLockReasonEnumPostInfraction:
+		return true
+	}
+	return false
+}
+
+func (e AccountLockReasonEnum) String() string {
+	return string(e)
+}
+
+func (e *AccountLockReasonEnum) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = AccountLockReasonEnum(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid AccountLockReasonEnum", str)
+	}
+	return nil
+}
+
+func (e AccountLockReasonEnum) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

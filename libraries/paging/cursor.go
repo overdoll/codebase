@@ -7,9 +7,64 @@ type Cursor struct {
 	last   int
 }
 
+type Pagination struct {
+	forwards  func(first int, after string) (bool, error)
+	backwards func(last int, before string) (bool, error)
+	cursor    *Cursor
+}
+
+func NewPagination(cursor *Cursor) *Pagination {
+	return &Pagination{cursor: cursor}
+}
+
+func (p *Pagination) DefineForwardsPagination(forwards func(first int, after string) (bool, error)) {
+	p.forwards = forwards
+}
+
+func (p *Pagination) DefineBackwardsPagination(backwards func(last int, before string) (bool, error)) {
+	p.backwards = backwards
+}
+
+func (p *Pagination) Run() (*PageInfo, error) {
+
+	hasMoreAfter := false
+	hasMoreBefore := false
+
+	var err error
+
+	if p.cursor.IsAfterCursor() {
+		hasMoreBefore, err = p.backwards(p.cursor.First(), p.cursor.After())
+
+		if err != nil {
+			return nil, err
+		}
+
+		hasMoreAfter, err = p.forwards(p.cursor.First(), p.cursor.After())
+
+		if err != nil {
+			return nil, err
+		}
+
+	} else if p.cursor.IsBeforeCursor() {
+		hasMoreAfter, err = p.forwards(p.cursor.Last(), p.cursor.Before())
+
+		if err != nil {
+			return nil, err
+		}
+
+		hasMoreBefore, err = p.backwards(p.cursor.Last(), p.cursor.Before())
+
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return NewPageInfo(hasMoreAfter, hasMoreBefore), nil
+}
+
 func NewCursor(before, after string, first, last int) *Cursor {
 
-	if first == 0 {
+	if first < 0 {
 		first = 10
 	}
 

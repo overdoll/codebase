@@ -33,7 +33,7 @@ func (r *QueryResolver) PendingPost(ctx context.Context, id string) (*types.Pend
 	}).Node, nil
 }
 
-func (r *QueryResolver) PendingPosts(ctx context.Context, input relay.ConnectionInput, filter types.PendingPostFilters) (*types.PendingPostConnection, error) {
+func (r *QueryResolver) PendingPosts(ctx context.Context, after *string, before *string, first *int, last *int, filter types.PendingPostFilters) (*types.PendingPostConnection, error) {
 
 	pass := passport.FromContext(ctx)
 
@@ -65,6 +65,16 @@ func (r *QueryResolver) PendingPosts(ctx context.Context, input relay.Connection
 		id = *filter.ID
 	}
 
+	var startCursor *string
+	var endCursor *string
+
+	input := &relay.ConnectionInput{
+		After:  after,
+		Before: before,
+		First:  first,
+		Last:   last,
+	}
+
 	results, err := r.App.Queries.GetPendingPosts.Handle(ctx, input.ToCursor(), moderatorId, contributorId, artistId, id, pass.AccountID())
 
 	if err != nil {
@@ -77,11 +87,18 @@ func (r *QueryResolver) PendingPosts(ctx context.Context, input relay.Connection
 		posts = append(posts, types.MarshalPendingPostToGraphQL(result))
 	}
 
+	if len(posts) > 0 {
+		startCursor = &posts[0].Cursor
+		endCursor = &posts[len(posts)-1].Cursor
+	}
+
 	return &types.PendingPostConnection{
 		Edges: posts,
 		PageInfo: &relay.PageInfo{
 			HasNextPage:     results.PageInfo.HasNextPage(),
 			HasPreviousPage: results.PageInfo.HasPrevPage(),
+			StartCursor:     startCursor,
+			EndCursor:       endCursor,
 		},
 	}, nil
 }

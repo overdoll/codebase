@@ -13,9 +13,9 @@ func (e *PageInfo) HasPrevPage() bool {
 	return e.hasPrevPage
 }
 
-func NewPageInfo(hasMore bool) *PageInfo {
+func NewPageInfo(hasNextPage, hasPreviousPage bool) *PageInfo {
 	return &PageInfo{
-		hasNextPage: hasMore,
-		hasPrevPage: hasMore,
+		hasNextPage: hasNextPage,
+		hasPrevPage: hasPreviousPage,
 	}
 }

@@ -5,6 +5,7 @@ import (
 
 	"overdoll/applications/parley/src/app"
 	"overdoll/applications/parley/src/ports/graphql/types"
+	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/passport"
 )
 
@@ -81,7 +82,12 @@ func (q QueryResolver) PendingPostAuditLogs(ctx context.Context, filter types.Pe
 		auditLogs = append(auditLogs, types.MarshalPendingPostAuditLogToGraphQL(log))
 	}
 
-	return &types.PendingPostAuditLogConnection{Edges: auditLogs}, nil
+	return &types.PendingPostAuditLogConnection{Edges: auditLogs, PageInfo: &relay.PageInfo{
+		HasNextPage:     false,
+		HasPreviousPage: false,
+		StartCursor:     nil,
+		EndCursor:       nil,
+	}}, nil
 }
 
 func (q QueryResolver) RejectionReasons(ctx context.Context) ([]*types.PendingPostRejectionReason, error) {

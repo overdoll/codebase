@@ -1,9 +1,11 @@
 type PendingPostAuditLogEdge {
   node: PendingPostAuditLog!
+  cursor: String!
 }
 
 type PendingPostAuditLogConnection {
   edges: [PendingPostAuditLogEdge!]!
+  pageInfo: PageInfo!
 }
 
 type PendingPostAuditLog {

@@ -832,9 +832,13 @@ type Account @key(fields: "id") {
   lock: AccountLock
 }
 
+enum AccountLockReasonEnum {
+  PostInfraction
+}
+
 type AccountLock {
   expires: Int!
-  reason: String!
+  reason: AccountLockReasonEnum!
 }
 
 input RegisterInput {
@@ -1798,9 +1802,9 @@ func (ec *executionContext) _AccountLock_reason(ctx context.Context, field graph
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(types.AccountLockReasonEnum)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNAccountLockReasonEnum2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountLockReasonEnum(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccountMultiFactorRecoveryCode_code(ctx context.Context, field graphql.CollectedField, obj *types.AccountMultiFactorRecoveryCode) (ret graphql.Marshaler) {
@@ -6190,6 +6194,16 @@ func (ec *executionContext) marshalNAccountGeneralSettings2ᚖoverdollᚋapplica
 		return graphql.Null
 	}
 	return ec._AccountGeneralSettings(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNAccountLockReasonEnum2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountLockReasonEnum(ctx context.Context, v interface{}) (types.AccountLockReasonEnum, error) {
+	var res types.AccountLockReasonEnum
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNAccountLockReasonEnum2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountLockReasonEnum(ctx context.Context, sel ast.SelectionSet, v types.AccountLockReasonEnum) graphql.Marshaler {
+	return v
 }
 
 func (ec *executionContext) marshalNAccountMultiFactorRecoveryCode2ᚕᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountMultiFactorRecoveryCodeᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.AccountMultiFactorRecoveryCode) graphql.Marshaler {

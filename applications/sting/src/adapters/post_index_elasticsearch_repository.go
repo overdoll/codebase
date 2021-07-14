@@ -281,44 +281,60 @@ func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Contex
 		return nil, err
 	}
 
-	cont := cursor.First()
+	paginator := paging.NewPagination(cursor)
 
-	rng := ""
+	runSearch := func(rng string, size int) (*search.SearchResults, error) {
 
-	if cursor.IsAfterCursor() {
-		rng = fmt.Sprintf(`{"range": {"posted_at": { "gt": %q } } },`, cursor.After())
+		postId := ""
+
+		if filter.ID() != "" {
+			postId = fmt.Sprintf(`{"multi_match": {"query" : %q,"fields" : ["id"],"operator" : "and"}},`, filter.ID())
+		}
+
+		data := struct {
+			Cursor      string
+			ModeratorId string
+			Size        int
+			PostId      string
+		}{
+			Size:        size,
+			ModeratorId: filter.ModeratorId(),
+			Cursor:      rng,
+			PostId:      postId,
+		}
+
+		var query bytes.Buffer
+
+		if err := t.Execute(&query, data); err != nil {
+			return nil, err
+		}
+
+		return r.store.Search(PendingPostIndexName, query.String())
 	}
 
-	if cursor.IsBeforeCursor() {
-		rng = fmt.Sprintf(`{"range": {"posted_at": { "lt": %q } } },`, cursor.Before())
-		cont = cursor.Last()
-	}
+	var response *search.SearchResults
 
-	postId := ""
+	paginator.DefineForwardsPagination(func(first int, after string) (bool, error) {
+		response, err = runSearch(fmt.Sprintf(`{"range": {"posted_at": { "gt": %q } } },`, after), first)
 
-	if filter.ID() != "" {
-		postId = fmt.Sprintf(`{"multi_match": {"query" : %q,"fields" : ["id"],"operator" : "and"}},`, filter.ID())
-	}
+		if err != nil {
+			return false, err
+		}
 
-	data := struct {
-		Cursor      string
-		ModeratorId string
-		Size        int
-		PostId      string
-	}{
-		Size:        cont,
-		ModeratorId: filter.ModeratorId(),
-		Cursor:      rng,
-		PostId:      postId,
-	}
+		return response.Total-len(response.Hits) > 0, nil
+	})
 
-	var query bytes.Buffer
+	paginator.DefineBackwardsPagination(func(last int, before string) (bool, error) {
+		response, err = runSearch(fmt.Sprintf(`{"range": {"posted_at": { "lt": %q } } },`, before), last)
 
-	if err := t.Execute(&query, data); err != nil {
-		return nil, err
-	}
+		if err != nil {
+			return false, err
+		}
 
-	response, err := r.store.Search(PendingPostIndexName, query.String())
+		return response.Total-len(response.Hits) > 0, nil
+	})
+
+	pageInfo, err := paginator.Run()
 
 	if err != nil {
 		return nil, err
@@ -373,7 +389,7 @@ func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Contex
 
 	return &post.PendingPostConnection{
 		Edges:    posts,
-		PageInfo: paging.NewPageInfo(response.Total-len(posts) > 0),
+		PageInfo: pageInfo,
 	}, nil
 }
 
