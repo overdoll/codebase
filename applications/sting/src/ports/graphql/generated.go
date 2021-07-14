@@ -115,6 +115,8 @@ type ComplexityRoot struct {
 		ID                func(childComplexity int) int
 		MediaRequests     func(childComplexity int) int
 		Moderator         func(childComplexity int) int
+		PostedAt          func(childComplexity int) int
+		ReassignmentAt    func(childComplexity int) int
 		State             func(childComplexity int) int
 	}
 
@@ -464,6 +466,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.PendingPost.Moderator(childComplexity), true
 
+	case "PendingPost.postedAt":
+		if e.complexity.PendingPost.PostedAt == nil {
+			break
+		}
+
+		return e.complexity.PendingPost.PostedAt(childComplexity), true
+
+	case "PendingPost.reassignmentAt":
+		if e.complexity.PendingPost.ReassignmentAt == nil {
+			break
+		}
+
+		return e.complexity.PendingPost.ReassignmentAt(childComplexity), true
+
 	case "PendingPost.state":
 		if e.complexity.PendingPost.State == nil {
 			break
@@ -734,6 +750,8 @@ type PendingPost {
   characterRequests: [CharacterRequestType!]
   artistId: String
   artistUsername: String!
+  postedAt: String!
+  reassignmentAt: String!
 }
 
 type Contributor {
@@ -2480,6 +2498,76 @@ func (ec *executionContext) _PendingPost_artistUsername(ctx context.Context, fie
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.ArtistUsername, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PendingPost_postedAt(ctx context.Context, field graphql.CollectedField, obj *types.PendingPost) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PendingPost",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PostedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PendingPost_reassignmentAt(ctx context.Context, field graphql.CollectedField, obj *types.PendingPost) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PendingPost",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ReassignmentAt, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5007,6 +5095,16 @@ func (ec *executionContext) _PendingPost(ctx context.Context, sel ast.SelectionS
 			out.Values[i] = ec._PendingPost_artistId(ctx, field, obj)
 		case "artistUsername":
 			out.Values[i] = ec._PendingPost_artistUsername(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "postedAt":
+			out.Values[i] = ec._PendingPost_postedAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "reassignmentAt":
+			out.Values[i] = ec._PendingPost_reassignmentAt(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}

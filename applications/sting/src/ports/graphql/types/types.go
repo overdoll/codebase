@@ -69,6 +69,8 @@ type PendingPost struct {
 	CharacterRequests []*CharacterRequestType `json:"characterRequests"`
 	ArtistID          *string                 `json:"artistId"`
 	ArtistUsername    string                  `json:"artistUsername"`
+	PostedAt          string                  `json:"postedAt"`
+	ReassignmentAt    string                  `json:"reassignmentAt"`
 }
 
 type PendingPostConnection struct {

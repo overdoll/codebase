@@ -38,6 +38,8 @@ extend type Query {
   Get pending post for the currently-logged in user
 
   Filters are available, but the moderatorId filter will only work if you are at least a staff role
+
+  NOTE: cursor arguments (after, before, first, last, etc...) are not implemented yet
   """
-  pendingPostAuditLogs(filter: PendingPostAuditLogFilters!): PendingPostAuditLogConnection!
+  pendingPostAuditLogs(after: String, before: String, first: Int, last: Int, filter: PendingPostAuditLogFilters): PendingPostAuditLogConnection!
 }

@@ -17,6 +17,8 @@ type PendingPost {
   characterRequests: [CharacterRequestType!]
   artistId: String
   artistUsername: String!
+  postedAt: String!
+  reassignmentAt: String!
 }
 
 type Contributor {

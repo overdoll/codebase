@@ -38,6 +38,7 @@ type PostPendingDocument struct {
 	CategoriesRequests []string             `json:"categories_requests"`
 	MediaRequests      []string             `json:"media_requests"`
 	PostedAt           string               `json:"posted_at"`
+	ReassignmentAt     string               `json:"reassignment_at"`
 }
 
 type ContributorDocument struct {
@@ -120,6 +121,9 @@ const PostIndex = `
 				"posted_at": {
                      "type": "date"
 				},
+				"reassignment_at": {
+                     "type": "date"
+				}
 			}
 	}
 }`
@@ -218,6 +222,9 @@ const PostPendingIndex = `
 					 "dynamic": true
 				},
 				"posted_at": {
+                     "type": "date"
+				},
+				"reassignment_at": {
                      "type": "date"
 				}
 			}
@@ -372,7 +379,8 @@ func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Contex
 			categories = append(categories, post.UnmarshalCategoryFromDatabase(cat.Id, cat.Title, cat.Thumbnail))
 		}
 
-		p, err := strconv.ParseInt(pst.PostedAt, 10, 64)
+		postedAt, err := strconv.ParseInt(pst.PostedAt, 10, 64)
+		reassignmentAt, err := strconv.ParseInt(pst.ReassignmentAt, 10, 64)
 
 		posts = append(posts, &post.PendingPostEdge{
 			Cursor: pst.PostedAt,
@@ -390,7 +398,8 @@ func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Contex
 				pst.CharactersRequests,
 				pst.CategoriesRequests,
 				pst.MediaRequests,
-				time.Unix(p, 0),
+				time.Unix(postedAt, 0),
+				time.Unix(reassignmentAt, 0),
 			),
 		})
 	}
@@ -458,6 +467,7 @@ func (r PostsIndexElasticSearchRepository) BulkIndexPendingPosts(ctx context.Con
 			CharactersRequests: characterRequests,
 			CategoriesRequests: categoryRequests,
 			MediaRequests:      mediaRequests,
+			ReassignmentAt:     strconv.FormatInt(pst.ReassignmentAt().Unix(), 10),
 		}
 
 		err = r.store.AddToBulkIndex(data.Id, data)

@@ -119,7 +119,7 @@ type ComplexityRoot struct {
 
 	Query struct {
 		AccountInfractionHistory func(childComplexity int) int
-		PendingPostAuditLogs     func(childComplexity int, filter types.PendingPostAuditLogFilters) int
+		PendingPostAuditLogs     func(childComplexity int, after *string, before *string, first *int, last *int, filter *types.PendingPostAuditLogFilters) int
 		RejectionReasons         func(childComplexity int) int
 		__resolve__service       func(childComplexity int) int
 		__resolve_entities       func(childComplexity int, representations []map[string]interface{}) int
@@ -150,7 +150,7 @@ type MutationResolver interface {
 type QueryResolver interface {
 	RejectionReasons(ctx context.Context) ([]*types.PendingPostRejectionReason, error)
 	AccountInfractionHistory(ctx context.Context) ([]*types.AccountInfractionHistory, error)
-	PendingPostAuditLogs(ctx context.Context, filter types.PendingPostAuditLogFilters) (*types.PendingPostAuditLogConnection, error)
+	PendingPostAuditLogs(ctx context.Context, after *string, before *string, first *int, last *int, filter *types.PendingPostAuditLogFilters) (*types.PendingPostAuditLogConnection, error)
 }
 
 type executableSchema struct {
@@ -438,7 +438,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.PendingPostAuditLogs(childComplexity, args["filter"].(types.PendingPostAuditLogFilters)), true
+		return e.complexity.Query.PendingPostAuditLogs(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["filter"].(*types.PendingPostAuditLogFilters)), true
 
 	case "Query.rejectionReasons":
 		if e.complexity.Query.RejectionReasons == nil {
@@ -598,8 +598,10 @@ extend type Query {
   Get pending post for the currently-logged in user
 
   Filters are available, but the moderatorId filter will only work if you are at least a staff role
+
+  NOTE: cursor arguments (after, before, first, last, etc...) are not implemented yet
   """
-  pendingPostAuditLogs(filter: PendingPostAuditLogFilters!): PendingPostAuditLogConnection!
+  pendingPostAuditLogs(after: String, before: String, first: Int, last: Int, filter: PendingPostAuditLogFilters): PendingPostAuditLogConnection!
 }
 `, BuiltIn: false},
 	{Name: "schema/federation/schema.graphql", Input: `extend type AccountSettings @key(fields: "accountId") {
@@ -827,15 +829,51 @@ func (ec *executionContext) field_Query__entities_args(ctx context.Context, rawA
 func (ec *executionContext) field_Query_pendingPostAuditLogs_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 types.PendingPostAuditLogFilters
-	if tmp, ok := rawArgs["filter"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("filter"))
-		arg0, err = ec.unmarshalNPendingPostAuditLogFilters2overdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostAuditLogFilters(ctx, tmp)
+	var arg0 *string
+	if tmp, ok := rawArgs["after"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["filter"] = arg0
+	args["after"] = arg0
+	var arg1 *string
+	if tmp, ok := rawArgs["before"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
+		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["before"] = arg1
+	var arg2 *int
+	if tmp, ok := rawArgs["first"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
+		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["first"] = arg2
+	var arg3 *int
+	if tmp, ok := rawArgs["last"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
+		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["last"] = arg3
+	var arg4 *types.PendingPostAuditLogFilters
+	if tmp, ok := rawArgs["filter"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("filter"))
+		arg4, err = ec.unmarshalOPendingPostAuditLogFilters2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostAuditLogFilters(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["filter"] = arg4
 	return args, nil
 }
 
@@ -2162,7 +2200,7 @@ func (ec *executionContext) _Query_pendingPostAuditLogs(ctx context.Context, fie
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().PendingPostAuditLogs(rctx, args["filter"].(types.PendingPostAuditLogFilters))
+		return ec.resolvers.Query().PendingPostAuditLogs(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["filter"].(*types.PendingPostAuditLogFilters))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4735,11 +4773,6 @@ func (ec *executionContext) marshalNPendingPostAuditLogEdge2ᚖoverdollᚋapplic
 	return ec._PendingPostAuditLogEdge(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNPendingPostAuditLogFilters2overdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostAuditLogFilters(ctx context.Context, v interface{}) (types.PendingPostAuditLogFilters, error) {
-	res, err := ec.unmarshalInputPendingPostAuditLogFilters(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
 func (ec *executionContext) marshalNPendingPostRejectionReason2ᚕᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostRejectionReasonᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.PendingPostRejectionReason) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -5284,6 +5317,14 @@ func (ec *executionContext) marshalOPendingPostAuditLog2ᚖoverdollᚋapplicatio
 		return graphql.Null
 	}
 	return ec._PendingPostAuditLog(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOPendingPostAuditLogFilters2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostAuditLogFilters(ctx context.Context, v interface{}) (*types.PendingPostAuditLogFilters, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputPendingPostAuditLogFilters(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalOString2string(ctx context.Context, v interface{}) (string, error) {

@@ -20,6 +20,7 @@ go_library(
         "//applications/sting/proto:v1_go_proto",
         "//libraries/account",
         "//libraries/bucket",
+        "//libraries/paging",
         "@com_github_gocql_gocql//:gocql",
         "@com_github_scylladb_gocqlx_v2//:gocqlx",
         "@com_github_scylladb_gocqlx_v2//qb",
