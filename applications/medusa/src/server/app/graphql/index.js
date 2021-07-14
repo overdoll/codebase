@@ -43,7 +43,7 @@ class CookieDataSource extends RemoteGraphQLDataSource {
         const Passport = root.lookupType('libraries.passport.v1.Passport')
 
         try {
-          const message = Passport.decode(Uint8Array.from(atob(passport), c => c.charCodeAt(0)))
+          const message = Passport.decode(Uint8Array.from(Buffer.from(passport, 'base64').toString(), c => c.charCodeAt(0)))
 
           const object = Passport.toObject(message, {
             longs: String,
