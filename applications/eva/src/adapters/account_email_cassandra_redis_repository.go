@@ -53,7 +53,10 @@ func (r AccountRepository) AddAccountEmail(ctx context.Context, acc *account.Acc
 		return err
 	}
 
-	valReal := crypt.Encrypt(string(val))
+	valReal, err := crypt.Encrypt(string(val))
+	if err != nil {
+		return err
+	}
 
 	ok, err := r.client.SetNX(ctx, ConfirmEmailPrefix+confirm.ID(), valReal, confirm.Expires()).Result()
 
@@ -105,7 +108,11 @@ func (r AccountRepository) GetEmailConfirmationByEmail(ctx context.Context, emai
 			return "", err
 		}
 
-		val = crypt.Decrypt(val)
+		val, err = crypt.Decrypt(val)
+
+		if err != nil {
+			return "", err
+		}
 
 		var emailConfirmation EmailConfirmation
 		if err := json.Unmarshal([]byte(val), &emailConfirmation); err != nil {
@@ -134,7 +141,10 @@ func (r AccountRepository) ConfirmAccountEmail(ctx context.Context, confirmId st
 		return fmt.Errorf("get failed: '%s", err)
 	}
 
-	val = crypt.Decrypt(val)
+	val, err = crypt.Decrypt(val)
+	if err != nil {
+		return err
+	}
 
 	var confirmItem EmailConfirmation
 

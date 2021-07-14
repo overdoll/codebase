@@ -91,7 +91,7 @@ func (r ModeratorCassandraRepository) AddModerator(ctx context.Context, mod *mod
 		})
 
 	if err := insertModerator.ExecRelease(); err != nil {
-		return err
+		return fmt.Errorf("insert() failed: '%s", err)
 	}
 
 	return nil

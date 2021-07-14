@@ -53,7 +53,10 @@ func (r SessionRepository) getSessionById(ctx context.Context, sessionId string)
 	}
 
 	// decrypt session - since value is initially encrypted
-	details := crypt.DecryptSession(val)
+	details, err := crypt.DecryptSession(val)
+	if err != nil {
+		return nil, err
+	}
 
 	var sessionItem Session
 
@@ -62,7 +65,10 @@ func (r SessionRepository) getSessionById(ctx context.Context, sessionId string)
 	}
 
 	// we want to encrypt our session key
-	encryptedKey := crypt.Encrypt(sessionId)
+	encryptedKey, err := crypt.Encrypt(sessionId)
+	if err != nil {
+		return nil, err
+	}
 
 	return session.UnmarshalSessionFromDatabase(encryptedKey, sessionItem.Passport, sessionItem.Details.UserAgent, sessionItem.Details.Ip, sessionItem.Details.Created), nil
 }
@@ -101,10 +107,13 @@ func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, sessionCo
 }
 
 // RevokeSessionById - revoke session
-func (r SessionRepository) RevokeSessionById(ctx context.Context, accountId string, sessionId string) error {
+func (r SessionRepository) RevokeSessionById(ctx context.Context, accountId, sessionId string) error {
 
 	// decrypt, since we send it as encrypted
-	key := crypt.Decrypt(sessionId)
+	key, err := crypt.Decrypt(sessionId)
+	if err != nil {
+		return err
+	}
 
 	sess, err := r.getSessionById(ctx, key)
 
@@ -146,7 +155,10 @@ func (r SessionRepository) CreateSessionForAccount(ctx context.Context, session 
 		return err
 	}
 
-	valReal := crypt.EncryptSession(string(val))
+	valReal, err := crypt.EncryptSession(string(val))
+	if err != nil {
+		return err
+	}
 
 	ok, err := r.client.SetNX(ctx, SessionPrefix+ksuid.New().String()+":"+AccountPrefix+session.Passport().AccountID(), valReal, time.Hour*24).Result()
 

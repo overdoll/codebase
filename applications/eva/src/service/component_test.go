@@ -35,7 +35,7 @@ type TestUser struct {
 }
 
 type Authenticate struct {
-	Authenticate bool `graphql:"authenticate(data: $data)"`
+	Authenticate types.Response `graphql:"authenticate(data: $data)"`
 }
 
 func mAuthenticate(t *testing.T, client *graphql.Client, email string) Authenticate {
@@ -75,7 +75,7 @@ func authenticateAndRedeemCookie(t *testing.T, email string) (RedeemCookie, *gra
 
 	otpCookie := getOTPCookieFromJar(t, httpUser.Jar)
 
-	assert.Equal(t, authenticate.Authenticate, true)
+	assert.Equal(t, authenticate.Authenticate.Ok, true)
 
 	ck := qRedeemCookie(t, client, otpCookie.Value)
 

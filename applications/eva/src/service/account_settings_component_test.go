@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"testing"
 
 	"github.com/bxcodec/faker/v3"
@@ -191,7 +192,7 @@ func TestAccountUsername_modify(t *testing.T) {
 	auth := qAuth(t, client)
 
 	// make sure that the username is modified as well for the "authentication" query
-	assert.Equal(t, targetUsername, auth.Authentication.User.Username)
+	assert.Equal(t, targetUsername, auth.Authentication.Account.Username)
 }
 
 type TestSession struct {
@@ -226,9 +227,12 @@ func TestAccountSessions_view_and_revoke(t *testing.T) {
 	for _, sess := range settings.AccountSettings.Security.Sessions {
 		if sess.IP == fakeSession.Ip {
 			foundSession = true
+			fmt.Println(sess.IP)
 			sessionId = sess.ID
 		}
 	}
+
+	require.False(t, true)
 
 	require.True(t, foundSession)
 

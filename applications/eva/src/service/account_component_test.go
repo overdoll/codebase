@@ -32,7 +32,7 @@ func TestGetAccountAuthentication_empty(t *testing.T) {
 
 	// at this point there is no user (since no passport is passed in) so expect that it doesnt send anything
 	require.Nil(t, query.Authentication.Cookie)
-	require.Nil(t, query.Authentication.User)
+	require.Nil(t, query.Authentication.Account)
 }
 
 // TestGetAccountAuthentication_user - we assign a passport to our Http client, which will add it to the request body
@@ -48,7 +48,7 @@ func TestGetAccountAuthentication_user(t *testing.T) {
 	query := qAuth(t, client)
 
 	require.Nil(t, query.Authentication.Cookie)
-	require.Equal(t, "poisonminion", query.Authentication.User.Username)
+	require.Equal(t, "poisonminion", query.Authentication.Account.Username)
 }
 
 // TestAccount_get - test GRPC endpoint for grabbing a user

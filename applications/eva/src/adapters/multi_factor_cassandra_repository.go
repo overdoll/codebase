@@ -53,7 +53,13 @@ func (r MultiFactorCassandraRepository) CreateAccountRecoveryCodes(ctx context.C
 
 		stmt, _ := qCodes.ToCql()
 
-		batch.Query(stmt, accountId, crypt.Encrypt(code.Code()))
+		encrypt, err := crypt.Encrypt(code.Code())
+
+		if err != nil {
+			return err
+		}
+
+		batch.Query(stmt, accountId, encrypt)
 	}
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
@@ -84,7 +90,13 @@ func (r MultiFactorCassandraRepository) GetAccountRecoveryCodes(ctx context.Cont
 	var codes []*multi_factor.RecoveryCode
 
 	for _, cd := range recoveryCodes {
-		codes = append(codes, multi_factor.UnmarshalRecoveryCodeFromDatabase(crypt.Decrypt(cd.Code)))
+		decryptedCode, err := crypt.Decrypt(cd.Code)
+
+		if err != nil {
+			return nil, err
+		}
+
+		codes = append(codes, multi_factor.UnmarshalRecoveryCodeFromDatabase(decryptedCode))
 	}
 
 	return codes, nil
@@ -93,12 +105,18 @@ func (r MultiFactorCassandraRepository) GetAccountRecoveryCodes(ctx context.Cont
 // RedeemAccountRecoveryCode - redeem recovery code - basically just deletes the recovery code from the database
 func (r MultiFactorCassandraRepository) RedeemAccountRecoveryCode(ctx context.Context, accountId string, recoveryCode *multi_factor.RecoveryCode) error {
 
+	encryptedCode, err := crypt.Encrypt(recoveryCode.Code())
+
+	if err != nil {
+		return err
+	}
+
 	deleteAccountMultiFactorCodes := qb.Delete("account_multi_factor_recovery_codes").
 		Where(qb.Eq("account_id"), qb.Eq("code")).
 		Query(r.session).
 		BindStruct(&AccountMultiFactorRecoveryCodes{
 			AccountId: accountId,
-			Code:      crypt.Encrypt(recoveryCode.Code()),
+			Code:      encryptedCode,
 		})
 
 	if err := deleteAccountMultiFactorCodes.ExecRelease(); err != nil {
@@ -135,18 +153,29 @@ func (r MultiFactorCassandraRepository) GetAccountMultiFactorTOTP(ctx context.Co
 		return nil, fmt.Errorf("select() failed: '%s", err)
 	}
 
-	return multi_factor.UnmarshalTOTPFromDatabase(crypt.Decrypt(multiTOTP.Secret)), nil
+	decryptedOTP, err := crypt.Decrypt(multiTOTP.Secret)
+	if err != nil {
+		return nil, err
+	}
+
+	return multi_factor.UnmarshalTOTPFromDatabase(decryptedOTP), nil
 }
 
 // CreateAccountMultiFactorTOTP - create MFA for user
 func (r MultiFactorCassandraRepository) CreateAccountMultiFactorTOTP(ctx context.Context, accountId string, totp *multi_factor.TOTP) error {
+
+	encryptedOTP, err := crypt.Encrypt(totp.Secret())
+
+	if err != nil {
+		return err
+	}
 
 	createMultiFactorTOTP := qb.Insert("account_multi_factor_totp").
 		Columns("account_id", "secret").
 		Query(r.session).
 		BindStruct(&AccountMultiFactorTOTP{
 			AccountId: accountId,
-			Secret:    crypt.Encrypt(totp.Secret()),
+			Secret:    encryptedOTP,
 		})
 
 	if err := createMultiFactorTOTP.ExecRelease(); err != nil {

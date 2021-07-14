@@ -43,7 +43,11 @@ func (r CookieRepository) GetCookieById(ctx context.Context, id string) (*cookie
 		return nil, fmt.Errorf("get failed: '%s", err)
 	}
 
-	val = crypt.Decrypt(val)
+	val, err = crypt.Decrypt(val)
+
+	if err != nil {
+		return nil, err
+	}
 
 	var cookieItem AuthenticationCookie
 
@@ -87,7 +91,11 @@ func (r CookieRepository) CreateCookie(ctx context.Context, instance *cookie.Coo
 		return err
 	}
 
-	newVal := crypt.Encrypt(string(val))
+	newVal, err := crypt.Encrypt(string(val))
+
+	if err != nil {
+		return err
+	}
 
 	ok, err := r.client.SetNX(ctx, CookiePrefix+instance.Cookie(), newVal, instance.Expiration()).Result()
 
@@ -135,7 +143,10 @@ func (r CookieRepository) UpdateCookie(ctx context.Context, cookieId string, upd
 		return nil, err
 	}
 
-	newVal := crypt.Encrypt(string(val))
+	newVal, err := crypt.Encrypt(string(val))
+	if err != nil {
+		return nil, err
+	}
 
 	_, err = r.client.Set(ctx, CookiePrefix+instance.Cookie(), newVal, instance.Expiration()).Result()
 

@@ -15,7 +15,7 @@ import (
 )
 
 type Logout struct {
-	Logout bool `graphql:"logout()"`
+	Logout types.Response `graphql:"logout()"`
 }
 
 // test to make sure logout works (when passport is present)
@@ -33,7 +33,7 @@ func TestLogout_user(t *testing.T) {
 	modified := pass.GetPassport()
 
 	// should no longer be authenticated
-	require.Equal(t, true, mutation.Logout)
+	require.Equal(t, true, mutation.Logout.Ok)
 	require.Equal(t, false, modified.IsAuthenticated())
 }
 
@@ -67,7 +67,7 @@ func TestAccountAuthenticate_from_another_session(t *testing.T) {
 
 	otpCookie := getOTPCookieFromJar(t, httpUser.Jar)
 
-	assert.Equal(t, authenticate.Authenticate, true)
+	assert.Equal(t, authenticate.Authenticate.Ok, true)
 
 	clientFromAnotherSession, _, _ := getHttpClient(t, passport.FreshPassport())
 
@@ -80,7 +80,7 @@ func TestAccountAuthenticate_from_another_session(t *testing.T) {
 
 	// since our user's cookie was redeemed from another session, when the user runs this query
 	// the next time, it should just log them in
-	assert.Equal(t, "poisonminion", authRedeemed.Authentication.User.Username)
+	assert.Equal(t, "poisonminion", authRedeemed.Authentication.Account.Username)
 }
 
 type GenerateAccountMultiFactorRecoveryCodes struct {
@@ -257,7 +257,7 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 }
 
 type Register struct {
-	Register bool `graphql:"register(data: $data)"`
+	Register types.Response `graphql:"register(data: $data)"`
 }
 
 // TestAccountRegistration_complete - complete a whole user registration flow using multiple graphql endpoints
@@ -281,7 +281,7 @@ func TestAccountRegistration_complete(t *testing.T) {
 	// make sure OTPKey is not empty
 	require.True(t, otpCookie != nil)
 
-	assert.Equal(t, authenticate.Authenticate, true)
+	assert.Equal(t, true, authenticate.Authenticate.Ok)
 
 	// check our auth query and make sure that it returns the correct cookie values
 	authNotRedeemed := qAuth(t, client)
@@ -292,9 +292,9 @@ func TestAccountRegistration_complete(t *testing.T) {
 	redeemCookie := qRedeemCookie(t, client, otpCookie.Value)
 
 	// make sure cookie is redeemed
-	assert.Equal(t, redeemCookie.RedeemCookie.Redeemed, true)
+	assert.Equal(t, true, redeemCookie.RedeemCookie.Redeemed)
 	// make sure in the same session
-	assert.Equal(t, redeemCookie.RedeemCookie.SameSession, true)
+	assert.Equal(t, true, redeemCookie.RedeemCookie.SameSession)
 
 	// check our auth query and make sure that it returns the correct cookie values
 	authRedeemed := qAuth(t, client)
@@ -310,7 +310,7 @@ func TestAccountRegistration_complete(t *testing.T) {
 	})
 
 	require.NoError(t, err)
-	assert.Equal(t, register.Register, true)
+	assert.Equal(t, true, register.Register.Ok)
 
 	otpCookie = getOTPCookieFromJar(t, httpUser.Jar)
 	// Making sure that with "register" the OTP cookie is removed

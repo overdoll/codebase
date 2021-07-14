@@ -1,7 +1,7 @@
 package multi_factor
 
 import (
-	"math/rand"
+	"crypto/rand"
 )
 
 type RecoveryCode struct {

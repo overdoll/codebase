@@ -36,28 +36,13 @@ export default {
    */
   encrypt: (text, masterkey) => {
     // random initialization vector
-    const iv = _crypto.randomBytes(16)
-
-    // random salt
-    const salt = _crypto.randomBytes(64)
-
-    // derive encryption key: 32 byte key length
-    // in assumption the masterkey is a cryptographic and NOT a password there is no need for
-    // a large number of iterations. It may can replaced by HKDF
-    // the value of 2145 is randomly chosen!
-    const key = _crypto.pbkdf2Sync(masterkey, salt, 2145, 32, 'sha512')
+    const iv = _crypto.randomBytes(12)
 
     // AES 256 GCM Mode
-    const cipher = _crypto.createCipheriv('aes-256-gcm', key, iv)
-
-    // encrypt the given text
-    const encrypted = Buffer.concat([cipher.update(text, 'utf8'), cipher.final()])
-
-    // extract the auth tag
-    const tag = cipher.getAuthTag()
+    const cipher = _crypto.createCipheriv('aes-256-gcm', masterkey, iv)
 
     // generate output
-    return Buffer.concat([salt, iv, tag, encrypted]).toString('base64')
+    return Buffer.concat([iv, cipher.update(text), cipher.final(), cipher.getAuthTag()])
   },
 
   /**
@@ -66,24 +51,22 @@ export default {
    * @param Buffer masterkey
    * @returns String decrypted (original) text
    */
-  decrypt: (encdata, masterkey) => {
+  decrypt: (input, masterkey) => {
     // base64 decoding
-    const bData = Buffer.from(encdata, 'base64')
+    const inputBuffer = Buffer.from(input, 'hex')
+    const iv = Buffer.allocUnsafe(12)
+    const tag = Buffer.allocUnsafe(16)
+    const data = Buffer.alloc(inputBuffer.length - 28, 0)
 
-    // convert data to buffers
-    const salt = bData.slice(0, 64)
-    const iv = bData.slice(64, 80)
-    const tag = bData.slice(80, 96)
-    const text = bData.slice(96)
-
-    // derive key using; 32 byte key length
-    const key = _crypto.pbkdf2Sync(masterkey, salt, 2145, 32, 'sha512')
+    inputBuffer.copy(iv, 0, 0, 12)
+    inputBuffer.copy(tag, 0, inputBuffer.length - 16)
+    inputBuffer.copy(data, 0, 12)
 
     // AES 256 GCM Mode
-    const decipher = _crypto.createDecipheriv('aes-256-gcm', key, iv)
+    const decipher = _crypto.createDecipheriv('aes-256-gcm', masterkey, iv)
     decipher.setAuthTag(tag)
 
     // encrypt the given text
-    return decipher.update(text, 'binary', 'utf8') + decipher.final('utf8')
+    return decipher.update(input, 'binary', 'utf8') + decipher.final('utf8')
   }
 }
