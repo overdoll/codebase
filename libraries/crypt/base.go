@@ -9,7 +9,10 @@ import (
 )
 
 func encrypt(data, passphrase string) (string, error) {
-	block, _ := aes.NewCipher([]byte(passphrase))
+	block, err := aes.NewCipher([]byte(passphrase))
+	if err != nil {
+		return "", err
+	}
 	gcm, err := cipher.NewGCM(block)
 	if err != nil {
 		return "", err
