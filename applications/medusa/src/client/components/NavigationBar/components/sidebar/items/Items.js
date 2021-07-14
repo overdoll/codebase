@@ -39,6 +39,8 @@ export default function Items ({ items, location }: Props): Node {
                 </AccordionItem>
                 : <Link to={item.route}>
                   <Button
+                    borderLeftColor={location === item.route && 'red.500'}
+                    borderLeftWidth={location === item.route && 3}
                     borderRadius={5} pt={3} pb={3}
                     textAlign='left' w='100%'
                     bg={location === item.route ? 'gray.700' : 'transparent'}

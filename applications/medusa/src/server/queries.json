@@ -19,5 +19,12 @@
   "ea4cbdb02f4888cdd14a5b393f55addb": "mutation LobbyMutation {\n  authenticateEmail {\n    ok\n  }\n}\n",
   "f1604fee51167235daafe362f3b58e6a": "mutation JoinMutation(\n  $data: AuthenticationInput!\n) {\n  authenticate(data: $data) {\n    ok\n  }\n}\n",
   "17fc34667c96526b459013e2d2ad7416": "mutation RegisterMutation(\n  $data: RegisterInput!\n) {\n  register(data: $data) {\n    ok\n    validation {\n      code\n    }\n  }\n}\n",
-  "7e5c372c223c18cbc199e631a798e33e": "query RootQuery {\n  authentication {\n    account {\n      username\n    }\n    ...JoinFragment\n  }\n}\n\nfragment JoinFragment on Authentication {\n  cookie {\n    redeemed\n    registered\n    email\n  }\n}\n"
+  "7e5c372c223c18cbc199e631a798e33e": "query RootQuery {\n  authentication {\n    account {\n      username\n    }\n    ...JoinFragment\n  }\n}\n\nfragment JoinFragment on Authentication {\n  cookie {\n    redeemed\n    registered\n    email\n  }\n}\n",
+  "f00a2e79d26efad10f0bc4e1ac9a0220": "mutation NavMenuMutation {\n  logout {\n    validation {\n      code\n    }\n    ok\n  }\n}\n",
+  "293efcf3d1b7da050f44db64e0692a65": "query RootQuery {\n  authentication {\n    account {\n      username\n      roles\n    }\n    ...JoinFragment\n  }\n}\n\nfragment JoinFragment on Authentication {\n  cookie {\n    redeemed\n    registered\n    email\n  }\n}\n",
+  "f9188dfb615ff6bfba6490f704b2bda7": "query HistoryPendingPostAuditLogsQuery {\n  pendingPostAuditLogs(filter: {}) {\n    edges {\n      node {\n        id\n      }\n    }\n  }\n}\n",
+  "e6a5a85fb7720b0c81be8337e62cbdd5": "query RootQuery {\n  authentication {\n    account {\n      username\n      roles\n      lock {\n        expires\n        reason\n      }\n    }\n    ...JoinFragment\n  }\n}\n\nfragment JoinFragment on Authentication {\n  cookie {\n    redeemed\n    registered\n    email\n  }\n}\n",
+  "27183ff29a9ce3a5061a27ce5f1c7a28": "query RootQuery {\n  authentication {\n    account {\n      username\n      roles\n      avatar\n      lock {\n        expires\n        reason\n      }\n    }\n    ...JoinFragment\n  }\n}\n\nfragment JoinFragment on Authentication {\n  cookie {\n    redeemed\n    registered\n    email\n  }\n}\n",
+  "a7daafb12665ba6821b59d4b5580740d": "query ProfileSettingsQuery {\n  accountSettings {\n    accountId\n    general {\n      emails {\n        email\n        status\n      }\n      usernames {\n        username\n      }\n    }\n  }\n}\n",
+  "eb650c16a159b6ed8659f08df8a1248f": "query ProfileSettingsQuery {\n  accountSettings {\n    accountId\n    general {\n      emails {\n        email\n        status\n      }\n      usernames {\n        username\n      }\n    }\n  }\n  authentication {\n    account {\n      username\n    }\n  }\n}\n"
 }

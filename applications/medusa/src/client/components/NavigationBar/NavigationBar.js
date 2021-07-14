@@ -36,7 +36,7 @@ type Props = {
   children: Node
 }
 
-export default function NavigationBar ({ user, children, refreshUserQuery }: Props): Node {
+export default function NavigationBar ({ account, children, refreshUserQuery }: Props): Node {
   const [t] = useTranslation('nav')
 
   const history = useHistory()
@@ -78,13 +78,13 @@ export default function NavigationBar ({ user, children, refreshUserQuery }: Pro
                   const route = item.firstRoute ? item.sidebar.routes[0].route : item.route
 
                   return (
-                    <Fragment key={index}>
+                    !item.hidden && <Fragment key={index}>
                       <Route exact={item.exact} path={item.route}>
                         {({ match }) => (
                           <NavItem
                             key={item.route}
                             icon={item.icon}
-                            user={!!user} route={route} label={label}
+                            route={route} label={label}
                             selected={!!match}
                           />
                         )}
@@ -94,7 +94,7 @@ export default function NavigationBar ({ user, children, refreshUserQuery }: Pro
                 })}
               </HStack>
             </Flex>
-            <RightMenu user={user} t={t} refresh={refreshUserQuery} />
+            <RightMenu account={account} t={t} refresh={refreshUserQuery} ability={ability} />
           </Flex>
         </>}
       <Flex direction='row'>
@@ -223,7 +223,7 @@ const LeftMenu = ({ t }) => {
   )
 }
 
-const RightMenu = ({ user, t, refresh }) => {
+const RightMenu = ({ account, t, refresh, ability }) => {
   return (
     <Flex m='auto' right={0} mr={1}>
       <Flex
@@ -231,7 +231,7 @@ const RightMenu = ({ user, t, refresh }) => {
         align='center'
       >
         <Flex m={1}>
-          {user
+          {ability.can('manage', 'account')
             ? <Link to='/profile'>
               <Tooltip hasArrow label={t('nav.profile')} placement='bottom'>
                 <Button
@@ -241,7 +241,7 @@ const RightMenu = ({ user, t, refresh }) => {
                   display={{ base: 'none', md: 'flex' }}
                   aria-label={t('nav.profile')}
                 >
-                  <Avatar m={0} borderRadius={10} w='38px' h='38px' />
+                  <Avatar src={account.avatar} m={0} borderRadius={10} w='38px' h='38px' />
                 </Button>
               </Tooltip>
             </Link>
@@ -255,7 +255,7 @@ const RightMenu = ({ user, t, refresh }) => {
                 icon={<Icon icon={Login2} fill='gray.300' w='38px' m={1} h='38px' />}
               />
             </Link>}
-          <NavMenu user={user} refresh={refresh} />
+          <NavMenu ability={ability} refresh={refresh} account={account} />
         </Flex>
       </Flex>
     </Flex>

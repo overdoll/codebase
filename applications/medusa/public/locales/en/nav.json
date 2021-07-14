@@ -10,9 +10,9 @@
   },
   "menu": {
     "profile": "Go to my profile",
-    "settings": "Settings",
-    "logout": "Log out",
-    "join": "Join the community"
+    "settings": "Account Settings",
+    "logout": "Log Out",
+    "join": "Join The Community"
   },
   "upload_locked": "You must be logged in to upload",
   "logout": {
@@ -24,6 +24,12 @@
       "title": "Moderation",
       "queue": "Queue",
       "history": "History"
+    },
+    "settings": {
+      "title": "Account Settings",
+      "profile": "Profile",
+      "security": "Security",
+      "moderation": "Moderation"
     }
   }
 }

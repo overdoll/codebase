@@ -21,23 +21,32 @@ import InterfacePageControllerSettings
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/page-controller/interface-page-controller-settings.svg'
 import InterfaceArrowsShrink3
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-shrink-3.svg'
+import SafetyExitDoorLeft
+  from '@streamlinehq/streamlinehq/img/streamline-bold/wayfinding/safety/safety-exit-door-left.svg'
+import InterfaceSettingCog
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/setting/interface-setting-cog.svg'
 
 import { useHistory } from '@//:modules/routing'
 import { graphql, useMutation } from 'react-relay/hooks'
 
 const logoutGQL = graphql`
   mutation NavMenuMutation {
-    logout
+    logout {
+      validation {
+        code
+      }
+      ok
+    }
   }
 `
 
 type Props = {
-  user: {
+  account: {
     username: string,
   }
 }
 
-export default function NavMenu ({ user, refresh }: Props): Node {
+export default function NavMenu ({ refresh, ability, account }: Props): Node {
   const [logout, isLoggingOut] = useMutation(logoutGQL)
 
   const [t] = useTranslation('nav')
@@ -87,23 +96,33 @@ export default function NavMenu ({ user, refresh }: Props): Node {
             />
           </Tooltip>
           <MenuList minW='300px' boxShadow='xs'>
-            {user
+            {ability.can('manage', 'account')
               ? (
                 <>
                   <Link to='/profile'>
                     <MenuItem>
-                      <Avatar pointerEvents='none' mr={4} borderRadius={10} w='60px' h='60px' />
+                      <Avatar src={account.avatar} pointerEvents='none' mr={4} borderRadius={10} w='60px' h='60px' />
                       <Flex pointerEvents='none' direction='column'>
-                        <Heading color='gray.100' size='md'>{user.username}</Heading>
+                        <Heading color='gray.100' size='md'>{account.username}</Heading>
                         <Text color='gray.300' size='xs'>{t('menu.profile')}</Text>
                       </Flex>
                     </MenuItem>
                   </Link>
                   <MenuDivider />
+                  <Link to='/s/profile'>
+                    <MenuItem>
+                      <Icon
+                        pointerEvents='none'
+                        icon={InterfaceSettingCog} w='38px' h='38px' p={2}
+                        fill='gray.100' mr={2}
+                      />
+                      <Text pointerEvents='none' color='gray.100' size='md'>{t('menu.settings')}</Text>
+                    </MenuItem>
+                  </Link>
                   <MenuItem onClick={() => onLogout()} isDisabled={isLoggingOut}>
                     <Icon
                       pointerEvents='none'
-                      icon={Login2} w='38px' h='38px' p={2}
+                      icon={SafetyExitDoorLeft} w='38px' h='38px' p={2}
                       fill='orange.300' mr={2}
                     />
                     <Text pointerEvents='none' color='orange.300' size='md'>{t('menu.logout')}</Text>

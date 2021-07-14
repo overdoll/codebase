@@ -24,6 +24,11 @@ const RootQueryGQL = graphql`
       account {
         username
         roles
+        avatar
+        lock {
+          expires
+          reason
+        }
       }
       ...JoinFragment
     }
@@ -48,7 +53,7 @@ export default function Root (props: Props): Node {
     loadQuery(variables, { fetchPolicy: 'network-only' })
   }
 
-  const ability = defineAbility(rootQuery.authentication?.user)
+  const ability = defineAbility(rootQuery.authentication?.account)
 
   return (
     <RootContext.Provider value={rootQuery}>
@@ -57,7 +62,7 @@ export default function Root (props: Props): Node {
           title='overdoll'
         />
         <NavigationBar
-          user={rootQuery.authentication.user} refreshUserQuery={refresh}
+          account={rootQuery.authentication.account} refreshUserQuery={refresh}
         ><Suspense fallback={null}>{props.children}</Suspense>
         </NavigationBar>
       </AbilityContext.Provider>

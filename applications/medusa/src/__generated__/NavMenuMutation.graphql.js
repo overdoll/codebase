@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 2d5391180cfa5ba29e2940ce0529f58a
+ * @relayHash f00a2e79d26efad10f0bc4e1ac9a0220
  */
 
 /* eslint-disable */
@@ -10,7 +10,12 @@
 import type { ConcreteRequest } from 'relay-runtime';
 export type NavMenuMutationVariables = {||};
 export type NavMenuMutationResponse = {|
-  +logout: boolean
+  +logout: {|
+    +validation: ?{|
+      +code: string
+    |},
+    +ok: boolean,
+  |}
 |};
 export type NavMenuMutation = {|
   variables: NavMenuMutationVariables,
@@ -20,7 +25,12 @@ export type NavMenuMutation = {|
 
 /*
 mutation NavMenuMutation {
-  logout
+  logout {
+    validation {
+      code
+    }
+    ok
+  }
 }
 */
 
@@ -29,8 +39,37 @@ var v0 = [
   {
     "alias": null,
     "args": null,
-    "kind": "ScalarField",
+    "concreteType": "Response",
+    "kind": "LinkedField",
     "name": "logout",
+    "plural": false,
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Validation",
+        "kind": "LinkedField",
+        "name": "validation",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "code",
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "ok",
+        "storageKey": null
+      }
+    ],
     "storageKey": null
   }
 ];
@@ -52,7 +91,7 @@ return {
     "selections": (v0/*: any*/)
   },
   "params": {
-    "id": "2d5391180cfa5ba29e2940ce0529f58a",
+    "id": "f00a2e79d26efad10f0bc4e1ac9a0220",
     "metadata": {},
     "name": "NavMenuMutation",
     "operationKind": "mutation",
@@ -61,5 +100,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = 'f9a904c38588c278775391992fdbd817';
+(node: any).hash = '897e9d4f5bd2a75578d56697fdb5d8a6';
 module.exports = node;

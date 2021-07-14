@@ -6,7 +6,7 @@ import { mode } from '@chakra-ui/theme-tools'
 const baseStyle = {
   lineHeight: '1.2',
   borderRadius: 'md',
-  fontWeight: 'medium',
+  fontWeight: 'bold',
   fontFamily: 'Nunito',
   _focus: {
     boxShadow: 'outline'

@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 7e5c372c223c18cbc199e631a798e33e
+ * @relayHash 27183ff29a9ce3a5061a27ce5f1c7a28
  */
 
 /* eslint-disable */
@@ -9,11 +9,18 @@
 
 import type { ConcreteRequest } from 'relay-runtime';
 import type { JoinFragment$ref } from "./JoinFragment.graphql";
+export type AccountRoleEnum = "Moderator" | "Staff" | "%future added value";
 export type RootQueryVariables = {||};
 export type RootQueryResponse = {|
   +authentication: ?{|
     +account: ?{|
-      +username: string
+      +username: string,
+      +roles: $ReadOnlyArray<AccountRoleEnum>,
+      +avatar: string,
+      +lock: ?{|
+        +expires: number,
+        +reason: string,
+      |},
     |},
     +$fragmentRefs: JoinFragment$ref,
   |}
@@ -30,6 +37,11 @@ query RootQuery {
     account {
       username
       roles
+      avatar
+      lock {
+        expires
+        reason
+      }
     }
     ...JoinFragment
   }
@@ -65,6 +77,38 @@ var v0 = {
       "args": null,
       "kind": "ScalarField",
       "name": "roles",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "avatar",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "AccountLock",
+      "kind": "LinkedField",
+      "name": "lock",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "expires",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "reason",
+          "storageKey": null
+        }
+      ],
       "storageKey": null
     }
   ],
@@ -151,7 +195,7 @@ return {
     ]
   },
   "params": {
-    "id": "7e5c372c223c18cbc199e631a798e33e",
+    "id": "27183ff29a9ce3a5061a27ce5f1c7a28",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",
@@ -160,5 +204,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '69df0ceba0bd8482b32143d92edae3d6';
+(node: any).hash = 'f4d2165c30c5753b5eeb2ed0d7288e4d';
 module.exports = node;

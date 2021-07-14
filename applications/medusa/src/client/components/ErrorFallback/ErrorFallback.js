@@ -3,7 +3,7 @@
  */
 import type { Node } from 'react'
 import type { Error } from '@//:modules/utilities/ErrorBoundary'
-import { Flex, Heading, IconButton } from '@chakra-ui/react'
+import { Flex, Heading, IconButton, Button, Text } from '@chakra-ui/react'
 import ButtonRefreshArrows
   from '@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/multimedia-controls/button-refresh-arrows.svg'
 import { useTranslation } from 'react-i18next'
@@ -29,18 +29,18 @@ export default function ErrorFallback ({ error, reset, refetch }: Props): Node {
 
   return (
     <Flex direction='column' w='100%' h='100%' align='center' position='center'>
-      <Heading size='lg' mb={4}>
+      <Heading fontSize='lg' color='gray.100' mb={4}>
         {t('fallback.header')}
       </Heading>
-      <IconButton
-        aria-label={t('fallback.button')}
-        variant='ghost'
-        size='lg'
-        role='button'
+      <Text size='sm' color='gray.300'>{error.Error}</Text>
+      <Button
+        variant='solid'
+        size='md'
         onClick={onReset}
-        icon={<Icon icon={ButtonRefreshArrows} fill='gray.50' />}
-        isRound
-      />
+        leftIcon={<Icon icon={ButtonRefreshArrows} w={4} h={4} fill='gray.100' />}
+      >
+        {t('fallback.button')}
+      </Button>
     </Flex>
   )
 }

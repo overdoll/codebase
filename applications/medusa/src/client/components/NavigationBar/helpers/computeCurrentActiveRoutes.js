@@ -34,11 +34,11 @@ export default function computeCurrentActiveRoutes ({ location, environment }) {
 
       const valid = isRouteValid({ history, location: history.location, environment }, route)
 
-      if (route.navigation?.top && valid) {
+      if (route.navigation && valid) {
         Object.assign(nav, {
           route: route.path,
-          title: route.navigation.top.title,
-          icon: route.navigation.top.icon,
+          ...(route.navigation.top?.title && { title: route.navigation.top.title }),
+          ...(route.navigation.top?.icon && { icon: route.navigation.top.icon }),
           ...(route.navigation.firstRoute && { firstRoute: route.navigation.firstRoute }),
           ...(route.navigation.hidden && { hidden: route.navigation.hidden }),
           ...(route.exact && { exact: route.exact })

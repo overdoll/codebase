@@ -185,6 +185,66 @@ const routes: Array<Route> = [
         ]
       },
       {
+        path: '/s',
+        component: JSResource('SettingsRoot', () =>
+          import(
+            /* webpackChunkName: "SettingsRoot" */ './domain/Settings/Settings'
+          ),
+        module.hot
+        ),
+        // If user is not logged in, they can't post - so we redirect to join page
+        middleware: [
+          ({ environment, history }) => {
+            const ability = getAbilityFromUser(environment)
+
+            if (ability.can('manage', 'account')) {
+              return true
+            }
+            history.push('/join')
+            return false
+          }
+        ],
+        routes: [
+          {
+            path: '/s/profile',
+            component: JSResource('SettingsProfileRoot', () =>
+              import(
+                /* webpackChunkName: "SettingsProfileRoot" */ './domain/Settings/routes/Profile/Profile'
+              ),
+            module.hot
+            )
+          },
+          {
+            path: '/s/security',
+            component: JSResource('SettingsSecurityRoot', () =>
+              import(
+                /* webpackChunkName: "SettingsSecurityRoot" */ './domain/Settings/routes/Security/Security'
+              ),
+            module.hot
+            )
+          },
+          {
+            path: '/s/moderation',
+            component: JSResource('SettingsModerationRoot', () =>
+              import(
+                /* webpackChunkName: "SettingsModerationRoot" */ './domain/Settings/routes/Moderation/Moderation'
+              ),
+            module.hot
+            ),
+            middleware: [
+              ({ environment }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('manage', 'pendingPosts')) {
+                  return true
+                }
+                return false
+              }
+            ]
+          }
+        ]
+      },
+      {
         path: '*',
         exact: false,
         component: JSResource('Empty', () =>

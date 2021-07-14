@@ -8,11 +8,11 @@ export default function defineAbility (user) {
   if (user) {
     can('manage', 'account')
 
-    if (roles.includes('moderator')) {
+    if (roles.includes('Moderator')) {
       can(['read', 'manage'], 'pendingPosts')
     }
 
-    if (roles.includes('staff')) {
+    if (roles.includes('Staff')) {
       can('manage', 'all')
     }
   }

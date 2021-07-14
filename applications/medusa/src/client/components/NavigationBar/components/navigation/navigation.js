@@ -9,12 +9,13 @@ import LoginKeys
   from '@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/login-logout/login-keys.svg'
 import ContentBrushPen
   from '@streamlinehq/streamlinehq/img/streamline-bold/content/content-creation/content-brush-pen.svg'
+import JSResource from '@//:modules/utilities/JSResource'
 
 const getUserFromEnvironment = environment =>
   environment
     .getStore()
     .getSource()
-    .get('client:root:authentication:user')
+    .get('client:root:authentication:account')
 
 const getAbilityFromUser = (environment) => {
   return defineAbility(getUserFromEnvironment(environment))
@@ -81,7 +82,6 @@ const routes: Array<Route> = [
       {
         path: '/m/queue',
         navigation: {
-          firstRoute: true,
           side: {
             title: 'sidebar.mod.queue'
           }
@@ -90,7 +90,6 @@ const routes: Array<Route> = [
       {
         path: '/m/history',
         navigation: {
-          firstRoute: true,
           side: {
             title: 'sidebar.mod.history'
           }
@@ -116,6 +115,51 @@ const routes: Array<Route> = [
         icon: ContentBrushPen
       }
     }
+  },
+  {
+    path: '/s',
+    navigation: {
+      hidden: true,
+      side: {
+        title: 'sidebar.settings.title'
+      }
+    },
+    routes: [
+      {
+        path: '/s/profile',
+        navigation: {
+          side: {
+            title: 'sidebar.settings.profile'
+          }
+        }
+      },
+      {
+        path: '/s/security',
+        navigation: {
+          side: {
+            title: 'sidebar.settings.security'
+          }
+        }
+      },
+      {
+        path: '/s/moderation',
+        navigation: {
+          side: {
+            title: 'sidebar.settings.moderation'
+          }
+        },
+        middleware: [
+          ({ environment }) => {
+            const ability = getAbilityFromUser(environment)
+
+            if (ability.can('manage', 'pendingPosts')) {
+              return true
+            }
+            return false
+          }
+        ]
+      }
+    ]
   }
 ]
 

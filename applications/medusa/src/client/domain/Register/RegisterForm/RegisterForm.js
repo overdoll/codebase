@@ -72,7 +72,7 @@ export default function RegisterForm ({ onSubmit, loading }: Props): Node {
             </InputRightElement>
           )}
         </InputGroup>
-        <FormHelperText>1tSSgnJSvYZHcEKlUXRL1jI1ins
+        <FormHelperText>
           {errors.username && t('authenticate.form.validation.email.required')}
         </FormHelperText>
       </FormControl>
