@@ -229,7 +229,7 @@ func TestAccountSessions_view_and_revoke(t *testing.T) {
 			sessionId = sess.ID
 		}
 	}
-	
+
 	require.True(t, foundSession)
 
 	var revokeAccountSession RevokeAccountSession
