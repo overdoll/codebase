@@ -183,7 +183,7 @@ func TestCreatePost_Publish(t *testing.T) {
 	pendingPost := qPendingPost(t, newPostId)
 
 	// check to make sure post is in rejected state
-	require.Equal(t, "published", pendingPost.PendingPost.State)
+	require.Equal(t, types.PendingPostStateEnumPublished, pendingPost.PendingPost.State)
 
 	// publishing removes any custom fields and converts them
 	require.Len(t, pendingPost.PendingPost.MediaRequests, 0)
@@ -240,7 +240,7 @@ func TestCreatePost_Discard(t *testing.T) {
 	pendingPost := qPendingPost(t, newPostId)
 
 	// check to make sure post is in rejected state
-	require.Equal(t, "discarded", pendingPost.PendingPost.State)
+	require.Equal(t, types.PendingPostStateEnumDiscarded, pendingPost.PendingPost.State)
 
 	// discarding post also completely removes any custom fields
 	require.Len(t, pendingPost.PendingPost.MediaRequests, 0)
