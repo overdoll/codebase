@@ -1,8 +1,5 @@
 import express from 'express'
 
-// cache env # https://github.com/nodejs/node/issues/3104
-process.env = JSON.parse(JSON.stringify(process.env))
-
 // Unhandled errors && exceptions should crash the process (if some graph services are unavailable, we sometimes get into an undefined state)
 process.on('uncaughtException', err => {
   console.log(err)

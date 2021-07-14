@@ -49,9 +49,9 @@ export default {
 
   /**
    * Decrypts text by given key
-   * @param String base64 encoded input data
-   * @param Buffer masterkey
    * @returns String decrypted (original) text
+   * @param input
+   * @param masterkey
    */
   decrypt: (input, masterkey) => {
     // base64 decoding
