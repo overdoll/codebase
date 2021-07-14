@@ -269,7 +269,7 @@ func TestCreatePost_Reject_undo_reject(t *testing.T) {
 			pendingPost := qPendingPost(t, newPostId)
 
 			// make sure post is in rejected state
-			require.Equal(t, "rejected", pendingPost.PendingPost.State)
+			require.Equal(t, types.PendingPostStateEnumRejected, pendingPost.PendingPost.State)
 
 			// UNDO
 			_, e = stingClient.UndoPendingPost(context.Background(), &sting.PendingPostRequest{Id: postId})
@@ -286,7 +286,7 @@ func TestCreatePost_Reject_undo_reject(t *testing.T) {
 			pendingPost = qPendingPost(t, newPostId)
 
 			// check to make sure post is still in "review" state (since we did the undo)
-			require.Equal(t, "review", pendingPost.PendingPost.State)
+			require.Equal(t, types.PendingPostStateEnumReview, pendingPost.PendingPost.State)
 
 			// need to reject again, or else we will be in an infinite loop
 			_, e = stingClient.RejectPendingPost(context.Background(), &sting.PendingPostRequest{Id: postId})
@@ -297,7 +297,7 @@ func TestCreatePost_Reject_undo_reject(t *testing.T) {
 	pendingPost := qPendingPost(t, newPostId)
 
 	// check to make sure post is in rejected state
-	require.Equal(t, "rejected", pendingPost.PendingPost.State)
+	require.Equal(t, types.PendingPostStateEnumRejected, pendingPost.PendingPost.State)
 }
 
 // TestSearchCharacters - search some characters
