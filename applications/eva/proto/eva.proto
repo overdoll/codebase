@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package applications.grpc.eva.v1;
 
-message User {
+message Account {
   string id = 1;
   string username = 2;
   repeated string roles = 3;
@@ -11,27 +11,27 @@ message User {
   bool locked = 6;
 }
 
-message GetUserRequest {
+message GetAccountRequest {
   string id = 1;
 }
 
-enum LockUserReason {
+enum LockAccountReason {
   POST_INFRACTION = 0;
 }
 
-message LockUserRequest {
+message LockAccountRequest {
   string id = 1;
   int64 duration = 2;
-  LockUserReason reason = 3;
+  LockAccountReason reason = 3;
 }
 
-message CreateUserRequest {
+message CreateAccountRequest {
   string username = 1;
   string email = 2;
 }
 
 service Eva {
-  rpc LockUser(LockUserRequest) returns (User);
-  rpc GetUser(GetUserRequest) returns (User);
-  rpc CreateUser(CreateUserRequest) returns (User);
+  rpc LockAccount(LockAccountRequest) returns (Account);
+  rpc GetAccount(GetAccountRequest) returns (Account);
+  rpc CreateAccount(CreateAccountRequest) returns (Account);
 }

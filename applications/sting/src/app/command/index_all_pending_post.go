@@ -29,7 +29,7 @@ func (h IndexAllPendingPostsHandler) Handle(ctx context.Context) error {
 	}
 
 	for _, pst := range posts {
-		usr, err := h.eva.GetUser(ctx, pst.Contributor().ID())
+		usr, err := h.eva.GetAccount(ctx, pst.Contributor().ID())
 
 		if err != nil {
 			return err

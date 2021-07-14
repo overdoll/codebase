@@ -25,7 +25,7 @@ func NewModeratePendingPostHandler(ir infraction.Repository, eva EvaService, sti
 func (h ModeratePendingPostHandler) Handle(ctx context.Context, moderatorId, pendingPostId, rejectionReasonId, notes string) (*infraction.PendingPostAuditLog, error) {
 
 	// Get user, to perform permission checks
-	usr, err := h.eva.GetUser(ctx, moderatorId)
+	usr, err := h.eva.GetAccount(ctx, moderatorId)
 
 	if err != nil {
 		zap.S().Errorf("failed to get user: %s", err)
@@ -44,7 +44,7 @@ func (h ModeratePendingPostHandler) Handle(ctx context.Context, moderatorId, pen
 		return nil, ErrFailedModeratePendingPost
 	}
 
-	postContributor, err := h.eva.GetUser(ctx, postContributorId)
+	postContributor, err := h.eva.GetAccount(ctx, postContributorId)
 
 	if err != nil {
 		zap.S().Errorf("failed to get user: %s", err)
@@ -52,7 +52,7 @@ func (h ModeratePendingPostHandler) Handle(ctx context.Context, moderatorId, pen
 	}
 
 	var rejectionReason *infraction.PendingPostRejectionReason
-	var userInfractionHistory []*infraction.UserInfractionHistory
+	var userInfractionHistory []*infraction.AccountInfractionHistory
 
 	// if not approved, get rejection reason
 	if rejectionReasonId != "" {
@@ -64,7 +64,7 @@ func (h ModeratePendingPostHandler) Handle(ctx context.Context, moderatorId, pen
 		}
 
 		// also grab the infraction history, since we will need it to calculate the time for the next infraction
-		userInfractionHistory, err = h.ir.GetUserInfractionHistory(ctx, postContributorId)
+		userInfractionHistory, err = h.ir.GetAccountInfractionHistory(ctx, postContributorId)
 
 		if err != nil {
 			zap.S().Errorf("failed to get user infraction history: %s", err)
@@ -96,7 +96,7 @@ func (h ModeratePendingPostHandler) Handle(ctx context.Context, moderatorId, pen
 		}
 
 		// Lock user account
-		if err := h.eva.LockUser(ctx, infractionAuditLog.Contributor().ID(), infractionAuditLog.UserInfraction().UserLockLength()); err != nil {
+		if err := h.eva.LockAccount(ctx, infractionAuditLog.Contributor().ID(), infractionAuditLog.UserInfraction().UserLockLength()); err != nil {
 			zap.S().Errorf("failed to lock account: %s", err)
 			return nil, ErrFailedModeratePendingPost
 		}

@@ -5,7 +5,6 @@ import (
 	"log"
 	"os"
 
-	"github.com/spf13/viper"
 	"overdoll/applications/parley/src/adapters"
 	"overdoll/applications/parley/src/app"
 	"overdoll/applications/parley/src/app/command"
@@ -49,7 +48,7 @@ func NewComponentTestApplication(ctx context.Context) (app.Application, func()) 
 
 func createApplication(ctx context.Context, eva command.EvaService, sting command.StingService) app.Application {
 
-	session, err := bootstrap.InitializeDatabaseSession(viper.GetString("db.keyspace"))
+	session, err := bootstrap.InitializeDatabaseSession()
 
 	if err != nil {
 		log.Fatalf("database session failed with errors: %s", err)
@@ -63,10 +62,13 @@ func createApplication(ctx context.Context, eva command.EvaService, sting comman
 			GetNextModerator:   command.NewGetNextModeratorHandler(moderatorRepo),
 			ModeratePost:       command.NewModeratePendingPostHandler(infractionRepo, eva, sting),
 			RevertModeratePost: command.NewRevertModeratePendingPostHandler(infractionRepo, eva, sting),
+			ToggleModerator:    command.NewToggleModeratorHandler(moderatorRepo, eva),
 		},
 		Queries: app.Queries{
 			PendingPostRejectionReasons:     query.NewPendingPostsRejectionReasonsHandler(infractionRepo),
 			PendingPostsAuditLogByModerator: query.NewPendingPostsAuditLogByModeratorHandler(infractionRepo, eva),
+			AccountInfractionHistory:        query.NewAccountInfractionHistoryHandler(infractionRepo),
+			ModeratorInQueue:                query.NewModeratorInQueueHandler(moderatorRepo),
 		},
 	}
 }

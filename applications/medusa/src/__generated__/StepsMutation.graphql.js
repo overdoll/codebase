@@ -15,7 +15,7 @@ export type PostInput = {|
   mediaRequests?: ?$ReadOnlyArray<string>,
   characterRequests?: ?$ReadOnlyArray<CharacterRequest>,
   artistId?: ?string,
-  artistUsername: string,
+  artistUsername?: ?string,
 |};
 export type CharacterRequest = {|
   name: string,

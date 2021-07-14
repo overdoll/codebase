@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash f33061051379fc907ac5f36512f5dcaf
+ * @relayHash 7e5c372c223c18cbc199e631a798e33e
  */
 
 /* eslint-disable */
@@ -12,9 +12,8 @@ import type { JoinFragment$ref } from "./JoinFragment.graphql";
 export type RootQueryVariables = {||};
 export type RootQueryResponse = {|
   +authentication: ?{|
-    +user: ?{|
-      +username: string,
-      +roles: $ReadOnlyArray<string>,
+    +account: ?{|
+      +username: string
     |},
     +$fragmentRefs: JoinFragment$ref,
   |}
@@ -28,7 +27,7 @@ export type RootQuery = {|
 /*
 query RootQuery {
   authentication {
-    user {
+    account {
       username
       roles
     }
@@ -49,9 +48,9 @@ const node: ConcreteRequest = (function(){
 var v0 = {
   "alias": null,
   "args": null,
-  "concreteType": "User",
+  "concreteType": "Account",
   "kind": "LinkedField",
-  "name": "user",
+  "name": "account",
   "plural": false,
   "selections": [
     {
@@ -152,7 +151,7 @@ return {
     ]
   },
   "params": {
-    "id": "f33061051379fc907ac5f36512f5dcaf",
+    "id": "7e5c372c223c18cbc199e631a798e33e",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",
@@ -161,5 +160,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = 'c1c93a83a2d5384537168d8ca133f594';
+(node: any).hash = '69df0ceba0bd8482b32143d92edae3d6';
 module.exports = node;

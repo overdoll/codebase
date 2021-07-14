@@ -3,9 +3,9 @@ package query
 import (
 	"context"
 
-	"overdoll/libraries/user"
+	"overdoll/libraries/account"
 )
 
 type EvaService interface {
-	GetUser(context.Context, string) (*user.User, error)
+	GetAccount(context.Context, string) (*account.Account, error)
 }

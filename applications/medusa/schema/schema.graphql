@@ -1,17 +1,127 @@
+type Account {
+  id: String!
+  username: String!
+  roles: [AccountRoleEnum!]!
+  avatar: String!
+  verified: Boolean!
+  lock: AccountLock
+  testField: String!
+}
+
+type AccountEmail {
+  email: String!
+  status: AccountEmailStatusEnum!
+}
+
+enum AccountEmailStatusEnum {
+  CONFIRMED
+  UNCONFIRMED
+  PRIMARY
+}
+
+type AccountGeneralSettings {
+  """Emails for account (multiple emails per account)"""
+  emails: [AccountEmail!]!
+
+  """Usernames for account (history)"""
+  usernames: [AccountUsername!]!
+}
+
+type AccountInfractionHistory {
+  id: String!
+  reason: String!
+}
+
+type AccountLock {
+  expires: Int!
+  reason: String!
+}
+
+type AccountModeratorSettings {
+  inQueue: Boolean!
+}
+
+type AccountMultiFactorRecoveryCode {
+  code: String!
+}
+
+type AccountMultiFactorSecuritySettings {
+  """
+  Have recovery codes been generated? Required in order to configure TOTP
+  """
+  recoveryCodesGenerated: Boolean!
+
+  """Is multi factor enabled - can be toggled off if they want to"""
+  multiFactorEnabled: Boolean!
+
+  """Privileged users cannot disable MFA (moderators, staff)"""
+  canDisableMultiFactor: Boolean!
+
+  """
+  Has TOTP been configured? Recovery codes must be generated before configuring
+  """
+  multiFactorTotpConfigured: Boolean!
+}
+
+type AccountMultiFactorTotp {
+  secret: String!
+
+  """
+  Always html image compatible. Just set SRC tag to this and it will work!
+  """
+  imageSrc: String!
+}
+
+enum AccountRoleEnum {
+  Moderator
+  Staff
+}
+
+type AccountSecuritySettings {
+  """Sessions linked to this account"""
+  sessions: [AccountSession!]!
+
+  """Multi factor account settings"""
+  multiFactor: AccountMultiFactorSecuritySettings!
+}
+
+type AccountSession {
+  userAgent: String!
+  ip: String!
+  created: String!
+  id: String!
+  current: Boolean!
+}
+
+type AccountSettings {
+  accountId: String!
+
+  """General account settings for the user"""
+  general: AccountGeneralSettings!
+
+  """Security settings for the user"""
+  security: AccountSecuritySettings!
+  moderator: AccountModeratorSettings
+}
+
+type AccountUsername {
+  username: String!
+}
+
 type Artist {
   id: String!
   avatar: String!
   username: String!
 }
 
-type AuditUser {
+type AuditAccount {
   id: String!
   username: String!
 }
 
 type Authentication {
   cookie: Cookie
-  user: User
+  account: Account
 }
 
 input AuthenticationInput {
@@ -61,6 +171,7 @@ type Cookie {
   session: String!
   email: String!
   invalid: Boolean!
+  multiFactor: [MultiFactorTypeEnum!]
 }
 
 type Media {
@@ -80,23 +191,83 @@ input ModeratePostInput {
   notes: String!
 }
 
+enum MultiFactorTypeEnum {
+  TOTP
+}
+
 type Mutation {
-  """Initiates an authentication flow for the specified user"""
-  authenticate(data: AuthenticationInput): Boolean!
+  """Initiates an authentication flow for the specified account"""
+  authenticate(data: AuthenticationInput): Response!
+
+  """Re-send the authentication email"""
+  authenticateEmail: Response!
 
   """
-  Registration for the user. Will only work once authenticate is initiated
+  Registration for the account. Will only work once authenticate is initiated
   and the cookie is still valid when redeemed (5 minutes)
   """
-  register(data: RegisterInput): Boolean!
-  logout: Boolean!
-  authEmail: Boolean!
+  register(data: RegisterInput): Response!
+
+  """
+  Authenticate with a TOTP code - should be used after a cookie is redeemed
+  """
+  authenticateTOTP(code: String!): Response!
+
+  """
+  Authenticate with a recovery code - should be used after a cookie is redeemed but user does not remember their credentials
+  """
+  authenticateRecoveryCode(code: String!): Response!
+
+  """
+  Unlock Account - account may be locked for any reason. Use this endpoint to
+  unlock the currently-logged in account (time must be after the expiration of the unlock)
+  """
+  unlockAccount: Response!
+
+  """Logout the current account"""
+  logout: Response!
+
+  """Add an email to the account, will need to be confirmed"""
+  addAccountEmail(email: String!): Response!
+
+  """Modify the current account's username"""
+  modifyAccountUsername(username: String!): Response!
+
+  """Revoke a session for this user"""
+  revokeAccountSession(id: String!): Response!
+
+  """Make account email primary"""
+  makeAccountEmailPrimary(email: String!): Response!
+
+  """
+  Generates a new set of recovery codes. The previous set (whatever it was) will be deleted!
+  """
+  generateAccountMultiFactorRecoveryCodes: [AccountMultiFactorRecoveryCode!]!
+
+  """
+  Generate a TOTP key for the current user. Recovery codes must be generated first.
+  """
+  generateAccountMultiFactorTotp: AccountMultiFactorTotp!
+
+  """
+  Enroll into TOTP. Code must be passed from previously-generated TOTP to validate that they have set it up
+  """
+  enrollAccountMultiFactorTotp(code: String!): Response!
+
+  """
+  Toggle Multi-Factor for the user (enable or disable)
+  
+  Privileged users cannot disable
+  
+  If it's disabled, all MFA settings will be removed and it will need to be set up again next time
+  """
+  toggleAccountMultiFactor: Response!
 
   """Post a new post"""
   post(data: PostInput): PostResponse!
 
   """Update post"""
-  updatePost(id: String!, data: PostInput): PostUpdateResponse!
+  updatePost(id: String!, data: PostInput): Response!
 
   """
   Moderate a specific pending post
@@ -112,6 +283,15 @@ type Mutation {
   Will delete an infraction if there was one, but the rest of the audit log will generally stay intact
   """
   revertPendingPostAuditLog(data: RevertPostInput!): ModeratePost!
+
+  """
+  Toggle moderator status
+  
+  Will remove or add the moderator from the queue
+  
+  Current status can be queried from AccountModeratorSettings
+  """
+  toggleModeratorStatus: Response!
 }
 
 type PageInfo {
@@ -123,7 +303,7 @@ type PageInfo {
 
 type PendingPost {
   id: String!
-  state: String!
+  state: PendingPostStateEnum!
   moderator: String!
   contributor: Contributor!
   content: [String!]!
@@ -138,8 +318,8 @@ type PendingPost {
 type PendingPostAuditLog {
   id: String!
   postId: String!
-  contributor: AuditUser!
-  moderator: AuditUser!
+  contributor: AuditAccount!
+  moderator: AuditAccount!
   infractionId: String
   status: String!
   reason: String!
@@ -186,6 +366,13 @@ type PendingPostRejectionReason {
   infraction: Boolean!
 }
 
+enum PendingPostStateEnum {
+  Review
+  Published
+  Discarded
+  Rejected
+}
+
 input PostInput {
   content: [String!]!
   categories: [String!]!
@@ -193,7 +380,7 @@ input PostInput {
   mediaRequests: [String!]
   characterRequests: [CharacterRequest!]
   artistId: String
-  artistUsername: String!
+  artistUsername: String
 }
 
 type PostResponse {
@@ -202,21 +389,26 @@ type PostResponse {
   validation: Validation
 }
 
-type PostUpdateResponse {
-  validation: Validation
-}
-
 type Query {
   """
-  A query that will allow you to get information about the currently logged-in user
+  A query that will allow you to get information about the currently logged-in account
   or the current state of authentication (cookie)
   
-  Good for persisting state on refresh and authorizing users
+  Good for persisting state on refresh and authorizing accounts
   """
   authentication: Authentication
 
   """Query for redeeming the cookie - when user receives the cookie from"""
   redeemCookie(cookie: String!): Cookie!
+
+  """Get current settings for the account"""
+  accountSettings: AccountSettings!
+
+  """Confirm account email, so it may be used"""
+  confirmAccountEmail(id: String!): Response!
+
+  """Get MFA recovery codes"""
+  accountMultiFactorRecoveryCodes: [AccountMultiFactorRecoveryCode!]!
 
   """
   Get Pending Posts, specific to a moderator
@@ -246,10 +438,18 @@ type Query {
   Used as the input for rejecting a pending post
   """
   rejectionReasons: [PendingPostRejectionReason!]!
+
+  """Infraction history for the currently logged-in account"""
+  accountInfractionHistory: [AccountInfractionHistory!]
 }
 
 input RegisterInput {
   username: String!
+}
+
+type Response {
+  ok: Boolean!
+  validation: Validation
 }
 
 input RevertPostInput {
@@ -258,19 +458,6 @@ input RevertPostInput {
 
 input SearchInput {
   search: String!
-}
-
-type User {
-  id: String!
-  username: String!
-  roles: [String!]!
-  pendingPosts: [PendingPost!]
-  infractionHistory: [UsersInfractionHistory!]
-}
-
-type UsersInfractionHistory {
-  id: String!
-  reason: String!
 }
 
 type Validation {

@@ -11,14 +11,30 @@ type Application struct {
 }
 
 type Commands struct {
-	RedeemCookie   command.RedeemCookieHandler
-	Authenticate   command.AuthenticateHandler
-	Register       command.RegisterHandler
-	Authentication command.AuthenticationHandler
-	LockUser       command.LockUserHandler
-	CreateUser     command.CreateUserHandler
+	RedeemCookie                   command.RedeemCookieHandler
+	ConsumeCookie                  command.ConsumeCookieHandler
+	Authenticate                   command.AuthenticateHandler
+	Register                       command.RegisterHandler
+	LockAccount                    command.LockAccountHandler
+	UnlockAccount                  command.UnlockAccountHandler
+	CreateAccount                  command.CreateAccountHandler
+	AddAccountEmail                command.AddAccountEmailHandler
+	ModifyAccountUsername          command.ModifyAccountUsernameHandler
+	ConfirmAccountEmail            command.ConfirmAccountEmailHandler
+	RevokeAccountSession           command.RevokeAccountSessionHandler
+	MakeAccountEmailPrimary        command.MakeAccountEmailPrimaryHandler
+	GenerateAccountRecoveryCodes   command.GenerateAccountRecoveryCodesHandler
+	GenerateAccountMultiFactorTOTP command.GenerateAccountMultiFactorTOTPHandler
+	EnrollAccountMultiFactorTOTP   command.EnrollAccountMultiFactorTOTPHandler
+	ToggleAccountMultiFactor       command.ToggleAccountMultiFactorHandler
+	FinishAuthenticateMultiFactor  command.FinishAuthenticateMultiFactorHandler
 }
 
 type Queries struct {
-	GetUser query.GetUserHandler
+	GetAccount                      query.GetAccountHandler
+	GetAccountEmails                query.GetAccountEmailsHandler
+	GetAccountUsernames             query.GetAccountUsernamesHandler
+	GetAccountSessions              query.GetAccountSessionsHandler
+	GetAccountRecoveryCodes         query.GetAccountRecoveryCodesHandler
+	IsAccountMultiFactorTOTPEnabled query.IsAccountTOTPMultiFactorEnabledHandler
 }

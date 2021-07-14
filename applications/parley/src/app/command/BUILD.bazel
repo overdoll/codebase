@@ -7,13 +7,14 @@ go_library(
         "moderate_pending_post.go",
         "revert_moderate_pending_post_audit_log.go",
         "services.go",
+        "toggle_moderator.go",
     ],
     importpath = "overdoll/applications/parley/src/app/command",
     visibility = ["//visibility:public"],
     deps = [
         "//applications/parley/src/domain/infraction",
         "//applications/parley/src/domain/moderator",
-        "//libraries/user",
+        "//libraries/account",
         "@org_uber_go_zap//:zap",
     ],
 )

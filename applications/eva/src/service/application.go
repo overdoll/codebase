@@ -4,7 +4,6 @@ import (
 	"context"
 	"log"
 
-	"github.com/spf13/viper"
 	"overdoll/applications/eva/src/adapters"
 	"overdoll/applications/eva/src/app"
 	"overdoll/applications/eva/src/app/command"
@@ -27,26 +26,57 @@ func createApplication(ctx context.Context) app.Application {
 		log.Fatalf("bootstrap failed with errors: %s", err)
 	}
 
-	session, err := bootstrap.InitializeDatabaseSession(viper.GetString("db.keyspace"))
+	session, err := bootstrap.InitializeDatabaseSession()
 
 	if err != nil {
 		log.Fatalf("database session failed with errors: %s", err)
 	}
 
-	cookieRepo := adapters.NewCookieCassandraRepository(session)
-	userRepo := adapters.NewUserCassandraRepository(session)
+	redis, err := bootstrap.InitializeRedisSession()
+
+	if err != nil {
+		log.Fatalf("redis session failed with errors: %s", err)
+	}
+
+	// need to use a custom DB redis session because sessions are stored in db 0 in express-session
+	redis2, err := bootstrap.InitializeRedisSessionWithCustomDB(0)
+
+	if err != nil {
+		log.Fatalf("redis session failed with errors: %s", err)
+	}
+
+	cookieRepo := adapters.NewCookieRedisRepository(redis)
+	sessionRepo := adapters.NewSessionRepository(redis2)
+	accountRepo := adapters.NewAccountCassandraRedisRepository(session, redis)
+	mfaRepo := adapters.NewMultiFactorCassandraRepository(session)
 
 	return app.Application{
 		Commands: app.Commands{
-			RedeemCookie:   command.NewRedeemCookieHandler(cookieRepo, userRepo),
-			Register:       command.NewRegisterHandler(cookieRepo, userRepo),
-			Authentication: command.NewAuthenticationHandler(cookieRepo, userRepo),
-			Authenticate:   command.NewAuthenticateHandler(cookieRepo),
-			LockUser:       command.NewLockUserHandler(userRepo),
-			CreateUser:     command.NewCreateUserHandler(userRepo),
+			RedeemCookie:                   command.NewRedeemCookieHandler(cookieRepo, accountRepo),
+			ConsumeCookie:                  command.NewConsumeCookieHandler(cookieRepo, accountRepo, mfaRepo),
+			Register:                       command.NewRegisterHandler(cookieRepo, accountRepo),
+			Authenticate:                   command.NewAuthenticateHandler(cookieRepo),
+			LockAccount:                    command.NewLockUserHandler(accountRepo),
+			CreateAccount:                  command.NewCreateUserHandler(accountRepo),
+			UnlockAccount:                  command.NewUnlockUserHandler(accountRepo),
+			AddAccountEmail:                command.NewAddAccountEmailHandler(accountRepo),
+			ConfirmAccountEmail:            command.NewConfirmAccountEmailHandler(accountRepo),
+			ModifyAccountUsername:          command.NewModifyAccountUsernameHandler(accountRepo),
+			RevokeAccountSession:           command.NewRevokeAccountSessionHandler(sessionRepo),
+			MakeAccountEmailPrimary:        command.NewMakeAccountEmailPrimaryHandler(accountRepo),
+			GenerateAccountRecoveryCodes:   command.NewGenerateAccountRecoveryCodesHandler(mfaRepo),
+			GenerateAccountMultiFactorTOTP: command.NewGenerateAccountMultiFactorTOTP(mfaRepo, accountRepo),
+			EnrollAccountMultiFactorTOTP:   command.NewEnrollAccountMultiFactorTOTPHandler(mfaRepo, accountRepo),
+			ToggleAccountMultiFactor:       command.NewToggleAccountMultiFactorHandler(mfaRepo, accountRepo),
+			FinishAuthenticateMultiFactor:  command.NewFinishAuthenticateMultiFactorHandler(cookieRepo, accountRepo, mfaRepo),
 		},
 		Queries: app.Queries{
-			GetUser: query.NewGetUserHandler(userRepo),
+			GetAccount:                      query.NewGetAccountHandler(accountRepo),
+			GetAccountEmails:                query.NewGetAccountEmailsHandler(accountRepo),
+			GetAccountUsernames:             query.NewGetAccountUsernamesHandler(accountRepo),
+			GetAccountSessions:              query.NewGetAccountSessionsHandler(sessionRepo),
+			GetAccountRecoveryCodes:         query.NewGetAccountRecoveryCodesHandler(mfaRepo),
+			IsAccountMultiFactorTOTPEnabled: query.NewIsAccountTOTPMultiFactorEnabledHandler(mfaRepo),
 		},
 	}
 }

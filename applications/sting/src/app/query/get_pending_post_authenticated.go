@@ -18,7 +18,7 @@ func NewGetPendingPostAuthenticatedHandler(pr post.Repository, eva EvaService) G
 
 func (h GetPendingPostAuthenticatedHandler) Handle(ctx context.Context, postId, userId string) (*post.PendingPost, error) {
 
-	usr, err := h.eva.GetUser(ctx, userId)
+	usr, err := h.eva.GetAccount(ctx, userId)
 
 	if err != nil {
 		zap.S().Errorf("could not get user: %s", err)

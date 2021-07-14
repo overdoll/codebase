@@ -74,8 +74,8 @@ func TestCookie_read_encrypted(t *testing.T) {
 		&http.Cookie{
 			Name:     cookieName,
 			Value:    "MTYyMjQwMTcxN3xuWi1GbHk0OU5JSnVXZWtsQzFkenZZUHRUZ29rN3FxYnRuc01jalBMcDc0PXzvM0tdxfVSx8pNO-vYfKesuV3SxN8jea6FCtZaSJnIag==",
-			MaxAge:   100000000,
 			HttpOnly: true,
+			MaxAge:   -1,
 			Secure:   false,
 			Path:     "/",
 		},

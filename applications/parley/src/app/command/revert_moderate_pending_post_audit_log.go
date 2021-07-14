@@ -25,7 +25,7 @@ func NewRevertModeratePendingPostHandler(ir infraction.Repository, eva EvaServic
 func (h RevertModeratePendingPostHandler) Handle(ctx context.Context, moderatorId, auditLogId string) (*infraction.PendingPostAuditLog, error) {
 
 	// Get user, to perform permission checks
-	usr, err := h.eva.GetUser(ctx, moderatorId)
+	usr, err := h.eva.GetAccount(ctx, moderatorId)
 
 	if err != nil {
 		zap.S().Errorf("failed to get user: %s", err)
@@ -57,12 +57,12 @@ func (h RevertModeratePendingPostHandler) Handle(ctx context.Context, moderatorI
 		if infractionId != "" {
 
 			// unlock account - sending "0" unlocks the account
-			if err := h.eva.LockUser(ctx, log.Contributor().ID(), 0); err != nil {
+			if err := h.eva.LockAccount(ctx, log.Contributor().ID(), 0); err != nil {
 				return err
 			}
 
 			// delete infraction from user's history
-			if err := h.ir.DeleteUserInfractionHistory(ctx, log.Contributor().ID(), infractionId); err != nil {
+			if err := h.ir.DeleteAccountInfractionHistory(ctx, log.Contributor().ID(), infractionId); err != nil {
 				return err
 			}
 		}

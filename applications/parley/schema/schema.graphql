@@ -1,4 +1,4 @@
-type UsersInfractionHistory {
+type AccountInfractionHistory {
   id: String!
   reason: String!
 }
@@ -13,10 +13,20 @@ type PendingPostRejectionReason {
   infraction: Boolean!
 }
 
+type Response {
+  ok: Boolean!
+  validation: Validation
+}
+
 type Query {
   """
   Get rejection reasons. Only available to moderators + staff
   Used as the input for rejecting a pending post
   """
   rejectionReasons: [PendingPostRejectionReason!]!
+
+  """
+  Infraction history for the currently logged-in account
+  """
+  accountInfractionHistory: [AccountInfractionHistory!]
 }

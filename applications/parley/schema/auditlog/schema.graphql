@@ -9,8 +9,8 @@ type PendingPostAuditLogConnection {
 type PendingPostAuditLog {
   id: String!
   postId: String!
-  contributor: AuditUser!
-  moderator: AuditUser!
+  contributor: AuditAccount!
+  moderator: AuditAccount!
   infractionId: String
   status: String!
   reason: String!
@@ -19,7 +19,7 @@ type PendingPostAuditLog {
   canRevert: Boolean!
 }
 
-type AuditUser {
+type AuditAccount {
   id: String!
   username: String!
 }

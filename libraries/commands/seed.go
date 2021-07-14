@@ -13,7 +13,6 @@ import (
 
 	"github.com/gocql/gocql"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"overdoll/libraries/bootstrap"
 )
 
@@ -31,7 +30,7 @@ var Seed = &cobra.Command{
 			return
 		}
 
-		session, err := bootstrap.InitializeDatabaseSession(viper.GetString("db.keyspace"))
+		session, err := bootstrap.InitializeDatabaseSession()
 
 		if err != nil {
 			fmt.Println("database session failed with errors: ", err)

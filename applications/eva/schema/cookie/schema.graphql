@@ -1,3 +1,7 @@
+enum MultiFactorTypeEnum {
+  TOTP
+}
+
 type Cookie {
   sameSession: Boolean!
   registered: Boolean!
@@ -5,6 +9,7 @@ type Cookie {
   session: String!
   email: String!
   invalid: Boolean!
+  multiFactor: [MultiFactorTypeEnum!]
 }
 
 extend type Query {

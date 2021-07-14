@@ -21,7 +21,7 @@ func (r *QueryResolver) PendingPost(ctx context.Context, id string) (*types.Pend
 		return nil, passport.ErrNotAuthenticated
 	}
 
-	result, err := r.App.Queries.GetPendingPostAuthenticated.Handle(ctx, id, pass.UserID())
+	result, err := r.App.Queries.GetPendingPostAuthenticated.Handle(ctx, id, pass.AccountID())
 
 	if err != nil {
 		return nil, err
@@ -65,7 +65,7 @@ func (r *QueryResolver) PendingPosts(ctx context.Context, input relay.Connection
 		id = *filter.ID
 	}
 
-	results, err := r.App.Queries.GetPendingPosts.Handle(ctx, input.ToCursor(), moderatorId, contributorId, artistId, id, pass.UserID())
+	results, err := r.App.Queries.GetPendingPosts.Handle(ctx, input.ToCursor(), moderatorId, contributorId, artistId, id, pass.AccountID())
 
 	if err != nil {
 		return nil, err

@@ -18,7 +18,7 @@ describe('Join', () => {
     cy.findByText(email).should('exist')
   })
 
-  it('redirects to profile when redeeming an existing user token', () => {
+  it('redirects to profile when redeeming an existing user token, and ensures account is correctly set up', () => {
     cy.reload()
 
     cy.getCookie('otp-key').then(cookie => {
@@ -26,5 +26,9 @@ describe('Join', () => {
 
       cy.url().should('include', '/profile')
     })
+
+    cy.visit('/join')
+
+    cy.url().should('include', '/profile')
   })
 })

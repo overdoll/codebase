@@ -14,6 +14,5 @@ go_library(
         "@com_github_gocql_gocql//:gocql",
         "@com_github_scylladb_gocqlx_v2//migrate",
         "@com_github_spf13_cobra//:cobra",
-        "@com_github_spf13_viper//:viper",
     ],
 )

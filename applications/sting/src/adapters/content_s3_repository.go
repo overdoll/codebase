@@ -34,7 +34,7 @@ func NewContentS3Repository(session *session.Session) ContentS3Repository {
 }
 
 // ProcessContent - do filetype validation, move files to a user private bucket out of the uploading bucket
-func (r ContentS3Repository) ProcessContent(ctx context.Context, userId string, oldContent []string) ([]string, error) {
+func (r ContentS3Repository) ProcessContent(ctx context.Context, accountId string, oldContent []string) ([]string, error) {
 	downloader := s3manager.NewDownloader(r.session)
 	s3Client := s3.New(r.session)
 
@@ -85,7 +85,7 @@ func (r ContentS3Repository) ProcessContent(ctx context.Context, userId string, 
 		}
 
 		fileName := uuid.New().String() + "." + kind.Extension
-		fileKey := userId + "/" + fileName
+		fileKey := accountId + "/" + fileName
 
 		// move file to private bucket
 		_, err = s3Client.CopyObject(&s3.CopyObjectInput{Bucket: aws.String(ImageStaticBucket),
@@ -114,7 +114,7 @@ func (r ContentS3Repository) ProcessContent(ctx context.Context, userId string, 
 	return content, nil
 }
 
-func (r ContentS3Repository) MakeProcessedContentPublic(ctx context.Context, userId string, oldContent []string) ([]string, error) {
+func (r ContentS3Repository) MakeProcessedContentPublic(ctx context.Context, accountId string, oldContent []string) ([]string, error) {
 
 	s3Client := s3.New(r.session)
 	var content []string
@@ -125,7 +125,7 @@ func (r ContentS3Repository) MakeProcessedContentPublic(ctx context.Context, use
 
 		// move file to private bucket
 		_, err := s3Client.CopyObject(&s3.CopyObjectInput{Bucket: aws.String(PostContentBucket),
-			CopySource: aws.String(url.PathEscape(ImageStaticBucket + "/" + PendingPostPrefix + userId + "/" + image)), Key: aws.String(newFileId)})
+			CopySource: aws.String(url.PathEscape(ImageStaticBucket + "/" + PendingPostPrefix + accountId + "/" + image)), Key: aws.String(newFileId)})
 
 		if err != nil {
 			fmt.Printf("unable to copy file %s", err)
@@ -163,13 +163,13 @@ func (r ContentS3Repository) DeletePublicContent(ctx context.Context, content []
 	return nil
 }
 
-func (r ContentS3Repository) DeleteProcessedContent(ctx context.Context, userId string, content []string) error {
+func (r ContentS3Repository) DeleteProcessedContent(ctx context.Context, accountId string, content []string) error {
 
 	s3Client := s3.New(r.session)
 
 	for _, image := range content {
 
-		id := aws.String(PendingPostPrefix + url.PathEscape(userId+"/"+image))
+		id := aws.String(PendingPostPrefix + url.PathEscape(accountId+"/"+image))
 
 		// move file to private bucket
 		_, err := s3Client.DeleteObject(&s3.DeleteObjectInput{Bucket: aws.String(ImageStaticBucket), Key: id})

@@ -11,18 +11,24 @@ go_library(
         "//applications/eva/src/app/command",
         "//applications/eva/src/app/query",
         "//libraries/bootstrap",
-        "@com_github_spf13_viper//:viper",
     ],
 )
 
 go_test(
     name = "service_test",
-    srcs = ["component_test.go"],
+    srcs = [
+        "account_component_test.go",
+        "account_settings_component_test.go",
+        "authenticate_component_test.go",
+        "component_test.go",
+    ],
     data = ["//applications/eva:config.toml"],
     embed = [":service"],
     deps = [
         "//applications/eva/proto:v1_go_proto",
+        "//applications/eva/src/adapters",
         "//applications/eva/src/domain/cookie",
+        "//applications/eva/src/domain/session",
         "//applications/eva/src/ports",
         "//applications/eva/src/ports/graphql/types",
         "//libraries/bootstrap",
@@ -30,7 +36,9 @@ go_test(
         "//libraries/config",
         "//libraries/passport",
         "//libraries/tests",
+        "@com_github_bmizerany_assert//:assert",
         "@com_github_bxcodec_faker_v3//:faker",
+        "@com_github_pquerna_otp//totp",
         "@com_github_shurcool_graphql//:graphql",
         "@com_github_stretchr_testify//assert",
         "@com_github_stretchr_testify//require",

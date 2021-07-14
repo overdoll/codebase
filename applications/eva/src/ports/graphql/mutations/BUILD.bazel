@@ -2,13 +2,19 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "mutations",
-    srcs = ["resolvers.go"],
+    srcs = [
+        "account_settings.go",
+        "authentication.go",
+        "multi_factor.go",
+        "resolvers.go",
+    ],
     importpath = "overdoll/applications/eva/src/ports/graphql/mutations",
     visibility = ["//visibility:public"],
     deps = [
         "//applications/eva/src/app",
         "//applications/eva/src/app/command",
         "//applications/eva/src/domain/cookie",
+        "//applications/eva/src/domain/multi_factor",
         "//applications/eva/src/ports/graphql/types",
         "//libraries/cookies",
         "//libraries/helpers",

@@ -73,7 +73,11 @@ applications = {
             "applications/parley/config.toml",
             "applications/parley/database",
         ],
-        "live_update": [],
+        "live_update": [
+            sync("applications/parley/.env", "/app/applications/parley/local-image.binary.runfiles/overdoll/applications/parley/.env"),
+            sync("applications/parley/config.toml", "/app/applications/parley/local-image.binary.runfiles/overdoll/applications/parley/config.toml"),
+            sync("applications/parley/database", "/app/applications/parley/local-image.binary.runfiles/overdoll/applications/parley/database"),
+        ],
     },
 }
 

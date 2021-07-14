@@ -21,7 +21,7 @@ type Props = {
 const RootQueryGQL = graphql`
   query RootQuery {
     authentication {
-      user {
+      account {
         username
         roles
       }
