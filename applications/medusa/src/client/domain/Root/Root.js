@@ -4,7 +4,7 @@
 import type { Node } from 'react'
 import { Suspense } from 'react'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
-import { graphql, usePreloadedQuery } from 'react-relay/hooks'
+import { graphql, usePreloadedQuery, useQueryLoader } from 'react-relay/hooks'
 import type { RootQuery } from '@//:artifacts/RootQuery.graphql'
 import { Helmet } from 'react-helmet-async'
 import NavigationBar from '../../components/NavigationBar/NavigationBar'
@@ -23,11 +23,11 @@ const RootQueryGQL = graphql`
     authenticatedAccount {
       username
       roles
-        avatar
-        lock {
-        }
-          reason
-          expires
+      avatar
+      lock {
+        reason
+        expires
+      }
     }
   }
 `
@@ -48,14 +48,19 @@ export default function Root (props: Props): Node {
     loadQuery(variables, { fetchPolicy: 'network-only' })
   }
 
-  const ability = defineAbility(rootQuery.authentication?.account)
+  const ability = defineAbility(rootQuery.authenticatedAccount)
 
   return (
     <>
-      <Helmet
-        title='overdoll'
-      />
-      <Suspense fallback={null}>{props.children}</Suspense>
+      <AbilityContext.Provider value={ability}>
+        <Helmet
+          title='overdoll'
+        />
+        <NavigationBar
+          account={rootQuery.authenticatedAccount} refreshUserQuery={refresh}
+        ><Suspense fallback={null}>{props.children}</Suspense>
+        </NavigationBar>
+      </AbilityContext.Provider>
     </>
   )
 }

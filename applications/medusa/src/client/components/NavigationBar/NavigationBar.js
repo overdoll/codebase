@@ -30,8 +30,9 @@ import NavMenu from './components/navmenu/NavMenu'
 import Items from './components/sidebar/items/Items'
 
 type Props = {
-  user: {
+  account: {
     username: string,
+    avatar: string,
   },
   children: Node
 }
