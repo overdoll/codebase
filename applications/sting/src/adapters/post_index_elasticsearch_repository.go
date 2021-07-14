@@ -315,7 +315,14 @@ func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Contex
 	var response *search.SearchResults
 
 	paginator.DefineForwardsPagination(func(first int, after string) (bool, error) {
-		response, err = runSearch(fmt.Sprintf(`{"range": {"posted_at": { "gt": %q } } },`, after), first)
+
+		cursor := ""
+
+		if after != "" {
+			cursor = fmt.Sprintf(`{"range": {"posted_at": { "gt": %q } } },`, after)
+		}
+
+		response, err = runSearch(cursor, first)
 
 		if err != nil {
 			return false, err
@@ -325,6 +332,7 @@ func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Contex
 	})
 
 	paginator.DefineBackwardsPagination(func(last int, before string) (bool, error) {
+
 		response, err = runSearch(fmt.Sprintf(`{"range": {"posted_at": { "lt": %q } } },`, before), last)
 
 		if err != nil {

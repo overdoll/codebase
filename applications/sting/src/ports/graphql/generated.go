@@ -140,7 +140,7 @@ type ComplexityRoot struct {
 		Characters         func(childComplexity int, data types.SearchInput) int
 		Media              func(childComplexity int, data types.SearchInput) int
 		PendingPost        func(childComplexity int, id string) int
-		PendingPosts       func(childComplexity int, after *string, before *string, first *int, last *int, filter types.PendingPostFilters) int
+		PendingPosts       func(childComplexity int, after *string, before *string, first *int, last *int, filter *types.PendingPostFilters) int
 		__resolve__service func(childComplexity int) int
 		__resolve_entities func(childComplexity int, representations []map[string]interface{}) int
 	}
@@ -171,7 +171,7 @@ type QueryResolver interface {
 	Categories(ctx context.Context, data types.SearchInput) ([]*types.Category, error)
 	Artists(ctx context.Context, data types.SearchInput) ([]*types.Artist, error)
 	Media(ctx context.Context, data types.SearchInput) ([]*types.Media, error)
-	PendingPosts(ctx context.Context, after *string, before *string, first *int, last *int, filter types.PendingPostFilters) (*types.PendingPostConnection, error)
+	PendingPosts(ctx context.Context, after *string, before *string, first *int, last *int, filter *types.PendingPostFilters) (*types.PendingPostConnection, error)
 	PendingPost(ctx context.Context, id string) (*types.PendingPost, error)
 }
 
@@ -590,7 +590,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.PendingPosts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["filter"].(types.PendingPostFilters)), true
+		return e.complexity.Query.PendingPosts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["filter"].(*types.PendingPostFilters)), true
 
 	case "Query._service":
 		if e.complexity.Query.__resolve__service == nil {
@@ -783,7 +783,7 @@ extend type Query {
 
   All filters will work, except moderatorId, which is staff-only (by default, will grab pending post for logged-in user)
   """
-  pendingPosts(after: String, before: String, first: Int, last: Int, filter: PendingPostFilters!): PendingPostConnection!
+  pendingPosts(after: String, before: String, first: Int, last: Int, filter: PendingPostFilters): PendingPostConnection!
 
   """
   Get a single pending post by ID
@@ -1110,10 +1110,10 @@ func (ec *executionContext) field_Query_pendingPosts_args(ctx context.Context, r
 		}
 	}
 	args["last"] = arg3
-	var arg4 types.PendingPostFilters
+	var arg4 *types.PendingPostFilters
 	if tmp, ok := rawArgs["filter"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("filter"))
-		arg4, err = ec.unmarshalNPendingPostFilters2overdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostFilters(ctx, tmp)
+		arg4, err = ec.unmarshalOPendingPostFilters2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostFilters(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2931,7 +2931,7 @@ func (ec *executionContext) _Query_pendingPosts(ctx context.Context, field graph
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().PendingPosts(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["filter"].(types.PendingPostFilters))
+		return ec.resolvers.Query().PendingPosts(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["filter"].(*types.PendingPostFilters))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5913,11 +5913,6 @@ func (ec *executionContext) marshalNPendingPostEdge2ᚖoverdollᚋapplications�
 	return ec._PendingPostEdge(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNPendingPostFilters2overdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostFilters(ctx context.Context, v interface{}) (types.PendingPostFilters, error) {
-	res, err := ec.unmarshalInputPendingPostFilters(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
 func (ec *executionContext) unmarshalNPendingPostStateEnum2overdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostStateEnum(ctx context.Context, v interface{}) (types.PendingPostStateEnum, error) {
 	var res types.PendingPostStateEnum
 	err := res.UnmarshalGQL(v)
@@ -6443,6 +6438,14 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 		return graphql.Null
 	}
 	return graphql.MarshalInt(*v)
+}
+
+func (ec *executionContext) unmarshalOPendingPostFilters2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostFilters(ctx context.Context, v interface{}) (*types.PendingPostFilters, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputPendingPostFilters(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalOPostInput2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPostInput(ctx context.Context, v interface{}) (*types.PostInput, error) {

@@ -32,7 +32,19 @@ func (p *Pagination) Run() (*PageInfo, error) {
 
 	var err error
 
-	if p.cursor.IsAfterCursor() {
+	if p.cursor.IsBeforeCursor() {
+		hasMoreAfter, err = p.forwards(p.cursor.Last(), p.cursor.Before())
+
+		if err != nil {
+			return nil, err
+		}
+
+		hasMoreBefore, err = p.backwards(p.cursor.Last(), p.cursor.Before())
+
+		if err != nil {
+			return nil, err
+		}
+	} else if p.cursor.IsAfterCursor() {
 		hasMoreBefore, err = p.backwards(p.cursor.First(), p.cursor.After())
 
 		if err != nil {
@@ -44,15 +56,8 @@ func (p *Pagination) Run() (*PageInfo, error) {
 		if err != nil {
 			return nil, err
 		}
-
-	} else if p.cursor.IsBeforeCursor() {
-		hasMoreAfter, err = p.forwards(p.cursor.Last(), p.cursor.Before())
-
-		if err != nil {
-			return nil, err
-		}
-
-		hasMoreBefore, err = p.backwards(p.cursor.Last(), p.cursor.Before())
+	} else {
+		hasMoreAfter, err = p.forwards(p.cursor.First(), p.cursor.After())
 
 		if err != nil {
 			return nil, err

@@ -33,7 +33,7 @@ func (r *QueryResolver) PendingPost(ctx context.Context, id string) (*types.Pend
 	}).Node, nil
 }
 
-func (r *QueryResolver) PendingPosts(ctx context.Context, after *string, before *string, first *int, last *int, filter types.PendingPostFilters) (*types.PendingPostConnection, error) {
+func (r *QueryResolver) PendingPosts(ctx context.Context, after *string, before *string, first *int, last *int, filter *types.PendingPostFilters) (*types.PendingPostConnection, error) {
 
 	pass := passport.FromContext(ctx)
 
@@ -42,27 +42,26 @@ func (r *QueryResolver) PendingPosts(ctx context.Context, after *string, before 
 	}
 
 	moderatorId := ""
-
-	if filter.ModeratorID != nil {
-		moderatorId = *filter.ModeratorID
-	}
-
 	contributorId := ""
-
-	if filter.ContributorID != nil {
-		contributorId = *filter.ContributorID
-	}
-
 	artistId := ""
-
-	if filter.ArtistID != nil {
-		artistId = *filter.ArtistID
-	}
-
 	id := ""
 
-	if filter.ID != nil {
-		id = *filter.ID
+	if filter != nil {
+		if filter.ModeratorID != nil {
+			moderatorId = *filter.ModeratorID
+		}
+
+		if filter.ContributorID != nil {
+			contributorId = *filter.ContributorID
+		}
+
+		if filter.ArtistID != nil {
+			artistId = *filter.ArtistID
+		}
+
+		if filter.ID != nil {
+			id = *filter.ID
+		}
 	}
 
 	var startCursor *string
