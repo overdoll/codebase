@@ -1,28 +1,28 @@
-package cookie_test
+package token_test
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"overdoll/applications/eva/src/domain/cookie"
+	"overdoll/applications/eva/src/domain/token"
 	"overdoll/libraries/uuid"
 )
 
 func TestCookie_Consume_not_redeemed(t *testing.T) {
 	t.Parallel()
 
-	ck, err := cookie.NewCookie(uuid.New().String(), "test-email@test.com", "")
+	ck, err := token.NewAuthenticationToken(uuid.New().String(), "test-email@test.com", "")
 
 	require.NoError(t, err)
 
-	assert.Equal(t, cookie.ErrCookieNotRedeemed, ck.MakeConsumed())
+	assert.Equal(t, token.ErrTokenNotRedeemed, ck.MakeConsumed())
 }
 
 func TestCookie_Consume(t *testing.T) {
 	t.Parallel()
 
-	ck, err := cookie.NewCookie(uuid.New().String(), "test-email@test.com", "")
+	ck, err := token.NewAuthenticationToken(uuid.New().String(), "test-email@test.com", "")
 
 	require.NoError(t, err)
 

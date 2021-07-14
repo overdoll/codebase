@@ -29,4 +29,3 @@ func NewEvaClient(ctx context.Context, address string) (eva.EvaClient, func()) {
 		_ = evaConnection.Close()
 	}
 }
-

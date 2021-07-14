@@ -9,7 +9,7 @@ const getUserFromEnvironment = environment =>
   environment
     .getStore()
     .getSource()
-    .get('client:root:authentication:account')
+    .get('client:root:authenticatedAccount')
 
 const getAbilityFromUser = (environment) => {
   return defineAbility(getUserFromEnvironment(environment))
@@ -75,7 +75,19 @@ const routes: Array<Route> = [
 
             return true
           }
-        ]
+        ],
+        prepare: params => {
+          const JoinQuery = require('@//:artifacts/JoinQuery.graphql')
+          return {
+            joinQuery: {
+              query: JoinQuery,
+              variables: {},
+              options: {
+                fetchPolicy: 'store-or-network'
+              }
+            }
+          }
+        }
       },
       {
         path: '/',
@@ -163,7 +175,7 @@ const routes: Array<Route> = [
           return {
             tokenQuery: {
               query: TokenQuery,
-              variables: { cookie: params.id },
+              variables: { token: params.id },
               options: {
                 fetchPolicy: 'store-or-network'
               }

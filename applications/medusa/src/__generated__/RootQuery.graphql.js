@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 27183ff29a9ce3a5061a27ce5f1c7a28
+ * @relayHash 3434ef0a82b3c2c17362082d1c1495a3
  */
 
 /* eslint-disable */
@@ -8,21 +8,12 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-import type { JoinFragment$ref } from "./JoinFragment.graphql";
 export type AccountRoleEnum = "Moderator" | "Staff" | "%future added value";
 export type RootQueryVariables = {||};
 export type RootQueryResponse = {|
-  +authentication: ?{|
-    +account: ?{|
-      +username: string,
-      +roles: $ReadOnlyArray<AccountRoleEnum>,
-      +avatar: string,
-      +lock: ?{|
-        +expires: number,
-        +reason: string,
-      |},
-    |},
-    +$fragmentRefs: JoinFragment$ref,
+  +authenticatedAccount: ?{|
+    +username: string,
+    +roles: $ReadOnlyArray<AccountRoleEnum>,
   |}
 |};
 export type RootQuery = {|
@@ -33,112 +24,48 @@ export type RootQuery = {|
 
 /*
 query RootQuery {
-  authentication {
-    account {
-      username
-      roles
-      avatar
-      lock {
-        expires
-        reason
-      }
-    }
-    ...JoinFragment
-  }
-}
-
-fragment JoinFragment on Authentication {
-  cookie {
-    redeemed
-    registered
-    email
+  authenticatedAccount {
+    username
+    roles
   }
 }
 */
 
 const node: ConcreteRequest = (function(){
-var v0 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "Account",
-  "kind": "LinkedField",
-  "name": "account",
-  "plural": false,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "username",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "roles",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "avatar",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "AccountLock",
-      "kind": "LinkedField",
-      "name": "lock",
-      "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "expires",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "reason",
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
-    }
-  ],
-  "storageKey": null
-};
+var v0 = [
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "Account",
+    "kind": "LinkedField",
+    "name": "authenticatedAccount",
+    "plural": false,
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "username",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "roles",
+        "storageKey": null
+      }
+    ],
+    "storageKey": null
+  }
+];
 return {
   "fragment": {
     "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
     "name": "RootQuery",
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "Authentication",
-        "kind": "LinkedField",
-        "name": "authentication",
-        "plural": false,
-        "selections": [
-          (v0/*: any*/),
-          {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "JoinFragment"
-          }
-        ],
-        "storageKey": null
-      }
-    ],
+    "selections": (v0/*: any*/),
     "type": "Query",
     "abstractKey": null
   },
@@ -147,55 +74,10 @@ return {
     "argumentDefinitions": [],
     "kind": "Operation",
     "name": "RootQuery",
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "Authentication",
-        "kind": "LinkedField",
-        "name": "authentication",
-        "plural": false,
-        "selections": [
-          (v0/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Cookie",
-            "kind": "LinkedField",
-            "name": "cookie",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "redeemed",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "registered",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "email",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      }
-    ]
+    "selections": (v0/*: any*/)
   },
   "params": {
-    "id": "27183ff29a9ce3a5061a27ce5f1c7a28",
+    "id": "3434ef0a82b3c2c17362082d1c1495a3",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",
@@ -204,5 +86,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = 'f4d2165c30c5753b5eeb2ed0d7288e4d';
+(node: any).hash = 'fa4aade3eb3645aa574120e47d24c973';
 module.exports = node;

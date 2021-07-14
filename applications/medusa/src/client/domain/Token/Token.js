@@ -10,16 +10,7 @@ import { useHistory } from '@//:modules/routing'
 import type { TokenQuery } from '@//:artifacts/TokenQuery.graphql'
 import { Icon } from '@//:modules/content'
 import UAParser from 'ua-parser-js'
-import {
-  Center,
-  Flex,
-  Heading,
-  Text,
-  Box,
-  AlertIcon,
-  AlertDescription,
-  Alert, useToast
-} from '@chakra-ui/react'
+import { Alert, AlertDescription, AlertIcon, Box, Center, Flex, Heading, Text } from '@chakra-ui/react'
 import { useFlash } from '@//:modules/flash'
 import { Helmet } from 'react-helmet-async'
 import SignBadgeCircle
@@ -32,12 +23,17 @@ type Props = {
 };
 
 const TokenQueryGQL = graphql`
-  query TokenQuery($cookie: String!) {
-    redeemCookie(cookie: $cookie) {
-      sameSession
-      registered
+  query TokenQuery($token: String!) {
+    redeemAuthenticationToken(token: $token) {
+      redeemed
+      email
       session
-      invalid
+      sameSession
+      accountStatus {
+        registered
+        authenticated
+        multiFactor
+      }
     }
   }
 `
@@ -55,7 +51,7 @@ export default function Token (props: Props): Node {
 
   const { flash } = useFlash()
 
-  if (data.redeemCookie.invalid) {
+  if (!data.redeemAuthenticationToken) {
     // Go back to Join page and send notification of invalid token
     flash('login.notify', t('invalid_token'))
     history.push('/join')
@@ -64,9 +60,9 @@ export default function Token (props: Props): Node {
 
   // Token was not redeemed in the same session, so we tell the user to check
   // the other session
-  if (!data.redeemCookie.sameSession) {
+  if (!data.redeemAuthenticationToken.sameSession) {
     const cookieText = UAParser(
-      JSON.parse(data.redeemCookie.session)['user-agent']
+      JSON.parse(data.redeemAuthenticationToken.session)['user-agent']
     )
 
     return (
@@ -105,16 +101,15 @@ export default function Token (props: Props): Node {
     )
   }
 
-  if (!!data.redeemCookie.registered === false) {
+  if (data.redeemAuthenticationToken.accountStatus && !data.redeemAuthenticationToken.accountStatus.registered) {
     return <Register />
   }
 
   // User is registered - redirect to profile
-  history.push('/')
-  notify({
-    status: 'success',
-    title: t('login_success'),
-    isClosable: true
-  })
+  if (data.redeemAuthenticationToken.accountStatus && data.redeemAuthenticationToken.accountStatus.authenticated) {
+    history.push('/profile')
+    return null
+  }
+
   return null
 }

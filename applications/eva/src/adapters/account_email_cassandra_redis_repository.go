@@ -234,3 +234,57 @@ func (r AccountRepository) GetAccountEmails(ctx context.Context, id string) ([]*
 
 	return emails, nil
 }
+
+// DeleteAccountEmail - delete email for account
+func (r AccountRepository) DeleteAccountEmail(ctx context.Context, accountId, email string) error {
+
+	emails, err := r.GetAccountEmails(ctx, accountId)
+
+	if err != nil {
+		return err
+	}
+
+	email = strings.ToLower(email)
+
+	foundEmail := false
+
+	for _, em := range emails {
+		if em.Email() == email {
+			foundEmail = true
+
+			if em.IsPrimary() {
+				return errors.New("email is primary")
+			}
+
+			break
+		}
+	}
+
+	if !foundEmail {
+		return errors.New("email does not belong to account")
+	}
+
+	batch := r.session.NewBatch(gocql.LoggedBatch)
+
+	// delete emails by account
+	q := qb.Delete("emails_by_account").
+		Where(qb.Eq("account_id"), qb.Eq("email"))
+
+	stmt, _ := q.ToCql()
+
+	batch.Query(stmt, accountId, email)
+
+	// delete account email
+	q = qb.Delete("account_emails").
+		Where(qb.Eq("email"))
+
+	stmt, _ = q.ToCql()
+
+	batch.Query(stmt, email)
+
+	if err := r.session.ExecuteBatch(batch); err != nil {
+		return fmt.Errorf("batch() failed: %s", err)
+	}
+
+	return nil
+}

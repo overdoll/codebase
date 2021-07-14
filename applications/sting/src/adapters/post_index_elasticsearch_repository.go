@@ -38,6 +38,7 @@ type PostPendingDocument struct {
 	CategoriesRequests []string             `json:"categories_requests"`
 	MediaRequests      []string             `json:"media_requests"`
 	PostedAt           string               `json:"posted_at"`
+	ReassignmentAt     string               `json:"reassignment_at"`
 }
 
 type ContributorDocument struct {
@@ -120,6 +121,9 @@ const PostIndex = `
 				"posted_at": {
                      "type": "date"
 				},
+				"reassignment_at": {
+                     "type": "date"
+				}
 			}
 	}
 }`
@@ -219,6 +223,9 @@ const PostPendingIndex = `
 				},
 				"posted_at": {
                      "type": "date"
+				},
+				"reassignment_at": {
+                     "type": "date"
 				}
 			}
 	}
@@ -281,44 +288,68 @@ func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Contex
 		return nil, err
 	}
 
-	cont := cursor.First()
+	paginator := paging.NewPagination(cursor)
 
-	rng := ""
+	runSearch := func(rng string, size int) (*search.SearchResults, error) {
 
-	if cursor.IsAfterCursor() {
-		rng = fmt.Sprintf(`{"range": {"posted_at": { "gt": %q } } },`, cursor.After())
+		postId := ""
+
+		if filter.ID() != "" {
+			postId = fmt.Sprintf(`{"multi_match": {"query" : %q,"fields" : ["id"],"operator" : "and"}},`, filter.ID())
+		}
+
+		data := struct {
+			Cursor      string
+			ModeratorId string
+			Size        int
+			PostId      string
+		}{
+			Size:        size,
+			ModeratorId: filter.ModeratorId(),
+			Cursor:      rng,
+			PostId:      postId,
+		}
+
+		var query bytes.Buffer
+
+		if err := t.Execute(&query, data); err != nil {
+			return nil, err
+		}
+
+		return r.store.Search(PendingPostIndexName, query.String())
 	}
 
-	if cursor.IsBeforeCursor() {
-		rng = fmt.Sprintf(`{"range": {"posted_at": { "lt": %q } } },`, cursor.Before())
-		cont = cursor.Last()
-	}
+	var response *search.SearchResults
 
-	postId := ""
+	paginator.DefineForwardsPagination(func(first int, after string) (bool, error) {
 
-	if filter.ID() != "" {
-		postId = fmt.Sprintf(`{"multi_match": {"query" : %q,"fields" : ["id"],"operator" : "and"}},`, filter.ID())
-	}
+		cursor := ""
 
-	data := struct {
-		Cursor      string
-		ModeratorId string
-		Size        int
-		PostId      string
-	}{
-		Size:        cont,
-		ModeratorId: filter.ModeratorId(),
-		Cursor:      rng,
-		PostId:      postId,
-	}
+		if after != "" {
+			cursor = fmt.Sprintf(`{"range": {"posted_at": { "gt": %q } } },`, after)
+		}
 
-	var query bytes.Buffer
+		response, err = runSearch(cursor, first)
 
-	if err := t.Execute(&query, data); err != nil {
-		return nil, err
-	}
+		if err != nil {
+			return false, err
+		}
 
-	response, err := r.store.Search(PendingPostIndexName, query.String())
+		return response.Total-len(response.Hits) > 0, nil
+	})
+
+	paginator.DefineBackwardsPagination(func(last int, before string) (bool, error) {
+
+		response, err = runSearch(fmt.Sprintf(`{"range": {"posted_at": { "lt": %q } } },`, before), last)
+
+		if err != nil {
+			return false, err
+		}
+
+		return response.Total-len(response.Hits) > 0, nil
+	})
+
+	pageInfo, err := paginator.Run()
 
 	if err != nil {
 		return nil, err
@@ -348,7 +379,8 @@ func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Contex
 			categories = append(categories, post.UnmarshalCategoryFromDatabase(cat.Id, cat.Title, cat.Thumbnail))
 		}
 
-		p, err := strconv.ParseInt(pst.PostedAt, 10, 64)
+		postedAt, err := strconv.ParseInt(pst.PostedAt, 10, 64)
+		reassignmentAt, err := strconv.ParseInt(pst.ReassignmentAt, 10, 64)
 
 		posts = append(posts, &post.PendingPostEdge{
 			Cursor: pst.PostedAt,
@@ -366,14 +398,15 @@ func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Contex
 				pst.CharactersRequests,
 				pst.CategoriesRequests,
 				pst.MediaRequests,
-				time.Unix(p, 0),
+				time.Unix(postedAt, 0),
+				time.Unix(reassignmentAt, 0),
 			),
 		})
 	}
 
 	return &post.PendingPostConnection{
 		Edges:    posts,
-		PageInfo: paging.NewPageInfo(response.Total-len(posts) > 0),
+		PageInfo: pageInfo,
 	}, nil
 }
 
@@ -434,6 +467,7 @@ func (r PostsIndexElasticSearchRepository) BulkIndexPendingPosts(ctx context.Con
 			CharactersRequests: characterRequests,
 			CategoriesRequests: categoryRequests,
 			MediaRequests:      mediaRequests,
+			ReassignmentAt:     strconv.FormatInt(pst.ReassignmentAt().Unix(), 10),
 		}
 
 		err = r.store.AddToBulkIndex(data.Id, data)

@@ -12,6 +12,7 @@ import (
 	"strconv"
 	"sync"
 	"sync/atomic"
+	"time"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
@@ -115,6 +116,8 @@ type ComplexityRoot struct {
 		ID                func(childComplexity int) int
 		MediaRequests     func(childComplexity int) int
 		Moderator         func(childComplexity int) int
+		PostedAt          func(childComplexity int) int
+		ReassignmentAt    func(childComplexity int) int
 		State             func(childComplexity int) int
 	}
 
@@ -140,7 +143,7 @@ type ComplexityRoot struct {
 		Characters         func(childComplexity int, data types.SearchInput) int
 		Media              func(childComplexity int, data types.SearchInput) int
 		PendingPost        func(childComplexity int, id string) int
-		PendingPosts       func(childComplexity int, input relay.ConnectionInput, filter types.PendingPostFilters) int
+		PendingPosts       func(childComplexity int, after *string, before *string, first *int, last *int, filter *types.PendingPostFilters) int
 		__resolve__service func(childComplexity int) int
 		__resolve_entities func(childComplexity int, representations []map[string]interface{}) int
 	}
@@ -171,7 +174,7 @@ type QueryResolver interface {
 	Categories(ctx context.Context, data types.SearchInput) ([]*types.Category, error)
 	Artists(ctx context.Context, data types.SearchInput) ([]*types.Artist, error)
 	Media(ctx context.Context, data types.SearchInput) ([]*types.Media, error)
-	PendingPosts(ctx context.Context, input relay.ConnectionInput, filter types.PendingPostFilters) (*types.PendingPostConnection, error)
+	PendingPosts(ctx context.Context, after *string, before *string, first *int, last *int, filter *types.PendingPostFilters) (*types.PendingPostConnection, error)
 	PendingPost(ctx context.Context, id string) (*types.PendingPost, error)
 }
 
@@ -464,6 +467,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.PendingPost.Moderator(childComplexity), true
 
+	case "PendingPost.postedAt":
+		if e.complexity.PendingPost.PostedAt == nil {
+			break
+		}
+
+		return e.complexity.PendingPost.PostedAt(childComplexity), true
+
+	case "PendingPost.reassignmentAt":
+		if e.complexity.PendingPost.ReassignmentAt == nil {
+			break
+		}
+
+		return e.complexity.PendingPost.ReassignmentAt(childComplexity), true
+
 	case "PendingPost.state":
 		if e.complexity.PendingPost.State == nil {
 			break
@@ -590,7 +607,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.PendingPosts(childComplexity, args["input"].(relay.ConnectionInput), args["filter"].(types.PendingPostFilters)), true
+		return e.complexity.Query.PendingPosts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["filter"].(*types.PendingPostFilters)), true
 
 	case "Query._service":
 		if e.complexity.Query.__resolve__service == nil {
@@ -722,6 +739,8 @@ input SearchInput {
   Rejected
 }
 
+scalar Time
+
 type PendingPost {
   id: String!
   state: PendingPostStateEnum!
@@ -734,6 +753,8 @@ type PendingPost {
   characterRequests: [CharacterRequestType!]
   artistId: String
   artistUsername: String!
+  postedAt: Time!
+  reassignmentAt: Time!
 }
 
 type Contributor {
@@ -779,11 +800,11 @@ extend type Query {
   """
   Get Pending Posts, specific to a moderator
 
-  Can paginate using ConnectionInput and filter with PendingPostFilters
+  Can paginate using Connection Inputs and filter with PendingPostFilters
 
   All filters will work, except moderatorId, which is staff-only (by default, will grab pending post for logged-in user)
   """
-  pendingPosts(input: ConnectionInput!, filter: PendingPostFilters!): PendingPostConnection!
+  pendingPosts(after: String, before: String, first: Int, last: Int, filter: PendingPostFilters): PendingPostConnection!
 
   """
   Get a single pending post by ID
@@ -1074,24 +1095,51 @@ func (ec *executionContext) field_Query_pendingPost_args(ctx context.Context, ra
 func (ec *executionContext) field_Query_pendingPosts_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 relay.ConnectionInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNConnectionInput2overdollᚋlibrariesᚋgraphqlᚋrelayᚐConnectionInput(ctx, tmp)
+	var arg0 *string
+	if tmp, ok := rawArgs["after"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["input"] = arg0
-	var arg1 types.PendingPostFilters
+	args["after"] = arg0
+	var arg1 *string
+	if tmp, ok := rawArgs["before"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
+		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["before"] = arg1
+	var arg2 *int
+	if tmp, ok := rawArgs["first"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
+		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["first"] = arg2
+	var arg3 *int
+	if tmp, ok := rawArgs["last"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
+		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["last"] = arg3
+	var arg4 *types.PendingPostFilters
 	if tmp, ok := rawArgs["filter"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("filter"))
-		arg1, err = ec.unmarshalNPendingPostFilters2overdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostFilters(ctx, tmp)
+		arg4, err = ec.unmarshalOPendingPostFilters2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostFilters(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["filter"] = arg1
+	args["filter"] = arg4
 	return args, nil
 }
 
@@ -2469,6 +2517,76 @@ func (ec *executionContext) _PendingPost_artistUsername(ctx context.Context, fie
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _PendingPost_postedAt(ctx context.Context, field graphql.CollectedField, obj *types.PendingPost) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PendingPost",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PostedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PendingPost_reassignmentAt(ctx context.Context, field graphql.CollectedField, obj *types.PendingPost) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PendingPost",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ReassignmentAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _PendingPostConnection_edges(ctx context.Context, field graphql.CollectedField, obj *types.PendingPostConnection) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -2904,7 +3022,7 @@ func (ec *executionContext) _Query_pendingPosts(ctx context.Context, field graph
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().PendingPosts(rctx, args["input"].(relay.ConnectionInput), args["filter"].(types.PendingPostFilters))
+		return ec.resolvers.Query().PendingPosts(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["filter"].(*types.PendingPostFilters))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4983,6 +5101,16 @@ func (ec *executionContext) _PendingPost(ctx context.Context, sel ast.SelectionS
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "postedAt":
+			out.Values[i] = ec._PendingPost_postedAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "reassignmentAt":
+			out.Values[i] = ec._PendingPost_reassignmentAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -5744,11 +5872,6 @@ func (ec *executionContext) marshalNCharacterRequestType2ᚖoverdollᚋapplicati
 	return ec._CharacterRequestType(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNConnectionInput2overdollᚋlibrariesᚋgraphqlᚋrelayᚐConnectionInput(ctx context.Context, v interface{}) (relay.ConnectionInput, error) {
-	res, err := ec.unmarshalInputConnectionInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
 func (ec *executionContext) marshalNContributor2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐContributor(ctx context.Context, sel ast.SelectionSet, v *types.Contributor) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -5891,11 +6014,6 @@ func (ec *executionContext) marshalNPendingPostEdge2ᚖoverdollᚋapplications�
 	return ec._PendingPostEdge(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNPendingPostFilters2overdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostFilters(ctx context.Context, v interface{}) (types.PendingPostFilters, error) {
-	res, err := ec.unmarshalInputPendingPostFilters(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
 func (ec *executionContext) unmarshalNPendingPostStateEnum2overdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostStateEnum(ctx context.Context, v interface{}) (types.PendingPostStateEnum, error) {
 	var res types.PendingPostStateEnum
 	err := res.UnmarshalGQL(v)
@@ -5982,6 +6100,21 @@ func (ec *executionContext) marshalNString2ᚕstringᚄ(ctx context.Context, sel
 	}
 
 	return ret
+}
+
+func (ec *executionContext) unmarshalNTime2timeᚐTime(ctx context.Context, v interface{}) (time.Time, error) {
+	res, err := graphql.UnmarshalTime(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNTime2timeᚐTime(ctx context.Context, sel ast.SelectionSet, v time.Time) graphql.Marshaler {
+	res := graphql.MarshalTime(v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
 }
 
 func (ec *executionContext) unmarshalN_Any2map(ctx context.Context, v interface{}) (map[string]interface{}, error) {
@@ -6421,6 +6554,14 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 		return graphql.Null
 	}
 	return graphql.MarshalInt(*v)
+}
+
+func (ec *executionContext) unmarshalOPendingPostFilters2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostFilters(ctx context.Context, v interface{}) (*types.PendingPostFilters, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputPendingPostFilters(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalOPostInput2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPostInput(ctx context.Context, v interface{}) (*types.PostInput, error) {

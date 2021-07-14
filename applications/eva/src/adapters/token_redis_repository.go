@@ -7,37 +7,37 @@ import (
 	"fmt"
 
 	"github.com/go-redis/redis/v8"
-	"overdoll/applications/eva/src/domain/cookie"
+	"overdoll/applications/eva/src/domain/token"
 	"overdoll/libraries/crypt"
 )
 
 const (
-	CookiePrefix = "authCookie:"
+	AuthenticationTokenPrefix = "authToken:"
 )
 
-type AuthenticationCookie struct {
+type AuthenticationToken struct {
 	Email    string `json:"email"`
 	Redeemed int    `json:"redeemed"`
 	Session  string `json:"session"`
 }
 
-type CookieRepository struct {
+type AuthenticationTokenRepository struct {
 	client *redis.Client
 }
 
-func NewCookieRedisRepository(client *redis.Client) CookieRepository {
-	return CookieRepository{client: client}
+func NewAuthenticationTokenRedisRepository(client *redis.Client) AuthenticationTokenRepository {
+	return AuthenticationTokenRepository{client: client}
 }
 
 // GetCookieById - Get authentication cookie by ID
-func (r CookieRepository) GetCookieById(ctx context.Context, id string) (*cookie.Cookie, error) {
+func (r AuthenticationTokenRepository) GetAuthenticationTokenById(ctx context.Context, id string) (*token.AuthenticationToken, error) {
 
-	val, err := r.client.Get(ctx, CookiePrefix+id).Result()
+	val, err := r.client.Get(ctx, AuthenticationTokenPrefix+id).Result()
 
 	if err != nil {
 
 		if err == redis.Nil {
-			return nil, cookie.ErrCookieNotFound
+			return nil, token.ErrTokenNotFound
 		}
 
 		return nil, fmt.Errorf("get failed: '%s", err)
@@ -49,13 +49,13 @@ func (r CookieRepository) GetCookieById(ctx context.Context, id string) (*cookie
 		return nil, err
 	}
 
-	var cookieItem AuthenticationCookie
+	var cookieItem AuthenticationToken
 
 	if err := json.Unmarshal([]byte(val), &cookieItem); err != nil {
 		return nil, err
 	}
 
-	return cookie.UnmarshalCookieFromDatabase(
+	return token.UnmarshalAuthenticationTokenFromDatabase(
 		id,
 		cookieItem.Email,
 		cookieItem.Redeemed == 1,
@@ -64,9 +64,9 @@ func (r CookieRepository) GetCookieById(ctx context.Context, id string) (*cookie
 }
 
 // DeleteCookieById - Delete cookie by ID
-func (r CookieRepository) DeleteCookieById(ctx context.Context, id string) error {
+func (r AuthenticationTokenRepository) DeleteAuthenticationTokenById(ctx context.Context, id string) error {
 
-	_, err := r.client.Del(ctx, CookiePrefix+id).Result()
+	_, err := r.client.Del(ctx, AuthenticationTokenPrefix+id).Result()
 
 	if err != nil {
 		return fmt.Errorf("del failed: '%s", err)
@@ -75,11 +75,11 @@ func (r CookieRepository) DeleteCookieById(ctx context.Context, id string) error
 	return nil
 }
 
-// CreateCookie - Create a Cookie
-func (r CookieRepository) CreateCookie(ctx context.Context, instance *cookie.Cookie) error {
+// CreateCookie - Create a AuthenticationToken
+func (r AuthenticationTokenRepository) CreateAuthenticationToken(ctx context.Context, instance *token.AuthenticationToken) error {
 
 	// run a query to create the authentication token
-	authCookie := &AuthenticationCookie{
+	authCookie := &AuthenticationToken{
 		Email:    instance.Email(),
 		Redeemed: 0,
 		Session:  instance.Session(),
@@ -97,7 +97,7 @@ func (r CookieRepository) CreateCookie(ctx context.Context, instance *cookie.Coo
 		return err
 	}
 
-	ok, err := r.client.SetNX(ctx, CookiePrefix+instance.Cookie(), newVal, instance.Expiration()).Result()
+	ok, err := r.client.SetNX(ctx, AuthenticationTokenPrefix+instance.Token(), newVal, instance.Expiration()).Result()
 
 	if err != nil {
 		return fmt.Errorf("set failed: '%s", err)
@@ -110,9 +110,9 @@ func (r CookieRepository) CreateCookie(ctx context.Context, instance *cookie.Coo
 	return nil
 }
 
-func (r CookieRepository) UpdateCookie(ctx context.Context, cookieId string, updateFn func(instance *cookie.Cookie) error) (*cookie.Cookie, error) {
+func (r AuthenticationTokenRepository) UpdateAuthenticationToken(ctx context.Context, cookieId string, updateFn func(instance *token.AuthenticationToken) error) (*token.AuthenticationToken, error) {
 
-	instance, err := r.GetCookieById(ctx, cookieId)
+	instance, err := r.GetAuthenticationTokenById(ctx, cookieId)
 
 	if err != nil {
 		return nil, err
@@ -131,7 +131,7 @@ func (r CookieRepository) UpdateCookie(ctx context.Context, cookieId string, upd
 	}
 
 	// get authentication cookie with this ID
-	authCookie := &AuthenticationCookie{
+	authCookie := &AuthenticationToken{
 		Redeemed: redeemed,
 		Email:    instance.Email(),
 		Session:  instance.Session(),
@@ -148,7 +148,7 @@ func (r CookieRepository) UpdateCookie(ctx context.Context, cookieId string, upd
 		return nil, err
 	}
 
-	_, err = r.client.Set(ctx, CookiePrefix+instance.Cookie(), newVal, instance.Expiration()).Result()
+	_, err = r.client.Set(ctx, AuthenticationTokenPrefix+instance.Token(), newVal, instance.Expiration()).Result()
 
 	if err != nil {
 		return nil, fmt.Errorf("set failed: '%s", err)

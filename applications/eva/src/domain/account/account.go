@@ -3,6 +3,7 @@ package account
 import (
 	"errors"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -80,7 +81,7 @@ func NewAccount(id, username, email string) (*Account, error) {
 	return &Account{
 		id:        id,
 		username:  username,
-		email:     email,
+		email:     strings.ToLower(email),
 		unclaimed: email == "",
 	}, nil
 }
@@ -129,6 +130,10 @@ func (u *Account) IsLocked() bool {
 
 func (u *Account) LockedReason() string {
 	return string(u.lockedReason)
+}
+
+func (u *Account) IsLockedDueToPostInfraction() bool {
+	return u.lockedReason == PostInfraction
 }
 
 func (u *Account) IsUnclaimed() bool {

@@ -106,35 +106,38 @@ type PendingPost struct {
 	categoriesRequests []CategoryRequest
 	mediaRequests      []MediaRequest
 	postedAt           time.Time
+	reassignmentAt     time.Time
 	generatedIds       []string
 }
 
-func NewPendingPost(id, moderatorId string, artist *Artist, contributor *account.Account, content []string, characters []*Character, categories []*Category, postedAt time.Time) (*PendingPost, error) {
+func NewPendingPost(id, moderatorId string, artist *Artist, contributor *account.Account, content []string, characters []*Character, categories []*Category) (*PendingPost, error) {
 	return &PendingPost{
-		id:          id,
-		moderatorId: moderatorId,
-		state:       Publishing,
-		artist:      artist,
-		contributor: contributor,
-		content:     content,
-		characters:  characters,
-		categories:  categories,
-		postedAt:    postedAt,
+		id:             id,
+		moderatorId:    moderatorId,
+		state:          Publishing,
+		artist:         artist,
+		contributor:    contributor,
+		content:        content,
+		characters:     characters,
+		categories:     categories,
+		postedAt:       time.Now(),
+		reassignmentAt: time.Now().Add(time.Hour * 24),
 	}, nil
 }
 
-func UnmarshalPendingPostFromDatabase(id, moderatorId, state string, artist *Artist, contributorId, contributorUsername, contributorAvatar string, content []string, characters []*Character, categories []*Category, charactersRequests map[string]string, categoryRequests, mediaRequests []string, postedAt time.Time) *PendingPost {
+func UnmarshalPendingPostFromDatabase(id, moderatorId, state string, artist *Artist, contributorId, contributorUsername, contributorAvatar string, content []string, characters []*Character, categories []*Category, charactersRequests map[string]string, categoryRequests, mediaRequests []string, postedAt, reassignmentAt time.Time) *PendingPost {
 
 	postPending := &PendingPost{
-		id:          id,
-		moderatorId: moderatorId,
-		state:       PostPendingState(state),
-		artist:      artist,
-		contributor: account.NewAccount(contributorId, contributorUsername, contributorAvatar, nil, false, false),
-		content:     content,
-		characters:  characters,
-		categories:  categories,
-		postedAt:    postedAt,
+		id:             id,
+		moderatorId:    moderatorId,
+		state:          PostPendingState(state),
+		artist:         artist,
+		contributor:    account.NewAccount(contributorId, contributorUsername, contributorAvatar, nil, false, false),
+		content:        content,
+		characters:     characters,
+		categories:     categories,
+		postedAt:       postedAt,
+		reassignmentAt: reassignmentAt,
 	}
 
 	postPending.RequestResources(charactersRequests, categoryRequests, mediaRequests)
@@ -206,6 +209,7 @@ func (p *PendingPost) UpdateModerator(moderatorId string) error {
 	}
 
 	p.moderatorId = moderatorId
+	p.reassignmentAt = time.Now().Add(time.Hour * 24)
 
 	return nil
 }
@@ -246,6 +250,10 @@ func (p *PendingPost) Characters() []*Character {
 
 func (p *PendingPost) PostedAt() time.Time {
 	return p.postedAt
+}
+
+func (p *PendingPost) ReassignmentAt() time.Time {
+	return p.reassignmentAt
 }
 
 func (p *PendingPost) MakePublish() error {

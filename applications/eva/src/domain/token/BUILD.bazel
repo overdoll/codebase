@@ -1,20 +1,20 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
-    name = "cookie",
+    name = "token",
     srcs = [
-        "cookie.go",
         "repository.go",
+        "token.go",
     ],
-    importpath = "overdoll/applications/eva/src/domain/cookie",
+    importpath = "overdoll/applications/eva/src/domain/token",
     visibility = ["//visibility:public"],
 )
 
 go_test(
-    name = "cookie_test",
-    srcs = ["cookie_test.go"],
+    name = "token_test",
+    srcs = ["token_test.go"],
     deps = [
-        ":cookie",
+        ":token",
         "//libraries/uuid",
         "@com_github_stretchr_testify//assert",
         "@com_github_stretchr_testify//require",

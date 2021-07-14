@@ -1,11 +1,11 @@
 /**
  * @flow
  */
-import type { Context, Node } from 'react'
-import { createContext, Suspense } from 'react'
+import type { Node } from 'react'
+import { Suspense } from 'react'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
-import { graphql, usePreloadedQuery, useQueryLoader } from 'react-relay/hooks'
-import type { RootQuery, RootQueryResponse } from '@//:artifacts/RootQuery.graphql'
+import { graphql, usePreloadedQuery } from 'react-relay/hooks'
+import type { RootQuery } from '@//:artifacts/RootQuery.graphql'
 import { Helmet } from 'react-helmet-async'
 import NavigationBar from '../../components/NavigationBar/NavigationBar'
 import defineAbility from '@//:modules/utilities/functions/defineAbility/defineAbility'
@@ -20,22 +20,17 @@ type Props = {
 
 const RootQueryGQL = graphql`
   query RootQuery {
-    authentication {
-      account {
-        username
-        roles
+    authenticatedAccount {
+      username
+      roles
         avatar
         lock {
-          expires
-          reason
         }
-      }
-      ...JoinFragment
+          reason
+          expires
     }
   }
 `
-
-const RootContext: Context<?RootQueryResponse> = createContext(null)
 
 export default function Root (props: Props): Node {
   const [queryRef, loadQuery] = useQueryLoader<RootQuery>(
@@ -56,18 +51,11 @@ export default function Root (props: Props): Node {
   const ability = defineAbility(rootQuery.authentication?.account)
 
   return (
-    <RootContext.Provider value={rootQuery}>
-      <AbilityContext.Provider value={ability}>
-        <Helmet
-          title='overdoll'
-        />
-        <NavigationBar
-          account={rootQuery.authentication.account} refreshUserQuery={refresh}
-        ><Suspense fallback={null}>{props.children}</Suspense>
-        </NavigationBar>
-      </AbilityContext.Provider>
-    </RootContext.Provider>
+    <>
+      <Helmet
+        title='overdoll'
+      />
+      <Suspense fallback={null}>{props.children}</Suspense>
+    </>
   )
 }
-
-export { RootContext }

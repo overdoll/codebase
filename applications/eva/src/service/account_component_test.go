@@ -16,10 +16,10 @@ func TestRedeemCookie_invalid(t *testing.T) {
 
 	client, _, _ := getHttpClient(t, nil)
 
-	redeemCookie := qRedeemCookie(t, client, "some-random-cookie")
+	redeemToken := qRedeemAuthenticationToken(t, client, "some-random-cookie")
 
 	// check to make sure its returned as invalid
-	assert.Equal(t, redeemCookie.RedeemCookie.Invalid, true)
+	assert.Nil(t, redeemToken.RedeemAuthenticationToken)
 }
 
 // Test empty authentication - we didnt pass any passport so it shouldn't do anything
@@ -28,11 +28,14 @@ func TestGetAccountAuthentication_empty(t *testing.T) {
 
 	client, _, _ := getHttpClient(t, nil)
 
-	query := qAuth(t, client)
+	query := qAuthenticatedAccount(t, client)
 
-	// at this point there is no user (since no passport is passed in) so expect that it doesnt send anything
-	require.Nil(t, query.Authentication.Cookie)
-	require.Nil(t, query.Authentication.Account)
+	// at this point there is no account (since no passport is passed in) so expect that it doesnt send anything
+	require.Nil(t, query.AuthenticatedAccount)
+
+	queryToken := qAuthenticationTokenStatus(t, client)
+
+	require.Nil(t, queryToken.AuthenticationTokenStatus)
 }
 
 // TestGetAccountAuthentication_user - we assign a passport to our Http client, which will add it to the request body
@@ -45,10 +48,13 @@ func TestGetAccountAuthentication_user(t *testing.T) {
 	// userID is from one of our seeders (which will exist during testing)
 	client, _, _ := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 
-	query := qAuth(t, client)
+	query := qAuthenticatedAccount(t, client)
 
-	require.Nil(t, query.Authentication.Cookie)
-	require.Equal(t, "poisonminion", query.Authentication.Account.Username)
+	require.Equal(t, "poisonminion", query.AuthenticatedAccount.Username)
+
+	queryToken := qAuthenticationTokenStatus(t, client)
+
+	require.Nil(t, queryToken.AuthenticationTokenStatus)
 }
 
 // TestAccount_get - test GRPC endpoint for grabbing a user

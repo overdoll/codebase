@@ -6,17 +6,17 @@ import (
 
 	"go.uber.org/zap"
 	"overdoll/applications/eva/src/domain/account"
-	"overdoll/applications/eva/src/domain/cookie"
 	"overdoll/applications/eva/src/domain/multi_factor"
+	"overdoll/applications/eva/src/domain/token"
 )
 
 type FinishAuthenticateMultiFactorHandler struct {
-	cr cookie.Repository
+	cr token.Repository
 	ur account.Repository
 	mr multi_factor.Repository
 }
 
-func NewFinishAuthenticateMultiFactorHandler(cr cookie.Repository, ur account.Repository, mr multi_factor.Repository) FinishAuthenticateMultiFactorHandler {
+func NewFinishAuthenticateMultiFactorHandler(cr token.Repository, ur account.Repository, mr multi_factor.Repository) FinishAuthenticateMultiFactorHandler {
 	return FinishAuthenticateMultiFactorHandler{cr: cr, ur: ur, mr: mr}
 }
 
@@ -31,14 +31,14 @@ const (
 
 func (h FinishAuthenticateMultiFactorHandler) Handle(ctx context.Context, recoveryCode bool, cookieId, code string) (*account.Account, string, error) {
 
-	ck, err := h.cr.GetCookieById(ctx, cookieId)
+	ck, err := h.cr.GetAuthenticationTokenById(ctx, cookieId)
 
 	if err != nil {
 		zap.S().Errorf("failed to get cookie: %s", err)
 		return nil, "", ErrFailedAuthenticateMultiFactor
 	}
 
-	// Cookie should have been redeemed at this point, if we are on this command
+	// AuthenticationToken should have been redeemed at this point, if we are on this command
 	if err := ck.MakeConsumed(); err != nil {
 		return nil, "", err
 	}
@@ -93,7 +93,7 @@ func (h FinishAuthenticateMultiFactorHandler) Handle(ctx context.Context, recove
 	}
 
 	// Delete cookie - has been consumed
-	if err := h.cr.DeleteCookieById(ctx, cookieId); err != nil {
+	if err := h.cr.DeleteAuthenticationTokenById(ctx, cookieId); err != nil {
 		zap.S().Errorf("failed to delete cookie: %s", err)
 		return nil, "", ErrFailedAuthenticateMultiFactor
 	}

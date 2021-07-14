@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash d660dc6770c44c1877ca917fb555406c
+ * @relayHash 310060b52c63cc09be5b62f5f3f9a25d
  */
 
 /* eslint-disable */
@@ -9,40 +9,30 @@
 
 import type { ConcreteRequest } from 'relay-runtime';
 export type MultiFactorTypeEnum = "TOTP" | "%future added value";
-export type TokenQueryVariables = {|
-  token: string
-|};
-export type TokenQueryResponse = {|
-  +redeemAuthenticationToken: ?{|
+export type JoinQueryVariables = {||};
+export type JoinQueryResponse = {|
+  +authenticationTokenStatus: ?{|
     +redeemed: boolean,
     +email: string,
-    +session: string,
-    +sameSession: boolean,
     +accountStatus: ?{|
       +registered: boolean,
-      +authenticated: boolean,
       +multiFactor: ?$ReadOnlyArray<MultiFactorTypeEnum>,
     |},
   |}
 |};
-export type TokenQuery = {|
-  variables: TokenQueryVariables,
-  response: TokenQueryResponse,
+export type JoinQuery = {|
+  variables: JoinQueryVariables,
+  response: JoinQueryResponse,
 |};
 
 
 /*
-query TokenQuery(
-  $token: String!
-) {
-  redeemAuthenticationToken(token: $token) {
+query JoinQuery {
+  authenticationTokenStatus {
     redeemed
     email
-    session
-    sameSession
     accountStatus {
       registered
-      authenticated
       multiFactor
     }
   }
@@ -52,24 +42,11 @@ query TokenQuery(
 const node: ConcreteRequest = (function(){
 var v0 = [
   {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "token"
-  }
-],
-v1 = [
-  {
     "alias": null,
-    "args": [
-      {
-        "kind": "Variable",
-        "name": "token",
-        "variableName": "token"
-      }
-    ],
+    "args": null,
     "concreteType": "AuthenticationToken",
     "kind": "LinkedField",
-    "name": "redeemAuthenticationToken",
+    "name": "authenticationTokenStatus",
     "plural": false,
     "selections": [
       {
@@ -84,20 +61,6 @@ v1 = [
         "args": null,
         "kind": "ScalarField",
         "name": "email",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "session",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "sameSession",
         "storageKey": null
       },
       {
@@ -119,13 +82,6 @@ v1 = [
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "authenticated",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
             "name": "multiFactor",
             "storageKey": null
           }
@@ -138,30 +94,30 @@ v1 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
-    "name": "TokenQuery",
-    "selections": (v1/*: any*/),
+    "name": "JoinQuery",
+    "selections": (v0/*: any*/),
     "type": "Query",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [],
     "kind": "Operation",
-    "name": "TokenQuery",
-    "selections": (v1/*: any*/)
+    "name": "JoinQuery",
+    "selections": (v0/*: any*/)
   },
   "params": {
-    "id": "d660dc6770c44c1877ca917fb555406c",
+    "id": "310060b52c63cc09be5b62f5f3f9a25d",
     "metadata": {},
-    "name": "TokenQuery",
+    "name": "JoinQuery",
     "operationKind": "query",
     "text": null
   }
 };
 })();
 // prettier-ignore
-(node: any).hash = 'ba49eb0156ee17633f68ef074eb575c0';
+(node: any).hash = 'bed1af4c0f9cea2f12acd5d8898dd433';
 module.exports = node;

@@ -1,4 +1,4 @@
-package command
+package query
 
 import (
 	"context"
@@ -7,41 +7,41 @@ import (
 	"github.com/gocql/gocql"
 	"go.uber.org/zap"
 	"overdoll/applications/eva/src/domain/account"
-	"overdoll/applications/eva/src/domain/cookie"
 	"overdoll/applications/eva/src/domain/multi_factor"
+	"overdoll/applications/eva/src/domain/token"
 )
 
-type ConsumeCookieHandler struct {
-	cr cookie.Repository
-	ur account.Repository
+type GetAuthenticationTokenStatusHandler struct {
+	tr token.Repository
+	ar account.Repository
 	mr multi_factor.Repository
 }
 
-func NewConsumeCookieHandler(cr cookie.Repository, ur account.Repository, mr multi_factor.Repository) ConsumeCookieHandler {
-	return ConsumeCookieHandler{cr: cr, ur: ur, mr: mr}
+func NewGetAuthenticationTokenStatusHandler(tr token.Repository, ar account.Repository, mr multi_factor.Repository) GetAuthenticationTokenStatusHandler {
+	return GetAuthenticationTokenStatusHandler{tr: tr, ar: ar, mr: mr}
 }
 
 var (
-	ErrFailedCookieConsume = errors.New("failed to consume cookie")
+	ErrFailedGetToken = errors.New("failed to get authentication token")
 )
 
-func (h ConsumeCookieHandler) Handle(ctx context.Context, cookieId string) (*account.Account, *cookie.Cookie, error) {
+func (h GetAuthenticationTokenStatusHandler) Handle(ctx context.Context, tokenId string) (*account.Account, *token.AuthenticationToken, error) {
 
 	// Redeem cookie
-	ck, err := h.cr.GetCookieById(ctx, cookieId)
+	ck, err := h.tr.GetAuthenticationTokenById(ctx, tokenId)
 
 	if err != nil {
 
-		if err == cookie.ErrCookieNotFound {
+		if err == token.ErrTokenNotFound {
 			return nil, nil, nil
 		}
 
 		zap.S().Errorf("failed to get cookie: %s", err == gocql.ErrNotFound)
-		return nil, nil, ErrFailedCookieConsume
+		return nil, nil, ErrFailedGetToken
 	}
 
 	// Redeemed - check if user exists with this email
-	usr, err := h.ur.GetAccountByEmail(ctx, ck.Email())
+	usr, err := h.ar.GetAccountByEmail(ctx, ck.Email())
 
 	// we weren't able to get our user, so that means that the cookie is not going to be deleted
 	// user has to register
@@ -51,11 +51,7 @@ func (h ConsumeCookieHandler) Handle(ctx context.Context, cookieId string) (*acc
 		}
 
 		zap.S().Errorf("failed to find user: %s", err)
-		return nil, nil, ErrFailedCookieConsume
-	}
-
-	if err := ck.MakeConsumed(); err != nil {
-		return nil, ck, err
+		return nil, nil, ErrFailedGetToken
 	}
 
 	// multi-factor auth is enabled, we get the auth types and figure out which ones the user has
@@ -73,15 +69,10 @@ func (h ConsumeCookieHandler) Handle(ctx context.Context, cookieId string) (*acc
 
 		if err != multi_factor.ErrTOTPNotConfigured {
 			zap.S().Errorf("failed to get totp: %s", err)
-			return nil, nil, ErrFailedCookieConsume
+			return nil, nil, ErrFailedGetToken
 		}
-	}
 
-	// Delete cookie - user is registered, so we don't need to wait for another call where the user will
-	// enter a username, since they already have an account and we can log them in
-	if err := h.cr.DeleteCookieById(ctx, cookieId); err != nil {
-		zap.S().Errorf("failed to delete cookie: %s", err)
-		return nil, nil, ErrFailedCookieConsume
+		return nil, ck, err
 	}
 
 	return usr, ck, err
