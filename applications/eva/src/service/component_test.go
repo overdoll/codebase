@@ -50,15 +50,15 @@ func mAuthenticate(t *testing.T, client *graphql.Client, email string) Authentic
 	return authenticate
 }
 
-type RedeemCookie struct {
-	RedeemCookie *types.Cookie `graphql:"redeemCookie(cookie: $cookie)"`
+type RedeemAuthenticationToken struct {
+	RedeemAuthenticationToken *types.AuthenticationToken `graphql:"redeemAuthenticationToken(token: $token)"`
 }
 
-func qRedeemCookie(t *testing.T, client *graphql.Client, cookie string) RedeemCookie {
-	var redeemCookie RedeemCookie
+func qRedeemAuthenticationToken(t *testing.T, client *graphql.Client, cookie string) RedeemAuthenticationToken {
+	var redeemCookie RedeemAuthenticationToken
 
 	err := client.Query(context.Background(), &redeemCookie, map[string]interface{}{
-		"cookie": graphql.String(cookie),
+		"token": graphql.String(cookie),
 	})
 
 	require.NoError(t, err)
@@ -67,20 +67,20 @@ func qRedeemCookie(t *testing.T, client *graphql.Client, cookie string) RedeemCo
 }
 
 // helper function - basically runs the "authentication" flow - run authenticate mutation, grab cookie from jar, and redeem the cookie
-func authenticateAndRedeemCookie(t *testing.T, email string) (RedeemCookie, *graphql.Client, *clients.ClientPassport) {
+func authenticateAndRedeemCookie(t *testing.T, email string) (RedeemAuthenticationToken, *graphql.Client, *clients.ClientPassport) {
 
 	client, httpUser, pass := getHttpClient(t, passport.FreshPassport())
 
 	authenticate := mAuthenticate(t, client, email)
 
-	otpCookie := getOTPCookieFromJar(t, httpUser.Jar)
+	otpCookie := getOTPTokenFromJar(t, httpUser.Jar)
 
 	assert.Equal(t, authenticate.Authenticate.Ok, true)
 
-	ck := qRedeemCookie(t, client, otpCookie.Value)
+	ck := qRedeemAuthenticationToken(t, client, otpCookie.Value)
 
 	// make sure cookie is valid
-	require.False(t, ck.RedeemCookie.Invalid)
+	require.NotNil(t, ck.RedeemAuthenticationToken)
 
 	return ck, client, pass
 }
@@ -99,12 +99,12 @@ func qAccountSettings(t *testing.T, client *graphql.Client) AccountSettings {
 	return accountSettings
 }
 
-type AuthQuery struct {
-	Authentication *types.Authentication
+type AuthenticatedAccount struct {
+	AuthenticatedAccount *types.Account
 }
 
-func qAuth(t *testing.T, client *graphql.Client) AuthQuery {
-	var authRedeemed AuthQuery
+func qAuthenticatedAccount(t *testing.T, client *graphql.Client) AuthenticatedAccount {
+	var authRedeemed AuthenticatedAccount
 
 	err := client.Query(context.Background(), &authRedeemed, nil)
 
@@ -113,7 +113,21 @@ func qAuth(t *testing.T, client *graphql.Client) AuthQuery {
 	return authRedeemed
 }
 
-func getOTPCookieFromJar(t *testing.T, jar http.CookieJar) *http.Cookie {
+type AuthenticationTokenStatus struct {
+	AuthenticationTokenStatus *types.AuthenticationToken
+}
+
+func qAuthenticationTokenStatus(t *testing.T, client *graphql.Client) AuthenticationTokenStatus {
+	var authRedeemed AuthenticationTokenStatus
+
+	err := client.Query(context.Background(), &authRedeemed, nil)
+
+	require.NoError(t, err)
+
+	return authRedeemed
+}
+
+func getOTPTokenFromJar(t *testing.T, jar http.CookieJar) *http.Cookie {
 	// get cookies
 	cookies := jar.Cookies(&url.URL{
 		Scheme: "http",

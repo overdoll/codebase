@@ -188,10 +188,10 @@ func TestAccountUsername_modify(t *testing.T) {
 
 	require.True(t, foundNewUsername)
 
-	auth := qAuth(t, client)
+	auth := qAuthenticatedAccount(t, client)
 
 	// make sure that the username is modified as well for the "authentication" query
-	assert.Equal(t, targetUsername, auth.Authentication.Account.Username)
+	assert.Equal(t, targetUsername, auth.AuthenticatedAccount.Username)
 }
 
 type TestSession struct {

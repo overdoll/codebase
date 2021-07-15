@@ -20,3 +20,24 @@ go_test(
         "@com_github_stretchr_testify//require",
     ],
 )
+
+go_library(
+    name = "token",
+    srcs = [
+        "repository.go",
+        "token.go",
+    ],
+    importpath = "overdoll/applications/eva/src/domain/token",
+    visibility = ["//visibility:public"],
+)
+
+go_test(
+    name = "token_test",
+    srcs = ["token_test.go"],
+    deps = [
+        ":token",
+        "//libraries/uuid",
+        "@com_github_stretchr_testify//assert",
+        "@com_github_stretchr_testify//require",
+    ],
+)
