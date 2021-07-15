@@ -7,6 +7,7 @@ import (
 	"io"
 	"overdoll/libraries/graphql/relay"
 	"strconv"
+	"time"
 )
 
 type Account struct {
@@ -69,6 +70,8 @@ type PendingPost struct {
 	CharacterRequests []*CharacterRequestType `json:"characterRequests"`
 	ArtistID          *string                 `json:"artistId"`
 	ArtistUsername    string                  `json:"artistUsername"`
+	PostedAt          time.Time               `json:"postedAt"`
+	ReassignmentAt    time.Time               `json:"reassignmentAt"`
 }
 
 type PendingPostConnection struct {

@@ -35,6 +35,7 @@ type PostPending struct {
 	CategoriesRequests []string          `db:"categories_requests"`
 	MediaRequests      []string          `db:"media_requests"`
 	PostedAt           time.Time         `db:"posted_at"`
+	ReassignmentAt     time.Time         `db:"reassignment_at"`
 }
 
 type PostsCassandraRepository struct {
@@ -79,6 +80,7 @@ func marshalPendingPostToDatabase(pending *post.PendingPost) *PostPending {
 		CategoriesRequests: categoryRequests,
 		MediaRequests:      mediaRequests,
 		PostedAt:           pending.PostedAt(),
+		ReassignmentAt:     pending.ReassignmentAt(),
 	}
 }
 
@@ -147,6 +149,7 @@ func (r PostsCassandraRepository) unmarshalPendingPost(ctx context.Context, post
 		postPending.CategoriesRequests,
 		postPending.MediaRequests,
 		postPending.PostedAt,
+		postPending.ReassignmentAt,
 	), nil
 }
 
@@ -168,6 +171,7 @@ func (r PostsCassandraRepository) CreatePendingPost(ctx context.Context, pending
 			"categories_requests",
 			"media_requests",
 			"posted_at",
+			"reassignment_at",
 		).
 		Query(r.session).
 		BindStruct(pendingPost).
@@ -359,6 +363,7 @@ func (r PostsCassandraRepository) UpdatePendingPost(ctx context.Context, id stri
 			"categories_requests",
 			"media_requests",
 			"posted_at",
+			"reassignment_at",
 		).
 		Where(qb.Eq("id")).
 		Query(r.session).

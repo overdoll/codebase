@@ -5,6 +5,7 @@ import (
 
 	"overdoll/applications/parley/src/app"
 	"overdoll/applications/parley/src/ports/graphql/types"
+	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/passport"
 )
 
@@ -38,7 +39,7 @@ func (q QueryResolver) AccountInfractionHistory(ctx context.Context) ([]*types.A
 	return infractionHistory, nil
 }
 
-func (q QueryResolver) PendingPostAuditLogs(ctx context.Context, filter types.PendingPostAuditLogFilters) (*types.PendingPostAuditLogConnection, error) {
+func (q QueryResolver) PendingPostAuditLogs(ctx context.Context, after, before *string, first, last *int, filter *types.PendingPostAuditLogFilters) (*types.PendingPostAuditLogConnection, error) {
 	pass := passport.FromContext(ctx)
 
 	if !pass.IsAuthenticated() {
@@ -46,30 +47,36 @@ func (q QueryResolver) PendingPostAuditLogs(ctx context.Context, filter types.Pe
 	}
 
 	moderatorId := ""
-
-	if filter.ModeratorID != nil {
-		moderatorId = *filter.ModeratorID
-	}
-
 	contributorId := ""
-
-	if filter.ContributorID != nil {
-		contributorId = *filter.ContributorID
-	}
-
 	postId := ""
-
-	if filter.PostID != nil {
-		postId = *filter.PostID
-	}
-
 	var dateRange []int
 
-	if filter.DateRange != nil {
-		dateRange = filter.DateRange
+	if filter != nil {
+		if filter.ModeratorID != nil {
+			moderatorId = *filter.ModeratorID
+		}
+
+		if filter.ContributorID != nil {
+			contributorId = *filter.ContributorID
+		}
+
+		if filter.PostID != nil {
+			postId = *filter.PostID
+		}
+
+		if filter.DateRange != nil {
+			dateRange = filter.DateRange
+		}
 	}
 
-	logs, err := q.App.Queries.PendingPostsAuditLogByModerator.Handle(ctx, moderatorId, contributorId, postId, dateRange, pass.AccountID())
+	input := &relay.ConnectionInput{
+		After:  after,
+		Before: before,
+		First:  first,
+		Last:   last,
+	}
+
+	logs, err := q.App.Queries.PendingPostsAuditLogByModerator.Handle(ctx, input.ToCursor(), moderatorId, contributorId, postId, dateRange, pass.AccountID())
 
 	if err != nil {
 		return nil, err
@@ -81,7 +88,12 @@ func (q QueryResolver) PendingPostAuditLogs(ctx context.Context, filter types.Pe
 		auditLogs = append(auditLogs, types.MarshalPendingPostAuditLogToGraphQL(log))
 	}
 
-	return &types.PendingPostAuditLogConnection{Edges: auditLogs}, nil
+	return &types.PendingPostAuditLogConnection{Edges: auditLogs, PageInfo: &relay.PageInfo{
+		HasNextPage:     false,
+		HasPreviousPage: false,
+		StartCursor:     nil,
+		EndCursor:       nil,
+	}}, nil
 }
 
 func (q QueryResolver) RejectionReasons(ctx context.Context) ([]*types.PendingPostRejectionReason, error) {

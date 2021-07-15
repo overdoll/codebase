@@ -9,9 +9,15 @@ func MarshalAccountToGraphQL(result *account.Account) *Account {
 	var lock *AccountLock
 
 	if result.IsLocked() {
+		var reason AccountLockReasonEnum
+
+		if result.IsLockedDueToPostInfraction() {
+			reason = AccountLockReasonEnumPostInfraction
+		}
+
 		lock = &AccountLock{
 			Expires: result.LockedUntil(),
-			Reason:  result.LockedReason(),
+			Reason:  reason,
 		}
 	}
 

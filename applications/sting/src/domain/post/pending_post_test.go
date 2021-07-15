@@ -11,7 +11,7 @@ import (
 func TestPostPending_ConsumeCustomResources(t *testing.T) {
 	t.Parallel()
 
-	pst := post.UnmarshalPendingPostFromDatabase("id", "test", string(post.Review), &post.Artist{}, "", "", "", nil, nil, nil, make(map[string]string), nil, nil, time.Now())
+	pst := post.UnmarshalPendingPostFromDatabase("id", "test", string(post.Review), &post.Artist{}, "", "", "", nil, nil, nil, make(map[string]string), nil, nil, time.Now(), time.Now().Add(time.Hour*24))
 
 	customCharacters := make(map[string]string)
 	customCharacters["test_character"] = "test_media"

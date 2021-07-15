@@ -8,6 +8,7 @@ go_library(
     deps = [
         "//applications/parley/src/app",
         "//applications/parley/src/ports/graphql/types",
+        "//libraries/graphql/relay",
         "//libraries/passport",
     ],
 )

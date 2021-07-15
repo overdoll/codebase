@@ -33,7 +33,7 @@ func (r *QueryResolver) PendingPost(ctx context.Context, id string) (*types.Pend
 	}).Node, nil
 }
 
-func (r *QueryResolver) PendingPosts(ctx context.Context, input relay.ConnectionInput, filter types.PendingPostFilters) (*types.PendingPostConnection, error) {
+func (r *QueryResolver) PendingPosts(ctx context.Context, after, before *string, first, last *int, filter *types.PendingPostFilters) (*types.PendingPostConnection, error) {
 
 	pass := passport.FromContext(ctx)
 
@@ -42,27 +42,36 @@ func (r *QueryResolver) PendingPosts(ctx context.Context, input relay.Connection
 	}
 
 	moderatorId := ""
-
-	if filter.ModeratorID != nil {
-		moderatorId = *filter.ModeratorID
-	}
-
 	contributorId := ""
-
-	if filter.ContributorID != nil {
-		contributorId = *filter.ContributorID
-	}
-
 	artistId := ""
-
-	if filter.ArtistID != nil {
-		artistId = *filter.ArtistID
-	}
-
 	id := ""
 
-	if filter.ID != nil {
-		id = *filter.ID
+	if filter != nil {
+		if filter.ModeratorID != nil {
+			moderatorId = *filter.ModeratorID
+		}
+
+		if filter.ContributorID != nil {
+			contributorId = *filter.ContributorID
+		}
+
+		if filter.ArtistID != nil {
+			artistId = *filter.ArtistID
+		}
+
+		if filter.ID != nil {
+			id = *filter.ID
+		}
+	}
+
+	var startCursor *string
+	var endCursor *string
+
+	input := &relay.ConnectionInput{
+		After:  after,
+		Before: before,
+		First:  first,
+		Last:   last,
 	}
 
 	results, err := r.App.Queries.GetPendingPosts.Handle(ctx, input.ToCursor(), moderatorId, contributorId, artistId, id, pass.AccountID())
@@ -77,11 +86,18 @@ func (r *QueryResolver) PendingPosts(ctx context.Context, input relay.Connection
 		posts = append(posts, types.MarshalPendingPostToGraphQL(result))
 	}
 
+	if len(posts) > 0 {
+		startCursor = &posts[0].Cursor
+		endCursor = &posts[len(posts)-1].Cursor
+	}
+
 	return &types.PendingPostConnection{
 		Edges: posts,
 		PageInfo: &relay.PageInfo{
 			HasNextPage:     results.PageInfo.HasNextPage(),
 			HasPreviousPage: results.PageInfo.HasPrevPage(),
+			StartCursor:     startCursor,
+			EndCursor:       endCursor,
 		},
 	}, nil
 }

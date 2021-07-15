@@ -131,6 +131,10 @@ func (u *Account) LockedReason() string {
 	return string(u.lockedReason)
 }
 
+func (u *Account) IsLockedDueToPostInfraction() bool {
+	return u.lockedReason == PostInfraction
+}
+
 func (u *Account) IsUnclaimed() bool {
 	return u.unclaimed
 }

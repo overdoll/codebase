@@ -34,7 +34,11 @@ type AccountInfractionHistory {
 
 type AccountLock {
   expires: Int!
-  reason: String!
+  reason: AccountLockReasonEnum!
+}
+
+enum AccountLockReasonEnum {
+  PostInfraction
 }
 
 type AccountModeratorSettings {
@@ -313,6 +317,8 @@ type PendingPost {
   characterRequests: [CharacterRequestType!]
   artistId: String
   artistUsername: String!
+  postedAt: String!
+  reassignmentAt: String!
 }
 
 type PendingPostAuditLog {
@@ -330,10 +336,12 @@ type PendingPostAuditLog {
 
 type PendingPostAuditLogConnection {
   edges: [PendingPostAuditLogEdge!]!
+  pageInfo: PageInfo!
 }
 
 type PendingPostAuditLogEdge {
   node: PendingPostAuditLog!
+  cursor: String!
 }
 
 input PendingPostAuditLogFilters {
@@ -413,11 +421,11 @@ type Query {
   """
   Get Pending Posts, specific to a moderator
   
-  Can paginate using ConnectionInput and filter with PendingPostFilters
+  Can paginate using Connection Inputs and filter with PendingPostFilters
   
   All filters will work, except moderatorId, which is staff-only (by default, will grab pending post for logged-in user)
   """
-  pendingPosts(input: ConnectionInput!, filter: PendingPostFilters!): PendingPostConnection!
+  pendingPosts(after: String, before: String, first: Int, last: Int, filter: PendingPostFilters): PendingPostConnection!
 
   """Get a single pending post by ID"""
   pendingPost(id: String!): PendingPost!
@@ -430,8 +438,10 @@ type Query {
   Get pending post for the currently-logged in user
   
   Filters are available, but the moderatorId filter will only work if you are at least a staff role
+  
+  NOTE: cursor arguments (after, before, first, last, etc...) are not implemented yet
   """
-  pendingPostAuditLogs(filter: PendingPostAuditLogFilters!): PendingPostAuditLogConnection!
+  pendingPostAuditLogs(after: String, before: String, first: Int, last: Int, filter: PendingPostAuditLogFilters): PendingPostAuditLogConnection!
 
   """
   Get rejection reasons. Only available to moderators + staff

@@ -8,5 +8,8 @@ go_library(
     ],
     importpath = "overdoll/applications/parley/src/ports/graphql/types",
     visibility = ["//visibility:public"],
-    deps = ["//applications/parley/src/domain/infraction"],
+    deps = [
+        "//applications/parley/src/domain/infraction",
+        "//libraries/graphql/relay",
+    ],
 )

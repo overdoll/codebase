@@ -32,7 +32,6 @@ go_test(
         "//libraries/clients",
         "//libraries/config",
         "//libraries/elasticsearch",
-        "//libraries/graphql/relay",
         "//libraries/passport",
         "//libraries/tests",
         "@com_github_shurcool_graphql//:graphql",

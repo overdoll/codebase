@@ -58,6 +58,7 @@ CREATE TABLE IF NOT EXISTS pending_posts
     media_requests          list<text>,
     categories_requests     list<text>,
     posted_at               timestamp,
+    reassignment_at         timestamp,
     primary key (id)
 );
 

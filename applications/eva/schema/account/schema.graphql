@@ -12,9 +12,13 @@ type Account @key(fields: "id") {
   lock: AccountLock
 }
 
+enum AccountLockReasonEnum {
+  PostInfraction
+}
+
 type AccountLock {
   expires: Int!
-  reason: String!
+  reason: AccountLockReasonEnum!
 }
 
 input RegisterInput {

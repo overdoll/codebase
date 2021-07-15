@@ -22,7 +22,6 @@ import (
 	"overdoll/libraries/clients"
 	"overdoll/libraries/config"
 	search "overdoll/libraries/elasticsearch"
-	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/tests"
 )
@@ -45,7 +44,7 @@ type PendingPost struct {
 }
 
 type PendingPosts struct {
-	PendingPosts *types.PendingPostConnection `graphql:"pendingPosts(filter: $filter, input: $input)"`
+	PendingPosts *types.PendingPostConnection `graphql:"pendingPosts(filter: $filter)"`
 }
 
 type SearchCharacters struct {
@@ -148,7 +147,6 @@ func TestCreatePost_Publish(t *testing.T) {
 				"filter": types.PendingPostFilters{
 					ID: &newPostId,
 				},
-				"input": relay.ConnectionInput{},
 			})
 
 			require.NoError(t, err)
