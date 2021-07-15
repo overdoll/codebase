@@ -46,7 +46,6 @@ export default function Root (props: Props): Node {
     rootQuery
   )
 
-  console.log(data)
   const fetchAccount = () => refetch({}, { fetchPolicy: 'network-only' })
 
   return (
