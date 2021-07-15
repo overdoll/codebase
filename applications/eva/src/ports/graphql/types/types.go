@@ -12,18 +12,6 @@ type Node interface {
 	IsNode()
 }
 
-type Account struct {
-	ID       string            `json:"id"`
-	Username string            `json:"username"`
-	Roles    []AccountRoleEnum `json:"roles"`
-	Avatar   string            `json:"avatar"`
-	Verified bool              `json:"verified"`
-	Lock     *AccountLock      `json:"lock"`
-}
-
-func (Account) IsNode()   {}
-func (Account) IsEntity() {}
-
 type AccountEmail struct {
 	Email  string                 `json:"email"`
 	Status AccountEmailStatusEnum `json:"status"`
@@ -130,6 +118,8 @@ type Viewer struct {
 	Verified bool              `json:"verified"`
 	Lock     *AccountLock      `json:"lock"`
 }
+
+func (Viewer) IsEntity() {}
 
 type AccountEmailStatusEnum string
 

@@ -569,11 +569,11 @@ type PendingPostAuditLogConnection {
 }
 
 type PendingPostAuditLog {
-  id: String!
-  postId: String!
+  id: ID!
+  postId: ID!
   contributor: AuditAccount!
   moderator: AuditAccount!
-  infractionId: String
+  infractionId: ID
   status: String!
   reason: String!
   notes: String!
@@ -582,7 +582,7 @@ type PendingPostAuditLog {
 }
 
 type AuditAccount {
-  id: String!
+  id: ID!
   username: String!
 }
 
@@ -605,7 +605,7 @@ extend type Query {
 }
 `, BuiltIn: false},
 	{Name: "schema/federation/schema.graphql", Input: `extend type AccountSettings @key(fields: "accountId") {
-  accountId: String! @external
+  accountId: ID! @external
   moderator: AccountModeratorSettings
 }
 
@@ -656,23 +656,14 @@ extend type Mutation {
 }
 `, BuiltIn: false},
 	{Name: "schema/schema.graphql", Input: `type AccountInfractionHistory {
-  id: String!
+  id: ID!
   reason: String!
-}
-
-type Validation {
-  code: String!
 }
 
 type PendingPostRejectionReason {
-  id: String!
+  id: ID!
   reason: String!
   infraction: Boolean!
-}
-
-type Response {
-  ok: Boolean!
-  validation: Validation
 }
 
 type Query {
@@ -715,6 +706,21 @@ input ConnectionInput {
   # Returns the last _n_ elements from the list.
   last: Int
 }`, BuiltIn: false},
+	{Name: "../../libraries/graphql/schema.graphql", Input: `type Response {
+  validation: Validation
+  ok: Boolean!
+}
+
+type Validation {
+  code: String!
+}
+
+interface Node {
+  id: ID!
+}
+
+scalar Time
+`, BuiltIn: false},
 	{Name: "federation/directives.graphql", Input: `
 scalar _Any
 scalar _FieldSet
@@ -731,7 +737,7 @@ union _Entity = AccountSettings
 
 # fake type to build resolver interfaces for users to implement
 type Entity {
-		findAccountSettingsByAccountID(accountId: String!,): AccountSettings!
+		findAccountSettingsByAccountID(accountId: ID!,): AccountSettings!
 
 }
 
@@ -757,7 +763,7 @@ func (ec *executionContext) field_Entity_findAccountSettingsByAccountID_args(ctx
 	var arg0 string
 	if tmp, ok := rawArgs["accountId"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("accountId"))
-		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -947,7 +953,7 @@ func (ec *executionContext) _AccountInfractionHistory_id(ctx context.Context, fi
 	}
 	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNID2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccountInfractionHistory_reason(ctx context.Context, field graphql.CollectedField, obj *types.AccountInfractionHistory) (ret graphql.Marshaler) {
@@ -1052,7 +1058,7 @@ func (ec *executionContext) _AccountSettings_accountId(ctx context.Context, fiel
 	}
 	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNID2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccountSettings_moderator(ctx context.Context, field graphql.CollectedField, obj *types.AccountSettings) (ret graphql.Marshaler) {
@@ -1119,7 +1125,7 @@ func (ec *executionContext) _AuditAccount_id(ctx context.Context, field graphql.
 	}
 	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNID2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AuditAccount_username(ctx context.Context, field graphql.CollectedField, obj *types.AuditAccount) (ret graphql.Marshaler) {
@@ -1548,7 +1554,7 @@ func (ec *executionContext) _PendingPostAuditLog_id(ctx context.Context, field g
 	}
 	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNID2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _PendingPostAuditLog_postId(ctx context.Context, field graphql.CollectedField, obj *types.PendingPostAuditLog) (ret graphql.Marshaler) {
@@ -1583,7 +1589,7 @@ func (ec *executionContext) _PendingPostAuditLog_postId(ctx context.Context, fie
 	}
 	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNID2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _PendingPostAuditLog_contributor(ctx context.Context, field graphql.CollectedField, obj *types.PendingPostAuditLog) (ret graphql.Marshaler) {
@@ -1685,7 +1691,7 @@ func (ec *executionContext) _PendingPostAuditLog_infractionId(ctx context.Contex
 	}
 	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOID2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _PendingPostAuditLog_status(ctx context.Context, field graphql.CollectedField, obj *types.PendingPostAuditLog) (ret graphql.Marshaler) {
@@ -2035,7 +2041,7 @@ func (ec *executionContext) _PendingPostRejectionReason_id(ctx context.Context, 
 	}
 	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNID2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _PendingPostRejectionReason_reason(ctx context.Context, field graphql.CollectedField, obj *types.PendingPostRejectionReason) (ret graphql.Marshaler) {
@@ -2365,6 +2371,38 @@ func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.C
 	return ec.marshalO__Schema2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐSchema(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Response_validation(ctx context.Context, field graphql.CollectedField, obj *types.Response) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Response",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Validation, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Validation)
+	fc.Result = res
+	return ec.marshalOValidation2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐValidation(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Response_ok(ctx context.Context, field graphql.CollectedField, obj *types.Response) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -2398,38 +2436,6 @@ func (ec *executionContext) _Response_ok(ctx context.Context, field graphql.Coll
 	res := resTmp.(bool)
 	fc.Result = res
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Response_validation(ctx context.Context, field graphql.CollectedField, obj *types.Response) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Response",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Validation, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.Validation)
-	fc.Result = res
-	return ec.marshalOValidation2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐValidation(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Validation_code(ctx context.Context, field graphql.CollectedField, obj *types.Validation) (ret graphql.Marshaler) {
@@ -3734,6 +3740,15 @@ func (ec *executionContext) unmarshalInputRevertPostInput(ctx context.Context, o
 
 // region    ************************** interface.gotpl ***************************
 
+func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj types.Node) graphql.Marshaler {
+	switch obj := (obj).(type) {
+	case nil:
+		return graphql.Null
+	default:
+		panic(fmt.Errorf("unexpected type %T", obj))
+	}
+}
+
 func (ec *executionContext) __Entity(ctx context.Context, sel ast.SelectionSet, obj fedruntime.Entity) graphql.Marshaler {
 	switch obj := (obj).(type) {
 	case nil:
@@ -4295,13 +4310,13 @@ func (ec *executionContext) _Response(ctx context.Context, sel ast.SelectionSet,
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Response")
+		case "validation":
+			out.Values[i] = ec._Response_validation(ctx, field, obj)
 		case "ok":
 			out.Values[i] = ec._Response_ok(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "validation":
-			out.Values[i] = ec._Response_validation(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -4650,6 +4665,21 @@ func (ec *executionContext) unmarshalNBoolean2bool(ctx context.Context, v interf
 
 func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.SelectionSet, v bool) graphql.Marshaler {
 	res := graphql.MarshalBoolean(v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
+}
+
+func (ec *executionContext) unmarshalNID2string(ctx context.Context, v interface{}) (string, error) {
+	res, err := graphql.UnmarshalID(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNID2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
+	res := graphql.MarshalID(v)
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -5259,6 +5289,21 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 		return graphql.Null
 	}
 	return graphql.MarshalBoolean(*v)
+}
+
+func (ec *executionContext) unmarshalOID2ᚖstring(ctx context.Context, v interface{}) (*string, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := graphql.UnmarshalID(v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOID2ᚖstring(ctx context.Context, sel ast.SelectionSet, v *string) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return graphql.MarshalID(*v)
 }
 
 func (ec *executionContext) unmarshalOInt2ᚕintᚄ(ctx context.Context, v interface{}) ([]int, error) {

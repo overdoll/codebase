@@ -1,5 +1,5 @@
 extend type AccountSettings @key(fields: "accountId") {
-  accountId: String! @external
+  accountId: ID! @external
   moderator: AccountModeratorSettings
 }
 

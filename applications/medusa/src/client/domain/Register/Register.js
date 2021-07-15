@@ -12,6 +12,8 @@ import SignBadgeCircle
   from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
 import { Helmet } from 'react-helmet-async'
 import RegisterForm from './RegisterForm/RegisterForm'
+import { useContext } from 'react'
+import { RootContext } from '../Root/Root'
 
 const RegisterMutationGQL = graphql`
   mutation RegisterMutation($data: RegisterInput!) {
@@ -32,6 +34,8 @@ export default function Register (): Node {
   const notify = useToast()
   const [t] = useTranslation('auth')
 
+  const root = useContext(RootContext)
+
   const history = useHistory()
 
   const onSubmit = val => {
@@ -42,6 +46,7 @@ export default function Register (): Node {
         }
       },
       onCompleted (data) {
+        root.fetchAccount()
         history.replace('/profile')
       },
       onError (data) {

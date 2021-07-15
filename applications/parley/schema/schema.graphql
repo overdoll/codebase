@@ -1,21 +1,12 @@
 type AccountInfractionHistory {
-  id: String!
+  id: ID!
   reason: String!
-}
-
-type Validation {
-  code: String!
 }
 
 type PendingPostRejectionReason {
-  id: String!
+  id: ID!
   reason: String!
   infraction: Boolean!
-}
-
-type Response {
-  ok: Boolean!
-  validation: Validation
 }
 
 type Query {

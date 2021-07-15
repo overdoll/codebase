@@ -11,7 +11,7 @@ type EntityResolver struct {
 	App *app.Application
 }
 
-func (e EntityResolver) FindAccountByID(ctx context.Context, id string) (*types.Account, error) {
+func (e EntityResolver) FindViewerByID(ctx context.Context, id string) (*types.Viewer, error) {
 	panic("implement me")
 }
 

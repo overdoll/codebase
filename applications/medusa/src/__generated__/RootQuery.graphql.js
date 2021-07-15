@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash a4af7c63a12bb944378a23eb8da64e56
+ * @relayHash 3d41b45fff8eed6507354d118ea4e35a
  */
 
 /* eslint-disable */
@@ -25,7 +25,7 @@ query RootQuery {
 }
 
 fragment RootComponent_account on Query {
-  authenticatedAccount {
+  viewer {
     username
     roles
   }
@@ -57,9 +57,9 @@ const node: ConcreteRequest = {
       {
         "alias": null,
         "args": null,
-        "concreteType": "Account",
+        "concreteType": "Viewer",
         "kind": "LinkedField",
-        "name": "authenticatedAccount",
+        "name": "viewer",
         "plural": false,
         "selections": [
           {
@@ -82,7 +82,7 @@ const node: ConcreteRequest = {
     ]
   },
   "params": {
-    "id": "a4af7c63a12bb944378a23eb8da64e56",
+    "id": "3d41b45fff8eed6507354d118ea4e35a",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",

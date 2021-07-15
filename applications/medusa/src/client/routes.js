@@ -4,11 +4,12 @@
 import JSResource from '@//:modules/utilities/JSResource'
 import type { Route } from '@//:modules/routing/router'
 
-const getUserFromEnvironment = environment =>
-  environment
+const getUserFromEnvironment = environment => {
+  return environment
     .getStore()
     .getSource()
-    .get('client:root:authenticatedAccount')
+    .get('client:root:viewer')
+}
 
 /**
  * Client routes for the application

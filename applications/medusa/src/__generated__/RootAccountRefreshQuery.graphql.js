@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 860923950119add8766b6f36ff2cf899
+ * @relayHash 19ac107dd1b6cb54d7ab3fa2bc25d36b
  */
 
 /* eslint-disable */
@@ -27,7 +27,7 @@ query RootAccountRefreshQuery {
 }
 
 fragment RootComponent_account on Query {
-  authenticatedAccount {
+  viewer {
     username
     roles
   }
@@ -59,9 +59,9 @@ const node: ConcreteRequest = {
       {
         "alias": null,
         "args": null,
-        "concreteType": "Account",
+        "concreteType": "Viewer",
         "kind": "LinkedField",
-        "name": "authenticatedAccount",
+        "name": "viewer",
         "plural": false,
         "selections": [
           {
@@ -84,7 +84,7 @@ const node: ConcreteRequest = {
     ]
   },
   "params": {
-    "id": "860923950119add8766b6f36ff2cf899",
+    "id": "19ac107dd1b6cb54d7ab3fa2bc25d36b",
     "metadata": {},
     "name": "RootAccountRefreshQuery",
     "operationKind": "query",
@@ -92,5 +92,5 @@ const node: ConcreteRequest = {
   }
 };
 // prettier-ignore
-(node: any).hash = '306e9e7ab1478cdfad4b641f02db479e';
+(node: any).hash = 'b2c00bb941f6dd7e2b6aa2df3f3d257e';
 module.exports = node;

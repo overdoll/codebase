@@ -4,41 +4,26 @@ type CharacterRequestType {
 }
 
 type Media {
-  id: String!
+  id: ID!
   thumbnail: String!
   title: String!
 }
 
 type Artist {
-  id: String!
+  id: ID!
   avatar: String!
   username: String!
 }
 
 type Character {
-  id: String!
+  id: ID!
   thumbnail: String!
   name: String!
   media: Media!
 }
 
 type Category {
-  id: String!
+  id: ID!
   thumbnail: String!
   title: String!
-}
-
-type Validation {
-  code: String!
-}
-
-type Response {
-  validation: Validation
-  ok: Boolean!
-}
-
-scalar Time
-
-interface Node {
-  id: ID!
 }

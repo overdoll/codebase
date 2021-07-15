@@ -1,5 +1,6 @@
 schema:
   - ./schema/**/*.graphql
+  - ../../libraries/graphql/schema.graphql
 
 exec:
   filename: src/ports/graphql/generated.go

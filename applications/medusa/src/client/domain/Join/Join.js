@@ -4,7 +4,7 @@
 import type { PreloadedQueryInner } from 'react-relay/hooks'
 import { graphql, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay/hooks'
 import type { Node } from 'react'
-import { useCallback, useState } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 import Register from '../Register/Register'
 import { useTranslation } from 'react-i18next'
 import Lobby from './Lobby/Lobby'
@@ -16,6 +16,8 @@ import { useFlash } from '@//:modules/flash'
 import { Helmet } from 'react-helmet-async'
 import JoinForm from './JoinForm/JoinForm'
 import type { JoinQuery } from '@//:artifacts/JoinQuery.graphql'
+import { RootContext } from '../Root/Root'
+import { useHistory } from '@//:modules/routing'
 
 type Props = {
   prepared: {
@@ -50,6 +52,10 @@ export default function Join (props: Props): Node {
     JoinTokenStatus,
     props.prepared.joinQuery
   )
+
+  const root = useContext(RootContext)
+
+  const history = useHistory()
 
   const data = usePreloadedQuery<JoinQuery>(JoinTokenStatus, queryRef)
 
@@ -94,6 +100,14 @@ export default function Join (props: Props): Node {
   const authenticationTokenRedeemed = !!data?.authenticationTokenStatus?.redeemed
   const authenticationTokenAccountRegistered = !!data?.authenticationTokenStatus?.accountStatus?.registered
 
+  // when we receive the results from the token redemption, we will re-fetch the account and change URLs
+  useEffect(() => {
+    if (authenticationInitiated && authenticationTokenRedeemed && authenticationTokenAccountRegistered) {
+      root.fetchAccount()
+      history.push('/profile')
+    }
+  }, [data])
+
   // If we're waiting on a token, create a subscription for the token
   // We don't have to send any values because it already knows the token
   // from a cookie.
@@ -113,9 +127,9 @@ export default function Join (props: Props): Node {
   if (authenticationInitiated && authenticationTokenRedeemed) {
     if (!authenticationTokenAccountRegistered) {
       return <Register />
-    } else {
-      return 'registered - should refresh query or redirect'
     }
+
+    return null
   }
 
   const error = read('login.notify')

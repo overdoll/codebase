@@ -6,6 +6,10 @@ import (
 	"overdoll/libraries/graphql/relay"
 )
 
+type Node interface {
+	IsNode()
+}
+
 type AccountInfractionHistory struct {
 	ID     string `json:"id"`
 	Reason string `json:"reason"`
@@ -75,8 +79,8 @@ type PendingPostRejectionReason struct {
 }
 
 type Response struct {
-	Ok         bool        `json:"ok"`
 	Validation *Validation `json:"validation"`
+	Ok         bool        `json:"ok"`
 }
 
 type RevertPostInput struct {

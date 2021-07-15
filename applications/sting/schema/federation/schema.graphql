@@ -1,4 +1,4 @@
-extend type Account implements Node @key(fields: "id") {
-  id: ID! @external
+extend type Viewer @key(fields: "id") {
+  id: String! @external
   testField: String!
 }

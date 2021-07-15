@@ -40,7 +40,7 @@ func (ec *executionContext) __resolve_entities(ctx context.Context, representati
 		switch typeName {
 
 		case "AccountSettings":
-			id0, err := ec.unmarshalNString2string(ctx, rep["accountId"])
+			id0, err := ec.unmarshalNID2string(ctx, rep["accountId"])
 			if err != nil {
 				return nil, errors.New(fmt.Sprintf("Field %s undefined in schema.", "accountId"))
 			}

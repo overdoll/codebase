@@ -12,7 +12,7 @@ import type { FragmentReference } from "relay-runtime";
 import type { RootComponent_account$ref, RootComponent_account$fragmentType } from "./RootAccountRefreshQuery.graphql";
 export type { RootComponent_account$ref, RootComponent_account$fragmentType };
 export type RootComponent_account = {|
-  +authenticatedAccount: ?{|
+  +viewer: ?{|
     +username: string,
     +roles: $ReadOnlyArray<AccountRoleEnum>,
   |},
@@ -41,9 +41,9 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
-      "concreteType": "Account",
+      "concreteType": "Viewer",
       "kind": "LinkedField",
-      "name": "authenticatedAccount",
+      "name": "viewer",
       "plural": false,
       "selections": [
         {
@@ -68,5 +68,5 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 // prettier-ignore
-(node: any).hash = '306e9e7ab1478cdfad4b641f02db479e';
+(node: any).hash = 'b2c00bb941f6dd7e2b6aa2df3f3d257e';
 module.exports = node;

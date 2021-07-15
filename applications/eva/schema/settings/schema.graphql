@@ -13,7 +13,7 @@ type AccountSession {
   userAgent: String!
   ip: String!
   created: String!
-  id: String!
+  id: ID!
   current: Boolean!
 }
 
@@ -81,7 +81,7 @@ type AccountSecuritySettings {
 }
 
 type AccountSettings @key(fields: "accountId") {
-  accountId: String!
+  accountId: ID!
 
   """
   General account settings for the user
@@ -108,12 +108,12 @@ extend type Mutation {
   """
   Modify the current account's username
   """
-  modifyAccountUsername(username: String!): Response!
+  modifyAccountUsername(username: ID!): Response!
 
   """
   Revoke a session for this user
   """
-  revokeAccountSession(id: String!): Response!
+  revokeAccountSession(id: ID!): Response!
 
   """
   Make account email primary
@@ -154,7 +154,7 @@ extend type Query {
   """
   Confirm account email, so it may be used
   """
-  confirmAccountEmail(id: String!): Response!
+  confirmAccountEmail(id: ID!): Response!
 
   """
   Get MFA recovery codes

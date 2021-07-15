@@ -9,11 +9,11 @@ type PendingPostAuditLogConnection {
 }
 
 type PendingPostAuditLog {
-  id: String!
-  postId: String!
+  id: ID!
+  postId: ID!
   contributor: AuditAccount!
   moderator: AuditAccount!
-  infractionId: String
+  infractionId: ID
   status: String!
   reason: String!
   notes: String!
@@ -22,7 +22,7 @@ type PendingPostAuditLog {
 }
 
 type AuditAccount {
-  id: String!
+  id: ID!
   username: String!
 }
 

@@ -10,3 +10,5 @@ type Validation {
 interface Node {
   id: ID!
 }
+
+scalar Time
