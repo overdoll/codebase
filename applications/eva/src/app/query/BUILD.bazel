@@ -8,7 +8,7 @@ go_library(
         "get_account_recovery_codes.go",
         "get_account_sessions.go",
         "get_account_usernames.go",
-        "get_authentication_token.go",
+        "get_authentication_token_status.go",
         "is_account_multi_factor_totp_enabled.go",
     ],
     importpath = "overdoll/applications/eva/src/app/query",
@@ -18,6 +18,7 @@ go_library(
         "//applications/eva/src/domain/multi_factor",
         "//applications/eva/src/domain/session",
         "//applications/eva/src/domain/token",
+        "@com_github_gocql_gocql//:gocql",
         "@org_uber_go_zap//:zap",
     ],
 )

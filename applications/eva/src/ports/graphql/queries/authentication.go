@@ -62,20 +62,18 @@ func (r *QueryResolver) RedeemAuthenticationToken(ctx context.Context, tokenId s
 	}
 
 	// consume cookie
-	usr, ck, err := r.App.Commands.ConsumeAuthenticationToken.Handle(ctx, tokenId)
+	usr, ck, err := r.App.Queries.GetAuthenticationTokenStatus.Handle(ctx, tokenId)
 
 	if err != nil {
 		return nil, err
 	}
 
-	// send back MFA types
-	var multiFactorTypes []types.MultiFactorTypeEnum
-
-	if ck.IsTOTPRequired() {
-		multiFactorTypes = append(multiFactorTypes, types.MultiFactorTypeEnumTotp)
-	}
-
 	if usr != nil {
+		// consume cookie since user is valid here
+		if err := r.App.Commands.ConsumeAuthenticationToken.Handle(ctx, tokenId); err != nil {
+			return nil, err
+		}
+
 		// Remove OTP cookie
 		http.SetCookie(gc.Writer, &http.Cookie{Name: token.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
 
@@ -95,9 +93,15 @@ func (r *QueryResolver) RedeemAuthenticationToken(ctx context.Context, tokenId s
 			AccountStatus: &types.AuthenticationTokenAccountStatus{
 				Registered:    true,
 				Authenticated: true,
-				MultiFactor:   multiFactorTypes,
 			},
 		}, nil
+	}
+
+	// send back MFA types
+	var multiFactorTypes []types.MultiFactorTypeEnum
+
+	if ck.IsTOTPRequired() {
+		multiFactorTypes = append(multiFactorTypes, types.MultiFactorTypeEnumTotp)
 	}
 
 	return &types.AuthenticationToken{
@@ -145,25 +149,19 @@ func (r *QueryResolver) AuthenticatedAccount(ctx context.Context) (*types.Accoun
 		return nil, nil
 	}
 
-	acc, ck, err := r.App.Commands.ConsumeAuthenticationToken.Handle(ctx, otpCookie.Value)
+	// consume cookie
+	acc, ck, err := r.App.Queries.GetAuthenticationTokenStatus.Handle(ctx, otpCookie.Value)
 
 	if err != nil {
-		if ck != nil {
-			// token not yet redeemed
-			if err == token.ErrTokenNotRedeemed {
-				return nil, nil
-			}
-
-			// token not found
-			if err == token.ErrTokenNotFound {
-				return nil, nil
-			}
-		}
-
 		return nil, err
 	}
 
-	if acc != nil {
+	if acc != nil && ck.Redeemed() {
+
+		if err := r.App.Commands.ConsumeAuthenticationToken.Handle(ctx, otpCookie.Value); err != nil {
+			return nil, err
+		}
+
 		// user had token and it was used to log in
 		http.SetCookie(gc.Writer, &http.Cookie{Name: token.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
 

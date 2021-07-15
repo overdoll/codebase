@@ -7,8 +7,8 @@ import (
 	"github.com/gocql/gocql"
 	"go.uber.org/zap"
 	"overdoll/applications/eva/src/domain/account"
-	"overdoll/applications/eva/src/domain/token"
 	"overdoll/applications/eva/src/domain/multi_factor"
+	"overdoll/applications/eva/src/domain/token"
 )
 
 type ConsumeAuthenticationTokenHandler struct {
@@ -25,7 +25,7 @@ var (
 	ErrFailedTokenConsume = errors.New("failed to consume cookie")
 )
 
-func (h ConsumeAuthenticationTokenHandler) Handle(ctx context.Context, cookieId string) (*account.Account, *token.AuthenticationToken, error) {
+func (h ConsumeAuthenticationTokenHandler) Handle(ctx context.Context, cookieId string) error {
 
 	// Redeem cookie
 	ck, err := h.cr.GetAuthenticationTokenById(ctx, cookieId)
@@ -33,56 +33,23 @@ func (h ConsumeAuthenticationTokenHandler) Handle(ctx context.Context, cookieId 
 	if err != nil {
 
 		if err == token.ErrTokenNotFound {
-			return nil, nil, nil
+			return nil
 		}
 
 		zap.S().Errorf("failed to get cookie: %s", err == gocql.ErrNotFound)
-		return nil, nil, ErrFailedTokenConsume
-	}
-
-	// Redeemed - check if user exists with this email
-	usr, err := h.ur.GetAccountByEmail(ctx, ck.Email())
-
-	// we weren't able to get our user, so that means that the cookie is not going to be deleted
-	// user has to register
-	if err != nil {
-		if err == account.ErrAccountNotFound {
-			return nil, ck, nil
-		}
-
-		zap.S().Errorf("failed to find user: %s", err)
-		return nil, nil, ErrFailedTokenConsume
+		return ErrFailedTokenConsume
 	}
 
 	if err := ck.MakeConsumed(); err != nil {
-		return nil, ck, err
-	}
-
-	// multi-factor auth is enabled, we get the auth types and figure out which ones the user has
-	if usr.MultiFactorEnabled() {
-
-		// get TOTP configuration to make sure it's configured
-		_, err := h.mr.GetAccountMultiFactorTOTP(ctx, usr.ID())
-
-		// no error
-		if err == nil {
-			// tell cookie that multi factor TOTP type is required, and we don't consume the cookie yet
-			ck.RequireMultiFactor(true)
-			return nil, ck, nil
-		}
-
-		if err != multi_factor.ErrTOTPNotConfigured {
-			zap.S().Errorf("failed to get totp: %s", err)
-			return nil, nil, ErrFailedTokenConsume
-		}
+		return err
 	}
 
 	// Delete cookie - user is registered, so we don't need to wait for another call where the user will
 	// enter a username, since they already have an account and we can log them in
 	if err := h.cr.DeleteAuthenticationTokenById(ctx, cookieId); err != nil {
 		zap.S().Errorf("failed to delete cookie: %s", err)
-		return nil, nil, ErrFailedTokenConsume
+		return ErrFailedTokenConsume
 	}
 
-	return usr, ck, err
+	return err
 }
