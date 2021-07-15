@@ -210,7 +210,6 @@ func (r PostsCassandraRepository) CreatePost(ctx context.Context, pending *post.
 			"categories",
 			"characters",
 			"posted_at",
-			"reassignment_at",
 		).
 		Query(r.session).
 		Consistency(gocql.One).
