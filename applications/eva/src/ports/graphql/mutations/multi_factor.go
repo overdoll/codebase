@@ -6,8 +6,8 @@ import (
 
 	"go.uber.org/zap"
 	"overdoll/applications/eva/src/app/command"
-	"overdoll/applications/eva/src/domain/token"
 	"overdoll/applications/eva/src/domain/multi_factor"
+	"overdoll/applications/eva/src/domain/token"
 	"overdoll/applications/eva/src/ports/graphql/types"
 	"overdoll/libraries/cookies"
 	"overdoll/libraries/helpers"
