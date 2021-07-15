@@ -101,6 +101,11 @@ extend type Mutation {
   addAccountEmail(email: String!): Response!
 
   """
+  Remove account email - email must belong to account and cannot be the primary email
+  """
+  removeAccountEmail(email: String!): Response!
+
+  """
   Modify the current account's username
   """
   modifyAccountUsername(username: String!): Response!

@@ -17,4 +17,5 @@ type Repository interface {
 	AddAccountEmail(context.Context, *Account, *EmailConfirmation) error
 	ConfirmAccountEmail(context.Context, string, *Account) error
 	GetAccountEmails(context.Context, string) ([]*Email, error)
+	DeleteAccountEmail(context.Context, string, string) error
 }

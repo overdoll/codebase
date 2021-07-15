@@ -28,6 +28,7 @@ type Commands struct {
 	EnrollAccountMultiFactorTOTP   command.EnrollAccountMultiFactorTOTPHandler
 	ToggleAccountMultiFactor       command.ToggleAccountMultiFactorHandler
 	FinishAuthenticateMultiFactor  command.FinishAuthenticateMultiFactorHandler
+	RemoveAccountEmail             command.RemoveAccountEmailHandler
 }
 
 type Queries struct {

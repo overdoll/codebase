@@ -141,6 +141,7 @@ type ComplexityRoot struct {
 		MakeAccountEmailPrimary                 func(childComplexity int, email string) int
 		ModifyAccountUsername                   func(childComplexity int, username string) int
 		Register                                func(childComplexity int, data *types.RegisterInput) int
+		RemoveAccountEmail                      func(childComplexity int, email string) int
 		RevokeAccountSession                    func(childComplexity int, id string) int
 		ToggleAccountMultiFactor                func(childComplexity int) int
 		UnlockAccount                           func(childComplexity int) int
@@ -184,6 +185,7 @@ type MutationResolver interface {
 	UnlockAccount(ctx context.Context) (*types.Response, error)
 	Logout(ctx context.Context) (*types.Response, error)
 	AddAccountEmail(ctx context.Context, email string) (*types.Response, error)
+	RemoveAccountEmail(ctx context.Context, email string) (*types.Response, error)
 	ModifyAccountUsername(ctx context.Context, username string) (*types.Response, error)
 	RevokeAccountSession(ctx context.Context, id string) (*types.Response, error)
 	MakeAccountEmailPrimary(ctx context.Context, email string) (*types.Response, error)
@@ -630,6 +632,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.Register(childComplexity, args["data"].(*types.RegisterInput)), true
 
+	case "Mutation.removeAccountEmail":
+		if e.complexity.Mutation.RemoveAccountEmail == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_removeAccountEmail_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.RemoveAccountEmail(childComplexity, args["email"].(string)), true
+
 	case "Mutation.revokeAccountSession":
 		if e.complexity.Mutation.RevokeAccountSession == nil {
 			break
@@ -1006,6 +1020,11 @@ extend type Mutation {
   addAccountEmail(email: String!): Response!
 
   """
+  Remove account email - email must belong to account and cannot be the primary email
+  """
+  removeAccountEmail(email: String!): Response!
+
+  """
   Modify the current account's username
   """
   modifyAccountUsername(username: String!): Response!
@@ -1276,6 +1295,21 @@ func (ec *executionContext) field_Mutation_register_args(ctx context.Context, ra
 		}
 	}
 	args["data"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_removeAccountEmail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["email"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("email"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["email"] = arg0
 	return args, nil
 }
 
@@ -3096,6 +3130,48 @@ func (ec *executionContext) _Mutation_addAccountEmail(ctx context.Context, field
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return ec.resolvers.Mutation().AddAccountEmail(rctx, args["email"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.Response)
+	fc.Result = res
+	return ec.marshalNResponse2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐResponse(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_removeAccountEmail(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_removeAccountEmail_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().RemoveAccountEmail(rctx, args["email"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5613,6 +5689,11 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			}
 		case "addAccountEmail":
 			out.Values[i] = ec._Mutation_addAccountEmail(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "removeAccountEmail":
+			out.Values[i] = ec._Mutation_removeAccountEmail(ctx, field)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}

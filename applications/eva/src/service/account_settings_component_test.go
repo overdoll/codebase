@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"strings"
 	"testing"
 
 	"github.com/bxcodec/faker/v3"
@@ -49,6 +50,10 @@ type ConfirmAccountEmail struct {
 	ConfirmAccountEmail types.Response `graphql:"confirmAccountEmail(id: $id)"`
 }
 
+type RemoveAccountEmail struct {
+	RemoveAccountEmail types.Response `graphql:"removeAccountEmail(email: $email)"`
+}
+
 type MakeAccountEmailPrimary struct {
 	MakeAccountEmailPrimary types.Response `graphql:"makeAccountEmailPrimary(email: $email)"`
 }
@@ -68,7 +73,7 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 
 	require.NoError(t, err)
 
-	targetEmail := fake.Email
+	targetEmail := strings.ToLower(fake.Email)
 
 	var addAccountEmail AddAccountEmail
 
@@ -144,6 +149,56 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 	}
 
 	require.True(t, foundPrimaryEmail)
+}
+
+func TestAccountEmail_create_new_and_remove(t *testing.T) {
+	t.Parallel()
+
+	testAccountId := "1pcKibRoqTAUgmOiNpGLIrztM9R"
+
+	// use passport with user
+	client, _, _ := getHttpClient(t, passport.FreshPassportWithAccount(testAccountId))
+
+	fake := TestUser{}
+
+	err := faker.FakeData(&fake)
+
+	require.NoError(t, err)
+
+	targetEmail := strings.ToLower(fake.Email)
+
+	var addAccountEmail AddAccountEmail
+
+	// add an email to our account
+	err = client.Mutate(context.Background(), &addAccountEmail, map[string]interface{}{
+		"email": graphql.String(targetEmail),
+	})
+
+	require.NoError(t, err)
+	require.True(t, addAccountEmail.AddAccountEmail.Ok)
+
+	var removeAccountEmail RemoveAccountEmail
+
+	// remove the email from the account
+	err = client.Mutate(context.Background(), &removeAccountEmail, map[string]interface{}{
+		"email": graphql.String(targetEmail),
+	})
+
+	require.NoError(t, err)
+	require.True(t, removeAccountEmail.RemoveAccountEmail.Ok)
+
+	settings := qAccountSettings(t, client)
+
+	foundNewEmail := false
+
+	// go through account settings and make sure email is not found
+	for _, email := range settings.AccountSettings.General.Emails {
+		if email.Email == targetEmail {
+			foundNewEmail = true
+		}
+	}
+
+	require.False(t, foundNewEmail)
 }
 
 type ModifyAccountUsername struct {

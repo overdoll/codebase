@@ -17,6 +17,7 @@ go_library(
         "modify_account_username.go",
         "redeem_authentication_token.go",
         "register.go",
+        "remove_account_email.go",
         "revoke_account_session.go",
         "toggle_account_multi_factor.go",
         "unlock_account.go",
