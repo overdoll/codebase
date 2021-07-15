@@ -26,5 +26,7 @@
   "056ce15445e4c4ea31c0ad915d66f0e6": "query JoinQuery {\n  authenticationTokenStatus {\n    redeemed\n    email\n    accountStatus {\n      registered\n      authenticated\n      multiFactor\n    }\n  }\n}\n",
   "310060b52c63cc09be5b62f5f3f9a25d": "query JoinQuery {\n  authenticationTokenStatus {\n    redeemed\n    email\n    accountStatus {\n      registered\n      multiFactor\n    }\n  }\n}\n",
   "821963d9c28b3acebec24eb50b86d328": "query TokenQuery(\n  $token: String!\n) {\n  redeemAuthenticationToken(token: $token) {\n    redeemed\n    email\n    session\n    accountStatus {\n      registered\n      authenticated\n      multiFactor\n    }\n  }\n}\n",
-  "d660dc6770c44c1877ca917fb555406c": "query TokenQuery(\n  $token: String!\n) {\n  redeemAuthenticationToken(token: $token) {\n    redeemed\n    email\n    session\n    sameSession\n    accountStatus {\n      registered\n      authenticated\n      multiFactor\n    }\n  }\n}\n"
+  "d660dc6770c44c1877ca917fb555406c": "query TokenQuery(\n  $token: String!\n) {\n  redeemAuthenticationToken(token: $token) {\n    redeemed\n    email\n    session\n    sameSession\n    accountStatus {\n      registered\n      authenticated\n      multiFactor\n    }\n  }\n}\n",
+  "860923950119add8766b6f36ff2cf899": "query RootAccountRefreshQuery {\n  ...RootComponent_account\n}\n\nfragment RootComponent_account on Query {\n  authenticatedAccount {\n    username\n    roles\n  }\n}\n",
+  "a4af7c63a12bb944378a23eb8da64e56": "query RootQuery {\n  ...RootComponent_account\n}\n\nfragment RootComponent_account on Query {\n  authenticatedAccount {\n    username\n    roles\n  }\n}\n"
 }

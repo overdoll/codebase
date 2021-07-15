@@ -119,7 +119,7 @@ func (r *QueryResolver) RedeemAuthenticationToken(ctx context.Context, tokenId s
 
 // AuthenticatedAccount - resolve currently authenticated account
 // will also authenticate the user if they have the authentication cookie and it was redeemed
-func (r *QueryResolver) AuthenticatedAccount(ctx context.Context) (*types.Account, error) {
+func (r *QueryResolver) Viewer(ctx context.Context) (*types.Viewer, error) {
 	pass := passport.FromContext(ctx)
 
 	// User is logged in

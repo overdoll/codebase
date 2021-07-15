@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash a4af7c63a12bb944378a23eb8da64e56
+ * @relayHash 860923950119add8766b6f36ff2cf899
  */
 
 /* eslint-disable */
@@ -8,19 +8,21 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-import type { RootComponent_account$ref } from "./RootComponent_account.graphql";
-export type RootQueryVariables = {||};
-export type RootQueryResponse = {|
+import type { FragmentReference } from "relay-runtime";
+declare export opaque type RootComponent_account$ref: FragmentReference;
+declare export opaque type RootComponent_account$fragmentType: RootComponent_account$ref;
+export type RootAccountRefreshQueryVariables = {||};
+export type RootAccountRefreshQueryResponse = {|
   +$fragmentRefs: RootComponent_account$ref
 |};
-export type RootQuery = {|
-  variables: RootQueryVariables,
-  response: RootQueryResponse,
+export type RootAccountRefreshQuery = {|
+  variables: RootAccountRefreshQueryVariables,
+  response: RootAccountRefreshQueryResponse,
 |};
 
 
 /*
-query RootQuery {
+query RootAccountRefreshQuery {
   ...RootComponent_account
 }
 
@@ -37,7 +39,7 @@ const node: ConcreteRequest = {
     "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
-    "name": "RootQuery",
+    "name": "RootAccountRefreshQuery",
     "selections": [
       {
         "args": null,
@@ -52,7 +54,7 @@ const node: ConcreteRequest = {
   "operation": {
     "argumentDefinitions": [],
     "kind": "Operation",
-    "name": "RootQuery",
+    "name": "RootAccountRefreshQuery",
     "selections": [
       {
         "alias": null,
@@ -82,13 +84,13 @@ const node: ConcreteRequest = {
     ]
   },
   "params": {
-    "id": "a4af7c63a12bb944378a23eb8da64e56",
+    "id": "860923950119add8766b6f36ff2cf899",
     "metadata": {},
-    "name": "RootQuery",
+    "name": "RootAccountRefreshQuery",
     "operationKind": "query",
     "text": null
   }
 };
 // prettier-ignore
-(node: any).hash = 'ccb034c86a1899fcb487573a204d4eb2';
+(node: any).hash = '306e9e7ab1478cdfad4b641f02db479e';
 module.exports = node;

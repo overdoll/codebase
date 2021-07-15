@@ -6,3 +6,7 @@ type Response {
 type Validation {
   code: String!
 }
+
+interface Node {
+  id: ID!
+}

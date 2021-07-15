@@ -10,12 +10,17 @@ import (
 	"time"
 )
 
+type Node interface {
+	IsNode()
+}
+
 type Account struct {
 	ID        string `json:"id"`
 	TestField string `json:"testField"`
 }
 
 func (Account) IsEntity() {}
+func (Account) IsNode()   {}
 
 type Artist struct {
 	ID       string `json:"id"`

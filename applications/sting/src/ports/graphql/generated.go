@@ -720,8 +720,8 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
-	{Name: "schema/federation/schema.graphql", Input: `extend type Account @key(fields: "id") {
-  id: String! @external
+	{Name: "schema/federation/schema.graphql", Input: `extend type Account implements Node @key(fields: "id") {
+  id: ID! @external
   testField: String!
 }`, BuiltIn: false},
 	{Name: "schema/inputs.graphql", Input: `input CharacterRequest {
@@ -738,8 +738,6 @@ input SearchInput {
   Discarded
   Rejected
 }
-
-scalar Time
 
 type PendingPost {
   id: String!
@@ -868,6 +866,12 @@ type Validation {
 type Response {
   validation: Validation
   ok: Boolean!
+}
+
+scalar Time
+
+interface Node {
+  id: ID!
 }`, BuiltIn: false},
 	{Name: "../../libraries/graphql/relay/schema.graphql", Input: `# Information about pagination in a connection.
 type PageInfo {
@@ -913,7 +917,7 @@ union _Entity = Account
 
 # fake type to build resolver interfaces for users to implement
 type Entity {
-		findAccountByID(id: String!,): Account!
+		findAccountByID(id: ID!,): Account!
 
 }
 
@@ -939,7 +943,7 @@ func (ec *executionContext) field_Entity_findAccountByID_args(ctx context.Contex
 	var arg0 string
 	if tmp, ok := rawArgs["id"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1213,7 +1217,7 @@ func (ec *executionContext) _Account_id(ctx context.Context, field graphql.Colle
 	}
 	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNID2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Account_testField(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
@@ -4658,6 +4662,22 @@ func (ec *executionContext) unmarshalInputSearchInput(ctx context.Context, obj i
 
 // region    ************************** interface.gotpl ***************************
 
+func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj types.Node) graphql.Marshaler {
+	switch obj := (obj).(type) {
+	case nil:
+		return graphql.Null
+	case types.Account:
+		return ec._Account(ctx, sel, &obj)
+	case *types.Account:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._Account(ctx, sel, obj)
+	default:
+		panic(fmt.Errorf("unexpected type %T", obj))
+	}
+}
+
 func (ec *executionContext) __Entity(ctx context.Context, sel ast.SelectionSet, obj fedruntime.Entity) graphql.Marshaler {
 	switch obj := (obj).(type) {
 	case nil:
@@ -4678,7 +4698,7 @@ func (ec *executionContext) __Entity(ctx context.Context, sel ast.SelectionSet, 
 
 // region    **************************** object.gotpl ****************************
 
-var accountImplementors = []string{"Account", "_Entity"}
+var accountImplementors = []string{"Account", "_Entity", "Node"}
 
 func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, obj *types.Account) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, accountImplementors)
@@ -5880,6 +5900,21 @@ func (ec *executionContext) marshalNContributor2ᚖoverdollᚋapplicationsᚋsti
 		return graphql.Null
 	}
 	return ec._Contributor(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNID2string(ctx context.Context, v interface{}) (string, error) {
+	res, err := graphql.UnmarshalID(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNID2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
+	res := graphql.MarshalID(v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
 }
 
 func (ec *executionContext) marshalNMedia2ᚕᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐMediaᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.Media) graphql.Marshaler {

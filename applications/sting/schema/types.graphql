@@ -38,3 +38,7 @@ type Response {
 }
 
 scalar Time
+
+interface Node {
+  id: ID!
+}

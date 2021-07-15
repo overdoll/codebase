@@ -1,5 +1,5 @@
-type Account {
-  id: String!
+type Account implements Node {
+  id: ID!
   username: String!
   roles: [AccountRoleEnum!]!
   avatar: String!
@@ -233,6 +233,11 @@ type Mutation {
   """Add an email to the account, will need to be confirmed"""
   addAccountEmail(email: String!): Response!
 
+  """
+  Remove account email - email must belong to account and cannot be the primary email
+  """
+  removeAccountEmail(email: String!): Response!
+
   """Modify the current account's username"""
   modifyAccountUsername(username: String!): Response!
 
@@ -295,6 +300,10 @@ type Mutation {
   Current status can be queried from AccountModeratorSettings
   """
   toggleModeratorStatus: Response!
+}
+
+interface Node {
+  id: ID!
 }
 
 type PageInfo {
@@ -398,7 +407,7 @@ type PostResponse {
 
 type Query {
   """Get the currently-authenticated account"""
-  authenticatedAccount: Account
+  viewer: Viewer
 
   """Get current settings for the account"""
   accountSettings: AccountSettings!
@@ -473,4 +482,13 @@ scalar Time
 
 type Validation {
   code: String!
+}
+
+type Viewer {
+  id: ID!
+  username: String!
+  roles: [AccountRoleEnum!]!
+  avatar: String!
+  verified: Boolean!
+  lock: AccountLock
 }

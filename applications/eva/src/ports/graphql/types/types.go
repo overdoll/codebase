@@ -8,6 +8,10 @@ import (
 	"strconv"
 )
 
+type Node interface {
+	IsNode()
+}
+
 type Account struct {
 	ID       string            `json:"id"`
 	Username string            `json:"username"`
@@ -17,6 +21,7 @@ type Account struct {
 	Lock     *AccountLock      `json:"lock"`
 }
 
+func (Account) IsNode()   {}
 func (Account) IsEntity() {}
 
 type AccountEmail struct {
@@ -115,6 +120,15 @@ type Response struct {
 
 type Validation struct {
 	Code string `json:"code"`
+}
+
+type Viewer struct {
+	ID       string            `json:"id"`
+	Username string            `json:"username"`
+	Roles    []AccountRoleEnum `json:"roles"`
+	Avatar   string            `json:"avatar"`
+	Verified bool              `json:"verified"`
+	Lock     *AccountLock      `json:"lock"`
 }
 
 type AccountEmailStatusEnum string

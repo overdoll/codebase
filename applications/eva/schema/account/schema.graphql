@@ -3,8 +3,17 @@ enum AccountRoleEnum {
   Staff
 }
 
-type Account @key(fields: "id") {
-  id: String!
+type Viewer {
+  id: ID!
+  username: String!
+  roles: [AccountRoleEnum!]!
+  avatar: String!
+  verified: Boolean!
+  lock: AccountLock
+}
+
+type Account implements Node @key(fields: "id") {
+  id: ID!
   username: String!
   roles: [AccountRoleEnum!]!
   avatar: String!
@@ -71,5 +80,5 @@ extend type Query {
   """
   Get the currently-authenticated account
   """
-  authenticatedAccount: Account
+  viewer: Viewer
 }
