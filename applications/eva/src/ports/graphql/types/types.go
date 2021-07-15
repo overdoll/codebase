@@ -86,23 +86,22 @@ type AccountUsername struct {
 	Username string `json:"username"`
 }
 
-type Authentication struct {
-	Cookie  *Cookie  `json:"cookie"`
-	Account *Account `json:"account"`
-}
-
 type AuthenticationInput struct {
 	Email string `json:"email"`
 }
 
-type Cookie struct {
-	SameSession bool                  `json:"sameSession"`
-	Registered  bool                  `json:"registered"`
-	Redeemed    bool                  `json:"redeemed"`
-	Session     string                `json:"session"`
-	Email       string                `json:"email"`
-	Invalid     bool                  `json:"invalid"`
-	MultiFactor []MultiFactorTypeEnum `json:"multiFactor"`
+type AuthenticationToken struct {
+	SameSession   bool                              `json:"sameSession"`
+	Redeemed      bool                              `json:"redeemed"`
+	Session       string                            `json:"session"`
+	Email         string                            `json:"email"`
+	AccountStatus *AuthenticationTokenAccountStatus `json:"accountStatus"`
+}
+
+type AuthenticationTokenAccountStatus struct {
+	Registered    bool                  `json:"registered"`
+	Authenticated bool                  `json:"authenticated"`
+	MultiFactor   []MultiFactorTypeEnum `json:"multiFactor"`
 }
 
 type RegisterInput struct {

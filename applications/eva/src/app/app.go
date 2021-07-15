@@ -11,8 +11,8 @@ type Application struct {
 }
 
 type Commands struct {
-	RedeemCookie                   command.RedeemCookieHandler
-	ConsumeCookie                  command.ConsumeCookieHandler
+	RedeemAuthenticationToken      command.RedeemAuthenticationTokenHandler
+	ConsumeAuthenticationToken     command.ConsumeAuthenticationTokenHandler
 	Authenticate                   command.AuthenticateHandler
 	Register                       command.RegisterHandler
 	LockAccount                    command.LockAccountHandler
@@ -28,6 +28,7 @@ type Commands struct {
 	EnrollAccountMultiFactorTOTP   command.EnrollAccountMultiFactorTOTPHandler
 	ToggleAccountMultiFactor       command.ToggleAccountMultiFactorHandler
 	FinishAuthenticateMultiFactor  command.FinishAuthenticateMultiFactorHandler
+	RemoveAccountEmail             command.RemoveAccountEmailHandler
 }
 
 type Queries struct {
@@ -37,4 +38,5 @@ type Queries struct {
 	GetAccountSessions              query.GetAccountSessionsHandler
 	GetAccountRecoveryCodes         query.GetAccountRecoveryCodesHandler
 	IsAccountMultiFactorTOTPEnabled query.IsAccountTOTPMultiFactorEnabledHandler
+	GetAuthenticationTokenStatus    query.GetAuthenticationTokenStatusHandler
 }

@@ -33,6 +33,23 @@ func (r *MutationResolver) AddAccountEmail(ctx context.Context, email string) (*
 	}, nil
 }
 
+func (r *MutationResolver) RemoveAccountEmail(ctx context.Context, email string) (*types.Response, error) {
+	pass := passport.FromContext(ctx)
+
+	if !pass.IsAuthenticated() {
+		return nil, passport.ErrNotAuthenticated
+	}
+
+	if err := r.App.Commands.RemoveAccountEmail.Handle(ctx, pass.AccountID(), email); err != nil {
+		return nil, err
+	}
+
+	return &types.Response{
+		Validation: nil,
+		Ok:         true,
+	}, nil
+}
+
 func (r *MutationResolver) ModifyAccountUsername(ctx context.Context, username string) (*types.Response, error) {
 	pass := passport.FromContext(ctx)
 

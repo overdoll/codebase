@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 7e5c372c223c18cbc199e631a798e33e
+ * @relayHash 3434ef0a82b3c2c17362082d1c1495a3
  */
 
 /* eslint-disable */
@@ -8,14 +8,12 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-import type { JoinFragment$ref } from "./JoinFragment.graphql";
+export type AccountRoleEnum = "Moderator" | "Staff" | "%future added value";
 export type RootQueryVariables = {||};
 export type RootQueryResponse = {|
-  +authentication: ?{|
-    +account: ?{|
-      +username: string
-    |},
-    +$fragmentRefs: JoinFragment$ref,
+  +authenticatedAccount: ?{|
+    +username: string,
+    +roles: $ReadOnlyArray<AccountRoleEnum>,
   |}
 |};
 export type RootQuery = {|
@@ -26,67 +24,48 @@ export type RootQuery = {|
 
 /*
 query RootQuery {
-  authentication {
-    account {
-      username
-    }
-    ...JoinFragment
-  }
-}
-
-fragment JoinFragment on Authentication {
-  cookie {
-    redeemed
-    registered
-    email
+  authenticatedAccount {
+    username
+    roles
   }
 }
 */
 
 const node: ConcreteRequest = (function(){
-var v0 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "Account",
-  "kind": "LinkedField",
-  "name": "account",
-  "plural": false,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "username",
-      "storageKey": null
-    }
-  ],
-  "storageKey": null
-};
+var v0 = [
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "Account",
+    "kind": "LinkedField",
+    "name": "authenticatedAccount",
+    "plural": false,
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "username",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "roles",
+        "storageKey": null
+      }
+    ],
+    "storageKey": null
+  }
+];
 return {
   "fragment": {
     "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
     "name": "RootQuery",
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "Authentication",
-        "kind": "LinkedField",
-        "name": "authentication",
-        "plural": false,
-        "selections": [
-          (v0/*: any*/),
-          {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "JoinFragment"
-          }
-        ],
-        "storageKey": null
-      }
-    ],
+    "selections": (v0/*: any*/),
     "type": "Query",
     "abstractKey": null
   },
@@ -95,55 +74,10 @@ return {
     "argumentDefinitions": [],
     "kind": "Operation",
     "name": "RootQuery",
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "Authentication",
-        "kind": "LinkedField",
-        "name": "authentication",
-        "plural": false,
-        "selections": [
-          (v0/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Cookie",
-            "kind": "LinkedField",
-            "name": "cookie",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "redeemed",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "registered",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "email",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      }
-    ]
+    "selections": (v0/*: any*/)
   },
   "params": {
-    "id": "7e5c372c223c18cbc199e631a798e33e",
+    "id": "3434ef0a82b3c2c17362082d1c1495a3",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",
@@ -152,5 +86,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '69df0ceba0bd8482b32143d92edae3d6';
+(node: any).hash = 'fa4aade3eb3645aa574120e47d24c973';
 module.exports = node;

@@ -3,6 +3,7 @@ package account
 import (
 	"errors"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -80,7 +81,7 @@ func NewAccount(id, username, email string) (*Account, error) {
 	return &Account{
 		id:        id,
 		username:  username,
-		email:     email,
+		email:     strings.ToLower(email),
 		unclaimed: email == "",
 	}, nil
 }

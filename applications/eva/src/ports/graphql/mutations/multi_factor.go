@@ -6,8 +6,8 @@ import (
 
 	"go.uber.org/zap"
 	"overdoll/applications/eva/src/app/command"
-	"overdoll/applications/eva/src/domain/cookie"
 	"overdoll/applications/eva/src/domain/multi_factor"
+	"overdoll/applications/eva/src/domain/token"
 	"overdoll/applications/eva/src/ports/graphql/types"
 	"overdoll/libraries/cookies"
 	"overdoll/libraries/helpers"
@@ -86,7 +86,7 @@ func (r *MutationResolver) EnrollAccountMultiFactorTotp(ctx context.Context, cod
 
 	if err != nil {
 
-		// Cookie doesn't exist - fail it
+		// AuthenticationToken doesn't exist - fail it
 		if err == http.ErrNoCookie {
 			return nil, command.ErrFailedEnrollAccountMultiFactorTOTP
 		}
@@ -108,7 +108,7 @@ func (r *MutationResolver) EnrollAccountMultiFactorTotp(ctx context.Context, cod
 		}, nil
 	}
 
-	http.SetCookie(gc.Writer, &http.Cookie{Name: cookie.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
+	http.SetCookie(gc.Writer, &http.Cookie{Name: token.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
 
 	return &types.Response{
 		Validation: nil,

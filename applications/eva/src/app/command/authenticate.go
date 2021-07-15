@@ -5,15 +5,15 @@ import (
 	"errors"
 
 	"go.uber.org/zap"
-	"overdoll/applications/eva/src/domain/cookie"
+	"overdoll/applications/eva/src/domain/token"
 	"overdoll/libraries/uuid"
 )
 
 type AuthenticateHandler struct {
-	cr cookie.Repository
+	cr token.Repository
 }
 
-func NewAuthenticateHandler(cr cookie.Repository) AuthenticateHandler {
+func NewAuthenticateHandler(cr token.Repository) AuthenticateHandler {
 	return AuthenticateHandler{cr: cr}
 }
 
@@ -21,16 +21,16 @@ var (
 	ErrFailedAuthenticate = errors.New("failed to authenticate")
 )
 
-func (h AuthenticateHandler) Handle(ctx context.Context, email, session string) (*cookie.Cookie, error) {
+func (h AuthenticateHandler) Handle(ctx context.Context, email, session string) (*token.AuthenticationToken, error) {
 
 	// Create an authentication cookie
-	instance, err := cookie.NewCookie(uuid.New().String(), email, session)
+	instance, err := token.NewAuthenticationToken(uuid.New().String(), email, session)
 
 	if err != nil {
 		return nil, err
 	}
 
-	if err := h.cr.CreateCookie(ctx, instance); err != nil {
+	if err := h.cr.CreateAuthenticationToken(ctx, instance); err != nil {
 		zap.S().Errorf("failed to create cookie: %s", err)
 		return nil, ErrFailedAuthenticate
 	}
