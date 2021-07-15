@@ -53,11 +53,11 @@ export default function Join (props: Props): Node {
     props.prepared.joinQuery
   )
 
+  const data = usePreloadedQuery<JoinQuery>(JoinTokenStatus, queryRef)
+
   const root = useContext(RootContext)
 
   const history = useHistory()
-
-  const data = usePreloadedQuery<JoinQuery>(JoinTokenStatus, queryRef)
 
   const [t] = useTranslation('auth')
 
@@ -69,6 +69,10 @@ export default function Join (props: Props): Node {
   const [waiting, setWaiting] = useState(false)
 
   const [email, setEmail] = useState(null)
+
+  const authenticationInitiated = !!data.authenticationTokenStatus
+  const authenticationTokenRedeemed = !!data?.authenticationTokenStatus?.redeemed
+  const authenticationTokenAccountRegistered = !!data?.authenticationTokenStatus?.accountStatus?.registered
 
   // a refresh query - used mainly for polling
   const refresh = useCallback(() => {
@@ -95,10 +99,6 @@ export default function Join (props: Props): Node {
       }
     })
   }
-
-  const authenticationInitiated = !!data.authenticationTokenStatus
-  const authenticationTokenRedeemed = !!data?.authenticationTokenStatus?.redeemed
-  const authenticationTokenAccountRegistered = !!data?.authenticationTokenStatus?.accountStatus?.registered
 
   // when we receive the results from the token redemption, we will re-fetch the account and change URLs
   useEffect(() => {
