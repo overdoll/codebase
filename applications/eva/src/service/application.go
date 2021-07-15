@@ -77,7 +77,7 @@ func createApplication(ctx context.Context) app.Application {
 			GetAccountSessions:              query.NewGetAccountSessionsHandler(sessionRepo),
 			GetAccountRecoveryCodes:         query.NewGetAccountRecoveryCodesHandler(mfaRepo),
 			IsAccountMultiFactorTOTPEnabled: query.NewIsAccountTOTPMultiFactorEnabledHandler(mfaRepo),
-			GetAuthenticationToken:          query.NewGetAuthenticationTokenHandler(tokenRepo),
+			GetAuthenticationTokenStatus:    query.NewGetAuthenticationTokenStatusHandler(tokenRepo, accountRepo),
 		},
 	}
 }

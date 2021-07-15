@@ -3,9 +3,8 @@
  */
 import { graphql, useMutation } from 'react-relay/hooks'
 import type { Node } from 'react'
-import { useMemo } from 'react'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { LobbySubscriptionResponse } from '@//:artifacts/LobbySubscription.graphql'
 import Icon from '@//:modules/content/icon/Icon'
 import { Box, Center, Flex, Heading, Text, useToast } from '@chakra-ui/react'
 import Button from '@//:modules/form/button'
@@ -15,7 +14,7 @@ import SignBadgeCircle
   from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
 
 type Props = {
-  onReceive: () => void,
+  refresh: () => void,
   email: ?string,
 };
 
@@ -30,37 +29,10 @@ const LobbyEmail = graphql`
 export default function Lobby (props: Props): Node {
   const notify = useToast()
 
-  // TODO: implement subscription when subscription is supported
-  // OR just use polling instead
-  useMemo(
-    () => ({
-      variables: {},
-      subscription: {},
-
-      // Received a subscription response
-      onNext: (response: ?LobbySubscriptionResponse) => {
-        // If the cookie was redeemed in the same browser session, and user is registered, refresh the page
-        if (
-          response?.authListener?.sameSession &&
-          !!response?.authListener?.cookie?.registered
-        ) {
-          window.location.reload()
-        } else {
-          props.onReceive(response)
-        }
-      },
-
-      // Subscription error - show to user
-      onError: () => {
-        notify({
-          status: 'error',
-          title: t('lobby.error'),
-          isClosable: true
-        })
-      }
-    }),
-    []
-  )
+  // TODO: refetch query, but add polling
+  useEffect(() => {
+    // props.refresh()
+  }, [])
 
   const [t] = useTranslation('auth')
 

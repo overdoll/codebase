@@ -123,13 +123,22 @@ type AuditAccount {
   username: String!
 }
 
-type Authentication {
-  cookie: Cookie
-  account: Account
-}
-
 input AuthenticationInput {
   email: String!
+}
+
+type AuthenticationToken {
+  sameSession: Boolean!
+  redeemed: Boolean!
+  session: String!
+  email: String!
+  accountStatus: AuthenticationTokenAccountStatus
+}
+
+type AuthenticationTokenAccountStatus {
+  registered: Boolean!
+  authenticated: Boolean!
+  multiFactor: [MultiFactorTypeEnum!]
 }
 
 type Category {
@@ -166,16 +175,6 @@ type Contributor {
   id: String!
   username: String!
   avatar: String!
-}
-
-type Cookie {
-  sameSession: Boolean!
-  registered: Boolean!
-  redeemed: Boolean!
-  session: String!
-  email: String!
-  invalid: Boolean!
-  multiFactor: [MultiFactorTypeEnum!]
 }
 
 type Media {
@@ -317,8 +316,8 @@ type PendingPost {
   characterRequests: [CharacterRequestType!]
   artistId: String
   artistUsername: String!
-  postedAt: String!
-  reassignmentAt: String!
+  postedAt: Time!
+  reassignmentAt: Time!
 }
 
 type PendingPostAuditLog {
@@ -398,16 +397,8 @@ type PostResponse {
 }
 
 type Query {
-  """
-  A query that will allow you to get information about the currently logged-in account
-  or the current state of authentication (cookie)
-  
-  Good for persisting state on refresh and authorizing accounts
-  """
-  authentication: Authentication
-
-  """Query for redeeming the cookie - when user receives the cookie from"""
-  redeemCookie(cookie: String!): Cookie!
+  """Get the currently-authenticated account"""
+  authenticatedAccount: Account
 
   """Get current settings for the account"""
   accountSettings: AccountSettings!
@@ -417,6 +408,14 @@ type Query {
 
   """Get MFA recovery codes"""
   accountMultiFactorRecoveryCodes: [AccountMultiFactorRecoveryCode!]!
+
+  """Redeem authentication token - token is received from the email"""
+  redeemAuthenticationToken(token: String!): AuthenticationToken
+
+  """
+  Get the status of the authentication token - whether or not it is redeemed, account status, etc..
+  """
+  authenticationTokenStatus: AuthenticationToken
 
   """
   Get Pending Posts, specific to a moderator
@@ -469,6 +468,8 @@ input RevertPostInput {
 input SearchInput {
   search: String!
 }
+
+scalar Time
 
 type Validation {
   code: String!

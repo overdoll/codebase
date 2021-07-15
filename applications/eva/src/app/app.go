@@ -37,5 +37,5 @@ type Queries struct {
 	GetAccountSessions              query.GetAccountSessionsHandler
 	GetAccountRecoveryCodes         query.GetAccountRecoveryCodesHandler
 	IsAccountMultiFactorTOTPEnabled query.IsAccountTOTPMultiFactorEnabledHandler
-	GetAuthenticationToken          query.GetAuthenticationTokenHandler
+	GetAuthenticationTokenStatus    query.GetAuthenticationTokenStatusHandler
 }

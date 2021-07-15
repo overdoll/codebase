@@ -1,11 +1,11 @@
 /**
  * @flow
  */
-import type { Context, Node } from 'react'
-import { createContext, Suspense } from 'react'
+import type { Node } from 'react'
+import { Suspense } from 'react'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
 import { graphql, usePreloadedQuery } from 'react-relay/hooks'
-import type { RootQuery, RootQueryResponse } from '@//:artifacts/RootQuery.graphql'
+import type { RootQuery } from '@//:artifacts/RootQuery.graphql'
 import { Helmet } from 'react-helmet-async'
 
 type Props = {
@@ -17,16 +17,12 @@ type Props = {
 
 const RootQueryGQL = graphql`
   query RootQuery {
-    authentication {
-      account {
-        username
-      }
-      ...JoinFragment
+    authenticatedAccount {
+      username
+      roles
     }
   }
 `
-
-const RootContext: Context<?RootQueryResponse> = createContext(null)
 
 export default function Root (props: Props): Node {
   const rootQuery = usePreloadedQuery<RootQuery>(
@@ -35,13 +31,11 @@ export default function Root (props: Props): Node {
   )
 
   return (
-    <RootContext.Provider value={rootQuery}>
+    <>
       <Helmet
         title='overdoll'
       />
       <Suspense fallback={null}>{props.children}</Suspense>
-    </RootContext.Provider>
+    </>
   )
 }
-
-export { RootContext }

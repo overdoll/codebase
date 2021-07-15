@@ -1,21 +1,28 @@
 /**
  * @flow
  */
-import { graphql, useFragment, useMutation } from 'react-relay/hooks'
+import type { PreloadedQueryInner } from 'react-relay/hooks'
+import { graphql, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay/hooks'
 import type { Node } from 'react'
-import { useContext, useState } from 'react'
+import { useCallback, useState } from 'react'
 import Register from '../Register/Register'
 import { useTranslation } from 'react-i18next'
 import Lobby from './Lobby/Lobby'
 import { Alert, AlertDescription, AlertIcon, Center, CloseButton, Flex, useToast } from '@chakra-ui/react'
-import { RootContext } from '../Root/Root'
 import Icon from '@//:modules/content/icon/Icon'
 import SignBadgeCircle
   from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
-import type { JoinFragment$key } from '@//:artifacts/JoinFragment.graphql'
 import { useFlash } from '@//:modules/flash'
 import { Helmet } from 'react-helmet-async'
 import JoinForm from './JoinForm/JoinForm'
+import type { JoinQuery } from '@//:artifacts/JoinQuery.graphql'
+
+type Props = {
+  prepared: {
+    joinQuery: PreloadedQueryInner<JoinQuery>,
+  },
+  children: Node,
+};
 
 const JoinAction = graphql`
   mutation JoinMutation($data: AuthenticationInput!) {
@@ -25,23 +32,26 @@ const JoinAction = graphql`
   }
 `
 
-const RootFragmentGQL = graphql`
-  fragment JoinFragment on Authentication {
-    cookie {
+const JoinTokenStatus = graphql`
+  query JoinQuery {
+    authenticationTokenStatus {
       redeemed
-      registered
       email
+      accountStatus {
+        registered
+        multiFactor
+      }
     }
   }
 `
 
-export default function Join (): Node {
-  const rootQuery = useContext(RootContext)
-
-  const data = useFragment<?JoinFragment$key>(
-    RootFragmentGQL,
-    rootQuery?.authentication
+export default function Join (props: Props): Node {
+  const [queryRef, loadQuery] = useQueryLoader<JoinQuery>(
+    JoinTokenStatus,
+    props.prepared.joinQuery
   )
+
+  const data = usePreloadedQuery<JoinQuery>(JoinTokenStatus, queryRef)
 
   const [t] = useTranslation('auth')
 
@@ -50,18 +60,14 @@ export default function Join (): Node {
   const notify = useToast()
   const { read, flush } = useFlash()
 
-  // Receiving a subscription response
-  const [authInfo, setAuthInfo] = useState({ authListener: null })
-
-  // Waiting for a subscription
   const [waiting, setWaiting] = useState(false)
 
   const [email, setEmail] = useState(null)
 
-  const changeAuth = data => {
-    setAuthInfo(data)
-    setWaiting(false)
-  }
+  //
+  const refresh = useCallback(() => {
+    loadQuery(props.prepared.joinQuery.variables, { fetchPolicy: 'network-only' })
+  }, [])
 
   const onSubmit = (val) => {
     setEmail(val.email)
@@ -84,37 +90,27 @@ export default function Join (): Node {
     })
   }
 
-  // Checks for various types of states
-  const emptySubscriptionResponse = authInfo.authListener === null
-  const emptyAuthCookie = !!data?.cookie === false
+  const authenticationInitiated = !!data.authenticationTokenStatus
+  const authenticationTokenRedeemed = !!data?.authenticationTokenStatus?.redeemed
+  const authenticationTokenAccountRegistered = !!data?.authenticationTokenStatus?.accountStatus?.registered
 
   // If we're waiting on a token, create a subscription for the token
   // We don't have to send any values because it already knows the token
   // from a cookie.
   if (
-    waiting ||
-    (emptySubscriptionResponse && !emptyAuthCookie && !data?.cookie?.redeemed)
+    waiting || (authenticationInitiated && !authenticationTokenRedeemed)
   ) {
     return (
       <Lobby
         // Use auth cookie's email as backup, since it may not be here after a refresh
-        email={!emptyAuthCookie ? data?.cookie?.email : email}
-        onReceive={changeAuth}
+        email={waiting ? email : data?.authenticationTokenStatus?.email}
+        refresh={refresh}
       />
     )
   }
 
-  // User not registered - when we either receive this response from a subscription, or a page refresh
-  const subscriptionNotRegistered =
-    !emptySubscriptionResponse &&
-    authInfo.authListener?.cookie.registered === false
-
-  // Cookie was redeemed, but the user is not registered
-  const cookieRedeemedNotRegistered =
-    !emptyAuthCookie && data?.cookie?.redeemed && !data.cookie?.registered
-
   // We already have auth cookie data, and it's been redeemed. We want the user to registers
-  if (subscriptionNotRegistered || cookieRedeemedNotRegistered) {
+  if (authenticationInitiated && authenticationTokenRedeemed && !authenticationTokenAccountRegistered) {
     return <Register />
   }
 
@@ -135,8 +131,7 @@ export default function Join (): Node {
             mr='auto'
             mb={8}
           />
-          {error &&
-          (
+          {error && (
             <Alert mb={2} status='error'>
               <AlertIcon />
               <AlertDescription>{error}</AlertDescription>
@@ -148,7 +143,10 @@ export default function Join (): Node {
               />
             </Alert>
           )}
-          <JoinForm onSubmit={onSubmit} loading={isInFlight} />
+          <JoinForm
+            onSubmit={onSubmit}
+            loading={isInFlight}
+          />
         </Flex>
       </Center>
     </>

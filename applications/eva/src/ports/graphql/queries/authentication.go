@@ -106,7 +106,7 @@ func (r *QueryResolver) RedeemAuthenticationToken(ctx context.Context, tokenId s
 		Session:     ck.Session(),
 		Email:       ck.Email(),
 		AccountStatus: &types.AuthenticationTokenAccountStatus{
-			Registered:    true,
+			Registered:    false,
 			Authenticated: false,
 			MultiFactor:   multiFactorTypes,
 		},
@@ -203,7 +203,7 @@ func (r *QueryResolver) AuthenticationTokenStatus(ctx context.Context) (*types.A
 		return nil, nil
 	}
 
-	ck, err := r.App.Queries.GetAuthenticationToken.Handle(ctx, otpCookie.Value)
+	acc, ck, err := r.App.Queries.GetAuthenticationTokenStatus.Handle(ctx, otpCookie.Value)
 
 	if err != nil {
 
@@ -214,10 +214,25 @@ func (r *QueryResolver) AuthenticationTokenStatus(ctx context.Context) (*types.A
 		return nil, err
 	}
 
-	var multiFactorTypes []types.MultiFactorTypeEnum
+	if acc != nil {
 
-	if ck.IsTOTPRequired() {
-		multiFactorTypes = append(multiFactorTypes, types.MultiFactorTypeEnumTotp)
+		var multiFactorTypes []types.MultiFactorTypeEnum
+
+		if ck.IsTOTPRequired() {
+			multiFactorTypes = append(multiFactorTypes, types.MultiFactorTypeEnumTotp)
+		}
+
+		return &types.AuthenticationToken{
+			SameSession: true,
+			Redeemed:    ck.Redeemed(),
+			Session:     ck.Session(),
+			Email:       ck.Email(),
+			AccountStatus: &types.AuthenticationTokenAccountStatus{
+				Registered:    true,
+				Authenticated: multiFactorTypes == nil,
+				MultiFactor:   multiFactorTypes,
+			},
+		}, nil
 	}
 
 	return &types.AuthenticationToken{
@@ -226,8 +241,7 @@ func (r *QueryResolver) AuthenticationTokenStatus(ctx context.Context) (*types.A
 		Session:     ck.Session(),
 		Email:       ck.Email(),
 		AccountStatus: &types.AuthenticationTokenAccountStatus{
-			Registered:  true,
-			MultiFactor: multiFactorTypes,
+			Registered: false,
 		},
 	}, nil
 }
