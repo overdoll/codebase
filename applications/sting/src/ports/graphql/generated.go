@@ -12,6 +12,7 @@ import (
 	"strconv"
 	"sync"
 	"sync/atomic"
+	"time"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
@@ -738,6 +739,8 @@ input SearchInput {
   Rejected
 }
 
+scalar Time
+
 type PendingPost {
   id: String!
   state: PendingPostStateEnum!
@@ -750,8 +753,8 @@ type PendingPost {
   characterRequests: [CharacterRequestType!]
   artistId: String
   artistUsername: String!
-  postedAt: String!
-  reassignmentAt: String!
+  postedAt: Time!
+  reassignmentAt: Time!
 }
 
 type Contributor {
@@ -2544,9 +2547,9 @@ func (ec *executionContext) _PendingPost_postedAt(ctx context.Context, field gra
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(time.Time)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _PendingPost_reassignmentAt(ctx context.Context, field graphql.CollectedField, obj *types.PendingPost) (ret graphql.Marshaler) {
@@ -2579,9 +2582,9 @@ func (ec *executionContext) _PendingPost_reassignmentAt(ctx context.Context, fie
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(time.Time)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _PendingPostConnection_edges(ctx context.Context, field graphql.CollectedField, obj *types.PendingPostConnection) (ret graphql.Marshaler) {
@@ -6097,6 +6100,21 @@ func (ec *executionContext) marshalNString2ᚕstringᚄ(ctx context.Context, sel
 	}
 
 	return ret
+}
+
+func (ec *executionContext) unmarshalNTime2timeᚐTime(ctx context.Context, v interface{}) (time.Time, error) {
+	res, err := graphql.UnmarshalTime(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNTime2timeᚐTime(ctx context.Context, sel ast.SelectionSet, v time.Time) graphql.Marshaler {
+	res := graphql.MarshalTime(v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
 }
 
 func (ec *executionContext) unmarshalN_Any2map(ctx context.Context, v interface{}) (map[string]interface{}, error) {

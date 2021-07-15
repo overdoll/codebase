@@ -86,8 +86,8 @@ func MarshalPendingPostToGraphQL(result *post.PendingPostEdge) *PendingPostEdge 
 			CharacterRequests: characterRequests,
 			ArtistID:          &id,
 			ArtistUsername:    artist.Username(),
-			PostedAt:          result.Node.PostedAt().String(),
-			ReassignmentAt:    result.Node.ReassignmentAt().String(),
+			PostedAt:          result.Node.PostedAt(),
+			ReassignmentAt:    result.Node.ReassignmentAt(),
 		},
 	}
 }
