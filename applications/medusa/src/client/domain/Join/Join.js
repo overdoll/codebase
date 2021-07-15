@@ -64,7 +64,7 @@ export default function Join (props: Props): Node {
 
   const [email, setEmail] = useState(null)
 
-  //
+  // a refresh query - used mainly for polling
   const refresh = useCallback(() => {
     loadQuery(props.prepared.joinQuery.variables, { fetchPolicy: 'network-only' })
   }, [])
@@ -98,7 +98,7 @@ export default function Join (props: Props): Node {
   // We don't have to send any values because it already knows the token
   // from a cookie.
   if (
-    waiting || (authenticationInitiated && !authenticationTokenRedeemed)
+    (waiting && !authenticationTokenRedeemed) || (authenticationInitiated && !authenticationTokenRedeemed)
   ) {
     return (
       <Lobby
@@ -110,8 +110,12 @@ export default function Join (props: Props): Node {
   }
 
   // We already have auth cookie data, and it's been redeemed. We want the user to registers
-  if (authenticationInitiated && authenticationTokenRedeemed && !authenticationTokenAccountRegistered) {
-    return <Register />
+  if (authenticationInitiated && authenticationTokenRedeemed) {
+    if (!authenticationTokenAccountRegistered) {
+      return <Register />
+    } else {
+      return 'registered - should refresh query or redirect'
+    }
   }
 
   const error = read('login.notify')

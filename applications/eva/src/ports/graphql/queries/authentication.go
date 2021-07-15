@@ -212,7 +212,7 @@ func (r *QueryResolver) AuthenticationTokenStatus(ctx context.Context) (*types.A
 		return nil, err
 	}
 
-	if acc != nil {
+	if acc != nil && ck.Redeemed() {
 
 		var multiFactorTypes []types.MultiFactorTypeEnum
 

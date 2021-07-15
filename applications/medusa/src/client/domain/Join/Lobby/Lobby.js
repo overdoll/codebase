@@ -29,18 +29,20 @@ const LobbyEmail = graphql`
 export default function Lobby (props: Props): Node {
   const notify = useToast()
 
-  // TODO: refetch query, but add polling
-  useEffect(() => {
-    // props.refresh()
-  }, [])
-
   const [t] = useTranslation('auth')
 
   const [sendEmail, isSendingEmail] = useMutation(LobbyEmail)
 
   const [isTimedOut, currentTimer, createTimeout] = useClickDelay('lobbyButton')
 
-  // TODO fix submitting as it doesn't work and put createTimeout inside instead
+  // poll for result
+  useEffect(() => {
+    function refresh () {
+      props.refresh()
+      setTimeout(refresh, 2000)
+    }
+    setTimeout(refresh, 2000)
+  }, [])
 
   const onSubmit = () => {
     sendEmail({
