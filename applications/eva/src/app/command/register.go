@@ -6,16 +6,16 @@ import (
 
 	"go.uber.org/zap"
 	"overdoll/applications/eva/src/domain/account"
-	"overdoll/applications/eva/src/domain/cookie"
+	"overdoll/applications/eva/src/domain/token"
 	"overdoll/libraries/uuid"
 )
 
 type RegisterHandler struct {
-	cr cookie.Repository
+	cr token.Repository
 	ur account.Repository
 }
 
-func NewRegisterHandler(cr cookie.Repository, ur account.Repository) RegisterHandler {
+func NewRegisterHandler(cr token.Repository, ur account.Repository) RegisterHandler {
 	return RegisterHandler{cr: cr, ur: ur}
 }
 
@@ -25,14 +25,14 @@ var (
 
 func (h RegisterHandler) Handle(ctx context.Context, cookieId, username string) (*account.Account, error) {
 
-	ck, err := h.cr.GetCookieById(ctx, cookieId)
+	ck, err := h.cr.GetAuthenticationTokenById(ctx, cookieId)
 
 	if err != nil {
 		zap.S().Errorf("failed to get cookie: %s", err)
 		return nil, ErrFailedRegister
 	}
 
-	// Cookie should have been redeemed at this point, if we are on this command
+	// AuthenticationToken should have been redeemed at this point, if we are on this command
 	if err := ck.MakeConsumed(); err != nil {
 		return nil, err
 	}
@@ -48,7 +48,7 @@ func (h RegisterHandler) Handle(ctx context.Context, cookieId, username string) 
 		return nil, ErrFailedRegister
 	}
 
-	if err := h.cr.DeleteCookieById(ctx, cookieId); err != nil {
+	if err := h.cr.DeleteAuthenticationTokenById(ctx, cookieId); err != nil {
 		zap.S().Errorf("failed to delete cookie: %s", err)
 		return nil, ErrFailedRegister
 	}

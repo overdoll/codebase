@@ -45,17 +45,17 @@ func createApplication(ctx context.Context) app.Application {
 		log.Fatalf("redis session failed with errors: %s", err)
 	}
 
-	cookieRepo := adapters.NewCookieRedisRepository(redis)
+	tokenRepo := adapters.NewAuthenticationTokenRedisRepository(redis)
 	sessionRepo := adapters.NewSessionRepository(redis2)
 	accountRepo := adapters.NewAccountCassandraRedisRepository(session, redis)
 	mfaRepo := adapters.NewMultiFactorCassandraRepository(session)
 
 	return app.Application{
 		Commands: app.Commands{
-			RedeemCookie:                   command.NewRedeemCookieHandler(cookieRepo, accountRepo),
-			ConsumeCookie:                  command.NewConsumeCookieHandler(cookieRepo, accountRepo, mfaRepo),
-			Register:                       command.NewRegisterHandler(cookieRepo, accountRepo),
-			Authenticate:                   command.NewAuthenticateHandler(cookieRepo),
+			RedeemAuthenticationToken:      command.NewRedeemAuthenticationTokenHandler(tokenRepo, accountRepo),
+			ConsumeAuthenticationToken:     command.NewConsumeAuthenticationTokenHandler(tokenRepo, accountRepo, mfaRepo),
+			Register:                       command.NewRegisterHandler(tokenRepo, accountRepo),
+			Authenticate:                   command.NewAuthenticateHandler(tokenRepo),
 			LockAccount:                    command.NewLockUserHandler(accountRepo),
 			CreateAccount:                  command.NewCreateUserHandler(accountRepo),
 			UnlockAccount:                  command.NewUnlockUserHandler(accountRepo),
@@ -68,7 +68,7 @@ func createApplication(ctx context.Context) app.Application {
 			GenerateAccountMultiFactorTOTP: command.NewGenerateAccountMultiFactorTOTP(mfaRepo, accountRepo),
 			EnrollAccountMultiFactorTOTP:   command.NewEnrollAccountMultiFactorTOTPHandler(mfaRepo, accountRepo),
 			ToggleAccountMultiFactor:       command.NewToggleAccountMultiFactorHandler(mfaRepo, accountRepo),
-			FinishAuthenticateMultiFactor:  command.NewFinishAuthenticateMultiFactorHandler(cookieRepo, accountRepo, mfaRepo),
+			FinishAuthenticateMultiFactor:  command.NewFinishAuthenticateMultiFactorHandler(tokenRepo, accountRepo, mfaRepo),
 		},
 		Queries: app.Queries{
 			GetAccount:                      query.NewGetAccountHandler(accountRepo),
@@ -77,6 +77,7 @@ func createApplication(ctx context.Context) app.Application {
 			GetAccountSessions:              query.NewGetAccountSessionsHandler(sessionRepo),
 			GetAccountRecoveryCodes:         query.NewGetAccountRecoveryCodesHandler(mfaRepo),
 			IsAccountMultiFactorTOTPEnabled: query.NewIsAccountTOTPMultiFactorEnabledHandler(mfaRepo),
+			GetAuthenticationToken:          query.NewGetAuthenticationTokenHandler(tokenRepo),
 		},
 	}
 }

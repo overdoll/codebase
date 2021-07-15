@@ -10,7 +10,7 @@ import (
 
 	"go.uber.org/zap"
 	"overdoll/applications/eva/src/app/command"
-	"overdoll/applications/eva/src/domain/cookie"
+	"overdoll/applications/eva/src/domain/token"
 	"overdoll/applications/eva/src/ports/graphql/types"
 	"overdoll/libraries/cookies"
 	"overdoll/libraries/helpers"
@@ -48,8 +48,8 @@ func (r *MutationResolver) Authenticate(ctx context.Context, data *types.Authent
 	// Opened in the same browser - log them in that browser if this cookie exists
 	// Otherwise, if opened in another browser (such as the phone), it will log them in on the original browser through a subscription
 	err = cookies.SetCookie(ctx, &http.Cookie{
-		Name:    cookie.OTPKey,
-		Value:   instance.Cookie(),
+		Name:    token.OTPKey,
+		Value:   instance.Token(),
 		Expires: time.Now().Add(instance.Expiration()),
 	})
 
@@ -73,11 +73,11 @@ func (r *MutationResolver) Register(ctx context.Context, data *types.RegisterInp
 
 	gc := helpers.GinContextFromContext(ctx)
 
-	currentCookie, err := cookies.ReadCookie(ctx, cookie.OTPKey)
+	currentCookie, err := cookies.ReadCookie(ctx, token.OTPKey)
 
 	if err != nil {
 
-		// Cookie doesn't exist
+		// AuthenticationToken doesn't exist
 		if err == http.ErrNoCookie {
 			return nil, command.ErrFailedRegister
 		}
@@ -92,7 +92,7 @@ func (r *MutationResolver) Register(ctx context.Context, data *types.RegisterInp
 		return nil, err
 	}
 
-	http.SetCookie(gc.Writer, &http.Cookie{Name: cookie.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
+	http.SetCookie(gc.Writer, &http.Cookie{Name: token.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
 
 	if err := pass.MutatePassport(ctx, func(p *passport.Passport) error {
 		p.SetAccount(usr.ID())
@@ -116,11 +116,11 @@ func (r *MutationResolver) AuthenticateTotp(ctx context.Context, code string) (*
 
 	gc := helpers.GinContextFromContext(ctx)
 
-	currentCookie, err := cookies.ReadCookie(ctx, cookie.OTPKey)
+	currentCookie, err := cookies.ReadCookie(ctx, token.OTPKey)
 
 	if err != nil {
 
-		// Cookie doesn't exist
+		// AuthenticationToken doesn't exist
 		if err == http.ErrNoCookie {
 			return nil, command.ErrFailedAuthenticateMultiFactor
 		}
@@ -142,7 +142,7 @@ func (r *MutationResolver) AuthenticateTotp(ctx context.Context, code string) (*
 		}, nil
 	}
 
-	http.SetCookie(gc.Writer, &http.Cookie{Name: cookie.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
+	http.SetCookie(gc.Writer, &http.Cookie{Name: token.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
 
 	if err := pass.MutatePassport(ctx, func(p *passport.Passport) error {
 		p.SetAccount(usr.ID())
@@ -166,11 +166,11 @@ func (r *MutationResolver) AuthenticateRecoveryCode(ctx context.Context, code st
 
 	gc := helpers.GinContextFromContext(ctx)
 
-	currentCookie, err := cookies.ReadCookie(ctx, cookie.OTPKey)
+	currentCookie, err := cookies.ReadCookie(ctx, token.OTPKey)
 
 	if err != nil {
 
-		// Cookie doesn't exist
+		// AuthenticationToken doesn't exist
 		if err == http.ErrNoCookie {
 			return nil, command.ErrFailedAuthenticateMultiFactor
 		}
@@ -192,7 +192,7 @@ func (r *MutationResolver) AuthenticateRecoveryCode(ctx context.Context, code st
 		}, nil
 	}
 
-	http.SetCookie(gc.Writer, &http.Cookie{Name: cookie.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
+	http.SetCookie(gc.Writer, &http.Cookie{Name: token.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
 
 	if err := pass.MutatePassport(ctx, func(p *passport.Passport) error {
 		p.SetAccount(usr.ID())

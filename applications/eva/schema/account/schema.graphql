@@ -29,11 +29,6 @@ input AuthenticationInput {
   email: String!
 }
 
-type Authentication {
-  cookie: Cookie
-  account: Account
-}
-
 extend type Mutation {
   """
   Initiates an authentication flow for the specified account
@@ -74,10 +69,7 @@ extend type Mutation {
 
 extend type Query {
   """
-  A query that will allow you to get information about the currently logged-in account
-  or the current state of authentication (cookie)
-
-  Good for persisting state on refresh and authorizing accounts
+  Get the currently-authenticated account
   """
-  authentication: Authentication
+  authenticatedAccount: Account
 }

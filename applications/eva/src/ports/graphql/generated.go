@@ -109,19 +109,18 @@ type ComplexityRoot struct {
 		Username func(childComplexity int) int
 	}
 
-	Authentication struct {
-		Account func(childComplexity int) int
-		Cookie  func(childComplexity int) int
+	AuthenticationToken struct {
+		AccountStatus func(childComplexity int) int
+		Email         func(childComplexity int) int
+		Redeemed      func(childComplexity int) int
+		SameSession   func(childComplexity int) int
+		Session       func(childComplexity int) int
 	}
 
-	Cookie struct {
-		Email       func(childComplexity int) int
-		Invalid     func(childComplexity int) int
-		MultiFactor func(childComplexity int) int
-		Redeemed    func(childComplexity int) int
-		Registered  func(childComplexity int) int
-		SameSession func(childComplexity int) int
-		Session     func(childComplexity int) int
+	AuthenticationTokenAccountStatus struct {
+		Authenticated func(childComplexity int) int
+		MultiFactor   func(childComplexity int) int
+		Registered    func(childComplexity int) int
 	}
 
 	Entity struct {
@@ -150,9 +149,10 @@ type ComplexityRoot struct {
 	Query struct {
 		AccountMultiFactorRecoveryCodes func(childComplexity int) int
 		AccountSettings                 func(childComplexity int) int
-		Authentication                  func(childComplexity int) int
+		AuthenticatedAccount            func(childComplexity int) int
+		AuthenticationTokenStatus       func(childComplexity int) int
 		ConfirmAccountEmail             func(childComplexity int, id string) int
-		RedeemCookie                    func(childComplexity int, cookie string) int
+		RedeemAuthenticationToken       func(childComplexity int, token string) int
 		__resolve__service              func(childComplexity int) int
 		__resolve_entities              func(childComplexity int, representations []map[string]interface{}) int
 	}
@@ -193,11 +193,12 @@ type MutationResolver interface {
 	ToggleAccountMultiFactor(ctx context.Context) (*types.Response, error)
 }
 type QueryResolver interface {
-	Authentication(ctx context.Context) (*types.Authentication, error)
-	RedeemCookie(ctx context.Context, cookie string) (*types.Cookie, error)
+	AuthenticatedAccount(ctx context.Context) (*types.Account, error)
 	AccountSettings(ctx context.Context) (*types.AccountSettings, error)
 	ConfirmAccountEmail(ctx context.Context, id string) (*types.Response, error)
 	AccountMultiFactorRecoveryCodes(ctx context.Context) ([]*types.AccountMultiFactorRecoveryCode, error)
+	RedeemAuthenticationToken(ctx context.Context, token string) (*types.AuthenticationToken, error)
+	AuthenticationTokenStatus(ctx context.Context) (*types.AuthenticationToken, error)
 }
 
 type executableSchema struct {
@@ -425,68 +426,61 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AccountUsername.Username(childComplexity), true
 
-	case "Authentication.account":
-		if e.complexity.Authentication.Account == nil {
+	case "AuthenticationToken.accountStatus":
+		if e.complexity.AuthenticationToken.AccountStatus == nil {
 			break
 		}
 
-		return e.complexity.Authentication.Account(childComplexity), true
+		return e.complexity.AuthenticationToken.AccountStatus(childComplexity), true
 
-	case "Authentication.cookie":
-		if e.complexity.Authentication.Cookie == nil {
+	case "AuthenticationToken.email":
+		if e.complexity.AuthenticationToken.Email == nil {
 			break
 		}
 
-		return e.complexity.Authentication.Cookie(childComplexity), true
+		return e.complexity.AuthenticationToken.Email(childComplexity), true
 
-	case "Cookie.email":
-		if e.complexity.Cookie.Email == nil {
+	case "AuthenticationToken.redeemed":
+		if e.complexity.AuthenticationToken.Redeemed == nil {
 			break
 		}
 
-		return e.complexity.Cookie.Email(childComplexity), true
+		return e.complexity.AuthenticationToken.Redeemed(childComplexity), true
 
-	case "Cookie.invalid":
-		if e.complexity.Cookie.Invalid == nil {
+	case "AuthenticationToken.sameSession":
+		if e.complexity.AuthenticationToken.SameSession == nil {
 			break
 		}
 
-		return e.complexity.Cookie.Invalid(childComplexity), true
+		return e.complexity.AuthenticationToken.SameSession(childComplexity), true
 
-	case "Cookie.multiFactor":
-		if e.complexity.Cookie.MultiFactor == nil {
+	case "AuthenticationToken.session":
+		if e.complexity.AuthenticationToken.Session == nil {
 			break
 		}
 
-		return e.complexity.Cookie.MultiFactor(childComplexity), true
+		return e.complexity.AuthenticationToken.Session(childComplexity), true
 
-	case "Cookie.redeemed":
-		if e.complexity.Cookie.Redeemed == nil {
+	case "AuthenticationTokenAccountStatus.authenticated":
+		if e.complexity.AuthenticationTokenAccountStatus.Authenticated == nil {
 			break
 		}
 
-		return e.complexity.Cookie.Redeemed(childComplexity), true
+		return e.complexity.AuthenticationTokenAccountStatus.Authenticated(childComplexity), true
 
-	case "Cookie.registered":
-		if e.complexity.Cookie.Registered == nil {
+	case "AuthenticationTokenAccountStatus.multiFactor":
+		if e.complexity.AuthenticationTokenAccountStatus.MultiFactor == nil {
 			break
 		}
 
-		return e.complexity.Cookie.Registered(childComplexity), true
+		return e.complexity.AuthenticationTokenAccountStatus.MultiFactor(childComplexity), true
 
-	case "Cookie.sameSession":
-		if e.complexity.Cookie.SameSession == nil {
+	case "AuthenticationTokenAccountStatus.registered":
+		if e.complexity.AuthenticationTokenAccountStatus.Registered == nil {
 			break
 		}
 
-		return e.complexity.Cookie.SameSession(childComplexity), true
-
-	case "Cookie.session":
-		if e.complexity.Cookie.Session == nil {
-			break
-		}
-
-		return e.complexity.Cookie.Session(childComplexity), true
+		return e.complexity.AuthenticationTokenAccountStatus.Registered(childComplexity), true
 
 	case "Entity.findAccountByID":
 		if e.complexity.Entity.FindAccountByID == nil {
@@ -676,12 +670,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.AccountSettings(childComplexity), true
 
-	case "Query.authentication":
-		if e.complexity.Query.Authentication == nil {
+	case "Query.authenticatedAccount":
+		if e.complexity.Query.AuthenticatedAccount == nil {
 			break
 		}
 
-		return e.complexity.Query.Authentication(childComplexity), true
+		return e.complexity.Query.AuthenticatedAccount(childComplexity), true
+
+	case "Query.authenticationTokenStatus":
+		if e.complexity.Query.AuthenticationTokenStatus == nil {
+			break
+		}
+
+		return e.complexity.Query.AuthenticationTokenStatus(childComplexity), true
 
 	case "Query.confirmAccountEmail":
 		if e.complexity.Query.ConfirmAccountEmail == nil {
@@ -695,17 +696,17 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.ConfirmAccountEmail(childComplexity, args["id"].(string)), true
 
-	case "Query.redeemCookie":
-		if e.complexity.Query.RedeemCookie == nil {
+	case "Query.redeemAuthenticationToken":
+		if e.complexity.Query.RedeemAuthenticationToken == nil {
 			break
 		}
 
-		args, err := ec.field_Query_redeemCookie_args(context.TODO(), rawArgs)
+		args, err := ec.field_Query_redeemAuthenticationToken_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Query.RedeemCookie(childComplexity, args["cookie"].(string)), true
+		return e.complexity.Query.RedeemAuthenticationToken(childComplexity, args["token"].(string)), true
 
 	case "Query._service":
 		if e.complexity.Query.__resolve__service == nil {
@@ -849,11 +850,6 @@ input AuthenticationInput {
   email: String!
 }
 
-type Authentication {
-  cookie: Cookie
-  account: Account
-}
-
 extend type Mutation {
   """
   Initiates an authentication flow for the specified account
@@ -894,33 +890,9 @@ extend type Mutation {
 
 extend type Query {
   """
-  A query that will allow you to get information about the currently logged-in account
-  or the current state of authentication (cookie)
-
-  Good for persisting state on refresh and authorizing accounts
+  Get the currently-authenticated account
   """
-  authentication: Authentication
-}
-`, BuiltIn: false},
-	{Name: "schema/cookie/schema.graphql", Input: `enum MultiFactorTypeEnum {
-  TOTP
-}
-
-type Cookie {
-  sameSession: Boolean!
-  registered: Boolean!
-  redeemed: Boolean!
-  session: String!
-  email: String!
-  invalid: Boolean!
-  multiFactor: [MultiFactorTypeEnum!]
-}
-
-extend type Query {
-  """
-  Query for redeeming the cookie - when user receives the cookie from
-  """
-  redeemCookie(cookie: String!): Cookie!
+  authenticatedAccount: Account
 }
 `, BuiltIn: false},
 	{Name: "schema/schema.graphql", Input: `type Response {
@@ -1088,6 +1060,36 @@ extend type Query {
   Get MFA recovery codes
   """
   accountMultiFactorRecoveryCodes: [AccountMultiFactorRecoveryCode!]!
+}
+`, BuiltIn: false},
+	{Name: "schema/token/schema.graphql", Input: `enum MultiFactorTypeEnum {
+  TOTP
+}
+
+type AuthenticationTokenAccountStatus {
+  registered: Boolean!
+  authenticated: Boolean!
+  multiFactor: [MultiFactorTypeEnum!]
+}
+
+type AuthenticationToken {
+  sameSession: Boolean!
+  redeemed: Boolean!
+  session: String!
+  email: String!
+  accountStatus: AuthenticationTokenAccountStatus
+}
+
+extend type Query {
+  """
+  Redeem authentication token - token is received from the email
+  """
+  redeemAuthenticationToken(token: String!): AuthenticationToken
+
+  """
+  Get the status of the authentication token - whether or not it is redeemed, account status, etc..
+  """
+  authenticationTokenStatus: AuthenticationToken
 }
 `, BuiltIn: false},
 	{Name: "federation/directives.graphql", Input: `
@@ -1337,18 +1339,18 @@ func (ec *executionContext) field_Query_confirmAccountEmail_args(ctx context.Con
 	return args, nil
 }
 
-func (ec *executionContext) field_Query_redeemCookie_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Query_redeemAuthenticationToken_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 string
-	if tmp, ok := rawArgs["cookie"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cookie"))
+	if tmp, ok := rawArgs["token"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("token"))
 		arg0, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["cookie"] = arg0
+	args["token"] = arg0
 	return args, nil
 }
 
@@ -2437,7 +2439,7 @@ func (ec *executionContext) _AccountUsername_username(ctx context.Context, field
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Authentication_cookie(ctx context.Context, field graphql.CollectedField, obj *types.Authentication) (ret graphql.Marshaler) {
+func (ec *executionContext) _AuthenticationToken_sameSession(ctx context.Context, field graphql.CollectedField, obj *types.AuthenticationToken) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2445,71 +2447,7 @@ func (ec *executionContext) _Authentication_cookie(ctx context.Context, field gr
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "Authentication",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Cookie, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.Cookie)
-	fc.Result = res
-	return ec.marshalOCookie2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐCookie(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Authentication_account(ctx context.Context, field graphql.CollectedField, obj *types.Authentication) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Authentication",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Account, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.Account)
-	fc.Result = res
-	return ec.marshalOAccount2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Cookie_sameSession(ctx context.Context, field graphql.CollectedField, obj *types.Cookie) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Cookie",
+		Object:     "AuthenticationToken",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -2536,7 +2474,7 @@ func (ec *executionContext) _Cookie_sameSession(ctx context.Context, field graph
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Cookie_registered(ctx context.Context, field graphql.CollectedField, obj *types.Cookie) (ret graphql.Marshaler) {
+func (ec *executionContext) _AuthenticationToken_redeemed(ctx context.Context, field graphql.CollectedField, obj *types.AuthenticationToken) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2544,42 +2482,7 @@ func (ec *executionContext) _Cookie_registered(ctx context.Context, field graphq
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "Cookie",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Registered, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(bool)
-	fc.Result = res
-	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Cookie_redeemed(ctx context.Context, field graphql.CollectedField, obj *types.Cookie) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Cookie",
+		Object:     "AuthenticationToken",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -2606,7 +2509,7 @@ func (ec *executionContext) _Cookie_redeemed(ctx context.Context, field graphql.
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Cookie_session(ctx context.Context, field graphql.CollectedField, obj *types.Cookie) (ret graphql.Marshaler) {
+func (ec *executionContext) _AuthenticationToken_session(ctx context.Context, field graphql.CollectedField, obj *types.AuthenticationToken) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2614,7 +2517,7 @@ func (ec *executionContext) _Cookie_session(ctx context.Context, field graphql.C
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "Cookie",
+		Object:     "AuthenticationToken",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -2641,7 +2544,7 @@ func (ec *executionContext) _Cookie_session(ctx context.Context, field graphql.C
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Cookie_email(ctx context.Context, field graphql.CollectedField, obj *types.Cookie) (ret graphql.Marshaler) {
+func (ec *executionContext) _AuthenticationToken_email(ctx context.Context, field graphql.CollectedField, obj *types.AuthenticationToken) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2649,7 +2552,7 @@ func (ec *executionContext) _Cookie_email(ctx context.Context, field graphql.Col
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "Cookie",
+		Object:     "AuthenticationToken",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -2676,7 +2579,7 @@ func (ec *executionContext) _Cookie_email(ctx context.Context, field graphql.Col
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Cookie_invalid(ctx context.Context, field graphql.CollectedField, obj *types.Cookie) (ret graphql.Marshaler) {
+func (ec *executionContext) _AuthenticationToken_accountStatus(ctx context.Context, field graphql.CollectedField, obj *types.AuthenticationToken) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2684,7 +2587,7 @@ func (ec *executionContext) _Cookie_invalid(ctx context.Context, field graphql.C
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "Cookie",
+		Object:     "AuthenticationToken",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -2694,7 +2597,39 @@ func (ec *executionContext) _Cookie_invalid(ctx context.Context, field graphql.C
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Invalid, nil
+		return obj.AccountStatus, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.AuthenticationTokenAccountStatus)
+	fc.Result = res
+	return ec.marshalOAuthenticationTokenAccountStatus2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAuthenticationTokenAccountStatus(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AuthenticationTokenAccountStatus_registered(ctx context.Context, field graphql.CollectedField, obj *types.AuthenticationTokenAccountStatus) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AuthenticationTokenAccountStatus",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Registered, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2711,7 +2646,7 @@ func (ec *executionContext) _Cookie_invalid(ctx context.Context, field graphql.C
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Cookie_multiFactor(ctx context.Context, field graphql.CollectedField, obj *types.Cookie) (ret graphql.Marshaler) {
+func (ec *executionContext) _AuthenticationTokenAccountStatus_authenticated(ctx context.Context, field graphql.CollectedField, obj *types.AuthenticationTokenAccountStatus) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2719,7 +2654,42 @@ func (ec *executionContext) _Cookie_multiFactor(ctx context.Context, field graph
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "Cookie",
+		Object:     "AuthenticationTokenAccountStatus",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Authenticated, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AuthenticationTokenAccountStatus_multiFactor(ctx context.Context, field graphql.CollectedField, obj *types.AuthenticationTokenAccountStatus) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AuthenticationTokenAccountStatus",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -3415,7 +3385,7 @@ func (ec *executionContext) _Mutation_toggleAccountMultiFactor(ctx context.Conte
 	return ec.marshalNResponse2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐResponse(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Query_authentication(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Query_authenticatedAccount(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3433,7 +3403,7 @@ func (ec *executionContext) _Query_authentication(ctx context.Context, field gra
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Authentication(rctx)
+		return ec.resolvers.Query().AuthenticatedAccount(rctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3442,51 +3412,9 @@ func (ec *executionContext) _Query_authentication(ctx context.Context, field gra
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*types.Authentication)
+	res := resTmp.(*types.Account)
 	fc.Result = res
-	return ec.marshalOAuthentication2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAuthentication(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Query_redeemCookie(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Query",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Query_redeemCookie_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().RedeemCookie(rctx, args["cookie"].(string))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*types.Cookie)
-	fc.Result = res
-	return ec.marshalNCookie2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐCookie(ctx, field.Selections, res)
+	return ec.marshalOAccount2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_accountSettings(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -3599,6 +3527,77 @@ func (ec *executionContext) _Query_accountMultiFactorRecoveryCodes(ctx context.C
 	res := resTmp.([]*types.AccountMultiFactorRecoveryCode)
 	fc.Result = res
 	return ec.marshalNAccountMultiFactorRecoveryCode2ᚕᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountMultiFactorRecoveryCodeᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_redeemAuthenticationToken(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_redeemAuthenticationToken_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().RedeemAuthenticationToken(rctx, args["token"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.AuthenticationToken)
+	fc.Result = res
+	return ec.marshalOAuthenticationToken2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAuthenticationToken(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_authenticationTokenStatus(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().AuthenticationTokenStatus(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.AuthenticationToken)
+	fc.Result = res
+	return ec.marshalOAuthenticationToken2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAuthenticationToken(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query__entities(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -5430,21 +5429,39 @@ func (ec *executionContext) _AccountUsername(ctx context.Context, sel ast.Select
 	return out
 }
 
-var authenticationImplementors = []string{"Authentication"}
+var authenticationTokenImplementors = []string{"AuthenticationToken"}
 
-func (ec *executionContext) _Authentication(ctx context.Context, sel ast.SelectionSet, obj *types.Authentication) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, authenticationImplementors)
+func (ec *executionContext) _AuthenticationToken(ctx context.Context, sel ast.SelectionSet, obj *types.AuthenticationToken) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, authenticationTokenImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("Authentication")
-		case "cookie":
-			out.Values[i] = ec._Authentication_cookie(ctx, field, obj)
-		case "account":
-			out.Values[i] = ec._Authentication_account(ctx, field, obj)
+			out.Values[i] = graphql.MarshalString("AuthenticationToken")
+		case "sameSession":
+			out.Values[i] = ec._AuthenticationToken_sameSession(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "redeemed":
+			out.Values[i] = ec._AuthenticationToken_redeemed(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "session":
+			out.Values[i] = ec._AuthenticationToken_session(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "email":
+			out.Values[i] = ec._AuthenticationToken_email(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "accountStatus":
+			out.Values[i] = ec._AuthenticationToken_accountStatus(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -5456,49 +5473,29 @@ func (ec *executionContext) _Authentication(ctx context.Context, sel ast.Selecti
 	return out
 }
 
-var cookieImplementors = []string{"Cookie"}
+var authenticationTokenAccountStatusImplementors = []string{"AuthenticationTokenAccountStatus"}
 
-func (ec *executionContext) _Cookie(ctx context.Context, sel ast.SelectionSet, obj *types.Cookie) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, cookieImplementors)
+func (ec *executionContext) _AuthenticationTokenAccountStatus(ctx context.Context, sel ast.SelectionSet, obj *types.AuthenticationTokenAccountStatus) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, authenticationTokenAccountStatusImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("Cookie")
-		case "sameSession":
-			out.Values[i] = ec._Cookie_sameSession(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
+			out.Values[i] = graphql.MarshalString("AuthenticationTokenAccountStatus")
 		case "registered":
-			out.Values[i] = ec._Cookie_registered(ctx, field, obj)
+			out.Values[i] = ec._AuthenticationTokenAccountStatus_registered(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "redeemed":
-			out.Values[i] = ec._Cookie_redeemed(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "session":
-			out.Values[i] = ec._Cookie_session(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "email":
-			out.Values[i] = ec._Cookie_email(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "invalid":
-			out.Values[i] = ec._Cookie_invalid(ctx, field, obj)
+		case "authenticated":
+			out.Values[i] = ec._AuthenticationTokenAccountStatus_authenticated(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "multiFactor":
-			out.Values[i] = ec._Cookie_multiFactor(ctx, field, obj)
+			out.Values[i] = ec._AuthenticationTokenAccountStatus_multiFactor(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -5680,7 +5677,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Query")
-		case "authentication":
+		case "authenticatedAccount":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
 				defer func() {
@@ -5688,21 +5685,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_authentication(ctx, field)
-				return res
-			})
-		case "redeemCookie":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Query_redeemCookie(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
+				res = ec._Query_authenticatedAccount(ctx, field)
 				return res
 			})
 		case "accountSettings":
@@ -5745,6 +5728,28 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
+				return res
+			})
+		case "redeemAuthenticationToken":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_redeemAuthenticationToken(ctx, field)
+				return res
+			})
+		case "authenticationTokenStatus":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_authenticationTokenStatus(ctx, field)
 				return res
 			})
 		case "_entities":
@@ -6478,20 +6483,6 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
-func (ec *executionContext) marshalNCookie2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐCookie(ctx context.Context, sel ast.SelectionSet, v types.Cookie) graphql.Marshaler {
-	return ec._Cookie(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNCookie2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐCookie(ctx context.Context, sel ast.SelectionSet, v *types.Cookie) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	return ec._Cookie(ctx, sel, v)
-}
-
 func (ec *executionContext) unmarshalNInt2int(ctx context.Context, v interface{}) (int, error) {
 	res, err := graphql.UnmarshalInt(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -6896,19 +6887,26 @@ func (ec *executionContext) marshalOAccountLock2ᚖoverdollᚋapplicationsᚋeva
 	return ec._AccountLock(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOAuthentication2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAuthentication(ctx context.Context, sel ast.SelectionSet, v *types.Authentication) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._Authentication(ctx, sel, v)
-}
-
 func (ec *executionContext) unmarshalOAuthenticationInput2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAuthenticationInput(ctx context.Context, v interface{}) (*types.AuthenticationInput, error) {
 	if v == nil {
 		return nil, nil
 	}
 	res, err := ec.unmarshalInputAuthenticationInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOAuthenticationToken2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAuthenticationToken(ctx context.Context, sel ast.SelectionSet, v *types.AuthenticationToken) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._AuthenticationToken(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOAuthenticationTokenAccountStatus2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAuthenticationTokenAccountStatus(ctx context.Context, sel ast.SelectionSet, v *types.AuthenticationTokenAccountStatus) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._AuthenticationTokenAccountStatus(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
@@ -6933,13 +6931,6 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 		return graphql.Null
 	}
 	return graphql.MarshalBoolean(*v)
-}
-
-func (ec *executionContext) marshalOCookie2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐCookie(ctx context.Context, sel ast.SelectionSet, v *types.Cookie) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._Cookie(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOMultiFactorTypeEnum2ᚕoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐMultiFactorTypeEnumᚄ(ctx context.Context, v interface{}) ([]types.MultiFactorTypeEnum, error) {

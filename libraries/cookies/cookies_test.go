@@ -47,7 +47,7 @@ func TestCookie_create_encrypted(t *testing.T) {
 	found := false
 
 	// read the set-cookie header and ensure the cookie is encrypted
-	for _, ck := range gc.Writer.Header()["Set-Cookie"] {
+	for _, ck := range gc.Writer.Header()["Set-Token"] {
 		item := strings.Split(ck, ";")
 
 		cookie := strings.Split(item[0], "=")

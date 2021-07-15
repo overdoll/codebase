@@ -1,0 +1,29 @@
+enum MultiFactorTypeEnum {
+  TOTP
+}
+
+type AuthenticationTokenAccountStatus {
+  registered: Boolean!
+  authenticated: Boolean!
+  multiFactor: [MultiFactorTypeEnum!]
+}
+
+type AuthenticationToken {
+  sameSession: Boolean!
+  redeemed: Boolean!
+  session: String!
+  email: String!
+  accountStatus: AuthenticationTokenAccountStatus
+}
+
+extend type Query {
+  """
+  Redeem authentication token - token is received from the email
+  """
+  redeemAuthenticationToken(token: String!): AuthenticationToken
+
+  """
+  Get the status of the authentication token - whether or not it is redeemed, account status, etc..
+  """
+  authenticationTokenStatus: AuthenticationToken
+}

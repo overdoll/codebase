@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc"
 	eva "overdoll/applications/eva/proto"
-	"overdoll/applications/eva/src/domain/cookie"
+	"overdoll/applications/eva/src/domain/token"
 	"overdoll/applications/eva/src/ports"
 	"overdoll/applications/eva/src/ports/graphql/types"
 	"overdoll/libraries/bootstrap"
@@ -123,7 +123,7 @@ func getOTPCookieFromJar(t *testing.T, jar http.CookieJar) *http.Cookie {
 
 	// need to grab value from cookie, so we can redeem it
 	for _, ck := range cookies {
-		if ck.Name == cookie.OTPKey {
+		if ck.Name == token.OTPKey {
 			otpCookie = ck
 		}
 	}
