@@ -39,7 +39,7 @@ func (q QueryResolver) AccountInfractionHistory(ctx context.Context) ([]*types.A
 	return infractionHistory, nil
 }
 
-func (q QueryResolver) PendingPostAuditLogs(ctx context.Context, after *string, before *string, first *int, last *int, filter *types.PendingPostAuditLogFilters) (*types.PendingPostAuditLogConnection, error) {
+func (q QueryResolver) PendingPostAuditLogs(ctx context.Context, after, before *string, first, last *int, filter *types.PendingPostAuditLogFilters) (*types.PendingPostAuditLogConnection, error) {
 	pass := passport.FromContext(ctx)
 
 	if !pass.IsAuthenticated() {

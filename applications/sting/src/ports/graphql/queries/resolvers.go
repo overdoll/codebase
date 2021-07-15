@@ -33,7 +33,7 @@ func (r *QueryResolver) PendingPost(ctx context.Context, id string) (*types.Pend
 	}).Node, nil
 }
 
-func (r *QueryResolver) PendingPosts(ctx context.Context, after *string, before *string, first *int, last *int, filter *types.PendingPostFilters) (*types.PendingPostConnection, error) {
+func (r *QueryResolver) PendingPosts(ctx context.Context, after, before *string, first, last *int, filter *types.PendingPostFilters) (*types.PendingPostConnection, error) {
 
 	pass := passport.FromContext(ctx)
 
