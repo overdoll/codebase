@@ -31,7 +31,7 @@ func TestGetAccountAuthentication_empty(t *testing.T) {
 	query := qAuthenticatedAccount(t, client)
 
 	// at this point there is no account (since no passport is passed in) so expect that it doesnt send anything
-	require.Nil(t, query.AuthenticatedAccount)
+	require.Nil(t, query.Viewer)
 
 	queryToken := qAuthenticationTokenStatus(t, client)
 
@@ -50,7 +50,7 @@ func TestGetAccountAuthentication_user(t *testing.T) {
 
 	query := qAuthenticatedAccount(t, client)
 
-	require.Equal(t, "poisonminion", query.AuthenticatedAccount.Username)
+	require.Equal(t, "poisonminion", query.Viewer.Username)
 
 	queryToken := qAuthenticationTokenStatus(t, client)
 

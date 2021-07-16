@@ -246,7 +246,7 @@ func TestAccountUsername_modify(t *testing.T) {
 	auth := qAuthenticatedAccount(t, client)
 
 	// make sure that the username is modified as well for the "authentication" query
-	assert.Equal(t, targetUsername, auth.AuthenticatedAccount.Username)
+	assert.Equal(t, targetUsername, auth.Viewer.Username)
 }
 
 type TestSession struct {

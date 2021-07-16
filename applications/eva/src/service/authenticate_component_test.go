@@ -80,7 +80,7 @@ func TestAccountAuthenticate_from_another_session(t *testing.T) {
 
 	// since our user's cookie was redeemed from another session, when the user runs this query
 	// the next time, it should just log them in
-	assert.Equal(t, "poisonminion", authRedeemed.AuthenticatedAccount.Username)
+	assert.Equal(t, "poisonminion", authRedeemed.Viewer.Username)
 }
 
 type GenerateAccountMultiFactorRecoveryCodes struct {

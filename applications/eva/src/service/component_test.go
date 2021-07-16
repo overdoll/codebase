@@ -99,12 +99,12 @@ func qAccountSettings(t *testing.T, client *graphql.Client) AccountSettings {
 	return accountSettings
 }
 
-type AuthenticatedAccount struct {
-	AuthenticatedAccount *types.Account
+type Viewer struct {
+	Viewer *types.Viewer `graphql:"viewer()"`
 }
 
-func qAuthenticatedAccount(t *testing.T, client *graphql.Client) AuthenticatedAccount {
-	var authRedeemed AuthenticatedAccount
+func qAuthenticatedAccount(t *testing.T, client *graphql.Client) Viewer {
+	var authRedeemed Viewer
 
 	err := client.Query(context.Background(), &authRedeemed, nil)
 
