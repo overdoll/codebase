@@ -4,106 +4,84 @@ import (
 	"context"
 
 	"overdoll/applications/sting/src/app"
-	"overdoll/applications/sting/src/domain/post"
 	"overdoll/applications/sting/src/ports/graphql/types"
-	"overdoll/libraries/graphql"
-	"overdoll/libraries/passport"
 )
 
 type QueryResolver struct {
 	App *app.Application
 }
 
-func (r *QueryResolver) PendingPost(ctx context.Context, id string) (*types.PendingPost, error) {
-	pass := passport.FromContext(ctx)
+func (r *QueryResolver) Artists(ctx context.Context, after *string, before *string, first *int, last *int, username *string) (*types.ArtistConnection, error) {
 
-	if !pass.IsAuthenticated() {
-		return nil, passport.ErrNotAuthenticated
-	}
-
-	result, err := r.App.Queries.GetPendingPostAuthenticated.Handle(ctx, id, pass.AccountID())
+	results, err := r.App.Queries.SearchArtist.Handle(ctx, data.Search)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return types.MarshalPendingPostToGraphQL(&post.PendingPostEdge{
-		Cursor: "",
-		Node:   result,
-	}).Node, nil
+	resp := make([]*types.Artist, 0)
+
+	// Unmarshal our json into the correct model
+	for _, result := range results {
+
+		resp = append(resp, &types.Artist{
+			ID:       result.ID(),
+			Avatar:   result.Avatar(),
+			Username: result.Username(),
+		})
+	}
+
+	return resp, nil
 }
 
-func (r *QueryResolver) PendingPosts(ctx context.Context, after, before *string, first, last *int, filter *types.PendingPostFilters) (*types.PendingPostConnection, error) {
+func (r *QueryResolver) Categories(ctx context.Context, after *string, before *string, first *int, last *int, name *string) (*types.CategoryConnection, error) {
 
-	pass := passport.FromContext(ctx)
-
-	if !pass.IsAuthenticated() {
-		return nil, passport.ErrNotAuthenticated
-	}
-
-	moderatorId := ""
-	contributorId := ""
-	artistId := ""
-	id := ""
-
-	if filter != nil {
-		if filter.ModeratorID != nil {
-			moderatorId = *filter.ModeratorID
-		}
-
-		if filter.ContributorID != nil {
-			contributorId = *filter.ContributorID
-		}
-
-		if filter.ArtistID != nil {
-			artistId = *filter.ArtistID
-		}
-
-		if filter.ID != nil {
-			id = *filter.ID
-		}
-	}
-
-	var startCursor *string
-	var endCursor *string
-
-	input := &graphql.ConnectionInput{
-		After:  after,
-		Before: before,
-		First:  first,
-		Last:   last,
-	}
-
-	results, err := r.App.Queries.GetPendingPosts.Handle(ctx, input.ToCursor(), moderatorId, contributorId, artistId, id, pass.AccountID())
+	results, err := r.App.Queries.SearchCategories.Handle(ctx, data.Search)
 
 	if err != nil {
 		return nil, err
 	}
 
-	var posts []*types.PendingPostEdge
+	resp := make([]*types.Category, 0)
 
-	for _, result := range results.Edges {
-		posts = append(posts, types.MarshalPendingPostToGraphQL(result))
+	// Unmarshal our json into the correct model
+	for _, result := range results {
+
+		resp = append(resp, &types.Category{
+			ID:        result.ID(),
+			Thumbnail: result.Thumbnail(),
+			Title:     result.Title(),
+		})
 	}
 
-	if len(posts) > 0 {
-		startCursor = &posts[0].Cursor
-		endCursor = &posts[len(posts)-1].Cursor
-	}
-
-	return &types.PendingPostConnection{
-		Edges: posts,
-		PageInfo: &graphql.PageInfo{
-			HasNextPage:     results.PageInfo.HasNextPage(),
-			HasPreviousPage: results.PageInfo.HasPrevPage(),
-			StartCursor:     startCursor,
-			EndCursor:       endCursor,
-		},
-	}, nil
+	return resp, nil
 }
 
-func (r *QueryResolver) Characters(ctx context.Context, data types.SearchInput) ([]*types.Character, error) {
+func (r *QueryResolver) Medias(ctx context.Context, after *string, before *string, first *int, last *int, title *string) (*types.MediaConnection, error) {
 
+	results, err := r.App.Queries.SearchMedias.Handle(ctx, data.Search)
+
+	if err != nil {
+		return nil, err
+	}
+
+	resp := make([]*types.Media, 0)
+
+	// Unmarshal our json into the correct model
+	for _, result := range results {
+
+		resp = append(resp, &types.Media{
+			ID:        result.ID(),
+			Thumbnail: result.Thumbnail(),
+			Title:     result.Title(),
+		})
+	}
+
+	return resp, nil
+
+}
+
+func (r *QueryResolver) Characters(ctx context.Context, after *string, before *string, first *int, last *int, name *string, mediaTitle *string) (*types.CharacterConnection, error) {
 	results, err := r.App.Queries.SearchCharacters.Handle(ctx, data.Search)
 
 	if err != nil {
@@ -130,71 +108,10 @@ func (r *QueryResolver) Characters(ctx context.Context, data types.SearchInput) 
 	return resp, nil
 }
 
-func (r *QueryResolver) Categories(ctx context.Context, data types.SearchInput) ([]*types.Category, error) {
-
-	results, err := r.App.Queries.SearchCategories.Handle(ctx, data.Search)
-
-	if err != nil {
-		return nil, err
-	}
-
-	resp := make([]*types.Category, 0)
-
-	// Unmarshal our json into the correct model
-	for _, result := range results {
-
-		resp = append(resp, &types.Category{
-			ID:        result.ID(),
-			Thumbnail: result.Thumbnail(),
-			Title:     result.Title(),
-		})
-	}
-
-	return resp, nil
+func (r *QueryResolver) Posts(ctx context.Context, after *string, before *string, first *int, last *int, characterName *string, mediaTitle *string) (*types.PostConnection, error) {
+	panic("implement me")
 }
 
-func (r *QueryResolver) Artists(ctx context.Context, data types.SearchInput) ([]*types.Artist, error) {
-
-	results, err := r.App.Queries.SearchArtist.Handle(ctx, data.Search)
-
-	if err != nil {
-		return nil, err
-	}
-
-	resp := make([]*types.Artist, 0)
-
-	// Unmarshal our json into the correct model
-	for _, result := range results {
-
-		resp = append(resp, &types.Artist{
-			ID:       result.ID(),
-			Avatar:   result.Avatar(),
-			Username: result.Username(),
-		})
-	}
-
-	return resp, nil
-}
-
-func (r *QueryResolver) Media(ctx context.Context, data types.SearchInput) ([]*types.Media, error) {
-
-	results, err := r.App.Queries.SearchMedias.Handle(ctx, data.Search)
-
-	if err != nil {
-		return nil, err
-	}
-
-	resp := make([]*types.Media, 0)
-
-	// Unmarshal our json into the correct model
-	for _, result := range results {
-
-		resp = append(resp, &types.Media{
-			ID:        result.ID(),
-			Thumbnail: result.Thumbnail(),
-			Title:     result.Title(),
-		})
-	}
-
-	return resp, nil
+func (r *QueryResolver) Node(ctx context.Context, id string) (types.Node, error) {
+	panic("implement me")
 }

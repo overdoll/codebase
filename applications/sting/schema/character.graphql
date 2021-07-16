@@ -49,7 +49,7 @@ interface CharacterContainer {
 }
 
 extend type Query {
-  media(
+  medias(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
 

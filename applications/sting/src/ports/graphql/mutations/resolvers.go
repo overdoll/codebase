@@ -16,34 +16,7 @@ type MutationResolver struct {
 	Client client.Client
 }
 
-func (r *MutationResolver) UpdatePost(ctx context.Context, id string, data *types.PostInput) (*types.Response, error) {
-	requests := make(map[string]string)
-
-	for _, item := range data.CharacterRequests {
-		requests[item.Name] = item.Media
-	}
-
-	_, err := r.App.Commands.UpdatePendingPost.
-		Handle(
-			ctx,
-			id,
-			*data.ArtistID,
-			data.Characters,
-			data.Categories,
-			requests,
-			data.MediaRequests,
-			[]string{},
-		)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &types.Response{Validation: nil, Ok: true}, nil
-}
-
-func (r *MutationResolver) Post(ctx context.Context, data *types.PostInput) (*types.PostResponse, error) {
-
+func (r *MutationResolver) CreatePendingPost(ctx context.Context, input types.CreatePendingPostInput) (*types.CreatePendingPostPayload, error) {
 	pass := passport.FromContext(ctx)
 
 	if !pass.IsAuthenticated() {

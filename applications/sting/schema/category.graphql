@@ -27,9 +27,6 @@ interface CategoryContainer {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-
-    # filter by the name of the category
-    name: String
   ): CategoryConnection!
 }
 

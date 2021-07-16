@@ -92,8 +92,6 @@ type PendingPostConnection {
 }
 
 extend type Account @key(fields: "id") {
-  id: ID! @external
-
   """Pending posts queue specific to this account (when moderator)"""
   pendingPostsForModerator(
     """Returns the elements in the list that come after the specified cursor."""
@@ -107,7 +105,7 @@ extend type Account @key(fields: "id") {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-  ): PendingPostConnection!
+  ): PendingPostConnection! @goField(forceResolver: true)
 
   """Pending posts for this account"""
   pendingPosts(
@@ -122,7 +120,7 @@ extend type Account @key(fields: "id") {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-  ): PendingPostConnection!
+  ): PendingPostConnection! @goField(forceResolver: true)
 }
 
 

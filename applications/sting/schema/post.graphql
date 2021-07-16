@@ -50,7 +50,7 @@ extend type Account @key(fields: "id") {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-  ): PostConnection!
+  ): PostConnection! @goField(forceResolver: true)
 
   """Contributions specific to this account"""
   contributions(
@@ -65,7 +65,7 @@ extend type Account @key(fields: "id") {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-  ): PostConnection!
+  ): PostConnection! @goField(forceResolver: true)
 }
 
 extend type Query {

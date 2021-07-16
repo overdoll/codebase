@@ -14,6 +14,10 @@ federation:
   filename: src/ports/graphql/federation.go
   package: gen
 
+relay:
+  filename: src/ports/graphql/relay.go
+  package: gen
+
 models:
-  YesNo:
+  URI:
     model: overdoll/libraries/graphql.URI
