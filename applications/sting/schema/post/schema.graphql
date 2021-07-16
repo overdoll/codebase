@@ -73,7 +73,7 @@ extend type Query {
   """
   Get a single pending post by ID
   """
-  pendingPost(id: ID!): PendingPost!
+  pendingPost(id: String!): PendingPost!
 }
 
 extend type Mutation {
@@ -85,5 +85,5 @@ extend type Mutation {
   """
   Update post
   """
-  updatePost(id: ID!, data: PostInput): Response!
+  updatePost(id: String!, data: PostInput): Response!
 }

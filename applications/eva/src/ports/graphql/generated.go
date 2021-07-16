@@ -1019,12 +1019,12 @@ extend type Mutation {
   """
   Modify the current account's username
   """
-  modifyAccountUsername(username: ID!): Response!
+  modifyAccountUsername(username: String!): Response!
 
   """
   Revoke a session for this user
   """
-  revokeAccountSession(id: ID!): Response!
+  revokeAccountSession(id: String!): Response!
 
   """
   Make account email primary
@@ -1065,7 +1065,7 @@ extend type Query {
   """
   Confirm account email, so it may be used
   """
-  confirmAccountEmail(id: ID!): Response!
+  confirmAccountEmail(id: String!): Response!
 
   """
   Get MFA recovery codes
@@ -1281,7 +1281,7 @@ func (ec *executionContext) field_Mutation_modifyAccountUsername_args(ctx contex
 	var arg0 string
 	if tmp, ok := rawArgs["username"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("username"))
-		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1326,7 +1326,7 @@ func (ec *executionContext) field_Mutation_revokeAccountSession_args(ctx context
 	var arg0 string
 	if tmp, ok := rawArgs["id"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1371,7 +1371,7 @@ func (ec *executionContext) field_Query_confirmAccountEmail_args(ctx context.Con
 	var arg0 string
 	if tmp, ok := rawArgs["id"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}

@@ -108,12 +108,12 @@ extend type Mutation {
   """
   Modify the current account's username
   """
-  modifyAccountUsername(username: ID!): Response!
+  modifyAccountUsername(username: String!): Response!
 
   """
   Revoke a session for this user
   """
-  revokeAccountSession(id: ID!): Response!
+  revokeAccountSession(id: String!): Response!
 
   """
   Make account email primary
@@ -154,7 +154,7 @@ extend type Query {
   """
   Confirm account email, so it may be used
   """
-  confirmAccountEmail(id: ID!): Response!
+  confirmAccountEmail(id: String!): Response!
 
   """
   Get MFA recovery codes

@@ -807,7 +807,7 @@ extend type Query {
   """
   Get a single pending post by ID
   """
-  pendingPost(id: ID!): PendingPost!
+  pendingPost(id: String!): PendingPost!
 }
 
 extend type Mutation {
@@ -819,7 +819,7 @@ extend type Mutation {
   """
   Update post
   """
-  updatePost(id: ID!, data: PostInput): Response!
+  updatePost(id: String!, data: PostInput): Response!
 }
 `, BuiltIn: false},
 	{Name: "schema/queries.graphql", Input: `type Query {
@@ -973,7 +973,7 @@ func (ec *executionContext) field_Mutation_updatePost_args(ctx context.Context, 
 	var arg0 string
 	if tmp, ok := rawArgs["id"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1087,7 +1087,7 @@ func (ec *executionContext) field_Query_pendingPost_args(ctx context.Context, ra
 	var arg0 string
 	if tmp, ok := rawArgs["id"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}

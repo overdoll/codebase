@@ -1,3 +1,13 @@
+type Account {
+  id: String!
+  username: String!
+  roles: [AccountRoleEnum!]!
+  avatar: String!
+  verified: Boolean!
+  lock: AccountLock
+  testField: String!
+}
+
 type AccountEmail {
   email: String!
   status: AccountEmailStatusEnum!
@@ -18,7 +28,7 @@ type AccountGeneralSettings {
 }
 
 type AccountInfractionHistory {
-  id: ID!
+  id: String!
   reason: String!
 }
 
@@ -83,12 +93,12 @@ type AccountSession {
   userAgent: String!
   ip: String!
   created: String!
-  id: ID!
+  id: String!
   current: Boolean!
 }
 
 type AccountSettings {
-  accountId: ID!
+  accountId: String!
 
   """General account settings for the user"""
   general: AccountGeneralSettings!
@@ -103,13 +113,13 @@ type AccountUsername {
 }
 
 type Artist {
-  id: ID!
+  id: String!
   avatar: String!
   username: String!
 }
 
 type AuditAccount {
-  id: ID!
+  id: String!
   username: String!
 }
 
@@ -132,13 +142,13 @@ type AuthenticationTokenAccountStatus {
 }
 
 type Category {
-  id: ID!
+  id: String!
   thumbnail: String!
   title: String!
 }
 
 type Character {
-  id: ID!
+  id: String!
   thumbnail: String!
   name: String!
   media: Media!
@@ -162,13 +172,13 @@ input ConnectionInput {
 }
 
 type Contributor {
-  id: ID!
+  id: String!
   username: String!
   avatar: String!
 }
 
 type Media {
-  id: ID!
+  id: String!
   thumbnail: String!
   title: String!
 }
@@ -229,10 +239,10 @@ type Mutation {
   removeAccountEmail(email: String!): Response!
 
   """Modify the current account's username"""
-  modifyAccountUsername(username: ID!): Response!
+  modifyAccountUsername(username: String!): Response!
 
   """Revoke a session for this user"""
-  revokeAccountSession(id: ID!): Response!
+  revokeAccountSession(id: String!): Response!
 
   """Make account email primary"""
   makeAccountEmailPrimary(email: String!): Response!
@@ -265,7 +275,7 @@ type Mutation {
   post(data: PostInput): PostResponse!
 
   """Update post"""
-  updatePost(id: ID!, data: PostInput): Response!
+  updatePost(id: String!, data: PostInput): Response!
 
   """
   Moderate a specific pending post
@@ -292,10 +302,6 @@ type Mutation {
   toggleModeratorStatus: Response!
 }
 
-interface Node {
-  id: ID!
-}
-
 type PageInfo {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
@@ -304,7 +310,7 @@ type PageInfo {
 }
 
 type PendingPost {
-  id: ID!
+  id: String!
   state: PendingPostStateEnum!
   moderator: String!
   contributor: Contributor!
@@ -320,11 +326,11 @@ type PendingPost {
 }
 
 type PendingPostAuditLog {
-  id: ID!
-  postId: ID!
+  id: String!
+  postId: String!
   contributor: AuditAccount!
   moderator: AuditAccount!
-  infractionId: ID
+  infractionId: String
   status: String!
   reason: String!
   notes: String!
@@ -367,7 +373,7 @@ input PendingPostFilters {
 }
 
 type PendingPostRejectionReason {
-  id: ID!
+  id: String!
   reason: String!
   infraction: Boolean!
 }
@@ -397,13 +403,13 @@ type PostResponse {
 
 type Query {
   """Get the currently-authenticated account"""
-  viewer: Viewer
+  authenticatedAccount: Account
 
   """Get current settings for the account"""
   accountSettings: AccountSettings!
 
   """Confirm account email, so it may be used"""
-  confirmAccountEmail(id: ID!): Response!
+  confirmAccountEmail(id: String!): Response!
 
   """Get MFA recovery codes"""
   accountMultiFactorRecoveryCodes: [AccountMultiFactorRecoveryCode!]!
@@ -426,7 +432,7 @@ type Query {
   pendingPosts(after: String, before: String, first: Int, last: Int, filter: PendingPostFilters): PendingPostConnection!
 
   """Get a single pending post by ID"""
-  pendingPost(id: ID!): PendingPost!
+  pendingPost(id: String!): PendingPost!
   characters(data: SearchInput!): [Character!]!
   categories(data: SearchInput!): [Category!]!
   artists(data: SearchInput!): [Artist!]!
@@ -456,8 +462,8 @@ input RegisterInput {
 }
 
 type Response {
-  validation: Validation
   ok: Boolean!
+  validation: Validation
 }
 
 input RevertPostInput {
@@ -472,14 +478,4 @@ scalar Time
 
 type Validation {
   code: String!
-}
-
-type Viewer {
-  id: String!
-  username: String!
-  roles: [AccountRoleEnum!]!
-  avatar: String!
-  verified: Boolean!
-  lock: AccountLock
-  testField: String!
 }
