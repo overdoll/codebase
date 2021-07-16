@@ -30,5 +30,7 @@
   "f00a2e79d26efad10f0bc4e1ac9a0220": "mutation NavMenuMutation {\n  logout {\n    validation {\n      code\n    }\n    ok\n  }\n}\n",
   "56027daea69761bfeba11ec29b5fd4f9": "query ProfileSettingsQuery {\n  accountSettings {\n    accountId\n    general {\n      emails {\n        email\n        status\n      }\n      usernames {\n        username\n      }\n    }\n  }\n  authenticatedAccount {\n    username\n  }\n}\n",
   "3d3673577f14370a1fc3e68435019568": "query RootQuery {\n  authenticatedAccount {\n    username\n    roles\n    avatar\n    lock {\n      reason\n      expires\n    }\n  }\n}\n",
-  "f9188dfb615ff6bfba6490f704b2bda7": "query HistoryPendingPostAuditLogsQuery {\n  pendingPostAuditLogs(filter: {}) {\n    edges {\n      node {\n        id\n      }\n    }\n  }\n}\n"
+  "f9188dfb615ff6bfba6490f704b2bda7": "query HistoryPendingPostAuditLogsQuery {\n  pendingPostAuditLogs(filter: {}) {\n    edges {\n      node {\n        id\n      }\n    }\n  }\n}\n",
+  "42cfe12d79ac72893822690ef199a65e": "mutation UsernameMutation(\n  $data: String!\n) {\n  modifyAccountUsername(username: $data) {\n    ok\n    validation {\n      code\n    }\n  }\n}\n",
+  "a35c1230ccf4691b6f6652628197ffac": "mutation UsernameMutation(\n  $username: String!\n) {\n  modifyAccountUsername(username: $username) {\n    ok\n    validation {\n      code\n    }\n  }\n}\n"
 }

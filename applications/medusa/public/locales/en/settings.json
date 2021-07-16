@@ -1,6 +1,53 @@
 {
   "title": "Account Settings",
   "profile": {
-    "title": "Profile"
+    "title": "Profile",
+    "username": {
+      "title": "Username",
+      "change": "Change Username",
+      "previous": {
+        "title": "Previous Usernames",
+        "tooltip": "If a link with an old username is clicked, it will redirect to the new username. This behaviour may change in the future."
+      },
+      "modal": {
+        "header": "Enter a new username",
+        "input_title": "Username",
+        "submit": "Change my username",
+        "query": {
+          "success": "Username changed successfully!",
+          "error": "There was an error changing your username"
+        },
+        "form": {
+          "validation": {
+            "username": {
+              "required": "Please enter a username"
+            }
+          }
+        }
+      }
+    },
+    "email": {
+      "title": "Emails",
+      "primary": {
+        "hint1": "Used to log into your account",
+        "hint2": "Receives login emails"
+      },
+      "confirmed": {
+        "hint1": "Can be set as a Primary email"
+      },
+      "unconfirmed": {
+        "hint1": "Needs to be confirmed through email link"
+      },
+      "options": {
+        "delete": "Remove",
+        "resend": "Resend Email",
+        "set_primary": "Set Primary"
+      },
+      "add": {
+        "title": "Add an email",
+        "button": "Add",
+        "placeholder": "Enter an email address"
+      }
+    }
   }
 }

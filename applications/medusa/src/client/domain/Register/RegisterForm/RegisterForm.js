@@ -68,12 +68,13 @@ export default function RegisterForm ({ onSubmit, loading }: Props): Node {
               <Icon
                 icon={success ? CheckDouble1 : AlertCircle}
                 color={success ? 'green.600' : 'orange.500'}
+                m={4}
               />
             </InputRightElement>
           )}
         </InputGroup>
         <FormHelperText>
-          {errors.username && t('authenticate.form.validation.email.required')}
+          {errors.username && t('authenticate.form.validation.username.required')}
         </FormHelperText>
       </FormControl>
       <Button
