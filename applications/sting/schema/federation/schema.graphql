@@ -1,4 +1,0 @@
-extend type Viewer @key(fields: "id") {
-  id: String! @external
-  testField: String!
-}

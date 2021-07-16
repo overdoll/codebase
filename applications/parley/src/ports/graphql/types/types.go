@@ -3,7 +3,7 @@
 package types
 
 import (
-	"overdoll/libraries/graphql/relay"
+	"overdoll/libraries/graphql"
 )
 
 type Node interface {
@@ -57,7 +57,7 @@ type PendingPostAuditLog struct {
 
 type PendingPostAuditLogConnection struct {
 	Edges    []*PendingPostAuditLogEdge `json:"edges"`
-	PageInfo *relay.PageInfo            `json:"pageInfo"`
+	PageInfo *graphql.PageInfo          `json:"pageInfo"`
 }
 
 type PendingPostAuditLogEdge struct {

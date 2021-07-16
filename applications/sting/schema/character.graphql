@@ -1,0 +1,105 @@
+type Media implements Node {
+  id: ID!
+  thumbnail: String!
+  title: String!
+}
+
+type MediaEdge {
+  cursor: ID!
+  node: Media!
+}
+
+type MediaConnection {
+  edges: [MediaEdge!]!
+  pageInfo: PageInfo!
+}
+
+type Character implements Node {
+  id: ID!
+  thumbnail: String!
+  name: String!
+  media: Media!
+}
+
+type CharacterEdge {
+  cursor: ID!
+  node: Character!
+}
+
+type CharacterConnection {
+  edges: [CharacterEdge!]!
+  pageInfo: PageInfo!
+}
+
+interface CharacterContainer {
+  """Characters that belong to this post"""
+  characters(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): CharacterConnection!
+}
+
+extend type Query {
+  media(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    # filter by the title of the media
+    title: String
+  ): MediaConnection!
+
+  characters(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    # Filter by the name of the character
+    name: String
+
+    # filter by the title of the media
+    mediaTitle: String
+  ): CharacterConnection!
+}
+
+extend type PendingPost implements CharacterContainer {
+  """Characters that belong to this post"""
+  characters(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): CharacterConnection!
+}

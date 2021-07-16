@@ -1,6 +1,5 @@
 schema:
   - ./schema/**/*.graphql
-  - ../../libraries/graphql/relay/schema.graphql
   - ../../libraries/graphql/schema.graphql
 
 exec:
@@ -15,5 +14,6 @@ federation:
   filename: src/ports/graphql/federation.go
   package: gen
 
-autobind:
-  - overdoll/libraries/graphql/relay
+models:
+  YesNo:
+    model: overdoll/libraries/graphql.URI

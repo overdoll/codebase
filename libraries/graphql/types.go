@@ -1,4 +1,4 @@
-package relay
+package graphql
 
 import (
 	"overdoll/libraries/paging"

@@ -1,10 +1,34 @@
-type Response {
-  validation: Validation
-  ok: Boolean!
+# Information about pagination in a connection.
+type PageInfo {
+  # When paginating forwards, are there more items?
+  hasNextPage: Boolean!
+
+  # When paginating backwards, are there more items?
+  hasPreviousPage: Boolean!
+
+  # When paginating backwards, the cursor to continue.
+  startCursor: String
+
+  # When paginating forwards, the cursor to continue.
+  endCursor: String
 }
 
-type Validation {
-  code: String!
+extend type Query {
+  node(id: ID!): Node
+}
+
+"""
+Represents an account
+"""
+interface Actor {
+  """A URL pointing to the actor's public avatar."""
+  avatar(
+    """The size of the resulting square image."""
+    size: Int
+  ): URI!
+
+  """The username of the actor."""
+  username: String!
 }
 
 interface Node {
@@ -12,3 +36,6 @@ interface Node {
 }
 
 scalar Time
+
+"""An RFC 3986, RFC 3987, and RFC 6570 (level 4) compliant URI string."""
+scalar URI

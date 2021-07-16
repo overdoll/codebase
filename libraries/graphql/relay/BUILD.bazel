@@ -1,9 +1,0 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
-
-go_library(
-    name = "relay",
-    srcs = ["types.go"],
-    importpath = "overdoll/libraries/graphql/relay",
-    visibility = ["//visibility:public"],
-    deps = ["//libraries/paging"],
-)

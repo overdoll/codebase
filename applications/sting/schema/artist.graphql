@@ -1,0 +1,34 @@
+type Artist implements Node {
+  id: ID!
+  avatar: String!
+  username: String!
+}
+
+type ArtistEdge {
+  cursor: ID!
+  node: Artist!
+}
+
+type ArtistConnection {
+  edges: [ArtistEdge!]!
+  pageInfo: PageInfo!
+}
+
+extend type Query {
+  artists(
+    # Returns the elements in the list that come after the specified cursor.
+    after: String
+
+    # Returns the elements in the list that come before the specified cursor.
+    before: String
+
+    # Returns the first _n_ elements from the list.
+    first: Int
+
+    # Returns the last _n_ elements from the list.
+    last: Int
+
+    # filter by the username of the artist
+    username: String
+  ): ArtistConnection!
+}
