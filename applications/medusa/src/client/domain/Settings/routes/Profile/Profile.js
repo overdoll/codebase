@@ -2,7 +2,7 @@
  * @flow
  */
 import type { Node } from 'react'
-import { useEffect, Suspense } from 'react'
+import { useEffect, Suspense, useState, useCallback } from 'react'
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
 import { Helmet } from 'react-helmet-async'
 import {
@@ -13,7 +13,7 @@ import {
 import { useTranslation } from 'react-i18next'
 import { graphql, usePreloadedQuery, useQueryLoader } from 'react-relay/hooks'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
-import type { RootQuery } from '@//:artifacts/RootQuery.graphql'
+import type { ProfileSettingsQuery } from '@//:artifacts/ProfileSettingsQuery.graphql'
 import ErrorFallback from '../../../../components/ErrorFallback/ErrorFallback'
 import Username from './components/Username/Username'
 import Emails from './components/Emails/Emails'
@@ -43,12 +43,16 @@ const generalSettingsGQL = graphql`
 `
 
 export default function Profile (props: Props): Node {
-  const [queryRef, loadQuery] = useQueryLoader<RootQuery>(
+  const [queryRef, loadQuery] = useQueryLoader<ProfileSettingsQuery>(
     generalSettingsGQL,
     props.profileQuery
   )
 
   useEffect(() => {
+    loadQuery()
+  }, [])
+
+  const refresh = useCallback(() => {
     loadQuery()
   }, [])
 
@@ -70,7 +74,7 @@ export default function Profile (props: Props): Node {
           >
             <Suspense fallback={null}>
               {queryRef != null
-                ? <Content query={generalSettingsGQL} queryRef={queryRef} loadQuery={loadQuery} />
+                ? <Content query={generalSettingsGQL} queryRef={queryRef} refresh={refresh} />
                 : <Flex justify='center'>
                   <Spinner size='lg' color='red.500' />
                 </Flex>}
@@ -82,22 +86,18 @@ export default function Profile (props: Props): Node {
   )
 }
 
-const Content = ({ query, queryRef, loadQuery }) => {
-  const [t] = useTranslation('settings')
-
-  const data = usePreloadedQuery<RootQuery>(
+const Content = ({ query, queryRef, refresh }) => {
+  const data = usePreloadedQuery<ProfileSettingsQuery>(
     query,
     queryRef
   )
 
   return (
-
     <Stack spacing={8}>
-      <Button onClick={loadQuery} />
       <Flex direction='column'>
         <Username
           username={data.authenticatedAccount.username} usernames={data.accountSettings.general.usernames}
-          refresh={loadQuery}
+          refresh={refresh}
         />
       </Flex>
       <Flex direction='column'>

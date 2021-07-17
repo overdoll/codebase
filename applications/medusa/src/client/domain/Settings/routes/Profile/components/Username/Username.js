@@ -6,9 +6,13 @@ import {
   Button, Divider, Flex, Heading, Stack, useDisclosure, Modal,
   ModalOverlay,
   ModalContent,
-  ModalHeader,
+  ModalHeader, Box,
   ModalFooter,
-  ModalBody,
+  ModalBody, Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
   ListItem, UnorderedList,
   ModalCloseButton, Input, FormControl, FormLabel, InputGroup, InputRightElement, FormHelperText, useToast
 } from '@chakra-ui/react'
@@ -102,23 +106,32 @@ export default function Username ({ username, usernames, refresh }: Props): Node
       <Divider borderColor='gray.500' mt={1} mb={3} />
       <Stack spacing={3}>
         <Flex align='center' direction='row' justify='space-between'>
-          <Heading size='md' color='gray.100'>{username}</Heading>
-          <Button onClick={refresh} size='sm'>{t('profile.username.change')}</Button>
+          <Heading size='md' color='green.500'>{username}</Heading>
+          <Button onClick={onOpen} size='sm'>{t('profile.username.change')}</Button>
         </Flex>
         {usernames.length > 0 &&
           <Flex direction='column'>
-            <Flex>
-              <Heading size='sm' color='gray.100'>{t('profile.username.previous.title')}</Heading>
-              <InfoTip
-                text={t('profile.username.previous.tooltip')}
-                size={3}
-              />
-            </Flex>
-            <UnorderedList pl={4}>
-              {usernames.map((item, index) =>
-                <ListItem key={index} color='gray.200'>{item.username}</ListItem>
-              )}
-            </UnorderedList>
+            <Accordion allowToggle defaultIndex={[0]}>
+              <AccordionItem border='none'>
+                <AccordionButton pl={1} pr={1} borderRadius={5} justify='space-between'>
+                  <Flex w='100%'>
+                    <Heading size='sm' color='gray.100'>{t('profile.username.previous.title')}</Heading>
+                    <InfoTip
+                      text={t('profile.username.previous.tooltip')}
+                      size={3}
+                    />
+                  </Flex>
+                  <AccordionIcon />
+                </AccordionButton>
+                <AccordionPanel pt={0}>
+                  <UnorderedList pl={4}>
+                    {usernames.map((item, index) =>
+                      <ListItem key={index} color='gray.200'>{item.username}</ListItem>
+                    )}
+                  </UnorderedList>
+                </AccordionPanel>
+              </AccordionItem>
+            </Accordion>
           </Flex>}
       </Stack>
       <Modal isOpen={isOpen} onClose={onClose}>
