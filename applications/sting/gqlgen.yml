@@ -14,10 +14,13 @@ federation:
   filename: src/ports/graphql/federation.go
   package: gen
 
-relay:
-  filename: src/ports/graphql/relay.go
-  package: gen
+autobind:
+  - overdoll/libraries/graphql/relay
 
 models:
-  URI:
-    model: overdoll/libraries/graphql.URI
+  ID:
+    model: overdoll/libraries/graphql/relay.ID
+  Node:
+    model: overdoll/libraries/graphql/relay/relayruntime.Node
+  PageInfo:
+    model: overdoll/libraries/graphql/relay.PageInfo

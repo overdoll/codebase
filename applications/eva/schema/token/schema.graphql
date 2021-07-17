@@ -16,7 +16,7 @@ type AuthenticationToken {
   accountStatus: AuthenticationTokenAccountStatus
 }
 
-extend type Query {
+type Query {
   """
   Redeem authentication token - token is received from the email
   """

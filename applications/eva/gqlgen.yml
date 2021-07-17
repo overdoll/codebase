@@ -13,3 +13,8 @@ model:
 federation:
   filename: src/ports/graphql/federation.go
   package: gen
+
+models:
+  ID:
+    model:
+      - overdoll/libraries/graphql.ID

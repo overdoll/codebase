@@ -11,11 +11,12 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//applications/sting/src/app",
-        "//applications/sting/src/ports/graphql/entities",
         "//applications/sting/src/ports/graphql/mutations",
         "//applications/sting/src/ports/graphql/queries",
+        "//applications/sting/src/ports/graphql/resolvers",
         "//applications/sting/src/ports/graphql/types",
         "//libraries/graphql/relay",
+        "//libraries/graphql/relay/relayruntime",
         "@com_github_99designs_gqlgen//graphql",
         "@com_github_99designs_gqlgen//graphql/introspection",
         "@com_github_99designs_gqlgen//plugin/federation/fedruntime",

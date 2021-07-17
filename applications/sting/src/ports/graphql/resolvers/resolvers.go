@@ -5,7 +5,7 @@ import (
 
 	"overdoll/applications/sting/src/app"
 	"overdoll/applications/sting/src/ports/graphql/types"
-	"overdoll/libraries/graphql"
+	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/passport"
 )
 
@@ -51,7 +51,7 @@ func (a AccountResolver) PendingPosts(ctx context.Context, obj *types.Account, a
 	var startCursor *string
 	var endCursor *string
 
-	input := &graphql.ConnectionInput{
+	input := &relay.ConnectionInput{
 		After:  after,
 		Before: before,
 		First:  first,
@@ -77,7 +77,7 @@ func (a AccountResolver) PendingPosts(ctx context.Context, obj *types.Account, a
 
 	return &types.PendingPostConnection{
 		Edges: posts,
-		PageInfo: &graphql.PageInfo{
+		PageInfo: &relay.PageInfo{
 			HasNextPage:     results.PageInfo.HasNextPage(),
 			HasPreviousPage: results.PageInfo.HasPrevPage(),
 			StartCursor:     startCursor,

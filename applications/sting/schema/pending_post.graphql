@@ -82,7 +82,7 @@ type CreatePendingPostPayload {
 }
 
 type PendingPostEdge {
-  cursor: ID!
+  cursor: String!
   node: PendingPost!
 }
 
@@ -93,34 +93,10 @@ type PendingPostConnection {
 
 extend type Account @key(fields: "id") {
   """Pending posts queue specific to this account (when moderator)"""
-  pendingPostsForModerator(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """Returns the elements in the list that come before the specified cursor."""
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-  ): PendingPostConnection! @goField(forceResolver: true)
+  pendingPostsForModerator: PendingPostConnection! @goField(forceResolver: true) @cursor
 
   """Pending posts for this account"""
-  pendingPosts(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """Returns the elements in the list that come before the specified cursor."""
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-  ): PendingPostConnection! @goField(forceResolver: true)
+  pendingPosts: PendingPostConnection! @goField(forceResolver: true) @cursor
 }
 
 

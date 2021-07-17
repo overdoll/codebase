@@ -25,7 +25,7 @@ interface PostObject {
 }
 
 type PostEdge {
-  cursor: ID!
+  cursor: String!
   node: Post!
 }
 
@@ -38,54 +38,18 @@ extend type Account @key(fields: "id") {
   id: ID! @external
 
   """Posts specific to this account"""
-  posts(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """Returns the elements in the list that come before the specified cursor."""
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-  ): PostConnection! @goField(forceResolver: true)
+  posts: PostConnection! @goField(forceResolver: true) @cursor
 
   """Contributions specific to this account"""
-  contributions(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """Returns the elements in the list that come before the specified cursor."""
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-  ): PostConnection! @goField(forceResolver: true)
+  contributions: PostConnection! @goField(forceResolver: true) @cursor
 }
 
 extend type Query {
   posts(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """Returns the elements in the list that come before the specified cursor."""
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-
     """Filter by the name of the character"""
     characterName: String
 
     """Filter by the title of the media"""
     mediaTitle: String
-  ): PostConnection!
+  ): PostConnection! @cursor
 }

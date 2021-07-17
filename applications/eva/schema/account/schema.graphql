@@ -3,6 +3,19 @@ enum AccountRoleEnum {
   Staff
 }
 
+
+directive @goField(forceResolver: Boolean) on INPUT_FIELD_DEFINITION
+  | FIELD_DEFINITION
+
+type Test implements Node @key(fields: "id") {
+  id: ID!
+  test: String! @goField(forceResolver: true)
+}
+
+type Account @key(fields: "id") {
+  id: String!
+}
+
 type Viewer @key(fields: "id") {
   id: String!
   username: String!

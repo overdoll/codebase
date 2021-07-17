@@ -6,11 +6,24 @@ import (
 	"fmt"
 	"io"
 	"strconv"
+
+	"overdoll/libraries/graphql/relay"
 )
+
+// Represents an account
+type Actor interface {
+	IsActor()
+}
 
 type Node interface {
 	IsNode()
 }
+
+type Account struct {
+	ID string `json:"id"`
+}
+
+func (Account) IsEntity() {}
 
 type AccountEmail struct {
 	Email  string                 `json:"email"`
@@ -58,15 +71,15 @@ type AccountSecuritySettings struct {
 }
 
 type AccountSession struct {
-	UserAgent string `json:"userAgent"`
-	IP        string `json:"ip"`
-	Created   string `json:"created"`
-	ID        string `json:"id"`
-	Current   bool   `json:"current"`
+	UserAgent string   `json:"userAgent"`
+	IP        string   `json:"ip"`
+	Created   string   `json:"created"`
+	ID        relay.ID `json:"id"`
+	Current   bool     `json:"current"`
 }
 
 type AccountSettings struct {
-	AccountID string `json:"accountId"`
+	AccountID relay.ID `json:"accountId"`
 	// General account settings for the user
 	General *AccountGeneralSettings `json:"general"`
 	// Security settings for the user
@@ -97,6 +110,13 @@ type AuthenticationTokenAccountStatus struct {
 	MultiFactor   []MultiFactorTypeEnum `json:"multiFactor"`
 }
 
+type PageInfo struct {
+	HasNextPage     bool    `json:"hasNextPage"`
+	HasPreviousPage bool    `json:"hasPreviousPage"`
+	StartCursor     *string `json:"startCursor"`
+	EndCursor       *string `json:"endCursor"`
+}
+
 type RegisterInput struct {
 	Username string `json:"username"`
 }
@@ -105,6 +125,14 @@ type Response struct {
 	Validation *Validation `json:"validation"`
 	Ok         bool        `json:"ok"`
 }
+
+type Test struct {
+	ID   relay.ID `json:"id"`
+	Test string   `json:"test"`
+}
+
+func (Test) IsNode()   {}
+func (Test) IsEntity() {}
 
 type Validation struct {
 	Code string `json:"code"`

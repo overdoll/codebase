@@ -2,6 +2,7 @@ package types
 
 import (
 	"overdoll/applications/sting/src/domain/post"
+	"overdoll/libraries/graphql/relay"
 )
 
 func MarshalPendingPostToGraphQL(result *post.PendingPostEdge) *PendingPostEdge {
@@ -29,7 +30,7 @@ func MarshalPendingPostToGraphQL(result *post.PendingPostEdge) *PendingPostEdge 
 
 	for _, cat := range result.Node.Categories() {
 		categories = append(categories, &Category{
-			ID:        cat.ID(),
+			ID:        relay.NewId(Category{}, cat.ID()),
 			Thumbnail: cat.Thumbnail(),
 			Title:     cat.Title(),
 		})
@@ -39,11 +40,11 @@ func MarshalPendingPostToGraphQL(result *post.PendingPostEdge) *PendingPostEdge 
 
 	for _, char := range result.Node.Characters() {
 		characters = append(characters, &Character{
-			ID:        char.ID(),
+			ID:        relay.NewId(Character{}, char.ID()),
 			Thumbnail: char.Thumbnail(),
 			Name:      char.Name(),
 			Media: &Media{
-				ID:        char.Media().ID(),
+				ID:        relay.NewId(Media{}, char.Media().ID()),
 				Thumbnail: char.Media().Thumbnail(),
 				Title:     char.Media().Title(),
 			},
@@ -71,7 +72,7 @@ func MarshalPendingPostToGraphQL(result *post.PendingPostEdge) *PendingPostEdge 
 	return &PendingPostEdge{
 		Cursor: result.Cursor,
 		Node: &PendingPost{
-			ID:        result.Node.ID(),
+			ID:        relay.NewId(PendingPost{}, result.Node.ID()),
 			Moderator: result.Node.ModeratorId(),
 			State:     state,
 			Contributor: &Contributor{

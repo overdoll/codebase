@@ -34,5 +34,6 @@
   "333fb15bc6294fef6cf10a6cdd62abbb": "query RootQuery {\n  ...RootComponent_account\n}\n\nfragment RootComponent_account on Query {\n  viewer {\n    username\n    roles\n    id\n  }\n}\n",
   "c733faae38f8e6d949f1dfcd2a6076ab": "query RootAccountRefreshQuery {\n  ...RootComponent_account\n}\n\nfragment RootComponent_account on Query {\n  viewer {\n    username\n    roles\n    id\n  }\n}\n",
   "3d41b45fff8eed6507354d118ea4e35a": "query RootQuery {\n  ...RootComponent_account\n}\n\nfragment RootComponent_account on Query {\n  viewer {\n    username\n    roles\n  }\n}\n",
-  "19ac107dd1b6cb54d7ab3fa2bc25d36b": "query RootAccountRefreshQuery {\n  ...RootComponent_account\n}\n\nfragment RootComponent_account on Query {\n  viewer {\n    username\n    roles\n  }\n}\n"
+  "19ac107dd1b6cb54d7ab3fa2bc25d36b": "query RootAccountRefreshQuery {\n  ...RootComponent_account\n}\n\nfragment RootComponent_account on Query {\n  viewer {\n    username\n    roles\n  }\n}\n",
+  "e4399102e5a6c22d2c196b2fac806823": "query NotFoundQuery {\n  node(id: \"testid123\") {\n    __typename\n    id\n    ... on Test {\n      __typename\n      test\n    }\n  }\n}\n"
 }

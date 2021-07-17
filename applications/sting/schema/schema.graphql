@@ -4,3 +4,16 @@ type Content {
 
 directive @goField(forceResolver: Boolean) on INPUT_FIELD_DEFINITION
   | FIELD_DEFINITION
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+directive @cursor on FIELD_DEFINITION
+
+interface Node {
+  id: ID!
+}

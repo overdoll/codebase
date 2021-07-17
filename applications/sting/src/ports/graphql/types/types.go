@@ -5,7 +5,7 @@ package types
 import (
 	"fmt"
 	"io"
-	graphql1 "overdoll/libraries/graphql"
+	"overdoll/libraries/graphql/relay"
 	"strconv"
 	"time"
 )
@@ -23,10 +23,6 @@ type CharacterContainer interface {
 	IsCharacterContainer()
 }
 
-type Node interface {
-	IsNode()
-}
-
 type PostObject interface {
 	IsPostObject()
 }
@@ -36,7 +32,7 @@ type Account struct {
 	PendingPostsForModerator *PendingPostConnection `json:"pendingPostsForModerator"`
 	// Pending posts for this account
 	PendingPosts *PendingPostConnection `json:"pendingPosts"`
-	ID           string                 `json:"id"`
+	ID           relay.ID               `json:"id"`
 	// Posts specific to this account
 	Posts *PostConnection `json:"posts"`
 	// Contributions specific to this account
@@ -46,16 +42,16 @@ type Account struct {
 func (Account) IsEntity() {}
 
 type Artist struct {
-	ID       string `json:"id"`
-	Avatar   string `json:"avatar"`
-	Username string `json:"username"`
+	ID       relay.ID `json:"id"`
+	Avatar   string   `json:"avatar"`
+	Username string   `json:"username"`
 }
 
 func (Artist) IsNode() {}
 
 type ArtistConnection struct {
-	Edges    []*ArtistEdge `json:"edges"`
-	PageInfo *PageInfo     `json:"pageInfo"`
+	Edges    []*ArtistEdge   `json:"edges"`
+	PageInfo *relay.PageInfo `json:"pageInfo"`
 }
 
 type ArtistEdge struct {
@@ -64,16 +60,16 @@ type ArtistEdge struct {
 }
 
 type Category struct {
-	ID        string `json:"id"`
-	Thumbnail string `json:"thumbnail"`
-	Title     string `json:"title"`
+	ID        relay.ID `json:"id"`
+	Thumbnail string   `json:"thumbnail"`
+	Title     string   `json:"title"`
 }
 
 func (Category) IsNode() {}
 
 type CategoryConnection struct {
 	Edges    []*CategoryEdge `json:"edges"`
-	PageInfo *PageInfo       `json:"pageInfo"`
+	PageInfo *relay.PageInfo `json:"pageInfo"`
 }
 
 type CategoryEdge struct {
@@ -82,17 +78,17 @@ type CategoryEdge struct {
 }
 
 type Character struct {
-	ID        string `json:"id"`
-	Thumbnail string `json:"thumbnail"`
-	Name      string `json:"name"`
-	Media     *Media `json:"media"`
+	ID        relay.ID `json:"id"`
+	Thumbnail string   `json:"thumbnail"`
+	Name      string   `json:"name"`
+	Media     *Media   `json:"media"`
 }
 
 func (Character) IsNode() {}
 
 type CharacterConnection struct {
 	Edges    []*CharacterEdge `json:"edges"`
-	PageInfo *PageInfo        `json:"pageInfo"`
+	PageInfo *relay.PageInfo  `json:"pageInfo"`
 }
 
 type CharacterEdge struct {
@@ -111,7 +107,7 @@ type CharacterRequestType struct {
 }
 
 type Content struct {
-	URL graphql1.URI `json:"url"`
+	URL string `json:"url"`
 }
 
 // Create pending post.
@@ -119,14 +115,14 @@ type CreatePendingPostInput struct {
 	// Image IDs for the content
 	Content []string `json:"content"`
 	// Category IDs for this post
-	CategoryIds []string `json:"categoryIds"`
+	CategoryIds []relay.ID `json:"categoryIds"`
 	// Ids for all the characters
-	CharacterIds []string `json:"characterIds"`
+	CharacterIds []relay.ID `json:"characterIds"`
 	// Requests (custom)
 	MediaRequests     []string            `json:"mediaRequests"`
 	CharacterRequests []*CharacterRequest `json:"characterRequests"`
 	// Existing artist's ID
-	ExistingArtist *string `json:"existingArtist"`
+	ExistingArtist *relay.ID `json:"existingArtist"`
 	// Custom Artist's username
 	CustomArtistUsername *string `json:"customArtistUsername"`
 	// The author of this post is the artist, as well as contributor
@@ -142,16 +138,16 @@ type CreatePendingPostPayload struct {
 }
 
 type Media struct {
-	ID        string `json:"id"`
-	Thumbnail string `json:"thumbnail"`
-	Title     string `json:"title"`
+	ID        relay.ID `json:"id"`
+	Thumbnail string   `json:"thumbnail"`
+	Title     string   `json:"title"`
 }
 
 func (Media) IsNode() {}
 
 type MediaConnection struct {
-	Edges    []*MediaEdge `json:"edges"`
-	PageInfo *PageInfo    `json:"pageInfo"`
+	Edges    []*MediaEdge    `json:"edges"`
+	PageInfo *relay.PageInfo `json:"pageInfo"`
 }
 
 type MediaEdge struct {
@@ -159,15 +155,8 @@ type MediaEdge struct {
 	Node   *Media `json:"node"`
 }
 
-type PageInfo struct {
-	HasNextPage     bool    `json:"hasNextPage"`
-	HasPreviousPage bool    `json:"hasPreviousPage"`
-	StartCursor     *string `json:"startCursor"`
-	EndCursor       *string `json:"endCursor"`
-}
-
 type PendingPost struct {
-	ID string `json:"id"`
+	ID relay.ID `json:"id"`
 	// The state of the post
 	State PendingPostStateEnum `json:"state"`
 	// Represents the account that this post belongs to
@@ -199,7 +188,7 @@ func (PendingPost) IsCharacterContainer() {}
 
 type PendingPostConnection struct {
 	Edges    []*PendingPostEdge `json:"edges"`
-	PageInfo *PageInfo          `json:"pageInfo"`
+	PageInfo *relay.PageInfo    `json:"pageInfo"`
 }
 
 type PendingPostEdge struct {
@@ -208,7 +197,7 @@ type PendingPostEdge struct {
 }
 
 type Post struct {
-	ID string `json:"id"`
+	ID relay.ID `json:"id"`
 	// Represents the account that this post belongs to
 	Artist Actor `json:"artist"`
 	// Content belonging to this post
@@ -224,8 +213,8 @@ func (Post) IsNode()              {}
 func (Post) IsCategoryContainer() {}
 
 type PostConnection struct {
-	Edges    []*PostEdge `json:"edges"`
-	PageInfo *PageInfo   `json:"pageInfo"`
+	Edges    []*PostEdge     `json:"edges"`
+	PageInfo *relay.PageInfo `json:"pageInfo"`
 }
 
 type PostEdge struct {

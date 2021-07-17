@@ -5,7 +5,7 @@ import (
 
 	"overdoll/applications/parley/src/app"
 	"overdoll/applications/parley/src/ports/graphql/types"
-	"overdoll/libraries/graphql"
+	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/passport"
 )
 
@@ -69,7 +69,7 @@ func (q QueryResolver) PendingPostAuditLogs(ctx context.Context, after, before *
 		}
 	}
 
-	input := &graphql.ConnectionInput{
+	input := &relay.ConnectionInput{
 		After:  after,
 		Before: before,
 		First:  first,
@@ -88,7 +88,7 @@ func (q QueryResolver) PendingPostAuditLogs(ctx context.Context, after, before *
 		auditLogs = append(auditLogs, types.MarshalPendingPostAuditLogToGraphQL(log))
 	}
 
-	return &types.PendingPostAuditLogConnection{Edges: auditLogs, PageInfo: &graphql.PageInfo{
+	return &types.PendingPostAuditLogConnection{Edges: auditLogs, PageInfo: &relay.PageInfo{
 		HasNextPage:     false,
 		HasPreviousPage: false,
 		StartCursor:     nil,

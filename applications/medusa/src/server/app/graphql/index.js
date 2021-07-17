@@ -38,6 +38,8 @@ const resolvers = {
   Node: {
     __resolveType ({ id }) {
       // TODO: Add validation around `fromId`
+      console.log('resolving type')
+      console.log(id)
       const [typename] = fromId(id)
       return typename
     }
@@ -57,12 +59,14 @@ const fromId = (id) => {
   const b = Buffer.from(id, 'base64')
   const i = b.indexOf(DIVIDER_TOKEN)
 
+  console.log(id)
+
   if (i === -1) {
     throw new RangeError('Invalid Node ID')
   }
 
   const typename = b.slice(0, i).toString('ascii')
-  const key = b.slice(i)
+  const key = b.slice(i).toString('ascii')
   return [typename, key]
 }
 
@@ -137,7 +141,7 @@ class NodeGateway extends ApolloGateway {
             return visit(node, {
               FieldDefinition (node) {
                 if (node.name.value === 'node') {
-                  return null
+                  throw new Error(`Service "${service.name} should not implement "node" Query type`)
                 }
               }
             })

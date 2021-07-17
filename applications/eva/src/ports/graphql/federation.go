@@ -39,13 +39,41 @@ func (ec *executionContext) __resolve_entities(ctx context.Context, representati
 		}
 		switch typeName {
 
+		case "Account":
+			id0, err := ec.unmarshalNString2string(ctx, rep["id"])
+			if err != nil {
+				return nil, errors.New(fmt.Sprintf("Field %s undefined in schema.", "id"))
+			}
+
+			entity, err := ec.resolvers.Entity().FindAccountByID(ctx,
+				id0)
+			if err != nil {
+				return nil, err
+			}
+
+			list = append(list, entity)
+
 		case "AccountSettings":
-			id0, err := ec.unmarshalNID2string(ctx, rep["accountId"])
+			id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚐID(ctx, rep["accountId"])
 			if err != nil {
 				return nil, errors.New(fmt.Sprintf("Field %s undefined in schema.", "accountId"))
 			}
 
 			entity, err := ec.resolvers.Entity().FindAccountSettingsByAccountID(ctx,
+				id0)
+			if err != nil {
+				return nil, err
+			}
+
+			list = append(list, entity)
+
+		case "Test":
+			id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚐID(ctx, rep["id"])
+			if err != nil {
+				return nil, errors.New(fmt.Sprintf("Field %s undefined in schema.", "id"))
+			}
+
+			entity, err := ec.resolvers.Entity().FindTestByID(ctx,
 				id0)
 			if err != nil {
 				return nil, err

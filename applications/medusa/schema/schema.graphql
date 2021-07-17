@@ -1,10 +1,5 @@
 type Account {
   id: String!
-  username: String!
-  roles: [AccountRoleEnum!]!
-  avatar: String!
-  verified: Boolean!
-  lock: AccountLock
   testField: String!
 }
 
@@ -28,7 +23,7 @@ type AccountGeneralSettings {
 }
 
 type AccountInfractionHistory {
-  id: String!
+  id: ID!
   reason: String!
 }
 
@@ -93,12 +88,12 @@ type AccountSession {
   userAgent: String!
   ip: String!
   created: String!
-  id: String!
+  id: ID!
   current: Boolean!
 }
 
 type AccountSettings {
-  accountId: String!
+  accountId: ID!
 
   """General account settings for the user"""
   general: AccountGeneralSettings!
@@ -112,6 +107,18 @@ type AccountUsername {
   username: String!
 }
 
+"""Represents an account"""
+interface Actor {
+  """A URL pointing to the actor's public avatar."""
+  avatar(
+    """The size of the resulting square image."""
+    size: Int
+  ): URI!
+
+  """The username of the actor."""
+  username: String!
+}
+
 type Artist {
   id: String!
   avatar: String!
@@ -119,7 +126,7 @@ type Artist {
 }
 
 type AuditAccount {
-  id: String!
+  id: ID!
   username: String!
 }
 
@@ -302,6 +309,14 @@ type Mutation {
   toggleModeratorStatus: Response!
 }
 
+"""
+An object with an ID.
+Follows the [Relay Global Object Identification Specification](https://relay.dev/graphql/objectidentification.htm)
+"""
+interface Node {
+  id: ID!
+}
+
 type PageInfo {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
@@ -326,11 +341,11 @@ type PendingPost {
 }
 
 type PendingPostAuditLog {
-  id: String!
-  postId: String!
+  id: ID!
+  postId: ID!
   contributor: AuditAccount!
   moderator: AuditAccount!
-  infractionId: String
+  infractionId: ID
   status: String!
   reason: String!
   notes: String!
@@ -373,7 +388,7 @@ input PendingPostFilters {
 }
 
 type PendingPostRejectionReason {
-  id: String!
+  id: ID!
   reason: String!
   infraction: Boolean!
 }
@@ -403,7 +418,7 @@ type PostResponse {
 
 type Query {
   """Get the currently-authenticated account"""
-  authenticatedAccount: Account
+  viewer: Viewer
 
   """Get current settings for the account"""
   accountSettings: AccountSettings!
@@ -455,6 +470,7 @@ type Query {
 
   """Infraction history for the currently logged-in account"""
   accountInfractionHistory: [AccountInfractionHistory!]
+  node(id: ID!): Node
 }
 
 input RegisterInput {
@@ -462,8 +478,8 @@ input RegisterInput {
 }
 
 type Response {
-  ok: Boolean!
   validation: Validation
+  ok: Boolean!
 }
 
 input RevertPostInput {
@@ -474,8 +490,25 @@ input SearchInput {
   search: String!
 }
 
+type Test implements Node {
+  id: ID!
+  test: String!
+}
+
 scalar Time
+
+"""An RFC 3986, RFC 3987, and RFC 6570 (level 4) compliant URI string."""
+scalar URI
 
 type Validation {
   code: String!
+}
+
+type Viewer {
+  id: String!
+  username: String!
+  roles: [AccountRoleEnum!]!
+  avatar: String!
+  verified: Boolean!
+  lock: AccountLock
 }
