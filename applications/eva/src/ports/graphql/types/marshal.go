@@ -62,6 +62,13 @@ func MarshalAccountEmailToGraphQL(result *account.Email) *AccountEmail {
 	}
 }
 
+func MarshalAccountUsernameToGraphQL(result *account.Username) *AccountUsername {
+	return &AccountUsername{
+		ID:       relay.NewID(AccountUsername{}, result.AccountId(), result.Username()),
+		Username: result.Username(),
+	}
+}
+
 func MarshalAuthenticationTokenToGraphQL(result *token.AuthenticationToken, sameSession, registered bool) *AuthenticationToken {
 
 	var multiFactorTypes []MultiFactorTypeEnum
@@ -124,11 +131,8 @@ func MarshalAccountUsernameToGraphQLConnection(results []*account.Username, page
 
 	for _, username := range results {
 		accUsernames = append(accUsernames, &AccountUsernameEdge{
-			Cursor: "",
-			Node: &AccountUsername{
-				ID:       relay.NewID(AccountUsername{}, username.AccountId(), username.Username()),
-				Username: username.Username(),
-			},
+			Cursor: username.Cursor(),
+			Node:   MarshalAccountUsernameToGraphQL(username),
 		})
 	}
 

@@ -24,10 +24,13 @@ const (
 	ValidationErrEmailNotConfirmed = "email_not_confirmed"
 )
 
-func (h MakeAccountEmailPrimaryHandler) Handle(ctx context.Context, accountId, email string) (string, error) {
+// TODO: return email
+// TODO: make this into a repository function instead UpdateAccountEmailToPrimary
+func (h MakeAccountEmailPrimaryHandler) Handle(ctx context.Context, accountId, email string) (*account.Email, string, error) {
 
 	_, err := h.ar.UpdateAccount(ctx, accountId, func(a *account.Account) error {
-		emails, err := h.ar.GetAccountEmails(ctx, accountId)
+
+		emails, _, err := h.ar.GetAccountEmails(ctx, nil, accountId)
 
 		if err != nil {
 			return err
@@ -38,12 +41,12 @@ func (h MakeAccountEmailPrimaryHandler) Handle(ctx context.Context, accountId, e
 
 	if err != nil {
 		if err == account.ErrEmailNotConfirmed {
-			return ValidationErrEmailNotConfirmed, nil
+			return nil, ValidationErrEmailNotConfirmed, nil
 		}
 
 		zap.S().Errorf("failed to make email primary: %s", err)
-		return "", ErrFailedMakeEmailPrimary
+		return nil, "", ErrFailedMakeEmailPrimary
 	}
 
-	return "", nil
+	return nil, "", nil
 }

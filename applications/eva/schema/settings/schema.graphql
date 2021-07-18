@@ -238,7 +238,7 @@ input RevokeAccountSessionInput {
   """
   Session ID that should be revoked
   """
-  id: String!
+  accountSessionId: ID!
 }
 
 
@@ -279,7 +279,7 @@ type UpdateAccountUsernameAndRetainPreviousPayload {
 """Payload of the revoked account session"""
 type RevokeAccountSessionPayload {
   """The ID of the session that was revoked"""
-  accountSessionId: AccountUsername
+  accountSessionId: ID!
 }
 
 """Payload of the updated account email"""

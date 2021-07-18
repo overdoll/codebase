@@ -24,7 +24,8 @@ const (
 	ValidationErrUsernameNotUnique = "username_not_unique"
 )
 
-func (h ModifyAccountUsernameHandler) Handle(ctx context.Context, accountId, username string) (string, error) {
+// TODO: need to grab username instance
+func (h ModifyAccountUsernameHandler) Handle(ctx context.Context, accountId, username string) (*account.Username, string, error) {
 
 	_, err := h.ar.GetAccountByUsername(ctx, username)
 
@@ -38,12 +39,12 @@ func (h ModifyAccountUsernameHandler) Handle(ctx context.Context, accountId, use
 
 			if err != nil {
 				zap.S().Errorf("failed to modify username: %s", err)
-				return "", ErrFailedModifyUsername
+				return nil, "", ErrFailedModifyUsername
 			}
 
-			return "", nil
+			return nil, "", nil
 		}
 	}
 
-	return ValidationErrUsernameNotUnique, nil
+	return nil, ValidationErrUsernameNotUnique, nil
 }

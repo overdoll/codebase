@@ -30,17 +30,17 @@ const (
 )
 
 // AddAccountEmail - add an email to the account
-func (r AccountRepository) AddAccountEmail(ctx context.Context, acc *account.Account, confirm *account.EmailConfirmation) error {
+func (r AccountRepository) AddAccountEmail(ctx context.Context, acc *account.Account, confirm *account.EmailConfirmation) (*account.Email, error) {
 
 	// check to make sure this email is not taken
 	existingAcc, err := r.GetAccountByEmail(ctx, confirm.Email())
 
 	if err != nil && err != account.ErrAccountNotFound {
-		return err
+		return nil, err
 	}
 
 	if existingAcc != nil {
-		return account.ErrEmailNotUnique
+		return nil, account.ErrEmailNotUnique
 	}
 
 	authCookie := &EmailConfirmation{
@@ -50,27 +50,27 @@ func (r AccountRepository) AddAccountEmail(ctx context.Context, acc *account.Acc
 	val, err := json.Marshal(authCookie)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	valReal, err := crypt.Encrypt(string(val))
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	ok, err := r.client.SetNX(ctx, ConfirmEmailPrefix+confirm.ID(), valReal, confirm.Expires()).Result()
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if !ok {
-		return errors.New("duplicate key")
+		return nil, errors.New("duplicate key")
 	}
 
 	// create a unique email
 	if err := r.createUniqueAccountEmail(ctx, acc, confirm.Email()); err != nil {
-		return err
+		return nil, err
 	}
 
 	insertEmailByAccount := qb.Insert("emails_by_account").
@@ -84,10 +84,10 @@ func (r AccountRepository) AddAccountEmail(ctx context.Context, acc *account.Acc
 		})
 
 	if err := insertEmailByAccount.ExecRelease(); err != nil {
-		return r.deleteAccountEmail(ctx, acc, confirm.Email())
+		return nil, r.deleteAccountEmail(ctx, acc, confirm.Email())
 	}
 
-	return nil
+	return account.UnmarshalEmailFromDatabase(confirm.Email(), acc.ID(), 0), nil
 }
 
 // GetEmailConfirmationByEmail - a method that is used to get the email confirmation ID by only passing the email
@@ -229,7 +229,7 @@ func (r AccountRepository) GetAccountEmails(ctx context.Context, id string) ([]*
 			status = 2
 		}
 
-		emails = append(emails, account.UnmarshalEmailFromDatabase(email.Email, status))
+		emails = append(emails, account.UnmarshalEmailFromDatabase(email.Email, email.AccountId, status))
 	}
 
 	return emails, nil

@@ -220,7 +220,7 @@ type ComplexityRoot struct {
 		RevokeAccountAccess                                      func(childComplexity int) int
 		RevokeAccountSession                                     func(childComplexity int, input types.RevokeAccountSessionInput) int
 		RevokeAuthenticationToken                                func(childComplexity int) int
-		UnlockAccount                                            func(childComplexity int, input types.UnlockAccountInput) int
+		UnlockAccount                                            func(childComplexity int) int
 		UpdateAccountEmailStatusToPrimary                        func(childComplexity int, input types.UpdateAccountEmailStatusToPrimaryInput) int
 		UpdateAccountUsernameAndRetainPrevious                   func(childComplexity int, input types.UpdateAccountUsernameAndRetainPreviousInput) int
 	}
@@ -308,7 +308,7 @@ type MutationResolver interface {
 	ReissueAuthenticationToken(ctx context.Context) (*types.ReissueAuthenticationTokenPayload, error)
 	GrantAccountAccessWithAuthenticationTokenAndTotp(ctx context.Context, input types.GrantAccountAccessWithAuthenticationTokenAndTotpInput) (*types.GrantAccountAccessWithAuthenticationTokenAndTotpPayload, error)
 	GrantAccountAccessWithAuthenticationTokenAndRecoveryCode(ctx context.Context, input types.GrantAccountAccessWithAuthenticationTokenAndRecoveryCodeInput) (*types.GrantAccountAccessWithAuthenticationTokenAndRecoveryCodePayload, error)
-	UnlockAccount(ctx context.Context, input types.UnlockAccountInput) (*types.UnlockAccountPayload, error)
+	UnlockAccount(ctx context.Context) (*types.UnlockAccountPayload, error)
 	AddAccountEmail(ctx context.Context, input types.AddAccountEmailInput) (*types.AddAccountEmailPayload, error)
 	DeleteAccountEmail(ctx context.Context, input types.DeleteAccountEmailInput) (*types.DeleteAccountEmailPayload, error)
 	UpdateAccountUsernameAndRetainPrevious(ctx context.Context, input types.UpdateAccountUsernameAndRetainPreviousInput) (*types.UpdateAccountUsernameAndRetainPreviousPayload, error)
@@ -1000,12 +1000,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		args, err := ec.field_Mutation_unlockAccount_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.UnlockAccount(childComplexity, args["input"].(types.UnlockAccountInput)), true
+		return e.complexity.Mutation.UnlockAccount(childComplexity), true
 
 	case "Mutation.updateAccountEmailStatusToPrimary":
 		if e.complexity.Mutation.UpdateAccountEmailStatusToPrimary == nil {
@@ -1300,7 +1295,7 @@ extend type Mutation {
   """
   Unlock Account - account may be locked for any reason. Use this endpoint to unlock the account
   """
-  unlockAccount(input: UnlockAccountInput!): UnlockAccountPayload @auth
+  unlockAccount: UnlockAccountPayload @auth
 }
 
 extend type Query {
@@ -1550,7 +1545,7 @@ input RevokeAccountSessionInput {
   """
   Session ID that should be revoked
   """
-  id: String!
+  accountSessionId: ID!
 }
 
 
@@ -1591,7 +1586,7 @@ type UpdateAccountUsernameAndRetainPreviousPayload {
 """Payload of the revoked account session"""
 type RevokeAccountSessionPayload {
   """The ID of the session that was revoked"""
-  accountSessionId: AccountUsername
+  accountSessionId: ID!
 }
 
 """Payload of the updated account email"""
@@ -2256,21 +2251,6 @@ func (ec *executionContext) field_Mutation_revokeAccountSession_args(ctx context
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNRevokeAccountSessionInput2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐRevokeAccountSessionInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_unlockAccount_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 types.UnlockAccountInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNUnlockAccountInput2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐUnlockAccountInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -5295,17 +5275,10 @@ func (ec *executionContext) _Mutation_unlockAccount(ctx context.Context, field g
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_unlockAccount_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().UnlockAccount(rctx, args["input"].(types.UnlockAccountInput))
+			return ec.resolvers.Mutation().UnlockAccount(rctx)
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			if ec.directives.Auth == nil {
@@ -6424,11 +6397,14 @@ func (ec *executionContext) _RevokeAccountSessionPayload_accountSessionId(ctx co
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*types.AccountUsername)
+	res := resTmp.(relay.ID)
 	fc.Result = res
-	return ec.marshalOAccountUsername2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountUsername(ctx, field.Selections, res)
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _RevokeAuthenticationTokenPayload_revokedAuthenticationTokenId(ctx context.Context, field graphql.CollectedField, obj *types.RevokeAuthenticationTokenPayload) (ret graphql.Marshaler) {
@@ -7911,11 +7887,11 @@ func (ec *executionContext) unmarshalInputRevokeAccountSessionInput(ctx context.
 
 	for k, v := range asMap {
 		switch k {
-		case "id":
+		case "accountSessionId":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			it.ID, err = ec.unmarshalNString2string(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("accountSessionId"))
+			it.AccountSessionID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -9397,6 +9373,9 @@ func (ec *executionContext) _RevokeAccountSessionPayload(ctx context.Context, se
 			out.Values[i] = graphql.MarshalString("RevokeAccountSessionPayload")
 		case "accountSessionId":
 			out.Values[i] = ec._RevokeAccountSessionPayload_accountSessionId(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -10250,11 +10229,6 @@ func (ec *executionContext) unmarshalNURI2overdollᚋlibrariesᚋgraphqlᚐURI(c
 
 func (ec *executionContext) marshalNURI2overdollᚋlibrariesᚋgraphqlᚐURI(ctx context.Context, sel ast.SelectionSet, v graphql1.URI) graphql.Marshaler {
 	return v
-}
-
-func (ec *executionContext) unmarshalNUnlockAccountInput2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐUnlockAccountInput(ctx context.Context, v interface{}) (types.UnlockAccountInput, error) {
-	res, err := ec.unmarshalInputUnlockAccountInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNUpdateAccountEmailStatusToPrimaryInput2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐUpdateAccountEmailStatusToPrimaryInput(ctx context.Context, v interface{}) (types.UpdateAccountEmailStatusToPrimaryInput, error) {

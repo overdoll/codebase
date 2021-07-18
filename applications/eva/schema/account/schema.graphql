@@ -48,7 +48,7 @@ extend type Mutation {
   """
   Unlock Account - account may be locked for any reason. Use this endpoint to unlock the account
   """
-  unlockAccount(input: UnlockAccountInput!): UnlockAccountPayload @auth
+  unlockAccount: UnlockAccountPayload @auth
 }
 
 extend type Query {

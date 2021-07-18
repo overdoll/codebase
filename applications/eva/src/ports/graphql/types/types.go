@@ -304,13 +304,13 @@ type RevokeAccountAccessPayload struct {
 // Input for updating an account's username
 type RevokeAccountSessionInput struct {
 	// Session ID that should be revoked
-	ID string `json:"id"`
+	AccountSessionID relay.ID `json:"accountSessionId"`
 }
 
 // Payload of the revoked account session
 type RevokeAccountSessionPayload struct {
 	// The ID of the session that was revoked
-	AccountSessionID *AccountUsername `json:"accountSessionId"`
+	AccountSessionID relay.ID `json:"accountSessionId"`
 }
 
 // Payload for revoking the authentication token
