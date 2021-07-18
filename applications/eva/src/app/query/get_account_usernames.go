@@ -6,6 +6,7 @@ import (
 
 	"go.uber.org/zap"
 	"overdoll/applications/eva/src/domain/account"
+	"overdoll/libraries/paging"
 )
 
 type GetAccountUsernamesHandler struct {
@@ -20,15 +21,15 @@ var (
 	ErrFailedGetUsernames = errors.New("failed to get usernames")
 )
 
-func (h GetAccountUsernamesHandler) Handle(ctx context.Context, userId string) ([]*account.Username, error) {
+func (h GetAccountUsernamesHandler) Handle(ctx context.Context, cursor *paging.Cursor, userId string) ([]*account.Username, *paging.Info, error) {
 
-	usernames, err := h.ar.GetAccountUsernames(ctx, userId)
+	usernames, page, err := h.ar.GetAccountUsernames(ctx, cursor, userId)
 
 	if err != nil {
 
 		zap.S().Errorf("failed to get account usernames: %s", err)
-		return nil, ErrFailedGetUsernames
+		return nil, nil, ErrFailedGetUsernames
 	}
 
-	return usernames, nil
+	return usernames, page, nil
 }

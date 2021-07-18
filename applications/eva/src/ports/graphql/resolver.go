@@ -42,8 +42,8 @@ func (r *Resolver) Entity() EntityResolver {
 }
 
 // Query returns gen.QueryResolver implementation.
-func (r *Resolver) Test() TestResolver {
-	return &resolvers.TestResolver{
+func (r *Resolver) Account() AccountResolver {
+	return &resolvers.AccountResolver{
 		App: r.app,
 	}
 }

@@ -6,6 +6,7 @@ import (
 
 	"go.uber.org/zap"
 	"overdoll/applications/eva/src/domain/account"
+	"overdoll/libraries/paging"
 )
 
 type GetAccountEmailsHandler struct {
@@ -20,14 +21,14 @@ var (
 	ErrFailedGetEmails = errors.New("failed to get emails")
 )
 
-func (h GetAccountEmailsHandler) Handle(ctx context.Context, userId string) ([]*account.Email, error) {
+func (h GetAccountEmailsHandler) Handle(ctx context.Context, cursor *paging.Cursor, userId string) ([]*account.Email, *paging.Info, error) {
 
-	emails, err := h.ar.GetAccountEmails(ctx, userId)
+	emails, page, err := h.ar.GetAccountEmails(ctx, cursor, userId)
 
 	if err != nil {
 		zap.S().Errorf("failed to get account emails: %s", err)
-		return nil, ErrFailedGetEmails
+		return nil, nil, ErrFailedGetEmails
 	}
 
-	return emails, nil
+	return emails, page, nil
 }

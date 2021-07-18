@@ -6,6 +6,7 @@ import (
 
 	"go.uber.org/zap"
 	"overdoll/applications/eva/src/domain/session"
+	"overdoll/libraries/paging"
 )
 
 type GetAccountSessionsHandler struct {
@@ -20,14 +21,14 @@ var (
 	ErrFailedGetSessions = errors.New("failed to get emails")
 )
 
-func (h GetAccountSessionsHandler) Handle(ctx context.Context, sessionCookie, id string) ([]*session.Session, error) {
+func (h GetAccountSessionsHandler) Handle(ctx context.Context, cursor *paging.Cursor, sessionCookie, id string) ([]*session.Session, *paging.Info, error) {
 
-	ur, err := h.sr.GetSessionsByAccountId(ctx, sessionCookie, id)
+	ur, page, err := h.sr.GetSessionsByAccountId(ctx, cursor, sessionCookie, id)
 
 	if err != nil {
 		zap.S().Errorf("failed to get sessions: %s", err)
-		return nil, ErrFailedGetSessions
+		return nil, nil, ErrFailedGetSessions
 	}
 
-	return ur, nil
+	return ur, page, nil
 }

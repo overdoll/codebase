@@ -5,10 +5,13 @@ import (
 	"time"
 
 	"github.com/segmentio/ksuid"
+	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
 )
 
 type Session struct {
+	*paging.Node
+
 	id        string
 	userAgent string
 	ip        string

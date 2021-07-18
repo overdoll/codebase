@@ -2,7 +2,6 @@ package entities
 
 import (
 	"context"
-	"fmt"
 
 	"overdoll/applications/eva/src/app"
 	"overdoll/applications/eva/src/ports/graphql/types"
@@ -13,22 +12,18 @@ type EntityResolver struct {
 	App *app.Application
 }
 
-func (e EntityResolver) FindAccountByID(ctx context.Context, id string) (*types.Account, error) {
+func (e EntityResolver) FindAccountByID(ctx context.Context, id relay.ID) (*types.Account, error) {
 	panic("implement me")
 }
 
-func (e EntityResolver) FindTestByID(ctx context.Context, accountID relay.ID) (*types.Test, error) {
-	fmt.Println(accountID)
-	return &types.Test{
-		ID:   "test",
-		Test: "",
-	}, nil
-}
-
-func (e EntityResolver) FindViewerByID(ctx context.Context, id string) (*types.Viewer, error) {
+func (e EntityResolver) FindAccountEmailByID(ctx context.Context, id relay.ID) (*types.AccountEmail, error) {
 	panic("implement me")
 }
 
-func (e EntityResolver) FindAccountSettingsByAccountID(ctx context.Context, accountID relay.ID) (*types.AccountSettings, error) {
+func (e EntityResolver) FindAccountSessionByID(ctx context.Context, id relay.ID) (*types.AccountSession, error) {
+	panic("implement me")
+}
+
+func (e EntityResolver) FindAccountUsernameByID(ctx context.Context, id relay.ID) (*types.AccountUsername, error) {
 	panic("implement me")
 }

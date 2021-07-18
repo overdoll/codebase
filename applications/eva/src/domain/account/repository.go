@@ -2,6 +2,8 @@ package account
 
 import (
 	"context"
+
+	"overdoll/libraries/paging"
 )
 
 type Repository interface {
@@ -12,10 +14,10 @@ type Repository interface {
 
 	GetAccountByUsername(context.Context, string) (*Account, error)
 	UpdateAccountUsername(context.Context, string, func(*Account) error) (*Account, error)
-	GetAccountUsernames(context.Context, string) ([]*Username, error)
+	GetAccountUsernames(context.Context, *paging.Cursor, string) ([]*Username, *paging.Info, error)
 
 	AddAccountEmail(context.Context, *Account, *EmailConfirmation) error
 	ConfirmAccountEmail(context.Context, string, *Account) error
-	GetAccountEmails(context.Context, string) ([]*Email, error)
+	GetAccountEmails(context.Context, *paging.Cursor, string) ([]*Email, *paging.Info, error)
 	DeleteAccountEmail(context.Context, string, string) error
 }

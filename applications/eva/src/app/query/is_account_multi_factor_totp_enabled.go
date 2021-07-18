@@ -21,7 +21,6 @@ var (
 )
 
 func (h IsAccountTOTPMultiFactorEnabledHandler) Handle(ctx context.Context, accountId string) (bool, error) {
-
 	if _, err := h.mr.GetAccountMultiFactorTOTP(ctx, accountId); err != nil {
 
 		if err == multi_factor.ErrTOTPNotConfigured {
