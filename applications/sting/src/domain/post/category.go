@@ -3,11 +3,11 @@ package post
 import (
 	"os"
 
-	"overdoll/libraries/graphql/relay"
+	"overdoll/libraries/paging"
 )
 
 type Category struct {
-	*relay.Node
+	*paging.Node
 
 	id        string
 	title     string

@@ -4,10 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"log"
 
 	"overdoll/applications/sting/src/domain/post"
-	"overdoll/libraries/graphql/relay"
+	"overdoll/libraries/paging"
 )
 
 type CategoryDocument struct {
@@ -59,7 +58,7 @@ func MarshalCategoryToDocument(cat *post.Category) *CategoryDocument {
 	}
 }
 
-func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context, cursor *relay.Cursor, search string) ([]*post.Category, *relay.Paging, error) {
+func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context, cursor *paging.Cursor, search string) ([]*post.Category, *paging.Info, error) {
 	var query string
 
 	if search == "" {
@@ -71,12 +70,10 @@ func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context,
 	response, err := r.store.Search(CategoryIndexName, query)
 
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	var cats []*post.Category
-
-	log.Println(response.Hits)
 
 	for _, cat := range response.Hits {
 
@@ -85,16 +82,16 @@ func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context,
 		err := json.Unmarshal(cat, &pst)
 
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 
 		newCategory := post.UnmarshalCategoryFromDatabase(pst.Id, pst.Title, pst.Thumbnail)
-		newCategory.Node = relay.NewNode(pst.Id)
+		newCategory.Node = paging.NewNode(pst.Id)
 
 		cats = append(cats, newCategory)
 	}
 
-	return cats, nil
+	return cats, nil, nil
 }
 
 func (r PostsIndexElasticSearchRepository) BulkIndexCategories(ctx context.Context, categories []*post.Category) error {

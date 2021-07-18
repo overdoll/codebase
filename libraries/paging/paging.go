@@ -1,11 +1,4 @@
-package relay
-
-type Cursor struct {
-	after  *string
-	before *string
-	first  *int
-	last   *int
-}
+package paging
 
 type Pagination struct {
 	forwards  func(first int, after string) (bool, error)
@@ -25,7 +18,7 @@ func (p *Pagination) DefineBackwardsPagination(backwards func(last int, before s
 	p.backwards = backwards
 }
 
-func (p *Pagination) Run() (*Paging, error) {
+func (p *Pagination) Run() (*Info, error) {
 
 	hasMoreAfter := false
 	hasMoreBefore := false
@@ -67,35 +60,22 @@ func (p *Pagination) Run() (*Paging, error) {
 	return NewPaging(hasMoreAfter, hasMoreBefore), nil
 }
 
-func NewCursor(after, before *string, first, last *int) (*Cursor, error) {
-	return &Cursor{
-		after:  after,
-		before: before,
-		first:  first,
-		last:   last,
-	}, nil
+type Info struct {
+	hasNextPage bool
+	hasPrevPage bool
 }
 
-func (c *Cursor) IsAfterCursor() bool {
-	return c.after != nil
+func (e *Info) HasNextPage() bool {
+	return e.hasNextPage
 }
 
-func (c *Cursor) IsBeforeCursor() bool {
-	return c.before != nil && c.last != nil
+func (e *Info) HasPrevPage() bool {
+	return e.hasPrevPage
 }
 
-func (c *Cursor) After() string {
-	return *c.after
-}
-
-func (c *Cursor) Before() string {
-	return *c.before
-}
-
-func (c *Cursor) First() int {
-	return *c.first
-}
-
-func (c *Cursor) Last() int {
-	return *c.last
+func NewPaging(hasNextPage, hasPreviousPage bool) *Info {
+	return &Info{
+		hasNextPage: hasNextPage,
+		hasPrevPage: hasPreviousPage,
+	}
 }

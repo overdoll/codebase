@@ -9,7 +9,7 @@ import (
 	"github.com/scylladb/gocqlx/v2/qb"
 	"overdoll/applications/parley/src/domain/infraction"
 	"overdoll/libraries/bucket"
-	"overdoll/libraries/graphql/relay"
+	"overdoll/libraries/paging"
 )
 
 type PendingPostAuditLog struct {
@@ -263,7 +263,7 @@ func (r InfractionCassandraRepository) GetPendingPostAuditLog(ctx context.Contex
 	), nil
 }
 
-func (r InfractionCassandraRepository) GetPendingPostAuditLogByModerator(ctx context.Context, cursor *relay.Cursor, filter *infraction.PendingPostAuditLogFilters) ([]*infraction.PendingPostAuditLog, error) {
+func (r InfractionCassandraRepository) GetPendingPostAuditLogByModerator(ctx context.Context, cursor *paging.Cursor, filter *infraction.PendingPostAuditLogFilters) ([]*infraction.PendingPostAuditLog, error) {
 
 	// build query based on filters
 	builder :=

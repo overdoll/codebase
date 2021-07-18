@@ -6,7 +6,7 @@ import (
 	"fmt"
 
 	"overdoll/applications/sting/src/domain/post"
-	"overdoll/libraries/graphql/relay"
+	"overdoll/libraries/paging"
 )
 
 type MediaDocument struct {
@@ -50,7 +50,7 @@ const AllMedia = `
 
 const MediaIndexName = "media"
 
-func (r PostsIndexElasticSearchRepository) SearchMedias(ctx context.Context, cursor *relay.Cursor, search string) ([]*post.Media, *relay.Paging, error) {
+func (r PostsIndexElasticSearchRepository) SearchMedias(ctx context.Context, cursor *paging.Cursor, search string) ([]*post.Media, *paging.Info, error) {
 	var query string
 
 	if search == "" {
@@ -78,7 +78,7 @@ func (r PostsIndexElasticSearchRepository) SearchMedias(ctx context.Context, cur
 		}
 
 		newMedia := post.UnmarshalMediaFromDatabase(md.Id, md.Title, md.Thumbnail)
-		newMedia.Node = relay.NewNode(md.Id)
+		newMedia.Node = paging.NewNode(md.Id)
 
 		meds = append(meds, newMedia)
 	}

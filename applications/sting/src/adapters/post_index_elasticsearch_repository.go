@@ -11,7 +11,7 @@ import (
 
 	"overdoll/applications/sting/src/domain/post"
 	search "overdoll/libraries/elasticsearch"
-	"overdoll/libraries/graphql/relay"
+	"overdoll/libraries/paging"
 )
 
 type PostDocument struct {
@@ -280,15 +280,15 @@ func (r PostsIndexElasticSearchRepository) IndexPendingPost(ctx context.Context,
 	return r.BulkIndexPendingPosts(ctx, pendingPosts)
 }
 
-func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Context, cursor *relay.Cursor, filter *post.PendingPostFilters) ([]*post.PendingPost, *relay.Paging, error) {
+func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Context, cursor *paging.Cursor, filter *post.PendingPostFilters) ([]*post.PendingPost, *paging.Info, error) {
 
 	t, err := template.New("SearchPostPending").Parse(SearchPostPending)
 
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	paginator := relay.NewPagination(cursor)
+	paginator := paging.NewPagination(cursor)
 
 	runSearch := func(rng string, size int) (*search.SearchResults, error) {
 
@@ -352,10 +352,10 @@ func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Contex
 	pageInfo, err := paginator.Run()
 
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	var posts []*post.PendingPostEdge
+	var posts []*post.PendingPost
 
 	for _, pest := range response.Hits {
 
@@ -364,7 +364,7 @@ func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Contex
 		err := json.Unmarshal(pest, &pst)
 
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 
 		var characters []*post.Character
@@ -382,32 +382,30 @@ func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Contex
 		postedAt, err := strconv.ParseInt(pst.PostedAt, 10, 64)
 		reassignmentAt, err := strconv.ParseInt(pst.ReassignmentAt, 10, 64)
 
-		posts = append(posts, &post.PendingPostEdge{
-			Cursor: pst.PostedAt,
-			Node: post.UnmarshalPendingPostFromDatabase(
-				pst.Id,
-				pst.ModeratorId,
-				pst.State,
-				post.NewArtist(pst.ArtistId, pst.ArtistUsername),
-				pst.Contributor.Id,
-				pst.Contributor.Username,
-				pst.Contributor.Avatar,
-				pst.Content,
-				characters,
-				categories,
-				pst.CharactersRequests,
-				pst.CategoriesRequests,
-				pst.MediaRequests,
-				time.Unix(postedAt, 0),
-				time.Unix(reassignmentAt, 0),
-			),
-		})
+		createdPost := post.UnmarshalPendingPostFromDatabase(
+			pst.Id,
+			pst.ModeratorId,
+			pst.State,
+			post.NewArtist(pst.ArtistId, pst.ArtistUsername),
+			pst.Contributor.Id,
+			pst.Contributor.Username,
+			pst.Contributor.Avatar,
+			pst.Content,
+			characters,
+			categories,
+			pst.CharactersRequests,
+			pst.CategoriesRequests,
+			pst.MediaRequests,
+			time.Unix(postedAt, 0),
+			time.Unix(reassignmentAt, 0),
+		)
+
+		createdPost.Node = paging.NewNode(pst.PostedAt)
+
+		posts = append(posts, createdPost)
 	}
 
-	return &post.PendingPostConnection{
-		Edges:    posts,
-		PageInfo: pageInfo,
-	}, nil
+	return posts, pageInfo, nil
 }
 
 func (r PostsIndexElasticSearchRepository) BulkIndexPendingPosts(ctx context.Context, pendingPosts []*post.PendingPost) error {

@@ -4,9 +4,10 @@ import (
 	"overdoll/applications/sting/src/domain/post"
 	"overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
+	"overdoll/libraries/paging"
 )
 
-func MarshalPendingPostToGraphQLConnection(results []*post.PendingPost, page *relay.Paging) *PendingPostConnection {
+func MarshalPendingPostToGraphQLConnection(results []*post.PendingPost, page *paging.Info) *PendingPostConnection {
 
 	var pendingPostEdges []*PendingPostEdge
 
@@ -108,7 +109,7 @@ func MarshalPendingPostToGraphQL(result *post.PendingPost) *PendingPost {
 	}
 }
 
-func MarshalArtistToGraphQLConnection(results []*post.Artist, paging *relay.Paging) *ArtistConnection {
+func MarshalArtistToGraphQLConnection(results []*post.Artist, paging *paging.Info) *ArtistConnection {
 	resp := make([]*ArtistEdge, 0)
 
 	// Unmarshal our json into the correct model
@@ -148,7 +149,7 @@ func MarshalArtistToGraphQL(result *post.Artist) *Artist {
 	}
 }
 
-func MarshalCategoryToGraphQLConnection(results []*post.Category, paging *relay.Paging) *CategoryConnection {
+func MarshalCategoryToGraphQLConnection(results []*post.Category, paging *paging.Info) *CategoryConnection {
 	resp := make([]*CategoryEdge, 0)
 
 	// Unmarshal our json into the correct model
@@ -188,7 +189,7 @@ func MarshalCategoryToGraphQL(result *post.Category) *Category {
 	}
 }
 
-func MarshalCharacterToGraphQLConnection(results []*post.Character, paging *relay.Paging) *CharacterConnection {
+func MarshalCharacterToGraphQLConnection(results []*post.Character, paging *paging.Info) *CharacterConnection {
 	resp := make([]*CharacterEdge, 0)
 
 	// Unmarshal our json into the correct model
@@ -229,7 +230,7 @@ func MarshalCharacterToGraphQL(result *post.Character) *Character {
 	}
 }
 
-func MarshalMediaToGraphQLConnection(results []*post.Media, paging *relay.Paging) *MediaConnection {
+func MarshalMediaToGraphQLConnection(results []*post.Media, paging *paging.Info) *MediaConnection {
 	resp := make([]*MediaEdge, 0)
 
 	// Unmarshal our json into the correct model

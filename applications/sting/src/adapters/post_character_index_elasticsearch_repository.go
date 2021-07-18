@@ -6,7 +6,7 @@ import (
 	"fmt"
 
 	"overdoll/applications/sting/src/domain/post"
-	"overdoll/libraries/graphql/relay"
+	"overdoll/libraries/paging"
 )
 
 type CharacterDocument struct {
@@ -81,7 +81,7 @@ func MarshalCharacterToDocument(char *post.Character) *CharacterDocument {
 	}
 }
 
-func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context, cursor *relay.Cursor, search string) ([]*post.Character, *relay.Paging, error) {
+func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context, cursor *paging.Cursor, search string) ([]*post.Character, *paging.Info, error) {
 	var query string
 
 	if search == "" {
@@ -109,7 +109,7 @@ func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context,
 		}
 
 		newCharacter := post.UnmarshalCharacterFromDatabase(chr.Id, chr.Name, chr.Thumbnail, post.UnmarshalMediaFromDatabase(chr.Media.Id, chr.Media.Title, chr.Media.Thumbnail))
-		newCharacter.Node = relay.NewNode(chr.Id)
+		newCharacter.Node = paging.NewNode(chr.Id)
 
 		characters = append(characters, newCharacter)
 	}

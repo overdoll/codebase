@@ -10,6 +10,7 @@ import (
 	"overdoll/applications/sting/src/ports/graphql/types"
 	graphql1 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
+	"overdoll/libraries/graphql/relay/relayruntime"
 	"strconv"
 	"sync"
 	"sync/atomic"
@@ -47,8 +48,7 @@ type ResolverRoot interface {
 }
 
 type DirectiveRoot struct {
-	Auth   func(ctx context.Context, obj interface{}, next graphql.Resolver) (res interface{}, err error)
-	Cursor func(ctx context.Context, obj interface{}, next graphql.Resolver) (res interface{}, err error)
+	Auth func(ctx context.Context, obj interface{}, next graphql.Resolver) (res interface{}, err error)
 }
 
 type ComplexityRoot struct {
@@ -1302,7 +1302,7 @@ extend type Query {
 
     """Filter by the title of the media"""
     mediaTitle: String
-  ): PostConnection! @cursor
+  ): PostConnection!
 }`, BuiltIn: false},
 	{Name: "schema/schema.graphql", Input: `type Content {
   url: URI!
@@ -1329,23 +1329,20 @@ scalar Time
 """An RFC 3986, RFC 3987, and RFC 6570 (level 4) compliant URI string."""
 scalar URI
 
-type PageInfo {
+directive @goField(forceResolver: Boolean) on INPUT_FIELD_DEFINITION
+  | FIELD_DEFINITION
+
+directive @auth on FIELD_DEFINITION`, BuiltIn: false},
+	{Name: "../../libraries/graphql/relay/schema.graphql", Input: `type PageInfo {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
   startCursor: String
   endCursor: String
 }
 
-directive @cursor on FIELD_DEFINITION
-
 interface Node {
   id: ID!
-}
-
-directive @goField(forceResolver: Boolean) on INPUT_FIELD_DEFINITION
-  | FIELD_DEFINITION
-
-directive @auth on FIELD_DEFINITION`, BuiltIn: false},
+}`, BuiltIn: false},
 	{Name: "federation/directives.graphql", Input: `
 scalar _Any
 scalar _FieldSet
@@ -4644,28 +4641,8 @@ func (ec *executionContext) _Query_posts(ctx context.Context, field graphql.Coll
 	}
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Query().Posts(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["characterName"].(*string), args["mediaTitle"].(*string))
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			if ec.directives.Cursor == nil {
-				return nil, errors.New("directive cursor is not implemented")
-			}
-			return ec.directives.Cursor(ctx, nil, directive0)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*types.PostConnection); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/sting/src/ports/graphql/types.PostConnection`, tmp)
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Posts(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["characterName"].(*string), args["mediaTitle"].(*string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6105,7 +6082,7 @@ func (ec *executionContext) _CharacterContainer(ctx context.Context, sel ast.Sel
 	}
 }
 
-func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj relay.Node) graphql.Marshaler {
+func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj relayruntime.Node) graphql.Marshaler {
 	switch obj := (obj).(type) {
 	case nil:
 		return graphql.Null

@@ -5,7 +5,7 @@ import (
 
 	"overdoll/applications/sting/src/app"
 	"overdoll/applications/sting/src/ports/graphql/types"
-	"overdoll/libraries/graphql/relay"
+	paging2 "overdoll/libraries/paging"
 )
 
 type AccountResolver struct {
@@ -14,7 +14,7 @@ type AccountResolver struct {
 
 func (a AccountResolver) PendingPostsForModerator(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PendingPostConnection, error) {
 
-	cursor, err := relay.NewCursor(after, before, first, last)
+	cursor, err := paging2.NewCursor(after, before, first, last)
 
 	if err != nil {
 		return nil, err

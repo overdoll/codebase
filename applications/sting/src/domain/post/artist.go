@@ -3,11 +3,11 @@ package post
 import (
 	"os"
 
-	"overdoll/libraries/graphql/relay"
+	"overdoll/libraries/paging"
 )
 
 type Artist struct {
-	*relay.Node
+	*paging.Node
 
 	id       string
 	username string

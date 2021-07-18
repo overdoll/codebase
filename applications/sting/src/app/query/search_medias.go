@@ -6,7 +6,7 @@ import (
 
 	"go.uber.org/zap"
 	"overdoll/applications/sting/src/domain/post"
-	"overdoll/libraries/graphql/relay"
+	"overdoll/libraries/paging"
 )
 
 var (
@@ -21,7 +21,7 @@ func NewSearchMediasHandler(pr post.IndexRepository) SearchMediasHandler {
 	return SearchMediasHandler{pr: pr}
 }
 
-func (h SearchMediasHandler) Handle(ctx context.Context, cursor *relay.Cursor, query string) ([]*post.Media, *relay.Paging, error) {
+func (h SearchMediasHandler) Handle(ctx context.Context, cursor *paging.Cursor, query string) ([]*post.Media, *paging.Info, error) {
 
 	results, paging, err := h.pr.SearchMedias(ctx, cursor, query)
 

@@ -5,7 +5,7 @@ import (
 
 	"overdoll/applications/sting/src/app"
 	"overdoll/applications/sting/src/ports/graphql/types"
-	"overdoll/libraries/graphql/relay"
+	paging2 "overdoll/libraries/paging"
 )
 
 type QueryResolver struct {
@@ -14,7 +14,7 @@ type QueryResolver struct {
 
 func (r *QueryResolver) Artists(ctx context.Context, after *string, before *string, first *int, last *int, username *string) (*types.ArtistConnection, error) {
 
-	cursor, err := relay.NewCursor(after, before, first, last)
+	cursor, err := paging2.NewCursor(after, before, first, last)
 
 	if err != nil {
 		return nil, err
@@ -37,7 +37,7 @@ func (r *QueryResolver) Artists(ctx context.Context, after *string, before *stri
 
 func (r *QueryResolver) Categories(ctx context.Context, after *string, before *string, first *int, last *int, name *string) (*types.CategoryConnection, error) {
 
-	cursor, err := relay.NewCursor(after, before, first, last)
+	cursor, err := paging2.NewCursor(after, before, first, last)
 
 	if err != nil {
 		return nil, err
@@ -60,7 +60,7 @@ func (r *QueryResolver) Categories(ctx context.Context, after *string, before *s
 
 func (r *QueryResolver) Medias(ctx context.Context, after *string, before *string, first *int, last *int, title *string) (*types.MediaConnection, error) {
 
-	cursor, err := relay.NewCursor(after, before, first, last)
+	cursor, err := paging2.NewCursor(after, before, first, last)
 
 	if err != nil {
 		return nil, err
@@ -83,7 +83,7 @@ func (r *QueryResolver) Medias(ctx context.Context, after *string, before *strin
 
 func (r *QueryResolver) Characters(ctx context.Context, after *string, before *string, first *int, last *int, name *string, mediaTitle *string) (*types.CharacterConnection, error) {
 
-	cursor, err := relay.NewCursor(after, before, first, last)
+	cursor, err := paging2.NewCursor(after, before, first, last)
 
 	if err != nil {
 		return nil, err

@@ -18,6 +18,7 @@ go_library(
         "//applications/sting/src/ports/graphql/types",
         "//libraries/graphql",
         "//libraries/graphql/relay",
+        "//libraries/graphql/relay/relay_plugin:relayruntime",
         "@com_github_99designs_gqlgen//graphql",
         "@com_github_99designs_gqlgen//graphql/introspection",
         "@com_github_99designs_gqlgen//plugin/federation/fedruntime",

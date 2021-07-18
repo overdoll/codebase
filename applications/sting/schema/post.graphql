@@ -87,5 +87,5 @@ extend type Query {
 
     """Filter by the title of the media"""
     mediaTitle: String
-  ): PostConnection! @cursor
+  ): PostConnection!
 }

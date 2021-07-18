@@ -12,7 +12,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//libraries/account",
-        "//libraries/graphql/relay",
+        "//libraries/paging",
         "@com_github_segmentio_ksuid//:ksuid",
     ],
 )

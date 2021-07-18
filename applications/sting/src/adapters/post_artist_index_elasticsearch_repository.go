@@ -7,7 +7,7 @@ import (
 	"log"
 
 	"overdoll/applications/sting/src/domain/post"
-	"overdoll/libraries/graphql/relay"
+	"overdoll/libraries/paging"
 )
 
 type ArtistDocument struct {
@@ -51,7 +51,7 @@ const AllArtists = `
 
 const ArtistIndexName = "artists"
 
-func (r PostsIndexElasticSearchRepository) SearchArtists(ctx context.Context, cursor *relay.Cursor, search string) ([]*post.Artist, *relay.Paging, error) {
+func (r PostsIndexElasticSearchRepository) SearchArtists(ctx context.Context, cursor *paging.Cursor, search string) ([]*post.Artist, *paging.Info, error) {
 	var query string
 
 	if search == "" {
@@ -63,7 +63,7 @@ func (r PostsIndexElasticSearchRepository) SearchArtists(ctx context.Context, cu
 	response, err := r.store.Search(ArtistIndexName, query)
 
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	var artists []*post.Artist
@@ -75,17 +75,17 @@ func (r PostsIndexElasticSearchRepository) SearchArtists(ctx context.Context, cu
 		err := json.Unmarshal(cat, &art)
 
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 
 		newArtist := post.UnmarshalArtistFromDatabase(art.Id, art.Username, art.Avatar)
-		newArtist.Node = relay.NewNode(art.Id)
+		newArtist.Node = paging.NewNode(art.Id)
 
 		artists = append(artists, newArtist)
 
 	}
 
-	return artists, nil
+	return artists, nil, nil
 }
 
 func (r PostsIndexElasticSearchRepository) BulkIndexArtists(ctx context.Context, artists []*post.Artist) error {

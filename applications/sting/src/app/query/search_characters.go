@@ -5,7 +5,7 @@ import (
 
 	"go.uber.org/zap"
 	"overdoll/applications/sting/src/domain/post"
-	"overdoll/libraries/graphql/relay"
+	"overdoll/libraries/paging"
 )
 
 type SearchCharactersHandler struct {
@@ -16,7 +16,7 @@ func NewSearchCharactersHandler(pr post.IndexRepository) SearchCharactersHandler
 	return SearchCharactersHandler{pr: pr}
 }
 
-func (h SearchCharactersHandler) Handle(ctx context.Context, cursor *relay.Cursor, query string) ([]*post.Character, *relay.Paging, error) {
+func (h SearchCharactersHandler) Handle(ctx context.Context, cursor *paging.Cursor, query string) ([]*post.Character, *paging.Info, error) {
 
 	results, paging, err := h.pr.SearchCharacters(ctx, cursor, query)
 

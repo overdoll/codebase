@@ -12,5 +12,6 @@ go_library(
         "//applications/sting/src/domain/post",
         "//libraries/graphql",
         "//libraries/graphql/relay",
+        "//libraries/paging",
     ],
 )
