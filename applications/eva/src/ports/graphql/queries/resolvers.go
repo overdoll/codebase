@@ -51,14 +51,8 @@ func (r *QueryResolver) VerifyAuthenticationTokenAndAttemptAccountAccessGrant(ct
 	// cookie redeemed not in the same session, just redeem it
 	if !isSameSession {
 		return &types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload{
-			Account: nil,
-			AuthenticationToken: &types.AuthenticationToken{
-				SameSession:   isSameSession,
-				Redeemed:      ck.Redeemed(),
-				Session:       ck.Session(),
-				Email:         ck.Email(),
-				AccountStatus: nil,
-			},
+			Account:             nil,
+			AuthenticationToken: types.MarshalAuthenticationTokenToGraphQL(ck, isSameSession, false),
 		}, nil
 	}
 
@@ -85,42 +79,11 @@ func (r *QueryResolver) VerifyAuthenticationTokenAndAttemptAccountAccessGrant(ct
 		}); err != nil {
 			return nil, err
 		}
-
-		return &types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload{
-			Account: types.MarshalAccountToGraphQL(usr),
-			AuthenticationToken: &types.AuthenticationToken{
-				SameSession: isSameSession,
-				Redeemed:    ck.Redeemed(),
-				Session:     ck.Session(),
-				Email:       ck.Email(),
-				AccountStatus: &types.AuthenticationTokenAccountStatus{
-					Registered:    true,
-					Authenticated: true,
-				},
-			},
-		}, nil
-	}
-
-	// send back MFA types
-	var multiFactorTypes []types.MultiFactorTypeEnum
-
-	if ck.IsTOTPRequired() {
-		multiFactorTypes = append(multiFactorTypes, types.MultiFactorTypeEnumTotp)
 	}
 
 	return &types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload{
-		Account: nil,
-		AuthenticationToken: &types.AuthenticationToken{
-			SameSession: isSameSession,
-			Redeemed:    ck.Redeemed(),
-			Session:     ck.Session(),
-			Email:       ck.Email(),
-			AccountStatus: &types.AuthenticationTokenAccountStatus{
-				Registered:    false,
-				Authenticated: false,
-				MultiFactor:   multiFactorTypes,
-			},
-		},
+		Account:             types.MarshalAccountToGraphQL(usr),
+		AuthenticationToken: types.MarshalAuthenticationTokenToGraphQL(ck, isSameSession, usr != nil),
 	}, nil
 }
 
@@ -150,36 +113,7 @@ func (r *QueryResolver) ViewAuthenticationToken(ctx context.Context) (*types.Aut
 		return nil, err
 	}
 
-	if acc != nil && ck.Redeemed() {
-
-		var multiFactorTypes []types.MultiFactorTypeEnum
-
-		if ck.IsTOTPRequired() {
-			multiFactorTypes = append(multiFactorTypes, types.MultiFactorTypeEnumTotp)
-		}
-
-		return &types.AuthenticationToken{
-			SameSession: true,
-			Redeemed:    ck.Redeemed(),
-			Session:     ck.Session(),
-			Email:       ck.Email(),
-			AccountStatus: &types.AuthenticationTokenAccountStatus{
-				Registered:    true,
-				Authenticated: multiFactorTypes == nil,
-				MultiFactor:   multiFactorTypes,
-			},
-		}, nil
-	}
-
-	return &types.AuthenticationToken{
-		SameSession: true,
-		Redeemed:    ck.Redeemed(),
-		Session:     ck.Session(),
-		Email:       ck.Email(),
-		AccountStatus: &types.AuthenticationTokenAccountStatus{
-			Registered: false,
-		},
-	}, nil
+	return types.MarshalAuthenticationTokenToGraphQL(ck, true, acc != nil), nil
 }
 
 func (r *QueryResolver) Viewer(ctx context.Context) (*types.Account, error) {

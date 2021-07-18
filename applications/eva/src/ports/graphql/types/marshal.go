@@ -3,11 +3,16 @@ package types
 import (
 	"overdoll/applications/eva/src/domain/account"
 	"overdoll/applications/eva/src/domain/session"
+	"overdoll/applications/eva/src/domain/token"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/paging"
 )
 
 func MarshalAccountToGraphQL(result *account.Account) *Account {
+
+	if result == nil {
+		return nil
+	}
 
 	var lock *AccountLockDetails
 
@@ -57,6 +62,29 @@ func MarshalAccountEmailToGraphQL(result *account.Email) *AccountEmail {
 	}
 }
 
+func MarshalAuthenticationTokenToGraphQL(result *token.AuthenticationToken, sameSession, registered bool) *AuthenticationToken {
+
+	var multiFactorTypes []MultiFactorTypeEnum
+
+	if registered {
+		if result.IsTOTPRequired() {
+			multiFactorTypes = append(multiFactorTypes, MultiFactorTypeEnumTotp)
+		}
+	}
+
+	return &AuthenticationToken{
+		SameSession: sameSession,
+		Redeemed:    result.Redeemed(),
+		Session:     result.Session(),
+		Email:       result.Email(),
+		AccountStatus: &AuthenticationTokenAccountStatus{
+			Registered:    registered,
+			Authenticated: registered && multiFactorTypes == nil,
+			MultiFactor:   multiFactorTypes,
+		},
+	}
+}
+
 func MarshalAccountEmailToGraphQLConnection(results []*account.Email, page *paging.Info) *AccountEmailConnection {
 
 	var accEmails []*AccountEmailEdge
@@ -65,7 +93,7 @@ func MarshalAccountEmailToGraphQLConnection(results []*account.Email, page *pagi
 
 		accEmails = append(accEmails, &AccountEmailEdge{
 			Cursor: email.Cursor(),
-			Node: MarshalAccountEmailToGraphQL(email),
+			Node:   MarshalAccountEmailToGraphQL(email),
 		})
 	}
 

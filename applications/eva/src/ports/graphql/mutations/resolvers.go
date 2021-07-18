@@ -3,6 +3,7 @@ package mutations
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"strings"
 	"time"
@@ -40,7 +41,7 @@ func (r *MutationResolver) GrantAuthenticationToken(ctx context.Context, input t
 		return nil, errors.New("error")
 	}
 
-	instance, err := r.App.Commands.Authenticate.Handle(ctx, data.Email, string(sessionJson))
+	instance, err := r.App.Commands.Authenticate.Handle(ctx, input.Email, string(sessionJson))
 
 	if err != nil {
 		return nil, nil
@@ -60,10 +61,7 @@ func (r *MutationResolver) GrantAuthenticationToken(ctx context.Context, input t
 		return nil, command.ErrFailedAuthenticate
 	}
 
-	return &types.Response{
-		Validation: nil,
-		Ok:         true,
-	}, nil
+	return &types.GrantAuthenticationTokenPayload{AuthenticationToken: types.MarshalAuthenticationTokenToGraphQL(instance, true, false)}, nil
 }
 
 func (r *MutationResolver) RevokeAuthenticationToken(ctx context.Context) (*types.RevokeAuthenticationTokenPayload, error) {
