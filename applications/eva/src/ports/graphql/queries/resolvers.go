@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/vektah/gqlparser/v2/gqlerror"
 	"go.uber.org/zap"
 	"overdoll/applications/eva/src/app"
 	"overdoll/applications/eva/src/app/command"
@@ -26,14 +27,6 @@ func (r *QueryResolver) VerifyAuthenticationTokenAndAttemptAccountAccessGrant(ct
 
 	// If this is a registration (user with email doesn't exist), we keep the cookie, and remove it when we register, so the user
 	// can complete the registration if they've accidentally closed their tab
-
-	pass := passport.FromContext(ctx)
-
-	// User is logged in
-	if pass.IsAuthenticated() {
-		return nil, nil
-	}
-
 	gc := helpers.GinContextFromContext(ctx)
 
 	_, err := cookies.ReadCookie(ctx, token.OTPKey)
@@ -45,7 +38,7 @@ func (r *QueryResolver) VerifyAuthenticationTokenAndAttemptAccountAccessGrant(ct
 	}
 
 	// redeemCookie first
-	ck, err := r.App.Commands.RedeemAuthenticationToken.Handle(ctx, tokenId)
+	ck, err := r.App.Commands.RedeemAuthenticationToken.Handle(ctx, input.AuthenticationTokenID)
 
 	if err != nil {
 		return nil, err
@@ -57,17 +50,20 @@ func (r *QueryResolver) VerifyAuthenticationTokenAndAttemptAccountAccessGrant(ct
 
 	// cookie redeemed not in the same session, just redeem it
 	if !isSameSession {
-		return &types.AuthenticationToken{
-			SameSession:   isSameSession,
-			Redeemed:      ck.Redeemed(),
-			Session:       ck.Session(),
-			Email:         ck.Email(),
-			AccountStatus: nil,
+		return &types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload{
+			Account: nil,
+			AuthenticationToken: &types.AuthenticationToken{
+				SameSession:   isSameSession,
+				Redeemed:      ck.Redeemed(),
+				Session:       ck.Session(),
+				Email:         ck.Email(),
+				AccountStatus: nil,
+			},
 		}, nil
 	}
 
 	// consume cookie
-	usr, ck, err := r.App.Queries.GetAuthenticationTokenStatus.Handle(ctx, tokenId)
+	usr, ck, err := r.App.Queries.GetAuthenticationTokenStatus.Handle(ctx, input.AuthenticationTokenID)
 
 	if err != nil {
 		return nil, err
@@ -75,7 +71,7 @@ func (r *QueryResolver) VerifyAuthenticationTokenAndAttemptAccountAccessGrant(ct
 
 	if usr != nil {
 		// consume cookie since user is valid here
-		if err := r.App.Commands.ConsumeAuthenticationToken.Handle(ctx, tokenId); err != nil {
+		if err := r.App.Commands.ConsumeAuthenticationToken.Handle(ctx, input.AuthenticationTokenID); err != nil {
 			return nil, err
 		}
 
@@ -83,21 +79,24 @@ func (r *QueryResolver) VerifyAuthenticationTokenAndAttemptAccountAccessGrant(ct
 		http.SetCookie(gc.Writer, &http.Cookie{Name: token.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
 
 		// Update passport to include our new user
-		if err := pass.MutatePassport(ctx, func(p *passport.Passport) error {
+		if err := passport.FromContext(ctx).MutatePassport(ctx, func(p *passport.Passport) error {
 			p.SetAccount(usr.ID())
 			return nil
 		}); err != nil {
 			return nil, err
 		}
 
-		return &types.AuthenticationToken{
-			SameSession: isSameSession,
-			Redeemed:    ck.Redeemed(),
-			Session:     ck.Session(),
-			Email:       ck.Email(),
-			AccountStatus: &types.AuthenticationTokenAccountStatus{
-				Registered:    true,
-				Authenticated: true,
+		return &types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload{
+			Account: types.MarshalAccountToGraphQL(usr),
+			AuthenticationToken: &types.AuthenticationToken{
+				SameSession: isSameSession,
+				Redeemed:    ck.Redeemed(),
+				Session:     ck.Session(),
+				Email:       ck.Email(),
+				AccountStatus: &types.AuthenticationTokenAccountStatus{
+					Registered:    true,
+					Authenticated: true,
+				},
 			},
 		}, nil
 	}
@@ -109,26 +108,23 @@ func (r *QueryResolver) VerifyAuthenticationTokenAndAttemptAccountAccessGrant(ct
 		multiFactorTypes = append(multiFactorTypes, types.MultiFactorTypeEnumTotp)
 	}
 
-	return &types.AuthenticationToken{
-		SameSession: isSameSession,
-		Redeemed:    ck.Redeemed(),
-		Session:     ck.Session(),
-		Email:       ck.Email(),
-		AccountStatus: &types.AuthenticationTokenAccountStatus{
-			Registered:    false,
-			Authenticated: false,
-			MultiFactor:   multiFactorTypes,
+	return &types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload{
+		Account: nil,
+		AuthenticationToken: &types.AuthenticationToken{
+			SameSession: isSameSession,
+			Redeemed:    ck.Redeemed(),
+			Session:     ck.Session(),
+			Email:       ck.Email(),
+			AccountStatus: &types.AuthenticationTokenAccountStatus{
+				Registered:    false,
+				Authenticated: false,
+				MultiFactor:   multiFactorTypes,
+			},
 		},
 	}, nil
 }
 
 func (r *QueryResolver) ViewAuthenticationToken(ctx context.Context) (*types.AuthenticationToken, error) {
-	pass := passport.FromContext(ctx)
-
-	// User is logged in
-	if pass.IsAuthenticated() {
-		return nil, nil
-	}
 
 	// User is not logged in, let's check for an OTP token
 	otpCookie, err := cookies.ReadCookie(ctx, token.OTPKey)
@@ -243,25 +239,22 @@ func (r *QueryResolver) Viewer(ctx context.Context) (*types.Account, error) {
 		return types.MarshalAccountToGraphQL(acc), nil
 	}
 
+	return nil, nil
 }
 
 func (r *QueryResolver) ConfirmAccountEmail(ctx context.Context, input types.ConfirmAccountEmailInput) (*types.ConfirmAccountEmailPayload, error) {
 
-	validation, err := r.App.Commands.ConfirmAccountEmail.Handle(ctx, passport.FromContext(ctx).AccountID(), id)
+	email, validation, err := r.App.Commands.ConfirmAccountEmail.Handle(ctx, passport.FromContext(ctx).AccountID(), input.ID)
 
 	if err != nil {
 		return nil, err
 	}
 
 	if validation != "" {
-		return &types.Response{
-			Validation: &types.Validation{Code: validation},
-			Ok:         false,
-		}, nil
+		return nil, gqlerror.Errorf(validation)
 	}
 
-	return &types.Response{
-		Validation: nil,
-		Ok:         true,
+	return &types.ConfirmAccountEmailPayload{
+		AccountEmail: types.MarshalAccountEmailToGraphQL(email),
 	}, nil
 }

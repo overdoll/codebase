@@ -17,7 +17,7 @@ type Repository interface {
 	GetAccountUsernames(context.Context, *paging.Cursor, string) ([]*Username, *paging.Info, error)
 
 	AddAccountEmail(context.Context, *Account, *EmailConfirmation) error
-	ConfirmAccountEmail(context.Context, string, *Account) error
+	ConfirmAccountEmail(context.Context, string, *Account) (*Email, error)
 	GetAccountEmails(context.Context, *paging.Cursor, string) ([]*Email, *paging.Info, error)
 	DeleteAccountEmail(context.Context, string, string) error
 }

@@ -24,25 +24,25 @@ const (
 	ValidationErrEmailCodeInvalid = "email_code_invalid"
 )
 
-func (h ConfirmAccountEmailHandler) Handle(ctx context.Context, userId, id string) (string, error) {
+func (h ConfirmAccountEmailHandler) Handle(ctx context.Context, userId, id string) (*account.Email, string, error) {
 
 	acc, err := h.ar.GetAccountById(ctx, userId)
 
 	if err != nil {
 		zap.S().Errorf("failed to get user: %s", err)
-		return "", ErrFailedConfirmAccountEmail
+		return nil, "", ErrFailedConfirmAccountEmail
 	}
 
-	err = h.ar.ConfirmAccountEmail(ctx, id, acc)
+	email, err := h.ar.ConfirmAccountEmail(ctx, id, acc)
 
 	if err != nil {
 		if err == account.ErrEmailCodeInvalid {
-			return ValidationErrEmailCodeInvalid, nil
+			return nil, ValidationErrEmailCodeInvalid, nil
 		}
 
 		zap.S().Errorf("failed to confirm email: %s", err)
-		return "", ErrFailedConfirmAccountEmail
+		return nil, "", ErrFailedConfirmAccountEmail
 	}
 
-	return "", nil
+	return email, "", nil
 }

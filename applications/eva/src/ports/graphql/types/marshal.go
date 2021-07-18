@@ -7,9 +7,9 @@ import (
 	"overdoll/libraries/paging"
 )
 
-func MarshalAccountToGraphQL(result *account.Account) *Viewer {
+func MarshalAccountToGraphQL(result *account.Account) *Account {
 
-	var lock *AccountLock
+	var lock *AccountLockDetails
 
 	if result.IsLocked() {
 		var reason AccountLockReasonEnum
@@ -18,23 +18,43 @@ func MarshalAccountToGraphQL(result *account.Account) *Viewer {
 			reason = AccountLockReasonEnumPostInfraction
 		}
 
-		lock = &AccountLock{
+		lock = &AccountLockDetails{
 			Expires: result.LockedUntil(),
 			Reason:  reason,
 		}
 	}
 
-	var roles []AccountRoleEnum
+	return &Account{
+		ID:          relay.NewID(Account{}, result.ID()),
+		Username:    result.Username(),
+		IsStaff:     result.IsStaff(),
+		IsModerator: result.IsModerator(),
+		IsLocked:    result.IsLocked(),
+		LockDetails: lock,
+	}
+}
 
-	if result.IsModerator() {
-		roles = append(roles, AccountRoleEnumModerator)
+func MarshalAccountEmailToGraphQL(result *account.Email) *AccountEmail {
+
+	var status AccountEmailStatusEnum
+
+	if result.IsConfirmed() {
+		status = AccountEmailStatusEnumConfirmed
 	}
 
-	if result.IsStaff() {
-		roles = append(roles, AccountRoleEnumStaff)
+	if result.IsUnconfirmed() {
+		status = AccountEmailStatusEnumUnconfirmed
 	}
 
-	return &Viewer{ID: result.ID(), Username: result.Username(), Roles: roles, Lock: lock, Avatar: result.Avatar(), Verified: result.Verified()}
+	if result.IsPrimary() {
+		status = AccountEmailStatusEnumPrimary
+	}
+
+	return &AccountEmail{
+		ID:     relay.NewID(AccountEmail{}, result.AccountId(), result.Email()),
+		Email:  result.Email(),
+		Status: status,
+	}
 }
 
 func MarshalAccountEmailToGraphQLConnection(results []*account.Email, page *paging.Info) *AccountEmailConnection {
@@ -43,27 +63,9 @@ func MarshalAccountEmailToGraphQLConnection(results []*account.Email, page *pagi
 
 	for _, email := range results {
 
-		var status AccountEmailStatusEnum
-
-		if email.IsConfirmed() {
-			status = AccountEmailStatusEnumConfirmed
-		}
-
-		if email.IsUnconfirmed() {
-			status = AccountEmailStatusEnumUnconfirmed
-		}
-
-		if email.IsPrimary() {
-			status = AccountEmailStatusEnumPrimary
-		}
-
 		accEmails = append(accEmails, &AccountEmailEdge{
 			Cursor: email.Cursor(),
-			Node: &AccountEmail{
-				ID:     relay.NewID(AccountEmail{}, email.AccountId(), email.Email()),
-				Email:  email.Email(),
-				Status: status,
-			},
+			Node: MarshalAccountEmailToGraphQL(email),
 		})
 	}
 

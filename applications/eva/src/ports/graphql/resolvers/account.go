@@ -17,7 +17,7 @@ type AccountResolver struct {
 }
 
 func (r AccountResolver) Avatar(ctx context.Context, obj *types.Account, size *int) (graphql.URI, error) {
-	panic("implement me")
+	return graphql.NewURI(""), nil
 }
 
 func (r AccountResolver) Emails(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountEmailConnection, error) {

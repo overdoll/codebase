@@ -128,39 +128,39 @@ func (r AccountRepository) GetEmailConfirmationByEmail(ctx context.Context, emai
 }
 
 // ConfirmAccountEmail - confirm account email
-func (r AccountRepository) ConfirmAccountEmail(ctx context.Context, confirmId string, acc *account.Account) error {
+func (r AccountRepository) ConfirmAccountEmail(ctx context.Context, confirmId string, acc *account.Account) (*account.Email, error) {
 
 	val, err := r.client.Get(ctx, ConfirmEmailPrefix+confirmId).Result()
 
 	if err != nil {
 
 		if err == redis.Nil {
-			return account.ErrEmailCodeInvalid
+			return nil, account.ErrEmailCodeInvalid
 		}
 
-		return fmt.Errorf("get failed: '%s", err)
+		return nil, fmt.Errorf("get failed: '%s", err)
 	}
 
 	val, err = crypt.Decrypt(val)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	var confirmItem EmailConfirmation
 
 	if err := json.Unmarshal([]byte(val), &confirmItem); err != nil {
-		return err
+		return nil, err
 	}
 
 	usr, err := r.GetAccountByEmail(ctx, confirmItem.Email)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	// user must be logged in to confirm the email
 	if usr.ID() != acc.ID() {
-		return passport.ErrNotAuthenticated
+		return nil, passport.ErrNotAuthenticated
 	}
 
 	// update to indicate that it's "confirmed" (status 1)
@@ -176,17 +176,17 @@ func (r AccountRepository) ConfirmAccountEmail(ctx context.Context, confirmId st
 		})
 
 	if err := updateAccountEmail.ExecRelease(); err != nil {
-		return fmt.Errorf("update() failed: '%s", err)
+		return nil, fmt.Errorf("update() failed: '%s", err)
 	}
 
 	// delete confirmation (it has been used up)
 	_, err = r.client.Del(ctx, ConfirmEmailPrefix+confirmId).Result()
 
 	if err != nil {
-		return fmt.Errorf("get failed: '%s", err)
+		return nil, fmt.Errorf("get failed: '%s", err)
 	}
 
-	return nil
+	return nil, nil
 }
 
 // GetAccountEmails - get emails for account
