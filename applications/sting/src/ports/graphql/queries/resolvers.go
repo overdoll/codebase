@@ -32,32 +32,7 @@ func (r *QueryResolver) Artists(ctx context.Context, after *string, before *stri
 		return nil, err
 	}
 
-	resp := make([]*types.ArtistEdge, 0)
-
-	// Unmarshal our json into the correct model
-	for _, result := range results {
-		resp = append(resp, &types.ArtistEdge{
-			Cursor: result.ID(),
-			Node:   types.MarshalArtistToGraphQL(result),
-		})
-	}
-
-	var startCursor *string
-	var endCursor *string
-
-	if len(results) > 0 {
-		startCursor = results[0].ID()
-	}
-
-	return &types.ArtistConnection{
-		Edges: resp,
-		PageInfo: &relay.PageInfo{
-			HasNextPage:     paging.HasNextPage(),
-			HasPreviousPage: paging.HasPrevPage(),
-			StartCursor:     nil,
-			EndCursor:       nil,
-		},
-	}, nil
+	return types.MarshalArtistToGraphQLConnection(results, paging), nil
 }
 
 func (r *QueryResolver) Categories(ctx context.Context, after *string, before *string, first *int, last *int, name *string) (*types.CategoryConnection, error) {
@@ -80,25 +55,7 @@ func (r *QueryResolver) Categories(ctx context.Context, after *string, before *s
 		return nil, err
 	}
 
-	resp := make([]*types.CategoryEdge, 0)
-
-	// Unmarshal our json into the correct model
-	for _, result := range results {
-		resp = append(resp, &types.CategoryEdge{
-			Cursor: result.ID(),
-			Node:   types.MarshalCategoryToGraphQL(result),
-		})
-	}
-
-	return &types.CategoryConnection{
-		Edges: resp,
-		PageInfo: &relay.PageInfo{
-			HasNextPage:     paging.HasNextPage(),
-			HasPreviousPage: paging.HasPrevPage(),
-			StartCursor:     nil,
-			EndCursor:       nil,
-		},
-	}, nil
+	return types.MarshalCategoryToGraphQLConnection(results, paging), nil
 }
 
 func (r *QueryResolver) Medias(ctx context.Context, after *string, before *string, first *int, last *int, title *string) (*types.MediaConnection, error) {
@@ -121,25 +78,7 @@ func (r *QueryResolver) Medias(ctx context.Context, after *string, before *strin
 		return nil, err
 	}
 
-	resp := make([]*types.MediaEdge, 0)
-
-	// Unmarshal our json into the correct model
-	for _, result := range results {
-		resp = append(resp, &types.MediaEdge{
-			Cursor: result.ID(),
-			Node:   types.MarshalMediaToGraphQL(result),
-		})
-	}
-
-	return &types.MediaConnection{
-		Edges: resp,
-		PageInfo: &relay.PageInfo{
-			HasNextPage:     paging.HasNextPage(),
-			HasPreviousPage: paging.HasPrevPage(),
-			StartCursor:     nil,
-			EndCursor:       nil,
-		},
-	}, nil
+	return types.MarshalMediaToGraphQLConnection(results, paging), nil
 }
 
 func (r *QueryResolver) Characters(ctx context.Context, after *string, before *string, first *int, last *int, name *string, mediaTitle *string) (*types.CharacterConnection, error) {
@@ -162,25 +101,7 @@ func (r *QueryResolver) Characters(ctx context.Context, after *string, before *s
 		return nil, err
 	}
 
-	resp := make([]*types.CharacterEdge, 0)
-
-	// Unmarshal our json into the correct model
-	for _, result := range results {
-		resp = append(resp, &types.CharacterEdge{
-			Cursor: result.ID(),
-			Node:   types.MarshalCharacterToGraphQL(result),
-		})
-	}
-
-	return &types.CharacterConnection{
-		Edges: resp,
-		PageInfo: &relay.PageInfo{
-			HasNextPage:     paging.HasNextPage(),
-			HasPreviousPage: paging.HasPrevPage(),
-			StartCursor:     nil,
-			EndCursor:       nil,
-		},
-	}, nil
+	return types.MarshalCharacterToGraphQLConnection(results, paging), nil
 }
 
 func (r *QueryResolver) Posts(ctx context.Context, after *string, before *string, first *int, last *int, characterName *string, mediaTitle *string) (*types.PostConnection, error) {

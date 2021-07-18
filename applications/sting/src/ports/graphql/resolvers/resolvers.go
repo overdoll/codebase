@@ -26,10 +26,7 @@ func (a AccountResolver) PendingPostsForModerator(ctx context.Context, obj *type
 		return nil, err
 	}
 
-	return &types.PendingPostConnection{
-		Edges:    types.MarshalPendingPostToGraphQLEdges(results),
-		PageInfo: paging.ToPageInfo(),
-	}, nil
+	return types.MarshalPendingPostToGraphQLConnection(results, paging), nil
 }
 
 func (a AccountResolver) PendingPosts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PendingPostConnection, error) {

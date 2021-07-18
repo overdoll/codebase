@@ -6,7 +6,8 @@ import (
 	"overdoll/libraries/graphql/relay"
 )
 
-func MarshalPendingPostToGraphQLEdges(results []*post.PendingPost) []*PendingPostEdge {
+func MarshalPendingPostToGraphQLConnection(results []*post.PendingPost, page *relay.Paging) *PendingPostConnection {
+
 	var pendingPostEdges []*PendingPostEdge
 
 	for _, pending := range results {
@@ -16,7 +17,25 @@ func MarshalPendingPostToGraphQLEdges(results []*post.PendingPost) []*PendingPos
 		})
 	}
 
-	return pendingPostEdges
+	var startCursor *string
+	var endCursor *string
+
+	if len(results) > 0 {
+		res := results[0].ID()
+		startCursor = &res
+		res = results[len(results)-1].ID()
+		endCursor = &res
+	}
+
+	return &PendingPostConnection{
+		Edges: pendingPostEdges,
+		PageInfo: &relay.PageInfo{
+			HasNextPage:     page.HasNextPage(),
+			HasPreviousPage: page.HasPrevPage(),
+			StartCursor:     startCursor,
+			EndCursor:       endCursor,
+		},
+	}
 }
 
 func MarshalPendingPostToGraphQL(result *post.PendingPost) *PendingPost {
@@ -89,11 +108,75 @@ func MarshalPendingPostToGraphQL(result *post.PendingPost) *PendingPost {
 	}
 }
 
+func MarshalArtistToGraphQLConnection(results []*post.Artist, paging *relay.Paging) *ArtistConnection {
+	resp := make([]*ArtistEdge, 0)
+
+	// Unmarshal our json into the correct model
+	for _, result := range results {
+		resp = append(resp, &ArtistEdge{
+			Cursor: result.ID(),
+			Node:   MarshalArtistToGraphQL(result),
+		})
+	}
+
+	var startCursor *string
+	var endCursor *string
+
+	if len(results) > 0 {
+		res := results[0].ID()
+		startCursor = &res
+		res = results[len(results)-1].ID()
+		endCursor = &res
+	}
+
+	return &ArtistConnection{
+		Edges: resp,
+		PageInfo: &relay.PageInfo{
+			HasNextPage:     paging.HasNextPage(),
+			HasPreviousPage: paging.HasPrevPage(),
+			StartCursor:     startCursor,
+			EndCursor:       endCursor,
+		},
+	}
+}
+
 func MarshalArtistToGraphQL(result *post.Artist) *Artist {
 	return &Artist{
 		ID:       relay.NewID(Artist{}, result.ID()),
 		Username: result.Username(),
 		Avatar:   result.Avatar(),
+	}
+}
+
+func MarshalCategoryToGraphQLConnection(results []*post.Category, paging *relay.Paging) *CategoryConnection {
+	resp := make([]*CategoryEdge, 0)
+
+	// Unmarshal our json into the correct model
+	for _, result := range results {
+		resp = append(resp, &CategoryEdge{
+			Cursor: result.ID(),
+			Node:   MarshalCategoryToGraphQL(result),
+		})
+	}
+
+	var startCursor *string
+	var endCursor *string
+
+	if len(results) > 0 {
+		res := results[0].ID()
+		startCursor = &res
+		res = results[len(results)-1].ID()
+		endCursor = &res
+	}
+
+	return &CategoryConnection{
+		Edges: resp,
+		PageInfo: &relay.PageInfo{
+			HasNextPage:     paging.HasNextPage(),
+			HasPreviousPage: paging.HasPrevPage(),
+			StartCursor:     startCursor,
+			EndCursor:       endCursor,
+		},
 	}
 }
 
@@ -105,12 +188,76 @@ func MarshalCategoryToGraphQL(result *post.Category) *Category {
 	}
 }
 
+func MarshalCharacterToGraphQLConnection(results []*post.Character, paging *relay.Paging) *CharacterConnection {
+	resp := make([]*CharacterEdge, 0)
+
+	// Unmarshal our json into the correct model
+	for _, result := range results {
+		resp = append(resp, &CharacterEdge{
+			Cursor: result.ID(),
+			Node:   MarshalCharacterToGraphQL(result),
+		})
+	}
+
+	var startCursor *string
+	var endCursor *string
+
+	if len(results) > 0 {
+		res := results[0].ID()
+		startCursor = &res
+		res = results[len(results)-1].ID()
+		endCursor = &res
+	}
+
+	return &CharacterConnection{
+		Edges: resp,
+		PageInfo: &relay.PageInfo{
+			HasNextPage:     paging.HasNextPage(),
+			HasPreviousPage: paging.HasPrevPage(),
+			StartCursor:     startCursor,
+			EndCursor:       endCursor,
+		},
+	}
+}
+
 func MarshalCharacterToGraphQL(result *post.Character) *Character {
 	return &Character{
 		ID:        relay.NewID(Character{}, result.ID()),
 		Thumbnail: result.Thumbnail(),
 		Name:      result.Name(),
 		Media:     MarshalMediaToGraphQL(result.Media()),
+	}
+}
+
+func MarshalMediaToGraphQLConnection(results []*post.Media, paging *relay.Paging) *MediaConnection {
+	resp := make([]*MediaEdge, 0)
+
+	// Unmarshal our json into the correct model
+	for _, result := range results {
+		resp = append(resp, &MediaEdge{
+			Cursor: result.ID(),
+			Node:   MarshalMediaToGraphQL(result),
+		})
+	}
+
+	var startCursor *string
+	var endCursor *string
+
+	if len(results) > 0 {
+		res := results[0].ID()
+		startCursor = &res
+		res = results[len(results)-1].ID()
+		endCursor = &res
+	}
+
+	return &MediaConnection{
+		Edges: resp,
+		PageInfo: &relay.PageInfo{
+			HasNextPage:     paging.HasNextPage(),
+			HasPreviousPage: paging.HasPrevPage(),
+			StartCursor:     startCursor,
+			EndCursor:       endCursor,
+		},
 	}
 }
 
