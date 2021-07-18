@@ -14,7 +14,7 @@ import (
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
 	"overdoll/libraries/commands"
-	config2 "overdoll/libraries/config"
+	"overdoll/libraries/config"
 )
 
 var rootCmd = &cobra.Command{
@@ -23,7 +23,7 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
-	config2.Read("applications/sting/config.toml")
+	config.Read("applications/sting/config.toml")
 
 	rootCmd.AddCommand(ports.Root)
 	rootCmd.AddCommand(commands.Database)

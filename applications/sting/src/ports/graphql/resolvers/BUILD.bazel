@@ -9,5 +9,6 @@ go_library(
         "//applications/sting/src/app",
         "//applications/sting/src/ports/graphql/types",
         "//libraries/paging",
+        "@com_github_vektah_gqlparser_v2//gqlerror",
     ],
 )

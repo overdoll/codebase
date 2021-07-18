@@ -3,9 +3,10 @@ package resolvers
 import (
 	"context"
 
+	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/sting/src/app"
 	"overdoll/applications/sting/src/ports/graphql/types"
-	paging2 "overdoll/libraries/paging"
+	"overdoll/libraries/paging"
 )
 
 type AccountResolver struct {
@@ -14,19 +15,19 @@ type AccountResolver struct {
 
 func (a AccountResolver) PendingPostsForModerator(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PendingPostConnection, error) {
 
-	cursor, err := paging2.NewCursor(after, before, first, last)
+	cursor, err := paging.NewCursor(after, before, first, last)
+
+	if err != nil {
+		return nil, gqlerror.Errorf(err.Error())
+	}
+
+	results, page, err := a.App.Queries.GetPendingPostsForModerator.Handle(ctx, cursor, obj.ID.GetID())
 
 	if err != nil {
 		return nil, err
 	}
 
-	results, paging, err := a.App.Queries.GetPendingPostsForModerator.Handle(ctx, cursor, obj.ID.GetID())
-
-	if err != nil {
-		return nil, err
-	}
-
-	return types.MarshalPendingPostToGraphQLConnection(results, paging), nil
+	return types.MarshalPendingPostToGraphQLConnection(results, page), nil
 }
 
 func (a AccountResolver) PendingPosts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PendingPostConnection, error) {
