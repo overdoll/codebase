@@ -5,19 +5,19 @@ import (
 
 	"go.uber.org/zap"
 	"overdoll/applications/sting/src/domain/post"
-	"overdoll/libraries/paging"
+	"overdoll/libraries/graphql/relay"
 )
 
-type GetPendingPostsHandler struct {
+type GetPendingPostsForModeratorHandler struct {
 	pr  post.IndexRepository
 	eva EvaService
 }
 
-func NewGetPendingPostsHandler(pr post.IndexRepository, eva EvaService) GetPendingPostsHandler {
-	return GetPendingPostsHandler{pr: pr, eva: eva}
+func NewGetPendingPostsForModeratorHandler(pr post.IndexRepository, eva EvaService) GetPendingPostsForModeratorHandler {
+	return GetPendingPostsForModeratorHandler{pr: pr, eva: eva}
 }
 
-func (h GetPendingPostsHandler) Handle(ctx context.Context, cursor *paging.Cursor, moderatorId, contributorId, artistId, id, userId string) (*post.PendingPostConnection, error) {
+func (h GetPendingPostsForModeratorHandler) Handle(ctx context.Context, cursor *relay.Cursor, accountID string) ([]*post.PendingPost, *relay.Paging, error) {
 
 	usr, err := h.eva.GetAccount(ctx, userId)
 

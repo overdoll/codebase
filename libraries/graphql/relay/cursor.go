@@ -1,10 +1,10 @@
-package paging
+package relay
 
 type Cursor struct {
-	after  string
-	before string
-	first  int
-	last   int
+	after  *string
+	before *string
+	first  *int
+	last   *int
 }
 
 type Pagination struct {
@@ -67,40 +67,35 @@ func (p *Pagination) Run() (*PageInfo, error) {
 	return NewPageInfo(hasMoreAfter, hasMoreBefore), nil
 }
 
-func NewCursor(before, after string, first, last int) *Cursor {
-
-	if first < 0 {
-		first = 10
-	}
-
+func NewCursor(after, before *string, first, last *int) (*Cursor, error) {
 	return &Cursor{
 		after:  after,
 		before: before,
 		first:  first,
 		last:   last,
-	}
+	}, nil
 }
 
 func (c *Cursor) IsAfterCursor() bool {
-	return c.after != ""
+	return c.after != nil
 }
 
 func (c *Cursor) IsBeforeCursor() bool {
-	return c.before != "" && c.last != 0
+	return c.before != nil && c.last != nil
 }
 
 func (c *Cursor) After() string {
-	return c.after
+	return *c.after
 }
 
 func (c *Cursor) Before() string {
-	return c.before
+	return *c.before
 }
 
 func (c *Cursor) First() int {
-	return c.first
+	return *c.first
 }
 
 func (c *Cursor) Last() int {
-	return c.last
+	return *c.last
 }

@@ -17,41 +17,36 @@ type MutationResolver struct {
 }
 
 func (r *MutationResolver) CreatePendingPost(ctx context.Context, input types.CreatePendingPostInput) (*types.CreatePendingPostPayload, error) {
-	pass := passport.FromContext(ctx)
-
-	if !pass.IsAuthenticated() {
-		return nil, passport.ErrNotAuthenticated
-	}
 
 	requests := make(map[string]string)
 
-	for _, item := range data.CharacterRequests {
+	for _, item := range input.CharacterRequests {
 		requests[item.Name] = item.Media
 	}
 
 	artistId := ""
 
-	if data.ArtistID != nil {
-		artistId = *data.ArtistID
+	if input.ExistingArtist != nil {
+		artistId = input.ExistingArtist.GetID()
 	}
 
 	artistUsername := ""
 
-	if data.ArtistUsername != nil {
-		artistUsername = *data.ArtistUsername
+	if input.CustomArtistUsername != nil {
+		artistUsername = *input.CustomArtistUsername
 	}
 
 	post, err := r.App.Commands.CreatePendingPost.
 		Handle(
 			ctx,
-			pass.AccountID(),
+			passport.FromContext(ctx).AccountID(),
 			artistId,
 			artistUsername,
-			data.Content,
-			data.Characters,
-			data.Categories,
+			input.Content,
+			input.CharacterIds,
+			input.CategoryIds,
 			requests,
-			data.MediaRequests,
+			input.MediaRequests,
 		)
 
 	if err != nil {
@@ -69,16 +64,10 @@ func (r *MutationResolver) CreatePendingPost(ctx context.Context, input types.Cr
 		return nil, err
 	}
 
-	if post == nil {
-		return &types.PostResponse{
-			Review:     false,
-			Validation: &types.Validation{Code: "is not valid"},
-		}, err
-	}
+	isReview := false
 
-	return &types.PostResponse{
-		Review:     false,
-		ID:         post.ID(),
-		Validation: nil,
+	return &types.CreatePendingPostPayload{
+		Review:      &isReview,
+		PendingPost: types.MarshalPendingPostToGraphQL(post),
 	}, err
 }

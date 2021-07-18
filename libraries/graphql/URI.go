@@ -7,6 +7,10 @@ import (
 
 type URI string
 
+func NewURI(uri string) URI {
+	return URI(uri)
+}
+
 // UnmarshalGQL implements the graphql.Unmarshaler interface
 func (y *URI) UnmarshalGQL(v interface{}) error {
 	yes, ok := v.(string)

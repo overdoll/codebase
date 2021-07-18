@@ -16,6 +16,7 @@ federation:
 
 autobind:
   - overdoll/libraries/graphql/relay
+  - overdoll/libraries/graphql
 
 models:
   ID:
@@ -24,3 +25,5 @@ models:
     model: overdoll/libraries/graphql/relay/relayruntime.Node
   PageInfo:
     model: overdoll/libraries/graphql/relay.PageInfo
+  URI:
+    model: overdoll/libraries/graphql.URI

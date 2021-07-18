@@ -15,6 +15,9 @@ func NewGraphQLServer(app *app.Application, client client.Client) http.Handler {
 
 	rtr.POST("/graphql", graphql.HandleGraphQL(gen.NewExecutableSchema(gen.Config{
 		Resolvers: gen.NewResolver(app, client),
+		Directives: gen.DirectiveRoot{
+			Auth: graphql.Auth,
+		},
 	})))
 
 	return rtr

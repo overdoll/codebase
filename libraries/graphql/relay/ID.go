@@ -7,8 +7,16 @@ import (
 
 type ID string
 
-func NewId(typename interface{}, args ...string) ID {
+func NewID(typename interface{}, args ...string) ID {
 	return ID("")
+}
+
+func (i ID) GetID() string {
+	return ""
+}
+
+func (i ID) GetTypeName() string {
+	return ""
 }
 
 // UnmarshalGQL implements the graphql.Unmarshaler interface

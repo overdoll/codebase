@@ -5,6 +5,7 @@ package types
 import (
 	"fmt"
 	"io"
+	graphql1 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"strconv"
 	"time"
@@ -107,7 +108,7 @@ type CharacterRequestType struct {
 }
 
 type Content struct {
-	URL string `json:"url"`
+	URL graphql1.URI `json:"url"`
 }
 
 // Create pending post.
@@ -115,9 +116,9 @@ type CreatePendingPostInput struct {
 	// Image IDs for the content
 	Content []string `json:"content"`
 	// Category IDs for this post
-	CategoryIds []relay.ID `json:"categoryIds"`
+	CategoryIds []string `json:"categoryIds"`
 	// Ids for all the characters
-	CharacterIds []relay.ID `json:"characterIds"`
+	CharacterIds []string `json:"characterIds"`
 	// Requests (custom)
 	MediaRequests     []string            `json:"mediaRequests"`
 	CharacterRequests []*CharacterRequest `json:"characterRequests"`
@@ -176,9 +177,9 @@ type PendingPost struct {
 	// The date at which this pending post will be reassigned
 	ReassignmentAt time.Time `json:"reassignmentAt"`
 	// Categories that belong to this post
-	Categories *CategoryConnection `json:"categories"`
+	Categories []*Category `json:"categories"`
 	// Characters that belong to this post
-	Characters *CharacterConnection `json:"characters"`
+	Characters []*Character `json:"characters"`
 }
 
 func (PendingPost) IsPostObject()         {}
@@ -205,7 +206,7 @@ type Post struct {
 	// The date and time of when this post was created
 	PostedAt time.Time `json:"postedAt"`
 	// Categories that belong to this post
-	Categories *CategoryConnection `json:"categories"`
+	Categories []*Category `json:"categories"`
 }
 
 func (Post) IsPostObject()        {}

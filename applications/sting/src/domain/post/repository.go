@@ -3,7 +3,7 @@ package post
 import (
 	"context"
 
-	"overdoll/libraries/paging"
+	"overdoll/libraries/graphql/relay"
 )
 
 type Repository interface {
@@ -38,7 +38,7 @@ type IndexRepository interface {
 	IndexPendingPost(context.Context, *PendingPost) error
 	BulkIndexPendingPosts(context.Context, []*PendingPost) error
 	DeletePendingPostIndex(context.Context) error
-	SearchPendingPosts(context.Context, *paging.Cursor, *PendingPostFilters) (*PendingPostConnection, error)
+	SearchPendingPosts(context.Context, *relay.Cursor, *PendingPostFilters) ([]*PendingPost, *relay.Paging, error)
 
 	BulkIndexPosts(context.Context, []*Post) error
 	DeletePostIndex(context.Context) error
@@ -48,17 +48,17 @@ type IndexRepository interface {
 
 	DeleteArtistIndex(context.Context) error
 	BulkIndexArtists(context.Context, []*Artist) error
-	SearchArtists(context.Context, string) ([]*Artist, error)
+	SearchArtists(context.Context, *relay.Cursor, string) ([]*Artist, *relay.Paging, error)
 
 	BulkIndexCharacters(context.Context, []*Character) error
 	DeleteCharacterIndex(context.Context) error
-	SearchCharacters(context.Context, string) ([]*Character, error)
+	SearchCharacters(context.Context, *relay.Cursor, string) ([]*Character, *relay.Paging, error)
 
 	BulkIndexMedia(context.Context, []*Media) error
 	DeleteMediaIndex(context.Context) error
-	SearchMedias(context.Context, string) ([]*Media, error)
+	SearchMedias(context.Context, *relay.Cursor, string) ([]*Media, *relay.Paging, error)
 
 	BulkIndexCategories(context.Context, []*Category) error
 	DeleteCategoryIndex(context.Context) error
-	SearchCategories(context.Context, string) ([]*Category, error)
+	SearchCategories(context.Context, *relay.Cursor, string) ([]*Category, *relay.Paging, error)
 }

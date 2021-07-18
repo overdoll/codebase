@@ -3,7 +3,7 @@ package infraction
 import (
 	"context"
 
-	"overdoll/libraries/paging"
+	"overdoll/libraries/graphql/relay"
 )
 
 type Repository interface {
@@ -11,7 +11,7 @@ type Repository interface {
 	GetRejectionReason(context.Context, string) (*PendingPostRejectionReason, error)
 
 	GetPendingPostAuditLog(context.Context, string) (*PendingPostAuditLog, error)
-	GetPendingPostAuditLogByModerator(context.Context, *paging.Cursor, *PendingPostAuditLogFilters) ([]*PendingPostAuditLog, error)
+	GetPendingPostAuditLogByModerator(context.Context, *relay.Cursor, *PendingPostAuditLogFilters) ([]*PendingPostAuditLog, error)
 	CreatePendingPostAuditLog(context.Context, *PendingPostAuditLog) error
 	UpdatePendingPostAuditLog(context.Context, string, func(*PendingPostAuditLog) error) (*PendingPostAuditLog, error)
 

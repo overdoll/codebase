@@ -2,93 +2,122 @@ package types
 
 import (
 	"overdoll/applications/sting/src/domain/post"
+	"overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 )
 
-func MarshalPendingPostToGraphQL(result *post.PendingPostEdge) *PendingPostEdge {
+func MarshalPendingPostToGraphQLEdges(results []*post.PendingPost) []*PendingPostEdge {
+	var pendingPostEdges []*PendingPostEdge
+
+	for _, pending := range results {
+		pendingPostEdges = append(pendingPostEdges, &PendingPostEdge{
+			Cursor: pending.ID(),
+			Node:   MarshalPendingPostToGraphQL(pending),
+		})
+	}
+
+	return pendingPostEdges
+}
+
+func MarshalPendingPostToGraphQL(result *post.PendingPost) *PendingPost {
 
 	// Unmarshal our json into the correct model
 	var mediaRequests []string
 
-	for _, med := range result.Node.MediaRequests() {
+	for _, med := range result.MediaRequests() {
 		mediaRequests = append(mediaRequests, med.Title)
 	}
 
 	var characterRequests []*CharacterRequestType
 
-	for _, med := range result.Node.CharacterRequests() {
+	for _, med := range result.CharacterRequests() {
 		characterRequests = append(characterRequests, &CharacterRequestType{
 			Name:  med.Name,
 			Media: med.Media,
 		})
 	}
 
-	artist := result.Node.Artist()
-	id := artist.ID()
-
 	var categories []*Category
 
-	for _, cat := range result.Node.Categories() {
-		categories = append(categories, &Category{
-			ID:        relay.NewId(Category{}, cat.ID()),
-			Thumbnail: cat.Thumbnail(),
-			Title:     cat.Title(),
-		})
+	for _, cat := range result.Categories() {
+		categories = append(categories, MarshalCategoryToGraphQL(cat))
 	}
 
 	var characters []*Character
 
-	for _, char := range result.Node.Characters() {
-		characters = append(characters, &Character{
-			ID:        relay.NewId(Character{}, char.ID()),
-			Thumbnail: char.Thumbnail(),
-			Name:      char.Name(),
-			Media: &Media{
-				ID:        relay.NewId(Media{}, char.Media().ID()),
-				Thumbnail: char.Media().Thumbnail(),
-				Title:     char.Media().Title(),
-			},
-		})
+	for _, char := range result.Characters() {
+		characters = append(characters, MarshalCharacterToGraphQL(char))
 	}
 
 	var state PendingPostStateEnum
 
-	if result.Node.InReview() {
+	if result.InReview() {
 		state = PendingPostStateEnumReview
 	}
 
-	if result.Node.IsDiscarded() {
+	if result.IsDiscarded() {
 		state = PendingPostStateEnumDiscarded
 	}
 
-	if result.Node.IsPublished() {
+	if result.IsPublished() {
 		state = PendingPostStateEnumPublished
 	}
 
-	if result.Node.IsRejected() {
+	if result.IsRejected() {
 		state = PendingPostStateEnumRejected
 	}
 
-	return &PendingPostEdge{
-		Cursor: result.Cursor,
-		Node: &PendingPost{
-			ID:        relay.NewId(PendingPost{}, result.Node.ID()),
-			Moderator: result.Node.ModeratorId(),
-			State:     state,
-			Contributor: &Contributor{
-				ID:       result.Node.Contributor().ID(),
-				Username: result.Node.Contributor().Username(),
-				Avatar:   result.Node.Contributor().Avatar(),
-			},
-			Content:           result.Node.Content(),
-			Categories:        categories,
-			Characters:        characters,
-			MediaRequests:     mediaRequests,
-			CharacterRequests: characterRequests,
-			ArtistID:          &id,
-			ArtistUsername:    artist.Username(),
-			PostedAt:          result.Node.PostedAt(),
-			ReassignmentAt:    result.Node.ReassignmentAt(),
-		},
+	var content []*Content
+
+	for _, id := range result.Content() {
+		content = append(content, &Content{URL: graphql.NewURI(id)})
+	}
+
+	return &PendingPost{
+		ID:                relay.NewID(PendingPost{}, result.ID()),
+		Moderator:         nil,
+		Contributor:       nil,
+		Artist:            nil,
+		State:             state,
+		Content:           content,
+		Categories:        categories,
+		Characters:        characters,
+		MediaRequests:     mediaRequests,
+		CharacterRequests: characterRequests,
+		PostedAt:          result.PostedAt(),
+		ReassignmentAt:    result.ReassignmentAt(),
+	}
+}
+
+func MarshalArtistToGraphQL(result *post.Artist) *Artist {
+	return &Artist{
+		ID:       relay.NewID(Artist{}, result.ID()),
+		Username: result.Username(),
+		Avatar:   result.Avatar(),
+	}
+}
+
+func MarshalCategoryToGraphQL(result *post.Category) *Category {
+	return &Category{
+		ID:        relay.NewID(Category{}, result.ID()),
+		Thumbnail: result.Thumbnail(),
+		Title:     result.Title(),
+	}
+}
+
+func MarshalCharacterToGraphQL(result *post.Character) *Character {
+	return &Character{
+		ID:        relay.NewID(Character{}, result.ID()),
+		Thumbnail: result.Thumbnail(),
+		Name:      result.Name(),
+		Media:     MarshalMediaToGraphQL(result.Media()),
+	}
+}
+
+func MarshalMediaToGraphQL(result *post.Media) *Media {
+	return &Media{
+		ID:        relay.NewID(Media{}, result.ID()),
+		Thumbnail: result.Thumbnail(),
+		Title:     result.Title(),
 	}
 }

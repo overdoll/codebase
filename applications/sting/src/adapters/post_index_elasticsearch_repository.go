@@ -11,7 +11,7 @@ import (
 
 	"overdoll/applications/sting/src/domain/post"
 	search "overdoll/libraries/elasticsearch"
-	"overdoll/libraries/paging"
+	"overdoll/libraries/graphql/relay"
 )
 
 type PostDocument struct {
@@ -280,7 +280,7 @@ func (r PostsIndexElasticSearchRepository) IndexPendingPost(ctx context.Context,
 	return r.BulkIndexPendingPosts(ctx, pendingPosts)
 }
 
-func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Context, cursor *paging.Cursor, filter *post.PendingPostFilters) (*post.PendingPostConnection, error) {
+func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Context, cursor *relay.Cursor, filter *post.PendingPostFilters) (*post.PendingPostConnection, error) {
 
 	t, err := template.New("SearchPostPending").Parse(SearchPostPending)
 
@@ -288,7 +288,7 @@ func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Contex
 		return nil, err
 	}
 
-	paginator := paging.NewPagination(cursor)
+	paginator := relay.NewPagination(cursor)
 
 	runSearch := func(rng string, size int) (*search.SearchResults, error) {
 

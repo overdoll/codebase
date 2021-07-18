@@ -2,6 +2,9 @@
 Represents an account
 """
 interface Actor {
+  """ID representing the actor"""
+  id: ID!
+
   """A URL pointing to the actor's public avatar."""
   avatar(
     """The size of the resulting square image."""
@@ -16,3 +19,21 @@ scalar Time
 
 """An RFC 3986, RFC 3987, and RFC 6570 (level 4) compliant URI string."""
 scalar URI
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+directive @cursor on FIELD_DEFINITION
+
+interface Node {
+  id: ID!
+}
+
+directive @goField(forceResolver: Boolean) on INPUT_FIELD_DEFINITION
+  | FIELD_DEFINITION
+
+directive @auth on FIELD_DEFINITION

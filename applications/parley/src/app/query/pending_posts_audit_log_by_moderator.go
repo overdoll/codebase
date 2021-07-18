@@ -6,7 +6,7 @@ import (
 
 	"go.uber.org/zap"
 	"overdoll/applications/parley/src/domain/infraction"
-	"overdoll/libraries/paging"
+	"overdoll/libraries/graphql/relay"
 )
 
 var (
@@ -23,7 +23,7 @@ func NewPendingPostsAuditLogByModeratorHandler(ir infraction.Repository, eva Eva
 	return PendingPostsAuditLogByModeratorHandler{ir: ir, eva: eva}
 }
 
-func (h PendingPostsAuditLogByModeratorHandler) Handle(ctx context.Context, cursor *paging.Cursor, moderatorId, contributorId, postId string, dateRange []int, userId string) ([]*infraction.PendingPostAuditLog, error) {
+func (h PendingPostsAuditLogByModeratorHandler) Handle(ctx context.Context, cursor *relay.Cursor, moderatorId, contributorId, postId string, dateRange []int, userId string) ([]*infraction.PendingPostAuditLog, error) {
 
 	// user requesting to see audit log
 	acc, err := h.eva.GetAccount(ctx, userId)

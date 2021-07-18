@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"overdoll/libraries/account"
-	"overdoll/libraries/paging"
 	"overdoll/libraries/uuid"
 )
 
@@ -77,16 +76,6 @@ func (e *PendingPostFilters) ContributorId() string {
 
 func (e *PendingPostFilters) ArtistId() string {
 	return e.artistId
-}
-
-type PendingPostConnection struct {
-	Edges    []*PendingPostEdge
-	PageInfo *paging.PageInfo
-}
-
-type PendingPostEdge struct {
-	Cursor string
-	Node   *PendingPost
 }
 
 type PendingPost struct {

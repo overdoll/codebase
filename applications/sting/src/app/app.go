@@ -39,7 +39,7 @@ type Queries struct {
 	SearchCategories            query.SearchCategoriesHandler
 	SearchCharacters            query.SearchCharactersHandler
 	SearchMedias                query.SearchMediasHandler
-	GetPendingPosts             query.GetPendingPostsHandler
+	GetPendingPostsForModerator query.GetPendingPostsForModeratorHandler
 	GetPendingPost              query.GetPendingPostHandler
 	GetPendingPostAuthenticated query.GetPendingPostAuthenticatedHandler
 }

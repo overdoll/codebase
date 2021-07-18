@@ -33,25 +33,49 @@ type CharacterConnection {
 
 interface CharacterContainer {
   """Characters that belong to this post"""
-  characters: CharacterConnection! @cursor
+  characters: [Character!]!
 }
 
 extend type Query {
   medias(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
     # filter by the title of the media
     title: String
-  ): MediaConnection! @cursor
+  ): MediaConnection!
 
   characters(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
     # Filter by the name of the character
     name: String
 
     # filter by the title of the media
     mediaTitle: String
-  ): CharacterConnection! @cursor
+  ): CharacterConnection!
 }
 
 extend type PendingPost implements CharacterContainer {
   """Characters that belong to this post"""
-  characters: CharacterConnection! @cursor
+  characters: [Character!]!
 }
