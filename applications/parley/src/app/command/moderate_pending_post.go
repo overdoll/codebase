@@ -52,7 +52,7 @@ func (h ModeratePendingPostHandler) Handle(ctx context.Context, moderatorId, pen
 	}
 
 	var rejectionReason *infraction.PendingPostRejectionReason
-	var userInfractionHistory []*infraction.AccountInfractionHistory
+	var accountInfractionHistory []*infraction.AccountInfractionHistory
 
 	// if not approved, get rejection reason
 	if rejectionReasonId != "" {
@@ -64,7 +64,7 @@ func (h ModeratePendingPostHandler) Handle(ctx context.Context, moderatorId, pen
 		}
 
 		// also grab the infraction history, since we will need it to calculate the time for the next infraction
-		userInfractionHistory, err = h.ir.GetAccountInfractionHistory(ctx, postContributorId)
+		accountInfractionHistory, _, err = h.ir.GetAccountInfractionHistory(ctx, nil, postContributorId)
 
 		if err != nil {
 			zap.S().Errorf("failed to get user infraction history: %s", err)
@@ -75,7 +75,7 @@ func (h ModeratePendingPostHandler) Handle(ctx context.Context, moderatorId, pen
 	// create new audit log - all necessary permission checks will be performed
 	infractionAuditLog, err := infraction.NewPendingPostAuditLog(
 		usr,
-		userInfractionHistory,
+		accountInfractionHistory,
 		pendingPostId,
 		postModeratorId,
 		postContributor,

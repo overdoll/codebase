@@ -33,11 +33,11 @@ type Account struct {
 	PendingPostsForModerator *PendingPostConnection `json:"pendingPostsForModerator"`
 	// Pending posts for this account
 	PendingPosts *PendingPostConnection `json:"pendingPosts"`
-	ID           relay.ID               `json:"id"`
 	// Posts specific to this account
 	Posts *PostConnection `json:"posts"`
 	// Contributions specific to this account
 	Contributions *PostConnection `json:"contributions"`
+	ID            relay.ID        `json:"id"`
 }
 
 func (Account) IsEntity() {}

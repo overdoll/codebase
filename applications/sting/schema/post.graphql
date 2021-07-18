@@ -35,8 +35,6 @@ type PostConnection {
 }
 
 extend type Account @key(fields: "id")  {
-  id: ID! @external
-
   """Posts specific to this account"""
   posts(
     """Returns the elements in the list that come after the specified cursor."""

@@ -114,7 +114,7 @@ func (r AccountRepository) GetAccountByEmail(ctx context.Context, email string) 
 		return nil, err
 	}
 
-	// Get our user using the Account Id, from the user email instance
+	// Get our user using the Account AccountId, from the user email instance
 	usr, err := r.GetAccountById(ctx, accountEmail.AccountId)
 
 	if err != nil {
@@ -133,7 +133,7 @@ func (r AccountRepository) createUniqueAccountUsername(ctx context.Context, inst
 		Query(r.session).
 		SerialConsistency(gocql.Serial).
 		BindStruct(AccountUsername{
-			Id: instance.ID(),
+			AccountId: instance.ID(),
 			// This piece of data, we want to make sure we use as lowercase, to make sure we don't get collisions
 			// This table always has the username of a user, in lowercase format to make sure that we always have unique usernames
 			Username: strings.ToLower(username),

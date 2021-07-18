@@ -5,21 +5,25 @@ import (
 
 	"overdoll/applications/parley/src/app"
 	"overdoll/applications/parley/src/ports/graphql/types"
+	"overdoll/libraries/graphql/relay"
 )
 
 type EntityResolver struct {
 	App *app.Application
 }
 
-func (e EntityResolver) FindAccountSettingsByAccountID(ctx context.Context, accountID string) (*types.AccountSettings, error) {
-	res, err := e.App.Queries.ModeratorInQueue.Handle(ctx, accountID)
+func (r EntityResolver) FindAccountByID(ctx context.Context, id relay.ID) (*types.Account, error) {
+	panic("implement me")
+}
 
-	if err != nil {
-		return nil, err
-	}
+func (r EntityResolver) FindAccountInfractionHistoryByID(ctx context.Context, id relay.ID) (*types.AccountInfractionHistory, error) {
+	panic("implement me")
+}
 
-	return &types.AccountSettings{
-		AccountID: accountID,
-		Moderator: &types.AccountModeratorSettings{InQueue: res},
-	}, nil
+func (r EntityResolver) FindPendingPostAuditLogByID(ctx context.Context, id relay.ID) (*types.PendingPostAuditLog, error) {
+	panic("implement me")
+}
+
+func (r EntityResolver) FindPendingPostRejectionReasonByID(ctx context.Context, id relay.ID) (*types.PendingPostRejectionReason, error) {
+	panic("implement me")
 }

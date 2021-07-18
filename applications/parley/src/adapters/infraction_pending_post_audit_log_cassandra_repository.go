@@ -69,7 +69,7 @@ func marshalPendingPostAuditLogToDatabase(auditLog *infraction.PendingPostAuditL
 	return &PendingPostAuditLogByModerator{
 		Id:                  auditLog.ID(),
 		Bucket:              buck,
-		PostId:              auditLog.PostId(),
+		PostId:              auditLog.PendingPostID(),
 		ModeratorId:         auditLog.Moderator().ID(),
 		ModeratorUsername:   auditLog.Moderator().Username(),
 		ContributorId:       auditLog.Contributor().ID(),

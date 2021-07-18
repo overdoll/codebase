@@ -131,8 +131,6 @@ func (r *QueryResolver) Viewer(ctx context.Context) (*types.Account, error) {
 		return types.MarshalAccountToGraphQL(acc), nil
 	}
 
-	gc := helpers.GinContextFromContext(ctx)
-
 	// User is not logged in, let's check for an OTP token
 	otpCookie, err := cookies.ReadCookie(ctx, token.OTPKey)
 
@@ -160,7 +158,7 @@ func (r *QueryResolver) Viewer(ctx context.Context) (*types.Account, error) {
 		}
 
 		// user had token and it was used to log in
-		http.SetCookie(gc.Writer, &http.Cookie{Name: token.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
+		http.SetCookie(helpers.GinContextFromContext(ctx).Writer, &http.Cookie{Name: token.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
 
 		// Update passport to include our new user
 		if err := pass.MutatePassport(ctx, func(p *passport.Passport) error {

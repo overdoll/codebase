@@ -1,9 +1,0 @@
-extend type AccountSettings @key(fields: "accountId") {
-  accountId: ID! @external
-  moderator: AccountModeratorSettings
-}
-
-type AccountModeratorSettings {
-  inQueue: Boolean!
-}
-

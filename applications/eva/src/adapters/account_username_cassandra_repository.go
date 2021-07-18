@@ -11,13 +11,13 @@ import (
 )
 
 type AccountUsername struct {
-	Id       string `db:"account_id"`
-	Username string `db:"username"`
+	AccountId string `db:"account_id"`
+	Username  string `db:"username"`
 }
 
 type UsernameByAccount struct {
-	Id       string `db:"account_id"`
-	Username string `db:"username"`
+	AccountId string `db:"account_id"`
+	Username  string `db:"username"`
 }
 
 // AddAccountEmail - add an email to the account
@@ -154,8 +154,8 @@ func (r AccountRepository) GetAccountByUsername(ctx context.Context, username st
 		return nil, err
 	}
 
-	// Get our user using the Account Id, from the user email instance
-	usr, err := r.GetAccountById(ctx, accountUsername.Id)
+	// Get our user using the Account AccountId, from the user email instance
+	usr, err := r.GetAccountById(ctx, accountUsername.AccountId)
 
 	if err != nil {
 		return nil, err
@@ -176,7 +176,7 @@ func (r AccountRepository) GetAccountUsernames(ctx context.Context, id string) (
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&UsernameByAccount{
-			Id: id,
+			AccountId: id,
 		})
 
 	if err := queryUsernames.Select(&accountUsernames); err != nil {
@@ -191,7 +191,7 @@ func (r AccountRepository) GetAccountUsernames(ctx context.Context, id string) (
 	var usernames []*account.Username
 
 	for _, username := range accountUsernames {
-		usernames = append(usernames, account.UnmarshalUsernameFromDatabase(username.Username))
+		usernames = append(usernames, account.UnmarshalUsernameFromDatabase(username.Username, username.AccountId))
 	}
 
 	return usernames, nil

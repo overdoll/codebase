@@ -1,3 +1,7 @@
 type Content {
   url: URI!
 }
+
+extend type Account @key(fields: "id")  {
+  id: ID! @external
+}

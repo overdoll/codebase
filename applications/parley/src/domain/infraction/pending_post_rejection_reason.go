@@ -1,6 +1,12 @@
 package infraction
 
+import (
+	"overdoll/libraries/paging"
+)
+
 type PendingPostRejectionReason struct {
+	*paging.Node
+
 	id         string
 	reason     string
 	infraction bool

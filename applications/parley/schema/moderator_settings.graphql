@@ -1,0 +1,12 @@
+type AccountModeratorSettings {
+  inQueue: Boolean!
+}
+
+extend type Account @key(fields: "id") {
+  """
+  Moderator settings for this account
+
+  Viewable by the currently authenticated account or staff+
+  """
+  moderatorSettings: AccountModeratorSettings @goField(forceResolver: true) @auth
+}

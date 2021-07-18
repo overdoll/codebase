@@ -6,6 +6,7 @@ import (
 
 	"github.com/segmentio/ksuid"
 	"overdoll/libraries/account"
+	"overdoll/libraries/paging"
 )
 
 const (
@@ -70,8 +71,10 @@ func (e *PendingPostAuditLogFilters) DateRange() []time.Time {
 // A class simply used to store the details of a PendingPost that we can use
 // later on
 type PendingPostAuditLog struct {
-	id     string
-	postId string
+	*paging.Node
+
+	id            string
+	pendingPostId string
 
 	createdMs int
 
@@ -110,7 +113,7 @@ func NewPendingPostAuditLog(user *account.Account, userInfractionHistory []*Acco
 
 	return &PendingPostAuditLog{
 		id:              ksuid.New().String(),
-		postId:          postId,
+		pendingPostId:   postId,
 		moderator:       user,
 		contributor:     contributor,
 		status:          status,
@@ -125,7 +128,7 @@ func NewPendingPostAuditLog(user *account.Account, userInfractionHistory []*Acco
 func UnmarshalPendingPostAuditLogFromDatabase(id, postId, moderatorId, moderatorUsername, contributorId, contributorUsername, status, userInfractionId, reason, notes string, reverted bool, userInfraction *AccountInfractionHistory, createdMs int) *PendingPostAuditLog {
 	return &PendingPostAuditLog{
 		id:              id,
-		postId:          postId,
+		pendingPostId:   postId,
 		moderator:       account.NewUserOnlyIdAndUsername(moderatorId, moderatorUsername),
 		contributor:     account.NewUserOnlyIdAndUsername(contributorId, contributorUsername),
 		status:          status,
@@ -141,8 +144,8 @@ func (m *PendingPostAuditLog) ID() string {
 	return m.id
 }
 
-func (m *PendingPostAuditLog) PostId() string {
-	return m.postId
+func (m *PendingPostAuditLog) PendingPostID() string {
+	return m.pendingPostId
 }
 
 func (m *PendingPostAuditLog) Status() string {
@@ -183,8 +186,14 @@ func (m *PendingPostAuditLog) reversible() bool {
 	return !parse.Time().After(time.Now().Add(time.Minute * 10))
 }
 
-func (m *PendingPostAuditLog) CanRevert() bool {
-	return m.reversible()
+func (m *PendingPostAuditLog) ReversibleUntil() time.Time {
+	parse, err := ksuid.Parse(m.id)
+
+	if err != nil {
+		return time.Now()
+	}
+
+	return parse.Time().Add(time.Minute * 10)
 }
 
 func (m *PendingPostAuditLog) CreatedMs() int {

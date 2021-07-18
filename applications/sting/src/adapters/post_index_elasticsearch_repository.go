@@ -236,7 +236,7 @@ const SearchPostPending = `
 		"bool": {
 			"must": [
 				{{.Cursor}}
-				{{.PostId}}
+				{{.PendingPostID}}
 				{
 					"multi_match": {
 						"query" : "{{.ModeratorId}}",

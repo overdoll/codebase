@@ -23,40 +23,20 @@ func NewPendingPostsAuditLogByModeratorHandler(ir infraction.Repository, eva Eva
 	return PendingPostsAuditLogByModeratorHandler{ir: ir, eva: eva}
 }
 
-func (h PendingPostsAuditLogByModeratorHandler) Handle(ctx context.Context, cursor *paging.Cursor, moderatorId, contributorId, postId string, dateRange []int, userId string) ([]*infraction.PendingPostAuditLog, error) {
+func (h PendingPostsAuditLogByModeratorHandler) Handle(ctx context.Context, cursor *paging.Cursor, moderatorId string) ([]*infraction.PendingPostAuditLog, *paging.Info, error) {
 
-	// user requesting to see audit log
-	acc, err := h.eva.GetAccount(ctx, userId)
-
-	if err != nil {
-		zap.S().Errorf("failed to get user: %s", err)
-		return nil, ErrFailedGetPendingPostsAuditLog
-	}
-
-	// have to have moderator role
-	if !acc.IsModerator() || acc.IsLocked() {
-		return nil, ErrFailedGetPendingPostsAuditLog
-	}
-
-	moderatorQuery := userId
-
-	// if staff, allow to query by moderatorID - otherwise we use the currently logged in user's id
-	if acc.IsStaff() && moderatorId != "" {
-		moderatorQuery = moderatorId
-	}
-
-	filters, err := infraction.NewPendingPostAuditLogFilters(moderatorQuery, contributorId, postId, dateRange)
+	filters, err := infraction.NewPendingPostAuditLogFilters(moderatorId, "", "", []int{})
 
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	auditLogs, err := h.ir.GetPendingPostAuditLogByModerator(ctx, cursor, filters)
+	auditLogs, page, err := h.ir.GetPendingPostAuditLogByModerator(ctx, cursor, filters)
 
 	if err != nil {
 		zap.S().Errorf("failed to get audit log: %s", err)
-		return nil, ErrFailedGetPendingPostsAuditLog
+		return nil, nil, ErrFailedGetPendingPostsAuditLog
 	}
 
-	return auditLogs, nil
+	return auditLogs, page, nil
 }
