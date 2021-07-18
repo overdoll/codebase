@@ -40,7 +40,7 @@ func (h GetAuthenticationTokenStatusHandler) Handle(ctx context.Context, tokenId
 		return nil, nil, ErrFailedGetToken
 	}
 
-	// Redeemed - check if user exists with this email
+	// Verified - check if user exists with this email
 	usr, err := h.ar.GetAccountByEmail(ctx, ck.Email())
 
 	// we weren't able to get our user, so that means that the cookie is not going to be deleted

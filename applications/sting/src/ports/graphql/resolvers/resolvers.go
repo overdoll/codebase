@@ -31,13 +31,13 @@ func (a AccountResolver) PendingPostsForModerator(ctx context.Context, obj *type
 }
 
 func (a AccountResolver) PendingPosts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PendingPostConnection, error) {
-	panic("implement me")
+	return nil, nil
 }
 
 func (a AccountResolver) Posts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostConnection, error) {
-	panic("implement me")
+	return nil, nil
 }
 
 func (a AccountResolver) Contributions(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostConnection, error) {
-	panic("implement me")
+	return nil, nil
 }

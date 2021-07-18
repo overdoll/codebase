@@ -187,6 +187,13 @@ func (PendingPost) IsNode()               {}
 func (PendingPost) IsCategoryContainer()  {}
 func (PendingPost) IsCharacterContainer() {}
 
+type PendingPostAuditLog struct {
+	ID          relay.ID     `json:"id"`
+	PendingPost *PendingPost `json:"pendingPost"`
+}
+
+func (PendingPostAuditLog) IsEntity() {}
+
 type PendingPostConnection struct {
 	Edges    []*PendingPostEdge `json:"edges"`
 	PageInfo *relay.PageInfo    `json:"pageInfo"`

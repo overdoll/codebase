@@ -3,6 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "graphql",
     srcs = [
+        "federation.go",
         "generated.go",
         "resolver.go",
     ],
@@ -15,6 +16,7 @@ go_library(
         "//applications/eva/src/ports/graphql/queries",
         "//applications/eva/src/ports/graphql/resolvers",
         "//applications/eva/src/ports/graphql/types",
+        "//libraries/graphql",
         "//libraries/graphql/relay",
         "@com_github_99designs_gqlgen//graphql",
         "@com_github_99designs_gqlgen//graphql/introspection",

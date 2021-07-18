@@ -12,6 +12,7 @@ import (
 	"github.com/scylladb/gocqlx/v2/qb"
 	"overdoll/applications/eva/src/domain/account"
 	"overdoll/libraries/crypt"
+	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
 )
 
@@ -190,12 +191,12 @@ func (r AccountRepository) ConfirmAccountEmail(ctx context.Context, confirmId st
 }
 
 // GetAccountEmails - get emails for account
-func (r AccountRepository) GetAccountEmails(ctx context.Context, id string) ([]*account.Email, error) {
+func (r AccountRepository) GetAccountEmails(ctx context.Context, cursor *paging.Cursor, id string) ([]*account.Email, *paging.Info, error) {
 
 	usr, err := r.GetAccountById(ctx, id)
 
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	var accountEmails []*EmailByAccount
@@ -213,10 +214,10 @@ func (r AccountRepository) GetAccountEmails(ctx context.Context, id string) ([]*
 	if err := queryEmails.Select(&accountEmails); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, account.ErrAccountNotFound
+			return nil, nil, account.ErrAccountNotFound
 		}
 
-		return nil, fmt.Errorf("select() failed: '%s", err)
+		return nil, nil, fmt.Errorf("select() failed: '%s", err)
 	}
 
 	var emails []*account.Email
@@ -232,7 +233,7 @@ func (r AccountRepository) GetAccountEmails(ctx context.Context, id string) ([]*
 		emails = append(emails, account.UnmarshalEmailFromDatabase(email.Email, email.AccountId, status))
 	}
 
-	return emails, nil
+	return emails, nil, nil
 }
 
 // DeleteAccountEmail - delete email for account

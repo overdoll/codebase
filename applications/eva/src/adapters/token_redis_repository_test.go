@@ -55,7 +55,7 @@ func TestCookieRepository_GetCookie_exists(t *testing.T) {
 	assert.Equal(t, usr.Token(), ck.Token())
 	assert.Equal(t, usr.Consumed(), ck.Consumed())
 	assert.Equal(t, usr.Email(), ck.Email())
-	assert.Equal(t, usr.Redeemed(), ck.Redeemed())
+	assert.Equal(t, usr.Verified(), ck.Verified())
 }
 
 func TestCookieRepository_DeleteCookie(t *testing.T) {

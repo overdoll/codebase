@@ -374,9 +374,7 @@ extend type Mutation {
   Priv. users cannot disable multi factor
   """
   disableAccountMultiFactor: DisableAccountMultiFactorPayload @auth
-}
 
-extend type Query {
   """
   Confirm account email, so it may be used
   """

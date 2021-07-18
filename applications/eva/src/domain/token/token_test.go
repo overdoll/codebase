@@ -16,7 +16,7 @@ func TestCookie_Consume_not_redeemed(t *testing.T) {
 
 	require.NoError(t, err)
 
-	assert.Equal(t, token.ErrTokenNotRedeemed, ck.MakeConsumed())
+	assert.Equal(t, token.ErrTokenNotVerified, ck.MakeConsumed())
 }
 
 func TestCookie_Consume(t *testing.T) {

@@ -49,6 +49,13 @@ type PendingPostAuditLogConnection {
   pageInfo: PageInfo!
 }
 
+extend type PendingPost @key(fields: "id") {
+  id: ID! @external
+
+  """Audit logs belonging to this pending post"""
+  auditLogs: [PendingPostAuditLog!]
+}
+
 extend type Account @key(fields: "id") {
   """
   Pending Post Audit Logs linked to this account

@@ -106,5 +106,5 @@ func (r *QueryResolver) Characters(ctx context.Context, after *string, before *s
 }
 
 func (r *QueryResolver) Posts(ctx context.Context, after *string, before *string, first *int, last *int, characterName *string, mediaTitle *string) (*types.PostConnection, error) {
-	panic("implement me")
+	return nil, nil
 }

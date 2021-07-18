@@ -9,7 +9,7 @@ type AuthenticationToken struct {
 	cookie string
 	email  string
 
-	redeemed   bool
+	verified   bool
 	expiration time.Duration
 
 	session string
@@ -26,7 +26,7 @@ var (
 )
 
 var (
-	ErrTokenNotRedeemed = errors.New("token is not yet redeemed")
+	ErrTokenNotVerified = errors.New("token is not yet verified")
 	ErrTokenNotFound    = errors.New("token not found")
 )
 
@@ -36,18 +36,18 @@ func NewAuthenticationToken(id, email, session string) (*AuthenticationToken, er
 		cookie:     id,
 		expiration: time.Minute * 15,
 		email:      email,
-		redeemed:   false,
+		verified:   false,
 		session:    session,
 	}
 
 	return ck, nil
 }
 
-func UnmarshalAuthenticationTokenFromDatabase(cookie, email string, redeemed bool, session string) *AuthenticationToken {
+func UnmarshalAuthenticationTokenFromDatabase(cookie, email string, verified bool, session string) *AuthenticationToken {
 	return &AuthenticationToken{
 		cookie:      cookie,
 		email:       email,
-		redeemed:    redeemed,
+		verified:    verified,
 		session:     session,
 		sameSession: false,
 		expiration:  time.Minute * 15,
@@ -74,13 +74,13 @@ func (c *AuthenticationToken) Session() string {
 	return c.session
 }
 
-func (c *AuthenticationToken) Redeemed() bool {
-	return c.redeemed
+func (c *AuthenticationToken) Verified() bool {
+	return c.verified
 }
 
 func (c *AuthenticationToken) MakeRedeemed() error {
 
-	c.redeemed = true
+	c.verified = true
 
 	return nil
 }
@@ -96,8 +96,8 @@ func (c *AuthenticationToken) RequireMultiFactor(totp bool) {
 // MakeConsumed - this will always be ran before a cookie is deleted, i.e. being consumed by the target application (registration, login)
 func (c *AuthenticationToken) MakeConsumed() error {
 
-	if !c.Redeemed() {
-		return ErrTokenNotRedeemed
+	if !c.Verified() {
+		return ErrTokenNotVerified
 	}
 
 	c.consumed = true

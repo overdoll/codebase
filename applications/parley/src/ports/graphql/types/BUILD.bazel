@@ -11,5 +11,6 @@ go_library(
     deps = [
         "//applications/parley/src/domain/infraction",
         "//libraries/graphql/relay",
+        "//libraries/paging",
     ],
 )

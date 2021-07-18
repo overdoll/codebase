@@ -171,7 +171,7 @@ type AddAccountEmailPayload struct {
 
 type AuthenticationToken struct {
 	SameSession   bool                              `json:"sameSession"`
-	Redeemed      bool                              `json:"redeemed"`
+	Verified      bool                              `json:"verified"`
 	Session       string                            `json:"session"`
 	Email         string                            `json:"email"`
 	AccountStatus *AuthenticationTokenAccountStatus `json:"accountStatus"`

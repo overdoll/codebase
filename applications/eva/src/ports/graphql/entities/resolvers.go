@@ -12,18 +12,18 @@ type EntityResolver struct {
 	App *app.Application
 }
 
-func (e EntityResolver) FindAccountByID(ctx context.Context, id relay.ID) (*types.Account, error) {
-	panic("implement me")
+func (r EntityResolver) FindAccountByID(ctx context.Context, id relay.ID) (*types.Account, error) {
+	return &types.Account{ID: id}, nil
 }
 
-func (e EntityResolver) FindAccountEmailByID(ctx context.Context, id relay.ID) (*types.AccountEmail, error) {
-	panic("implement me")
+func (r EntityResolver) FindAccountEmailByID(ctx context.Context, id relay.ID) (*types.AccountEmail, error) {
+	return nil, nil
 }
 
-func (e EntityResolver) FindAccountSessionByID(ctx context.Context, id relay.ID) (*types.AccountSession, error) {
-	panic("implement me")
+func (r EntityResolver) FindAccountSessionByID(ctx context.Context, id relay.ID) (*types.AccountSession, error) {
+	return nil, nil
 }
 
-func (e EntityResolver) FindAccountUsernameByID(ctx context.Context, id relay.ID) (*types.AccountUsername, error) {
-	panic("implement me")
+func (r EntityResolver) FindAccountUsernameByID(ctx context.Context, id relay.ID) (*types.AccountUsername, error) {
+	return nil, nil
 }

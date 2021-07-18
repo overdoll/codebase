@@ -31,7 +31,7 @@ func MarshalPendingPostAuditLogToGraphQL(result *infraction.PendingPostAuditLog)
 	}
 
 	return &PendingPostAuditLog{
-		ID:              relay.NewID(PendingPostAuditLog{}, result.ID()),
+		ID:              relay.NewID(PendingPostAuditLog{}, result.PendingPostID(), result.ID()),
 		Contributor:     nil,
 		Moderator:       nil,
 		InfractionID:    infractionId,

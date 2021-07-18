@@ -142,9 +142,9 @@ type ComplexityRoot struct {
 	AuthenticationToken struct {
 		AccountStatus func(childComplexity int) int
 		Email         func(childComplexity int) int
-		Redeemed      func(childComplexity int) int
 		SameSession   func(childComplexity int) int
 		Session       func(childComplexity int) int
+		Verified      func(childComplexity int) int
 	}
 
 	AuthenticationTokenAccountStatus struct {
@@ -207,6 +207,7 @@ type ComplexityRoot struct {
 
 	Mutation struct {
 		AddAccountEmail                                          func(childComplexity int, input types.AddAccountEmailInput) int
+		ConfirmAccountEmail                                      func(childComplexity int, input types.ConfirmAccountEmailInput) int
 		CreateAccountMultiFactorRecoveryCodesAndDeletePrevious   func(childComplexity int) int
 		CreateAccountWithAuthenticationToken                     func(childComplexity int, input types.CreateAccountWithAuthenticationTokenInput) int
 		DeleteAccountEmail                                       func(childComplexity int, input types.DeleteAccountEmailInput) int
@@ -223,6 +224,7 @@ type ComplexityRoot struct {
 		UnlockAccount                                            func(childComplexity int) int
 		UpdateAccountEmailStatusToPrimary                        func(childComplexity int, input types.UpdateAccountEmailStatusToPrimaryInput) int
 		UpdateAccountUsernameAndRetainPrevious                   func(childComplexity int, input types.UpdateAccountUsernameAndRetainPreviousInput) int
+		VerifyAuthenticationTokenAndAttemptAccountAccessGrant    func(childComplexity int, input types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput) int
 	}
 
 	PageInfo struct {
@@ -233,12 +235,10 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		ConfirmAccountEmail                                   func(childComplexity int, input types.ConfirmAccountEmailInput) int
-		VerifyAuthenticationTokenAndAttemptAccountAccessGrant func(childComplexity int, input types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput) int
-		ViewAuthenticationToken                               func(childComplexity int) int
-		Viewer                                                func(childComplexity int) int
-		__resolve__service                                    func(childComplexity int) int
-		__resolve_entities                                    func(childComplexity int, representations []map[string]interface{}) int
+		ViewAuthenticationToken func(childComplexity int) int
+		Viewer                  func(childComplexity int) int
+		__resolve__service      func(childComplexity int) int
+		__resolve_entities      func(childComplexity int, representations []map[string]interface{}) int
 	}
 
 	ReissueAuthenticationTokenPayload struct {
@@ -308,6 +308,7 @@ type MutationResolver interface {
 	ReissueAuthenticationToken(ctx context.Context) (*types.ReissueAuthenticationTokenPayload, error)
 	GrantAccountAccessWithAuthenticationTokenAndTotp(ctx context.Context, input types.GrantAccountAccessWithAuthenticationTokenAndTotpInput) (*types.GrantAccountAccessWithAuthenticationTokenAndTotpPayload, error)
 	GrantAccountAccessWithAuthenticationTokenAndRecoveryCode(ctx context.Context, input types.GrantAccountAccessWithAuthenticationTokenAndRecoveryCodeInput) (*types.GrantAccountAccessWithAuthenticationTokenAndRecoveryCodePayload, error)
+	VerifyAuthenticationTokenAndAttemptAccountAccessGrant(ctx context.Context, input types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput) (*types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload, error)
 	UnlockAccount(ctx context.Context) (*types.UnlockAccountPayload, error)
 	AddAccountEmail(ctx context.Context, input types.AddAccountEmailInput) (*types.AddAccountEmailPayload, error)
 	DeleteAccountEmail(ctx context.Context, input types.DeleteAccountEmailInput) (*types.DeleteAccountEmailPayload, error)
@@ -318,12 +319,11 @@ type MutationResolver interface {
 	GenerateAccountMultiFactorTotp(ctx context.Context) (*types.GenerateAccountMultiFactorTotpPayload, error)
 	EnrollAccountMultiFactorTotp(ctx context.Context, input types.EnrollAccountMultiFactorTotpInput) (*types.EnrollAccountMultiFactorTotpPayload, error)
 	DisableAccountMultiFactor(ctx context.Context) (*types.DisableAccountMultiFactorPayload, error)
+	ConfirmAccountEmail(ctx context.Context, input types.ConfirmAccountEmailInput) (*types.ConfirmAccountEmailPayload, error)
 }
 type QueryResolver interface {
-	VerifyAuthenticationTokenAndAttemptAccountAccessGrant(ctx context.Context, input types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput) (*types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload, error)
 	ViewAuthenticationToken(ctx context.Context) (*types.AuthenticationToken, error)
 	Viewer(ctx context.Context) (*types.Account, error)
-	ConfirmAccountEmail(ctx context.Context, input types.ConfirmAccountEmailInput) (*types.ConfirmAccountEmailPayload, error)
 }
 
 type executableSchema struct {
@@ -683,13 +683,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AuthenticationToken.Email(childComplexity), true
 
-	case "AuthenticationToken.redeemed":
-		if e.complexity.AuthenticationToken.Redeemed == nil {
-			break
-		}
-
-		return e.complexity.AuthenticationToken.Redeemed(childComplexity), true
-
 	case "AuthenticationToken.sameSession":
 		if e.complexity.AuthenticationToken.SameSession == nil {
 			break
@@ -703,6 +696,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.AuthenticationToken.Session(childComplexity), true
+
+	case "AuthenticationToken.verified":
+		if e.complexity.AuthenticationToken.Verified == nil {
+			break
+		}
+
+		return e.complexity.AuthenticationToken.Verified(childComplexity), true
 
 	case "AuthenticationTokenAccountStatus.authenticated":
 		if e.complexity.AuthenticationTokenAccountStatus.Authenticated == nil {
@@ -869,6 +869,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.AddAccountEmail(childComplexity, args["input"].(types.AddAccountEmailInput)), true
 
+	case "Mutation.confirmAccountEmail":
+		if e.complexity.Mutation.ConfirmAccountEmail == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_confirmAccountEmail_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.ConfirmAccountEmail(childComplexity, args["input"].(types.ConfirmAccountEmailInput)), true
+
 	case "Mutation.createAccountMultiFactorRecoveryCodesAndDeletePrevious":
 		if e.complexity.Mutation.CreateAccountMultiFactorRecoveryCodesAndDeletePrevious == nil {
 			break
@@ -1026,6 +1038,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.UpdateAccountUsernameAndRetainPrevious(childComplexity, args["input"].(types.UpdateAccountUsernameAndRetainPreviousInput)), true
 
+	case "Mutation.verifyAuthenticationTokenAndAttemptAccountAccessGrant":
+		if e.complexity.Mutation.VerifyAuthenticationTokenAndAttemptAccountAccessGrant == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_verifyAuthenticationTokenAndAttemptAccountAccessGrant_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.VerifyAuthenticationTokenAndAttemptAccountAccessGrant(childComplexity, args["input"].(types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput)), true
+
 	case "PageInfo.endCursor":
 		if e.complexity.PageInfo.EndCursor == nil {
 			break
@@ -1053,30 +1077,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.PageInfo.StartCursor(childComplexity), true
-
-	case "Query.confirmAccountEmail":
-		if e.complexity.Query.ConfirmAccountEmail == nil {
-			break
-		}
-
-		args, err := ec.field_Query_confirmAccountEmail_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.ConfirmAccountEmail(childComplexity, args["input"].(types.ConfirmAccountEmailInput)), true
-
-	case "Query.verifyAuthenticationTokenAndAttemptAccountAccessGrant":
-		if e.complexity.Query.VerifyAuthenticationTokenAndAttemptAccountAccessGrant == nil {
-			break
-		}
-
-		args, err := ec.field_Query_verifyAuthenticationTokenAndAttemptAccountAccessGrant_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.VerifyAuthenticationTokenAndAttemptAccountAccessGrant(childComplexity, args["input"].(types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput)), true
 
 	case "Query.viewAuthenticationToken":
 		if e.complexity.Query.ViewAuthenticationToken == nil {
@@ -1681,15 +1681,12 @@ extend type Mutation {
   Priv. users cannot disable multi factor
   """
   disableAccountMultiFactor: DisableAccountMultiFactorPayload @auth
-}
 
-extend type Query {
   """
   Confirm account email, so it may be used
   """
   confirmAccountEmail(input: ConfirmAccountEmailInput!): ConfirmAccountEmailPayload @auth
-}
-`, BuiltIn: false},
+}`, BuiltIn: false},
 	{Name: "schema/token/schema.graphql", Input: `enum MultiFactorTypeEnum {
   TOTP
 }
@@ -1702,7 +1699,7 @@ type AuthenticationTokenAccountStatus {
 
 type AuthenticationToken {
   sameSession: Boolean!
-  redeemed: Boolean!
+  verified: Boolean!
   session: String!
   email: String!
   accountStatus: AuthenticationTokenAccountStatus
@@ -1836,9 +1833,7 @@ type Mutation {
   Note: the actual authentication token is opaque (set & read from cookies)
   """
   grantAccountAccessWithAuthenticationTokenAndRecoveryCode(input: GrantAccountAccessWithAuthenticationTokenAndRecoveryCodeInput!): GrantAccountAccessWithAuthenticationTokenAndRecoveryCodePayload @anon
-}
 
-type Query {
   """
   Will verify the authentication token.
 
@@ -1852,7 +1847,9 @@ type Query {
   Note: the actual authentication token is opaque (set & read from cookies)
   """
   verifyAuthenticationTokenAndAttemptAccountAccessGrant(input: VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput!): VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload @anon
+}
 
+type Query {
   """
   Get the status of the authentication token - whether or not it is redeemed, account status, etc..
 
@@ -2154,6 +2151,21 @@ func (ec *executionContext) field_Mutation_addAccountEmail_args(ctx context.Cont
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_confirmAccountEmail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.ConfirmAccountEmailInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNConfirmAccountEmailInput2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐConfirmAccountEmailInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_createAccountWithAuthenticationToken_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -2289,6 +2301,21 @@ func (ec *executionContext) field_Mutation_updateAccountUsernameAndRetainPreviou
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_verifyAuthenticationTokenAndAttemptAccountAccessGrant_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNVerifyAuthenticationTokenAndAttemptAccountAccessGrantInput2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐVerifyAuthenticationTokenAndAttemptAccountAccessGrantInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -2316,36 +2343,6 @@ func (ec *executionContext) field_Query__entities_args(ctx context.Context, rawA
 		}
 	}
 	args["representations"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Query_confirmAccountEmail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 types.ConfirmAccountEmailInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNConfirmAccountEmailInput2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐConfirmAccountEmailInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Query_verifyAuthenticationTokenAndAttemptAccountAccessGrant_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNVerifyAuthenticationTokenAndAttemptAccountAccessGrantInput2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐVerifyAuthenticationTokenAndAttemptAccountAccessGrantInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
 	return args, nil
 }
 
@@ -4064,7 +4061,7 @@ func (ec *executionContext) _AuthenticationToken_sameSession(ctx context.Context
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AuthenticationToken_redeemed(ctx context.Context, field graphql.CollectedField, obj *types.AuthenticationToken) (ret graphql.Marshaler) {
+func (ec *executionContext) _AuthenticationToken_verified(ctx context.Context, field graphql.CollectedField, obj *types.AuthenticationToken) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -4082,7 +4079,7 @@ func (ec *executionContext) _AuthenticationToken_redeemed(ctx context.Context, f
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Redeemed, nil
+		return obj.Verified, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5259,6 +5256,65 @@ func (ec *executionContext) _Mutation_grantAccountAccessWithAuthenticationTokenA
 	return ec.marshalOGrantAccountAccessWithAuthenticationTokenAndRecoveryCodePayload2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐGrantAccountAccessWithAuthenticationTokenAndRecoveryCodePayload(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_verifyAuthenticationTokenAndAttemptAccountAccessGrant(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_verifyAuthenticationTokenAndAttemptAccountAccessGrant_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().VerifyAuthenticationTokenAndAttemptAccountAccessGrant(rctx, args["input"].(types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			if ec.directives.Anon == nil {
+				return nil, errors.New("directive anon is not implemented")
+			}
+			return ec.directives.Anon(ctx, nil, directive0)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/eva/src/ports/graphql/types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload)
+	fc.Result = res
+	return ec.marshalOVerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐVerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Mutation_unlockAccount(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -5821,6 +5877,65 @@ func (ec *executionContext) _Mutation_disableAccountMultiFactor(ctx context.Cont
 	return ec.marshalODisableAccountMultiFactorPayload2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐDisableAccountMultiFactorPayload(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_confirmAccountEmail(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_confirmAccountEmail_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().ConfirmAccountEmail(rctx, args["input"].(types.ConfirmAccountEmailInput))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			if ec.directives.Auth == nil {
+				return nil, errors.New("directive auth is not implemented")
+			}
+			return ec.directives.Auth(ctx, nil, directive0)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*types.ConfirmAccountEmailPayload); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/eva/src/ports/graphql/types.ConfirmAccountEmailPayload`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.ConfirmAccountEmailPayload)
+	fc.Result = res
+	return ec.marshalOConfirmAccountEmailPayload2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐConfirmAccountEmailPayload(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _PageInfo_hasNextPage(ctx context.Context, field graphql.CollectedField, obj *relay.PageInfo) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -5955,65 +6070,6 @@ func (ec *executionContext) _PageInfo_endCursor(ctx context.Context, field graph
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Query_verifyAuthenticationTokenAndAttemptAccountAccessGrant(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Query",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Query_verifyAuthenticationTokenAndAttemptAccountAccessGrant_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Query().VerifyAuthenticationTokenAndAttemptAccountAccessGrant(rctx, args["input"].(types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput))
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			if ec.directives.Anon == nil {
-				return nil, errors.New("directive anon is not implemented")
-			}
-			return ec.directives.Anon(ctx, nil, directive0)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/eva/src/ports/graphql/types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload`, tmp)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload)
-	fc.Result = res
-	return ec.marshalOVerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐVerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _Query_viewAuthenticationToken(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -6096,65 +6152,6 @@ func (ec *executionContext) _Query_viewer(ctx context.Context, field graphql.Col
 	res := resTmp.(*types.Account)
 	fc.Result = res
 	return ec.marshalOAccount2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Query_confirmAccountEmail(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Query",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Query_confirmAccountEmail_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Query().ConfirmAccountEmail(rctx, args["input"].(types.ConfirmAccountEmailInput))
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			if ec.directives.Auth == nil {
-				return nil, errors.New("directive auth is not implemented")
-			}
-			return ec.directives.Auth(ctx, nil, directive0)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*types.ConfirmAccountEmailPayload); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/eva/src/ports/graphql/types.ConfirmAccountEmailPayload`, tmp)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.ConfirmAccountEmailPayload)
-	fc.Result = res
-	return ec.marshalOConfirmAccountEmailPayload2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐConfirmAccountEmailPayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query__entities(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -8689,8 +8686,8 @@ func (ec *executionContext) _AuthenticationToken(ctx context.Context, sel ast.Se
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "redeemed":
-			out.Values[i] = ec._AuthenticationToken_redeemed(ctx, field, obj)
+		case "verified":
+			out.Values[i] = ec._AuthenticationToken_verified(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -9140,6 +9137,8 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_grantAccountAccessWithAuthenticationTokenAndTotp(ctx, field)
 		case "grantAccountAccessWithAuthenticationTokenAndRecoveryCode":
 			out.Values[i] = ec._Mutation_grantAccountAccessWithAuthenticationTokenAndRecoveryCode(ctx, field)
+		case "verifyAuthenticationTokenAndAttemptAccountAccessGrant":
+			out.Values[i] = ec._Mutation_verifyAuthenticationTokenAndAttemptAccountAccessGrant(ctx, field)
 		case "unlockAccount":
 			out.Values[i] = ec._Mutation_unlockAccount(ctx, field)
 		case "addAccountEmail":
@@ -9160,6 +9159,8 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_enrollAccountMultiFactorTotp(ctx, field)
 		case "disableAccountMultiFactor":
 			out.Values[i] = ec._Mutation_disableAccountMultiFactor(ctx, field)
+		case "confirmAccountEmail":
+			out.Values[i] = ec._Mutation_confirmAccountEmail(ctx, field)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -9222,17 +9223,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Query")
-		case "verifyAuthenticationTokenAndAttemptAccountAccessGrant":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Query_verifyAuthenticationTokenAndAttemptAccountAccessGrant(ctx, field)
-				return res
-			})
 		case "viewAuthenticationToken":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -9253,17 +9243,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_viewer(ctx, field)
-				return res
-			})
-		case "confirmAccountEmail":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Query_confirmAccountEmail(ctx, field)
 				return res
 			})
 		case "_entities":

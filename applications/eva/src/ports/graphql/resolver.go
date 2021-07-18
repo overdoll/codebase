@@ -47,3 +47,15 @@ func (r *Resolver) Account() AccountResolver {
 		App: r.app,
 	}
 }
+
+func (r *Resolver) AccountEmail() AccountEmailResolver {
+	return &resolvers.AccountEmailResolver{
+		App: r.app,
+	}
+}
+
+func (r *Resolver) AccountUsername() AccountUsernameResolver {
+	return &resolvers.AccountUsernameResolver{
+		App: r.app,
+	}
+}

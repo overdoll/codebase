@@ -76,6 +76,14 @@ type ModeratePendingPostPayload struct {
 	PendingPostAuditLog *PendingPostAuditLog `json:"pendingPostAuditLog"`
 }
 
+type PendingPost struct {
+	ID relay.ID `json:"id"`
+	// Audit logs belonging to this pending post
+	AuditLogs []*PendingPostAuditLog `json:"auditLogs"`
+}
+
+func (PendingPost) IsEntity() {}
+
 // Pending post audit log
 //
 // Audit log is created when a moderator takes an action against a pending post

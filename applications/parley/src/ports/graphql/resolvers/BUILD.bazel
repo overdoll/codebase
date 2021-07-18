@@ -1,9 +1,9 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
-    name = "queries",
-    srcs = ["resolvers.go"],
-    importpath = "overdoll/applications/parley/src/ports/graphql/queries",
+    name = "resolvers",
+    srcs = ["account.go"],
+    importpath = "overdoll/applications/parley/src/ports/graphql/resolvers",
     visibility = ["//visibility:public"],
     deps = [
         "//applications/parley/src/app",

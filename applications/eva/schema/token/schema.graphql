@@ -10,7 +10,7 @@ type AuthenticationTokenAccountStatus {
 
 type AuthenticationToken {
   sameSession: Boolean!
-  redeemed: Boolean!
+  verified: Boolean!
   session: String!
   email: String!
   accountStatus: AuthenticationTokenAccountStatus
@@ -144,9 +144,7 @@ type Mutation {
   Note: the actual authentication token is opaque (set & read from cookies)
   """
   grantAccountAccessWithAuthenticationTokenAndRecoveryCode(input: GrantAccountAccessWithAuthenticationTokenAndRecoveryCodeInput!): GrantAccountAccessWithAuthenticationTokenAndRecoveryCodePayload @anon
-}
 
-type Query {
   """
   Will verify the authentication token.
 
@@ -160,7 +158,9 @@ type Query {
   Note: the actual authentication token is opaque (set & read from cookies)
   """
   verifyAuthenticationTokenAndAttemptAccountAccessGrant(input: VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput!): VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload @anon
+}
 
+type Query {
   """
   Get the status of the authentication token - whether or not it is redeemed, account status, etc..
 

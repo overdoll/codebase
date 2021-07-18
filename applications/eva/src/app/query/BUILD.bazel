@@ -4,6 +4,8 @@ go_library(
     name = "query",
     srcs = [
         "get_account.go",
+        "get_account_by_email.go",
+        "get_account_by_username.go",
         "get_account_emails.go",
         "get_account_recovery_codes.go",
         "get_account_sessions.go",
@@ -18,6 +20,7 @@ go_library(
         "//applications/eva/src/domain/multi_factor",
         "//applications/eva/src/domain/session",
         "//applications/eva/src/domain/token",
+        "//libraries/paging",
         "@com_github_gocql_gocql//:gocql",
         "@org_uber_go_zap//:zap",
     ],

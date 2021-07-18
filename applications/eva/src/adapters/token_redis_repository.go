@@ -126,7 +126,7 @@ func (r AuthenticationTokenRepository) UpdateAuthenticationToken(ctx context.Con
 
 	redeemed := 0
 
-	if instance.Redeemed() {
+	if instance.Verified() {
 		redeemed = 1
 	}
 

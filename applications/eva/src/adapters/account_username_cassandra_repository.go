@@ -8,6 +8,7 @@ import (
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"overdoll/applications/eva/src/domain/account"
+	"overdoll/libraries/paging"
 )
 
 type AccountUsername struct {
@@ -165,7 +166,7 @@ func (r AccountRepository) GetAccountByUsername(ctx context.Context, username st
 }
 
 // GetAccountEmails - get emails for account
-func (r AccountRepository) GetAccountUsernames(ctx context.Context, id string) ([]*account.Username, error) {
+func (r AccountRepository) GetAccountUsernames(ctx context.Context, cursor *paging.Cursor, id string) ([]*account.Username, *paging.Info, error) {
 
 	var accountUsernames []*UsernameByAccount
 
@@ -182,10 +183,10 @@ func (r AccountRepository) GetAccountUsernames(ctx context.Context, id string) (
 	if err := queryUsernames.Select(&accountUsernames); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, account.ErrAccountNotFound
+			return nil, nil, account.ErrAccountNotFound
 		}
 
-		return nil, fmt.Errorf("select() failed: '%s", err)
+		return nil, nil, fmt.Errorf("select() failed: '%s", err)
 	}
 
 	var usernames []*account.Username
@@ -194,5 +195,5 @@ func (r AccountRepository) GetAccountUsernames(ctx context.Context, id string) (
 		usernames = append(usernames, account.UnmarshalUsernameFromDatabase(username.Username, username.AccountId))
 	}
 
-	return usernames, nil
+	return usernames, nil, nil
 }

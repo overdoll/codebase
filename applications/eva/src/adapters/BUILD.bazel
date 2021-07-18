@@ -18,6 +18,7 @@ go_library(
         "//applications/eva/src/domain/session",
         "//applications/eva/src/domain/token",
         "//libraries/crypt",
+        "//libraries/paging",
         "//libraries/passport",
         "@com_github_go_redis_redis_v8//:redis",
         "@com_github_gocql_gocql//:gocql",

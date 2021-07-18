@@ -123,6 +123,10 @@ extend type Account @key(fields: "id") {
   ): PendingPostConnection! @goField(forceResolver: true) @auth
 }
 
+extend type PendingPostAuditLog @key(fields: "id") {
+  id: ID! @external
+  pendingPost: PendingPost!
+}
 
 extend type Mutation {
   """

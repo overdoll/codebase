@@ -37,9 +37,7 @@ func (m MutationResolver) RevertPendingPostAuditLog(ctx context.Context, data ty
 		return nil, err
 	}
 
-	return &types.RevertPendingPostAuditLogPayload{
-		PendingPostAuditLog: types.MarshalPendingPostAuditLogToGraphQL(auditLog),
-	}, nil
+	return &types.RevertPendingPostAuditLogPayload{PendingPostAuditLog: types.MarshalPendingPostAuditLogToGraphQL(auditLog)}, nil
 }
 
 func (m MutationResolver) ToggleModeratorSettingsInQueue(ctx context.Context) (*types.ToggleModeratorSettingsInQueuePayload, error) {
@@ -50,8 +48,5 @@ func (m MutationResolver) ToggleModeratorSettingsInQueue(ctx context.Context) (*
 		return nil, err
 	}
 
-	return &types.Response{
-		Ok:         true,
-		Validation: nil,
-	}, nil
+	return &types.ToggleModeratorSettingsInQueuePayload{ModeratorSettingsInQueue: &inQueue}, nil
 }

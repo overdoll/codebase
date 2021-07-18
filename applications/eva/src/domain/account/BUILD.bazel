@@ -12,6 +12,7 @@ go_library(
     importpath = "overdoll/applications/eva/src/domain/account",
     visibility = ["//visibility:public"],
     deps = [
+        "//libraries/paging",
         "@com_github_go_playground_validator_v10//:validator",
         "@com_github_segmentio_ksuid//:ksuid",
     ],

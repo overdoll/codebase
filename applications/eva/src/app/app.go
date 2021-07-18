@@ -33,6 +33,8 @@ type Commands struct {
 
 type Queries struct {
 	GetAccount                      query.GetAccountHandler
+	GetAccountByEmail               query.GetAccountByEmailHandler
+	GetAccountByUsername            query.GetAccountByUsernameHandler
 	GetAccountEmails                query.GetAccountEmailsHandler
 	GetAccountUsernames             query.GetAccountUsernamesHandler
 	GetAccountSessions              query.GetAccountSessionsHandler

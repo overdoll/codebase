@@ -81,7 +81,7 @@ func MarshalAuthenticationTokenToGraphQL(result *token.AuthenticationToken, same
 
 	return &AuthenticationToken{
 		SameSession: sameSession,
-		Redeemed:    result.Redeemed(),
+		Verified:    result.Verified(),
 		Session:     result.Session(),
 		Email:       result.Email(),
 		AccountStatus: &AuthenticationTokenAccountStatus{

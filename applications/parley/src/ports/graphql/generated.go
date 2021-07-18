@@ -81,6 +81,7 @@ type ComplexityRoot struct {
 		FindAccountByID                    func(childComplexity int, id relay.ID) int
 		FindAccountInfractionHistoryByID   func(childComplexity int, id relay.ID) int
 		FindPendingPostAuditLogByID        func(childComplexity int, id relay.ID) int
+		FindPendingPostByID                func(childComplexity int, id relay.ID) int
 		FindPendingPostRejectionReasonByID func(childComplexity int, id relay.ID) int
 	}
 
@@ -99,6 +100,11 @@ type ComplexityRoot struct {
 		HasNextPage     func(childComplexity int) int
 		HasPreviousPage func(childComplexity int) int
 		StartCursor     func(childComplexity int) int
+	}
+
+	PendingPost struct {
+		AuditLogs func(childComplexity int) int
+		ID        func(childComplexity int) int
 	}
 
 	PendingPostAuditLog struct {
@@ -166,6 +172,7 @@ type AccountResolver interface {
 type EntityResolver interface {
 	FindAccountByID(ctx context.Context, id relay.ID) (*types.Account, error)
 	FindAccountInfractionHistoryByID(ctx context.Context, id relay.ID) (*types.AccountInfractionHistory, error)
+	FindPendingPostByID(ctx context.Context, id relay.ID) (*types.PendingPost, error)
 	FindPendingPostAuditLogByID(ctx context.Context, id relay.ID) (*types.PendingPostAuditLog, error)
 	FindPendingPostRejectionReasonByID(ctx context.Context, id relay.ID) (*types.PendingPostRejectionReason, error)
 }
@@ -316,6 +323,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Entity.FindPendingPostAuditLogByID(childComplexity, args["id"].(relay.ID)), true
 
+	case "Entity.findPendingPostByID":
+		if e.complexity.Entity.FindPendingPostByID == nil {
+			break
+		}
+
+		args, err := ec.field_Entity_findPendingPostByID_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Entity.FindPendingPostByID(childComplexity, args["id"].(relay.ID)), true
+
 	case "Entity.findPendingPostRejectionReasonByID":
 		if e.complexity.Entity.FindPendingPostRejectionReasonByID == nil {
 			break
@@ -393,6 +412,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.PageInfo.StartCursor(childComplexity), true
+
+	case "PendingPost.auditLogs":
+		if e.complexity.PendingPost.AuditLogs == nil {
+			break
+		}
+
+		return e.complexity.PendingPost.AuditLogs(childComplexity), true
+
+	case "PendingPost.id":
+		if e.complexity.PendingPost.ID == nil {
+			break
+		}
+
+		return e.complexity.PendingPost.ID(childComplexity), true
 
 	case "PendingPostAuditLog.action":
 		if e.complexity.PendingPostAuditLog.Action == nil {
@@ -701,6 +734,13 @@ type PendingPostAuditLogConnection {
   pageInfo: PageInfo!
 }
 
+extend type PendingPost @key(fields: "id") {
+  id: ID! @external
+
+  """Audit logs belonging to this pending post"""
+  auditLogs: [PendingPostAuditLog!]
+}
+
 extend type Account @key(fields: "id") {
   """
   Pending Post Audit Logs linked to this account
@@ -939,12 +979,13 @@ directive @extends on OBJECT
 `, BuiltIn: true},
 	{Name: "federation/entity.graphql", Input: `
 # a union of all types that use the @key directive
-union _Entity = Account | AccountInfractionHistory | PendingPostAuditLog | PendingPostRejectionReason
+union _Entity = Account | AccountInfractionHistory | PendingPost | PendingPostAuditLog | PendingPostRejectionReason
 
 # fake type to build resolver interfaces for users to implement
 type Entity {
 		findAccountByID(id: ID!,): Account!
 	findAccountInfractionHistoryByID(id: ID!,): AccountInfractionHistory!
+	findPendingPostByID(id: ID!,): PendingPost!
 	findPendingPostAuditLogByID(id: ID!,): PendingPostAuditLog!
 	findPendingPostRejectionReasonByID(id: ID!,): PendingPostRejectionReason!
 
@@ -1081,6 +1122,21 @@ func (ec *executionContext) field_Entity_findAccountInfractionHistoryByID_args(c
 }
 
 func (ec *executionContext) field_Entity_findPendingPostAuditLogByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 relay.ID
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Entity_findPendingPostByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 relay.ID
@@ -1790,6 +1846,48 @@ func (ec *executionContext) _Entity_findAccountInfractionHistoryByID(ctx context
 	return ec.marshalNAccountInfractionHistory2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountInfractionHistory(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Entity_findPendingPostByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Entity",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Entity_findPendingPostByID_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Entity().FindPendingPostByID(rctx, args["id"].(relay.ID))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.PendingPost)
+	fc.Result = res
+	return ec.marshalNPendingPost2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPost(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Entity_findPendingPostAuditLogByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -2148,6 +2246,73 @@ func (ec *executionContext) _PageInfo_endCursor(ctx context.Context, field graph
 	res := resTmp.(*string)
 	fc.Result = res
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PendingPost_id(ctx context.Context, field graphql.CollectedField, obj *types.PendingPost) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PendingPost",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(relay.ID)
+	fc.Result = res
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PendingPost_auditLogs(ctx context.Context, field graphql.CollectedField, obj *types.PendingPost) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PendingPost",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.AuditLogs, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*types.PendingPostAuditLog)
+	fc.Result = res
+	return ec.marshalOPendingPostAuditLog2ᚕᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostAuditLogᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _PendingPostAuditLog_id(ctx context.Context, field graphql.CollectedField, obj *types.PendingPostAuditLog) (ret graphql.Marshaler) {
@@ -4357,6 +4522,13 @@ func (ec *executionContext) __Entity(ctx context.Context, sel ast.SelectionSet, 
 			return graphql.Null
 		}
 		return ec._AccountInfractionHistory(ctx, sel, obj)
+	case types.PendingPost:
+		return ec._PendingPost(ctx, sel, &obj)
+	case *types.PendingPost:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._PendingPost(ctx, sel, obj)
 	case types.PendingPostAuditLog:
 		return ec._PendingPostAuditLog(ctx, sel, &obj)
 	case *types.PendingPostAuditLog:
@@ -4612,6 +4784,20 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 				}
 				return res
 			})
+		case "findPendingPostByID":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Entity_findPendingPostByID(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		case "findPendingPostAuditLogByID":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -4732,6 +4918,35 @@ func (ec *executionContext) _PageInfo(ctx context.Context, sel ast.SelectionSet,
 			out.Values[i] = ec._PageInfo_startCursor(ctx, field, obj)
 		case "endCursor":
 			out.Values[i] = ec._PageInfo_endCursor(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var pendingPostImplementors = []string{"PendingPost", "_Entity"}
+
+func (ec *executionContext) _PendingPost(ctx context.Context, sel ast.SelectionSet, obj *types.PendingPost) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, pendingPostImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("PendingPost")
+		case "id":
+			out.Values[i] = ec._PendingPost_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "auditLogs":
+			out.Values[i] = ec._PendingPost_auditLogs(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -5500,6 +5715,20 @@ func (ec *executionContext) marshalNPageInfo2ᚖoverdollᚋlibrariesᚋgraphql�
 	return ec._PageInfo(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNPendingPost2overdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPost(ctx context.Context, sel ast.SelectionSet, v types.PendingPost) graphql.Marshaler {
+	return ec._PendingPost(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNPendingPost2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPost(ctx context.Context, sel ast.SelectionSet, v *types.PendingPost) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._PendingPost(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNPendingPostAuditLog2overdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostAuditLog(ctx context.Context, sel ast.SelectionSet, v types.PendingPostAuditLog) graphql.Marshaler {
 	return ec._PendingPostAuditLog(ctx, sel, &v)
 }
@@ -6098,6 +6327,46 @@ func (ec *executionContext) marshalOModeratePendingPostPayload2ᚖoverdollᚋapp
 		return graphql.Null
 	}
 	return ec._ModeratePendingPostPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOPendingPostAuditLog2ᚕᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostAuditLogᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.PendingPostAuditLog) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNPendingPostAuditLog2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostAuditLog(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
 }
 
 func (ec *executionContext) marshalOPendingPostAuditLog2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPendingPostAuditLog(ctx context.Context, sel ast.SelectionSet, v *types.PendingPostAuditLog) graphql.Marshaler {

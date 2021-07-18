@@ -12,6 +12,7 @@ import (
 	"github.com/segmentio/ksuid"
 	"overdoll/applications/eva/src/domain/session"
 	"overdoll/libraries/crypt"
+	"overdoll/libraries/paging"
 )
 
 const (
@@ -74,17 +75,17 @@ func (r SessionRepository) getSessionById(ctx context.Context, sessionId string)
 }
 
 // GetSessionsByAccountId - Get sessions
-func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, sessionCookie, accountId string) ([]*session.Session, error) {
+func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, cursor *paging.Cursor, sessionCookie, accountId string) ([]*session.Session, *paging.Info, error) {
 
 	keys, err := r.client.Keys(ctx, SessionPrefix+"*:"+AccountPrefix+accountId).Result()
 
 	if err != nil {
 
 		if err == redis.Nil {
-			return nil, session.ErrSessionsNotFound
+			return nil, nil, session.ErrSessionsNotFound
 		}
 
-		return nil, fmt.Errorf("keys failed: '%s", err)
+		return nil, nil, fmt.Errorf("keys failed: '%s", err)
 	}
 
 	var sessions []*session.Session
@@ -93,7 +94,7 @@ func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, sessionCo
 		sess, err := r.getSessionById(ctx, sessionID)
 
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 
 		if sess.ID() == strings.Split(sessionCookie, ".")[0] {
@@ -103,7 +104,7 @@ func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, sessionCo
 		sessions = append(sessions, sess)
 	}
 
-	return sessions, nil
+	return sessions, nil, nil
 }
 
 // RevokeSessionById - revoke session

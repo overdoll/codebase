@@ -43,6 +43,24 @@ func (i ID) GetID() string {
 	return splits[len(splits)-1]
 }
 
+// GetCompositePartID will get the composite IDs that make up the ID
+// GetID usually grabs the most-right ID (which is usually the primary key) but you can add any IDs in the middle to make it
+// a composite ID.
+// This function will grab the ID starting from the left, starting from 0
+
+// for example: StructName:SomeID1:SomeID2
+// GetCompositePartID(0) will get "SomeID2"
+// GetCompositePartID(1) will get "SomeID1"
+func (i ID) GetCompositePartID(pos int) string {
+	splits := decode(i)
+
+	if len(splits) < len(splits)-pos {
+		return ""
+	}
+
+	return splits[len(splits)-1-(-1*pos)]
+}
+
 func (i ID) GetTypeName() string {
 	return decode(i)[0]
 }
