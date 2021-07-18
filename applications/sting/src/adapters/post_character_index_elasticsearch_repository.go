@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	"overdoll/applications/sting/src/domain/post"
+	"overdoll/libraries/graphql/relay"
 )
 
 type CharacterDocument struct {
@@ -80,7 +81,7 @@ func MarshalCharacterToDocument(char *post.Character) *CharacterDocument {
 	}
 }
 
-func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context, search string) ([]*post.Character, error) {
+func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context, cursor *relay.Cursor, search string) ([]*post.Character, *relay.Paging, error) {
 	var query string
 
 	if search == "" {
@@ -92,7 +93,7 @@ func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context,
 	response, err := r.store.Search(CharacterIndexName, query)
 
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	var characters []*post.Character
@@ -104,13 +105,16 @@ func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context,
 		err := json.Unmarshal(char, &chr)
 
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 
-		characters = append(characters, post.UnmarshalCharacterFromDatabase(chr.Id, chr.Name, chr.Thumbnail, post.UnmarshalMediaFromDatabase(chr.Media.Id, chr.Media.Title, chr.Media.Thumbnail)))
+		newCharacter := post.UnmarshalCharacterFromDatabase(chr.Id, chr.Name, chr.Thumbnail, post.UnmarshalMediaFromDatabase(chr.Media.Id, chr.Media.Title, chr.Media.Thumbnail))
+		newCharacter.Node = relay.NewNode(chr.Id)
+
+		characters = append(characters, newCharacter)
 	}
 
-	return characters, nil
+	return characters, nil, nil
 }
 
 func (r PostsIndexElasticSearchRepository) BulkIndexCharacters(ctx context.Context, characters []*post.Character) error {

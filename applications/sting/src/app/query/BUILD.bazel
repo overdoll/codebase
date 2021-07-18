@@ -17,7 +17,7 @@ go_library(
     deps = [
         "//applications/sting/src/domain/post",
         "//libraries/account",
-        "//libraries/paging",
+        "//libraries/graphql/relay",
         "@org_uber_go_zap//:zap",
     ],
 )

@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "entities",
+    srcs = ["resolvers.go"],
+    importpath = "overdoll/applications/sting/src/ports/graphql/entities",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//applications/sting/src/app",
+        "//applications/sting/src/ports/graphql/types",
+        "//libraries/graphql/relay",
+    ],
+)

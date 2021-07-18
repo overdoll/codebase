@@ -25,7 +25,7 @@ func (p *Pagination) DefineBackwardsPagination(backwards func(last int, before s
 	p.backwards = backwards
 }
 
-func (p *Pagination) Run() (*PageInfo, error) {
+func (p *Pagination) Run() (*Paging, error) {
 
 	hasMoreAfter := false
 	hasMoreBefore := false
@@ -64,7 +64,7 @@ func (p *Pagination) Run() (*PageInfo, error) {
 		}
 	}
 
-	return NewPageInfo(hasMoreAfter, hasMoreBefore), nil
+	return NewPaging(hasMoreAfter, hasMoreBefore), nil
 }
 
 func NewCursor(after, before *string, first, last *int) (*Cursor, error) {

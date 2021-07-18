@@ -13,7 +13,7 @@ func (e *Paging) HasPrevPage() bool {
 	return e.hasPrevPage
 }
 
-func NewPageInfo(hasNextPage, hasPreviousPage bool) *Paging {
+func NewPaging(hasNextPage, hasPreviousPage bool) *Paging {
 	return &Paging{
 		hasNextPage: hasNextPage,
 		hasPrevPage: hasPreviousPage,

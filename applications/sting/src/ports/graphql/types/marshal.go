@@ -12,7 +12,7 @@ func MarshalPendingPostToGraphQLConnection(results []*post.PendingPost, page *re
 
 	for _, pending := range results {
 		pendingPostEdges = append(pendingPostEdges, &PendingPostEdge{
-			Cursor: pending.ID(),
+			Cursor: pending.Cursor(),
 			Node:   MarshalPendingPostToGraphQL(pending),
 		})
 	}
@@ -21,9 +21,9 @@ func MarshalPendingPostToGraphQLConnection(results []*post.PendingPost, page *re
 	var endCursor *string
 
 	if len(results) > 0 {
-		res := results[0].ID()
+		res := results[0].Cursor()
 		startCursor = &res
-		res = results[len(results)-1].ID()
+		res = results[len(results)-1].Cursor()
 		endCursor = &res
 	}
 
@@ -114,7 +114,7 @@ func MarshalArtistToGraphQLConnection(results []*post.Artist, paging *relay.Pagi
 	// Unmarshal our json into the correct model
 	for _, result := range results {
 		resp = append(resp, &ArtistEdge{
-			Cursor: result.ID(),
+			Cursor: result.Cursor(),
 			Node:   MarshalArtistToGraphQL(result),
 		})
 	}
@@ -123,9 +123,9 @@ func MarshalArtistToGraphQLConnection(results []*post.Artist, paging *relay.Pagi
 	var endCursor *string
 
 	if len(results) > 0 {
-		res := results[0].ID()
+		res := results[0].Cursor()
 		startCursor = &res
-		res = results[len(results)-1].ID()
+		res = results[len(results)-1].Cursor()
 		endCursor = &res
 	}
 
@@ -154,7 +154,7 @@ func MarshalCategoryToGraphQLConnection(results []*post.Category, paging *relay.
 	// Unmarshal our json into the correct model
 	for _, result := range results {
 		resp = append(resp, &CategoryEdge{
-			Cursor: result.ID(),
+			Cursor: result.Cursor(),
 			Node:   MarshalCategoryToGraphQL(result),
 		})
 	}
@@ -163,9 +163,9 @@ func MarshalCategoryToGraphQLConnection(results []*post.Category, paging *relay.
 	var endCursor *string
 
 	if len(results) > 0 {
-		res := results[0].ID()
+		res := results[0].Cursor()
 		startCursor = &res
-		res = results[len(results)-1].ID()
+		res = results[len(results)-1].Cursor()
 		endCursor = &res
 	}
 
@@ -194,7 +194,7 @@ func MarshalCharacterToGraphQLConnection(results []*post.Character, paging *rela
 	// Unmarshal our json into the correct model
 	for _, result := range results {
 		resp = append(resp, &CharacterEdge{
-			Cursor: result.ID(),
+			Cursor: result.Cursor(),
 			Node:   MarshalCharacterToGraphQL(result),
 		})
 	}
@@ -203,9 +203,9 @@ func MarshalCharacterToGraphQLConnection(results []*post.Character, paging *rela
 	var endCursor *string
 
 	if len(results) > 0 {
-		res := results[0].ID()
+		res := results[0].Cursor()
 		startCursor = &res
-		res = results[len(results)-1].ID()
+		res = results[len(results)-1].Cursor()
 		endCursor = &res
 	}
 
@@ -235,7 +235,7 @@ func MarshalMediaToGraphQLConnection(results []*post.Media, paging *relay.Paging
 	// Unmarshal our json into the correct model
 	for _, result := range results {
 		resp = append(resp, &MediaEdge{
-			Cursor: result.ID(),
+			Cursor: result.Cursor(),
 			Node:   MarshalMediaToGraphQL(result),
 		})
 	}
@@ -244,9 +244,9 @@ func MarshalMediaToGraphQLConnection(results []*post.Media, paging *relay.Paging
 	var endCursor *string
 
 	if len(results) > 0 {
-		res := results[0].ID()
+		res := results[0].Cursor()
 		startCursor = &res
-		res = results[len(results)-1].ID()
+		res = results[len(results)-1].Cursor()
 		endCursor = &res
 	}
 

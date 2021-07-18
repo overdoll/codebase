@@ -2,9 +2,13 @@ package post
 
 import (
 	"os"
+
+	"overdoll/libraries/graphql/relay"
 )
 
 type Character struct {
+	*relay.Node
+
 	id        string
 	name      string
 	thumbnail string

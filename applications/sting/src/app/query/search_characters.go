@@ -18,12 +18,12 @@ func NewSearchCharactersHandler(pr post.IndexRepository) SearchCharactersHandler
 
 func (h SearchCharactersHandler) Handle(ctx context.Context, cursor *relay.Cursor, query string) ([]*post.Character, *relay.Paging, error) {
 
-	chars, err := h.pr.SearchCharacters(ctx, query)
+	results, paging, err := h.pr.SearchCharacters(ctx, cursor, query)
 
 	if err != nil {
 		zap.S().Errorf("failed to get cookie: %s", err)
-		return nil, ErrSearchFailed
+		return nil, nil, ErrSearchFailed
 	}
 
-	return chars, nil
+	return results, paging, nil
 }

@@ -15,7 +15,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//libraries/account",
-        "//libraries/paging",
+        "//libraries/graphql/relay",
         "//libraries/uuid",
     ],
 )

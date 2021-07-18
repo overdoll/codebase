@@ -18,12 +18,12 @@ func NewSearchArtistsHandler(pr post.IndexRepository) SearchArtistsHandler {
 
 func (h SearchArtistsHandler) Handle(ctx context.Context, cursor *relay.Cursor, query string) ([]*post.Artist, *relay.Paging, error) {
 
-	arts, err := h.pr.SearchArtists(ctx, query)
+	results, paging, err := h.pr.SearchArtists(ctx, cursor, query)
 
 	if err != nil {
 		zap.S().Errorf("failed to search: %s", err)
-		return nil, ErrSearchFailed
+		return nil, nil, ErrSearchFailed
 	}
 
-	return arts, nil
+	return results, paging, nil
 }

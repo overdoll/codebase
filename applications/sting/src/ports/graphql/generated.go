@@ -10,7 +10,6 @@ import (
 	"overdoll/applications/sting/src/ports/graphql/types"
 	graphql1 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
-	"overdoll/libraries/graphql/relay/relayruntime"
 	"strconv"
 	"sync"
 	"sync/atomic"
@@ -6106,7 +6105,7 @@ func (ec *executionContext) _CharacterContainer(ctx context.Context, sel ast.Sel
 	}
 }
 
-func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj relayruntime.Node) graphql.Marshaler {
+func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj relay.Node) graphql.Marshaler {
 	switch obj := (obj).(type) {
 	case nil:
 		return graphql.Null

@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"overdoll/libraries/account"
+	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/uuid"
 )
 
@@ -79,6 +80,8 @@ func (e *PendingPostFilters) ArtistId() string {
 }
 
 type PendingPost struct {
+	*relay.Node
+
 	id          string
 	moderatorId string
 	state       PostPendingState

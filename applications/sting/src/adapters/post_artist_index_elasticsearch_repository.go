@@ -7,6 +7,7 @@ import (
 	"log"
 
 	"overdoll/applications/sting/src/domain/post"
+	"overdoll/libraries/graphql/relay"
 )
 
 type ArtistDocument struct {
@@ -50,7 +51,7 @@ const AllArtists = `
 
 const ArtistIndexName = "artists"
 
-func (r PostsIndexElasticSearchRepository) SearchArtists(ctx context.Context, search string) ([]*post.Artist, error) {
+func (r PostsIndexElasticSearchRepository) SearchArtists(ctx context.Context, cursor *relay.Cursor, search string) ([]*post.Artist, *relay.Paging, error) {
 	var query string
 
 	if search == "" {
@@ -77,7 +78,11 @@ func (r PostsIndexElasticSearchRepository) SearchArtists(ctx context.Context, se
 			return nil, err
 		}
 
-		artists = append(artists, post.UnmarshalArtistFromDatabase(art.Id, art.Username, art.Avatar))
+		newArtist := post.UnmarshalArtistFromDatabase(art.Id, art.Username, art.Avatar)
+		newArtist.Node = relay.NewNode(art.Id)
+
+		artists = append(artists, newArtist)
+
 	}
 
 	return artists, nil

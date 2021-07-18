@@ -2,9 +2,13 @@ package post
 
 import (
 	"os"
+
+	"overdoll/libraries/graphql/relay"
 )
 
 type Artist struct {
+	*relay.Node
+
 	id       string
 	username string
 	avatar   string

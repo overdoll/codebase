@@ -7,6 +7,7 @@ import (
 	"log"
 
 	"overdoll/applications/sting/src/domain/post"
+	"overdoll/libraries/graphql/relay"
 )
 
 type CategoryDocument struct {
@@ -58,7 +59,7 @@ func MarshalCategoryToDocument(cat *post.Category) *CategoryDocument {
 	}
 }
 
-func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context, search string) ([]*post.Category, error) {
+func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context, cursor *relay.Cursor, search string) ([]*post.Category, *relay.Paging, error) {
 	var query string
 
 	if search == "" {
@@ -87,7 +88,10 @@ func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context,
 			return nil, err
 		}
 
-		cats = append(cats, post.UnmarshalCategoryFromDatabase(pst.Id, pst.Title, pst.Thumbnail))
+		newCategory := post.UnmarshalCategoryFromDatabase(pst.Id, pst.Title, pst.Thumbnail)
+		newCategory.Node = relay.NewNode(pst.Id)
+
+		cats = append(cats, newCategory)
 	}
 
 	return cats, nil

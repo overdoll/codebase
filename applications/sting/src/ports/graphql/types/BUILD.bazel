@@ -10,6 +10,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//applications/sting/src/domain/post",
+        "//libraries/graphql",
         "//libraries/graphql/relay",
     ],
 )

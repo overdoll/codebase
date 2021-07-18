@@ -280,7 +280,7 @@ func (r PostsIndexElasticSearchRepository) IndexPendingPost(ctx context.Context,
 	return r.BulkIndexPendingPosts(ctx, pendingPosts)
 }
 
-func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Context, cursor *relay.Cursor, filter *post.PendingPostFilters) (*post.PendingPostConnection, error) {
+func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Context, cursor *relay.Cursor, filter *post.PendingPostFilters) ([]*post.PendingPost, *relay.Paging, error) {
 
 	t, err := template.New("SearchPostPending").Parse(SearchPostPending)
 

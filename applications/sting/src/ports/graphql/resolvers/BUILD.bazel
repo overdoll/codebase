@@ -9,6 +9,5 @@ go_library(
         "//applications/sting/src/app",
         "//applications/sting/src/ports/graphql/types",
         "//libraries/graphql/relay",
-        "//libraries/passport",
     ],
 )

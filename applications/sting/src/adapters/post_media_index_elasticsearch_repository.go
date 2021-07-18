@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	"overdoll/applications/sting/src/domain/post"
+	"overdoll/libraries/graphql/relay"
 )
 
 type MediaDocument struct {
@@ -49,7 +50,7 @@ const AllMedia = `
 
 const MediaIndexName = "media"
 
-func (r PostsIndexElasticSearchRepository) SearchMedias(ctx context.Context, search string) ([]*post.Media, error) {
+func (r PostsIndexElasticSearchRepository) SearchMedias(ctx context.Context, cursor *relay.Cursor, search string) ([]*post.Media, *relay.Paging, error) {
 	var query string
 
 	if search == "" {
@@ -61,7 +62,7 @@ func (r PostsIndexElasticSearchRepository) SearchMedias(ctx context.Context, sea
 	response, err := r.store.Search(MediaIndexName, query)
 
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	var meds []*post.Media
@@ -73,13 +74,16 @@ func (r PostsIndexElasticSearchRepository) SearchMedias(ctx context.Context, sea
 		err := json.Unmarshal(med, &md)
 
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 
-		meds = append(meds, post.UnmarshalMediaFromDatabase(md.Id, md.Title, md.Thumbnail))
+		newMedia := post.UnmarshalMediaFromDatabase(md.Id, md.Title, md.Thumbnail)
+		newMedia.Node = relay.NewNode(md.Id)
+
+		meds = append(meds, newMedia)
 	}
 
-	return meds, nil
+	return meds, nil, nil
 }
 
 func (r PostsIndexElasticSearchRepository) BulkIndexMedia(ctx context.Context, media []*post.Media) error {

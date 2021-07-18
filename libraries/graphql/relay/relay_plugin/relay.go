@@ -1,4 +1,4 @@
-package relay
+package relay_plugin
 
 import (
 	"github.com/99designs/gqlgen/codegen/config"

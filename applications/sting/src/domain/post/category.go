@@ -2,9 +2,13 @@ package post
 
 import (
 	"os"
+
+	"overdoll/libraries/graphql/relay"
 )
 
 type Category struct {
+	*relay.Node
+
 	id        string
 	title     string
 	thumbnail string
