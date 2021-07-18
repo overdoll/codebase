@@ -4,28 +4,90 @@ enum AccountEmailStatusEnum {
   PRIMARY
 }
 
-type AccountEmail {
+"""Email belonging to a specific account"""
+type AccountEmail implements Node @key(fields: "id") {
+  """ID of the account email"""
+  id: ID!
+
+  """The account email"""
   email: String!
+
+  """The current status of the account email"""
   status: AccountEmailStatusEnum!
+
+  """The account that this email belongs to"""
+  account: Account! @goField(forceResolver: true)
 }
 
-type AccountSession {
-  userAgent: String!
-  ip: String!
-  created: String!
+"""Session belonging to a specific account"""
+type AccountSession implements Node @key(fields: "id") {
+  """ID of the session"""
   id: ID!
+
+  """The user agent who first created the sesssion"""
+  userAgent: String!
+
+  """The IP of who first created the session"""
+  ip: String!
+
+  """When the session was created"""
+  created: String!
+
+  """If the session belongs to the currently authenticated account"""
   current: Boolean!
 }
 
-type AccountUsername {
+"""Edge of the account session"""
+type AccountSessionEdge {
+  cursor: String!
+  edge: AccountSession!
+}
+
+"""Edge of the account session"""
+type AccountSessionConnection {
+  pageInfo: PageInfo!
+  edges: [AccountSession!]!
+}
+
+"""Username belonging to a specific account"""
+type AccountUsername implements Node @key(fields: "id") {
+  """ID of the account username"""
+  id: ID!
+
+  """The account username"""
   username: String!
+
+  """The account that this username belongs to"""
+  account: Account! @goField(forceResolver: true)
 }
 
-type AccountMultiFactorRecoveryCode {
+"""The multi-factor recovery code belonging to the account"""
+type AccountMultiFactorRecoveryCode implements Node @key(fields: "id") {
+  """ID of the multi factor recovery code"""
+  id: ID!
+
+  """The multi factor recovery code"""
   code: String!
+
+  """The account that this code belongs to"""
+  account: Account! @goField(forceResolver: true)
 }
 
-type AccountMultiFactorTotp {
+"""TOTP secret belonging to a specific account"""
+type AccountMultiFactorTotp implements Node @key(fields: "id") {
+  """ID of the TOTP secret code"""
+  id: ID!
+
+  """The TOTP secret"""
+  secret: String!
+
+  """The account that this secret belongs to"""
+  account: Account! @goField(forceResolver: true)
+}
+
+"""TOTP secret + image combination"""
+type MultiFactorTotp  {
+  """The TOTP secret"""
   secret: String!
 
   """
@@ -38,12 +100,12 @@ type AccountGeneralSettings {
   """
   Emails for account (multiple emails per account)
   """
-  emails: [AccountEmail!]!
+  emails: [AccountEmail!]! @goField(forceResolver: true)
 
   """
   Usernames for account (history)
   """
-  usernames: [AccountUsername!]!
+  usernames: [AccountUsername!]! @goField(forceResolver: true)
 }
 
 type AccountMultiFactorSecuritySettings {
@@ -72,17 +134,34 @@ type AccountSecuritySettings {
   """
   Sessions linked to this account
   """
-  sessions: [AccountSession!]!
+  sessions(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): AccountSessionConnection! @goField(forceResolver: true)
 
   """
   Multi factor account settings
   """
-  multiFactor: AccountMultiFactorSecuritySettings!
+  multiFactor: AccountMultiFactorSecuritySettings! @goField(forceResolver: true)
+
+  """
+  MFA Recovery codes belonging to this account
+  """
+  recoveryCodes: [AccountMultiFactorRecoveryCode!]! @goField(forceResolver: true)
 }
 
-type AccountSettings @key(fields: "accountId") {
-  accountId: ID!
-
+type AccountSettings {
   """
   General account settings for the user
   """
@@ -94,46 +173,195 @@ type AccountSettings @key(fields: "accountId") {
   security: AccountSecuritySettings!
 }
 
+extend type Account @key(fields: "id") {
+  """
+  View settings for this account
+
+  Only queryable if the currently logged-in account belongs to the requested account
+  """
+  settings: AccountSettings @goField(forceResolver: true)
+}
+
+"""Add an email to the account"""
+input AddAccountEmailInput {
+  """
+  Account ID of the account that the email should be added to
+
+  Send a blank string if you want the email to be added to the currently logged-in account
+
+  Staff+ may add emails to any accounts
+  """
+  accountId: String!
+
+  """
+  The email that should be added to this account
+  """
+  email: String!
+}
+
+"""Input for removing an email from an"""
+input RemoveAccountEmailInput {
+  """
+  Account ID of the account that the email should be removed from
+
+  Send a blank string if you want the email to be added to the currently logged-in account
+
+  Staff+ may remove emails from any account
+  """
+  accountId: String!
+
+  """
+  The email that should be removed
+  """
+  email: String!
+}
+
+"""Input for updating an account's username"""
+input UpdateAccountUsernameAndRetainPreviousInput {
+  """
+  Account ID of the account that the username should be updated
+
+  Send a blank string if you want to update the currently logged-in account's username
+
+  Staff+ may update usernames from any account
+  """
+  accountId: String!
+
+  """
+  The username that the account should be updated to
+  """
+  username: String!
+}
+
+"""Input for updating the account status to primary"""
+input UpdateAccountEmailStatusToPrimaryInput {
+  """
+  Account ID of the account that the email belongs to
+
+  Send a blank string if you want to update the currently logged-in account's username
+
+  Staff+ may update any acount
+  """
+  accountId: String!
+
+  """
+  The email that should be updated
+  """
+  email: String!
+}
+
+"""Input for updating an account's username"""
+input RevokeAccountSessionInput {
+  """
+  Session ID that should be revoked
+  """
+  id: String!
+}
+
+
+"""Input for enrolling the account into TOTP"""
+input EnrollAccountMultiFactorTotpInput {
+  """
+  The code that the TOTP expects
+  """
+  code: String!
+}
+
+"""Email to add the account"""
+type AddAccountEmailPayload {
+  """The account email that was added to"""
+  accountEmail: AccountEmail
+}
+
+"""Email to add the account"""
+type RemoveAccountEmailPayload {
+  """The ID of the account email that was removed"""
+  accountEmailId: ID!
+}
+
+"""Payload of the updated username"""
+type UpdateAccountUsernameAndRetainPreviousPayload {
+  """The account username that was added"""
+  accountUsername: AccountUsername
+}
+
+"""Payload of the revoked account session"""
+type RevokeAccountSessionPayload {
+  """The ID of the session that was revoked"""
+  accountSessionId: AccountUsername
+}
+
+"""Payload of the updated account email"""
+type UpdateAccountEmailStatusToPrimaryPayload {
+  """The account email that was updated"""
+  accountEmail: AccountEmail
+}
+
+"""Payload of the created account recovery codes"""
+type CreateAccountMultiFactorRecoveryCodesAndDeletePreviousPayload {
+  """The recovery codes that were created"""
+  accountMultiFactorRecoveryCodes: [AccountMultiFactorRecoveryCode!]!
+}
+
+"""Payload of the generated TOTP token"""
+type GenerateAccountMultiFactorTotpPayload {
+  """TOTP pair that was generated"""
+  multiFactorTOTP: MultiFactorTotp
+}
+
+"""Payload of the enrolled totp payload"""
+type EnrollAccountMultiFactorTotpPayload {
+  """TOTP that belongs to this account now"""
+  accountMultiFactorTOTP: AccountMultiFactorTotp
+}
+
 extend type Mutation {
   """
   Add an email to the account, will need to be confirmed
   """
-  addAccountEmail(email: String!): Response!
+  addAccountEmail(input: AddAccountEmailInput!): AddAccountEmailPayload
 
   """
   Remove account email - email must belong to account and cannot be the primary email
   """
-  removeAccountEmail(email: String!): Response!
+  removeAccountEmail(input: RemoveAccountEmailInput!): RemoveAccountEmailPayload
 
   """
-  Modify the current account's username
+  Update the account username
+
+  Will retain the old username
   """
-  modifyAccountUsername(username: String!): Response!
+  updateAccountUsernameAndRetainPrevious(input: UpdateAccountUsernameAndRetainPreviousInput!): UpdateAccountUsernameAndRetainPreviousPayload
 
   """
-  Revoke a session for this user
+  Revoke a session for this account
   """
-  revokeAccountSession(id: String!): Response!
+  revokeAccountSession(input: RevokeAccountSessionInput!): RevokeAccountSessionPayload
 
   """
-  Make account email primary
+  Update the account email status to primary
+
+  Cannot update if the email is not confirmed
   """
-  makeAccountEmailPrimary(email: String!): Response!
+  updateAccountEmailStatusToPrimary(input: UpdateAccountEmailStatusToPrimaryInput!): UpdateAccountEmailStatusToPrimaryPayload
 
   """
   Generates a new set of recovery codes. The previous set (whatever it was) will be deleted!
   """
-  generateAccountMultiFactorRecoveryCodes: [AccountMultiFactorRecoveryCode!]!
+  createAccountMultiFactorRecoveryCodesAndDeletePrevious: CreateAccountMultiFactorRecoveryCodesAndDeletePreviousPayload
 
   """
   Generate a TOTP key for the current user. Recovery codes must be generated first.
   """
-  generateAccountMultiFactorTotp: AccountMultiFactorTotp!
+  generateAccountMultiFactorTotp: GenerateAccountMultiFactorTotpPayload
 
   """
-  Enroll into TOTP. Code must be passed from previously-generated TOTP to validate that they have set it up
+  Enroll into TOTP.
+
+  Must have called "generateAccountMultiFactorTOTP" first before enrolling, since this will
+  generate a valid secret
   """
-  enrollAccountMultiFactorTotp(code: String!): Response!
+  enrollAccountMultiFactorTotp(input: EnrollAccountMultiFactorTotpInput!): EnrollAccountMultiFactorTotpPayload
 
   """
   Toggle Multi-Factor for the user (enable or disable)
@@ -147,17 +375,7 @@ extend type Mutation {
 
 extend type Query {
   """
-  Get current settings for the account
-  """
-  accountSettings: AccountSettings!
-
-  """
   Confirm account email, so it may be used
   """
   confirmAccountEmail(id: String!): Response!
-
-  """
-  Get MFA recovery codes
-  """
-  accountMultiFactorRecoveryCodes: [AccountMultiFactorRecoveryCode!]!
 }

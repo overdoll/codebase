@@ -9,7 +9,7 @@ interface Actor {
   avatar(
     """The size of the resulting square image."""
     size: Int
-  ): URI!
+  ): URI! @goField(forceResolver: true)
 
   """The username of the actor."""
   username: String!

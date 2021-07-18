@@ -16,14 +16,155 @@ type AuthenticationToken {
   accountStatus: AuthenticationTokenAccountStatus
 }
 
+"""Input for granting an authentication token"""
+input GrantAuthenticationTokenInput {
+  email: String!
+}
+
+"""Payload for granting access to an account using the token and the TOTP code"""
+input GrantAccountAccessWithAuthenticationTokenAndTotpInput {
+  code: String!
+}
+
+"""Payload for granting access to an account using the token and the recovery code"""
+input GrantAccountAccessWithAuthenticationTokenAndRecoveryCodeInput {
+  recoveryCode: String!
+}
+
+"""Input for verifying and attempting access grant to an account"""
+input VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput {
+  authenticationTokenId: String!
+}
+
+"""Payload for a created pending post"""
+input CreateAccountWithAuthenticationTokenInput {
+  username: String!
+}
+
+"""Payload for starting an authentication"""
+type GrantAuthenticationTokenPayload {
+  """The authentication token after starting"""
+  authenticationToken: AuthenticationToken
+}
+
+"""Payload for creating an account"""
+type CreateAccountWithAuthenticationTokenPayload {
+  """The account that was created"""
+  account: Account
+}
+
+"""Payload for revoking the current viewer"""
+type RevokeAccountAccessPayload {
+  """The account that was revoked"""
+  revokedAccountId: ID!
+}
+
+"""Payload for revoking the authentication token"""
+type RevokeAuthenticationTokenPayload {
+  """The authentication token that was removed"""
+  revokedAuthenticationTokenId: ID!
+}
+
+"""Payload re-sending authentication email"""
+type ReissueAuthenticationTokenPayload {
+  """The authentication token"""
+  authenticationToken: AuthenticationToken
+}
+
+"""Payload for granting access to an account using the authentication token and TOTP code"""
+type GrantAccountAccessWithAuthenticationTokenAndTotpPayload {
+  """The account that granted access to"""
+  account: Account
+}
+
+"""Payload for granting access to an account using the authentication token and Recovery Code"""
+type GrantAccountAccessWithAuthenticationTokenAndRecoveryCodePayload {
+  """The account that granted access to"""
+  account: Account
+}
+
+"""Payload for verifying the authentication token"""
+type VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload {
+  """The account that granted access to"""
+  account: Account
+
+  """The authentication token"""
+  authenticationToken: AuthenticationToken
+}
+
+type Mutation {
+  """
+  Grant authentication token
+
+  Authentication token can be used to login into a specific account, provided the token's value is first redeemed
+  with the query
+
+  Note: the actual authentication token is opaque (set & read from cookies)
+  """
+  grantAuthenticationToken(input: GrantAuthenticationTokenInput!): GrantAuthenticationTokenPayload
+
+  """
+  Revoke authentication token
+
+  Creating accounts and completing authentication flows will not be possible once it's revoked
+
+  Note: the actual authentication token is opaque (set & read from cookies)
+  """
+  revokeAuthenticationToken: RevokeAuthenticationTokenPayload
+
+  """
+  Create an account using the current authentication token
+
+  Note: the actual authentication token is opaque (set & read from cookies)
+  """
+  createAccountWithAuthenticationToken(input: CreateAccountWithAuthenticationTokenInput!): CreateAccountWithAuthenticationTokenPayload
+
+  """
+  Logout the current account
+  """
+  revokeAccountAccess: RevokeAccountAccessPayload
+
+  """
+  Re-issue an authentication token based on the current one
+
+  Note: the actual authentication token is opaque (set & read from cookies)
+  """
+  reissueAuthenticationToken: ReissueAuthenticationTokenPayload
+
+  """
+  Authenticate with a TOTP code - should be used after token is verified
+
+  Note: the actual authentication token is opaque (set & read from cookies)
+  """
+  grantAccountAccessWithAuthenticationTokenAndTotp(input: GrantAccountAccessWithAuthenticationTokenAndTotpInput!): GrantAccountAccessWithAuthenticationTokenAndTotpPayload
+
+  """
+  Authenticate with a recovery code - should be used after a token is verified
+
+  Note: the actual authentication token is opaque (set & read from cookies)
+  """
+  grantAccountAccessWithAuthenticationTokenAndRecoveryCode(input: GrantAccountAccessWithAuthenticationTokenAndRecoveryCodeInput!): GrantAccountAccessWithAuthenticationTokenAndRecoveryCodePayload
+}
+
 type Query {
   """
-  Redeem authentication token - token is received from the email
+  Will verify the authentication token.
+
+  If token does not exist in the cookie, it will only verify
+
+  If the token exists in the cookie, it will also attempt to grant access to the account associated
+  to this token
+
+  If no account exists,
+
+  Note: the actual authentication token is opaque (set & read from cookies)
   """
-  redeemAuthenticationToken(token: String!): AuthenticationToken
+  verifyAuthenticationTokenAndAttemptAccountAccessGrant(input: VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput!): VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload
 
   """
   Get the status of the authentication token - whether or not it is redeemed, account status, etc..
+
+  Note: the actual authentication token is opaque (set & read from cookies)
   """
-  authenticationTokenStatus: AuthenticationToken
+  viewAuthenticationToken: AuthenticationToken
 }

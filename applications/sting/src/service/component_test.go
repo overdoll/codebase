@@ -22,6 +22,7 @@ import (
 	"overdoll/libraries/clients"
 	"overdoll/libraries/config"
 	search "overdoll/libraries/elasticsearch"
+	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/tests"
 )
@@ -35,8 +36,8 @@ const StingHttpClientAddr = "http://:6666/graphql"
 const StingGrpcAddr = "localhost:6667"
 const StingGrpcClientAddr = "localhost:6667"
 
-type CreatePost struct {
-	Post *types.PostResponse `graphql:"post(data: $data)"`
+type CreatePendingPost struct {
+	CreatePendingPost *types.CreatePendingPostPayload `graphql:"createPendingPost(input: $input)"`
 }
 
 type PendingPost struct {
@@ -82,30 +83,32 @@ func mCreatePost(t *testing.T, env *testsuite.TestWorkflowEnvironment, callback 
 	// we have to create a post as an authenticated user, otherwise it won't let us
 	client, _ := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 
-	var createPost CreatePost
+	var createPost CreatePendingPost
 
 	artistId := "1q7MIw0U6TEpELH0FqnxrcXt3E0"
 	artistUsername := "artist_verified"
 
+	id := relay.NewID(types.Artist{}, artistId)
+
 	err := client.Mutate(context.Background(), &createPost, map[string]interface{}{
-		"data": &types.PostInput{
+		"input": &types.CreatePendingPostInput{
 			Content:       []string{},
-			Categories:    []string{"1q7MJFk9Wof1qyQQORKBrJxGFhJ", "1q7MJFMVgDPo4mFjsfNag6rRwRy", "1q7MJSeEiai3yFN6Ps65eACFde9"},
-			Characters:    []string{"1q7MJnQXAtxer0fboBMHtlC0JMe"},
+			CategoryIds:   []string{"1q7MJFk9Wof1qyQQORKBrJxGFhJ", "1q7MJFMVgDPo4mFjsfNag6rRwRy", "1q7MJSeEiai3yFN6Ps65eACFde9"},
+			CharacterIds:  []string{"1q7MJnQXAtxer0fboBMHtlC0JMe"},
 			MediaRequests: []string{customMediaName},
 			CharacterRequests: []*types.CharacterRequest{{
 				Name:  customCharacterName,
 				Media: customMediaName,
 			}},
-			ArtistID:       &artistId,
-			ArtistUsername: &artistUsername,
+			ExistingArtist:       &id,
+			CustomArtistUsername: &artistUsername,
 		},
 	})
 
 	require.NoError(t, err)
-	require.Equal(t, false, createPost.Post.Review)
+	require.Equal(t, false, createPost.CreatePendingPost.Review)
 
-	postId := createPost.Post.ID
+	postId := createPost.CreatePendingPost.PendingPost.ID.GetID()
 
 	// execute workflow, since the graphql wont execute it and only put it into a queue
 	// we also get the ability to get workflow state, etc.. in this test
