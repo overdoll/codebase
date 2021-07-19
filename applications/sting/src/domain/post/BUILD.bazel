@@ -7,7 +7,6 @@ go_library(
         "category.go",
         "character.go",
         "media.go",
-        "pending_post.go",
         "post.go",
         "repository.go",
     ],
@@ -22,7 +21,7 @@ go_library(
 
 go_test(
     name = "post_test",
-    srcs = ["pending_post_test.go"],
+    srcs = ["post_test.go"],
     deps = [
         ":post",
         "@com_github_stretchr_testify//assert",

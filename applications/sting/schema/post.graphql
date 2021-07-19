@@ -2,7 +2,7 @@ type Post implements Node @key(fields: "id") {
   id: ID!
 
   """The state of the post"""
-  state: PendingPostStateEnum!
+  state: PostStateEnum!
 
   """Represents the account that this post belongs to"""
   artist: Actor!
@@ -75,7 +75,7 @@ input CreatePostInput {
 """Payload for a created pending post"""
 type CreatePostPayload {
   """The pending post after the creation"""
-  pendingPost: PendingPost
+  post: Post
 
   """If this pending post will be in review or not"""
   review: Boolean

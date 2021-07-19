@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS moderators
     primary key ( bucket, account_id ),
 );
 
-CREATE TABLE IF NOT EXISTS pending_posts_audit_log
+CREATE TABLE IF NOT EXISTS post_audit_logs
 (
     id                     text,
     moderator_account_id   text,
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS pending_posts_audit_log
     primary key ( id ),
 );
 
-CREATE TABLE IF NOT EXISTS pending_posts_audit_logs_by_post
+CREATE TABLE IF NOT EXISTS post_audit_logs_by_post
 (
     post_id                text,
     id                     text,
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS pending_posts_audit_logs_by_post
     primary key ( post_id ),
 );
 
-CREATE TABLE IF NOT EXISTS pending_posts_audit_logs_by_moderator
+CREATE TABLE IF NOT EXISTS post_audit_logs_by_moderator
 (
     id                           text,
     bucket                       int,
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS pending_posts_audit_logs_by_moderator
     primary key ( (moderator_account_id, bucket), created_ms, contributor_account_id, post_id, id ),
 ) WITH CLUSTERING ORDER BY (created_ms DESC, contributor_account_id DESC, post_id DESC, id DESC);
 
-CREATE INDEX IF NOT EXISTS pending_posts_audit_logs_by_moderator_status on pending_posts_audit_logs_by_moderator (status);
+CREATE INDEX IF NOT EXISTS post_audit_logs_by_moderator on post_audit_logs_by_moderator (status);
 
 CREATE TABLE IF NOT EXISTS account_infraction_history
 (
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS account_infraction_history
     primary key ( account_id, id),
 ) WITH CLUSTERING ORDER BY (id DESC);
 
-CREATE TABLE IF NOT EXISTS pending_posts_rejection_reasons
+CREATE TABLE IF NOT EXISTS post_rejection_reasons
 (
     bucket     int,
     id         text,

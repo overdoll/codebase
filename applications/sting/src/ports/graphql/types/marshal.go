@@ -7,14 +7,14 @@ import (
 	"overdoll/libraries/paging"
 )
 
-func MarshalPendingPostToGraphQLConnection(results []*post.Post, page *paging.Info) *PendingPostConnection {
+func MarshalPostToGraphQLConnection(results []*post.Post, page *paging.Info) *PostConnection {
 
-	var pendingPostEdges []*PendingPostEdge
+	var pendingPostEdges []*PostEdge
 
 	for _, pending := range results {
-		pendingPostEdges = append(pendingPostEdges, &PendingPostEdge{
+		pendingPostEdges = append(pendingPostEdges, &PostEdge{
 			Cursor: pending.Cursor(),
-			Node:   MarshalPendingPostToGraphQL(pending),
+			Node:   MarshalPostToGraphQL(pending),
 		})
 	}
 
@@ -28,7 +28,7 @@ func MarshalPendingPostToGraphQLConnection(results []*post.Post, page *paging.In
 		endCursor = &res
 	}
 
-	return &PendingPostConnection{
+	return &PostConnection{
 		Edges: pendingPostEdges,
 		PageInfo: &relay.PageInfo{
 			HasNextPage:     page.HasNextPage(),
@@ -39,7 +39,7 @@ func MarshalPendingPostToGraphQLConnection(results []*post.Post, page *paging.In
 	}
 }
 
-func MarshalPendingPostToGraphQL(result *post.Post) *PendingPost {
+func MarshalPostToGraphQL(result *post.Post) *Post {
 
 	// Unmarshal our json into the correct model
 	var mediaRequests []string
@@ -69,22 +69,22 @@ func MarshalPendingPostToGraphQL(result *post.Post) *PendingPost {
 		characters = append(characters, MarshalCharacterToGraphQL(char))
 	}
 
-	var state PendingPostStateEnum
+	var state PostStateEnum
 
 	if result.InReview() {
-		state = PendingPostStateEnumReview
+		state = PostStateEnumReview
 	}
 
 	if result.IsDiscarded() {
-		state = PendingPostStateEnumDiscarded
+		state = PostStateEnumDiscarded
 	}
 
 	if result.IsPublished() {
-		state = PendingPostStateEnumPublished
+		state = PostStateEnumPublished
 	}
 
 	if result.IsRejected() {
-		state = PendingPostStateEnumRejected
+		state = PostStateEnumRejected
 	}
 
 	var content []*Content
@@ -93,8 +93,8 @@ func MarshalPendingPostToGraphQL(result *post.Post) *PendingPost {
 		content = append(content, &Content{URL: graphql.NewURI(id)})
 	}
 
-	return &PendingPost{
-		ID:                relay.NewID(PendingPost{}, result.ID()),
+	return &Post{
+		ID:                relay.NewID(Post{}, result.ID()),
 		Moderator:         nil,
 		Contributor:       nil,
 		Artist:            nil,
@@ -143,9 +143,7 @@ func MarshalArtistToGraphQLConnection(results []*post.Artist, paging *paging.Inf
 
 func MarshalArtistToGraphQL(result *post.Artist) *Artist {
 	return &Artist{
-		ID:       relay.NewID(Artist{}, result.ID()),
-		Username: result.Username(),
-		Avatar:   result.Avatar(),
+		ID: relay.NewID(Artist{}, result.ID()),
 	}
 }
 

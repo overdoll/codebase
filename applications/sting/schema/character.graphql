@@ -75,7 +75,7 @@ extend type Query {
   ): CharacterConnection!
 }
 
-extend type PendingPost implements CharacterContainer {
+extend type Post implements CharacterContainer {
   """Characters that belong to this post"""
   characters: [Character!]!
 }

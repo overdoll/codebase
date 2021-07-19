@@ -1,14 +1,14 @@
-enum PendingPostAuditLogActionEnum {
+enum PostAuditLogActionEnum {
   Approved
   Denied
 }
 
 """
-Pending post audit log
+Post audit log
 
 Audit log is created when a moderator takes an action against a pending post
 """
-type PendingPostAuditLog implements Node @key(fields: "id") {
+type PostAuditLog implements Node @key(fields: "id") {
   """ID of the audit log"""
   id: ID!
 
@@ -19,7 +19,7 @@ type PendingPostAuditLog implements Node @key(fields: "id") {
   moderator: Actor!
 
   """The status or the action that was taken against the pending post"""
-  action: PendingPostAuditLogActionEnum!
+  action: PostAuditLogActionEnum!
 
   """The reason the action was taken"""
   reason: String!
@@ -38,31 +38,31 @@ type PendingPostAuditLog implements Node @key(fields: "id") {
 }
 
 """Edge of the audit log"""
-type PendingPostAuditLogEdge {
-  node: PendingPostAuditLog!
+type PostAuditLogEdge {
+  node: PostAuditLog!
   cursor: String!
 }
 
 """Connection of the audit log"""
-type PendingPostAuditLogConnection {
-  edges: [PendingPostAuditLogEdge!]!
+type PostAuditLogConnection {
+  edges: [PostAuditLogEdge!]!
   pageInfo: PageInfo!
 }
 
-extend type PendingPost @key(fields: "id") {
+extend type Post @key(fields: "id") {
   id: ID! @external
 
   """Audit logs belonging to this pending post"""
-  auditLogs: [PendingPostAuditLog!]
+  auditLogs: [PostAuditLog!]
 }
 
 extend type Account @key(fields: "id") {
   """
-  Pending Post Audit Logs linked to this account
+  Post Audit Logs linked to this account
 
   Viewable by either the currently logged-in account or staff+
   """
-  pendingPostAuditLogs(
+  moderatorPostAuditLogs(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
 
@@ -76,5 +76,5 @@ extend type Account @key(fields: "id") {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-  ): PendingPostAuditLogConnection! @goField(forceResolver: true) @auth
+  ): PostAuditLogConnection! @goField(forceResolver: true) @auth
 }

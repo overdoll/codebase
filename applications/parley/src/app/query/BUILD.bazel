@@ -5,6 +5,7 @@ go_library(
     srcs = [
         "account_infraction_history.go",
         "moderator_in_queue.go",
+        "pending_post_audit_logs_by_post.go",
         "pending_posts_audit_log_by_moderator.go",
         "pending_posts_rejection_reasons.go",
         "services.go",

@@ -36,12 +36,12 @@ func (h GetPostsForModeratorHandler) Handle(ctx context.Context, cursor *paging.
 		return nil, nil, err
 	}
 
-	posts, paging, err := h.pr.SearchPosts(ctx, cursor, filters)
+	posts, page, err := h.pr.SearchPosts(ctx, cursor, filters)
 
 	if err != nil {
 		zap.S().Errorf("failed to search: %s", err)
 		return nil, nil, ErrSearchFailed
 	}
 
-	return posts, paging, nil
+	return posts, page, nil
 }

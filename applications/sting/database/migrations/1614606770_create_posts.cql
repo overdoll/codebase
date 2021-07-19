@@ -25,9 +25,10 @@ CREATE TABLE IF NOT EXISTS medias
 
 CREATE TABLE IF NOT EXISTS artists
 (
+    bucket             int,
     account_id         text,
     do_not_post_reason text,
-    primary key ( account_id )
+    primary key ( bucket, account_id ),
 );
 
 CREATE TABLE IF NOT EXISTS posts

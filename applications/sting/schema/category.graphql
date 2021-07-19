@@ -41,8 +41,3 @@ extend type Post implements CategoryContainer {
   """Categories that belong to this post"""
   categories: [Category!]!
 }
-
-extend type PendingPost implements CategoryContainer {
-  """Categories that belong to this post"""
-  categories: [Category!]!
-}

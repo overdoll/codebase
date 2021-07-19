@@ -24,15 +24,9 @@ type CharacterContainer interface {
 	IsCharacterContainer()
 }
 
-type PostObject interface {
-	IsPostObject()
-}
-
 type Account struct {
-	// Pending posts queue specific to this account (when moderator)
-	PendingPostsForModerator *PendingPostConnection `json:"pendingPostsForModerator"`
-	// Pending posts for this account
-	PendingPosts *PendingPostConnection `json:"pendingPosts"`
+	// Posts queue specific to this account (when moderator)
+	ModeratorPostsQueue *PostConnection `json:"moderatorPostsQueue"`
 	// Posts specific to this account
 	Posts *PostConnection `json:"posts"`
 	// Contributions specific to this account
@@ -112,7 +106,7 @@ type Content struct {
 }
 
 // Create pending post.
-type CreatePendingPostInput struct {
+type CreatePostInput struct {
 	// Image IDs for the content
 	Content []string `json:"content"`
 	// Category IDs for this post
@@ -131,9 +125,9 @@ type CreatePendingPostInput struct {
 }
 
 // Payload for a created pending post
-type CreatePendingPostPayload struct {
+type CreatePostPayload struct {
 	// The pending post after the creation
-	PendingPost *PendingPost `json:"pendingPost"`
+	Post *Post `json:"post"`
 	// If this pending post will be in review or not
 	Review *bool `json:"review"`
 }
@@ -156,10 +150,10 @@ type MediaEdge struct {
 	Node   *Media `json:"node"`
 }
 
-type PendingPost struct {
+type Post struct {
 	ID relay.ID `json:"id"`
 	// The state of the post
-	State PendingPostStateEnum `json:"state"`
+	State PostStateEnum `json:"state"`
 	// Represents the account that this post belongs to
 	Artist Actor `json:"artist"`
 	// The moderator to whom this pending post was assigned
@@ -182,43 +176,17 @@ type PendingPost struct {
 	Characters []*Character `json:"characters"`
 }
 
-func (PendingPost) IsPostObject()         {}
-func (PendingPost) IsNode()               {}
-func (PendingPost) IsCategoryContainer()  {}
-func (PendingPost) IsCharacterContainer() {}
+func (Post) IsNode()               {}
+func (Post) IsCategoryContainer()  {}
+func (Post) IsCharacterContainer() {}
+func (Post) IsEntity()             {}
 
-type PendingPostAuditLog struct {
-	ID          relay.ID     `json:"id"`
-	PendingPost *PendingPost `json:"pendingPost"`
+type PostAuditLog struct {
+	ID   relay.ID `json:"id"`
+	Post *Post    `json:"post"`
 }
 
-func (PendingPostAuditLog) IsEntity() {}
-
-type PendingPostConnection struct {
-	Edges    []*PendingPostEdge `json:"edges"`
-	PageInfo *relay.PageInfo    `json:"pageInfo"`
-}
-
-type PendingPostEdge struct {
-	Cursor string       `json:"cursor"`
-	Node   *PendingPost `json:"node"`
-}
-
-type Post struct {
-	ID relay.ID `json:"id"`
-	// Represents the account that this post belongs to
-	Artist Actor `json:"artist"`
-	// Content belonging to this post
-	Content []*Content `json:"content"`
-	// The date and time of when this post was created
-	PostedAt time.Time `json:"postedAt"`
-	// Categories that belong to this post
-	Categories []*Category `json:"categories"`
-}
-
-func (Post) IsPostObject()        {}
-func (Post) IsNode()              {}
-func (Post) IsCategoryContainer() {}
+func (PostAuditLog) IsEntity() {}
 
 type PostConnection struct {
 	Edges    []*PostEdge     `json:"edges"`
@@ -230,47 +198,47 @@ type PostEdge struct {
 	Node   *Post  `json:"node"`
 }
 
-type PendingPostStateEnum string
+type PostStateEnum string
 
 const (
-	PendingPostStateEnumReview    PendingPostStateEnum = "Review"
-	PendingPostStateEnumPublished PendingPostStateEnum = "Published"
-	PendingPostStateEnumDiscarded PendingPostStateEnum = "Discarded"
-	PendingPostStateEnumRejected  PendingPostStateEnum = "Rejected"
+	PostStateEnumReview    PostStateEnum = "Review"
+	PostStateEnumPublished PostStateEnum = "Published"
+	PostStateEnumDiscarded PostStateEnum = "Discarded"
+	PostStateEnumRejected  PostStateEnum = "Rejected"
 )
 
-var AllPendingPostStateEnum = []PendingPostStateEnum{
-	PendingPostStateEnumReview,
-	PendingPostStateEnumPublished,
-	PendingPostStateEnumDiscarded,
-	PendingPostStateEnumRejected,
+var AllPostStateEnum = []PostStateEnum{
+	PostStateEnumReview,
+	PostStateEnumPublished,
+	PostStateEnumDiscarded,
+	PostStateEnumRejected,
 }
 
-func (e PendingPostStateEnum) IsValid() bool {
+func (e PostStateEnum) IsValid() bool {
 	switch e {
-	case PendingPostStateEnumReview, PendingPostStateEnumPublished, PendingPostStateEnumDiscarded, PendingPostStateEnumRejected:
+	case PostStateEnumReview, PostStateEnumPublished, PostStateEnumDiscarded, PostStateEnumRejected:
 		return true
 	}
 	return false
 }
 
-func (e PendingPostStateEnum) String() string {
+func (e PostStateEnum) String() string {
 	return string(e)
 }
 
-func (e *PendingPostStateEnum) UnmarshalGQL(v interface{}) error {
+func (e *PostStateEnum) UnmarshalGQL(v interface{}) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
 	}
 
-	*e = PendingPostStateEnum(str)
+	*e = PostStateEnum(str)
 	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid PendingPostStateEnum", str)
+		return fmt.Errorf("%s is not a valid PostStateEnum", str)
 	}
 	return nil
 }
 
-func (e PendingPostStateEnum) MarshalGQL(w io.Writer) {
+func (e PostStateEnum) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }

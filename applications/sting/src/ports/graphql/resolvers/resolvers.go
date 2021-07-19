@@ -13,7 +13,7 @@ type AccountResolver struct {
 	App *app.Application
 }
 
-func (a AccountResolver) PendingPostsForModerator(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PendingPostConnection, error) {
+func (r AccountResolver) ModeratorPostsQueue(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)
 
@@ -21,23 +21,19 @@ func (a AccountResolver) PendingPostsForModerator(ctx context.Context, obj *type
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	results, page, err := a.App.Queries.GetPostsForModerator.Handle(ctx, cursor, obj.ID.GetID())
+	results, page, err := r.App.Queries.GetPostsForModerator.Handle(ctx, cursor, obj.ID.GetID())
 
 	if err != nil {
 		return nil, err
 	}
 
-	return types.MarshalPendingPostToGraphQLConnection(results, page), nil
+	return types.MarshalPostToGraphQLConnection(results, page), nil
 }
 
-func (a AccountResolver) PendingPosts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PendingPostConnection, error) {
+func (r AccountResolver) Posts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostConnection, error) {
 	return nil, nil
 }
 
-func (a AccountResolver) Posts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostConnection, error) {
-	return nil, nil
-}
-
-func (a AccountResolver) Contributions(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostConnection, error) {
+func (r AccountResolver) Contributions(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostConnection, error) {
 	return nil, nil
 }

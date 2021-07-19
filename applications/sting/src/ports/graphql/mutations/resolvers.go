@@ -16,7 +16,7 @@ type MutationResolver struct {
 	Client client.Client
 }
 
-func (r *MutationResolver) CreatePendingPost(ctx context.Context, input types.CreatePendingPostInput) (*types.CreatePendingPostPayload, error) {
+func (r *MutationResolver) CreatePost(ctx context.Context, input types.CreatePostInput) (*types.CreatePostPayload, error) {
 
 	requests := make(map[string]string)
 
@@ -66,8 +66,8 @@ func (r *MutationResolver) CreatePendingPost(ctx context.Context, input types.Cr
 
 	isReview := false
 
-	return &types.CreatePendingPostPayload{
-		Review:      &isReview,
-		PendingPost: types.MarshalPendingPostToGraphQL(post),
+	return &types.CreatePostPayload{
+		Review: &isReview,
+		Post:   types.MarshalPostToGraphQL(post),
 	}, err
 }
