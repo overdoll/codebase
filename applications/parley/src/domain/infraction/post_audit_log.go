@@ -18,14 +18,14 @@ var (
 	ErrInvalidModerator = errors.New("moderator does not match")
 )
 
-type PendingPostAuditLogFilters struct {
+type PostAuditLogFilters struct {
 	moderatorId   string
 	contributorId string
 	postId        string
 	dateRange     []time.Time
 }
 
-func NewPendingPostAuditLogFilters(moderatorId, contributorId, postId string, dateRange []int) (*PendingPostAuditLogFilters, error) {
+func NewPostAuditLogFilters(moderatorId, contributorId, postId string, dateRange []int) (*PostAuditLogFilters, error) {
 
 	// DateRange will be UTC unix timestamps, so we check for that here
 	// if no date range is provided, we take the current time
@@ -44,7 +44,7 @@ func NewPendingPostAuditLogFilters(moderatorId, contributorId, postId string, da
 		}
 	}
 
-	return &PendingPostAuditLogFilters{
+	return &PostAuditLogFilters{
 		moderatorId:   moderatorId,
 		contributorId: contributorId,
 		postId:        postId,
@@ -52,25 +52,25 @@ func NewPendingPostAuditLogFilters(moderatorId, contributorId, postId string, da
 	}, nil
 }
 
-func (e *PendingPostAuditLogFilters) ModeratorId() string {
+func (e *PostAuditLogFilters) ModeratorId() string {
 	return e.moderatorId
 }
 
-func (e *PendingPostAuditLogFilters) PostId() string {
+func (e *PostAuditLogFilters) PostId() string {
 	return e.postId
 }
 
-func (e *PendingPostAuditLogFilters) ContributorId() string {
+func (e *PostAuditLogFilters) ContributorId() string {
 	return e.contributorId
 }
 
-func (e *PendingPostAuditLogFilters) DateRange() []time.Time {
+func (e *PostAuditLogFilters) DateRange() []time.Time {
 	return e.dateRange
 }
 
 // A class simply used to store the details of a PendingPost that we can use
 // later on
-type PendingPostAuditLog struct {
+type PostAuditLog struct {
 	*paging.Node
 
 	id            string
@@ -85,11 +85,11 @@ type PendingPostAuditLog struct {
 
 	status string
 
-	rejectionReason *PendingPostRejectionReason
+	rejectionReason *PostRejectionReason
 	userInfraction  *AccountInfractionHistory
 }
 
-func NewPendingPostAuditLog(user *account.Account, userInfractionHistory []*AccountInfractionHistory, postId, moderatorId string, contributor *account.Account, rejectionReason *PendingPostRejectionReason, notes string) (*PendingPostAuditLog, error) {
+func NewPendingPostAuditLog(user *account.Account, userInfractionHistory []*AccountInfractionHistory, postId, moderatorId string, contributor *account.Account, rejectionReason *PostRejectionReason, notes string) (*PostAuditLog, error) {
 	// Do some permission checks here to make sure the proper user is doing everything
 
 	if !user.IsStaff() {
@@ -111,7 +111,7 @@ func NewPendingPostAuditLog(user *account.Account, userInfractionHistory []*Acco
 		}
 	}
 
-	return &PendingPostAuditLog{
+	return &PostAuditLog{
 		id:              ksuid.New().String(),
 		pendingPostId:   postId,
 		moderator:       user,
@@ -125,14 +125,14 @@ func NewPendingPostAuditLog(user *account.Account, userInfractionHistory []*Acco
 	}, nil
 }
 
-func UnmarshalPendingPostAuditLogFromDatabase(id, postId, moderatorId, moderatorUsername, contributorId, contributorUsername, status, userInfractionId, reason, notes string, reverted bool, userInfraction *AccountInfractionHistory, createdMs int) *PendingPostAuditLog {
-	return &PendingPostAuditLog{
+func UnmarshalPostAuditLogFromDatabase(id, postId, moderatorId, moderatorUsername, contributorId, contributorUsername, status, userInfractionId, reason, notes string, reverted bool, userInfraction *AccountInfractionHistory, createdMs int) *PostAuditLog {
+	return &PostAuditLog{
 		id:              id,
 		pendingPostId:   postId,
 		moderator:       account.NewUserOnlyIdAndUsername(moderatorId, moderatorUsername),
 		contributor:     account.NewUserOnlyIdAndUsername(contributorId, contributorUsername),
 		status:          status,
-		rejectionReason: UnmarshalPendingPostRejectionReasonFromDatabase(ksuid.New().String(), reason, userInfractionId != ""),
+		rejectionReason: UnmarshalPostRejectionReasonFromDatabase(ksuid.New().String(), reason, userInfractionId != ""),
 		notes:           notes,
 		reverted:        reverted,
 		userInfraction:  userInfraction,
@@ -140,43 +140,43 @@ func UnmarshalPendingPostAuditLogFromDatabase(id, postId, moderatorId, moderator
 	}
 }
 
-func (m *PendingPostAuditLog) ID() string {
+func (m *PostAuditLog) ID() string {
 	return m.id
 }
 
-func (m *PendingPostAuditLog) PendingPostID() string {
+func (m *PostAuditLog) PendingPostID() string {
 	return m.pendingPostId
 }
 
-func (m *PendingPostAuditLog) Status() string {
+func (m *PostAuditLog) Status() string {
 	return m.status
 }
 
-func (m *PendingPostAuditLog) Notes() string {
+func (m *PostAuditLog) Notes() string {
 	return m.notes
 }
 
-func (m *PendingPostAuditLog) Moderator() *account.Account {
+func (m *PostAuditLog) Moderator() *account.Account {
 	return m.moderator
 }
 
-func (m *PendingPostAuditLog) Contributor() *account.Account {
+func (m *PostAuditLog) Contributor() *account.Account {
 	return m.contributor
 }
 
-func (m *PendingPostAuditLog) IsApproved() bool {
+func (m *PostAuditLog) IsApproved() bool {
 	return m.status == StatusApproved
 }
 
-func (m *PendingPostAuditLog) IsDenied() bool {
+func (m *PostAuditLog) IsDenied() bool {
 	return m.status == StatusDenied
 }
 
-func (m *PendingPostAuditLog) Reverted() bool {
+func (m *PostAuditLog) Reverted() bool {
 	return m.reverted
 }
 
-func (m *PendingPostAuditLog) reversible() bool {
+func (m *PostAuditLog) reversible() bool {
 	parse, err := ksuid.Parse(m.id)
 
 	if err != nil {
@@ -186,7 +186,7 @@ func (m *PendingPostAuditLog) reversible() bool {
 	return !parse.Time().After(time.Now().Add(time.Minute * 10))
 }
 
-func (m *PendingPostAuditLog) ReversibleUntil() time.Time {
+func (m *PostAuditLog) ReversibleUntil() time.Time {
 	parse, err := ksuid.Parse(m.id)
 
 	if err != nil {
@@ -196,12 +196,12 @@ func (m *PendingPostAuditLog) ReversibleUntil() time.Time {
 	return parse.Time().Add(time.Minute * 10)
 }
 
-func (m *PendingPostAuditLog) CreatedMs() int {
+func (m *PostAuditLog) CreatedMs() int {
 	return m.createdMs
 }
 
 // revert log
-func (m *PendingPostAuditLog) Revert() error {
+func (m *PostAuditLog) Revert() error {
 	// cant revert after 15 minutes
 	if !m.reversible() {
 		return errors.New("revert log period has passed")
@@ -210,23 +210,23 @@ func (m *PendingPostAuditLog) Revert() error {
 	// remove infraction (else we have bad ids)
 	m.userInfraction = nil
 	m.reverted = true
-	m.rejectionReason = UnmarshalPendingPostRejectionReasonFromDatabase(m.rejectionReason.ID(), m.rejectionReason.Reason(), false)
+	m.rejectionReason = UnmarshalPostRejectionReasonFromDatabase(m.rejectionReason.ID(), m.rejectionReason.Reason(), false)
 
 	return nil
 }
 
-func (m *PendingPostAuditLog) UpdateModerator(mod *account.Account) {
+func (m *PostAuditLog) UpdateModerator(mod *account.Account) {
 	m.moderator = mod
 }
 
-func (m *PendingPostAuditLog) RejectionReason() *PendingPostRejectionReason {
+func (m *PostAuditLog) RejectionReason() *PostRejectionReason {
 	return m.rejectionReason
 }
 
-func (m *PendingPostAuditLog) UserInfraction() *AccountInfractionHistory {
+func (m *PostAuditLog) UserInfraction() *AccountInfractionHistory {
 	return m.userInfraction
 }
 
-func (m *PendingPostAuditLog) IsDeniedWithInfraction() bool {
+func (m *PostAuditLog) IsDeniedWithInfraction() bool {
 	return m.status == StatusDenied && m.rejectionReason.Infraction()
 }

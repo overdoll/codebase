@@ -21,14 +21,14 @@ var mediaTable = table.New(table.Metadata{
 	SortKey: []string{},
 })
 
-type Media struct {
+type media struct {
 	Id        string `db:"id"`
 	Title     string `db:"title"`
 	Thumbnail string `db:"thumbnail"`
 }
 
 func (r PostsCassandraRepository) GetMedias(ctx context.Context) ([]*post.Media, error) {
-	var dbMed []Media
+	var dbMed []media
 
 	qc := r.session.Query(mediaTable.Select()).Consistency(gocql.LocalQuorum)
 
@@ -67,7 +67,7 @@ func (r PostsCassandraRepository) GetMediasById(ctx context.Context, medi []stri
 		Consistency(gocql.One).
 		BindStruct(medi)
 
-	var mediaModels []*Media
+	var mediaModels []*media
 
 	if err := queryMedia.Select(&mediaModels); err != nil {
 		return nil, fmt.Errorf("select() failed: '%s", err)

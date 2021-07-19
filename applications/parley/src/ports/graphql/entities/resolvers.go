@@ -13,28 +13,30 @@ type EntityResolver struct {
 }
 
 func (r EntityResolver) FindAccountByID(ctx context.Context, id relay.ID) (*types.Account, error) {
-	return &types.Account{ID: id}, nil
+	panic("implement me")
 }
 
-// only moderators can grab audit logs from a pending post
-func (r EntityResolver) FindPendingPostByID(ctx context.Context, id relay.ID) (*types.PendingPost, error) {
+func (r EntityResolver) FindAccountInfractionHistoryByID(ctx context.Context, id relay.ID) (*types.AccountInfractionHistory, error) {
+	panic("implement me")
+}
+
+func (r EntityResolver) FindPostAuditLogByID(ctx context.Context, id relay.ID) (*types.PostAuditLog, error) {
+	panic("implement me")
+}
+
+func (r EntityResolver) FindPostRejectionReasonByID(ctx context.Context, id relay.ID) (*types.PostRejectionReason, error) {
+	panic("implement me")
+}
+
+func (r EntityResolver) FindPostByID(ctx context.Context, id relay.ID) (*types.Post, error) {
 	auditLog, err := r.App.Queries.GetPendingPostAuditLogById.Handle(ctx, id.GetID())
 
 	if err != nil {
 		return nil, err
 	}
 
-	return &types.PendingPost{AuditLogs: }
-}
-
-func (r EntityResolver) FindAccountInfractionHistoryByID(ctx context.Context, id relay.ID) (*types.AccountInfractionHistory, error) {
-	return nil, nil
-}
-
-func (r EntityResolver) FindPendingPostAuditLogByID(ctx context.Context, id relay.ID) (*types.PendingPostAuditLog, error) {
-	return nil, nil
-}
-
-func (r EntityResolver) FindPendingPostRejectionReasonByID(ctx context.Context, id relay.ID) (*types.PendingPostRejectionReason, error) {
-	return nil, nil
+	return &types.Post{
+		ID:        id,
+		AuditLogs: nil,
+	}, nil
 }

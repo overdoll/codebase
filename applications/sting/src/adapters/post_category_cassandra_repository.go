@@ -22,7 +22,7 @@ var categoryTable = table.New(table.Metadata{
 	SortKey: []string{},
 })
 
-type Category struct {
+type category struct {
 	Id        string `db:"id"`
 	Title     string `db:"title"`
 	Thumbnail string `db:"thumbnail"`
@@ -48,7 +48,7 @@ func (r PostsCassandraRepository) GetCategoriesById(ctx context.Context, cats []
 		Query(r.session).
 		Consistency(gocql.One)
 
-	var categoriesModels []Category
+	var categoriesModels []category
 
 	if err := queryCategories.Select(&categoriesModels); err != nil {
 		return nil, fmt.Errorf("select() failed: '%s", err)
@@ -63,7 +63,7 @@ func (r PostsCassandraRepository) GetCategoriesById(ctx context.Context, cats []
 
 func (r PostsCassandraRepository) GetCategories(ctx context.Context) ([]*post.Category, error) {
 
-	var dbCategory []Category
+	var dbCategory []category
 
 	qc := r.session.Query(categoryTable.Select()).Consistency(gocql.One)
 

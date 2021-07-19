@@ -7,14 +7,14 @@ import (
 )
 
 type Repository interface {
-	GetRejectionReasons(context.Context, *paging.Cursor) ([]*PendingPostRejectionReason, *paging.Info, error)
-	GetRejectionReason(context.Context, string) (*PendingPostRejectionReason, error)
+	GetPostRejectionReasons(context.Context, *paging.Cursor) ([]*PostRejectionReason, *paging.Info, error)
+	GetPostRejectionReason(context.Context, string) (*PostRejectionReason, error)
 
-	GetPendingPostAuditLog(context.Context, string) (*PendingPostAuditLog, error)
-	GetPendingPostAuditLogsByPost(context.Context, *paging.Cursor, *PendingPostAuditLogFilters) ([]*PendingPostAuditLog, *paging.Info, error)
-	GetPendingPostAuditLogByModerator(context.Context, *paging.Cursor, *PendingPostAuditLogFilters) ([]*PendingPostAuditLog, *paging.Info, error)
-	CreatePendingPostAuditLog(context.Context, *PendingPostAuditLog) error
-	UpdatePendingPostAuditLog(context.Context, string, func(*PendingPostAuditLog) error) (*PendingPostAuditLog, error)
+	GetPostAuditLog(context.Context, string) (*PostAuditLog, error)
+	GetPostAuditLogsByPost(context.Context, *paging.Cursor, *PostAuditLogFilters) ([]*PostAuditLog, *paging.Info, error)
+	GetPostAuditLogByModerator(context.Context, *paging.Cursor, *PostAuditLogFilters) ([]*PostAuditLog, *paging.Info, error)
+	CreatePostAuditLog(context.Context, *PostAuditLog) error
+	UpdatePostAuditLog(context.Context, string, func(*PostAuditLog) error) (*PostAuditLog, error)
 
 	CreateUserInfractionHistory(context.Context, *AccountInfractionHistory) error
 	GetAccountInfractionHistory(context.Context, *paging.Cursor, string) ([]*AccountInfractionHistory, *paging.Info, error)

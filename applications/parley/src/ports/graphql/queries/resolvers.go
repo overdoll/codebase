@@ -14,7 +14,7 @@ type QueryResolver struct {
 	App *app.Application
 }
 
-func (r QueryResolver) PendingPostRejectionReasons(ctx context.Context, after *string, before *string, first *int, last *int) (*types.PendingPostRejectionReasonConnection, error) {
+func (r QueryResolver) PostRejectionReasons(ctx context.Context, after *string, before *string, first *int, last *int) (*types.PostRejectionReasonConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)
 
@@ -28,5 +28,5 @@ func (r QueryResolver) PendingPostRejectionReasons(ctx context.Context, after *s
 		return nil, err
 	}
 
-	return types.MarshalPendingPostRejectionReasonToGraphQLConnection(results, page), nil
+	return types.MarshalPostRejectionReasonToGraphQLConnection(results, page), nil
 }

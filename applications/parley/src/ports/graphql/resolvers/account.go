@@ -14,7 +14,7 @@ type AccountResolver struct {
 	App *app.Application
 }
 
-func (r AccountResolver) PendingPostAuditLogs(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PendingPostAuditLogConnection, error) {
+func (r AccountResolver) ModeratorPostAuditLogs(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostAuditLogConnection, error) {
 	accountId := obj.ID.GetID()
 
 	if passport.FromContext(ctx).AccountID() != accountId {

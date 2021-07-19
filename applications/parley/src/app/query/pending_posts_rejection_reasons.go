@@ -22,7 +22,7 @@ var (
 	ErrFailedGetRejectionReasons = errors.New("get rejection reasons failed")
 )
 
-func (h PendingPostsRejectionReasonsHandler) Handle(ctx context.Context, cursor *paging.Cursor, accountId string) ([]*infraction.PendingPostRejectionReason, *paging.Info, error) {
+func (h PendingPostsRejectionReasonsHandler) Handle(ctx context.Context, cursor *paging.Cursor, accountId string) ([]*infraction.PostRejectionReason, *paging.Info, error) {
 	// Get account to perform permission checks
 	acc, err := h.eva.GetAccount(ctx, accountId)
 
@@ -35,7 +35,7 @@ func (h PendingPostsRejectionReasonsHandler) Handle(ctx context.Context, cursor 
 		return nil, nil, ErrFailedGetRejectionReasons
 	}
 
-	reasons, page, err := h.ir.GetRejectionReasons(ctx, cursor)
+	reasons, page, err := h.ir.GetPostRejectionReasons(ctx, cursor)
 
 	if err != nil {
 		zap.S().Errorf("failed to get rejection reasons: %s", err)

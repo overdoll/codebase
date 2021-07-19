@@ -22,7 +22,7 @@ func NewModeratePendingPostHandler(ir infraction.Repository, eva EvaService, sti
 	return ModeratePendingPostHandler{sting: sting, eva: eva, ir: ir}
 }
 
-func (h ModeratePendingPostHandler) Handle(ctx context.Context, moderatorId, pendingPostId, rejectionReasonId, notes string) (*infraction.PendingPostAuditLog, error) {
+func (h ModeratePendingPostHandler) Handle(ctx context.Context, moderatorId, pendingPostId, rejectionReasonId, notes string) (*infraction.PostAuditLog, error) {
 
 	// Get user, to perform permission checks
 	usr, err := h.eva.GetAccount(ctx, moderatorId)
@@ -51,12 +51,12 @@ func (h ModeratePendingPostHandler) Handle(ctx context.Context, moderatorId, pen
 		return nil, ErrFailedModeratePendingPost
 	}
 
-	var rejectionReason *infraction.PendingPostRejectionReason
+	var rejectionReason *infraction.PostRejectionReason
 	var accountInfractionHistory []*infraction.AccountInfractionHistory
 
 	// if not approved, get rejection reason
 	if rejectionReasonId != "" {
-		rejectionReason, err = h.ir.GetRejectionReason(ctx, rejectionReasonId)
+		rejectionReason, err = h.ir.GetPostRejectionReason(ctx, rejectionReasonId)
 
 		if err != nil {
 			zap.S().Errorf("failed to get rejection reason: %s", err)
@@ -114,7 +114,7 @@ func (h ModeratePendingPostHandler) Handle(ctx context.Context, moderatorId, pen
 	}
 
 	// create audit log record
-	if err := h.ir.CreatePendingPostAuditLog(ctx, infractionAuditLog); err != nil {
+	if err := h.ir.CreatePostAuditLog(ctx, infractionAuditLog); err != nil {
 		zap.S().Errorf("failed to create audit log: %s", err)
 		return nil, ErrFailedModeratePendingPost
 	}

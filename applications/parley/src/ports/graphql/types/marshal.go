@@ -6,7 +6,7 @@ import (
 	"overdoll/libraries/paging"
 )
 
-func MarshalPendingPostAuditLogToGraphQL(result *infraction.PendingPostAuditLog) *PendingPostAuditLog {
+func MarshalPostAuditLogToGraphQL(result *infraction.PostAuditLog) *PostAuditLog {
 	var infractionId *relay.ID
 
 	if result.IsDeniedWithInfraction() {
@@ -20,18 +20,18 @@ func MarshalPendingPostAuditLogToGraphQL(result *infraction.PendingPostAuditLog)
 		reason = result.RejectionReason().Reason()
 	}
 
-	var action PendingPostAuditLogActionEnum
+	var action PostAuditLogActionEnum
 
 	if result.IsDenied() {
-		action = PendingPostAuditLogActionEnumDenied
+		action = PostAuditLogActionEnumDenied
 	}
 
 	if result.IsApproved() {
-		action = PendingPostAuditLogActionEnumApproved
+		action = PostAuditLogActionEnumApproved
 	}
 
-	return &PendingPostAuditLog{
-		ID:              relay.NewID(PendingPostAuditLog{}, result.PendingPostID(), result.ID()),
+	return &PostAuditLog{
+		ID:              relay.NewID(PostAuditLog{}, result.PendingPostID(), result.ID()),
 		Contributor:     nil,
 		Moderator:       nil,
 		InfractionID:    infractionId,
@@ -43,13 +43,13 @@ func MarshalPendingPostAuditLogToGraphQL(result *infraction.PendingPostAuditLog)
 	}
 }
 
-func MarshalPendingPostAuditLogToGraphQLConnection(results []*infraction.PendingPostAuditLog, page *paging.Info) *PendingPostAuditLogConnection {
+func MarshalPendingPostAuditLogToGraphQLConnection(results []*infraction.PostAuditLog, page *paging.Info) *PostAuditLogConnection {
 
-	var auditLogs []*PendingPostAuditLogEdge
+	var auditLogs []*PostAuditLogEdge
 
 	for _, log := range results {
-		auditLogs = append(auditLogs, &PendingPostAuditLogEdge{
-			Node:   MarshalPendingPostAuditLogToGraphQL(log),
+		auditLogs = append(auditLogs, &PostAuditLogEdge{
+			Node:   MarshalPostAuditLogToGraphQL(log),
 			Cursor: log.Cursor(),
 		})
 	}
@@ -64,7 +64,7 @@ func MarshalPendingPostAuditLogToGraphQLConnection(results []*infraction.Pending
 		endCursor = &res
 	}
 
-	return &PendingPostAuditLogConnection{
+	return &PostAuditLogConnection{
 		PageInfo: &relay.PageInfo{
 			HasNextPage:     page.HasNextPage(),
 			HasPreviousPage: page.HasPrevPage(),
@@ -110,14 +110,14 @@ func MarshalAccountInfractionHistoryToGraphQLConnection(results []*infraction.Ac
 	}
 }
 
-func MarshalPendingPostRejectionReasonToGraphQLConnection(results []*infraction.PendingPostRejectionReason, page *paging.Info) *PendingPostRejectionReasonConnection {
+func MarshalPostRejectionReasonToGraphQLConnection(results []*infraction.PostRejectionReason, page *paging.Info) *PostRejectionReasonConnection {
 
-	var rejectionReasons []*PendingPostRejectionReasonEdge
+	var rejectionReasons []*PostRejectionReasonEdge
 
 	for _, reason := range results {
-		rejectionReasons = append(rejectionReasons, &PendingPostRejectionReasonEdge{
-			Node: &PendingPostRejectionReason{
-				ID:         relay.NewID(PendingPostRejectionReason{}, reason.ID()),
+		rejectionReasons = append(rejectionReasons, &PostRejectionReasonEdge{
+			Node: &PostRejectionReason{
+				ID:         relay.NewID(PostRejectionReason{}, reason.ID()),
 				Reason:     reason.Reason(),
 				Infraction: reason.Infraction(),
 			},
@@ -135,7 +135,7 @@ func MarshalPendingPostRejectionReasonToGraphQLConnection(results []*infraction.
 		endCursor = &res
 	}
 
-	return &PendingPostRejectionReasonConnection{
+	return &PostRejectionReasonConnection{
 		PageInfo: &relay.PageInfo{
 			HasNextPage:     page.HasNextPage(),
 			HasPreviousPage: page.HasPrevPage(),

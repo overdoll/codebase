@@ -33,7 +33,7 @@ var postTable = table.New(table.Metadata{
 	SortKey: []string{},
 })
 
-type Post struct {
+type posts struct {
 	Id                 string            `db:"id"`
 	State              string            `db:"state"`
 	ModeratorId        string            `db:"moderator_account_id"`
@@ -58,7 +58,7 @@ func NewPostsCassandraRepository(session gocqlx.Session) PostsCassandraRepositor
 	return PostsCassandraRepository{session: session}
 }
 
-func marshalPostToDatabase(pending *post.Post) *Post {
+func marshalPostToDatabase(pending *post.Post) *posts {
 
 	characterRequests := make(map[string]string)
 
@@ -78,7 +78,7 @@ func marshalPostToDatabase(pending *post.Post) *Post {
 		mediaRequests = append(mediaRequests, med.Title)
 	}
 
-	return &Post{
+	return &posts{
 		Id:                 pending.ID(),
 		ModeratorId:        pending.ModeratorId(),
 		State:              string(pending.State()),
@@ -96,7 +96,7 @@ func marshalPostToDatabase(pending *post.Post) *Post {
 	}
 }
 
-func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending Post) (*post.Post, error) {
+func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending posts) (*post.Post, error) {
 
 	characters, err := r.GetCharactersById(ctx, postPending.Characters)
 
@@ -159,7 +159,7 @@ func (r PostsCassandraRepository) DeletePost(ctx context.Context, id string) err
 	deletePost := r.session.
 		Query(postTable.Delete()).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(&Post{Id: id})
+		BindStruct(&posts{Id: id})
 
 	if err := deletePost.ExecRelease(); err != nil {
 		return fmt.Errorf("ExecRelease() failed: '%s", err)
@@ -174,7 +174,7 @@ func (r PostsCassandraRepository) GetPosts(ctx context.Context) ([]*post.Post, e
 		Query(postTable.Select()).
 		Consistency(gocql.LocalQuorum)
 
-	var postsPending []Post
+	var postsPending []posts
 
 	if err := postQuery.Select(&postsPending); err != nil {
 		return nil, err
@@ -201,9 +201,9 @@ func (r PostsCassandraRepository) GetPost(ctx context.Context, id string) (*post
 	postQuery := r.session.
 		Query(postTable.Get()).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(&Post{Id: id})
+		BindStruct(&posts{Id: id})
 
-	var postPending Post
+	var postPending posts
 
 	if err := postQuery.Get(&postPending); err != nil {
 

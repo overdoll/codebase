@@ -23,15 +23,15 @@ func NewPendingPostsAuditLogByModeratorHandler(ir infraction.Repository, eva Eva
 	return PendingPostsAuditLogByModeratorHandler{ir: ir, eva: eva}
 }
 
-func (h PendingPostsAuditLogByModeratorHandler) Handle(ctx context.Context, cursor *paging.Cursor, moderatorId string) ([]*infraction.PendingPostAuditLog, *paging.Info, error) {
+func (h PendingPostsAuditLogByModeratorHandler) Handle(ctx context.Context, cursor *paging.Cursor, moderatorId string) ([]*infraction.PostAuditLog, *paging.Info, error) {
 
-	filters, err := infraction.NewPendingPostAuditLogFilters(moderatorId, "", "", []int{})
+	filters, err := infraction.NewPostAuditLogFilters(moderatorId, "", "", []int{})
 
 	if err != nil {
 		return nil, nil, err
 	}
 
-	auditLogs, page, err := h.ir.GetPendingPostAuditLogByModerator(ctx, cursor, filters)
+	auditLogs, page, err := h.ir.GetPostAuditLogByModerator(ctx, cursor, filters)
 
 	if err != nil {
 		zap.S().Errorf("failed to get audit log: %s", err)

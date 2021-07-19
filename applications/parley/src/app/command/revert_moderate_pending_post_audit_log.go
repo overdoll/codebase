@@ -22,7 +22,7 @@ func NewRevertModeratePendingPostHandler(ir infraction.Repository, eva EvaServic
 	return RevertModeratePendingPostHandler{ir: ir, sting: sting, eva: eva}
 }
 
-func (h RevertModeratePendingPostHandler) Handle(ctx context.Context, moderatorId, auditLogId string) (*infraction.PendingPostAuditLog, error) {
+func (h RevertModeratePendingPostHandler) Handle(ctx context.Context, moderatorId, auditLogId string) (*infraction.PostAuditLog, error) {
 
 	// Get user, to perform permission checks
 	usr, err := h.eva.GetAccount(ctx, moderatorId)
@@ -37,7 +37,7 @@ func (h RevertModeratePendingPostHandler) Handle(ctx context.Context, moderatorI
 	}
 
 	// update audit log to revert any infractions and user locks, as well as mark it as reverted
-	auditLog, err := h.ir.UpdatePendingPostAuditLog(ctx, auditLogId, func(log *infraction.PendingPostAuditLog) error {
+	auditLog, err := h.ir.UpdatePostAuditLog(ctx, auditLogId, func(log *infraction.PostAuditLog) error {
 
 		// need to set this because user permissions arent available when getting it from the DB (needs to be grabbed from
 		// another service)

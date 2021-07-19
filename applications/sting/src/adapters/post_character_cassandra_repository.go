@@ -23,7 +23,7 @@ var characterTable = table.New(table.Metadata{
 	SortKey: []string{},
 })
 
-type Character struct {
+type character struct {
 	Id        string `db:"id"`
 	Name      string `db:"name"`
 	Thumbnail string `db:"thumbnail"`
@@ -46,7 +46,7 @@ func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars [
 		Consistency(gocql.LocalQuorum).
 		Bind(chars)
 
-	var characterModels []*Character
+	var characterModels []*character
 
 	if err := queryCharacters.Select(&characterModels); err != nil {
 		return nil, fmt.Errorf("select() failed: '%s", err)
@@ -68,7 +68,7 @@ func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars [
 		Consistency(gocql.LocalQuorum).
 		Bind(mediaIds)
 
-	var mediaModels []*Media
+	var mediaModels []*media
 
 	if err := queryMedia.Select(&mediaModels); err != nil {
 		return nil, fmt.Errorf("select() failed: '%s", err)
@@ -76,7 +76,7 @@ func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars [
 
 	for _, char := range characterModels {
 
-		var media *Media
+		var media *media
 
 		for _, med := range mediaModels {
 			if med.Id == char.MediaId {
@@ -105,7 +105,7 @@ func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars [
 }
 
 func (r PostsCassandraRepository) GetCharacters(ctx context.Context) ([]*post.Character, error) {
-	var dbChars []Character
+	var dbChars []character
 
 	// Grab all of our characters
 	// Doing a direct database query
@@ -115,11 +115,11 @@ func (r PostsCassandraRepository) GetCharacters(ctx context.Context) ([]*post.Ch
 		return nil, fmt.Errorf("select() failed: %s", err)
 	}
 
-	var medias []Media
+	var medias []media
 
 	// Go through each character and grab the media ID, since we need this for the character document
 	for _, char := range dbChars {
-		medias = append(medias, Media{Id: char.MediaId})
+		medias = append(medias, media{Id: char.MediaId})
 	}
 
 	// Get all the medias through a direct database query
@@ -137,7 +137,7 @@ func (r PostsCassandraRepository) GetCharacters(ctx context.Context) ([]*post.Ch
 	// Now we can safely start creating our documents
 	for _, char := range dbChars {
 
-		var media Media
+		var media media
 
 		for _, med := range medias {
 			if med.Id == char.MediaId {

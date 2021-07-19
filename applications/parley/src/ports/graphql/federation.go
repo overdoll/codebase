@@ -67,13 +67,13 @@ func (ec *executionContext) __resolve_entities(ctx context.Context, representati
 
 			list = append(list, entity)
 
-		case "PendingPost":
+		case "Post":
 			id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
 			if err != nil {
 				return nil, errors.New(fmt.Sprintf("Field %s undefined in schema.", "id"))
 			}
 
-			entity, err := ec.resolvers.Entity().FindPendingPostByID(ctx,
+			entity, err := ec.resolvers.Entity().FindPostByID(ctx,
 				id0)
 			if err != nil {
 				return nil, err
@@ -81,13 +81,13 @@ func (ec *executionContext) __resolve_entities(ctx context.Context, representati
 
 			list = append(list, entity)
 
-		case "PendingPostAuditLog":
+		case "PostAuditLog":
 			id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
 			if err != nil {
 				return nil, errors.New(fmt.Sprintf("Field %s undefined in schema.", "id"))
 			}
 
-			entity, err := ec.resolvers.Entity().FindPendingPostAuditLogByID(ctx,
+			entity, err := ec.resolvers.Entity().FindPostAuditLogByID(ctx,
 				id0)
 			if err != nil {
 				return nil, err
@@ -95,13 +95,13 @@ func (ec *executionContext) __resolve_entities(ctx context.Context, representati
 
 			list = append(list, entity)
 
-		case "PendingPostRejectionReason":
+		case "PostRejectionReason":
 			id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
 			if err != nil {
 				return nil, errors.New(fmt.Sprintf("Field %s undefined in schema.", "id"))
 			}
 
-			entity, err := ec.resolvers.Entity().FindPendingPostRejectionReasonByID(ctx,
+			entity, err := ec.resolvers.Entity().FindPostRejectionReasonByID(ctx,
 				id0)
 			if err != nil {
 				return nil, err

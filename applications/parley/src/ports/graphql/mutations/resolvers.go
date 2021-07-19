@@ -12,32 +12,32 @@ type MutationResolver struct {
 	App *app.Application
 }
 
-func (m MutationResolver) ModeratePendingPost(ctx context.Context, input types.ModeratePendingPostInput) (*types.ModeratePendingPostPayload, error) {
+func (m MutationResolver) ModeratePost(ctx context.Context, input types.ModeratePostInput) (*types.ModeratePostPayload, error) {
 
 	rejectionReasonId := ""
 
-	if input.PendingPostRejectionReasonID != nil {
-		rejectionReasonId = input.PendingPostRejectionReasonID.GetID()
+	if input.PostRejectionReasonID != nil {
+		rejectionReasonId = input.PostRejectionReasonID.GetID()
 	}
 
-	auditLog, err := m.App.Commands.ModeratePost.Handle(ctx, passport.FromContext(ctx).AccountID(), input.PendingPostID.GetID(), rejectionReasonId, input.Notes)
+	auditLog, err := m.App.Commands.ModeratePost.Handle(ctx, passport.FromContext(ctx).AccountID(), input.PostID.GetID(), rejectionReasonId, input.Notes)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return &types.ModeratePendingPostPayload{PendingPostAuditLog: types.MarshalPendingPostAuditLogToGraphQL(auditLog)}, nil
+	return &types.ModeratePostPayload{PostAuditLog: types.MarshalPostAuditLogToGraphQL(auditLog)}, nil
 }
 
-func (m MutationResolver) RevertPendingPostAuditLog(ctx context.Context, data types.RevertPendingPostAuditLogInput) (*types.RevertPendingPostAuditLogPayload, error) {
+func (m MutationResolver) RevertPostAuditLog(ctx context.Context, data types.RevertPostAuditLogInput) (*types.RevertPostAuditLogPayload, error) {
 
-	auditLog, err := m.App.Commands.RevertModeratePost.Handle(ctx, passport.FromContext(ctx).AccountID(), data.PendingPostAuditLogID.GetID())
+	auditLog, err := m.App.Commands.RevertModeratePost.Handle(ctx, passport.FromContext(ctx).AccountID(), data.PostAuditLogID.GetID())
 
 	if err != nil {
 		return nil, err
 	}
 
-	return &types.RevertPendingPostAuditLogPayload{PendingPostAuditLog: types.MarshalPendingPostAuditLogToGraphQL(auditLog)}, nil
+	return &types.RevertPostAuditLogPayload{PostAuditLog: types.MarshalPostAuditLogToGraphQL(auditLog)}, nil
 }
 
 func (m MutationResolver) ToggleModeratorSettingsInQueue(ctx context.Context) (*types.ToggleModeratorSettingsInQueuePayload, error) {
