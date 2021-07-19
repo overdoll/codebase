@@ -135,7 +135,7 @@ func TestCreatePost_Publish(t *testing.T) {
 			// need to refresh the ES index or else the post wont be found
 			es, err := search.NewStore(context.Background())
 			require.NoError(t, err)
-			err = es.Refresh(adapters.PendingPostIndexName)
+			err = es.Refresh(adapters.PostIndexName)
 			require.NoError(t, err)
 
 			newPostId = postId

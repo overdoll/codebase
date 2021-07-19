@@ -21,7 +21,7 @@ func NewDiscardPostHandler(pr post.Repository, pi post.IndexRepository, cnt cont
 
 func (h DiscardPostHandler) Handle(ctx context.Context, id string) error {
 
-	pendingPost, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PendingPost) error {
+	pendingPost, err := h.pr.UpdatePost(ctx, id, func(pending *post.Post) error {
 
 		// On discarded posts, delete the content from S3
 		if err := h.cnt.DeleteProcessedContent(ctx, pending.Contributor().ID(), pending.RawContent()); err != nil {
@@ -36,7 +36,7 @@ func (h DiscardPostHandler) Handle(ctx context.Context, id string) error {
 	}
 
 	// delete document because it's been processed
-	if err := h.pi.DeletePendingPostDocument(ctx, pendingPost.ID()); err != nil {
+	if err := h.pi.DeletePostDocument(ctx, pendingPost.ID()); err != nil {
 		zap.S().Errorf("failed to index post: %s", err)
 		return err
 	}

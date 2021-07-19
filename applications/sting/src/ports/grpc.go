@@ -23,7 +23,7 @@ func NewGrpcServer(application *app.Application, client client.Client) *Server {
 }
 
 func (s Server) GetPendingPost(ctx context.Context, request *sting.PendingPostRequest) (*sting.PendingPost, error) {
-	post, err := s.app.Queries.GetPendingPost.Handle(ctx, request.Id)
+	post, err := s.app.Queries.GetPost.Handle(ctx, request.Id)
 
 	if err != nil {
 		return nil, err

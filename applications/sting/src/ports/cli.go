@@ -40,7 +40,7 @@ func init() {
 				log.Fatalf(err.Error())
 			}
 
-			if err := application.Commands.IndexAllPendingPosts.Handle(ctx); err != nil {
+			if err := application.Commands.IndexAllPosts.Handle(ctx); err != nil {
 				log.Fatalf(err.Error())
 			}
 		},
@@ -125,7 +125,7 @@ func init() {
 
 			defer cleanup()
 
-			if err := application.Commands.IndexAllPendingPosts.Handle(ctx); err != nil {
+			if err := application.Commands.IndexAllPosts.Handle(ctx); err != nil {
 				log.Fatalf(err.Error())
 			}
 		},

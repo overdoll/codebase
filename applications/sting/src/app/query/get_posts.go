@@ -8,16 +8,16 @@ import (
 	"overdoll/libraries/paging"
 )
 
-type GetPendingPostsForModeratorHandler struct {
+type GetPostsForModeratorHandler struct {
 	pr  post.IndexRepository
 	eva EvaService
 }
 
-func NewGetPendingPostsForModeratorHandler(pr post.IndexRepository, eva EvaService) GetPendingPostsForModeratorHandler {
-	return GetPendingPostsForModeratorHandler{pr: pr, eva: eva}
+func NewGetPendingPostsForModeratorHandler(pr post.IndexRepository, eva EvaService) GetPostsForModeratorHandler {
+	return GetPostsForModeratorHandler{pr: pr, eva: eva}
 }
 
-func (h GetPendingPostsForModeratorHandler) Handle(ctx context.Context, cursor *paging.Cursor, accountID string) ([]*post.PendingPost, *paging.Info, error) {
+func (h GetPostsForModeratorHandler) Handle(ctx context.Context, cursor *paging.Cursor, accountID string) ([]*post.Post, *paging.Info, error) {
 
 	usr, err := h.eva.GetAccount(ctx, accountID)
 
@@ -30,13 +30,13 @@ func (h GetPendingPostsForModeratorHandler) Handle(ctx context.Context, cursor *
 		return nil, nil, ErrSearchFailed
 	}
 
-	filters, err := post.NewPendingPostFilters(accountID, "", "", "")
+	filters, err := post.NewPostFilters(accountID, "", "", "")
 
 	if err != nil {
 		return nil, nil, err
 	}
 
-	posts, paging, err := h.pr.SearchPendingPosts(ctx, cursor, filters)
+	posts, paging, err := h.pr.SearchPosts(ctx, cursor, filters)
 
 	if err != nil {
 		zap.S().Errorf("failed to search: %s", err)

@@ -6,23 +6,23 @@ import (
 	"overdoll/applications/sting/src/domain/post"
 )
 
-type IndexAllPendingPostsHandler struct {
+type IndexAllPostsHandler struct {
 	pr  post.Repository
 	eva EvaService
 	pi  post.IndexRepository
 }
 
-func NewIndexAllPendingPostsHandler(pr post.Repository, pi post.IndexRepository, eva EvaService) IndexAllPendingPostsHandler {
-	return IndexAllPendingPostsHandler{pr: pr, pi: pi, eva: eva}
+func NewIndexAllPendingPostsHandler(pr post.Repository, pi post.IndexRepository, eva EvaService) IndexAllPostsHandler {
+	return IndexAllPostsHandler{pr: pr, pi: pi, eva: eva}
 }
 
-func (h IndexAllPendingPostsHandler) Handle(ctx context.Context) error {
+func (h IndexAllPostsHandler) Handle(ctx context.Context) error {
 
-	if err := h.pi.DeletePendingPostIndex(ctx); err != nil {
+	if err := h.pi.DeletePostIndex(ctx); err != nil {
 		return err
 	}
 
-	posts, err := h.pr.GetPendingPosts(ctx)
+	posts, err := h.pr.GetPosts(ctx)
 
 	if err != nil {
 		return err
@@ -39,5 +39,5 @@ func (h IndexAllPendingPostsHandler) Handle(ctx context.Context) error {
 		pst.UpdateContributor(usr)
 	}
 
-	return h.pi.BulkIndexPendingPosts(ctx, posts)
+	return h.pi.BulkIndexPosts(ctx, posts)
 }

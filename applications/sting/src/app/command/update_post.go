@@ -11,18 +11,18 @@ var (
 	ErrReviewFailed = errors.New("review failed")
 )
 
-type UpdatePendingPostHandler struct {
+type UpdatePostHandler struct {
 	pr post.Repository
 }
 
-func NewUpdatePendingPostHandler(pr post.Repository) UpdatePendingPostHandler {
-	return UpdatePendingPostHandler{pr: pr}
+func NewUpdatePendingPostHandler(pr post.Repository) UpdatePostHandler {
+	return UpdatePostHandler{pr: pr}
 }
 
-func (h UpdatePendingPostHandler) Handle(ctx context.Context, id, artistId string, characterIds, categoryIds []string, characterRequests map[string]string, mediaRequest, categoryRequests []string) (*post.PendingPost, error) {
+func (h UpdatePostHandler) Handle(ctx context.Context, id, artistId string, characterIds, categoryIds []string, characterRequests map[string]string, mediaRequest, categoryRequests []string) (*post.Post, error) {
 
 	// Update pending post with new values
-	pendingPost, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PendingPost) error {
+	pendingPost, err := h.pr.UpdatePost(ctx, id, func(pending *post.Post) error {
 
 		// Need to grab this since our protobuf only contains references to IDs
 		characters, err := h.pr.GetCharactersById(ctx, characterIds)

@@ -20,7 +20,7 @@ func NewNewPostHandler(pr post.Repository, pi post.IndexRepository, cr content.R
 
 func (h NewPostHandler) Handle(ctx context.Context, id string) error {
 
-	pendingPost, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PendingPost) error {
+	pendingPost, err := h.pr.UpdatePost(ctx, id, func(pending *post.Post) error {
 		// Get our contributor
 		usr, err := h.eva.GetAccount(ctx, pending.Contributor().ID())
 
@@ -54,5 +54,5 @@ func (h NewPostHandler) Handle(ctx context.Context, id string) error {
 	}
 
 	// Update pending post index
-	return h.pi.IndexPendingPost(ctx, pendingPost)
+	return h.pi.IndexPost(ctx, pendingPost)
 }

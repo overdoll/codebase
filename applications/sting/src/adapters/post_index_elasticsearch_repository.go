@@ -14,16 +14,6 @@ import (
 	"overdoll/libraries/paging"
 )
 
-type PostDocument struct {
-	Id          string               `json:"id"`
-	Artist      ArtistDocument       `json:"artist"`
-	Contributor ContributorDocument  `json:"contributor"`
-	Content     []string             `json:"content"`
-	Categories  []*CategoryDocument  `json:"categories"`
-	Characters  []*CharacterDocument `json:"characters"`
-	PostedAt    string               `json:"posted_at"`
-}
-
 type PostPendingDocument struct {
 	Id                 string               `json:"id"`
 	State              string               `json:"state"`
@@ -259,8 +249,6 @@ const SearchPostPending = `
 	"track_total_hits": true
 `
 
-const PendingPostIndexName = "pending_posts"
-
 const PostIndexName = "posts"
 
 type PostsIndexElasticSearchRepository struct {
@@ -271,16 +259,16 @@ func NewPostsIndexElasticSearchRepository(store *search.Store) PostsIndexElastic
 	return PostsIndexElasticSearchRepository{store: store}
 }
 
-func (r PostsIndexElasticSearchRepository) IndexPendingPost(ctx context.Context, pendingPost *post.PendingPost) error {
+func (r PostsIndexElasticSearchRepository) IndexPost(ctx context.Context, pendingPost *post.Post) error {
 
-	var pendingPosts []*post.PendingPost
+	var pendingPosts []*post.Post
 
 	pendingPosts = append(pendingPosts, pendingPost)
 
-	return r.BulkIndexPendingPosts(ctx, pendingPosts)
+	return r.BulkIndexPosts(ctx, pendingPosts)
 }
 
-func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Context, cursor *paging.Cursor, filter *post.PendingPostFilters) ([]*post.PendingPost, *paging.Info, error) {
+func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, cursor *paging.Cursor, filter *post.PostFilters) ([]*post.Post, *paging.Info, error) {
 
 	t, err := template.New("SearchPostPending").Parse(SearchPostPending)
 
@@ -316,7 +304,7 @@ func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Contex
 			return nil, err
 		}
 
-		return r.store.Search(PendingPostIndexName, query.String())
+		return r.store.Search(PostIndexName, query.String())
 	}
 
 	var response *search.SearchResults
@@ -355,7 +343,7 @@ func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Contex
 		return nil, nil, err
 	}
 
-	var posts []*post.PendingPost
+	var posts []*post.Post
 
 	for _, pest := range response.Hits {
 
@@ -408,8 +396,8 @@ func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Contex
 	return posts, pageInfo, nil
 }
 
-func (r PostsIndexElasticSearchRepository) BulkIndexPendingPosts(ctx context.Context, pendingPosts []*post.PendingPost) error {
-	err := r.store.CreateBulkIndex(PendingPostIndexName)
+func (r PostsIndexElasticSearchRepository) BulkIndexPosts(ctx context.Context, pendingPosts []*post.Post) error {
+	err := r.store.CreateBulkIndex(PostIndexName)
 
 	if err != nil {
 		return fmt.Errorf("error creating bulk indexer: %s", err)
@@ -482,81 +470,9 @@ func (r PostsIndexElasticSearchRepository) BulkIndexPendingPosts(ctx context.Con
 	return nil
 }
 
-func (r PostsIndexElasticSearchRepository) IndexPost(ctx context.Context, pst *post.Post) error {
-
-	// We have only one post - index it
-	var posts []*post.Post
-	posts = append(posts, pst)
-
-	return r.BulkIndexPosts(ctx, posts)
-}
-
-func (r PostsIndexElasticSearchRepository) BulkIndexPosts(ctx context.Context, posts []*post.Post) error {
-
-	err := r.store.CreateBulkIndex(PostIndexName)
-
-	if err != nil {
-		return fmt.Errorf("error creating bulk indexer: %s", err)
-	}
-
-	for _, pst := range posts {
-
-		var characterDocuments []*CharacterDocument
-
-		for _, char := range pst.Characters() {
-			characterDocuments = append(characterDocuments, MarshalCharacterToDocument(char))
-		}
-
-		var categoryDocuments []*CategoryDocument
-
-		for _, cat := range pst.Categories() {
-			categoryDocuments = append(categoryDocuments, MarshalCategoryToDocument(cat))
-		}
-
-		data := &PostDocument{
-			Id: pst.ID(),
-			Artist: ArtistDocument{
-				Id:       pst.Artist().ID(),
-				Avatar:   pst.Artist().RawAvatar(),
-				Username: pst.Artist().Username(),
-			},
-			Contributor: ContributorDocument{
-				Id:       pst.Contributor().ID(),
-				Avatar:   pst.Contributor().Avatar(),
-				Username: pst.Contributor().Username(),
-			},
-			Content:    pst.Content(),
-			PostedAt:   pst.PostedAt().String(),
-			Categories: categoryDocuments,
-			Characters: characterDocuments,
-		}
-
-		err = r.store.AddToBulkIndex(data.Id, data)
-
-		if err != nil {
-			return fmt.Errorf("unexpected error: %s", err)
-		}
-	}
-
-	if err := r.store.CloseBulkIndex(); err != nil {
-		return fmt.Errorf("unexpected error: %s", err)
-	}
-
-	return nil
-}
-
 func (r PostsIndexElasticSearchRepository) DeletePostDocument(ctx context.Context, id string) error {
 
 	if err := r.store.Delete(PostIndexName, id); err != nil {
-		return fmt.Errorf("failed to delete pos document: %s", err)
-	}
-
-	return nil
-}
-
-func (r PostsIndexElasticSearchRepository) DeletePendingPostDocument(ctx context.Context, id string) error {
-
-	if err := r.store.Delete(PendingPostIndexName, id); err != nil {
 		return fmt.Errorf("failed to delete pending post document: %s", err)
 	}
 
@@ -569,22 +485,7 @@ func (r PostsIndexElasticSearchRepository) DeletePostIndex(ctx context.Context) 
 	if err != nil {
 	}
 
-	err = r.store.CreateIndex(PostIndexName, PostIndex)
-
-	if err != nil {
-		return fmt.Errorf("failed to create media index: %s", err)
-	}
-
-	return nil
-}
-
-func (r PostsIndexElasticSearchRepository) DeletePendingPostIndex(ctx context.Context) error {
-	err := r.store.DeleteIndex(PendingPostIndexName)
-
-	if err != nil {
-	}
-
-	err = r.store.CreateIndex(PendingPostIndexName, PostPendingIndex)
+	err = r.store.CreateIndex(PostIndexName, PostPendingIndex)
 
 	if err != nil {
 		return fmt.Errorf("failed to create pending post index: %s", err)

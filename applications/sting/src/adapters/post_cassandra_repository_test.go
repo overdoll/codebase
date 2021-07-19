@@ -13,19 +13,6 @@ import (
 	"overdoll/libraries/uuid"
 )
 
-func TestCassandraRepository_create_post(t *testing.T) {
-	t.Parallel()
-
-	repo := newPostRepository(t)
-	ctx := context.Background()
-
-	fakePost := newFakePost(t)
-
-	err := repo.CreatePost(ctx, fakePost)
-
-	require.NoError(t, err)
-}
-
 func TestCassandraRepository_get_pending_post_not_exists(t *testing.T) {
 	t.Parallel()
 
@@ -34,7 +21,7 @@ func TestCassandraRepository_get_pending_post_not_exists(t *testing.T) {
 
 	id := uuid.New().String()
 
-	usr, err := repo.GetPendingPost(ctx, id)
+	usr, err := repo.GetPost(ctx, id)
 
 	assert.Nil(t, usr)
 	assert.EqualError(t, err, post.NotFoundError{Identifier: id}.Error())

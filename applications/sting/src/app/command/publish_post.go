@@ -20,7 +20,7 @@ func NewPublishPostHandler(pr post.Repository, pi post.IndexRepository, cr conte
 
 func (h PublishPostHandler) Handle(ctx context.Context, id string) error {
 
-	pendingPost, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PendingPost) error {
+	pendingPost, err := h.pr.UpdatePost(ctx, id, func(pending *post.Post) error {
 
 		// Bulk index
 		err := h.pi.BulkIndexCategories(ctx, pending.Categories())
@@ -69,5 +69,5 @@ func (h PublishPostHandler) Handle(ctx context.Context, id string) error {
 	}
 
 	// delete pending post document since it's no longer needed
-	return h.pi.DeletePendingPostDocument(ctx, pendingPost.ID())
+	return h.pi.DeletePostDocument(ctx, pendingPost.ID())
 }

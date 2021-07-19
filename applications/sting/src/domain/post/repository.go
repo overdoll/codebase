@@ -7,14 +7,10 @@ import (
 )
 
 type Repository interface {
-	GetPendingPost(context.Context, string) (*PendingPost, error)
-	GetPendingPosts(context.Context) ([]*PendingPost, error)
-	CreatePendingPost(context.Context, *PendingPost) error
-	UpdatePendingPost(context.Context, string, func(*PendingPost) error) (*PendingPost, error)
-	DeletePendingPost(context.Context, string) error
-
-	CreatePost(context.Context, *Post) error
 	GetPost(context.Context, string) (*Post, error)
+	GetPosts(context.Context) ([]*Post, error)
+	CreatePost(context.Context, *Post) error
+	UpdatePost(context.Context, string, func(*Post) error) (*Post, error)
 	DeletePost(context.Context, string) error
 
 	GetArtistById(context.Context, string) (*Artist, error)
@@ -35,16 +31,11 @@ type Repository interface {
 }
 
 type IndexRepository interface {
-	IndexPendingPost(context.Context, *PendingPost) error
-	BulkIndexPendingPosts(context.Context, []*PendingPost) error
-	DeletePendingPostIndex(context.Context) error
-	SearchPendingPosts(context.Context, *paging.Cursor, *PendingPostFilters) ([]*PendingPost, *paging.Info, error)
-
+	IndexPost(context.Context, *Post) error
 	BulkIndexPosts(context.Context, []*Post) error
 	DeletePostIndex(context.Context) error
+	SearchPosts(context.Context, *paging.Cursor) ([]*Post, *paging.Info, error)
 	DeletePostDocument(context.Context, string) error
-	IndexPost(context.Context, *Post) error
-	DeletePendingPostDocument(context.Context, string) error
 
 	DeleteArtistIndex(context.Context) error
 	BulkIndexArtists(context.Context, []*Artist) error

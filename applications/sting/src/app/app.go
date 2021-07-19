@@ -12,21 +12,21 @@ type Application struct {
 
 type Commands struct {
 	CreatePendingPost command.CreatePendingPostHandler
-	UpdatePendingPost command.UpdatePendingPostHandler
+	UpdatePost        command.UpdatePostHandler
 
 	StartDiscardPost command.StartDiscardPostHandler
 	StartPublishPost command.StartPublishPostHandler
 	StartUndoPost    command.StartUndoPostHandler
 	RejectPost       command.RejectPostHandler
 
-	IndexAllArtists      command.IndexAllArtistsHandler
-	IndexAllCategories   command.IndexAllCategoriesHandler
-	IndexAllCharacters   command.IndexAllCharactersHandler
-	IndexAllMedia        command.IndexAllMediaHandler
-	IndexAllPendingPosts command.IndexAllPendingPostsHandler
+	IndexAllArtists    command.IndexAllArtistsHandler
+	IndexAllCategories command.IndexAllCategoriesHandler
+	IndexAllCharacters command.IndexAllCharactersHandler
+	IndexAllMedia      command.IndexAllMediaHandler
+	IndexAllPosts      command.IndexAllPostsHandler
 
 	CreatePost          command.CreatePostHandler
-	NewPendingPost      command.NewPostHandler
+	NewPost             command.NewPostHandler
 	PostCustomResources command.PostCustomResourcesHandler
 	PublishPost         command.PublishPostHandler
 	DiscardPost         command.DiscardPostHandler
@@ -35,11 +35,11 @@ type Commands struct {
 }
 
 type Queries struct {
-	SearchArtist                query.SearchArtistsHandler
-	SearchCategories            query.SearchCategoriesHandler
-	SearchCharacters            query.SearchCharactersHandler
-	SearchMedias                query.SearchMediasHandler
-	GetPendingPostsForModerator query.GetPendingPostsForModeratorHandler
-	GetPendingPost              query.GetPendingPostHandler
-	GetPendingPostAuthenticated query.GetPendingPostAuthenticatedHandler
+	SearchArtist         query.SearchArtistsHandler
+	SearchCategories     query.SearchCategoriesHandler
+	SearchCharacters     query.SearchCharactersHandler
+	SearchMedias         query.SearchMediasHandler
+	GetPostsForModerator query.GetPostsForModeratorHandler
+	GetPost              query.GetPostHandler
+	GetPostAuthenticated query.GetPostAuthenticatedHandler
 }

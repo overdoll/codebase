@@ -7,16 +7,16 @@ import (
 	"overdoll/applications/sting/src/domain/post"
 )
 
-type GetPendingPostAuthenticatedHandler struct {
+type GetPostAuthenticatedHandler struct {
 	pr  post.Repository
 	eva EvaService
 }
 
-func NewGetPendingPostAuthenticatedHandler(pr post.Repository, eva EvaService) GetPendingPostAuthenticatedHandler {
-	return GetPendingPostAuthenticatedHandler{pr: pr, eva: eva}
+func NewGetPendingPostAuthenticatedHandler(pr post.Repository, eva EvaService) GetPostAuthenticatedHandler {
+	return GetPostAuthenticatedHandler{pr: pr, eva: eva}
 }
 
-func (h GetPendingPostAuthenticatedHandler) Handle(ctx context.Context, postId, userId string) (*post.PendingPost, error) {
+func (h GetPostAuthenticatedHandler) Handle(ctx context.Context, postId, userId string) (*post.Post, error) {
 
 	usr, err := h.eva.GetAccount(ctx, userId)
 
@@ -29,7 +29,7 @@ func (h GetPendingPostAuthenticatedHandler) Handle(ctx context.Context, postId, 
 		return nil, ErrSearchFailed
 	}
 
-	pst, err := h.pr.GetPendingPost(ctx, postId)
+	pst, err := h.pr.GetPost(ctx, postId)
 
 	if err != nil {
 		zap.S().Errorf("failed to search: %s", err)

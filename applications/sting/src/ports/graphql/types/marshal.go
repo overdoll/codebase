@@ -7,7 +7,7 @@ import (
 	"overdoll/libraries/paging"
 )
 
-func MarshalPendingPostToGraphQLConnection(results []*post.PendingPost, page *paging.Info) *PendingPostConnection {
+func MarshalPendingPostToGraphQLConnection(results []*post.Post, page *paging.Info) *PendingPostConnection {
 
 	var pendingPostEdges []*PendingPostEdge
 
@@ -39,7 +39,7 @@ func MarshalPendingPostToGraphQLConnection(results []*post.PendingPost, page *pa
 	}
 }
 
-func MarshalPendingPostToGraphQL(result *post.PendingPost) *PendingPost {
+func MarshalPendingPostToGraphQL(result *post.Post) *PendingPost {
 
 	// Unmarshal our json into the correct model
 	var mediaRequests []string

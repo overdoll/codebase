@@ -24,7 +24,7 @@ func NewCreatePendingPostHandler(pr post.Repository, eva EvaService, parley Parl
 	return CreatePendingPostHandler{pr: pr, eva: eva, parley: parley}
 }
 
-func (h CreatePendingPostHandler) Handle(ctx context.Context, contributorId, artistId, artistUsername string, content, characterIds, categoryIds []string, characterRequests map[string]string, mediaRequests []string) (*post.PendingPost, error) {
+func (h CreatePendingPostHandler) Handle(ctx context.Context, contributorId, artistId, artistUsername string, content, characterIds, categoryIds []string, characterRequests map[string]string, mediaRequests []string) (*post.Post, error) {
 
 	// Get our contributor
 	usr, err := h.eva.GetAccount(ctx, contributorId)
@@ -95,7 +95,7 @@ func (h CreatePendingPostHandler) Handle(ctx context.Context, contributorId, art
 	_ = pendingPost.MakeProcessing()
 
 	// create a pending post in the database with all of the data
-	if err := h.pr.CreatePendingPost(ctx, pendingPost); err != nil {
+	if err := h.pr.CreatePost(ctx, pendingPost); err != nil {
 		return nil, err
 	}
 

@@ -8,7 +8,7 @@ import (
 )
 
 type PostMock struct {
-	PendingPost *post.PendingPost
+	PendingPost *post.Post
 	Post        *post.Post
 	Artist      *post.Artist
 	Characters  []*post.Character
@@ -16,26 +16,22 @@ type PostMock struct {
 	Medias      []*post.Media
 }
 
-func (p PostMock) GetPendingPost(ctx context.Context, s string) (*post.PendingPost, error) {
+func (p PostMock) GetPendingPost(ctx context.Context, s string) (*post.Post, error) {
 	return p.PendingPost, nil
 }
 
-func (p PostMock) CreatePendingPost(ctx context.Context, pending *post.PendingPost) error {
+func (p PostMock) CreatePendingPost(ctx context.Context, pending *post.Post) error {
 	p.PendingPost = pending
 	return nil
 }
 
-func (p PostMock) UpdatePendingPost(ctx context.Context, s string, f func(*post.PendingPost) (*post.PendingPost, error)) (*post.PendingPost, error) {
+func (p PostMock) UpdatePendingPost(ctx context.Context, s string, f func(*post.Post) (*post.Post, error)) (*post.Post, error) {
 
 	pending, _ := p.GetPendingPost(ctx, s)
 
 	updated, _ := f(pending)
 
 	return updated, nil
-}
-
-func (p PostMock) CreatePost(ctx context.Context, post *post.Post) error {
-	return nil
 }
 
 func (p PostMock) GetArtistById(ctx context.Context, s string) (*post.Artist, error) {
@@ -101,23 +97,11 @@ func (p PostIndexMock) SearchCategories(ctx context.Context, s string) ([]*post.
 	panic("implement me")
 }
 
-func (p PostIndexMock) BulkIndexPosts(ctx context.Context, posts []*post.Post) error {
+func (p PostIndexMock) IndexPendingPost(ctx context.Context, pending *post.Post) error {
 	return nil
 }
 
-func (p PostIndexMock) IndexPendingPost(ctx context.Context, pending *post.PendingPost) error {
-	return nil
-}
-
-func (p PostIndexMock) BulkIndexPendingPosts(ctx context.Context, pendings []*post.PendingPost) error {
-	return nil
-}
-
-func (p PostIndexMock) DeletePostIndex(ctx context.Context) error {
-	return nil
-}
-
-func (p PostIndexMock) IndexPost(ctx context.Context, p2 *post.Post) error {
+func (p PostIndexMock) BulkIndexPendingPosts(ctx context.Context, pendings []*post.Post) error {
 	return nil
 }
 

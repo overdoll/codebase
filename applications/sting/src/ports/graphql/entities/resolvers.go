@@ -16,7 +16,7 @@ func (r EntityResolver) FindPendingPostAuditLogByID(ctx context.Context, id rela
 
 	// We know part of the ID of the audit log is the pending post ID, so we get it here
 	// since we dont keep the reference of audit logs
-	pendingPost, err := r.App.Queries.GetPendingPost.Handle(ctx, id.GetCompositePartID(1))
+	pendingPost, err := r.App.Queries.GetPost.Handle(ctx, id.GetCompositePartID(1))
 
 	if err != nil {
 		return nil, err

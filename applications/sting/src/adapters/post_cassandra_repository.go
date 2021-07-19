@@ -11,16 +11,6 @@ import (
 	"overdoll/applications/sting/src/domain/post"
 )
 
-type Post struct {
-	Id            string    `db:"id"`
-	ArtistId      string    `db:"artist_account_id"`
-	ContributorId string    `db:"contributor_account_id"`
-	Content       []string  `db:"content"`
-	Categories    []string  `db:"categories"`
-	Characters    []string  `db:"characters"`
-	PostedAt      time.Time `db:"posted_at"`
-}
-
 type PostPending struct {
 	Id                 string            `db:"id"`
 	State              string            `db:"state"`
@@ -46,7 +36,7 @@ func NewPostsCassandraRepository(session gocqlx.Session) PostsCassandraRepositor
 	return PostsCassandraRepository{session: session}
 }
 
-func marshalPendingPostToDatabase(pending *post.PendingPost) *PostPending {
+func marshalPendingPostToDatabase(pending *post.Post) *PostPending {
 
 	characterRequests := make(map[string]string)
 
@@ -84,32 +74,7 @@ func marshalPendingPostToDatabase(pending *post.PendingPost) *PostPending {
 	}
 }
 
-func marshalPostToDatabase(post *post.Post) *Post {
-
-	var categoryIds []string
-
-	for _, cat := range post.Categories() {
-		categoryIds = append(categoryIds, cat.ID())
-	}
-
-	var characterIds []string
-
-	for _, char := range post.Characters() {
-		characterIds = append(characterIds, char.ID())
-	}
-
-	return &Post{
-		Id:            post.ID(),
-		ArtistId:      post.Artist().ID(),
-		ContributorId: post.Contributor().ID(),
-		Content:       post.RawContent(),
-		Categories:    categoryIds,
-		Characters:    characterIds,
-		PostedAt:      post.PostedAt(),
-	}
-}
-
-func (r PostsCassandraRepository) unmarshalPendingPost(ctx context.Context, postPending PostPending) (*post.PendingPost, error) {
+func (r PostsCassandraRepository) unmarshalPendingPost(ctx context.Context, postPending PostPending) (*post.Post, error) {
 
 	characters, err := r.GetCharactersById(ctx, postPending.Characters)
 
@@ -153,7 +118,7 @@ func (r PostsCassandraRepository) unmarshalPendingPost(ctx context.Context, post
 	), nil
 }
 
-func (r PostsCassandraRepository) CreatePendingPost(ctx context.Context, pending *post.PendingPost) error {
+func (r PostsCassandraRepository) CreatePost(ctx context.Context, pending *post.Post) error {
 	pendingPost := marshalPendingPostToDatabase(pending)
 
 	insertPost := qb.Insert("pending_posts").
@@ -184,7 +149,7 @@ func (r PostsCassandraRepository) CreatePendingPost(ctx context.Context, pending
 	return nil
 }
 
-func (r PostsCassandraRepository) DeletePendingPost(ctx context.Context, id string) error {
+func (r PostsCassandraRepository) DeletePost(ctx context.Context, id string) error {
 	deletePost := qb.Delete("pending_posts").
 		Where(qb.Eq("id")).
 		Query(r.session).
@@ -198,94 +163,7 @@ func (r PostsCassandraRepository) DeletePendingPost(ctx context.Context, id stri
 	return nil
 }
 
-func (r PostsCassandraRepository) CreatePost(ctx context.Context, pending *post.Post) error {
-	pst := marshalPostToDatabase(pending)
-
-	insertPost := qb.Insert("posts").
-		Columns(
-			"id",
-			"artist_account_id",
-			"contributor_account_id",
-			"content",
-			"categories",
-			"characters",
-			"posted_at",
-		).
-		Query(r.session).
-		Consistency(gocql.One).
-		BindStruct(pst)
-
-	if err := insertPost.ExecRelease(); err != nil {
-		return fmt.Errorf("ExecRelease() failed: '%s", err)
-	}
-
-	return nil
-}
-
-func (r PostsCassandraRepository) DeletePost(ctx context.Context, id string) error {
-	deletePost := qb.Delete("posts").
-		Where(qb.Eq("id")).
-		Query(r.session).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(&Post{Id: id})
-
-	if err := deletePost.ExecRelease(); err != nil {
-		return fmt.Errorf("ExecRelease() failed: '%s", err)
-	}
-
-	return nil
-}
-
-func (r PostsCassandraRepository) GetPost(ctx context.Context, id string) (*post.Post, error) {
-	postQuery := qb.Select("posts").
-		Where(qb.Eq("id")).
-		Query(r.session).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(&Post{Id: id})
-
-	var pst Post
-
-	if err := postQuery.Get(&pst); err != nil {
-
-		if err == gocql.ErrNotFound {
-			return nil, post.NotFoundError{Identifier: id}
-		}
-
-		return nil, err
-	}
-
-	characters, err := r.GetCharactersById(ctx, pst.Characters)
-
-	if err != nil {
-		return nil, err
-	}
-
-	categories, err := r.GetCategoriesById(ctx, pst.Categories)
-
-	if err != nil {
-		return nil, err
-	}
-
-	artist, err := r.GetArtistById(ctx, pst.ArtistId)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return post.UnmarshalPostFromDatabase(
-		pst.Id,
-		artist,
-		pst.ContributorId,
-		"",
-		"",
-		pst.Content,
-		characters,
-		categories,
-		pst.PostedAt,
-	), nil
-}
-
-func (r PostsCassandraRepository) GetPendingPosts(ctx context.Context) ([]*post.PendingPost, error) {
+func (r PostsCassandraRepository) GetPosts(ctx context.Context) ([]*post.Post, error) {
 
 	postPendingQuery := qb.Select("pending_posts").
 		Query(r.session).
@@ -297,7 +175,7 @@ func (r PostsCassandraRepository) GetPendingPosts(ctx context.Context) ([]*post.
 		return nil, err
 	}
 
-	var pos []*post.PendingPost
+	var pos []*post.Post
 
 	for _, pst := range postsPending {
 
@@ -313,7 +191,7 @@ func (r PostsCassandraRepository) GetPendingPosts(ctx context.Context) ([]*post.
 	return pos, nil
 }
 
-func (r PostsCassandraRepository) GetPendingPost(ctx context.Context, id string) (*post.PendingPost, error) {
+func (r PostsCassandraRepository) GetPost(ctx context.Context, id string) (*post.Post, error) {
 
 	postPendingQuery := qb.Select("pending_posts").
 		Where(qb.Eq("id")).
@@ -335,9 +213,9 @@ func (r PostsCassandraRepository) GetPendingPost(ctx context.Context, id string)
 	return r.unmarshalPendingPost(ctx, postPending)
 }
 
-func (r PostsCassandraRepository) UpdatePendingPost(ctx context.Context, id string, updateFn func(pending *post.PendingPost) error) (*post.PendingPost, error) {
+func (r PostsCassandraRepository) UpdatePost(ctx context.Context, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
 
-	currentPost, err := r.GetPendingPost(ctx, id)
+	currentPost, err := r.GetPost(ctx, id)
 
 	if err != nil {
 		return nil, err

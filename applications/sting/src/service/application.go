@@ -61,13 +61,13 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 	return app.Application{
 		Commands: app.Commands{
 			CreatePendingPost: command.NewCreatePendingPostHandler(postRepo, eva, parley),
-			UpdatePendingPost: command.NewUpdatePendingPostHandler(postRepo),
+			UpdatePost:        command.NewUpdatePendingPostHandler(postRepo),
 
-			IndexAllPendingPosts: command.NewIndexAllPendingPostsHandler(postRepo, indexRepo, eva),
-			IndexAllMedia:        command.NewIndexAllMediaHandler(postRepo, indexRepo),
-			IndexAllCharacters:   command.NewIndexAllCharactersHandler(postRepo, indexRepo),
-			IndexAllCategories:   command.NewIndexAllCategoriesHandler(postRepo, indexRepo),
-			IndexAllArtists:      command.NewIndexAllArtistsHandler(postRepo, indexRepo),
+			IndexAllPosts:      command.NewIndexAllPendingPostsHandler(postRepo, indexRepo, eva),
+			IndexAllMedia:      command.NewIndexAllMediaHandler(postRepo, indexRepo),
+			IndexAllCharacters: command.NewIndexAllCharactersHandler(postRepo, indexRepo),
+			IndexAllCategories: command.NewIndexAllCategoriesHandler(postRepo, indexRepo),
+			IndexAllArtists:    command.NewIndexAllArtistsHandler(postRepo, indexRepo),
 
 			StartUndoPost:    command.NewStartUndoPostHandler(postRepo, indexRepo),
 			StartPublishPost: command.NewStartPublishPostHandler(postRepo, indexRepo, eva),
@@ -75,7 +75,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			RejectPost:       command.NewRejectPostHandler(postRepo, indexRepo),
 
 			CreatePost:          command.NewCreatePostHandler(postRepo, indexRepo),
-			NewPendingPost:      command.NewNewPostHandler(postRepo, indexRepo, contentRepo, eva),
+			NewPost:             command.NewNewPostHandler(postRepo, indexRepo, contentRepo, eva),
 			PostCustomResources: command.NewPostCustomResourcesHandler(postRepo, indexRepo),
 
 			PublishPost:       command.NewPublishPostHandler(postRepo, indexRepo, contentRepo, eva),
@@ -84,13 +84,13 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			ReassignModerator: command.NewReassignModeratorHandler(postRepo, indexRepo, parley),
 		},
 		Queries: app.Queries{
-			SearchMedias:                query.NewSearchMediasHandler(indexRepo),
-			SearchCharacters:            query.NewSearchCharactersHandler(indexRepo),
-			SearchCategories:            query.NewSearchCategoriesHandler(indexRepo),
-			SearchArtist:                query.NewSearchArtistsHandler(indexRepo),
-			GetPendingPostsForModerator: query.NewGetPendingPostsForModeratorHandler(indexRepo, eva),
-			GetPendingPost:              query.NewGetPendingPostHandler(postRepo),
-			GetPendingPostAuthenticated: query.NewGetPendingPostAuthenticatedHandler(postRepo, eva),
+			SearchMedias:         query.NewSearchMediasHandler(indexRepo),
+			SearchCharacters:     query.NewSearchCharactersHandler(indexRepo),
+			SearchCategories:     query.NewSearchCategoriesHandler(indexRepo),
+			SearchArtist:         query.NewSearchArtistsHandler(indexRepo),
+			GetPostsForModerator: query.NewGetPendingPostsForModeratorHandler(indexRepo, eva),
+			GetPost:              query.NewGetPendingPostHandler(postRepo),
+			GetPostAuthenticated: query.NewGetPendingPostAuthenticatedHandler(postRepo, eva),
 		},
 	}
 }

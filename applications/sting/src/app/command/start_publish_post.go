@@ -18,7 +18,7 @@ func NewStartPublishPostHandler(pr post.Repository, pi post.IndexRepository, eva
 
 func (h StartPublishPostHandler) Handle(ctx context.Context, id string) error {
 
-	pendingPost, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PendingPost) error {
+	pendingPost, err := h.pr.UpdatePost(ctx, id, func(pending *post.Post) error {
 
 		// if no artist assigned, create it
 		if pending.Artist().ID() == "" {
@@ -46,5 +46,5 @@ func (h StartPublishPostHandler) Handle(ctx context.Context, id string) error {
 		return nil
 	}
 
-	return h.pi.IndexPendingPost(ctx, pendingPost)
+	return h.pi.IndexPost(ctx, pendingPost)
 }
