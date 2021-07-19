@@ -374,7 +374,7 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, curs
 			pst.Id,
 			pst.ModeratorId,
 			pst.State,
-			post.NewArtist(pst.ArtistId, pst.ArtistUsername),
+			post.NewArtist(pst.ArtistId),
 			pst.Contributor.Id,
 			pst.Contributor.Username,
 			pst.Contributor.Avatar,

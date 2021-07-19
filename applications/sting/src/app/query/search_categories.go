@@ -18,12 +18,12 @@ func NewSearchCategoriesHandler(pr post.IndexRepository) SearchCategoriesHandler
 
 func (h SearchCategoriesHandler) Handle(ctx context.Context, cursor *paging.Cursor, query string) ([]*post.Category, *paging.Info, error) {
 
-	results, paging, err := h.pr.SearchCategories(ctx, cursor, query)
+	results, page, err := h.pr.SearchCategories(ctx, cursor, query)
 
 	if err != nil {
 		zap.S().Errorf("failed to search: %s", err)
 		return nil, nil, ErrSearchFailed
 	}
 
-	return results, paging, nil
+	return results, page, nil
 }

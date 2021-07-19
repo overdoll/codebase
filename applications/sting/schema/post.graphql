@@ -1,27 +1,84 @@
-type Post implements PostObject & Node {
+type Post implements Node @key(fields: "id") {
   id: ID!
+
+  """The state of the post"""
+  state: PendingPostStateEnum!
 
   """Represents the account that this post belongs to"""
   artist: Actor!
 
+  """The moderator to whom this pending post was assigned"""
+  moderator: Actor!
+
+  """The actor that contributed this post"""
+  contributor: Actor!
+
   """Content belonging to this post"""
   content: [Content!]!
 
+  """The media that was requested."""
+  mediaRequests: [String!]
+
+  """The characters that were requested"""
+  characterRequests: [CharacterRequestType!]
+
   """The date and time of when this post was created"""
   postedAt: Time!
+
+  """The date at which this pending post will be reassigned"""
+  reassignmentAt: Time!
 }
 
-interface PostObject {
-  id: ID!
+enum PostStateEnum {
+  Review
+  Published
+  Discarded
+  Rejected
+}
 
-  """Represents the account that this post belongs to"""
-  artist: Actor!
+type CharacterRequestType {
+  name: String!
+  media: String!
+}
 
-  """Content belonging to this post"""
-  content: [Content!]!
+input CharacterRequest {
+  name: String!
+  media: String!
+}
 
-  """The date and time of when this post was created"""
-  postedAt: Time!
+"""Create pending post."""
+input CreatePostInput {
+
+  """Image IDs for the content"""
+  content: [String!]!
+
+  """Category IDs for this post"""
+  categoryIds: [String!]!
+
+  """Ids for all the characters"""
+  characterIds: [String!]!
+
+  """Requests (custom)"""
+  mediaRequests: [String!]
+  characterRequests: [CharacterRequest!]
+
+  """Existing artist's ID"""
+  existingArtist: ID
+
+  """Custom Artist's username"""
+  customArtistUsername: String
+
+  """The author of this post is the artist, as well as contributor"""
+  posterIsArtist: Boolean
+}
+
+"""Payload for a created pending post"""
+type CreatePostPayload {
+  """The pending post after the creation"""
+  pendingPost: PendingPost
+
+  """If this pending post will be in review or not"""
+  review: Boolean
 }
 
 type PostEdge {
@@ -34,7 +91,22 @@ type PostConnection {
   pageInfo: PageInfo!
 }
 
-extend type Account @key(fields: "id")  {
+extend type Account @key(fields: "id") {
+  """Posts queue specific to this account (when moderator)"""
+  moderatorPostsQueue(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): PostConnection! @goField(forceResolver: true) @auth
+
   """Posts specific to this account"""
   posts(
     """Returns the elements in the list that come after the specified cursor."""
@@ -64,6 +136,18 @@ extend type Account @key(fields: "id")  {
     """Returns the last _n_ elements from the list."""
     last: Int
   ): PostConnection! @goField(forceResolver: true)
+}
+
+extend type PostAuditLog @key(fields: "id") {
+  id: ID! @external
+  post: Post!
+}
+
+extend type Mutation {
+  """
+  Create a new pending post
+  """
+  createPost(input: CreatePostInput!): CreatePostPayload @auth
 }
 
 extend type Query {

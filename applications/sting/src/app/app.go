@@ -11,8 +11,8 @@ type Application struct {
 }
 
 type Commands struct {
-	CreatePendingPost command.CreatePendingPostHandler
-	UpdatePost        command.UpdatePostHandler
+	CreatePost command.CreatePendingPostHandler
+	UpdatePost command.UpdatePostHandler
 
 	StartDiscardPost command.StartDiscardPostHandler
 	StartPublishPost command.StartPublishPostHandler
@@ -25,7 +25,6 @@ type Commands struct {
 	IndexAllMedia      command.IndexAllMediaHandler
 	IndexAllPosts      command.IndexAllPostsHandler
 
-	CreatePost          command.CreatePostHandler
 	NewPost             command.NewPostHandler
 	PostCustomResources command.PostCustomResourcesHandler
 	PublishPost         command.PublishPostHandler

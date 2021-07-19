@@ -7,8 +7,20 @@ import (
 
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
+	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/sting/src/domain/post"
 )
+
+var categoryTable = table.New(table.Metadata{
+	Name: "categories",
+	Columns: []string{
+		"id",
+		"title",
+		"thumbnail",
+	},
+	PartKey: []string{"id"},
+	SortKey: []string{},
+})
 
 type Category struct {
 	Id        string `db:"id"`
@@ -30,7 +42,8 @@ func (r PostsCassandraRepository) GetCategoriesById(ctx context.Context, cats []
 		return categories, nil
 	}
 
-	queryCategories := qb.Select("categories").
+	queryCategories := categoryTable.
+		SelectBuilder().
 		Where(qb.InLit("id", "("+strings.Join(final, ",")+")")).
 		Query(r.session).
 		Consistency(gocql.One)
@@ -52,10 +65,7 @@ func (r PostsCassandraRepository) GetCategories(ctx context.Context) ([]*post.Ca
 
 	var dbCategory []Category
 
-	qc := qb.Select("categories").
-		Columns("id", "title", "thumbnail").
-		Query(r.session).
-		Consistency(gocql.One)
+	qc := r.session.Query(categoryTable.Select()).Consistency(gocql.One)
 
 	if err := qc.Select(&dbCategory); err != nil {
 		return nil, fmt.Errorf("select() failed: %s", err)
@@ -79,7 +89,7 @@ func (r PostsCassandraRepository) CreateCategories(ctx context.Context, categori
 	// Go through each category request
 	for _, cat := range categories {
 		// Create new categories query
-		stmt, _ := qb.Insert("categories").Columns("id", "title", "thumbnail").ToCql()
+		stmt, _ := categoryTable.Insert()
 		batch.Query(
 			stmt,
 			cat.ID(),

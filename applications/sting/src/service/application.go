@@ -60,28 +60,23 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 
 	return app.Application{
 		Commands: app.Commands{
-			CreatePendingPost: command.NewCreatePendingPostHandler(postRepo, eva, parley),
-			UpdatePost:        command.NewUpdatePendingPostHandler(postRepo),
-
-			IndexAllPosts:      command.NewIndexAllPendingPostsHandler(postRepo, indexRepo, eva),
-			IndexAllMedia:      command.NewIndexAllMediaHandler(postRepo, indexRepo),
-			IndexAllCharacters: command.NewIndexAllCharactersHandler(postRepo, indexRepo),
-			IndexAllCategories: command.NewIndexAllCategoriesHandler(postRepo, indexRepo),
-			IndexAllArtists:    command.NewIndexAllArtistsHandler(postRepo, indexRepo),
-
-			StartUndoPost:    command.NewStartUndoPostHandler(postRepo, indexRepo),
-			StartPublishPost: command.NewStartPublishPostHandler(postRepo, indexRepo, eva),
-			StartDiscardPost: command.NewStartDiscardPostHandler(postRepo, indexRepo),
-			RejectPost:       command.NewRejectPostHandler(postRepo, indexRepo),
-
-			CreatePost:          command.NewCreatePostHandler(postRepo, indexRepo),
+			CreatePost:          command.NewCreatePendingPostHandler(postRepo, eva, parley),
+			UpdatePost:          command.NewUpdatePendingPostHandler(postRepo),
+			IndexAllPosts:       command.NewIndexAllPendingPostsHandler(postRepo, indexRepo, eva),
+			IndexAllMedia:       command.NewIndexAllMediaHandler(postRepo, indexRepo),
+			IndexAllCharacters:  command.NewIndexAllCharactersHandler(postRepo, indexRepo),
+			IndexAllCategories:  command.NewIndexAllCategoriesHandler(postRepo, indexRepo),
+			IndexAllArtists:     command.NewIndexAllArtistsHandler(postRepo, indexRepo),
+			StartUndoPost:       command.NewStartUndoPostHandler(postRepo, indexRepo),
+			StartPublishPost:    command.NewStartPublishPostHandler(postRepo, indexRepo, eva),
+			StartDiscardPost:    command.NewStartDiscardPostHandler(postRepo, indexRepo),
+			RejectPost:          command.NewRejectPostHandler(postRepo, indexRepo),
 			NewPost:             command.NewNewPostHandler(postRepo, indexRepo, contentRepo, eva),
 			PostCustomResources: command.NewPostCustomResourcesHandler(postRepo, indexRepo),
-
-			PublishPost:       command.NewPublishPostHandler(postRepo, indexRepo, contentRepo, eva),
-			DiscardPost:       command.NewDiscardPostHandler(postRepo, indexRepo, contentRepo, eva),
-			UndoPost:          command.NewUndoPostHandler(postRepo, indexRepo, contentRepo, eva),
-			ReassignModerator: command.NewReassignModeratorHandler(postRepo, indexRepo, parley),
+			PublishPost:         command.NewPublishPostHandler(postRepo, indexRepo, contentRepo, eva),
+			DiscardPost:         command.NewDiscardPostHandler(postRepo, indexRepo, contentRepo, eva),
+			UndoPost:            command.NewUndoPostHandler(postRepo, indexRepo, contentRepo, eva),
+			ReassignModerator:   command.NewReassignModeratorHandler(postRepo, indexRepo, parley),
 		},
 		Queries: app.Queries{
 			SearchMedias:         query.NewSearchMediasHandler(indexRepo),

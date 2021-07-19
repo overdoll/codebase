@@ -6,8 +6,20 @@ import (
 
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
+	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/sting/src/domain/post"
 )
+
+var mediaTable = table.New(table.Metadata{
+	Name: "medias",
+	Columns: []string{
+		"id",
+		"title",
+		"thumbnail",
+	},
+	PartKey: []string{"id"},
+	SortKey: []string{},
+})
 
 type Media struct {
 	Id        string `db:"id"`
@@ -18,10 +30,7 @@ type Media struct {
 func (r PostsCassandraRepository) GetMedias(ctx context.Context) ([]*post.Media, error) {
 	var dbMed []Media
 
-	qc := qb.Select("media").
-		Columns("id", "title", "thumbnail").
-		Query(r.session).
-		Consistency(gocql.LocalQuorum)
+	qc := r.session.Query(mediaTable.Select()).Consistency(gocql.LocalQuorum)
 
 	if err := qc.Select(&dbMed); err != nil {
 		return nil, fmt.Errorf("select() failed: %s", err)
@@ -51,7 +60,8 @@ func (r PostsCassandraRepository) GetMediasById(ctx context.Context, medi []stri
 		return medias, nil
 	}
 
-	queryMedia := qb.Select("media").
+	queryMedia := mediaTable.
+		SelectBuilder().
 		Where(qb.In("id")).
 		Query(r.session).
 		Consistency(gocql.One).
@@ -79,7 +89,7 @@ func (r PostsCassandraRepository) CreateMedias(ctx context.Context, medias []*po
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
 	for _, med := range medias {
-		stmt, _ := qb.Insert("media").Columns("id", "title", "thumbnail").ToCql()
+		stmt, _ := mediaTable.Insert()
 		batch.Query(
 			stmt,
 			med.ID(),

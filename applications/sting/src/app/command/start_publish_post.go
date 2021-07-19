@@ -30,11 +30,11 @@ func (h StartPublishPostHandler) Handle(ctx context.Context, id string) error {
 			}
 
 			// add to artist record
-			if err := h.pr.CreateArtist(ctx, post.NewArtist(usr.ID(), usr.Username())); err != nil {
+			if err := h.pr.CreateArtist(ctx, post.NewArtist(usr.ID())); err != nil {
 				return err
 			}
 
-			pending.UpdateArtist(post.NewArtist(usr.ID(), usr.Username()))
+			pending.UpdateArtist(post.NewArtist(usr.ID()))
 		}
 
 		pending.MakePublishing()

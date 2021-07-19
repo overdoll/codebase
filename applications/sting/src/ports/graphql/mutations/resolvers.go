@@ -36,7 +36,7 @@ func (r *MutationResolver) CreatePendingPost(ctx context.Context, input types.Cr
 		artistUsername = *input.CustomArtistUsername
 	}
 
-	post, err := r.App.Commands.CreatePendingPost.
+	post, err := r.App.Commands.CreatePost.
 		Handle(
 			ctx,
 			passport.FromContext(ctx).AccountID(),

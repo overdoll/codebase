@@ -7,8 +7,21 @@ import (
 
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
+	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/sting/src/domain/post"
 )
+
+var characterTable = table.New(table.Metadata{
+	Name: "characters",
+	Columns: []string{
+		"id",
+		"name",
+		"thumbnail",
+		"media_id",
+	},
+	PartKey: []string{"id"},
+	SortKey: []string{},
+})
 
 type Character struct {
 	Id        string `db:"id"`
@@ -26,7 +39,8 @@ func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars [
 		return characters, nil
 	}
 
-	queryCharacters := qb.Select("characters").
+	queryCharacters := characterTable.
+		SelectBuilder().
 		Where(qb.In("id")).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
@@ -95,7 +109,7 @@ func (r PostsCassandraRepository) GetCharacters(ctx context.Context) ([]*post.Ch
 
 	// Grab all of our characters
 	// Doing a direct database query
-	qc := qb.Select("characters").Columns("id", "media_id", "name", "thumbnail").Query(r.session)
+	qc := r.session.Query(characterTable.Select())
 
 	if err := qc.Select(&dbChars); err != nil {
 		return nil, fmt.Errorf("select() failed: %s", err)
@@ -155,7 +169,7 @@ func (r PostsCassandraRepository) CreateCharacters(ctx context.Context, characte
 
 		media := chars.Media()
 
-		stmt, _ := qb.Insert("characters").Columns("id", "name", "thumbnail", "media_id").ToCql()
+		stmt, _ := characterTable.Insert()
 		batch.Query(
 			stmt,
 			chars.ID(),

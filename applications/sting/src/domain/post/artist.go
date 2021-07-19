@@ -1,48 +1,34 @@
 package post
 
 import (
-	"os"
-
 	"overdoll/libraries/paging"
 )
 
 type Artist struct {
 	*paging.Node
 
-	id       string
-	username string
-	avatar   string
+	id              string
+	doNotPostReason string
 }
 
 func (a *Artist) ID() string {
 	return a.id
 }
 
-func (a *Artist) Username() string {
-	return a.username
+func (a *Artist) DoNotPostReason() string {
+	return a.doNotPostReason
 }
 
-func (a *Artist) RawAvatar() string {
-	return a.avatar
-}
-
-func (a *Artist) Avatar() string {
-	var staticURL = os.Getenv("STATIC_URL")
-	return staticURL + "/avatars/" + a.avatar
-}
-
-func NewArtist(id, username string) *Artist {
+func NewArtist(id string) *Artist {
 	return &Artist{
-		id:       id,
-		username: username,
-		avatar:   "",
+		id:              id,
+		doNotPostReason: "",
 	}
 }
 
-func UnmarshalArtistFromDatabase(id, username, avatar string) *Artist {
+func UnmarshalArtistFromDatabase(id, doNotPostReason string) *Artist {
 	return &Artist{
-		id:       id,
-		username: username,
-		avatar:   avatar,
+		id:              id,
+		doNotPostReason: doNotPostReason,
 	}
 }

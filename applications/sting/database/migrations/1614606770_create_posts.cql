@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS characters
     primary key ( id)
 );
 
-CREATE TABLE IF NOT EXISTS media
+CREATE TABLE IF NOT EXISTS medias
 (
     id        text,
     title     text,

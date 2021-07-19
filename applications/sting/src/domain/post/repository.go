@@ -34,7 +34,7 @@ type IndexRepository interface {
 	IndexPost(context.Context, *Post) error
 	BulkIndexPosts(context.Context, []*Post) error
 	DeletePostIndex(context.Context) error
-	SearchPosts(context.Context, *paging.Cursor) ([]*Post, *paging.Info, error)
+	SearchPosts(context.Context, *paging.Cursor, *PostFilters) ([]*Post, *paging.Info, error)
 	DeletePostDocument(context.Context, string) error
 
 	DeleteArtistIndex(context.Context) error

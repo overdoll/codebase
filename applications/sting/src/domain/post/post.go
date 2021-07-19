@@ -26,7 +26,7 @@ var (
 	ErrNotPublishing    = errors.New("post must be publishing")
 	ErrNotReview        = errors.New("post must be in review")
 	ErrNotComplete      = errors.New("post is incomplete")
-	ErrInvalidId        = errors.New("passed id is not a valid ID")
+	ErrNotFound        = errors.New("post not found")
 	ErrAlreadyModerated = errors.New("already moderated")
 )
 
