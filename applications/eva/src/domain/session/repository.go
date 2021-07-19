@@ -9,4 +9,5 @@ import (
 type Repository interface {
 	GetSessionsByAccountId(context.Context, *paging.Cursor, string, string) ([]*Session, *paging.Info, error)
 	RevokeSessionById(context.Context, string, string) error
+	GetSessionById(context.Context, string) (*Session, error)
 }

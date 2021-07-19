@@ -78,12 +78,12 @@ func (r AccountRepository) deleteAccountEmail(ctx context.Context, instance *acc
 
 // UpdateAccountUsername - modify the username for the account - will either modify username by adding new entries (if it's a completely new username)
 // or just change the casings
-func (r AccountRepository) UpdateAccountUsername(ctx context.Context, id string, updateFn func(usr *account.Account) error) (*account.Account, error) {
+func (r AccountRepository) UpdateAccountUsername(ctx context.Context, id string, updateFn func(usr *account.Account) error) (*account.Account, *account.Username, error) {
 
 	instance, err := r.GetAccountById(ctx, id)
 
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	oldUsername := instance.Username()
@@ -91,13 +91,13 @@ func (r AccountRepository) UpdateAccountUsername(ctx context.Context, id string,
 	err = updateFn(instance)
 
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	// if we dont change the casings (extra letters, etc..) we need to add it to our lookup table
 	if oldUsername != strings.ToLower(instance.Username()) {
 		if err := r.createUniqueAccountUsername(ctx, instance, instance.Username()); err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 	}
 
@@ -125,10 +125,10 @@ func (r AccountRepository) UpdateAccountUsername(ctx context.Context, id string,
 	batch.Query(stmt, instance.Username(), instance.LastUsernameEdit(), instance.ID())
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return nil, fmt.Errorf("batch() failed: %s", err)
+		return nil, nil, fmt.Errorf("batch() failed: %s", err)
 	}
 
-	return instance, nil
+	return instance, account.UnmarshalUsernameFromDatabase(instance.Username(), instance.ID()), nil
 }
 
 // GetAccountByUsername - Get user using the username
@@ -196,4 +196,32 @@ func (r AccountRepository) GetAccountUsernames(ctx context.Context, cursor *pagi
 	}
 
 	return usernames, nil, nil
+}
+
+// GetAccountEmails - get emails for account
+func (r AccountRepository) GetAccountUsername(ctx context.Context, accountId, username string) (*account.Username, error) {
+
+	var accountUsernames *UsernameByAccount
+
+	// get account emails and status
+	queryUsernames := qb.Select("usernames_by_account").
+		Where(qb.Eq("account_id"), qb.Eq("username")).
+		Columns("account_id", "username").
+		Query(r.session).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(&UsernameByAccount{
+			AccountId: accountId,
+			Username:  username,
+		})
+
+	if err := queryUsernames.Get(&accountUsernames); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return nil, account.ErrAccountNotFound
+		}
+
+		return nil, fmt.Errorf("select() failed: '%s", err)
+	}
+
+	return account.UnmarshalUsernameFromDatabase(accountUsernames.Username, accountUsernames.AccountId), nil
 }

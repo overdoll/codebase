@@ -157,6 +157,16 @@ func MarshalAccountUsernameToGraphQLConnection(results []*account.Username, page
 	}
 }
 
+func MarshalAccountSessionToGraphQL(result *session.Session) *AccountSession {
+	return &AccountSession{
+		UserAgent: result.UserAgent(),
+		IP:        result.IP(),
+		Created:   result.Created(),
+		ID:        relay.NewID(AccountSession{}, result.ID()),
+		Current:   result.IsCurrent(),
+	}
+}
+
 func MarshalAccountSessionToGraphQLConnection(results []*session.Session, page *paging.Info) *AccountSessionConnection {
 
 	var accSessions []*AccountSessionEdge
@@ -164,13 +174,7 @@ func MarshalAccountSessionToGraphQLConnection(results []*session.Session, page *
 	for _, result := range results {
 		accSessions = append(accSessions, &AccountSessionEdge{
 			Cursor: result.Cursor(),
-			Node: &AccountSession{
-				UserAgent: result.UserAgent(),
-				IP:        result.IP(),
-				Created:   result.Created(),
-				ID:        relay.NewID(AccountSession{}, result.ID()),
-				Current:   result.IsCurrent(),
-			},
+			Node:   MarshalAccountSessionToGraphQL(result),
 		})
 	}
 

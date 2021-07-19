@@ -6,6 +6,7 @@ import (
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"overdoll/applications/parley/src/domain/infraction"
+	"overdoll/libraries/paging"
 )
 
 type PendingPostRejectionReason struct {
@@ -32,7 +33,7 @@ func (r InfractionCassandraRepository) GetRejectionReason(ctx context.Context, i
 	return infraction.UnmarshalPendingPostRejectionReasonFromDatabase(rejectionReason.Id, rejectionReason.Reason, rejectionReason.Infraction), nil
 }
 
-func (r InfractionCassandraRepository) GetRejectionReasons(ctx context.Context) ([]*infraction.PendingPostRejectionReason, error) {
+func (r InfractionCassandraRepository) GetRejectionReasons(ctx context.Context, cursor *paging.Cursor) ([]*infraction.PendingPostRejectionReason, *paging.Info, error) {
 
 	rejectionReasonsQuery := qb.Select("pending_posts_rejection_reasons").
 		Where(qb.Eq("bucket")).
@@ -44,7 +45,7 @@ func (r InfractionCassandraRepository) GetRejectionReasons(ctx context.Context) 
 	var dbRejectionReasons []PendingPostRejectionReason
 
 	if err := rejectionReasonsQuery.Select(&dbRejectionReasons); err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	var rejectionReasons []*infraction.PendingPostRejectionReason
@@ -52,5 +53,5 @@ func (r InfractionCassandraRepository) GetRejectionReasons(ctx context.Context) 
 		rejectionReasons = append(rejectionReasons, infraction.UnmarshalPendingPostRejectionReasonFromDatabase(rejectionReason.Id, rejectionReason.Reason, rejectionReason.Infraction))
 	}
 
-	return rejectionReasons, nil
+	return rejectionReasons, nil, nil
 }

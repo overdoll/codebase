@@ -26,7 +26,7 @@ type Commands struct {
 	GenerateAccountRecoveryCodes   command.GenerateAccountRecoveryCodesHandler
 	GenerateAccountMultiFactorTOTP command.GenerateAccountMultiFactorTOTPHandler
 	EnrollAccountMultiFactorTOTP   command.EnrollAccountMultiFactorTOTPHandler
-	ToggleAccountMultiFactor       command.ToggleAccountMultiFactorHandler
+	DisableAccountMultiFactor      command.DisableAccountMultiFactorHandler
 	FinishAuthenticateMultiFactor  command.FinishAuthenticateMultiFactorHandler
 	RemoveAccountEmail             command.RemoveAccountEmailHandler
 }
@@ -35,8 +35,11 @@ type Queries struct {
 	GetAccount                      query.GetAccountHandler
 	GetAccountByEmail               query.GetAccountByEmailHandler
 	GetAccountByUsername            query.GetAccountByUsernameHandler
+	GetAccountEmail                 query.GetAccountEmailHandler
 	GetAccountEmails                query.GetAccountEmailsHandler
+	GetAccountUsername              query.GetAccountUsernameHandler
 	GetAccountUsernames             query.GetAccountUsernamesHandler
+	GetAccountSession               query.GetAccountSessionHandler
 	GetAccountSessions              query.GetAccountSessionsHandler
 	GetAccountRecoveryCodes         query.GetAccountRecoveryCodesHandler
 	IsAccountMultiFactorTOTPEnabled query.IsAccountTOTPMultiFactorEnabledHandler

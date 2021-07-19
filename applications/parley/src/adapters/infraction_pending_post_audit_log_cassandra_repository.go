@@ -263,7 +263,7 @@ func (r InfractionCassandraRepository) GetPendingPostAuditLog(ctx context.Contex
 	), nil
 }
 
-func (r InfractionCassandraRepository) GetPendingPostAuditLogByModerator(ctx context.Context, cursor *paging.Cursor, filter *infraction.PendingPostAuditLogFilters) ([]*infraction.PendingPostAuditLog, error) {
+func (r InfractionCassandraRepository) GetPendingPostAuditLogByModerator(ctx context.Context, cursor *paging.Cursor, filter *infraction.PendingPostAuditLogFilters) ([]*infraction.PendingPostAuditLog, *paging.Info, error) {
 
 	// build query based on filters
 	builder :=
@@ -314,7 +314,7 @@ func (r InfractionCassandraRepository) GetPendingPostAuditLogByModerator(ctx con
 	var dbPendingPostAuditLogs []*PendingPostAuditLogByModerator
 
 	if err := pendingPostAuditLogQuery.Select(&dbPendingPostAuditLogs); err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	var pendingPostAuditLogs []*infraction.PendingPostAuditLog
@@ -351,7 +351,7 @@ func (r InfractionCassandraRepository) GetPendingPostAuditLogByModerator(ctx con
 		pendingPostAuditLogs = append(pendingPostAuditLogs, result)
 	}
 
-	return pendingPostAuditLogs, nil
+	return pendingPostAuditLogs, nil, nil
 }
 
 func (r InfractionCassandraRepository) UpdatePendingPostAuditLog(ctx context.Context, id string, updateFn func(auditLog *infraction.PendingPostAuditLog) error) (*infraction.PendingPostAuditLog, error) {

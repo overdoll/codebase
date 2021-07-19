@@ -22,4 +22,5 @@ type Queries struct {
 	PendingPostsAuditLogByModerator query.PendingPostsAuditLogByModeratorHandler
 	AccountInfractionHistory        query.AccountInfractionHistoryHandler
 	ModeratorInQueue                query.ModeratorInQueueHandler
+	GetPendingPostAuditLogById      query.PendingPostAuditLogsByPostHandler
 }

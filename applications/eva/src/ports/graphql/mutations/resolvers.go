@@ -445,7 +445,7 @@ func (r *MutationResolver) EnrollAccountMultiFactorTotp(ctx context.Context, inp
 
 func (r *MutationResolver) DisableAccountMultiFactor(ctx context.Context) (*types.DisableAccountMultiFactorPayload, error) {
 
-	if err := r.App.Commands.ToggleAccountMultiFactor.Handle(ctx, passport.FromContext(ctx).AccountID()); err != nil {
+	if err := r.App.Commands.DisableAccountMultiFactor.Handle(ctx, passport.FromContext(ctx).AccountID()); err != nil {
 		return nil, err
 	}
 

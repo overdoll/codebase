@@ -8,6 +8,7 @@ import (
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"overdoll/applications/parley/src/domain/infraction"
+	"overdoll/libraries/paging"
 )
 
 type AccountInfractionHistory struct {
@@ -59,7 +60,7 @@ func (r InfractionCassandraRepository) GetAccountInfractionHistoryById(ctx conte
 	return infraction.UnmarshalAccountInfractionHistoryFromDatabase(dbUserInfractionHistory.Id, dbUserInfractionHistory.AccountId, dbUserInfractionHistory.Reason, dbUserInfractionHistory.Expiration), nil
 }
 
-func (r InfractionCassandraRepository) GetAccountInfractionHistory(ctx context.Context, accountId string) ([]*infraction.AccountInfractionHistory, error) {
+func (r InfractionCassandraRepository) GetAccountInfractionHistory(ctx context.Context, cursor *paging.Cursor, accountId string) ([]*infraction.AccountInfractionHistory, *paging.Info, error) {
 
 	infractionHistoryQuery := qb.Select("account_infraction_history").
 		Columns("id", "reason", "account_id", "expiration").
@@ -71,7 +72,7 @@ func (r InfractionCassandraRepository) GetAccountInfractionHistory(ctx context.C
 	var dbUserInfractionHistory []AccountInfractionHistory
 
 	if err := infractionHistoryQuery.Select(&dbUserInfractionHistory); err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	var infractionHistory []*infraction.AccountInfractionHistory
@@ -79,7 +80,7 @@ func (r InfractionCassandraRepository) GetAccountInfractionHistory(ctx context.C
 		infractionHistory = append(infractionHistory, infraction.UnmarshalAccountInfractionHistoryFromDatabase(infractionHist.Id, infractionHist.AccountId, infractionHist.Reason, infractionHist.Expiration))
 	}
 
-	return infractionHistory, nil
+	return infractionHistory, nil, nil
 }
 
 func (r InfractionCassandraRepository) CreateUserInfractionHistory(ctx context.Context, infractionHistory *infraction.AccountInfractionHistory) error {

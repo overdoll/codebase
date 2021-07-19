@@ -11,6 +11,7 @@ type Repository interface {
 	GetRejectionReason(context.Context, string) (*PendingPostRejectionReason, error)
 
 	GetPendingPostAuditLog(context.Context, string) (*PendingPostAuditLog, error)
+	GetPendingPostAuditLogsByPost(context.Context, *paging.Cursor, *PendingPostAuditLogFilters) ([]*PendingPostAuditLog, *paging.Info, error)
 	GetPendingPostAuditLogByModerator(context.Context, *paging.Cursor, *PendingPostAuditLogFilters) ([]*PendingPostAuditLog, *paging.Info, error)
 	CreatePendingPostAuditLog(context.Context, *PendingPostAuditLog) error
 	UpdatePendingPostAuditLog(context.Context, string, func(*PendingPostAuditLog) error) (*PendingPostAuditLog, error)

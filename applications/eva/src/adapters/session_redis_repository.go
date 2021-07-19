@@ -40,7 +40,7 @@ func NewSessionRepository(client *redis.Client) SessionRepository {
 }
 
 // getSessionById - get session by ID
-func (r SessionRepository) getSessionById(ctx context.Context, sessionId string) (*session.Session, error) {
+func (r SessionRepository) GetSessionById(ctx context.Context, sessionId string) (*session.Session, error) {
 
 	val, err := r.client.Get(ctx, sessionId).Result()
 
@@ -91,7 +91,7 @@ func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, cursor *p
 	var sessions []*session.Session
 
 	for _, sessionID := range keys {
-		sess, err := r.getSessionById(ctx, sessionID)
+		sess, err := r.GetSessionById(ctx, sessionID)
 
 		if err != nil {
 			return nil, nil, err
@@ -116,7 +116,7 @@ func (r SessionRepository) RevokeSessionById(ctx context.Context, accountId, ses
 		return err
 	}
 
-	sess, err := r.getSessionById(ctx, key)
+	sess, err := r.GetSessionById(ctx, key)
 
 	if err != nil {
 		return err

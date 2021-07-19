@@ -33,7 +33,7 @@ func (h ModifyAccountUsernameHandler) Handle(ctx context.Context, accountId, use
 		if err == account.ErrAccountNotFound {
 			// ensure an account with this username is not existent
 
-			_, err := h.ar.UpdateAccountUsername(ctx, accountId, func(usr *account.Account) error {
+			_, user, err := h.ar.UpdateAccountUsername(ctx, accountId, func(usr *account.Account) error {
 				return usr.EditUsername(username)
 			})
 
@@ -42,7 +42,7 @@ func (h ModifyAccountUsernameHandler) Handle(ctx context.Context, accountId, use
 				return nil, "", ErrFailedModifyUsername
 			}
 
-			return nil, "", nil
+			return user, "", nil
 		}
 	}
 

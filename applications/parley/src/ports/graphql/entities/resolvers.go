@@ -12,13 +12,19 @@ type EntityResolver struct {
 	App *app.Application
 }
 
-// only moderators can grab audit logs from a pending post
-func (r EntityResolver) FindPendingPostByID(ctx context.Context, id relay.ID) (*types.PendingPost, error) {
-	panic("implement me")
-}
-
 func (r EntityResolver) FindAccountByID(ctx context.Context, id relay.ID) (*types.Account, error) {
 	return &types.Account{ID: id}, nil
+}
+
+// only moderators can grab audit logs from a pending post
+func (r EntityResolver) FindPendingPostByID(ctx context.Context, id relay.ID) (*types.PendingPost, error) {
+	auditLog, err := r.App.Queries.GetPendingPostAuditLogById.Handle(ctx, id.GetID())
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.PendingPost{AuditLogs: }
 }
 
 func (r EntityResolver) FindAccountInfractionHistoryByID(ctx context.Context, id relay.ID) (*types.AccountInfractionHistory, error) {
