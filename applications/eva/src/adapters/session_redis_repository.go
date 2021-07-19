@@ -16,16 +16,16 @@ import (
 )
 
 const (
-	SessionPrefix = "session:"
-	AccountPrefix = "account:"
+	sessionPrefix = "session:"
+	accountPrefix = "account:"
 )
 
-type Session struct {
+type sessions struct {
 	Passport string `json:"passport"`
-	Details  SessionDetails
+	Details  sessionDetails
 }
 
-type SessionDetails struct {
+type sessionDetails struct {
 	Ip        string `json:"ip"`
 	UserAgent string `json:"userAgent"`
 	Created   string `json:"created"`
@@ -59,7 +59,7 @@ func (r SessionRepository) GetSessionById(ctx context.Context, sessionId string)
 		return nil, err
 	}
 
-	var sessionItem Session
+	var sessionItem sessions
 
 	if err := json.Unmarshal([]byte(details), &sessionItem); err != nil {
 		return nil, err
@@ -77,7 +77,7 @@ func (r SessionRepository) GetSessionById(ctx context.Context, sessionId string)
 // GetSessionsByAccountId - Get sessions
 func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, cursor *paging.Cursor, sessionCookie, accountId string) ([]*session.Session, *paging.Info, error) {
 
-	keys, err := r.client.Keys(ctx, SessionPrefix+"*:"+AccountPrefix+accountId).Result()
+	keys, err := r.client.Keys(ctx, sessionPrefix+"*:"+accountPrefix+accountId).Result()
 
 	if err != nil {
 
@@ -145,9 +145,9 @@ func (r SessionRepository) RevokeSessionById(ctx context.Context, accountId, ses
 // NOTE: only use for tests! sessions are created and managed by express-session
 func (r SessionRepository) CreateSessionForAccount(ctx context.Context, session *session.Session) error {
 
-	sessionData := &Session{
+	sessionData := &sessions{
 		Passport: session.Passport().SerializeToBaseString(),
-		Details:  SessionDetails{Ip: session.IP(), UserAgent: session.UserAgent(), Created: session.Created()},
+		Details:  sessionDetails{Ip: session.IP(), UserAgent: session.UserAgent(), Created: session.Created()},
 	}
 
 	val, err := json.Marshal(sessionData)
@@ -161,7 +161,7 @@ func (r SessionRepository) CreateSessionForAccount(ctx context.Context, session 
 		return err
 	}
 
-	ok, err := r.client.SetNX(ctx, SessionPrefix+ksuid.New().String()+":"+AccountPrefix+session.Passport().AccountID(), valReal, time.Hour*24).Result()
+	ok, err := r.client.SetNX(ctx, sessionPrefix+ksuid.New().String()+":"+accountPrefix+session.Passport().AccountID(), valReal, time.Hour*24).Result()
 
 	if err != nil {
 		return err

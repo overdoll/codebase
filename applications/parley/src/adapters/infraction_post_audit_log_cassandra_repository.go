@@ -253,7 +253,7 @@ func (r InfractionCassandraRepository) GetPostAuditLogByModerator(ctx context.Co
 
 	// build query based on filters
 	builder :=
-		qb.Select("post_audit_logs_by_moderator").
+		postAuditLogByModeratorTable.SelectBuilder().
 			Where(qb.Eq("moderator_account_id"), qb.In("bucket"), qb.Gt("created_ms"))
 
 	if filter.ContributorId() != "" {

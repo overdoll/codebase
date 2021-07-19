@@ -6,15 +6,35 @@ import (
 	"strings"
 
 	"github.com/gocql/gocql"
-	"github.com/scylladb/gocqlx/v2/qb"
+	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/eva/src/domain/account"
 	"overdoll/libraries/paging"
 )
+
+var accountUsernameTable = table.New(table.Metadata{
+	Name: "account_usernames",
+	Columns: []string{
+		"account_id",
+		"username",
+	},
+	PartKey: []string{"username"},
+	SortKey: []string{},
+})
 
 type AccountUsername struct {
 	AccountId string `db:"account_id"`
 	Username  string `db:"username"`
 }
+
+var usernameByAccount = table.New(table.Metadata{
+	Name: "usernames_by_account",
+	Columns: []string{
+		"account_id",
+		"username",
+	},
+	PartKey: []string{"account_id"},
+	SortKey: []string{"username"},
+})
 
 type UsernameByAccount struct {
 	AccountId string `db:"account_id"`
@@ -27,18 +47,12 @@ func (r AccountRepository) deleteAccountUsername(ctx context.Context, instance *
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
 	// delete username
-	q := qb.Delete("usernames_by_account").
-		Where(qb.Eq("username"), qb.Eq("account_id"))
-
-	stmt, _ := q.ToCql()
+	stmt, _ := usernameByAccount.Delete()
 
 	batch.Query(stmt, instance.Username(), instance.ID())
 
 	// delete from other table
-	q = qb.Delete("account_usernames").
-		Where(qb.Eq("username"))
-
-	stmt, _ = q.ToCql()
+	stmt, _ = accountUsernameTable.Delete()
 
 	batch.Query(stmt, strings.ToLower(instance.Username()))
 
@@ -54,18 +68,12 @@ func (r AccountRepository) deleteAccountEmail(ctx context.Context, instance *acc
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
 	// delete username
-	q := qb.Delete("emails_by_account").
-		Where(qb.Eq("email"), qb.Eq("account_id"))
-
-	stmt, _ := q.ToCql()
+	stmt, _ := emailByAccountTable.Delete()
 
 	batch.Query(stmt, email, instance.ID())
 
 	// delete from other table
-	q = qb.Delete("account_emails").
-		Where(qb.Eq("email"))
-
-	stmt, _ = q.ToCql()
+	stmt, _ = accountEmailTable.Delete()
 
 	batch.Query(stmt, strings.ToLower(email))
 
@@ -104,22 +112,12 @@ func (r AccountRepository) UpdateAccountUsername(ctx context.Context, id string,
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
 	// add to usernames table
-	q := qb.Insert("usernames_by_account").
-		Columns("account_id", "username")
-
-	stmt, _ := q.ToCql()
+	stmt, _ := usernameByAccount.Insert()
 
 	// add to account's usernames list
 	batch.Query(stmt, instance.ID(), instance.Username())
 
-	qUpdate := qb.Update("accounts").
-		Set(
-			"username",
-			"last_username_edit",
-		).
-		Where(qb.Eq("id"))
-
-	stmt, _ = qUpdate.ToCql()
+	stmt, _ = accountTable.UpdateBuilder().Set("username", "last_username_edit").ToCql()
 
 	// finally, update account
 	batch.Query(stmt, instance.Username(), instance.LastUsernameEdit(), instance.ID())
@@ -138,9 +136,8 @@ func (r AccountRepository) GetAccountByUsername(ctx context.Context, username st
 	var accountUsername AccountUsername
 
 	// check if email is in use
-	queryEmail := qb.Select("account_usernames").
-		Where(qb.Eq("username")).
-		Query(r.session).
+	queryEmail := r.session.
+		Query(accountUsernameTable.Get()).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&AccountUsername{
 			Username: strings.ToLower(username),
@@ -155,7 +152,7 @@ func (r AccountRepository) GetAccountByUsername(ctx context.Context, username st
 		return nil, err
 	}
 
-	// Get our user using the Account AccountId, from the user email instance
+	// Get our user using the accounts AccountId, from the user email instance
 	usr, err := r.GetAccountById(ctx, accountUsername.AccountId)
 
 	if err != nil {
@@ -170,11 +167,8 @@ func (r AccountRepository) GetAccountUsernames(ctx context.Context, cursor *pagi
 
 	var accountUsernames []*UsernameByAccount
 
-	// get account emails and status
-	queryUsernames := qb.Select("usernames_by_account").
-		Where(qb.Eq("account_id")).
-		Columns("account_id", "username").
-		Query(r.session).
+	queryUsernames := r.session.
+		Query(usernameByAccount.Select()).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&UsernameByAccount{
 			AccountId: id,
@@ -203,11 +197,8 @@ func (r AccountRepository) GetAccountUsername(ctx context.Context, accountId, us
 
 	var accountUsernames *UsernameByAccount
 
-	// get account emails and status
-	queryUsernames := qb.Select("usernames_by_account").
-		Where(qb.Eq("account_id"), qb.Eq("username")).
-		Columns("account_id", "username").
-		Query(r.session).
+	queryUsernames := r.session.
+		Query(usernameByAccount.Get()).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&UsernameByAccount{
 			AccountId: accountId,

@@ -9,20 +9,46 @@ import (
 
 	"github.com/go-redis/redis/v8"
 	"github.com/gocql/gocql"
-	"github.com/scylladb/gocqlx/v2/qb"
+	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/eva/src/domain/account"
 	"overdoll/libraries/crypt"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
 )
 
-type EmailByAccount struct {
+var accountEmailTable = table.New(table.Metadata{
+	Name: "account_emails",
+	Columns: []string{
+		"account_id",
+		"email",
+	},
+	PartKey: []string{"email"},
+	SortKey: []string{},
+})
+
+type accountEmail struct {
+	AccountId string `db:"account_id"`
+	Email     string `db:"email"`
+}
+
+var emailByAccountTable = table.New(table.Metadata{
+	Name: "emails_by_account",
+	Columns: []string{
+		"account_id",
+		"email",
+		"status",
+	},
+	PartKey: []string{"account_id"},
+	SortKey: []string{"email"},
+})
+
+type emailByAccount struct {
 	Email     string `db:"email"`
 	AccountId string `db:"account_id"`
 	Status    int    `db:"status"`
 }
 
-type EmailConfirmation struct {
+type emailConfirmation struct {
 	Email string `json:"email"`
 }
 
@@ -44,7 +70,7 @@ func (r AccountRepository) AddAccountEmail(ctx context.Context, acc *account.Acc
 		return nil, account.ErrEmailNotUnique
 	}
 
-	authCookie := &EmailConfirmation{
+	authCookie := &emailConfirmation{
 		Email: confirm.Email(),
 	}
 
@@ -74,11 +100,10 @@ func (r AccountRepository) AddAccountEmail(ctx context.Context, acc *account.Acc
 		return nil, err
 	}
 
-	insertEmailByAccount := qb.Insert("emails_by_account").
-		Columns("email", "account_id", "status").
-		Query(r.session).
+	insertEmailByAccount := r.session.
+		Query(emailByAccountTable.Insert()).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(EmailByAccount{
+		BindStruct(emailByAccount{
 			Email:     confirm.Email(),
 			AccountId: acc.ID(),
 			Status:    0,
@@ -115,7 +140,7 @@ func (r AccountRepository) GetEmailConfirmationByEmail(ctx context.Context, emai
 			return "", err
 		}
 
-		var emailConfirmation EmailConfirmation
+		var emailConfirmation emailConfirmation
 		if err := json.Unmarshal([]byte(val), &emailConfirmation); err != nil {
 			return "", err
 		}
@@ -147,7 +172,7 @@ func (r AccountRepository) ConfirmAccountEmail(ctx context.Context, confirmId st
 		return nil, err
 	}
 
-	var confirmItem EmailConfirmation
+	var confirmItem emailConfirmation
 
 	if err := json.Unmarshal([]byte(val), &confirmItem); err != nil {
 		return nil, err
@@ -164,13 +189,10 @@ func (r AccountRepository) ConfirmAccountEmail(ctx context.Context, confirmId st
 		return nil, passport.ErrNotAuthenticated
 	}
 
-	// update to indicate that it's "confirmed" (status 1)
-	updateAccountEmail := qb.Update("emails_by_account").
-		Set("status").
-		Where(qb.Eq("email"), qb.Eq("account_id")).
-		Query(r.session).
+	updateAccountEmail := r.session.
+		Query(emailByAccountTable.Update("status")).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(EmailByAccount{
+		BindStruct(emailByAccount{
 			Email:     confirmItem.Email,
 			AccountId: acc.ID(),
 			Status:    1,
@@ -193,15 +215,13 @@ func (r AccountRepository) ConfirmAccountEmail(ctx context.Context, confirmId st
 // GetAccountEmail - get an email for a single account
 func (r AccountRepository) GetAccountEmail(ctx context.Context, accountId, email string) (*account.Email, error) {
 
-	var accountEmail EmailByAccount
+	var accountEmail emailByAccount
 
 	// get account emails and status
-	queryEmails := qb.Select("emails_by_account").
-		Where(qb.Eq("account_id"), qb.Eq("email")).
-		Columns("account_id", "email", "status").
-		Query(r.session).
+	queryEmails := r.session.
+		Query(emailByAccountTable.Get()).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(&EmailByAccount{
+		BindStruct(&emailByAccount{
 			AccountId: accountId,
 			Email:     email,
 		})
@@ -221,15 +241,12 @@ func (r AccountRepository) GetAccountEmail(ctx context.Context, accountId, email
 // GetAccountEmails - get emails for account
 func (r AccountRepository) GetAccountEmails(ctx context.Context, cursor *paging.Cursor, id string) ([]*account.Email, *paging.Info, error) {
 
-	var accountEmails []*EmailByAccount
+	var accountEmails []*emailByAccount
 
-	// get account emails and status
-	queryEmails := qb.Select("emails_by_account").
-		Where(qb.Eq("account_id")).
-		Columns("account_id", "email", "status").
-		Query(r.session).
+	queryEmails := r.session.
+		Query(emailByAccountTable.Select()).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(&EmailByAccount{
+		BindStruct(&emailByAccount{
 			AccountId: id,
 		})
 
@@ -283,18 +300,12 @@ func (r AccountRepository) DeleteAccountEmail(ctx context.Context, accountId, em
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
 	// delete emails by account
-	q := qb.Delete("emails_by_account").
-		Where(qb.Eq("account_id"), qb.Eq("email"))
-
-	stmt, _ := q.ToCql()
+	stmt, _ := emailByAccountTable.Delete()
 
 	batch.Query(stmt, accountId, email)
 
 	// delete account email
-	q = qb.Delete("account_emails").
-		Where(qb.Eq("email"))
-
-	stmt, _ = q.ToCql()
+	stmt, _ = accountEmailTable.Delete()
 
 	batch.Query(stmt, email)
 
@@ -327,5 +338,5 @@ func (r AccountRepository) UpdateAccountMakeEmailPrimary(ctx context.Context, ac
 		return nil, err
 	}
 
-	return instance, nil
+	return nil, nil
 }

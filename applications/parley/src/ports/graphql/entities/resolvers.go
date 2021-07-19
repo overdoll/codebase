@@ -29,7 +29,7 @@ func (r EntityResolver) FindPostRejectionReasonByID(ctx context.Context, id rela
 }
 
 func (r EntityResolver) FindPostByID(ctx context.Context, id relay.ID) (*types.Post, error) {
-	auditLog, err := r.App.Queries.GetPendingPostAuditLogById.Handle(ctx, id.GetID())
+	_, err := r.App.Queries.GetPendingPostAuditLogById.Handle(ctx, id.GetID())
 
 	if err != nil {
 		return nil, err
