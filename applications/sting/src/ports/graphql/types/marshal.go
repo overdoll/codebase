@@ -163,6 +163,7 @@ func MarshalCategoryToGraphQLConnection(results []*post.Category, paging *paging
 func MarshalCategoryToGraphQL(result *post.Category) *Category {
 	return &Category{
 		ID:    relay.NewID(Category{}, result.ID()),
+		Thumbnail:
 		Title: result.Title(),
 	}
 }

@@ -19,7 +19,6 @@ type Commands struct {
 	StartUndoPost    command.StartUndoPostHandler
 	RejectPost       command.RejectPostHandler
 
-	IndexAllArtists    command.IndexAllArtistsHandler
 	IndexAllCategories command.IndexAllCategoriesHandler
 	IndexAllCharacters command.IndexAllCharactersHandler
 	IndexAllMedia      command.IndexAllMediaHandler
@@ -34,7 +33,6 @@ type Commands struct {
 }
 
 type Queries struct {
-	SearchArtist       query.SearchArtistsHandler
 	SearchCategories   query.SearchCategoriesHandler
 	SearchCharacters   query.SearchCharactersHandler
 	SearchMedias       query.SearchMediasHandler

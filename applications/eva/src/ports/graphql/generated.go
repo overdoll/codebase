@@ -307,8 +307,6 @@ type ComplexityRoot struct {
 }
 
 type AccountResolver interface {
-	Avatar(ctx context.Context, obj *types.Account, size *int) (graphql1.URI, error)
-
 	Usernames(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountUsernameConnection, error)
 	Emails(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountEmailConnection, error)
 	Sessions(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountSessionConnection, error)
@@ -1412,7 +1410,7 @@ var sources = []*ast.Source{
   avatar(
     """The size of the resulting square image."""
     size: Int
-  ): URI! @goField(forceResolver: true)
+  ): URI!
 
   """The username of the account."""
   username: String!
@@ -2762,8 +2760,8 @@ func (ec *executionContext) _Account_avatar(ctx context.Context, field graphql.C
 		Object:     "Account",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
@@ -2776,7 +2774,7 @@ func (ec *executionContext) _Account_avatar(ctx context.Context, field graphql.C
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Account().Avatar(rctx, obj, args["size"].(*int))
+		return obj.Avatar, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8924,19 +8922,10 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 				atomic.AddUint32(&invalids, 1)
 			}
 		case "avatar":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Account_avatar(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			})
+			out.Values[i] = ec._Account_avatar(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		case "username":
 			out.Values[i] = ec._Account_username(ctx, field, obj)
 			if out.Values[i] == graphql.Null {

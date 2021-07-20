@@ -24,10 +24,6 @@ func init() {
 
 			defer cleanup()
 
-			if err := application.Commands.IndexAllArtists.Handle(ctx); err != nil {
-				log.Fatalf(err.Error())
-			}
-
 			if err := application.Commands.IndexAllCategories.Handle(ctx); err != nil {
 				log.Fatalf(err.Error())
 			}
@@ -41,23 +37,6 @@ func init() {
 			}
 
 			if err := application.Commands.IndexAllPosts.Handle(ctx); err != nil {
-				log.Fatalf(err.Error())
-			}
-		},
-	})
-
-	Root.AddCommand(&cobra.Command{
-		Use:   "artists",
-		Short: "Index the whole artists table into elasticsearch",
-		Run: func(cmd *cobra.Command, args []string) {
-			ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
-			defer cancelFn()
-
-			application, cleanup := service.NewApplication(ctx)
-
-			defer cleanup()
-
-			if err := application.Commands.IndexAllArtists.Handle(ctx); err != nil {
 				log.Fatalf(err.Error())
 			}
 		},
@@ -115,8 +94,8 @@ func init() {
 	})
 
 	Root.AddCommand(&cobra.Command{
-		Use:   "pending_posts",
-		Short: "Index the whole pending_posts table into elasticsearch",
+		Use:   "posts",
+		Short: "Index the whole posts table into elasticsearch",
 		Run: func(cmd *cobra.Command, args []string) {
 			ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
 			defer cancelFn()

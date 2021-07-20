@@ -41,10 +41,7 @@ type Config struct {
 
 type ResolverRoot interface {
 	Account() AccountResolver
-	Category() CategoryResolver
-	Character() CharacterResolver
 	Entity() EntityResolver
-	Media() MediaResolver
 	Mutation() MutationResolver
 	Query() QueryResolver
 }
@@ -203,12 +200,6 @@ type AccountResolver interface {
 	Posts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostConnection, error)
 	Contributions(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostConnection, error)
 }
-type CategoryResolver interface {
-	Thumbnail(ctx context.Context, obj *types.Category, size *int) (graphql1.URI, error)
-}
-type CharacterResolver interface {
-	Thumbnail(ctx context.Context, obj *types.Character, size *int) (graphql1.URI, error)
-}
 type EntityResolver interface {
 	FindAccountByID(ctx context.Context, id relay.ID) (*types.Account, error)
 	FindArtistByID(ctx context.Context, id relay.ID) (*types.Artist, error)
@@ -217,9 +208,6 @@ type EntityResolver interface {
 	FindMediaByID(ctx context.Context, id relay.ID) (*types.Media, error)
 	FindPostByID(ctx context.Context, id relay.ID) (*types.Post, error)
 	FindPostAuditLogByID(ctx context.Context, id relay.ID) (*types.PostAuditLog, error)
-}
-type MediaResolver interface {
-	Thumbnail(ctx context.Context, obj *types.Media, size *int) (graphql1.URI, error)
 }
 type MutationResolver interface {
 	CreatePost(ctx context.Context, input types.CreatePostInput) (*types.CreatePostPayload, error)
@@ -939,7 +927,7 @@ extend type Account @key(fields: "id") {
   thumbnail(
     """The size of the resulting square image."""
     size: Int
-  ): URI! @goField(forceResolver: true)
+  ): URI!
 
   """A title for this category."""
   title: String!
@@ -986,7 +974,7 @@ extend type Post {
   thumbnail(
     """The size of the resulting square image."""
     size: Int
-  ): URI! @goField(forceResolver: true)
+  ): URI!
 
   """A title for this media."""
   title: String!
@@ -1010,7 +998,7 @@ type Character implements Node & Object @key(fields: "id") {
   thumbnail(
     """The size of the resulting square image."""
     size: Int
-  ): URI! @goField(forceResolver: true)
+  ): URI!
 
   """A name for this character."""
   name: String!
@@ -1280,7 +1268,7 @@ interface Object {
   thumbnail(
     """The size of the resulting square image."""
     size: Int
-  ): URI! @goField(forceResolver: true)
+  ): URI!
 }`, BuiltIn: false},
 	{Name: "../../libraries/graphql/schema.graphql", Input: `scalar Time
 
@@ -2285,8 +2273,8 @@ func (ec *executionContext) _Category_thumbnail(ctx context.Context, field graph
 		Object:     "Category",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
@@ -2299,7 +2287,7 @@ func (ec *executionContext) _Category_thumbnail(ctx context.Context, field graph
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Category().Thumbnail(rctx, obj, args["size"].(*int))
+		return obj.Thumbnail, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2537,8 +2525,8 @@ func (ec *executionContext) _Character_thumbnail(ctx context.Context, field grap
 		Object:     "Character",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
@@ -2551,7 +2539,7 @@ func (ec *executionContext) _Character_thumbnail(ctx context.Context, field grap
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Character().Thumbnail(rctx, obj, args["size"].(*int))
+		return obj.Thumbnail, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3287,8 +3275,8 @@ func (ec *executionContext) _Media_thumbnail(ctx context.Context, field graphql.
 		Object:     "Media",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
@@ -3301,7 +3289,7 @@ func (ec *executionContext) _Media_thumbnail(ctx context.Context, field graphql.
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Media().Thumbnail(rctx, obj, args["size"].(*int))
+		return obj.Thumbnail, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6177,26 +6165,17 @@ func (ec *executionContext) _Category(ctx context.Context, sel ast.SelectionSet,
 		case "id":
 			out.Values[i] = ec._Category_id(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "thumbnail":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Category_thumbnail(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			})
+			out.Values[i] = ec._Category_thumbnail(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "title":
 			out.Values[i] = ec._Category_title(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -6287,31 +6266,22 @@ func (ec *executionContext) _Character(ctx context.Context, sel ast.SelectionSet
 		case "id":
 			out.Values[i] = ec._Character_id(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "thumbnail":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Character_thumbnail(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			})
+			out.Values[i] = ec._Character_thumbnail(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "name":
 			out.Values[i] = ec._Character_name(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "media":
 			out.Values[i] = ec._Character_media(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -6611,26 +6581,17 @@ func (ec *executionContext) _Media(ctx context.Context, sel ast.SelectionSet, ob
 		case "id":
 			out.Values[i] = ec._Media_id(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "thumbnail":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Media_thumbnail(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			})
+			out.Values[i] = ec._Media_thumbnail(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "title":
 			out.Values[i] = ec._Media_title(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))

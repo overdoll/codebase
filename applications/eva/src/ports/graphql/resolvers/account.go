@@ -6,17 +6,12 @@ import (
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/eva/src/app"
 	"overdoll/applications/eva/src/ports/graphql/types"
-	"overdoll/libraries/graphql"
 	"overdoll/libraries/helpers"
 	"overdoll/libraries/paging"
 )
 
 type AccountResolver struct {
 	App *app.Application
-}
-
-func (r AccountResolver) Avatar(ctx context.Context, obj *types.Account, size *int) (graphql.URI, error) {
-	return graphql.NewURI(""), nil
 }
 
 func (r AccountResolver) Emails(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountEmailConnection, error) {

@@ -40,10 +40,6 @@ type IndexRepository interface {
 	SearchPosts(ctx context.Context, cursor *paging.Cursor, filters *PostFilters) ([]*Post, *paging.Info, error)
 	DeletePost(ctx context.Context, postId string) error
 
-	DeleteArtistIndex(ctx context.Context) error
-	BulkIndexArtists(ctx context.Context, artists []*Artist) error
-	SearchArtists(ctx context.Context, cursor *paging.Cursor, username string) ([]*Artist, *paging.Info, error)
-
 	BulkIndexCharacters(ctx context.Context, characters []*Character) error
 	DeleteCharacterIndex(ctx context.Context) error
 	SearchCharacters(ctx context.Context, cursor *paging.Cursor, name string) ([]*Character, *paging.Info, error)
