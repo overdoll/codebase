@@ -12,7 +12,7 @@ type IsAccountMultiFactorTOTPEnabledHandler struct {
 	mr multi_factor.Repository
 }
 
-func NewIsAccountTOTPMultiFactorEnabledHandler(mr multi_factor.Repository) IsAccountMultiFactorTOTPEnabledHandler {
+func NewIsAccountMultiFactorTOTPEnabledHandler(mr multi_factor.Repository) IsAccountMultiFactorTOTPEnabledHandler {
 	return IsAccountMultiFactorTOTPEnabledHandler{mr: mr}
 }
 

@@ -83,8 +83,8 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			SearchCharacters:     query.NewSearchCharactersHandler(indexRepo),
 			SearchCategories:     query.NewSearchCategoriesHandler(indexRepo),
 			SearchArtist:         query.NewSearchArtistsHandler(indexRepo),
-			GetPostsForModerator: query.NewGetPendingPostsForModeratorHandler(indexRepo, eva),
-			GetPost:              query.NewGetPendingPostHandler(postRepo),
+			GetPostsForModerator: query.NewPostsByModeratorAccountHandler(indexRepo, eva),
+			GetPost:              query.NewPostByIdHandler(postRepo),
 			GetPostAuthenticated: query.NewGetPendingPostAuthenticatedHandler(postRepo, eva),
 		},
 	}

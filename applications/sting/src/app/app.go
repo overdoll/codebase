@@ -38,7 +38,6 @@ type Queries struct {
 	SearchCategories     query.SearchCategoriesHandler
 	SearchCharacters     query.SearchCharactersHandler
 	SearchMedias         query.SearchMediasHandler
-	GetPostsForModerator query.GetPostsForModeratorHandler
-	GetPost              query.GetPostHandler
-	GetPostAuthenticated query.GetPostAuthenticatedHandler
+	GetPostsForModerator query.PostsByModeratorAccountHandler
+	GetPost              query.PostByIdHandler
 }
