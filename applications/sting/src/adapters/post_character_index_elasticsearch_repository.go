@@ -5,15 +5,17 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/scylladb/gocqlx/v2"
 	"overdoll/applications/sting/src/domain/post"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/scan"
 )
 
 type characterDocument struct {
 	Id        string        `json:"id"`
 	Thumbnail string        `json:"thumbnail"`
 	Name      string        `json:"name"`
-	Media     MediaDocument `json:"media"`
+	Media     mediaDocument `json:"media"`
 }
 
 const characterIndex = `
@@ -66,14 +68,14 @@ const allCharacters = `
 
 const characterIndexName = "characters"
 
-func MarshalCharacterToDocument(char *post.Character) *characterDocument {
+func marshalCharacterToDocument(char *post.Character) *characterDocument {
 	media := char.Media()
 
 	return &characterDocument{
 		Id:        char.ID(),
 		Thumbnail: char.RawThumbnail(),
 		Name:      char.Name(),
-		Media: MediaDocument{
+		Media: mediaDocument{
 			Id:        media.ID(),
 			Thumbnail: media.RawThumbnail(),
 			Title:     media.Title(),
@@ -117,36 +119,56 @@ func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context,
 	return characters, nil, nil
 }
 
-func (r PostsIndexElasticSearchRepository) BulkIndexCharacters(ctx context.Context, characters []*post.Character) error {
+func (r PostsIndexElasticSearchRepository) IndexAllCharacters(ctx context.Context) error {
 
-	err := r.store.CreateBulkIndex(characterIndexName)
+	scanner := scan.New(r.session,
+		scan.Config{
+			NodesInCluster: 1,
+			CoresInNode:    2,
+			SmudgeFactor:   3,
+		},
+	)
 
-	if err != nil {
-		return fmt.Errorf("error creating bulk indexer: %s", err)
-	}
+	err := scanner.RunIterator(characterTable, func(iter *gocqlx.Iterx) error {
 
-	// TODO: also bulk index media along with characters
+		if err := r.store.CreateBulkIndex(characterIndex); err != nil {
+			return err
+		}
 
-	// Now we can safely start creating our documents
-	for _, char := range characters {
+		var m character
 
-		data := MarshalCharacterToDocument(char)
+		for iter.StructScan(&m) {
 
-		err = r.store.AddToBulkIndex(data.Id, data)
+			if err := r.store.AddToBulkIndex(m.Id, characterDocument{
+				Id:        m.Id,
+				Thumbnail: m.Thumbnail,
+				Name:      m.Name,
+				Media: mediaDocument{
+					Id:        m.MediaId,
+					Thumbnail: "",
+					Title:     "",
+				},
+			}); err != nil {
+				return err
+			}
+		}
 
-		if err != nil {
+		if err := r.store.CloseBulkIndex(); err != nil {
 			return fmt.Errorf("unexpected error: %s", err)
 		}
-	}
 
-	if err := r.store.CloseBulkIndex(); err != nil {
-		return fmt.Errorf("unexpected error: %s", err)
+		return nil
+	})
+
+	if err != nil {
+		return err
 	}
 
 	return nil
 }
 
 func (r PostsIndexElasticSearchRepository) DeleteCharacterIndex(ctx context.Context) error {
+
 	err := r.store.DeleteIndex(characterIndexName)
 
 	if err != nil {

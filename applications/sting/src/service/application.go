@@ -54,7 +54,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 	}
 
 	postRepo := adapters.NewPostsCassandraRepository(session)
-	indexRepo := adapters.NewPostsIndexElasticSearchRepository(es)
+	indexRepo := adapters.NewPostsIndexElasticSearchRepository(es, session)
 
 	contentRepo := adapters.NewContentS3Repository(awsSession)
 
@@ -62,7 +62,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 		Commands: app.Commands{
 			CreatePost:          command.NewCreatePendingPostHandler(postRepo, eva, parley),
 			UpdatePost:          command.NewUpdatePendingPostHandler(postRepo),
-			IndexAllPosts:       command.NewIndexAllPendingPostsHandler(postRepo, indexRepo, eva),
+			IndexAllPosts:       command.NewIndexAllPendingPostsHandler(postRepo, indexRepo),
 			IndexAllMedia:       command.NewIndexAllMediaHandler(postRepo, indexRepo),
 			IndexAllCharacters:  command.NewIndexAllCharactersHandler(postRepo, indexRepo),
 			IndexAllCategories:  command.NewIndexAllCategoriesHandler(postRepo, indexRepo),

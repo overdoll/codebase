@@ -5,8 +5,10 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/scylladb/gocqlx/v2"
 	"overdoll/applications/sting/src/domain/post"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/scan"
 )
 
 type categoryDocument struct {
@@ -50,7 +52,7 @@ const allCategories = `
 
 const categoryIndexName = "categories"
 
-func MarshalCategoryToDocument(cat *post.Category) *categoryDocument {
+func marshalCategoryToDocument(cat *post.Category) *categoryDocument {
 	return &categoryDocument{
 		Id:        cat.ID(),
 		Thumbnail: cat.RawThumbnail(),
@@ -94,34 +96,50 @@ func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context,
 	return cats, nil, nil
 }
 
-func (r PostsIndexElasticSearchRepository) BulkIndexCategories(ctx context.Context, categories []*post.Category) error {
+func (r PostsIndexElasticSearchRepository) IndexAllCategories(ctx context.Context) error {
 
-	err := r.store.CreateBulkIndex(categoryIndexName)
+	scanner := scan.New(r.session,
+		scan.Config{
+			NodesInCluster: 1,
+			CoresInNode:    2,
+			SmudgeFactor:   3,
+		},
+	)
 
-	if err != nil {
-		return fmt.Errorf("error creating bulk indexer: %s", err)
-	}
+	err := scanner.RunIterator(categoryTable, func(iter *gocqlx.Iterx) error {
 
-	// Now we can safely start creating our documents
-	for _, cat := range categories {
+		if err := r.store.CreateBulkIndex(categoryIndex); err != nil {
+			return err
+		}
 
-		data := MarshalCategoryToDocument(cat)
+		var c category
 
-		err = r.store.AddToBulkIndex(data.Id, data)
+		for iter.StructScan(&c) {
+			if err := r.store.AddToBulkIndex(c.Id, categoryDocument{
+				Id:        c.Id,
+				Thumbnail: c.Thumbnail,
+				Title:     c.Title,
+			}); err != nil {
+				return err
+			}
+		}
 
-		if err != nil {
+		if err := r.store.CloseBulkIndex(); err != nil {
 			return fmt.Errorf("unexpected error: %s", err)
 		}
-	}
 
-	if err := r.store.CloseBulkIndex(); err != nil {
-		return fmt.Errorf("unexpected error: %s", err)
+		return nil
+	})
+
+	if err != nil {
+		return err
 	}
 
 	return nil
 }
 
 func (r PostsIndexElasticSearchRepository) DeleteCategoryIndex(ctx context.Context) error {
+
 	err := r.store.DeleteIndex(categoryIndexName)
 
 	if err != nil {

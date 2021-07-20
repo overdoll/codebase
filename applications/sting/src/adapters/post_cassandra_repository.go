@@ -168,34 +168,6 @@ func (r PostsCassandraRepository) DeletePost(ctx context.Context, id string) err
 	return nil
 }
 
-func (r PostsCassandraRepository) GetPosts(ctx context.Context) ([]*post.Post, error) {
-
-	postQuery := r.session.
-		Query(postTable.Select()).
-		Consistency(gocql.LocalQuorum)
-
-	var postsPending []posts
-
-	if err := postQuery.Select(&postsPending); err != nil {
-		return nil, err
-	}
-
-	var pos []*post.Post
-
-	for _, pst := range postsPending {
-
-		item, err := r.unmarshalPost(ctx, pst)
-
-		if err != nil {
-			return nil, err
-		}
-
-		pos = append(pos, item)
-	}
-
-	return pos, nil
-}
-
 func (r PostsCassandraRepository) GetPost(ctx context.Context, id string) (*post.Post, error) {
 
 	postQuery := r.session.

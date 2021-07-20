@@ -131,62 +131,6 @@ func (r PostsCassandraRepository) GetCharacterById(ctx context.Context, characte
 	), nil
 }
 
-func (r PostsCassandraRepository) GetCharacters(ctx context.Context) ([]*post.Character, error) {
-	var dbChars []character
-
-	// Grab all of our characters
-	// Doing a direct database query
-	qc := r.session.Query(characterTable.Select())
-
-	if err := qc.Select(&dbChars); err != nil {
-		return nil, fmt.Errorf("select() failed: %s", err)
-	}
-
-	var medias []media
-
-	// Go through each character and grab the media ID, since we need this for the character document
-	for _, char := range dbChars {
-		medias = append(medias, media{Id: char.MediaId})
-	}
-
-	// Get all the medias through a direct database query
-	qm := r.session.
-		Query(mediaTable.Select()).
-		Consistency(gocql.One)
-
-	if err := qm.Select(&medias); err != nil {
-		return nil, fmt.Errorf("select() failed: %s", err)
-	}
-
-	var characters []*post.Character
-
-	// Now we can safely start creating our documents
-	for _, char := range dbChars {
-
-		var media media
-
-		for _, med := range medias {
-			if med.Id == char.MediaId {
-				media = med
-				break
-			}
-		}
-
-		characters = append(characters, post.UnmarshalCharacterFromDatabase(
-			char.Id,
-			char.Name,
-			char.Thumbnail,
-			post.UnmarshalMediaFromDatabase(
-				char.MediaId,
-				media.Title,
-				media.Thumbnail,
-			),
-		))
-	}
-
-	return characters, nil
-}
-
 func (r PostsCassandraRepository) CreateCharacters(ctx context.Context, characters []*post.Character) error {
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)

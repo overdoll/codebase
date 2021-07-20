@@ -3,7 +3,6 @@ package adapters
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
@@ -32,21 +31,16 @@ func (r PostsCassandraRepository) GetCategoriesById(ctx context.Context, cats []
 
 	var categories []*post.Category
 
-	final := []string{}
-
-	for _, str := range cats {
-		final = append(final, `'`+str+`'`)
-	}
-
-	if len(final) == 0 {
+	if len(cats) == 0 {
 		return categories, nil
 	}
 
 	queryCategories := categoryTable.
 		SelectBuilder().
-		Where(qb.InLit("id", "("+strings.Join(final, ",")+")")).
+		Where(qb.In("id")).
 		Query(r.session).
-		Consistency(gocql.One)
+		Consistency(gocql.One).
+		Bind(cats)
 
 	var categoriesModels []category
 
@@ -74,25 +68,6 @@ func (r PostsCassandraRepository) GetCategoryById(ctx context.Context, categoryI
 	}
 
 	return post.UnmarshalCategoryFromDatabase(cat.Id, cat.Title, cat.Thumbnail), nil
-}
-
-func (r PostsCassandraRepository) GetCategories(ctx context.Context) ([]*post.Category, error) {
-
-	var dbCategory []category
-
-	qc := r.session.Query(categoryTable.Select()).Consistency(gocql.One)
-
-	if err := qc.Select(&dbCategory); err != nil {
-		return nil, fmt.Errorf("select() failed: %s", err)
-	}
-
-	var categories []*post.Category
-
-	for _, dbCat := range dbCategory {
-		categories = append(categories, post.UnmarshalCategoryFromDatabase(dbCat.Id, dbCat.Title, dbCat.Thumbnail))
-	}
-
-	return categories, nil
 }
 
 func (r PostsCassandraRepository) CreateCategories(ctx context.Context, categories []*post.Category) error {

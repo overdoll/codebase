@@ -30,25 +30,6 @@ func marshalArtistToDatabase(art *post.Artist) *artist {
 	}
 }
 
-func (r PostsCassandraRepository) GetArtists(ctx context.Context) ([]*post.Artist, error) {
-
-	var dbArtists []artist
-
-	qc := r.session.Query(artistTable.Select()).Consistency(gocql.One)
-
-	if err := qc.Select(&dbArtists); err != nil {
-		return nil, fmt.Errorf("select() failed: %s", err)
-	}
-
-	var artists []*post.Artist
-
-	for _, dbArt := range dbArtists {
-		artists = append(artists, post.UnmarshalArtistFromDatabase(dbArt.Id, dbArt.DoNotPostReason))
-	}
-
-	return artists, nil
-}
-
 func (r PostsCassandraRepository) GetArtistById(ctx context.Context, id string) (*post.Artist, error) {
 
 	var art artist

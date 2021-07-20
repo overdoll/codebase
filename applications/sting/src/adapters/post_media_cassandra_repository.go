@@ -27,30 +27,6 @@ type media struct {
 	Thumbnail string `db:"thumbnail"`
 }
 
-func (r PostsCassandraRepository) GetMedias(ctx context.Context) ([]*post.Media, error) {
-	var dbMed []media
-
-	qc := r.session.Query(mediaTable.Select()).Consistency(gocql.LocalQuorum)
-
-	if err := qc.Select(&dbMed); err != nil {
-		return nil, fmt.Errorf("select() failed: %s", err)
-	}
-
-	var medias []*post.Media
-
-	// Now we can safely start creating our documents
-	for _, media := range dbMed {
-
-		medias = append(medias, post.UnmarshalMediaFromDatabase(
-			media.Id,
-			media.Title,
-			media.Thumbnail,
-		))
-	}
-
-	return medias, nil
-}
-
 func (r PostsCassandraRepository) GetMediaById(ctx context.Context, mediaId string) (*post.Media, error) {
 
 	queryMedia := r.session.

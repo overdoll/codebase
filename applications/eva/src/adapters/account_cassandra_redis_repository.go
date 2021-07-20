@@ -13,7 +13,7 @@ import (
 )
 
 var accountTable = table.New(table.Metadata{
-	Name: "Accounts",
+	Name: "accounts",
 	Columns: []string{
 		"id",
 		"username",
@@ -31,7 +31,7 @@ var accountTable = table.New(table.Metadata{
 	SortKey: []string{},
 })
 
-type Accounts struct {
+type accounts struct {
 	Id                 string   `db:"id"`
 	Username           string   `db:"username"`
 	Email              string   `db:"email"`
@@ -54,8 +54,8 @@ func NewAccountCassandraRedisRepository(session gocqlx.Session, client *redis.Cl
 	return AccountRepository{session: session, client: client}
 }
 
-func marshalUserToDatabase(usr *account.Account) *Accounts {
-	return &Accounts{
+func marshalUserToDatabase(usr *account.Account) *accounts {
+	return &accounts{
 		Id:                 usr.ID(),
 		Email:              usr.Email(),
 		Username:           usr.Username(),
@@ -71,12 +71,12 @@ func marshalUserToDatabase(usr *account.Account) *Accounts {
 
 // GetAccountById - Get user using the ID
 func (r AccountRepository) GetAccountById(ctx context.Context, id string) (*account.Account, error) {
-	var accountInstance Accounts
+	var accountInstance accounts
 
 	queryUser := r.session.
 		Query(accountTable.Get()).
 		Consistency(gocql.LocalOne).
-		BindStruct(&Accounts{
+		BindStruct(&accounts{
 			Id: id,
 		})
 
@@ -125,7 +125,7 @@ func (r AccountRepository) GetAccountByEmail(ctx context.Context, email string) 
 		return nil, err
 	}
 
-	// Get our user using the Accounts AccountId, from the user email instance
+	// Get our user using the accounts AccountId, from the user email instance
 	usr, err := r.GetAccountById(ctx, accEmail.AccountId)
 
 	if err != nil {

@@ -9,9 +9,11 @@ import (
 	"text/template"
 	"time"
 
+	"github.com/scylladb/gocqlx/v2"
 	"overdoll/applications/sting/src/domain/post"
 	search "overdoll/libraries/elasticsearch"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/scan"
 )
 
 type postDocument struct {
@@ -172,11 +174,12 @@ const searchPostPending = `
 const PostIndexName = "posts"
 
 type PostsIndexElasticSearchRepository struct {
-	store *search.Store
+	session gocqlx.Session
+	store   *search.Store
 }
 
-func NewPostsIndexElasticSearchRepository(store *search.Store) PostsIndexElasticSearchRepository {
-	return PostsIndexElasticSearchRepository{store: store}
+func NewPostsIndexElasticSearchRepository(store *search.Store, session gocqlx.Session) PostsIndexElasticSearchRepository {
+	return PostsIndexElasticSearchRepository{store: store, session: session}
 }
 
 func (r PostsIndexElasticSearchRepository) IndexPost(ctx context.Context, pendingPost *post.Post) error {
@@ -186,6 +189,59 @@ func (r PostsIndexElasticSearchRepository) IndexPost(ctx context.Context, pendin
 	pendingPosts = append(pendingPosts, pendingPost)
 
 	return r.BulkIndexPosts(ctx, pendingPosts)
+}
+
+func marshalPostToDocument(pst *post.Post) *postDocument {
+	var characterDocuments []*characterDocument
+
+	for _, char := range pst.Characters() {
+		characterDocuments = append(characterDocuments, marshalCharacterToDocument(char))
+	}
+
+	var categoryDocuments []*categoryDocument
+
+	for _, cat := range pst.Categories() {
+		categoryDocuments = append(categoryDocuments, marshalCategoryToDocument(cat))
+	}
+
+	characterRequests := make(map[string]string)
+
+	for _, cr := range pst.CharacterRequests() {
+		characterRequests[cr.Name] = cr.Media
+	}
+
+	var categoryRequests []string
+
+	for _, cr := range pst.CategoryRequests() {
+		categoryRequests = append(categoryRequests, cr.Title)
+	}
+
+	var mediaRequests []string
+
+	for _, cr := range pst.MediaRequests() {
+		mediaRequests = append(mediaRequests, cr.Title)
+	}
+
+	return &postDocument{
+		Id:             pst.ID(),
+		State:          string(pst.State()),
+		ArtistUsername: "",
+		ArtistId:       pst.Artist().ID(),
+		ModeratorId:    pst.ModeratorId(),
+		Contributor: contributorDocument{
+			Id:       pst.Contributor().ID(),
+			Avatar:   pst.Contributor().Avatar(),
+			Username: pst.Contributor().Username(),
+		},
+		Content:            pst.RawContent(),
+		PostedAt:           strconv.FormatInt(pst.PostedAt().Unix(), 10),
+		Categories:         categoryDocuments,
+		Characters:         characterDocuments,
+		CharactersRequests: characterRequests,
+		CategoriesRequests: categoryRequests,
+		MediaRequests:      mediaRequests,
+		ReassignmentAt:     strconv.FormatInt(pst.ReassignmentAt().Unix(), 10),
+	}
 }
 
 func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, cursor *paging.Cursor, filter *post.PostFilters) ([]*post.Post, *paging.Info, error) {
@@ -316,77 +372,73 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, curs
 	return posts, pageInfo, nil
 }
 
-func (r PostsIndexElasticSearchRepository) BulkIndexPosts(ctx context.Context, pendingPosts []*post.Post) error {
-	err := r.store.CreateBulkIndex(PostIndexName)
+func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) error {
+	
+	scanner := scan.New(r.session,
+		scan.Config{
+			NodesInCluster: 1,
+			CoresInNode:    2,
+			SmudgeFactor:   3,
+		},
+	)
 
-	if err != nil {
-		return fmt.Errorf("error creating bulk indexer: %s", err)
-	}
+	err := scanner.RunIterator(mediaTable, func(iter *gocqlx.Iterx) error {
 
-	for _, pst := range pendingPosts {
-
-		var characterDocuments []*characterDocument
-
-		for _, char := range pst.Characters() {
-			characterDocuments = append(characterDocuments, MarshalCharacterToDocument(char))
+		if err := r.store.CreateBulkIndex(mediaIndex); err != nil {
+			return err
 		}
 
-		var categoryDocuments []*categoryDocument
+		var p posts
 
-		for _, cat := range pst.Categories() {
-			categoryDocuments = append(categoryDocuments, MarshalCategoryToDocument(cat))
+		for iter.StructScan(&p) {
+
+			var characterDocuments []*characterDocument
+
+			for _, char := range pst.Characters() {
+				characterDocuments = append(characterDocuments, marshalCharacterToDocument(char))
+			}
+
+			var categoryDocuments []*categoryDocument
+
+			for _, cat := range p.Categories {
+				categoryDocuments = append(categoryDocuments, &categoryDocument{
+					Id:        cat,
+					Thumbnail: "",
+					Title:     "",
+				})
+			}
+
+			if err := r.store.AddToBulkIndex(p.Id, postDocument{
+				Id:                 p.Id,
+				State:              p.State,
+				ModeratorId:        p.ModeratorId,
+				ArtistId:           p.ArtistId,
+				ArtistUsername:     p.ArtistRequest,
+				Contributor:        contributorDocument{},
+				Content:            p.Content,
+				Categories:         p.Categories,
+				Characters:         nil,
+				CharactersRequests: nil,
+				CategoriesRequests: nil,
+				MediaRequests:      nil,
+				PostedAt:           "",
+				ReassignmentAt:     "",
+			}); err != nil {
+				return err
+			}
 		}
 
-		characterRequests := make(map[string]string)
-
-		for _, cr := range pst.CharacterRequests() {
-			characterRequests[cr.Name] = cr.Media
-		}
-
-		var categoryRequests []string
-
-		for _, cr := range pst.CategoryRequests() {
-			categoryRequests = append(categoryRequests, cr.Title)
-		}
-
-		var mediaRequests []string
-
-		for _, cr := range pst.MediaRequests() {
-			mediaRequests = append(mediaRequests, cr.Title)
-		}
-
-		data := &postDocument{
-			Id:             pst.ID(),
-			State:          string(pst.State()),
-			ArtistUsername: "",
-			ArtistId:       pst.Artist().ID(),
-			ModeratorId:    pst.ModeratorId(),
-			Contributor: contributorDocument{
-				Id:       pst.Contributor().ID(),
-				Avatar:   pst.Contributor().Avatar(),
-				Username: pst.Contributor().Username(),
-			},
-			Content:            pst.RawContent(),
-			PostedAt:           strconv.FormatInt(pst.PostedAt().Unix(), 10),
-			Categories:         categoryDocuments,
-			Characters:         characterDocuments,
-			CharactersRequests: characterRequests,
-			CategoriesRequests: categoryRequests,
-			MediaRequests:      mediaRequests,
-			ReassignmentAt:     strconv.FormatInt(pst.ReassignmentAt().Unix(), 10),
-		}
-
-		err = r.store.AddToBulkIndex(data.Id, data)
-
-		if err != nil {
+		if err := r.store.CloseBulkIndex(); err != nil {
 			return fmt.Errorf("unexpected error: %s", err)
 		}
-	}
 
-	if err := r.store.CloseBulkIndex(); err != nil {
-		return fmt.Errorf("unexpected error: %s", err)
-	}
+		return nil
+	})
 
+	if err != nil {
+		return err
+	}
+	
 	return nil
 }
 
@@ -400,6 +452,7 @@ func (r PostsIndexElasticSearchRepository) DeletePost(ctx context.Context, id st
 }
 
 func (r PostsIndexElasticSearchRepository) DeletePostIndex(ctx context.Context) error {
+	
 	err := r.store.DeleteIndex(PostIndexName)
 
 	if err != nil {

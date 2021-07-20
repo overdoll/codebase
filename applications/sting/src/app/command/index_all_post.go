@@ -7,13 +7,12 @@ import (
 )
 
 type IndexAllPostsHandler struct {
-	pr  post.Repository
-	eva EvaService
-	pi  post.IndexRepository
+	pr post.Repository
+	pi post.IndexRepository
 }
 
-func NewIndexAllPendingPostsHandler(pr post.Repository, pi post.IndexRepository, eva EvaService) IndexAllPostsHandler {
-	return IndexAllPostsHandler{pr: pr, pi: pi, eva: eva}
+func NewIndexAllPendingPostsHandler(pr post.Repository, pi post.IndexRepository) IndexAllPostsHandler {
+	return IndexAllPostsHandler{pr: pr, pi: pi}
 }
 
 func (h IndexAllPostsHandler) Handle(ctx context.Context) error {
@@ -22,22 +21,5 @@ func (h IndexAllPostsHandler) Handle(ctx context.Context) error {
 		return err
 	}
 
-	posts, err := h.pr.GetPosts(ctx)
-
-	if err != nil {
-		return err
-	}
-
-	for _, pst := range posts {
-		usr, err := h.eva.GetAccount(ctx, pst.Contributor().ID())
-
-		if err != nil {
-			return err
-		}
-
-		// get proper contributor data because it's not correct (only ID is returned)
-		pst.UpdateContributor(usr)
-	}
-
-	return h.pi.BulkIndexPosts(ctx, posts)
+	return h.pi.IndexAllPosts(ctx)
 }

@@ -21,11 +21,5 @@ func (h IndexAllCategoriesHandler) Handle(ctx context.Context) error {
 		return err
 	}
 
-	categories, err := h.pr.GetCategories(ctx)
-
-	if err != nil {
-		return err
-	}
-
-	return h.pi.BulkIndexCategories(ctx, categories)
+	return h.pi.IndexAllCategories(ctx)
 }
