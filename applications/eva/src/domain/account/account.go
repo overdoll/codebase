@@ -236,8 +236,8 @@ func (u *Account) UpdateEmail(emails []*Email, email string) error {
 	for _, current := range emails {
 		if current.Email() == email {
 			if current.IsConfirmed() {
+				current.MakePrimary()
 				u.email = email
-				return nil
 			}
 		}
 	}

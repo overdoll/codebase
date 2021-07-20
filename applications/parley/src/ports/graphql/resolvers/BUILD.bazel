@@ -2,7 +2,10 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "resolvers",
-    srcs = ["account.go"],
+    srcs = [
+        "account.go",
+        "post.go",
+    ],
     importpath = "overdoll/applications/parley/src/ports/graphql/resolvers",
     visibility = ["//visibility:public"],
     deps = [

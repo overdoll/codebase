@@ -70,3 +70,11 @@ func (c *Email) IsUnconfirmed() bool {
 func (c *Email) IsPrimary() bool {
 	return c.status == EmailPrimary
 }
+
+func (c *Email) MakePrimary() {
+	c.status = EmailPrimary
+}
+
+func (c *Email) MakeConfirmed() {
+	c.status = EmailConfirmed
+}

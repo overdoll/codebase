@@ -3,10 +3,13 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "query",
     srcs = [
-        "account_infraction_history.go",
-        "moderator_in_queue.go",
+        "account_infraction_history_by_account.go",
+        "account_infraction_history_by_id.go",
+        "is_moderator_in_queue.go",
+        "pending_post_audit_log.go",
         "pending_post_audit_logs_by_post.go",
         "pending_posts_audit_log_by_moderator.go",
+        "pending_posts_rejection_reason_by_id.go",
         "pending_posts_rejection_reasons.go",
         "services.go",
     ],

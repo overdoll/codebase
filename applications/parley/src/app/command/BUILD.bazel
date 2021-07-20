@@ -4,8 +4,8 @@ go_library(
     name = "command",
     srcs = [
         "get_next_moderator.go",
-        "moderate_pending_post.go",
-        "revert_moderate_pending_post_audit_log.go",
+        "moderate_post.go",
+        "revert_moderate_post_audit_log.go",
         "services.go",
         "toggle_moderator.go",
     ],

@@ -3,9 +3,8 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "query",
     srcs = [
-        "get_post.go",
-        "get_post_authenticated.go",
-        "get_posts.go",
+        "post_by_id.go",
+        "posts_by_moderator_account.go",
         "search_artists.go",
         "search_categories.go",
         "search_characters.go",

@@ -9,6 +9,7 @@ import (
 
 	"github.com/go-redis/redis/v8"
 	"github.com/gocql/gocql"
+	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/eva/src/domain/account"
 	"overdoll/libraries/crypt"
@@ -53,7 +54,7 @@ type emailConfirmation struct {
 }
 
 const (
-	ConfirmEmailPrefix = "emailConfirm:"
+	confirmEmailPrefix = "emailConfirm:"
 )
 
 // AddAccountEmail - add an email to the account
@@ -85,7 +86,7 @@ func (r AccountRepository) AddAccountEmail(ctx context.Context, acc *account.Acc
 		return nil, err
 	}
 
-	ok, err := r.client.SetNX(ctx, ConfirmEmailPrefix+confirm.ID(), valReal, confirm.Expires()).Result()
+	ok, err := r.client.SetNX(ctx, confirmEmailPrefix+confirm.ID(), valReal, confirm.Expires()).Result()
 
 	if err != nil {
 		return nil, err
@@ -120,7 +121,7 @@ func (r AccountRepository) AddAccountEmail(ctx context.Context, acc *account.Acc
 // NOTE: this should only be used in tests! This is here purely because it is used for testing and any future
 // changes to how email confirmations will work would make this change easier
 func (r AccountRepository) GetEmailConfirmationByEmail(ctx context.Context, email string) (string, error) {
-	keys, err := r.client.Keys(ctx, ConfirmEmailPrefix+"*").Result()
+	keys, err := r.client.Keys(ctx, confirmEmailPrefix+"*").Result()
 
 	if err != nil {
 		return "", err
@@ -156,7 +157,7 @@ func (r AccountRepository) GetEmailConfirmationByEmail(ctx context.Context, emai
 // ConfirmAccountEmail - confirm account email
 func (r AccountRepository) ConfirmAccountEmail(ctx context.Context, confirmId string, acc *account.Account) (*account.Email, error) {
 
-	val, err := r.client.Get(ctx, ConfirmEmailPrefix+confirmId).Result()
+	val, err := r.client.Get(ctx, confirmEmailPrefix+confirmId).Result()
 
 	if err != nil {
 
@@ -203,7 +204,7 @@ func (r AccountRepository) ConfirmAccountEmail(ctx context.Context, confirmId st
 	}
 
 	// delete confirmation (it has been used up)
-	_, err = r.client.Del(ctx, ConfirmEmailPrefix+confirmId).Result()
+	_, err = r.client.Del(ctx, confirmEmailPrefix+confirmId).Result()
 
 	if err != nil {
 		return nil, fmt.Errorf("get failed: '%s", err)
@@ -320,7 +321,7 @@ func (r AccountRepository) DeleteAccountEmail(ctx context.Context, accountId, em
 // or just change the casings
 func (r AccountRepository) UpdateAccountMakeEmailPrimary(ctx context.Context, accountId string, updateFn func(usr *account.Account, ems []*account.Email) error) (*account.Account, *account.Email, error) {
 
-	instance, err := r.GetAccountById(ctx, accountId)
+	acc, err := r.GetAccountById(ctx, accountId)
 
 	if err != nil {
 		return nil, nil, err
@@ -332,11 +333,48 @@ func (r AccountRepository) UpdateAccountMakeEmailPrimary(ctx context.Context, ac
 		return nil, nil, err
 	}
 
-	err = updateFn(instance, ems)
+	oldEmail := acc.Email()
+
+	err = updateFn(acc, ems)
 
 	if err != nil {
 		return nil, nil, err
 	}
 
-	return instance, nil, nil
+	var newEmail *account.Email
+
+	for _, email := range ems {
+		if email.IsPrimary() && email.Email() != oldEmail {
+			newEmail = email
+		}
+	}
+
+	if newEmail == nil {
+		return nil, nil, errors.New("email not found")
+	}
+
+	batch := r.session.NewBatch(gocql.LoggedBatch)
+
+	// delete emails by account
+	stmt, _ := accountEmailTable.
+		UpdateBuilder().
+		Set("status").
+		Where(qb.Eq("email"), qb.Eq("account_id")).
+		ToCql()
+
+	batch.Query(stmt, 2, newEmail.Email(), accountId)
+	batch.Query(stmt, 1, oldEmail, accountId)
+
+	stmt, _ = accountTable.
+		UpdateBuilder().
+		Set("email").
+		ToCql()
+
+	batch.Query(stmt, newEmail.Email(), accountId)
+
+	if err := r.session.ExecuteBatch(batch); err != nil {
+		return nil, nil, fmt.Errorf("batch() failed: %s", err)
+	}
+
+	return acc, newEmail, nil
 }

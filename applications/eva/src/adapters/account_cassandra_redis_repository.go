@@ -229,7 +229,7 @@ func (r AccountRepository) CreateAccount(ctx context.Context, instance *account.
 		// create a table that holds all of the user's emails
 		stmt, _ = emailByAccountTable.Insert()
 
-		batch.Query(stmt, instance.Email(), instance.ID(), 1)
+		batch.Query(stmt, instance.Email(), instance.ID(), 2)
 
 		email = instance.Username()
 	}
