@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 5d1adf5588e35e94786070bd9484079a
+ * @relayHash 73705b449c435e088cecd1af88395e9c
  */
 
 /* eslint-disable */
@@ -29,7 +29,30 @@ fragment QueuePostsFragment on Query {
     edges {
       node {
         id
+        state
+        contributor {
+          username
+          avatar
+        }
+        content
+        categories {
+          title
+        }
+        characters {
+          name
+          media {
+            title
+          }
+        }
+        mediaRequests
+        characterRequests {
+          name
+          media
+        }
         artistId
+        artistUsername
+        postedAt
+        reassignmentAt
         __typename
       }
       cursor
@@ -49,7 +72,23 @@ var v0 = [
     "name": "first",
     "value": 1
   }
-];
+],
+v1 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "title",
+    "storageKey": null
+  }
+],
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": [],
@@ -107,7 +146,125 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
+                    "name": "state",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Contributor",
+                    "kind": "LinkedField",
+                    "name": "contributor",
+                    "plural": false,
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "username",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "avatar",
+                        "storageKey": null
+                      }
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "content",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Category",
+                    "kind": "LinkedField",
+                    "name": "categories",
+                    "plural": true,
+                    "selections": (v1/*: any*/),
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Character",
+                    "kind": "LinkedField",
+                    "name": "characters",
+                    "plural": true,
+                    "selections": [
+                      (v2/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "Media",
+                        "kind": "LinkedField",
+                        "name": "media",
+                        "plural": false,
+                        "selections": (v1/*: any*/),
+                        "storageKey": null
+                      }
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "mediaRequests",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "CharacterRequestType",
+                    "kind": "LinkedField",
+                    "name": "characterRequests",
+                    "plural": true,
+                    "selections": [
+                      (v2/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "media",
+                        "storageKey": null
+                      }
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
                     "name": "artistId",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "artistUsername",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "postedAt",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "reassignmentAt",
                     "storageKey": null
                   },
                   {
@@ -170,7 +327,7 @@ return {
     ]
   },
   "params": {
-    "id": "5d1adf5588e35e94786070bd9484079a",
+    "id": "73705b449c435e088cecd1af88395e9c",
     "metadata": {},
     "name": "QueuePostsQuery",
     "operationKind": "query",

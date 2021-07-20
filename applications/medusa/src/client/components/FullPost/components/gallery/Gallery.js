@@ -23,6 +23,7 @@ import ArrowButtonRight2
   from '@streamlinehq/streamlinehq/img/streamline-bold/arrows-diagrams/arrows/arrow-button-right-2.svg'
 import ArrowButtonLeft2
   from '@streamlinehq/streamlinehq/img/streamline-bold/arrows-diagrams/arrows/arrow-button-left-2.svg'
+import mime from 'mime-types'
 
 import SuspenseImage from '@//:modules/utilities/SuspenseImage'
 
@@ -88,10 +89,10 @@ export default function Gallery ({ files, urls, thumbnails, setSwiper }: Props):
               // TODO make into its own componenet
               const content = urls[file.id]
 
-              const fileType = file.type.split('/')[0]
+              const fileType = mime.lookup(content).split('/')[0]
 
               return (
-                <SwiperSlide key={file.id}>
+                <SwiperSlide key={index}>
                   {({ isActive }) => {
                     const videoRef = useRef(null)
 

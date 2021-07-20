@@ -20,10 +20,12 @@ import { useTranslation } from 'react-i18next'
 import type { QueuePostsFragment$key } from '@//:artifacts/QueuePostsFragment.graphql'
 import type { PostsPaginationQuery } from '@//:artifacts/PostsPaginationQuery.graphql'
 import type { QueuePostsQuery } from '@//:artifacts/QueuePostsQuery.graphql'
+import type { ProfileSettingsQuery } from '@//:artifacts/ProfileSettingsQuery.graphql'
+import ErrorFallback from '../../../../components/ErrorFallback/ErrorFallback'
+import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
 
 type Props = {
-  pendingPosts: QueuePostsFragment$key,
-  pendingPostsQuery: PreloadedQuery<QueuePostsQuery>
+  postsQuery: PreloadedQuery<QueuePostsQuery>,
 }
 
 const pendingPostsGQL = graphql`
@@ -38,32 +40,53 @@ const pendingPostsGQL = graphql`
       edges {
         node {
           id
+          state
+          contributor {
+            username
+            avatar
+          }
+          content
+          categories {
+            title
+          }
+          characters {
+            name
+            media {
+              title
+            }
+          }
+          mediaRequests
+          characterRequests {
+            name
+            media
+          }
           artistId
+          artistUsername
+          postedAt
+          reassignmentAt
         }
       }
     }
   }
 `
 
+const queuePostsGQL = graphql`
+  query QueuePostsQuery {
+    ...QueuePostsFragment
+  }
+`
+
 export default function Queue (props: Props): Node {
   const [t] = useTranslation('moderation')
 
-  const { data, loadNext, hasNext, hasPrevious, loadPrevious, isLoadingNext, isLoadingPrevious } = usePaginationFragment<PostsPaginationQuery,
-    _>(
-      pendingPostsGQL,
-      props.pendingPosts
-    )
-
-  const queryData = useLazyLoadQuery(
-    graphql`
-      query QueuePostsQuery {
-        ...QueuePostsFragment
-      }
-    `,
-    props.pendingPostsQuery
+  const [queryRef, loadQuery] = useQueryLoader<QueuePostsQuery>(
+    queuePostsGQL,
+    props.postsQuery
   )
 
-  console.log(queryData)
+  useEffect(() => {
+    loadQuery()
+  }, [])
 
   return (
     <>
@@ -76,16 +99,29 @@ export default function Queue (props: Props): Node {
           direction='column'
           mb={6}
         >
-          <button onClick={() => loadNext(10)}>123</button>
           <Flex align='center' justify='space-between'>
             <Heading size='lg' color='gray.00'>{t('queue.title')}</Heading>
             <IconButton
               icon={<Icon icon={InterfaceArrowsSynchronize} w='fill' h='fill' fill='gray.500' />}
               variant='solid' borderRadius={5} pl={2} pr={2} pt={1} pb={1}
               bg='transparent'
+              onClick={loadQuery}
             />
           </Flex>
-          <Suspense fallback={<PostSuspense />} />
+          <ErrorBoundary
+            fallback={({ error, reset }) => (
+              <ErrorFallback error={error} reset={reset} refetch={loadQuery} />
+            )}
+          >
+            <Suspense fallback={<PostSuspense />}>
+              {queryRef
+                ? <PendingPosts
+                    queryRef={queryRef} query={queuePostsGQL}
+                    paginationQuery={pendingPostsGQL}
+                  />
+                : <PostSuspense />}
+            </Suspense>
+          </ErrorBoundary>
         </Flex>
       </Center>
     </>
@@ -95,9 +131,10 @@ export default function Queue (props: Props): Node {
 const PostSuspense = () => {
   return (
     <Stack mt={2}>
-      <Skeleton borderRadius={5} h={12} />
-      <Skeleton borderRadius={5} h={12} />
-      <Skeleton borderRadius={5} h={12} />
+      {[...Array(5).keys()].map((item, index) =>
+        <Skeleton key={index} borderRadius={5} h={12} />
+      )}
+
     </Stack>
   )
 }
