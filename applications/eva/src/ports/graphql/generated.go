@@ -157,10 +157,6 @@ type ComplexityRoot struct {
 		AccountEmail func(childComplexity int) int
 	}
 
-	CreateAccountMultiFactorRecoveryCodesAndDeletePreviousPayload struct {
-		AccountMultiFactorRecoveryCodes func(childComplexity int) int
-	}
-
 	CreateAccountWithAuthenticationTokenPayload struct {
 		Account func(childComplexity int) int
 	}
@@ -184,15 +180,15 @@ type ComplexityRoot struct {
 		FindAccountUsernameByID func(childComplexity int, id relay.ID) int
 	}
 
+	GenerateAccountMultiFactorRecoveryCodesPayload struct {
+		AccountMultiFactorRecoveryCodes func(childComplexity int) int
+	}
+
 	GenerateAccountMultiFactorTotpPayload struct {
 		MultiFactorTotp func(childComplexity int) int
 	}
 
-	GrantAccountAccessWithAuthenticationTokenAndRecoveryCodePayload struct {
-		Account func(childComplexity int) int
-	}
-
-	GrantAccountAccessWithAuthenticationTokenAndTotpPayload struct {
+	GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload struct {
 		Account func(childComplexity int) int
 	}
 
@@ -206,25 +202,24 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		AddAccountEmail                                          func(childComplexity int, input types.AddAccountEmailInput) int
-		ConfirmAccountEmail                                      func(childComplexity int, input types.ConfirmAccountEmailInput) int
-		CreateAccountMultiFactorRecoveryCodesAndDeletePrevious   func(childComplexity int) int
-		CreateAccountWithAuthenticationToken                     func(childComplexity int, input types.CreateAccountWithAuthenticationTokenInput) int
-		DeleteAccountEmail                                       func(childComplexity int, input types.DeleteAccountEmailInput) int
-		DisableAccountMultiFactor                                func(childComplexity int) int
-		EnrollAccountMultiFactorTotp                             func(childComplexity int, input types.EnrollAccountMultiFactorTotpInput) int
-		GenerateAccountMultiFactorTotp                           func(childComplexity int) int
-		GrantAccountAccessWithAuthenticationTokenAndRecoveryCode func(childComplexity int, input types.GrantAccountAccessWithAuthenticationTokenAndRecoveryCodeInput) int
-		GrantAccountAccessWithAuthenticationTokenAndTotp         func(childComplexity int, input types.GrantAccountAccessWithAuthenticationTokenAndTotpInput) int
-		GrantAuthenticationToken                                 func(childComplexity int, input types.GrantAuthenticationTokenInput) int
-		ReissueAuthenticationToken                               func(childComplexity int) int
-		RevokeAccountAccess                                      func(childComplexity int) int
-		RevokeAccountSession                                     func(childComplexity int, input types.RevokeAccountSessionInput) int
-		RevokeAuthenticationToken                                func(childComplexity int) int
-		UnlockAccount                                            func(childComplexity int) int
-		UpdateAccountEmailStatusToPrimary                        func(childComplexity int, input types.UpdateAccountEmailStatusToPrimaryInput) int
-		UpdateAccountUsernameAndRetainPrevious                   func(childComplexity int, input types.UpdateAccountUsernameAndRetainPreviousInput) int
-		VerifyAuthenticationTokenAndAttemptAccountAccessGrant    func(childComplexity int, input types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput) int
+		AddAccountEmail                                         func(childComplexity int, input types.AddAccountEmailInput) int
+		ConfirmAccountEmail                                     func(childComplexity int, input types.ConfirmAccountEmailInput) int
+		CreateAccountWithAuthenticationToken                    func(childComplexity int, input types.CreateAccountWithAuthenticationTokenInput) int
+		DeleteAccountEmail                                      func(childComplexity int, input types.DeleteAccountEmailInput) int
+		DisableAccountMultiFactor                               func(childComplexity int) int
+		EnrollAccountMultiFactorTotp                            func(childComplexity int, input types.EnrollAccountMultiFactorTotpInput) int
+		GenerateAccountMultiFactorRecoveryCodes                 func(childComplexity int) int
+		GenerateAccountMultiFactorTotp                          func(childComplexity int) int
+		GrantAccountAccessWithAuthenticationTokenAndMultiFactor func(childComplexity int, input types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorInput) int
+		GrantAuthenticationToken                                func(childComplexity int, input types.GrantAuthenticationTokenInput) int
+		ReissueAuthenticationToken                              func(childComplexity int) int
+		RevokeAccountAccess                                     func(childComplexity int) int
+		RevokeAccountSession                                    func(childComplexity int, input types.RevokeAccountSessionInput) int
+		RevokeAuthenticationToken                               func(childComplexity int) int
+		UnlockAccount                                           func(childComplexity int) int
+		UpdateAccountEmailStatusToPrimary                       func(childComplexity int, input types.UpdateAccountEmailStatusToPrimaryInput) int
+		UpdateAccountUsernameAndRetainPrevious                  func(childComplexity int, input types.UpdateAccountUsernameAndRetainPreviousInput) int
+		VerifyAuthenticationTokenAndAttemptAccountAccessGrant   func(childComplexity int, input types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput) int
 	}
 
 	PageInfo struct {
@@ -306,8 +301,7 @@ type MutationResolver interface {
 	CreateAccountWithAuthenticationToken(ctx context.Context, input types.CreateAccountWithAuthenticationTokenInput) (*types.CreateAccountWithAuthenticationTokenPayload, error)
 	RevokeAccountAccess(ctx context.Context) (*types.RevokeAccountAccessPayload, error)
 	ReissueAuthenticationToken(ctx context.Context) (*types.ReissueAuthenticationTokenPayload, error)
-	GrantAccountAccessWithAuthenticationTokenAndTotp(ctx context.Context, input types.GrantAccountAccessWithAuthenticationTokenAndTotpInput) (*types.GrantAccountAccessWithAuthenticationTokenAndTotpPayload, error)
-	GrantAccountAccessWithAuthenticationTokenAndRecoveryCode(ctx context.Context, input types.GrantAccountAccessWithAuthenticationTokenAndRecoveryCodeInput) (*types.GrantAccountAccessWithAuthenticationTokenAndRecoveryCodePayload, error)
+	GrantAccountAccessWithAuthenticationTokenAndMultiFactor(ctx context.Context, input types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorInput) (*types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload, error)
 	VerifyAuthenticationTokenAndAttemptAccountAccessGrant(ctx context.Context, input types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput) (*types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload, error)
 	UnlockAccount(ctx context.Context) (*types.UnlockAccountPayload, error)
 	AddAccountEmail(ctx context.Context, input types.AddAccountEmailInput) (*types.AddAccountEmailPayload, error)
@@ -315,7 +309,7 @@ type MutationResolver interface {
 	UpdateAccountUsernameAndRetainPrevious(ctx context.Context, input types.UpdateAccountUsernameAndRetainPreviousInput) (*types.UpdateAccountUsernameAndRetainPreviousPayload, error)
 	RevokeAccountSession(ctx context.Context, input types.RevokeAccountSessionInput) (*types.RevokeAccountSessionPayload, error)
 	UpdateAccountEmailStatusToPrimary(ctx context.Context, input types.UpdateAccountEmailStatusToPrimaryInput) (*types.UpdateAccountEmailStatusToPrimaryPayload, error)
-	CreateAccountMultiFactorRecoveryCodesAndDeletePrevious(ctx context.Context) (*types.CreateAccountMultiFactorRecoveryCodesAndDeletePreviousPayload, error)
+	GenerateAccountMultiFactorRecoveryCodes(ctx context.Context) (*types.GenerateAccountMultiFactorRecoveryCodesPayload, error)
 	GenerateAccountMultiFactorTotp(ctx context.Context) (*types.GenerateAccountMultiFactorTotpPayload, error)
 	EnrollAccountMultiFactorTotp(ctx context.Context, input types.EnrollAccountMultiFactorTotpInput) (*types.EnrollAccountMultiFactorTotpPayload, error)
 	DisableAccountMultiFactor(ctx context.Context) (*types.DisableAccountMultiFactorPayload, error)
@@ -732,13 +726,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ConfirmAccountEmailPayload.AccountEmail(childComplexity), true
 
-	case "CreateAccountMultiFactorRecoveryCodesAndDeletePreviousPayload.accountMultiFactorRecoveryCodes":
-		if e.complexity.CreateAccountMultiFactorRecoveryCodesAndDeletePreviousPayload.AccountMultiFactorRecoveryCodes == nil {
-			break
-		}
-
-		return e.complexity.CreateAccountMultiFactorRecoveryCodesAndDeletePreviousPayload.AccountMultiFactorRecoveryCodes(childComplexity), true
-
 	case "CreateAccountWithAuthenticationTokenPayload.account":
 		if e.complexity.CreateAccountWithAuthenticationTokenPayload.Account == nil {
 			break
@@ -815,6 +802,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Entity.FindAccountUsernameByID(childComplexity, args["id"].(relay.ID)), true
 
+	case "GenerateAccountMultiFactorRecoveryCodesPayload.accountMultiFactorRecoveryCodes":
+		if e.complexity.GenerateAccountMultiFactorRecoveryCodesPayload.AccountMultiFactorRecoveryCodes == nil {
+			break
+		}
+
+		return e.complexity.GenerateAccountMultiFactorRecoveryCodesPayload.AccountMultiFactorRecoveryCodes(childComplexity), true
+
 	case "GenerateAccountMultiFactorTotpPayload.multiFactorTOTP":
 		if e.complexity.GenerateAccountMultiFactorTotpPayload.MultiFactorTotp == nil {
 			break
@@ -822,19 +816,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.GenerateAccountMultiFactorTotpPayload.MultiFactorTotp(childComplexity), true
 
-	case "GrantAccountAccessWithAuthenticationTokenAndRecoveryCodePayload.account":
-		if e.complexity.GrantAccountAccessWithAuthenticationTokenAndRecoveryCodePayload.Account == nil {
+	case "GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload.account":
+		if e.complexity.GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload.Account == nil {
 			break
 		}
 
-		return e.complexity.GrantAccountAccessWithAuthenticationTokenAndRecoveryCodePayload.Account(childComplexity), true
-
-	case "GrantAccountAccessWithAuthenticationTokenAndTotpPayload.account":
-		if e.complexity.GrantAccountAccessWithAuthenticationTokenAndTotpPayload.Account == nil {
-			break
-		}
-
-		return e.complexity.GrantAccountAccessWithAuthenticationTokenAndTotpPayload.Account(childComplexity), true
+		return e.complexity.GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload.Account(childComplexity), true
 
 	case "GrantAuthenticationTokenPayload.authenticationToken":
 		if e.complexity.GrantAuthenticationTokenPayload.AuthenticationToken == nil {
@@ -881,13 +868,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.ConfirmAccountEmail(childComplexity, args["input"].(types.ConfirmAccountEmailInput)), true
 
-	case "Mutation.createAccountMultiFactorRecoveryCodesAndDeletePrevious":
-		if e.complexity.Mutation.CreateAccountMultiFactorRecoveryCodesAndDeletePrevious == nil {
-			break
-		}
-
-		return e.complexity.Mutation.CreateAccountMultiFactorRecoveryCodesAndDeletePrevious(childComplexity), true
-
 	case "Mutation.createAccountWithAuthenticationToken":
 		if e.complexity.Mutation.CreateAccountWithAuthenticationToken == nil {
 			break
@@ -931,6 +911,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.EnrollAccountMultiFactorTotp(childComplexity, args["input"].(types.EnrollAccountMultiFactorTotpInput)), true
 
+	case "Mutation.generateAccountMultiFactorRecoveryCodes":
+		if e.complexity.Mutation.GenerateAccountMultiFactorRecoveryCodes == nil {
+			break
+		}
+
+		return e.complexity.Mutation.GenerateAccountMultiFactorRecoveryCodes(childComplexity), true
+
 	case "Mutation.generateAccountMultiFactorTotp":
 		if e.complexity.Mutation.GenerateAccountMultiFactorTotp == nil {
 			break
@@ -938,29 +925,17 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.GenerateAccountMultiFactorTotp(childComplexity), true
 
-	case "Mutation.grantAccountAccessWithAuthenticationTokenAndRecoveryCode":
-		if e.complexity.Mutation.GrantAccountAccessWithAuthenticationTokenAndRecoveryCode == nil {
+	case "Mutation.grantAccountAccessWithAuthenticationTokenAndMultiFactor":
+		if e.complexity.Mutation.GrantAccountAccessWithAuthenticationTokenAndMultiFactor == nil {
 			break
 		}
 
-		args, err := ec.field_Mutation_grantAccountAccessWithAuthenticationTokenAndRecoveryCode_args(context.TODO(), rawArgs)
+		args, err := ec.field_Mutation_grantAccountAccessWithAuthenticationTokenAndMultiFactor_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Mutation.GrantAccountAccessWithAuthenticationTokenAndRecoveryCode(childComplexity, args["input"].(types.GrantAccountAccessWithAuthenticationTokenAndRecoveryCodeInput)), true
-
-	case "Mutation.grantAccountAccessWithAuthenticationTokenAndTotp":
-		if e.complexity.Mutation.GrantAccountAccessWithAuthenticationTokenAndTotp == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_grantAccountAccessWithAuthenticationTokenAndTotp_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.GrantAccountAccessWithAuthenticationTokenAndTotp(childComplexity, args["input"].(types.GrantAccountAccessWithAuthenticationTokenAndTotpInput)), true
+		return e.complexity.Mutation.GrantAccountAccessWithAuthenticationTokenAndMultiFactor(childComplexity, args["input"].(types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorInput)), true
 
 	case "Mutation.grantAuthenticationToken":
 		if e.complexity.Mutation.GrantAuthenticationToken == nil {
@@ -1596,7 +1571,7 @@ type UpdateAccountEmailStatusToPrimaryPayload {
 }
 
 """Payload of the created account recovery codes"""
-type CreateAccountMultiFactorRecoveryCodesAndDeletePreviousPayload {
+type GenerateAccountMultiFactorRecoveryCodesPayload {
   """The recovery codes that were created"""
   accountMultiFactorRecoveryCodes: [AccountMultiFactorRecoveryCode!]!
 }
@@ -1658,7 +1633,7 @@ extend type Mutation {
   """
   Generates a new set of recovery codes. The previous set (whatever it was) will be deleted!
   """
-  createAccountMultiFactorRecoveryCodesAndDeletePrevious: CreateAccountMultiFactorRecoveryCodesAndDeletePreviousPayload @auth
+  generateAccountMultiFactorRecoveryCodes: GenerateAccountMultiFactorRecoveryCodesPayload @auth
 
   """
   Generate a TOTP key for the current user. Recovery codes must be generated first.
@@ -1710,14 +1685,10 @@ input GrantAuthenticationTokenInput {
   email: String!
 }
 
-"""Payload for granting access to an account using the token and the TOTP code"""
-input GrantAccountAccessWithAuthenticationTokenAndTotpInput {
-  code: String!
-}
-
 """Payload for granting access to an account using the token and the recovery code"""
-input GrantAccountAccessWithAuthenticationTokenAndRecoveryCodeInput {
-  recoveryCode: String!
+input GrantAccountAccessWithAuthenticationTokenAndMultiFactorInput {
+  recoveryCode: String
+  code: String
 }
 
 """Input for verifying and attempting access grant to an account"""
@@ -1760,14 +1731,8 @@ type ReissueAuthenticationTokenPayload {
   authenticationToken: AuthenticationToken
 }
 
-"""Payload for granting access to an account using the authentication token and TOTP code"""
-type GrantAccountAccessWithAuthenticationTokenAndTotpPayload {
-  """The account that granted access to"""
-  account: Account
-}
-
 """Payload for granting access to an account using the authentication token and Recovery Code"""
-type GrantAccountAccessWithAuthenticationTokenAndRecoveryCodePayload {
+type GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload {
   """The account that granted access to"""
   account: Account
 }
@@ -1821,18 +1786,14 @@ type Mutation {
   reissueAuthenticationToken: ReissueAuthenticationTokenPayload @anon
 
   """
-  Authenticate with a TOTP code - should be used after token is verified
+  Grant account access using an authentication token and a multi factor option
+
+  Set "code" when authenticating with a TOTP code
+  Set "recoveryCode" when authenticating with a recovery code
 
   Note: the actual authentication token is opaque (set & read from cookies)
   """
-  grantAccountAccessWithAuthenticationTokenAndTotp(input: GrantAccountAccessWithAuthenticationTokenAndTotpInput!): GrantAccountAccessWithAuthenticationTokenAndTotpPayload @anon
-
-  """
-  Authenticate with a recovery code - should be used after a token is verified
-
-  Note: the actual authentication token is opaque (set & read from cookies)
-  """
-  grantAccountAccessWithAuthenticationTokenAndRecoveryCode(input: GrantAccountAccessWithAuthenticationTokenAndRecoveryCodeInput!): GrantAccountAccessWithAuthenticationTokenAndRecoveryCodePayload @anon
+  grantAccountAccessWithAuthenticationTokenAndMultiFactor(input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorInput!): GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload @anon
 
   """
   Will verify the authentication token.
@@ -2211,28 +2172,13 @@ func (ec *executionContext) field_Mutation_enrollAccountMultiFactorTotp_args(ctx
 	return args, nil
 }
 
-func (ec *executionContext) field_Mutation_grantAccountAccessWithAuthenticationTokenAndRecoveryCode_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Mutation_grantAccountAccessWithAuthenticationTokenAndMultiFactor_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 types.GrantAccountAccessWithAuthenticationTokenAndRecoveryCodeInput
+	var arg0 types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNGrantAccountAccessWithAuthenticationTokenAndRecoveryCodeInput2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐGrantAccountAccessWithAuthenticationTokenAndRecoveryCodeInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_grantAccountAccessWithAuthenticationTokenAndTotp_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 types.GrantAccountAccessWithAuthenticationTokenAndTotpInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNGrantAccountAccessWithAuthenticationTokenAndTotpInput2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐGrantAccountAccessWithAuthenticationTokenAndTotpInput(ctx, tmp)
+		arg0, err = ec.unmarshalNGrantAccountAccessWithAuthenticationTokenAndMultiFactorInput2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐGrantAccountAccessWithAuthenticationTokenAndMultiFactorInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4332,41 +4278,6 @@ func (ec *executionContext) _ConfirmAccountEmailPayload_accountEmail(ctx context
 	return ec.marshalOAccountEmail2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountEmail(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _CreateAccountMultiFactorRecoveryCodesAndDeletePreviousPayload_accountMultiFactorRecoveryCodes(ctx context.Context, field graphql.CollectedField, obj *types.CreateAccountMultiFactorRecoveryCodesAndDeletePreviousPayload) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "CreateAccountMultiFactorRecoveryCodesAndDeletePreviousPayload",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.AccountMultiFactorRecoveryCodes, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.([]*types.AccountMultiFactorRecoveryCode)
-	fc.Result = res
-	return ec.marshalNAccountMultiFactorRecoveryCode2ᚕᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountMultiFactorRecoveryCodeᚄ(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _CreateAccountWithAuthenticationTokenPayload_account(ctx context.Context, field graphql.CollectedField, obj *types.CreateAccountWithAuthenticationTokenPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -4666,6 +4577,41 @@ func (ec *executionContext) _Entity_findAccountUsernameByID(ctx context.Context,
 	return ec.marshalNAccountUsername2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountUsername(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _GenerateAccountMultiFactorRecoveryCodesPayload_accountMultiFactorRecoveryCodes(ctx context.Context, field graphql.CollectedField, obj *types.GenerateAccountMultiFactorRecoveryCodesPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "GenerateAccountMultiFactorRecoveryCodesPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.AccountMultiFactorRecoveryCodes, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*types.AccountMultiFactorRecoveryCode)
+	fc.Result = res
+	return ec.marshalNAccountMultiFactorRecoveryCode2ᚕᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountMultiFactorRecoveryCodeᚄ(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _GenerateAccountMultiFactorTotpPayload_multiFactorTOTP(ctx context.Context, field graphql.CollectedField, obj *types.GenerateAccountMultiFactorTotpPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -4698,7 +4644,7 @@ func (ec *executionContext) _GenerateAccountMultiFactorTotpPayload_multiFactorTO
 	return ec.marshalOMultiFactorTotp2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐMultiFactorTotp(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _GrantAccountAccessWithAuthenticationTokenAndRecoveryCodePayload_account(ctx context.Context, field graphql.CollectedField, obj *types.GrantAccountAccessWithAuthenticationTokenAndRecoveryCodePayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload_account(ctx context.Context, field graphql.CollectedField, obj *types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -4706,39 +4652,7 @@ func (ec *executionContext) _GrantAccountAccessWithAuthenticationTokenAndRecover
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "GrantAccountAccessWithAuthenticationTokenAndRecoveryCodePayload",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Account, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.Account)
-	fc.Result = res
-	return ec.marshalOAccount2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _GrantAccountAccessWithAuthenticationTokenAndTotpPayload_account(ctx context.Context, field graphql.CollectedField, obj *types.GrantAccountAccessWithAuthenticationTokenAndTotpPayload) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "GrantAccountAccessWithAuthenticationTokenAndTotpPayload",
+		Object:     "GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -5138,7 +5052,7 @@ func (ec *executionContext) _Mutation_reissueAuthenticationToken(ctx context.Con
 	return ec.marshalOReissueAuthenticationTokenPayload2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐReissueAuthenticationTokenPayload(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Mutation_grantAccountAccessWithAuthenticationTokenAndTotp(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Mutation_grantAccountAccessWithAuthenticationTokenAndMultiFactor(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -5155,7 +5069,7 @@ func (ec *executionContext) _Mutation_grantAccountAccessWithAuthenticationTokenA
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_grantAccountAccessWithAuthenticationTokenAndTotp_args(ctx, rawArgs)
+	args, err := ec.field_Mutation_grantAccountAccessWithAuthenticationTokenAndMultiFactor_args(ctx, rawArgs)
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
@@ -5164,7 +5078,7 @@ func (ec *executionContext) _Mutation_grantAccountAccessWithAuthenticationTokenA
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().GrantAccountAccessWithAuthenticationTokenAndTotp(rctx, args["input"].(types.GrantAccountAccessWithAuthenticationTokenAndTotpInput))
+			return ec.resolvers.Mutation().GrantAccountAccessWithAuthenticationTokenAndMultiFactor(rctx, args["input"].(types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorInput))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			if ec.directives.Anon == nil {
@@ -5180,10 +5094,10 @@ func (ec *executionContext) _Mutation_grantAccountAccessWithAuthenticationTokenA
 		if tmp == nil {
 			return nil, nil
 		}
-		if data, ok := tmp.(*types.GrantAccountAccessWithAuthenticationTokenAndTotpPayload); ok {
+		if data, ok := tmp.(*types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/eva/src/ports/graphql/types.GrantAccountAccessWithAuthenticationTokenAndTotpPayload`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/eva/src/ports/graphql/types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5192,68 +5106,9 @@ func (ec *executionContext) _Mutation_grantAccountAccessWithAuthenticationTokenA
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*types.GrantAccountAccessWithAuthenticationTokenAndTotpPayload)
+	res := resTmp.(*types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload)
 	fc.Result = res
-	return ec.marshalOGrantAccountAccessWithAuthenticationTokenAndTotpPayload2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐGrantAccountAccessWithAuthenticationTokenAndTotpPayload(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Mutation_grantAccountAccessWithAuthenticationTokenAndRecoveryCode(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_grantAccountAccessWithAuthenticationTokenAndRecoveryCode_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().GrantAccountAccessWithAuthenticationTokenAndRecoveryCode(rctx, args["input"].(types.GrantAccountAccessWithAuthenticationTokenAndRecoveryCodeInput))
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			if ec.directives.Anon == nil {
-				return nil, errors.New("directive anon is not implemented")
-			}
-			return ec.directives.Anon(ctx, nil, directive0)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*types.GrantAccountAccessWithAuthenticationTokenAndRecoveryCodePayload); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/eva/src/ports/graphql/types.GrantAccountAccessWithAuthenticationTokenAndRecoveryCodePayload`, tmp)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.GrantAccountAccessWithAuthenticationTokenAndRecoveryCodePayload)
-	fc.Result = res
-	return ec.marshalOGrantAccountAccessWithAuthenticationTokenAndRecoveryCodePayload2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐGrantAccountAccessWithAuthenticationTokenAndRecoveryCodePayload(ctx, field.Selections, res)
+	return ec.marshalOGrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐGrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_verifyAuthenticationTokenAndAttemptAccountAccessGrant(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -5662,7 +5517,7 @@ func (ec *executionContext) _Mutation_updateAccountEmailStatusToPrimary(ctx cont
 	return ec.marshalOUpdateAccountEmailStatusToPrimaryPayload2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐUpdateAccountEmailStatusToPrimaryPayload(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Mutation_createAccountMultiFactorRecoveryCodesAndDeletePrevious(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Mutation_generateAccountMultiFactorRecoveryCodes(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -5681,7 +5536,7 @@ func (ec *executionContext) _Mutation_createAccountMultiFactorRecoveryCodesAndDe
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().CreateAccountMultiFactorRecoveryCodesAndDeletePrevious(rctx)
+			return ec.resolvers.Mutation().GenerateAccountMultiFactorRecoveryCodes(rctx)
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			if ec.directives.Auth == nil {
@@ -5697,10 +5552,10 @@ func (ec *executionContext) _Mutation_createAccountMultiFactorRecoveryCodesAndDe
 		if tmp == nil {
 			return nil, nil
 		}
-		if data, ok := tmp.(*types.CreateAccountMultiFactorRecoveryCodesAndDeletePreviousPayload); ok {
+		if data, ok := tmp.(*types.GenerateAccountMultiFactorRecoveryCodesPayload); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/eva/src/ports/graphql/types.CreateAccountMultiFactorRecoveryCodesAndDeletePreviousPayload`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/eva/src/ports/graphql/types.GenerateAccountMultiFactorRecoveryCodesPayload`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5709,9 +5564,9 @@ func (ec *executionContext) _Mutation_createAccountMultiFactorRecoveryCodesAndDe
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*types.CreateAccountMultiFactorRecoveryCodesAndDeletePreviousPayload)
+	res := resTmp.(*types.GenerateAccountMultiFactorRecoveryCodesPayload)
 	fc.Result = res
-	return ec.marshalOCreateAccountMultiFactorRecoveryCodesAndDeletePreviousPayload2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐCreateAccountMultiFactorRecoveryCodesAndDeletePreviousPayload(ctx, field.Selections, res)
+	return ec.marshalOGenerateAccountMultiFactorRecoveryCodesPayload2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐGenerateAccountMultiFactorRecoveryCodesPayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_generateAccountMultiFactorTotp(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -7818,8 +7673,8 @@ func (ec *executionContext) unmarshalInputEnrollAccountMultiFactorTotpInput(ctx 
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputGrantAccountAccessWithAuthenticationTokenAndRecoveryCodeInput(ctx context.Context, obj interface{}) (types.GrantAccountAccessWithAuthenticationTokenAndRecoveryCodeInput, error) {
-	var it types.GrantAccountAccessWithAuthenticationTokenAndRecoveryCodeInput
+func (ec *executionContext) unmarshalInputGrantAccountAccessWithAuthenticationTokenAndMultiFactorInput(ctx context.Context, obj interface{}) (types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorInput, error) {
+	var it types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorInput
 	var asMap = obj.(map[string]interface{})
 
 	for k, v := range asMap {
@@ -7828,27 +7683,15 @@ func (ec *executionContext) unmarshalInputGrantAccountAccessWithAuthenticationTo
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("recoveryCode"))
-			it.RecoveryCode, err = ec.unmarshalNString2string(ctx, v)
+			it.RecoveryCode, err = ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputGrantAccountAccessWithAuthenticationTokenAndTotpInput(ctx context.Context, obj interface{}) (types.GrantAccountAccessWithAuthenticationTokenAndTotpInput, error) {
-	var it types.GrantAccountAccessWithAuthenticationTokenAndTotpInput
-	var asMap = obj.(map[string]interface{})
-
-	for k, v := range asMap {
-		switch k {
 		case "code":
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("code"))
-			it.Code, err = ec.unmarshalNString2string(ctx, v)
+			it.Code, err = ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -8772,33 +8615,6 @@ func (ec *executionContext) _ConfirmAccountEmailPayload(ctx context.Context, sel
 	return out
 }
 
-var createAccountMultiFactorRecoveryCodesAndDeletePreviousPayloadImplementors = []string{"CreateAccountMultiFactorRecoveryCodesAndDeletePreviousPayload"}
-
-func (ec *executionContext) _CreateAccountMultiFactorRecoveryCodesAndDeletePreviousPayload(ctx context.Context, sel ast.SelectionSet, obj *types.CreateAccountMultiFactorRecoveryCodesAndDeletePreviousPayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, createAccountMultiFactorRecoveryCodesAndDeletePreviousPayloadImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("CreateAccountMultiFactorRecoveryCodesAndDeletePreviousPayload")
-		case "accountMultiFactorRecoveryCodes":
-			out.Values[i] = ec._CreateAccountMultiFactorRecoveryCodesAndDeletePreviousPayload_accountMultiFactorRecoveryCodes(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
 var createAccountWithAuthenticationTokenPayloadImplementors = []string{"CreateAccountWithAuthenticationTokenPayload"}
 
 func (ec *executionContext) _CreateAccountWithAuthenticationTokenPayload(ctx context.Context, sel ast.SelectionSet, obj *types.CreateAccountWithAuthenticationTokenPayload) graphql.Marshaler {
@@ -8980,6 +8796,33 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 	return out
 }
 
+var generateAccountMultiFactorRecoveryCodesPayloadImplementors = []string{"GenerateAccountMultiFactorRecoveryCodesPayload"}
+
+func (ec *executionContext) _GenerateAccountMultiFactorRecoveryCodesPayload(ctx context.Context, sel ast.SelectionSet, obj *types.GenerateAccountMultiFactorRecoveryCodesPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, generateAccountMultiFactorRecoveryCodesPayloadImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("GenerateAccountMultiFactorRecoveryCodesPayload")
+		case "accountMultiFactorRecoveryCodes":
+			out.Values[i] = ec._GenerateAccountMultiFactorRecoveryCodesPayload_accountMultiFactorRecoveryCodes(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var generateAccountMultiFactorTotpPayloadImplementors = []string{"GenerateAccountMultiFactorTotpPayload"}
 
 func (ec *executionContext) _GenerateAccountMultiFactorTotpPayload(ctx context.Context, sel ast.SelectionSet, obj *types.GenerateAccountMultiFactorTotpPayload) graphql.Marshaler {
@@ -9004,43 +8847,19 @@ func (ec *executionContext) _GenerateAccountMultiFactorTotpPayload(ctx context.C
 	return out
 }
 
-var grantAccountAccessWithAuthenticationTokenAndRecoveryCodePayloadImplementors = []string{"GrantAccountAccessWithAuthenticationTokenAndRecoveryCodePayload"}
+var grantAccountAccessWithAuthenticationTokenAndMultiFactorPayloadImplementors = []string{"GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload"}
 
-func (ec *executionContext) _GrantAccountAccessWithAuthenticationTokenAndRecoveryCodePayload(ctx context.Context, sel ast.SelectionSet, obj *types.GrantAccountAccessWithAuthenticationTokenAndRecoveryCodePayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, grantAccountAccessWithAuthenticationTokenAndRecoveryCodePayloadImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("GrantAccountAccessWithAuthenticationTokenAndRecoveryCodePayload")
-		case "account":
-			out.Values[i] = ec._GrantAccountAccessWithAuthenticationTokenAndRecoveryCodePayload_account(ctx, field, obj)
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var grantAccountAccessWithAuthenticationTokenAndTotpPayloadImplementors = []string{"GrantAccountAccessWithAuthenticationTokenAndTotpPayload"}
-
-func (ec *executionContext) _GrantAccountAccessWithAuthenticationTokenAndTotpPayload(ctx context.Context, sel ast.SelectionSet, obj *types.GrantAccountAccessWithAuthenticationTokenAndTotpPayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, grantAccountAccessWithAuthenticationTokenAndTotpPayloadImplementors)
+func (ec *executionContext) _GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload(ctx context.Context, sel ast.SelectionSet, obj *types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, grantAccountAccessWithAuthenticationTokenAndMultiFactorPayloadImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("GrantAccountAccessWithAuthenticationTokenAndTotpPayload")
+			out.Values[i] = graphql.MarshalString("GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload")
 		case "account":
-			out.Values[i] = ec._GrantAccountAccessWithAuthenticationTokenAndTotpPayload_account(ctx, field, obj)
+			out.Values[i] = ec._GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload_account(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -9133,10 +8952,8 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_revokeAccountAccess(ctx, field)
 		case "reissueAuthenticationToken":
 			out.Values[i] = ec._Mutation_reissueAuthenticationToken(ctx, field)
-		case "grantAccountAccessWithAuthenticationTokenAndTotp":
-			out.Values[i] = ec._Mutation_grantAccountAccessWithAuthenticationTokenAndTotp(ctx, field)
-		case "grantAccountAccessWithAuthenticationTokenAndRecoveryCode":
-			out.Values[i] = ec._Mutation_grantAccountAccessWithAuthenticationTokenAndRecoveryCode(ctx, field)
+		case "grantAccountAccessWithAuthenticationTokenAndMultiFactor":
+			out.Values[i] = ec._Mutation_grantAccountAccessWithAuthenticationTokenAndMultiFactor(ctx, field)
 		case "verifyAuthenticationTokenAndAttemptAccountAccessGrant":
 			out.Values[i] = ec._Mutation_verifyAuthenticationTokenAndAttemptAccountAccessGrant(ctx, field)
 		case "unlockAccount":
@@ -9151,8 +8968,8 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_revokeAccountSession(ctx, field)
 		case "updateAccountEmailStatusToPrimary":
 			out.Values[i] = ec._Mutation_updateAccountEmailStatusToPrimary(ctx, field)
-		case "createAccountMultiFactorRecoveryCodesAndDeletePrevious":
-			out.Values[i] = ec._Mutation_createAccountMultiFactorRecoveryCodesAndDeletePrevious(ctx, field)
+		case "generateAccountMultiFactorRecoveryCodes":
+			out.Values[i] = ec._Mutation_generateAccountMultiFactorRecoveryCodes(ctx, field)
 		case "generateAccountMultiFactorTotp":
 			out.Values[i] = ec._Mutation_generateAccountMultiFactorTotp(ctx, field)
 		case "enrollAccountMultiFactorTotp":
@@ -10120,13 +9937,8 @@ func (ec *executionContext) unmarshalNEnrollAccountMultiFactorTotpInput2overdoll
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNGrantAccountAccessWithAuthenticationTokenAndRecoveryCodeInput2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐGrantAccountAccessWithAuthenticationTokenAndRecoveryCodeInput(ctx context.Context, v interface{}) (types.GrantAccountAccessWithAuthenticationTokenAndRecoveryCodeInput, error) {
-	res, err := ec.unmarshalInputGrantAccountAccessWithAuthenticationTokenAndRecoveryCodeInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNGrantAccountAccessWithAuthenticationTokenAndTotpInput2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐGrantAccountAccessWithAuthenticationTokenAndTotpInput(ctx context.Context, v interface{}) (types.GrantAccountAccessWithAuthenticationTokenAndTotpInput, error) {
-	res, err := ec.unmarshalInputGrantAccountAccessWithAuthenticationTokenAndTotpInput(ctx, v)
+func (ec *executionContext) unmarshalNGrantAccountAccessWithAuthenticationTokenAndMultiFactorInput2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐGrantAccountAccessWithAuthenticationTokenAndMultiFactorInput(ctx context.Context, v interface{}) (types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorInput, error) {
+	res, err := ec.unmarshalInputGrantAccountAccessWithAuthenticationTokenAndMultiFactorInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -10641,13 +10453,6 @@ func (ec *executionContext) marshalOConfirmAccountEmailPayload2ᚖoverdollᚋapp
 	return ec._ConfirmAccountEmailPayload(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOCreateAccountMultiFactorRecoveryCodesAndDeletePreviousPayload2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐCreateAccountMultiFactorRecoveryCodesAndDeletePreviousPayload(ctx context.Context, sel ast.SelectionSet, v *types.CreateAccountMultiFactorRecoveryCodesAndDeletePreviousPayload) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._CreateAccountMultiFactorRecoveryCodesAndDeletePreviousPayload(ctx, sel, v)
-}
-
 func (ec *executionContext) marshalOCreateAccountWithAuthenticationTokenPayload2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐCreateAccountWithAuthenticationTokenPayload(ctx context.Context, sel ast.SelectionSet, v *types.CreateAccountWithAuthenticationTokenPayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -10676,6 +10481,13 @@ func (ec *executionContext) marshalOEnrollAccountMultiFactorTotpPayload2ᚖoverd
 	return ec._EnrollAccountMultiFactorTotpPayload(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalOGenerateAccountMultiFactorRecoveryCodesPayload2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐGenerateAccountMultiFactorRecoveryCodesPayload(ctx context.Context, sel ast.SelectionSet, v *types.GenerateAccountMultiFactorRecoveryCodesPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._GenerateAccountMultiFactorRecoveryCodesPayload(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalOGenerateAccountMultiFactorTotpPayload2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐGenerateAccountMultiFactorTotpPayload(ctx context.Context, sel ast.SelectionSet, v *types.GenerateAccountMultiFactorTotpPayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -10683,18 +10495,11 @@ func (ec *executionContext) marshalOGenerateAccountMultiFactorTotpPayload2ᚖove
 	return ec._GenerateAccountMultiFactorTotpPayload(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOGrantAccountAccessWithAuthenticationTokenAndRecoveryCodePayload2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐGrantAccountAccessWithAuthenticationTokenAndRecoveryCodePayload(ctx context.Context, sel ast.SelectionSet, v *types.GrantAccountAccessWithAuthenticationTokenAndRecoveryCodePayload) graphql.Marshaler {
+func (ec *executionContext) marshalOGrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐGrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload(ctx context.Context, sel ast.SelectionSet, v *types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
-	return ec._GrantAccountAccessWithAuthenticationTokenAndRecoveryCodePayload(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOGrantAccountAccessWithAuthenticationTokenAndTotpPayload2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐGrantAccountAccessWithAuthenticationTokenAndTotpPayload(ctx context.Context, sel ast.SelectionSet, v *types.GrantAccountAccessWithAuthenticationTokenAndTotpPayload) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._GrantAccountAccessWithAuthenticationTokenAndTotpPayload(ctx, sel, v)
+	return ec._GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOGrantAuthenticationTokenPayload2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐGrantAuthenticationTokenPayload(ctx context.Context, sel ast.SelectionSet, v *types.GrantAuthenticationTokenPayload) graphql.Marshaler {

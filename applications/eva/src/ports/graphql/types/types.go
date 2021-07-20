@@ -195,12 +195,6 @@ type ConfirmAccountEmailPayload struct {
 	AccountEmail *AccountEmail `json:"accountEmail"`
 }
 
-// Payload of the created account recovery codes
-type CreateAccountMultiFactorRecoveryCodesAndDeletePreviousPayload struct {
-	// The recovery codes that were created
-	AccountMultiFactorRecoveryCodes []*AccountMultiFactorRecoveryCode `json:"accountMultiFactorRecoveryCodes"`
-}
-
 // Payload for a created pending post
 type CreateAccountWithAuthenticationTokenInput struct {
 	Username string `json:"username"`
@@ -242,6 +236,12 @@ type EnrollAccountMultiFactorTotpPayload struct {
 	AccountMultiFactorTOTPEnabled *bool `json:"accountMultiFactorTOTPEnabled"`
 }
 
+// Payload of the created account recovery codes
+type GenerateAccountMultiFactorRecoveryCodesPayload struct {
+	// The recovery codes that were created
+	AccountMultiFactorRecoveryCodes []*AccountMultiFactorRecoveryCode `json:"accountMultiFactorRecoveryCodes"`
+}
+
 // Payload of the generated TOTP token
 type GenerateAccountMultiFactorTotpPayload struct {
 	// TOTP pair that was generated
@@ -249,23 +249,13 @@ type GenerateAccountMultiFactorTotpPayload struct {
 }
 
 // Payload for granting access to an account using the token and the recovery code
-type GrantAccountAccessWithAuthenticationTokenAndRecoveryCodeInput struct {
-	RecoveryCode string `json:"recoveryCode"`
+type GrantAccountAccessWithAuthenticationTokenAndMultiFactorInput struct {
+	RecoveryCode *string `json:"recoveryCode"`
+	Code         *string `json:"code"`
 }
 
 // Payload for granting access to an account using the authentication token and Recovery Code
-type GrantAccountAccessWithAuthenticationTokenAndRecoveryCodePayload struct {
-	// The account that granted access to
-	Account *Account `json:"account"`
-}
-
-// Payload for granting access to an account using the token and the TOTP code
-type GrantAccountAccessWithAuthenticationTokenAndTotpInput struct {
-	Code string `json:"code"`
-}
-
-// Payload for granting access to an account using the authentication token and TOTP code
-type GrantAccountAccessWithAuthenticationTokenAndTotpPayload struct {
+type GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload struct {
 	// The account that granted access to
 	Account *Account `json:"account"`
 }

@@ -7,49 +7,49 @@ import (
 )
 
 type Repository interface {
-	GetPost(context.Context, string) (*Post, error)
-	GetPosts(context.Context) ([]*Post, error)
-	CreatePost(context.Context, *Post) error
-	UpdatePost(context.Context, string, func(*Post) error) (*Post, error)
-	DeletePost(context.Context, string) error
+	GetPost(ctx context.Context, postId string) (*Post, error)
+	GetPosts(ctx context.Context) ([]*Post, error)
+	CreatePost(ctx context.Context, post *Post) error
+	UpdatePost(ctx context.Context, postId string, updateFn func(post *Post) error) (*Post, error)
+	DeletePost(ctx context.Context, postId string) error
 
-	GetArtistById(context.Context, string) (*Artist, error)
-	GetArtists(context.Context) ([]*Artist, error)
-	CreateArtist(context.Context, *Artist) error
+	GetArtistById(ctx context.Context, postId string) (*Artist, error)
+	GetArtists(ctx context.Context) ([]*Artist, error)
+	CreateArtist(ctx context.Context, artist *Artist) error
 
-	GetCharactersById(context.Context, []string) ([]*Character, error)
-	GetCharacters(context.Context) ([]*Character, error)
-	CreateCharacters(context.Context, []*Character) error
+	GetCharactersById(ctx context.Context, characterIds []string) ([]*Character, error)
+	GetCharacters(ctx context.Context) ([]*Character, error)
+	CreateCharacters(ctx context.Context, characters []*Character) error
 
-	CreateMedias(context.Context, []*Media) error
-	GetMediasById(context.Context, []string) ([]*Media, error)
-	GetMedias(context.Context) ([]*Media, error)
+	CreateMedias(ctx context.Context, medias []*Media) error
+	GetMediasById(ctx context.Context, mediaIds []string) ([]*Media, error)
+	GetMedias(ctx context.Context) ([]*Media, error)
 
-	GetCategoriesById(context.Context, []string) ([]*Category, error)
-	GetCategories(context.Context) ([]*Category, error)
-	CreateCategories(context.Context, []*Category) error
+	GetCategoriesById(ctx context.Context, categoryIds []string) ([]*Category, error)
+	GetCategories(ctx context.Context) ([]*Category, error)
+	CreateCategories(ctx context.Context, categories []*Category) error
 }
 
 type IndexRepository interface {
-	IndexPost(context.Context, *Post) error
-	BulkIndexPosts(context.Context, []*Post) error
-	DeletePostIndex(context.Context) error
-	SearchPosts(context.Context, *paging.Cursor, *PostFilters) ([]*Post, *paging.Info, error)
-	DeletePostDocument(context.Context, string) error
+	IndexPost(ctx context.Context, postId *Post) error
+	BulkIndexPosts(ctx context.Context, posts []*Post) error
+	DeletePostIndex(ctx context.Context) error
+	SearchPosts(ctx context.Context, cursor *paging.Cursor, filters *PostFilters) ([]*Post, *paging.Info, error)
+	DeletePost(ctx context.Context, postId string) error
 
-	DeleteArtistIndex(context.Context) error
-	BulkIndexArtists(context.Context, []*Artist) error
-	SearchArtists(context.Context, *paging.Cursor, string) ([]*Artist, *paging.Info, error)
+	DeleteArtistIndex(ctx context.Context) error
+	BulkIndexArtists(ctx context.Context, artists []*Artist) error
+	SearchArtists(ctx context.Context, cursor *paging.Cursor, username string) ([]*Artist, *paging.Info, error)
 
-	BulkIndexCharacters(context.Context, []*Character) error
-	DeleteCharacterIndex(context.Context) error
-	SearchCharacters(context.Context, *paging.Cursor, string) ([]*Character, *paging.Info, error)
+	BulkIndexCharacters(ctx context.Context, characters []*Character) error
+	DeleteCharacterIndex(ctx context.Context) error
+	SearchCharacters(ctx context.Context, cursor *paging.Cursor, name string) ([]*Character, *paging.Info, error)
 
-	BulkIndexMedia(context.Context, []*Media) error
-	DeleteMediaIndex(context.Context) error
-	SearchMedias(context.Context, *paging.Cursor, string) ([]*Media, *paging.Info, error)
+	BulkIndexMedia(ctx context.Context, medias []*Media) error
+	DeleteMediaIndex(ctx context.Context) error
+	SearchMedias(ctx context.Context, cursor *paging.Cursor, title string) ([]*Media, *paging.Info, error)
 
-	BulkIndexCategories(context.Context, []*Category) error
-	DeleteCategoryIndex(context.Context) error
-	SearchCategories(context.Context, *paging.Cursor, string) ([]*Category, *paging.Info, error)
+	BulkIndexCategories(ctx context.Context, categories []*Category) error
+	DeleteCategoryIndex(ctx context.Context) error
+	SearchCategories(ctx context.Context, paging *paging.Cursor, title string) ([]*Category, *paging.Info, error)
 }

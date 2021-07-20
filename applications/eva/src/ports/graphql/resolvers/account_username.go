@@ -12,6 +12,7 @@ type AccountUsernameResolver struct {
 }
 
 func (r AccountUsernameResolver) Account(ctx context.Context, obj *types.AccountUsername) (*types.Account, error) {
+
 	acc, err := r.App.Queries.AccountByUsername.Handle(ctx, obj.ID.GetID())
 
 	if err != nil {

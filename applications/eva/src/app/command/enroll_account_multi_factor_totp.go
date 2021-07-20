@@ -9,6 +9,14 @@ import (
 	"overdoll/applications/eva/src/domain/multi_factor"
 )
 
+var (
+	ErrFailedEnrollAccountMultiFactorTOTP = errors.New("failed to enroll TOTP")
+)
+
+const (
+	ValidationErrCodeNotValid = "code_not_valid"
+)
+
 type EnrollAccountMultiFactorTOTPHandler struct {
 	mr multi_factor.Repository
 	ar account.Repository
@@ -17,14 +25,6 @@ type EnrollAccountMultiFactorTOTPHandler struct {
 func NewEnrollAccountMultiFactorTOTPHandler(mr multi_factor.Repository, ar account.Repository) EnrollAccountMultiFactorTOTPHandler {
 	return EnrollAccountMultiFactorTOTPHandler{mr: mr, ar: ar}
 }
-
-var (
-	ErrFailedEnrollAccountMultiFactorTOTP = errors.New("failed to enroll TOTP")
-)
-
-const (
-	ValidationErrCodeNotValid = "code_not_valid"
-)
 
 func (h EnrollAccountMultiFactorTOTPHandler) Handle(ctx context.Context, accountId, secret, code string) (string, error) {
 

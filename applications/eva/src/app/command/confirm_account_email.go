@@ -8,14 +8,6 @@ import (
 	"overdoll/applications/eva/src/domain/account"
 )
 
-type ConfirmAccountEmailHandler struct {
-	ar account.Repository
-}
-
-func NewConfirmAccountEmailHandler(ar account.Repository) ConfirmAccountEmailHandler {
-	return ConfirmAccountEmailHandler{ar: ar}
-}
-
 var (
 	ErrFailedConfirmAccountEmail = errors.New("failed to confirm email")
 )
@@ -23,6 +15,14 @@ var (
 const (
 	ValidationErrEmailCodeInvalid = "email_code_invalid"
 )
+
+type ConfirmAccountEmailHandler struct {
+	ar account.Repository
+}
+
+func NewConfirmAccountEmailHandler(ar account.Repository) ConfirmAccountEmailHandler {
+	return ConfirmAccountEmailHandler{ar: ar}
+}
 
 func (h ConfirmAccountEmailHandler) Handle(ctx context.Context, userId, id string) (*account.Email, string, error) {
 

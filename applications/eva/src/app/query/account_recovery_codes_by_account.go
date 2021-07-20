@@ -8,6 +8,10 @@ import (
 	"overdoll/applications/eva/src/domain/multi_factor"
 )
 
+var (
+	ErrFailedAccountRecoveryCodesByAccount = errors.New("failed to get recovery codes")
+)
+
 type AccountRecoveryCodesByAccountHandler struct {
 	mr multi_factor.Repository
 }
@@ -15,10 +19,6 @@ type AccountRecoveryCodesByAccountHandler struct {
 func NewAccountRecoveryCodesByAccountHandler(mr multi_factor.Repository) AccountRecoveryCodesByAccountHandler {
 	return AccountRecoveryCodesByAccountHandler{mr: mr}
 }
-
-var (
-	ErrFailedAccountRecoveryCodesByAccount = errors.New("failed to get recovery codes")
-)
 
 func (h AccountRecoveryCodesByAccountHandler) Handle(ctx context.Context, accountId string) ([]*multi_factor.RecoveryCode, error) {
 

@@ -34,32 +34,26 @@ func (r *MutationResolver) RevokeAuthenticationToken(ctx context.Context) (*type
 }
 
 func (r *MutationResolver) VerifyAuthenticationTokenAndAttemptAccountAccessGrant(ctx context.Context, input types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput) (*types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload, error) {
-	// RedeemAuthenticationToken - this is when the user uses the redeemed cookie. This will
+	// VerifyAuthenticationToken - this is when the user uses the redeemed cookie. This will
 	// occur when the user uses the redeemed cookie in the same browser that has the 'otp-key' cookie
 
 	// If this is a login (user with email exists), we remove the otp-cookie & pass account data.
 
 	// If this is a registration (user with email doesn't exist), we keep the cookie, and remove it when we register, so the user
 	// can complete the registration if they've accidentally closed their tab
-	gc := helpers.GinContextFromContext(ctx)
-
 	_, err := cookies.ReadCookie(ctx, token.OTPKey)
 
 	isSameSession := err == nil
 
-	if err != nil && err != http.ErrNoCookie {
-		return nil, command.ErrFailedTokenRedeem
-	}
-
-	// redeemCookie first
-	ck, err := r.App.Commands.RedeemAuthenticationToken.Handle(ctx, input.AuthenticationTokenID)
-
-	if err != nil {
+	if err != nil && err != cookies.ErrCookieNotFound {
 		return nil, err
 	}
 
-	if ck == nil {
-		return nil, nil
+	// redeemCookie first
+	ck, err := r.App.Commands.VerifyAuthenticationToken.Handle(ctx, input.AuthenticationTokenID)
+
+	if err != nil {
+		return nil, err
 	}
 
 	// cookie redeemed not in the same session, just redeem it
@@ -70,7 +64,6 @@ func (r *MutationResolver) VerifyAuthenticationTokenAndAttemptAccountAccessGrant
 		}, nil
 	}
 
-	// consume cookie
 	usr, ck, err := r.App.Queries.AuthenticationTokenById.Handle(ctx, input.AuthenticationTokenID)
 
 	if err != nil {
@@ -84,13 +77,16 @@ func (r *MutationResolver) VerifyAuthenticationTokenAndAttemptAccountAccessGrant
 		}
 
 		// Remove OTP cookie
-		http.SetCookie(gc.Writer, &http.Cookie{Name: token.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
+		cookies.DeleteCookie(ctx, token.OTPKey)
 
 		// Update passport to include our new user
-		if err := passport.FromContext(ctx).MutatePassport(ctx, func(p *passport.Passport) error {
-			p.SetAccount(usr.ID())
-			return nil
-		}); err != nil {
+		if err := passport.
+			FromContext(ctx).
+			MutatePassport(ctx,
+				func(p *passport.Passport) error {
+					p.SetAccount(usr.ID())
+					return nil
+				}); err != nil {
 			return nil, err
 		}
 	}
@@ -134,24 +130,21 @@ func (r *MutationResolver) GrantAuthenticationToken(ctx context.Context, input t
 		return nil, errors.New("error")
 	}
 
-	instance, err := r.App.Commands.Authenticate.Handle(ctx, input.Email, string(sessionJson))
+	instance, err := r.App.Commands.GrantAuthenticationToken.Handle(ctx, input.Email, string(sessionJson))
 
 	if err != nil {
-		return nil, nil
+		return nil, err
 	}
 
 	// OTP login cookie - will determine if
 	// Opened in the same browser - log them in that browser if this cookie exists
 	// Otherwise, if opened in another browser (such as the phone), it will log them in on the original browser through a subscription
-	err = cookies.SetCookie(ctx, &http.Cookie{
+	if err := cookies.SetCookie(ctx, &http.Cookie{
 		Name:    token.OTPKey,
 		Value:   instance.Token(),
 		Expires: time.Now().Add(instance.Expiration()),
-	})
-
-	if err != nil {
-		zap.S().Errorf("failed to set cookie: %s", err)
-		return nil, command.ErrFailedAuthenticate
+	}); err != nil {
+		return nil, err
 	}
 
 	return &types.GrantAuthenticationTokenPayload{
@@ -164,75 +157,16 @@ func (r *MutationResolver) CreateAccountWithAuthenticationToken(ctx context.Cont
 	currentCookie, err := cookies.ReadCookie(ctx, token.OTPKey)
 
 	if err != nil {
-
-		// AuthenticationToken doesn't exist
-		if err == http.ErrNoCookie {
-			return nil, command.ErrFailedRegister
-		}
-
-		zap.S().Errorf("failed to get cookie: %s", err)
-		return nil, command.ErrFailedRegister
+		return nil, err
 	}
 
-	acc, err := r.App.Commands.Register.Handle(ctx, currentCookie.Value, input.Username)
+	acc, err := r.App.Commands.CreateAccountWithAuthenticationToken.Handle(ctx, currentCookie.Value, input.Username)
 
 	if err != nil {
 		return nil, err
 	}
 
-	http.SetCookie(helpers.GinContextFromContext(ctx).Writer, &http.Cookie{Name: token.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
-
-	if err := passport.FromContext(ctx).MutatePassport(ctx, func(p *passport.Passport) error {
-		p.SetAccount(acc.ID())
-		return nil
-	}); err != nil {
-		return nil, err
-	}
-
-	return &types.CreateAccountWithAuthenticationTokenPayload{Account: types.MarshalAccountToGraphQL(acc)}, err
-}
-
-func (r *MutationResolver) RevokeAccountAccess(ctx context.Context) (*types.RevokeAccountAccessPayload, error) {
-	// logout just revokes the currently-authenticated user from the passport
-	if err := passport.
-		FromContext(ctx).
-		MutatePassport(ctx, func(p *passport.Passport) error {
-			return p.RevokeAccount()
-		}); err != nil {
-		return nil, err
-	}
-
-	return &types.RevokeAccountAccessPayload{
-		RevokedAccountID: relay.NewID(types.Account{}, passport.FromContext(ctx).AccountID()),
-	}, nil
-}
-
-func (r *MutationResolver) GrantAccountAccessWithAuthenticationTokenAndTotp(ctx context.Context, input types.GrantAccountAccessWithAuthenticationTokenAndTotpInput) (*types.GrantAccountAccessWithAuthenticationTokenAndTotpPayload, error) {
-
-	currentCookie, err := cookies.ReadCookie(ctx, token.OTPKey)
-
-	if err != nil {
-
-		// AuthenticationToken doesn't exist
-		if err == http.ErrNoCookie {
-			return nil, command.ErrFailedAuthenticateMultiFactor
-		}
-
-		zap.S().Errorf("failed to get cookie: %s", err)
-		return nil, command.ErrFailedAuthenticateMultiFactor
-	}
-
-	acc, validation, err := r.App.Commands.FinishAuthenticateMultiFactor.Handle(ctx, false, currentCookie.Value, input.Code)
-
-	if err != nil {
-		return nil, err
-	}
-
-	if validation != "" {
-		return nil, gqlerror.Errorf(validation)
-	}
-
-	http.SetCookie(helpers.GinContextFromContext(ctx).Writer, &http.Cookie{Name: token.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
+	cookies.DeleteCookie(ctx, token.OTPKey)
 
 	if err := passport.
 		FromContext(ctx).
@@ -244,25 +178,50 @@ func (r *MutationResolver) GrantAccountAccessWithAuthenticationTokenAndTotp(ctx 
 		return nil, err
 	}
 
-	return &types.GrantAccountAccessWithAuthenticationTokenAndTotpPayload{Account: types.MarshalAccountToGraphQL(acc)}, nil
+	return &types.CreateAccountWithAuthenticationTokenPayload{Account: types.MarshalAccountToGraphQL(acc)}, err
 }
 
-func (r *MutationResolver) GrantAccountAccessWithAuthenticationTokenAndRecoveryCode(ctx context.Context, input types.GrantAccountAccessWithAuthenticationTokenAndRecoveryCodeInput) (*types.GrantAccountAccessWithAuthenticationTokenAndRecoveryCodePayload, error) {
+func (r *MutationResolver) RevokeAccountAccess(ctx context.Context) (*types.RevokeAccountAccessPayload, error) {
+	// logout just revokes the currently-authenticated user from the passport
+	if err := passport.
+		FromContext(ctx).
+		MutatePassport(ctx,
+			func(p *passport.Passport) error {
+				return p.RevokeAccount()
+			}); err != nil {
+		return nil, err
+	}
+
+	return &types.RevokeAccountAccessPayload{
+		RevokedAccountID: relay.NewID(types.Account{}, passport.FromContext(ctx).AccountID()),
+	}, nil
+}
+
+func (r *MutationResolver) GrantAccountAccessWithAuthenticationTokenAndMultiFactor(ctx context.Context, input types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorInput) (*types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload, error) {
 
 	currentCookie, err := cookies.ReadCookie(ctx, token.OTPKey)
 
 	if err != nil {
-
-		// AuthenticationToken doesn't exist
-		if err == http.ErrNoCookie {
-			return nil, command.ErrFailedAuthenticateMultiFactor
-		}
-
-		zap.S().Errorf("failed to get cookie: %s", err)
-		return nil, command.ErrFailedAuthenticateMultiFactor
+		return nil, err
 	}
 
-	acc, validation, err := r.App.Commands.FinishAuthenticateMultiFactor.Handle(ctx, true, currentCookie.Value, input.RecoveryCode)
+	code := ""
+	recoveryCode := false
+
+	if input.Code != nil {
+		code = *input.Code
+	}
+
+	if input.RecoveryCode != nil {
+		if code != "" {
+			return nil, gqlerror.Errorf("can only specify one of code or recovery code")
+		}
+
+		recoveryCode = true
+		code = *input.RecoveryCode
+	}
+
+	acc, validation, err := r.App.Commands.GrantAccountAccessWithAuthTokenAndRecoveryCodeOrTotp.Handle(ctx, recoveryCode, currentCookie.Value, code)
 
 	if err != nil {
 		return nil, err
@@ -272,19 +231,79 @@ func (r *MutationResolver) GrantAccountAccessWithAuthenticationTokenAndRecoveryC
 		return nil, gqlerror.Errorf(validation)
 	}
 
-	http.SetCookie(helpers.GinContextFromContext(ctx).Writer, &http.Cookie{Name: token.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
+	cookies.DeleteCookie(ctx, token.OTPKey)
 
-	if err := passport.FromContext(ctx).MutatePassport(ctx, func(p *passport.Passport) error {
-		p.SetAccount(acc.ID())
-		return nil
+	if err := passport.
+		FromContext(ctx).
+		MutatePassport(ctx,
+			func(p *passport.Passport) error {
+				p.SetAccount(acc.ID())
+				return nil
+			}); err != nil {
+		return nil, err
+	}
+
+	return &types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload{Account: types.MarshalAccountToGraphQL(acc)}, nil
+}
+
+func (r *MutationResolver) GenerateAccountMultiFactorTotp(ctx context.Context) (*types.GenerateAccountMultiFactorTotpPayload, error) {
+
+	totp, err := r.App.Commands.GenerateAccountMultiFactorTOTP.Handle(ctx, passport.FromContext(ctx).AccountID())
+
+	if err != nil {
+		return nil, err
+	}
+
+	// add TOTP secret to cookie, which will be read when enrolling
+	if err := cookies.SetCookie(ctx, &http.Cookie{
+		Name:  multi_factor.TOTPCookieKey,
+		Value: totp.Secret(),
 	}); err != nil {
 		return nil, err
 	}
 
-	return &types.GrantAccountAccessWithAuthenticationTokenAndRecoveryCodePayload{Account: types.MarshalAccountToGraphQL(acc)}, nil
+	img, err := totp.Image()
+
+	if err != nil {
+		zap.S().Errorf("failed to generate image: %s", err)
+		return nil, command.ErrFailedGenerateAccountMultiFactorTOTP
+	}
+
+	return &types.GenerateAccountMultiFactorTotpPayload{
+		MultiFactorTotp: &types.MultiFactorTotp{
+			Secret:   totp.Secret(),
+			ImageSrc: img,
+		},
+	}, nil
+}
+
+func (r *MutationResolver) EnrollAccountMultiFactorTotp(ctx context.Context, input types.EnrollAccountMultiFactorTotpInput) (*types.EnrollAccountMultiFactorTotpPayload, error) {
+
+	currentCookie, err := cookies.ReadCookie(ctx, multi_factor.TOTPCookieKey)
+
+	if err != nil {
+		return nil, err
+	}
+
+	validation, err := r.App.Commands.EnrollAccountMultiFactorTOTP.Handle(ctx, passport.FromContext(ctx).AccountID(), currentCookie.Value, input.Code)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if validation != "" {
+		return nil, gqlerror.Errorf(validation)
+	}
+
+	cookies.DeleteCookie(ctx, token.OTPKey)
+
+	enabled := true
+
+	return &types.EnrollAccountMultiFactorTotpPayload{AccountMultiFactorTOTPEnabled: &enabled}, nil
 }
 
 func (r *MutationResolver) UnlockAccount(ctx context.Context) (*types.UnlockAccountPayload, error) {
+
 	acc, err := r.App.Commands.UnlockAccount.Handle(ctx, passport.FromContext(ctx).AccountID())
 
 	if err != nil {
@@ -311,7 +330,7 @@ func (r *MutationResolver) AddAccountEmail(ctx context.Context, input types.AddA
 
 func (r *MutationResolver) DeleteAccountEmail(ctx context.Context, input types.DeleteAccountEmailInput) (*types.DeleteAccountEmailPayload, error) {
 
-	if err := r.App.Commands.RemoveAccountEmail.Handle(ctx, passport.FromContext(ctx).AccountID(), input.AccountEmailID.GetID()); err != nil {
+	if err := r.App.Commands.DeleteAccountEmail.Handle(ctx, passport.FromContext(ctx).AccountID(), input.AccountEmailID.GetID()); err != nil {
 		return nil, err
 	}
 
@@ -320,7 +339,7 @@ func (r *MutationResolver) DeleteAccountEmail(ctx context.Context, input types.D
 
 func (r *MutationResolver) UpdateAccountUsernameAndRetainPrevious(ctx context.Context, input types.UpdateAccountUsernameAndRetainPreviousInput) (*types.UpdateAccountUsernameAndRetainPreviousPayload, error) {
 
-	username, validation, err := r.App.Commands.ModifyAccountUsername.Handle(ctx, passport.FromContext(ctx).AccountID(), input.Username)
+	username, validation, err := r.App.Commands.UpdateAccountUsernameAndRetainPrevious.Handle(ctx, passport.FromContext(ctx).AccountID(), input.Username)
 
 	if err != nil {
 		return nil, err
@@ -344,7 +363,7 @@ func (r *MutationResolver) RevokeAccountSession(ctx context.Context, input types
 
 func (r *MutationResolver) UpdateAccountEmailStatusToPrimary(ctx context.Context, input types.UpdateAccountEmailStatusToPrimaryInput) (*types.UpdateAccountEmailStatusToPrimaryPayload, error) {
 
-	email, validation, err := r.App.Commands.MakeAccountEmailPrimary.Handle(ctx, passport.FromContext(ctx).AccountID(), input.AccountEmailID.GetID())
+	email, validation, err := r.App.Commands.UpdateAccountEmailStatusToPrimary.Handle(ctx, passport.FromContext(ctx).AccountID(), input.AccountEmailID.GetID())
 
 	if err != nil {
 		return nil, err
@@ -357,9 +376,9 @@ func (r *MutationResolver) UpdateAccountEmailStatusToPrimary(ctx context.Context
 	return &types.UpdateAccountEmailStatusToPrimaryPayload{AccountEmail: types.MarshalAccountEmailToGraphQL(email)}, nil
 }
 
-func (r *MutationResolver) CreateAccountMultiFactorRecoveryCodesAndDeletePrevious(ctx context.Context) (*types.CreateAccountMultiFactorRecoveryCodesAndDeletePreviousPayload, error) {
+func (r *MutationResolver) GenerateAccountMultiFactorRecoveryCodes(ctx context.Context) (*types.GenerateAccountMultiFactorRecoveryCodesPayload, error) {
 
-	codes, err := r.App.Commands.GenerateAccountRecoveryCodes.Handle(ctx, passport.FromContext(ctx).AccountID())
+	codes, err := r.App.Commands.GenerateAccountMultiFactorRecoveryCodes.Handle(ctx, passport.FromContext(ctx).AccountID())
 
 	if err != nil {
 		return nil, err
@@ -371,76 +390,7 @@ func (r *MutationResolver) CreateAccountMultiFactorRecoveryCodesAndDeletePreviou
 		recoveryCodes = append(recoveryCodes, &types.AccountMultiFactorRecoveryCode{Code: code.Code()})
 	}
 
-	return &types.CreateAccountMultiFactorRecoveryCodesAndDeletePreviousPayload{AccountMultiFactorRecoveryCodes: recoveryCodes}, nil
-}
-
-func (r *MutationResolver) GenerateAccountMultiFactorTotp(ctx context.Context) (*types.GenerateAccountMultiFactorTotpPayload, error) {
-
-	totp, err := r.App.Commands.GenerateAccountMultiFactorTOTP.Handle(ctx, passport.FromContext(ctx).AccountID())
-
-	if err != nil {
-		return nil, err
-	}
-
-	// add TOTP secret to cookie, which will be read when enrolling
-	err = cookies.SetCookie(ctx, &http.Cookie{
-		Name:  multi_factor.TOTPCookieKey,
-		Value: totp.Secret(),
-	})
-
-	if err != nil {
-		zap.S().Errorf("failed to set cookie: %s", err)
-		return nil, command.ErrFailedGenerateAccountMultiFactorTOTP
-	}
-
-	img, err := totp.Image()
-
-	if err != nil {
-		zap.S().Errorf("failed to generate image: %s", err)
-		return nil, command.ErrFailedGenerateAccountMultiFactorTOTP
-	}
-
-	return &types.GenerateAccountMultiFactorTotpPayload{
-		MultiFactorTotp: &types.MultiFactorTotp{
-			Secret:   totp.Secret(),
-			ImageSrc: img,
-		},
-	}, nil
-}
-
-func (r *MutationResolver) EnrollAccountMultiFactorTotp(ctx context.Context, input types.EnrollAccountMultiFactorTotpInput) (*types.EnrollAccountMultiFactorTotpPayload, error) {
-
-	currentCookie, err := cookies.ReadCookie(ctx, multi_factor.TOTPCookieKey)
-
-	if err != nil {
-
-		// AuthenticationToken doesn't exist - fail it
-		if err == http.ErrNoCookie {
-			return nil, command.ErrFailedEnrollAccountMultiFactorTOTP
-		}
-
-		zap.S().Errorf("failed to get cookie: %s", err)
-		return nil, command.ErrFailedEnrollAccountMultiFactorTOTP
-	}
-
-	validation, err := r.App.Commands.EnrollAccountMultiFactorTOTP.Handle(ctx, passport.FromContext(ctx).AccountID(), currentCookie.Value, input.Code)
-
-	if err != nil {
-		return nil, err
-	}
-
-	if validation != "" {
-		return nil, gqlerror.Errorf(validation)
-	}
-
-	http.SetCookie(
-		helpers.GinContextFromContext(ctx).Writer,
-		&http.Cookie{Name: token.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"},
-	)
-
-	enabled := true
-
-	return &types.EnrollAccountMultiFactorTotpPayload{AccountMultiFactorTOTPEnabled: &enabled}, nil
+	return &types.GenerateAccountMultiFactorRecoveryCodesPayload{AccountMultiFactorRecoveryCodes: recoveryCodes}, nil
 }
 
 func (r *MutationResolver) DisableAccountMultiFactor(ctx context.Context) (*types.DisableAccountMultiFactorPayload, error) {

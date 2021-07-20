@@ -9,19 +9,19 @@ import (
 	"overdoll/libraries/uuid"
 )
 
-type AuthenticateHandler struct {
-	cr token.Repository
-}
-
-func NewAuthenticateHandler(cr token.Repository) AuthenticateHandler {
-	return AuthenticateHandler{cr: cr}
-}
-
 var (
 	ErrFailedAuthenticate = errors.New("failed to authenticate")
 )
 
-func (h AuthenticateHandler) Handle(ctx context.Context, email, session string) (*token.AuthenticationToken, error) {
+type GrantAuthenticationTokenHandler struct {
+	cr token.Repository
+}
+
+func NewGrantAuthenticationTokenHandler(cr token.Repository) GrantAuthenticationTokenHandler {
+	return GrantAuthenticationTokenHandler{cr: cr}
+}
+
+func (h GrantAuthenticationTokenHandler) Handle(ctx context.Context, email, session string) (*token.AuthenticationToken, error) {
 
 	// Create an authentication cookie
 	instance, err := token.NewAuthenticationToken(uuid.New().String(), email, session)

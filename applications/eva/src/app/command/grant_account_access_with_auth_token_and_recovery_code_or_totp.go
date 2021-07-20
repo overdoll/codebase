@@ -10,16 +10,6 @@ import (
 	"overdoll/applications/eva/src/domain/token"
 )
 
-type FinishAuthenticateMultiFactorHandler struct {
-	cr token.Repository
-	ur account.Repository
-	mr multi_factor.Repository
-}
-
-func NewFinishAuthenticateMultiFactorHandler(cr token.Repository, ur account.Repository, mr multi_factor.Repository) FinishAuthenticateMultiFactorHandler {
-	return FinishAuthenticateMultiFactorHandler{cr: cr, ur: ur, mr: mr}
-}
-
 var (
 	ErrFailedAuthenticateMultiFactor           = errors.New("failed to authenticate with multi factor")
 	ErrFailedAuthenticateMultiFactorNotEnabled = errors.New("failed to authenticate with multi factor - not enabled")
@@ -29,7 +19,17 @@ const (
 	ValidationErrMultiFactorCodeInvalid = "multi_factor_code_invalid"
 )
 
-func (h FinishAuthenticateMultiFactorHandler) Handle(ctx context.Context, recoveryCode bool, cookieId, code string) (*account.Account, string, error) {
+type GrantAccountAccessWithAuthTokenAndRecoveryCodeOrTotpHandler struct {
+	cr token.Repository
+	ur account.Repository
+	mr multi_factor.Repository
+}
+
+func NewGrantAccountAccessWithAuthTokenAndRecoveryCodeOrTotpHandler(cr token.Repository, ur account.Repository, mr multi_factor.Repository) GrantAccountAccessWithAuthTokenAndRecoveryCodeOrTotpHandler {
+	return GrantAccountAccessWithAuthTokenAndRecoveryCodeOrTotpHandler{cr: cr, ur: ur, mr: mr}
+}
+
+func (h GrantAccountAccessWithAuthTokenAndRecoveryCodeOrTotpHandler) Handle(ctx context.Context, recoveryCode bool, cookieId, code string) (*account.Account, string, error) {
 
 	ck, err := h.cr.GetAuthenticationTokenById(ctx, cookieId)
 
@@ -75,7 +75,7 @@ func (h FinishAuthenticateMultiFactorHandler) Handle(ctx context.Context, recove
 	}
 
 	if recoveryCode {
-		if err := h.mr.RedeemAccountRecoveryCode(ctx, usr.ID(), multi_factor.NewRecoveryCode(code)); err != nil {
+		if err := h.mr.VerifyAccountRecoveryCode(ctx, usr.ID(), multi_factor.NewRecoveryCode(code)); err != nil {
 
 			// recovery codes must be valid
 			if err == multi_factor.ErrRecoveryCodeInvalid {

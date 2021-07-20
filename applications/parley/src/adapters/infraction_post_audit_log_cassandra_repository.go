@@ -180,7 +180,7 @@ func (r InfractionCassandraRepository) CreatePostAuditLog(ctx context.Context, a
 
 	// if denied with infraction, add to infraction history for this user
 	if auditLog.IsDeniedWithInfraction() {
-		if err := r.CreateUserInfractionHistory(ctx, auditLog.UserInfraction()); err != nil {
+		if err := r.CreateAccountInfractionHistory(ctx, auditLog.UserInfraction()); err != nil {
 			return err
 		}
 	}

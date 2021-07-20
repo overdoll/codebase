@@ -86,7 +86,7 @@ func (r ModeratorCassandraRepository) GetModerators(ctx context.Context) ([]*mod
 	return moderators, nil
 }
 
-func (r ModeratorCassandraRepository) AddModerator(ctx context.Context, mod *mod.Moderator) error {
+func (r ModeratorCassandraRepository) CreateModerator(ctx context.Context, mod *mod.Moderator) error {
 
 	insertModerator := r.session.
 		Query(moderatorTable.Insert()).

@@ -8,19 +8,19 @@ import (
 	"overdoll/applications/eva/src/domain/account"
 )
 
-type RemoveAccountEmailHandler struct {
-	ar account.Repository
-}
-
-func NewRemoveAccountEmailHandler(ar account.Repository) RemoveAccountEmailHandler {
-	return RemoveAccountEmailHandler{ar: ar}
-}
-
 var (
 	ErrFailedRemoveAccountEmail = errors.New("failed to remove email")
 )
 
-func (h RemoveAccountEmailHandler) Handle(ctx context.Context, accountId, email string) error {
+type DeleteAccountEmailHandler struct {
+	ar account.Repository
+}
+
+func NewDeleteAccountEmailHandler(ar account.Repository) DeleteAccountEmailHandler {
+	return DeleteAccountEmailHandler{ar: ar}
+}
+
+func (h DeleteAccountEmailHandler) Handle(ctx context.Context, accountId, email string) error {
 
 	if err := h.ar.DeleteAccountEmail(ctx, accountId, email); err != nil {
 		zap.S().Errorf("failed to remove email: %s", err)

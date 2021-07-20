@@ -9,6 +9,10 @@ import (
 	"overdoll/libraries/paging"
 )
 
+var (
+	ErrFailedAccountEmailsByAccount = errors.New("failed to get emails")
+)
+
 type AccountEmailsByAccountHandler struct {
 	ar account.Repository
 }
@@ -16,10 +20,6 @@ type AccountEmailsByAccountHandler struct {
 func NewGetAccountEmailsHandler(ar account.Repository) AccountEmailsByAccountHandler {
 	return AccountEmailsByAccountHandler{ar: ar}
 }
-
-var (
-	ErrFailedAccountEmailsByAccount = errors.New("failed to get emails")
-)
 
 func (h AccountEmailsByAccountHandler) Handle(ctx context.Context, cursor *paging.Cursor, userId string) ([]*account.Email, *paging.Info, error) {
 

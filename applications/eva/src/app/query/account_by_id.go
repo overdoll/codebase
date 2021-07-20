@@ -8,6 +8,10 @@ import (
 	"overdoll/applications/eva/src/domain/account"
 )
 
+var (
+	ErrFailedAccountByIdHandler = errors.New("failed to get account by id")
+)
+
 type AccountByIdHandler struct {
 	ur account.Repository
 }
@@ -15,10 +19,6 @@ type AccountByIdHandler struct {
 func NewAccountByIdHandler(ur account.Repository) AccountByIdHandler {
 	return AccountByIdHandler{ur: ur}
 }
-
-var (
-	ErrFailedAccountByIdHandler = errors.New("failed to get account by id")
-)
 
 func (h AccountByIdHandler) Handle(ctx context.Context, id string) (*account.Account, error) {
 

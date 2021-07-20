@@ -390,7 +390,7 @@ func (r PostsIndexElasticSearchRepository) BulkIndexPosts(ctx context.Context, p
 	return nil
 }
 
-func (r PostsIndexElasticSearchRepository) DeletePostDocument(ctx context.Context, id string) error {
+func (r PostsIndexElasticSearchRepository) DeletePost(ctx context.Context, id string) error {
 
 	if err := r.store.Delete(PostIndexName, id); err != nil {
 		return fmt.Errorf("failed to delete pending post document: %s", err)

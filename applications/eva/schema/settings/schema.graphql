@@ -289,7 +289,7 @@ type UpdateAccountEmailStatusToPrimaryPayload {
 }
 
 """Payload of the created account recovery codes"""
-type CreateAccountMultiFactorRecoveryCodesAndDeletePreviousPayload {
+type GenerateAccountMultiFactorRecoveryCodesPayload {
   """The recovery codes that were created"""
   accountMultiFactorRecoveryCodes: [AccountMultiFactorRecoveryCode!]!
 }
@@ -351,7 +351,7 @@ extend type Mutation {
   """
   Generates a new set of recovery codes. The previous set (whatever it was) will be deleted!
   """
-  createAccountMultiFactorRecoveryCodesAndDeletePrevious: CreateAccountMultiFactorRecoveryCodesAndDeletePreviousPayload @auth
+  generateAccountMultiFactorRecoveryCodes: GenerateAccountMultiFactorRecoveryCodesPayload @auth
 
   """
   Generate a TOTP key for the current user. Recovery codes must be generated first.

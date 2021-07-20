@@ -40,7 +40,7 @@ func (h ToggleModeratorHandler) Handle(ctx context.Context, accId string) (bool,
 
 		// not found - add to moderator queue
 		if err == moderator.ErrModeratorNotFound {
-			if err := h.mr.AddModerator(ctx, moderator.NewModerator(accId)); err != nil {
+			if err := h.mr.CreateModerator(ctx, moderator.NewModerator(accId)); err != nil {
 				zap.S().Errorf("failed to add moderator: %s", err)
 				return true, ErrFailedModeratorToggle
 			}

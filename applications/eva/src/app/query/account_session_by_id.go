@@ -8,6 +8,10 @@ import (
 	"overdoll/applications/eva/src/domain/session"
 )
 
+var (
+	ErrFailedSessionById = errors.New("failed to get session")
+)
+
 type AccountSessionByIdHandler struct {
 	sr session.Repository
 }
@@ -15,10 +19,6 @@ type AccountSessionByIdHandler struct {
 func NewAccountSessionByIdHandler(sr session.Repository) AccountSessionByIdHandler {
 	return AccountSessionByIdHandler{sr: sr}
 }
-
-var (
-	ErrFailedSessionById = errors.New("failed to get session")
-)
 
 func (h AccountSessionByIdHandler) Handle(ctx context.Context, sessionId string) (*session.Session, error) {
 

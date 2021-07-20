@@ -8,14 +8,6 @@ import (
 	"overdoll/applications/eva/src/domain/account"
 )
 
-type MakeAccountEmailPrimaryHandler struct {
-	ar account.Repository
-}
-
-func NewMakeAccountEmailPrimaryHandler(ar account.Repository) MakeAccountEmailPrimaryHandler {
-	return MakeAccountEmailPrimaryHandler{ar: ar}
-}
-
 var (
 	ErrFailedMakeEmailPrimary = errors.New("failed to make email primary")
 )
@@ -24,7 +16,15 @@ const (
 	ValidationErrEmailNotConfirmed = "email_not_confirmed"
 )
 
-func (h MakeAccountEmailPrimaryHandler) Handle(ctx context.Context, accountId, email string) (*account.Email, string, error) {
+type UpdateAccountEmailStatusToPrimaryHandler struct {
+	ar account.Repository
+}
+
+func NewUpdateAccountEmailStatusToPrimaryHandler(ar account.Repository) UpdateAccountEmailStatusToPrimaryHandler {
+	return UpdateAccountEmailStatusToPrimaryHandler{ar: ar}
+}
+
+func (h UpdateAccountEmailStatusToPrimaryHandler) Handle(ctx context.Context, accountId, email string) (*account.Email, string, error) {
 
 	_, em, err := h.ar.UpdateAccountMakeEmailPrimary(ctx, accountId, func(a *account.Account, emails []*account.Email) error {
 		return a.UpdateEmail(emails, email)

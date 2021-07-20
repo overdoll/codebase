@@ -36,7 +36,7 @@ func (h DiscardPostHandler) Handle(ctx context.Context, id string) error {
 	}
 
 	// delete document because it's been processed
-	if err := h.pi.DeletePostDocument(ctx, pendingPost.ID()); err != nil {
+	if err := h.pi.DeletePost(ctx, pendingPost.ID()); err != nil {
 		zap.S().Errorf("failed to index post: %s", err)
 		return err
 	}

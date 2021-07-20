@@ -5,11 +5,11 @@ import (
 )
 
 type Repository interface {
-	CreateAccountRecoveryCodes(context.Context, string, []*RecoveryCode) error
-	GetAccountRecoveryCodes(context.Context, string) ([]*RecoveryCode, error)
-	RedeemAccountRecoveryCode(context.Context, string, *RecoveryCode) error
+	CreateAccountRecoveryCodes(ctx context.Context, accountId string, recoveryCodes []*RecoveryCode) error
+	GetAccountRecoveryCodes(ctx context.Context, accountId string) ([]*RecoveryCode, error)
+	VerifyAccountRecoveryCode(ctx context.Context, accountId string, recoveryCode *RecoveryCode) error
 
-	GetAccountMultiFactorTOTP(context.Context, string) (*TOTP, error)
-	CreateAccountMultiFactorTOTP(context.Context, string, *TOTP) error
-	DeleteAccountMultiFactorTOTP(context.Context, string) error
+	GetAccountMultiFactorTOTP(ctx context.Context, accountId string) (*TOTP, error)
+	CreateAccountMultiFactorTOTP(ctx context.Context, accountId string, totp *TOTP) error
+	DeleteAccountMultiFactorTOTP(ctx context.Context, accountId string) error
 }

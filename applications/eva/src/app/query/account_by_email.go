@@ -8,6 +8,10 @@ import (
 	"overdoll/applications/eva/src/domain/account"
 )
 
+var (
+	ErrFailedAccountByEmailHandler = errors.New("failed to get account from email")
+)
+
 type AccountByEmailHandler struct {
 	ur account.Repository
 }
@@ -15,10 +19,6 @@ type AccountByEmailHandler struct {
 func NewAccountByEmailHandler(ur account.Repository) AccountByEmailHandler {
 	return AccountByEmailHandler{ur: ur}
 }
-
-var (
-	ErrFailedAccountByEmailHandler = errors.New("failed to get account from email")
-)
 
 func (h AccountByEmailHandler) Handle(ctx context.Context, email string) (*account.Account, error) {
 

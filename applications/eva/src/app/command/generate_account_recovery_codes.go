@@ -8,19 +8,19 @@ import (
 	"overdoll/applications/eva/src/domain/multi_factor"
 )
 
-type GenerateAccountRecoveryCodesHandler struct {
-	mr multi_factor.Repository
-}
-
-func NewGenerateAccountRecoveryCodesHandler(mr multi_factor.Repository) GenerateAccountRecoveryCodesHandler {
-	return GenerateAccountRecoveryCodesHandler{mr: mr}
-}
-
 var (
 	ErrFailedGenerateAccountRecoveryCodes = errors.New("failed to generate recovery codes")
 )
 
-func (h GenerateAccountRecoveryCodesHandler) Handle(ctx context.Context, accountId string) ([]*multi_factor.RecoveryCode, error) {
+type GenerateAccountMultiFactorRecoveryCodesHandler struct {
+	mr multi_factor.Repository
+}
+
+func NewGenerateAccountMultiFactorRecoveryCodesHandler(mr multi_factor.Repository) GenerateAccountMultiFactorRecoveryCodesHandler {
+	return GenerateAccountMultiFactorRecoveryCodesHandler{mr: mr}
+}
+
+func (h GenerateAccountMultiFactorRecoveryCodesHandler) Handle(ctx context.Context, accountId string) ([]*multi_factor.RecoveryCode, error) {
 
 	// generate a set of recovery codes for the account
 	set, err := multi_factor.GenerateRecoveryCodeSet()

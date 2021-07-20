@@ -21,6 +21,7 @@ func (r AccountResolver) Avatar(ctx context.Context, obj *types.Account, size *i
 }
 
 func (r AccountResolver) Emails(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountEmailConnection, error) {
+
 	accountId := obj.ID.GetID()
 
 	if passport.FromContext(ctx).AccountID() != accountId {
@@ -43,6 +44,7 @@ func (r AccountResolver) Emails(ctx context.Context, obj *types.Account, after *
 }
 
 func (r AccountResolver) Usernames(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountUsernameConnection, error) {
+
 	accountId := obj.ID.GetID()
 
 	if passport.FromContext(ctx).AccountID() != accountId {
@@ -65,6 +67,7 @@ func (r AccountResolver) Usernames(ctx context.Context, obj *types.Account, afte
 }
 
 func (r AccountResolver) Sessions(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountSessionConnection, error) {
+
 	accountId := obj.ID.GetID()
 
 	if passport.FromContext(ctx).AccountID() != accountId {

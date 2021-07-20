@@ -39,6 +39,7 @@ func (r EntityResolver) FindAccountSessionByID(ctx context.Context, id relay.ID)
 }
 
 func (r EntityResolver) FindAccountUsernameByID(ctx context.Context, id relay.ID) (*types.AccountUsername, error) {
+
 	username, err := r.App.Queries.AccountUsernameByUsername.Handle(ctx, id.GetCompositePartID(1), id.GetCompositePartID(0))
 
 	if err != nil {

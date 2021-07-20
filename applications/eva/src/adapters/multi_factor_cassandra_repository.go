@@ -116,7 +116,7 @@ func (r MultiFactorCassandraRepository) GetAccountRecoveryCodes(ctx context.Cont
 }
 
 // RedeemAccountRecoveryCode - redeem recovery code - basically just deletes the recovery code from the database
-func (r MultiFactorCassandraRepository) RedeemAccountRecoveryCode(ctx context.Context, accountId string, recoveryCode *multi_factor.RecoveryCode) error {
+func (r MultiFactorCassandraRepository) VerifyAccountRecoveryCode(ctx context.Context, accountId string, recoveryCode *multi_factor.RecoveryCode) error {
 
 	encryptedCode, err := crypt.Encrypt(recoveryCode.Code())
 

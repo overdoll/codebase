@@ -9,6 +9,10 @@ import (
 	"overdoll/libraries/uuid"
 )
 
+var (
+	ErrFailedCreateAccount = errors.New("failed to create account")
+)
+
 type CreateAccountHandler struct {
 	ur account.Repository
 }
@@ -16,10 +20,6 @@ type CreateAccountHandler struct {
 func NewCreateUserHandler(ur account.Repository) CreateAccountHandler {
 	return CreateAccountHandler{ur: ur}
 }
-
-var (
-	ErrFailedCreateAccount = errors.New("failed to create account")
-)
 
 func (h CreateAccountHandler) Handle(ctx context.Context, username, email string) (*account.Account, error) {
 

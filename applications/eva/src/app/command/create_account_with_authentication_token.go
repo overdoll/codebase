@@ -10,26 +10,26 @@ import (
 	"overdoll/libraries/uuid"
 )
 
-type RegisterHandler struct {
+var (
+	ErrFailedFailedCreateAccount = errors.New("failed to create account")
+)
+
+type CreateAccountWithAuthenticationTokenHandler struct {
 	cr token.Repository
 	ur account.Repository
 }
 
-func NewRegisterHandler(cr token.Repository, ur account.Repository) RegisterHandler {
-	return RegisterHandler{cr: cr, ur: ur}
+func NewCreateAccountWithAuthenticationTokenHandler(cr token.Repository, ur account.Repository) CreateAccountWithAuthenticationTokenHandler {
+	return CreateAccountWithAuthenticationTokenHandler{cr: cr, ur: ur}
 }
 
-var (
-	ErrFailedRegister = errors.New("failed to register")
-)
-
-func (h RegisterHandler) Handle(ctx context.Context, cookieId, username string) (*account.Account, error) {
+func (h CreateAccountWithAuthenticationTokenHandler) Handle(ctx context.Context, cookieId, username string) (*account.Account, error) {
 
 	ck, err := h.cr.GetAuthenticationTokenById(ctx, cookieId)
 
 	if err != nil {
 		zap.S().Errorf("failed to get cookie: %s", err)
-		return nil, ErrFailedRegister
+		return nil, ErrFailedFailedCreateAccount
 	}
 
 	// AuthenticationToken should have been redeemed at this point, if we are on this command
@@ -45,12 +45,12 @@ func (h RegisterHandler) Handle(ctx context.Context, cookieId, username string) 
 
 	if err := h.ur.CreateAccount(ctx, instance); err != nil {
 		zap.S().Errorf("failed to create user: %s", err)
-		return nil, ErrFailedRegister
+		return nil, ErrFailedFailedCreateAccount
 	}
 
 	if err := h.cr.DeleteAuthenticationTokenById(ctx, cookieId); err != nil {
 		zap.S().Errorf("failed to delete cookie: %s", err)
-		return nil, ErrFailedRegister
+		return nil, ErrFailedFailedCreateAccount
 	}
 
 	return instance, nil

@@ -69,5 +69,5 @@ func (h PublishPostHandler) Handle(ctx context.Context, id string) error {
 	}
 
 	// delete pending post document since it's no longer needed
-	return h.pi.DeletePostDocument(ctx, pendingPost.ID())
+	return h.pi.DeletePost(ctx, pendingPost.ID())
 }

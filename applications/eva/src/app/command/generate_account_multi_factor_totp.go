@@ -9,6 +9,10 @@ import (
 	"overdoll/applications/eva/src/domain/multi_factor"
 )
 
+var (
+	ErrFailedGenerateAccountMultiFactorTOTP = errors.New("failed to generate totp info")
+)
+
 type GenerateAccountMultiFactorTOTPHandler struct {
 	mr multi_factor.Repository
 	ar account.Repository
@@ -17,10 +21,6 @@ type GenerateAccountMultiFactorTOTPHandler struct {
 func NewGenerateAccountMultiFactorTOTP(mr multi_factor.Repository, ar account.Repository) GenerateAccountMultiFactorTOTPHandler {
 	return GenerateAccountMultiFactorTOTPHandler{mr: mr, ar: ar}
 }
-
-var (
-	ErrFailedGenerateAccountMultiFactorTOTP = errors.New("failed to generate totp info")
-)
 
 func (h GenerateAccountMultiFactorTOTPHandler) Handle(ctx context.Context, accountId string) (*multi_factor.TOTP, error) {
 

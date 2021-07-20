@@ -21,14 +21,10 @@ input GrantAuthenticationTokenInput {
   email: String!
 }
 
-"""Payload for granting access to an account using the token and the TOTP code"""
-input GrantAccountAccessWithAuthenticationTokenAndTotpInput {
-  code: String!
-}
-
 """Payload for granting access to an account using the token and the recovery code"""
-input GrantAccountAccessWithAuthenticationTokenAndRecoveryCodeInput {
-  recoveryCode: String!
+input GrantAccountAccessWithAuthenticationTokenAndMultiFactorInput {
+  recoveryCode: String
+  code: String
 }
 
 """Input for verifying and attempting access grant to an account"""
@@ -71,14 +67,8 @@ type ReissueAuthenticationTokenPayload {
   authenticationToken: AuthenticationToken
 }
 
-"""Payload for granting access to an account using the authentication token and TOTP code"""
-type GrantAccountAccessWithAuthenticationTokenAndTotpPayload {
-  """The account that granted access to"""
-  account: Account
-}
-
 """Payload for granting access to an account using the authentication token and Recovery Code"""
-type GrantAccountAccessWithAuthenticationTokenAndRecoveryCodePayload {
+type GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload {
   """The account that granted access to"""
   account: Account
 }
@@ -132,18 +122,14 @@ type Mutation {
   reissueAuthenticationToken: ReissueAuthenticationTokenPayload @anon
 
   """
-  Authenticate with a TOTP code - should be used after token is verified
+  Grant account access using an authentication token and a multi factor option
+
+  Set "code" when authenticating with a TOTP code
+  Set "recoveryCode" when authenticating with a recovery code
 
   Note: the actual authentication token is opaque (set & read from cookies)
   """
-  grantAccountAccessWithAuthenticationTokenAndTotp(input: GrantAccountAccessWithAuthenticationTokenAndTotpInput!): GrantAccountAccessWithAuthenticationTokenAndTotpPayload @anon
-
-  """
-  Authenticate with a recovery code - should be used after a token is verified
-
-  Note: the actual authentication token is opaque (set & read from cookies)
-  """
-  grantAccountAccessWithAuthenticationTokenAndRecoveryCode(input: GrantAccountAccessWithAuthenticationTokenAndRecoveryCodeInput!): GrantAccountAccessWithAuthenticationTokenAndRecoveryCodePayload @anon
+  grantAccountAccessWithAuthenticationTokenAndMultiFactor(input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorInput!): GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload @anon
 
   """
   Will verify the authentication token.

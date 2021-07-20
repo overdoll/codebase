@@ -8,6 +8,10 @@ import (
 	"overdoll/applications/eva/src/domain/session"
 )
 
+var (
+	ErrFailedRevokeAccountSession = errors.New("failed to revoke session")
+)
+
 type RevokeAccountSessionHandler struct {
 	sr session.Repository
 }
@@ -15,10 +19,6 @@ type RevokeAccountSessionHandler struct {
 func NewRevokeAccountSessionHandler(sr session.Repository) RevokeAccountSessionHandler {
 	return RevokeAccountSessionHandler{sr: sr}
 }
-
-var (
-	ErrFailedRevokeAccountSession = errors.New("failed to revoke session")
-)
 
 func (h RevokeAccountSessionHandler) Handle(ctx context.Context, accountId, sessionId string) error {
 

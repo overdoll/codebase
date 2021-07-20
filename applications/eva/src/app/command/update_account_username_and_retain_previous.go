@@ -8,14 +8,6 @@ import (
 	"overdoll/applications/eva/src/domain/account"
 )
 
-type ModifyAccountUsernameHandler struct {
-	ar account.Repository
-}
-
-func NewModifyAccountUsernameHandler(ar account.Repository) ModifyAccountUsernameHandler {
-	return ModifyAccountUsernameHandler{ar: ar}
-}
-
 var (
 	ErrFailedModifyUsername = errors.New("failed to modify username")
 )
@@ -24,8 +16,15 @@ const (
 	ValidationErrUsernameNotUnique = "username_not_unique"
 )
 
-// TODO: need to grab username instance
-func (h ModifyAccountUsernameHandler) Handle(ctx context.Context, accountId, username string) (*account.Username, string, error) {
+type UpdateAccountUsernameAndRetainPreviousHandler struct {
+	ar account.Repository
+}
+
+func NewUpdateAccountUsernameAndRetainPreviousHandler(ar account.Repository) UpdateAccountUsernameAndRetainPreviousHandler {
+	return UpdateAccountUsernameAndRetainPreviousHandler{ar: ar}
+}
+
+func (h UpdateAccountUsernameAndRetainPreviousHandler) Handle(ctx context.Context, accountId, username string) (*account.Username, string, error) {
 
 	_, err := h.ar.GetAccountByUsername(ctx, username)
 

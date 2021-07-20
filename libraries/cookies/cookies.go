@@ -2,16 +2,23 @@ package cookies
 
 import (
 	"context"
+	"errors"
 	"net/http"
 	"os"
 
 	"github.com/gorilla/securecookie"
+	"go.uber.org/zap"
 	"overdoll/libraries/helpers"
 )
 
 const (
-	CookieKey      = "COOKIE_KEY"
-	CookieBlockKey = "COOKIE_BLOCK_KEY"
+	cookieKey      = "COOKIE_KEY"
+	cookieBlockKey = "COOKIE_BLOCK_KEY"
+)
+
+var (
+	ErrCookieNotFound = errors.New("cookie not found")
+	ErrCookieError    = errors.New("internal cookie error")
 )
 
 // Create Secure Cookies
@@ -22,7 +29,7 @@ const (
 // Set a cookie, encrypt
 func SetCookie(ctx context.Context, cookie *http.Cookie) error {
 
-	cookieKey := os.Getenv(CookieKey)
+	cookieKey := os.Getenv(cookieKey)
 	encrypt := cookieKey != ""
 
 	gc := helpers.GinContextFromContext(ctx)
@@ -39,11 +46,12 @@ func SetCookie(ctx context.Context, cookie *http.Cookie) error {
 	cookie.Path = "/"
 
 	if encrypt {
-		var secureCookie = securecookie.New([]byte(cookieKey), []byte(os.Getenv(CookieBlockKey)))
+		var secureCookie = securecookie.New([]byte(cookieKey), []byte(os.Getenv(cookieBlockKey)))
 		encodedValue, err := secureCookie.Encode(name, value)
 
 		if err != nil {
-			return err
+			zap.S().Errorf("failed to encode cookie: %s", err)
+			return ErrCookieError
 		}
 
 		cookie.Value = encodedValue
@@ -60,7 +68,7 @@ func SetCookie(ctx context.Context, cookie *http.Cookie) error {
 // Read cookie
 func ReadCookie(ctx context.Context, name string) (*http.Cookie, error) {
 
-	cookieKey := os.Getenv(CookieKey)
+	cookieKey := os.Getenv(cookieKey)
 	encrypt := cookieKey != ""
 
 	gc := helpers.GinContextFromContext(ctx)
@@ -68,12 +76,18 @@ func ReadCookie(ctx context.Context, name string) (*http.Cookie, error) {
 	currentCookie, err := gc.Request.Cookie(name)
 
 	if err != nil {
-		return nil, err
+
+		if err == http.ErrNoCookie {
+			return nil, ErrCookieNotFound
+		}
+
+		zap.S().Errorf("failed to get cookie: %s", err)
+		return nil, ErrCookieError
 	}
 
 	var value string
 	if encrypt {
-		secureCookie := securecookie.New([]byte(cookieKey), []byte(os.Getenv(CookieBlockKey)))
+		secureCookie := securecookie.New([]byte(cookieKey), []byte(os.Getenv(cookieBlockKey)))
 
 		// no restriction on maxAge
 		secureCookie.MaxAge(0)
@@ -82,8 +96,16 @@ func ReadCookie(ctx context.Context, name string) (*http.Cookie, error) {
 			return currentCookie, nil
 		}
 
-		return nil, err
+		zap.S().Errorf("failed to decode cookie: %s", err)
+		return nil, ErrCookieError
 	}
 
 	return currentCookie, nil
+}
+
+func DeleteCookie(ctx context.Context, name string) {
+	http.SetCookie(
+		helpers.GinContextFromContext(ctx).Writer,
+		&http.Cookie{Name: name, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"},
+	)
 }

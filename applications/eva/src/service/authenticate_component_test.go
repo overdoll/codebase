@@ -44,7 +44,7 @@ func TestAccountAuthenticate_existing(t *testing.T) {
 
 	redeemCookie, _, pass := authenticateAndRedeemCookie(t, "poisonminion_test@overdoll.com")
 
-	// the RedeemAuthenticationToken function will also log you in, if you redeem a cookie that's for a registered user
+	// the VerifyAuthenticationToken function will also log you in, if you redeem a cookie that's for a registered user
 	// so we check for that here
 	assert.Equal(t, true, redeemCookie.RedeemAuthenticationToken.AccountStatus.Authenticated)
 

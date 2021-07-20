@@ -2,15 +2,11 @@ package queries
 
 import (
 	"context"
-	"net/http"
 
-	"go.uber.org/zap"
 	"overdoll/applications/eva/src/app"
-	"overdoll/applications/eva/src/app/command"
 	"overdoll/applications/eva/src/domain/token"
 	"overdoll/applications/eva/src/ports/graphql/types"
 	"overdoll/libraries/cookies"
-	"overdoll/libraries/helpers"
 	"overdoll/libraries/passport"
 )
 
@@ -23,14 +19,13 @@ func (r *QueryResolver) ViewAuthenticationToken(ctx context.Context) (*types.Aut
 	// User is not logged in, let's check for an OTP token
 	otpCookie, err := cookies.ReadCookie(ctx, token.OTPKey)
 
-	// Error
-	if err != nil && err != http.ErrNoCookie {
-		zap.S().Errorf("failed to get cookie header: %s", err)
-		return nil, command.ErrFailedAuthenticate
+	if err == cookies.ErrCookieNotFound {
+		return nil, nil
 	}
 
-	if err != nil && err == http.ErrNoCookie || otpCookie == nil {
-		return nil, nil
+	// Error
+	if err != nil {
+		return nil, err
 	}
 
 	acc, ck, err := r.App.Queries.AuthenticationTokenById.Handle(ctx, otpCookie.Value)
@@ -48,6 +43,7 @@ func (r *QueryResolver) ViewAuthenticationToken(ctx context.Context) (*types.Aut
 }
 
 func (r *QueryResolver) Viewer(ctx context.Context) (*types.Account, error) {
+
 	pass := passport.FromContext(ctx)
 
 	// User is logged in
@@ -65,14 +61,13 @@ func (r *QueryResolver) Viewer(ctx context.Context) (*types.Account, error) {
 	// User is not logged in, let's check for an OTP token
 	otpCookie, err := cookies.ReadCookie(ctx, token.OTPKey)
 
-	// Error
-	if err != nil && err != http.ErrNoCookie {
-		zap.S().Errorf("failed to get cookie header: %s", err)
-		return nil, command.ErrFailedAuthenticate
+	if err == cookies.ErrCookieNotFound {
+		return nil, nil
 	}
 
-	if err != nil && err == http.ErrNoCookie || otpCookie == nil {
-		return nil, nil
+	// Error
+	if err != nil {
+		return nil, err
 	}
 
 	// consume cookie
@@ -89,7 +84,7 @@ func (r *QueryResolver) Viewer(ctx context.Context) (*types.Account, error) {
 		}
 
 		// user had token and it was used to log in
-		http.SetCookie(helpers.GinContextFromContext(ctx).Writer, &http.Cookie{Name: token.OTPKey, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"})
+		cookies.DeleteCookie(ctx, token.OTPKey)
 
 		// Update passport to include our new user
 		if err := pass.MutatePassport(ctx, func(p *passport.Passport) error {

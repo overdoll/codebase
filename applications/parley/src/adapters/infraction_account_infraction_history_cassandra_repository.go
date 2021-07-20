@@ -90,7 +90,7 @@ func (r InfractionCassandraRepository) GetAccountInfractionHistory(ctx context.C
 	return infractionHistory, nil, nil
 }
 
-func (r InfractionCassandraRepository) CreateUserInfractionHistory(ctx context.Context, infractionHistory *infraction.AccountInfractionHistory) error {
+func (r InfractionCassandraRepository) CreateAccountInfractionHistory(ctx context.Context, infractionHistory *infraction.AccountInfractionHistory) error {
 
 	infractionHistoryQuery := r.session.
 		Query(accountInfractionHistoryTable.Insert()).

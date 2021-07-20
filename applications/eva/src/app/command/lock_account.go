@@ -8,6 +8,10 @@ import (
 	"overdoll/applications/eva/src/domain/account"
 )
 
+var (
+	ErrFailedAccountLock = errors.New("failed to lock account")
+)
+
 type LockAccountHandler struct {
 	ur account.Repository
 }
@@ -15,10 +19,6 @@ type LockAccountHandler struct {
 func NewLockUserHandler(ur account.Repository) LockAccountHandler {
 	return LockAccountHandler{ur: ur}
 }
-
-var (
-	ErrFailedLock = errors.New("failed to lock")
-)
 
 func (h LockAccountHandler) Handle(ctx context.Context, id string, duration int, reason string) (*account.Account, error) {
 
@@ -28,7 +28,7 @@ func (h LockAccountHandler) Handle(ctx context.Context, id string, duration int,
 
 	if err != nil {
 		zap.S().Errorf("failed to lock user: %s", err)
-		return nil, ErrFailedLock
+		return nil, ErrFailedAccountLock
 	}
 
 	return usr, nil

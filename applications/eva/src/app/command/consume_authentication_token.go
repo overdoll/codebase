@@ -11,6 +11,10 @@ import (
 	"overdoll/applications/eva/src/domain/token"
 )
 
+var (
+	ErrFailedTokenConsume = errors.New("failed to consume cookie")
+)
+
 type ConsumeAuthenticationTokenHandler struct {
 	cr token.Repository
 	ur account.Repository
@@ -20,10 +24,6 @@ type ConsumeAuthenticationTokenHandler struct {
 func NewConsumeAuthenticationTokenHandler(cr token.Repository, ur account.Repository, mr multi_factor.Repository) ConsumeAuthenticationTokenHandler {
 	return ConsumeAuthenticationTokenHandler{cr: cr, ur: ur, mr: mr}
 }
-
-var (
-	ErrFailedTokenConsume = errors.New("failed to consume cookie")
-)
 
 func (h ConsumeAuthenticationTokenHandler) Handle(ctx context.Context, cookieId string) error {
 

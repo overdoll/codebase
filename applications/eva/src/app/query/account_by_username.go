@@ -8,6 +8,10 @@ import (
 	"overdoll/applications/eva/src/domain/account"
 )
 
+var (
+	ErrFailedAccountByUsernameHandler = errors.New("failed to get account by username")
+)
+
 type AccountByUsernameHandler struct {
 	ur account.Repository
 }
@@ -15,10 +19,6 @@ type AccountByUsernameHandler struct {
 func NewAccountByUsernameHandler(ur account.Repository) AccountByUsernameHandler {
 	return AccountByUsernameHandler{ur: ur}
 }
-
-var (
-	ErrFailedAccountByUsernameHandler = errors.New("failed to get account by username")
-)
 
 func (h AccountByUsernameHandler) Handle(ctx context.Context, username string) (*account.Account, error) {
 
