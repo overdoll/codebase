@@ -1,11 +1,11 @@
-enum MultiFactorTypeEnum {
+enum MultiFactorType {
   TOTP
 }
 
 type AuthenticationTokenAccountStatus {
   registered: Boolean!
   authenticated: Boolean!
-  multiFactor: [MultiFactorTypeEnum!]
+  multiFactor: [MultiFactorType!]
 }
 
 type AuthenticationToken {

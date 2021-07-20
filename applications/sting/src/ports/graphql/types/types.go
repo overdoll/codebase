@@ -16,14 +16,6 @@ type Actor interface {
 	IsActor()
 }
 
-type CategoryContainer interface {
-	IsCategoryContainer()
-}
-
-type CharacterContainer interface {
-	IsCharacterContainer()
-}
-
 type Account struct {
 	// Posts queue specific to this account (when moderator)
 	ModeratorPostsQueue *PostConnection `json:"moderatorPostsQueue"`
@@ -152,8 +144,10 @@ type MediaEdge struct {
 
 type Post struct {
 	ID relay.ID `json:"id"`
+	// The reference of this post. Should always be used to reference this post
+	Reference string `json:"reference"`
 	// The state of the post
-	State PostStateEnum `json:"state"`
+	State PostState `json:"state"`
 	// Represents the account that this post belongs to
 	Artist Actor `json:"artist"`
 	// The moderator to whom this pending post was assigned
@@ -176,10 +170,8 @@ type Post struct {
 	Characters []*Character `json:"characters"`
 }
 
-func (Post) IsNode()               {}
-func (Post) IsCategoryContainer()  {}
-func (Post) IsCharacterContainer() {}
-func (Post) IsEntity()             {}
+func (Post) IsNode()   {}
+func (Post) IsEntity() {}
 
 type PostAuditLog struct {
 	ID   relay.ID `json:"id"`
@@ -198,47 +190,53 @@ type PostEdge struct {
 	Node   *Post  `json:"node"`
 }
 
-type PostStateEnum string
+type PostState string
 
 const (
-	PostStateEnumReview    PostStateEnum = "Review"
-	PostStateEnumPublished PostStateEnum = "Published"
-	PostStateEnumDiscarded PostStateEnum = "Discarded"
-	PostStateEnumRejected  PostStateEnum = "Rejected"
+	PostStatePublishing PostState = "Publishing"
+	PostStateReview     PostState = "Review"
+	PostStatePublished  PostState = "Published"
+	PostStateDiscarding PostState = "Discarding"
+	PostStateDiscarded  PostState = "Discarded"
+	PostStateRejected   PostState = "Rejected"
+	PostStateProcessing PostState = "Processing"
 )
 
-var AllPostStateEnum = []PostStateEnum{
-	PostStateEnumReview,
-	PostStateEnumPublished,
-	PostStateEnumDiscarded,
-	PostStateEnumRejected,
+var AllPostState = []PostState{
+	PostStatePublishing,
+	PostStateReview,
+	PostStatePublished,
+	PostStateDiscarding,
+	PostStateDiscarded,
+	PostStateRejected,
+	PostStateProcessing,
 }
 
-func (e PostStateEnum) IsValid() bool {
+func (e PostState) IsValid() bool {
 	switch e {
-	case PostStateEnumReview, PostStateEnumPublished, PostStateEnumDiscarded, PostStateEnumRejected:
+	case PostStatePublishing, PostStateReview, PostStatePublished, PostStateDiscarding, PostStateDiscarded, PostStateRejected, PostStateProcessing:
 		return true
 	}
 	return false
 }
 
-func (e PostStateEnum) String() string {
+func (e PostState) String() string {
 	return string(e)
 }
 
-func (e *PostStateEnum) UnmarshalGQL(v interface{}) error {
+func (e *PostState) UnmarshalGQL(v interface{}) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
 	}
 
-	*e = PostStateEnum(str)
+	*e = PostState(str)
 	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid PostStateEnum", str)
+		return fmt.Errorf("%s is not a valid PostState", str)
 	}
 	return nil
 }
 
-func (e PostStateEnum) MarshalGQL(w io.Writer) {
+func (e PostState) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }

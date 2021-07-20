@@ -24,13 +24,13 @@ type Account implements Node & Actor @key(fields: "id") {
   lockDetails: AccountLockDetails
 }
 
-enum AccountLockReasonEnum {
+enum AccountLockReason {
   PostInfraction
 }
 
 type AccountLockDetails {
   expires: Int!
-  reason: AccountLockReasonEnum!
+  reason: AccountLockReason!
 }
 
 """Input for unlocking an account"""
@@ -56,4 +56,10 @@ extend type Query {
   Get the currently-authenticated account
   """
   viewer: Account
+
+  """Look up a single account"""
+  account(
+    """Look up a post by a username"""
+    username: String!
+  ): Account
 }

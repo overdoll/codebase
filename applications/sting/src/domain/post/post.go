@@ -26,7 +26,7 @@ var (
 	ErrNotPublishing    = errors.New("post must be publishing")
 	ErrNotReview        = errors.New("post must be in review")
 	ErrNotComplete      = errors.New("post is incomplete")
-	ErrNotFound        = errors.New("post not found")
+	ErrNotFound         = errors.New("post not found")
 	ErrAlreadyModerated = errors.New("already moderated")
 )
 
@@ -321,12 +321,24 @@ func (p *Post) IsPublished() bool {
 	return p.state == Published
 }
 
+func (p *Post) IsPublishing() bool {
+	return p.state == Publishing
+}
+
+func (p *Post) IsProcessing() bool {
+	return p.state == Processing
+}
+
 func (p *Post) IsRejected() bool {
 	return p.state == Rejected
 }
 
 func (p *Post) IsDiscarded() bool {
 	return p.state == Discarded
+}
+
+func (p *Post) IsDiscarding() bool {
+	return p.state == Discarding
 }
 
 func (p *Post) UpdateContent(content []string) {

@@ -1,4 +1,4 @@
-enum AccountEmailStatusEnum {
+enum AccountEmailStatus {
   CONFIRMED
   UNCONFIRMED
   PRIMARY
@@ -13,7 +13,7 @@ type AccountEmail implements Node @key(fields: "id") {
   email: String!
 
   """The current status of the account email"""
-  status: AccountEmailStatusEnum!
+  status: AccountEmailStatus!
 
   """The account that this email belongs to"""
   account: Account! @goField(forceResolver: true)

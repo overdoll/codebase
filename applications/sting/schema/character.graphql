@@ -31,11 +31,6 @@ type CharacterConnection {
   pageInfo: PageInfo!
 }
 
-interface CharacterContainer {
-  """Characters that belong to this post"""
-  characters: [Character!]!
-}
-
 extend type Query {
   medias(
     """Returns the elements in the list that come after the specified cursor."""
@@ -75,7 +70,7 @@ extend type Query {
   ): CharacterConnection!
 }
 
-extend type Post implements CharacterContainer {
+extend type Post {
   """Characters that belong to this post"""
   characters: [Character!]!
 }

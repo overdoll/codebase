@@ -15,6 +15,7 @@ type AccountResolver struct {
 }
 
 func (r AccountResolver) ModeratorPostAuditLogs(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostAuditLogConnection, error) {
+
 	accountId := obj.ID.GetID()
 
 	if passport.FromContext(ctx).AccountID() != accountId {
@@ -37,6 +38,7 @@ func (r AccountResolver) ModeratorPostAuditLogs(ctx context.Context, obj *types.
 }
 
 func (r AccountResolver) Infractions(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountInfractionHistoryConnection, error) {
+
 	accountId := obj.ID.GetID()
 
 	if passport.FromContext(ctx).AccountID() != accountId {
@@ -59,6 +61,7 @@ func (r AccountResolver) Infractions(ctx context.Context, obj *types.Account, af
 }
 
 func (r AccountResolver) ModeratorSettings(ctx context.Context, obj *types.Account) (*types.AccountModeratorSettings, error) {
+
 	accountId := obj.ID.GetID()
 
 	if passport.FromContext(ctx).AccountID() != accountId {

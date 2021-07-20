@@ -14,10 +14,6 @@ type CategoryConnection {
   pageInfo: PageInfo!
 }
 
-interface CategoryContainer {
-  categories: [Category!]!
-}
-
 extend type Query {
   categories(
     """Returns the elements in the list that come after the specified cursor."""
@@ -37,7 +33,7 @@ extend type Query {
   ): CategoryConnection!
 }
 
-extend type Post implements CategoryContainer {
+extend type Post {
   """Categories that belong to this post"""
   categories: [Category!]!
 }

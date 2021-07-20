@@ -34,10 +34,13 @@ type Commands struct {
 }
 
 type Queries struct {
-	SearchArtist         query.SearchArtistsHandler
-	SearchCategories     query.SearchCategoriesHandler
-	SearchCharacters     query.SearchCharactersHandler
-	SearchMedias         query.SearchMediasHandler
-	GetPostsForModerator query.PostsByModeratorAccountHandler
-	GetPost              query.PostByIdHandler
+	SearchArtist       query.SearchArtistsHandler
+	SearchCategories   query.SearchCategoriesHandler
+	SearchCharacters   query.SearchCharactersHandler
+	SearchMedias       query.SearchMediasHandler
+	SearchPosts        query.SearchPostsHandler
+	PostsByModerator   query.PostsByModeratorAccountHandler
+	PostsByContributor query.PostsByContributorAccountHandler
+	PostsByArtist      query.PostsByArtistAccountHandler
+	PostById           query.PostByIdHandler
 }

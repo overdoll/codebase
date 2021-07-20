@@ -167,6 +167,7 @@ type ComplexityRoot struct {
 		Moderator         func(childComplexity int) int
 		PostedAt          func(childComplexity int) int
 		ReassignmentAt    func(childComplexity int) int
+		Reference         func(childComplexity int) int
 		State             func(childComplexity int) int
 	}
 
@@ -190,7 +191,8 @@ type ComplexityRoot struct {
 		Categories         func(childComplexity int, after *string, before *string, first *int, last *int, name *string) int
 		Characters         func(childComplexity int, after *string, before *string, first *int, last *int, name *string, mediaTitle *string) int
 		Medias             func(childComplexity int, after *string, before *string, first *int, last *int, title *string) int
-		Posts              func(childComplexity int, after *string, before *string, first *int, last *int, characterName *string, mediaTitle *string) int
+		Post               func(childComplexity int, reference string) int
+		Posts              func(childComplexity int, after *string, before *string, first *int, last *int, characterName *string, mediaTitle *string, categoryTitle *string, artistUsername *string) int
 		__resolve__service func(childComplexity int) int
 		__resolve_entities func(childComplexity int, representations []map[string]interface{}) int
 	}
@@ -218,7 +220,8 @@ type QueryResolver interface {
 	Categories(ctx context.Context, after *string, before *string, first *int, last *int, name *string) (*types.CategoryConnection, error)
 	Medias(ctx context.Context, after *string, before *string, first *int, last *int, title *string) (*types.MediaConnection, error)
 	Characters(ctx context.Context, after *string, before *string, first *int, last *int, name *string, mediaTitle *string) (*types.CharacterConnection, error)
-	Posts(ctx context.Context, after *string, before *string, first *int, last *int, characterName *string, mediaTitle *string) (*types.PostConnection, error)
+	Post(ctx context.Context, reference string) (*types.Post, error)
+	Posts(ctx context.Context, after *string, before *string, first *int, last *int, characterName *string, mediaTitle *string, categoryTitle *string, artistUsername *string) (*types.PostConnection, error)
 }
 
 type executableSchema struct {
@@ -670,6 +673,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Post.ReassignmentAt(childComplexity), true
 
+	case "Post.reference":
+		if e.complexity.Post.Reference == nil {
+			break
+		}
+
+		return e.complexity.Post.Reference(childComplexity), true
+
 	case "Post.state":
 		if e.complexity.Post.State == nil {
 			break
@@ -767,6 +777,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.Medias(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["title"].(*string)), true
 
+	case "Query.post":
+		if e.complexity.Query.Post == nil {
+			break
+		}
+
+		args, err := ec.field_Query_post_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Post(childComplexity, args["reference"].(string)), true
+
 	case "Query.posts":
 		if e.complexity.Query.Posts == nil {
 			break
@@ -777,7 +799,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["characterName"].(*string), args["mediaTitle"].(*string)), true
+		return e.complexity.Query.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["characterName"].(*string), args["mediaTitle"].(*string), args["categoryTitle"].(*string), args["artistUsername"].(*string)), true
 
 	case "Query._service":
 		if e.complexity.Query.__resolve__service == nil {
@@ -919,10 +941,6 @@ type CategoryConnection {
   pageInfo: PageInfo!
 }
 
-interface CategoryContainer {
-  categories: [Category!]!
-}
-
 extend type Query {
   categories(
     """Returns the elements in the list that come after the specified cursor."""
@@ -942,7 +960,7 @@ extend type Query {
   ): CategoryConnection!
 }
 
-extend type Post implements CategoryContainer {
+extend type Post {
   """Categories that belong to this post"""
   categories: [Category!]!
 }`, BuiltIn: false},
@@ -977,11 +995,6 @@ type CharacterEdge {
 type CharacterConnection {
   edges: [CharacterEdge!]!
   pageInfo: PageInfo!
-}
-
-interface CharacterContainer {
-  """Characters that belong to this post"""
-  characters: [Character!]!
 }
 
 extend type Query {
@@ -1023,15 +1036,18 @@ extend type Query {
   ): CharacterConnection!
 }
 
-extend type Post implements CharacterContainer {
+extend type Post {
   """Characters that belong to this post"""
   characters: [Character!]!
 }`, BuiltIn: false},
 	{Name: "schema/post.graphql", Input: `type Post implements Node @key(fields: "id") {
   id: ID!
 
+  """The reference of this post. Should always be used to reference this post"""
+  reference: String!
+
   """The state of the post"""
-  state: PostStateEnum!
+  state: PostState!
 
   """Represents the account that this post belongs to"""
   artist: Actor!
@@ -1058,11 +1074,14 @@ extend type Post implements CharacterContainer {
   reassignmentAt: Time!
 }
 
-enum PostStateEnum {
+enum PostState {
+  Publishing
   Review
   Published
+  Discarding
   Discarded
   Rejected
+  Processing
 }
 
 type CharacterRequestType {
@@ -1180,6 +1199,13 @@ extend type Mutation {
 }
 
 extend type Query {
+  """Look up a single post"""
+  post(
+    """Look up a post by a reference #"""
+    reference: String!
+  ): Post
+
+  """Search multiple posts"""
   posts(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
@@ -1198,6 +1224,12 @@ extend type Query {
 
     """Filter by the title of the media"""
     mediaTitle: String
+
+    """Filter by the title of the category"""
+    categoryTitle: String
+
+    """Filter by the artist"""
+    artistUsername: String
   ): PostConnection!
 }`, BuiltIn: false},
 	{Name: "schema/schema.graphql", Input: `type Content {
@@ -1712,6 +1744,21 @@ func (ec *executionContext) field_Query_medias_args(ctx context.Context, rawArgs
 	return args, nil
 }
 
+func (ec *executionContext) field_Query_post_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["reference"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reference"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["reference"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Query_posts_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -1769,6 +1816,24 @@ func (ec *executionContext) field_Query_posts_args(ctx context.Context, rawArgs 
 		}
 	}
 	args["mediaTitle"] = arg5
+	var arg6 *string
+	if tmp, ok := rawArgs["categoryTitle"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("categoryTitle"))
+		arg6, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["categoryTitle"] = arg6
+	var arg7 *string
+	if tmp, ok := rawArgs["artistUsername"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("artistUsername"))
+		arg7, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["artistUsername"] = arg7
 	return args, nil
 }
 
@@ -3529,6 +3594,41 @@ func (ec *executionContext) _Post_id(ctx context.Context, field graphql.Collecte
 	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Post_reference(ctx context.Context, field graphql.CollectedField, obj *types.Post) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Post",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Reference, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Post_state(ctx context.Context, field graphql.CollectedField, obj *types.Post) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -3559,9 +3659,9 @@ func (ec *executionContext) _Post_state(ctx context.Context, field graphql.Colle
 		}
 		return graphql.Null
 	}
-	res := resTmp.(types.PostStateEnum)
+	res := resTmp.(types.PostState)
 	fc.Result = res
-	return ec.marshalNPostStateEnum2overdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPostStateEnum(ctx, field.Selections, res)
+	return ec.marshalNPostState2overdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPostState(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Post_artist(ctx context.Context, field graphql.CollectedField, obj *types.Post) (ret graphql.Marshaler) {
@@ -4286,6 +4386,45 @@ func (ec *executionContext) _Query_characters(ctx context.Context, field graphql
 	return ec.marshalNCharacterConnection2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐCharacterConnection(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Query_post(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_post_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Post(rctx, args["reference"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Post)
+	fc.Result = res
+	return ec.marshalOPost2ᚖoverdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPost(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Query_posts(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -4311,7 +4450,7 @@ func (ec *executionContext) _Query_posts(ctx context.Context, field graphql.Coll
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Posts(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["characterName"].(*string), args["mediaTitle"].(*string))
+		return ec.resolvers.Query().Posts(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["characterName"].(*string), args["mediaTitle"].(*string), args["categoryTitle"].(*string), args["artistUsername"].(*string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5712,38 +5851,6 @@ func (ec *executionContext) _Actor(ctx context.Context, sel ast.SelectionSet, ob
 	}
 }
 
-func (ec *executionContext) _CategoryContainer(ctx context.Context, sel ast.SelectionSet, obj types.CategoryContainer) graphql.Marshaler {
-	switch obj := (obj).(type) {
-	case nil:
-		return graphql.Null
-	case types.Post:
-		return ec._Post(ctx, sel, &obj)
-	case *types.Post:
-		if obj == nil {
-			return graphql.Null
-		}
-		return ec._Post(ctx, sel, obj)
-	default:
-		panic(fmt.Errorf("unexpected type %T", obj))
-	}
-}
-
-func (ec *executionContext) _CharacterContainer(ctx context.Context, sel ast.SelectionSet, obj types.CharacterContainer) graphql.Marshaler {
-	switch obj := (obj).(type) {
-	case nil:
-		return graphql.Null
-	case types.Post:
-		return ec._Post(ctx, sel, &obj)
-	case *types.Post:
-		if obj == nil {
-			return graphql.Null
-		}
-		return ec._Post(ctx, sel, obj)
-	default:
-		panic(fmt.Errorf("unexpected type %T", obj))
-	}
-}
-
 func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj relay.Node) graphql.Marshaler {
 	switch obj := (obj).(type) {
 	case nil:
@@ -6517,7 +6624,7 @@ func (ec *executionContext) _PageInfo(ctx context.Context, sel ast.SelectionSet,
 	return out
 }
 
-var postImplementors = []string{"Post", "Node", "CategoryContainer", "CharacterContainer", "_Entity"}
+var postImplementors = []string{"Post", "Node", "_Entity"}
 
 func (ec *executionContext) _Post(ctx context.Context, sel ast.SelectionSet, obj *types.Post) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, postImplementors)
@@ -6530,6 +6637,11 @@ func (ec *executionContext) _Post(ctx context.Context, sel ast.SelectionSet, obj
 			out.Values[i] = graphql.MarshalString("Post")
 		case "id":
 			out.Values[i] = ec._Post_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "reference":
+			out.Values[i] = ec._Post_reference(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -6758,6 +6870,17 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
+				return res
+			})
+		case "post":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_post(ctx, field)
 				return res
 			})
 		case "posts":
@@ -7659,13 +7782,13 @@ func (ec *executionContext) marshalNPostEdge2ᚖoverdollᚋapplicationsᚋsting�
 	return ec._PostEdge(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNPostStateEnum2overdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPostStateEnum(ctx context.Context, v interface{}) (types.PostStateEnum, error) {
-	var res types.PostStateEnum
+func (ec *executionContext) unmarshalNPostState2overdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPostState(ctx context.Context, v interface{}) (types.PostState, error) {
+	var res types.PostState
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNPostStateEnum2overdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPostStateEnum(ctx context.Context, sel ast.SelectionSet, v types.PostStateEnum) graphql.Marshaler {
+func (ec *executionContext) marshalNPostState2overdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐPostState(ctx context.Context, sel ast.SelectionSet, v types.PostState) graphql.Marshaler {
 	return v
 }
 

@@ -17,10 +17,10 @@ func MarshalAccountToGraphQL(result *account.Account) *Account {
 	var lock *AccountLockDetails
 
 	if result.IsLocked() {
-		var reason AccountLockReasonEnum
+		var reason AccountLockReason
 
 		if result.IsLockedDueToPostInfraction() {
-			reason = AccountLockReasonEnumPostInfraction
+			reason = AccountLockReasonPostInfraction
 		}
 
 		lock = &AccountLockDetails{
@@ -41,18 +41,18 @@ func MarshalAccountToGraphQL(result *account.Account) *Account {
 
 func MarshalAccountEmailToGraphQL(result *account.Email) *AccountEmail {
 
-	var status AccountEmailStatusEnum
+	var status AccountEmailStatus
 
 	if result.IsConfirmed() {
-		status = AccountEmailStatusEnumConfirmed
+		status = AccountEmailStatusConfirmed
 	}
 
 	if result.IsUnconfirmed() {
-		status = AccountEmailStatusEnumUnconfirmed
+		status = AccountEmailStatusUnconfirmed
 	}
 
 	if result.IsPrimary() {
-		status = AccountEmailStatusEnumPrimary
+		status = AccountEmailStatusPrimary
 	}
 
 	return &AccountEmail{
@@ -71,11 +71,11 @@ func MarshalAccountUsernameToGraphQL(result *account.Username) *AccountUsername 
 
 func MarshalAuthenticationTokenToGraphQL(result *token.AuthenticationToken, sameSession, registered bool) *AuthenticationToken {
 
-	var multiFactorTypes []MultiFactorTypeEnum
+	var multiFactorTypes []MultiFactorType
 
 	if registered {
 		if result.IsTOTPRequired() {
-			multiFactorTypes = append(multiFactorTypes, MultiFactorTypeEnumTotp)
+			multiFactorTypes = append(multiFactorTypes, MultiFactorTypeTotp)
 		}
 	}
 

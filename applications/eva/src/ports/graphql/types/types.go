@@ -61,7 +61,7 @@ type AccountEmail struct {
 	// The account email
 	Email string `json:"email"`
 	// The current status of the account email
-	Status AccountEmailStatusEnum `json:"status"`
+	Status AccountEmailStatus `json:"status"`
 	// The account that this email belongs to
 	Account *Account `json:"account"`
 }
@@ -82,8 +82,8 @@ type AccountEmailEdge struct {
 }
 
 type AccountLockDetails struct {
-	Expires int                   `json:"expires"`
-	Reason  AccountLockReasonEnum `json:"reason"`
+	Expires int               `json:"expires"`
+	Reason  AccountLockReason `json:"reason"`
 }
 
 // The multi-factor recovery code belonging to the account
@@ -178,9 +178,9 @@ type AuthenticationToken struct {
 }
 
 type AuthenticationTokenAccountStatus struct {
-	Registered    bool                  `json:"registered"`
-	Authenticated bool                  `json:"authenticated"`
-	MultiFactor   []MultiFactorTypeEnum `json:"multiFactor"`
+	Registered    bool              `json:"registered"`
+	Authenticated bool              `json:"authenticated"`
+	MultiFactor   []MultiFactorType `json:"multiFactor"`
 }
 
 // Input for confirming the account email
@@ -357,123 +357,123 @@ type VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload struct {
 	AuthenticationToken *AuthenticationToken `json:"authenticationToken"`
 }
 
-type AccountEmailStatusEnum string
+type AccountEmailStatus string
 
 const (
-	AccountEmailStatusEnumConfirmed   AccountEmailStatusEnum = "CONFIRMED"
-	AccountEmailStatusEnumUnconfirmed AccountEmailStatusEnum = "UNCONFIRMED"
-	AccountEmailStatusEnumPrimary     AccountEmailStatusEnum = "PRIMARY"
+	AccountEmailStatusConfirmed   AccountEmailStatus = "CONFIRMED"
+	AccountEmailStatusUnconfirmed AccountEmailStatus = "UNCONFIRMED"
+	AccountEmailStatusPrimary     AccountEmailStatus = "PRIMARY"
 )
 
-var AllAccountEmailStatusEnum = []AccountEmailStatusEnum{
-	AccountEmailStatusEnumConfirmed,
-	AccountEmailStatusEnumUnconfirmed,
-	AccountEmailStatusEnumPrimary,
+var AllAccountEmailStatus = []AccountEmailStatus{
+	AccountEmailStatusConfirmed,
+	AccountEmailStatusUnconfirmed,
+	AccountEmailStatusPrimary,
 }
 
-func (e AccountEmailStatusEnum) IsValid() bool {
+func (e AccountEmailStatus) IsValid() bool {
 	switch e {
-	case AccountEmailStatusEnumConfirmed, AccountEmailStatusEnumUnconfirmed, AccountEmailStatusEnumPrimary:
+	case AccountEmailStatusConfirmed, AccountEmailStatusUnconfirmed, AccountEmailStatusPrimary:
 		return true
 	}
 	return false
 }
 
-func (e AccountEmailStatusEnum) String() string {
+func (e AccountEmailStatus) String() string {
 	return string(e)
 }
 
-func (e *AccountEmailStatusEnum) UnmarshalGQL(v interface{}) error {
+func (e *AccountEmailStatus) UnmarshalGQL(v interface{}) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
 	}
 
-	*e = AccountEmailStatusEnum(str)
+	*e = AccountEmailStatus(str)
 	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid AccountEmailStatusEnum", str)
+		return fmt.Errorf("%s is not a valid AccountEmailStatus", str)
 	}
 	return nil
 }
 
-func (e AccountEmailStatusEnum) MarshalGQL(w io.Writer) {
+func (e AccountEmailStatus) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
-type AccountLockReasonEnum string
+type AccountLockReason string
 
 const (
-	AccountLockReasonEnumPostInfraction AccountLockReasonEnum = "PostInfraction"
+	AccountLockReasonPostInfraction AccountLockReason = "PostInfraction"
 )
 
-var AllAccountLockReasonEnum = []AccountLockReasonEnum{
-	AccountLockReasonEnumPostInfraction,
+var AllAccountLockReason = []AccountLockReason{
+	AccountLockReasonPostInfraction,
 }
 
-func (e AccountLockReasonEnum) IsValid() bool {
+func (e AccountLockReason) IsValid() bool {
 	switch e {
-	case AccountLockReasonEnumPostInfraction:
+	case AccountLockReasonPostInfraction:
 		return true
 	}
 	return false
 }
 
-func (e AccountLockReasonEnum) String() string {
+func (e AccountLockReason) String() string {
 	return string(e)
 }
 
-func (e *AccountLockReasonEnum) UnmarshalGQL(v interface{}) error {
+func (e *AccountLockReason) UnmarshalGQL(v interface{}) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
 	}
 
-	*e = AccountLockReasonEnum(str)
+	*e = AccountLockReason(str)
 	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid AccountLockReasonEnum", str)
+		return fmt.Errorf("%s is not a valid AccountLockReason", str)
 	}
 	return nil
 }
 
-func (e AccountLockReasonEnum) MarshalGQL(w io.Writer) {
+func (e AccountLockReason) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
-type MultiFactorTypeEnum string
+type MultiFactorType string
 
 const (
-	MultiFactorTypeEnumTotp MultiFactorTypeEnum = "TOTP"
+	MultiFactorTypeTotp MultiFactorType = "TOTP"
 )
 
-var AllMultiFactorTypeEnum = []MultiFactorTypeEnum{
-	MultiFactorTypeEnumTotp,
+var AllMultiFactorType = []MultiFactorType{
+	MultiFactorTypeTotp,
 }
 
-func (e MultiFactorTypeEnum) IsValid() bool {
+func (e MultiFactorType) IsValid() bool {
 	switch e {
-	case MultiFactorTypeEnumTotp:
+	case MultiFactorTypeTotp:
 		return true
 	}
 	return false
 }
 
-func (e MultiFactorTypeEnum) String() string {
+func (e MultiFactorType) String() string {
 	return string(e)
 }
 
-func (e *MultiFactorTypeEnum) UnmarshalGQL(v interface{}) error {
+func (e *MultiFactorType) UnmarshalGQL(v interface{}) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
 	}
 
-	*e = MultiFactorTypeEnum(str)
+	*e = MultiFactorType(str)
 	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid MultiFactorTypeEnum", str)
+		return fmt.Errorf("%s is not a valid MultiFactorType", str)
 	}
 	return nil
 }
 
-func (e MultiFactorTypeEnum) MarshalGQL(w io.Writer) {
+func (e MultiFactorType) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }

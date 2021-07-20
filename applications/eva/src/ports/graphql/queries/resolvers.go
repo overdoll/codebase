@@ -14,6 +14,17 @@ type QueryResolver struct {
 	App *app.Application
 }
 
+func (r *QueryResolver) Account(ctx context.Context, username string) (*types.Account, error) {
+
+	acc, err := r.App.Queries.AccountByUsername.Handle(ctx, username)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return types.MarshalAccountToGraphQL(acc), nil
+}
+
 func (r *QueryResolver) ViewAuthenticationToken(ctx context.Context) (*types.AuthenticationToken, error) {
 
 	// User is not logged in, let's check for an OTP token

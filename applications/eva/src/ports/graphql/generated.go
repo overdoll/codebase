@@ -230,6 +230,7 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
+		Account                 func(childComplexity int, username string) int
 		ViewAuthenticationToken func(childComplexity int) int
 		Viewer                  func(childComplexity int) int
 		__resolve__service      func(childComplexity int) int
@@ -318,6 +319,7 @@ type MutationResolver interface {
 type QueryResolver interface {
 	ViewAuthenticationToken(ctx context.Context) (*types.AuthenticationToken, error)
 	Viewer(ctx context.Context) (*types.Account, error)
+	Account(ctx context.Context, username string) (*types.Account, error)
 }
 
 type executableSchema struct {
@@ -1053,6 +1055,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.PageInfo.StartCursor(childComplexity), true
 
+	case "Query.account":
+		if e.complexity.Query.Account == nil {
+			break
+		}
+
+		args, err := ec.field_Query_account_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Account(childComplexity, args["username"].(string)), true
+
 	case "Query.viewAuthenticationToken":
 		if e.complexity.Query.ViewAuthenticationToken == nil {
 			break
@@ -1246,13 +1260,13 @@ var sources = []*ast.Source{
   lockDetails: AccountLockDetails
 }
 
-enum AccountLockReasonEnum {
+enum AccountLockReason {
   PostInfraction
 }
 
 type AccountLockDetails {
   expires: Int!
-  reason: AccountLockReasonEnum!
+  reason: AccountLockReason!
 }
 
 """Input for unlocking an account"""
@@ -1278,9 +1292,15 @@ extend type Query {
   Get the currently-authenticated account
   """
   viewer: Account
+
+  """Look up a single account"""
+  account(
+    """Look up a post by a username"""
+    username: String!
+  ): Account
 }
 `, BuiltIn: false},
-	{Name: "schema/settings/schema.graphql", Input: `enum AccountEmailStatusEnum {
+	{Name: "schema/settings/schema.graphql", Input: `enum AccountEmailStatus {
   CONFIRMED
   UNCONFIRMED
   PRIMARY
@@ -1295,7 +1315,7 @@ type AccountEmail implements Node @key(fields: "id") {
   email: String!
 
   """The current status of the account email"""
-  status: AccountEmailStatusEnum!
+  status: AccountEmailStatus!
 
   """The account that this email belongs to"""
   account: Account! @goField(forceResolver: true)
@@ -1662,14 +1682,14 @@ extend type Mutation {
   """
   confirmAccountEmail(input: ConfirmAccountEmailInput!): ConfirmAccountEmailPayload @auth
 }`, BuiltIn: false},
-	{Name: "schema/token/schema.graphql", Input: `enum MultiFactorTypeEnum {
+	{Name: "schema/token/schema.graphql", Input: `enum MultiFactorType {
   TOTP
 }
 
 type AuthenticationTokenAccountStatus {
   registered: Boolean!
   authenticated: Boolean!
-  multiFactor: [MultiFactorTypeEnum!]
+  multiFactor: [MultiFactorType!]
 }
 
 type AuthenticationToken {
@@ -2289,6 +2309,21 @@ func (ec *executionContext) field_Query__entities_args(ctx context.Context, rawA
 		}
 	}
 	args["representations"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_account_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["username"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("username"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["username"] = arg0
 	return args, nil
 }
 
@@ -2955,9 +2990,9 @@ func (ec *executionContext) _AccountEmail_status(ctx context.Context, field grap
 		}
 		return graphql.Null
 	}
-	res := resTmp.(types.AccountEmailStatusEnum)
+	res := resTmp.(types.AccountEmailStatus)
 	fc.Result = res
-	return ec.marshalNAccountEmailStatusEnum2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountEmailStatusEnum(ctx, field.Selections, res)
+	return ec.marshalNAccountEmailStatus2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountEmailStatus(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccountEmail_account(ctx context.Context, field graphql.CollectedField, obj *types.AccountEmail) (ret graphql.Marshaler) {
@@ -3200,9 +3235,9 @@ func (ec *executionContext) _AccountLockDetails_reason(ctx context.Context, fiel
 		}
 		return graphql.Null
 	}
-	res := resTmp.(types.AccountLockReasonEnum)
+	res := resTmp.(types.AccountLockReason)
 	fc.Result = res
-	return ec.marshalNAccountLockReasonEnum2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountLockReasonEnum(ctx, field.Selections, res)
+	return ec.marshalNAccountLockReason2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountLockReason(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccountMultiFactorRecoveryCode_code(ctx context.Context, field graphql.CollectedField, obj *types.AccountMultiFactorRecoveryCode) (ret graphql.Marshaler) {
@@ -4241,9 +4276,9 @@ func (ec *executionContext) _AuthenticationTokenAccountStatus_multiFactor(ctx co
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.([]types.MultiFactorTypeEnum)
+	res := resTmp.([]types.MultiFactorType)
 	fc.Result = res
-	return ec.marshalOMultiFactorTypeEnum2ᚕoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐMultiFactorTypeEnumᚄ(ctx, field.Selections, res)
+	return ec.marshalOMultiFactorType2ᚕoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐMultiFactorTypeᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _ConfirmAccountEmailPayload_accountEmail(ctx context.Context, field graphql.CollectedField, obj *types.ConfirmAccountEmailPayload) (ret graphql.Marshaler) {
@@ -5996,6 +6031,45 @@ func (ec *executionContext) _Query_viewer(ctx context.Context, field graphql.Col
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return ec.resolvers.Query().Viewer(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Account)
+	fc.Result = res
+	return ec.marshalOAccount2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_account(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_account_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Account(rctx, args["username"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9062,6 +9136,17 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				res = ec._Query_viewer(ctx, field)
 				return res
 			})
+		case "account":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_account(ctx, field)
+				return res
+			})
 		case "_entities":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -9666,23 +9751,23 @@ func (ec *executionContext) marshalNAccountEmailEdge2ᚖoverdollᚋapplications�
 	return ec._AccountEmailEdge(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNAccountEmailStatusEnum2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountEmailStatusEnum(ctx context.Context, v interface{}) (types.AccountEmailStatusEnum, error) {
-	var res types.AccountEmailStatusEnum
+func (ec *executionContext) unmarshalNAccountEmailStatus2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountEmailStatus(ctx context.Context, v interface{}) (types.AccountEmailStatus, error) {
+	var res types.AccountEmailStatus
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNAccountEmailStatusEnum2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountEmailStatusEnum(ctx context.Context, sel ast.SelectionSet, v types.AccountEmailStatusEnum) graphql.Marshaler {
+func (ec *executionContext) marshalNAccountEmailStatus2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountEmailStatus(ctx context.Context, sel ast.SelectionSet, v types.AccountEmailStatus) graphql.Marshaler {
 	return v
 }
 
-func (ec *executionContext) unmarshalNAccountLockReasonEnum2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountLockReasonEnum(ctx context.Context, v interface{}) (types.AccountLockReasonEnum, error) {
-	var res types.AccountLockReasonEnum
+func (ec *executionContext) unmarshalNAccountLockReason2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountLockReason(ctx context.Context, v interface{}) (types.AccountLockReason, error) {
+	var res types.AccountLockReason
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNAccountLockReasonEnum2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountLockReasonEnum(ctx context.Context, sel ast.SelectionSet, v types.AccountLockReasonEnum) graphql.Marshaler {
+func (ec *executionContext) marshalNAccountLockReason2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountLockReason(ctx context.Context, sel ast.SelectionSet, v types.AccountLockReason) graphql.Marshaler {
 	return v
 }
 
@@ -9972,13 +10057,13 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 	return res
 }
 
-func (ec *executionContext) unmarshalNMultiFactorTypeEnum2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐMultiFactorTypeEnum(ctx context.Context, v interface{}) (types.MultiFactorTypeEnum, error) {
-	var res types.MultiFactorTypeEnum
+func (ec *executionContext) unmarshalNMultiFactorType2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐMultiFactorType(ctx context.Context, v interface{}) (types.MultiFactorType, error) {
+	var res types.MultiFactorType
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNMultiFactorTypeEnum2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐMultiFactorTypeEnum(ctx context.Context, sel ast.SelectionSet, v types.MultiFactorTypeEnum) graphql.Marshaler {
+func (ec *executionContext) marshalNMultiFactorType2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐMultiFactorType(ctx context.Context, sel ast.SelectionSet, v types.MultiFactorType) graphql.Marshaler {
 	return v
 }
 
@@ -10531,7 +10616,7 @@ func (ec *executionContext) marshalOMultiFactorTotp2ᚖoverdollᚋapplications�
 	return ec._MultiFactorTotp(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOMultiFactorTypeEnum2ᚕoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐMultiFactorTypeEnumᚄ(ctx context.Context, v interface{}) ([]types.MultiFactorTypeEnum, error) {
+func (ec *executionContext) unmarshalOMultiFactorType2ᚕoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐMultiFactorTypeᚄ(ctx context.Context, v interface{}) ([]types.MultiFactorType, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -10544,10 +10629,10 @@ func (ec *executionContext) unmarshalOMultiFactorTypeEnum2ᚕoverdollᚋapplicat
 		}
 	}
 	var err error
-	res := make([]types.MultiFactorTypeEnum, len(vSlice))
+	res := make([]types.MultiFactorType, len(vSlice))
 	for i := range vSlice {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNMultiFactorTypeEnum2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐMultiFactorTypeEnum(ctx, vSlice[i])
+		res[i], err = ec.unmarshalNMultiFactorType2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐMultiFactorType(ctx, vSlice[i])
 		if err != nil {
 			return nil, err
 		}
@@ -10555,7 +10640,7 @@ func (ec *executionContext) unmarshalOMultiFactorTypeEnum2ᚕoverdollᚋapplicat
 	return res, nil
 }
 
-func (ec *executionContext) marshalOMultiFactorTypeEnum2ᚕoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐMultiFactorTypeEnumᚄ(ctx context.Context, sel ast.SelectionSet, v []types.MultiFactorTypeEnum) graphql.Marshaler {
+func (ec *executionContext) marshalOMultiFactorType2ᚕoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐMultiFactorTypeᚄ(ctx context.Context, sel ast.SelectionSet, v []types.MultiFactorType) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -10582,7 +10667,7 @@ func (ec *executionContext) marshalOMultiFactorTypeEnum2ᚕoverdollᚋapplicatio
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNMultiFactorTypeEnum2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐMultiFactorTypeEnum(ctx, sel, v[i])
+			ret[i] = ec.marshalNMultiFactorType2overdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐMultiFactorType(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)

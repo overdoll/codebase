@@ -1,8 +1,11 @@
 type Post implements Node @key(fields: "id") {
   id: ID!
 
+  """The reference of this post. Should always be used to reference this post"""
+  reference: String!
+
   """The state of the post"""
-  state: PostStateEnum!
+  state: PostState!
 
   """Represents the account that this post belongs to"""
   artist: Actor!
@@ -29,11 +32,14 @@ type Post implements Node @key(fields: "id") {
   reassignmentAt: Time!
 }
 
-enum PostStateEnum {
+enum PostState {
+  Publishing
   Review
   Published
+  Discarding
   Discarded
   Rejected
+  Processing
 }
 
 type CharacterRequestType {
@@ -151,6 +157,13 @@ extend type Mutation {
 }
 
 extend type Query {
+  """Look up a single post"""
+  post(
+    """Look up a post by a reference #"""
+    reference: String!
+  ): Post
+
+  """Search multiple posts"""
   posts(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
@@ -169,5 +182,11 @@ extend type Query {
 
     """Filter by the title of the media"""
     mediaTitle: String
+
+    """Filter by the title of the category"""
+    categoryTitle: String
+
+    """Filter by the artist"""
+    artistUsername: String
   ): PostConnection!
 }

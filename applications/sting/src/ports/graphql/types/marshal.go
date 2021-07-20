@@ -69,22 +69,34 @@ func MarshalPostToGraphQL(result *post.Post) *Post {
 		characters = append(characters, MarshalCharacterToGraphQL(char))
 	}
 
-	var state PostStateEnum
+	var state PostState
 
 	if result.InReview() {
-		state = PostStateEnumReview
+		state = PostStateReview
+	}
+
+	if result.IsProcessing() {
+		state = PostStateProcessing
+	}
+
+	if result.IsPublishing() {
+		state = PostStatePublishing
 	}
 
 	if result.IsDiscarded() {
-		state = PostStateEnumDiscarded
+		state = PostStateDiscarded
+	}
+
+	if result.IsDiscarding() {
+		state = PostStateDiscarding
 	}
 
 	if result.IsPublished() {
-		state = PostStateEnumPublished
+		state = PostStatePublished
 	}
 
 	if result.IsRejected() {
-		state = PostStateEnumRejected
+		state = PostStateRejected
 	}
 
 	var content []*Content
@@ -95,6 +107,7 @@ func MarshalPostToGraphQL(result *post.Post) *Post {
 
 	return &Post{
 		ID:                relay.NewID(Post{}, result.ID()),
+		Reference:         result.ID(),
 		Moderator:         nil,
 		Contributor:       nil,
 		Artist:            nil,

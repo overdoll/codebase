@@ -13,6 +13,57 @@ type QueryResolver struct {
 	App *app.Application
 }
 
+func (r *QueryResolver) Post(ctx context.Context, reference string) (*types.Post, error) {
+
+	pendingPost, err := r.App.Queries.PostById.Handle(ctx, reference)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return types.MarshalPostToGraphQL(pendingPost), nil
+}
+
+func (r *QueryResolver) Posts(ctx context.Context, after *string, before *string, first *int, last *int, characterName *string, mediaTitle *string, categoryTitle *string, artistUsername *string) (*types.PostConnection, error) {
+	cursor, err := paging.NewCursor(after, before, first, last)
+
+	if err != nil {
+		return nil, gqlerror.Errorf(err.Error())
+	}
+
+	searchCharacterName := ""
+
+	if characterName != nil {
+		searchCharacterName = *characterName
+	}
+
+	searchMediaTitle := ""
+
+	if mediaTitle != nil {
+		searchMediaTitle = *mediaTitle
+	}
+
+	searchCategoryTitle := ""
+
+	if categoryTitle != nil {
+		searchCategoryTitle = *categoryTitle
+	}
+
+	searchArtistUsername := ""
+
+	if artistUsername != nil {
+		searchArtistUsername = *artistUsername
+	}
+
+	results, page, err := r.App.Queries.SearchPosts.Handle(ctx, cursor, searchCharacterName, searchMediaTitle, searchCategoryTitle, searchArtistUsername)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return types.MarshalPostToGraphQLConnection(results, page), nil
+}
+
 func (r *QueryResolver) Artists(ctx context.Context, after *string, before *string, first *int, last *int, username *string) (*types.ArtistConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)
@@ -103,8 +154,4 @@ func (r *QueryResolver) Characters(ctx context.Context, after *string, before *s
 	}
 
 	return types.MarshalCharacterToGraphQLConnection(results, page), nil
-}
-
-func (r *QueryResolver) Posts(ctx context.Context, after *string, before *string, first *int, last *int, characterName *string, mediaTitle *string) (*types.PostConnection, error) {
-	return nil, nil
 }
