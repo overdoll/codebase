@@ -45,6 +45,9 @@ export default function (props) {
     },
     '.os-scrollbar-handle': {
       opacity: 0.3
+    },
+    form: {
+      width: '100%'
     }
   }
 }

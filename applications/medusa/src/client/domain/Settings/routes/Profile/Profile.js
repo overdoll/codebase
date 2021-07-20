@@ -59,6 +59,7 @@ export default function Profile (props: Props): Node {
   return (
     <>
       <Helmet title='profile' />
+
       <Center mt={8}>
         <Flex
           w={['full', 'sm', 'md', 'lg']}
@@ -69,7 +70,7 @@ export default function Profile (props: Props): Node {
         >
           <ErrorBoundary
             fallback={({ error, reset }) => (
-              <ErrorFallback error={error} reset={reset} refetch={loadQuery} />
+              <ErrorFallback error={error} reset={reset} refetch={refresh} />
             )}
           >
             <Suspense fallback={null}>
@@ -86,7 +87,9 @@ export default function Profile (props: Props): Node {
   )
 }
 
-const Content = ({ query, queryRef, refresh }) => {
+const Content = (props) => {
+  const { query, queryRef, refresh } = props
+
   const data = usePreloadedQuery<ProfileSettingsQuery>(
     query,
     queryRef
@@ -101,7 +104,7 @@ const Content = ({ query, queryRef, refresh }) => {
         />
       </Flex>
       <Flex direction='column'>
-        <Emails emails={data.accountSettings.general.emails} />
+        <Emails refresh={refresh} emails={data.accountSettings.general.emails} />
       </Flex>
     </Stack>
   )

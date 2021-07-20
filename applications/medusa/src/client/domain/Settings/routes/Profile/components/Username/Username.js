@@ -80,14 +80,22 @@ export default function Username ({ username, usernames, refresh }: Props): Node
       variables: {
         username: formData.username
       },
-      onCompleted () {
-        notify({
-          status: 'success',
-          title: t('profile.username.modal.query.success'),
-          isClosable: true
-        })
-        refresh()
-        onClose()
+      onCompleted (data) {
+        if (data.modifyAccountUsername.ok) {
+          notify({
+            status: 'success',
+            title: t('profile.username.modal.query.success'),
+            isClosable: true
+          })
+          refresh()
+          onClose()
+        } else {
+          notify({
+            status: 'error',
+            title: data.modifyAccountUsername.validation.code,
+            isClosable: true
+          })
+        }
       },
       onError () {
         notify({
@@ -105,17 +113,24 @@ export default function Username ({ username, usernames, refresh }: Props): Node
       <Heading size='lg' color='gray.00'>{t('profile.username.title')}</Heading>
       <Divider borderColor='gray.500' mt={1} mb={3} />
       <Stack spacing={3}>
-        <Flex align='center' direction='row' justify='space-between'>
-          <Heading size='md' color='green.500'>{username}</Heading>
-          <Button onClick={onOpen} size='sm'>{t('profile.username.change')}</Button>
+        <Flex direction='column'>
+          <Heading size='sm' color='gray.100'>{t('profile.username.current.title')}</Heading>
+          <Flex align='center' direction='row' justify='space-between'>
+            <Heading size='md' color='red.500'>{username}</Heading>
+            <Button onClick={onOpen} size='sm'>{t('profile.username.current.change')}</Button>
+          </Flex>
         </Flex>
         {usernames.length > 0 &&
           <Flex direction='column'>
-            <Accordion allowToggle defaultIndex={[0]}>
+            <Accordion allowToggle>
               <AccordionItem border='none'>
-                <AccordionButton pl={1} pr={1} borderRadius={5} justify='space-between'>
+                <AccordionButton pl={0} pr={0} borderRadius={5} justify='space-between'>
                   <Flex w='100%'>
-                    <Heading size='sm' color='gray.100'>{t('profile.username.previous.title')}</Heading>
+                    <Heading
+                      size='sm'
+                      color='gray.100'
+                    >{t('profile.username.previous.title')} ({usernames.length})
+                    </Heading>
                     <InfoTip
                       text={t('profile.username.previous.tooltip')}
                       size={3}

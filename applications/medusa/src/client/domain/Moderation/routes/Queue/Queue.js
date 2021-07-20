@@ -4,7 +4,6 @@
 import type { Node } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Suspense, useEffect } from 'react'
-import type { QueuePendingPostsQuery } from '@//:artifacts/QueuePendingPostsQuery.graphql'
 import { PreloadedQuery } from 'react-relay/hooks'
 import {
   Heading, Center,
@@ -18,36 +17,53 @@ import { graphql, usePreloadedQuery, useLazyLoadQuery, useQueryLoader, usePagina
 import PendingPosts from './components/PendingPosts/PendingPosts'
 import { useTranslation } from 'react-i18next'
 
-/*
+import type { QueuePostsFragment$key } from '@//:artifacts/QueuePostsFragment.graphql'
+import type { PostsPaginationQuery } from '@//:artifacts/PostsPaginationQuery.graphql'
+import type { QueuePostsQuery } from '@//:artifacts/QueuePostsQuery.graphql'
 
 type Props = {
-  pendingPosts: PendingPostsComponent_pendingPosts$key
+  pendingPosts: QueuePostsFragment$key,
+  pendingPostsQuery: PreloadedQuery<QueuePostsQuery>
 }
 
 const pendingPostsGQL = graphql`
-  fragment QueuePostsFragment on Query @refetchable(queryName: "PendingPostsPaginationQuery" ) {
-    pendingPosts (input: {first: $first, before: $before, after: $after, last: $last}, filter: {})
-    @connection(key: "PostsFragment_post") {
+  fragment QueuePostsFragment on Query
+  @argumentDefinitions(
+    first: {type: Int, defaultValue: 1}
+    after: {type: String}
+  )
+  @refetchable(queryName: "PostsPaginationQuery" ) {
+    pendingPosts (first: $first, after: $after)
+    @connection(key: "QueuePostsFragment_pendingPosts") {
       edges {
         node {
           id
+          artistId
         }
       }
     }
   }
 `
-*/
 
 export default function Queue (props: Props): Node {
   const [t] = useTranslation('moderation')
 
-  /*
+  const { data, loadNext, hasNext, hasPrevious, loadPrevious, isLoadingNext, isLoadingPrevious } = usePaginationFragment<PostsPaginationQuery,
+    _>(
+      pendingPostsGQL,
+      props.pendingPosts
+    )
 
-  const { data, loadNext, hasNext, hasPrevious, loadPrevious } = usePaginationFragment<PendingPostsPaginationQuery, _>(
-    pendingPostsGQL,
-    props.pendingPosts
+  const queryData = useLazyLoadQuery(
+    graphql`
+      query QueuePostsQuery {
+        ...QueuePostsFragment
+      }
+    `,
+    props.pendingPostsQuery
   )
-  */
+
+  console.log(queryData)
 
   return (
     <>
@@ -60,6 +76,7 @@ export default function Queue (props: Props): Node {
           direction='column'
           mb={6}
         >
+          <button onClick={() => loadNext(10)}>123</button>
           <Flex align='center' justify='space-between'>
             <Heading size='lg' color='gray.00'>{t('queue.title')}</Heading>
             <IconButton

@@ -5,21 +5,22 @@ import type { Node } from 'react'
 import {
   Badge,
   Box,
-  Button,
   Divider,
   Flex,
   Heading,
-  IconButton, Input,
+  IconButton,
   Menu,
   MenuButton, MenuItem,
   MenuList,
   Stack,
-  Text
+  Text, useToast
 } from '@chakra-ui/react'
-import InfoTip from '../../../../../../components/InfoTip/InfoTip'
 import { useTranslation } from 'react-i18next'
 import Icon from '@//:modules/content/icon/Icon'
-import { Fragment } from 'react'
+import AddEmailForm from './AddEmailForm/AddEmailForm'
+
+import { graphql, useMutation } from 'react-relay/hooks'
+import type { EmailsPrimaryMutation } from '@//:artifacts/EmailsPrimaryMutation.graphql'
 
 import InterfaceDeleteBin1
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/add-remove-delete/interface-delete-bin-1.svg'
@@ -33,18 +34,67 @@ type Props = {
   emails: {
     email: string,
     status: string,
-  }
-
+  },
+  refresh: () => void,
 }
 
-export default function Emails ({ emails }: Props): Node {
+const MakeEmailPrimaryMutationGQL = graphql`
+  mutation EmailsPrimaryMutation($email: String!) {
+    addAccountEmail(email: $email) {
+      ok
+      validation {
+        code
+      }
+    }
+  }
+`
+
+export default function Emails ({ emails, refresh }: Props): Node {
   const [t] = useTranslation('settings')
+
+  const [makePrimary, isMakingPrimary] = useMutation<EmailsPrimaryMutation>(
+    MakeEmailPrimaryMutationGQL
+  )
+
+  const setPrimary = (email) => {
+    makePrimary({
+      variables: {
+        email: email
+      },
+      onCompleted (data) {
+        if (data.addAccountEmail.ok) {
+          notify({
+            status: 'success',
+            title: t('profile.email.confirmed.query.success', { email: email }),
+            isClosable: true
+          })
+          refresh()
+        } else {
+          notify({
+            status: 'error',
+            title: data.addAccountEmail.validation.code,
+            isClosable: true
+          })
+        }
+      },
+      onError () {
+        notify({
+          status: 'error',
+          title: t('profile.email.confirmed.query.error', { email: email }),
+          isClosable: true
+        })
+      }
+    }
+    )
+  }
 
   const [primaryEmail, confirmedEmails, unconfirmedEmails] = [
     emails.filter((item) => { return item.status === 'PRIMARY' }),
     emails.filter((item) => { return item.status === 'CONFIRMED' }),
     emails.filter((item) => { return item.status === 'UNCONFIRMED' })
   ]
+
+  const notify = useToast()
 
   return (
     <>
@@ -99,7 +149,7 @@ export default function Emails ({ emails }: Props): Node {
                     }
                   />
                   <MenuList boxShadow='xs'>
-                    <MenuItem justify='center'>
+                    <MenuItem onClick={() => setPrimary(item.email)} isDisabled={isMakingPrimary} justify='center'>
                       <Icon pointerEvents='none' icon={InterfaceSettingWrench} fill='gray.100' w={4} h={4} mr={2} />
                       <Text pointerEvents='none' color='gray.100'>{t('profile.email.options.set_primary')}</Text>
                     </MenuItem>
@@ -156,16 +206,8 @@ export default function Emails ({ emails }: Props): Node {
           </Box>
         )}
       </Stack>
-      <Heading mb={1} size='sm' color='gray.00'>{t('profile.email.add.title')}</Heading>
       <Flex>
-        <Input
-          size='sm'
-          placeholder={t('profile.email.add.placeholder')}
-          variant='outline'
-          mb={4} mr={2}
-        />
-        <Button size='sm'>{t('profile.email.add.button')}</Button>
-
+        <AddEmailForm refresh={refresh} />
       </Flex>
     </>
   )

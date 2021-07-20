@@ -4,7 +4,10 @@
     "title": "Profile",
     "username": {
       "title": "Username",
-      "change": "Change Username",
+      "current": {
+        "title": "Current Username",
+        "change": "Change Username"
+      },
       "previous": {
         "title": "Previous Usernames",
         "tooltip": "If a link with an old username is clicked, it will redirect to the new username. This behaviour may change in the future."
@@ -14,7 +17,7 @@
         "input_title": "Username",
         "submit": "Change my username",
         "query": {
-          "success": "Username changed successfully!",
+          "success": "Username changed successfully",
           "error": "There was an error changing your username"
         },
         "form": {
@@ -33,7 +36,11 @@
         "hint2": "Receives login emails"
       },
       "confirmed": {
-        "hint1": "Can be set as a Primary email"
+        "hint1": "Can be set as a Primary email",
+        "query": {
+          "success": "{{email}} was set as your Primary email",
+          "error": "There was an error setting {{email}} to Primary"
+        }
       },
       "unconfirmed": {
         "hint1": "Needs to be confirmed through email link"
@@ -46,7 +53,18 @@
       "add": {
         "title": "Add an email",
         "button": "Add",
-        "placeholder": "Enter an email address"
+        "placeholder": "Enter an email address",
+        "form": {
+          "validation": {
+            "email": {
+              "pattern": "Please enter a valid email address"
+            }
+          }
+        },
+        "query": {
+          "success": "A verification email was sent to {{email}}",
+          "error": "There was an error adding an email"
+        }
       }
     }
   }
