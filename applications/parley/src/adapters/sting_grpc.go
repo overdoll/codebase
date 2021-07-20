@@ -15,6 +15,7 @@ func NewStingGrpc(client sting.StingClient) StingGrpc {
 }
 
 func (s StingGrpc) GetPost(ctx context.Context, id string) (string, string, error) {
+
 	md, err := s.client.GetPost(ctx, &sting.PostRequest{Id: id})
 
 	if err != nil {
@@ -25,6 +26,7 @@ func (s StingGrpc) GetPost(ctx context.Context, id string) (string, string, erro
 }
 
 func (s StingGrpc) PublishPost(ctx context.Context, id string) error {
+
 	if _, err := s.client.PublishPost(ctx, &sting.PostRequest{Id: id}); err != nil {
 		return err
 	}
@@ -33,6 +35,7 @@ func (s StingGrpc) PublishPost(ctx context.Context, id string) error {
 }
 
 func (s StingGrpc) RejectPost(ctx context.Context, id string) error {
+
 	if _, err := s.client.RejectPost(ctx, &sting.PostRequest{Id: id}); err != nil {
 		return err
 	}
@@ -41,6 +44,7 @@ func (s StingGrpc) RejectPost(ctx context.Context, id string) error {
 }
 
 func (s StingGrpc) DiscardPost(ctx context.Context, id string) error {
+
 	if _, err := s.client.DiscardPost(ctx, &sting.PostRequest{Id: id}); err != nil {
 		return err
 	}
@@ -49,6 +53,7 @@ func (s StingGrpc) DiscardPost(ctx context.Context, id string) error {
 }
 
 func (s StingGrpc) UndoPost(ctx context.Context, id string) error {
+
 	if _, err := s.client.UndoPost(ctx, &sting.PostRequest{Id: id}); err != nil {
 		return err
 	}

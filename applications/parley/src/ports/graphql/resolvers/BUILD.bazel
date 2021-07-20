@@ -12,7 +12,6 @@ go_library(
         "//applications/parley/src/app",
         "//applications/parley/src/ports/graphql/types",
         "//libraries/paging",
-        "//libraries/passport",
         "@com_github_vektah_gqlparser_v2//gqlerror",
     ],
 )

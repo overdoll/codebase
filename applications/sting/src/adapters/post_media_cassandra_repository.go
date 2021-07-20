@@ -89,7 +89,7 @@ func (r PostsCassandraRepository) CreateMedias(ctx context.Context, medias []*po
 			stmt,
 			med.ID(),
 			med.Title(),
-			med.RawThumbnail(),
+			med.Thumbnail(),
 		)
 	}
 

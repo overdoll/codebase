@@ -68,9 +68,6 @@ var postAuditLogByModeratorTable = table.New(table.Metadata{
 		"created_ms",
 		"post_id",
 		"contributor_account_id",
-
-		"contributor_account_username",
-		"moderator_account_username",
 		"account_infraction_id",
 		"action",
 		"reason",
@@ -82,15 +79,12 @@ var postAuditLogByModeratorTable = table.New(table.Metadata{
 })
 
 type postAuditLogByModerator struct {
-	Id            string `db:"id"`
-	Bucket        int    `db:"bucket"`
-	CreatedMs     int    `db:"created_ms"`
-	PostId        string `db:"post_id"`
-	ContributorId string `db:"contributor_account_id"`
-	ModeratorId   string `db:"moderator_account_id"`
-
-	ContributorUsername string `db:"contributor_account_username"`
-	ModeratorUsername   string `db:"moderator_account_username"`
+	Id                  string `db:"id"`
+	Bucket              int    `db:"bucket"`
+	CreatedMs           int    `db:"created_ms"`
+	PostId              string `db:"post_id"`
+	ContributorId       string `db:"contributor_account_id"`
+	ModeratorId         string `db:"moderator_account_id"`
 	AccountInfractionId string `db:"account_infraction_id"`
 	Action              string `db:"action"`
 	Reason              string `db:"reason"`
@@ -121,10 +115,8 @@ func marshalPostAuditLogToDatabase(auditLog *infraction.PostAuditLog) (*postAudi
 		Id:                  auditLog.ID(),
 		Bucket:              buck,
 		PostId:              auditLog.PendingPostID(),
-		ModeratorId:         auditLog.Moderator().ID(),
-		ModeratorUsername:   auditLog.Moderator().Username(),
-		ContributorId:       auditLog.Contributor().ID(),
-		ContributorUsername: auditLog.Contributor().Username(),
+		ModeratorId:         auditLog.ModeratorId(),
+		ContributorId:       auditLog.ContributorId(),
 		AccountInfractionId: userInfractionId,
 		Action:              auditLog.Status(),
 		Reason:              reason,
@@ -159,9 +151,7 @@ func (r InfractionCassandraRepository) CreatePostAuditLog(ctx context.Context, a
 		marshalledAuditLog.PostId,
 		marshalledAuditLog.CreatedMs,
 		marshalledAuditLog.ContributorId,
-		marshalledAuditLog.ContributorUsername,
 		marshalledAuditLog.ModeratorId,
-		marshalledAuditLog.ModeratorUsername,
 		marshalledAuditLog.AccountInfractionId,
 		marshalledAuditLog.Action,
 		marshalledAuditLog.Reason,
@@ -232,9 +222,7 @@ func (r InfractionCassandraRepository) GetPostAuditLog(ctx context.Context, logI
 		pendingPostAuditLogByModerator.Id,
 		pendingPostAuditLogByModerator.PostId,
 		pendingPostAuditLogByModerator.ModeratorId,
-		pendingPostAuditLogByModerator.ModeratorUsername,
 		pendingPostAuditLogByModerator.ContributorId,
-		pendingPostAuditLogByModerator.ContributorUsername,
 		pendingPostAuditLogByModerator.Action,
 		pendingPostAuditLogByModerator.AccountInfractionId,
 		pendingPostAuditLogByModerator.Reason,
@@ -318,9 +306,7 @@ func (r InfractionCassandraRepository) SearchPostAuditLogs(ctx context.Context, 
 			pendingPostAuditLog.Id,
 			pendingPostAuditLog.PostId,
 			pendingPostAuditLog.ModeratorId,
-			pendingPostAuditLog.ModeratorUsername,
 			pendingPostAuditLog.ContributorId,
-			pendingPostAuditLog.ContributorUsername,
 			pendingPostAuditLog.Action,
 			pendingPostAuditLog.AccountInfractionId,
 			pendingPostAuditLog.Reason,

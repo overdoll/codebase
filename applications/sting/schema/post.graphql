@@ -176,17 +176,5 @@ extend type Query {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-
-    """Filter by the name of the character"""
-    characterName: String
-
-    """Filter by the title of the media"""
-    mediaTitle: String
-
-    """Filter by the title of the category"""
-    categoryTitle: String
-
-    """Filter by the artist"""
-    artistUsername: String
   ): PostConnection!
 }

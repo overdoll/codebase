@@ -30,19 +30,17 @@ CREATE TABLE IF NOT EXISTS post_audit_logs_by_post
 
 CREATE TABLE IF NOT EXISTS post_audit_logs_by_moderator
 (
-    id                           text,
-    bucket                       int,
-    created_ms                   int,
-    post_id                      text,
-    contributor_account_id       text,
-    contributor_account_username text,
-    moderator_account_id         text,
-    moderator_account_username   text,
-    account_infraction_id        text,
-    action                       text,
-    reason                       text,
-    notes                        text,
-    reverted                     boolean,
+    id                     text,
+    bucket                 int,
+    created_ms             int,
+    post_id                text,
+    contributor_account_id text,
+    moderator_account_id   text,
+    account_infraction_id  text,
+    action                 text,
+    reason                 text,
+    notes                  text,
+    reverted               boolean,
     primary key ( (moderator_account_id, bucket), created_ms, contributor_account_id, post_id, id ),
 ) WITH CLUSTERING ORDER BY (created_ms DESC, contributor_account_id DESC, post_id DESC, id DESC);
 

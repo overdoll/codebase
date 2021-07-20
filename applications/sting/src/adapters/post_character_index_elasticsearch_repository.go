@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
 	"overdoll/applications/sting/src/domain/post"
 	"overdoll/libraries/paging"
@@ -73,14 +74,32 @@ func marshalCharacterToDocument(char *post.Character) *characterDocument {
 
 	return &characterDocument{
 		Id:        char.ID(),
-		Thumbnail: char.RawThumbnail(),
+		Thumbnail: char.Thumbnail(),
 		Name:      char.Name(),
 		Media: mediaDocument{
 			Id:        media.ID(),
-			Thumbnail: media.RawThumbnail(),
+			Thumbnail: media.Thumbnail(),
 			Title:     media.Title(),
 		},
 	}
+}
+
+func (r PostsIndexElasticSearchRepository) IndexCharacters(ctx context.Context, characters []*post.Character) error {
+	if err := r.store.CreateBulkIndex(characterIndex); err != nil {
+		return err
+	}
+
+	for _, character := range characters {
+		if err := r.store.AddToBulkIndex(character.ID(), marshalCharacterToDocument(character)); err != nil {
+			return err
+		}
+	}
+
+	if err := r.store.CloseBulkIndex(); err != nil {
+		return fmt.Errorf("unexpected error: %s", err)
+	}
+
+	return nil
 }
 
 func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context, cursor *paging.Cursor, search string) ([]*post.Character, *paging.Info, error) {
@@ -135,18 +154,25 @@ func (r PostsIndexElasticSearchRepository) IndexAllCharacters(ctx context.Contex
 			return err
 		}
 
-		var m character
+		var c character
 
-		for iter.StructScan(&m) {
+		for iter.StructScan(&c) {
+
+			var m media
+
+			// get media connected to this character document
+			if err := r.session.Query(mediaTable.Get()).Consistency(gocql.One).Get(&m); err != nil {
+				return err
+			}
 
 			if err := r.store.AddToBulkIndex(m.Id, characterDocument{
-				Id:        m.Id,
-				Thumbnail: m.Thumbnail,
-				Name:      m.Name,
+				Id:        c.Id,
+				Thumbnail: c.Thumbnail,
+				Name:      c.Name,
 				Media: mediaDocument{
-					Id:        m.MediaId,
-					Thumbnail: "",
-					Title:     "",
+					Id:        m.Id,
+					Thumbnail: m.Thumbnail,
+					Title:     m.Title,
 				},
 			}); err != nil {
 				return err

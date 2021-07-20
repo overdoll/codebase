@@ -144,7 +144,7 @@ func (r PostsCassandraRepository) CreateCharacters(ctx context.Context, characte
 			stmt,
 			chars.ID(),
 			chars.Name(),
-			chars.RawThumbnail(),
+			chars.Thumbnail(),
 			media.ID(),
 		)
 	}

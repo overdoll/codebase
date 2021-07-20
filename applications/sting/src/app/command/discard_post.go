@@ -24,7 +24,7 @@ func (h DiscardPostHandler) Handle(ctx context.Context, id string) error {
 	pendingPost, err := h.pr.UpdatePost(ctx, id, func(pending *post.Post) error {
 
 		// On discarded posts, delete the content from S3
-		if err := h.cnt.DeleteProcessedContent(ctx, pending.Contributor().ID(), pending.RawContent()); err != nil {
+		if err := h.cnt.DeleteProcessedContent(ctx, pending.ContributorId(), pending.Content()); err != nil {
 			return err
 		}
 

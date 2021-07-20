@@ -84,7 +84,7 @@ func (r PostsCassandraRepository) CreateCategories(ctx context.Context, categori
 			stmt,
 			cat.ID(),
 			cat.Title(),
-			cat.RawThumbnail(),
+			cat.Thumbnail(),
 		)
 	}
 

@@ -39,10 +39,6 @@ func (h RevertModeratePostHandler) Handle(ctx context.Context, moderatorId, audi
 	// update audit log to revert any infractions and user locks, as well as mark it as reverted
 	auditLog, err := h.ir.UpdatePostAuditLog(ctx, auditLogId, func(log *infraction.PostAuditLog) error {
 
-		// need to set this because user permissions arent available when getting it from the DB (needs to be grabbed from
-		// another service)
-		log.UpdateModerator(usr)
-
 		infractionId := ""
 
 		// save infraction ID so we can delete it after the revert
@@ -57,12 +53,12 @@ func (h RevertModeratePostHandler) Handle(ctx context.Context, moderatorId, audi
 		if infractionId != "" {
 
 			// unlock account - sending "0" unlocks the account
-			if err := h.eva.LockAccount(ctx, log.Contributor().ID(), 0); err != nil {
+			if err := h.eva.LockAccount(ctx, log.ContributorId(), 0); err != nil {
 				return err
 			}
 
 			// delete infraction from user's history
-			if err := h.ir.DeleteAccountInfractionHistory(ctx, log.Contributor().ID(), infractionId); err != nil {
+			if err := h.ir.DeleteAccountInfractionHistory(ctx, log.ContributorId(), infractionId); err != nil {
 				return err
 			}
 		}

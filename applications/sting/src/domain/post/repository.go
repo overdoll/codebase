@@ -38,12 +38,14 @@ type IndexRepository interface {
 	IndexAllCharacters(ctx context.Context) error
 	DeleteCharacterIndex(ctx context.Context) error
 	SearchCharacters(ctx context.Context, cursor *paging.Cursor, name string) ([]*Character, *paging.Info, error)
+	IndexCharacters(ctx context.Context, characters []*Character) error
 
 	IndexAllMedia(ctx context.Context) error
 	DeleteMediaIndex(ctx context.Context) error
 	SearchMedias(ctx context.Context, cursor *paging.Cursor, title string) ([]*Media, *paging.Info, error)
 
 	IndexAllCategories(ctx context.Context) error
+	IndexCategories(ctx context.Context, categories []*Category) error
 	DeleteCategoryIndex(ctx context.Context) error
 	SearchCategories(ctx context.Context, paging *paging.Cursor, title string) ([]*Category, *paging.Info, error)
 }

@@ -55,9 +55,28 @@ const categoryIndexName = "categories"
 func marshalCategoryToDocument(cat *post.Category) *categoryDocument {
 	return &categoryDocument{
 		Id:        cat.ID(),
-		Thumbnail: cat.RawThumbnail(),
+		Thumbnail: cat.Thumbnail(),
 		Title:     cat.Title(),
 	}
+}
+
+func (r PostsIndexElasticSearchRepository) IndexCategories(ctx context.Context, categories []*post.Category) error {
+
+	if err := r.store.CreateBulkIndex(categoryIndex); err != nil {
+		return err
+	}
+
+	for _, category := range categories {
+		if err := r.store.AddToBulkIndex(category.ID(), marshalCategoryToDocument(category)); err != nil {
+			return err
+		}
+	}
+
+	if err := r.store.CloseBulkIndex(); err != nil {
+		return fmt.Errorf("unexpected error: %s", err)
+	}
+
+	return nil
 }
 
 func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context, cursor *paging.Cursor, search string) ([]*post.Category, *paging.Info, error) {

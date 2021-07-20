@@ -21,5 +21,5 @@ func (h IndexAllAccountsHandler) Handle(ctx context.Context) error {
 		return err
 	}
 
-	return h.ai.BulkIndexAccounts(ctx)
+	return h.ai.IndexAllAccounts(ctx)
 }

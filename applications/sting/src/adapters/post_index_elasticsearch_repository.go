@@ -21,25 +21,19 @@ type postDocument struct {
 	State              string               `json:"state"`
 	ModeratorId        string               `json:"moderator_id"`
 	ArtistId           string               `json:"artist_id"`
-	ArtistUsername     string               `json:"artist_username"`
-	Contributor        contributorDocument  `json:"contributor"`
+	ContributorId      string               `json:"contributor_d"`
 	Content            []string             `json:"content"`
 	Categories         []*categoryDocument  `json:"categories"`
 	Characters         []*characterDocument `json:"characters"`
 	CharactersRequests map[string]string    `json:"characters_requests"`
 	CategoriesRequests []string             `json:"categories_requests"`
 	MediaRequests      []string             `json:"media_requests"`
+	ArtistRequest      string               `json:"artist_request"`
 	PostedAt           string               `json:"posted_at"`
 	ReassignmentAt     string               `json:"reassignment_at"`
 }
 
-type contributorDocument struct {
-	Id       string `json:"id"`
-	Avatar   string `json:"avatar"`
-	Username string `json:"username"`
-}
-
-const postPendingIndex = `
+const postIndex = `
 {
 	"mappings": {
 		"dynamic": "strict",
@@ -56,23 +50,8 @@ const postPendingIndex = `
 				"artist_id": {
 					"type": "keyword"
 				},
-				"artist_username": {
+				"contributor_id": {
 					"type": "keyword"
-				},
-				"contributor": {
-					"type": "nested",
-					"properties": {
-						"id": {
-							"type": "keyword"
-						},
-						"avatar": {
-							"type": "keyword"
-						},
-						"username": {
-							"type": "text",
-							"analyzer": "english"
-						}
-					}
 				},
 				"categories": {
 					"type": "nested",
@@ -126,6 +105,9 @@ const postPendingIndex = `
                      "type": "keyword"
 				},
 				"media_requests": {
+                     "type": "keyword"
+				},	
+				"artist_request": {
                      "type": "keyword"
 				},
 				"characters_requests": {
@@ -182,15 +164,6 @@ func NewPostsIndexElasticSearchRepository(store *search.Store, session gocqlx.Se
 	return PostsIndexElasticSearchRepository{store: store, session: session}
 }
 
-func (r PostsIndexElasticSearchRepository) IndexPost(ctx context.Context, pendingPost *post.Post) error {
-
-	var pendingPosts []*post.Post
-
-	pendingPosts = append(pendingPosts, pendingPost)
-
-	return r.BulkIndexPosts(ctx, pendingPosts)
-}
-
 func marshalPostToDocument(pst *post.Post) *postDocument {
 	var characterDocuments []*characterDocument
 
@@ -223,18 +196,14 @@ func marshalPostToDocument(pst *post.Post) *postDocument {
 	}
 
 	return &postDocument{
-		Id:             pst.ID(),
-		State:          string(pst.State()),
-		ArtistUsername: "",
-		ArtistId:       pst.Artist().ID(),
-		ModeratorId:    pst.ModeratorId(),
-		Contributor: contributorDocument{
-			Id:       pst.Contributor().ID(),
-			Avatar:   pst.Contributor().Avatar(),
-			Username: pst.Contributor().Username(),
-		},
-		Content:            pst.RawContent(),
+		Id:                 pst.ID(),
+		State:              string(pst.State()),
+		ArtistId:           pst.ArtistId(),
+		ModeratorId:        pst.ModeratorId(),
+		ContributorId:      pst.ContributorId(),
+		Content:            pst.Content(),
 		PostedAt:           strconv.FormatInt(pst.PostedAt().Unix(), 10),
+		ArtistRequest:      pst.CustomArtistUsername(),
 		Categories:         categoryDocuments,
 		Characters:         characterDocuments,
 		CharactersRequests: characterRequests,
@@ -242,6 +211,23 @@ func marshalPostToDocument(pst *post.Post) *postDocument {
 		MediaRequests:      mediaRequests,
 		ReassignmentAt:     strconv.FormatInt(pst.ReassignmentAt().Unix(), 10),
 	}
+}
+
+func (r PostsIndexElasticSearchRepository) IndexPost(ctx context.Context, post *post.Post) error {
+
+	if err := r.store.CreateBulkIndex(postIndex); err != nil {
+		return err
+	}
+
+	if err := r.store.AddToBulkIndex(post.ID(), marshalPostToDocument(post)); err != nil {
+		return err
+	}
+
+	if err := r.store.CloseBulkIndex(); err != nil {
+		return fmt.Errorf("unexpected error: %s", err)
+	}
+
+	return nil
 }
 
 func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, cursor *paging.Cursor, filter *post.PostFilters) ([]*post.Post, *paging.Info, error) {
@@ -348,12 +334,11 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, curs
 
 		createdPost := post.UnmarshalPendingPostFromDatabase(
 			pst.Id,
-			pst.ModeratorId,
 			pst.State,
-			post.NewArtist(pst.ArtistId),
-			pst.Contributor.Id,
-			pst.Contributor.Username,
-			pst.Contributor.Avatar,
+			pst.ModeratorId,
+			pst.ArtistId,
+			pst.ArtistRequest,
+			pst.ContributorId,
 			pst.Content,
 			characters,
 			categories,
@@ -373,7 +358,7 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, curs
 }
 
 func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) error {
-	
+
 	scanner := scan.New(r.session,
 		scan.Config{
 			NodesInCluster: 1,
@@ -382,9 +367,9 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 		},
 	)
 
-	err := scanner.RunIterator(mediaTable, func(iter *gocqlx.Iterx) error {
+	err := scanner.RunIterator(postTable, func(iter *gocqlx.Iterx) error {
 
-		if err := r.store.CreateBulkIndex(mediaIndex); err != nil {
+		if err := r.store.CreateBulkIndex(postIndex); err != nil {
 			return err
 		}
 
@@ -394,8 +379,13 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 
 			var characterDocuments []*characterDocument
 
-			for _, char := range pst.Characters() {
-				characterDocuments = append(characterDocuments, marshalCharacterToDocument(char))
+			for _, char := range p.Characters {
+				characterDocuments = append(characterDocuments, &characterDocument{
+					Id:        char,
+					Thumbnail: "",
+					Name:      "",
+					Media:     mediaDocument{},
+				})
 			}
 
 			var categoryDocuments []*categoryDocument
@@ -413,16 +403,16 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 				State:              p.State,
 				ModeratorId:        p.ModeratorId,
 				ArtistId:           p.ArtistId,
-				ArtistUsername:     p.ArtistRequest,
-				Contributor:        contributorDocument{},
+				ContributorId:      p.ContributorId,
 				Content:            p.Content,
-				Categories:         p.Categories,
-				Characters:         nil,
-				CharactersRequests: nil,
-				CategoriesRequests: nil,
-				MediaRequests:      nil,
-				PostedAt:           "",
-				ReassignmentAt:     "",
+				Categories:         categoryDocuments,
+				Characters:         characterDocuments,
+				CharactersRequests: p.CharactersRequests,
+				CategoriesRequests: p.CategoriesRequests,
+				MediaRequests:      p.MediaRequests,
+				ArtistRequest:      p.ArtistRequest,
+				PostedAt:           strconv.FormatInt(p.PostedAt.Unix(), 10),
+				ReassignmentAt:     strconv.FormatInt(p.ReassignmentAt.Unix(), 10),
 			}); err != nil {
 				return err
 			}
@@ -438,7 +428,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 	if err != nil {
 		return err
 	}
-	
+
 	return nil
 }
 
@@ -452,13 +442,13 @@ func (r PostsIndexElasticSearchRepository) DeletePost(ctx context.Context, id st
 }
 
 func (r PostsIndexElasticSearchRepository) DeletePostIndex(ctx context.Context) error {
-	
+
 	err := r.store.DeleteIndex(PostIndexName)
 
 	if err != nil {
 	}
 
-	err = r.store.CreateIndex(PostIndexName, postPendingIndex)
+	err = r.store.CreateIndex(PostIndexName, postIndex)
 
 	if err != nil {
 		return fmt.Errorf("failed to create pending post index: %s", err)

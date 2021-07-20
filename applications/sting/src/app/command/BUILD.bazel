@@ -19,7 +19,6 @@ go_library(
         "start_publish_post.go",
         "start_undo_post.go",
         "undo_post.go",
-        "update_post.go",
     ],
     importpath = "overdoll/applications/sting/src/app/command",
     visibility = ["//visibility:public"],
@@ -28,7 +27,6 @@ go_library(
         "//applications/sting/src/domain/post",
         "//libraries/account",
         "//libraries/uuid",
-        "@com_github_gocql_gocql//:gocql",
         "@org_uber_go_zap//:zap",
     ],
 )

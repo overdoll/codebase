@@ -26,6 +26,7 @@ go_library(
         "//libraries/account",
         "//libraries/elasticsearch",
         "//libraries/paging",
+        "//libraries/scan",
         "//libraries/uuid",
         "@com_github_aws_aws_sdk_go//aws",
         "@com_github_aws_aws_sdk_go//aws/session",

@@ -21,7 +21,7 @@ func (r AccountResolver) ModeratorPostsQueue(ctx context.Context, obj *types.Acc
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	results, page, err := r.App.Queries.PostsByModerator.Handle(ctx, cursor, obj.ID.GetID())
+	results, page, err := r.App.Queries.SearchPosts.Handle(ctx, cursor, obj.ID.GetID(), "", "", nil, nil, nil)
 
 	if err != nil {
 		return nil, err
@@ -38,7 +38,7 @@ func (r AccountResolver) Posts(ctx context.Context, obj *types.Account, after *s
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	results, page, err := r.App.Queries.PostsByArtist.Handle(ctx, cursor, obj.ID.GetID())
+	results, page, err := r.App.Queries.SearchPosts.Handle(ctx, cursor, "", "", obj.ID.GetID(), nil, nil, nil)
 
 	if err != nil {
 		return nil, err
@@ -55,7 +55,7 @@ func (r AccountResolver) Contributions(ctx context.Context, obj *types.Account, 
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	results, page, err := r.App.Queries.PostsByContributor.Handle(ctx, cursor, obj.ID.GetID())
+	results, page, err := r.App.Queries.SearchPosts.Handle(ctx, cursor, "", obj.ID.GetID(), "", nil, nil, nil)
 
 	if err != nil {
 		return nil, err

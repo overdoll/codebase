@@ -4,9 +4,9 @@ import (
 	"context"
 	"errors"
 
-	"github.com/gocql/gocql"
 	"go.uber.org/zap"
 	"overdoll/applications/sting/src/domain/post"
+	"overdoll/libraries/account"
 	"overdoll/libraries/uuid"
 )
 
@@ -24,17 +24,17 @@ func NewCreatePendingPostHandler(pr post.Repository, eva EvaService, parley Parl
 	return CreatePendingPostHandler{pr: pr, eva: eva, parley: parley}
 }
 
-func (h CreatePendingPostHandler) Handle(ctx context.Context, contributorId, artistId, artistUsername string, content, characterIds, categoryIds []string, characterRequests map[string]string, mediaRequests []string) (*post.Post, error) {
+func (h CreatePendingPostHandler) Handle(ctx context.Context, contributorId, existingArtistId, artistUsername string, posterIsArtist bool, content, characterIds, categoryIds []string, characterRequests map[string]string, mediaRequests []string) (*post.Post, error) {
 
 	// Get our contributor
-	usr, err := h.eva.GetAccount(ctx, contributorId)
+	contributor, err := h.eva.GetAccount(ctx, contributorId)
 
 	if err != nil {
 		zap.S().Errorf("failed to get user: %s", err)
 		return nil, nil
 	}
 
-	if usr.IsLocked() {
+	if contributor.IsLocked() {
 		return nil, errFailedPost
 	}
 
@@ -50,28 +50,20 @@ func (h CreatePendingPostHandler) Handle(ctx context.Context, contributorId, art
 		return nil, errFailedPost
 	}
 
-	contributorIsArtist := false
+	var artist *account.Account
 
-	// no artist ID or username, contributor is our artist
-	if artistId == "" && artistUsername == "" {
-		artistId = usr.ID()
-		artistUsername = usr.Username()
-		contributorIsArtist = true
-	}
-
-	artist := post.NewArtist(artistId)
-
-	// Artist ID is not null, they are not requesting an artist - look for an existing one in the DB
-	if artistId != "" && !contributorIsArtist {
-		artist, err = h.pr.GetArtistById(ctx, artistId)
+	if posterIsArtist {
+		artist, err = h.eva.GetAccount(ctx, contributorId)
 
 		if err != nil {
+			zap.S().Errorf("failed to get account: %s", err)
+			return nil, errFailedPost
+		}
+	} else if existingArtistId != "" {
+		artist, err = h.eva.GetAccount(ctx, existingArtistId)
 
-			if err == gocql.ErrNotFound {
-				return nil, errFailedPost
-			}
-
-			zap.S().Errorf("failed to get artist: %s", err)
+		if err != nil {
+			zap.S().Errorf("failed to get account: %s", err)
 			return nil, errFailedPost
 		}
 	}
@@ -83,7 +75,7 @@ func (h CreatePendingPostHandler) Handle(ctx context.Context, contributorId, art
 		return nil, nil
 	}
 
-	pendingPost, err := post.NewPendingPost(uuid.New().String(), moderatorId, artist, usr, content, characters, categories)
+	pendingPost, err := post.NewPendingPost(uuid.New().String(), moderatorId, artist, artistUsername, contributor, content, characters, categories)
 
 	if err != nil {
 		return nil, err

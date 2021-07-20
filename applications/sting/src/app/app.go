@@ -12,7 +12,6 @@ type Application struct {
 
 type Commands struct {
 	CreatePost command.CreatePendingPostHandler
-	UpdatePost command.UpdatePostHandler
 
 	StartDiscardPost command.StartDiscardPostHandler
 	StartPublishPost command.StartPublishPostHandler
@@ -33,16 +32,13 @@ type Commands struct {
 }
 
 type Queries struct {
-	SearchCategories   query.SearchCategoriesHandler
-	SearchCharacters   query.SearchCharactersHandler
-	SearchMedias       query.SearchMediasHandler
-	SearchPosts        query.SearchPostsHandler
-	PostsByModerator   query.PostsByModeratorAccountHandler
-	PostsByContributor query.PostsByContributorAccountHandler
-	PostsByArtist      query.PostsByArtistAccountHandler
-	PostById           query.PostByIdHandler
-	CharacterById      query.CharacterByIdHandler
-	CategoryById       query.CategoryByIdHandler
-	MediaById          query.MediaByIdHandler
-	ArtistById         query.ArtistByIdHandler
+	SearchCategories query.SearchCategoriesHandler
+	SearchCharacters query.SearchCharactersHandler
+	SearchMedias     query.SearchMediasHandler
+	SearchPosts      query.SearchPostsHandler
+	PostById         query.PostByIdHandler
+	CharacterById    query.CharacterByIdHandler
+	CategoryById     query.CategoryByIdHandler
+	MediaById        query.MediaByIdHandler
+	ArtistById       query.ArtistByIdHandler
 }

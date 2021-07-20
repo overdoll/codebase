@@ -24,7 +24,7 @@ func (r *QueryResolver) Post(ctx context.Context, reference string) (*types.Post
 	return types.MarshalPostToGraphQL(pendingPost), nil
 }
 
-func (r *QueryResolver) Posts(ctx context.Context, after *string, before *string, first *int, last *int, characterName *string, mediaTitle *string, categoryTitle *string, artistUsername *string) (*types.PostConnection, error) {
+func (r *QueryResolver) Posts(ctx context.Context, after *string, before *string, first *int, last *int) (*types.PostConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)
 
@@ -32,31 +32,7 @@ func (r *QueryResolver) Posts(ctx context.Context, after *string, before *string
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	searchCharacterName := ""
-
-	if characterName != nil {
-		searchCharacterName = *characterName
-	}
-
-	searchMediaTitle := ""
-
-	if mediaTitle != nil {
-		searchMediaTitle = *mediaTitle
-	}
-
-	searchCategoryTitle := ""
-
-	if categoryTitle != nil {
-		searchCategoryTitle = *categoryTitle
-	}
-
-	searchArtistUsername := ""
-
-	if artistUsername != nil {
-		searchArtistUsername = *artistUsername
-	}
-
-	results, page, err := r.App.Queries.SearchPosts.Handle(ctx, cursor, searchCharacterName, searchMediaTitle, searchCategoryTitle, searchArtistUsername)
+	results, page, err := r.App.Queries.SearchPosts.Handle(ctx, cursor, "", "", "", nil, nil, nil)
 
 	if err != nil {
 		return nil, err

@@ -61,7 +61,6 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 	return app.Application{
 		Commands: app.Commands{
 			CreatePost:          command.NewCreatePendingPostHandler(postRepo, eva, parley),
-			UpdatePost:          command.NewUpdatePendingPostHandler(postRepo),
 			IndexAllPosts:       command.NewIndexAllPendingPostsHandler(postRepo, indexRepo),
 			IndexAllMedia:       command.NewIndexAllMediaHandler(postRepo, indexRepo),
 			IndexAllCharacters:  command.NewIndexAllCharactersHandler(postRepo, indexRepo),
@@ -78,18 +77,15 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			ReassignModerator:   command.NewReassignModeratorHandler(postRepo, indexRepo, parley),
 		},
 		Queries: app.Queries{
-			SearchMedias:       query.NewSearchMediasHandler(indexRepo),
-			SearchCharacters:   query.NewSearchCharactersHandler(indexRepo),
-			SearchCategories:   query.NewSearchCategoriesHandler(indexRepo),
-			SearchPosts:        query.NewSearchPostsHandler(indexRepo),
-			PostById:           query.NewPostByIdHandler(postRepo),
-			CharacterById:      query.NewCharacterByIdHandler(postRepo),
-			CategoryById:       query.NewCategoryByIdHandler(postRepo),
-			ArtistById:         query.NewArtistByIdHandler(postRepo),
-			MediaById:          query.NewMediaByIdHandler(postRepo),
-			PostsByModerator:   query.NewPostsByModeratorAccountHandler(indexRepo, eva),
-			PostsByContributor: query.NewPostsByContributorAccountHandler(indexRepo),
-			PostsByArtist:      query.NewPostsByArtistAccountHandler(indexRepo),
+			SearchMedias:     query.NewSearchMediasHandler(indexRepo),
+			SearchCharacters: query.NewSearchCharactersHandler(indexRepo),
+			SearchCategories: query.NewSearchCategoriesHandler(indexRepo),
+			SearchPosts:      query.NewSearchPostsHandler(indexRepo),
+			PostById:         query.NewPostByIdHandler(postRepo),
+			CharacterById:    query.NewCharacterByIdHandler(postRepo),
+			CategoryById:     query.NewCategoryByIdHandler(postRepo),
+			ArtistById:       query.NewArtistByIdHandler(postRepo),
+			MediaById:        query.NewMediaByIdHandler(postRepo),
 		},
 	}
 }

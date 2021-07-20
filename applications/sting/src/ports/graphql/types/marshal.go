@@ -163,7 +163,7 @@ func MarshalCategoryToGraphQLConnection(results []*post.Category, paging *paging
 func MarshalCategoryToGraphQL(result *post.Category) *Category {
 	return &Category{
 		ID:        relay.NewID(Category{}, result.ID()),
-		Thumbnail: result.Thumbnail(),
+		Thumbnail: result.ConvertThumbnailToURI(),
 		Title:     result.Title(),
 	}
 }
@@ -204,7 +204,7 @@ func MarshalCharacterToGraphQL(result *post.Character) *Character {
 	return &Character{
 		ID:        relay.NewID(Character{}, result.ID()),
 		Name:      result.Name(),
-		Thumbnail: result.Thumbnail(),
+		Thumbnail: result.ConvertThumbnailToURI(),
 		Media:     MarshalMediaToGraphQL(result.Media()),
 	}
 }
@@ -245,6 +245,6 @@ func MarshalMediaToGraphQL(result *post.Media) *Media {
 	return &Media{
 		ID:        relay.NewID(Media{}, result.ID()),
 		Title:     result.Title(),
-		Thumbnail: result.Thumbnail(),
+		Thumbnail: result.ConvertThumbnailToURI(),
 	}
 }

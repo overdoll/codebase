@@ -109,7 +109,7 @@ func (r AccountIndexElasticSearchRepository) SearchAccounts(ctx context.Context,
 }
 
 // Efficiently scan the accounts table and index it
-func (r AccountIndexElasticSearchRepository) BulkIndexAccounts(ctx context.Context) error {
+func (r AccountIndexElasticSearchRepository) IndexAllAccounts(ctx context.Context) error {
 
 	scanner := scan.New(r.session,
 		scan.Config{

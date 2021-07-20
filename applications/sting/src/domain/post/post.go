@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"overdoll/libraries/account"
+	"overdoll/libraries/graphql"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/uuid"
 )
@@ -52,14 +53,19 @@ type PostFilters struct {
 	contributorId string
 	artistId      string
 	id            string
+	categoryIds   []string
+	characterIds  []string
+	mediaIds      []string
 }
 
-func NewPostFilters(moderatorId, contributorId, artistId, id string) (*PostFilters, error) {
+func NewPostFilters(moderatorId, contributorId, artistId string, categoryIds, characterIds, mediaIds []string) (*PostFilters, error) {
 	return &PostFilters{
 		moderatorId:   moderatorId,
 		contributorId: contributorId,
 		artistId:      artistId,
-		id:            id,
+		categoryIds:   categoryIds,
+		characterIds:  characterIds,
+		mediaIds:      mediaIds,
 	}, nil
 }
 
@@ -79,6 +85,18 @@ func (e *PostFilters) ArtistId() string {
 	return e.artistId
 }
 
+func (e *PostFilters) MediaIds() []string {
+	return e.mediaIds
+}
+
+func (e *PostFilters) CategoryIds() []string {
+	return e.categoryIds
+}
+
+func (e *PostFilters) CharacterIds() []string {
+	return e.characterIds
+}
+
 type Post struct {
 	*paging.Node
 
@@ -91,9 +109,7 @@ type Post struct {
 	characters []*Character
 	categories []*Category
 
-	contributor *account.Account
-
-	artist *Artist
+	customArtistUsername string
 
 	content            []string
 	charactersRequests []CharacterRequest
@@ -104,34 +120,36 @@ type Post struct {
 	generatedIds       []string
 }
 
-func NewPendingPost(id, moderatorId string, artist *Artist, contributor *account.Account, content []string, characters []*Character, categories []*Category) (*Post, error) {
+func NewPendingPost(id, moderatorId string, artist *account.Account, customArtistUsername string, contributor *account.Account, content []string, characters []*Character, categories []*Category) (*Post, error) {
 	return &Post{
-		id:             id,
-		moderatorId:    moderatorId,
-		state:          Publishing,
-		artist:         artist,
-		contributor:    contributor,
-		content:        content,
-		characters:     characters,
-		categories:     categories,
-		postedAt:       time.Now(),
-		reassignmentAt: time.Now().Add(time.Hour * 24),
+		id:                   id,
+		moderatorId:          moderatorId,
+		state:                Processing,
+		artistId:             artist.ID(),
+		contributorId:        contributor.ID(),
+		customArtistUsername: customArtistUsername,
+		content:              content,
+		characters:           characters,
+		categories:           categories,
+		postedAt:             time.Now(),
+		reassignmentAt:       time.Now().Add(time.Hour * 24),
 	}, nil
 }
 
-func UnmarshalPendingPostFromDatabase(id, moderatorId, state string, artist *Artist, contributorId, contributorUsername, contributorAvatar string, content []string, characters []*Character, categories []*Category, charactersRequests map[string]string, categoryRequests, mediaRequests []string, postedAt, reassignmentAt time.Time) *Post {
+func UnmarshalPendingPostFromDatabase(id, state, moderatorId, artistId, customArtistUsername, contributorId string, content []string, characters []*Character, categories []*Category, charactersRequests map[string]string, categoryRequests, mediaRequests []string, postedAt, reassignmentAt time.Time) *Post {
 
 	postPending := &Post{
-		id:             id,
-		moderatorId:    moderatorId,
-		state:          PostState(state),
-		artist:         artist,
-		contributor:    account.NewAccount(contributorId, contributorUsername, contributorAvatar, nil, false, false),
-		content:        content,
-		characters:     characters,
-		categories:     categories,
-		postedAt:       postedAt,
-		reassignmentAt: reassignmentAt,
+		id:                   id,
+		moderatorId:          moderatorId,
+		state:                PostState(state),
+		artistId:             artistId,
+		contributorId:        contributorId,
+		customArtistUsername: customArtistUsername,
+		content:              content,
+		characters:           characters,
+		categories:           categories,
+		postedAt:             postedAt,
+		reassignmentAt:       reassignmentAt,
 	}
 
 	postPending.RequestResources(charactersRequests, categoryRequests, mediaRequests)
@@ -155,25 +173,25 @@ func (p *Post) ArtistId() string {
 	return p.artistId
 }
 
+func (p *Post) CustomArtistUsername() string {
+	return p.customArtistUsername
+}
+
+func (p *Post) IsCustomArtist() bool {
+	return p.customArtistUsername != ""
+}
+
 func (p *Post) State() PostState {
 	return p.state
 }
 
-func (p *Post) Artist() *Artist {
-	return p.artist
-}
-
-func (p *Post) Contributor() *account.Account {
-	return p.contributor
-}
-
-func (p *Post) RawContent() []string {
+func (p *Post) Content() []string {
 	return p.content
 }
 
-func (p *Post) Content() []string {
+func (p *Post) ConvertContentToURI() []graphql.URI {
 
-	var generatedContent []string
+	var generatedContent []graphql.URI
 
 	for _, image := range p.content {
 
@@ -184,7 +202,7 @@ func (p *Post) Content() []string {
 		}
 
 		// generate the proper content url
-		generatedContent = append(generatedContent, baseUrl+"/"+p.Contributor().ID()+"/"+image)
+		generatedContent = append(generatedContent, graphql.NewURI(baseUrl+"/"+p.contributorId+"/"+image))
 	}
 
 	return generatedContent
@@ -200,10 +218,6 @@ func (p *Post) UpdateCharacters(characters []*Character) error {
 	return nil
 }
 
-func (p *Post) UpdateArtist(artist *Artist) {
-	p.artist = artist
-}
-
 func (p *Post) UpdateModerator(moderatorId string) error {
 
 	if p.state != Review {
@@ -214,10 +228,6 @@ func (p *Post) UpdateModerator(moderatorId string) error {
 	p.reassignmentAt = time.Now().Add(time.Hour * 24)
 
 	return nil
-}
-
-func (p *Post) UpdateContributor(contributor *account.Account) {
-	p.contributor = contributor
 }
 
 func (p *Post) Categories() []*Category {
@@ -314,6 +324,10 @@ func (p *Post) MakeUndo() error {
 
 func (p *Post) MakePublishing() {
 	p.state = Publishing
+}
+
+func (p *Post) UpdateArtist(artistId string) {
+	p.artistId = artistId
 }
 
 func (p *Post) MakeProcessing() error {

@@ -185,7 +185,7 @@ type ComplexityRoot struct {
 		Characters         func(childComplexity int, after *string, before *string, first *int, last *int, name *string, mediaTitle *string) int
 		Medias             func(childComplexity int, after *string, before *string, first *int, last *int, title *string) int
 		Post               func(childComplexity int, reference string) int
-		Posts              func(childComplexity int, after *string, before *string, first *int, last *int, characterName *string, mediaTitle *string, categoryTitle *string, artistUsername *string) int
+		Posts              func(childComplexity int, after *string, before *string, first *int, last *int) int
 		__resolve__service func(childComplexity int) int
 		__resolve_entities func(childComplexity int, representations []map[string]interface{}) int
 	}
@@ -217,7 +217,7 @@ type QueryResolver interface {
 	Medias(ctx context.Context, after *string, before *string, first *int, last *int, title *string) (*types.MediaConnection, error)
 	Characters(ctx context.Context, after *string, before *string, first *int, last *int, name *string, mediaTitle *string) (*types.CharacterConnection, error)
 	Post(ctx context.Context, reference string) (*types.Post, error)
-	Posts(ctx context.Context, after *string, before *string, first *int, last *int, characterName *string, mediaTitle *string, categoryTitle *string, artistUsername *string) (*types.PostConnection, error)
+	Posts(ctx context.Context, after *string, before *string, first *int, last *int) (*types.PostConnection, error)
 }
 
 type executableSchema struct {
@@ -818,7 +818,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["characterName"].(*string), args["mediaTitle"].(*string), args["categoryTitle"].(*string), args["artistUsername"].(*string)), true
+		return e.complexity.Query.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
 
 	case "Query._service":
 		if e.complexity.Query.__resolve__service == nil {
@@ -1238,18 +1238,6 @@ extend type Query {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-
-    """Filter by the name of the character"""
-    characterName: String
-
-    """Filter by the title of the media"""
-    mediaTitle: String
-
-    """Filter by the title of the category"""
-    categoryTitle: String
-
-    """Filter by the artist"""
-    artistUsername: String
   ): PostConnection!
 }`, BuiltIn: false},
 	{Name: "schema/schema.graphql", Input: `type Content {
@@ -1870,42 +1858,6 @@ func (ec *executionContext) field_Query_posts_args(ctx context.Context, rawArgs 
 		}
 	}
 	args["last"] = arg3
-	var arg4 *string
-	if tmp, ok := rawArgs["characterName"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("characterName"))
-		arg4, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["characterName"] = arg4
-	var arg5 *string
-	if tmp, ok := rawArgs["mediaTitle"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("mediaTitle"))
-		arg5, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["mediaTitle"] = arg5
-	var arg6 *string
-	if tmp, ok := rawArgs["categoryTitle"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("categoryTitle"))
-		arg6, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["categoryTitle"] = arg6
-	var arg7 *string
-	if tmp, ok := rawArgs["artistUsername"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("artistUsername"))
-		arg7, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["artistUsername"] = arg7
 	return args, nil
 }
 
@@ -4523,7 +4475,7 @@ func (ec *executionContext) _Query_posts(ctx context.Context, field graphql.Coll
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Posts(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["characterName"].(*string), args["mediaTitle"].(*string), args["categoryTitle"].(*string), args["artistUsername"].(*string))
+		return ec.resolvers.Query().Posts(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)

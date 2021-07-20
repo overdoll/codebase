@@ -7,7 +7,6 @@ import (
 	"overdoll/applications/parley/src/app"
 	"overdoll/applications/parley/src/ports/graphql/types"
 	"overdoll/libraries/paging"
-	"overdoll/libraries/passport"
 )
 
 type AccountResolver struct {
@@ -20,19 +19,13 @@ func (r AccountResolver) Contributor(ctx context.Context, obj *types.Account) (*
 
 func (r AccountResolver) ModeratorPostAuditLogs(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostAuditLogConnection, error) {
 
-	accountId := obj.ID.GetID()
-
-	if passport.FromContext(ctx).AccountID() != accountId {
-		return nil, nil
-	}
-
 	cursor, err := paging.NewCursor(after, before, first, last)
 
 	if err != nil {
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	logs, page, err := r.App.Queries.PostsAuditLogByModerator.Handle(ctx, cursor, accountId)
+	logs, page, err := r.App.Queries.PostsAuditLogByModerator.Handle(ctx, cursor, obj.ID.GetID())
 
 	if err != nil {
 		return nil, err
@@ -43,19 +36,13 @@ func (r AccountResolver) ModeratorPostAuditLogs(ctx context.Context, obj *types.
 
 func (r AccountResolver) Infractions(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountInfractionHistoryConnection, error) {
 
-	accountId := obj.ID.GetID()
-
-	if passport.FromContext(ctx).AccountID() != accountId {
-		return nil, nil
-	}
-
 	cursor, err := paging.NewCursor(after, before, first, last)
 
 	if err != nil {
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	history, page, err := r.App.Queries.AccountInfractionHistory.Handle(ctx, cursor, accountId)
+	history, page, err := r.App.Queries.AccountInfractionHistory.Handle(ctx, cursor, obj.ID.GetID())
 
 	if err != nil {
 		return nil, err

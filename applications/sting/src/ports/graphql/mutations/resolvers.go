@@ -36,12 +36,19 @@ func (r *MutationResolver) CreatePost(ctx context.Context, input types.CreatePos
 		artistUsername = *input.CustomArtistUsername
 	}
 
-	post, err := r.App.Commands.CreatePost.
+	posterIsArtist := false
+
+	if input.PosterIsArtist != nil {
+		posterIsArtist = *input.PosterIsArtist
+	}
+
+	pst, err := r.App.Commands.CreatePost.
 		Handle(
 			ctx,
 			passport.FromContext(ctx).AccountID(),
 			artistId,
 			artistUsername,
+			posterIsArtist,
 			input.Content,
 			input.CharacterIds,
 			input.CategoryIds,
@@ -55,10 +62,10 @@ func (r *MutationResolver) CreatePost(ctx context.Context, input types.CreatePos
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "NewCreatePendingPostWorkflow_" + post.ID(),
+		ID:        "NewCreatePendingPostWorkflow_" + pst.ID(),
 	}
 
-	_, err = r.Client.ExecuteWorkflow(ctx, options, workflows.CreatePost, post.ID())
+	_, err = r.Client.ExecuteWorkflow(ctx, options, workflows.CreatePost, pst.ID())
 
 	if err != nil {
 		return nil, err
@@ -68,6 +75,6 @@ func (r *MutationResolver) CreatePost(ctx context.Context, input types.CreatePos
 
 	return &types.CreatePostPayload{
 		Review: &isReview,
-		Post:   types.MarshalPostToGraphQL(post),
+		Post:   types.MarshalPostToGraphQL(pst),
 	}, err
 }

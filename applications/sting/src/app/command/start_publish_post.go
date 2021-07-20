@@ -21,9 +21,9 @@ func (h StartPublishPostHandler) Handle(ctx context.Context, id string) error {
 	pendingPost, err := h.pr.UpdatePost(ctx, id, func(pending *post.Post) error {
 
 		// if no artist assigned, create it
-		if pending.Artist().ID() == "" {
-			// create a new user for this artist
-			usr, err := h.eva.CreateAccount(ctx, pending.Artist().Username(), "")
+		if pending.IsCustomArtist() {
+			// create a new account for this artist
+			usr, err := h.eva.CreateAccount(ctx, pending.CustomArtistUsername(), "")
 
 			if err != nil {
 				return err
@@ -34,7 +34,7 @@ func (h StartPublishPostHandler) Handle(ctx context.Context, id string) error {
 				return err
 			}
 
-			pending.UpdateArtist(post.NewArtist(usr.ID()))
+			pending.UpdateArtist(usr.ID())
 		}
 
 		pending.MakePublishing()
