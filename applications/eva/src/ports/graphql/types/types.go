@@ -25,10 +25,8 @@ type Account struct {
 	IsModerator bool `json:"isModerator"`
 	// Whether or not this account is an artist
 	IsArtist bool `json:"isArtist"`
-	// Whether or not this account is locked
-	IsLocked bool `json:"isLocked"`
 	// The details of the account lock
-	LockDetails *AccountLockDetails `json:"lockDetails"`
+	Lock *AccountLock `json:"lock"`
 	// Usernames for account (history)
 	Usernames *AccountUsernameConnection `json:"usernames"`
 	// Emails for account (multiple emails per account)
@@ -91,7 +89,7 @@ type AccountEmailEdge struct {
 	Node   *AccountEmail `json:"node"`
 }
 
-type AccountLockDetails struct {
+type AccountLock struct {
 	Expires int               `json:"expires"`
 	Reason  AccountLockReason `json:"reason"`
 }

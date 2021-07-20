@@ -5,7 +5,6 @@ go_library(
     srcs = [
         "create_post.go",
         "discard_post.go",
-        "index_all_artists.go",
         "index_all_categories.go",
         "index_all_characters.go",
         "index_all_media.go",

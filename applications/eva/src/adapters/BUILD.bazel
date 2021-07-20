@@ -5,6 +5,7 @@ go_library(
     srcs = [
         "account_cassandra_redis_repository.go",
         "account_email_cassandra_redis_repository.go",
+        "account_index_elasticsearch_repository.go",
         "account_username_cassandra_repository.go",
         "multi_factor_cassandra_repository.go",
         "session_redis_repository.go",
@@ -18,6 +19,7 @@ go_library(
         "//applications/eva/src/domain/session",
         "//applications/eva/src/domain/token",
         "//libraries/crypt",
+        "//libraries/elasticsearch",
         "//libraries/paging",
         "//libraries/passport",
         "@com_github_go_redis_redis_v8//:redis",
@@ -26,6 +28,7 @@ go_library(
         "@com_github_scylladb_gocqlx_v2//qb",
         "@com_github_scylladb_gocqlx_v2//table",
         "@com_github_segmentio_ksuid//:ksuid",
+        "@org_golang_x_sync//errgroup",
     ],
 )
 

@@ -9,6 +9,7 @@ import (
 	"overdoll/applications/eva/src/app/command"
 	"overdoll/applications/eva/src/app/query"
 	"overdoll/libraries/bootstrap"
+	search "overdoll/libraries/elasticsearch"
 )
 
 func NewApplication(ctx context.Context) (app.Application, func()) {
@@ -38,6 +39,12 @@ func createApplication(ctx context.Context) app.Application {
 		log.Fatalf("redis session failed with errors: %s", err)
 	}
 
+	es, err := search.NewStore(ctx)
+
+	if err != nil {
+		log.Fatalf("es session failed with errors: %s", err)
+	}
+
 	// need to use a custom DB redis session because sessions are stored in db 0 in express-session
 	redis2, err := bootstrap.InitializeRedisSessionWithCustomDB(0)
 
@@ -48,6 +55,7 @@ func createApplication(ctx context.Context) app.Application {
 	tokenRepo := adapters.NewAuthenticationTokenRedisRepository(redis)
 	sessionRepo := adapters.NewSessionRepository(redis2)
 	accountRepo := adapters.NewAccountCassandraRedisRepository(session, redis)
+	accountIndexRepo := adapters.NewAccountIndexElasticSearchRepository(session, es)
 	mfaRepo := adapters.NewMultiFactorCassandraRepository(session)
 
 	return app.Application{
@@ -72,8 +80,10 @@ func createApplication(ctx context.Context) app.Application {
 			DeleteAccountEmail:                                   command.NewDeleteAccountEmailHandler(accountRepo),
 			RevokeAuthenticationToken:                            command.NewRevokeAuthenticationTokenHandler(tokenRepo),
 			ReissueAuthenticationToken:                           command.NewReissueAuthenticationTokenHandler(tokenRepo),
+			IndexAllAccounts:                                     command.NewIndexAllAccountsHandler(accountRepo, accountIndexRepo),
 		},
 		Queries: app.Queries{
+			SearchAccounts:                  query.NewSearchAccountsHandler(accountIndexRepo),
 			AccountById:                     query.NewAccountByIdHandler(accountRepo),
 			AccountByEmail:                  query.NewAccountByEmailHandler(accountRepo),
 			AccountByUsername:               query.NewAccountByUsernameHandler(accountRepo),

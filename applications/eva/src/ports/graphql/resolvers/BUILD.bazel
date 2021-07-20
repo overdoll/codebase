@@ -12,10 +12,8 @@ go_library(
     deps = [
         "//applications/eva/src/app",
         "//applications/eva/src/ports/graphql/types",
-        "//libraries/graphql",
         "//libraries/helpers",
         "//libraries/paging",
-        "//libraries/passport",
         "@com_github_vektah_gqlparser_v2//gqlerror",
     ],
 )

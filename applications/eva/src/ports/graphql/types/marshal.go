@@ -14,7 +14,57 @@ func MarshalAccountToGraphQL(result *account.Account) *Account {
 		return nil
 	}
 
-	var lock *AccountLockDetails
+	return &Account{
+		ID:          relay.NewID(Account{}, result.ID()),
+		Reference:   result.ID(),
+		Avatar:      result.ConvertAvatarToURI(),
+		Username:    result.Username(),
+		IsStaff:     result.IsStaff(),
+		IsModerator: result.IsModerator(),
+		IsArtist:    result.IsArtist(),
+	}
+}
+
+func MarshalAccountToGraphQLConnection(results []*account.Account, page *paging.Info) *AccountConnection {
+
+	var accEdges []*AccountEdge
+
+	for _, acc := range results {
+
+		accEdges = append(accEdges, &AccountEdge{
+			Cursor: acc.Cursor(),
+			Node:   MarshalAccountToGraphQL(acc),
+		})
+	}
+
+	var startCursor *string
+	var endCursor *string
+
+	if len(results) > 0 {
+		res := results[0].Cursor()
+		startCursor = &res
+		res = results[len(results)-1].Cursor()
+		endCursor = &res
+	}
+
+	return &AccountConnection{
+		PageInfo: &relay.PageInfo{
+			HasNextPage:     page.HasNextPage(),
+			HasPreviousPage: page.HasPrevPage(),
+			StartCursor:     startCursor,
+			EndCursor:       endCursor,
+		},
+		Edges: accEdges,
+	}
+}
+
+func MarshalAccountLockToGraphQL(result *account.Account) *AccountLock {
+
+	if result == nil {
+		return nil
+	}
+
+	var lock *AccountLock
 
 	if result.IsLocked() {
 		var reason AccountLockReason
@@ -23,20 +73,13 @@ func MarshalAccountToGraphQL(result *account.Account) *Account {
 			reason = AccountLockReasonPostInfraction
 		}
 
-		lock = &AccountLockDetails{
+		lock = &AccountLock{
 			Expires: result.LockedUntil(),
 			Reason:  reason,
 		}
 	}
 
-	return &Account{
-		ID:          relay.NewID(Account{}, result.ID()),
-		Username:    result.Username(),
-		IsStaff:     result.IsStaff(),
-		IsModerator: result.IsModerator(),
-		IsLocked:    result.IsLocked(),
-		LockDetails: lock,
-	}
+	return lock
 }
 
 func MarshalAccountEmailToGraphQL(result *account.Email) *AccountEmail {

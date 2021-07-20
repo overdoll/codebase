@@ -10,6 +10,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//applications/parley/src/domain/infraction",
+        "//applications/parley/src/domain/moderator",
         "//libraries/graphql/relay",
         "//libraries/paging",
     ],

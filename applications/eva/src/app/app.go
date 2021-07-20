@@ -31,9 +31,11 @@ type Commands struct {
 	DeleteAccountEmail                                   command.DeleteAccountEmailHandler
 	RevokeAuthenticationToken                            command.RevokeAuthenticationTokenHandler
 	ReissueAuthenticationToken                           command.ReissueAuthenticationTokenHandler
+	IndexAllAccounts                                     command.IndexAllAccountsHandler
 }
 
 type Queries struct {
+	SearchAccounts                  query.SearchAccountsHandler
 	AccountById                     query.AccountByIdHandler
 	AccountByEmail                  query.AccountByEmailHandler
 	AccountByUsername               query.AccountByUsernameHandler

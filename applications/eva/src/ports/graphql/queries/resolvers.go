@@ -3,15 +3,46 @@ package queries
 import (
 	"context"
 
+	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/eva/src/app"
 	"overdoll/applications/eva/src/domain/token"
 	"overdoll/applications/eva/src/ports/graphql/types"
 	"overdoll/libraries/cookies"
+	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
 )
 
 type QueryResolver struct {
 	App *app.Application
+}
+
+func (r *QueryResolver) Accounts(ctx context.Context, after *string, before *string, first *int, last *int, username *string, isArtist *bool) (*types.AccountConnection, error) {
+
+	cursor, err := paging.NewCursor(after, before, first, last)
+
+	if err != nil {
+		return nil, gqlerror.Errorf(err.Error())
+	}
+
+	usrname := ""
+
+	if username != nil {
+		usrname = *username
+	}
+
+	artist := false
+
+	if isArtist != nil {
+		artist = *isArtist
+	}
+
+	results, page, err := r.App.Queries.SearchAccounts.Handle(ctx, cursor, usrname, artist)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return types.MarshalAccountToGraphQLConnection(results, page), nil
 }
 
 func (r *QueryResolver) Account(ctx context.Context, username string) (*types.Account, error) {
@@ -109,8 +140,4 @@ func (r *QueryResolver) Viewer(ctx context.Context) (*types.Account, error) {
 	}
 
 	return nil, nil
-}
-
-func (r *QueryResolver) Accounts(ctx context.Context, after *string, before *string, first *int, last *int, username *string, isArtist *bool) (*types.AccountConnection, error) {
-	panic("implement me")
 }

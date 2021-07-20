@@ -15,6 +15,7 @@ go_library(
         "account_usernames_by_account.go",
         "authentication_token_by_id.go",
         "is_account_multi_factor_totp_enabled.go",
+        "search_accounts.go",
     ],
     importpath = "overdoll/applications/eva/src/app/query",
     visibility = ["//visibility:public"],

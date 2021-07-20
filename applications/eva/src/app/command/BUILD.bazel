@@ -13,6 +13,7 @@ go_library(
         "generate_account_recovery_codes.go",
         "grant_account_access_with_auth_token_and_recovery_code_or_totp.go",
         "grant_authentication_token.go",
+        "index_all_accounts.go",
         "lock_account.go",
         "redeem_authentication_token.go",
         "reissue_authentication_token.go",

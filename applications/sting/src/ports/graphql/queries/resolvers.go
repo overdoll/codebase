@@ -25,6 +25,7 @@ func (r *QueryResolver) Post(ctx context.Context, reference string) (*types.Post
 }
 
 func (r *QueryResolver) Posts(ctx context.Context, after *string, before *string, first *int, last *int, characterName *string, mediaTitle *string, categoryTitle *string, artistUsername *string) (*types.PostConnection, error) {
+
 	cursor, err := paging.NewCursor(after, before, first, last)
 
 	if err != nil {

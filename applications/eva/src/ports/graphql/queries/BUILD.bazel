@@ -10,6 +10,8 @@ go_library(
         "//applications/eva/src/domain/token",
         "//applications/eva/src/ports/graphql/types",
         "//libraries/cookies",
+        "//libraries/paging",
         "//libraries/passport",
+        "@com_github_vektah_gqlparser_v2//gqlerror",
     ],
 )

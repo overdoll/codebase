@@ -23,11 +23,8 @@ type Account implements Node @key(fields: "id") {
   """Whether or not this account is an artist"""
   isArtist: Boolean!
 
-  """Whether or not this account is locked"""
-  isLocked: Boolean!
-
   """The details of the account lock"""
-  lockDetails: AccountLockDetails
+  lock: AccountLock @goField(forceResolver: true)
 }
 
 """Edge of the account"""
@@ -46,7 +43,7 @@ enum AccountLockReason {
   PostInfraction
 }
 
-type AccountLockDetails {
+type AccountLock {
   expires: Int!
   reason: AccountLockReason!
 }
@@ -99,6 +96,6 @@ extend type Query {
     username: String
 
     """Filter whether or not this account is an artist."""
-    isArtist: Boolean
+    isArtist: Boolean = false
   ): AccountConnection!
 }

@@ -2,11 +2,12 @@ package account
 
 import (
 	"errors"
-	"os"
 	"strings"
 	"time"
 
 	"github.com/go-playground/validator/v10"
+	"overdoll/libraries/graphql"
+	"overdoll/libraries/paging"
 )
 
 type AccountRole string
@@ -24,6 +25,8 @@ const (
 )
 
 type Account struct {
+	*paging.Node
+
 	id string
 
 	username  string
@@ -103,12 +106,11 @@ func (u *Account) Verified() bool {
 }
 
 func (u *Account) Avatar() string {
-	var staticURL = os.Getenv("STATIC_URL")
-	return staticURL + "/avatars/" + u.avatar
+	return u.avatar
 }
 
-func (u *Account) RawAvatar() string {
-	return u.avatar
+func (u *Account) ConvertAvatarToURI() graphql.URI {
+	return graphql.NewURI("")
 }
 
 func (u *Account) LockedUntil() int {
@@ -192,6 +194,10 @@ func (u *Account) isPrivileged() bool {
 
 func (u *Account) IsStaff() bool {
 	return u.hasRoles([]string{"staff"})
+}
+
+func (u *Account) IsArtist() bool {
+	return u.hasRoles([]string{"artist"})
 }
 
 func (u *Account) IsModerator() bool {

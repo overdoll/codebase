@@ -58,10 +58,9 @@ type ComplexityRoot struct {
 		Emails              func(childComplexity int, after *string, before *string, first *int, last *int) int
 		ID                  func(childComplexity int) int
 		IsArtist            func(childComplexity int) int
-		IsLocked            func(childComplexity int) int
 		IsModerator         func(childComplexity int) int
 		IsStaff             func(childComplexity int) int
-		LockDetails         func(childComplexity int) int
+		Lock                func(childComplexity int) int
 		MultiFactorSettings func(childComplexity int) int
 		RecoveryCodes       func(childComplexity int) int
 		Reference           func(childComplexity int) int
@@ -97,7 +96,7 @@ type ComplexityRoot struct {
 		Node   func(childComplexity int) int
 	}
 
-	AccountLockDetails struct {
+	AccountLock struct {
 		Expires func(childComplexity int) int
 		Reason  func(childComplexity int) int
 	}
@@ -307,6 +306,7 @@ type ComplexityRoot struct {
 }
 
 type AccountResolver interface {
+	Lock(ctx context.Context, obj *types.Account) (*types.AccountLock, error)
 	Usernames(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountUsernameConnection, error)
 	Emails(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountEmailConnection, error)
 	Sessions(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountSessionConnection, error)
@@ -408,13 +408,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Account.IsArtist(childComplexity), true
 
-	case "Account.isLocked":
-		if e.complexity.Account.IsLocked == nil {
-			break
-		}
-
-		return e.complexity.Account.IsLocked(childComplexity), true
-
 	case "Account.isModerator":
 		if e.complexity.Account.IsModerator == nil {
 			break
@@ -429,12 +422,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Account.IsStaff(childComplexity), true
 
-	case "Account.lockDetails":
-		if e.complexity.Account.LockDetails == nil {
+	case "Account.lock":
+		if e.complexity.Account.Lock == nil {
 			break
 		}
 
-		return e.complexity.Account.LockDetails(childComplexity), true
+		return e.complexity.Account.Lock(childComplexity), true
 
 	case "Account.multiFactorSettings":
 		if e.complexity.Account.MultiFactorSettings == nil {
@@ -572,19 +565,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AccountEmailEdge.Node(childComplexity), true
 
-	case "AccountLockDetails.expires":
-		if e.complexity.AccountLockDetails.Expires == nil {
+	case "AccountLock.expires":
+		if e.complexity.AccountLock.Expires == nil {
 			break
 		}
 
-		return e.complexity.AccountLockDetails.Expires(childComplexity), true
+		return e.complexity.AccountLock.Expires(childComplexity), true
 
-	case "AccountLockDetails.reason":
-		if e.complexity.AccountLockDetails.Reason == nil {
+	case "AccountLock.reason":
+		if e.complexity.AccountLock.Reason == nil {
 			break
 		}
 
-		return e.complexity.AccountLockDetails.Reason(childComplexity), true
+		return e.complexity.AccountLock.Reason(childComplexity), true
 
 	case "AccountMultiFactorRecoveryCode.code":
 		if e.complexity.AccountMultiFactorRecoveryCode.Code == nil {
@@ -1424,11 +1417,8 @@ var sources = []*ast.Source{
   """Whether or not this account is an artist"""
   isArtist: Boolean!
 
-  """Whether or not this account is locked"""
-  isLocked: Boolean!
-
   """The details of the account lock"""
-  lockDetails: AccountLockDetails
+  lock: AccountLock @goField(forceResolver: true)
 }
 
 """Edge of the account"""
@@ -1447,7 +1437,7 @@ enum AccountLockReason {
   PostInfraction
 }
 
-type AccountLockDetails {
+type AccountLock {
   expires: Int!
   reason: AccountLockReason!
 }
@@ -1500,7 +1490,7 @@ extend type Query {
     username: String
 
     """Filter whether or not this account is an artist."""
-    isArtist: Boolean
+    isArtist: Boolean = false
   ): AccountConnection!
 }`, BuiltIn: false},
 	{Name: "schema/extensions/schema.graphql", Input: `extend type Moderator @key(fields: "id") {
@@ -2931,7 +2921,7 @@ func (ec *executionContext) _Account_isArtist(ctx context.Context, field graphql
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Account_isLocked(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
+func (ec *executionContext) _Account_lock(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2942,49 +2932,14 @@ func (ec *executionContext) _Account_isLocked(ctx context.Context, field graphql
 		Object:     "Account",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.IsLocked, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(bool)
-	fc.Result = res
-	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Account_lockDetails(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Account",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.LockDetails, nil
+		return ec.resolvers.Account().Lock(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2993,9 +2948,9 @@ func (ec *executionContext) _Account_lockDetails(ctx context.Context, field grap
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*types.AccountLockDetails)
+	res := resTmp.(*types.AccountLock)
 	fc.Result = res
-	return ec.marshalOAccountLockDetails2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountLockDetails(ctx, field.Selections, res)
+	return ec.marshalOAccountLock2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountLock(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Account_usernames(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
@@ -3694,7 +3649,7 @@ func (ec *executionContext) _AccountEmailEdge_node(ctx context.Context, field gr
 	return ec.marshalNAccountEmail2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountEmail(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AccountLockDetails_expires(ctx context.Context, field graphql.CollectedField, obj *types.AccountLockDetails) (ret graphql.Marshaler) {
+func (ec *executionContext) _AccountLock_expires(ctx context.Context, field graphql.CollectedField, obj *types.AccountLock) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3702,7 +3657,7 @@ func (ec *executionContext) _AccountLockDetails_expires(ctx context.Context, fie
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "AccountLockDetails",
+		Object:     "AccountLock",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -3729,7 +3684,7 @@ func (ec *executionContext) _AccountLockDetails_expires(ctx context.Context, fie
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AccountLockDetails_reason(ctx context.Context, field graphql.CollectedField, obj *types.AccountLockDetails) (ret graphql.Marshaler) {
+func (ec *executionContext) _AccountLock_reason(ctx context.Context, field graphql.CollectedField, obj *types.AccountLock) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3737,7 +3692,7 @@ func (ec *executionContext) _AccountLockDetails_reason(ctx context.Context, fiel
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "AccountLockDetails",
+		Object:     "AccountLock",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -8946,13 +8901,17 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		case "isLocked":
-			out.Values[i] = ec._Account_isLocked(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
-		case "lockDetails":
-			out.Values[i] = ec._Account_lockDetails(ctx, field, obj)
+		case "lock":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Account_lock(ctx, field, obj)
+				return res
+			})
 		case "usernames":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -9213,24 +9172,24 @@ func (ec *executionContext) _AccountEmailEdge(ctx context.Context, sel ast.Selec
 	return out
 }
 
-var accountLockDetailsImplementors = []string{"AccountLockDetails"}
+var accountLockImplementors = []string{"AccountLock"}
 
-func (ec *executionContext) _AccountLockDetails(ctx context.Context, sel ast.SelectionSet, obj *types.AccountLockDetails) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, accountLockDetailsImplementors)
+func (ec *executionContext) _AccountLock(ctx context.Context, sel ast.SelectionSet, obj *types.AccountLock) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, accountLockImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("AccountLockDetails")
+			out.Values[i] = graphql.MarshalString("AccountLock")
 		case "expires":
-			out.Values[i] = ec._AccountLockDetails_expires(ctx, field, obj)
+			out.Values[i] = ec._AccountLock_expires(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "reason":
-			out.Values[i] = ec._AccountLockDetails_reason(ctx, field, obj)
+			out.Values[i] = ec._AccountLock_reason(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -11699,11 +11658,11 @@ func (ec *executionContext) marshalOAccountEmail2ᚖoverdollᚋapplicationsᚋev
 	return ec._AccountEmail(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOAccountLockDetails2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountLockDetails(ctx context.Context, sel ast.SelectionSet, v *types.AccountLockDetails) graphql.Marshaler {
+func (ec *executionContext) marshalOAccountLock2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountLock(ctx context.Context, sel ast.SelectionSet, v *types.AccountLock) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
-	return ec._AccountLockDetails(ctx, sel, v)
+	return ec._AccountLock(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOAccountUsername2ᚖoverdollᚋapplicationsᚋevaᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountUsername(ctx context.Context, sel ast.SelectionSet, v *types.AccountUsername) graphql.Marshaler {

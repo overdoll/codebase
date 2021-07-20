@@ -9,12 +9,12 @@ import (
 	"overdoll/applications/sting/src/service"
 )
 
-var Root = &cobra.Command{
+var Cli = &cobra.Command{
 	Use: "index",
 }
 
 func init() {
-	Root.AddCommand(&cobra.Command{
+	Cli.AddCommand(&cobra.Command{
 		Use: "all",
 		Run: func(cmd *cobra.Command, args []string) {
 			ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
@@ -42,7 +42,7 @@ func init() {
 		},
 	})
 
-	Root.AddCommand(&cobra.Command{
+	Cli.AddCommand(&cobra.Command{
 		Use:   "categories",
 		Short: "Index the whole categories table into elasticsearch",
 		Run: func(cmd *cobra.Command, args []string) {
@@ -59,7 +59,7 @@ func init() {
 		},
 	})
 
-	Root.AddCommand(&cobra.Command{
+	Cli.AddCommand(&cobra.Command{
 		Use:   "characters",
 		Short: "Index the whole characters table into elasticsearch",
 		Run: func(cmd *cobra.Command, args []string) {
@@ -76,7 +76,7 @@ func init() {
 		},
 	})
 
-	Root.AddCommand(&cobra.Command{
+	Cli.AddCommand(&cobra.Command{
 		Use:   "media",
 		Short: "Index the whole media table into elasticsearch",
 		Run: func(cmd *cobra.Command, args []string) {
@@ -93,7 +93,7 @@ func init() {
 		},
 	})
 
-	Root.AddCommand(&cobra.Command{
+	Cli.AddCommand(&cobra.Command{
 		Use:   "posts",
 		Short: "Index the whole posts table into elasticsearch",
 		Run: func(cmd *cobra.Command, args []string) {
