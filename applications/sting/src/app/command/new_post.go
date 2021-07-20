@@ -2,9 +2,14 @@ package command
 
 import (
 	"context"
+	"errors"
 
 	"overdoll/applications/sting/src/domain/content"
 	"overdoll/applications/sting/src/domain/post"
+)
+
+var (
+	errFailedNewPost = errors.New("new post failed")
 )
 
 type NewPostHandler struct {
@@ -50,7 +55,7 @@ func (h NewPostHandler) Handle(ctx context.Context, id string) error {
 	})
 
 	if err != nil {
-		return err
+		return errFailedNewPost
 	}
 
 	// Update pending post index

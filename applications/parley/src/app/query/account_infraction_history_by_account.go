@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	ErrFailedGetAccountInfractionHistoryByAccount = errors.New("get rejection reasons failed")
+	errFailedGetAccountInfractionHistoryByAccount = errors.New("get rejection reasons failed")
 )
 
 type AccountInfractionHistoryByAccountHandler struct {
@@ -27,7 +27,7 @@ func (h AccountInfractionHistoryByAccountHandler) Handle(ctx context.Context, cu
 
 	if err != nil {
 		zap.S().Errorf("failed to get infraction history: %s", err)
-		return nil, nil, ErrFailedGetAccountInfractionHistoryByAccount
+		return nil, nil, errFailedGetAccountInfractionHistoryByAccount
 	}
 
 	return history, page, nil

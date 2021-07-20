@@ -23,6 +23,7 @@ func NewGrpcServer(application *app.Application, client client.Client) *Server {
 }
 
 func (s Server) GetPost(ctx context.Context, request *sting.PostRequest) (*sting.Post, error) {
+
 	post, err := s.app.Queries.GetPost.Handle(ctx, request.Id)
 
 	if err != nil {
@@ -36,6 +37,7 @@ func (s Server) GetPost(ctx context.Context, request *sting.PostRequest) (*sting
 }
 
 func (s Server) RejectPost(ctx context.Context, request *sting.PostRequest) (*sting.UpdatePostResponse, error) {
+
 	if err := s.app.Commands.RejectPost.Handle(ctx, request.Id); err != nil {
 		return nil, err
 	}
@@ -44,6 +46,7 @@ func (s Server) RejectPost(ctx context.Context, request *sting.PostRequest) (*st
 }
 
 func (s Server) PublishPost(ctx context.Context, request *sting.PostRequest) (*sting.UpdatePostResponse, error) {
+
 	if err := s.app.Commands.StartPublishPost.Handle(ctx, request.Id); err != nil {
 		return nil, err
 	}
@@ -63,6 +66,7 @@ func (s Server) PublishPost(ctx context.Context, request *sting.PostRequest) (*s
 }
 
 func (s Server) DiscardPost(ctx context.Context, request *sting.PostRequest) (*sting.UpdatePostResponse, error) {
+
 	if err := s.app.Commands.StartDiscardPost.Handle(ctx, request.Id); err != nil {
 		return nil, err
 	}
@@ -82,6 +86,7 @@ func (s Server) DiscardPost(ctx context.Context, request *sting.PostRequest) (*s
 }
 
 func (s Server) UndoPost(ctx context.Context, request *sting.PostRequest) (*sting.UpdatePostResponse, error) {
+
 	if err := s.app.Commands.StartUndoPost.Handle(ctx, request.Id); err != nil {
 		return nil, err
 	}

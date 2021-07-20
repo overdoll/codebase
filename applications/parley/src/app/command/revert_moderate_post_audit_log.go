@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	ErrFailedRevertModeratePendingPost = errors.New("revert audit log failed")
+	errFailedRevertModeratePendingPost = errors.New("revert audit log failed")
 )
 
 type RevertModeratePostHandler struct {
@@ -29,11 +29,11 @@ func (h RevertModeratePostHandler) Handle(ctx context.Context, moderatorId, audi
 
 	if err != nil {
 		zap.S().Errorf("failed to get user: %s", err)
-		return nil, ErrFailedRevertModeratePendingPost
+		return nil, errFailedRevertModeratePendingPost
 	}
 
 	if !usr.IsModerator() {
-		return nil, ErrFailedRevertModeratePendingPost
+		return nil, errFailedRevertModeratePendingPost
 	}
 
 	// update audit log to revert any infractions and user locks, as well as mark it as reverted
@@ -78,7 +78,7 @@ func (h RevertModeratePostHandler) Handle(ctx context.Context, moderatorId, audi
 
 	if err != nil {
 		zap.S().Errorf("failed to update audit log: %s", err)
-		return nil, ErrFailedRevertModeratePendingPost
+		return nil, errFailedRevertModeratePendingPost
 	}
 
 	return auditLog, nil

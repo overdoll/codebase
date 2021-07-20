@@ -11,6 +11,10 @@ import (
 	"overdoll/applications/eva/src/domain/token"
 )
 
+var (
+	errFailedGetToken = errors.New("failed to get authentication token")
+)
+
 type AuthenticationTokenByIdHandler struct {
 	tr token.Repository
 	ar account.Repository
@@ -20,10 +24,6 @@ type AuthenticationTokenByIdHandler struct {
 func NewAuthenticationTokenByIdHandler(tr token.Repository, ar account.Repository, mr multi_factor.Repository) AuthenticationTokenByIdHandler {
 	return AuthenticationTokenByIdHandler{tr: tr, ar: ar, mr: mr}
 }
-
-var (
-	ErrFailedGetToken = errors.New("failed to get authentication token")
-)
 
 func (h AuthenticationTokenByIdHandler) Handle(ctx context.Context, tokenId string) (*account.Account, *token.AuthenticationToken, error) {
 
@@ -37,7 +37,7 @@ func (h AuthenticationTokenByIdHandler) Handle(ctx context.Context, tokenId stri
 		}
 
 		zap.S().Errorf("failed to get cookie: %s", err == gocql.ErrNotFound)
-		return nil, nil, ErrFailedGetToken
+		return nil, nil, errFailedGetToken
 	}
 
 	// Verified - check if user exists with this email
@@ -51,7 +51,7 @@ func (h AuthenticationTokenByIdHandler) Handle(ctx context.Context, tokenId stri
 		}
 
 		zap.S().Errorf("failed to find user: %s", err)
-		return nil, nil, ErrFailedGetToken
+		return nil, nil, errFailedGetToken
 	}
 
 	// multi-factor auth is enabled, we get the auth types and figure out which ones the user has
@@ -69,7 +69,7 @@ func (h AuthenticationTokenByIdHandler) Handle(ctx context.Context, tokenId stri
 
 		if err != multi_factor.ErrTOTPNotConfigured {
 			zap.S().Errorf("failed to get totp: %s", err)
-			return nil, nil, ErrFailedGetToken
+			return nil, nil, errFailedGetToken
 		}
 
 		return nil, ck, err

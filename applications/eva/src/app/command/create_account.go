@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	ErrFailedCreateAccount = errors.New("failed to create account")
+	errFailedCreateAccount = errors.New("failed to create account")
 )
 
 type CreateAccountHandler struct {
@@ -31,7 +31,7 @@ func (h CreateAccountHandler) Handle(ctx context.Context, username, email string
 
 	if err := h.ur.CreateAccount(ctx, instance); err != nil {
 		zap.S().Errorf("failed to create account: %s", err)
-		return nil, ErrFailedCreateAccount
+		return nil, errFailedCreateAccount
 	}
 
 	return instance, nil

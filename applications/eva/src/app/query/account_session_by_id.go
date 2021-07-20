@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	ErrFailedSessionById = errors.New("failed to get session")
+	errFailedSessionById = errors.New("failed to get session")
 )
 
 type AccountSessionByIdHandler struct {
@@ -26,7 +26,7 @@ func (h AccountSessionByIdHandler) Handle(ctx context.Context, sessionId string)
 
 	if err != nil {
 		zap.S().Errorf("failed to get session: %s", err)
-		return nil, ErrFailedSessionById
+		return nil, errFailedSessionById
 	}
 
 	return sess, nil

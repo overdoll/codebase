@@ -9,11 +9,11 @@ import (
 )
 
 var (
-	ErrFailedMakeEmailPrimary = errors.New("failed to make email primary")
+	errFailedMakeEmailPrimary = errors.New("failed to make email primary")
 )
 
 const (
-	ValidationErrEmailNotConfirmed = "email_not_confirmed"
+	validationErrEmailNotConfirmed = "email_not_confirmed"
 )
 
 type UpdateAccountEmailStatusToPrimaryHandler struct {
@@ -32,11 +32,11 @@ func (h UpdateAccountEmailStatusToPrimaryHandler) Handle(ctx context.Context, ac
 
 	if err != nil {
 		if err == account.ErrEmailNotConfirmed {
-			return nil, ValidationErrEmailNotConfirmed, nil
+			return nil, validationErrEmailNotConfirmed, nil
 		}
 
 		zap.S().Errorf("failed to make email primary: %s", err)
-		return nil, "", ErrFailedMakeEmailPrimary
+		return nil, "", errFailedMakeEmailPrimary
 	}
 
 	return em, "", nil

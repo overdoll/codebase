@@ -110,6 +110,7 @@ func MarshalPostToGraphQL(result *post.Post) *Post {
 }
 
 func MarshalArtistToGraphQLConnection(results []*post.Artist, paging *paging.Info) *ArtistConnection {
+
 	resp := make([]*ArtistEdge, 0)
 
 	// Unmarshal our json into the correct model

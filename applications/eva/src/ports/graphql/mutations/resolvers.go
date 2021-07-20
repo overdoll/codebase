@@ -11,7 +11,6 @@ import (
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"go.uber.org/zap"
 	"overdoll/applications/eva/src/app"
-	"overdoll/applications/eva/src/app/command"
 	"overdoll/applications/eva/src/domain/multi_factor"
 	"overdoll/applications/eva/src/domain/token"
 	"overdoll/applications/eva/src/ports/graphql/types"
@@ -26,11 +25,33 @@ type MutationResolver struct {
 }
 
 func (r *MutationResolver) ReissueAuthenticationToken(ctx context.Context) (*types.ReissueAuthenticationTokenPayload, error) {
-	return nil, nil
+
+	tk, err := cookies.ReadCookie(ctx, token.OTPKey)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err := r.App.Commands.ReissueAuthenticationToken.Handle(ctx, tk.Value); err != nil {
+		return nil, err
+	}
+
+	return &types.ReissueAuthenticationTokenPayload{AuthenticationToken: nil}, nil
 }
 
 func (r *MutationResolver) RevokeAuthenticationToken(ctx context.Context) (*types.RevokeAuthenticationTokenPayload, error) {
-	return nil, nil
+
+	tk, err := cookies.ReadCookie(ctx, token.OTPKey)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err := r.App.Commands.RevokeAuthenticationToken.Handle(ctx, tk.Value); err != nil {
+		return nil, err
+	}
+
+	return &types.RevokeAuthenticationTokenPayload{RevokedAuthenticationTokenID: nil}, nil
 }
 
 func (r *MutationResolver) VerifyAuthenticationTokenAndAttemptAccountAccessGrant(ctx context.Context, input types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput) (*types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload, error) {
@@ -266,7 +287,7 @@ func (r *MutationResolver) GenerateAccountMultiFactorTotp(ctx context.Context) (
 
 	if err != nil {
 		zap.S().Errorf("failed to generate image: %s", err)
-		return nil, command.ErrFailedGenerateAccountMultiFactorTOTP
+		return nil, errors.New("image error")
 	}
 
 	return &types.GenerateAccountMultiFactorTotpPayload{

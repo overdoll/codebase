@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	ErrFailedAuthenticate = errors.New("failed to authenticate")
+	errFailedGrantAuthenticationToken = errors.New("failed to grant authentication token")
 )
 
 type GrantAuthenticationTokenHandler struct {
@@ -31,8 +31,8 @@ func (h GrantAuthenticationTokenHandler) Handle(ctx context.Context, email, sess
 	}
 
 	if err := h.cr.CreateAuthenticationToken(ctx, instance); err != nil {
-		zap.S().Errorf("failed to create cookie: %s", err)
-		return nil, ErrFailedAuthenticate
+		zap.S().Errorf("failed to create token: %s", err)
+		return nil, errFailedGrantAuthenticationToken
 	}
 
 	// TODO: send an email here

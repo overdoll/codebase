@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	ErrFailedAccountByEmailHandler = errors.New("failed to get account from email")
+	errFailedAccountByEmailHandler = errors.New("failed to get account from email")
 )
 
 type AccountByEmailHandler struct {
@@ -26,7 +26,7 @@ func (h AccountByEmailHandler) Handle(ctx context.Context, email string) (*accou
 
 	if err != nil {
 		zap.S().Errorf("failed to get account by email: %s", err)
-		return nil, ErrFailedAccountByEmailHandler
+		return nil, errFailedAccountByEmailHandler
 	}
 
 	return acc, nil

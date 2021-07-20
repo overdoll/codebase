@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	ErrFailedPost = errors.New("post failed")
+	errFailedPost = errors.New("post failed")
 )
 
 type CreatePendingPostHandler struct {
@@ -35,19 +35,19 @@ func (h CreatePendingPostHandler) Handle(ctx context.Context, contributorId, art
 	}
 
 	if usr.IsLocked() {
-		return nil, ErrFailedPost
+		return nil, errFailedPost
 	}
 
 	characters, err := h.pr.GetCharactersById(ctx, characterIds)
 
 	if err != nil {
-		return nil, ErrFailedPost
+		return nil, errFailedPost
 	}
 
 	categories, err := h.pr.GetCategoriesById(ctx, categoryIds)
 
 	if err != nil {
-		return nil, ErrFailedPost
+		return nil, errFailedPost
 	}
 
 	contributorIsArtist := false
@@ -68,11 +68,11 @@ func (h CreatePendingPostHandler) Handle(ctx context.Context, contributorId, art
 		if err != nil {
 
 			if err == gocql.ErrNotFound {
-				return nil, ErrFailedPost
+				return nil, errFailedPost
 			}
 
 			zap.S().Errorf("failed to get artist: %s", err)
-			return nil, ErrFailedPost
+			return nil, errFailedPost
 		}
 	}
 

@@ -9,11 +9,11 @@ import (
 )
 
 var (
-	ErrFailedModifyUsername = errors.New("failed to modify username")
+	errFailedModifyUsername = errors.New("failed to modify username")
 )
 
 const (
-	ValidationErrUsernameNotUnique = "username_not_unique"
+	validationErrUsernameNotUnique = "username_not_unique"
 )
 
 type UpdateAccountUsernameAndRetainPreviousHandler struct {
@@ -38,12 +38,12 @@ func (h UpdateAccountUsernameAndRetainPreviousHandler) Handle(ctx context.Contex
 
 			if err != nil {
 				zap.S().Errorf("failed to modify username: %s", err)
-				return nil, "", ErrFailedModifyUsername
+				return nil, "", errFailedModifyUsername
 			}
 
 			return user, "", nil
 		}
 	}
 
-	return nil, ValidationErrUsernameNotUnique, nil
+	return nil, validationErrUsernameNotUnique, nil
 }

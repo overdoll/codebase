@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	ErrFailedModeratorToggle = errors.New("get moderator failed")
+	errFailedModeratorToggle = errors.New("get moderator failed")
 )
 
 type ToggleModeratorHandler struct {
@@ -27,11 +27,11 @@ func (h ToggleModeratorHandler) Handle(ctx context.Context, accId string) (bool,
 
 	if err != nil {
 		zap.S().Errorf("failed to get user: %s", err)
-		return false, ErrFailedModeratorToggle
+		return false, errFailedModeratorToggle
 	}
 
 	if !acc.IsModerator() {
-		return false, ErrFailedModeratorToggle
+		return false, errFailedModeratorToggle
 	}
 
 	_, err = h.mr.GetModerator(ctx, accId)
@@ -42,19 +42,19 @@ func (h ToggleModeratorHandler) Handle(ctx context.Context, accId string) (bool,
 		if err == moderator.ErrModeratorNotFound {
 			if err := h.mr.CreateModerator(ctx, moderator.NewModerator(accId)); err != nil {
 				zap.S().Errorf("failed to add moderator: %s", err)
-				return true, ErrFailedModeratorToggle
+				return true, errFailedModeratorToggle
 			}
 
 			return false, nil
 		}
 
 		zap.S().Errorf("failed to get moderator: %s", err)
-		return false, ErrFailedModeratorToggle
+		return false, errFailedModeratorToggle
 	}
 
 	if err = h.mr.RemoveModerator(ctx, accId); err != nil {
 		zap.S().Errorf("failed to remove moderator: %s", err)
-		return false, ErrFailedModeratorToggle
+		return false, errFailedModeratorToggle
 	}
 
 	return false, nil

@@ -11,12 +11,12 @@ import (
 )
 
 var (
-	ErrFailedAuthenticateMultiFactor           = errors.New("failed to authenticate with multi factor")
-	ErrFailedAuthenticateMultiFactorNotEnabled = errors.New("failed to authenticate with multi factor - not enabled")
+	errFailedAuthenticateMultiFactor           = errors.New("failed to authenticate with multi factor")
+	errFailedAuthenticateMultiFactorNotEnabled = errors.New("failed to authenticate with multi factor - not enabled")
 )
 
 const (
-	ValidationErrMultiFactorCodeInvalid = "multi_factor_code_invalid"
+	validationErrMultiFactorCodeInvalid = "multi_factor_code_invalid"
 )
 
 type GrantAccountAccessWithAuthTokenAndRecoveryCodeOrTotpHandler struct {
@@ -35,7 +35,7 @@ func (h GrantAccountAccessWithAuthTokenAndRecoveryCodeOrTotpHandler) Handle(ctx 
 
 	if err != nil {
 		zap.S().Errorf("failed to get cookie: %s", err)
-		return nil, "", ErrFailedAuthenticateMultiFactor
+		return nil, "", errFailedAuthenticateMultiFactor
 	}
 
 	// AuthenticationToken should have been redeemed at this point, if we are on this command
@@ -48,16 +48,16 @@ func (h GrantAccountAccessWithAuthTokenAndRecoveryCodeOrTotpHandler) Handle(ctx 
 
 	if err != nil {
 		if err == account.ErrAccountNotFound {
-			return nil, "", ErrFailedAuthenticateMultiFactor
+			return nil, "", errFailedAuthenticateMultiFactor
 		}
 
 		zap.S().Errorf("failed get account: %s", err)
-		return nil, "", ErrFailedAuthenticateMultiFactor
+		return nil, "", errFailedAuthenticateMultiFactor
 	}
 
 	// Multi factor must be enabled for recovery codes to function
 	if !usr.MultiFactorEnabled() {
-		return nil, "", ErrFailedAuthenticateMultiFactor
+		return nil, "", errFailedAuthenticateMultiFactor
 	}
 
 	// get TOTP
@@ -67,11 +67,11 @@ func (h GrantAccountAccessWithAuthTokenAndRecoveryCodeOrTotpHandler) Handle(ctx 
 
 		// totp must be configured
 		if err == multi_factor.ErrTOTPNotConfigured {
-			return nil, "", ErrFailedAuthenticateMultiFactorNotEnabled
+			return nil, "", errFailedAuthenticateMultiFactorNotEnabled
 		}
 
 		zap.S().Errorf("failed get otp for account: %s", err)
-		return nil, "", ErrFailedAuthenticateMultiFactor
+		return nil, "", errFailedAuthenticateMultiFactor
 	}
 
 	if recoveryCode {
@@ -79,23 +79,23 @@ func (h GrantAccountAccessWithAuthTokenAndRecoveryCodeOrTotpHandler) Handle(ctx 
 
 			// recovery codes must be valid
 			if err == multi_factor.ErrRecoveryCodeInvalid {
-				return nil, ValidationErrMultiFactorCodeInvalid, nil
+				return nil, validationErrMultiFactorCodeInvalid, nil
 			}
 
 			zap.S().Errorf("failed redeem recovery code: %s", err)
-			return nil, "", ErrFailedAuthenticateMultiFactor
+			return nil, "", errFailedAuthenticateMultiFactor
 		}
 	} else {
 		// validate TOTP code
 		if !totp.ValidateCode(code) {
-			return nil, ValidationErrMultiFactorCodeInvalid, nil
+			return nil, validationErrMultiFactorCodeInvalid, nil
 		}
 	}
 
 	// Delete cookie - has been consumed
 	if err := h.cr.DeleteAuthenticationTokenById(ctx, cookieId); err != nil {
 		zap.S().Errorf("failed to delete cookie: %s", err)
-		return nil, "", ErrFailedAuthenticateMultiFactor
+		return nil, "", errFailedAuthenticateMultiFactor
 	}
 
 	return usr, "", nil

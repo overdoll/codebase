@@ -6,18 +6,16 @@ import (
 
 	"go.uber.org/zap"
 	"overdoll/applications/eva/src/domain/account"
-	"overdoll/applications/eva/src/domain/multi_factor"
 	"overdoll/applications/eva/src/domain/token"
 )
 
 var (
-	ErrFailedTokenRedeem = errors.New("failed to redeem cookie")
+	errFailedTokenRedeem = errors.New("failed to redeem cookie")
 )
 
 type VerifyAuthenticationTokenHandler struct {
 	cr token.Repository
 	ur account.Repository
-	mr multi_factor.Repository
 }
 
 func NewVerifyAuthenticationTokenHandler(cr token.Repository, ur account.Repository) VerifyAuthenticationTokenHandler {
@@ -37,7 +35,7 @@ func (h VerifyAuthenticationTokenHandler) Handle(ctx context.Context, cookieId s
 		}
 
 		zap.S().Errorf("failed to update cookie: %s", err)
-		return nil, ErrFailedTokenRedeem
+		return nil, errFailedTokenRedeem
 	}
 
 	return ck, nil

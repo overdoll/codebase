@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	ErrFailedGetPendingPostsAuditLog = errors.New("get audit log failed")
+	errFailedGetPendingPostsAuditLog = errors.New("get audit log failed")
 )
 
 type PostsAuditLogByModeratorHandler struct {
@@ -30,11 +30,11 @@ func (h PostsAuditLogByModeratorHandler) Handle(ctx context.Context, cursor *pag
 		return nil, nil, err
 	}
 
-	auditLogs, page, err := h.ir.GetPostAuditLogByModerator(ctx, cursor, filters)
+	auditLogs, page, err := h.ir.SearchPostAuditLogs(ctx, cursor, filters)
 
 	if err != nil {
 		zap.S().Errorf("failed to get audit log: %s", err)
-		return nil, nil, ErrFailedGetPendingPostsAuditLog
+		return nil, nil, errFailedGetPendingPostsAuditLog
 	}
 
 	return auditLogs, page, nil

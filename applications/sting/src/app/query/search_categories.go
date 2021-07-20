@@ -22,7 +22,7 @@ func (h SearchCategoriesHandler) Handle(ctx context.Context, cursor *paging.Curs
 
 	if err != nil {
 		zap.S().Errorf("failed to search: %s", err)
-		return nil, nil, ErrSearchFailed
+		return nil, nil, errSearchFailed
 	}
 
 	return results, page, nil

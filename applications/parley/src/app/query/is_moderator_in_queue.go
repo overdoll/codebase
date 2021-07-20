@@ -8,13 +8,13 @@ import (
 	"overdoll/applications/parley/src/domain/moderator"
 )
 
+var (
+	errFailedIsModeratorInQueue = errors.New("is moderator in queue failed")
+)
+
 type IsModeratorInQueueHandler struct {
 	mr moderator.Repository
 }
-
-var (
-	ErrFailedIsModeratorInQueue = errors.New("is moderator in queue failed")
-)
 
 func NewIsModeratorInQueueHandler(mr moderator.Repository) IsModeratorInQueueHandler {
 	return IsModeratorInQueueHandler{mr: mr}
@@ -31,7 +31,7 @@ func (h IsModeratorInQueueHandler) Handle(ctx context.Context, accountId string)
 		}
 
 		zap.S().Errorf("failed to moderator: %s", err)
-		return false, ErrFailedIsModeratorInQueue
+		return false, errFailedIsModeratorInQueue
 	}
 
 	// true - in queue

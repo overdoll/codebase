@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	ErrFailedFailedCreateAccount = errors.New("failed to create account")
+	errFailedFailedCreateAccount = errors.New("failed to create account")
 )
 
 type CreateAccountWithAuthenticationTokenHandler struct {
@@ -29,7 +29,7 @@ func (h CreateAccountWithAuthenticationTokenHandler) Handle(ctx context.Context,
 
 	if err != nil {
 		zap.S().Errorf("failed to get cookie: %s", err)
-		return nil, ErrFailedFailedCreateAccount
+		return nil, errFailedFailedCreateAccount
 	}
 
 	// AuthenticationToken should have been redeemed at this point, if we are on this command
@@ -45,12 +45,12 @@ func (h CreateAccountWithAuthenticationTokenHandler) Handle(ctx context.Context,
 
 	if err := h.ur.CreateAccount(ctx, instance); err != nil {
 		zap.S().Errorf("failed to create user: %s", err)
-		return nil, ErrFailedFailedCreateAccount
+		return nil, errFailedFailedCreateAccount
 	}
 
 	if err := h.cr.DeleteAuthenticationTokenById(ctx, cookieId); err != nil {
 		zap.S().Errorf("failed to delete cookie: %s", err)
-		return nil, ErrFailedFailedCreateAccount
+		return nil, errFailedFailedCreateAccount
 	}
 
 	return instance, nil

@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	ErrFailedRevokeAccountSession = errors.New("failed to revoke session")
+	errFailedRevokeAccountSession = errors.New("failed to revoke session")
 )
 
 type RevokeAccountSessionHandler struct {
@@ -24,7 +24,7 @@ func (h RevokeAccountSessionHandler) Handle(ctx context.Context, accountId, sess
 
 	if err := h.sr.RevokeSessionById(ctx, accountId, sessionId); err != nil {
 		zap.S().Errorf("failed to revoke session: %s", err)
-		return ErrFailedRevokeAccountSession
+		return errFailedRevokeAccountSession
 	}
 
 	return nil

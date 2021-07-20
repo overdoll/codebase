@@ -12,7 +12,7 @@ import (
 )
 
 var (
-	ErrFailedTokenConsume = errors.New("failed to consume cookie")
+	errFailedTokenConsume = errors.New("failed to consume cookie")
 )
 
 type ConsumeAuthenticationTokenHandler struct {
@@ -37,7 +37,7 @@ func (h ConsumeAuthenticationTokenHandler) Handle(ctx context.Context, cookieId 
 		}
 
 		zap.S().Errorf("failed to get cookie: %s", err == gocql.ErrNotFound)
-		return ErrFailedTokenConsume
+		return errFailedTokenConsume
 	}
 
 	if err := ck.MakeConsumed(); err != nil {
@@ -48,7 +48,7 @@ func (h ConsumeAuthenticationTokenHandler) Handle(ctx context.Context, cookieId 
 	// enter a username, since they already have an account and we can log them in
 	if err := h.cr.DeleteAuthenticationTokenById(ctx, cookieId); err != nil {
 		zap.S().Errorf("failed to delete cookie: %s", err)
-		return ErrFailedTokenConsume
+		return errFailedTokenConsume
 	}
 
 	return err

@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	ErrFailedAccountRecoveryCodesByAccount = errors.New("failed to get recovery codes")
+	errFailedAccountRecoveryCodesByAccount = errors.New("failed to get recovery codes")
 )
 
 type AccountRecoveryCodesByAccountHandler struct {
@@ -26,7 +26,7 @@ func (h AccountRecoveryCodesByAccountHandler) Handle(ctx context.Context, accoun
 
 	if err != nil {
 		zap.S().Errorf("failed to get recovery codes: %s", err)
-		return nil, ErrFailedAccountRecoveryCodesByAccount
+		return nil, errFailedAccountRecoveryCodesByAccount
 	}
 
 	return codes, nil

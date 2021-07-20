@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	ErrFailedAccountByIdHandler = errors.New("failed to get account by id")
+	errFailedAccountByIdHandler = errors.New("failed to get account by id")
 )
 
 type AccountByIdHandler struct {
@@ -26,7 +26,7 @@ func (h AccountByIdHandler) Handle(ctx context.Context, id string) (*account.Acc
 
 	if err != nil {
 		zap.S().Errorf("failed to get account by id: %s", err)
-		return nil, ErrFailedAccountByIdHandler
+		return nil, errFailedAccountByIdHandler
 	}
 
 	return ur, nil

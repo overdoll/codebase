@@ -9,11 +9,11 @@ import (
 )
 
 var (
-	ErrFailedConfirmAccountEmail = errors.New("failed to confirm email")
+	errFailedConfirmAccountEmail = errors.New("failed to confirm email")
 )
 
 const (
-	ValidationErrEmailCodeInvalid = "email_code_invalid"
+	validationErrEmailCodeInvalid = "email_code_invalid"
 )
 
 type ConfirmAccountEmailHandler struct {
@@ -30,18 +30,18 @@ func (h ConfirmAccountEmailHandler) Handle(ctx context.Context, userId, id strin
 
 	if err != nil {
 		zap.S().Errorf("failed to get user: %s", err)
-		return nil, "", ErrFailedConfirmAccountEmail
+		return nil, "", errFailedConfirmAccountEmail
 	}
 
 	email, err := h.ar.ConfirmAccountEmail(ctx, id, acc)
 
 	if err != nil {
 		if err == account.ErrEmailCodeInvalid {
-			return nil, ValidationErrEmailCodeInvalid, nil
+			return nil, validationErrEmailCodeInvalid, nil
 		}
 
 		zap.S().Errorf("failed to confirm email: %s", err)
-		return nil, "", ErrFailedConfirmAccountEmail
+		return nil, "", errFailedConfirmAccountEmail
 	}
 
 	return email, "", nil

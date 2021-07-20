@@ -9,11 +9,11 @@ import (
 )
 
 var (
-	ErrFailedAddAccountEmail = errors.New("failed to add email to account")
+	errFailedAddAccountEmail = errors.New("failed to add email to account")
 )
 
 const (
-	ValidationErrEmailNotUnique = "email_not_unique"
+	validationErrEmailNotUnique = "email_not_unique"
 )
 
 type AddAccountEmailHandler struct {
@@ -30,7 +30,7 @@ func (h AddAccountEmailHandler) Handle(ctx context.Context, userId, email string
 
 	if err != nil {
 		zap.S().Errorf("failed to get user: %s", err)
-		return nil, "", ErrFailedAddAccountEmail
+		return nil, "", errFailedAddAccountEmail
 	}
 
 	confirm, err := account.NewEmailConfirmation(email)
@@ -43,11 +43,11 @@ func (h AddAccountEmailHandler) Handle(ctx context.Context, userId, email string
 
 	if err != nil {
 		if err == account.ErrEmailNotUnique {
-			return nil, ValidationErrEmailNotUnique, nil
+			return nil, validationErrEmailNotUnique, nil
 		}
 
 		zap.S().Errorf("failed to add email: %s", err)
-		return nil, "", ErrFailedAddAccountEmail
+		return nil, "", errFailedAddAccountEmail
 	}
 
 	// TODO: send an email confirmation here

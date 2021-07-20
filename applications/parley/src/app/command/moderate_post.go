@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	ErrFailedModeratePost = errors.New("get moderator failed")
+	errFailedModeratePost = errors.New("get moderator failed")
 )
 
 type ModeratePostHandler struct {
@@ -29,11 +29,11 @@ func (h ModeratePostHandler) Handle(ctx context.Context, moderatorId, pendingPos
 
 	if err != nil {
 		zap.S().Errorf("failed to get user: %s", err)
-		return nil, ErrFailedModeratePost
+		return nil, errFailedModeratePost
 	}
 
 	if !usr.IsModerator() {
-		return nil, ErrFailedModeratePost
+		return nil, errFailedModeratePost
 	}
 
 	// Get pending post
@@ -41,14 +41,14 @@ func (h ModeratePostHandler) Handle(ctx context.Context, moderatorId, pendingPos
 
 	if err != nil {
 		zap.S().Errorf("failed to get post: %s", err)
-		return nil, ErrFailedModeratePost
+		return nil, errFailedModeratePost
 	}
 
 	postContributor, err := h.eva.GetAccount(ctx, postContributorId)
 
 	if err != nil {
 		zap.S().Errorf("failed to get user: %s", err)
-		return nil, ErrFailedModeratePost
+		return nil, errFailedModeratePost
 	}
 
 	var rejectionReason *infraction.PostRejectionReason
@@ -60,7 +60,7 @@ func (h ModeratePostHandler) Handle(ctx context.Context, moderatorId, pendingPos
 
 		if err != nil {
 			zap.S().Errorf("failed to get rejection reason: %s", err)
-			return nil, ErrFailedModeratePost
+			return nil, errFailedModeratePost
 		}
 
 		// also grab the infraction history, since we will need it to calculate the time for the next infraction
@@ -68,7 +68,7 @@ func (h ModeratePostHandler) Handle(ctx context.Context, moderatorId, pendingPos
 
 		if err != nil {
 			zap.S().Errorf("failed to get user infraction history: %s", err)
-			return nil, ErrFailedModeratePost
+			return nil, errFailedModeratePost
 		}
 	}
 
@@ -92,31 +92,31 @@ func (h ModeratePostHandler) Handle(ctx context.Context, moderatorId, pendingPos
 	if infractionAuditLog.IsDeniedWithInfraction() {
 		if err := h.sting.DiscardPost(ctx, pendingPostId); err != nil {
 			zap.S().Errorf("failed to discard pending post: %s", err)
-			return nil, ErrFailedModeratePost
+			return nil, errFailedModeratePost
 		}
 
 		// Lock user account
 		if err := h.eva.LockAccount(ctx, infractionAuditLog.Contributor().ID(), infractionAuditLog.UserInfraction().UserLockLength()); err != nil {
 			zap.S().Errorf("failed to lock account: %s", err)
-			return nil, ErrFailedModeratePost
+			return nil, errFailedModeratePost
 		}
 	} else if infractionAuditLog.IsDenied() {
 		if err := h.sting.RejectPost(ctx, pendingPostId); err != nil {
 			zap.S().Errorf("failed to reject pending post: %s", err)
-			return nil, ErrFailedModeratePost
+			return nil, errFailedModeratePost
 		}
 	} else {
 		// post approved
 		if err := h.sting.PublishPost(ctx, pendingPostId); err != nil {
 			zap.S().Errorf("failed to publish pending post: %s", err)
-			return nil, ErrFailedModeratePost
+			return nil, errFailedModeratePost
 		}
 	}
 
 	// create audit log record
 	if err := h.ir.CreatePostAuditLog(ctx, infractionAuditLog); err != nil {
 		zap.S().Errorf("failed to create audit log: %s", err)
-		return nil, ErrFailedModeratePost
+		return nil, errFailedModeratePost
 	}
 
 	return infractionAuditLog, nil

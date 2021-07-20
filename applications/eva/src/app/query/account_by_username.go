@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	ErrFailedAccountByUsernameHandler = errors.New("failed to get account by username")
+	errFailedAccountByUsernameHandler = errors.New("failed to get account by username")
 )
 
 type AccountByUsernameHandler struct {
@@ -26,7 +26,7 @@ func (h AccountByUsernameHandler) Handle(ctx context.Context, username string) (
 
 	if err != nil {
 		zap.S().Errorf("failed to get account by username: %s", err)
-		return nil, ErrFailedAccountByUsernameHandler
+		return nil, errFailedAccountByUsernameHandler
 	}
 
 	return ur, nil

@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	ErrSearchFailed = errors.New("search failed")
+	errSearchFailed = errors.New("search failed")
 )
 
 type SearchMediasHandler struct {
@@ -27,7 +27,7 @@ func (h SearchMediasHandler) Handle(ctx context.Context, cursor *paging.Cursor, 
 
 	if err != nil {
 		zap.S().Errorf("failed to search: %s", err)
-		return nil, nil, ErrSearchFailed
+		return nil, nil, errSearchFailed
 	}
 
 	return results, page, nil

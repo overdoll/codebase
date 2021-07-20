@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	ErrFailedRemoveAccountEmail = errors.New("failed to remove email")
+	errFailedRemoveAccountEmail = errors.New("failed to remove email")
 )
 
 type DeleteAccountEmailHandler struct {
@@ -24,7 +24,7 @@ func (h DeleteAccountEmailHandler) Handle(ctx context.Context, accountId, email 
 
 	if err := h.ar.DeleteAccountEmail(ctx, accountId, email); err != nil {
 		zap.S().Errorf("failed to remove email: %s", err)
-		return ErrFailedRemoveAccountEmail
+		return errFailedRemoveAccountEmail
 	}
 
 	return nil

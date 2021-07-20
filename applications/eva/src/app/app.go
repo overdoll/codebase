@@ -29,6 +29,8 @@ type Commands struct {
 	DisableAccountMultiFactor                            command.DisableAccountMultiFactorHandler
 	GrantAccountAccessWithAuthTokenAndRecoveryCodeOrTotp command.GrantAccountAccessWithAuthTokenAndRecoveryCodeOrTotpHandler
 	DeleteAccountEmail                                   command.DeleteAccountEmailHandler
+	RevokeAuthenticationToken                            command.RevokeAuthenticationTokenHandler
+	ReissueAuthenticationToken                           command.ReissueAuthenticationTokenHandler
 }
 
 type Queries struct {

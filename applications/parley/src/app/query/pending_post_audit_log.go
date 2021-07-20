@@ -8,6 +8,10 @@ import (
 	"overdoll/applications/parley/src/domain/infraction"
 )
 
+var (
+	errFailedPostAuditLogById = errors.New("get pending post audit log failed")
+)
+
 type PostAuditLogByIdHandler struct {
 	ir infraction.Repository
 }
@@ -16,17 +20,13 @@ func NewPostAuditLogByIdHandler(ir infraction.Repository) PostAuditLogByIdHandle
 	return PostAuditLogByIdHandler{ir: ir}
 }
 
-var (
-	ErrFailedPostAuditLogById = errors.New("get pending post audit log failed")
-)
-
 func (h PostAuditLogByIdHandler) Handle(ctx context.Context, auditLogId string) (*infraction.PostAuditLog, error) {
 
 	auditLog, err := h.ir.GetPostAuditLog(ctx, auditLogId)
 
 	if err != nil {
 		zap.S().Errorf("failed to get infraction history: %s", err)
-		return nil, ErrFailedPostAuditLogById
+		return nil, errFailedPostAuditLogById
 	}
 
 	return auditLog, nil

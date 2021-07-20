@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	ErrFailedAccountLock = errors.New("failed to lock account")
+	errFailedAccountLock = errors.New("failed to lock account")
 )
 
 type LockAccountHandler struct {
@@ -28,7 +28,7 @@ func (h LockAccountHandler) Handle(ctx context.Context, id string, duration int,
 
 	if err != nil {
 		zap.S().Errorf("failed to lock user: %s", err)
-		return nil, ErrFailedAccountLock
+		return nil, errFailedAccountLock
 	}
 
 	return usr, nil

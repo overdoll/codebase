@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	ErrFailedNextModerator = errors.New("get moderator failed")
+	errFailedNextModerator = errors.New("get moderator failed")
 )
 
 type GetNextModeratorHandler struct {
@@ -27,7 +27,7 @@ func (h GetNextModeratorHandler) Handle(ctx context.Context) (*moderator.Moderat
 
 	if err != nil {
 		zap.S().Errorf("failed to get moderators: %s", err)
-		return nil, ErrFailedNextModerator
+		return nil, errFailedNextModerator
 	}
 
 	// sort by LastSelected - the moderators who were not selected recently will be at the top
@@ -37,7 +37,7 @@ func (h GetNextModeratorHandler) Handle(ctx context.Context) (*moderator.Moderat
 	})
 
 	if len(mods) == 0 {
-		return nil, ErrFailedNextModerator
+		return nil, errFailedNextModerator
 	}
 
 	// get first moderator on the list, and call "select"

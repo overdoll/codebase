@@ -10,11 +10,11 @@ import (
 )
 
 var (
-	ErrFailedEnrollAccountMultiFactorTOTP = errors.New("failed to enroll TOTP")
+	errFailedEnrollAccountMultiFactorTOTP = errors.New("failed to enroll TOTP")
 )
 
 const (
-	ValidationErrCodeNotValid = "code_not_valid"
+	validationErrCodeNotValid = "code_not_valid"
 )
 
 type EnrollAccountMultiFactorTOTPHandler struct {
@@ -32,14 +32,14 @@ func (h EnrollAccountMultiFactorTOTPHandler) Handle(ctx context.Context, account
 
 	if err != nil {
 		zap.S().Errorf("failed to get account: %s", err)
-		return "", ErrFailedEnrollAccountMultiFactorTOTP
+		return "", errFailedEnrollAccountMultiFactorTOTP
 	}
 
 	codes, err := h.mr.GetAccountRecoveryCodes(ctx, accountId)
 
 	if err != nil {
 		zap.S().Errorf("failed to get recovery codes: %s", err)
-		return "", ErrFailedEnrollAccountMultiFactorTOTP
+		return "", errFailedEnrollAccountMultiFactorTOTP
 	}
 
 	// enroll TOTP
@@ -48,17 +48,17 @@ func (h EnrollAccountMultiFactorTOTPHandler) Handle(ctx context.Context, account
 	if err != nil {
 
 		if err == multi_factor.ErrTOTPCodeInvalid {
-			return ValidationErrCodeNotValid, nil
+			return validationErrCodeNotValid, nil
 		}
 
 		zap.S().Errorf("failed to enroll totp: %s", err)
-		return "", ErrFailedEnrollAccountMultiFactorTOTP
+		return "", errFailedEnrollAccountMultiFactorTOTP
 	}
 
 	// create the TOTP
 	if err := h.mr.CreateAccountMultiFactorTOTP(ctx, accountId, mfa); err != nil {
 		zap.S().Errorf("failed to enroll totp: %s", err)
-		return "", ErrFailedEnrollAccountMultiFactorTOTP
+		return "", errFailedEnrollAccountMultiFactorTOTP
 	}
 
 	// if user doesn't have 2FA enabled, enable it
@@ -67,7 +67,7 @@ func (h EnrollAccountMultiFactorTOTPHandler) Handle(ctx context.Context, account
 			return a.ToggleMultiFactor()
 		}); err != nil {
 			zap.S().Errorf("failed to update account: %s", err)
-			return "", ErrFailedEnrollAccountMultiFactorTOTP
+			return "", errFailedEnrollAccountMultiFactorTOTP
 		}
 	}
 

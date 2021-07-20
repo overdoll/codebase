@@ -70,6 +70,8 @@ func createApplication(ctx context.Context) app.Application {
 			DisableAccountMultiFactor:                            command.NewDisableAccountMultiFactorHandler(mfaRepo, accountRepo),
 			GrantAccountAccessWithAuthTokenAndRecoveryCodeOrTotp: command.NewGrantAccountAccessWithAuthTokenAndRecoveryCodeOrTotpHandler(tokenRepo, accountRepo, mfaRepo),
 			DeleteAccountEmail:                                   command.NewDeleteAccountEmailHandler(accountRepo),
+			RevokeAuthenticationToken:                            command.NewRevokeAuthenticationTokenHandler(tokenRepo),
+			ReissueAuthenticationToken:                           command.NewReissueAuthenticationTokenHandler(tokenRepo),
 		},
 		Queries: app.Queries{
 			AccountById:                     query.NewAccountByIdHandler(accountRepo),

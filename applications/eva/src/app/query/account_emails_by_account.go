@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	ErrFailedAccountEmailsByAccount = errors.New("failed to get emails")
+	errFailedAccountEmailsByAccount = errors.New("failed to get emails")
 )
 
 type AccountEmailsByAccountHandler struct {
@@ -27,7 +27,7 @@ func (h AccountEmailsByAccountHandler) Handle(ctx context.Context, cursor *pagin
 
 	if err != nil {
 		zap.S().Errorf("failed to get account emails: %s", err)
-		return nil, nil, ErrFailedAccountEmailsByAccount
+		return nil, nil, errFailedAccountEmailsByAccount
 	}
 
 	return emails, page, nil

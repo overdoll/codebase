@@ -134,10 +134,6 @@ func marshalPostAuditLogToDatabase(auditLog *infraction.PostAuditLog) (*postAudi
 	}, nil
 }
 
-func (r InfractionCassandraRepository) GetPostAuditLogsByPost(ctx context.Context, cursor *paging.Cursor, filters *infraction.PostAuditLogFilters) ([]*infraction.PostAuditLog, *paging.Info, error) {
-	panic("implement me")
-}
-
 func (r InfractionCassandraRepository) CreatePostAuditLog(ctx context.Context, auditLog *infraction.PostAuditLog) error {
 
 	marshalledAuditLog, err := marshalPostAuditLogToDatabase(auditLog)
@@ -249,7 +245,7 @@ func (r InfractionCassandraRepository) GetPostAuditLog(ctx context.Context, logI
 	), nil
 }
 
-func (r InfractionCassandraRepository) GetPostAuditLogByModerator(ctx context.Context, cursor *paging.Cursor, filter *infraction.PostAuditLogFilters) ([]*infraction.PostAuditLog, *paging.Info, error) {
+func (r InfractionCassandraRepository) SearchPostAuditLogs(ctx context.Context, cursor *paging.Cursor, filter *infraction.PostAuditLogFilters) ([]*infraction.PostAuditLog, *paging.Info, error) {
 
 	// build query based on filters
 	builder :=

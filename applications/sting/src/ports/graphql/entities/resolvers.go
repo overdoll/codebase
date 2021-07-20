@@ -19,6 +19,7 @@ func (r EntityResolver) FindAccountByID(ctx context.Context, id relay.ID) (*type
 }
 
 func (r EntityResolver) FindPostByID(ctx context.Context, id relay.ID) (*types.Post, error) {
+
 	pendingPost, err := r.App.Queries.GetPost.Handle(ctx, id.GetID())
 
 	if err != nil {
