@@ -26,6 +26,7 @@ import ArrowButtonLeft2
 import mime from 'mime-types'
 
 import SuspenseImage from '@//:modules/utilities/SuspenseImage'
+import ImageSnippet from '../../../components/ContentItem/ImageSnippet/ImageSnippet'
 
 type File = {
   id: string,
@@ -89,7 +90,7 @@ export default function Gallery ({ files, urls, thumbnails, setSwiper }: Props):
               // TODO make into its own componenet
               const content = urls[file.id]
 
-              const fileType = mime.lookup(content).split('/')[0]
+              const fileType = file.type.split('/')[0]
 
               return (
                 <SwiperSlide key={index}>
@@ -134,12 +135,7 @@ export default function Gallery ({ files, urls, thumbnails, setSwiper }: Props):
                               >
                               <source src={urls[file.id]} type={file.type} />
                             </video>
-                            : <SuspenseImage
-                                alt='thumbnail'
-                                h='100%'
-                                objectFit='cover'
-                                src={content} fallback={<Skeleton w='100%' h='100%' />}
-                              />}
+                            : <ImageSnippet src={content} />}
                           <Box
                             bg='transparent'
                             w='40%'

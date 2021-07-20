@@ -7,7 +7,13 @@
       "subheader": "There are no posts in your queue at the moment. Try checking again tomorrow?"
     },
     "post": {
-      "content": "Post Uploads"
+      "content": "Post Uploads",
+      "tags": {
+        "title": "Post Tags",
+        "artist": "Artist",
+        "characters": "Characters",
+        "categories": "Categories"
+      }
     },
     "history": {
       "title": "Moderation History"

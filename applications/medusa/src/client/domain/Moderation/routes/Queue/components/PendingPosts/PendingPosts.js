@@ -15,12 +15,23 @@ import {
   AlertDescription,
   Wrap,
   WrapItem,
-  Heading, Avatar, Skeleton, useDisclosure, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, Modal
+  Heading,
+  Avatar,
+  Skeleton,
+  useDisclosure,
+  ModalOverlay,
+  ModalContent,
+  ModalCloseButton,
+  ModalBody,
+  Modal,
+  TagLabel,
+  Tag
 } from '@chakra-ui/react'
 import Icon from '@//:modules/content/icon/Icon'
 import { useEffect, useState } from 'react'
 import { graphql, usePreloadedQuery, useLazyLoadQuery, useQueryLoader, usePaginationFragment } from 'react-relay'
 import mime from 'mime-types'
+import ContentItem from '../../../../../../components/Posts/components/ContentItem/ContentItem'
 
 import InterfaceArrowsButtonRight
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-button-right.svg'
@@ -37,6 +48,9 @@ import type { PostsPaginationQuery } from '@//:artifacts/PostsPaginationQuery.gr
 import type { QueuePostsFragment$key } from '@//:artifacts/QueuePostsFragment.graphql'
 import type { QueuePostsQuery } from '@//:artifacts/QueuePostsQuery.graphql'
 import SuspenseImage from '@//:modules/utilities/SuspenseImage'
+import VideoSnippet from '../../../../../../components/Posts/components/ContentItem/VideoSnippet/VideoSnippet'
+import ImageSnippet from '../../../../../../components/Posts/components/ContentItem/ImageSnippet/ImageSnippet'
+import InspectModal from '../../../../../../components/Posts/components/modal/InspectModal'
 
 /*
   queryRef: PreloadedQuery<QueuePendingPostsQuery>,
@@ -87,9 +101,9 @@ export default function (props: Props): Node {
       setCurrentIndex(x => x + -1)
     }
   }
+  console.log(currentPost)
 
   return (
-
     data.pendingPosts.edges.length > 0
       ? <>
         <Flex mt={2}>
@@ -104,10 +118,15 @@ export default function (props: Props): Node {
             />}
           <Flex
             borderRadius={5} h={12} pl={2} pr={2} pt={1} pb={1} w='100%' bg='gray.800'
-            align='center'
             justify='center'
+            align='center'
+            position='relative'
           >
-            <Text color='gray.300' fontWeight='medium' size='md'>{currentPost.id}</Text>
+            <Text
+              color='gray.300' fontWeight='medium'
+              size='md'
+            >{currentPost.id}
+            </Text>
           </Flex>
           {(currentIndex + 1 !== data.pendingPosts?.edges.length || hasNext) &&
             <IconButton
@@ -129,7 +148,7 @@ export default function (props: Props): Node {
         >
           <Flex align='center' w='100%' justify='space-between'>
             <Flex align='center'>
-              <Avatar src={currentPost.contributor.avatar} w={6} h={6} mr={2} borderRadius='25%' />
+              <Avatar src={currentPost.contributor.avatar} w={8} h={8} mr={2} borderRadius='25%' />
               <Text color='gray.100' fontWeight='medium' size='md'>{currentPost.contributor.username}</Text>
             </Flex>
             <Flex align='center'>
@@ -140,66 +159,62 @@ export default function (props: Props): Node {
               </CircularProgress>
             </Flex>
           </Flex>
-          <Stack direction='column' mt={4}>
+          <Stack spacing={2} direction='column' mt={4}>
             <Flex direction='column'>
               <Heading mb={2} color='gray.00' size='md'>{t('queue.post.content')}</Heading>
               <Wrap justify='center'>
-                {currentPost.content.map((item, index) => {
-                  const rawType = mime.lookup(item)
-
-                  const fileType = rawType.split('/')[0]
-
-                  const { isOpen, onOpen, onClose } = useDisclosure()
-
-                  return (
-                    <WrapItem spacing={4} h={200} w={160} key={index}>
-                      {fileType === 'image'
-                        ? <SuspenseImage
-                            alt='thumbnail'
-                            h='100%'
-                            objectFit='cover'
-                            src={item} fallback={<Skeleton w='100%' h='100%' />}
-                          />
-                        : <video
-                            controls
-                            disablePictureInPicture
-                            controlsList='nodownload noremoteplayback nofullscreen'
-                            muted loop preload='auto' style={{
-                              objectFit: 'cover',
-                              height: '100%'
-                            }}
-                          >
-                          <source src={item} type={rawType} />
-                        </video>}
-                      <Modal
-                        isOpen={isOpen}
-                        onClose={onClose}
-                        size='full'
-                      >
-                        <ModalOverlay />
-                        <ModalContent position='relative' m={0} borderRadius={0} bg='gray.800'>
-                          {supplement && <Flex right={16} position='fixed' direction='row'>{supplement}</Flex>}
-                          <ModalCloseButton position='fixed' size='lg' />
-                          <ModalBody
-                            zIndex='hide'
-                            h='100%'
-                            w='100%'
-                            display='flex'
-                            p={0}
-                            align='center'
-                            justify='center'
-                            position='relative'
-                          >
-                            <Flex w='100%' m={1} align='center' justify='center'>
-                              {children}
-                            </Flex>
-                          </ModalBody>
-                        </ModalContent>
-                      </Modal>
-                    </WrapItem>
-                  )
-                })}
+                {currentPost.content.map((item, index) =>
+                  <WrapItem key={index} spacing={4} h={200} w={160}>
+                    <ContentItem src={item} key={index} />
+                  </WrapItem>
+                )}
               </Wrap>
+            </Flex>
+            <Flex direction='column'>
+              <Heading mb={2} color='gray.00' size='md'>{t('queue.post.tags.title')}</Heading>
+              <Stack spacing={2}>
+                <Flex direction='column'>
+                  <Text mb={1} fontSize='md' color='gray.300'>{t('queue.post.tags.artist')}</Text>
+                  <Wrap direction='column'>
+                    <WrapItem>
+                      <Tag size='lg' colorScheme='gray' borderRadius='full'>
+                        <TagLabel>{currentPost.artistUsername}</TagLabel>
+                      </Tag>
+                    </WrapItem>
+                  </Wrap>
+                </Flex>
+                <Flex direction='column'>
+                  <Text mb={1} fontSize='md' color='gray.300'>{t('queue.post.tags.characters')}</Text>
+                  <Wrap>
+                    {currentPost.characters.map((item, index) =>
+                      <WrapItem key={index}>
+                        <Tag size='lg' colorScheme='gray' borderRadius='full'>
+                          <TagLabel>{item.name} ({item.media.title})</TagLabel>
+                        </Tag>
+                      </WrapItem>
+                    )}
+                    {currentPost.characterRequests?.map((item, index) =>
+                      <WrapItem key={index}>
+                        <Tag size='lg' colorScheme='green' borderRadius='full'>
+                          <TagLabel>{item.name} ({item.media})</TagLabel>
+                        </Tag>
+                      </WrapItem>
+                    )}
+                  </Wrap>
+                </Flex>
+                <Flex direction='column'>
+                  <Text mb={1} fontSize='md' color='gray.300'>{t('queue.post.tags.categories')}</Text>
+                  <Wrap>
+                    {currentPost.categories.map((item, index) =>
+                      <WrapItem key={index}>
+                        <Tag size='lg' colorScheme='gray' borderRadius='full'>
+                          <TagLabel>{item.title}</TagLabel>
+                        </Tag>
+                      </WrapItem>
+                    )}
+                  </Wrap>
+                </Flex>
+              </Stack>
             </Flex>
           </Stack>
         </Flex>
