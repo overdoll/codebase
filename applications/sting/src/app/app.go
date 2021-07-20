@@ -43,4 +43,8 @@ type Queries struct {
 	PostsByContributor query.PostsByContributorAccountHandler
 	PostsByArtist      query.PostsByArtistAccountHandler
 	PostById           query.PostByIdHandler
+	CharacterById      query.CharacterByIdHandler
+	CategoryById       query.CategoryByIdHandler
+	MediaById          query.MediaByIdHandler
+	ArtistById         query.ArtistByIdHandler
 }

@@ -70,9 +70,9 @@ func createApplication(ctx context.Context, eva command.EvaService, sting comman
 			PostRejectionReasonById:      query.NewPendingPostsRejectionReasonByIdHandler(infractionRepo),
 			AccountInfractionHistory:     query.NewAccountInfractionHistoryByAccountHandler(infractionRepo),
 			AccountInfractionHistoryById: query.NewAccountInfractionHistoryByIdHandler(infractionRepo),
-			ModeratorInQueue:             query.NewIsModeratorInQueueHandler(moderatorRepo),
 			PostAuditLogById:             query.NewPostAuditLogByIdHandler(infractionRepo),
 			PostAuditLogsByPost:          query.NewPostAuditLogsByPostHandler(infractionRepo),
+			ModeratorById:                query.NewModeratorByIdHandler(moderatorRepo),
 		},
 	}
 }

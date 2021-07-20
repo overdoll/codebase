@@ -72,7 +72,7 @@ var postAuditLogByModeratorTable = table.New(table.Metadata{
 		"contributor_account_username",
 		"moderator_account_username",
 		"account_infraction_id",
-		"status",
+		"action",
 		"reason",
 		"notes",
 		"reverted",
@@ -92,7 +92,7 @@ type postAuditLogByModerator struct {
 	ContributorUsername string `db:"contributor_account_username"`
 	ModeratorUsername   string `db:"moderator_account_username"`
 	AccountInfractionId string `db:"account_infraction_id"`
-	Status              string `db:"status"`
+	Action              string `db:"action"`
 	Reason              string `db:"reason"`
 	Notes               string `db:"notes"`
 	Reverted            bool   `db:"reverted"`
@@ -126,7 +126,7 @@ func marshalPostAuditLogToDatabase(auditLog *infraction.PostAuditLog) (*postAudi
 		ContributorId:       auditLog.Contributor().ID(),
 		ContributorUsername: auditLog.Contributor().Username(),
 		AccountInfractionId: userInfractionId,
-		Status:              auditLog.Status(),
+		Action:              auditLog.Status(),
 		Reason:              reason,
 		Notes:               auditLog.Notes(),
 		Reverted:            auditLog.Reverted(),
@@ -163,7 +163,7 @@ func (r InfractionCassandraRepository) CreatePostAuditLog(ctx context.Context, a
 		marshalledAuditLog.ModeratorId,
 		marshalledAuditLog.ModeratorUsername,
 		marshalledAuditLog.AccountInfractionId,
-		marshalledAuditLog.Status,
+		marshalledAuditLog.Action,
 		marshalledAuditLog.Reason,
 		marshalledAuditLog.Notes,
 		marshalledAuditLog.Reverted,
@@ -235,7 +235,7 @@ func (r InfractionCassandraRepository) GetPostAuditLog(ctx context.Context, logI
 		pendingPostAuditLogByModerator.ModeratorUsername,
 		pendingPostAuditLogByModerator.ContributorId,
 		pendingPostAuditLogByModerator.ContributorUsername,
-		pendingPostAuditLogByModerator.Status,
+		pendingPostAuditLogByModerator.Action,
 		pendingPostAuditLogByModerator.AccountInfractionId,
 		pendingPostAuditLogByModerator.Reason,
 		pendingPostAuditLogByModerator.Notes,
@@ -321,7 +321,7 @@ func (r InfractionCassandraRepository) SearchPostAuditLogs(ctx context.Context, 
 			pendingPostAuditLog.ModeratorUsername,
 			pendingPostAuditLog.ContributorId,
 			pendingPostAuditLog.ContributorUsername,
-			pendingPostAuditLog.Status,
+			pendingPostAuditLog.Action,
 			pendingPostAuditLog.AccountInfractionId,
 			pendingPostAuditLog.Reason,
 			pendingPostAuditLog.Notes,

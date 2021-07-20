@@ -108,9 +108,9 @@ func MarshalPostToGraphQL(result *post.Post) *Post {
 	return &Post{
 		ID:                relay.NewID(Post{}, result.ID()),
 		Reference:         result.ID(),
-		Moderator:         nil,
-		Contributor:       nil,
-		Artist:            nil,
+		Moderator:         &Account{ID: relay.NewID(Account{}, result.ModeratorId())},
+		Contributor:       &Account{ID: relay.NewID(Account{}, result.ContributorId())},
+		Artist:            &Account{ID: relay.NewID(Account{}, result.ArtistId())},
 		State:             state,
 		Content:           content,
 		Categories:        categories,
@@ -119,39 +119,6 @@ func MarshalPostToGraphQL(result *post.Post) *Post {
 		CharacterRequests: characterRequests,
 		PostedAt:          result.PostedAt(),
 		ReassignmentAt:    result.ReassignmentAt(),
-	}
-}
-
-func MarshalArtistToGraphQLConnection(results []*post.Artist, paging *paging.Info) *ArtistConnection {
-
-	resp := make([]*ArtistEdge, 0)
-
-	// Unmarshal our json into the correct model
-	for _, result := range results {
-		resp = append(resp, &ArtistEdge{
-			Cursor: result.Cursor(),
-			Node:   MarshalArtistToGraphQL(result),
-		})
-	}
-
-	var startCursor *string
-	var endCursor *string
-
-	if len(results) > 0 {
-		res := results[0].Cursor()
-		startCursor = &res
-		res = results[len(results)-1].Cursor()
-		endCursor = &res
-	}
-
-	return &ArtistConnection{
-		Edges: resp,
-		PageInfo: &relay.PageInfo{
-			HasNextPage:     paging.HasNextPage(),
-			HasPreviousPage: paging.HasPrevPage(),
-			StartCursor:     startCursor,
-			EndCursor:       endCursor,
-		},
 	}
 }
 
@@ -195,9 +162,8 @@ func MarshalCategoryToGraphQLConnection(results []*post.Category, paging *paging
 
 func MarshalCategoryToGraphQL(result *post.Category) *Category {
 	return &Category{
-		ID:        relay.NewID(Category{}, result.ID()),
-		Thumbnail: result.Thumbnail(),
-		Title:     result.Title(),
+		ID:    relay.NewID(Category{}, result.ID()),
+		Title: result.Title(),
 	}
 }
 
@@ -235,10 +201,9 @@ func MarshalCharacterToGraphQLConnection(results []*post.Character, paging *pagi
 
 func MarshalCharacterToGraphQL(result *post.Character) *Character {
 	return &Character{
-		ID:        relay.NewID(Character{}, result.ID()),
-		Thumbnail: result.Thumbnail(),
-		Name:      result.Name(),
-		Media:     MarshalMediaToGraphQL(result.Media()),
+		ID:    relay.NewID(Character{}, result.ID()),
+		Name:  result.Name(),
+		Media: MarshalMediaToGraphQL(result.Media()),
 	}
 }
 
@@ -276,8 +241,7 @@ func MarshalMediaToGraphQLConnection(results []*post.Media, paging *paging.Info)
 
 func MarshalMediaToGraphQL(result *post.Media) *Media {
 	return &Media{
-		ID:        relay.NewID(Media{}, result.ID()),
-		Thumbnail: result.Thumbnail(),
-		Title:     result.Title(),
+		ID:    relay.NewID(Media{}, result.ID()),
+		Title: result.Title(),
 	}
 }

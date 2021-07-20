@@ -53,10 +53,11 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Account struct {
+		Contributor            func(childComplexity int) int
 		ID                     func(childComplexity int) int
 		Infractions            func(childComplexity int, after *string, before *string, first *int, last *int) int
+		Moderator              func(childComplexity int) int
 		ModeratorPostAuditLogs func(childComplexity int, after *string, before *string, first *int, last *int) int
-		ModeratorSettings      func(childComplexity int) int
 	}
 
 	AccountInfractionHistory struct {
@@ -74,13 +75,15 @@ type ComplexityRoot struct {
 		Node   func(childComplexity int) int
 	}
 
-	AccountModeratorSettings struct {
-		InQueue func(childComplexity int) int
+	Contributor struct {
+		ID func(childComplexity int) int
 	}
 
 	Entity struct {
 		FindAccountByID                  func(childComplexity int, id relay.ID) int
 		FindAccountInfractionHistoryByID func(childComplexity int, id relay.ID) int
+		FindContributorByID              func(childComplexity int, id relay.ID) int
+		FindModeratorByID                func(childComplexity int, id relay.ID) int
 		FindPostAuditLogByID             func(childComplexity int, id relay.ID) int
 		FindPostByID                     func(childComplexity int, id relay.ID) int
 		FindPostRejectionReasonByID      func(childComplexity int, id relay.ID) int
@@ -88,6 +91,11 @@ type ComplexityRoot struct {
 
 	ModeratePostPayload struct {
 		PostAuditLog func(childComplexity int) int
+	}
+
+	Moderator struct {
+		ID           func(childComplexity int) int
+		LastSelected func(childComplexity int) int
 	}
 
 	Mutation struct {
@@ -168,11 +176,14 @@ type ComplexityRoot struct {
 type AccountResolver interface {
 	ModeratorPostAuditLogs(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostAuditLogConnection, error)
 	Infractions(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountInfractionHistoryConnection, error)
-	ModeratorSettings(ctx context.Context, obj *types.Account) (*types.AccountModeratorSettings, error)
+	Moderator(ctx context.Context, obj *types.Account) (*types.Moderator, error)
+	Contributor(ctx context.Context, obj *types.Account) (*types.Contributor, error)
 }
 type EntityResolver interface {
 	FindAccountByID(ctx context.Context, id relay.ID) (*types.Account, error)
 	FindAccountInfractionHistoryByID(ctx context.Context, id relay.ID) (*types.AccountInfractionHistory, error)
+	FindContributorByID(ctx context.Context, id relay.ID) (*types.Contributor, error)
+	FindModeratorByID(ctx context.Context, id relay.ID) (*types.Moderator, error)
 	FindPostByID(ctx context.Context, id relay.ID) (*types.Post, error)
 	FindPostAuditLogByID(ctx context.Context, id relay.ID) (*types.PostAuditLog, error)
 	FindPostRejectionReasonByID(ctx context.Context, id relay.ID) (*types.PostRejectionReason, error)
@@ -204,6 +215,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	_ = ec
 	switch typeName + "." + field {
 
+	case "Account.contributor":
+		if e.complexity.Account.Contributor == nil {
+			break
+		}
+
+		return e.complexity.Account.Contributor(childComplexity), true
+
 	case "Account.id":
 		if e.complexity.Account.ID == nil {
 			break
@@ -223,6 +241,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Account.Infractions(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
 
+	case "Account.moderator":
+		if e.complexity.Account.Moderator == nil {
+			break
+		}
+
+		return e.complexity.Account.Moderator(childComplexity), true
+
 	case "Account.moderatorPostAuditLogs":
 		if e.complexity.Account.ModeratorPostAuditLogs == nil {
 			break
@@ -234,13 +259,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Account.ModeratorPostAuditLogs(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
-
-	case "Account.moderatorSettings":
-		if e.complexity.Account.ModeratorSettings == nil {
-			break
-		}
-
-		return e.complexity.Account.ModeratorSettings(childComplexity), true
 
 	case "AccountInfractionHistory.id":
 		if e.complexity.AccountInfractionHistory.ID == nil {
@@ -284,12 +302,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AccountInfractionHistoryEdge.Node(childComplexity), true
 
-	case "AccountModeratorSettings.inQueue":
-		if e.complexity.AccountModeratorSettings.InQueue == nil {
+	case "Contributor.id":
+		if e.complexity.Contributor.ID == nil {
 			break
 		}
 
-		return e.complexity.AccountModeratorSettings.InQueue(childComplexity), true
+		return e.complexity.Contributor.ID(childComplexity), true
 
 	case "Entity.findAccountByID":
 		if e.complexity.Entity.FindAccountByID == nil {
@@ -314,6 +332,30 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Entity.FindAccountInfractionHistoryByID(childComplexity, args["id"].(relay.ID)), true
+
+	case "Entity.findContributorByID":
+		if e.complexity.Entity.FindContributorByID == nil {
+			break
+		}
+
+		args, err := ec.field_Entity_findContributorByID_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Entity.FindContributorByID(childComplexity, args["id"].(relay.ID)), true
+
+	case "Entity.findModeratorByID":
+		if e.complexity.Entity.FindModeratorByID == nil {
+			break
+		}
+
+		args, err := ec.field_Entity_findModeratorByID_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Entity.FindModeratorByID(childComplexity, args["id"].(relay.ID)), true
 
 	case "Entity.findPostAuditLogByID":
 		if e.complexity.Entity.FindPostAuditLogByID == nil {
@@ -357,6 +399,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.ModeratePostPayload.PostAuditLog(childComplexity), true
+
+	case "Moderator.id":
+		if e.complexity.Moderator.ID == nil {
+			break
+		}
+
+		return e.complexity.Moderator.ID(childComplexity), true
+
+	case "Moderator.lastSelected":
+		if e.complexity.Moderator.LastSelected == nil {
+			break
+		}
+
+		return e.complexity.Moderator.LastSelected(childComplexity), true
 
 	case "Mutation.moderatePost":
 		if e.complexity.Mutation.ModeratePost == nil {
@@ -692,7 +748,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
-	{Name: "schema/audit_logs.graphql", Input: `enum PostAuditLogActionEnum {
+	{Name: "schema/audit_logs.graphql", Input: `enum PostAuditLogAction {
   Approved
   Denied
 }
@@ -707,13 +763,13 @@ type PostAuditLog implements Node @key(fields: "id") {
   id: ID!
 
   """The contributor that the audit log belongs to"""
-  contributor: Actor!
+  contributor: Account!
 
   """The moderator that this log belongs to"""
-  moderator: Actor!
+  moderator: Account!
 
   """The status or the action that was taken against the pending post"""
-  action: PostAuditLogActionEnum!
+  action: PostAuditLogAction!
 
   """The reason the action was taken"""
   reason: String!
@@ -937,39 +993,36 @@ extend type Mutation {
   """
   toggleModeratorSettingsInQueue: ToggleModeratorSettingsInQueuePayload
 }`, BuiltIn: false},
-	{Name: "schema/moderator_settings.graphql", Input: `type AccountModeratorSettings {
-  inQueue: Boolean!
+	{Name: "schema/moderator_settings.graphql", Input: `type Moderator implements Node @key(fields: "id") {
+  """The ID of the moderator"""
+  id: ID!
+
+  """The last time this moderator was selected for a post"""
+  lastSelected: Time!
+}
+
+type Contributor implements Node @key(fields: "id") {
+  """The ID of the contributor"""
+  id: ID!
 }
 
 extend type Account @key(fields: "id") {
   """
-  Moderator settings for this account
+  Moderator settings and status for this account
 
   Viewable by the currently authenticated account or staff+
   """
-  moderatorSettings: AccountModeratorSettings @goField(forceResolver: true) @auth
+  moderator: Moderator @goField(forceResolver: true)
+
+  """
+  Contributor settings and status
+  """
+  contributor: Contributor @goField(forceResolver: true)
 }`, BuiltIn: false},
 	{Name: "schema/schema.graphql", Input: `extend type Account @key(fields: "id") {
   id: ID! @external
 }`, BuiltIn: false},
-	{Name: "../../libraries/graphql/schema.graphql", Input: `"""
-Represents an account
-"""
-interface Actor {
-  """ID representing the actor"""
-  id: ID!
-
-  """A URL pointing to the actor's public avatar."""
-  avatar(
-    """The size of the resulting square image."""
-    size: Int
-  ): URI! @goField(forceResolver: true)
-
-  """The username of the actor."""
-  username: String!
-}
-
-scalar Time
+	{Name: "../../libraries/graphql/schema.graphql", Input: `scalar Time
 
 """An RFC 3986, RFC 3987, and RFC 6570 (level 4) compliant URI string."""
 scalar URI
@@ -1002,12 +1055,14 @@ directive @extends on OBJECT
 `, BuiltIn: true},
 	{Name: "federation/entity.graphql", Input: `
 # a union of all types that use the @key directive
-union _Entity = Account | AccountInfractionHistory | Post | PostAuditLog | PostRejectionReason
+union _Entity = Account | AccountInfractionHistory | Contributor | Moderator | Post | PostAuditLog | PostRejectionReason
 
 # fake type to build resolver interfaces for users to implement
 type Entity {
 		findAccountByID(id: ID!,): Account!
 	findAccountInfractionHistoryByID(id: ID!,): AccountInfractionHistory!
+	findContributorByID(id: ID!,): Contributor!
+	findModeratorByID(id: ID!,): Moderator!
 	findPostByID(id: ID!,): Post!
 	findPostAuditLogByID(id: ID!,): PostAuditLog!
 	findPostRejectionReasonByID(id: ID!,): PostRejectionReason!
@@ -1130,6 +1185,36 @@ func (ec *executionContext) field_Entity_findAccountByID_args(ctx context.Contex
 }
 
 func (ec *executionContext) field_Entity_findAccountInfractionHistoryByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 relay.ID
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Entity_findContributorByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 relay.ID
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Entity_findModeratorByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 relay.ID
@@ -1495,7 +1580,7 @@ func (ec *executionContext) _Account_infractions(ctx context.Context, field grap
 	return ec.marshalNAccountInfractionHistoryConnection2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountInfractionHistoryConnection(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Account_moderatorSettings(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
+func (ec *executionContext) _Account_moderator(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1512,28 +1597,8 @@ func (ec *executionContext) _Account_moderatorSettings(ctx context.Context, fiel
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Account().ModeratorSettings(rctx, obj)
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			if ec.directives.Auth == nil {
-				return nil, errors.New("directive auth is not implemented")
-			}
-			return ec.directives.Auth(ctx, obj, directive0)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*types.AccountModeratorSettings); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/parley/src/ports/graphql/types.AccountModeratorSettings`, tmp)
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Account().Moderator(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1542,9 +1607,41 @@ func (ec *executionContext) _Account_moderatorSettings(ctx context.Context, fiel
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*types.AccountModeratorSettings)
+	res := resTmp.(*types.Moderator)
 	fc.Result = res
-	return ec.marshalOAccountModeratorSettings2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountModeratorSettings(ctx, field.Selections, res)
+	return ec.marshalOModerator2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐModerator(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Account_contributor(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Account",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Account().Contributor(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Contributor)
+	fc.Result = res
+	return ec.marshalOContributor2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐContributor(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Account_id(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
@@ -1792,7 +1889,7 @@ func (ec *executionContext) _AccountInfractionHistoryEdge_cursor(ctx context.Con
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AccountModeratorSettings_inQueue(ctx context.Context, field graphql.CollectedField, obj *types.AccountModeratorSettings) (ret graphql.Marshaler) {
+func (ec *executionContext) _Contributor_id(ctx context.Context, field graphql.CollectedField, obj *types.Contributor) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1800,7 +1897,7 @@ func (ec *executionContext) _AccountModeratorSettings_inQueue(ctx context.Contex
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "AccountModeratorSettings",
+		Object:     "Contributor",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -1810,7 +1907,7 @@ func (ec *executionContext) _AccountModeratorSettings_inQueue(ctx context.Contex
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.InQueue, nil
+		return obj.ID, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1822,9 +1919,9 @@ func (ec *executionContext) _AccountModeratorSettings_inQueue(ctx context.Contex
 		}
 		return graphql.Null
 	}
-	res := resTmp.(bool)
+	res := resTmp.(relay.ID)
 	fc.Result = res
-	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Entity_findAccountByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1909,6 +2006,90 @@ func (ec *executionContext) _Entity_findAccountInfractionHistoryByID(ctx context
 	res := resTmp.(*types.AccountInfractionHistory)
 	fc.Result = res
 	return ec.marshalNAccountInfractionHistory2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountInfractionHistory(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Entity_findContributorByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Entity",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Entity_findContributorByID_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Entity().FindContributorByID(rctx, args["id"].(relay.ID))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.Contributor)
+	fc.Result = res
+	return ec.marshalNContributor2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐContributor(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Entity_findModeratorByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Entity",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Entity_findModeratorByID_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Entity().FindModeratorByID(rctx, args["id"].(relay.ID))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.Moderator)
+	fc.Result = res
+	return ec.marshalNModerator2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐModerator(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Entity_findPostByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2067,6 +2248,76 @@ func (ec *executionContext) _ModeratePostPayload_postAuditLog(ctx context.Contex
 	res := resTmp.(*types.PostAuditLog)
 	fc.Result = res
 	return ec.marshalOPostAuditLog2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPostAuditLog(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Moderator_id(ctx context.Context, field graphql.CollectedField, obj *types.Moderator) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Moderator",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(relay.ID)
+	fc.Result = res
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Moderator_lastSelected(ctx context.Context, field graphql.CollectedField, obj *types.Moderator) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Moderator",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.LastSelected, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_moderatePost(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2475,9 +2726,9 @@ func (ec *executionContext) _PostAuditLog_contributor(ctx context.Context, field
 		}
 		return graphql.Null
 	}
-	res := resTmp.(types.Actor)
+	res := resTmp.(*types.Account)
 	fc.Result = res
-	return ec.marshalNActor2overdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐActor(ctx, field.Selections, res)
+	return ec.marshalNAccount2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _PostAuditLog_moderator(ctx context.Context, field graphql.CollectedField, obj *types.PostAuditLog) (ret graphql.Marshaler) {
@@ -2510,9 +2761,9 @@ func (ec *executionContext) _PostAuditLog_moderator(ctx context.Context, field g
 		}
 		return graphql.Null
 	}
-	res := resTmp.(types.Actor)
+	res := resTmp.(*types.Account)
 	fc.Result = res
-	return ec.marshalNActor2overdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐActor(ctx, field.Selections, res)
+	return ec.marshalNAccount2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _PostAuditLog_action(ctx context.Context, field graphql.CollectedField, obj *types.PostAuditLog) (ret graphql.Marshaler) {
@@ -2545,9 +2796,9 @@ func (ec *executionContext) _PostAuditLog_action(ctx context.Context, field grap
 		}
 		return graphql.Null
 	}
-	res := resTmp.(types.PostAuditLogActionEnum)
+	res := resTmp.(types.PostAuditLogAction)
 	fc.Result = res
-	return ec.marshalNPostAuditLogActionEnum2overdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPostAuditLogActionEnum(ctx, field.Selections, res)
+	return ec.marshalNPostAuditLogAction2overdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPostAuditLogAction(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _PostAuditLog_reason(ctx context.Context, field graphql.CollectedField, obj *types.PostAuditLog) (ret graphql.Marshaler) {
@@ -4560,15 +4811,6 @@ func (ec *executionContext) unmarshalInputRevertPostAuditLogInput(ctx context.Co
 
 // region    ************************** interface.gotpl ***************************
 
-func (ec *executionContext) _Actor(ctx context.Context, sel ast.SelectionSet, obj types.Actor) graphql.Marshaler {
-	switch obj := (obj).(type) {
-	case nil:
-		return graphql.Null
-	default:
-		panic(fmt.Errorf("unexpected type %T", obj))
-	}
-}
-
 func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj relay.Node) graphql.Marshaler {
 	switch obj := (obj).(type) {
 	case nil:
@@ -4594,6 +4836,20 @@ func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj
 			return graphql.Null
 		}
 		return ec._PostRejectionReason(ctx, sel, obj)
+	case types.Moderator:
+		return ec._Moderator(ctx, sel, &obj)
+	case *types.Moderator:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._Moderator(ctx, sel, obj)
+	case types.Contributor:
+		return ec._Contributor(ctx, sel, &obj)
+	case *types.Contributor:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._Contributor(ctx, sel, obj)
 	default:
 		panic(fmt.Errorf("unexpected type %T", obj))
 	}
@@ -4617,6 +4873,20 @@ func (ec *executionContext) __Entity(ctx context.Context, sel ast.SelectionSet, 
 			return graphql.Null
 		}
 		return ec._AccountInfractionHistory(ctx, sel, obj)
+	case types.Contributor:
+		return ec._Contributor(ctx, sel, &obj)
+	case *types.Contributor:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._Contributor(ctx, sel, obj)
+	case types.Moderator:
+		return ec._Moderator(ctx, sel, &obj)
+	case *types.Moderator:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._Moderator(ctx, sel, obj)
 	case types.Post:
 		return ec._Post(ctx, sel, &obj)
 	case *types.Post:
@@ -4686,7 +4956,7 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 				}
 				return res
 			})
-		case "moderatorSettings":
+		case "moderator":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
 				defer func() {
@@ -4694,7 +4964,18 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Account_moderatorSettings(ctx, field, obj)
+				res = ec._Account_moderator(ctx, field, obj)
+				return res
+			})
+		case "contributor":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Account_contributor(ctx, field, obj)
 				return res
 			})
 		case "id":
@@ -4809,19 +5090,19 @@ func (ec *executionContext) _AccountInfractionHistoryEdge(ctx context.Context, s
 	return out
 }
 
-var accountModeratorSettingsImplementors = []string{"AccountModeratorSettings"}
+var contributorImplementors = []string{"Contributor", "Node", "_Entity"}
 
-func (ec *executionContext) _AccountModeratorSettings(ctx context.Context, sel ast.SelectionSet, obj *types.AccountModeratorSettings) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, accountModeratorSettingsImplementors)
+func (ec *executionContext) _Contributor(ctx context.Context, sel ast.SelectionSet, obj *types.Contributor) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, contributorImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("AccountModeratorSettings")
-		case "inQueue":
-			out.Values[i] = ec._AccountModeratorSettings_inQueue(ctx, field, obj)
+			out.Values[i] = graphql.MarshalString("Contributor")
+		case "id":
+			out.Values[i] = ec._Contributor_id(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -4874,6 +5155,34 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 					}
 				}()
 				res = ec._Entity_findAccountInfractionHistoryByID(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
+		case "findContributorByID":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Entity_findContributorByID(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
+		case "findModeratorByID":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Entity_findModeratorByID(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -4945,6 +5254,38 @@ func (ec *executionContext) _ModeratePostPayload(ctx context.Context, sel ast.Se
 			out.Values[i] = graphql.MarshalString("ModeratePostPayload")
 		case "postAuditLog":
 			out.Values[i] = ec._ModeratePostPayload_postAuditLog(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var moderatorImplementors = []string{"Moderator", "Node", "_Entity"}
+
+func (ec *executionContext) _Moderator(ctx context.Context, sel ast.SelectionSet, obj *types.Moderator) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, moderatorImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Moderator")
+		case "id":
+			out.Values[i] = ec._Moderator_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "lastSelected":
+			out.Values[i] = ec._Moderator_lastSelected(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -5772,16 +6113,6 @@ func (ec *executionContext) marshalNAccountInfractionHistoryEdge2ᚖoverdollᚋa
 	return ec._AccountInfractionHistoryEdge(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNActor2overdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐActor(ctx context.Context, sel ast.SelectionSet, v types.Actor) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	return ec._Actor(ctx, sel, v)
-}
-
 func (ec *executionContext) unmarshalNBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
 	res, err := graphql.UnmarshalBoolean(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -5797,6 +6128,20 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
+func (ec *executionContext) marshalNContributor2overdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐContributor(ctx context.Context, sel ast.SelectionSet, v types.Contributor) graphql.Marshaler {
+	return ec._Contributor(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNContributor2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐContributor(ctx context.Context, sel ast.SelectionSet, v *types.Contributor) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._Contributor(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx context.Context, v interface{}) (relay.ID, error) {
 	var res relay.ID
 	err := res.UnmarshalGQL(v)
@@ -5810,6 +6155,20 @@ func (ec *executionContext) marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐ
 func (ec *executionContext) unmarshalNModeratePostInput2overdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐModeratePostInput(ctx context.Context, v interface{}) (types.ModeratePostInput, error) {
 	res, err := ec.unmarshalInputModeratePostInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNModerator2overdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐModerator(ctx context.Context, sel ast.SelectionSet, v types.Moderator) graphql.Marshaler {
+	return ec._Moderator(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNModerator2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐModerator(ctx context.Context, sel ast.SelectionSet, v *types.Moderator) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._Moderator(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNPageInfo2ᚖoverdollᚋlibrariesᚋgraphqlᚋrelayᚐPageInfo(ctx context.Context, sel ast.SelectionSet, v *relay.PageInfo) graphql.Marshaler {
@@ -5850,13 +6209,13 @@ func (ec *executionContext) marshalNPostAuditLog2ᚖoverdollᚋapplicationsᚋpa
 	return ec._PostAuditLog(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNPostAuditLogActionEnum2overdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPostAuditLogActionEnum(ctx context.Context, v interface{}) (types.PostAuditLogActionEnum, error) {
-	var res types.PostAuditLogActionEnum
+func (ec *executionContext) unmarshalNPostAuditLogAction2overdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPostAuditLogAction(ctx context.Context, v interface{}) (types.PostAuditLogAction, error) {
+	var res types.PostAuditLogAction
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNPostAuditLogActionEnum2overdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPostAuditLogActionEnum(ctx context.Context, sel ast.SelectionSet, v types.PostAuditLogActionEnum) graphql.Marshaler {
+func (ec *executionContext) marshalNPostAuditLogAction2overdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPostAuditLogAction(ctx context.Context, sel ast.SelectionSet, v types.PostAuditLogAction) graphql.Marshaler {
 	return v
 }
 
@@ -6367,13 +6726,6 @@ func (ec *executionContext) marshalN__TypeKind2string(ctx context.Context, sel a
 	return res
 }
 
-func (ec *executionContext) marshalOAccountModeratorSettings2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐAccountModeratorSettings(ctx context.Context, sel ast.SelectionSet, v *types.AccountModeratorSettings) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._AccountModeratorSettings(ctx, sel, v)
-}
-
 func (ec *executionContext) unmarshalOBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
 	res, err := graphql.UnmarshalBoolean(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -6396,6 +6748,13 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 		return graphql.Null
 	}
 	return graphql.MarshalBoolean(*v)
+}
+
+func (ec *executionContext) marshalOContributor2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐContributor(ctx context.Context, sel ast.SelectionSet, v *types.Contributor) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Contributor(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOID2ᚖoverdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx context.Context, v interface{}) (*relay.ID, error) {
@@ -6434,6 +6793,13 @@ func (ec *executionContext) marshalOModeratePostPayload2ᚖoverdollᚋapplicatio
 		return graphql.Null
 	}
 	return ec._ModeratePostPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOModerator2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐModerator(ctx context.Context, sel ast.SelectionSet, v *types.Moderator) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Moderator(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOPostAuditLog2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPostAuditLog(ctx context.Context, sel ast.SelectionSet, v *types.PostAuditLog) graphql.Marshaler {

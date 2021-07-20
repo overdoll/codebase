@@ -13,10 +13,11 @@ type Repository interface {
 	UpdatePost(ctx context.Context, postId string, updateFn func(post *Post) error) (*Post, error)
 	DeletePost(ctx context.Context, postId string) error
 
-	GetArtistById(ctx context.Context, postId string) (*Artist, error)
+	GetArtistById(ctx context.Context, artistId string) (*Artist, error)
 	GetArtists(ctx context.Context) ([]*Artist, error)
 	CreateArtist(ctx context.Context, artist *Artist) error
 
+	GetCharacterById(ctx context.Context, characterId string) (*Character, error)
 	GetCharactersById(ctx context.Context, characterIds []string) ([]*Character, error)
 	GetCharacters(ctx context.Context) ([]*Character, error)
 	CreateCharacters(ctx context.Context, characters []*Character) error
@@ -24,7 +25,9 @@ type Repository interface {
 	CreateMedias(ctx context.Context, medias []*Media) error
 	GetMediasById(ctx context.Context, mediaIds []string) ([]*Media, error)
 	GetMedias(ctx context.Context) ([]*Media, error)
+	GetMediaById(ctx context.Context, mediaId string) (*Media, error)
 
+	GetCategoryById(ctx context.Context, categoryId string) (*Category, error)
 	GetCategoriesById(ctx context.Context, categoryIds []string) ([]*Category, error)
 	GetCategories(ctx context.Context) ([]*Category, error)
 	CreateCategories(ctx context.Context, categories []*Category) error

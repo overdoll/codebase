@@ -1,6 +1,14 @@
-type Media implements Node {
+type Media implements Node & Object @key(fields: "id") {
+  """An ID pointing to this media."""
   id: ID!
-  thumbnail: String!
+
+  """A URL pointing to the object's thumbnail."""
+  thumbnail(
+    """The size of the resulting square image."""
+    size: Int
+  ): URI! @goField(forceResolver: true)
+
+  """A title for this media."""
   title: String!
 }
 
@@ -14,10 +22,20 @@ type MediaConnection {
   pageInfo: PageInfo!
 }
 
-type Character implements Node {
+type Character implements Node & Object @key(fields: "id") {
+  """An ID pointing to this character."""
   id: ID!
-  thumbnail: String!
+
+  """A URL pointing to the object's thumbnail."""
+  thumbnail(
+    """The size of the resulting square image."""
+    size: Int
+  ): URI! @goField(forceResolver: true)
+
+  """A name for this character."""
   name: String!
+
+  """The media linked to this character."""
   media: Media!
 }
 

@@ -10,11 +10,6 @@ import (
 	"time"
 )
 
-// Represents an account
-type Actor interface {
-	IsActor()
-}
-
 type Account struct {
 	// Post Audit Logs linked to this account
 	//
@@ -24,11 +19,13 @@ type Account struct {
 	//
 	// Viewable by the currently authenticated account or staff+
 	Infractions *AccountInfractionHistoryConnection `json:"infractions"`
-	// Moderator settings for this account
+	// Moderator settings and status for this account
 	//
 	// Viewable by the currently authenticated account or staff+
-	ModeratorSettings *AccountModeratorSettings `json:"moderatorSettings"`
-	ID                relay.ID                  `json:"id"`
+	Moderator *Moderator `json:"moderator"`
+	// Contributor settings and status
+	Contributor *Contributor `json:"contributor"`
+	ID          relay.ID     `json:"id"`
 }
 
 func (Account) IsEntity() {}
@@ -56,9 +53,13 @@ type AccountInfractionHistoryEdge struct {
 	Cursor string                    `json:"cursor"`
 }
 
-type AccountModeratorSettings struct {
-	InQueue bool `json:"inQueue"`
+type Contributor struct {
+	// The ID of the contributor
+	ID relay.ID `json:"id"`
 }
+
+func (Contributor) IsNode()   {}
+func (Contributor) IsEntity() {}
 
 // Moderate the pending post input
 type ModeratePostInput struct {
@@ -76,6 +77,16 @@ type ModeratePostPayload struct {
 	PostAuditLog *PostAuditLog `json:"postAuditLog"`
 }
 
+type Moderator struct {
+	// The ID of the moderator
+	ID relay.ID `json:"id"`
+	// The last time this moderator was selected for a post
+	LastSelected time.Time `json:"lastSelected"`
+}
+
+func (Moderator) IsNode()   {}
+func (Moderator) IsEntity() {}
+
 type Post struct {
 	ID relay.ID `json:"id"`
 	// Audit logs belonging to this pending post
@@ -91,11 +102,11 @@ type PostAuditLog struct {
 	// ID of the audit log
 	ID relay.ID `json:"id"`
 	// The contributor that the audit log belongs to
-	Contributor Actor `json:"contributor"`
+	Contributor *Account `json:"contributor"`
 	// The moderator that this log belongs to
-	Moderator Actor `json:"moderator"`
+	Moderator *Account `json:"moderator"`
 	// The status or the action that was taken against the pending post
-	Action PostAuditLogActionEnum `json:"action"`
+	Action PostAuditLogAction `json:"action"`
 	// The reason the action was taken
 	Reason string `json:"reason"`
 	// Additional notes by the moderator
@@ -166,43 +177,43 @@ type ToggleModeratorSettingsInQueuePayload struct {
 	ModeratorSettingsInQueue *bool `json:"moderatorSettingsInQueue"`
 }
 
-type PostAuditLogActionEnum string
+type PostAuditLogAction string
 
 const (
-	PostAuditLogActionEnumApproved PostAuditLogActionEnum = "Approved"
-	PostAuditLogActionEnumDenied   PostAuditLogActionEnum = "Denied"
+	PostAuditLogActionApproved PostAuditLogAction = "Approved"
+	PostAuditLogActionDenied   PostAuditLogAction = "Denied"
 )
 
-var AllPostAuditLogActionEnum = []PostAuditLogActionEnum{
-	PostAuditLogActionEnumApproved,
-	PostAuditLogActionEnumDenied,
+var AllPostAuditLogAction = []PostAuditLogAction{
+	PostAuditLogActionApproved,
+	PostAuditLogActionDenied,
 }
 
-func (e PostAuditLogActionEnum) IsValid() bool {
+func (e PostAuditLogAction) IsValid() bool {
 	switch e {
-	case PostAuditLogActionEnumApproved, PostAuditLogActionEnumDenied:
+	case PostAuditLogActionApproved, PostAuditLogActionDenied:
 		return true
 	}
 	return false
 }
 
-func (e PostAuditLogActionEnum) String() string {
+func (e PostAuditLogAction) String() string {
 	return string(e)
 }
 
-func (e *PostAuditLogActionEnum) UnmarshalGQL(v interface{}) error {
+func (e *PostAuditLogAction) UnmarshalGQL(v interface{}) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
 	}
 
-	*e = PostAuditLogActionEnum(str)
+	*e = PostAuditLogAction(str)
 	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid PostAuditLogActionEnum", str)
+		return fmt.Errorf("%s is not a valid PostAuditLogAction", str)
 	}
 	return nil
 }
 
-func (e PostAuditLogActionEnum) MarshalGQL(w io.Writer) {
+func (e PostAuditLogAction) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }

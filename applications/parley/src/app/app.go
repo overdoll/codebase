@@ -23,7 +23,7 @@ type Queries struct {
 	PostsAuditLogByModerator     query.PostsAuditLogByModeratorHandler
 	AccountInfractionHistory     query.AccountInfractionHistoryByAccountHandler
 	AccountInfractionHistoryById query.AccountInfractionHistoryByIdHandler
-	ModeratorInQueue             query.IsModeratorInQueueHandler
+	ModeratorById                query.ModeratorByIdHandler
 	PostAuditLogById             query.PostAuditLogByIdHandler
 	PostAuditLogsByPost          query.PostAuditLogsByPostHandler
 }

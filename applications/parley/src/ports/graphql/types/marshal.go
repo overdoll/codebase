@@ -2,6 +2,7 @@ package types
 
 import (
 	"overdoll/applications/parley/src/domain/infraction"
+	"overdoll/applications/parley/src/domain/moderator"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/paging"
 )
@@ -10,7 +11,7 @@ func MarshalPostAuditLogToGraphQL(result *infraction.PostAuditLog) *PostAuditLog
 	var infractionId *relay.ID
 
 	if result.IsDeniedWithInfraction() {
-		id := relay.NewID(AccountInfractionHistory{}, result.Contributor().ID(), result.UserInfraction().ID())
+		id := relay.NewID(AccountInfractionHistory{}, result.ContributorId(), result.UserInfraction().ID())
 		infractionId = &id
 	}
 
@@ -20,20 +21,20 @@ func MarshalPostAuditLogToGraphQL(result *infraction.PostAuditLog) *PostAuditLog
 		reason = result.RejectionReason().Reason()
 	}
 
-	var action PostAuditLogActionEnum
+	var action PostAuditLogAction
 
 	if result.IsDenied() {
-		action = PostAuditLogActionEnumDenied
+		action = PostAuditLogActionDenied
 	}
 
 	if result.IsApproved() {
-		action = PostAuditLogActionEnumApproved
+		action = PostAuditLogActionApproved
 	}
 
 	return &PostAuditLog{
 		ID:              relay.NewID(PostAuditLog{}, result.PendingPostID(), result.ID()),
-		Contributor:     nil,
-		Moderator:       nil,
+		Contributor:     &Account{ID: relay.NewID(Account{}, result.ContributorId())},
+		Moderator:       &Account{ID: relay.NewID(Account{}, result.ModeratorId())},
 		InfractionID:    infractionId,
 		Action:          action,
 		Reason:          reason,
@@ -111,6 +112,13 @@ func MarshalAccountInfractionHistoryToGraphQLConnection(results []*infraction.Ac
 			EndCursor:       endCursor,
 		},
 		Edges: infractionHistory,
+	}
+}
+
+func MarshalModeratorToGraphQL(result *moderator.Moderator) *Moderator {
+	return &Moderator{
+		ID:           relay.NewID(Moderator{}, result.ID()),
+		LastSelected: result.LastSelected(),
 	}
 }
 

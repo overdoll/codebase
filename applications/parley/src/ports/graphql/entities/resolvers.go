@@ -20,6 +20,10 @@ func (r EntityResolver) FindAccountByID(ctx context.Context, id relay.ID) (*type
 	return &types.Account{ID: id}, nil
 }
 
+func (r EntityResolver) FindContributorByID(ctx context.Context, id relay.ID) (*types.Contributor, error) {
+	return &types.Contributor{ID: id}, nil
+}
+
 func (r EntityResolver) FindAccountInfractionHistoryByID(ctx context.Context, id relay.ID) (*types.AccountInfractionHistory, error) {
 
 	infractionHistory, err := r.App.Queries.AccountInfractionHistoryById.Handle(ctx, id.GetCompositePartID(1), id.GetCompositePartID(0))
@@ -51,4 +55,15 @@ func (r EntityResolver) FindPostRejectionReasonByID(ctx context.Context, id rela
 	}
 
 	return types.MarshalPostRejectionReasonToGraphQL(rejectionReason), nil
+}
+
+func (r EntityResolver) FindModeratorByID(ctx context.Context, id relay.ID) (*types.Moderator, error) {
+
+	mod, err := r.App.Queries.ModeratorById.Handle(ctx, id.GetID())
+
+	if err != nil {
+		return nil, err
+	}
+
+	return types.MarshalModeratorToGraphQL(mod), nil
 }

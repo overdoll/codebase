@@ -1,20 +1,20 @@
 type Post implements Node @key(fields: "id") {
   id: ID!
 
-  """The reference of this post. Should always be used to reference this post"""
+  """The reference of this post. Should always be used to reference this post."""
   reference: String!
 
   """The state of the post"""
   state: PostState!
 
   """Represents the account that this post belongs to"""
-  artist: Actor!
+  artist: Account!
 
   """The moderator to whom this pending post was assigned"""
-  moderator: Actor!
+  moderator: Account!
 
-  """The actor that contributed this post"""
-  contributor: Actor!
+  """The contributor who contributed this post"""
+  contributor: Account!
 
   """Content belonging to this post"""
   content: [Content!]!

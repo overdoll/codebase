@@ -49,3 +49,21 @@ func (r *Resolver) Account() AccountResolver {
 		App: r.app,
 	}
 }
+
+func (r *Resolver) Media() MediaResolver {
+	return &resolvers.MediaResolver{
+		App: r.app,
+	}
+}
+
+func (r *Resolver) CategoryResolver() MediaResolver {
+	return &resolvers.CategoryResolver{
+		App: r.app,
+	}
+}
+
+func (r *Resolver) CharacterResolver() MediaResolver {
+	return &resolvers.CharacterResolver{
+		App: r.app,
+	}
+}

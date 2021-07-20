@@ -64,29 +64,6 @@ func (r *QueryResolver) Posts(ctx context.Context, after *string, before *string
 	return types.MarshalPostToGraphQLConnection(results, page), nil
 }
 
-func (r *QueryResolver) Artists(ctx context.Context, after *string, before *string, first *int, last *int, username *string) (*types.ArtistConnection, error) {
-
-	cursor, err := paging.NewCursor(after, before, first, last)
-
-	if err != nil {
-		return nil, gqlerror.Errorf(err.Error())
-	}
-
-	search := ""
-
-	if username != nil {
-		search = *username
-	}
-
-	results, page, err := r.App.Queries.SearchArtist.Handle(ctx, cursor, search)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return types.MarshalArtistToGraphQLConnection(results, page), nil
-}
-
 func (r *QueryResolver) Categories(ctx context.Context, after *string, before *string, first *int, last *int, name *string) (*types.CategoryConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)

@@ -1,20 +1,3 @@
-"""
-Represents an account
-"""
-interface Actor {
-  """ID representing the actor"""
-  id: ID!
-
-  """A URL pointing to the actor's public avatar."""
-  avatar(
-    """The size of the resulting square image."""
-    size: Int
-  ): URI! @goField(forceResolver: true)
-
-  """The username of the actor."""
-  username: String!
-}
-
 scalar Time
 
 """An RFC 3986, RFC 3987, and RFC 6570 (level 4) compliant URI string."""

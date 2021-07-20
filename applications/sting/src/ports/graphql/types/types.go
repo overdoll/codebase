@@ -12,11 +12,13 @@ import (
 )
 
 // Represents an account
-type Actor interface {
-	IsActor()
+type Object interface {
+	IsObject()
 }
 
 type Account struct {
+	// Artist status for this account
+	Artist *Artist `json:"artist"`
 	// Posts queue specific to this account (when moderator)
 	ModeratorPostsQueue *PostConnection `json:"moderatorPostsQueue"`
 	// Posts specific to this account
@@ -29,30 +31,25 @@ type Account struct {
 func (Account) IsEntity() {}
 
 type Artist struct {
-	ID       relay.ID `json:"id"`
-	Avatar   string   `json:"avatar"`
-	Username string   `json:"username"`
+	ID              relay.ID `json:"id"`
+	DoNotPostReason *string  `json:"doNotPostReason"`
 }
 
-func (Artist) IsNode() {}
-
-type ArtistConnection struct {
-	Edges    []*ArtistEdge   `json:"edges"`
-	PageInfo *relay.PageInfo `json:"pageInfo"`
-}
-
-type ArtistEdge struct {
-	Cursor string  `json:"cursor"`
-	Node   *Artist `json:"node"`
-}
+func (Artist) IsNode()   {}
+func (Artist) IsEntity() {}
 
 type Category struct {
-	ID        relay.ID `json:"id"`
-	Thumbnail string   `json:"thumbnail"`
-	Title     string   `json:"title"`
+	// An ID pointing to this category.
+	ID relay.ID `json:"id"`
+	// A URL pointing to the object's thumbnail.
+	Thumbnail graphql1.URI `json:"thumbnail"`
+	// A title for this category.
+	Title string `json:"title"`
 }
 
-func (Category) IsNode() {}
+func (Category) IsNode()   {}
+func (Category) IsObject() {}
+func (Category) IsEntity() {}
 
 type CategoryConnection struct {
 	Edges    []*CategoryEdge `json:"edges"`
@@ -65,13 +62,19 @@ type CategoryEdge struct {
 }
 
 type Character struct {
-	ID        relay.ID `json:"id"`
-	Thumbnail string   `json:"thumbnail"`
-	Name      string   `json:"name"`
-	Media     *Media   `json:"media"`
+	// An ID pointing to this character.
+	ID relay.ID `json:"id"`
+	// A URL pointing to the object's thumbnail.
+	Thumbnail graphql1.URI `json:"thumbnail"`
+	// A name for this character.
+	Name string `json:"name"`
+	// The media linked to this character.
+	Media *Media `json:"media"`
 }
 
-func (Character) IsNode() {}
+func (Character) IsNode()   {}
+func (Character) IsObject() {}
+func (Character) IsEntity() {}
 
 type CharacterConnection struct {
 	Edges    []*CharacterEdge `json:"edges"`
@@ -125,12 +128,17 @@ type CreatePostPayload struct {
 }
 
 type Media struct {
-	ID        relay.ID `json:"id"`
-	Thumbnail string   `json:"thumbnail"`
-	Title     string   `json:"title"`
+	// An ID pointing to this media.
+	ID relay.ID `json:"id"`
+	// A URL pointing to the object's thumbnail.
+	Thumbnail graphql1.URI `json:"thumbnail"`
+	// A title for this media.
+	Title string `json:"title"`
 }
 
-func (Media) IsNode() {}
+func (Media) IsNode()   {}
+func (Media) IsObject() {}
+func (Media) IsEntity() {}
 
 type MediaConnection struct {
 	Edges    []*MediaEdge    `json:"edges"`
@@ -144,16 +152,16 @@ type MediaEdge struct {
 
 type Post struct {
 	ID relay.ID `json:"id"`
-	// The reference of this post. Should always be used to reference this post
+	// The reference of this post. Should always be used to reference this post.
 	Reference string `json:"reference"`
 	// The state of the post
 	State PostState `json:"state"`
 	// Represents the account that this post belongs to
-	Artist Actor `json:"artist"`
+	Artist *Account `json:"artist"`
 	// The moderator to whom this pending post was assigned
-	Moderator Actor `json:"moderator"`
-	// The actor that contributed this post
-	Contributor Actor `json:"contributor"`
+	Moderator *Account `json:"moderator"`
+	// The contributor who contributed this post
+	Contributor *Account `json:"contributor"`
 	// Content belonging to this post
 	Content []*Content `json:"content"`
 	// The media that was requested.

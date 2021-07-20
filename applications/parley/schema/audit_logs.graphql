@@ -1,4 +1,4 @@
-enum PostAuditLogActionEnum {
+enum PostAuditLogAction {
   Approved
   Denied
 }
@@ -13,13 +13,13 @@ type PostAuditLog implements Node @key(fields: "id") {
   id: ID!
 
   """The contributor that the audit log belongs to"""
-  contributor: Actor!
+  contributor: Account!
 
   """The moderator that this log belongs to"""
-  moderator: Actor!
+  moderator: Account!
 
   """The status or the action that was taken against the pending post"""
-  action: PostAuditLogActionEnum!
+  action: PostAuditLogAction!
 
   """The reason the action was taken"""
   reason: String!

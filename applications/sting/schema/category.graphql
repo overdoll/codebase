@@ -1,6 +1,14 @@
-type Category implements Node {
+type Category implements Node & Object @key(fields: "id") {
+  """An ID pointing to this category."""
   id: ID!
-  thumbnail: String!
+
+  """A URL pointing to the object's thumbnail."""
+  thumbnail(
+    """The size of the resulting square image."""
+    size: Int
+  ): URI! @goField(forceResolver: true)
+
+  """A title for this category."""
   title: String!
 }
 

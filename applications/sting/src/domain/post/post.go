@@ -82,9 +82,11 @@ func (e *PostFilters) ArtistId() string {
 type Post struct {
 	*paging.Node
 
-	id          string
-	moderatorId string
-	state       PostState
+	id            string
+	moderatorId   string
+	contributorId string
+	artistId      string
+	state         PostState
 
 	characters []*Character
 	categories []*Category
@@ -143,6 +145,14 @@ func (p *Post) ID() string {
 
 func (p *Post) ModeratorId() string {
 	return p.moderatorId
+}
+
+func (p *Post) ContributorId() string {
+	return p.contributorId
+}
+
+func (p *Post) ArtistId() string {
+	return p.artistId
 }
 
 func (p *Post) State() PostState {

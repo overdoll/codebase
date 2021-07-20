@@ -78,10 +78,11 @@ type PostAuditLog struct {
 
 	createdMs int
 
-	moderator   *account.Account
-	contributor *account.Account
-	notes       string
-	reverted    bool
+	moderatorId   string
+	contributorId string
+
+	notes    string
+	reverted bool
 
 	status string
 
@@ -114,8 +115,8 @@ func NewPendingPostAuditLog(user *account.Account, userInfractionHistory []*Acco
 	return &PostAuditLog{
 		id:              ksuid.New().String(),
 		pendingPostId:   postId,
-		moderator:       user,
-		contributor:     contributor,
+		moderatorId:     moderatorId,
+		contributorId:   contributor.ID(),
 		status:          status,
 		rejectionReason: rejectionReason,
 		notes:           notes,
@@ -125,12 +126,12 @@ func NewPendingPostAuditLog(user *account.Account, userInfractionHistory []*Acco
 	}, nil
 }
 
-func UnmarshalPostAuditLogFromDatabase(id, postId, moderatorId, moderatorUsername, contributorId, contributorUsername, status, userInfractionId, reason, notes string, reverted bool, userInfraction *AccountInfractionHistory, createdMs int) *PostAuditLog {
+func UnmarshalPostAuditLogFromDatabase(id, postId, moderatorId, contributorId, status, userInfractionId, reason, notes string, reverted bool, userInfraction *AccountInfractionHistory, createdMs int) *PostAuditLog {
 	return &PostAuditLog{
 		id:              id,
 		pendingPostId:   postId,
-		moderator:       account.NewUserOnlyIdAndUsername(moderatorId, moderatorUsername),
-		contributor:     account.NewUserOnlyIdAndUsername(contributorId, contributorUsername),
+		moderatorId:     moderatorId,
+		contributorId:   contributorId,
 		status:          status,
 		rejectionReason: UnmarshalPostRejectionReasonFromDatabase(ksuid.New().String(), reason, userInfractionId != ""),
 		notes:           notes,
@@ -156,12 +157,12 @@ func (m *PostAuditLog) Notes() string {
 	return m.notes
 }
 
-func (m *PostAuditLog) Moderator() *account.Account {
-	return m.moderator
+func (m *PostAuditLog) ModeratorId() string {
+	return m.moderatorId
 }
 
-func (m *PostAuditLog) Contributor() *account.Account {
-	return m.contributor
+func (m *PostAuditLog) ContributorId() string {
+	return m.contributorId
 }
 
 func (m *PostAuditLog) IsApproved() bool {
@@ -213,10 +214,6 @@ func (m *PostAuditLog) Revert() error {
 	m.rejectionReason = UnmarshalPostRejectionReasonFromDatabase(m.rejectionReason.ID(), m.rejectionReason.Reason(), false)
 
 	return nil
-}
-
-func (m *PostAuditLog) UpdateModerator(mod *account.Account) {
-	m.moderator = mod
 }
 
 func (m *PostAuditLog) RejectionReason() *PostRejectionReason {
