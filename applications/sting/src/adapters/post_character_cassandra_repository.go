@@ -105,6 +105,32 @@ func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars [
 	return characters, nil
 }
 
+func (r PostsCassandraRepository) GetCharacterById(ctx context.Context, characterId string) (*post.Character, error) {
+
+	queryCharacters := r.session.
+		Query(characterTable.Get()).
+		Consistency(gocql.One)
+
+	var char *character
+
+	if err := queryCharacters.Get(&char); err != nil {
+		return nil, fmt.Errorf("select() failed: '%s", err)
+	}
+
+	media, err := r.GetMediaById(ctx, char.MediaId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return post.UnmarshalCharacterFromDatabase(
+		char.Id,
+		char.Name,
+		char.Thumbnail,
+		media,
+	), nil
+}
+
 func (r PostsCassandraRepository) GetCharacters(ctx context.Context) ([]*post.Character, error) {
 	var dbChars []character
 

@@ -51,6 +51,25 @@ func (r PostsCassandraRepository) GetMedias(ctx context.Context) ([]*post.Media,
 	return medias, nil
 }
 
+func (r PostsCassandraRepository) GetMediaById(ctx context.Context, mediaId string) (*post.Media, error) {
+
+	queryMedia := r.session.
+		Query(mediaTable.Get()).
+		Consistency(gocql.One)
+
+	var med *media
+
+	if err := queryMedia.Get(&med); err != nil {
+		return nil, fmt.Errorf("select() failed: '%s", err)
+	}
+
+	return post.UnmarshalMediaFromDatabase(
+		med.Id,
+		med.Title,
+		med.Thumbnail,
+	), nil
+}
+
 func (r PostsCassandraRepository) GetMediasById(ctx context.Context, medi []string) ([]*post.Media, error) {
 
 	var medias []*post.Media

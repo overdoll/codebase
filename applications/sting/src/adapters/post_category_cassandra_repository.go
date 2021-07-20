@@ -61,6 +61,21 @@ func (r PostsCassandraRepository) GetCategoriesById(ctx context.Context, cats []
 	return categories, nil
 }
 
+func (r PostsCassandraRepository) GetCategoryById(ctx context.Context, categoryId string) (*post.Category, error) {
+
+	queryCategories := r.session.
+		Query(categoryTable.Get()).
+		Consistency(gocql.One)
+
+	var cat category
+
+	if err := queryCategories.Get(&cat); err != nil {
+		return nil, fmt.Errorf("select() failed: '%s", err)
+	}
+
+	return post.UnmarshalCategoryFromDatabase(cat.Id, cat.Title, cat.Thumbnail), nil
+}
+
 func (r PostsCassandraRepository) GetCategories(ctx context.Context) ([]*post.Category, error) {
 
 	var dbCategory []category
