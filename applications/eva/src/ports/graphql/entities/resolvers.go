@@ -13,7 +13,56 @@ type EntityResolver struct {
 }
 
 func (r EntityResolver) FindAccountByID(ctx context.Context, id relay.ID) (*types.Account, error) {
-	return &types.Account{ID: id}, nil
+
+	acc, err := r.App.Queries.AccountById.Handle(ctx, id.GetID())
+
+	if err != nil {
+		return nil, err
+	}
+
+	return types.MarshalAccountToGraphQL(acc), nil
+}
+
+func (r EntityResolver) FindArtistByID(ctx context.Context, id relay.ID) (*types.Artist, error) {
+
+	acc, err := r.App.Queries.AccountById.Handle(ctx, id.GetID())
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.Artist{
+		ID:      id,
+		Account: types.MarshalAccountToGraphQL(acc),
+	}, nil
+}
+
+func (r EntityResolver) FindContributorByID(ctx context.Context, id relay.ID) (*types.Contributor, error) {
+
+	acc, err := r.App.Queries.AccountById.Handle(ctx, id.GetID())
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.Contributor{
+		ID:      id,
+		Account: types.MarshalAccountToGraphQL(acc),
+	}, nil
+}
+
+func (r EntityResolver) FindModeratorByID(ctx context.Context, id relay.ID) (*types.Moderator, error) {
+
+	acc, err := r.App.Queries.AccountById.Handle(ctx, id.GetID())
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.Moderator{
+		ID:      id,
+		Account: types.MarshalAccountToGraphQL(acc),
+	}, nil
 }
 
 func (r EntityResolver) FindAccountEmailByID(ctx context.Context, id relay.ID) (*types.AccountEmail, error) {

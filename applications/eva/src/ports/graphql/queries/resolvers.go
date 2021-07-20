@@ -110,3 +110,7 @@ func (r *QueryResolver) Viewer(ctx context.Context) (*types.Account, error) {
 
 	return nil, nil
 }
+
+func (r *QueryResolver) Accounts(ctx context.Context, after *string, before *string, first *int, last *int, username *string, isArtist *bool) (*types.AccountConnection, error) {
+	panic("implement me")
+}

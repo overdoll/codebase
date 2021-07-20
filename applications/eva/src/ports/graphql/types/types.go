@@ -10,14 +10,11 @@ import (
 	"strconv"
 )
 
-// Represents an account
-type Actor interface {
-	IsActor()
-}
-
 type Account struct {
 	// ID representing the account
 	ID relay.ID `json:"id"`
+	// The ID that the account can be referenced by
+	Reference string `json:"reference"`
 	// A URL pointing to the accounts's public avatar.
 	Avatar graphql1.URI `json:"avatar"`
 	// The username of the account.
@@ -26,6 +23,8 @@ type Account struct {
 	IsStaff bool `json:"isStaff"`
 	// Whether or not this account is part of the moderation team
 	IsModerator bool `json:"isModerator"`
+	// Whether or not this account is an artist
+	IsArtist bool `json:"isArtist"`
 	// Whether or not this account is locked
 	IsLocked bool `json:"isLocked"`
 	// The details of the account lock
@@ -51,8 +50,19 @@ type Account struct {
 }
 
 func (Account) IsNode()   {}
-func (Account) IsActor()  {}
 func (Account) IsEntity() {}
+
+// Connection of the account
+type AccountConnection struct {
+	Edges    []*AccountEdge  `json:"edges"`
+	PageInfo *relay.PageInfo `json:"pageInfo"`
+}
+
+// Edge of the account
+type AccountEdge struct {
+	Node   *Account `json:"node"`
+	Cursor string   `json:"cursor"`
+}
 
 // Email belonging to a specific account
 type AccountEmail struct {
@@ -169,6 +179,14 @@ type AddAccountEmailPayload struct {
 	AccountEmail *AccountEmail `json:"accountEmail"`
 }
 
+type Artist struct {
+	ID relay.ID `json:"id"`
+	// The account linked to this artist
+	Account *Account `json:"account"`
+}
+
+func (Artist) IsEntity() {}
+
 type AuthenticationToken struct {
 	SameSession   bool                              `json:"sameSession"`
 	Verified      bool                              `json:"verified"`
@@ -194,6 +212,14 @@ type ConfirmAccountEmailPayload struct {
 	// The account email that was confirmed
 	AccountEmail *AccountEmail `json:"accountEmail"`
 }
+
+type Contributor struct {
+	ID relay.ID `json:"id"`
+	// The account linked to this contributor
+	Account *Account `json:"account"`
+}
+
+func (Contributor) IsEntity() {}
 
 // Payload for a created pending post
 type CreateAccountWithAuthenticationTokenInput struct {
@@ -270,6 +296,14 @@ type GrantAuthenticationTokenPayload struct {
 	// The authentication token after starting
 	AuthenticationToken *AuthenticationToken `json:"authenticationToken"`
 }
+
+type Moderator struct {
+	ID relay.ID `json:"id"`
+	// The account linked to this moderator
+	Account *Account `json:"account"`
+}
+
+func (Moderator) IsEntity() {}
 
 // TOTP secret + image combination
 type MultiFactorTotp struct {

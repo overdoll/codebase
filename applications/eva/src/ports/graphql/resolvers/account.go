@@ -9,7 +9,6 @@ import (
 	"overdoll/libraries/graphql"
 	"overdoll/libraries/helpers"
 	"overdoll/libraries/paging"
-	"overdoll/libraries/passport"
 )
 
 type AccountResolver struct {
@@ -22,19 +21,13 @@ func (r AccountResolver) Avatar(ctx context.Context, obj *types.Account, size *i
 
 func (r AccountResolver) Emails(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountEmailConnection, error) {
 
-	accountId := obj.ID.GetID()
-
-	if passport.FromContext(ctx).AccountID() != accountId {
-		return nil, nil
-	}
-
 	cursor, err := paging.NewCursor(after, before, first, last)
 
 	if err != nil {
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	results, page, err := r.App.Queries.AccountEmailsByAccount.Handle(ctx, cursor, accountId)
+	results, page, err := r.App.Queries.AccountEmailsByAccount.Handle(ctx, cursor, obj.ID.GetID())
 
 	if err != nil {
 		return nil, err
@@ -45,19 +38,13 @@ func (r AccountResolver) Emails(ctx context.Context, obj *types.Account, after *
 
 func (r AccountResolver) Usernames(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountUsernameConnection, error) {
 
-	accountId := obj.ID.GetID()
-
-	if passport.FromContext(ctx).AccountID() != accountId {
-		return nil, nil
-	}
-
 	cursor, err := paging.NewCursor(after, before, first, last)
 
 	if err != nil {
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	results, page, err := r.App.Queries.AccountUsernamesByAccount.Handle(ctx, cursor, accountId)
+	results, page, err := r.App.Queries.AccountUsernamesByAccount.Handle(ctx, cursor, obj.ID.GetID())
 
 	if err != nil {
 		return nil, err
@@ -67,12 +54,6 @@ func (r AccountResolver) Usernames(ctx context.Context, obj *types.Account, afte
 }
 
 func (r AccountResolver) Sessions(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountSessionConnection, error) {
-
-	accountId := obj.ID.GetID()
-
-	if passport.FromContext(ctx).AccountID() != accountId {
-		return nil, nil
-	}
 
 	cursor, err := paging.NewCursor(after, before, first, last)
 
@@ -91,7 +72,7 @@ func (r AccountResolver) Sessions(ctx context.Context, obj *types.Account, after
 		accountSession = currentCookie.Value
 	}
 
-	results, page, err := r.App.Queries.AccountSessionsByAccount.Handle(ctx, cursor, accountSession, accountId)
+	results, page, err := r.App.Queries.AccountSessionsByAccount.Handle(ctx, cursor, accountSession, obj.ID.GetID())
 
 	if err != nil {
 		return nil, err
@@ -103,10 +84,6 @@ func (r AccountResolver) Sessions(ctx context.Context, obj *types.Account, after
 func (r AccountResolver) MultiFactorSettings(ctx context.Context, obj *types.Account) (*types.AccountMultiFactorSettings, error) {
 
 	accountId := obj.ID.GetID()
-
-	if passport.FromContext(ctx).AccountID() != accountId {
-		return nil, nil
-	}
 
 	acc, err := r.App.Queries.AccountById.Handle(ctx, accountId)
 
@@ -136,10 +113,6 @@ func (r AccountResolver) MultiFactorSettings(ctx context.Context, obj *types.Acc
 }
 
 func (r AccountResolver) RecoveryCodes(ctx context.Context, obj *types.Account) ([]*types.AccountMultiFactorRecoveryCode, error) {
-
-	if passport.FromContext(ctx).AccountID() != obj.ID.GetID() {
-		return nil, nil
-	}
 
 	codes, err := r.App.Queries.AccountRecoveryCodesByAccount.Handle(ctx, obj.ID.GetID())
 
