@@ -12,31 +12,43 @@ type EntityResolver struct {
 	App *app.Application
 }
 
+func (r EntityResolver) FindPostByID(ctx context.Context, id relay.ID) (*types.Post, error) {
+	return &types.Post{ID: id}, nil
+}
+
 func (r EntityResolver) FindAccountByID(ctx context.Context, id relay.ID) (*types.Account, error) {
-	panic("implement me")
+	return &types.Account{ID: id}, nil
 }
 
 func (r EntityResolver) FindAccountInfractionHistoryByID(ctx context.Context, id relay.ID) (*types.AccountInfractionHistory, error) {
-	panic("implement me")
-}
 
-func (r EntityResolver) FindPostAuditLogByID(ctx context.Context, id relay.ID) (*types.PostAuditLog, error) {
-	panic("implement me")
-}
-
-func (r EntityResolver) FindPostRejectionReasonByID(ctx context.Context, id relay.ID) (*types.PostRejectionReason, error) {
-	panic("implement me")
-}
-
-func (r EntityResolver) FindPostByID(ctx context.Context, id relay.ID) (*types.Post, error) {
-	_, err := r.App.Queries.GetPendingPostAuditLogById.Handle(ctx, id.GetID())
+	infractionHistory, err := r.App.Queries.AccountInfractionHistoryById.Handle(ctx, id.GetCompositePartID(1), id.GetCompositePartID(0))
 
 	if err != nil {
 		return nil, err
 	}
 
-	return &types.Post{
-		ID:        id,
-		AuditLogs: nil,
-	}, nil
+	return types.MarshalAccountInfractionHistoryToGraphQL(infractionHistory), nil
+}
+
+func (r EntityResolver) FindPostAuditLogByID(ctx context.Context, id relay.ID) (*types.PostAuditLog, error) {
+
+	auditLog, err := r.App.Queries.PostAuditLogById.Handle(ctx, id.GetID())
+
+	if err != nil {
+		return nil, err
+	}
+
+	return types.MarshalPostAuditLogToGraphQL(auditLog), nil
+}
+
+func (r EntityResolver) FindPostRejectionReasonByID(ctx context.Context, id relay.ID) (*types.PostRejectionReason, error) {
+
+	rejectionReason, err := r.App.Queries.PostRejectionReasonById.Handle(ctx, id.GetID())
+
+	if err != nil {
+		return nil, err
+	}
+
+	return types.MarshalPostRejectionReasonToGraphQL(rejectionReason), nil
 }

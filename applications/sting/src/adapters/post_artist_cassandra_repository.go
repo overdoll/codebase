@@ -19,20 +19,20 @@ var artistTable = table.New(table.Metadata{
 	SortKey: []string{},
 })
 
-type Artist struct {
+type artist struct {
 	Id              string `db:"account_id"`
 	DoNotPostReason string `db:"do_not_post_reason"`
 }
 
-func marshalArtistToDatabase(artist *post.Artist) *Artist {
-	return &Artist{
-		Id: artist.ID(),
+func marshalArtistToDatabase(art *post.Artist) *artist {
+	return &artist{
+		Id: art.ID(),
 	}
 }
 
 func (r PostsCassandraRepository) GetArtists(ctx context.Context) ([]*post.Artist, error) {
 
-	var dbArtists []Artist
+	var dbArtists []artist
 
 	qc := r.session.Query(artistTable.Select()).Consistency(gocql.One)
 
@@ -51,20 +51,20 @@ func (r PostsCassandraRepository) GetArtists(ctx context.Context) ([]*post.Artis
 
 func (r PostsCassandraRepository) GetArtistById(ctx context.Context, id string) (*post.Artist, error) {
 
-	var artist Artist
+	var art artist
 
 	qc := r.session.
 		Query(artistTable.Select()).
 		Consistency(gocql.One).
-		BindStruct(&Artist{
+		BindStruct(&artist{
 			Id: id,
 		})
 
-	if err := qc.Get(&artist); err != nil {
+	if err := qc.Get(&art); err != nil {
 		return nil, fmt.Errorf("select() failed: %s", err)
 	}
 
-	return post.UnmarshalArtistFromDatabase(artist.Id, artist.DoNotPostReason), nil
+	return post.UnmarshalArtistFromDatabase(art.Id, art.DoNotPostReason), nil
 }
 
 func (r PostsCassandraRepository) CreateArtist(ctx context.Context, artist *post.Artist) error {

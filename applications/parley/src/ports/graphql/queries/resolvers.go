@@ -22,7 +22,7 @@ func (r QueryResolver) PostRejectionReasons(ctx context.Context, after *string, 
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	results, page, err := r.App.Queries.PendingPostRejectionReasons.Handle(ctx, cursor, passport.FromContext(ctx).AccountID())
+	results, page, err := r.App.Queries.PostRejectionReasons.Handle(ctx, cursor, passport.FromContext(ctx).AccountID())
 
 	if err != nil {
 		return nil, err

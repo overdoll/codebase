@@ -14,16 +14,16 @@ import (
 	"overdoll/libraries/paging"
 )
 
-type PostPendingDocument struct {
+type postDocument struct {
 	Id                 string               `json:"id"`
 	State              string               `json:"state"`
 	ModeratorId        string               `json:"moderator_id"`
 	ArtistId           string               `json:"artist_id"`
 	ArtistUsername     string               `json:"artist_username"`
-	Contributor        ContributorDocument  `json:"contributor"`
+	Contributor        contributorDocument  `json:"contributor"`
 	Content            []string             `json:"content"`
-	Categories         []*CategoryDocument  `json:"categories"`
-	Characters         []*CharacterDocument `json:"characters"`
+	Categories         []*categoryDocument  `json:"categories"`
+	Characters         []*characterDocument `json:"characters"`
 	CharactersRequests map[string]string    `json:"characters_requests"`
 	CategoriesRequests []string             `json:"categories_requests"`
 	MediaRequests      []string             `json:"media_requests"`
@@ -31,94 +31,13 @@ type PostPendingDocument struct {
 	ReassignmentAt     string               `json:"reassignment_at"`
 }
 
-type ContributorDocument struct {
+type contributorDocument struct {
 	Id       string `json:"id"`
 	Avatar   string `json:"avatar"`
 	Username string `json:"username"`
 }
 
-const PostIndex = `
-{
-	"mappings": {
-		"dynamic": "strict",
-		"properties": {
-				"id": {
-					"type": "keyword"
-				},
-				"artist": {
-					"type": "nested",
-					"properties": {
-						"id": {
-							"type": "keyword"
-						},
-						"avatar": {
-							"type": "keyword"
-						},
-						"username": {
-							"type": "text",
-							"analyzer": "english"
-						}
-					}
-				},
-				"contributor": {
-					"type": "nested",
-					"properties": {
-						"id": {
-							"type": "keyword"
-						},
-						"avatar": {
-							"type": "keyword"
-						},
-						"username": {
-							"type": "text",
-							"analyzer": "english"
-						}
-					}
-				},
-				"categories": {
-					"type": "nested",
-					"properties": {
-						"id": {
-							"type": "keyword"
-						},
-						"thumbnail": {
-							"type": "keyword"
-						},
-						"title": {
-							"type": "text",
-							"analyzer": "english"
-						}
-					}
-				},
-				"characters": {
-					"type": "nested",
-					"properties": {
-						"id": {
-							"type": "keyword"
-						},
-						"thumbnail": {
-							"type": "keyword"
-						},
-						"name": {
-							"type": "text",
-							"analyzer": "english"
-						}
-					}
-				},
-				"content": {
-                     "type": "keyword"
-				},
-				"posted_at": {
-                     "type": "date"
-				},
-				"reassignment_at": {
-                     "type": "date"
-				}
-			}
-	}
-}`
-
-const PostPendingIndex = `
+const postPendingIndex = `
 {
 	"mappings": {
 		"dynamic": "strict",
@@ -221,7 +140,7 @@ const PostPendingIndex = `
 	}
 }`
 
-const SearchPostPending = `	
+const searchPostPending = `	
     "query" : {
 		"bool": {
 			"must": [
@@ -249,6 +168,7 @@ const SearchPostPending = `
 	"track_total_hits": true
 `
 
+// needs to be exported because its used in a test to refresh the index
 const PostIndexName = "posts"
 
 type PostsIndexElasticSearchRepository struct {
@@ -270,7 +190,7 @@ func (r PostsIndexElasticSearchRepository) IndexPost(ctx context.Context, pendin
 
 func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, cursor *paging.Cursor, filter *post.PostFilters) ([]*post.Post, *paging.Info, error) {
 
-	t, err := template.New("SearchPostPending").Parse(SearchPostPending)
+	t, err := template.New("searchPostPending").Parse(searchPostPending)
 
 	if err != nil {
 		return nil, nil, err
@@ -347,7 +267,7 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, curs
 
 	for _, pest := range response.Hits {
 
-		var pst PostPendingDocument
+		var pst postDocument
 
 		err := json.Unmarshal(pest, &pst)
 
@@ -405,13 +325,13 @@ func (r PostsIndexElasticSearchRepository) BulkIndexPosts(ctx context.Context, p
 
 	for _, pst := range pendingPosts {
 
-		var characterDocuments []*CharacterDocument
+		var characterDocuments []*characterDocument
 
 		for _, char := range pst.Characters() {
 			characterDocuments = append(characterDocuments, MarshalCharacterToDocument(char))
 		}
 
-		var categoryDocuments []*CategoryDocument
+		var categoryDocuments []*categoryDocument
 
 		for _, cat := range pst.Categories() {
 			categoryDocuments = append(categoryDocuments, MarshalCategoryToDocument(cat))
@@ -435,13 +355,13 @@ func (r PostsIndexElasticSearchRepository) BulkIndexPosts(ctx context.Context, p
 			mediaRequests = append(mediaRequests, cr.Title)
 		}
 
-		data := &PostPendingDocument{
+		data := &postDocument{
 			Id:             pst.ID(),
 			State:          string(pst.State()),
-			ArtistUsername: pst.Artist().Username(),
+			ArtistUsername: "",
 			ArtistId:       pst.Artist().ID(),
 			ModeratorId:    pst.ModeratorId(),
-			Contributor: ContributorDocument{
+			Contributor: contributorDocument{
 				Id:       pst.Contributor().ID(),
 				Avatar:   pst.Contributor().Avatar(),
 				Username: pst.Contributor().Username(),
@@ -485,7 +405,7 @@ func (r PostsIndexElasticSearchRepository) DeletePostIndex(ctx context.Context) 
 	if err != nil {
 	}
 
-	err = r.store.CreateIndex(PostIndexName, PostPendingIndex)
+	err = r.store.CreateIndex(PostIndexName, postPendingIndex)
 
 	if err != nil {
 		return fmt.Errorf("failed to create pending post index: %s", err)

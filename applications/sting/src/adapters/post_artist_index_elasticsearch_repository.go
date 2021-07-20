@@ -10,13 +10,14 @@ import (
 	"overdoll/libraries/paging"
 )
 
-type ArtistDocument struct {
-	Id       string `json:"id"`
-	Avatar   string `json:"avatar"`
-	Username string `json:"username"`
+type artistDocument struct {
+	Id              string `json:"id"`
+	Avatar          string `json:"avatar"`
+	Username        string `json:"username"`
+	DoNotPostReason string `json:"do_not_post_reason"`
 }
 
-const ArtistIndex = `
+const artistIndex = `
 {
 	"mappings": {
 		"dynamic": "strict",
@@ -35,7 +36,7 @@ const ArtistIndex = `
 	}
 }`
 
-const SearchArtists = `
+const searchArtists = `
 	"query" : {
 		"multi_match" : {
 			"query" : %q,
@@ -45,22 +46,22 @@ const SearchArtists = `
 	},
 	"size" : 5`
 
-const AllArtists = `
+const allArtists = `
 	"query" : { "match_all" : {} },
 	"size" : 5`
 
-const ArtistIndexName = "artists"
+const artistIndexName = "artists"
 
 func (r PostsIndexElasticSearchRepository) SearchArtists(ctx context.Context, cursor *paging.Cursor, search string) ([]*post.Artist, *paging.Info, error) {
 	var query string
 
 	if search == "" {
-		query = AllArtists
+		query = allArtists
 	} else {
-		query = fmt.Sprintf(SearchArtists, search)
+		query = fmt.Sprintf(searchArtists, search)
 	}
 
-	response, err := r.store.Search(ArtistIndexName, query)
+	response, err := r.store.Search(artistIndexName, query)
 
 	if err != nil {
 		return nil, nil, err
@@ -70,7 +71,7 @@ func (r PostsIndexElasticSearchRepository) SearchArtists(ctx context.Context, cu
 
 	for _, cat := range response.Hits {
 
-		var art ArtistDocument
+		var art artistDocument
 
 		err := json.Unmarshal(cat, &art)
 
@@ -78,7 +79,7 @@ func (r PostsIndexElasticSearchRepository) SearchArtists(ctx context.Context, cu
 			return nil, nil, err
 		}
 
-		newArtist := post.UnmarshalArtistFromDatabase(art.Id, art.Username, art.Avatar)
+		newArtist := post.UnmarshalArtistFromDatabase(art.Id, art.DoNotPostReason)
 		newArtist.Node = paging.NewNode(art.Id)
 
 		artists = append(artists, newArtist)
@@ -89,7 +90,7 @@ func (r PostsIndexElasticSearchRepository) SearchArtists(ctx context.Context, cu
 }
 
 func (r PostsIndexElasticSearchRepository) BulkIndexArtists(ctx context.Context, artists []*post.Artist) error {
-	err := r.store.CreateBulkIndex(ArtistIndexName)
+	err := r.store.CreateBulkIndex(artistIndexName)
 
 	if err != nil {
 		log.Fatalf("error creating bulk indexer: %s", err)
@@ -98,10 +99,11 @@ func (r PostsIndexElasticSearchRepository) BulkIndexArtists(ctx context.Context,
 	// Now we can safely start creating our documents
 	for _, art := range artists {
 
-		data := &ArtistDocument{
-			Id:       art.ID(),
-			Avatar:   art.RawAvatar(),
-			Username: art.Username(),
+		data := &artistDocument{
+			Id:              art.ID(),
+			Avatar:          "",
+			Username:        "",
+			DoNotPostReason: art.DoNotPostReason(),
 		}
 
 		err = r.store.AddToBulkIndex(data.Id, data)
@@ -119,13 +121,13 @@ func (r PostsIndexElasticSearchRepository) BulkIndexArtists(ctx context.Context,
 }
 
 func (r PostsIndexElasticSearchRepository) DeleteArtistIndex(ctx context.Context) error {
-	err := r.store.DeleteIndex(ArtistIndexName)
+	err := r.store.DeleteIndex(artistIndexName)
 
 	if err != nil {
 
 	}
 
-	err = r.store.CreateIndex(ArtistIndexName, ArtistIndex)
+	err = r.store.CreateIndex(artistIndexName, artistIndex)
 
 	if err != nil {
 		return fmt.Errorf("failed to create artists index: %s", err)

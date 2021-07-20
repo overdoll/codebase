@@ -43,7 +43,7 @@ func MarshalPostAuditLogToGraphQL(result *infraction.PostAuditLog) *PostAuditLog
 	}
 }
 
-func MarshalPendingPostAuditLogToGraphQLConnection(results []*infraction.PostAuditLog, page *paging.Info) *PostAuditLogConnection {
+func MarshalPostAuditLogToGraphQLConnection(results []*infraction.PostAuditLog, page *paging.Info) *PostAuditLogConnection {
 
 	var auditLogs []*PostAuditLogEdge
 
@@ -75,16 +75,20 @@ func MarshalPendingPostAuditLogToGraphQLConnection(results []*infraction.PostAud
 	}
 }
 
+func MarshalAccountInfractionHistoryToGraphQL(result *infraction.AccountInfractionHistory) *AccountInfractionHistory {
+	return &AccountInfractionHistory{
+		ID:     relay.NewID(AccountInfractionHistory{}, result.AccountId(), result.ID()),
+		Reason: result.Reason(),
+	}
+}
+
 func MarshalAccountInfractionHistoryToGraphQLConnection(results []*infraction.AccountInfractionHistory, page *paging.Info) *AccountInfractionHistoryConnection {
 
 	var infractionHistory []*AccountInfractionHistoryEdge
 
 	for _, infra := range results {
 		infractionHistory = append(infractionHistory, &AccountInfractionHistoryEdge{
-			Node: &AccountInfractionHistory{
-				ID:     relay.NewID(AccountInfractionHistory{}, infra.AccountId(), infra.ID()),
-				Reason: infra.Reason(),
-			},
+			Node:   MarshalAccountInfractionHistoryToGraphQL(infra),
 			Cursor: infra.Cursor(),
 		})
 	}
@@ -110,17 +114,21 @@ func MarshalAccountInfractionHistoryToGraphQLConnection(results []*infraction.Ac
 	}
 }
 
+func MarshalPostRejectionReasonToGraphQL(result *infraction.PostRejectionReason) *PostRejectionReason {
+	return &PostRejectionReason{
+		ID:         relay.NewID(PostRejectionReason{}, result.ID()),
+		Reason:     result.Reason(),
+		Infraction: result.Infraction(),
+	}
+}
+
 func MarshalPostRejectionReasonToGraphQLConnection(results []*infraction.PostRejectionReason, page *paging.Info) *PostRejectionReasonConnection {
 
 	var rejectionReasons []*PostRejectionReasonEdge
 
 	for _, reason := range results {
 		rejectionReasons = append(rejectionReasons, &PostRejectionReasonEdge{
-			Node: &PostRejectionReason{
-				ID:         relay.NewID(PostRejectionReason{}, reason.ID()),
-				Reason:     reason.Reason(),
-				Infraction: reason.Infraction(),
-			},
+			Node:   MarshalPostRejectionReasonToGraphQL(reason),
 			Cursor: reason.Cursor(),
 		})
 	}

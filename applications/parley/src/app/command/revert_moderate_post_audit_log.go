@@ -12,17 +12,17 @@ var (
 	ErrFailedRevertModeratePendingPost = errors.New("revert audit log failed")
 )
 
-type RevertModeratePendingPostHandler struct {
+type RevertModeratePostHandler struct {
 	ir    infraction.Repository
 	eva   EvaService
 	sting StingService
 }
 
-func NewRevertModeratePendingPostHandler(ir infraction.Repository, eva EvaService, sting StingService) RevertModeratePendingPostHandler {
-	return RevertModeratePendingPostHandler{ir: ir, sting: sting, eva: eva}
+func NewRevertModeratePostHandler(ir infraction.Repository, eva EvaService, sting StingService) RevertModeratePostHandler {
+	return RevertModeratePostHandler{ir: ir, sting: sting, eva: eva}
 }
 
-func (h RevertModeratePendingPostHandler) Handle(ctx context.Context, moderatorId, auditLogId string) (*infraction.PostAuditLog, error) {
+func (h RevertModeratePostHandler) Handle(ctx context.Context, moderatorId, auditLogId string) (*infraction.PostAuditLog, error) {
 
 	// Get user, to perform permission checks
 	usr, err := h.eva.GetAccount(ctx, moderatorId)
@@ -68,7 +68,7 @@ func (h RevertModeratePendingPostHandler) Handle(ctx context.Context, moderatorI
 		}
 
 		// tell sting to undo the pending post
-		if err := h.sting.UndoPendingPost(ctx, log.PendingPostID()); err != nil {
+		if err := h.sting.UndoPost(ctx, log.PendingPostID()); err != nil {
 			zap.S().Errorf("failed to publish pending post: %s", err)
 			return err
 		}

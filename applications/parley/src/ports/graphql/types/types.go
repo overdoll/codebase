@@ -79,7 +79,7 @@ type ModeratePostPayload struct {
 type Post struct {
 	ID relay.ID `json:"id"`
 	// Audit logs belonging to this pending post
-	AuditLogs []*PostAuditLog `json:"auditLogs"`
+	AuditLogs *PostAuditLogConnection `json:"auditLogs"`
 }
 
 func (Post) IsEntity() {}

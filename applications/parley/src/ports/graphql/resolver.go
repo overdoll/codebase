@@ -46,3 +46,9 @@ func (r *Resolver) Account() AccountResolver {
 		App: r.app,
 	}
 }
+
+func (r *Resolver) Post() PostResolver {
+	return &resolvers.PostResolver{
+		App: r.app,
+	}
+}

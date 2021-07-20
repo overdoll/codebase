@@ -9,14 +9,14 @@ import (
 	"overdoll/libraries/paging"
 )
 
-type CharacterDocument struct {
+type characterDocument struct {
 	Id        string        `json:"id"`
 	Thumbnail string        `json:"thumbnail"`
 	Name      string        `json:"name"`
 	Media     MediaDocument `json:"media"`
 }
 
-const CharacterIndex = `
+const characterIndex = `
 {
 	"mappings": {
 		"dynamic": "strict",
@@ -50,7 +50,7 @@ const CharacterIndex = `
 	}
 }`
 
-const SearchCharacters = `
+const searchCharacters = `
 	"query" : {
 		"multi_match" : {
 			"query" : %q,
@@ -60,16 +60,16 @@ const SearchCharacters = `
 	},
 	"size" : 5`
 
-const AllCharacters = `
+const allCharacters = `
 	"query" : { "match_all" : {} },
 	"size" : 5`
 
-const CharacterIndexName = "characters"
+const characterIndexName = "characters"
 
-func MarshalCharacterToDocument(char *post.Character) *CharacterDocument {
+func MarshalCharacterToDocument(char *post.Character) *characterDocument {
 	media := char.Media()
 
-	return &CharacterDocument{
+	return &characterDocument{
 		Id:        char.ID(),
 		Thumbnail: char.RawThumbnail(),
 		Name:      char.Name(),
@@ -85,12 +85,12 @@ func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context,
 	var query string
 
 	if search == "" {
-		query = AllCharacters
+		query = allCharacters
 	} else {
-		query = fmt.Sprintf(SearchCharacters, search)
+		query = fmt.Sprintf(searchCharacters, search)
 	}
 
-	response, err := r.store.Search(CharacterIndexName, query)
+	response, err := r.store.Search(characterIndexName, query)
 
 	if err != nil {
 		return nil, nil, err
@@ -100,7 +100,7 @@ func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context,
 
 	for _, char := range response.Hits {
 
-		var chr CharacterDocument
+		var chr characterDocument
 
 		err := json.Unmarshal(char, &chr)
 
@@ -119,7 +119,7 @@ func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context,
 
 func (r PostsIndexElasticSearchRepository) BulkIndexCharacters(ctx context.Context, characters []*post.Character) error {
 
-	err := r.store.CreateBulkIndex(CharacterIndexName)
+	err := r.store.CreateBulkIndex(characterIndexName)
 
 	if err != nil {
 		return fmt.Errorf("error creating bulk indexer: %s", err)
@@ -147,13 +147,13 @@ func (r PostsIndexElasticSearchRepository) BulkIndexCharacters(ctx context.Conte
 }
 
 func (r PostsIndexElasticSearchRepository) DeleteCharacterIndex(ctx context.Context) error {
-	err := r.store.DeleteIndex(CharacterIndexName)
+	err := r.store.DeleteIndex(characterIndexName)
 
 	if err != nil {
 
 	}
 
-	err = r.store.CreateIndex(CharacterIndexName, CharacterIndex)
+	err = r.store.CreateIndex(characterIndexName, characterIndex)
 
 	if err != nil {
 		return fmt.Errorf("failed to create character index: %s", err)

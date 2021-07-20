@@ -8,19 +8,19 @@ import (
 	"overdoll/applications/parley/src/domain/moderator"
 )
 
-type ModeratorInQueueHandler struct {
+type IsModeratorInQueueHandler struct {
 	mr moderator.Repository
 }
 
 var (
-	ErrFailedGetModeratorInQueue = errors.New("get moderator in queue failed")
+	ErrFailedIsModeratorInQueue = errors.New("is moderator in queue failed")
 )
 
-func NewModeratorInQueueHandler(mr moderator.Repository) ModeratorInQueueHandler {
-	return ModeratorInQueueHandler{mr: mr}
+func NewIsModeratorInQueueHandler(mr moderator.Repository) IsModeratorInQueueHandler {
+	return IsModeratorInQueueHandler{mr: mr}
 }
 
-func (h ModeratorInQueueHandler) Handle(ctx context.Context, accountId string) (bool, error) {
+func (h IsModeratorInQueueHandler) Handle(ctx context.Context, accountId string) (bool, error) {
 
 	_, err := h.mr.GetModerator(ctx, accountId)
 
@@ -31,7 +31,7 @@ func (h ModeratorInQueueHandler) Handle(ctx context.Context, accountId string) (
 		}
 
 		zap.S().Errorf("failed to moderator: %s", err)
-		return false, ErrFailedGetModeratorInQueue
+		return false, ErrFailedIsModeratorInQueue
 	}
 
 	// true - in queue

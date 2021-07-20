@@ -53,7 +53,21 @@ extend type Post @key(fields: "id") {
   id: ID! @external
 
   """Audit logs belonging to this pending post"""
-  auditLogs: [PostAuditLog!]
+  auditLogs(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): PostAuditLogConnection! @goField(forceResolver: true) @auth
 }
 
 extend type Account @key(fields: "id") {

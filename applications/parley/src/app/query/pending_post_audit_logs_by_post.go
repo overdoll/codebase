@@ -6,28 +6,35 @@ import (
 
 	"go.uber.org/zap"
 	"overdoll/applications/parley/src/domain/infraction"
+	"overdoll/libraries/paging"
 )
 
-type PendingPostAuditLogsByPostHandler struct {
+type PostAuditLogsByPostHandler struct {
 	ir infraction.Repository
 }
 
-func NewPendingPostAuditLogsByPostHandler(ir infraction.Repository) PendingPostAuditLogsByPostHandler {
-	return PendingPostAuditLogsByPostHandler{ir: ir}
+func NewPostAuditLogsByPostHandler(ir infraction.Repository) PostAuditLogsByPostHandler {
+	return PostAuditLogsByPostHandler{ir: ir}
 }
 
 var (
 	ErrFailedGetPendingPostAuditLogById = errors.New("get pending post audit log failed")
 )
 
-func (h PendingPostAuditLogsByPostHandler) Handle(ctx context.Context, auditLogId string) (*infraction.PostAuditLog, error) {
+func (h PostAuditLogsByPostHandler) Handle(ctx context.Context, cursor *paging.Cursor, postId string) ([]*infraction.PostAuditLog, *paging.Info, error) {
 
-	auditLog, err := h.ir.GetPostAuditLog(ctx, auditLogId)
+	filters, err := infraction.NewPostAuditLogFilters("", "", postId, []int{})
+
+	if err != nil {
+		return nil, nil, err
+	}
+
+	auditLogs, _, err := h.ir.GetPostAuditLogsByPost(ctx, cursor, filters)
 
 	if err != nil {
 		zap.S().Errorf("failed to get infraction history: %s", err)
-		return nil, ErrFailedGetPendingPostAuditLogById
+		return nil, nil, ErrFailedGetPendingPostAuditLogById
 	}
 
-	return auditLog, nil
+	return auditLogs, nil, nil
 }

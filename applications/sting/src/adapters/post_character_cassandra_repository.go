@@ -62,7 +62,8 @@ func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars [
 		mediaIds = append(mediaIds, cat.MediaId)
 	}
 
-	queryMedia := qb.Select("media").
+	queryMedia := mediaTable.
+		SelectBuilder().
 		Where(qb.In("id")).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
@@ -123,9 +124,8 @@ func (r PostsCassandraRepository) GetCharacters(ctx context.Context) ([]*post.Ch
 	}
 
 	// Get all the medias through a direct database query
-	qm := qb.Select("media").
-		Columns("id", "thumbnail", "title").
-		Query(r.session).
+	qm := r.session.
+		Query(mediaTable.Select()).
 		Consistency(gocql.One)
 
 	if err := qm.Select(&medias); err != nil {

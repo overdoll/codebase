@@ -59,7 +59,7 @@ func (h CreatePendingPostHandler) Handle(ctx context.Context, contributorId, art
 		contributorIsArtist = true
 	}
 
-	artist := post.NewArtist(artistId, artistUsername)
+	artist := post.NewArtist(artistId)
 
 	// Artist ID is not null, they are not requesting an artist - look for an existing one in the DB
 	if artistId != "" && !contributorIsArtist {

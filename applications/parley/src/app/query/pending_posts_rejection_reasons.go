@@ -9,20 +9,20 @@ import (
 	"overdoll/libraries/paging"
 )
 
-type PendingPostsRejectionReasonsHandler struct {
+type PostsRejectionReasonsHandler struct {
 	ir  infraction.Repository
 	eva EvaService
 }
 
-func NewPendingPostsRejectionReasonsHandler(ir infraction.Repository, eva EvaService) PendingPostsRejectionReasonsHandler {
-	return PendingPostsRejectionReasonsHandler{ir: ir, eva: eva}
+func NewPendingPostsRejectionReasonsHandler(ir infraction.Repository, eva EvaService) PostsRejectionReasonsHandler {
+	return PostsRejectionReasonsHandler{ir: ir, eva: eva}
 }
 
 var (
 	ErrFailedGetRejectionReasons = errors.New("get rejection reasons failed")
 )
 
-func (h PendingPostsRejectionReasonsHandler) Handle(ctx context.Context, cursor *paging.Cursor, accountId string) ([]*infraction.PostRejectionReason, *paging.Info, error) {
+func (h PostsRejectionReasonsHandler) Handle(ctx context.Context, cursor *paging.Cursor, accountId string) ([]*infraction.PostRejectionReason, *paging.Info, error) {
 	// Get account to perform permission checks
 	acc, err := h.eva.GetAccount(ctx, accountId)
 

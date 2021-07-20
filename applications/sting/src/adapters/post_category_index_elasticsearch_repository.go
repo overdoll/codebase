@@ -9,13 +9,13 @@ import (
 	"overdoll/libraries/paging"
 )
 
-type CategoryDocument struct {
+type categoryDocument struct {
 	Id        string `json:"id"`
 	Thumbnail string `json:"thumbnail"`
 	Title     string `json:"title"`
 }
 
-const CategoryIndex = `
+const categoryIndex = `
 {
 	"mappings": {
 		"dynamic": "strict",
@@ -34,7 +34,7 @@ const CategoryIndex = `
 	}
 }`
 
-const SearchCategories = `
+const searchCategories = `
 	"query" : {
 		"multi_match" : {
 			"query" : %q,
@@ -44,14 +44,14 @@ const SearchCategories = `
 	},
 	"size" : 5`
 
-const AllCategories = `
+const allCategories = `
 	"query" : { "match_all" : {} },
 	"size" : 5`
 
-const CategoryIndexName = "categories"
+const categoryIndexName = "categories"
 
-func MarshalCategoryToDocument(cat *post.Category) *CategoryDocument {
-	return &CategoryDocument{
+func MarshalCategoryToDocument(cat *post.Category) *categoryDocument {
+	return &categoryDocument{
 		Id:        cat.ID(),
 		Thumbnail: cat.RawThumbnail(),
 		Title:     cat.Title(),
@@ -62,12 +62,12 @@ func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context,
 	var query string
 
 	if search == "" {
-		query = AllCategories
+		query = allCategories
 	} else {
-		query = fmt.Sprintf(SearchCategories, search)
+		query = fmt.Sprintf(searchCategories, search)
 	}
 
-	response, err := r.store.Search(CategoryIndexName, query)
+	response, err := r.store.Search(categoryIndexName, query)
 
 	if err != nil {
 		return nil, nil, err
@@ -77,7 +77,7 @@ func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context,
 
 	for _, cat := range response.Hits {
 
-		var pst CategoryDocument
+		var pst categoryDocument
 
 		err := json.Unmarshal(cat, &pst)
 
@@ -96,7 +96,7 @@ func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context,
 
 func (r PostsIndexElasticSearchRepository) BulkIndexCategories(ctx context.Context, categories []*post.Category) error {
 
-	err := r.store.CreateBulkIndex(CategoryIndexName)
+	err := r.store.CreateBulkIndex(categoryIndexName)
 
 	if err != nil {
 		return fmt.Errorf("error creating bulk indexer: %s", err)
@@ -122,13 +122,13 @@ func (r PostsIndexElasticSearchRepository) BulkIndexCategories(ctx context.Conte
 }
 
 func (r PostsIndexElasticSearchRepository) DeleteCategoryIndex(ctx context.Context) error {
-	err := r.store.DeleteIndex(CategoryIndexName)
+	err := r.store.DeleteIndex(categoryIndexName)
 
 	if err != nil {
 
 	}
 
-	err = r.store.CreateIndex(CategoryIndexName, CategoryIndex)
+	err = r.store.CreateIndex(categoryIndexName, categoryIndex)
 
 	if err != nil {
 		return fmt.Errorf("failed to create category index: %s", err)

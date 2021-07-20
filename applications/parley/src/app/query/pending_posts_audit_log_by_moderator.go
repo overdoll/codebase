@@ -13,17 +13,16 @@ var (
 	ErrFailedGetPendingPostsAuditLog = errors.New("get audit log failed")
 )
 
-type PendingPostsAuditLogByModeratorHandler struct {
-	ir infraction.Repository
-
+type PostsAuditLogByModeratorHandler struct {
+	ir  infraction.Repository
 	eva EvaService
 }
 
-func NewPendingPostsAuditLogByModeratorHandler(ir infraction.Repository, eva EvaService) PendingPostsAuditLogByModeratorHandler {
-	return PendingPostsAuditLogByModeratorHandler{ir: ir, eva: eva}
+func NewPendingPostsAuditLogByModeratorHandler(ir infraction.Repository, eva EvaService) PostsAuditLogByModeratorHandler {
+	return PostsAuditLogByModeratorHandler{ir: ir, eva: eva}
 }
 
-func (h PendingPostsAuditLogByModeratorHandler) Handle(ctx context.Context, cursor *paging.Cursor, moderatorId string) ([]*infraction.PostAuditLog, *paging.Info, error) {
+func (h PostsAuditLogByModeratorHandler) Handle(ctx context.Context, cursor *paging.Cursor, moderatorId string) ([]*infraction.PostAuditLog, *paging.Info, error) {
 
 	filters, err := infraction.NewPostAuditLogFilters(moderatorId, "", "", []int{})
 
