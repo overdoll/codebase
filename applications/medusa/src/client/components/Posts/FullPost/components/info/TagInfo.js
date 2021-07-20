@@ -3,7 +3,7 @@
  */
 import type { Node } from 'react'
 import { Flex, IconButton, Heading, useDisclosure } from '@chakra-ui/react'
-import InspectModal from '../modal/InspectModal'
+import InspectModal from '../../../components/modal/InspectModal'
 import Icon from '@//:modules/content/icon/Icon'
 
 type Props = {

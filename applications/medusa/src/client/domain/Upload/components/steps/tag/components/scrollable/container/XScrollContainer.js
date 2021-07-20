@@ -3,7 +3,7 @@
  */
 import type { Node } from 'react'
 import { Box, Flex } from '@chakra-ui/react'
-import Indexer from '../../../../../../../../components/FullPost/components/indexer/Indexer'
+import Indexer from '../../../../../../../../components/Posts/FullPost/components/indexer/Indexer'
 import Thumbnail from '../../../../arrange/components/thumbnail/Thumbnail'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/swiper.min.css'

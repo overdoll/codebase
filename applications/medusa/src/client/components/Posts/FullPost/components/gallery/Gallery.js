@@ -12,7 +12,7 @@ import {
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/swiper.min.css'
 import 'swiper/components/navigation/navigation.min.css'
-import InspectModal from '../modal/InspectModal'
+import InspectModal from '../../../components/modal/InspectModal'
 import Icon from '@//:modules/content/icon/Icon'
 
 import InterfaceArrowsShrinkVertical
@@ -209,7 +209,6 @@ export default function Gallery ({ files, urls, thumbnails, setSwiper }: Props):
                 src={urls[currentSlide.id]} fallback={<Skeleton w='100%' h='100%' />}
               />
           : <Spinner size='xl' color='red.500' />}
-
       </InspectModal>
     </>
   )

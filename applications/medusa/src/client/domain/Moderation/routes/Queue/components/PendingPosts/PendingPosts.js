@@ -15,7 +15,7 @@ import {
   AlertDescription,
   Wrap,
   WrapItem,
-  Heading, Avatar, Skeleton, useDisclosure
+  Heading, Avatar, Skeleton, useDisclosure, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, Modal
 } from '@chakra-ui/react'
 import Icon from '@//:modules/content/icon/Icon'
 import { useEffect, useState } from 'react'
@@ -122,7 +122,6 @@ export default function (props: Props): Node {
         </Flex>
         <Flex
           flexDirection='column'
-          height='500px'
           mt={2}
           p={6}
           bg='gray.800'
@@ -150,6 +149,8 @@ export default function (props: Props): Node {
 
                   const fileType = rawType.split('/')[0]
 
+                  const { isOpen, onOpen, onClose } = useDisclosure()
+
                   return (
                     <WrapItem spacing={4} h={200} w={160} key={index}>
                       {fileType === 'image'
@@ -170,6 +171,31 @@ export default function (props: Props): Node {
                           >
                           <source src={item} type={rawType} />
                         </video>}
+                      <Modal
+                        isOpen={isOpen}
+                        onClose={onClose}
+                        size='full'
+                      >
+                        <ModalOverlay />
+                        <ModalContent position='relative' m={0} borderRadius={0} bg='gray.800'>
+                          {supplement && <Flex right={16} position='fixed' direction='row'>{supplement}</Flex>}
+                          <ModalCloseButton position='fixed' size='lg' />
+                          <ModalBody
+                            zIndex='hide'
+                            h='100%'
+                            w='100%'
+                            display='flex'
+                            p={0}
+                            align='center'
+                            justify='center'
+                            position='relative'
+                          >
+                            <Flex w='100%' m={1} align='center' justify='center'>
+                              {children}
+                            </Flex>
+                          </ModalBody>
+                        </ModalContent>
+                      </Modal>
                     </WrapItem>
                   )
                 })}

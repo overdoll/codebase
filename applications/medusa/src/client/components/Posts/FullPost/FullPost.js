@@ -16,7 +16,7 @@ import ShoppingStoreSignage1
 import InterfaceSettingMenuVerticalAlternate
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/setting/interface-setting-menu-vertical-alternate.svg'
 import Icon from '@//:modules/content/icon/Icon'
-import Element from '../Element/Element'
+import Element from '../../Element/Element'
 
 type Props = {
   artist: {
