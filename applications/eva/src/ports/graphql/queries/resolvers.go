@@ -33,7 +33,7 @@ func (r *QueryResolver) ViewAuthenticationToken(ctx context.Context) (*types.Aut
 		return nil, nil
 	}
 
-	acc, ck, err := r.App.Queries.GetAuthenticationTokenStatus.Handle(ctx, otpCookie.Value)
+	acc, ck, err := r.App.Queries.AuthenticationTokenById.Handle(ctx, otpCookie.Value)
 
 	if err != nil {
 
@@ -53,7 +53,7 @@ func (r *QueryResolver) Viewer(ctx context.Context) (*types.Account, error) {
 	// User is logged in
 	if pass.IsAuthenticated() {
 
-		acc, err := r.App.Queries.GetAccount.Handle(ctx, pass.AccountID())
+		acc, err := r.App.Queries.AccountById.Handle(ctx, pass.AccountID())
 
 		if err != nil {
 			return nil, err
@@ -76,7 +76,7 @@ func (r *QueryResolver) Viewer(ctx context.Context) (*types.Account, error) {
 	}
 
 	// consume cookie
-	acc, ck, err := r.App.Queries.GetAuthenticationTokenStatus.Handle(ctx, otpCookie.Value)
+	acc, ck, err := r.App.Queries.AuthenticationTokenById.Handle(ctx, otpCookie.Value)
 
 	if err != nil {
 		return nil, err

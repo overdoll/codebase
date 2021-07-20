@@ -18,7 +18,7 @@ func (r EntityResolver) FindAccountByID(ctx context.Context, id relay.ID) (*type
 
 func (r EntityResolver) FindAccountEmailByID(ctx context.Context, id relay.ID) (*types.AccountEmail, error) {
 
-	email, err := r.App.Queries.GetAccountEmail.Handle(ctx, id.GetCompositePartID(1), id.GetCompositePartID(0))
+	email, err := r.App.Queries.AccountEmailByEmail.Handle(ctx, id.GetCompositePartID(1), id.GetCompositePartID(0))
 
 	if err != nil {
 		return nil, err
@@ -29,7 +29,7 @@ func (r EntityResolver) FindAccountEmailByID(ctx context.Context, id relay.ID) (
 
 func (r EntityResolver) FindAccountSessionByID(ctx context.Context, id relay.ID) (*types.AccountSession, error) {
 
-	session, err := r.App.Queries.GetAccountSession.Handle(ctx, id.GetID())
+	session, err := r.App.Queries.AccountSessionById.Handle(ctx, id.GetID())
 
 	if err != nil {
 		return nil, err
@@ -39,7 +39,7 @@ func (r EntityResolver) FindAccountSessionByID(ctx context.Context, id relay.ID)
 }
 
 func (r EntityResolver) FindAccountUsernameByID(ctx context.Context, id relay.ID) (*types.AccountUsername, error) {
-	username, err := r.App.Queries.GetAccountUsername.Handle(ctx, id.GetCompositePartID(1), id.GetCompositePartID(0))
+	username, err := r.App.Queries.AccountUsernameByUsername.Handle(ctx, id.GetCompositePartID(1), id.GetCompositePartID(0))
 
 	if err != nil {
 		return nil, err

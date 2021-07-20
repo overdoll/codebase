@@ -33,7 +33,7 @@ func (r AccountResolver) Emails(ctx context.Context, obj *types.Account, after *
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	results, page, err := r.App.Queries.GetAccountEmails.Handle(ctx, cursor, accountId)
+	results, page, err := r.App.Queries.AccountEmailsByAccount.Handle(ctx, cursor, accountId)
 
 	if err != nil {
 		return nil, err
@@ -55,7 +55,7 @@ func (r AccountResolver) Usernames(ctx context.Context, obj *types.Account, afte
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	results, page, err := r.App.Queries.GetAccountUsernames.Handle(ctx, cursor, accountId)
+	results, page, err := r.App.Queries.AccountUsernamesByAccount.Handle(ctx, cursor, accountId)
 
 	if err != nil {
 		return nil, err
@@ -88,7 +88,7 @@ func (r AccountResolver) Sessions(ctx context.Context, obj *types.Account, after
 		accountSession = currentCookie.Value
 	}
 
-	results, page, err := r.App.Queries.GetAccountSessions.Handle(ctx, cursor, accountSession, accountId)
+	results, page, err := r.App.Queries.AccountSessionsByAccount.Handle(ctx, cursor, accountSession, accountId)
 
 	if err != nil {
 		return nil, err
@@ -105,13 +105,13 @@ func (r AccountResolver) MultiFactorSettings(ctx context.Context, obj *types.Acc
 		return nil, nil
 	}
 
-	acc, err := r.App.Queries.GetAccount.Handle(ctx, accountId)
+	acc, err := r.App.Queries.AccountById.Handle(ctx, accountId)
 
 	if err != nil {
 		return nil, err
 	}
 
-	codes, err := r.App.Queries.GetAccountRecoveryCodes.Handle(ctx, accountId)
+	codes, err := r.App.Queries.AccountRecoveryCodesByAccount.Handle(ctx, accountId)
 
 	if err != nil {
 		return nil, err
@@ -138,7 +138,7 @@ func (r AccountResolver) RecoveryCodes(ctx context.Context, obj *types.Account) 
 		return nil, nil
 	}
 
-	codes, err := r.App.Queries.GetAccountRecoveryCodes.Handle(ctx, obj.ID.GetID())
+	codes, err := r.App.Queries.AccountRecoveryCodesByAccount.Handle(ctx, obj.ID.GetID())
 
 	if err != nil {
 		return nil, err

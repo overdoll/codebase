@@ -11,21 +11,21 @@ import (
 	"overdoll/applications/eva/src/domain/token"
 )
 
-type GetAuthenticationTokenStatusHandler struct {
+type AuthenticationTokenByIdHandler struct {
 	tr token.Repository
 	ar account.Repository
 	mr multi_factor.Repository
 }
 
-func NewGetAuthenticationTokenStatusHandler(tr token.Repository, ar account.Repository, mr multi_factor.Repository) GetAuthenticationTokenStatusHandler {
-	return GetAuthenticationTokenStatusHandler{tr: tr, ar: ar, mr: mr}
+func NewAuthenticationTokenByIdHandler(tr token.Repository, ar account.Repository, mr multi_factor.Repository) AuthenticationTokenByIdHandler {
+	return AuthenticationTokenByIdHandler{tr: tr, ar: ar, mr: mr}
 }
 
 var (
 	ErrFailedGetToken = errors.New("failed to get authentication token")
 )
 
-func (h GetAuthenticationTokenStatusHandler) Handle(ctx context.Context, tokenId string) (*account.Account, *token.AuthenticationToken, error) {
+func (h AuthenticationTokenByIdHandler) Handle(ctx context.Context, tokenId string) (*account.Account, *token.AuthenticationToken, error) {
 
 	// Redeem cookie
 	ck, err := h.tr.GetAuthenticationTokenById(ctx, tokenId)

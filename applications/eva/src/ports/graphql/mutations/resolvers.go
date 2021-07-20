@@ -71,7 +71,7 @@ func (r *MutationResolver) VerifyAuthenticationTokenAndAttemptAccountAccessGrant
 	}
 
 	// consume cookie
-	usr, ck, err := r.App.Queries.GetAuthenticationTokenStatus.Handle(ctx, input.AuthenticationTokenID)
+	usr, ck, err := r.App.Queries.AuthenticationTokenById.Handle(ctx, input.AuthenticationTokenID)
 
 	if err != nil {
 		return nil, err

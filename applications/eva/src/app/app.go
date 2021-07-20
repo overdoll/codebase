@@ -32,16 +32,16 @@ type Commands struct {
 }
 
 type Queries struct {
-	GetAccount                      query.GetAccountHandler
-	GetAccountByEmail               query.GetAccountByEmailHandler
-	GetAccountByUsername            query.GetAccountByUsernameHandler
-	GetAccountEmail                 query.GetAccountEmailHandler
-	GetAccountEmails                query.GetAccountEmailsHandler
-	GetAccountUsername              query.GetAccountUsernameHandler
-	GetAccountUsernames             query.GetAccountUsernamesHandler
-	GetAccountSession               query.GetAccountSessionHandler
-	GetAccountSessions              query.GetAccountSessionsHandler
-	GetAccountRecoveryCodes         query.GetAccountRecoveryCodesHandler
-	IsAccountMultiFactorTOTPEnabled query.IsAccountTOTPMultiFactorEnabledHandler
-	GetAuthenticationTokenStatus    query.GetAuthenticationTokenStatusHandler
+	AccountById                     query.AccountByIdHandler
+	AccountByEmail                  query.AccountByEmailHandler
+	AccountByUsername               query.AccountByUsernameHandler
+	AccountEmailByEmail             query.AccountEmailByEmailHandler
+	AccountEmailsByAccount          query.AccountEmailsByAccountHandler
+	AccountUsernameByUsername       query.AccountUsernameByUsernameHandler
+	AccountUsernamesByAccount       query.AccountUsernamesByAccountHandler
+	AccountSessionById              query.AccountSessionByIdHandler
+	AccountSessionsByAccount        query.AccountSessionsByAccountHandler
+	AccountRecoveryCodesByAccount   query.AccountRecoveryCodesByAccountHandler
+	IsAccountMultiFactorTOTPEnabled query.IsAccountMultiFactorTOTPEnabledHandler
+	AuthenticationTokenById         query.AuthenticationTokenByIdHandler
 }

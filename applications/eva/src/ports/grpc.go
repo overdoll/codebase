@@ -33,7 +33,7 @@ func marshalAccountToProto(usr *account.Account) *eva.Account {
 
 func (s *Server) GetAccount(ctx context.Context, request *eva.GetAccountRequest) (*eva.Account, error) {
 
-	acc, err := s.app.Queries.GetAccount.Handle(ctx, request.Id)
+	acc, err := s.app.Queries.AccountById.Handle(ctx, request.Id)
 
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
