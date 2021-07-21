@@ -69,7 +69,7 @@ func NewAccountIndexElasticSearchRepository(session gocqlx.Session, store *searc
 	return AccountIndexElasticSearchRepository{session: session, store: store}
 }
 
-func (r AccountIndexElasticSearchRepository) SearchAccounts(ctx context.Context, cursor *paging.Cursor, username string, artist bool) ([]*account.Account, *paging.Info, error) {
+func (r AccountIndexElasticSearchRepository) SearchAccounts(ctx context.Context, cursor *paging.Cursor, username string, artist bool) ([]*account.Account, error) {
 	var query string
 
 	if username == "" {
@@ -81,7 +81,7 @@ func (r AccountIndexElasticSearchRepository) SearchAccounts(ctx context.Context,
 	response, err := r.store.Search(accountIndexName, query)
 
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
 	var accounts []*account.Account
@@ -93,7 +93,7 @@ func (r AccountIndexElasticSearchRepository) SearchAccounts(ctx context.Context,
 		err := json.Unmarshal(cat, &ac)
 
 		if err != nil {
-			return nil, nil, err
+			return nil, err
 		}
 
 		// note that the index only contains partial info for the account so it should never be used for domain objects
@@ -104,7 +104,7 @@ func (r AccountIndexElasticSearchRepository) SearchAccounts(ctx context.Context,
 
 	}
 
-	return accounts, nil, nil
+	return accounts, nil
 }
 
 // Efficiently scan the accounts table and index it

@@ -42,13 +42,13 @@ func (r AccountResolver) Infractions(ctx context.Context, obj *types.Account, af
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	history, page, err := r.App.Queries.AccountInfractionHistory.Handle(ctx, cursor, obj.ID.GetID())
+	history, err := r.App.Queries.AccountInfractionHistory.Handle(ctx, cursor, obj.ID.GetID())
 
 	if err != nil {
 		return nil, err
 	}
 
-	return types.MarshalAccountInfractionHistoryToGraphQLConnection(history, page), nil
+	return types.MarshalAccountInfractionHistoryToGraphQLConnection(history, cursor), nil
 }
 
 func (r AccountResolver) Moderator(ctx context.Context, obj *types.Account) (*types.Moderator, error) {

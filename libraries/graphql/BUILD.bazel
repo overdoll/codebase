@@ -4,14 +4,12 @@ go_library(
     name = "graphql",
     srcs = [
         "URI.go",
-        "directives.go",
         "new.go",
         "preloads.go",
     ],
     importpath = "overdoll/libraries/graphql",
     visibility = ["//visibility:public"],
     deps = [
-        "//libraries/passport",
         "@com_github_99designs_gqlgen//graphql",
         "@com_github_99designs_gqlgen//graphql/handler",
         "@com_github_99designs_gqlgen//graphql/handler/apollotracing",

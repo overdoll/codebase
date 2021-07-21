@@ -22,11 +22,11 @@ func (r QueryResolver) PostRejectionReasons(ctx context.Context, after *string, 
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	results, page, err := r.App.Queries.PostRejectionReasons.Handle(ctx, cursor, passport.FromContext(ctx).AccountID())
+	results, err := r.App.Queries.PostRejectionReasons.Handle(ctx, cursor, passport.FromContext(ctx).AccountID())
 
 	if err != nil {
 		return nil, err
 	}
 
-	return types.MarshalPostRejectionReasonToGraphQLConnection(results, page), nil
+	return types.MarshalPostRejectionReasonToGraphQLConnection(results, cursor), nil
 }
