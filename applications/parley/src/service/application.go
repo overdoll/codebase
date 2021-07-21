@@ -66,12 +66,11 @@ func createApplication(ctx context.Context, eva command.EvaService, sting comman
 		},
 		Queries: app.Queries{
 			PostRejectionReasons:         query.NewPendingPostsRejectionReasonsHandler(infractionRepo, eva),
-			PostsAuditLogByModerator:     query.NewPendingPostsAuditLogByModeratorHandler(infractionRepo, eva),
+			SearchPostAuditLogs:          query.NewSearchPostAuditLogsHandler(infractionRepo, eva),
 			PostRejectionReasonById:      query.NewPendingPostsRejectionReasonByIdHandler(infractionRepo),
 			AccountInfractionHistory:     query.NewAccountInfractionHistoryByAccountHandler(infractionRepo),
 			AccountInfractionHistoryById: query.NewAccountInfractionHistoryByIdHandler(infractionRepo),
 			PostAuditLogById:             query.NewPostAuditLogByIdHandler(infractionRepo),
-			PostAuditLogsByPost:          query.NewPostAuditLogsByPostHandler(infractionRepo),
 			ModeratorById:                query.NewModeratorByIdHandler(moderatorRepo),
 		},
 	}

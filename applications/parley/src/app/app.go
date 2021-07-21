@@ -20,10 +20,9 @@ type Commands struct {
 type Queries struct {
 	PostRejectionReasons         query.PostsRejectionReasonsHandler
 	PostRejectionReasonById      query.PostRejectionReasonByIdHandler
-	PostsAuditLogByModerator     query.PostsAuditLogByModeratorHandler
+	SearchPostAuditLogs          query.SearchPostAuditLogsHandler
 	AccountInfractionHistory     query.AccountInfractionHistoryByAccountHandler
 	AccountInfractionHistoryById query.AccountInfractionHistoryByIdHandler
 	ModeratorById                query.ModeratorByIdHandler
 	PostAuditLogById             query.PostAuditLogByIdHandler
-	PostAuditLogsByPost          query.PostAuditLogsByPostHandler
 }

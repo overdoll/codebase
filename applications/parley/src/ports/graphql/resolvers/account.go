@@ -25,7 +25,7 @@ func (r AccountResolver) ModeratorPostAuditLogs(ctx context.Context, obj *types.
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	logs, page, err := r.App.Queries.PostsAuditLogByModerator.Handle(ctx, cursor, obj.ID.GetID())
+	logs, page, err := r.App.Queries.SearchPostAuditLogs.Handle(ctx, cursor, obj.ID.GetID(), "")
 
 	if err != nil {
 		return nil, err

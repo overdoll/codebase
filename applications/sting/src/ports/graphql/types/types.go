@@ -45,6 +45,8 @@ type Category struct {
 	Thumbnail graphql1.URI `json:"thumbnail"`
 	// A title for this category.
 	Title string `json:"title"`
+	// Posts belonging to this category
+	Posts *PostConnection `json:"posts"`
 }
 
 func (Category) IsNode()   {}
@@ -70,6 +72,8 @@ type Character struct {
 	Name string `json:"name"`
 	// The media linked to this character.
 	Media *Media `json:"media"`
+	// Posts belonging to this character
+	Posts *PostConnection `json:"posts"`
 }
 
 func (Character) IsNode()   {}
@@ -134,6 +138,8 @@ type Media struct {
 	Thumbnail graphql1.URI `json:"thumbnail"`
 	// A title for this media.
 	Title string `json:"title"`
+	// Posts belonging to this media
+	Posts *PostConnection `json:"posts"`
 }
 
 func (Media) IsNode()   {}

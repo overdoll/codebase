@@ -6,11 +6,47 @@ import (
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/sting/src/app"
 	"overdoll/applications/sting/src/ports/graphql/types"
+	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/paging"
 )
 
 type QueryResolver struct {
 	App *app.Application
+}
+
+func (r *QueryResolver) Posts(ctx context.Context, after *string, before *string, first *int, last *int, categoryIds []relay.ID, characterIds []relay.ID, mediaIds []relay.ID) (*types.PostConnection, error) {
+
+	cursor, err := paging.NewCursor(after, before, first, last)
+
+	if err != nil {
+		return nil, gqlerror.Errorf(err.Error())
+	}
+
+	var categoryIdsString []string
+
+	for _, category := range categoryIds {
+		categoryIdsString = append(categoryIdsString, category.GetID())
+	}
+
+	var characterIdsString []string
+
+	for _, character := range characterIds {
+		characterIdsString = append(characterIdsString, character.GetID())
+	}
+
+	var mediaIdsString []string
+
+	for _, media := range mediaIds {
+		mediaIdsString = append(mediaIdsString, media.GetID())
+	}
+
+	results, page, err := r.App.Queries.SearchPosts.Handle(ctx, cursor, "", "", "", categoryIdsString, characterIdsString, mediaIdsString)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return types.MarshalPostToGraphQLConnection(results, page), nil
 }
 
 func (r *QueryResolver) Post(ctx context.Context, reference string) (*types.Post, error) {
@@ -22,23 +58,6 @@ func (r *QueryResolver) Post(ctx context.Context, reference string) (*types.Post
 	}
 
 	return types.MarshalPostToGraphQL(pendingPost), nil
-}
-
-func (r *QueryResolver) Posts(ctx context.Context, after *string, before *string, first *int, last *int) (*types.PostConnection, error) {
-
-	cursor, err := paging.NewCursor(after, before, first, last)
-
-	if err != nil {
-		return nil, gqlerror.Errorf(err.Error())
-	}
-
-	results, page, err := r.App.Queries.SearchPosts.Handle(ctx, cursor, "", "", "", nil, nil, nil)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return types.MarshalPostToGraphQLConnection(results, page), nil
 }
 
 func (r *QueryResolver) Categories(ctx context.Context, after *string, before *string, first *int, last *int, name *string) (*types.CategoryConnection, error) {

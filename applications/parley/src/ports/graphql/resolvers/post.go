@@ -21,11 +21,11 @@ func (r PostResolver) AuditLogs(ctx context.Context, obj *types.Post, after *str
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	auditLogs, page, err := r.App.Queries.PostAuditLogsByPost.Handle(ctx, cursor, obj.ID.GetID())
+	logs, page, err := r.App.Queries.SearchPostAuditLogs.Handle(ctx, cursor, "", obj.ID.GetID())
 
 	if err != nil {
 		return nil, err
 	}
 
-	return types.MarshalPostAuditLogToGraphQLConnection(auditLogs, page), nil
+	return types.MarshalPostAuditLogToGraphQLConnection(logs, page), nil
 }
