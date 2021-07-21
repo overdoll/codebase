@@ -187,13 +187,6 @@ type Post struct {
 func (Post) IsNode()   {}
 func (Post) IsEntity() {}
 
-type PostAuditLog struct {
-	ID   relay.ID `json:"id"`
-	Post *Post    `json:"post"`
-}
-
-func (PostAuditLog) IsEntity() {}
-
 type PostConnection struct {
 	Edges    []*PostEdge     `json:"edges"`
 	PageInfo *relay.PageInfo `json:"pageInfo"`

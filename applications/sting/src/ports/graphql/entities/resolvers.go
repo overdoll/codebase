@@ -72,18 +72,3 @@ func (r EntityResolver) FindPostByID(ctx context.Context, id relay.ID) (*types.P
 
 	return types.MarshalPostToGraphQL(pendingPost), nil
 }
-
-func (r EntityResolver) FindPostAuditLogByID(ctx context.Context, id relay.ID) (*types.PostAuditLog, error) {
-	// We know part of the ID of the audit log is the pending post ID, so we get it here
-	// since we dont keep the reference of audit logs
-	pendingPost, err := r.App.Queries.PostById.Handle(ctx, id.GetCompositePartID(1))
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &types.PostAuditLog{
-		ID:   id,
-		Post: types.MarshalPostToGraphQL(pendingPost),
-	}, nil
-}

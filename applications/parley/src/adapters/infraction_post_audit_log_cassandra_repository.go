@@ -2,6 +2,7 @@ package adapters
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strconv"
 	"time"
@@ -121,7 +122,7 @@ func marshalPostAuditLogToDatabase(auditLog *infraction.PostAuditLog) (*postAudi
 	return &postAuditLogByModerator{
 		Id:                  auditLog.ID(),
 		Bucket:              buck,
-		PostId:              auditLog.PendingPostID(),
+		PostId:              auditLog.PostID(),
 		ModeratorId:         auditLog.ModeratorId(),
 		ContributorId:       auditLog.ContributorId(),
 		AccountInfractionId: userInfractionId,
@@ -259,8 +260,21 @@ func (r InfractionCassandraRepository) SearchPostAuditLogs(ctx context.Context, 
 		return auditLogs, nil
 	}
 
-	builder := postAuditLogByModeratorTable.
-		SelectBuilder()
+	var builder *qb.SelectBuilder
+
+	if filter.ModeratorId() != "" {
+		builder = postAuditLogByModeratorTable.
+			SelectBuilder()
+	}
+
+	if filter.PostId() != "" {
+		builder = postAuditLogByPostTable.
+			SelectBuilder()
+	}
+
+	if builder == nil {
+		return nil, errors.New("must select at least moderator or post id")
+	}
 
 	info := &postAuditLogByModerator{
 		Bucket:      bucket.MakeBucketFromTimestamp(time.Now()),

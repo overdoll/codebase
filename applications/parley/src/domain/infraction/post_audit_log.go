@@ -134,7 +134,7 @@ func (m *PostAuditLog) ID() string {
 	return m.id
 }
 
-func (m *PostAuditLog) PendingPostID() string {
+func (m *PostAuditLog) PostID() string {
 	return m.pendingPostId
 }
 

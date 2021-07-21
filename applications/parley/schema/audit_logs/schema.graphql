@@ -35,6 +35,9 @@ type PostAuditLog implements Node @key(fields: "id") {
 
   """The infraction that is linked to this audit log, mainly kept here as a reference so reverting will be easier"""
   infractionId: ID
+
+  """The post linked to this audit log"""
+  post: Post!
 }
 
 """Edge of the audit log"""

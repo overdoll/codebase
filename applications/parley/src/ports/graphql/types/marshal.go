@@ -32,7 +32,7 @@ func MarshalPostAuditLogToGraphQL(result *infraction.PostAuditLog) *PostAuditLog
 	}
 
 	return &PostAuditLog{
-		ID:              relay.NewID(PostAuditLog{}, result.PendingPostID(), result.ID()),
+		ID:              relay.NewID(PostAuditLog{}, result.PostID(), result.ID()),
 		Contributor:     &Account{ID: relay.NewID(Account{}, result.ContributorId())},
 		Moderator:       &Account{ID: relay.NewID(Account{}, result.ModeratorId())},
 		InfractionID:    infractionId,
@@ -41,6 +41,7 @@ func MarshalPostAuditLogToGraphQL(result *infraction.PostAuditLog) *PostAuditLog
 		Notes:           result.Notes(),
 		Reverted:        result.Reverted(),
 		ReversibleUntil: result.ReversibleUntil(),
+		Post:            &Post{ID: relay.NewID(Post{}, result.PostID())},
 	}
 }
 

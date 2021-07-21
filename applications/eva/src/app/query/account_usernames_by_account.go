@@ -26,7 +26,6 @@ func (h AccountUsernamesByAccountHandler) Handle(ctx context.Context, cursor *pa
 	usernames, err := h.ar.GetAccountUsernames(ctx, cursor, accountId)
 
 	if err != nil {
-
 		zap.S().Errorf("failed to get account usernames: %s", err)
 		return nil, errFailedAccountUsernamesByAccount
 	}

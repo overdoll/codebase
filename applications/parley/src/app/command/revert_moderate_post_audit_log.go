@@ -64,7 +64,7 @@ func (h RevertModeratePostHandler) Handle(ctx context.Context, moderatorId, audi
 		}
 
 		// tell sting to undo the pending post
-		if err := h.sting.UndoPost(ctx, log.PendingPostID()); err != nil {
+		if err := h.sting.UndoPost(ctx, log.PostID()); err != nil {
 			zap.S().Errorf("failed to publish pending post: %s", err)
 			return err
 		}

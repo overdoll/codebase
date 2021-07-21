@@ -144,11 +144,6 @@ extend type Account {
   ): PostConnection! @goField(forceResolver: true)
 }
 
-extend type PostAuditLog @key(fields: "id") {
-  id: ID! @external
-  post: Post!
-}
-
 extend type Mutation {
   """
   Create a new pending post

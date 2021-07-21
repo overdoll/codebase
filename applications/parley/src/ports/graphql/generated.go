@@ -121,6 +121,7 @@ type ComplexityRoot struct {
 		InfractionID    func(childComplexity int) int
 		Moderator       func(childComplexity int) int
 		Notes           func(childComplexity int) int
+		Post            func(childComplexity int) int
 		Reason          func(childComplexity int) int
 		ReversibleUntil func(childComplexity int) int
 		Reverted        func(childComplexity int) int
@@ -532,6 +533,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.PostAuditLog.Notes(childComplexity), true
 
+	case "PostAuditLog.post":
+		if e.complexity.PostAuditLog.Post == nil {
+			break
+		}
+
+		return e.complexity.PostAuditLog.Post(childComplexity), true
+
 	case "PostAuditLog.reason":
 		if e.complexity.PostAuditLog.Reason == nil {
 			break
@@ -783,6 +791,9 @@ type PostAuditLog implements Node @key(fields: "id") {
 
   """The infraction that is linked to this audit log, mainly kept here as a reference so reverting will be easier"""
   infractionId: ID
+
+  """The post linked to this audit log"""
+  post: Post!
 }
 
 """Edge of the audit log"""
@@ -2906,6 +2917,41 @@ func (ec *executionContext) _PostAuditLog_infractionId(ctx context.Context, fiel
 	res := resTmp.(*relay.ID)
 	fc.Result = res
 	return ec.marshalOID2ᚖoverdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _PostAuditLog_post(ctx context.Context, field graphql.CollectedField, obj *types.PostAuditLog) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "PostAuditLog",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Post, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.Post)
+	fc.Result = res
+	return ec.marshalNPost2ᚖoverdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐPost(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _PostAuditLogConnection_edges(ctx context.Context, field graphql.CollectedField, obj *types.PostAuditLogConnection) (ret graphql.Marshaler) {
@@ -5374,6 +5420,11 @@ func (ec *executionContext) _PostAuditLog(ctx context.Context, sel ast.Selection
 			}
 		case "infractionId":
 			out.Values[i] = ec._PostAuditLog_infractionId(ctx, field, obj)
+		case "post":
+			out.Values[i] = ec._PostAuditLog_post(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

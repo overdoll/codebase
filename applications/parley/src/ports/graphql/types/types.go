@@ -117,6 +117,8 @@ type PostAuditLog struct {
 	ReversibleUntil time.Time `json:"reversibleUntil"`
 	// The infraction that is linked to this audit log, mainly kept here as a reference so reverting will be easier
 	InfractionID *relay.ID `json:"infractionId"`
+	// The post linked to this audit log
+	Post *Post `json:"post"`
 }
 
 func (PostAuditLog) IsNode()   {}
