@@ -20,20 +20,16 @@ var postAuditLogTable = table.New(table.Metadata{
 		"moderator_account_id",
 		"bucket",
 		"created_ms",
-		"post_id",
-		"contributor_account_id",
 	},
 	PartKey: []string{"id"},
 	SortKey: []string{},
 })
 
 type postAuditLog struct {
-	Id            string `db:"id"`
-	Bucket        int    `db:"bucket"`
-	CreatedMs     int    `db:"created_ms"`
-	PostId        string `db:"post_id"`
-	ContributorId string `db:"contributor_account_id"`
-	ModeratorId   string `db:"moderator_account_id"`
+	Id          string `db:"id"`
+	Bucket      int    `db:"bucket"`
+	CreatedMs   int    `db:"created_ms"`
+	ModeratorId string `db:"moderator_account_id"`
 }
 
 var postAuditLogByPostTable = table.New(table.Metadata{
@@ -45,18 +41,28 @@ var postAuditLogByPostTable = table.New(table.Metadata{
 		"created_ms",
 		"post_id",
 		"contributor_account_id",
+		"account_infraction_id",
+		"action",
+		"reason",
+		"notes",
+		"reverted",
 	},
 	PartKey: []string{"post_id"},
-	SortKey: []string{},
+	SortKey: []string{"created_ms"},
 })
 
 type postAuditLogByPost struct {
-	Id            string `db:"id"`
-	Bucket        int    `db:"bucket"`
-	CreatedMs     int    `db:"created_ms"`
-	PostId        string `db:"post_id"`
-	ContributorId string `db:"contributor_account_id"`
-	ModeratorId   string `db:"moderator_account_id"`
+	Id                  string `db:"id"`
+	Bucket              int    `db:"bucket"`
+	CreatedMs           int    `db:"created_ms"`
+	PostId              string `db:"post_id"`
+	ContributorId       string `db:"contributor_account_id"`
+	ModeratorId         string `db:"moderator_account_id"`
+	AccountInfractionId string `db:"account_infraction_id"`
+	Action              string `db:"action"`
+	Reason              string `db:"reason"`
+	Notes               string `db:"notes"`
+	Reverted            bool   `db:"reverted"`
 }
 
 var postAuditLogByModeratorTable = table.New(table.Metadata{
@@ -75,7 +81,7 @@ var postAuditLogByModeratorTable = table.New(table.Metadata{
 		"reverted",
 	},
 	PartKey: []string{"moderator_account_id", "bucket"},
-	SortKey: []string{"created_ms", "contributor_account_id", "post_id", "id"},
+	SortKey: []string{"created_ms", "id"},
 })
 
 type postAuditLogByModerator struct {
@@ -138,26 +144,38 @@ func (r InfractionCassandraRepository) CreatePostAuditLog(ctx context.Context, a
 
 	stmt, _ := postAuditLogTable.Insert()
 
-	batch.Query(stmt, marshalledAuditLog.Id, marshalledAuditLog.PostId, marshalledAuditLog.ContributorId, marshalledAuditLog.ModeratorId, marshalledAuditLog.Bucket, marshalledAuditLog.CreatedMs)
+	batch.Query(stmt,
+		marshalledAuditLog.Id,
+		marshalledAuditLog.ModeratorId,
+		marshalledAuditLog.Bucket,
+		marshalledAuditLog.CreatedMs,
+	)
 
 	stmt, _ = postAuditLogByPostTable.Insert()
 
-	batch.Query(stmt, marshalledAuditLog.Id, marshalledAuditLog.PostId, marshalledAuditLog.ContributorId, marshalledAuditLog.ModeratorId, marshalledAuditLog.Bucket, marshalledAuditLog.CreatedMs)
+	batch.Query(stmt,
+		marshalledAuditLog.Id,
+		marshalledAuditLog.PostId,
+		marshalledAuditLog.ContributorId,
+		marshalledAuditLog.ModeratorId,
+		marshalledAuditLog.Bucket,
+		marshalledAuditLog.CreatedMs,
+	)
 
 	stmt, _ = postAuditLogByModeratorTable.Insert()
 
 	batch.Query(stmt,
 		marshalledAuditLog.Id,
-		marshalledAuditLog.PostId,
-		marshalledAuditLog.CreatedMs,
-		marshalledAuditLog.ContributorId,
 		marshalledAuditLog.ModeratorId,
+		marshalledAuditLog.Bucket,
+		marshalledAuditLog.CreatedMs,
+		marshalledAuditLog.PostId,
+		marshalledAuditLog.ContributorId,
 		marshalledAuditLog.AccountInfractionId,
 		marshalledAuditLog.Action,
 		marshalledAuditLog.Reason,
 		marshalledAuditLog.Notes,
 		marshalledAuditLog.Reverted,
-		marshalledAuditLog.Bucket,
 	)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
@@ -235,61 +253,95 @@ func (r InfractionCassandraRepository) GetPostAuditLog(ctx context.Context, logI
 
 func (r InfractionCassandraRepository) SearchPostAuditLogs(ctx context.Context, cursor *paging.Cursor, filter *infraction.PostAuditLogFilters) ([]*infraction.PostAuditLog, *paging.Info, error) {
 
-	// build query based on filters
-	builder :=
-		postAuditLogByModeratorTable.SelectBuilder().
-			Where(qb.Eq("moderator_account_id"), qb.In("bucket"), qb.Gt("created_ms"))
-
-	if filter.ContributorId() != "" {
-		builder.Where(qb.Eq("contributor_account_id"))
-
-		if filter.PostId() != "" {
-			builder.Where(qb.Eq("post_id"))
+	var err error
+	if cursor == nil {
+		cursor, err = paging.NewCursor(nil, nil, nil, nil)
+		if err != nil {
+			return nil, nil, err
 		}
 	}
 
-	var times []int
+	times := []int{bucket.MakeBucketFromTimestamp(time.Now())}
+	createdMs := time.Now().Unix()
 
-	for _, date := range filter.DateRange() {
-		times = append(times, bucket.MakeBucketFromTimestamp(date))
+	// FORWARDS PAGING, CHECK IF THERE IS A NEXT PAGE
+	var auditLogs []*infraction.PostAuditLog
+
+	builder := postAuditLogByModeratorTable.
+		SelectBuilder()
+
+	info := qb.M{
+		"bucket": times,
+		// in the future created_ms will be used as a cursor for pagination for filtering
+		"created_ms":           createdMs,
+		"moderator_account_id": filter.ModeratorId(),
 	}
 
-	pendingPostAuditLogQuery := builder.
-		Columns(
-			"id",
-			"post_id",
-			"contributor_account_id",
-			"contributor_account_username",
-			"moderator_account_id",
-			"moderator_account_username",
-			"account_infraction_id",
-			"created_ms",
-			"status",
-			"reason",
-			"notes",
-			"reverted",
-			"bucket",
-		).
+	hasNextPage := false
+	hasPrevPage := false
+
+	if cursor.First() != nil && *cursor.First() == 0 || cursor.Last() != nil && *cursor.Last() == 0 {
+		// asked for empty (0)
+		var count int
+
+		if err := builder.
+			CountAll().
+			Query(r.session).
+			Bind(info).
+			Select(&count); err != nil {
+			return nil, nil, err
+		}
+
+		return auditLogs, paging.NewPaging(cursor.First() != nil && count > 0, cursor.Last() != nil && count > 0), nil
+	}
+
+	if cursor.After() != nil {
+		builder.Where(qb.GtLit("created_ms", *cursor.After()))
+	}
+
+	if cursor.Before() != nil {
+		builder.Where(qb.LtLit("created_ms", *cursor.Before()))
+	}
+
+	if cursor.Last() != nil {
+		builder.OrderBy("created_ms", qb.DESC)
+	} else {
+		builder.OrderBy("created_ms", qb.ASC)
+	}
+
+	var limit int
+
+	if cursor.First() != nil {
+		limit = *cursor.First() + 1
+	} else if cursor.Last() != nil {
+		limit = *cursor.Last() + 1
+	}
+
+	if limit > 0 {
+		builder.Limit(uint(limit))
+	}
+
+	var results []*postAuditLogByModerator
+
+	if err := builder.
 		Query(r.session).
-		Consistency(gocql.LocalQuorum).
-		BindMap(qb.M{
-			"bucket": times,
-			// in the future created_ms will be used as a cursor for pagination for filtering
-			"created_ms":             0,
-			"moderator_account_id":   filter.ModeratorId(),
-			"contributor_account_id": filter.ContributorId(),
-			"post_id":                filter.PostId(),
-		})
-
-	var dbPendingPostAuditLogs []*postAuditLogByModerator
-
-	if err := pendingPostAuditLogQuery.Select(&dbPendingPostAuditLogs); err != nil {
+		Bind(info).
+		Select(&results); err != nil {
 		return nil, nil, err
+	}
+
+	if len(results) == 0 {
+		return auditLogs, paging.NewPaging(false, false), nil
+	}
+
+	if len(results) == limit {
+		hasNextPage = cursor.First() != nil
+		hasPrevPage = cursor.Last() != nil
 	}
 
 	var pendingPostAuditLogs []*infraction.PostAuditLog
 
-	for _, pendingPostAuditLog := range dbPendingPostAuditLogs {
+	for _, pendingPostAuditLog := range results {
 
 		var userInfractionHistory *infraction.AccountInfractionHistory
 
@@ -316,10 +368,12 @@ func (r InfractionCassandraRepository) SearchPostAuditLogs(ctx context.Context, 
 			pendingPostAuditLog.CreatedMs,
 		)
 
+		result.Node = paging.NewNode(string(rune(pendingPostAuditLog.CreatedMs)))
+
 		pendingPostAuditLogs = append(pendingPostAuditLogs, result)
 	}
 
-	return pendingPostAuditLogs, nil, nil
+	return pendingPostAuditLogs, paging.NewPaging(hasNextPage, hasPrevPage), nil
 }
 
 func (r InfractionCassandraRepository) UpdatePostAuditLog(ctx context.Context, id string, updateFn func(auditLog *infraction.PostAuditLog) error) (*infraction.PostAuditLog, error) {

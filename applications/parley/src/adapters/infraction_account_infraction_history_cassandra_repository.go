@@ -72,7 +72,7 @@ func (r InfractionCassandraRepository) GetAccountInfractionHistoryById(ctx conte
 func (r InfractionCassandraRepository) GetAccountInfractionHistory(ctx context.Context, cursor *paging.Cursor, accountId string) ([]*infraction.AccountInfractionHistory, *paging.Info, error) {
 
 	infractionHistoryQuery := r.session.
-		Query(accountInfractionHistoryTable.Get()).
+		Query(accountInfractionHistoryTable.Select()).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&accountInfractionHistory{AccountId: accountId})
 

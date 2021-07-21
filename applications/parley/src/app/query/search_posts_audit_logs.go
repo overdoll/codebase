@@ -24,7 +24,7 @@ func NewSearchPostAuditLogsHandler(ir infraction.Repository, eva EvaService) Sea
 
 func (h SearchPostAuditLogsHandler) Handle(ctx context.Context, cursor *paging.Cursor, moderatorId, postId string) ([]*infraction.PostAuditLog, *paging.Info, error) {
 
-	filters, err := infraction.NewPostAuditLogFilters(moderatorId, "", postId, []int{})
+	filters, err := infraction.NewPostAuditLogFilters(moderatorId, postId, []int{})
 
 	if err != nil {
 		return nil, nil, err

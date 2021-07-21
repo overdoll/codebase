@@ -19,21 +19,15 @@ var (
 )
 
 type PostAuditLogFilters struct {
-	moderatorId   string
-	contributorId string
-	postId        string
-	dateRange     []time.Time
+	moderatorId string
+	postId      string
+	dateRange   []time.Time
 }
 
-func NewPostAuditLogFilters(moderatorId, contributorId, postId string, dateRange []int) (*PostAuditLogFilters, error) {
+func NewPostAuditLogFilters(moderatorId, postId string, dateRange []int) (*PostAuditLogFilters, error) {
 
 	// DateRange will be UTC unix timestamps, so we check for that here
 	// if no date range is provided, we take the current time
-
-	if moderatorId == "" {
-		return nil, errors.New("moderator must be specified")
-	}
-
 	var times []time.Time
 
 	if len(dateRange) == 0 {
@@ -45,10 +39,9 @@ func NewPostAuditLogFilters(moderatorId, contributorId, postId string, dateRange
 	}
 
 	return &PostAuditLogFilters{
-		moderatorId:   moderatorId,
-		contributorId: contributorId,
-		postId:        postId,
-		dateRange:     times,
+		moderatorId: moderatorId,
+		postId:      postId,
+		dateRange:   times,
 	}, nil
 }
 
@@ -58,10 +51,6 @@ func (e *PostAuditLogFilters) ModeratorId() string {
 
 func (e *PostAuditLogFilters) PostId() string {
 	return e.postId
-}
-
-func (e *PostAuditLogFilters) ContributorId() string {
-	return e.contributorId
 }
 
 func (e *PostAuditLogFilters) DateRange() []time.Time {

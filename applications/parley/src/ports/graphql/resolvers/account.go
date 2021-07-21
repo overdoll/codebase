@@ -31,7 +31,7 @@ func (r AccountResolver) ModeratorPostAuditLogs(ctx context.Context, obj *types.
 		return nil, err
 	}
 
-	return types.MarshalPostAuditLogToGraphQLConnection(logs, page), nil
+	return types.MarshalPostAuditLogToGraphQLConnection(logs, cursor, page), nil
 }
 
 func (r AccountResolver) Infractions(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountInfractionHistoryConnection, error) {

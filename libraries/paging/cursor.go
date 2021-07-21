@@ -47,11 +47,16 @@ func NewCursor(after, before *string, first, last *int) (*Cursor, error) {
 	}
 
 	if first != nil && *first < 0 {
-		return nil, errors.New("argument first cannot be less than 0")
+		return nil, errors.New("`first` on a connection cannot be less than zero")
 	}
 
 	if last != nil && *last < 0 {
-		return nil, errors.New("argument last cannot be less than 0")
+		return nil, errors.New("`last` on a connection cannot be less than zero")
+	}
+
+	if first != nil && last != nil {
+		return nil, errors.New("passing both `first` and `last` to paginate a connection is not supported")
+
 	}
 
 	return &Cursor{
@@ -62,26 +67,18 @@ func NewCursor(after, before *string, first, last *int) (*Cursor, error) {
 	}, nil
 }
 
-func (c *Cursor) IsAfterCursor() bool {
-	return c.after != nil
+func (c *Cursor) After() *string {
+	return c.after
 }
 
-func (c *Cursor) IsBeforeCursor() bool {
-	return c.before != nil && c.last != nil
+func (c *Cursor) Before() *string {
+	return c.before
 }
 
-func (c *Cursor) After() string {
-	return *c.after
+func (c *Cursor) First() *int {
+	return c.first
 }
 
-func (c *Cursor) Before() string {
-	return *c.before
-}
-
-func (c *Cursor) First() int {
-	return *c.first
-}
-
-func (c *Cursor) Last() int {
-	return *c.last
+func (c *Cursor) Last() *int {
+	return c.last
 }

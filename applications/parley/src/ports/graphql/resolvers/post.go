@@ -27,5 +27,5 @@ func (r PostResolver) AuditLogs(ctx context.Context, obj *types.Post, after *str
 		return nil, err
 	}
 
-	return types.MarshalPostAuditLogToGraphQLConnection(logs, page), nil
+	return types.MarshalPostAuditLogToGraphQLConnection(logs, cursor, page), nil
 }

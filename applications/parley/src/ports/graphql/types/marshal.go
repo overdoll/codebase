@@ -44,14 +44,30 @@ func MarshalPostAuditLogToGraphQL(result *infraction.PostAuditLog) *PostAuditLog
 	}
 }
 
-func MarshalPostAuditLogToGraphQLConnection(results []*infraction.PostAuditLog, page *paging.Info) *PostAuditLogConnection {
+func MarshalPostAuditLogToGraphQLConnection(results []*infraction.PostAuditLog, cursor *paging.Cursor, page *paging.Info) *PostAuditLogConnection {
 
 	var auditLogs []*PostAuditLogEdge
 
-	for _, log := range results {
+	results = results[:len(results)-1]
+
+	var nodeAt func(int) *infraction.PostAuditLog
+
+	if cursor != nil && cursor.Last() != nil {
+		n := len(results) - 1
+		nodeAt = func(i int) *infraction.PostAuditLog {
+			return results[n-i]
+		}
+	} else {
+		nodeAt = func(i int) *infraction.PostAuditLog {
+			return results[i]
+		}
+	}
+
+	for i := range results {
+		node := nodeAt(i)
 		auditLogs = append(auditLogs, &PostAuditLogEdge{
-			Node:   MarshalPostAuditLogToGraphQL(log),
-			Cursor: log.Cursor(),
+			Node:   MarshalPostAuditLogToGraphQL(node),
+			Cursor: node.Cursor(),
 		})
 	}
 

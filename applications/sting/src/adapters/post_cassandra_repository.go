@@ -84,7 +84,7 @@ func marshalPostToDatabase(pending *post.Post) *posts {
 		State:              string(pending.State()),
 		ArtistRequest:      nil,
 		ContributorId:      pending.ContributorId(),
-		Content:            pending.RawContent(),
+		Content:            pending.Content(),
 		Categories:         pending.CategoryIds(),
 		Characters:         pending.CharacterIds(),
 		ArtistId:           pending.ArtistId(),
@@ -123,12 +123,10 @@ func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending
 
 	return post.UnmarshalPendingPostFromDatabase(
 		postPending.Id,
-		postPending.ModeratorId,
 		postPending.State,
-		artist,
+		postPending.ModeratorId,
+		"",
 		postPending.ContributorId,
-		"",
-		"",
 		postPending.Content,
 		characters,
 		categories,
