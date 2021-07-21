@@ -16,11 +16,7 @@ import InterfaceArrowsSynchronize
 import { graphql, usePreloadedQuery, useLazyLoadQuery, useQueryLoader, usePaginationFragment } from 'react-relay'
 import PendingPosts from './components/PendingPosts/PendingPosts'
 import { useTranslation } from 'react-i18next'
-
-import type { QueuePostsFragment$key } from '@//:artifacts/QueuePostsFragment.graphql'
-import type { PostsPaginationQuery } from '@//:artifacts/PostsPaginationQuery.graphql'
 import type { QueuePostsQuery } from '@//:artifacts/QueuePostsQuery.graphql'
-import type { ProfileSettingsQuery } from '@//:artifacts/ProfileSettingsQuery.graphql'
 import ErrorFallback from '../../../../components/ErrorFallback/ErrorFallback'
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
 
@@ -118,6 +114,7 @@ export default function Queue (props: Props): Node {
                 ? <PendingPosts
                     queryRef={queryRef} query={queuePostsGQL}
                     paginationQuery={pendingPostsGQL}
+                    refresh={loadQuery}
                   />
                 : <PostSuspense />}
             </Suspense>

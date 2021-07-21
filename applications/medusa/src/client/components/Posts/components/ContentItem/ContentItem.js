@@ -2,8 +2,9 @@
  * @flow
  */
 import type { Node } from 'react'
+import { useRef } from 'react'
 import mime from 'mime-types'
-import { Box, Flex, IconButton, useDisclosure } from '@chakra-ui/react'
+import { Box, Flex, IconButton, Stack, useDisclosure } from '@chakra-ui/react'
 import ImageSnippet from './ImageSnippet/ImageSnippet'
 import InspectModal from '../modal/InspectModal'
 import Icon from '@//:modules/content/icon/Icon'
@@ -13,6 +14,10 @@ import InterfaceArrowsShrinkVertical
 import InterfaceArrowsVerticalExpand1
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-vertical-expand-1.svg'
 import VideoSnippet from './VideoSnippet/VideoSnippet'
+import { usePreloadedQuery } from 'react-relay/hooks'
+import type { ProfileSettingsQuery } from '@//:artifacts/ProfileSettingsQuery.graphql'
+import Username from '../../../../domain/Settings/routes/Profile/components/Username/Username'
+import Emails from '../../../../domain/Settings/routes/Profile/components/Emails/Emails'
 
 type Props = {
   src: string,
@@ -22,6 +27,8 @@ export default function ContentItem ({ src, ...rest }: Props): Node {
   const mimeType = mime.lookup(src)
 
   const fileType = mimeType.split('/')[0]
+
+  const videoContent = useRef(null)
 
   const {
     isOpen: isPreviewOpen,
@@ -33,6 +40,13 @@ export default function ContentItem ({ src, ...rest }: Props): Node {
     isOpen: previewExpand,
     onToggle: setPreviewExpand
   } = useDisclosure()
+
+  const onOpenModal = () => {
+    onPreviewOpen()
+    if (fileType === 'video' && videoContent.current) {
+      videoContent.current.pause()
+    }
+  }
 
   return (
     <>
@@ -47,7 +61,7 @@ export default function ContentItem ({ src, ...rest }: Props): Node {
         {fileType === 'image' &&
           <ImageSnippet src={src} />}
         {fileType === 'video' &&
-          <VideoSnippet src={src} type={mimeType} />}
+          <VideoSnippet innerRef={videoContent} src={src} type={mimeType} />}
         <Box
           bg='transparent'
           w='40%'
@@ -55,9 +69,7 @@ export default function ContentItem ({ src, ...rest }: Props): Node {
           position='absolute'
           cursor='pointer'
           display={isPreviewOpen ? 'none' : 'block'}
-          onClick={() => {
-            onPreviewOpen()
-          }}
+          onClick={onOpenModal}
         />
       </Flex>
       <InspectModal
@@ -82,7 +94,10 @@ export default function ContentItem ({ src, ...rest }: Props): Node {
         {fileType === 'image' &&
           <ImageSnippet objectFit={previewExpand ? 'cover' : 'contain'} src={src} />}
         {fileType === 'video' &&
-          <VideoSnippet objectFit={previewExpand ? 'cover' : 'contain'} src={src} type={mimeType} />}
+          <VideoSnippet
+            autoPlay objectFit={previewExpand ? 'cover' : 'contain'} src={src}
+            type={mimeType}
+          />}
       </InspectModal>
     </>
   )

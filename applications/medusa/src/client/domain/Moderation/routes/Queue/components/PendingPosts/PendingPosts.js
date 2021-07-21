@@ -9,58 +9,46 @@ import {
   Stack,
   Text,
   IconButton,
-  Alert,
-  AlertIcon,
-  AlertTitle,
-  AlertDescription,
   Wrap,
   WrapItem,
   Heading,
   Avatar,
-  Skeleton,
-  useDisclosure,
-  ModalOverlay,
-  ModalContent,
-  ModalCloseButton,
-  ModalBody,
-  Modal,
   TagLabel,
-  Tag
+  Tag,
+  Tooltip,
+  Button,
+  HStack,
+  Divider,
+  AlertIcon,
+  AlertDescription,
+  Alert,
+  CloseButton,
+  AlertTitle
 } from '@chakra-ui/react'
 import Icon from '@//:modules/content/icon/Icon'
 import { useEffect, useState } from 'react'
-import { graphql, usePreloadedQuery, useLazyLoadQuery, useQueryLoader, usePaginationFragment } from 'react-relay'
-import mime from 'mime-types'
+import { graphql, usePreloadedQuery, usePaginationFragment } from 'react-relay'
+
+import { useTranslation } from 'react-i18next'
+import type { PostsPaginationQuery } from '@//:artifacts/PostsPaginationQuery.graphql'
+import type { QueuePostsFragment$key } from '@//:artifacts/QueuePostsFragment.graphql'
+import type { QueuePostsQuery } from '@//:artifacts/QueuePostsQuery.graphql'
 import ContentItem from '../../../../../../components/Posts/components/ContentItem/ContentItem'
+import ReassignmentClock from '../ReassignmentClock/ReassignmentClock'
+import ModeratePost from './ModeratePost/ModeratePost'
 
 import InterfaceArrowsButtonRight
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-button-right.svg'
 import InterfaceArrowsButtonLeft
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-button-left.svg'
-import InterfaceValidationCheck
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/validation/interface-validation-check.svg'
-import InterfaceValidationCheckCircle
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/validation/interface-validation-check-circle.svg'
 import InterfaceValidationCheckSquare1
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/validation/interface-validation-check-square-1.svg'
-import { useTranslation } from 'react-i18next'
-import type { PostsPaginationQuery } from '@//:artifacts/PostsPaginationQuery.graphql'
-import type { QueuePostsFragment$key } from '@//:artifacts/QueuePostsFragment.graphql'
-import type { QueuePostsQuery } from '@//:artifacts/QueuePostsQuery.graphql'
-import SuspenseImage from '@//:modules/utilities/SuspenseImage'
-import VideoSnippet from '../../../../../../components/Posts/components/ContentItem/VideoSnippet/VideoSnippet'
-import ImageSnippet from '../../../../../../components/Posts/components/ContentItem/ImageSnippet/ImageSnippet'
-import InspectModal from '../../../../../../components/Posts/components/modal/InspectModal'
-
-/*
-  queryRef: PreloadedQuery<QueuePendingPostsQuery>,
-  refresh: () => void,
- */
 
 type Props = {
   query: QueuePostsQuery,
   queryRef: QueuePostsQuery,
   paginationQuery: QueuePostsFragment$key,
+  refresh: () => void,
 }
 
 export default function (props: Props): Node {
@@ -76,6 +64,8 @@ export default function (props: Props): Node {
       props.paginationQuery,
       initialQuery
     )
+
+  const [notice, setNotice] = useState(true)
 
   const [currentIndex, setCurrentIndex] = useState(0)
 
@@ -101,7 +91,6 @@ export default function (props: Props): Node {
       setCurrentIndex(x => x + -1)
     }
   }
-  console.log(currentPost)
 
   return (
     data.pendingPosts.edges.length > 0
@@ -146,21 +135,40 @@ export default function (props: Props): Node {
           bg='gray.800'
           borderRadius={10}
         >
+          {notice && <Alert mb={4} borderRadius={5}>
+            <Flex direction='column'>
+              <Flex align='center' mb={2}>
+                <AlertIcon />
+                <AlertTitle>{t('queue.post.actions.notice.title')}</AlertTitle>
+              </Flex>
+              <AlertDescription
+                fontSize='md'
+                mb={2}
+              >{t('queue.post.actions.notice.description')}
+              </AlertDescription>
+              <Button
+                textAlign='left' colorScheme='blue' variant='link'
+                size='md'
+              >
+                {t('queue.post.actions.notice.link')}
+              </Button>
+            </Flex>
+            <CloseButton
+              position='absolute'
+              right={2}
+              top={2}
+              onClick={() => setNotice(false)}
+            />
+          </Alert>}
           <Flex align='center' w='100%' justify='space-between'>
             <Flex align='center'>
-              <Avatar src={currentPost.contributor.avatar} w={8} h={8} mr={2} borderRadius='25%' />
+              <Avatar src={currentPost.contributor.avatar} w={10} h={10} mr={2} borderRadius='25%' />
               <Text color='gray.100' fontWeight='medium' size='md'>{currentPost.contributor.username}</Text>
             </Flex>
-            <Flex align='center'>
-              <CircularProgress size={8} value={50} color='green.500'>
-                <CircularProgressLabel fontSize='xs'>
-                  t
-                </CircularProgressLabel>
-              </CircularProgress>
-            </Flex>
+            <ReassignmentClock time={currentPost.reassignmentAt} />
           </Flex>
           <Stack spacing={2} direction='column' mt={4}>
-            <Flex direction='column'>
+            <Flex mb={1} direction='column'>
               <Heading mb={2} color='gray.00' size='md'>{t('queue.post.content')}</Heading>
               <Wrap justify='center'>
                 {currentPost.content.map((item, index) =>
@@ -174,7 +182,7 @@ export default function (props: Props): Node {
               <Heading mb={2} color='gray.00' size='md'>{t('queue.post.tags.title')}</Heading>
               <Stack spacing={2}>
                 <Flex direction='column'>
-                  <Text mb={1} fontSize='md' color='gray.300'>{t('queue.post.tags.artist')}</Text>
+                  <Heading mb={1} fontSize='md' color='teal.50'>{t('queue.post.tags.artist')}</Heading>
                   <Wrap direction='column'>
                     <WrapItem>
                       <Tag size='lg' colorScheme='gray' borderRadius='full'>
@@ -184,7 +192,7 @@ export default function (props: Props): Node {
                   </Wrap>
                 </Flex>
                 <Flex direction='column'>
-                  <Text mb={1} fontSize='md' color='gray.300'>{t('queue.post.tags.characters')}</Text>
+                  <Heading mb={1} fontSize='md' color='purple.50'>{t('queue.post.tags.characters')}</Heading>
                   <Wrap>
                     {currentPost.characters.map((item, index) =>
                       <WrapItem key={index}>
@@ -195,15 +203,17 @@ export default function (props: Props): Node {
                     )}
                     {currentPost.characterRequests?.map((item, index) =>
                       <WrapItem key={index}>
-                        <Tag size='lg' colorScheme='green' borderRadius='full'>
-                          <TagLabel>{item.name} ({item.media})</TagLabel>
-                        </Tag>
+                        <Tooltip label={t('queue.post.tags.new')}>
+                          <Tag size='lg' colorScheme='green' borderRadius='full'>
+                            <TagLabel>{item.name} ({item.media})</TagLabel>
+                          </Tag>
+                        </Tooltip>
                       </WrapItem>
                     )}
                   </Wrap>
                 </Flex>
                 <Flex direction='column'>
-                  <Text mb={1} fontSize='md' color='gray.300'>{t('queue.post.tags.categories')}</Text>
+                  <Heading mb={1} fontSize='md' color='orange.50'>{t('queue.post.tags.categories')}</Heading>
                   <Wrap>
                     {currentPost.categories.map((item, index) =>
                       <WrapItem key={index}>
@@ -215,6 +225,7 @@ export default function (props: Props): Node {
                   </Wrap>
                 </Flex>
               </Stack>
+              <ModeratePost refresh={props.refresh} postId={currentPost.id} />
             </Flex>
           </Stack>
         </Flex>

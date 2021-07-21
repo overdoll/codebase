@@ -137,7 +137,7 @@ export default function NavigationBar ({ account, children, refreshUserQuery }: 
                       boxShadow='md'
                       overflowY='auto'
                       flexShrink={0}
-                      position={{ base: 'absolute', md: 'sticky', lg: 'absolute' }}
+                      position='fixed'
                       zIndex='sidebar'
                       display={{
                         base: isOpen ? 'block' : 'none',

@@ -6,13 +6,14 @@ import type { Node } from 'react'
 type Props = {
   src: string,
   type: string,
-  ref?: () => void,
+  innerRef?: () => void,
 }
 
-export default function VideoSnippet ({ src, ref, objectFit, type, ...rest }: Props): Node {
+export default function VideoSnippet ({ src, innerRef, objectFit, type, ...rest }: Props): Node {
   return (
     <video
       controls
+      ref={innerRef}
       disablePictureInPicture
       controlsList='nodownload noremoteplayback nofullscreen'
       muted loop preload='auto' {...rest} style={{

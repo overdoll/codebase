@@ -15,7 +15,7 @@ type Props = {
 
 export default function InfoTip ({ text, size }: Props): Node {
   return (
-    <Tooltip bg='gray.100' color='gray.900' label={text} fontSize='sm'>
+    <Tooltip label={text} fontSize='sm'>
       <Flex>
         <Icon ml={1} w={size} h={size} icon={InterfaceAlertInformationCircle} fill='gray.100' />
       </Flex>

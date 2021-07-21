@@ -207,7 +207,6 @@ export default function Username ({ username, usernames, refresh }: Props): Node
           </ModalBody>
           <ModalFooter />
         </ModalContent>
-
       </Modal>
     </>
   )

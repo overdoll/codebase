@@ -8,11 +8,37 @@
     },
     "post": {
       "content": "Post Uploads",
+      "reassignment": "Time you have left to take action on the post before it is reassigned to another moderator",
       "tags": {
         "title": "Post Tags",
         "artist": "Artist",
         "characters": "Characters",
-        "categories": "Categories"
+        "categories": "Categories",
+        "new": "This is a new tag. If approved, it will be available for anyone to use."
+      },
+      "actions": {
+        "notice": {
+          "title": "A few things...",
+          "description": "Before this post is visible to the public, it must be reviewed to ensure that it complies with the community guidelines.",
+          "link": "Community Guidelines"
+        },
+        "approve": {
+          "button": "Approve",
+          "query": {
+            "success": "Post {{id}} was approved successfully",
+            "error": "There was an error approving post {{id}}"
+          }
+        },
+        "deny": {
+          "button": "Deny",
+          "modal": {
+            "title": "Select a reason for denying the post"
+          },
+          "query": {
+            "success": "Post {{id}} was denied with reason: {{reason}}",
+            "error": "There was an error denying post {{id}}"
+          }
+        }
       }
     },
     "history": {

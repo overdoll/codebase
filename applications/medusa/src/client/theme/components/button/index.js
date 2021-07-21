@@ -79,17 +79,16 @@ function variantGhost (props) {
     }
   }
 
-  const darkHoverBg = `${c}.400`
-  const darkActiveBg = `${c}.600`
-
   return {
-    color: mode(`${c}.600`, `${c}.500`)(props),
+    color: mode(`${c}.600`, `${c}.300`)(props),
     bg: 'transparent',
     _hover: {
-      color: mode(`${c}.50`, darkHoverBg)(props)
+      color: mode(`${c}.50`, `${c}.200`)(props),
+      bg: mode('gray.200', 'gray.600')(props)
     },
     _active: {
-      color: mode(`${c}.100`, darkActiveBg)(props)
+      color: mode(`${c}.50`, `${c}.500`)(props),
+      bg: mode('gray.200', 'gray.600')(props)
     }
   }
 }
@@ -105,10 +104,10 @@ function variantOutline (props) {
       borderWidth: 3.5,
       color: mode('inherit', 'gray.100')(props),
       _hover: {
-        bg: mode('gray.100', 'gray.200')(props)
+        bg: mode('gray.100', 'gray.500')(props)
       },
       _active: {
-        bg: mode('gray.200', 'gray.300')(props)
+        bg: mode('gray.200', 'gray.700')(props)
       }
     }
   }
