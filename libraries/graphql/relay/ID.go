@@ -30,12 +30,7 @@ func NewID(typename interface{}, args ...string) ID {
 
 func decode(i ID) []string {
 
-	sDec, err := base64.StdEncoding.DecodeString(string(i))
-	if err != nil {
-		return []string{string(i)}
-	}
-
-	splits := strings.Split(string(sDec), ":")
+	splits := strings.Split(string(i), ":")
 
 	return splits
 }
@@ -74,7 +69,13 @@ func (i *ID) UnmarshalGQL(v interface{}) error {
 		return fmt.Errorf("ID must be a string")
 	}
 
-	*i = ID(id)
+	sDec, err := base64.StdEncoding.DecodeString(id)
+
+	if err != nil {
+		return err
+	}
+
+	*i = ID(sDec)
 
 	return nil
 }

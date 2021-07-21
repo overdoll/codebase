@@ -3,6 +3,8 @@ package paging
 import (
 	"encoding/base64"
 	"errors"
+
+	"github.com/scylladb/gocqlx/v2/qb"
 )
 
 type Node struct {
@@ -97,4 +99,26 @@ func (c *Cursor) GetLimit() int {
 	}
 
 	return limit
+}
+
+func (c *Cursor) BuildCassandra(builder *qb.SelectBuilder, column string) {
+	if c.After() != nil {
+		builder.Where(qb.LtLit(column, `'`+*c.After()+`'`))
+	}
+
+	if c.Before() != nil {
+		builder.Where(qb.GtLit(column, `'`+*c.Before()+`'`))
+	}
+
+	if c.Last() != nil {
+		builder.OrderBy(column, qb.ASC)
+	} else {
+		builder.OrderBy(column, qb.DESC)
+	}
+
+	limit := c.GetLimit()
+
+	if limit > 0 {
+		builder.Limit(uint(limit))
+	}
 }

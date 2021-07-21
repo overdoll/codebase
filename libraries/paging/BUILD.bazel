@@ -5,4 +5,5 @@ go_library(
     srcs = ["cursor.go"],
     importpath = "overdoll/libraries/paging",
     visibility = ["//visibility:public"],
+    deps = ["@com_github_scylladb_gocqlx_v2//qb"],
 )

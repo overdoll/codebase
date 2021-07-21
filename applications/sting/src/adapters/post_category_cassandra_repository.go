@@ -35,11 +35,10 @@ func (r PostsCassandraRepository) GetCategoriesById(ctx context.Context, cats []
 		return categories, nil
 	}
 
-	queryCategories := categoryTable.
-		SelectBuilder().
+	queryCategories := qb.Select(categoryTable.Name()).
 		Where(qb.In("id")).
 		Query(r.session).
-		Consistency(gocql.One).
+		Consistency(gocql.LocalQuorum).
 		Bind(cats)
 
 	var categoriesModels []category

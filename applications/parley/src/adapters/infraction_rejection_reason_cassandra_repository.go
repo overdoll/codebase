@@ -46,10 +46,18 @@ func (r InfractionCassandraRepository) GetPostRejectionReason(ctx context.Contex
 
 func (r InfractionCassandraRepository) GetPostRejectionReasons(ctx context.Context, cursor *paging.Cursor) ([]*infraction.PostRejectionReason, error) {
 
-	rejectionReasonsQuery := r.session.
-		Query(postRejectionReasonTable.Get()).
+	builder := postRejectionReasonTable.SelectBuilder()
+
+	data := &postRejectionReason{Bucket: 0}
+
+	if cursor != nil {
+		cursor.BuildCassandra(builder, "id")
+	}
+
+	rejectionReasonsQuery := builder.
+		Query(r.session).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(&postRejectionReason{Bucket: 0})
+		BindStruct(data)
 
 	var dbRejectionReasons []postRejectionReason
 

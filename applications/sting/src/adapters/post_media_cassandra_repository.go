@@ -55,12 +55,11 @@ func (r PostsCassandraRepository) GetMediasById(ctx context.Context, medi []stri
 		return medias, nil
 	}
 
-	queryMedia := mediaTable.
-		SelectBuilder().
+	queryMedia := qb.Select(mediaTable.Name()).
 		Where(qb.In("id")).
 		Query(r.session).
 		Consistency(gocql.One).
-		BindStruct(medi)
+		Bind(medi)
 
 	var mediaModels []*media
 

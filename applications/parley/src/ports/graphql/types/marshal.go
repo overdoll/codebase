@@ -115,32 +115,59 @@ func MarshalAccountInfractionHistoryToGraphQLConnection(results []*infraction.Ac
 
 	var infractionHistory []*AccountInfractionHistoryEdge
 
-	for _, infra := range results {
-		infractionHistory = append(infractionHistory, &AccountInfractionHistoryEdge{
-			Node:   MarshalAccountInfractionHistoryToGraphQL(infra),
-			Cursor: infra.Cursor(),
-		})
-	}
-
-	var startCursor *string
-	var endCursor *string
-
-	if len(results) > 0 {
-		res := results[0].Cursor()
-		startCursor = &res
-		res = results[len(results)-1].Cursor()
-		endCursor = &res
-	}
-
-	return &AccountInfractionHistoryConnection{
+	conn := &AccountInfractionHistoryConnection{
 		PageInfo: &relay.PageInfo{
 			HasNextPage:     false,
 			HasPreviousPage: false,
-			StartCursor:     startCursor,
-			EndCursor:       endCursor,
+			StartCursor:     nil,
+			EndCursor:       nil,
 		},
 		Edges: infractionHistory,
 	}
+
+	limit := cursor.GetLimit()
+
+	if len(results) == 0 {
+		return conn
+	}
+
+	if len(results) == limit {
+		conn.PageInfo.HasNextPage = cursor.First() != nil
+		conn.PageInfo.HasPreviousPage = cursor.Last() != nil
+		results = results[:len(results)-1]
+	}
+
+	var nodeAt func(int) *infraction.AccountInfractionHistory
+
+	if cursor != nil && cursor.Last() != nil {
+		n := len(results) - 1
+		nodeAt = func(i int) *infraction.AccountInfractionHistory {
+			return results[n-i]
+		}
+	} else {
+		nodeAt = func(i int) *infraction.AccountInfractionHistory {
+			return results[i]
+		}
+	}
+
+	for i := range results {
+		node := nodeAt(i)
+		infractionHistory = append(infractionHistory, &AccountInfractionHistoryEdge{
+			Node:   MarshalAccountInfractionHistoryToGraphQL(node),
+			Cursor: node.Cursor(),
+		})
+	}
+
+	conn.Edges = infractionHistory
+
+	if len(results) > 0 {
+		res := results[0].Cursor()
+		conn.PageInfo.StartCursor = &res
+		res = results[len(results)-1].Cursor()
+		conn.PageInfo.EndCursor = &res
+	}
+
+	return conn
 }
 
 func MarshalModeratorToGraphQL(result *moderator.Moderator) *Moderator {
@@ -162,30 +189,57 @@ func MarshalPostRejectionReasonToGraphQLConnection(results []*infraction.PostRej
 
 	var rejectionReasons []*PostRejectionReasonEdge
 
-	for _, reason := range results {
-		rejectionReasons = append(rejectionReasons, &PostRejectionReasonEdge{
-			Node:   MarshalPostRejectionReasonToGraphQL(reason),
-			Cursor: reason.Cursor(),
-		})
-	}
-
-	var startCursor *string
-	var endCursor *string
-
-	if len(results) > 0 {
-		res := results[0].Cursor()
-		startCursor = &res
-		res = results[len(results)-1].Cursor()
-		endCursor = &res
-	}
-
-	return &PostRejectionReasonConnection{
+	conn := &PostRejectionReasonConnection{
 		PageInfo: &relay.PageInfo{
 			HasNextPage:     false,
 			HasPreviousPage: false,
-			StartCursor:     startCursor,
-			EndCursor:       endCursor,
+			StartCursor:     nil,
+			EndCursor:       nil,
 		},
 		Edges: rejectionReasons,
 	}
+
+	limit := cursor.GetLimit()
+
+	if len(results) == 0 {
+		return conn
+	}
+
+	if len(results) == limit {
+		conn.PageInfo.HasNextPage = cursor.First() != nil
+		conn.PageInfo.HasPreviousPage = cursor.Last() != nil
+		results = results[:len(results)-1]
+	}
+
+	var nodeAt func(int) *infraction.PostRejectionReason
+
+	if cursor != nil && cursor.Last() != nil {
+		n := len(results) - 1
+		nodeAt = func(i int) *infraction.PostRejectionReason {
+			return results[n-i]
+		}
+	} else {
+		nodeAt = func(i int) *infraction.PostRejectionReason {
+			return results[i]
+		}
+	}
+
+	for i := range results {
+		node := nodeAt(i)
+		rejectionReasons = append(rejectionReasons, &PostRejectionReasonEdge{
+			Node:   MarshalPostRejectionReasonToGraphQL(node),
+			Cursor: node.Cursor(),
+		})
+	}
+
+	conn.Edges = rejectionReasons
+
+	if len(results) > 0 {
+		res := results[0].Cursor()
+		conn.PageInfo.StartCursor = &res
+		res = results[len(results)-1].Cursor()
+		conn.PageInfo.EndCursor = &res
+	}
+
+	return conn
 }

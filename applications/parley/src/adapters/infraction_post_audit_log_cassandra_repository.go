@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"strconv"
 	"time"
 
 	"github.com/gocql/gocql"
@@ -30,7 +29,6 @@ var postAuditLogTable = table.New(table.Metadata{
 type postAuditLog struct {
 	Id          string `db:"id"`
 	Bucket      int    `db:"bucket"`
-	CreatedMs   int    `db:"created_ms"`
 	ModeratorId string `db:"moderator_account_id"`
 }
 
@@ -40,7 +38,6 @@ var postAuditLogByPostTable = table.New(table.Metadata{
 		"id",
 		"moderator_account_id",
 		"bucket",
-		"created_ms",
 		"post_id",
 		"contributor_account_id",
 		"account_infraction_id",
@@ -50,13 +47,12 @@ var postAuditLogByPostTable = table.New(table.Metadata{
 		"reverted",
 	},
 	PartKey: []string{"post_id"},
-	SortKey: []string{"created_ms"},
+	SortKey: []string{"id"},
 })
 
 type postAuditLogByPost struct {
 	Id                  string `db:"id"`
 	Bucket              int    `db:"bucket"`
-	CreatedMs           int    `db:"created_ms"`
 	PostId              string `db:"post_id"`
 	ContributorId       string `db:"contributor_account_id"`
 	ModeratorId         string `db:"moderator_account_id"`
@@ -73,7 +69,6 @@ var postAuditLogByModeratorTable = table.New(table.Metadata{
 		"id",
 		"moderator_account_id",
 		"bucket",
-		"created_ms",
 		"post_id",
 		"contributor_account_id",
 		"account_infraction_id",
@@ -83,13 +78,12 @@ var postAuditLogByModeratorTable = table.New(table.Metadata{
 		"reverted",
 	},
 	PartKey: []string{"moderator_account_id", "bucket"},
-	SortKey: []string{"created_ms", "id"},
+	SortKey: []string{"id"},
 })
 
 type postAuditLogByModerator struct {
 	Id                  string `db:"id"`
 	Bucket              int    `db:"bucket"`
-	CreatedMs           int    `db:"created_ms"`
 	PostId              string `db:"post_id"`
 	ContributorId       string `db:"contributor_account_id"`
 	ModeratorId         string `db:"moderator_account_id"`
@@ -130,7 +124,6 @@ func marshalPostAuditLogToDatabase(auditLog *infraction.PostAuditLog) (*postAudi
 		Reason:              reason,
 		Notes:               auditLog.Notes(),
 		Reverted:            auditLog.Reverted(),
-		CreatedMs:           auditLog.CreatedMs(),
 	}, nil
 }
 
@@ -150,7 +143,6 @@ func (r InfractionCassandraRepository) CreatePostAuditLog(ctx context.Context, a
 		marshalledAuditLog.Id,
 		marshalledAuditLog.ModeratorId,
 		marshalledAuditLog.Bucket,
-		marshalledAuditLog.CreatedMs,
 	)
 
 	stmt, _ = postAuditLogByPostTable.Insert()
@@ -161,7 +153,6 @@ func (r InfractionCassandraRepository) CreatePostAuditLog(ctx context.Context, a
 		marshalledAuditLog.ContributorId,
 		marshalledAuditLog.ModeratorId,
 		marshalledAuditLog.Bucket,
-		marshalledAuditLog.CreatedMs,
 	)
 
 	stmt, _ = postAuditLogByModeratorTable.Insert()
@@ -170,7 +161,6 @@ func (r InfractionCassandraRepository) CreatePostAuditLog(ctx context.Context, a
 		marshalledAuditLog.Id,
 		marshalledAuditLog.ModeratorId,
 		marshalledAuditLog.Bucket,
-		marshalledAuditLog.CreatedMs,
 		marshalledAuditLog.PostId,
 		marshalledAuditLog.ContributorId,
 		marshalledAuditLog.AccountInfractionId,
@@ -249,7 +239,6 @@ func (r InfractionCassandraRepository) GetPostAuditLog(ctx context.Context, logI
 		pendingPostAuditLogByModerator.Notes,
 		pendingPostAuditLogByModerator.Reverted,
 		userInfractionHistory,
-		pendingPostAuditLogByModerator.CreatedMs,
 	), nil
 }
 
@@ -279,26 +268,11 @@ func (r InfractionCassandraRepository) SearchPostAuditLogs(ctx context.Context, 
 	info := &postAuditLogByModerator{
 		Bucket:      bucket.MakeBucketFromTimestamp(time.Now()),
 		ModeratorId: filter.ModeratorId(),
+		PostId:      filter.PostId(),
 	}
 
-	if cursor.After() != nil {
-		builder.Where(qb.GtLit("created_ms", *cursor.After()))
-	}
-
-	if cursor.Before() != nil {
-		builder.Where(qb.LtLit("created_ms", *cursor.Before()))
-	}
-
-	if cursor.Last() != nil {
-		builder.OrderBy("created_ms", qb.DESC)
-	} else {
-		builder.OrderBy("created_ms", qb.ASC)
-	}
-
-	limit := cursor.GetLimit()
-
-	if limit > 0 {
-		builder.Limit(uint(limit))
+	if cursor != nil {
+		cursor.BuildCassandra(builder, "id")
 	}
 
 	var results []*postAuditLogByModerator
@@ -336,10 +310,9 @@ func (r InfractionCassandraRepository) SearchPostAuditLogs(ctx context.Context, 
 			pendingPostAuditLog.Notes,
 			pendingPostAuditLog.Reverted,
 			userInfractionHistory,
-			pendingPostAuditLog.CreatedMs,
 		)
 
-		result.Node = paging.NewNode(strconv.Itoa(pendingPostAuditLog.CreatedMs))
+		result.Node = paging.NewNode(pendingPostAuditLog.Id)
 
 		pendingPostAuditLogs = append(pendingPostAuditLogs, result)
 	}

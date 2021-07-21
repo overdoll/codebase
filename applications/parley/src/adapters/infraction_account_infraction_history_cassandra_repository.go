@@ -71,10 +71,18 @@ func (r InfractionCassandraRepository) GetAccountInfractionHistoryById(ctx conte
 
 func (r InfractionCassandraRepository) GetAccountInfractionHistory(ctx context.Context, cursor *paging.Cursor, accountId string) ([]*infraction.AccountInfractionHistory, error) {
 
-	infractionHistoryQuery := r.session.
-		Query(accountInfractionHistoryTable.Select()).
+	builder := accountInfractionHistoryTable.SelectBuilder()
+
+	data := &accountInfractionHistory{AccountId: accountId}
+
+	if cursor != nil {
+		cursor.BuildCassandra(builder, "id")
+	}
+
+	infractionHistoryQuery := builder.
+		Query(r.session).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(&accountInfractionHistory{AccountId: accountId})
+		BindStruct(data)
 
 	var dbUserInfractionHistory []accountInfractionHistory
 
@@ -84,7 +92,9 @@ func (r InfractionCassandraRepository) GetAccountInfractionHistory(ctx context.C
 
 	var infractionHistory []*infraction.AccountInfractionHistory
 	for _, infractionHist := range dbUserInfractionHistory {
-		infractionHistory = append(infractionHistory, infraction.UnmarshalAccountInfractionHistoryFromDatabase(infractionHist.Id, infractionHist.AccountId, infractionHist.Reason, infractionHist.Expiration))
+		infract := infraction.UnmarshalAccountInfractionHistoryFromDatabase(infractionHist.Id, infractionHist.AccountId, infractionHist.Reason, infractionHist.Expiration)
+		infract.Node = paging.NewNode(infractionHist.Id)
+		infractionHistory = append(infractionHistory, infract)
 	}
 
 	return infractionHistory, nil

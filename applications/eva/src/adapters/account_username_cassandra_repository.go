@@ -173,7 +173,7 @@ func (r AccountRepository) GetAccountUsernames(ctx context.Context, cursor *pagi
 		BindStruct(&UsernameByAccount{
 			AccountId: id,
 		})
-
+	
 	if err := queryUsernames.Select(&accountUsernames); err != nil {
 
 		if err == gocql.ErrNotFound {
@@ -186,7 +186,9 @@ func (r AccountRepository) GetAccountUsernames(ctx context.Context, cursor *pagi
 	var usernames []*account.Username
 
 	for _, username := range accountUsernames {
-		usernames = append(usernames, account.UnmarshalUsernameFromDatabase(username.Username, username.AccountId))
+		usern := account.UnmarshalUsernameFromDatabase(username.Username, username.AccountId)
+		usern.Node = paging.NewNode(username.Username)
+		usernames = append(usernames, usern)
 	}
 
 	return usernames, nil

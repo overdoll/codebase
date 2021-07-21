@@ -27,7 +27,7 @@ var postTable = table.New(table.Metadata{
 		"categories_requests",
 		"media_requests",
 		"posted_at",
-		"reassignment_at",
+		"moderator_reassignment_at",
 	},
 	PartKey: []string{"id"},
 	SortKey: []string{},
@@ -47,7 +47,7 @@ type posts struct {
 	CategoriesRequests []string          `db:"categories_requests"`
 	MediaRequests      []string          `db:"media_requests"`
 	PostedAt           time.Time         `db:"posted_at"`
-	ReassignmentAt     time.Time         `db:"reassignment_at"`
+	ReassignmentAt     time.Time         `db:"moderator_reassignment_at"`
 }
 
 type PostsCassandraRepository struct {
@@ -108,17 +108,6 @@ func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending
 
 	if err != nil {
 		return nil, err
-	}
-
-	artist := post.NewArtist(postPending.ArtistId)
-
-	// if artist ID isn't null, grab artist from DB
-	if artist.ID() != "" {
-		artist, err = r.GetArtistById(ctx, artist.ID())
-
-		if err != nil {
-			return nil, err
-		}
 	}
 
 	return post.UnmarshalPendingPostFromDatabase(

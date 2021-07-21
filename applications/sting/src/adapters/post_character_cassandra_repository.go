@@ -39,8 +39,7 @@ func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars [
 		return characters, nil
 	}
 
-	queryCharacters := characterTable.
-		SelectBuilder().
+	queryCharacters := qb.Select(characterTable.Name()).
 		Where(qb.In("id")).
 		Query(r.session).
 		Consistency(gocql.LocalQuorum).
@@ -62,11 +61,10 @@ func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars [
 		mediaIds = append(mediaIds, cat.MediaId)
 	}
 
-	queryMedia := mediaTable.
-		SelectBuilder().
+	queryMedia := qb.Select(mediaTable.Name()).
 		Where(qb.In("id")).
 		Query(r.session).
-		Consistency(gocql.LocalQuorum).
+		Consistency(gocql.One).
 		Bind(mediaIds)
 
 	var mediaModels []*media

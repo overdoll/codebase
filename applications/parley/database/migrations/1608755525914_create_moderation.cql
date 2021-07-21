@@ -11,7 +11,6 @@ CREATE TABLE IF NOT EXISTS post_audit_logs
     id                   text,
     moderator_account_id text,
     bucket               int,
-    created_ms           int,
     primary key ( id ),
 );
 
@@ -21,21 +20,19 @@ CREATE TABLE IF NOT EXISTS post_audit_logs_by_post
     id                     text,
     moderator_account_id   text,
     bucket                 int,
-    created_ms             int,
     contributor_account_id text,
     account_infraction_id  text,
     action                 text,
     reason                 text,
     notes                  text,
     reverted               boolean,
-    primary key ( post_id, created_ms ),
-) WITH CLUSTERING ORDER BY (created_ms DESC);
+    primary key ( post_id, id ),
+) WITH CLUSTERING ORDER BY (id DESC);
 
 CREATE TABLE IF NOT EXISTS post_audit_logs_by_moderator
 (
     id                     text,
     bucket                 int,
-    created_ms             int,
     post_id                text,
     contributor_account_id text,
     moderator_account_id   text,
@@ -44,8 +41,8 @@ CREATE TABLE IF NOT EXISTS post_audit_logs_by_moderator
     reason                 text,
     notes                  text,
     reverted               boolean,
-    primary key ( (moderator_account_id, bucket), created_ms, id ),
-) WITH CLUSTERING ORDER BY (created_ms DESC, id DESC);
+    primary key ( (moderator_account_id, bucket), id ),
+) WITH CLUSTERING ORDER BY (id DESC);
 
 CREATE TABLE IF NOT EXISTS account_infraction_history
 (
@@ -62,5 +59,5 @@ CREATE TABLE IF NOT EXISTS post_rejection_reasons
     id         text,
     reason     text,
     infraction boolean,
-    primary key ( bucket , id ),
+    primary key ( bucket, id ),
 );

@@ -65,8 +65,6 @@ type PostAuditLog struct {
 	id            string
 	pendingPostId string
 
-	createdMs int
-
 	moderatorId   string
 	contributorId string
 
@@ -111,11 +109,10 @@ func NewPendingPostAuditLog(user *account.Account, userInfractionHistory []*Acco
 		notes:           notes,
 		reverted:        false,
 		userInfraction:  userInfraction,
-		createdMs:       int(time.Now().Unix()),
 	}, nil
 }
 
-func UnmarshalPostAuditLogFromDatabase(id, postId, moderatorId, contributorId, status, userInfractionId, reason, notes string, reverted bool, userInfraction *AccountInfractionHistory, createdMs int) *PostAuditLog {
+func UnmarshalPostAuditLogFromDatabase(id, postId, moderatorId, contributorId, status, userInfractionId, reason, notes string, reverted bool, userInfraction *AccountInfractionHistory) *PostAuditLog {
 	return &PostAuditLog{
 		id:              id,
 		pendingPostId:   postId,
@@ -126,7 +123,6 @@ func UnmarshalPostAuditLogFromDatabase(id, postId, moderatorId, contributorId, s
 		notes:           notes,
 		reverted:        reverted,
 		userInfraction:  userInfraction,
-		createdMs:       createdMs,
 	}
 }
 
@@ -184,10 +180,6 @@ func (m *PostAuditLog) ReversibleUntil() time.Time {
 	}
 
 	return parse.Time().Add(time.Minute * 10)
-}
-
-func (m *PostAuditLog) CreatedMs() int {
-	return m.createdMs
 }
 
 // revert log

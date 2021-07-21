@@ -263,7 +263,9 @@ func (r AccountRepository) GetAccountEmails(ctx context.Context, cursor *paging.
 	var emails []*account.Email
 
 	for _, email := range accountEmails {
-		emails = append(emails, account.UnmarshalEmailFromDatabase(email.Email, email.AccountId, email.Status))
+		em := account.UnmarshalEmailFromDatabase(email.Email, email.AccountId, email.Status)
+		emails = append(emails, em)
+		em.Node = paging.NewNode(email.Email)
 	}
 
 	return emails, nil
