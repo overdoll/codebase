@@ -21,11 +21,11 @@ func (r CharacterResolver) Posts(ctx context.Context, obj *types.Character, afte
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	results, page, err := r.App.Queries.SearchPosts.Handle(ctx, cursor, "", "", "", nil, []string{obj.ID.GetID()}, nil)
+	results, err := r.App.Queries.SearchPosts.Handle(ctx, cursor, "", "", "", nil, []string{obj.ID.GetID()}, nil)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return types.MarshalPostToGraphQLConnection(results, page), nil
+	return types.MarshalPostToGraphQLConnection(results, cursor), nil
 }

@@ -32,14 +32,13 @@ const accountIndex = `
 				"type": "keyword"
 			},
 			"username": {
-				"type": "text",
-				"analyzer": "english"
+				"type": "keyword"
 			},
 			"verified": {
-				"type": "bool",
+				"type": "boolean"
 			},
-			"Roles": {
-				"type": "bool",
+			"roles": {
+				"type": "keyword"
 			}
 		}
 	}
@@ -111,6 +110,10 @@ func (r AccountIndexElasticSearchRepository) SearchAccounts(ctx context.Context,
 // Efficiently scan the accounts table and index it
 func (r AccountIndexElasticSearchRepository) IndexAllAccounts(ctx context.Context) error {
 
+	if err := r.store.CreateBulkIndex(accountIndex); err != nil {
+		return err
+	}
+
 	scanner := scan.New(r.session,
 		scan.Config{
 			NodesInCluster: 1,
@@ -121,14 +124,10 @@ func (r AccountIndexElasticSearchRepository) IndexAllAccounts(ctx context.Contex
 
 	err := scanner.RunIterator(accountTable, func(iter *gocqlx.Iterx) error {
 
-		if err := r.store.CreateBulkIndex(accountIndex); err != nil {
-			return err
-		}
-
 		var a accounts
 
 		for iter.StructScan(&a) {
-			if err := r.store.AddToBulkIndex(a.Id, accountDocument{
+			if err := r.store.AddToBulkIndex(a.Id, &accountDocument{
 				Id:       a.Id,
 				Avatar:   a.Avatar,
 				Username: a.Username,
@@ -139,10 +138,6 @@ func (r AccountIndexElasticSearchRepository) IndexAllAccounts(ctx context.Contex
 			}
 		}
 
-		if err := r.store.CloseBulkIndex(); err != nil {
-			return fmt.Errorf("unexpected error: %s", err)
-		}
-
 		return nil
 	})
 
@@ -150,10 +145,15 @@ func (r AccountIndexElasticSearchRepository) IndexAllAccounts(ctx context.Contex
 		return err
 	}
 
+	if err := r.store.CloseBulkIndex(); err != nil {
+		return fmt.Errorf("unexpected error: %s", err)
+	}
+
 	return nil
 }
 
 func (r AccountIndexElasticSearchRepository) DeleteAccountIndex(ctx context.Context) error {
+
 	err := r.store.DeleteIndex(accountIndexName)
 
 	if err != nil {

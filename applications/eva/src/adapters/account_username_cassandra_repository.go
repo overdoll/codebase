@@ -163,7 +163,7 @@ func (r AccountRepository) GetAccountByUsername(ctx context.Context, username st
 }
 
 // GetAccountEmails - get emails for account
-func (r AccountRepository) GetAccountUsernames(ctx context.Context, cursor *paging.Cursor, id string) ([]*account.Username, *paging.Info, error) {
+func (r AccountRepository) GetAccountUsernames(ctx context.Context, cursor *paging.Cursor, id string) ([]*account.Username, error) {
 
 	var accountUsernames []*UsernameByAccount
 
@@ -177,10 +177,10 @@ func (r AccountRepository) GetAccountUsernames(ctx context.Context, cursor *pagi
 	if err := queryUsernames.Select(&accountUsernames); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, nil, account.ErrAccountNotFound
+			return nil, account.ErrAccountNotFound
 		}
 
-		return nil, nil, fmt.Errorf("select() failed: '%s", err)
+		return nil, fmt.Errorf("select() failed: '%s", err)
 	}
 
 	var usernames []*account.Username
@@ -189,7 +189,7 @@ func (r AccountRepository) GetAccountUsernames(ctx context.Context, cursor *pagi
 		usernames = append(usernames, account.UnmarshalUsernameFromDatabase(username.Username, username.AccountId))
 	}
 
-	return usernames, nil, nil
+	return usernames, nil
 }
 
 // GetAccountEmails - get emails for account

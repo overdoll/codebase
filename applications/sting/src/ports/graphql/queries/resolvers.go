@@ -40,13 +40,13 @@ func (r *QueryResolver) Posts(ctx context.Context, after *string, before *string
 		mediaIdsString = append(mediaIdsString, media.GetID())
 	}
 
-	results, page, err := r.App.Queries.SearchPosts.Handle(ctx, cursor, "", "", "", categoryIdsString, characterIdsString, mediaIdsString)
+	results, err := r.App.Queries.SearchPosts.Handle(ctx, cursor, "", "", "", categoryIdsString, characterIdsString, mediaIdsString)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return types.MarshalPostToGraphQLConnection(results, page), nil
+	return types.MarshalPostToGraphQLConnection(results, cursor), nil
 }
 
 func (r *QueryResolver) Post(ctx context.Context, reference string) (*types.Post, error) {
@@ -74,13 +74,13 @@ func (r *QueryResolver) Categories(ctx context.Context, after *string, before *s
 		search = *name
 	}
 
-	results, page, err := r.App.Queries.SearchCategories.Handle(ctx, cursor, search)
+	results, err := r.App.Queries.SearchCategories.Handle(ctx, cursor, search)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return types.MarshalCategoryToGraphQLConnection(results, page), nil
+	return types.MarshalCategoryToGraphQLConnection(results, cursor), nil
 }
 
 func (r *QueryResolver) Medias(ctx context.Context, after *string, before *string, first *int, last *int, title *string) (*types.MediaConnection, error) {
@@ -97,13 +97,13 @@ func (r *QueryResolver) Medias(ctx context.Context, after *string, before *strin
 		search = *title
 	}
 
-	results, page, err := r.App.Queries.SearchMedias.Handle(ctx, cursor, search)
+	results, err := r.App.Queries.SearchMedias.Handle(ctx, cursor, search)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return types.MarshalMediaToGraphQLConnection(results, page), nil
+	return types.MarshalMediaToGraphQLConnection(results, cursor), nil
 }
 
 func (r *QueryResolver) Characters(ctx context.Context, after *string, before *string, first *int, last *int, name *string, mediaTitle *string) (*types.CharacterConnection, error) {
@@ -120,11 +120,11 @@ func (r *QueryResolver) Characters(ctx context.Context, after *string, before *s
 		search = *name
 	}
 
-	results, page, err := r.App.Queries.SearchCharacters.Handle(ctx, cursor, search)
+	results, err := r.App.Queries.SearchCharacters.Handle(ctx, cursor, search)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return types.MarshalCharacterToGraphQLConnection(results, page), nil
+	return types.MarshalCharacterToGraphQLConnection(results, cursor), nil
 }

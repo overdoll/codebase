@@ -52,7 +52,7 @@ const allMedia = `
 
 const mediaIndexName = "media"
 
-func (r PostsIndexElasticSearchRepository) SearchMedias(ctx context.Context, cursor *paging.Cursor, search string) ([]*post.Media, *paging.Info, error) {
+func (r PostsIndexElasticSearchRepository) SearchMedias(ctx context.Context, cursor *paging.Cursor, search string) ([]*post.Media, error) {
 	var query string
 
 	if search == "" {
@@ -64,7 +64,7 @@ func (r PostsIndexElasticSearchRepository) SearchMedias(ctx context.Context, cur
 	response, err := r.store.Search(mediaIndexName, query)
 
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
 	var meds []*post.Media
@@ -76,7 +76,7 @@ func (r PostsIndexElasticSearchRepository) SearchMedias(ctx context.Context, cur
 		err := json.Unmarshal(med, &md)
 
 		if err != nil {
-			return nil, nil, err
+			return nil, err
 		}
 
 		newMedia := post.UnmarshalMediaFromDatabase(md.Id, md.Title, md.Thumbnail)
@@ -85,7 +85,7 @@ func (r PostsIndexElasticSearchRepository) SearchMedias(ctx context.Context, cur
 		meds = append(meds, newMedia)
 	}
 
-	return meds, nil, nil
+	return meds, nil
 }
 
 func (r PostsIndexElasticSearchRepository) IndexAllMedia(ctx context.Context) error {

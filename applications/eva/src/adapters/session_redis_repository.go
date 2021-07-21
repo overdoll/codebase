@@ -75,17 +75,17 @@ func (r SessionRepository) GetSessionById(ctx context.Context, sessionId string)
 }
 
 // GetSessionsByAccountId - Get sessions
-func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, cursor *paging.Cursor, sessionCookie, accountId string) ([]*session.Session, *paging.Info, error) {
+func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, cursor *paging.Cursor, sessionCookie, accountId string) ([]*session.Session, error) {
 
 	keys, err := r.client.Keys(ctx, sessionPrefix+"*:"+accountPrefix+accountId).Result()
 
 	if err != nil {
 
 		if err == redis.Nil {
-			return nil, nil, session.ErrSessionsNotFound
+			return nil, session.ErrSessionsNotFound
 		}
 
-		return nil, nil, fmt.Errorf("keys failed: '%s", err)
+		return nil, fmt.Errorf("keys failed: '%s", err)
 	}
 
 	var sessions []*session.Session
@@ -94,7 +94,7 @@ func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, cursor *p
 		sess, err := r.GetSessionById(ctx, sessionID)
 
 		if err != nil {
-			return nil, nil, err
+			return nil, err
 		}
 
 		if sess.ID() == strings.Split(sessionCookie, ".")[0] {
@@ -104,7 +104,7 @@ func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, cursor *p
 		sessions = append(sessions, sess)
 	}
 
-	return sessions, nil, nil
+	return sessions, nil
 }
 
 // RevokeSessionById - revoke session

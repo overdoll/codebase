@@ -21,15 +21,15 @@ func NewAccountUsernamesByAccountHandler(ar account.Repository) AccountUsernames
 	return AccountUsernamesByAccountHandler{ar: ar}
 }
 
-func (h AccountUsernamesByAccountHandler) Handle(ctx context.Context, cursor *paging.Cursor, accountId string) ([]*account.Username, *paging.Info, error) {
+func (h AccountUsernamesByAccountHandler) Handle(ctx context.Context, cursor *paging.Cursor, accountId string) ([]*account.Username, error) {
 
-	usernames, page, err := h.ar.GetAccountUsernames(ctx, cursor, accountId)
+	usernames, err := h.ar.GetAccountUsernames(ctx, cursor, accountId)
 
 	if err != nil {
 
 		zap.S().Errorf("failed to get account usernames: %s", err)
-		return nil, nil, errFailedAccountUsernamesByAccount
+		return nil, errFailedAccountUsernamesByAccount
 	}
 
-	return usernames, page, nil
+	return usernames, nil
 }

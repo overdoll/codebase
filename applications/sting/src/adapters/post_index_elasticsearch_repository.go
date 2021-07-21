@@ -230,79 +230,42 @@ func (r PostsIndexElasticSearchRepository) IndexPost(ctx context.Context, post *
 	return nil
 }
 
-func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, cursor *paging.Cursor, filter *post.PostFilters) ([]*post.Post, *paging.Info, error) {
+func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, cursor *paging.Cursor, filter *post.PostFilters) ([]*post.Post, error) {
 
 	t, err := template.New("searchPostPending").Parse(searchPostPending)
 
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
-	paginator := paging.NewPagination(cursor)
+	postId := ""
 
-	runSearch := func(rng string, size int) (*search.SearchResults, error) {
-
-		postId := ""
-
-		if filter.ID() != "" {
-			postId = fmt.Sprintf(`{"multi_match": {"query" : %q,"fields" : ["id"],"operator" : "and"}},`, filter.ID())
-		}
-
-		data := struct {
-			Cursor      string
-			ModeratorId string
-			Size        int
-			PostId      string
-		}{
-			Size:        size,
-			ModeratorId: filter.ModeratorId(),
-			Cursor:      rng,
-			PostId:      postId,
-		}
-
-		var query bytes.Buffer
-
-		if err := t.Execute(&query, data); err != nil {
-			return nil, err
-		}
-
-		return r.store.Search(PostIndexName, query.String())
+	if filter.ID() != "" {
+		postId = fmt.Sprintf(`{"multi_match": {"query" : %q,"fields" : ["id"],"operator" : "and"}},`, filter.ID())
 	}
 
-	var response *search.SearchResults
+	data := struct {
+		Cursor      string
+		ModeratorId string
+		Size        int
+		PostId      string
+	}{
+		Size:        0,
+		ModeratorId: filter.ModeratorId(),
+		Cursor:      "",
+		PostId:      postId,
+	}
 
-	paginator.DefineForwardsPagination(func(first int, after string) (bool, error) {
+	var query bytes.Buffer
 
-		cursor := ""
+	if err := t.Execute(&query, data); err != nil {
+		return nil, err
+	}
 
-		if after != "" {
-			cursor = fmt.Sprintf(`{"range": {"posted_at": { "gt": %q } } },`, after)
-		}
-
-		response, err = runSearch(cursor, first)
-
-		if err != nil {
-			return false, err
-		}
-
-		return response.Total-len(response.Hits) > 0, nil
-	})
-
-	paginator.DefineBackwardsPagination(func(last int, before string) (bool, error) {
-
-		response, err = runSearch(fmt.Sprintf(`{"range": {"posted_at": { "lt": %q } } },`, before), last)
-
-		if err != nil {
-			return false, err
-		}
-
-		return response.Total-len(response.Hits) > 0, nil
-	})
-
-	pageInfo, err := paginator.Run()
+	response, err := r.store.Search(PostIndexName, query.String())
 
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
 	var posts []*post.Post
@@ -314,7 +277,7 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, curs
 		err := json.Unmarshal(pest, &pst)
 
 		if err != nil {
-			return nil, nil, err
+			return nil, err
 		}
 
 		var characters []*post.Character
@@ -354,7 +317,7 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, curs
 		posts = append(posts, createdPost)
 	}
 
-	return posts, pageInfo, nil
+	return posts, nil
 }
 
 func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) error {

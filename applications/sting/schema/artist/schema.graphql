@@ -3,7 +3,7 @@ type Artist implements Node @key(fields: "id") {
   doNotPostReason: String
 }
 
-extend type Account @key(fields: "id") {
+extend type Account {
   """Artist status for this account"""
   artist: Artist
 }

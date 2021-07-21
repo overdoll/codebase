@@ -3,6 +3,7 @@ package adapters
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/gocql/gocql"
@@ -251,48 +252,19 @@ func (r InfractionCassandraRepository) GetPostAuditLog(ctx context.Context, logI
 	), nil
 }
 
-func (r InfractionCassandraRepository) SearchPostAuditLogs(ctx context.Context, cursor *paging.Cursor, filter *infraction.PostAuditLogFilters) ([]*infraction.PostAuditLog, *paging.Info, error) {
-
-	var err error
-	if cursor == nil {
-		cursor, err = paging.NewCursor(nil, nil, nil, nil)
-		if err != nil {
-			return nil, nil, err
-		}
-	}
-
-	times := []int{bucket.MakeBucketFromTimestamp(time.Now())}
-	createdMs := time.Now().Unix()
-
-	// FORWARDS PAGING, CHECK IF THERE IS A NEXT PAGE
+func (r InfractionCassandraRepository) SearchPostAuditLogs(ctx context.Context, cursor *paging.Cursor, filter *infraction.PostAuditLogFilters) ([]*infraction.PostAuditLog, error) {
 	var auditLogs []*infraction.PostAuditLog
+
+	if cursor.IsEmpty() {
+		return auditLogs, nil
+	}
 
 	builder := postAuditLogByModeratorTable.
 		SelectBuilder()
 
-	info := qb.M{
-		"bucket": times,
-		// in the future created_ms will be used as a cursor for pagination for filtering
-		"created_ms":           createdMs,
-		"moderator_account_id": filter.ModeratorId(),
-	}
-
-	hasNextPage := false
-	hasPrevPage := false
-
-	if cursor.First() != nil && *cursor.First() == 0 || cursor.Last() != nil && *cursor.Last() == 0 {
-		// asked for empty (0)
-		var count int
-
-		if err := builder.
-			CountAll().
-			Query(r.session).
-			Bind(info).
-			Select(&count); err != nil {
-			return nil, nil, err
-		}
-
-		return auditLogs, paging.NewPaging(cursor.First() != nil && count > 0, cursor.Last() != nil && count > 0), nil
+	info := &postAuditLogByModerator{
+		Bucket:      bucket.MakeBucketFromTimestamp(time.Now()),
+		ModeratorId: filter.ModeratorId(),
 	}
 
 	if cursor.After() != nil {
@@ -309,13 +281,7 @@ func (r InfractionCassandraRepository) SearchPostAuditLogs(ctx context.Context, 
 		builder.OrderBy("created_ms", qb.ASC)
 	}
 
-	var limit int
-
-	if cursor.First() != nil {
-		limit = *cursor.First() + 1
-	} else if cursor.Last() != nil {
-		limit = *cursor.Last() + 1
-	}
+	limit := cursor.GetLimit()
 
 	if limit > 0 {
 		builder.Limit(uint(limit))
@@ -325,18 +291,9 @@ func (r InfractionCassandraRepository) SearchPostAuditLogs(ctx context.Context, 
 
 	if err := builder.
 		Query(r.session).
-		Bind(info).
+		BindStruct(info).
 		Select(&results); err != nil {
-		return nil, nil, err
-	}
-
-	if len(results) == 0 {
-		return auditLogs, paging.NewPaging(false, false), nil
-	}
-
-	if len(results) == limit {
-		hasNextPage = cursor.First() != nil
-		hasPrevPage = cursor.Last() != nil
+		return nil, err
 	}
 
 	var pendingPostAuditLogs []*infraction.PostAuditLog
@@ -368,12 +325,12 @@ func (r InfractionCassandraRepository) SearchPostAuditLogs(ctx context.Context, 
 			pendingPostAuditLog.CreatedMs,
 		)
 
-		result.Node = paging.NewNode(string(rune(pendingPostAuditLog.CreatedMs)))
+		result.Node = paging.NewNode(strconv.Itoa(pendingPostAuditLog.CreatedMs))
 
 		pendingPostAuditLogs = append(pendingPostAuditLogs, result)
 	}
 
-	return pendingPostAuditLogs, paging.NewPaging(hasNextPage, hasPrevPage), nil
+	return pendingPostAuditLogs, nil
 }
 
 func (r InfractionCassandraRepository) UpdatePostAuditLog(ctx context.Context, id string, updateFn func(auditLog *infraction.PostAuditLog) error) (*infraction.PostAuditLog, error) {

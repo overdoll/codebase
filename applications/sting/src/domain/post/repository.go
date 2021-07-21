@@ -31,21 +31,21 @@ type Repository interface {
 type IndexRepository interface {
 	IndexPost(ctx context.Context, postId *Post) error
 	IndexAllPosts(ctx context.Context) error
-	SearchPosts(ctx context.Context, cursor *paging.Cursor, filters *PostFilters) ([]*Post, *paging.Info, error)
+	SearchPosts(ctx context.Context, cursor *paging.Cursor, filters *PostFilters) ([]*Post, error)
 	DeletePostIndex(ctx context.Context) error
 	DeletePost(ctx context.Context, postId string) error
 
 	IndexAllCharacters(ctx context.Context) error
 	DeleteCharacterIndex(ctx context.Context) error
-	SearchCharacters(ctx context.Context, cursor *paging.Cursor, name string) ([]*Character, *paging.Info, error)
+	SearchCharacters(ctx context.Context, cursor *paging.Cursor, name string) ([]*Character, error)
 	IndexCharacters(ctx context.Context, characters []*Character) error
 
 	IndexAllMedia(ctx context.Context) error
 	DeleteMediaIndex(ctx context.Context) error
-	SearchMedias(ctx context.Context, cursor *paging.Cursor, title string) ([]*Media, *paging.Info, error)
+	SearchMedias(ctx context.Context, cursor *paging.Cursor, title string) ([]*Media, error)
 
 	IndexAllCategories(ctx context.Context) error
 	IndexCategories(ctx context.Context, categories []*Category) error
 	DeleteCategoryIndex(ctx context.Context) error
-	SearchCategories(ctx context.Context, paging *paging.Cursor, title string) ([]*Category, *paging.Info, error)
+	SearchCategories(ctx context.Context, paging *paging.Cursor, title string) ([]*Category, error)
 }

@@ -5,7 +5,3 @@ scalar URI
 
 directive @goField(forceResolver: Boolean) on INPUT_FIELD_DEFINITION
   | FIELD_DEFINITION
-
-directive @auth on FIELD_DEFINITION
-
-directive @anon on FIELD_DEFINITION

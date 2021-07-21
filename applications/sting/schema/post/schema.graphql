@@ -97,7 +97,7 @@ type PostConnection {
   pageInfo: PageInfo!
 }
 
-extend type Account @key(fields: "id") {
+extend type Account {
   """Posts queue specific to this account (when moderator)"""
   moderatorPostsQueue(
     """Returns the elements in the list that come after the specified cursor."""
@@ -111,7 +111,7 @@ extend type Account @key(fields: "id") {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-  ): PostConnection! @goField(forceResolver: true) @auth
+  ): PostConnection! @goField(forceResolver: true)
 
   """Posts specific to this account"""
   posts(
@@ -153,7 +153,7 @@ extend type Mutation {
   """
   Create a new pending post
   """
-  createPost(input: CreatePostInput!): CreatePostPayload @auth
+  createPost(input: CreatePostInput!): CreatePostPayload
 }
 
 extend type Query {
@@ -188,7 +188,7 @@ extend type Query {
   ): PostConnection!
 }
 
-extend type Category @key(fields: "id") {
+extend type Category {
   """Posts belonging to this category"""
   posts(
     """Returns the elements in the list that come after the specified cursor."""
@@ -205,7 +205,7 @@ extend type Category @key(fields: "id") {
   ): PostConnection! @goField(forceResolver: true)
 }
 
-extend type Character @key(fields: "id") {
+extend type Character {
   """Posts belonging to this character"""
   posts(
     """Returns the elements in the list that come after the specified cursor."""
@@ -222,7 +222,7 @@ extend type Character @key(fields: "id") {
   ): PostConnection! @goField(forceResolver: true)
 }
 
-extend type Media @key(fields: "id") {
+extend type Media {
   """Posts belonging to this media"""
   posts(
     """Returns the elements in the list that come after the specified cursor."""

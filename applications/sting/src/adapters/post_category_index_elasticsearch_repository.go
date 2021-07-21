@@ -79,7 +79,7 @@ func (r PostsIndexElasticSearchRepository) IndexCategories(ctx context.Context, 
 	return nil
 }
 
-func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context, cursor *paging.Cursor, search string) ([]*post.Category, *paging.Info, error) {
+func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context, cursor *paging.Cursor, search string) ([]*post.Category, error) {
 	var query string
 
 	if search == "" {
@@ -91,7 +91,7 @@ func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context,
 	response, err := r.store.Search(categoryIndexName, query)
 
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
 	var cats []*post.Category
@@ -103,7 +103,7 @@ func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context,
 		err := json.Unmarshal(cat, &pst)
 
 		if err != nil {
-			return nil, nil, err
+			return nil, err
 		}
 
 		newCategory := post.UnmarshalCategoryFromDatabase(pst.Id, pst.Title, pst.Thumbnail)
@@ -112,7 +112,7 @@ func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context,
 		cats = append(cats, newCategory)
 	}
 
-	return cats, nil, nil
+	return cats, nil
 }
 
 func (r PostsIndexElasticSearchRepository) IndexAllCategories(ctx context.Context) error {

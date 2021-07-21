@@ -48,8 +48,6 @@ type ResolverRoot interface {
 }
 
 type DirectiveRoot struct {
-	Anon func(ctx context.Context, obj interface{}, next graphql.Resolver) (res interface{}, err error)
-	Auth func(ctx context.Context, obj interface{}, next graphql.Resolver) (res interface{}, err error)
 }
 
 type ComplexityRoot struct {
@@ -1457,7 +1455,7 @@ extend type Mutation {
   """
   Unlock Account - account may be locked for any reason. Use this endpoint to unlock the account
   """
-  unlockAccount: UnlockAccountPayload @auth
+  unlockAccount: UnlockAccountPayload
 }
 
 extend type Query {
@@ -1639,7 +1637,7 @@ type AccountMultiFactorSettings {
   multiFactorTotpConfigured: Boolean!
 }
 
-extend type Account @key(fields: "id") {
+extend type Account {
   """
   Usernames for account (history)
   """
@@ -1678,7 +1676,7 @@ extend type Account @key(fields: "id") {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-  ): AccountEmailConnection! @goField(forceResolver: true) @auth
+  ): AccountEmailConnection! @goField(forceResolver: true)
 
   """
   Sessions linked to this account
@@ -1699,21 +1697,21 @@ extend type Account @key(fields: "id") {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-  ): AccountSessionConnection! @goField(forceResolver: true) @auth
+  ): AccountSessionConnection! @goField(forceResolver: true)
 
   """
   Multi factor account settings
 
   Only queryable if the currently logged-in account belongs to the requested account
   """
-  multiFactorSettings: AccountMultiFactorSettings! @goField(forceResolver: true) @auth
+  multiFactorSettings: AccountMultiFactorSettings! @goField(forceResolver: true)
 
   """
   MFA Recovery codes belonging to this account
 
   Only queryable if the currently logged-in account belongs to the requested account
   """
-  recoveryCodes: [AccountMultiFactorRecoveryCode!]! @goField(forceResolver: true) @auth
+  recoveryCodes: [AccountMultiFactorRecoveryCode!]! @goField(forceResolver: true)
 }
 
 """Add an email to the account"""
@@ -1837,41 +1835,41 @@ extend type Mutation {
   """
   Add an email to the account, will need to be confirmed
   """
-  addAccountEmail(input: AddAccountEmailInput!): AddAccountEmailPayload @auth
+  addAccountEmail(input: AddAccountEmailInput!): AddAccountEmailPayload
 
   """
   Delete account email - email must belong to account and cannot be the primary email
   """
-  deleteAccountEmail(input: DeleteAccountEmailInput!): DeleteAccountEmailPayload @auth
+  deleteAccountEmail(input: DeleteAccountEmailInput!): DeleteAccountEmailPayload
 
   """
   Update the account username
 
   Will retain the old username
   """
-  updateAccountUsernameAndRetainPrevious(input: UpdateAccountUsernameAndRetainPreviousInput!): UpdateAccountUsernameAndRetainPreviousPayload @auth
+  updateAccountUsernameAndRetainPrevious(input: UpdateAccountUsernameAndRetainPreviousInput!): UpdateAccountUsernameAndRetainPreviousPayload
 
   """
   Revoke a session for this account
   """
-  revokeAccountSession(input: RevokeAccountSessionInput!): RevokeAccountSessionPayload @auth
+  revokeAccountSession(input: RevokeAccountSessionInput!): RevokeAccountSessionPayload
 
   """
   Update the account email status to primary
 
   Cannot update if the email is not confirmed
   """
-  updateAccountEmailStatusToPrimary(input: UpdateAccountEmailStatusToPrimaryInput!): UpdateAccountEmailStatusToPrimaryPayload @auth
+  updateAccountEmailStatusToPrimary(input: UpdateAccountEmailStatusToPrimaryInput!): UpdateAccountEmailStatusToPrimaryPayload
 
   """
   Generates a new set of recovery codes. The previous set (whatever it was) will be deleted!
   """
-  generateAccountMultiFactorRecoveryCodes: GenerateAccountMultiFactorRecoveryCodesPayload @auth
+  generateAccountMultiFactorRecoveryCodes: GenerateAccountMultiFactorRecoveryCodesPayload
 
   """
   Generate a TOTP key for the current user. Recovery codes must be generated first.
   """
-  generateAccountMultiFactorTotp: GenerateAccountMultiFactorTotpPayload @auth
+  generateAccountMultiFactorTotp: GenerateAccountMultiFactorTotpPayload
 
   """
   Enroll into TOTP.
@@ -1879,7 +1877,7 @@ extend type Mutation {
   Must have called "generateAccountMultiFactorTOTP" first before enrolling, since this will
   generate a valid secret
   """
-  enrollAccountMultiFactorTotp(input: EnrollAccountMultiFactorTotpInput!): EnrollAccountMultiFactorTotpPayload @auth
+  enrollAccountMultiFactorTotp(input: EnrollAccountMultiFactorTotpInput!): EnrollAccountMultiFactorTotpPayload
 
   """
   Disable account multi factor
@@ -1888,12 +1886,12 @@ extend type Mutation {
 
   Priv. users cannot disable multi factor
   """
-  disableAccountMultiFactor: DisableAccountMultiFactorPayload @auth
+  disableAccountMultiFactor: DisableAccountMultiFactorPayload
 
   """
   Confirm account email, so it may be used
   """
-  confirmAccountEmail(input: ConfirmAccountEmailInput!): ConfirmAccountEmailPayload @auth
+  confirmAccountEmail(input: ConfirmAccountEmailInput!): ConfirmAccountEmailPayload
 }`, BuiltIn: false},
 	{Name: "schema/token/schema.graphql", Input: `enum MultiFactorType {
   TOTP
@@ -1988,7 +1986,7 @@ type Mutation {
 
   Note: the actual authentication token is opaque (set & read from cookies)
   """
-  grantAuthenticationToken(input: GrantAuthenticationTokenInput!): GrantAuthenticationTokenPayload @anon
+  grantAuthenticationToken(input: GrantAuthenticationTokenInput!): GrantAuthenticationTokenPayload
 
   """
   Revoke authentication token
@@ -1997,26 +1995,26 @@ type Mutation {
 
   Note: the actual authentication token is opaque (set & read from cookies)
   """
-  revokeAuthenticationToken: RevokeAuthenticationTokenPayload @anon
+  revokeAuthenticationToken: RevokeAuthenticationTokenPayload
 
   """
   Create an account using the current authentication token
 
   Note: the actual authentication token is opaque (set & read from cookies)
   """
-  createAccountWithAuthenticationToken(input: CreateAccountWithAuthenticationTokenInput!): CreateAccountWithAuthenticationTokenPayload @anon
+  createAccountWithAuthenticationToken(input: CreateAccountWithAuthenticationTokenInput!): CreateAccountWithAuthenticationTokenPayload
 
   """
   Logout the current account
   """
-  revokeAccountAccess: RevokeAccountAccessPayload @auth
+  revokeAccountAccess: RevokeAccountAccessPayload
 
   """
   Re-issue an authentication token based on the current one
 
   Note: the actual authentication token is opaque (set & read from cookies)
   """
-  reissueAuthenticationToken: ReissueAuthenticationTokenPayload @anon
+  reissueAuthenticationToken: ReissueAuthenticationTokenPayload
 
   """
   Grant account access using an authentication token and a multi factor option
@@ -2026,7 +2024,7 @@ type Mutation {
 
   Note: the actual authentication token is opaque (set & read from cookies)
   """
-  grantAccountAccessWithAuthenticationTokenAndMultiFactor(input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorInput!): GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload @anon
+  grantAccountAccessWithAuthenticationTokenAndMultiFactor(input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorInput!): GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload
 
   """
   Will verify the authentication token.
@@ -2040,7 +2038,7 @@ type Mutation {
 
   Note: the actual authentication token is opaque (set & read from cookies)
   """
-  verifyAuthenticationTokenAndAttemptAccountAccessGrant(input: VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput!): VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload @anon
+  verifyAuthenticationTokenAndAttemptAccountAccessGrant(input: VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput!): VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload
 }
 
 type Query {
@@ -2049,7 +2047,7 @@ type Query {
 
   Note: the actual authentication token is opaque (set & read from cookies)
   """
-  viewAuthenticationToken: AuthenticationToken @anon
+  viewAuthenticationToken: AuthenticationToken
 }
 `, BuiltIn: false},
 	{Name: "../../libraries/graphql/schema.graphql", Input: `scalar Time
@@ -2058,11 +2056,7 @@ type Query {
 scalar URI
 
 directive @goField(forceResolver: Boolean) on INPUT_FIELD_DEFINITION
-  | FIELD_DEFINITION
-
-directive @auth on FIELD_DEFINITION
-
-directive @anon on FIELD_DEFINITION`, BuiltIn: false},
+  | FIELD_DEFINITION`, BuiltIn: false},
 	{Name: "../../libraries/graphql/relay/schema.graphql", Input: `type PageInfo {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
@@ -3019,28 +3013,8 @@ func (ec *executionContext) _Account_emails(ctx context.Context, field graphql.C
 	}
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Account().Emails(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			if ec.directives.Auth == nil {
-				return nil, errors.New("directive auth is not implemented")
-			}
-			return ec.directives.Auth(ctx, obj, directive0)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*types.AccountEmailConnection); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/eva/src/ports/graphql/types.AccountEmailConnection`, tmp)
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Account().Emails(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3081,28 +3055,8 @@ func (ec *executionContext) _Account_sessions(ctx context.Context, field graphql
 	}
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Account().Sessions(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			if ec.directives.Auth == nil {
-				return nil, errors.New("directive auth is not implemented")
-			}
-			return ec.directives.Auth(ctx, obj, directive0)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*types.AccountSessionConnection); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/eva/src/ports/graphql/types.AccountSessionConnection`, tmp)
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Account().Sessions(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3136,28 +3090,8 @@ func (ec *executionContext) _Account_multiFactorSettings(ctx context.Context, fi
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Account().MultiFactorSettings(rctx, obj)
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			if ec.directives.Auth == nil {
-				return nil, errors.New("directive auth is not implemented")
-			}
-			return ec.directives.Auth(ctx, obj, directive0)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*types.AccountMultiFactorSettings); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/eva/src/ports/graphql/types.AccountMultiFactorSettings`, tmp)
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Account().MultiFactorSettings(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3191,28 +3125,8 @@ func (ec *executionContext) _Account_recoveryCodes(ctx context.Context, field gr
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Account().RecoveryCodes(rctx, obj)
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			if ec.directives.Auth == nil {
-				return nil, errors.New("directive auth is not implemented")
-			}
-			return ec.directives.Auth(ctx, obj, directive0)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.([]*types.AccountMultiFactorRecoveryCode); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be []*overdoll/applications/eva/src/ports/graphql/types.AccountMultiFactorRecoveryCode`, tmp)
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Account().RecoveryCodes(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5652,28 +5566,8 @@ func (ec *executionContext) _Mutation_grantAuthenticationToken(ctx context.Conte
 	}
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().GrantAuthenticationToken(rctx, args["input"].(types.GrantAuthenticationTokenInput))
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			if ec.directives.Anon == nil {
-				return nil, errors.New("directive anon is not implemented")
-			}
-			return ec.directives.Anon(ctx, nil, directive0)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*types.GrantAuthenticationTokenPayload); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/eva/src/ports/graphql/types.GrantAuthenticationTokenPayload`, tmp)
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().GrantAuthenticationToken(rctx, args["input"].(types.GrantAuthenticationTokenInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5704,28 +5598,8 @@ func (ec *executionContext) _Mutation_revokeAuthenticationToken(ctx context.Cont
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().RevokeAuthenticationToken(rctx)
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			if ec.directives.Anon == nil {
-				return nil, errors.New("directive anon is not implemented")
-			}
-			return ec.directives.Anon(ctx, nil, directive0)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*types.RevokeAuthenticationTokenPayload); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/eva/src/ports/graphql/types.RevokeAuthenticationTokenPayload`, tmp)
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().RevokeAuthenticationToken(rctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5763,28 +5637,8 @@ func (ec *executionContext) _Mutation_createAccountWithAuthenticationToken(ctx c
 	}
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().CreateAccountWithAuthenticationToken(rctx, args["input"].(types.CreateAccountWithAuthenticationTokenInput))
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			if ec.directives.Anon == nil {
-				return nil, errors.New("directive anon is not implemented")
-			}
-			return ec.directives.Anon(ctx, nil, directive0)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*types.CreateAccountWithAuthenticationTokenPayload); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/eva/src/ports/graphql/types.CreateAccountWithAuthenticationTokenPayload`, tmp)
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateAccountWithAuthenticationToken(rctx, args["input"].(types.CreateAccountWithAuthenticationTokenInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5815,28 +5669,8 @@ func (ec *executionContext) _Mutation_revokeAccountAccess(ctx context.Context, f
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().RevokeAccountAccess(rctx)
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			if ec.directives.Auth == nil {
-				return nil, errors.New("directive auth is not implemented")
-			}
-			return ec.directives.Auth(ctx, nil, directive0)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*types.RevokeAccountAccessPayload); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/eva/src/ports/graphql/types.RevokeAccountAccessPayload`, tmp)
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().RevokeAccountAccess(rctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5867,28 +5701,8 @@ func (ec *executionContext) _Mutation_reissueAuthenticationToken(ctx context.Con
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().ReissueAuthenticationToken(rctx)
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			if ec.directives.Anon == nil {
-				return nil, errors.New("directive anon is not implemented")
-			}
-			return ec.directives.Anon(ctx, nil, directive0)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*types.ReissueAuthenticationTokenPayload); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/eva/src/ports/graphql/types.ReissueAuthenticationTokenPayload`, tmp)
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().ReissueAuthenticationToken(rctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5926,28 +5740,8 @@ func (ec *executionContext) _Mutation_grantAccountAccessWithAuthenticationTokenA
 	}
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().GrantAccountAccessWithAuthenticationTokenAndMultiFactor(rctx, args["input"].(types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorInput))
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			if ec.directives.Anon == nil {
-				return nil, errors.New("directive anon is not implemented")
-			}
-			return ec.directives.Anon(ctx, nil, directive0)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/eva/src/ports/graphql/types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload`, tmp)
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().GrantAccountAccessWithAuthenticationTokenAndMultiFactor(rctx, args["input"].(types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5985,28 +5779,8 @@ func (ec *executionContext) _Mutation_verifyAuthenticationTokenAndAttemptAccount
 	}
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().VerifyAuthenticationTokenAndAttemptAccountAccessGrant(rctx, args["input"].(types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput))
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			if ec.directives.Anon == nil {
-				return nil, errors.New("directive anon is not implemented")
-			}
-			return ec.directives.Anon(ctx, nil, directive0)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/eva/src/ports/graphql/types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload`, tmp)
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().VerifyAuthenticationTokenAndAttemptAccountAccessGrant(rctx, args["input"].(types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6037,28 +5811,8 @@ func (ec *executionContext) _Mutation_unlockAccount(ctx context.Context, field g
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().UnlockAccount(rctx)
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			if ec.directives.Auth == nil {
-				return nil, errors.New("directive auth is not implemented")
-			}
-			return ec.directives.Auth(ctx, nil, directive0)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*types.UnlockAccountPayload); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/eva/src/ports/graphql/types.UnlockAccountPayload`, tmp)
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UnlockAccount(rctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6096,28 +5850,8 @@ func (ec *executionContext) _Mutation_addAccountEmail(ctx context.Context, field
 	}
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().AddAccountEmail(rctx, args["input"].(types.AddAccountEmailInput))
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			if ec.directives.Auth == nil {
-				return nil, errors.New("directive auth is not implemented")
-			}
-			return ec.directives.Auth(ctx, nil, directive0)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*types.AddAccountEmailPayload); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/eva/src/ports/graphql/types.AddAccountEmailPayload`, tmp)
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().AddAccountEmail(rctx, args["input"].(types.AddAccountEmailInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6155,28 +5889,8 @@ func (ec *executionContext) _Mutation_deleteAccountEmail(ctx context.Context, fi
 	}
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().DeleteAccountEmail(rctx, args["input"].(types.DeleteAccountEmailInput))
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			if ec.directives.Auth == nil {
-				return nil, errors.New("directive auth is not implemented")
-			}
-			return ec.directives.Auth(ctx, nil, directive0)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*types.DeleteAccountEmailPayload); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/eva/src/ports/graphql/types.DeleteAccountEmailPayload`, tmp)
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DeleteAccountEmail(rctx, args["input"].(types.DeleteAccountEmailInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6214,28 +5928,8 @@ func (ec *executionContext) _Mutation_updateAccountUsernameAndRetainPrevious(ctx
 	}
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().UpdateAccountUsernameAndRetainPrevious(rctx, args["input"].(types.UpdateAccountUsernameAndRetainPreviousInput))
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			if ec.directives.Auth == nil {
-				return nil, errors.New("directive auth is not implemented")
-			}
-			return ec.directives.Auth(ctx, nil, directive0)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*types.UpdateAccountUsernameAndRetainPreviousPayload); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/eva/src/ports/graphql/types.UpdateAccountUsernameAndRetainPreviousPayload`, tmp)
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateAccountUsernameAndRetainPrevious(rctx, args["input"].(types.UpdateAccountUsernameAndRetainPreviousInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6273,28 +5967,8 @@ func (ec *executionContext) _Mutation_revokeAccountSession(ctx context.Context, 
 	}
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().RevokeAccountSession(rctx, args["input"].(types.RevokeAccountSessionInput))
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			if ec.directives.Auth == nil {
-				return nil, errors.New("directive auth is not implemented")
-			}
-			return ec.directives.Auth(ctx, nil, directive0)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*types.RevokeAccountSessionPayload); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/eva/src/ports/graphql/types.RevokeAccountSessionPayload`, tmp)
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().RevokeAccountSession(rctx, args["input"].(types.RevokeAccountSessionInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6332,28 +6006,8 @@ func (ec *executionContext) _Mutation_updateAccountEmailStatusToPrimary(ctx cont
 	}
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().UpdateAccountEmailStatusToPrimary(rctx, args["input"].(types.UpdateAccountEmailStatusToPrimaryInput))
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			if ec.directives.Auth == nil {
-				return nil, errors.New("directive auth is not implemented")
-			}
-			return ec.directives.Auth(ctx, nil, directive0)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*types.UpdateAccountEmailStatusToPrimaryPayload); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/eva/src/ports/graphql/types.UpdateAccountEmailStatusToPrimaryPayload`, tmp)
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateAccountEmailStatusToPrimary(rctx, args["input"].(types.UpdateAccountEmailStatusToPrimaryInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6384,28 +6038,8 @@ func (ec *executionContext) _Mutation_generateAccountMultiFactorRecoveryCodes(ct
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().GenerateAccountMultiFactorRecoveryCodes(rctx)
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			if ec.directives.Auth == nil {
-				return nil, errors.New("directive auth is not implemented")
-			}
-			return ec.directives.Auth(ctx, nil, directive0)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*types.GenerateAccountMultiFactorRecoveryCodesPayload); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/eva/src/ports/graphql/types.GenerateAccountMultiFactorRecoveryCodesPayload`, tmp)
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().GenerateAccountMultiFactorRecoveryCodes(rctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6436,28 +6070,8 @@ func (ec *executionContext) _Mutation_generateAccountMultiFactorTotp(ctx context
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().GenerateAccountMultiFactorTotp(rctx)
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			if ec.directives.Auth == nil {
-				return nil, errors.New("directive auth is not implemented")
-			}
-			return ec.directives.Auth(ctx, nil, directive0)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*types.GenerateAccountMultiFactorTotpPayload); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/eva/src/ports/graphql/types.GenerateAccountMultiFactorTotpPayload`, tmp)
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().GenerateAccountMultiFactorTotp(rctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6495,28 +6109,8 @@ func (ec *executionContext) _Mutation_enrollAccountMultiFactorTotp(ctx context.C
 	}
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().EnrollAccountMultiFactorTotp(rctx, args["input"].(types.EnrollAccountMultiFactorTotpInput))
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			if ec.directives.Auth == nil {
-				return nil, errors.New("directive auth is not implemented")
-			}
-			return ec.directives.Auth(ctx, nil, directive0)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*types.EnrollAccountMultiFactorTotpPayload); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/eva/src/ports/graphql/types.EnrollAccountMultiFactorTotpPayload`, tmp)
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().EnrollAccountMultiFactorTotp(rctx, args["input"].(types.EnrollAccountMultiFactorTotpInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6547,28 +6141,8 @@ func (ec *executionContext) _Mutation_disableAccountMultiFactor(ctx context.Cont
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().DisableAccountMultiFactor(rctx)
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			if ec.directives.Auth == nil {
-				return nil, errors.New("directive auth is not implemented")
-			}
-			return ec.directives.Auth(ctx, nil, directive0)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*types.DisableAccountMultiFactorPayload); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/eva/src/ports/graphql/types.DisableAccountMultiFactorPayload`, tmp)
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DisableAccountMultiFactor(rctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6606,28 +6180,8 @@ func (ec *executionContext) _Mutation_confirmAccountEmail(ctx context.Context, f
 	}
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().ConfirmAccountEmail(rctx, args["input"].(types.ConfirmAccountEmailInput))
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			if ec.directives.Auth == nil {
-				return nil, errors.New("directive auth is not implemented")
-			}
-			return ec.directives.Auth(ctx, nil, directive0)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*types.ConfirmAccountEmailPayload); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/eva/src/ports/graphql/types.ConfirmAccountEmailPayload`, tmp)
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().ConfirmAccountEmail(rctx, args["input"].(types.ConfirmAccountEmailInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6792,28 +6346,8 @@ func (ec *executionContext) _Query_viewAuthenticationToken(ctx context.Context, 
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Query().ViewAuthenticationToken(rctx)
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			if ec.directives.Anon == nil {
-				return nil, errors.New("directive anon is not implemented")
-			}
-			return ec.directives.Anon(ctx, nil, directive0)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*types.AuthenticationToken); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/eva/src/ports/graphql/types.AuthenticationToken`, tmp)
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().ViewAuthenticationToken(rctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)

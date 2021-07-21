@@ -21,14 +21,14 @@ func NewAccountSessionsByAccountHandler(sr session.Repository) AccountSessionsBy
 	return AccountSessionsByAccountHandler{sr: sr}
 }
 
-func (h AccountSessionsByAccountHandler) Handle(ctx context.Context, cursor *paging.Cursor, sessionCookie, id string) ([]*session.Session, *paging.Info, error) {
+func (h AccountSessionsByAccountHandler) Handle(ctx context.Context, cursor *paging.Cursor, sessionCookie, id string) ([]*session.Session, error) {
 
-	ur, page, err := h.sr.GetSessionsByAccountId(ctx, cursor, sessionCookie, id)
+	ur, err := h.sr.GetSessionsByAccountId(ctx, cursor, sessionCookie, id)
 
 	if err != nil {
 		zap.S().Errorf("failed to get sessions: %s", err)
-		return nil, nil, errFailedAccountSessionsByAccount
+		return nil, errFailedAccountSessionsByAccount
 	}
 
-	return ur, page, nil
+	return ur, nil
 }

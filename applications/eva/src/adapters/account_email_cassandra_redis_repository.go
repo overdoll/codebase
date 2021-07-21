@@ -240,7 +240,7 @@ func (r AccountRepository) GetAccountEmail(ctx context.Context, accountId, email
 }
 
 // GetAccountEmails - get emails for account
-func (r AccountRepository) GetAccountEmails(ctx context.Context, cursor *paging.Cursor, id string) ([]*account.Email, *paging.Info, error) {
+func (r AccountRepository) GetAccountEmails(ctx context.Context, cursor *paging.Cursor, id string) ([]*account.Email, error) {
 
 	var accountEmails []*emailByAccount
 
@@ -254,10 +254,10 @@ func (r AccountRepository) GetAccountEmails(ctx context.Context, cursor *paging.
 	if err := queryEmails.Select(&accountEmails); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, nil, account.ErrAccountNotFound
+			return nil, account.ErrAccountNotFound
 		}
 
-		return nil, nil, fmt.Errorf("select() failed: '%s", err)
+		return nil, fmt.Errorf("select() failed: '%s", err)
 	}
 
 	var emails []*account.Email
@@ -266,13 +266,13 @@ func (r AccountRepository) GetAccountEmails(ctx context.Context, cursor *paging.
 		emails = append(emails, account.UnmarshalEmailFromDatabase(email.Email, email.AccountId, email.Status))
 	}
 
-	return emails, nil, nil
+	return emails, nil
 }
 
 // DeleteAccountEmail - delete email for account
 func (r AccountRepository) DeleteAccountEmail(ctx context.Context, accountId, email string) error {
 
-	emails, _, err := r.GetAccountEmails(ctx, nil, accountId)
+	emails, err := r.GetAccountEmails(ctx, nil, accountId)
 
 	if err != nil {
 		return err
@@ -327,7 +327,7 @@ func (r AccountRepository) UpdateAccountMakeEmailPrimary(ctx context.Context, ac
 		return nil, nil, err
 	}
 
-	ems, _, err := r.GetAccountEmails(ctx, nil, accountId)
+	ems, err := r.GetAccountEmails(ctx, nil, accountId)
 
 	if err != nil {
 		return nil, nil, err

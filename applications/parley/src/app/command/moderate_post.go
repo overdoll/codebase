@@ -64,7 +64,7 @@ func (h ModeratePostHandler) Handle(ctx context.Context, moderatorId, pendingPos
 		}
 
 		// also grab the infraction history, since we will need it to calculate the time for the next infraction
-		accountInfractionHistory, _, err = h.ir.GetAccountInfractionHistory(ctx, nil, postContributorId)
+		accountInfractionHistory, err = h.ir.GetAccountInfractionHistory(ctx, nil, postContributorId)
 
 		if err != nil {
 			zap.S().Errorf("failed to get user infraction history: %s", err)

@@ -67,10 +67,10 @@ extend type Post @key(fields: "id") {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-  ): PostAuditLogConnection! @goField(forceResolver: true) @auth
+  ): PostAuditLogConnection! @goField(forceResolver: true)
 }
 
-extend type Account @key(fields: "id") {
+extend type Account {
   """
   Post Audit Logs linked to this account
 
@@ -90,5 +90,5 @@ extend type Account @key(fields: "id") {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-  ): PostAuditLogConnection! @goField(forceResolver: true) @auth
+  ): PostAuditLogConnection! @goField(forceResolver: true)
 }

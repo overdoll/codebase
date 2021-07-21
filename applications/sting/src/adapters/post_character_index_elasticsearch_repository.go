@@ -102,7 +102,7 @@ func (r PostsIndexElasticSearchRepository) IndexCharacters(ctx context.Context, 
 	return nil
 }
 
-func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context, cursor *paging.Cursor, search string) ([]*post.Character, *paging.Info, error) {
+func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context, cursor *paging.Cursor, search string) ([]*post.Character, error) {
 	var query string
 
 	if search == "" {
@@ -114,7 +114,7 @@ func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context,
 	response, err := r.store.Search(characterIndexName, query)
 
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
 	var characters []*post.Character
@@ -126,7 +126,7 @@ func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context,
 		err := json.Unmarshal(char, &chr)
 
 		if err != nil {
-			return nil, nil, err
+			return nil, err
 		}
 
 		newCharacter := post.UnmarshalCharacterFromDatabase(chr.Id, chr.Name, chr.Thumbnail, post.UnmarshalMediaFromDatabase(chr.Media.Id, chr.Media.Title, chr.Media.Thumbnail))
@@ -135,7 +135,7 @@ func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context,
 		characters = append(characters, newCharacter)
 	}
 
-	return characters, nil, nil
+	return characters, nil
 }
 
 func (r PostsIndexElasticSearchRepository) IndexAllCharacters(ctx context.Context) error {

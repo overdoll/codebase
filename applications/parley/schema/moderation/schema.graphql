@@ -73,7 +73,7 @@ type Contributor implements Node @key(fields: "id") {
   id: ID!
 }
 
-extend type Account @key(fields: "id") {
+extend type Account {
   """
   Moderator settings and status for this account
 

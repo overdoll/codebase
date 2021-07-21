@@ -7,7 +7,7 @@ import (
 	"overdoll/libraries/paging"
 )
 
-func MarshalPostToGraphQLConnection(results []*post.Post, page *paging.Info) *PostConnection {
+func MarshalPostToGraphQLConnection(results []*post.Post, cursor *paging.Cursor) *PostConnection {
 
 	var pendingPostEdges []*PostEdge
 
@@ -31,8 +31,8 @@ func MarshalPostToGraphQLConnection(results []*post.Post, page *paging.Info) *Po
 	return &PostConnection{
 		Edges: pendingPostEdges,
 		PageInfo: &relay.PageInfo{
-			HasNextPage:     page.HasNextPage(),
-			HasPreviousPage: page.HasPrevPage(),
+			HasNextPage:     false,
+			HasPreviousPage: false,
 			StartCursor:     startCursor,
 			EndCursor:       endCursor,
 		},
@@ -128,7 +128,7 @@ func MarshalArtistToGraphQL(result *post.Artist) *Artist {
 	}
 }
 
-func MarshalCategoryToGraphQLConnection(results []*post.Category, paging *paging.Info) *CategoryConnection {
+func MarshalCategoryToGraphQLConnection(results []*post.Category, cursor *paging.Cursor) *CategoryConnection {
 	resp := make([]*CategoryEdge, 0)
 
 	// Unmarshal our json into the correct model
@@ -152,8 +152,8 @@ func MarshalCategoryToGraphQLConnection(results []*post.Category, paging *paging
 	return &CategoryConnection{
 		Edges: resp,
 		PageInfo: &relay.PageInfo{
-			HasNextPage:     paging.HasNextPage(),
-			HasPreviousPage: paging.HasPrevPage(),
+			HasNextPage:     false,
+			HasPreviousPage: false,
 			StartCursor:     startCursor,
 			EndCursor:       endCursor,
 		},
@@ -168,7 +168,7 @@ func MarshalCategoryToGraphQL(result *post.Category) *Category {
 	}
 }
 
-func MarshalCharacterToGraphQLConnection(results []*post.Character, paging *paging.Info) *CharacterConnection {
+func MarshalCharacterToGraphQLConnection(results []*post.Character, cursor *paging.Cursor) *CharacterConnection {
 	resp := make([]*CharacterEdge, 0)
 
 	// Unmarshal our json into the correct model
@@ -192,8 +192,8 @@ func MarshalCharacterToGraphQLConnection(results []*post.Character, paging *pagi
 	return &CharacterConnection{
 		Edges: resp,
 		PageInfo: &relay.PageInfo{
-			HasNextPage:     paging.HasNextPage(),
-			HasPreviousPage: paging.HasPrevPage(),
+			HasNextPage:     false,
+			HasPreviousPage: false,
 			StartCursor:     startCursor,
 			EndCursor:       endCursor,
 		},
@@ -209,7 +209,7 @@ func MarshalCharacterToGraphQL(result *post.Character) *Character {
 	}
 }
 
-func MarshalMediaToGraphQLConnection(results []*post.Media, paging *paging.Info) *MediaConnection {
+func MarshalMediaToGraphQLConnection(results []*post.Media, cursor *paging.Cursor) *MediaConnection {
 	resp := make([]*MediaEdge, 0)
 
 	// Unmarshal our json into the correct model
@@ -233,8 +233,8 @@ func MarshalMediaToGraphQLConnection(results []*post.Media, paging *paging.Info)
 	return &MediaConnection{
 		Edges: resp,
 		PageInfo: &relay.PageInfo{
-			HasNextPage:     paging.HasNextPage(),
-			HasPreviousPage: paging.HasPrevPage(),
+			HasNextPage:     false,
+			HasPreviousPage: false,
 			StartCursor:     startCursor,
 			EndCursor:       endCursor,
 		},

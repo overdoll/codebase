@@ -50,8 +50,6 @@ type ResolverRoot interface {
 }
 
 type DirectiveRoot struct {
-	Anon func(ctx context.Context, obj interface{}, next graphql.Resolver) (res interface{}, err error)
-	Auth func(ctx context.Context, obj interface{}, next graphql.Resolver) (res interface{}, err error)
 }
 
 type ComplexityRoot struct {
@@ -966,7 +964,7 @@ var sources = []*ast.Source{
   doNotPostReason: String
 }
 
-extend type Account @key(fields: "id") {
+extend type Account {
   """Artist status for this account"""
   artist: Artist
 }`, BuiltIn: false},
@@ -1210,7 +1208,7 @@ type PostConnection {
   pageInfo: PageInfo!
 }
 
-extend type Account @key(fields: "id") {
+extend type Account {
   """Posts queue specific to this account (when moderator)"""
   moderatorPostsQueue(
     """Returns the elements in the list that come after the specified cursor."""
@@ -1224,7 +1222,7 @@ extend type Account @key(fields: "id") {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-  ): PostConnection! @goField(forceResolver: true) @auth
+  ): PostConnection! @goField(forceResolver: true)
 
   """Posts specific to this account"""
   posts(
@@ -1266,7 +1264,7 @@ extend type Mutation {
   """
   Create a new pending post
   """
-  createPost(input: CreatePostInput!): CreatePostPayload @auth
+  createPost(input: CreatePostInput!): CreatePostPayload
 }
 
 extend type Query {
@@ -1301,7 +1299,7 @@ extend type Query {
   ): PostConnection!
 }
 
-extend type Category @key(fields: "id") {
+extend type Category {
   """Posts belonging to this category"""
   posts(
     """Returns the elements in the list that come after the specified cursor."""
@@ -1318,7 +1316,7 @@ extend type Category @key(fields: "id") {
   ): PostConnection! @goField(forceResolver: true)
 }
 
-extend type Character @key(fields: "id") {
+extend type Character {
   """Posts belonging to this character"""
   posts(
     """Returns the elements in the list that come after the specified cursor."""
@@ -1335,7 +1333,7 @@ extend type Character @key(fields: "id") {
   ): PostConnection! @goField(forceResolver: true)
 }
 
-extend type Media @key(fields: "id") {
+extend type Media {
   """Posts belonging to this media"""
   posts(
     """Returns the elements in the list that come after the specified cursor."""
@@ -1376,11 +1374,7 @@ interface Object {
 scalar URI
 
 directive @goField(forceResolver: Boolean) on INPUT_FIELD_DEFINITION
-  | FIELD_DEFINITION
-
-directive @auth on FIELD_DEFINITION
-
-directive @anon on FIELD_DEFINITION`, BuiltIn: false},
+  | FIELD_DEFINITION`, BuiltIn: false},
 	{Name: "../../libraries/graphql/relay/schema.graphql", Input: `type PageInfo {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
@@ -2220,28 +2214,8 @@ func (ec *executionContext) _Account_moderatorPostsQueue(ctx context.Context, fi
 	}
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Account().ModeratorPostsQueue(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			if ec.directives.Auth == nil {
-				return nil, errors.New("directive auth is not implemented")
-			}
-			return ec.directives.Auth(ctx, obj, directive0)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*types.PostConnection); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/sting/src/ports/graphql/types.PostConnection`, tmp)
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Account().ModeratorPostsQueue(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3848,28 +3822,8 @@ func (ec *executionContext) _Mutation_createPost(ctx context.Context, field grap
 	}
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().CreatePost(rctx, args["input"].(types.CreatePostInput))
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			if ec.directives.Auth == nil {
-				return nil, errors.New("directive auth is not implemented")
-			}
-			return ec.directives.Auth(ctx, nil, directive0)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*types.CreatePostPayload); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/sting/src/ports/graphql/types.CreatePostPayload`, tmp)
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreatePost(rctx, args["input"].(types.CreatePostInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)

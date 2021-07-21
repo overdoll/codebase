@@ -25,13 +25,13 @@ func (r AccountResolver) ModeratorPostAuditLogs(ctx context.Context, obj *types.
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	logs, page, err := r.App.Queries.SearchPostAuditLogs.Handle(ctx, cursor, obj.ID.GetID(), "")
+	logs, err := r.App.Queries.SearchPostAuditLogs.Handle(ctx, cursor, obj.ID.GetID(), "")
 
 	if err != nil {
 		return nil, err
 	}
 
-	return types.MarshalPostAuditLogToGraphQLConnection(logs, cursor, page), nil
+	return types.MarshalPostAuditLogToGraphQLConnection(logs, cursor), nil
 }
 
 func (r AccountResolver) Infractions(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountInfractionHistoryConnection, error) {

@@ -51,7 +51,7 @@ func (r *MutationResolver) RevokeAuthenticationToken(ctx context.Context) (*type
 		return nil, err
 	}
 
-	return &types.RevokeAuthenticationTokenPayload{RevokedAuthenticationTokenID: nil}, nil
+	return &types.RevokeAuthenticationTokenPayload{RevokedAuthenticationTokenID: relay.NewID("")}, nil
 }
 
 func (r *MutationResolver) VerifyAuthenticationTokenAndAttemptAccountAccessGrant(ctx context.Context, input types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput) (*types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload, error) {

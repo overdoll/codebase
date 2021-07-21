@@ -25,7 +25,7 @@ func MarshalAccountToGraphQL(result *account.Account) *Account {
 	}
 }
 
-func MarshalAccountToGraphQLConnection(results []*account.Account, page *paging.Info) *AccountConnection {
+func MarshalAccountToGraphQLConnection(results []*account.Account, cursor *paging.Cursor) *AccountConnection {
 
 	var accEdges []*AccountEdge
 
@@ -49,8 +49,8 @@ func MarshalAccountToGraphQLConnection(results []*account.Account, page *paging.
 
 	return &AccountConnection{
 		PageInfo: &relay.PageInfo{
-			HasNextPage:     page.HasNextPage(),
-			HasPreviousPage: page.HasPrevPage(),
+			HasNextPage:     false,
+			HasPreviousPage: false,
 			StartCursor:     startCursor,
 			EndCursor:       endCursor,
 		},
@@ -135,7 +135,7 @@ func MarshalAuthenticationTokenToGraphQL(result *token.AuthenticationToken, same
 	}
 }
 
-func MarshalAccountEmailToGraphQLConnection(results []*account.Email, page *paging.Info) *AccountEmailConnection {
+func MarshalAccountEmailToGraphQLConnection(results []*account.Email, cursor *paging.Cursor) *AccountEmailConnection {
 
 	var accEmails []*AccountEmailEdge
 
@@ -159,8 +159,8 @@ func MarshalAccountEmailToGraphQLConnection(results []*account.Email, page *pagi
 
 	return &AccountEmailConnection{
 		PageInfo: &relay.PageInfo{
-			HasNextPage:     page.HasNextPage(),
-			HasPreviousPage: page.HasPrevPage(),
+			HasNextPage:     false,
+			HasPreviousPage: false,
 			StartCursor:     startCursor,
 			EndCursor:       endCursor,
 		},
@@ -168,7 +168,7 @@ func MarshalAccountEmailToGraphQLConnection(results []*account.Email, page *pagi
 	}
 }
 
-func MarshalAccountUsernameToGraphQLConnection(results []*account.Username, page *paging.Info) *AccountUsernameConnection {
+func MarshalAccountUsernameToGraphQLConnection(results []*account.Username, cursor *paging.Cursor) *AccountUsernameConnection {
 
 	var accUsernames []*AccountUsernameEdge
 
@@ -191,8 +191,8 @@ func MarshalAccountUsernameToGraphQLConnection(results []*account.Username, page
 
 	return &AccountUsernameConnection{
 		PageInfo: &relay.PageInfo{
-			HasNextPage:     page.HasNextPage(),
-			HasPreviousPage: page.HasPrevPage(),
+			HasNextPage:     false,
+			HasPreviousPage: false,
 			StartCursor:     startCursor,
 			EndCursor:       endCursor,
 		},
@@ -210,7 +210,7 @@ func MarshalAccountSessionToGraphQL(result *session.Session) *AccountSession {
 	}
 }
 
-func MarshalAccountSessionToGraphQLConnection(results []*session.Session, page *paging.Info) *AccountSessionConnection {
+func MarshalAccountSessionToGraphQLConnection(results []*session.Session, cursor *paging.Cursor) *AccountSessionConnection {
 
 	var accSessions []*AccountSessionEdge
 
@@ -233,8 +233,8 @@ func MarshalAccountSessionToGraphQLConnection(results []*session.Session, page *
 
 	return &AccountSessionConnection{
 		PageInfo: &relay.PageInfo{
-			HasNextPage:     page.HasNextPage(),
-			HasPreviousPage: page.HasPrevPage(),
+			HasNextPage:     false,
+			HasPreviousPage: false,
 			StartCursor:     startCursor,
 			EndCursor:       endCursor,
 		},

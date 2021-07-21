@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"reflect"
+	"strconv"
 	"strings"
 )
 
@@ -14,12 +15,13 @@ func NewID(typename interface{}, args ...string) ID {
 
 	typeName := ""
 
-	switch typename.(type) {
-	case string:
-		typeName = typename.(string)
-	case struct{}:
+	if reflect.ValueOf(typename).Kind() == reflect.Struct {
 		typeName = reflect.TypeOf(typename).Name()
-	default:
+	} else {
+		switch typename.(type) {
+		case string:
+			typeName = typename.(string)
+		}
 
 	}
 
@@ -79,5 +81,5 @@ func (i *ID) UnmarshalGQL(v interface{}) error {
 
 // MarshalGQL implements the graphql.Marshaler interface
 func (i ID) MarshalGQL(w io.Writer) {
-	w.Write([]byte(i))
+	w.Write([]byte(strconv.Quote(base64.StdEncoding.EncodeToString([]byte(i)))))
 }

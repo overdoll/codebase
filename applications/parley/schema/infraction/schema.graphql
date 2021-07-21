@@ -19,7 +19,7 @@ type AccountInfractionHistoryConnection {
   pageInfo: PageInfo!
 }
 
-extend type Account @key(fields: "id") {
+extend type Account {
   """
   Infraction history for this account
 
@@ -39,7 +39,7 @@ extend type Account @key(fields: "id") {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-  ): AccountInfractionHistoryConnection! @goField(forceResolver: true) @auth
+  ): AccountInfractionHistoryConnection! @goField(forceResolver: true)
 }
 
 """Infraction history belonging to an account"""
@@ -86,5 +86,5 @@ extend type Query {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-  ): PostRejectionReasonConnection! @goField(forceResolver: true) @auth
+  ): PostRejectionReasonConnection! @goField(forceResolver: true)
 }

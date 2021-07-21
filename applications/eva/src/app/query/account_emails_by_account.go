@@ -21,14 +21,14 @@ func NewGetAccountEmailsHandler(ar account.Repository) AccountEmailsByAccountHan
 	return AccountEmailsByAccountHandler{ar: ar}
 }
 
-func (h AccountEmailsByAccountHandler) Handle(ctx context.Context, cursor *paging.Cursor, userId string) ([]*account.Email, *paging.Info, error) {
+func (h AccountEmailsByAccountHandler) Handle(ctx context.Context, cursor *paging.Cursor, userId string) ([]*account.Email, error) {
 
-	emails, page, err := h.ar.GetAccountEmails(ctx, cursor, userId)
+	emails, err := h.ar.GetAccountEmails(ctx, cursor, userId)
 
 	if err != nil {
 		zap.S().Errorf("failed to get account emails: %s", err)
-		return nil, nil, errFailedAccountEmailsByAccount
+		return nil, errFailedAccountEmailsByAccount
 	}
 
-	return emails, page, nil
+	return emails, nil
 }

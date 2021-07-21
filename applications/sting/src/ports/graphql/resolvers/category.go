@@ -21,11 +21,11 @@ func (r CategoryResolver) Posts(ctx context.Context, obj *types.Category, after 
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	results, page, err := r.App.Queries.SearchPosts.Handle(ctx, cursor, "", "", "", []string{obj.ID.GetID()}, nil, nil)
+	results, err := r.App.Queries.SearchPosts.Handle(ctx, cursor, "", "", "", []string{obj.ID.GetID()}, nil, nil)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return types.MarshalPostToGraphQLConnection(results, page), nil
+	return types.MarshalPostToGraphQLConnection(results, cursor), nil
 }

@@ -36,13 +36,13 @@ func (r *QueryResolver) Accounts(ctx context.Context, after *string, before *str
 		artist = *isArtist
 	}
 
-	results, page, err := r.App.Queries.SearchAccounts.Handle(ctx, cursor, usrname, artist)
+	results, err := r.App.Queries.SearchAccounts.Handle(ctx, cursor, usrname, artist)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return types.MarshalAccountToGraphQLConnection(results, page), nil
+	return types.MarshalAccountToGraphQLConnection(results, cursor), nil
 }
 
 func (r *QueryResolver) Account(ctx context.Context, username string) (*types.Account, error) {

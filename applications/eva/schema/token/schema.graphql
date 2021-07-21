@@ -91,7 +91,7 @@ type Mutation {
 
   Note: the actual authentication token is opaque (set & read from cookies)
   """
-  grantAuthenticationToken(input: GrantAuthenticationTokenInput!): GrantAuthenticationTokenPayload @anon
+  grantAuthenticationToken(input: GrantAuthenticationTokenInput!): GrantAuthenticationTokenPayload
 
   """
   Revoke authentication token
@@ -100,26 +100,26 @@ type Mutation {
 
   Note: the actual authentication token is opaque (set & read from cookies)
   """
-  revokeAuthenticationToken: RevokeAuthenticationTokenPayload @anon
+  revokeAuthenticationToken: RevokeAuthenticationTokenPayload
 
   """
   Create an account using the current authentication token
 
   Note: the actual authentication token is opaque (set & read from cookies)
   """
-  createAccountWithAuthenticationToken(input: CreateAccountWithAuthenticationTokenInput!): CreateAccountWithAuthenticationTokenPayload @anon
+  createAccountWithAuthenticationToken(input: CreateAccountWithAuthenticationTokenInput!): CreateAccountWithAuthenticationTokenPayload
 
   """
   Logout the current account
   """
-  revokeAccountAccess: RevokeAccountAccessPayload @auth
+  revokeAccountAccess: RevokeAccountAccessPayload
 
   """
   Re-issue an authentication token based on the current one
 
   Note: the actual authentication token is opaque (set & read from cookies)
   """
-  reissueAuthenticationToken: ReissueAuthenticationTokenPayload @anon
+  reissueAuthenticationToken: ReissueAuthenticationTokenPayload
 
   """
   Grant account access using an authentication token and a multi factor option
@@ -129,7 +129,7 @@ type Mutation {
 
   Note: the actual authentication token is opaque (set & read from cookies)
   """
-  grantAccountAccessWithAuthenticationTokenAndMultiFactor(input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorInput!): GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload @anon
+  grantAccountAccessWithAuthenticationTokenAndMultiFactor(input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorInput!): GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload
 
   """
   Will verify the authentication token.
@@ -143,7 +143,7 @@ type Mutation {
 
   Note: the actual authentication token is opaque (set & read from cookies)
   """
-  verifyAuthenticationTokenAndAttemptAccountAccessGrant(input: VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput!): VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload @anon
+  verifyAuthenticationTokenAndAttemptAccountAccessGrant(input: VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput!): VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload
 }
 
 type Query {
@@ -152,5 +152,5 @@ type Query {
 
   Note: the actual authentication token is opaque (set & read from cookies)
   """
-  viewAuthenticationToken: AuthenticationToken @anon
+  viewAuthenticationToken: AuthenticationToken
 }

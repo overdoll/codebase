@@ -47,8 +47,6 @@ type ResolverRoot interface {
 }
 
 type DirectiveRoot struct {
-	Anon func(ctx context.Context, obj interface{}, next graphql.Resolver) (res interface{}, err error)
-	Auth func(ctx context.Context, obj interface{}, next graphql.Resolver) (res interface{}, err error)
 }
 
 type ComplexityRoot struct {
@@ -748,7 +746,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
-	{Name: "schema/audit_logs.graphql", Input: `enum PostAuditLogAction {
+	{Name: "schema/audit_logs/schema.graphql", Input: `enum PostAuditLogAction {
   Approved
   Denied
 }
@@ -817,10 +815,10 @@ extend type Post @key(fields: "id") {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-  ): PostAuditLogConnection! @goField(forceResolver: true) @auth
+  ): PostAuditLogConnection! @goField(forceResolver: true)
 }
 
-extend type Account @key(fields: "id") {
+extend type Account {
   """
   Post Audit Logs linked to this account
 
@@ -840,9 +838,9 @@ extend type Account @key(fields: "id") {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-  ): PostAuditLogConnection! @goField(forceResolver: true) @auth
+  ): PostAuditLogConnection! @goField(forceResolver: true)
 }`, BuiltIn: false},
-	{Name: "schema/infraction_history.graphql", Input: `"""Infraction history belonging to an account"""
+	{Name: "schema/infraction/schema.graphql", Input: `"""Infraction history belonging to an account"""
 type AccountInfractionHistory implements Node @key(fields: "id") {
   """ID of the infraction history"""
   id: ID!
@@ -863,7 +861,7 @@ type AccountInfractionHistoryConnection {
   pageInfo: PageInfo!
 }
 
-extend type Account @key(fields: "id") {
+extend type Account {
   """
   Infraction history for this account
 
@@ -883,7 +881,7 @@ extend type Account @key(fields: "id") {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-  ): AccountInfractionHistoryConnection! @goField(forceResolver: true) @auth
+  ): AccountInfractionHistoryConnection! @goField(forceResolver: true)
 }
 
 """Infraction history belonging to an account"""
@@ -930,9 +928,9 @@ extend type Query {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-  ): PostRejectionReasonConnection! @goField(forceResolver: true) @auth
+  ): PostRejectionReasonConnection! @goField(forceResolver: true)
 }`, BuiltIn: false},
-	{Name: "schema/moderate.graphql", Input: `"""Moderate the pending post input"""
+	{Name: "schema/moderation/schema.graphql", Input: `"""Moderate the pending post input"""
 input ModeratePostInput {
   """Pending post to take action against"""
   postId: ID!
@@ -992,8 +990,9 @@ extend type Mutation {
   Current status can be queried from moderatorSettings of the account
   """
   toggleModeratorSettingsInQueue: ToggleModeratorSettingsInQueuePayload
-}`, BuiltIn: false},
-	{Name: "schema/moderator_settings.graphql", Input: `type Moderator implements Node @key(fields: "id") {
+}
+
+type Moderator implements Node @key(fields: "id") {
   """The ID of the moderator"""
   id: ID!
 
@@ -1006,7 +1005,7 @@ type Contributor implements Node @key(fields: "id") {
   id: ID!
 }
 
-extend type Account @key(fields: "id") {
+extend type Account {
   """
   Moderator settings and status for this account
 
@@ -1028,11 +1027,7 @@ extend type Account @key(fields: "id") {
 scalar URI
 
 directive @goField(forceResolver: Boolean) on INPUT_FIELD_DEFINITION
-  | FIELD_DEFINITION
-
-directive @auth on FIELD_DEFINITION
-
-directive @anon on FIELD_DEFINITION`, BuiltIn: false},
+  | FIELD_DEFINITION`, BuiltIn: false},
 	{Name: "../../libraries/graphql/relay/schema.graphql", Input: `type PageInfo {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
@@ -1480,28 +1475,8 @@ func (ec *executionContext) _Account_moderatorPostAuditLogs(ctx context.Context,
 	}
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Account().ModeratorPostAuditLogs(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			if ec.directives.Auth == nil {
-				return nil, errors.New("directive auth is not implemented")
-			}
-			return ec.directives.Auth(ctx, obj, directive0)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*types.PostAuditLogConnection); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/parley/src/ports/graphql/types.PostAuditLogConnection`, tmp)
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Account().ModeratorPostAuditLogs(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1542,28 +1517,8 @@ func (ec *executionContext) _Account_infractions(ctx context.Context, field grap
 	}
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Account().Infractions(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			if ec.directives.Auth == nil {
-				return nil, errors.New("directive auth is not implemented")
-			}
-			return ec.directives.Auth(ctx, obj, directive0)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*types.AccountInfractionHistoryConnection); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/parley/src/ports/graphql/types.AccountInfractionHistoryConnection`, tmp)
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Account().Infractions(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2623,28 +2578,8 @@ func (ec *executionContext) _Post_auditLogs(ctx context.Context, field graphql.C
 	}
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Post().AuditLogs(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			if ec.directives.Auth == nil {
-				return nil, errors.New("directive auth is not implemented")
-			}
-			return ec.directives.Auth(ctx, obj, directive0)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*types.PostAuditLogConnection); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/parley/src/ports/graphql/types.PostAuditLogConnection`, tmp)
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Post().AuditLogs(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3382,28 +3317,8 @@ func (ec *executionContext) _Query_postRejectionReasons(ctx context.Context, fie
 	}
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Query().PostRejectionReasons(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			if ec.directives.Auth == nil {
-				return nil, errors.New("directive auth is not implemented")
-			}
-			return ec.directives.Auth(ctx, nil, directive0)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*types.PostRejectionReasonConnection); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *overdoll/applications/parley/src/ports/graphql/types.PostRejectionReasonConnection`, tmp)
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().PostRejectionReasons(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)

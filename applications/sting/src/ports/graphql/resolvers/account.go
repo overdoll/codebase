@@ -21,13 +21,13 @@ func (r AccountResolver) ModeratorPostsQueue(ctx context.Context, obj *types.Acc
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	results, page, err := r.App.Queries.SearchPosts.Handle(ctx, cursor, obj.ID.GetID(), "", "", nil, nil, nil)
+	results, err := r.App.Queries.SearchPosts.Handle(ctx, cursor, obj.ID.GetID(), "", "", nil, nil, nil)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return types.MarshalPostToGraphQLConnection(results, page), nil
+	return types.MarshalPostToGraphQLConnection(results, cursor), nil
 }
 
 func (r AccountResolver) Posts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostConnection, error) {
@@ -38,13 +38,13 @@ func (r AccountResolver) Posts(ctx context.Context, obj *types.Account, after *s
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	results, page, err := r.App.Queries.SearchPosts.Handle(ctx, cursor, "", "", obj.ID.GetID(), nil, nil, nil)
+	results, err := r.App.Queries.SearchPosts.Handle(ctx, cursor, "", "", obj.ID.GetID(), nil, nil, nil)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return types.MarshalPostToGraphQLConnection(results, page), nil
+	return types.MarshalPostToGraphQLConnection(results, cursor), nil
 }
 
 func (r AccountResolver) Contributions(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostConnection, error) {
@@ -55,11 +55,11 @@ func (r AccountResolver) Contributions(ctx context.Context, obj *types.Account, 
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	results, page, err := r.App.Queries.SearchPosts.Handle(ctx, cursor, "", obj.ID.GetID(), "", nil, nil, nil)
+	results, err := r.App.Queries.SearchPosts.Handle(ctx, cursor, "", obj.ID.GetID(), "", nil, nil, nil)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return types.MarshalPostToGraphQLConnection(results, page), nil
+	return types.MarshalPostToGraphQLConnection(results, cursor), nil
 }

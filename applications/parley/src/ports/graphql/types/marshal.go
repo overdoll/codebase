@@ -44,11 +44,31 @@ func MarshalPostAuditLogToGraphQL(result *infraction.PostAuditLog) *PostAuditLog
 	}
 }
 
-func MarshalPostAuditLogToGraphQLConnection(results []*infraction.PostAuditLog, cursor *paging.Cursor, page *paging.Info) *PostAuditLogConnection {
+func MarshalPostAuditLogToGraphQLConnection(results []*infraction.PostAuditLog, cursor *paging.Cursor) *PostAuditLogConnection {
 
 	var auditLogs []*PostAuditLogEdge
 
-	results = results[:len(results)-1]
+	conn := &PostAuditLogConnection{
+		PageInfo: &relay.PageInfo{
+			HasNextPage:     false,
+			HasPreviousPage: false,
+			StartCursor:     nil,
+			EndCursor:       nil,
+		},
+		Edges: auditLogs,
+	}
+
+	limit := cursor.GetLimit()
+
+	if len(results) == 0 {
+		return conn
+	}
+
+	if len(results) == limit {
+		conn.PageInfo.HasNextPage = cursor.First() != nil
+		conn.PageInfo.HasPreviousPage = cursor.Last() != nil
+		results = results[:len(results)-1]
+	}
 
 	var nodeAt func(int) *infraction.PostAuditLog
 
@@ -71,25 +91,16 @@ func MarshalPostAuditLogToGraphQLConnection(results []*infraction.PostAuditLog, 
 		})
 	}
 
-	var startCursor *string
-	var endCursor *string
+	conn.Edges = auditLogs
 
 	if len(results) > 0 {
 		res := results[0].Cursor()
-		startCursor = &res
+		conn.PageInfo.StartCursor = &res
 		res = results[len(results)-1].Cursor()
-		endCursor = &res
+		conn.PageInfo.EndCursor = &res
 	}
 
-	return &PostAuditLogConnection{
-		PageInfo: &relay.PageInfo{
-			HasNextPage:     page.HasNextPage(),
-			HasPreviousPage: page.HasPrevPage(),
-			StartCursor:     startCursor,
-			EndCursor:       endCursor,
-		},
-		Edges: auditLogs,
-	}
+	return conn
 }
 
 func MarshalAccountInfractionHistoryToGraphQL(result *infraction.AccountInfractionHistory) *AccountInfractionHistory {
@@ -99,7 +110,7 @@ func MarshalAccountInfractionHistoryToGraphQL(result *infraction.AccountInfracti
 	}
 }
 
-func MarshalAccountInfractionHistoryToGraphQLConnection(results []*infraction.AccountInfractionHistory, page *paging.Info) *AccountInfractionHistoryConnection {
+func MarshalAccountInfractionHistoryToGraphQLConnection(results []*infraction.AccountInfractionHistory, cursor *paging.Cursor) *AccountInfractionHistoryConnection {
 
 	var infractionHistory []*AccountInfractionHistoryEdge
 
@@ -122,8 +133,8 @@ func MarshalAccountInfractionHistoryToGraphQLConnection(results []*infraction.Ac
 
 	return &AccountInfractionHistoryConnection{
 		PageInfo: &relay.PageInfo{
-			HasNextPage:     page.HasNextPage(),
-			HasPreviousPage: page.HasPrevPage(),
+			HasNextPage:     false,
+			HasPreviousPage: false,
 			StartCursor:     startCursor,
 			EndCursor:       endCursor,
 		},
@@ -146,7 +157,7 @@ func MarshalPostRejectionReasonToGraphQL(result *infraction.PostRejectionReason)
 	}
 }
 
-func MarshalPostRejectionReasonToGraphQLConnection(results []*infraction.PostRejectionReason, page *paging.Info) *PostRejectionReasonConnection {
+func MarshalPostRejectionReasonToGraphQLConnection(results []*infraction.PostRejectionReason, cursor *paging.Cursor) *PostRejectionReasonConnection {
 
 	var rejectionReasons []*PostRejectionReasonEdge
 
@@ -169,8 +180,8 @@ func MarshalPostRejectionReasonToGraphQLConnection(results []*infraction.PostRej
 
 	return &PostRejectionReasonConnection{
 		PageInfo: &relay.PageInfo{
-			HasNextPage:     page.HasNextPage(),
-			HasPreviousPage: page.HasPrevPage(),
+			HasNextPage:     false,
+			HasPreviousPage: false,
 			StartCursor:     startCursor,
 			EndCursor:       endCursor,
 		},

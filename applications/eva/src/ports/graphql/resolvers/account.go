@@ -33,13 +33,13 @@ func (r AccountResolver) Emails(ctx context.Context, obj *types.Account, after *
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	results, page, err := r.App.Queries.AccountEmailsByAccount.Handle(ctx, cursor, obj.ID.GetID())
+	results, err := r.App.Queries.AccountEmailsByAccount.Handle(ctx, cursor, obj.ID.GetID())
 
 	if err != nil {
 		return nil, err
 	}
 
-	return types.MarshalAccountEmailToGraphQLConnection(results, page), nil
+	return types.MarshalAccountEmailToGraphQLConnection(results, cursor), nil
 }
 
 func (r AccountResolver) Usernames(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountUsernameConnection, error) {
@@ -50,13 +50,13 @@ func (r AccountResolver) Usernames(ctx context.Context, obj *types.Account, afte
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	results, page, err := r.App.Queries.AccountUsernamesByAccount.Handle(ctx, cursor, obj.ID.GetID())
+	results, err := r.App.Queries.AccountUsernamesByAccount.Handle(ctx, cursor, obj.ID.GetID())
 
 	if err != nil {
 		return nil, err
 	}
 
-	return types.MarshalAccountUsernameToGraphQLConnection(results, page), nil
+	return types.MarshalAccountUsernameToGraphQLConnection(results, cursor), nil
 }
 
 func (r AccountResolver) Sessions(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountSessionConnection, error) {
@@ -78,13 +78,13 @@ func (r AccountResolver) Sessions(ctx context.Context, obj *types.Account, after
 		accountSession = currentCookie.Value
 	}
 
-	results, page, err := r.App.Queries.AccountSessionsByAccount.Handle(ctx, cursor, accountSession, obj.ID.GetID())
+	results, err := r.App.Queries.AccountSessionsByAccount.Handle(ctx, cursor, accountSession, obj.ID.GetID())
 
 	if err != nil {
 		return nil, err
 	}
 
-	return types.MarshalAccountSessionToGraphQLConnection(results, page), nil
+	return types.MarshalAccountSessionToGraphQLConnection(results, cursor), nil
 }
 
 func (r AccountResolver) MultiFactorSettings(ctx context.Context, obj *types.Account) (*types.AccountMultiFactorSettings, error) {

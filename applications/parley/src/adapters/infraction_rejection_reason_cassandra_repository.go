@@ -44,7 +44,7 @@ func (r InfractionCassandraRepository) GetPostRejectionReason(ctx context.Contex
 	return infraction.UnmarshalPostRejectionReasonFromDatabase(rejectionReason.Id, rejectionReason.Reason, rejectionReason.Infraction), nil
 }
 
-func (r InfractionCassandraRepository) GetPostRejectionReasons(ctx context.Context, cursor *paging.Cursor) ([]*infraction.PostRejectionReason, *paging.Info, error) {
+func (r InfractionCassandraRepository) GetPostRejectionReasons(ctx context.Context, cursor *paging.Cursor) ([]*infraction.PostRejectionReason, error) {
 
 	rejectionReasonsQuery := r.session.
 		Query(postRejectionReasonTable.Get()).
@@ -54,7 +54,7 @@ func (r InfractionCassandraRepository) GetPostRejectionReasons(ctx context.Conte
 	var dbRejectionReasons []postRejectionReason
 
 	if err := rejectionReasonsQuery.Select(&dbRejectionReasons); err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
 	var rejectionReasons []*infraction.PostRejectionReason
@@ -62,5 +62,5 @@ func (r InfractionCassandraRepository) GetPostRejectionReasons(ctx context.Conte
 		rejectionReasons = append(rejectionReasons, infraction.UnmarshalPostRejectionReasonFromDatabase(rejectionReason.Id, rejectionReason.Reason, rejectionReason.Infraction))
 	}
 
-	return rejectionReasons, nil, nil
+	return rejectionReasons, nil
 }

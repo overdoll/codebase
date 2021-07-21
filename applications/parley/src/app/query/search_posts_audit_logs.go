@@ -22,20 +22,20 @@ func NewSearchPostAuditLogsHandler(ir infraction.Repository, eva EvaService) Sea
 	return SearchPostAuditLogsHandler{ir: ir, eva: eva}
 }
 
-func (h SearchPostAuditLogsHandler) Handle(ctx context.Context, cursor *paging.Cursor, moderatorId, postId string) ([]*infraction.PostAuditLog, *paging.Info, error) {
+func (h SearchPostAuditLogsHandler) Handle(ctx context.Context, cursor *paging.Cursor, moderatorId, postId string) ([]*infraction.PostAuditLog, error) {
 
 	filters, err := infraction.NewPostAuditLogFilters(moderatorId, postId, []int{})
 
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
-	auditLogs, page, err := h.ir.SearchPostAuditLogs(ctx, cursor, filters)
+	auditLogs, err := h.ir.SearchPostAuditLogs(ctx, cursor, filters)
 
 	if err != nil {
 		zap.S().Errorf("failed to get audit log: %s", err)
-		return nil, nil, errFailedSearchPostAuditLogs
+		return nil, errFailedSearchPostAuditLogs
 	}
 
-	return auditLogs, page, nil
+	return auditLogs, nil
 }

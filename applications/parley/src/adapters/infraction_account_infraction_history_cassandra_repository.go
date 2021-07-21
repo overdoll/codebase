@@ -69,7 +69,7 @@ func (r InfractionCassandraRepository) GetAccountInfractionHistoryById(ctx conte
 	return infraction.UnmarshalAccountInfractionHistoryFromDatabase(dbUserInfractionHistory.Id, dbUserInfractionHistory.AccountId, dbUserInfractionHistory.Reason, dbUserInfractionHistory.Expiration), nil
 }
 
-func (r InfractionCassandraRepository) GetAccountInfractionHistory(ctx context.Context, cursor *paging.Cursor, accountId string) ([]*infraction.AccountInfractionHistory, *paging.Info, error) {
+func (r InfractionCassandraRepository) GetAccountInfractionHistory(ctx context.Context, cursor *paging.Cursor, accountId string) ([]*infraction.AccountInfractionHistory, error) {
 
 	infractionHistoryQuery := r.session.
 		Query(accountInfractionHistoryTable.Select()).
@@ -79,7 +79,7 @@ func (r InfractionCassandraRepository) GetAccountInfractionHistory(ctx context.C
 	var dbUserInfractionHistory []accountInfractionHistory
 
 	if err := infractionHistoryQuery.Select(&dbUserInfractionHistory); err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
 	var infractionHistory []*infraction.AccountInfractionHistory
@@ -87,7 +87,7 @@ func (r InfractionCassandraRepository) GetAccountInfractionHistory(ctx context.C
 		infractionHistory = append(infractionHistory, infraction.UnmarshalAccountInfractionHistoryFromDatabase(infractionHist.Id, infractionHist.AccountId, infractionHist.Reason, infractionHist.Expiration))
 	}
 
-	return infractionHistory, nil, nil
+	return infractionHistory, nil
 }
 
 func (r InfractionCassandraRepository) CreateAccountInfractionHistory(ctx context.Context, infractionHistory *infraction.AccountInfractionHistory) error {

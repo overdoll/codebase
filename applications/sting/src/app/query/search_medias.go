@@ -21,14 +21,14 @@ func NewSearchMediasHandler(pr post.IndexRepository) SearchMediasHandler {
 	return SearchMediasHandler{pr: pr}
 }
 
-func (h SearchMediasHandler) Handle(ctx context.Context, cursor *paging.Cursor, query string) ([]*post.Media, *paging.Info, error) {
+func (h SearchMediasHandler) Handle(ctx context.Context, cursor *paging.Cursor, query string) ([]*post.Media, error) {
 
-	results, page, err := h.pr.SearchMedias(ctx, cursor, query)
+	results, err := h.pr.SearchMedias(ctx, cursor, query)
 
 	if err != nil {
 		zap.S().Errorf("failed to search: %s", err)
-		return nil, nil, errSearchFailed
+		return nil, errSearchFailed
 	}
 
-	return results, page, nil
+	return results, nil
 }

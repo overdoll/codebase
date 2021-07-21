@@ -21,14 +21,14 @@ func NewSearchAccountsHandler(ar account.IndexRepository) SearchAccountsHandler 
 	return SearchAccountsHandler{ar: ar}
 }
 
-func (h SearchAccountsHandler) Handle(ctx context.Context, cursor *paging.Cursor, username string, isArtist bool) ([]*account.Account, *paging.Info, error) {
+func (h SearchAccountsHandler) Handle(ctx context.Context, cursor *paging.Cursor, username string, isArtist bool) ([]*account.Account, error) {
 
-	results, page, err := h.ar.SearchAccounts(ctx, cursor, username, isArtist)
+	results, err := h.ar.SearchAccounts(ctx, cursor, username, isArtist)
 
 	if err != nil {
 		zap.S().Errorf("failed to search accounts: %s", err)
-		return nil, nil, errFailedSearchAccount
+		return nil, errFailedSearchAccount
 	}
 
-	return results, page, nil
+	return results, nil
 }

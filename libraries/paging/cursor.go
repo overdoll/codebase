@@ -82,3 +82,19 @@ func (c *Cursor) First() *int {
 func (c *Cursor) Last() *int {
 	return c.last
 }
+
+func (c *Cursor) IsEmpty() bool {
+	return c.First() != nil && *c.First() == 0 || c.Last() != nil && *c.Last() == 0
+}
+
+func (c *Cursor) GetLimit() int {
+	var limit int
+
+	if c.First() != nil {
+		limit = *c.First() + 1
+	} else if c.Last() != nil {
+		limit = *c.Last() + 1
+	}
+
+	return limit
+}

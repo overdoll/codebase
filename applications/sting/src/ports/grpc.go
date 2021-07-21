@@ -32,7 +32,7 @@ func (s Server) GetPost(ctx context.Context, request *sting.PostRequest) (*sting
 
 	return &sting.Post{
 		ModeratorId:   post.ModeratorId(),
-		ContributorId: post.Contributor().ID(),
+		ContributorId: post.ContributorId(),
 	}, nil
 }
 

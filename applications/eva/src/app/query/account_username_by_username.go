@@ -26,7 +26,7 @@ func (h AccountUsernameByUsernameHandler) Handle(ctx context.Context, accountId,
 
 	if err != nil {
 		zap.S().Errorf("failed to get account email: %s", err)
-		return nil, errFailedAccountEmailByEmail
+		return nil, errFailedAccountUsernameByUsername
 	}
 
 	return realUser, nil

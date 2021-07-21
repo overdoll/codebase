@@ -124,7 +124,7 @@ type AccountMultiFactorSettings {
   multiFactorTotpConfigured: Boolean!
 }
 
-extend type Account @key(fields: "id") {
+extend type Account {
   """
   Usernames for account (history)
   """
@@ -163,7 +163,7 @@ extend type Account @key(fields: "id") {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-  ): AccountEmailConnection! @goField(forceResolver: true) @auth
+  ): AccountEmailConnection! @goField(forceResolver: true)
 
   """
   Sessions linked to this account
@@ -184,21 +184,21 @@ extend type Account @key(fields: "id") {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-  ): AccountSessionConnection! @goField(forceResolver: true) @auth
+  ): AccountSessionConnection! @goField(forceResolver: true)
 
   """
   Multi factor account settings
 
   Only queryable if the currently logged-in account belongs to the requested account
   """
-  multiFactorSettings: AccountMultiFactorSettings! @goField(forceResolver: true) @auth
+  multiFactorSettings: AccountMultiFactorSettings! @goField(forceResolver: true)
 
   """
   MFA Recovery codes belonging to this account
 
   Only queryable if the currently logged-in account belongs to the requested account
   """
-  recoveryCodes: [AccountMultiFactorRecoveryCode!]! @goField(forceResolver: true) @auth
+  recoveryCodes: [AccountMultiFactorRecoveryCode!]! @goField(forceResolver: true)
 }
 
 """Add an email to the account"""
@@ -322,41 +322,41 @@ extend type Mutation {
   """
   Add an email to the account, will need to be confirmed
   """
-  addAccountEmail(input: AddAccountEmailInput!): AddAccountEmailPayload @auth
+  addAccountEmail(input: AddAccountEmailInput!): AddAccountEmailPayload
 
   """
   Delete account email - email must belong to account and cannot be the primary email
   """
-  deleteAccountEmail(input: DeleteAccountEmailInput!): DeleteAccountEmailPayload @auth
+  deleteAccountEmail(input: DeleteAccountEmailInput!): DeleteAccountEmailPayload
 
   """
   Update the account username
 
   Will retain the old username
   """
-  updateAccountUsernameAndRetainPrevious(input: UpdateAccountUsernameAndRetainPreviousInput!): UpdateAccountUsernameAndRetainPreviousPayload @auth
+  updateAccountUsernameAndRetainPrevious(input: UpdateAccountUsernameAndRetainPreviousInput!): UpdateAccountUsernameAndRetainPreviousPayload
 
   """
   Revoke a session for this account
   """
-  revokeAccountSession(input: RevokeAccountSessionInput!): RevokeAccountSessionPayload @auth
+  revokeAccountSession(input: RevokeAccountSessionInput!): RevokeAccountSessionPayload
 
   """
   Update the account email status to primary
 
   Cannot update if the email is not confirmed
   """
-  updateAccountEmailStatusToPrimary(input: UpdateAccountEmailStatusToPrimaryInput!): UpdateAccountEmailStatusToPrimaryPayload @auth
+  updateAccountEmailStatusToPrimary(input: UpdateAccountEmailStatusToPrimaryInput!): UpdateAccountEmailStatusToPrimaryPayload
 
   """
   Generates a new set of recovery codes. The previous set (whatever it was) will be deleted!
   """
-  generateAccountMultiFactorRecoveryCodes: GenerateAccountMultiFactorRecoveryCodesPayload @auth
+  generateAccountMultiFactorRecoveryCodes: GenerateAccountMultiFactorRecoveryCodesPayload
 
   """
   Generate a TOTP key for the current user. Recovery codes must be generated first.
   """
-  generateAccountMultiFactorTotp: GenerateAccountMultiFactorTotpPayload @auth
+  generateAccountMultiFactorTotp: GenerateAccountMultiFactorTotpPayload
 
   """
   Enroll into TOTP.
@@ -364,7 +364,7 @@ extend type Mutation {
   Must have called "generateAccountMultiFactorTOTP" first before enrolling, since this will
   generate a valid secret
   """
-  enrollAccountMultiFactorTotp(input: EnrollAccountMultiFactorTotpInput!): EnrollAccountMultiFactorTotpPayload @auth
+  enrollAccountMultiFactorTotp(input: EnrollAccountMultiFactorTotpInput!): EnrollAccountMultiFactorTotpPayload
 
   """
   Disable account multi factor
@@ -373,10 +373,10 @@ extend type Mutation {
 
   Priv. users cannot disable multi factor
   """
-  disableAccountMultiFactor: DisableAccountMultiFactorPayload @auth
+  disableAccountMultiFactor: DisableAccountMultiFactorPayload
 
   """
   Confirm account email, so it may be used
   """
-  confirmAccountEmail(input: ConfirmAccountEmailInput!): ConfirmAccountEmailPayload @auth
+  confirmAccountEmail(input: ConfirmAccountEmailInput!): ConfirmAccountEmailPayload
 }
