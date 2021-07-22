@@ -1,11 +1,16 @@
 package adapters
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"strconv"
+	"text/template"
 
 	"github.com/scylladb/gocqlx/v2"
+	"github.com/segmentio/ksuid"
 	"overdoll/applications/sting/src/domain/post"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/scan"
@@ -15,6 +20,7 @@ type categoryDocument struct {
 	Id        string `json:"id"`
 	Thumbnail string `json:"thumbnail"`
 	Title     string `json:"title"`
+	CreatedAt string `json:"created_at"`
 }
 
 const categoryIndex = `
@@ -31,33 +37,43 @@ const categoryIndex = `
 			"title": {
 				"type": "text",
 				"analyzer": "english"
+			},
+			"created_at": {
+				"type": "date"
 			}
 		}
 	}
 }`
 
-const searchCategories = `
-	"query" : {
-		"multi_match" : {
-			"query" : %q,
-			"fields" : ["title^100"],
-			"operator" : "and"
+const searchCategories = `	
+    "query" : {
+		"bool": {
+			"must": [
+				{{.Cursor}}
+			]
 		}
 	},
-	"size" : 5`
-
-const allCategories = `
-	"query" : { "match_all" : {} },
-	"size" : 5`
+	{{.Size}}
+    {{.Sort}}
+	"track_total_hits": true
+`
 
 const categoryIndexName = "categories"
 
-func marshalCategoryToDocument(cat *post.Category) *categoryDocument {
+func marshalCategoryToDocument(cat *post.Category) (*categoryDocument, error) {
+
+	parse, err := ksuid.Parse(cat.ID())
+
+	if err != nil {
+		return nil, err
+	}
+
 	return &categoryDocument{
 		Id:        cat.ID(),
 		Thumbnail: cat.Thumbnail(),
 		Title:     cat.Title(),
-	}
+		CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
+	}, nil
 }
 
 func (r PostsIndexElasticSearchRepository) IndexCategories(ctx context.Context, categories []*post.Category) error {
@@ -67,12 +83,19 @@ func (r PostsIndexElasticSearchRepository) IndexCategories(ctx context.Context, 
 	}
 
 	for _, category := range categories {
-		if err := r.store.AddToBulkIndex(category.ID(), marshalCategoryToDocument(category)); err != nil {
+
+		cat, err := marshalCategoryToDocument(category)
+
+		if err != nil {
+			return err
+		}
+
+		if err := r.store.AddToBulkIndex(ctx, category.ID(), cat); err != nil {
 			return err
 		}
 	}
 
-	if err := r.store.CloseBulkIndex(); err != nil {
+	if err := r.store.CloseBulkIndex(ctx); err != nil {
 		return fmt.Errorf("unexpected error: %s", err)
 	}
 
@@ -80,15 +103,36 @@ func (r PostsIndexElasticSearchRepository) IndexCategories(ctx context.Context, 
 }
 
 func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context, cursor *paging.Cursor, search string) ([]*post.Category, error) {
-	var query string
 
-	if search == "" {
-		query = allCategories
-	} else {
-		query = fmt.Sprintf(searchCategories, search)
+	t, err := template.New("searchCategory").Parse(searchCategories)
+
+	if err != nil {
+		return nil, err
 	}
 
-	response, err := r.store.Search(categoryIndexName, query)
+	if cursor == nil {
+		return nil, errors.New("cursor required")
+	}
+
+	curse, sort, count := cursor.BuildElasticsearch("created_at")
+
+	data := struct {
+		Cursor string
+		Sort   string
+		Size   string
+	}{
+		Size:   count,
+		Sort:   sort,
+		Cursor: curse,
+	}
+
+	var query bytes.Buffer
+
+	if err := t.Execute(&query, data); err != nil {
+		return nil, err
+	}
+
+	response, err := r.store.Search(categoryIndexName, query.String())
 
 	if err != nil {
 		return nil, err
@@ -117,6 +161,10 @@ func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context,
 
 func (r PostsIndexElasticSearchRepository) IndexAllCategories(ctx context.Context) error {
 
+	if err := r.store.CreateBulkIndex(categoryIndex); err != nil {
+		return err
+	}
+
 	scanner := scan.New(r.session,
 		scan.Config{
 			NodesInCluster: 1,
@@ -127,14 +175,10 @@ func (r PostsIndexElasticSearchRepository) IndexAllCategories(ctx context.Contex
 
 	err := scanner.RunIterator(categoryTable, func(iter *gocqlx.Iterx) error {
 
-		if err := r.store.CreateBulkIndex(categoryIndex); err != nil {
-			return err
-		}
-
 		var c category
 
 		for iter.StructScan(&c) {
-			if err := r.store.AddToBulkIndex(c.Id, categoryDocument{
+			if err := r.store.AddToBulkIndex(ctx, c.Id, categoryDocument{
 				Id:        c.Id,
 				Thumbnail: c.Thumbnail,
 				Title:     c.Title,
@@ -143,15 +187,15 @@ func (r PostsIndexElasticSearchRepository) IndexAllCategories(ctx context.Contex
 			}
 		}
 
-		if err := r.store.CloseBulkIndex(); err != nil {
-			return fmt.Errorf("unexpected error: %s", err)
-		}
-
 		return nil
 	})
 
 	if err != nil {
 		return err
+	}
+
+	if err := r.store.CloseBulkIndex(ctx); err != nil {
+		return fmt.Errorf("unexpected error: %s", err)
 	}
 
 	return nil

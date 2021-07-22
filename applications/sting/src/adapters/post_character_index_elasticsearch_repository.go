@@ -90,12 +90,12 @@ func (r PostsIndexElasticSearchRepository) IndexCharacters(ctx context.Context, 
 	}
 
 	for _, character := range characters {
-		if err := r.store.AddToBulkIndex(character.ID(), marshalCharacterToDocument(character)); err != nil {
+		if err := r.store.AddToBulkIndex(ctx, character.ID(), marshalCharacterToDocument(character)); err != nil {
 			return err
 		}
 	}
 
-	if err := r.store.CloseBulkIndex(); err != nil {
+	if err := r.store.CloseBulkIndex(ctx); err != nil {
 		return fmt.Errorf("unexpected error: %s", err)
 	}
 
@@ -140,6 +140,10 @@ func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context,
 
 func (r PostsIndexElasticSearchRepository) IndexAllCharacters(ctx context.Context) error {
 
+	if err := r.store.CreateBulkIndex(characterIndex); err != nil {
+		return err
+	}
+
 	scanner := scan.New(r.session,
 		scan.Config{
 			NodesInCluster: 1,
@@ -149,10 +153,6 @@ func (r PostsIndexElasticSearchRepository) IndexAllCharacters(ctx context.Contex
 	)
 
 	err := scanner.RunIterator(characterTable, func(iter *gocqlx.Iterx) error {
-
-		if err := r.store.CreateBulkIndex(characterIndex); err != nil {
-			return err
-		}
 
 		var c character
 
@@ -165,7 +165,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllCharacters(ctx context.Contex
 				return err
 			}
 
-			if err := r.store.AddToBulkIndex(m.Id, characterDocument{
+			if err := r.store.AddToBulkIndex(ctx, m.Id, characterDocument{
 				Id:        c.Id,
 				Thumbnail: c.Thumbnail,
 				Name:      c.Name,
@@ -179,15 +179,15 @@ func (r PostsIndexElasticSearchRepository) IndexAllCharacters(ctx context.Contex
 			}
 		}
 
-		if err := r.store.CloseBulkIndex(); err != nil {
-			return fmt.Errorf("unexpected error: %s", err)
-		}
-
 		return nil
 	})
 
 	if err != nil {
 		return err
+	}
+
+	if err := r.store.CloseBulkIndex(ctx); err != nil {
+		return fmt.Errorf("unexpected error: %s", err)
 	}
 
 	return nil

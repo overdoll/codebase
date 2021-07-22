@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS emails_by_account
     email      text,
     status     int,
     primary key ( account_id, email )
-);
+) WITH CLUSTERING ORDER BY (email DESC);
 
 CREATE TABLE IF NOT EXISTS account_usernames
 (
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS usernames_by_account
     account_id text,
     username   text,
     primary key ( account_id, username )
-);
+) WITH CLUSTERING ORDER BY (username DESC);
 
 CREATE TABLE IF NOT EXISTS account_multi_factor_totp
 (

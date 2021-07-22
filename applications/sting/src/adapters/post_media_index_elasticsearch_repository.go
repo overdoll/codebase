@@ -90,6 +90,10 @@ func (r PostsIndexElasticSearchRepository) SearchMedias(ctx context.Context, cur
 
 func (r PostsIndexElasticSearchRepository) IndexAllMedia(ctx context.Context) error {
 
+	if err := r.store.CreateBulkIndex(mediaIndex); err != nil {
+		return err
+	}
+
 	scanner := scan.New(r.session,
 		scan.Config{
 			NodesInCluster: 1,
@@ -100,14 +104,10 @@ func (r PostsIndexElasticSearchRepository) IndexAllMedia(ctx context.Context) er
 
 	err := scanner.RunIterator(mediaTable, func(iter *gocqlx.Iterx) error {
 
-		if err := r.store.CreateBulkIndex(mediaIndex); err != nil {
-			return err
-		}
-
 		var m media
 
 		for iter.StructScan(&m) {
-			if err := r.store.AddToBulkIndex(m.Id, mediaDocument{
+			if err := r.store.AddToBulkIndex(ctx, m.Id, mediaDocument{
 				Id:        m.Id,
 				Thumbnail: m.Thumbnail,
 				Title:     m.Title,
@@ -116,15 +116,15 @@ func (r PostsIndexElasticSearchRepository) IndexAllMedia(ctx context.Context) er
 			}
 		}
 
-		if err := r.store.CloseBulkIndex(); err != nil {
-			return fmt.Errorf("unexpected error: %s", err)
-		}
-
 		return nil
 	})
 
 	if err != nil {
 		return err
+	}
+
+	if err := r.store.CloseBulkIndex(ctx); err != nil {
+		return fmt.Errorf("unexpected error: %s", err)
 	}
 
 	return nil

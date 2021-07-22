@@ -3,6 +3,7 @@ package paging
 import (
 	"encoding/base64"
 	"errors"
+	"fmt"
 
 	"github.com/scylladb/gocqlx/v2/qb"
 )
@@ -121,4 +122,25 @@ func (c *Cursor) BuildCassandra(builder *qb.SelectBuilder, column string) {
 	if limit > 0 {
 		builder.Limit(uint(limit))
 	}
+}
+
+func (c *Cursor) BuildElasticsearch(column string) (string, string, string) {
+	curse := ""
+	sort := ""
+
+	if c.After() != nil {
+		curse = fmt.Sprintf(`{"range": {"`+column+`": { "lt": %q } } },`, *c.After())
+	}
+
+	if c.Before() != nil {
+		curse += fmt.Sprintf(`{"range": {"`+column+`": { "gt": %q } } },`, *c.Before())
+	}
+
+	if c.Last() != nil {
+		curse = fmt.Sprintf(`"sort": [{"`+column+`": %q}],`, "asc")
+	} else {
+		curse = fmt.Sprintf(`"sort": [{"`+column+`": %q}],`, "desc")
+	}
+
+	return curse, sort, fmt.Sprintf(`"size" : %q,`, c.GetLimit())
 }

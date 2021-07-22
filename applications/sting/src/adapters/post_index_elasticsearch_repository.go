@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"strconv"
 	"text/template"
@@ -147,8 +148,8 @@ const searchPostPending = `
 			]
 		}
 	},
-	"size" : {{.Size}},
-    "sort": [{"posted_at": "asc"}],
+	{{.Size}}
+    {{.Sort}}
 	"track_total_hits": true
 `
 
@@ -164,7 +165,7 @@ func NewPostsIndexElasticSearchRepository(store *search.Store, session gocqlx.Se
 	return PostsIndexElasticSearchRepository{store: store, session: session}
 }
 
-func marshalPostToDocument(pst *post.Post) *postDocument {
+func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 	var characterDocuments []*characterDocument
 
 	for _, char := range pst.Characters() {
@@ -174,7 +175,14 @@ func marshalPostToDocument(pst *post.Post) *postDocument {
 	var categoryDocuments []*categoryDocument
 
 	for _, cat := range pst.Categories() {
-		categoryDocuments = append(categoryDocuments, marshalCategoryToDocument(cat))
+
+		cat, err := marshalCategoryToDocument(cat)
+
+		if err != nil {
+			return nil, err
+		}
+
+		categoryDocuments = append(categoryDocuments, cat)
 	}
 
 	characterRequests := make(map[string]string)
@@ -210,7 +218,7 @@ func marshalPostToDocument(pst *post.Post) *postDocument {
 		CategoriesRequests: categoryRequests,
 		MediaRequests:      mediaRequests,
 		ReassignmentAt:     strconv.FormatInt(pst.ReassignmentAt().Unix(), 10),
-	}
+	}, nil
 }
 
 func (r PostsIndexElasticSearchRepository) IndexPost(ctx context.Context, post *post.Post) error {
@@ -219,11 +227,17 @@ func (r PostsIndexElasticSearchRepository) IndexPost(ctx context.Context, post *
 		return err
 	}
 
-	if err := r.store.AddToBulkIndex(post.ID(), marshalPostToDocument(post)); err != nil {
+	pst, err := marshalPostToDocument(post)
+
+	if err != nil {
 		return err
 	}
 
-	if err := r.store.CloseBulkIndex(); err != nil {
+	if err := r.store.AddToBulkIndex(ctx, post.ID(), pst); err != nil {
+		return err
+	}
+
+	if err := r.store.CloseBulkIndex(ctx); err != nil {
 		return fmt.Errorf("unexpected error: %s", err)
 	}
 
@@ -232,10 +246,14 @@ func (r PostsIndexElasticSearchRepository) IndexPost(ctx context.Context, post *
 
 func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, cursor *paging.Cursor, filter *post.PostFilters) ([]*post.Post, error) {
 
-	t, err := template.New("searchPostPending").Parse(searchPostPending)
+	t, err := template.New("searchPost").Parse(searchPostPending)
 
 	if err != nil {
 		return nil, err
+	}
+
+	if cursor == nil {
+		return nil, errors.New("cursor required")
 	}
 
 	postId := ""
@@ -244,16 +262,20 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, curs
 		postId = fmt.Sprintf(`{"multi_match": {"query" : %q,"fields" : ["id"],"operator" : "and"}},`, filter.ID())
 	}
 
+	curse, sort, count := cursor.BuildElasticsearch("posted_at")
+
 	data := struct {
-		Cursor      string
 		ModeratorId string
-		Size        int
 		PostId      string
+		Cursor      string
+		Sort        string
+		Size        string
 	}{
-		Size:        0,
 		ModeratorId: filter.ModeratorId(),
-		Cursor:      "",
 		PostId:      postId,
+		Size:        count,
+		Sort:        sort,
+		Cursor:      curse,
 	}
 
 	var query bytes.Buffer
@@ -322,6 +344,10 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, curs
 
 func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) error {
 
+	if err := r.store.CreateBulkIndex(postIndex); err != nil {
+		return err
+	}
+
 	scanner := scan.New(r.session,
 		scan.Config{
 			NodesInCluster: 1,
@@ -331,10 +357,6 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 	)
 
 	err := scanner.RunIterator(postTable, func(iter *gocqlx.Iterx) error {
-
-		if err := r.store.CreateBulkIndex(postIndex); err != nil {
-			return err
-		}
 
 		var p posts
 
@@ -361,7 +383,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 				})
 			}
 
-			if err := r.store.AddToBulkIndex(p.Id, postDocument{
+			if err := r.store.AddToBulkIndex(ctx, p.Id, postDocument{
 				Id:                 p.Id,
 				State:              p.State,
 				ModeratorId:        p.ModeratorId,
@@ -381,15 +403,15 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 			}
 		}
 
-		if err := r.store.CloseBulkIndex(); err != nil {
-			return fmt.Errorf("unexpected error: %s", err)
-		}
-
 		return nil
 	})
 
 	if err != nil {
 		return err
+	}
+
+	if err := r.store.CloseBulkIndex(ctx); err != nil {
+		return fmt.Errorf("unexpected error: %s", err)
 	}
 
 	return nil

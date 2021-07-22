@@ -139,65 +139,118 @@ func MarshalAccountEmailToGraphQLConnection(results []*account.Email, cursor *pa
 
 	var accEmails []*AccountEmailEdge
 
-	for _, email := range results {
-
-		accEmails = append(accEmails, &AccountEmailEdge{
-			Cursor: email.Cursor(),
-			Node:   MarshalAccountEmailToGraphQL(email),
-		})
-	}
-
-	var startCursor *string
-	var endCursor *string
-
-	if len(results) > 0 {
-		res := results[0].Cursor()
-		startCursor = &res
-		res = results[len(results)-1].Cursor()
-		endCursor = &res
-	}
-
-	return &AccountEmailConnection{
+	conn := &AccountEmailConnection{
 		PageInfo: &relay.PageInfo{
 			HasNextPage:     false,
 			HasPreviousPage: false,
-			StartCursor:     startCursor,
-			EndCursor:       endCursor,
+			StartCursor:     nil,
+			EndCursor:       nil,
 		},
 		Edges: accEmails,
 	}
+
+	limit := cursor.GetLimit()
+
+	if len(results) == 0 {
+		return conn
+	}
+
+	if len(results) == limit {
+		conn.PageInfo.HasNextPage = cursor.First() != nil
+		conn.PageInfo.HasPreviousPage = cursor.Last() != nil
+		results = results[:len(results)-1]
+	}
+
+	var nodeAt func(int) *account.Email
+
+	if cursor != nil && cursor.Last() != nil {
+		n := len(results) - 1
+		nodeAt = func(i int) *account.Email {
+			return results[n-i]
+		}
+	} else {
+		nodeAt = func(i int) *account.Email {
+			return results[i]
+		}
+	}
+
+	for i := range results {
+		node := nodeAt(i)
+		accEmails = append(accEmails, &AccountEmailEdge{
+			Node:   MarshalAccountEmailToGraphQL(node),
+			Cursor: node.Cursor(),
+		})
+	}
+
+	conn.Edges = accEmails
+
+	if len(results) > 0 {
+		res := results[0].Cursor()
+		conn.PageInfo.StartCursor = &res
+		res = results[len(results)-1].Cursor()
+		conn.PageInfo.EndCursor = &res
+	}
+
+	return conn
 }
 
 func MarshalAccountUsernameToGraphQLConnection(results []*account.Username, cursor *paging.Cursor) *AccountUsernameConnection {
 
 	var accUsernames []*AccountUsernameEdge
 
-	for _, username := range results {
-		accUsernames = append(accUsernames, &AccountUsernameEdge{
-			Cursor: username.Cursor(),
-			Node:   MarshalAccountUsernameToGraphQL(username),
-		})
-	}
-
-	var startCursor *string
-	var endCursor *string
-
-	if len(results) > 0 {
-		res := results[0].Cursor()
-		startCursor = &res
-		res = results[len(results)-1].Cursor()
-		endCursor = &res
-	}
-
-	return &AccountUsernameConnection{
+	conn := &AccountUsernameConnection{
 		PageInfo: &relay.PageInfo{
 			HasNextPage:     false,
 			HasPreviousPage: false,
-			StartCursor:     startCursor,
-			EndCursor:       endCursor,
+			StartCursor:     nil,
+			EndCursor:       nil,
 		},
 		Edges: accUsernames,
 	}
+
+	limit := cursor.GetLimit()
+
+	if len(results) == 0 {
+		return conn
+	}
+
+	if len(results) == limit {
+		conn.PageInfo.HasNextPage = cursor.First() != nil
+		conn.PageInfo.HasPreviousPage = cursor.Last() != nil
+		results = results[:len(results)-1]
+	}
+
+	var nodeAt func(int) *account.Username
+
+	if cursor != nil && cursor.Last() != nil {
+		n := len(results) - 1
+		nodeAt = func(i int) *account.Username {
+			return results[n-i]
+		}
+	} else {
+		nodeAt = func(i int) *account.Username {
+			return results[i]
+		}
+	}
+
+	for i := range results {
+		node := nodeAt(i)
+		accUsernames = append(accUsernames, &AccountUsernameEdge{
+			Node:   MarshalAccountUsernameToGraphQL(node),
+			Cursor: node.Cursor(),
+		})
+	}
+
+	conn.Edges = accUsernames
+
+	if len(results) > 0 {
+		res := results[0].Cursor()
+		conn.PageInfo.StartCursor = &res
+		res = results[len(results)-1].Cursor()
+		conn.PageInfo.EndCursor = &res
+	}
+
+	return conn
 }
 
 func MarshalAccountSessionToGraphQL(result *session.Session) *AccountSession {
@@ -214,30 +267,57 @@ func MarshalAccountSessionToGraphQLConnection(results []*session.Session, cursor
 
 	var accSessions []*AccountSessionEdge
 
-	for _, result := range results {
-		accSessions = append(accSessions, &AccountSessionEdge{
-			Cursor: result.Cursor(),
-			Node:   MarshalAccountSessionToGraphQL(result),
-		})
-	}
-
-	var startCursor *string
-	var endCursor *string
-
-	if len(results) > 0 {
-		res := results[0].Cursor()
-		startCursor = &res
-		res = results[len(results)-1].Cursor()
-		endCursor = &res
-	}
-
-	return &AccountSessionConnection{
+	conn := &AccountSessionConnection{
 		PageInfo: &relay.PageInfo{
 			HasNextPage:     false,
 			HasPreviousPage: false,
-			StartCursor:     startCursor,
-			EndCursor:       endCursor,
+			StartCursor:     nil,
+			EndCursor:       nil,
 		},
 		Edges: accSessions,
 	}
+
+	limit := cursor.GetLimit()
+
+	if len(results) == 0 {
+		return conn
+	}
+
+	if len(results) == limit {
+		conn.PageInfo.HasNextPage = cursor.First() != nil
+		conn.PageInfo.HasPreviousPage = cursor.Last() != nil
+		results = results[:len(results)-1]
+	}
+
+	var nodeAt func(int) *session.Session
+
+	if cursor != nil && cursor.Last() != nil {
+		n := len(results) - 1
+		nodeAt = func(i int) *session.Session {
+			return results[n-i]
+		}
+	} else {
+		nodeAt = func(i int) *session.Session {
+			return results[i]
+		}
+	}
+
+	for i := range results {
+		node := nodeAt(i)
+		accSessions = append(accSessions, &AccountSessionEdge{
+			Node:   MarshalAccountSessionToGraphQL(node),
+			Cursor: node.Cursor(),
+		})
+	}
+
+	conn.Edges = accSessions
+
+	if len(results) > 0 {
+		res := results[0].Cursor()
+		conn.PageInfo.StartCursor = &res
+		res = results[len(results)-1].Cursor()
+		conn.PageInfo.EndCursor = &res
+	}
+
+	return conn
 }

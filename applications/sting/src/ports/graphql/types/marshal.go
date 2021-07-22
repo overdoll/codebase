@@ -129,35 +129,62 @@ func MarshalArtistToGraphQL(result *post.Artist) *Artist {
 }
 
 func MarshalCategoryToGraphQLConnection(results []*post.Category, cursor *paging.Cursor) *CategoryConnection {
-	resp := make([]*CategoryEdge, 0)
 
-	// Unmarshal our json into the correct model
-	for _, result := range results {
-		resp = append(resp, &CategoryEdge{
-			Cursor: result.Cursor(),
-			Node:   MarshalCategoryToGraphQL(result),
-		})
-	}
+	var categories []*CategoryEdge
 
-	var startCursor *string
-	var endCursor *string
-
-	if len(results) > 0 {
-		res := results[0].Cursor()
-		startCursor = &res
-		res = results[len(results)-1].Cursor()
-		endCursor = &res
-	}
-
-	return &CategoryConnection{
-		Edges: resp,
+	conn := &CategoryConnection{
 		PageInfo: &relay.PageInfo{
 			HasNextPage:     false,
 			HasPreviousPage: false,
-			StartCursor:     startCursor,
-			EndCursor:       endCursor,
+			StartCursor:     nil,
+			EndCursor:       nil,
 		},
+		Edges: categories,
 	}
+
+	limit := cursor.GetLimit()
+
+	if len(results) == 0 {
+		return conn
+	}
+
+	if len(results) == limit {
+		conn.PageInfo.HasNextPage = cursor.First() != nil
+		conn.PageInfo.HasPreviousPage = cursor.Last() != nil
+		results = results[:len(results)-1]
+	}
+
+	var nodeAt func(int) *post.Category
+
+	if cursor != nil && cursor.Last() != nil {
+		n := len(results) - 1
+		nodeAt = func(i int) *post.Category {
+			return results[n-i]
+		}
+	} else {
+		nodeAt = func(i int) *post.Category {
+			return results[i]
+		}
+	}
+
+	for i := range results {
+		node := nodeAt(i)
+		categories = append(categories, &CategoryEdge{
+			Node:   MarshalCategoryToGraphQL(node),
+			Cursor: node.Cursor(),
+		})
+	}
+
+	conn.Edges = categories
+
+	if len(results) > 0 {
+		res := results[0].Cursor()
+		conn.PageInfo.StartCursor = &res
+		res = results[len(results)-1].Cursor()
+		conn.PageInfo.EndCursor = &res
+	}
+
+	return conn
 }
 
 func MarshalCategoryToGraphQL(result *post.Category) *Category {

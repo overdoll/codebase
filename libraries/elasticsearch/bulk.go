@@ -47,7 +47,7 @@ func (s *Store) CreateBulkIndex(index string) error {
 }
 
 // CreateBulkIndex - create a bulk index
-func (s *Store) AddToBulkIndex(id string, data interface{}) error {
+func (s *Store) AddToBulkIndex(ctx context.Context, id string, data interface{}) error {
 
 	dat, err := json.Marshal(data)
 
@@ -56,7 +56,7 @@ func (s *Store) AddToBulkIndex(id string, data interface{}) error {
 	}
 
 	err = s.bulk.indexer.Add(
-		context.Background(),
+		ctx,
 		esutil.BulkIndexerItem{
 			// Action field configures the operation to perform (index, create, delete, update)
 			Action: "index",
@@ -91,9 +91,9 @@ func (s *Store) AddToBulkIndex(id string, data interface{}) error {
 }
 
 // CloseBulkIndex - will close the bulk index, gather some stats
-func (s *Store) CloseBulkIndex() error {
+func (s *Store) CloseBulkIndex(ctx context.Context) error {
 
-	if err := s.bulk.indexer.Close(context.Background()); err != nil {
+	if err := s.bulk.indexer.Close(ctx); err != nil {
 		return err
 	}
 

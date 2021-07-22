@@ -127,7 +127,7 @@ func (r AccountIndexElasticSearchRepository) IndexAllAccounts(ctx context.Contex
 		var a accounts
 
 		for iter.StructScan(&a) {
-			if err := r.store.AddToBulkIndex(a.Id, &accountDocument{
+			if err := r.store.AddToBulkIndex(ctx, a.Id, &accountDocument{
 				Id:       a.Id,
 				Avatar:   a.Avatar,
 				Username: a.Username,
@@ -145,7 +145,7 @@ func (r AccountIndexElasticSearchRepository) IndexAllAccounts(ctx context.Contex
 		return err
 	}
 
-	if err := r.store.CloseBulkIndex(); err != nil {
+	if err := r.store.CloseBulkIndex(ctx); err != nil {
 		return fmt.Errorf("unexpected error: %s", err)
 	}
 

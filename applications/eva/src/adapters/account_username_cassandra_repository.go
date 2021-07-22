@@ -167,13 +167,21 @@ func (r AccountRepository) GetAccountUsernames(ctx context.Context, cursor *pagi
 
 	var accountUsernames []*UsernameByAccount
 
-	queryUsernames := r.session.
-		Query(usernameByAccount.Select()).
+	builder := usernameByAccount.SelectBuilder()
+
+	data := &UsernameByAccount{
+		AccountId: id,
+	}
+
+	if cursor != nil {
+		cursor.BuildCassandra(builder, "username")
+	}
+
+	queryUsernames := builder.
+		Query(r.session).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(&UsernameByAccount{
-			AccountId: id,
-		})
-	
+		BindStruct(data)
+
 	if err := queryUsernames.Select(&accountUsernames); err != nil {
 
 		if err == gocql.ErrNotFound {

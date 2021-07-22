@@ -3,6 +3,7 @@ package graphql
 import (
 	"fmt"
 	"io"
+	"strconv"
 )
 
 type URI string
@@ -25,5 +26,5 @@ func (y *URI) UnmarshalGQL(v interface{}) error {
 
 // MarshalGQL implements the graphql.Marshaler interface
 func (y URI) MarshalGQL(w io.Writer) {
-	w.Write([]byte(y))
+	w.Write([]byte(strconv.Quote(string(y))))
 }

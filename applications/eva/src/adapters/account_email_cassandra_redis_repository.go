@@ -244,12 +244,19 @@ func (r AccountRepository) GetAccountEmails(ctx context.Context, cursor *paging.
 
 	var accountEmails []*emailByAccount
 
-	queryEmails := r.session.
-		Query(emailByAccountTable.Select()).
+	builder := emailByAccountTable.SelectBuilder()
+
+	data := &emailByAccount{
+		AccountId: id,
+	}
+
+	if cursor != nil {
+		cursor.BuildCassandra(builder, "email")
+	}
+
+	queryEmails := builder.Query(r.session).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(&emailByAccount{
-			AccountId: id,
-		})
+		BindStruct(data)
 
 	if err := queryEmails.Select(&accountEmails); err != nil {
 
