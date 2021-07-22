@@ -3,7 +3,7 @@
  */
 import type { Node } from 'react'
 import type { ModeratePostMutation } from '@//:artifacts/ModeratePostMutation.graphql'
-import { graphql, usePreloadedQuery, usePaginationFragment, useQueryLoader } from 'react-relay'
+import { graphql, useQueryLoader } from 'react-relay'
 import { useMutation, PreloadedQuery } from 'react-relay/hooks'
 import { Suspense, useEffect } from 'react'
 import {
@@ -23,11 +23,12 @@ import { useTranslation } from 'react-i18next'
 import type { ModeratePostInfractionsQuery } from '@//:artifacts/ModeratePostInfractionsQuery.graphql'
 import ErrorFallback from '../../../../../../../components/ErrorFallback/ErrorFallback'
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
+import RejectionReasons from './RejectionReasons/RejectionReasons'
 
 type Props = {
   postId: string,
   refresh: () => void,
-  query: PreloadedQuery<ModeratePostInfractionsQuery>
+  query?: PreloadedQuery<ModeratePostInfractionsQuery>
 }
 
 const ModeratePostGQL = graphql`
@@ -53,7 +54,7 @@ const InfractionsGQL = graphql`
   }
 `
 
-export default function Indexer ({ postId, refresh, query }: Props): Node {
+export default function ModeratePost ({ postId, refresh, query }: Props): Node {
   const [t] = useTranslation('moderation')
 
   const [moderatePost, isModeratingPost] = useMutation<ModeratePostMutation>(
@@ -79,10 +80,10 @@ export default function Indexer ({ postId, refresh, query }: Props): Node {
         postId: postId,
         notes: ''
       },
-      onCompleted (data) {
+      onCompleted () {
         notify({
           status: 'success',
-          title: t('queue.post.actions.deny.query.success', { id: postId }),
+          title: t('queue.post.actions.approve.query.success', { id: postId }),
           isClosable: true
         })
         refresh()
@@ -90,15 +91,11 @@ export default function Indexer ({ postId, refresh, query }: Props): Node {
       onError () {
         notify({
           status: 'error',
-          title: t('queue.post.actions.deny.query.error', { id: postId }),
+          title: t('queue.post.actions.approve.query.error', { id: postId }),
           isClosable: true
         })
       }
     })
-  }
-
-  const denyPost = () => {
-
   }
 
   return (
@@ -111,10 +108,10 @@ export default function Indexer ({ postId, refresh, query }: Props): Node {
           {t('queue.post.actions.approve.button')}
         </Button>
       </HStack>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent bg='gray.900'>
-          <ModalHeader fontSize='md'>{t('queue.post.actions.deny.modal.title')}</ModalHeader>
+          <ModalHeader fontSize='lg'>{t('queue.post.actions.deny.modal.title')}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <ErrorBoundary
@@ -124,7 +121,11 @@ export default function Indexer ({ postId, refresh, query }: Props): Node {
             >
               <Suspense fallback={<Skeleton />}>
                 {queryRef
-                  ? <RejectionReasons query={InfractionsGQL} queryRef={queryRef} />
+                  ? <RejectionReasons
+                      isModeratingPost={isModeratingPost} moderatePost={moderatePost}
+                      postId={postId} onClose={onClose} refresh={refresh}
+                      query={InfractionsGQL} queryRef={queryRef}
+                    />
                   : <Skeleton />}
               </Suspense>
             </ErrorBoundary>
@@ -133,18 +134,5 @@ export default function Indexer ({ postId, refresh, query }: Props): Node {
         </ModalContent>
       </Modal>
     </>
-  )
-}
-
-const RejectionReasons = (props) => {
-  const data = usePreloadedQuery<ModeratePostInfractionsQuery>(
-    props.query,
-    props.queryRef
-  )
-
-  console.log(data)
-
-  return (
-    <></>
   )
 }

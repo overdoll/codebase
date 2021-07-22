@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 73705b449c435e088cecd1af88395e9c
+ * @relayHash 74571f8b447ebb11b52180fb11e646f1
  */
 
 /* eslint-disable */
@@ -11,7 +11,12 @@ import type { ConcreteRequest } from 'relay-runtime';
 import type { QueuePostsFragment$ref } from "./QueuePostsFragment.graphql";
 export type QueuePostsQueryVariables = {||};
 export type QueuePostsQueryResponse = {|
-  +$fragmentRefs: QueuePostsFragment$ref
+  +accountSettings: {|
+    +moderator: ?{|
+      +inQueue: boolean
+    |}
+  |},
+  +$fragmentRefs: QueuePostsFragment$ref,
 |};
 export type QueuePostsQuery = {|
   variables: QueuePostsQueryVariables,
@@ -22,6 +27,11 @@ export type QueuePostsQuery = {|
 /*
 query QueuePostsQuery {
   ...QueuePostsFragment
+  accountSettings {
+    moderator {
+      inQueue
+    }
+  }
 }
 
 fragment QueuePostsFragment on Query {
@@ -66,14 +76,43 @@ fragment QueuePostsFragment on Query {
 */
 
 const node: ConcreteRequest = (function(){
-var v0 = [
+var v0 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "AccountSettings",
+  "kind": "LinkedField",
+  "name": "accountSettings",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "AccountModeratorSettings",
+      "kind": "LinkedField",
+      "name": "moderator",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "inQueue",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+},
+v1 = [
   {
     "kind": "Literal",
     "name": "first",
     "value": 1
   }
 ],
-v1 = [
+v2 = [
   {
     "alias": null,
     "args": null,
@@ -82,7 +121,7 @@ v1 = [
     "storageKey": null
   }
 ],
-v2 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -96,6 +135,7 @@ return {
     "metadata": null,
     "name": "QueuePostsQuery",
     "selections": [
+      (v0/*: any*/),
       {
         "args": null,
         "kind": "FragmentSpread",
@@ -113,7 +153,7 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": (v0/*: any*/),
+        "args": (v1/*: any*/),
         "concreteType": "PendingPostConnection",
         "kind": "LinkedField",
         "name": "pendingPosts",
@@ -188,7 +228,7 @@ return {
                     "kind": "LinkedField",
                     "name": "categories",
                     "plural": true,
-                    "selections": (v1/*: any*/),
+                    "selections": (v2/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -199,7 +239,7 @@ return {
                     "name": "characters",
                     "plural": true,
                     "selections": [
-                      (v2/*: any*/),
+                      (v3/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -207,7 +247,7 @@ return {
                         "kind": "LinkedField",
                         "name": "media",
                         "plural": false,
-                        "selections": (v1/*: any*/),
+                        "selections": (v2/*: any*/),
                         "storageKey": null
                       }
                     ],
@@ -228,7 +268,7 @@ return {
                     "name": "characterRequests",
                     "plural": true,
                     "selections": [
-                      (v2/*: any*/),
+                      (v3/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -317,17 +357,18 @@ return {
       },
       {
         "alias": null,
-        "args": (v0/*: any*/),
+        "args": (v1/*: any*/),
         "filters": null,
         "handle": "connection",
         "key": "QueuePostsFragment_pendingPosts",
         "kind": "LinkedHandle",
         "name": "pendingPosts"
-      }
+      },
+      (v0/*: any*/)
     ]
   },
   "params": {
-    "id": "73705b449c435e088cecd1af88395e9c",
+    "id": "74571f8b447ebb11b52180fb11e646f1",
     "metadata": {},
     "name": "QueuePostsQuery",
     "operationKind": "query",
@@ -336,5 +377,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '667c52ca593f7c6abc80fa83aea79429';
+(node: any).hash = 'd408bb0095f88496c11b30983cecec76';
 module.exports = node;

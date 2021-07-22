@@ -2,8 +2,8 @@
  * @flow
  */
 
-import routes from '../components/navigation/navigation'
-import createMockHistory from '../../../../server/app/render/Domain/createMockHistory'
+import routes from '../routing/navigation'
+import createMockHistory from '../../../../../server/app/render/Domain/createMockHistory'
 
 export default function computeCurrentActiveRoutes ({ location, environment }) {
   const activeRoutes = routes

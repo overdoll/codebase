@@ -7,6 +7,7 @@ type Props = {
   src: string,
   type: string,
   innerRef?: () => void,
+  objectFit?: string,
 }
 
 export default function VideoSnippet ({ src, innerRef, objectFit, type, ...rest }: Props): Node {

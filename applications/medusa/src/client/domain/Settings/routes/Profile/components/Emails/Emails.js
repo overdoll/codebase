@@ -31,10 +31,10 @@ import InterfaceSettingCog
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/setting/interface-setting-cog.svg'
 
 type Props = {
-  emails: {
+  emails: Array<{
     email: string,
     status: string,
-  },
+  }>,
   refresh: () => void,
 }
 

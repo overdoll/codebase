@@ -17,6 +17,7 @@ type Props = {
   hasVoted: boolean,
   voteCount: number,
   disabled: boolean,
+  onClick: () => void,
 }
 
 export default function VoteMenu ({ onClick, hasVoted, voteCount, disabled }: Props): Node {

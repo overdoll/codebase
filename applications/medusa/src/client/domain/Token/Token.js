@@ -10,7 +10,7 @@ import { useHistory } from '@//:modules/routing'
 import type { TokenQuery } from '@//:artifacts/TokenQuery.graphql'
 import { Icon } from '@//:modules/content'
 import UAParser from 'ua-parser-js'
-import { Alert, AlertDescription, AlertIcon, Box, Center, Flex, Heading, Text, useToast } from '@chakra-ui/react'
+import { Alert, AlertDescription, AlertIcon, Box, Center, Flex, Heading, Text } from '@chakra-ui/react'
 import { useFlash } from '@//:modules/flash'
 import { Helmet } from 'react-helmet-async'
 import SignBadgeCircle

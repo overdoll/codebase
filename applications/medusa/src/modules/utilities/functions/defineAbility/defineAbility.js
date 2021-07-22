@@ -1,7 +1,7 @@
 import { AbilityBuilder, Ability } from '@casl/ability'
 
 export default function defineAbility (user) {
-  const { can, cannot, build } = new AbilityBuilder(Ability)
+  const { can, build } = new AbilityBuilder(Ability)
 
   const roles = user?.roles
 

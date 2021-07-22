@@ -5,7 +5,11 @@ import type { Node } from 'react'
 import { useLocation } from '@//:modules/routing'
 import { Redirect } from 'react-router'
 
-export default function Settings ({ children }): Node {
+type Props = {
+  children: Node
+}
+
+export default function Settings ({ children }: Props): Node {
   const location = useLocation()
 
   return (

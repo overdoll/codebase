@@ -5,6 +5,8 @@ import menu from './menu'
 import badge from './badge'
 import tag from './tag'
 import tooltip from './tooltip'
+import select from './select'
+import textarea from './textarea'
 
 export default {
   Menu: menu,
@@ -14,6 +16,8 @@ export default {
   Badge: badge,
   Tag: tag,
   Tooltip: tooltip,
+  Select: select,
+  Textarea: textarea,
   FormLabel: {
     variants: {
       float: {

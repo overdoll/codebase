@@ -24,32 +24,24 @@ type Props = {
     username: string,
     avatar: string,
   },
-  files: {
+  files: Array<{
     id: string,
-  },
-  urls: {
-    key: string,
-  },
-  thumbnails: {
-    key: string,
-  },
-  characters: {
-    key: {
+  }>,
+  urls: Array<string>,
+  thumbnails: Array<string>,
+  characters: Array<{
+    id: string,
+    name: string,
+    media: {
       id: string,
-      name: string,
-      media: {
-        id: string,
-        title: string
-      }
+      title: string
     }
-  },
-  categories: {
-    key: {
-      id: string,
-      title: string,
-      thumbnail: string,
-    }
-  },
+  }>,
+  categories: Array<{
+    id: string,
+    title: string,
+    thumbnail: string,
+  }>,
   voteCount?: number,
   hasVoted?: boolean,
   disableContext?: boolean,

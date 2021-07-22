@@ -51,17 +51,17 @@ function variantSolid (props) {
 
   return {
     bg: background,
-    color: mode(color, `${c}.500`)(props),
+    color: mode(color, `${c}.300`)(props),
     _hover: {
       bg: background,
-      color: mode(hoverBg, `${c}.400`)(props),
+      color: mode(hoverBg, `${c}.200`)(props),
       _disabled: {
         bg: background
       }
     },
     _active: {
       bg: background,
-      color: mode(activeBg, `${c}.600`)(props)
+      color: mode(activeBg, `${c}.500`)(props)
     }
   }
 }

@@ -19,7 +19,6 @@ function variantSolid (props) {
 
 function variantSubtle (props) {
   const { colorScheme: c, theme } = props
-  const darkBg = transparentize(`${c}.200`, 0.16)(theme)
 
   if (c === 'gray') {
     return {

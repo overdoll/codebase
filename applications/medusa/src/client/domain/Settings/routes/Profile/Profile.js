@@ -2,15 +2,14 @@
  * @flow
  */
 import type { Node } from 'react'
-import { useEffect, Suspense, useState, useCallback } from 'react'
+import { useEffect, Suspense, useCallback } from 'react'
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
 import { Helmet } from 'react-helmet-async'
 import {
   Center,
   Flex,
-  Spinner, Stack, Button
+  Spinner, Stack
 } from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
 import { graphql, usePreloadedQuery, useQueryLoader } from 'react-relay/hooks'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
 import type { ProfileSettingsQuery } from '@//:artifacts/ProfileSettingsQuery.graphql'
@@ -74,11 +73,11 @@ export default function Profile (props: Props): Node {
             )}
           >
             <Suspense fallback={null}>
-              {queryRef != null
-                ? <Content query={generalSettingsGQL} queryRef={queryRef} refresh={refresh} />
-                : <Flex justify='center'>
+              {queryRef === null
+                ? <Flex justify='center'>
                   <Spinner size='lg' color='red.500' />
-                </Flex>}
+                </Flex>
+                : <Content query={generalSettingsGQL} queryRef={queryRef} refresh={refresh} />}
             </Suspense>
           </ErrorBoundary>
         </Flex>
@@ -88,11 +87,9 @@ export default function Profile (props: Props): Node {
 }
 
 const Content = (props) => {
-  const { query, queryRef, refresh } = props
-
   const data = usePreloadedQuery<ProfileSettingsQuery>(
-    query,
-    queryRef
+    props.query,
+    props.queryRef
   )
 
   return (
@@ -100,7 +97,7 @@ const Content = (props) => {
       <Flex direction='column'>
         <Username
           username={data.authenticatedAccount.username} usernames={data.accountSettings.general.usernames}
-          refresh={refresh}
+          refresh={props.refresh}
         />
       </Flex>
       <Flex direction='column'>

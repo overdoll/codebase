@@ -3,7 +3,7 @@
  */
 import type { Node } from 'react'
 import type { Error } from '@//:modules/utilities/ErrorBoundary'
-import { Flex, Heading, IconButton, Button, Text } from '@chakra-ui/react'
+import { Flex, Heading, Button, Text } from '@chakra-ui/react'
 import ButtonRefreshArrows
   from '@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/multimedia-controls/button-refresh-arrows.svg'
 import { useTranslation } from 'react-i18next'

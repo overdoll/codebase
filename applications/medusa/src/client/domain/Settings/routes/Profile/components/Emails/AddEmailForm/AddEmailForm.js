@@ -2,28 +2,19 @@
  * @flow
  */
 
-import { graphql, useMutation, useQueryLoader } from 'react-relay/hooks'
-import type { ProfileSettingsQuery } from '@//:artifacts/ProfileSettingsQuery.graphql'
-import { Helmet } from 'react-helmet-async'
+import { graphql, useMutation } from 'react-relay/hooks'
 import {
-  Center,
   Flex,
   FormControl, FormHelperText,
   Heading, IconButton,
   Input,
   InputGroup,
   InputLeftElement,
-  InputRightElement,
-  Spinner, useToast
+  InputRightElement, useToast
 } from '@chakra-ui/react'
-import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
-import ErrorFallback from '../../../../../../../components/ErrorFallback/ErrorFallback'
 import Icon from '@//:modules/content/icon/Icon'
 import type { AddEmailFormMutation } from '@//:artifacts/AddEmailFormMutation.graphql'
 
-import AlertCircle from '@streamlinehq/streamlinehq/img/streamline-regular/interface-essential/alerts/alert-circle.svg'
-import CheckDouble1
-  from '@streamlinehq/streamlinehq/img/streamline-regular/interface-essential/form-validation/check-double-1.svg'
 import InterfaceAlertWarningTriangle
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/alerts/interface-alert-warning-triangle.svg'
 import InterfaceValidationCheck

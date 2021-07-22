@@ -16,7 +16,6 @@ import Icon from '@//:modules/content/icon/Icon'
 import Link from '@//:modules/routing/Link'
 import LoginKey2
   from '@streamlinehq/streamlinehq/img/streamline-regular/interface-essential/login-logout/login-key-2.svg'
-import Login2 from '@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/login-logout/login-2.svg'
 import InterfacePageControllerSettings
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/page-controller/interface-page-controller-settings.svg'
 import InterfaceArrowsShrink3
@@ -43,7 +42,10 @@ const logoutGQL = graphql`
 type Props = {
   account: {
     username: string,
-  }
+    avatar: string,
+  },
+  ability: () => void,
+  refresh: () => void,
 }
 
 export default function NavMenu ({ refresh, ability, account }: Props): Node {

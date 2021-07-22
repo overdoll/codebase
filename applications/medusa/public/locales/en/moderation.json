@@ -6,6 +6,11 @@
       "header": "All Clear",
       "subheader": "There are no posts in your queue at the moment. Try checking again tomorrow?"
     },
+    "paused": {
+      "header": "Moderation Paused",
+      "subheader": "Since you've paused your moderator status, you won't get anymore new cases.",
+      "unpause": "Moderation Settings"
+    },
     "post": {
       "content": "Post Uploads",
       "reassignment": "Time you have left to take action on the post before it is reassigned to another moderator",
@@ -19,7 +24,7 @@
       "actions": {
         "notice": {
           "title": "A few things...",
-          "description": "Before this post is visible to the public, it must be reviewed to ensure that it complies with the community guidelines.",
+          "description": "Before posts are visible to the public, they must be reviewed to ensure that they comply with the community guidelines.",
           "link": "Community Guidelines"
         },
         "approve": {
@@ -32,11 +37,31 @@
         "deny": {
           "button": "Deny",
           "modal": {
-            "title": "Select a reason for denying the post"
+            "title": "Select a reason for denying the post",
+            "form": {
+              "textarea": {
+                "label": "Note",
+                "placeholder": "Add a note describing the reason in detail..."
+              },
+              "dropdown": {
+                "label": "Reason",
+                "placeholder": "Select the rejection reason"
+              },
+              "validation": {
+                "rejectionId": {
+                  "error": "Please select a rejection option"
+                },
+                "note": {
+                  "error": "Please enter a valid note. Maximum 255 characters."
+                }
+              },
+              "submit": "Deny Post"
+            },
+            "infraction": "This rejection reason is an infraction. The poster's account will be temporarily suspended."
           },
           "query": {
-            "success": "Post {{id}} was denied with reason: {{reason}}",
-            "error": "There was an error denying post {{id}}"
+            "success": "Post {{id}} was successfully rejected",
+            "error": "There was an error rejecting post {{id}}"
           }
         }
       }

@@ -23,7 +23,6 @@ import ArrowButtonRight2
   from '@streamlinehq/streamlinehq/img/streamline-bold/arrows-diagrams/arrows/arrow-button-right-2.svg'
 import ArrowButtonLeft2
   from '@streamlinehq/streamlinehq/img/streamline-bold/arrows-diagrams/arrows/arrow-button-left-2.svg'
-import mime from 'mime-types'
 
 import SuspenseImage from '@//:modules/utilities/SuspenseImage'
 import ImageSnippet from '../../../components/ContentItem/ImageSnippet/ImageSnippet'
@@ -70,8 +69,6 @@ export default function Gallery ({ files, urls, thumbnails, setSwiper }: Props):
     }
   }
 
-  // TODO localstorage snippets for saving volume level and autoplay
-
   return (
     <>
       {!swiper
@@ -87,7 +84,6 @@ export default function Gallery ({ files, urls, thumbnails, setSwiper }: Props):
             }}
           >
             {files.map((file, index) => {
-              // TODO make into its own componenet
               const content = urls[file.id]
 
               const fileType = file.type.split('/')[0]

@@ -14,7 +14,7 @@ import Link from '@//:modules/routing/Link'
 import { Switch, Route, Router } from 'react-router'
 import { useHistory, useLocation } from '@//:modules/routing'
 import computeCurrentActiveRoutes from './helpers/computeCurrentActiveRoutes'
-import { AbilityContext } from '../../domain/Root/helpers/AbilityContext'
+import { AbilityContext } from '../helpers/AbilityContext'
 import { useRelayEnvironment } from 'react-relay'
 
 import InterfaceArrowsTurnBackward
@@ -27,14 +27,16 @@ import InterfaceArrowsButtonRight
 
 import NavItem from './components/navitem/NavItem'
 import NavMenu from './components/navmenu/NavMenu'
-import Items from './components/sidebar/items/Items'
+import Items from './components/sideitems/Items'
 
 type Props = {
   account: {
     username: string,
     avatar: string,
   },
-  children: Node
+  children: Node,
+  refreshUserQuery: () => void,
+  ability: () => void,
 }
 
 export default function NavigationBar ({ account, children, refreshUserQuery }: Props): Node {
@@ -184,18 +186,18 @@ export default function NavigationBar ({ account, children, refreshUserQuery }: 
   )
 }
 
-const SimplifiedNav = ({ history, t }) => {
+const SimplifiedNav = () => {
   return (
     <Flex
       zIndex='docked' boxShadow='sm' align='center' right={0} left={0} top={0} position='fixed' h='54px'
       bg='transparent'
     >
       <Link to='/'>
-        <Button ml={2}>{t('title')}</Button>
+        <Button ml={2}>{props.t('title')}</Button>
       </Link>
       <Spacer />
       <IconButton
-        onClick={() => history.goBack()}
+        onClick={() => props.history.goBack()}
         variant='solid'
         colorScheme='red'
         size='md'
@@ -211,20 +213,19 @@ const SimplifiedNav = ({ history, t }) => {
   )
 }
 
-const LeftMenu = ({ t }) => {
+const LeftMenu = (props) => {
   return (
     <>
       <Flex display={{ base: 'none', md: 'flex' }} left={0} ml={3}>
         <Link to='/'>
-          <Button textColor='red.500' variant='link' colorScheme='red'>{t('title')}</Button>
+          <Button textColor='red.500' variant='link' colorScheme='red'>{props.t('title')}</Button>
         </Link>
       </Flex>
-
     </>
   )
 }
 
-const RightMenu = ({ account, t, refresh, ability }) => {
+const RightMenu = (props) => {
   return (
     <Flex m='auto' right={0} mr={1}>
       <Flex
@@ -232,17 +233,17 @@ const RightMenu = ({ account, t, refresh, ability }) => {
         align='center'
       >
         <Flex m={1}>
-          {ability.can('manage', 'account')
+          {props.ability.can('manage', 'account')
             ? <Link to='/profile'>
-              <Tooltip hasArrow label={t('nav.profile')} placement='bottom'>
+              <Tooltip hasArrow label={props.t('nav.profile')} placement='bottom'>
                 <Button
                   bg='transparent'
                   borderRadius={10}
                   h='42px' w='42px' mr={1}
                   display={{ base: 'none', md: 'flex' }}
-                  aria-label={t('nav.profile')}
+                  aria-label={props.t('nav.profile')}
                 >
-                  <Avatar src={account.avatar} m={0} borderRadius={10} w='38px' h='38px' />
+                  <Avatar src={props.account.avatar} m={0} borderRadius={10} w='38px' h='38px' />
                 </Button>
               </Tooltip>
             </Link>
@@ -256,7 +257,7 @@ const RightMenu = ({ account, t, refresh, ability }) => {
                 icon={<Icon icon={Login2} fill='gray.300' w='38px' m={1} h='38px' />}
               />
             </Link>}
-          <NavMenu ability={ability} refresh={refresh} account={account} />
+          <NavMenu ability={props.ability} refresh={props.refresh} account={props.account} />
         </Flex>
       </Flex>
     </Flex>

@@ -5,7 +5,6 @@ import { matchRoutes } from 'react-router-config'
 import { fetchQuery, loadQuery } from 'react-relay/hooks'
 import type { IEnvironment } from 'relay-runtime/store/RelayStoreTypes'
 import type { Resource } from '@//:modules/utilities/JSResource'
-import defineAbility from '../utilities/functions/defineAbility/defineAbility'
 
 export type Location = $ReadOnly<{
   pathname: string,

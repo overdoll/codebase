@@ -3,8 +3,6 @@
  */
 
 import {
-  CircularProgress,
-  CircularProgressLabel,
   Flex,
   Stack,
   Text,
@@ -16,18 +14,11 @@ import {
   TagLabel,
   Tag,
   Tooltip,
-  Button,
-  HStack,
-  Divider,
-  AlertIcon,
-  AlertDescription,
-  Alert,
-  CloseButton,
-  AlertTitle
+  Button
 } from '@chakra-ui/react'
 import Icon from '@//:modules/content/icon/Icon'
-import { useEffect, useState } from 'react'
-import { graphql, usePreloadedQuery, usePaginationFragment } from 'react-relay'
+import { useState } from 'react'
+import { usePreloadedQuery, usePaginationFragment } from 'react-relay'
 
 import { useTranslation } from 'react-i18next'
 import type { PostsPaginationQuery } from '@//:artifacts/PostsPaginationQuery.graphql'
@@ -36,6 +27,7 @@ import type { QueuePostsQuery } from '@//:artifacts/QueuePostsQuery.graphql'
 import ContentItem from '../../../../../../components/Posts/components/ContentItem/ContentItem'
 import ReassignmentClock from '../ReassignmentClock/ReassignmentClock'
 import ModeratePost from './ModeratePost/ModeratePost'
+import { Link } from '@//:modules/routing'
 
 import InterfaceArrowsButtonRight
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-button-right.svg'
@@ -43,6 +35,8 @@ import InterfaceArrowsButtonLeft
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-button-left.svg'
 import InterfaceValidationCheckSquare1
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/validation/interface-validation-check-square-1.svg'
+import EntertainmentControlButtonPauseCircle
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/entertainment/control-buttons/entertainment-control-button-pause-circle.svg'
 
 type Props = {
   query: QueuePostsQuery,
@@ -65,11 +59,11 @@ export default function (props: Props): Node {
       initialQuery
     )
 
-  const [notice, setNotice] = useState(true)
-
   const [currentIndex, setCurrentIndex] = useState(0)
 
   const currentPost = data.pendingPosts?.edges[currentIndex]?.node
+
+  console.log(initialQuery)
 
   const nextPage = () => {
     if (currentIndex + 1 === data.pendingPosts?.edges.length) {
@@ -135,31 +129,6 @@ export default function (props: Props): Node {
           bg='gray.800'
           borderRadius={10}
         >
-          {notice && <Alert mb={4} borderRadius={5}>
-            <Flex direction='column'>
-              <Flex align='center' mb={2}>
-                <AlertIcon />
-                <AlertTitle>{t('queue.post.actions.notice.title')}</AlertTitle>
-              </Flex>
-              <AlertDescription
-                fontSize='md'
-                mb={2}
-              >{t('queue.post.actions.notice.description')}
-              </AlertDescription>
-              <Button
-                textAlign='left' colorScheme='blue' variant='link'
-                size='md'
-              >
-                {t('queue.post.actions.notice.link')}
-              </Button>
-            </Flex>
-            <CloseButton
-              position='absolute'
-              right={2}
-              top={2}
-              onClick={() => setNotice(false)}
-            />
-          </Alert>}
           <Flex align='center' w='100%' justify='space-between'>
             <Flex align='center'>
               <Avatar src={currentPost.contributor.avatar} w={10} h={10} mr={2} borderRadius='25%' />
@@ -242,15 +211,39 @@ export default function (props: Props): Node {
           bg='gray.800'
           borderRadius={10}
         >
-          <Icon w={12} h={12} icon={InterfaceValidationCheckSquare1} fill='green.300' />
-          <Heading color='gray.00' fontWeight='normal' size='xl' mt={8} mb={1}>
-            {t('queue.empty.header')}
-          </Heading>
-          <Text color='gray.200'>
-            {t('queue.empty.subheader')}
-          </Text>
+          {initialQuery.accountSettings.moderator.inQueue
+            ? <>
+              <Icon
+                w={12} h={12} icon={InterfaceValidationCheckSquare1}
+                fill='green.300'
+              />
+              <Heading color='gray.00' fontWeight='normal' size='xl' mt={8} mb={1}>
+                {t('queue.empty.header')}
+              </Heading>
+              <Text color='gray.200'>
+                {t('queue.empty.subheader')}
+              </Text>
+            </>
+            : <>
+              <Icon
+                w={12} h={12} icon={EntertainmentControlButtonPauseCircle}
+                fill='orange.300'
+              />
+              <Heading color='gray.00' fontWeight='normal' size='xl' mt={8} mb={1}>
+                {t('queue.paused.header')}
+              </Heading>
+              <Text mb={1} color='gray.200'>
+                {t('queue.paused.subheader')}
+              </Text>
+              <Link to='/s/moderation'>
+                <Button
+                  colorScheme='gray' variant='ghost'
+                  size='md'
+                >{t('queue.paused.unpause')}
+                </Button>
+              </Link>
+            </>}
         </Flex>
       </>
-
   )
 }

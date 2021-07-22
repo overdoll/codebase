@@ -6,7 +6,7 @@ import {
   Button, Divider, Flex, Heading, Stack, useDisclosure, Modal,
   ModalOverlay,
   ModalContent,
-  ModalHeader, Box,
+  ModalHeader,
   ModalFooter,
   ModalBody, Accordion,
   AccordionItem,
@@ -14,15 +14,16 @@ import {
   AccordionPanel,
   AccordionIcon,
   ListItem, UnorderedList,
+  Text,
   ModalCloseButton, Input, FormControl, FormLabel, InputGroup, InputRightElement, FormHelperText, useToast
 } from '@chakra-ui/react'
-import InfoTip from '../../../../../../components/InfoTip/InfoTip'
+
 import { useTranslation } from 'react-i18next'
 import Icon from '@//:modules/content/icon/Icon'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Joi from 'joi'
-import { graphql, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay/hooks'
+import { graphql, useMutation } from 'react-relay/hooks'
 
 import AlertCircle from '@streamlinehq/streamlinehq/img/streamline-regular/interface-essential/alerts/alert-circle.svg'
 import CheckDouble1
@@ -131,14 +132,11 @@ export default function Username ({ username, usernames, refresh }: Props): Node
                       color='gray.100'
                     >{t('profile.username.previous.title')} ({usernames.length})
                     </Heading>
-                    <InfoTip
-                      text={t('profile.username.previous.tooltip')}
-                      size={3}
-                    />
                   </Flex>
                   <AccordionIcon />
                 </AccordionButton>
-                <AccordionPanel pt={0}>
+                <AccordionPanel pt={1}>
+                  <Text mb={1} fontSize='sm' color='gray.200'>{t('profile.username.previous.tooltip')}</Text>
                   <UnorderedList pl={4}>
                     {usernames.map((item, index) =>
                       <ListItem key={index} color='gray.200'>{item.username}</ListItem>

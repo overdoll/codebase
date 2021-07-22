@@ -4,7 +4,7 @@
 import type { Node } from 'react'
 import { useRef } from 'react'
 import mime from 'mime-types'
-import { Box, Flex, IconButton, Stack, useDisclosure } from '@chakra-ui/react'
+import { Box, Flex, IconButton, useDisclosure } from '@chakra-ui/react'
 import ImageSnippet from './ImageSnippet/ImageSnippet'
 import InspectModal from '../modal/InspectModal'
 import Icon from '@//:modules/content/icon/Icon'
@@ -14,10 +14,6 @@ import InterfaceArrowsShrinkVertical
 import InterfaceArrowsVerticalExpand1
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-vertical-expand-1.svg'
 import VideoSnippet from './VideoSnippet/VideoSnippet'
-import { usePreloadedQuery } from 'react-relay/hooks'
-import type { ProfileSettingsQuery } from '@//:artifacts/ProfileSettingsQuery.graphql'
-import Username from '../../../../domain/Settings/routes/Profile/components/Username/Username'
-import Emails from '../../../../domain/Settings/routes/Profile/components/Emails/Emails'
 
 type Props = {
   src: string,
