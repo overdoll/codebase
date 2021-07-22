@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2/qb"
 )
 
@@ -125,23 +126,26 @@ func (c *Cursor) BuildCassandra(builder *qb.SelectBuilder, column string) {
 	}
 }
 
-func (c *Cursor) BuildElasticsearch(column string) (string, string, string) {
-	curse := ""
-	sort := ""
-
+func (c *Cursor) BuildElasticsearch(builder *elastic.SearchService, column string) {
+	builder.Query()
 	if c.After() != nil {
-		curse = fmt.Sprintf(`{"range": {"`+column+`": { "lt": %q } } },`, *c.After())
+		builder.SearchAfter()
+		builder.Where(qb.LtLit(column, `'`+*c.After()+`'`))
 	}
 
 	if c.Before() != nil {
-		curse += fmt.Sprintf(`{"range": {"`+column+`": { "gt": %q } } },`, *c.Before())
+		builder.Where(qb.GtLit(column, `'`+*c.Before()+`'`))
 	}
 
 	if c.Last() != nil {
-		sort = fmt.Sprintf(`"sort": [{"`+column+`": %q}],`, "asc")
+		builder.Sort(column, true) // sort by "user" field, ascending
 	} else {
-		sort = fmt.Sprintf(`"sort": [{"`+column+`": %q}],`, "desc")
+		builder.Sort(column, false) // sort by "user" field, ascending
 	}
 
-	return curse, sort, fmt.Sprintf(`"size" : %q,`, strconv.Itoa(c.GetLimit()))
+	limit := c.GetLimit()
+
+	if limit > 0 {
+		builder.Size(limit)
+	}
 }

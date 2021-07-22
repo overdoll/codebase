@@ -1,14 +1,10 @@
 package adapters
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"strconv"
-	"strings"
-	"text/template"
 
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/segmentio/ksuid"
@@ -79,10 +75,6 @@ func marshalCategoryToDocument(cat *post.Category) (*categoryDocument, error) {
 
 func (r PostsIndexElasticSearchRepository) IndexCategories(ctx context.Context, categories []*post.Category) error {
 
-	if err := r.store.CreateBulkIndex(categoryIndexName); err != nil {
-		return err
-	}
-
 	for _, category := range categories {
 
 		cat, err := marshalCategoryToDocument(category)
@@ -91,13 +83,16 @@ func (r PostsIndexElasticSearchRepository) IndexCategories(ctx context.Context, 
 			return err
 		}
 
-		if err := r.store.AddToBulkIndex(ctx, category.ID(), cat); err != nil {
+		_, err = r.client.
+			Index().
+			Index(categoryIndexName).
+			Id(category.ID()).
+			BodyJson(cat).
+			Do(ctx)
+
+		if err != nil {
 			return err
 		}
-	}
-
-	if err := r.store.CloseBulkIndex(ctx); err != nil {
-		return fmt.Errorf("unexpected error: %s", err)
 	}
 
 	return nil
@@ -105,35 +100,16 @@ func (r PostsIndexElasticSearchRepository) IndexCategories(ctx context.Context, 
 
 func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context, cursor *paging.Cursor, search string) ([]*post.Category, error) {
 
-	t, err := template.New("searchCategory").Parse(searchCategories)
-
-	if err != nil {
-		return nil, err
-	}
+	builder := r.client.Search().
+		Index(categoryIndexName)
 
 	if cursor == nil {
 		return nil, errors.New("cursor required")
 	}
 
-	curse, sort, count := cursor.BuildElasticsearch("created_at")
+	cursor.BuildElasticsearch(builder, "created_at")
 
-	data := struct {
-		Cursor string
-		Sort   string
-		Size   string
-	}{
-		Size:   count,
-		Sort:   sort,
-		Cursor: strings.TrimRight(curse, ","),
-	}
-
-	var query bytes.Buffer
-
-	if err := t.Execute(&query, data); err != nil {
-		return nil, err
-	}
-
-	response, err := r.store.Search(categoryIndexName, query.String())
+	response, err := builder.Pretty(true).Do(ctx)
 
 	if err != nil {
 		return nil, err
@@ -141,11 +117,11 @@ func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context,
 
 	var cats []*post.Category
 
-	for _, cat := range response.Hits {
+	for _, hit := range response.Hits.Hits {
 
 		var pst categoryDocument
 
-		err := json.Unmarshal(cat, &pst)
+		err := json.Unmarshal(hit.Source, &pst)
 
 		if err != nil {
 			return nil, err
@@ -161,10 +137,6 @@ func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context,
 }
 
 func (r PostsIndexElasticSearchRepository) IndexAllCategories(ctx context.Context) error {
-
-	if err := r.store.CreateBulkIndex(categoryIndexName); err != nil {
-		return err
-	}
 
 	scanner := scan.New(r.session,
 		scan.Config{
@@ -186,12 +158,21 @@ func (r PostsIndexElasticSearchRepository) IndexAllCategories(ctx context.Contex
 				return err
 			}
 
-			if err := r.store.AddToBulkIndex(ctx, c.Id, categoryDocument{
+			id := categoryDocument{
 				Id:        c.Id,
 				Thumbnail: c.Thumbnail,
 				Title:     c.Title,
 				CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
-			}); err != nil {
+			}
+
+			_, err = r.client.
+				Index().
+				Index(mediaIndexName).
+				Id(c.Id).
+				BodyJson(id).
+				Do(ctx)
+
+			if err != nil {
 				return err
 			}
 		}
@@ -203,25 +184,18 @@ func (r PostsIndexElasticSearchRepository) IndexAllCategories(ctx context.Contex
 		return err
 	}
 
-	if err := r.store.CloseBulkIndex(ctx); err != nil {
-		return fmt.Errorf("unexpected error: %s", err)
-	}
-
 	return nil
 }
 
 func (r PostsIndexElasticSearchRepository) DeleteCategoryIndex(ctx context.Context) error {
 
-	err := r.store.DeleteIndex(categoryIndexName)
-
-	if err != nil {
-
+	if _, err := r.client.DeleteIndex(categoryIndexName).Do(ctx); err != nil {
+		// Handle error
+		return err
 	}
 
-	err = r.store.CreateIndex(categoryIndexName, categoryIndex)
-
-	if err != nil {
-		return fmt.Errorf("failed to create category index: %s", err)
+	if _, err := r.client.CreateIndex(categoryIndexName).BodyString(categoryIndex).Do(ctx); err != nil {
+		return err
 	}
 
 	return nil

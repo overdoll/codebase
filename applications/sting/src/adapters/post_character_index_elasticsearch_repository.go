@@ -1,14 +1,10 @@
 package adapters
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"strconv"
-	"strings"
-	"text/template"
 
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
@@ -111,9 +107,6 @@ func marshalCharacterToDocument(char *post.Character) (*characterDocument, error
 }
 
 func (r PostsIndexElasticSearchRepository) IndexCharacters(ctx context.Context, characters []*post.Character) error {
-	if err := r.store.CreateBulkIndex(characterIndex); err != nil {
-		return err
-	}
 
 	for _, character := range characters {
 		char, err := marshalCharacterToDocument(character)
@@ -122,13 +115,16 @@ func (r PostsIndexElasticSearchRepository) IndexCharacters(ctx context.Context, 
 			return err
 		}
 
-		if err := r.store.AddToBulkIndex(ctx, character.ID(), char); err != nil {
+		_, err = r.client.
+			Index().
+			Index(characterIndexName).
+			Id(character.ID()).
+			BodyJson(char).
+			Do(ctx)
+
+		if err != nil {
 			return err
 		}
-	}
-
-	if err := r.store.CloseBulkIndex(ctx); err != nil {
-		return fmt.Errorf("unexpected error: %s", err)
 	}
 
 	return nil
@@ -136,35 +132,16 @@ func (r PostsIndexElasticSearchRepository) IndexCharacters(ctx context.Context, 
 
 func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context, cursor *paging.Cursor, search string) ([]*post.Character, error) {
 
-	t, err := template.New("searchCharacter").Parse(searchCharacters)
-
-	if err != nil {
-		return nil, err
-	}
+	builder := r.client.Search().
+		Index(characterIndexName)
 
 	if cursor == nil {
 		return nil, errors.New("cursor required")
 	}
 
-	curse, sort, count := cursor.BuildElasticsearch("created_at")
+	cursor.BuildElasticsearch(builder, "created_at")
 
-	data := struct {
-		Cursor string
-		Sort   string
-		Size   string
-	}{
-		Size:   count,
-		Sort:   sort,
-		Cursor: strings.TrimRight(curse, ","),
-	}
-
-	var query bytes.Buffer
-
-	if err := t.Execute(&query, data); err != nil {
-		return nil, err
-	}
-
-	response, err := r.store.Search(characterIndexName, query.String())
+	response, err := builder.Pretty(true).Do(ctx)
 
 	if err != nil {
 		return nil, err
@@ -172,11 +149,11 @@ func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context,
 
 	var characters []*post.Character
 
-	for _, char := range response.Hits {
+	for _, hit := range response.Hits.Hits {
 
 		var chr characterDocument
 
-		err := json.Unmarshal(char, &chr)
+		err := json.Unmarshal(hit.Source, &chr)
 
 		if err != nil {
 			return nil, err
@@ -192,10 +169,6 @@ func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context,
 }
 
 func (r PostsIndexElasticSearchRepository) IndexAllCharacters(ctx context.Context) error {
-
-	if err := r.store.CreateBulkIndex(characterIndexName); err != nil {
-		return err
-	}
 
 	scanner := scan.New(r.session,
 		scan.Config{
@@ -230,7 +203,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllCharacters(ctx context.Contex
 				return err
 			}
 
-			if err := r.store.AddToBulkIndex(ctx, m.Id, characterDocument{
+			doc := characterDocument{
 				Id:        c.Id,
 				Thumbnail: c.Thumbnail,
 				Name:      c.Name,
@@ -241,7 +214,16 @@ func (r PostsIndexElasticSearchRepository) IndexAllCharacters(ctx context.Contex
 					Title:     m.Title,
 					CreatedAt: strconv.FormatInt(parse2.Time().Unix(), 10),
 				},
-			}); err != nil {
+			}
+
+			_, err = r.client.
+				Index().
+				Index(characterIndexName).
+				Id(m.Id).
+				BodyJson(doc).
+				Do(ctx)
+
+			if err != nil {
 				return err
 			}
 		}
@@ -253,25 +235,18 @@ func (r PostsIndexElasticSearchRepository) IndexAllCharacters(ctx context.Contex
 		return err
 	}
 
-	if err := r.store.CloseBulkIndex(ctx); err != nil {
-		return fmt.Errorf("unexpected error: %s", err)
-	}
-
 	return nil
 }
 
 func (r PostsIndexElasticSearchRepository) DeleteCharacterIndex(ctx context.Context) error {
 
-	err := r.store.DeleteIndex(characterIndexName)
-
-	if err != nil {
+	if _, err := r.client.DeleteIndex(characterIndexName).Do(ctx); err != nil {
+		// Handle error
 		return err
 	}
 
-	err = r.store.CreateIndex(characterIndexName, characterIndex)
-
-	if err != nil {
-		return fmt.Errorf("failed to create character index: %s", err)
+	if _, err := r.client.CreateIndex(characterIndexName).BodyString(characterIndex).Do(ctx); err != nil {
+		return err
 	}
 
 	return nil

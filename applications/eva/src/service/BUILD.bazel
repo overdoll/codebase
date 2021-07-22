@@ -11,7 +11,6 @@ go_library(
         "//applications/eva/src/app/command",
         "//applications/eva/src/app/query",
         "//libraries/bootstrap",
-        "//libraries/elasticsearch",
     ],
 )
 

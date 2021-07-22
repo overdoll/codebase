@@ -1,14 +1,10 @@
 package adapters
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"strconv"
-	"strings"
-	"text/template"
 
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/segmentio/ksuid"
@@ -63,35 +59,16 @@ const mediaIndexName = "media"
 
 func (r PostsIndexElasticSearchRepository) SearchMedias(ctx context.Context, cursor *paging.Cursor, search string) ([]*post.Media, error) {
 
-	t, err := template.New("searchMedia").Parse(searchMedia)
-
-	if err != nil {
-		return nil, err
-	}
+	builder := r.client.Search().
+		Index(mediaIndexName)
 
 	if cursor == nil {
 		return nil, errors.New("cursor required")
 	}
 
-	curse, sort, count := cursor.BuildElasticsearch("created_at")
+	cursor.BuildElasticsearch(builder, "created_at")
 
-	data := struct {
-		Cursor string
-		Sort   string
-		Size   string
-	}{
-		Size:   count,
-		Sort:   sort,
-		Cursor: strings.TrimRight(curse, ","),
-	}
-
-	var query bytes.Buffer
-
-	if err := t.Execute(&query, data); err != nil {
-		return nil, err
-	}
-
-	response, err := r.store.Search(mediaIndexName, query.String())
+	response, err := builder.Pretty(true).Do(ctx)
 
 	if err != nil {
 		return nil, err
@@ -99,11 +76,11 @@ func (r PostsIndexElasticSearchRepository) SearchMedias(ctx context.Context, cur
 
 	var meds []*post.Media
 
-	for _, med := range response.Hits {
+	for _, hit := range response.Hits.Hits {
 
 		var md mediaDocument
 
-		err := json.Unmarshal(med, &md)
+		err := json.Unmarshal(hit.Source, &md)
 
 		if err != nil {
 			return nil, err
@@ -119,10 +96,6 @@ func (r PostsIndexElasticSearchRepository) SearchMedias(ctx context.Context, cur
 }
 
 func (r PostsIndexElasticSearchRepository) IndexAllMedia(ctx context.Context) error {
-
-	if err := r.store.CreateBulkIndex(mediaIndexName); err != nil {
-		return err
-	}
 
 	scanner := scan.New(r.session,
 		scan.Config{
@@ -144,12 +117,21 @@ func (r PostsIndexElasticSearchRepository) IndexAllMedia(ctx context.Context) er
 				return err
 			}
 
-			if err := r.store.AddToBulkIndex(ctx, m.Id, mediaDocument{
+			doc := mediaDocument{
 				Id:        m.Id,
 				Thumbnail: m.Thumbnail,
 				Title:     m.Title,
 				CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
-			}); err != nil {
+			}
+
+			_, err = r.client.
+				Index().
+				Index(mediaIndexName).
+				Id(m.Id).
+				BodyJson(doc).
+				Do(ctx)
+
+			if err != nil {
 				return err
 			}
 		}
@@ -161,25 +143,18 @@ func (r PostsIndexElasticSearchRepository) IndexAllMedia(ctx context.Context) er
 		return err
 	}
 
-	if err := r.store.CloseBulkIndex(ctx); err != nil {
-		return fmt.Errorf("unexpected error: %s", err)
-	}
-
 	return nil
 }
 
 func (r PostsIndexElasticSearchRepository) DeleteMediaIndex(ctx context.Context) error {
 
-	err := r.store.DeleteIndex(mediaIndexName)
-
-	if err != nil {
+	if _, err := r.client.DeleteIndex(mediaIndexName).Do(ctx); err != nil {
+		// Handle error
 		return err
 	}
 
-	err = r.store.CreateIndex(mediaIndexName, mediaIndex)
-
-	if err != nil {
-		return fmt.Errorf("failed to create media index: %s", err)
+	if _, err := r.client.CreateIndex(mediaIndexName).BodyString(mediaIndex).Do(ctx); err != nil {
+		return err
 	}
 
 	return nil

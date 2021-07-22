@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/olivere/elastic/v7"
 	"overdoll/applications/sting/src/adapters"
 	"overdoll/applications/sting/src/app"
 	"overdoll/applications/sting/src/app/command"
@@ -12,7 +13,6 @@ import (
 	storage "overdoll/libraries/aws"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
-	"overdoll/libraries/elasticsearch"
 )
 
 func NewApplication(ctx context.Context) (app.Application, func()) {
@@ -41,10 +41,10 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 		log.Fatalf("database session failed with errors: %s", err)
 	}
 
-	es, err := search.NewStore(ctx)
-
+	client, err := elastic.NewClient()
 	if err != nil {
-		log.Fatalf("es session failed with errors: %s", err)
+		// Handle error
+		log.Fatalf("elastic session failed with errors: %s", err)
 	}
 
 	awsSession, err := storage.CreateAWSSession()
@@ -54,7 +54,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 	}
 
 	postRepo := adapters.NewPostsCassandraRepository(session)
-	indexRepo := adapters.NewPostsIndexElasticSearchRepository(es, session)
+	indexRepo := adapters.NewPostsIndexElasticSearchRepository(client, session)
 
 	contentRepo := adapters.NewContentS3Repository(awsSession)
 

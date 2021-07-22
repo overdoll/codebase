@@ -19,7 +19,6 @@ go_library(
         "//applications/eva/src/domain/session",
         "//applications/eva/src/domain/token",
         "//libraries/crypt",
-        "//libraries/elasticsearch",
         "//libraries/paging",
         "//libraries/passport",
         "//libraries/scan",

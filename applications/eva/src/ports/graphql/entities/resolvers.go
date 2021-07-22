@@ -19,7 +19,7 @@ func (r EntityResolver) FindAccountByID(ctx context.Context, id relay.ID) (*type
 
 func (r EntityResolver) FindArtistByID(ctx context.Context, id relay.ID) (*types.Artist, error) {
 
-	acc, err := r.App.Queries.AccountById.Handle(ctx, id.GetID())
+	acc, err := dataloader.For(ctx).AccountById.Load(id.GetID())
 
 	if err != nil {
 		return nil, err
@@ -27,13 +27,13 @@ func (r EntityResolver) FindArtistByID(ctx context.Context, id relay.ID) (*types
 
 	return &types.Artist{
 		ID:      id,
-		Account: types.MarshalAccountToGraphQL(acc),
+		Account: acc,
 	}, nil
 }
 
 func (r EntityResolver) FindContributorByID(ctx context.Context, id relay.ID) (*types.Contributor, error) {
 
-	acc, err := r.App.Queries.AccountById.Handle(ctx, id.GetID())
+	acc, err := dataloader.For(ctx).AccountById.Load(id.GetID())
 
 	if err != nil {
 		return nil, err
@@ -41,13 +41,13 @@ func (r EntityResolver) FindContributorByID(ctx context.Context, id relay.ID) (*
 
 	return &types.Contributor{
 		ID:      id,
-		Account: types.MarshalAccountToGraphQL(acc),
+		Account: acc,
 	}, nil
 }
 
 func (r EntityResolver) FindModeratorByID(ctx context.Context, id relay.ID) (*types.Moderator, error) {
 
-	acc, err := r.App.Queries.AccountById.Handle(ctx, id.GetID())
+	acc, err := dataloader.For(ctx).AccountById.Load(id.GetID())
 
 	if err != nil {
 		return nil, err
@@ -55,7 +55,7 @@ func (r EntityResolver) FindModeratorByID(ctx context.Context, id relay.ID) (*ty
 
 	return &types.Moderator{
 		ID:      id,
-		Account: types.MarshalAccountToGraphQL(acc),
+		Account: acc,
 	}, nil
 }
 
