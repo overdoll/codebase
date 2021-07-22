@@ -63,8 +63,6 @@ export default function (props: Props): Node {
 
   const currentPost = data.pendingPosts?.edges[currentIndex]?.node
 
-  console.log(initialQuery)
-
   const nextPage = () => {
     if (currentIndex + 1 === data.pendingPosts?.edges.length) {
       loadNext(

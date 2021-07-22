@@ -17,7 +17,7 @@ describe('Upload', () => {
     window.indexedDB.deleteDatabase('overdoll.uploads')
     window.indexedDB.deleteDatabase('uppy-blobs')
     cy.clearLocalStorage()
-    cy.login('artist_verified_test@overdoll.com')
+    cy.login('artist_unverified_test@overdoll.com')
 
     cy.visit('/upload')
 
@@ -51,7 +51,7 @@ describe('Upload', () => {
     cy.findByRole('textbox', { placeholder: /Search for an artist/u })
       .type(artist)
 
-    cy.findByText(artist).click()
+    cy.findAllByText(artist).first().click()
 
     cy.findByText(/Tag your post/u).should('exist')
 
@@ -182,6 +182,8 @@ describe('Upload', () => {
 
     // Submit
     cy.findByRole('button', { name: /Submit/u }).click()
+
+    cy.findByText(/Your post was submitted for approval/u).should('exist')
   })
 
   it('should be able to add extra media', () => {
