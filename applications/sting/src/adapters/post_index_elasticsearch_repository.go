@@ -239,6 +239,14 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, curs
 
 	query := cursor.BuildElasticsearch(builder, "posted_at")
 
+	if filter.ModeratorId() != "" {
+		query.Must(elastic.NewMatchQuery(filter.ModeratorId(), "moderator_id"))
+	}
+
+	if filter.ContributorId() != "" {
+		query.Must(elastic.NewMatchQuery(filter.ModeratorId(), "contributor_id"))
+	}
+
 	builder.Query(query)
 
 	response, err := builder.Pretty(true).Do(ctx)

@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/gocql/gocql"
+	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/segmentio/ksuid"
 	"overdoll/applications/sting/src/domain/post"
@@ -127,6 +128,10 @@ func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context,
 	}
 
 	query := cursor.BuildElasticsearch(builder, "created_at")
+
+	if search != "" {
+		query.Must(elastic.NewMultiMatchQuery(search, "name").Operator("and"))
+	}
 
 	builder.Query(query)
 

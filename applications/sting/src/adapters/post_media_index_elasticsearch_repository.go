@@ -6,6 +6,7 @@ import (
 	"errors"
 	"strconv"
 
+	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/segmentio/ksuid"
 	"overdoll/applications/sting/src/domain/post"
@@ -54,6 +55,10 @@ func (r PostsIndexElasticSearchRepository) SearchMedias(ctx context.Context, cur
 	}
 
 	query := cursor.BuildElasticsearch(builder, "created_at")
+
+	if search != "" {
+		query.Must(elastic.NewMultiMatchQuery(search, "title").Operator("and"))
+	}
 
 	builder.Query(query)
 
