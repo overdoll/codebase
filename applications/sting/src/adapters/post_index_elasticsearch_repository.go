@@ -237,7 +237,9 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, curs
 		return nil, errors.New("cursor required")
 	}
 
-	cursor.BuildElasticsearch(builder, "posted_at")
+	query := cursor.BuildElasticsearch(builder, "posted_at")
+
+	builder.Query(query)
 
 	response, err := builder.Pretty(true).Do(ctx)
 

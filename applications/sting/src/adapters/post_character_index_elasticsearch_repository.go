@@ -126,7 +126,9 @@ func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context,
 		return nil, errors.New("cursor required")
 	}
 
-	cursor.BuildElasticsearch(builder, "created_at")
+	query := cursor.BuildElasticsearch(builder, "created_at")
+
+	builder.Query(query)
 
 	response, err := builder.Pretty(true).Do(ctx)
 

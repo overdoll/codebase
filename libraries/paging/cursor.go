@@ -124,15 +124,15 @@ func (c *Cursor) BuildCassandra(builder *qb.SelectBuilder, column string) {
 	}
 }
 
-func (c *Cursor) BuildElasticsearch(builder *elastic.SearchService, column string) {
+func (c *Cursor) BuildElasticsearch(builder *elastic.SearchService, column string) *elastic.BoolQuery {
+	query := elastic.NewBoolQuery()
+
 	if c.After() != nil {
-		rangeQuery := elastic.NewRangeQuery(column).Lt(*c.After())
-		builder.Query(elastic.NewBoolQuery().Must(rangeQuery))
+		query.Must(elastic.NewRangeQuery(column).Lt(*c.After()))
 	}
 
 	if c.Before() != nil {
-		rangeQuery := elastic.NewRangeQuery(column).Gt(*c.Before())
-		builder.Query(elastic.NewBoolQuery().Must(rangeQuery))
+		query.Must(elastic.NewRangeQuery(column).Gt(*c.Before()))
 	}
 
 	if c.Last() != nil {
@@ -146,4 +146,6 @@ func (c *Cursor) BuildElasticsearch(builder *elastic.SearchService, column strin
 	if limit > 0 {
 		builder.Size(limit)
 	}
+
+	return query
 }
