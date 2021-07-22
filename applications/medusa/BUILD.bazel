@@ -118,6 +118,7 @@ _RUNTIME_DEPS = [
     "@npm//protobufjs",
     "@npm//@casl/ability",
     "@npm//mime-types",
+    "@npm//@casl/ability",
 ]
 
 TEST_DEPS = [
