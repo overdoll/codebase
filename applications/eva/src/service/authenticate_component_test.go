@@ -42,11 +42,11 @@ func TestLogout_user(t *testing.T) {
 func TestAccountAuthenticate_existing(t *testing.T) {
 	t.Parallel()
 
-	redeemCookie, _, pass := authenticateAndRedeemCookie(t, "poisonminion_test@overdoll.com")
+	redeemCookie, _, pass := authenticateAndVerifyToken(t, "poisonminion_test@overdoll.com")
 
 	// the VerifyAuthenticationToken function will also log you in, if you redeem a cookie that's for a registered user
 	// so we check for that here
-	assert.Equal(t, true, redeemCookie.RedeemAuthenticationToken.AccountStatus.Authenticated)
+	assert.Equal(t, true, redeemCookie.VerifyAuthenticationTokenAndAttemptAccountAccessGrant.AccountStatus.Authenticated)
 
 	// the third parameter of getClient contains the most up-to-date version of the passport
 	modified := pass.GetPassport()
@@ -67,16 +67,16 @@ func TestAccountAuthenticate_from_another_session(t *testing.T) {
 
 	otpCookie := getOTPTokenFromJar(t, httpUser.Jar)
 
-	assert.Equal(t, authenticate.Authenticate.Ok, true)
+	assert.Equal(t, authenticate.GrantAuthenticationToken.Ok, true)
 
 	clientFromAnotherSession, _, _ := getHttpClient(t, passport.FreshPassport())
 
-	redeemCookie := qRedeemAuthenticationToken(t, clientFromAnotherSession, otpCookie.Value)
+	redeemCookie := verifyAuthenticationToken(t, clientFromAnotherSession, otpCookie.Value)
 
 	// should have indicated that it was redeemed by another session
-	assert.Equal(t, false, redeemCookie.RedeemAuthenticationToken.SameSession)
+	assert.Equal(t, false, redeemCookie.VerifyAuthenticationTokenAndAttemptAccountAccessGrant.SameSession)
 
-	authRedeemed := qAuthenticatedAccount(t, client)
+	authRedeemed := viewer(t, client)
 
 	// since our user's cookie was redeemed from another session, when the user runs this query
 	// the next time, it should just log them in
@@ -194,11 +194,11 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 	require.True(t, settings.AccountSettings.Security.MultiFactor.MultiFactorTotpConfigured)
 
 	// log in with TOTP
-	redeemCookie, client, pass := authenticateAndRedeemCookie(t, testAccountEmail)
+	redeemCookie, client, pass := authenticateAndVerifyToken(t, testAccountEmail)
 
-	assert.NotNil(t, redeemCookie.RedeemAuthenticationToken.AccountStatus.MultiFactor)
+	assert.NotNil(t, redeemCookie.VerifyAuthenticationTokenAndAttemptAccountAccessGrant.AccountStatus.MultiFactor)
 	// when we try to login, TOTP should be in here to tell the user that they need to authenticate with MFA
-	assert.Contains(t, redeemCookie.RedeemAuthenticationToken.AccountStatus.MultiFactor, types.MultiFactorTypeEnumTotp)
+	assert.Contains(t, redeemCookie.VerifyAuthenticationTokenAndAttemptAccountAccessGrant.AccountStatus.MultiFactor, types.MultiFactorTypeEnumTotp)
 
 	// generate the OTP code for authentication
 	otp, err = totp.GenerateCode(totpSecret, time.Now())
@@ -216,9 +216,9 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 	assert.Equal(t, testAccountId, modified.AccountID())
 
 	// log in with a Recovery Code
-	redeemCookie, client, pass = authenticateAndRedeemCookie(t, testAccountEmail)
+	redeemCookie, client, pass = authenticateAndVerifyToken(t, testAccountEmail)
 
-	assert.NotNil(t, redeemCookie.RedeemAuthenticationToken.AccountStatus.MultiFactor)
+	assert.NotNil(t, redeemCookie.VerifyAuthenticationTokenAndAttemptAccountAccessGrant.AccountStatus.MultiFactor)
 
 	var authenticateRecoveryCode AuthenticateRecoveryCode
 	err = client.Mutate(context.Background(), &authenticateRecoveryCode, map[string]interface{}{
@@ -246,9 +246,9 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 	require.False(t, settings.AccountSettings.Security.MultiFactor.MultiFactorTotpConfigured)
 
 	// attempt one last login and ensure it doesn't ask for a MFA code
-	redeemCookie, client, pass = authenticateAndRedeemCookie(t, testAccountEmail)
+	redeemCookie, client, pass = authenticateAndVerifyToken(t, testAccountEmail)
 
-	assert.Equal(t, true, redeemCookie.RedeemAuthenticationToken.AccountStatus.Registered)
+	assert.Equal(t, true, redeemCookie.VerifyAuthenticationTokenAndAttemptAccountAccessGrant.AccountStatus.Registered)
 
 	modified = pass.GetPassport()
 
@@ -281,26 +281,26 @@ func TestAccountRegistration_complete(t *testing.T) {
 	// make sure OTPKey is not empty
 	require.True(t, otpCookie != nil)
 
-	assert.Equal(t, true, authenticate.Authenticate.Ok)
+	assert.Equal(t, true, authenticate.GrantAuthenticationToken.Ok)
 
 	// check our auth query and make sure that it returns the correct cookie values
-	authenticationToken := qAuthenticationTokenStatus(t, client)
+	authenticationToken := viewAuthenticationToken(t, client)
 
 	// expect that the cookie is not redeemed
-	assert.Equal(t, false, authenticationToken.AuthenticationTokenStatus.Redeemed)
+	assert.Equal(t, false, authenticationToken.ViewAuthenticationToken.Redeemed)
 
-	redeemCookie := qRedeemAuthenticationToken(t, client, otpCookie.Value)
+	redeemCookie := verifyAuthenticationToken(t, client, otpCookie.Value)
 
 	// make sure cookie is redeemed
-	assert.Equal(t, true, redeemCookie.RedeemAuthenticationToken.Redeemed)
+	assert.Equal(t, true, redeemCookie.VerifyAuthenticationTokenAndAttemptAccountAccessGrant.Redeemed)
 	// make sure in the same session
-	assert.Equal(t, true, redeemCookie.RedeemAuthenticationToken.SameSession)
+	assert.Equal(t, true, redeemCookie.VerifyAuthenticationTokenAndAttemptAccountAccessGrant.SameSession)
 
 	// check our auth query and make sure that it returns the correct cookie values
-	authenticationToken = qAuthenticationTokenStatus(t, client)
+	authenticationToken = viewAuthenticationToken(t, client)
 
 	// expect that our authentication query sees the cookie as redeemed
-	assert.Equal(t, true, authenticationToken.AuthenticationTokenStatus.Redeemed)
+	assert.Equal(t, true, authenticationToken.ViewAuthenticationToken.Redeemed)
 
 	// now, we register (cookie is redeemed from above query)
 	var register Register

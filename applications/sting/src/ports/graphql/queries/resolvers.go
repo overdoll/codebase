@@ -60,7 +60,7 @@ func (r *QueryResolver) Post(ctx context.Context, reference string) (*types.Post
 	return types.MarshalPostToGraphQL(pendingPost), nil
 }
 
-func (r *QueryResolver) Categories(ctx context.Context, after *string, before *string, first *int, last *int, name *string) (*types.CategoryConnection, error) {
+func (r *QueryResolver) Categories(ctx context.Context, after *string, before *string, first *int, last *int, title *string) (*types.CategoryConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)
 
@@ -70,8 +70,8 @@ func (r *QueryResolver) Categories(ctx context.Context, after *string, before *s
 
 	search := ""
 
-	if name != nil {
-		search = *name
+	if title != nil {
+		search = *title
 	}
 
 	results, err := r.App.Queries.SearchCategories.Handle(ctx, cursor, search)

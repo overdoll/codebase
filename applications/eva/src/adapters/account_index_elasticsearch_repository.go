@@ -36,7 +36,7 @@ const accountIndex = `
 				"type": "keyword"
 			},
 			"username": {
-				"type": "keyword"
+				"type": "text"
 			},
 			"verified": {
 				"type": "boolean"
@@ -73,6 +73,10 @@ func (r AccountIndexElasticSearchRepository) SearchAccounts(ctx context.Context,
 
 	query := cursor.BuildElasticsearch(builder, "created_at")
 
+	if username != "" {
+		query.Must(elastic.NewMatchQuery("username", username))
+	}
+	
 	builder.Query(query)
 
 	response, err := builder.Pretty(true).Do(ctx)

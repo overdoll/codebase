@@ -8,7 +8,6 @@ import (
 	"os"
 	"testing"
 
-	"github.com/bmizerany/assert"
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc"
@@ -34,15 +33,15 @@ type TestUser struct {
 	Username string `faker:"username"`
 }
 
-type Authenticate struct {
-	Authenticate types.Response `graphql:"authenticate(data: $data)"`
+type GrantAuthenticationToken struct {
+	GrantAuthenticationToken types.GrantAuthenticationTokenPayload `graphql:"grantAuthenticationToken(input: $input)"`
 }
 
-func mAuthenticate(t *testing.T, client *graphql.Client, email string) Authenticate {
-	var authenticate Authenticate
+func mAuthenticate(t *testing.T, client *graphql.Client, email string) GrantAuthenticationToken {
+	var authenticate GrantAuthenticationToken
 
 	err := client.Mutate(context.Background(), &authenticate, map[string]interface{}{
-		"data": &types.AuthenticationInput{Email: email},
+		"input": &types.GrantAuthenticationTokenInput{Email: email},
 	})
 
 	require.NoError(t, err)
@@ -50,15 +49,15 @@ func mAuthenticate(t *testing.T, client *graphql.Client, email string) Authentic
 	return authenticate
 }
 
-type RedeemAuthenticationToken struct {
-	RedeemAuthenticationToken *types.AuthenticationToken `graphql:"redeemAuthenticationToken(token: $token)"`
+type VerifyAuthenticationTokenAndAttemptAccountAccessGrant struct {
+	VerifyAuthenticationTokenAndAttemptAccountAccessGrant *types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload `graphql:"verifyAuthenticationTokenAndAttemptAccountAccessGrant(input: $input)"`
 }
 
-func qRedeemAuthenticationToken(t *testing.T, client *graphql.Client, cookie string) RedeemAuthenticationToken {
-	var redeemCookie RedeemAuthenticationToken
+func verifyAuthenticationToken(t *testing.T, client *graphql.Client, cookie string) VerifyAuthenticationTokenAndAttemptAccountAccessGrant {
+	var redeemCookie VerifyAuthenticationTokenAndAttemptAccountAccessGrant
 
-	err := client.Query(context.Background(), &redeemCookie, map[string]interface{}{
-		"token": graphql.String(cookie),
+	err := client.Mutate(context.Background(), &redeemCookie, map[string]interface{}{
+		"input": &types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput{AuthenticationTokenID: cookie},
 	})
 
 	require.NoError(t, err)
@@ -67,7 +66,7 @@ func qRedeemAuthenticationToken(t *testing.T, client *graphql.Client, cookie str
 }
 
 // helper function - basically runs the "authentication" flow - run authenticate mutation, grab cookie from jar, and redeem the cookie
-func authenticateAndRedeemCookie(t *testing.T, email string) (RedeemAuthenticationToken, *graphql.Client, *clients.ClientPassport) {
+func authenticateAndVerifyToken(t *testing.T, email string) (VerifyAuthenticationTokenAndAttemptAccountAccessGrant, *graphql.Client, *clients.ClientPassport) {
 
 	client, httpUser, pass := getHttpClient(t, passport.FreshPassport())
 
@@ -75,35 +74,22 @@ func authenticateAndRedeemCookie(t *testing.T, email string) (RedeemAuthenticati
 
 	otpCookie := getOTPTokenFromJar(t, httpUser.Jar)
 
-	assert.Equal(t, authenticate.Authenticate.Ok, true)
+	require.NotNil(t, authenticate.GrantAuthenticationToken.AuthenticationToken)
+	require.Equal(t, email, authenticate.GrantAuthenticationToken.AuthenticationToken.Email)
 
-	ck := qRedeemAuthenticationToken(t, client, otpCookie.Value)
+	ck := verifyAuthenticationToken(t, client, otpCookie.Value)
 
 	// make sure cookie is valid
-	require.NotNil(t, ck.RedeemAuthenticationToken)
+	require.NotNil(t, ck.VerifyAuthenticationTokenAndAttemptAccountAccessGrant)
 
 	return ck, client, pass
 }
 
-type AccountSettings struct {
-	AccountSettings types.AccountSettings `graphql:"accountSettings()"`
-}
-
-func qAccountSettings(t *testing.T, client *graphql.Client) AccountSettings {
-	var accountSettings AccountSettings
-
-	err := client.Query(context.Background(), &accountSettings, nil)
-
-	require.NoError(t, err)
-
-	return accountSettings
-}
-
 type Viewer struct {
-	Viewer *types.Viewer `graphql:"viewer()"`
+	Viewer *types.Account `graphql:"viewer()"`
 }
 
-func qAuthenticatedAccount(t *testing.T, client *graphql.Client) Viewer {
+func viewer(t *testing.T, client *graphql.Client) Viewer {
 	var authRedeemed Viewer
 
 	err := client.Query(context.Background(), &authRedeemed, nil)
@@ -113,12 +99,12 @@ func qAuthenticatedAccount(t *testing.T, client *graphql.Client) Viewer {
 	return authRedeemed
 }
 
-type AuthenticationTokenStatus struct {
-	AuthenticationTokenStatus *types.AuthenticationToken
+type ViewAuthenticationToken struct {
+	ViewAuthenticationToken *types.AuthenticationToken
 }
 
-func qAuthenticationTokenStatus(t *testing.T, client *graphql.Client) AuthenticationTokenStatus {
-	var authRedeemed AuthenticationTokenStatus
+func viewAuthenticationToken(t *testing.T, client *graphql.Client) ViewAuthenticationToken {
+	var authRedeemed ViewAuthenticationToken
 
 	err := client.Query(context.Background(), &authRedeemed, nil)
 

@@ -179,7 +179,7 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		Categories         func(childComplexity int, after *string, before *string, first *int, last *int, name *string) int
+		Categories         func(childComplexity int, after *string, before *string, first *int, last *int, title *string) int
 		Characters         func(childComplexity int, after *string, before *string, first *int, last *int, name *string, mediaTitle *string) int
 		Medias             func(childComplexity int, after *string, before *string, first *int, last *int, title *string) int
 		Post               func(childComplexity int, reference string) int
@@ -219,7 +219,7 @@ type MutationResolver interface {
 	CreatePost(ctx context.Context, input types.CreatePostInput) (*types.CreatePostPayload, error)
 }
 type QueryResolver interface {
-	Categories(ctx context.Context, after *string, before *string, first *int, last *int, name *string) (*types.CategoryConnection, error)
+	Categories(ctx context.Context, after *string, before *string, first *int, last *int, title *string) (*types.CategoryConnection, error)
 	Medias(ctx context.Context, after *string, before *string, first *int, last *int, title *string) (*types.MediaConnection, error)
 	Characters(ctx context.Context, after *string, before *string, first *int, last *int, name *string, mediaTitle *string) (*types.CharacterConnection, error)
 	Post(ctx context.Context, reference string) (*types.Post, error)
@@ -786,7 +786,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Categories(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["name"].(*string)), true
+		return e.complexity.Query.Categories(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["title"].(*string)), true
 
 	case "Query.characters":
 		if e.complexity.Query.Characters == nil {
@@ -974,7 +974,7 @@ extend type Query {
     last: Int
 
     # filter by the name of the category
-    name: String
+    title: String
   ): CategoryConnection!
 }
 
@@ -1860,14 +1860,14 @@ func (ec *executionContext) field_Query_categories_args(ctx context.Context, raw
 	}
 	args["last"] = arg3
 	var arg4 *string
-	if tmp, ok := rawArgs["name"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+	if tmp, ok := rawArgs["title"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
 		arg4, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["name"] = arg4
+	args["title"] = arg4
 	return args, nil
 }
 
@@ -4489,7 +4489,7 @@ func (ec *executionContext) _Query_categories(ctx context.Context, field graphql
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Categories(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["name"].(*string))
+		return ec.resolvers.Query().Categories(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["title"].(*string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
