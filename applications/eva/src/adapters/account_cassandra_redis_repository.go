@@ -8,6 +8,7 @@ import (
 	"github.com/go-redis/redis/v8"
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
+	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/eva/src/domain/account"
 )
@@ -71,6 +72,7 @@ func marshalUserToDatabase(usr *account.Account) *accounts {
 
 // GetAccountById - Get user using the ID
 func (r AccountRepository) GetAccountById(ctx context.Context, id string) (*account.Account, error) {
+
 	var accountInstance accounts
 
 	queryUser := r.session.
@@ -101,6 +103,47 @@ func (r AccountRepository) GetAccountById(ctx context.Context, id string) (*acco
 		accountInstance.LockedReason,
 		accountInstance.MultiFactorEnabled,
 	), nil
+}
+
+// GetAccountsById - get accounts in bulk
+func (r AccountRepository) GetAccountsById(ctx context.Context, ids []string) ([]*account.Account, error) {
+
+	var accountInstances []accounts
+
+	queryUser := qb.
+		Select(accountTable.Name()).
+		Where(qb.In("id")).
+		Query(r.session).
+		Consistency(gocql.LocalOne).
+		Bind(ids)
+
+	if err := queryUser.Select(&accountInstances); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return nil, account.ErrAccountNotFound
+		}
+
+		return nil, fmt.Errorf("select() failed: '%s", err)
+	}
+
+	var accounts []*account.Account
+
+	for _, accountInstance := range accountInstances {
+		accounts = append(accounts, account.UnmarshalAccountFromDatabase(
+			accountInstance.Id,
+			accountInstance.Username,
+			accountInstance.Email,
+			accountInstance.Roles,
+			accountInstance.Verified,
+			accountInstance.Avatar,
+			accountInstance.Locked,
+			accountInstance.LockedUntil,
+			accountInstance.LockedReason,
+			accountInstance.MultiFactorEnabled,
+		))
+	}
+
+	return accounts, nil
 }
 
 // GetAccountByEmail - Get user using the email

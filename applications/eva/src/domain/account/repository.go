@@ -7,6 +7,7 @@ import (
 )
 
 type Repository interface {
+	GetAccountsById(ctx context.Context, accountId []string) ([]*Account, error)
 	GetAccountById(ctx context.Context, accountId string) (*Account, error)
 	GetAccountByEmail(ctx context.Context, email string) (*Account, error)
 	CreateAccount(ctx context.Context, account *Account) error

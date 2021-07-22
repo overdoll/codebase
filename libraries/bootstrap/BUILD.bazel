@@ -4,6 +4,7 @@ go_library(
     name = "bootstrap",
     srcs = [
         "bootstrap.go",
+        "cassandra_query_observer.go",
         "database.go",
         "grpc.go",
         "http.go",

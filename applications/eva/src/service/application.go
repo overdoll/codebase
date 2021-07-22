@@ -85,6 +85,7 @@ func createApplication(ctx context.Context) app.Application {
 		Queries: app.Queries{
 			SearchAccounts:                  query.NewSearchAccountsHandler(accountIndexRepo),
 			AccountById:                     query.NewAccountByIdHandler(accountRepo),
+			AccountsById:                    query.NewAccountsByIdHandler(accountRepo),
 			AccountByEmail:                  query.NewAccountByEmailHandler(accountRepo),
 			AccountByUsername:               query.NewAccountByUsernameHandler(accountRepo),
 			AccountEmailsByAccount:          query.NewGetAccountEmailsHandler(accountRepo),

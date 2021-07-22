@@ -4,6 +4,7 @@ go_library(
     name = "graphql",
     srcs = [
         "URI.go",
+        "dataloader.go",
         "new.go",
         "preloads.go",
     ],

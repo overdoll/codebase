@@ -14,6 +14,7 @@ go_library(
         "//applications/eva/src/app",
         "//applications/eva/src/domain/account",
         "//applications/eva/src/ports/graphql",
+        "//applications/eva/src/ports/graphql/dataloader",
         "//applications/eva/src/service",
         "//libraries/graphql",
         "//libraries/router",

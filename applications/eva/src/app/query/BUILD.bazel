@@ -13,6 +13,7 @@ go_library(
         "account_sessions_by_account.go",
         "account_username_by_username.go",
         "account_usernames_by_account.go",
+        "accounts_by_id.go",
         "authentication_token_by_id.go",
         "is_account_multi_factor_totp_enabled.go",
         "search_accounts.go",

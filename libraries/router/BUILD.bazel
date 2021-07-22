@@ -6,7 +6,9 @@ go_library(
     importpath = "overdoll/libraries/router",
     visibility = ["//visibility:public"],
     deps = [
-        "//libraries/middleware",
+        "//libraries/bootstrap",
+        "//libraries/helpers",
+        "//libraries/passport",
         "@com_github_gin_gonic_gin//:gin",
     ],
 )

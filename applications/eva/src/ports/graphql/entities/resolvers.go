@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"overdoll/applications/eva/src/app"
+	"overdoll/applications/eva/src/ports/graphql/dataloader"
 	"overdoll/applications/eva/src/ports/graphql/types"
 	"overdoll/libraries/graphql/relay"
 )
@@ -13,14 +14,7 @@ type EntityResolver struct {
 }
 
 func (r EntityResolver) FindAccountByID(ctx context.Context, id relay.ID) (*types.Account, error) {
-
-	acc, err := r.App.Queries.AccountById.Handle(ctx, id.GetID())
-
-	if err != nil {
-		return nil, err
-	}
-
-	return types.MarshalAccountToGraphQL(acc), nil
+	return dataloader.For(ctx).AccountById.Load(id.GetID())
 }
 
 func (r EntityResolver) FindArtistByID(ctx context.Context, id relay.ID) (*types.Artist, error) {

@@ -44,3 +44,4 @@ func InitializeDatabaseSessionNoKeyspace() (gocqlx.Session, error) {
 
 	return initializeDatabaseSession("")
 }
+
