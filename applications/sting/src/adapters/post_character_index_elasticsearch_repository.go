@@ -1,10 +1,14 @@
 package adapters
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"strconv"
+	"strings"
+	"text/template"
 
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
@@ -52,6 +56,9 @@ const characterIndex = `
 					"title": {
 						"type": "text",
 						"analyzer": "english"
+					},
+					"created_at": {
+						"type": "date"
 					}
 				}
 			}
@@ -60,18 +67,17 @@ const characterIndex = `
 }`
 
 const searchCharacters = `
-	"query" : {
-		"multi_match" : {
-			"query" : %q,
-			"fields" : ["name^100"],
-			"operator" : "and"
+    "query" : {
+		"bool": {
+			"must": [
+				{{.Cursor}}
+			]
 		}
 	},
-	"size" : 5`
-
-const allCharacters = `
-	"query" : { "match_all" : {} },
-	"size" : 5`
+	{{.Size}}
+    {{.Sort}}
+	"track_total_hits": false
+`
 
 const characterIndexName = "characters"
 
@@ -79,6 +85,12 @@ func marshalCharacterToDocument(char *post.Character) (*characterDocument, error
 	media := char.Media()
 
 	parse, err := ksuid.Parse(char.ID())
+
+	if err != nil {
+		return nil, err
+	}
+
+	parse2, err := ksuid.Parse(char.ID())
 
 	if err != nil {
 		return nil, err
@@ -93,6 +105,7 @@ func marshalCharacterToDocument(char *post.Character) (*characterDocument, error
 			Id:        media.ID(),
 			Thumbnail: media.Thumbnail(),
 			Title:     media.Title(),
+			CreatedAt: strconv.FormatInt(parse2.Time().Unix(), 10),
 		},
 	}, nil
 }
@@ -122,15 +135,36 @@ func (r PostsIndexElasticSearchRepository) IndexCharacters(ctx context.Context, 
 }
 
 func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context, cursor *paging.Cursor, search string) ([]*post.Character, error) {
-	var query string
 
-	if search == "" {
-		query = allCharacters
-	} else {
-		query = fmt.Sprintf(searchCharacters, search)
+	t, err := template.New("searchCharacter").Parse(searchCharacters)
+
+	if err != nil {
+		return nil, err
 	}
 
-	response, err := r.store.Search(characterIndexName, query)
+	if cursor == nil {
+		return nil, errors.New("cursor required")
+	}
+
+	curse, sort, count := cursor.BuildElasticsearch("created_at")
+
+	data := struct {
+		Cursor string
+		Sort   string
+		Size   string
+	}{
+		Size:   count,
+		Sort:   sort,
+		Cursor: strings.TrimRight(curse, ","),
+	}
+
+	var query bytes.Buffer
+
+	if err := t.Execute(&query, data); err != nil {
+		return nil, err
+	}
+
+	response, err := r.store.Search(characterIndexName, query.String())
 
 	if err != nil {
 		return nil, err
@@ -159,7 +193,7 @@ func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context,
 
 func (r PostsIndexElasticSearchRepository) IndexAllCharacters(ctx context.Context) error {
 
-	if err := r.store.CreateBulkIndex(characterIndex); err != nil {
+	if err := r.store.CreateBulkIndex(characterIndexName); err != nil {
 		return err
 	}
 
@@ -180,11 +214,17 @@ func (r PostsIndexElasticSearchRepository) IndexAllCharacters(ctx context.Contex
 			var m media
 
 			// get media connected to this character document
-			if err := r.session.Query(mediaTable.Get()).Consistency(gocql.One).Get(&m); err != nil {
+			if err := r.session.Query(mediaTable.Get()).Consistency(gocql.One).Bind(c.MediaId).Get(&m); err != nil {
 				return err
 			}
 
-			parse, err := ksuid.Parse(m.Id)
+			parse, err := ksuid.Parse(c.Id)
+
+			if err != nil {
+				return err
+			}
+
+			parse2, err := ksuid.Parse(m.Id)
 
 			if err != nil {
 				return err
@@ -199,6 +239,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllCharacters(ctx context.Contex
 					Id:        m.Id,
 					Thumbnail: m.Thumbnail,
 					Title:     m.Title,
+					CreatedAt: strconv.FormatInt(parse2.Time().Unix(), 10),
 				},
 			}); err != nil {
 				return err
@@ -224,7 +265,7 @@ func (r PostsIndexElasticSearchRepository) DeleteCharacterIndex(ctx context.Cont
 	err := r.store.DeleteIndex(characterIndexName)
 
 	if err != nil {
-
+		return err
 	}
 
 	err = r.store.CreateIndex(characterIndexName, characterIndex)

@@ -1,10 +1,14 @@
 package adapters
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"strconv"
+	"strings"
+	"text/template"
 
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/segmentio/ksuid"
@@ -43,31 +47,51 @@ const mediaIndex = `
 }`
 
 const searchMedia = `
-	"query" : {
-		"multi_match" : {
-			"query" : %q,
-			"fields" : ["title^100"],
-			"operator" : "and"
+    "query" : {
+		"bool": {
+			"must": [
+				{{.Cursor}}
+			]
 		}
 	},
-	"size" : 5`
-
-const allMedia = `
-	"query" : { "match_all" : {} },
-	"size" : 5`
+	{{.Size}}
+    {{.Sort}}
+	"track_total_hits": false
+`
 
 const mediaIndexName = "media"
 
 func (r PostsIndexElasticSearchRepository) SearchMedias(ctx context.Context, cursor *paging.Cursor, search string) ([]*post.Media, error) {
-	var query string
 
-	if search == "" {
-		query = allMedia
-	} else {
-		query = fmt.Sprintf(searchMedia, search)
+	t, err := template.New("searchMedia").Parse(searchMedia)
+
+	if err != nil {
+		return nil, err
 	}
 
-	response, err := r.store.Search(mediaIndexName, query)
+	if cursor == nil {
+		return nil, errors.New("cursor required")
+	}
+
+	curse, sort, count := cursor.BuildElasticsearch("created_at")
+
+	data := struct {
+		Cursor string
+		Sort   string
+		Size   string
+	}{
+		Size:   count,
+		Sort:   sort,
+		Cursor: strings.TrimRight(curse, ","),
+	}
+
+	var query bytes.Buffer
+
+	if err := t.Execute(&query, data); err != nil {
+		return nil, err
+	}
+
+	response, err := r.store.Search(mediaIndexName, query.String())
 
 	if err != nil {
 		return nil, err
@@ -96,7 +120,7 @@ func (r PostsIndexElasticSearchRepository) SearchMedias(ctx context.Context, cur
 
 func (r PostsIndexElasticSearchRepository) IndexAllMedia(ctx context.Context) error {
 
-	if err := r.store.CreateBulkIndex(PostIndexName); err != nil {
+	if err := r.store.CreateBulkIndex(mediaIndexName); err != nil {
 		return err
 	}
 
@@ -149,7 +173,7 @@ func (r PostsIndexElasticSearchRepository) DeleteMediaIndex(ctx context.Context)
 	err := r.store.DeleteIndex(mediaIndexName)
 
 	if err != nil {
-
+		return err
 	}
 
 	err = r.store.CreateIndex(mediaIndexName, mediaIndex)

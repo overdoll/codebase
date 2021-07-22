@@ -7,38 +7,6 @@ import (
 	"overdoll/libraries/paging"
 )
 
-func MarshalPostToGraphQLConnection(results []*post.Post, cursor *paging.Cursor) *PostConnection {
-
-	var pendingPostEdges []*PostEdge
-
-	for _, pending := range results {
-		pendingPostEdges = append(pendingPostEdges, &PostEdge{
-			Cursor: pending.Cursor(),
-			Node:   MarshalPostToGraphQL(pending),
-		})
-	}
-
-	var startCursor *string
-	var endCursor *string
-
-	if len(results) > 0 {
-		res := results[0].Cursor()
-		startCursor = &res
-		res = results[len(results)-1].Cursor()
-		endCursor = &res
-	}
-
-	return &PostConnection{
-		Edges: pendingPostEdges,
-		PageInfo: &relay.PageInfo{
-			HasNextPage:     false,
-			HasPreviousPage: false,
-			StartCursor:     startCursor,
-			EndCursor:       endCursor,
-		},
-	}
-}
-
 func MarshalPostToGraphQL(result *post.Post) *Post {
 
 	// Unmarshal our json into the correct model
@@ -128,6 +96,31 @@ func MarshalArtistToGraphQL(result *post.Artist) *Artist {
 	}
 }
 
+func MarshalMediaToGraphQL(result *post.Media) *Media {
+	return &Media{
+		ID:        relay.NewID(Media{}, result.ID()),
+		Title:     result.Title(),
+		Thumbnail: result.ConvertThumbnailToURI(),
+	}
+}
+
+func MarshalCategoryToGraphQL(result *post.Category) *Category {
+	return &Category{
+		ID:        relay.NewID(Category{}, result.ID()),
+		Thumbnail: result.ConvertThumbnailToURI(),
+		Title:     result.Title(),
+	}
+}
+
+func MarshalCharacterToGraphQL(result *post.Character) *Character {
+	return &Character{
+		ID:        relay.NewID(Character{}, result.ID()),
+		Name:      result.Name(),
+		Thumbnail: result.ConvertThumbnailToURI(),
+		Media:     MarshalMediaToGraphQL(result.Media()),
+	}
+}
+
 func MarshalCategoryToGraphQLConnection(results []*post.Category, cursor *paging.Cursor) *CategoryConnection {
 
 	var categories []*CategoryEdge
@@ -187,14 +180,6 @@ func MarshalCategoryToGraphQLConnection(results []*post.Category, cursor *paging
 	return conn
 }
 
-func MarshalCategoryToGraphQL(result *post.Category) *Category {
-	return &Category{
-		ID:        relay.NewID(Category{}, result.ID()),
-		Thumbnail: result.ConvertThumbnailToURI(),
-		Title:     result.Title(),
-	}
-}
-
 func MarshalCharacterToGraphQLConnection(results []*post.Character, cursor *paging.Cursor) *CharacterConnection {
 	resp := make([]*CharacterEdge, 0)
 
@@ -224,15 +209,6 @@ func MarshalCharacterToGraphQLConnection(results []*post.Character, cursor *pagi
 			StartCursor:     startCursor,
 			EndCursor:       endCursor,
 		},
-	}
-}
-
-func MarshalCharacterToGraphQL(result *post.Character) *Character {
-	return &Character{
-		ID:        relay.NewID(Character{}, result.ID()),
-		Name:      result.Name(),
-		Thumbnail: result.ConvertThumbnailToURI(),
-		Media:     MarshalMediaToGraphQL(result.Media()),
 	}
 }
 
@@ -268,10 +244,60 @@ func MarshalMediaToGraphQLConnection(results []*post.Media, cursor *paging.Curso
 	}
 }
 
-func MarshalMediaToGraphQL(result *post.Media) *Media {
-	return &Media{
-		ID:        relay.NewID(Media{}, result.ID()),
-		Title:     result.Title(),
-		Thumbnail: result.ConvertThumbnailToURI(),
+func MarshalPostToGraphQLConnection(results []*post.Post, cursor *paging.Cursor) *PostConnection {
+	var posts []*PostEdge
+
+	conn := &PostConnection{
+		PageInfo: &relay.PageInfo{
+			HasNextPage:     false,
+			HasPreviousPage: false,
+			StartCursor:     nil,
+			EndCursor:       nil,
+		},
+		Edges: posts,
 	}
+
+	limit := cursor.GetLimit()
+
+	if len(results) == 0 {
+		return conn
+	}
+
+	if len(results) == limit {
+		conn.PageInfo.HasNextPage = cursor.First() != nil
+		conn.PageInfo.HasPreviousPage = cursor.Last() != nil
+		results = results[:len(results)-1]
+	}
+
+	var nodeAt func(int) *post.Post
+
+	if cursor != nil && cursor.Last() != nil {
+		n := len(results) - 1
+		nodeAt = func(i int) *post.Post {
+			return results[n-i]
+		}
+	} else {
+		nodeAt = func(i int) *post.Post {
+			return results[i]
+		}
+	}
+
+	for i := range results {
+		node := nodeAt(i)
+		posts = append(posts, &PostEdge{
+			Node:   MarshalPostToGraphQL(node),
+			Cursor: node.Cursor(),
+		})
+	}
+
+	conn.Edges = posts
+
+	if len(results) > 0 {
+		res := results[0].Cursor()
+		conn.PageInfo.StartCursor = &res
+		res = results[len(results)-1].Cursor()
+		conn.PageInfo.EndCursor = &res
+	}
+
+	return conn
 }

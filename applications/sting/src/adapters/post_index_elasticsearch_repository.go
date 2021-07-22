@@ -22,7 +22,7 @@ type postDocument struct {
 	State              string               `json:"state"`
 	ModeratorId        string               `json:"moderator_id"`
 	ArtistId           string               `json:"artist_id"`
-	ContributorId      string               `json:"contributor_d"`
+	ContributorId      string               `json:"contributor_id"`
 	Content            []string             `json:"content"`
 	Categories         []*categoryDocument  `json:"categories"`
 	Characters         []*characterDocument `json:"characters"`
@@ -66,6 +66,9 @@ const postIndex = `
 						"title": {
 							"type": "text",
 							"analyzer": "english"
+						},
+						"created_at": {
+							"type": "date"
 						}
 					}
 				},
@@ -82,6 +85,9 @@ const postIndex = `
 							"type": "text",
 							"analyzer": "english"
 						},
+						"created_at": {
+							"type": "date"
+						},
 					    "media": {
 							"dynamic": "strict",
 							"properties": {
@@ -94,6 +100,9 @@ const postIndex = `
 								"title": {
 									"type": "text",
 									"analyzer": "english"
+								},
+								"created_at": {
+									"type": "date"
 								}
 							}		
 						}			
@@ -150,7 +159,7 @@ const searchPostPending = `
 	},
 	{{.Size}}
     {{.Sort}}
-	"track_total_hits": true
+	"track_total_hits": false
 `
 
 // needs to be exported because its used in a test to refresh the index
@@ -362,6 +371,8 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 		},
 	)
 
+	rep := NewPostsCassandraRepository(r.session)
+
 	err := scanner.RunIterator(postTable, func(iter *gocqlx.Iterx) error {
 
 		var p posts
@@ -370,23 +381,39 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 
 			var characterDocuments []*characterDocument
 
-			for _, char := range p.Characters {
-				characterDocuments = append(characterDocuments, &characterDocument{
-					Id:        char,
-					Thumbnail: "",
-					Name:      "",
-					Media:     mediaDocument{},
-				})
+			chars, err := rep.GetCharactersById(ctx, p.Characters)
+
+			if err != nil {
+				return err
+			}
+
+			for _, char := range chars {
+
+				charDoc, err := marshalCharacterToDocument(char)
+
+				if err != nil {
+					return err
+				}
+
+				characterDocuments = append(characterDocuments, charDoc)
 			}
 
 			var categoryDocuments []*categoryDocument
 
-			for _, cat := range p.Categories {
-				categoryDocuments = append(categoryDocuments, &categoryDocument{
-					Id:        cat,
-					Thumbnail: "",
-					Title:     "",
-				})
+			cats, err := rep.GetCategoriesById(ctx, p.Categories)
+
+			if err != nil {
+				return err
+			}
+
+			for _, cat := range cats {
+				catDoc, err := marshalCategoryToDocument(cat)
+
+				if err != nil {
+					return err
+				}
+
+				categoryDocuments = append(categoryDocuments, catDoc)
 			}
 
 			if err := r.store.AddToBulkIndex(ctx, p.Id, postDocument{
@@ -437,6 +464,7 @@ func (r PostsIndexElasticSearchRepository) DeletePostIndex(ctx context.Context) 
 	err := r.store.DeleteIndex(PostIndexName)
 
 	if err != nil {
+		return err
 	}
 
 	err = r.store.CreateIndex(PostIndexName, postIndex)

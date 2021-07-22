@@ -56,7 +56,7 @@ const searchCategories = `
 	},
 	{{.Size}}
     {{.Sort}}
-	"track_total_hits": true
+	"track_total_hits": false
 `
 
 const categoryIndexName = "categories"
