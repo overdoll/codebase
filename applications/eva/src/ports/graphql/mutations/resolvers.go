@@ -77,6 +77,10 @@ func (r *MutationResolver) VerifyAuthenticationTokenAndAttemptAccountAccessGrant
 		return nil, err
 	}
 
+	if ck == nil {
+		return &types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload{}, nil
+	}
+
 	// cookie redeemed not in the same session, just redeem it
 	if !isSameSession {
 		return &types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload{
@@ -110,6 +114,10 @@ func (r *MutationResolver) VerifyAuthenticationTokenAndAttemptAccountAccessGrant
 				}); err != nil {
 			return nil, err
 		}
+	}
+
+	if ck == nil {
+		return &types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload{}, nil
 	}
 
 	return &types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload{

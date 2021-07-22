@@ -1,4 +1,4 @@
-package service
+package service_test
 
 import (
 	"context"
@@ -15,6 +15,7 @@ import (
 	"overdoll/applications/eva/src/domain/token"
 	"overdoll/applications/eva/src/ports"
 	"overdoll/applications/eva/src/ports/graphql/types"
+	"overdoll/applications/eva/src/service"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
 	"overdoll/libraries/config"
@@ -50,14 +51,19 @@ func mAuthenticate(t *testing.T, client *graphql.Client, email string) GrantAuth
 }
 
 type VerifyAuthenticationTokenAndAttemptAccountAccessGrant struct {
-	VerifyAuthenticationTokenAndAttemptAccountAccessGrant *types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload `graphql:"verifyAuthenticationTokenAndAttemptAccountAccessGrant(input: $input)"`
+	VerifyAuthenticationTokenAndAttemptAccountAccessGrant *struct {
+		Account *struct {
+			Username graphql.String
+		}
+		AuthenticationToken *types.AuthenticationToken
+	} `graphql:"verifyAuthenticationTokenAndAttemptAccountAccessGrant(input: $input)"`
 }
 
 func verifyAuthenticationToken(t *testing.T, client *graphql.Client, cookie string) VerifyAuthenticationTokenAndAttemptAccountAccessGrant {
 	var redeemCookie VerifyAuthenticationTokenAndAttemptAccountAccessGrant
 
 	err := client.Mutate(context.Background(), &redeemCookie, map[string]interface{}{
-		"input": &types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput{AuthenticationTokenID: cookie},
+		"input": types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput{AuthenticationTokenID: cookie},
 	})
 
 	require.NoError(t, err)
@@ -83,20 +89,6 @@ func authenticateAndVerifyToken(t *testing.T, email string) (VerifyAuthenticatio
 	require.NotNil(t, ck.VerifyAuthenticationTokenAndAttemptAccountAccessGrant)
 
 	return ck, client, pass
-}
-
-type Viewer struct {
-	Viewer *types.Account `graphql:"viewer()"`
-}
-
-func viewer(t *testing.T, client *graphql.Client) Viewer {
-	var authRedeemed Viewer
-
-	err := client.Query(context.Background(), &authRedeemed, nil)
-
-	require.NoError(t, err)
-
-	return authRedeemed
 }
 
 type ViewAuthenticationToken struct {
@@ -149,7 +141,7 @@ func startService() bool {
 	// config file location (specified in BUILD file) will be absolute from repository path
 	config.Read("applications/eva/config.toml")
 
-	app, _ := NewApplication(context.Background())
+	app, _ := service.NewApplication(context.Background())
 
 	srv := ports.NewGraphQLServer(&app)
 

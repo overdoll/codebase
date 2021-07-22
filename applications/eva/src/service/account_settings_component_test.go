@@ -1,4 +1,4 @@
-package service
+package service_test
 
 import (
 	"context"
@@ -13,6 +13,7 @@ import (
 	"overdoll/applications/eva/src/domain/session"
 	"overdoll/applications/eva/src/ports/graphql/types"
 	"overdoll/libraries/bootstrap"
+	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/passport"
 )
 
@@ -43,19 +44,35 @@ func createSession(t *testing.T, accountId, userAgent, ip string) {
 }
 
 type AddAccountEmail struct {
-	AddAccountEmail types.Response `graphql:"addAccountEmail(email: $email)"`
+	AddAccountEmail types.AddAccountEmailPayload `graphql:"addAccountEmail(input: $input)"`
 }
 
 type ConfirmAccountEmail struct {
-	ConfirmAccountEmail types.Response `graphql:"confirmAccountEmail(id: $id)"`
+	ConfirmAccountEmail types.ConfirmAccountEmailPayload `graphql:"confirmAccountEmail(input: $input)"`
 }
 
-type RemoveAccountEmail struct {
-	RemoveAccountEmail types.Response `graphql:"removeAccountEmail(email: $email)"`
+type DeleteAccountEmail struct {
+	DeleteAccountEmail types.DeleteAccountEmailPayload `graphql:"deleteAccountEmail(input: $input)"`
 }
 
-type MakeAccountEmailPrimary struct {
-	MakeAccountEmailPrimary types.Response `graphql:"makeAccountEmailPrimary(email: $email)"`
+type UpdateAccountEmailStatusToPrimary struct {
+	UpdateAccountEmailStatusToPrimary types.UpdateAccountEmailStatusToPrimaryPayload `graphql:"updateAccountEmailStatusToPrimary(input: $input)"`
+}
+
+type ViewerAccountEmailUsernameSettings struct {
+	Viewer struct {
+		Username  graphql.String
+		Emails    *types.AccountEmailConnection
+		Usernames *types.AccountUsernameConnection
+		Sessions  *types.AccountSessionConnection
+	} `graphql:"viewer()"`
+}
+
+func viewerAccountEmailUsernameSettings(t *testing.T, client *graphql.Client) ViewerAccountEmailUsernameSettings {
+	var settings ViewerAccountEmailUsernameSettings
+	err := client.Query(context.Background(), &settings, nil)
+	require.NoError(t, err)
+	return settings
 }
 
 // Go through a full flow of adding a new email to an account, confirming the email and making it the primary email
@@ -79,19 +96,20 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 
 	// add an email to our account
 	err = client.Mutate(context.Background(), &addAccountEmail, map[string]interface{}{
-		"email": graphql.String(targetEmail),
+		"input": &types.AddAccountEmailInput{Email: targetEmail},
 	})
 
 	require.NoError(t, err)
-	require.True(t, addAccountEmail.AddAccountEmail.Ok)
+	require.NotNil(t, addAccountEmail.AddAccountEmail.AccountEmail)
+	require.Equal(t, targetEmail, addAccountEmail.AddAccountEmail.AccountEmail.Email)
 
-	settings := qAccountSettings(t, client)
+	settings := viewerAccountEmailUsernameSettings(t, client)
 
 	foundUnconfirmedEmail := false
 
 	// query account's settings and ensure this email is here, and unconfirmed
-	for _, email := range settings.AccountSettings.General.Emails {
-		if email.Email == targetEmail && email.Status == types.AccountEmailStatusEnumUnconfirmed {
+	for _, email := range settings.Viewer.Emails.Edges {
+		if email.Node.Email == targetEmail && email.Node.Status == types.AccountEmailStatusUnconfirmed {
 			foundUnconfirmedEmail = true
 		}
 	}
@@ -107,43 +125,43 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 
 	// confirm the account's new email
 	err = client.Query(context.Background(), &confirmAccountEmail, map[string]interface{}{
-		"id": graphql.String(confirmationKey),
+		"input": &types.ConfirmAccountEmailInput{ID: confirmationKey},
 	})
 
 	require.NoError(t, err)
-	require.True(t, confirmAccountEmail.ConfirmAccountEmail.Ok)
+	require.NotNil(t, confirmAccountEmail.ConfirmAccountEmail.AccountEmail)
 
-	settings = qAccountSettings(t, client)
+	settings = viewerAccountEmailUsernameSettings(t, client)
 
 	foundConfirmedEmail := false
 
 	// go through account settings and make sure that this email is now confirmed
-	for _, email := range settings.AccountSettings.General.Emails {
-		if email.Email == targetEmail && email.Status == types.AccountEmailStatusEnumConfirmed {
+	for _, email := range settings.Viewer.Emails.Edges {
+		if email.Node.Email == targetEmail && email.Node.Status == types.AccountEmailStatusConfirmed {
 			foundConfirmedEmail = true
 		}
 	}
 
 	require.True(t, foundConfirmedEmail)
 
-	var makeEmailPrimary MakeAccountEmailPrimary
+	var makeEmailPrimary UpdateAccountEmailStatusToPrimary
 
 	// mark email as primary
 	err = client.Mutate(context.Background(), &makeEmailPrimary, map[string]interface{}{
-		"email": graphql.String(targetEmail),
+		"input": types.UpdateAccountEmailStatusToPrimaryInput{AccountEmailID: confirmAccountEmail.ConfirmAccountEmail.AccountEmail.ID},
 	})
 
 	require.NoError(t, err)
-	require.True(t, makeEmailPrimary.MakeAccountEmailPrimary.Ok)
+	require.NotNil(t, makeEmailPrimary.UpdateAccountEmailStatusToPrimary.AccountEmail)
 
 	// query account settings once more
-	settings = qAccountSettings(t, client)
+	settings = viewerAccountEmailUsernameSettings(t, client)
 
 	foundPrimaryEmail := false
 
 	// go through account settings and make sure that this email is now the primary email
-	for _, email := range settings.AccountSettings.General.Emails {
-		if email.Email == targetEmail && email.Status == types.AccountEmailStatusEnumPrimary {
+	for _, email := range settings.Viewer.Emails.Edges {
+		if email.Node.Email == targetEmail && email.Node.Status == types.AccountEmailStatusPrimary {
 			foundPrimaryEmail = true
 		}
 	}
@@ -171,29 +189,29 @@ func TestAccountEmail_create_new_and_remove(t *testing.T) {
 
 	// add an email to our account
 	err = client.Mutate(context.Background(), &addAccountEmail, map[string]interface{}{
-		"email": graphql.String(targetEmail),
+		"input": &types.AddAccountEmailInput{Email: targetEmail},
 	})
 
 	require.NoError(t, err)
-	require.True(t, addAccountEmail.AddAccountEmail.Ok)
+	require.NotNil(t, addAccountEmail.AddAccountEmail.AccountEmail)
 
-	var removeAccountEmail RemoveAccountEmail
+	var removeAccountEmail DeleteAccountEmail
 
 	// remove the email from the account
 	err = client.Mutate(context.Background(), &removeAccountEmail, map[string]interface{}{
-		"email": graphql.String(targetEmail),
+		"input": types.DeleteAccountEmailInput{AccountEmailID: addAccountEmail.AddAccountEmail.AccountEmail.ID},
 	})
 
 	require.NoError(t, err)
-	require.True(t, removeAccountEmail.RemoveAccountEmail.Ok)
+	require.NotNil(t, removeAccountEmail.DeleteAccountEmail.AccountEmailID)
 
-	settings := qAccountSettings(t, client)
+	settings := viewerAccountEmailUsernameSettings(t, client)
 
 	foundNewEmail := false
 
 	// go through account settings and make sure email is not found
-	for _, email := range settings.AccountSettings.General.Emails {
-		if email.Email == targetEmail {
+	for _, email := range settings.Viewer.Emails.Edges {
+		if email.Node.Email == targetEmail {
 			foundNewEmail = true
 		}
 	}
@@ -201,8 +219,8 @@ func TestAccountEmail_create_new_and_remove(t *testing.T) {
 	require.False(t, foundNewEmail)
 }
 
-type ModifyAccountUsername struct {
-	ModifyAccountUsername types.Response `graphql:"modifyAccountUsername(username: $username)"`
+type UpdateAccountUsernameAndRetainPrevious struct {
+	UpdateAccountUsernameAndRetainPrevious types.UpdateAccountUsernameAndRetainPreviousPayload `graphql:"updateAccountUsernameAndRetainPrevious(input: $input)"`
 }
 
 func TestAccountUsername_modify(t *testing.T) {
@@ -220,33 +238,31 @@ func TestAccountUsername_modify(t *testing.T) {
 
 	targetUsername := fake.Username
 
-	var modifyAccountUsername ModifyAccountUsername
+	var modifyAccountUsername UpdateAccountUsernameAndRetainPrevious
 
 	// modify account's username
 	err = client.Mutate(context.Background(), &modifyAccountUsername, map[string]interface{}{
-		"username": graphql.String(targetUsername),
+		"input": &types.UpdateAccountUsernameAndRetainPreviousInput{Username: targetUsername},
 	})
 
 	require.NoError(t, err)
-	require.True(t, modifyAccountUsername.ModifyAccountUsername.Ok)
+	require.NotNil(t, modifyAccountUsername.UpdateAccountUsernameAndRetainPrevious.AccountUsername)
 
-	settings := qAccountSettings(t, client)
+	settings := viewerAccountEmailUsernameSettings(t, client)
 
 	foundNewUsername := false
 
 	// go through the account's usernames and make sure the username exists here
-	for _, email := range settings.AccountSettings.General.Usernames {
-		if email.Username == targetUsername {
+	for _, username := range settings.Viewer.Usernames.Edges {
+		if username.Node.Username == targetUsername {
 			foundNewUsername = true
 		}
 	}
 
 	require.True(t, foundNewUsername)
 
-	auth := viewer(t, client)
-
 	// make sure that the username is modified as well for the "authentication" query
-	assert.Equal(t, targetUsername, auth.Viewer.Username)
+	assert.Equal(t, targetUsername, settings.Viewer.Username)
 }
 
 type TestSession struct {
@@ -254,7 +270,7 @@ type TestSession struct {
 }
 
 type RevokeAccountSession struct {
-	RevokeAccountSession types.Response `graphql:"revokeAccountSession(id: $id)"`
+	RevokeAccountSession types.RevokeAccountSessionPayload `graphql:"revokeAccountSession(input: $input)"`
 }
 
 func TestAccountSessions_view_and_revoke(t *testing.T) {
@@ -272,16 +288,16 @@ func TestAccountSessions_view_and_revoke(t *testing.T) {
 	client, _, _ := getHttpClient(t, passport.FreshPassportWithAccount(testAccountId))
 
 	// query account settings once more
-	settings := qAccountSettings(t, client)
+	settings := viewerAccountEmailUsernameSettings(t, client)
 
 	foundSession := false
-	sessionId := ""
+	var sessionId relay.ID
 
 	// go through sessions and find by IP
-	for _, sess := range settings.AccountSettings.Security.Sessions {
-		if sess.IP == fakeSession.Ip {
+	for _, sess := range settings.Viewer.Sessions.Edges {
+		if sess.Node.IP == fakeSession.Ip {
 			foundSession = true
-			sessionId = sess.ID
+			sessionId = sess.Node.ID
 		}
 	}
 
@@ -291,18 +307,18 @@ func TestAccountSessions_view_and_revoke(t *testing.T) {
 
 	// revoke the session
 	err = client.Mutate(context.Background(), &revokeAccountSession, map[string]interface{}{
-		"id": graphql.String(sessionId),
+		"input": &types.RevokeAccountSessionPayload{AccountSessionID: sessionId},
 	})
 
 	require.NoError(t, err)
-	require.True(t, revokeAccountSession.RevokeAccountSession.Ok)
+	require.NotNil(t, revokeAccountSession.RevokeAccountSession.AccountSessionID)
 
 	// now test to make sure the session does not exist
-	settings = qAccountSettings(t, client)
+	settings = viewerAccountEmailUsernameSettings(t, client)
 	foundSession = false
 
-	for _, sess := range settings.AccountSettings.Security.Sessions {
-		if sess.IP == fakeSession.Ip {
+	for _, sess := range settings.Viewer.Sessions.Edges {
+		if sess.Node.IP == fakeSession.Ip {
 			foundSession = true
 		}
 	}

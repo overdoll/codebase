@@ -1,14 +1,28 @@
-package service
+package service_test
 
 import (
 	"context"
 	"testing"
 
+	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	eva "overdoll/applications/eva/proto"
 	"overdoll/libraries/passport"
 )
+
+type ViewerAcc struct {
+	Viewer struct {
+		Username graphql.String
+	} `graphql:"viewer()"`
+}
+
+func viewerAccount(t *testing.T, client *graphql.Client) ViewerAcc {
+	var settings ViewerAcc
+	err := client.Query(context.Background(), &settings, nil)
+	require.NoError(t, err)
+	return settings
+}
 
 // TestRedeemCookie_invalid - test by redeeming an invalid cookie
 func TestRedeemCookie_invalid(t *testing.T) {
@@ -19,7 +33,7 @@ func TestRedeemCookie_invalid(t *testing.T) {
 	redeemToken := verifyAuthenticationToken(t, client, "some-random-cookie")
 
 	// check to make sure its returned as invalid
-	assert.Nil(t, redeemToken.VerifyAuthenticationTokenAndAttemptAccountAccessGrant)
+	assert.Nil(t, redeemToken.VerifyAuthenticationTokenAndAttemptAccountAccessGrant.AuthenticationToken)
 }
 
 // Test empty authentication - we didnt pass any passport so it shouldn't do anything
@@ -28,10 +42,10 @@ func TestGetAccountAuthentication_empty(t *testing.T) {
 
 	client, _, _ := getHttpClient(t, nil)
 
-	query := viewer(t, client)
+	query := viewerAccount(t, client)
 
 	// at this point there is no account (since no passport is passed in) so expect that it doesnt send anything
-	require.Nil(t, query.Viewer)
+	require.Empty(t, query.Viewer.Username)
 
 	queryToken := viewAuthenticationToken(t, client)
 
@@ -48,9 +62,9 @@ func TestGetAccountAuthentication_user(t *testing.T) {
 	// userID is from one of our seeders (which will exist during testing)
 	client, _, _ := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 
-	query := viewer(t, client)
+	query := viewerAccount(t, client)
 
-	require.Equal(t, "poisonminion", query.Viewer.Username)
+	require.Equal(t, graphql.String("poisonminion"), query.Viewer.Username)
 
 	queryToken := viewAuthenticationToken(t, client)
 
