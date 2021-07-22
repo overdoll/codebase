@@ -36,7 +36,7 @@ export default function Finish ({ state }: Props): Node {
           {t('finish.review.header')}
         </Heading>
         <Text size='md' align='center' color='gray.100'>
-          {t('finish.subheader')}
+          {t('finish.review.subheader')}
         </Text>
         <Center mt={8}>
           <Flex justify='space-between' direction='column' h='100%'>
@@ -48,7 +48,7 @@ export default function Finish ({ state }: Props): Node {
                 location.reload()
               }}
             >
-              {t('finish.again')}
+              {t('finish.review.again')}
             </Button>
 
           </Flex>
@@ -64,7 +64,7 @@ export default function Finish ({ state }: Props): Node {
                 history.push('/profile')
               }}
             >
-              {t('finish.home')}
+              {t('finish.review.home')}
             </Button>
           </Flex>
         </Center>
