@@ -62,19 +62,6 @@ const characterIndex = `
 	}
 }`
 
-const searchCharacters = `
-    "query" : {
-		"bool": {
-			"must": [
-				{{.Cursor}}
-			]
-		}
-	},
-	{{.Size}}
-    {{.Sort}}
-	"track_total_hits": false
-`
-
 const characterIndexName = "characters"
 
 func marshalCharacterToDocument(char *post.Character) (*characterDocument, error) {

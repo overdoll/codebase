@@ -1,19 +1,16 @@
 package adapters
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"strconv"
-	"strings"
-	"text/template"
 
+	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/segmentio/ksuid"
 	"overdoll/applications/eva/src/domain/account"
-	search "overdoll/libraries/elasticsearch"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/scan"
 )
@@ -54,61 +51,29 @@ const accountIndex = `
 	}
 }`
 
-const searchAccounts = `
-    "query" : {
-		"bool": {
-			"must": [
-				{{.Cursor}}
-			]
-		}
-	},
-	{{.Size}}
-    {{.Sort}}
-	"track_total_hits": false
-`
-
 const accountIndexName = "accounts"
 
 type AccountIndexElasticSearchRepository struct {
 	session gocqlx.Session
-	store   *search.Store
+	client  *elastic.Client
 }
 
-func NewAccountIndexElasticSearchRepository(session gocqlx.Session, store *search.Store) AccountIndexElasticSearchRepository {
-	return AccountIndexElasticSearchRepository{session: session, store: store}
+func NewAccountIndexElasticSearchRepository(client *elastic.Client, session gocqlx.Session) AccountIndexElasticSearchRepository {
+	return AccountIndexElasticSearchRepository{session: session, client: client}
 }
 
 func (r AccountIndexElasticSearchRepository) SearchAccounts(ctx context.Context, cursor *paging.Cursor, username string, artist bool) ([]*account.Account, error) {
 
-	t, err := template.New("searchAccount").Parse(searchAccounts)
-
-	if err != nil {
-		return nil, err
-	}
+	builder := r.client.Search().
+		Index(accountIndexName)
 
 	if cursor == nil {
 		return nil, errors.New("cursor required")
 	}
 
-	curse, sort, count := cursor.BuildElasticsearch("created_at")
+	cursor.BuildElasticsearch(builder, "created_at")
 
-	data := struct {
-		Cursor string
-		Sort   string
-		Size   string
-	}{
-		Size:   count,
-		Sort:   sort,
-		Cursor: strings.TrimRight(curse, ","),
-	}
-
-	var query bytes.Buffer
-
-	if err := t.Execute(&query, data); err != nil {
-		return nil, err
-	}
-
-	response, err := r.store.Search(accountIndexName, query.String())
+	response, err := builder.Pretty(true).Do(ctx)
 
 	if err != nil {
 		return nil, err
@@ -116,11 +81,11 @@ func (r AccountIndexElasticSearchRepository) SearchAccounts(ctx context.Context,
 
 	var accounts []*account.Account
 
-	for _, cat := range response.Hits {
+	for _, hit := range response.Hits.Hits {
 
 		var ac accountDocument
 
-		err := json.Unmarshal(cat, &ac)
+		err := json.Unmarshal(hit.Source, &ac)
 
 		if err != nil {
 			return nil, err
@@ -139,10 +104,6 @@ func (r AccountIndexElasticSearchRepository) SearchAccounts(ctx context.Context,
 
 // Efficiently scan the accounts table and index it
 func (r AccountIndexElasticSearchRepository) IndexAllAccounts(ctx context.Context) error {
-
-	if err := r.store.CreateBulkIndex(accountIndexName); err != nil {
-		return err
-	}
 
 	scanner := scan.New(r.session,
 		scan.Config{
@@ -164,15 +125,24 @@ func (r AccountIndexElasticSearchRepository) IndexAllAccounts(ctx context.Contex
 				return err
 			}
 
-			if err := r.store.AddToBulkIndex(ctx, a.Id, accountDocument{
+			doc := accountDocument{
 				Id:        a.Id,
 				Avatar:    a.Avatar,
 				Username:  a.Username,
 				Verified:  a.Verified,
 				Roles:     a.Roles,
 				CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
-			}); err != nil {
-				return err
+			}
+
+			_, err = r.client.
+				Index().
+				Index(accountIndexName).
+				Id(a.Id).
+				BodyJson(doc).
+				Do(ctx)
+
+			if err != nil {
+				return fmt.Errorf("could not index post: %s", err)
 			}
 		}
 
@@ -183,25 +153,18 @@ func (r AccountIndexElasticSearchRepository) IndexAllAccounts(ctx context.Contex
 		return err
 	}
 
-	if err := r.store.CloseBulkIndex(ctx); err != nil {
-		return fmt.Errorf("unexpected error: %s", err)
-	}
-
 	return nil
 }
 
 func (r AccountIndexElasticSearchRepository) DeleteAccountIndex(ctx context.Context) error {
 
-	err := r.store.DeleteIndex(accountIndexName)
-
-	if err != nil {
-		return fmt.Errorf("failed to delete account index: %s", err)
+	if _, err := r.client.DeleteIndex(accountIndexName).Do(ctx); err != nil {
+		// Handle error
+		return err
 	}
 
-	err = r.store.CreateIndex(accountIndexName, accountIndex)
-
-	if err != nil {
-		return fmt.Errorf("failed to create account index: %s", err)
+	if _, err := r.client.CreateIndex(accountIndexName).BodyString(accountIndex).Do(ctx); err != nil {
+		return err
 	}
 
 	return nil

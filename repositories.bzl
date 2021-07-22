@@ -337,6 +337,14 @@ def go_repositories():
         version = "v1.7.0",
     )
     go_repository(
+        name = "com_github_fortytw2_leaktest",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/fortytw2/leaktest",
+        sum = "h1:u8491cBMTQ8ft8aeV+adlcytMZylmA5nnwwkRZjI8vw=",
+        version = "v1.3.0",
+    )
+
+    go_repository(
         name = "com_github_fsnotify_fsnotify",
         build_file_proto_mode = "disable",
         importpath = "github.com/fsnotify/fsnotify",
@@ -476,8 +484,8 @@ def go_repositories():
         name = "com_github_golang_groupcache",
         build_file_proto_mode = "disable",
         importpath = "github.com/golang/groupcache",
-        sum = "h1:veQD95Isof8w9/WXiA+pa3tz3fJXkt5B7QaRBrM62gk=",
-        version = "v0.0.0-20190129154638-5b532d6fd5ef",
+        sum = "h1:1r7pUrabqp18hOBcwBwiTsbnFeTZHV9eER/QT5JVZxY=",
+        version = "v0.0.0-20200121045136-8c9f03a8e57e",
     )
     go_repository(
         name = "com_github_golang_mock",
@@ -803,6 +811,14 @@ def go_repositories():
         version = "v0.1.0",
     )
     go_repository(
+        name = "com_github_josharian_intern",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/josharian/intern",
+        sum = "h1:vlS4z54oSdjm0bgjRigI+G1HpF+tI+9rE5LLzOg8HmY=",
+        version = "v1.0.0",
+    )
+
+    go_repository(
         name = "com_github_json_iterator_go",
         build_file_proto_mode = "disable",
         importpath = "github.com/json-iterator/go",
@@ -900,6 +916,14 @@ def go_repositories():
         sum = "h1:ZC2Vc7/ZFkGmsVC9KvOjumD+G5lXy2RtTKyzRKO2BQ4=",
         version = "v1.8.1",
     )
+    go_repository(
+        name = "com_github_mailru_easyjson",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/mailru/easyjson",
+        sum = "h1:UGYAvKxe3sBsEDzO8ZeWOSlIQfWFlxbzLZe7hwFURr0=",
+        version = "v0.7.7",
+    )
+
     go_repository(
         name = "com_github_matryer_moq",
         build_file_proto_mode = "disable",
@@ -1027,6 +1051,14 @@ def go_repositories():
         sum = "h1:EGfNDEx6MqHz8B3uNV6QAib1UR2Lm97sHi3ocA6ESJ4=",
         version = "v1.3.1",
     )
+    go_repository(
+        name = "com_github_olivere_elastic_v7",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/olivere/elastic/v7",
+        sum = "h1:KjLLCCpHb0ap+kA2s16c+Czs7kxBOk6DmPoy8D9ZozA=",
+        version = "v7.0.26",
+    )
+
     go_repository(
         name = "com_github_oneofone_xxhash",
         build_file_proto_mode = "disable",
@@ -1278,9 +1310,17 @@ def go_repositories():
         name = "com_github_smartystreets_assertions",
         build_file_proto_mode = "disable",
         importpath = "github.com/smartystreets/assertions",
-        sum = "h1:zE9ykElWQ6/NYmHa3jpm/yHnI4xSofP+UP6SpjHcSeM=",
-        version = "v0.0.0-20180927180507-b2de0cb4f26d",
+        sum = "h1:T/YLemO5Yp7KPzS+lVtu+WsHn8yoSwTfItdAd1r3cck=",
+        version = "v1.1.1",
     )
+    go_repository(
+        name = "com_github_smartystreets_go_aws_auth",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/smartystreets/go-aws-auth",
+        sum = "h1:hp2CYQUINdZMHdvTdXtPOY2ainKl4IoMcpAXEf2xj3Q=",
+        version = "v0.0.0-20180515143844-0c1422d1fdb9",
+    )
+
     go_repository(
         name = "com_github_smartystreets_goconvey",
         build_file_proto_mode = "disable",
@@ -1288,6 +1328,14 @@ def go_repositories():
         sum = "h1:fv0U8FUIMPNf1L9lnHLvLhgicrIVChEkdzIKYqbNC9s=",
         version = "v1.6.4",
     )
+    go_repository(
+        name = "com_github_smartystreets_gunit",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/smartystreets/gunit",
+        sum = "h1:tyWYZffdPhQPfK5VsMQXfauwnJkqg7Tv5DLuQVYxq3Q=",
+        version = "v1.4.2",
+    )
+
     go_repository(
         name = "com_github_soheilhy_cmux",
         build_file_proto_mode = "disable",
@@ -1425,8 +1473,8 @@ def go_repositories():
         name = "com_github_vektah_dataloaden",
         build_file_proto_mode = "disable",
         importpath = "github.com/vektah/dataloaden",
-        sum = "h1:+w0Zm/9gaWpEAyDlU1eKOuk5twTjAjuevXqcJJw8hrg=",
-        version = "v0.2.1-0.20190515034641-a19b9a6e7c9e",
+        sum = "h1:ZfVN2QD6swgvp+tDqdH/OIT/wu3Dhu0cus0k5gIZS84=",
+        version = "v0.3.0",
     )
     go_repository(
         name = "com_github_vektah_gqlparser_v2",
@@ -1616,8 +1664,8 @@ def go_repositories():
         name = "io_opencensus_go",
         build_file_proto_mode = "disable",
         importpath = "go.opencensus.io",
-        sum = "h1:C9hSCOW830chIVkdja34wa6Ky+IzWllkUinR+BtRZd4=",
-        version = "v0.22.0",
+        sum = "h1:gqCw0LfLxScz8irSi8exQc7fyQ0fKQU/qnC/X8+V/1M=",
+        version = "v0.23.0",
     )
     go_repository(
         name = "io_opentelemetry_go_otel",

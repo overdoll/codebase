@@ -21,7 +21,6 @@ import (
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
 	"overdoll/libraries/config"
-	search "overdoll/libraries/elasticsearch"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/tests"

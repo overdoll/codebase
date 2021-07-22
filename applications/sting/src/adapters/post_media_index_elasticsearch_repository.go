@@ -42,19 +42,6 @@ const mediaIndex = `
 	}
 }`
 
-const searchMedia = `
-    "query" : {
-		"bool": {
-			"must": [
-				{{.Cursor}}
-			]
-		}
-	},
-	{{.Size}}
-    {{.Sort}}
-	"track_total_hits": false
-`
-
 const mediaIndexName = "media"
 
 func (r PostsIndexElasticSearchRepository) SearchMedias(ctx context.Context, cursor *paging.Cursor, search string) ([]*post.Media, error) {

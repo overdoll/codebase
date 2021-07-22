@@ -6,7 +6,7 @@ go_library(
     importpath = "overdoll/libraries/paging",
     visibility = ["//visibility:public"],
     deps = [
-        "@com_github_olivere_elastic_v7//:go_default_library",
+        "@com_github_olivere_elastic_v7//:elastic",
         "@com_github_scylladb_gocqlx_v2//qb",
     ],
 )

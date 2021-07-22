@@ -42,19 +42,6 @@ const categoryIndex = `
 	}
 }`
 
-const searchCategories = `	
-    "query" : {
-		"bool": {
-			"must": [
-				{{.Cursor}}
-			]
-		}
-	},
-	{{.Size}}
-    {{.Sort}}
-	"track_total_hits": false
-`
-
 const categoryIndexName = "categories"
 
 func marshalCategoryToDocument(cat *post.Category) (*categoryDocument, error) {
@@ -101,7 +88,7 @@ func (r PostsIndexElasticSearchRepository) IndexCategories(ctx context.Context, 
 func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context, cursor *paging.Cursor, search string) ([]*post.Category, error) {
 
 	builder := r.client.Search().
-		Index(categoryIndexName)
+		Index(categoryIndexName).ErrorTrace(true)
 
 	if cursor == nil {
 		return nil, errors.New("cursor required")
@@ -109,7 +96,7 @@ func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context,
 
 	cursor.BuildElasticsearch(builder, "created_at")
 
-	response, err := builder.Pretty(true).Do(ctx)
+	response, err := builder.Do(ctx)
 
 	if err != nil {
 		return nil, err
@@ -158,7 +145,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllCategories(ctx context.Contex
 				return err
 			}
 
-			id := categoryDocument{
+			doc := categoryDocument{
 				Id:        c.Id,
 				Thumbnail: c.Thumbnail,
 				Title:     c.Title,
@@ -167,9 +154,9 @@ func (r PostsIndexElasticSearchRepository) IndexAllCategories(ctx context.Contex
 
 			_, err = r.client.
 				Index().
-				Index(mediaIndexName).
+				Index(categoryIndexName).
 				Id(c.Id).
-				BodyJson(id).
+				BodyJson(doc).
 				Do(ctx)
 
 			if err != nil {

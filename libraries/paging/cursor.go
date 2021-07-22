@@ -3,8 +3,6 @@ package paging
 import (
 	"encoding/base64"
 	"errors"
-	"fmt"
-	"strconv"
 
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2/qb"
@@ -127,20 +125,20 @@ func (c *Cursor) BuildCassandra(builder *qb.SelectBuilder, column string) {
 }
 
 func (c *Cursor) BuildElasticsearch(builder *elastic.SearchService, column string) {
-	builder.Query()
 	if c.After() != nil {
-		builder.SearchAfter()
-		builder.Where(qb.LtLit(column, `'`+*c.After()+`'`))
+		rangeQuery := elastic.NewRangeQuery(column).Lt(*c.After())
+		builder.Query(elastic.NewBoolQuery().Must(rangeQuery))
 	}
 
 	if c.Before() != nil {
-		builder.Where(qb.GtLit(column, `'`+*c.Before()+`'`))
+		rangeQuery := elastic.NewRangeQuery(column).Gt(*c.Before())
+		builder.Query(elastic.NewBoolQuery().Must(rangeQuery))
 	}
 
 	if c.Last() != nil {
-		builder.Sort(column, true) // sort by "user" field, ascending
+		builder.Sort(column, true)
 	} else {
-		builder.Sort(column, false) // sort by "user" field, ascending
+		builder.Sort(column, false)
 	}
 
 	limit := c.GetLimit()

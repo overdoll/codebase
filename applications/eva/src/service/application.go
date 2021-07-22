@@ -9,7 +9,6 @@ import (
 	"overdoll/applications/eva/src/app/command"
 	"overdoll/applications/eva/src/app/query"
 	"overdoll/libraries/bootstrap"
-	search "overdoll/libraries/elasticsearch"
 )
 
 func NewApplication(ctx context.Context) (app.Application, func()) {
@@ -39,10 +38,11 @@ func createApplication(ctx context.Context) app.Application {
 		log.Fatalf("redis session failed with errors: %s", err)
 	}
 
-	es, err := search.NewStore(ctx)
+	client, err := bootstrap.InitializeElasticSearchSession()
 
 	if err != nil {
-		log.Fatalf("es session failed with errors: %s", err)
+		// Handle error
+		log.Fatalf("elastic session failed with errors: %s", err)
 	}
 
 	// need to use a custom DB redis session because sessions are stored in db 0 in express-session
@@ -55,7 +55,7 @@ func createApplication(ctx context.Context) app.Application {
 	tokenRepo := adapters.NewAuthenticationTokenRedisRepository(redis)
 	sessionRepo := adapters.NewSessionRepository(redis2)
 	accountRepo := adapters.NewAccountCassandraRedisRepository(session, redis)
-	accountIndexRepo := adapters.NewAccountIndexElasticSearchRepository(session, es)
+	accountIndexRepo := adapters.NewAccountIndexElasticSearchRepository(client, session)
 	mfaRepo := adapters.NewMultiFactorCassandraRepository(session)
 
 	return app.Application{

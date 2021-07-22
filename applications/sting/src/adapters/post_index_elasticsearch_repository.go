@@ -132,34 +132,6 @@ const postIndex = `
 	}
 }`
 
-const searchPostPending = `	
-    "query" : {
-		"bool": {
-			"must": [
-				{{.Cursor}}
-				{{.PendingPostID}}
-				{
-					"multi_match": {
-						"query" : "{{.ModeratorId}}",
-						"fields" : ["moderator_id"],
-						"operator" : "and"
-					}
-				},
-				{
-					"multi_match": {
-						"query" : "review",
-						"fields" : ["state"],
-						"operator" : "and"
-					}
-				}
-			]
-		}
-	},
-	{{.Size}}
-    {{.Sort}}
-	"track_total_hits": false
-`
-
 // needs to be exported because its used in a test to refresh the index
 const PostIndexName = "posts"
 

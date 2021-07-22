@@ -5,7 +5,6 @@ import (
 	"log"
 	"os"
 
-	"github.com/olivere/elastic/v7"
 	"overdoll/applications/sting/src/adapters"
 	"overdoll/applications/sting/src/app"
 	"overdoll/applications/sting/src/app/command"
@@ -41,10 +40,10 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 		log.Fatalf("database session failed with errors: %s", err)
 	}
 
-	client, err := elastic.NewClient()
+	client, err := bootstrap.InitializeElasticSearchSession()
+
 	if err != nil {
-		// Handle error
-		log.Fatalf("elastic session failed with errors: %s", err)
+		log.Fatalf("failed to create es session: %s", err)
 	}
 
 	awsSession, err := storage.CreateAWSSession()
