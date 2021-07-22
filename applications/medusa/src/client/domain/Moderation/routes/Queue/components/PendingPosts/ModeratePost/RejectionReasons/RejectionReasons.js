@@ -2,17 +2,14 @@
  * @flow
  */
 import { useTranslation } from 'react-i18next'
-import { Helmet } from 'react-helmet-async'
 import { useState } from 'react'
 import {
   Alert, AlertDescription,
   AlertIcon, Button,
-  Center,
   Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Heading,
   Select,
   Stack, Textarea, useToast
 } from '@chakra-ui/react'
@@ -21,7 +18,6 @@ import type { ModeratePostInfractionsQuery } from '@//:artifacts/ModeratePostInf
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Joi from 'joi'
-import { PreloadedQuery } from 'react-relay/hooks'
 
 type NoteValues = {
   note: string,

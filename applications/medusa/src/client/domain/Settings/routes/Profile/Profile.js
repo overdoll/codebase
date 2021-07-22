@@ -101,7 +101,7 @@ const Content = (props) => {
         />
       </Flex>
       <Flex direction='column'>
-        <Emails refresh={refresh} emails={data.accountSettings.general.emails} />
+        <Emails refresh={props.refresh} emails={data.accountSettings.general.emails} />
       </Flex>
     </Stack>
   )

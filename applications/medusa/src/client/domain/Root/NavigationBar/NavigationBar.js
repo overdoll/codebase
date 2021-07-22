@@ -36,7 +36,6 @@ type Props = {
   },
   children: Node,
   refreshUserQuery: () => void,
-  ability: () => void,
 }
 
 export default function NavigationBar ({ account, children, refreshUserQuery }: Props): Node {
@@ -186,7 +185,7 @@ export default function NavigationBar ({ account, children, refreshUserQuery }: 
   )
 }
 
-const SimplifiedNav = () => {
+const SimplifiedNav = (props) => {
   return (
     <Flex
       zIndex='docked' boxShadow='sm' align='center' right={0} left={0} top={0} position='fixed' h='54px'
@@ -253,7 +252,7 @@ const RightMenu = (props) => {
                 borderRadius={10}
                 h='42px' w='42px' mr={1}
                 display={['none', 'none', 'flex']}
-                aria-label={t('nav.profile')}
+                aria-label={props.t('nav.profile')}
                 icon={<Icon icon={Login2} fill='gray.300' w='38px' m={1} h='38px' />}
               />
             </Link>}

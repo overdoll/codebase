@@ -14,7 +14,6 @@ import InterfaceAlertInformationCircle
 
 type Props = {
   text: string,
-  size: number,
 };
 
 export default function InfoTip ({ text }: Props): Node {
