@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
+	"strconv"
 
 	"github.com/scylladb/gocqlx/v2/qb"
 )
@@ -137,10 +138,10 @@ func (c *Cursor) BuildElasticsearch(column string) (string, string, string) {
 	}
 
 	if c.Last() != nil {
-		curse = fmt.Sprintf(`"sort": [{"`+column+`": %q}],`, "asc")
+		sort = fmt.Sprintf(`"sort": [{"`+column+`": %q}],`, "asc")
 	} else {
-		curse = fmt.Sprintf(`"sort": [{"`+column+`": %q}],`, "desc")
+		sort = fmt.Sprintf(`"sort": [{"`+column+`": %q}],`, "desc")
 	}
 
-	return curse, sort, fmt.Sprintf(`"size" : %q,`, c.GetLimit())
+	return curse, sort, fmt.Sprintf(`"size" : %q,`, strconv.Itoa(c.GetLimit()))
 }

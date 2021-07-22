@@ -169,7 +169,13 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 	var characterDocuments []*characterDocument
 
 	for _, char := range pst.Characters() {
-		characterDocuments = append(characterDocuments, marshalCharacterToDocument(char))
+		c, err := marshalCharacterToDocument(char)
+
+		if err != nil {
+			return nil, err
+		}
+
+		characterDocuments = append(characterDocuments, c)
 	}
 
 	var categoryDocuments []*categoryDocument
@@ -344,7 +350,7 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, curs
 
 func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) error {
 
-	if err := r.store.CreateBulkIndex(postIndex); err != nil {
+	if err := r.store.CreateBulkIndex(PostIndexName); err != nil {
 		return err
 	}
 

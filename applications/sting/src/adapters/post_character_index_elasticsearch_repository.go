@@ -4,9 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
+	"github.com/segmentio/ksuid"
 	"overdoll/applications/sting/src/domain/post"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/scan"
@@ -17,6 +19,7 @@ type characterDocument struct {
 	Thumbnail string        `json:"thumbnail"`
 	Name      string        `json:"name"`
 	Media     mediaDocument `json:"media"`
+	CreatedAt string        `json:"created_at"`
 }
 
 const characterIndex = `
@@ -33,6 +36,9 @@ const characterIndex = `
 			"name": {
 				"type": "text",
 				"analyzer": "english"
+			},
+			"created_at": {
+				"type": "date"
 			},
 			"media": {
 				"type": "nested",
@@ -69,19 +75,26 @@ const allCharacters = `
 
 const characterIndexName = "characters"
 
-func marshalCharacterToDocument(char *post.Character) *characterDocument {
+func marshalCharacterToDocument(char *post.Character) (*characterDocument, error) {
 	media := char.Media()
+
+	parse, err := ksuid.Parse(char.ID())
+
+	if err != nil {
+		return nil, err
+	}
 
 	return &characterDocument{
 		Id:        char.ID(),
 		Thumbnail: char.Thumbnail(),
 		Name:      char.Name(),
+		CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
 		Media: mediaDocument{
 			Id:        media.ID(),
 			Thumbnail: media.Thumbnail(),
 			Title:     media.Title(),
 		},
-	}
+	}, nil
 }
 
 func (r PostsIndexElasticSearchRepository) IndexCharacters(ctx context.Context, characters []*post.Character) error {
@@ -90,7 +103,13 @@ func (r PostsIndexElasticSearchRepository) IndexCharacters(ctx context.Context, 
 	}
 
 	for _, character := range characters {
-		if err := r.store.AddToBulkIndex(ctx, character.ID(), marshalCharacterToDocument(character)); err != nil {
+		char, err := marshalCharacterToDocument(character)
+
+		if err != nil {
+			return err
+		}
+
+		if err := r.store.AddToBulkIndex(ctx, character.ID(), char); err != nil {
 			return err
 		}
 	}
@@ -130,7 +149,7 @@ func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context,
 		}
 
 		newCharacter := post.UnmarshalCharacterFromDatabase(chr.Id, chr.Name, chr.Thumbnail, post.UnmarshalMediaFromDatabase(chr.Media.Id, chr.Media.Title, chr.Media.Thumbnail))
-		newCharacter.Node = paging.NewNode(chr.Id)
+		newCharacter.Node = paging.NewNode(chr.CreatedAt)
 
 		characters = append(characters, newCharacter)
 	}
@@ -165,10 +184,17 @@ func (r PostsIndexElasticSearchRepository) IndexAllCharacters(ctx context.Contex
 				return err
 			}
 
+			parse, err := ksuid.Parse(m.Id)
+
+			if err != nil {
+				return err
+			}
+
 			if err := r.store.AddToBulkIndex(ctx, m.Id, characterDocument{
 				Id:        c.Id,
 				Thumbnail: c.Thumbnail,
 				Name:      c.Name,
+				CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
 				Media: mediaDocument{
 					Id:        m.Id,
 					Thumbnail: m.Thumbnail,

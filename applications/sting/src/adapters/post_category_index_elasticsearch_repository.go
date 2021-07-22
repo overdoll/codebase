@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+	"strings"
 	"text/template"
 
 	"github.com/scylladb/gocqlx/v2"
@@ -78,7 +79,7 @@ func marshalCategoryToDocument(cat *post.Category) (*categoryDocument, error) {
 
 func (r PostsIndexElasticSearchRepository) IndexCategories(ctx context.Context, categories []*post.Category) error {
 
-	if err := r.store.CreateBulkIndex(categoryIndex); err != nil {
+	if err := r.store.CreateBulkIndex(categoryIndexName); err != nil {
 		return err
 	}
 
@@ -123,7 +124,7 @@ func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context,
 	}{
 		Size:   count,
 		Sort:   sort,
-		Cursor: curse,
+		Cursor: strings.TrimRight(curse, ","),
 	}
 
 	var query bytes.Buffer
@@ -151,7 +152,7 @@ func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context,
 		}
 
 		newCategory := post.UnmarshalCategoryFromDatabase(pst.Id, pst.Title, pst.Thumbnail)
-		newCategory.Node = paging.NewNode(pst.Id)
+		newCategory.Node = paging.NewNode(pst.CreatedAt)
 
 		cats = append(cats, newCategory)
 	}
@@ -161,7 +162,7 @@ func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context,
 
 func (r PostsIndexElasticSearchRepository) IndexAllCategories(ctx context.Context) error {
 
-	if err := r.store.CreateBulkIndex(categoryIndex); err != nil {
+	if err := r.store.CreateBulkIndex(categoryIndexName); err != nil {
 		return err
 	}
 
@@ -178,10 +179,18 @@ func (r PostsIndexElasticSearchRepository) IndexAllCategories(ctx context.Contex
 		var c category
 
 		for iter.StructScan(&c) {
+
+			parse, err := ksuid.Parse(c.Id)
+
+			if err != nil {
+				return err
+			}
+
 			if err := r.store.AddToBulkIndex(ctx, c.Id, categoryDocument{
 				Id:        c.Id,
 				Thumbnail: c.Thumbnail,
 				Title:     c.Title,
+				CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
 			}); err != nil {
 				return err
 			}

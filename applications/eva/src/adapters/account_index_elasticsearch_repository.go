@@ -110,7 +110,7 @@ func (r AccountIndexElasticSearchRepository) SearchAccounts(ctx context.Context,
 // Efficiently scan the accounts table and index it
 func (r AccountIndexElasticSearchRepository) IndexAllAccounts(ctx context.Context) error {
 
-	if err := r.store.CreateBulkIndex(accountIndex); err != nil {
+	if err := r.store.CreateBulkIndex(accountIndexName); err != nil {
 		return err
 	}
 
@@ -127,7 +127,7 @@ func (r AccountIndexElasticSearchRepository) IndexAllAccounts(ctx context.Contex
 		var a accounts
 
 		for iter.StructScan(&a) {
-			if err := r.store.AddToBulkIndex(ctx, a.Id, &accountDocument{
+			if err := r.store.AddToBulkIndex(ctx, a.Id, accountDocument{
 				Id:       a.Id,
 				Avatar:   a.Avatar,
 				Username: a.Username,
@@ -157,7 +157,7 @@ func (r AccountIndexElasticSearchRepository) DeleteAccountIndex(ctx context.Cont
 	err := r.store.DeleteIndex(accountIndexName)
 
 	if err != nil {
-
+		return fmt.Errorf("failed to delete account index: %s", err)
 	}
 
 	err = r.store.CreateIndex(accountIndexName, accountIndex)

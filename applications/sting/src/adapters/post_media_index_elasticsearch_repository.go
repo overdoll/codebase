@@ -4,8 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"github.com/scylladb/gocqlx/v2"
+	"github.com/segmentio/ksuid"
 	"overdoll/applications/sting/src/domain/post"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/scan"
@@ -15,6 +17,7 @@ type mediaDocument struct {
 	Id        string `json:"id"`
 	Thumbnail string `json:"thumbnail"`
 	Title     string `json:"title"`
+	CreatedAt string `json:"created_at"`
 }
 
 const mediaIndex = `
@@ -31,6 +34,9 @@ const mediaIndex = `
 			"title": {
 				"type": "text",
 				"analyzer": "english"
+			},
+			"created_at": {
+				"type": "date"
 			}
 		}
 	}
@@ -80,7 +86,7 @@ func (r PostsIndexElasticSearchRepository) SearchMedias(ctx context.Context, cur
 		}
 
 		newMedia := post.UnmarshalMediaFromDatabase(md.Id, md.Title, md.Thumbnail)
-		newMedia.Node = paging.NewNode(md.Id)
+		newMedia.Node = paging.NewNode(md.CreatedAt)
 
 		meds = append(meds, newMedia)
 	}
@@ -90,7 +96,7 @@ func (r PostsIndexElasticSearchRepository) SearchMedias(ctx context.Context, cur
 
 func (r PostsIndexElasticSearchRepository) IndexAllMedia(ctx context.Context) error {
 
-	if err := r.store.CreateBulkIndex(mediaIndex); err != nil {
+	if err := r.store.CreateBulkIndex(PostIndexName); err != nil {
 		return err
 	}
 
@@ -107,10 +113,18 @@ func (r PostsIndexElasticSearchRepository) IndexAllMedia(ctx context.Context) er
 		var m media
 
 		for iter.StructScan(&m) {
+
+			parse, err := ksuid.Parse(m.Id)
+
+			if err != nil {
+				return err
+			}
+
 			if err := r.store.AddToBulkIndex(ctx, m.Id, mediaDocument{
 				Id:        m.Id,
 				Thumbnail: m.Thumbnail,
 				Title:     m.Title,
+				CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
 			}); err != nil {
 				return err
 			}
