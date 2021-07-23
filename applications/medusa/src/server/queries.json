@@ -26,7 +26,7 @@
   "c733faae38f8e6d949f1dfcd2a6076ab": "query RootAccountRefreshQuery {\n  ...RootComponent_account\n}\n\nfragment RootComponent_account on Query {\n  viewer {\n    username\n    roles\n    id\n  }\n}\n",
   "3d41b45fff8eed6507354d118ea4e35a": "query RootQuery {\n  ...RootComponent_account\n}\n\nfragment RootComponent_account on Query {\n  viewer {\n    username\n    roles\n  }\n}\n",
   "19ac107dd1b6cb54d7ab3fa2bc25d36b": "query RootAccountRefreshQuery {\n  ...RootComponent_account\n}\n\nfragment RootComponent_account on Query {\n  viewer {\n    username\n    roles\n  }\n}\n",
-  "e4399102e5a6c22d2c196b2fac806823": "query NotFoundQuery {\n  node(id: \"testid123\") {\n    __typename\n    id\n    ... on Test {\n      __typename\n      test\n    }\n  }\n}\n"
+  "e4399102e5a6c22d2c196b2fac806823": "query NotFoundQuery {\n  node(id: \"testid123\") {\n    __typename\n    id\n    ... on Test {\n      __typename\n      test\n    }\n  }\n}\n",
   "3d3673577f14370a1fc3e68435019568": "query RootQuery {\n  authenticatedAccount {\n    username\n    roles\n    avatar\n    lock {\n      reason\n      expires\n    }\n  }\n}\n",
   "94d4557e6a50a40166e9403b238eb1a2": "mutation AddEmailFormMutation(\n  $email: String!\n) {\n  addAccountEmail(email: $email) {\n    ok\n    validation {\n      code\n    }\n  }\n}\n",
   "6e2d77d54dc16c355e924d0626715556": "query ArtistsQuery(\n  $data: SearchInput!\n) {\n  artists(data: $data) {\n    id\n    avatar\n    username\n  }\n}\n",

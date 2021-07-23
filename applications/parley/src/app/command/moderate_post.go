@@ -56,6 +56,7 @@ func (h ModeratePostHandler) Handle(ctx context.Context, moderatorId, pendingPos
 
 	// if not approved, get rejection reason
 	if rejectionReasonId != "" {
+
 		rejectionReason, err = h.ir.GetPostRejectionReason(ctx, rejectionReasonId)
 
 		if err != nil {

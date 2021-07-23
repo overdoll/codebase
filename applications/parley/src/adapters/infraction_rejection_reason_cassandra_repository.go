@@ -31,7 +31,7 @@ type postRejectionReason struct {
 func (r InfractionCassandraRepository) GetPostRejectionReason(ctx context.Context, id string) (*infraction.PostRejectionReason, error) {
 
 	rejectionReasonQuery := r.session.
-		Query(postRejectionReasonTable.Select()).
+		Query(postRejectionReasonTable.Get()).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&postRejectionReason{Id: id, Bucket: 0})
 
@@ -67,7 +67,9 @@ func (r InfractionCassandraRepository) GetPostRejectionReasons(ctx context.Conte
 
 	var rejectionReasons []*infraction.PostRejectionReason
 	for _, rejectionReason := range dbRejectionReasons {
-		rejectionReasons = append(rejectionReasons, infraction.UnmarshalPostRejectionReasonFromDatabase(rejectionReason.Id, rejectionReason.Reason, rejectionReason.Infraction))
+		reason := infraction.UnmarshalPostRejectionReasonFromDatabase(rejectionReason.Id, rejectionReason.Reason, rejectionReason.Infraction)
+		reason.Node = paging.NewNode(rejectionReason.Id)
+		rejectionReasons = append(rejectionReasons, reason)
 	}
 
 	return rejectionReasons, nil

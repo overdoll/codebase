@@ -29,9 +29,9 @@ func (m MutationResolver) ModeratePost(ctx context.Context, input types.Moderate
 	return &types.ModeratePostPayload{PostAuditLog: types.MarshalPostAuditLogToGraphQL(auditLog)}, nil
 }
 
-func (m MutationResolver) RevertPostAuditLog(ctx context.Context, data types.RevertPostAuditLogInput) (*types.RevertPostAuditLogPayload, error) {
+func (m MutationResolver) RevertPostAuditLog(ctx context.Context, input types.RevertPostAuditLogInput) (*types.RevertPostAuditLogPayload, error) {
 
-	auditLog, err := m.App.Commands.RevertModeratePost.Handle(ctx, passport.FromContext(ctx).AccountID(), data.PostAuditLogID.GetID())
+	auditLog, err := m.App.Commands.RevertModeratePost.Handle(ctx, passport.FromContext(ctx).AccountID(), input.PostAuditLogID.GetID())
 
 	if err != nil {
 		return nil, err

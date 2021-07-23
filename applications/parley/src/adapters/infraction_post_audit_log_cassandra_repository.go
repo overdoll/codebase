@@ -20,7 +20,6 @@ var postAuditLogTable = table.New(table.Metadata{
 		"id",
 		"moderator_account_id",
 		"bucket",
-		"created_ms",
 	},
 	PartKey: []string{"id"},
 	SortKey: []string{},
@@ -149,10 +148,15 @@ func (r InfractionCassandraRepository) CreatePostAuditLog(ctx context.Context, a
 
 	batch.Query(stmt,
 		marshalledAuditLog.Id,
-		marshalledAuditLog.PostId,
-		marshalledAuditLog.ContributorId,
 		marshalledAuditLog.ModeratorId,
 		marshalledAuditLog.Bucket,
+		marshalledAuditLog.PostId,
+		marshalledAuditLog.ContributorId,
+		marshalledAuditLog.AccountInfractionId,
+		marshalledAuditLog.Action,
+		marshalledAuditLog.Reason,
+		marshalledAuditLog.Notes,
+		marshalledAuditLog.Reverted,
 	)
 
 	stmt, _ = postAuditLogByModeratorTable.Insert()

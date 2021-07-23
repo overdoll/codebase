@@ -48,7 +48,7 @@ extend type Mutation {
 
   Will delete an infraction if there was one, but the rest of the audit log will generally stay intact
   """
-  revertPostAuditLog(data: RevertPostAuditLogInput!): RevertPostAuditLogPayload
+  revertPostAuditLog(input: RevertPostAuditLogInput!): RevertPostAuditLogPayload
 
   """
   Toggle moderator status

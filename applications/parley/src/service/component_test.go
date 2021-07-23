@@ -16,6 +16,7 @@ import (
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
 	"overdoll/libraries/config"
+	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/tests"
 )
@@ -26,44 +27,36 @@ const ParleyHttpClientAddr = "http://:8888/graphql"
 const ParleyGrpcAddr = "localhost:8889"
 const ParleyGrpcClientAddr = "localhost:8889"
 
-// query is weird here because we query the entities field directly
-type AccountSettings struct {
-	Entities []struct {
-		AccountSettings types.AccountSettings `graphql:"... on AccountSettings"`
-	} `graphql:"_entities(representations: $representations)"`
-}
-
-type _Any map[string]interface{}
-
-func qAccountSettings(t *testing.T, client *graphql.Client, accountId string) types.AccountSettings {
-	var accountSettings AccountSettings
-
-	err := client.Query(context.Background(), &accountSettings, map[string]interface{}{
-		"representations": []_Any{
-			{
-				"__typename": "AccountSettings",
-				"accountId":  accountId,
-			},
-		},
-	})
-
-	require.NoError(t, err)
-
-	return accountSettings.Entities[0].AccountSettings
+type PostAuditLogModified struct {
+	Reason       string
+	Notes        string
+	Reverted     bool
+	InfractionID string
+	ID           string
+	Action       types.PostAuditLogAction
 }
 
 type ModeratePost struct {
-	ModeratePost types.ModeratePost `graphql:"moderatePost(data: $data)"`
+	ModeratePost *struct {
+		PostAuditLog PostAuditLogModified
+	} `graphql:"moderatePost(input: $input)"`
 }
 
 func mModeratePost(t *testing.T, client *graphql.Client, rejectionReason *string, notes string) ModeratePost {
 	var modPost ModeratePost
 
+	var rejection *relay.ID
+
+	if rejectionReason != nil {
+		id := relay.ID(*rejectionReason)
+		rejection = &id
+	}
+
 	err := client.Mutate(context.Background(), &modPost, map[string]interface{}{
-		"data": types.ModeratePostInput{
-			PendingPostID:     "1q7MIqqnkzew33q4elXuN1Ri27d",
-			RejectionReasonID: rejectionReason,
-			Notes:             notes,
+		"input": types.ModeratePostInput{
+			PostID:                "UG9zdDoxcTdNSXFxbmt6ZXczM3E0ZWxYdU4xUmkyN2Q=",
+			PostRejectionReasonID: rejection,
+			Notes:                 notes,
 		},
 	})
 
@@ -72,15 +65,17 @@ func mModeratePost(t *testing.T, client *graphql.Client, rejectionReason *string
 	return modPost
 }
 
-type UndoModeratePost struct {
-	UndoModeratePost types.ModeratePost `graphql:"revertPendingPostAuditLog(data: $data)"`
+type RevertPostAuditLog struct {
+	RevertPostAuditLog *struct {
+		PostAuditLog *PostAuditLogModified
+	} `graphql:"revertPostAuditLog(input: $input)"`
 }
 
-func mRevertModeratePost(t *testing.T, client *graphql.Client, id string) UndoModeratePost {
-	var search UndoModeratePost
+func mRevertModeratePost(t *testing.T, client *graphql.Client, id string) RevertPostAuditLog {
+	var search RevertPostAuditLog
 
 	err := client.Mutate(context.Background(), &search, map[string]interface{}{
-		"data": types.RevertPostInput{AuditLogID: id},
+		"input": types.RevertPostAuditLogInput{PostAuditLogID: relay.ID(id)},
 	})
 
 	require.NoError(t, err)

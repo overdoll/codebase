@@ -98,7 +98,7 @@ type ComplexityRoot struct {
 
 	Mutation struct {
 		ModeratePost                   func(childComplexity int, input types.ModeratePostInput) int
-		RevertPostAuditLog             func(childComplexity int, data types.RevertPostAuditLogInput) int
+		RevertPostAuditLog             func(childComplexity int, input types.RevertPostAuditLogInput) int
 		ToggleModeratorSettingsInQueue func(childComplexity int) int
 	}
 
@@ -189,7 +189,7 @@ type EntityResolver interface {
 }
 type MutationResolver interface {
 	ModeratePost(ctx context.Context, input types.ModeratePostInput) (*types.ModeratePostPayload, error)
-	RevertPostAuditLog(ctx context.Context, data types.RevertPostAuditLogInput) (*types.RevertPostAuditLogPayload, error)
+	RevertPostAuditLog(ctx context.Context, input types.RevertPostAuditLogInput) (*types.RevertPostAuditLogPayload, error)
 	ToggleModeratorSettingsInQueue(ctx context.Context) (*types.ToggleModeratorSettingsInQueuePayload, error)
 }
 type PostResolver interface {
@@ -435,7 +435,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.RevertPostAuditLog(childComplexity, args["data"].(types.RevertPostAuditLogInput)), true
+		return e.complexity.Mutation.RevertPostAuditLog(childComplexity, args["input"].(types.RevertPostAuditLogInput)), true
 
 	case "Mutation.toggleModeratorSettingsInQueue":
 		if e.complexity.Mutation.ToggleModeratorSettingsInQueue == nil {
@@ -991,7 +991,7 @@ extend type Mutation {
 
   Will delete an infraction if there was one, but the rest of the audit log will generally stay intact
   """
-  revertPostAuditLog(data: RevertPostAuditLogInput!): RevertPostAuditLogPayload
+  revertPostAuditLog(input: RevertPostAuditLogInput!): RevertPostAuditLogPayload
 
   """
   Toggle moderator status
@@ -1299,14 +1299,14 @@ func (ec *executionContext) field_Mutation_revertPostAuditLog_args(ctx context.C
 	var err error
 	args := map[string]interface{}{}
 	var arg0 types.RevertPostAuditLogInput
-	if tmp, ok := rawArgs["data"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("data"))
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNRevertPostAuditLogInput2overdollᚋapplicationsᚋparleyᚋsrcᚋportsᚋgraphqlᚋtypesᚐRevertPostAuditLogInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["data"] = arg0
+	args["input"] = arg0
 	return args, nil
 }
 
@@ -2350,7 +2350,7 @@ func (ec *executionContext) _Mutation_revertPostAuditLog(ctx context.Context, fi
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().RevertPostAuditLog(rctx, args["data"].(types.RevertPostAuditLogInput))
+		return ec.resolvers.Mutation().RevertPostAuditLog(rctx, args["input"].(types.RevertPostAuditLogInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)

@@ -4,7 +4,7 @@
 import type { Node } from 'react'
 import { createContext, Suspense } from 'react'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
-import { graphql, usePreloadedQuery, useQueryLoader } from 'react-relay/hooks'
+import { graphql, usePreloadedQuery, useRefetchableFragment } from 'react-relay/hooks'
 import type { RootQuery } from '@//:artifacts/RootQuery.graphql'
 import { Helmet } from 'react-helmet-async'
 import NavigationBar from './NavigationBar/NavigationBar'
@@ -42,48 +42,35 @@ const RootFragmentGQL = graphql`
 const RootContext: Context = createContext(null)
 
 export default function Root (props: Props): Node {
-  const [queryRef, loadQuery] = useQueryLoader<RootQuery>(
+  const rootQuery = usePreloadedQuery<RootQuery>(
     RootQueryGQL,
     props.prepared.stateQuery
   )
-
-  const rootQuery = usePreloadedQuery<RootQuery>(
-    RootQueryGQL,
-    queryRef
-  )
-
-  const refresh = () => {
-    const { variables } = props.prepared.stateQuery
-    loadQuery(variables, { fetchPolicy: 'network-only' })
-  }
-
-  const ability = defineAbility(rootQuery.authenticatedAccount)
 
   const [data, refetch] = useRefetchableFragment<RootAccountRefreshQuery, _>(
     RootFragmentGQL,
     rootQuery
   )
 
+  const ability = defineAbility(data.viewer)
+
   const fetchAccount = () => refetch({}, { fetchPolicy: 'network-only' })
 
   return (
     <>
-      <AbilityContext.Provider value={ability}>
-        <Helmet
-          title='overdoll'
-        />
-        <NavigationBar
-          account={rootQuery.authenticatedAccount} refreshUserQuery={refresh}
-        ><Suspense fallback={null}>{props.children}</Suspense>
-        </NavigationBar>
-      </AbilityContext.Provider>
-    </>
-    <RootContext.Provider value={{ fetchAccount }}>
       <Helmet
         title='overdoll'
       />
-      <Suspense fallback={null}>{props.children}</Suspense>
-    </RootContext.Provider>
+      <AbilityContext.Provider value={ability}>
+        <RootContext.Provider value={{ fetchAccount }}>
+          <NavigationBar
+            account={data.viewer} refreshUserQuery={fetchAccount}
+          >
+            <Suspense fallback={null}>{props.children}</Suspense>
+          </NavigationBar>
+        </RootContext.Provider>
+      </AbilityContext.Provider>
+    </>
   )
 }
 
