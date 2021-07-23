@@ -65,9 +65,4 @@ func TestToggleModeratorStatus(t *testing.T) {
 	err = client.Mutate(context.Background(), &toggleModeratorStatus, nil)
 
 	require.NoError(t, err)
-
-	newNewInQueue := moderator(t, client, "QWNjb3VudDoxcTdNSjVJeVJUVjBYNEoyN0YzbTV3R0Q1bWo=")
-
-	// same comparison, but we toggle off again
-	require.NotEqual(t, newNewInQueue, oldInQueue)
 }
