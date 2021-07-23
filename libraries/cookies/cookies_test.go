@@ -17,11 +17,11 @@ import (
 
 func setupEncryptedCookies(t *testing.T) {
 	// need to set encryption keys or else it doesnt encrypt
-	err := os.Setenv(cookies.cookieKey, "very-secret-secret-that-nobody-knows-to-use")
+	err := os.Setenv(cookies.CookieKey, "very-secret-secret-that-nobody-knows-to-use")
 
 	require.NoError(t, err)
 
-	err = os.Setenv(cookies.cookieBlockKey, "another-very-sec")
+	err = os.Setenv(cookies.CookieBlockKey, "another-very-sec")
 
 	require.NoError(t, err)
 }

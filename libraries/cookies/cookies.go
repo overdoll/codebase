@@ -12,8 +12,8 @@ import (
 )
 
 const (
-	cookieKey      = "COOKIE_KEY"
-	cookieBlockKey = "COOKIE_BLOCK_KEY"
+	CookieKey      = "COOKIE_KEY"
+	CookieBlockKey = "COOKIE_BLOCK_KEY"
 )
 
 var (
@@ -29,7 +29,7 @@ var (
 // Set a cookie, encrypt
 func SetCookie(ctx context.Context, cookie *http.Cookie) error {
 
-	cookieKey := os.Getenv(cookieKey)
+	cookieKey := os.Getenv(CookieKey)
 	encrypt := cookieKey != ""
 
 	gc := helpers.GinContextFromContext(ctx)
@@ -46,7 +46,7 @@ func SetCookie(ctx context.Context, cookie *http.Cookie) error {
 	cookie.Path = "/"
 
 	if encrypt {
-		var secureCookie = securecookie.New([]byte(cookieKey), []byte(os.Getenv(cookieBlockKey)))
+		var secureCookie = securecookie.New([]byte(cookieKey), []byte(os.Getenv(CookieBlockKey)))
 		encodedValue, err := secureCookie.Encode(name, value)
 
 		if err != nil {
@@ -68,7 +68,7 @@ func SetCookie(ctx context.Context, cookie *http.Cookie) error {
 // Read cookie
 func ReadCookie(ctx context.Context, name string) (*http.Cookie, error) {
 
-	cookieKey := os.Getenv(cookieKey)
+	cookieKey := os.Getenv(CookieKey)
 	encrypt := cookieKey != ""
 
 	gc := helpers.GinContextFromContext(ctx)
@@ -87,7 +87,7 @@ func ReadCookie(ctx context.Context, name string) (*http.Cookie, error) {
 
 	var value string
 	if encrypt {
-		secureCookie := securecookie.New([]byte(cookieKey), []byte(os.Getenv(cookieBlockKey)))
+		secureCookie := securecookie.New([]byte(cookieKey), []byte(os.Getenv(CookieBlockKey)))
 
 		// no restriction on maxAge
 		secureCookie.MaxAge(0)
