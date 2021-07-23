@@ -110,7 +110,7 @@ func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending
 		return nil, err
 	}
 
-	return post.UnmarshalPendingPostFromDatabase(
+	return post.UnmarshalPostFromDatabase(
 		postPending.Id,
 		postPending.State,
 		postPending.ModeratorId,
@@ -192,7 +192,19 @@ func (r PostsCassandraRepository) UpdatePost(ctx context.Context, id string, upd
 	}
 
 	postQuery := r.session.
-		Query(postTable.Update()).
+		Query(postTable.Update(
+			"state",
+			"moderator_reassignment_at",
+			"moderator_account_id",
+			"artist_account_id",
+			"content",
+			"categories",
+			"characters",
+			"artist_request",
+			"characters_requests",
+			"categories_requests",
+			"media_requests",
+		)).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalPostToDatabase(currentPost))
 

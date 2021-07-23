@@ -37,6 +37,7 @@ const StingGrpcClientAddr = "localhost:6667"
 
 type PostModified struct {
 	ID                string
+	Reference         string
 	State             types.PostState
 	MediaRequests     []string
 	CharacterRequests []*types.CharacterRequestType
@@ -111,7 +112,7 @@ func qPendingPost(t *testing.T, id string) Post {
 	var post Post
 
 	err := client.Query(context.Background(), &post, map[string]interface{}{
-		"id": graphql.String(id),
+		"reference": graphql.String(id),
 	})
 
 	require.NoError(t, err)
@@ -147,7 +148,7 @@ func mCreatePost(t *testing.T, env *testsuite.TestWorkflowEnvironment, callback 
 	require.NoError(t, err)
 	require.Equal(t, false, createPost.CreatePost.Review)
 
-	postId := createPost.CreatePost.Post.ID
+	postId := createPost.CreatePost.Post.Reference
 
 	// execute workflow, since the graphql wont execute it and only put it into a queue
 	// we also get the ability to get workflow state, etc.. in this test
@@ -199,7 +200,7 @@ func TestCreatePost_Publish(t *testing.T) {
 			exists := false
 
 			for _, post := range accountPosts.Entities[0].Account.Posts.Edges {
-				if post.Node.ID == newPostId {
+				if post.Node.Reference == newPostId {
 					exists = true
 				}
 			}

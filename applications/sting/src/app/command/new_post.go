@@ -45,7 +45,7 @@ func (h NewPostHandler) Handle(ctx context.Context, id string) error {
 	})
 
 	if err != nil {
-		return errFailedNewPost
+		return err
 	}
 
 	// Update pending post index

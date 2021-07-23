@@ -75,7 +75,7 @@ func (h CreatePendingPostHandler) Handle(ctx context.Context, contributorId, exi
 		return nil, nil
 	}
 
-	pendingPost, err := post.NewPendingPost(uuid.New().String(), moderatorId, artist, artistUsername, contributor, content, characters, categories)
+	pendingPost, err := post.NewPost(uuid.New().String(), moderatorId, artist, artistUsername, contributor, content, characters, categories)
 
 	if err != nil {
 		return nil, err

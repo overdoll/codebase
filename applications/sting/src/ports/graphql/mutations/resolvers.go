@@ -84,7 +84,7 @@ func (r *MutationResolver) CreatePost(ctx context.Context, input types.CreatePos
 		TaskQueue: viper.GetString("temporal.queue"),
 		ID:        "NewCreatePendingPostWorkflow_" + pst.ID(),
 	}
-
+	
 	_, err = r.Client.ExecuteWorkflow(ctx, options, workflows.CreatePost, pst.ID())
 
 	if err != nil {

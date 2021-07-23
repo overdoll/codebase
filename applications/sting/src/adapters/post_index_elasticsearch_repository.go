@@ -282,7 +282,7 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, curs
 		postedAt, err := strconv.ParseInt(pst.PostedAt, 10, 64)
 		reassignmentAt, err := strconv.ParseInt(pst.ReassignmentAt, 10, 64)
 
-		createdPost := post.UnmarshalPendingPostFromDatabase(
+		createdPost := post.UnmarshalPostFromDatabase(
 			pst.Id,
 			pst.State,
 			pst.ModeratorId,

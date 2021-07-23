@@ -120,7 +120,7 @@ type Post struct {
 	generatedIds       []string
 }
 
-func NewPendingPost(id, moderatorId string, artist *account.Account, customArtistUsername string, contributor *account.Account, content []string, characters []*Character, categories []*Category) (*Post, error) {
+func NewPost(id, moderatorId string, artist *account.Account, customArtistUsername string, contributor *account.Account, content []string, characters []*Character, categories []*Category) (*Post, error) {
 	return &Post{
 		id:                   id,
 		moderatorId:          moderatorId,
@@ -136,7 +136,7 @@ func NewPendingPost(id, moderatorId string, artist *account.Account, customArtis
 	}, nil
 }
 
-func UnmarshalPendingPostFromDatabase(id, state, moderatorId, artistId, customArtistUsername, contributorId string, content []string, characters []*Character, categories []*Category, charactersRequests map[string]string, categoryRequests, mediaRequests []string, postedAt, reassignmentAt time.Time) *Post {
+func UnmarshalPostFromDatabase(id, state, moderatorId, artistId, customArtistUsername, contributorId string, content []string, characters []*Character, categories []*Category, charactersRequests map[string]string, categoryRequests, mediaRequests []string, postedAt, reassignmentAt time.Time) *Post {
 
 	postPending := &Post{
 		id:                   id,
