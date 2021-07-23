@@ -2,6 +2,7 @@ const zIndices = {
   hide: -1,
   auto: 'auto',
   base: 0,
+  sidebar: 9,
   docked: 10,
   dropdown: 1000,
   sticky: 1100,

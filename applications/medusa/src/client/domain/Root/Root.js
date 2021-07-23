@@ -4,10 +4,12 @@
 import type { Node } from 'react'
 import { createContext, Suspense } from 'react'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
-import { graphql, usePreloadedQuery, useRefetchableFragment } from 'react-relay/hooks'
+import { graphql, usePreloadedQuery, useQueryLoader } from 'react-relay/hooks'
 import type { RootQuery } from '@//:artifacts/RootQuery.graphql'
 import { Helmet } from 'react-helmet-async'
-import type { RootAccountRefreshQuery } from '@//:artifacts/RootAccountRefreshQuery.graphql'
+import NavigationBar from './NavigationBar/NavigationBar'
+import defineAbility from '@//:modules/utilities/functions/defineAbility/defineAbility'
+import { AbilityContext } from './helpers/AbilityContext'
 
 type Props = {
   prepared: {
@@ -28,6 +30,11 @@ const RootFragmentGQL = graphql`
     viewer {
       username
       roles
+      avatar
+      lock {
+        reason
+        expires
+      }
     }
   }
 `
@@ -35,10 +42,22 @@ const RootFragmentGQL = graphql`
 const RootContext: Context = createContext(null)
 
 export default function Root (props: Props): Node {
-  const rootQuery = usePreloadedQuery<RootQuery>(
+  const [queryRef, loadQuery] = useQueryLoader<RootQuery>(
     RootQueryGQL,
     props.prepared.stateQuery
   )
+
+  const rootQuery = usePreloadedQuery<RootQuery>(
+    RootQueryGQL,
+    queryRef
+  )
+
+  const refresh = () => {
+    const { variables } = props.prepared.stateQuery
+    loadQuery(variables, { fetchPolicy: 'network-only' })
+  }
+
+  const ability = defineAbility(rootQuery.authenticatedAccount)
 
   const [data, refetch] = useRefetchableFragment<RootAccountRefreshQuery, _>(
     RootFragmentGQL,
@@ -48,6 +67,17 @@ export default function Root (props: Props): Node {
   const fetchAccount = () => refetch({}, { fetchPolicy: 'network-only' })
 
   return (
+    <>
+      <AbilityContext.Provider value={ability}>
+        <Helmet
+          title='overdoll'
+        />
+        <NavigationBar
+          account={rootQuery.authenticatedAccount} refreshUserQuery={refresh}
+        ><Suspense fallback={null}>{props.children}</Suspense>
+        </NavigationBar>
+      </AbilityContext.Provider>
+    </>
     <RootContext.Provider value={{ fetchAccount }}>
       <Helmet
         title='overdoll'

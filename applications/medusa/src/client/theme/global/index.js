@@ -6,6 +6,9 @@ export default function (props) {
       bg: 'gray.900',
       lineHeight: 'base'
     },
+    heading: {
+      fontWeight: 600
+    },
     '*::placeholder': {
       color: 'gray.400'
     },
@@ -42,6 +45,9 @@ export default function (props) {
     },
     '.os-scrollbar-handle': {
       opacity: 0.3
+    },
+    form: {
+      width: '100%'
     }
   }
 }

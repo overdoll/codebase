@@ -28,6 +28,11 @@ fragment RootComponent_account on Query {
   viewer {
     username
     roles
+    avatar
+    lock {
+      reason
+      expires
+    }
   }
 }
 */

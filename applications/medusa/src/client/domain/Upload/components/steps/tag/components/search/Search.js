@@ -4,7 +4,7 @@
 import type { Node } from 'react'
 import { Suspense, useCallback, useState } from 'react'
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
-import ErrorFallback from '../error/ErrorFallback'
+import ErrorFallback from '../../../../../../../components/ErrorFallback/ErrorFallback'
 import LoadingSearch from '../loading/LoadingSearch'
 import {
   Center, Flex, Input, InputGroup, InputLeftElement, ModalOverlay,

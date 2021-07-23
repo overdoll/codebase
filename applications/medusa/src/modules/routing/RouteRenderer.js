@@ -108,7 +108,7 @@ export default function RouterRenderer (): Node {
     <ErrorBoundary>
       <Suspense fallback={<Flex mt={40} h='100%' align='center' justify='center' direction='column'><Spinner mb={6} thickness={4} size='xl' color='red.500' /></Flex>}>
         {routeComponent}
-        <chakra.div position='fixed' w='100%' top='0' opacity={isPending ? 1 : 0}>
+        <chakra.div zIndex='banner' position='fixed' w='100%' top='0' opacity={isPending ? 1 : 0}>
           <Progress colorScheme='red' size='xs' isIndeterminate />
         </chakra.div>
       </Suspense>

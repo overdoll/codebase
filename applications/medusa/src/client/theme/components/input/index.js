@@ -45,7 +45,7 @@ const size = {
     fontSize: 'sm',
     px: 3,
     h: 8,
-    borderRadius: 'sm'
+    borderRadius: 5
   },
 
   xs: {
@@ -98,10 +98,10 @@ function variantOutline (props) {
   return {
     field: {
       border: '1px solid',
-      borderColor: 'inherit',
+      borderColor: 'gray.500',
       bg: 'inherit',
       _hover: {
-        borderColor: mode('gray.300', 'gray.400')(props)
+        borderColor: mode('gray.300', 'gray.300')(props)
       },
       _readOnly: {
         boxShadow: 'none !important',

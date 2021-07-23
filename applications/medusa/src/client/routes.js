@@ -3,12 +3,17 @@
  */
 import JSResource from '@//:modules/utilities/JSResource'
 import type { Route } from '@//:modules/routing/router'
+import defineAbility from '@//:modules/utilities/functions/defineAbility/defineAbility'
 
 const getUserFromEnvironment = environment => {
   return environment
     .getStore()
     .getSource()
     .get('client:root:viewer')
+}
+
+const getAbilityFromUser = (environment) => {
+  return defineAbility(getUserFromEnvironment(environment))
 }
 
 /**
@@ -62,9 +67,9 @@ const routes: Array<Route> = [
         // When user is logged in, we just want to redirect them since they're already "logged in"
         middleware: [
           ({ environment, history }) => {
-            const user = getUserFromEnvironment(environment)
+            const ability = getAbilityFromUser(environment)
 
-            if (user) {
+            if (ability.can('manage', 'account')) {
               history.push('/profile')
               return false
             }
@@ -86,8 +91,58 @@ const routes: Array<Route> = [
         }
       },
       {
-        path: '/upload',
+        path: '/',
         exact: true,
+        component: JSResource('HomeRoot', () =>
+          import(
+            /* webpackChunkName: "HomeRoot" */ './domain/Home/Home'
+          ),
+        module.hot
+        )
+      },
+      {
+        path: '/m',
+        component: JSResource('ModRoot', () =>
+          import(
+            /* webpackChunkName: "ModRoot" */ './domain/Moderation/Moderation'
+          ),
+        module.hot
+        ),
+        // If user is not logged in, they can't post - so we redirect to join page
+        middleware: [
+          ({ environment, history }) => {
+            const ability = getAbilityFromUser(environment)
+
+            if (ability.can('read', 'pendingPosts')) {
+              return true
+            }
+            history.push('/join')
+            return false
+          }
+        ],
+        routes: [
+          {
+            path: '/m/queue',
+            component: JSResource('ModQueueRoot', () =>
+              import(
+                /* webpackChunkName: "ModQueueRoot" */ './domain/Moderation/routes/Queue/Queue'
+              ),
+            module.hot
+            )
+          },
+          {
+            path: '/m/history',
+            component: JSResource('ModHistoryRoot', () =>
+              import(
+                /* webpackChunkName: "ModHistoryRoot" */ './domain/Moderation/routes/History/History'
+              ),
+            module.hot
+            )
+          }
+        ]
+      },
+      {
+        path: '/upload',
         component: JSResource('UploadRoot', () =>
           import(
             /* webpackChunkName: "UploadRoot" */ './domain/Upload/Upload'
@@ -97,14 +152,13 @@ const routes: Array<Route> = [
         // If user is not logged in, they can't post - so we redirect to join page
         middleware: [
           ({ environment, history }) => {
-            const user = getUserFromEnvironment(environment)
+            const ability = getAbilityFromUser(environment)
 
-            if (!user) {
-              history.push('/join')
-              return false
+            if (ability.can('manage', 'account')) {
+              return true
             }
-
-            return true
+            history.push('/join')
+            return false
           }
         ]
       },
@@ -132,14 +186,74 @@ const routes: Array<Route> = [
         // When user is logged in, we don't want them to be able to redeem any other tokens
         middleware: [
           ({ environment, history }) => {
-            const user = getUserFromEnvironment(environment)
+            const ability = getAbilityFromUser(environment)
 
-            if (user) {
-              history.push('/profile')
+            if (ability.can('manage', 'account')) {
+              history.push('/')
               return false
             }
 
             return true
+          }
+        ]
+      },
+      {
+        path: '/s',
+        component: JSResource('SettingsRoot', () =>
+          import(
+            /* webpackChunkName: "SettingsRoot" */ './domain/Settings/Settings'
+          ),
+        module.hot
+        ),
+        // If user is not logged in, they can't post - so we redirect to join page
+        middleware: [
+          ({ environment, history }) => {
+            const ability = getAbilityFromUser(environment)
+
+            if (ability.can('manage', 'account')) {
+              return true
+            }
+            history.push('/join')
+            return false
+          }
+        ],
+        routes: [
+          {
+            path: '/s/profile',
+            component: JSResource('SettingsProfileRoot', () =>
+              import(
+                /* webpackChunkName: "SettingsProfileRoot" */ './domain/Settings/routes/Profile/Profile'
+              ),
+            module.hot
+            )
+          },
+          {
+            path: '/s/security',
+            component: JSResource('SettingsSecurityRoot', () =>
+              import(
+                /* webpackChunkName: "SettingsSecurityRoot" */ './domain/Settings/routes/Security/Security'
+              ),
+            module.hot
+            )
+          },
+          {
+            path: '/s/moderation',
+            component: JSResource('SettingsModerationRoot', () =>
+              import(
+                /* webpackChunkName: "SettingsModerationRoot" */ './domain/Settings/routes/Moderation/Moderation'
+              ),
+            module.hot
+            ),
+            middleware: [
+              ({ environment }) => {
+                const ability = getAbilityFromUser(environment)
+
+                if (ability.can('manage', 'pendingPosts')) {
+                  return true
+                }
+                return false
+              }
+            ]
           }
         ]
       },
