@@ -239,13 +239,15 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, curs
 
 	query := cursor.BuildElasticsearch(builder, "posted_at")
 
-	if filter.ModeratorId() != "" {
-		query.Must(elastic.NewMatchQuery(filter.ModeratorId(), "moderator_id"))
-	}
+	//if filter.ModeratorId() != "" {
+	//	query.Must(elastic.NewMatchQuery(filter.ModeratorId(), "moderator_id"))
+	//}
 
 	if filter.ContributorId() != "" {
 		query.Must(elastic.NewMatchQuery(filter.ModeratorId(), "contributor_id"))
 	}
+
+	fmt.Println(query.Source())
 
 	builder.Query(query)
 
@@ -412,11 +414,19 @@ func (r PostsIndexElasticSearchRepository) DeletePost(ctx context.Context, id st
 
 func (r PostsIndexElasticSearchRepository) DeletePostIndex(ctx context.Context) error {
 
-	if _, err := r.client.DeleteIndex(PostIndexName).Do(ctx); err != nil {
-		// Handle error
+	exists, err := r.client.IndexExists(PostIndexName).Do(ctx)
+
+	if err != nil {
 		return err
 	}
 
+	if exists {
+		if _, err := r.client.DeleteIndex(PostIndexName).Do(ctx); err != nil {
+			// Handle error
+			return err
+		}
+	}
+	
 	if _, err := r.client.CreateIndex(PostIndexName).BodyString(postIndex).Do(ctx); err != nil {
 		return err
 	}
