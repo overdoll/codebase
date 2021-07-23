@@ -426,7 +426,7 @@ func (r PostsIndexElasticSearchRepository) DeletePostIndex(ctx context.Context) 
 			return err
 		}
 	}
-	
+
 	if _, err := r.client.CreateIndex(PostIndexName).BodyString(postIndex).Do(ctx); err != nil {
 		return err
 	}
