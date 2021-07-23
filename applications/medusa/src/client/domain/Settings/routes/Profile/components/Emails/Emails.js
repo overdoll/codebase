@@ -39,11 +39,10 @@ type Props = {
 }
 
 const MakeEmailPrimaryMutationGQL = graphql`
-  mutation EmailsPrimaryMutation($email: String!) {
-    addAccountEmail(email: $email) {
-      ok
-      validation {
-        code
+  mutation EmailsPrimaryMutation($input: AddAccountEmailInput!) {
+    addAccountEmail(input: $input) {
+      accountEmail {
+        id
       }
     }
   }

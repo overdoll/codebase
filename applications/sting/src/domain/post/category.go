@@ -1,6 +1,8 @@
 package post
 
 import (
+	"os"
+
 	"overdoll/libraries/graphql"
 	"overdoll/libraries/paging"
 )
@@ -26,7 +28,8 @@ func (c *Category) Thumbnail() string {
 }
 
 func (c *Category) ConvertThumbnailToURI() graphql.URI {
-	return graphql.NewURI("")
+	var staticURL = os.Getenv("STATIC_URL")
+	return graphql.NewURI(staticURL + "/thumbnails/" + c.thumbnail)
 }
 
 func NewCategory(id, title string) *Category {

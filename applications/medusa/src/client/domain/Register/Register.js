@@ -16,11 +16,14 @@ import { useContext } from 'react'
 import { RootContext } from '../Root/Root'
 
 const RegisterMutationGQL = graphql`
-  mutation RegisterMutation($data: RegisterInput!) {
-    register(data: $data) {
-      ok
-      validation {
-        code
+  mutation RegisterMutation($input: CreateAccountWithAuthenticationTokenInput!) {
+    createAccountWithAuthenticationToken(input: $input) {
+      account {
+        username
+        isStaff
+        isArtist
+        isModerator
+        avatar
       }
     }
   }

@@ -29,7 +29,9 @@ const RootFragmentGQL = graphql`
   @refetchable(queryName: "RootAccountRefreshQuery") {
     viewer {
       username
-      roles
+      isStaff
+      isArtist
+      isModerator
       avatar
       lock {
         reason

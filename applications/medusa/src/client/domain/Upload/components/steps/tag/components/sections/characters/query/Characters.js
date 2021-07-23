@@ -20,15 +20,19 @@ type Props = {
 };
 
 const CharactersQueryGQL = graphql`
-  query CharactersQuery($data: SearchInput!) {
-    characters(data: $data) {
-      id
-      name
-      thumbnail
-      media {
-        id
-        title
-        thumbnail
+  query CharactersQuery($name: String!) {
+    characters(name: $name) {
+      edges {
+        node {
+          id
+          name
+          thumbnail
+          media {
+            id
+            title
+            thumbnail
+          }
+        }
       }
     }
   }
@@ -55,7 +59,7 @@ export default function Characters ({ args, onSelect, selected }: Props): Node {
 
   const [t] = useTranslation('upload')
 
-  if (data.characters.length === 0) {
+  if (data.characters.edges.length === 0) {
     return (
       <Empty
         title={t('tag.character.not_found')} button={`${t('tag.character.add')} ${args.variables.data.search}`}

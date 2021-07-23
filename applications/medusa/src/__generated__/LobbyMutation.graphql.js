@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash ea4cbdb02f4888cdd14a5b393f55addb
+ * @relayHash df72ffb5fb4c046e7278fdb797c4d155
  */
 
 /* eslint-disable */
@@ -10,8 +10,10 @@
 import type { ConcreteRequest } from 'relay-runtime';
 export type LobbyMutationVariables = {||};
 export type LobbyMutationResponse = {|
-  +authenticateEmail: {|
-    +ok: boolean
+  +reissueAuthenticationToken: ?{|
+    +authenticationToken: ?{|
+      +email: string
+    |}
   |}
 |};
 export type LobbyMutation = {|
@@ -22,8 +24,10 @@ export type LobbyMutation = {|
 
 /*
 mutation LobbyMutation {
-  authenticateEmail {
-    ok
+  reissueAuthenticationToken {
+    authenticationToken {
+      email
+    }
   }
 }
 */
@@ -33,16 +37,27 @@ var v0 = [
   {
     "alias": null,
     "args": null,
-    "concreteType": "Response",
+    "concreteType": "ReissueAuthenticationTokenPayload",
     "kind": "LinkedField",
-    "name": "authenticateEmail",
+    "name": "reissueAuthenticationToken",
     "plural": false,
     "selections": [
       {
         "alias": null,
         "args": null,
-        "kind": "ScalarField",
-        "name": "ok",
+        "concreteType": "AuthenticationToken",
+        "kind": "LinkedField",
+        "name": "authenticationToken",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "email",
+            "storageKey": null
+          }
+        ],
         "storageKey": null
       }
     ],
@@ -67,7 +82,7 @@ return {
     "selections": (v0/*: any*/)
   },
   "params": {
-    "id": "ea4cbdb02f4888cdd14a5b393f55addb",
+    "id": "df72ffb5fb4c046e7278fdb797c4d155",
     "metadata": {},
     "name": "LobbyMutation",
     "operationKind": "mutation",
@@ -76,5 +91,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '883b88813dc01d00e36725fa88437d2f';
+(node: any).hash = '7f94927a47815ed963ec0cafb1193360';
 module.exports = node;

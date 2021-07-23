@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 56027daea69761bfeba11ec29b5fd4f9
+ * @relayHash 526f0385824bbb11fe04aaf36ea81757
  */
 
 /* eslint-disable */
@@ -8,24 +8,26 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-export type AccountEmailStatusEnum = "CONFIRMED" | "PRIMARY" | "UNCONFIRMED" | "%future added value";
+export type AccountEmailStatus = "CONFIRMED" | "PRIMARY" | "UNCONFIRMED" | "%future added value";
 export type ProfileSettingsQueryVariables = {||};
 export type ProfileSettingsQueryResponse = {|
-  +accountSettings: {|
-    +accountId: string,
-    +general: {|
-      +emails: $ReadOnlyArray<{|
-        +email: string,
-        +status: AccountEmailStatusEnum,
-      |}>,
-      +usernames: $ReadOnlyArray<{|
-        +username: string
-      |}>,
+  +viewer: ?{|
+    +usernames: {|
+      +edges: $ReadOnlyArray<{|
+        +node: {|
+          +username: string
+        |}
+      |}>
     |},
-  |},
-  +authenticatedAccount: ?{|
-    +username: string
-  |},
+    +emails: {|
+      +edges: $ReadOnlyArray<{|
+        +node: {|
+          +email: string,
+          +status: AccountEmailStatus,
+        |}
+      |}>
+    |},
+  |}
 |};
 export type ProfileSettingsQuery = {|
   variables: ProfileSettingsQueryVariables,
@@ -35,78 +37,102 @@ export type ProfileSettingsQuery = {|
 
 /*
 query ProfileSettingsQuery {
-  accountSettings {
-    accountId
-    general {
-      emails {
-        email
-        status
-      }
-      usernames {
-        username
+  viewer {
+    usernames {
+      edges {
+        node {
+          username
+          id
+        }
       }
     }
-  }
-  authenticatedAccount {
-    username
+    emails {
+      edges {
+        node {
+          email
+          status
+          id
+        }
+      }
+    }
+    id
   }
 }
 */
 
 const node: ConcreteRequest = (function(){
-var v0 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "username",
-    "storageKey": null
-  }
-],
-v1 = [
-  {
-    "alias": null,
-    "args": null,
-    "concreteType": "AccountSettings",
-    "kind": "LinkedField",
-    "name": "accountSettings",
-    "plural": false,
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "username",
+  "storageKey": null
+},
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "email",
+  "storageKey": null
+},
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "status",
+  "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
+return {
+  "fragment": {
+    "argumentDefinitions": [],
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "ProfileSettingsQuery",
     "selections": [
       {
         "alias": null,
         "args": null,
-        "kind": "ScalarField",
-        "name": "accountId",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "AccountGeneralSettings",
+        "concreteType": "Account",
         "kind": "LinkedField",
-        "name": "general",
+        "name": "viewer",
         "plural": false,
         "selections": [
           {
             "alias": null,
             "args": null,
-            "concreteType": "AccountEmail",
+            "concreteType": "AccountUsernameConnection",
             "kind": "LinkedField",
-            "name": "emails",
-            "plural": true,
+            "name": "usernames",
+            "plural": false,
             "selections": [
               {
                 "alias": null,
                 "args": null,
-                "kind": "ScalarField",
-                "name": "email",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "status",
+                "concreteType": "AccountUsernameEdge",
+                "kind": "LinkedField",
+                "name": "edges",
+                "plural": true,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "AccountUsername",
+                    "kind": "LinkedField",
+                    "name": "node",
+                    "plural": false,
+                    "selections": [
+                      (v0/*: any*/)
+                    ],
+                    "storageKey": null
+                  }
+                ],
                 "storageKey": null
               }
             ],
@@ -115,37 +141,42 @@ v1 = [
           {
             "alias": null,
             "args": null,
-            "concreteType": "AccountUsername",
+            "concreteType": "AccountEmailConnection",
             "kind": "LinkedField",
-            "name": "usernames",
-            "plural": true,
-            "selections": (v0/*: any*/),
+            "name": "emails",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "AccountEmailEdge",
+                "kind": "LinkedField",
+                "name": "edges",
+                "plural": true,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "AccountEmail",
+                    "kind": "LinkedField",
+                    "name": "node",
+                    "plural": false,
+                    "selections": [
+                      (v1/*: any*/),
+                      (v2/*: any*/)
+                    ],
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              }
+            ],
             "storageKey": null
           }
         ],
         "storageKey": null
       }
     ],
-    "storageKey": null
-  },
-  {
-    "alias": null,
-    "args": null,
-    "concreteType": "Account",
-    "kind": "LinkedField",
-    "name": "authenticatedAccount",
-    "plural": false,
-    "selections": (v0/*: any*/),
-    "storageKey": null
-  }
-];
-return {
-  "fragment": {
-    "argumentDefinitions": [],
-    "kind": "Fragment",
-    "metadata": null,
-    "name": "ProfileSettingsQuery",
-    "selections": (v1/*: any*/),
     "type": "Query",
     "abstractKey": null
   },
@@ -154,10 +185,94 @@ return {
     "argumentDefinitions": [],
     "kind": "Operation",
     "name": "ProfileSettingsQuery",
-    "selections": (v1/*: any*/)
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Account",
+        "kind": "LinkedField",
+        "name": "viewer",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AccountUsernameConnection",
+            "kind": "LinkedField",
+            "name": "usernames",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "AccountUsernameEdge",
+                "kind": "LinkedField",
+                "name": "edges",
+                "plural": true,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "AccountUsername",
+                    "kind": "LinkedField",
+                    "name": "node",
+                    "plural": false,
+                    "selections": [
+                      (v0/*: any*/),
+                      (v3/*: any*/)
+                    ],
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AccountEmailConnection",
+            "kind": "LinkedField",
+            "name": "emails",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "AccountEmailEdge",
+                "kind": "LinkedField",
+                "name": "edges",
+                "plural": true,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "AccountEmail",
+                    "kind": "LinkedField",
+                    "name": "node",
+                    "plural": false,
+                    "selections": [
+                      (v1/*: any*/),
+                      (v2/*: any*/),
+                      (v3/*: any*/)
+                    ],
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          (v3/*: any*/)
+        ],
+        "storageKey": null
+      }
+    ]
   },
   "params": {
-    "id": "56027daea69761bfeba11ec29b5fd4f9",
+    "id": "526f0385824bbb11fe04aaf36ea81757",
     "metadata": {},
     "name": "ProfileSettingsQuery",
     "operationKind": "query",
@@ -166,5 +281,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = 'e8630eb729855fe77bfdaa18e1a37dfc';
+(node: any).hash = '1cdb50bdfdea276324898cf4cbef8037';
 module.exports = node;

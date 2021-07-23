@@ -23,20 +23,22 @@ type Props = {
 
 const generalSettingsGQL = graphql`
   query ProfileSettingsQuery {
-    accountSettings {
-      accountId
-      general {
-        emails {
-          email
-          status
-        }
-        usernames {
-          username
+    viewer {
+      usernames {
+        edges {
+          node {
+            username
+          }
         }
       }
-    }
-    authenticatedAccount{
-      username
+      emails {
+        edges {
+          node {
+            email
+            status
+          }
+        }
+      }
     }
   }
 `

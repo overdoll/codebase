@@ -20,11 +20,15 @@ type Props = {
 };
 
 const CategoriesQueryGQL = graphql`
-  query CategoriesQuery($data: SearchInput!) {
-    categories(data: $data) {
-      id
-      title
-      thumbnail
+  query CategoriesQuery($title: String!) {
+    categories(title: $title) {
+      edges {
+        node {
+          id
+          title
+          thumbnail
+        }
+      }
     }
   }
 `
@@ -39,7 +43,7 @@ export default function Categories ({ args, onSelect, selected }: Props): Node {
   const [t] = useTranslation('upload')
 
   // We dont let users add custom categories
-  if (data.categories.length === 0) {
+  if (data.categories.edges.length === 0) {
     return (
       <Empty title={t('tag.category.not_found')} />
     )
@@ -47,7 +51,7 @@ export default function Categories ({ args, onSelect, selected }: Props): Node {
 
   return (
     <Wrap justify='center'>
-      {data.categories.map(item => (
+      {data.categories.edges.map(item => (
         <Element
           key={item.id}
           onSelect={() => onSelect(item)}

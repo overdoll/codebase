@@ -31,11 +31,10 @@ import CheckDouble1
 import type { UsernameMutation } from '@//:artifacts/UsernameMutation.graphql'
 
 const UsernameMutationGQL = graphql`
-  mutation UsernameMutation($username: String!) {
-    modifyAccountUsername(username: $username) {
-      ok
-      validation {
-        code
+  mutation UsernameMutation($input: UpdateAccountUsernameAndRetainPreviousInput!) {
+    updateAccountUsernameAndRetainPrevious(input: $input) {
+      accountUsername {
+        username
       }
     }
   }

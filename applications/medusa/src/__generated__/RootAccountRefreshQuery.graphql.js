@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 19ac107dd1b6cb54d7ab3fa2bc25d36b
+ * @relayHash c404ab6cc682a6a581c7ce0d003e22b5
  */
 
 /* eslint-disable */
@@ -29,7 +29,15 @@ query RootAccountRefreshQuery {
 fragment RootComponent_account on Query {
   viewer {
     username
-    roles
+    isStaff
+    isArtist
+    isModerator
+    avatar
+    lock {
+      reason
+      expires
+    }
+    id
   }
 }
 */
@@ -59,7 +67,7 @@ const node: ConcreteRequest = {
       {
         "alias": null,
         "args": null,
-        "concreteType": "Viewer",
+        "concreteType": "Account",
         "kind": "LinkedField",
         "name": "viewer",
         "plural": false,
@@ -75,7 +83,60 @@ const node: ConcreteRequest = {
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "roles",
+            "name": "isStaff",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "isArtist",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "isModerator",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "avatar",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AccountLock",
+            "kind": "LinkedField",
+            "name": "lock",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "reason",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "expires",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "id",
             "storageKey": null
           }
         ],
@@ -84,7 +145,7 @@ const node: ConcreteRequest = {
     ]
   },
   "params": {
-    "id": "19ac107dd1b6cb54d7ab3fa2bc25d36b",
+    "id": "c404ab6cc682a6a581c7ce0d003e22b5",
     "metadata": {},
     "name": "RootAccountRefreshQuery",
     "operationKind": "query",
@@ -92,5 +153,5 @@ const node: ConcreteRequest = {
   }
 };
 // prettier-ignore
-(node: any).hash = 'b2c00bb941f6dd7e2b6aa2df3f3d257e';
+(node: any).hash = '0dfb3e06e95cac865f3fcb93a5811d1c';
 module.exports = node;

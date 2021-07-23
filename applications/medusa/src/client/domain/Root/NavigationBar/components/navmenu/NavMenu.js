@@ -30,11 +30,8 @@ import { graphql, useMutation } from 'react-relay/hooks'
 
 const logoutGQL = graphql`
   mutation NavMenuMutation {
-    logout {
-      validation {
-        code
-      }
-      ok
+    revokeAccountAccess {
+      revokedAccountId
     }
   }
 `

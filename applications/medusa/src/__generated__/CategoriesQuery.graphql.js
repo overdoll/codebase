@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 9c029d9eeba88719a2ec4eda2e6f1d8c
+ * @relayHash 837b15758633e6ffdbc8a5d672817d8f
  */
 
 /* eslint-disable */
@@ -8,18 +8,19 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-export type SearchInput = {|
-  search: string
-|};
 export type CategoriesQueryVariables = {|
-  data: SearchInput
+  title: string
 |};
 export type CategoriesQueryResponse = {|
-  +categories: $ReadOnlyArray<{|
-    +id: string,
-    +title: string,
-    +thumbnail: string,
-  |}>
+  +categories: {|
+    +edges: $ReadOnlyArray<{|
+      +node: {|
+        +id: string,
+        +title: string,
+        +thumbnail: any,
+      |}
+    |}>
+  |}
 |};
 export type CategoriesQuery = {|
   variables: CategoriesQueryVariables,
@@ -29,12 +30,16 @@ export type CategoriesQuery = {|
 
 /*
 query CategoriesQuery(
-  $data: SearchInput!
+  $title: String!
 ) {
-  categories(data: $data) {
-    id
-    title
-    thumbnail
+  categories(title: $title) {
+    edges {
+      node {
+        id
+        title
+        thumbnail
+      }
+    }
   }
 }
 */
@@ -44,7 +49,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "data"
+    "name": "title"
   }
 ],
 v1 = [
@@ -53,34 +58,56 @@ v1 = [
     "args": [
       {
         "kind": "Variable",
-        "name": "data",
-        "variableName": "data"
+        "name": "title",
+        "variableName": "title"
       }
     ],
-    "concreteType": "Category",
+    "concreteType": "CategoryConnection",
     "kind": "LinkedField",
     "name": "categories",
-    "plural": true,
+    "plural": false,
     "selections": [
       {
         "alias": null,
         "args": null,
-        "kind": "ScalarField",
-        "name": "id",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "title",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "thumbnail",
+        "concreteType": "CategoryEdge",
+        "kind": "LinkedField",
+        "name": "edges",
+        "plural": true,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Category",
+            "kind": "LinkedField",
+            "name": "node",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "id",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "title",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "thumbnail",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
         "storageKey": null
       }
     ],
@@ -105,7 +132,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "9c029d9eeba88719a2ec4eda2e6f1d8c",
+    "id": "837b15758633e6ffdbc8a5d672817d8f",
     "metadata": {},
     "name": "CategoriesQuery",
     "operationKind": "query",
@@ -114,5 +141,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '44a23aa48384eef3904ae581484afa88';
+(node: any).hash = '769fd1c97f094554f27a1d5909cf9496';
 module.exports = node;

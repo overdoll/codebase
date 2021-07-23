@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 3d41b45fff8eed6507354d118ea4e35a
+ * @relayHash f17aebdb2e71b61c667555cc73abb90c
  */
 
 /* eslint-disable */
@@ -27,12 +27,15 @@ query RootQuery {
 fragment RootComponent_account on Query {
   viewer {
     username
-    roles
+    isStaff
+    isArtist
+    isModerator
     avatar
     lock {
       reason
       expires
     }
+    id
   }
 }
 */
@@ -62,7 +65,7 @@ const node: ConcreteRequest = {
       {
         "alias": null,
         "args": null,
-        "concreteType": "Viewer",
+        "concreteType": "Account",
         "kind": "LinkedField",
         "name": "viewer",
         "plural": false,
@@ -78,7 +81,60 @@ const node: ConcreteRequest = {
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "roles",
+            "name": "isStaff",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "isArtist",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "isModerator",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "avatar",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AccountLock",
+            "kind": "LinkedField",
+            "name": "lock",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "reason",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "expires",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "id",
             "storageKey": null
           }
         ],
@@ -87,7 +143,7 @@ const node: ConcreteRequest = {
     ]
   },
   "params": {
-    "id": "3d41b45fff8eed6507354d118ea4e35a",
+    "id": "f17aebdb2e71b61c667555cc73abb90c",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",

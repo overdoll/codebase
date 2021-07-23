@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 6e2d77d54dc16c355e924d0626715556
+ * @relayHash e9e3efa5540f9a88df3e8d32bb0988ee
  */
 
 /* eslint-disable */
@@ -8,18 +8,19 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-export type SearchInput = {|
-  search: string
-|};
 export type ArtistsQueryVariables = {|
-  data: SearchInput
+  username: string
 |};
 export type ArtistsQueryResponse = {|
-  +artists: $ReadOnlyArray<{|
-    +id: string,
-    +avatar: string,
-    +username: string,
-  |}>
+  +accounts: {|
+    +edges: $ReadOnlyArray<{|
+      +node: {|
+        +id: string,
+        +avatar: any,
+        +username: string,
+      |}
+    |}>
+  |}
 |};
 export type ArtistsQuery = {|
   variables: ArtistsQueryVariables,
@@ -29,12 +30,16 @@ export type ArtistsQuery = {|
 
 /*
 query ArtistsQuery(
-  $data: SearchInput!
+  $username: String!
 ) {
-  artists(data: $data) {
-    id
-    avatar
-    username
+  accounts(username: $username) {
+    edges {
+      node {
+        id
+        avatar
+        username
+      }
+    }
   }
 }
 */
@@ -44,7 +49,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "data"
+    "name": "username"
   }
 ],
 v1 = [
@@ -53,34 +58,56 @@ v1 = [
     "args": [
       {
         "kind": "Variable",
-        "name": "data",
-        "variableName": "data"
+        "name": "username",
+        "variableName": "username"
       }
     ],
-    "concreteType": "Artist",
+    "concreteType": "AccountConnection",
     "kind": "LinkedField",
-    "name": "artists",
-    "plural": true,
+    "name": "accounts",
+    "plural": false,
     "selections": [
       {
         "alias": null,
         "args": null,
-        "kind": "ScalarField",
-        "name": "id",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "avatar",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "username",
+        "concreteType": "AccountEdge",
+        "kind": "LinkedField",
+        "name": "edges",
+        "plural": true,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Account",
+            "kind": "LinkedField",
+            "name": "node",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "id",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "avatar",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "username",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
         "storageKey": null
       }
     ],
@@ -105,7 +132,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "6e2d77d54dc16c355e924d0626715556",
+    "id": "e9e3efa5540f9a88df3e8d32bb0988ee",
     "metadata": {},
     "name": "ArtistsQuery",
     "operationKind": "query",
@@ -114,5 +141,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '0022c323a2afef1879835d89b8436f9a';
+(node: any).hash = 'ae118c9596025f4b22c02d92a65c3ec4';
 module.exports = node;

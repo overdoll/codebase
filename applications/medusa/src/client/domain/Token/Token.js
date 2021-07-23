@@ -2,12 +2,11 @@
  * @flow
  */
 import type { Node } from 'react'
-import type { PreloadedQueryInner } from 'react-relay/hooks'
-import { graphql, usePreloadedQuery } from 'react-relay/hooks'
+import { useEffect } from 'react'
+import { graphql, useMutation } from 'react-relay/hooks'
 import Register from '../Register/Register'
 import { useTranslation } from 'react-i18next'
-import { useHistory } from '@//:modules/routing'
-import type { TokenQuery } from '@//:artifacts/TokenQuery.graphql'
+import { useHistory, useLocation } from '@//:modules/routing'
 import { Icon } from '@//:modules/content'
 import UAParser from 'ua-parser-js'
 import { Alert, AlertDescription, AlertIcon, Box, Center, Flex, Heading, Text } from '@chakra-ui/react'
@@ -16,38 +15,63 @@ import { Helmet } from 'react-helmet-async'
 import SignBadgeCircle
   from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
 
-type Props = {
-  prepared: {
-    tokenQuery: PreloadedQueryInner<TokenQuery>,
-  },
-};
-
-const TokenQueryGQL = graphql`
-  query TokenQuery($token: String!) {
-    redeemAuthenticationToken(token: $token) {
-      redeemed
-      email
-      session
-      sameSession
-      accountStatus {
-        registered
-        authenticated
-        multiFactor
+const TokenMutationGQL = graphql`
+  mutation TokenMutation($input: VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput!) {
+    verifyAuthenticationTokenAndAttemptAccountAccessGrant(input: $input) {
+      authenticationToken {
+        verified
+        email
+        session
+        sameSession
+        accountStatus {
+          registered
+          authenticated
+          multiFactor
+        }
+      }
+      account {
+        username
+        isStaff
+        isArtist
+        isModerator
+        avatar
+        lock {
+          reason
+          expires
+        }
       }
     }
   }
 `
 
-export default function Token (props: Props): Node {
-  const data = usePreloadedQuery<TokenQuery>(
-    TokenQueryGQL,
-    props.prepared.tokenQuery
-  )
-
+export default function Token (): Node {
   const [t] = useTranslation('token')
   const history = useHistory()
-
+  const location = useLocation()
   const { flash } = useFlash()
+
+  const [commit, isInFlight] = useMutation(
+    TokenMutationGQL
+  )
+
+  console.log(location)
+
+  useEffect(() => {
+    commit({
+      variables: {
+        input: {
+          username: 'id'
+        }
+      },
+      onCompleted (data) {
+      },
+      onError (data) {
+
+      }
+    })
+  }, [])
+
+  const data = { redeemAuthenticationToken: null }
 
   if (!data.redeemAuthenticationToken) {
     // Go back to Join page and send notification of invalid token

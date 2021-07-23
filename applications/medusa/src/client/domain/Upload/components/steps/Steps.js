@@ -33,11 +33,11 @@ type Props = {
 };
 
 const SubmitGraphQL = graphql`
-  mutation StepsMutation($data: PostInput) {
-    post(data: $data) {
+  mutation StepsMutation($input: CreatePostInput!) {
+    createPost(input: $input) {
       review
-      validation {
-        code
+      post {
+        id
       }
     }
   }
@@ -158,7 +158,7 @@ export default function Steps ({ uppy, state, dispatch }: Props): Node {
     // Commit all results
     commit({
       variables: {
-        data: {
+        input: {
           artistUsername: state.artist.username ?? '',
           artistId: state.artist.id,
           categories: Object.keys(state.categories),

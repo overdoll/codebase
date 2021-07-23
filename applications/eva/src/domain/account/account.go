@@ -2,6 +2,7 @@ package account
 
 import (
 	"errors"
+	"os"
 	"strings"
 	"time"
 
@@ -110,7 +111,8 @@ func (u *Account) Avatar() string {
 }
 
 func (u *Account) ConvertAvatarToURI() graphql.URI {
-	return graphql.NewURI("")
+	var staticURL = os.Getenv("STATIC_URL")
+	return graphql.NewURI(staticURL + "/avatars/" + u.avatar)
 }
 
 func (u *Account) LockedUntil() int {

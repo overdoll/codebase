@@ -27,17 +27,19 @@ type Props = {
 };
 
 const JoinAction = graphql`
-  mutation JoinMutation($data: AuthenticationInput!) {
-    authenticate(data: $data) {
-      ok
+  mutation JoinMutation($input: GrantAuthenticationTokenInput!) {
+    grantAuthenticationToken(input: $input) {
+      authenticationToken {
+        email
+      }
     }
   }
 `
 
 const JoinTokenStatus = graphql`
   query JoinQuery {
-    authenticationTokenStatus {
-      redeemed
+    viewAuthenticationToken {
+      verified
       email
       accountStatus {
         registered
@@ -70,9 +72,9 @@ export default function Join (props: Props): Node {
 
   const [email, setEmail] = useState(null)
 
-  const authenticationInitiated = !!data.authenticationTokenStatus
-  const authenticationTokenRedeemed = !!data?.authenticationTokenStatus?.redeemed
-  const authenticationTokenAccountRegistered = !!data?.authenticationTokenStatus?.accountStatus?.registered
+  const authenticationInitiated = !!data.viewAuthenticationToken
+  const authenticationTokenRedeemed = !!data?.viewAuthenticationToken?.verified
+  const authenticationTokenAccountRegistered = !!data?.viewAuthenticationToken?.accountStatus?.registered
 
   // a refresh query - used mainly for polling
   const refresh = useCallback(() => {
@@ -117,7 +119,7 @@ export default function Join (props: Props): Node {
     return (
       <Lobby
         // Use auth cookie's email as backup, since it may not be here after a refresh
-        email={waiting ? email : data?.authenticationTokenStatus?.email}
+        email={waiting ? email : data?.viewAuthenticationToken?.email}
         refresh={refresh}
       />
     )

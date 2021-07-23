@@ -12,24 +12,8 @@ import { useLazyLoadQuery } from 'react-relay/hooks'
 import { Helmet } from 'react-helmet-async'
 import { graphql } from 'graphql'
 
-const TestQueryGQL = graphql`
-  query NotFoundQuery {
-    node(id: "testid123") {
-      id
-      ... on Test {
-        __typename
-        test
-      }
-    }
-  }
-`
-
 export default function NotFound (): Node {
   const [t] = useTranslation('empty')
-
-  const data = useLazyLoadQuery(TestQueryGQL)
-
-  console.log(data)
 
   return (
     <>

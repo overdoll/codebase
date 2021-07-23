@@ -7,14 +7,21 @@
 'use strict';
 
 import type { ReaderFragment } from 'relay-runtime';
-export type AccountRoleEnum = "Moderator" | "Staff" | "%future added value";
+export type AccountLockReason = "PostInfraction" | "%future added value";
 import type { FragmentReference } from "relay-runtime";
 import type { RootComponent_account$ref, RootComponent_account$fragmentType } from "./RootAccountRefreshQuery.graphql";
 export type { RootComponent_account$ref, RootComponent_account$fragmentType };
 export type RootComponent_account = {|
   +viewer: ?{|
     +username: string,
-    +roles: $ReadOnlyArray<AccountRoleEnum>,
+    +isStaff: boolean,
+    +isArtist: boolean,
+    +isModerator: boolean,
+    +avatar: any,
+    +lock: ?{|
+      +reason: AccountLockReason,
+      +expires: number,
+    |},
   |},
   +$refType: RootComponent_account$ref,
 |};
@@ -41,7 +48,7 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
-      "concreteType": "Viewer",
+      "concreteType": "Account",
       "kind": "LinkedField",
       "name": "viewer",
       "plural": false,
@@ -57,7 +64,53 @@ const node: ReaderFragment = {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "roles",
+          "name": "isStaff",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "isArtist",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "isModerator",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "avatar",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "AccountLock",
+          "kind": "LinkedField",
+          "name": "lock",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "reason",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "expires",
+              "storageKey": null
+            }
+          ],
           "storageKey": null
         }
       ],
@@ -68,5 +121,5 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 // prettier-ignore
-(node: any).hash = 'b2c00bb941f6dd7e2b6aa2df3f3d257e';
+(node: any).hash = '0dfb3e06e95cac865f3fcb93a5811d1c';
 module.exports = node;

@@ -19,11 +19,15 @@ type Props = {
 };
 
 const MediaQueryGQL = graphql`
-  query MediaQuery($data: SearchInput!) {
-    media(data: $data) {
-      id
-      title
-      thumbnail
+  query MediaQuery($title: String!) {
+    medias(title: $title) {
+     edges {
+       node {
+         id
+         title
+         thumbnail
+       }
+     }
     }
   }
 `
@@ -45,7 +49,7 @@ export default function Media ({ args, onSelect }: Props): Node {
 
   return (
     <>
-      {data.media.length === 0
+      {data.media.edges.length === 0
         ? (
           <Empty
             title={t('tag.character.media.not_found')}

@@ -20,11 +20,15 @@ type Props = {
 };
 
 const ArtistsQueryGQL = graphql`
-  query ArtistsQuery($data: SearchInput!) {
-    artists(data: $data) {
-      id
-      avatar
-      username
+  query ArtistsQuery($username: String!) {
+    accounts(username: $username) {
+      edges {
+        node {
+          id
+          avatar
+          username
+        }
+      }
     }
   }
 `
@@ -43,7 +47,7 @@ export default function Artists ({ args, onSelect, selected }: Props): Node {
 
   const [t] = useTranslation('upload')
 
-  if (data.artists.length === 0) {
+  if (data.artists.edges.length === 0) {
     return (
       <Empty
         title={t('tag.artist.not_found')} button={`${t('tag.artist.add')} ${args.variables.data.search}`}

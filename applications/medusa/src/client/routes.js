@@ -171,18 +171,6 @@ const routes: Array<Route> = [
           ),
         module.hot
         ),
-        prepare: params => {
-          const TokenQuery = require('@//:artifacts/TokenQuery.graphql')
-          return {
-            tokenQuery: {
-              query: TokenQuery,
-              variables: { token: params.id },
-              options: {
-                fetchPolicy: 'store-or-network'
-              }
-            }
-          }
-        },
         // When user is logged in, we don't want them to be able to redeem any other tokens
         middleware: [
           ({ environment, history }) => {
