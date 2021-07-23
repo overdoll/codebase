@@ -16,7 +16,7 @@ func NewSearchCharactersHandler(pr post.IndexRepository) SearchCharactersHandler
 	return SearchCharactersHandler{pr: pr}
 }
 
-func (h SearchCharactersHandler) Handle(ctx context.Context, cursor *paging.Cursor, query string) ([]*post.Character,  error) {
+func (h SearchCharactersHandler) Handle(ctx context.Context, cursor *paging.Cursor, query string) ([]*post.Character, error) {
 
 	results, err := h.pr.SearchCharacters(ctx, cursor, query)
 
