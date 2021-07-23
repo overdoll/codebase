@@ -245,7 +245,7 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 	require.NoError(t, err)
 
 	modified = pass.GetPassport()
-	
+
 	// ensure user is now authenticated
 	require.Equal(t, true, modified.IsAuthenticated())
 	require.Equal(t, testAccountId, modified.AccountID())
