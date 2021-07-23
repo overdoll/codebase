@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 8013fdfdc81e54de7f24b2e6069d97a9
+ * @relayHash 181aa9f22c834f287303a08ac7b1209d
  */
 
 /* eslint-disable */
@@ -9,7 +9,7 @@
 
 import type { ConcreteRequest } from 'relay-runtime';
 export type CharactersQueryVariables = {|
-  name: string
+  name?: ?string
 |};
 export type CharactersQueryResponse = {|
   +characters: {|
@@ -35,7 +35,7 @@ export type CharactersQuery = {|
 
 /*
 query CharactersQuery(
-  $name: String!
+  $name: String
 ) {
   characters(name: $name) {
     edges {
@@ -164,7 +164,7 @@ return {
     "selections": (v3/*: any*/)
   },
   "params": {
-    "id": "8013fdfdc81e54de7f24b2e6069d97a9",
+    "id": "181aa9f22c834f287303a08ac7b1209d",
     "metadata": {},
     "name": "CharactersQuery",
     "operationKind": "query",
@@ -173,5 +173,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '98fac9c62ff0a1a2825fac9b3e6f969d';
+(node: any).hash = 'c34334ef6db876e67bce9268a46623e4';
 module.exports = node;

@@ -2,21 +2,21 @@
  * @flow
  */
 import type { PreloadedQueryInner } from 'react-relay/hooks'
-import { graphql, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay/hooks'
+import { graphql, useMutation, usePreloadedQuery, useQueryLoader, useRelayEnvironment } from 'react-relay/hooks'
+import { commitLocalUpdate } from 'react-relay'
 import type { Node } from 'react'
-import { useCallback, useContext, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import Register from '../Register/Register'
 import { useTranslation } from 'react-i18next'
 import Lobby from './Lobby/Lobby'
 import { Alert, AlertDescription, AlertIcon, Center, CloseButton, Flex, useToast } from '@chakra-ui/react'
-import Icon from '@//:modules/content/icon/Icon'
+import Icon from '@//:modules/content/Icon/Icon'
 import SignBadgeCircle
   from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
 import { useFlash } from '@//:modules/flash'
 import { Helmet } from 'react-helmet-async'
 import JoinForm from './JoinForm/JoinForm'
 import type { JoinQuery } from '@//:artifacts/JoinQuery.graphql'
-import { RootContext } from '../Root/Root'
 import { useHistory } from '@//:modules/routing'
 
 type Props = {
@@ -55,9 +55,9 @@ export default function Join (props: Props): Node {
     props.prepared.joinQuery
   )
 
-  const data = usePreloadedQuery<JoinQuery>(JoinTokenStatus, queryRef)
+  const environment = useRelayEnvironment()
 
-  const root = useContext(RootContext)
+  const data = usePreloadedQuery<JoinQuery>(JoinTokenStatus, queryRef)
 
   const history = useHistory()
 
@@ -85,7 +85,7 @@ export default function Join (props: Props): Node {
     setEmail(val.email)
     commit({
       variables: {
-        data: {
+        input: {
           email: val.email
         }
       },
@@ -105,7 +105,13 @@ export default function Join (props: Props): Node {
   // when we receive the results from the token redemption, we will re-fetch the account and change URLs
   useEffect(() => {
     if (authenticationInitiated && authenticationTokenRedeemed && authenticationTokenAccountRegistered) {
-      root.fetchAccount()
+      // invalidate viewer so it will be re-fetched
+      commitLocalUpdate(environment, store => {
+        store
+          .getRoot()
+          .setValue(undefined, 'viewer')
+      })
+
       history.push('/profile')
     }
   }, [data])

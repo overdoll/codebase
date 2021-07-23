@@ -8,11 +8,15 @@ import {
   Heading,
   IconButton,
   Menu,
-  MenuButton, MenuDivider,
+  MenuButton,
+  MenuDivider,
   MenuItem,
-  MenuList, Text, Tooltip, useToast
+  MenuList,
+  Text,
+  Tooltip,
+  useToast
 } from '@chakra-ui/react'
-import Icon from '@//:modules/content/icon/Icon'
+import Icon from '@//:modules/content/Icon/Icon'
 import Link from '@//:modules/routing/Link'
 import LoginKey2
   from '@streamlinehq/streamlinehq/img/streamline-regular/interface-essential/login-logout/login-key-2.svg'
@@ -63,6 +67,12 @@ export default function NavMenu ({ refresh, ability, account }: Props): Node {
           title: t('logout.success'),
           isClosable: true
         })
+      },
+      updater: (store, payload) => {
+        store
+          .getRoot()
+          .setValue(null, 'viewer')
+        history.push('/')
       },
       onError () {
         notify({

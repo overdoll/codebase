@@ -7,7 +7,7 @@ import { Flex, Heading, Button, Text } from '@chakra-ui/react'
 import ButtonRefreshArrows
   from '@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/multimedia-controls/button-refresh-arrows.svg'
 import { useTranslation } from 'react-i18next'
-import Icon from '@//:modules/content/icon/Icon'
+import Icon from '@//:modules/content/Icon/Icon'
 
 type Props = {
   error: Error,

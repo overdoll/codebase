@@ -8,7 +8,7 @@ import {
   PopoverContent,
   PopoverArrow, PopoverCloseButton, PopoverBody, Popover
 } from '@chakra-ui/react'
-import Icon from '@//:modules/content/icon/Icon'
+import Icon from '@//:modules/content/Icon/Icon'
 import InterfaceAlertInformationCircle
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/alerts/interface-alert-information-circle.svg'
 

@@ -17,6 +17,8 @@ Cypress.Commands.add('login', (email, complete = true) => {
       // in debug mode, our cookies won't be encrypted so we can just read it directly from the browser
       // in production, the user would have to check their email in order to get the right token
       cy.visit('/token/' + cookie.value)
+
+      cy.url().should('include', '/profile')
     })
   }
 })

@@ -228,6 +228,12 @@ class CookieDataSource extends RemoteGraphQLDataSource {
       })
     }
 
+    // empty passport sent back - user needs to be logged out
+    if (passport === '') {
+      await new Promise(resolve => context.req.session.regenerate(resolve))
+      return response
+    }
+
     // If the service sends back an X-Modified-Passport, we modify the session's passport
     // we will validate the passport by parsing it
     // TODO: passport && sessions for accounts should eventually be handled by an ingress service

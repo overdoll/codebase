@@ -19,7 +19,7 @@ import {
 } from '@chakra-ui/react'
 
 import { useTranslation } from 'react-i18next'
-import Icon from '@//:modules/content/icon/Icon'
+import Icon from '@//:modules/content/Icon/Icon'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Joi from 'joi'

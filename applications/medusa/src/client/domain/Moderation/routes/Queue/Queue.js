@@ -16,7 +16,7 @@ import {
   PopoverArrow,
   PopoverCloseButton
 } from '@chakra-ui/react'
-import Icon from '@//:modules/content/icon/Icon'
+import Icon from '@//:modules/content/Icon/Icon'
 import Button from '@//:modules/form/button'
 import InterfaceArrowsSynchronize
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-synchronize.svg'

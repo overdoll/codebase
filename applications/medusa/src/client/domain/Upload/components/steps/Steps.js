@@ -139,12 +139,17 @@ export default function Steps ({ uppy, state, dispatch }: Props): Node {
       // if the media is custom, use the name. otherwise use the id
       // the check is done on the backend against mediaRequests
       if (character.request) {
-        characterRequests.push({
-          name: character.name,
-          media: character.media.request
-            ? character.media.title
-            : character.media.id
-        })
+        const request = {
+          name: character.name
+        }
+
+        if (character.media.request) {
+          request.customMediaName = character.media.title
+        } else {
+          request.existingMediaId = character.media.id
+        }
+
+        characterRequests.push(request)
       }
 
       // if the media is requested, add it to our list
@@ -155,29 +160,20 @@ export default function Steps ({ uppy, state, dispatch }: Props): Node {
       return !(character.media.request || character.request)
     })
 
-    // Commit all results
     commit({
       variables: {
         input: {
-          artistUsername: state.artist.username ?? '',
-          artistId: state.artist.id,
-          categories: Object.keys(state.categories),
-          characters: characters,
+          customArtistUsername: state.artist.username ?? '',
+          existingArtist: state.artist.id,
+          categoryIds: Object.keys(state.categories),
+          characterIds: characters,
           content: urls,
           characterRequests: characterRequests,
           mediaRequests: mediaRequests
         }
       },
       onCompleted (data) {
-        if (data.post?.validation !== null) {
-          notify({
-            status: 'error',
-            title: data?.post?.validation?.code,
-            isClosable: true
-          })
-        } else {
-          dispatch({ type: EVENTS.SUBMIT, value: data.post })
-        }
+        dispatch({ type: EVENTS.SUBMIT, value: data.post })
       },
       onError (data) {
         const message = JSON.parse(data?.message)

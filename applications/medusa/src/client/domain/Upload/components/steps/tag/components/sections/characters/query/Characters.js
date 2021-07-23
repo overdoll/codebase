@@ -20,7 +20,7 @@ type Props = {
 };
 
 const CharactersQueryGQL = graphql`
-  query CharactersQuery($name: String!) {
+  query CharactersQuery($name: String) {
     characters(name: $name) {
       edges {
         node {
@@ -47,7 +47,7 @@ export default function Characters ({ args, onSelect, selected }: Props): Node {
 
   // When we add a "new" character, we will open a modal so that the user can select the media
   const onAddNewCharacter = () => {
-    const name: string = args.variables.data.search
+    const name: string = args.variables.name
     onSelect({
       id: name,
       name: name,
@@ -62,7 +62,7 @@ export default function Characters ({ args, onSelect, selected }: Props): Node {
   if (data.characters.edges.length === 0) {
     return (
       <Empty
-        title={t('tag.character.not_found')} button={`${t('tag.character.add')} ${args.variables.data.search}`}
+        title={t('tag.character.not_found')} button={`${t('tag.character.add')} ${args.variables.name}`}
         onClick={onAddNewCharacter}
       />
     )
@@ -71,14 +71,14 @@ export default function Characters ({ args, onSelect, selected }: Props): Node {
   return (
     <>
       <Wrap justify='center'>
-        {data.characters.map(item => (
+        {data.characters.edges.map(item => (
           <Element
-            key={item.id}
-            onSelect={() => onSelect(item)}
-            selected={selected.indexOf(item.id) > -1}
-            title={item.name}
-            subheader={item.media.title}
-            thumbnail={item.thumbnail}
+            key={item.node.id}
+            onSelect={() => onSelect(item.node)}
+            selected={selected.indexOf(item.node.id) > -1}
+            title={item.node.name}
+            subheader={item.node.media.title}
+            thumbnail={item.node.thumbnail}
           />
         ))}
       </Wrap>

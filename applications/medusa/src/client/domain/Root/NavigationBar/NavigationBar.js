@@ -8,7 +8,7 @@ import {
   HStack, Box, useDisclosure, Stack, Heading, Tooltip
 } from '@chakra-ui/react'
 import { Fragment, useMemo, useContext } from 'react'
-import Icon from '@//:modules/content/icon/Icon'
+import Icon from '@//:modules/content/Icon/Icon'
 import { useTranslation } from 'react-i18next'
 import Link from '@//:modules/routing/Link'
 import { Switch, Route, Router } from 'react-router'

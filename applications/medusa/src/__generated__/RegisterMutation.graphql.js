@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 9c1eb8ff0cec2de22a695134ea7d6594
+ * @relayHash 501573df0718dc07c1c8475ea93a5bcc
  */
 
 /* eslint-disable */
@@ -17,11 +17,7 @@ export type RegisterMutationVariables = {|
 export type RegisterMutationResponse = {|
   +createAccountWithAuthenticationToken: ?{|
     +account: ?{|
-      +username: string,
-      +isStaff: boolean,
-      +isArtist: boolean,
-      +isModerator: boolean,
-      +avatar: any,
+      +id: string
     |}
   |}
 |};
@@ -37,11 +33,6 @@ mutation RegisterMutation(
 ) {
   createAccountWithAuthenticationToken(input: $input) {
     account {
-      username
-      isStaff
-      isArtist
-      isModerator
-      avatar
       id
     }
   }
@@ -58,81 +49,48 @@ var v0 = [
 ],
 v1 = [
   {
-    "kind": "Variable",
-    "name": "input",
-    "variableName": "input"
-  }
-],
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "username",
-  "storageKey": null
-},
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "isStaff",
-  "storageKey": null
-},
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "isArtist",
-  "storageKey": null
-},
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "isModerator",
-  "storageKey": null
-},
-v6 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "avatar",
-  "storageKey": null
-};
-return {
-  "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
-    "kind": "Fragment",
-    "metadata": null,
-    "name": "RegisterMutation",
+    "alias": null,
+    "args": [
+      {
+        "kind": "Variable",
+        "name": "input",
+        "variableName": "input"
+      }
+    ],
+    "concreteType": "CreateAccountWithAuthenticationTokenPayload",
+    "kind": "LinkedField",
+    "name": "createAccountWithAuthenticationToken",
+    "plural": false,
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
-        "concreteType": "CreateAccountWithAuthenticationTokenPayload",
+        "args": null,
+        "concreteType": "Account",
         "kind": "LinkedField",
-        "name": "createAccountWithAuthenticationToken",
+        "name": "account",
         "plural": false,
         "selections": [
           {
             "alias": null,
             "args": null,
-            "concreteType": "Account",
-            "kind": "LinkedField",
-            "name": "account",
-            "plural": false,
-            "selections": [
-              (v2/*: any*/),
-              (v3/*: any*/),
-              (v4/*: any*/),
-              (v5/*: any*/),
-              (v6/*: any*/)
-            ],
+            "kind": "ScalarField",
+            "name": "id",
             "storageKey": null
           }
         ],
         "storageKey": null
       }
     ],
+    "storageKey": null
+  }
+];
+return {
+  "fragment": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "RegisterMutation",
+    "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -141,45 +99,10 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "RegisterMutation",
-    "selections": [
-      {
-        "alias": null,
-        "args": (v1/*: any*/),
-        "concreteType": "CreateAccountWithAuthenticationTokenPayload",
-        "kind": "LinkedField",
-        "name": "createAccountWithAuthenticationToken",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Account",
-            "kind": "LinkedField",
-            "name": "account",
-            "plural": false,
-            "selections": [
-              (v2/*: any*/),
-              (v3/*: any*/),
-              (v4/*: any*/),
-              (v5/*: any*/),
-              (v6/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "id",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      }
-    ]
+    "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "9c1eb8ff0cec2de22a695134ea7d6594",
+    "id": "501573df0718dc07c1c8475ea93a5bcc",
     "metadata": {},
     "name": "RegisterMutation",
     "operationKind": "mutation",
@@ -188,5 +111,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '6dd9569467bae6bc4c2e3f54ca950aa4';
+(node: any).hash = '40dd985fd835e7f5dff39dd90d25e01a';
 module.exports = node;

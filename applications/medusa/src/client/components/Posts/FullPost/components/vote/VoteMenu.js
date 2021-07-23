@@ -4,7 +4,7 @@
 
 import { Node } from 'react'
 import { Flex, Heading, IconButton } from '@chakra-ui/react'
-import Icon from '@//:modules/content/icon/Icon'
+import Icon from '@//:modules/content/Icon/Icon'
 import { abbreviateNumber } from '@//:modules/utilities/functions'
 
 import InterfaceNoFavoriteStar

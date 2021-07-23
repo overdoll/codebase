@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash e9e3efa5540f9a88df3e8d32bb0988ee
+ * @relayHash a26d21fe5c6b97dd25a40f206447ec07
  */
 
 /* eslint-disable */
@@ -9,7 +9,7 @@
 
 import type { ConcreteRequest } from 'relay-runtime';
 export type ArtistsQueryVariables = {|
-  username: string
+  username?: ?string
 |};
 export type ArtistsQueryResponse = {|
   +accounts: {|
@@ -30,7 +30,7 @@ export type ArtistsQuery = {|
 
 /*
 query ArtistsQuery(
-  $username: String!
+  $username: String
 ) {
   accounts(username: $username) {
     edges {
@@ -132,7 +132,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "e9e3efa5540f9a88df3e8d32bb0988ee",
+    "id": "a26d21fe5c6b97dd25a40f206447ec07",
     "metadata": {},
     "name": "ArtistsQuery",
     "operationKind": "query",
@@ -141,5 +141,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = 'ae118c9596025f4b22c02d92a65c3ec4';
+(node: any).hash = '280bd07944329c7a851600c8fe45fbcb';
 module.exports = node;

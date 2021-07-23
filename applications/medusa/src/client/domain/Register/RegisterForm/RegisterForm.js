@@ -4,7 +4,7 @@
 import Joi from 'joi'
 import { useTranslation } from 'react-i18next'
 import { FormControl, FormHelperText, FormLabel, Input, InputGroup, InputRightElement } from '@chakra-ui/react'
-import Icon from '@//:modules/content/icon/Icon'
+import Icon from '@//:modules/content/Icon/Icon'
 import { useForm } from 'react-hook-form'
 import AlertCircle from '@streamlinehq/streamlinehq/img/streamline-regular/interface-essential/alerts/alert-circle.svg'
 import CheckDouble1

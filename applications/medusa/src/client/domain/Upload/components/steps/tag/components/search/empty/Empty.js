@@ -3,7 +3,7 @@
  */
 import type { Node } from 'react'
 import { Flex, Heading } from '@chakra-ui/react'
-import Icon from '@//:modules/content/icon/Icon'
+import Icon from '@//:modules/content/Icon/Icon'
 import Button from '@//:modules/form/button'
 import CleaningBroom from '@streamlinehq/streamlinehq/img/streamline-regular/wayfinding/cleaning/cleaning-broom.svg'
 

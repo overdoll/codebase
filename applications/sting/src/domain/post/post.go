@@ -121,11 +121,18 @@ type Post struct {
 }
 
 func NewPost(id, moderatorId string, artist *account.Account, customArtistUsername string, contributor *account.Account, content []string, characters []*Character, categories []*Category) (*Post, error) {
+
+	var artistId string
+
+	if artist != nil {
+		artistId = artist.ID()
+	}
+	
 	return &Post{
 		id:                   id,
 		moderatorId:          moderatorId,
 		state:                Processing,
-		artistId:             artist.ID(),
+		artistId:             artistId,
 		contributorId:        contributor.ID(),
 		customArtistUsername: customArtistUsername,
 		content:              content,

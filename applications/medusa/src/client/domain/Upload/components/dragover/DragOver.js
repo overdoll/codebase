@@ -5,7 +5,7 @@ import type { Node } from 'react'
 import { useState } from 'react'
 import { Flex, useToast, Heading, useDisclosure } from '@chakra-ui/react'
 import type { Uppy } from '@uppy/core'
-import Icon from '@//:modules/content/icon/Icon'
+import Icon from '@//:modules/content/Icon/Icon'
 import InterfaceContentArchive
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/content/interface-content-archive.svg'
 import { useTranslation } from 'react-i18next'

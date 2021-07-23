@@ -7,6 +7,7 @@ import RoutingContext from '@//:modules/routing/RoutingContext'
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
 import type { PreparedEntry, RouterInit } from '@//:modules/routing/router'
 import { chakra, Progress, Flex, Spinner } from '@chakra-ui/react'
+import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner'
 
 const SUSPENSE_CONFIG = { timeoutMs: 2000 }
 
@@ -106,7 +107,7 @@ export default function RouterRenderer (): Node {
   // Routes can suspend, so wrap in <Suspense>
   return (
     <ErrorBoundary>
-      <Suspense fallback={<Flex mt={40} h='100%' align='center' justify='center' direction='column'><Spinner mb={6} thickness={4} size='xl' color='red.500' /></Flex>}>
+      <Suspense fallback={<CenteredSpinner />}>
         {routeComponent}
         <chakra.div zIndex='banner' position='fixed' w='100%' top='0' opacity={isPending ? 1 : 0}>
           <Progress colorScheme='red' size='xs' isIndeterminate />

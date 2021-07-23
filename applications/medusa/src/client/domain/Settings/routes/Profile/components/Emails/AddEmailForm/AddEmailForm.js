@@ -12,7 +12,7 @@ import {
   InputLeftElement,
   InputRightElement, useToast
 } from '@chakra-ui/react'
-import Icon from '@//:modules/content/icon/Icon'
+import Icon from '@//:modules/content/Icon/Icon'
 import type { AddEmailFormMutation } from '@//:artifacts/AddEmailFormMutation.graphql'
 
 import InterfaceAlertWarningTriangle

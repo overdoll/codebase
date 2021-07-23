@@ -73,12 +73,11 @@ func (r *QueryResolver) ViewAuthenticationToken(ctx context.Context) (*types.Aut
 	acc, ck, err := r.App.Queries.AuthenticationTokenById.Handle(ctx, otpCookie.Value)
 
 	if err != nil {
-
-		if err == token.ErrTokenNotFound {
-			return nil, nil
-		}
-
 		return nil, err
+	}
+
+	if ck == nil {
+		return nil, nil
 	}
 
 	return types.MarshalAuthenticationTokenToGraphQL(ck, true, acc != nil), nil

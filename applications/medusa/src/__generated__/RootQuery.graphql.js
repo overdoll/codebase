@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash f17aebdb2e71b61c667555cc73abb90c
+ * @relayHash 065a40d09104cbef63b7b38d10d9a994
  */
 
 /* eslint-disable */
@@ -8,10 +8,20 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-import type { RootComponent_account$ref } from "./RootComponent_account.graphql";
+export type AccountLockReason = "PostInfraction" | "%future added value";
 export type RootQueryVariables = {||};
 export type RootQueryResponse = {|
-  +$fragmentRefs: RootComponent_account$ref
+  +viewer: ?{|
+    +username: string,
+    +isStaff: boolean,
+    +isArtist: boolean,
+    +isModerator: boolean,
+    +avatar: any,
+    +lock: ?{|
+      +reason: AccountLockReason,
+      +expires: number,
+    |},
+  |}
 |};
 export type RootQuery = {|
   variables: RootQueryVariables,
@@ -21,10 +31,6 @@ export type RootQuery = {|
 
 /*
 query RootQuery {
-  ...RootComponent_account
-}
-
-fragment RootComponent_account on Query {
   viewer {
     username
     isStaff
@@ -40,7 +46,68 @@ fragment RootComponent_account on Query {
 }
 */
 
-const node: ConcreteRequest = {
+const node: ConcreteRequest = (function(){
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "username",
+  "storageKey": null
+},
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "isStaff",
+  "storageKey": null
+},
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "isArtist",
+  "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "isModerator",
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "avatar",
+  "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "AccountLock",
+  "kind": "LinkedField",
+  "name": "lock",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "reason",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "expires",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+};
+return {
   "fragment": {
     "argumentDefinitions": [],
     "kind": "Fragment",
@@ -48,9 +115,21 @@ const node: ConcreteRequest = {
     "name": "RootQuery",
     "selections": [
       {
+        "alias": null,
         "args": null,
-        "kind": "FragmentSpread",
-        "name": "RootComponent_account"
+        "concreteType": "Account",
+        "kind": "LinkedField",
+        "name": "viewer",
+        "plural": false,
+        "selections": [
+          (v0/*: any*/),
+          (v1/*: any*/),
+          (v2/*: any*/),
+          (v3/*: any*/),
+          (v4/*: any*/),
+          (v5/*: any*/)
+        ],
+        "storageKey": null
       }
     ],
     "type": "Query",
@@ -70,66 +149,12 @@ const node: ConcreteRequest = {
         "name": "viewer",
         "plural": false,
         "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "username",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "isStaff",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "isArtist",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "isModerator",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "avatar",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "AccountLock",
-            "kind": "LinkedField",
-            "name": "lock",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "reason",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "expires",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          },
+          (v0/*: any*/),
+          (v1/*: any*/),
+          (v2/*: any*/),
+          (v3/*: any*/),
+          (v4/*: any*/),
+          (v5/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -143,13 +168,14 @@ const node: ConcreteRequest = {
     ]
   },
   "params": {
-    "id": "f17aebdb2e71b61c667555cc73abb90c",
+    "id": "065a40d09104cbef63b7b38d10d9a994",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",
     "text": null
   }
 };
+})();
 // prettier-ignore
-(node: any).hash = 'ccb034c86a1899fcb487573a204d4eb2';
+(node: any).hash = 'e271409e47560a7711400d307b498830';
 module.exports = node;

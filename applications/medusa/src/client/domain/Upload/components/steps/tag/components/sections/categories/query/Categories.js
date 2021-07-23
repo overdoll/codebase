@@ -20,7 +20,7 @@ type Props = {
 };
 
 const CategoriesQueryGQL = graphql`
-  query CategoriesQuery($title: String!) {
+  query CategoriesQuery($title: String) {
     categories(title: $title) {
       edges {
         node {
@@ -53,11 +53,11 @@ export default function Categories ({ args, onSelect, selected }: Props): Node {
     <Wrap justify='center'>
       {data.categories.edges.map(item => (
         <Element
-          key={item.id}
-          onSelect={() => onSelect(item)}
-          selected={selected.indexOf(item.id) > -1}
-          title={item.title}
-          thumbnail={item.thumbnail}
+          key={item.node.id}
+          onSelect={() => onSelect(item.node)}
+          selected={selected.indexOf(item.node.id) > -1}
+          title={item.node.title}
+          thumbnail={item.node.thumbnail}
         />
       ))}
     </Wrap>

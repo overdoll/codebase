@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 837b15758633e6ffdbc8a5d672817d8f
+ * @relayHash 367dffd92f0c7f7d05b758b46be11ced
  */
 
 /* eslint-disable */
@@ -9,7 +9,7 @@
 
 import type { ConcreteRequest } from 'relay-runtime';
 export type CategoriesQueryVariables = {|
-  title: string
+  title?: ?string
 |};
 export type CategoriesQueryResponse = {|
   +categories: {|
@@ -30,7 +30,7 @@ export type CategoriesQuery = {|
 
 /*
 query CategoriesQuery(
-  $title: String!
+  $title: String
 ) {
   categories(title: $title) {
     edges {
@@ -132,7 +132,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "837b15758633e6ffdbc8a5d672817d8f",
+    "id": "367dffd92f0c7f7d05b758b46be11ced",
     "metadata": {},
     "name": "CategoriesQuery",
     "operationKind": "query",
@@ -141,5 +141,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '769fd1c97f094554f27a1d5909cf9496';
+(node: any).hash = '4dbef2b069e47ba1a1b9289c910e1fdb';
 module.exports = node;

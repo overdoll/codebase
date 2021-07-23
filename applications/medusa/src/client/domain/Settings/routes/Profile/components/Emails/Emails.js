@@ -16,7 +16,7 @@ import {
   Text, useToast
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
-import Icon from '@//:modules/content/icon/Icon'
+import Icon from '@//:modules/content/Icon/Icon'
 import AddEmailForm from './AddEmailForm/AddEmailForm'
 
 import { graphql, useMutation } from 'react-relay/hooks'

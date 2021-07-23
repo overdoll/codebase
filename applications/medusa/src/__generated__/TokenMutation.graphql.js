@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 53df926c95714e3cf000ae3be5dc0c9d
+ * @relayHash c90c7f280e861705e15754973ad8e0e2
  */
 
 /* eslint-disable */
@@ -8,7 +8,6 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-export type AccountLockReason = "PostInfraction" | "%future added value";
 export type MultiFactorType = "TOTP" | "%future added value";
 export type VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput = {|
   authenticationTokenId: string
@@ -30,15 +29,7 @@ export type TokenMutationResponse = {|
       |},
     |},
     +account: ?{|
-      +username: string,
-      +isStaff: boolean,
-      +isArtist: boolean,
-      +isModerator: boolean,
-      +avatar: any,
-      +lock: ?{|
-        +reason: AccountLockReason,
-        +expires: number,
-      |},
+      +id: string
     |},
   |}
 |};
@@ -65,15 +56,6 @@ mutation TokenMutation(
       }
     }
     account {
-      username
-      isStaff
-      isArtist
-      isModerator
-      avatar
-      lock {
-        reason
-        expires
-      }
       id
     }
   }
@@ -90,179 +72,119 @@ var v0 = [
 ],
 v1 = [
   {
-    "kind": "Variable",
-    "name": "input",
-    "variableName": "input"
-  }
-],
-v2 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "AuthenticationToken",
-  "kind": "LinkedField",
-  "name": "authenticationToken",
-  "plural": false,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "verified",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "email",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "session",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "sameSession",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "AuthenticationTokenAccountStatus",
-      "kind": "LinkedField",
-      "name": "accountStatus",
-      "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "registered",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "authenticated",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "multiFactor",
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
-    }
-  ],
-  "storageKey": null
-},
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "username",
-  "storageKey": null
-},
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "isStaff",
-  "storageKey": null
-},
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "isArtist",
-  "storageKey": null
-},
-v6 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "isModerator",
-  "storageKey": null
-},
-v7 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "avatar",
-  "storageKey": null
-},
-v8 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "AccountLock",
-  "kind": "LinkedField",
-  "name": "lock",
-  "plural": false,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "reason",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "expires",
-      "storageKey": null
-    }
-  ],
-  "storageKey": null
-};
-return {
-  "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
-    "kind": "Fragment",
-    "metadata": null,
-    "name": "TokenMutation",
+    "alias": null,
+    "args": [
+      {
+        "kind": "Variable",
+        "name": "input",
+        "variableName": "input"
+      }
+    ],
+    "concreteType": "VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload",
+    "kind": "LinkedField",
+    "name": "verifyAuthenticationTokenAndAttemptAccountAccessGrant",
+    "plural": false,
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
-        "concreteType": "VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload",
+        "args": null,
+        "concreteType": "AuthenticationToken",
         "kind": "LinkedField",
-        "name": "verifyAuthenticationTokenAndAttemptAccountAccessGrant",
+        "name": "authenticationToken",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
-            "concreteType": "Account",
+            "kind": "ScalarField",
+            "name": "verified",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "email",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "session",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "sameSession",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AuthenticationTokenAccountStatus",
             "kind": "LinkedField",
-            "name": "account",
+            "name": "accountStatus",
             "plural": false,
             "selections": [
-              (v3/*: any*/),
-              (v4/*: any*/),
-              (v5/*: any*/),
-              (v6/*: any*/),
-              (v7/*: any*/),
-              (v8/*: any*/)
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "registered",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "authenticated",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "multiFactor",
+                "storageKey": null
+              }
             ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Account",
+        "kind": "LinkedField",
+        "name": "account",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "id",
             "storageKey": null
           }
         ],
         "storageKey": null
       }
     ],
+    "storageKey": null
+  }
+];
+return {
+  "fragment": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "TokenMutation",
+    "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -271,47 +193,10 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "TokenMutation",
-    "selections": [
-      {
-        "alias": null,
-        "args": (v1/*: any*/),
-        "concreteType": "VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload",
-        "kind": "LinkedField",
-        "name": "verifyAuthenticationTokenAndAttemptAccountAccessGrant",
-        "plural": false,
-        "selections": [
-          (v2/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Account",
-            "kind": "LinkedField",
-            "name": "account",
-            "plural": false,
-            "selections": [
-              (v3/*: any*/),
-              (v4/*: any*/),
-              (v5/*: any*/),
-              (v6/*: any*/),
-              (v7/*: any*/),
-              (v8/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "id",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      }
-    ]
+    "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "53df926c95714e3cf000ae3be5dc0c9d",
+    "id": "c90c7f280e861705e15754973ad8e0e2",
     "metadata": {},
     "name": "TokenMutation",
     "operationKind": "mutation",
@@ -320,5 +205,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = 'd9d5b030112fcb5943a7ce7c511bea93';
+(node: any).hash = 'e1b8984582b6c4d87eb06614fe058752';
 module.exports = node;
