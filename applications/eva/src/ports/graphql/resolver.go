@@ -9,6 +9,7 @@ import (
 	"overdoll/applications/eva/src/ports/graphql/entities"
 	"overdoll/applications/eva/src/ports/graphql/mutations"
 	"overdoll/applications/eva/src/ports/graphql/queries"
+	"overdoll/applications/eva/src/ports/graphql/resolvers"
 )
 
 type Resolver struct {
@@ -36,6 +37,25 @@ func (r *Resolver) Query() QueryResolver {
 // Query returns gen.QueryResolver implementation.
 func (r *Resolver) Entity() EntityResolver {
 	return &entities.EntityResolver{
+		App: r.app,
+	}
+}
+
+// Query returns gen.QueryResolver implementation.
+func (r *Resolver) Account() AccountResolver {
+	return &resolvers.AccountResolver{
+		App: r.app,
+	}
+}
+
+func (r *Resolver) AccountEmail() AccountEmailResolver {
+	return &resolvers.AccountEmailResolver{
+		App: r.app,
+	}
+}
+
+func (r *Resolver) AccountUsername() AccountUsernameResolver {
+	return &resolvers.AccountUsernameResolver{
 		App: r.app,
 	}
 }

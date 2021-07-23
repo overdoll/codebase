@@ -22,28 +22,31 @@ func NewGrpcServer(application *app.Application, client client.Client) *Server {
 	}
 }
 
-func (s Server) GetPendingPost(ctx context.Context, request *sting.PendingPostRequest) (*sting.PendingPost, error) {
-	post, err := s.app.Queries.GetPendingPost.Handle(ctx, request.Id)
+func (s Server) GetPost(ctx context.Context, request *sting.PostRequest) (*sting.Post, error) {
+
+	post, err := s.app.Queries.PostById.Handle(ctx, request.Id)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return &sting.PendingPost{
+	return &sting.Post{
 		ModeratorId:   post.ModeratorId(),
-		ContributorId: post.Contributor().ID(),
+		ContributorId: post.ContributorId(),
 	}, nil
 }
 
-func (s Server) RejectPendingPost(ctx context.Context, request *sting.PendingPostRequest) (*sting.UpdatePendingPostResponse, error) {
+func (s Server) RejectPost(ctx context.Context, request *sting.PostRequest) (*sting.UpdatePostResponse, error) {
+
 	if err := s.app.Commands.RejectPost.Handle(ctx, request.Id); err != nil {
 		return nil, err
 	}
 
-	return &sting.UpdatePendingPostResponse{}, nil
+	return &sting.UpdatePostResponse{}, nil
 }
 
-func (s Server) PublishPendingPost(ctx context.Context, request *sting.PendingPostRequest) (*sting.UpdatePendingPostResponse, error) {
+func (s Server) PublishPost(ctx context.Context, request *sting.PostRequest) (*sting.UpdatePostResponse, error) {
+
 	if err := s.app.Commands.StartPublishPost.Handle(ctx, request.Id); err != nil {
 		return nil, err
 	}
@@ -59,10 +62,11 @@ func (s Server) PublishPendingPost(ctx context.Context, request *sting.PendingPo
 		return nil, err
 	}
 
-	return &sting.UpdatePendingPostResponse{}, nil
+	return &sting.UpdatePostResponse{}, nil
 }
 
-func (s Server) DiscardPendingPost(ctx context.Context, request *sting.PendingPostRequest) (*sting.UpdatePendingPostResponse, error) {
+func (s Server) DiscardPost(ctx context.Context, request *sting.PostRequest) (*sting.UpdatePostResponse, error) {
+
 	if err := s.app.Commands.StartDiscardPost.Handle(ctx, request.Id); err != nil {
 		return nil, err
 	}
@@ -78,10 +82,11 @@ func (s Server) DiscardPendingPost(ctx context.Context, request *sting.PendingPo
 		return nil, err
 	}
 
-	return &sting.UpdatePendingPostResponse{}, nil
+	return &sting.UpdatePostResponse{}, nil
 }
 
-func (s Server) UndoPendingPost(ctx context.Context, request *sting.PendingPostRequest) (*sting.UpdatePendingPostResponse, error) {
+func (s Server) UndoPost(ctx context.Context, request *sting.PostRequest) (*sting.UpdatePostResponse, error) {
+
 	if err := s.app.Commands.StartUndoPost.Handle(ctx, request.Id); err != nil {
 		return nil, err
 	}
@@ -97,5 +102,5 @@ func (s Server) UndoPendingPost(ctx context.Context, request *sting.PendingPostR
 		return nil, err
 	}
 
-	return &sting.UpdatePendingPostResponse{}, nil
+	return &sting.UpdatePostResponse{}, nil
 }

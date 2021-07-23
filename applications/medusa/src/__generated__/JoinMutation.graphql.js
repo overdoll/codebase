@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash f1604fee51167235daafe362f3b58e6a
+ * @relayHash 8431634c2acdf0b882ec72d670d26e3a
  */
 
 /* eslint-disable */
@@ -8,15 +8,17 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-export type AuthenticationInput = {|
+export type GrantAuthenticationTokenInput = {|
   email: string
 |};
 export type JoinMutationVariables = {|
-  data: AuthenticationInput
+  input: GrantAuthenticationTokenInput
 |};
 export type JoinMutationResponse = {|
-  +authenticate: {|
-    +ok: boolean
+  +grantAuthenticationToken: ?{|
+    +authenticationToken: ?{|
+      +email: string
+    |}
   |}
 |};
 export type JoinMutation = {|
@@ -27,10 +29,12 @@ export type JoinMutation = {|
 
 /*
 mutation JoinMutation(
-  $data: AuthenticationInput!
+  $input: GrantAuthenticationTokenInput!
 ) {
-  authenticate(data: $data) {
-    ok
+  grantAuthenticationToken(input: $input) {
+    authenticationToken {
+      email
+    }
   }
 }
 */
@@ -40,7 +44,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "data"
+    "name": "input"
   }
 ],
 v1 = [
@@ -49,20 +53,31 @@ v1 = [
     "args": [
       {
         "kind": "Variable",
-        "name": "data",
-        "variableName": "data"
+        "name": "input",
+        "variableName": "input"
       }
     ],
-    "concreteType": "Response",
+    "concreteType": "GrantAuthenticationTokenPayload",
     "kind": "LinkedField",
-    "name": "authenticate",
+    "name": "grantAuthenticationToken",
     "plural": false,
     "selections": [
       {
         "alias": null,
         "args": null,
-        "kind": "ScalarField",
-        "name": "ok",
+        "concreteType": "AuthenticationToken",
+        "kind": "LinkedField",
+        "name": "authenticationToken",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "email",
+            "storageKey": null
+          }
+        ],
         "storageKey": null
       }
     ],
@@ -87,7 +102,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "f1604fee51167235daafe362f3b58e6a",
+    "id": "8431634c2acdf0b882ec72d670d26e3a",
     "metadata": {},
     "name": "JoinMutation",
     "operationKind": "mutation",
@@ -96,5 +111,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '74e50d9a9bf4fd8efac9a08300ebf1de';
+(node: any).hash = 'adfa09346806bbe112bbe3ef18640c9a';
 module.exports = node;

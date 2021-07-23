@@ -4,8 +4,8 @@ go_library(
     name = "infraction",
     srcs = [
         "account_infraction_history.go",
-        "pending_post_audit_log.go",
-        "pending_post_rejection_reason.go",
+        "post_audit_log.go",
+        "post_rejection_reason.go",
         "repository.go",
     ],
     importpath = "overdoll/applications/parley/src/domain/infraction",

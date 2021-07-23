@@ -5,7 +5,7 @@
 import {
   Flex, Tooltip
 } from '@chakra-ui/react'
-import Icon from '@//:modules/content/icon/Icon'
+import Icon from '@//:modules/content/Icon/Icon'
 import Link from '@//:modules/routing/Link'
 
 type Props = {

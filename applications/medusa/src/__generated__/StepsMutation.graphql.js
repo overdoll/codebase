@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 3d0383f9dd76ad9089c7b4ff747ceb96
+ * @relayHash d573595806053acadc6c0df665a14818
  */
 
 /* eslint-disable */
@@ -8,27 +8,29 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-export type PostInput = {|
+export type CreatePostInput = {|
   content: $ReadOnlyArray<string>,
-  categories: $ReadOnlyArray<string>,
-  characters: $ReadOnlyArray<string>,
+  categoryIds: $ReadOnlyArray<string>,
+  characterIds: $ReadOnlyArray<string>,
   mediaRequests?: ?$ReadOnlyArray<string>,
   characterRequests?: ?$ReadOnlyArray<CharacterRequest>,
-  artistId?: ?string,
-  artistUsername?: ?string,
+  existingArtist?: ?string,
+  customArtistUsername?: ?string,
+  posterIsArtist?: ?boolean,
 |};
 export type CharacterRequest = {|
   name: string,
-  media: string,
+  customMediaName?: ?string,
+  existingMediaId?: ?string,
 |};
 export type StepsMutationVariables = {|
-  data?: ?PostInput
+  input: CreatePostInput
 |};
 export type StepsMutationResponse = {|
-  +post: {|
-    +review: boolean,
-    +validation: ?{|
-      +code: string
+  +createPost: ?{|
+    +review: ?boolean,
+    +post: ?{|
+      +id: string
     |},
   |}
 |};
@@ -40,12 +42,12 @@ export type StepsMutation = {|
 
 /*
 mutation StepsMutation(
-  $data: PostInput
+  $input: CreatePostInput!
 ) {
-  post(data: $data) {
+  createPost(input: $input) {
     review
-    validation {
-      code
+    post {
+      id
     }
   }
 }
@@ -56,7 +58,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "data"
+    "name": "input"
   }
 ],
 v1 = [
@@ -65,13 +67,13 @@ v1 = [
     "args": [
       {
         "kind": "Variable",
-        "name": "data",
-        "variableName": "data"
+        "name": "input",
+        "variableName": "input"
       }
     ],
-    "concreteType": "PostResponse",
+    "concreteType": "CreatePostPayload",
     "kind": "LinkedField",
-    "name": "post",
+    "name": "createPost",
     "plural": false,
     "selections": [
       {
@@ -84,16 +86,16 @@ v1 = [
       {
         "alias": null,
         "args": null,
-        "concreteType": "Validation",
+        "concreteType": "Post",
         "kind": "LinkedField",
-        "name": "validation",
+        "name": "post",
         "plural": false,
         "selections": [
           {
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "code",
+            "name": "id",
             "storageKey": null
           }
         ],
@@ -121,7 +123,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "3d0383f9dd76ad9089c7b4ff747ceb96",
+    "id": "d573595806053acadc6c0df665a14818",
     "metadata": {},
     "name": "StepsMutation",
     "operationKind": "mutation",
@@ -130,5 +132,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '90f0123660986a0b7f572986f769e9c5';
+(node: any).hash = 'b504251e033bb28997ee185c10272004';
 module.exports = node;

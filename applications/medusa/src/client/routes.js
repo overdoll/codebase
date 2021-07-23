@@ -5,11 +5,22 @@ import JSResource from '@//:modules/utilities/JSResource'
 import type { Route } from '@//:modules/routing/router'
 import defineAbility from '@//:modules/utilities/functions/defineAbility/defineAbility'
 
-const getUserFromEnvironment = environment =>
-  environment
+// hacky way to get the current viewer
+const getUserFromEnvironment = environment => {
+  const viewerRef = environment
     .getStore()
     .getSource()
-    .get('client:root:authenticatedAccount')
+    .get('client:root')
+
+  if (viewerRef.viewer) {
+    return environment
+      .getStore()
+      .getSource()
+      .get(viewerRef.viewer.__ref)
+  }
+
+  return null
+}
 
 const getAbilityFromUser = (environment) => {
   return defineAbility(getUserFromEnvironment(environment))
@@ -170,18 +181,6 @@ const routes: Array<Route> = [
           ),
         module.hot
         ),
-        prepare: params => {
-          const TokenQuery = require('@//:artifacts/TokenQuery.graphql')
-          return {
-            tokenQuery: {
-              query: TokenQuery,
-              variables: { token: params.id },
-              options: {
-                fetchPolicy: 'store-or-network'
-              }
-            }
-          }
-        },
         // When user is logged in, we don't want them to be able to redeem any other tokens
         middleware: [
           ({ environment, history }) => {

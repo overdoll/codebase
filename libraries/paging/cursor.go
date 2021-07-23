@@ -1,76 +1,65 @@
 package paging
 
+import (
+	"encoding/base64"
+	"errors"
+
+	"github.com/olivere/elastic/v7"
+	"github.com/scylladb/gocqlx/v2/qb"
+)
+
+type Node struct {
+	cursor string
+}
+
+func NewNode(cursor string) *Node {
+	return &Node{cursor: base64.StdEncoding.EncodeToString([]byte(cursor))}
+}
+
+func (n *Node) Cursor() string {
+	return n.cursor
+}
+
 type Cursor struct {
-	after  string
-	before string
-	first  int
-	last   int
+	after  *string
+	before *string
+	first  *int
+	last   *int
 }
 
-type Pagination struct {
-	forwards  func(first int, after string) (bool, error)
-	backwards func(last int, before string) (bool, error)
-	cursor    *Cursor
-}
+func NewCursor(after, before *string, first, last *int) (*Cursor, error) {
 
-func NewPagination(cursor *Cursor) *Pagination {
-	return &Pagination{cursor: cursor}
-}
-
-func (p *Pagination) DefineForwardsPagination(forwards func(first int, after string) (bool, error)) {
-	p.forwards = forwards
-}
-
-func (p *Pagination) DefineBackwardsPagination(backwards func(last int, before string) (bool, error)) {
-	p.backwards = backwards
-}
-
-func (p *Pagination) Run() (*PageInfo, error) {
-
-	hasMoreAfter := false
-	hasMoreBefore := false
-
-	var err error
-
-	if p.cursor.IsBeforeCursor() {
-		hasMoreAfter, err = p.forwards(p.cursor.Last(), p.cursor.Before())
-
+	if after != nil && *after != "" {
+		decoded, err := base64.StdEncoding.DecodeString(*after)
 		if err != nil {
 			return nil, err
 		}
 
-		hasMoreBefore, err = p.backwards(p.cursor.Last(), p.cursor.Before())
-
-		if err != nil {
-			return nil, err
-		}
-	} else if p.cursor.IsAfterCursor() {
-		hasMoreBefore, err = p.backwards(p.cursor.First(), p.cursor.After())
-
-		if err != nil {
-			return nil, err
-		}
-
-		hasMoreAfter, err = p.forwards(p.cursor.First(), p.cursor.After())
-
-		if err != nil {
-			return nil, err
-		}
-	} else {
-		hasMoreAfter, err = p.forwards(p.cursor.First(), p.cursor.After())
-
-		if err != nil {
-			return nil, err
-		}
+		dec := string(decoded)
+		after = &dec
 	}
 
-	return NewPageInfo(hasMoreAfter, hasMoreBefore), nil
-}
+	if before != nil && *before != "" {
+		decoded, err := base64.StdEncoding.DecodeString(*before)
+		if err != nil {
+			return nil, err
+		}
 
-func NewCursor(before, after string, first, last int) *Cursor {
+		dec := string(decoded)
+		before = &dec
+	}
 
-	if first < 0 {
-		first = 10
+	if first != nil && *first < 0 {
+		return nil, errors.New("`first` on a connection cannot be less than zero")
+	}
+
+	if last != nil && *last < 0 {
+		return nil, errors.New("`last` on a connection cannot be less than zero")
+	}
+
+	if first != nil && last != nil {
+		return nil, errors.New("passing both `first` and `last` to paginate a connection is not supported")
+
 	}
 
 	return &Cursor{
@@ -78,29 +67,85 @@ func NewCursor(before, after string, first, last int) *Cursor {
 		before: before,
 		first:  first,
 		last:   last,
-	}
+	}, nil
 }
 
-func (c *Cursor) IsAfterCursor() bool {
-	return c.after != ""
-}
-
-func (c *Cursor) IsBeforeCursor() bool {
-	return c.before != "" && c.last != 0
-}
-
-func (c *Cursor) After() string {
+func (c *Cursor) After() *string {
 	return c.after
 }
 
-func (c *Cursor) Before() string {
+func (c *Cursor) Before() *string {
 	return c.before
 }
 
-func (c *Cursor) First() int {
+func (c *Cursor) First() *int {
 	return c.first
 }
 
-func (c *Cursor) Last() int {
+func (c *Cursor) Last() *int {
 	return c.last
+}
+
+func (c *Cursor) IsEmpty() bool {
+	return c.First() != nil && *c.First() == 0 || c.Last() != nil && *c.Last() == 0
+}
+
+func (c *Cursor) GetLimit() int {
+	var limit int
+
+	if c.First() != nil {
+		limit = *c.First() + 1
+	} else if c.Last() != nil {
+		limit = *c.Last() + 1
+	}
+
+	return limit
+}
+
+func (c *Cursor) BuildCassandra(builder *qb.SelectBuilder, column string) {
+	if c.After() != nil {
+		builder.Where(qb.LtLit(column, `'`+*c.After()+`'`))
+	}
+
+	if c.Before() != nil {
+		builder.Where(qb.GtLit(column, `'`+*c.Before()+`'`))
+	}
+
+	if c.Last() != nil {
+		builder.OrderBy(column, qb.ASC)
+	} else {
+		builder.OrderBy(column, qb.DESC)
+	}
+
+	limit := c.GetLimit()
+
+	if limit > 0 {
+		builder.Limit(uint(limit))
+	}
+}
+
+func (c *Cursor) BuildElasticsearch(builder *elastic.SearchService, column string) *elastic.BoolQuery {
+	query := elastic.NewBoolQuery()
+
+	if c.After() != nil {
+		query.Must(elastic.NewRangeQuery(column).Lt(*c.After()))
+	}
+
+	if c.Before() != nil {
+		query.Must(elastic.NewRangeQuery(column).Gt(*c.Before()))
+	}
+
+	if c.Last() != nil {
+		builder.Sort(column, true)
+	} else {
+		builder.Sort(column, false)
+	}
+
+	limit := c.GetLimit()
+
+	if limit > 0 {
+		builder.Size(limit)
+	}
+
+	return query
 }

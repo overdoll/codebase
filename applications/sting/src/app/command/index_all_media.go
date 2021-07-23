@@ -21,11 +21,5 @@ func (h IndexAllMediaHandler) Handle(ctx context.Context) error {
 		return err
 	}
 
-	medias, err := h.pr.GetMedias(ctx)
-
-	if err != nil {
-		return err
-	}
-
-	return h.pi.BulkIndexMedia(ctx, medias)
+	return h.pi.IndexAllMedia(ctx)
 }

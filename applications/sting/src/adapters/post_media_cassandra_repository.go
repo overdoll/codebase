@@ -6,40 +6,44 @@ import (
 
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
+	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/sting/src/domain/post"
 )
 
-type Media struct {
+var mediaTable = table.New(table.Metadata{
+	Name: "medias",
+	Columns: []string{
+		"id",
+		"title",
+		"thumbnail",
+	},
+	PartKey: []string{"id"},
+	SortKey: []string{},
+})
+
+type media struct {
 	Id        string `db:"id"`
 	Title     string `db:"title"`
 	Thumbnail string `db:"thumbnail"`
 }
 
-func (r PostsCassandraRepository) GetMedias(ctx context.Context) ([]*post.Media, error) {
-	var dbMed []Media
+func (r PostsCassandraRepository) GetMediaById(ctx context.Context, mediaId string) (*post.Media, error) {
 
-	qc := qb.Select("media").
-		Columns("id", "title", "thumbnail").
-		Query(r.session).
-		Consistency(gocql.LocalQuorum)
+	queryMedia := r.session.
+		Query(mediaTable.Get()).
+		Consistency(gocql.One)
 
-	if err := qc.Select(&dbMed); err != nil {
-		return nil, fmt.Errorf("select() failed: %s", err)
+	var med *media
+
+	if err := queryMedia.Get(&med); err != nil {
+		return nil, fmt.Errorf("select() failed: '%s", err)
 	}
 
-	var medias []*post.Media
-
-	// Now we can safely start creating our documents
-	for _, media := range dbMed {
-
-		medias = append(medias, post.UnmarshalMediaFromDatabase(
-			media.Id,
-			media.Title,
-			media.Thumbnail,
-		))
-	}
-
-	return medias, nil
+	return post.UnmarshalMediaFromDatabase(
+		med.Id,
+		med.Title,
+		med.Thumbnail,
+	), nil
 }
 
 func (r PostsCassandraRepository) GetMediasById(ctx context.Context, medi []string) ([]*post.Media, error) {
@@ -51,13 +55,13 @@ func (r PostsCassandraRepository) GetMediasById(ctx context.Context, medi []stri
 		return medias, nil
 	}
 
-	queryMedia := qb.Select("media").
+	queryMedia := qb.Select(mediaTable.Name()).
 		Where(qb.In("id")).
 		Query(r.session).
 		Consistency(gocql.One).
-		BindStruct(medi)
+		Bind(medi)
 
-	var mediaModels []*Media
+	var mediaModels []*media
 
 	if err := queryMedia.Select(&mediaModels); err != nil {
 		return nil, fmt.Errorf("select() failed: '%s", err)
@@ -79,12 +83,12 @@ func (r PostsCassandraRepository) CreateMedias(ctx context.Context, medias []*po
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
 	for _, med := range medias {
-		stmt, _ := qb.Insert("media").Columns("id", "title", "thumbnail").ToCql()
+		stmt, _ := mediaTable.Insert()
 		batch.Query(
 			stmt,
 			med.ID(),
 			med.Title(),
-			med.RawThumbnail(),
+			med.Thumbnail(),
 		)
 	}
 

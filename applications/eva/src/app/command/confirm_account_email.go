@@ -8,6 +8,14 @@ import (
 	"overdoll/applications/eva/src/domain/account"
 )
 
+var (
+	errFailedConfirmAccountEmail = errors.New("failed to confirm email")
+)
+
+const (
+	validationErrEmailCodeInvalid = "email_code_invalid"
+)
+
 type ConfirmAccountEmailHandler struct {
 	ar account.Repository
 }
@@ -16,33 +24,25 @@ func NewConfirmAccountEmailHandler(ar account.Repository) ConfirmAccountEmailHan
 	return ConfirmAccountEmailHandler{ar: ar}
 }
 
-var (
-	ErrFailedConfirmAccountEmail = errors.New("failed to confirm email")
-)
-
-const (
-	ValidationErrEmailCodeInvalid = "email_code_invalid"
-)
-
-func (h ConfirmAccountEmailHandler) Handle(ctx context.Context, userId, id string) (string, error) {
+func (h ConfirmAccountEmailHandler) Handle(ctx context.Context, userId, id string) (*account.Email, string, error) {
 
 	acc, err := h.ar.GetAccountById(ctx, userId)
 
 	if err != nil {
 		zap.S().Errorf("failed to get user: %s", err)
-		return "", ErrFailedConfirmAccountEmail
+		return nil, "", errFailedConfirmAccountEmail
 	}
 
-	err = h.ar.ConfirmAccountEmail(ctx, id, acc)
+	email, err := h.ar.ConfirmAccountEmail(ctx, id, acc)
 
 	if err != nil {
 		if err == account.ErrEmailCodeInvalid {
-			return ValidationErrEmailCodeInvalid, nil
+			return nil, validationErrEmailCodeInvalid, nil
 		}
 
 		zap.S().Errorf("failed to confirm email: %s", err)
-		return "", ErrFailedConfirmAccountEmail
+		return nil, "", errFailedConfirmAccountEmail
 	}
 
-	return "", nil
+	return email, "", nil
 }

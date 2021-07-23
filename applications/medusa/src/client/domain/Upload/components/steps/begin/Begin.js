@@ -5,7 +5,7 @@ import type { Node } from 'react'
 import { Heading, Text, Box, ListItem, UnorderedList, Flex, Center } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import Picker from '../../picker/Picker'
-import Icon from '@//:modules/content/icon/Icon'
+import Icon from '@//:modules/content/Icon/Icon'
 import DragOver from '../../dragover/DragOver'
 
 import Cloud from '@streamlinehq/streamlinehq/img/streamline-regular/internet-networks-servers/cloud/cloud.svg'

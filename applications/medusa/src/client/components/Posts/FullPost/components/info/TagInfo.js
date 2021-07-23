@@ -4,7 +4,7 @@
 import type { Node } from 'react'
 import { Flex, IconButton, Heading, useDisclosure } from '@chakra-ui/react'
 import InspectModal from '../../../components/modal/InspectModal'
-import Icon from '@//:modules/content/icon/Icon'
+import Icon from '@//:modules/content/Icon/Icon'
 
 type Props = {
   count: number,

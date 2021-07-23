@@ -17,7 +17,7 @@ func NewStartUndoPostHandler(pr post.Repository, pi post.IndexRepository) StartU
 
 func (h StartUndoPostHandler) Handle(ctx context.Context, id string) error {
 
-	pst, err := h.pr.GetPendingPost(ctx, id)
+	pst, err := h.pr.GetPost(ctx, id)
 
 	if err != nil {
 		return err

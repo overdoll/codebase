@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 1da2b6111b188436e97882c7cd2e477f
+ * @relayHash f56edccd5d1c51616ca4ee577f119de6
  */
 
 /* eslint-disable */
@@ -10,11 +10,15 @@
 import type { ConcreteRequest } from 'relay-runtime';
 export type ModeratePostInfractionsQueryVariables = {||};
 export type ModeratePostInfractionsQueryResponse = {|
-  +rejectionReasons: $ReadOnlyArray<{|
-    +id: string,
-    +reason: string,
-    +infraction: boolean,
-  |}>
+  +postRejectionReasons: {|
+    +edges: $ReadOnlyArray<{|
+      +node: {|
+        +id: string,
+        +reason: string,
+        +infraction: boolean,
+      |}
+    |}>
+  |}
 |};
 export type ModeratePostInfractionsQuery = {|
   variables: ModeratePostInfractionsQueryVariables,
@@ -24,10 +28,14 @@ export type ModeratePostInfractionsQuery = {|
 
 /*
 query ModeratePostInfractionsQuery {
-  rejectionReasons {
-    id
-    reason
-    infraction
+  postRejectionReasons {
+    edges {
+      node {
+        id
+        reason
+        infraction
+      }
+    }
   }
 }
 */
@@ -37,30 +45,52 @@ var v0 = [
   {
     "alias": null,
     "args": null,
-    "concreteType": "PendingPostRejectionReason",
+    "concreteType": "PostRejectionReasonConnection",
     "kind": "LinkedField",
-    "name": "rejectionReasons",
-    "plural": true,
+    "name": "postRejectionReasons",
+    "plural": false,
     "selections": [
       {
         "alias": null,
         "args": null,
-        "kind": "ScalarField",
-        "name": "id",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "reason",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "infraction",
+        "concreteType": "PostRejectionReasonEdge",
+        "kind": "LinkedField",
+        "name": "edges",
+        "plural": true,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "PostRejectionReason",
+            "kind": "LinkedField",
+            "name": "node",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "id",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "reason",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "infraction",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
         "storageKey": null
       }
     ],
@@ -85,7 +115,7 @@ return {
     "selections": (v0/*: any*/)
   },
   "params": {
-    "id": "1da2b6111b188436e97882c7cd2e477f",
+    "id": "f56edccd5d1c51616ca4ee577f119de6",
     "metadata": {},
     "name": "ModeratePostInfractionsQuery",
     "operationKind": "query",
@@ -94,5 +124,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '06eebea79e7eaf1eefc8fb9cb88ec9aa';
+(node: any).hash = '760c26d8d4908be8d54e9c3f94ceae1b';
 module.exports = node;

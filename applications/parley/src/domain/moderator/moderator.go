@@ -10,12 +10,12 @@ var (
 )
 
 type Moderator struct {
-	id           string
+	accountId    string
 	lastSelected time.Time
 }
 
 func (m *Moderator) ID() string {
-	return m.id
+	return m.accountId
 }
 
 func (m *Moderator) LastSelected() time.Time {
@@ -28,14 +28,14 @@ func (m *Moderator) Select() {
 
 func NewModerator(id string) *Moderator {
 	return &Moderator{
-		id:           id,
+		accountId:    id,
 		lastSelected: time.Now(),
 	}
 }
 
 func UnmarshalModeratorFromDatabase(id string, lastSelected time.Time) *Moderator {
 	return &Moderator{
-		id:           id,
+		accountId:    id,
 		lastSelected: lastSelected,
 	}
 }

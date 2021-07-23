@@ -16,69 +16,64 @@ type MutationResolver struct {
 	Client client.Client
 }
 
-func (r *MutationResolver) UpdatePost(ctx context.Context, id string, data *types.PostInput) (*types.Response, error) {
-	requests := make(map[string]string)
-
-	for _, item := range data.CharacterRequests {
-		requests[item.Name] = item.Media
-	}
-
-	_, err := r.App.Commands.UpdatePendingPost.
-		Handle(
-			ctx,
-			id,
-			*data.ArtistID,
-			data.Characters,
-			data.Categories,
-			requests,
-			data.MediaRequests,
-			[]string{},
-		)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &types.Response{Validation: nil, Ok: true}, nil
-}
-
-func (r *MutationResolver) Post(ctx context.Context, data *types.PostInput) (*types.PostResponse, error) {
-
-	pass := passport.FromContext(ctx)
-
-	if !pass.IsAuthenticated() {
-		return nil, passport.ErrNotAuthenticated
-	}
+func (r *MutationResolver) CreatePost(ctx context.Context, input types.CreatePostInput) (*types.CreatePostPayload, error) {
 
 	requests := make(map[string]string)
 
-	for _, item := range data.CharacterRequests {
-		requests[item.Name] = item.Media
+	for _, item := range input.CharacterRequests {
+
+		if item.CustomMediaName != nil {
+			requests[item.Name] = *item.CustomMediaName
+		}
+
+		if item.ExistingMediaID != nil {
+			requests[item.Name] = item.ExistingMediaID.GetID()
+		}
+
 	}
 
 	artistId := ""
 
-	if data.ArtistID != nil {
-		artistId = *data.ArtistID
+	if input.ExistingArtist != nil {
+		artistId = input.ExistingArtist.GetID()
 	}
 
 	artistUsername := ""
 
-	if data.ArtistUsername != nil {
-		artistUsername = *data.ArtistUsername
+	if input.CustomArtistUsername != nil {
+		artistUsername = *input.CustomArtistUsername
 	}
 
-	post, err := r.App.Commands.CreatePendingPost.
+	posterIsArtist := false
+
+	if input.PosterIsArtist != nil {
+		posterIsArtist = *input.PosterIsArtist
+	}
+
+	var characterIds []string
+
+	for _, char := range input.CharacterIds {
+		characterIds = append(characterIds, char.GetID())
+	}
+
+	var categoryIds []string
+
+	for _, cat := range input.CategoryIds {
+		categoryIds = append(categoryIds, cat.GetID())
+	}
+
+	pst, err := r.App.Commands.CreatePost.
 		Handle(
 			ctx,
-			pass.AccountID(),
+			passport.FromContext(ctx).AccountID(),
 			artistId,
 			artistUsername,
-			data.Content,
-			data.Characters,
-			data.Categories,
+			posterIsArtist,
+			input.Content,
+			characterIds,
+			categoryIds,
 			requests,
-			data.MediaRequests,
+			input.MediaRequests,
 		)
 
 	if err != nil {
@@ -87,25 +82,19 @@ func (r *MutationResolver) Post(ctx context.Context, data *types.PostInput) (*ty
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "NewCreatePendingPostWorkflow_" + post.ID(),
+		ID:        "NewCreatePendingPostWorkflow_" + pst.ID(),
 	}
 
-	_, err = r.Client.ExecuteWorkflow(ctx, options, workflows.CreatePost, post.ID())
+	_, err = r.Client.ExecuteWorkflow(ctx, options, workflows.CreatePost, pst.ID())
 
 	if err != nil {
 		return nil, err
 	}
 
-	if post == nil {
-		return &types.PostResponse{
-			Review:     false,
-			Validation: &types.Validation{Code: "is not valid"},
-		}, err
-	}
+	isReview := false
 
-	return &types.PostResponse{
-		Review:     false,
-		ID:         post.ID(),
-		Validation: nil,
+	return &types.CreatePostPayload{
+		Review: &isReview,
+		Post:   types.MarshalPostToGraphQL(pst),
 	}, err
 }

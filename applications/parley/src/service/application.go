@@ -60,15 +60,18 @@ func createApplication(ctx context.Context, eva command.EvaService, sting comman
 	return app.Application{
 		Commands: app.Commands{
 			GetNextModerator:   command.NewGetNextModeratorHandler(moderatorRepo),
-			ModeratePost:       command.NewModeratePendingPostHandler(infractionRepo, eva, sting),
-			RevertModeratePost: command.NewRevertModeratePendingPostHandler(infractionRepo, eva, sting),
+			ModeratePost:       command.NewModeratePostHandler(infractionRepo, eva, sting),
+			RevertModeratePost: command.NewRevertModeratePostHandler(infractionRepo, eva, sting),
 			ToggleModerator:    command.NewToggleModeratorHandler(moderatorRepo, eva),
 		},
 		Queries: app.Queries{
-			PendingPostRejectionReasons:     query.NewPendingPostsRejectionReasonsHandler(infractionRepo),
-			PendingPostsAuditLogByModerator: query.NewPendingPostsAuditLogByModeratorHandler(infractionRepo, eva),
-			AccountInfractionHistory:        query.NewAccountInfractionHistoryHandler(infractionRepo),
-			ModeratorInQueue:                query.NewModeratorInQueueHandler(moderatorRepo),
+			PostRejectionReasons:         query.NewPendingPostsRejectionReasonsHandler(infractionRepo, eva),
+			SearchPostAuditLogs:          query.NewSearchPostAuditLogsHandler(infractionRepo, eva),
+			PostRejectionReasonById:      query.NewPendingPostsRejectionReasonByIdHandler(infractionRepo),
+			AccountInfractionHistory:     query.NewAccountInfractionHistoryByAccountHandler(infractionRepo),
+			AccountInfractionHistoryById: query.NewAccountInfractionHistoryByIdHandler(infractionRepo),
+			PostAuditLogById:             query.NewPostAuditLogByIdHandler(infractionRepo),
+			ModeratorById:                query.NewModeratorByIdHandler(moderatorRepo),
 		},
 	}
 }

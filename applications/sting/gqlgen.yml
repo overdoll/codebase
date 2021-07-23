@@ -1,5 +1,6 @@
 schema:
   - ./schema/**/*.graphql
+  - ../../libraries/graphql/schema.graphql
   - ../../libraries/graphql/relay/schema.graphql
 
 exec:
@@ -16,3 +17,14 @@ federation:
 
 autobind:
   - overdoll/libraries/graphql/relay
+  - overdoll/libraries/graphql
+
+models:
+  ID:
+    model: overdoll/libraries/graphql/relay.ID
+  Node:
+    model: overdoll/libraries/graphql/relay.Node
+  PageInfo:
+    model: overdoll/libraries/graphql/relay.PageInfo
+  URI:
+    model: overdoll/libraries/graphql.URI

@@ -11,9 +11,9 @@ type EvaService interface {
 	LockAccount(context.Context, string, int64) error
 }
 type StingService interface {
-	GetPendingPost(context.Context, string) (string, string, error)
-	PublishPendingPost(context.Context, string) error
-	RejectPendingPost(context.Context, string) error
-	DiscardPendingPost(context.Context, string) error
-	UndoPendingPost(context.Context, string) error
+	GetPost(context.Context, string) (string, string, error)
+	PublishPost(context.Context, string) error
+	RejectPost(context.Context, string) error
+	DiscardPost(context.Context, string) error
+	UndoPost(context.Context, string) error
 }

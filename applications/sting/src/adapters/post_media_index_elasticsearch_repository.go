@@ -3,18 +3,25 @@ package adapters
 import (
 	"context"
 	"encoding/json"
-	"fmt"
+	"errors"
+	"strconv"
 
+	"github.com/olivere/elastic/v7"
+	"github.com/scylladb/gocqlx/v2"
+	"github.com/segmentio/ksuid"
 	"overdoll/applications/sting/src/domain/post"
+	"overdoll/libraries/paging"
+	"overdoll/libraries/scan"
 )
 
-type MediaDocument struct {
+type mediaDocument struct {
 	Id        string `json:"id"`
 	Thumbnail string `json:"thumbnail"`
 	Title     string `json:"title"`
+	CreatedAt string `json:"created_at"`
 }
 
-const MediaIndex = `
+const mediaIndex = `
 {
 	"mappings": {
 		"dynamic": "strict",
@@ -28,37 +35,34 @@ const MediaIndex = `
 			"title": {
 				"type": "text",
 				"analyzer": "english"
+			},
+			"created_at": {
+				"type": "date"
 			}
 		}
 	}
 }`
 
-const SearchMedia = `
-	"query" : {
-		"multi_match" : {
-			"query" : %q,
-			"fields" : ["title^100"],
-			"operator" : "and"
-		}
-	},
-	"size" : 5`
+const mediaIndexName = "media"
 
-const AllMedia = `
-	"query" : { "match_all" : {} },
-	"size" : 5`
+func (r PostsIndexElasticSearchRepository) SearchMedias(ctx context.Context, cursor *paging.Cursor, search string) ([]*post.Media, error) {
 
-const MediaIndexName = "media"
+	builder := r.client.Search().
+		Index(mediaIndexName)
 
-func (r PostsIndexElasticSearchRepository) SearchMedias(ctx context.Context, search string) ([]*post.Media, error) {
-	var query string
-
-	if search == "" {
-		query = AllMedia
-	} else {
-		query = fmt.Sprintf(SearchMedia, search)
+	if cursor == nil {
+		return nil, errors.New("cursor required")
 	}
 
-	response, err := r.store.Search(MediaIndexName, query)
+	query := cursor.BuildElasticsearch(builder, "created_at")
+
+	if search != "" {
+		query.Must(elastic.NewMultiMatchQuery(search, "title").Operator("and"))
+	}
+
+	builder.Query(query)
+
+	response, err := builder.Pretty(true).Do(ctx)
 
 	if err != nil {
 		return nil, err
@@ -66,64 +70,93 @@ func (r PostsIndexElasticSearchRepository) SearchMedias(ctx context.Context, sea
 
 	var meds []*post.Media
 
-	for _, med := range response.Hits {
+	for _, hit := range response.Hits.Hits {
 
-		var md MediaDocument
+		var md mediaDocument
 
-		err := json.Unmarshal(med, &md)
+		err := json.Unmarshal(hit.Source, &md)
 
 		if err != nil {
 			return nil, err
 		}
 
-		meds = append(meds, post.UnmarshalMediaFromDatabase(md.Id, md.Title, md.Thumbnail))
+		newMedia := post.UnmarshalMediaFromDatabase(md.Id, md.Title, md.Thumbnail)
+		newMedia.Node = paging.NewNode(md.CreatedAt)
+
+		meds = append(meds, newMedia)
 	}
 
 	return meds, nil
 }
 
-func (r PostsIndexElasticSearchRepository) BulkIndexMedia(ctx context.Context, media []*post.Media) error {
+func (r PostsIndexElasticSearchRepository) IndexAllMedia(ctx context.Context) error {
 
-	err := r.store.CreateBulkIndex(MediaIndexName)
+	scanner := scan.New(r.session,
+		scan.Config{
+			NodesInCluster: 1,
+			CoresInNode:    2,
+			SmudgeFactor:   3,
+		},
+	)
+
+	err := scanner.RunIterator(mediaTable, func(iter *gocqlx.Iterx) error {
+
+		var m media
+
+		for iter.StructScan(&m) {
+
+			parse, err := ksuid.Parse(m.Id)
+
+			if err != nil {
+				return err
+			}
+
+			doc := mediaDocument{
+				Id:        m.Id,
+				Thumbnail: m.Thumbnail,
+				Title:     m.Title,
+				CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
+			}
+
+			_, err = r.client.
+				Index().
+				Index(mediaIndexName).
+				Id(m.Id).
+				BodyJson(doc).
+				Do(ctx)
+
+			if err != nil {
+				return err
+			}
+		}
+
+		return nil
+	})
 
 	if err != nil {
-		return fmt.Errorf("error creating bulk indexer: %s", err)
-	}
-
-	// Now we can safely start creating our documents
-	for _, med := range media {
-
-		data := &MediaDocument{
-			Id:        med.ID(),
-			Thumbnail: med.RawThumbnail(),
-			Title:     med.Title(),
-		}
-
-		err = r.store.AddToBulkIndex(data.Id, data)
-
-		if err != nil {
-			return fmt.Errorf("unexpected error: %s", err)
-		}
-	}
-
-	if err := r.store.CloseBulkIndex(); err != nil {
-		return fmt.Errorf("unexpected error: %s", err)
+		return err
 	}
 
 	return nil
 }
 
 func (r PostsIndexElasticSearchRepository) DeleteMediaIndex(ctx context.Context) error {
-	err := r.store.DeleteIndex(MediaIndexName)
+
+	exists, err := r.client.IndexExists(mediaIndexName).Do(ctx)
 
 	if err != nil {
-
+		return err
 	}
 
-	err = r.store.CreateIndex(MediaIndexName, MediaIndex)
+	if exists {
+		if _, err := r.client.DeleteIndex(mediaIndexName).Do(ctx); err != nil {
+			// Handle error
+			return err
+		}
+	}
 
-	if err != nil {
-		return fmt.Errorf("failed to create media index: %s", err)
+	if _, err := r.client.CreateIndex(mediaIndexName).BodyString(mediaIndex).Do(ctx); err != nil {
+		return err
 	}
 
 	return nil

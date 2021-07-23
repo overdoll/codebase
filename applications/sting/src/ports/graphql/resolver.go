@@ -10,6 +10,7 @@ import (
 	"overdoll/applications/sting/src/ports/graphql/entities"
 	"overdoll/applications/sting/src/ports/graphql/mutations"
 	"overdoll/applications/sting/src/ports/graphql/queries"
+	"overdoll/applications/sting/src/ports/graphql/resolvers"
 )
 
 type Resolver struct {
@@ -39,6 +40,30 @@ func (r *Resolver) Query() QueryResolver {
 // Query returns gen.QueryResolver implementation.
 func (r *Resolver) Entity() EntityResolver {
 	return &entities.EntityResolver{
+		App: r.app,
+	}
+}
+
+func (r *Resolver) Account() AccountResolver {
+	return &resolvers.AccountResolver{
+		App: r.app,
+	}
+}
+
+func (r *Resolver) Category() CategoryResolver {
+	return &resolvers.CategoryResolver{
+		App: r.app,
+	}
+}
+
+func (r *Resolver) Character() CharacterResolver {
+	return &resolvers.CharacterResolver{
+		App: r.app,
+	}
+}
+
+func (r *Resolver) Media() MediaResolver {
+	return &resolvers.MediaResolver{
 		App: r.app,
 	}
 }

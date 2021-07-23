@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 5bea89c07976cdcffb14789ca0816f9d
+ * @relayHash bc46e4f065e4d0a9b71911a575e429b2
  */
 
 /* eslint-disable */
@@ -8,19 +8,19 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-export type ModeratePostMutationVariables = {|
+export type ModeratePostInput = {|
   postId: string,
-  reasonId?: ?string,
+  postRejectionReasonId?: ?string,
   notes: string,
 |};
+export type ModeratePostMutationVariables = {|
+  input: ModeratePostInput
+|};
 export type ModeratePostMutationResponse = {|
-  +moderatePost: {|
-    +validation: ?{|
-      +code: string
-    |},
-    +auditLog: ?{|
+  +moderatePost: ?{|
+    +postAuditLog: ?{|
       +id: string
-    |},
+    |}
   |}
 |};
 export type ModeratePostMutation = {|
@@ -31,15 +31,10 @@ export type ModeratePostMutation = {|
 
 /*
 mutation ModeratePostMutation(
-  $postId: String!
-  $reasonId: String
-  $notes: String!
+  $input: ModeratePostInput!
 ) {
-  moderatePost(data: {pendingPostId: $postId, rejectionReasonId: $reasonId, notes: $notes}) {
-    validation {
-      code
-    }
-    auditLog {
+  moderatePost(input: $input) {
+    postAuditLog {
       id
     }
   }
@@ -47,48 +42,24 @@ mutation ModeratePostMutation(
 */
 
 const node: ConcreteRequest = (function(){
-var v0 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "notes"
-},
-v1 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "postId"
-},
-v2 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "reasonId"
-},
-v3 = [
+var v0 = [
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "input"
+  }
+],
+v1 = [
   {
     "alias": null,
     "args": [
       {
-        "fields": [
-          {
-            "kind": "Variable",
-            "name": "notes",
-            "variableName": "notes"
-          },
-          {
-            "kind": "Variable",
-            "name": "pendingPostId",
-            "variableName": "postId"
-          },
-          {
-            "kind": "Variable",
-            "name": "rejectionReasonId",
-            "variableName": "reasonId"
-          }
-        ],
-        "kind": "ObjectValue",
-        "name": "data"
+        "kind": "Variable",
+        "name": "input",
+        "variableName": "input"
       }
     ],
-    "concreteType": "ModeratePost",
+    "concreteType": "ModeratePostPayload",
     "kind": "LinkedField",
     "name": "moderatePost",
     "plural": false,
@@ -96,27 +67,9 @@ v3 = [
       {
         "alias": null,
         "args": null,
-        "concreteType": "Validation",
+        "concreteType": "PostAuditLog",
         "kind": "LinkedField",
-        "name": "validation",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "code",
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "PendingPostAuditLog",
-        "kind": "LinkedField",
-        "name": "auditLog",
+        "name": "postAuditLog",
         "plural": false,
         "selections": [
           {
@@ -135,31 +88,23 @@ v3 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": [
-      (v0/*: any*/),
-      (v1/*: any*/),
-      (v2/*: any*/)
-    ],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "ModeratePostMutation",
-    "selections": (v3/*: any*/),
+    "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [
-      (v1/*: any*/),
-      (v2/*: any*/),
-      (v0/*: any*/)
-    ],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "ModeratePostMutation",
-    "selections": (v3/*: any*/)
+    "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "5bea89c07976cdcffb14789ca0816f9d",
+    "id": "bc46e4f065e4d0a9b71911a575e429b2",
     "metadata": {},
     "name": "ModeratePostMutation",
     "operationKind": "mutation",
@@ -168,5 +113,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '0cdf041ccf4a87552eb1668073eb1ff5';
+(node: any).hash = '6daad6ccb91a52a94aa3fc2c4124101f';
 module.exports = node;

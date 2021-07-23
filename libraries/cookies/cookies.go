@@ -2,16 +2,23 @@ package cookies
 
 import (
 	"context"
+	"errors"
 	"net/http"
 	"os"
 
 	"github.com/gorilla/securecookie"
+	"go.uber.org/zap"
 	"overdoll/libraries/helpers"
 )
 
 const (
 	CookieKey      = "COOKIE_KEY"
 	CookieBlockKey = "COOKIE_BLOCK_KEY"
+)
+
+var (
+	ErrCookieNotFound = errors.New("cookie not found")
+	ErrCookieError    = errors.New("internal cookie error")
 )
 
 // Create Secure Cookies
@@ -43,7 +50,8 @@ func SetCookie(ctx context.Context, cookie *http.Cookie) error {
 		encodedValue, err := secureCookie.Encode(name, value)
 
 		if err != nil {
-			return err
+			zap.S().Errorf("failed to encode cookie: %s", err)
+			return ErrCookieError
 		}
 
 		cookie.Value = encodedValue
@@ -68,7 +76,13 @@ func ReadCookie(ctx context.Context, name string) (*http.Cookie, error) {
 	currentCookie, err := gc.Request.Cookie(name)
 
 	if err != nil {
-		return nil, err
+
+		if err == http.ErrNoCookie {
+			return nil, ErrCookieNotFound
+		}
+
+		zap.S().Errorf("failed to get cookie: %s", err)
+		return nil, ErrCookieError
 	}
 
 	var value string
@@ -82,8 +96,16 @@ func ReadCookie(ctx context.Context, name string) (*http.Cookie, error) {
 			return currentCookie, nil
 		}
 
-		return nil, err
+		zap.S().Errorf("failed to decode cookie: %s", err)
+		return nil, ErrCookieError
 	}
 
 	return currentCookie, nil
+}
+
+func DeleteCookie(ctx context.Context, name string) {
+	http.SetCookie(
+		helpers.GinContextFromContext(ctx).Writer,
+		&http.Cookie{Name: name, Value: "", MaxAge: -1, HttpOnly: true, Secure: true, Path: "/"},
+	)
 }

@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 310060b52c63cc09be5b62f5f3f9a25d
+ * @relayHash 2b51a5e9b2393d80f07edf51d08a95ff
  */
 
 /* eslint-disable */
@@ -8,15 +8,15 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-export type MultiFactorTypeEnum = "TOTP" | "%future added value";
+export type MultiFactorType = "TOTP" | "%future added value";
 export type JoinQueryVariables = {||};
 export type JoinQueryResponse = {|
-  +authenticationTokenStatus: ?{|
-    +redeemed: boolean,
+  +viewAuthenticationToken: ?{|
+    +verified: boolean,
     +email: string,
     +accountStatus: ?{|
       +registered: boolean,
-      +multiFactor: ?$ReadOnlyArray<MultiFactorTypeEnum>,
+      +multiFactor: ?$ReadOnlyArray<MultiFactorType>,
     |},
   |}
 |};
@@ -28,8 +28,8 @@ export type JoinQuery = {|
 
 /*
 query JoinQuery {
-  authenticationTokenStatus {
-    redeemed
+  viewAuthenticationToken {
+    verified
     email
     accountStatus {
       registered
@@ -46,14 +46,14 @@ var v0 = [
     "args": null,
     "concreteType": "AuthenticationToken",
     "kind": "LinkedField",
-    "name": "authenticationTokenStatus",
+    "name": "viewAuthenticationToken",
     "plural": false,
     "selections": [
       {
         "alias": null,
         "args": null,
         "kind": "ScalarField",
-        "name": "redeemed",
+        "name": "verified",
         "storageKey": null
       },
       {
@@ -110,7 +110,7 @@ return {
     "selections": (v0/*: any*/)
   },
   "params": {
-    "id": "310060b52c63cc09be5b62f5f3f9a25d",
+    "id": "2b51a5e9b2393d80f07edf51d08a95ff",
     "metadata": {},
     "name": "JoinQuery",
     "operationKind": "query",
@@ -119,5 +119,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = 'bed1af4c0f9cea2f12acd5d8898dd433';
+(node: any).hash = 'f2bafb3d876fdbce22cd089176e67050';
 module.exports = node;

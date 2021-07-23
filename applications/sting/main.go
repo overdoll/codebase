@@ -25,7 +25,7 @@ var rootCmd = &cobra.Command{
 func init() {
 	config.Read("applications/sting/config.toml")
 
-	rootCmd.AddCommand(ports.Root)
+	rootCmd.AddCommand(ports.Cli)
 	rootCmd.AddCommand(commands.Database)
 	rootCmd.AddCommand(&cobra.Command{
 		Use: "worker",

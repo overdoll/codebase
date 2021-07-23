@@ -5,7 +5,7 @@ import { graphql, useMutation } from 'react-relay/hooks'
 import type { Node } from 'react'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import Icon from '@//:modules/content/icon/Icon'
+import Icon from '@//:modules/content/Icon/Icon'
 import { Box, Center, Flex, Heading, Text, useToast } from '@chakra-ui/react'
 import Button from '@//:modules/form/button'
 import { useClickDelay } from '@//:modules/utilities/hooks'
@@ -20,8 +20,10 @@ type Props = {
 
 const LobbyEmail = graphql`
   mutation LobbyMutation {
-    authenticateEmail {
-      ok
+    reissueAuthenticationToken {
+     authenticationToken {
+        email
+     }
     }
   }
 `

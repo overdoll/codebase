@@ -2,65 +2,97 @@
  * @flow
  */
 import type { Node } from 'react'
-import type { PreloadedQueryInner } from 'react-relay/hooks'
-import { graphql, usePreloadedQuery } from 'react-relay/hooks'
+import { useEffect, useState } from 'react'
+import { graphql, useMutation } from 'react-relay/hooks'
 import Register from '../Register/Register'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from '@//:modules/routing'
-import type { TokenQuery } from '@//:artifacts/TokenQuery.graphql'
 import { Icon } from '@//:modules/content'
 import UAParser from 'ua-parser-js'
-import { Alert, AlertDescription, AlertIcon, Box, Center, Flex, Heading, Text } from '@chakra-ui/react'
+import { Alert, AlertDescription, AlertIcon, Box, Center, Flex, Heading, Spinner, Text } from '@chakra-ui/react'
 import { useFlash } from '@//:modules/flash'
 import { Helmet } from 'react-helmet-async'
 import SignBadgeCircle
   from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
+import { useParams } from '@//:modules/routing/useParams'
+import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner'
 
-type Props = {
-  prepared: {
-    tokenQuery: PreloadedQueryInner<TokenQuery>,
-  },
-};
-
-const TokenQueryGQL = graphql`
-  query TokenQuery($token: String!) {
-    redeemAuthenticationToken(token: $token) {
-      redeemed
-      email
-      session
-      sameSession
-      accountStatus {
-        registered
-        authenticated
-        multiFactor
+const TokenMutationGQL = graphql`
+  mutation TokenMutation($input: VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput!) {
+    verifyAuthenticationTokenAndAttemptAccountAccessGrant(input: $input) {
+      authenticationToken {
+        verified
+        email
+        session
+        sameSession
+        accountStatus {
+          registered
+          authenticated
+          multiFactor
+        }
+      }
+      account {
+        id
       }
     }
   }
 `
 
-export default function Token (props: Props): Node {
-  const data = usePreloadedQuery<TokenQuery>(
-    TokenQueryGQL,
-    props.prepared.tokenQuery
-  )
-
+export default function Token (): Node {
   const [t] = useTranslation('token')
   const history = useHistory()
-
+  const params = useParams()
   const { flash } = useFlash()
 
-  if (!data.redeemAuthenticationToken) {
-    // Go back to Join page and send notification of invalid token
-    flash('login.notify', t('invalid_token'))
-    history.push('/join')
-    return null
+  const [data, setData] = useState(null)
+
+  const [commit, isInFlight] = useMutation(
+    TokenMutationGQL
+  )
+
+  useEffect(() => {
+    commit({
+      variables: {
+        input: {
+          authenticationTokenId: params.id
+        }
+      },
+      updater: (store, payload) => {
+        const data = payload.verifyAuthenticationTokenAndAttemptAccountAccessGrant
+
+        if (!data.authenticationToken) {
+          flash('login.notify', t('invalid_token'))
+          history.push('/join')
+          return
+        }
+
+        if (data.account) {
+          // basically just invalidate the store so it can re-fetch
+          store
+            .getRoot()
+            .setValue(undefined, 'viewer')
+
+          history.push('/profile')
+          return
+        }
+
+        setData(data.authenticationToken)
+      },
+      onError (data) {
+        console.log(data)
+      }
+    })
+  }, [])
+
+  if (!data) {
+    return <CenteredSpinner />
   }
 
   // Token was not redeemed in the same session, so we tell the user to check
   // the other session
-  if (!data.redeemAuthenticationToken.sameSession) {
+  if (!data.sameSession) {
     const cookieText = UAParser(
-      JSON.parse(data.redeemAuthenticationToken.session)['user-agent']
+      JSON.parse(data.session)['user-agent']
     )
 
     return (
@@ -99,14 +131,8 @@ export default function Token (props: Props): Node {
     )
   }
 
-  if (data.redeemAuthenticationToken.accountStatus && !data.redeemAuthenticationToken.accountStatus.registered) {
+  if (data.accountStatus && !data.accountStatus.registered) {
     return <Register />
-  }
-
-  // User is registered - redirect to profile
-  if (data.redeemAuthenticationToken.accountStatus && data.redeemAuthenticationToken.accountStatus.authenticated) {
-    history.push('/profile')
-    return null
   }
 
   return null

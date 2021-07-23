@@ -3,19 +3,25 @@ package adapters
 import (
 	"context"
 	"encoding/json"
-	"fmt"
-	"log"
+	"errors"
+	"strconv"
 
+	"github.com/olivere/elastic/v7"
+	"github.com/scylladb/gocqlx/v2"
+	"github.com/segmentio/ksuid"
 	"overdoll/applications/sting/src/domain/post"
+	"overdoll/libraries/paging"
+	"overdoll/libraries/scan"
 )
 
-type CategoryDocument struct {
+type categoryDocument struct {
 	Id        string `json:"id"`
 	Thumbnail string `json:"thumbnail"`
 	Title     string `json:"title"`
+	CreatedAt string `json:"created_at"`
 }
 
-const CategoryIndex = `
+const categoryIndex = `
 {
 	"mappings": {
 		"dynamic": "strict",
@@ -29,45 +35,75 @@ const CategoryIndex = `
 			"title": {
 				"type": "text",
 				"analyzer": "english"
+			},
+			"created_at": {
+				"type": "date"
 			}
 		}
 	}
 }`
 
-const SearchCategories = `
-	"query" : {
-		"multi_match" : {
-			"query" : %q,
-			"fields" : ["title^100"],
-			"operator" : "and"
-		}
-	},
-	"size" : 5`
+const categoryIndexName = "categories"
 
-const AllCategories = `
-	"query" : { "match_all" : {} },
-	"size" : 5`
+func marshalCategoryToDocument(cat *post.Category) (*categoryDocument, error) {
 
-const CategoryIndexName = "categories"
+	parse, err := ksuid.Parse(cat.ID())
 
-func MarshalCategoryToDocument(cat *post.Category) *CategoryDocument {
-	return &CategoryDocument{
-		Id:        cat.ID(),
-		Thumbnail: cat.RawThumbnail(),
-		Title:     cat.Title(),
+	if err != nil {
+		return nil, err
 	}
+
+	return &categoryDocument{
+		Id:        cat.ID(),
+		Thumbnail: cat.Thumbnail(),
+		Title:     cat.Title(),
+		CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
+	}, nil
 }
 
-func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context, search string) ([]*post.Category, error) {
-	var query string
+func (r PostsIndexElasticSearchRepository) IndexCategories(ctx context.Context, categories []*post.Category) error {
 
-	if search == "" {
-		query = AllCategories
-	} else {
-		query = fmt.Sprintf(SearchCategories, search)
+	for _, category := range categories {
+
+		cat, err := marshalCategoryToDocument(category)
+
+		if err != nil {
+			return err
+		}
+
+		_, err = r.client.
+			Index().
+			Index(categoryIndexName).
+			Id(category.ID()).
+			BodyJson(cat).
+			Do(ctx)
+
+		if err != nil {
+			return err
+		}
 	}
 
-	response, err := r.store.Search(CategoryIndexName, query)
+	return nil
+}
+
+func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context, cursor *paging.Cursor, search string) ([]*post.Category, error) {
+
+	builder := r.client.Search().
+		Index(categoryIndexName).ErrorTrace(true)
+
+	if cursor == nil {
+		return nil, errors.New("cursor required")
+	}
+
+	query := cursor.BuildElasticsearch(builder, "created_at")
+
+	if search != "" {
+		query.Must(elastic.NewMultiMatchQuery(search, "title").Operator("and"))
+	}
+
+	builder.Query(query)
+
+	response, err := builder.Do(ctx)
 
 	if err != nil {
 		return nil, err
@@ -75,62 +111,93 @@ func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context,
 
 	var cats []*post.Category
 
-	log.Println(response.Hits)
+	for _, hit := range response.Hits.Hits {
 
-	for _, cat := range response.Hits {
+		var pst categoryDocument
 
-		var pst CategoryDocument
-
-		err := json.Unmarshal(cat, &pst)
+		err := json.Unmarshal(hit.Source, &pst)
 
 		if err != nil {
 			return nil, err
 		}
 
-		cats = append(cats, post.UnmarshalCategoryFromDatabase(pst.Id, pst.Title, pst.Thumbnail))
+		newCategory := post.UnmarshalCategoryFromDatabase(pst.Id, pst.Title, pst.Thumbnail)
+		newCategory.Node = paging.NewNode(pst.CreatedAt)
+
+		cats = append(cats, newCategory)
 	}
 
 	return cats, nil
 }
 
-func (r PostsIndexElasticSearchRepository) BulkIndexCategories(ctx context.Context, categories []*post.Category) error {
+func (r PostsIndexElasticSearchRepository) IndexAllCategories(ctx context.Context) error {
 
-	err := r.store.CreateBulkIndex(CategoryIndexName)
+	scanner := scan.New(r.session,
+		scan.Config{
+			NodesInCluster: 1,
+			CoresInNode:    2,
+			SmudgeFactor:   3,
+		},
+	)
+
+	err := scanner.RunIterator(categoryTable, func(iter *gocqlx.Iterx) error {
+
+		var c category
+
+		for iter.StructScan(&c) {
+
+			parse, err := ksuid.Parse(c.Id)
+
+			if err != nil {
+				return err
+			}
+
+			doc := categoryDocument{
+				Id:        c.Id,
+				Thumbnail: c.Thumbnail,
+				Title:     c.Title,
+				CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
+			}
+
+			_, err = r.client.
+				Index().
+				Index(categoryIndexName).
+				Id(c.Id).
+				BodyJson(doc).
+				Do(ctx)
+
+			if err != nil {
+				return err
+			}
+		}
+
+		return nil
+	})
 
 	if err != nil {
-		return fmt.Errorf("error creating bulk indexer: %s", err)
-	}
-
-	// Now we can safely start creating our documents
-	for _, cat := range categories {
-
-		data := MarshalCategoryToDocument(cat)
-
-		err = r.store.AddToBulkIndex(data.Id, data)
-
-		if err != nil {
-			return fmt.Errorf("unexpected error: %s", err)
-		}
-	}
-
-	if err := r.store.CloseBulkIndex(); err != nil {
-		return fmt.Errorf("unexpected error: %s", err)
+		return err
 	}
 
 	return nil
 }
 
 func (r PostsIndexElasticSearchRepository) DeleteCategoryIndex(ctx context.Context) error {
-	err := r.store.DeleteIndex(CategoryIndexName)
+
+	exists, err := r.client.IndexExists(categoryIndexName).Do(ctx)
 
 	if err != nil {
-
+		return err
 	}
 
-	err = r.store.CreateIndex(CategoryIndexName, CategoryIndex)
+	if exists {
+		if _, err := r.client.DeleteIndex(categoryIndexName).Do(ctx); err != nil {
+			// Handle error
+			return err
+		}
+	}
 
-	if err != nil {
-		return fmt.Errorf("failed to create category index: %s", err)
+	if _, err := r.client.CreateIndex(categoryIndexName).BodyString(categoryIndex).Do(ctx); err != nil {
+		return err
 	}
 
 	return nil

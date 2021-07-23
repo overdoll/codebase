@@ -3,6 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "ports",
     srcs = [
+        "cli.go",
         "grpc.go",
         "http.go",
     ],
@@ -13,9 +14,12 @@ go_library(
         "//applications/eva/src/app",
         "//applications/eva/src/domain/account",
         "//applications/eva/src/ports/graphql",
+        "//applications/eva/src/ports/graphql/dataloader",
+        "//applications/eva/src/service",
         "//libraries/graphql",
         "//libraries/router",
         "@com_github_gin_gonic_gin//:gin",
+        "@com_github_spf13_cobra//:cobra",
         "@org_golang_google_grpc//codes",
         "@org_golang_google_grpc//status",
     ],

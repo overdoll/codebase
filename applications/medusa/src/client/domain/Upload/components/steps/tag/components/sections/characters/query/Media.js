@@ -19,11 +19,15 @@ type Props = {
 };
 
 const MediaQueryGQL = graphql`
-  query MediaQuery($data: SearchInput!) {
-    media(data: $data) {
-      id
-      title
-      thumbnail
+  query MediaQuery($title: String) {
+    medias(title: $title) {
+     edges {
+       node {
+         id
+         title
+         thumbnail
+       }
+     }
     }
   }
 `
@@ -39,28 +43,28 @@ export default function Media ({ args, onSelect }: Props): Node {
 
   // add a new media with a custom tag telling us it's custom
   const onAddNewMedia = () => {
-    const name: string = args.variables.data.search
+    const name: string = args.variables.title
     onSelect({ id: name, title: name, thumbnail: null, request: true })
   }
 
   return (
     <>
-      {data.media.length === 0
+      {data.medias.edges.length === 0
         ? (
           <Empty
             title={t('tag.character.media.not_found')}
-            button={`${t('tag.character.media.add')} ${args.variables.data.search}`} onClick={onAddNewMedia}
+            button={`${t('tag.character.media.add')} ${args.variables.title}`} onClick={onAddNewMedia}
           />
           )
         : (
           <Wrap justify='center'>
-            {data.media.map(item => (
+            {data.medias.edges.map(item => (
               <Element
-                key={item.id}
-                onSelect={() => onSelect(item)}
+                key={item.node.id}
+                onSelect={() => onSelect(item.node)}
                 selected={false}
-                title={item.title}
-                thumbnail={item.thumbnail}
+                title={item.node.title}
+                thumbnail={item.node.thumbnail}
               />
             ))}
           </Wrap>

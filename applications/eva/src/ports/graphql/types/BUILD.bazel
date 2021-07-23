@@ -8,5 +8,12 @@ go_library(
     ],
     importpath = "overdoll/applications/eva/src/ports/graphql/types",
     visibility = ["//visibility:public"],
-    deps = ["//applications/eva/src/domain/account"],
+    deps = [
+        "//applications/eva/src/domain/account",
+        "//applications/eva/src/domain/session",
+        "//applications/eva/src/domain/token",
+        "//libraries/graphql",
+        "//libraries/graphql/relay",
+        "//libraries/paging",
+    ],
 )

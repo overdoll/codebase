@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash f00a2e79d26efad10f0bc4e1ac9a0220
+ * @relayHash 35e6c42c1ed318ec1d189ef56ec9570f
  */
 
 /* eslint-disable */
@@ -10,11 +10,8 @@
 import type { ConcreteRequest } from 'relay-runtime';
 export type NavMenuMutationVariables = {||};
 export type NavMenuMutationResponse = {|
-  +logout: {|
-    +validation: ?{|
-      +code: string
-    |},
-    +ok: boolean,
+  +revokeAccountAccess: ?{|
+    +revokedAccountId: string
   |}
 |};
 export type NavMenuMutation = {|
@@ -25,11 +22,8 @@ export type NavMenuMutation = {|
 
 /*
 mutation NavMenuMutation {
-  logout {
-    validation {
-      code
-    }
-    ok
+  revokeAccountAccess {
+    revokedAccountId
   }
 }
 */
@@ -39,34 +33,16 @@ var v0 = [
   {
     "alias": null,
     "args": null,
-    "concreteType": "Response",
+    "concreteType": "RevokeAccountAccessPayload",
     "kind": "LinkedField",
-    "name": "logout",
+    "name": "revokeAccountAccess",
     "plural": false,
     "selections": [
       {
         "alias": null,
         "args": null,
-        "concreteType": "Validation",
-        "kind": "LinkedField",
-        "name": "validation",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "code",
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
         "kind": "ScalarField",
-        "name": "ok",
+        "name": "revokedAccountId",
         "storageKey": null
       }
     ],
@@ -91,7 +67,7 @@ return {
     "selections": (v0/*: any*/)
   },
   "params": {
-    "id": "f00a2e79d26efad10f0bc4e1ac9a0220",
+    "id": "35e6c42c1ed318ec1d189ef56ec9570f",
     "metadata": {},
     "name": "NavMenuMutation",
     "operationKind": "mutation",
@@ -100,5 +76,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '897e9d4f5bd2a75578d56697fdb5d8a6';
+(node: any).hash = 'ae763c4adbdbe6536012c719f7714a52';
 module.exports = node;

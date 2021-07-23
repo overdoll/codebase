@@ -3,14 +3,25 @@ package adapters
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
+	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/sting/src/domain/post"
 )
 
-type Category struct {
+var categoryTable = table.New(table.Metadata{
+	Name: "categories",
+	Columns: []string{
+		"id",
+		"title",
+		"thumbnail",
+	},
+	PartKey: []string{"id"},
+	SortKey: []string{},
+})
+
+type category struct {
 	Id        string `db:"id"`
 	Title     string `db:"title"`
 	Thumbnail string `db:"thumbnail"`
@@ -20,22 +31,17 @@ func (r PostsCassandraRepository) GetCategoriesById(ctx context.Context, cats []
 
 	var categories []*post.Category
 
-	final := []string{}
-
-	for _, str := range cats {
-		final = append(final, `'`+str+`'`)
-	}
-
-	if len(final) == 0 {
+	if len(cats) == 0 {
 		return categories, nil
 	}
 
-	queryCategories := qb.Select("categories").
-		Where(qb.InLit("id", "("+strings.Join(final, ",")+")")).
+	queryCategories := qb.Select(categoryTable.Name()).
+		Where(qb.In("id")).
 		Query(r.session).
-		Consistency(gocql.One)
+		Consistency(gocql.LocalQuorum).
+		Bind(cats)
 
-	var categoriesModels []Category
+	var categoriesModels []category
 
 	if err := queryCategories.Select(&categoriesModels); err != nil {
 		return nil, fmt.Errorf("select() failed: '%s", err)
@@ -48,26 +54,19 @@ func (r PostsCassandraRepository) GetCategoriesById(ctx context.Context, cats []
 	return categories, nil
 }
 
-func (r PostsCassandraRepository) GetCategories(ctx context.Context) ([]*post.Category, error) {
+func (r PostsCassandraRepository) GetCategoryById(ctx context.Context, categoryId string) (*post.Category, error) {
 
-	var dbCategory []Category
-
-	qc := qb.Select("categories").
-		Columns("id", "title", "thumbnail").
-		Query(r.session).
+	queryCategories := r.session.
+		Query(categoryTable.Get()).
 		Consistency(gocql.One)
 
-	if err := qc.Select(&dbCategory); err != nil {
-		return nil, fmt.Errorf("select() failed: %s", err)
+	var cat category
+
+	if err := queryCategories.Get(&cat); err != nil {
+		return nil, fmt.Errorf("select() failed: '%s", err)
 	}
 
-	var categories []*post.Category
-
-	for _, dbCat := range dbCategory {
-		categories = append(categories, post.UnmarshalCategoryFromDatabase(dbCat.Id, dbCat.Title, dbCat.Thumbnail))
-	}
-
-	return categories, nil
+	return post.UnmarshalCategoryFromDatabase(cat.Id, cat.Title, cat.Thumbnail), nil
 }
 
 func (r PostsCassandraRepository) CreateCategories(ctx context.Context, categories []*post.Category) error {
@@ -79,12 +78,12 @@ func (r PostsCassandraRepository) CreateCategories(ctx context.Context, categori
 	// Go through each category request
 	for _, cat := range categories {
 		// Create new categories query
-		stmt, _ := qb.Insert("categories").Columns("id", "title", "thumbnail").ToCql()
+		stmt, _ := categoryTable.Insert()
 		batch.Query(
 			stmt,
 			cat.ID(),
 			cat.Title(),
-			cat.RawThumbnail(),
+			cat.Thumbnail(),
 		)
 	}
 

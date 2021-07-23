@@ -2,6 +2,8 @@ package account
 
 import (
 	"errors"
+
+	"overdoll/libraries/paging"
 )
 
 type EmailStatus string
@@ -13,15 +15,17 @@ const (
 )
 
 type Email struct {
-	email  string
-	status EmailStatus
+	*paging.Node
+	email     string
+	accountId string
+	status    EmailStatus
 }
 
 var (
 	ErrEmailNotConfirmed = errors.New("email not confirmed")
 )
 
-func UnmarshalEmailFromDatabase(email string, status int) *Email {
+func UnmarshalEmailFromDatabase(email, accountId string, status int) *Email {
 	var st EmailStatus
 
 	if status == 0 {
@@ -37,13 +41,18 @@ func UnmarshalEmailFromDatabase(email string, status int) *Email {
 	}
 
 	return &Email{
-		email:  email,
-		status: st,
+		email:     email,
+		status:    st,
+		accountId: accountId,
 	}
 }
 
 func (c *Email) Email() string {
 	return c.email
+}
+
+func (c *Email) AccountId() string {
+	return c.accountId
 }
 
 func (c *Email) Status() EmailStatus {
@@ -60,4 +69,12 @@ func (c *Email) IsUnconfirmed() bool {
 
 func (c *Email) IsPrimary() bool {
 	return c.status == EmailPrimary
+}
+
+func (c *Email) MakePrimary() {
+	c.status = EmailPrimary
+}
+
+func (c *Email) MakeConfirmed() {
+	c.status = EmailConfirmed
 }

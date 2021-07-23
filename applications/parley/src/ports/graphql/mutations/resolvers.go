@@ -12,59 +12,41 @@ type MutationResolver struct {
 	App *app.Application
 }
 
-func (m MutationResolver) ToggleModeratorStatus(ctx context.Context) (*types.Response, error) {
-	pass := passport.FromContext(ctx)
-
-	if !pass.IsAuthenticated() {
-		return nil, passport.ErrNotAuthenticated
-	}
-
-	err := m.App.Commands.ToggleModerator.Handle(ctx, pass.AccountID())
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &types.Response{
-		Ok:         true,
-		Validation: nil,
-	}, nil
-}
-
-func (m MutationResolver) ModeratePost(ctx context.Context, data types.ModeratePostInput) (*types.ModeratePost, error) {
-	pass := passport.FromContext(ctx)
-
-	if !pass.IsAuthenticated() {
-		return nil, passport.ErrNotAuthenticated
-	}
+func (m MutationResolver) ModeratePost(ctx context.Context, input types.ModeratePostInput) (*types.ModeratePostPayload, error) {
 
 	rejectionReasonId := ""
 
-	if data.RejectionReasonID != nil {
-		rejectionReasonId = *data.RejectionReasonID
+	if input.PostRejectionReasonID != nil {
+		rejectionReasonId = input.PostRejectionReasonID.GetID()
 	}
 
-	auditLog, err := m.App.Commands.ModeratePost.Handle(ctx, pass.AccountID(), data.PendingPostID, rejectionReasonId, data.Notes)
+	auditLog, err := m.App.Commands.ModeratePost.Handle(ctx, passport.FromContext(ctx).AccountID(), input.PostID.GetID(), rejectionReasonId, input.Notes)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return &types.ModeratePost{Validation: nil, AuditLog: types.MarshalPendingPostAuditLogToGraphQL(auditLog).Node}, nil
+	return &types.ModeratePostPayload{PostAuditLog: types.MarshalPostAuditLogToGraphQL(auditLog)}, nil
 }
 
-func (m MutationResolver) RevertPendingPostAuditLog(ctx context.Context, data types.RevertPostInput) (*types.ModeratePost, error) {
-	pass := passport.FromContext(ctx)
+func (m MutationResolver) RevertPostAuditLog(ctx context.Context, input types.RevertPostAuditLogInput) (*types.RevertPostAuditLogPayload, error) {
 
-	if !pass.IsAuthenticated() {
-		return nil, passport.ErrNotAuthenticated
-	}
-
-	auditLog, err := m.App.Commands.RevertModeratePost.Handle(ctx, pass.AccountID(), data.AuditLogID)
+	auditLog, err := m.App.Commands.RevertModeratePost.Handle(ctx, passport.FromContext(ctx).AccountID(), input.PostAuditLogID.GetID())
 
 	if err != nil {
 		return nil, err
 	}
 
-	return &types.ModeratePost{Validation: nil, AuditLog: types.MarshalPendingPostAuditLogToGraphQL(auditLog).Node}, nil
+	return &types.RevertPostAuditLogPayload{PostAuditLog: types.MarshalPostAuditLogToGraphQL(auditLog)}, nil
+}
+
+func (m MutationResolver) ToggleModeratorSettingsInQueue(ctx context.Context) (*types.ToggleModeratorSettingsInQueuePayload, error) {
+
+	inQueue, err := m.App.Commands.ToggleModerator.Handle(ctx, passport.FromContext(ctx).AccountID())
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.ToggleModeratorSettingsInQueuePayload{ModeratorSettingsInQueue: &inQueue}, nil
 }

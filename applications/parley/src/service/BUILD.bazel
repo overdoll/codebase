@@ -29,12 +29,12 @@ go_test(
     deps = [
         ":service",
         "//applications/parley/proto:v1_go_proto",
-        "//applications/parley/src/domain/infraction",
         "//applications/parley/src/ports",
         "//applications/parley/src/ports/graphql/types",
         "//libraries/bootstrap",
         "//libraries/clients",
         "//libraries/config",
+        "//libraries/graphql/relay",
         "//libraries/passport",
         "//libraries/tests",
         "@com_github_shurcool_graphql//:graphql",

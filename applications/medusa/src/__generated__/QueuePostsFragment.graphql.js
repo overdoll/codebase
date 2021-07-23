@@ -7,21 +7,23 @@
 'use strict';
 
 import type { ReaderFragment } from 'relay-runtime';
-export type PendingPostStateEnum = "Discarded" | "Published" | "Rejected" | "Review" | "%future added value";
+export type PostState = "Discarded" | "Discarding" | "Processing" | "Published" | "Publishing" | "Rejected" | "Review" | "%future added value";
 import type { FragmentReference } from "relay-runtime";
 import type { QueuePostsFragment$ref, QueuePostsFragment$fragmentType } from "./PostsPaginationQuery.graphql";
 export type { QueuePostsFragment$ref, QueuePostsFragment$fragmentType };
 export type QueuePostsFragment = {|
-  +pendingPosts: {|
+  +moderatorPostsQueue: {|
     +edges: $ReadOnlyArray<{|
       +node: {|
         +id: string,
-        +state: PendingPostStateEnum,
+        +state: PostState,
         +contributor: {|
           +username: string,
-          +avatar: string,
+          +avatar: any,
         |},
-        +content: $ReadOnlyArray<string>,
+        +content: $ReadOnlyArray<{|
+          +url: any
+        |}>,
         +categories: $ReadOnlyArray<{|
           +title: string
         |}>,
@@ -36,13 +38,12 @@ export type QueuePostsFragment = {|
           +name: string,
           +media: string,
         |}>,
-        +artistId: ?string,
-        +artistUsername: string,
         +postedAt: any,
         +reassignmentAt: any,
       |}
     |}>
   |},
+  +id: string,
   +$refType: QueuePostsFragment$ref,
 |};
 export type QueuePostsFragment$data = QueuePostsFragment;
@@ -55,9 +56,16 @@ export type QueuePostsFragment$key = {
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "pendingPosts"
+  "moderatorPostsQueue"
 ],
-v1 = [
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v2 = [
   {
     "alias": null,
     "args": null,
@@ -66,7 +74,7 @@ v1 = [
     "storageKey": null
   }
 ],
-v2 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -105,24 +113,27 @@ return {
         "backward": null,
         "path": (v0/*: any*/)
       },
-      "fragmentPathInResult": [],
-      "operation": require('./PostsPaginationQuery.graphql.js')
+      "fragmentPathInResult": [
+        "node"
+      ],
+      "operation": require('./PostsPaginationQuery.graphql.js'),
+      "identifierField": "id"
     }
   },
   "name": "QueuePostsFragment",
   "selections": [
     {
-      "alias": "pendingPosts",
+      "alias": "moderatorPostsQueue",
       "args": null,
-      "concreteType": "PendingPostConnection",
+      "concreteType": "PostConnection",
       "kind": "LinkedField",
-      "name": "__QueuePostsFragment_pendingPosts_connection",
+      "name": "__Posts_moderatorPostsQueue_connection",
       "plural": false,
       "selections": [
         {
           "alias": null,
           "args": null,
-          "concreteType": "PendingPostEdge",
+          "concreteType": "PostEdge",
           "kind": "LinkedField",
           "name": "edges",
           "plural": true,
@@ -130,18 +141,12 @@ return {
             {
               "alias": null,
               "args": null,
-              "concreteType": "PendingPost",
+              "concreteType": "Post",
               "kind": "LinkedField",
               "name": "node",
               "plural": false,
               "selections": [
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "id",
-                  "storageKey": null
-                },
+                (v1/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -152,7 +157,7 @@ return {
                 {
                   "alias": null,
                   "args": null,
-                  "concreteType": "Contributor",
+                  "concreteType": "Account",
                   "kind": "LinkedField",
                   "name": "contributor",
                   "plural": false,
@@ -177,8 +182,19 @@ return {
                 {
                   "alias": null,
                   "args": null,
-                  "kind": "ScalarField",
+                  "concreteType": "Content",
+                  "kind": "LinkedField",
                   "name": "content",
+                  "plural": true,
+                  "selections": [
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "url",
+                      "storageKey": null
+                    }
+                  ],
                   "storageKey": null
                 },
                 {
@@ -188,7 +204,7 @@ return {
                   "kind": "LinkedField",
                   "name": "categories",
                   "plural": true,
-                  "selections": (v1/*: any*/),
+                  "selections": (v2/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -199,7 +215,7 @@ return {
                   "name": "characters",
                   "plural": true,
                   "selections": [
-                    (v2/*: any*/),
+                    (v3/*: any*/),
                     {
                       "alias": null,
                       "args": null,
@@ -207,7 +223,7 @@ return {
                       "kind": "LinkedField",
                       "name": "media",
                       "plural": false,
-                      "selections": (v1/*: any*/),
+                      "selections": (v2/*: any*/),
                       "storageKey": null
                     }
                   ],
@@ -228,7 +244,7 @@ return {
                   "name": "characterRequests",
                   "plural": true,
                   "selections": [
-                    (v2/*: any*/),
+                    (v3/*: any*/),
                     {
                       "alias": null,
                       "args": null,
@@ -237,20 +253,6 @@ return {
                       "storageKey": null
                     }
                   ],
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "artistId",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "artistUsername",
                   "storageKey": null
                 },
                 {
@@ -314,12 +316,13 @@ return {
         }
       ],
       "storageKey": null
-    }
+    },
+    (v1/*: any*/)
   ],
-  "type": "Query",
+  "type": "Account",
   "abstractKey": null
 };
 })();
 // prettier-ignore
-(node: any).hash = '219172e15ff10b97e7d102591823a425';
+(node: any).hash = '4c7eb9a1cda0163e4b4fa72a81d3b3d5';
 module.exports = node;

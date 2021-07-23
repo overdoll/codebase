@@ -4,9 +4,12 @@ import (
 	"time"
 
 	"github.com/segmentio/ksuid"
+	"overdoll/libraries/paging"
 )
 
 type AccountInfractionHistory struct {
+	*paging.Node
+
 	id             string
 	accountId      string
 	reason         string

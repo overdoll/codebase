@@ -1,89 +1,236 @@
-enum PendingPostStateEnum {
-  Review
-  Published
-  Discarded
-  Rejected
-}
+type Post implements Node @key(fields: "id") {
+  id: ID!
 
-type PendingPost {
-  id: String!
-  state: PendingPostStateEnum!
-  moderator: String!
-  contributor: Contributor!
-  content: [String!]!
-  categories: [Category!]!
-  characters: [Character!]!
+  """The reference of this post. Should always be used to reference this post."""
+  reference: String!
+
+  """The state of the post"""
+  state: PostState!
+
+  """Represents the account that this post belongs to"""
+  artist: Account!
+
+  """The moderator to whom this pending post was assigned"""
+  moderator: Account!
+
+  """The contributor who contributed this post"""
+  contributor: Account!
+
+  """Content belonging to this post"""
+  content: [Content!]!
+
+  """The media that was requested."""
   mediaRequests: [String!]
+
+  """The characters that were requested"""
   characterRequests: [CharacterRequestType!]
-  artistId: String
-  artistUsername: String!
+
+  """The date and time of when this post was created"""
   postedAt: Time!
+
+  """The date at which this pending post will be reassigned"""
   reassignmentAt: Time!
 }
 
-type Contributor {
-  id: String!
-  username: String!
-  avatar: String!
+enum PostState {
+  Publishing
+  Review
+  Published
+  Discarding
+  Discarded
+  Rejected
+  Processing
 }
 
-type PendingPostEdge {
+type CharacterRequestType {
+  name: String!
+  media: String!
+}
+
+input CharacterRequest {
+  name: String!
+  customMediaName: String
+  existingMediaId: ID
+}
+
+"""Create pending post."""
+input CreatePostInput {
+
+  """Image IDs for the content"""
+  content: [String!]!
+
+  """Category IDs for this post"""
+  categoryIds: [ID!]!
+
+  """Ids for all the characters"""
+  characterIds: [ID!]!
+
+  """Requests (custom)"""
+  mediaRequests: [String!]
+  characterRequests: [CharacterRequest!]
+
+  """Existing artist's ID"""
+  existingArtist: ID
+
+  """Custom Artist's username"""
+  customArtistUsername: String
+
+  """The author of this post is the artist, as well as contributor"""
+  posterIsArtist: Boolean
+}
+
+"""Payload for a created pending post"""
+type CreatePostPayload {
+  """The pending post after the creation"""
+  post: Post
+
+  """If this pending post will be in review or not"""
+  review: Boolean
+}
+
+type PostEdge {
   cursor: String!
-  node: PendingPost!
+  node: Post!
 }
 
-type PendingPostConnection {
-  edges: [PendingPostEdge!]!
+type PostConnection {
+  edges: [PostEdge!]!
   pageInfo: PageInfo!
 }
 
-input PostInput {
-  content: [String!]!
-  categories: [String!]!
-  characters: [String!]!
-  mediaRequests: [String!]
-  characterRequests: [CharacterRequest!]
-  artistId: String
-  artistUsername: String
-}
+extend type Account {
+  """Posts queue specific to this account (when moderator)"""
+  moderatorPostsQueue(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
 
-type PostResponse {
-  id: String!
-  review: Boolean!
-  validation: Validation
-}
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
 
-input PendingPostFilters {
-  moderatorId: String
-  contributorId: String
-  artistId: String
-  id: String
-}
+    """Returns the first _n_ elements from the list."""
+    first: Int
 
-extend type Query {
-  """
-  Get Pending Posts, specific to a moderator
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): PostConnection! @goField(forceResolver: true)
 
-  Can paginate using Connection Inputs and filter with PendingPostFilters
+  """Posts specific to this account"""
+  posts(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
 
-  All filters will work, except moderatorId, which is staff-only (by default, will grab pending post for logged-in user)
-  """
-  pendingPosts(after: String, before: String, first: Int, last: Int, filter: PendingPostFilters): PendingPostConnection!
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
 
-  """
-  Get a single pending post by ID
-  """
-  pendingPost(id: String!): PendingPost!
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): PostConnection! @goField(forceResolver: true)
+
+  """Contributions specific to this account"""
+  contributions(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): PostConnection! @goField(forceResolver: true)
 }
 
 extend type Mutation {
   """
-  Post a new post
+  Create a new pending post
   """
-  post(data: PostInput): PostResponse!
+  createPost(input: CreatePostInput!): CreatePostPayload
+}
 
-  """
-  Update post
-  """
-  updatePost(id: String!, data: PostInput): Response!
+extend type Query {
+  """Look up a single post"""
+  post(
+    """Look up a post by a reference #"""
+    reference: String!
+  ): Post
+
+  """Search multiple posts"""
+  posts(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Search by category Ids."""
+    categoryIds: [ID!]
+
+    """Search by charcter Ids."""
+    characterIds: [ID!]
+
+    """Search by media Ids."""
+    mediaIds: [ID!]
+  ): PostConnection!
+}
+
+extend type Category {
+  """Posts belonging to this category"""
+  posts(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): PostConnection! @goField(forceResolver: true)
+}
+
+extend type Character {
+  """Posts belonging to this character"""
+  posts(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): PostConnection! @goField(forceResolver: true)
+}
+
+extend type Media {
+  """Posts belonging to this media"""
+  posts(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): PostConnection! @goField(forceResolver: true)
 }

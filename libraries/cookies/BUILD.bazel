@@ -8,6 +8,7 @@ go_library(
     deps = [
         "//libraries/helpers",
         "@com_github_gorilla_securecookie//:securecookie",
+        "@org_uber_go_zap//:zap",
     ],
 )
 

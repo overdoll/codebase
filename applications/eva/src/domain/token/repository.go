@@ -5,8 +5,8 @@ import (
 )
 
 type Repository interface {
-	GetAuthenticationTokenById(context.Context, string) (*AuthenticationToken, error)
-	DeleteAuthenticationTokenById(context.Context, string) error
-	CreateAuthenticationToken(context.Context, *AuthenticationToken) error
-	UpdateAuthenticationToken(context.Context, string, func(*AuthenticationToken) error) (*AuthenticationToken, error)
+	GetAuthenticationTokenById(ctx context.Context, tokenId string) (*AuthenticationToken, error)
+	DeleteAuthenticationTokenById(ctx context.Context, tokenId string) error
+	CreateAuthenticationToken(ctx context.Context, authenticationToken *AuthenticationToken) error
+	UpdateAuthenticationToken(ctx context.Context, tokenId string, updateFn func(authenticationToken *AuthenticationToken) error) (*AuthenticationToken, error)
 }

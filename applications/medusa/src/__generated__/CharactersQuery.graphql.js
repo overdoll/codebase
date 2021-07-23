@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 95c7173f7ace68e89c3301fac043b20b
+ * @relayHash 181aa9f22c834f287303a08ac7b1209d
  */
 
 /* eslint-disable */
@@ -8,23 +8,24 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-export type SearchInput = {|
-  search: string
-|};
 export type CharactersQueryVariables = {|
-  data: SearchInput
+  name?: ?string
 |};
 export type CharactersQueryResponse = {|
-  +characters: $ReadOnlyArray<{|
-    +id: string,
-    +name: string,
-    +thumbnail: string,
-    +media: {|
-      +id: string,
-      +title: string,
-      +thumbnail: string,
-    |},
-  |}>
+  +characters: {|
+    +edges: $ReadOnlyArray<{|
+      +node: {|
+        +id: string,
+        +name: string,
+        +thumbnail: any,
+        +media: {|
+          +id: string,
+          +title: string,
+          +thumbnail: any,
+        |},
+      |}
+    |}>
+  |}
 |};
 export type CharactersQuery = {|
   variables: CharactersQueryVariables,
@@ -34,16 +35,20 @@ export type CharactersQuery = {|
 
 /*
 query CharactersQuery(
-  $data: SearchInput!
+  $name: String
 ) {
-  characters(data: $data) {
-    id
-    name
-    thumbnail
-    media {
-      id
-      title
-      thumbnail
+  characters(name: $name) {
+    edges {
+      node {
+        id
+        name
+        thumbnail
+        media {
+          id
+          title
+          thumbnail
+        }
+      }
     }
   }
 }
@@ -54,7 +59,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "data"
+    "name": "name"
   }
 ],
 v1 = {
@@ -77,41 +82,63 @@ v3 = [
     "args": [
       {
         "kind": "Variable",
-        "name": "data",
-        "variableName": "data"
+        "name": "name",
+        "variableName": "name"
       }
     ],
-    "concreteType": "Character",
+    "concreteType": "CharacterConnection",
     "kind": "LinkedField",
     "name": "characters",
-    "plural": true,
+    "plural": false,
     "selections": [
-      (v1/*: any*/),
       {
         "alias": null,
         "args": null,
-        "kind": "ScalarField",
-        "name": "name",
-        "storageKey": null
-      },
-      (v2/*: any*/),
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "Media",
+        "concreteType": "CharacterEdge",
         "kind": "LinkedField",
-        "name": "media",
-        "plural": false,
+        "name": "edges",
+        "plural": true,
         "selections": [
-          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "title",
+            "concreteType": "Character",
+            "kind": "LinkedField",
+            "name": "node",
+            "plural": false,
+            "selections": [
+              (v1/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "name",
+                "storageKey": null
+              },
+              (v2/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Media",
+                "kind": "LinkedField",
+                "name": "media",
+                "plural": false,
+                "selections": [
+                  (v1/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "title",
+                    "storageKey": null
+                  },
+                  (v2/*: any*/)
+                ],
+                "storageKey": null
+              }
+            ],
             "storageKey": null
-          },
-          (v2/*: any*/)
+          }
         ],
         "storageKey": null
       }
@@ -137,7 +164,7 @@ return {
     "selections": (v3/*: any*/)
   },
   "params": {
-    "id": "95c7173f7ace68e89c3301fac043b20b",
+    "id": "181aa9f22c834f287303a08ac7b1209d",
     "metadata": {},
     "name": "CharactersQuery",
     "operationKind": "query",
@@ -146,5 +173,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = 'd8306e47d17867c6d5b96a46cc8abed4';
+(node: any).hash = 'c34334ef6db876e67bce9268a46623e4';
 module.exports = node;

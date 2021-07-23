@@ -12,10 +12,10 @@ import (
 )
 
 const (
-	AuthenticationTokenPrefix = "authToken:"
+	authenticationTokenPrefix = "authToken:"
 )
 
-type AuthenticationToken struct {
+type authenticationToken struct {
 	Email    string `json:"email"`
 	Redeemed int    `json:"redeemed"`
 	Session  string `json:"session"`
@@ -32,7 +32,7 @@ func NewAuthenticationTokenRedisRepository(client *redis.Client) AuthenticationT
 // GetCookieById - Get authentication cookie by ID
 func (r AuthenticationTokenRepository) GetAuthenticationTokenById(ctx context.Context, id string) (*token.AuthenticationToken, error) {
 
-	val, err := r.client.Get(ctx, AuthenticationTokenPrefix+id).Result()
+	val, err := r.client.Get(ctx, authenticationTokenPrefix+id).Result()
 
 	if err != nil {
 
@@ -49,7 +49,7 @@ func (r AuthenticationTokenRepository) GetAuthenticationTokenById(ctx context.Co
 		return nil, err
 	}
 
-	var cookieItem AuthenticationToken
+	var cookieItem authenticationToken
 
 	if err := json.Unmarshal([]byte(val), &cookieItem); err != nil {
 		return nil, err
@@ -66,7 +66,7 @@ func (r AuthenticationTokenRepository) GetAuthenticationTokenById(ctx context.Co
 // DeleteCookieById - Delete cookie by ID
 func (r AuthenticationTokenRepository) DeleteAuthenticationTokenById(ctx context.Context, id string) error {
 
-	_, err := r.client.Del(ctx, AuthenticationTokenPrefix+id).Result()
+	_, err := r.client.Del(ctx, authenticationTokenPrefix+id).Result()
 
 	if err != nil {
 		return fmt.Errorf("del failed: '%s", err)
@@ -75,11 +75,11 @@ func (r AuthenticationTokenRepository) DeleteAuthenticationTokenById(ctx context
 	return nil
 }
 
-// CreateCookie - Create a AuthenticationToken
+// CreateCookie - Create a authenticationToken
 func (r AuthenticationTokenRepository) CreateAuthenticationToken(ctx context.Context, instance *token.AuthenticationToken) error {
 
 	// run a query to create the authentication token
-	authCookie := &AuthenticationToken{
+	authCookie := &authenticationToken{
 		Email:    instance.Email(),
 		Redeemed: 0,
 		Session:  instance.Session(),
@@ -97,7 +97,7 @@ func (r AuthenticationTokenRepository) CreateAuthenticationToken(ctx context.Con
 		return err
 	}
 
-	ok, err := r.client.SetNX(ctx, AuthenticationTokenPrefix+instance.Token(), newVal, instance.Expiration()).Result()
+	ok, err := r.client.SetNX(ctx, authenticationTokenPrefix+instance.Token(), newVal, instance.Expiration()).Result()
 
 	if err != nil {
 		return fmt.Errorf("set failed: '%s", err)
@@ -126,12 +126,12 @@ func (r AuthenticationTokenRepository) UpdateAuthenticationToken(ctx context.Con
 
 	redeemed := 0
 
-	if instance.Redeemed() {
+	if instance.Verified() {
 		redeemed = 1
 	}
 
 	// get authentication cookie with this ID
-	authCookie := &AuthenticationToken{
+	authCookie := &authenticationToken{
 		Redeemed: redeemed,
 		Email:    instance.Email(),
 		Session:  instance.Session(),
@@ -148,7 +148,7 @@ func (r AuthenticationTokenRepository) UpdateAuthenticationToken(ctx context.Con
 		return nil, err
 	}
 
-	_, err = r.client.Set(ctx, AuthenticationTokenPrefix+instance.Token(), newVal, instance.Expiration()).Result()
+	_, err = r.client.Set(ctx, authenticationTokenPrefix+instance.Token(), newVal, instance.Expiration()).Result()
 
 	if err != nil {
 		return nil, fmt.Errorf("set failed: '%s", err)

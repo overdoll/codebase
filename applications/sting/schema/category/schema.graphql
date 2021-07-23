@@ -1,0 +1,47 @@
+type Category implements Node & Object @key(fields: "id") {
+  """An ID pointing to this category."""
+  id: ID!
+
+  """A URL pointing to the object's thumbnail."""
+  thumbnail(
+    """The size of the resulting square image."""
+    size: Int
+  ): URI!
+
+  """A title for this category."""
+  title: String!
+}
+
+type CategoryEdge {
+  cursor: String!
+  node: Category!
+}
+
+type CategoryConnection {
+  edges: [CategoryEdge!]!
+  pageInfo: PageInfo!
+}
+
+extend type Query {
+  categories(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    # filter by the name of the category
+    title: String
+  ): CategoryConnection!
+}
+
+extend type Post {
+  """Categories that belong to this post"""
+  categories: [Category!]!
+}

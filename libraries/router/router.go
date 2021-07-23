@@ -4,7 +4,6 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
-	"overdoll/libraries/middleware"
 )
 
 func NewGinRouter() *gin.Engine {
@@ -18,8 +17,10 @@ func NewGinRouter() *gin.Engine {
 	}
 
 	// Add gin context to context
-	router.Use(middleware.GinContextToContextMiddleware())
-	router.Use(middleware.PassportToContext())
+	router.Use(PassportToContext())
+	router.Use(GinContextToContextMiddleware())
+	router.Use(CassandraQueryObserverToContext())
+	router.Use(CassandraQueryObserverGetMetrics())
 
 	return router
 }

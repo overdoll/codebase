@@ -5,6 +5,7 @@ import (
 
 	"go.uber.org/zap"
 	"overdoll/applications/sting/src/domain/post"
+	"overdoll/libraries/paging"
 )
 
 type SearchCharactersHandler struct {
@@ -15,14 +16,14 @@ func NewSearchCharactersHandler(pr post.IndexRepository) SearchCharactersHandler
 	return SearchCharactersHandler{pr: pr}
 }
 
-func (h SearchCharactersHandler) Handle(ctx context.Context, query string) ([]*post.Character, error) {
+func (h SearchCharactersHandler) Handle(ctx context.Context, cursor *paging.Cursor, query string) ([]*post.Character, error) {
 
-	chars, err := h.pr.SearchCharacters(ctx, query)
+	results, err := h.pr.SearchCharacters(ctx, cursor, query)
 
 	if err != nil {
 		zap.S().Errorf("failed to get cookie: %s", err)
-		return nil, ErrSearchFailed
+		return nil, errSearchFailed
 	}
 
-	return chars, nil
+	return results, nil
 }

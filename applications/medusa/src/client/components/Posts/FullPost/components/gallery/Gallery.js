@@ -13,7 +13,7 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/swiper.min.css'
 import 'swiper/components/navigation/navigation.min.css'
 import InspectModal from '../../../components/modal/InspectModal'
-import Icon from '@//:modules/content/icon/Icon'
+import Icon from '@//:modules/content/Icon/Icon'
 
 import InterfaceArrowsShrinkVertical
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-shrink-vertical.svg'

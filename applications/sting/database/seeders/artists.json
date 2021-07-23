@@ -1,12 +1,10 @@
 [
   {
     "account_id": "1q7MIqqnkzew33q4elXuN1Ri27d",
-    "account_username": "artist_unverified",
-    "account_avatar": "1pcKaM9zDCZB3TTVYChSqsJZVqt.png"
+    "do_not_post_reason": ""
   },
   {
     "account_id": "1q7MIw0U6TEpELH0FqnxrcXt3E0",
-    "account_username": "artist_verified",
-    "account_avatar": "1pcKZxqh6vKnun2ZBXxEKEi686B.png"
+    "do_not_post_reason": ""
   }
 ]

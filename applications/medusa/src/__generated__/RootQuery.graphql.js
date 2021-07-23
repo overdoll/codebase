@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 3d3673577f14370a1fc3e68435019568
+ * @relayHash 065a40d09104cbef63b7b38d10d9a994
  */
 
 /* eslint-disable */
@@ -8,16 +8,17 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-export type AccountLockReasonEnum = "PostInfraction" | "%future added value";
-export type AccountRoleEnum = "Moderator" | "Staff" | "%future added value";
+export type AccountLockReason = "PostInfraction" | "%future added value";
 export type RootQueryVariables = {||};
 export type RootQueryResponse = {|
-  +authenticatedAccount: ?{|
+  +viewer: ?{|
     +username: string,
-    +roles: $ReadOnlyArray<AccountRoleEnum>,
-    +avatar: string,
+    +isStaff: boolean,
+    +isArtist: boolean,
+    +isModerator: boolean,
+    +avatar: any,
     +lock: ?{|
-      +reason: AccountLockReasonEnum,
+      +reason: AccountLockReason,
       +expires: number,
     |},
   |}
@@ -30,85 +31,107 @@ export type RootQuery = {|
 
 /*
 query RootQuery {
-  authenticatedAccount {
+  viewer {
     username
-    roles
+    isStaff
+    isArtist
+    isModerator
     avatar
     lock {
       reason
       expires
     }
+    id
   }
 }
 */
 
 const node: ConcreteRequest = (function(){
-var v0 = [
-  {
-    "alias": null,
-    "args": null,
-    "concreteType": "Account",
-    "kind": "LinkedField",
-    "name": "authenticatedAccount",
-    "plural": false,
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "username",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "roles",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "avatar",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "AccountLock",
-        "kind": "LinkedField",
-        "name": "lock",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "reason",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "expires",
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      }
-    ],
-    "storageKey": null
-  }
-];
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "username",
+  "storageKey": null
+},
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "isStaff",
+  "storageKey": null
+},
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "isArtist",
+  "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "isModerator",
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "avatar",
+  "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "AccountLock",
+  "kind": "LinkedField",
+  "name": "lock",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "reason",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "expires",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
     "name": "RootQuery",
-    "selections": (v0/*: any*/),
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Account",
+        "kind": "LinkedField",
+        "name": "viewer",
+        "plural": false,
+        "selections": [
+          (v0/*: any*/),
+          (v1/*: any*/),
+          (v2/*: any*/),
+          (v3/*: any*/),
+          (v4/*: any*/),
+          (v5/*: any*/)
+        ],
+        "storageKey": null
+      }
+    ],
     "type": "Query",
     "abstractKey": null
   },
@@ -117,10 +140,35 @@ return {
     "argumentDefinitions": [],
     "kind": "Operation",
     "name": "RootQuery",
-    "selections": (v0/*: any*/)
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Account",
+        "kind": "LinkedField",
+        "name": "viewer",
+        "plural": false,
+        "selections": [
+          (v0/*: any*/),
+          (v1/*: any*/),
+          (v2/*: any*/),
+          (v3/*: any*/),
+          (v4/*: any*/),
+          (v5/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "id",
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ]
   },
   "params": {
-    "id": "3d3673577f14370a1fc3e68435019568",
+    "id": "065a40d09104cbef63b7b38d10d9a994",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",
@@ -129,5 +177,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = 'ec844176a30df1e28b1501779c6a030f';
+(node: any).hash = 'e271409e47560a7711400d307b498830';
 module.exports = node;

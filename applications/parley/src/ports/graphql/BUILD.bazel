@@ -14,6 +14,7 @@ go_library(
         "//applications/parley/src/ports/graphql/entities",
         "//applications/parley/src/ports/graphql/mutations",
         "//applications/parley/src/ports/graphql/queries",
+        "//applications/parley/src/ports/graphql/resolvers",
         "//applications/parley/src/ports/graphql/types",
         "//libraries/graphql/relay",
         "@com_github_99designs_gqlgen//graphql",

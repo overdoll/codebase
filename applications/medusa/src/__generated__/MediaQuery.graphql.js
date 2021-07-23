@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash c580e2ec639f896f6891e72f4ce5bb53
+ * @relayHash 89bd7423a89efb2a1e9f8fb61e57b15e
  */
 
 /* eslint-disable */
@@ -8,18 +8,19 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-export type SearchInput = {|
-  search: string
-|};
 export type MediaQueryVariables = {|
-  data: SearchInput
+  title?: ?string
 |};
 export type MediaQueryResponse = {|
-  +media: $ReadOnlyArray<{|
-    +id: string,
-    +title: string,
-    +thumbnail: string,
-  |}>
+  +medias: {|
+    +edges: $ReadOnlyArray<{|
+      +node: {|
+        +id: string,
+        +title: string,
+        +thumbnail: any,
+      |}
+    |}>
+  |}
 |};
 export type MediaQuery = {|
   variables: MediaQueryVariables,
@@ -29,12 +30,16 @@ export type MediaQuery = {|
 
 /*
 query MediaQuery(
-  $data: SearchInput!
+  $title: String
 ) {
-  media(data: $data) {
-    id
-    title
-    thumbnail
+  medias(title: $title) {
+    edges {
+      node {
+        id
+        title
+        thumbnail
+      }
+    }
   }
 }
 */
@@ -44,7 +49,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "data"
+    "name": "title"
   }
 ],
 v1 = [
@@ -53,34 +58,56 @@ v1 = [
     "args": [
       {
         "kind": "Variable",
-        "name": "data",
-        "variableName": "data"
+        "name": "title",
+        "variableName": "title"
       }
     ],
-    "concreteType": "Media",
+    "concreteType": "MediaConnection",
     "kind": "LinkedField",
-    "name": "media",
-    "plural": true,
+    "name": "medias",
+    "plural": false,
     "selections": [
       {
         "alias": null,
         "args": null,
-        "kind": "ScalarField",
-        "name": "id",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "title",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "thumbnail",
+        "concreteType": "MediaEdge",
+        "kind": "LinkedField",
+        "name": "edges",
+        "plural": true,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Media",
+            "kind": "LinkedField",
+            "name": "node",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "id",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "title",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "thumbnail",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
         "storageKey": null
       }
     ],
@@ -105,7 +132,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "c580e2ec639f896f6891e72f4ce5bb53",
+    "id": "89bd7423a89efb2a1e9f8fb61e57b15e",
     "metadata": {},
     "name": "MediaQuery",
     "operationKind": "query",
@@ -114,5 +141,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '23dc589863175c92283325a47d4ccaf6';
+(node: any).hash = '628e576461798455e8e5f27e867fa866';
 module.exports = node;

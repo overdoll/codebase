@@ -1,8 +1,0 @@
-input CharacterRequest {
-  name: String!
-  media: String!
-}
-
-input SearchInput {
-  search: String!
-}

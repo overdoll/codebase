@@ -40,7 +40,7 @@ func (ec *executionContext) __resolve_entities(ctx context.Context, representati
 		switch typeName {
 
 		case "Account":
-			id0, err := ec.unmarshalNString2string(ctx, rep["id"])
+			id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
 			if err != nil {
 				return nil, errors.New(fmt.Sprintf("Field %s undefined in schema.", "id"))
 			}
@@ -53,13 +53,83 @@ func (ec *executionContext) __resolve_entities(ctx context.Context, representati
 
 			list = append(list, entity)
 
-		case "AccountSettings":
-			id0, err := ec.unmarshalNString2string(ctx, rep["accountId"])
+		case "AccountEmail":
+			id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
 			if err != nil {
-				return nil, errors.New(fmt.Sprintf("Field %s undefined in schema.", "accountId"))
+				return nil, errors.New(fmt.Sprintf("Field %s undefined in schema.", "id"))
 			}
 
-			entity, err := ec.resolvers.Entity().FindAccountSettingsByAccountID(ctx,
+			entity, err := ec.resolvers.Entity().FindAccountEmailByID(ctx,
+				id0)
+			if err != nil {
+				return nil, err
+			}
+
+			list = append(list, entity)
+
+		case "AccountSession":
+			id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
+			if err != nil {
+				return nil, errors.New(fmt.Sprintf("Field %s undefined in schema.", "id"))
+			}
+
+			entity, err := ec.resolvers.Entity().FindAccountSessionByID(ctx,
+				id0)
+			if err != nil {
+				return nil, err
+			}
+
+			list = append(list, entity)
+
+		case "AccountUsername":
+			id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
+			if err != nil {
+				return nil, errors.New(fmt.Sprintf("Field %s undefined in schema.", "id"))
+			}
+
+			entity, err := ec.resolvers.Entity().FindAccountUsernameByID(ctx,
+				id0)
+			if err != nil {
+				return nil, err
+			}
+
+			list = append(list, entity)
+
+		case "Artist":
+			id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
+			if err != nil {
+				return nil, errors.New(fmt.Sprintf("Field %s undefined in schema.", "id"))
+			}
+
+			entity, err := ec.resolvers.Entity().FindArtistByID(ctx,
+				id0)
+			if err != nil {
+				return nil, err
+			}
+
+			list = append(list, entity)
+
+		case "Contributor":
+			id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
+			if err != nil {
+				return nil, errors.New(fmt.Sprintf("Field %s undefined in schema.", "id"))
+			}
+
+			entity, err := ec.resolvers.Entity().FindContributorByID(ctx,
+				id0)
+			if err != nil {
+				return nil, err
+			}
+
+			list = append(list, entity)
+
+		case "Moderator":
+			id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
+			if err != nil {
+				return nil, errors.New(fmt.Sprintf("Field %s undefined in schema.", "id"))
+			}
+
+			entity, err := ec.resolvers.Entity().FindModeratorByID(ctx,
 				id0)
 			if err != nil {
 				return nil, err

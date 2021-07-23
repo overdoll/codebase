@@ -24,6 +24,8 @@ export default function Upload (): Node {
   const [uppy, isLoaded] = useUpload(state, dispatch)
 
   const [t] = useTranslation('general')
+  // load the upload namespace
+  useTranslation('upload')
 
   const notify = useToast()
 

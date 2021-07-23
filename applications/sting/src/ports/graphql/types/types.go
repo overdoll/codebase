@@ -5,40 +5,95 @@ package types
 import (
 	"fmt"
 	"io"
+	graphql1 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"strconv"
 	"time"
 )
 
+// Represents an account
+type Object interface {
+	IsObject()
+}
+
 type Account struct {
-	ID        string `json:"id"`
-	TestField string `json:"testField"`
+	// Artist status for this account
+	Artist *Artist `json:"artist"`
+	// Posts queue specific to this account (when moderator)
+	ModeratorPostsQueue *PostConnection `json:"moderatorPostsQueue"`
+	// Posts specific to this account
+	Posts *PostConnection `json:"posts"`
+	// Contributions specific to this account
+	Contributions *PostConnection `json:"contributions"`
+	ID            relay.ID        `json:"id"`
 }
 
 func (Account) IsEntity() {}
 
 type Artist struct {
-	ID       string `json:"id"`
-	Avatar   string `json:"avatar"`
-	Username string `json:"username"`
+	ID              relay.ID `json:"id"`
+	DoNotPostReason *string  `json:"doNotPostReason"`
 }
 
+func (Artist) IsNode()   {}
+func (Artist) IsEntity() {}
+
 type Category struct {
-	ID        string `json:"id"`
-	Thumbnail string `json:"thumbnail"`
-	Title     string `json:"title"`
+	// An ID pointing to this category.
+	ID relay.ID `json:"id"`
+	// A URL pointing to the object's thumbnail.
+	Thumbnail graphql1.URI `json:"thumbnail"`
+	// A title for this category.
+	Title string `json:"title"`
+	// Posts belonging to this category
+	Posts *PostConnection `json:"posts"`
+}
+
+func (Category) IsNode()   {}
+func (Category) IsObject() {}
+func (Category) IsEntity() {}
+
+type CategoryConnection struct {
+	Edges    []*CategoryEdge `json:"edges"`
+	PageInfo *relay.PageInfo `json:"pageInfo"`
+}
+
+type CategoryEdge struct {
+	Cursor string    `json:"cursor"`
+	Node   *Category `json:"node"`
 }
 
 type Character struct {
-	ID        string `json:"id"`
-	Thumbnail string `json:"thumbnail"`
-	Name      string `json:"name"`
-	Media     *Media `json:"media"`
+	// An ID pointing to this character.
+	ID relay.ID `json:"id"`
+	// A URL pointing to the object's thumbnail.
+	Thumbnail graphql1.URI `json:"thumbnail"`
+	// A name for this character.
+	Name string `json:"name"`
+	// The media linked to this character.
+	Media *Media `json:"media"`
+	// Posts belonging to this character
+	Posts *PostConnection `json:"posts"`
+}
+
+func (Character) IsNode()   {}
+func (Character) IsObject() {}
+func (Character) IsEntity() {}
+
+type CharacterConnection struct {
+	Edges    []*CharacterEdge `json:"edges"`
+	PageInfo *relay.PageInfo  `json:"pageInfo"`
+}
+
+type CharacterEdge struct {
+	Cursor string     `json:"cursor"`
+	Node   *Character `json:"node"`
 }
 
 type CharacterRequest struct {
-	Name  string `json:"name"`
-	Media string `json:"media"`
+	Name            string    `json:"name"`
+	CustomMediaName *string   `json:"customMediaName"`
+	ExistingMediaID *relay.ID `json:"existingMediaId"`
 }
 
 type CharacterRequestType struct {
@@ -46,121 +101,150 @@ type CharacterRequestType struct {
 	Media string `json:"media"`
 }
 
-type Contributor struct {
-	ID       string `json:"id"`
-	Username string `json:"username"`
-	Avatar   string `json:"avatar"`
+type Content struct {
+	URL graphql1.URI `json:"url"`
+}
+
+// Create pending post.
+type CreatePostInput struct {
+	// Image IDs for the content
+	Content []string `json:"content"`
+	// Category IDs for this post
+	CategoryIds []relay.ID `json:"categoryIds"`
+	// Ids for all the characters
+	CharacterIds []relay.ID `json:"characterIds"`
+	// Requests (custom)
+	MediaRequests     []string            `json:"mediaRequests"`
+	CharacterRequests []*CharacterRequest `json:"characterRequests"`
+	// Existing artist's ID
+	ExistingArtist *relay.ID `json:"existingArtist"`
+	// Custom Artist's username
+	CustomArtistUsername *string `json:"customArtistUsername"`
+	// The author of this post is the artist, as well as contributor
+	PosterIsArtist *bool `json:"posterIsArtist"`
+}
+
+// Payload for a created pending post
+type CreatePostPayload struct {
+	// The pending post after the creation
+	Post *Post `json:"post"`
+	// If this pending post will be in review or not
+	Review *bool `json:"review"`
 }
 
 type Media struct {
-	ID        string `json:"id"`
-	Thumbnail string `json:"thumbnail"`
-	Title     string `json:"title"`
+	// An ID pointing to this media.
+	ID relay.ID `json:"id"`
+	// A URL pointing to the object's thumbnail.
+	Thumbnail graphql1.URI `json:"thumbnail"`
+	// A title for this media.
+	Title string `json:"title"`
+	// Posts belonging to this media
+	Posts *PostConnection `json:"posts"`
 }
 
-type PendingPost struct {
-	ID                string                  `json:"id"`
-	State             PendingPostStateEnum    `json:"state"`
-	Moderator         string                  `json:"moderator"`
-	Contributor       *Contributor            `json:"contributor"`
-	Content           []string                `json:"content"`
-	Categories        []*Category             `json:"categories"`
-	Characters        []*Character            `json:"characters"`
-	MediaRequests     []string                `json:"mediaRequests"`
+func (Media) IsNode()   {}
+func (Media) IsObject() {}
+func (Media) IsEntity() {}
+
+type MediaConnection struct {
+	Edges    []*MediaEdge    `json:"edges"`
+	PageInfo *relay.PageInfo `json:"pageInfo"`
+}
+
+type MediaEdge struct {
+	Cursor string `json:"cursor"`
+	Node   *Media `json:"node"`
+}
+
+type Post struct {
+	ID relay.ID `json:"id"`
+	// The reference of this post. Should always be used to reference this post.
+	Reference string `json:"reference"`
+	// The state of the post
+	State PostState `json:"state"`
+	// Represents the account that this post belongs to
+	Artist *Account `json:"artist"`
+	// The moderator to whom this pending post was assigned
+	Moderator *Account `json:"moderator"`
+	// The contributor who contributed this post
+	Contributor *Account `json:"contributor"`
+	// Content belonging to this post
+	Content []*Content `json:"content"`
+	// The media that was requested.
+	MediaRequests []string `json:"mediaRequests"`
+	// The characters that were requested
 	CharacterRequests []*CharacterRequestType `json:"characterRequests"`
-	ArtistID          *string                 `json:"artistId"`
-	ArtistUsername    string                  `json:"artistUsername"`
-	PostedAt          time.Time               `json:"postedAt"`
-	ReassignmentAt    time.Time               `json:"reassignmentAt"`
+	// The date and time of when this post was created
+	PostedAt time.Time `json:"postedAt"`
+	// The date at which this pending post will be reassigned
+	ReassignmentAt time.Time `json:"reassignmentAt"`
+	// Categories that belong to this post
+	Categories []*Category `json:"categories"`
+	// Characters that belong to this post
+	Characters []*Character `json:"characters"`
 }
 
-type PendingPostConnection struct {
-	Edges    []*PendingPostEdge `json:"edges"`
-	PageInfo *relay.PageInfo    `json:"pageInfo"`
+func (Post) IsNode()   {}
+func (Post) IsEntity() {}
+
+type PostConnection struct {
+	Edges    []*PostEdge     `json:"edges"`
+	PageInfo *relay.PageInfo `json:"pageInfo"`
 }
 
-type PendingPostEdge struct {
-	Cursor string       `json:"cursor"`
-	Node   *PendingPost `json:"node"`
+type PostEdge struct {
+	Cursor string `json:"cursor"`
+	Node   *Post  `json:"node"`
 }
 
-type PendingPostFilters struct {
-	ModeratorID   *string `json:"moderatorId"`
-	ContributorID *string `json:"contributorId"`
-	ArtistID      *string `json:"artistId"`
-	ID            *string `json:"id"`
-}
-
-type PostInput struct {
-	Content           []string            `json:"content"`
-	Categories        []string            `json:"categories"`
-	Characters        []string            `json:"characters"`
-	MediaRequests     []string            `json:"mediaRequests"`
-	CharacterRequests []*CharacterRequest `json:"characterRequests"`
-	ArtistID          *string             `json:"artistId"`
-	ArtistUsername    *string             `json:"artistUsername"`
-}
-
-type PostResponse struct {
-	ID         string      `json:"id"`
-	Review     bool        `json:"review"`
-	Validation *Validation `json:"validation"`
-}
-
-type Response struct {
-	Validation *Validation `json:"validation"`
-	Ok         bool        `json:"ok"`
-}
-
-type SearchInput struct {
-	Search string `json:"search"`
-}
-
-type Validation struct {
-	Code string `json:"code"`
-}
-
-type PendingPostStateEnum string
+type PostState string
 
 const (
-	PendingPostStateEnumReview    PendingPostStateEnum = "Review"
-	PendingPostStateEnumPublished PendingPostStateEnum = "Published"
-	PendingPostStateEnumDiscarded PendingPostStateEnum = "Discarded"
-	PendingPostStateEnumRejected  PendingPostStateEnum = "Rejected"
+	PostStatePublishing PostState = "Publishing"
+	PostStateReview     PostState = "Review"
+	PostStatePublished  PostState = "Published"
+	PostStateDiscarding PostState = "Discarding"
+	PostStateDiscarded  PostState = "Discarded"
+	PostStateRejected   PostState = "Rejected"
+	PostStateProcessing PostState = "Processing"
 )
 
-var AllPendingPostStateEnum = []PendingPostStateEnum{
-	PendingPostStateEnumReview,
-	PendingPostStateEnumPublished,
-	PendingPostStateEnumDiscarded,
-	PendingPostStateEnumRejected,
+var AllPostState = []PostState{
+	PostStatePublishing,
+	PostStateReview,
+	PostStatePublished,
+	PostStateDiscarding,
+	PostStateDiscarded,
+	PostStateRejected,
+	PostStateProcessing,
 }
 
-func (e PendingPostStateEnum) IsValid() bool {
+func (e PostState) IsValid() bool {
 	switch e {
-	case PendingPostStateEnumReview, PendingPostStateEnumPublished, PendingPostStateEnumDiscarded, PendingPostStateEnumRejected:
+	case PostStatePublishing, PostStateReview, PostStatePublished, PostStateDiscarding, PostStateDiscarded, PostStateRejected, PostStateProcessing:
 		return true
 	}
 	return false
 }
 
-func (e PendingPostStateEnum) String() string {
+func (e PostState) String() string {
 	return string(e)
 }
 
-func (e *PendingPostStateEnum) UnmarshalGQL(v interface{}) error {
+func (e *PostState) UnmarshalGQL(v interface{}) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
 	}
 
-	*e = PendingPostStateEnum(str)
+	*e = PostState(str)
 	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid PendingPostStateEnum", str)
+		return fmt.Errorf("%s is not a valid PostState", str)
 	}
 	return nil
 }
 
-func (e PendingPostStateEnum) MarshalGQL(w io.Writer) {
+func (e PostState) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }

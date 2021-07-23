@@ -7,6 +7,8 @@ import (
 	"time"
 
 	"github.com/go-playground/validator/v10"
+	"overdoll/libraries/graphql"
+	"overdoll/libraries/paging"
 )
 
 type AccountRole string
@@ -24,6 +26,8 @@ const (
 )
 
 type Account struct {
+	*paging.Node
+
 	id string
 
 	username  string
@@ -103,12 +107,12 @@ func (u *Account) Verified() bool {
 }
 
 func (u *Account) Avatar() string {
-	var staticURL = os.Getenv("STATIC_URL")
-	return staticURL + "/avatars/" + u.avatar
+	return u.avatar
 }
 
-func (u *Account) RawAvatar() string {
-	return u.avatar
+func (u *Account) ConvertAvatarToURI() graphql.URI {
+	var staticURL = os.Getenv("STATIC_URL")
+	return graphql.NewURI(staticURL + "/avatars/" + u.avatar)
 }
 
 func (u *Account) LockedUntil() int {
@@ -194,6 +198,10 @@ func (u *Account) IsStaff() bool {
 	return u.hasRoles([]string{"staff"})
 }
 
+func (u *Account) IsArtist() bool {
+	return u.hasRoles([]string{"artist"})
+}
+
 func (u *Account) IsModerator() bool {
 	return (u.hasRoles([]string{"moderator"}) || u.IsStaff()) && !u.IsLocked()
 }
@@ -236,6 +244,7 @@ func (u *Account) UpdateEmail(emails []*Email, email string) error {
 	for _, current := range emails {
 		if current.Email() == email {
 			if current.IsConfirmed() {
+				current.MakePrimary()
 				u.email = email
 				return nil
 			}
