@@ -246,9 +246,7 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, curs
 	if filter.ContributorId() != "" {
 		query.Must(elastic.NewMultiMatchQuery(filter.ModeratorId(), "contributor_id"))
 	}
-
-	fmt.Println(query.Source())
-
+	
 	builder.Query(query)
 
 	response, err := builder.Pretty(true).Do(ctx)
