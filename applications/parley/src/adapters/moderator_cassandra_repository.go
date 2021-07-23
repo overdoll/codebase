@@ -68,7 +68,7 @@ func (r ModeratorCassandraRepository) GetModerator(ctx context.Context, id strin
 func (r ModeratorCassandraRepository) GetModerators(ctx context.Context) ([]*mod.Moderator, error) {
 
 	moderatorQuery := r.session.
-		Query(moderatorTable.Get()).
+		Query(moderatorTable.Select()).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&moderator{Bucket: 0})
 

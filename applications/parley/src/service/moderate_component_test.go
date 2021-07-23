@@ -31,9 +31,12 @@ func TestPendingPostRejectionReasons(t *testing.T) {
 
 type AccountPostAuditLogs struct {
 	Entities []struct {
-		ModeratorPostAuditLogs *struct {
-			Edges []struct {
-				Node PostAuditLogModified
+		Account struct {
+			ID                     string
+			ModeratorPostAuditLogs *struct {
+				Edges []struct {
+					Node PostAuditLogModified
+				}
 			}
 		} `graphql:"... on Account"`
 	} `graphql:"_entities(representations: $representations)"`
@@ -104,7 +107,10 @@ func TestModeratePost_reject(t *testing.T) {
 
 type AccountInfractionHistory struct {
 	Entities []struct {
-		Infractions *types.AccountInfractionHistoryConnection `graphql:"... on Account"`
+		Account struct {
+			ID          string
+			Infractions *types.AccountInfractionHistoryConnection
+		} `graphql:"... on Account"`
 	} `graphql:"_entities(representations: $representations)"`
 }
 
@@ -140,7 +146,7 @@ func TestModeratePost_reject_infraction_and_undo(t *testing.T) {
 	foundInfraction := false
 
 	// look for the infraction that we created
-	for _, infra := range infractionHistory.Entities[0].Infractions.Edges {
+	for _, infra := range infractionHistory.Entities[0].Account.Infractions.Edges {
 		if infra.Node.Reason == infractionReason {
 			foundInfraction = true
 		}
@@ -153,7 +159,6 @@ func TestModeratePost_reject_infraction_and_undo(t *testing.T) {
 	undo := mRevertModeratePost(t, client, res.ModeratePost.PostAuditLog.ID)
 
 	// infraction should have been undone
-	var str *string
-	require.Equal(t, str, undo.RevertPostAuditLog.PostAuditLog.InfractionID)
+	require.Equal(t, "", undo.RevertPostAuditLog.PostAuditLog.InfractionID)
 	require.Equal(t, true, undo.RevertPostAuditLog.PostAuditLog.Reverted)
 }

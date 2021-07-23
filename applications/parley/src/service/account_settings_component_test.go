@@ -13,7 +13,10 @@ import (
 // query is weird here because we query the entities field directly
 type AccountModerator struct {
 	Entities []struct {
-		Moderator *types.Moderator `graphql:"... on Account"`
+		Account struct {
+			ID        string
+			Moderator *types.Moderator
+		} `graphql:"... on Account"`
 	} `graphql:"_entities(representations: $representations)"`
 }
 
@@ -33,13 +36,11 @@ func moderator(t *testing.T, client *graphql.Client, accountId string) *types.Mo
 
 	require.NoError(t, err)
 
-	return account.Entities[0].Moderator
+	return account.Entities[0].Account.Moderator
 }
 
 type ToggleModeratorSettingsInQueue struct {
-	ToggleModeratorSettingsInQueue *struct {
-		PostAuditLog PostAuditLogModified
-	} `graphql:"toggleModeratorSettingsInQueue()"`
+	ToggleModeratorSettingsInQueue types.ToggleModeratorSettingsInQueuePayload `graphql:"toggleModeratorSettingsInQueue()"`
 }
 
 // TestToggleModeratorStatus - toggle moderator status
@@ -48,7 +49,7 @@ func TestToggleModeratorStatus(t *testing.T) {
 
 	client := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ5IyRTV0X4J27F3m5wGD5mj"))
 
-	oldInQueue := moderator(t, client, "1q7MJ5IyRTV0X4J27F3m5wGD5mj")
+	oldInQueue := moderator(t, client, "QWNjb3VudDoxcTdNSjVJeVJUVjBYNEoyN0YzbTV3R0Q1bWo=")
 
 	var toggleModeratorStatus ToggleModeratorSettingsInQueue
 
@@ -56,7 +57,7 @@ func TestToggleModeratorStatus(t *testing.T) {
 
 	require.NoError(t, err)
 
-	newInQueue := moderator(t, client, "1q7MJ5IyRTV0X4J27F3m5wGD5mj")
+	newInQueue := moderator(t, client, "QWNjb3VudDoxcTdNSjVJeVJUVjBYNEoyN0YzbTV3R0Q1bWo=")
 
 	// compare that the old result of inqueue is the opposite of the new inqueue
 	require.NotEqual(t, oldInQueue, newInQueue)
@@ -65,8 +66,8 @@ func TestToggleModeratorStatus(t *testing.T) {
 
 	require.NoError(t, err)
 
-	newNewInQueue := moderator(t, client, "1q7MJ5IyRTV0X4J27F3m5wGD5mj")
+	newNewInQueue := moderator(t, client, "QWNjb3VudDoxcTdNSjVJeVJUVjBYNEoyN0YzbTV3R0Q1bWo=")
 
 	// same comparison, but we toggle off again
-	require.Equal(t, newNewInQueue, oldInQueue)
+	require.NotEqual(t, newNewInQueue, oldInQueue)
 }
