@@ -42,7 +42,7 @@ func mAuthenticate(t *testing.T, client *graphql.Client, email string) GrantAuth
 	var authenticate GrantAuthenticationToken
 
 	err := client.Mutate(context.Background(), &authenticate, map[string]interface{}{
-		"input": &types.GrantAuthenticationTokenInput{Email: email},
+		"input": types.GrantAuthenticationTokenInput{Email: email},
 	})
 
 	require.NoError(t, err)

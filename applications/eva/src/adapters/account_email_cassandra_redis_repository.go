@@ -210,7 +210,13 @@ func (r AccountRepository) ConfirmAccountEmail(ctx context.Context, confirmId st
 		return nil, fmt.Errorf("get failed: '%s", err)
 	}
 
-	return nil, nil
+	em, err := r.GetAccountEmail(ctx, acc.ID(), confirmItem.Email)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return em, nil
 }
 
 // GetAccountEmail - get an email for a single account
@@ -365,18 +371,19 @@ func (r AccountRepository) UpdateAccountMakeEmailPrimary(ctx context.Context, ac
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
 	// delete emails by account
-	stmt, _ := accountEmailTable.
-		UpdateBuilder().
+	stmt, _ := qb.Update(emailByAccountTable.Name()).
 		Set("status").
-		Where(qb.Eq("email"), qb.Eq("account_id")).
+		Where(qb.Eq("account_id"), qb.Eq("email")).
 		ToCql()
 
-	batch.Query(stmt, 2, newEmail.Email(), accountId)
-	batch.Query(stmt, 1, oldEmail, accountId)
+	// set old mail to "1" - confirmed
+	// set new mail to "2" - primary
+	batch.Query(stmt, 2, accountId, newEmail.Email())
+	batch.Query(stmt, 1, accountId, oldEmail)
 
-	stmt, _ = accountTable.
-		UpdateBuilder().
+	stmt, _ = qb.Update(accountTable.Name()).
 		Set("email").
+		Where(qb.Eq("id")).
 		ToCql()
 
 	batch.Query(stmt, newEmail.Email(), accountId)

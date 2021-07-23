@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -328,7 +329,7 @@ func (r *MutationResolver) EnrollAccountMultiFactorTotp(ctx context.Context, inp
 
 	enabled := true
 
-	return &types.EnrollAccountMultiFactorTotpPayload{AccountMultiFactorTOTPEnabled: &enabled}, nil
+	return &types.EnrollAccountMultiFactorTotpPayload{AccountMultiFactorTotpEnabled: &enabled}, nil
 }
 
 func (r *MutationResolver) UnlockAccount(ctx context.Context) (*types.UnlockAccountPayload, error) {
@@ -419,6 +420,8 @@ func (r *MutationResolver) GenerateAccountMultiFactorRecoveryCodes(ctx context.C
 		recoveryCodes = append(recoveryCodes, &types.AccountMultiFactorRecoveryCode{Code: code.Code()})
 	}
 
+	fmt.Println(recoveryCodes)
+
 	return &types.GenerateAccountMultiFactorRecoveryCodesPayload{AccountMultiFactorRecoveryCodes: recoveryCodes}, nil
 }
 
@@ -430,5 +433,5 @@ func (r *MutationResolver) DisableAccountMultiFactor(ctx context.Context) (*type
 
 	enabled := false
 
-	return &types.DisableAccountMultiFactorPayload{AccountMultiFactorTOTPEnabled: &enabled}, nil
+	return &types.DisableAccountMultiFactorPayload{AccountMultiFactorTotpEnabled: &enabled}, nil
 }

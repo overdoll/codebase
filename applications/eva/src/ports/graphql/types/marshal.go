@@ -142,10 +142,8 @@ func MarshalAuthenticationTokenToGraphQL(result *token.AuthenticationToken, same
 
 	var multiFactorTypes []MultiFactorType
 
-	if registered {
-		if result.IsTOTPRequired() {
-			multiFactorTypes = append(multiFactorTypes, MultiFactorTypeTotp)
-		}
+	if result.IsTOTPRequired() {
+		multiFactorTypes = append(multiFactorTypes, MultiFactorTypeTotp)
 	}
 
 	return &AuthenticationToken{
@@ -303,11 +301,11 @@ func MarshalAccountSessionToGraphQLConnection(results []*session.Session, cursor
 		Edges: accSessions,
 	}
 
-	limit := cursor.GetLimit()
-
 	if len(results) == 0 {
 		return conn
 	}
+
+	limit := cursor.GetLimit()
 
 	if len(results) == limit {
 		conn.PageInfo.HasNextPage = cursor.First() != nil

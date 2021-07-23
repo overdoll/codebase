@@ -272,7 +272,7 @@ func (r AccountRepository) CreateAccount(ctx context.Context, instance *account.
 		// create a table that holds all of the user's emails
 		stmt, _ = emailByAccountTable.Insert()
 
-		batch.Query(stmt, instance.Email(), instance.ID(), 2)
+		batch.Query(stmt, instance.ID(), instance.Email(), 2)
 
 		email = instance.Username()
 	}
@@ -281,7 +281,7 @@ func (r AccountRepository) CreateAccount(ctx context.Context, instance *account.
 	// Will also contain all major information about the user such as permissions, etc...
 	stmt, _ = accountTable.Insert()
 
-	batch.Query(stmt, instance.Username(), instance.ID(), email, false)
+	batch.Query(stmt, instance.ID(), instance.Username(), email, []string{}, false, nil, false, 0, nil, nil, false)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
 

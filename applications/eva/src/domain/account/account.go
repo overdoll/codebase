@@ -244,6 +244,7 @@ func (u *Account) UpdateEmail(emails []*Email, email string) error {
 			if current.IsConfirmed() {
 				current.MakePrimary()
 				u.email = email
+				return nil
 			}
 		}
 	}

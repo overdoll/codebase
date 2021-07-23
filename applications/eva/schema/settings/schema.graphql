@@ -297,19 +297,19 @@ type GenerateAccountMultiFactorRecoveryCodesPayload {
 """Payload of the generated TOTP token"""
 type GenerateAccountMultiFactorTotpPayload {
   """TOTP pair that was generated"""
-  multiFactorTOTP: MultiFactorTotp
+  multiFactorTotp: MultiFactorTotp
 }
 
 """Payload of the enrolled totp payload"""
 type EnrollAccountMultiFactorTotpPayload {
   """TOTP that belongs to this account now"""
-  accountMultiFactorTOTPEnabled: Boolean
+  accountMultiFactorTotpEnabled: Boolean
 }
 
 """Payload for disabling account multi factor"""
 type DisableAccountMultiFactorPayload {
   """TOTP that was removed from this account, if it was removed"""
-  accountMultiFactorTOTPEnabled: Boolean
+  accountMultiFactorTotpEnabled: Boolean
 }
 
 """Payload for confirming the account email"""

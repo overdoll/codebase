@@ -7,7 +7,6 @@ import (
 
 	"github.com/bxcodec/faker/v3"
 	"github.com/shurcooL/graphql"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/eva/src/adapters"
 	"overdoll/applications/eva/src/domain/session"
@@ -43,28 +42,55 @@ func createSession(t *testing.T, accountId, userAgent, ip string) {
 	require.NoError(t, err)
 }
 
+type AccountEmailModified struct {
+	ID     relay.ID
+	Email  graphql.String
+	Status types.AccountEmailStatus
+}
+
+type AccountUsernameModified struct {
+	ID       relay.ID
+	Username graphql.String
+}
+
 type AddAccountEmail struct {
-	AddAccountEmail types.AddAccountEmailPayload `graphql:"addAccountEmail(input: $input)"`
+	AddAccountEmail struct {
+		AccountEmail *AccountEmailModified
+	} `graphql:"addAccountEmail(input: $input)"`
 }
 
 type ConfirmAccountEmail struct {
-	ConfirmAccountEmail types.ConfirmAccountEmailPayload `graphql:"confirmAccountEmail(input: $input)"`
+	ConfirmAccountEmail struct {
+		AccountEmail *AccountEmailModified
+	} `graphql:"confirmAccountEmail(input: $input)"`
 }
 
 type DeleteAccountEmail struct {
-	DeleteAccountEmail types.DeleteAccountEmailPayload `graphql:"deleteAccountEmail(input: $input)"`
+	DeleteAccountEmail struct {
+		AccountEmailID relay.ID
+	} `graphql:"deleteAccountEmail(input: $input)"`
 }
 
 type UpdateAccountEmailStatusToPrimary struct {
-	UpdateAccountEmailStatusToPrimary types.UpdateAccountEmailStatusToPrimaryPayload `graphql:"updateAccountEmailStatusToPrimary(input: $input)"`
+	UpdateAccountEmailStatusToPrimary struct {
+		AccountEmail *AccountEmailModified
+	} `graphql:"updateAccountEmailStatusToPrimary(input: $input)"`
 }
 
 type ViewerAccountEmailUsernameSettings struct {
 	Viewer struct {
-		Username  graphql.String
-		Emails    *types.AccountEmailConnection
-		Usernames *types.AccountUsernameConnection
-		Sessions  *types.AccountSessionConnection
+		Username graphql.String
+		Emails   *struct {
+			Edges []*struct {
+				Node *AccountEmailModified
+			}
+		}
+		Usernames *struct {
+			Edges []*struct {
+				Node *AccountUsernameModified
+			}
+		}
+		Sessions *types.AccountSessionConnection
 	} `graphql:"viewer()"`
 }
 
@@ -96,12 +122,12 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 
 	// add an email to our account
 	err = client.Mutate(context.Background(), &addAccountEmail, map[string]interface{}{
-		"input": &types.AddAccountEmailInput{Email: targetEmail},
+		"input": types.AddAccountEmailInput{Email: targetEmail},
 	})
 
 	require.NoError(t, err)
 	require.NotNil(t, addAccountEmail.AddAccountEmail.AccountEmail)
-	require.Equal(t, targetEmail, addAccountEmail.AddAccountEmail.AccountEmail.Email)
+	require.Equal(t, graphql.String(targetEmail), addAccountEmail.AddAccountEmail.AccountEmail.Email)
 
 	settings := viewerAccountEmailUsernameSettings(t, client)
 
@@ -109,7 +135,7 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 
 	// query account's settings and ensure this email is here, and unconfirmed
 	for _, email := range settings.Viewer.Emails.Edges {
-		if email.Node.Email == targetEmail && email.Node.Status == types.AccountEmailStatusUnconfirmed {
+		if email.Node.Email == graphql.String(targetEmail) && email.Node.Status == types.AccountEmailStatusUnconfirmed {
 			foundUnconfirmedEmail = true
 		}
 	}
@@ -124,8 +150,8 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 	var confirmAccountEmail ConfirmAccountEmail
 
 	// confirm the account's new email
-	err = client.Query(context.Background(), &confirmAccountEmail, map[string]interface{}{
-		"input": &types.ConfirmAccountEmailInput{ID: confirmationKey},
+	err = client.Mutate(context.Background(), &confirmAccountEmail, map[string]interface{}{
+		"input": types.ConfirmAccountEmailInput{ID: confirmationKey},
 	})
 
 	require.NoError(t, err)
@@ -137,7 +163,7 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 
 	// go through account settings and make sure that this email is now confirmed
 	for _, email := range settings.Viewer.Emails.Edges {
-		if email.Node.Email == targetEmail && email.Node.Status == types.AccountEmailStatusConfirmed {
+		if email.Node.Email == graphql.String(targetEmail) && email.Node.Status == types.AccountEmailStatusConfirmed {
 			foundConfirmedEmail = true
 		}
 	}
@@ -161,7 +187,7 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 
 	// go through account settings and make sure that this email is now the primary email
 	for _, email := range settings.Viewer.Emails.Edges {
-		if email.Node.Email == targetEmail && email.Node.Status == types.AccountEmailStatusPrimary {
+		if email.Node.Email == graphql.String(targetEmail) && email.Node.Status == types.AccountEmailStatusPrimary {
 			foundPrimaryEmail = true
 		}
 	}
@@ -189,7 +215,7 @@ func TestAccountEmail_create_new_and_remove(t *testing.T) {
 
 	// add an email to our account
 	err = client.Mutate(context.Background(), &addAccountEmail, map[string]interface{}{
-		"input": &types.AddAccountEmailInput{Email: targetEmail},
+		"input": types.AddAccountEmailInput{Email: targetEmail},
 	})
 
 	require.NoError(t, err)
@@ -211,7 +237,7 @@ func TestAccountEmail_create_new_and_remove(t *testing.T) {
 
 	// go through account settings and make sure email is not found
 	for _, email := range settings.Viewer.Emails.Edges {
-		if email.Node.Email == targetEmail {
+		if email.Node.Email == graphql.String(targetEmail) {
 			foundNewEmail = true
 		}
 	}
@@ -220,7 +246,9 @@ func TestAccountEmail_create_new_and_remove(t *testing.T) {
 }
 
 type UpdateAccountUsernameAndRetainPrevious struct {
-	UpdateAccountUsernameAndRetainPrevious types.UpdateAccountUsernameAndRetainPreviousPayload `graphql:"updateAccountUsernameAndRetainPrevious(input: $input)"`
+	UpdateAccountUsernameAndRetainPrevious struct {
+		AccountUsername *AccountUsernameModified
+	} `graphql:"updateAccountUsernameAndRetainPrevious(input: $input)"`
 }
 
 func TestAccountUsername_modify(t *testing.T) {
@@ -242,7 +270,7 @@ func TestAccountUsername_modify(t *testing.T) {
 
 	// modify account's username
 	err = client.Mutate(context.Background(), &modifyAccountUsername, map[string]interface{}{
-		"input": &types.UpdateAccountUsernameAndRetainPreviousInput{Username: targetUsername},
+		"input": types.UpdateAccountUsernameAndRetainPreviousInput{Username: targetUsername},
 	})
 
 	require.NoError(t, err)
@@ -254,7 +282,7 @@ func TestAccountUsername_modify(t *testing.T) {
 
 	// go through the account's usernames and make sure the username exists here
 	for _, username := range settings.Viewer.Usernames.Edges {
-		if username.Node.Username == targetUsername {
+		if username.Node.Username == graphql.String(targetUsername) {
 			foundNewUsername = true
 		}
 	}
@@ -262,7 +290,7 @@ func TestAccountUsername_modify(t *testing.T) {
 	require.True(t, foundNewUsername)
 
 	// make sure that the username is modified as well for the "authentication" query
-	assert.Equal(t, targetUsername, settings.Viewer.Username)
+	require.Equal(t, graphql.String(targetUsername), settings.Viewer.Username)
 }
 
 type TestSession struct {
@@ -270,7 +298,7 @@ type TestSession struct {
 }
 
 type RevokeAccountSession struct {
-	RevokeAccountSession types.RevokeAccountSessionPayload `graphql:"revokeAccountSession(input: $input)"`
+	RevokeAccountSession *types.RevokeAccountSessionPayload `graphql:"revokeAccountSession(input: $input)"`
 }
 
 func TestAccountSessions_view_and_revoke(t *testing.T) {
@@ -307,7 +335,7 @@ func TestAccountSessions_view_and_revoke(t *testing.T) {
 
 	// revoke the session
 	err = client.Mutate(context.Background(), &revokeAccountSession, map[string]interface{}{
-		"input": &types.RevokeAccountSessionPayload{AccountSessionID: sessionId},
+		"input": types.RevokeAccountSessionInput{AccountSessionID: sessionId},
 	})
 
 	require.NoError(t, err)

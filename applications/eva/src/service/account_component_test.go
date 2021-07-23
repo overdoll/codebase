@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/shurcooL/graphql"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	eva "overdoll/applications/eva/proto"
 	"overdoll/libraries/passport"
@@ -33,7 +32,7 @@ func TestRedeemCookie_invalid(t *testing.T) {
 	redeemToken := verifyAuthenticationToken(t, client, "some-random-cookie")
 
 	// check to make sure its returned as invalid
-	assert.Nil(t, redeemToken.VerifyAuthenticationTokenAndAttemptAccountAccessGrant.AuthenticationToken)
+	require.Nil(t, redeemToken.VerifyAuthenticationTokenAndAttemptAccountAccessGrant.AuthenticationToken)
 }
 
 // Test empty authentication - we didnt pass any passport so it shouldn't do anything
@@ -81,7 +80,7 @@ func TestAccount_get(t *testing.T) {
 
 	require.NoError(t, err)
 
-	assert.Equal(t, res.Username, "poisonminion")
+	require.Equal(t, res.Username, "poisonminion")
 }
 
 func TestAccount_lock_unlock(t *testing.T) {
@@ -97,7 +96,7 @@ func TestAccount_lock_unlock(t *testing.T) {
 
 	require.NoError(t, err)
 
-	assert.Equal(t, true, res.Locked)
+	require.Equal(t, true, res.Locked)
 
 	res, err = client.LockAccount(context.Background(), &eva.LockAccountRequest{
 		Id:       "1q7MIqqnkzew33q4elXuN1Ri27d",
@@ -106,5 +105,5 @@ func TestAccount_lock_unlock(t *testing.T) {
 
 	require.NoError(t, err)
 
-	assert.Equal(t, false, res.Locked)
+	require.Equal(t, false, res.Locked)
 }

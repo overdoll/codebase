@@ -8,7 +8,6 @@ import (
 	"github.com/bxcodec/faker/v3"
 	"github.com/pquerna/otp/totp"
 	"github.com/shurcooL/graphql"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/eva/src/ports/graphql/types"
 	"overdoll/libraries/passport"
@@ -33,7 +32,7 @@ func TestLogout_user(t *testing.T) {
 	modified := pass.GetPassport()
 
 	// should no longer be authenticated
-	require.Equal(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6", mutation.RevokeAccountAccess.RevokedAccountID)
+	require.NotNil(t, mutation.RevokeAccountAccess.RevokedAccountID)
 	require.Equal(t, false, modified.IsAuthenticated())
 }
 
@@ -46,15 +45,15 @@ func TestAccountAuthenticate_existing(t *testing.T) {
 
 	// the VerifyAuthenticationToken function will also log you in, if you redeem a cookie that's for a registered user
 	// so we check for that here
-	assert.Equal(t, true, redeemCookie.VerifyAuthenticationTokenAndAttemptAccountAccessGrant.AuthenticationToken.AccountStatus.Authenticated)
+	require.Equal(t, true, redeemCookie.VerifyAuthenticationTokenAndAttemptAccountAccessGrant.AuthenticationToken.AccountStatus.Authenticated)
 
 	// the third parameter of getClient contains the most up-to-date version of the passport
 	modified := pass.GetPassport()
 
 	// since our passport is a pointer that is modified from a response, we can use it to check to make sure
 	// that the user is logged into the correct one
-	assert.Equal(t, true, modified.IsAuthenticated())
-	assert.Equal(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6", modified.AccountID())
+	require.Equal(t, true, modified.IsAuthenticated())
+	require.Equal(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6", modified.AccountID())
 }
 
 type ViewerAccount struct {
@@ -80,7 +79,7 @@ func TestAccountAuthenticate_from_another_session(t *testing.T) {
 	redeemCookie := verifyAuthenticationToken(t, clientFromAnotherSession, otpCookie.Value)
 
 	// should have indicated that it was redeemed by another session
-	assert.Equal(t, false, redeemCookie.VerifyAuthenticationTokenAndAttemptAccountAccessGrant.AuthenticationToken.SameSession)
+	require.Equal(t, false, redeemCookie.VerifyAuthenticationTokenAndAttemptAccountAccessGrant.AuthenticationToken.SameSession)
 
 	var settings ViewerAccount
 	err := client.Query(context.Background(), &settings, nil)
@@ -88,7 +87,7 @@ func TestAccountAuthenticate_from_another_session(t *testing.T) {
 
 	// since our user's cookie was redeemed from another session, when the user runs this query
 	// the next time, it should just log them in
-	assert.Equal(t, "poisonminion", settings.Viewer.Username)
+	require.Equal(t, graphql.String("poisonminion"), settings.Viewer.Username)
 }
 
 type GenerateAccountMultiFactorRecoveryCodes struct {
@@ -108,7 +107,11 @@ type DisableAccountMultiFactor struct {
 }
 
 type GrantAccountAccessWithAuthenticationTokenAndMultiFactor struct {
-	GrantAccountAccessWithAuthenticationTokenAndMultiFactor types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload `graphql:"grantAccountAccessWithAuthenticationTokenAndMultiFactor(input: $input)"`
+	GrantAccountAccessWithAuthenticationTokenAndMultiFactor struct {
+		Account *struct {
+			Username graphql.String
+		}
+	} `graphql:"grantAccountAccessWithAuthenticationTokenAndMultiFactor(input: $input)"`
 }
 
 type ViewerAccountSettings struct {
@@ -193,7 +196,7 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 	})
 
 	require.NoError(t, err)
-	require.True(t, *enrollAccountMultiFactorTOTP.EnrollAccountMultiFactorTotp.AccountMultiFactorTOTPEnabled)
+	require.True(t, *enrollAccountMultiFactorTOTP.EnrollAccountMultiFactorTotp.AccountMultiFactorTotpEnabled)
 
 	// get new settings
 	settings = viewerAccountSettings(t, client)
@@ -206,9 +209,9 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 	// log in with TOTP
 	redeemCookie, client, pass := authenticateAndVerifyToken(t, testAccountEmail)
 
-	assert.NotNil(t, redeemCookie.VerifyAuthenticationTokenAndAttemptAccountAccessGrant.AuthenticationToken)
+	require.NotNil(t, redeemCookie.VerifyAuthenticationTokenAndAttemptAccountAccessGrant.AuthenticationToken)
 	// when we try to login, TOTP should be in here to tell the user that they need to authenticate with MFA
-	assert.Contains(t, redeemCookie.VerifyAuthenticationTokenAndAttemptAccountAccessGrant.AuthenticationToken.AccountStatus.MultiFactor, types.MultiFactorTypeTotp)
+	require.Contains(t, redeemCookie.VerifyAuthenticationTokenAndAttemptAccountAccessGrant.AuthenticationToken.AccountStatus.MultiFactor, types.MultiFactorTypeTotp)
 
 	// generate the OTP code for authentication
 	otp, err = totp.GenerateCode(totpSecret, time.Now())
@@ -216,7 +219,7 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 
 	var authenticateTOTP GrantAccountAccessWithAuthenticationTokenAndMultiFactor
 	err = client.Mutate(context.Background(), &authenticateTOTP, map[string]interface{}{
-		"input": &types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorInput{
+		"input": types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorInput{
 			Code: &otp,
 		},
 	})
@@ -224,26 +227,28 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 	modified := pass.GetPassport()
 
 	// ensure user is authenticated
-	assert.Equal(t, true, modified.IsAuthenticated())
-	assert.Equal(t, testAccountId, modified.AccountID())
+	require.Equal(t, true, modified.IsAuthenticated())
+	require.Equal(t, testAccountId, modified.AccountID())
 
 	// log in with a Recovery Code
 	redeemCookie, client, pass = authenticateAndVerifyToken(t, testAccountEmail)
 
-	assert.NotNil(t, redeemCookie.VerifyAuthenticationTokenAndAttemptAccountAccessGrant.AuthenticationToken.AccountStatus.MultiFactor)
+	require.NotNil(t, redeemCookie.VerifyAuthenticationTokenAndAttemptAccountAccessGrant.AuthenticationToken.AccountStatus.MultiFactor)
 
 	var authenticateRecoveryCode GrantAccountAccessWithAuthenticationTokenAndMultiFactor
 	err = client.Mutate(context.Background(), &authenticateRecoveryCode, map[string]interface{}{
-		"input": &types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorInput{
-			Code: &settings.Viewer.RecoveryCodes[0].Code,
+		"input": types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorInput{
+			RecoveryCode: &settings.Viewer.RecoveryCodes[0].Code,
 		},
 	})
 
-	modified = pass.GetPassport()
+	require.NoError(t, err)
 
+	modified = pass.GetPassport()
+	
 	// ensure user is now authenticated
-	assert.Equal(t, true, modified.IsAuthenticated())
-	assert.Equal(t, testAccountId, modified.AccountID())
+	require.Equal(t, true, modified.IsAuthenticated())
+	require.Equal(t, testAccountId, modified.AccountID())
 
 	// go in and disable MFA
 	var toggleAccountMultiFactor DisableAccountMultiFactor
@@ -261,16 +266,20 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 	// attempt one last login and ensure it doesn't ask for a MFA code
 	redeemCookie, client, pass = authenticateAndVerifyToken(t, testAccountEmail)
 
-	assert.Equal(t, true, redeemCookie.VerifyAuthenticationTokenAndAttemptAccountAccessGrant.AuthenticationToken.AccountStatus.Registered)
+	require.Equal(t, true, redeemCookie.VerifyAuthenticationTokenAndAttemptAccountAccessGrant.AuthenticationToken.AccountStatus.Registered)
 
 	modified = pass.GetPassport()
 
-	assert.Equal(t, true, modified.IsAuthenticated())
-	assert.Equal(t, testAccountId, modified.AccountID())
+	require.Equal(t, true, modified.IsAuthenticated())
+	require.Equal(t, testAccountId, modified.AccountID())
 }
 
 type CreateAccountWithAuthenticationToken struct {
-	CreateAccountWithAuthenticationToken types.CreateAccountWithAuthenticationTokenPayload `graphql:"createAccountWithAuthenticationToken(input: $input)"`
+	CreateAccountWithAuthenticationToken struct {
+		Account *struct {
+			Username graphql.String
+		}
+	} `graphql:"createAccountWithAuthenticationToken(input: $input)"`
 }
 
 // TestAccountRegistration_complete - complete a whole user registration flow using multiple graphql endpoints
@@ -294,36 +303,36 @@ func TestAccountRegistration_complete(t *testing.T) {
 	// make sure OTPKey is not empty
 	require.True(t, otpCookie != nil)
 
-	assert.NotNil(t, true, authenticate.GrantAuthenticationToken.AuthenticationToken)
+	require.NotNil(t, true, authenticate.GrantAuthenticationToken.AuthenticationToken)
 
 	// check our auth query and make sure that it returns the correct cookie values
 	authenticationToken := viewAuthenticationToken(t, client)
 
 	// expect that the cookie is not redeemed
-	assert.Equal(t, false, authenticationToken.ViewAuthenticationToken.Verified)
+	require.Equal(t, false, authenticationToken.ViewAuthenticationToken.Verified)
 
 	redeemCookie := verifyAuthenticationToken(t, client, otpCookie.Value)
 
 	// make sure cookie is redeemed
-	assert.Equal(t, true, redeemCookie.VerifyAuthenticationTokenAndAttemptAccountAccessGrant.AuthenticationToken.Verified)
+	require.Equal(t, true, redeemCookie.VerifyAuthenticationTokenAndAttemptAccountAccessGrant.AuthenticationToken.Verified)
 	// make sure in the same session
-	assert.Equal(t, true, redeemCookie.VerifyAuthenticationTokenAndAttemptAccountAccessGrant.AuthenticationToken.SameSession)
+	require.Equal(t, true, redeemCookie.VerifyAuthenticationTokenAndAttemptAccountAccessGrant.AuthenticationToken.SameSession)
 
 	// check our auth query and make sure that it returns the correct cookie values
 	authenticationToken = viewAuthenticationToken(t, client)
 
 	// expect that our authentication query sees the cookie as redeemed
-	assert.Equal(t, true, authenticationToken.ViewAuthenticationToken.Verified)
+	require.Equal(t, true, authenticationToken.ViewAuthenticationToken.Verified)
 
 	// now, we register (cookie is redeemed from above query)
 	var register CreateAccountWithAuthenticationToken
 
 	err = client.Mutate(context.Background(), &register, map[string]interface{}{
-		"input": &types.CreateAccountWithAuthenticationTokenInput{Username: fake.Username},
+		"input": types.CreateAccountWithAuthenticationTokenInput{Username: fake.Username},
 	})
 
 	require.NoError(t, err)
-	assert.NotNil(t, register.CreateAccountWithAuthenticationToken.Account)
+	require.NotNil(t, register.CreateAccountWithAuthenticationToken.Account)
 
 	otpCookie = getOTPTokenFromJar(t, httpUser.Jar)
 	// Making sure that with "register" the OTP cookie is removed

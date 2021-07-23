@@ -71,7 +71,10 @@ func (r SessionRepository) GetSessionById(ctx context.Context, sessionId string)
 		return nil, err
 	}
 
-	return session.UnmarshalSessionFromDatabase(encryptedKey, sessionItem.Passport, sessionItem.Details.UserAgent, sessionItem.Details.Ip, sessionItem.Details.Created), nil
+	res := session.UnmarshalSessionFromDatabase(encryptedKey, sessionItem.Passport, sessionItem.Details.UserAgent, sessionItem.Details.Ip, sessionItem.Details.Created)
+	res.Node = paging.NewNode(encryptedKey)
+
+	return res, nil
 }
 
 // GetSessionsByAccountId - Get sessions

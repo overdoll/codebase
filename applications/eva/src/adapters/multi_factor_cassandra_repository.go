@@ -6,6 +6,7 @@ import (
 
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
+	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/eva/src/domain/multi_factor"
 	"overdoll/libraries/crypt"
@@ -53,8 +54,9 @@ func NewMultiFactorCassandraRepository(session gocqlx.Session) MultiFactorCassan
 func (r MultiFactorCassandraRepository) CreateAccountRecoveryCodes(ctx context.Context, accountId string, codes []*multi_factor.RecoveryCode) error {
 
 	// delete all current MFA codes
-	deleteOldCodes := r.session.
-		Query(accountMultiFactorRecoveryCodeTable.Delete()).
+	deleteOldCodes := qb.Delete(accountMultiFactorRecoveryCodeTable.Name()).
+		Where(qb.Eq("account_id")).
+		Query(r.session).
 		BindStruct(&accountMultiFactorRecoveryCodes{
 			AccountId: accountId,
 		})
