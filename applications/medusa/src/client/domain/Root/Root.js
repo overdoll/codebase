@@ -4,12 +4,13 @@
 import type { Node } from 'react'
 import { Suspense } from 'react'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
-import { graphql, usePreloadedQuery, useQueryLoader } from 'react-relay/hooks'
+import { graphql, usePreloadedQuery } from 'react-relay/hooks'
 import type { RootQuery } from '@//:artifacts/RootQuery.graphql'
 import { Helmet } from 'react-helmet-async'
 import NavigationBar from './NavigationBar/NavigationBar'
 import defineAbility from '@//:modules/utilities/functions/defineAbility/defineAbility'
 import { AbilityContext } from './helpers/AbilityContext'
+import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner'
 
 type Props = {
   prepared: {
@@ -20,9 +21,11 @@ type Props = {
 
 const RootQueryGQL = graphql`
   query RootQuery {
-    authenticatedAccount {
+    viewer {
       username
-      roles
+      isStaff
+      isArtist
+      isModerator
       avatar
       lock {
         reason
@@ -33,32 +36,23 @@ const RootQueryGQL = graphql`
 `
 
 export default function Root (props: Props): Node {
-  const [queryRef, loadQuery] = useQueryLoader<RootQuery>(
+  const data = usePreloadedQuery<RootQuery>(
     RootQueryGQL,
     props.prepared.stateQuery
   )
 
-  const rootQuery = usePreloadedQuery<RootQuery>(
-    RootQueryGQL,
-    queryRef
-  )
-
-  const refresh = () => {
-    const { variables } = props.prepared.stateQuery
-    loadQuery(variables, { fetchPolicy: 'network-only' })
-  }
-
-  const ability = defineAbility(rootQuery.authenticatedAccount)
+  const ability = defineAbility(data.viewer)
 
   return (
     <>
+      <Helmet
+        title='overdoll'
+      />
       <AbilityContext.Provider value={ability}>
-        <Helmet
-          title='overdoll'
-        />
         <NavigationBar
-          account={rootQuery.authenticatedAccount} refreshUserQuery={refresh}
-        ><Suspense fallback={null}>{props.children}</Suspense>
+          account={data.viewer} refreshUserQuery={() => {}}
+        >
+          <Suspense fallback={<CenteredSpinner />}>{props.children}</Suspense>
         </NavigationBar>
       </AbilityContext.Provider>
     </>

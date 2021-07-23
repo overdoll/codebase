@@ -1,0 +1,20 @@
+extend type Moderator @key(fields: "id") {
+  id: ID! @external
+
+  """The account linked to this moderator"""
+  account: Account!
+}
+
+extend type Contributor @key(fields: "id") {
+  id: ID! @external
+
+  """The account linked to this contributor"""
+  account: Account!
+}
+
+extend type Artist @key(fields: "id") {
+  id: ID! @external
+
+  """The account linked to this artist"""
+  account: Account!
+}

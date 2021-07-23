@@ -11,7 +11,7 @@ import { EVENTS } from '../../../constants/constants'
 import { useTranslation } from 'react-i18next'
 import Picker from '../../picker/Picker'
 import DragOver from '../../dragover/DragOver'
-import Icon from '@//:modules/content/icon/Icon'
+import Icon from '@//:modules/content/Icon/Icon'
 import InterfaceUploadBox2
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/upload-download/interface-upload-box-2.svg'
 

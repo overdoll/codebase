@@ -10,7 +10,7 @@ import {
   Box
 } from '@chakra-ui/react'
 
-import Icon from '@//:modules/content/icon/Icon'
+import Icon from '@//:modules/content/Icon/Icon'
 
 import ComputerWebcamVideo
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/computer-devices/webcam/computer-webcam-video.svg'

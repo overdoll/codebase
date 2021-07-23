@@ -5,42 +5,102 @@ package types
 import (
 	"fmt"
 	"io"
+	graphql1 "overdoll/libraries/graphql"
+	"overdoll/libraries/graphql/relay"
 	"strconv"
 )
 
 type Account struct {
-	ID       string            `json:"id"`
-	Username string            `json:"username"`
-	Roles    []AccountRoleEnum `json:"roles"`
-	Avatar   string            `json:"avatar"`
-	Verified bool              `json:"verified"`
-	Lock     *AccountLock      `json:"lock"`
+	// ID representing the account
+	ID relay.ID `json:"id"`
+	// The ID that the account can be referenced by
+	Reference string `json:"reference"`
+	// A URL pointing to the accounts's public avatar.
+	Avatar graphql1.URI `json:"avatar"`
+	// The username of the account.
+	Username string `json:"username"`
+	// Whether or not this account is a staff member
+	IsStaff bool `json:"isStaff"`
+	// Whether or not this account is part of the moderation team
+	IsModerator bool `json:"isModerator"`
+	// Whether or not this account is an artist
+	IsArtist bool `json:"isArtist"`
+	// The details of the account lock
+	Lock *AccountLock `json:"lock"`
+	// Usernames for account (history)
+	Usernames *AccountUsernameConnection `json:"usernames"`
+	// Emails for account (multiple emails per account)
+	//
+	// Only queryable if the currently logged-in account belongs to the requested account
+	Emails *AccountEmailConnection `json:"emails"`
+	// Sessions linked to this account
+	//
+	// Only queryable if the currently logged-in account belongs to the requested account
+	Sessions *AccountSessionConnection `json:"sessions"`
+	// Multi factor account settings
+	//
+	// Only queryable if the currently logged-in account belongs to the requested account
+	MultiFactorSettings *AccountMultiFactorSettings `json:"multiFactorSettings"`
+	// MFA Recovery codes belonging to this account
+	//
+	// Only queryable if the currently logged-in account belongs to the requested account
+	RecoveryCodes []*AccountMultiFactorRecoveryCode `json:"recoveryCodes"`
 }
 
+func (Account) IsNode()   {}
 func (Account) IsEntity() {}
 
-type AccountEmail struct {
-	Email  string                 `json:"email"`
-	Status AccountEmailStatusEnum `json:"status"`
+// Connection of the account
+type AccountConnection struct {
+	Edges    []*AccountEdge  `json:"edges"`
+	PageInfo *relay.PageInfo `json:"pageInfo"`
 }
 
-type AccountGeneralSettings struct {
-	// Emails for account (multiple emails per account)
-	Emails []*AccountEmail `json:"emails"`
-	// Usernames for account (history)
-	Usernames []*AccountUsername `json:"usernames"`
+// Edge of the account
+type AccountEdge struct {
+	Node   *Account `json:"node"`
+	Cursor string   `json:"cursor"`
+}
+
+// Email belonging to a specific account
+type AccountEmail struct {
+	// ID of the account email
+	ID relay.ID `json:"id"`
+	// The account email
+	Email string `json:"email"`
+	// The current status of the account email
+	Status AccountEmailStatus `json:"status"`
+	// The account that this email belongs to
+	Account *Account `json:"account"`
+}
+
+func (AccountEmail) IsNode()   {}
+func (AccountEmail) IsEntity() {}
+
+// Connection of the account email
+type AccountEmailConnection struct {
+	PageInfo *relay.PageInfo     `json:"pageInfo"`
+	Edges    []*AccountEmailEdge `json:"edges"`
+}
+
+// Edge of the account email
+type AccountEmailEdge struct {
+	Cursor string        `json:"cursor"`
+	Node   *AccountEmail `json:"node"`
 }
 
 type AccountLock struct {
-	Expires int                   `json:"expires"`
-	Reason  AccountLockReasonEnum `json:"reason"`
+	Expires int               `json:"expires"`
+	Reason  AccountLockReason `json:"reason"`
 }
 
+// The multi-factor recovery code belonging to the account
 type AccountMultiFactorRecoveryCode struct {
+	// The multi factor recovery code
 	Code string `json:"code"`
 }
 
-type AccountMultiFactorSecuritySettings struct {
+type AccountMultiFactorSettings struct {
 	// Have recovery codes been generated? Required in order to configure TOTP
 	RecoveryCodesGenerated bool `json:"recoveryCodesGenerated"`
 	// Is multi factor enabled - can be toggled off if they want to
@@ -51,230 +111,401 @@ type AccountMultiFactorSecuritySettings struct {
 	MultiFactorTotpConfigured bool `json:"multiFactorTotpConfigured"`
 }
 
-type AccountMultiFactorTotp struct {
-	Secret string `json:"secret"`
-	// Always html image compatible. Just set SRC tag to this and it will work!
-	ImageSrc string `json:"imageSrc"`
-}
-
-type AccountSecuritySettings struct {
-	// Sessions linked to this account
-	Sessions []*AccountSession `json:"sessions"`
-	// Multi factor account settings
-	MultiFactor *AccountMultiFactorSecuritySettings `json:"multiFactor"`
-}
-
+// Session belonging to a specific account
 type AccountSession struct {
+	// ID of the session
+	ID relay.ID `json:"id"`
+	// The user agent who first created the sesssion
 	UserAgent string `json:"userAgent"`
-	IP        string `json:"ip"`
-	Created   string `json:"created"`
-	ID        string `json:"id"`
-	Current   bool   `json:"current"`
+	// The IP of who first created the session
+	IP string `json:"ip"`
+	// When the session was created
+	Created string `json:"created"`
+	// If the session belongs to the currently authenticated account
+	Current bool `json:"current"`
 }
 
-type AccountSettings struct {
-	AccountID string `json:"accountId"`
-	// General account settings for the user
-	General *AccountGeneralSettings `json:"general"`
-	// Security settings for the user
-	Security *AccountSecuritySettings `json:"security"`
+func (AccountSession) IsNode()   {}
+func (AccountSession) IsEntity() {}
+
+// Edge of the account session
+type AccountSessionConnection struct {
+	PageInfo *relay.PageInfo       `json:"pageInfo"`
+	Edges    []*AccountSessionEdge `json:"edges"`
 }
 
-func (AccountSettings) IsEntity() {}
+// Edge of the account session
+type AccountSessionEdge struct {
+	Cursor string          `json:"cursor"`
+	Node   *AccountSession `json:"node"`
+}
 
+// Username belonging to a specific account
 type AccountUsername struct {
+	// ID of the account username
+	ID relay.ID `json:"id"`
+	// The account username
 	Username string `json:"username"`
+	// The account that this username belongs to
+	Account *Account `json:"account"`
 }
 
-type AuthenticationInput struct {
+func (AccountUsername) IsNode()   {}
+func (AccountUsername) IsEntity() {}
+
+// Connection of the account username
+type AccountUsernameConnection struct {
+	PageInfo *relay.PageInfo        `json:"pageInfo"`
+	Edges    []*AccountUsernameEdge `json:"edges"`
+}
+
+// Edge of the account username
+type AccountUsernameEdge struct {
+	Cursor string           `json:"cursor"`
+	Node   *AccountUsername `json:"node"`
+}
+
+// Add an email to the account
+type AddAccountEmailInput struct {
+	// The email that should be added to this account
 	Email string `json:"email"`
 }
 
+// Email to add the account
+type AddAccountEmailPayload struct {
+	// The account email that was added to
+	AccountEmail *AccountEmail `json:"accountEmail"`
+}
+
+type Artist struct {
+	ID relay.ID `json:"id"`
+	// The account linked to this artist
+	Account *Account `json:"account"`
+}
+
+func (Artist) IsEntity() {}
+
 type AuthenticationToken struct {
 	SameSession   bool                              `json:"sameSession"`
-	Redeemed      bool                              `json:"redeemed"`
+	Verified      bool                              `json:"verified"`
 	Session       string                            `json:"session"`
 	Email         string                            `json:"email"`
 	AccountStatus *AuthenticationTokenAccountStatus `json:"accountStatus"`
 }
 
 type AuthenticationTokenAccountStatus struct {
-	Registered    bool                  `json:"registered"`
-	Authenticated bool                  `json:"authenticated"`
-	MultiFactor   []MultiFactorTypeEnum `json:"multiFactor"`
+	Registered    bool              `json:"registered"`
+	Authenticated bool              `json:"authenticated"`
+	MultiFactor   []MultiFactorType `json:"multiFactor"`
 }
 
-type RegisterInput struct {
+// Input for confirming the account email
+type ConfirmAccountEmailInput struct {
+	// The ID that is sent for confirmation
+	ID string `json:"id"`
+}
+
+// Payload for confirming the account email
+type ConfirmAccountEmailPayload struct {
+	// The account email that was confirmed
+	AccountEmail *AccountEmail `json:"accountEmail"`
+}
+
+type Contributor struct {
+	ID relay.ID `json:"id"`
+	// The account linked to this contributor
+	Account *Account `json:"account"`
+}
+
+func (Contributor) IsEntity() {}
+
+// Payload for a created pending post
+type CreateAccountWithAuthenticationTokenInput struct {
 	Username string `json:"username"`
 }
 
-type Response struct {
-	Validation *Validation `json:"validation"`
-	Ok         bool        `json:"ok"`
+// Payload for creating an account
+type CreateAccountWithAuthenticationTokenPayload struct {
+	// The account that was created
+	Account *Account `json:"account"`
 }
 
-type Validation struct {
+// Input for removing an email from an account
+type DeleteAccountEmailInput struct {
+	// The email that should be removed
+	AccountEmailID relay.ID `json:"accountEmailId"`
+}
+
+// Email to add the account
+type DeleteAccountEmailPayload struct {
+	// The ID of the account email that was removed
+	AccountEmailID relay.ID `json:"accountEmailId"`
+}
+
+// Payload for disabling account multi factor
+type DisableAccountMultiFactorPayload struct {
+	// TOTP that was removed from this account, if it was removed
+	AccountMultiFactorTotpEnabled *bool `json:"accountMultiFactorTotpEnabled"`
+}
+
+// Input for enrolling the account into TOTP
+type EnrollAccountMultiFactorTotpInput struct {
+	// The code that the TOTP expects
 	Code string `json:"code"`
 }
 
-type AccountEmailStatusEnum string
-
-const (
-	AccountEmailStatusEnumConfirmed   AccountEmailStatusEnum = "CONFIRMED"
-	AccountEmailStatusEnumUnconfirmed AccountEmailStatusEnum = "UNCONFIRMED"
-	AccountEmailStatusEnumPrimary     AccountEmailStatusEnum = "PRIMARY"
-)
-
-var AllAccountEmailStatusEnum = []AccountEmailStatusEnum{
-	AccountEmailStatusEnumConfirmed,
-	AccountEmailStatusEnumUnconfirmed,
-	AccountEmailStatusEnumPrimary,
+// Payload of the enrolled totp payload
+type EnrollAccountMultiFactorTotpPayload struct {
+	// TOTP that belongs to this account now
+	AccountMultiFactorTotpEnabled *bool `json:"accountMultiFactorTotpEnabled"`
 }
 
-func (e AccountEmailStatusEnum) IsValid() bool {
+// Payload of the created account recovery codes
+type GenerateAccountMultiFactorRecoveryCodesPayload struct {
+	// The recovery codes that were created
+	AccountMultiFactorRecoveryCodes []*AccountMultiFactorRecoveryCode `json:"accountMultiFactorRecoveryCodes"`
+}
+
+// Payload of the generated TOTP token
+type GenerateAccountMultiFactorTotpPayload struct {
+	// TOTP pair that was generated
+	MultiFactorTotp *MultiFactorTotp `json:"multiFactorTotp"`
+}
+
+// Payload for granting access to an account using the token and the recovery code
+type GrantAccountAccessWithAuthenticationTokenAndMultiFactorInput struct {
+	RecoveryCode *string `json:"recoveryCode"`
+	Code         *string `json:"code"`
+}
+
+// Payload for granting access to an account using the authentication token and Recovery Code
+type GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload struct {
+	// The account that granted access to
+	Account *Account `json:"account"`
+}
+
+// Input for granting an authentication token
+type GrantAuthenticationTokenInput struct {
+	Email string `json:"email"`
+}
+
+// Payload for starting an authentication
+type GrantAuthenticationTokenPayload struct {
+	// The authentication token after starting
+	AuthenticationToken *AuthenticationToken `json:"authenticationToken"`
+}
+
+type Moderator struct {
+	ID relay.ID `json:"id"`
+	// The account linked to this moderator
+	Account *Account `json:"account"`
+}
+
+func (Moderator) IsEntity() {}
+
+// TOTP secret + image combination
+type MultiFactorTotp struct {
+	// The TOTP secret
+	Secret string `json:"secret"`
+	// Always html image compatible. Just set SRC tag to this and it will work!
+	ImageSrc string `json:"imageSrc"`
+}
+
+// Payload re-sending authentication email
+type ReissueAuthenticationTokenPayload struct {
+	// The authentication token
+	AuthenticationToken *AuthenticationToken `json:"authenticationToken"`
+}
+
+// Payload for revoking the current viewer
+type RevokeAccountAccessPayload struct {
+	// The account that was revoked
+	RevokedAccountID relay.ID `json:"revokedAccountId"`
+}
+
+// Input for updating an account's username
+type RevokeAccountSessionInput struct {
+	// Session ID that should be revoked
+	AccountSessionID relay.ID `json:"accountSessionId"`
+}
+
+// Payload of the revoked account session
+type RevokeAccountSessionPayload struct {
+	// The ID of the session that was revoked
+	AccountSessionID relay.ID `json:"accountSessionId"`
+}
+
+// Payload for revoking the authentication token
+type RevokeAuthenticationTokenPayload struct {
+	// The authentication token that was removed
+	RevokedAuthenticationTokenID relay.ID `json:"revokedAuthenticationTokenId"`
+}
+
+// Input for unlocking an account
+type UnlockAccountInput struct {
+	AccountID relay.ID `json:"accountID"`
+}
+
+// Payload for the unlocked account
+type UnlockAccountPayload struct {
+	// Account that was unlocked
+	Account *Account `json:"account"`
+}
+
+// Input for updating the account status to primary
+type UpdateAccountEmailStatusToPrimaryInput struct {
+	// The email that should be updated
+	AccountEmailID relay.ID `json:"accountEmailId"`
+}
+
+// Payload of the updated account email
+type UpdateAccountEmailStatusToPrimaryPayload struct {
+	// The account email that was updated
+	AccountEmail *AccountEmail `json:"accountEmail"`
+}
+
+// Input for updating an account's username
+type UpdateAccountUsernameAndRetainPreviousInput struct {
+	// The username that the account should be updated to
+	Username string `json:"username"`
+}
+
+// Payload of the updated username
+type UpdateAccountUsernameAndRetainPreviousPayload struct {
+	// The account username that was added
+	AccountUsername *AccountUsername `json:"accountUsername"`
+}
+
+// Input for verifying and attempting access grant to an account
+type VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput struct {
+	AuthenticationTokenID string `json:"authenticationTokenId"`
+}
+
+// Payload for verifying the authentication token
+type VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload struct {
+	// The account that granted access to
+	Account *Account `json:"account"`
+	// The authentication token
+	AuthenticationToken *AuthenticationToken `json:"authenticationToken"`
+}
+
+type AccountEmailStatus string
+
+const (
+	AccountEmailStatusConfirmed   AccountEmailStatus = "CONFIRMED"
+	AccountEmailStatusUnconfirmed AccountEmailStatus = "UNCONFIRMED"
+	AccountEmailStatusPrimary     AccountEmailStatus = "PRIMARY"
+)
+
+var AllAccountEmailStatus = []AccountEmailStatus{
+	AccountEmailStatusConfirmed,
+	AccountEmailStatusUnconfirmed,
+	AccountEmailStatusPrimary,
+}
+
+func (e AccountEmailStatus) IsValid() bool {
 	switch e {
-	case AccountEmailStatusEnumConfirmed, AccountEmailStatusEnumUnconfirmed, AccountEmailStatusEnumPrimary:
+	case AccountEmailStatusConfirmed, AccountEmailStatusUnconfirmed, AccountEmailStatusPrimary:
 		return true
 	}
 	return false
 }
 
-func (e AccountEmailStatusEnum) String() string {
+func (e AccountEmailStatus) String() string {
 	return string(e)
 }
 
-func (e *AccountEmailStatusEnum) UnmarshalGQL(v interface{}) error {
+func (e *AccountEmailStatus) UnmarshalGQL(v interface{}) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
 	}
 
-	*e = AccountEmailStatusEnum(str)
+	*e = AccountEmailStatus(str)
 	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid AccountEmailStatusEnum", str)
+		return fmt.Errorf("%s is not a valid AccountEmailStatus", str)
 	}
 	return nil
 }
 
-func (e AccountEmailStatusEnum) MarshalGQL(w io.Writer) {
+func (e AccountEmailStatus) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
-type AccountLockReasonEnum string
+type AccountLockReason string
 
 const (
-	AccountLockReasonEnumPostInfraction AccountLockReasonEnum = "PostInfraction"
+	AccountLockReasonPostInfraction AccountLockReason = "PostInfraction"
 )
 
-var AllAccountLockReasonEnum = []AccountLockReasonEnum{
-	AccountLockReasonEnumPostInfraction,
+var AllAccountLockReason = []AccountLockReason{
+	AccountLockReasonPostInfraction,
 }
 
-func (e AccountLockReasonEnum) IsValid() bool {
+func (e AccountLockReason) IsValid() bool {
 	switch e {
-	case AccountLockReasonEnumPostInfraction:
+	case AccountLockReasonPostInfraction:
 		return true
 	}
 	return false
 }
 
-func (e AccountLockReasonEnum) String() string {
+func (e AccountLockReason) String() string {
 	return string(e)
 }
 
-func (e *AccountLockReasonEnum) UnmarshalGQL(v interface{}) error {
+func (e *AccountLockReason) UnmarshalGQL(v interface{}) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
 	}
 
-	*e = AccountLockReasonEnum(str)
+	*e = AccountLockReason(str)
 	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid AccountLockReasonEnum", str)
+		return fmt.Errorf("%s is not a valid AccountLockReason", str)
 	}
 	return nil
 }
 
-func (e AccountLockReasonEnum) MarshalGQL(w io.Writer) {
+func (e AccountLockReason) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
-type AccountRoleEnum string
+type MultiFactorType string
 
 const (
-	AccountRoleEnumModerator AccountRoleEnum = "Moderator"
-	AccountRoleEnumStaff     AccountRoleEnum = "Staff"
+	MultiFactorTypeTotp MultiFactorType = "TOTP"
 )
 
-var AllAccountRoleEnum = []AccountRoleEnum{
-	AccountRoleEnumModerator,
-	AccountRoleEnumStaff,
+var AllMultiFactorType = []MultiFactorType{
+	MultiFactorTypeTotp,
 }
 
-func (e AccountRoleEnum) IsValid() bool {
+func (e MultiFactorType) IsValid() bool {
 	switch e {
-	case AccountRoleEnumModerator, AccountRoleEnumStaff:
+	case MultiFactorTypeTotp:
 		return true
 	}
 	return false
 }
 
-func (e AccountRoleEnum) String() string {
+func (e MultiFactorType) String() string {
 	return string(e)
 }
 
-func (e *AccountRoleEnum) UnmarshalGQL(v interface{}) error {
+func (e *MultiFactorType) UnmarshalGQL(v interface{}) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
 	}
 
-	*e = AccountRoleEnum(str)
+	*e = MultiFactorType(str)
 	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid AccountRoleEnum", str)
+		return fmt.Errorf("%s is not a valid MultiFactorType", str)
 	}
 	return nil
 }
 
-func (e AccountRoleEnum) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
-}
-
-type MultiFactorTypeEnum string
-
-const (
-	MultiFactorTypeEnumTotp MultiFactorTypeEnum = "TOTP"
-)
-
-var AllMultiFactorTypeEnum = []MultiFactorTypeEnum{
-	MultiFactorTypeEnumTotp,
-}
-
-func (e MultiFactorTypeEnum) IsValid() bool {
-	switch e {
-	case MultiFactorTypeEnumTotp:
-		return true
-	}
-	return false
-}
-
-func (e MultiFactorTypeEnum) String() string {
-	return string(e)
-}
-
-func (e *MultiFactorTypeEnum) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = MultiFactorTypeEnum(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid MultiFactorTypeEnum", str)
-	}
-	return nil
-}
-
-func (e MultiFactorTypeEnum) MarshalGQL(w io.Writer) {
+func (e MultiFactorType) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }

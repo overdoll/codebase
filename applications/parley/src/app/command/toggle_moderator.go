@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	ErrFailedModeratorToggle = errors.New("get moderator failed")
+	errFailedModeratorToggle = errors.New("get moderator failed")
 )
 
 type ToggleModeratorHandler struct {
@@ -21,17 +21,17 @@ func NewToggleModeratorHandler(mr moderator.Repository, eva EvaService) ToggleMo
 	return ToggleModeratorHandler{mr: mr, eva: eva}
 }
 
-func (h ToggleModeratorHandler) Handle(ctx context.Context, accId string) error {
+func (h ToggleModeratorHandler) Handle(ctx context.Context, accId string) (bool, error) {
 
 	acc, err := h.eva.GetAccount(ctx, accId)
 
 	if err != nil {
 		zap.S().Errorf("failed to get user: %s", err)
-		return ErrFailedModeratorToggle
+		return false, errFailedModeratorToggle
 	}
 
 	if !acc.IsModerator() {
-		return ErrFailedModeratorToggle
+		return false, errFailedModeratorToggle
 	}
 
 	_, err = h.mr.GetModerator(ctx, accId)
@@ -40,24 +40,22 @@ func (h ToggleModeratorHandler) Handle(ctx context.Context, accId string) error 
 
 		// not found - add to moderator queue
 		if err == moderator.ErrModeratorNotFound {
-			if err := h.mr.AddModerator(ctx, moderator.NewModerator(accId)); err != nil {
+			if err := h.mr.CreateModerator(ctx, moderator.NewModerator(accId)); err != nil {
 				zap.S().Errorf("failed to add moderator: %s", err)
-				return ErrFailedModeratorToggle
+				return true, errFailedModeratorToggle
 			}
 
-			return nil
+			return false, nil
 		}
 
 		zap.S().Errorf("failed to get moderator: %s", err)
-		return ErrFailedModeratorToggle
+		return false, errFailedModeratorToggle
 	}
 
-	err = h.mr.RemoveModerator(ctx, accId)
-
-	if err != nil {
+	if err = h.mr.RemoveModerator(ctx, accId); err != nil {
 		zap.S().Errorf("failed to remove moderator: %s", err)
-		return ErrFailedModeratorToggle
+		return false, errFailedModeratorToggle
 	}
 
-	return nil
+	return false, nil
 }

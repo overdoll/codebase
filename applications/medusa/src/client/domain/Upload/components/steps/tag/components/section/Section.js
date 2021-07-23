@@ -3,7 +3,7 @@
  */
 import type { Node } from 'react'
 import Search from '../search/Search'
-import Icon from '@//:modules/content/icon/Icon'
+import Icon from '@//:modules/content/Icon/Icon'
 import {
   Heading, Flex, Wrap, useDisclosure,
   AccordionItem,

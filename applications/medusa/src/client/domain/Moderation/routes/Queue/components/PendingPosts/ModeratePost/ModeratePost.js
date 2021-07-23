@@ -2,22 +2,23 @@
  * @flow
  */
 import type { Node } from 'react'
+import { Suspense, useEffect } from 'react'
 import type { ModeratePostMutation } from '@//:artifacts/ModeratePostMutation.graphql'
 import { graphql, useQueryLoader } from 'react-relay'
-import { useMutation, PreloadedQuery } from 'react-relay/hooks'
-import { Suspense, useEffect } from 'react'
+import { PreloadedQuery, useMutation } from 'react-relay/hooks'
 import {
   Button,
   HStack,
   Modal,
   ModalBody,
   ModalCloseButton,
-  ModalContent, ModalFooter,
+  ModalContent,
+  ModalFooter,
   ModalHeader,
   ModalOverlay,
   Skeleton,
-  useToast,
-  useDisclosure
+  useDisclosure,
+  useToast
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import type { ModeratePostInfractionsQuery } from '@//:artifacts/ModeratePostInfractionsQuery.graphql'
@@ -32,12 +33,9 @@ type Props = {
 }
 
 const ModeratePostGQL = graphql`
-  mutation ModeratePostMutation($postId: String!, $reasonId: String, $notes: String!) {
-    moderatePost(data: {pendingPostId: $postId, rejectionReasonId: $reasonId, notes: $notes}) {
-      validation {
-        code
-      }
-      auditLog {
+  mutation ModeratePostMutation($input: ModeratePostInput!) {
+    moderatePost(input: $input) {
+      postAuditLog {
         id
       }
     }
@@ -46,10 +44,14 @@ const ModeratePostGQL = graphql`
 
 const InfractionsGQL = graphql`
   query ModeratePostInfractionsQuery {
-    rejectionReasons {
-      id
-      reason
-      infraction
+    postRejectionReasons {
+     edges {
+       node {
+         id
+         reason
+         infraction
+       }
+     }
     }
   }
 `

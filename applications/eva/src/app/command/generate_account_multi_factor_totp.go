@@ -9,6 +9,10 @@ import (
 	"overdoll/applications/eva/src/domain/multi_factor"
 )
 
+var (
+	errFailedGenerateAccountMultiFactorTOTP = errors.New("failed to generate totp info")
+)
+
 type GenerateAccountMultiFactorTOTPHandler struct {
 	mr multi_factor.Repository
 	ar account.Repository
@@ -18,23 +22,19 @@ func NewGenerateAccountMultiFactorTOTP(mr multi_factor.Repository, ar account.Re
 	return GenerateAccountMultiFactorTOTPHandler{mr: mr, ar: ar}
 }
 
-var (
-	ErrFailedGenerateAccountMultiFactorTOTP = errors.New("failed to generate totp info")
-)
-
 func (h GenerateAccountMultiFactorTOTPHandler) Handle(ctx context.Context, accountId string) (*multi_factor.TOTP, error) {
 
 	usr, err := h.ar.GetAccountById(ctx, accountId)
 
 	if err != nil {
-		return nil, ErrFailedGenerateAccountMultiFactorTOTP
+		return nil, errFailedGenerateAccountMultiFactorTOTP
 	}
 
 	codes, err := h.mr.GetAccountRecoveryCodes(ctx, accountId)
 
 	if err != nil {
 		zap.S().Errorf("failed to get recovery codes: %s", err)
-		return nil, ErrFailedGenerateAccountMultiFactorTOTP
+		return nil, errFailedGenerateAccountMultiFactorTOTP
 	}
 
 	// create a new TOTP instance
@@ -42,7 +42,7 @@ func (h GenerateAccountMultiFactorTOTPHandler) Handle(ctx context.Context, accou
 
 	if err != nil {
 		zap.S().Errorf("failed to generate a set of codes: %s", err)
-		return nil, ErrFailedGenerateAccountRecoveryCodes
+		return nil, errFailedGenerateAccountMultiFactorTOTP
 	}
 
 	return mfa, nil

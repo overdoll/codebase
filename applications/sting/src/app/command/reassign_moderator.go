@@ -18,7 +18,7 @@ func NewReassignModeratorHandler(pr post.Repository, pi post.IndexRepository, pa
 
 func (h ReassignModeratorHandler) Handle(ctx context.Context, id string) (bool, error) {
 
-	pst, err := h.pr.UpdatePendingPost(ctx, id, func(pendingPost *post.PendingPost) error {
+	pst, err := h.pr.UpdatePost(ctx, id, func(pendingPost *post.Post) error {
 
 		newModId, err := h.parley.GetNextModeratorId(ctx)
 
@@ -43,7 +43,7 @@ func (h ReassignModeratorHandler) Handle(ctx context.Context, id string) (bool, 
 	}
 
 	// index pending post
-	if err := h.pi.IndexPendingPost(ctx, pst); err != nil {
+	if err := h.pi.IndexPost(ctx, pst); err != nil {
 		return false, err
 	}
 

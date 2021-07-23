@@ -7,16 +7,16 @@ import (
 )
 
 type Repository interface {
-	GetRejectionReasons(context.Context) ([]*PendingPostRejectionReason, error)
-	GetRejectionReason(context.Context, string) (*PendingPostRejectionReason, error)
+	GetPostRejectionReasons(ctx context.Context, cursor *paging.Cursor) ([]*PostRejectionReason, error)
+	GetPostRejectionReason(ctx context.Context, rejectionReasonId string) (*PostRejectionReason, error)
 
-	GetPendingPostAuditLog(context.Context, string) (*PendingPostAuditLog, error)
-	GetPendingPostAuditLogByModerator(context.Context, *paging.Cursor, *PendingPostAuditLogFilters) ([]*PendingPostAuditLog, error)
-	CreatePendingPostAuditLog(context.Context, *PendingPostAuditLog) error
-	UpdatePendingPostAuditLog(context.Context, string, func(*PendingPostAuditLog) error) (*PendingPostAuditLog, error)
+	GetPostAuditLog(ctx context.Context, auditLogId string) (*PostAuditLog, error)
+	SearchPostAuditLogs(ctx context.Context, cursor *paging.Cursor, filters *PostAuditLogFilters) ([]*PostAuditLog, error)
+	CreatePostAuditLog(ctx context.Context, auditLog *PostAuditLog) error
+	UpdatePostAuditLog(ctx context.Context, auditLogId string, updateFn func(auditLog *PostAuditLog) error) (*PostAuditLog, error)
 
-	CreateUserInfractionHistory(context.Context, *AccountInfractionHistory) error
-	GetAccountInfractionHistory(context.Context, string) ([]*AccountInfractionHistory, error)
-	GetAccountInfractionHistoryById(context.Context, string, string) (*AccountInfractionHistory, error)
-	DeleteAccountInfractionHistory(context.Context, string, string) error
+	CreateAccountInfractionHistory(ctx context.Context, accountInfractionHistory *AccountInfractionHistory) error
+	GetAccountInfractionHistory(ctx context.Context, cursor *paging.Cursor, accountId string) ([]*AccountInfractionHistory, error)
+	GetAccountInfractionHistoryById(ctx context.Context, accountId, historyId string) (*AccountInfractionHistory, error)
+	DeleteAccountInfractionHistory(ctx context.Context, accountId, historyId string) error
 }

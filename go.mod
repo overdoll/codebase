@@ -23,6 +23,7 @@ require (
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
 	github.com/h2non/filetype v1.1.1
 	github.com/joho/godotenv v1.3.0
+	github.com/olivere/elastic/v7 v7.0.26 // indirect
 	github.com/pquerna/otp v1.3.0 // indirect
 	github.com/scylladb/gocqlx/v2 v2.4.0
 	github.com/segmentio/ksuid v1.0.3
@@ -31,6 +32,7 @@ require (
 	github.com/spf13/viper v1.7.1
 	github.com/stretchr/testify v1.7.0
 	github.com/tus/tusd v1.6.0
+	github.com/vektah/dataloaden v0.3.0 // indirect
 	github.com/vektah/gqlparser/v2 v2.2.0
 	go.temporal.io/sdk v1.6.0
 	go.uber.org/zap v1.17.0

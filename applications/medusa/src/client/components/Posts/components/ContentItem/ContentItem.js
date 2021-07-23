@@ -7,7 +7,7 @@ import mime from 'mime-types'
 import { Box, Flex, IconButton, useDisclosure } from '@chakra-ui/react'
 import ImageSnippet from './ImageSnippet/ImageSnippet'
 import InspectModal from '../modal/InspectModal'
-import Icon from '@//:modules/content/icon/Icon'
+import Icon from '@//:modules/content/Icon/Icon'
 
 import InterfaceArrowsShrinkVertical
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-shrink-vertical.svg'

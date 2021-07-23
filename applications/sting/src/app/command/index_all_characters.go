@@ -21,11 +21,5 @@ func (h IndexAllCharactersHandler) Handle(ctx context.Context) error {
 		return err
 	}
 
-	characters, err := h.pr.GetCharacters(ctx)
-
-	if err != nil {
-		return err
-	}
-
-	return h.pi.BulkIndexCharacters(ctx, characters)
+	return h.pi.IndexAllCharacters(ctx)
 }

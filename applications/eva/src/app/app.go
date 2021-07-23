@@ -11,32 +11,42 @@ type Application struct {
 }
 
 type Commands struct {
-	RedeemAuthenticationToken      command.RedeemAuthenticationTokenHandler
-	ConsumeAuthenticationToken     command.ConsumeAuthenticationTokenHandler
-	Authenticate                   command.AuthenticateHandler
-	Register                       command.RegisterHandler
-	LockAccount                    command.LockAccountHandler
-	UnlockAccount                  command.UnlockAccountHandler
-	CreateAccount                  command.CreateAccountHandler
-	AddAccountEmail                command.AddAccountEmailHandler
-	ModifyAccountUsername          command.ModifyAccountUsernameHandler
-	ConfirmAccountEmail            command.ConfirmAccountEmailHandler
-	RevokeAccountSession           command.RevokeAccountSessionHandler
-	MakeAccountEmailPrimary        command.MakeAccountEmailPrimaryHandler
-	GenerateAccountRecoveryCodes   command.GenerateAccountRecoveryCodesHandler
-	GenerateAccountMultiFactorTOTP command.GenerateAccountMultiFactorTOTPHandler
-	EnrollAccountMultiFactorTOTP   command.EnrollAccountMultiFactorTOTPHandler
-	ToggleAccountMultiFactor       command.ToggleAccountMultiFactorHandler
-	FinishAuthenticateMultiFactor  command.FinishAuthenticateMultiFactorHandler
-	RemoveAccountEmail             command.RemoveAccountEmailHandler
+	VerifyAuthenticationToken                            command.VerifyAuthenticationTokenHandler
+	ConsumeAuthenticationToken                           command.ConsumeAuthenticationTokenHandler
+	GrantAuthenticationToken                             command.GrantAuthenticationTokenHandler
+	CreateAccountWithAuthenticationToken                 command.CreateAccountWithAuthenticationTokenHandler
+	LockAccount                                          command.LockAccountHandler
+	UnlockAccount                                        command.UnlockAccountHandler
+	CreateAccount                                        command.CreateAccountHandler
+	AddAccountEmail                                      command.AddAccountEmailHandler
+	UpdateAccountUsernameAndRetainPrevious               command.UpdateAccountUsernameAndRetainPreviousHandler
+	ConfirmAccountEmail                                  command.ConfirmAccountEmailHandler
+	RevokeAccountSession                                 command.RevokeAccountSessionHandler
+	UpdateAccountEmailStatusToPrimary                    command.UpdateAccountEmailStatusToPrimaryHandler
+	GenerateAccountMultiFactorRecoveryCodes              command.GenerateAccountMultiFactorRecoveryCodesHandler
+	GenerateAccountMultiFactorTOTP                       command.GenerateAccountMultiFactorTOTPHandler
+	EnrollAccountMultiFactorTOTP                         command.EnrollAccountMultiFactorTOTPHandler
+	DisableAccountMultiFactor                            command.DisableAccountMultiFactorHandler
+	GrantAccountAccessWithAuthTokenAndRecoveryCodeOrTotp command.GrantAccountAccessWithAuthTokenAndRecoveryCodeOrTotpHandler
+	DeleteAccountEmail                                   command.DeleteAccountEmailHandler
+	RevokeAuthenticationToken                            command.RevokeAuthenticationTokenHandler
+	ReissueAuthenticationToken                           command.ReissueAuthenticationTokenHandler
+	IndexAllAccounts                                     command.IndexAllAccountsHandler
 }
 
 type Queries struct {
-	GetAccount                      query.GetAccountHandler
-	GetAccountEmails                query.GetAccountEmailsHandler
-	GetAccountUsernames             query.GetAccountUsernamesHandler
-	GetAccountSessions              query.GetAccountSessionsHandler
-	GetAccountRecoveryCodes         query.GetAccountRecoveryCodesHandler
-	IsAccountMultiFactorTOTPEnabled query.IsAccountTOTPMultiFactorEnabledHandler
-	GetAuthenticationTokenStatus    query.GetAuthenticationTokenStatusHandler
+	SearchAccounts                  query.SearchAccountsHandler
+	AccountById                     query.AccountByIdHandler
+	AccountsById                    query.AccountsByIdHandler
+	AccountByEmail                  query.AccountByEmailHandler
+	AccountByUsername               query.AccountByUsernameHandler
+	AccountEmailByEmail             query.AccountEmailByEmailHandler
+	AccountEmailsByAccount          query.AccountEmailsByAccountHandler
+	AccountUsernameByUsername       query.AccountUsernameByUsernameHandler
+	AccountUsernamesByAccount       query.AccountUsernamesByAccountHandler
+	AccountSessionById              query.AccountSessionByIdHandler
+	AccountSessionsByAccount        query.AccountSessionsByAccountHandler
+	AccountRecoveryCodesByAccount   query.AccountRecoveryCodesByAccountHandler
+	IsAccountMultiFactorTOTPEnabled query.IsAccountMultiFactorTOTPEnabledHandler
+	AuthenticationTokenById         query.AuthenticationTokenByIdHandler
 }

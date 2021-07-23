@@ -2,9 +2,14 @@ package post
 
 import (
 	"os"
+
+	"overdoll/libraries/graphql"
+	"overdoll/libraries/paging"
 )
 
 type Category struct {
+	*paging.Node
+
 	id        string
 	title     string
 	thumbnail string
@@ -18,13 +23,13 @@ func (c *Category) Title() string {
 	return c.title
 }
 
-func (c *Category) RawThumbnail() string {
+func (c *Category) Thumbnail() string {
 	return c.thumbnail
 }
 
-func (c *Category) Thumbnail() string {
+func (c *Category) ConvertThumbnailToURI() graphql.URI {
 	var staticURL = os.Getenv("STATIC_URL")
-	return staticURL + "/thumbnails/" + c.thumbnail
+	return graphql.NewURI(staticURL + "/thumbnails/" + c.thumbnail)
 }
 
 func NewCategory(id, title string) *Category {

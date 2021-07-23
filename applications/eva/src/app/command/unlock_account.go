@@ -8,6 +8,10 @@ import (
 	"overdoll/applications/eva/src/domain/account"
 )
 
+var (
+	errFailedUnlock = errors.New("failed to unlock")
+)
+
 type UnlockAccountHandler struct {
 	ur account.Repository
 }
@@ -15,10 +19,6 @@ type UnlockAccountHandler struct {
 func NewUnlockUserHandler(ur account.Repository) UnlockAccountHandler {
 	return UnlockAccountHandler{ur: ur}
 }
-
-var (
-	ErrFailedUnlock = errors.New("failed to unlock")
-)
 
 func (h UnlockAccountHandler) Handle(ctx context.Context, id string) (*account.Account, error) {
 
@@ -28,7 +28,7 @@ func (h UnlockAccountHandler) Handle(ctx context.Context, id string) (*account.A
 
 	if err != nil {
 		zap.S().Errorf("failed to unlock user: %s", err)
-		return nil, ErrFailedUnlock
+		return nil, errFailedUnlock
 	}
 
 	return usr, nil

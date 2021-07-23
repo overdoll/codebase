@@ -16,7 +16,7 @@ import {
   Tooltip,
   Button
 } from '@chakra-ui/react'
-import Icon from '@//:modules/content/icon/Icon'
+import Icon from '@//:modules/content/Icon/Icon'
 import { useState } from 'react'
 import { usePreloadedQuery, usePaginationFragment } from 'react-relay'
 

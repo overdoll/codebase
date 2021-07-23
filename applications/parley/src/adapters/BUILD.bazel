@@ -6,8 +6,8 @@ go_library(
         "eva_grpc.go",
         "infraction_account_infraction_history_cassandra_repository.go",
         "infraction_cassandra_repository.go",
-        "infraction_pending_post_audit_log_cassandra_repository.go",
-        "infraction_pending_rejection_reason_cassandra_repository.go",
+        "infraction_post_audit_log_cassandra_repository.go",
+        "infraction_rejection_reason_cassandra_repository.go",
         "moderator_cassandra_repository.go",
         "sting_grpc.go",
     ],
@@ -24,5 +24,6 @@ go_library(
         "@com_github_gocql_gocql//:gocql",
         "@com_github_scylladb_gocqlx_v2//:gocqlx",
         "@com_github_scylladb_gocqlx_v2//qb",
+        "@com_github_scylladb_gocqlx_v2//table",
     ],
 )

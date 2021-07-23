@@ -1,0 +1,18 @@
+type Content {
+  url: URI!
+}
+
+extend type Account @key(fields: "id")  {
+  id: ID! @external
+}
+
+"""
+Represents an account
+"""
+interface Object {
+  """A URL pointing to the object's thumbnail."""
+  thumbnail(
+    """The size of the resulting square image."""
+    size: Int
+  ): URI!
+}

@@ -20,11 +20,15 @@ type Props = {
 };
 
 const ArtistsQueryGQL = graphql`
-  query ArtistsQuery($data: SearchInput!) {
-    artists(data: $data) {
-      id
-      avatar
-      username
+  query ArtistsQuery($username: String) {
+    accounts(username: $username) {
+      edges {
+        node {
+          id
+          avatar
+          username
+        }
+      }
     }
   }
 `
@@ -38,15 +42,15 @@ export default function Artists ({ args, onSelect, selected }: Props): Node {
 
   // Add new artist if no artists are available
   const addNewArtist = () => {
-    onSelect({ id: null, username: args.variables.data.search, avatar: null })
+    onSelect({ id: null, username: args.variables.username, avatar: null })
   }
 
   const [t] = useTranslation('upload')
 
-  if (data.artists.length === 0) {
+  if (data.accounts.edges.length === 0) {
     return (
       <Empty
-        title={t('tag.artist.not_found')} button={`${t('tag.artist.add')} ${args.variables.data.search}`}
+        title={t('tag.artist.not_found')} button={`${t('tag.artist.add')} ${args.variables.username}`}
         onClick={addNewArtist}
       />
     )
@@ -57,13 +61,13 @@ export default function Artists ({ args, onSelect, selected }: Props): Node {
       justify='center'
     >
       {
-        data.artists.map(item => (
+        data.accounts.edges.map(item => (
           <Element
-            key={item.id}
-            onSelect={() => onSelect(item)}
-            selected={selected.id === item.id}
-            title={item.username}
-            thumbnail={item.avatar}
+            key={item.node.id}
+            onSelect={() => onSelect(item.node)}
+            selected={selected.id === item.node.id}
+            title={item.node.username}
+            thumbnail={item.node.avatar}
           />
         ))
       }

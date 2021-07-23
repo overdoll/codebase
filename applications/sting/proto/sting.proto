@@ -2,26 +2,21 @@ syntax = "proto3";
 
 package applications.grpc.sting.v1;
 
-message PendingPostRequest {
+message PostRequest {
   string id = 1;
 }
 
-message DiscardPendingPostRequest {
-  string id = 1;
-}
+message UpdatePostResponse {}
 
-message UpdatePendingPostResponse {
-}
-
-message PendingPost {
+message Post {
   string moderatorId = 1;
   string contributorId = 2;
 }
 
 service Sting {
-  rpc GetPendingPost(PendingPostRequest) returns (PendingPost);
-  rpc PublishPendingPost(PendingPostRequest) returns (UpdatePendingPostResponse);
-  rpc RejectPendingPost(PendingPostRequest) returns (UpdatePendingPostResponse);
-  rpc DiscardPendingPost(PendingPostRequest) returns (UpdatePendingPostResponse);
-  rpc UndoPendingPost(PendingPostRequest) returns (UpdatePendingPostResponse);
+  rpc GetPost(PostRequest) returns (Post);
+  rpc PublishPost(PostRequest) returns (UpdatePostResponse);
+  rpc RejectPost(PostRequest) returns (UpdatePostResponse);
+  rpc DiscardPost(PostRequest) returns (UpdatePostResponse);
+  rpc UndoPost(PostRequest) returns (UpdatePostResponse);
 }

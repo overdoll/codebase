@@ -2,11 +2,18 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "router",
-    srcs = ["router.go"],
+    srcs = [
+        "gin.go",
+        "passport.go",
+        "query_observer.go",
+        "router.go",
+    ],
     importpath = "overdoll/libraries/router",
     visibility = ["//visibility:public"],
     deps = [
-        "//libraries/middleware",
+        "//libraries/bootstrap",
+        "//libraries/helpers",
+        "//libraries/passport",
         "@com_github_gin_gonic_gin//:gin",
     ],
 )

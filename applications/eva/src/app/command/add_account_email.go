@@ -8,6 +8,14 @@ import (
 	"overdoll/applications/eva/src/domain/account"
 )
 
+var (
+	errFailedAddAccountEmail = errors.New("failed to add email to account")
+)
+
+const (
+	validationErrEmailNotUnique = "email_not_unique"
+)
+
 type AddAccountEmailHandler struct {
 	ar account.Repository
 }
@@ -16,41 +24,33 @@ func NewAddAccountEmailHandler(ar account.Repository) AddAccountEmailHandler {
 	return AddAccountEmailHandler{ar: ar}
 }
 
-var (
-	ErrFailedAddEmail = errors.New("failed to add email to account")
-)
-
-const (
-	ValidationErrEmailNotUnique = "email_not_unique"
-)
-
-func (h AddAccountEmailHandler) Handle(ctx context.Context, userId, email string) (string, error) {
+func (h AddAccountEmailHandler) Handle(ctx context.Context, userId, email string) (*account.Email, string, error) {
 
 	acc, err := h.ar.GetAccountById(ctx, userId)
 
 	if err != nil {
 		zap.S().Errorf("failed to get user: %s", err)
-		return "", ErrFailedAddEmail
+		return nil, "", errFailedAddAccountEmail
 	}
 
 	confirm, err := account.NewEmailConfirmation(email)
 
 	if err != nil {
-		return "", err
+		return nil, "", err
 	}
 
-	err = h.ar.AddAccountEmail(ctx, acc, confirm)
+	em, err := h.ar.AddAccountEmail(ctx, acc, confirm)
 
 	if err != nil {
 		if err == account.ErrEmailNotUnique {
-			return ValidationErrEmailNotUnique, nil
+			return nil, validationErrEmailNotUnique, nil
 		}
 
 		zap.S().Errorf("failed to add email: %s", err)
-		return "", ErrFailedAddEmail
+		return nil, "", errFailedAddAccountEmail
 	}
 
 	// TODO: send an email confirmation here
 
-	return "", nil
+	return em, "", nil
 }

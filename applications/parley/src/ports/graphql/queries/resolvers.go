@@ -3,9 +3,10 @@ package queries
 import (
 	"context"
 
+	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/parley/src/app"
 	"overdoll/applications/parley/src/ports/graphql/types"
-	"overdoll/libraries/graphql/relay"
+	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
 )
 
@@ -13,112 +14,19 @@ type QueryResolver struct {
 	App *app.Application
 }
 
-func (q QueryResolver) AccountInfractionHistory(ctx context.Context) ([]*types.AccountInfractionHistory, error) {
+func (r QueryResolver) PostRejectionReasons(ctx context.Context, after *string, before *string, first *int, last *int) (*types.PostRejectionReasonConnection, error) {
 
-	pass := passport.FromContext(ctx)
+	cursor, err := paging.NewCursor(after, before, first, last)
 
-	if !pass.IsAuthenticated() {
-		return nil, passport.ErrNotAuthenticated
+	if err != nil {
+		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	history, err := q.App.Queries.AccountInfractionHistory.Handle(ctx, pass.AccountID())
+	results, err := r.App.Queries.PostRejectionReasons.Handle(ctx, cursor, passport.FromContext(ctx).AccountID())
 
 	if err != nil {
 		return nil, err
 	}
 
-	var infractionHistory []*types.AccountInfractionHistory
-
-	for _, infraction := range history {
-		infractionHistory = append(infractionHistory, &types.AccountInfractionHistory{
-			ID:     infraction.ID(),
-			Reason: infraction.Reason(),
-		})
-	}
-
-	return infractionHistory, nil
-}
-
-func (q QueryResolver) PendingPostAuditLogs(ctx context.Context, after, before *string, first, last *int, filter *types.PendingPostAuditLogFilters) (*types.PendingPostAuditLogConnection, error) {
-	pass := passport.FromContext(ctx)
-
-	if !pass.IsAuthenticated() {
-		return nil, passport.ErrNotAuthenticated
-	}
-
-	moderatorId := ""
-	contributorId := ""
-	postId := ""
-	var dateRange []int
-
-	if filter != nil {
-		if filter.ModeratorID != nil {
-			moderatorId = *filter.ModeratorID
-		}
-
-		if filter.ContributorID != nil {
-			contributorId = *filter.ContributorID
-		}
-
-		if filter.PostID != nil {
-			postId = *filter.PostID
-		}
-
-		if filter.DateRange != nil {
-			dateRange = filter.DateRange
-		}
-	}
-
-	input := &relay.ConnectionInput{
-		After:  after,
-		Before: before,
-		First:  first,
-		Last:   last,
-	}
-
-	logs, err := q.App.Queries.PendingPostsAuditLogByModerator.Handle(ctx, input.ToCursor(), moderatorId, contributorId, postId, dateRange, pass.AccountID())
-
-	if err != nil {
-		return nil, err
-	}
-
-	var auditLogs []*types.PendingPostAuditLogEdge
-
-	for _, log := range logs {
-		auditLogs = append(auditLogs, types.MarshalPendingPostAuditLogToGraphQL(log))
-	}
-
-	return &types.PendingPostAuditLogConnection{Edges: auditLogs, PageInfo: &relay.PageInfo{
-		HasNextPage:     false,
-		HasPreviousPage: false,
-		StartCursor:     nil,
-		EndCursor:       nil,
-	}}, nil
-}
-
-func (q QueryResolver) RejectionReasons(ctx context.Context) ([]*types.PendingPostRejectionReason, error) {
-
-	pass := passport.FromContext(ctx)
-
-	if !pass.IsAuthenticated() {
-		return nil, passport.ErrNotAuthenticated
-	}
-
-	reasons, err := q.App.Queries.PendingPostRejectionReasons.Handle(ctx)
-
-	if err != nil {
-		return nil, err
-	}
-
-	var rejectionReasons []*types.PendingPostRejectionReason
-
-	for _, reason := range reasons {
-		rejectionReasons = append(rejectionReasons, &types.PendingPostRejectionReason{
-			ID:         reason.ID(),
-			Reason:     reason.Reason(),
-			Infraction: reason.Infraction(),
-		})
-	}
-
-	return rejectionReasons, nil
+	return types.MarshalPostRejectionReasonToGraphQLConnection(results, cursor), nil
 }

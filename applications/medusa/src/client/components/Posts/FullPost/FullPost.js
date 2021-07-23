@@ -15,7 +15,7 @@ import ShoppingStoreSignage1
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/money-shopping/building-store/shopping-store-signage-1.svg'
 import InterfaceSettingMenuVerticalAlternate
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/setting/interface-setting-menu-vertical-alternate.svg'
-import Icon from '@//:modules/content/icon/Icon'
+import Icon from '@//:modules/content/Icon/Icon'
 import Element from '../../Element/Element'
 
 type Props = {

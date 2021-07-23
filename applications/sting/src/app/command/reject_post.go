@@ -18,7 +18,7 @@ func NewRejectPostHandler(pr post.Repository, pi post.IndexRepository) RejectPos
 
 func (h RejectPostHandler) Handle(ctx context.Context, id string) error {
 
-	pendingPost, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PendingPost) error {
+	pendingPost, err := h.pr.UpdatePost(ctx, id, func(pending *post.Post) error {
 		return pending.MakeRejected()
 	})
 
@@ -26,7 +26,7 @@ func (h RejectPostHandler) Handle(ctx context.Context, id string) error {
 		return err
 	}
 
-	if err := h.pi.IndexPendingPost(ctx, pendingPost); err != nil {
+	if err := h.pi.IndexPost(ctx, pendingPost); err != nil {
 		zap.S().Errorf("failed to index post: %s", err)
 		return err
 	}

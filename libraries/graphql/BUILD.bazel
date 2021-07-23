@@ -3,6 +3,8 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "graphql",
     srcs = [
+        "URI.go",
+        "dataloader.go",
         "new.go",
         "preloads.go",
     ],
@@ -11,10 +13,10 @@ go_library(
     deps = [
         "@com_github_99designs_gqlgen//graphql",
         "@com_github_99designs_gqlgen//graphql/handler",
+        "@com_github_99designs_gqlgen//graphql/handler/apollotracing",
         "@com_github_99designs_gqlgen//graphql/handler/extension",
         "@com_github_99designs_gqlgen//graphql/handler/lru",
         "@com_github_99designs_gqlgen//graphql/handler/transport",
         "@com_github_gin_gonic_gin//:gin",
-        "@com_github_gorilla_websocket//:websocket",
     ],
 )

@@ -11,22 +11,19 @@ type Application struct {
 }
 
 type Commands struct {
-	CreatePendingPost command.CreatePendingPostHandler
-	UpdatePendingPost command.UpdatePendingPostHandler
+	CreatePost command.CreatePendingPostHandler
 
 	StartDiscardPost command.StartDiscardPostHandler
 	StartPublishPost command.StartPublishPostHandler
 	StartUndoPost    command.StartUndoPostHandler
 	RejectPost       command.RejectPostHandler
 
-	IndexAllArtists      command.IndexAllArtistsHandler
-	IndexAllCategories   command.IndexAllCategoriesHandler
-	IndexAllCharacters   command.IndexAllCharactersHandler
-	IndexAllMedia        command.IndexAllMediaHandler
-	IndexAllPendingPosts command.IndexAllPendingPostsHandler
+	IndexAllCategories command.IndexAllCategoriesHandler
+	IndexAllCharacters command.IndexAllCharactersHandler
+	IndexAllMedia      command.IndexAllMediaHandler
+	IndexAllPosts      command.IndexAllPostsHandler
 
-	CreatePost          command.CreatePostHandler
-	NewPendingPost      command.NewPostHandler
+	NewPost             command.NewPostHandler
 	PostCustomResources command.PostCustomResourcesHandler
 	PublishPost         command.PublishPostHandler
 	DiscardPost         command.DiscardPostHandler
@@ -35,11 +32,13 @@ type Commands struct {
 }
 
 type Queries struct {
-	SearchArtist                query.SearchArtistsHandler
-	SearchCategories            query.SearchCategoriesHandler
-	SearchCharacters            query.SearchCharactersHandler
-	SearchMedias                query.SearchMediasHandler
-	GetPendingPosts             query.GetPendingPostsHandler
-	GetPendingPost              query.GetPendingPostHandler
-	GetPendingPostAuthenticated query.GetPendingPostAuthenticatedHandler
+	SearchCategories query.SearchCategoriesHandler
+	SearchCharacters query.SearchCharactersHandler
+	SearchMedias     query.SearchMediasHandler
+	SearchPosts      query.SearchPostsHandler
+	PostById         query.PostByIdHandler
+	CharacterById    query.CharacterByIdHandler
+	CategoryById     query.CategoryByIdHandler
+	MediaById        query.MediaByIdHandler
+	ArtistById       query.ArtistByIdHandler
 }

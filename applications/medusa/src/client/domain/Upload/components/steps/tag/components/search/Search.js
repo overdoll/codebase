@@ -15,7 +15,7 @@ import {
 } from '@chakra-ui/react'
 import Button from '@//:modules/form/button'
 import { useTranslation } from 'react-i18next'
-import Icon from '@//:modules/content/icon/Icon'
+import Icon from '@//:modules/content/Icon/Icon'
 import SearchCircle
   from '@streamlinehq/streamlinehq/img/streamline-regular/interface-essential/search/search-circle.svg'
 import InterfaceDelete1
@@ -58,10 +58,9 @@ export default function Search ({
         fetchKey: (prev?.options?.fetchKey ?? 0) + 1
       },
       variables: {
-        data: {
-          // fall back to data in the input if it's a refresh
-          search: search || searchInput
-        }
+        username: search || searchInput,
+        title: search || searchInput,
+        name: search || searchInput
       }
     }))
   }, [])
@@ -69,7 +68,6 @@ export default function Search ({
   const onChange = e => {
     setSearch(e.target.value)
     refetch(e.target.value)
-
     // Start transition -
     // TODO: breaks inputs - fix it
     // startTransition(() => {

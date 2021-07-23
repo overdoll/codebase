@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash a35c1230ccf4691b6f6652628197ffac
+ * @relayHash deb3147ea0adf0a240175c6452890991
  */
 
 /* eslint-disable */
@@ -8,15 +8,17 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-export type UsernameMutationVariables = {|
+export type UpdateAccountUsernameAndRetainPreviousInput = {|
   username: string
 |};
+export type UsernameMutationVariables = {|
+  input: UpdateAccountUsernameAndRetainPreviousInput
+|};
 export type UsernameMutationResponse = {|
-  +modifyAccountUsername: {|
-    +ok: boolean,
-    +validation: ?{|
-      +code: string
-    |},
+  +updateAccountUsernameAndRetainPrevious: ?{|
+    +accountUsername: ?{|
+      +username: string
+    |}
   |}
 |};
 export type UsernameMutation = {|
@@ -27,12 +29,12 @@ export type UsernameMutation = {|
 
 /*
 mutation UsernameMutation(
-  $username: String!
+  $input: UpdateAccountUsernameAndRetainPreviousInput!
 ) {
-  modifyAccountUsername(username: $username) {
-    ok
-    validation {
-      code
+  updateAccountUsernameAndRetainPrevious(input: $input) {
+    accountUsername {
+      username
+      id
     }
   }
 }
@@ -43,60 +45,54 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "username"
+    "name": "input"
   }
 ],
 v1 = [
   {
-    "alias": null,
-    "args": [
-      {
-        "kind": "Variable",
-        "name": "username",
-        "variableName": "username"
-      }
-    ],
-    "concreteType": "Response",
-    "kind": "LinkedField",
-    "name": "modifyAccountUsername",
-    "plural": false,
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "ok",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "Validation",
-        "kind": "LinkedField",
-        "name": "validation",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "code",
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      }
-    ],
-    "storageKey": null
+    "kind": "Variable",
+    "name": "input",
+    "variableName": "input"
   }
-];
+],
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "username",
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "UsernameMutation",
-    "selections": (v1/*: any*/),
+    "selections": [
+      {
+        "alias": null,
+        "args": (v1/*: any*/),
+        "concreteType": "UpdateAccountUsernameAndRetainPreviousPayload",
+        "kind": "LinkedField",
+        "name": "updateAccountUsernameAndRetainPrevious",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AccountUsername",
+            "kind": "LinkedField",
+            "name": "accountUsername",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/)
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ],
     "type": "Mutation",
     "abstractKey": null
   },
@@ -105,10 +101,41 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "UsernameMutation",
-    "selections": (v1/*: any*/)
+    "selections": [
+      {
+        "alias": null,
+        "args": (v1/*: any*/),
+        "concreteType": "UpdateAccountUsernameAndRetainPreviousPayload",
+        "kind": "LinkedField",
+        "name": "updateAccountUsernameAndRetainPrevious",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AccountUsername",
+            "kind": "LinkedField",
+            "name": "accountUsername",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "id",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ]
   },
   "params": {
-    "id": "a35c1230ccf4691b6f6652628197ffac",
+    "id": "deb3147ea0adf0a240175c6452890991",
     "metadata": {},
     "name": "UsernameMutation",
     "operationKind": "mutation",
@@ -117,5 +144,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '7b799b50bcd48957663f9086c939970e';
+(node: any).hash = '99f88bf5481c287fbcd8888293ed00c2';
 module.exports = node;

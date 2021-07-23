@@ -11,6 +11,10 @@ import (
 	"overdoll/applications/eva/src/domain/token"
 )
 
+var (
+	errFailedTokenConsume = errors.New("failed to consume cookie")
+)
+
 type ConsumeAuthenticationTokenHandler struct {
 	cr token.Repository
 	ur account.Repository
@@ -20,10 +24,6 @@ type ConsumeAuthenticationTokenHandler struct {
 func NewConsumeAuthenticationTokenHandler(cr token.Repository, ur account.Repository, mr multi_factor.Repository) ConsumeAuthenticationTokenHandler {
 	return ConsumeAuthenticationTokenHandler{cr: cr, ur: ur, mr: mr}
 }
-
-var (
-	ErrFailedTokenConsume = errors.New("failed to consume cookie")
-)
 
 func (h ConsumeAuthenticationTokenHandler) Handle(ctx context.Context, cookieId string) error {
 
@@ -37,7 +37,7 @@ func (h ConsumeAuthenticationTokenHandler) Handle(ctx context.Context, cookieId 
 		}
 
 		zap.S().Errorf("failed to get cookie: %s", err == gocql.ErrNotFound)
-		return ErrFailedTokenConsume
+		return errFailedTokenConsume
 	}
 
 	if err := ck.MakeConsumed(); err != nil {
@@ -48,7 +48,7 @@ func (h ConsumeAuthenticationTokenHandler) Handle(ctx context.Context, cookieId 
 	// enter a username, since they already have an account and we can log them in
 	if err := h.cr.DeleteAuthenticationTokenById(ctx, cookieId); err != nil {
 		zap.S().Errorf("failed to delete cookie: %s", err)
-		return ErrFailedTokenConsume
+		return errFailedTokenConsume
 	}
 
 	return err

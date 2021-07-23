@@ -9,10 +9,30 @@ import (
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
+	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/eva/src/domain/account"
 )
 
-type Account struct {
+var accountTable = table.New(table.Metadata{
+	Name: "accounts",
+	Columns: []string{
+		"id",
+		"username",
+		"email",
+		"roles",
+		"verified",
+		"avatar",
+		"locked",
+		"locked_until",
+		"locked_reason",
+		"last_username_edit",
+		"multi_factor_enabled",
+	},
+	PartKey: []string{"id"},
+	SortKey: []string{},
+})
+
+type accounts struct {
 	Id                 string   `db:"id"`
 	Username           string   `db:"username"`
 	Email              string   `db:"email"`
@@ -26,11 +46,6 @@ type Account struct {
 	MultiFactorEnabled bool     `db:"multi_factor_enabled"`
 }
 
-type AccountEmail struct {
-	AccountId string `db:"account_id"`
-	Email     string `db:"email"`
-}
-
 type AccountRepository struct {
 	session gocqlx.Session
 	client  *redis.Client
@@ -40,13 +55,13 @@ func NewAccountCassandraRedisRepository(session gocqlx.Session, client *redis.Cl
 	return AccountRepository{session: session, client: client}
 }
 
-func marshalUserToDatabase(usr *account.Account) *Account {
-	return &Account{
+func marshalUserToDatabase(usr *account.Account) *accounts {
+	return &accounts{
 		Id:                 usr.ID(),
 		Email:              usr.Email(),
 		Username:           usr.Username(),
 		Roles:              usr.RolesAsString(),
-		Avatar:             usr.RawAvatar(),
+		Avatar:             usr.Avatar(),
 		Verified:           usr.Verified(),
 		LockedUntil:        usr.LockedUntil(),
 		Locked:             usr.IsLocked(),
@@ -57,13 +72,13 @@ func marshalUserToDatabase(usr *account.Account) *Account {
 
 // GetAccountById - Get user using the ID
 func (r AccountRepository) GetAccountById(ctx context.Context, id string) (*account.Account, error) {
-	var accountInstance Account
 
-	queryUser := qb.Select("accounts").
-		Where(qb.Eq("id")).
-		Query(r.session).
+	var accountInstance accounts
+
+	queryUser := r.session.
+		Query(accountTable.Get()).
 		Consistency(gocql.LocalOne).
-		BindStruct(&Account{
+		BindStruct(&accounts{
 			Id: id,
 		})
 
@@ -90,22 +105,61 @@ func (r AccountRepository) GetAccountById(ctx context.Context, id string) (*acco
 	), nil
 }
 
+// GetAccountsById - get accounts in bulk
+func (r AccountRepository) GetAccountsById(ctx context.Context, ids []string) ([]*account.Account, error) {
+
+	var accountInstances []accounts
+
+	queryUser := qb.
+		Select(accountTable.Name()).
+		Where(qb.In("id")).
+		Query(r.session).
+		Consistency(gocql.LocalOne).
+		Bind(ids)
+
+	if err := queryUser.Select(&accountInstances); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return nil, account.ErrAccountNotFound
+		}
+
+		return nil, fmt.Errorf("select() failed: '%s", err)
+	}
+
+	var accounts []*account.Account
+
+	for _, accountInstance := range accountInstances {
+		accounts = append(accounts, account.UnmarshalAccountFromDatabase(
+			accountInstance.Id,
+			accountInstance.Username,
+			accountInstance.Email,
+			accountInstance.Roles,
+			accountInstance.Verified,
+			accountInstance.Avatar,
+			accountInstance.Locked,
+			accountInstance.LockedUntil,
+			accountInstance.LockedReason,
+			accountInstance.MultiFactorEnabled,
+		))
+	}
+
+	return accounts, nil
+}
+
 // GetAccountByEmail - Get user using the email
 func (r AccountRepository) GetAccountByEmail(ctx context.Context, email string) (*account.Account, error) {
 
 	// get authentication cookie with this ID
-	var accountEmail AccountEmail
+	var accEmail accountEmail
 
-	// check if email is in use
-	queryEmail := qb.Select("account_emails").
-		Where(qb.Eq("email")).
-		Query(r.session).
+	queryEmail := r.session.
+		Query(accountEmailTable.Get()).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(&AccountEmail{
+		BindStruct(&accountEmail{
 			Email: strings.ToLower(email),
 		})
 
-	if err := queryEmail.Get(&accountEmail); err != nil {
+	if err := queryEmail.Get(&accEmail); err != nil {
 
 		if err == gocql.ErrNotFound {
 			return nil, account.ErrAccountNotFound
@@ -114,8 +168,8 @@ func (r AccountRepository) GetAccountByEmail(ctx context.Context, email string) 
 		return nil, err
 	}
 
-	// Get our user using the Account Id, from the user email instance
-	usr, err := r.GetAccountById(ctx, accountEmail.AccountId)
+	// Get our user using the accounts AccountId, from the user email instance
+	usr, err := r.GetAccountById(ctx, accEmail.AccountId)
 
 	if err != nil {
 		return nil, err
@@ -127,13 +181,14 @@ func (r AccountRepository) GetAccountByEmail(ctx context.Context, email string) 
 func (r AccountRepository) createUniqueAccountUsername(ctx context.Context, instance *account.Account, username string) error {
 	// First, we do a unique insert into users_usernames
 	// This ensures that we capture the username so nobody else can use it
-	accountUsernames := qb.Insert("account_usernames").
-		Columns("account_id", "username").
+
+	accountUsernames := accountUsernameTable.
+		InsertBuilder().
 		Unique().
 		Query(r.session).
 		SerialConsistency(gocql.Serial).
 		BindStruct(AccountUsername{
-			Id: instance.ID(),
+			AccountId: instance.ID(),
 			// This piece of data, we want to make sure we use as lowercase, to make sure we don't get collisions
 			// This table always has the username of a user, in lowercase format to make sure that we always have unique usernames
 			Username: strings.ToLower(username),
@@ -155,12 +210,12 @@ func (r AccountRepository) createUniqueAccountUsername(ctx context.Context, inst
 
 func (r AccountRepository) createUniqueAccountEmail(ctx context.Context, instance *account.Account, email string) error {
 
-	insertAccountEmail := qb.Insert("account_emails").
-		Columns("email", "account_id").
+	insertAccountEmail := accountEmailTable.
+		InsertBuilder().
 		Unique().
 		Query(r.session).
 		SerialConsistency(gocql.Serial).
-		BindStruct(AccountEmail{
+		BindStruct(accountEmail{
 			Email:     strings.ToLower(email),
 			AccountId: instance.ID(),
 		})
@@ -189,10 +244,7 @@ func (r AccountRepository) CreateAccount(ctx context.Context, instance *account.
 		return err
 	}
 
-	q := qb.Insert("usernames_by_account").
-		Columns("account_id", "username")
-
-	stmt, _ := q.ToCql()
+	stmt, _ := usernameByAccount.Insert()
 
 	batch.Query(stmt, instance.ID(), instance.Username())
 
@@ -218,24 +270,18 @@ func (r AccountRepository) CreateAccount(ctx context.Context, instance *account.
 		}
 
 		// create a table that holds all of the user's emails
-		q = qb.Insert("emails_by_account").
-			Columns("email", "account_id", "status")
+		stmt, _ = emailByAccountTable.Insert()
 
-		stmt, _ = q.ToCql()
-
-		batch.Query(stmt, instance.Email(), instance.ID(), 1)
+		batch.Query(stmt, instance.ID(), instance.Email(), 2)
 
 		email = instance.Username()
 	}
 
 	// Create a lookup table that will be used to find the user using their unique ID
 	// Will also contain all major information about the user such as permissions, etc...
-	q = qb.Insert("accounts").
-		Columns("username", "id", "email", "verified")
+	stmt, _ = accountTable.Insert()
 
-	stmt, _ = q.ToCql()
-
-	batch.Query(stmt, instance.Username(), instance.ID(), email, false)
+	batch.Query(stmt, instance.ID(), instance.Username(), email, []string{}, false, nil, false, 0, nil, nil, false)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
 
@@ -271,23 +317,23 @@ func (r AccountRepository) UpdateAccount(ctx context.Context, id string, updateF
 		return nil, err
 	}
 
-	// update user
-	updateUser := qb.Update("accounts").
-		Set(
-			"username",
-			"email",
-			"roles",
-			"verified",
-			"locked_until",
-			"locked",
-			"locked_reason",
-			"avatar",
-			"multi_factor_enabled",
-		).
-		Where(qb.Eq("id")).
-		Query(r.session).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(marshalUserToDatabase(currentUser))
+	updateUser :=
+		r.session.
+			Query(
+				accountTable.Update(
+					"username",
+					"email",
+					"roles",
+					"verified",
+					"locked_until",
+					"locked",
+					"locked_reason",
+					"avatar",
+					"multi_factor_enabled",
+				),
+			).
+			Consistency(gocql.LocalQuorum).
+			BindStruct(marshalUserToDatabase(currentUser))
 
 	if err := updateUser.ExecRelease(); err != nil {
 		return nil, fmt.Errorf("update() failed: '%s", err)

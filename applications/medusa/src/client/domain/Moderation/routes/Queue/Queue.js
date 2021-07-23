@@ -16,7 +16,7 @@ import {
   PopoverArrow,
   PopoverCloseButton
 } from '@chakra-ui/react'
-import Icon from '@//:modules/content/icon/Icon'
+import Icon from '@//:modules/content/Icon/Icon'
 import Button from '@//:modules/form/button'
 import InterfaceArrowsSynchronize
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-synchronize.svg'
@@ -34,14 +34,14 @@ type Props = {
 }
 
 const pendingPostsGQL = graphql`
-  fragment QueuePostsFragment on Query
+  fragment QueuePostsFragment on Account
   @argumentDefinitions(
     first: {type: Int, defaultValue: 1}
     after: {type: String}
   )
   @refetchable(queryName: "PostsPaginationQuery" ) {
-    pendingPosts (first: $first, after: $after)
-    @connection(key: "QueuePostsFragment_pendingPosts") {
+    moderatorPostsQueue (first: $first, after: $after)
+    @connection(key: "Posts_moderatorPostsQueue") {
       edges {
         node {
           id
@@ -50,7 +50,9 @@ const pendingPostsGQL = graphql`
             username
             avatar
           }
-          content
+          content {
+            url
+          }
           categories {
             title
           }
@@ -65,8 +67,6 @@ const pendingPostsGQL = graphql`
             name
             media
           }
-          artistId
-          artistUsername
           postedAt
           reassignmentAt
         }
@@ -77,10 +77,10 @@ const pendingPostsGQL = graphql`
 
 const queuePostsGQL = graphql`
   query QueuePostsQuery {
-    ...QueuePostsFragment
-    accountSettings {
+    viewer {
+      ...QueuePostsFragment
       moderator {
-        inQueue
+        lastSelected
       }
     }
   }

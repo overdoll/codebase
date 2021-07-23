@@ -7,9 +7,9 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//applications/sting/src/app",
-        "//applications/sting/src/domain/post",
         "//applications/sting/src/ports/graphql/types",
         "//libraries/graphql/relay",
-        "//libraries/passport",
+        "//libraries/paging",
+        "@com_github_vektah_gqlparser_v2//gqlerror",
     ],
 )

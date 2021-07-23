@@ -1,32 +1,3 @@
-type AccountInfractionHistory {
-  id: String!
-  reason: String!
-}
-
-type Validation {
-  code: String!
-}
-
-type PendingPostRejectionReason {
-  id: String!
-  reason: String!
-  infraction: Boolean!
-}
-
-type Response {
-  ok: Boolean!
-  validation: Validation
-}
-
-type Query {
-  """
-  Get rejection reasons. Only available to moderators + staff
-  Used as the input for rejecting a pending post
-  """
-  rejectionReasons: [PendingPostRejectionReason!]!
-
-  """
-  Infraction history for the currently logged-in account
-  """
-  accountInfractionHistory: [AccountInfractionHistory!]
+extend type Account @key(fields: "id") {
+  id: ID! @external
 }

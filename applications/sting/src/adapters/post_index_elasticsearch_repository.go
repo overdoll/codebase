@@ -1,134 +1,38 @@
 package adapters
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"strconv"
-	"text/template"
 	"time"
 
+	"github.com/olivere/elastic/v7"
+	"github.com/scylladb/gocqlx/v2"
 	"overdoll/applications/sting/src/domain/post"
-	search "overdoll/libraries/elasticsearch"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/scan"
 )
 
-type PostDocument struct {
-	Id          string               `json:"id"`
-	Artist      ArtistDocument       `json:"artist"`
-	Contributor ContributorDocument  `json:"contributor"`
-	Content     []string             `json:"content"`
-	Categories  []*CategoryDocument  `json:"categories"`
-	Characters  []*CharacterDocument `json:"characters"`
-	PostedAt    string               `json:"posted_at"`
-}
-
-type PostPendingDocument struct {
+type postDocument struct {
 	Id                 string               `json:"id"`
 	State              string               `json:"state"`
 	ModeratorId        string               `json:"moderator_id"`
 	ArtistId           string               `json:"artist_id"`
-	ArtistUsername     string               `json:"artist_username"`
-	Contributor        ContributorDocument  `json:"contributor"`
+	ContributorId      string               `json:"contributor_id"`
 	Content            []string             `json:"content"`
-	Categories         []*CategoryDocument  `json:"categories"`
-	Characters         []*CharacterDocument `json:"characters"`
+	Categories         []*categoryDocument  `json:"categories"`
+	Characters         []*characterDocument `json:"characters"`
 	CharactersRequests map[string]string    `json:"characters_requests"`
 	CategoriesRequests []string             `json:"categories_requests"`
 	MediaRequests      []string             `json:"media_requests"`
+	ArtistRequest      string               `json:"artist_request"`
 	PostedAt           string               `json:"posted_at"`
 	ReassignmentAt     string               `json:"reassignment_at"`
 }
 
-type ContributorDocument struct {
-	Id       string `json:"id"`
-	Avatar   string `json:"avatar"`
-	Username string `json:"username"`
-}
-
-const PostIndex = `
-{
-	"mappings": {
-		"dynamic": "strict",
-		"properties": {
-				"id": {
-					"type": "keyword"
-				},
-				"artist": {
-					"type": "nested",
-					"properties": {
-						"id": {
-							"type": "keyword"
-						},
-						"avatar": {
-							"type": "keyword"
-						},
-						"username": {
-							"type": "text",
-							"analyzer": "english"
-						}
-					}
-				},
-				"contributor": {
-					"type": "nested",
-					"properties": {
-						"id": {
-							"type": "keyword"
-						},
-						"avatar": {
-							"type": "keyword"
-						},
-						"username": {
-							"type": "text",
-							"analyzer": "english"
-						}
-					}
-				},
-				"categories": {
-					"type": "nested",
-					"properties": {
-						"id": {
-							"type": "keyword"
-						},
-						"thumbnail": {
-							"type": "keyword"
-						},
-						"title": {
-							"type": "text",
-							"analyzer": "english"
-						}
-					}
-				},
-				"characters": {
-					"type": "nested",
-					"properties": {
-						"id": {
-							"type": "keyword"
-						},
-						"thumbnail": {
-							"type": "keyword"
-						},
-						"name": {
-							"type": "text",
-							"analyzer": "english"
-						}
-					}
-				},
-				"content": {
-                     "type": "keyword"
-				},
-				"posted_at": {
-                     "type": "date"
-				},
-				"reassignment_at": {
-                     "type": "date"
-				}
-			}
-	}
-}`
-
-const PostPendingIndex = `
+const postIndex = `
 {
 	"mappings": {
 		"dynamic": "strict",
@@ -145,23 +49,8 @@ const PostPendingIndex = `
 				"artist_id": {
 					"type": "keyword"
 				},
-				"artist_username": {
+				"contributor_id": {
 					"type": "keyword"
-				},
-				"contributor": {
-					"type": "nested",
-					"properties": {
-						"id": {
-							"type": "keyword"
-						},
-						"avatar": {
-							"type": "keyword"
-						},
-						"username": {
-							"type": "text",
-							"analyzer": "english"
-						}
-					}
 				},
 				"categories": {
 					"type": "nested",
@@ -175,6 +64,9 @@ const PostPendingIndex = `
 						"title": {
 							"type": "text",
 							"analyzer": "english"
+						},
+						"created_at": {
+							"type": "date"
 						}
 					}
 				},
@@ -191,6 +83,9 @@ const PostPendingIndex = `
 							"type": "text",
 							"analyzer": "english"
 						},
+						"created_at": {
+							"type": "date"
+						},
 					    "media": {
 							"dynamic": "strict",
 							"properties": {
@@ -203,6 +98,9 @@ const PostPendingIndex = `
 								"title": {
 									"type": "text",
 									"analyzer": "english"
+								},
+								"created_at": {
+									"type": "date"
 								}
 							}		
 						}			
@@ -215,6 +113,9 @@ const PostPendingIndex = `
                      "type": "keyword"
 				},
 				"media_requests": {
+                     "type": "keyword"
+				},	
+				"artist_request": {
                      "type": "keyword"
 				},
 				"characters_requests": {
@@ -231,137 +132,136 @@ const PostPendingIndex = `
 	}
 }`
 
-const SearchPostPending = `	
-    "query" : {
-		"bool": {
-			"must": [
-				{{.Cursor}}
-				{{.PostId}}
-				{
-					"multi_match": {
-						"query" : "{{.ModeratorId}}",
-						"fields" : ["moderator_id"],
-						"operator" : "and"
-					}
-				},
-				{
-					"multi_match": {
-						"query" : "review",
-						"fields" : ["state"],
-						"operator" : "and"
-					}
-				}
-			]
-		}
-	},
-	"size" : {{.Size}},
-    "sort": [{"posted_at": "asc"}],
-	"track_total_hits": true
-`
-
-const PendingPostIndexName = "pending_posts"
-
+// needs to be exported because its used in a test to refresh the index
 const PostIndexName = "posts"
 
 type PostsIndexElasticSearchRepository struct {
-	store *search.Store
+	session gocqlx.Session
+	client  *elastic.Client
 }
 
-func NewPostsIndexElasticSearchRepository(store *search.Store) PostsIndexElasticSearchRepository {
-	return PostsIndexElasticSearchRepository{store: store}
+func NewPostsIndexElasticSearchRepository(client *elastic.Client, session gocqlx.Session) PostsIndexElasticSearchRepository {
+	return PostsIndexElasticSearchRepository{client: client, session: session}
 }
 
-func (r PostsIndexElasticSearchRepository) IndexPendingPost(ctx context.Context, pendingPost *post.PendingPost) error {
+func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
+	var characterDocuments []*characterDocument
 
-	var pendingPosts []*post.PendingPost
+	for _, char := range pst.Characters() {
+		c, err := marshalCharacterToDocument(char)
 
-	pendingPosts = append(pendingPosts, pendingPost)
-
-	return r.BulkIndexPendingPosts(ctx, pendingPosts)
-}
-
-func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Context, cursor *paging.Cursor, filter *post.PendingPostFilters) (*post.PendingPostConnection, error) {
-
-	t, err := template.New("SearchPostPending").Parse(SearchPostPending)
-
-	if err != nil {
-		return nil, err
-	}
-
-	paginator := paging.NewPagination(cursor)
-
-	runSearch := func(rng string, size int) (*search.SearchResults, error) {
-
-		postId := ""
-
-		if filter.ID() != "" {
-			postId = fmt.Sprintf(`{"multi_match": {"query" : %q,"fields" : ["id"],"operator" : "and"}},`, filter.ID())
-		}
-
-		data := struct {
-			Cursor      string
-			ModeratorId string
-			Size        int
-			PostId      string
-		}{
-			Size:        size,
-			ModeratorId: filter.ModeratorId(),
-			Cursor:      rng,
-			PostId:      postId,
-		}
-
-		var query bytes.Buffer
-
-		if err := t.Execute(&query, data); err != nil {
+		if err != nil {
 			return nil, err
 		}
 
-		return r.store.Search(PendingPostIndexName, query.String())
+		characterDocuments = append(characterDocuments, c)
 	}
 
-	var response *search.SearchResults
+	var categoryDocuments []*categoryDocument
 
-	paginator.DefineForwardsPagination(func(first int, after string) (bool, error) {
+	for _, cat := range pst.Categories() {
 
-		cursor := ""
-
-		if after != "" {
-			cursor = fmt.Sprintf(`{"range": {"posted_at": { "gt": %q } } },`, after)
-		}
-
-		response, err = runSearch(cursor, first)
+		cat, err := marshalCategoryToDocument(cat)
 
 		if err != nil {
-			return false, err
+			return nil, err
 		}
 
-		return response.Total-len(response.Hits) > 0, nil
-	})
+		categoryDocuments = append(categoryDocuments, cat)
+	}
 
-	paginator.DefineBackwardsPagination(func(last int, before string) (bool, error) {
+	characterRequests := make(map[string]string)
 
-		response, err = runSearch(fmt.Sprintf(`{"range": {"posted_at": { "lt": %q } } },`, before), last)
+	for _, cr := range pst.CharacterRequests() {
+		characterRequests[cr.Name] = cr.Media
+	}
 
-		if err != nil {
-			return false, err
-		}
+	var categoryRequests []string
 
-		return response.Total-len(response.Hits) > 0, nil
-	})
+	for _, cr := range pst.CategoryRequests() {
+		categoryRequests = append(categoryRequests, cr.Title)
+	}
 
-	pageInfo, err := paginator.Run()
+	var mediaRequests []string
+
+	for _, cr := range pst.MediaRequests() {
+		mediaRequests = append(mediaRequests, cr.Title)
+	}
+
+	return &postDocument{
+		Id:                 pst.ID(),
+		State:              string(pst.State()),
+		ArtistId:           pst.ArtistId(),
+		ModeratorId:        pst.ModeratorId(),
+		ContributorId:      pst.ContributorId(),
+		Content:            pst.Content(),
+		PostedAt:           strconv.FormatInt(pst.PostedAt().Unix(), 10),
+		ArtistRequest:      pst.CustomArtistUsername(),
+		Categories:         categoryDocuments,
+		Characters:         characterDocuments,
+		CharactersRequests: characterRequests,
+		CategoriesRequests: categoryRequests,
+		MediaRequests:      mediaRequests,
+		ReassignmentAt:     strconv.FormatInt(pst.ReassignmentAt().Unix(), 10),
+	}, nil
+}
+
+func (r PostsIndexElasticSearchRepository) IndexPost(ctx context.Context, post *post.Post) error {
+
+	pst, err := marshalPostToDocument(post)
+
+	if err != nil {
+		return err
+	}
+
+	_, err = r.client.
+		Index().
+		Index(PostIndexName).
+		Id(post.ID()).
+		BodyJson(pst).
+		Do(ctx)
+
+	if err != nil {
+		return fmt.Errorf("could not index post: %s", err)
+	}
+
+	return nil
+}
+
+func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, cursor *paging.Cursor, filter *post.PostFilters) ([]*post.Post, error) {
+
+	builder := r.client.Search().
+		Index(PostIndexName)
+
+	if cursor == nil {
+		return nil, errors.New("cursor required")
+	}
+
+	query := cursor.BuildElasticsearch(builder, "posted_at")
+
+	if filter.ModeratorId() != "" {
+		query.Must(elastic.NewMultiMatchQuery(filter.ModeratorId(), "moderator_id"))
+	}
+
+	if filter.ContributorId() != "" {
+		query.Must(elastic.NewMultiMatchQuery(filter.ModeratorId(), "contributor_id"))
+	}
+
+	builder.Query(query)
+
+	response, err := builder.Pretty(true).Do(ctx)
 
 	if err != nil {
 		return nil, err
 	}
 
-	var posts []*post.PendingPostEdge
+	var posts []*post.Post
 
-	for _, pest := range response.Hits {
+	for _, hit := range response.Hits.Hits {
 
-		var pst PostPendingDocument
+		var pst postDocument
 
-		err := json.Unmarshal(pest, &pst)
+		err := json.Unmarshal(hit.Source, &pst)
 
 		if err != nil {
 			return nil, err
@@ -382,214 +282,151 @@ func (r PostsIndexElasticSearchRepository) SearchPendingPosts(ctx context.Contex
 		postedAt, err := strconv.ParseInt(pst.PostedAt, 10, 64)
 		reassignmentAt, err := strconv.ParseInt(pst.ReassignmentAt, 10, 64)
 
-		posts = append(posts, &post.PendingPostEdge{
-			Cursor: pst.PostedAt,
-			Node: post.UnmarshalPendingPostFromDatabase(
-				pst.Id,
-				pst.ModeratorId,
-				pst.State,
-				post.NewArtist(pst.ArtistId, pst.ArtistUsername),
-				pst.Contributor.Id,
-				pst.Contributor.Username,
-				pst.Contributor.Avatar,
-				pst.Content,
-				characters,
-				categories,
-				pst.CharactersRequests,
-				pst.CategoriesRequests,
-				pst.MediaRequests,
-				time.Unix(postedAt, 0),
-				time.Unix(reassignmentAt, 0),
-			),
-		})
+		createdPost := post.UnmarshalPostFromDatabase(
+			pst.Id,
+			pst.State,
+			pst.ModeratorId,
+			pst.ArtistId,
+			pst.ArtistRequest,
+			pst.ContributorId,
+			pst.Content,
+			characters,
+			categories,
+			pst.CharactersRequests,
+			pst.CategoriesRequests,
+			pst.MediaRequests,
+			time.Unix(postedAt, 0),
+			time.Unix(reassignmentAt, 0),
+		)
+
+		createdPost.Node = paging.NewNode(pst.PostedAt)
+
+		posts = append(posts, createdPost)
 	}
 
-	return &post.PendingPostConnection{
-		Edges:    posts,
-		PageInfo: pageInfo,
-	}, nil
+	return posts, nil
 }
 
-func (r PostsIndexElasticSearchRepository) BulkIndexPendingPosts(ctx context.Context, pendingPosts []*post.PendingPost) error {
-	err := r.store.CreateBulkIndex(PendingPostIndexName)
+func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) error {
+
+	scanner := scan.New(r.session,
+		scan.Config{
+			NodesInCluster: 1,
+			CoresInNode:    2,
+			SmudgeFactor:   3,
+		},
+	)
+
+	rep := NewPostsCassandraRepository(r.session)
+
+	err := scanner.RunIterator(postTable, func(iter *gocqlx.Iterx) error {
+
+		var p posts
+
+		for iter.StructScan(&p) {
+
+			var characterDocuments []*characterDocument
+
+			chars, err := rep.GetCharactersById(ctx, p.Characters)
+
+			if err != nil {
+				return err
+			}
+
+			for _, char := range chars {
+
+				charDoc, err := marshalCharacterToDocument(char)
+
+				if err != nil {
+					return err
+				}
+
+				characterDocuments = append(characterDocuments, charDoc)
+			}
+
+			var categoryDocuments []*categoryDocument
+
+			cats, err := rep.GetCategoriesById(ctx, p.Categories)
+
+			if err != nil {
+				return err
+			}
+
+			for _, cat := range cats {
+				catDoc, err := marshalCategoryToDocument(cat)
+
+				if err != nil {
+					return err
+				}
+
+				categoryDocuments = append(categoryDocuments, catDoc)
+			}
+
+			doc := postDocument{
+				Id:                 p.Id,
+				State:              p.State,
+				ModeratorId:        p.ModeratorId,
+				ArtistId:           p.ArtistId,
+				ContributorId:      p.ContributorId,
+				Content:            p.Content,
+				Categories:         categoryDocuments,
+				Characters:         characterDocuments,
+				CharactersRequests: p.CharactersRequests,
+				CategoriesRequests: p.CategoriesRequests,
+				MediaRequests:      p.MediaRequests,
+				ArtistRequest:      p.ArtistRequest,
+				PostedAt:           strconv.FormatInt(p.PostedAt.Unix(), 10),
+				ReassignmentAt:     strconv.FormatInt(p.ReassignmentAt.Unix(), 10),
+			}
+
+			_, err = r.client.
+				Index().
+				Index(PostIndexName).
+				Id(p.Id).
+				BodyJson(doc).
+				Do(ctx)
+
+			if err != nil {
+				return fmt.Errorf("could not index post: %s", err)
+			}
+		}
+
+		return nil
+	})
 
 	if err != nil {
-		return fmt.Errorf("error creating bulk indexer: %s", err)
-	}
-
-	for _, pst := range pendingPosts {
-
-		var characterDocuments []*CharacterDocument
-
-		for _, char := range pst.Characters() {
-			characterDocuments = append(characterDocuments, MarshalCharacterToDocument(char))
-		}
-
-		var categoryDocuments []*CategoryDocument
-
-		for _, cat := range pst.Categories() {
-			categoryDocuments = append(categoryDocuments, MarshalCategoryToDocument(cat))
-		}
-
-		characterRequests := make(map[string]string)
-
-		for _, cr := range pst.CharacterRequests() {
-			characterRequests[cr.Name] = cr.Media
-		}
-
-		var categoryRequests []string
-
-		for _, cr := range pst.CategoryRequests() {
-			categoryRequests = append(categoryRequests, cr.Title)
-		}
-
-		var mediaRequests []string
-
-		for _, cr := range pst.MediaRequests() {
-			mediaRequests = append(mediaRequests, cr.Title)
-		}
-
-		data := &PostPendingDocument{
-			Id:             pst.ID(),
-			State:          string(pst.State()),
-			ArtistUsername: pst.Artist().Username(),
-			ArtistId:       pst.Artist().ID(),
-			ModeratorId:    pst.ModeratorId(),
-			Contributor: ContributorDocument{
-				Id:       pst.Contributor().ID(),
-				Avatar:   pst.Contributor().Avatar(),
-				Username: pst.Contributor().Username(),
-			},
-			Content:            pst.RawContent(),
-			PostedAt:           strconv.FormatInt(pst.PostedAt().Unix(), 10),
-			Categories:         categoryDocuments,
-			Characters:         characterDocuments,
-			CharactersRequests: characterRequests,
-			CategoriesRequests: categoryRequests,
-			MediaRequests:      mediaRequests,
-			ReassignmentAt:     strconv.FormatInt(pst.ReassignmentAt().Unix(), 10),
-		}
-
-		err = r.store.AddToBulkIndex(data.Id, data)
-
-		if err != nil {
-			return fmt.Errorf("unexpected error: %s", err)
-		}
-	}
-
-	if err := r.store.CloseBulkIndex(); err != nil {
-		return fmt.Errorf("unexpected error: %s", err)
+		return err
 	}
 
 	return nil
 }
 
-func (r PostsIndexElasticSearchRepository) IndexPost(ctx context.Context, pst *post.Post) error {
+func (r PostsIndexElasticSearchRepository) DeletePost(ctx context.Context, id string) error {
 
-	// We have only one post - index it
-	var posts []*post.Post
-	posts = append(posts, pst)
-
-	return r.BulkIndexPosts(ctx, posts)
-}
-
-func (r PostsIndexElasticSearchRepository) BulkIndexPosts(ctx context.Context, posts []*post.Post) error {
-
-	err := r.store.CreateBulkIndex(PostIndexName)
-
-	if err != nil {
-		return fmt.Errorf("error creating bulk indexer: %s", err)
-	}
-
-	for _, pst := range posts {
-
-		var characterDocuments []*CharacterDocument
-
-		for _, char := range pst.Characters() {
-			characterDocuments = append(characterDocuments, MarshalCharacterToDocument(char))
-		}
-
-		var categoryDocuments []*CategoryDocument
-
-		for _, cat := range pst.Categories() {
-			categoryDocuments = append(categoryDocuments, MarshalCategoryToDocument(cat))
-		}
-
-		data := &PostDocument{
-			Id: pst.ID(),
-			Artist: ArtistDocument{
-				Id:       pst.Artist().ID(),
-				Avatar:   pst.Artist().RawAvatar(),
-				Username: pst.Artist().Username(),
-			},
-			Contributor: ContributorDocument{
-				Id:       pst.Contributor().ID(),
-				Avatar:   pst.Contributor().Avatar(),
-				Username: pst.Contributor().Username(),
-			},
-			Content:    pst.Content(),
-			PostedAt:   pst.PostedAt().String(),
-			Categories: categoryDocuments,
-			Characters: characterDocuments,
-		}
-
-		err = r.store.AddToBulkIndex(data.Id, data)
-
-		if err != nil {
-			return fmt.Errorf("unexpected error: %s", err)
-		}
-	}
-
-	if err := r.store.CloseBulkIndex(); err != nil {
-		return fmt.Errorf("unexpected error: %s", err)
-	}
-
-	return nil
-}
-
-func (r PostsIndexElasticSearchRepository) DeletePostDocument(ctx context.Context, id string) error {
-
-	if err := r.store.Delete(PostIndexName, id); err != nil {
-		return fmt.Errorf("failed to delete pos document: %s", err)
-	}
-
-	return nil
-}
-
-func (r PostsIndexElasticSearchRepository) DeletePendingPostDocument(ctx context.Context, id string) error {
-
-	if err := r.store.Delete(PendingPostIndexName, id); err != nil {
-		return fmt.Errorf("failed to delete pending post document: %s", err)
+	if _, err := r.client.Delete().Index(PostIndexName).Id(id).Do(ctx); err != nil {
+		return fmt.Errorf("failed to delete post document: %s", err)
 	}
 
 	return nil
 }
 
 func (r PostsIndexElasticSearchRepository) DeletePostIndex(ctx context.Context) error {
-	err := r.store.DeleteIndex(PostIndexName)
+
+	exists, err := r.client.IndexExists(PostIndexName).Do(ctx)
 
 	if err != nil {
+		return err
 	}
 
-	err = r.store.CreateIndex(PostIndexName, PostIndex)
-
-	if err != nil {
-		return fmt.Errorf("failed to create media index: %s", err)
+	if exists {
+		if _, err := r.client.DeleteIndex(PostIndexName).Do(ctx); err != nil {
+			// Handle error
+			return err
+		}
 	}
 
-	return nil
-}
-
-func (r PostsIndexElasticSearchRepository) DeletePendingPostIndex(ctx context.Context) error {
-	err := r.store.DeleteIndex(PendingPostIndexName)
-
-	if err != nil {
-	}
-
-	err = r.store.CreateIndex(PendingPostIndexName, PostPendingIndex)
-
-	if err != nil {
-		return fmt.Errorf("failed to create pending post index: %s", err)
+	if _, err := r.client.CreateIndex(PostIndexName).BodyString(postIndex).Do(ctx); err != nil {
+		return err
 	}
 
 	return nil

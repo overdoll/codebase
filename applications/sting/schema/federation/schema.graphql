@@ -1,4 +1,0 @@
-extend type Account @key(fields: "id") {
-  id: String! @external
-  testField: String!
-}

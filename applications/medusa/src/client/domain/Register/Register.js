@@ -7,18 +7,17 @@ import { useTranslation } from 'react-i18next'
 import type { RegisterMutation } from '@//:artifacts/RegisterMutation.graphql'
 import type { Node } from 'react'
 import { useHistory } from '@//:modules/routing'
-import Icon from '@//:modules/content/icon/Icon'
+import Icon from '@//:modules/content/Icon/Icon'
 import SignBadgeCircle
   from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
 import { Helmet } from 'react-helmet-async'
 import RegisterForm from './RegisterForm/RegisterForm'
 
 const RegisterMutationGQL = graphql`
-  mutation RegisterMutation($data: RegisterInput!) {
-    register(data: $data) {
-      ok
-      validation {
-        code
+  mutation RegisterMutation($input: CreateAccountWithAuthenticationTokenInput!) {
+    createAccountWithAuthenticationToken(input: $input) {
+      account {
+        id
       }
     }
   }
@@ -37,12 +36,17 @@ export default function Register (): Node {
   const onSubmit = val => {
     commit({
       variables: {
-        data: {
+        input: {
           username: val.username
         }
       },
-      onCompleted (data) {
-        history.replace('/profile')
+      updater: (store, payload) => {
+        // basically just invalidate the store so it can re-fetch
+        store
+          .getRoot()
+          .setValue(undefined, 'viewer')
+
+        history.push('/profile')
       },
       onError (data) {
         notify({

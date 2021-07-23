@@ -3,198 +3,128 @@ package queries
 import (
 	"context"
 
+	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/sting/src/app"
-	"overdoll/applications/sting/src/domain/post"
 	"overdoll/applications/sting/src/ports/graphql/types"
 	"overdoll/libraries/graphql/relay"
-	"overdoll/libraries/passport"
+	"overdoll/libraries/paging"
 )
 
 type QueryResolver struct {
 	App *app.Application
 }
 
-func (r *QueryResolver) PendingPost(ctx context.Context, id string) (*types.PendingPost, error) {
-	pass := passport.FromContext(ctx)
+func (r *QueryResolver) Posts(ctx context.Context, after *string, before *string, first *int, last *int, categoryIds []relay.ID, characterIds []relay.ID, mediaIds []relay.ID) (*types.PostConnection, error) {
 
-	if !pass.IsAuthenticated() {
-		return nil, passport.ErrNotAuthenticated
+	cursor, err := paging.NewCursor(after, before, first, last)
+
+	if err != nil {
+		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	result, err := r.App.Queries.GetPendingPostAuthenticated.Handle(ctx, id, pass.AccountID())
+	var categoryIdsString []string
+
+	for _, category := range categoryIds {
+		categoryIdsString = append(categoryIdsString, category.GetID())
+	}
+
+	var characterIdsString []string
+
+	for _, character := range characterIds {
+		characterIdsString = append(characterIdsString, character.GetID())
+	}
+
+	var mediaIdsString []string
+
+	for _, media := range mediaIds {
+		mediaIdsString = append(mediaIdsString, media.GetID())
+	}
+
+	results, err := r.App.Queries.SearchPosts.Handle(ctx, cursor, "", "", "", categoryIdsString, characterIdsString, mediaIdsString)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return types.MarshalPendingPostToGraphQL(&post.PendingPostEdge{
-		Cursor: "",
-		Node:   result,
-	}).Node, nil
+	return types.MarshalPostToGraphQLConnection(results, cursor), nil
 }
 
-func (r *QueryResolver) PendingPosts(ctx context.Context, after, before *string, first, last *int, filter *types.PendingPostFilters) (*types.PendingPostConnection, error) {
+func (r *QueryResolver) Post(ctx context.Context, reference string) (*types.Post, error) {
 
-	pass := passport.FromContext(ctx)
-
-	if !pass.IsAuthenticated() {
-		return nil, passport.ErrNotAuthenticated
-	}
-
-	moderatorId := ""
-	contributorId := ""
-	artistId := ""
-	id := ""
-
-	if filter != nil {
-		if filter.ModeratorID != nil {
-			moderatorId = *filter.ModeratorID
-		}
-
-		if filter.ContributorID != nil {
-			contributorId = *filter.ContributorID
-		}
-
-		if filter.ArtistID != nil {
-			artistId = *filter.ArtistID
-		}
-
-		if filter.ID != nil {
-			id = *filter.ID
-		}
-	}
-
-	var startCursor *string
-	var endCursor *string
-
-	input := &relay.ConnectionInput{
-		After:  after,
-		Before: before,
-		First:  first,
-		Last:   last,
-	}
-
-	results, err := r.App.Queries.GetPendingPosts.Handle(ctx, input.ToCursor(), moderatorId, contributorId, artistId, id, pass.AccountID())
+	pendingPost, err := r.App.Queries.PostById.Handle(ctx, reference)
 
 	if err != nil {
 		return nil, err
 	}
 
-	var posts []*types.PendingPostEdge
-
-	for _, result := range results.Edges {
-		posts = append(posts, types.MarshalPendingPostToGraphQL(result))
-	}
-
-	if len(posts) > 0 {
-		startCursor = &posts[0].Cursor
-		endCursor = &posts[len(posts)-1].Cursor
-	}
-
-	return &types.PendingPostConnection{
-		Edges: posts,
-		PageInfo: &relay.PageInfo{
-			HasNextPage:     results.PageInfo.HasNextPage(),
-			HasPreviousPage: results.PageInfo.HasPrevPage(),
-			StartCursor:     startCursor,
-			EndCursor:       endCursor,
-		},
-	}, nil
+	return types.MarshalPostToGraphQL(pendingPost), nil
 }
 
-func (r *QueryResolver) Characters(ctx context.Context, data types.SearchInput) ([]*types.Character, error) {
+func (r *QueryResolver) Categories(ctx context.Context, after *string, before *string, first *int, last *int, title *string) (*types.CategoryConnection, error) {
 
-	results, err := r.App.Queries.SearchCharacters.Handle(ctx, data.Search)
+	cursor, err := paging.NewCursor(after, before, first, last)
+
+	if err != nil {
+		return nil, gqlerror.Errorf(err.Error())
+	}
+
+	search := ""
+
+	if title != nil {
+		search = *title
+	}
+
+	results, err := r.App.Queries.SearchCategories.Handle(ctx, cursor, search)
 
 	if err != nil {
 		return nil, err
 	}
 
-	resp := make([]*types.Character, 0)
-
-	// Unmarshal our json into the correct model
-	for _, result := range results {
-
-		resp = append(resp, &types.Character{
-			ID:        result.ID(),
-			Thumbnail: result.Thumbnail(),
-			Name:      result.Name(),
-			Media: &types.Media{
-				ID:        result.Media().ID(),
-				Thumbnail: result.Media().Thumbnail(),
-				Title:     result.Media().Title(),
-			},
-		})
-	}
-
-	return resp, nil
+	return types.MarshalCategoryToGraphQLConnection(results, cursor), nil
 }
 
-func (r *QueryResolver) Categories(ctx context.Context, data types.SearchInput) ([]*types.Category, error) {
+func (r *QueryResolver) Medias(ctx context.Context, after *string, before *string, first *int, last *int, title *string) (*types.MediaConnection, error) {
 
-	results, err := r.App.Queries.SearchCategories.Handle(ctx, data.Search)
+	cursor, err := paging.NewCursor(after, before, first, last)
+
+	if err != nil {
+		return nil, gqlerror.Errorf(err.Error())
+	}
+
+	search := ""
+
+	if title != nil {
+		search = *title
+	}
+
+	results, err := r.App.Queries.SearchMedias.Handle(ctx, cursor, search)
 
 	if err != nil {
 		return nil, err
 	}
 
-	resp := make([]*types.Category, 0)
-
-	// Unmarshal our json into the correct model
-	for _, result := range results {
-
-		resp = append(resp, &types.Category{
-			ID:        result.ID(),
-			Thumbnail: result.Thumbnail(),
-			Title:     result.Title(),
-		})
-	}
-
-	return resp, nil
+	return types.MarshalMediaToGraphQLConnection(results, cursor), nil
 }
 
-func (r *QueryResolver) Artists(ctx context.Context, data types.SearchInput) ([]*types.Artist, error) {
+func (r *QueryResolver) Characters(ctx context.Context, after *string, before *string, first *int, last *int, name *string, mediaTitle *string) (*types.CharacterConnection, error) {
 
-	results, err := r.App.Queries.SearchArtist.Handle(ctx, data.Search)
+	cursor, err := paging.NewCursor(after, before, first, last)
+
+	if err != nil {
+		return nil, gqlerror.Errorf(err.Error())
+	}
+
+	search := ""
+
+	if name != nil {
+		search = *name
+	}
+
+	results, err := r.App.Queries.SearchCharacters.Handle(ctx, cursor, search)
 
 	if err != nil {
 		return nil, err
 	}
 
-	resp := make([]*types.Artist, 0)
-
-	// Unmarshal our json into the correct model
-	for _, result := range results {
-
-		resp = append(resp, &types.Artist{
-			ID:       result.ID(),
-			Avatar:   result.Avatar(),
-			Username: result.Username(),
-		})
-	}
-
-	return resp, nil
-}
-
-func (r *QueryResolver) Media(ctx context.Context, data types.SearchInput) ([]*types.Media, error) {
-
-	results, err := r.App.Queries.SearchMedias.Handle(ctx, data.Search)
-
-	if err != nil {
-		return nil, err
-	}
-
-	resp := make([]*types.Media, 0)
-
-	// Unmarshal our json into the correct model
-	for _, result := range results {
-
-		resp = append(resp, &types.Media{
-			ID:        result.ID(),
-			Thumbnail: result.Thumbnail(),
-			Title:     result.Title(),
-		})
-	}
-
-	return resp, nil
+	return types.MarshalCharacterToGraphQLConnection(results, cursor), nil
 }

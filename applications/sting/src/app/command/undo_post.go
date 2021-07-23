@@ -21,7 +21,7 @@ func NewUndoPostHandler(pr post.Repository, pi post.IndexRepository, cr content.
 func (h UndoPostHandler) Handle(ctx context.Context, id string) error {
 
 	// update pending post to back in review
-	pendingPost, err := h.pr.UpdatePendingPost(ctx, id, func(pending *post.PendingPost) error {
+	pendingPost, err := h.pr.UpdatePost(ctx, id, func(pending *post.Post) error {
 
 		// skip job if published or discarded
 		if err := pending.MakeUndo(); err != nil {
@@ -41,5 +41,5 @@ func (h UndoPostHandler) Handle(ctx context.Context, id string) error {
 	}
 
 	// Index pending post so it's bounced back into review
-	return h.pi.IndexPendingPost(ctx, pendingPost)
+	return h.pi.IndexPost(ctx, pendingPost)
 }

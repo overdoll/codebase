@@ -6,10 +6,11 @@ import (
 
 	"go.uber.org/zap"
 	"overdoll/applications/sting/src/domain/post"
+	"overdoll/libraries/paging"
 )
 
 var (
-	ErrSearchFailed = errors.New("search failed")
+	errSearchFailed = errors.New("search failed")
 )
 
 type SearchMediasHandler struct {
@@ -20,14 +21,14 @@ func NewSearchMediasHandler(pr post.IndexRepository) SearchMediasHandler {
 	return SearchMediasHandler{pr: pr}
 }
 
-func (h SearchMediasHandler) Handle(ctx context.Context, query string) ([]*post.Media, error) {
+func (h SearchMediasHandler) Handle(ctx context.Context, cursor *paging.Cursor, query string) ([]*post.Media, error) {
 
-	medias, err := h.pr.SearchMedias(ctx, query)
+	results, err := h.pr.SearchMedias(ctx, cursor, query)
 
 	if err != nil {
 		zap.S().Errorf("failed to search: %s", err)
-		return nil, ErrSearchFailed
+		return nil, errSearchFailed
 	}
 
-	return medias, nil
+	return results, nil
 }

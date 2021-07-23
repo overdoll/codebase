@@ -12,14 +12,17 @@ type Application struct {
 
 type Commands struct {
 	GetNextModerator   command.GetNextModeratorHandler
-	ModeratePost       command.ModeratePendingPostHandler
-	RevertModeratePost command.RevertModeratePendingPostHandler
+	ModeratePost       command.ModeratePostHandler
+	RevertModeratePost command.RevertModeratePostHandler
 	ToggleModerator    command.ToggleModeratorHandler
 }
 
 type Queries struct {
-	PendingPostRejectionReasons     query.PendingPostsRejectionReasonsHandler
-	PendingPostsAuditLogByModerator query.PendingPostsAuditLogByModeratorHandler
-	AccountInfractionHistory        query.AccountInfractionHistoryHandler
-	ModeratorInQueue                query.ModeratorInQueueHandler
+	PostRejectionReasons         query.PostsRejectionReasonsHandler
+	PostRejectionReasonById      query.PostRejectionReasonByIdHandler
+	SearchPostAuditLogs          query.SearchPostAuditLogsHandler
+	AccountInfractionHistory     query.AccountInfractionHistoryByAccountHandler
+	AccountInfractionHistoryById query.AccountInfractionHistoryByIdHandler
+	ModeratorById                query.ModeratorByIdHandler
+	PostAuditLogById             query.PostAuditLogByIdHandler
 }

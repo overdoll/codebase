@@ -5,7 +5,7 @@ import type { Node } from 'react'
 import { Draggable } from 'react-beautiful-dnd'
 import { Flex, Heading, Text, Skeleton, CloseButton } from '@chakra-ui/react'
 import Thumbnail from '../thumbnail/Thumbnail'
-import Icon from '@//:modules/content/icon/Icon'
+import Icon from '@//:modules/content/Icon/Icon'
 
 import InterfacePageControllerScrollUp
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/page-controller/interface-page-controller-scroll-up.svg'

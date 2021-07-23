@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 17fc34667c96526b459013e2d2ad7416
+ * @relayHash 501573df0718dc07c1c8475ea93a5bcc
  */
 
 /* eslint-disable */
@@ -8,18 +8,17 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-export type RegisterInput = {|
+export type CreateAccountWithAuthenticationTokenInput = {|
   username: string
 |};
 export type RegisterMutationVariables = {|
-  data: RegisterInput
+  input: CreateAccountWithAuthenticationTokenInput
 |};
 export type RegisterMutationResponse = {|
-  +register: {|
-    +ok: boolean,
-    +validation: ?{|
-      +code: string
-    |},
+  +createAccountWithAuthenticationToken: ?{|
+    +account: ?{|
+      +id: string
+    |}
   |}
 |};
 export type RegisterMutation = {|
@@ -30,12 +29,11 @@ export type RegisterMutation = {|
 
 /*
 mutation RegisterMutation(
-  $data: RegisterInput!
+  $input: CreateAccountWithAuthenticationTokenInput!
 ) {
-  register(data: $data) {
-    ok
-    validation {
-      code
+  createAccountWithAuthenticationToken(input: $input) {
+    account {
+      id
     }
   }
 }
@@ -46,7 +44,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "data"
+    "name": "input"
   }
 ],
 v1 = [
@@ -55,35 +53,28 @@ v1 = [
     "args": [
       {
         "kind": "Variable",
-        "name": "data",
-        "variableName": "data"
+        "name": "input",
+        "variableName": "input"
       }
     ],
-    "concreteType": "Response",
+    "concreteType": "CreateAccountWithAuthenticationTokenPayload",
     "kind": "LinkedField",
-    "name": "register",
+    "name": "createAccountWithAuthenticationToken",
     "plural": false,
     "selections": [
       {
         "alias": null,
         "args": null,
-        "kind": "ScalarField",
-        "name": "ok",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "Validation",
+        "concreteType": "Account",
         "kind": "LinkedField",
-        "name": "validation",
+        "name": "account",
         "plural": false,
         "selections": [
           {
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "code",
+            "name": "id",
             "storageKey": null
           }
         ],
@@ -111,7 +102,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "17fc34667c96526b459013e2d2ad7416",
+    "id": "501573df0718dc07c1c8475ea93a5bcc",
     "metadata": {},
     "name": "RegisterMutation",
     "operationKind": "mutation",
@@ -120,5 +111,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '7a10396b270bf28b5b2777c7f880fd64';
+(node: any).hash = '40dd985fd835e7f5dff39dd90d25e01a';
 module.exports = node;

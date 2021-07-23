@@ -21,7 +21,7 @@ import (
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
 	"overdoll/libraries/config"
-	search "overdoll/libraries/elasticsearch"
+	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/tests"
 )
@@ -35,47 +35,89 @@ const StingHttpClientAddr = "http://:6666/graphql"
 const StingGrpcAddr = "localhost:6667"
 const StingGrpcClientAddr = "localhost:6667"
 
+type PostModified struct {
+	ID                string
+	Reference         string
+	State             types.PostState
+	MediaRequests     []string
+	CharacterRequests []*types.CharacterRequestType
+	Characters        []CharacterModified
+}
+
 type CreatePost struct {
-	Post *types.PostResponse `graphql:"post(data: $data)"`
+	CreatePost *struct {
+		Post   *PostModified
+		Review bool
+	} `graphql:"createPost(input: $input)"`
 }
 
-type PendingPost struct {
-	PendingPost *types.PendingPost `graphql:"pendingPost(id: $id)"`
+type Post struct {
+	Post *PostModified `graphql:"post(reference: $reference)"`
 }
 
-type PendingPosts struct {
-	PendingPosts *types.PendingPostConnection `graphql:"pendingPosts(filter: $filter)"`
+type _Any map[string]interface{}
+
+type AccountPosts struct {
+	Entities []struct {
+		Account struct {
+			ID    string
+			Posts *struct {
+				Edges []*struct {
+					Node PostModified
+				}
+			}
+		} `graphql:"... on Account"`
+	} `graphql:"_entities(representations: $representations)"`
+}
+
+type CharacterModified struct {
+	Name  string
+	Media struct {
+		Title string
+	}
 }
 
 type SearchCharacters struct {
-	Characters []*types.Character `graphql:"characters(data: $data)"`
+	Characters struct {
+		Edges []struct {
+			Node CharacterModified
+		}
+	} `graphql:"characters(name: $name)"`
 }
 
 type SearchCategories struct {
-	Categories []*types.Category `graphql:"categories(data: $data)"`
+	Categories struct {
+		Edges []struct {
+			Node struct {
+				Title string
+			}
+		}
+	} `graphql:"categories(title: $title)"`
 }
 
 type SearchMedia struct {
-	Media []*types.Media `graphql:"media(data: $data)"`
+	Media struct {
+		Edges []struct {
+			Node struct {
+				Title string
+			}
+		}
+	} `graphql:"medias(title: $title)"`
 }
 
-type SearchArtist struct {
-	Artists []*types.Artist `graphql:"artists(data: $data)"`
-}
-
-func qPendingPost(t *testing.T, id string) PendingPost {
+func qPendingPost(t *testing.T, id string) Post {
 
 	client, _ := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 
-	var pendingPost PendingPost
+	var post Post
 
-	err := client.Query(context.Background(), &pendingPost, map[string]interface{}{
-		"id": graphql.String(id),
+	err := client.Query(context.Background(), &post, map[string]interface{}{
+		"reference": graphql.String(id),
 	})
 
 	require.NoError(t, err)
 
-	return pendingPost
+	return post
 }
 
 func mCreatePost(t *testing.T, env *testsuite.TestWorkflowEnvironment, callback func(string) func()) {
@@ -84,28 +126,29 @@ func mCreatePost(t *testing.T, env *testsuite.TestWorkflowEnvironment, callback 
 
 	var createPost CreatePost
 
-	artistId := "1q7MIw0U6TEpELH0FqnxrcXt3E0"
 	artistUsername := "artist_verified"
+	id := relay.ID("QWNjb3VudDoxcTdNSXcwVTZURXBFTEgwRnFueHJjWHQzRTA=")
+	med := customMediaName
 
 	err := client.Mutate(context.Background(), &createPost, map[string]interface{}{
-		"data": &types.PostInput{
+		"input": types.CreatePostInput{
 			Content:       []string{},
-			Categories:    []string{"1q7MJFk9Wof1qyQQORKBrJxGFhJ", "1q7MJFMVgDPo4mFjsfNag6rRwRy", "1q7MJSeEiai3yFN6Ps65eACFde9"},
-			Characters:    []string{"1q7MJnQXAtxer0fboBMHtlC0JMe"},
+			CategoryIds:   []relay.ID{"Q2F0ZWdvcnk6MXE3TUpGazlXb2YxcXlRUU9SS0JySnhHRmhK", "Q2F0ZWdvcnk6MXE3TUpGTVZnRFBvNG1GanNmTmFnNnJSd1J5", "Q2F0ZWdvcnk6MXE3TUpTZUVpYWkzeUZONlBzNjVlQUNGZGU5"},
+			CharacterIds:  []relay.ID{"Q2hhcmFjdGVyOjFxN01KblFYQXR4ZXIwZmJvQk1IdGxDMEpNZQ=="},
 			MediaRequests: []string{customMediaName},
 			CharacterRequests: []*types.CharacterRequest{{
-				Name:  customCharacterName,
-				Media: customMediaName,
+				Name:            customCharacterName,
+				CustomMediaName: &med,
 			}},
-			ArtistID:       &artistId,
-			ArtistUsername: &artistUsername,
+			ExistingArtist:       &id,
+			CustomArtistUsername: &artistUsername,
 		},
 	})
 
 	require.NoError(t, err)
-	require.Equal(t, false, createPost.Post.Review)
+	require.Equal(t, false, createPost.CreatePost.Review)
 
-	postId := createPost.Post.ID
+	postId := createPost.CreatePost.Post.Reference
 
 	// execute workflow, since the graphql wont execute it and only put it into a queue
 	// we also get the ability to get workflow state, etc.. in this test
@@ -130,9 +173,9 @@ func TestCreatePost_Publish(t *testing.T) {
 	mCreatePost(t, env, func(postId string) func() {
 		return func() {
 			// need to refresh the ES index or else the post wont be found
-			es, err := search.NewStore(context.Background())
+			es, err := bootstrap.InitializeElasticSearchSession()
 			require.NoError(t, err)
-			err = es.Refresh(adapters.PendingPostIndexName)
+			_, err = es.Refresh(adapters.PostIndexName).Do(context.Background())
 			require.NoError(t, err)
 
 			newPostId = postId
@@ -141,11 +184,14 @@ func TestCreatePost_Publish(t *testing.T) {
 			// grab all pending posts for our moderator
 			client, _ := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 
-			var pendingPosts PendingPosts
+			var accountPosts AccountPosts
 
-			err = client.Query(context.Background(), &pendingPosts, map[string]interface{}{
-				"filter": types.PendingPostFilters{
-					ID: &newPostId,
+			err = client.Query(context.Background(), &accountPosts, map[string]interface{}{
+				"representations": []_Any{
+					{
+						"__typename": "Account",
+						"id":         "QWNjb3VudDoxcTdNSjVJeVJUVjBYNEoyN0YzbTV3R0Q1bWo=",
+					},
 				},
 			})
 
@@ -153,8 +199,8 @@ func TestCreatePost_Publish(t *testing.T) {
 
 			exists := false
 
-			for _, post := range pendingPosts.PendingPosts.Edges {
-				if post.Node.ID == newPostId {
+			for _, post := range accountPosts.Entities[0].Account.Posts.Edges {
+				if post.Node.Reference == newPostId {
 					exists = true
 				}
 			}
@@ -168,7 +214,7 @@ func TestCreatePost_Publish(t *testing.T) {
 			stingClient := getGrpcClient(t)
 
 			// "publish" pending post
-			_, e := stingClient.PublishPendingPost(context.Background(), &sting.PendingPostRequest{Id: postId})
+			_, e := stingClient.PublishPost(context.Background(), &sting.PostRequest{Id: postId})
 			require.NoError(t, e)
 
 			// execute workflow manually since it wont be executed right here
@@ -181,17 +227,17 @@ func TestCreatePost_Publish(t *testing.T) {
 	pendingPost := qPendingPost(t, newPostId)
 
 	// check to make sure post is in rejected state
-	require.Equal(t, types.PendingPostStateEnumPublished, pendingPost.PendingPost.State)
+	require.Equal(t, types.PostStatePublished, pendingPost.Post.State)
 
 	// publishing removes any custom fields and converts them
-	require.Len(t, pendingPost.PendingPost.MediaRequests, 0)
-	require.Nil(t, pendingPost.PendingPost.CharacterRequests)
+	require.Len(t, pendingPost.Post.MediaRequests, 0)
+	require.Nil(t, pendingPost.Post.CharacterRequests)
 
 	// check to make sure our custom character + media appears in the list
 	customCharacterExists := false
 	customMediaExists := false
 
-	for _, char := range pendingPost.PendingPost.Characters {
+	for _, char := range pendingPost.Post.Characters {
 		if char.Name == customCharacterName {
 			customCharacterExists = true
 		}
@@ -224,7 +270,7 @@ func TestCreatePost_Discard(t *testing.T) {
 			stingClient := getGrpcClient(t)
 
 			// "discard" pending post
-			_, e := stingClient.DiscardPendingPost(context.Background(), &sting.PendingPostRequest{Id: postId})
+			_, e := stingClient.DiscardPost(context.Background(), &sting.PostRequest{Id: postId})
 			require.NoError(t, e)
 
 			// execute workflow manually since it wont be executed right here
@@ -238,11 +284,11 @@ func TestCreatePost_Discard(t *testing.T) {
 	pendingPost := qPendingPost(t, newPostId)
 
 	// check to make sure post is in rejected state
-	require.Equal(t, types.PendingPostStateEnumDiscarded, pendingPost.PendingPost.State)
+	require.Equal(t, types.PostStateDiscarded, pendingPost.Post.State)
 
 	// discarding post also completely removes any custom fields
-	require.Len(t, pendingPost.PendingPost.MediaRequests, 0)
-	require.Nil(t, pendingPost.PendingPost.CharacterRequests)
+	require.Len(t, pendingPost.Post.MediaRequests, 0)
+	require.Nil(t, pendingPost.Post.CharacterRequests)
 }
 
 // Test_CreatePost_Reject - reject post
@@ -261,16 +307,16 @@ func TestCreatePost_Reject_undo_reject(t *testing.T) {
 			stingClient := getGrpcClient(t)
 
 			// "reject" pending post
-			_, e := stingClient.RejectPendingPost(context.Background(), &sting.PendingPostRequest{Id: postId})
+			_, e := stingClient.RejectPost(context.Background(), &sting.PostRequest{Id: postId})
 			require.NoError(t, e)
 
 			pendingPost := qPendingPost(t, newPostId)
 
 			// make sure post is in rejected state
-			require.Equal(t, types.PendingPostStateEnumRejected, pendingPost.PendingPost.State)
+			require.Equal(t, types.PostStateRejected, pendingPost.Post.State)
 
 			// UNDO
-			_, e = stingClient.UndoPendingPost(context.Background(), &sting.PendingPostRequest{Id: postId})
+			_, e = stingClient.UndoPost(context.Background(), &sting.PostRequest{Id: postId})
 			require.NoError(t, e)
 
 			newEnv := getWorkflowEnvironment(t)
@@ -284,10 +330,10 @@ func TestCreatePost_Reject_undo_reject(t *testing.T) {
 			pendingPost = qPendingPost(t, newPostId)
 
 			// check to make sure post is still in "review" state (since we did the undo)
-			require.Equal(t, types.PendingPostStateEnumReview, pendingPost.PendingPost.State)
+			require.Equal(t, types.PostStateReview, pendingPost.Post.State)
 
 			// need to reject again, or else we will be in an infinite loop
-			_, e = stingClient.RejectPendingPost(context.Background(), &sting.PendingPostRequest{Id: postId})
+			_, e = stingClient.RejectPost(context.Background(), &sting.PostRequest{Id: postId})
 			require.NoError(t, e)
 		}
 	})
@@ -295,7 +341,7 @@ func TestCreatePost_Reject_undo_reject(t *testing.T) {
 	pendingPost := qPendingPost(t, newPostId)
 
 	// check to make sure post is in rejected state
-	require.Equal(t, types.PendingPostStateEnumRejected, pendingPost.PendingPost.State)
+	require.Equal(t, types.PostStateRejected, pendingPost.Post.State)
 }
 
 // TestSearchCharacters - search some characters
@@ -307,14 +353,12 @@ func TestSearchCharacters(t *testing.T) {
 	var searchCharacters SearchCharacters
 
 	err := client.Query(context.Background(), &searchCharacters, map[string]interface{}{
-		"data": types.SearchInput{
-			Search: "Aarush Hills",
-		},
+		"name": graphql.String("Aarush Hills"),
 	})
 
 	require.NoError(t, err)
-	require.Len(t, searchCharacters.Characters, 1)
-	require.Equal(t, "Aarush Hills", searchCharacters.Characters[0].Name)
+	require.Len(t, searchCharacters.Characters.Edges, 1)
+	require.Equal(t, "Aarush Hills", searchCharacters.Characters.Edges[0].Node.Name)
 }
 
 // TestSearchCategories - search some categories
@@ -326,14 +370,12 @@ func TestSearchCategories(t *testing.T) {
 	var searchCategories SearchCategories
 
 	err := client.Query(context.Background(), &searchCategories, map[string]interface{}{
-		"data": types.SearchInput{
-			Search: "Convict",
-		},
+		"title": graphql.String("Convict"),
 	})
 
 	require.NoError(t, err)
-	require.Len(t, searchCategories.Categories, 1)
-	require.Equal(t, "Convict", searchCategories.Categories[0].Title)
+	require.Len(t, searchCategories.Categories.Edges, 1)
+	require.Equal(t, "Convict", searchCategories.Categories.Edges[0].Node.Title)
 }
 
 // TestSearchMedia - search some media
@@ -345,33 +387,12 @@ func TestSearchMedia(t *testing.T) {
 	var searchMedia SearchMedia
 
 	err := client.Query(context.Background(), &searchMedia, map[string]interface{}{
-		"data": types.SearchInput{
-			Search: "Foreigner On Mars",
-		},
+		"title": graphql.String("Foreigner On Mars"),
 	})
 
 	require.NoError(t, err)
-	require.Len(t, searchMedia.Media, 1)
-	require.Equal(t, "Foreigner On Mars", searchMedia.Media[0].Title)
-}
-
-// TestSearchArtist - search some artist
-func TestSearchArtist(t *testing.T) {
-	t.Parallel()
-
-	client, _ := getHttpClient(t, nil)
-
-	var searchArtist SearchArtist
-
-	err := client.Query(context.Background(), &searchArtist, map[string]interface{}{
-		"data": types.SearchInput{
-			Search: "artist_verified",
-		},
-	})
-
-	require.NoError(t, err)
-	require.Len(t, searchArtist.Artists, 1)
-	require.Equal(t, "artist_verified", searchArtist.Artists[0].Username)
+	require.Len(t, searchMedia.Media.Edges, 1)
+	require.Equal(t, "Foreigner On Mars", searchMedia.Media.Edges[0].Node.Title)
 }
 
 func getHttpClient(t *testing.T, pass *passport.Passport) (*graphql.Client, *http.Client) {

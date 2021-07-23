@@ -1,75 +1,101 @@
-enum AccountRoleEnum {
-  Moderator
-  Staff
-}
+type Account implements Node @key(fields: "id") {
+  """ID representing the account"""
+  id: ID!
 
-type Account @key(fields: "id") {
-  id: String!
+  """The ID that the account can be referenced by"""
+  reference: String!
+
+  """A URL pointing to the accounts's public avatar."""
+  avatar(
+    """The size of the resulting square image."""
+    size: Int
+  ): URI!
+
+  """The username of the account."""
   username: String!
-  roles: [AccountRoleEnum!]!
-  avatar: String!
-  verified: Boolean!
-  lock: AccountLock
+
+  """Whether or not this account is a staff member"""
+  isStaff: Boolean!
+
+  """Whether or not this account is part of the moderation team"""
+  isModerator: Boolean!
+
+  """Whether or not this account is an artist"""
+  isArtist: Boolean!
+
+  """The details of the account lock"""
+  lock: AccountLock @goField(forceResolver: true)
 }
 
-enum AccountLockReasonEnum {
+"""Edge of the account"""
+type AccountEdge {
+  node: Account!
+  cursor: String!
+}
+
+"""Connection of the account"""
+type AccountConnection {
+  edges: [AccountEdge!]!
+  pageInfo: PageInfo!
+}
+
+enum AccountLockReason {
   PostInfraction
 }
 
 type AccountLock {
   expires: Int!
-  reason: AccountLockReasonEnum!
+  reason: AccountLockReason!
 }
 
-input RegisterInput {
-  username: String!
+"""Input for unlocking an account"""
+input UnlockAccountInput {
+  accountID: ID!
 }
 
-input AuthenticationInput {
-  email: String!
+"""Payload for the unlocked account"""
+type UnlockAccountPayload {
+  """Account that was unlocked"""
+  account: Account
 }
 
 extend type Mutation {
   """
-  Initiates an authentication flow for the specified account
+  Unlock Account - account may be locked for any reason. Use this endpoint to unlock the account
   """
-  authenticate(data: AuthenticationInput): Response!
-
-  """
-  Re-send the authentication email
-  """
-  authenticateEmail: Response!
-
-  """
-  Registration for the account. Will only work once authenticate is initiated
-  and the cookie is still valid when redeemed (5 minutes)
-  """
-  register(data: RegisterInput): Response!
-
-  """
-  Authenticate with a TOTP code - should be used after a cookie is redeemed
-  """
-  authenticateTOTP(code: String!): Response!
-
-  """
-  Authenticate with a recovery code - should be used after a cookie is redeemed but user does not remember their credentials
-  """
-  authenticateRecoveryCode(code: String!): Response!
-
-  """
-  Unlock Account - account may be locked for any reason. Use this endpoint to unlock the currently-logged in account (time must be after the expiration of the unlock)
-  """
-  unlockAccount: Response!
-
-  """
-  Logout the current account
-  """
-  logout: Response!
+  unlockAccount: UnlockAccountPayload
 }
 
 extend type Query {
   """
   Get the currently-authenticated account
   """
-  authenticatedAccount: Account
+  viewer: Account
+
+  """Look up a single account"""
+  account(
+    """Look up a post by a username"""
+    username: String!
+  ): Account
+
+  """Look up or search multiple accounts"""
+  accounts(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Filter by the account username."""
+    username: String
+
+    """Filter whether or not this account is an artist."""
+    isArtist: Boolean = false
+  ): AccountConnection!
 }

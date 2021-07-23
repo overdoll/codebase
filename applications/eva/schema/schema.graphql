@@ -1,8 +1,0 @@
-type Response {
-  validation: Validation
-  ok: Boolean!
-}
-
-type Validation {
-  code: String!
-}

@@ -5,87 +5,56 @@ import (
 	"fmt"
 
 	"github.com/gocql/gocql"
-	"github.com/scylladb/gocqlx/v2/qb"
+	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/sting/src/domain/post"
 )
 
-type Artist struct {
-	Id       string `db:"account_id"`
-	Username string `db:"account_username"`
-	Avatar   string `db:"account_avatar"`
+var artistTable = table.New(table.Metadata{
+	Name: "artists",
+	Columns: []string{
+		"account_id",
+		"do_not_post_reason",
+	},
+	PartKey: []string{"account_id"},
+	SortKey: []string{},
+})
+
+type artist struct {
+	Id              string `db:"account_id"`
+	DoNotPostReason string `db:"do_not_post_reason"`
 }
 
-func marshalArtistToDatabase(artist *post.Artist) *Artist {
-
-	return &Artist{
-		Id:       artist.ID(),
-		Username: artist.Username(),
-		Avatar:   artist.RawAvatar(),
+func marshalArtistToDatabase(art *post.Artist) *artist {
+	return &artist{
+		Id: art.ID(),
 	}
-}
-
-func (r PostsCassandraRepository) GetArtists(ctx context.Context) ([]*post.Artist, error) {
-
-	var dbArtists []Artist
-
-	qc := qb.Select("artists").
-		Columns(
-			"account_id",
-			"account_username",
-			"account_avatar",
-		).
-		Query(r.session).
-		Consistency(gocql.One)
-
-	if err := qc.Select(&dbArtists); err != nil {
-		return nil, fmt.Errorf("select() failed: %s", err)
-	}
-
-	var artists []*post.Artist
-
-	for _, dbArt := range dbArtists {
-		artists = append(artists, post.UnmarshalArtistFromDatabase(dbArt.Id, dbArt.Username, dbArt.Avatar))
-	}
-
-	return artists, nil
 }
 
 func (r PostsCassandraRepository) GetArtistById(ctx context.Context, id string) (*post.Artist, error) {
 
-	var artist Artist
+	var art artist
 
-	qc := qb.Select("artists").
-		Where(qb.Eq("account_id")).
-		Columns(
-			"account_id",
-			"account_username",
-			"account_avatar",
-		).
-		Query(r.session).
-		BindStruct(&Artist{
+	qc := r.session.
+		Query(artistTable.Select()).
+		Consistency(gocql.One).
+		BindStruct(&artist{
 			Id: id,
-		}).
-		Consistency(gocql.One)
+		})
 
-	if err := qc.Get(&artist); err != nil {
+	if err := qc.Get(&art); err != nil {
 		return nil, fmt.Errorf("select() failed: %s", err)
 	}
 
-	return post.UnmarshalArtistFromDatabase(artist.Id, artist.Username, artist.Avatar), nil
+	return post.UnmarshalArtistFromDatabase(art.Id, art.DoNotPostReason), nil
 }
 
 func (r PostsCassandraRepository) CreateArtist(ctx context.Context, artist *post.Artist) error {
 	pendingArtist := marshalArtistToDatabase(artist)
 
-	insertArtist := qb.Insert("artists").
-		Columns(
-			"account_id",
-			"account_username",
-			"account_avatar",
-		).
-		Query(r.session).
-		BindStruct(pendingArtist).
-		Consistency(gocql.LocalQuorum)
+	insertArtist := r.session.
+		Query(artistTable.Insert()).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(pendingArtist)
 
 	if err := insertArtist.ExecRelease(); err != nil {
 		return fmt.Errorf("ExecRelease() failed: '%s", err)

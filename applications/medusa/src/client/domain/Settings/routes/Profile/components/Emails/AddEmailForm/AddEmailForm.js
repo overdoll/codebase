@@ -12,7 +12,7 @@ import {
   InputLeftElement,
   InputRightElement, useToast
 } from '@chakra-ui/react'
-import Icon from '@//:modules/content/icon/Icon'
+import Icon from '@//:modules/content/Icon/Icon'
 import type { AddEmailFormMutation } from '@//:artifacts/AddEmailFormMutation.graphql'
 
 import InterfaceAlertWarningTriangle
@@ -36,11 +36,10 @@ type Props = {
 }
 
 const AddEmailMutationGQL = graphql`
-  mutation AddEmailFormMutation($email: String!) {
-    addAccountEmail(email: $email) {
-      ok
-      validation {
-        code
+  mutation AddEmailFormMutation($input: AddAccountEmailInput!) {
+    addAccountEmail(input: $input) {
+      accountEmail {
+        email
       }
     }
   }
