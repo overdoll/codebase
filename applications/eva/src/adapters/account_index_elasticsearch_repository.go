@@ -76,7 +76,7 @@ func (r AccountIndexElasticSearchRepository) SearchAccounts(ctx context.Context,
 	if username != "" {
 		query.Must(elastic.NewMatchQuery("username", username))
 	}
-	
+
 	builder.Query(query)
 
 	response, err := builder.Pretty(true).Do(ctx)

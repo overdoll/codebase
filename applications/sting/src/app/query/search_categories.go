@@ -16,7 +16,7 @@ func NewSearchCategoriesHandler(pr post.IndexRepository) SearchCategoriesHandler
 	return SearchCategoriesHandler{pr: pr}
 }
 
-func (h SearchCategoriesHandler) Handle(ctx context.Context, cursor *paging.Cursor, query string) ([]*post.Category,  error) {
+func (h SearchCategoriesHandler) Handle(ctx context.Context, cursor *paging.Cursor, query string) ([]*post.Category, error) {
 
 	results, err := h.pr.SearchCategories(ctx, cursor, query)
 

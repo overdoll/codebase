@@ -127,7 +127,7 @@ func NewPost(id, moderatorId string, artist *account.Account, customArtistUserna
 	if artist != nil {
 		artistId = artist.ID()
 	}
-	
+
 	return &Post{
 		id:                   id,
 		moderatorId:          moderatorId,
