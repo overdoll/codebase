@@ -24,7 +24,7 @@ type Props = {
 const generalSettingsGQL = graphql`
   query ProfileSettingsQuery {
     accountSettings {
-      accountId
+      accountId 
       general {
         emails {
           email

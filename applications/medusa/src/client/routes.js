@@ -197,6 +197,41 @@ const routes: Array<Route> = [
         ]
       },
       {
+        path: '/confirmation/:id',
+        exact: true,
+        component: JSResource('ConfirmationRoot', () =>
+          import(
+            /* webpackChunkName: "TokenRoot" */ './domain/Confirmation/Confirmation'
+          ),
+        module.hot
+        ),
+        prepare: params => {
+          const ConfirmationQuery = require('@//:artifacts/TokenQuery.graphql')
+          return {
+            confirmationQuery: {
+              query: ConfirmationQuery,
+              variables: { confirmation: params.id },
+              options: {
+                fetchPolicy: 'store-or-network'
+              }
+            }
+          }
+        },
+        // When user is logged in, we don't want them to be able to redeem any other tokens
+        middleware: [
+          ({ environment, history }) => {
+            const ability = getAbilityFromUser(environment)
+
+            if (ability.can('manage', 'account')) {
+              history.push('/')
+              return false
+            }
+
+            return true
+          }
+        ]
+      },
+      {
         path: '/s',
         component: JSResource('SettingsRoot', () =>
           import(
