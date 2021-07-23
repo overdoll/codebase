@@ -91,8 +91,9 @@ type CharacterEdge struct {
 }
 
 type CharacterRequest struct {
-	Name  string `json:"name"`
-	Media string `json:"media"`
+	Name            string    `json:"name"`
+	CustomMediaName *string   `json:"customMediaName"`
+	ExistingMediaID *relay.ID `json:"existingMediaId"`
 }
 
 type CharacterRequestType struct {
@@ -109,9 +110,9 @@ type CreatePostInput struct {
 	// Image IDs for the content
 	Content []string `json:"content"`
 	// Category IDs for this post
-	CategoryIds []string `json:"categoryIds"`
+	CategoryIds []relay.ID `json:"categoryIds"`
 	// Ids for all the characters
-	CharacterIds []string `json:"characterIds"`
+	CharacterIds []relay.ID `json:"characterIds"`
 	// Requests (custom)
 	MediaRequests     []string            `json:"mediaRequests"`
 	CharacterRequests []*CharacterRequest `json:"characterRequests"`

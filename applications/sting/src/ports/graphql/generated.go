@@ -1127,7 +1127,8 @@ type CharacterRequestType {
 
 input CharacterRequest {
   name: String!
-  media: String!
+  customMediaName: String
+  existingMediaId: ID
 }
 
 """Create pending post."""
@@ -1137,10 +1138,10 @@ input CreatePostInput {
   content: [String!]!
 
   """Category IDs for this post"""
-  categoryIds: [String!]!
+  categoryIds: [ID!]!
 
   """Ids for all the characters"""
-  characterIds: [String!]!
+  characterIds: [ID!]!
 
   """Requests (custom)"""
   mediaRequests: [String!]
@@ -5952,11 +5953,19 @@ func (ec *executionContext) unmarshalInputCharacterRequest(ctx context.Context, 
 			if err != nil {
 				return it, err
 			}
-		case "media":
+		case "customMediaName":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("media"))
-			it.Media, err = ec.unmarshalNString2string(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("customMediaName"))
+			it.CustomMediaName, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "existingMediaId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("existingMediaId"))
+			it.ExistingMediaID, err = ec.unmarshalOID2ᚖoverdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -5984,7 +5993,7 @@ func (ec *executionContext) unmarshalInputCreatePostInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("categoryIds"))
-			it.CategoryIds, err = ec.unmarshalNString2ᚕstringᚄ(ctx, v)
+			it.CategoryIds, err = ec.unmarshalNID2ᚕoverdollᚋlibrariesᚋgraphqlᚋrelayᚐIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -5992,7 +6001,7 @@ func (ec *executionContext) unmarshalInputCreatePostInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("characterIds"))
-			it.CharacterIds, err = ec.unmarshalNString2ᚕstringᚄ(ctx, v)
+			it.CharacterIds, err = ec.unmarshalNID2ᚕoverdollᚋlibrariesᚋgraphqlᚋrelayᚐIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -7765,6 +7774,36 @@ func (ec *executionContext) unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelay�
 
 func (ec *executionContext) marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx context.Context, sel ast.SelectionSet, v relay.ID) graphql.Marshaler {
 	return v
+}
+
+func (ec *executionContext) unmarshalNID2ᚕoverdollᚋlibrariesᚋgraphqlᚋrelayᚐIDᚄ(ctx context.Context, v interface{}) ([]relay.ID, error) {
+	var vSlice []interface{}
+	if v != nil {
+		if tmp1, ok := v.([]interface{}); ok {
+			vSlice = tmp1
+		} else {
+			vSlice = []interface{}{v}
+		}
+	}
+	var err error
+	res := make([]relay.ID, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) marshalNID2ᚕoverdollᚋlibrariesᚋgraphqlᚋrelayᚐIDᚄ(ctx context.Context, sel ast.SelectionSet, v []relay.ID) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	for i := range v {
+		ret[i] = ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, sel, v[i])
+	}
+
+	return ret
 }
 
 func (ec *executionContext) marshalNMedia2overdollᚋapplicationsᚋstingᚋsrcᚋportsᚋgraphqlᚋtypesᚐMedia(ctx context.Context, sel ast.SelectionSet, v types.Media) graphql.Marshaler {

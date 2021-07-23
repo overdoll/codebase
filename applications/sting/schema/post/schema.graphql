@@ -49,7 +49,8 @@ type CharacterRequestType {
 
 input CharacterRequest {
   name: String!
-  media: String!
+  customMediaName: String
+  existingMediaId: ID
 }
 
 """Create pending post."""
@@ -59,10 +60,10 @@ input CreatePostInput {
   content: [String!]!
 
   """Category IDs for this post"""
-  categoryIds: [String!]!
+  categoryIds: [ID!]!
 
   """Ids for all the characters"""
-  characterIds: [String!]!
+  characterIds: [ID!]!
 
   """Requests (custom)"""
   mediaRequests: [String!]

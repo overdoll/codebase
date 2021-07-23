@@ -21,7 +21,15 @@ func (r *MutationResolver) CreatePost(ctx context.Context, input types.CreatePos
 	requests := make(map[string]string)
 
 	for _, item := range input.CharacterRequests {
-		requests[item.Name] = item.Media
+
+		if item.CustomMediaName != nil {
+			requests[item.Name] = *item.CustomMediaName
+		}
+
+		if item.ExistingMediaID != nil {
+			requests[item.Name] = item.ExistingMediaID.GetID()
+		}
+
 	}
 
 	artistId := ""
@@ -42,6 +50,18 @@ func (r *MutationResolver) CreatePost(ctx context.Context, input types.CreatePos
 		posterIsArtist = *input.PosterIsArtist
 	}
 
+	var characterIds []string
+
+	for _, char := range input.CharacterIds {
+		characterIds = append(characterIds, char.GetID())
+	}
+
+	var categoryIds []string
+
+	for _, cat := range input.CategoryIds {
+		categoryIds = append(categoryIds, cat.GetID())
+	}
+
 	pst, err := r.App.Commands.CreatePost.
 		Handle(
 			ctx,
@@ -50,8 +70,8 @@ func (r *MutationResolver) CreatePost(ctx context.Context, input types.CreatePos
 			artistUsername,
 			posterIsArtist,
 			input.Content,
-			input.CharacterIds,
-			input.CategoryIds,
+			characterIds,
+			categoryIds,
 			requests,
 			input.MediaRequests,
 		)

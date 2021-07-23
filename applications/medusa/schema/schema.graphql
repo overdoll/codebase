@@ -45,7 +45,7 @@ type Account implements Node {
 
   """
   Emails for account (multiple emails per account)
-  
+
   Only queryable if the currently logged-in account belongs to the requested account
   """
   emails(
@@ -66,7 +66,7 @@ type Account implements Node {
 
   """
   Sessions linked to this account
-  
+
   Only queryable if the currently logged-in account belongs to the requested account
   """
   sessions(
@@ -87,14 +87,14 @@ type Account implements Node {
 
   """
   Multi factor account settings
-  
+
   Only queryable if the currently logged-in account belongs to the requested account
   """
   multiFactorSettings: AccountMultiFactorSettings!
 
   """
   MFA Recovery codes belonging to this account
-  
+
   Only queryable if the currently logged-in account belongs to the requested account
   """
   recoveryCodes: [AccountMultiFactorRecoveryCode!]!
@@ -155,7 +155,7 @@ type Account implements Node {
 
   """
   Post Audit Logs linked to this account
-  
+
   Viewable by either the currently logged-in account or staff+
   """
   moderatorPostAuditLogs(
@@ -176,7 +176,7 @@ type Account implements Node {
 
   """
   Infraction history for this account
-  
+
   Viewable by the currently authenticated account or staff+
   """
   infractions(
@@ -197,7 +197,7 @@ type Account implements Node {
 
   """
   Moderator settings and status for this account
-  
+
   Viewable by the currently authenticated account or staff+
   """
   moderator: Moderator
@@ -480,7 +480,8 @@ type CharacterEdge {
 
 input CharacterRequest {
   name: String!
-  media: String!
+  customMediaName: String
+  existingMediaId: ID
 }
 
 type CharacterRequestType {
@@ -727,7 +728,7 @@ type Mutation {
 
   """
   Update the account username
-  
+
   Will retain the old username
   """
   updateAccountUsernameAndRetainPrevious(input: UpdateAccountUsernameAndRetainPreviousInput!): UpdateAccountUsernameAndRetainPreviousPayload
@@ -737,7 +738,7 @@ type Mutation {
 
   """
   Update the account email status to primary
-  
+
   Cannot update if the email is not confirmed
   """
   updateAccountEmailStatusToPrimary(input: UpdateAccountEmailStatusToPrimaryInput!): UpdateAccountEmailStatusToPrimaryPayload
@@ -754,7 +755,7 @@ type Mutation {
 
   """
   Enroll into TOTP.
-  
+
   Must have called "generateAccountMultiFactorTOTP" first before enrolling, since this will
   generate a valid secret
   """
@@ -762,9 +763,9 @@ type Mutation {
 
   """
   Disable account multi factor
-  
+
   Will delete all multi factor settings (if TOTP is set up, etc...)
-  
+
   Priv. users cannot disable multi factor
   """
   disableAccountMultiFactor: DisableAccountMultiFactorPayload
@@ -774,26 +775,26 @@ type Mutation {
 
   """
   Grant authentication token
-  
+
   Authentication token can be used to login into a specific account, provided the token's value is first redeemed
   with the query
-  
+
   Note: the actual authentication token is opaque (set & read from cookies)
   """
   grantAuthenticationToken(input: GrantAuthenticationTokenInput!): GrantAuthenticationTokenPayload
 
   """
   Revoke authentication token
-  
+
   Creating accounts and completing authentication flows will not be possible once it's revoked
-  
+
   Note: the actual authentication token is opaque (set & read from cookies)
   """
   revokeAuthenticationToken: RevokeAuthenticationTokenPayload
 
   """
   Create an account using the current authentication token
-  
+
   Note: the actual authentication token is opaque (set & read from cookies)
   """
   createAccountWithAuthenticationToken(input: CreateAccountWithAuthenticationTokenInput!): CreateAccountWithAuthenticationTokenPayload
@@ -803,31 +804,31 @@ type Mutation {
 
   """
   Re-issue an authentication token based on the current one
-  
+
   Note: the actual authentication token is opaque (set & read from cookies)
   """
   reissueAuthenticationToken: ReissueAuthenticationTokenPayload
 
   """
   Grant account access using an authentication token and a multi factor option
-  
+
   Set "code" when authenticating with a TOTP code
   Set "recoveryCode" when authenticating with a recovery code
-  
+
   Note: the actual authentication token is opaque (set & read from cookies)
   """
   grantAccountAccessWithAuthenticationTokenAndMultiFactor(input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorInput!): GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload
 
   """
   Will verify the authentication token.
-  
+
   If token does not exist in the cookie, it will only verify
-  
+
   If the token exists in the cookie, it will also attempt to grant access to the account associated
   to this token
-  
+
   If no account exists,
-  
+
   Note: the actual authentication token is opaque (set & read from cookies)
   """
   verifyAuthenticationTokenAndAttemptAccountAccessGrant(input: VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput!): VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload
@@ -838,23 +839,23 @@ type Mutation {
   """
   Moderate a specific pending post
   Pending post must belong to the moderator
-  
+
   If rejecting, must input a rejection reason and additional notes
   """
   moderatePost(input: ModeratePostInput!): ModeratePostPayload
 
   """
   Revert an audit log, in case it was done incorrectly
-  
+
   Will delete an infraction if there was one, but the rest of the audit log will generally stay intact
   """
   revertPostAuditLog(data: RevertPostAuditLogInput!): RevertPostAuditLogPayload
 
   """
   Toggle moderator status
-  
+
   Will remove or add the moderator from the queue
-  
+
   Current status can be queried from moderatorSettings of the account
   """
   toggleModeratorSettingsInQueue: ToggleModeratorSettingsInQueuePayload
@@ -1080,7 +1081,7 @@ type Query {
 
   """
   Get the status of the authentication token - whether or not it is redeemed, account status, etc..
-  
+
   Note: the actual authentication token is opaque (set & read from cookies)
   """
   viewAuthenticationToken: AuthenticationToken
@@ -1168,7 +1169,7 @@ type Query {
 
   """
   Get rejection reasons that can be used for pending posts
-  
+
   Only viewable by moderators+
   """
   postRejectionReasons(
