@@ -142,9 +142,17 @@ func (r PostsIndexElasticSearchRepository) IndexAllMedia(ctx context.Context) er
 
 func (r PostsIndexElasticSearchRepository) DeleteMediaIndex(ctx context.Context) error {
 
-	if _, err := r.client.DeleteIndex(mediaIndexName).Do(ctx); err != nil {
-		// Handle error
+	exists, err := r.client.IndexExists(mediaIndexName).Do(ctx)
+
+	if err != nil {
 		return err
+	}
+
+	if exists {
+		if _, err := r.client.DeleteIndex(mediaIndexName).Do(ctx); err != nil {
+			// Handle error
+			return err
+		}
 	}
 
 	if _, err := r.client.CreateIndex(mediaIndexName).BodyString(mediaIndex).Do(ctx); err != nil {

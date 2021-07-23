@@ -164,9 +164,17 @@ func (r AccountIndexElasticSearchRepository) IndexAllAccounts(ctx context.Contex
 
 func (r AccountIndexElasticSearchRepository) DeleteAccountIndex(ctx context.Context) error {
 
-	if _, err := r.client.DeleteIndex(accountIndexName).Do(ctx); err != nil {
-		// Handle error
+	exists, err := r.client.IndexExists(accountIndexName).Do(ctx)
+
+	if err != nil {
 		return err
+	}
+
+	if exists {
+		if _, err := r.client.DeleteIndex(accountIndexName).Do(ctx); err != nil {
+			// Handle error
+			return err
+		}
 	}
 
 	if _, err := r.client.CreateIndex(accountIndexName).BodyString(accountIndex).Do(ctx); err != nil {

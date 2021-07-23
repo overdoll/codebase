@@ -183,9 +183,17 @@ func (r PostsIndexElasticSearchRepository) IndexAllCategories(ctx context.Contex
 
 func (r PostsIndexElasticSearchRepository) DeleteCategoryIndex(ctx context.Context) error {
 
-	if _, err := r.client.DeleteIndex(categoryIndexName).Do(ctx); err != nil {
-		// Handle error
+	exists, err := r.client.IndexExists(categoryIndexName).Do(ctx)
+
+	if err != nil {
 		return err
+	}
+
+	if exists {
+		if _, err := r.client.DeleteIndex(categoryIndexName).Do(ctx); err != nil {
+			// Handle error
+			return err
+		}
 	}
 
 	if _, err := r.client.CreateIndex(categoryIndexName).BodyString(categoryIndex).Do(ctx); err != nil {

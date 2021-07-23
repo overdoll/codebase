@@ -234,9 +234,17 @@ func (r PostsIndexElasticSearchRepository) IndexAllCharacters(ctx context.Contex
 
 func (r PostsIndexElasticSearchRepository) DeleteCharacterIndex(ctx context.Context) error {
 
-	if _, err := r.client.DeleteIndex(characterIndexName).Do(ctx); err != nil {
-		// Handle error
+	exists, err := r.client.IndexExists(characterIndexName).Do(ctx)
+
+	if err != nil {
 		return err
+	}
+
+	if exists {
+		if _, err := r.client.DeleteIndex(characterIndexName).Do(ctx); err != nil {
+			// Handle error
+			return err
+		}
 	}
 
 	if _, err := r.client.CreateIndex(characterIndexName).BodyString(characterIndex).Do(ctx); err != nil {
