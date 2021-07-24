@@ -111,7 +111,7 @@ const routes: Array<Route> = [
         )
       },
       {
-        path: '/m',
+        path: '/moderation',
         component: JSResource('ModRoot', () =>
           import(
             /* webpackChunkName: "ModRoot" */ './domain/Moderation/Moderation'
@@ -132,7 +132,7 @@ const routes: Array<Route> = [
         ],
         routes: [
           {
-            path: '/m/queue',
+            path: '/moderation/queue',
             component: JSResource('ModQueueRoot', () =>
               import(
                 /* webpackChunkName: "ModQueueRoot" */ './domain/Moderation/routes/Queue/Queue'
@@ -141,7 +141,7 @@ const routes: Array<Route> = [
             )
           },
           {
-            path: '/m/history',
+            path: '/moderation/history',
             component: JSResource('ModHistoryRoot', () =>
               import(
                 /* webpackChunkName: "ModHistoryRoot" */ './domain/Moderation/routes/History/History'
@@ -204,18 +204,6 @@ const routes: Array<Route> = [
           ),
         module.hot
         ),
-        prepare: params => {
-          const ConfirmationQuery = require('@//:artifacts/TokenQuery.graphql')
-          return {
-            confirmationQuery: {
-              query: ConfirmationQuery,
-              variables: { confirmation: params.id },
-              options: {
-                fetchPolicy: 'store-or-network'
-              }
-            }
-          }
-        },
         // When user is logged in, we don't want them to be able to redeem any other tokens
         middleware: [
           ({ environment, history }) => {

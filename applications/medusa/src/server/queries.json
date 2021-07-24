@@ -66,5 +66,6 @@
   "a26d21fe5c6b97dd25a40f206447ec07": "query ArtistsQuery(\n  $username: String\n) {\n  accounts(username: $username) {\n    edges {\n      node {\n        id\n        avatar\n        username\n      }\n    }\n  }\n}\n",
   "367dffd92f0c7f7d05b758b46be11ced": "query CategoriesQuery(\n  $title: String\n) {\n  categories(title: $title) {\n    edges {\n      node {\n        id\n        title\n        thumbnail\n      }\n    }\n  }\n}\n",
   "89bd7423a89efb2a1e9f8fb61e57b15e": "query MediaQuery(\n  $title: String\n) {\n  medias(title: $title) {\n    edges {\n      node {\n        id\n        title\n        thumbnail\n      }\n    }\n  }\n}\n",
-  "181aa9f22c834f287303a08ac7b1209d": "query CharactersQuery(\n  $name: String\n) {\n  characters(name: $name) {\n    edges {\n      node {\n        id\n        name\n        thumbnail\n        media {\n          id\n          title\n          thumbnail\n        }\n      }\n    }\n  }\n}\n"
+  "181aa9f22c834f287303a08ac7b1209d": "query CharactersQuery(\n  $name: String\n) {\n  characters(name: $name) {\n    edges {\n      node {\n        id\n        name\n        thumbnail\n        media {\n          id\n          title\n          thumbnail\n        }\n      }\n    }\n  }\n}\n",
+  "aee193b995a5eb26ec8bbb8e1e0247eb": "mutation UsernameMutation(\n  $input: UpdateAccountUsernameAndRetainPreviousInput!\n) {\n  updateAccountUsernameAndRetainPrevious(input: $input) {\n    accountUsername {\n      username\n      account {\n        id\n        username\n      }\n      id\n    }\n  }\n}\n"
 }

@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash deb3147ea0adf0a240175c6452890991
+ * @relayHash aee193b995a5eb26ec8bbb8e1e0247eb
  */
 
 /* eslint-disable */
@@ -17,7 +17,11 @@ export type UsernameMutationVariables = {|
 export type UsernameMutationResponse = {|
   +updateAccountUsernameAndRetainPrevious: ?{|
     +accountUsername: ?{|
-      +username: string
+      +username: string,
+      +account: {|
+        +id: string,
+        +username: string,
+      |},
     |}
   |}
 |};
@@ -34,6 +38,10 @@ mutation UsernameMutation(
   updateAccountUsernameAndRetainPrevious(input: $input) {
     accountUsername {
       username
+      account {
+        id
+        username
+      }
       id
     }
   }
@@ -61,6 +69,26 @@ v2 = {
   "kind": "ScalarField",
   "name": "username",
   "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "Account",
+  "kind": "LinkedField",
+  "name": "account",
+  "plural": false,
+  "selections": [
+    (v3/*: any*/),
+    (v2/*: any*/)
+  ],
+  "storageKey": null
 };
 return {
   "fragment": {
@@ -85,7 +113,8 @@ return {
             "name": "accountUsername",
             "plural": false,
             "selections": [
-              (v2/*: any*/)
+              (v2/*: any*/),
+              (v4/*: any*/)
             ],
             "storageKey": null
           }
@@ -119,13 +148,8 @@ return {
             "plural": false,
             "selections": [
               (v2/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "id",
-                "storageKey": null
-              }
+              (v4/*: any*/),
+              (v3/*: any*/)
             ],
             "storageKey": null
           }
@@ -135,7 +159,7 @@ return {
     ]
   },
   "params": {
-    "id": "deb3147ea0adf0a240175c6452890991",
+    "id": "aee193b995a5eb26ec8bbb8e1e0247eb",
     "metadata": {},
     "name": "UsernameMutation",
     "operationKind": "mutation",
@@ -144,5 +168,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '99f88bf5481c287fbcd8888293ed00c2';
+(node: any).hash = 'ddcabcc184d10df1fb8b99a8fef79610';
 module.exports = node;

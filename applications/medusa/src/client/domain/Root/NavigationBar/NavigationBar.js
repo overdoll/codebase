@@ -28,6 +28,7 @@ import InterfaceArrowsButtonRight
 import NavItem from './components/navitem/NavItem'
 import NavMenu from './components/navmenu/NavMenu'
 import Items from './components/sideitems/Items'
+import { useRoutingContext } from '@//:modules/routing/RoutingContext'
 
 type Props = {
   account: {
@@ -54,6 +55,10 @@ export default function NavigationBar ({ account, children, refreshUserQuery }: 
     ability,
     environment
   }), [ability])
+
+  const cont = useRoutingContext()
+
+  console.log(cont.get())
 
   return (
     <Router history={history}>

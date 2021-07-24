@@ -35,6 +35,10 @@ const UsernameMutationGQL = graphql`
     updateAccountUsernameAndRetainPrevious(input: $input) {
       accountUsername {
         username
+        account {
+          id
+          username
+        }
       }
     }
   }

@@ -16,34 +16,7 @@ import { Helmet } from 'react-helmet-async'
 import SignBadgeCircle
   from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
 
-type Props = {
-  prepared: {
-    tokenQuery: PreloadedQueryInner<TokenQuery>,
-  },
-};
-
-const TokenQueryGQL = graphql`
-  query TokenQuery($token: String!) {
-    redeemAuthenticationToken(token: $token) {
-      redeemed
-      email
-      session
-      sameSession
-      accountStatus {
-        registered
-        authenticated
-        multiFactor
-      }
-    }
-  }
-`
-
 export default function Confirmation (props: Props): Node {
-  const data = usePreloadedQuery<TokenQuery>(
-    TokenQueryGQL,
-    props.prepared.tokenQuery
-  )
-
   const [t] = useTranslation('token')
   const history = useHistory()
 
