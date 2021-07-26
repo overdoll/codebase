@@ -2,18 +2,20 @@ load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
 load("@io_bazel_rules_docker//go:image.bzl", "go_image")
 load("@io_bazel_rules_docker//container:container.bzl", "container_push")
 
-DEPENDENCIES = ["//applications/carrier:config.toml"]
+DEPENDENCIES = ["//applications/parley/database:files"] + ["//applications/parley:config.toml"]
 
 go_library(
     name = "internal_lib",
     srcs = ["main.go"],
-    importpath = "overdoll/applications/carrier/internal",
+    data = DEPENDENCIES,
+    importpath = "overdoll/applications/parley/internal",
     visibility = ["//visibility:private"],
     deps = [
-        "//applications/carrier/internal/ports",
-        "//applications/carrier/internal/service",
-        "//applications/carrier/proto:v1_go_proto",
+        "//applications/parley/internal/ports",
+        "//applications/parley/internal/service",
+        "//applications/parley/proto:v1_go_proto",
         "//libraries/bootstrap",
+        "//libraries/commands",
         "//libraries/config",
         "@com_github_spf13_cobra//:cobra",
         "@org_golang_google_grpc//:go_default_library",
@@ -23,15 +25,15 @@ go_library(
 go_binary(
     name = "internal",
     embed = [":internal_lib"],
-    visibility = ["//applications/carrier:__subpackages__"],
+    visibility = ["//visibility:public"],
 )
 
 go_image(
     name = "local-image",
     base = "@go_base_image//image",
-    data = ["//applications/carrier:.env"] + DEPENDENCIES,
+    data = ["//applications/parley:.env"] + DEPENDENCIES,
     embed = [":internal_lib"],
-    importpath = "overdoll/applications/carrier",
+    importpath = "overdoll/applications/parley",
 )
 
 go_image(
@@ -39,7 +41,7 @@ go_image(
     base = "@go_base_image//image",
     data = DEPENDENCIES,
     embed = [":internal_lib"],
-    importpath = "overdoll/applications/carrier",
+    importpath = "overdoll/applications/parley",
 )
 
 container_push(
@@ -47,7 +49,7 @@ container_push(
     format = "Docker",
     image = ":image",
     registry = "$(CONTAINER_REGISTRY)",
-    repository = "carrier/dev",
+    repository = "parley/dev",
     tag = "$(CONTAINER_TAG)",
 )
 
@@ -56,7 +58,7 @@ container_push(
     format = "Docker",
     image = ":image",
     registry = "$(CONTAINER_REGISTRY)",
-    repository = "carrier",
+    repository = "parley",
     skip_unchanged_digest = True,
     tag = "$(CONTAINER_TAG)",
 )
