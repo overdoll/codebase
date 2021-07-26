@@ -7,16 +7,21 @@ import (
 )
 
 type ReissueAuthenticationTokenHandler struct {
-	cr token.Repository
+	cr      token.Repository
+	carrier CarrierService
 }
 
-func NewReissueAuthenticationTokenHandler(cr token.Repository) ReissueAuthenticationTokenHandler {
-	return ReissueAuthenticationTokenHandler{cr: cr}
+func NewReissueAuthenticationTokenHandler(cr token.Repository, carrier CarrierService) ReissueAuthenticationTokenHandler {
+	return ReissueAuthenticationTokenHandler{cr: cr, carrier: carrier}
 }
 
 func (h ReissueAuthenticationTokenHandler) Handle(ctx context.Context, tokenId string) error {
 
-	// send email for token
+	tk, err := h.cr.GetAuthenticationTokenById(ctx, tokenId)
 
-	return nil
+	if err != nil {
+		return err
+	}
+
+	return h.carrier.NewLoginToken(ctx, tk.Email(), tk.Token())
 }

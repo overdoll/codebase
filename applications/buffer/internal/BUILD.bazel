@@ -1,0 +1,60 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+load("@io_bazel_rules_docker//go:image.bzl", "go_image")
+load("@io_bazel_rules_docker//container:container.bzl", "container_push")
+
+web_sources = ["//applications/buffer:config.toml"]
+
+go_library(
+    name = "internal_lib",
+    srcs = ["main.go"],
+    data = web_sources,
+    importpath = "overdoll/applications/buffer/internal",
+    visibility = ["//visibility:private"],
+    deps = [
+        "//applications/buffer/internal/ports",
+        "//applications/buffer/internal/service",
+        "//libraries/bootstrap",
+        "//libraries/config",
+        "@com_github_spf13_cobra//:cobra",
+    ],
+)
+
+go_binary(
+    name = "internal",
+    embed = [":internal_lib"],
+    visibility = ["//applications/buffer:__subpackages__"],
+)
+
+go_image(
+    name = "local-image",
+    base = "@go_base_image//image",
+    data = ["//applications/buffer:.env"] + web_sources,
+    embed = ["//applications/carrier/internal:internal"],
+    importpath = "overdoll/applications/buffer",
+)
+
+go_image(
+    name = "image",
+    base = "@go_base_image//image",
+    embed = ["//applications/carrier/internal:internal"],
+    importpath = "overdoll/applications/buffer",
+)
+
+container_push(
+    name = "publish-testing",
+    format = "Docker",
+    image = ":image",
+    registry = "$(CONTAINER_REGISTRY)",
+    repository = "buffer/dev",
+    tag = "$(CONTAINER_TAG)",
+)
+
+container_push(
+    name = "publish",
+    format = "Docker",
+    image = ":image",
+    registry = "$(CONTAINER_REGISTRY)",
+    repository = "buffer",
+    skip_unchanged_digest = True,
+    tag = "$(CONTAINER_TAG)",
+)

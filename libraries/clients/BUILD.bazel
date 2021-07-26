@@ -3,6 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "clients",
     srcs = [
+        "carrier.go",
         "eva.go",
         "http.go",
         "parley.go",
@@ -12,6 +13,7 @@ go_library(
     importpath = "overdoll/libraries/clients",
     visibility = ["//visibility:public"],
     deps = [
+        "//applications/carrier/proto:v1_go_proto",
         "//applications/eva/proto:v1_go_proto",
         "//applications/parley/proto:v1_go_proto",
         "//applications/sting/proto:v1_go_proto",

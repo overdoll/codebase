@@ -14,11 +14,12 @@ var (
 )
 
 type GrantAuthenticationTokenHandler struct {
-	cr token.Repository
+	cr      token.Repository
+	carrier CarrierService
 }
 
-func NewGrantAuthenticationTokenHandler(cr token.Repository) GrantAuthenticationTokenHandler {
-	return GrantAuthenticationTokenHandler{cr: cr}
+func NewGrantAuthenticationTokenHandler(cr token.Repository, carrier CarrierService) GrantAuthenticationTokenHandler {
+	return GrantAuthenticationTokenHandler{cr: cr, carrier: carrier}
 }
 
 func (h GrantAuthenticationTokenHandler) Handle(ctx context.Context, email, session string) (*token.AuthenticationToken, error) {
@@ -35,7 +36,9 @@ func (h GrantAuthenticationTokenHandler) Handle(ctx context.Context, email, sess
 		return nil, errFailedGrantAuthenticationToken
 	}
 
-	// TODO: send an email here
+	if err := h.carrier.NewLoginToken(ctx, email, instance.Token()); err != nil {
+		return nil, err
+	}
 
 	return instance, nil
 }

@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "adapters",
+    srcs = [
+        "eva_grpc.go",
+        "mailing_sendgrid_repository.go",
+    ],
+    importpath = "overdoll/applications/carrier/internal/adapters",
+    visibility = ["//applications/carrier:__subpackages__"],
+    deps = [
+        "//applications/carrier/internal/domain/mailing",
+        "//applications/eva/proto:v1_go_proto",
+        "//libraries/account",
+        "@com_github_sendgrid_sendgrid_go//:sendgrid-go",
+        "@com_github_sendgrid_sendgrid_go//helpers/mail",
+    ],
+)

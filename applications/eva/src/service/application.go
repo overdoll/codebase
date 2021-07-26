@@ -3,22 +3,27 @@ package service
 import (
 	"context"
 	"log"
+	"os"
 
 	"overdoll/applications/eva/src/adapters"
 	"overdoll/applications/eva/src/app"
 	"overdoll/applications/eva/src/app/command"
 	"overdoll/applications/eva/src/app/query"
 	"overdoll/libraries/bootstrap"
+	"overdoll/libraries/clients"
 )
 
 func NewApplication(ctx context.Context) (app.Application, func()) {
-	return createApplication(ctx),
-		func() {
 
+	carrierClient, cleanup := clients.NewCarrierClient(ctx, os.Getenv("CARRIER_SERVICE"))
+
+	return createApplication(ctx, adapters.NewCarrierGrpc(carrierClient)),
+		func() {
+			cleanup()
 		}
 }
 
-func createApplication(ctx context.Context) app.Application {
+func createApplication(ctx context.Context, carrier command.CarrierService) app.Application {
 
 	_, err := bootstrap.NewBootstrap(ctx)
 
@@ -63,11 +68,11 @@ func createApplication(ctx context.Context) app.Application {
 			VerifyAuthenticationToken:                            command.NewVerifyAuthenticationTokenHandler(tokenRepo, accountRepo),
 			ConsumeAuthenticationToken:                           command.NewConsumeAuthenticationTokenHandler(tokenRepo, accountRepo, mfaRepo),
 			CreateAccountWithAuthenticationToken:                 command.NewCreateAccountWithAuthenticationTokenHandler(tokenRepo, accountRepo),
-			GrantAuthenticationToken:                             command.NewGrantAuthenticationTokenHandler(tokenRepo),
+			GrantAuthenticationToken:                             command.NewGrantAuthenticationTokenHandler(tokenRepo, carrier),
 			LockAccount:                                          command.NewLockUserHandler(accountRepo),
 			CreateAccount:                                        command.NewCreateUserHandler(accountRepo),
 			UnlockAccount:                                        command.NewUnlockUserHandler(accountRepo),
-			AddAccountEmail:                                      command.NewAddAccountEmailHandler(accountRepo),
+			AddAccountEmail:                                      command.NewAddAccountEmailHandler(accountRepo, carrier),
 			ConfirmAccountEmail:                                  command.NewConfirmAccountEmailHandler(accountRepo),
 			UpdateAccountUsernameAndRetainPrevious:               command.NewUpdateAccountUsernameAndRetainPreviousHandler(accountRepo),
 			RevokeAccountSession:                                 command.NewRevokeAccountSessionHandler(sessionRepo),
@@ -79,7 +84,7 @@ func createApplication(ctx context.Context) app.Application {
 			GrantAccountAccessWithAuthTokenAndRecoveryCodeOrTotp: command.NewGrantAccountAccessWithAuthTokenAndRecoveryCodeOrTotpHandler(tokenRepo, accountRepo, mfaRepo),
 			DeleteAccountEmail:                                   command.NewDeleteAccountEmailHandler(accountRepo),
 			RevokeAuthenticationToken:                            command.NewRevokeAuthenticationTokenHandler(tokenRepo),
-			ReissueAuthenticationToken:                           command.NewReissueAuthenticationTokenHandler(tokenRepo),
+			ReissueAuthenticationToken:                           command.NewReissueAuthenticationTokenHandler(tokenRepo, carrier),
 			IndexAllAccounts:                                     command.NewIndexAllAccountsHandler(accountRepo, accountIndexRepo),
 		},
 		Queries: app.Queries{

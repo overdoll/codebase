@@ -26,7 +26,7 @@ func marshalAccountToProto(usr *account.Account) *eva.Account {
 		Id:       usr.ID(),
 		Roles:    usr.RolesAsString(),
 		Verified: usr.Verified(),
-		Avatar:   usr.Avatar(),
+		Email:    usr.Email(),
 		Locked:   usr.IsLocked(),
 	}
 }

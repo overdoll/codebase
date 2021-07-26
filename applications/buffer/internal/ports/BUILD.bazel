@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "ports",
+    srcs = ["http.go"],
+    importpath = "overdoll/applications/buffer/internal/ports",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//applications/buffer/internal/app",
+        "@com_github_bmizerany_pat//:pat",
+        "@com_github_tus_tusd//pkg/handler",
+    ],
+)

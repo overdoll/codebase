@@ -7,17 +7,17 @@ import (
 type Account struct {
 	id       string
 	username string
-	avatar   string
 	roles    []string
 	verified bool
 	locked   bool
+	email    string
 }
 
 func UnmarshalFromProto(proto *eva.Account) *Account {
 	return NewAccount(
 		proto.Id,
 		proto.Username,
-		proto.Avatar,
+		proto.Email,
 		proto.Roles,
 		proto.Verified,
 		proto.Locked,
@@ -31,11 +31,11 @@ func NewUserOnlyIdAndUsername(id, username string) *Account {
 	}
 }
 
-func NewAccount(id, username, avatar string, roles []string, verified, locked bool) *Account {
+func NewAccount(id, username, email string, roles []string, verified, locked bool) *Account {
 	return &Account{
 		id:       id,
 		username: username,
-		avatar:   avatar,
+		email:    email,
 		roles:    roles,
 		verified: verified,
 		locked:   locked,
@@ -50,8 +50,8 @@ func (user *Account) Username() string {
 	return user.username
 }
 
-func (user *Account) Avatar() string {
-	return user.avatar
+func (user *Account) Email() string {
+	return user.email
 }
 
 func (user *Account) IsVerified() bool {

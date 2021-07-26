@@ -18,10 +18,11 @@ const (
 
 type AddAccountEmailHandler struct {
 	ar account.Repository
+	carrier CarrierService
 }
 
-func NewAddAccountEmailHandler(ar account.Repository) AddAccountEmailHandler {
-	return AddAccountEmailHandler{ar: ar}
+func NewAddAccountEmailHandler(ar account.Repository, carrier CarrierService) AddAccountEmailHandler {
+	return AddAccountEmailHandler{ar: ar, carrier: carrier}
 }
 
 func (h AddAccountEmailHandler) Handle(ctx context.Context, userId, email string) (*account.Email, string, error) {
