@@ -1,0 +1,55 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "adapters",
+    srcs = [
+        "account_cassandra_redis_repository.go",
+        "account_email_cassandra_redis_repository.go",
+        "account_index_elasticsearch_repository.go",
+        "account_username_cassandra_repository.go",
+        "carrier_grpc.go",
+        "multi_factor_cassandra_repository.go",
+        "session_redis_repository.go",
+        "token_redis_repository.go",
+    ],
+    importpath = "overdoll/applications/eva/internal/adapters",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//applications/carrier/proto:v1_go_proto",
+        "//applications/eva/internal/domain/account",
+        "//applications/eva/internal/domain/multi_factor",
+        "//applications/eva/internal/domain/session",
+        "//applications/eva/internal/domain/token",
+        "//libraries/crypt",
+        "//libraries/paging",
+        "//libraries/passport",
+        "//libraries/scan",
+        "@com_github_go_redis_redis_v8//:redis",
+        "@com_github_gocql_gocql//:gocql",
+        "@com_github_olivere_elastic_v7//:elastic",
+        "@com_github_scylladb_gocqlx_v2//:gocqlx",
+        "@com_github_scylladb_gocqlx_v2//qb",
+        "@com_github_scylladb_gocqlx_v2//table",
+        "@com_github_segmentio_ksuid//:ksuid",
+    ],
+)
+
+go_test(
+    name = "adapters_test",
+    srcs = [
+        "account_cassandra_redis_repository_test.go",
+        "token_redis_repository_test.go",
+    ],
+    data = ["//applications/eva:config.toml"],
+    deps = [
+        ":adapters",
+        "//applications/eva/internal/domain/account",
+        "//applications/eva/internal/domain/token",
+        "//libraries/bootstrap",
+        "//libraries/config",
+        "//libraries/uuid",
+        "@com_github_bxcodec_faker_v3//:faker",
+        "@com_github_stretchr_testify//assert",
+        "@com_github_stretchr_testify//require",
+    ],
+)

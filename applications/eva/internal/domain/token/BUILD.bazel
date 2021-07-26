@@ -1,0 +1,11 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "token",
+    srcs = [
+        "repository.go",
+        "token.go",
+    ],
+    importpath = "overdoll/applications/eva/internal/domain/token",
+    visibility = ["//visibility:public"],
+)

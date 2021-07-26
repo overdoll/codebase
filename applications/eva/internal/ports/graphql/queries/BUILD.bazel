@@ -1,0 +1,17 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "queries",
+    srcs = ["resolvers.go"],
+    importpath = "overdoll/applications/eva/internal/ports/graphql/queries",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//applications/eva/internal/app",
+        "//applications/eva/internal/domain/token",
+        "//applications/eva/internal/ports/graphql/types",
+        "//libraries/cookies",
+        "//libraries/paging",
+        "//libraries/passport",
+        "@com_github_vektah_gqlparser_v2//gqlerror",
+    ],
+)

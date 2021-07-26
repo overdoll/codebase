@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "queries",
+    srcs = ["resolvers.go"],
+    importpath = "overdoll/applications/sting/internal/ports/graphql/queries",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//applications/sting/internal/app",
+        "//applications/sting/internal/ports/graphql/types",
+        "//libraries/graphql/relay",
+        "//libraries/paging",
+        "@com_github_vektah_gqlparser_v2//gqlerror",
+    ],
+)
