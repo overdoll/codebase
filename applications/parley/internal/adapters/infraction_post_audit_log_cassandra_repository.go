@@ -174,7 +174,7 @@ func (r InfractionCassandraRepository) CreatePostAuditLog(ctx context.Context, a
 	)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return err
+		return fmt.Errorf("failed to create audit log: %v", err)
 	}
 
 	// if denied with infraction, add to infraction history for this user
@@ -200,7 +200,7 @@ func (r InfractionCassandraRepository) GetPostAuditLog(ctx context.Context, logI
 	var postAuditLog postAuditLog
 
 	if err := postAuditLogQuery.Get(&postAuditLog); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to get audit log for post: %v", err)
 	}
 
 	postAuditLogByModeratorQuery := r.session.
@@ -211,7 +211,7 @@ func (r InfractionCassandraRepository) GetPostAuditLog(ctx context.Context, logI
 	var pendingPostAuditLogByModerator postAuditLogByModerator
 
 	if err := postAuditLogByModeratorQuery.Get(&pendingPostAuditLogByModerator); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to get audit log by moderator: %v", err)
 	}
 
 	// grab the final audit log, which is stored in the moderator spot
@@ -280,7 +280,7 @@ func (r InfractionCassandraRepository) SearchPostAuditLogs(ctx context.Context, 
 		Query(r.session).
 		BindStruct(info).
 		Select(&results); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to search audit logs: %v", err)
 	}
 
 	var pendingPostAuditLogs []*infraction.PostAuditLog
@@ -345,7 +345,7 @@ func (r InfractionCassandraRepository) UpdatePostAuditLog(ctx context.Context, i
 		BindStruct(marhs)
 
 	if err := updateAuditLog.ExecRelease(); err != nil {
-		return nil, fmt.Errorf("update() failed: '%s", err)
+		return nil, fmt.Errorf("failed to update post audit log: %v", err)
 	}
 
 	return auditLog, nil

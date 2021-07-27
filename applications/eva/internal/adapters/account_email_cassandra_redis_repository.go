@@ -14,7 +14,6 @@ import (
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/libraries/crypt"
 	"overdoll/libraries/paging"
-	"overdoll/libraries/passport"
 )
 
 var accountEmailTable = table.New(table.Metadata{
@@ -57,6 +56,27 @@ const (
 	confirmEmailPrefix = "emailConfirm:"
 )
 
+func (r AccountRepository) deleteAccountEmail(ctx context.Context, instance *account.Account, email string) error {
+
+	batch := r.session.NewBatch(gocql.LoggedBatch)
+
+	// delete username
+	stmt, _ := emailByAccountTable.Delete()
+
+	batch.Query(stmt, email, instance.ID())
+
+	// delete from other table
+	stmt, _ = accountEmailTable.Delete()
+
+	batch.Query(stmt, strings.ToLower(email))
+
+	if err := r.session.ExecuteBatch(batch); err != nil {
+		return fmt.Errorf("failed to delete account email: %v", err)
+	}
+
+	return nil
+}
+
 // AddAccountEmail - add an email to the account
 func (r AccountRepository) AddAccountEmail(ctx context.Context, acc *account.Account, confirm *account.EmailConfirmation) (*account.Email, error) {
 
@@ -78,22 +98,23 @@ func (r AccountRepository) AddAccountEmail(ctx context.Context, acc *account.Acc
 	val, err := json.Marshal(authCookie)
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to add account email - json marshal: %v", err)
 	}
 
 	valReal, err := crypt.Encrypt(string(val))
+
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to add account email - encryption: %v", err)
 	}
 
 	ok, err := r.client.SetNX(ctx, confirmEmailPrefix+confirm.ID(), valReal, confirm.Expires()).Result()
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to add account email - redis: %v", err)
 	}
 
 	if !ok {
-		return nil, errors.New("duplicate key")
+		return nil, fmt.Errorf("failed to add account email - duplicate key: %s", confirmEmailPrefix+confirm.ID())
 	}
 
 	// create a unique email
@@ -111,7 +132,9 @@ func (r AccountRepository) AddAccountEmail(ctx context.Context, acc *account.Acc
 		})
 
 	if err := insertEmailByAccount.ExecRelease(); err != nil {
-		return nil, r.deleteAccountEmail(ctx, acc, confirm.Email())
+		_ = r.deleteAccountEmail(ctx, acc, confirm.Email())
+
+		return nil, fmt.Errorf("failed to add account email - cassandra: %v", err)
 	}
 
 	return account.UnmarshalEmailFromDatabase(confirm.Email(), acc.ID(), 0), nil
@@ -165,18 +188,19 @@ func (r AccountRepository) ConfirmAccountEmail(ctx context.Context, confirmId st
 			return nil, account.ErrEmailCodeInvalid
 		}
 
-		return nil, fmt.Errorf("get failed: '%s", err)
+		return nil, fmt.Errorf("failed to confirm email - redis: %v", err)
 	}
 
 	val, err = crypt.Decrypt(val)
+
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to confirm email - decryption: %v", err)
 	}
 
 	var confirmItem emailConfirmation
 
 	if err := json.Unmarshal([]byte(val), &confirmItem); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to confirm email - unmarshal: %v", err)
 	}
 
 	usr, err := r.GetAccountByEmail(ctx, confirmItem.Email)
@@ -187,7 +211,7 @@ func (r AccountRepository) ConfirmAccountEmail(ctx context.Context, confirmId st
 
 	// user must be logged in to confirm the email
 	if usr.ID() != acc.ID() {
-		return nil, passport.ErrNotAuthenticated
+		return nil, fmt.Errorf("failed to confirm email - invalid account")
 	}
 
 	updateAccountEmail := r.session.
@@ -200,14 +224,14 @@ func (r AccountRepository) ConfirmAccountEmail(ctx context.Context, confirmId st
 		})
 
 	if err := updateAccountEmail.ExecRelease(); err != nil {
-		return nil, fmt.Errorf("update() failed: '%s", err)
+		return nil, fmt.Errorf("failed to confirm email - account email update: %v", err)
 	}
 
 	// delete confirmation (it has been used up)
 	_, err = r.client.Del(ctx, confirmEmailPrefix+confirmId).Result()
 
 	if err != nil {
-		return nil, fmt.Errorf("get failed: '%s", err)
+		return nil, fmt.Errorf("failed to confirm email - delete redis key: %v", err)
 	}
 
 	em, err := r.GetAccountEmail(ctx, acc.ID(), confirmItem.Email)
@@ -239,7 +263,7 @@ func (r AccountRepository) GetAccountEmail(ctx context.Context, accountId, email
 			return nil, account.ErrAccountNotFound
 		}
 
-		return nil, fmt.Errorf("select() failed: '%s", err)
+		return nil, fmt.Errorf("failed to get email by account: %v", err)
 	}
 
 	return account.UnmarshalEmailFromDatabase(accountEmail.Email, accountEmail.AccountId, accountEmail.Status), nil
@@ -270,7 +294,7 @@ func (r AccountRepository) GetAccountEmails(ctx context.Context, cursor *paging.
 			return nil, account.ErrAccountNotFound
 		}
 
-		return nil, fmt.Errorf("select() failed: '%s", err)
+		return nil, fmt.Errorf("failed to get emails by account: %v", err)
 	}
 
 	var emails []*account.Email
@@ -326,7 +350,7 @@ func (r AccountRepository) DeleteAccountEmail(ctx context.Context, accountId, em
 	batch.Query(stmt, email)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("batch() failed: %s", err)
+		return fmt.Errorf("failed to delete account email: %v", err)
 	}
 
 	return nil
@@ -389,7 +413,7 @@ func (r AccountRepository) UpdateAccountMakeEmailPrimary(ctx context.Context, ac
 	batch.Query(stmt, newEmail.Email(), accountId)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return nil, nil, fmt.Errorf("batch() failed: %s", err)
+		return nil, nil, fmt.Errorf("failed to make email primary: %v", err)
 	}
 
 	return acc, newEmail, nil

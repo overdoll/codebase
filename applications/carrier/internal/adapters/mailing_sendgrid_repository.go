@@ -29,7 +29,7 @@ func (r MailingSendgridRepository) SendEmail(ctx context.Context, recipient *mai
 	_, err := r.client.Send(message)
 
 	if err != nil {
-		return fmt.Errorf("could not send sendgrid email: %s", err)
+		return fmt.Errorf("could not send sendgrid email: %v", err)
 	}
 
 	return nil

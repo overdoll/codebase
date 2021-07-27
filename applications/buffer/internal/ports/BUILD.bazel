@@ -7,7 +7,6 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//applications/buffer/internal/app",
-        "@com_github_bmizerany_pat//:pat",
         "@com_github_tus_tusd//pkg/handler",
     ],
 )

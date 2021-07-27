@@ -15,6 +15,6 @@ go_library(
         "//applications/parley/internal/domain/infraction",
         "//applications/parley/internal/domain/moderator",
         "//libraries/account",
-        "@org_uber_go_zap//:zap",
+        "@com_github_pkg_errors//:errors",
     ],
 )

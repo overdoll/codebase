@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"strconv"
 
 	"github.com/olivere/elastic/v7"
@@ -79,7 +80,7 @@ func (r PostsIndexElasticSearchRepository) IndexCategories(ctx context.Context, 
 			Do(ctx)
 
 		if err != nil {
-			return err
+			return fmt.Errorf("failed to index categories: %v", err)
 		}
 	}
 
@@ -106,7 +107,7 @@ func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context,
 	response, err := builder.Do(ctx)
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to search categories: %v", err)
 	}
 
 	var cats []*post.Category
@@ -118,7 +119,7 @@ func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context,
 		err := json.Unmarshal(hit.Source, &pst)
 
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("failed to unmarshal document: %v", err)
 		}
 
 		newCategory := post.UnmarshalCategoryFromDatabase(pst.Id, pst.Title, pst.Thumbnail)
@@ -167,7 +168,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllCategories(ctx context.Contex
 				Do(ctx)
 
 			if err != nil {
-				return err
+				return fmt.Errorf("failed to index categories: %v", err)
 			}
 		}
 

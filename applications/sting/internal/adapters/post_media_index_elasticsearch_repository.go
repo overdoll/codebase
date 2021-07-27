@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"strconv"
 
 	"github.com/olivere/elastic/v7"
@@ -65,7 +66,7 @@ func (r PostsIndexElasticSearchRepository) SearchMedias(ctx context.Context, cur
 	response, err := builder.Pretty(true).Do(ctx)
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed search medias: %v", err)
 	}
 
 	var meds []*post.Media
@@ -77,7 +78,7 @@ func (r PostsIndexElasticSearchRepository) SearchMedias(ctx context.Context, cur
 		err := json.Unmarshal(hit.Source, &md)
 
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("failed search medias - unmarshal: %v", err)
 		}
 
 		newMedia := post.UnmarshalMediaFromDatabase(md.Id, md.Title, md.Thumbnail)

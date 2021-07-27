@@ -62,7 +62,7 @@ func (r MultiFactorCassandraRepository) CreateAccountRecoveryCodes(ctx context.C
 		})
 
 	if err := deleteOldCodes.ExecRelease(); err != nil {
-		return fmt.Errorf("delete() failed: %s", err)
+		return fmt.Errorf("failed to delete recovery codes: %v", err)
 	}
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
@@ -74,14 +74,14 @@ func (r MultiFactorCassandraRepository) CreateAccountRecoveryCodes(ctx context.C
 		encrypt, err := crypt.Encrypt(code.Code())
 
 		if err != nil {
-			return err
+			return fmt.Errorf("failed to encrypt recovery code: %v", err)
 		}
 
 		batch.Query(stmt, accountId, encrypt)
 	}
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("batch() failed: %s", err)
+		return fmt.Errorf("failed to create new recovery code set: %v", err)
 	}
 
 	return nil
@@ -99,7 +99,7 @@ func (r MultiFactorCassandraRepository) GetAccountRecoveryCodes(ctx context.Cont
 		})
 
 	if err := getAccountMultiFactorRecoveryCodes.Select(&recoveryCodes); err != nil {
-		return nil, fmt.Errorf("select() failed: '%s", err)
+		return nil, fmt.Errorf("failed to get recovery codes for account: %v", err)
 	}
 
 	var codes []*multi_factor.RecoveryCode
@@ -108,7 +108,7 @@ func (r MultiFactorCassandraRepository) GetAccountRecoveryCodes(ctx context.Cont
 		decryptedCode, err := crypt.Decrypt(cd.Code)
 
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("failed to decrypt recovery codes for account: %v", err)
 		}
 
 		codes = append(codes, multi_factor.UnmarshalRecoveryCodeFromDatabase(decryptedCode))
@@ -123,7 +123,7 @@ func (r MultiFactorCassandraRepository) VerifyAccountRecoveryCode(ctx context.Co
 	encryptedCode, err := crypt.Encrypt(recoveryCode.Code())
 
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to encrypt recovery code: %v", err)
 	}
 
 	deleteAccountMultiFactorCodes := r.session.
@@ -139,7 +139,7 @@ func (r MultiFactorCassandraRepository) VerifyAccountRecoveryCode(ctx context.Co
 			return multi_factor.ErrRecoveryCodeInvalid
 		}
 
-		return fmt.Errorf("delete() failed: '%s", err)
+		return fmt.Errorf("failed to verify recovery code: %v", err)
 	}
 
 	return nil
@@ -162,12 +162,13 @@ func (r MultiFactorCassandraRepository) GetAccountMultiFactorTOTP(ctx context.Co
 			return nil, multi_factor.ErrTOTPNotConfigured
 		}
 
-		return nil, fmt.Errorf("select() failed: '%s", err)
+		return nil, fmt.Errorf("failed to get MFA TOTP: %v", err)
 	}
 
 	decryptedOTP, err := crypt.Decrypt(multiTOTP.Secret)
+
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to decrypt TOTP secret: %v", err)
 	}
 
 	return multi_factor.UnmarshalTOTPFromDatabase(decryptedOTP), nil
@@ -179,7 +180,7 @@ func (r MultiFactorCassandraRepository) CreateAccountMultiFactorTOTP(ctx context
 	encryptedOTP, err := crypt.Encrypt(totp.Secret())
 
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to encrypt MFA TOTP: %v", err)
 	}
 
 	createMultiFactorTOTP := r.session.
@@ -190,7 +191,7 @@ func (r MultiFactorCassandraRepository) CreateAccountMultiFactorTOTP(ctx context
 		})
 
 	if err := createMultiFactorTOTP.ExecRelease(); err != nil {
-		return fmt.Errorf("insert() failed: '%s", err)
+		return fmt.Errorf("failed to create MFA TOTP: %v", err)
 	}
 
 	return nil
@@ -205,7 +206,7 @@ func (r MultiFactorCassandraRepository) DeleteAccountMultiFactorTOTP(ctx context
 		})
 
 	if err := deleteMultiFactorTOTP.ExecRelease(); err != nil {
-		return fmt.Errorf("delete() failed: '%s", err)
+		return fmt.Errorf("failed to delete MFA TOTP: %v", err)
 	}
 
 	return nil

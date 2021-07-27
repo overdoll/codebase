@@ -29,6 +29,7 @@ var (
 	ErrNotComplete      = errors.New("post is incomplete")
 	ErrNotFound         = errors.New("post not found")
 	ErrAlreadyModerated = errors.New("already moderated")
+	ErrArtistNotFound = errors.New("artist not found")
 )
 
 // Each request type contains space for an "ID" - we pre-generate IDs and pass them in between events to ensure idempotency

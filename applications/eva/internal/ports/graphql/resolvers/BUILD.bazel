@@ -11,6 +11,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//applications/eva/internal/app",
+        "//applications/eva/internal/app/query",
         "//applications/eva/internal/ports/graphql/types",
         "//libraries/helpers",
         "//libraries/paging",

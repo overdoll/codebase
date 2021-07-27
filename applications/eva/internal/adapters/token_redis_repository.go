@@ -40,19 +40,19 @@ func (r AuthenticationTokenRepository) GetAuthenticationTokenById(ctx context.Co
 			return nil, token.ErrTokenNotFound
 		}
 
-		return nil, fmt.Errorf("get failed: '%s", err)
+		return nil, fmt.Errorf("failed to get authentication token id: %v", err)
 	}
 
 	val, err = crypt.Decrypt(val)
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to decrypt token: %v", err)
 	}
 
 	var cookieItem authenticationToken
 
 	if err := json.Unmarshal([]byte(val), &cookieItem); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to unmarshal token: %v", err)
 	}
 
 	return token.UnmarshalAuthenticationTokenFromDatabase(
@@ -69,7 +69,7 @@ func (r AuthenticationTokenRepository) DeleteAuthenticationTokenById(ctx context
 	_, err := r.client.Del(ctx, authenticationTokenPrefix+id).Result()
 
 	if err != nil {
-		return fmt.Errorf("del failed: '%s", err)
+		return fmt.Errorf("failed to delete token: %v", err)
 	}
 
 	return nil
@@ -88,19 +88,19 @@ func (r AuthenticationTokenRepository) CreateAuthenticationToken(ctx context.Con
 	val, err := json.Marshal(authCookie)
 
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to marshal token: %v", err)
 	}
 
 	newVal, err := crypt.Encrypt(string(val))
 
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to encrypt token: %v", err)
 	}
 
 	ok, err := r.client.SetNX(ctx, authenticationTokenPrefix+instance.Token(), newVal, instance.Expiration()).Result()
 
 	if err != nil {
-		return fmt.Errorf("set failed: '%s", err)
+		return fmt.Errorf("failed to create token: %v", err)
 	}
 
 	if !ok {
@@ -140,18 +140,19 @@ func (r AuthenticationTokenRepository) UpdateAuthenticationToken(ctx context.Con
 	val, err := json.Marshal(authCookie)
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to marshal token: %v", err)
 	}
 
 	newVal, err := crypt.Encrypt(string(val))
+
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to encrypt token: %v", err)
 	}
 
 	_, err = r.client.Set(ctx, authenticationTokenPrefix+instance.Token(), newVal, instance.Expiration()).Result()
 
 	if err != nil {
-		return nil, fmt.Errorf("set failed: '%s", err)
+		return nil, fmt.Errorf("failed to update token: %v", err)
 	}
 
 	return instance, nil

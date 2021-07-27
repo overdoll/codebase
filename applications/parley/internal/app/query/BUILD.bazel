@@ -19,6 +19,6 @@ go_library(
         "//applications/parley/internal/domain/moderator",
         "//libraries/account",
         "//libraries/paging",
-        "@org_uber_go_zap//:zap",
+        "@com_github_pkg_errors//:errors",
     ],
 )

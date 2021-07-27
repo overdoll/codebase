@@ -48,7 +48,7 @@ func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars [
 	var characterModels []*character
 
 	if err := queryCharacters.Select(&characterModels); err != nil {
-		return nil, fmt.Errorf("select() failed: '%s", err)
+		return nil, fmt.Errorf("failed to get characters by id: %v", err)
 	}
 
 	if len(chars) != len(characterModels) {
@@ -70,7 +70,7 @@ func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars [
 	var mediaModels []*media
 
 	if err := queryMedia.Select(&mediaModels); err != nil {
-		return nil, fmt.Errorf("select() failed: '%s", err)
+		return nil, fmt.Errorf("failed to get medias by id: %v", err)
 	}
 
 	for _, char := range characterModels {
@@ -107,12 +107,13 @@ func (r PostsCassandraRepository) GetCharacterById(ctx context.Context, characte
 
 	queryCharacters := r.session.
 		Query(characterTable.Get()).
-		Consistency(gocql.One)
+		Consistency(gocql.One).
+		BindStruct(character{Id: characterId})
 
 	var char *character
 
 	if err := queryCharacters.Get(&char); err != nil {
-		return nil, fmt.Errorf("select() failed: '%s", err)
+		return nil, fmt.Errorf("failed to get characters by id: %v", err)
 	}
 
 	media, err := r.GetMediaById(ctx, char.MediaId)
@@ -150,7 +151,7 @@ func (r PostsCassandraRepository) CreateCharacters(ctx context.Context, characte
 	err := r.session.ExecuteBatch(batch)
 
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to create characters: %v", err)
 	}
 
 	return nil

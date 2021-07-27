@@ -222,7 +222,7 @@ func (r PostsIndexElasticSearchRepository) IndexPost(ctx context.Context, post *
 		Do(ctx)
 
 	if err != nil {
-		return fmt.Errorf("could not index post: %s", err)
+		return fmt.Errorf("failed to index post: %v", err)
 	}
 
 	return nil
@@ -252,7 +252,7 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, curs
 	response, err := builder.Pretty(true).Do(ctx)
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to search posts: %v", err)
 	}
 
 	var posts []*post.Post
@@ -264,7 +264,7 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, curs
 		err := json.Unmarshal(hit.Source, &pst)
 
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("failed to unmarshal post: %v", err)
 		}
 
 		var characters []*post.Character
@@ -387,7 +387,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 				Do(ctx)
 
 			if err != nil {
-				return fmt.Errorf("could not index post: %s", err)
+				return fmt.Errorf("failed to index post: %v", err)
 			}
 		}
 
@@ -404,7 +404,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 func (r PostsIndexElasticSearchRepository) DeletePost(ctx context.Context, id string) error {
 
 	if _, err := r.client.Delete().Index(PostIndexName).Id(id).Do(ctx); err != nil {
-		return fmt.Errorf("failed to delete post document: %s", err)
+		return fmt.Errorf("failed to delete post document: %v", err)
 	}
 
 	return nil

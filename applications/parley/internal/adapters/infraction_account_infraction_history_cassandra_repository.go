@@ -47,7 +47,7 @@ func (r InfractionCassandraRepository) DeleteAccountInfractionHistory(ctx contex
 		BindStruct(&accountInfractionHistory{Id: id, AccountId: userId})
 
 	if err := deleteAccountInfraction.ExecRelease(); err != nil {
-		return fmt.Errorf("ExecRelease() failed: '%s", err)
+		return fmt.Errorf("failed to delete account infraction history: %v", err)
 	}
 
 	return nil
@@ -63,7 +63,12 @@ func (r InfractionCassandraRepository) GetAccountInfractionHistoryById(ctx conte
 	var dbUserInfractionHistory accountInfractionHistory
 
 	if err := infractionHistoryQuery.Get(&dbUserInfractionHistory); err != nil {
-		return nil, err
+
+		if err == gocql.ErrNotFound {
+			return nil, infraction.ErrAccountInfractionHistoryNotFound
+		}
+
+		return nil, fmt.Errorf("failed to get account infraction history: %v", err)
 	}
 
 	return infraction.UnmarshalAccountInfractionHistoryFromDatabase(dbUserInfractionHistory.Id, dbUserInfractionHistory.AccountId, dbUserInfractionHistory.Reason, dbUserInfractionHistory.Expiration), nil
@@ -87,7 +92,7 @@ func (r InfractionCassandraRepository) GetAccountInfractionHistory(ctx context.C
 	var dbUserInfractionHistory []accountInfractionHistory
 
 	if err := infractionHistoryQuery.Select(&dbUserInfractionHistory); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to get infraction history for account: %v", err)
 	}
 
 	var infractionHistory []*infraction.AccountInfractionHistory
@@ -108,7 +113,7 @@ func (r InfractionCassandraRepository) CreateAccountInfractionHistory(ctx contex
 		BindStruct(marshalAccountInfractionHistoryToDatabase(infractionHistory))
 
 	if err := infractionHistoryQuery.ExecRelease(); err != nil {
-		return fmt.Errorf("ExecRelease() failed: '%s", err)
+		return fmt.Errorf("failed to create account infraction: %v", err)
 	}
 
 	return nil

@@ -59,7 +59,7 @@ func (r ModeratorCassandraRepository) GetModerator(ctx context.Context, id strin
 			return nil, mod.ErrModeratorNotFound
 		}
 
-		return nil, err
+		return nil, fmt.Errorf("failed to get moderator: %v", err)
 	}
 
 	return mod.UnmarshalModeratorFromDatabase(md.AccountId, md.LastSelected), nil
@@ -75,7 +75,7 @@ func (r ModeratorCassandraRepository) GetModerators(ctx context.Context) ([]*mod
 	var dbModerators []moderator
 
 	if err := moderatorQuery.Select(&dbModerators); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to get moderators: %v", err)
 	}
 
 	var moderators []*mod.Moderator
@@ -94,7 +94,7 @@ func (r ModeratorCassandraRepository) CreateModerator(ctx context.Context, mod *
 		BindStruct(marshaModeratorToDatabase(mod))
 
 	if err := insertModerator.ExecRelease(); err != nil {
-		return fmt.Errorf("insert() failed: '%s", err)
+		return fmt.Errorf("failed to create moderator: %v", err)
 	}
 
 	return nil
@@ -120,7 +120,7 @@ func (r ModeratorCassandraRepository) UpdateModerator(ctx context.Context, id st
 		BindStruct(marshaModeratorToDatabase(currentMod))
 
 	if err := updateMod.ExecRelease(); err != nil {
-		return nil, fmt.Errorf("update() failed: '%s", err)
+		return nil, fmt.Errorf("failed to update moderator: %v", err)
 	}
 
 	return currentMod, nil
@@ -137,7 +137,7 @@ func (r ModeratorCassandraRepository) RemoveModerator(ctx context.Context, accou
 		})
 
 	if err := updateMod.ExecRelease(); err != nil {
-		return fmt.Errorf("update() failed: '%s", err)
+		return fmt.Errorf("failed to remove moderator: %v", err)
 	}
 
 	return nil

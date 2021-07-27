@@ -1,7 +1,13 @@
 package infraction
 
 import (
+	"errors"
+
 	"overdoll/libraries/paging"
+)
+
+var (
+	ErrPostRejectionReasonNotFound = errors.New("post rejection reason not found")
 )
 
 type PostRejectionReason struct {

@@ -7,6 +7,8 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//applications/eva/internal/app",
+        "//applications/eva/internal/app/command",
+        "//applications/eva/internal/app/query",
         "//applications/eva/internal/domain/token",
         "//applications/eva/internal/ports/graphql/types",
         "//libraries/cookies",

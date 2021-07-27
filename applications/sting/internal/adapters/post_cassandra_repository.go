@@ -136,7 +136,7 @@ func (r PostsCassandraRepository) CreatePost(ctx context.Context, pending *post.
 		Consistency(gocql.LocalQuorum)
 
 	if err := insertPost.ExecRelease(); err != nil {
-		return fmt.Errorf("ExecRelease() failed: '%s", err)
+		return fmt.Errorf("failed to create post: %v", err)
 	}
 
 	return nil
@@ -150,7 +150,7 @@ func (r PostsCassandraRepository) DeletePost(ctx context.Context, id string) err
 		BindStruct(&posts{Id: id})
 
 	if err := deletePost.ExecRelease(); err != nil {
-		return fmt.Errorf("ExecRelease() failed: '%s", err)
+		return fmt.Errorf("failed to delete post: %v", err)
 	}
 
 	return nil
@@ -171,7 +171,7 @@ func (r PostsCassandraRepository) GetPost(ctx context.Context, id string) (*post
 			return nil, post.ErrNotFound
 		}
 
-		return nil, err
+		return nil, fmt.Errorf("failed to get post: %v", err)
 	}
 
 	return r.unmarshalPost(ctx, postPending)
@@ -209,7 +209,7 @@ func (r PostsCassandraRepository) UpdatePost(ctx context.Context, id string, upd
 		BindStruct(marshalPostToDatabase(currentPost))
 
 	if err := postQuery.ExecRelease(); err != nil {
-		return nil, fmt.Errorf("update() failed: '%s", err)
+		return nil, fmt.Errorf("failed to update post: %v", err)
 	}
 
 	return currentPost, nil

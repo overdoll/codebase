@@ -27,6 +27,6 @@ go_library(
         "//applications/sting/internal/domain/post",
         "//libraries/account",
         "//libraries/uuid",
-        "@org_uber_go_zap//:zap",
+        "@com_github_pkg_errors//:errors",
     ],
 )

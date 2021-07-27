@@ -42,7 +42,12 @@ func (r PostsCassandraRepository) GetArtistById(ctx context.Context, id string) 
 		})
 
 	if err := qc.Get(&art); err != nil {
-		return nil, fmt.Errorf("select() failed: %s", err)
+
+		if err == gocql.ErrNotFound {
+			return nil, post.ErrArtistNotFound
+		}
+
+		return nil, fmt.Errorf("failed to get artist: %v", err)
 	}
 
 	return post.UnmarshalArtistFromDatabase(art.Id, art.DoNotPostReason), nil
@@ -57,7 +62,7 @@ func (r PostsCassandraRepository) CreateArtist(ctx context.Context, artist *post
 		BindStruct(pendingArtist)
 
 	if err := insertArtist.ExecRelease(); err != nil {
-		return fmt.Errorf("ExecRelease() failed: '%s", err)
+		return fmt.Errorf("failed to create artist: %v", err)
 	}
 
 	return nil

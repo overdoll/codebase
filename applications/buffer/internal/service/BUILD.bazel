@@ -9,7 +9,6 @@ go_library(
         "//applications/buffer/internal/adapters",
         "//applications/buffer/internal/app",
         "//applications/buffer/internal/app/command",
-        "//applications/buffer/internal/app/query",
         "//libraries/aws",
         "//libraries/bootstrap",
     ],

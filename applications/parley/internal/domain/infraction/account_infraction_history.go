@@ -1,6 +1,7 @@
 package infraction
 
 import (
+	"errors"
 	"time"
 
 	"github.com/segmentio/ksuid"
@@ -19,6 +20,10 @@ type AccountInfractionHistory struct {
 
 var (
 	LengthPeriodBans = []int64{0, 1, 3, 5, 7}
+)
+
+var (
+	ErrAccountInfractionHistoryNotFound = errors.New("account infraction history not found")
 )
 
 func NewAccountInfractionHistory(userId string, pastUserInfractionHistory []*AccountInfractionHistory, reason string) *AccountInfractionHistory {

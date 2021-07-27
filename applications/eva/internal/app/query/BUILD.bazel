@@ -26,7 +26,5 @@ go_library(
         "//applications/eva/internal/domain/session",
         "//applications/eva/internal/domain/token",
         "//libraries/paging",
-        "@com_github_gocql_gocql//:gocql",
-        "@org_uber_go_zap//:zap",
     ],
 )

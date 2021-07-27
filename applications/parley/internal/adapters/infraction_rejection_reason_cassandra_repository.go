@@ -2,6 +2,7 @@ package adapters
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/table"
@@ -38,7 +39,12 @@ func (r InfractionCassandraRepository) GetPostRejectionReason(ctx context.Contex
 	var rejectionReason postRejectionReason
 
 	if err := rejectionReasonQuery.Get(&rejectionReason); err != nil {
-		return nil, err
+
+		if err == gocql.ErrNotFound {
+			return nil, infraction.ErrPostRejectionReasonNotFound
+		}
+
+		return nil, fmt.Errorf("failed to get post rejection reason: %v", err)
 	}
 
 	return infraction.UnmarshalPostRejectionReasonFromDatabase(rejectionReason.Id, rejectionReason.Reason, rejectionReason.Infraction), nil
@@ -62,7 +68,7 @@ func (r InfractionCassandraRepository) GetPostRejectionReasons(ctx context.Conte
 	var dbRejectionReasons []postRejectionReason
 
 	if err := rejectionReasonsQuery.Select(&dbRejectionReasons); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to get rejection reasons: %v", err)
 	}
 
 	var rejectionReasons []*infraction.PostRejectionReason

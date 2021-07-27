@@ -5,8 +5,5 @@ go_library(
     srcs = ["app.go"],
     importpath = "overdoll/applications/buffer/internal/app",
     visibility = ["//visibility:public"],
-    deps = [
-        "//applications/buffer/internal/app/command",
-        "//applications/buffer/internal/app/query",
-    ],
+    deps = ["//applications/buffer/internal/app/command"],
 )

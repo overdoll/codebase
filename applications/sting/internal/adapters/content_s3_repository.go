@@ -48,7 +48,7 @@ func (r ContentS3Repository) ProcessContent(ctx context.Context, accountId strin
 		file, err := os.Create(fileId)
 
 		if err != nil {
-			fmt.Println("failed to create file", err)
+			return nil, fmt.Errorf("failed to create file: %v", err)
 		}
 
 		// Download our file from the private bucket
@@ -60,8 +60,7 @@ func (r ContentS3Repository) ProcessContent(ctx context.Context, accountId strin
 		)
 
 		if err != nil {
-			fmt.Println("failed to download file", err)
-			return nil, err
+			return nil, fmt.Errorf("failed to download file: %v", err)
 		}
 
 		head := make([]byte, 261)
@@ -92,15 +91,13 @@ func (r ContentS3Repository) ProcessContent(ctx context.Context, accountId strin
 			CopySource: aws.String(url.PathEscape(ImageUploadsBucket + "/" + fileId)), Key: aws.String(PendingPostPrefix + fileKey)})
 
 		if err != nil {
-			fmt.Println("failed to copy file", err)
-			return nil, err
+			return nil, fmt.Errorf("failed to copy file: %v", err)
 		}
 
 		// wait until file is available in private bucket
 		err = s3Client.WaitUntilObjectExists(&s3.HeadObjectInput{Bucket: aws.String(ImageStaticBucket), Key: aws.String(PendingPostPrefix + fileKey)})
 		if err != nil {
-			fmt.Println("failed to wait", err)
-			return nil, err
+			return nil, fmt.Errorf("failed to wait for file: %v", err)
 		}
 
 		// add to our list of files
@@ -135,7 +132,7 @@ func (r ContentS3Repository) MakeProcessedContentPublic(ctx context.Context, acc
 		// wait until file is available in private bucket
 		err = s3Client.WaitUntilObjectExists(&s3.HeadObjectInput{Bucket: aws.String(PostContentBucket), Key: aws.String(newFileId)})
 		if err != nil {
-			fmt.Printf("error while waiting for item to be copied %s", err)
+			return nil, fmt.Errorf("error while waitint for item to be copied: %v", err)
 		}
 
 		// add to our list of files

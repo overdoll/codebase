@@ -57,28 +57,7 @@ func (r AccountRepository) deleteAccountUsername(ctx context.Context, instance *
 	batch.Query(stmt, strings.ToLower(instance.Username()))
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("batch() failed: %s", err)
-	}
-
-	return nil
-}
-
-func (r AccountRepository) deleteAccountEmail(ctx context.Context, instance *account.Account, email string) error {
-
-	batch := r.session.NewBatch(gocql.LoggedBatch)
-
-	// delete username
-	stmt, _ := emailByAccountTable.Delete()
-
-	batch.Query(stmt, email, instance.ID())
-
-	// delete from other table
-	stmt, _ = accountEmailTable.Delete()
-
-	batch.Query(stmt, strings.ToLower(email))
-
-	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("batch() failed: %s", err)
+		return fmt.Errorf("failed to delete account username: %v", err)
 	}
 
 	return nil
@@ -123,7 +102,7 @@ func (r AccountRepository) UpdateAccountUsername(ctx context.Context, id string,
 	batch.Query(stmt, instance.Username(), instance.LastUsernameEdit(), instance.ID())
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return nil, nil, fmt.Errorf("batch() failed: %s", err)
+		return nil, nil, fmt.Errorf("failed to update account username: %v", err)
 	}
 
 	return instance, account.UnmarshalUsernameFromDatabase(instance.Username(), instance.ID()), nil
@@ -149,7 +128,7 @@ func (r AccountRepository) GetAccountByUsername(ctx context.Context, username st
 			return nil, account.ErrAccountNotFound
 		}
 
-		return nil, err
+		return nil, fmt.Errorf("failed to get account by username: %v", err)
 	}
 
 	// Get our user using the accounts AccountId, from the user email instance
@@ -188,7 +167,7 @@ func (r AccountRepository) GetAccountUsernames(ctx context.Context, cursor *pagi
 			return nil, account.ErrAccountNotFound
 		}
 
-		return nil, fmt.Errorf("select() failed: '%s", err)
+		return nil, fmt.Errorf("failed to get account usernames: %v", err)
 	}
 
 	var usernames []*account.Username
@@ -221,7 +200,7 @@ func (r AccountRepository) GetAccountUsername(ctx context.Context, accountId, us
 			return nil, account.ErrAccountNotFound
 		}
 
-		return nil, fmt.Errorf("select() failed: '%s", err)
+		return nil, fmt.Errorf("failed to get account username: %v", err)
 	}
 
 	return account.UnmarshalUsernameFromDatabase(accountUsernames.Username, accountUsernames.AccountId), nil

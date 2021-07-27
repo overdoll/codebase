@@ -10,6 +10,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//applications/parley/internal/app",
+        "//applications/parley/internal/app/query",
         "//applications/parley/internal/ports/graphql/types",
         "//libraries/paging",
         "@com_github_vektah_gqlparser_v2//gqlerror",

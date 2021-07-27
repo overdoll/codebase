@@ -82,7 +82,7 @@ func (r AccountIndexElasticSearchRepository) SearchAccounts(ctx context.Context,
 	response, err := builder.Pretty(true).Do(ctx)
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to search accounts: %v", err)
 	}
 
 	var accounts []*account.Account
@@ -148,7 +148,7 @@ func (r AccountIndexElasticSearchRepository) IndexAllAccounts(ctx context.Contex
 				Do(ctx)
 
 			if err != nil {
-				return fmt.Errorf("could not index post: %s", err)
+				return fmt.Errorf("could not index post: %v", err)
 			}
 		}
 

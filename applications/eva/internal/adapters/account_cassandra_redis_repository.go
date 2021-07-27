@@ -88,7 +88,7 @@ func (r AccountRepository) GetAccountById(ctx context.Context, id string) (*acco
 			return nil, account.ErrAccountNotFound
 		}
 
-		return nil, fmt.Errorf("select() failed: '%s", err)
+		return nil, fmt.Errorf("failed to get account: %v", err)
 	}
 
 	return account.UnmarshalAccountFromDatabase(
@@ -123,7 +123,7 @@ func (r AccountRepository) GetAccountsById(ctx context.Context, ids []string) ([
 			return nil, account.ErrAccountNotFound
 		}
 
-		return nil, fmt.Errorf("select() failed: '%s", err)
+		return nil, fmt.Errorf("failed to get accounts: %v", err)
 	}
 
 	var accounts []*account.Account
@@ -165,7 +165,7 @@ func (r AccountRepository) GetAccountByEmail(ctx context.Context, email string) 
 			return nil, account.ErrAccountNotFound
 		}
 
-		return nil, err
+		return nil, fmt.Errorf("failed to get account by email: %v", err)
 	}
 
 	// Get our user using the accounts AccountId, from the user email instance
@@ -198,7 +198,7 @@ func (r AccountRepository) createUniqueAccountUsername(ctx context.Context, inst
 
 	// Do our checks to make sure we got a unique username
 	if err != nil {
-		return fmt.Errorf("ExecCAS() failed: '%s", err)
+		return fmt.Errorf("failed to create unique username: %v", err)
 	}
 
 	if !applied {
@@ -223,7 +223,7 @@ func (r AccountRepository) createUniqueAccountEmail(ctx context.Context, instanc
 	applied, err := insertAccountEmail.ExecCAS()
 
 	if err != nil {
-		return fmt.Errorf("ExecCAS() failed: '%s", err)
+		return fmt.Errorf("failed to create unique email: %v", err)
 	}
 
 	if !applied {
@@ -297,7 +297,7 @@ func (r AccountRepository) CreateAccount(ctx context.Context, instance *account.
 			return err2
 		}
 
-		return fmt.Errorf("batch() failed: %s", err)
+		return fmt.Errorf("failed to create account: %v", err)
 	}
 
 	return nil
@@ -336,7 +336,7 @@ func (r AccountRepository) UpdateAccount(ctx context.Context, id string, updateF
 			BindStruct(marshalUserToDatabase(currentUser))
 
 	if err := updateUser.ExecRelease(); err != nil {
-		return nil, fmt.Errorf("update() failed: '%s", err)
+		return nil, fmt.Errorf("failed to update account: %v", err)
 	}
 
 	return currentUser, nil

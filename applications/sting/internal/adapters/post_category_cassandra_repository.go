@@ -44,7 +44,7 @@ func (r PostsCassandraRepository) GetCategoriesById(ctx context.Context, cats []
 	var categoriesModels []category
 
 	if err := queryCategories.Select(&categoriesModels); err != nil {
-		return nil, fmt.Errorf("select() failed: '%s", err)
+		return nil, fmt.Errorf("failed to get categories by id: %v", err)
 	}
 
 	for _, cat := range categoriesModels {
@@ -63,7 +63,7 @@ func (r PostsCassandraRepository) GetCategoryById(ctx context.Context, categoryI
 	var cat category
 
 	if err := queryCategories.Get(&cat); err != nil {
-		return nil, fmt.Errorf("select() failed: '%s", err)
+		return nil, fmt.Errorf("failed to get category by id: %v", err)
 	}
 
 	return post.UnmarshalCategoryFromDatabase(cat.Id, cat.Title, cat.Thumbnail), nil
@@ -90,7 +90,7 @@ func (r PostsCassandraRepository) CreateCategories(ctx context.Context, categori
 	err := r.session.ExecuteBatch(batch)
 
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to create categories: %v", err)
 	}
 
 	return nil

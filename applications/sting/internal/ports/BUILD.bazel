@@ -12,6 +12,8 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//applications/sting/internal/app",
+        "//applications/sting/internal/app/command",
+        "//applications/sting/internal/app/query",
         "//applications/sting/internal/ports/graphql",
         "//applications/sting/internal/ports/temporal/workflows",
         "//applications/sting/internal/service",

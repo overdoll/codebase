@@ -50,25 +50,26 @@ func (r SessionRepository) GetSessionById(ctx context.Context, sessionId string)
 			return nil, session.ErrSessionsNotFound
 		}
 
-		return nil, fmt.Errorf("keys failed: '%s", err)
+		return nil, fmt.Errorf("failed to get session by id: %v", err)
 	}
 
 	// decrypt session - since value is initially encrypted
 	details, err := crypt.DecryptSession(val)
+
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to decrypt session: %v", err)
 	}
 
 	var sessionItem sessions
 
 	if err := json.Unmarshal([]byte(details), &sessionItem); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to unmarshal session: %v", err)
 	}
 
 	// we want to encrypt our session key
 	encryptedKey, err := crypt.Encrypt(sessionId)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to encrypt session id: %v", err)
 	}
 
 	res := session.UnmarshalSessionFromDatabase(encryptedKey, sessionItem.Passport, sessionItem.Details.UserAgent, sessionItem.Details.Ip, sessionItem.Details.Created)
@@ -88,7 +89,7 @@ func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, cursor *p
 			return nil, session.ErrSessionsNotFound
 		}
 
-		return nil, fmt.Errorf("keys failed: '%s", err)
+		return nil, fmt.Errorf("failed to get sessions for account: %v", err)
 	}
 
 	var sessions []*session.Session
@@ -115,8 +116,9 @@ func (r SessionRepository) RevokeSessionById(ctx context.Context, accountId, ses
 
 	// decrypt, since we send it as encrypted
 	key, err := crypt.Decrypt(sessionId)
+
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to decrypt session id: %v", err)
 	}
 
 	sess, err := r.GetSessionById(ctx, key)
@@ -138,7 +140,7 @@ func (r SessionRepository) RevokeSessionById(ctx context.Context, accountId, ses
 			return session.ErrSessionsNotFound
 		}
 
-		return fmt.Errorf("keys failed: '%s", err)
+		return fmt.Errorf("failed to revoke session by id: %v", err)
 	}
 
 	return nil

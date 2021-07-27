@@ -20,6 +20,5 @@ go_library(
         "//applications/sting/internal/domain/post",
         "//libraries/account",
         "//libraries/paging",
-        "@org_uber_go_zap//:zap",
     ],
 )

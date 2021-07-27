@@ -8,6 +8,7 @@ go_library(
         "consume_authentication_token.go",
         "create_account.go",
         "create_account_with_authentication_token.go",
+        "disable_account_multi_factor.go",
         "enroll_account_multi_factor_totp.go",
         "generate_account_multi_factor_totp.go",
         "generate_account_recovery_codes.go",
@@ -21,7 +22,6 @@ go_library(
         "revoke_account_session.go",
         "revoke_authentication_token.go",
         "services.go",
-        "toggle_account_multi_factor.go",
         "unlock_account.go",
         "update_account_email_status_to_primary.go",
         "update_account_username_and_retain_previous.go",
@@ -34,7 +34,5 @@ go_library(
         "//applications/eva/internal/domain/session",
         "//applications/eva/internal/domain/token",
         "//libraries/uuid",
-        "@com_github_gocql_gocql//:gocql",
-        "@org_uber_go_zap//:zap",
     ],
 )

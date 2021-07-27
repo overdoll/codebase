@@ -31,12 +31,13 @@ func (r PostsCassandraRepository) GetMediaById(ctx context.Context, mediaId stri
 
 	queryMedia := r.session.
 		Query(mediaTable.Get()).
-		Consistency(gocql.One)
+		Consistency(gocql.One).
+		BindStruct(media{Id: mediaId})
 
 	var med *media
 
 	if err := queryMedia.Get(&med); err != nil {
-		return nil, fmt.Errorf("select() failed: '%s", err)
+		return nil, fmt.Errorf("failed to get media by id: %v", err)
 	}
 
 	return post.UnmarshalMediaFromDatabase(
@@ -64,7 +65,7 @@ func (r PostsCassandraRepository) GetMediasById(ctx context.Context, medi []stri
 	var mediaModels []*media
 
 	if err := queryMedia.Select(&mediaModels); err != nil {
-		return nil, fmt.Errorf("select() failed: '%s", err)
+		return nil, fmt.Errorf("failed to get medias by id: %v", err)
 	}
 
 	for _, med := range mediaModels {
@@ -95,7 +96,7 @@ func (r PostsCassandraRepository) CreateMedias(ctx context.Context, medias []*po
 	err := r.session.ExecuteBatch(batch)
 
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to create medias: %v", err)
 	}
 
 	return nil
