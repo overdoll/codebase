@@ -2,18 +2,16 @@
  * @flow
  */
 import type { Node } from 'react'
-import { useEffect, Suspense, useCallback } from 'react'
-import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
+import { Suspense } from 'react'
 import { Helmet } from 'react-helmet-async'
 import {
   Center,
   Flex,
-  Spinner, Stack
+  Stack
 } from '@chakra-ui/react'
-import { graphql, usePreloadedQuery, useQueryLoader } from 'react-relay/hooks'
+import { graphql, usePreloadedQuery } from 'react-relay/hooks'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
 import type { ProfileSettingsQuery } from '@//:artifacts/ProfileSettingsQuery.graphql'
-import ErrorFallback from '../../../../components/ErrorFallback/ErrorFallback'
 import Usernames from './components/Usernames/Usernames'
 import Emails from './components/Emails/Emails'
 import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner'
@@ -39,8 +37,6 @@ export default function Profile (props: Props): Node {
     props.prepared.stateQuery
   )
 
-  console.log(data)
-
   return (
     <>
       <Helmet title='profile' />
@@ -57,11 +53,11 @@ export default function Profile (props: Props): Node {
             <Stack spacing={8}>
               <Flex direction='column'>
                 <Usernames
-                  usernames={data?.usernames}
+                  usernames={data?.viewer}
                 />
               </Flex>
               <Flex direction='column'>
-                <Emails emails={data?.emails} />
+                <Emails emails={data?.viewer} />
               </Flex>
             </Stack>
           </Suspense>

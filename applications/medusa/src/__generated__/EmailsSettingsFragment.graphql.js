@@ -15,6 +15,7 @@ export type EmailsSettingsFragment = {|
   +emails: {|
     +edges: $ReadOnlyArray<{|
       +node: {|
+        +id: string,
         +email: string,
         +status: AccountEmailStatus,
       |}
@@ -64,6 +65,13 @@ const node: ReaderFragment = {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
+                  "name": "id",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
                   "name": "email",
                   "storageKey": null
                 },
@@ -88,5 +96,5 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 // prettier-ignore
-(node: any).hash = 'dda530c1b1c96d248f563fe3e44adf74';
+(node: any).hash = 'fd127bef8f48d5ebcc78c177dca02254';
 module.exports = node;

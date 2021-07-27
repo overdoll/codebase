@@ -36,19 +36,33 @@
         "hint2": "Receives login emails"
       },
       "confirmed": {
-        "hint1": "Can be set as a Primary email",
-        "query": {
-          "success": "{{email}} was set as your Primary email",
-          "error": "There was an error setting {{email}} to Primary"
-        }
+        "hint1": "Can be set as a Primary email"
       },
       "unconfirmed": {
         "hint1": "Needs to be confirmed through email link"
       },
       "options": {
-        "delete": "Remove",
-        "resend": "Resend Email",
-        "set_primary": "Set Primary"
+        "delete": {
+          "button": "Remove",
+          "query": {
+            "success": "{{email}} was successfully deleted",
+            "error": "There was an error deleting {{email}}"
+          }
+        },
+        "resend": {
+          "button": "Resend Email",
+          "query": {
+            "success": "Confirmation email resent to {{email}}. Check your inbox/spam!",
+            "error": "There was an error resending a confirmation email to {{email}}"
+          }
+        },
+        "set_primary": {
+          "button": "Set Primary",
+          "query": {
+            "success": "{{email}} was set as your Primary email",
+            "error": "There was an error setting {{email}} to Primary"
+          }
+        }
       },
       "add": {
         "title": "Add an email",

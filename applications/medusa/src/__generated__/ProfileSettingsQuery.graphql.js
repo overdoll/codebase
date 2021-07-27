@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash f500a80c8420272346ceee778ec28c1c
+ * @relayHash f033cae6144e8194bc761b80aff20ff6
  */
 
 /* eslint-disable */
@@ -35,9 +35,9 @@ fragment EmailsSettingsFragment on Account {
   emails {
     edges {
       node {
+        id
         email
         status
-        id
       }
     }
   }
@@ -177,6 +177,7 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
+                      (v1/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -190,8 +191,7 @@ return {
                         "kind": "ScalarField",
                         "name": "status",
                         "storageKey": null
-                      },
-                      (v1/*: any*/)
+                      }
                     ],
                     "storageKey": null
                   }
@@ -208,7 +208,7 @@ return {
     ]
   },
   "params": {
-    "id": "f500a80c8420272346ceee778ec28c1c",
+    "id": "f033cae6144e8194bc761b80aff20ff6",
     "metadata": {},
     "name": "ProfileSettingsQuery",
     "operationKind": "query",

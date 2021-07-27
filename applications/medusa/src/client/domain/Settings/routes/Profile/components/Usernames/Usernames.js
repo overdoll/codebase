@@ -23,7 +23,7 @@ import { useTranslation } from 'react-i18next'
 
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 
-import type { UsernameMutation } from '@//:artifacts/UsernameMutation.graphql'
+import type { UsernamesMutation } from '@//:artifacts/UsernamesMutation.graphql'
 import type { UsernamesSettingsFragment$key } from '@//:artifacts/UsernamesSettingsFragment.graphql'
 import ChangeUsernameForm from './ChangeUsernameForm/ChangeUsernameForm'
 
@@ -59,7 +59,7 @@ type Props = {
 }
 
 export default function Usernames ({ usernames }: Props): Node {
-  const [commit, isInFlight] = useMutation<UsernameMutation>(
+  const [commit, isInFlight] = useMutation<UsernamesMutation>(
     UsernameMutationGQL
   )
 
@@ -74,7 +74,7 @@ export default function Usernames ({ usernames }: Props): Node {
   const onSubmit = (formData) => {
     commit({
       variables: {
-        username: formData.username
+        input: formData.username
       },
       onCompleted () {
         notify({
@@ -107,7 +107,7 @@ export default function Usernames ({ usernames }: Props): Node {
             <Button onClick={onOpen} size='sm'>{t('profile.username.current.change')}</Button>
           </Flex>
         </Flex>
-        {data?.viewer.usernames.edges.length > 0 &&
+        {data?.usernames.edges.length > 0 &&
           <Flex direction='column'>
             <Accordion allowToggle>
               <AccordionItem border='none'>
@@ -116,7 +116,7 @@ export default function Usernames ({ usernames }: Props): Node {
                     <Heading
                       size='sm'
                       color='gray.100'
-                    >{t('profile.username.previous.title')} ({data.viewer.usernames.edges.length})
+                    >{t('profile.username.previous.title')} ({data.usernames.edges.length})
                     </Heading>
                   </Flex>
                   <AccordionIcon />
@@ -124,7 +124,7 @@ export default function Usernames ({ usernames }: Props): Node {
                 <AccordionPanel pt={1}>
                   <Text mb={1} fontSize='sm' color='gray.200'>{t('profile.username.previous.tooltip')}</Text>
                   <UnorderedList pl={4}>
-                    {data.viewer.usernames.edges.map((item, index) =>
+                    {data.usernames.edges.map((item, index) =>
                       <ListItem key={index} color='gray.200'>{item.node.username}</ListItem>
                     )}
                   </UnorderedList>

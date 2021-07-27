@@ -31,10 +31,6 @@ type EmailValues = {
   email: string,
 };
 
-type Props = {
-  refresh: () => void
-}
-
 const AddEmailMutationGQL = graphql`
   mutation AddEmailFormMutation($input: AddAccountEmailInput!) {
     addAccountEmail(input: $input) {
@@ -52,7 +48,7 @@ const schema = Joi.object({
     .required()
 })
 
-export default function AddEmailForm ({ refresh }: Props): Node {
+export default function AddEmailForm (): Node {
   const [t] = useTranslation('settings')
 
   const [addEmail, isAddingEmail] = useMutation<AddEmailFormMutation>(
@@ -70,23 +66,16 @@ export default function AddEmailForm ({ refresh }: Props): Node {
   const onAddEmail = (formData) => {
     addEmail({
       variables: {
-        email: formData.email
-      },
-      onCompleted (data) {
-        if (data.addAccountEmail.ok) {
-          notify({
-            status: 'success',
-            title: t('profile.email.add.query.success', { email: formData.email }),
-            isClosable: true
-          })
-          refresh()
-        } else {
-          notify({
-            status: 'error',
-            title: data.addAccountEmail.validation.code,
-            isClosable: true
-          })
+        input: {
+          email: formData.email
         }
+      },
+      onCompleted () {
+        notify({
+          status: 'success',
+          title: t('profile.email.add.query.success', { email: formData.email }),
+          isClosable: true
+        })
       },
       onError () {
         notify({
