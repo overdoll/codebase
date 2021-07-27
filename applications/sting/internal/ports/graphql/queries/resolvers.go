@@ -5,6 +5,7 @@ import (
 
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/sting/internal/app"
+	"overdoll/applications/sting/internal/app/query"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/paging"
@@ -40,7 +41,15 @@ func (r *QueryResolver) Posts(ctx context.Context, after *string, before *string
 		mediaIdsString = append(mediaIdsString, media.GetID())
 	}
 
-	results, err := r.App.Queries.SearchPosts.Handle(ctx, cursor, "", "", "", categoryIdsString, characterIdsString, mediaIdsString)
+	results, err := r.App.Queries.SearchPosts.Handle(ctx, query.SearchPosts{
+		Cursor:        cursor,
+		ModeratorId:   nil,
+		ContributorId: nil,
+		ArtistId:      nil,
+		CategoryIds:   categoryIdsString,
+		CharacterIds:  characterIdsString,
+		MediaIds:      mediaIdsString,
+	})
 
 	if err != nil {
 		return nil, err
@@ -51,7 +60,9 @@ func (r *QueryResolver) Posts(ctx context.Context, after *string, before *string
 
 func (r *QueryResolver) Post(ctx context.Context, reference string) (*types.Post, error) {
 
-	pendingPost, err := r.App.Queries.PostById.Handle(ctx, reference)
+	pendingPost, err := r.App.Queries.PostById.Handle(ctx, query.PostById{
+		PostId: reference,
+	})
 
 	if err != nil {
 		return nil, err
@@ -68,13 +79,10 @@ func (r *QueryResolver) Categories(ctx context.Context, after *string, before *s
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	search := ""
-
-	if title != nil {
-		search = *title
-	}
-
-	results, err := r.App.Queries.SearchCategories.Handle(ctx, cursor, search)
+	results, err := r.App.Queries.SearchCategories.Handle(ctx, query.SearchCategories{
+		Cursor: cursor,
+		Title:  title,
+	})
 
 	if err != nil {
 		return nil, err
@@ -91,13 +99,10 @@ func (r *QueryResolver) Medias(ctx context.Context, after *string, before *strin
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	search := ""
-
-	if title != nil {
-		search = *title
-	}
-
-	results, err := r.App.Queries.SearchMedias.Handle(ctx, cursor, search)
+	results, err := r.App.Queries.SearchMedias.Handle(ctx, query.SearchMedias{
+		Cursor: cursor,
+		Title:  title,
+	})
 
 	if err != nil {
 		return nil, err
@@ -114,13 +119,10 @@ func (r *QueryResolver) Characters(ctx context.Context, after *string, before *s
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	search := ""
-
-	if name != nil {
-		search = *name
-	}
-
-	results, err := r.App.Queries.SearchCharacters.Handle(ctx, cursor, search)
+	results, err := r.App.Queries.SearchCharacters.Handle(ctx, query.SearchCharacters{
+		Cursor: cursor,
+		Name:   name,
+	})
 
 	if err != nil {
 		return nil, err

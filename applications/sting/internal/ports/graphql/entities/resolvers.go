@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"overdoll/applications/sting/internal/app"
+	"overdoll/applications/sting/internal/app/query"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/graphql/relay"
 )
@@ -14,7 +15,9 @@ type EntityResolver struct {
 
 func (r EntityResolver) FindArtistByID(ctx context.Context, id relay.ID) (*types.Artist, error) {
 
-	artist, err := r.App.Queries.ArtistById.Handle(ctx, id.GetID())
+	artist, err := r.App.Queries.ArtistById.Handle(ctx, query.ArtistById{
+		AccountId: id.GetID(),
+	})
 
 	if err != nil {
 		return nil, err
@@ -25,7 +28,9 @@ func (r EntityResolver) FindArtistByID(ctx context.Context, id relay.ID) (*types
 
 func (r EntityResolver) FindCategoryByID(ctx context.Context, id relay.ID) (*types.Category, error) {
 
-	category, err := r.App.Queries.CategoryById.Handle(ctx, id.GetID())
+	category, err := r.App.Queries.CategoryById.Handle(ctx, query.CategoryById{
+		CategoryId: id.GetID(),
+	})
 
 	if err != nil {
 		return nil, err
@@ -36,7 +41,9 @@ func (r EntityResolver) FindCategoryByID(ctx context.Context, id relay.ID) (*typ
 
 func (r EntityResolver) FindCharacterByID(ctx context.Context, id relay.ID) (*types.Character, error) {
 
-	character, err := r.App.Queries.CharacterById.Handle(ctx, id.GetID())
+	character, err := r.App.Queries.CharacterById.Handle(ctx, query.CharacterById{
+		CharacterId: id.GetID(),
+	})
 
 	if err != nil {
 		return nil, err
@@ -47,7 +54,9 @@ func (r EntityResolver) FindCharacterByID(ctx context.Context, id relay.ID) (*ty
 
 func (r EntityResolver) FindMediaByID(ctx context.Context, id relay.ID) (*types.Media, error) {
 
-	media, err := r.App.Queries.MediaById.Handle(ctx, id.GetID())
+	media, err := r.App.Queries.MediaById.Handle(ctx, query.MediaById{
+		MediaId: id.GetID(),
+	})
 
 	if err != nil {
 		return nil, err
@@ -64,7 +73,9 @@ func (r EntityResolver) FindAccountByID(ctx context.Context, id relay.ID) (*type
 
 func (r EntityResolver) FindPostByID(ctx context.Context, id relay.ID) (*types.Post, error) {
 
-	pendingPost, err := r.App.Queries.PostById.Handle(ctx, id.GetID())
+	pendingPost, err := r.App.Queries.PostById.Handle(ctx, query.PostById{
+		PostId: id.GetID(),
+	})
 
 	if err != nil {
 		return nil, err

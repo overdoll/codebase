@@ -5,9 +5,11 @@ import (
 
 	"github.com/spf13/viper"
 	"go.temporal.io/sdk/client"
-	sting "overdoll/applications/sting/proto"
 	"overdoll/applications/sting/internal/app"
+	"overdoll/applications/sting/internal/app/command"
+	"overdoll/applications/sting/internal/app/query"
 	"overdoll/applications/sting/internal/ports/temporal/workflows"
+	sting "overdoll/applications/sting/proto"
 )
 
 type Server struct {
@@ -24,7 +26,9 @@ func NewGrpcServer(application *app.Application, client client.Client) *Server {
 
 func (s Server) GetPost(ctx context.Context, request *sting.PostRequest) (*sting.Post, error) {
 
-	post, err := s.app.Queries.PostById.Handle(ctx, request.Id)
+	post, err := s.app.Queries.PostById.Handle(ctx, query.PostById{
+		PostId: request.Id,
+	})
 
 	if err != nil {
 		return nil, err
@@ -38,7 +42,9 @@ func (s Server) GetPost(ctx context.Context, request *sting.PostRequest) (*sting
 
 func (s Server) RejectPost(ctx context.Context, request *sting.PostRequest) (*sting.UpdatePostResponse, error) {
 
-	if err := s.app.Commands.RejectPost.Handle(ctx, request.Id); err != nil {
+	if err := s.app.Commands.RejectPost.Handle(ctx, command.RejectPost{
+		PostId: request.Id,
+	}); err != nil {
 		return nil, err
 	}
 
@@ -47,7 +53,9 @@ func (s Server) RejectPost(ctx context.Context, request *sting.PostRequest) (*st
 
 func (s Server) PublishPost(ctx context.Context, request *sting.PostRequest) (*sting.UpdatePostResponse, error) {
 
-	if err := s.app.Commands.StartPublishPost.Handle(ctx, request.Id); err != nil {
+	if err := s.app.Commands.StartPublishPost.Handle(ctx, command.StartPublishPost{
+		PostId: request.Id,
+	}); err != nil {
 		return nil, err
 	}
 
@@ -67,7 +75,9 @@ func (s Server) PublishPost(ctx context.Context, request *sting.PostRequest) (*s
 
 func (s Server) DiscardPost(ctx context.Context, request *sting.PostRequest) (*sting.UpdatePostResponse, error) {
 
-	if err := s.app.Commands.StartDiscardPost.Handle(ctx, request.Id); err != nil {
+	if err := s.app.Commands.StartDiscardPost.Handle(ctx, command.StartDiscardPost{
+		PostId: request.Id,
+	}); err != nil {
 		return nil, err
 	}
 
@@ -87,7 +97,9 @@ func (s Server) DiscardPost(ctx context.Context, request *sting.PostRequest) (*s
 
 func (s Server) UndoPost(ctx context.Context, request *sting.PostRequest) (*sting.UpdatePostResponse, error) {
 
-	if err := s.app.Commands.StartUndoPost.Handle(ctx, request.Id); err != nil {
+	if err := s.app.Commands.StartUndoPost.Handle(ctx, command.StartUndoPost{
+		PostId: request.Id,
+	}); err != nil {
 		return nil, err
 	}
 

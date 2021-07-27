@@ -5,6 +5,7 @@ import (
 
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/sting/internal/app"
+	"overdoll/applications/sting/internal/app/query"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/paging"
 )
@@ -21,7 +22,10 @@ func (r MediaResolver) Posts(ctx context.Context, obj *types.Media, after *strin
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	results, err := r.App.Queries.SearchPosts.Handle(ctx, cursor, "", "", "", nil, nil, []string{obj.ID.GetID()})
+	results, err := r.App.Queries.SearchPosts.Handle(ctx, query.SearchPosts{
+		Cursor:   cursor,
+		MediaIds: []string{obj.ID.GetID()},
+	})
 
 	if err != nil {
 		return nil, err

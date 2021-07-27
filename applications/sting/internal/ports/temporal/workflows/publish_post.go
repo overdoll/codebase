@@ -16,9 +16,9 @@ func PublishPost(ctx workflow.Context, id string) error {
 		return err
 	}
 
-	if err := workflow.ExecuteActivity(ctx, helpers.GetStructName(command.PostCustomResourcesHandler{}), id).Get(ctx, nil); err != nil {
+	if err := workflow.ExecuteActivity(ctx, helpers.GetStructName(command.PostCustomResourcesHandler{}), command.PostCustomResources{PostId: id}).Get(ctx, nil); err != nil {
 		return err
 	}
 
-	return workflow.ExecuteActivity(ctx, helpers.GetStructName(command.PublishPostHandler{}), id).Get(ctx, nil)
+	return workflow.ExecuteActivity(ctx, helpers.GetStructName(command.PublishPostHandler{}), command.PublishPost{PostId: id}).Get(ctx, nil)
 }

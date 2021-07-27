@@ -11,14 +11,14 @@ import (
 type CreatePost struct {
 	ContributorId string
 	// optional
-	ExistingArtistId  *string
-	ArtistUsername    string
-	PosterIsArtist    bool
-	Content           []string
-	CharacterIds      []string
-	CategoryIds       []string
-	CharacterRequests map[string]string
-	MediaRequests     []string
+	ExistingArtistId     *string
+	CustomArtistUsername *string
+	PosterIsArtist       bool
+	Content              []string
+	CharacterIds         []string
+	CategoryIds          []string
+	CharacterRequests    map[string]string
+	MediaRequests        []string
 }
 
 type CreatePostHandler struct {
@@ -78,7 +78,7 @@ func (h CreatePostHandler) Handle(ctx context.Context, cmd CreatePost) (*post.Po
 		return nil, err
 	}
 
-	pendingPost, err := post.NewPost(uuid.New().String(), moderatorId, artist, cmd.ArtistUsername, contributor, cmd.Content, characters, categories)
+	pendingPost, err := post.NewPost(uuid.New().String(), moderatorId, artist, *cmd.CustomArtistUsername, contributor, cmd.Content, characters, categories)
 
 	if err != nil {
 		return nil, err

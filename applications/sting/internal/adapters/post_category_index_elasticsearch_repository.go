@@ -86,7 +86,7 @@ func (r PostsIndexElasticSearchRepository) IndexCategories(ctx context.Context, 
 	return nil
 }
 
-func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context, cursor *paging.Cursor, search string) ([]*post.Category, error) {
+func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context, cursor *paging.Cursor, search *string) ([]*post.Category, error) {
 
 	builder := r.client.Search().
 		Index(categoryIndexName).ErrorTrace(true)
@@ -97,8 +97,8 @@ func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context,
 
 	query := cursor.BuildElasticsearch(builder, "created_at")
 
-	if search != "" {
-		query.Must(elastic.NewMultiMatchQuery(search, "title").Operator("and"))
+	if search != nil {
+		query.Must(elastic.NewMultiMatchQuery(*search, "title").Operator("and"))
 	}
 
 	builder.Query(query)

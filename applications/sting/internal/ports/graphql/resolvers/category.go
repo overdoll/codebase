@@ -5,6 +5,7 @@ import (
 
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/sting/internal/app"
+	"overdoll/applications/sting/internal/app/query"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/paging"
 )
@@ -21,7 +22,10 @@ func (r CategoryResolver) Posts(ctx context.Context, obj *types.Category, after 
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	results, err := r.App.Queries.SearchPosts.Handle(ctx, cursor, "", "", "", []string{obj.ID.GetID()}, nil, nil)
+	results, err := r.App.Queries.SearchPosts.Handle(ctx, query.SearchPosts{
+		Cursor:      cursor,
+		CategoryIds: []string{obj.ID.GetID()},
+	})
 
 	if err != nil {
 		return nil, err

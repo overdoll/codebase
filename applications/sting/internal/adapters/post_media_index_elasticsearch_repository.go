@@ -45,7 +45,7 @@ const mediaIndex = `
 
 const mediaIndexName = "media"
 
-func (r PostsIndexElasticSearchRepository) SearchMedias(ctx context.Context, cursor *paging.Cursor, search string) ([]*post.Media, error) {
+func (r PostsIndexElasticSearchRepository) SearchMedias(ctx context.Context, cursor *paging.Cursor, search *string) ([]*post.Media, error) {
 
 	builder := r.client.Search().
 		Index(mediaIndexName)
@@ -56,8 +56,8 @@ func (r PostsIndexElasticSearchRepository) SearchMedias(ctx context.Context, cur
 
 	query := cursor.BuildElasticsearch(builder, "created_at")
 
-	if search != "" {
-		query.Must(elastic.NewMultiMatchQuery(search, "title").Operator("and"))
+	if search != nil {
+		query.Must(elastic.NewMultiMatchQuery(*search, "title").Operator("and"))
 	}
 
 	builder.Query(query)

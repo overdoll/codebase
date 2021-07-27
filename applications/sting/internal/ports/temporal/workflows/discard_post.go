@@ -15,5 +15,5 @@ func DiscardPost(ctx workflow.Context, id string) error {
 		return err
 	}
 
-	return workflow.ExecuteActivity(ctx, helpers.GetStructName(command.DiscardPostHandler{}), id).Get(ctx, nil)
+	return workflow.ExecuteActivity(ctx, helpers.GetStructName(command.DiscardPostHandler{}), command.DiscardPost{PostId: id}).Get(ctx, nil)
 }

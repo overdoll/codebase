@@ -8,5 +8,5 @@ import (
 
 func UndoPost(ctx workflow.Context, id string) error {
 	ctx = workflow.WithActivityOptions(ctx, options)
-	return workflow.ExecuteActivity(ctx, helpers.GetStructName(command.UndoPostHandler{}), id).Get(ctx, nil)
+	return workflow.ExecuteActivity(ctx, helpers.GetStructName(command.UndoPostHandler{}), command.UndoPost{PostId: id}).Get(ctx, nil)
 }

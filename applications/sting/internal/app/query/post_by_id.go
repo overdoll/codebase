@@ -2,15 +2,13 @@ package query
 
 import (
 	"context"
-	"errors"
 
-	"go.uber.org/zap"
 	"overdoll/applications/sting/internal/domain/post"
 )
 
-var (
-	errFailedPostById = errors.New("post by id failed")
-)
+type PostById struct {
+	PostId string
+}
 
 type PostByIdHandler struct {
 	pr post.Repository
@@ -20,13 +18,12 @@ func NewPostByIdHandler(pr post.Repository) PostByIdHandler {
 	return PostByIdHandler{pr: pr}
 }
 
-func (h PostByIdHandler) Handle(ctx context.Context, postId string) (*post.Post, error) {
+func (h PostByIdHandler) Handle(ctx context.Context, query PostById) (*post.Post, error) {
 
-	pst, err := h.pr.GetPost(ctx, postId)
+	pst, err := h.pr.GetPost(ctx, query.PostId)
 
 	if err != nil {
-		zap.S().Errorf("failed to get post: %s", err)
-		return nil, errFailedPostById
+		return nil, err
 	}
 
 	return pst, nil

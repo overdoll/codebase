@@ -18,9 +18,9 @@ func NewArtistByIdHandler(pr post.Repository) ArtistByIdHandler {
 	return ArtistByIdHandler{pr: pr}
 }
 
-func (h ArtistByIdHandler) Handle(ctx context.Context, cmd ArtistById) (*post.Artist, error) {
+func (h ArtistByIdHandler) Handle(ctx context.Context, query ArtistById) (*post.Artist, error) {
 
-	result, err := h.pr.GetArtistById(ctx, cmd.AccountId)
+	result, err := h.pr.GetArtistById(ctx, query.AccountId)
 
 	if err != nil {
 		return nil, err

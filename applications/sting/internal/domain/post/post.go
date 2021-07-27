@@ -49,16 +49,16 @@ type MediaRequest struct {
 }
 
 type PostFilters struct {
-	moderatorId   string
-	contributorId string
-	artistId      string
+	moderatorId   *string
+	contributorId *string
+	artistId      *string
 	id            string
 	categoryIds   []string
 	characterIds  []string
 	mediaIds      []string
 }
 
-func NewPostFilters(moderatorId, contributorId, artistId string, categoryIds, characterIds, mediaIds []string) (*PostFilters, error) {
+func NewPostFilters(moderatorId, contributorId, artistId *string, categoryIds, characterIds, mediaIds []string) (*PostFilters, error) {
 	return &PostFilters{
 		moderatorId:   moderatorId,
 		contributorId: contributorId,
@@ -73,15 +73,15 @@ func (e *PostFilters) ID() string {
 	return e.id
 }
 
-func (e *PostFilters) ModeratorId() string {
+func (e *PostFilters) ModeratorId() *string {
 	return e.moderatorId
 }
 
-func (e *PostFilters) ContributorId() string {
+func (e *PostFilters) ContributorId() *string {
 	return e.contributorId
 }
 
-func (e *PostFilters) ArtistId() string {
+func (e *PostFilters) ArtistId() *string {
 	return e.artistId
 }
 

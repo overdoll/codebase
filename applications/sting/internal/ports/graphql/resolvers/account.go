@@ -5,6 +5,7 @@ import (
 
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/sting/internal/app"
+	"overdoll/applications/sting/internal/app/query"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/paging"
 )
@@ -21,7 +22,12 @@ func (r AccountResolver) ModeratorPostsQueue(ctx context.Context, obj *types.Acc
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	results, err := r.App.Queries.SearchPosts.Handle(ctx, cursor, obj.ID.GetID(), "", "", nil, nil, nil)
+	moderatorId := obj.ID.GetID()
+
+	results, err := r.App.Queries.SearchPosts.Handle(ctx, query.SearchPosts{
+		Cursor:      cursor,
+		ModeratorId: &moderatorId,
+	})
 
 	if err != nil {
 		return nil, err
@@ -38,7 +44,12 @@ func (r AccountResolver) Posts(ctx context.Context, obj *types.Account, after *s
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	results, err := r.App.Queries.SearchPosts.Handle(ctx, cursor, "", "", obj.ID.GetID(), nil, nil, nil)
+	artistId := obj.ID.GetID()
+
+	results, err := r.App.Queries.SearchPosts.Handle(ctx, query.SearchPosts{
+		Cursor:   cursor,
+		ArtistId: &artistId,
+	})
 
 	if err != nil {
 		return nil, err
@@ -55,8 +66,13 @@ func (r AccountResolver) Contributions(ctx context.Context, obj *types.Account, 
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	results, err := r.App.Queries.SearchPosts.Handle(ctx, cursor, "", obj.ID.GetID(), "", nil, nil, nil)
+	contributorId := obj.ID.GetID()
 
+	results, err := r.App.Queries.SearchPosts.Handle(ctx, query.SearchPosts{
+		Cursor:        cursor,
+		ContributorId: &contributorId,
+	})
+	
 	if err != nil {
 		return nil, err
 	}

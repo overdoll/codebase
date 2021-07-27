@@ -6,6 +6,7 @@ import (
 	"github.com/spf13/viper"
 	"go.temporal.io/sdk/client"
 	"overdoll/applications/sting/internal/app"
+	"overdoll/applications/sting/internal/app/command"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/applications/sting/internal/ports/temporal/workflows"
 	"overdoll/libraries/passport"
@@ -32,16 +33,11 @@ func (r *MutationResolver) CreatePost(ctx context.Context, input types.CreatePos
 
 	}
 
-	artistId := ""
+	var artistId *string
 
 	if input.ExistingArtist != nil {
-		artistId = input.ExistingArtist.GetID()
-	}
-
-	artistUsername := ""
-
-	if input.CustomArtistUsername != nil {
-		artistUsername = *input.CustomArtistUsername
+		id := input.ExistingArtist.GetID()
+		artistId = &id
 	}
 
 	posterIsArtist := false
@@ -65,15 +61,17 @@ func (r *MutationResolver) CreatePost(ctx context.Context, input types.CreatePos
 	pst, err := r.App.Commands.CreatePost.
 		Handle(
 			ctx,
-			passport.FromContext(ctx).AccountID(),
-			artistId,
-			artistUsername,
-			posterIsArtist,
-			input.Content,
-			characterIds,
-			categoryIds,
-			requests,
-			input.MediaRequests,
+			command.CreatePost{
+				ContributorId:        passport.FromContext(ctx).AccountID(),
+				ExistingArtistId:     artistId,
+				CustomArtistUsername: input.CustomArtistUsername,
+				PosterIsArtist:       posterIsArtist,
+				Content:              input.Content,
+				CharacterIds:         characterIds,
+				CategoryIds:          categoryIds,
+				CharacterRequests:    requests,
+				MediaRequests:        input.MediaRequests,
+			},
 		)
 
 	if err != nil {

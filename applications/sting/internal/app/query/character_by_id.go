@@ -18,9 +18,9 @@ func NewCharacterByIdHandler(pr post.Repository) CharacterByIdHandler {
 	return CharacterByIdHandler{pr: pr}
 }
 
-func (h CharacterByIdHandler) Handle(ctx context.Context, cmd CharacterById) (*post.Character, error) {
+func (h CharacterByIdHandler) Handle(ctx context.Context, query CharacterById) (*post.Character, error) {
 
-	result, err := h.pr.GetCharacterById(ctx, cmd.CharacterId)
+	result, err := h.pr.GetCharacterById(ctx, query.CharacterId)
 
 	if err != nil {
 		return nil, err

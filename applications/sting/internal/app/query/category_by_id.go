@@ -18,9 +18,9 @@ func NewCategoryByIdHandler(pr post.Repository) CategoryByIdHandler {
 	return CategoryByIdHandler{pr: pr}
 }
 
-func (h CategoryByIdHandler) Handle(ctx context.Context, cmd CategoryById) (*post.Category, error) {
+func (h CategoryByIdHandler) Handle(ctx context.Context, query CategoryById) (*post.Category, error) {
 
-	result, err := h.pr.GetCategoryById(ctx, cmd.CategoryId)
+	result, err := h.pr.GetCategoryById(ctx, query.CategoryId)
 
 	if err != nil {
 		return nil, err

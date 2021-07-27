@@ -2,16 +2,20 @@ package query
 
 import (
 	"context"
-	"errors"
 
-	"go.uber.org/zap"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/paging"
 )
 
-var (
-	errFailedSearchPosts = errors.New("search posts failed")
-)
+type SearchPosts struct {
+	Cursor        *paging.Cursor
+	ModeratorId   *string
+	ContributorId *string
+	ArtistId      *string
+	CategoryIds   []string
+	CharacterIds  []string
+	MediaIds      []string
+}
 
 type SearchPostsHandler struct {
 	pr post.IndexRepository
@@ -21,19 +25,18 @@ func NewSearchPostsHandler(pr post.IndexRepository) SearchPostsHandler {
 	return SearchPostsHandler{pr: pr}
 }
 
-func (h SearchPostsHandler) Handle(ctx context.Context, cursor *paging.Cursor, moderatorId, contributorId, artistId string, categoryIds, characterIds, mediaIds []string) ([]*post.Post, error) {
+func (h SearchPostsHandler) Handle(ctx context.Context, query SearchPosts) ([]*post.Post, error) {
 
-	filters, err := post.NewPostFilters(moderatorId, contributorId, artistId, categoryIds, characterIds, mediaIds)
+	filters, err := post.NewPostFilters(query.ModeratorId, query.ContributorId, query.ArtistId, query.CategoryIds, query.CharacterIds, query.MediaIds)
 
 	if err != nil {
 		return nil, err
 	}
 
-	posts, err := h.pr.SearchPosts(ctx, cursor, filters)
+	posts, err := h.pr.SearchPosts(ctx, query.Cursor, filters)
 
 	if err != nil {
-		zap.S().Errorf("failed to search: %s", err)
-		return nil, errFailedSearchPosts
+		return nil, err
 	}
 
 	return posts, nil
