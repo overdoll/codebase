@@ -45,8 +45,8 @@
         "delete": {
           "button": "Remove",
           "query": {
-            "success": "{{email}} was successfully deleted",
-            "error": "There was an error deleting {{email}}"
+            "success": "{{email}} was successfully removed",
+            "error": "There was an error removing {{email}}"
           }
         },
         "resend": {

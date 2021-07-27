@@ -12,8 +12,8 @@ import {
 import { graphql, usePreloadedQuery } from 'react-relay/hooks'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
 import type { ProfileSettingsQuery } from '@//:artifacts/ProfileSettingsQuery.graphql'
-import Usernames from './components/Usernames/Usernames'
-import Emails from './components/Emails/Emails'
+import Usernames from './Usernames/Usernames'
+import Emails from './Emails/Emails'
 import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner'
 
 type Props = {
@@ -40,7 +40,6 @@ export default function Profile (props: Props): Node {
   return (
     <>
       <Helmet title='profile' />
-
       <Center mt={8}>
         <Flex
           w={['full', 'sm', 'md', 'lg']}

@@ -35,6 +35,13 @@ const UsernameMutationGQL = graphql`
         account {
           id
           username
+          usernames {
+            edges {
+              node {
+                username
+              }
+            }
+          }
         }
       }
     }
@@ -74,7 +81,9 @@ export default function Usernames ({ usernames }: Props): Node {
   const onSubmit = (formData) => {
     commit({
       variables: {
-        input: formData.username
+        input: {
+          username: formData.username
+        }
       },
       onCompleted () {
         notify({

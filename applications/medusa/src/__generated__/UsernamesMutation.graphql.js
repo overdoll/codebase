@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 691adccd4edb11164512383708bd7442
+ * @relayHash c4f197753d25ef9efeca621502162974
  */
 
 /* eslint-disable */
@@ -21,6 +21,13 @@ export type UsernamesMutationResponse = {|
       +account: {|
         +id: string,
         +username: string,
+        +usernames: {|
+          +edges: $ReadOnlyArray<{|
+            +node: {|
+              +username: string
+            |}
+          |}>
+        |},
       |},
     |}
   |}
@@ -41,6 +48,14 @@ mutation UsernamesMutation(
       account {
         id
         username
+        usernames {
+          edges {
+            node {
+              username
+              id
+            }
+          }
+        }
       }
       id
     }
@@ -76,19 +91,6 @@ v3 = {
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
-},
-v4 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "Account",
-  "kind": "LinkedField",
-  "name": "account",
-  "plural": false,
-  "selections": [
-    (v3/*: any*/),
-    (v2/*: any*/)
-  ],
-  "storageKey": null
 };
 return {
   "fragment": {
@@ -114,7 +116,53 @@ return {
             "plural": false,
             "selections": [
               (v2/*: any*/),
-              (v4/*: any*/)
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Account",
+                "kind": "LinkedField",
+                "name": "account",
+                "plural": false,
+                "selections": [
+                  (v3/*: any*/),
+                  (v2/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "AccountUsernameConnection",
+                    "kind": "LinkedField",
+                    "name": "usernames",
+                    "plural": false,
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "AccountUsernameEdge",
+                        "kind": "LinkedField",
+                        "name": "edges",
+                        "plural": true,
+                        "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "AccountUsername",
+                            "kind": "LinkedField",
+                            "name": "node",
+                            "plural": false,
+                            "selections": [
+                              (v2/*: any*/)
+                            ],
+                            "storageKey": null
+                          }
+                        ],
+                        "storageKey": null
+                      }
+                    ],
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              }
             ],
             "storageKey": null
           }
@@ -148,7 +196,54 @@ return {
             "plural": false,
             "selections": [
               (v2/*: any*/),
-              (v4/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Account",
+                "kind": "LinkedField",
+                "name": "account",
+                "plural": false,
+                "selections": [
+                  (v3/*: any*/),
+                  (v2/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "AccountUsernameConnection",
+                    "kind": "LinkedField",
+                    "name": "usernames",
+                    "plural": false,
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "AccountUsernameEdge",
+                        "kind": "LinkedField",
+                        "name": "edges",
+                        "plural": true,
+                        "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "AccountUsername",
+                            "kind": "LinkedField",
+                            "name": "node",
+                            "plural": false,
+                            "selections": [
+                              (v2/*: any*/),
+                              (v3/*: any*/)
+                            ],
+                            "storageKey": null
+                          }
+                        ],
+                        "storageKey": null
+                      }
+                    ],
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              },
               (v3/*: any*/)
             ],
             "storageKey": null
@@ -159,7 +254,7 @@ return {
     ]
   },
   "params": {
-    "id": "691adccd4edb11164512383708bd7442",
+    "id": "c4f197753d25ef9efeca621502162974",
     "metadata": {},
     "name": "UsernamesMutation",
     "operationKind": "mutation",
@@ -168,5 +263,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = 'b736b1ed45761242a6b84217f520b338';
+(node: any).hash = 'a644be797fd8f092b8115f0593fb3198';
 module.exports = node;

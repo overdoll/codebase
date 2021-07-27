@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 6a1afe68a83923800a9962fb57b999ba
+ * @relayHash 56e7c5f31225819c4e12a94cf05f6d62
  */
 
 /* eslint-disable */
@@ -8,16 +8,19 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-export type AddAccountEmailInput = {|
-  email: string
+export type AccountEmailStatus = "CONFIRMED" | "PRIMARY" | "UNCONFIRMED" | "%future added value";
+export type UpdateAccountEmailStatusToPrimaryInput = {|
+  accountEmailId: string
 |};
 export type EmailsPrimaryMutationVariables = {|
-  input: AddAccountEmailInput
+  input: UpdateAccountEmailStatusToPrimaryInput
 |};
 export type EmailsPrimaryMutationResponse = {|
-  +addAccountEmail: ?{|
+  +updateAccountEmailStatusToPrimary: ?{|
     +accountEmail: ?{|
-      +id: string
+      +id: string,
+      +status: AccountEmailStatus,
+      +email: string,
     |}
   |}
 |};
@@ -29,11 +32,13 @@ export type EmailsPrimaryMutation = {|
 
 /*
 mutation EmailsPrimaryMutation(
-  $input: AddAccountEmailInput!
+  $input: UpdateAccountEmailStatusToPrimaryInput!
 ) {
-  addAccountEmail(input: $input) {
+  updateAccountEmailStatusToPrimary(input: $input) {
     accountEmail {
       id
+      status
+      email
     }
   }
 }
@@ -57,9 +62,9 @@ v1 = [
         "variableName": "input"
       }
     ],
-    "concreteType": "AddAccountEmailPayload",
+    "concreteType": "UpdateAccountEmailStatusToPrimaryPayload",
     "kind": "LinkedField",
-    "name": "addAccountEmail",
+    "name": "updateAccountEmailStatusToPrimary",
     "plural": false,
     "selections": [
       {
@@ -75,6 +80,20 @@ v1 = [
             "args": null,
             "kind": "ScalarField",
             "name": "id",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "status",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "email",
             "storageKey": null
           }
         ],
@@ -102,7 +121,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "6a1afe68a83923800a9962fb57b999ba",
+    "id": "56e7c5f31225819c4e12a94cf05f6d62",
     "metadata": {},
     "name": "EmailsPrimaryMutation",
     "operationKind": "mutation",
@@ -111,5 +130,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '8e40a028df80fee225c2f07b12edf7c2';
+(node: any).hash = '31b0af5577fe93f98aad6c333a9482d2';
 module.exports = node;

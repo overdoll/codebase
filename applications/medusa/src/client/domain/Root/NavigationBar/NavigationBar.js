@@ -154,9 +154,9 @@ export default function NavigationBar (props: Props): Node {
             return null
           })}
         </Switch>
-        <Flex w='100%' direction='column'>
+        <Box w='100%'>
           {props.children}
-        </Flex>
+        </Box>
       </Flex>
     </Router>
   )

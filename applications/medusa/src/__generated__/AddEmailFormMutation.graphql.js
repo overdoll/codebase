@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 2d0267655c32497ae017e707ecbb2341
+ * @relayHash 11225120e6fd1210cdd23abd0729955a
  */
 
 /* eslint-disable */
@@ -8,6 +8,7 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
+export type AccountEmailStatus = "CONFIRMED" | "PRIMARY" | "UNCONFIRMED" | "%future added value";
 export type AddAccountEmailInput = {|
   email: string
 |};
@@ -17,7 +18,9 @@ export type AddEmailFormMutationVariables = {|
 export type AddEmailFormMutationResponse = {|
   +addAccountEmail: ?{|
     +accountEmail: ?{|
-      +email: string
+      +id: string,
+      +email: string,
+      +status: AccountEmailStatus,
     |}
   |}
 |};
@@ -33,8 +36,9 @@ mutation AddEmailFormMutation(
 ) {
   addAccountEmail(input: $input) {
     accountEmail {
-      email
       id
+      email
+      status
     }
   }
 }
@@ -50,49 +54,62 @@ var v0 = [
 ],
 v1 = [
   {
-    "kind": "Variable",
-    "name": "input",
-    "variableName": "input"
-  }
-],
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "email",
-  "storageKey": null
-};
-return {
-  "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
-    "kind": "Fragment",
-    "metadata": null,
-    "name": "AddEmailFormMutation",
+    "alias": null,
+    "args": [
+      {
+        "kind": "Variable",
+        "name": "input",
+        "variableName": "input"
+      }
+    ],
+    "concreteType": "AddAccountEmailPayload",
+    "kind": "LinkedField",
+    "name": "addAccountEmail",
+    "plural": false,
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
-        "concreteType": "AddAccountEmailPayload",
+        "args": null,
+        "concreteType": "AccountEmail",
         "kind": "LinkedField",
-        "name": "addAccountEmail",
+        "name": "accountEmail",
         "plural": false,
         "selections": [
           {
             "alias": null,
             "args": null,
-            "concreteType": "AccountEmail",
-            "kind": "LinkedField",
-            "name": "accountEmail",
-            "plural": false,
-            "selections": [
-              (v2/*: any*/)
-            ],
+            "kind": "ScalarField",
+            "name": "id",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "email",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "status",
             "storageKey": null
           }
         ],
         "storageKey": null
       }
     ],
+    "storageKey": null
+  }
+];
+return {
+  "fragment": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "AddEmailFormMutation",
+    "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -101,41 +118,10 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "AddEmailFormMutation",
-    "selections": [
-      {
-        "alias": null,
-        "args": (v1/*: any*/),
-        "concreteType": "AddAccountEmailPayload",
-        "kind": "LinkedField",
-        "name": "addAccountEmail",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "AccountEmail",
-            "kind": "LinkedField",
-            "name": "accountEmail",
-            "plural": false,
-            "selections": [
-              (v2/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "id",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      }
-    ]
+    "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "2d0267655c32497ae017e707ecbb2341",
+    "id": "11225120e6fd1210cdd23abd0729955a",
     "metadata": {},
     "name": "AddEmailFormMutation",
     "operationKind": "mutation",
@@ -144,5 +130,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '8af2b46c386e64807d5b7654c52cdb8f';
+(node: any).hash = '3d32183b17942ea649760a81a485902f';
 module.exports = node;

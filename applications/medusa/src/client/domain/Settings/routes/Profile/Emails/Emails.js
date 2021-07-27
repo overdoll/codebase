@@ -42,10 +42,12 @@ const EmailsFragmentGQL = graphql`
 `
 
 const MakeEmailPrimaryMutationGQL = graphql`
-  mutation EmailsPrimaryMutation($input: AddAccountEmailInput!) {
-    addAccountEmail(input: $input) {
+  mutation EmailsPrimaryMutation($input: UpdateAccountEmailStatusToPrimaryInput!) {
+    updateAccountEmailStatusToPrimary(input: $input) {
       accountEmail {
         id
+        status
+        email
       }
     }
   }
@@ -68,7 +70,7 @@ export default function Emails ({ emails }: Props): Node {
     MakeEmailPrimaryMutationGQL
   )
 
-  const [deleteEmail, isDeletingEmail] = useMutation<EmailsPrimaryMutation>(
+  const [deleteEmail, isDeletingEmail] = useMutation<EmailsDeleteMutation>(
     DeleteEmailMutationGQL
   )
 
@@ -111,14 +113,14 @@ export default function Emails ({ emails }: Props): Node {
       onCompleted () {
         notify({
           status: 'success',
-          title: t('profile.email.options.set_primary.query.success', { email: email }),
+          title: t('profile.email.options.delete.query.success', { email: email }),
           isClosable: true
         })
       },
       onError () {
         notify({
           status: 'error',
-          title: t('profile.email.options.set_primary.query.error', { email: email }),
+          title: t('profile.email.options.delete.query.error', { email: email }),
           isClosable: true
         })
       }
@@ -159,7 +161,7 @@ export default function Emails ({ emails }: Props): Node {
               <ConfirmedEmailCard
                 key={index} email={item.node.email} status={item.node.status}
                 onDelete={() => deleteSelectedEmail(item.node.id, item.node.email)}
-                onSetPrimary={() => setPrimary(item.node.id, item.node.email)} loading={cardsLoading}
+                onSetPrimary={() => setPrimary(item.node.id, item.node.email)} isLoading={cardsLoading}
               />
             )
           }
@@ -168,7 +170,7 @@ export default function Emails ({ emails }: Props): Node {
               <UnconfirmedEmailCard
                 key={index} email={item.node.email} status={item.node.status}
                 onDelete={() => deleteSelectedEmail(item.node.id, item.node.email)}
-                onResendEmail={() => { return null }} loading={cardsLoading}
+                onResendEmail={() => { return null }} isLoading={cardsLoading}
               />
             )
           }

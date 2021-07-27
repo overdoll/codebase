@@ -35,7 +35,9 @@ const AddEmailMutationGQL = graphql`
   mutation AddEmailFormMutation($input: AddAccountEmailInput!) {
     addAccountEmail(input: $input) {
       accountEmail {
+        id
         email
+        status
       }
     }
   }
