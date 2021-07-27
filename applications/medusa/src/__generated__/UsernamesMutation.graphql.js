@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash aee193b995a5eb26ec8bbb8e1e0247eb
+ * @relayHash 691adccd4edb11164512383708bd7442
  */
 
 /* eslint-disable */
@@ -11,10 +11,10 @@ import type { ConcreteRequest } from 'relay-runtime';
 export type UpdateAccountUsernameAndRetainPreviousInput = {|
   username: string
 |};
-export type UsernameMutationVariables = {|
+export type UsernamesMutationVariables = {|
   input: UpdateAccountUsernameAndRetainPreviousInput
 |};
-export type UsernameMutationResponse = {|
+export type UsernamesMutationResponse = {|
   +updateAccountUsernameAndRetainPrevious: ?{|
     +accountUsername: ?{|
       +username: string,
@@ -25,14 +25,14 @@ export type UsernameMutationResponse = {|
     |}
   |}
 |};
-export type UsernameMutation = {|
-  variables: UsernameMutationVariables,
-  response: UsernameMutationResponse,
+export type UsernamesMutation = {|
+  variables: UsernamesMutationVariables,
+  response: UsernamesMutationResponse,
 |};
 
 
 /*
-mutation UsernameMutation(
+mutation UsernamesMutation(
   $input: UpdateAccountUsernameAndRetainPreviousInput!
 ) {
   updateAccountUsernameAndRetainPrevious(input: $input) {
@@ -95,7 +95,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "UsernameMutation",
+    "name": "UsernamesMutation",
     "selections": [
       {
         "alias": null,
@@ -129,7 +129,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "UsernameMutation",
+    "name": "UsernamesMutation",
     "selections": [
       {
         "alias": null,
@@ -159,14 +159,14 @@ return {
     ]
   },
   "params": {
-    "id": "aee193b995a5eb26ec8bbb8e1e0247eb",
+    "id": "691adccd4edb11164512383708bd7442",
     "metadata": {},
-    "name": "UsernameMutation",
+    "name": "UsernamesMutation",
     "operationKind": "mutation",
     "text": null
   }
 };
 })();
 // prettier-ignore
-(node: any).hash = 'ddcabcc184d10df1fb8b99a8fef79610';
+(node: any).hash = 'b736b1ed45761242a6b84217f520b338';
 module.exports = node;

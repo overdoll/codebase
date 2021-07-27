@@ -14,48 +14,32 @@ import { graphql, usePreloadedQuery, useQueryLoader } from 'react-relay/hooks'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
 import type { ProfileSettingsQuery } from '@//:artifacts/ProfileSettingsQuery.graphql'
 import ErrorFallback from '../../../../components/ErrorFallback/ErrorFallback'
-import Username from './components/Username/Username'
+import Usernames from './components/Usernames/Usernames'
 import Emails from './components/Emails/Emails'
+import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner'
 
 type Props = {
-  profileQuery: PreloadedQueryInner<ProfileSettingsQuery>,
+  prepared: {
+    stateQuery: PreloadedQueryInner<ProfileSettingsQuery>,
+  }
 };
 
 const generalSettingsGQL = graphql`
   query ProfileSettingsQuery {
     viewer {
-      usernames {
-        edges {
-          node {
-            username
-          }
-        }
-      }
-      emails {
-        edges {
-          node {
-            email
-            status
-          }
-        }
-      }
+      ...UsernamesSettingsFragment
+      ...EmailsSettingsFragment
     }
   }
 `
 
 export default function Profile (props: Props): Node {
-  const [queryRef, loadQuery] = useQueryLoader<ProfileSettingsQuery>(
+  const data = usePreloadedQuery<ProfileSettingsQuery>(
     generalSettingsGQL,
-    props.profileQuery
+    props.prepared.stateQuery
   )
 
-  useEffect(() => {
-    loadQuery()
-  }, [])
-
-  const refresh = useCallback(() => {
-    loadQuery()
-  }, [])
+  console.log(data)
 
   return (
     <>
@@ -69,42 +53,20 @@ export default function Profile (props: Props): Node {
           direction='column'
           mb={6}
         >
-          <ErrorBoundary
-            fallback={({ error, reset }) => (
-              <ErrorFallback error={error} reset={reset} refetch={refresh} />
-            )}
-          >
-            <Suspense fallback={null}>
-              {queryRef === null
-                ? <Flex justify='center'>
-                  <Spinner size='lg' color='red.500' />
-                </Flex>
-                : <Content query={generalSettingsGQL} queryRef={queryRef} refresh={refresh} />}
-            </Suspense>
-          </ErrorBoundary>
+          <Suspense fallback={<CenteredSpinner />}>
+            <Stack spacing={8}>
+              <Flex direction='column'>
+                <Usernames
+                  usernames={data?.usernames}
+                />
+              </Flex>
+              <Flex direction='column'>
+                <Emails emails={data?.emails} />
+              </Flex>
+            </Stack>
+          </Suspense>
         </Flex>
       </Center>
     </>
-  )
-}
-
-const Content = (props) => {
-  const data = usePreloadedQuery<ProfileSettingsQuery>(
-    props.query,
-    props.queryRef
-  )
-
-  return (
-    <Stack spacing={8}>
-      <Flex direction='column'>
-        <Username
-          username={data.authenticatedAccount.username} usernames={data.accountSettings.general.usernames}
-          refresh={props.refresh}
-        />
-      </Flex>
-      <Flex direction='column'>
-        <Emails refresh={props.refresh} emails={data.accountSettings.general.emails} />
-      </Flex>
-    </Stack>
   )
 }

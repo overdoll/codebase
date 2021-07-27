@@ -4,23 +4,7 @@
 import JSResource from '@//:modules/utilities/JSResource'
 import type { Route } from '@//:modules/routing/router'
 import defineAbility from '@//:modules/utilities/functions/defineAbility/defineAbility'
-
-// hacky way to get the current viewer
-const getUserFromEnvironment = environment => {
-  const viewerRef = environment
-    .getStore()
-    .getSource()
-    .get('client:root')
-
-  if (viewerRef.viewer) {
-    return environment
-      .getStore()
-      .getSource()
-      .get(viewerRef.viewer.__ref)
-  }
-
-  return null
-}
+import getUserFromEnvironment from '@//:modules/routing/getUserFromEnvironment'
 
 const getAbilityFromUser = (environment) => {
   return defineAbility(getUserFromEnvironment(environment))
@@ -219,7 +203,7 @@ const routes: Array<Route> = [
         ]
       },
       {
-        path: '/s',
+        path: '/settings',
         component: JSResource('SettingsRoot', () =>
           import(
             /* webpackChunkName: "SettingsRoot" */ './domain/Settings/Settings'
@@ -240,16 +224,28 @@ const routes: Array<Route> = [
         ],
         routes: [
           {
-            path: '/s/profile',
+            path: '/settings/profile',
             component: JSResource('SettingsProfileRoot', () =>
               import(
                 /* webpackChunkName: "SettingsProfileRoot" */ './domain/Settings/routes/Profile/Profile'
               ),
             module.hot
-            )
+            ),
+            prepare: params => {
+              const ProfileSettingsQuery = require('@//:artifacts/ProfileSettingsQuery.graphql')
+              return {
+                stateQuery: {
+                  query: ProfileSettingsQuery,
+                  variables: {},
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
           },
           {
-            path: '/s/security',
+            path: '/settings/security',
             component: JSResource('SettingsSecurityRoot', () =>
               import(
                 /* webpackChunkName: "SettingsSecurityRoot" */ './domain/Settings/routes/Security/Security'
@@ -258,7 +254,7 @@ const routes: Array<Route> = [
             )
           },
           {
-            path: '/s/moderation',
+            path: '/settings/moderation',
             component: JSResource('SettingsModerationRoot', () =>
               import(
                 /* webpackChunkName: "SettingsModerationRoot" */ './domain/Settings/routes/Moderation/Moderation'

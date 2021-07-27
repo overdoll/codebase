@@ -15,7 +15,7 @@ type Props = {
   selected: boolean,
 }
 
-export default function NavItem ({ route, icon, selected, label }: Props): Node {
+export default function TopNavigationItem ({ route, icon, selected, label }: Props): Node {
   return (
     <Link to={route}>
       <Tooltip hasArrow label={label} placement='bottom'>

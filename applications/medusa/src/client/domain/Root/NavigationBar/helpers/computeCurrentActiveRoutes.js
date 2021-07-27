@@ -7,6 +7,7 @@ import routes from '../routing/navigation'
 export default function computeCurrentActiveRoutes ({ environment }) {
   const activeRoutes = routes
 
+  // Determine if route is valid by calling the middleware function in the route
   const isRouteValid = (data, route) => {
     if (Object.prototype.hasOwnProperty.call(route, 'middleware')) {
       for (let i = 0; i < route.middleware.length; i++) {
@@ -16,11 +17,36 @@ export default function computeCurrentActiveRoutes ({ environment }) {
     return true
   }
 
+  // Filter for all disabled routes
   const navDisabled = (routes) => {
     const disabled = routes.filter((item) => item.hidden)
     return disabled.map((item) => { return item.path }
     )
   }
+
+  // TODO rewrite the whole function to make it more readable
+
+  /*
+ const navRoutes2 =
+   activeRoutes.map((item) => {
+     if (item.navigation && isRouteValid({ environment }, item)) {
+       return ({
+         ...item,
+         ...(item.navigation?.side && item.routes.map((childItem) => {
+           if (childItem.navigation?.side && isRouteValid({ environment }, childItem.path)) {
+             return ({
+               ...childItem
+             })
+           }
+         }))
+       })
+     }
+     return null
+   })
+
+   console.log(navRoutes2)
+
+   */
 
   const navRoutes = (routes) => {
     const navHeaders = []

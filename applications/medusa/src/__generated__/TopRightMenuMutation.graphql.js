@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 35e6c42c1ed318ec1d189ef56ec9570f
+ * @relayHash 171135cf317baffe9e38fc48365f6877
  */
 
 /* eslint-disable */
@@ -8,20 +8,20 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-export type NavMenuMutationVariables = {||};
-export type NavMenuMutationResponse = {|
+export type TopRightMenuMutationVariables = {||};
+export type TopRightMenuMutationResponse = {|
   +revokeAccountAccess: ?{|
     +revokedAccountId: string
   |}
 |};
-export type NavMenuMutation = {|
-  variables: NavMenuMutationVariables,
-  response: NavMenuMutationResponse,
+export type TopRightMenuMutation = {|
+  variables: TopRightMenuMutationVariables,
+  response: TopRightMenuMutationResponse,
 |};
 
 
 /*
-mutation NavMenuMutation {
+mutation TopRightMenuMutation {
   revokeAccountAccess {
     revokedAccountId
   }
@@ -54,7 +54,7 @@ return {
     "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
-    "name": "NavMenuMutation",
+    "name": "TopRightMenuMutation",
     "selections": (v0/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -63,18 +63,18 @@ return {
   "operation": {
     "argumentDefinitions": [],
     "kind": "Operation",
-    "name": "NavMenuMutation",
+    "name": "TopRightMenuMutation",
     "selections": (v0/*: any*/)
   },
   "params": {
-    "id": "35e6c42c1ed318ec1d189ef56ec9570f",
+    "id": "171135cf317baffe9e38fc48365f6877",
     "metadata": {},
-    "name": "NavMenuMutation",
+    "name": "TopRightMenuMutation",
     "operationKind": "mutation",
     "text": null
   }
 };
 })();
 // prettier-ignore
-(node: any).hash = 'ae763c4adbdbe6536012c719f7714a52';
+(node: any).hash = '23512c413fbb44a4cda1f3a9c43500dc';
 module.exports = node;

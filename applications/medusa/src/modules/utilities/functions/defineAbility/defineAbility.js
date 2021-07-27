@@ -1,16 +1,20 @@
 import { Ability, AbilityBuilder } from '@casl/ability'
 
-export default function defineAbility (user) {
+export default function defineAbility (isLoggedIn, isModerator, isStaff) {
   const { can, build } = new AbilityBuilder(Ability)
 
-  if (user) {
+  // Check if user is logged in
+  if (isLoggedIn) {
     can('manage', 'account')
 
-    if (user.isModerator) {
+    // Check if user is a moderator and give permissions accordingly
+    if (isModerator) {
       can(['read', 'manage'], 'pendingPosts')
     }
 
-    if (user.isStaff) {
+    // Check if user is staff and give access to everything
+    if (isStaff) {
+      can('manage', 'moderators')
       can('manage', 'all')
     }
   }

@@ -3,18 +3,13 @@
  */
 import type { Route } from '@//:modules/routing/router'
 import defineAbility from '@//:modules/utilities/functions/defineAbility/defineAbility'
+import getUserFromEnvironment from '@//:modules/routing/getUserFromEnvironment'
 
 import BirdHouse from '@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/home/bird-house.svg'
 import LoginKeys
   from '@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/login-logout/login-keys.svg'
 import ContentBrushPen
   from '@streamlinehq/streamlinehq/img/streamline-bold/content/content-creation/content-brush-pen.svg'
-
-const getUserFromEnvironment = environment =>
-  environment
-    .getStore()
-    .getSource()
-    .get('client:root:authenticatedAccount')
 
 const getAbilityFromUser = (environment) => {
   return defineAbility(getUserFromEnvironment(environment))
@@ -118,7 +113,7 @@ const routes: Array<Route> = [
     }
   },
   {
-    path: '/s',
+    path: '/settings',
     navigation: {
       hidden: true,
       side: {
@@ -127,7 +122,7 @@ const routes: Array<Route> = [
     },
     routes: [
       {
-        path: '/s/profile',
+        path: '/settings/profile',
         navigation: {
           side: {
             title: 'sidebar.settings.profile'
@@ -135,7 +130,7 @@ const routes: Array<Route> = [
         }
       },
       {
-        path: '/s/security',
+        path: '/settings/security',
         navigation: {
           side: {
             title: 'sidebar.settings.security'
@@ -143,7 +138,7 @@ const routes: Array<Route> = [
         }
       },
       {
-        path: '/s/moderation',
+        path: '/settings/moderation',
         navigation: {
           side: {
             title: 'sidebar.settings.moderation'
