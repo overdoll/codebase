@@ -2,6 +2,9 @@ package command
 
 import (
 	"context"
+	"net/url"
+	"os"
+	"path"
 
 	"github.com/matcornic/hermes/v2"
 	"overdoll/applications/carrier/internal/domain/mailing"
@@ -18,22 +21,34 @@ func NewNewLoginTokenHandler(mr mailing.Repository) NewLoginTokenHandler {
 
 func (h NewLoginTokenHandler) Handle(ctx context.Context, tokenEmail, token string) error {
 
+	u, err := url.Parse(os.Getenv("APP_URL"))
+
+	if err != nil {
+		return err
+	}
+
+	u.Path = path.Join(u.Path, "token", token)
+
 	email := hermes.Email{
 		Body: hermes.Body{
-			Name:         "",
-			Intros:       nil,
-			Dictionary:   nil,
-			Table:        hermes.Table{},
-			Actions:      nil,
-			Outros:       nil,
-			Greeting:     "",
-			Signature:    "",
-			Title:        "",
-			FreeMarkdown: "",
+			Name: "Anonymous",
+			Intros: []string{
+				"Welcome!",
+			},
+			Actions: []hermes.Action{
+				{
+					Instructions: "To get started, please click here:",
+					Button: hermes.Button{
+						Color: "#22BC66", // Optional action button color
+						Text:  "Login",
+						Link:  u.String(),
+					},
+				},
+			},
 		},
 	}
 
-	subject := "test"
+	subject := "login"
 
 	template, err := mailing.EmailFromTemplate(subject, email)
 

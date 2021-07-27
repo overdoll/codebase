@@ -3,6 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "mailing",
     srcs = [
+        "darkmode_template.go",
         "email.go",
         "recipient.go",
         "repository.go",

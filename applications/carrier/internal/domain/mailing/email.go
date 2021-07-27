@@ -32,13 +32,15 @@ func (r *Email) HTML() string {
 
 func EmailFromTemplate(subject string, email hermes.Email) (*Email, error) {
 
-	html, err := template.GenerateHTML(email)
+	temp := NewTemplate()
+
+	html, err := temp.GenerateHTML(email)
 
 	if err != nil {
 		return nil, err
 	}
 
-	plainText, err := template.GeneratePlainText(email)
+	plainText, err := temp.GeneratePlainText(email)
 
 	if err != nil {
 		return nil, err
