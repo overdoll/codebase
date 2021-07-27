@@ -1,7 +1,7 @@
 steps:
   build:
     targets:
-      - //applications/eva:eva
+      - //applications/eva/internal:internal
 
   unit_test:
     coverage:
@@ -9,22 +9,22 @@ steps:
         paths:
           - ./applications/eva/**/coverage.dat
     targets:
-      - //applications/eva/src/app/...
-      - //applications/eva/src/domain/...
-      - //applications/eva/src/ports/...
+      - //applications/eva/internal/app/...
+      - //applications/eva/internal/domain/...
+      - //applications/eva/internal/ports/...
 
   push_image:
     targets:
-      - //applications/eva:publish-testing
+      - //applications/eva/internal:publish-testing
 
   integration_test:
     coverage:
       - name: eva.integration
         paths:
-          - ./applications/eva/src/adapters/**/coverage.dat
+          - ./applications/eva/internal/adapters/**/coverage.dat
       - name: eva.component
         paths:
-          - ./applications/eva/src/service/**/coverage.dat
+          - ./applications/eva/internal/service/**/coverage.dat
     setup:
       dockerfile:
         - ./applications/eva/docker-compose.ci.yaml
@@ -32,8 +32,8 @@ steps:
       - host: eva
         port: 8000
     targets:
-      - //applications/eva/src/adapters/...
-      - //applications/eva/src/service/...
+      - //applications/eva/internal/adapters/...
+      - //applications/eva/internal/service/...
 
   e2e_test:
     setup:
@@ -46,4 +46,4 @@ steps:
 
   publish_image:
     targets:
-      - //applications/eva:publish
+      - //applications/eva/internal:publish
