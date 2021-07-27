@@ -2,16 +2,16 @@ package query
 
 import (
 	"context"
-	"errors"
 
-	"go.uber.org/zap"
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/libraries/paging"
 )
 
-var (
-	errFailedSearchAccount = errors.New("failed to search accounts")
-)
+type SearchAccounts struct {
+	Cursor   *paging.Cursor
+	Username string
+	IsArtist bool
+}
 
 type SearchAccountsHandler struct {
 	ar account.IndexRepository
@@ -21,13 +21,12 @@ func NewSearchAccountsHandler(ar account.IndexRepository) SearchAccountsHandler 
 	return SearchAccountsHandler{ar: ar}
 }
 
-func (h SearchAccountsHandler) Handle(ctx context.Context, cursor *paging.Cursor, username string, isArtist bool) ([]*account.Account, error) {
+func (h SearchAccountsHandler) Handle(ctx context.Context, query SearchAccounts) ([]*account.Account, error) {
 
-	results, err := h.ar.SearchAccounts(ctx, cursor, username, isArtist)
+	results, err := h.ar.SearchAccounts(ctx, query.Cursor, query.Username, query.IsArtist)
 
 	if err != nil {
-		zap.S().Errorf("failed to search accounts: %s", err)
-		return nil, errFailedSearchAccount
+		return nil, err
 	}
 
 	return results, nil

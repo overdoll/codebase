@@ -7,7 +7,6 @@ import (
 	"overdoll/applications/buffer/internal/adapters"
 	"overdoll/applications/buffer/internal/app"
 	"overdoll/applications/buffer/internal/app/command"
-	"overdoll/applications/buffer/internal/app/query"
 	storage "overdoll/libraries/aws"
 	"overdoll/libraries/bootstrap"
 )
@@ -18,10 +17,6 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 		func() {
 
 		}
-}
-
-func NewComponentTestApplication(ctx context.Context) app.Application {
-	return createApplication(ctx)
 }
 
 func createApplication(ctx context.Context) app.Application {
@@ -44,8 +39,6 @@ func createApplication(ctx context.Context) app.Application {
 		Commands: app.Commands{
 			HandleUpload: command.NewHandleUploadHandler(repo),
 		},
-		Queries: app.Queries{
-			GetFile: query.NewGetFileHandler(repo),
-		},
+		Queries: app.Queries{},
 	}
 }

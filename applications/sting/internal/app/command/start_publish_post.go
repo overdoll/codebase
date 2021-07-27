@@ -6,6 +6,10 @@ import (
 	"overdoll/applications/sting/internal/domain/post"
 )
 
+type StartPublishPost struct {
+	PostId string
+}
+
 type StartPublishPostHandler struct {
 	pi  post.IndexRepository
 	pr  post.Repository
@@ -16,9 +20,9 @@ func NewStartPublishPostHandler(pr post.Repository, pi post.IndexRepository, eva
 	return StartPublishPostHandler{pr: pr, pi: pi, eva: eva}
 }
 
-func (h StartPublishPostHandler) Handle(ctx context.Context, id string) error {
+func (h StartPublishPostHandler) Handle(ctx context.Context, cmd StartPublishPost) error {
 
-	pendingPost, err := h.pr.UpdatePost(ctx, id, func(pending *post.Post) error {
+	pendingPost, err := h.pr.UpdatePost(ctx, cmd.PostId, func(pending *post.Post) error {
 
 		// if no artist assigned, create it
 		if pending.IsCustomArtist() {

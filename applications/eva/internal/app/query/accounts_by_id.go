@@ -2,15 +2,13 @@ package query
 
 import (
 	"context"
-	"errors"
 
-	"go.uber.org/zap"
 	"overdoll/applications/eva/internal/domain/account"
 )
 
-var (
-	errFailedAccountsByIdHandler = errors.New("failed to get accounts by id")
-)
+type AccountsById struct {
+	AccountIds []string
+}
 
 type AccountsByIdHandler struct {
 	ur account.Repository
@@ -20,14 +18,13 @@ func NewAccountsByIdHandler(ur account.Repository) AccountsByIdHandler {
 	return AccountsByIdHandler{ur: ur}
 }
 
-func (h AccountsByIdHandler) Handle(ctx context.Context, ids []string) ([]*account.Account, error) {
+func (h AccountsByIdHandler) Handle(ctx context.Context, query AccountsById) ([]*account.Account, error) {
 
-	accs, err := h.ur.GetAccountsById(ctx, ids)
+	accounts, err := h.ur.GetAccountsById(ctx, query.AccountIds)
 
 	if err != nil {
-		zap.S().Errorf("failed to get account by id: %s", err)
-		return nil, errFailedAccountsByIdHandler
+		return nil, err
 	}
 
-	return accs, nil
+	return accounts, nil
 }

@@ -2,22 +2,17 @@ package command
 
 import (
 	"context"
-	"errors"
 
-	"go.uber.org/zap"
 	"overdoll/applications/eva/internal/domain/account"
 )
 
-var (
-	errFailedAddAccountEmail = errors.New("failed to add email to account")
-)
-
-const (
-	validationErrEmailNotUnique = "email_not_unique"
-)
+type AddAccountEmail struct {
+	AccountId string
+	Email     string
+}
 
 type AddAccountEmailHandler struct {
-	ar account.Repository
+	ar      account.Repository
 	carrier CarrierService
 }
 
@@ -25,33 +20,31 @@ func NewAddAccountEmailHandler(ar account.Repository, carrier CarrierService) Ad
 	return AddAccountEmailHandler{ar: ar, carrier: carrier}
 }
 
-func (h AddAccountEmailHandler) Handle(ctx context.Context, userId, email string) (*account.Email, string, error) {
+func (h AddAccountEmailHandler) Handle(ctx context.Context, cmd AddAccountEmail) (*account.Email, error) {
 
-	acc, err := h.ar.GetAccountById(ctx, userId)
+	acc, err := h.ar.GetAccountById(ctx, cmd.AccountId)
 
 	if err != nil {
-		zap.S().Errorf("failed to get user: %s", err)
-		return nil, "", errFailedAddAccountEmail
+		return nil, err
 	}
 
-	confirm, err := account.NewEmailConfirmation(email)
+	// create new confirmation instance
+	confirm, err := account.NewEmailConfirmation(cmd.Email)
 
 	if err != nil {
-		return nil, "", err
+		return nil, err
 	}
 
 	em, err := h.ar.AddAccountEmail(ctx, acc, confirm)
 
 	if err != nil {
-		if err == account.ErrEmailNotUnique {
-			return nil, validationErrEmailNotUnique, nil
-		}
-
-		zap.S().Errorf("failed to add email: %s", err)
-		return nil, "", errFailedAddAccountEmail
+		return nil, err
 	}
 
-	// TODO: send an email confirmation here
+	// tell carrier to send a notification email
+	if err := h.carrier.ConfirmAccountEmail(ctx, cmd.AccountId, cmd.Email, confirm.ID()); err != nil {
+		return nil, err
+	}
 
-	return em, "", nil
+	return em, nil
 }

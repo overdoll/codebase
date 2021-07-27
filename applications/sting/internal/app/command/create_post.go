@@ -2,87 +2,90 @@ package command
 
 import (
 	"context"
-	"errors"
 
-	"go.uber.org/zap"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/account"
 	"overdoll/libraries/uuid"
 )
 
-var (
-	errFailedPost = errors.New("post failed")
-)
+type CreatePost struct {
+	ContributorId string
+	// optional
+	ExistingArtistId  *string
+	ArtistUsername    string
+	PosterIsArtist    bool
+	Content           []string
+	CharacterIds      []string
+	CategoryIds       []string
+	CharacterRequests map[string]string
+	MediaRequests     []string
+}
 
-type CreatePendingPostHandler struct {
+type CreatePostHandler struct {
 	pr     post.Repository
 	parley ParleyService
 	eva    EvaService
 }
 
-func NewCreatePendingPostHandler(pr post.Repository, eva EvaService, parley ParleyService) CreatePendingPostHandler {
-	return CreatePendingPostHandler{pr: pr, eva: eva, parley: parley}
+func NewCreatePostHandler(pr post.Repository, eva EvaService, parley ParleyService) CreatePostHandler {
+	return CreatePostHandler{pr: pr, eva: eva, parley: parley}
 }
 
-func (h CreatePendingPostHandler) Handle(ctx context.Context, contributorId, existingArtistId, artistUsername string, posterIsArtist bool, content, characterIds, categoryIds []string, characterRequests map[string]string, mediaRequests []string) (*post.Post, error) {
+func (h CreatePostHandler) Handle(ctx context.Context, cmd CreatePost) (*post.Post, error) {
 
 	// Get our contributor
-	contributor, err := h.eva.GetAccount(ctx, contributorId)
+	contributor, err := h.eva.GetAccount(ctx, cmd.ContributorId)
 
 	if err != nil {
-		zap.S().Errorf("failed to get user: %s", err)
-		return nil, nil
+		return nil, err
 	}
 
 	if contributor.IsLocked() {
-		return nil, errFailedPost
+		return nil, err
 	}
 
-	characters, err := h.pr.GetCharactersById(ctx, characterIds)
+	characters, err := h.pr.GetCharactersById(ctx, cmd.CharacterIds)
 
 	if err != nil {
-		return nil, errFailedPost
+		return nil, err
 	}
 
-	categories, err := h.pr.GetCategoriesById(ctx, categoryIds)
+	categories, err := h.pr.GetCategoriesById(ctx, cmd.CategoryIds)
 
 	if err != nil {
-		return nil, errFailedPost
+		return nil, err
 	}
 
 	var artist *account.Account
 
-	if posterIsArtist {
-		artist, err = h.eva.GetAccount(ctx, contributorId)
+	if cmd.PosterIsArtist {
+		artist, err = h.eva.GetAccount(ctx, cmd.ContributorId)
 
 		if err != nil {
-			zap.S().Errorf("failed to get account: %s", err)
-			return nil, errFailedPost
+			return nil, err
 		}
-	} else if existingArtistId != "" {
-		artist, err = h.eva.GetAccount(ctx, existingArtistId)
+	} else if cmd.ExistingArtistId != nil {
+		artist, err = h.eva.GetAccount(ctx, *cmd.ExistingArtistId)
 
 		if err != nil {
-			zap.S().Errorf("failed to get account: %s", err)
-			return nil, errFailedPost
+			return nil, err
 		}
 	}
 
 	moderatorId, err := h.parley.GetNextModeratorId(ctx)
 
 	if err != nil {
-		zap.S().Errorf("failed to get moderator: %s", err)
-		return nil, nil
+		return nil, err
 	}
 
-	pendingPost, err := post.NewPost(uuid.New().String(), moderatorId, artist, artistUsername, contributor, content, characters, categories)
+	pendingPost, err := post.NewPost(uuid.New().String(), moderatorId, artist, cmd.ArtistUsername, contributor, cmd.Content, characters, categories)
 
 	if err != nil {
 		return nil, err
 	}
 
 	// Request new resources
-	pendingPost.RequestResources(characterRequests, make([]string, 0), mediaRequests)
+	pendingPost.RequestResources(cmd.CharacterRequests, make([]string, 0), cmd.MediaRequests)
 
 	_ = pendingPost.MakeProcessing()
 

@@ -16,6 +16,7 @@ func NewEvaGrpc(client eva.EvaClient) EvaGrpc {
 }
 
 func (s EvaGrpc) GetAccount(ctx context.Context, id string) (*account.Account, error) {
+
 	usr, err := s.client.GetAccount(ctx, &eva.GetAccountRequest{
 		Id: id,
 	})

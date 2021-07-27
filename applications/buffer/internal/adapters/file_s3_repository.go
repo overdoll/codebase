@@ -2,19 +2,15 @@ package adapters
 
 import (
 	"context"
-	"io"
 
-	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	tusd "github.com/tus/tusd/pkg/handler"
 	"github.com/tus/tusd/pkg/s3store"
-	"overdoll/applications/buffer/internal/domain/file"
 )
 
 const (
-	ImageProcessingBucket = "overdoll-processing"
-	ImageUploadsBucket    = "overdoll-uploads"
+	ImageUploadsBucket = "overdoll-uploads"
 )
 
 type FileS3Repository struct {
@@ -23,19 +19,6 @@ type FileS3Repository struct {
 
 func NewFileS3Repository(session *session.Session) FileS3Repository {
 	return FileS3Repository{session: session}
-}
-
-func (r FileS3Repository) GetFile(ctx context.Context, file *file.File) (io.ReadCloser, error) {
-
-	s3Client := s3.New(r.session)
-
-	object, err := s3Client.GetObject(&s3.GetObjectInput{Bucket: aws.String(ImageProcessingBucket), Key: aws.String(file.GetLocation())})
-
-	if err != nil {
-		return nil, err
-	}
-
-	return object.Body, nil
 }
 
 func (r FileS3Repository) GetComposer(ctx context.Context) (*tusd.StoreComposer, error) {

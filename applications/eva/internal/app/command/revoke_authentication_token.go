@@ -2,15 +2,13 @@ package command
 
 import (
 	"context"
-	"errors"
 
-	"go.uber.org/zap"
 	"overdoll/applications/eva/internal/domain/token"
 )
 
-var (
-	errFailedRevokeAuthenticationToken = errors.New("failed to revoke token")
-)
+type RevokeAuthenticationToken struct {
+	TokenId string
+}
 
 type RevokeAuthenticationTokenHandler struct {
 	cr token.Repository
@@ -20,13 +18,6 @@ func NewRevokeAuthenticationTokenHandler(cr token.Repository) RevokeAuthenticati
 	return RevokeAuthenticationTokenHandler{cr: cr}
 }
 
-func (h RevokeAuthenticationTokenHandler) Handle(ctx context.Context, tokenId string) error {
-
-	if err := h.cr.DeleteAuthenticationTokenById(ctx, tokenId); err != nil {
-		zap.S().Errorf("failed to delete token: %s", err)
-		return errFailedRevokeAuthenticationToken
-	}
-
-	return nil
-
+func (h RevokeAuthenticationTokenHandler) Handle(ctx context.Context, cmd RevokeAuthenticationToken) error {
+	return h.cr.DeleteAuthenticationTokenById(ctx, cmd.TokenId)
 }

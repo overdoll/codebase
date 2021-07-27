@@ -3,10 +3,13 @@ package command
 import (
 	"context"
 
-	"go.uber.org/zap"
 	"overdoll/applications/sting/internal/domain/content"
 	"overdoll/applications/sting/internal/domain/post"
 )
+
+type DiscardPost struct {
+	PostId string
+}
 
 type DiscardPostHandler struct {
 	pi  post.IndexRepository
@@ -19,9 +22,9 @@ func NewDiscardPostHandler(pr post.Repository, pi post.IndexRepository, cnt cont
 	return DiscardPostHandler{pr: pr, pi: pi, eva: eva, cnt: cnt}
 }
 
-func (h DiscardPostHandler) Handle(ctx context.Context, id string) error {
+func (h DiscardPostHandler) Handle(ctx context.Context, cmd DiscardPost) error {
 
-	pendingPost, err := h.pr.UpdatePost(ctx, id, func(pending *post.Post) error {
+	pendingPost, err := h.pr.UpdatePost(ctx, cmd.PostId, func(pending *post.Post) error {
 
 		// On discarded posts, delete the content from S3
 		if err := h.cnt.DeleteProcessedContent(ctx, pending.ContributorId(), pending.Content()); err != nil {
@@ -37,7 +40,6 @@ func (h DiscardPostHandler) Handle(ctx context.Context, id string) error {
 
 	// delete document because it's been processed
 	if err := h.pi.DeletePost(ctx, pendingPost.ID()); err != nil {
-		zap.S().Errorf("failed to index post: %s", err)
 		return err
 	}
 

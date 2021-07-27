@@ -11,7 +11,7 @@ type Application struct {
 }
 
 type Commands struct {
-	CreatePost command.CreatePendingPostHandler
+	CreatePost command.CreatePostHandler
 
 	StartDiscardPost command.StartDiscardPostHandler
 	StartPublishPost command.StartPublishPostHandler

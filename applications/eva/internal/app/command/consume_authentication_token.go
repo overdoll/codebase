@@ -2,18 +2,15 @@ package command
 
 import (
 	"context"
-	"errors"
 
-	"github.com/gocql/gocql"
-	"go.uber.org/zap"
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/multi_factor"
 	"overdoll/applications/eva/internal/domain/token"
 )
 
-var (
-	errFailedTokenConsume = errors.New("failed to consume cookie")
-)
+type ConsumeAuthenticationToken struct {
+	TokenId string
+}
 
 type ConsumeAuthenticationTokenHandler struct {
 	cr token.Repository
@@ -25,19 +22,13 @@ func NewConsumeAuthenticationTokenHandler(cr token.Repository, ur account.Reposi
 	return ConsumeAuthenticationTokenHandler{cr: cr, ur: ur, mr: mr}
 }
 
-func (h ConsumeAuthenticationTokenHandler) Handle(ctx context.Context, cookieId string) error {
+func (h ConsumeAuthenticationTokenHandler) Handle(ctx context.Context, cmd ConsumeAuthenticationToken) error {
 
 	// Redeem cookie
-	ck, err := h.cr.GetAuthenticationTokenById(ctx, cookieId)
+	ck, err := h.cr.GetAuthenticationTokenById(ctx, cmd.TokenId)
 
 	if err != nil {
-
-		if err == token.ErrTokenNotFound {
-			return nil
-		}
-
-		zap.S().Errorf("failed to get cookie: %s", err == gocql.ErrNotFound)
-		return errFailedTokenConsume
+		return err
 	}
 
 	if err := ck.MakeConsumed(); err != nil {
@@ -46,9 +37,8 @@ func (h ConsumeAuthenticationTokenHandler) Handle(ctx context.Context, cookieId 
 
 	// Delete cookie - user is registered, so we don't need to wait for another call where the user will
 	// enter a username, since they already have an account and we can log them in
-	if err := h.cr.DeleteAuthenticationTokenById(ctx, cookieId); err != nil {
-		zap.S().Errorf("failed to delete cookie: %s", err)
-		return errFailedTokenConsume
+	if err := h.cr.DeleteAuthenticationTokenById(ctx, ck.Token()); err != nil {
+		return err
 	}
 
 	return err

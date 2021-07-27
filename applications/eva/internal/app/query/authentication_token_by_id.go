@@ -2,18 +2,15 @@ package query
 
 import (
 	"context"
-	"errors"
 
-	"github.com/gocql/gocql"
-	"go.uber.org/zap"
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/multi_factor"
 	"overdoll/applications/eva/internal/domain/token"
 )
 
-var (
-	errFailedGetToken = errors.New("failed to get authentication token")
-)
+type AuthenticationTokenById struct {
+	TokenId string
+}
 
 type AuthenticationTokenByIdHandler struct {
 	tr token.Repository
@@ -25,10 +22,10 @@ func NewAuthenticationTokenByIdHandler(tr token.Repository, ar account.Repositor
 	return AuthenticationTokenByIdHandler{tr: tr, ar: ar, mr: mr}
 }
 
-func (h AuthenticationTokenByIdHandler) Handle(ctx context.Context, tokenId string) (*account.Account, *token.AuthenticationToken, error) {
+func (h AuthenticationTokenByIdHandler) Handle(ctx context.Context, query AuthenticationTokenById) (*account.Account, *token.AuthenticationToken, error) {
 
 	// Redeem cookie
-	ck, err := h.tr.GetAuthenticationTokenById(ctx, tokenId)
+	ck, err := h.tr.GetAuthenticationTokenById(ctx, query.TokenId)
 
 	if err != nil {
 
@@ -36,8 +33,7 @@ func (h AuthenticationTokenByIdHandler) Handle(ctx context.Context, tokenId stri
 			return nil, nil, nil
 		}
 
-		zap.S().Errorf("failed to get cookie: %s", err == gocql.ErrNotFound)
-		return nil, nil, errFailedGetToken
+		return nil, nil, err
 	}
 
 	// Verified - check if user exists with this email
@@ -50,8 +46,7 @@ func (h AuthenticationTokenByIdHandler) Handle(ctx context.Context, tokenId stri
 			return nil, ck, nil
 		}
 
-		zap.S().Errorf("failed to find user: %s", err)
-		return nil, nil, errFailedGetToken
+		return nil, nil, err
 	}
 
 	// multi-factor auth is enabled, we get the auth types and figure out which ones the user has
@@ -68,8 +63,7 @@ func (h AuthenticationTokenByIdHandler) Handle(ctx context.Context, tokenId stri
 		}
 
 		if err != multi_factor.ErrTOTPNotConfigured {
-			zap.S().Errorf("failed to get totp: %s", err)
-			return nil, nil, errFailedGetToken
+			return nil, nil, err
 		}
 
 		return nil, ck, err

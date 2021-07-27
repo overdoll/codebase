@@ -6,6 +6,10 @@ import (
 	"overdoll/applications/eva/internal/domain/token"
 )
 
+type ReissueAuthenticationToken struct {
+	TokenId string
+}
+
 type ReissueAuthenticationTokenHandler struct {
 	cr      token.Repository
 	carrier CarrierService
@@ -15,9 +19,9 @@ func NewReissueAuthenticationTokenHandler(cr token.Repository, carrier CarrierSe
 	return ReissueAuthenticationTokenHandler{cr: cr, carrier: carrier}
 }
 
-func (h ReissueAuthenticationTokenHandler) Handle(ctx context.Context, tokenId string) error {
+func (h ReissueAuthenticationTokenHandler) Handle(ctx context.Context, cmd ReissueAuthenticationToken) error {
 
-	tk, err := h.cr.GetAuthenticationTokenById(ctx, tokenId)
+	tk, err := h.cr.GetAuthenticationTokenById(ctx, cmd.TokenId)
 
 	if err != nil {
 		return err

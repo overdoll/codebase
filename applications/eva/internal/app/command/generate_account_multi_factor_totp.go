@@ -2,16 +2,14 @@ package command
 
 import (
 	"context"
-	"errors"
 
-	"go.uber.org/zap"
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/multi_factor"
 )
 
-var (
-	errFailedGenerateAccountMultiFactorTOTP = errors.New("failed to generate totp info")
-)
+type GenerateAccountMultiFactorTOTP struct {
+	AccountId string
+}
 
 type GenerateAccountMultiFactorTOTPHandler struct {
 	mr multi_factor.Repository
@@ -22,27 +20,25 @@ func NewGenerateAccountMultiFactorTOTP(mr multi_factor.Repository, ar account.Re
 	return GenerateAccountMultiFactorTOTPHandler{mr: mr, ar: ar}
 }
 
-func (h GenerateAccountMultiFactorTOTPHandler) Handle(ctx context.Context, accountId string) (*multi_factor.TOTP, error) {
+func (h GenerateAccountMultiFactorTOTPHandler) Handle(ctx context.Context, cmd GenerateAccountMultiFactorTOTP) (*multi_factor.TOTP, error) {
 
-	usr, err := h.ar.GetAccountById(ctx, accountId)
+	usr, err := h.ar.GetAccountById(ctx, cmd.AccountId)
 
 	if err != nil {
-		return nil, errFailedGenerateAccountMultiFactorTOTP
+		return nil, err
 	}
 
-	codes, err := h.mr.GetAccountRecoveryCodes(ctx, accountId)
+	codes, err := h.mr.GetAccountRecoveryCodes(ctx, usr.ID())
 
 	if err != nil {
-		zap.S().Errorf("failed to get recovery codes: %s", err)
-		return nil, errFailedGenerateAccountMultiFactorTOTP
+		return nil, err
 	}
 
 	// create a new TOTP instance
 	mfa, err := multi_factor.NewTOTP(codes, usr.Username())
 
 	if err != nil {
-		zap.S().Errorf("failed to generate a set of codes: %s", err)
-		return nil, errFailedGenerateAccountMultiFactorTOTP
+		return nil, err
 	}
 
 	return mfa, nil

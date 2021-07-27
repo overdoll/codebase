@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"overdoll/applications/eva/internal/app"
+	"overdoll/applications/eva/internal/app/query"
 	"overdoll/applications/eva/internal/ports/graphql/types"
 	"overdoll/libraries/graphql"
 )
@@ -22,7 +23,7 @@ func NewLoader(app *app.Application) *Loaders {
 				accounts := make([]*types.Account, len(ids))
 				accountById := map[string]*types.Account{}
 
-				accs, err := app.Queries.AccountsById.Handle(context.Background(), ids)
+				accs, err := app.Queries.AccountsById.Handle(context.Background(), query.AccountsById{AccountIds: ids})
 
 				if err == nil {
 					for _, acc := range accs {

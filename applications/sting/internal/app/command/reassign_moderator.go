@@ -6,6 +6,10 @@ import (
 	"overdoll/applications/sting/internal/domain/post"
 )
 
+type ReassignModerator struct {
+	PostId string
+}
+
 type ReassignModeratorHandler struct {
 	pi     post.IndexRepository
 	pr     post.Repository
@@ -16,9 +20,9 @@ func NewReassignModeratorHandler(pr post.Repository, pi post.IndexRepository, pa
 	return ReassignModeratorHandler{pr: pr, pi: pi, parley: parley}
 }
 
-func (h ReassignModeratorHandler) Handle(ctx context.Context, id string) (bool, error) {
+func (h ReassignModeratorHandler) Handle(ctx context.Context, cmd ReassignModerator) (bool, error) {
 
-	pst, err := h.pr.UpdatePost(ctx, id, func(pendingPost *post.Post) error {
+	pst, err := h.pr.UpdatePost(ctx, cmd.PostId, func(pendingPost *post.Post) error {
 
 		newModId, err := h.parley.GetNextModeratorId(ctx)
 

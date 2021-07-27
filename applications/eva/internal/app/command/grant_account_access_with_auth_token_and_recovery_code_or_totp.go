@@ -2,22 +2,18 @@ package command
 
 import (
 	"context"
-	"errors"
 
-	"go.uber.org/zap"
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/multi_factor"
 	"overdoll/applications/eva/internal/domain/token"
 )
 
-var (
-	errFailedAuthenticateMultiFactor           = errors.New("failed to authenticate with multi factor")
-	errFailedAuthenticateMultiFactorNotEnabled = errors.New("failed to authenticate with multi factor - not enabled")
-)
-
-const (
-	validationErrMultiFactorCodeInvalid = "multi_factor_code_invalid"
-)
+type GrantAccountAccessWithAuthTokenAndRecoveryCodeOrTotp struct {
+	// whether or not the code entered is a recovery code
+	RecoveryCode bool
+	TokenId      string
+	Code         string
+}
 
 type GrantAccountAccessWithAuthTokenAndRecoveryCodeOrTotpHandler struct {
 	cr token.Repository
@@ -29,74 +25,53 @@ func NewGrantAccountAccessWithAuthTokenAndRecoveryCodeOrTotpHandler(cr token.Rep
 	return GrantAccountAccessWithAuthTokenAndRecoveryCodeOrTotpHandler{cr: cr, ur: ur, mr: mr}
 }
 
-func (h GrantAccountAccessWithAuthTokenAndRecoveryCodeOrTotpHandler) Handle(ctx context.Context, recoveryCode bool, cookieId, code string) (*account.Account, string, error) {
+func (h GrantAccountAccessWithAuthTokenAndRecoveryCodeOrTotpHandler) Handle(ctx context.Context, cmd GrantAccountAccessWithAuthTokenAndRecoveryCodeOrTotp) (*account.Account, error) {
 
-	ck, err := h.cr.GetAuthenticationTokenById(ctx, cookieId)
+	ck, err := h.cr.GetAuthenticationTokenById(ctx, cmd.TokenId)
 
 	if err != nil {
-		zap.S().Errorf("failed to get cookie: %s", err)
-		return nil, "", errFailedAuthenticateMultiFactor
+		return nil, err
 	}
 
 	// AuthenticationToken should have been redeemed at this point, if we are on this command
 	if err := ck.MakeConsumed(); err != nil {
-		return nil, "", err
+		return nil, err
 	}
 
 	// make sure that this account exists
 	usr, err := h.ur.GetAccountByEmail(ctx, ck.Email())
 
 	if err != nil {
-		if err == account.ErrAccountNotFound {
-			return nil, "", errFailedAuthenticateMultiFactor
-		}
-
-		zap.S().Errorf("failed get account: %s", err)
-		return nil, "", errFailedAuthenticateMultiFactor
+		return nil, err
 	}
 
 	// Multi factor must be enabled for recovery codes to function
 	if !usr.MultiFactorEnabled() {
-		return nil, "", errFailedAuthenticateMultiFactor
+		return nil, err
 	}
 
 	// get TOTP
 	totp, err := h.mr.GetAccountMultiFactorTOTP(ctx, usr.ID())
 
 	if err != nil {
-
-		// totp must be configured
-		if err == multi_factor.ErrTOTPNotConfigured {
-			return nil, "", errFailedAuthenticateMultiFactorNotEnabled
-		}
-
-		zap.S().Errorf("failed get otp for account: %s", err)
-		return nil, "", errFailedAuthenticateMultiFactor
+		return nil, err
 	}
 
-	if recoveryCode {
-		if err := h.mr.VerifyAccountRecoveryCode(ctx, usr.ID(), multi_factor.NewRecoveryCode(code)); err != nil {
-
-			// recovery codes must be valid
-			if err == multi_factor.ErrRecoveryCodeInvalid {
-				return nil, validationErrMultiFactorCodeInvalid, nil
-			}
-
-			zap.S().Errorf("failed redeem recovery code: %s", err)
-			return nil, "", errFailedAuthenticateMultiFactor
+	if cmd.RecoveryCode {
+		if err := h.mr.VerifyAccountRecoveryCode(ctx, usr.ID(), multi_factor.NewRecoveryCode(cmd.Code)); err != nil {
+			return nil, err
 		}
 	} else {
 		// validate TOTP code
-		if !totp.ValidateCode(code) {
-			return nil, validationErrMultiFactorCodeInvalid, nil
+		if !totp.ValidateCode(cmd.Code) {
+			return nil, err
 		}
 	}
 
 	// Delete cookie - has been consumed
-	if err := h.cr.DeleteAuthenticationTokenById(ctx, cookieId); err != nil {
-		zap.S().Errorf("failed to delete cookie: %s", err)
-		return nil, "", errFailedAuthenticateMultiFactor
+	if err := h.cr.DeleteAuthenticationTokenById(ctx, ck.Token()); err != nil {
+		return nil, err
 	}
 
-	return usr, "", nil
+	return usr, nil
 }

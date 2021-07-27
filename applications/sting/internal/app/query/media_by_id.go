@@ -8,9 +8,7 @@ import (
 	"overdoll/applications/sting/internal/domain/post"
 )
 
-var (
-	errFailedMediaById = errors.New("media by id failed")
-)
+type Media
 
 type MediaByIdHandler struct {
 	pr post.Repository

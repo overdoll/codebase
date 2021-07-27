@@ -5,6 +5,8 @@ import (
 
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/eva/internal/app"
+	"overdoll/applications/eva/internal/app/command"
+	"overdoll/applications/eva/internal/app/query"
 	"overdoll/applications/eva/internal/domain/token"
 	"overdoll/applications/eva/internal/ports/graphql/types"
 	"overdoll/libraries/cookies"
@@ -36,7 +38,11 @@ func (r *QueryResolver) Accounts(ctx context.Context, after *string, before *str
 		artist = *isArtist
 	}
 
-	results, err := r.App.Queries.SearchAccounts.Handle(ctx, cursor, usrname, artist)
+	results, err := r.App.Queries.SearchAccounts.Handle(ctx, query.SearchAccounts{
+		Cursor:   cursor,
+		Username: usrname,
+		IsArtist: artist,
+	})
 
 	if err != nil {
 		return nil, err
@@ -70,7 +76,9 @@ func (r *QueryResolver) ViewAuthenticationToken(ctx context.Context) (*types.Aut
 		return nil, err
 	}
 
-	acc, ck, err := r.App.Queries.AuthenticationTokenById.Handle(ctx, otpCookie.Value)
+	acc, ck, err := r.App.Queries.AuthenticationTokenById.Handle(ctx, query.AuthenticationTokenById{
+		TokenId: otpCookie.Value,
+	})
 
 	if err != nil {
 		return nil, err
@@ -112,7 +120,9 @@ func (r *QueryResolver) Viewer(ctx context.Context) (*types.Account, error) {
 	}
 
 	// consume cookie
-	acc, ck, err := r.App.Queries.AuthenticationTokenById.Handle(ctx, otpCookie.Value)
+	acc, ck, err := r.App.Queries.AuthenticationTokenById.Handle(ctx, query.AuthenticationTokenById{
+		TokenId: otpCookie.Value,
+	})
 
 	if err != nil {
 		return nil, err
@@ -120,7 +130,9 @@ func (r *QueryResolver) Viewer(ctx context.Context) (*types.Account, error) {
 
 	if acc != nil && ck.Verified() {
 
-		if err := r.App.Commands.ConsumeAuthenticationToken.Handle(ctx, otpCookie.Value); err != nil {
+		if err := r.App.Commands.ConsumeAuthenticationToken.Handle(ctx, command.ConsumeAuthenticationToken{
+			TokenId: otpCookie.Value,
+		}); err != nil {
 			return nil, err
 		}
 

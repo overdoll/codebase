@@ -10,6 +10,11 @@ import (
 	"overdoll/applications/carrier/internal/domain/mailing"
 )
 
+type NewLoginToken struct {
+	Email string
+	Token string
+}
+
 type NewLoginTokenHandler struct {
 	mr mailing.Repository
 	ar EvaService
@@ -19,7 +24,7 @@ func NewNewLoginTokenHandler(mr mailing.Repository) NewLoginTokenHandler {
 	return NewLoginTokenHandler{mr: mr}
 }
 
-func (h NewLoginTokenHandler) Handle(ctx context.Context, tokenEmail, token string) error {
+func (h NewLoginTokenHandler) Handle(ctx context.Context, cmd NewLoginToken) error {
 
 	u, err := url.Parse(os.Getenv("APP_URL"))
 
@@ -27,7 +32,7 @@ func (h NewLoginTokenHandler) Handle(ctx context.Context, tokenEmail, token stri
 		return err
 	}
 
-	u.Path = path.Join(u.Path, "token", token)
+	u.Path = path.Join(u.Path, "token", cmd.Token)
 
 	email := hermes.Email{
 		Body: hermes.Body{
@@ -56,7 +61,7 @@ func (h NewLoginTokenHandler) Handle(ctx context.Context, tokenEmail, token stri
 		return err
 	}
 
-	recipient, err := mailing.NewRecipient("", tokenEmail)
+	recipient, err := mailing.NewRecipient("", cmd.Email)
 
 	if err != nil {
 		return err

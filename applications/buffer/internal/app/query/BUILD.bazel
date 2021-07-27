@@ -1,9 +1,0 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
-
-go_library(
-    name = "query",
-    srcs = ["get_file.go"],
-    importpath = "overdoll/applications/buffer/internal/app/query",
-    visibility = ["//visibility:public"],
-    deps = ["//applications/buffer/internal/domain/file"],
-)

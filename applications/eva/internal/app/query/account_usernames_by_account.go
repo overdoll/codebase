@@ -2,16 +2,15 @@ package query
 
 import (
 	"context"
-	"errors"
 
-	"go.uber.org/zap"
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/libraries/paging"
 )
 
-var (
-	errFailedAccountUsernamesByAccount = errors.New("failed to get account usernames")
-)
+type AccountUsernamesByAccount struct {
+	Cursor    *paging.Cursor
+	AccountId string
+}
 
 type AccountUsernamesByAccountHandler struct {
 	ar account.Repository
@@ -21,13 +20,12 @@ func NewAccountUsernamesByAccountHandler(ar account.Repository) AccountUsernames
 	return AccountUsernamesByAccountHandler{ar: ar}
 }
 
-func (h AccountUsernamesByAccountHandler) Handle(ctx context.Context, cursor *paging.Cursor, accountId string) ([]*account.Username, error) {
+func (h AccountUsernamesByAccountHandler) Handle(ctx context.Context, query AccountUsernamesByAccount) ([]*account.Username, error) {
 
-	usernames, err := h.ar.GetAccountUsernames(ctx, cursor, accountId)
+	usernames, err := h.ar.GetAccountUsernames(ctx, query.Cursor, query.AccountId)
 
 	if err != nil {
-		zap.S().Errorf("failed to get account usernames: %s", err)
-		return nil, errFailedAccountUsernamesByAccount
+		return nil, err
 	}
 
 	return usernames, nil

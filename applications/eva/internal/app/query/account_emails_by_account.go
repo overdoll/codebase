@@ -2,16 +2,15 @@ package query
 
 import (
 	"context"
-	"errors"
 
-	"go.uber.org/zap"
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/libraries/paging"
 )
 
-var (
-	errFailedAccountEmailsByAccount = errors.New("failed to get emails")
-)
+type AccountEmailsByAccount struct {
+	Cursor    *paging.Cursor
+	AccountId string
+}
 
 type AccountEmailsByAccountHandler struct {
 	ar account.Repository
@@ -21,13 +20,12 @@ func NewGetAccountEmailsHandler(ar account.Repository) AccountEmailsByAccountHan
 	return AccountEmailsByAccountHandler{ar: ar}
 }
 
-func (h AccountEmailsByAccountHandler) Handle(ctx context.Context, cursor *paging.Cursor, userId string) ([]*account.Email, error) {
+func (h AccountEmailsByAccountHandler) Handle(ctx context.Context, query AccountEmailsByAccount) ([]*account.Email, error) {
 
-	emails, err := h.ar.GetAccountEmails(ctx, cursor, userId)
+	emails, err := h.ar.GetAccountEmails(ctx, query.Cursor, query.AccountId)
 
 	if err != nil {
-		zap.S().Errorf("failed to get account emails: %s", err)
-		return nil, errFailedAccountEmailsByAccount
+		return nil, err
 	}
 
 	return emails, nil

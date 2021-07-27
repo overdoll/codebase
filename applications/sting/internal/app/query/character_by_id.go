@@ -2,15 +2,13 @@ package query
 
 import (
 	"context"
-	"errors"
 
-	"go.uber.org/zap"
 	"overdoll/applications/sting/internal/domain/post"
 )
 
-var (
-	errFailedCharacterById = errors.New("character by id failed")
-)
+type CharacterById struct {
+	CharacterId string
+}
 
 type CharacterByIdHandler struct {
 	pr post.Repository
@@ -20,13 +18,12 @@ func NewCharacterByIdHandler(pr post.Repository) CharacterByIdHandler {
 	return CharacterByIdHandler{pr: pr}
 }
 
-func (h CharacterByIdHandler) Handle(ctx context.Context, characterId string) (*post.Character, error) {
+func (h CharacterByIdHandler) Handle(ctx context.Context, cmd CharacterById) (*post.Character, error) {
 
-	result, err := h.pr.GetCharacterById(ctx, characterId)
+	result, err := h.pr.GetCharacterById(ctx, cmd.CharacterId)
 
 	if err != nil {
-		zap.S().Errorf("failed to get character: %s", err)
-		return nil, errFailedCharacterById
+		return nil, err
 	}
 
 	return result, nil

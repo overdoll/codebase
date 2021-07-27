@@ -2,20 +2,16 @@ package command
 
 import (
 	"context"
-	"errors"
 
-	"go.uber.org/zap"
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/multi_factor"
 )
 
-var (
-	errFailedEnrollAccountMultiFactorTOTP = errors.New("failed to enroll TOTP")
-)
-
-const (
-	validationErrCodeNotValid = "code_not_valid"
-)
+type EnrollAccountMultiFactorTOTP struct {
+	AccountId string
+	Secret    string
+	Code      string
+}
 
 type EnrollAccountMultiFactorTOTPHandler struct {
 	mr multi_factor.Repository
@@ -26,50 +22,40 @@ func NewEnrollAccountMultiFactorTOTPHandler(mr multi_factor.Repository, ar accou
 	return EnrollAccountMultiFactorTOTPHandler{mr: mr, ar: ar}
 }
 
-func (h EnrollAccountMultiFactorTOTPHandler) Handle(ctx context.Context, accountId, secret, code string) (string, error) {
+func (h EnrollAccountMultiFactorTOTPHandler) Handle(ctx context.Context, cmd EnrollAccountMultiFactorTOTP) error {
 
-	acc, err := h.ar.GetAccountById(ctx, accountId)
+	acc, err := h.ar.GetAccountById(ctx, cmd.AccountId)
 
 	if err != nil {
-		zap.S().Errorf("failed to get account: %s", err)
-		return "", errFailedEnrollAccountMultiFactorTOTP
+		return err
 	}
 
-	codes, err := h.mr.GetAccountRecoveryCodes(ctx, accountId)
+	codes, err := h.mr.GetAccountRecoveryCodes(ctx, acc.ID())
 
 	if err != nil {
-		zap.S().Errorf("failed to get recovery codes: %s", err)
-		return "", errFailedEnrollAccountMultiFactorTOTP
+		return err
 	}
 
 	// enroll TOTP
-	mfa, err := multi_factor.EnrollTOTP(codes, secret, code)
+	mfa, err := multi_factor.EnrollTOTP(codes, cmd.Secret, cmd.Code)
 
 	if err != nil {
-
-		if err == multi_factor.ErrTOTPCodeInvalid {
-			return validationErrCodeNotValid, nil
-		}
-
-		zap.S().Errorf("failed to enroll totp: %s", err)
-		return "", errFailedEnrollAccountMultiFactorTOTP
+		return err
 	}
 
 	// create the TOTP
-	if err := h.mr.CreateAccountMultiFactorTOTP(ctx, accountId, mfa); err != nil {
-		zap.S().Errorf("failed to enroll totp: %s", err)
-		return "", errFailedEnrollAccountMultiFactorTOTP
+	if err := h.mr.CreateAccountMultiFactorTOTP(ctx, acc.ID(), mfa); err != nil {
+		return err
 	}
 
 	// if user doesn't have 2FA enabled, enable it
 	if !acc.MultiFactorEnabled() {
-		if _, err := h.ar.UpdateAccount(ctx, accountId, func(a *account.Account) error {
+		if _, err := h.ar.UpdateAccount(ctx, acc.ID(), func(a *account.Account) error {
 			return a.ToggleMultiFactor()
 		}); err != nil {
-			zap.S().Errorf("failed to update account: %s", err)
-			return "", errFailedEnrollAccountMultiFactorTOTP
+			return err
 		}
 	}
 
-	return "", nil
+	return nil
 }

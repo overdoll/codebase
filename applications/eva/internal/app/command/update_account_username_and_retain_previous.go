@@ -2,19 +2,14 @@ package command
 
 import (
 	"context"
-	"errors"
 
-	"go.uber.org/zap"
 	"overdoll/applications/eva/internal/domain/account"
 )
 
-var (
-	errFailedModifyUsername = errors.New("failed to modify username")
-)
-
-const (
-	validationErrUsernameNotUnique = "username_not_unique"
-)
+type UpdateAccountUsernameAndRetainPrevious struct {
+	AccountId string
+	Username  string
+}
 
 type UpdateAccountUsernameAndRetainPreviousHandler struct {
 	ar account.Repository
@@ -24,26 +19,25 @@ func NewUpdateAccountUsernameAndRetainPreviousHandler(ar account.Repository) Upd
 	return UpdateAccountUsernameAndRetainPreviousHandler{ar: ar}
 }
 
-func (h UpdateAccountUsernameAndRetainPreviousHandler) Handle(ctx context.Context, accountId, username string) (*account.Username, string, error) {
+func (h UpdateAccountUsernameAndRetainPreviousHandler) Handle(ctx context.Context, cmd UpdateAccountUsernameAndRetainPrevious) (*account.Username, error) {
 
-	_, err := h.ar.GetAccountByUsername(ctx, username)
+	_, err := h.ar.GetAccountByUsername(ctx, cmd.Username)
 
 	if err != nil {
 		if err == account.ErrAccountNotFound {
 			// ensure an account with this username is not existent
 
-			_, user, err := h.ar.UpdateAccountUsername(ctx, accountId, func(usr *account.Account) error {
-				return usr.EditUsername(username)
+			_, user, err := h.ar.UpdateAccountUsername(ctx, cmd.AccountId, func(usr *account.Account) error {
+				return usr.EditUsername(cmd.Username)
 			})
 
 			if err != nil {
-				zap.S().Errorf("failed to modify username: %s", err)
-				return nil, "", errFailedModifyUsername
+				return nil, err
 			}
 
-			return user, "", nil
+			return user, nil
 		}
 	}
 
-	return nil, validationErrUsernameNotUnique, nil
+	return nil, account.ErrUsernameNotUnique
 }

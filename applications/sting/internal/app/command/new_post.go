@@ -2,15 +2,14 @@ package command
 
 import (
 	"context"
-	"errors"
 
 	"overdoll/applications/sting/internal/domain/content"
 	"overdoll/applications/sting/internal/domain/post"
 )
 
-var (
-	errFailedNewPost = errors.New("new post failed")
-)
+type NewPost struct {
+	PostId string
+}
 
 type NewPostHandler struct {
 	pr  post.Repository
@@ -23,9 +22,9 @@ func NewNewPostHandler(pr post.Repository, pi post.IndexRepository, cr content.R
 	return NewPostHandler{pr: pr, cr: cr, eva: eva, pi: pi}
 }
 
-func (h NewPostHandler) Handle(ctx context.Context, id string) error {
+func (h NewPostHandler) Handle(ctx context.Context, cmd NewPost) error {
 
-	pendingPost, err := h.pr.UpdatePost(ctx, id, func(pending *post.Post) error {
+	pendingPost, err := h.pr.UpdatePost(ctx, cmd.PostId, func(pending *post.Post) error {
 		// make post in review
 		if err := pending.MakeReview(); err != nil {
 			return err

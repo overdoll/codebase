@@ -7,6 +7,10 @@ import (
 	"overdoll/applications/sting/internal/domain/post"
 )
 
+type PublishPost struct {
+	PostId string
+}
+
 type PublishPostHandler struct {
 	pi  post.IndexRepository
 	pr  post.Repository
@@ -18,9 +22,9 @@ func NewPublishPostHandler(pr post.Repository, pi post.IndexRepository, cr conte
 	return PublishPostHandler{pr: pr, pi: pi, cr: cr, eva: eva}
 }
 
-func (h PublishPostHandler) Handle(ctx context.Context, id string) error {
+func (h PublishPostHandler) Handle(ctx context.Context, cmd PublishPost) error {
 
-	pendingPost, err := h.pr.UpdatePost(ctx, id, func(pending *post.Post) error {
+	pendingPost, err := h.pr.UpdatePost(ctx, cmd.PostId, func(pending *post.Post) error {
 
 		// Bulk index
 		err := h.pi.IndexCategories(ctx, pending.Categories())

@@ -2,14 +2,8 @@ package query
 
 import (
 	"context"
-	"errors"
 
-	"go.uber.org/zap"
 	"overdoll/applications/eva/internal/domain/account"
-)
-
-var (
-	errFailedAccountByIdHandler = errors.New("failed to get account by id")
 )
 
 type AccountByIdHandler struct {
@@ -25,8 +19,7 @@ func (h AccountByIdHandler) Handle(ctx context.Context, id string) (*account.Acc
 	ur, err := h.ur.GetAccountById(ctx, id)
 
 	if err != nil {
-		zap.S().Errorf("failed to get account by id: %s", err)
-		return nil, errFailedAccountByIdHandler
+		return nil, err
 	}
 
 	return ur, nil

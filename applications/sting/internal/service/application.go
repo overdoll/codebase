@@ -59,7 +59,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 
 	return app.Application{
 		Commands: app.Commands{
-			CreatePost:          command.NewCreatePendingPostHandler(postRepo, eva, parley),
+			CreatePost:          command.NewCreatePostHandler(postRepo, eva, parley),
 			IndexAllPosts:       command.NewIndexAllPendingPostsHandler(postRepo, indexRepo),
 			IndexAllMedia:       command.NewIndexAllMediaHandler(postRepo, indexRepo),
 			IndexAllCharacters:  command.NewIndexAllCharactersHandler(postRepo, indexRepo),

@@ -2,15 +2,13 @@ package query
 
 import (
 	"context"
-	"errors"
 
-	"go.uber.org/zap"
 	"overdoll/applications/eva/internal/domain/session"
 )
 
-var (
-	errFailedSessionById = errors.New("failed to get session")
-)
+type AccountSessionById struct {
+	SessionId string
+}
 
 type AccountSessionByIdHandler struct {
 	sr session.Repository
@@ -20,13 +18,12 @@ func NewAccountSessionByIdHandler(sr session.Repository) AccountSessionByIdHandl
 	return AccountSessionByIdHandler{sr: sr}
 }
 
-func (h AccountSessionByIdHandler) Handle(ctx context.Context, sessionId string) (*session.Session, error) {
+func (h AccountSessionByIdHandler) Handle(ctx context.Context, query AccountSessionById) (*session.Session, error) {
 
-	sess, err := h.sr.GetSessionById(ctx, sessionId)
+	sess, err := h.sr.GetSessionById(ctx, query.SessionId)
 
 	if err != nil {
-		zap.S().Errorf("failed to get session: %s", err)
-		return nil, errFailedSessionById
+		return nil, err
 	}
 
 	return sess, nil

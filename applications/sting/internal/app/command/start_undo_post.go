@@ -6,6 +6,10 @@ import (
 	"overdoll/applications/sting/internal/domain/post"
 )
 
+type StartUndoPost struct {
+	PostId string
+}
+
 type StartUndoPostHandler struct {
 	pi post.IndexRepository
 	pr post.Repository
@@ -15,9 +19,9 @@ func NewStartUndoPostHandler(pr post.Repository, pi post.IndexRepository) StartU
 	return StartUndoPostHandler{pr: pr, pi: pi}
 }
 
-func (h StartUndoPostHandler) Handle(ctx context.Context, id string) error {
+func (h StartUndoPostHandler) Handle(ctx context.Context, cmd StartUndoPost) error {
 
-	pst, err := h.pr.GetPost(ctx, id)
+	pst, err := h.pr.GetPost(ctx, cmd.PostId)
 
 	if err != nil {
 		return err

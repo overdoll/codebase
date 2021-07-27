@@ -2,15 +2,13 @@ package query
 
 import (
 	"context"
-	"errors"
 
-	"go.uber.org/zap"
 	"overdoll/applications/eva/internal/domain/multi_factor"
 )
 
-var (
-	errFailedAccountRecoveryCodesByAccount = errors.New("failed to get recovery codes")
-)
+type AccountRecoveryCodesByAccount struct {
+	AccountId string
+}
 
 type AccountRecoveryCodesByAccountHandler struct {
 	mr multi_factor.Repository
@@ -20,13 +18,12 @@ func NewAccountRecoveryCodesByAccountHandler(mr multi_factor.Repository) Account
 	return AccountRecoveryCodesByAccountHandler{mr: mr}
 }
 
-func (h AccountRecoveryCodesByAccountHandler) Handle(ctx context.Context, accountId string) ([]*multi_factor.RecoveryCode, error) {
+func (h AccountRecoveryCodesByAccountHandler) Handle(ctx context.Context, query AccountRecoveryCodesByAccount) ([]*multi_factor.RecoveryCode, error) {
 
-	codes, err := h.mr.GetAccountRecoveryCodes(ctx, accountId)
+	codes, err := h.mr.GetAccountRecoveryCodes(ctx, query.AccountId)
 
 	if err != nil {
-		zap.S().Errorf("failed to get recovery codes: %s", err)
-		return nil, errFailedAccountRecoveryCodesByAccount
+		return nil, err
 	}
 
 	return codes, nil

@@ -5,6 +5,7 @@ import (
 
 	"github.com/golang/protobuf/ptypes/empty"
 	"overdoll/applications/carrier/internal/app"
+	"overdoll/applications/carrier/internal/app/command"
 	carrier "overdoll/applications/carrier/proto"
 )
 
@@ -19,7 +20,12 @@ func NewGrpcServer(application *app.Application) *Server {
 }
 
 func (s Server) ConfirmAccountEmail(ctx context.Context, request *carrier.ConfirmAccountEmailRequest) (*empty.Empty, error) {
-	if err := s.app.Commands.ConfirmAccountEmail.Handle(ctx, request.Account.Id, request.Email, request.Token); err != nil {
+
+	if err := s.app.Commands.ConfirmAccountEmail.Handle(ctx, command.ConfirmAccountEmail{
+		AccountId:    request.Account.Id,
+		AccountEmail: request.Email,
+		EmailToken:   request.Token,
+	}); err != nil {
 		return nil, err
 	}
 
@@ -27,7 +33,11 @@ func (s Server) ConfirmAccountEmail(ctx context.Context, request *carrier.Confir
 }
 
 func (s Server) NewLoginToken(ctx context.Context, request *carrier.NewLoginTokenRequest) (*empty.Empty, error) {
-	if err := s.app.Commands.NewLoginToken.Handle(ctx, request.Email, request.Token); err != nil {
+
+	if err := s.app.Commands.NewLoginToken.Handle(ctx, command.NewLoginToken{
+		Email: request.Email,
+		Token: request.Token,
+	}); err != nil {
 		return nil, err
 	}
 

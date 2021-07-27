@@ -10,6 +10,12 @@ import (
 	"overdoll/applications/carrier/internal/domain/mailing"
 )
 
+type ConfirmAccountEmail struct {
+	AccountId    string
+	AccountEmail string
+	EmailToken   string
+}
+
 type ConfirmAccountEmailHandler struct {
 	mr mailing.Repository
 	ar EvaService
@@ -19,9 +25,9 @@ func NewConfirmAccountEmailHandler(mr mailing.Repository, ar EvaService) Confirm
 	return ConfirmAccountEmailHandler{mr: mr, ar: ar}
 }
 
-func (h ConfirmAccountEmailHandler) Handle(ctx context.Context, accountId, accountEmail, emailToken string) error {
+func (h ConfirmAccountEmailHandler) Handle(ctx context.Context, cmd ConfirmAccountEmail) error {
 
-	acc, err := h.ar.GetAccount(ctx, accountId)
+	acc, err := h.ar.GetAccount(ctx, cmd.AccountId)
 
 	if err != nil {
 		return err
@@ -33,7 +39,7 @@ func (h ConfirmAccountEmailHandler) Handle(ctx context.Context, accountId, accou
 		return err
 	}
 
-	u.Path = path.Join(u.Path, "confirm-email", emailToken)
+	u.Path = path.Join(u.Path, "confirm-email", cmd.EmailToken)
 
 	email := hermes.Email{
 		Body: hermes.Body{
@@ -62,7 +68,7 @@ func (h ConfirmAccountEmailHandler) Handle(ctx context.Context, accountId, accou
 		return err
 	}
 
-	recipient, err := mailing.NewRecipient(acc.Username(), accountEmail)
+	recipient, err := mailing.NewRecipient(acc.Username(), cmd.AccountEmail)
 
 	if err != nil {
 		return err

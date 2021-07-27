@@ -2,16 +2,16 @@ package query
 
 import (
 	"context"
-	"errors"
 
-	"go.uber.org/zap"
 	"overdoll/applications/eva/internal/domain/session"
 	"overdoll/libraries/paging"
 )
 
-var (
-	errFailedAccountSessionsByAccount = errors.New("failed to get sessions for account")
-)
+type AccountSessionsByAccount struct {
+	Cursor           *paging.Cursor
+	CurrentSessionId string
+	AccountId        string
+}
 
 type AccountSessionsByAccountHandler struct {
 	sr session.Repository
@@ -21,13 +21,12 @@ func NewAccountSessionsByAccountHandler(sr session.Repository) AccountSessionsBy
 	return AccountSessionsByAccountHandler{sr: sr}
 }
 
-func (h AccountSessionsByAccountHandler) Handle(ctx context.Context, cursor *paging.Cursor, sessionCookie, id string) ([]*session.Session, error) {
+func (h AccountSessionsByAccountHandler) Handle(ctx context.Context, query AccountSessionsByAccount) ([]*session.Session, error) {
 
-	ur, err := h.sr.GetSessionsByAccountId(ctx, cursor, sessionCookie, id)
+	ur, err := h.sr.GetSessionsByAccountId(ctx, query.Cursor, query.CurrentSessionId, query.AccountId)
 
 	if err != nil {
-		zap.S().Errorf("failed to get sessions: %s", err)
-		return nil, errFailedAccountSessionsByAccount
+		return nil, err
 	}
 
 	return ur, nil

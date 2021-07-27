@@ -2,19 +2,14 @@ package command
 
 import (
 	"context"
-	"errors"
 
-	"go.uber.org/zap"
 	"overdoll/applications/eva/internal/domain/account"
 )
 
-var (
-	errFailedMakeEmailPrimary = errors.New("failed to make email primary")
-)
-
-const (
-	validationErrEmailNotConfirmed = "email_not_confirmed"
-)
+type UpdateAccountEmailStatusToPrimary struct {
+	AccountId string
+	Email     string
+}
 
 type UpdateAccountEmailStatusToPrimaryHandler struct {
 	ar account.Repository
@@ -24,20 +19,15 @@ func NewUpdateAccountEmailStatusToPrimaryHandler(ar account.Repository) UpdateAc
 	return UpdateAccountEmailStatusToPrimaryHandler{ar: ar}
 }
 
-func (h UpdateAccountEmailStatusToPrimaryHandler) Handle(ctx context.Context, accountId, email string) (*account.Email, string, error) {
+func (h UpdateAccountEmailStatusToPrimaryHandler) Handle(ctx context.Context, cmd UpdateAccountEmailStatusToPrimary) (*account.Email, error) {
 
-	_, em, err := h.ar.UpdateAccountMakeEmailPrimary(ctx, accountId, func(a *account.Account, emails []*account.Email) error {
-		return a.UpdateEmail(emails, email)
+	_, em, err := h.ar.UpdateAccountMakeEmailPrimary(ctx, cmd.AccountId, func(a *account.Account, emails []*account.Email) error {
+		return a.UpdateEmail(emails, cmd.Email)
 	})
 
 	if err != nil {
-		if err == account.ErrEmailNotConfirmed {
-			return nil, validationErrEmailNotConfirmed, nil
-		}
-
-		zap.S().Errorf("failed to make email primary: %s", err)
-		return nil, "", errFailedMakeEmailPrimary
+		return nil, err
 	}
 
-	return em, "", nil
+	return em, nil
 }

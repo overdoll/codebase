@@ -2,15 +2,13 @@ package query
 
 import (
 	"context"
-	"errors"
 
-	"go.uber.org/zap"
 	"overdoll/applications/eva/internal/domain/multi_factor"
 )
 
-var (
-	errFailedIsAccountTOTPMultiFactorEnabled = errors.New("failed to get totp status")
-)
+type IsAccountMultiFactorTOTPEnabled struct {
+	AccountId string
+}
 
 type IsAccountMultiFactorTOTPEnabledHandler struct {
 	mr multi_factor.Repository
@@ -20,15 +18,14 @@ func NewIsAccountMultiFactorTOTPEnabledHandler(mr multi_factor.Repository) IsAcc
 	return IsAccountMultiFactorTOTPEnabledHandler{mr: mr}
 }
 
-func (h IsAccountMultiFactorTOTPEnabledHandler) Handle(ctx context.Context, accountId string) (bool, error) {
-	if _, err := h.mr.GetAccountMultiFactorTOTP(ctx, accountId); err != nil {
+func (h IsAccountMultiFactorTOTPEnabledHandler) Handle(ctx context.Context, query IsAccountMultiFactorTOTPEnabled) (bool, error) {
+	if _, err := h.mr.GetAccountMultiFactorTOTP(ctx, query.AccountId); err != nil {
 
 		if err == multi_factor.ErrTOTPNotConfigured {
 			return false, nil
 		}
 
-		zap.S().Errorf("failed to get totp configuration: %s", err)
-		return false, errFailedIsAccountTOTPMultiFactorEnabled
+		return false, err
 	}
 
 	return true, nil

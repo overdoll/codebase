@@ -5,6 +5,7 @@ import (
 
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/eva/internal/app"
+	"overdoll/applications/eva/internal/app/query"
 	"overdoll/applications/eva/internal/ports/graphql/types"
 	"overdoll/libraries/helpers"
 	"overdoll/libraries/paging"
@@ -33,7 +34,10 @@ func (r AccountResolver) Emails(ctx context.Context, obj *types.Account, after *
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	results, err := r.App.Queries.AccountEmailsByAccount.Handle(ctx, cursor, obj.ID.GetID())
+	results, err := r.App.Queries.AccountEmailsByAccount.Handle(ctx, query.AccountEmailsByAccount{
+		Cursor:    cursor,
+		AccountId: obj.ID.GetID(),
+	})
 
 	if err != nil {
 		return nil, err
@@ -50,7 +54,10 @@ func (r AccountResolver) Usernames(ctx context.Context, obj *types.Account, afte
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	results, err := r.App.Queries.AccountUsernamesByAccount.Handle(ctx, cursor, obj.ID.GetID())
+	results, err := r.App.Queries.AccountUsernamesByAccount.Handle(ctx, query.AccountUsernamesByAccount{
+		Cursor:    cursor,
+		AccountId: obj.ID.GetID(),
+	})
 
 	if err != nil {
 		return nil, err
@@ -78,7 +85,11 @@ func (r AccountResolver) Sessions(ctx context.Context, obj *types.Account, after
 		accountSession = currentCookie.Value
 	}
 
-	results, err := r.App.Queries.AccountSessionsByAccount.Handle(ctx, cursor, accountSession, obj.ID.GetID())
+	results, err := r.App.Queries.AccountSessionsByAccount.Handle(ctx, query.AccountSessionsByAccount{
+		Cursor:           cursor,
+		CurrentSessionId: accountSession,
+		AccountId:        obj.ID.GetID(),
+	})
 
 	if err != nil {
 		return nil, err
@@ -97,13 +108,17 @@ func (r AccountResolver) MultiFactorSettings(ctx context.Context, obj *types.Acc
 		return nil, err
 	}
 
-	codes, err := r.App.Queries.AccountRecoveryCodesByAccount.Handle(ctx, accountId)
+	codes, err := r.App.Queries.AccountRecoveryCodesByAccount.Handle(ctx, query.AccountRecoveryCodesByAccount{
+		AccountId: accountId,
+	})
 
 	if err != nil {
 		return nil, err
 	}
 
-	totpEnabled, err := r.App.Queries.IsAccountMultiFactorTOTPEnabled.Handle(ctx, accountId)
+	totpEnabled, err := r.App.Queries.IsAccountMultiFactorTOTPEnabled.Handle(ctx, query.IsAccountMultiFactorTOTPEnabled{
+		AccountId: accountId,
+	})
 
 	if err != nil {
 		return nil, err
@@ -120,7 +135,9 @@ func (r AccountResolver) MultiFactorSettings(ctx context.Context, obj *types.Acc
 
 func (r AccountResolver) RecoveryCodes(ctx context.Context, obj *types.Account) ([]*types.AccountMultiFactorRecoveryCode, error) {
 
-	codes, err := r.App.Queries.AccountRecoveryCodesByAccount.Handle(ctx, obj.ID.GetID())
+	codes, err := r.App.Queries.AccountRecoveryCodesByAccount.Handle(ctx, query.AccountRecoveryCodesByAccount{
+		AccountId: obj.ID.GetID(),
+	})
 
 	if err != nil {
 		return nil, err

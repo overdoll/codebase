@@ -2,16 +2,15 @@ package command
 
 import (
 	"context"
-	"errors"
 
-	"go.uber.org/zap"
 	"overdoll/applications/eva/internal/domain/token"
 	"overdoll/libraries/uuid"
 )
 
-var (
-	errFailedGrantAuthenticationToken = errors.New("failed to grant authentication token")
-)
+type GrantAuthenticationToken struct {
+	Email   string
+	Session string
+}
 
 type GrantAuthenticationTokenHandler struct {
 	cr      token.Repository
@@ -22,21 +21,21 @@ func NewGrantAuthenticationTokenHandler(cr token.Repository, carrier CarrierServ
 	return GrantAuthenticationTokenHandler{cr: cr, carrier: carrier}
 }
 
-func (h GrantAuthenticationTokenHandler) Handle(ctx context.Context, email, session string) (*token.AuthenticationToken, error) {
+func (h GrantAuthenticationTokenHandler) Handle(ctx context.Context, cmd GrantAuthenticationToken) (*token.AuthenticationToken, error) {
 
 	// Create an authentication cookie
-	instance, err := token.NewAuthenticationToken(uuid.New().String(), email, session)
+	instance, err := token.NewAuthenticationToken(uuid.New().String(), cmd.Email, cmd.Session)
 
 	if err != nil {
 		return nil, err
 	}
 
 	if err := h.cr.CreateAuthenticationToken(ctx, instance); err != nil {
-		zap.S().Errorf("failed to create token: %s", err)
-		return nil, errFailedGrantAuthenticationToken
+		return nil, err
 	}
 
-	if err := h.carrier.NewLoginToken(ctx, email, instance.Token()); err != nil {
+	// send login token notification
+	if err := h.carrier.NewLoginToken(ctx, instance.Email(), instance.Token()); err != nil {
 		return nil, err
 	}
 

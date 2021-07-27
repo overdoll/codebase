@@ -3,9 +3,12 @@ package command
 import (
 	"context"
 
-	"go.uber.org/zap"
 	"overdoll/applications/sting/internal/domain/post"
 )
+
+type RejectPost struct {
+	PostId string
+}
 
 type RejectPostHandler struct {
 	pi post.IndexRepository
@@ -16,9 +19,9 @@ func NewRejectPostHandler(pr post.Repository, pi post.IndexRepository) RejectPos
 	return RejectPostHandler{pr: pr, pi: pi}
 }
 
-func (h RejectPostHandler) Handle(ctx context.Context, id string) error {
+func (h RejectPostHandler) Handle(ctx context.Context, cmd RejectPost) error {
 
-	pendingPost, err := h.pr.UpdatePost(ctx, id, func(pending *post.Post) error {
+	pendingPost, err := h.pr.UpdatePost(ctx, cmd.PostId, func(pending *post.Post) error {
 		return pending.MakeRejected()
 	})
 
@@ -27,7 +30,6 @@ func (h RejectPostHandler) Handle(ctx context.Context, id string) error {
 	}
 
 	if err := h.pi.IndexPost(ctx, pendingPost); err != nil {
-		zap.S().Errorf("failed to index post: %s", err)
 		return err
 	}
 
