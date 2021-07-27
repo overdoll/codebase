@@ -5,6 +5,7 @@ import (
 
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/parley/internal/app"
+	"overdoll/applications/parley/internal/app/query"
 	"overdoll/applications/parley/internal/ports/graphql/types"
 	"overdoll/libraries/paging"
 )
@@ -25,7 +26,13 @@ func (r AccountResolver) ModeratorPostAuditLogs(ctx context.Context, obj *types.
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	logs, err := r.App.Queries.SearchPostAuditLogs.Handle(ctx, cursor, obj.ID.GetID(), "")
+	id := obj.ID.GetID()
+
+	logs, err := r.App.Queries.SearchPostAuditLogs.Handle(ctx, query.SearchPostAuditLogs{
+		Cursor:             cursor,
+		ModeratorAccountId: &id,
+		PostId:             nil,
+	})
 
 	if err != nil {
 		return nil, err
@@ -42,7 +49,10 @@ func (r AccountResolver) Infractions(ctx context.Context, obj *types.Account, af
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	history, err := r.App.Queries.AccountInfractionHistory.Handle(ctx, cursor, obj.ID.GetID())
+	history, err := r.App.Queries.AccountInfractionHistory.Handle(ctx, query.AccountInfractionHistory{
+		Cursor:    cursor,
+		AccountId: obj.ID.GetID(),
+	})
 
 	if err != nil {
 		return nil, err
@@ -53,7 +63,9 @@ func (r AccountResolver) Infractions(ctx context.Context, obj *types.Account, af
 
 func (r AccountResolver) Moderator(ctx context.Context, obj *types.Account) (*types.Moderator, error) {
 
-	mod, err := r.App.Queries.ModeratorById.Handle(ctx, obj.ID.GetID())
+	mod, err := r.App.Queries.ModeratorById.Handle(ctx, query.ModeratorById{
+		AccountId: obj.ID.GetID(),
+	})
 
 	if err != nil {
 		return nil, err

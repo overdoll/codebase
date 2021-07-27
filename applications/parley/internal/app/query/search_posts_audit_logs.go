@@ -2,16 +2,16 @@ package query
 
 import (
 	"context"
-	"errors"
 
-	"go.uber.org/zap"
 	"overdoll/applications/parley/internal/domain/infraction"
 	"overdoll/libraries/paging"
 )
 
-var (
-	errFailedSearchPostAuditLogs = errors.New("get audit log failed")
-)
+type SearchPostAuditLogs struct {
+	Cursor             *paging.Cursor
+	ModeratorAccountId *string
+	PostId             *string
+}
 
 type SearchPostAuditLogsHandler struct {
 	ir  infraction.Repository
@@ -22,19 +22,18 @@ func NewSearchPostAuditLogsHandler(ir infraction.Repository, eva EvaService) Sea
 	return SearchPostAuditLogsHandler{ir: ir, eva: eva}
 }
 
-func (h SearchPostAuditLogsHandler) Handle(ctx context.Context, cursor *paging.Cursor, moderatorId, postId string) ([]*infraction.PostAuditLog, error) {
+func (h SearchPostAuditLogsHandler) Handle(ctx context.Context, query SearchPostAuditLogs) ([]*infraction.PostAuditLog, error) {
 
-	filters, err := infraction.NewPostAuditLogFilters(moderatorId, postId, []int{})
+	filters, err := infraction.NewPostAuditLogFilters(query.ModeratorAccountId, query.PostId, []int{})
 
 	if err != nil {
 		return nil, err
 	}
 
-	auditLogs, err := h.ir.SearchPostAuditLogs(ctx, cursor, filters)
+	auditLogs, err := h.ir.SearchPostAuditLogs(ctx, query.Cursor, filters)
 
 	if err != nil {
-		zap.S().Errorf("failed to get audit log: %s", err)
-		return nil, errFailedSearchPostAuditLogs
+		return nil, err
 	}
 
 	return auditLogs, nil

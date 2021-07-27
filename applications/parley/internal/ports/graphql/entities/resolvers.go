@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"overdoll/applications/parley/internal/app"
+	"overdoll/applications/parley/internal/app/query"
 	"overdoll/applications/parley/internal/ports/graphql/types"
 	"overdoll/libraries/graphql/relay"
 )
@@ -26,7 +27,10 @@ func (r EntityResolver) FindContributorByID(ctx context.Context, id relay.ID) (*
 
 func (r EntityResolver) FindAccountInfractionHistoryByID(ctx context.Context, id relay.ID) (*types.AccountInfractionHistory, error) {
 
-	infractionHistory, err := r.App.Queries.AccountInfractionHistoryById.Handle(ctx, id.GetCompositePartID(1), id.GetCompositePartID(0))
+	infractionHistory, err := r.App.Queries.AccountInfractionHistoryById.Handle(ctx, query.AccountInfractionHistoryById{
+		AccountId:    id.GetCompositePartID(1),
+		InfractionId: id.GetCompositePartID(0),
+	})
 
 	if err != nil {
 		return nil, err
@@ -37,7 +41,9 @@ func (r EntityResolver) FindAccountInfractionHistoryByID(ctx context.Context, id
 
 func (r EntityResolver) FindPostAuditLogByID(ctx context.Context, id relay.ID) (*types.PostAuditLog, error) {
 
-	auditLog, err := r.App.Queries.PostAuditLogById.Handle(ctx, id.GetID())
+	auditLog, err := r.App.Queries.PostAuditLogById.Handle(ctx, query.PostAuditLogById{
+		AuditLogId: id.GetID(),
+	})
 
 	if err != nil {
 		return nil, err
@@ -48,7 +54,9 @@ func (r EntityResolver) FindPostAuditLogByID(ctx context.Context, id relay.ID) (
 
 func (r EntityResolver) FindPostRejectionReasonByID(ctx context.Context, id relay.ID) (*types.PostRejectionReason, error) {
 
-	rejectionReason, err := r.App.Queries.PostRejectionReasonById.Handle(ctx, id.GetID())
+	rejectionReason, err := r.App.Queries.PostRejectionReasonById.Handle(ctx, query.PostRejectionReasonById{
+		RejectionReasonId: id.GetID(),
+	})
 
 	if err != nil {
 		return nil, err
@@ -59,7 +67,9 @@ func (r EntityResolver) FindPostRejectionReasonByID(ctx context.Context, id rela
 
 func (r EntityResolver) FindModeratorByID(ctx context.Context, id relay.ID) (*types.Moderator, error) {
 
-	mod, err := r.App.Queries.ModeratorById.Handle(ctx, id.GetID())
+	mod, err := r.App.Queries.ModeratorById.Handle(ctx, query.ModeratorById{
+		AccountId: id.GetID(),
+	})
 
 	if err != nil {
 		return nil, err

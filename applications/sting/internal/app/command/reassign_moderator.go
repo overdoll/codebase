@@ -3,6 +3,7 @@ package command
 import (
 	"context"
 
+	"github.com/pkg/errors"
 	"overdoll/applications/sting/internal/domain/post"
 )
 
@@ -27,7 +28,7 @@ func (h ReassignModeratorHandler) Handle(ctx context.Context, cmd ReassignModera
 		newModId, err := h.parley.GetNextModeratorId(ctx)
 
 		if err != nil {
-			return err
+			return errors.Wrap(err, "failed to get next moderator")
 		}
 
 		// if this returns an error, then we dont proceed with assigning a new moderator

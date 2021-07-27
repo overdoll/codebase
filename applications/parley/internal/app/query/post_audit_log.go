@@ -2,15 +2,13 @@ package query
 
 import (
 	"context"
-	"errors"
 
-	"go.uber.org/zap"
 	"overdoll/applications/parley/internal/domain/infraction"
 )
 
-var (
-	errFailedPostAuditLogById = errors.New("get pending post audit log failed")
-)
+type PostAuditLogById struct {
+	AuditLogId string
+}
 
 type PostAuditLogByIdHandler struct {
 	ir infraction.Repository
@@ -20,13 +18,12 @@ func NewPostAuditLogByIdHandler(ir infraction.Repository) PostAuditLogByIdHandle
 	return PostAuditLogByIdHandler{ir: ir}
 }
 
-func (h PostAuditLogByIdHandler) Handle(ctx context.Context, auditLogId string) (*infraction.PostAuditLog, error) {
+func (h PostAuditLogByIdHandler) Handle(ctx context.Context, query PostAuditLogById) (*infraction.PostAuditLog, error) {
 
-	auditLog, err := h.ir.GetPostAuditLog(ctx, auditLogId)
+	auditLog, err := h.ir.GetPostAuditLog(ctx, query.AuditLogId)
 
 	if err != nil {
-		zap.S().Errorf("failed to get infraction history: %s", err)
-		return nil, errFailedPostAuditLogById
+		return nil, err
 	}
 
 	return auditLog, nil

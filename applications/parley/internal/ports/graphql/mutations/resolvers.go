@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"overdoll/applications/parley/internal/app"
+	"overdoll/applications/parley/internal/app/command"
 	"overdoll/applications/parley/internal/ports/graphql/types"
 	"overdoll/libraries/passport"
 )
@@ -14,13 +15,19 @@ type MutationResolver struct {
 
 func (m MutationResolver) ModeratePost(ctx context.Context, input types.ModeratePostInput) (*types.ModeratePostPayload, error) {
 
-	rejectionReasonId := ""
+	var rejectionReasonId *string
 
 	if input.PostRejectionReasonID != nil {
-		rejectionReasonId = input.PostRejectionReasonID.GetID()
+		id := input.PostRejectionReasonID.GetID()
+		rejectionReasonId = &id
 	}
 
-	auditLog, err := m.App.Commands.ModeratePost.Handle(ctx, passport.FromContext(ctx).AccountID(), input.PostID.GetID(), rejectionReasonId, input.Notes)
+	auditLog, err := m.App.Commands.ModeratePost.Handle(ctx, command.ModeratePost{
+		ModeratorAccountId:    passport.FromContext(ctx).AccountID(),
+		PostId:                input.PostID.GetID(),
+		PostRejectionReasonId: rejectionReasonId,
+		Notes:                 input.Notes,
+	})
 
 	if err != nil {
 		return nil, err
@@ -31,7 +38,10 @@ func (m MutationResolver) ModeratePost(ctx context.Context, input types.Moderate
 
 func (m MutationResolver) RevertPostAuditLog(ctx context.Context, input types.RevertPostAuditLogInput) (*types.RevertPostAuditLogPayload, error) {
 
-	auditLog, err := m.App.Commands.RevertModeratePost.Handle(ctx, passport.FromContext(ctx).AccountID(), input.PostAuditLogID.GetID())
+	auditLog, err := m.App.Commands.RevertModeratePost.Handle(ctx, command.RevertModeratePost{
+		ModeratorAccountId: passport.FromContext(ctx).AccountID(),
+		AuditLogId:         input.PostAuditLogID.GetID(),
+	})
 
 	if err != nil {
 		return nil, err
@@ -42,7 +52,9 @@ func (m MutationResolver) RevertPostAuditLog(ctx context.Context, input types.Re
 
 func (m MutationResolver) ToggleModeratorSettingsInQueue(ctx context.Context) (*types.ToggleModeratorSettingsInQueuePayload, error) {
 
-	inQueue, err := m.App.Commands.ToggleModerator.Handle(ctx, passport.FromContext(ctx).AccountID())
+	inQueue, err := m.App.Commands.ToggleModerator.Handle(ctx, command.ToggleModerator{
+		AccountId: passport.FromContext(ctx).AccountID(),
+	})
 
 	if err != nil {
 		return nil, err

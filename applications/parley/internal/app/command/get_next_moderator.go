@@ -2,15 +2,9 @@ package command
 
 import (
 	"context"
-	"errors"
 	"sort"
 
-	"go.uber.org/zap"
 	"overdoll/applications/parley/internal/domain/moderator"
-)
-
-var (
-	errFailedNextModerator = errors.New("get moderator failed")
 )
 
 type GetNextModeratorHandler struct {
@@ -26,8 +20,7 @@ func (h GetNextModeratorHandler) Handle(ctx context.Context) (*moderator.Moderat
 	mods, err := h.mr.GetModerators(ctx)
 
 	if err != nil {
-		zap.S().Errorf("failed to get moderators: %s", err)
-		return nil, errFailedNextModerator
+		return nil, err
 	}
 
 	// sort by LastSelected - the moderators who were not selected recently will be at the top
@@ -37,7 +30,7 @@ func (h GetNextModeratorHandler) Handle(ctx context.Context) (*moderator.Moderat
 	})
 
 	if len(mods) == 0 {
-		return nil, errFailedNextModerator
+		return nil, err
 	}
 
 	// get first moderator on the list, and call "select"

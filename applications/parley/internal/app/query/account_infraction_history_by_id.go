@@ -2,15 +2,14 @@ package query
 
 import (
 	"context"
-	"errors"
 
-	"go.uber.org/zap"
 	"overdoll/applications/parley/internal/domain/infraction"
 )
 
-var (
-	errFailedGetUserInfractionHistoryForAccount = errors.New("get infraction history for account failed")
-)
+type AccountInfractionHistoryById struct {
+	AccountId    string
+	InfractionId string
+}
 
 type AccountInfractionHistoryByIdHandler struct {
 	ir infraction.Repository
@@ -20,13 +19,12 @@ func NewAccountInfractionHistoryByIdHandler(ir infraction.Repository) AccountInf
 	return AccountInfractionHistoryByIdHandler{ir: ir}
 }
 
-func (h AccountInfractionHistoryByIdHandler) Handle(ctx context.Context, accountId, id string) (*infraction.AccountInfractionHistory, error) {
+func (h AccountInfractionHistoryByIdHandler) Handle(ctx context.Context, query AccountInfractionHistoryById) (*infraction.AccountInfractionHistory, error) {
 
-	infractionHistory, err := h.ir.GetAccountInfractionHistoryById(ctx, accountId, id)
+	infractionHistory, err := h.ir.GetAccountInfractionHistoryById(ctx, query.AccountId, query.InfractionId)
 
 	if err != nil {
-		zap.S().Errorf("failed to get infraction history: %s", err)
-		return nil, errFailedGetUserInfractionHistoryForAccount
+		return nil, err
 	}
 
 	return infractionHistory, nil

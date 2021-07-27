@@ -3,8 +3,8 @@ package ports
 import (
 	"context"
 
-	parley "overdoll/applications/parley/proto"
 	"overdoll/applications/parley/internal/app"
+	parley "overdoll/applications/parley/proto"
 )
 
 type Server struct {

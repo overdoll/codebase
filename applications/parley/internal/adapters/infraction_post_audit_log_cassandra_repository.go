@@ -2,7 +2,6 @@ package adapters
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"time"
 
@@ -255,24 +254,20 @@ func (r InfractionCassandraRepository) SearchPostAuditLogs(ctx context.Context, 
 
 	var builder *qb.SelectBuilder
 
-	if filter.ModeratorId() != "" {
+	info := &postAuditLogByModerator{
+		Bucket: bucket.MakeBucketFromTimestamp(time.Now()),
+	}
+
+	if filter.ModeratorId() != nil {
 		builder = postAuditLogByModeratorTable.
 			SelectBuilder()
+		info.ModeratorId = *filter.ModeratorId()
 	}
 
-	if filter.PostId() != "" {
+	if filter.PostId() != nil {
 		builder = postAuditLogByPostTable.
 			SelectBuilder()
-	}
-
-	if builder == nil {
-		return nil, errors.New("must select at least moderator or post id")
-	}
-
-	info := &postAuditLogByModerator{
-		Bucket:      bucket.MakeBucketFromTimestamp(time.Now()),
-		ModeratorId: filter.ModeratorId(),
-		PostId:      filter.PostId(),
+		info.PostId = *filter.PostId()
 	}
 
 	if cursor != nil {

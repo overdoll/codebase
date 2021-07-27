@@ -3,6 +3,7 @@ package command
 import (
 	"context"
 
+	"github.com/pkg/errors"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/account"
 	"overdoll/libraries/uuid"
@@ -62,20 +63,21 @@ func (h CreatePostHandler) Handle(ctx context.Context, cmd CreatePost) (*post.Po
 		artist, err = h.eva.GetAccount(ctx, cmd.ContributorId)
 
 		if err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "failed to get account")
 		}
+
 	} else if cmd.ExistingArtistId != nil {
 		artist, err = h.eva.GetAccount(ctx, *cmd.ExistingArtistId)
 
 		if err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "failed to get account")
 		}
 	}
 
 	moderatorId, err := h.parley.GetNextModeratorId(ctx)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to get next moderator")
 	}
 
 	pendingPost, err := post.NewPost(uuid.New().String(), moderatorId, artist, *cmd.CustomArtistUsername, contributor, cmd.Content, characters, categories)

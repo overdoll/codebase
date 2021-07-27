@@ -3,6 +3,7 @@ package command
 import (
 	"context"
 
+	"github.com/pkg/errors"
 	"overdoll/applications/sting/internal/domain/post"
 )
 
@@ -30,7 +31,7 @@ func (h StartPublishPostHandler) Handle(ctx context.Context, cmd StartPublishPos
 			usr, err := h.eva.CreateAccount(ctx, pending.CustomArtistUsername(), "")
 
 			if err != nil {
-				return err
+				return errors.Wrap(err, "failed to create account")
 			}
 
 			// add to artist record

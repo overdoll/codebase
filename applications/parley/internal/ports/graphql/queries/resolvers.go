@@ -5,6 +5,7 @@ import (
 
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/parley/internal/app"
+	"overdoll/applications/parley/internal/app/query"
 	"overdoll/applications/parley/internal/ports/graphql/types"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
@@ -22,7 +23,10 @@ func (r QueryResolver) PostRejectionReasons(ctx context.Context, after *string, 
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	results, err := r.App.Queries.PostRejectionReasons.Handle(ctx, cursor, passport.FromContext(ctx).AccountID())
+	results, err := r.App.Queries.PostRejectionReasons.Handle(ctx, query.PostsRejectionReasons{
+		AccountId: passport.FromContext(ctx).AccountID(),
+		Cursor:    cursor,
+	})
 
 	if err != nil {
 		return nil, err

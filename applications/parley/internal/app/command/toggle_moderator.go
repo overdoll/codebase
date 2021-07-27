@@ -2,15 +2,14 @@ package command
 
 import (
 	"context"
-	"errors"
 
-	"go.uber.org/zap"
+	"github.com/pkg/errors"
 	"overdoll/applications/parley/internal/domain/moderator"
 )
 
-var (
-	errFailedModeratorToggle = errors.New("get moderator failed")
-)
+type ToggleModerator struct {
+	AccountId string
+}
 
 type ToggleModeratorHandler struct {
 	mr  moderator.Repository
@@ -21,40 +20,36 @@ func NewToggleModeratorHandler(mr moderator.Repository, eva EvaService) ToggleMo
 	return ToggleModeratorHandler{mr: mr, eva: eva}
 }
 
-func (h ToggleModeratorHandler) Handle(ctx context.Context, accId string) (bool, error) {
+func (h ToggleModeratorHandler) Handle(ctx context.Context, cmd ToggleModerator) (bool, error) {
 
-	acc, err := h.eva.GetAccount(ctx, accId)
+	acc, err := h.eva.GetAccount(ctx, cmd.AccountId)
 
 	if err != nil {
-		zap.S().Errorf("failed to get user: %s", err)
-		return false, errFailedModeratorToggle
+		return false, errors.Wrap(err, "failed to get account")
 	}
 
 	if !acc.IsModerator() {
-		return false, errFailedModeratorToggle
+		return false, errors.New("not moderator")
 	}
 
-	_, err = h.mr.GetModerator(ctx, accId)
+	_, err = h.mr.GetModerator(ctx, acc.ID())
 
 	if err != nil {
 
 		// not found - add to moderator queue
 		if err == moderator.ErrModeratorNotFound {
-			if err := h.mr.CreateModerator(ctx, moderator.NewModerator(accId)); err != nil {
-				zap.S().Errorf("failed to add moderator: %s", err)
-				return true, errFailedModeratorToggle
+			if err := h.mr.CreateModerator(ctx, moderator.NewModerator(acc.ID())); err != nil {
+				return false, err
 			}
 
-			return false, nil
+			return true, nil
 		}
 
-		zap.S().Errorf("failed to get moderator: %s", err)
-		return false, errFailedModeratorToggle
+		return false, err
 	}
 
-	if err = h.mr.RemoveModerator(ctx, accId); err != nil {
-		zap.S().Errorf("failed to remove moderator: %s", err)
-		return false, errFailedModeratorToggle
+	if err = h.mr.RemoveModerator(ctx, acc.ID()); err != nil {
+		return false, err
 	}
 
 	return false, nil

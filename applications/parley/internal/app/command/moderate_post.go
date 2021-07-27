@@ -2,8 +2,8 @@ package command
 
 import (
 	"context"
-	"errors"
 
+	"github.com/pkg/errors"
 	"overdoll/applications/parley/internal/domain/infraction"
 )
 
@@ -42,7 +42,7 @@ func (h ModeratePostHandler) Handle(ctx context.Context, cmd ModeratePost) (*inf
 	postModeratorId, postContributorId, err := h.sting.GetPost(ctx, cmd.PostId)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to get post")
 	}
 
 	postContributor, err := h.eva.GetAccount(ctx, postContributorId)
@@ -90,21 +90,23 @@ func (h ModeratePostHandler) Handle(ctx context.Context, cmd ModeratePost) (*inf
 	// has to be done synchronously since it may perform some checks (i.e. creates a new user, etc..)
 	if infractionAuditLog.IsDeniedWithInfraction() {
 		if err := h.sting.DiscardPost(ctx, cmd.PostId); err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "failed to discard post")
 		}
 
 		// Lock user account
 		if err := h.eva.LockAccount(ctx, infractionAuditLog.ContributorId(), infractionAuditLog.UserInfraction().UserLockLength()); err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "failed to lock account")
 		}
 	} else if infractionAuditLog.IsDenied() {
+
 		if err := h.sting.RejectPost(ctx, cmd.PostId); err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "failed to reject post")
 		}
 	} else {
+
 		// post approved
 		if err := h.sting.PublishPost(ctx, cmd.PostId); err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "failed to publish post")
 		}
 	}
 

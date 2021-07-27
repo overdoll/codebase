@@ -5,6 +5,7 @@ import (
 
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/parley/internal/app"
+	"overdoll/applications/parley/internal/app/query"
 	"overdoll/applications/parley/internal/ports/graphql/types"
 	"overdoll/libraries/paging"
 )
@@ -21,7 +22,12 @@ func (r PostResolver) AuditLogs(ctx context.Context, obj *types.Post, after *str
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	logs, err := r.App.Queries.SearchPostAuditLogs.Handle(ctx, cursor, "", obj.ID.GetID())
+	id := obj.ID.GetID()
+
+	logs, err := r.App.Queries.SearchPostAuditLogs.Handle(ctx, query.SearchPostAuditLogs{
+		Cursor: cursor,
+		PostId: &id,
+	})
 
 	if err != nil {
 		return nil, err

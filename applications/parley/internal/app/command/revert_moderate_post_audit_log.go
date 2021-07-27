@@ -2,15 +2,15 @@ package command
 
 import (
 	"context"
-	"errors"
 
-	"go.uber.org/zap"
+	"github.com/pkg/errors"
 	"overdoll/applications/parley/internal/domain/infraction"
 )
 
-var (
-	errFailedRevertModeratePendingPost = errors.New("revert audit log failed")
-)
+type RevertModeratePost struct {
+	ModeratorAccountId string
+	AuditLogId         string
+}
 
 type RevertModeratePostHandler struct {
 	ir    infraction.Repository
@@ -22,22 +22,21 @@ func NewRevertModeratePostHandler(ir infraction.Repository, eva EvaService, stin
 	return RevertModeratePostHandler{ir: ir, sting: sting, eva: eva}
 }
 
-func (h RevertModeratePostHandler) Handle(ctx context.Context, moderatorId, auditLogId string) (*infraction.PostAuditLog, error) {
+func (h RevertModeratePostHandler) Handle(ctx context.Context, cmd RevertModeratePost) (*infraction.PostAuditLog, error) {
 
 	// Get user, to perform permission checks
-	usr, err := h.eva.GetAccount(ctx, moderatorId)
+	usr, err := h.eva.GetAccount(ctx, cmd.ModeratorAccountId)
 
 	if err != nil {
-		zap.S().Errorf("failed to get user: %s", err)
-		return nil, errFailedRevertModeratePendingPost
+		return nil, errors.Wrap(err, "failed to get account")
 	}
 
 	if !usr.IsModerator() {
-		return nil, errFailedRevertModeratePendingPost
+		return nil, errors.New("not moderator")
 	}
 
 	// update audit log to revert any infractions and user locks, as well as mark it as reverted
-	auditLog, err := h.ir.UpdatePostAuditLog(ctx, auditLogId, func(log *infraction.PostAuditLog) error {
+	auditLog, err := h.ir.UpdatePostAuditLog(ctx, cmd.AuditLogId, func(log *infraction.PostAuditLog) error {
 
 		infractionId := ""
 
@@ -54,7 +53,7 @@ func (h RevertModeratePostHandler) Handle(ctx context.Context, moderatorId, audi
 
 			// unlock account - sending "0" unlocks the account
 			if err := h.eva.LockAccount(ctx, log.ContributorId(), 0); err != nil {
-				return err
+				return errors.Wrap(err, "failed to lock account")
 			}
 
 			// delete infraction from user's history
@@ -65,16 +64,14 @@ func (h RevertModeratePostHandler) Handle(ctx context.Context, moderatorId, audi
 
 		// tell sting to undo the pending post
 		if err := h.sting.UndoPost(ctx, log.PostID()); err != nil {
-			zap.S().Errorf("failed to publish pending post: %s", err)
-			return err
+			return errors.Wrap(err, "failed to undo post")
 		}
 
 		return nil
 	})
 
 	if err != nil {
-		zap.S().Errorf("failed to update audit log: %s", err)
-		return nil, errFailedRevertModeratePendingPost
+		return nil, err
 	}
 
 	return auditLog, nil
