@@ -20,7 +20,7 @@ import Icon from '@//:modules/content/Icon/Icon'
 import Button from '@//:modules/form/button'
 import InterfaceArrowsSynchronize
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-synchronize.svg'
-import { graphql, useQueryLoader } from 'react-relay'
+import { graphql, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay'
 import PendingPosts from './components/PendingPosts/PendingPosts'
 import { useTranslation } from 'react-i18next'
 import type { QueuePostsQuery } from '@//:artifacts/QueuePostsQuery.graphql'
@@ -28,9 +28,14 @@ import ErrorFallback from '../../../../components/ErrorFallback/ErrorFallback'
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
 import InterfaceHelpQuestionCircle
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/help/interface-help-question-circle.svg'
+import type { PostsPaginationQuery } from '@//:artifacts/PostsPaginationQuery.graphql'
+import type { QueuePostsFragment$key } from '@//:artifacts/QueuePostsFragment.graphql'
 
 type Props = {
-  postsQuery: PreloadedQuery<QueuePostsQuery>,
+  prepared: {
+    stateQuery: QueuePostsQuery,
+  },
+  paginationQuery: QueuePostsFragment$key,
 }
 
 const queuePostsGQL = graphql`
@@ -44,59 +49,13 @@ const queuePostsGQL = graphql`
   }
 `
 
-const pendingPostsGQL = graphql`
-  fragment QueuePostsFragment on Account
-  @argumentDefinitions(
-    first: {type: Int, defaultValue: 1}
-    after: {type: String}
-  )
-  @refetchable(queryName: "PostsPaginationQuery" ) {
-    moderatorPostsQueue (first: $first, after: $after)
-    @connection(key: "Posts_moderatorPostsQueue") {
-      edges {
-        node {
-          id
-          state
-          contributor {
-            username
-            avatar
-          }
-          content {
-            url
-          }
-          categories {
-            title
-          }
-          characters {
-            name
-            media {
-              title
-            }
-          }
-          mediaRequests
-          characterRequests {
-            name
-            media
-          }
-          postedAt
-          reassignmentAt
-        }
-      }
-    }
-  }
-`
-
 export default function Queue (props: Props): Node {
   const [t] = useTranslation('moderation')
 
-  const [queryRef, loadQuery] = useQueryLoader<QueuePostsQuery>(
+  const data = usePreloadedQuery<QueuePostsQuery>(
     queuePostsGQL,
-    props.postsQuery
+    props.prepared.stateQuery
   )
-
-  useEffect(() => {
-    loadQuery()
-  }, [])
 
   return (
     <>
@@ -138,40 +97,21 @@ export default function Queue (props: Props): Node {
                 </PopoverContent>
               </Popover>
             </Flex>
-            <IconButton
-              icon={<Icon icon={InterfaceArrowsSynchronize} w='fill' h='fill' fill='gray.500' />}
-              variant='solid' borderRadius={5} pl={2} pr={2} pt={1} pb={1}
-              bg='transparent'
-              onClick={loadQuery}
-            />
           </Flex>
-          <ErrorBoundary
-            fallback={({ error, reset }) => (
-              <ErrorFallback error={error} reset={reset} refetch={loadQuery} />
-            )}
+          <Suspense fallback={
+            <Stack mt={2}>
+              {[...Array(3).keys()].map((item, index) =>
+                <Skeleton key={index} borderRadius={5} h={12} />
+              )}
+            </Stack>
+          }
           >
-            <Suspense fallback={<PostSuspense />}>
-              {queryRef
-                ? <PendingPosts
-                    queryRef={queryRef} query={queuePostsGQL}
-                    paginationQuery={pendingPostsGQL}
-                    refresh={loadQuery}
-                  />
-                : <PostSuspense />}
-            </Suspense>
-          </ErrorBoundary>
+            <PendingPosts
+              query={data} posts={data?.viewer}
+            />
+          </Suspense>
         </Flex>
       </Center>
     </>
-  )
-}
-
-const PostSuspense = () => {
-  return (
-    <Stack mt={2}>
-      {[...Array(3).keys()].map((item, index) =>
-        <Skeleton key={index} borderRadius={5} h={12} />
-      )}
-    </Stack>
   )
 }

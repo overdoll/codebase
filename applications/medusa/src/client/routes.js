@@ -122,7 +122,19 @@ const routes: Array<Route> = [
                 /* webpackChunkName: "ModQueueRoot" */ './domain/Moderation/routes/Queue/Queue'
               ),
             module.hot
-            )
+            ),
+            prepare: params => {
+              const ModerationQuery = require('@//:artifacts/QueuePostsQuery.graphql')
+              return {
+                stateQuery: {
+                  query: ModerationQuery,
+                  variables: {},
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
           },
           {
             path: '/moderation/history',
