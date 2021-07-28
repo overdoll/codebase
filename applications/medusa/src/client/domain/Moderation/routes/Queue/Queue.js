@@ -33,6 +33,17 @@ type Props = {
   postsQuery: PreloadedQuery<QueuePostsQuery>,
 }
 
+const queuePostsGQL = graphql`
+  query QueuePostsQuery {
+    viewer {
+      ...QueuePostsFragment
+      moderator {
+        lastSelected
+      }
+    }
+  }
+`
+
 const pendingPostsGQL = graphql`
   fragment QueuePostsFragment on Account
   @argumentDefinitions(
@@ -70,17 +81,6 @@ const pendingPostsGQL = graphql`
           postedAt
           reassignmentAt
         }
-      }
-    }
-  }
-`
-
-const queuePostsGQL = graphql`
-  query QueuePostsQuery {
-    viewer {
-      ...QueuePostsFragment
-      moderator {
-        lastSelected
       }
     }
   }

@@ -2,9 +2,8 @@
  * @flow
  */
 import { useTranslation } from 'react-i18next'
-import { graphql, useFragment, useMutation } from 'react-relay/hooks'
+import { graphql, useMutation } from 'react-relay/hooks'
 import type { EmailsPrimaryMutation } from '@//:artifacts/EmailsPrimaryMutation.graphql'
-import type { EmailsDeleteMutation } from '@//:artifacts/EmailsDeleteMutation.graphql'
 import { MenuItem, Text, useToast } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import InterfaceSettingWrench

@@ -7,8 +7,6 @@ import {
   Flex, Heading, IconButton, Menu, MenuButton, MenuItem, MenuList, Text
 } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
-import InterfaceDeleteBin1
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/add-remove-delete/interface-delete-bin-1.svg'
 import InterfaceSettingCog
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/setting/interface-setting-cog.svg'
 import MailSendEnvelope from '@streamlinehq/streamlinehq/img/streamline-mini-bold/mail/send/mail-send-envelope.svg'
@@ -16,6 +14,7 @@ import MailSendEnvelope from '@streamlinehq/streamlinehq/img/streamline-mini-bol
 import { useTranslation } from 'react-i18next'
 import type { EmailsSettingsFragment$key } from '@//:artifacts/EmailsSettingsFragment.graphql'
 import MakePrimary from './MakePrimary/MakePrimary'
+import Delete from './Delete/Delete'
 
 type Props = {
   email: string,
@@ -88,12 +87,7 @@ export default function EmailCard ({ email, status, emailID, connectionID }: Pro
                     <Text pointerEvents='none' color='gray.100'>{t('profile.email.options.resend.button')}</Text>
                   </MenuItem>}
                 {(status === 'CONFIRMED' || status === 'UNCONFIRMED') &&
-                  <MenuItem
-                    justify='center'
-                  >
-                    <Icon pointerEvents='none' icon={InterfaceDeleteBin1} fill='orange.300' w={4} h={4} mr={2} />
-                    <Text pointerEvents='none' color='orange.300'>{t('profile.email.options.delete.button')}</Text>
-                  </MenuItem>}
+                  <Delete email={email} emailID={emailID} connectionID={connectionID} />}
               </MenuList>
             </Menu>}
         </Flex>

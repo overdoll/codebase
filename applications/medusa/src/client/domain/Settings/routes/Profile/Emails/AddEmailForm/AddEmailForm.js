@@ -116,7 +116,7 @@ export default function AddEmailForm ({ connectionID }): Node {
                 variant='outline' mr={2}
               />
               {(errors.email || success) && (
-                <InputRightElement mr={2} h='32px' pointerEvents='none'>
+                <InputRightElement zIndex={0} mr={2} h='32px' pointerEvents='none'>
                   <Icon
                     m={3}
                     icon={success ? InterfaceValidationCheck : InterfaceAlertWarningTriangle}
