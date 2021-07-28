@@ -26,7 +26,7 @@ func NewEnrollAccountMultiFactorTOTPHandler(mr multi_factor.Repository, ar accou
 
 func (h EnrollAccountMultiFactorTOTPHandler) Handle(ctx context.Context, cmd EnrollAccountMultiFactorTOTP) error {
 
-	acc, err := h.ar.GetAccountById(ctx, cmd.AccountId)
+	acc, err := h.ar.GetAccountById(ctx, cmd.Principal.AccountId())
 
 	if err != nil {
 		return err

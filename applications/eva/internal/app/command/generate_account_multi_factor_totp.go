@@ -24,7 +24,7 @@ func NewGenerateAccountMultiFactorTOTP(mr multi_factor.Repository, ar account.Re
 
 func (h GenerateAccountMultiFactorTOTPHandler) Handle(ctx context.Context, cmd GenerateAccountMultiFactorTOTP) (*multi_factor.TOTP, error) {
 
-	usr, err := h.ar.GetAccountById(ctx, cmd.AccountId)
+	usr, err := h.ar.GetAccountById(ctx, cmd.Principal.AccountId())
 
 	if err != nil {
 		return nil, err

@@ -23,7 +23,7 @@ func NewDisableAccountMultiFactorHandler(mr multi_factor.Repository, ar account.
 
 func (h DisableAccountMultiFactorHandler) Handle(ctx context.Context, cmd DisableAccountMultiFactor) error {
 
-	_, err := h.ar.UpdateAccount(ctx, cmd.AccountId, func(a *account.Account) error {
+	_, err := h.ar.UpdateAccount(ctx, cmd.Principal.AccountId(), func(a *account.Account) error {
 		if !a.MultiFactorEnabled() {
 			return nil
 		}

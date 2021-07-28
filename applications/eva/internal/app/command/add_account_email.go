@@ -23,7 +23,7 @@ func NewAddAccountEmailHandler(ar account.Repository, carrier CarrierService) Ad
 
 func (h AddAccountEmailHandler) Handle(ctx context.Context, cmd AddAccountEmail) (*account.Email, error) {
 
-	acc, err := h.ar.GetAccountById(ctx, cmd.AccountId)
+	acc, err := h.ar.GetAccountById(ctx, cmd.Principal.AccountId())
 
 	if err != nil {
 		return nil, err
@@ -43,7 +43,7 @@ func (h AddAccountEmailHandler) Handle(ctx context.Context, cmd AddAccountEmail)
 	}
 
 	// tell carrier to send a notification email
-	if err := h.carrier.ConfirmAccountEmail(ctx, cmd.AccountId, cmd.Email, confirm.ID()); err != nil {
+	if err := h.carrier.ConfirmAccountEmail(ctx, acc.ID(), cmd.Email, confirm.ID()); err != nil {
 		return nil, err
 	}
 

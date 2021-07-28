@@ -21,5 +21,5 @@ func NewDeleteAccountEmailHandler(ar account.Repository) DeleteAccountEmailHandl
 }
 
 func (h DeleteAccountEmailHandler) Handle(ctx context.Context, cmd DeleteAccountEmail) error {
-	return h.ar.DeleteAccountEmail(ctx, cmd.AccountId, cmd.Email)
+	return h.ar.DeleteAccountEmail(ctx, cmd.Principal.AccountId(), cmd.Email)
 }

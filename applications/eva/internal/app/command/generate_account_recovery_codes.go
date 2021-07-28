@@ -28,7 +28,7 @@ func (h GenerateAccountMultiFactorRecoveryCodesHandler) Handle(ctx context.Conte
 		return nil, err
 	}
 
-	if err := h.mr.CreateAccountRecoveryCodes(ctx, cmd.AccountId, set); err != nil {
+	if err := h.mr.CreateAccountRecoveryCodes(ctx, cmd.Principal.AccountId(), set); err != nil {
 		return nil, err
 	}
 

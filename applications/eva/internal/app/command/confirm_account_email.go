@@ -23,7 +23,7 @@ func NewConfirmAccountEmailHandler(ar account.Repository) ConfirmAccountEmailHan
 
 func (h ConfirmAccountEmailHandler) Handle(ctx context.Context, cmd ConfirmAccountEmail) (*account.Email, error) {
 
-	acc, err := h.ar.GetAccountById(ctx, cmd.AccountId)
+	acc, err := h.ar.GetAccountById(ctx, cmd.Principal.AccountId())
 
 	if err != nil {
 		return nil, err

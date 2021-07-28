@@ -22,7 +22,7 @@ func NewUnlockUserHandler(ur account.Repository) UnlockAccountHandler {
 
 func (h UnlockAccountHandler) Handle(ctx context.Context, cmd UnlockAccount) (*account.Account, error) {
 
-	usr, err := h.ur.UpdateAccount(ctx, cmd.AccountId, func(u *account.Account) error {
+	usr, err := h.ur.UpdateAccount(ctx, cmd.Principal.AccountId(), func(u *account.Account) error {
 		return u.Unlock()
 	})
 

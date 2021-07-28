@@ -473,7 +473,7 @@ func (r *MutationResolver) AddAccountEmail(ctx context.Context, input types.AddA
 	}
 
 	email, err := r.App.Commands.AddAccountEmail.Handle(ctx, command.AddAccountEmail{
-		Principal: principal.FromContext(ctx),
+		Principal: *principal.FromContext(ctx),
 		Email:     input.Email,
 	})
 
