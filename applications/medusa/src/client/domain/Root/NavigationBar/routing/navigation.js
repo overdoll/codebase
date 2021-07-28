@@ -53,7 +53,7 @@ const routes: Array<Route> = [
     }
   },
   {
-    path: '/m',
+    path: '/moderation',
     middleware: [
       ({ environment }) => {
         const ability = getAbilityFromUser(environment)
@@ -76,7 +76,7 @@ const routes: Array<Route> = [
     },
     routes: [
       {
-        path: '/m/queue',
+        path: '/moderation/queue',
         navigation: {
           side: {
             title: 'sidebar.mod.queue'
@@ -84,7 +84,7 @@ const routes: Array<Route> = [
         }
       },
       {
-        path: '/m/history',
+        path: '/moderation/history',
         navigation: {
           side: {
             title: 'sidebar.mod.history'

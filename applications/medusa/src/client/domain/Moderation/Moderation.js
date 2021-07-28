@@ -14,7 +14,7 @@ export default function Moderation ({ children }: Props): Node {
 
   return (
     <>
-      {location.pathname === '/m' ? <Redirect to='/m/queue' /> : children}
+      {location.pathname === '/moderation' ? <Redirect to='/moderation/queue' /> : children}
     </>
   )
 }

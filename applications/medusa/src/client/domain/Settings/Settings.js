@@ -14,7 +14,7 @@ export default function Settings ({ children }: Props): Node {
 
   return (
     <>
-      {location.pathname === '/s' ? <Redirect to='/s/profile' /> : children}
+      {location.pathname === '/settings' ? <Redirect to='/settings/profile' /> : children}
     </>
   )
 }

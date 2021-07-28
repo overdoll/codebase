@@ -57,7 +57,7 @@
           }
         },
         "set_primary": {
-          "button": "Set Primary",
+          "button": "Make Primary",
           "query": {
             "success": "{{email}} was set as your Primary email",
             "error": "There was an error setting {{email}} to Primary"
@@ -76,8 +76,8 @@
           }
         },
         "query": {
-          "success": "A verification email was sent to {{email}}",
-          "error": "There was an error adding an email"
+          "success": "A confirmation email was sent to {{email}}. Check your inbox/spam!",
+          "error": "There was an error adding the email"
         }
       }
     }

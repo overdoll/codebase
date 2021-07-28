@@ -13,11 +13,12 @@ declare export opaque type UsernamesSettingsFragment$fragmentType: UsernamesSett
 export type UsernamesSettingsFragment = {|
   +username: string,
   +usernames: {|
+    +__id: string,
     +edges: $ReadOnlyArray<{|
       +node: {|
         +username: string
       |}
-    |}>
+    |}>,
   |},
   +$refType: UsernamesSettingsFragment$ref,
 |};
@@ -38,18 +39,34 @@ var v0 = {
   "storageKey": null
 };
 return {
-  "argumentDefinitions": [],
+  "argumentDefinitions": [
+    {
+      "kind": "RootArgument",
+      "name": "first"
+    }
+  ],
   "kind": "Fragment",
-  "metadata": null,
+  "metadata": {
+    "connection": [
+      {
+        "count": "first",
+        "cursor": null,
+        "direction": "forward",
+        "path": [
+          "usernames"
+        ]
+      }
+    ]
+  },
   "name": "UsernamesSettingsFragment",
   "selections": [
     (v0/*: any*/),
     {
-      "alias": null,
+      "alias": "usernames",
       "args": null,
       "concreteType": "AccountUsernameConnection",
       "kind": "LinkedField",
-      "name": "usernames",
+      "name": "__UsernamesSettingsFragment_usernames_connection",
       "plural": false,
       "selections": [
         {
@@ -68,12 +85,63 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
-                (v0/*: any*/)
+                (v0/*: any*/),
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "__typename",
+                  "storageKey": null
+                }
               ],
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "cursor",
               "storageKey": null
             }
           ],
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "PageInfo",
+          "kind": "LinkedField",
+          "name": "pageInfo",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "endCursor",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "hasNextPage",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        },
+        {
+          "kind": "ClientExtension",
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "__id",
+              "storageKey": null
+            }
+          ]
         }
       ],
       "storageKey": null
@@ -84,5 +152,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = 'e4cd4dbfcd94e7d5ae4d14c1ee066d8a';
+(node: any).hash = 'bace2e572b5d38453f17fbfbd02ce968';
 module.exports = node;

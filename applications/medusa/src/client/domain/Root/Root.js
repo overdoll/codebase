@@ -40,9 +40,7 @@ export default function Root (props: Props): Node {
   )
 
   const ability = defineAbility(
-    data?.viewer,
-    data?.isModerator,
-    data?.isStaff
+    data?.viewer
   )
 
   return (

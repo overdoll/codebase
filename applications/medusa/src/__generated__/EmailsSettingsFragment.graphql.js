@@ -13,13 +13,14 @@ declare export opaque type EmailsSettingsFragment$ref: FragmentReference;
 declare export opaque type EmailsSettingsFragment$fragmentType: EmailsSettingsFragment$ref;
 export type EmailsSettingsFragment = {|
   +emails: {|
+    +__id: string,
     +edges: $ReadOnlyArray<{|
       +node: {|
         +id: string,
         +email: string,
         +status: AccountEmailStatus,
       |}
-    |}>
+    |}>,
   |},
   +$refType: EmailsSettingsFragment$ref,
 |};
@@ -32,17 +33,33 @@ export type EmailsSettingsFragment$key = {
 
 
 const node: ReaderFragment = {
-  "argumentDefinitions": [],
+  "argumentDefinitions": [
+    {
+      "kind": "RootArgument",
+      "name": "first"
+    }
+  ],
   "kind": "Fragment",
-  "metadata": null,
+  "metadata": {
+    "connection": [
+      {
+        "count": "first",
+        "cursor": null,
+        "direction": "forward",
+        "path": [
+          "emails"
+        ]
+      }
+    ]
+  },
   "name": "EmailsSettingsFragment",
   "selections": [
     {
-      "alias": null,
+      "alias": "emails",
       "args": null,
       "concreteType": "AccountEmailConnection",
       "kind": "LinkedField",
-      "name": "emails",
+      "name": "__EmailsSettingsFragment_emails_connection",
       "plural": false,
       "selections": [
         {
@@ -81,12 +98,63 @@ const node: ReaderFragment = {
                   "kind": "ScalarField",
                   "name": "status",
                   "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "__typename",
+                  "storageKey": null
                 }
               ],
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "cursor",
               "storageKey": null
             }
           ],
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "PageInfo",
+          "kind": "LinkedField",
+          "name": "pageInfo",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "endCursor",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "hasNextPage",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        },
+        {
+          "kind": "ClientExtension",
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "__id",
+              "storageKey": null
+            }
+          ]
         }
       ],
       "storageKey": null
@@ -96,5 +164,5 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 // prettier-ignore
-(node: any).hash = 'fd127bef8f48d5ebcc78c177dca02254';
+(node: any).hash = '23418ca38fbf0f5d1efb4d0183d72ce1';
 module.exports = node;

@@ -23,7 +23,7 @@ type Props = {
 };
 
 const generalSettingsGQL = graphql`
-  query ProfileSettingsQuery {
+  query ProfileSettingsQuery($first: Int) {
     viewer {
       ...UsernamesSettingsFragment
       ...EmailsSettingsFragment

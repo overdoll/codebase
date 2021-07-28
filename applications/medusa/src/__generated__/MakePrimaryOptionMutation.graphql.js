@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 11225120e6fd1210cdd23abd0729955a
+ * @relayHash 1599678abe6ac72dfcdd0eaaf84d5840
  */
 
 /* eslint-disable */
@@ -9,37 +9,37 @@
 
 import type { ConcreteRequest } from 'relay-runtime';
 export type AccountEmailStatus = "CONFIRMED" | "PRIMARY" | "UNCONFIRMED" | "%future added value";
-export type AddAccountEmailInput = {|
-  email: string
+export type UpdateAccountEmailStatusToPrimaryInput = {|
+  accountEmailId: string
 |};
-export type AddEmailFormMutationVariables = {|
-  input: AddAccountEmailInput,
+export type MakePrimaryOptionMutationVariables = {|
+  input: UpdateAccountEmailStatusToPrimaryInput,
   connections: $ReadOnlyArray<string>,
 |};
-export type AddEmailFormMutationResponse = {|
-  +addAccountEmail: ?{|
+export type MakePrimaryOptionMutationResponse = {|
+  +updateAccountEmailStatusToPrimary: ?{|
     +accountEmail: ?{|
       +id: string,
-      +email: string,
       +status: AccountEmailStatus,
+      +email: string,
     |}
   |}
 |};
-export type AddEmailFormMutation = {|
-  variables: AddEmailFormMutationVariables,
-  response: AddEmailFormMutationResponse,
+export type MakePrimaryOptionMutation = {|
+  variables: MakePrimaryOptionMutationVariables,
+  response: MakePrimaryOptionMutationResponse,
 |};
 
 
 /*
-mutation AddEmailFormMutation(
-  $input: AddAccountEmailInput!
+mutation MakePrimaryOptionMutation(
+  $input: UpdateAccountEmailStatusToPrimaryInput!
 ) {
-  addAccountEmail(input: $input) {
+  updateAccountEmailStatusToPrimary(input: $input) {
     accountEmail {
       id
-      email
       status
+      email
     }
   }
 }
@@ -82,14 +82,14 @@ v3 = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "email",
+      "name": "status",
       "storageKey": null
     },
     {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "status",
+      "name": "email",
       "storageKey": null
     }
   ],
@@ -103,14 +103,14 @@ return {
     ],
     "kind": "Fragment",
     "metadata": null,
-    "name": "AddEmailFormMutation",
+    "name": "MakePrimaryOptionMutation",
     "selections": [
       {
         "alias": null,
         "args": (v2/*: any*/),
-        "concreteType": "AddAccountEmailPayload",
+        "concreteType": "UpdateAccountEmailStatusToPrimaryPayload",
         "kind": "LinkedField",
-        "name": "addAccountEmail",
+        "name": "updateAccountEmailStatusToPrimary",
         "plural": false,
         "selections": [
           (v3/*: any*/)
@@ -128,14 +128,14 @@ return {
       (v0/*: any*/)
     ],
     "kind": "Operation",
-    "name": "AddEmailFormMutation",
+    "name": "MakePrimaryOptionMutation",
     "selections": [
       {
         "alias": null,
         "args": (v2/*: any*/),
-        "concreteType": "AddAccountEmailPayload",
+        "concreteType": "UpdateAccountEmailStatusToPrimaryPayload",
         "kind": "LinkedField",
-        "name": "addAccountEmail",
+        "name": "updateAccountEmailStatusToPrimary",
         "plural": false,
         "selections": [
           (v3/*: any*/),
@@ -156,7 +156,7 @@ return {
               {
                 "kind": "Literal",
                 "name": "edgeTypeName",
-                "value": "updateEmailPrimaryEdge"
+                "value": "AccountEmailEdge"
               }
             ]
           }
@@ -166,14 +166,14 @@ return {
     ]
   },
   "params": {
-    "id": "11225120e6fd1210cdd23abd0729955a",
+    "id": "1599678abe6ac72dfcdd0eaaf84d5840",
     "metadata": {},
-    "name": "AddEmailFormMutation",
+    "name": "MakePrimaryOptionMutation",
     "operationKind": "mutation",
     "text": null
   }
 };
 })();
 // prettier-ignore
-(node: any).hash = '6f834357fde2d17150f8079d8054e0c2';
+(node: any).hash = 'af05407fa2ae6178ab10c136db925d02';
 module.exports = node;

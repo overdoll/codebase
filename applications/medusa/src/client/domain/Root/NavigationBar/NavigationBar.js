@@ -131,29 +131,27 @@ export default function NavigationBar (props: Props): Node {
         </Flex>
       </>
       <Flex direction='row'>
-        <Switch>
-          {navigationSettings.map((item, index) => {
-            if (item.sidebar) {
-              return (
-                <Fragment key={index}>
-                  <Route index={index} exact={item.exact} path={item.route}>
-                    <Sidebar title={t(item.sidebar.title)}>
-                      {item.sidebar.routes?.map((item, index) => (
-                        <SidebarItem
-                          key={index}
-                          title={t(item?.title)}
-                          match={location.pathname === item.route}
-                          route={item.route}
-                        />
-                      ))}
-                    </Sidebar>
-                  </Route>
-                </Fragment>
-              )
-            }
-            return null
-          })}
-        </Switch>
+        {navigationSettings.map((item, index) => {
+          if (item.sidebar) {
+            return (
+              <Fragment key={index}>
+                <Route exact={item.exact} path={item.route}>
+                  <Sidebar title={t(item.sidebar.title)}>
+                    {item.sidebar.routes?.map((item, index) => (
+                      <SidebarItem
+                        key={index}
+                        title={t(item?.title)}
+                        match={location.pathname === item.route}
+                        route={item.route}
+                      />
+                    ))}
+                  </Sidebar>
+                </Route>
+              </Fragment>
+            )
+          }
+          return null
+        })}
         <Box w='100%'>
           {props.children}
         </Box>

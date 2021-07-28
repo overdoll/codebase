@@ -31,10 +31,17 @@ type EmailValues = {
   email: string,
 };
 
+const schema = Joi.object({
+  email: Joi
+    .string()
+    .email({ minDomainSegments: 2, tlds: {} })
+    .required()
+})
+
 const AddEmailMutationGQL = graphql`
-  mutation AddEmailFormMutation($input: AddAccountEmailInput!) {
+  mutation AddEmailFormMutation($input: AddAccountEmailInput!, $connections: [ID!]!) {
     addAccountEmail(input: $input) {
-      accountEmail {
+      accountEmail @appendNode(connections: $connections, edgeTypeName: "updateEmailPrimaryEdge") {
         id
         email
         status
@@ -43,19 +50,8 @@ const AddEmailMutationGQL = graphql`
   }
 `
 
-const schema = Joi.object({
-  email: Joi
-    .string()
-    .email({ minDomainSegments: 2, tlds: {} })
-    .required()
-})
-
-export default function AddEmailForm (): Node {
+export default function AddEmailForm ({ connectionID }): Node {
   const [t] = useTranslation('settings')
-
-  const [addEmail, isAddingEmail] = useMutation<AddEmailFormMutation>(
-    AddEmailMutationGQL
-  )
 
   const { register, handleSubmit, formState: { errors, isDirty, isSubmitted } } = useForm<EmailValues>({
     resolver: joiResolver(
@@ -65,12 +61,19 @@ export default function AddEmailForm (): Node {
 
   const success = isDirty && !errors.email && isSubmitted
 
+  const [addEmail, isAddingEmail] = useMutation<AddEmailFormMutation>(
+    AddEmailMutationGQL
+  )
+
+  const notify = useToast()
+
   const onAddEmail = (formData) => {
     addEmail({
       variables: {
         input: {
           email: formData.email
-        }
+        },
+        connections: [connectionID]
       },
       onCompleted () {
         notify({
@@ -89,8 +92,6 @@ export default function AddEmailForm (): Node {
     }
     )
   }
-
-  const notify = useToast()
 
   return (
     <>

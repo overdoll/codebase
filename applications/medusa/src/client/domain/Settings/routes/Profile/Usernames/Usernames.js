@@ -27,33 +27,28 @@ import type { UsernamesMutation } from '@//:artifacts/UsernamesMutation.graphql'
 import type { UsernamesSettingsFragment$key } from '@//:artifacts/UsernamesSettingsFragment.graphql'
 import ChangeUsernameForm from './ChangeUsernameForm/ChangeUsernameForm'
 
-const UsernameMutationGQL = graphql`
-  mutation UsernamesMutation($input: UpdateAccountUsernameAndRetainPreviousInput!) {
-    updateAccountUsernameAndRetainPrevious(input: $input) {
-      accountUsername {
-        username
-        account {
-          id
+const UsernameFragmentGQL = graphql`
+  fragment UsernamesSettingsFragment on Account {
+    username
+    usernames(first: $first) @connection(key: "UsernamesSettingsFragment_usernames" ) {
+      __id
+      edges {
+        node {
           username
-          usernames {
-            edges {
-              node {
-                username
-              }
-            }
-          }
         }
       }
     }
   }
 `
 
-const UsernameFragmentGQL = graphql`
-  fragment UsernamesSettingsFragment on Account {
-    username
-    usernames {
-      edges {
-        node {
+const UsernameMutationGQL = graphql`
+  mutation UsernamesMutation($input: UpdateAccountUsernameAndRetainPreviousInput!, $connections: [ID!]!) {
+    updateAccountUsernameAndRetainPrevious(input: $input) {
+      accountUsername  {
+        id
+        username
+        account @appendNode(connections: $connections, edgeTypeName: "UsernamesEdge"){
+          id
           username
         }
       }
@@ -66,7 +61,7 @@ type Props = {
 }
 
 export default function Usernames ({ usernames }: Props): Node {
-  const [commit, isInFlight] = useMutation<UsernamesMutation>(
+  const [changeUsername, isChangingUsername] = useMutation<UsernamesMutation>(
     UsernameMutationGQL
   )
 
@@ -78,12 +73,15 @@ export default function Usernames ({ usernames }: Props): Node {
 
   const notify = useToast()
 
-  const onSubmit = (formData) => {
-    commit({
+  const usernamesConnectionID = data?.usernames?.__id
+
+  const onChangeUsername = (formData) => {
+    changeUsername({
       variables: {
         input: {
           username: formData.username
-        }
+        },
+        connections: [usernamesConnectionID]
       },
       onCompleted () {
         notify({
@@ -148,7 +146,7 @@ export default function Usernames ({ usernames }: Props): Node {
           <ModalHeader fontSize='md'>{t('profile.username.modal.header')}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <ChangeUsernameForm onSubmit={onSubmit} loading={isInFlight} />
+            <ChangeUsernameForm onSubmit={onChangeUsername} loading={isChangingUsername} />
           </ModalBody>
           <ModalFooter />
         </ModalContent>
