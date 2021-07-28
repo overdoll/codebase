@@ -11,6 +11,8 @@ import (
 	"overdoll/applications/eva/internal/ports/graphql/types"
 	"overdoll/libraries/helpers"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/passport"
+	"overdoll/libraries/principal"
 )
 
 type AccountResolver struct {
@@ -35,6 +37,10 @@ func (r AccountResolver) Lock(ctx context.Context, obj *types.Account) (*types.A
 
 func (r AccountResolver) Emails(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountEmailConnection, error) {
 
+	if !passport.FromContext(ctx).IsAuthenticated() {
+		return nil, passport.ErrNotAuthenticated
+	}
+
 	cursor, err := paging.NewCursor(after, before, first, last)
 
 	if err != nil {
@@ -44,6 +50,7 @@ func (r AccountResolver) Emails(ctx context.Context, obj *types.Account, after *
 	results, err := r.App.Queries.AccountEmailsByAccount.Handle(ctx, query.AccountEmailsByAccount{
 		Cursor:    cursor,
 		AccountId: obj.ID.GetID(),
+		Principal: principal.FromContext(ctx),
 	})
 
 	if err != nil {
@@ -60,6 +67,10 @@ func (r AccountResolver) Emails(ctx context.Context, obj *types.Account, after *
 
 func (r AccountResolver) Usernames(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountUsernameConnection, error) {
 
+	if !passport.FromContext(ctx).IsAuthenticated() {
+		return nil, passport.ErrNotAuthenticated
+	}
+
 	cursor, err := paging.NewCursor(after, before, first, last)
 
 	if err != nil {
@@ -69,6 +80,7 @@ func (r AccountResolver) Usernames(ctx context.Context, obj *types.Account, afte
 	results, err := r.App.Queries.AccountUsernamesByAccount.Handle(ctx, query.AccountUsernamesByAccount{
 		Cursor:    cursor,
 		AccountId: obj.ID.GetID(),
+		Principal: principal.FromContext(ctx),
 	})
 
 	if err != nil {
@@ -84,6 +96,10 @@ func (r AccountResolver) Usernames(ctx context.Context, obj *types.Account, afte
 }
 
 func (r AccountResolver) Sessions(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountSessionConnection, error) {
+
+	if !passport.FromContext(ctx).IsAuthenticated() {
+		return nil, passport.ErrNotAuthenticated
+	}
 
 	cursor, err := paging.NewCursor(after, before, first, last)
 
@@ -105,6 +121,7 @@ func (r AccountResolver) Sessions(ctx context.Context, obj *types.Account, after
 	results, err := r.App.Queries.AccountSessionsByAccount.Handle(ctx, query.AccountSessionsByAccount{
 		Cursor:           cursor,
 		CurrentSessionId: accountSession,
+		Principal:        principal.FromContext(ctx),
 		AccountId:        obj.ID.GetID(),
 	})
 
@@ -122,6 +139,10 @@ func (r AccountResolver) Sessions(ctx context.Context, obj *types.Account, after
 
 func (r AccountResolver) MultiFactorSettings(ctx context.Context, obj *types.Account) (*types.AccountMultiFactorSettings, error) {
 
+	if !passport.FromContext(ctx).IsAuthenticated() {
+		return nil, passport.ErrNotAuthenticated
+	}
+
 	accountId := obj.ID.GetID()
 
 	acc, err := r.App.Queries.AccountById.Handle(ctx, accountId)
@@ -137,6 +158,7 @@ func (r AccountResolver) MultiFactorSettings(ctx context.Context, obj *types.Acc
 
 	codes, err := r.App.Queries.AccountRecoveryCodesByAccount.Handle(ctx, query.AccountRecoveryCodesByAccount{
 		AccountId: accountId,
+		Principal: principal.FromContext(ctx),
 	})
 
 	if err != nil {
@@ -145,6 +167,7 @@ func (r AccountResolver) MultiFactorSettings(ctx context.Context, obj *types.Acc
 
 	totpEnabled, err := r.App.Queries.IsAccountMultiFactorTOTPEnabled.Handle(ctx, query.IsAccountMultiFactorTOTPEnabled{
 		AccountId: accountId,
+		Principal: principal.FromContext(ctx),
 	})
 
 	if err != nil {
@@ -157,13 +180,17 @@ func (r AccountResolver) MultiFactorSettings(ctx context.Context, obj *types.Acc
 		CanDisableMultiFactor:     acc.CanDisableMultiFactor(),
 		MultiFactorTotpConfigured: totpEnabled,
 	}, nil
-
 }
 
 func (r AccountResolver) RecoveryCodes(ctx context.Context, obj *types.Account) ([]*types.AccountMultiFactorRecoveryCode, error) {
 
+	if !passport.FromContext(ctx).IsAuthenticated() {
+		return nil, passport.ErrNotAuthenticated
+	}
+
 	codes, err := r.App.Queries.AccountRecoveryCodesByAccount.Handle(ctx, query.AccountRecoveryCodesByAccount{
 		AccountId: obj.ID.GetID(),
+		Principal: principal.FromContext(ctx),
 	})
 
 	if err != nil {

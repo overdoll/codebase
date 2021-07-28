@@ -5,9 +5,14 @@ import (
 
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
 )
 
 type AccountEmailsByAccount struct {
+	// The account that is requesting this resource
+	Principal *principal.Principal
+
+	// information related to this resource
 	Cursor    *paging.Cursor
 	AccountId string
 }

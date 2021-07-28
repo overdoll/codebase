@@ -4,10 +4,12 @@ import (
 	"context"
 
 	"overdoll/applications/eva/internal/domain/account"
+	"overdoll/libraries/principal"
 )
 
 type UnlockAccount struct {
-	AccountId string
+	// the account that is making this request
+	Principal *principal.Principal
 }
 
 type UnlockAccountHandler struct {

@@ -2,12 +2,17 @@ package ports
 
 import (
 	"context"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 	"overdoll/applications/eva/internal/app"
+	"overdoll/applications/eva/internal/domain/account"
 	gen "overdoll/applications/eva/internal/ports/graphql"
 	"overdoll/applications/eva/internal/ports/graphql/dataloader"
 	"overdoll/libraries/graphql"
+	"overdoll/libraries/passport"
+	"overdoll/libraries/principal"
 	"overdoll/libraries/router"
 )
 
@@ -23,10 +28,35 @@ func dataLoaderToContext(app *app.Application) gin.HandlerFunc {
 	}
 }
 
+// Eva implementation of principal.
+// will grab directly from it's own database and convert the account to a principal
+func principalToContext(app *app.Application) gin.HandlerFunc {
+	return func(c *gin.Context) {
+
+		ctx := c.Request.Context()
+
+		if !passport.FromContext(ctx).IsAuthenticated() {
+			c.Next()
+			return
+		}
+
+		acc, err := app.Queries.AccountById.Handle(ctx, passport.FromContext(ctx).AccountID())
+
+		if err != nil {
+			zap.S().Error("unable to get account", zap.Error(err))
+			c.Status(http.StatusUnauthorized)
+			return
+		}
+
+		c.Request = principal.AddPrincipalToRequest(c, account.ToPrincipal(acc))
+		c.Next()
+	}
+}
+
 func NewGraphQLServer(app *app.Application) *gin.Engine {
 	rtr := router.NewGinRouter()
 
-	rtr.POST("/graphql", dataLoaderToContext(app), graphql.HandleGraphQL(gen.NewExecutableSchema(gen.Config{
+	rtr.POST("/graphql", dataLoaderToContext(app), principalToContext(app), graphql.HandleGraphQL(gen.NewExecutableSchema(gen.Config{
 		Resolvers: gen.NewResolver(app),
 	})))
 

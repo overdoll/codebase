@@ -32,6 +32,7 @@ type Commands struct {
 }
 
 type Queries struct {
+	PrincipalById    query.PrincipalByIdHandler
 	SearchCategories query.SearchCategoriesHandler
 	SearchCharacters query.SearchCharactersHandler
 	SearchMedias     query.SearchMediasHandler

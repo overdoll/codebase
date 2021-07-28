@@ -4,10 +4,12 @@ import (
 	"context"
 
 	"overdoll/applications/eva/internal/domain/account"
+	"overdoll/libraries/principal"
 )
 
 type ConfirmAccountEmail struct {
-	AccountId string
+	// the account that is requesting this action
+	Principal *principal.Principal
 	Id        string
 }
 

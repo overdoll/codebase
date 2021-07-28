@@ -32,7 +32,6 @@ func (r AccountResolver) ModeratorPostAuditLogs(ctx context.Context, obj *types.
 	logs, err := r.App.Queries.SearchPostAuditLogs.Handle(ctx, query.SearchPostAuditLogs{
 		Cursor:             cursor,
 		ModeratorAccountId: &id,
-		PostId:             nil,
 	})
 
 	if err != nil {

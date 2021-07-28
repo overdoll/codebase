@@ -5,6 +5,7 @@ import (
 
 	eva "overdoll/applications/eva/proto"
 	"overdoll/libraries/account"
+	"overdoll/libraries/principal"
 )
 
 type EvaGrpc struct {
@@ -15,7 +16,7 @@ func NewEvaGrpc(client eva.EvaClient) EvaGrpc {
 	return EvaGrpc{client: client}
 }
 
-func (s EvaGrpc) GetAccount(ctx context.Context, id string) (*account.Account, error) {
+func (s EvaGrpc) GetAccount(ctx context.Context, id string) (*principal.Principal, error) {
 
 	acc, err := s.client.GetAccount(ctx, &eva.GetAccountRequest{
 		Id: id,
@@ -25,7 +26,7 @@ func (s EvaGrpc) GetAccount(ctx context.Context, id string) (*account.Account, e
 		return nil, err
 	}
 
-	return account.UnmarshalFromProto(acc), nil
+	return principal.UnmarshalFromEvaProto(acc), nil
 }
 
 func (s EvaGrpc) CreateAccount(ctx context.Context, username, email string) (*account.Account, error) {

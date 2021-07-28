@@ -18,6 +18,7 @@ type Commands struct {
 }
 
 type Queries struct {
+	PrincipalById                query.PrincipalByIdHandler
 	PostRejectionReasons         query.PostsRejectionReasonsHandler
 	PostRejectionReasonById      query.PostRejectionReasonByIdHandler
 	SearchPostAuditLogs          query.SearchPostAuditLogsHandler

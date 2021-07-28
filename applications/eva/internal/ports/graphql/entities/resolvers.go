@@ -8,6 +8,8 @@ import (
 	"overdoll/applications/eva/internal/ports/graphql/dataloader"
 	"overdoll/applications/eva/internal/ports/graphql/types"
 	"overdoll/libraries/graphql/relay"
+	"overdoll/libraries/passport"
+	"overdoll/libraries/principal"
 )
 
 type EntityResolver struct {
@@ -62,7 +64,12 @@ func (r EntityResolver) FindModeratorByID(ctx context.Context, id relay.ID) (*ty
 
 func (r EntityResolver) FindAccountEmailByID(ctx context.Context, id relay.ID) (*types.AccountEmail, error) {
 
+	if !passport.FromContext(ctx).IsAuthenticated() {
+		return nil, passport.ErrNotAuthenticated
+	}
+
 	email, err := r.App.Queries.AccountEmailByEmail.Handle(ctx, query.AccountEmailByEmail{
+		Principal: principal.FromContext(ctx),
 		AccountId: id.GetCompositePartID(1),
 		Email:     id.GetCompositePartID(0),
 	})
@@ -76,7 +83,12 @@ func (r EntityResolver) FindAccountEmailByID(ctx context.Context, id relay.ID) (
 
 func (r EntityResolver) FindAccountSessionByID(ctx context.Context, id relay.ID) (*types.AccountSession, error) {
 
+	if !passport.FromContext(ctx).IsAuthenticated() {
+		return nil, passport.ErrNotAuthenticated
+	}
+
 	session, err := r.App.Queries.AccountSessionById.Handle(ctx, query.AccountSessionById{
+		Principal: principal.FromContext(ctx),
 		SessionId: id.GetID(),
 	})
 
@@ -89,7 +101,12 @@ func (r EntityResolver) FindAccountSessionByID(ctx context.Context, id relay.ID)
 
 func (r EntityResolver) FindAccountUsernameByID(ctx context.Context, id relay.ID) (*types.AccountUsername, error) {
 
+	if !passport.FromContext(ctx).IsAuthenticated() {
+		return nil, passport.ErrNotAuthenticated
+	}
+
 	username, err := r.App.Queries.AccountUsernameByUsername.Handle(ctx, query.AccountUsernameByUsername{
+		Principal: principal.FromContext(ctx),
 		AccountId: id.GetCompositePartID(1),
 		Username:  id.GetCompositePartID(0),
 	})

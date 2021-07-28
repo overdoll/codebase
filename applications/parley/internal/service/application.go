@@ -65,6 +65,7 @@ func createApplication(ctx context.Context, eva command.EvaService, sting comman
 			ToggleModerator:    command.NewToggleModeratorHandler(moderatorRepo, eva),
 		},
 		Queries: app.Queries{
+			PrincipalById:                query.NewPrincipalByIdHandler(eva),
 			PostRejectionReasons:         query.NewPendingPostsRejectionReasonsHandler(infractionRepo, eva),
 			SearchPostAuditLogs:          query.NewSearchPostAuditLogsHandler(infractionRepo, eva),
 			PostRejectionReasonById:      query.NewPendingPostsRejectionReasonByIdHandler(infractionRepo),

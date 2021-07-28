@@ -4,9 +4,14 @@ import (
 	"context"
 
 	"overdoll/applications/eva/internal/domain/account"
+	"overdoll/libraries/principal"
 )
 
 type AccountEmailByEmail struct {
+	// the principal that is requesting this email
+	Principal *principal.Principal
+
+	// the account email that is being requested - information
 	AccountId string
 	Email     string
 }

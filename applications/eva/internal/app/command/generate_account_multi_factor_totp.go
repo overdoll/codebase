@@ -5,10 +5,12 @@ import (
 
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/multi_factor"
+	"overdoll/libraries/principal"
 )
 
 type GenerateAccountMultiFactorTOTP struct {
-	AccountId string
+	// the account that is making this request
+	Principal *principal.Principal
 }
 
 type GenerateAccountMultiFactorTOTPHandler struct {

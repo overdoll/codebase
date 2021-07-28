@@ -5,9 +5,10 @@ import (
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	eva "overdoll/applications/eva/proto"
 	"overdoll/applications/eva/internal/app"
+	"overdoll/applications/eva/internal/app/command"
 	"overdoll/applications/eva/internal/domain/account"
+	eva "overdoll/applications/eva/proto"
 )
 
 type Server struct {
@@ -44,7 +45,11 @@ func (s *Server) GetAccount(ctx context.Context, request *eva.GetAccountRequest)
 
 func (s *Server) LockAccount(ctx context.Context, request *eva.LockAccountRequest) (*eva.Account, error) {
 
-	acc, err := s.app.Commands.LockAccount.Handle(ctx, request.Id, int(request.Duration), request.Reason.String())
+	acc, err := s.app.Commands.LockAccount.Handle(ctx, command.LockAccount{
+		AccountId: request.Id,
+		Duration:  int(request.Duration),
+		Reason:    request.Reason.String(),
+	})
 
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
@@ -55,7 +60,10 @@ func (s *Server) LockAccount(ctx context.Context, request *eva.LockAccountReques
 
 func (s *Server) CreateAccount(ctx context.Context, request *eva.CreateAccountRequest) (*eva.Account, error) {
 
-	acc, err := s.app.Commands.CreateAccount.Handle(ctx, request.Username, request.Email)
+	acc, err := s.app.Commands.CreateAccount.Handle(ctx, command.CreateAccount{
+		Username: request.Username,
+		Email:    request.Email,
+	})
 
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())

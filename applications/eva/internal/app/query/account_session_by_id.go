@@ -4,9 +4,13 @@ import (
 	"context"
 
 	"overdoll/applications/eva/internal/domain/session"
+	"overdoll/libraries/principal"
 )
 
 type AccountSessionById struct {
+	// The account that is requesting this resource
+	Principal *principal.Principal
+
 	SessionId string
 }
 

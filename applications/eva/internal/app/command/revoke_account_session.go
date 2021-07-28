@@ -4,10 +4,11 @@ import (
 	"context"
 
 	"overdoll/applications/eva/internal/domain/session"
+	"overdoll/libraries/principal"
 )
 
 type RevokeAccountSession struct {
-	AccountId string
+	Principal *principal.Principal
 	SessionId string
 }
 

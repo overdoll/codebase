@@ -76,6 +76,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			ReassignModerator:   command.NewReassignModeratorHandler(postRepo, indexRepo, parley),
 		},
 		Queries: app.Queries{
+			PrincipalById:    query.NewPrincipalByIdHandler(eva),
 			SearchMedias:     query.NewSearchMediasHandler(indexRepo),
 			SearchCharacters: query.NewSearchCharactersHandler(indexRepo),
 			SearchCategories: query.NewSearchCategoriesHandler(indexRepo),

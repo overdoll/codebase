@@ -4,10 +4,11 @@ import (
 	"context"
 
 	"overdoll/applications/eva/internal/domain/account"
+	"overdoll/libraries/principal"
 )
 
 type UpdateAccountEmailStatusToPrimary struct {
-	AccountId string
+	Principal *principal.Principal
 	Email     string
 }
 

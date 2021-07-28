@@ -4,9 +4,12 @@ import (
 	"context"
 
 	"overdoll/applications/eva/internal/domain/multi_factor"
+	"overdoll/libraries/principal"
 )
 
 type IsAccountMultiFactorTOTPEnabled struct {
+	Principal *principal.Principal
+
 	AccountId string
 }
 

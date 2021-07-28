@@ -4,10 +4,13 @@ import (
 	"context"
 
 	"overdoll/applications/eva/internal/domain/account"
+	"overdoll/libraries/principal"
 )
 
 type UpdateAccountUsernameAndRetainPrevious struct {
-	AccountId string
+	// account that is making this request
+	// must not be nil
+	Principal *principal.Principal
 	Username  string
 }
 

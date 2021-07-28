@@ -4,9 +4,13 @@ import (
 	"context"
 
 	"overdoll/applications/eva/internal/domain/account"
+	"overdoll/libraries/principal"
 )
 
 type AccountUsernameByUsername struct {
+	// the account that is requesting this resource
+	Principal *principal.Principal
+
 	AccountId string
 	Username  string
 }

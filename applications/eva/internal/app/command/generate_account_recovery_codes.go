@@ -4,10 +4,11 @@ import (
 	"context"
 
 	"overdoll/applications/eva/internal/domain/multi_factor"
+	"overdoll/libraries/principal"
 )
 
 type GenerateAccountMultiFactorRecoveryCodes struct {
-	AccountId string
+	Principal *principal.Principal
 }
 
 type GenerateAccountMultiFactorRecoveryCodesHandler struct {

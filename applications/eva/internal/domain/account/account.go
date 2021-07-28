@@ -9,6 +9,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"overdoll/libraries/graphql"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
 )
 
 type AccountRole string
@@ -262,4 +263,9 @@ func validateUsername(username string) error {
 	}
 
 	return nil
+}
+
+// convert account to a principal for global usage
+func ToPrincipal(acc *Account) *principal.Principal {
+	return principal.NewPrincipal(acc.id, acc.username, acc.email, acc.RolesAsString(), acc.verified, acc.locked)
 }

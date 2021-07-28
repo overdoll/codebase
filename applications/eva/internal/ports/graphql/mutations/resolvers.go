@@ -19,6 +19,7 @@ import (
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/helpers"
 	"overdoll/libraries/passport"
+	"overdoll/libraries/principal"
 )
 
 type MutationResolver struct {
@@ -169,8 +170,12 @@ func (r *MutationResolver) VerifyAuthenticationTokenAndAttemptAccountAccessGrant
 
 func (r *MutationResolver) ConfirmAccountEmail(ctx context.Context, input types.ConfirmAccountEmailInput) (*types.ConfirmAccountEmailPayload, error) {
 
+	if !passport.FromContext(ctx).IsAuthenticated() {
+		return nil, passport.ErrNotAuthenticated
+	}
+
 	email, err := r.App.Commands.ConfirmAccountEmail.Handle(ctx, command.ConfirmAccountEmail{
-		AccountId: passport.FromContext(ctx).AccountID(),
+		Principal: principal.FromContext(ctx),
 		Id:        input.ID,
 	})
 
@@ -282,6 +287,11 @@ func (r *MutationResolver) CreateAccountWithAuthenticationToken(ctx context.Cont
 }
 
 func (r *MutationResolver) RevokeAccountAccess(ctx context.Context) (*types.RevokeAccountAccessPayload, error) {
+
+	if !passport.FromContext(ctx).IsAuthenticated() {
+		return nil, passport.ErrNotAuthenticated
+	}
+
 	// logout just revokes the currently-authenticated user from the passport
 	if err := passport.
 		FromContext(ctx).
@@ -370,8 +380,12 @@ func (r *MutationResolver) GrantAccountAccessWithAuthenticationTokenAndMultiFact
 
 func (r *MutationResolver) GenerateAccountMultiFactorTotp(ctx context.Context) (*types.GenerateAccountMultiFactorTotpPayload, error) {
 
+	if !passport.FromContext(ctx).IsAuthenticated() {
+		return nil, passport.ErrNotAuthenticated
+	}
+
 	totp, err := r.App.Commands.GenerateAccountMultiFactorTOTP.Handle(ctx, command.GenerateAccountMultiFactorTOTP{
-		AccountId: passport.FromContext(ctx).AccountID(),
+		Principal: principal.FromContext(ctx),
 	})
 
 	if err != nil {
@@ -402,6 +416,10 @@ func (r *MutationResolver) GenerateAccountMultiFactorTotp(ctx context.Context) (
 
 func (r *MutationResolver) EnrollAccountMultiFactorTotp(ctx context.Context, input types.EnrollAccountMultiFactorTotpInput) (*types.EnrollAccountMultiFactorTotpPayload, error) {
 
+	if !passport.FromContext(ctx).IsAuthenticated() {
+		return nil, passport.ErrNotAuthenticated
+	}
+
 	currentCookie, err := cookies.ReadCookie(ctx, multi_factor.TOTPCookieKey)
 
 	if err != nil {
@@ -409,7 +427,7 @@ func (r *MutationResolver) EnrollAccountMultiFactorTotp(ctx context.Context, inp
 	}
 
 	err = r.App.Commands.EnrollAccountMultiFactorTOTP.Handle(ctx, command.EnrollAccountMultiFactorTOTP{
-		AccountId: passport.FromContext(ctx).AccountID(),
+		Principal: principal.FromContext(ctx),
 		Secret:    currentCookie.Value,
 		Code:      input.Code,
 	})
@@ -433,8 +451,12 @@ func (r *MutationResolver) EnrollAccountMultiFactorTotp(ctx context.Context, inp
 
 func (r *MutationResolver) UnlockAccount(ctx context.Context) (*types.UnlockAccountPayload, error) {
 
+	if !passport.FromContext(ctx).IsAuthenticated() {
+		return nil, passport.ErrNotAuthenticated
+	}
+
 	acc, err := r.App.Commands.UnlockAccount.Handle(ctx, command.UnlockAccount{
-		AccountId: passport.FromContext(ctx).AccountID(),
+		Principal: principal.FromContext(ctx),
 	})
 
 	if err != nil {
@@ -446,8 +468,12 @@ func (r *MutationResolver) UnlockAccount(ctx context.Context) (*types.UnlockAcco
 
 func (r *MutationResolver) AddAccountEmail(ctx context.Context, input types.AddAccountEmailInput) (*types.AddAccountEmailPayload, error) {
 
+	if !passport.FromContext(ctx).IsAuthenticated() {
+		return nil, passport.ErrNotAuthenticated
+	}
+
 	email, err := r.App.Commands.AddAccountEmail.Handle(ctx, command.AddAccountEmail{
-		AccountId: passport.FromContext(ctx).AccountID(),
+		Principal: principal.FromContext(ctx),
 		Email:     input.Email,
 	})
 
@@ -466,8 +492,12 @@ func (r *MutationResolver) AddAccountEmail(ctx context.Context, input types.AddA
 
 func (r *MutationResolver) DeleteAccountEmail(ctx context.Context, input types.DeleteAccountEmailInput) (*types.DeleteAccountEmailPayload, error) {
 
+	if !passport.FromContext(ctx).IsAuthenticated() {
+		return nil, passport.ErrNotAuthenticated
+	}
+
 	if err := r.App.Commands.DeleteAccountEmail.Handle(ctx, command.DeleteAccountEmail{
-		AccountId: passport.FromContext(ctx).AccountID(),
+		Principal: principal.FromContext(ctx),
 		Email:     input.AccountEmailID.GetID(),
 	}); err != nil {
 		return nil, err
@@ -478,8 +508,12 @@ func (r *MutationResolver) DeleteAccountEmail(ctx context.Context, input types.D
 
 func (r *MutationResolver) UpdateAccountUsernameAndRetainPrevious(ctx context.Context, input types.UpdateAccountUsernameAndRetainPreviousInput) (*types.UpdateAccountUsernameAndRetainPreviousPayload, error) {
 
+	if !passport.FromContext(ctx).IsAuthenticated() {
+		return nil, passport.ErrNotAuthenticated
+	}
+
 	username, err := r.App.Commands.UpdateAccountUsernameAndRetainPrevious.Handle(ctx, command.UpdateAccountUsernameAndRetainPrevious{
-		AccountId: passport.FromContext(ctx).AccountID(),
+		Principal: principal.FromContext(ctx),
 		Username:  input.Username,
 	})
 
@@ -498,8 +532,12 @@ func (r *MutationResolver) UpdateAccountUsernameAndRetainPrevious(ctx context.Co
 
 func (r *MutationResolver) RevokeAccountSession(ctx context.Context, input types.RevokeAccountSessionInput) (*types.RevokeAccountSessionPayload, error) {
 
+	if !passport.FromContext(ctx).IsAuthenticated() {
+		return nil, passport.ErrNotAuthenticated
+	}
+
 	if err := r.App.Commands.RevokeAccountSession.Handle(ctx, command.RevokeAccountSession{
-		AccountId: passport.FromContext(ctx).AccountID(),
+		Principal: principal.FromContext(ctx),
 		SessionId: input.AccountSessionID.GetID(),
 	}); err != nil {
 		return nil, err
@@ -510,8 +548,12 @@ func (r *MutationResolver) RevokeAccountSession(ctx context.Context, input types
 
 func (r *MutationResolver) UpdateAccountEmailStatusToPrimary(ctx context.Context, input types.UpdateAccountEmailStatusToPrimaryInput) (*types.UpdateAccountEmailStatusToPrimaryPayload, error) {
 
+	if !passport.FromContext(ctx).IsAuthenticated() {
+		return nil, passport.ErrNotAuthenticated
+	}
+
 	email, err := r.App.Commands.UpdateAccountEmailStatusToPrimary.Handle(ctx, command.UpdateAccountEmailStatusToPrimary{
-		AccountId: passport.FromContext(ctx).AccountID(),
+		Principal: principal.FromContext(ctx),
 		Email:     input.AccountEmailID.GetID(),
 	})
 
@@ -524,8 +566,12 @@ func (r *MutationResolver) UpdateAccountEmailStatusToPrimary(ctx context.Context
 
 func (r *MutationResolver) GenerateAccountMultiFactorRecoveryCodes(ctx context.Context) (*types.GenerateAccountMultiFactorRecoveryCodesPayload, error) {
 
+	if !passport.FromContext(ctx).IsAuthenticated() {
+		return nil, passport.ErrNotAuthenticated
+	}
+
 	codes, err := r.App.Commands.GenerateAccountMultiFactorRecoveryCodes.Handle(ctx, command.GenerateAccountMultiFactorRecoveryCodes{
-		AccountId: passport.FromContext(ctx).AccountID(),
+		Principal: principal.FromContext(ctx),
 	})
 
 	if err != nil {
@@ -543,8 +589,12 @@ func (r *MutationResolver) GenerateAccountMultiFactorRecoveryCodes(ctx context.C
 
 func (r *MutationResolver) DisableAccountMultiFactor(ctx context.Context) (*types.DisableAccountMultiFactorPayload, error) {
 
+	if !passport.FromContext(ctx).IsAuthenticated() {
+		return nil, passport.ErrNotAuthenticated
+	}
+
 	if err := r.App.Commands.DisableAccountMultiFactor.Handle(ctx, command.DisableAccountMultiFactor{
-		AccountId: passport.FromContext(ctx).AccountID(),
+		Principal: principal.FromContext(ctx),
 	}); err != nil {
 		return nil, err
 	}

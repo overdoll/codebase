@@ -5,9 +5,12 @@ import (
 
 	"overdoll/applications/eva/internal/domain/session"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
 )
 
 type AccountSessionsByAccount struct {
+	Principal *principal.Principal
+
 	Cursor           *paging.Cursor
 	CurrentSessionId string
 	AccountId        string

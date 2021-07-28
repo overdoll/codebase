@@ -5,9 +5,13 @@ import (
 
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
 )
 
 type AccountUsernamesByAccount struct {
+	// the account that is making this request
+	Principal *principal.Principal
+
 	Cursor    *paging.Cursor
 	AccountId string
 }

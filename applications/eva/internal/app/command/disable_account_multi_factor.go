@@ -5,10 +5,11 @@ import (
 
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/multi_factor"
+	"overdoll/libraries/principal"
 )
 
 type DisableAccountMultiFactor struct {
-	AccountId string
+	Principal *principal.Principal
 }
 
 type DisableAccountMultiFactorHandler struct {
