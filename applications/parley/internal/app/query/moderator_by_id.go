@@ -4,9 +4,12 @@ import (
 	"context"
 
 	"overdoll/applications/parley/internal/domain/moderator"
+	"overdoll/libraries/principal"
 )
 
 type ModeratorById struct {
+	Principal *principal.Principal
+
 	AccountId string
 }
 

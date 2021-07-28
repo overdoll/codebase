@@ -4,9 +4,12 @@ import (
 	"context"
 
 	"overdoll/applications/parley/internal/domain/infraction"
+	"overdoll/libraries/principal"
 )
 
 type AccountInfractionHistoryById struct {
+	Principal *principal.Principal
+
 	AccountId    string
 	InfractionId string
 }

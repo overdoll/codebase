@@ -5,9 +5,12 @@ import (
 
 	"overdoll/applications/parley/internal/domain/infraction"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
 )
 
 type SearchPostAuditLogs struct {
+	Principal *principal.Principal
+
 	Cursor             *paging.Cursor
 	ModeratorAccountId *string
 	PostId             *string

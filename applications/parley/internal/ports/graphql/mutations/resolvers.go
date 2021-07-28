@@ -7,6 +7,7 @@ import (
 	"overdoll/applications/parley/internal/app/command"
 	"overdoll/applications/parley/internal/ports/graphql/types"
 	"overdoll/libraries/passport"
+	"overdoll/libraries/principal"
 )
 
 type MutationResolver struct {
@@ -14,6 +15,10 @@ type MutationResolver struct {
 }
 
 func (m MutationResolver) ModeratePost(ctx context.Context, input types.ModeratePostInput) (*types.ModeratePostPayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
 
 	var rejectionReasonId *string
 
@@ -23,7 +28,7 @@ func (m MutationResolver) ModeratePost(ctx context.Context, input types.Moderate
 	}
 
 	auditLog, err := m.App.Commands.ModeratePost.Handle(ctx, command.ModeratePost{
-		ModeratorAccountId:    passport.FromContext(ctx).AccountID(),
+		Principal:             principal.FromContext(ctx),
 		PostId:                input.PostID.GetID(),
 		PostRejectionReasonId: rejectionReasonId,
 		Notes:                 input.Notes,
@@ -38,9 +43,13 @@ func (m MutationResolver) ModeratePost(ctx context.Context, input types.Moderate
 
 func (m MutationResolver) RevertPostAuditLog(ctx context.Context, input types.RevertPostAuditLogInput) (*types.RevertPostAuditLogPayload, error) {
 
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
 	auditLog, err := m.App.Commands.RevertModeratePost.Handle(ctx, command.RevertModeratePost{
-		ModeratorAccountId: passport.FromContext(ctx).AccountID(),
-		AuditLogId:         input.PostAuditLogID.GetID(),
+		Principal:  principal.FromContext(ctx),
+		AuditLogId: input.PostAuditLogID.GetID(),
 	})
 
 	if err != nil {
@@ -52,8 +61,12 @@ func (m MutationResolver) RevertPostAuditLog(ctx context.Context, input types.Re
 
 func (m MutationResolver) ToggleModeratorSettingsInQueue(ctx context.Context) (*types.ToggleModeratorSettingsInQueuePayload, error) {
 
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
 	inQueue, err := m.App.Commands.ToggleModerator.Handle(ctx, command.ToggleModerator{
-		AccountId: passport.FromContext(ctx).AccountID(),
+		Principal: principal.FromContext(ctx),
 	})
 
 	if err != nil {

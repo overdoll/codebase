@@ -6,10 +6,11 @@ import (
 	"github.com/pkg/errors"
 	"overdoll/applications/parley/internal/domain/infraction"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
 )
 
 type PostsRejectionReasons struct {
-	AccountId string
+	Principal *principal.Principal
 	Cursor    *paging.Cursor
 }
 

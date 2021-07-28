@@ -64,8 +64,8 @@ func (r EntityResolver) FindModeratorByID(ctx context.Context, id relay.ID) (*ty
 
 func (r EntityResolver) FindAccountEmailByID(ctx context.Context, id relay.ID) (*types.AccountEmail, error) {
 
-	if !passport.FromContext(ctx).IsAuthenticated() {
-		return nil, passport.ErrNotAuthenticated
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
 	}
 
 	email, err := r.App.Queries.AccountEmailByEmail.Handle(ctx, query.AccountEmailByEmail{
@@ -83,8 +83,8 @@ func (r EntityResolver) FindAccountEmailByID(ctx context.Context, id relay.ID) (
 
 func (r EntityResolver) FindAccountSessionByID(ctx context.Context, id relay.ID) (*types.AccountSession, error) {
 
-	if !passport.FromContext(ctx).IsAuthenticated() {
-		return nil, passport.ErrNotAuthenticated
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
 	}
 
 	session, err := r.App.Queries.AccountSessionById.Handle(ctx, query.AccountSessionById{
@@ -101,8 +101,8 @@ func (r EntityResolver) FindAccountSessionByID(ctx context.Context, id relay.ID)
 
 func (r EntityResolver) FindAccountUsernameByID(ctx context.Context, id relay.ID) (*types.AccountUsername, error) {
 
-	if !passport.FromContext(ctx).IsAuthenticated() {
-		return nil, passport.ErrNotAuthenticated
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
 	}
 
 	username, err := r.App.Queries.AccountUsernameByUsername.Handle(ctx, query.AccountUsernameByUsername{

@@ -5,11 +5,12 @@ import (
 
 	"github.com/pkg/errors"
 	"overdoll/applications/parley/internal/domain/infraction"
+	"overdoll/libraries/principal"
 )
 
 type ModeratePost struct {
-	ModeratorAccountId string
-	PostId             string
+	Principal *principal.Principal
+	PostId    string
 	// optional
 	PostRejectionReasonId *string
 	Notes                 string

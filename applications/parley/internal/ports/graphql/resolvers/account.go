@@ -9,6 +9,8 @@ import (
 	"overdoll/applications/parley/internal/domain/infraction"
 	"overdoll/applications/parley/internal/ports/graphql/types"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/passport"
+	"overdoll/libraries/principal"
 )
 
 type AccountResolver struct {
@@ -21,6 +23,10 @@ func (r AccountResolver) Contributor(ctx context.Context, obj *types.Account) (*
 
 func (r AccountResolver) ModeratorPostAuditLogs(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostAuditLogConnection, error) {
 
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
 	cursor, err := paging.NewCursor(after, before, first, last)
 
 	if err != nil {
@@ -32,6 +38,7 @@ func (r AccountResolver) ModeratorPostAuditLogs(ctx context.Context, obj *types.
 	logs, err := r.App.Queries.SearchPostAuditLogs.Handle(ctx, query.SearchPostAuditLogs{
 		Cursor:             cursor,
 		ModeratorAccountId: &id,
+		Principal:          principal.FromContext(ctx),
 	})
 
 	if err != nil {
@@ -43,6 +50,10 @@ func (r AccountResolver) ModeratorPostAuditLogs(ctx context.Context, obj *types.
 
 func (r AccountResolver) Infractions(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountInfractionHistoryConnection, error) {
 
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
 	cursor, err := paging.NewCursor(after, before, first, last)
 
 	if err != nil {
@@ -52,6 +63,7 @@ func (r AccountResolver) Infractions(ctx context.Context, obj *types.Account, af
 	history, err := r.App.Queries.AccountInfractionHistory.Handle(ctx, query.AccountInfractionHistory{
 		Cursor:    cursor,
 		AccountId: obj.ID.GetID(),
+		Principal: principal.FromContext(ctx),
 	})
 
 	if err != nil {
@@ -63,8 +75,13 @@ func (r AccountResolver) Infractions(ctx context.Context, obj *types.Account, af
 
 func (r AccountResolver) Moderator(ctx context.Context, obj *types.Account) (*types.Moderator, error) {
 
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
 	mod, err := r.App.Queries.ModeratorById.Handle(ctx, query.ModeratorById{
 		AccountId: obj.ID.GetID(),
+		Principal: principal.FromContext(ctx),
 	})
 
 	if err != nil {

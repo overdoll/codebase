@@ -1,9 +1,5 @@
 package mailing
 
-import (
-	"overdoll/libraries/account"
-)
-
 type Recipient struct {
 	username string
 	email    string
@@ -22,11 +18,4 @@ func (r *Recipient) Username() string {
 
 func (r *Recipient) Email() string {
 	return r.username
-}
-
-func RecipientFromAccount(acc *account.Account) *Recipient {
-	return &Recipient{
-		username: acc.Username(),
-		email:    acc.Email(),
-	}
 }

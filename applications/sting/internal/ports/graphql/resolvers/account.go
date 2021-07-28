@@ -8,6 +8,8 @@ import (
 	"overdoll/applications/sting/internal/app/query"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/passport"
+	"overdoll/libraries/principal"
 )
 
 type AccountResolver struct {
@@ -15,6 +17,10 @@ type AccountResolver struct {
 }
 
 func (r AccountResolver) ModeratorPostsQueue(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostConnection, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
 
 	cursor, err := paging.NewCursor(after, before, first, last)
 
@@ -27,6 +33,7 @@ func (r AccountResolver) ModeratorPostsQueue(ctx context.Context, obj *types.Acc
 	results, err := r.App.Queries.SearchPosts.Handle(ctx, query.SearchPosts{
 		Cursor:      cursor,
 		ModeratorId: &moderatorId,
+		Principal:   principal.FromContext(ctx),
 	})
 
 	if err != nil {
@@ -60,6 +67,10 @@ func (r AccountResolver) Posts(ctx context.Context, obj *types.Account, after *s
 
 func (r AccountResolver) Contributions(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostConnection, error) {
 
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
 	cursor, err := paging.NewCursor(after, before, first, last)
 
 	if err != nil {
@@ -71,8 +82,9 @@ func (r AccountResolver) Contributions(ctx context.Context, obj *types.Account, 
 	results, err := r.App.Queries.SearchPosts.Handle(ctx, query.SearchPosts{
 		Cursor:        cursor,
 		ContributorId: &contributorId,
+		Principal:     principal.FromContext(ctx),
 	})
-	
+
 	if err != nil {
 		return nil, err
 	}

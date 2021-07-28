@@ -4,9 +4,11 @@ import (
 	"context"
 
 	"overdoll/applications/parley/internal/domain/infraction"
+	"overdoll/libraries/principal"
 )
 
 type PostRejectionReasonById struct {
+	Principal         *principal.Principal
 	RejectionReasonId string
 }
 

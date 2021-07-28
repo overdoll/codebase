@@ -19,6 +19,10 @@ type MutationResolver struct {
 
 func (r *MutationResolver) CreatePost(ctx context.Context, input types.CreatePostInput) (*types.CreatePostPayload, error) {
 
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
 	requests := make(map[string]string)
 
 	for _, item := range input.CharacterRequests {

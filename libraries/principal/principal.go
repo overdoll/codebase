@@ -1,26 +1,28 @@
 package principal
 
 import (
+	"errors"
+
 	eva "overdoll/applications/eva/proto"
+)
+
+var (
+	ErrNotAuthorized = errors.New("not authorized")
 )
 
 type Principal struct {
 	accountId string
-	username  string
 	roles     []string
 	verified  bool
 	locked    bool
-	email     string
 }
 
-func NewPrincipal(accountId, username, email string, roles []string, verified, locked bool) *Principal {
+func NewPrincipal(accountId string, roles []string, verified, locked bool) *Principal {
 	return &Principal{
 		accountId: accountId,
-		username:  username,
 		roles:     roles,
 		verified:  verified,
 		locked:    locked,
-		email:     email,
 	}
 }
 
@@ -28,44 +30,39 @@ func NewPrincipal(accountId, username, email string, roles []string, verified, l
 func UnmarshalFromEvaProto(proto *eva.Account) *Principal {
 	return &Principal{
 		accountId: proto.Id,
-		username:  proto.Username,
 		roles:     proto.Roles,
 		verified:  proto.Verified,
 		locked:    proto.Locked,
-		email:     proto.Email,
 	}
 }
 
-func (user *Principal) AccountId() string {
-	return user.accountId
+// basically a simple check to make sure this principal is a specific account
+func (p *Principal) IsAccount(accountId string) bool {
+	return p.accountId == accountId
 }
 
-func (user *Principal) Username() string {
-	return user.username
+func (p *Principal) AccountId() string {
+	return p.accountId
 }
 
-func (user *Principal) Email() string {
-	return user.email
+func (p *Principal) IsVerified() bool {
+	return p.verified == true
 }
 
-func (user *Principal) IsVerified() bool {
-	return user.verified == true
+func (p *Principal) IsLocked() bool {
+	return p.locked
 }
 
-func (user *Principal) IsLocked() bool {
-	return user.locked
+func (p *Principal) IsStaff() bool {
+	return p.hasRoles([]string{"staff"})
 }
 
-func (user *Principal) IsStaff() bool {
-	return user.hasRoles([]string{"staff"})
+func (p *Principal) IsModerator() bool {
+	return (p.hasRoles([]string{"moderator"}) || p.IsStaff()) && !p.IsLocked()
 }
 
-func (user *Principal) IsModerator() bool {
-	return (user.hasRoles([]string{"moderator"}) || user.IsStaff()) && !user.IsLocked()
-}
-
-func (user *Principal) hasRoles(roles []string) bool {
-	for _, role := range user.roles {
+func (p *Principal) hasRoles(roles []string) bool {
+	for _, role := range p.roles {
 		for _, requiredRole := range roles {
 			if role == requiredRole {
 				return true

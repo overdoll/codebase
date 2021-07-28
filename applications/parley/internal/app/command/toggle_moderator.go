@@ -5,10 +5,11 @@ import (
 
 	"github.com/pkg/errors"
 	"overdoll/applications/parley/internal/domain/moderator"
+	"overdoll/libraries/principal"
 )
 
 type ToggleModerator struct {
-	AccountId string
+	Principal *principal.Principal
 }
 
 type ToggleModeratorHandler struct {

@@ -5,9 +5,11 @@ import (
 
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
 )
 
 type SearchPosts struct {
+	Principal     *principal.Principal
 	Cursor        *paging.Cursor
 	ModeratorId   *string
 	ContributorId *string

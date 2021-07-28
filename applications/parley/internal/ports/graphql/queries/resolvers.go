@@ -9,6 +9,7 @@ import (
 	"overdoll/applications/parley/internal/ports/graphql/types"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
+	"overdoll/libraries/principal"
 )
 
 type QueryResolver struct {
@@ -17,6 +18,10 @@ type QueryResolver struct {
 
 func (r QueryResolver) PostRejectionReasons(ctx context.Context, after *string, before *string, first *int, last *int) (*types.PostRejectionReasonConnection, error) {
 
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
 	cursor, err := paging.NewCursor(after, before, first, last)
 
 	if err != nil {
@@ -24,7 +29,7 @@ func (r QueryResolver) PostRejectionReasons(ctx context.Context, after *string, 
 	}
 
 	results, err := r.App.Queries.PostRejectionReasons.Handle(ctx, query.PostsRejectionReasons{
-		AccountId: passport.FromContext(ctx).AccountID(),
+		Principal: principal.FromContext(ctx),
 		Cursor:    cursor,
 	})
 

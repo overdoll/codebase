@@ -37,8 +37,8 @@ func (r AccountResolver) Lock(ctx context.Context, obj *types.Account) (*types.A
 
 func (r AccountResolver) Emails(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountEmailConnection, error) {
 
-	if !passport.FromContext(ctx).IsAuthenticated() {
-		return nil, passport.ErrNotAuthenticated
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
 	}
 
 	cursor, err := paging.NewCursor(after, before, first, last)
@@ -67,8 +67,8 @@ func (r AccountResolver) Emails(ctx context.Context, obj *types.Account, after *
 
 func (r AccountResolver) Usernames(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountUsernameConnection, error) {
 
-	if !passport.FromContext(ctx).IsAuthenticated() {
-		return nil, passport.ErrNotAuthenticated
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
 	}
 
 	cursor, err := paging.NewCursor(after, before, first, last)
@@ -97,8 +97,8 @@ func (r AccountResolver) Usernames(ctx context.Context, obj *types.Account, afte
 
 func (r AccountResolver) Sessions(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountSessionConnection, error) {
 
-	if !passport.FromContext(ctx).IsAuthenticated() {
-		return nil, passport.ErrNotAuthenticated
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
 	}
 
 	cursor, err := paging.NewCursor(after, before, first, last)
@@ -139,8 +139,8 @@ func (r AccountResolver) Sessions(ctx context.Context, obj *types.Account, after
 
 func (r AccountResolver) MultiFactorSettings(ctx context.Context, obj *types.Account) (*types.AccountMultiFactorSettings, error) {
 
-	if !passport.FromContext(ctx).IsAuthenticated() {
-		return nil, passport.ErrNotAuthenticated
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
 	}
 
 	accountId := obj.ID.GetID()
@@ -184,8 +184,8 @@ func (r AccountResolver) MultiFactorSettings(ctx context.Context, obj *types.Acc
 
 func (r AccountResolver) RecoveryCodes(ctx context.Context, obj *types.Account) ([]*types.AccountMultiFactorRecoveryCode, error) {
 
-	if !passport.FromContext(ctx).IsAuthenticated() {
-		return nil, passport.ErrNotAuthenticated
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
 	}
 
 	codes, err := r.App.Queries.AccountRecoveryCodesByAccount.Handle(ctx, query.AccountRecoveryCodesByAccount{

@@ -101,8 +101,10 @@ func (r *QueryResolver) Viewer(ctx context.Context) (*types.Account, error) {
 
 	pass := passport.FromContext(ctx)
 
+	err := pass.Authenticated()
+
 	// User is logged in
-	if pass.IsAuthenticated() {
+	if err == nil {
 
 		acc, err := r.App.Queries.AccountById.Handle(ctx, pass.AccountID())
 

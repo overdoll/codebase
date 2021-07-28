@@ -4,9 +4,12 @@ import (
 	"context"
 
 	"overdoll/applications/parley/internal/domain/infraction"
+	"overdoll/libraries/principal"
 )
 
 type PostAuditLogById struct {
+	Principal *principal.Principal
+
 	AuditLogId string
 }
 

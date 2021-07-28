@@ -5,11 +5,12 @@ import (
 
 	"github.com/pkg/errors"
 	"overdoll/applications/parley/internal/domain/infraction"
+	"overdoll/libraries/principal"
 )
 
 type RevertModeratePost struct {
-	ModeratorAccountId string
-	AuditLogId         string
+	Principal  *principal.Principal
+	AuditLogId string
 }
 
 type RevertModeratePostHandler struct {
