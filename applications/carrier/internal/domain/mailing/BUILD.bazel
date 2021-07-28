@@ -11,8 +11,5 @@ go_library(
     ],
     importpath = "overdoll/applications/carrier/internal/domain/mailing",
     visibility = ["//applications/carrier:__subpackages__"],
-    deps = [
-        "//libraries/account",
-        "@com_github_matcornic_hermes_v2//:hermes",
-    ],
+    deps = ["@com_github_matcornic_hermes_v2//:hermes"],
 )

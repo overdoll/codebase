@@ -26,10 +26,14 @@ input GrantAuthenticationTokenInput {
   email: String!
 }
 
+"""Payload for granting access to an account using the token and the totp code"""
+input GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput {
+  code: String!
+}
+
 """Payload for granting access to an account using the token and the recovery code"""
-input GrantAccountAccessWithAuthenticationTokenAndMultiFactorInput {
-  recoveryCode: String
-  code: String
+input GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput {
+  recoveryCode: String!
 }
 
 """Input for verifying token account"""
@@ -92,16 +96,30 @@ type ReissueAuthenticationTokenPayload {
 }
 
 """Validation for granting account access with multi factor"""
-enum GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation {
+enum GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation {
   TOKEN_EXPIRED
   INVALID_CODE
+}
+
+"""Payload for granting access to an account using the authentication token and TOTP code"""
+type GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpPayload {
+  """Validation options"""
+  validation: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation
+
+  """The account that granted access to"""
+  account: Account
+}
+
+"""Validation for granting account access with multi factor"""
+enum GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation {
+  TOKEN_EXPIRED
   INVALID_RECOVERY_CODE
 }
 
 """Payload for granting access to an account using the authentication token and Recovery Code"""
-type GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload {
+type GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodePayload {
   """Validation options"""
-  validation: GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation
+  validation: GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation
 
   """The account that granted access to"""
   account: Account
@@ -133,6 +151,16 @@ type VerifyAuthenticationTokenPayload {
   authenticationToken: AuthenticationToken
 }
 
+"""Input for revoking an authentication token"""
+input RevokeAuthenticationTokenInput {
+  """
+  If an ID is specified, the token can be revoked if a proper ID is specified
+
+  If an ID is not specified, a token from the cookie will be used
+  """
+  token: String
+}
+
 type Mutation {
   """
   Grant authentication token
@@ -148,10 +176,8 @@ type Mutation {
   Revoke authentication token
 
   Creating accounts and completing authentication flows will not be possible once it's revoked
-
-  Note: the actual authentication token is opaque (set & read from cookies)
   """
-  revokeAuthenticationToken: RevokeAuthenticationTokenPayload
+  revokeAuthenticationToken(input: RevokeAuthenticationTokenInput!): RevokeAuthenticationTokenPayload
 
   """
   Create an account using the current authentication token
@@ -184,11 +210,19 @@ type Mutation {
   Grant account access using an authentication token and a multi factor option
 
   Set "code" when authenticating with a TOTP code
+
+  Note: the actual authentication token is opaque (set & read from cookies)
+  """
+  grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp(input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput!): GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpPayload
+
+  """
+  Grant account access using an authentication token and a multi factor option
+
   Set "recoveryCode" when authenticating with a recovery code
 
   Note: the actual authentication token is opaque (set & read from cookies)
   """
-  grantAccountAccessWithAuthenticationTokenAndMultiFactor(input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorInput!): GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload
+  grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode(input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput!): GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodePayload
 
   """
   Will verify the authentication token.

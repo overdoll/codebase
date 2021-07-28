@@ -8,7 +8,7 @@ go_library(
     deps = [
         "//applications/eva/internal/app",
         "//applications/eva/internal/app/command",
-        "//applications/eva/internal/app/query",
+        "//applications/eva/internal/domain/account",
         "//applications/eva/internal/domain/multi_factor",
         "//applications/eva/internal/domain/token",
         "//applications/eva/internal/ports/graphql/types",
@@ -16,7 +16,6 @@ go_library(
         "//libraries/graphql/relay",
         "//libraries/helpers",
         "//libraries/passport",
-        "@com_github_vektah_gqlparser_v2//gqlerror",
-        "@org_uber_go_zap//:zap",
+        "//libraries/principal",
     ],
 )

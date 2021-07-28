@@ -71,7 +71,8 @@ func (r *QueryResolver) ViewAuthenticationToken(ctx context.Context, tk *string)
 
 	tokenId := ""
 
-	if tk != nil {
+	// check for empty string as well
+	if tk != nil && *tk != "" {
 		tokenId = *tk
 	} else {
 		otpCookie, err := cookies.ReadCookie(ctx, token.OTPKey)

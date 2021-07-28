@@ -9,6 +9,7 @@ go_library(
         "post_audit_log.go",
         "posts_rejection_reason_by_id.go",
         "posts_rejection_reasons.go",
+        "principal_by_id.go",
         "search_posts_audit_logs.go",
         "services.go",
     ],
@@ -17,8 +18,8 @@ go_library(
     deps = [
         "//applications/parley/internal/domain/infraction",
         "//applications/parley/internal/domain/moderator",
-        "//libraries/account",
         "//libraries/paging",
+        "//libraries/principal",
         "@com_github_pkg_errors//:errors",
     ],
 )

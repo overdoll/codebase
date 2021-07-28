@@ -12,8 +12,10 @@ go_library(
         "//applications/eva/internal/domain/account",
         "//applications/eva/internal/domain/session",
         "//applications/eva/internal/domain/token",
+        "//libraries/cookies",
         "//libraries/graphql",
         "//libraries/graphql/relay",
+        "//libraries/helpers",
         "//libraries/paging",
     ],
 )

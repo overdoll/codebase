@@ -4,6 +4,7 @@ go_library(
     name = "helpers",
     srcs = [
         "directory.go",
+        "get_ip.go",
         "gin.go",
         "struct_name.go",
     ],

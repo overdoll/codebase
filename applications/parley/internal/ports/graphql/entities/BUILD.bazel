@@ -8,7 +8,10 @@ go_library(
     deps = [
         "//applications/parley/internal/app",
         "//applications/parley/internal/app/query",
+        "//applications/parley/internal/domain/infraction",
         "//applications/parley/internal/ports/graphql/types",
         "//libraries/graphql/relay",
+        "//libraries/passport",
+        "//libraries/principal",
     ],
 )

@@ -282,15 +282,27 @@ type GenerateAccountMultiFactorTotpPayload struct {
 }
 
 // Payload for granting access to an account using the token and the recovery code
-type GrantAccountAccessWithAuthenticationTokenAndMultiFactorInput struct {
-	RecoveryCode *string `json:"recoveryCode"`
-	Code         *string `json:"code"`
+type GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput struct {
+	RecoveryCode string `json:"recoveryCode"`
 }
 
 // Payload for granting access to an account using the authentication token and Recovery Code
-type GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload struct {
+type GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodePayload struct {
 	// Validation options
-	Validation *GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation `json:"validation"`
+	Validation *GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation `json:"validation"`
+	// The account that granted access to
+	Account *Account `json:"account"`
+}
+
+// Payload for granting access to an account using the token and the totp code
+type GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput struct {
+	Code string `json:"code"`
+}
+
+// Payload for granting access to an account using the authentication token and TOTP code
+type GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpPayload struct {
+	// Validation options
+	Validation *GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation `json:"validation"`
 	// The account that granted access to
 	Account *Account `json:"account"`
 }
@@ -353,6 +365,14 @@ type RevokeAccountSessionInput struct {
 type RevokeAccountSessionPayload struct {
 	// The ID of the session that was revoked
 	AccountSessionID relay.ID `json:"accountSessionId"`
+}
+
+// Input for revoking an authentication token
+type RevokeAuthenticationTokenInput struct {
+	// If an ID is specified, the token can be revoked if a proper ID is specified
+	//
+	// If an ID is not specified, a token from the cookie will be used
+	Token *string `json:"token"`
 }
 
 // Payload for revoking the authentication token
@@ -658,46 +678,86 @@ func (e EnrollAccountMultiFactorTotpValidation) MarshalGQL(w io.Writer) {
 }
 
 // Validation for granting account access with multi factor
-type GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation string
+type GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation string
 
 const (
-	GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidationTokenExpired        GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation = "TOKEN_EXPIRED"
-	GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidationInvalidCode         GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation = "INVALID_CODE"
-	GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidationInvalidRecoveryCode GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation = "INVALID_RECOVERY_CODE"
+	GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidationTokenExpired        GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation = "TOKEN_EXPIRED"
+	GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidationInvalidRecoveryCode GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation = "INVALID_RECOVERY_CODE"
 )
 
-var AllGrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation = []GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation{
-	GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidationTokenExpired,
-	GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidationInvalidCode,
-	GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidationInvalidRecoveryCode,
+var AllGrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation = []GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation{
+	GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidationTokenExpired,
+	GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidationInvalidRecoveryCode,
 }
 
-func (e GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation) IsValid() bool {
+func (e GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation) IsValid() bool {
 	switch e {
-	case GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidationTokenExpired, GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidationInvalidCode, GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidationInvalidRecoveryCode:
+	case GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidationTokenExpired, GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidationInvalidRecoveryCode:
 		return true
 	}
 	return false
 }
 
-func (e GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation) String() string {
+func (e GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation) String() string {
 	return string(e)
 }
 
-func (e *GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation) UnmarshalGQL(v interface{}) error {
+func (e *GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation) UnmarshalGQL(v interface{}) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
 	}
 
-	*e = GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation(str)
+	*e = GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation(str)
 	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation", str)
+		return fmt.Errorf("%s is not a valid GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation", str)
 	}
 	return nil
 }
 
-func (e GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation) MarshalGQL(w io.Writer) {
+func (e GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// Validation for granting account access with multi factor
+type GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation string
+
+const (
+	GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidationTokenExpired GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation = "TOKEN_EXPIRED"
+	GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidationInvalidCode  GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation = "INVALID_CODE"
+)
+
+var AllGrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation = []GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation{
+	GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidationTokenExpired,
+	GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidationInvalidCode,
+}
+
+func (e GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation) IsValid() bool {
+	switch e {
+	case GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidationTokenExpired, GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidationInvalidCode:
+		return true
+	}
+	return false
+}
+
+func (e GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation) String() string {
+	return string(e)
+}
+
+func (e *GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation", str)
+	}
+	return nil
+}
+
+func (e GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

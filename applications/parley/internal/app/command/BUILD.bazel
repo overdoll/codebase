@@ -14,7 +14,7 @@ go_library(
     deps = [
         "//applications/parley/internal/domain/infraction",
         "//applications/parley/internal/domain/moderator",
-        "//libraries/account",
+        "//libraries/principal",
         "@com_github_pkg_errors//:errors",
     ],
 )

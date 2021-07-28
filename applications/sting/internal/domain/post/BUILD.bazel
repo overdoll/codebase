@@ -13,7 +13,6 @@ go_library(
     importpath = "overdoll/applications/sting/internal/domain/post",
     visibility = ["//visibility:public"],
     deps = [
-        "//libraries/account",
         "//libraries/graphql",
         "//libraries/paging",
         "//libraries/uuid",

@@ -11,5 +11,7 @@ go_library(
         "//applications/eva/internal/ports/graphql/dataloader",
         "//applications/eva/internal/ports/graphql/types",
         "//libraries/graphql/relay",
+        "//libraries/passport",
+        "//libraries/principal",
     ],
 )

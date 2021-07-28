@@ -22,7 +22,7 @@ func NewIsAccountMultiFactorTOTPEnabledHandler(mr multi_factor.Repository) IsAcc
 }
 
 func (h IsAccountMultiFactorTOTPEnabledHandler) Handle(ctx context.Context, query IsAccountMultiFactorTOTPEnabled) (bool, error) {
-	if _, err := h.mr.GetAccountMultiFactorTOTP(ctx, query.Principal, query.AccountId); err != nil {
+	if _, err := h.mr.GetAccountMultiFactorTOTP(ctx, query.AccountId); err != nil {
 
 		if err == multi_factor.ErrTOTPNotConfigured {
 			return false, nil

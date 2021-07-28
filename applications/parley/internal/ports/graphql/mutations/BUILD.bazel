@@ -10,5 +10,6 @@ go_library(
         "//applications/parley/internal/app/command",
         "//applications/parley/internal/ports/graphql/types",
         "//libraries/passport",
+        "//libraries/principal",
     ],
 )

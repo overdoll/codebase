@@ -11,7 +11,7 @@ go_library(
     visibility = ["//applications/carrier:__subpackages__"],
     deps = [
         "//applications/carrier/internal/domain/mailing",
-        "//libraries/account",
+        "//libraries/principal",
         "@com_github_matcornic_hermes_v2//:hermes",
     ],
 )

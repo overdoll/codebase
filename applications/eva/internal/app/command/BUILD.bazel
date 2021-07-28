@@ -5,14 +5,13 @@ go_library(
     srcs = [
         "add_account_email.go",
         "confirm_account_email.go",
-        "consume_authentication_token.go",
         "create_account.go",
         "create_account_with_authentication_token.go",
         "disable_account_multi_factor.go",
         "enroll_account_multi_factor_totp.go",
         "generate_account_multi_factor_totp.go",
         "generate_account_recovery_codes.go",
-        "grant_account_access_with_auth_token_and_recovery_code_or_totp.go",
+        "grant_account_access_with_authentication_token.go",
         "grant_authentication_token.go",
         "index_all_accounts.go",
         "lock_account.go",
@@ -33,6 +32,7 @@ go_library(
         "//applications/eva/internal/domain/multi_factor",
         "//applications/eva/internal/domain/session",
         "//applications/eva/internal/domain/token",
+        "//libraries/principal",
         "//libraries/uuid",
     ],
 )

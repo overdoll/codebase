@@ -11,7 +11,7 @@ go_library(
     deps = [
         "//applications/carrier/internal/domain/mailing",
         "//applications/eva/proto:v1_go_proto",
-        "//libraries/account",
+        "//libraries/principal",
         "@com_github_sendgrid_sendgrid_go//:sendgrid-go",
         "@com_github_sendgrid_sendgrid_go//helpers/mail",
     ],

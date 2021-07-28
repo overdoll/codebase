@@ -8,6 +8,7 @@ go_library(
         "character_by_id.go",
         "media_by_id.go",
         "post_by_id.go",
+        "principal_by_id.go",
         "search_categories.go",
         "search_characters.go",
         "search_medias.go",
@@ -18,7 +19,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//applications/sting/internal/domain/post",
-        "//libraries/account",
         "//libraries/paging",
+        "//libraries/principal",
     ],
 )

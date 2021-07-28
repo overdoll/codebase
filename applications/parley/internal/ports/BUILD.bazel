@@ -13,6 +13,10 @@ go_library(
         "//applications/parley/internal/ports/graphql",
         "//applications/parley/proto:v1_go_proto",
         "//libraries/graphql",
+        "//libraries/passport",
+        "//libraries/principal",
         "//libraries/router",
+        "@com_github_gin_gonic_gin//:gin",
+        "@org_uber_go_zap//:zap",
     ],
 )

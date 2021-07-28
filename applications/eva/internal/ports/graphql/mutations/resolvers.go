@@ -23,6 +23,156 @@ type MutationResolver struct {
 	App *app.Application
 }
 
+func (r *MutationResolver) CreateAccountWithAuthenticationToken(ctx context.Context, input types.CreateAccountWithAuthenticationTokenInput) (*types.CreateAccountWithAuthenticationTokenPayload, error) {
+
+	currentCookie, err := cookies.ReadCookie(ctx, token.OTPKey)
+
+	if err != nil {
+		if err == cookies.ErrCookieNotFound {
+			expired := types.CreateAccountWithAuthenticationTokenValidationTokenExpired
+			return &types.CreateAccountWithAuthenticationTokenPayload{Validation: &expired}, nil
+		}
+
+		return nil, err
+	}
+
+	acc, err := r.App.Commands.CreateAccountWithAuthenticationToken.Handle(ctx, command.CreateAccountWithAuthenticationToken{
+		TokenId:  currentCookie.Value,
+		Username: input.Username,
+	})
+
+	if err != nil {
+		if err == token.ErrTokenNotFound {
+			expired := types.CreateAccountWithAuthenticationTokenValidationTokenExpired
+			return &types.CreateAccountWithAuthenticationTokenPayload{Validation: &expired}, nil
+		}
+
+		if err == account.ErrUsernameNotUnique {
+			expired := types.CreateAccountWithAuthenticationTokenValidationUsernameTaken
+			return &types.CreateAccountWithAuthenticationTokenPayload{Validation: &expired}, nil
+		}
+
+		if err == account.ErrEmailNotUnique {
+			expired := types.CreateAccountWithAuthenticationTokenValidationEmailTaken
+			return &types.CreateAccountWithAuthenticationTokenPayload{Validation: &expired}, nil
+		}
+
+		return nil, err
+	}
+
+	cookies.DeleteCookie(ctx, token.OTPKey)
+
+	if err := passport.
+		FromContext(ctx).
+		MutatePassport(ctx,
+			func(p *passport.Passport) error {
+				p.SetAccount(acc.ID())
+				return nil
+			}); err != nil {
+		return nil, err
+	}
+
+	return &types.CreateAccountWithAuthenticationTokenPayload{Account: types.MarshalAccountToGraphQL(acc)}, err
+}
+
+func (r *MutationResolver) GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotp(ctx context.Context, input types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput) (*types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpPayload, error) {
+
+	currentCookie, err := cookies.ReadCookie(ctx, token.OTPKey)
+
+	if err != nil {
+		if err == cookies.ErrCookieNotFound {
+			expired := types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidationTokenExpired
+			return &types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpPayload{Validation: &expired}, nil
+		}
+
+		return nil, err
+	}
+
+	acc, err := r.App.Commands.GrantAccountAccessWithAuthenticationToken.Handle(ctx, command.GrantAccountAccessWithAuthenticationToken{
+		TokenId: currentCookie.Value,
+		Code:    &input.Code,
+	})
+
+	if err != nil {
+
+		// different errors that can occur due to validation
+		if err == token.ErrTokenNotFound {
+			expired := types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidationTokenExpired
+			return &types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpPayload{Validation: &expired}, nil
+		}
+
+		if err == multi_factor.ErrTOTPCodeInvalid {
+			expired := types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidationInvalidCode
+			return &types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpPayload{Validation: &expired}, nil
+		}
+
+		return nil, err
+	}
+
+	cookies.DeleteCookie(ctx, token.OTPKey)
+
+	if err := passport.
+		FromContext(ctx).
+		MutatePassport(ctx,
+			func(p *passport.Passport) error {
+				p.SetAccount(acc.ID())
+				return nil
+			}); err != nil {
+		return nil, err
+	}
+
+	return &types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpPayload{Account: types.MarshalAccountToGraphQL(acc)}, nil
+}
+
+func (r *MutationResolver) GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode(ctx context.Context, input types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput) (*types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodePayload, error) {
+
+	currentCookie, err := cookies.ReadCookie(ctx, token.OTPKey)
+
+	if err != nil {
+		if err == cookies.ErrCookieNotFound {
+			expired := types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidationTokenExpired
+			return &types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodePayload{Validation: &expired}, nil
+		}
+
+		return nil, err
+	}
+
+	acc, err := r.App.Commands.GrantAccountAccessWithAuthenticationToken.Handle(ctx, command.GrantAccountAccessWithAuthenticationToken{
+		TokenId:      currentCookie.Value,
+		RecoveryCode: &input.RecoveryCode,
+	})
+
+	if err != nil {
+
+		// different errors that can occur due to validation
+		if err == token.ErrTokenNotFound {
+			expired := types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidationTokenExpired
+			return &types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodePayload{Validation: &expired}, nil
+		}
+
+		if err == multi_factor.ErrRecoveryCodeInvalid {
+			expired := types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidationInvalidRecoveryCode
+			return &types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodePayload{Validation: &expired}, nil
+		}
+
+		return nil, err
+	}
+
+	cookies.DeleteCookie(ctx, token.OTPKey)
+
+	if err := passport.
+		FromContext(ctx).
+		MutatePassport(ctx,
+			func(p *passport.Passport) error {
+				p.SetAccount(acc.ID())
+				return nil
+			}); err != nil {
+		return nil, err
+	}
+
+	return &types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodePayload{Account: types.MarshalAccountToGraphQL(acc)}, nil
+}
+
 func (r *MutationResolver) GrantAccountAccessWithAuthenticationToken(ctx context.Context) (*types.GrantAccountAccessWithAuthenticationTokenPayload, error) {
 
 	tk, err := cookies.ReadCookie(ctx, token.OTPKey)
@@ -121,20 +271,27 @@ func (r *MutationResolver) ReissueAuthenticationToken(ctx context.Context) (*typ
 	return &types.ReissueAuthenticationTokenPayload{AuthenticationToken: nil}, nil
 }
 
-func (r *MutationResolver) RevokeAuthenticationToken(ctx context.Context) (*types.RevokeAuthenticationTokenPayload, error) {
+func (r *MutationResolver) RevokeAuthenticationToken(ctx context.Context, input types.RevokeAuthenticationTokenInput) (*types.RevokeAuthenticationTokenPayload, error) {
 
-	tk, err := cookies.ReadCookie(ctx, token.OTPKey)
+	tokenId := ""
 
-	if err != nil {
-		if err == cookies.ErrCookieNotFound {
-			return &types.RevokeAuthenticationTokenPayload{RevokedAuthenticationTokenID: relay.NewID("")}, err
+	// check for empty string as well
+	if input.Token != nil && *input.Token != "" {
+		tokenId = *input.Token
+	} else {
+		otpCookie, err := cookies.ReadCookie(ctx, token.OTPKey)
+
+		if err == nil {
+			tokenId = otpCookie.Value
 		}
+	}
 
-		return nil, err
+	if tokenId == "" {
+		return &types.RevokeAuthenticationTokenPayload{RevokedAuthenticationTokenID: relay.NewID("")}, nil
 	}
 
 	if err := r.App.Commands.RevokeAuthenticationToken.Handle(ctx, command.RevokeAuthenticationToken{
-		TokenId: tk.Value,
+		TokenId: tokenId,
 	}); err != nil {
 		return nil, err
 	}
@@ -199,58 +356,6 @@ func (r *MutationResolver) GrantAuthenticationToken(ctx context.Context, input t
 	}, nil
 }
 
-func (r *MutationResolver) CreateAccountWithAuthenticationToken(ctx context.Context, input types.CreateAccountWithAuthenticationTokenInput) (*types.CreateAccountWithAuthenticationTokenPayload, error) {
-
-	currentCookie, err := cookies.ReadCookie(ctx, token.OTPKey)
-
-	if err != nil {
-		if err == cookies.ErrCookieNotFound {
-			expired := types.CreateAccountWithAuthenticationTokenValidationTokenExpired
-			return &types.CreateAccountWithAuthenticationTokenPayload{Validation: &expired}, nil
-		}
-
-		return nil, err
-	}
-
-	acc, err := r.App.Commands.CreateAccountWithAuthenticationToken.Handle(ctx, command.CreateAccountWithAuthenticationToken{
-		TokenId:  currentCookie.Value,
-		Username: input.Username,
-	})
-
-	if err != nil {
-		if err == token.ErrTokenNotFound {
-			expired := types.CreateAccountWithAuthenticationTokenValidationTokenExpired
-			return &types.CreateAccountWithAuthenticationTokenPayload{Validation: &expired}, nil
-		}
-
-		if err == account.ErrUsernameNotUnique {
-			expired := types.CreateAccountWithAuthenticationTokenValidationUsernameTaken
-			return &types.CreateAccountWithAuthenticationTokenPayload{Validation: &expired}, nil
-		}
-
-		if err == account.ErrEmailNotUnique {
-			expired := types.CreateAccountWithAuthenticationTokenValidationEmailTaken
-			return &types.CreateAccountWithAuthenticationTokenPayload{Validation: &expired}, nil
-		}
-
-		return nil, err
-	}
-
-	cookies.DeleteCookie(ctx, token.OTPKey)
-
-	if err := passport.
-		FromContext(ctx).
-		MutatePassport(ctx,
-			func(p *passport.Passport) error {
-				p.SetAccount(acc.ID())
-				return nil
-			}); err != nil {
-		return nil, err
-	}
-
-	return &types.CreateAccountWithAuthenticationTokenPayload{Account: types.MarshalAccountToGraphQL(acc)}, err
-}
-
 func (r *MutationResolver) RevokeAccountAccess(ctx context.Context) (*types.RevokeAccountAccessPayload, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
@@ -270,61 +375,6 @@ func (r *MutationResolver) RevokeAccountAccess(ctx context.Context) (*types.Revo
 	return &types.RevokeAccountAccessPayload{
 		RevokedAccountID: relay.NewID(types.Account{}, passport.FromContext(ctx).AccountID()),
 	}, nil
-}
-
-func (r *MutationResolver) GrantAccountAccessWithAuthenticationTokenAndMultiFactor(ctx context.Context, input types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorInput) (*types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload, error) {
-
-	currentCookie, err := cookies.ReadCookie(ctx, token.OTPKey)
-
-	if err != nil {
-		if err == cookies.ErrCookieNotFound {
-			expired := types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidationTokenExpired
-			return &types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload{Validation: &expired}, nil
-		}
-
-		return nil, err
-	}
-
-	acc, err := r.App.Commands.GrantAccountAccessWithAuthenticationToken.Handle(ctx, command.GrantAccountAccessWithAuthenticationToken{
-		RecoveryCode: input.RecoveryCode,
-		TokenId:      currentCookie.Value,
-		Code:         input.Code,
-	})
-
-	if err != nil {
-
-		// different errors that can occur due to validation
-		if err == token.ErrTokenNotFound {
-			expired := types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidationTokenExpired
-			return &types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload{Validation: &expired}, nil
-		}
-
-		if err == multi_factor.ErrRecoveryCodeInvalid {
-			expired := types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidationInvalidRecoveryCode
-			return &types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload{Validation: &expired}, nil
-		}
-
-		if err == multi_factor.ErrTOTPCodeInvalid {
-			expired := types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidationInvalidCode
-			return &types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload{Validation: &expired}, nil
-		}
-
-		return nil, err
-	}
-
-	cookies.DeleteCookie(ctx, token.OTPKey)
-
-	if err := passport.
-		FromContext(ctx).
-		MutatePassport(ctx,
-			func(p *passport.Passport) error {
-				p.SetAccount(acc.ID())
-				return nil
-			}); err != nil {
-		return nil, err
-	}
-
-	return &types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload{Account: types.MarshalAccountToGraphQL(acc)}, nil
 }
 
 func (r *MutationResolver) GenerateAccountMultiFactorTotp(ctx context.Context) (*types.GenerateAccountMultiFactorTotpPayload, error) {
