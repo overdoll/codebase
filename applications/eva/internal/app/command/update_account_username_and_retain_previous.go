@@ -30,7 +30,7 @@ func (h UpdateAccountUsernameAndRetainPreviousHandler) Handle(ctx context.Contex
 		if err == account.ErrAccountNotFound {
 			// ensure an account with this username is not existent
 
-			_, user, err := h.ar.UpdateAccountUsername(ctx, cmd.Principal.AccountId(), func(usr *account.Account) error {
+			_, user, err := h.ar.UpdateAccountUsername(ctx, cmd.Principal, cmd.Principal.AccountId(), func(usr *account.Account) error {
 				return usr.EditUsername(cmd.Username)
 			})
 

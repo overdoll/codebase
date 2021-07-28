@@ -14,6 +14,7 @@ import (
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/libraries/crypt"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
 )
 
 var accountEmailTable = table.New(table.Metadata{
@@ -178,7 +179,7 @@ func (r AccountRepository) GetEmailConfirmationByEmail(ctx context.Context, emai
 }
 
 // ConfirmAccountEmail - confirm account email
-func (r AccountRepository) ConfirmAccountEmail(ctx context.Context, confirmId string, acc *account.Account) (*account.Email, error) {
+func (r AccountRepository) ConfirmAccountEmail(ctx context.Context, requester *principal.Principal, confirmId string) (*account.Email, error) {
 
 	val, err := r.client.Get(ctx, confirmEmailPrefix+confirmId).Result()
 
@@ -203,15 +204,20 @@ func (r AccountRepository) ConfirmAccountEmail(ctx context.Context, confirmId st
 		return nil, fmt.Errorf("failed to confirm email - unmarshal: %v", err)
 	}
 
-	usr, err := r.GetAccountByEmail(ctx, confirmItem.Email)
+	acc, err := r.GetAccountByEmail(ctx, confirmItem.Email)
 
 	if err != nil {
 		return nil, err
 	}
 
-	// user must be logged in to confirm the email
-	if usr.ID() != acc.ID() {
-		return nil, fmt.Errorf("failed to confirm email - invalid account")
+	em, err := r.GetAccountEmail(ctx, requester, acc.ID(), confirmItem.Email)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err := em.CanConfirm(requester); err != nil {
+		return nil, err
 	}
 
 	updateAccountEmail := r.session.
@@ -234,17 +240,11 @@ func (r AccountRepository) ConfirmAccountEmail(ctx context.Context, confirmId st
 		return nil, fmt.Errorf("failed to confirm email - delete redis key: %v", err)
 	}
 
-	em, err := r.GetAccountEmail(ctx, acc.ID(), confirmItem.Email)
-
-	if err != nil {
-		return nil, err
-	}
-
 	return em, nil
 }
 
 // GetAccountEmail - get an email for a single account
-func (r AccountRepository) GetAccountEmail(ctx context.Context, accountId, email string) (*account.Email, error) {
+func (r AccountRepository) GetAccountEmail(ctx context.Context, requester *principal.Principal, accountId, email string) (*account.Email, error) {
 
 	var accountEmail emailByAccount
 
@@ -266,18 +266,28 @@ func (r AccountRepository) GetAccountEmail(ctx context.Context, accountId, email
 		return nil, fmt.Errorf("failed to get email by account: %v", err)
 	}
 
-	return account.UnmarshalEmailFromDatabase(accountEmail.Email, accountEmail.AccountId, accountEmail.Status), nil
+	result := account.UnmarshalEmailFromDatabase(accountEmail.Email, accountEmail.AccountId, accountEmail.Status)
+
+	if err := result.CanView(requester); err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }
 
 // GetAccountEmails - get emails for account
-func (r AccountRepository) GetAccountEmails(ctx context.Context, cursor *paging.Cursor, id string) ([]*account.Email, error) {
+func (r AccountRepository) GetAccountEmails(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*account.Email, error) {
+
+	if err := account.CanViewAccountEmails(requester, accountId); err != nil {
+		return nil, err
+	}
 
 	var accountEmails []*emailByAccount
 
 	builder := emailByAccountTable.SelectBuilder()
 
 	data := &emailByAccount{
-		AccountId: id,
+		AccountId: accountId,
 	}
 
 	if cursor != nil {
@@ -309,9 +319,9 @@ func (r AccountRepository) GetAccountEmails(ctx context.Context, cursor *paging.
 }
 
 // DeleteAccountEmail - delete email for account
-func (r AccountRepository) DeleteAccountEmail(ctx context.Context, accountId, email string) error {
+func (r AccountRepository) DeleteAccountEmail(ctx context.Context, requester *principal.Principal, accountId, email string) error {
 
-	emails, err := r.GetAccountEmails(ctx, nil, accountId)
+	emails, err := r.GetAccountEmails(ctx, requester, nil, accountId)
 
 	if err != nil {
 		return err
@@ -319,22 +329,8 @@ func (r AccountRepository) DeleteAccountEmail(ctx context.Context, accountId, em
 
 	email = strings.ToLower(email)
 
-	foundEmail := false
-
-	for _, em := range emails {
-		if em.Email() == email {
-			foundEmail = true
-
-			if em.IsPrimary() {
-				return errors.New("email is primary")
-			}
-
-			break
-		}
-	}
-
-	if !foundEmail {
-		return errors.New("email does not belong to account")
+	if err := account.CanDeleteAccountEmail(requester, accountId, emails, email); err != nil {
+		return err
 	}
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
@@ -358,7 +354,7 @@ func (r AccountRepository) DeleteAccountEmail(ctx context.Context, accountId, em
 
 // UpdateAccountMakeEmailPrimary - update the account and make the email primary
 // or just change the casings
-func (r AccountRepository) UpdateAccountMakeEmailPrimary(ctx context.Context, accountId string, updateFn func(usr *account.Account, ems []*account.Email) error) (*account.Account, *account.Email, error) {
+func (r AccountRepository) UpdateAccountMakeEmailPrimary(ctx context.Context, requester *principal.Principal, accountId string, updateFn func(usr *account.Account, ems []*account.Email) error) (*account.Account, *account.Email, error) {
 
 	acc, err := r.GetAccountById(ctx, accountId)
 
@@ -366,7 +362,11 @@ func (r AccountRepository) UpdateAccountMakeEmailPrimary(ctx context.Context, ac
 		return nil, nil, err
 	}
 
-	ems, err := r.GetAccountEmails(ctx, nil, accountId)
+	if err := acc.CanMakeEmailPrimary(requester); err != nil {
+		return nil, nil, err
+	}
+
+	ems, err := r.GetAccountEmails(ctx, requester, nil, accountId)
 
 	if err != nil {
 		return nil, nil, err

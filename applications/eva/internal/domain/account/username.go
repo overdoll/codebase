@@ -2,6 +2,7 @@ package account
 
 import (
 	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
 )
 
 type Username struct {
@@ -23,4 +24,20 @@ func (c *Username) Username() string {
 
 func (c *Username) AccountId() string {
 	return c.accountId
+}
+
+func (c *Username) CanView(requester *principal.Principal) error {
+	if err := requester.BelongsToAccount(c.accountId); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func CanViewUsernamesForAccount(requester *principal.Principal, accountId string) error {
+	if err := requester.BelongsToAccount(accountId); err != nil {
+		return err
+	}
+
+	return nil
 }

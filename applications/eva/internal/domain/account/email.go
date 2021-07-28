@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
 )
 
 type EmailStatus string
@@ -77,4 +78,54 @@ func (c *Email) MakePrimary() {
 
 func (c *Email) MakeConfirmed() {
 	c.status = EmailConfirmed
+}
+
+func (c *Email) CanView(requester *principal.Principal) error {
+	if err := requester.BelongsToAccount(c.accountId); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (c *Email) CanConfirm(requester *principal.Principal) error {
+	if err := requester.BelongsToAccount(c.accountId); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func CanViewAccountEmails(requester *principal.Principal, accountId string) error {
+	if err := requester.BelongsToAccount(accountId); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func CanDeleteAccountEmail(requester *principal.Principal, accountId string, emails []*Email, targetEmail string) error {
+	if err := requester.BelongsToAccount(accountId); err != nil {
+		return err
+	}
+
+	foundEmail := false
+
+	for _, em := range emails {
+		if em.Email() == targetEmail {
+			foundEmail = true
+
+			if em.IsPrimary() {
+				return errors.New("email is primary")
+			}
+
+			break
+		}
+	}
+
+	if !foundEmail {
+		return errors.New("email does not belong to account")
+	}
+
+	return nil
 }

@@ -9,6 +9,7 @@ import (
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
 )
 
 var accountUsernameTable = table.New(table.Metadata{
@@ -65,11 +66,15 @@ func (r AccountRepository) deleteAccountUsername(ctx context.Context, instance *
 
 // UpdateAccountUsername - modify the username for the account - will either modify username by adding new entries (if it's a completely new username)
 // or just change the casings
-func (r AccountRepository) UpdateAccountUsername(ctx context.Context, id string, updateFn func(usr *account.Account) error) (*account.Account, *account.Username, error) {
+func (r AccountRepository) UpdateAccountUsername(ctx context.Context, requester *principal.Principal, id string, updateFn func(usr *account.Account) error) (*account.Account, *account.Username, error) {
 
 	instance, err := r.GetAccountById(ctx, id)
 
 	if err != nil {
+		return nil, nil, err
+	}
+
+	if err := instance.CanUpdateUsername(requester); err != nil {
 		return nil, nil, err
 	}
 
@@ -141,15 +146,19 @@ func (r AccountRepository) GetAccountByUsername(ctx context.Context, username st
 	return usr, nil
 }
 
-// GetAccountEmails - get emails for account
-func (r AccountRepository) GetAccountUsernames(ctx context.Context, cursor *paging.Cursor, id string) ([]*account.Username, error) {
+// GetAccountUsernames - get usernames for account
+func (r AccountRepository) GetAccountUsernames(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*account.Username, error) {
+
+	if err := account.CanViewUsernamesForAccount(requester, accountId); err != nil {
+		return nil, err
+	}
 
 	var accountUsernames []*UsernameByAccount
 
 	builder := usernameByAccount.SelectBuilder()
 
 	data := &UsernameByAccount{
-		AccountId: id,
+		AccountId: accountId,
 	}
 
 	if cursor != nil {
@@ -182,7 +191,7 @@ func (r AccountRepository) GetAccountUsernames(ctx context.Context, cursor *pagi
 }
 
 // GetAccountEmails - get emails for account
-func (r AccountRepository) GetAccountUsername(ctx context.Context, accountId, username string) (*account.Username, error) {
+func (r AccountRepository) GetAccountUsername(ctx context.Context, requester *principal.Principal, accountId, username string) (*account.Username, error) {
 
 	var accountUsernames *UsernameByAccount
 
@@ -203,5 +212,11 @@ func (r AccountRepository) GetAccountUsername(ctx context.Context, accountId, us
 		return nil, fmt.Errorf("failed to get account username: %v", err)
 	}
 
-	return account.UnmarshalUsernameFromDatabase(accountUsernames.Username, accountUsernames.AccountId), nil
+	name := account.UnmarshalUsernameFromDatabase(accountUsernames.Username, accountUsernames.AccountId)
+
+	if err := name.CanView(requester); err != nil {
+		return nil, err
+	}
+
+	return name, nil
 }

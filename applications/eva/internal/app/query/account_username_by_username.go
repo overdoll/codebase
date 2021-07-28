@@ -25,7 +25,7 @@ func NewAccountUsernameByUsernameHandler(ar account.Repository) AccountUsernameB
 
 func (h AccountUsernameByUsernameHandler) Handle(ctx context.Context, query AccountUsernameByUsername) (*account.Username, error) {
 
-	realUser, err := h.ar.GetAccountUsername(ctx, query.AccountId, query.Username)
+	realUser, err := h.ar.GetAccountUsername(ctx, query.Principal, query.AccountId, query.Username)
 
 	if err != nil {
 		return nil, err

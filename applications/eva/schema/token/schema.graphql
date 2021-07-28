@@ -4,14 +4,19 @@ enum MultiFactorType {
 
 type AuthenticationTokenAccountStatus {
   registered: Boolean!
-  authenticated: Boolean!
   multiFactor: [MultiFactorType!]
 }
 
 type AuthenticationToken {
   sameSession: Boolean!
   verified: Boolean!
-  session: String!
+  # Whether or not this token is "secure"
+  # Secure means that the token has been viewed from the same network as originally created
+  # if it wasn't viewed in the same network, the interface should take care and double-check with
+  # the user that they want to verify the token.
+  secure: Boolean!
+  device: String!
+  location: String!
   email: String!
   accountStatus: AuthenticationTokenAccountStatus
 }
@@ -27,8 +32,8 @@ input GrantAccountAccessWithAuthenticationTokenAndMultiFactorInput {
   code: String
 }
 
-"""Input for verifying and attempting access grant to an account"""
-input VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput {
+"""Input for verifying token account"""
+input VerifyAuthenticationTokenInput {
   authenticationTokenId: String!
 }
 
@@ -102,18 +107,27 @@ type GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload {
   account: Account
 }
 
+enum GrantAccountAccessWithAuthenticationTokenValidation {
+  TOKEN_EXPIRED
+}
+
+type GrantAccountAccessWithAuthenticationTokenPayload {
+  """Validation options"""
+  validation: GrantAccountAccessWithAuthenticationTokenValidation
+
+  """The account that granted access to"""
+  account: Account
+}
+
 """Validation for granting account access"""
-enum VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidation {
+enum VerifyAuthenticationTokenValidation {
   TOKEN_EXPIRED
 }
 
 """Payload for verifying the authentication token"""
-type VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload {
+type VerifyAuthenticationTokenPayload {
   """Validation options"""
-  validation: VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidation
-
-  """The account that granted access to"""
-  account: Account
+  validation: VerifyAuthenticationTokenValidation
 
   """The authentication token"""
   authenticationToken: AuthenticationToken
@@ -159,6 +173,14 @@ type Mutation {
   reissueAuthenticationToken: ReissueAuthenticationTokenPayload
 
   """
+  Grant account access with authentication token
+
+  Should be used if the token does not require a multi-factor authentication step, and the token has to be
+  verified first
+  """
+  grantAccountAccessWithAuthenticationToken: GrantAccountAccessWithAuthenticationTokenPayload
+
+  """
   Grant account access using an authentication token and a multi factor option
 
   Set "code" when authenticating with a TOTP code
@@ -180,14 +202,16 @@ type Mutation {
 
   Note: the actual authentication token is opaque (set & read from cookies)
   """
-  verifyAuthenticationTokenAndAttemptAccountAccessGrant(input: VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput!): VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload
+  verifyAuthenticationToken(input: VerifyAuthenticationTokenInput!): VerifyAuthenticationTokenPayload
 }
 
 type Query {
   """
   Get the status of the authentication token - whether or not it is redeemed, account status, etc..
 
-  Note: the actual authentication token is opaque (set & read from cookies)
+  If "token" is not provided, it will attempt to read the opaque token
+
+  However, if the token is provided, and the ID is valid, it will show the token
   """
-  viewAuthenticationToken: AuthenticationToken
+  viewAuthenticationToken(token: String): AuthenticationToken
 }

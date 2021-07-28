@@ -30,7 +30,7 @@ func (h GenerateAccountMultiFactorTOTPHandler) Handle(ctx context.Context, cmd G
 		return nil, err
 	}
 
-	codes, err := h.mr.GetAccountRecoveryCodes(ctx, usr.ID())
+	codes, err := h.mr.GetAccountRecoveryCodes(ctx, cmd.Principal, usr.ID())
 
 	if err != nil {
 		return nil, err

@@ -1,10 +1,14 @@
 package types
 
 import (
+	"context"
+
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/session"
 	"overdoll/applications/eva/internal/domain/token"
+	"overdoll/libraries/cookies"
 	"overdoll/libraries/graphql/relay"
+	"overdoll/libraries/helpers"
 	"overdoll/libraries/paging"
 )
 
@@ -138,24 +142,50 @@ func MarshalAccountUsernameToGraphQL(result *account.Username) *AccountUsername 
 	}
 }
 
-func MarshalAuthenticationTokenToGraphQL(result *token.AuthenticationToken, sameSession, registered bool) *AuthenticationToken {
+func MarshalAuthenticationTokenToGraphQL(ctx context.Context, result *token.AuthenticationToken) *AuthenticationToken {
 
-	var multiFactorTypes []MultiFactorType
+	var accountStatus *AuthenticationTokenAccountStatus
 
-	if result.IsTOTPRequired() {
-		multiFactorTypes = append(multiFactorTypes, MultiFactorTypeTotp)
+	sameSession := true
+
+	// determine if the cookie is in the same session
+	_, err := cookies.ReadCookie(ctx, token.OTPKey)
+
+	if err == cookies.ErrCookieNotFound {
+		sameSession = false
+	}
+
+	// determine if "secure" (same IP)
+	secure := true
+	ip := helpers.GetIp(ctx)
+
+	if ip != result.IP() {
+		secure = false
+	}
+
+	// only show account status if verified
+	// this will only be populated if the token is verified anyways
+	if result.Verified() {
+
+		var multiFactorTypes []MultiFactorType
+
+		if result.IsTOTPRequired() {
+			multiFactorTypes = append(multiFactorTypes, MultiFactorTypeTotp)
+		}
+
+		accountStatus = &AuthenticationTokenAccountStatus{
+			Registered:  result.Registered(),
+			MultiFactor: multiFactorTypes,
+		}
 	}
 
 	return &AuthenticationToken{
-		SameSession: sameSession,
-		Verified:    result.Verified(),
-		Session:     result.Session(),
-		Email:       result.Email(),
-		AccountStatus: &AuthenticationTokenAccountStatus{
-			Registered:    registered,
-			Authenticated: registered && multiFactorTypes == nil,
-			MultiFactor:   multiFactorTypes,
-		},
+		SameSession:   sameSession,
+		Verified:      result.Verified(),
+		Device:        result.Device(),
+		Email:         result.Email(),
+		Secure:        secure,
+		AccountStatus: accountStatus,
 	}
 }
 

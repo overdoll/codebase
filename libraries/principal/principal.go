@@ -37,8 +37,13 @@ func UnmarshalFromEvaProto(proto *eva.Account) *Principal {
 }
 
 // basically a simple check to make sure this principal is a specific account
-func (p *Principal) IsAccount(accountId string) bool {
-	return p.accountId == accountId
+func (p *Principal) BelongsToAccount(accountId string) error {
+
+	if p.accountId != accountId {
+		return ErrNotAuthorized
+	}
+
+	return nil
 }
 
 func (p *Principal) AccountId() string {

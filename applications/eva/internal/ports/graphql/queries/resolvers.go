@@ -5,7 +5,6 @@ import (
 
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/eva/internal/app"
-	"overdoll/applications/eva/internal/app/command"
 	"overdoll/applications/eva/internal/app/query"
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/token"
@@ -68,33 +67,38 @@ func (r *QueryResolver) Account(ctx context.Context, username string) (*types.Ac
 	return types.MarshalAccountToGraphQL(acc), nil
 }
 
-func (r *QueryResolver) ViewAuthenticationToken(ctx context.Context) (*types.AuthenticationToken, error) {
+func (r *QueryResolver) ViewAuthenticationToken(ctx context.Context, tk *string) (*types.AuthenticationToken, error) {
 
-	// User is not logged in, let's check for an OTP token
-	otpCookie, err := cookies.ReadCookie(ctx, token.OTPKey)
+	tokenId := ""
 
-	if err == cookies.ErrCookieNotFound {
+	if tk != nil {
+		tokenId = *tk
+	} else {
+		otpCookie, err := cookies.ReadCookie(ctx, token.OTPKey)
+
+		if err == nil {
+			tokenId = otpCookie.Value
+		}
+	}
+
+	if tokenId == "" {
 		return nil, nil
 	}
 
-	// Error
-	if err != nil {
-		return nil, err
-	}
-
-	acc, ck, err := r.App.Queries.AuthenticationTokenById.Handle(ctx, query.AuthenticationTokenById{
-		TokenId: otpCookie.Value,
+	ck, err := r.App.Queries.AuthenticationTokenById.Handle(ctx, query.AuthenticationTokenById{
+		TokenId: tokenId,
 	})
 
 	if err != nil {
+
+		if err == token.ErrTokenNotFound {
+			return nil, nil
+		}
+
 		return nil, err
 	}
 
-	if ck == nil {
-		return nil, nil
-	}
-
-	return types.MarshalAuthenticationTokenToGraphQL(ck, true, acc != nil), nil
+	return types.MarshalAuthenticationTokenToGraphQL(ctx, ck), nil
 }
 
 func (r *QueryResolver) Viewer(ctx context.Context) (*types.Account, error) {
@@ -114,49 +118,6 @@ func (r *QueryResolver) Viewer(ctx context.Context) (*types.Account, error) {
 				return nil, nil
 			}
 
-			return nil, err
-		}
-
-		return types.MarshalAccountToGraphQL(acc), nil
-	}
-
-	// User is not logged in, let's check for an OTP token
-	otpCookie, err := cookies.ReadCookie(ctx, token.OTPKey)
-
-	if err == cookies.ErrCookieNotFound {
-		return nil, nil
-	}
-
-	// Error
-	if err != nil {
-		return nil, err
-	}
-
-	// consume cookie
-	acc, ck, err := r.App.Queries.AuthenticationTokenById.Handle(ctx, query.AuthenticationTokenById{
-		TokenId: otpCookie.Value,
-	})
-
-	if err != nil {
-		return nil, err
-	}
-
-	if acc != nil && ck.Verified() {
-
-		if err := r.App.Commands.ConsumeAuthenticationToken.Handle(ctx, command.ConsumeAuthenticationToken{
-			TokenId: otpCookie.Value,
-		}); err != nil {
-			return nil, err
-		}
-
-		// user had token and it was used to log in
-		cookies.DeleteCookie(ctx, token.OTPKey)
-
-		// Update passport to include our new user
-		if err := pass.MutatePassport(ctx, func(p *passport.Passport) error {
-			p.SetAccount(acc.ID())
-			return nil
-		}); err != nil {
 			return nil, err
 		}
 

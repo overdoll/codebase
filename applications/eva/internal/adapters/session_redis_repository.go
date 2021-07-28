@@ -13,6 +13,7 @@ import (
 	"overdoll/applications/eva/internal/domain/session"
 	"overdoll/libraries/crypt"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
 )
 
 const (
@@ -40,7 +41,7 @@ func NewSessionRepository(client *redis.Client) SessionRepository {
 }
 
 // getSessionById - get session by ID
-func (r SessionRepository) GetSessionById(ctx context.Context, sessionId string) (*session.Session, error) {
+func (r SessionRepository) GetSessionById(ctx context.Context, requester *principal.Principal, sessionId string) (*session.Session, error) {
 
 	val, err := r.client.Get(ctx, sessionId).Result()
 
@@ -75,11 +76,15 @@ func (r SessionRepository) GetSessionById(ctx context.Context, sessionId string)
 	res := session.UnmarshalSessionFromDatabase(encryptedKey, sessionItem.Passport, sessionItem.Details.UserAgent, sessionItem.Details.Ip, sessionItem.Details.Created)
 	res.Node = paging.NewNode(encryptedKey)
 
+	if err := res.CanView(requester); err != nil {
+		return nil, err
+	}
+
 	return res, nil
 }
 
 // GetSessionsByAccountId - Get sessions
-func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, cursor *paging.Cursor, sessionCookie, accountId string) ([]*session.Session, error) {
+func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, sessionCookie, accountId string) ([]*session.Session, error) {
 
 	keys, err := r.client.Keys(ctx, sessionPrefix+"*:"+accountPrefix+accountId).Result()
 
@@ -95,7 +100,7 @@ func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, cursor *p
 	var sessions []*session.Session
 
 	for _, sessionID := range keys {
-		sess, err := r.GetSessionById(ctx, sessionID)
+		sess, err := r.GetSessionById(ctx, requester, sessionID)
 
 		if err != nil {
 			return nil, err
@@ -112,7 +117,7 @@ func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, cursor *p
 }
 
 // RevokeSessionById - revoke session
-func (r SessionRepository) RevokeSessionById(ctx context.Context, accountId, sessionId string) error {
+func (r SessionRepository) RevokeSessionById(ctx context.Context, requester *principal.Principal, sessionId string) error {
 
 	// decrypt, since we send it as encrypted
 	key, err := crypt.Decrypt(sessionId)
@@ -121,14 +126,10 @@ func (r SessionRepository) RevokeSessionById(ctx context.Context, accountId, ses
 		return fmt.Errorf("failed to decrypt session id: %v", err)
 	}
 
-	sess, err := r.GetSessionById(ctx, key)
+	_, err = r.GetSessionById(ctx, requester, key)
 
 	if err != nil {
 		return err
-	}
-
-	if sess.Passport().AccountID() != accountId {
-		return session.ErrSessionsNotFound
 	}
 
 	// make sure that we delete the session that belongs to this user only

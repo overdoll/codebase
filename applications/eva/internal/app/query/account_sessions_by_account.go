@@ -26,7 +26,7 @@ func NewAccountSessionsByAccountHandler(sr session.Repository) AccountSessionsBy
 
 func (h AccountSessionsByAccountHandler) Handle(ctx context.Context, query AccountSessionsByAccount) ([]*session.Session, error) {
 
-	ur, err := h.sr.GetSessionsByAccountId(ctx, query.Cursor, query.CurrentSessionId, query.AccountId)
+	ur, err := h.sr.GetSessionsByAccountId(ctx, query.Principal, query.Cursor, query.CurrentSessionId, query.AccountId)
 
 	if err != nil {
 		return nil, err

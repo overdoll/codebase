@@ -11,27 +11,27 @@ type Application struct {
 }
 
 type Commands struct {
-	VerifyAuthenticationToken                            command.VerifyAuthenticationTokenHandler
-	ConsumeAuthenticationToken                           command.ConsumeAuthenticationTokenHandler
-	GrantAuthenticationToken                             command.GrantAuthenticationTokenHandler
-	CreateAccountWithAuthenticationToken                 command.CreateAccountWithAuthenticationTokenHandler
-	LockAccount                                          command.LockAccountHandler
-	UnlockAccount                                        command.UnlockAccountHandler
-	CreateAccount                                        command.CreateAccountHandler
-	AddAccountEmail                                      command.AddAccountEmailHandler
-	UpdateAccountUsernameAndRetainPrevious               command.UpdateAccountUsernameAndRetainPreviousHandler
-	ConfirmAccountEmail                                  command.ConfirmAccountEmailHandler
-	RevokeAccountSession                                 command.RevokeAccountSessionHandler
-	UpdateAccountEmailStatusToPrimary                    command.UpdateAccountEmailStatusToPrimaryHandler
-	GenerateAccountMultiFactorRecoveryCodes              command.GenerateAccountMultiFactorRecoveryCodesHandler
-	GenerateAccountMultiFactorTOTP                       command.GenerateAccountMultiFactorTOTPHandler
-	EnrollAccountMultiFactorTOTP                         command.EnrollAccountMultiFactorTOTPHandler
-	DisableAccountMultiFactor                            command.DisableAccountMultiFactorHandler
-	GrantAccountAccessWithAuthTokenAndRecoveryCodeOrTotp command.GrantAccountAccessWithAuthTokenAndRecoveryCodeOrTotpHandler
-	DeleteAccountEmail                                   command.DeleteAccountEmailHandler
-	RevokeAuthenticationToken                            command.RevokeAuthenticationTokenHandler
-	ReissueAuthenticationToken                           command.ReissueAuthenticationTokenHandler
-	IndexAllAccounts                                     command.IndexAllAccountsHandler
+	VerifyAuthenticationToken               command.VerifyAuthenticationTokenHandler
+	GrantAuthenticationToken                command.GrantAuthenticationTokenHandler
+	LockAccount                             command.LockAccountHandler
+	UnlockAccount                           command.UnlockAccountHandler
+	CreateAccount                           command.CreateAccountHandler
+	AddAccountEmail                         command.AddAccountEmailHandler
+	UpdateAccountUsernameAndRetainPrevious  command.UpdateAccountUsernameAndRetainPreviousHandler
+	ConfirmAccountEmail                     command.ConfirmAccountEmailHandler
+	RevokeAccountSession                    command.RevokeAccountSessionHandler
+	UpdateAccountEmailStatusToPrimary       command.UpdateAccountEmailStatusToPrimaryHandler
+	GenerateAccountMultiFactorRecoveryCodes command.GenerateAccountMultiFactorRecoveryCodesHandler
+	GenerateAccountMultiFactorTOTP          command.GenerateAccountMultiFactorTOTPHandler
+	EnrollAccountMultiFactorTOTP            command.EnrollAccountMultiFactorTOTPHandler
+	DisableAccountMultiFactor               command.DisableAccountMultiFactorHandler
+	DeleteAccountEmail                      command.DeleteAccountEmailHandler
+	RevokeAuthenticationToken               command.RevokeAuthenticationTokenHandler
+	ReissueAuthenticationToken              command.ReissueAuthenticationTokenHandler
+	IndexAllAccounts                        command.IndexAllAccountsHandler
+
+	CreateAccountWithAuthenticationToken      command.CreateAccountWithAuthenticationTokenHandler
+	GrantAccountAccessWithAuthenticationToken command.GrantAccountAccessWithAuthenticationTokenHandler
 }
 
 type Queries struct {

@@ -22,7 +22,7 @@ func NewUpdateAccountEmailStatusToPrimaryHandler(ar account.Repository) UpdateAc
 
 func (h UpdateAccountEmailStatusToPrimaryHandler) Handle(ctx context.Context, cmd UpdateAccountEmailStatusToPrimary) (*account.Email, error) {
 
-	_, em, err := h.ar.UpdateAccountMakeEmailPrimary(ctx, cmd.Principal.AccountId(), func(a *account.Account, emails []*account.Email) error {
+	_, em, err := h.ar.UpdateAccountMakeEmailPrimary(ctx, cmd.Principal, cmd.Principal.AccountId(), func(a *account.Account, emails []*account.Email) error {
 		return a.UpdateEmail(emails, cmd.Email)
 	})
 

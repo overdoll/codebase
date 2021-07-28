@@ -23,7 +23,7 @@ func NewAccountRecoveryCodesByAccountHandler(mr multi_factor.Repository) Account
 
 func (h AccountRecoveryCodesByAccountHandler) Handle(ctx context.Context, query AccountRecoveryCodesByAccount) ([]*multi_factor.RecoveryCode, error) {
 
-	codes, err := h.mr.GetAccountRecoveryCodes(ctx, query.AccountId)
+	codes, err := h.mr.GetAccountRecoveryCodes(ctx, query.Principal, query.AccountId)
 
 	if err != nil {
 		return nil, err

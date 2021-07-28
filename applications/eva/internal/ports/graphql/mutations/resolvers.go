@@ -2,15 +2,12 @@ package mutations
 
 import (
 	"context"
-	"encoding/json"
 	"net/http"
 	"strings"
 	"time"
 
-	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/eva/internal/app"
 	"overdoll/applications/eva/internal/app/command"
-	"overdoll/applications/eva/internal/app/query"
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/multi_factor"
 	"overdoll/applications/eva/internal/domain/token"
@@ -24,6 +21,75 @@ import (
 
 type MutationResolver struct {
 	App *app.Application
+}
+
+func (r *MutationResolver) GrantAccountAccessWithAuthenticationToken(ctx context.Context) (*types.GrantAccountAccessWithAuthenticationTokenPayload, error) {
+
+	tk, err := cookies.ReadCookie(ctx, token.OTPKey)
+
+	if err != nil {
+
+		if err == cookies.ErrCookieNotFound {
+			expired := types.GrantAccountAccessWithAuthenticationTokenValidationTokenExpired
+			return &types.GrantAccountAccessWithAuthenticationTokenPayload{Validation: &expired}, nil
+		}
+
+		return nil, err
+	}
+
+	acc, err := r.App.Commands.GrantAccountAccessWithAuthenticationToken.Handle(ctx, command.GrantAccountAccessWithAuthenticationToken{
+		TokenId: tk.Value,
+	})
+
+	if err != nil {
+
+		if err == token.ErrTokenNotFound {
+			expired := types.GrantAccountAccessWithAuthenticationTokenValidationTokenExpired
+			return &types.GrantAccountAccessWithAuthenticationTokenPayload{Validation: &expired}, nil
+		}
+
+		return nil, err
+	}
+
+	// Remove OTP cookie
+	cookies.DeleteCookie(ctx, token.OTPKey)
+
+	// Update passport to include our new user
+	if err := passport.
+		FromContext(ctx).
+		MutatePassport(ctx,
+			func(p *passport.Passport) error {
+				p.SetAccount(acc.ID())
+				return nil
+			}); err != nil {
+		return nil, err
+	}
+
+	return &types.GrantAccountAccessWithAuthenticationTokenPayload{
+		Account: types.MarshalAccountToGraphQL(acc),
+	}, nil
+}
+
+func (r *MutationResolver) VerifyAuthenticationToken(ctx context.Context, input types.VerifyAuthenticationTokenInput) (*types.VerifyAuthenticationTokenPayload, error) {
+
+	ck, err := r.App.Commands.VerifyAuthenticationToken.Handle(ctx, command.VerifyAuthenticationToken{
+		TokenId: input.AuthenticationTokenID,
+	})
+
+	if err != nil {
+
+		if err == token.ErrTokenNotFound {
+			expired := types.VerifyAuthenticationTokenValidationTokenExpired
+			return &types.VerifyAuthenticationTokenPayload{Validation: &expired}, nil
+		}
+
+		return nil, err
+	}
+
+	// cookie redeemed not in the same session, just redeem it
+	return &types.VerifyAuthenticationTokenPayload{
+		AuthenticationToken: types.MarshalAuthenticationTokenToGraphQL(ctx, ck),
+	}, nil
 }
 
 func (r *MutationResolver) ReissueAuthenticationToken(ctx context.Context) (*types.ReissueAuthenticationTokenPayload, error) {
@@ -76,98 +142,6 @@ func (r *MutationResolver) RevokeAuthenticationToken(ctx context.Context) (*type
 	return &types.RevokeAuthenticationTokenPayload{RevokedAuthenticationTokenID: relay.NewID("")}, nil
 }
 
-func (r *MutationResolver) VerifyAuthenticationTokenAndAttemptAccountAccessGrant(ctx context.Context, input types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput) (*types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload, error) {
-	// VerifyAuthenticationToken - this is when the user uses the redeemed cookie. This will
-	// occur when the user uses the redeemed cookie in the same browser that has the 'otp-key' cookie
-
-	// If this is a login (user with email exists), we remove the otp-cookie & pass account data.
-
-	// If this is a registration (user with email doesn't exist), we keep the cookie, and remove it when we register, so the user
-	// can complete the registration if they've accidentally closed their tab
-	_, err := cookies.ReadCookie(ctx, token.OTPKey)
-
-	isSameSession := err == nil
-
-	if err != nil && err != cookies.ErrCookieNotFound {
-		return nil, err
-	}
-
-	// redeemCookie first
-	ck, err := r.App.Commands.VerifyAuthenticationToken.Handle(ctx, command.VerifyAuthenticationToken{
-		TokenId: input.AuthenticationTokenID,
-	})
-
-	if err != nil {
-
-		if err == token.ErrTokenNotFound {
-			expired := types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidationTokenExpired
-			return &types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload{Validation: &expired}, nil
-		}
-
-		return nil, err
-	}
-
-	// cookie redeemed not in the same session, just redeem it
-	if !isSameSession {
-		return &types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload{
-			Account:             nil,
-			AuthenticationToken: types.MarshalAuthenticationTokenToGraphQL(ck, isSameSession, false),
-		}, nil
-	}
-
-	usr, ck, err := r.App.Queries.AuthenticationTokenById.Handle(ctx, query.AuthenticationTokenById{
-		TokenId: input.AuthenticationTokenID,
-	})
-
-	if err != nil {
-
-		if err == token.ErrTokenNotFound {
-			expired := types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidationTokenExpired
-			return &types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload{Validation: &expired}, nil
-		}
-
-		return nil, err
-	}
-
-	if usr != nil {
-		// consume cookie since user is valid here
-		if err := r.App.Commands.ConsumeAuthenticationToken.Handle(ctx, command.ConsumeAuthenticationToken{
-			TokenId: input.AuthenticationTokenID,
-		}); err != nil {
-
-			if err == token.ErrTokenNotFound {
-				expired := types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidationTokenExpired
-				return &types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload{Validation: &expired}, nil
-			}
-
-			return nil, err
-		}
-
-		// Remove OTP cookie
-		cookies.DeleteCookie(ctx, token.OTPKey)
-
-		// Update passport to include our new user
-		if err := passport.
-			FromContext(ctx).
-			MutatePassport(ctx,
-				func(p *passport.Passport) error {
-					p.SetAccount(usr.ID())
-					return nil
-				}); err != nil {
-			return nil, err
-		}
-	}
-
-	if ck == nil {
-		return &types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload{}, nil
-	}
-
-	return &types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload{
-		Account:             types.MarshalAccountToGraphQL(usr),
-		AuthenticationToken: types.MarshalAuthenticationTokenToGraphQL(ck, isSameSession, usr != nil),
-	}, nil
-}
-
 func (r *MutationResolver) ConfirmAccountEmail(ctx context.Context, input types.ConfirmAccountEmailInput) (*types.ConfirmAccountEmailPayload, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
@@ -197,21 +171,12 @@ func (r *MutationResolver) ConfirmAccountEmail(ctx context.Context, input types.
 func (r *MutationResolver) GrantAuthenticationToken(ctx context.Context, input types.GrantAuthenticationTokenInput) (*types.GrantAuthenticationTokenPayload, error) {
 
 	// Capture session data
-	type SessionData struct {
-		UserAgent string `json:"user-agent"`
-	}
-
-	sessionData := SessionData{UserAgent: strings.Join(helpers.GinContextFromContext(ctx).Request.Header["User-Agent"], ",")}
-
-	sessionJson, err := json.Marshal(sessionData)
-
-	if err != nil {
-		return nil, err
-	}
+	userAgent := strings.Join(helpers.GinContextFromContext(ctx).Request.Header["User-Agent"], ",")
 
 	instance, err := r.App.Commands.GrantAuthenticationToken.Handle(ctx, command.GrantAuthenticationToken{
-		Email:   input.Email,
-		Session: string(sessionJson),
+		Email:     input.Email,
+		UserAgent: userAgent,
+		IP:        helpers.GetIp(ctx),
 	})
 
 	if err != nil {
@@ -230,7 +195,7 @@ func (r *MutationResolver) GrantAuthenticationToken(ctx context.Context, input t
 	}
 
 	return &types.GrantAuthenticationTokenPayload{
-		AuthenticationToken: types.MarshalAuthenticationTokenToGraphQL(instance, true, false),
+		AuthenticationToken: types.MarshalAuthenticationTokenToGraphQL(ctx, instance),
 	}, nil
 }
 
@@ -320,26 +285,10 @@ func (r *MutationResolver) GrantAccountAccessWithAuthenticationTokenAndMultiFact
 		return nil, err
 	}
 
-	code := ""
-	recoveryCode := false
-
-	if input.Code != nil {
-		code = *input.Code
-	}
-
-	if input.RecoveryCode != nil {
-		if code != "" {
-			return nil, gqlerror.Errorf("can only specify one of code or recovery code")
-		}
-
-		recoveryCode = true
-		code = *input.RecoveryCode
-	}
-
-	acc, err := r.App.Commands.GrantAccountAccessWithAuthTokenAndRecoveryCodeOrTotp.Handle(ctx, command.GrantAccountAccessWithAuthTokenAndRecoveryCodeOrTotp{
-		RecoveryCode: recoveryCode,
+	acc, err := r.App.Commands.GrantAccountAccessWithAuthenticationToken.Handle(ctx, command.GrantAccountAccessWithAuthenticationToken{
+		RecoveryCode: input.RecoveryCode,
 		TokenId:      currentCookie.Value,
-		Code:         code,
+		Code:         input.Code,
 	})
 
 	if err != nil {
@@ -473,7 +422,7 @@ func (r *MutationResolver) AddAccountEmail(ctx context.Context, input types.AddA
 	}
 
 	email, err := r.App.Commands.AddAccountEmail.Handle(ctx, command.AddAccountEmail{
-		Principal: *principal.FromContext(ctx),
+		Principal: principal.FromContext(ctx),
 		Email:     input.Email,
 	})
 

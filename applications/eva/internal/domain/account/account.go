@@ -91,124 +91,124 @@ func NewAccount(id, username, email string) (*Account, error) {
 	}, nil
 }
 
-func (u *Account) ID() string {
-	return u.id
+func (a *Account) ID() string {
+	return a.id
 }
 
-func (u *Account) Email() string {
-	return u.email
+func (a *Account) Email() string {
+	return a.email
 }
 
-func (u *Account) Username() string {
-	return u.username
+func (a *Account) Username() string {
+	return a.username
 }
 
-func (u *Account) Verified() bool {
-	return u.verified
+func (a *Account) Verified() bool {
+	return a.verified
 }
 
-func (u *Account) Avatar() string {
-	return u.avatar
+func (a *Account) Avatar() string {
+	return a.avatar
 }
 
-func (u *Account) ConvertAvatarToURI() graphql.URI {
+func (a *Account) ConvertAvatarToURI() graphql.URI {
 	var staticURL = os.Getenv("STATIC_URL")
-	return graphql.NewURI(staticURL + "/avatars/" + u.avatar)
+	return graphql.NewURI(staticURL + "/avatars/" + a.avatar)
 }
 
-func (u *Account) LockedUntil() int {
-	return u.lockedUntil
+func (a *Account) LockedUntil() int {
+	return a.lockedUntil
 }
 
-func (u *Account) CanUnlock() bool {
+func (a *Account) CanUnlock() bool {
 
-	if u.lockedUntil == -1 {
+	if a.lockedUntil == -1 {
 		return true
 	}
 
-	return time.Now().After(time.Unix(int64(u.lockedUntil), 0))
+	return time.Now().After(time.Unix(int64(a.lockedUntil), 0))
 }
 
-func (u *Account) IsLocked() bool {
-	return u.locked
+func (a *Account) IsLocked() bool {
+	return a.locked
 }
 
-func (u *Account) LockedReason() string {
-	return string(u.lockedReason)
+func (a *Account) LockedReason() string {
+	return string(a.lockedReason)
 }
 
-func (u *Account) IsLockedDueToPostInfraction() bool {
-	return u.lockedReason == PostInfraction
+func (a *Account) IsLockedDueToPostInfraction() bool {
+	return a.lockedReason == PostInfraction
 }
 
-func (u *Account) IsUnclaimed() bool {
-	return u.unclaimed
+func (a *Account) IsUnclaimed() bool {
+	return a.unclaimed
 }
 
-func (u *Account) MultiFactorEnabled() bool {
-	return u.multiFactorEnabled
+func (a *Account) MultiFactorEnabled() bool {
+	return a.multiFactorEnabled
 }
 
-func (u *Account) ToggleMultiFactor() error {
+func (a *Account) ToggleMultiFactor() error {
 
-	if u.multiFactorEnabled && !u.CanDisableMultiFactor() {
+	if a.multiFactorEnabled && !a.CanDisableMultiFactor() {
 		return ErrAccountPrivileged
 	}
 
-	u.multiFactorEnabled = !u.multiFactorEnabled
+	a.multiFactorEnabled = !a.multiFactorEnabled
 	return nil
 }
 
-func (u *Account) Lock(duration int, reason string) error {
+func (a *Account) Lock(duration int, reason string) error {
 	if duration == 0 {
-		u.lockedUntil = 0
-		u.lockedReason = ""
-		u.locked = false
+		a.lockedUntil = 0
+		a.lockedReason = ""
+		a.locked = false
 		return nil
 	}
 
-	u.lockedUntil = duration
-	u.lockedReason = LockReason(reason)
-	u.locked = true
+	a.lockedUntil = duration
+	a.lockedReason = LockReason(reason)
+	a.locked = true
 
 	return nil
 }
 
-func (u *Account) Unlock() error {
+func (a *Account) Unlock() error {
 
-	if !u.CanUnlock() {
+	if !a.CanUnlock() {
 		return errors.New("cannot unlock yet")
 	}
 
-	return u.Lock(0, "")
+	return a.Lock(0, "")
 }
 
-func (u *Account) LastUsernameEdit() int {
-	return u.lastUsernameEdit
+func (a *Account) LastUsernameEdit() int {
+	return a.lastUsernameEdit
 }
 
-func (u *Account) CanDisableMultiFactor() bool {
-	return !u.isPrivileged()
+func (a *Account) CanDisableMultiFactor() bool {
+	return !a.isPrivileged()
 }
 
-func (u *Account) isPrivileged() bool {
-	return u.IsStaff() || u.IsModerator()
+func (a *Account) isPrivileged() bool {
+	return a.IsStaff() || a.IsModerator()
 }
 
-func (u *Account) IsStaff() bool {
-	return u.hasRoles([]string{"staff"})
+func (a *Account) IsStaff() bool {
+	return a.hasRoles([]string{"staff"})
 }
 
-func (u *Account) IsArtist() bool {
-	return u.hasRoles([]string{"artist"})
+func (a *Account) IsArtist() bool {
+	return a.hasRoles([]string{"artist"})
 }
 
-func (u *Account) IsModerator() bool {
-	return (u.hasRoles([]string{"moderator"}) || u.IsStaff()) && !u.IsLocked()
+func (a *Account) IsModerator() bool {
+	return (a.hasRoles([]string{"moderator"}) || a.IsStaff()) && !a.IsLocked()
 }
 
-func (u *Account) hasRoles(roles []string) bool {
-	for _, role := range u.roles {
+func (a *Account) hasRoles(roles []string) bool {
+	for _, role := range a.roles {
 		for _, requiredRole := range roles {
 			if string(role) == requiredRole {
 				return true
@@ -219,34 +219,34 @@ func (u *Account) hasRoles(roles []string) bool {
 	return false
 }
 
-func (u *Account) EditUsername(username string) error {
+func (a *Account) EditUsername(username string) error {
 
 	if err := validateUsername(username); err != nil {
 		return err
 	}
 
-	u.username = username
-	u.lastUsernameEdit = int(time.Now().Unix())
+	a.username = username
+	a.lastUsernameEdit = int(time.Now().Unix())
 
 	return nil
 }
 
-func (u *Account) RolesAsString() []string {
+func (a *Account) RolesAsString() []string {
 	var n []string
 
-	for _, role := range u.roles {
+	for _, role := range a.roles {
 		n = append(n, string(role))
 	}
 
 	return n
 }
 
-func (u *Account) UpdateEmail(emails []*Email, email string) error {
+func (a *Account) UpdateEmail(emails []*Email, email string) error {
 	for _, current := range emails {
 		if current.Email() == email {
 			if current.IsConfirmed() {
 				current.MakePrimary()
-				u.email = email
+				a.email = email
 				return nil
 			}
 		}
@@ -265,7 +265,24 @@ func validateUsername(username string) error {
 	return nil
 }
 
+func (a *Account) CanMakeEmailPrimary(requester *principal.Principal) error {
+
+	if err := requester.BelongsToAccount(a.id); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (a *Account) CanUpdateUsername(requester *principal.Principal) error {
+	if err := requester.BelongsToAccount(a.id); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // convert account to a principal for global usage
 func ToPrincipal(acc *Account) *principal.Principal {
-	return principal.NewPrincipal(acc.id, acc.username, acc.email, acc.RolesAsString(), acc.verified, acc.locked)
+	return principal.NewPrincipal(acc.id, acc.RolesAsString(), acc.verified, acc.locked)
 }

@@ -27,7 +27,7 @@ func NewGetAccountEmailsHandler(ar account.Repository) AccountEmailsByAccountHan
 
 func (h AccountEmailsByAccountHandler) Handle(ctx context.Context, query AccountEmailsByAccount) ([]*account.Email, error) {
 
-	emails, err := h.ar.GetAccountEmails(ctx, query.Cursor, query.AccountId)
+	emails, err := h.ar.GetAccountEmails(ctx, query.Principal, query.Cursor, query.AccountId)
 
 	if err != nil {
 		return nil, err

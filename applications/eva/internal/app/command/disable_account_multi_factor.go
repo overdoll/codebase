@@ -29,7 +29,7 @@ func (h DisableAccountMultiFactorHandler) Handle(ctx context.Context, cmd Disabl
 		}
 
 		// if user toggled "off", delete TOTP settings
-		if err := h.mr.DeleteAccountMultiFactorTOTP(ctx, a.ID()); err != nil {
+		if err := h.mr.DeleteAccountMultiFactorTOTP(ctx, cmd.Principal, a.ID()); err != nil {
 			return err
 		}
 

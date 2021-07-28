@@ -190,15 +190,16 @@ func (Artist) IsEntity() {}
 type AuthenticationToken struct {
 	SameSession   bool                              `json:"sameSession"`
 	Verified      bool                              `json:"verified"`
-	Session       string                            `json:"session"`
+	Secure        bool                              `json:"secure"`
+	Device        string                            `json:"device"`
+	Location      string                            `json:"location"`
 	Email         string                            `json:"email"`
 	AccountStatus *AuthenticationTokenAccountStatus `json:"accountStatus"`
 }
 
 type AuthenticationTokenAccountStatus struct {
-	Registered    bool              `json:"registered"`
-	Authenticated bool              `json:"authenticated"`
-	MultiFactor   []MultiFactorType `json:"multiFactor"`
+	Registered  bool              `json:"registered"`
+	MultiFactor []MultiFactorType `json:"multiFactor"`
 }
 
 // Input for confirming the account email
@@ -290,6 +291,13 @@ type GrantAccountAccessWithAuthenticationTokenAndMultiFactorInput struct {
 type GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload struct {
 	// Validation options
 	Validation *GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation `json:"validation"`
+	// The account that granted access to
+	Account *Account `json:"account"`
+}
+
+type GrantAccountAccessWithAuthenticationTokenPayload struct {
+	// Validation options
+	Validation *GrantAccountAccessWithAuthenticationTokenValidation `json:"validation"`
 	// The account that granted access to
 	Account *Account `json:"account"`
 }
@@ -390,17 +398,15 @@ type UpdateAccountUsernameAndRetainPreviousPayload struct {
 	AccountUsername *AccountUsername `json:"accountUsername"`
 }
 
-// Input for verifying and attempting access grant to an account
-type VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput struct {
+// Input for verifying token account
+type VerifyAuthenticationTokenInput struct {
 	AuthenticationTokenID string `json:"authenticationTokenId"`
 }
 
 // Payload for verifying the authentication token
-type VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload struct {
+type VerifyAuthenticationTokenPayload struct {
 	// Validation options
-	Validation *VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidation `json:"validation"`
-	// The account that granted access to
-	Account *Account `json:"account"`
+	Validation *VerifyAuthenticationTokenValidation `json:"validation"`
 	// The authentication token
 	AuthenticationToken *AuthenticationToken `json:"authenticationToken"`
 }
@@ -695,6 +701,45 @@ func (e GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation) Marsh
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+type GrantAccountAccessWithAuthenticationTokenValidation string
+
+const (
+	GrantAccountAccessWithAuthenticationTokenValidationTokenExpired GrantAccountAccessWithAuthenticationTokenValidation = "TOKEN_EXPIRED"
+)
+
+var AllGrantAccountAccessWithAuthenticationTokenValidation = []GrantAccountAccessWithAuthenticationTokenValidation{
+	GrantAccountAccessWithAuthenticationTokenValidationTokenExpired,
+}
+
+func (e GrantAccountAccessWithAuthenticationTokenValidation) IsValid() bool {
+	switch e {
+	case GrantAccountAccessWithAuthenticationTokenValidationTokenExpired:
+		return true
+	}
+	return false
+}
+
+func (e GrantAccountAccessWithAuthenticationTokenValidation) String() string {
+	return string(e)
+}
+
+func (e *GrantAccountAccessWithAuthenticationTokenValidation) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = GrantAccountAccessWithAuthenticationTokenValidation(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid GrantAccountAccessWithAuthenticationTokenValidation", str)
+	}
+	return nil
+}
+
+func (e GrantAccountAccessWithAuthenticationTokenValidation) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 type MultiFactorType string
 
 const (
@@ -815,41 +860,41 @@ func (e UpdateAccountUsernameAndRetainPreviousValidation) MarshalGQL(w io.Writer
 }
 
 // Validation for granting account access
-type VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidation string
+type VerifyAuthenticationTokenValidation string
 
 const (
-	VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidationTokenExpired VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidation = "TOKEN_EXPIRED"
+	VerifyAuthenticationTokenValidationTokenExpired VerifyAuthenticationTokenValidation = "TOKEN_EXPIRED"
 )
 
-var AllVerifyAuthenticationTokenAndAttemptAccountAccessGrantValidation = []VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidation{
-	VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidationTokenExpired,
+var AllVerifyAuthenticationTokenValidation = []VerifyAuthenticationTokenValidation{
+	VerifyAuthenticationTokenValidationTokenExpired,
 }
 
-func (e VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidation) IsValid() bool {
+func (e VerifyAuthenticationTokenValidation) IsValid() bool {
 	switch e {
-	case VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidationTokenExpired:
+	case VerifyAuthenticationTokenValidationTokenExpired:
 		return true
 	}
 	return false
 }
 
-func (e VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidation) String() string {
+func (e VerifyAuthenticationTokenValidation) String() string {
 	return string(e)
 }
 
-func (e *VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidation) UnmarshalGQL(v interface{}) error {
+func (e *VerifyAuthenticationTokenValidation) UnmarshalGQL(v interface{}) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
 	}
 
-	*e = VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidation(str)
+	*e = VerifyAuthenticationTokenValidation(str)
 	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidation", str)
+		return fmt.Errorf("%s is not a valid VerifyAuthenticationTokenValidation", str)
 	}
 	return nil
 }
 
-func (e VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidation) MarshalGQL(w io.Writer) {
+func (e VerifyAuthenticationTokenValidation) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }

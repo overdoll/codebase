@@ -32,7 +32,7 @@ func (h EnrollAccountMultiFactorTOTPHandler) Handle(ctx context.Context, cmd Enr
 		return err
 	}
 
-	codes, err := h.mr.GetAccountRecoveryCodes(ctx, acc.ID())
+	codes, err := h.mr.GetAccountRecoveryCodes(ctx, cmd.Principal, cmd.Principal.AccountId())
 
 	if err != nil {
 		return err
@@ -46,7 +46,7 @@ func (h EnrollAccountMultiFactorTOTPHandler) Handle(ctx context.Context, cmd Enr
 	}
 
 	// create the TOTP
-	if err := h.mr.CreateAccountMultiFactorTOTP(ctx, acc.ID(), mfa); err != nil {
+	if err := h.mr.CreateAccountMultiFactorTOTP(ctx, cmd.Principal, cmd.Principal.AccountId(), mfa); err != nil {
 		return err
 	}
 

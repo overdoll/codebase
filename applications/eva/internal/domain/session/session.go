@@ -7,6 +7,7 @@ import (
 	"github.com/segmentio/ksuid"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
+	"overdoll/libraries/principal"
 )
 
 type Session struct {
@@ -66,6 +67,14 @@ func (s *Session) Passport() *passport.Passport {
 
 func (s *Session) Created() string {
 	return s.created
+}
+
+func (s *Session) CanView(requester *principal.Principal) error {
+	if err := requester.BelongsToAccount(s.passport.AccountID()); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (s *Session) MakeCurrent() {

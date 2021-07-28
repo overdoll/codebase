@@ -17,8 +17,10 @@ const (
 
 type authenticationToken struct {
 	Email    string `json:"email"`
-	Redeemed int    `json:"redeemed"`
-	Session  string `json:"session"`
+	Verified int    `json:"verified"`
+	Device   string `json:"device"`
+	Location string `json:"location"`
+	IP       string `json:"ip"`
 }
 
 type AuthenticationTokenRepository struct {
@@ -58,8 +60,10 @@ func (r AuthenticationTokenRepository) GetAuthenticationTokenById(ctx context.Co
 	return token.UnmarshalAuthenticationTokenFromDatabase(
 		id,
 		cookieItem.Email,
-		cookieItem.Redeemed == 1,
-		cookieItem.Session,
+		cookieItem.Verified == 1,
+		cookieItem.Device,
+		cookieItem.Location,
+		cookieItem.IP,
 	), nil
 }
 
@@ -81,8 +85,10 @@ func (r AuthenticationTokenRepository) CreateAuthenticationToken(ctx context.Con
 	// run a query to create the authentication token
 	authCookie := &authenticationToken{
 		Email:    instance.Email(),
-		Redeemed: 0,
-		Session:  instance.Session(),
+		Verified: 0,
+		Device:   instance.Device(),
+		Location: instance.Location(),
+		IP:       instance.IP(),
 	}
 
 	val, err := json.Marshal(authCookie)
@@ -132,9 +138,11 @@ func (r AuthenticationTokenRepository) UpdateAuthenticationToken(ctx context.Con
 
 	// get authentication cookie with this ID
 	authCookie := &authenticationToken{
-		Redeemed: redeemed,
+		Verified: redeemed,
 		Email:    instance.Email(),
-		Session:  instance.Session(),
+		Device:   instance.Device(),
+		Location: instance.Location(),
+		IP:       instance.IP(),
 	}
 
 	val, err := json.Marshal(authCookie)
