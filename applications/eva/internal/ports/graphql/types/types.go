@@ -173,6 +173,8 @@ type AddAccountEmailInput struct {
 
 // Email to add the account
 type AddAccountEmailPayload struct {
+	// Validation for adding an email
+	Validation *AddAccountEmailValidation `json:"validation"`
 	// The account email that was added to
 	AccountEmail *AccountEmail `json:"accountEmail"`
 }
@@ -207,6 +209,8 @@ type ConfirmAccountEmailInput struct {
 
 // Payload for confirming the account email
 type ConfirmAccountEmailPayload struct {
+	// Validation for confirming account email
+	Validation *ConfirmAccountEmailValidation `json:"validation"`
 	// The account email that was confirmed
 	AccountEmail *AccountEmail `json:"accountEmail"`
 }
@@ -226,6 +230,8 @@ type CreateAccountWithAuthenticationTokenInput struct {
 
 // Payload for creating an account
 type CreateAccountWithAuthenticationTokenPayload struct {
+	// Validation for creating an account
+	Validation *CreateAccountWithAuthenticationTokenValidation `json:"validation"`
 	// The account that was created
 	Account *Account `json:"account"`
 }
@@ -256,6 +262,8 @@ type EnrollAccountMultiFactorTotpInput struct {
 
 // Payload of the enrolled totp payload
 type EnrollAccountMultiFactorTotpPayload struct {
+	// Validation for enrolling TOTP
+	Validation *EnrollAccountMultiFactorTotpValidation `json:"validation"`
 	// TOTP that belongs to this account now
 	AccountMultiFactorTotpEnabled *bool `json:"accountMultiFactorTotpEnabled"`
 }
@@ -280,6 +288,8 @@ type GrantAccountAccessWithAuthenticationTokenAndMultiFactorInput struct {
 
 // Payload for granting access to an account using the authentication token and Recovery Code
 type GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload struct {
+	// Validation options
+	Validation *GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation `json:"validation"`
 	// The account that granted access to
 	Account *Account `json:"account"`
 }
@@ -313,6 +323,8 @@ type MultiFactorTotp struct {
 
 // Payload re-sending authentication email
 type ReissueAuthenticationTokenPayload struct {
+	// Validation for reissuing authentication token
+	Validation *ReissueAuthenticationTokenValidation `json:"validation"`
 	// The authentication token
 	AuthenticationToken *AuthenticationToken `json:"authenticationToken"`
 }
@@ -372,6 +384,8 @@ type UpdateAccountUsernameAndRetainPreviousInput struct {
 
 // Payload of the updated username
 type UpdateAccountUsernameAndRetainPreviousPayload struct {
+	// Validation for taking an account username
+	Validation *UpdateAccountUsernameAndRetainPreviousValidation `json:"validation"`
 	// The account username that was added
 	AccountUsername *AccountUsername `json:"accountUsername"`
 }
@@ -383,6 +397,8 @@ type VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput struct {
 
 // Payload for verifying the authentication token
 type VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload struct {
+	// Validation options
+	Validation *VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidation `json:"validation"`
 	// The account that granted access to
 	Account *Account `json:"account"`
 	// The authentication token
@@ -471,6 +487,214 @@ func (e AccountLockReason) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+// Validation message for adding account email
+type AddAccountEmailValidation string
+
+const (
+	AddAccountEmailValidationEmailTaken AddAccountEmailValidation = "EMAIL_TAKEN"
+)
+
+var AllAddAccountEmailValidation = []AddAccountEmailValidation{
+	AddAccountEmailValidationEmailTaken,
+}
+
+func (e AddAccountEmailValidation) IsValid() bool {
+	switch e {
+	case AddAccountEmailValidationEmailTaken:
+		return true
+	}
+	return false
+}
+
+func (e AddAccountEmailValidation) String() string {
+	return string(e)
+}
+
+func (e *AddAccountEmailValidation) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = AddAccountEmailValidation(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid AddAccountEmailValidation", str)
+	}
+	return nil
+}
+
+func (e AddAccountEmailValidation) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// Validation for confirming account email
+type ConfirmAccountEmailValidation string
+
+const (
+	ConfirmAccountEmailValidationTokenExpired ConfirmAccountEmailValidation = "TOKEN_EXPIRED"
+)
+
+var AllConfirmAccountEmailValidation = []ConfirmAccountEmailValidation{
+	ConfirmAccountEmailValidationTokenExpired,
+}
+
+func (e ConfirmAccountEmailValidation) IsValid() bool {
+	switch e {
+	case ConfirmAccountEmailValidationTokenExpired:
+		return true
+	}
+	return false
+}
+
+func (e ConfirmAccountEmailValidation) String() string {
+	return string(e)
+}
+
+func (e *ConfirmAccountEmailValidation) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = ConfirmAccountEmailValidation(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid ConfirmAccountEmailValidation", str)
+	}
+	return nil
+}
+
+func (e ConfirmAccountEmailValidation) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// Validation for creating an account with an authentication token
+type CreateAccountWithAuthenticationTokenValidation string
+
+const (
+	CreateAccountWithAuthenticationTokenValidationEmailTaken    CreateAccountWithAuthenticationTokenValidation = "EMAIL_TAKEN"
+	CreateAccountWithAuthenticationTokenValidationUsernameTaken CreateAccountWithAuthenticationTokenValidation = "USERNAME_TAKEN"
+	CreateAccountWithAuthenticationTokenValidationTokenExpired  CreateAccountWithAuthenticationTokenValidation = "TOKEN_EXPIRED"
+)
+
+var AllCreateAccountWithAuthenticationTokenValidation = []CreateAccountWithAuthenticationTokenValidation{
+	CreateAccountWithAuthenticationTokenValidationEmailTaken,
+	CreateAccountWithAuthenticationTokenValidationUsernameTaken,
+	CreateAccountWithAuthenticationTokenValidationTokenExpired,
+}
+
+func (e CreateAccountWithAuthenticationTokenValidation) IsValid() bool {
+	switch e {
+	case CreateAccountWithAuthenticationTokenValidationEmailTaken, CreateAccountWithAuthenticationTokenValidationUsernameTaken, CreateAccountWithAuthenticationTokenValidationTokenExpired:
+		return true
+	}
+	return false
+}
+
+func (e CreateAccountWithAuthenticationTokenValidation) String() string {
+	return string(e)
+}
+
+func (e *CreateAccountWithAuthenticationTokenValidation) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = CreateAccountWithAuthenticationTokenValidation(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid CreateAccountWithAuthenticationTokenValidation", str)
+	}
+	return nil
+}
+
+func (e CreateAccountWithAuthenticationTokenValidation) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// Validation for enrolling in TOTP
+type EnrollAccountMultiFactorTotpValidation string
+
+const (
+	EnrollAccountMultiFactorTotpValidationInvalidCode EnrollAccountMultiFactorTotpValidation = "INVALID_CODE"
+)
+
+var AllEnrollAccountMultiFactorTotpValidation = []EnrollAccountMultiFactorTotpValidation{
+	EnrollAccountMultiFactorTotpValidationInvalidCode,
+}
+
+func (e EnrollAccountMultiFactorTotpValidation) IsValid() bool {
+	switch e {
+	case EnrollAccountMultiFactorTotpValidationInvalidCode:
+		return true
+	}
+	return false
+}
+
+func (e EnrollAccountMultiFactorTotpValidation) String() string {
+	return string(e)
+}
+
+func (e *EnrollAccountMultiFactorTotpValidation) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = EnrollAccountMultiFactorTotpValidation(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid EnrollAccountMultiFactorTotpValidation", str)
+	}
+	return nil
+}
+
+func (e EnrollAccountMultiFactorTotpValidation) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// Validation for granting account access with multi factor
+type GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation string
+
+const (
+	GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidationTokenExpired        GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation = "TOKEN_EXPIRED"
+	GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidationInvalidCode         GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation = "INVALID_CODE"
+	GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidationInvalidRecoveryCode GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation = "INVALID_RECOVERY_CODE"
+)
+
+var AllGrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation = []GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation{
+	GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidationTokenExpired,
+	GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidationInvalidCode,
+	GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidationInvalidRecoveryCode,
+}
+
+func (e GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation) IsValid() bool {
+	switch e {
+	case GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidationTokenExpired, GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidationInvalidCode, GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidationInvalidRecoveryCode:
+		return true
+	}
+	return false
+}
+
+func (e GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation) String() string {
+	return string(e)
+}
+
+func (e *GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation", str)
+	}
+	return nil
+}
+
+func (e GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 type MultiFactorType string
 
 const (
@@ -507,5 +731,125 @@ func (e *MultiFactorType) UnmarshalGQL(v interface{}) error {
 }
 
 func (e MultiFactorType) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// Validation for reissuing authentication token
+type ReissueAuthenticationTokenValidation string
+
+const (
+	ReissueAuthenticationTokenValidationTokenExpired ReissueAuthenticationTokenValidation = "TOKEN_EXPIRED"
+)
+
+var AllReissueAuthenticationTokenValidation = []ReissueAuthenticationTokenValidation{
+	ReissueAuthenticationTokenValidationTokenExpired,
+}
+
+func (e ReissueAuthenticationTokenValidation) IsValid() bool {
+	switch e {
+	case ReissueAuthenticationTokenValidationTokenExpired:
+		return true
+	}
+	return false
+}
+
+func (e ReissueAuthenticationTokenValidation) String() string {
+	return string(e)
+}
+
+func (e *ReissueAuthenticationTokenValidation) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = ReissueAuthenticationTokenValidation(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid ReissueAuthenticationTokenValidation", str)
+	}
+	return nil
+}
+
+func (e ReissueAuthenticationTokenValidation) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// Validation message for updating account username
+type UpdateAccountUsernameAndRetainPreviousValidation string
+
+const (
+	UpdateAccountUsernameAndRetainPreviousValidationUsernameTaken UpdateAccountUsernameAndRetainPreviousValidation = "USERNAME_TAKEN"
+)
+
+var AllUpdateAccountUsernameAndRetainPreviousValidation = []UpdateAccountUsernameAndRetainPreviousValidation{
+	UpdateAccountUsernameAndRetainPreviousValidationUsernameTaken,
+}
+
+func (e UpdateAccountUsernameAndRetainPreviousValidation) IsValid() bool {
+	switch e {
+	case UpdateAccountUsernameAndRetainPreviousValidationUsernameTaken:
+		return true
+	}
+	return false
+}
+
+func (e UpdateAccountUsernameAndRetainPreviousValidation) String() string {
+	return string(e)
+}
+
+func (e *UpdateAccountUsernameAndRetainPreviousValidation) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = UpdateAccountUsernameAndRetainPreviousValidation(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid UpdateAccountUsernameAndRetainPreviousValidation", str)
+	}
+	return nil
+}
+
+func (e UpdateAccountUsernameAndRetainPreviousValidation) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// Validation for granting account access
+type VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidation string
+
+const (
+	VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidationTokenExpired VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidation = "TOKEN_EXPIRED"
+)
+
+var AllVerifyAuthenticationTokenAndAttemptAccountAccessGrantValidation = []VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidation{
+	VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidationTokenExpired,
+}
+
+func (e VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidation) IsValid() bool {
+	switch e {
+	case VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidationTokenExpired:
+		return true
+	}
+	return false
+}
+
+func (e VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidation) String() string {
+	return string(e)
+}
+
+func (e *VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidation) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidation(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidation", str)
+	}
+	return nil
+}
+
+func (e VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidation) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }

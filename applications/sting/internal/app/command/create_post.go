@@ -80,7 +80,13 @@ func (h CreatePostHandler) Handle(ctx context.Context, cmd CreatePost) (*post.Po
 		return nil, errors.Wrap(err, "failed to get next moderator")
 	}
 
-	pendingPost, err := post.NewPost(uuid.New().String(), moderatorId, artist, *cmd.CustomArtistUsername, contributor, cmd.Content, characters, categories)
+	customArtistUsername := ""
+
+	if cmd.CustomArtistUsername != nil {
+		customArtistUsername = *cmd.CustomArtistUsername
+	}
+
+	pendingPost, err := post.NewPost(uuid.New().String(), moderatorId, artist, customArtistUsername, contributor, cmd.Content, characters, categories)
 
 	if err != nil {
 		return nil, err

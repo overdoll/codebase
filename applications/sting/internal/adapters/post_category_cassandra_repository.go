@@ -58,11 +58,17 @@ func (r PostsCassandraRepository) GetCategoryById(ctx context.Context, categoryI
 
 	queryCategories := r.session.
 		Query(categoryTable.Get()).
-		Consistency(gocql.One)
+		Consistency(gocql.One).
+		BindStruct(category{Id: categoryId})
 
 	var cat category
 
 	if err := queryCategories.Get(&cat); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return nil, post.ErrCategoryNotFound
+		}
+
 		return nil, fmt.Errorf("failed to get category by id: %v", err)
 	}
 

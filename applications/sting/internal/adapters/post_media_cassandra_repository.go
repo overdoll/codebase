@@ -37,6 +37,11 @@ func (r PostsCassandraRepository) GetMediaById(ctx context.Context, mediaId stri
 	var med *media
 
 	if err := queryMedia.Get(&med); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return nil, post.ErrMediaNotFound
+		}
+
 		return nil, fmt.Errorf("failed to get media by id: %v", err)
 	}
 

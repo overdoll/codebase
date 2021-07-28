@@ -6,6 +6,7 @@ import (
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/parley/internal/app"
 	"overdoll/applications/parley/internal/app/query"
+	"overdoll/applications/parley/internal/domain/infraction"
 	"overdoll/applications/parley/internal/ports/graphql/types"
 	"overdoll/libraries/paging"
 )
@@ -68,6 +69,11 @@ func (r AccountResolver) Moderator(ctx context.Context, obj *types.Account) (*ty
 	})
 
 	if err != nil {
+
+		if err == infraction.ErrInvalidModerator {
+			return nil, nil
+		}
+
 		return nil, err
 	}
 

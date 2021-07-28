@@ -1,7 +1,13 @@
 package post
 
 import (
+	"errors"
+
 	"overdoll/libraries/paging"
+)
+
+var (
+	ErrArtistNotFound = errors.New("artist not found")
 )
 
 type Artist struct {

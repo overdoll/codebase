@@ -1,10 +1,15 @@
 package post
 
 import (
+	"errors"
 	"os"
 
 	"overdoll/libraries/graphql"
 	"overdoll/libraries/paging"
+)
+
+var (
+	ErrCategoryNotFound = errors.New("category not found")
 )
 
 type Category struct {

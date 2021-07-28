@@ -113,6 +113,11 @@ func (r PostsCassandraRepository) GetCharacterById(ctx context.Context, characte
 	var char *character
 
 	if err := queryCharacters.Get(&char); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return nil, post.ErrCharacterNotFound
+		}
+
 		return nil, fmt.Errorf("failed to get characters by id: %v", err)
 	}
 

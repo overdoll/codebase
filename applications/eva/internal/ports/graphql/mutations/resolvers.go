@@ -3,16 +3,15 @@ package mutations
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"net/http"
 	"strings"
 	"time"
 
 	"github.com/vektah/gqlparser/v2/gqlerror"
-	"go.uber.org/zap"
 	"overdoll/applications/eva/internal/app"
 	"overdoll/applications/eva/internal/app/command"
 	"overdoll/applications/eva/internal/app/query"
+	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/multi_factor"
 	"overdoll/applications/eva/internal/domain/token"
 	"overdoll/applications/eva/internal/ports/graphql/types"
@@ -31,12 +30,24 @@ func (r *MutationResolver) ReissueAuthenticationToken(ctx context.Context) (*typ
 	tk, err := cookies.ReadCookie(ctx, token.OTPKey)
 
 	if err != nil {
+
+		if err == cookies.ErrCookieNotFound {
+			expired := types.ReissueAuthenticationTokenValidationTokenExpired
+			return &types.ReissueAuthenticationTokenPayload{Validation: &expired}, nil
+		}
+
 		return nil, err
 	}
 
 	if err := r.App.Commands.ReissueAuthenticationToken.Handle(ctx, command.ReissueAuthenticationToken{
 		TokenId: tk.Value,
 	}); err != nil {
+
+		if err == token.ErrTokenNotFound {
+			expired := types.ReissueAuthenticationTokenValidationTokenExpired
+			return &types.ReissueAuthenticationTokenPayload{Validation: &expired}, nil
+		}
+
 		return nil, err
 	}
 
@@ -48,6 +59,10 @@ func (r *MutationResolver) RevokeAuthenticationToken(ctx context.Context) (*type
 	tk, err := cookies.ReadCookie(ctx, token.OTPKey)
 
 	if err != nil {
+		if err == cookies.ErrCookieNotFound {
+			return &types.RevokeAuthenticationTokenPayload{RevokedAuthenticationTokenID: relay.NewID("")}, err
+		}
+
 		return nil, err
 	}
 
@@ -82,11 +97,13 @@ func (r *MutationResolver) VerifyAuthenticationTokenAndAttemptAccountAccessGrant
 	})
 
 	if err != nil {
-		return nil, err
-	}
 
-	if ck == nil {
-		return &types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload{}, nil
+		if err == token.ErrTokenNotFound {
+			expired := types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidationTokenExpired
+			return &types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload{Validation: &expired}, nil
+		}
+
+		return nil, err
 	}
 
 	// cookie redeemed not in the same session, just redeem it
@@ -102,6 +119,12 @@ func (r *MutationResolver) VerifyAuthenticationTokenAndAttemptAccountAccessGrant
 	})
 
 	if err != nil {
+
+		if err == token.ErrTokenNotFound {
+			expired := types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidationTokenExpired
+			return &types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload{Validation: &expired}, nil
+		}
+
 		return nil, err
 	}
 
@@ -110,6 +133,12 @@ func (r *MutationResolver) VerifyAuthenticationTokenAndAttemptAccountAccessGrant
 		if err := r.App.Commands.ConsumeAuthenticationToken.Handle(ctx, command.ConsumeAuthenticationToken{
 			TokenId: input.AuthenticationTokenID,
 		}); err != nil {
+
+			if err == token.ErrTokenNotFound {
+				expired := types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidationTokenExpired
+				return &types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload{Validation: &expired}, nil
+			}
+
 			return nil, err
 		}
 
@@ -146,6 +175,12 @@ func (r *MutationResolver) ConfirmAccountEmail(ctx context.Context, input types.
 	})
 
 	if err != nil {
+
+		if err == account.ErrEmailCodeInvalid {
+			expired := types.ConfirmAccountEmailValidationTokenExpired
+			return &types.ConfirmAccountEmailPayload{Validation: &expired}, nil
+		}
+
 		return nil, err
 	}
 
@@ -166,8 +201,7 @@ func (r *MutationResolver) GrantAuthenticationToken(ctx context.Context, input t
 	sessionJson, err := json.Marshal(sessionData)
 
 	if err != nil {
-		zap.S().Errorf("failed to unmarshal: %s", err)
-		return nil, errors.New("error")
+		return nil, err
 	}
 
 	instance, err := r.App.Commands.GrantAuthenticationToken.Handle(ctx, command.GrantAuthenticationToken{
@@ -200,6 +234,11 @@ func (r *MutationResolver) CreateAccountWithAuthenticationToken(ctx context.Cont
 	currentCookie, err := cookies.ReadCookie(ctx, token.OTPKey)
 
 	if err != nil {
+		if err == cookies.ErrCookieNotFound {
+			expired := types.CreateAccountWithAuthenticationTokenValidationTokenExpired
+			return &types.CreateAccountWithAuthenticationTokenPayload{Validation: &expired}, nil
+		}
+
 		return nil, err
 	}
 
@@ -209,6 +248,21 @@ func (r *MutationResolver) CreateAccountWithAuthenticationToken(ctx context.Cont
 	})
 
 	if err != nil {
+		if err == token.ErrTokenNotFound {
+			expired := types.CreateAccountWithAuthenticationTokenValidationTokenExpired
+			return &types.CreateAccountWithAuthenticationTokenPayload{Validation: &expired}, nil
+		}
+
+		if err == account.ErrUsernameNotUnique {
+			expired := types.CreateAccountWithAuthenticationTokenValidationUsernameTaken
+			return &types.CreateAccountWithAuthenticationTokenPayload{Validation: &expired}, nil
+		}
+
+		if err == account.ErrEmailNotUnique {
+			expired := types.CreateAccountWithAuthenticationTokenValidationEmailTaken
+			return &types.CreateAccountWithAuthenticationTokenPayload{Validation: &expired}, nil
+		}
+
 		return nil, err
 	}
 
@@ -248,6 +302,11 @@ func (r *MutationResolver) GrantAccountAccessWithAuthenticationTokenAndMultiFact
 	currentCookie, err := cookies.ReadCookie(ctx, token.OTPKey)
 
 	if err != nil {
+		if err == cookies.ErrCookieNotFound {
+			expired := types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidationTokenExpired
+			return &types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload{Validation: &expired}, nil
+		}
+
 		return nil, err
 	}
 
@@ -274,6 +333,23 @@ func (r *MutationResolver) GrantAccountAccessWithAuthenticationTokenAndMultiFact
 	})
 
 	if err != nil {
+
+		// different errors that can occur due to validation
+		if err == token.ErrTokenNotFound {
+			expired := types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidationTokenExpired
+			return &types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload{Validation: &expired}, nil
+		}
+
+		if err == multi_factor.ErrRecoveryCodeInvalid {
+			expired := types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidationInvalidRecoveryCode
+			return &types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload{Validation: &expired}, nil
+		}
+
+		if err == multi_factor.ErrTOTPCodeInvalid {
+			expired := types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidationInvalidCode
+			return &types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload{Validation: &expired}, nil
+		}
+
 		return nil, err
 	}
 
@@ -313,8 +389,7 @@ func (r *MutationResolver) GenerateAccountMultiFactorTotp(ctx context.Context) (
 	img, err := totp.Image()
 
 	if err != nil {
-		zap.S().Errorf("failed to generate image: %s", err)
-		return nil, errors.New("image error")
+		return nil, err
 	}
 
 	return &types.GenerateAccountMultiFactorTotpPayload{
@@ -340,6 +415,12 @@ func (r *MutationResolver) EnrollAccountMultiFactorTotp(ctx context.Context, inp
 	})
 
 	if err != nil {
+
+		if err == multi_factor.ErrTOTPCodeInvalid {
+			expired := types.EnrollAccountMultiFactorTotpValidationInvalidCode
+			return &types.EnrollAccountMultiFactorTotpPayload{Validation: &expired}, nil
+		}
+
 		return nil, err
 	}
 
@@ -371,6 +452,12 @@ func (r *MutationResolver) AddAccountEmail(ctx context.Context, input types.AddA
 	})
 
 	if err != nil {
+
+		if err == account.ErrEmailNotUnique {
+			expired := types.AddAccountEmailValidationEmailTaken
+			return &types.AddAccountEmailPayload{Validation: &expired}, nil
+		}
+
 		return nil, err
 	}
 
@@ -397,6 +484,12 @@ func (r *MutationResolver) UpdateAccountUsernameAndRetainPrevious(ctx context.Co
 	})
 
 	if err != nil {
+
+		if err == account.ErrUsernameNotUnique {
+			expired := types.UpdateAccountUsernameAndRetainPreviousValidationUsernameTaken
+			return &types.UpdateAccountUsernameAndRetainPreviousPayload{Validation: &expired}, nil
+		}
+
 		return nil, err
 	}
 

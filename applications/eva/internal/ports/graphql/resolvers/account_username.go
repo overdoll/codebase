@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"overdoll/applications/eva/internal/app"
+	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/ports/graphql/types"
 )
 
@@ -16,6 +17,11 @@ func (r AccountUsernameResolver) Account(ctx context.Context, obj *types.Account
 	acc, err := r.App.Queries.AccountByUsername.Handle(ctx, obj.ID.GetID())
 
 	if err != nil {
+
+		if err == account.ErrAccountNotFound {
+			return nil, nil
+		}
+
 		return nil, err
 	}
 

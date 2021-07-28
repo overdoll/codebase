@@ -146,6 +146,7 @@ type ComplexityRoot struct {
 
 	AddAccountEmailPayload struct {
 		AccountEmail func(childComplexity int) int
+		Validation   func(childComplexity int) int
 	}
 
 	Artist struct {
@@ -169,6 +170,7 @@ type ComplexityRoot struct {
 
 	ConfirmAccountEmailPayload struct {
 		AccountEmail func(childComplexity int) int
+		Validation   func(childComplexity int) int
 	}
 
 	Contributor struct {
@@ -177,7 +179,8 @@ type ComplexityRoot struct {
 	}
 
 	CreateAccountWithAuthenticationTokenPayload struct {
-		Account func(childComplexity int) int
+		Account    func(childComplexity int) int
+		Validation func(childComplexity int) int
 	}
 
 	DeleteAccountEmailPayload struct {
@@ -190,6 +193,7 @@ type ComplexityRoot struct {
 
 	EnrollAccountMultiFactorTotpPayload struct {
 		AccountMultiFactorTotpEnabled func(childComplexity int) int
+		Validation                    func(childComplexity int) int
 	}
 
 	Entity struct {
@@ -211,7 +215,8 @@ type ComplexityRoot struct {
 	}
 
 	GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload struct {
-		Account func(childComplexity int) int
+		Account    func(childComplexity int) int
+		Validation func(childComplexity int) int
 	}
 
 	GrantAuthenticationTokenPayload struct {
@@ -267,6 +272,7 @@ type ComplexityRoot struct {
 
 	ReissueAuthenticationTokenPayload struct {
 		AuthenticationToken func(childComplexity int) int
+		Validation          func(childComplexity int) int
 	}
 
 	RevokeAccountAccessPayload struct {
@@ -291,11 +297,13 @@ type ComplexityRoot struct {
 
 	UpdateAccountUsernameAndRetainPreviousPayload struct {
 		AccountUsername func(childComplexity int) int
+		Validation      func(childComplexity int) int
 	}
 
 	VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload struct {
 		Account             func(childComplexity int) int
 		AuthenticationToken func(childComplexity int) int
+		Validation          func(childComplexity int) int
 	}
 
 	Service struct {
@@ -731,6 +739,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AddAccountEmailPayload.AccountEmail(childComplexity), true
 
+	case "AddAccountEmailPayload.validation":
+		if e.complexity.AddAccountEmailPayload.Validation == nil {
+			break
+		}
+
+		return e.complexity.AddAccountEmailPayload.Validation(childComplexity), true
+
 	case "Artist.account":
 		if e.complexity.Artist.Account == nil {
 			break
@@ -808,6 +823,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ConfirmAccountEmailPayload.AccountEmail(childComplexity), true
 
+	case "ConfirmAccountEmailPayload.validation":
+		if e.complexity.ConfirmAccountEmailPayload.Validation == nil {
+			break
+		}
+
+		return e.complexity.ConfirmAccountEmailPayload.Validation(childComplexity), true
+
 	case "Contributor.account":
 		if e.complexity.Contributor.Account == nil {
 			break
@@ -829,6 +851,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CreateAccountWithAuthenticationTokenPayload.Account(childComplexity), true
 
+	case "CreateAccountWithAuthenticationTokenPayload.validation":
+		if e.complexity.CreateAccountWithAuthenticationTokenPayload.Validation == nil {
+			break
+		}
+
+		return e.complexity.CreateAccountWithAuthenticationTokenPayload.Validation(childComplexity), true
+
 	case "DeleteAccountEmailPayload.accountEmailId":
 		if e.complexity.DeleteAccountEmailPayload.AccountEmailID == nil {
 			break
@@ -849,6 +878,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.EnrollAccountMultiFactorTotpPayload.AccountMultiFactorTotpEnabled(childComplexity), true
+
+	case "EnrollAccountMultiFactorTotpPayload.validation":
+		if e.complexity.EnrollAccountMultiFactorTotpPayload.Validation == nil {
+			break
+		}
+
+		return e.complexity.EnrollAccountMultiFactorTotpPayload.Validation(childComplexity), true
 
 	case "Entity.findAccountByID":
 		if e.complexity.Entity.FindAccountByID == nil {
@@ -954,6 +990,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload.Account(childComplexity), true
+
+	case "GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload.validation":
+		if e.complexity.GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload.Validation == nil {
+			break
+		}
+
+		return e.complexity.GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload.Validation(childComplexity), true
 
 	case "GrantAuthenticationTokenPayload.authenticationToken":
 		if e.complexity.GrantAuthenticationTokenPayload.AuthenticationToken == nil {
@@ -1263,6 +1306,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ReissueAuthenticationTokenPayload.AuthenticationToken(childComplexity), true
 
+	case "ReissueAuthenticationTokenPayload.validation":
+		if e.complexity.ReissueAuthenticationTokenPayload.Validation == nil {
+			break
+		}
+
+		return e.complexity.ReissueAuthenticationTokenPayload.Validation(childComplexity), true
+
 	case "RevokeAccountAccessPayload.revokedAccountId":
 		if e.complexity.RevokeAccountAccessPayload.RevokedAccountID == nil {
 			break
@@ -1305,6 +1355,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.UpdateAccountUsernameAndRetainPreviousPayload.AccountUsername(childComplexity), true
 
+	case "UpdateAccountUsernameAndRetainPreviousPayload.validation":
+		if e.complexity.UpdateAccountUsernameAndRetainPreviousPayload.Validation == nil {
+			break
+		}
+
+		return e.complexity.UpdateAccountUsernameAndRetainPreviousPayload.Validation(childComplexity), true
+
 	case "VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload.account":
 		if e.complexity.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload.Account == nil {
 			break
@@ -1318,6 +1375,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload.AuthenticationToken(childComplexity), true
+
+	case "VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload.validation":
+		if e.complexity.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload.Validation == nil {
+			break
+		}
+
+		return e.complexity.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload.Validation(childComplexity), true
 
 	case "_Service.sdl":
 		if e.complexity.Service.SDL == nil {
@@ -1771,8 +1835,16 @@ input ConfirmAccountEmailInput {
   id: String!
 }
 
+"""Validation message for adding account email"""
+enum AddAccountEmailValidation {
+  EMAIL_TAKEN
+}
+
 """Email to add the account"""
 type AddAccountEmailPayload {
+  """Validation for adding an email"""
+  validation: AddAccountEmailValidation
+
   """The account email that was added to"""
   accountEmail: AccountEmail
 }
@@ -1783,8 +1855,16 @@ type DeleteAccountEmailPayload {
   accountEmailId: ID!
 }
 
+"""Validation message for updating account username"""
+enum UpdateAccountUsernameAndRetainPreviousValidation {
+  USERNAME_TAKEN
+}
+
 """Payload of the updated username"""
 type UpdateAccountUsernameAndRetainPreviousPayload {
+  """Validation for taking an account username"""
+  validation: UpdateAccountUsernameAndRetainPreviousValidation
+
   """The account username that was added"""
   accountUsername: AccountUsername
 }
@@ -1813,8 +1893,16 @@ type GenerateAccountMultiFactorTotpPayload {
   multiFactorTotp: MultiFactorTotp
 }
 
+"""Validation for enrolling in TOTP"""
+enum EnrollAccountMultiFactorTotpValidation {
+  INVALID_CODE
+}
+
 """Payload of the enrolled totp payload"""
 type EnrollAccountMultiFactorTotpPayload {
+  """Validation for enrolling TOTP"""
+  validation: EnrollAccountMultiFactorTotpValidation
+
   """TOTP that belongs to this account now"""
   accountMultiFactorTotpEnabled: Boolean
 }
@@ -1825,8 +1913,16 @@ type DisableAccountMultiFactorPayload {
   accountMultiFactorTotpEnabled: Boolean
 }
 
+"""Validation for confirming account email"""
+enum ConfirmAccountEmailValidation {
+  TOKEN_EXPIRED
+}
+
 """Payload for confirming the account email"""
 type ConfirmAccountEmailPayload {
+  """Validation for confirming account email"""
+  validation: ConfirmAccountEmailValidation
+
   """The account email that was confirmed"""
   accountEmail: AccountEmail
 }
@@ -1938,8 +2034,19 @@ type GrantAuthenticationTokenPayload {
   authenticationToken: AuthenticationToken
 }
 
+
+"""Validation for creating an account with an authentication token"""
+enum CreateAccountWithAuthenticationTokenValidation {
+  EMAIL_TAKEN
+  USERNAME_TAKEN
+  TOKEN_EXPIRED
+}
+
 """Payload for creating an account"""
 type CreateAccountWithAuthenticationTokenPayload {
+  """Validation for creating an account"""
+  validation: CreateAccountWithAuthenticationTokenValidation
+
   """The account that was created"""
   account: Account
 }
@@ -1956,20 +2063,46 @@ type RevokeAuthenticationTokenPayload {
   revokedAuthenticationTokenId: ID!
 }
 
+"""Validation for reissuing authentication token"""
+enum ReissueAuthenticationTokenValidation {
+  TOKEN_EXPIRED
+}
+
 """Payload re-sending authentication email"""
 type ReissueAuthenticationTokenPayload {
+  """Validation for reissuing authentication token"""
+  validation: ReissueAuthenticationTokenValidation
+
   """The authentication token"""
   authenticationToken: AuthenticationToken
 }
 
+"""Validation for granting account access with multi factor"""
+enum GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation {
+  TOKEN_EXPIRED
+  INVALID_CODE
+  INVALID_RECOVERY_CODE
+}
+
 """Payload for granting access to an account using the authentication token and Recovery Code"""
 type GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload {
+  """Validation options"""
+  validation: GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation
+
   """The account that granted access to"""
   account: Account
 }
 
+"""Validation for granting account access"""
+enum VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidation {
+  TOKEN_EXPIRED
+}
+
 """Payload for verifying the authentication token"""
 type VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload {
+  """Validation options"""
+  validation: VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidation
+
   """The account that granted access to"""
   account: Account
 
@@ -4368,6 +4501,38 @@ func (ec *executionContext) _AccountUsernameEdge_node(ctx context.Context, field
 	return ec.marshalNAccountUsername2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountUsername(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _AddAccountEmailPayload_validation(ctx context.Context, field graphql.CollectedField, obj *types.AddAccountEmailPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AddAccountEmailPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Validation, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.AddAccountEmailValidation)
+	fc.Result = res
+	return ec.marshalOAddAccountEmailValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAddAccountEmailValidation(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _AddAccountEmailPayload_accountEmail(ctx context.Context, field graphql.CollectedField, obj *types.AddAccountEmailPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -4744,6 +4909,38 @@ func (ec *executionContext) _AuthenticationTokenAccountStatus_multiFactor(ctx co
 	return ec.marshalOMultiFactorType2ᚕoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐMultiFactorTypeᚄ(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _ConfirmAccountEmailPayload_validation(ctx context.Context, field graphql.CollectedField, obj *types.ConfirmAccountEmailPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ConfirmAccountEmailPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Validation, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.ConfirmAccountEmailValidation)
+	fc.Result = res
+	return ec.marshalOConfirmAccountEmailValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐConfirmAccountEmailValidation(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _ConfirmAccountEmailPayload_accountEmail(ctx context.Context, field graphql.CollectedField, obj *types.ConfirmAccountEmailPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -4846,6 +5043,38 @@ func (ec *executionContext) _Contributor_account(ctx context.Context, field grap
 	return ec.marshalNAccount2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _CreateAccountWithAuthenticationTokenPayload_validation(ctx context.Context, field graphql.CollectedField, obj *types.CreateAccountWithAuthenticationTokenPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "CreateAccountWithAuthenticationTokenPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Validation, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.CreateAccountWithAuthenticationTokenValidation)
+	fc.Result = res
+	return ec.marshalOCreateAccountWithAuthenticationTokenValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateAccountWithAuthenticationTokenValidation(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _CreateAccountWithAuthenticationTokenPayload_account(ctx context.Context, field graphql.CollectedField, obj *types.CreateAccountWithAuthenticationTokenPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -4943,6 +5172,38 @@ func (ec *executionContext) _DisableAccountMultiFactorPayload_accountMultiFactor
 	res := resTmp.(*bool)
 	fc.Result = res
 	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _EnrollAccountMultiFactorTotpPayload_validation(ctx context.Context, field graphql.CollectedField, obj *types.EnrollAccountMultiFactorTotpPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "EnrollAccountMultiFactorTotpPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Validation, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.EnrollAccountMultiFactorTotpValidation)
+	fc.Result = res
+	return ec.marshalOEnrollAccountMultiFactorTotpValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐEnrollAccountMultiFactorTotpValidation(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _EnrollAccountMultiFactorTotpPayload_accountMultiFactorTotpEnabled(ctx context.Context, field graphql.CollectedField, obj *types.EnrollAccountMultiFactorTotpPayload) (ret graphql.Marshaler) {
@@ -5336,6 +5597,38 @@ func (ec *executionContext) _GenerateAccountMultiFactorTotpPayload_multiFactorTo
 	res := resTmp.(*types.MultiFactorTotp)
 	fc.Result = res
 	return ec.marshalOMultiFactorTotp2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐMultiFactorTotp(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload_validation(ctx context.Context, field graphql.CollectedField, obj *types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Validation, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation)
+	fc.Result = res
+	return ec.marshalOGrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐGrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload_account(ctx context.Context, field graphql.CollectedField, obj *types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload) (ret graphql.Marshaler) {
@@ -6622,6 +6915,38 @@ func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.C
 	return ec.marshalO__Schema2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐSchema(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _ReissueAuthenticationTokenPayload_validation(ctx context.Context, field graphql.CollectedField, obj *types.ReissueAuthenticationTokenPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ReissueAuthenticationTokenPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Validation, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.ReissueAuthenticationTokenValidation)
+	fc.Result = res
+	return ec.marshalOReissueAuthenticationTokenValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐReissueAuthenticationTokenValidation(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _ReissueAuthenticationTokenPayload_authenticationToken(ctx context.Context, field graphql.CollectedField, obj *types.ReissueAuthenticationTokenPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -6823,6 +7148,38 @@ func (ec *executionContext) _UpdateAccountEmailStatusToPrimaryPayload_accountEma
 	return ec.marshalOAccountEmail2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountEmail(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _UpdateAccountUsernameAndRetainPreviousPayload_validation(ctx context.Context, field graphql.CollectedField, obj *types.UpdateAccountUsernameAndRetainPreviousPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdateAccountUsernameAndRetainPreviousPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Validation, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdateAccountUsernameAndRetainPreviousValidation)
+	fc.Result = res
+	return ec.marshalOUpdateAccountUsernameAndRetainPreviousValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAccountUsernameAndRetainPreviousValidation(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _UpdateAccountUsernameAndRetainPreviousPayload_accountUsername(ctx context.Context, field graphql.CollectedField, obj *types.UpdateAccountUsernameAndRetainPreviousPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -6853,6 +7210,38 @@ func (ec *executionContext) _UpdateAccountUsernameAndRetainPreviousPayload_accou
 	res := resTmp.(*types.AccountUsername)
 	fc.Result = res
 	return ec.marshalOAccountUsername2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountUsername(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload_validation(ctx context.Context, field graphql.CollectedField, obj *types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Validation, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidation)
+	fc.Result = res
+	return ec.marshalOVerifyAuthenticationTokenAndAttemptAccountAccessGrantValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐVerifyAuthenticationTokenAndAttemptAccountAccessGrantValidation(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload_account(ctx context.Context, field graphql.CollectedField, obj *types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload) (ret graphql.Marshaler) {
@@ -9039,6 +9428,8 @@ func (ec *executionContext) _AddAccountEmailPayload(ctx context.Context, sel ast
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("AddAccountEmailPayload")
+		case "validation":
+			out.Values[i] = ec._AddAccountEmailPayload_validation(ctx, field, obj)
 		case "accountEmail":
 			out.Values[i] = ec._AddAccountEmailPayload_accountEmail(ctx, field, obj)
 		default:
@@ -9173,6 +9564,8 @@ func (ec *executionContext) _ConfirmAccountEmailPayload(ctx context.Context, sel
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("ConfirmAccountEmailPayload")
+		case "validation":
+			out.Values[i] = ec._ConfirmAccountEmailPayload_validation(ctx, field, obj)
 		case "accountEmail":
 			out.Values[i] = ec._ConfirmAccountEmailPayload_accountEmail(ctx, field, obj)
 		default:
@@ -9229,6 +9622,8 @@ func (ec *executionContext) _CreateAccountWithAuthenticationTokenPayload(ctx con
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("CreateAccountWithAuthenticationTokenPayload")
+		case "validation":
+			out.Values[i] = ec._CreateAccountWithAuthenticationTokenPayload_validation(ctx, field, obj)
 		case "account":
 			out.Values[i] = ec._CreateAccountWithAuthenticationTokenPayload_account(ctx, field, obj)
 		default:
@@ -9304,6 +9699,8 @@ func (ec *executionContext) _EnrollAccountMultiFactorTotpPayload(ctx context.Con
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("EnrollAccountMultiFactorTotpPayload")
+		case "validation":
+			out.Values[i] = ec._EnrollAccountMultiFactorTotpPayload_validation(ctx, field, obj)
 		case "accountMultiFactorTotpEnabled":
 			out.Values[i] = ec._EnrollAccountMultiFactorTotpPayload_accountMultiFactorTotpEnabled(ctx, field, obj)
 		default:
@@ -9503,6 +9900,8 @@ func (ec *executionContext) _GrantAccountAccessWithAuthenticationTokenAndMultiFa
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload")
+		case "validation":
+			out.Values[i] = ec._GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload_validation(ctx, field, obj)
 		case "account":
 			out.Values[i] = ec._GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload_account(ctx, field, obj)
 		default:
@@ -9818,6 +10217,8 @@ func (ec *executionContext) _ReissueAuthenticationTokenPayload(ctx context.Conte
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("ReissueAuthenticationTokenPayload")
+		case "validation":
+			out.Values[i] = ec._ReissueAuthenticationTokenPayload_validation(ctx, field, obj)
 		case "authenticationToken":
 			out.Values[i] = ec._ReissueAuthenticationTokenPayload_authenticationToken(ctx, field, obj)
 		default:
@@ -9971,6 +10372,8 @@ func (ec *executionContext) _UpdateAccountUsernameAndRetainPreviousPayload(ctx c
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("UpdateAccountUsernameAndRetainPreviousPayload")
+		case "validation":
+			out.Values[i] = ec._UpdateAccountUsernameAndRetainPreviousPayload_validation(ctx, field, obj)
 		case "accountUsername":
 			out.Values[i] = ec._UpdateAccountUsernameAndRetainPreviousPayload_accountUsername(ctx, field, obj)
 		default:
@@ -9995,6 +10398,8 @@ func (ec *executionContext) _VerifyAuthenticationTokenAndAttemptAccountAccessGra
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload")
+		case "validation":
+			out.Values[i] = ec._VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload_validation(ctx, field, obj)
 		case "account":
 			out.Values[i] = ec._VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload_account(ctx, field, obj)
 		case "authenticationToken":
@@ -11213,6 +11618,22 @@ func (ec *executionContext) marshalOAddAccountEmailPayload2ᚖoverdollᚋapplica
 	return ec._AddAccountEmailPayload(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalOAddAccountEmailValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAddAccountEmailValidation(ctx context.Context, v interface{}) (*types.AddAccountEmailValidation, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(types.AddAccountEmailValidation)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOAddAccountEmailValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAddAccountEmailValidation(ctx context.Context, sel ast.SelectionSet, v *types.AddAccountEmailValidation) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
+}
+
 func (ec *executionContext) marshalOAuthenticationToken2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAuthenticationToken(ctx context.Context, sel ast.SelectionSet, v *types.AuthenticationToken) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -11258,11 +11679,43 @@ func (ec *executionContext) marshalOConfirmAccountEmailPayload2ᚖoverdollᚋapp
 	return ec._ConfirmAccountEmailPayload(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalOConfirmAccountEmailValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐConfirmAccountEmailValidation(ctx context.Context, v interface{}) (*types.ConfirmAccountEmailValidation, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(types.ConfirmAccountEmailValidation)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOConfirmAccountEmailValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐConfirmAccountEmailValidation(ctx context.Context, sel ast.SelectionSet, v *types.ConfirmAccountEmailValidation) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
+}
+
 func (ec *executionContext) marshalOCreateAccountWithAuthenticationTokenPayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateAccountWithAuthenticationTokenPayload(ctx context.Context, sel ast.SelectionSet, v *types.CreateAccountWithAuthenticationTokenPayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._CreateAccountWithAuthenticationTokenPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOCreateAccountWithAuthenticationTokenValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateAccountWithAuthenticationTokenValidation(ctx context.Context, v interface{}) (*types.CreateAccountWithAuthenticationTokenValidation, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(types.CreateAccountWithAuthenticationTokenValidation)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOCreateAccountWithAuthenticationTokenValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateAccountWithAuthenticationTokenValidation(ctx context.Context, sel ast.SelectionSet, v *types.CreateAccountWithAuthenticationTokenValidation) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
 }
 
 func (ec *executionContext) marshalODeleteAccountEmailPayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐDeleteAccountEmailPayload(ctx context.Context, sel ast.SelectionSet, v *types.DeleteAccountEmailPayload) graphql.Marshaler {
@@ -11286,6 +11739,22 @@ func (ec *executionContext) marshalOEnrollAccountMultiFactorTotpPayload2ᚖoverd
 	return ec._EnrollAccountMultiFactorTotpPayload(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalOEnrollAccountMultiFactorTotpValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐEnrollAccountMultiFactorTotpValidation(ctx context.Context, v interface{}) (*types.EnrollAccountMultiFactorTotpValidation, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(types.EnrollAccountMultiFactorTotpValidation)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOEnrollAccountMultiFactorTotpValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐEnrollAccountMultiFactorTotpValidation(ctx context.Context, sel ast.SelectionSet, v *types.EnrollAccountMultiFactorTotpValidation) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
+}
+
 func (ec *executionContext) marshalOGenerateAccountMultiFactorRecoveryCodesPayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐGenerateAccountMultiFactorRecoveryCodesPayload(ctx context.Context, sel ast.SelectionSet, v *types.GenerateAccountMultiFactorRecoveryCodesPayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -11305,6 +11774,22 @@ func (ec *executionContext) marshalOGrantAccountAccessWithAuthenticationTokenAnd
 		return graphql.Null
 	}
 	return ec._GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOGrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐGrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation(ctx context.Context, v interface{}) (*types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOGrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐGrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation(ctx context.Context, sel ast.SelectionSet, v *types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
 }
 
 func (ec *executionContext) marshalOGrantAuthenticationTokenPayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐGrantAuthenticationTokenPayload(ctx context.Context, sel ast.SelectionSet, v *types.GrantAuthenticationTokenPayload) graphql.Marshaler {
@@ -11407,6 +11892,22 @@ func (ec *executionContext) marshalOReissueAuthenticationTokenPayload2ᚖoverdol
 	return ec._ReissueAuthenticationTokenPayload(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalOReissueAuthenticationTokenValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐReissueAuthenticationTokenValidation(ctx context.Context, v interface{}) (*types.ReissueAuthenticationTokenValidation, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(types.ReissueAuthenticationTokenValidation)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOReissueAuthenticationTokenValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐReissueAuthenticationTokenValidation(ctx context.Context, sel ast.SelectionSet, v *types.ReissueAuthenticationTokenValidation) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
+}
+
 func (ec *executionContext) marshalORevokeAccountAccessPayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐRevokeAccountAccessPayload(ctx context.Context, sel ast.SelectionSet, v *types.RevokeAccountAccessPayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -11473,11 +11974,43 @@ func (ec *executionContext) marshalOUpdateAccountUsernameAndRetainPreviousPayloa
 	return ec._UpdateAccountUsernameAndRetainPreviousPayload(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalOUpdateAccountUsernameAndRetainPreviousValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAccountUsernameAndRetainPreviousValidation(ctx context.Context, v interface{}) (*types.UpdateAccountUsernameAndRetainPreviousValidation, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(types.UpdateAccountUsernameAndRetainPreviousValidation)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOUpdateAccountUsernameAndRetainPreviousValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAccountUsernameAndRetainPreviousValidation(ctx context.Context, sel ast.SelectionSet, v *types.UpdateAccountUsernameAndRetainPreviousValidation) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
+}
+
 func (ec *executionContext) marshalOVerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐVerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload(ctx context.Context, sel ast.SelectionSet, v *types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOVerifyAuthenticationTokenAndAttemptAccountAccessGrantValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐVerifyAuthenticationTokenAndAttemptAccountAccessGrantValidation(ctx context.Context, v interface{}) (*types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidation, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidation)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOVerifyAuthenticationTokenAndAttemptAccountAccessGrantValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐVerifyAuthenticationTokenAndAttemptAccountAccessGrantValidation(ctx context.Context, sel ast.SelectionSet, v *types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidation) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
 }
 
 func (ec *executionContext) marshalO_Entity2githubᚗcomᚋ99designsᚋgqlgenᚋpluginᚋfederationᚋfedruntimeᚐEntity(ctx context.Context, sel ast.SelectionSet, v fedruntime.Entity) graphql.Marshaler {

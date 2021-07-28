@@ -7,6 +7,7 @@ import (
 	"overdoll/applications/eva/internal/app"
 	"overdoll/applications/eva/internal/app/command"
 	"overdoll/applications/eva/internal/app/query"
+	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/token"
 	"overdoll/applications/eva/internal/ports/graphql/types"
 	"overdoll/libraries/cookies"
@@ -56,6 +57,11 @@ func (r *QueryResolver) Account(ctx context.Context, username string) (*types.Ac
 	acc, err := r.App.Queries.AccountByUsername.Handle(ctx, username)
 
 	if err != nil {
+
+		if err == account.ErrAccountNotFound {
+			return nil, nil
+		}
+
 		return nil, err
 	}
 
@@ -101,6 +107,11 @@ func (r *QueryResolver) Viewer(ctx context.Context) (*types.Account, error) {
 		acc, err := r.App.Queries.AccountById.Handle(ctx, pass.AccountID())
 
 		if err != nil {
+
+			if err == account.ErrAccountNotFound {
+				return nil, nil
+			}
+
 			return nil, err
 		}
 

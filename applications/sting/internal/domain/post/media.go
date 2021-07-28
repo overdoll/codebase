@@ -1,10 +1,15 @@
 package post
 
 import (
+	"errors"
 	"os"
 
 	"overdoll/libraries/graphql"
 	"overdoll/libraries/paging"
+)
+
+var (
+	ErrMediaNotFound = errors.New("media not found")
 )
 
 type Media struct {

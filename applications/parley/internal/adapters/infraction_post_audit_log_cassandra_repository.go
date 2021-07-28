@@ -200,6 +200,11 @@ func (r InfractionCassandraRepository) GetPostAuditLog(ctx context.Context, logI
 	var postAuditLog postAuditLog
 
 	if err := postAuditLogQuery.Get(&postAuditLog); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return nil, infraction.ErrPostRejectionReasonNotFound
+		}
+
 		return nil, fmt.Errorf("failed to get audit log for post: %v", err)
 	}
 
@@ -211,6 +216,11 @@ func (r InfractionCassandraRepository) GetPostAuditLog(ctx context.Context, logI
 	var pendingPostAuditLogByModerator postAuditLogByModerator
 
 	if err := postAuditLogByModeratorQuery.Get(&pendingPostAuditLogByModerator); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return nil, infraction.ErrPostRejectionReasonNotFound
+		}
+
 		return nil, fmt.Errorf("failed to get audit log by moderator: %v", err)
 	}
 

@@ -6,6 +6,8 @@ import (
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/eva/internal/app"
 	"overdoll/applications/eva/internal/app/query"
+	"overdoll/applications/eva/internal/domain/account"
+	"overdoll/applications/eva/internal/domain/session"
 	"overdoll/applications/eva/internal/ports/graphql/types"
 	"overdoll/libraries/helpers"
 	"overdoll/libraries/paging"
@@ -20,6 +22,11 @@ func (r AccountResolver) Lock(ctx context.Context, obj *types.Account) (*types.A
 	acc, err := r.App.Queries.AccountById.Handle(ctx, obj.ID.GetID())
 
 	if err != nil {
+
+		if err == account.ErrAccountNotFound {
+			return nil, nil
+		}
+
 		return nil, err
 	}
 
@@ -40,6 +47,11 @@ func (r AccountResolver) Emails(ctx context.Context, obj *types.Account, after *
 	})
 
 	if err != nil {
+
+		if err == account.ErrAccountNotFound {
+			return types.MarshalAccountEmailToGraphQLConnection(results, cursor), nil
+		}
+
 		return nil, err
 	}
 
@@ -60,6 +72,11 @@ func (r AccountResolver) Usernames(ctx context.Context, obj *types.Account, afte
 	})
 
 	if err != nil {
+
+		if err == account.ErrAccountNotFound {
+			return types.MarshalAccountUsernameToGraphQLConnection(results, cursor), nil
+		}
+
 		return nil, err
 	}
 
@@ -92,6 +109,11 @@ func (r AccountResolver) Sessions(ctx context.Context, obj *types.Account, after
 	})
 
 	if err != nil {
+
+		if err == session.ErrSessionsNotFound {
+			return types.MarshalAccountSessionToGraphQLConnection(results, cursor), nil
+		}
+
 		return nil, err
 	}
 
@@ -105,6 +127,11 @@ func (r AccountResolver) MultiFactorSettings(ctx context.Context, obj *types.Acc
 	acc, err := r.App.Queries.AccountById.Handle(ctx, accountId)
 
 	if err != nil {
+
+		if err == account.ErrAccountNotFound {
+			return nil, nil
+		}
+
 		return nil, err
 	}
 

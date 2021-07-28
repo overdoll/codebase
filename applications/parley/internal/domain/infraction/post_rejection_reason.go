@@ -10,6 +10,10 @@ var (
 	ErrPostRejectionReasonNotFound = errors.New("post rejection reason not found")
 )
 
+var (
+	ErrPostAuditLogNotFound = errors.New("post audit log not found")
+)
+
 type PostRejectionReason struct {
 	*paging.Node
 

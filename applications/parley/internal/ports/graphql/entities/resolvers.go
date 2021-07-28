@@ -5,6 +5,7 @@ import (
 
 	"overdoll/applications/parley/internal/app"
 	"overdoll/applications/parley/internal/app/query"
+	"overdoll/applications/parley/internal/domain/infraction"
 	"overdoll/applications/parley/internal/ports/graphql/types"
 	"overdoll/libraries/graphql/relay"
 )
@@ -33,6 +34,11 @@ func (r EntityResolver) FindAccountInfractionHistoryByID(ctx context.Context, id
 	})
 
 	if err != nil {
+
+		if err == infraction.ErrAccountInfractionHistoryNotFound {
+			return nil, nil
+		}
+
 		return nil, err
 	}
 
@@ -46,6 +52,11 @@ func (r EntityResolver) FindPostAuditLogByID(ctx context.Context, id relay.ID) (
 	})
 
 	if err != nil {
+
+		if err == infraction.ErrPostAuditLogNotFound {
+			return nil, nil
+		}
+
 		return nil, err
 	}
 
@@ -59,6 +70,11 @@ func (r EntityResolver) FindPostRejectionReasonByID(ctx context.Context, id rela
 	})
 
 	if err != nil {
+
+		if err == infraction.ErrPostRejectionReasonNotFound {
+			return nil, nil
+		}
+
 		return nil, err
 	}
 
@@ -72,6 +88,11 @@ func (r EntityResolver) FindModeratorByID(ctx context.Context, id relay.ID) (*ty
 	})
 
 	if err != nil {
+
+		if err == infraction.ErrInvalidModerator {
+			return nil, nil
+		}
+
 		return nil, err
 	}
 

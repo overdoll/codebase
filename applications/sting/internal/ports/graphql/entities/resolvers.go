@@ -5,6 +5,7 @@ import (
 
 	"overdoll/applications/sting/internal/app"
 	"overdoll/applications/sting/internal/app/query"
+	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/graphql/relay"
 )
@@ -20,6 +21,11 @@ func (r EntityResolver) FindArtistByID(ctx context.Context, id relay.ID) (*types
 	})
 
 	if err != nil {
+
+		if err == post.ErrArtistNotFound {
+			return nil, nil
+		}
+
 		return nil, err
 	}
 
@@ -33,6 +39,11 @@ func (r EntityResolver) FindCategoryByID(ctx context.Context, id relay.ID) (*typ
 	})
 
 	if err != nil {
+
+		if err == post.ErrCategoryNotFound {
+			return nil, nil
+		}
+
 		return nil, err
 	}
 
@@ -46,6 +57,11 @@ func (r EntityResolver) FindCharacterByID(ctx context.Context, id relay.ID) (*ty
 	})
 
 	if err != nil {
+
+		if err == post.ErrCharacterNotFound {
+			return nil, nil
+		}
+
 		return nil, err
 	}
 
@@ -59,6 +75,11 @@ func (r EntityResolver) FindMediaByID(ctx context.Context, id relay.ID) (*types.
 	})
 
 	if err != nil {
+
+		if err == post.ErrMediaNotFound {
+			return nil, nil
+		}
+
 		return nil, err
 	}
 
@@ -78,6 +99,11 @@ func (r EntityResolver) FindPostByID(ctx context.Context, id relay.ID) (*types.P
 	})
 
 	if err != nil {
+
+		if err == post.ErrNotFound {
+			return nil, nil
+		}
+
 		return nil, err
 	}
 

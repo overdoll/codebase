@@ -1,10 +1,15 @@
 package post
 
 import (
+	"errors"
 	"os"
 
 	"overdoll/libraries/graphql"
 	"overdoll/libraries/paging"
+)
+
+var (
+	ErrCharacterNotFound = errors.New("character not found")
 )
 
 type Character struct {

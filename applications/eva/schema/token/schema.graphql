@@ -43,8 +43,19 @@ type GrantAuthenticationTokenPayload {
   authenticationToken: AuthenticationToken
 }
 
+
+"""Validation for creating an account with an authentication token"""
+enum CreateAccountWithAuthenticationTokenValidation {
+  EMAIL_TAKEN
+  USERNAME_TAKEN
+  TOKEN_EXPIRED
+}
+
 """Payload for creating an account"""
 type CreateAccountWithAuthenticationTokenPayload {
+  """Validation for creating an account"""
+  validation: CreateAccountWithAuthenticationTokenValidation
+
   """The account that was created"""
   account: Account
 }
@@ -61,20 +72,46 @@ type RevokeAuthenticationTokenPayload {
   revokedAuthenticationTokenId: ID!
 }
 
+"""Validation for reissuing authentication token"""
+enum ReissueAuthenticationTokenValidation {
+  TOKEN_EXPIRED
+}
+
 """Payload re-sending authentication email"""
 type ReissueAuthenticationTokenPayload {
+  """Validation for reissuing authentication token"""
+  validation: ReissueAuthenticationTokenValidation
+
   """The authentication token"""
   authenticationToken: AuthenticationToken
 }
 
+"""Validation for granting account access with multi factor"""
+enum GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation {
+  TOKEN_EXPIRED
+  INVALID_CODE
+  INVALID_RECOVERY_CODE
+}
+
 """Payload for granting access to an account using the authentication token and Recovery Code"""
 type GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload {
+  """Validation options"""
+  validation: GrantAccountAccessWithAuthenticationTokenAndMultiFactorValidation
+
   """The account that granted access to"""
   account: Account
 }
 
+"""Validation for granting account access"""
+enum VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidation {
+  TOKEN_EXPIRED
+}
+
 """Payload for verifying the authentication token"""
 type VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload {
+  """Validation options"""
+  validation: VerifyAuthenticationTokenAndAttemptAccountAccessGrantValidation
+
   """The account that granted access to"""
   account: Account
 
