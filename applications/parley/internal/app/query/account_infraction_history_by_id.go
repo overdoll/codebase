@@ -24,7 +24,7 @@ func NewAccountInfractionHistoryByIdHandler(ir infraction.Repository) AccountInf
 
 func (h AccountInfractionHistoryByIdHandler) Handle(ctx context.Context, query AccountInfractionHistoryById) (*infraction.AccountInfractionHistory, error) {
 
-	infractionHistory, err := h.ir.GetAccountInfractionHistoryById(ctx, query.AccountId, query.InfractionId)
+	infractionHistory, err := h.ir.GetAccountInfractionHistoryById(ctx, query.Principal, query.AccountId, query.InfractionId)
 
 	if err != nil {
 		return nil, err

@@ -8,6 +8,7 @@ import (
 	"overdoll/applications/sting/internal/app/query"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
 )
 
 type MediaResolver struct {
@@ -23,8 +24,9 @@ func (r MediaResolver) Posts(ctx context.Context, obj *types.Media, after *strin
 	}
 
 	results, err := r.App.Queries.SearchPosts.Handle(ctx, query.SearchPosts{
-		Cursor:   cursor,
-		MediaIds: []string{obj.ID.GetID()},
+		Cursor:    cursor,
+		MediaIds:  []string{obj.ID.GetID()},
+		Principal: principal.FromContext(ctx),
 	})
 
 	if err != nil {

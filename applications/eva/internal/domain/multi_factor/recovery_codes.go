@@ -2,6 +2,8 @@ package multi_factor
 
 import (
 	"crypto/rand"
+
+	"overdoll/libraries/principal"
 )
 
 type RecoveryCode struct {
@@ -61,4 +63,20 @@ func GenerateRecoveryCodeSet() ([]*RecoveryCode, error) {
 	}
 
 	return recoveryCodes, nil
+}
+
+func CanCreateRecoveryCodesForAccount(requester *principal.Principal, accountId string) error {
+	if err := requester.BelongsToAccount(accountId); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func CanViewRecoveryCodesForAccount(requester *principal.Principal, accountId string) error {
+	if err := requester.BelongsToAccount(accountId); err != nil {
+		return err
+	}
+
+	return nil
 }

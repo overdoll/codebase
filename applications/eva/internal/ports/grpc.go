@@ -45,7 +45,7 @@ func (s *Server) GetAccount(ctx context.Context, request *eva.GetAccountRequest)
 
 func (s *Server) LockAccount(ctx context.Context, request *eva.LockAccountRequest) (*eva.Account, error) {
 
-	acc, err := s.app.Commands.LockAccount.Handle(ctx, command.LockAccount{
+	acc, err := s.app.Commands.LockAccountOperator.Handle(ctx, command.LockAccount{
 		AccountId: request.Id,
 		Duration:  int(request.Duration),
 		Reason:    request.Reason.String(),
@@ -60,7 +60,7 @@ func (s *Server) LockAccount(ctx context.Context, request *eva.LockAccountReques
 
 func (s *Server) CreateAccount(ctx context.Context, request *eva.CreateAccountRequest) (*eva.Account, error) {
 
-	acc, err := s.app.Commands.CreateAccount.Handle(ctx, command.CreateAccount{
+	acc, err := s.app.Commands.CreateAccountOperator.Handle(ctx, command.CreateAccountOperator{
 		Username: request.Username,
 		Email:    request.Email,
 	})

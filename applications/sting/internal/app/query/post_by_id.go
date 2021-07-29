@@ -4,10 +4,12 @@ import (
 	"context"
 
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/principal"
 )
 
 type PostById struct {
-	PostId string
+	PostId    string
+	Principal *principal.Principal
 }
 
 type PostByIdHandler struct {
@@ -20,7 +22,7 @@ func NewPostByIdHandler(pr post.Repository) PostByIdHandler {
 
 func (h PostByIdHandler) Handle(ctx context.Context, query PostById) (*post.Post, error) {
 
-	pst, err := h.pr.GetPost(ctx, query.PostId)
+	pst, err := h.pr.GetPostRequest(ctx, query.Principal, query.PostId)
 
 	if err != nil {
 		return nil, err

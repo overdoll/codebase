@@ -5,9 +5,9 @@ import (
 	"os"
 	"time"
 
-	"overdoll/libraries/account"
 	"overdoll/libraries/graphql"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
 	"overdoll/libraries/uuid"
 )
 
@@ -120,12 +120,14 @@ type Post struct {
 	generatedIds       []string
 }
 
-func NewPost(id, moderatorId string, artist *account.Account, customArtistUsername string, contributor *account.Account, content []string, characters []*Character, categories []*Category) (*Post, error) {
+func NewPost(id, moderatorId string, artist *principal.Principal, customArtistUsername string, contributor *principal.Principal, content []string, characters []*Character, categories []*Category) (*Post, error) {
+
+	// TODO: permission checks here
 
 	var artistId string
 
 	if artist != nil {
-		artistId = artist.ID()
+		artistId = artist.AccountId()
 	}
 
 	return &Post{
@@ -133,7 +135,7 @@ func NewPost(id, moderatorId string, artist *account.Account, customArtistUserna
 		moderatorId:          moderatorId,
 		state:                Processing,
 		artistId:             artistId,
-		contributorId:        contributor.ID(),
+		contributorId:        contributor.AccountId(),
 		customArtistUsername: customArtistUsername,
 		content:              content,
 		characters:           characters,
@@ -492,4 +494,32 @@ func (p *Post) RequestResources(characters map[string]string, categories, medias
 	for _, med := range medias {
 		p.mediaRequests = append(p.mediaRequests, MediaRequest{Id: uuid.New().String(), Title: med})
 	}
+}
+
+func (p *Post) CanView(requester *principal.Principal) error {
+
+	if !p.IsPublished() {
+		if requester.IsStaff() || requester.IsModerator() {
+			return nil
+		}
+
+		return requester.BelongsToAccount(requester.AccountId())
+	}
+
+	return nil
+}
+
+func CanViewWithFilters(requester *principal.Principal, filter *PostFilters) error {
+
+	// filtering by moderator
+	if filter.ModeratorId() != nil {
+
+		if requester.IsStaff() {
+			return nil
+		}
+
+		return requester.BelongsToAccount(*filter.ModeratorId())
+	}
+
+	return nil
 }

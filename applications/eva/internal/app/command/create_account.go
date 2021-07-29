@@ -7,20 +7,20 @@ import (
 	"overdoll/libraries/uuid"
 )
 
-type CreateAccount struct {
+type CreateAccountOperator struct {
 	Username string
 	Email    string
 }
 
-type CreateAccountHandler struct {
+type CreateAccountOperatorHandler struct {
 	ur account.Repository
 }
 
-func NewCreateUserHandler(ur account.Repository) CreateAccountHandler {
-	return CreateAccountHandler{ur: ur}
+func NewCreateAccountOperatorHandler(ur account.Repository) CreateAccountOperatorHandler {
+	return CreateAccountOperatorHandler{ur: ur}
 }
 
-func (h CreateAccountHandler) Handle(ctx context.Context, cmd CreateAccount) (*account.Account, error) {
+func (h CreateAccountOperatorHandler) Handle(ctx context.Context, cmd CreateAccountOperator) (*account.Account, error) {
 
 	instance, err := account.NewAccount(uuid.New().String(), cmd.Username, cmd.Email)
 

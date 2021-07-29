@@ -23,7 +23,7 @@ func NewPostAuditLogByIdHandler(ir infraction.Repository) PostAuditLogByIdHandle
 
 func (h PostAuditLogByIdHandler) Handle(ctx context.Context, query PostAuditLogById) (*infraction.PostAuditLog, error) {
 
-	auditLog, err := h.ir.GetPostAuditLog(ctx, query.AuditLogId)
+	auditLog, err := h.ir.GetPostAuditLog(ctx, query.Principal, query.AuditLogId)
 
 	if err != nil {
 		return nil, err

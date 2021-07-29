@@ -25,19 +25,8 @@ func NewRevertModeratePostHandler(ir infraction.Repository, eva EvaService, stin
 
 func (h RevertModeratePostHandler) Handle(ctx context.Context, cmd RevertModeratePost) (*infraction.PostAuditLog, error) {
 
-	// Get user, to perform permission checks
-	usr, err := h.eva.GetAccount(ctx, cmd.ModeratorAccountId)
-
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to get account")
-	}
-
-	if !usr.IsModerator() {
-		return nil, errors.New("not moderator")
-	}
-
 	// update audit log to revert any infractions and user locks, as well as mark it as reverted
-	auditLog, err := h.ir.UpdatePostAuditLog(ctx, cmd.AuditLogId, func(log *infraction.PostAuditLog) error {
+	auditLog, err := h.ir.UpdatePostAuditLog(ctx, cmd.Principal, cmd.AuditLogId, func(log *infraction.PostAuditLog) error {
 
 		infractionId := ""
 

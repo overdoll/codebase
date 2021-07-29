@@ -8,6 +8,7 @@ import (
 	"overdoll/applications/sting/internal/app/query"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
 )
 
 type CategoryResolver struct {
@@ -25,6 +26,7 @@ func (r CategoryResolver) Posts(ctx context.Context, obj *types.Category, after 
 	results, err := r.App.Queries.SearchPosts.Handle(ctx, query.SearchPosts{
 		Cursor:      cursor,
 		CategoryIds: []string{obj.ID.GetID()},
+		Principal:   principal.FromContext(ctx),
 	})
 
 	if err != nil {

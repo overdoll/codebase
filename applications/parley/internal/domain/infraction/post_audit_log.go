@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/segmentio/ksuid"
-	"overdoll/libraries/account"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
 )
 
 const (
@@ -81,12 +81,12 @@ type PostAuditLog struct {
 	userInfraction  *AccountInfractionHistory
 }
 
-func NewPendingPostAuditLog(user *account.Account, userInfractionHistory []*AccountInfractionHistory, postId, moderatorId string, contributor *account.Account, rejectionReason *PostRejectionReason, notes string) (*PostAuditLog, error) {
+func NewPendingPostAuditLog(moderator *principal.Principal, userInfractionHistory []*AccountInfractionHistory, postId, moderatorId, contributorId string, rejectionReason *PostRejectionReason, notes string) (*PostAuditLog, error) {
 	// Do some permission checks here to make sure the proper user is doing everything
 
-	if !user.IsStaff() {
+	if !moderator.IsStaff() {
 		// ensure moderator is the same as the one who is doing the moderation
-		if user.ID() != moderatorId {
+		if moderator.AccountId() != moderatorId {
 			return nil, ErrInvalidModerator
 		}
 	}
@@ -99,7 +99,7 @@ func NewPendingPostAuditLog(user *account.Account, userInfractionHistory []*Acco
 		status = StatusDenied
 
 		if rejectionReason.Infraction() {
-			userInfraction = NewAccountInfractionHistory(contributor.ID(), userInfractionHistory, rejectionReason.Reason())
+			userInfraction = NewAccountInfractionHistory(contributorId, userInfractionHistory, rejectionReason.Reason())
 		}
 	}
 
@@ -107,7 +107,7 @@ func NewPendingPostAuditLog(user *account.Account, userInfractionHistory []*Acco
 		id:              ksuid.New().String(),
 		pendingPostId:   postId,
 		moderatorId:     moderatorId,
-		contributorId:   contributor.ID(),
+		contributorId:   contributorId,
 		status:          status,
 		rejectionReason: rejectionReason,
 		notes:           notes,

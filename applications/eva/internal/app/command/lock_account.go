@@ -12,15 +12,15 @@ type LockAccount struct {
 	Reason    string
 }
 
-type LockAccountHandler struct {
+type LockAccountOperatorHandler struct {
 	ur account.Repository
 }
 
-func NewLockUserHandler(ur account.Repository) LockAccountHandler {
-	return LockAccountHandler{ur: ur}
+func NewLockAccountOperatorHandler(ur account.Repository) LockAccountOperatorHandler {
+	return LockAccountOperatorHandler{ur: ur}
 }
 
-func (h LockAccountHandler) Handle(ctx context.Context, cmd LockAccount) (*account.Account, error) {
+func (h LockAccountOperatorHandler) Handle(ctx context.Context, cmd LockAccount) (*account.Account, error) {
 
 	usr, err := h.ur.UpdateAccount(ctx, cmd.AccountId, func(u *account.Account) error {
 		return u.Lock(cmd.Duration, cmd.Reason)

@@ -4,7 +4,6 @@ import (
 	"context"
 
 	eva "overdoll/applications/eva/proto"
-	"overdoll/libraries/account"
 	"overdoll/libraries/principal"
 )
 
@@ -29,7 +28,7 @@ func (s EvaGrpc) GetAccount(ctx context.Context, id string) (*principal.Principa
 	return principal.UnmarshalFromEvaProto(acc), nil
 }
 
-func (s EvaGrpc) CreateAccount(ctx context.Context, username, email string) (*account.Account, error) {
+func (s EvaGrpc) CreateAccount(ctx context.Context, username, email string) (*principal.Principal, error) {
 
 	acc, err := s.client.CreateAccount(ctx, &eva.CreateAccountRequest{
 		Username: username,
@@ -40,5 +39,5 @@ func (s EvaGrpc) CreateAccount(ctx context.Context, username, email string) (*ac
 		return nil, err
 	}
 
-	return account.UnmarshalFromProto(acc), nil
+	return principal.UnmarshalFromEvaProto(acc), nil
 }

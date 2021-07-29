@@ -9,6 +9,7 @@ import (
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/principal"
 )
 
 var postTable = table.New(table.Metadata{
@@ -175,6 +176,21 @@ func (r PostsCassandraRepository) GetPost(ctx context.Context, id string) (*post
 	}
 
 	return r.unmarshalPost(ctx, postPending)
+}
+
+func (r PostsCassandraRepository) GetPostRequest(ctx context.Context, requester *principal.Principal, id string) (*post.Post, error) {
+
+	pst, err := r.GetPost(ctx, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err := pst.CanView(requester); err != nil {
+		return nil, err
+	}
+
+	return pst, err
 }
 
 func (r PostsCassandraRepository) UpdatePost(ctx context.Context, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {

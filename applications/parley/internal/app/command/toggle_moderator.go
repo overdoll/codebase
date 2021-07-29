@@ -3,7 +3,6 @@ package command
 import (
 	"context"
 
-	"github.com/pkg/errors"
 	"overdoll/applications/parley/internal/domain/moderator"
 	"overdoll/libraries/principal"
 )
@@ -23,23 +22,13 @@ func NewToggleModeratorHandler(mr moderator.Repository, eva EvaService) ToggleMo
 
 func (h ToggleModeratorHandler) Handle(ctx context.Context, cmd ToggleModerator) (bool, error) {
 
-	acc, err := h.eva.GetAccount(ctx, cmd.AccountId)
-
-	if err != nil {
-		return false, errors.Wrap(err, "failed to get account")
-	}
-
-	if !acc.IsModerator() {
-		return false, errors.New("not moderator")
-	}
-
-	_, err = h.mr.GetModerator(ctx, acc.ID())
+	_, err := h.mr.GetModerator(ctx, cmd.Principal.AccountId())
 
 	if err != nil {
 
 		// not found - add to moderator queue
 		if err == moderator.ErrModeratorNotFound {
-			if err := h.mr.CreateModerator(ctx, moderator.NewModerator(acc.ID())); err != nil {
+			if err := h.mr.CreateModerator(ctx, cmd.Principal, moderator.NewModerator(cmd.Principal.AccountId())); err != nil {
 				return false, err
 			}
 
@@ -49,7 +38,7 @@ func (h ToggleModeratorHandler) Handle(ctx context.Context, cmd ToggleModerator)
 		return false, err
 	}
 
-	if err = h.mr.RemoveModerator(ctx, acc.ID()); err != nil {
+	if err = h.mr.RemoveModerator(ctx, cmd.Principal, cmd.Principal.AccountId()); err != nil {
 		return false, err
 	}
 

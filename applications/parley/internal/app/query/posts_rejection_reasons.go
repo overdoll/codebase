@@ -3,7 +3,6 @@ package query
 import (
 	"context"
 
-	"github.com/pkg/errors"
 	"overdoll/applications/parley/internal/domain/infraction"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
@@ -25,17 +24,8 @@ func NewPendingPostsRejectionReasonsHandler(ir infraction.Repository, eva EvaSer
 
 func (h PostsRejectionReasonsHandler) Handle(ctx context.Context, query PostsRejectionReasons) ([]*infraction.PostRejectionReason, error) {
 	// Get account to perform permission checks
-	acc, err := h.eva.GetAccount(ctx, query.AccountId)
 
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to get account")
-	}
-
-	if !acc.IsModerator() {
-		return nil, errors.New("not moderator")
-	}
-
-	reasons, err := h.ir.GetPostRejectionReasons(ctx, query.Cursor)
+	reasons, err := h.ir.GetPostRejectionReasons(ctx, query.Principal, query.Cursor)
 
 	if err != nil {
 		return nil, err

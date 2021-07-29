@@ -28,28 +28,11 @@ func NewModeratePostHandler(ir infraction.Repository, eva EvaService, sting Stin
 
 func (h ModeratePostHandler) Handle(ctx context.Context, cmd ModeratePost) (*infraction.PostAuditLog, error) {
 
-	// Get user, to perform permission checks
-	usr, err := h.eva.GetAccount(ctx, cmd.ModeratorAccountId)
-
-	if err != nil {
-		return nil, err
-	}
-
-	if !usr.IsModerator() {
-		return nil, errors.New("not moderator")
-	}
-
 	// Get pending post
 	postModeratorId, postContributorId, err := h.sting.GetPost(ctx, cmd.PostId)
 
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to get post")
-	}
-
-	postContributor, err := h.eva.GetAccount(ctx, postContributorId)
-
-	if err != nil {
-		return nil, err
 	}
 
 	var rejectionReason *infraction.PostRejectionReason
@@ -74,11 +57,11 @@ func (h ModeratePostHandler) Handle(ctx context.Context, cmd ModeratePost) (*inf
 
 	// create new audit log - all necessary permission checks will be performed
 	infractionAuditLog, err := infraction.NewPendingPostAuditLog(
-		usr,
+		cmd.Principal,
 		accountInfractionHistory,
 		cmd.PostId,
 		postModeratorId,
-		postContributor,
+		postContributorId,
 		rejectionReason,
 		cmd.Notes,
 	)

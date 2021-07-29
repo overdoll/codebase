@@ -4,11 +4,14 @@ import (
 	"context"
 
 	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
 )
 
 type Repository interface {
 	GetPost(ctx context.Context, postId string) (*Post, error)
+	GetPostRequest(ctx context.Context, requester *principal.Principal, postId string) (*Post, error)
 	CreatePost(ctx context.Context, post *Post) error
+
 	UpdatePost(ctx context.Context, postId string, updateFn func(post *Post) error) (*Post, error)
 	DeletePost(ctx context.Context, postId string) error
 
@@ -31,7 +34,7 @@ type Repository interface {
 type IndexRepository interface {
 	IndexPost(ctx context.Context, postId *Post) error
 	IndexAllPosts(ctx context.Context) error
-	SearchPosts(ctx context.Context, cursor *paging.Cursor, filters *PostFilters) ([]*Post, error)
+	SearchPosts(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *PostFilters) ([]*Post, error)
 	DeletePostIndex(ctx context.Context) error
 	DeletePost(ctx context.Context, postId string) error
 

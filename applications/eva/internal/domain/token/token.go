@@ -112,6 +112,7 @@ func (c *AuthenticationToken) SetAccountDetails(acc *account.Account) {
 	if acc.MultiFactorEnabled() {
 		c.multiFactorTOTP = true
 	}
+	c.registered = true
 }
 
 // MakeConsumed - this will always be ran before a cookie is deleted, i.e. being consumed by the target application (registration, login)

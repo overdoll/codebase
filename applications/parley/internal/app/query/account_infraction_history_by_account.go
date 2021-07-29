@@ -25,7 +25,7 @@ func NewAccountInfractionHistoryByAccountHandler(ir infraction.Repository) Accou
 
 func (h AccountInfractionHistoryByAccountHandler) Handle(ctx context.Context, query AccountInfractionHistory) ([]*infraction.AccountInfractionHistory, error) {
 
-	history, err := h.ir.GetAccountInfractionHistory(ctx, query.Cursor, query.AccountId)
+	history, err := h.ir.GetAccountInfractionHistory(ctx, query.Principal, query.Cursor, query.AccountId)
 
 	if err != nil {
 		return nil, err

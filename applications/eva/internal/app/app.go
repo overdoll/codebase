@@ -13,9 +13,7 @@ type Application struct {
 type Commands struct {
 	VerifyAuthenticationToken               command.VerifyAuthenticationTokenHandler
 	GrantAuthenticationToken                command.GrantAuthenticationTokenHandler
-	LockAccount                             command.LockAccountHandler
 	UnlockAccount                           command.UnlockAccountHandler
-	CreateAccount                           command.CreateAccountHandler
 	AddAccountEmail                         command.AddAccountEmailHandler
 	UpdateAccountUsernameAndRetainPrevious  command.UpdateAccountUsernameAndRetainPreviousHandler
 	ConfirmAccountEmail                     command.ConfirmAccountEmailHandler
@@ -32,6 +30,10 @@ type Commands struct {
 
 	CreateAccountWithAuthenticationToken      command.CreateAccountWithAuthenticationTokenHandler
 	GrantAccountAccessWithAuthenticationToken command.GrantAccountAccessWithAuthenticationTokenHandler
+
+	// operator handlers don't do any permission checks
+	CreateAccountOperator command.CreateAccountOperatorHandler
+	LockAccountOperator   command.LockAccountOperatorHandler
 }
 
 type Queries struct {

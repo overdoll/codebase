@@ -17,7 +17,7 @@ func NewGetNextModeratorHandler(mr moderator.Repository) GetNextModeratorHandler
 
 func (h GetNextModeratorHandler) Handle(ctx context.Context) (*moderator.Moderator, error) {
 
-	mods, err := h.mr.GetModerators(ctx)
+	mods, err := h.mr.GetModeratorsOperator(ctx)
 
 	if err != nil {
 		return nil, err
@@ -35,7 +35,7 @@ func (h GetNextModeratorHandler) Handle(ctx context.Context) (*moderator.Moderat
 
 	// get first moderator on the list, and call "select"
 	first := mods[0]
-	m, err := h.mr.UpdateModerator(ctx, first.ID(), func(m *moderator.Moderator) error {
+	m, err := h.mr.UpdateModeratorOperator(ctx, first.ID(), func(m *moderator.Moderator) error {
 		m.Select()
 		return nil
 	})

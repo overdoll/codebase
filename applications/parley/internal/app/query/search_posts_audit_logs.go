@@ -33,7 +33,7 @@ func (h SearchPostAuditLogsHandler) Handle(ctx context.Context, query SearchPost
 		return nil, err
 	}
 
-	auditLogs, err := h.ir.SearchPostAuditLogs(ctx, query.Cursor, filters)
+	auditLogs, err := h.ir.SearchPostAuditLogs(ctx, query.Principal, query.Cursor, filters)
 
 	if err != nil {
 		return nil, err

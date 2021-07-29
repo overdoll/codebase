@@ -9,6 +9,7 @@ import (
 
 	"github.com/pquerna/otp"
 	"github.com/pquerna/otp/totp"
+	"overdoll/libraries/principal"
 )
 
 type TOTP struct {
@@ -108,4 +109,20 @@ func EnrollTOTP(recoveryCodes []*RecoveryCode, secret, code string) (*TOTP, erro
 	return &TOTP{
 		secret: secret,
 	}, nil
+}
+
+func CanCreateTOTPForAccount(requester *principal.Principal, accountId string) error {
+	if err := requester.BelongsToAccount(accountId); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func CanDeleteTOTPForAccount(requester *principal.Principal, accountId string) error {
+	if err := requester.BelongsToAccount(accountId); err != nil {
+		return err
+	}
+
+	return nil
 }

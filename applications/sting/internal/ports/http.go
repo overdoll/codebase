@@ -21,7 +21,7 @@ func principalToContext(app *app.Application) gin.HandlerFunc {
 
 		ctx := c.Request.Context()
 
-		if !passport.FromContext(ctx).IsAuthenticated() {
+		if err := passport.FromContext(ctx).Authenticated(); err != nil {
 			c.Next()
 			return
 		}

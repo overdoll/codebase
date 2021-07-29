@@ -10,6 +10,12 @@ var (
 	ErrNotAuthorized = errors.New("not authorized")
 )
 
+// principal contains all methods required for authorization checks
+// it's purposely bare to ensure that it's used properly
+
+// it's recommended that each service builds their own middleware that will grab the current account in the request,
+// which can be parsed from the passport in order to save on additional calls due to graphql nesting
+// see "eva" or "sting" for implementation examples
 type Principal struct {
 	accountId string
 	roles     []string
@@ -63,7 +69,7 @@ func (p *Principal) IsStaff() bool {
 }
 
 func (p *Principal) IsModerator() bool {
-	return (p.hasRoles([]string{"moderator"}) || p.IsStaff()) && !p.IsLocked()
+	return p.hasRoles([]string{"moderator"})
 }
 
 func (p *Principal) hasRoles(roles []string) bool {

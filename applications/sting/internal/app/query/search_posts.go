@@ -35,7 +35,7 @@ func (h SearchPostsHandler) Handle(ctx context.Context, query SearchPosts) ([]*p
 		return nil, err
 	}
 
-	posts, err := h.pr.SearchPosts(ctx, query.Cursor, filters)
+	posts, err := h.pr.SearchPosts(ctx, query.Principal, query.Cursor, filters)
 
 	if err != nil {
 		return nil, err

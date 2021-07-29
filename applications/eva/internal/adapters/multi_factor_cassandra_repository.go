@@ -10,6 +10,7 @@ import (
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/eva/internal/domain/multi_factor"
 	"overdoll/libraries/crypt"
+	"overdoll/libraries/principal"
 )
 
 var accountMultiFactorTotpTable = table.New(table.Metadata{
@@ -51,7 +52,11 @@ func NewMultiFactorCassandraRepository(session gocqlx.Session) MultiFactorCassan
 }
 
 // CreateAccountRecoveryCodes - create recovery codes for the account
-func (r MultiFactorCassandraRepository) CreateAccountRecoveryCodes(ctx context.Context, accountId string, codes []*multi_factor.RecoveryCode) error {
+func (r MultiFactorCassandraRepository) CreateAccountRecoveryCodes(ctx context.Context, requester *principal.Principal, accountId string, codes []*multi_factor.RecoveryCode) error {
+
+	if err := multi_factor.CanCreateRecoveryCodesForAccount(requester, accountId); err != nil {
+		return err
+	}
 
 	// delete all current MFA codes
 	deleteOldCodes := qb.Delete(accountMultiFactorRecoveryCodeTable.Name()).
@@ -88,7 +93,11 @@ func (r MultiFactorCassandraRepository) CreateAccountRecoveryCodes(ctx context.C
 }
 
 // GetAccountRecoveryCodes - get account recovery codes
-func (r MultiFactorCassandraRepository) GetAccountRecoveryCodes(ctx context.Context, accountId string) ([]*multi_factor.RecoveryCode, error) {
+func (r MultiFactorCassandraRepository) GetAccountRecoveryCodes(ctx context.Context, requester *principal.Principal, accountId string) ([]*multi_factor.RecoveryCode, error) {
+
+	if err := multi_factor.CanViewRecoveryCodesForAccount(requester, accountId); err != nil {
+		return nil, err
+	}
 
 	var recoveryCodes []*accountMultiFactorRecoveryCodes
 
@@ -175,7 +184,11 @@ func (r MultiFactorCassandraRepository) GetAccountMultiFactorTOTP(ctx context.Co
 }
 
 // CreateAccountMultiFactorTOTP - create MFA for user
-func (r MultiFactorCassandraRepository) CreateAccountMultiFactorTOTP(ctx context.Context, accountId string, totp *multi_factor.TOTP) error {
+func (r MultiFactorCassandraRepository) CreateAccountMultiFactorTOTP(ctx context.Context, requester *principal.Principal, accountId string, totp *multi_factor.TOTP) error {
+
+	if err := multi_factor.CanCreateTOTPForAccount(requester, accountId); err != nil {
+		return err
+	}
 
 	encryptedOTP, err := crypt.Encrypt(totp.Secret())
 
@@ -197,7 +210,11 @@ func (r MultiFactorCassandraRepository) CreateAccountMultiFactorTOTP(ctx context
 	return nil
 }
 
-func (r MultiFactorCassandraRepository) DeleteAccountMultiFactorTOTP(ctx context.Context, accountId string) error {
+func (r MultiFactorCassandraRepository) DeleteAccountMultiFactorTOTP(ctx context.Context, requester *principal.Principal, accountId string) error {
+
+	if err := multi_factor.CanDeleteTOTPForAccount(requester, accountId); err != nil {
+		return err
+	}
 
 	deleteMultiFactorTOTP := r.session.
 		Query(accountMultiFactorTotpTable.Delete()).

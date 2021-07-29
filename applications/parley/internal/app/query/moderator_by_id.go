@@ -23,7 +23,7 @@ func NewModeratorByIdHandler(mr moderator.Repository) ModeratorByIdHandler {
 
 func (h ModeratorByIdHandler) Handle(ctx context.Context, query ModeratorById) (*moderator.Moderator, error) {
 
-	mod, err := h.mr.GetModerator(ctx, query.AccountId)
+	mod, err := h.mr.GetModerator(ctx, query.Principal, query.AccountId)
 
 	if err != nil {
 		return nil, err

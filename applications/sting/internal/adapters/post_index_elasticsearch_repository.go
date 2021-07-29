@@ -12,6 +12,7 @@ import (
 	"github.com/scylladb/gocqlx/v2"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
 	"overdoll/libraries/scan"
 )
 
@@ -228,7 +229,7 @@ func (r PostsIndexElasticSearchRepository) IndexPost(ctx context.Context, post *
 	return nil
 }
 
-func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, cursor *paging.Cursor, filter *post.PostFilters) ([]*post.Post, error) {
+func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.PostFilters) ([]*post.Post, error) {
 
 	builder := r.client.Search().
 		Index(PostIndexName)
@@ -237,10 +238,16 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, curs
 		return nil, errors.New("cursor required")
 	}
 
+	if err := post.CanViewWithFilters(requester, filter); err != nil {
+		return nil, err
+	}
+
 	query := cursor.BuildElasticsearch(builder, "posted_at")
 
 	if filter.ModeratorId() != nil {
 		query.Must(elastic.NewMultiMatchQuery(*filter.ModeratorId(), "moderator_id"))
+		// only show if post is in review when filtering by moderator ID
+		query.Must(elastic.NewMultiMatchQuery("review", "state"))
 	}
 
 	if filter.ContributorId() != nil {

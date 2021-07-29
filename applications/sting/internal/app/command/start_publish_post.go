@@ -35,11 +35,11 @@ func (h StartPublishPostHandler) Handle(ctx context.Context, cmd StartPublishPos
 			}
 
 			// add to artist record
-			if err := h.pr.CreateArtist(ctx, post.NewArtist(usr.ID())); err != nil {
+			if err := h.pr.CreateArtist(ctx, post.NewArtist(usr.AccountId())); err != nil {
 				return err
 			}
 
-			pending.UpdateArtist(usr.ID())
+			pending.UpdateArtist(usr.AccountId())
 		}
 
 		pending.MakePublishing()

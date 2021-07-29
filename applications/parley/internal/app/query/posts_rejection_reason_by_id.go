@@ -22,7 +22,7 @@ func NewPendingPostsRejectionReasonByIdHandler(ir infraction.Repository) PostRej
 
 func (h PostRejectionReasonByIdHandler) Handle(ctx context.Context, query PostRejectionReasonById) (*infraction.PostRejectionReason, error) {
 
-	reason, err := h.ir.GetPostRejectionReason(ctx, query.RejectionReasonId)
+	reason, err := h.ir.GetPostRejectionReason(ctx, query.Principal, query.RejectionReasonId)
 
 	if err != nil {
 		return nil, err

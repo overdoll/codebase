@@ -10,6 +10,7 @@ import (
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
 )
 
 type QueryResolver struct {
@@ -50,6 +51,7 @@ func (r *QueryResolver) Posts(ctx context.Context, after *string, before *string
 		CategoryIds:   categoryIdsString,
 		CharacterIds:  characterIdsString,
 		MediaIds:      mediaIdsString,
+		Principal:     principal.FromContext(ctx),
 	})
 
 	if err != nil {
@@ -62,7 +64,8 @@ func (r *QueryResolver) Posts(ctx context.Context, after *string, before *string
 func (r *QueryResolver) Post(ctx context.Context, reference string) (*types.Post, error) {
 
 	pendingPost, err := r.App.Queries.PostById.Handle(ctx, query.PostById{
-		PostId: reference,
+		PostId:    reference,
+		Principal: principal.FromContext(ctx),
 	})
 
 	if err != nil {

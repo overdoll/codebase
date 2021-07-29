@@ -8,6 +8,7 @@ import (
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/graphql/relay"
+	"overdoll/libraries/principal"
 )
 
 type EntityResolver struct {
@@ -95,7 +96,8 @@ func (r EntityResolver) FindAccountByID(ctx context.Context, id relay.ID) (*type
 func (r EntityResolver) FindPostByID(ctx context.Context, id relay.ID) (*types.Post, error) {
 
 	pendingPost, err := r.App.Queries.PostById.Handle(ctx, query.PostById{
-		PostId: id.GetID(),
+		PostId:    id.GetID(),
+		Principal: principal.FromContext(ctx),
 	})
 
 	if err != nil {

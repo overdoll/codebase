@@ -5,12 +5,13 @@ import (
 
 	"github.com/pkg/errors"
 	"overdoll/applications/sting/internal/domain/post"
-	"overdoll/libraries/account"
+	"overdoll/libraries/principal"
 	"overdoll/libraries/uuid"
 )
 
 type CreatePost struct {
-	ContributorId string
+	Principal *principal.Principal
+
 	// optional
 	ExistingArtistId     *string
 	CustomArtistUsername *string
@@ -34,17 +35,6 @@ func NewCreatePostHandler(pr post.Repository, eva EvaService, parley ParleyServi
 
 func (h CreatePostHandler) Handle(ctx context.Context, cmd CreatePost) (*post.Post, error) {
 
-	// Get our contributor
-	contributor, err := h.eva.GetAccount(ctx, cmd.ContributorId)
-
-	if err != nil {
-		return nil, err
-	}
-
-	if contributor.IsLocked() {
-		return nil, err
-	}
-
 	characters, err := h.pr.GetCharactersById(ctx, cmd.CharacterIds)
 
 	if err != nil {
@@ -57,15 +47,10 @@ func (h CreatePostHandler) Handle(ctx context.Context, cmd CreatePost) (*post.Po
 		return nil, err
 	}
 
-	var artist *account.Account
+	var artist *principal.Principal
 
 	if cmd.PosterIsArtist {
-		artist, err = h.eva.GetAccount(ctx, cmd.ContributorId)
-
-		if err != nil {
-			return nil, errors.Wrap(err, "failed to get account")
-		}
-
+		artist = cmd.Principal
 	} else if cmd.ExistingArtistId != nil {
 		artist, err = h.eva.GetAccount(ctx, *cmd.ExistingArtistId)
 
@@ -86,7 +71,7 @@ func (h CreatePostHandler) Handle(ctx context.Context, cmd CreatePost) (*post.Po
 		customArtistUsername = *cmd.CustomArtistUsername
 	}
 
-	pendingPost, err := post.NewPost(uuid.New().String(), moderatorId, artist, customArtistUsername, contributor, cmd.Content, characters, categories)
+	pendingPost, err := post.NewPost(uuid.New().String(), moderatorId, artist, customArtistUsername, cmd.Principal, cmd.Content, characters, categories)
 
 	if err != nil {
 		return nil, err

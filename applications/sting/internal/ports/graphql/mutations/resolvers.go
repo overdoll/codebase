@@ -10,6 +10,7 @@ import (
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/applications/sting/internal/ports/temporal/workflows"
 	"overdoll/libraries/passport"
+	"overdoll/libraries/principal"
 )
 
 type MutationResolver struct {
@@ -66,7 +67,7 @@ func (r *MutationResolver) CreatePost(ctx context.Context, input types.CreatePos
 		Handle(
 			ctx,
 			command.CreatePost{
-				ContributorId:        passport.FromContext(ctx).AccountID(),
+				Principal:            principal.FromContext(ctx),
 				ExistingArtistId:     artistId,
 				CustomArtistUsername: input.CustomArtistUsername,
 				PosterIsArtist:       posterIsArtist,
