@@ -3,8 +3,7 @@
  */
 import type { Node } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { Suspense, useEffect } from 'react'
-import { PreloadedQuery } from 'react-relay/hooks'
+import { Suspense } from 'react'
 import {
   Heading, Center,
   Flex, Stack, Skeleton, IconButton, Popover,
@@ -18,34 +17,26 @@ import {
 } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import Button from '@//:modules/form/button'
-import InterfaceArrowsSynchronize
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-synchronize.svg'
-import { graphql, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay'
+import { graphql, usePreloadedQuery } from 'react-relay'
 import PendingPosts from './components/PendingPosts/PendingPosts'
 import { useTranslation } from 'react-i18next'
 import type { QueuePostsQuery } from '@//:artifacts/QueuePostsQuery.graphql'
-import ErrorFallback from '../../../../components/ErrorFallback/ErrorFallback'
-import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
+
 import InterfaceHelpQuestionCircle
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/help/interface-help-question-circle.svg'
-import type { PostsPaginationQuery } from '@//:artifacts/PostsPaginationQuery.graphql'
-import type { QueuePostsFragment$key } from '@//:artifacts/QueuePostsFragment.graphql'
 
 type Props = {
   prepared: {
     stateQuery: QueuePostsQuery,
-  },
-  paginationQuery: QueuePostsFragment$key,
+  }
 }
 
 const queuePostsGQL = graphql`
   query QueuePostsQuery {
     viewer {
-      ...QueuePostsFragment
-      moderator {
-        lastSelected
-      }
+      ...PendingPostsFragment
     }
+    ...RejectionReasonsFragment
   }
 `
 

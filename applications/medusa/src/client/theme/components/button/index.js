@@ -195,19 +195,21 @@ const sizes = {
     fontSize: '2xl',
     fontWeight: 'medium',
     px: 6,
-    borderRadius: 12
+    borderRadius: 15
   },
   lg: {
     h: 12,
     minW: 12,
     fontSize: 'lg',
+    borderRadius: 15,
     px: 6
   },
   md: {
     h: 10,
     minW: 10,
     fontSize: 'md',
-    px: 4
+    px: 4,
+    borderRadius: 10
   },
   sm: {
     h: 8,

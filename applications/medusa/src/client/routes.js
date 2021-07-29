@@ -128,7 +128,7 @@ const routes: Array<Route> = [
               return {
                 stateQuery: {
                   query: ModerationQuery,
-                  variables: {},
+                  variables: { first: 1 },
                   options: {
                     fetchPolicy: 'store-or-network'
                   }

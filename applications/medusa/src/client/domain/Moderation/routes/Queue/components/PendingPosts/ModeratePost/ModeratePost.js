@@ -2,98 +2,117 @@
  * @flow
  */
 import type { Node } from 'react'
-import { Suspense, useEffect } from 'react'
+import { useEffect } from 'react'
 import type { ModeratePostMutation } from '@//:artifacts/ModeratePostMutation.graphql'
-import { graphql, useQueryLoader } from 'react-relay'
-import { PreloadedQuery, useMutation } from 'react-relay/hooks'
+import { graphql, useFragment } from 'react-relay'
+import { useMutation } from 'react-relay/hooks'
 import {
   Button,
   HStack,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Skeleton,
+  CloseButton,
+  Flex,
+  Heading,
+  Fade,
   useDisclosure,
   useToast
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
-import type { ModeratePostInfractionsQuery } from '@//:artifacts/ModeratePostInfractionsQuery.graphql'
-import ErrorFallback from '../../../../../../../components/ErrorFallback/ErrorFallback'
-import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
 import RejectionReasons from './RejectionReasons/RejectionReasons'
+import type { PostContentFragment$key } from '@//:artifacts/PostContentFragment.graphql'
+import type { ModeratePostFragment$key } from '@//:artifacts/ModeratePostFragment.graphql'
+import Icon from '@//:modules/content/Icon/Icon'
+import Close from '@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/form-validation/close.svg'
+import InterfaceValidationCheck
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/validation/interface-validation-check.svg'
+import type { PendingPostsFragment$key } from '@//:artifacts/PendingPostsFragment.graphql'
 
 type Props = {
-  postId: string,
-  refresh: () => void,
-  query?: PreloadedQuery<ModeratePostInfractionsQuery>
+  infractions: PostContentFragment$key,
+  postID: ModeratePostFragment$key,
+  connectionID: PendingPostsFragment$key,
 }
 
 const ModeratePostGQL = graphql`
-  mutation ModeratePostMutation($input: ModeratePostInput!) {
+  mutation ModeratePostMutation($input: ModeratePostInput!, $connections: [ID!]!) {
     moderatePost(input: $input) {
       postAuditLog {
-        id
+        id @deleteEdge(connections: $connections)
       }
     }
   }
 `
 
-const InfractionsGQL = graphql`
-  query ModeratePostInfractionsQuery {
-    postRejectionReasons {
-     edges {
-       node {
-         id
-         reason
-         infraction
-       }
-     }
-    }
+const PostIDGQL = graphql`
+  fragment ModeratePostFragment on Post {
+    id
   }
 `
 
-export default function ModeratePost ({ postId, refresh, query }: Props): Node {
+export default function ModeratePost (props: Props): Node {
   const [t] = useTranslation('moderation')
 
   const [moderatePost, isModeratingPost] = useMutation<ModeratePostMutation>(
     ModeratePostGQL
   )
 
-  const [queryRef, loadQuery] = useQueryLoader<ModeratePostInfractionsQuery>(
-    InfractionsGQL,
-    query
-  )
-
-  useEffect(() => {
-    loadQuery()
-  }, [])
+  const data = useFragment(PostIDGQL, props.postID)
 
   const notify = useToast()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
+  // Close modal if user scrolls to a different post
+  useEffect(() => {
+    onClose()
+  }, [data.id])
+
   const approvePost = () => {
     moderatePost({
       variables: {
-        postId: postId,
-        notes: ''
+        input: {
+          postId: data.id,
+          notes: ''
+        },
+        connections: [props.connectionID]
       },
       onCompleted () {
         notify({
           status: 'success',
-          title: t('queue.post.actions.approve.query.success', { id: postId }),
+          title: t('queue.post.actions.approve.query.success', { id: data.id }),
           isClosable: true
         })
-        refresh()
       },
       onError () {
         notify({
           status: 'error',
-          title: t('queue.post.actions.approve.query.error', { id: postId }),
+          title: t('queue.post.actions.approve.query.error', { id: data.id }),
+          isClosable: true
+        })
+      }
+    })
+  }
+  const rejectPost = (formData) => {
+    moderatePost({
+      variables: {
+        input: {
+          postId: data.id,
+          reasonId: formData.rejectionId,
+          notes: formData.note
+        },
+        connections: [props.connectionID]
+      },
+      onCompleted () {
+        notify({
+          status: 'success',
+          title: t('queue.post.actions.deny.query.success', { id: data.id }),
+          isClosable: true
+        })
+        onClose()
+      },
+      onError () {
+        notify({
+          status: 'error',
+          title: t('queue.post.actions.deny.query.error', { id: data.id }),
           isClosable: true
         })
       }
@@ -102,39 +121,60 @@ export default function ModeratePost ({ postId, refresh, query }: Props): Node {
 
   return (
     <>
-      <HStack mt={6} justify='flex-end'>
-        <Button size='lg' variant='ghost' colorScheme='orange' isLoading={isModeratingPost} onClick={onOpen}>
-          {t('queue.post.actions.deny.button')}
+      <HStack p={6} spacing={8} justify='center'>
+        <Button
+          color='gray.00'
+          bg='orange.500'
+          borderRadius='100%' size='lg' variant='unstyled' colorScheme='orange' isLoading={isModeratingPost}
+          onClick={onOpen} h='85px' w='85px'
+        >
+          <Flex align='center' direction='column'>
+            <Icon
+              w={4} mb={1} h={4} icon={Close}
+              fill='gray.00'
+            />
+            {t('queue.post.actions.deny.button')}
+          </Flex>
         </Button>
-        <Button size='lg' variant='outline' colorScheme='gray' isLoading={isModeratingPost} onClick={approvePost}>
-          {t('queue.post.actions.approve.button')}
+        <Button
+          h='85px' w='85px'
+          color='gray.00'
+          bg='green.300'
+          borderRadius='100%' size='lg' variant='unstyled' colorScheme='green' isLoading={isModeratingPost}
+          onClick={approvePost}
+        >
+          <Flex align='center' direction='column'>
+            <Icon
+              w={4} mb={1} h={4} icon={InterfaceValidationCheck}
+              fill='gray.00'
+            />
+            {t('queue.post.actions.approve.button')}
+          </Flex>
         </Button>
       </HStack>
-      <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent bg='gray.900'>
-          <ModalHeader fontSize='lg'>{t('queue.post.actions.deny.modal.title')}</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <ErrorBoundary
-              fallback={({ error, reset }) => (
-                <ErrorFallback error={error} reset={reset} refetch={loadQuery} />
-              )}
-            >
-              <Suspense fallback={<Skeleton />}>
-                {queryRef
-                  ? <RejectionReasons
-                      isModeratingPost={isModeratingPost} moderatePost={moderatePost}
-                      postId={postId} onClose={onClose} refresh={refresh}
-                      query={InfractionsGQL} queryRef={queryRef}
-                    />
-                  : <Skeleton />}
-              </Suspense>
-            </ErrorBoundary>
-          </ModalBody>
-          <ModalFooter />
-        </ModalContent>
-      </Modal>
+      <Flex
+        position='absolute'
+        w='100%' h='100%'
+        pointerEvents={isOpen ? 'initial' : 'none'}
+      >
+        <Fade in={isOpen}>
+          <Flex
+            p={4} direction='column' bg='dimmers.900' w='100%' h='100%' position='absolute'
+            borderRadius={10} backdropFilter='blur(5px)'
+          >
+            <Flex align='center' w='100%' justify='space-between'>
+              <Heading fontSize='lg' color='gray.00'>{t('queue.post.actions.deny.modal.title')}</Heading>
+              <CloseButton onClick={onClose} right={0} />
+            </Flex>
+            <RejectionReasons
+              infractions={props.infractions}
+              onSubmit={rejectPost}
+              isModeratingPost={isModeratingPost}
+              moderatePost={moderatePost}
+            />
+          </Flex>
+        </Fade>
+      </Flex>
     </>
   )
 }

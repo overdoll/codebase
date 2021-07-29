@@ -11,13 +11,13 @@ import {
   FormErrorMessage,
   FormLabel,
   Select,
-  Stack, Textarea, useToast
+  Stack, Textarea
 } from '@chakra-ui/react'
-import { usePreloadedQuery } from 'react-relay'
-import type { ModeratePostInfractionsQuery } from '@//:artifacts/ModeratePostInfractionsQuery.graphql'
+import { graphql, useFragment } from 'react-relay'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Joi from 'joi'
+import type { RejectionReasonsFragment$key } from '@//:artifacts/RejectionReasonsFragment.graphql'
 
 type NoteValues = {
   note: string,
@@ -25,14 +25,24 @@ type NoteValues = {
 };
 
 type Props = {
+  infractions: RejectionReasonsFragment$key,
   isModeratingPost: boolean,
-  moderatePost: () => void,
-  postId: string,
-  query: ModeratePostInfractionsQuery,
-  queryRef: ModeratePostInfractionsQuery,
-  onClose: () => void,
-  refresh: () => void,
+  onSubmit: () => void
 }
+
+const InfractionsGQL = graphql`
+  fragment RejectionReasonsFragment on Query {
+    postRejectionReasons {
+      edges {
+        node {
+          id
+          reason
+          infraction
+        }
+      }
+    }
+  }
+`
 
 const schema = Joi.object({
   rejectionId: Joi.string().required(),
@@ -42,43 +52,12 @@ const schema = Joi.object({
 export default function RejectionReasons (props: Props): Node {
   const [t] = useTranslation('moderation')
 
-  const data = usePreloadedQuery<ModeratePostInfractionsQuery>(
-    props.query,
-    props.queryRef
-  )
+  const data = useFragment(InfractionsGQL, props.infractions)
 
   const [infraction, setInfraction] = useState(null)
 
-  const notify = useToast()
-
   const findInfraction = (id) => {
-    setInfraction(data.rejectionReasons.filter((item) => item.id === id)[0]?.infraction)
-  }
-
-  const onReject = (formData) => {
-    props.moderatePost({
-      variables: {
-        postId: props.postId,
-        reasonId: formData.rejectionId,
-        notes: formData.note
-      },
-      onCompleted () {
-        notify({
-          status: 'success',
-          title: t('queue.post.actions.deny.query.success', { id: props.postId }),
-          isClosable: true
-        })
-        props.onClose()
-        props.refresh()
-      },
-      onError () {
-        notify({
-          status: 'error',
-          title: t('queue.post.actions.deny.query.error', { id: props.postId }),
-          isClosable: true
-        })
-      }
-    })
+    setInfraction(data.postRejectionReasons.edges.filter((item) => item.node.id === id)[0]?.node.infraction)
   }
 
   const { register, handleSubmit, formState: { errors } } = useForm<NoteValues>({
@@ -89,7 +68,7 @@ export default function RejectionReasons (props: Props): Node {
 
   return (
     <>
-      <form onSubmit={handleSubmit(onReject)}>
+      <form onSubmit={handleSubmit(props.onSubmit)}>
         <Stack spacing={3}>
           <FormControl isRequired isInvalid={errors.rejectionId}>
             <FormLabel>
@@ -100,8 +79,8 @@ export default function RejectionReasons (props: Props): Node {
               onChange={(e) => findInfraction(e.target.value)}
               placeholder={t('queue.post.actions.deny.modal.form.dropdown.placeholder')}
             >
-              {data.rejectionReasons.map((item, index) =>
-                <option key={index} value={item.id}>{item.reason}</option>
+              {data.postRejectionReasons.edges.map((item, index) =>
+                <option key={index} value={item.node.id}>{item.node.reason}</option>
               )}
             </Select>
             <FormErrorMessage
@@ -114,6 +93,7 @@ export default function RejectionReasons (props: Props): Node {
               {t('queue.post.actions.deny.modal.form.textarea.label')}
             </FormLabel>
             <Textarea
+              resize='none'
               isInvalid={errors.note} {...register('note', { maxLength: 255 })}
               placeholder={t('queue.post.actions.deny.modal.form.textarea.placeholder')}
             />

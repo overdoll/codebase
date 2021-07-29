@@ -13,6 +13,7 @@
     },
     "post": {
       "content": "Post Uploads",
+      "title": "Posted on {{date}}",
       "reassignment": "Time you have left to take action on the post before it is reassigned to another moderator",
       "tags": {
         "title": "Post Tags",
@@ -37,7 +38,7 @@
         "deny": {
           "button": "Deny",
           "modal": {
-            "title": "Select a reason for denying the post",
+            "title": "Select a reason for denying this post",
             "form": {
               "textarea": {
                 "label": "Note",
