@@ -2,7 +2,6 @@ package adapters
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/sendgrid/sendgrid-go"
 	"github.com/sendgrid/sendgrid-go/helpers/mail"
@@ -24,13 +23,14 @@ func (r MailingSendgridRepository) SendEmail(ctx context.Context, recipient *mai
 
 	to := mail.NewEmail(recipient.Username(), recipient.Email())
 
-	message := mail.NewSingleEmail(from, email.Subject(), to, email.PlainText(), email.HTML())
+	_ = mail.NewSingleEmail(from, email.Subject(), to, email.PlainText(), email.HTML())
 
-	_, err := r.client.Send(message)
-
-	if err != nil {
-		return fmt.Errorf("could not send sendgrid email: %v", err)
-	}
+	// TODO: add back when API key is available
+	//_, err := r.client.Send(message)
+	//
+	//if err != nil {
+	//	return fmt.Errorf("could not send sendgrid email: %v", err)
+	//}
 
 	return nil
 }

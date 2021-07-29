@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash c90c7f280e861705e15754973ad8e0e2
+ * @relayHash 2b12b163e0128592b40b31fcf50f31f5
  */
 
 /* eslint-disable */
@@ -9,28 +9,26 @@
 
 import type { ConcreteRequest } from 'relay-runtime';
 export type MultiFactorType = "TOTP" | "%future added value";
-export type VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput = {|
+export type VerifyAuthenticationTokenInput = {|
   authenticationTokenId: string
 |};
 export type TokenMutationVariables = {|
-  input: VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput
+  input: VerifyAuthenticationTokenInput
 |};
 export type TokenMutationResponse = {|
-  +verifyAuthenticationTokenAndAttemptAccountAccessGrant: ?{|
+  +verifyAuthenticationToken: ?{|
     +authenticationToken: ?{|
       +verified: boolean,
       +email: string,
-      +session: string,
+      +device: string,
+      +location: string,
+      +secure: boolean,
       +sameSession: boolean,
       +accountStatus: ?{|
         +registered: boolean,
-        +authenticated: boolean,
         +multiFactor: ?$ReadOnlyArray<MultiFactorType>,
       |},
-    |},
-    +account: ?{|
-      +id: string
-    |},
+    |}
   |}
 |};
 export type TokenMutation = {|
@@ -41,22 +39,20 @@ export type TokenMutation = {|
 
 /*
 mutation TokenMutation(
-  $input: VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput!
+  $input: VerifyAuthenticationTokenInput!
 ) {
-  verifyAuthenticationTokenAndAttemptAccountAccessGrant(input: $input) {
+  verifyAuthenticationToken(input: $input) {
     authenticationToken {
       verified
       email
-      session
+      device
+      location
+      secure
       sameSession
       accountStatus {
         registered
-        authenticated
         multiFactor
       }
-    }
-    account {
-      id
     }
   }
 }
@@ -80,9 +76,9 @@ v1 = [
         "variableName": "input"
       }
     ],
-    "concreteType": "VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload",
+    "concreteType": "VerifyAuthenticationTokenPayload",
     "kind": "LinkedField",
-    "name": "verifyAuthenticationTokenAndAttemptAccountAccessGrant",
+    "name": "verifyAuthenticationToken",
     "plural": false,
     "selections": [
       {
@@ -111,7 +107,21 @@ v1 = [
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "session",
+            "name": "device",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "location",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "secure",
             "storageKey": null
           },
           {
@@ -140,35 +150,10 @@ v1 = [
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "authenticated",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
                 "name": "multiFactor",
                 "storageKey": null
               }
             ],
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "Account",
-        "kind": "LinkedField",
-        "name": "account",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "id",
             "storageKey": null
           }
         ],
@@ -196,7 +181,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "c90c7f280e861705e15754973ad8e0e2",
+    "id": "2b12b163e0128592b40b31fcf50f31f5",
     "metadata": {},
     "name": "TokenMutation",
     "operationKind": "mutation",
@@ -205,5 +190,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = 'e1b8984582b6c4d87eb06614fe058752';
+(node: any).hash = '7cc73fe7ed014b478b5ccb8540f52ff4';
 module.exports = node;

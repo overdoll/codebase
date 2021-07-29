@@ -13,7 +13,6 @@ import type { Router } from '@//:modules/routing/router'
 import type { IEnvironment } from 'relay-runtime/store/RelayStoreTypes'
 import Display from './Display'
 import { RuntimeProvider } from '@//:modules/runtime'
-import Route from '@//:modules/routing/Route'
 
 type Props = {
   environment: IEnvironment,
@@ -50,13 +49,14 @@ const Bootstrap = ({
     <RuntimeProvider initial={runtimeContext}>
       <FlashProvider override={flash}>
         <RelayEnvironmentProvider environment={environment}>
-          <RoutingContext.Provider value={routerContext}>
-            <QueryParamProvider
-              ReactRouterRoute={Route}
-            >
+          <QueryParamProvider
+            location={routerContext.history.location}
+            history={routerContext.history}
+          >
+            <RoutingContext.Provider value={routerContext}>
               {children ?? <RouterRenderer />}
-            </QueryParamProvider>
-          </RoutingContext.Provider>
+            </RoutingContext.Provider>
+          </QueryParamProvider>
         </RelayEnvironmentProvider>
       </FlashProvider>
     </RuntimeProvider>

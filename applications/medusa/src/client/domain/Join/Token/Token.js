@@ -1,38 +1,32 @@
 /**
  * @flow
  */
-import type { Node } from 'react'
-import { useEffect, useState } from 'react'
-import { graphql, useMutation } from 'react-relay/hooks'
-import Register from '../Register/Register'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from '@//:modules/routing'
-import { Icon } from '@//:modules/content'
-import UAParser from 'ua-parser-js'
-import { Alert, AlertDescription, AlertIcon, Box, Center, Flex, Heading, Spinner, Text } from '@chakra-ui/react'
-import { useFlash } from '@//:modules/flash'
-import { Helmet } from 'react-helmet-async'
-import SignBadgeCircle
-  from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
 import { useParams } from '@//:modules/routing/useParams'
+import { useFlash } from '@//:modules/flash'
 import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner'
+import UAParser from 'ua-parser-js'
+import { Helmet } from 'react-helmet-async'
+import { Alert, AlertDescription, AlertIcon, Box, Center, Flex, Heading, Text } from '@chakra-ui/react'
+import { Icon } from '@//:modules/content'
+import Register from '../Register/Register'
+import { graphql, useMutation } from 'react-relay/hooks'
 
 const TokenMutationGQL = graphql`
-  mutation TokenMutation($input: VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput!) {
-    verifyAuthenticationTokenAndAttemptAccountAccessGrant(input: $input) {
+  mutation TokenMutation($input: VerifyAuthenticationTokenInput!) {
+    verifyAuthenticationToken(input: $input) {
       authenticationToken {
         verified
         email
-        session
+        device
+        location
+        secure
         sameSession
         accountStatus {
           registered
-          authenticated
           multiFactor
         }
-      }
-      account {
-        id
       }
     }
   }
@@ -46,12 +40,16 @@ export default function Token (): Node {
 
   const [data, setData] = useState(null)
 
-  const [commit, isInFlight] = useMutation(
+  useEffect(() => {
+
+  }, [])
+
+  const [commitToken, isInFlightToken] = useMutation(
     TokenMutationGQL
   )
 
-  useEffect(() => {
-    commit({
+  const verifyToken = () => {
+    commitToken({
       variables: {
         input: {
           authenticationTokenId: params.id
@@ -82,7 +80,7 @@ export default function Token (): Node {
         console.log(data)
       }
     })
-  }, [])
+  }
 
   if (!data) {
     return <CenteredSpinner />
