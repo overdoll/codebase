@@ -13,23 +13,23 @@ type VerifyAuthenticationToken struct {
 
 type VerifyAuthenticationTokenHandler struct {
 	cr token.Repository
-	ur account.Repository
+	ar account.Repository
 }
 
-func NewVerifyAuthenticationTokenHandler(cr token.Repository, ur account.Repository) VerifyAuthenticationTokenHandler {
-	return VerifyAuthenticationTokenHandler{cr: cr, ur: ur}
+func NewVerifyAuthenticationTokenHandler(cr token.Repository, ar account.Repository) VerifyAuthenticationTokenHandler {
+	return VerifyAuthenticationTokenHandler{cr: cr, ar: ar}
 }
 
-func (h VerifyAuthenticationTokenHandler) Handle(ctx context.Context, cmd VerifyAuthenticationToken) (*token.AuthenticationToken, error) {
+func (h VerifyAuthenticationTokenHandler) Handle(ctx context.Context, cmd VerifyAuthenticationToken) error {
 
-	ck, err := h.cr.UpdateAuthenticationToken(ctx, cmd.TokenId, func(c *token.AuthenticationToken) error {
-		return c.MakeRedeemed()
+	_, err := h.cr.UpdateAuthenticationToken(ctx, cmd.TokenId, func(c *token.AuthenticationToken) error {
+		return c.MakeVerified()
 	})
 
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return ck, nil
+	return nil
 
 }

@@ -2,6 +2,7 @@ package service_test
 
 import (
 	"context"
+	"fmt"
 	"testing"
 	"time"
 
@@ -41,11 +42,17 @@ func TestLogout_user(t *testing.T) {
 func TestAccountAuthenticate_existing(t *testing.T) {
 	t.Parallel()
 
-	redeemCookie, _, pass := authenticateAndVerifyToken(t, "poisonminion_test@overdoll.com")
+	redeemCookie, client, pass := authenticateAndVerifyToken(t, "poisonminion_test@overdoll.com")
+
+	fmt.Println(redeemCookie.VerifyAuthenticationToken.AuthenticationToken.AccountStatus)
 
 	// the VerifyAuthenticationToken function will also log you in, if you redeem a cookie that's for a registered user
 	// so we check for that here
 	require.Equal(t, true, redeemCookie.VerifyAuthenticationToken.AuthenticationToken.AccountStatus.Registered)
+
+	// we need to now grant account access after verifying the token
+	grant := grantAccountAccessWithAuthenticationToken(t, client)
+	require.NotNil(t, grant.GrantAccountAccessWithAuthenticationToken.Account)
 
 	// the third parameter of getClient contains the most up-to-date version of the passport
 	modified := pass.GetPassport()
@@ -68,7 +75,7 @@ func TestAccountAuthenticate_from_another_session(t *testing.T) {
 
 	client, httpUser, _ := getHttpClient(t, passport.FreshPassport())
 
-	authenticate := mAuthenticate(t, client, "poisonminion_test@overdoll.com")
+	authenticate := grantAuthenticationToken(t, client, "poisonminion_test@overdoll.com")
 
 	otpCookie := getOTPTokenFromJar(t, httpUser.Jar)
 
@@ -80,6 +87,10 @@ func TestAccountAuthenticate_from_another_session(t *testing.T) {
 
 	// should have indicated that it was redeemed by another session
 	require.Equal(t, false, redeemCookie.VerifyAuthenticationToken.AuthenticationToken.SameSession)
+
+	// after verifying the token, we need  to grant account access
+	grant := grantAccountAccessWithAuthenticationToken(t, client)
+	require.Equal(t, graphql.String("poisonminion"), grant.GrantAccountAccessWithAuthenticationToken.Account.Username)
 
 	var settings ViewerAccount
 	err := client.Query(context.Background(), &settings, nil)
@@ -276,6 +287,10 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 
 	require.Equal(t, true, redeemCookie.VerifyAuthenticationToken.AuthenticationToken.AccountStatus.Registered)
 
+	// now grant account access
+	grant := grantAccountAccessWithAuthenticationToken(t, client)
+	require.NotNil(t, grant.GrantAccountAccessWithAuthenticationToken.Account)
+
 	modified = pass.GetPassport()
 
 	require.NoError(t, modified.Authenticated())
@@ -303,7 +318,7 @@ func TestAccountRegistration_complete(t *testing.T) {
 
 	require.NoError(t, err)
 
-	authenticate := mAuthenticate(t, client, fake.Email)
+	authenticate := grantAuthenticationToken(t, client, fake.Email)
 
 	// get cookies
 	otpCookie := getOTPTokenFromJar(t, httpUser.Jar)

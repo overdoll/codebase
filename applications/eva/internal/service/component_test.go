@@ -38,7 +38,7 @@ type GrantAuthenticationToken struct {
 	GrantAuthenticationToken types.GrantAuthenticationTokenPayload `graphql:"grantAuthenticationToken(input: $input)"`
 }
 
-func mAuthenticate(t *testing.T, client *graphql.Client, email string) GrantAuthenticationToken {
+func grantAuthenticationToken(t *testing.T, client *graphql.Client, email string) GrantAuthenticationToken {
 	var authenticate GrantAuthenticationToken
 
 	err := client.Mutate(context.Background(), &authenticate, map[string]interface{}{
@@ -68,12 +68,30 @@ func verifyAuthenticationToken(t *testing.T, client *graphql.Client, cookie stri
 	return redeemCookie
 }
 
+type GrantAccountAccessWithAuthenticationToken struct {
+	GrantAccountAccessWithAuthenticationToken *struct {
+		Account struct {
+			Username graphql.String
+		}
+	} `graphql:"grantAccountAccessWithAuthenticationToken()"`
+}
+
+func grantAccountAccessWithAuthenticationToken(t *testing.T, client *graphql.Client) GrantAccountAccessWithAuthenticationToken {
+	var redeemCookie GrantAccountAccessWithAuthenticationToken
+
+	err := client.Mutate(context.Background(), &redeemCookie, nil)
+
+	require.NoError(t, err)
+
+	return redeemCookie
+}
+
 // helper function - basically runs the "authentication" flow - run authenticate mutation, grab cookie from jar, and redeem the cookie
 func authenticateAndVerifyToken(t *testing.T, email string) (VerifyAuthenticationToken, *graphql.Client, *clients.ClientPassport) {
 
 	client, httpUser, pass := getHttpClient(t, passport.FreshPassport())
 
-	authenticate := mAuthenticate(t, client, email)
+	authenticate := grantAuthenticationToken(t, client, email)
 
 	otpCookie := getOTPTokenFromJar(t, httpUser.Jar)
 

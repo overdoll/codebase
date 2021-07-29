@@ -4,4 +4,4 @@ image:
 nameOverride: "carrier"
 
 service: true
-http: true
+grpc: true

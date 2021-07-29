@@ -3,14 +3,13 @@ services:
   carrier:
     image: $CONTAINER_REGISTRY/carrier/dev:$BUILDKITE_COMMIT
     entrypoint: ""
-    command: /bin/sh -c "/app/applications/carrier/internal/image.binary
+    command: /bin/sh -c "/app/applications/carrier/internal/image.binary"
     env_file: ../../applications/carrier/.env.ci
     depends_on:
       - temporal
       - redis
     ports:
-      - 3020:8000
-      - 3030:8080
+      - 5030:8080
     deploy:
       restart_policy:
         condition: on-failure

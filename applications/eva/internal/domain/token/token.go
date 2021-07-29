@@ -99,7 +99,7 @@ func (c *AuthenticationToken) Registered() bool {
 	return c.registered
 }
 
-func (c *AuthenticationToken) MakeRedeemed() error {
+func (c *AuthenticationToken) MakeVerified() error {
 	c.verified = true
 	return nil
 }

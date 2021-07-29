@@ -8,6 +8,7 @@ import (
 
 	"overdoll/applications/eva/internal/app"
 	"overdoll/applications/eva/internal/app/command"
+	"overdoll/applications/eva/internal/app/query"
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/multi_factor"
 	"overdoll/applications/eva/internal/domain/token"
@@ -222,7 +223,22 @@ func (r *MutationResolver) GrantAccountAccessWithAuthenticationToken(ctx context
 
 func (r *MutationResolver) VerifyAuthenticationToken(ctx context.Context, input types.VerifyAuthenticationTokenInput) (*types.VerifyAuthenticationTokenPayload, error) {
 
-	ck, err := r.App.Commands.VerifyAuthenticationToken.Handle(ctx, command.VerifyAuthenticationToken{
+	err := r.App.Commands.VerifyAuthenticationToken.Handle(ctx, command.VerifyAuthenticationToken{
+		TokenId: input.AuthenticationTokenID,
+	})
+
+	if err != nil {
+
+		if err == token.ErrTokenNotFound {
+			expired := types.VerifyAuthenticationTokenValidationTokenExpired
+			return &types.VerifyAuthenticationTokenPayload{Validation: &expired}, nil
+		}
+
+		return nil, err
+	}
+
+	// get updated token
+	ck, err := r.App.Queries.AuthenticationTokenById.Handle(ctx, query.AuthenticationTokenById{
 		TokenId: input.AuthenticationTokenID,
 	})
 
