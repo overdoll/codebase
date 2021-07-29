@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"log"
 	"os"
 
 	"overdoll/applications/eva/internal/adapters"
@@ -25,37 +24,16 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 
 func createApplication(ctx context.Context, carrier command.CarrierService) app.Application {
 
-	_, err := bootstrap.NewBootstrap(ctx)
+	bootstrap.NewBootstrap(ctx)
 
-	if err != nil {
-		log.Fatalf("bootstrap failed with errors: %s", err)
-	}
+	session := bootstrap.InitializeDatabaseSession()
 
-	session, err := bootstrap.InitializeDatabaseSession()
+	redis := bootstrap.InitializeRedisSession()
 
-	if err != nil {
-		log.Fatalf("database session failed with errors: %s", err)
-	}
-
-	redis, err := bootstrap.InitializeRedisSession()
-
-	if err != nil {
-		log.Fatalf("redis session failed with errors: %s", err)
-	}
-
-	client, err := bootstrap.InitializeElasticSearchSession()
-
-	if err != nil {
-		// Handle error
-		log.Fatalf("elastic session failed with errors: %s", err)
-	}
+	client := bootstrap.InitializeElasticSearchSession()
 
 	// need to use a custom DB redis session because sessions are stored in db 0 in express-session
-	redis2, err := bootstrap.InitializeRedisSessionWithCustomDB(0)
-
-	if err != nil {
-		log.Fatalf("redis session failed with errors: %s", err)
-	}
+	redis2 := bootstrap.InitializeRedisSessionWithCustomDB(0)
 
 	tokenRepo := adapters.NewAuthenticationTokenRedisRepository(redis)
 	sessionRepo := adapters.NewSessionRepository(redis2)

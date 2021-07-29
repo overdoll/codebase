@@ -16,9 +16,13 @@ func Read(root string) {
 		panic(err)
 	}
 
-	err = godotenv.Load(path.Join(dir, root) + "/.env")
+	rt := path.Join(dir, root)
 
-	viper.SetConfigFile(path.Join(dir, root) + "/config.toml")
+	viper.Set("root_directory", rt)
+
+	err = godotenv.Load(rt + "/.env")
+
+	viper.SetConfigFile(rt + "/config.toml")
 
 	if err := viper.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {

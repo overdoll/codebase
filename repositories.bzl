@@ -87,6 +87,14 @@ def go_repositories():
         version = "v0.0.0-20180808171621-7fddfc383310",
     )
     go_repository(
+        name = "com_github_avct_uasurfer",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/avct/uasurfer",
+        sum = "h1:9h8f71kuF1pqovnn9h7LTHLEjxzyQaj0j1rQq5nsMM4=",
+        version = "v0.0.0-20191028135549-26b5daa857f1",
+    )
+
+    go_repository(
         name = "com_github_aws_aws_sdk_go",
         build_file_proto_mode = "disable",
         importpath = "github.com/aws/aws-sdk-go",

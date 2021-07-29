@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"log"
 	"os"
 
 	"github.com/sendgrid/sendgrid-go"
@@ -15,9 +14,7 @@ import (
 
 func NewApplication(ctx context.Context) (app.Application, func()) {
 
-	if _, err := bootstrap.NewBootstrap(ctx); err != nil {
-		log.Fatalf("bootstrap failed with errors: %s", err)
-	}
+	bootstrap.NewBootstrap(ctx)
 
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
 

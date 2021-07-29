@@ -3,9 +3,9 @@ package command
 import (
 	"context"
 
-	"overdoll/libraries/principal"
+	"overdoll/applications/carrier/internal/domain/identifier"
 )
 
 type EvaService interface {
-	GetAccount(context.Context, string) (*principal.Principal, error)
+	GetAccount(context.Context, string) (*identifier.Identifier, error)
 }

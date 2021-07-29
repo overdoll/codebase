@@ -3,8 +3,8 @@ package adapters
 import (
 	"context"
 
+	"overdoll/applications/carrier/internal/domain/identifier"
 	eva "overdoll/applications/eva/proto"
-	"overdoll/libraries/principal"
 )
 
 type EvaGrpc struct {
@@ -15,7 +15,7 @@ func NewEvaGrpc(client eva.EvaClient) EvaGrpc {
 	return EvaGrpc{client: client}
 }
 
-func (s EvaGrpc) GetAccount(ctx context.Context, id string) (*principal.Principal, error) {
+func (s EvaGrpc) GetAccount(ctx context.Context, id string) (*identifier.Identifier, error) {
 
 	usr, err := s.client.GetAccount(ctx, &eva.GetAccountRequest{
 		Id: id,
@@ -25,5 +25,5 @@ func (s EvaGrpc) GetAccount(ctx context.Context, id string) (*principal.Principa
 		return nil, err
 	}
 
-	return principal.UnmarshalFromEvaProto(usr), nil
+	return identifier.UnmarshalIdentifierFromDatabase(usr.Id, usr.Username, usr.Email), nil
 }

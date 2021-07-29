@@ -2,25 +2,20 @@ package service
 
 import (
 	"context"
-	"log"
 	"os"
 
 	"overdoll/applications/sting/internal/adapters"
 	"overdoll/applications/sting/internal/app"
 	"overdoll/applications/sting/internal/app/command"
 	"overdoll/applications/sting/internal/app/query"
-	storage "overdoll/libraries/aws"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
 )
 
 func NewApplication(ctx context.Context) (app.Application, func()) {
 
-	_, err := bootstrap.NewBootstrap(ctx)
-
-	if err != nil {
-		log.Fatalf("bootstrap failed with errors: %s", err)
-	}
+	// bootstrap application
+	bootstrap.NewBootstrap(ctx)
 
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
 	parleyClient, cleanup2 := clients.NewParleyClient(ctx, os.Getenv("PARLEY_SERVICE"))
@@ -34,23 +29,11 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 
 func createApplication(ctx context.Context, eva command.EvaService, parley command.ParleyService) app.Application {
 
-	session, err := bootstrap.InitializeDatabaseSession()
+	session := bootstrap.InitializeDatabaseSession()
 
-	if err != nil {
-		log.Fatalf("database session failed with errors: %s", err)
-	}
+	client := bootstrap.InitializeElasticSearchSession()
 
-	client, err := bootstrap.InitializeElasticSearchSession()
-
-	if err != nil {
-		log.Fatalf("failed to create es session: %s", err)
-	}
-
-	awsSession, err := storage.CreateAWSSession()
-
-	if err != nil {
-		log.Fatalf("failed to create aws session: %s", err)
-	}
+	awsSession := bootstrap.InitializeAWSSession()
 
 	postRepo := adapters.NewPostsCassandraRepository(session)
 	indexRepo := adapters.NewPostsIndexElasticSearchRepository(client, session)

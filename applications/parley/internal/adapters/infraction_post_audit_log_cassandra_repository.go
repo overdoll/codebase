@@ -359,19 +359,46 @@ func (r InfractionCassandraRepository) UpdatePostAuditLog(ctx context.Context, r
 		return nil, err
 	}
 
-	marhs, err := marshalPostAuditLogToDatabase(auditLog)
+	marshalledAuditLog, err := marshalPostAuditLogToDatabase(auditLog)
 
 	if err != nil {
 		return nil, err
 	}
 
-	updateAuditLog := r.session.
-		Query(postAuditLogByModeratorTable.Update("account_infraction_id", "reverted", "reason")).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(marhs)
+	batch := r.session.NewBatch(gocql.LoggedBatch)
 
-	if err := updateAuditLog.ExecRelease(); err != nil {
-		return nil, fmt.Errorf("failed to update post audit log: %v", err)
+	stmt, _ := postAuditLogByPostTable.Update("account_infraction_id", "reverted", "reason")
+
+	batch.Query(stmt,
+		marshalledAuditLog.Id,
+		marshalledAuditLog.ModeratorId,
+		marshalledAuditLog.Bucket,
+		marshalledAuditLog.PostId,
+		marshalledAuditLog.ContributorId,
+		marshalledAuditLog.AccountInfractionId,
+		marshalledAuditLog.Action,
+		marshalledAuditLog.Reason,
+		marshalledAuditLog.Notes,
+		marshalledAuditLog.Reverted,
+	)
+
+	stmt, _ = postAuditLogByModeratorTable.Update("account_infraction_id", "reverted", "reason")
+
+	batch.Query(stmt,
+		marshalledAuditLog.Id,
+		marshalledAuditLog.ModeratorId,
+		marshalledAuditLog.Bucket,
+		marshalledAuditLog.PostId,
+		marshalledAuditLog.ContributorId,
+		marshalledAuditLog.AccountInfractionId,
+		marshalledAuditLog.Action,
+		marshalledAuditLog.Reason,
+		marshalledAuditLog.Notes,
+		marshalledAuditLog.Reverted,
+	)
+
+	if err := r.session.ExecuteBatch(batch); err != nil {
+		return nil, fmt.Errorf("failed to update audit log: %v", err)
 	}
 
 	return auditLog, nil

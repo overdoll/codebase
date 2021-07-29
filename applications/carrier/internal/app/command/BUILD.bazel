@@ -10,8 +10,8 @@ go_library(
     importpath = "overdoll/applications/carrier/internal/app/command",
     visibility = ["//applications/carrier:__subpackages__"],
     deps = [
+        "//applications/carrier/internal/domain/identifier",
         "//applications/carrier/internal/domain/mailing",
-        "//libraries/principal",
         "@com_github_matcornic_hermes_v2//:hermes",
     ],
 )

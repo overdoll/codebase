@@ -1,4 +1,4 @@
-package storage
+package bootstrap
 
 import (
 	"os"
@@ -6,9 +6,10 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
+	"go.uber.org/zap"
 )
 
-func CreateAWSSession() (*session.Session, error) {
+func InitializeAWSSession() *session.Session {
 	s, err := session.NewSession(&aws.Config{
 		Credentials:      credentials.NewStaticCredentials(os.Getenv("AWS_ACCESS_KEY"), os.Getenv("AWS_ACCESS_SECRET"), ""),
 		Endpoint:         aws.String(os.Getenv("AWS_ENDPOINT")),
@@ -18,8 +19,8 @@ func CreateAWSSession() (*session.Session, error) {
 	})
 
 	if err != nil {
-		return nil, err
+		zap.S().Fatal("aws session failed", zap.Error(err))
 	}
 
-	return s, nil
+	return s
 }

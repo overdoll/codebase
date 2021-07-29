@@ -16,7 +16,7 @@ import (
 	"github.com/segmentio/ksuid"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/sting/internal/adapters"
-	storage "overdoll/libraries/aws"
+	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/config"
 )
 
@@ -57,7 +57,7 @@ func TestContentS3Repository_ProcessContent(t *testing.T) {
 
 }
 func newS3Client(t *testing.T) *s3.S3 {
-	session, err := storage.CreateAWSSession()
+	session, err := bootstrap.InitializeAWSSession()
 
 	require.NoError(t, err)
 
@@ -66,7 +66,7 @@ func newS3Client(t *testing.T) *s3.S3 {
 
 func uploadFileFixture(t *testing.T, bucket, fileKey, filePath string) {
 
-	session, err := storage.CreateAWSSession()
+	session, err := bootstrap.InitializeAWSSession()
 
 	require.NoError(t, err)
 
@@ -93,7 +93,7 @@ func uploadFileFixture(t *testing.T, bucket, fileKey, filePath string) {
 
 func newContentRepository(t *testing.T) adapters.ContentS3Repository {
 
-	s, err := storage.CreateAWSSession()
+	s, err := bootstrap.InitializeAWSSession()
 
 	require.NoError(t, err)
 
@@ -104,7 +104,7 @@ func newContentRepository(t *testing.T) adapters.ContentS3Repository {
 func seedBuckets() bool {
 	config.Read("applications/sting/config.toml")
 
-	session, err := storage.CreateAWSSession()
+	session, err := bootstrap.InitializeAWSSession()
 
 	if err != nil {
 		fmt.Println(err)

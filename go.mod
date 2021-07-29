@@ -9,6 +9,7 @@ require (
 	github.com/Masterminds/sprig v2.22.0+incompatible // indirect
 	github.com/PuerkitoBio/goquery v1.7.1 // indirect
 	github.com/aokoli/goutils v1.1.1 // indirect
+	github.com/avct/uasurfer v0.0.0-20191028135549-26b5daa857f1 // indirect
 	github.com/aws/aws-sdk-go v1.38.51
 	github.com/bazelbuild/rules_go v0.27.0
 	github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869

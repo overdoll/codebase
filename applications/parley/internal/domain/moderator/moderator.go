@@ -43,7 +43,17 @@ func (m *Moderator) CanView(requester *principal.Principal) error {
 
 func NewModerator(requester *principal.Principal, accountId string) (*Moderator, error) {
 
-	// TODO: permission checks
+	// make sure we are allowed to create a new moderator
+	if !requester.IsStaff() {
+
+		if !requester.IsModerator() {
+			return nil, principal.ErrNotAuthorized
+		}
+
+		if err := requester.BelongsToAccount(accountId); err != nil {
+			return nil, err
+		}
+	}
 
 	return &Moderator{
 		accountId:    accountId,

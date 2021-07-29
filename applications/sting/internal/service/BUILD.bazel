@@ -10,7 +10,6 @@ go_library(
         "//applications/sting/internal/app",
         "//applications/sting/internal/app/command",
         "//applications/sting/internal/app/query",
-        "//libraries/aws",
         "//libraries/bootstrap",
         "//libraries/clients",
     ],

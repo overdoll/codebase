@@ -7,6 +7,7 @@ import (
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/spf13/viper"
+	"go.uber.org/zap"
 )
 
 func initializeDatabaseSession(keyspace string) (gocqlx.Session, error) {
@@ -33,15 +34,26 @@ func initializeDatabaseSession(keyspace string) (gocqlx.Session, error) {
 	return session, nil
 }
 
-func InitializeDatabaseSession() (gocqlx.Session, error) {
+func InitializeDatabaseSession() gocqlx.Session {
 
 	keyspace := viper.GetString("db.keyspace")
 
-	return initializeDatabaseSession(keyspace)
+	session, err := initializeDatabaseSession(keyspace)
+
+	if err != nil {
+		zap.S().Fatal("database session failed", zap.Error(err))
+	}
+
+	return session
 }
 
-func InitializeDatabaseSessionNoKeyspace() (gocqlx.Session, error) {
+func InitializeDatabaseSessionNoKeyspace() gocqlx.Session {
 
-	return initializeDatabaseSession("")
+	session, err := initializeDatabaseSession("")
+
+	if err != nil {
+		zap.S().Fatal("database session failed", zap.Error(err))
+	}
+
+	return session
 }
-

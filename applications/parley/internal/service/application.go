@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"log"
 	"os"
 
 	"overdoll/applications/parley/internal/adapters"
@@ -15,9 +14,7 @@ import (
 
 func NewApplication(ctx context.Context) (app.Application, func()) {
 
-	if _, err := bootstrap.NewBootstrap(ctx); err != nil {
-		log.Fatalf("bootstrap failed with errors: %s", err)
-	}
+	bootstrap.NewBootstrap(ctx)
 
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
 	stingClient, cleanup2 := clients.NewStingClient(ctx, os.Getenv("STING_SERVICE"))
@@ -31,9 +28,7 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 
 func NewComponentTestApplication(ctx context.Context) (app.Application, func()) {
 
-	if _, err := bootstrap.NewBootstrap(ctx); err != nil {
-		log.Fatalf("bootstrap failed with errors: %s", err)
-	}
+	bootstrap.NewBootstrap(ctx)
 
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
 
@@ -48,11 +43,7 @@ func NewComponentTestApplication(ctx context.Context) (app.Application, func()) 
 
 func createApplication(ctx context.Context, eva command.EvaService, sting command.StingService) app.Application {
 
-	session, err := bootstrap.InitializeDatabaseSession()
-
-	if err != nil {
-		log.Fatalf("database session failed with errors: %s", err)
-	}
+	session := bootstrap.InitializeDatabaseSession()
 
 	moderatorRepo := adapters.NewModeratorCassandraRepository(session)
 	infractionRepo := adapters.NewInfractionCassandraRepository(session)

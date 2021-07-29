@@ -15,7 +15,7 @@ import (
 
 func newFakeCookie(t *testing.T) *token.AuthenticationToken {
 
-	ck, err := token.NewAuthenticationToken(uuid.New().String(), "test@test.com", "")
+	ck, err := token.NewAuthenticationToken(uuid.New().String(), "test@test.com", "", "", "")
 
 	require.NoError(t, err)
 

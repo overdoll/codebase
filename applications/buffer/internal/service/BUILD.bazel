@@ -9,7 +9,7 @@ go_library(
         "//applications/buffer/internal/adapters",
         "//applications/buffer/internal/app",
         "//applications/buffer/internal/app/command",
-        "//libraries/aws",
         "//libraries/bootstrap",
+        "@org_uber_go_zap//:zap",
     ],
 )

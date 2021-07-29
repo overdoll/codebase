@@ -5,10 +5,18 @@ import (
 
 	"github.com/go-redis/redis/v8"
 	"github.com/spf13/viper"
+	"go.uber.org/zap"
 )
 
-func InitializeRedisSession() (*redis.Client, error) {
-	return initializeRedisSession(viper.GetInt("redis.db"))
+func InitializeRedisSession() *redis.Client {
+
+	client, err := initializeRedisSession(viper.GetInt("redis.db"))
+
+	if err != nil {
+		zap.S().Fatal("redis session failed", zap.Error(err))
+	}
+
+	return client
 }
 
 func initializeRedisSession(db int) (*redis.Client, error) {
@@ -22,6 +30,13 @@ func initializeRedisSession(db int) (*redis.Client, error) {
 	return rdb, nil
 }
 
-func InitializeRedisSessionWithCustomDB(db int) (*redis.Client, error) {
-	return initializeRedisSession(db)
+func InitializeRedisSessionWithCustomDB(db int) *redis.Client {
+
+	client, err := initializeRedisSession(db)
+
+	if err != nil {
+		zap.S().Fatal("redis session failed", zap.Error(err))
+	}
+
+	return client
 }
