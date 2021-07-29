@@ -9,6 +9,7 @@ import (
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/table"
 	mod "overdoll/applications/parley/internal/domain/moderator"
+	"overdoll/libraries/principal"
 )
 
 var moderatorTable = table.New(table.Metadata{
@@ -44,7 +45,7 @@ func marshaModeratorToDatabase(mod *mod.Moderator) *moderator {
 	}
 }
 
-func (r ModeratorCassandraRepository) GetModerator(ctx context.Context, id string) (*mod.Moderator, error) {
+func (r ModeratorCassandraRepository) getModerator(ctx context.Context, id string) (*mod.Moderator, error) {
 
 	moderatorQuery := r.session.
 		Query(moderatorTable.Select()).
@@ -63,6 +64,21 @@ func (r ModeratorCassandraRepository) GetModerator(ctx context.Context, id strin
 	}
 
 	return mod.UnmarshalModeratorFromDatabase(md.AccountId, md.LastSelected), nil
+}
+
+func (r ModeratorCassandraRepository) GetModerator(ctx context.Context, requester *principal.Principal, accountId string) (*mod.Moderator, error) {
+
+	moderator, err := r.getModerator(ctx, accountId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err := moderator.CanView(requester); err != nil {
+		return nil, err
+	}
+
+	return moderator, nil
 }
 
 func (r ModeratorCassandraRepository) GetModerators(ctx context.Context) ([]*mod.Moderator, error) {
@@ -102,7 +118,7 @@ func (r ModeratorCassandraRepository) CreateModerator(ctx context.Context, mod *
 
 func (r ModeratorCassandraRepository) UpdateModerator(ctx context.Context, id string, updateFn func(moderator *mod.Moderator) error) (*mod.Moderator, error) {
 
-	currentMod, err := r.GetModerator(ctx, id)
+	currentMod, err := r.getModerator(ctx, id)
 
 	if err != nil {
 		return nil, err
@@ -126,7 +142,13 @@ func (r ModeratorCassandraRepository) UpdateModerator(ctx context.Context, id st
 	return currentMod, nil
 }
 
-func (r ModeratorCassandraRepository) RemoveModerator(ctx context.Context, accountId string) error {
+func (r ModeratorCassandraRepository) RemoveModerator(ctx context.Context, requester *principal.Principal, accountId string) error {
+
+	_, err := r.GetModerator(ctx, requester, accountId)
+
+	if err != nil {
+		return err
+	}
 
 	updateMod := r.session.
 		Query(moderatorTable.Delete()).

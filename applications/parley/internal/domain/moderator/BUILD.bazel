@@ -8,4 +8,5 @@ go_library(
     ],
     importpath = "overdoll/applications/parley/internal/domain/moderator",
     visibility = ["//visibility:public"],
+    deps = ["//libraries/principal"],
 )

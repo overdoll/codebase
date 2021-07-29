@@ -20,6 +20,5 @@ go_library(
         "//applications/parley/internal/domain/moderator",
         "//libraries/paging",
         "//libraries/principal",
-        "@com_github_pkg_errors//:errors",
     ],
 )

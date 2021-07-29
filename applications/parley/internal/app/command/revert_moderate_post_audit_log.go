@@ -41,14 +41,14 @@ func (h RevertModeratePostHandler) Handle(ctx context.Context, cmd RevertModerat
 
 		if infractionId != "" {
 
+			// delete infraction from user's history
+			if err := h.ir.DeleteAccountInfractionHistory(ctx, cmd.Principal, log.ContributorId(), infractionId); err != nil {
+				return err
+			}
+
 			// unlock account - sending "0" unlocks the account
 			if err := h.eva.LockAccount(ctx, log.ContributorId(), 0); err != nil {
 				return errors.Wrap(err, "failed to lock account")
-			}
-
-			// delete infraction from user's history
-			if err := h.ir.DeleteAccountInfractionHistory(ctx, log.ContributorId(), infractionId); err != nil {
-				return err
 			}
 		}
 

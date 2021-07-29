@@ -11,6 +11,7 @@ import (
 	"overdoll/applications/parley/internal/domain/infraction"
 	"overdoll/libraries/bucket"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
 )
 
 var postAuditLogTable = table.New(table.Metadata{
@@ -187,7 +188,7 @@ func (r InfractionCassandraRepository) CreatePostAuditLog(ctx context.Context, a
 	return nil
 }
 
-func (r InfractionCassandraRepository) GetPostAuditLog(ctx context.Context, logId string) (*infraction.PostAuditLog, error) {
+func (r InfractionCassandraRepository) GetPostAuditLog(ctx context.Context, requester *principal.Principal, logId string) (*infraction.PostAuditLog, error) {
 
 	// grab the pending post audit log to get all of the composite keys
 	postAuditLogQuery := r.session.
@@ -232,6 +233,7 @@ func (r InfractionCassandraRepository) GetPostAuditLog(ctx context.Context, logI
 	if pendingPostAuditLogByModerator.AccountInfractionId != "" {
 		userInfractionHistory, err = r.GetAccountInfractionHistoryById(
 			ctx,
+			requester,
 			pendingPostAuditLogByModerator.ContributorId,
 			pendingPostAuditLogByModerator.AccountInfractionId,
 		)
@@ -241,7 +243,7 @@ func (r InfractionCassandraRepository) GetPostAuditLog(ctx context.Context, logI
 		}
 	}
 
-	return infraction.UnmarshalPostAuditLogFromDatabase(
+	infractionReason := infraction.UnmarshalPostAuditLogFromDatabase(
 		pendingPostAuditLogByModerator.Id,
 		pendingPostAuditLogByModerator.PostId,
 		pendingPostAuditLogByModerator.ModeratorId,
@@ -252,14 +254,24 @@ func (r InfractionCassandraRepository) GetPostAuditLog(ctx context.Context, logI
 		pendingPostAuditLogByModerator.Notes,
 		pendingPostAuditLogByModerator.Reverted,
 		userInfractionHistory,
-	), nil
+	)
+
+	if err := infractionReason.CanView(requester); err != nil {
+		return nil, err
+	}
+
+	return infractionReason, nil
 }
 
-func (r InfractionCassandraRepository) SearchPostAuditLogs(ctx context.Context, cursor *paging.Cursor, filter *infraction.PostAuditLogFilters) ([]*infraction.PostAuditLog, error) {
+func (r InfractionCassandraRepository) SearchPostAuditLogs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *infraction.PostAuditLogFilters) ([]*infraction.PostAuditLog, error) {
 	var auditLogs []*infraction.PostAuditLog
 
 	if cursor.IsEmpty() {
 		return auditLogs, nil
+	}
+
+	if err := infraction.CanViewWithFilters(requester, filter); err != nil {
+		return nil, err
 	}
 
 	var builder *qb.SelectBuilder
@@ -329,11 +341,15 @@ func (r InfractionCassandraRepository) SearchPostAuditLogs(ctx context.Context, 
 	return pendingPostAuditLogs, nil
 }
 
-func (r InfractionCassandraRepository) UpdatePostAuditLog(ctx context.Context, id string, updateFn func(auditLog *infraction.PostAuditLog) error) (*infraction.PostAuditLog, error) {
+func (r InfractionCassandraRepository) UpdatePostAuditLog(ctx context.Context, requester *principal.Principal, id string, updateFn func(auditLog *infraction.PostAuditLog) error) (*infraction.PostAuditLog, error) {
 
-	auditLog, err := r.GetPostAuditLog(ctx, id)
+	auditLog, err := r.GetPostAuditLog(ctx, requester, id)
 
 	if err != nil {
+		return nil, err
+	}
+
+	if err := auditLog.CanUpdate(requester); err != nil {
 		return nil, err
 	}
 

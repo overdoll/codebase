@@ -41,14 +41,14 @@ func (h ModeratePostHandler) Handle(ctx context.Context, cmd ModeratePost) (*inf
 	// if not approved, get rejection reason
 	if cmd.PostRejectionReasonId != nil {
 
-		rejectionReason, err = h.ir.GetPostRejectionReason(ctx, *cmd.PostRejectionReasonId)
+		rejectionReason, err = h.ir.GetPostRejectionReason(ctx, cmd.Principal, *cmd.PostRejectionReasonId)
 
 		if err != nil {
 			return nil, err
 		}
 
 		// also grab the infraction history, since we will need it to calculate the time for the next infraction
-		accountInfractionHistory, err = h.ir.GetAccountInfractionHistory(ctx, nil, postContributorId)
+		accountInfractionHistory, err = h.ir.GetAccountInfractionHistory(ctx, cmd.Principal, nil, postContributorId)
 
 		if err != nil {
 			return nil, err

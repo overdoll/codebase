@@ -22,13 +22,20 @@ func NewToggleModeratorHandler(mr moderator.Repository, eva EvaService) ToggleMo
 
 func (h ToggleModeratorHandler) Handle(ctx context.Context, cmd ToggleModerator) (bool, error) {
 
-	_, err := h.mr.GetModerator(ctx, cmd.Principal.AccountId())
+	_, err := h.mr.GetModerator(ctx, cmd.Principal, cmd.Principal.AccountId())
 
 	if err != nil {
 
 		// not found - add to moderator queue
 		if err == moderator.ErrModeratorNotFound {
-			if err := h.mr.CreateModerator(ctx, cmd.Principal, moderator.NewModerator(cmd.Principal.AccountId())); err != nil {
+
+			newMod, err := moderator.NewModerator(cmd.Principal, cmd.Principal.AccountId())
+
+			if err != nil {
+				return false, err
+			}
+
+			if err := h.mr.CreateModerator(ctx, newMod); err != nil {
 				return false, err
 			}
 

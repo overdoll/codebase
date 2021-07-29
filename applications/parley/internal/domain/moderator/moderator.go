@@ -3,6 +3,8 @@ package moderator
 import (
 	"errors"
 	"time"
+
+	"overdoll/libraries/principal"
 )
 
 var (
@@ -26,11 +28,27 @@ func (m *Moderator) Select() {
 	m.lastSelected = time.Now()
 }
 
-func NewModerator(id string) *Moderator {
-	return &Moderator{
-		accountId:    id,
-		lastSelected: time.Now(),
+func (m *Moderator) CanView(requester *principal.Principal) error {
+
+	if requester.IsStaff() {
+		return nil
 	}
+
+	if err := requester.BelongsToAccount(m.accountId); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func NewModerator(requester *principal.Principal, accountId string) (*Moderator, error) {
+
+	// TODO: permission checks
+
+	return &Moderator{
+		accountId:    accountId,
+		lastSelected: time.Now(),
+	}, nil
 }
 
 func UnmarshalModeratorFromDatabase(id string, lastSelected time.Time) *Moderator {

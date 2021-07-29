@@ -9,6 +9,7 @@ import (
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/parley/internal/domain/infraction"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
 )
 
 var accountInfractionHistoryTable = table.New(table.Metadata{
@@ -39,7 +40,17 @@ func marshalAccountInfractionHistoryToDatabase(infractionHistory *infraction.Acc
 	}
 }
 
-func (r InfractionCassandraRepository) DeleteAccountInfractionHistory(ctx context.Context, userId, id string) error {
+func (r InfractionCassandraRepository) DeleteAccountInfractionHistory(ctx context.Context, requester *principal.Principal, userId, id string) error {
+
+	history, err := r.getAccountInfractionHistoryById(ctx, userId, id)
+
+	if err != nil {
+		return err
+	}
+
+	if err := history.CanDelete(requester); err != nil {
+		return err
+	}
 
 	deleteAccountInfraction := r.session.
 		Query(accountInfractionHistoryTable.Delete()).
@@ -53,7 +64,22 @@ func (r InfractionCassandraRepository) DeleteAccountInfractionHistory(ctx contex
 	return nil
 }
 
-func (r InfractionCassandraRepository) GetAccountInfractionHistoryById(ctx context.Context, userId, id string) (*infraction.AccountInfractionHistory, error) {
+func (r InfractionCassandraRepository) GetAccountInfractionHistoryById(ctx context.Context, requester *principal.Principal, userId, id string) (*infraction.AccountInfractionHistory, error) {
+
+	history, err := r.getAccountInfractionHistoryById(ctx, userId, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err := history.CanView(requester); err != nil {
+		return nil, err
+	}
+
+	return history, nil
+}
+
+func (r InfractionCassandraRepository) getAccountInfractionHistoryById(ctx context.Context, userId, id string) (*infraction.AccountInfractionHistory, error) {
 
 	infractionHistoryQuery := r.session.
 		Query(accountInfractionHistoryTable.Select()).
@@ -74,7 +100,11 @@ func (r InfractionCassandraRepository) GetAccountInfractionHistoryById(ctx conte
 	return infraction.UnmarshalAccountInfractionHistoryFromDatabase(dbUserInfractionHistory.Id, dbUserInfractionHistory.AccountId, dbUserInfractionHistory.Reason, dbUserInfractionHistory.Expiration), nil
 }
 
-func (r InfractionCassandraRepository) GetAccountInfractionHistory(ctx context.Context, cursor *paging.Cursor, accountId string) ([]*infraction.AccountInfractionHistory, error) {
+func (r InfractionCassandraRepository) GetAccountInfractionHistory(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*infraction.AccountInfractionHistory, error) {
+
+	if err := infraction.CanViewAccountInfractionHistory(requester); err != nil {
+		return nil, err
+	}
 
 	builder := accountInfractionHistoryTable.SelectBuilder()
 

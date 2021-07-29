@@ -11,5 +11,6 @@ go_library(
         "//applications/sting/internal/domain/post",
         "//applications/sting/internal/ports/graphql/types",
         "//libraries/graphql/relay",
+        "//libraries/principal",
     ],
 )

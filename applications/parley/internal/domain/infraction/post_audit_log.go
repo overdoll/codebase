@@ -92,6 +92,7 @@ func NewPendingPostAuditLog(moderator *principal.Principal, userInfractionHistor
 	}
 
 	var userInfraction *AccountInfractionHistory
+	var err error
 
 	status := StatusApproved
 
@@ -99,7 +100,11 @@ func NewPendingPostAuditLog(moderator *principal.Principal, userInfractionHistor
 		status = StatusDenied
 
 		if rejectionReason.Infraction() {
-			userInfraction = NewAccountInfractionHistory(contributorId, userInfractionHistory, rejectionReason.Reason())
+			userInfraction, err = NewAccountInfractionHistory(moderator, contributorId, userInfractionHistory, rejectionReason.Reason())
+
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 
@@ -201,6 +206,19 @@ func (m *PostAuditLog) Revert() error {
 	return nil
 }
 
+func (m *PostAuditLog) CanView(requester *principal.Principal) error {
+
+	if requester.IsStaff() {
+		return nil
+	}
+
+	return requester.BelongsToAccount(m.moderatorId)
+}
+
+func (m *PostAuditLog) CanUpdate(requester *principal.Principal) error {
+	return requester.BelongsToAccount(m.moderatorId)
+}
+
 func (m *PostAuditLog) RejectionReason() *PostRejectionReason {
 	return m.rejectionReason
 }
@@ -211,4 +229,19 @@ func (m *PostAuditLog) UserInfraction() *AccountInfractionHistory {
 
 func (m *PostAuditLog) IsDeniedWithInfraction() bool {
 	return m.status == StatusDenied && m.rejectionReason.Infraction()
+}
+
+func CanViewWithFilters(requester *principal.Principal, filter *PostAuditLogFilters) error {
+
+	// filtering by moderator
+	if filter.ModeratorId() != nil {
+
+		if requester.IsStaff() {
+			return nil
+		}
+
+		return requester.BelongsToAccount(*filter.ModeratorId())
+	}
+
+	return nil
 }

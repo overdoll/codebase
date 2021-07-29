@@ -6,6 +6,7 @@ import (
 
 	"github.com/segmentio/ksuid"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
 )
 
 type AccountInfractionHistory struct {
@@ -26,7 +27,11 @@ var (
 	ErrAccountInfractionHistoryNotFound = errors.New("account infraction history not found")
 )
 
-func NewAccountInfractionHistory(userId string, pastUserInfractionHistory []*AccountInfractionHistory, reason string) *AccountInfractionHistory {
+func NewAccountInfractionHistory(requester *principal.Principal, accountId string, pastUserInfractionHistory []*AccountInfractionHistory, reason string) (*AccountInfractionHistory, error) {
+
+	if !(requester.IsStaff() || requester.IsModerator()) {
+		return nil, principal.ErrNotAuthorized
+	}
 
 	var activeInfractions []*AccountInfractionHistory
 
@@ -42,11 +47,11 @@ func NewAccountInfractionHistory(userId string, pastUserInfractionHistory []*Acc
 	if len(activeInfractions)+1 > len(LengthPeriodBans) {
 		return &AccountInfractionHistory{
 			id:             ksuid.New().String(),
-			accountId:      userId,
+			accountId:      accountId,
 			reason:         reason,
 			expiration:     time.Now(),
 			userLockLength: -1,
-		}
+		}, nil
 	}
 
 	index := 0
@@ -63,11 +68,11 @@ func NewAccountInfractionHistory(userId string, pastUserInfractionHistory []*Acc
 	lockLength := time.Now().Add(time.Hour * 24 * time.Duration(banPeriod)).Unix()
 	return &AccountInfractionHistory{
 		id:             ksuid.New().String(),
-		accountId:      userId,
+		accountId:      accountId,
 		reason:         reason,
 		expiration:     expiration,
 		userLockLength: lockLength,
-	}
+	}, nil
 }
 
 func (m *AccountInfractionHistory) ID() string {
@@ -90,6 +95,14 @@ func (m *AccountInfractionHistory) Expiration() time.Time {
 	return m.expiration
 }
 
+func (m *AccountInfractionHistory) CanView(requester *principal.Principal) error {
+	return CanViewAccountInfractionHistory(requester)
+}
+
+func (m *AccountInfractionHistory) CanDelete(requester *principal.Principal) error {
+	return CanViewAccountInfractionHistory(requester)
+}
+
 func UnmarshalAccountInfractionHistoryFromDatabase(id, userId, reason string, expiration time.Time) *AccountInfractionHistory {
 	return &AccountInfractionHistory{
 		id:         id,
@@ -97,4 +110,12 @@ func UnmarshalAccountInfractionHistoryFromDatabase(id, userId, reason string, ex
 		reason:     reason,
 		expiration: expiration,
 	}
+}
+
+func CanViewAccountInfractionHistory(requester *principal.Principal) error {
+	if !(requester.IsModerator() || requester.IsStaff()) {
+		return principal.ErrNotAuthorized
+	}
+
+	return nil
 }

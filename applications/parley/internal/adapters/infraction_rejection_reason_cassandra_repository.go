@@ -8,6 +8,7 @@ import (
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/parley/internal/domain/infraction"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
 )
 
 var postRejectionReasonTable = table.New(table.Metadata{
@@ -29,7 +30,7 @@ type postRejectionReason struct {
 	Bucket     int    `db:"bucket"`
 }
 
-func (r InfractionCassandraRepository) GetPostRejectionReason(ctx context.Context, id string) (*infraction.PostRejectionReason, error) {
+func (r InfractionCassandraRepository) GetPostRejectionReason(ctx context.Context, requester *principal.Principal, id string) (*infraction.PostRejectionReason, error) {
 
 	rejectionReasonQuery := r.session.
 		Query(postRejectionReasonTable.Get()).
@@ -47,10 +48,20 @@ func (r InfractionCassandraRepository) GetPostRejectionReason(ctx context.Contex
 		return nil, fmt.Errorf("failed to get post rejection reason: %v", err)
 	}
 
-	return infraction.UnmarshalPostRejectionReasonFromDatabase(rejectionReason.Id, rejectionReason.Reason, rejectionReason.Infraction), nil
+	reason := infraction.UnmarshalPostRejectionReasonFromDatabase(rejectionReason.Id, rejectionReason.Reason, rejectionReason.Infraction)
+
+	if err := reason.CanView(requester); err != nil {
+		return nil, err
+	}
+
+	return reason, nil
 }
 
-func (r InfractionCassandraRepository) GetPostRejectionReasons(ctx context.Context, cursor *paging.Cursor) ([]*infraction.PostRejectionReason, error) {
+func (r InfractionCassandraRepository) GetPostRejectionReasons(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor) ([]*infraction.PostRejectionReason, error) {
+
+	if err := infraction.CanViewRejectionReasons(requester); err != nil {
+		return nil, err
+	}
 
 	builder := postRejectionReasonTable.SelectBuilder()
 
