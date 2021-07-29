@@ -12,12 +12,12 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.temporal.io/sdk/testsuite"
 	"google.golang.org/grpc"
-	sting "overdoll/applications/sting/proto"
 	"overdoll/applications/sting/internal/adapters"
 	"overdoll/applications/sting/internal/ports"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/applications/sting/internal/ports/temporal/workflows"
 	"overdoll/applications/sting/internal/service"
+	sting "overdoll/applications/sting/proto"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
 	"overdoll/libraries/config"
@@ -173,10 +173,8 @@ func TestCreatePost_Publish(t *testing.T) {
 	mCreatePost(t, env, func(postId string) func() {
 		return func() {
 			// need to refresh the ES index or else the post wont be found
-			es, err := bootstrap.InitializeElasticSearchSession()
-			require.NoError(t, err)
-			_, err = es.Refresh(adapters.PostIndexName).Do(context.Background())
-			require.NoError(t, err)
+			es := bootstrap.InitializeElasticSearchSession()
+			_, err := es.Refresh(adapters.PostIndexName).Do(context.Background())
 
 			newPostId = postId
 
@@ -420,7 +418,7 @@ func getWorkflowEnvironment(t *testing.T) *testsuite.TestWorkflowEnvironment {
 }
 
 func startService() bool {
-	config.Read("applications/sting/config.toml")
+	config.Read("applications/sting")
 
 	application, _ := service.NewApplication(context.Background())
 

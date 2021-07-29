@@ -32,7 +32,7 @@ func TestRedeemCookie_invalid(t *testing.T) {
 	redeemToken := verifyAuthenticationToken(t, client, "some-random-cookie")
 
 	// check to make sure its returned as invalid
-	require.Nil(t, redeemToken.VerifyAuthenticationTokenAndAttemptAccountAccessGrant.AuthenticationToken)
+	require.Nil(t, redeemToken.VerifyAuthenticationToken.AuthenticationToken)
 }
 
 // Test empty authentication - we didnt pass any passport so it shouldn't do anything

@@ -11,11 +11,11 @@ import (
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc"
-	eva "overdoll/applications/eva/proto"
 	"overdoll/applications/eva/internal/domain/token"
 	"overdoll/applications/eva/internal/ports"
 	"overdoll/applications/eva/internal/ports/graphql/types"
 	"overdoll/applications/eva/internal/service"
+	eva "overdoll/applications/eva/proto"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
 	"overdoll/libraries/config"
@@ -50,20 +50,17 @@ func mAuthenticate(t *testing.T, client *graphql.Client, email string) GrantAuth
 	return authenticate
 }
 
-type VerifyAuthenticationTokenAndAttemptAccountAccessGrant struct {
-	VerifyAuthenticationTokenAndAttemptAccountAccessGrant *struct {
-		Account *struct {
-			Username graphql.String
-		}
+type VerifyAuthenticationToken struct {
+	VerifyAuthenticationToken *struct {
 		AuthenticationToken *types.AuthenticationToken
-	} `graphql:"verifyAuthenticationTokenAndAttemptAccountAccessGrant(input: $input)"`
+	} `graphql:"verifyAuthenticationToken(input: $input)"`
 }
 
-func verifyAuthenticationToken(t *testing.T, client *graphql.Client, cookie string) VerifyAuthenticationTokenAndAttemptAccountAccessGrant {
-	var redeemCookie VerifyAuthenticationTokenAndAttemptAccountAccessGrant
+func verifyAuthenticationToken(t *testing.T, client *graphql.Client, cookie string) VerifyAuthenticationToken {
+	var redeemCookie VerifyAuthenticationToken
 
 	err := client.Mutate(context.Background(), &redeemCookie, map[string]interface{}{
-		"input": types.VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput{AuthenticationTokenID: cookie},
+		"input": types.VerifyAuthenticationTokenInput{AuthenticationTokenID: cookie},
 	})
 
 	require.NoError(t, err)
@@ -72,7 +69,7 @@ func verifyAuthenticationToken(t *testing.T, client *graphql.Client, cookie stri
 }
 
 // helper function - basically runs the "authentication" flow - run authenticate mutation, grab cookie from jar, and redeem the cookie
-func authenticateAndVerifyToken(t *testing.T, email string) (VerifyAuthenticationTokenAndAttemptAccountAccessGrant, *graphql.Client, *clients.ClientPassport) {
+func authenticateAndVerifyToken(t *testing.T, email string) (VerifyAuthenticationToken, *graphql.Client, *clients.ClientPassport) {
 
 	client, httpUser, pass := getHttpClient(t, passport.FreshPassport())
 
@@ -86,7 +83,7 @@ func authenticateAndVerifyToken(t *testing.T, email string) (VerifyAuthenticatio
 	ck := verifyAuthenticationToken(t, client, otpCookie.Value)
 
 	// make sure cookie is valid
-	require.NotNil(t, ck.VerifyAuthenticationTokenAndAttemptAccountAccessGrant)
+	require.NotNil(t, ck.VerifyAuthenticationToken)
 
 	return ck, client, pass
 }
@@ -139,7 +136,7 @@ func getGrpcClient(t *testing.T) eva.EvaClient {
 
 func startService() bool {
 	// config file location (specified in BUILD file) will be absolute from repository path
-	config.Read("applications/eva/config.toml")
+	config.Read("applications/eva")
 
 	app, _ := service.NewApplication(context.Background())
 

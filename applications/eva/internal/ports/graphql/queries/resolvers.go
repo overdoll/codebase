@@ -104,26 +104,22 @@ func (r *QueryResolver) ViewAuthenticationToken(ctx context.Context, tk *string)
 
 func (r *QueryResolver) Viewer(ctx context.Context) (*types.Account, error) {
 
-	pass := passport.FromContext(ctx)
-
-	err := pass.Authenticated()
-
 	// User is logged in
-	if err == nil {
-
-		acc, err := r.App.Queries.AccountById.Handle(ctx, pass.AccountID())
-
-		if err != nil {
-
-			if err == account.ErrAccountNotFound {
-				return nil, nil
-			}
-
-			return nil, err
-		}
-
-		return types.MarshalAccountToGraphQL(acc), nil
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, nil
 	}
 
-	return nil, nil
+	acc, err := r.App.Queries.AccountById.Handle(ctx, passport.FromContext(ctx).AccountID())
+
+	if err != nil {
+
+		if err == account.ErrAccountNotFound {
+			return nil, nil
+		}
+
+		return nil, err
+	}
+
+	return types.MarshalAccountToGraphQL(acc), nil
+
 }

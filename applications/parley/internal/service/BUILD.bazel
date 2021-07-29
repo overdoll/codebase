@@ -25,7 +25,7 @@ go_test(
         "component_test.go",
         "moderate_component_test.go",
     ],
-    data = ["//applications/parley/internal:config.toml"],
+    data = ["//applications/parley:config.toml"],
     deps = [
         ":service",
         "//applications/parley/internal/ports",

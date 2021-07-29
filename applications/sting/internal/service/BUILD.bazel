@@ -18,7 +18,7 @@ go_library(
 go_test(
     name = "service_test",
     srcs = ["component_test.go"],
-    data = ["//applications/sting/internal:config.toml"],
+    data = ["//applications/sting:config.toml"],
     deps = [
         ":service",
         "//applications/sting/internal/adapters",

@@ -232,7 +232,6 @@ func (m *PostAuditLog) IsDeniedWithInfraction() bool {
 }
 
 func CanViewWithFilters(requester *principal.Principal, filter *PostAuditLogFilters) error {
-
 	// filtering by moderator
 	if filter.ModeratorId() != nil {
 

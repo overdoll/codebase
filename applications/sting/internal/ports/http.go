@@ -29,8 +29,9 @@ func principalToContext(app *app.Application) gin.HandlerFunc {
 		acc, err := app.Queries.PrincipalById.Handle(ctx, passport.FromContext(ctx).AccountID())
 
 		if err != nil {
-			zap.S().Error("unable to get account", zap.Error(err))
-			c.Status(http.StatusUnauthorized)
+			zap.S().Error("unable to get account ", zap.Error(err))
+			c.JSON(401, principal.ErrNotAuthorized)
+			c.Abort()
 			return
 		}
 

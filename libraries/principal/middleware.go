@@ -24,9 +24,9 @@ func AddPrincipalToRequest(c *gin.Context, principal *Principal) *http.Request {
 func FromContext(ctx context.Context) *Principal {
 	raw := ctx.Value(principalContextType(key))
 
-	if raw == "" || raw == nil {
-		return nil
+	if raw != nil {
+		return raw.(*Principal)
 	}
 
-	return raw.(*Principal)
+	return nil
 }

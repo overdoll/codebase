@@ -18,27 +18,24 @@ import (
 
 func getEmailConfirmation(t *testing.T, targetEmail string) string {
 
-	client, err := bootstrap.InitializeRedisSession()
-	require.NoError(t, err)
-	sess, err := bootstrap.InitializeDatabaseSession()
-	require.NoError(t, err)
+	client := bootstrap.InitializeRedisSession()
+	sess := bootstrap.InitializeDatabaseSession()
 
 	accountRepo := adapters.NewAccountCassandraRedisRepository(sess, client)
 
 	res, err := accountRepo.GetEmailConfirmationByEmail(context.Background(), targetEmail)
+	require.NoError(t, err)
 
 	return res
 }
 
 func createSession(t *testing.T, accountId, userAgent, ip string) {
 
-	client, err := bootstrap.InitializeRedisSessionWithCustomDB(0)
-	require.NoError(t, err)
+	client := bootstrap.InitializeRedisSessionWithCustomDB(0)
 
 	sessionRepo := adapters.NewSessionRepository(client)
 
-	err = sessionRepo.CreateSessionForAccount(context.Background(), session.NewSession(accountId, userAgent, ip))
-
+	err := sessionRepo.CreateSessionForAccount(context.Background(), session.NewSession(accountId, userAgent, ip))
 	require.NoError(t, err)
 }
 

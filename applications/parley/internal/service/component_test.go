@@ -9,10 +9,10 @@ import (
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc"
-	parley "overdoll/applications/parley/proto"
 	"overdoll/applications/parley/internal/ports"
 	"overdoll/applications/parley/internal/ports/graphql/types"
 	"overdoll/applications/parley/internal/service"
+	parley "overdoll/applications/parley/proto"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
 	"overdoll/libraries/config"
@@ -98,7 +98,7 @@ func getGrpcClient(t *testing.T) parley.ParleyClient {
 }
 
 func startService() bool {
-	config.Read("applications/parley/config.toml")
+	config.Read("applications/parley")
 
 	application, _ := service.NewComponentTestApplication(context.Background())
 

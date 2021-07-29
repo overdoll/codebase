@@ -367,34 +367,23 @@ func (r InfractionCassandraRepository) UpdatePostAuditLog(ctx context.Context, r
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
-	stmt, _ := postAuditLogByPostTable.Update("account_infraction_id", "reverted", "reason")
+	stmt, _ := postAuditLogByPostTable.Update("account_infraction_id", "reverted")
 
 	batch.Query(stmt,
-		marshalledAuditLog.Id,
-		marshalledAuditLog.ModeratorId,
-		marshalledAuditLog.Bucket,
-		marshalledAuditLog.PostId,
-		marshalledAuditLog.ContributorId,
 		marshalledAuditLog.AccountInfractionId,
-		marshalledAuditLog.Action,
-		marshalledAuditLog.Reason,
-		marshalledAuditLog.Notes,
 		marshalledAuditLog.Reverted,
+		marshalledAuditLog.PostId,
+		marshalledAuditLog.Id,
 	)
 
-	stmt, _ = postAuditLogByModeratorTable.Update("account_infraction_id", "reverted", "reason")
+	stmt, _ = postAuditLogByModeratorTable.Update("account_infraction_id", "reverted")
 
 	batch.Query(stmt,
-		marshalledAuditLog.Id,
+		marshalledAuditLog.AccountInfractionId,
+		marshalledAuditLog.Reverted,
 		marshalledAuditLog.ModeratorId,
 		marshalledAuditLog.Bucket,
-		marshalledAuditLog.PostId,
-		marshalledAuditLog.ContributorId,
-		marshalledAuditLog.AccountInfractionId,
-		marshalledAuditLog.Action,
-		marshalledAuditLog.Reason,
-		marshalledAuditLog.Notes,
-		marshalledAuditLog.Reverted,
+		marshalledAuditLog.Id,
 	)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {

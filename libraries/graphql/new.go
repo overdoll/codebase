@@ -26,19 +26,18 @@ func HandleGraphQL(schema graphql.ExecutableSchema) gin.HandlerFunc {
 
 			err := graphql.DefaultErrorPresenter(ctx, e)
 
+			zap.S().Error("resolver failed ", err)
+
 			if os.Getenv("APP_DEBUG") != "true" {
 				err.Message = "internal server error"
 			}
-
-			gctx := graphql.GetFieldContext(ctx)
-
-			zap.S().Error("resolver failed", zap.String("resolver", gctx.Field.Name), zap.Error(err))
 
 			return err
 		})
 
 		graphAPIHandler.SetRecoverFunc(func(ctx context.Context, err interface{}) error {
 			// notify bug tracker?
+			zap.S().Error("resolver failed ", err)
 
 			return errors.New("internal server error")
 		})

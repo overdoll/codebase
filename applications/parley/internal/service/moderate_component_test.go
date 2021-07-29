@@ -5,8 +5,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	parley "overdoll/applications/parley/proto"
 	"overdoll/applications/parley/internal/ports/graphql/types"
+	parley "overdoll/applications/parley/proto"
 	"overdoll/libraries/passport"
 )
 
@@ -46,7 +46,7 @@ type AccountPostAuditLogs struct {
 func TestPendingPostAuditLogs(t *testing.T) {
 	t.Parallel()
 
-	client := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	client := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ5IyRTV0X4J27F3m5wGD5mj"))
 
 	var account AccountPostAuditLogs
 
