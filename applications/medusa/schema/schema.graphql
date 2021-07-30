@@ -388,6 +388,7 @@ type Artist implements Node {
 }
 
 type AuthenticationToken {
+  id: ID!
   sameSession: Boolean!
   verified: Boolean!
   secure: Boolean!
@@ -1336,7 +1337,7 @@ input RevokeAuthenticationTokenInput {
   
   If an ID is not specified, a token from the cookie will be used
   """
-  token: String
+  authenticationTokenId: String
 }
 
 """Payload for revoking the authentication token"""

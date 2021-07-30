@@ -2,6 +2,7 @@ package mutations
 
 import (
 	"context"
+	"crypto/sha256"
 	"net/http"
 	"strings"
 	"time"
@@ -252,15 +253,9 @@ func (r *MutationResolver) VerifyAuthenticationToken(ctx context.Context, input 
 		return nil, err
 	}
 
-	marshalled, err := types.MarshalAuthenticationTokenToGraphQL(ctx, ck)
-
-	if err != nil {
-		return nil, err
-	}
-
 	// cookie redeemed not in the same session, just redeem it
 	return &types.VerifyAuthenticationTokenPayload{
-		AuthenticationToken: marshalled,
+		AuthenticationToken: types.MarshalAuthenticationTokenToGraphQL(ctx, ck),
 	}, nil
 }
 
@@ -298,8 +293,8 @@ func (r *MutationResolver) RevokeAuthenticationToken(ctx context.Context, input 
 	tokenId := ""
 
 	// check for empty string as well
-	if input.Token != nil && *input.Token != "" {
-		tokenId = *input.Token
+	if input.AuthenticationTokenID != nil && *input.AuthenticationTokenID != "" {
+		tokenId = *input.AuthenticationTokenID
 	} else {
 		otpCookie, err := cookies.ReadCookie(ctx, token.OTPKey)
 
@@ -318,7 +313,9 @@ func (r *MutationResolver) RevokeAuthenticationToken(ctx context.Context, input 
 		return nil, err
 	}
 
-	return &types.RevokeAuthenticationTokenPayload{RevokedAuthenticationTokenID: relay.NewID("")}, nil
+	// the hash of the revoked token
+	hash := sha256.Sum256([]byte(tokenId))
+	return &types.RevokeAuthenticationTokenPayload{RevokedAuthenticationTokenID: relay.NewID(types.AuthenticationToken{}, string(hash[:]))}, nil
 }
 
 func (r *MutationResolver) ConfirmAccountEmail(ctx context.Context, input types.ConfirmAccountEmailInput) (*types.ConfirmAccountEmailPayload, error) {
@@ -373,14 +370,8 @@ func (r *MutationResolver) GrantAuthenticationToken(ctx context.Context, input t
 		return nil, err
 	}
 
-	marshalled, err := types.MarshalAuthenticationTokenToGraphQL(ctx, instance)
-
-	if err != nil {
-		return nil, err
-	}
-
 	return &types.GrantAuthenticationTokenPayload{
-		AuthenticationToken: marshalled,
+		AuthenticationToken: types.MarshalAuthenticationTokenToGraphQL(ctx, instance),
 	}, nil
 }
 

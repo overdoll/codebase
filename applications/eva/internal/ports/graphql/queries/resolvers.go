@@ -99,13 +99,7 @@ func (r *QueryResolver) ViewAuthenticationToken(ctx context.Context, tk *string)
 		return nil, err
 	}
 
-	marshalled, err := types.MarshalAuthenticationTokenToGraphQL(ctx, ck)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return marshalled, nil
+	return types.MarshalAuthenticationTokenToGraphQL(ctx, ck), nil
 }
 
 func (r *QueryResolver) Viewer(ctx context.Context) (*types.Account, error) {

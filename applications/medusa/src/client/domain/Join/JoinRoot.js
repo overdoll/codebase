@@ -85,7 +85,7 @@ export default function JoinRoot (props: Props): Node {
     )
   }
 
-  if (!tokenData.accountStatus.registered) {
+  if (!data.accountStatus?.registered) {
     return <Register />
   }
 

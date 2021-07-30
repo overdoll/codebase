@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash cfe0d94d863688cde25eb44bfee758c1
+ * @relayHash df1bb1c0b3d007aa2174bed8b2352bea
  */
 
 /* eslint-disable */
@@ -8,12 +8,14 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
+export type GrantAccountAccessWithAuthenticationTokenValidation = "TOKEN_EXPIRED" | "%future added value";
 export type GrantMutationVariables = {||};
 export type GrantMutationResponse = {|
   +grantAccountAccessWithAuthenticationToken: ?{|
+    +validation: ?GrantAccountAccessWithAuthenticationTokenValidation,
     +account: ?{|
-      +username: string
-    |}
+      +id: string
+    |},
   |}
 |};
 export type GrantMutation = {|
@@ -25,8 +27,8 @@ export type GrantMutation = {|
 /*
 mutation GrantMutation {
   grantAccountAccessWithAuthenticationToken {
+    validation
     account {
-      username
       id
     }
   }
@@ -34,44 +36,51 @@ mutation GrantMutation {
 */
 
 const node: ConcreteRequest = (function(){
-var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "username",
-  "storageKey": null
-};
-return {
-  "fragment": {
-    "argumentDefinitions": [],
-    "kind": "Fragment",
-    "metadata": null,
-    "name": "GrantMutation",
+var v0 = [
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "GrantAccountAccessWithAuthenticationTokenPayload",
+    "kind": "LinkedField",
+    "name": "grantAccountAccessWithAuthenticationToken",
+    "plural": false,
     "selections": [
       {
         "alias": null,
         "args": null,
-        "concreteType": "GrantAccountAccessWithAuthenticationTokenPayload",
+        "kind": "ScalarField",
+        "name": "validation",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Account",
         "kind": "LinkedField",
-        "name": "grantAccountAccessWithAuthenticationToken",
+        "name": "account",
         "plural": false,
         "selections": [
           {
             "alias": null,
             "args": null,
-            "concreteType": "Account",
-            "kind": "LinkedField",
-            "name": "account",
-            "plural": false,
-            "selections": [
-              (v0/*: any*/)
-            ],
+            "kind": "ScalarField",
+            "name": "id",
             "storageKey": null
           }
         ],
         "storageKey": null
       }
     ],
+    "storageKey": null
+  }
+];
+return {
+  "fragment": {
+    "argumentDefinitions": [],
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "GrantMutation",
+    "selections": (v0/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -80,41 +89,10 @@ return {
     "argumentDefinitions": [],
     "kind": "Operation",
     "name": "GrantMutation",
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "GrantAccountAccessWithAuthenticationTokenPayload",
-        "kind": "LinkedField",
-        "name": "grantAccountAccessWithAuthenticationToken",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Account",
-            "kind": "LinkedField",
-            "name": "account",
-            "plural": false,
-            "selections": [
-              (v0/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "id",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      }
-    ]
+    "selections": (v0/*: any*/)
   },
   "params": {
-    "id": "cfe0d94d863688cde25eb44bfee758c1",
+    "id": "df1bb1c0b3d007aa2174bed8b2352bea",
     "metadata": {},
     "name": "GrantMutation",
     "operationKind": "mutation",
@@ -123,5 +101,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '716ba5e54678340cf13a717bf5711f33';
+(node: any).hash = '5fed83d99a5ead7514e405a9fb5f21da';
 module.exports = node;

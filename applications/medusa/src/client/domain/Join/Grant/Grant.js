@@ -11,8 +11,9 @@ import { useHistory } from '@//:modules/routing'
 const GrantAction = graphql`
   mutation GrantMutation {
     grantAccountAccessWithAuthenticationToken {
+      validation
       account {
-        username
+        id
       }
     }
   }

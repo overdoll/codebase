@@ -159,7 +159,7 @@ input RevokeAuthenticationTokenInput {
 
   If an ID is not specified, a token from the cookie will be used
   """
-  token: String
+  authenticationTokenId: String
 }
 
 type Mutation {

@@ -2229,7 +2229,7 @@ input RevokeAuthenticationTokenInput {
 
   If an ID is not specified, a token from the cookie will be used
   """
-  token: String
+  authenticationTokenId: String
 }
 
 type Mutation {
@@ -9047,11 +9047,11 @@ func (ec *executionContext) unmarshalInputRevokeAuthenticationTokenInput(ctx con
 
 	for k, v := range asMap {
 		switch k {
-		case "token":
+		case "authenticationTokenId":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("token"))
-			it.Token, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("authenticationTokenId"))
+			it.AuthenticationTokenID, err = ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}

@@ -20,6 +20,7 @@ const JoinAction = graphql`
   mutation JoinMutation($input: GrantAuthenticationTokenInput!) {
     grantAuthenticationToken(input: $input) {
       authenticationToken {
+        id
         email
       }
     }
@@ -60,6 +61,7 @@ export default function Join ({ queryRef }: Props): Node {
         // after the mutation, update the root 'viewAuthenticationToken' so that the query can start the lobby queries
         const node = store.create('client:root:viewAuthenticationToken-1', 'AuthenticationToken')
         node.setValue(payload.grantAuthenticationToken.authenticationToken.email, 'email')
+        node.setValue(payload.grantAuthenticationToken.authenticationToken.id, 'id')
 
         store
           .getRoot()

@@ -22,6 +22,7 @@ type Props = {
 const LobbyEmail = graphql`
   mutation LobbyMutation {
     reissueAuthenticationToken {
+      validation
       authenticationToken {
         email
       }

@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 6a347d4a552aca6514c786c15ed7f55d
+ * @relayHash 5144a69f709085fcdb6b47b33e57c830
  */
 
 /* eslint-disable */
@@ -17,7 +17,8 @@ export type JoinRootQueryVariables = {|
 |};
 export type JoinRootQueryResponse = {|
   +viewAuthenticationToken: ?{|
-    +$fragmentRefs: JoinFragment$ref & TokenFragment$ref & LobbyFragment$ref & JoinRootFragment$ref
+    +id: string,
+    +$fragmentRefs: JoinFragment$ref & TokenFragment$ref & LobbyFragment$ref & JoinRootFragment$ref,
   |}
 |};
 export type JoinRootQuery = {|
@@ -31,6 +32,7 @@ query JoinRootQuery(
   $token: String
 ) {
   viewAuthenticationToken(token: $token) {
+    id
     ...JoinFragment
     ...TokenFragment
     ...LobbyFragment
@@ -76,7 +78,14 @@ v1 = [
     "name": "token",
     "variableName": "token"
   }
-];
+],
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -92,6 +101,7 @@ return {
         "name": "viewAuthenticationToken",
         "plural": false,
         "selections": [
+          (v2/*: any*/),
           {
             "args": null,
             "kind": "FragmentSpread",
@@ -133,6 +143,7 @@ return {
         "name": "viewAuthenticationToken",
         "plural": false,
         "selections": [
+          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -199,7 +210,7 @@ return {
     ]
   },
   "params": {
-    "id": "6a347d4a552aca6514c786c15ed7f55d",
+    "id": "5144a69f709085fcdb6b47b33e57c830",
     "metadata": {},
     "name": "JoinRootQuery",
     "operationKind": "query",
@@ -208,5 +219,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '12634b21a3f64b64fa6f93b348997adf';
+(node: any).hash = '7b76348775edb1c487d54b8061aa11f2';
 module.exports = node;

@@ -373,7 +373,7 @@ type RevokeAuthenticationTokenInput struct {
 	// If an ID is specified, the token can be revoked if a proper ID is specified
 	//
 	// If an ID is not specified, a token from the cookie will be used
-	Token *string `json:"token"`
+	AuthenticationTokenID *string `json:"authenticationTokenId"`
 }
 
 // Payload for revoking the authentication token

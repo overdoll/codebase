@@ -16,6 +16,7 @@ import RegisterForm from './RegisterForm/RegisterForm'
 const RegisterMutationGQL = graphql`
   mutation RegisterMutation($input: CreateAccountWithAuthenticationTokenInput!) {
     createAccountWithAuthenticationToken(input: $input) {
+      validation
       account {
         id
       }

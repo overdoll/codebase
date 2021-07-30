@@ -18,15 +18,25 @@ type Props = {
   queryRef: TokenFragment$key
 }
 
-const TokenMutationGQL = graphql`
-  mutation TokenMutation($input: VerifyAuthenticationTokenInput!) {
+const TokenRevokeMutationGQL = graphql`
+  mutation TokenVerifyMutation($input: RevokeAuthenticationTokenInput!) {
+    revokeAuthenticationToken(input: $input) {
+      revokedAuthenticationTokenId
+    }
+  }
+`
+
+const TokenVerifyMutationGQL = graphql`
+  mutation TokenRevokeMutation($input: VerifyAuthenticationTokenInput!) {
     verifyAuthenticationToken(input: $input) {
+      validation
       authenticationToken {
-          verified
-          accountStatus {
-            registered
-            multiFactor
-          }
+        id
+        verified
+        accountStatus {
+          registered
+          multiFactor
+        }
       }
     }
   }
@@ -42,40 +52,39 @@ const TokenFragment = graphql`
 `
 
 export default function Token ({ queryRef }: Props): Node {
-  const [t] = useTranslation('auth')
+  const [verifyToken, isVerifyingToken] = useMutation(
+    TokenVerifyMutationGQL
+  )
 
-  const [commit, isInFlight] = useMutation(
-    TokenMutationGQL
+  const [revokeToken, isRevokingToken] = useMutation(
+    TokenRevokeMutationGQL
   )
 
   const data = useFragment(TokenFragment, queryRef)
 
+  const [t] = useTranslation('auth')
+
   const [queryToken] = useQueryParam('token', StringParam)
 
   const verify = () => {
-    commit({
+    verifyToken({
       variables: {
         input: {
           authenticationTokenId: queryToken
         }
       },
-      updater: (store, payload) => {
-        const viewRecord = store
-          .getRoot()
-          .getLinkedRecord('viewAuthenticationToken', { token: queryToken })
+      onError (data) {
+        console.log(data)
+      }
+    })
+  }
 
-        // set value to verified
-        viewRecord
-          .setValue(payload.verifyAuthenticationToken.authenticationToken.verified, 'verified')
-
-        // create a record for account status
-        const node = store.create('client:root:authenticationTokenAccountStatus', 'AccountStatus')
-        node.setValue(payload.verifyAuthenticationToken.authenticationToken.accountStatus.registered, 'registered')
-        node.setValue(payload.verifyAuthenticationToken.authenticationToken.accountStatus.multiFactor, 'multiFactor')
-
-        // update record
-        viewRecord
-          .setLinkedRecord(node, 'accountStatus')
+  const revoke = () => {
+    revokeToken({
+      variables: {
+        input: {
+          authenticationTokenId: queryToken
+        }
       },
       onError (data) {
         console.log(data)
@@ -94,7 +103,12 @@ export default function Token ({ queryRef }: Props): Node {
   if (!data.verified) {
     // if not secure, show the page to confirm or deny the token
     if (!data.secure) {
-      return 'please confirm if you want to approve or deny token'
+      return (
+        <>
+          <button disabled={isVerifyingToken || isRevokingToken} onClick={revoke}>revoke</button>
+          <button disabled={isVerifyingToken || isRevokingToken} onClick={verify}>accept</button>
+        </>
+      )
     }
 
     // otherwise we're in a "waiting" state - will auto-verify the token
