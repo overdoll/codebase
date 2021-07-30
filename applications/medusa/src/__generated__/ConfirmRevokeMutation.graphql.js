@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash aea89838ddd1493d2c2fb6c9ac58af5a
+ * @relayHash 66447af1fee23a4edaee4700871549be
  */
 
 /* eslint-disable */
@@ -11,22 +11,22 @@ import type { ConcreteRequest } from 'relay-runtime';
 export type RevokeAuthenticationTokenInput = {|
   authenticationTokenId?: ?string
 |};
-export type TokenRevokeMutationVariables = {|
+export type ConfirmRevokeMutationVariables = {|
   input: RevokeAuthenticationTokenInput
 |};
-export type TokenRevokeMutationResponse = {|
+export type ConfirmRevokeMutationResponse = {|
   +revokeAuthenticationToken: ?{|
     +revokedAuthenticationTokenId: string
   |}
 |};
-export type TokenRevokeMutation = {|
-  variables: TokenRevokeMutationVariables,
-  response: TokenRevokeMutationResponse,
+export type ConfirmRevokeMutation = {|
+  variables: ConfirmRevokeMutationVariables,
+  response: ConfirmRevokeMutationResponse,
 |};
 
 
 /*
-mutation TokenRevokeMutation(
+mutation ConfirmRevokeMutation(
   $input: RevokeAuthenticationTokenInput!
 ) {
   revokeAuthenticationToken(input: $input) {
@@ -74,7 +74,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "TokenRevokeMutation",
+    "name": "ConfirmRevokeMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -83,18 +83,18 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "TokenRevokeMutation",
+    "name": "ConfirmRevokeMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "aea89838ddd1493d2c2fb6c9ac58af5a",
+    "id": "66447af1fee23a4edaee4700871549be",
     "metadata": {},
-    "name": "TokenRevokeMutation",
+    "name": "ConfirmRevokeMutation",
     "operationKind": "mutation",
     "text": null
   }
 };
 })();
 // prettier-ignore
-(node: any).hash = '8c3b1b234a36862c28e4afe7b27f5c04';
+(node: any).hash = 'e5406e58e44e3c174d71eccac9d38e61';
 module.exports = node;

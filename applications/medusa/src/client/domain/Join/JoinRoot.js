@@ -4,7 +4,7 @@
 import type { PreloadedQueryInner } from 'react-relay/hooks'
 import { graphql, useFragment, usePreloadedQuery, useQueryLoader } from 'react-relay/hooks'
 import type { Node } from 'react'
-import { useCallback } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import Register from './Register/Register'
 import Lobby from './Lobby/Lobby'
 import type { JoinRootQuery } from '@//:artifacts/JoinRootQuery.graphql'
@@ -54,6 +54,22 @@ export default function JoinRoot (props: Props): Node {
   const authenticationInitiated = !!tokenData
   const authenticationTokenVerified = data?.verified === true
 
+  // used to track whether or not there was previously a token grant, so that if
+  // an invalid token was returned, we can show an "expired" token page
+  const [hadGrant, setHadGrant] = useState(false)
+
+  // when a new join is started, we want to make sure that we save the fact that
+  // there was one, so we can tell the user if the login code expired
+  useEffect(() => {
+    if (data) {
+      setHadGrant(true)
+    }
+  }, [data])
+
+  const clearGrant = () => {
+    setHadGrant(false)
+  }
+
   // a refresh query - used mainly for polling
   const refresh = useCallback(() => {
     loadQuery(props.prepared.joinQuery.variables, { fetchPolicy: 'network-only' })
@@ -61,7 +77,7 @@ export default function JoinRoot (props: Props): Node {
 
   // when authentication not initiated
   if (!authenticationInitiated) {
-    return <Join queryRef={tokenData} />
+    return <Join hadGrant={hadGrant} clearGrant={clearGrant} queryRef={tokenData} />
   }
 
   if (!authenticationTokenVerified) {

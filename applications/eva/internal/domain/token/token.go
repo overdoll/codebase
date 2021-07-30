@@ -57,7 +57,7 @@ func UnmarshalAuthenticationTokenFromDatabase(cookie, email string, verified boo
 		email:      email,
 		verified:   verified,
 		device:     device,
-		location:   location,
+		location: location,
 		ip:         ip,
 		expiration: time.Minute * 15,
 	}

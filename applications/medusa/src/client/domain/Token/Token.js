@@ -14,20 +14,15 @@ import SignBadgeCircle
 import { StringParam, useQueryParam } from 'use-query-params'
 import { Node, useEffect } from 'react'
 import type { TokenQuery } from '@//:artifacts/TokenQuery.graphql'
+import Button from '@//:modules/form/button'
+import { useHistory } from '@//:modules/routing'
+import Confirm from './Confirm/Confirm'
 
 type Props = {
   prepared: {
     tokenQuery: PreloadedQueryInner<TokenQuery>,
   },
 };
-
-const RevokeTokenMutationGQL = graphql`
-  mutation TokenRevokeMutation($input: RevokeAuthenticationTokenInput!) {
-    revokeAuthenticationToken(input: $input) {
-      revokedAuthenticationTokenId
-    }
-  }
-`
 
 const VerifyTokenMutationGQL = graphql`
   mutation TokenVerifyMutation($input: VerifyAuthenticationTokenInput!) {
@@ -47,6 +42,7 @@ const TokenStatus = graphql`
       id
       verified
       sameSession
+      location
       device
       secure
     }
@@ -60,9 +56,7 @@ export default function Token ({ prepared }: Props): Node {
     VerifyTokenMutationGQL
   )
 
-  const [revokeToken, isRevokingToken] = useMutation(
-    RevokeTokenMutationGQL
-  )
+  const history = useHistory()
 
   const [t] = useTranslation('token')
 
@@ -81,17 +75,14 @@ export default function Token ({ prepared }: Props): Node {
     })
   }
 
-  const revoke = () => {
-    revokeToken({
-      variables: {
-        input: {
-          authenticationTokenId: queryToken
-        }
-      },
-      onError (data) {
-        console.log(data)
-      }
-    })
+  // when the token is verified, the user might close the original tab, either by accident or
+  // unknowingly.
+  // we do a full page refresh to /join, which will cover the following cases:
+  // - the app used the token and got an authentication token back, so the state is not in sync
+  // - the app did not use the token yet and requires user action
+  const refresh = () => {
+    history.push('/join')
+    history.go(0)
   }
 
   const data = query.viewAuthenticationToken
@@ -104,7 +95,20 @@ export default function Token ({ prepared }: Props): Node {
   }, [data])
 
   if (!data) {
-    return 'invalid or expired token'
+    return 'invalid'
+  }
+
+  const renderDevice = () => {
+    const cookieText = UAParser(
+      data.device
+    )
+
+    return (
+      <>
+        {cookieText.browser.name} {cookieText.browser.major},{' '}
+        {cookieText.os.name} {cookieText.os.version}
+      </>
+    )
   }
 
   // not verified yet
@@ -112,20 +116,18 @@ export default function Token ({ prepared }: Props): Node {
     // if not secure, show the page to confirm or deny the token
     if (!data.secure) {
       return (
-        <>
-          <button disabled={isVerifyingToken || isRevokingToken} onClick={revoke}>revoke</button>
-          <button disabled={isVerifyingToken || isRevokingToken} onClick={verify}>accept</button>
-        </>
+        <Confirm
+          verify={verify}
+          isVerifying={isVerifyingToken}
+          device={renderDevice()}
+          location={data.location}
+        />
       )
     }
 
-    // otherwise we're in a "waiting" state - will auto-verify the token
+    // otherwise we're in a "waiting" state - will auto-verify the token without requiring user action
     return <CenteredSpinner />
   }
-
-  const cookieText = UAParser(
-    data.device
-  )
 
   return (
     <>
@@ -144,11 +146,10 @@ export default function Token ({ prepared }: Props): Node {
           <Heading mb={8} align='center' size='md' color='gray.100'>
             {t('header')}
           </Heading>
-          <Box mb={8} pt={3} pb={3} borderRadius={5} bg='gray.800'>
+          <Box pt={3} pb={3} borderRadius={5} bg='gray.800'>
             <Center>
               <Text fontSize='lg' color='green.300'>
-                {cookieText.browser.name} {cookieText.browser.major},{' '}
-                {cookieText.os.name} {cookieText.os.version}
+                {renderDevice()}
               </Text>
             </Center>
           </Box>
@@ -157,6 +158,22 @@ export default function Token ({ prepared }: Props): Node {
             {t('close')}
             <AlertDescription />
           </Alert>
+          {data.sameSession
+            ? (
+              <Button
+                mt={8}
+                size='md'
+                onClick={refresh}
+              >
+                {t('closed_original_device')}
+              </Button>)
+            : (
+              <Center mt={4}>
+                <Text align='center' fontSize='md' color='pink.300'>
+                  {t('closed_original_device_hint')}
+                </Text>
+              </Center>
+              )}
         </Flex>
       </Center>
     </>

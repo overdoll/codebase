@@ -1,7 +1,7 @@
 /**
  * @flow
  */
-import { graphql, useMutation, useFragment } from 'react-relay/hooks'
+import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { useTranslation } from 'react-i18next'
 import { Alert, AlertDescription, AlertIcon, Center, CloseButton, Flex, useToast } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
@@ -9,11 +9,12 @@ import Icon from '@//:modules/content/Icon/Icon'
 import JoinForm from './JoinForm/JoinForm'
 import SignBadgeCircle
   from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
-import { useEffect, useState } from 'react'
 import type { JoinFragment$key } from '@//:artifacts/JoinFragment.graphql'
 
 type Props = {
-  queryRef: JoinFragment$key
+  queryRef: JoinFragment$key,
+  hadGrant: boolean,
+  clearGrant: () => void,
 }
 
 const JoinAction = graphql`
@@ -34,30 +35,14 @@ const JoinFragment = graphql`
   }
 `
 
-export default function Join ({ queryRef }: Props): Node {
+export default function Join ({ queryRef, hadGrant, clearGrant }: Props): Node {
   const [commit, isInFlight] = useMutation(JoinAction)
 
   const data = useFragment(JoinFragment, queryRef)
 
   const [t] = useTranslation('auth')
 
-  // used to track whether or not there was previously a token grant, so that if
-  // an invalid token was returned, we can show an "expired" token page
-  const [hadGrant, setHadGrant] = useState(false)
-
-  const clearAlert = () => {
-    setHadGrant(false)
-  }
-
   const notify = useToast()
-
-  // when a new join is started, we want to make sure that we save the fact that
-  // there was one, so we can tell the user if the login code expired
-  useEffect(() => {
-    if (data) {
-      setHadGrant(true)
-    }
-  }, [data])
 
   const onSubmit = (val) => {
     commit({
@@ -88,8 +73,6 @@ export default function Join ({ queryRef }: Props): Node {
     })
   }
 
-  console.log(data)
-
   // Ask user to authenticate
   return (
     <>
@@ -113,7 +96,7 @@ export default function Join ({ queryRef }: Props): Node {
                 position='absolute'
                 right={2}
                 top={2}
-                onClick={clearAlert}
+                onClick={clearGrant}
               />
             </Alert>
           )}
