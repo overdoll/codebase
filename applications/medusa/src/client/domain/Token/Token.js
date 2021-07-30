@@ -95,7 +95,16 @@ export default function Token ({ prepared }: Props): Node {
   }, [data])
 
   if (!data) {
-    return 'invalid'
+    return (
+      <Center mt={8}>
+        <Flex w={['fill', 'sm']} direction='column'>
+          <Alert mb={2} status='error'>
+            <AlertIcon />
+            <AlertDescription>{t('expired')}</AlertDescription>
+          </Alert>
+        </Flex>
+      </Center>
+    )
   }
 
   const renderDevice = () => {
