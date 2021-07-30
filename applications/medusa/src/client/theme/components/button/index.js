@@ -201,7 +201,7 @@ const sizes = {
     h: 12,
     minW: 12,
     fontSize: 'lg',
-    borderRadius: 15,
+    borderRadius: 10,
     px: 6
   },
   md: {

@@ -6,15 +6,6 @@ import { Helmet } from 'react-helmet-async'
 import { Center, Flex, Heading } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 
-/*
-import type { HistoryPendingPostAuditLogsQuery } from '@//:artifacts/HistoryPendingPostAuditLogsQuery.graphql'
-import type { PreloadedQuery } from 'react-relay/relay-hooks/EntryPointTypes.flow'
-
-type Props = {
-  auditLogsQueryRef: PreloadedQuery<HistoryPendingPostAuditLogsQuery>
-}
-*/
-
 export default function History (props: Props): Node {
   const [t] = useTranslation('moderation')
 

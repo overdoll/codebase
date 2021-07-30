@@ -196,7 +196,7 @@ const routes: Array<Route> = [
         exact: true,
         component: JSResource('ConfirmationRoot', () =>
           import(
-            /* webpackChunkName: "TokenRoot" */ './domain/Confirmation/Confirmation'
+            /* webpackChunkName: "ConfirmationRoot" */ './domain/Confirmation/Confirmation'
           ),
         module.hot
         ),
@@ -205,7 +205,7 @@ const routes: Array<Route> = [
           ({ environment, history }) => {
             const ability = getAbilityFromUser(environment)
 
-            if (ability.can('manage', 'account')) {
+            if (ability.cannot('manage', 'account')) {
               history.push('/')
               return false
             }

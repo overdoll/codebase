@@ -2,11 +2,12 @@
  * @flow
  */
 import type { Node } from 'react'
+import { useEffect } from 'react'
 import {
   Divider,
   Flex,
   Heading,
-  Stack
+  Stack, useToast
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import AddEmailForm from './AddEmailForm/AddEmailForm'
@@ -14,6 +15,7 @@ import AddEmailForm from './AddEmailForm/AddEmailForm'
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { EmailsSettingsFragment$key } from '@//:artifacts/EmailsSettingsFragment.graphql'
 import EmailCard from './EmailCard/EmailCard'
+import { useFlash } from '@//:modules/flash'
 
 type Props = {
   emails: EmailsSettingsFragment$key
@@ -40,6 +42,35 @@ export default function Emails ({ emails }: Props): Node {
   const data = useFragment(EmailsFragmentGQL, emails)
 
   const emailsConnectionID = data?.emails?.__id
+
+  const { read, flush } = useFlash()
+
+  const notify = useToast()
+
+  const confirmationSuccess = read('confirmation.success')
+
+  const confirmationError = read('confirmation.error')
+
+  useEffect(() => {
+    if (confirmationError) {
+      notify({
+        status: 'error',
+        duration: 10000,
+        isClosable: true,
+        title: confirmationError
+      })
+      flush('confirmation.error')
+    }
+
+    if (confirmationSuccess) {
+      notify({
+        status: 'success',
+        isClosable: true,
+        title: confirmationSuccess
+      })
+      flush('confirmation.success')
+    }
+  }, [confirmationError, confirmationSuccess])
 
   return (
     <>

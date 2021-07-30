@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 1599678abe6ac72dfcdd0eaaf84d5840
+ * @relayHash bd807d26fb74c5f78ed47d2de2c8a88b
  */
 
 /* eslint-disable */
@@ -13,8 +13,7 @@ export type UpdateAccountEmailStatusToPrimaryInput = {|
   accountEmailId: string
 |};
 export type MakePrimaryOptionMutationVariables = {|
-  input: UpdateAccountEmailStatusToPrimaryInput,
-  connections: $ReadOnlyArray<string>,
+  input: UpdateAccountEmailStatusToPrimaryInput
 |};
 export type MakePrimaryOptionMutationResponse = {|
   +updateAccountEmailStatusToPrimary: ?{|
@@ -22,6 +21,17 @@ export type MakePrimaryOptionMutationResponse = {|
       +id: string,
       +status: AccountEmailStatus,
       +email: string,
+      +account: {|
+        +emails: {|
+          +edges: $ReadOnlyArray<{|
+            +node: {|
+              +id: string,
+              +email: string,
+              +status: AccountEmailStatus,
+            |}
+          |}>
+        |}
+      |},
     |}
   |}
 |};
@@ -40,56 +50,90 @@ mutation MakePrimaryOptionMutation(
       id
       status
       email
+      account {
+        emails {
+          edges {
+            node {
+              id
+              email
+              status
+            }
+          }
+        }
+        id
+      }
     }
   }
 }
 */
 
 const node: ConcreteRequest = (function(){
-var v0 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "connections"
-},
-v1 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "input"
-},
-v2 = [
+var v0 = [
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "input"
+  }
+],
+v1 = [
   {
     "kind": "Variable",
     "name": "input",
     "variableName": "input"
   }
 ],
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
 v3 = {
   "alias": null,
   "args": null,
-  "concreteType": "AccountEmail",
+  "kind": "ScalarField",
+  "name": "status",
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "email",
+  "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "AccountEmailConnection",
   "kind": "LinkedField",
-  "name": "accountEmail",
+  "name": "emails",
   "plural": false,
   "selections": [
     {
       "alias": null,
       "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "status",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "email",
+      "concreteType": "AccountEmailEdge",
+      "kind": "LinkedField",
+      "name": "edges",
+      "plural": true,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "AccountEmail",
+          "kind": "LinkedField",
+          "name": "node",
+          "plural": false,
+          "selections": [
+            (v2/*: any*/),
+            (v4/*: any*/),
+            (v3/*: any*/)
+          ],
+          "storageKey": null
+        }
+      ],
       "storageKey": null
     }
   ],
@@ -97,23 +141,45 @@ v3 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": [
-      (v0/*: any*/),
-      (v1/*: any*/)
-    ],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "MakePrimaryOptionMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v2/*: any*/),
+        "args": (v1/*: any*/),
         "concreteType": "UpdateAccountEmailStatusToPrimaryPayload",
         "kind": "LinkedField",
         "name": "updateAccountEmailStatusToPrimary",
         "plural": false,
         "selections": [
-          (v3/*: any*/)
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AccountEmail",
+            "kind": "LinkedField",
+            "name": "accountEmail",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/),
+              (v3/*: any*/),
+              (v4/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Account",
+                "kind": "LinkedField",
+                "name": "account",
+                "plural": false,
+                "selections": [
+                  (v5/*: any*/)
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
         ],
         "storageKey": null
       }
@@ -123,42 +189,44 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [
-      (v1/*: any*/),
-      (v0/*: any*/)
-    ],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "MakePrimaryOptionMutation",
     "selections": [
       {
         "alias": null,
-        "args": (v2/*: any*/),
+        "args": (v1/*: any*/),
         "concreteType": "UpdateAccountEmailStatusToPrimaryPayload",
         "kind": "LinkedField",
         "name": "updateAccountEmailStatusToPrimary",
         "plural": false,
         "selections": [
-          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
-            "filters": null,
-            "handle": "appendNode",
-            "key": "",
-            "kind": "LinkedHandle",
+            "concreteType": "AccountEmail",
+            "kind": "LinkedField",
             "name": "accountEmail",
-            "handleArgs": [
+            "plural": false,
+            "selections": [
+              (v2/*: any*/),
+              (v3/*: any*/),
+              (v4/*: any*/),
               {
-                "kind": "Variable",
-                "name": "connections",
-                "variableName": "connections"
-              },
-              {
-                "kind": "Literal",
-                "name": "edgeTypeName",
-                "value": "AccountEmailEdge"
+                "alias": null,
+                "args": null,
+                "concreteType": "Account",
+                "kind": "LinkedField",
+                "name": "account",
+                "plural": false,
+                "selections": [
+                  (v5/*: any*/),
+                  (v2/*: any*/)
+                ],
+                "storageKey": null
               }
-            ]
+            ],
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -166,7 +234,7 @@ return {
     ]
   },
   "params": {
-    "id": "1599678abe6ac72dfcdd0eaaf84d5840",
+    "id": "bd807d26fb74c5f78ed47d2de2c8a88b",
     "metadata": {},
     "name": "MakePrimaryOptionMutation",
     "operationKind": "mutation",
@@ -175,5 +243,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = 'af05407fa2ae6178ab10c136db925d02';
+(node: any).hash = 'add5d0caced161fb36cfcd31bcf7d183';
 module.exports = node;

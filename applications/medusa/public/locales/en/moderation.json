@@ -66,9 +66,9 @@
           }
         }
       }
-    },
-    "history": {
-      "title": "Moderation History"
     }
+  },
+  "history": {
+    "title": "Moderation History"
   }
 }

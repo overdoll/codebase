@@ -142,6 +142,18 @@ export default function Join (props: Props): Node {
 
   const error = read('login.notify')
 
+  useEffect(() => {
+    if (error) {
+      notify({
+        status: 'error',
+        duration: null,
+        isClosable: true,
+        title: error
+      })
+      flush('login.notify')
+    }
+  }, [error])
+
   // Ask user to authenticate
   return (
     <>

@@ -31,7 +31,7 @@ export default function PostHeader (props: Props): Node {
 
   const data = useFragment(NoPostsPlaceholderFragmentGQL, props.moderator)
 
-  if (data.moderator) {
+  if (!data.moderator) {
     return (
       <>
         <Icon

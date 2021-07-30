@@ -2,9 +2,10 @@
  * @flow
  */
 import type { Node } from 'react'
+import { useState } from 'react'
 import {
   Badge, Box,
-  Flex, Heading, IconButton, Menu, MenuButton, MenuItem, MenuList, Text
+  Flex, Heading, IconButton, Menu, MenuButton, MenuItem, MenuList, Text, Spinner, Fade
 } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import InterfaceSettingCog
@@ -32,6 +33,7 @@ export default function EmailCard ({ email, status, emailID, connectionID }: Pro
       borderColor={status === 'PRIMARY' ? 'green.500' : 'gray.800'} p={4}
       borderRadius={5}
       bg={status === 'PRIMARY' ? 'gray.800' : 'transparent'}
+      position='relative'
     >
       <Flex align='flex-start' direction='column'>
         <Flex mb={1} align='center' w='100%' direction='row'>
