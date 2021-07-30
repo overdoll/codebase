@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 927eb3e579f178c085a0407b9dc03c74
+ * @relayHash 2c6a242cc75778483d432b75fe2fa4b4
  */
 
 /* eslint-disable */
@@ -8,15 +8,20 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-export type RevokeAuthenticationTokenInput = {|
-  authenticationTokenId?: ?string
+export type VerifyAuthenticationTokenValidation = "TOKEN_EXPIRED" | "%future added value";
+export type VerifyAuthenticationTokenInput = {|
+  authenticationTokenId: string
 |};
 export type TokenVerifyMutationVariables = {|
-  input: RevokeAuthenticationTokenInput
+  input: VerifyAuthenticationTokenInput
 |};
 export type TokenVerifyMutationResponse = {|
-  +revokeAuthenticationToken: ?{|
-    +revokedAuthenticationTokenId: string
+  +verifyAuthenticationToken: ?{|
+    +validation: ?VerifyAuthenticationTokenValidation,
+    +authenticationToken: ?{|
+      +id: string,
+      +verified: boolean,
+    |},
   |}
 |};
 export type TokenVerifyMutation = {|
@@ -27,10 +32,14 @@ export type TokenVerifyMutation = {|
 
 /*
 mutation TokenVerifyMutation(
-  $input: RevokeAuthenticationTokenInput!
+  $input: VerifyAuthenticationTokenInput!
 ) {
-  revokeAuthenticationToken(input: $input) {
-    revokedAuthenticationTokenId
+  verifyAuthenticationToken(input: $input) {
+    validation
+    authenticationToken {
+      id
+      verified
+    }
   }
 }
 */
@@ -53,16 +62,41 @@ v1 = [
         "variableName": "input"
       }
     ],
-    "concreteType": "RevokeAuthenticationTokenPayload",
+    "concreteType": "VerifyAuthenticationTokenPayload",
     "kind": "LinkedField",
-    "name": "revokeAuthenticationToken",
+    "name": "verifyAuthenticationToken",
     "plural": false,
     "selections": [
       {
         "alias": null,
         "args": null,
         "kind": "ScalarField",
-        "name": "revokedAuthenticationTokenId",
+        "name": "validation",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "AuthenticationToken",
+        "kind": "LinkedField",
+        "name": "authenticationToken",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "id",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "verified",
+            "storageKey": null
+          }
+        ],
         "storageKey": null
       }
     ],
@@ -87,7 +121,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "927eb3e579f178c085a0407b9dc03c74",
+    "id": "2c6a242cc75778483d432b75fe2fa4b4",
     "metadata": {},
     "name": "TokenVerifyMutation",
     "operationKind": "mutation",
@@ -96,5 +130,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = 'a6d2cae3d767671f209be8bddef2760d';
+(node: any).hash = 'c2d498b98a87ce002ebbbc344811afd7';
 module.exports = node;

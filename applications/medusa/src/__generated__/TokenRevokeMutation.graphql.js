@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 16dcc70af20488d817e801944b16ec17
+ * @relayHash aea89838ddd1493d2c2fb6c9ac58af5a
  */
 
 /* eslint-disable */
@@ -8,25 +8,15 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-export type MultiFactorType = "TOTP" | "%future added value";
-export type VerifyAuthenticationTokenValidation = "TOKEN_EXPIRED" | "%future added value";
-export type VerifyAuthenticationTokenInput = {|
-  authenticationTokenId: string
+export type RevokeAuthenticationTokenInput = {|
+  authenticationTokenId?: ?string
 |};
 export type TokenRevokeMutationVariables = {|
-  input: VerifyAuthenticationTokenInput
+  input: RevokeAuthenticationTokenInput
 |};
 export type TokenRevokeMutationResponse = {|
-  +verifyAuthenticationToken: ?{|
-    +validation: ?VerifyAuthenticationTokenValidation,
-    +authenticationToken: ?{|
-      +id: string,
-      +verified: boolean,
-      +accountStatus: ?{|
-        +registered: boolean,
-        +multiFactor: ?$ReadOnlyArray<MultiFactorType>,
-      |},
-    |},
+  +revokeAuthenticationToken: ?{|
+    +revokedAuthenticationTokenId: string
   |}
 |};
 export type TokenRevokeMutation = {|
@@ -37,18 +27,10 @@ export type TokenRevokeMutation = {|
 
 /*
 mutation TokenRevokeMutation(
-  $input: VerifyAuthenticationTokenInput!
+  $input: RevokeAuthenticationTokenInput!
 ) {
-  verifyAuthenticationToken(input: $input) {
-    validation
-    authenticationToken {
-      id
-      verified
-      accountStatus {
-        registered
-        multiFactor
-      }
-    }
+  revokeAuthenticationToken(input: $input) {
+    revokedAuthenticationTokenId
   }
 }
 */
@@ -71,66 +53,16 @@ v1 = [
         "variableName": "input"
       }
     ],
-    "concreteType": "VerifyAuthenticationTokenPayload",
+    "concreteType": "RevokeAuthenticationTokenPayload",
     "kind": "LinkedField",
-    "name": "verifyAuthenticationToken",
+    "name": "revokeAuthenticationToken",
     "plural": false,
     "selections": [
       {
         "alias": null,
         "args": null,
         "kind": "ScalarField",
-        "name": "validation",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "AuthenticationToken",
-        "kind": "LinkedField",
-        "name": "authenticationToken",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "verified",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "AuthenticationTokenAccountStatus",
-            "kind": "LinkedField",
-            "name": "accountStatus",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "registered",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "multiFactor",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          }
-        ],
+        "name": "revokedAuthenticationTokenId",
         "storageKey": null
       }
     ],
@@ -155,7 +87,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "16dcc70af20488d817e801944b16ec17",
+    "id": "aea89838ddd1493d2c2fb6c9ac58af5a",
     "metadata": {},
     "name": "TokenRevokeMutation",
     "operationKind": "mutation",
@@ -164,5 +96,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = 'adbb5d2a9f1a37e98061e60ba8a0e1f8';
+(node: any).hash = '8c3b1b234a36862c28e4afe7b27f5c04';
 module.exports = node;

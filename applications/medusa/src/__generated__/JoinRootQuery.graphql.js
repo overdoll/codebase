@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 5144a69f709085fcdb6b47b33e57c830
+ * @relayHash 4cbb1cbf17c57335accfd532ad6b8431
  */
 
 /* eslint-disable */
@@ -11,14 +11,11 @@ import type { ConcreteRequest } from 'relay-runtime';
 import type { JoinFragment$ref } from "./JoinFragment.graphql";
 import type { JoinRootFragment$ref } from "./JoinRootFragment.graphql";
 import type { LobbyFragment$ref } from "./LobbyFragment.graphql";
-import type { TokenFragment$ref } from "./TokenFragment.graphql";
-export type JoinRootQueryVariables = {|
-  token?: ?string
-|};
+export type JoinRootQueryVariables = {||};
 export type JoinRootQueryResponse = {|
   +viewAuthenticationToken: ?{|
     +id: string,
-    +$fragmentRefs: JoinFragment$ref & TokenFragment$ref & LobbyFragment$ref & JoinRootFragment$ref,
+    +$fragmentRefs: LobbyFragment$ref & JoinRootFragment$ref & JoinFragment$ref,
   |}
 |};
 export type JoinRootQuery = {|
@@ -28,15 +25,12 @@ export type JoinRootQuery = {|
 
 
 /*
-query JoinRootQuery(
-  $token: String
-) {
-  viewAuthenticationToken(token: $token) {
+query JoinRootQuery {
+  viewAuthenticationToken {
     id
-    ...JoinFragment
-    ...TokenFragment
     ...LobbyFragment
     ...JoinRootFragment
+    ...JoinFragment
   }
 }
 
@@ -55,31 +49,10 @@ fragment JoinRootFragment on AuthenticationToken {
 fragment LobbyFragment on AuthenticationToken {
   email
 }
-
-fragment TokenFragment on AuthenticationToken {
-  verified
-  device
-  location
-  secure
-}
 */
 
 const node: ConcreteRequest = (function(){
-var v0 = [
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "token"
-  }
-],
-v1 = [
-  {
-    "kind": "Variable",
-    "name": "token",
-    "variableName": "token"
-  }
-],
-v2 = {
+var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -88,30 +61,20 @@ v2 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
     "name": "JoinRootQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": null,
         "concreteType": "AuthenticationToken",
         "kind": "LinkedField",
         "name": "viewAuthenticationToken",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
-          {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "JoinFragment"
-          },
-          {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "TokenFragment"
-          },
+          (v0/*: any*/),
           {
             "args": null,
             "kind": "FragmentSpread",
@@ -121,6 +84,11 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "JoinRootFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "JoinFragment"
           }
         ],
         "storageKey": null
@@ -131,19 +99,19 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [],
     "kind": "Operation",
     "name": "JoinRootQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": null,
         "concreteType": "AuthenticationToken",
         "kind": "LinkedField",
         "name": "viewAuthenticationToken",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
+          (v0/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -156,27 +124,6 @@ return {
             "args": null,
             "kind": "ScalarField",
             "name": "verified",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "device",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "location",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "secure",
             "storageKey": null
           },
           {
@@ -210,7 +157,7 @@ return {
     ]
   },
   "params": {
-    "id": "5144a69f709085fcdb6b47b33e57c830",
+    "id": "4cbb1cbf17c57335accfd532ad6b8431",
     "metadata": {},
     "name": "JoinRootQuery",
     "operationKind": "query",
@@ -219,5 +166,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '7b76348775edb1c487d54b8061aa11f2';
+(node: any).hash = '0c6c0b6a163273018d9e42ae3cceaaa3';
 module.exports = node;

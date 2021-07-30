@@ -92,9 +92,42 @@ const routes: Array<Route> = [
           return {
             joinQuery: {
               query: JoinQuery,
-              // we may have the current user specify the token as a query parameter (that's how it's sent) so it will use this instead
-              // of reading the token from the cookie
-              variables: { token: query.get('token') },
+              variables: {},
+              options: {
+                fetchPolicy: 'store-or-network'
+              }
+            }
+          }
+        }
+      },
+      {
+        path: '/token',
+        exact: true,
+        component: JSResource('TokenRoot', () =>
+          import(
+            /* webpackChunkName: "TokenRoot" */ './domain/Token/Token'
+          ),
+        module.hot
+        ),
+        // When user is logged in, we just want to redirect them since they're already "logged in"
+        middleware: [
+          ({ environment, history }) => {
+            const ability = getAbilityFromUser(environment)
+
+            if (ability.can('manage', 'account')) {
+              history.push('/profile')
+              return false
+            }
+
+            return true
+          }
+        ],
+        prepare: (params, query) => {
+          const TokenQuery = require('@//:artifacts/TokenQuery.graphql')
+          return {
+            tokenQuery: {
+              query: TokenQuery,
+              variables: { token: query.get('id') ?? '' },
               options: {
                 fetchPolicy: 'store-or-network'
               }

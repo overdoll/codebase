@@ -1,16 +1,16 @@
 /**
  * @flow
  */
-import { graphql, useFragment, useMutation } from 'react-relay/hooks'
+import { graphql, useMutation, useFragment } from 'react-relay/hooks'
 import { useTranslation } from 'react-i18next'
 import { Alert, AlertDescription, AlertIcon, Center, CloseButton, Flex, useToast } from '@chakra-ui/react'
-import { StringParam, useQueryParam } from 'use-query-params'
 import { Helmet } from 'react-helmet-async'
 import Icon from '@//:modules/content/Icon/Icon'
 import JoinForm from './JoinForm/JoinForm'
-import type { JoinFragment$key } from '@//:artifacts/JoinFragment.graphql'
 import SignBadgeCircle
   from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
+import { useEffect, useState } from 'react'
+import type { JoinFragment$key } from '@//:artifacts/JoinFragment.graphql'
 
 type Props = {
   queryRef: JoinFragment$key
@@ -41,15 +41,23 @@ export default function Join ({ queryRef }: Props): Node {
 
   const [t] = useTranslation('auth')
 
-  const notify = useToast()
-
-  const [queryToken, setQueryToken] = useQueryParam('token', StringParam)
-
-  const invalidTokenFromQuery = !data && queryToken !== undefined
+  // used to track whether or not there was previously a token grant, so that if
+  // an invalid token was returned, we can show an "expired" token page
+  const [hadGrant, setHadGrant] = useState(false)
 
   const clearAlert = () => {
-    setQueryToken(undefined)
+    setHadGrant(false)
   }
+
+  const notify = useToast()
+
+  // when a new join is started, we want to make sure that we save the fact that
+  // there was one, so we can tell the user if the login code expired
+  useEffect(() => {
+    if (data) {
+      setHadGrant(true)
+    }
+  }, [data])
 
   const onSubmit = (val) => {
     commit({
@@ -59,8 +67,6 @@ export default function Join ({ queryRef }: Props): Node {
         }
       },
       updater: (store, payload) => {
-        clearAlert()
-
         // after the mutation, update the root 'viewAuthenticationToken' so that the query can start the lobby queries
         const node = store.create(`client:root:viewAuthenticationToken-${payload.grantAuthenticationToken.authenticationToken.id}`, 'AuthenticationToken')
         node.setValue(payload.grantAuthenticationToken.authenticationToken.email, 'email')
@@ -82,6 +88,8 @@ export default function Join ({ queryRef }: Props): Node {
     })
   }
 
+  console.log(data)
+
   // Ask user to authenticate
   return (
     <>
@@ -97,10 +105,10 @@ export default function Join ({ queryRef }: Props): Node {
             mr='auto'
             mb={8}
           />
-          {invalidTokenFromQuery && (
+          {(!data && hadGrant) && (
             <Alert mb={2} status='error'>
               <AlertIcon />
-              <AlertDescription>{t('token.invalid_token')}</AlertDescription>
+              <AlertDescription>{t('expired')}</AlertDescription>
               <CloseButton
                 position='absolute'
                 right={2}

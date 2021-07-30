@@ -7,64 +7,66 @@ import UAParser from 'ua-parser-js'
 import { Helmet } from 'react-helmet-async'
 import { Alert, AlertDescription, AlertIcon, Box, Center, Flex, Heading, Text } from '@chakra-ui/react'
 import { Icon } from '@//:modules/content'
-import { graphql, useFragment, useMutation } from 'react-relay/hooks'
+import type { PreloadedQueryInner } from 'react-relay/hooks'
+import { graphql, useMutation, usePreloadedQuery } from 'react-relay/hooks'
 import SignBadgeCircle
   from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
-import type { TokenFragment$key } from '@//:artifacts/TokenFragment.graphql'
 import { StringParam, useQueryParam } from 'use-query-params'
-import { useEffect } from 'react'
+import { Node, useEffect } from 'react'
+import type { TokenQuery } from '@//:artifacts/TokenQuery.graphql'
 
 type Props = {
-  queryRef: TokenFragment$key
-}
+  prepared: {
+    tokenQuery: PreloadedQueryInner<TokenQuery>,
+  },
+};
 
-const TokenRevokeMutationGQL = graphql`
-  mutation TokenVerifyMutation($input: RevokeAuthenticationTokenInput!) {
+const RevokeTokenMutationGQL = graphql`
+  mutation TokenRevokeMutation($input: RevokeAuthenticationTokenInput!) {
     revokeAuthenticationToken(input: $input) {
       revokedAuthenticationTokenId
     }
   }
 `
 
-const TokenVerifyMutationGQL = graphql`
-  mutation TokenRevokeMutation($input: VerifyAuthenticationTokenInput!) {
+const VerifyTokenMutationGQL = graphql`
+  mutation TokenVerifyMutation($input: VerifyAuthenticationTokenInput!) {
     verifyAuthenticationToken(input: $input) {
       validation
       authenticationToken {
         id
         verified
-        accountStatus {
-          registered
-          multiFactor
-        }
       }
     }
   }
 `
 
-const TokenFragment = graphql`
-  fragment TokenFragment on AuthenticationToken {
-    verified
-    device
-    location
-    secure
+const TokenStatus = graphql`
+  query TokenQuery($token: String) {
+    viewAuthenticationToken(token: $token) {
+      id
+      verified
+      sameSession
+      device
+      secure
+    }
   }
 `
 
-export default function Token ({ queryRef }: Props): Node {
+export default function Token ({ prepared }: Props): Node {
+  const query = usePreloadedQuery<TokenQuery>(TokenStatus, prepared.tokenQuery)
+
   const [verifyToken, isVerifyingToken] = useMutation(
-    TokenVerifyMutationGQL
+    VerifyTokenMutationGQL
   )
 
   const [revokeToken, isRevokingToken] = useMutation(
-    TokenRevokeMutationGQL
+    RevokeTokenMutationGQL
   )
 
-  const data = useFragment(TokenFragment, queryRef)
+  const [t] = useTranslation('token')
 
-  const [t] = useTranslation('auth')
-
-  const [queryToken] = useQueryParam('token', StringParam)
+  const [queryToken] = useQueryParam('id', StringParam)
 
   const verify = () => {
     verifyToken({
@@ -92,12 +94,18 @@ export default function Token ({ queryRef }: Props): Node {
     })
   }
 
+  const data = query.viewAuthenticationToken
+
   useEffect(() => {
     // secure and verified, auto-verify the token
-    if (!data.verified && data.secure) {
+    if (data && !data.verified && data.secure) {
       verify()
     }
   }, [data])
+
+  if (!data) {
+    return 'invalid or expired token'
+  }
 
   // not verified yet
   if (!data.verified) {
@@ -134,7 +142,7 @@ export default function Token ({ queryRef }: Props): Node {
             mb={8}
           />
           <Heading mb={8} align='center' size='md' color='gray.100'>
-            {t('token.header')}
+            {t('header')}
           </Heading>
           <Box mb={8} pt={3} pb={3} borderRadius={5} bg='gray.800'>
             <Center>
@@ -146,7 +154,7 @@ export default function Token ({ queryRef }: Props): Node {
           </Box>
           <Alert mt={4} borderRadius={5}>
             <AlertIcon />
-            {t('token.close')}
+            {t('close')}
             <AlertDescription />
           </Alert>
         </Flex>
