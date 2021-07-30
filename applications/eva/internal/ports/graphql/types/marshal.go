@@ -3,7 +3,6 @@ package types
 import (
 	"context"
 	"crypto/sha256"
-	"fmt"
 
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/session"
@@ -165,8 +164,6 @@ func MarshalAuthenticationTokenToGraphQL(ctx context.Context, result *token.Auth
 		secure = false
 	}
 
-	fmt.Println(secure)
-
 	// only show account status if verified
 	// this will only be populated if the token is verified anyways
 	if result.Verified() {
@@ -193,7 +190,7 @@ func MarshalAuthenticationTokenToGraphQL(ctx context.Context, result *token.Auth
 		Verified:      result.Verified(),
 		Device:        result.Device(),
 		Email:         result.Email(),
-		Secure:        false,
+		Secure:        secure,
 		AccountStatus: accountStatus,
 	}
 }

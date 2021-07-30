@@ -22,6 +22,7 @@ const JoinAction = graphql`
       authenticationToken {
         id
         email
+        sameSession
       }
     }
   }
@@ -58,16 +59,17 @@ export default function Join ({ queryRef }: Props): Node {
         }
       },
       updater: (store, payload) => {
+        clearAlert()
+
         // after the mutation, update the root 'viewAuthenticationToken' so that the query can start the lobby queries
-        const node = store.create('client:root:viewAuthenticationToken-1', 'AuthenticationToken')
+        const node = store.create(`client:root:viewAuthenticationToken-${payload.grantAuthenticationToken.authenticationToken.id}`, 'AuthenticationToken')
         node.setValue(payload.grantAuthenticationToken.authenticationToken.email, 'email')
         node.setValue(payload.grantAuthenticationToken.authenticationToken.id, 'id')
+        node.setValue(payload.grantAuthenticationToken.authenticationToken.sameSession, 'sameSession')
 
         store
           .getRoot()
           .setLinkedRecord(node, 'viewAuthenticationToken')
-
-        clearAlert()
       },
       onError (data) {
         console.log(data)

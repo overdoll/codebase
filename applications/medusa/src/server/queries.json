@@ -97,5 +97,6 @@
   "e2fe757224e0a33cd664690a4bb64b24": "mutation GrantMutation {\n  grantAccountAccessWithAuthenticationToken {\n    validation\n    account {\n      username\n      id\n    }\n  }\n}\n",
   "c3538ff1ed0ac6870c3e7e3eb05887c2": "mutation LobbyMutation {\n  reissueAuthenticationToken {\n    validation\n    authenticationToken {\n      email\n      id\n    }\n  }\n}\n",
   "633d6abdc12ec3db601c9c1bb6b1a230": "mutation RegisterMutation(\n  $input: CreateAccountWithAuthenticationTokenInput!\n) {\n  createAccountWithAuthenticationToken(input: $input) {\n    validation\n    account {\n      id\n    }\n  }\n}\n",
-  "df1bb1c0b3d007aa2174bed8b2352bea": "mutation GrantMutation {\n  grantAccountAccessWithAuthenticationToken {\n    validation\n    account {\n      id\n    }\n  }\n}\n"
+  "df1bb1c0b3d007aa2174bed8b2352bea": "mutation GrantMutation {\n  grantAccountAccessWithAuthenticationToken {\n    validation\n    account {\n      id\n    }\n  }\n}\n",
+  "7b6af25bb5f3307fb55741ece39a6839": "mutation JoinMutation(\n  $input: GrantAuthenticationTokenInput!\n) {\n  grantAuthenticationToken(input: $input) {\n    authenticationToken {\n      id\n      email\n      sameSession\n    }\n  }\n}\n"
 }

@@ -2,16 +2,24 @@
  * @flow
  */
 import type { Node } from 'react'
+import { Fragment, useContext, useMemo } from 'react'
 import {
-  Flex, Spacer, Avatar, Button,
+  Avatar,
+  Box,
+  Button,
+  Flex,
+  Heading,
+  HStack,
   IconButton,
-  HStack, Box, useDisclosure, Stack, Heading, Tooltip
+  Spacer,
+  Stack,
+  Tooltip,
+  useDisclosure
 } from '@chakra-ui/react'
-import { Fragment, useMemo, useContext } from 'react'
 import Icon from '@//:modules/content/Icon/Icon'
 import { useTranslation } from 'react-i18next'
 import Link from '@//:modules/routing/Link'
-import { Switch, Route, Router } from 'react-router'
+import { Route, Switch } from 'react-router'
 import { useHistory, useLocation } from '@//:modules/routing'
 import computeCurrentActiveRoutes from './helpers/computeCurrentActiveRoutes'
 import { AbilityContext } from '../helpers/AbilityContext'
@@ -56,7 +64,7 @@ export default function NavigationBar ({ account, children, refreshUserQuery }: 
   }), [ability])
 
   return (
-    <Router history={history}>
+    <>
       <Flex
         align='center' right={0} left={0} top={0} h='54px'
       />
@@ -181,7 +189,7 @@ export default function NavigationBar ({ account, children, refreshUserQuery }: 
           {children}
         </Flex>
       </Flex>
-    </Router>
+    </>
   )
 }
 
