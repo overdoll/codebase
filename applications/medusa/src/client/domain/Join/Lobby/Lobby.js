@@ -60,7 +60,16 @@ export default function Lobby ({ queryRef, refresh }: Props): Node {
   const onSubmit = () => {
     commit({
       variables: {},
-      onCompleted () {
+      onCompleted (payload) {
+        if (payload.reissueAuthenticationToken.validation) {
+          notify({
+            status: 'error',
+            title: payload.reissueAuthenticationToken.validation,
+            isClosable: true
+          })
+          return
+        }
+
         createTimeout(60000)
         notify({
           status: 'success',

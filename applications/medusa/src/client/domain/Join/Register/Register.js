@@ -42,6 +42,15 @@ export default function Register (): Node {
         }
       },
       updater: (store, payload) => {
+        if (payload.createAccountWithAuthenticationToken.validation) {
+          notify({
+            status: 'error',
+            title: payload.createAccountWithAuthenticationToken.validation,
+            isClosable: true
+          })
+          return
+        }
+
         // basically just invalidate the viewer so it can be re-fetched
         const viewer = store
           .getRoot()

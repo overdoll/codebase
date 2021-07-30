@@ -33,6 +33,15 @@ export default function Grant (): Node {
     commit({
       variables: {},
       updater: (store, payload) => {
+        if (payload.grantAccountAccessWithAuthenticationToken.validation) {
+          notify({
+            status: 'error',
+            title: payload.grantAccountAccessWithAuthenticationToken.validation,
+            isClosable: true
+          })
+          return
+        }
+
         // basically just invalidate the viewer so it can be re-fetched
         const viewer = store
           .getRoot()

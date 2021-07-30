@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner'
 import UAParser from 'ua-parser-js'
 import { Helmet } from 'react-helmet-async'
-import { Alert, AlertDescription, AlertIcon, Box, Center, Flex, Heading, Text } from '@chakra-ui/react'
+import { Alert, AlertDescription, AlertIcon, Box, Center, Flex, Heading, Text, useToast } from '@chakra-ui/react'
 import { Icon } from '@//:modules/content'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
 import { graphql, useMutation, usePreloadedQuery } from 'react-relay/hooks'
@@ -58,6 +58,8 @@ export default function Token ({ prepared }: Props): Node {
 
   const history = useHistory()
 
+  const notify = useToast()
+
   const [t] = useTranslation('token')
 
   const [queryToken] = useQueryParam('id', StringParam)
@@ -67,6 +69,15 @@ export default function Token ({ prepared }: Props): Node {
       variables: {
         input: {
           authenticationTokenId: queryToken
+        }
+      },
+      onCompleted (payload) {
+        if (payload.verifyAuthenticationToken.validation) {
+          notify({
+            status: 'error',
+            title: payload.verifyAuthenticationToken.validation,
+            isClosable: true
+          })
         }
       },
       onError (data) {
