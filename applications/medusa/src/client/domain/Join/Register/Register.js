@@ -41,10 +41,14 @@ export default function Register (): Node {
         }
       },
       updater: (store, payload) => {
-        // basically just invalidate the store so it can re-fetch
-        store
+        // basically just invalidate the viewer so it can be re-fetched
+        const viewer = store
           .getRoot()
-          .setValue(undefined, 'viewer')
+          .getLinkedRecord('viewer')
+
+        if (viewer != null) {
+          viewer.invalidateRecord()
+        }
 
         history.push('/profile')
       },

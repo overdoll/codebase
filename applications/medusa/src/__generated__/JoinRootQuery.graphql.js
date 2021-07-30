@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 88ec647830d388cf204dfecaebfdb8cc
+ * @relayHash 6a347d4a552aca6514c786c15ed7f55d
  */
 
 /* eslint-disable */
@@ -9,19 +9,15 @@
 
 import type { ConcreteRequest } from 'relay-runtime';
 import type { JoinFragment$ref } from "./JoinFragment.graphql";
-export type MultiFactorType = "TOTP" | "%future added value";
+import type { JoinRootFragment$ref } from "./JoinRootFragment.graphql";
+import type { LobbyFragment$ref } from "./LobbyFragment.graphql";
+import type { TokenFragment$ref } from "./TokenFragment.graphql";
 export type JoinRootQueryVariables = {|
   token?: ?string
 |};
 export type JoinRootQueryResponse = {|
   +viewAuthenticationToken: ?{|
-    +verified: boolean,
-    +email: string,
-    +accountStatus: ?{|
-      +registered: boolean,
-      +multiFactor: ?$ReadOnlyArray<MultiFactorType>,
-    |},
-    +$fragmentRefs: JoinFragment$ref,
+    +$fragmentRefs: JoinFragment$ref & TokenFragment$ref & LobbyFragment$ref & JoinRootFragment$ref
   |}
 |};
 export type JoinRootQuery = {|
@@ -36,17 +32,33 @@ query JoinRootQuery(
 ) {
   viewAuthenticationToken(token: $token) {
     ...JoinFragment
-    verified
-    email
-    accountStatus {
-      registered
-      multiFactor
-    }
+    ...TokenFragment
+    ...LobbyFragment
+    ...JoinRootFragment
   }
 }
 
 fragment JoinFragment on AuthenticationToken {
   email
+}
+
+fragment JoinRootFragment on AuthenticationToken {
+  verified
+  sameSession
+  accountStatus {
+    registered
+  }
+}
+
+fragment LobbyFragment on AuthenticationToken {
+  email
+}
+
+fragment TokenFragment on AuthenticationToken {
+  verified
+  device
+  location
+  secure
 }
 */
 
@@ -64,46 +76,7 @@ v1 = [
     "name": "token",
     "variableName": "token"
   }
-],
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "verified",
-  "storageKey": null
-},
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "email",
-  "storageKey": null
-},
-v4 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "AuthenticationTokenAccountStatus",
-  "kind": "LinkedField",
-  "name": "accountStatus",
-  "plural": false,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "registered",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "multiFactor",
-      "storageKey": null
-    }
-  ],
-  "storageKey": null
-};
+];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -119,13 +92,25 @@ return {
         "name": "viewAuthenticationToken",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
-          (v3/*: any*/),
-          (v4/*: any*/),
           {
             "args": null,
             "kind": "FragmentSpread",
             "name": "JoinFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "TokenFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "LobbyFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "JoinRootFragment"
           }
         ],
         "storageKey": null
@@ -148,16 +133,73 @@ return {
         "name": "viewAuthenticationToken",
         "plural": false,
         "selections": [
-          (v3/*: any*/),
-          (v2/*: any*/),
-          (v4/*: any*/)
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "email",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "verified",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "device",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "location",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "secure",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "sameSession",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AuthenticationTokenAccountStatus",
+            "kind": "LinkedField",
+            "name": "accountStatus",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "registered",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "88ec647830d388cf204dfecaebfdb8cc",
+    "id": "6a347d4a552aca6514c786c15ed7f55d",
     "metadata": {},
     "name": "JoinRootQuery",
     "operationKind": "query",
@@ -166,5 +208,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '3b2a4a107f732ac63cce1a54b0ad4c8e';
+(node: any).hash = '12634b21a3f64b64fa6f93b348997adf';
 module.exports = node;

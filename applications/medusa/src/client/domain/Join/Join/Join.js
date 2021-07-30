@@ -1,18 +1,16 @@
 /**
  * @flow
  */
-import { graphql, useMutation, usePreloadedQuery, useQueryLoader, useFragment } from 'react-relay/hooks'
-import type { JoinQuery } from '@//:artifacts/JoinQuery.graphql'
-import { useHistory } from '@//:modules/routing'
+import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { useTranslation } from 'react-i18next'
 import { Alert, AlertDescription, AlertIcon, Center, CloseButton, Flex, useToast } from '@chakra-ui/react'
 import { StringParam, useQueryParam } from 'use-query-params'
-import Lobby from '../Lobby/Lobby'
-import Register from '../Register/Register'
 import { Helmet } from 'react-helmet-async'
 import Icon from '@//:modules/content/Icon/Icon'
 import JoinForm from './JoinForm/JoinForm'
 import type { JoinFragment$key } from '@//:artifacts/JoinFragment.graphql'
+import SignBadgeCircle
+  from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
 
 type Props = {
   queryRef: JoinFragment$key
@@ -58,10 +56,19 @@ export default function Join ({ queryRef }: Props): Node {
           email: val.email
         }
       },
-      onCompleted (data) {
+      updater: (store, payload) => {
+        // after the mutation, update the root 'viewAuthenticationToken' so that the query can start the lobby queries
+        const node = store.create('client:root:viewAuthenticationToken-1', 'AuthenticationToken')
+        node.setValue(payload.grantAuthenticationToken.authenticationToken.email, 'email')
+
+        store
+          .getRoot()
+          .setLinkedRecord(node, 'viewAuthenticationToken')
+
         clearAlert()
       },
       onError (data) {
+        console.log(data)
         notify({
           status: 'error',
           title: t('authenticate.error.join'),

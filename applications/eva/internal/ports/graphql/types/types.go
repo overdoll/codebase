@@ -188,6 +188,7 @@ type Artist struct {
 func (Artist) IsEntity() {}
 
 type AuthenticationToken struct {
+	ID            relay.ID                          `json:"id"`
 	SameSession   bool                              `json:"sameSession"`
 	Verified      bool                              `json:"verified"`
 	Secure        bool                              `json:"secure"`

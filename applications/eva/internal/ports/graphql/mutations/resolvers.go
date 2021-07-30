@@ -252,9 +252,15 @@ func (r *MutationResolver) VerifyAuthenticationToken(ctx context.Context, input 
 		return nil, err
 	}
 
+	marshalled, err := types.MarshalAuthenticationTokenToGraphQL(ctx, ck)
+
+	if err != nil {
+		return nil, err
+	}
+
 	// cookie redeemed not in the same session, just redeem it
 	return &types.VerifyAuthenticationTokenPayload{
-		AuthenticationToken: types.MarshalAuthenticationTokenToGraphQL(ctx, ck),
+		AuthenticationToken: marshalled,
 	}, nil
 }
 
@@ -367,8 +373,14 @@ func (r *MutationResolver) GrantAuthenticationToken(ctx context.Context, input t
 		return nil, err
 	}
 
+	marshalled, err := types.MarshalAuthenticationTokenToGraphQL(ctx, instance)
+
+	if err != nil {
+		return nil, err
+	}
+
 	return &types.GrantAuthenticationTokenPayload{
-		AuthenticationToken: types.MarshalAuthenticationTokenToGraphQL(ctx, instance),
+		AuthenticationToken: marshalled,
 	}, nil
 }
 

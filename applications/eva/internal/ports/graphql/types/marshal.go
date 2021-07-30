@@ -7,6 +7,7 @@ import (
 	"overdoll/applications/eva/internal/domain/session"
 	"overdoll/applications/eva/internal/domain/token"
 	"overdoll/libraries/cookies"
+	"overdoll/libraries/crypt"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/helpers"
 	"overdoll/libraries/paging"
@@ -142,7 +143,7 @@ func MarshalAccountUsernameToGraphQL(result *account.Username) *AccountUsername 
 	}
 }
 
-func MarshalAuthenticationTokenToGraphQL(ctx context.Context, result *token.AuthenticationToken) *AuthenticationToken {
+func MarshalAuthenticationTokenToGraphQL(ctx context.Context, result *token.AuthenticationToken) (*AuthenticationToken, error) {
 
 	var accountStatus *AuthenticationTokenAccountStatus
 
@@ -179,14 +180,24 @@ func MarshalAuthenticationTokenToGraphQL(ctx context.Context, result *token.Auth
 		}
 	}
 
+	// we need to provide a globally-unique ID for the authentication token
+	// however we don't want to reveal the actual value (since it can be used to authenticate people)
+	// so we encrypt it
+	value, err := crypt.Encrypt(result.Token())
+
+	if err != nil {
+		return nil, err
+	}
+
 	return &AuthenticationToken{
+		ID:            relay.NewID(AuthenticationToken{}, value),
 		SameSession:   sameSession,
 		Verified:      result.Verified(),
 		Device:        result.Device(),
 		Email:         result.Email(),
 		Secure:        secure,
 		AccountStatus: accountStatus,
-	}
+	}, nil
 }
 
 func MarshalAccountEmailToGraphQLConnection(results []*account.Email, cursor *paging.Cursor) *AccountEmailConnection {

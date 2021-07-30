@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 2b12b163e0128592b40b31fcf50f31f5
+ * @relayHash 561195bd1dd92a0fc0fd1d7a6469e7bf
  */
 
 /* eslint-disable */
@@ -19,11 +19,6 @@ export type TokenMutationResponse = {|
   +verifyAuthenticationToken: ?{|
     +authenticationToken: ?{|
       +verified: boolean,
-      +email: string,
-      +device: string,
-      +location: string,
-      +secure: boolean,
-      +sameSession: boolean,
       +accountStatus: ?{|
         +registered: boolean,
         +multiFactor: ?$ReadOnlyArray<MultiFactorType>,
@@ -44,11 +39,6 @@ mutation TokenMutation(
   verifyAuthenticationToken(input: $input) {
     authenticationToken {
       verified
-      email
-      device
-      location
-      secure
-      sameSession
       accountStatus {
         registered
         multiFactor
@@ -94,41 +84,6 @@ v1 = [
             "args": null,
             "kind": "ScalarField",
             "name": "verified",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "email",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "device",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "location",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "secure",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "sameSession",
             "storageKey": null
           },
           {
@@ -181,7 +136,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "2b12b163e0128592b40b31fcf50f31f5",
+    "id": "561195bd1dd92a0fc0fd1d7a6469e7bf",
     "metadata": {},
     "name": "TokenMutation",
     "operationKind": "mutation",
@@ -190,5 +145,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '7cc73fe7ed014b478b5ccb8540f52ff4';
+(node: any).hash = '661912353a3991708a42c14175561910';
 module.exports = node;

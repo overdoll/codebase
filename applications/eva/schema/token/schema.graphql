@@ -8,6 +8,7 @@ type AuthenticationTokenAccountStatus {
 }
 
 type AuthenticationToken {
+  id: ID!
   sameSession: Boolean!
   verified: Boolean!
   # Whether or not this token is "secure"
