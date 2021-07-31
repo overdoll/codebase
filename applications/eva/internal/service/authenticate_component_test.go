@@ -6,6 +6,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/bxcodec/faker/v3"
 	"github.com/pquerna/otp/totp"
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
