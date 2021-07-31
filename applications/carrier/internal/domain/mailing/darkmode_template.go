@@ -1,7 +1,5 @@
 package mailing
 
-
-
 // Default is the theme by default
 type DarkMode struct{}
 
