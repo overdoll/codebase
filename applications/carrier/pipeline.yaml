@@ -18,6 +18,9 @@ steps:
       - //applications/carrier/internal:publish-testing
 
   integration_test:
+    setup:
+      dockerfile:
+        - ./applications/carrier/docker-compose.ci.yaml
     coverage:
       - name: carrier.integration
         paths:

@@ -28,7 +28,7 @@ func TestContentS3Repository_ProcessContent(t *testing.T) {
 	fileId := ksuid.New().String()
 
 	// upload fixture
-	uploadFileFixture(t, adapters.ImageUploadsBucket, fileId, "applications/sting/src/adapters/content_fixtures/test_file_1.png")
+	uploadFileFixture(t, adapters.ImageUploadsBucket, fileId, "applications/sting/internal/adapters/content_fixtures/test_file_1.png")
 
 	content := newContentRepository(t)
 
