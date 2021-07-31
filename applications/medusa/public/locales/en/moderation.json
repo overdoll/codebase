@@ -69,6 +69,38 @@
     }
   },
   "history": {
-    "title": "Moderation History"
+    "title": "Moderation History",
+    "table": {
+      "headers": {
+        "date": "Date Posted",
+        "id": "Request ID",
+        "contributor": "Contributor",
+        "status": "Status"
+      },
+      "load": "Load More",
+      "empty": "Only the last 7 days of logs are visible"
+    },
+    "inspect": {
+      "copy": "Copy Audit Log ID",
+      "status": "Case Status",
+      "content": "Post Content",
+      "artist": "Artist",
+      "characters": "Characters",
+      "categories": "Categories",
+      "revert": {
+        "query": {
+          "success": "This audit log was reverted. The post should appear back in your queue shortly.",
+          "failure": "There was an error reverting the audit log"
+        },
+        "alert": {
+          "reverted": "This case has been reverted",
+          "expired": "The period to revert this audit log has expired"
+        },
+        "button": {
+          "action": "Revert Decision"
+        }
+      },
+      "note": "Note"
+    }
   }
 }

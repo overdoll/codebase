@@ -24,6 +24,7 @@ import PostArtist from './PostArtist/PostArtist'
 import PostCharacters from './PostCharacters/PostCharacters'
 import PostCategories from './PostCategories/PostCategories'
 import NoPostsPlaceholder from './NoPostsPlaceholder/NoPostsPlaceholder'
+import convertToMonthDay from '@//:modules/utilities/functions/date'
 
 import InterfaceArrowsButtonRight
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-button-right.svg'
@@ -99,13 +100,6 @@ export default function (props: Props): Node {
     }
   }
 
-  const parseDate = (date) => {
-    const current = new Date(date)
-    const month = current.toLocaleString('default', { month: 'long' })
-    const day = current.getDay()
-    return `${month} ${day}`
-  }
-
   // If there are no posts in queue, return a placeholder that also shows if they are in queue
   if (data.moderatorPostsQueue.edges.length < 1) {
     return (
@@ -147,7 +141,7 @@ export default function (props: Props): Node {
           <Text
             color='gray.300' fontWeight='medium'
             size='md'
-          >{t('queue.post.title', { date: parseDate(currentPost.postedAt) })}
+          >{t('queue.post.title', { date: convertToMonthDay(currentPost.postedAt) })}
           </Text>
         </Flex>
         {(currentIndex + 1 !== data.moderatorPostsQueue?.edges.length || hasNext) &&

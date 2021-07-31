@@ -128,7 +128,7 @@ const routes: Array<Route> = [
               return {
                 stateQuery: {
                   query: ModerationQuery,
-                  variables: { first: 1 },
+                  variables: {},
                   options: {
                     fetchPolicy: 'store-or-network'
                   }
@@ -143,7 +143,19 @@ const routes: Array<Route> = [
                 /* webpackChunkName: "ModHistoryRoot" */ './domain/Moderation/routes/History/History'
               ),
             module.hot
-            )
+            ),
+            prepare: params => {
+              const HistoryQuery = require('@//:artifacts/HistoryAuditQuery.graphql')
+              return {
+                stateQuery: {
+                  query: HistoryQuery,
+                  variables: {},
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
           }
         ]
       },

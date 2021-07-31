@@ -18,7 +18,7 @@ import {
 import Icon from '@//:modules/content/Icon/Icon'
 import Button from '@//:modules/form/button'
 import { graphql, usePreloadedQuery } from 'react-relay'
-import PendingPosts from './components/PendingPosts/PendingPosts'
+import PendingPosts from './PendingPosts/PendingPosts'
 import { useTranslation } from 'react-i18next'
 import type { QueuePostsQuery } from '@//:artifacts/QueuePostsQuery.graphql'
 

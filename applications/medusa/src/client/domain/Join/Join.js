@@ -76,6 +76,21 @@ export default function Join (props: Props): Node {
   const authenticationTokenRedeemed = !!data?.viewAuthenticationToken?.verified
   const authenticationTokenAccountRegistered = !!data?.viewAuthenticationToken?.accountStatus?.registered
 
+  const error = read('login.notify')
+
+  // Check for login notify error
+  useEffect(() => {
+    if (error) {
+      notify({
+        status: 'error',
+        duration: null,
+        isClosable: true,
+        title: error
+      })
+      flush('login.notify')
+    }
+  }, [error])
+
   // a refresh query - used mainly for polling
   const refresh = useCallback(() => {
     loadQuery(props.prepared.joinQuery.variables, { fetchPolicy: 'network-only' })
@@ -139,20 +154,6 @@ export default function Join (props: Props): Node {
 
     return null
   }
-
-  const error = read('login.notify')
-
-  useEffect(() => {
-    if (error) {
-      notify({
-        status: 'error',
-        duration: null,
-        isClosable: true,
-        title: error
-      })
-      flush('login.notify')
-    }
-  }, [error])
 
   // Ask user to authenticate
   return (
