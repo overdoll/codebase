@@ -75,7 +75,7 @@ func TestAccountAuthenticate_from_another_session(t *testing.T) {
 
 	client, httpUser, _ := getHttpClient(t, passport.FreshPassport())
 
-	authenticate := grantAuthenticationToken(t, client, "poisonminion_test@overdoll.com")
+	authenticate := grantAuthenticationToken(t, client, "i2fhz.poisonminion@inbox.testmail.app")
 
 	otpCookie := getOTPTokenFromJar(t, httpUser.Jar)
 
