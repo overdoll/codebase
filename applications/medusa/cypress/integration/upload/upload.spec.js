@@ -19,6 +19,8 @@ describe('Upload', () => {
     cy.clearLocalStorage()
     cy.login('artist_unverified_test@overdoll.com')
 
+    cy.url().should('include', '/profile')
+
     cy.visit('/upload')
 
     cy.findByTestId('file').should('exist')

@@ -18,8 +18,9 @@ Cypress.Commands.add('login', (email, complete = true) => {
       // in production, the user would have to check their email in order to get the right token
       cy.visit('/token?id=' + cookie.value)
 
-      cy.get('form')
-        .findByRole('button', { name: /I closed the original tab/iu })
+      cy.waitUntil(() => cy.findByRole('button', { name: /I closed the original tab/iu }).should('not.be.disabled'))
+
+      cy.findByRole('button', { name: /I closed the original tab/iu })
         .click()
     })
   }
