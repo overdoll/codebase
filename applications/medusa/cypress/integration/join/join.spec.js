@@ -1,5 +1,5 @@
 describe('Join', () => {
-  const email = 'artist_verified_test@overdoll.com'
+  const email = 'i2fhz.artist_verified@inbox.testmail.app'
 
   it('asks to check email when joining', () => {
     cy.login(email, false)
