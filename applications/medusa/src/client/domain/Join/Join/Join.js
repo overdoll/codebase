@@ -10,6 +10,7 @@ import JoinForm from './JoinForm/JoinForm'
 import SignBadgeCircle
   from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
 import type { JoinFragment$key } from '@//:artifacts/JoinFragment.graphql'
+import NavLink from '@//:modules/routing/NavLink'
 
 type Props = {
   queryRef: JoinFragment$key,
