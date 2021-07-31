@@ -54,8 +54,8 @@ def go_repositories():
         name = "com_github_aokoli_goutils",
         build_file_proto_mode = "disable",
         importpath = "github.com/aokoli/goutils",
-        sum = "h1:/hA+Ywo3AxoDZY5ZMnkiEkUvkK4BPp927ax110KCqqg=",
-        version = "v1.1.1",
+        sum = "h1:7fpzNGoJ3VA8qcrm++XEE1QUe0mIwNeLa02Nwq7RDkg=",
+        version = "v1.0.1",
     )
 
     go_repository(
@@ -85,13 +85,6 @@ def go_repositories():
         importpath = "github.com/armon/go-radix",
         sum = "h1:BUAU3CGlLvorLI26FmByPp2eC2qla6E1Tw+scpcg/to=",
         version = "v0.0.0-20180808171621-7fddfc383310",
-    )
-    go_repository(
-        name = "com_github_avct_uasurfer",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/avct/uasurfer",
-        sum = "h1:9h8f71kuF1pqovnn9h7LTHLEjxzyQaj0j1rQq5nsMM4=",
-        version = "v0.0.0-20191028135549-26b5daa857f1",
     )
 
     go_repository(
@@ -180,13 +173,7 @@ def go_repositories():
         sum = "h1:Meuh+M6pQJsQJwxVALq6H5wpDzkZ4pStV9pmH7gbKKs=",
         version = "v3.6.0",
     )
-    go_repository(
-        name = "com_github_cenkalti_backoff_v4",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/cenkalti/backoff/v4",
-        sum = "h1:c8LkOFQTzuO0WBM/ae5HdGQuZPfPxp7lqBRwQRm4fSc=",
-        version = "v4.1.0",
-    )
+
     go_repository(
         name = "com_github_census_instrumentation_opencensus_proto",
         build_file_proto_mode = "disable",
@@ -316,27 +303,13 @@ def go_repositories():
         sum = "h1:TUuUh0Xgj97tLMNtWtNvI9mIV6isjEb9lBMNv+77IGM=",
         version = "v0.0.0-20190318185328-a8d75aae118c",
     )
-    go_repository(
-        name = "com_github_dustin_go_humanize",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/dustin/go-humanize",
-        sum = "h1:VSnTsYCnlFHaM2/igO1h6X3HA71jcobQuxemgkq4zYo=",
-        version = "v1.0.0",
-    )
+
     go_repository(
         name = "com_github_eknkc_amber",
         build_file_proto_mode = "disable",
         importpath = "github.com/eknkc/amber",
         sum = "h1:clC1lXBpe2kTj2VHdaIu9ajZQe4kcEY9j0NsnDDBZ3o=",
         version = "v0.0.0-20171010120322-cdade1c07385",
-    )
-
-    go_repository(
-        name = "com_github_elastic_go_elasticsearch_v7",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/elastic/go-elasticsearch/v7",
-        sum = "h1:PaM3V69wPlnwR+ne50rSKKn0RNDYnnOFQcuGEI0ce80=",
-        version = "v7.13.1",
     )
 
     go_repository(
@@ -1670,8 +1643,8 @@ def go_repositories():
         name = "com_github_vektah_dataloaden",
         build_file_proto_mode = "disable",
         importpath = "github.com/vektah/dataloaden",
-        sum = "h1:ZfVN2QD6swgvp+tDqdH/OIT/wu3Dhu0cus0k5gIZS84=",
-        version = "v0.3.0",
+        sum = "h1:+w0Zm/9gaWpEAyDlU1eKOuk5twTjAjuevXqcJJw8hrg=",
+        version = "v0.2.1-0.20190515034641-a19b9a6e7c9e",
     )
     go_repository(
         name = "com_github_vektah_gqlparser_v2",
