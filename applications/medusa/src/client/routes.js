@@ -70,7 +70,7 @@ const routes: Array<Route> = [
         exact: true,
         component: JSResource('JoinRoot', () =>
           import(
-            /* webpackChunkName: "JoinRoot" */ './domain/Join/Join'
+            /* webpackChunkName: "JoinRoot" */ './domain/Join/JoinRoot'
           ),
         module.hot
         ),
@@ -87,12 +87,47 @@ const routes: Array<Route> = [
             return true
           }
         ],
-        prepare: params => {
-          const JoinQuery = require('@//:artifacts/JoinQuery.graphql')
+        prepare: (params, query) => {
+          const JoinQuery = require('@//:artifacts/JoinRootQuery.graphql')
           return {
             joinQuery: {
               query: JoinQuery,
               variables: {},
+              options: {
+                fetchPolicy: 'store-or-network'
+              }
+            }
+          }
+        }
+      },
+      {
+        path: '/token',
+        exact: true,
+        component: JSResource('TokenRoot', () =>
+          import(
+            /* webpackChunkName: "TokenRoot" */ './domain/Token/Token'
+          ),
+        module.hot
+        ),
+        // When user is logged in, we just want to redirect them since they're already "logged in"
+        middleware: [
+          ({ environment, history }) => {
+            const ability = getAbilityFromUser(environment)
+
+            if (ability.can('manage', 'account')) {
+              history.push('/profile')
+              return false
+            }
+
+            return true
+          }
+        ],
+        prepare: (params, query) => {
+          const TokenQuery = require('@//:artifacts/TokenQuery.graphql')
+          return {
+            tokenQuery: {
+              query: TokenQuery,
+              variables: { token: query.get('id') ?? '' },
               options: {
                 fetchPolicy: 'store-or-network'
               }
@@ -169,29 +204,6 @@ const routes: Array<Route> = [
             }
             history.push('/join')
             return false
-          }
-        ]
-      },
-      {
-        path: '/token/:id',
-        exact: true,
-        component: JSResource('TokenRoot', () =>
-          import(
-            /* webpackChunkName: "TokenRoot" */ './domain/Token/Token'
-          ),
-        module.hot
-        ),
-        // When user is logged in, we don't want them to be able to redeem any other tokens
-        middleware: [
-          ({ environment, history }) => {
-            const ability = getAbilityFromUser(environment)
-
-            if (ability.can('manage', 'account')) {
-              history.push('/')
-              return false
-            }
-
-            return true
           }
         ]
       },

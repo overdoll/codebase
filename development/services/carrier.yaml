@@ -1,0 +1,7 @@
+image:
+  repository: carrier-image
+
+nameOverride: "carrier"
+
+service: true
+grpc: true

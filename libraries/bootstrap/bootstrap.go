@@ -4,26 +4,11 @@ import (
 	"context"
 	"log"
 	"os"
-	"path"
 
 	"go.uber.org/zap"
-	"overdoll/libraries/helpers"
 )
 
-type Bootstrap struct {
-	context   context.Context
-	directory string
-}
-
-func NewBootstrap(ctx context.Context) (Bootstrap, error) {
-
-	dir, err := helpers.GetBinaryDirectory()
-
-	if err != nil {
-		log.Fatal("error loading directory")
-	}
-
-	directory := path.Dir(dir)
+func NewBootstrap(ctx context.Context) {
 
 	logger, err := zap.NewProduction()
 
@@ -35,16 +20,5 @@ func NewBootstrap(ctx context.Context) (Bootstrap, error) {
 		log.Fatalf("can't initialize zap logger: %v", err)
 	}
 
-	defer logger.Sync()
-
 	zap.ReplaceGlobals(logger)
-
-	return Bootstrap{
-		context:   ctx,
-		directory: directory,
-	}, nil
-}
-
-func (b Bootstrap) GetCurrentDirectory() string {
-	return b.directory
 }

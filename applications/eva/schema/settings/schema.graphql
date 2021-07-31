@@ -258,8 +258,16 @@ input ConfirmAccountEmailInput {
   id: String!
 }
 
+"""Validation message for adding account email"""
+enum AddAccountEmailValidation {
+  EMAIL_TAKEN
+}
+
 """Email to add the account"""
 type AddAccountEmailPayload {
+  """Validation for adding an email"""
+  validation: AddAccountEmailValidation
+
   """The account email that was added to"""
   accountEmail: AccountEmail
 }
@@ -270,8 +278,16 @@ type DeleteAccountEmailPayload {
   accountEmailId: ID!
 }
 
+"""Validation message for updating account username"""
+enum UpdateAccountUsernameAndRetainPreviousValidation {
+  USERNAME_TAKEN
+}
+
 """Payload of the updated username"""
 type UpdateAccountUsernameAndRetainPreviousPayload {
+  """Validation for taking an account username"""
+  validation: UpdateAccountUsernameAndRetainPreviousValidation
+
   """The account username that was added"""
   accountUsername: AccountUsername
 }
@@ -300,8 +316,16 @@ type GenerateAccountMultiFactorTotpPayload {
   multiFactorTotp: MultiFactorTotp
 }
 
+"""Validation for enrolling in TOTP"""
+enum EnrollAccountMultiFactorTotpValidation {
+  INVALID_CODE
+}
+
 """Payload of the enrolled totp payload"""
 type EnrollAccountMultiFactorTotpPayload {
+  """Validation for enrolling TOTP"""
+  validation: EnrollAccountMultiFactorTotpValidation
+
   """TOTP that belongs to this account now"""
   accountMultiFactorTotpEnabled: Boolean
 }
@@ -312,8 +336,16 @@ type DisableAccountMultiFactorPayload {
   accountMultiFactorTotpEnabled: Boolean
 }
 
+"""Validation for confirming account email"""
+enum ConfirmAccountEmailValidation {
+  TOKEN_EXPIRED
+}
+
 """Payload for confirming the account email"""
 type ConfirmAccountEmailPayload {
+  """Validation for confirming account email"""
+  validation: ConfirmAccountEmailValidation
+
   """The account email that was confirmed"""
   accountEmail: AccountEmail
 }

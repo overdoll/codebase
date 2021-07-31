@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package applications.grpc.carrier.v1;
+
+service Carrier {
+  rpc ConfirmAccountEmail(ConfirmAccountEmailRequest) returns (google.protobuf.Empty) {}
+  rpc NewLoginToken(NewLoginTokenRequest) returns (google.protobuf.Empty) {}
+}
+
+message Account {
+  string id = 1;
+}
+
+message ConfirmAccountEmailRequest {
+  Account account = 1;
+  string email = 2;
+  string token = 3;
+}
+
+message NewLoginTokenRequest {
+  string email = 1;
+  string token = 2;
+}

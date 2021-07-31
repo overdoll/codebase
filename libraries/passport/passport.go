@@ -42,8 +42,12 @@ type Passport struct {
 	passport *libraries_passport_v1.Passport
 }
 
-func (p *Passport) IsAuthenticated() bool {
-	return p.passport.Account != nil
+func (p *Passport) Authenticated() error {
+	if p.passport.Account != nil {
+		return nil
+	}
+
+	return ErrNotAuthenticated
 }
 
 func (p *Passport) AccountID() string {

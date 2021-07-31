@@ -3,7 +3,6 @@ package commands
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -13,6 +12,8 @@ import (
 
 	"github.com/gocql/gocql"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
+	"go.uber.org/zap"
 	"overdoll/libraries/bootstrap"
 )
 
@@ -23,27 +24,16 @@ var Seed = &cobra.Command{
 		ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
 		defer cancelFn()
 
-		init, err := bootstrap.NewBootstrap(ctx)
+		bootstrap.NewBootstrap(ctx)
 
-		if err != nil {
-			fmt.Println("bootstrap failed with errors: ", err)
-			return
-		}
+		session := bootstrap.InitializeDatabaseSession()
 
-		session, err := bootstrap.InitializeDatabaseSession()
-
-		if err != nil {
-			fmt.Println("database session failed with errors: ", err)
-			return
-		}
-
-		seeders := init.GetCurrentDirectory() + "/database/seeders"
+		seeders := viper.GetString("root_directory") + "/database/seeders"
 
 		file, err := os.Open(seeders)
 
 		if err != nil {
-			fmt.Println("failed opening seeders directory: ", err)
-			return
+			zap.S().Fatal("failed opening seeders directory", zap.Error(err))
 		}
 
 		defer file.Close()
@@ -84,8 +74,7 @@ var Seed = &cobra.Command{
 			data, err := ioutil.ReadFile(seeders + "/" + name)
 
 			if err != nil {
-				fmt.Printf("failed to read file %s", name)
-				continue
+				zap.S().Fatal("failed to read file", zap.Error(err))
 			}
 
 			var obj []map[string]interface{}
@@ -94,7 +83,7 @@ var Seed = &cobra.Command{
 			err = json.Unmarshal(data, &obj)
 
 			if err != nil {
-				fmt.Println("error reading json: ", err)
+				zap.S().Fatal("error reading json", zap.Error(err))
 			}
 
 			// Insert into table, based on the filename (filename determines table)
@@ -103,7 +92,7 @@ var Seed = &cobra.Command{
 				jsonStr, err := json.Marshal(row)
 
 				if err != nil {
-					fmt.Println("error converting to json: ", err)
+					zap.S().Fatal("error converting to json", zap.Error(err))
 				}
 
 				batch.Entries = append(batch.Entries, gocql.BatchEntry{
@@ -116,15 +105,11 @@ var Seed = &cobra.Command{
 			count += len(obj)
 		}
 
-		err = session.ExecuteBatch(batch)
-
-		if err != nil {
-			fmt.Println("failed to insert rows: ", err)
-			return
+		if err = session.ExecuteBatch(batch); err != nil {
+			zap.S().Fatal("failed to insert rows", zap.Error(err))
 		}
 
-		// print results
-		fmt.Printf(
+		zap.S().Infof(
 			"sucessfuly seeded [%s] rows in %s \n",
 			strconv.Itoa(count),
 			time.Since(start).Truncate(time.Millisecond),

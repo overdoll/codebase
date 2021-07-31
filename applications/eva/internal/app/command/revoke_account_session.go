@@ -1,0 +1,25 @@
+package command
+
+import (
+	"context"
+
+	"overdoll/applications/eva/internal/domain/session"
+	"overdoll/libraries/principal"
+)
+
+type RevokeAccountSession struct {
+	Principal *principal.Principal
+	SessionId string
+}
+
+type RevokeAccountSessionHandler struct {
+	sr session.Repository
+}
+
+func NewRevokeAccountSessionHandler(sr session.Repository) RevokeAccountSessionHandler {
+	return RevokeAccountSessionHandler{sr: sr}
+}
+
+func (h RevokeAccountSessionHandler) Handle(ctx context.Context, cmd RevokeAccountSession) error {
+	return h.sr.RevokeSessionById(ctx, cmd.Principal, cmd.SessionId)
+}

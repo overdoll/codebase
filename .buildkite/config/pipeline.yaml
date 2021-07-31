@@ -16,6 +16,7 @@ steps:
         EVA_SERVICE: eva:8080
         PARLEY_SERVICE: parley:8080
         STING_SERVICE: sting:8080
+        CARRIER_SERVICE: carrier:8080
         APP_KEY: AES256Key-32Characters1234567890
         SESSION_SECRET: AES256Key-32Characters1234567890
         REDIS_HOST: redis

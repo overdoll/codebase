@@ -1,0 +1,17 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "entities",
+    srcs = ["resolvers.go"],
+    importpath = "overdoll/applications/eva/internal/ports/graphql/entities",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//applications/eva/internal/app",
+        "//applications/eva/internal/app/query",
+        "//applications/eva/internal/ports/graphql/dataloader",
+        "//applications/eva/internal/ports/graphql/types",
+        "//libraries/graphql/relay",
+        "//libraries/passport",
+        "//libraries/principal",
+    ],
+)

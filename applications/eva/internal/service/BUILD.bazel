@@ -1,0 +1,47 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "service",
+    srcs = ["application.go"],
+    importpath = "overdoll/applications/eva/internal/service",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//applications/eva/internal/adapters",
+        "//applications/eva/internal/app",
+        "//applications/eva/internal/app/command",
+        "//applications/eva/internal/app/query",
+        "//libraries/bootstrap",
+        "//libraries/clients",
+    ],
+)
+
+go_test(
+    name = "service_test",
+    srcs = [
+        "account_component_test.go",
+        "account_settings_component_test.go",
+        "authenticate_component_test.go",
+        "component_test.go",
+    ],
+    data = ["//applications/eva:config.toml"],
+    deps = [
+        ":service",
+        "//applications/eva/internal/adapters",
+        "//applications/eva/internal/domain/session",
+        "//applications/eva/internal/domain/token",
+        "//applications/eva/internal/ports",
+        "//applications/eva/internal/ports/graphql/types",
+        "//applications/eva/proto:v1_go_proto",
+        "//libraries/bootstrap",
+        "//libraries/clients",
+        "//libraries/config",
+        "//libraries/graphql/relay",
+        "//libraries/passport",
+        "//libraries/tests",
+        "@com_github_bxcodec_faker_v3//:faker",
+        "@com_github_pquerna_otp//totp",
+        "@com_github_shurcool_graphql//:graphql",
+        "@com_github_stretchr_testify//require",
+        "@org_golang_google_grpc//:go_default_library",
+    ],
+)

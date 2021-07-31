@@ -1,0 +1,17 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "session",
+    srcs = [
+        "repository.go",
+        "session.go",
+    ],
+    importpath = "overdoll/applications/eva/internal/domain/session",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libraries/paging",
+        "//libraries/passport",
+        "//libraries/principal",
+        "@com_github_segmentio_ksuid//:ksuid",
+    ],
+)

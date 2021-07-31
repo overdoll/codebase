@@ -4,12 +4,13 @@ import (
 	"bytes"
 	"context"
 	"io/ioutil"
-	"log"
 	"os"
 	"time"
 
 	"github.com/scylladb/gocqlx/v2/migrate"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
+	"go.uber.org/zap"
 	"overdoll/libraries/bootstrap"
 )
 
@@ -23,30 +24,23 @@ var Migrate = &cobra.Command{
 		ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
 		defer cancelFn()
 
-		init, err := bootstrap.NewBootstrap(ctx)
-
-		if err != nil {
-			log.Fatalf("bootstrap failed with errors: %s", err)
-		}
+		bootstrap.NewBootstrap(ctx)
 
 		// if "keyspace" arg is passed, it will create the keyspace before running migrations
 		for _, arg := range args {
 			if arg == "keyspace" {
-				session, err := bootstrap.InitializeDatabaseSessionNoKeyspace()
+				session := bootstrap.InitializeDatabaseSessionNoKeyspace()
+
+				f, err := os.Open(viper.GetString("root_directory") + "/database/__init__.cql")
 
 				if err != nil {
-					log.Fatalf("database session failed with errors: %s", err)
-				}
-
-				f, err := os.Open(init.GetCurrentDirectory() + "/database/__init__.cql")
-				if err != nil {
-					log.Fatalf("could not open init file: %s", err)
+					zap.S().Fatal("could not open init file", zap.Error(err))
 				}
 
 				b, err := ioutil.ReadAll(f)
 
 				if err != nil {
-					log.Fatalf("could not read init file: %s", err)
+					zap.S().Fatal("could not read init file", zap.Error(err))
 				}
 
 				r := bytes.NewBuffer(b)
@@ -54,35 +48,29 @@ var Migrate = &cobra.Command{
 				stmt, err := r.ReadString(';')
 
 				if err != nil {
-					log.Fatalf("could not read init file: %s", err)
+					zap.S().Fatal("could not read init file", zap.Error(err))
 				}
-
-				log.Println(stmt)
 
 				q := session.ContextQuery(ctx, stmt, nil).RetryPolicy(nil)
 
 				if err := q.ExecRelease(); err != nil {
-					log.Fatalf("could not create keyspace: %s", err)
+					zap.S().Fatal("could not create keyspace", zap.Error(err))
 				}
 
 				err = f.Close()
 
 				if err != nil {
-					log.Fatalf("error closing init file: %s", err)
+					zap.S().Fatal("error closing init file", zap.Error(err))
 				}
 			}
 		}
 
-		session, err := bootstrap.InitializeDatabaseSession()
+		session := bootstrap.InitializeDatabaseSession()
 
-		if err != nil {
-			log.Fatalf("database session failed with errors: %s", err)
+		if err := migrate.Migrate(context.Background(), session, viper.GetString("root_directory")+"/database/migrations"); err != nil {
+			zap.S().Fatal("migrations failed", zap.Error(err))
 		}
 
-		if err := migrate.Migrate(context.Background(), session, init.GetCurrentDirectory()+"/database/migrations"); err != nil {
-			log.Fatalf("migrations failed with error: %s", err)
-		}
-
-		log.Print("migrations successfully completed!")
+		zap.S().Info("migrations successfully completed!")
 	},
 }

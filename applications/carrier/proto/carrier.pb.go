@@ -1,0 +1,1 @@
+../../../bazel-out/k8-fastbuild/bin/applications/carrier/proto/v1_go_proto_/overdoll/applications/carrier/proto/carrier.pb.go

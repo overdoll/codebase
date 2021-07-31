@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "app",
+    srcs = ["app.go"],
+    importpath = "overdoll/applications/sting/internal/app",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//applications/sting/internal/app/command",
+        "//applications/sting/internal/app/query",
+    ],
+)

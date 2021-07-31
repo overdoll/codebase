@@ -4,14 +4,20 @@ enum MultiFactorType {
 
 type AuthenticationTokenAccountStatus {
   registered: Boolean!
-  authenticated: Boolean!
   multiFactor: [MultiFactorType!]
 }
 
 type AuthenticationToken {
+  id: ID!
   sameSession: Boolean!
   verified: Boolean!
-  session: String!
+  # Whether or not this token is "secure"
+  # Secure means that the token has been viewed from the same network as originally created
+  # if it wasn't viewed in the same network, the interface should take care and double-check with
+  # the user that they want to verify the token.
+  secure: Boolean!
+  device: String!
+  location: String!
   email: String!
   accountStatus: AuthenticationTokenAccountStatus
 }
@@ -21,14 +27,18 @@ input GrantAuthenticationTokenInput {
   email: String!
 }
 
-"""Payload for granting access to an account using the token and the recovery code"""
-input GrantAccountAccessWithAuthenticationTokenAndMultiFactorInput {
-  recoveryCode: String
-  code: String
+"""Payload for granting access to an account using the token and the totp code"""
+input GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput {
+  code: String!
 }
 
-"""Input for verifying and attempting access grant to an account"""
-input VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput {
+"""Payload for granting access to an account using the token and the recovery code"""
+input GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput {
+  recoveryCode: String!
+}
+
+"""Input for verifying token account"""
+input VerifyAuthenticationTokenInput {
   authenticationTokenId: String!
 }
 
@@ -43,8 +53,19 @@ type GrantAuthenticationTokenPayload {
   authenticationToken: AuthenticationToken
 }
 
+
+"""Validation for creating an account with an authentication token"""
+enum CreateAccountWithAuthenticationTokenValidation {
+  EMAIL_TAKEN
+  USERNAME_TAKEN
+  TOKEN_EXPIRED
+}
+
 """Payload for creating an account"""
 type CreateAccountWithAuthenticationTokenPayload {
+  """Validation for creating an account"""
+  validation: CreateAccountWithAuthenticationTokenValidation
+
   """The account that was created"""
   account: Account
 }
@@ -61,25 +82,84 @@ type RevokeAuthenticationTokenPayload {
   revokedAuthenticationTokenId: ID!
 }
 
+"""Validation for reissuing authentication token"""
+enum ReissueAuthenticationTokenValidation {
+  TOKEN_EXPIRED
+}
+
 """Payload re-sending authentication email"""
 type ReissueAuthenticationTokenPayload {
+  """Validation for reissuing authentication token"""
+  validation: ReissueAuthenticationTokenValidation
+
   """The authentication token"""
   authenticationToken: AuthenticationToken
+}
+
+"""Validation for granting account access with multi factor"""
+enum GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation {
+  TOKEN_EXPIRED
+  INVALID_CODE
+}
+
+"""Payload for granting access to an account using the authentication token and TOTP code"""
+type GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpPayload {
+  """Validation options"""
+  validation: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation
+
+  """The account that granted access to"""
+  account: Account
+}
+
+"""Validation for granting account access with multi factor"""
+enum GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation {
+  TOKEN_EXPIRED
+  INVALID_RECOVERY_CODE
 }
 
 """Payload for granting access to an account using the authentication token and Recovery Code"""
-type GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload {
+type GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodePayload {
+  """Validation options"""
+  validation: GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation
+
   """The account that granted access to"""
   account: Account
 }
 
-"""Payload for verifying the authentication token"""
-type VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload {
+enum GrantAccountAccessWithAuthenticationTokenValidation {
+  TOKEN_EXPIRED
+}
+
+type GrantAccountAccessWithAuthenticationTokenPayload {
+  """Validation options"""
+  validation: GrantAccountAccessWithAuthenticationTokenValidation
+
   """The account that granted access to"""
   account: Account
+}
+
+"""Validation for granting account access"""
+enum VerifyAuthenticationTokenValidation {
+  TOKEN_EXPIRED
+}
+
+"""Payload for verifying the authentication token"""
+type VerifyAuthenticationTokenPayload {
+  """Validation options"""
+  validation: VerifyAuthenticationTokenValidation
 
   """The authentication token"""
   authenticationToken: AuthenticationToken
+}
+
+"""Input for revoking an authentication token"""
+input RevokeAuthenticationTokenInput {
+  """
+  If an ID is specified, the token can be revoked if a proper ID is specified
+
+  If an ID is not specified, a token from the cookie will be used
+  """
+  authenticationTokenId: String
 }
 
 type Mutation {
@@ -97,10 +177,8 @@ type Mutation {
   Revoke authentication token
 
   Creating accounts and completing authentication flows will not be possible once it's revoked
-
-  Note: the actual authentication token is opaque (set & read from cookies)
   """
-  revokeAuthenticationToken: RevokeAuthenticationTokenPayload
+  revokeAuthenticationToken(input: RevokeAuthenticationTokenInput!): RevokeAuthenticationTokenPayload
 
   """
   Create an account using the current authentication token
@@ -122,14 +200,30 @@ type Mutation {
   reissueAuthenticationToken: ReissueAuthenticationTokenPayload
 
   """
+  Grant account access with authentication token
+
+  Should be used if the token does not require a multi-factor authentication step, and the token has to be
+  verified first
+  """
+  grantAccountAccessWithAuthenticationToken: GrantAccountAccessWithAuthenticationTokenPayload
+
+  """
   Grant account access using an authentication token and a multi factor option
 
   Set "code" when authenticating with a TOTP code
+
+  Note: the actual authentication token is opaque (set & read from cookies)
+  """
+  grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp(input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput!): GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpPayload
+
+  """
+  Grant account access using an authentication token and a multi factor option
+
   Set "recoveryCode" when authenticating with a recovery code
 
   Note: the actual authentication token is opaque (set & read from cookies)
   """
-  grantAccountAccessWithAuthenticationTokenAndMultiFactor(input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorInput!): GrantAccountAccessWithAuthenticationTokenAndMultiFactorPayload
+  grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode(input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput!): GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodePayload
 
   """
   Will verify the authentication token.
@@ -143,14 +237,16 @@ type Mutation {
 
   Note: the actual authentication token is opaque (set & read from cookies)
   """
-  verifyAuthenticationTokenAndAttemptAccountAccessGrant(input: VerifyAuthenticationTokenAndAttemptAccountAccessGrantInput!): VerifyAuthenticationTokenAndAttemptAccountAccessGrantPayload
+  verifyAuthenticationToken(input: VerifyAuthenticationTokenInput!): VerifyAuthenticationTokenPayload
 }
 
 type Query {
   """
   Get the status of the authentication token - whether or not it is redeemed, account status, etc..
 
-  Note: the actual authentication token is opaque (set & read from cookies)
+  If "token" is not provided, it will attempt to read the opaque token
+
+  However, if the token is provided, and the ID is valid, it will show the token
   """
-  viewAuthenticationToken: AuthenticationToken
+  viewAuthenticationToken(token: String): AuthenticationToken
 }

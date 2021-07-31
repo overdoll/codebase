@@ -1,7 +1,7 @@
 steps:
   build:
     targets:
-      - //applications/buffer:buffer
+      - //applications/buffer/internal:internal
 
   unit_test:
     coverage:
@@ -9,21 +9,21 @@ steps:
         paths:
           - ./applications/buffer/**/coverage.dat
     targets:
-      - //applications/buffer/src/app/...
-      - //applications/buffer/src/domain/...
-      - //applications/buffer/src/ports/...
+      - //applications/buffer/internal/app/...
+      - //applications/buffer/internal/domain/...
+      - //applications/buffer/internal/ports/...
 
   push_image:
     targets:
-      - //applications/buffer:publish-testing
+      - //applications/buffer/internal:publish-testing
 
   integration_test:
     coverage:
       - name: buffer.integration
         paths:
-          - ./applications/buffer/src/adapters/**/coverage.dat
+          - ./applications/buffer/internal/adapters/**/coverage.dat
     targets:
-      - //applications/buffer/src/adapters/...
+      - //applications/buffer/internal/adapters/...
 
   e2e_test:
     setup:
@@ -32,4 +32,4 @@ steps:
 
   publish_image:
     targets:
-      - //applications/buffer:publish
+      - //applications/buffer/internal:publish

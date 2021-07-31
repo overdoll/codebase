@@ -16,9 +16,12 @@ Cypress.Commands.add('login', (email, complete = true) => {
     cy.getCookie('otp-key').then(cookie => {
       // in debug mode, our cookies won't be encrypted so we can just read it directly from the browser
       // in production, the user would have to check their email in order to get the right token
-      cy.visit('/token/' + cookie.value)
+      cy.visit('/token?id=' + cookie.value)
 
-      cy.url().should('include', '/profile')
+      cy.waitUntil(() => cy.findByRole('button', { name: /I closed the original tab/iu }).should('not.be.disabled'))
+
+      cy.findByRole('button', { name: /I closed the original tab/iu })
+        .click()
     })
   }
 })

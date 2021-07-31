@@ -2,7 +2,7 @@ version: '3.9'
 services:
   buffer:
     image: $CONTAINER_REGISTRY/buffer/dev:$BUILDKITE_COMMIT
-    command: ./buffer_ http
+    command: ./internal/internal_ http
     ports:
       - 3010:8000
     env_file: ../../applications/buffer/.env.ci
