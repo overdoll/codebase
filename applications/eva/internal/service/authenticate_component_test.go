@@ -6,7 +6,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/bxcodec/faker/v3"
 	"github.com/pquerna/otp/totp"
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
@@ -42,7 +41,7 @@ func TestLogout_user(t *testing.T) {
 func TestAccountAuthenticate_existing(t *testing.T) {
 	t.Parallel()
 
-	redeemCookie, client, pass := authenticateAndVerifyToken(t, "poisonminion_test@overdoll.com")
+	redeemCookie, client, pass := authenticateAndVerifyToken(t, "i2fhz.poisonminion@inbox.testmail.app")
 
 	fmt.Println(redeemCookie.VerifyAuthenticationToken.AuthenticationToken.AccountStatus)
 
@@ -157,7 +156,7 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 	t.Parallel()
 
 	testAccountId := "1q7MIw0U6TEpELH0FqnxrcXt3E0"
-	testAccountEmail := "artist_verified_test@overdoll.com"
+	testAccountEmail := "i2fhz.artist_verified@inbox.testmail.app"
 
 	// use passport with user
 	client, _, _ := getHttpClient(t, passport.FreshPassportWithAccount(testAccountId))
