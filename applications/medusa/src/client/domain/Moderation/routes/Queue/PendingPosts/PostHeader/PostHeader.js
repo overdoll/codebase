@@ -65,7 +65,7 @@ export default function PostHeader (props: Props): Node {
       <Tooltip label={t('queue.post.reassignment')}>
         <Flex align='center'>
           <CircularProgress
-            size={10} value={(reassignmentTime / 24) * 100}
+            size={10} value={reassignmentPercent * 100}
             color={clockColor}
           >
             <CircularProgressLabel fontSize='xs'>

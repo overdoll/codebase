@@ -17,7 +17,9 @@ import {
   Badge,
   Alert,
   AlertIcon,
-  AlertDescription, useToast
+  AlertDescription, useToast,
+  Tooltip,
+  Divider
 } from '@chakra-ui/react'
 import type { Node } from 'react'
 import Icon from '@//:modules/content/Icon/Icon'
@@ -125,14 +127,14 @@ export default function AuditInspect ({ auditLog, selected, onClose }: Props): N
               {data.reverted &&
                 <Alert borderRadius={5} mb={2} status='info'>
                   <AlertIcon />
-                  <AlertDescription>
+                  <AlertDescription fontSize='sm'>
                     {t('history.inspect.revert.alert.reverted')}
                   </AlertDescription>
                 </Alert>}
               {(!canRevert && !data.reverted) &&
                 <Alert borderRadius={5} mb={2} status='info'>
                   <AlertIcon />
-                  <AlertDescription>
+                  <AlertDescription fontSize='sm'>
                     {t('history.inspect.revert.alert.expired')}
                   </AlertDescription>
                 </Alert>}
@@ -159,6 +161,7 @@ export default function AuditInspect ({ auditLog, selected, onClose }: Props): N
                     <Heading mb={2} color='gray.100' size='sm'>{t('history.inspect.note')}</Heading>
                     <Text>{data.notes}</Text>
                   </Box>}
+                <Divider />
                 <AuditPost auditLog={data} />
               </Stack>
             </Box>}

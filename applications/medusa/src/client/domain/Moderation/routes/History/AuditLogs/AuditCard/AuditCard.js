@@ -15,6 +15,8 @@ import InterfaceArrowsButtonRight
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-button-right.svg'
 import InterfaceArrowsRoundLeft
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-round-left.svg'
+import InterfaceArrowsMoveHorizontalCircle
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-move-horizontal-circle.svg'
 
 import convertToMonthDayTime from '@//:modules/utilities/functions/date/convertToMonthDayTime'
 
@@ -53,7 +55,7 @@ export default function AuditCard ({ auditLog, selected, setSelected }: Props): 
 
   const expiryTime = getMinuteDifference(data.reversibleUntil)
 
-  const expiryPercent = expiryTime / 24
+  const expiryPercent = (expiryTime / 10) * 100
 
   return (
     <Button
@@ -73,12 +75,12 @@ export default function AuditCard ({ auditLog, selected, setSelected }: Props): 
         <Flex align='center' justify='center' position='relative'>
           <Box>
             <Icon
-              icon={data.reverted ? InterfaceArrowsRoundLeft : data.action === 'Approved' ? InterfaceValidationCheckCircle : InterfaceDeleteCircle}
+              icon={data.reverted ? InterfaceArrowsMoveHorizontalCircle : data.action === 'Approved' ? InterfaceValidationCheckCircle : InterfaceDeleteCircle}
               w={4} h={4} fill={data.reverted ? 'blue.500' : data.action === 'Approved' ? 'green.500' : 'orange.500'}
             />
           </Box>
           {(expiryPercent > 0 && !data.reverted) &&
-            <CircularProgress colorScheme='blue' position='absolute' value={expiryPercent} size={7} />}
+            <CircularProgress color='blue.500' position='absolute' value={expiryPercent} size={7} />}
         </Flex>
       </Flex>
       <Flex ml={3}>

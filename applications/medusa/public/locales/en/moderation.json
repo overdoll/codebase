@@ -78,7 +78,7 @@
         "status": "Status"
       },
       "load": "Load More",
-      "empty": "Only the last 7 days of logs are visible"
+      "empty": "Only the last 7 days of logs are available"
     },
     "inspect": {
       "copy": "Copy Audit Log ID",
@@ -94,7 +94,7 @@
         },
         "alert": {
           "reverted": "This case has been reverted",
-          "expired": "The period to revert this audit log has expired"
+          "expired": "The time period to revert this audit log has expired"
         },
         "button": {
           "action": "Revert Decision"

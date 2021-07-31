@@ -24,7 +24,7 @@ import PostArtist from './PostArtist/PostArtist'
 import PostCharacters from './PostCharacters/PostCharacters'
 import PostCategories from './PostCategories/PostCategories'
 import NoPostsPlaceholder from './NoPostsPlaceholder/NoPostsPlaceholder'
-import convertToMonthDay from '@//:modules/utilities/functions/date'
+import convertToMonthDay from '@//:modules/utilities/functions/date/convertToMonthDay'
 
 import InterfaceArrowsButtonRight
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-button-right.svg'
