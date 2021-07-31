@@ -76,9 +76,9 @@ func TestCookieRepository_DeleteCookie(t *testing.T) {
 }
 
 func newCookieRepository(t *testing.T) adapters.AuthenticationTokenRepository {
-	config.Read("applications/eva/config.toml")
+	config.Read("applications/eva")
 
-	redis, _ := bootstrap.InitializeRedisSession()
+	redis := bootstrap.InitializeRedisSession()
 
 	return adapters.NewAuthenticationTokenRedisRepository(redis)
 }

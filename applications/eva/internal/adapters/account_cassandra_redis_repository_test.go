@@ -186,10 +186,10 @@ func newFakeAccount(t *testing.T) *account.Account {
 }
 
 func newAccountRepository(t *testing.T) adapters.AccountRepository {
-	config.Read("applications/eva/config.toml")
+	config.Read("applications/eva")
 
-	session, _ := bootstrap.InitializeDatabaseSession()
-	redis, _ := bootstrap.InitializeRedisSession()
+	session := bootstrap.InitializeDatabaseSession()
+	redis := bootstrap.InitializeRedisSession()
 
 	return adapters.NewAccountCassandraRedisRepository(session, redis)
 }

@@ -57,18 +57,14 @@ func TestContentS3Repository_ProcessContent(t *testing.T) {
 
 }
 func newS3Client(t *testing.T) *s3.S3 {
-	session, err := bootstrap.InitializeAWSSession()
-
-	require.NoError(t, err)
+	session := bootstrap.InitializeAWSSession()
 
 	return s3.New(session)
 }
 
 func uploadFileFixture(t *testing.T, bucket, fileKey, filePath string) {
 
-	session, err := bootstrap.InitializeAWSSession()
-
-	require.NoError(t, err)
+	session := bootstrap.InitializeAWSSession()
 
 	client := s3manager.NewUploader(session)
 
@@ -93,30 +89,23 @@ func uploadFileFixture(t *testing.T, bucket, fileKey, filePath string) {
 
 func newContentRepository(t *testing.T) adapters.ContentS3Repository {
 
-	s, err := bootstrap.InitializeAWSSession()
-
-	require.NoError(t, err)
+	s := bootstrap.InitializeAWSSession()
 
 	return adapters.NewContentS3Repository(s)
 }
 
 // create buckets before running tests
 func seedBuckets() bool {
-	config.Read("applications/sting/config.toml")
+	config.Read("applications/sting")
 
-	session, err := bootstrap.InitializeAWSSession()
-
-	if err != nil {
-		fmt.Println(err)
-		return false
-	}
+	session := bootstrap.InitializeAWSSession()
 
 	s3c := s3.New(session)
 
 	buckets := []string{adapters.ImageStaticBucket, adapters.ImageUploadsBucket, adapters.PostContentBucket}
 
 	for _, bucket := range buckets {
-		_, err = s3c.CreateBucket(&s3.CreateBucketInput{Bucket: aws.String(bucket)})
+		_, err := s3c.CreateBucket(&s3.CreateBucketInput{Bucket: aws.String(bucket)})
 
 		if aerr, ok := err.(awserr.Error); ok {
 			switch aerr.Code() {
