@@ -46,7 +46,7 @@ go_test(
     srcs = ["content_s3_repository_test.go"],
     data = [
         "//applications/sting/internal:config.toml",
-        "//applications/sting/src/adapters/content_fixtures:all",
+        "//applications/sting/internal/adapters/content_fixtures:all",
     ],
     deps = [
         ":adapters",
