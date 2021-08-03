@@ -11,7 +11,6 @@ import (
 	"overdoll/applications/eva/internal/adapters"
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/libraries/bootstrap"
-	"overdoll/libraries/config"
 	"overdoll/libraries/uuid"
 )
 
@@ -186,8 +185,6 @@ func newFakeAccount(t *testing.T) *account.Account {
 }
 
 func newAccountRepository(t *testing.T) adapters.AccountRepository {
-	config.Read("applications/eva")
-
 	session := bootstrap.InitializeDatabaseSession()
 	redis := bootstrap.InitializeRedisSession()
 

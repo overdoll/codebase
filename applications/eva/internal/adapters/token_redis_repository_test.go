@@ -9,7 +9,6 @@ import (
 	"overdoll/applications/eva/internal/adapters"
 	"overdoll/applications/eva/internal/domain/token"
 	"overdoll/libraries/bootstrap"
-	"overdoll/libraries/config"
 	"overdoll/libraries/uuid"
 )
 
@@ -76,8 +75,6 @@ func TestCookieRepository_DeleteCookie(t *testing.T) {
 }
 
 func newCookieRepository(t *testing.T) adapters.AuthenticationTokenRepository {
-	config.Read("applications/eva")
-
 	redis := bootstrap.InitializeRedisSession()
 
 	return adapters.NewAuthenticationTokenRedisRepository(redis)
