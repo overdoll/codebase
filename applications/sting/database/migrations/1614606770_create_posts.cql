@@ -11,11 +11,20 @@ CREATE TABLE IF NOT EXISTS characters
     id        text,
     name      text,
     thumbnail text,
-    media_id  text,
+    series_id text,
     primary key ( id)
 );
 
-CREATE TABLE IF NOT EXISTS medias
+CREATE TABLE IF NOT EXISTS series
+(
+    id        text,
+    name      text,
+    thumbnail text,
+    media_id  text,
+    primary key ( id )
+);
+
+CREATE TABLE IF NOT EXISTS media
 (
     id        text,
     title     text,
@@ -23,11 +32,12 @@ CREATE TABLE IF NOT EXISTS medias
     primary key ( id )
 );
 
-CREATE TABLE IF NOT EXISTS artists
+CREATE TABLE IF NOT EXISTS brands
 (
-    account_id         text,
-    do_not_post_reason text,
-    primary key ( account_id ),
+    id        text,
+    name      text,
+    thumbnail text,
+    primary key ( id )
 );
 
 CREATE TABLE IF NOT EXISTS posts
@@ -35,16 +45,13 @@ CREATE TABLE IF NOT EXISTS posts
     id                        text,
     state                     text,
     moderator_account_id      text,
-    artist_account_id         text,
     contributor_account_id    text,
+    brand_id                  text,
+    category_ids              list<text>,
+    character_ids             list<text>,
     content                   list<text>,
-    categories                list<text>,
-    characters                list<text>,
-    artist_request            text,
-    characters_requests       map<text, text>,
-    media_requests            list<text>,
-    categories_requests       list<text>,
+    created_at                timestamp,
     posted_at                 timestamp,
     moderator_reassignment_at timestamp,
-    primary key (id)
+    primary key ( id )
 );
