@@ -2,7 +2,7 @@
  * @flow
  */
 
-import { Button, Heading, Flex, Text, Tooltip, Wrap, WrapItem } from '@chakra-ui/react'
+import { Button, Heading, Text } from '@chakra-ui/react'
 import type { Node } from 'react'
 import { useFragment, graphql } from 'react-relay'
 import type { NoPostsPlaceholderFragment$key } from '@//:artifacts/NoPostsPlaceholderFragment.graphql'

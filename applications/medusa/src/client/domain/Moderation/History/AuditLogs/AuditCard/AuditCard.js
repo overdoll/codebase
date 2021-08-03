@@ -2,7 +2,7 @@
  * @flow
  */
 
-import { Button, Flex, Text, CircularProgress, CircularProgressLabel, Box } from '@chakra-ui/react'
+import { Button, Flex, Text, CircularProgress, Box } from '@chakra-ui/react'
 import type { Node } from 'react'
 import Icon from '@//:modules/content/Icon/Icon'
 import type { AuditCardFragment$key } from '@//:artifacts/AuditCardFragment.graphql'
@@ -13,8 +13,6 @@ import InterfaceDeleteCircle
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/add-remove-delete/interface-delete-circle.svg'
 import InterfaceArrowsButtonRight
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-button-right.svg'
-import InterfaceArrowsRoundLeft
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-round-left.svg'
 import InterfaceArrowsMoveHorizontalCircle
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-move-horizontal-circle.svg'
 

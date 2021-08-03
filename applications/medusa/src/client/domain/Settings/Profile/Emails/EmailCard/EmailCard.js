@@ -2,10 +2,9 @@
  * @flow
  */
 import type { Node } from 'react'
-import { useState } from 'react'
 import {
   Badge, Box,
-  Flex, Heading, IconButton, Menu, MenuButton, MenuItem, MenuList, Text, Spinner, Fade
+  Flex, Heading, IconButton, Menu, MenuButton, MenuItem, MenuList, Text
 } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import InterfaceSettingCog

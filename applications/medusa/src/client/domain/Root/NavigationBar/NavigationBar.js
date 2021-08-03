@@ -4,22 +4,17 @@
 import type { Node } from 'react'
 import { Fragment, useContext, useMemo } from 'react'
 import {
-  Avatar,
   Box,
   Button,
   Flex,
-  Heading,
   HStack,
   IconButton,
-  Spacer,
-  Stack,
-  Tooltip,
-  useDisclosure
+  Spacer
 } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import { useTranslation } from 'react-i18next'
 import Link from '@//:modules/routing/Link'
-import { Route, Switch } from 'react-router'
+import { Route } from 'react-router'
 import { useHistory, useLocation } from '@//:modules/routing'
 import computeCurrentActiveRoutes from './helpers/computeCurrentActiveRoutes'
 import { AbilityContext } from '../helpers/AbilityContext'

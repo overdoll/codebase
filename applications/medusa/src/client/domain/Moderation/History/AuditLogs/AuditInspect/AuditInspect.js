@@ -10,36 +10,22 @@ import {
   SlideFade,
   Text,
   Heading,
-  Tag,
-  WrapItem,
-  Wrap,
   Stack,
   Badge,
   Alert,
   AlertIcon,
   AlertDescription, useToast,
-  Tooltip,
   Divider
 } from '@chakra-ui/react'
 import type { Node } from 'react'
 import Icon from '@//:modules/content/Icon/Icon'
 import type { AuditInspectFragment$key } from '@//:artifacts/AuditInspectFragment.graphql'
 import { graphql, useFragment } from 'react-relay'
-import InterfaceValidationCheckCircle
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/validation/interface-validation-check-circle.svg'
-import InterfaceDeleteCircle
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/add-remove-delete/interface-delete-circle.svg'
-import InterfaceArrowsButtonRight
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-button-right.svg'
-import convertToMonthDayTime from '@//:modules/utilities/functions/date/convertToMonthDayTime'
 import { useTranslation } from 'react-i18next'
-import CopyToClipboardText from '../../../../../../components/CopyToClipboardText/CopyToClipboardText'
-import ContentItem from '../../../../../../components/Posts/components/ContentItem/ContentItem'
+import CopyToClipboardText from '../../../../../components/CopyToClipboardText/CopyToClipboardText'
 import AuditPost from './AuditPost/AuditPost'
-import Undo from '@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/text-options/undo.svg'
 import RotateBack from '@streamlinehq/streamlinehq/img/streamline-bold/design/rotate/rotate-back.svg'
 import { useMutation } from 'react-relay/hooks'
-import type { ModeratePostMutation } from '@//:artifacts/ModeratePostMutation.graphql'
 import type { AuditInspectMutation } from '@//:artifacts/AuditInspectMutation.graphql'
 
 type Props = {

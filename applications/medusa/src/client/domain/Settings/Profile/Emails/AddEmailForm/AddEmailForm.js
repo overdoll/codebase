@@ -26,10 +26,15 @@ import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Joi from 'joi'
 import { useTranslation } from 'react-i18next'
+import type { EmailsSettingsFragment$key } from '@//:artifacts/EmailsSettingsFragment.graphql'
 
 type EmailValues = {
   email: string,
 };
+
+type Props = {
+  connectionID: EmailsSettingsFragment$key,
+}
 
 const schema = Joi.object({
   email: Joi
@@ -50,7 +55,7 @@ const AddEmailMutationGQL = graphql`
   }
 `
 
-export default function AddEmailForm ({ connectionID }): Node {
+export default function AddEmailForm ({ connectionID }: Props): Node {
   const [t] = useTranslation('settings')
 
   const { register, handleSubmit, formState: { errors, isDirty, isSubmitted } } = useForm<EmailValues>({

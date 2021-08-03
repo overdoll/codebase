@@ -2,11 +2,10 @@
  * @flow
  */
 
-import { Tag, TagLabel, Tooltip, Wrap, WrapItem } from '@chakra-ui/react'
+import { Tag, TagLabel, Wrap, WrapItem } from '@chakra-ui/react'
 import type { Node } from 'react'
 import { useFragment, graphql } from 'react-relay'
 import type { PostCategoriesFragment$key } from '@//:artifacts/PostCategoriesFragment.graphql'
-import { useTranslation } from 'react-i18next'
 
 type Props = {
   categories: PostCategoriesFragment$key
@@ -21,8 +20,6 @@ const postCategoriesFragmentGQL = graphql`
 `
 
 export default function PostHeader (props: Props): Node {
-  const [t] = useTranslation('moderation')
-
   const data = useFragment(postCategoriesFragmentGQL, props.categories)
 
   return (

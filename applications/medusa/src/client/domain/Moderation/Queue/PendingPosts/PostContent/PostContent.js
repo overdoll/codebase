@@ -2,11 +2,11 @@
  * @flow
  */
 
-import { Tag, TagLabel, Wrap, WrapItem } from '@chakra-ui/react'
+import { Wrap, WrapItem } from '@chakra-ui/react'
 import type { Node } from 'react'
 import { useFragment, graphql } from 'react-relay'
 import type { PostContentFragment$key } from '@//:artifacts/PostContentFragment.graphql'
-import ContentItem from '../../../../../../components/Posts/components/ContentItem/ContentItem'
+import ContentItem from '../../../../../components/Posts/components/ContentItem/ContentItem'
 
 type Props = {
   content: PostContentFragment$key

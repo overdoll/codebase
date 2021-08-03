@@ -31,7 +31,9 @@ export default function Confirmation (props: Props): Node {
 
   const { flash } = useFlash()
 
-  const [commit, isInFlight] = useMutation(
+  // TODO change to a ? url parameter instead for better security
+
+  const [commit] = useMutation(
     ConfirmationMutationGQL
   )
 

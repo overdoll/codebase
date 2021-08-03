@@ -20,7 +20,7 @@ type Props = {
 export default function CopyToClipboardText ({ text, children, ...rest }: Props): Node {
   const [t] = useTranslation('general')
 
-  const [copied, setCopied] = useState(text)
+  const [copied] = useState(text)
 
   const { hasCopied, onCopy } = useClipboard(copied)
 

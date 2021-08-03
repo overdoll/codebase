@@ -154,7 +154,7 @@ const routes: Array<Route> = [
             path: '/moderation/queue',
             component: JSResource('ModQueueRoot', () =>
               import(
-                /* webpackChunkName: "ModQueueRoot" */ './domain/Moderation/routes/Queue/Queue'
+                /* webpackChunkName: "ModQueueRoot" */ './domain/Moderation/Queue/Queue'
               ),
             module.hot
             ),
@@ -175,7 +175,7 @@ const routes: Array<Route> = [
             path: '/moderation/history',
             component: JSResource('ModHistoryRoot', () =>
               import(
-                /* webpackChunkName: "ModHistoryRoot" */ './domain/Moderation/routes/History/History'
+                /* webpackChunkName: "ModHistoryRoot" */ './domain/Moderation/History/History'
               ),
             module.hot
             ),
@@ -286,7 +286,7 @@ const routes: Array<Route> = [
             path: '/settings/profile',
             component: JSResource('SettingsProfileRoot', () =>
               import(
-                /* webpackChunkName: "SettingsProfileRoot" */ './domain/Settings/routes/Profile/Profile'
+                /* webpackChunkName: "SettingsProfileRoot" */ './domain/Settings/Profile/Profile'
               ),
             module.hot
             ),
@@ -307,7 +307,7 @@ const routes: Array<Route> = [
             path: '/settings/security',
             component: JSResource('SettingsSecurityRoot', () =>
               import(
-                /* webpackChunkName: "SettingsSecurityRoot" */ './domain/Settings/routes/Security/Security'
+                /* webpackChunkName: "SettingsSecurityRoot" */ './domain/Settings/Security/Security'
               ),
             module.hot
             )
@@ -316,7 +316,7 @@ const routes: Array<Route> = [
             path: '/settings/moderation',
             component: JSResource('SettingsModerationRoot', () =>
               import(
-                /* webpackChunkName: "SettingsModerationRoot" */ './domain/Settings/routes/Moderation/Moderation'
+                /* webpackChunkName: "SettingsModerationRoot" */ './domain/Settings/Moderation/Moderation'
               ),
             module.hot
             ),
