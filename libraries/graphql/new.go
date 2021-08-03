@@ -1,6 +1,8 @@
 package graphql
 
 import (
+	"context"
+	"errors"
 	"os"
 
 	"github.com/99designs/gqlgen/graphql"
@@ -10,11 +12,35 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler/lru"
 	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"github.com/gin-gonic/gin"
+	"github.com/vektah/gqlparser/v2/gqlerror"
+	"go.uber.org/zap"
 )
 
 func HandleGraphQL(schema graphql.ExecutableSchema) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		graphAPIHandler := handler.New(schema)
+
+		// set default error presenter to show 'internal server error'
+		graphAPIHandler.SetErrorPresenter(func(ctx context.Context, e error) *gqlerror.Error {
+			// notify bug tracker?
+
+			err := graphql.DefaultErrorPresenter(ctx, e)
+
+			zap.S().Error("resolver failed ", err)
+
+			if os.Getenv("APP_DEBUG") != "true" {
+				err.Message = "internal server error"
+			}
+
+			return err
+		})
+
+		graphAPIHandler.SetRecoverFunc(func(ctx context.Context, err interface{}) error {
+			// notify bug tracker?
+			zap.S().Error("resolver failed ", err)
+
+			return errors.New("internal server error")
+		})
 
 		graphAPIHandler.Use(apollotracing.Tracer{})
 

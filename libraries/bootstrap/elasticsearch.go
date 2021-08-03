@@ -4,9 +4,10 @@ import (
 	"os"
 
 	"github.com/olivere/elastic/v7"
+	"go.uber.org/zap"
 )
 
-func InitializeElasticSearchSession() (*elastic.Client, error) {
+func InitializeElasticSearchSession() *elastic.Client {
 
 	client, err := elastic.NewClient(
 		elastic.SetURL(os.Getenv("ELASTICSEARCH_URL")),
@@ -16,8 +17,8 @@ func InitializeElasticSearchSession() (*elastic.Client, error) {
 	)
 
 	if err != nil {
-		return nil, err
+		zap.S().Fatal("es session failed", zap.Error(err))
 	}
 
-	return client, nil
+	return client
 }

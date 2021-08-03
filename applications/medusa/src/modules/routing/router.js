@@ -152,7 +152,9 @@ async function createServerRouter (
     data
   )
 
-  const initialEntries = prepareMatches(initialMatches, environment)
+  const parameters = new URLSearchParams(history.location.search)
+
+  const initialEntries = prepareMatches(initialMatches, parameters, environment)
 
   // The actual object that will be passed on the RoutingContext.
   const context = {
@@ -171,7 +173,7 @@ async function createServerRouter (
       )
     },
     preload (pathname) {
-      prepareMatches(matchRoutes(routes, pathname), environment)
+      prepareMatches(matchRoutes(routes, pathname), new URLSearchParams(pathname), environment)
     },
     subscribe (cb) {
 
@@ -198,8 +200,9 @@ function createClientRouter (
 ): RouterInstance {
   // Find the initial match and prepare it
   const initialMatches = matchRoutes(routes, history.location.pathname)
+  const parameters = new URLSearchParams(history.location.search)
 
-  const initialEntries = prepareMatches(initialMatches, environment)
+  const initialEntries = prepareMatches(initialMatches, parameters, environment)
 
   let currentEntry: RouterInit = {
     location: history.location,
@@ -218,7 +221,8 @@ function createClientRouter (
       return
     }
     const matches = matchRoutes(routes, history.location.pathname)
-    const entries = prepareMatches(matches, environment)
+    const parameters = new URLSearchParams(history.location.search)
+    const entries = prepareMatches(matches, parameters, environment)
     const nextEntry = {
       location,
       entries
@@ -241,7 +245,7 @@ function createClientRouter (
     preload (pathname) {
       // preload the code and data for a route, without storing the result
       const matches = matchRoutes(routes, pathname)
-      prepareMatches(matches, environment)
+      prepareMatches(matches, new URLSearchParams(pathname), environment)
     },
     subscribe (cb) {
       const id = nextId++
@@ -275,7 +279,7 @@ function matchRouteWithFilter (routes, history, location, data) {
  *
  * Inject RelayEnvironment
  */
-function prepareMatches (matches, relayEnvironment) {
+function prepareMatches (matches, query, relayEnvironment) {
   return matches.map((match, index) => {
     const { route, match: matchData } = match
 
@@ -283,6 +287,7 @@ function prepareMatches (matches, relayEnvironment) {
       relayEnvironment,
       route.prepare,
       matchData.params,
+      query,
       index
     )
 
@@ -305,12 +310,12 @@ function prepareMatches (matches, relayEnvironment) {
  * Converts our "prepared" object into an actual routing key
  *
  */
-function convertPreparedToQueries (environment, prepare, params, index) {
+function convertPreparedToQueries (environment, prepare, params, query, index) {
   const prepared = {}
 
   if (prepare === undefined) return prepared
 
-  const queriesToPrepare = prepare(params)
+  const queriesToPrepare = prepare(params, query)
   const queryKeys = Object.keys(queriesToPrepare)
 
   // For each route, fetch the query

@@ -4,15 +4,15 @@ schema:
   - ../../libraries/graphql/relay/schema.graphql
 
 exec:
-  filename: src/ports/graphql/generated.go
+  filename: internal/ports/graphql/generated.go
   package: gen
 
 model:
-  filename: src/ports/graphql/types/types.go
+  filename: internal/ports/graphql/types/types.go
   package: types
 
 federation:
-  filename: src/ports/graphql/federation.go
+  filename: internal/ports/graphql/federation.go
   package: gen
 
 autobind:

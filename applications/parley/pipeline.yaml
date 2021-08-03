@@ -1,7 +1,7 @@
 steps:
   build:
     targets:
-      - //applications/parley:parley
+      - //applications/parley/internal:internal
 
   unit_test:
     coverage:
@@ -9,22 +9,22 @@ steps:
         paths:
           - ./applications/parley/**/coverage.dat
     targets:
-      - //applications/parley/src/app/...
-      - //applications/parley/src/domain/...
-      - //applications/parley/src/ports/...
+      - //applications/parley/internal/app/...
+      - //applications/parley/internal/domain/...
+      - //applications/parley/internal/ports/...
 
   push_image:
     targets:
-      - //applications/parley:publish-testing
+      - //applications/parley/internal:publish-testing
 
   integration_test:
     coverage:
       - name: parley.integration
         paths:
-          - ./applications/parley/src/adapters/**/coverage.dat
+          - ./applications/parley/internal/adapters/**/coverage.dat
       - name: parley.component
         paths:
-          - ./applications/parley/src/service/**/coverage.dat
+          - ./applications/parley/internal/service/**/coverage.dat
     setup:
       dockerfile:
         - ./applications/parley/docker-compose.ci.yaml
@@ -32,8 +32,8 @@ steps:
       - host: parley
         port: 8000
     targets:
-      - //applications/parley/src/adapters/...
-      - //applications/parley/src/service/...
+      - //applications/parley/internal/adapters/...
+      - //applications/parley/internal/service/...
 
   e2e_test:
     setup:
@@ -46,4 +46,4 @@ steps:
 
   publish_image:
     targets:
-      - //applications/parley:publish
+      - //applications/parley/internal:publish

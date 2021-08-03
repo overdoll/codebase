@@ -1,7 +1,7 @@
 /**
  * @flow
  */
-import { graphql, useMutation } from 'react-relay/hooks'
+import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import type { Node } from 'react'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -12,44 +12,64 @@ import { useClickDelay } from '@//:modules/utilities/hooks'
 
 import SignBadgeCircle
   from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
+import type { LobbyFragment$key } from '@//:artifacts/LobbyFragment.graphql'
 
 type Props = {
   refresh: () => void,
-  email: ?string,
+  queryRef: LobbyFragment$key,
 };
 
 const LobbyEmail = graphql`
   mutation LobbyMutation {
     reissueAuthenticationToken {
-     authenticationToken {
+      validation
+      authenticationToken {
         email
-     }
+      }
     }
   }
 `
 
-export default function Lobby (props: Props): Node {
+const LobbyFragment = graphql`
+  fragment LobbyFragment on AuthenticationToken {
+    email
+  }
+`
+
+export default function Lobby ({ queryRef, refresh }: Props): Node {
+  const data = useFragment(LobbyFragment, queryRef)
+
+  const [commit, isInFlight] = useMutation(LobbyEmail)
+
   const notify = useToast()
 
   const [t] = useTranslation('auth')
-
-  const [sendEmail, isSendingEmail] = useMutation(LobbyEmail)
 
   const [isTimedOut, currentTimer, createTimeout] = useClickDelay('lobbyButton')
 
   // poll for result
   useEffect(() => {
-    function refresh () {
-      props.refresh()
-      setTimeout(refresh, 2000)
+    const refreshLoop = () => {
+      refresh()
+      setTimeout(refreshLoop, 2000)
     }
-    setTimeout(refresh, 2000)
+
+    setTimeout(refreshLoop, 2000)
   }, [])
 
   const onSubmit = () => {
-    sendEmail({
+    commit({
       variables: {},
-      onCompleted () {
+      onCompleted (payload) {
+        if (payload.reissueAuthenticationToken.validation) {
+          notify({
+            status: 'error',
+            title: payload.reissueAuthenticationToken.validation,
+            isClosable: true
+          })
+          return
+        }
+
         createTimeout(60000)
         notify({
           status: 'success',
@@ -85,13 +105,13 @@ export default function Lobby (props: Props): Node {
         <Box mb={8} pt={3} pb={3} borderRadius={5} bg='gray.800' w='100%'>
           <Center>
             <Text fontSize='lg' color='purple.300'>
-              {props.email}
+              {data.email}
             </Text>
           </Center>
         </Box>
         <Button
           size='lg'
-          loading={isSendingEmail}
+          loading={isInFlight}
           onClick={onSubmit}
           disabled={isTimedOut}
         >

@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "app",
+    srcs = ["app.go"],
+    importpath = "overdoll/applications/buffer/internal/app",
+    visibility = ["//visibility:public"],
+    deps = ["//applications/buffer/internal/app/command"],
+)

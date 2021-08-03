@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 501573df0718dc07c1c8475ea93a5bcc
+ * @relayHash 633d6abdc12ec3db601c9c1bb6b1a230
  */
 
 /* eslint-disable */
@@ -8,6 +8,7 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
+export type CreateAccountWithAuthenticationTokenValidation = "EMAIL_TAKEN" | "TOKEN_EXPIRED" | "USERNAME_TAKEN" | "%future added value";
 export type CreateAccountWithAuthenticationTokenInput = {|
   username: string
 |};
@@ -16,9 +17,10 @@ export type RegisterMutationVariables = {|
 |};
 export type RegisterMutationResponse = {|
   +createAccountWithAuthenticationToken: ?{|
+    +validation: ?CreateAccountWithAuthenticationTokenValidation,
     +account: ?{|
       +id: string
-    |}
+    |},
   |}
 |};
 export type RegisterMutation = {|
@@ -32,6 +34,7 @@ mutation RegisterMutation(
   $input: CreateAccountWithAuthenticationTokenInput!
 ) {
   createAccountWithAuthenticationToken(input: $input) {
+    validation
     account {
       id
     }
@@ -62,6 +65,13 @@ v1 = [
     "name": "createAccountWithAuthenticationToken",
     "plural": false,
     "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "validation",
+        "storageKey": null
+      },
       {
         "alias": null,
         "args": null,
@@ -102,7 +112,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "501573df0718dc07c1c8475ea93a5bcc",
+    "id": "633d6abdc12ec3db601c9c1bb6b1a230",
     "metadata": {},
     "name": "RegisterMutation",
     "operationKind": "mutation",
@@ -111,5 +121,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '40dd985fd835e7f5dff39dd90d25e01a';
+(node: any).hash = '1182c2f6d5e474677da815c79ca3308b';
 module.exports = node;

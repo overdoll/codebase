@@ -3,7 +3,7 @@ services:
   parley:
     image: $CONTAINER_REGISTRY/parley/dev:$BUILDKITE_COMMIT
     entrypoint: ""
-    command: /bin/sh -c "/app/applications/parley/image.binary db migrate keyspace && /app/applications/parley/image.binary db seed && /app/applications/parley/image.binary"
+    command: /bin/sh -c "/app/applications/parley/internal/image.binary db migrate keyspace && /app/applications/parley/internal/image.binary db seed && /app/applications/parley/internal/image.binary"
     env_file: ../../applications/parley/.env.ci
     depends_on:
       - temporal

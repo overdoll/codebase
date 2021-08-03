@@ -1,7 +1,7 @@
 steps:
   build:
     targets:
-      - //applications/sting:sting
+      - //applications/sting/internal:internal
 
   unit_test:
     coverage:
@@ -9,22 +9,22 @@ steps:
         paths:
           - ./applications/sting/**/coverage.dat
     targets:
-      - //applications/sting/src/app/...
-      - //applications/sting/src/domain/...
-      - //applications/sting/src/ports/...
+      - //applications/sting/internal/app/...
+      - //applications/sting/internal/domain/...
+      - //applications/sting/internal/ports/...
 
   push_image:
     targets:
-      - //applications/sting:publish-testing
+      - //applications/sting/internal:publish-testing
 
   integration_test:
     coverage:
       - name: sting.integration
         paths:
-          - ./applications/sting/src/adapters/**/coverage.dat
+          - ./applications/sting/internal/adapters/**/coverage.dat
       - name: sting.component
         paths:
-          - ./applications/sting/src/service/**/coverage.dat
+          - ./applications/sting/internal/service/**/coverage.dat
     setup:
       dockerfile:
         - ./applications/sting/docker-compose.ci.yaml
@@ -32,8 +32,8 @@ steps:
       - host: sting
         port: 8000
     targets:
-      - //applications/sting/src/adapters/...
-      - //applications/sting/src/service/...
+      - //applications/sting/internal/adapters/...
+      - //applications/sting/internal/service/...
 
   e2e_test:
     setup:
@@ -47,4 +47,4 @@ steps:
 
   publish_image:
     targets:
-      - //applications/sting:publish
+      - //applications/sting/internal:publish

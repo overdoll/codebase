@@ -1,0 +1,40 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "service",
+    srcs = ["application.go"],
+    importpath = "overdoll/applications/sting/internal/service",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//applications/sting/internal/adapters",
+        "//applications/sting/internal/app",
+        "//applications/sting/internal/app/command",
+        "//applications/sting/internal/app/query",
+        "//libraries/bootstrap",
+        "//libraries/clients",
+    ],
+)
+
+go_test(
+    name = "service_test",
+    srcs = ["component_test.go"],
+    data = ["//applications/sting:config.toml"],
+    deps = [
+        ":service",
+        "//applications/sting/internal/adapters",
+        "//applications/sting/internal/ports",
+        "//applications/sting/internal/ports/graphql/types",
+        "//applications/sting/internal/ports/temporal/workflows",
+        "//applications/sting/proto:v1_go_proto",
+        "//libraries/bootstrap",
+        "//libraries/clients",
+        "//libraries/config",
+        "//libraries/graphql/relay",
+        "//libraries/passport",
+        "//libraries/tests",
+        "@com_github_shurcool_graphql//:graphql",
+        "@com_github_stretchr_testify//require",
+        "@io_temporal_go_sdk//testsuite",
+        "@org_golang_google_grpc//:go_default_library",
+    ],
+)

@@ -1,0 +1,44 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "service",
+    srcs = [
+        "application.go",
+        "mocks.go",
+    ],
+    importpath = "overdoll/applications/parley/internal/service",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//applications/parley/internal/adapters",
+        "//applications/parley/internal/app",
+        "//applications/parley/internal/app/command",
+        "//applications/parley/internal/app/query",
+        "//libraries/bootstrap",
+        "//libraries/clients",
+    ],
+)
+
+go_test(
+    name = "service_test",
+    srcs = [
+        "account_settings_component_test.go",
+        "component_test.go",
+        "moderate_component_test.go",
+    ],
+    data = ["//applications/parley:config.toml"],
+    deps = [
+        ":service",
+        "//applications/parley/internal/ports",
+        "//applications/parley/internal/ports/graphql/types",
+        "//applications/parley/proto:v1_go_proto",
+        "//libraries/bootstrap",
+        "//libraries/clients",
+        "//libraries/config",
+        "//libraries/graphql/relay",
+        "//libraries/passport",
+        "//libraries/tests",
+        "@com_github_shurcool_graphql//:graphql",
+        "@com_github_stretchr_testify//require",
+        "@org_golang_google_grpc//:go_default_library",
+    ],
+)

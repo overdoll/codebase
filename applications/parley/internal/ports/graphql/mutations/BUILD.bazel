@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "mutations",
+    srcs = ["resolvers.go"],
+    importpath = "overdoll/applications/parley/internal/ports/graphql/mutations",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//applications/parley/internal/app",
+        "//applications/parley/internal/app/command",
+        "//applications/parley/internal/ports/graphql/types",
+        "//libraries/passport",
+        "//libraries/principal",
+    ],
+)

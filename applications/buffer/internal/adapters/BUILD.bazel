@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "adapters",
+    srcs = ["file_s3_repository.go"],
+    importpath = "overdoll/applications/buffer/internal/adapters",
+    visibility = ["//visibility:public"],
+    deps = [
+        "@com_github_aws_aws_sdk_go//aws/session",
+        "@com_github_aws_aws_sdk_go//service/s3",
+        "@com_github_tus_tusd//pkg/handler",
+        "@com_github_tus_tusd//pkg/s3store",
+    ],
+)

@@ -17,7 +17,9 @@ describe('Upload', () => {
     window.indexedDB.deleteDatabase('overdoll.uploads')
     window.indexedDB.deleteDatabase('uppy-blobs')
     cy.clearLocalStorage()
-    cy.login('artist_unverified_test@overdoll.com')
+    cy.login('i2fhz.artist_unverified@inbox.testmail.app')
+
+    cy.url().should('include', '/profile')
 
     cy.visit('/upload')
 

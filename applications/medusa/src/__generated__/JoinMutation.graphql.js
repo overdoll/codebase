@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 8431634c2acdf0b882ec72d670d26e3a
+ * @relayHash 7b6af25bb5f3307fb55741ece39a6839
  */
 
 /* eslint-disable */
@@ -17,7 +17,9 @@ export type JoinMutationVariables = {|
 export type JoinMutationResponse = {|
   +grantAuthenticationToken: ?{|
     +authenticationToken: ?{|
-      +email: string
+      +id: string,
+      +email: string,
+      +sameSession: boolean,
     |}
   |}
 |};
@@ -33,7 +35,9 @@ mutation JoinMutation(
 ) {
   grantAuthenticationToken(input: $input) {
     authenticationToken {
+      id
       email
+      sameSession
     }
   }
 }
@@ -74,7 +78,21 @@ v1 = [
             "alias": null,
             "args": null,
             "kind": "ScalarField",
+            "name": "id",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
             "name": "email",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "sameSession",
             "storageKey": null
           }
         ],
@@ -102,7 +120,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "8431634c2acdf0b882ec72d670d26e3a",
+    "id": "7b6af25bb5f3307fb55741ece39a6839",
     "metadata": {},
     "name": "JoinMutation",
     "operationKind": "mutation",
@@ -111,5 +129,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = 'adfa09346806bbe112bbe3ef18640c9a';
+(node: any).hash = '0c84693dec8938f3fc0ef5497136c171';
 module.exports = node;

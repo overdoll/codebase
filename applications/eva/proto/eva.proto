@@ -7,7 +7,7 @@ message Account {
   string username = 2;
   repeated string roles = 3;
   bool verified = 4;
-  string avatar = 5;
+  string email = 5;
   bool locked = 6;
 }
 

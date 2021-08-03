@@ -1,0 +1,38 @@
+steps:
+  build:
+    targets:
+      - //applications/carrier/internal:internal
+
+  unit_test:
+    coverage:
+      - name: carrier.unit
+        paths:
+          - ./applications/carrier/**/coverage.dat
+    targets:
+      - //applications/carrier/internal/app/...
+      - //applications/carrier/internal/domain/...
+      - //applications/carrier/internal/ports/...
+
+  push_image:
+    targets:
+      - //applications/carrier/internal:publish-testing
+
+  integration_test:
+    setup:
+      dockerfile:
+        - ./applications/carrier/docker-compose.ci.yaml
+    coverage:
+      - name: carrier.integration
+        paths:
+          - ./applications/buffer/internal/adapters/**/coverage.dat
+    targets:
+      - //applications/buffer/internal/adapters/...
+
+  e2e_test:
+    setup:
+      dockerfile:
+        - ./applications/carrier/docker-compose.ci.yaml
+
+  publish_image:
+    targets:
+      - //applications/carrier/internal:publish

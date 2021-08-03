@@ -3,7 +3,7 @@ services:
   sting:
     image: $CONTAINER_REGISTRY/sting/dev:$BUILDKITE_COMMIT
     entrypoint: ""
-    command: /bin/sh -c "/app/applications/sting/image.binary db migrate keyspace && /app/applications/sting/image.binary db seed && /app/applications/sting/image.binary index all && /app/applications/sting/image.binary"
+    command: /bin/sh -c "/app/applications/sting/internal/image.binary db migrate keyspace && /app/applications/sting/internal/image.binary db seed && /app/applications/sting/internal/image.binary index all && /app/applications/sting/internal/image.binary"
     env_file: ../../applications/sting/.env.ci
     depends_on:
       - temporal
