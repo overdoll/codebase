@@ -16,7 +16,10 @@ import {
   ListItem, UnorderedList,
   Text,
   ModalCloseButton,
-  useToast
+  useToast,
+  AlertIcon,
+  Alert,
+  AlertDescription
 } from '@chakra-ui/react'
 
 import { useTranslation } from 'react-i18next'
@@ -26,6 +29,7 @@ import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import type { UsernamesMutation } from '@//:artifacts/UsernamesMutation.graphql'
 import type { UsernamesSettingsFragment$key } from '@//:artifacts/UsernamesSettingsFragment.graphql'
 import ChangeUsernameForm from './ChangeUsernameForm/ChangeUsernameForm'
+import InfoTip from '../../../../components/InfoTip/InfoTip'
 
 const UsernameFragmentGQL = graphql`
   fragment UsernamesSettingsFragment on Account {
@@ -128,13 +132,16 @@ export default function Usernames ({ usernames }: Props): Node {
                   </Flex>
                   <AccordionIcon />
                 </AccordionButton>
-                <AccordionPanel pt={1}>
-                  <Text mb={1} fontSize='sm' color='gray.200'>{t('profile.username.previous.tooltip')}</Text>
-                  <UnorderedList pl={4}>
-                    {data.usernames.edges.map((item, index) =>
-                      <ListItem key={index} color='gray.200'>{item.node.username}</ListItem>
-                    )}
-                  </UnorderedList>
+                <AccordionPanel pl={0} pr={0}>
+                  <Flex mb={1}>
+                    <Text fontSize='sm' color='gray.100'>Your previous usernames are replaced</Text>
+                    <InfoTip
+                      text={t('profile.username.previous.tooltip')}
+                    />
+                  </Flex>
+                  {data.usernames.edges.map((item, index) =>
+                    <Text key={index} color='gray.200'>{item.node.username}</Text>
+                  )}
                 </AccordionPanel>
               </AccordionItem>
             </Accordion>

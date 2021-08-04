@@ -7,7 +7,7 @@
 'use strict';
 
 import type { ReaderFragment } from 'relay-runtime';
-export type AccountEmailStatus = "CONFIRMED" | "PRIMARY" | "UNCONFIRMED" | "%future added value";
+import type { EmailCardFragment$ref } from "./EmailCardFragment.graphql";
 import type { FragmentReference } from "relay-runtime";
 declare export opaque type EmailsSettingsFragment$ref: FragmentReference;
 declare export opaque type EmailsSettingsFragment$fragmentType: EmailsSettingsFragment$ref;
@@ -17,8 +17,7 @@ export type EmailsSettingsFragment = {|
     +edges: $ReadOnlyArray<{|
       +node: {|
         +id: string,
-        +email: string,
-        +status: AccountEmailStatus,
+        +$fragmentRefs: EmailCardFragment$ref,
       |}
     |}>,
   |},
@@ -89,22 +88,13 @@ const node: ReaderFragment = {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "email",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "status",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
                   "name": "__typename",
                   "storageKey": null
+                },
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "EmailCardFragment"
                 }
               ],
               "storageKey": null
@@ -164,5 +154,5 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 // prettier-ignore
-(node: any).hash = '23418ca38fbf0f5d1efb4d0183d72ce1';
+(node: any).hash = '406b623f1b92918b91d06bf91c499728';
 module.exports = node;

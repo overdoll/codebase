@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 8688d22c9c566f953f2ba4bb138179ad
+ * @relayHash 574f5574dae45ea1e14f97dd72d58f1c
  */
 
 /* eslint-disable */
@@ -42,8 +42,13 @@ query RootQuery {
   }
 }
 
-fragment TopRightMenuFragment on Account {
+fragment ProfileButtonFragment on Account {
   username
+  avatar
+}
+
+fragment TopRightMenuFragment on Account {
+  ...ProfileButtonFragment
   avatar
 }
 */
@@ -162,7 +167,7 @@ return {
     ]
   },
   "params": {
-    "id": "8688d22c9c566f953f2ba4bb138179ad",
+    "id": "574f5574dae45ea1e14f97dd72d58f1c",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",

@@ -27,9 +27,8 @@ const EmailsFragmentGQL = graphql`
       __id
       edges {
         node {
+          ...EmailCardFragment
           id
-          email
-          status
         }
       }
     }
@@ -80,9 +79,8 @@ export default function Emails ({ emails }: Props): Node {
         {data?.emails.edges.map((item, index) => {
           return (
             <EmailCard
+              emails={item.node}
               key={index}
-              emailID={item.node.id}
-              email={item.node.email} status={item.node.status}
               connectionID={emailsConnectionID}
             />
           )

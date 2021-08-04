@@ -7,12 +7,13 @@
 'use strict';
 
 import type { ReaderFragment } from 'relay-runtime';
+import type { ProfileButtonFragment$ref } from "./ProfileButtonFragment.graphql";
 import type { FragmentReference } from "relay-runtime";
 declare export opaque type TopRightMenuFragment$ref: FragmentReference;
 declare export opaque type TopRightMenuFragment$fragmentType: TopRightMenuFragment$ref;
 export type TopRightMenuFragment = {|
-  +username: string,
   +avatar: any,
+  +$fragmentRefs: ProfileButtonFragment$ref,
   +$refType: TopRightMenuFragment$ref,
 |};
 export type TopRightMenuFragment$data = TopRightMenuFragment;
@@ -33,20 +34,18 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "username",
+      "name": "avatar",
       "storageKey": null
     },
     {
-      "alias": null,
       "args": null,
-      "kind": "ScalarField",
-      "name": "avatar",
-      "storageKey": null
+      "kind": "FragmentSpread",
+      "name": "ProfileButtonFragment"
     }
   ],
   "type": "Account",
   "abstractKey": null
 };
 // prettier-ignore
-(node: any).hash = '950b7c0efb61dfc19d01907032423568';
+(node: any).hash = 'b593831808ee6ca962d062eef7121a2e';
 module.exports = node;

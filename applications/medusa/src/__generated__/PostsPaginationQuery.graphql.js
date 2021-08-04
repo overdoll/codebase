@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 6c02bcc47de1ad5e978a54d696fff009
+ * @relayHash 8f46bdcbe23c527ec5c22a5ebc9e9493
  */
 
 /* eslint-disable */
@@ -9,8 +9,8 @@
 
 import type { ConcreteRequest } from 'relay-runtime';
 import type { FragmentReference } from "relay-runtime";
-declare export opaque type PendingPostsFragment$ref: FragmentReference;
-declare export opaque type PendingPostsFragment$fragmentType: PendingPostsFragment$ref;
+declare export opaque type PostsFragment$ref: FragmentReference;
+declare export opaque type PostsFragment$fragmentType: PostsFragment$ref;
 export type PostsPaginationQueryVariables = {|
   after?: ?string,
   first?: ?number,
@@ -18,7 +18,7 @@ export type PostsPaginationQueryVariables = {|
 |};
 export type PostsPaginationQueryResponse = {|
   +node: ?{|
-    +$fragmentRefs: PendingPostsFragment$ref
+    +$fragmentRefs: PostsFragment$ref
   |}
 |};
 export type PostsPaginationQuery = {|
@@ -35,7 +35,7 @@ query PostsPaginationQuery(
 ) {
   node(id: $id) {
     __typename
-    ...PendingPostsFragment_2HEEH6
+    ...PostsFragment_2HEEH6
     id
   }
 }
@@ -49,31 +49,6 @@ fragment NoPostsPlaceholderFragment on Account {
     __typename
     id
   }
-}
-
-fragment PendingPostsFragment_2HEEH6 on Account {
-  ...NoPostsPlaceholderFragment
-  moderatorPostsQueue(first: $first, after: $after) {
-    edges {
-      node {
-        ...PostHeaderFragment
-        ...PostContentFragment
-        ...PostArtistFragment
-        ...PostCharactersFragment
-        ...PostCategoriesFragment
-        ...ModeratePostFragment
-        postedAt
-        id
-        __typename
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-  id
 }
 
 fragment PostArtistFragment on Post {
@@ -119,6 +94,35 @@ fragment PostHeaderFragment on Post {
     id
   }
   reassignmentAt
+}
+
+fragment PostPreviewFragment on Post {
+  ...PostContentFragment
+  ...PostArtistFragment
+  ...PostCharactersFragment
+  ...PostCategoriesFragment
+}
+
+fragment PostsFragment_2HEEH6 on Account {
+  ...NoPostsPlaceholderFragment
+  moderatorPostsQueue(first: $first, after: $after) {
+    edges {
+      node {
+        ...PostHeaderFragment
+        ...PostPreviewFragment
+        ...ModeratePostFragment
+        postedAt
+        id
+        __typename
+      }
+      cursor
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+  }
+  id
 }
 */
 
@@ -215,7 +219,7 @@ return {
           {
             "args": (v2/*: any*/),
             "kind": "FragmentSpread",
-            "name": "PendingPostsFragment"
+            "name": "PostsFragment"
           }
         ],
         "storageKey": null
@@ -478,7 +482,7 @@ return {
     ]
   },
   "params": {
-    "id": "6c02bcc47de1ad5e978a54d696fff009",
+    "id": "8f46bdcbe23c527ec5c22a5ebc9e9493",
     "metadata": {},
     "name": "PostsPaginationQuery",
     "operationKind": "query",
@@ -487,5 +491,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = 'd7f8b0daa97e82c93df1a423c1f82ca1';
+(node: any).hash = '76682a7111f9934a66d06957a57f3b23';
 module.exports = node;

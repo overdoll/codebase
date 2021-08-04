@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 599f918e08b68013f8740ae8024d4f7f
+ * @relayHash c25bda2fd96df389b9261c273ca42f39
  */
 
 /* eslint-disable */
@@ -45,13 +45,14 @@ fragment AuditCardFragment on PostAuditLog {
 
 fragment AuditInspectFragment on PostAuditLog {
   id
-  infractionId
-  reason
   notes
   reverted
   reversibleUntil
   action
-  ...AuditPostFragment
+  post {
+    ...PostPreviewFragment
+    id
+  }
 }
 
 fragment AuditLogsFragment on Account {
@@ -71,16 +72,6 @@ fragment AuditLogsFragment on Account {
     }
   }
   id
-}
-
-fragment AuditPostFragment on PostAuditLog {
-  post {
-    ...PostArtistFragment
-    ...PostContentFragment
-    ...PostCharactersFragment
-    ...PostCategoriesFragment
-    id
-  }
 }
 
 fragment PostArtistFragment on Post {
@@ -117,6 +108,13 @@ fragment PostContentFragment on Post {
   content {
     url
   }
+}
+
+fragment PostPreviewFragment on Post {
+  ...PostContentFragment
+  ...PostArtistFragment
+  ...PostCharactersFragment
+  ...PostCategoriesFragment
 }
 */
 
@@ -270,16 +268,6 @@ return {
                           {
                             "alias": null,
                             "args": null,
-                            "concreteType": "Account",
-                            "kind": "LinkedField",
-                            "name": "artist",
-                            "plural": false,
-                            "selections": (v2/*: any*/),
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
                             "concreteType": "Content",
                             "kind": "LinkedField",
                             "name": "content",
@@ -293,6 +281,16 @@ return {
                                 "storageKey": null
                               }
                             ],
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Account",
+                            "kind": "LinkedField",
+                            "name": "artist",
+                            "plural": false,
+                            "selections": (v2/*: any*/),
                             "storageKey": null
                           },
                           {
@@ -369,20 +367,6 @@ return {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
-                        "name": "infractionId",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "reason",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
                         "name": "notes",
                         "storageKey": null
                       },
@@ -450,7 +434,7 @@ return {
     ]
   },
   "params": {
-    "id": "599f918e08b68013f8740ae8024d4f7f",
+    "id": "c25bda2fd96df389b9261c273ca42f39",
     "metadata": {},
     "name": "HistoryAuditQuery",
     "operationKind": "query",

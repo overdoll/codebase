@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash bf0373ed50af6079d8e88d17c6c9f04f
+ * @relayHash 86d9d99f61dd43d50f328b016e8c61aa
  */
 
 /* eslint-disable */
@@ -35,13 +35,24 @@ query ProfileSettingsQuery(
   }
 }
 
+fragment DeleteFragment on AccountEmail {
+  id
+  email
+}
+
+fragment EmailCardFragment on AccountEmail {
+  ...DeleteFragment
+  ...MakePrimaryFragment
+  email
+  status
+}
+
 fragment EmailsSettingsFragment on Account {
   emails(first: $first) {
     edges {
       node {
+        ...EmailCardFragment
         id
-        email
-        status
         __typename
       }
       cursor
@@ -51,6 +62,11 @@ fragment EmailsSettingsFragment on Account {
       hasNextPage
     }
   }
+}
+
+fragment MakePrimaryFragment on AccountEmail {
+  id
+  email
 }
 
 fragment UsernamesSettingsFragment on Account {
@@ -315,7 +331,7 @@ return {
     ]
   },
   "params": {
-    "id": "bf0373ed50af6079d8e88d17c6c9f04f",
+    "id": "86d9d99f61dd43d50f328b016e8c61aa",
     "metadata": {},
     "name": "ProfileSettingsQuery",
     "operationKind": "query",

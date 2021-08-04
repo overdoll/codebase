@@ -18,23 +18,23 @@ import {
 import Icon from '@//:modules/content/Icon/Icon'
 import Button from '@//:modules/form/button'
 import { graphql, usePreloadedQuery } from 'react-relay'
-import PendingPosts from './PendingPosts/PendingPosts'
+import Posts from './Posts/Posts'
 import { useTranslation } from 'react-i18next'
-import type { QueuePostsQuery } from '@//:artifacts/QueuePostsQuery.graphql'
+import type { QueueQuery } from '@//:artifacts/QueueQuery.graphql'
 
 import InterfaceHelpQuestionCircle
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/help/interface-help-question-circle.svg'
 
 type Props = {
   prepared: {
-    stateQuery: QueuePostsQuery,
+    stateQuery: QueueQuery,
   }
 }
 
-const queuePostsGQL = graphql`
-  query QueuePostsQuery {
+const PostsGQL = graphql`
+  query QueueQuery {
     viewer {
-      ...PendingPostsFragment
+      ...PostsFragment
     }
     ...RejectionReasonsFragment
   }
@@ -43,8 +43,8 @@ const queuePostsGQL = graphql`
 export default function Queue (props: Props): Node {
   const [t] = useTranslation('moderation')
 
-  const data = usePreloadedQuery<QueuePostsQuery>(
-    queuePostsGQL,
+  const data = usePreloadedQuery<QueueQuery>(
+    PostsGQL,
     props.prepared.stateQuery
   )
 
@@ -97,7 +97,7 @@ export default function Queue (props: Props): Node {
             </Stack>
           }
           >
-            <PendingPosts
+            <Posts
               query={data} posts={data?.viewer}
             />
           </Suspense>

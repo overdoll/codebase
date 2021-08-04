@@ -91,6 +91,8 @@ export default function Token ({ prepared }: Props): Node {
   // we do a full page refresh to /join, which will cover the following cases:
   // - the app used the token and got an authentication token back, so the state is not in sync
   // - the app did not use the token yet and requires user action
+
+  // TODO do a proper refresh (recall ability?) as another refresh is needed to see the nav bar correctly
   const refresh = () => {
     history.push('/join')
     history.go(0)
@@ -184,6 +186,7 @@ export default function Token ({ prepared }: Props): Node {
                 mt={8}
                 size='md'
                 onClick={refresh}
+                variant='link'
               >
                 {t('closed_original_device')}
               </Button>)

@@ -8,8 +8,8 @@ import {
   Button,
   Flex,
   HStack,
-  IconButton,
-  Spacer
+  IconButton, MenuItem,
+  Spacer, Text
 } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import { useTranslation } from 'react-i18next'
@@ -22,12 +22,15 @@ import { useRelayEnvironment } from 'react-relay'
 
 import InterfaceArrowsTurnBackward
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-turn-backward.svg'
+import InterfaceSettingCog
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/setting/interface-setting-cog.svg'
 
-import TopNavigationItem from './components/TopNavigationItem/TopNavigationItem'
-import SidebarItem from './components/Sidebar/SidebarItem/SidebarItem'
+import TopNavigationButton from './components/TopNavigationButton/TopNavigationButton'
+import LeftSidebarButton from './components/LeftSidebar/LeftSidebarButton/LeftSidebarButton'
 import TopRightMenu from './components/TopRightMenu/TopRightMenu'
-import Sidebar from './components/Sidebar/Sidebar'
+import Sidebar from './components/LeftSidebar/LeftSidebar'
 import type { TopRightMenuFragment$key } from '@//:artifacts/TopRightMenuFragment.graphql'
+import TopRightMenuButton from './components/TopRightMenu/TopRightMenuButton/TopRightMenuButton'
 
 type Props = {
   children: Node,
@@ -108,11 +111,12 @@ export default function NavigationBar (props: Props): Node {
                   <Fragment key={index}>
                     <Route exact={item.exact} path={item.route}>
                       {({ match }) => (
-                        <TopNavigationItem
+                        <TopNavigationButton
+                          exact={item.exact}
+                          match={match}
                           key={item.route}
                           icon={item.icon}
                           route={route} label={t(item.title)}
-                          selected={!!match}
                         />
                       )}
                     </Route>
@@ -127,7 +131,9 @@ export default function NavigationBar (props: Props): Node {
               align='center'
             >
               <Flex m={1}>
-                <TopRightMenu viewer={props.rootQuery} />
+                <TopRightMenu viewer={props.rootQuery}>
+                  <TopRightMenuButton route='/settings/profile' label='menu.settings' icon={InterfaceSettingCog} />
+                </TopRightMenu>
               </Flex>
             </Flex>
           </Flex>
@@ -141,10 +147,9 @@ export default function NavigationBar (props: Props): Node {
                 <Route exact={item.exact} path={item.route}>
                   <Sidebar title={t(item.sidebar.title)}>
                     {item.sidebar.routes?.map((item, index) => (
-                      <SidebarItem
+                      <LeftSidebarButton
                         key={index}
                         title={t(item?.title)}
-                        match={location.pathname === item.route}
                         route={item.route}
                       />
                     ))}

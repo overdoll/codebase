@@ -7,8 +7,8 @@ import { graphql, useMutation } from 'react-relay/hooks'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from '@//:modules/routing'
 import { Flex, Heading, Spinner, Text } from '@chakra-ui/react'
+import { StringParam, useQueryParam } from 'use-query-params'
 import { useFlash } from '@//:modules/flash'
-import { useParams } from '@//:modules/routing/useParams'
 
 const ConfirmationMutationGQL = graphql`
   mutation ConfirmationMutation($input: ConfirmAccountEmailInput!) {
@@ -23,32 +23,30 @@ const ConfirmationMutationGQL = graphql`
 `
 
 export default function Confirmation (props: Props): Node {
-  const [t] = useTranslation('confirmation')
-
-  const params = useParams()
-
-  const history = useHistory()
-
-  const { flash } = useFlash()
-
-  // TODO change to a ? url parameter instead for better security
+  const [queryToken] = useQueryParam('id', StringParam)
 
   const [commit] = useMutation(
     ConfirmationMutationGQL
   )
 
-  useEffect(() => {
+  const [t] = useTranslation('confirmation')
+
+  const history = useHistory()
+
+  const { flash } = useFlash()
+
+  const confirm = () => {
     commit({
       variables: {
         input: {
-          id: params.id
+          id: queryToken
         }
       },
       updater: (store, payload) => {
         const data = payload.confirmAccountEmail
 
         if (!data.accountEmail) {
-          flash('confirmation.error', t('error', { email: data.accountEmail.email }))
+          flash('confirmation.error', t('error'))
           history.push('/settings/profile')
         }
 
@@ -58,10 +56,14 @@ export default function Confirmation (props: Props): Node {
         }
       },
       onError () {
-        flash('confirmation.error', t('error_no'))
+        flash('confirmation.error', t('error'))
         history.push('/settings/profile')
       }
     })
+  }
+
+  useEffect(() => {
+    confirm()
   }, [])
 
   return (

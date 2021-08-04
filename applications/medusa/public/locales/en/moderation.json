@@ -35,10 +35,10 @@
             "error": "There was an error approving post {{id}}"
           }
         },
-        "deny": {
-          "button": "Deny",
+        "reject": {
+          "button": "Reject",
           "modal": {
-            "title": "Select a reason for denying this post",
+            "title": "Select a reason for rejecting this post",
             "form": {
               "textarea": {
                 "label": "Note",
@@ -56,7 +56,7 @@
                   "error": "Please enter a valid note. Maximum 255 characters."
                 }
               },
-              "submit": "Deny Post"
+              "submit": "Reject Post"
             },
             "infraction": "This rejection reason is an infraction. The poster's account will be temporarily suspended."
           },

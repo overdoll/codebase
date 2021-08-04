@@ -2,19 +2,26 @@
  * @flow
  */
 import { useTranslation } from 'react-i18next'
-import { graphql, useMutation } from 'react-relay/hooks'
+import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import type { DeleteEmailMutation } from '@//:artifacts/DeleteEmailMutation.graphql'
 import { MenuItem, Text, useToast } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import InterfaceDeleteBin1
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/add-remove-delete/interface-delete-bin-1.svg'
 import type { EmailsSettingsFragment$key } from '@//:artifacts/EmailsSettingsFragment.graphql'
+import type { DeleteFragment$key } from '@//:artifacts/DeleteFragment.graphql'
 
 type Props = {
-  emailID: string,
   connectionID: EmailsSettingsFragment$key,
-  email: string,
+  emails: DeleteFragment$key,
 }
+
+const DeleteEmailFragmentGQL = graphql`
+  fragment DeleteFragment on AccountEmail {
+    id
+    email
+  }
+`
 
 const DeleteEmailMutationGQL = graphql`
   mutation DeleteEmailMutation($input: DeleteAccountEmailInput!, $connections: [ID!]!) {
@@ -24,8 +31,10 @@ const DeleteEmailMutationGQL = graphql`
   }
 `
 
-export default function Delete ({ emailID, connectionID, email }: Props): Node {
+export default function Delete ({ connectionID, emails }: Props): Node {
   const [t] = useTranslation('settings')
+
+  const data = useFragment(DeleteEmailFragmentGQL, emails)
 
   const [deleteEmail, isDeletingEmail] = useMutation<DeleteEmailMutation>(
     DeleteEmailMutationGQL
@@ -33,25 +42,25 @@ export default function Delete ({ emailID, connectionID, email }: Props): Node {
 
   const notify = useToast()
 
-  const onDeleteEmail = (id, email) => {
+  const onDeleteEmail = () => {
     deleteEmail({
       variables: {
         input: {
-          accountEmailId: id
+          accountEmailId: data.id
         },
         connections: [connectionID]
       },
       onCompleted () {
         notify({
           status: 'success',
-          title: t('profile.email.options.delete.query.success', { email: email }),
+          title: t('profile.email.options.delete.query.success', { email: data.email }),
           isClosable: true
         })
       },
       onError () {
         notify({
           status: 'error',
-          title: t('profile.email.options.delete.query.error', { email: email }),
+          title: t('profile.email.options.delete.query.error', { email: data.email }),
           isClosable: true
         })
       }
@@ -61,7 +70,7 @@ export default function Delete ({ emailID, connectionID, email }: Props): Node {
 
   return (
     <MenuItem
-      justify='center' isDisabled={isDeletingEmail} onClick={() => onDeleteEmail(emailID, email)}
+      justify='center' isDisabled={isDeletingEmail} onClick={onDeleteEmail}
     >
       <Icon pointerEvents='none' icon={InterfaceDeleteBin1} fill='orange.300' w={4} h={4} mr={2} />
       <Text pointerEvents='none' color='orange.300'>{t('profile.email.options.delete.button')}</Text>

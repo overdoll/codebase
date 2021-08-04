@@ -4,7 +4,7 @@
 
 import type { Node } from 'react'
 import { graphql, usePaginationFragment } from 'react-relay'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import type { AuditLogsFragment, AuditLogsFragment$key } from '@//:artifacts/AuditLogsFragment.graphql'
 import {
   Button,
@@ -74,7 +74,8 @@ export default function AuditLogs (props: Props): Node {
             {t('history.table.empty')}
           </Text>}
       </Flex>
-      <AuditInspect auditLog={selected?.node} selected={selected} onClose={() => setSelected(null)} />
+      {selected &&
+        <AuditInspect auditLog={selected?.node} selected={selected} onClose={() => setSelected(null)} />}
     </>
   )
 }

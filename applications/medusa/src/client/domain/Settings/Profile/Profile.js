@@ -22,7 +22,7 @@ type Props = {
   }
 };
 
-const generalSettingsGQL = graphql`
+const ProfileSettingsGQL = graphql`
   query ProfileSettingsQuery($first: Int) {
     viewer {
       ...UsernamesSettingsFragment
@@ -33,7 +33,7 @@ const generalSettingsGQL = graphql`
 
 export default function Profile (props: Props): Node {
   const data = usePreloadedQuery<ProfileSettingsQuery>(
-    generalSettingsGQL,
+    ProfileSettingsGQL,
     props.prepared.stateQuery
   )
 

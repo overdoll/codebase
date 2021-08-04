@@ -22,6 +22,8 @@ type Props = {
   loading: boolean
 }
 
+// TODO create a username validator so all usernames can't be whatever you want them to be
+
 const schema = Joi.object({
   username: Joi
     .string()

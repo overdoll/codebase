@@ -2,17 +2,25 @@
  * @flow
  */
 import { useTranslation } from 'react-i18next'
-import { graphql, useMutation } from 'react-relay/hooks'
+import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import type { MakePrimaryOptionMutation } from '@//:artifacts/MakePrimaryOptionMutation.graphql'
+import type { MakePrimaryFragment$key } from '@//:artifacts/MakePrimaryFragment.graphql'
+
 import { MenuItem, Text, useToast } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import InterfaceSettingWrench
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/setting/interface-setting-wrench.svg'
 
 type Props = {
-  emailID: string,
-  email: string,
+  emails: MakePrimaryFragment$key
 }
+
+const MakePrimaryFragmentGQL = graphql`
+  fragment MakePrimaryFragment on AccountEmail {
+    id
+    email
+  }
+`
 
 const MakeEmailPrimaryMutationGQL = graphql`
   mutation MakePrimaryOptionMutation($input: UpdateAccountEmailStatusToPrimaryInput!) {
@@ -37,8 +45,10 @@ const MakeEmailPrimaryMutationGQL = graphql`
   }
 `
 
-export default function MakePrimary ({ emailID, email }: Props): Node {
+export default function MakePrimary ({ emails }: Props): Node {
   const [t] = useTranslation('settings')
+
+  const data = useFragment(MakePrimaryFragmentGQL, emails)
 
   const [makePrimary, isMakingPrimary] = useMutation<MakePrimaryOptionMutation>(
     MakeEmailPrimaryMutationGQL
@@ -46,24 +56,24 @@ export default function MakePrimary ({ emailID, email }: Props): Node {
 
   const notify = useToast()
 
-  const onMakePrimary = (id, email) => {
+  const onMakePrimary = () => {
     makePrimary({
       variables: {
         input: {
-          accountEmailId: id
+          accountEmailId: data.id
         }
       },
       onCompleted () {
         notify({
           status: 'success',
-          title: t('profile.email.options.set_primary.query.success', { email: email }),
+          title: t('profile.email.options.set_primary.query.success', { email: data.email }),
           isClosable: true
         })
       },
       onError () {
         notify({
           status: 'error',
-          title: t('profile.email.options.set_primary.query.error', { email: email }),
+          title: t('profile.email.options.set_primary.query.error', { email: data.email }),
           isClosable: true
         })
       }
@@ -73,7 +83,7 @@ export default function MakePrimary ({ emailID, email }: Props): Node {
 
   return (
     <MenuItem
-      justify='center' isDisabled={isMakingPrimary} onClick={() => onMakePrimary(emailID, email)}
+      justify='center' isDisabled={isMakingPrimary} onClick={onMakePrimary}
     >
       <Icon pointerEvents='none' icon={InterfaceSettingWrench} fill='gray.100' w={4} h={4} mr={2} />
       <Text pointerEvents='none' color='gray.100'>{t('profile.email.options.set_primary.button')}</Text>

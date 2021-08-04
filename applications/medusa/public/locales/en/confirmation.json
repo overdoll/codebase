@@ -2,6 +2,5 @@
   "header": "Confirming Email",
   "subheader": "Please wait while we confirm your email...",
   "success": "{{email}} was confirmed successfully",
-  "error": "The confirmation link for {{email}} is either invalid or has expired",
-  "error_no": "This confirmation link is either invalid or has expired"
+  "error": "This confirmation link is either invalid or has expired"
 }

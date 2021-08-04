@@ -120,6 +120,29 @@ const routes: Array<Route> = [
         }
       },
       {
+        path: '/confirmation',
+        exact: true,
+        component: JSResource('ConfirmationRoot', () =>
+          import(
+            /* webpackChunkName: "ConfirmationRoot" */ './domain/Confirmation/Confirmation'
+          ),
+        module.hot
+        ),
+        // When user is logged in, we don't want them to be able to redeem any other tokens
+        middleware: [
+          ({ environment, history }) => {
+            const ability = getAbilityFromUser(environment)
+
+            if (ability.cannot('manage', 'account')) {
+              history.push('/')
+              return false
+            }
+
+            return true
+          }
+        ]
+      },
+      {
         path: '/',
         exact: true,
         component: JSResource('HomeRoot', () =>
@@ -159,7 +182,7 @@ const routes: Array<Route> = [
             module.hot
             ),
             prepare: params => {
-              const ModerationQuery = require('@//:artifacts/QueuePostsQuery.graphql')
+              const ModerationQuery = require('@//:artifacts/QueueQuery.graphql')
               return {
                 stateQuery: {
                   query: ModerationQuery,
@@ -212,52 +235,6 @@ const routes: Array<Route> = [
             }
             history.push('/join')
             return false
-          }
-        ]
-      },
-      {
-        path: '/token/:id',
-        exact: true,
-        component: JSResource('TokenRoot', () =>
-          import(
-            /* webpackChunkName: "TokenRoot" */ './domain/Token/Token'
-          ),
-        module.hot
-        ),
-        // When user is logged in, we don't want them to be able to redeem any other tokens
-        middleware: [
-          ({ environment, history }) => {
-            const ability = getAbilityFromUser(environment)
-
-            if (ability.can('manage', 'account')) {
-              history.push('/')
-              return false
-            }
-
-            return true
-          }
-        ]
-      },
-      {
-        path: '/confirmation/:id',
-        exact: true,
-        component: JSResource('ConfirmationRoot', () =>
-          import(
-            /* webpackChunkName: "ConfirmationRoot" */ './domain/Confirmation/Confirmation'
-          ),
-        module.hot
-        ),
-        // When user is logged in, we don't want them to be able to redeem any other tokens
-        middleware: [
-          ({ environment, history }) => {
-            const ability = getAbilityFromUser(environment)
-
-            if (ability.cannot('manage', 'account')) {
-              history.push('/')
-              return false
-            }
-
-            return true
           }
         ]
       },

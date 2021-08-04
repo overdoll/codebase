@@ -7,20 +7,20 @@
 'use strict';
 
 import type { ReaderFragment } from 'relay-runtime';
-import type { AuditPostFragment$ref } from "./AuditPostFragment.graphql";
+import type { PostPreviewFragment$ref } from "./PostPreviewFragment.graphql";
 export type PostAuditLogAction = "Approved" | "Denied" | "%future added value";
 import type { FragmentReference } from "relay-runtime";
 declare export opaque type AuditInspectFragment$ref: FragmentReference;
 declare export opaque type AuditInspectFragment$fragmentType: AuditInspectFragment$ref;
 export type AuditInspectFragment = {|
   +id: string,
-  +infractionId: ?string,
-  +reason: string,
   +notes: string,
   +reverted: boolean,
   +reversibleUntil: any,
   +action: PostAuditLogAction,
-  +$fragmentRefs: AuditPostFragment$ref,
+  +post: {|
+    +$fragmentRefs: PostPreviewFragment$ref
+  |},
   +$refType: AuditInspectFragment$ref,
 |};
 export type AuditInspectFragment$data = AuditInspectFragment;
@@ -42,20 +42,6 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "ScalarField",
       "name": "id",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "infractionId",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "reason",
       "storageKey": null
     },
     {
@@ -87,14 +73,25 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
+      "alias": null,
       "args": null,
-      "kind": "FragmentSpread",
-      "name": "AuditPostFragment"
+      "concreteType": "Post",
+      "kind": "LinkedField",
+      "name": "post",
+      "plural": false,
+      "selections": [
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "PostPreviewFragment"
+        }
+      ],
+      "storageKey": null
     }
   ],
   "type": "PostAuditLog",
   "abstractKey": null
 };
 // prettier-ignore
-(node: any).hash = '15700801a10a7e24352a8cf71c42b176';
+(node: any).hash = 'fc4da277d6b0721f1525968a8fd0af26';
 module.exports = node;
