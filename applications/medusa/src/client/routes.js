@@ -306,7 +306,19 @@ const routes: Array<Route> = [
                 }
                 return false
               }
-            ]
+            ],
+            prepare: (params, query) => {
+              const ModerationSettingsQuery = require('@//:artifacts/ModerationSettingsQuery.graphql')
+              return {
+                stateQuery: {
+                  query: ModerationSettingsQuery,
+                  variables: {},
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
           }
         ]
       },

@@ -87,7 +87,7 @@ export default function Usernames ({ usernames }: Props): Node {
         },
         connections: [usernamesConnectionID]
       },
-      onCompleted () {
+      onCompleted (data) {
         notify({
           status: 'success',
           title: t('profile.username.modal.query.success'),

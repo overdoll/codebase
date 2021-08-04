@@ -3,12 +3,13 @@
  */
 import type { Node } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { Center, Flex, Heading, Skeleton, Stack, Table, Th, Thead, Tr } from '@chakra-ui/react'
+import { Center, Flex, Heading, Table, Th, Thead, Tr } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { graphql, usePreloadedQuery } from 'react-relay'
 import type { HistoryAuditQuery } from '@//:artifacts/HistoryAuditQuery.graphql'
 import { Suspense } from 'react'
 import AuditLogs from './AuditLogs/AuditLogs'
+import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner'
 
 const AuditLogsGQL = graphql`
   query HistoryAuditQuery {
@@ -51,11 +52,7 @@ export default function History (props: Props): Node {
             </Thead>
           </Table>
           <Suspense fallback={
-            <Stack mt={2}>
-              {[...Array(3).keys()].map((item, index) =>
-                <Skeleton key={index} borderRadius={5} h={12} />
-              )}
-            </Stack>
+            <CenteredSpinner />
           }
           >
             <AuditLogs auditLogs={data?.viewer} />

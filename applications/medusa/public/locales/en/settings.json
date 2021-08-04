@@ -81,5 +81,19 @@
         }
       }
     }
+  },
+  "moderation": {
+    "queue": {
+      "title": "Queue",
+      "toggle": {
+        "header": "Toggle Queue Status",
+        "subheader": "Change your status for receiving posts in your Moderation Queue",
+        "query": {
+          "success_on": "You are now in the Moderator Posts Queue",
+          "success_off": "You are no longer in the Moderator Posts Queue",
+          "error": "There was an error changing your Queue status"
+        }
+      }
+    }
   }
 }

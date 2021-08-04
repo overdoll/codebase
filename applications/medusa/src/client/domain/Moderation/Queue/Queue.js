@@ -6,7 +6,7 @@ import { Helmet } from 'react-helmet-async'
 import { Suspense } from 'react'
 import {
   Heading, Center,
-  Flex, Stack, Skeleton, IconButton, Popover,
+  Flex, IconButton, Popover,
   PopoverTrigger,
   PopoverContent,
   PopoverHeader,
@@ -24,6 +24,7 @@ import type { QueueQuery } from '@//:artifacts/QueueQuery.graphql'
 
 import InterfaceHelpQuestionCircle
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/help/interface-help-question-circle.svg'
+import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner'
 
 type Props = {
   prepared: {
@@ -90,11 +91,7 @@ export default function Queue (props: Props): Node {
             </Flex>
           </Flex>
           <Suspense fallback={
-            <Stack mt={2}>
-              {[...Array(3).keys()].map((item, index) =>
-                <Skeleton key={index} borderRadius={5} h={12} />
-              )}
-            </Stack>
+            <CenteredSpinner />
           }
           >
             <Posts
