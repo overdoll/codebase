@@ -43,21 +43,16 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 
 	return app.Application{
 		Commands: app.Commands{
-			CreatePost:          command.NewCreatePostHandler(postRepo, eva, parley),
-			IndexAllPosts:       command.NewIndexAllPendingPostsHandler(postRepo, indexRepo),
-			IndexAllMedia:       command.NewIndexAllMediaHandler(postRepo, indexRepo),
-			IndexAllCharacters:  command.NewIndexAllCharactersHandler(postRepo, indexRepo),
-			IndexAllCategories:  command.NewIndexAllCategoriesHandler(postRepo, indexRepo),
-			UndoPost:            command.NewStartUndoPostHandler(postRepo, indexRepo),
-			PublishPost:         command.NewStartPublishPostHandler(postRepo, indexRepo, eva),
-			DiscardPost:         command.NewStartDiscardPostHandler(postRepo, indexRepo),
-			RejectPost:          command.NewRejectPostHandler(postRepo, indexRepo),
-			NewPost:             activities.NewNewPostHandler(postRepo, indexRepo, contentRepo, eva),
-			PostCustomResources: command.NewPostCustomResourcesHandler(postRepo, indexRepo),
-			PublishPost:         activities.NewPublishPostHandler(postRepo, indexRepo, contentRepo, eva),
-			DiscardPost:         activities.NewDiscardPostHandler(postRepo, indexRepo, contentRepo, eva),
-			UndoPost:            activities.NewUndoPostHandler(postRepo, indexRepo, contentRepo, eva),
-			ReassignModerator:   activities.NewReassignModeratorHandler(postRepo, indexRepo, parley),
+			NewPost:            command.NewNewPostHandler(postRepo, eva, parley),
+			IndexAllPosts:      command.NewIndexAllPendingPostsHandler(postRepo, indexRepo),
+			IndexAllMedia:      command.NewIndexAllSeriesHandler(postRepo, indexRepo),
+			IndexAllCharacters: command.NewIndexAllCharactersHandler(postRepo, indexRepo),
+			IndexAllCategories: command.NewIndexAllCategoriesHandler(postRepo, indexRepo),
+			UndoPost:           command.NewUndoPostHandler(postRepo, indexRepo),
+			PublishPost:        command.NewPublishPostHandler(postRepo, indexRepo, eva),
+			DiscardPost:        command.NewDiscardPostHandler(postRepo, indexRepo),
+			RejectPost:         command.NewRejectPostHandler(postRepo, indexRepo),
+			SubmitPost:         command.NewSubmitPostHandler(postRepo, indexRepo, parley),
 		},
 		Queries: app.Queries{
 			PrincipalById:    query.NewPrincipalByIdHandler(eva),
@@ -71,5 +66,6 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			ArtistById:       query.NewArtistByIdHandler(postRepo),
 			MediaById:        query.NewMediaByIdHandler(postRepo),
 		},
+		Activities: activities.NewActivitiesHandler(postRepo, indexRepo, contentRepo, parley),
 	}
 }

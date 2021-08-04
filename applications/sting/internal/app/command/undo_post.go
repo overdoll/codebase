@@ -15,7 +15,7 @@ type UndoPostHandler struct {
 	pr post.Repository
 }
 
-func NewStartUndoPostHandler(pr post.Repository, pi post.IndexRepository) UndoPostHandler {
+func NewUndoPostHandler(pr post.Repository, pi post.IndexRepository) UndoPostHandler {
 	return UndoPostHandler{pr: pr, pi: pi}
 }
 

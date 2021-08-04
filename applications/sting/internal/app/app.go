@@ -1,26 +1,28 @@
 package app
 
 import (
+	"overdoll/applications/sting/internal/app/activities"
 	"overdoll/applications/sting/internal/app/command"
 	"overdoll/applications/sting/internal/app/query"
 )
 
 type Application struct {
-	Commands Commands
-	Queries  Queries
+	Commands   Commands
+	Queries    Queries
+	Activities *activities.Activities
 }
 
 type Commands struct {
-	CreatePost command.CreatePostHandler
-
+	NewPost     command.NewPostHandler
 	DiscardPost command.DiscardPostHandler
 	PublishPost command.PublishPostHandler
 	UndoPost    command.UndoPostHandler
 	RejectPost  command.RejectPostHandler
+	SubmitPost  command.SubmitPostHandler
 
 	IndexAllCategories command.IndexAllCategoriesHandler
 	IndexAllCharacters command.IndexAllCharactersHandler
-	IndexAllMedia      command.IndexAllMediaHandler
+	IndexAllMedia      command.IndexAllSeriesHandler
 	IndexAllPosts      command.IndexAllPostsHandler
 }
 

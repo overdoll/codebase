@@ -15,4 +15,6 @@ type Activities struct {
 	parley ParleyService
 }
 
-func NewActivities()
+func NewActivitiesHandler(pr post.Repository, pi post.IndexRepository, cr content.Repository, parley ParleyService) *Activities {
+	return &Activities{pr: pr, pi: pi, cr: cr, parley: parley}
+}

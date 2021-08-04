@@ -6,7 +6,7 @@ import (
 	"overdoll/applications/sting/internal/domain/post"
 )
 
-func (h *Activities) NewPost(ctx context.Context, postId string) error {
+func (h *Activities) SubmitPost(ctx context.Context, postId string) error {
 
 	pendingPost, err := h.pr.UpdatePost(ctx, postId, func(pending *post.Post) error {
 		// make post in review

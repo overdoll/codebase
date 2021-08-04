@@ -63,7 +63,7 @@ func (r *MutationResolver) CreatePost(ctx context.Context, input types.CreatePos
 		categoryIds = append(categoryIds, cat.GetID())
 	}
 
-	pst, err := r.App.Commands.CreatePost.
+	pst, err := r.App.Commands.NewPost.
 		Handle(
 			ctx,
 			command.CreatePost{

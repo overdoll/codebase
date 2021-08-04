@@ -23,17 +23,17 @@ type CreatePost struct {
 	MediaRequests        []string
 }
 
-type CreatePostHandler struct {
+type NewPostHandler struct {
 	pr     post.Repository
 	parley ParleyService
 	eva    EvaService
 }
 
-func NewCreatePostHandler(pr post.Repository, eva EvaService, parley ParleyService) CreatePostHandler {
-	return CreatePostHandler{pr: pr, eva: eva, parley: parley}
+func NewNewPostHandler(pr post.Repository, eva EvaService, parley ParleyService) NewPostHandler {
+	return NewPostHandler{pr: pr, eva: eva, parley: parley}
 }
 
-func (h CreatePostHandler) Handle(ctx context.Context, cmd CreatePost) (*post.Post, error) {
+func (h NewPostHandler) Handle(ctx context.Context, cmd CreatePost) (*post.Post, error) {
 
 	characters, err := h.pr.GetCharactersById(ctx, cmd.CharacterIds)
 
@@ -76,9 +76,6 @@ func (h CreatePostHandler) Handle(ctx context.Context, cmd CreatePost) (*post.Po
 	if err != nil {
 		return nil, err
 	}
-
-	// Request new resources
-	pendingPost.RequestResources(cmd.CharacterRequests, make([]string, 0), cmd.MediaRequests)
 
 	_ = pendingPost.MakeProcessing()
 

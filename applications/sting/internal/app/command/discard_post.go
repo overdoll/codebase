@@ -15,7 +15,7 @@ type DiscardPostHandler struct {
 	pr post.Repository
 }
 
-func NewStartDiscardPostHandler(pr post.Repository, pi post.IndexRepository) DiscardPostHandler {
+func NewDiscardPostHandler(pr post.Repository, pi post.IndexRepository) DiscardPostHandler {
 	return DiscardPostHandler{pr: pr, pi: pi}
 }
 
