@@ -1,30 +1,14 @@
-package command
+package activities
 
 import (
 	"context"
 
-	"overdoll/applications/sting/internal/domain/content"
 	"overdoll/applications/sting/internal/domain/post"
 )
 
-type PublishPost struct {
-	PostId string
-}
+func (h *Activities) Handle(ctx context.Context, postId string) error {
 
-type PublishPostHandler struct {
-	pi  post.IndexRepository
-	pr  post.Repository
-	cr  content.Repository
-	eva EvaService
-}
-
-func NewPublishPostHandler(pr post.Repository, pi post.IndexRepository, cr content.Repository, eva EvaService) PublishPostHandler {
-	return PublishPostHandler{pr: pr, pi: pi, cr: cr, eva: eva}
-}
-
-func (h PublishPostHandler) Handle(ctx context.Context, cmd PublishPost) error {
-
-	pendingPost, err := h.pr.UpdatePost(ctx, cmd.PostId, func(pending *post.Post) error {
+	pendingPost, err := h.pr.UpdatePost(ctx, postId, func(pending *post.Post) error {
 
 		// Bulk index
 		err := h.pi.IndexCategories(ctx, pending.Categories())

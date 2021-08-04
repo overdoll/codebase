@@ -17,20 +17,18 @@ import (
 )
 
 type postDocument struct {
-	Id                 string               `json:"id"`
-	State              string               `json:"state"`
-	ModeratorId        string               `json:"moderator_id"`
-	ArtistId           string               `json:"artist_id"`
-	ContributorId      string               `json:"contributor_id"`
-	Content            []string             `json:"content"`
-	Categories         []*categoryDocument  `json:"categories"`
-	Characters         []*characterDocument `json:"characters"`
-	CharactersRequests map[string]string    `json:"characters_requests"`
-	CategoriesRequests []string             `json:"categories_requests"`
-	MediaRequests      []string             `json:"media_requests"`
-	ArtistRequest      string               `json:"artist_request"`
-	PostedAt           string               `json:"posted_at"`
-	ReassignmentAt     string               `json:"reassignment_at"`
+	Id             string               `json:"id"`
+	State          string               `json:"state"`
+	ModeratorId    string               `json:"moderator_id"`
+	ContributorId  string               `json:"contributor_id"`
+	Content        []string             `json:"content"`
+	Audience       *audienceDocument    `json:"audience"`
+	Brand          *brandDocument       `json:"brand"`
+	Categories     []*categoryDocument  `json:"categories"`
+	Characters     []*characterDocument `json:"characters"`
+	CreatedAt      string               `json:"created_at"`
+	PostedAt       string               `json:"posted_at"`
+	ReassignmentAt string               `json:"reassignment_at"`
 }
 
 const postIndex = `
@@ -47,16 +45,61 @@ const postIndex = `
 				"moderator_id": {
 					"type": "keyword"
 				},
-				"artist_id": {
-					"type": "keyword"
-				},
 				"contributor_id": {
 					"type": "keyword"
+				},
+				"audience": {
+					"type": "nested",
+					"properties": {
+						"id": {
+							"type": "keyword"
+						},
+						"slug": {
+							"type": "keyword"
+						},
+						"thumbnail": {
+							"type": "keyword"
+						},
+						"title": {
+							"type": "text",
+							"analyzer": "english"
+						},
+						"standard": {
+							"type": "number"
+						},
+						"created_at": {
+							"type": "date"
+						}
+					}
+				},
+				"brand": {
+					"type": "nested",
+					"properties": {
+						"id": {
+							"type": "keyword"
+						},
+						"slug": {
+							"type": "keyword"
+						},
+						"thumbnail": {
+							"type": "keyword"
+						},
+						"name": {
+							"type": "text",
+							"analyzer": "english"
+						},
+						"created_at": {
+							"type": "date"
+						}
+					}
 				},
 				"categories": {
 					"type": "nested",
 					"properties": {
 						"id": {
+							"type": "keyword"
+						},
+						"slug": {
 							"type": "keyword"
 						},
 						"thumbnail": {
@@ -77,6 +120,9 @@ const postIndex = `
 						"id": {
 							"type": "keyword"
 						},
+						"slug": {
+							"type": "keyword"
+						},
 						"thumbnail": {
 							"type": "keyword"
 						},
@@ -91,6 +137,9 @@ const postIndex = `
 							"dynamic": "strict",
 							"properties": {
 								"id": {
+									"type": "keyword"
+								},
+								"slug": {
 									"type": "keyword"
 								},
 								"thumbnail": {
@@ -110,19 +159,9 @@ const postIndex = `
 				"content": {
                      "type": "keyword"
 				},
-				"categories_requests": {
-                     "type": "keyword"
-				},
-				"media_requests": {
-                     "type": "keyword"
-				},	
-				"artist_request": {
-                     "type": "keyword"
-				},
-				"characters_requests": {
-                     "type": "object",
-					 "dynamic": true
-				},
+				"created_at": {
+                     "type": "date"
+				},			
 				"posted_at": {
                      "type": "date"
 				},
@@ -147,8 +186,10 @@ func NewPostsIndexElasticSearchRepository(client *elastic.Client, session gocqlx
 
 func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 	var characterDocuments []*characterDocument
+	var err error
 
 	for _, char := range pst.Characters() {
+
 		c, err := marshalCharacterToDocument(char)
 
 		if err != nil {
@@ -171,39 +212,39 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 		categoryDocuments = append(categoryDocuments, cat)
 	}
 
-	characterRequests := make(map[string]string)
+	var brandDoc *brandDocument
 
-	for _, cr := range pst.CharacterRequests() {
-		characterRequests[cr.Name] = cr.Media
+	if pst.Brand() != nil {
+		brandDoc, err = marshalBrandToDocument(pst.Brand())
+
+		if err != nil {
+			return nil, err
+		}
 	}
 
-	var categoryRequests []string
+	var audDoc *audienceDocument
 
-	for _, cr := range pst.CategoryRequests() {
-		categoryRequests = append(categoryRequests, cr.Title)
-	}
+	if pst.Audience() != nil {
+		audDoc, err = marshalAudienceToDocument(pst.Audience())
 
-	var mediaRequests []string
-
-	for _, cr := range pst.MediaRequests() {
-		mediaRequests = append(mediaRequests, cr.Title)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return &postDocument{
-		Id:                 pst.ID(),
-		State:              string(pst.State()),
-		ArtistId:           pst.Brand(),
-		ModeratorId:        pst.ModeratorId(),
-		ContributorId:      pst.ContributorId(),
-		Content:            pst.Content(),
-		PostedAt:           strconv.FormatInt(pst.PostedAt().Unix(), 10),
-		ArtistRequest:      pst.CustomArtistUsername(),
-		Categories:         categoryDocuments,
-		Characters:         characterDocuments,
-		CharactersRequests: characterRequests,
-		CategoriesRequests: categoryRequests,
-		MediaRequests:      mediaRequests,
-		ReassignmentAt:     strconv.FormatInt(pst.ReassignmentAt().Unix(), 10),
+		Id:             pst.ID(),
+		State:          pst.State(),
+		Audience:       audDoc,
+		Brand:          brandDoc,
+		ModeratorId:    pst.ModeratorId(),
+		ContributorId:  pst.ContributorId(),
+		Content:        pst.Content(),
+		Categories:     categoryDocuments,
+		Characters:     characterDocuments,
+		CreatedAt:      strconv.FormatInt(pst.CreatedAt().Unix(), 10),
+		PostedAt:       strconv.FormatInt(pst.PostedAt().Unix(), 10),
+		ReassignmentAt: strconv.FormatInt(pst.ReassignmentAt().Unix(), 10),
 	}, nil
 }
 
@@ -277,36 +318,35 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 		var characters []*post.Character
 
 		for _, char := range pst.Characters {
-			characters = append(characters, post.UnmarshalCharacterFromDatabase(char.Id, char.Name, char.Thumbnail, post.UnmarshalSeriesFromDatabase(char.Media.Id, char.Media.Title, char.Media.Thumbnail)))
+			characters = append(characters, post.UnmarshalCharacterFromDatabase(char.Id, char.Slug, char.Name, char.Thumbnail, post.UnmarshalSeriesFromDatabase(char.Series.Id, char.Series.Slug, char.Series.Title, char.Series.Thumbnail)))
 		}
 
 		var categories []*post.Category
 
 		for _, cat := range pst.Categories {
-			categories = append(categories, post.UnmarshalCategoryFromDatabase(cat.Id, cat.Title, cat.Thumbnail))
+			categories = append(categories, post.UnmarshalCategoryFromDatabase(cat.Id, cat.Slug, cat.Title, cat.Thumbnail))
 		}
 
 		postedAt, err := strconv.ParseInt(pst.PostedAt, 10, 64)
 		reassignmentAt, err := strconv.ParseInt(pst.ReassignmentAt, 10, 64)
+		createdAt, err := strconv.ParseInt(pst.CreatedAt, 10, 64)
 
 		createdPost := post.UnmarshalPostFromDatabase(
 			pst.Id,
 			pst.State,
 			pst.ModeratorId,
-			pst.ArtistId,
-			pst.ArtistRequest,
 			pst.ContributorId,
 			pst.Content,
+			post.UnmarshalBrandFromDatabase(pst.Brand.Id, pst.Brand.Slug, pst.Brand.Name, pst.Brand.Thumbnail),
+			post.UnmarshalAudienceFromDatabase(pst.Audience.Id, pst.Audience.Slug, pst.Audience.Title, pst.Audience.Thumbnail, pst.Audience.Standard),
 			characters,
 			categories,
-			pst.CharactersRequests,
-			pst.CategoriesRequests,
-			pst.MediaRequests,
+			time.Unix(createdAt, 0),
 			time.Unix(postedAt, 0),
 			time.Unix(reassignmentAt, 0),
 		)
 
-		createdPost.Node = paging.NewNode(pst.PostedAt)
+		createdPost.Node = paging.NewNode(pst.CreatedAt)
 
 		posts = append(posts, createdPost)
 	}
@@ -334,7 +374,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 
 			var characterDocuments []*characterDocument
 
-			chars, err := rep.GetCharactersById(ctx, p.Characters)
+			chars, err := rep.GetCharactersById(ctx, p.CharacterIds)
 
 			if err != nil {
 				return err
@@ -353,7 +393,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 
 			var categoryDocuments []*categoryDocument
 
-			cats, err := rep.GetCategoriesById(ctx, p.Categories)
+			cats, err := rep.GetCategoriesById(ctx, p.CategoryIds)
 
 			if err != nil {
 				return err
@@ -369,21 +409,43 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 				categoryDocuments = append(categoryDocuments, catDoc)
 			}
 
+			brnd, err := rep.GetBrandById(ctx, p.BrandId)
+
+			if err != nil {
+				return err
+			}
+
+			brandDoc, err := marshalBrandToDocument(brnd)
+
+			if err != nil {
+				return err
+			}
+
+			aud, err := rep.GetAudienceById(ctx, p.AudienceId)
+
+			if err != nil {
+				return err
+			}
+
+			audDoc, err := marshalAudienceToDocument(aud)
+
+			if err != nil {
+				return err
+			}
+
 			doc := postDocument{
-				Id:                 p.Id,
-				State:              p.State,
-				ModeratorId:        p.ModeratorId,
-				ArtistId:           p.ArtistId,
-				ContributorId:      p.ContributorId,
-				Content:            p.Content,
-				Categories:         categoryDocuments,
-				Characters:         characterDocuments,
-				CharactersRequests: p.CharactersRequests,
-				CategoriesRequests: p.CategoriesRequests,
-				MediaRequests:      p.MediaRequests,
-				ArtistRequest:      p.ArtistRequest,
-				PostedAt:           strconv.FormatInt(p.PostedAt.Unix(), 10),
-				ReassignmentAt:     strconv.FormatInt(p.ReassignmentAt.Unix(), 10),
+				Id:             p.Id,
+				State:          p.State,
+				ModeratorId:    p.ModeratorId,
+				ContributorId:  p.ContributorId,
+				Content:        p.Content,
+				Brand:          brandDoc,
+				Audience:       audDoc,
+				Categories:     categoryDocuments,
+				Characters:     characterDocuments,
+				CreatedAt:      strconv.FormatInt(p.CreatedAt.Unix(), 10),
+				PostedAt:       strconv.FormatInt(p.PostedAt.Unix(), 10),
+				ReassignmentAt: strconv.FormatInt(p.ReassignmentAt.Unix(), 10),
 			}
 
 			_, err = r.client.

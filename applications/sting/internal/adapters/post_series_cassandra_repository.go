@@ -11,9 +11,10 @@ import (
 )
 
 var mediaTable = table.New(table.Metadata{
-	Name: "medias",
+	Name: "series",
 	Columns: []string{
 		"id",
+		"slug",
 		"title",
 		"thumbnail",
 	},
@@ -21,20 +22,21 @@ var mediaTable = table.New(table.Metadata{
 	SortKey: []string{},
 })
 
-type media struct {
+type series struct {
 	Id        string `db:"id"`
+	Slug      string `db:"slug"`
 	Title     string `db:"title"`
 	Thumbnail string `db:"thumbnail"`
 }
 
-func (r PostsCassandraRepository) GetSingleSeriesById(ctx context.Context, mediaId string) (*post.Series, error) {
+func (r PostsCassandraRepository) GetSingleSeriesById(ctx context.Context, seriesId string) (*post.Series, error) {
 
 	queryMedia := r.session.
 		Query(mediaTable.Get()).
 		Consistency(gocql.One).
-		BindStruct(media{Id: mediaId})
+		BindStruct(series{Id: seriesId})
 
-	var med *media
+	var med *series
 
 	if err := queryMedia.Get(&med); err != nil {
 
@@ -47,6 +49,7 @@ func (r PostsCassandraRepository) GetSingleSeriesById(ctx context.Context, media
 
 	return post.UnmarshalSeriesFromDatabase(
 		med.Id,
+		med.Slug,
 		med.Title,
 		med.Thumbnail,
 	), nil
@@ -67,7 +70,7 @@ func (r PostsCassandraRepository) GetSeriesById(ctx context.Context, medi []stri
 		Consistency(gocql.One).
 		Bind(medi)
 
-	var mediaModels []*media
+	var mediaModels []*series
 
 	if err := queryMedia.Select(&mediaModels); err != nil {
 		return nil, fmt.Errorf("failed to get medias by id: %v", err)
@@ -76,6 +79,7 @@ func (r PostsCassandraRepository) GetSeriesById(ctx context.Context, medi []stri
 	for _, med := range mediaModels {
 		medias = append(medias, post.UnmarshalSeriesFromDatabase(
 			med.Id,
+			med.Slug,
 			med.Title,
 			med.Thumbnail,
 		))
@@ -93,6 +97,7 @@ func (r PostsCassandraRepository) CreateMedias(ctx context.Context, medias []*po
 		batch.Query(
 			stmt,
 			med.ID(),
+			med.Slug(),
 			med.Title(),
 			med.Thumbnail(),
 		)

@@ -18,6 +18,10 @@ type Repository interface {
 	GetCharacterById(ctx context.Context, characterId string) (*Character, error)
 	GetCharactersById(ctx context.Context, characterIds []string) ([]*Character, error)
 
+	GetBrandById(ctx context.Context, brandId string) (*Brand, error)
+
+	GetAudienceById(ctx context.Context, audienceId string) (*Audience, error)
+
 	GetSeriesById(ctx context.Context, seriesIds []string) ([]*Series, error)
 	GetSingleSeriesById(ctx context.Context, serialId string) (*Series, error)
 
@@ -37,6 +41,14 @@ type IndexRepository interface {
 	DeleteCharacterIndex(ctx context.Context) error
 	SearchCharacters(ctx context.Context, cursor *paging.Cursor, name *string) ([]*Character, error)
 	IndexCharacters(ctx context.Context, characters []*Character) error
+
+	IndexAllBrands(ctx context.Context) error
+	DeleteBrandsIndex(ctx context.Context) error
+	SearchBrands(ctx context.Context, cursor *paging.Cursor, title *string) ([]*Brand, error)
+
+	IndexAllAudience(ctx context.Context) error
+	DeleteAudienceIndex(ctx context.Context) error
+	SearchAudience(ctx context.Context, cursor *paging.Cursor, title *string) ([]*Audience, error)
 
 	IndexAllSeries(ctx context.Context) error
 	DeleteSeriesIndex(ctx context.Context) error

@@ -54,14 +54,13 @@ type Post struct {
 	reassignmentAt time.Time
 }
 
-func NewPost(contributor *principal.Principal, content []string) (*Post, error) {
+func NewPost(contributor *principal.Principal) (*Post, error) {
 	id := uuid.New()
 
 	return &Post{
 		id:            id.String(),
 		state:         draft,
 		contributorId: contributor.AccountId(),
-		content:       content,
 		createdAt:     time.Now(),
 	}, nil
 }
@@ -83,7 +82,11 @@ func UnmarshalPostFromDatabase(id, state, moderatorId, contributorId string, con
 	}
 }
 
-func (p *Post) UpdatePost(brand *Brand, audience *Audience, content []string, characters []*Character, categories []*Category) error {
+func (p *Post) UpdatePost(requester *principal.Principal, brand *Brand, audience *Audience, content []string, characters []*Character, categories []*Category) error {
+
+	if err := p.CanView(requester); err != nil {
+		return err
+	}
 
 	if brand != nil {
 		p.brand = brand
@@ -215,6 +218,10 @@ func (p *Post) Characters() []*Character {
 	return p.characters
 }
 
+func (p *Post) CreatedAt() time.Time {
+	return p.createdAt
+}
+
 func (p *Post) PostedAt() time.Time {
 	return p.postedAt
 }
@@ -324,11 +331,18 @@ func (p *Post) MakeReview() error {
 	return nil
 }
 
-func (p *Post) UploadPost(moderatorId string) {
+func (p *Post) SubmitPost(requester *principal.Principal, moderatorId string) error {
+
+	if err := p.CanView(requester); err != nil {
+		return err
+	}
+
 	p.moderatorId = moderatorId
 	p.postedAt = time.Now()
 	p.reassignmentAt = time.Now().Add(time.Hour * 24)
 	p.state = processing
+
+	return nil
 }
 
 func (p *Post) CanView(requester *principal.Principal) error {

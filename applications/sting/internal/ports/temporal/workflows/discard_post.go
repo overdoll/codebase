@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"go.temporal.io/sdk/workflow"
-	"overdoll/applications/sting/internal/app/command"
+	"overdoll/applications/sting/internal/app/activities"
 	"overdoll/libraries/helpers"
 )
 
@@ -15,5 +15,5 @@ func DiscardPost(ctx workflow.Context, id string) error {
 		return err
 	}
 
-	return workflow.ExecuteActivity(ctx, helpers.GetStructName(command.DiscardPostHandler{}), command.DiscardPost{PostId: id}).Get(ctx, nil)
+	return workflow.ExecuteActivity(ctx, helpers.GetStructName(activities.DiscardPostHandler{}), activities.DiscardPost{PostId: id}).Get(ctx, nil)
 }

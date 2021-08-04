@@ -11,17 +11,17 @@ type StartPublishPost struct {
 	PostId string
 }
 
-type StartPublishPostHandler struct {
+type PublishPostHandler struct {
 	pi  post.IndexRepository
 	pr  post.Repository
 	eva EvaService
 }
 
-func NewStartPublishPostHandler(pr post.Repository, pi post.IndexRepository, eva EvaService) StartPublishPostHandler {
-	return StartPublishPostHandler{pr: pr, pi: pi, eva: eva}
+func NewStartPublishPostHandler(pr post.Repository, pi post.IndexRepository, eva EvaService) PublishPostHandler {
+	return PublishPostHandler{pr: pr, pi: pi, eva: eva}
 }
 
-func (h StartPublishPostHandler) Handle(ctx context.Context, cmd StartPublishPost) error {
+func (h PublishPostHandler) Handle(ctx context.Context, cmd StartPublishPost) error {
 
 	pendingPost, err := h.pr.UpdatePost(ctx, cmd.PostId, func(pending *post.Post) error {
 

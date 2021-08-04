@@ -1,0 +1,16 @@
+[
+  {
+    "id": "1pcKiQL7dgUW8CIN7uO1wqFaMql",
+    "slug": "standard_audience",
+    "name": "Standard Audience",
+    "thumbnail": "1pcKZyoYFxZRyidV9XHd1WyPbrj",
+    "standard": 1
+  },
+  {
+    "id": "1pcKiTRBqURVEdcw1cKhyiejFp7",
+    "slug": "non_standard_audience",
+    "name": "Non-Standard Audience",
+    "thumbnail": "1pcKZyoYFxZRyidV9XHd1WyPbrj",
+    "standard": 0
+  }
+]

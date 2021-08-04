@@ -15,15 +15,15 @@ import (
 	"overdoll/libraries/scan"
 )
 
-type seriesDocument struct {
+type brandDocument struct {
 	Id        string `json:"id"`
 	Slug      string `json:"slug"`
 	Thumbnail string `json:"thumbnail"`
-	Title     string `json:"title"`
+	Name      string `json:"name"`
 	CreatedAt string `json:"created_at"`
 }
 
-const seriesIndex = `
+const brandsIndex = `
 {
 	"mappings": {
 		"dynamic": "strict",
@@ -37,7 +37,7 @@ const seriesIndex = `
 			"thumbnail": {
 				"type": "keyword"
 			},
-			"title": {
+			"name": {
 				"type": "text",
 				"analyzer": "english"
 			},
@@ -48,12 +48,29 @@ const seriesIndex = `
 	}
 }`
 
-const seriesIndexName = "series"
+const brandsIndexName = "brands"
 
-func (r PostsIndexElasticSearchRepository) SearchSeries(ctx context.Context, cursor *paging.Cursor, search *string) ([]*post.Series, error) {
+func marshalBrandToDocument(cat *post.Brand) (*brandDocument, error) {
+
+	parse, err := ksuid.Parse(cat.ID())
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &brandDocument{
+		Id:        cat.ID(),
+		Slug:      cat.Slug(),
+		Thumbnail: cat.Thumbnail(),
+		Name:      cat.Name(),
+		CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
+	}, nil
+}
+
+func (r PostsIndexElasticSearchRepository) SearchBrands(ctx context.Context, cursor *paging.Cursor, search *string) ([]*post.Brand, error) {
 
 	builder := r.client.Search().
-		Index(seriesIndexName)
+		Index(brandsIndexName)
 
 	if cursor == nil {
 		return nil, errors.New("cursor required")
@@ -62,7 +79,7 @@ func (r PostsIndexElasticSearchRepository) SearchSeries(ctx context.Context, cur
 	query := cursor.BuildElasticsearch(builder, "created_at")
 
 	if search != nil {
-		query.Must(elastic.NewMultiMatchQuery(*search, "title").Operator("and"))
+		query.Must(elastic.NewMultiMatchQuery(*search, "name").Operator("and"))
 	}
 
 	builder.Query(query)
@@ -70,31 +87,31 @@ func (r PostsIndexElasticSearchRepository) SearchSeries(ctx context.Context, cur
 	response, err := builder.Pretty(true).Do(ctx)
 
 	if err != nil {
-		return nil, fmt.Errorf("failed search medias: %v", err)
+		return nil, fmt.Errorf("failed search brands: %v", err)
 	}
 
-	var meds []*post.Series
+	var brands []*post.Brand
 
 	for _, hit := range response.Hits.Hits {
 
-		var md seriesDocument
+		var bd brandDocument
 
-		err := json.Unmarshal(hit.Source, &md)
+		err := json.Unmarshal(hit.Source, &bd)
 
 		if err != nil {
 			return nil, fmt.Errorf("failed search medias - unmarshal: %v", err)
 		}
 
-		newMedia := post.UnmarshalSeriesFromDatabase(md.Id, md.Slug, md.Title, md.Thumbnail)
-		newMedia.Node = paging.NewNode(md.CreatedAt)
+		newBrand := post.UnmarshalBrandFromDatabase(bd.Id, bd.Slug, bd.Name, bd.Thumbnail)
+		newBrand.Node = paging.NewNode(bd.CreatedAt)
 
-		meds = append(meds, newMedia)
+		brands = append(brands, newBrand)
 	}
 
-	return meds, nil
+	return brands, nil
 }
 
-func (r PostsIndexElasticSearchRepository) IndexAllSeries(ctx context.Context) error {
+func (r PostsIndexElasticSearchRepository) IndexAllBrands(ctx context.Context) error {
 
 	scanner := scan.New(r.session,
 		scan.Config{
@@ -106,7 +123,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllSeries(ctx context.Context) e
 
 	err := scanner.RunIterator(mediaTable, func(iter *gocqlx.Iterx) error {
 
-		var m series
+		var m brand
 
 		for iter.StructScan(&m) {
 
@@ -116,16 +133,17 @@ func (r PostsIndexElasticSearchRepository) IndexAllSeries(ctx context.Context) e
 				return err
 			}
 
-			doc := seriesDocument{
+			doc := brandDocument{
 				Id:        m.Id,
+				Slug:      m.Slug,
 				Thumbnail: m.Thumbnail,
-				Title:     m.Title,
+				Name:      m.Name,
 				CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
 			}
 
 			_, err = r.client.
 				Index().
-				Index(seriesIndexName).
+				Index(brandsIndexName).
 				Id(m.Id).
 				BodyJson(doc).
 				Do(ctx)
@@ -145,22 +163,22 @@ func (r PostsIndexElasticSearchRepository) IndexAllSeries(ctx context.Context) e
 	return nil
 }
 
-func (r PostsIndexElasticSearchRepository) DeleteSeriesIndex(ctx context.Context) error {
+func (r PostsIndexElasticSearchRepository) DeleteBrandsIndex(ctx context.Context) error {
 
-	exists, err := r.client.IndexExists(seriesIndexName).Do(ctx)
+	exists, err := r.client.IndexExists(brandsIndexName).Do(ctx)
 
 	if err != nil {
 		return err
 	}
 
 	if exists {
-		if _, err := r.client.DeleteIndex(seriesIndexName).Do(ctx); err != nil {
+		if _, err := r.client.DeleteIndex(brandsIndexName).Do(ctx); err != nil {
 			// Handle error
 			return err
 		}
 	}
 
-	if _, err := r.client.CreateIndex(seriesIndexName).BodyString(seriesIndex).Do(ctx); err != nil {
+	if _, err := r.client.CreateIndex(brandsIndexName).BodyString(brandsIndex).Do(ctx); err != nil {
 		return err
 	}
 

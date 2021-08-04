@@ -10,16 +10,16 @@ type StartUndoPost struct {
 	PostId string
 }
 
-type StartUndoPostHandler struct {
+type UndoPostHandler struct {
 	pi post.IndexRepository
 	pr post.Repository
 }
 
-func NewStartUndoPostHandler(pr post.Repository, pi post.IndexRepository) StartUndoPostHandler {
-	return StartUndoPostHandler{pr: pr, pi: pi}
+func NewStartUndoPostHandler(pr post.Repository, pi post.IndexRepository) UndoPostHandler {
+	return UndoPostHandler{pr: pr, pi: pi}
 }
 
-func (h StartUndoPostHandler) Handle(ctx context.Context, cmd StartUndoPost) error {
+func (h UndoPostHandler) Handle(ctx context.Context, cmd StartUndoPost) error {
 
 	pst, err := h.pr.GetPost(ctx, cmd.PostId)
 

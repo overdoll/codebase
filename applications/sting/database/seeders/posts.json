@@ -2,43 +2,41 @@
   {
     "id": "1q7MIqqnkzew33q4elXuN1Ri27d",
     "state": "review",
-    "artist_account_id": "1q7MIqqnkzew33q4elXuN1Ri27d",
     "moderator_account_id": "1q7MJ3JkhcdcJJNqZezdfQt5pZ6",
     "contributor_account_id": "1q7MJ5IyRTV0X4J27F3m5wGD5mj",
     "content": [],
-    "categories": [
+    "brand_id": "1q7MIw0U6TEpELH0FqnxrcXt3E0",
+    "audience_id": "1pcKiQL7dgUW8CIN7uO1wqFaMql",
+    "category_ids": [
       "1q7MJ9eXjRsgWJNIbOMJ9qzg2S3",
       "1q7MJFMVgDPo4mFjsfNag6rRwRy"
     ],
-    "characters": [
+    "character_ids": [
       "1q7MJfxuQNRslgmHqOdj35SWgrP",
       "1q7MJkk5fQGBWWYDqM22iITSjeW"
     ],
-    "characters_requests": {},
-    "media_requests": [],
-    "categories_requests": [],
+    "created_at": "2021-05-31 16:11:44.287",
     "posted_at": "2021-05-31 16:11:44.287",
     "moderator_reassignment_at": "2021-06-01 16:11:44.287"
   },
   {
     "id": "1q7MIqqnkzew33q4dlXuN1Ri27d",
     "state": "published",
-    "artist_account_id": "1q7MIw0U6TEpELH0FqnxrcXt3E0",
     "moderator_account_id": "1q7MJ3JkhcdcJJNqZezdfQt5pZ6",
     "contributor_account_id": "1q7MJ5IyRTV0X4J27F3m5wGD5mj",
     "content": [],
-    "categories": [
+    "brand_id": "1q7MIqqnkzew33q4elXuN1Ri27d",
+    "audience_id": "1pcKiTRBqURVEdcw1cKhyiejFp7",
+    "category_ids": [
       "1q7MJPetzOm0Ty8EJV68pYVDMoK",
       "1q7MJbXvgFBTgdh65MfYhRz3wPI"
     ],
-    "characters": [
+    "character_ids": [
       "1q7MfIULfXfCXXzRO2ddDfLUAJw",
       "1q7MfGasemHylVBXDbOijLoIvhT"
     ],
-    "characters_requests": {},
-    "media_requests": [],
-    "categories_requests": [],
-    "posted_at": "2021-05-31 16:11:44.287",
-    "moderator_reassignment_at": "2021-06-01 16:11:44.287"
+    "created_at": "2021-06-01 16:11:44.287",
+    "posted_at": "2021-06-01 16:11:44.287",
+    "moderator_reassignment_at": "2021-06-02 16:11:44.287"
   }
 ]

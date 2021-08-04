@@ -53,7 +53,7 @@ func (s Server) RejectPost(ctx context.Context, request *sting.PostRequest) (*st
 
 func (s Server) PublishPost(ctx context.Context, request *sting.PostRequest) (*sting.UpdatePostResponse, error) {
 
-	if err := s.app.Commands.StartPublishPost.Handle(ctx, command.StartPublishPost{
+	if err := s.app.Commands.PublishPost.Handle(ctx, command.StartPublishPost{
 		PostId: request.Id,
 	}); err != nil {
 		return nil, err
@@ -75,7 +75,7 @@ func (s Server) PublishPost(ctx context.Context, request *sting.PostRequest) (*s
 
 func (s Server) DiscardPost(ctx context.Context, request *sting.PostRequest) (*sting.UpdatePostResponse, error) {
 
-	if err := s.app.Commands.StartDiscardPost.Handle(ctx, command.StartDiscardPost{
+	if err := s.app.Commands.DiscardPost.Handle(ctx, command.StartDiscardPost{
 		PostId: request.Id,
 	}); err != nil {
 		return nil, err
@@ -97,7 +97,7 @@ func (s Server) DiscardPost(ctx context.Context, request *sting.PostRequest) (*s
 
 func (s Server) UndoPost(ctx context.Context, request *sting.PostRequest) (*sting.UpdatePostResponse, error) {
 
-	if err := s.app.Commands.StartUndoPost.Handle(ctx, command.StartUndoPost{
+	if err := s.app.Commands.UndoPost.Handle(ctx, command.StartUndoPost{
 		PostId: request.Id,
 	}); err != nil {
 		return nil, err

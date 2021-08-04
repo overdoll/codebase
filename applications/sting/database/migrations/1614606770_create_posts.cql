@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS brands
     primary key ( id )
 );
 
-CREATE TABLE IF NOT EXISTS audiences
+CREATE TABLE IF NOT EXISTS audience
 (
     id        text,
     slug      text,

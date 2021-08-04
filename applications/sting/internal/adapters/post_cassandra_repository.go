@@ -17,15 +17,14 @@ var postTable = table.New(table.Metadata{
 	Columns: []string{
 		"id",
 		"state",
+		"content",
 		"moderator_account_id",
 		"contributor_account_id",
-		"content",
-		"categories",
-		"characters",
-		"artist_request",
-		"characters_requests",
-		"categories_requests",
-		"media_requests",
+		"brand_id",
+		"audience_id",
+		"category_ids",
+		"character_ids",
+		"created_at",
 		"posted_at",
 		"moderator_reassignment_at",
 	},
@@ -34,20 +33,18 @@ var postTable = table.New(table.Metadata{
 })
 
 type posts struct {
-	Id                 string            `db:"id"`
-	State              string            `db:"state"`
-	ModeratorId        string            `db:"moderator_account_id"`
-	ArtistId           string            `db:"artist_account_id"`
-	ContributorId      string            `db:"contributor_account_id"`
-	Content            []string          `db:"content"`
-	Categories         []string          `db:"categories"`
-	Characters         []string          `db:"characters"`
-	ArtistRequest      string            `db:"artist_request"`
-	CharactersRequests map[string]string `db:"characters_requests"`
-	CategoriesRequests []string          `db:"categories_requests"`
-	MediaRequests      []string          `db:"media_requests"`
-	PostedAt           time.Time         `db:"posted_at"`
-	ReassignmentAt     time.Time         `db:"moderator_reassignment_at"`
+	Id             string    `db:"id"`
+	State          string    `db:"state"`
+	Content        []string  `db:"content"`
+	ModeratorId    string    `db:"moderator_account_id"`
+	ContributorId  string    `db:"contributor_account_id"`
+	BrandId        string    `db:"brand_id"`
+	AudienceId     string    `db:"audience_id"`
+	CategoryIds    []string  `db:"category_ids"`
+	CharacterIds   []string  `db:"character_ids"`
+	CreatedAt      time.Time `db:"created_at"`
+	PostedAt       time.Time `db:"posted_at"`
+	ReassignmentAt time.Time `db:"moderator_reassignment_at"`
 }
 
 type PostsCassandraRepository struct {
@@ -60,69 +57,67 @@ func NewPostsCassandraRepository(session gocqlx.Session) PostsCassandraRepositor
 
 func marshalPostToDatabase(pending *post.Post) *posts {
 
-	characterRequests := make(map[string]string)
-
-	for _, char := range pending.CharacterRequests() {
-		characterRequests[char.Name] = char.Media
-	}
-
-	var categoryRequests []string
-
-	for _, cat := range pending.CategoryRequests() {
-		categoryRequests = append(categoryRequests, cat.Title)
-	}
-
-	var mediaRequests []string
-
-	for _, med := range pending.MediaRequests() {
-		mediaRequests = append(mediaRequests, med.Title)
-	}
-
 	return &posts{
-		Id:                 pending.ID(),
-		ModeratorId:        pending.ModeratorId(),
-		State:              string(pending.State()),
-		ArtistRequest:      pending.CustomArtistUsername(),
-		ContributorId:      pending.ContributorId(),
-		Content:            pending.Content(),
-		Categories:         pending.CategoryIds(),
-		Characters:         pending.CharacterIds(),
-		ArtistId:           pending.Brand(),
-		CharactersRequests: characterRequests,
-		CategoriesRequests: categoryRequests,
-		MediaRequests:      mediaRequests,
-		PostedAt:           pending.PostedAt(),
-		ReassignmentAt:     pending.ReassignmentAt(),
+		Id:             pending.ID(),
+		State:          pending.State(),
+		ModeratorId:    pending.ModeratorId(),
+		BrandId:        pending.BrandId(),
+		AudienceId:     pending.AudienceId(),
+		ContributorId:  pending.ContributorId(),
+		Content:        pending.Content(),
+		CategoryIds:    pending.CategoryIds(),
+		CharacterIds:   pending.CharacterIds(),
+		CreatedAt:      pending.CreatedAt(),
+		PostedAt:       pending.PostedAt(),
+		ReassignmentAt: pending.ReassignmentAt(),
 	}
 }
 
 func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending posts) (*post.Post, error) {
 
-	characters, err := r.GetCharactersById(ctx, postPending.Characters)
+	characters, err := r.GetCharactersById(ctx, postPending.CharacterIds)
 
 	if err != nil {
 		return nil, err
 	}
 
-	categories, err := r.GetCategoriesById(ctx, postPending.Categories)
+	categories, err := r.GetCategoriesById(ctx, postPending.CategoryIds)
 
 	if err != nil {
 		return nil, err
+	}
+
+	var brand *post.Brand
+
+	if postPending.BrandId != "" {
+		brand, err = r.GetBrandById(ctx, postPending.BrandId)
+
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	var audienc *post.Audience
+
+	if postPending.AudienceId != "" {
+		audienc, err = r.GetAudienceById(ctx, postPending.AudienceId)
+
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return post.UnmarshalPostFromDatabase(
 		postPending.Id,
 		postPending.State,
 		postPending.ModeratorId,
-		postPending.ArtistId,
-		postPending.ArtistRequest,
 		postPending.ContributorId,
 		postPending.Content,
+		brand,
+		audienc,
 		characters,
 		categories,
-		postPending.CharactersRequests,
-		postPending.CategoriesRequests,
-		postPending.MediaRequests,
+		postPending.CreatedAt,
 		postPending.PostedAt,
 		postPending.ReassignmentAt,
 	), nil
@@ -211,14 +206,9 @@ func (r PostsCassandraRepository) UpdatePost(ctx context.Context, id string, upd
 			"state",
 			"moderator_reassignment_at",
 			"moderator_account_id",
-			"artist_account_id",
 			"content",
 			"categories",
 			"characters",
-			"artist_request",
-			"characters_requests",
-			"categories_requests",
-			"media_requests",
 		)).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalPostToDatabase(currentPost))

@@ -4,14 +4,14 @@ import (
 	"time"
 
 	"go.temporal.io/sdk/workflow"
-	"overdoll/applications/sting/internal/app/command"
+	"overdoll/applications/sting/internal/app/activities"
 	"overdoll/libraries/helpers"
 )
 
 func CreatePost(ctx workflow.Context, id string) error {
 	ctx = workflow.WithActivityOptions(ctx, options)
 
-	if err := workflow.ExecuteActivity(ctx, helpers.GetStructName(command.NewPostHandler{}), command.NewPost{PostId: id}).Get(ctx, nil); err != nil {
+	if err := workflow.ExecuteActivity(ctx, helpers.GetStructName(activities.NewPostHandler{}), activities.NewPost{PostId: id}).Get(ctx, nil); err != nil {
 		return err
 	}
 
@@ -23,7 +23,7 @@ func CreatePost(ctx workflow.Context, id string) error {
 
 		var assignedNewModerator bool
 
-		err := workflow.ExecuteActivity(ctx, helpers.GetStructName(command.ReassignModeratorHandler{}), command.ReassignModerator{PostId: id}).Get(ctx, &assignedNewModerator)
+		err := workflow.ExecuteActivity(ctx, helpers.GetStructName(activities.ReassignModeratorHandler{}), activities.ReassignModerator{PostId: id}).Get(ctx, &assignedNewModerator)
 
 		if err != nil {
 			return err

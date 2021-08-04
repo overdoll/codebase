@@ -1,4 +1,4 @@
-package command
+package activities
 
 import (
 	"context"
@@ -7,23 +7,9 @@ import (
 	"overdoll/applications/sting/internal/domain/post"
 )
 
-type ReassignModerator struct {
-	PostId string
-}
+func (h *Activities) ReassignModerator(ctx context.Context, postId string) (bool, error) {
 
-type ReassignModeratorHandler struct {
-	pi     post.IndexRepository
-	pr     post.Repository
-	parley ParleyService
-}
-
-func NewReassignModeratorHandler(pr post.Repository, pi post.IndexRepository, parley ParleyService) ReassignModeratorHandler {
-	return ReassignModeratorHandler{pr: pr, pi: pi, parley: parley}
-}
-
-func (h ReassignModeratorHandler) Handle(ctx context.Context, cmd ReassignModerator) (bool, error) {
-
-	pst, err := h.pr.UpdatePost(ctx, cmd.PostId, func(pendingPost *post.Post) error {
+	pst, err := h.pr.UpdatePost(ctx, postId, func(pendingPost *post.Post) error {
 
 		newModId, err := h.parley.GetNextModeratorId(ctx)
 

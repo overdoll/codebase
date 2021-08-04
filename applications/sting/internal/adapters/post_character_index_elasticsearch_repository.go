@@ -17,9 +17,10 @@ import (
 
 type characterDocument struct {
 	Id        string         `json:"id"`
+	Slug      string         `json:"slug"`
 	Thumbnail string         `json:"thumbnail"`
 	Name      string         `json:"name"`
-	Media     seriesDocument `json:"media"`
+	Series    seriesDocument `json:"media"`
 	CreatedAt string         `json:"created_at"`
 }
 
@@ -29,6 +30,9 @@ const characterIndex = `
 		"dynamic": "strict",
 		"properties": {
 			"id": {
+				"type": "keyword"
+			},
+			"slug": {
 				"type": "keyword"
 			},
 			"thumbnail": {
@@ -41,10 +45,13 @@ const characterIndex = `
 			"created_at": {
 				"type": "date"
 			},
-			"media": {
+			"series": {
 				"type": "nested",
 				"properties": {
 					"id": {
+						"type": "keyword"
+					},
+					"slug": {
 						"type": "keyword"
 					},
 					"thumbnail": {
@@ -84,8 +91,9 @@ func marshalCharacterToDocument(char *post.Character) (*characterDocument, error
 		Id:        char.ID(),
 		Thumbnail: char.Thumbnail(),
 		Name:      char.Name(),
+		Slug:      char.Slug(),
 		CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
-		Media: seriesDocument{
+		Series: seriesDocument{
 			Id:        media.ID(),
 			Thumbnail: media.Thumbnail(),
 			Title:     media.Title(),
@@ -153,7 +161,7 @@ func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context,
 			return nil, err
 		}
 
-		newCharacter := post.UnmarshalCharacterFromDatabase(chr.Id, chr.Name, chr.Thumbnail, post.UnmarshalSeriesFromDatabase(chr.Media.Id, chr.Media.Title, chr.Media.Thumbnail))
+		newCharacter := post.UnmarshalCharacterFromDatabase(chr.Id, chr.Slug, chr.Name, chr.Thumbnail, post.UnmarshalSeriesFromDatabase(chr.Series.Id, chr.Series.Slug, chr.Series.Title, chr.Series.Thumbnail))
 		newCharacter.Node = paging.NewNode(chr.CreatedAt)
 
 		characters = append(characters, newCharacter)
@@ -178,10 +186,10 @@ func (r PostsIndexElasticSearchRepository) IndexAllCharacters(ctx context.Contex
 
 		for iter.StructScan(&c) {
 
-			var m media
+			var m series
 
 			// get media connected to this character document
-			if err := r.session.Query(mediaTable.Get()).Consistency(gocql.One).Bind(c.MediaId).Get(&m); err != nil {
+			if err := r.session.Query(mediaTable.Get()).Consistency(gocql.One).Bind(c.SeriesId).Get(&m); err != nil {
 				return err
 			}
 
@@ -201,11 +209,13 @@ func (r PostsIndexElasticSearchRepository) IndexAllCharacters(ctx context.Contex
 				Id:        c.Id,
 				Thumbnail: c.Thumbnail,
 				Name:      c.Name,
+				Slug:      c.Slug,
 				CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
-				Media: seriesDocument{
+				Series: seriesDocument{
 					Id:        m.Id,
 					Thumbnail: m.Thumbnail,
 					Title:     m.Title,
+					Slug:      m.Slug,
 					CreatedAt: strconv.FormatInt(parse2.Time().Unix(), 10),
 				},
 			}

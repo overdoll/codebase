@@ -10,16 +10,16 @@ type StartDiscardPost struct {
 	PostId string
 }
 
-type StartDiscardPostHandler struct {
+type DiscardPostHandler struct {
 	pi post.IndexRepository
 	pr post.Repository
 }
 
-func NewStartDiscardPostHandler(pr post.Repository, pi post.IndexRepository) StartDiscardPostHandler {
-	return StartDiscardPostHandler{pr: pr, pi: pi}
+func NewStartDiscardPostHandler(pr post.Repository, pi post.IndexRepository) DiscardPostHandler {
+	return DiscardPostHandler{pr: pr, pi: pi}
 }
 
-func (h StartDiscardPostHandler) Handle(ctx context.Context, cmd StartDiscardPost) error {
+func (h DiscardPostHandler) Handle(ctx context.Context, cmd StartDiscardPost) error {
 
 	pendingPost, err := h.pr.UpdatePost(ctx, cmd.PostId, func(pending *post.Post) error {
 		return pending.MakeDiscarding()

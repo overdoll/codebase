@@ -15,15 +15,16 @@ import (
 	"overdoll/libraries/scan"
 )
 
-type seriesDocument struct {
+type audienceDocument struct {
 	Id        string `json:"id"`
 	Slug      string `json:"slug"`
-	Thumbnail string `json:"thumbnail"`
 	Title     string `json:"title"`
+	Thumbnail string `json:"thumbnail"`
+	Standard  int    `json:"standard"`
 	CreatedAt string `json:"created_at"`
 }
 
-const seriesIndex = `
+const audienceIndex = `
 {
 	"mappings": {
 		"dynamic": "strict",
@@ -37,7 +38,7 @@ const seriesIndex = `
 			"thumbnail": {
 				"type": "keyword"
 			},
-			"title": {
+			"name": {
 				"type": "text",
 				"analyzer": "english"
 			},
@@ -48,12 +49,36 @@ const seriesIndex = `
 	}
 }`
 
-const seriesIndexName = "series"
+const audienceIndexName = "audience"
 
-func (r PostsIndexElasticSearchRepository) SearchSeries(ctx context.Context, cursor *paging.Cursor, search *string) ([]*post.Series, error) {
+func marshalAudienceToDocument(cat *post.Audience) (*audienceDocument, error) {
+
+	parse, err := ksuid.Parse(cat.ID())
+
+	if err != nil {
+		return nil, err
+	}
+
+	stnd := 0
+
+	if cat.IsStandard() {
+		stnd = 1
+	}
+
+	return &audienceDocument{
+		Id:        cat.ID(),
+		Slug:      cat.Slug(),
+		Thumbnail: cat.Thumbnail(),
+		Title:     cat.Title(),
+		CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
+		Standard:  stnd,
+	}, nil
+}
+
+func (r PostsIndexElasticSearchRepository) SearchAudience(ctx context.Context, cursor *paging.Cursor, search *string) ([]*post.Audience, error) {
 
 	builder := r.client.Search().
-		Index(seriesIndexName)
+		Index(audienceIndexName)
 
 	if cursor == nil {
 		return nil, errors.New("cursor required")
@@ -62,7 +87,7 @@ func (r PostsIndexElasticSearchRepository) SearchSeries(ctx context.Context, cur
 	query := cursor.BuildElasticsearch(builder, "created_at")
 
 	if search != nil {
-		query.Must(elastic.NewMultiMatchQuery(*search, "title").Operator("and"))
+		query.Must(elastic.NewMultiMatchQuery(*search, "name").Operator("and"))
 	}
 
 	builder.Query(query)
@@ -70,31 +95,31 @@ func (r PostsIndexElasticSearchRepository) SearchSeries(ctx context.Context, cur
 	response, err := builder.Pretty(true).Do(ctx)
 
 	if err != nil {
-		return nil, fmt.Errorf("failed search medias: %v", err)
+		return nil, fmt.Errorf("failed search audiences: %v", err)
 	}
 
-	var meds []*post.Series
+	var audiences []*post.Audience
 
 	for _, hit := range response.Hits.Hits {
 
-		var md seriesDocument
+		var bd audienceDocument
 
-		err := json.Unmarshal(hit.Source, &md)
+		err := json.Unmarshal(hit.Source, &bd)
 
 		if err != nil {
 			return nil, fmt.Errorf("failed search medias - unmarshal: %v", err)
 		}
 
-		newMedia := post.UnmarshalSeriesFromDatabase(md.Id, md.Slug, md.Title, md.Thumbnail)
-		newMedia.Node = paging.NewNode(md.CreatedAt)
+		newAudience := post.UnmarshalAudienceFromDatabase(bd.Id, bd.Slug, bd.Title, bd.Thumbnail, bd.Standard)
+		newAudience.Node = paging.NewNode(bd.CreatedAt)
 
-		meds = append(meds, newMedia)
+		audiences = append(audiences, newAudience)
 	}
 
-	return meds, nil
+	return audiences, nil
 }
 
-func (r PostsIndexElasticSearchRepository) IndexAllSeries(ctx context.Context) error {
+func (r PostsIndexElasticSearchRepository) IndexAllAudience(ctx context.Context) error {
 
 	scanner := scan.New(r.session,
 		scan.Config{
@@ -106,7 +131,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllSeries(ctx context.Context) e
 
 	err := scanner.RunIterator(mediaTable, func(iter *gocqlx.Iterx) error {
 
-		var m series
+		var m audience
 
 		for iter.StructScan(&m) {
 
@@ -116,16 +141,18 @@ func (r PostsIndexElasticSearchRepository) IndexAllSeries(ctx context.Context) e
 				return err
 			}
 
-			doc := seriesDocument{
+			doc := audienceDocument{
 				Id:        m.Id,
+				Slug:      m.Slug,
 				Thumbnail: m.Thumbnail,
 				Title:     m.Title,
+				Standard:  m.Standard,
 				CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
 			}
 
 			_, err = r.client.
 				Index().
-				Index(seriesIndexName).
+				Index(audienceIndexName).
 				Id(m.Id).
 				BodyJson(doc).
 				Do(ctx)
@@ -145,22 +172,22 @@ func (r PostsIndexElasticSearchRepository) IndexAllSeries(ctx context.Context) e
 	return nil
 }
 
-func (r PostsIndexElasticSearchRepository) DeleteSeriesIndex(ctx context.Context) error {
+func (r PostsIndexElasticSearchRepository) DeleteAudienceIndex(ctx context.Context) error {
 
-	exists, err := r.client.IndexExists(seriesIndexName).Do(ctx)
+	exists, err := r.client.IndexExists(audienceIndexName).Do(ctx)
 
 	if err != nil {
 		return err
 	}
 
 	if exists {
-		if _, err := r.client.DeleteIndex(seriesIndexName).Do(ctx); err != nil {
+		if _, err := r.client.DeleteIndex(audienceIndexName).Do(ctx); err != nil {
 			// Handle error
 			return err
 		}
 	}
 
-	if _, err := r.client.CreateIndex(seriesIndexName).BodyString(seriesIndex).Do(ctx); err != nil {
+	if _, err := r.client.CreateIndex(audienceIndexName).BodyString(audienceIndex).Do(ctx); err != nil {
 		return err
 	}
 
