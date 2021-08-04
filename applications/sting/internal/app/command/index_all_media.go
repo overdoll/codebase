@@ -17,9 +17,9 @@ func NewIndexAllMediaHandler(pr post.Repository, pi post.IndexRepository) IndexA
 
 func (h IndexAllMediaHandler) Handle(ctx context.Context) error {
 
-	if err := h.pi.DeleteMediaIndex(ctx); err != nil {
+	if err := h.pi.DeleteSeriesIndex(ctx); err != nil {
 		return err
 	}
 
-	return h.pi.IndexAllMedia(ctx)
+	return h.pi.IndexAllSeries(ctx)
 }

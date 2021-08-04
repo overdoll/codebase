@@ -192,7 +192,7 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 	return &postDocument{
 		Id:                 pst.ID(),
 		State:              string(pst.State()),
-		ArtistId:           pst.BrandId(),
+		ArtistId:           pst.Brand(),
 		ModeratorId:        pst.ModeratorId(),
 		ContributorId:      pst.ContributorId(),
 		Content:            pst.Content(),
@@ -277,7 +277,7 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 		var characters []*post.Character
 
 		for _, char := range pst.Characters {
-			characters = append(characters, post.UnmarshalCharacterFromDatabase(char.Id, char.Name, char.Thumbnail, post.UnmarshalMediaFromDatabase(char.Media.Id, char.Media.Title, char.Media.Thumbnail)))
+			characters = append(characters, post.UnmarshalCharacterFromDatabase(char.Id, char.Name, char.Thumbnail, post.UnmarshalSeriesFromDatabase(char.Media.Id, char.Media.Title, char.Media.Thumbnail)))
 		}
 
 		var categories []*post.Category

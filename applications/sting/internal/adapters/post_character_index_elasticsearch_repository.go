@@ -16,11 +16,11 @@ import (
 )
 
 type characterDocument struct {
-	Id        string        `json:"id"`
-	Thumbnail string        `json:"thumbnail"`
-	Name      string        `json:"name"`
-	Media     mediaDocument `json:"media"`
-	CreatedAt string        `json:"created_at"`
+	Id        string         `json:"id"`
+	Thumbnail string         `json:"thumbnail"`
+	Name      string         `json:"name"`
+	Media     seriesDocument `json:"media"`
+	CreatedAt string         `json:"created_at"`
 }
 
 const characterIndex = `
@@ -85,7 +85,7 @@ func marshalCharacterToDocument(char *post.Character) (*characterDocument, error
 		Thumbnail: char.Thumbnail(),
 		Name:      char.Name(),
 		CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
-		Media: mediaDocument{
+		Media: seriesDocument{
 			Id:        media.ID(),
 			Thumbnail: media.Thumbnail(),
 			Title:     media.Title(),
@@ -153,7 +153,7 @@ func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context,
 			return nil, err
 		}
 
-		newCharacter := post.UnmarshalCharacterFromDatabase(chr.Id, chr.Name, chr.Thumbnail, post.UnmarshalMediaFromDatabase(chr.Media.Id, chr.Media.Title, chr.Media.Thumbnail))
+		newCharacter := post.UnmarshalCharacterFromDatabase(chr.Id, chr.Name, chr.Thumbnail, post.UnmarshalSeriesFromDatabase(chr.Media.Id, chr.Media.Title, chr.Media.Thumbnail))
 		newCharacter.Node = paging.NewNode(chr.CreatedAt)
 
 		characters = append(characters, newCharacter)
@@ -202,7 +202,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllCharacters(ctx context.Contex
 				Thumbnail: c.Thumbnail,
 				Name:      c.Name,
 				CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
-				Media: mediaDocument{
+				Media: seriesDocument{
 					Id:        m.Id,
 					Thumbnail: m.Thumbnail,
 					Title:     m.Title,

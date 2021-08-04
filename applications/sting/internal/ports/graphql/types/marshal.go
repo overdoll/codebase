@@ -78,7 +78,7 @@ func MarshalPostToGraphQL(result *post.Post) *Post {
 		Reference:         result.ID(),
 		Moderator:         &Account{ID: relay.NewID(Account{}, result.ModeratorId())},
 		Contributor:       &Account{ID: relay.NewID(Account{}, result.ContributorId())},
-		Artist:            &Account{ID: relay.NewID(Account{}, result.BrandId())},
+		Artist:            &Account{ID: relay.NewID(Account{}, result.Brand())},
 		State:             state,
 		Content:           content,
 		Categories:        categories,

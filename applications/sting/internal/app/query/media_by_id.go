@@ -20,7 +20,7 @@ func NewMediaByIdHandler(pr post.Repository) MediaByIdHandler {
 
 func (h MediaByIdHandler) Handle(ctx context.Context, query MediaById) (*post.Series, error) {
 
-	result, err := h.pr.GetMediaById(ctx, query.MediaId)
+	result, err := h.pr.GetSingleSeriesById(ctx, query.MediaId)
 
 	if err != nil {
 		return nil, err

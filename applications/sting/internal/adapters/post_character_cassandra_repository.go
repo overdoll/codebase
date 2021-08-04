@@ -92,7 +92,7 @@ func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars [
 			char.Id,
 			char.Name,
 			char.Thumbnail,
-			post.UnmarshalMediaFromDatabase(
+			post.UnmarshalSeriesFromDatabase(
 				media.Id,
 				media.Title,
 				media.Thumbnail,
@@ -121,7 +121,7 @@ func (r PostsCassandraRepository) GetCharacterById(ctx context.Context, characte
 		return nil, fmt.Errorf("failed to get characters by id: %v", err)
 	}
 
-	media, err := r.GetMediaById(ctx, char.MediaId)
+	media, err := r.GetSingleSeriesById(ctx, char.MediaId)
 
 	if err != nil {
 		return nil, err

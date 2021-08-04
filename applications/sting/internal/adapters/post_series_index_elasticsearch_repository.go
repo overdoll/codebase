@@ -15,19 +15,23 @@ import (
 	"overdoll/libraries/scan"
 )
 
-type mediaDocument struct {
+type seriesDocument struct {
 	Id        string `json:"id"`
+	Slug      string `json:"slug"`
 	Thumbnail string `json:"thumbnail"`
 	Title     string `json:"title"`
 	CreatedAt string `json:"created_at"`
 }
 
-const mediaIndex = `
+const seriesIndex = `
 {
 	"mappings": {
 		"dynamic": "strict",
 		"properties": {
 			"id": {
+				"type": "keyword"
+			},
+			"slug": {
 				"type": "keyword"
 			},
 			"thumbnail": {
@@ -44,12 +48,12 @@ const mediaIndex = `
 	}
 }`
 
-const mediaIndexName = "media"
+const seriesIndexName = "series"
 
-func (r PostsIndexElasticSearchRepository) SearchMedias(ctx context.Context, cursor *paging.Cursor, search *string) ([]*post.Series, error) {
+func (r PostsIndexElasticSearchRepository) SearchSeries(ctx context.Context, cursor *paging.Cursor, search *string) ([]*post.Series, error) {
 
 	builder := r.client.Search().
-		Index(mediaIndexName)
+		Index(seriesIndexName)
 
 	if cursor == nil {
 		return nil, errors.New("cursor required")
@@ -73,7 +77,7 @@ func (r PostsIndexElasticSearchRepository) SearchMedias(ctx context.Context, cur
 
 	for _, hit := range response.Hits.Hits {
 
-		var md mediaDocument
+		var md seriesDocument
 
 		err := json.Unmarshal(hit.Source, &md)
 
@@ -81,7 +85,7 @@ func (r PostsIndexElasticSearchRepository) SearchMedias(ctx context.Context, cur
 			return nil, fmt.Errorf("failed search medias - unmarshal: %v", err)
 		}
 
-		newMedia := post.UnmarshalMediaFromDatabase(md.Id, md.Title, md.Thumbnail)
+		newMedia := post.UnmarshalSeriesFromDatabase(md.Id, md.Title, md.Thumbnail)
 		newMedia.Node = paging.NewNode(md.CreatedAt)
 
 		meds = append(meds, newMedia)
@@ -90,7 +94,7 @@ func (r PostsIndexElasticSearchRepository) SearchMedias(ctx context.Context, cur
 	return meds, nil
 }
 
-func (r PostsIndexElasticSearchRepository) IndexAllMedia(ctx context.Context) error {
+func (r PostsIndexElasticSearchRepository) IndexAllSeries(ctx context.Context) error {
 
 	scanner := scan.New(r.session,
 		scan.Config{
@@ -112,7 +116,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllMedia(ctx context.Context) er
 				return err
 			}
 
-			doc := mediaDocument{
+			doc := seriesDocument{
 				Id:        m.Id,
 				Thumbnail: m.Thumbnail,
 				Title:     m.Title,
@@ -121,7 +125,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllMedia(ctx context.Context) er
 
 			_, err = r.client.
 				Index().
-				Index(mediaIndexName).
+				Index(seriesIndexName).
 				Id(m.Id).
 				BodyJson(doc).
 				Do(ctx)
@@ -141,22 +145,22 @@ func (r PostsIndexElasticSearchRepository) IndexAllMedia(ctx context.Context) er
 	return nil
 }
 
-func (r PostsIndexElasticSearchRepository) DeleteMediaIndex(ctx context.Context) error {
+func (r PostsIndexElasticSearchRepository) DeleteSeriesIndex(ctx context.Context) error {
 
-	exists, err := r.client.IndexExists(mediaIndexName).Do(ctx)
+	exists, err := r.client.IndexExists(seriesIndexName).Do(ctx)
 
 	if err != nil {
 		return err
 	}
 
 	if exists {
-		if _, err := r.client.DeleteIndex(mediaIndexName).Do(ctx); err != nil {
+		if _, err := r.client.DeleteIndex(seriesIndexName).Do(ctx); err != nil {
 			// Handle error
 			return err
 		}
 	}
 
-	if _, err := r.client.CreateIndex(mediaIndexName).BodyString(mediaIndex).Do(ctx); err != nil {
+	if _, err := r.client.CreateIndex(seriesIndexName).BodyString(seriesIndex).Do(ctx); err != nil {
 		return err
 	}
 

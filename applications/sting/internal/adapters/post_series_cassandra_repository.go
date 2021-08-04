@@ -27,7 +27,7 @@ type media struct {
 	Thumbnail string `db:"thumbnail"`
 }
 
-func (r PostsCassandraRepository) GetMediaById(ctx context.Context, mediaId string) (*post.Series, error) {
+func (r PostsCassandraRepository) GetSingleSeriesById(ctx context.Context, mediaId string) (*post.Series, error) {
 
 	queryMedia := r.session.
 		Query(mediaTable.Get()).
@@ -45,14 +45,14 @@ func (r PostsCassandraRepository) GetMediaById(ctx context.Context, mediaId stri
 		return nil, fmt.Errorf("failed to get media by id: %v", err)
 	}
 
-	return post.UnmarshalMediaFromDatabase(
+	return post.UnmarshalSeriesFromDatabase(
 		med.Id,
 		med.Title,
 		med.Thumbnail,
 	), nil
 }
 
-func (r PostsCassandraRepository) GetMediasById(ctx context.Context, medi []string) ([]*post.Series, error) {
+func (r PostsCassandraRepository) GetSeriesById(ctx context.Context, medi []string) ([]*post.Series, error) {
 
 	var medias []*post.Series
 
@@ -74,7 +74,7 @@ func (r PostsCassandraRepository) GetMediasById(ctx context.Context, medi []stri
 	}
 
 	for _, med := range mediaModels {
-		medias = append(medias, post.UnmarshalMediaFromDatabase(
+		medias = append(medias, post.UnmarshalSeriesFromDatabase(
 			med.Id,
 			med.Title,
 			med.Thumbnail,

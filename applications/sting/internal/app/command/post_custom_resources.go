@@ -26,7 +26,7 @@ func (h PostCustomResourcesHandler) Handle(ctx context.Context, cmd PostCustomRe
 		pending.MakePublishing()
 
 		// Consume custom categories, characters, medias
-		existingMedias, err := h.pr.GetMediasById(ctx, pending.GetExistingMediaIds())
+		existingMedias, err := h.pr.GetSeriesById(ctx, pending.GetExistingMediaIds())
 
 		if err != nil {
 			return err

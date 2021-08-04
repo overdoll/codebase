@@ -42,7 +42,7 @@ func (m *Series) ConvertThumbnailToURI() graphql.URI {
 	return graphql.NewURI(staticURL + "/thumbnails/" + m.thumbnail)
 }
 
-func UnmarshalMediaFromDatabase(id, slug, title, thumbnail string) *Series {
+func UnmarshalSeriesFromDatabase(id, slug, title, thumbnail string) *Series {
 	return &Series{
 		id:        id,
 		slug:      slug,

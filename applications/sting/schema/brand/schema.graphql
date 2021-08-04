@@ -1,5 +1,5 @@
-type Category implements Node & Object @key(fields: "id") {
-  """An ID pointing to this category."""
+type Brand implements Node & Object @key(fields: "id") {
+  """An ID pointing to this brand."""
   id: ID!
 
   """A url-friendly ID. Should be used when searching"""
@@ -11,22 +11,22 @@ type Category implements Node & Object @key(fields: "id") {
     size: Int
   ): URI!
 
-  """A title for this category."""
-  title: String!
+  """A name for this brand."""
+  name: String!
 }
 
-type CategoryEdge {
+type BrandEdge {
   cursor: String!
-  node: Category!
+  node: Brand!
 }
 
-type CategoryConnection {
-  edges: [CategoryEdge!]!
+type BrandConnection {
+  edges: [BrandEdge!]!
   pageInfo: PageInfo!
 }
 
 extend type Query {
-  categories(
+  brands(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
 
@@ -39,12 +39,12 @@ extend type Query {
     """Returns the last _n_ elements from the list."""
     last: Int
 
-    # filter by the name of the category
-    title: String
-  ): CategoryConnection!
+    # filter by the name of the brand
+    name: String
+  ): BrandConnection!
 }
 
 extend type Post {
-  """Categories that belong to this post"""
-  categories: [Category!]!
+  """Represents the brand that this post belongs to"""
+  brand: Brand!
 }

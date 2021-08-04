@@ -1,5 +1,5 @@
-type Category implements Node & Object @key(fields: "id") {
-  """An ID pointing to this category."""
+type Audience implements Node & Object @key(fields: "id") {
+  """An ID pointing to this audience."""
   id: ID!
 
   """A url-friendly ID. Should be used when searching"""
@@ -11,22 +11,22 @@ type Category implements Node & Object @key(fields: "id") {
     size: Int
   ): URI!
 
-  """A title for this category."""
+  """A title for this audience."""
   title: String!
 }
 
-type CategoryEdge {
+type AudienceEdge {
   cursor: String!
-  node: Category!
+  node: Brand!
 }
 
-type CategoryConnection {
-  edges: [CategoryEdge!]!
+type AudienceConnection {
+  edges: [AudienceEdge!]!
   pageInfo: PageInfo!
 }
 
 extend type Query {
-  categories(
+  audiences(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
 
@@ -38,13 +38,10 @@ extend type Query {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-
-    # filter by the name of the category
-    title: String
-  ): CategoryConnection!
+  ): AudienceConnection!
 }
 
 extend type Post {
-  """Categories that belong to this post"""
-  categories: [Category!]!
+  """Represents the audience that this post belongs to"""
+  audience: Audience!
 }

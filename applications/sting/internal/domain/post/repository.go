@@ -15,16 +15,11 @@ type Repository interface {
 	UpdatePost(ctx context.Context, postId string, updateFn func(post *Post) error) (*Post, error)
 	DeletePost(ctx context.Context, postId string) error
 
-	GetArtistById(ctx context.Context, artistId string) (*Artist, error)
-	CreateArtist(ctx context.Context, artist *Artist) error
-
 	GetCharacterById(ctx context.Context, characterId string) (*Character, error)
 	GetCharactersById(ctx context.Context, characterIds []string) ([]*Character, error)
-	CreateCharacters(ctx context.Context, characters []*Character) error
 
-	CreateMedias(ctx context.Context, medias []*Series) error
-	GetMediasById(ctx context.Context, mediaIds []string) ([]*Series, error)
-	GetMediaById(ctx context.Context, mediaId string) (*Series, error)
+	GetSeriesById(ctx context.Context, seriesIds []string) ([]*Series, error)
+	GetSingleSeriesById(ctx context.Context, serialId string) (*Series, error)
 
 	GetCategoryById(ctx context.Context, categoryId string) (*Category, error)
 	GetCategoriesById(ctx context.Context, categoryIds []string) ([]*Category, error)
@@ -43,9 +38,9 @@ type IndexRepository interface {
 	SearchCharacters(ctx context.Context, cursor *paging.Cursor, name *string) ([]*Character, error)
 	IndexCharacters(ctx context.Context, characters []*Character) error
 
-	IndexAllMedia(ctx context.Context) error
-	DeleteMediaIndex(ctx context.Context) error
-	SearchMedias(ctx context.Context, cursor *paging.Cursor, title *string) ([]*Series, error)
+	IndexAllSeries(ctx context.Context) error
+	DeleteSeriesIndex(ctx context.Context) error
+	SearchSeries(ctx context.Context, cursor *paging.Cursor, title *string) ([]*Series, error)
 
 	IndexAllCategories(ctx context.Context) error
 	IndexCategories(ctx context.Context, categories []*Category) error

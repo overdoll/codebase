@@ -22,7 +22,7 @@ func NewSearchMediasHandler(pr post.IndexRepository) SearchMediasHandler {
 
 func (h SearchMediasHandler) Handle(ctx context.Context, query SearchMedias) ([]*post.Series, error) {
 
-	results, err := h.pr.SearchMedias(ctx, query.Cursor, query.Title)
+	results, err := h.pr.SearchSeries(ctx, query.Cursor, query.Title)
 
 	if err != nil {
 		return nil, err

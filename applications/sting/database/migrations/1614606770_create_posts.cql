@@ -21,16 +21,6 @@ CREATE TABLE IF NOT EXISTS series
 (
     id        text,
     slug      text,
-    name      text,
-    thumbnail text,
-    media_id  text,
-    primary key ( id )
-);
-
-CREATE TABLE IF NOT EXISTS media
-(
-    id        text,
-    slug      text,
     title     text,
     thumbnail text,
     primary key ( id )
@@ -45,6 +35,16 @@ CREATE TABLE IF NOT EXISTS brands
     primary key ( id )
 );
 
+CREATE TABLE IF NOT EXISTS audiences
+(
+    id        text,
+    slug      text,
+    title     text,
+    thumbnail text,
+    standard  int,
+    primary key ( id )
+);
+
 CREATE TABLE IF NOT EXISTS posts
 (
     id                        text,
@@ -52,6 +52,7 @@ CREATE TABLE IF NOT EXISTS posts
     moderator_account_id      text,
     contributor_account_id    text,
     brand_id                  text,
+    audience_id               text,
     category_ids              list<text>,
     character_ids             list<text>,
     content                   list<text>,

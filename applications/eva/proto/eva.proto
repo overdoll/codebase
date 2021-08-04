@@ -33,5 +33,4 @@ message CreateAccountRequest {
 service Eva {
   rpc LockAccount(LockAccountRequest) returns (Account);
   rpc GetAccount(GetAccountRequest) returns (Account);
-  rpc CreateAccount(CreateAccountRequest) returns (Account);
 }

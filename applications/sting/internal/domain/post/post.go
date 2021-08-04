@@ -41,7 +41,9 @@ type Post struct {
 
 	moderatorId   string
 	contributorId string
-	brandId       string
+
+	brand    *Brand
+	audience *Audience
 
 	characters []*Character
 	categories []*Category
@@ -57,21 +59,20 @@ func NewPost(contributor *principal.Principal, content []string) (*Post, error) 
 
 	return &Post{
 		id:            id.String(),
-		moderatorId:   "",
 		state:         draft,
-		brandId:       "",
 		contributorId: contributor.AccountId(),
 		content:       content,
 		createdAt:     time.Now(),
 	}, nil
 }
 
-func UnmarshalPostFromDatabase(id, state, moderatorId, brandId, contributorId string, content []string, characters []*Character, categories []*Category, createdAt, postedAt, reassignmentAt time.Time) *Post {
+func UnmarshalPostFromDatabase(id, state, moderatorId, contributorId string, content []string, brand *Brand, audience *Audience, characters []*Character, categories []*Category, createdAt, postedAt, reassignmentAt time.Time) *Post {
 	return &Post{
 		id:             id,
 		moderatorId:    moderatorId,
 		state:          postState(state),
-		brandId:        brandId,
+		brand:          brand,
+		audience:       audience,
 		contributorId:  contributorId,
 		content:        content,
 		characters:     characters,
@@ -82,11 +83,28 @@ func UnmarshalPostFromDatabase(id, state, moderatorId, brandId, contributorId st
 	}
 }
 
-func (p *Post) UpdatePost(brandId string, content []string, characters []*Character, categories []*Category) error {
-	p.brandId = brandId
-	p.content = content
-	p.characters = characters
-	p.categories = categories
+func (p *Post) UpdatePost(brand *Brand, audience *Audience, content []string, characters []*Character, categories []*Category) error {
+
+	if brand != nil {
+		p.brand = brand
+	}
+
+	if audience != nil {
+		p.audience = audience
+	}
+
+	if content != nil {
+		p.content = content
+	}
+
+	if characters != nil {
+		p.characters = characters
+	}
+
+	if categories != nil {
+		p.categories = categories
+	}
+
 	return nil
 }
 
@@ -103,7 +121,29 @@ func (p *Post) ContributorId() string {
 }
 
 func (p *Post) BrandId() string {
-	return p.brandId
+
+	if p.brand != nil {
+		return p.brand.id
+	}
+
+	return ""
+}
+
+func (p *Post) AudienceId() string {
+
+	if p.audience != nil {
+		return p.audience.id
+	}
+
+	return ""
+}
+
+func (p *Post) Audience() *Audience {
+	return p.audience
+}
+
+func (p *Post) Brand() *Brand {
+	return p.brand
 }
 
 func (p *Post) State() string {
