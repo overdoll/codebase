@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 336ee446efb9ac696e4711e4d6371ee0
+ * @relayHash cc281904ed6fe764d570de27c967a161
  */
 
 /* eslint-disable */
@@ -11,9 +11,7 @@ import type { ConcreteRequest } from 'relay-runtime';
 import type { QueueSettingsFragment$ref } from "./QueueSettingsFragment.graphql";
 export type ModerationSettingsQueryVariables = {||};
 export type ModerationSettingsQueryResponse = {|
-  +viewer: ?{|
-    +$fragmentRefs: QueueSettingsFragment$ref
-  |}
+  +$fragmentRefs: QueueSettingsFragment$ref
 |};
 export type ModerationSettingsQuery = {|
   variables: ModerationSettingsQueryVariables,
@@ -23,29 +21,18 @@ export type ModerationSettingsQuery = {|
 
 /*
 query ModerationSettingsQuery {
-  viewer {
-    ...QueueSettingsFragment
-    id
-  }
+  ...QueueSettingsFragment
 }
 
-fragment QueueSettingsFragment on Account {
-  moderator {
+fragment QueueSettingsFragment on Query {
+  viewer {
     __typename
     id
   }
 }
 */
 
-const node: ConcreteRequest = (function(){
-var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-};
-return {
+const node: ConcreteRequest = {
   "fragment": {
     "argumentDefinitions": [],
     "kind": "Fragment",
@@ -53,20 +40,9 @@ return {
     "name": "ModerationSettingsQuery",
     "selections": [
       {
-        "alias": null,
         "args": null,
-        "concreteType": "Account",
-        "kind": "LinkedField",
-        "name": "viewer",
-        "plural": false,
-        "selections": [
-          {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "QueueSettingsFragment"
-          }
-        ],
-        "storageKey": null
+        "kind": "FragmentSpread",
+        "name": "QueueSettingsFragment"
       }
     ],
     "type": "Query",
@@ -89,37 +65,30 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "Moderator",
-            "kind": "LinkedField",
-            "name": "moderator",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "__typename",
-                "storageKey": null
-              },
-              (v0/*: any*/)
-            ],
+            "kind": "ScalarField",
+            "name": "__typename",
             "storageKey": null
           },
-          (v0/*: any*/)
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "id",
+            "storageKey": null
+          }
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "336ee446efb9ac696e4711e4d6371ee0",
+    "id": "cc281904ed6fe764d570de27c967a161",
     "metadata": {},
     "name": "ModerationSettingsQuery",
     "operationKind": "query",
     "text": null
   }
 };
-})();
 // prettier-ignore
-(node: any).hash = '704937f3ebc33dece32dba64592da904';
+(node: any).hash = '555045c3015fa2569090184eff56a879';
 module.exports = node;

@@ -20,8 +20,8 @@ type Props = {
 }
 
 const QueueSettingsFragmentGQL = graphql`
-  fragment QueueSettingsFragment on Account {
-    moderator {
+  fragment QueueSettingsFragment on Query {
+    viewer {
       __typename
     }
   }
@@ -44,7 +44,7 @@ export default function QueueSettings ({ account }: Props): Node {
 
   const [t] = useTranslation('settings')
 
-  const status = !!data?.moderator
+  const status = !!data?.viewer.moderator
 
   const notify = useToast()
 

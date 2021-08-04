@@ -144,5 +144,6 @@
   "1b10bb024869c99534e2c2eeddce98c6": "query ModerationSettingsQuery {\n  viewer {\n    id\n  }\n}\n",
   "aa68d16ea5d28a0ff2c9a5d636331cd8": "query ModerationSettingsQuery {\n  viewer {\n    moderator {\n      __typename\n      id\n    }\n    id\n  }\n}\n",
   "336ee446efb9ac696e4711e4d6371ee0": "query ModerationSettingsQuery {\n  viewer {\n    ...QueueSettingsFragment\n    id\n  }\n}\n\nfragment QueueSettingsFragment on Account {\n  moderator {\n    __typename\n    id\n  }\n}\n",
-  "92dee5e2dd13c5704b0ca6b4f279f37c": "mutation QueueSettingsMutation {\n  toggleModeratorSettingsInQueue {\n    moderatorSettingsInQueue\n  }\n}\n"
+  "92dee5e2dd13c5704b0ca6b4f279f37c": "mutation QueueSettingsMutation {\n  toggleModeratorSettingsInQueue {\n    moderatorSettingsInQueue\n  }\n}\n",
+  "cc281904ed6fe764d570de27c967a161": "query ModerationSettingsQuery {\n  ...QueueSettingsFragment\n}\n\nfragment QueueSettingsFragment on Query {\n  viewer {\n    __typename\n    id\n  }\n}\n"
 }

@@ -19,9 +19,7 @@ type Props = {
 
 const ModerationQuery = graphql`
   query ModerationSettingsQuery {
-    viewer {
-      ...QueueSettingsFragment
-    }
+    ...QueueSettingsFragment
   }
 `
 

@@ -11,7 +11,7 @@ import type { FragmentReference } from "relay-runtime";
 declare export opaque type QueueSettingsFragment$ref: FragmentReference;
 declare export opaque type QueueSettingsFragment$fragmentType: QueueSettingsFragment$ref;
 export type QueueSettingsFragment = {|
-  +moderator: ?{|
+  +viewer: ?{|
     +__typename: string
   |},
   +$refType: QueueSettingsFragment$ref,
@@ -33,9 +33,9 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
-      "concreteType": "Moderator",
+      "concreteType": "Account",
       "kind": "LinkedField",
-      "name": "moderator",
+      "name": "viewer",
       "plural": false,
       "selections": [
         {
@@ -49,9 +49,9 @@ const node: ReaderFragment = {
       "storageKey": null
     }
   ],
-  "type": "Account",
+  "type": "Query",
   "abstractKey": null
 };
 // prettier-ignore
-(node: any).hash = 'fec638bad0397d02a842975b4b7aff19';
+(node: any).hash = 'ae2a17311769027df62fcefe59c2fa34';
 module.exports = node;
