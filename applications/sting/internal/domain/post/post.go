@@ -11,16 +11,17 @@ import (
 	"overdoll/libraries/uuid"
 )
 
-type PostState string
+type postState string
 
 const (
-	Publishing PostState = "publishing"
-	Review     PostState = "review"
-	Published  PostState = "published"
-	Discarding PostState = "discarding"
-	Discarded  PostState = "discarded"
-	Rejected   PostState = "rejected"
-	Processing PostState = "processing"
+	draft      postState = "draft"
+	publishing postState = "publishing"
+	review     postState = "review"
+	published  postState = "published"
+	discarding postState = "discarding"
+	discarded  postState = "discarded"
+	rejected   postState = "rejected"
+	processing postState = "processing"
 )
 
 var (
@@ -31,139 +32,62 @@ var (
 	ErrAlreadyModerated = errors.New("already moderated")
 )
 
-// Each request type contains space for an "ID" - we pre-generate IDs and pass them in between events to ensure idempotency
-type CharacterRequest struct {
-	Id    string
-	Name  string
-	Media string
-}
-
-type CategoryRequest struct {
-	Id    string
-	Title string
-}
-
-type MediaRequest struct {
-	Id    string
-	Title string
-}
-
-type PostFilters struct {
-	moderatorId   *string
-	contributorId *string
-	artistId      *string
-	id            string
-	categoryIds   []string
-	characterIds  []string
-	mediaIds      []string
-}
-
-func NewPostFilters(moderatorId, contributorId, artistId *string, categoryIds, characterIds, mediaIds []string) (*PostFilters, error) {
-	return &PostFilters{
-		moderatorId:   moderatorId,
-		contributorId: contributorId,
-		artistId:      artistId,
-		categoryIds:   categoryIds,
-		characterIds:  characterIds,
-		mediaIds:      mediaIds,
-	}, nil
-}
-
-func (e *PostFilters) ID() string {
-	return e.id
-}
-
-func (e *PostFilters) ModeratorId() *string {
-	return e.moderatorId
-}
-
-func (e *PostFilters) ContributorId() *string {
-	return e.contributorId
-}
-
-func (e *PostFilters) ArtistId() *string {
-	return e.artistId
-}
-
-func (e *PostFilters) MediaIds() []string {
-	return e.mediaIds
-}
-
-func (e *PostFilters) CategoryIds() []string {
-	return e.categoryIds
-}
-
-func (e *PostFilters) CharacterIds() []string {
-	return e.characterIds
-}
-
 type Post struct {
 	*paging.Node
 
-	id            string
+	id string
+
+	state postState
+
 	moderatorId   string
 	contributorId string
-	artistId      string
-	state         PostState
+	brandId       string
 
 	characters []*Character
 	categories []*Category
 
-	customArtistUsername string
-
-	content            []string
-	charactersRequests []CharacterRequest
-	categoriesRequests []CategoryRequest
-	mediaRequests      []MediaRequest
-	postedAt           time.Time
-	reassignmentAt     time.Time
-	generatedIds       []string
+	content        []string
+	createdAt      time.Time
+	postedAt       time.Time
+	reassignmentAt time.Time
 }
 
-func NewPost(id, moderatorId string, artist *principal.Principal, customArtistUsername string, contributor *principal.Principal, content []string, characters []*Character, categories []*Category) (*Post, error) {
-
-	// TODO: permission checks here
-
-	var artistId string
-
-	if artist != nil {
-		artistId = artist.AccountId()
-	}
+func NewPost(contributor *principal.Principal, content []string) (*Post, error) {
+	id := uuid.New()
 
 	return &Post{
-		id:                   id,
-		moderatorId:          moderatorId,
-		state:                Processing,
-		artistId:             artistId,
-		contributorId:        contributor.AccountId(),
-		customArtistUsername: customArtistUsername,
-		content:              content,
-		characters:           characters,
-		categories:           categories,
-		postedAt:             time.Now(),
-		reassignmentAt:       time.Now().Add(time.Hour * 24),
+		id:            id.String(),
+		moderatorId:   "",
+		state:         draft,
+		brandId:       "",
+		contributorId: contributor.AccountId(),
+		content:       content,
+		createdAt:     time.Now(),
 	}, nil
 }
 
-func UnmarshalPostFromDatabase(id, state, moderatorId, artistId, customArtistUsername, contributorId string, content []string, characters []*Character, categories []*Category, charactersRequests map[string]string, categoryRequests, mediaRequests []string, postedAt, reassignmentAt time.Time) *Post {
-
-	postPending := &Post{
-		id:                   id,
-		moderatorId:          moderatorId,
-		state:                PostState(state),
-		artistId:             artistId,
-		contributorId:        contributorId,
-		customArtistUsername: customArtistUsername,
-		content:              content,
-		characters:           characters,
-		categories:           categories,
-		postedAt:             postedAt,
-		reassignmentAt:       reassignmentAt,
+func UnmarshalPostFromDatabase(id, state, moderatorId, brandId, contributorId string, content []string, characters []*Character, categories []*Category, createdAt, postedAt, reassignmentAt time.Time) *Post {
+	return &Post{
+		id:             id,
+		moderatorId:    moderatorId,
+		state:          postState(state),
+		brandId:        brandId,
+		contributorId:  contributorId,
+		content:        content,
+		characters:     characters,
+		categories:     categories,
+		createdAt:      createdAt,
+		postedAt:       postedAt,
+		reassignmentAt: reassignmentAt,
 	}
+}
 
-	postPending.RequestResources(charactersRequests, categoryRequests, mediaRequests)
-
-	return postPending
+func (p *Post) UpdatePost(brandId string, content []string, characters []*Character, categories []*Category) error {
+	p.brandId = brandId
+	p.content = content
+	p.characters = characters
+	p.categories = categories
+	return nil
 }
 
 func (p *Post) ID() string {
@@ -178,20 +102,12 @@ func (p *Post) ContributorId() string {
 	return p.contributorId
 }
 
-func (p *Post) ArtistId() string {
-	return p.artistId
+func (p *Post) BrandId() string {
+	return p.brandId
 }
 
-func (p *Post) CustomArtistUsername() string {
-	return p.customArtistUsername
-}
-
-func (p *Post) IsCustomArtist() bool {
-	return p.customArtistUsername != ""
-}
-
-func (p *Post) State() PostState {
-	return p.state
+func (p *Post) State() string {
+	return string(p.state)
 }
 
 func (p *Post) Content() []string {
@@ -206,7 +122,7 @@ func (p *Post) ConvertContentToURI() []graphql.URI {
 
 		baseUrl := os.Getenv("STATIC_URL") + "/" + "pending_posts"
 
-		if p.state == Published {
+		if p.state == published {
 			baseUrl = os.Getenv("POSTS_URL")
 		}
 
@@ -217,19 +133,9 @@ func (p *Post) ConvertContentToURI() []graphql.URI {
 	return generatedContent
 }
 
-func (p *Post) UpdateCategories(categories []*Category) error {
-	p.categories = categories
-	return nil
-}
-
-func (p *Post) UpdateCharacters(characters []*Character) error {
-	p.characters = characters
-	return nil
-}
-
 func (p *Post) UpdateModerator(moderatorId string) error {
 
-	if p.state != Review {
+	if p.state != review {
 		return ErrAlreadyModerated
 	}
 
@@ -280,37 +186,34 @@ func (p *Post) ReassignmentAt() time.Time {
 func (p *Post) MakePublish() error {
 
 	// State of the post needs to be "publishing" before "published"
-	if p.state != Publishing {
+	if p.state != publishing {
 		return ErrNotPublishing
 	}
 
-	p.state = Published
+	p.state = published
 
 	return nil
 }
 
 func (p *Post) MakeDiscarding() error {
 
-	if p.state != Review {
+	if p.state != review {
 		return ErrNotReview
 	}
 
-	p.state = Discarding
+	p.state = discarding
 
 	return nil
 }
 
 func (p *Post) MakeDiscarded() error {
 
-	if p.state != Discarding {
+	if p.state != discarding {
 		return ErrNotReview
 	}
 
-	p.state = Discarded
+	p.state = discarded
 
-	p.categoriesRequests = []CategoryRequest{}
-	p.charactersRequests = []CharacterRequest{}
-	p.mediaRequests = []MediaRequest{}
 	p.content = []string{}
 
 	return nil
@@ -318,13 +221,14 @@ func (p *Post) MakeDiscarded() error {
 
 func (p *Post) MakeRejected() error {
 
-	p.state = Rejected
+	p.state = rejected
 
 	return nil
 }
 
 func (p *Post) MakeUndo() error {
-	if p.state == Discarded || p.state == Published {
+
+	if p.state == discarded || p.state == published {
 		return ErrNotComplete
 	}
 
@@ -332,168 +236,59 @@ func (p *Post) MakeUndo() error {
 }
 
 func (p *Post) MakePublishing() {
-	p.state = Publishing
-}
-
-func (p *Post) UpdateArtist(artistId string) {
-	p.artistId = artistId
+	p.state = publishing
 }
 
 func (p *Post) MakeProcessing() error {
 
-	p.state = Processing
+	p.state = processing
 
 	return nil
 }
 
 func (p *Post) InReview() bool {
-	return p.state == Review
+	return p.state == review
 }
 
 func (p *Post) IsPublished() bool {
-	return p.state == Published
+	return p.state == published
 }
 
 func (p *Post) IsPublishing() bool {
-	return p.state == Publishing
+	return p.state == publishing
 }
 
 func (p *Post) IsProcessing() bool {
-	return p.state == Processing
+	return p.state == processing
 }
 
 func (p *Post) IsRejected() bool {
-	return p.state == Rejected
+	return p.state == rejected
 }
 
 func (p *Post) IsDiscarded() bool {
-	return p.state == Discarded
+	return p.state == discarded
 }
 
 func (p *Post) IsDiscarding() bool {
-	return p.state == Discarding
+	return p.state == discarding
 }
 
 func (p *Post) UpdateContent(content []string) {
 	p.content = content
 }
 
-func (p *Post) CharacterRequests() []CharacterRequest {
-	return p.charactersRequests
-}
-
-func (p *Post) CategoryRequests() []CategoryRequest {
-	return p.categoriesRequests
-}
-
-func (p *Post) MediaRequests() []MediaRequest {
-	return p.mediaRequests
-}
-
 func (p *Post) MakeReview() error {
-	p.state = Review
+	p.state = review
 
 	return nil
 }
 
-// When requesting a new character, you must select a media or request a new media as well
-// This function helps to match against mediaRequests and tell you which of the medias already exist in our database
-// so we can pass it to ConsumeCustomResources
-func (p *Post) GetExistingMediaIds() []string {
-
-	var medias []string
-
-	for _, char := range p.charactersRequests {
-		var exists = true
-
-		// Check if the requested media is a media in our list
-		for _, requestedMedia := range p.mediaRequests {
-
-			// If the media is on our list, skip
-			if char.Media == requestedMedia.Title {
-				exists = false
-				break
-			}
-		}
-
-		if exists {
-			medias = append(medias, char.Media)
-		}
-	}
-
-	return medias
-}
-
-// ConsumeCustomResources - pass existingMedia so it can use that as arguments.
-func (p *Post) ConsumeCustomResources(existingMedia []*Media) ([]*Category, []*Character, []*Media) {
-
-	var characters []*Character
-	var medias []*Media
-
-	for _, char := range p.charactersRequests {
-
-		var exists = false
-		var newMedia *Media
-
-		// Check if the requested media is a media in our list
-		for _, requestedMedia := range p.mediaRequests {
-			// If the media is on our list, then we create a new media, and append to array of events
-			if char.Media == requestedMedia.Title {
-				newMedia = NewMedia(char.Id, requestedMedia.Title)
-				medias = append(medias, newMedia)
-				exists = true
-				break
-			}
-		}
-
-		// If a media exists (not in media requests), we use the string as the ID
-		if !exists {
-			for _, media := range existingMedia {
-				if media.ID() == char.Media {
-					// media exists in DB
-					newMedia = media
-					break
-				}
-			}
-
-		}
-
-		newCharacter := NewCharacter(char.Id, char.Name, newMedia)
-
-		p.characters = append(p.characters, newCharacter)
-		characters = append(characters, newCharacter)
-	}
-
-	var categories []*Category
-
-	for _, cat := range p.categoriesRequests {
-
-		newCategory := NewCategory(cat.Id, cat.Title)
-
-		p.categories = append(p.categories, newCategory)
-		categories = append(categories, newCategory)
-	}
-
-	p.categoriesRequests = []CategoryRequest{}
-	p.charactersRequests = []CharacterRequest{}
-	p.mediaRequests = []MediaRequest{}
-
-	return categories, characters, medias
-}
-
-// RequestResources will pre-generate IDs for each request type
-func (p *Post) RequestResources(characters map[string]string, categories, medias []string) {
-	for char, med := range characters {
-		p.charactersRequests = append(p.charactersRequests, CharacterRequest{Id: uuid.New().String(), Name: char, Media: med})
-	}
-
-	for _, cat := range categories {
-		p.categoriesRequests = append(p.categoriesRequests, CategoryRequest{Id: uuid.New().String(), Title: cat})
-	}
-
-	for _, med := range medias {
-		p.mediaRequests = append(p.mediaRequests, MediaRequest{Id: uuid.New().String(), Title: med})
-	}
+func (p *Post) UploadPost(moderatorId string) {
+	p.moderatorId = moderatorId
+	p.postedAt = time.Now()
+	p.reassignmentAt = time.Now().Add(time.Hour * 24)
+	p.state = processing
 }
 
 func (p *Post) CanView(requester *principal.Principal) error {

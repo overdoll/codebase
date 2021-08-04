@@ -78,7 +78,7 @@ func MarshalPostToGraphQL(result *post.Post) *Post {
 		Reference:         result.ID(),
 		Moderator:         &Account{ID: relay.NewID(Account{}, result.ModeratorId())},
 		Contributor:       &Account{ID: relay.NewID(Account{}, result.ContributorId())},
-		Artist:            &Account{ID: relay.NewID(Account{}, result.ArtistId())},
+		Artist:            &Account{ID: relay.NewID(Account{}, result.BrandId())},
 		State:             state,
 		Content:           content,
 		Categories:        categories,
@@ -96,7 +96,7 @@ func MarshalArtistToGraphQL(result *post.Artist) *Artist {
 	}
 }
 
-func MarshalMediaToGraphQL(result *post.Media) *Media {
+func MarshalMediaToGraphQL(result *post.Series) *Media {
 	return &Media{
 		ID:        relay.NewID(Media{}, result.ID()),
 		Title:     result.Title(),
@@ -117,7 +117,7 @@ func MarshalCharacterToGraphQL(result *post.Character) *Character {
 		ID:        relay.NewID(Character{}, result.ID()),
 		Name:      result.Name(),
 		Thumbnail: result.ConvertThumbnailToURI(),
-		Media:     MarshalMediaToGraphQL(result.Media()),
+		Media:     MarshalMediaToGraphQL(result.Series()),
 	}
 }
 
@@ -212,7 +212,7 @@ func MarshalCharacterToGraphQLConnection(results []*post.Character, cursor *pagi
 	}
 }
 
-func MarshalMediaToGraphQLConnection(results []*post.Media, cursor *paging.Cursor) *MediaConnection {
+func MarshalMediaToGraphQLConnection(results []*post.Series, cursor *paging.Cursor) *MediaConnection {
 	resp := make([]*MediaEdge, 0)
 
 	// Unmarshal our json into the correct model

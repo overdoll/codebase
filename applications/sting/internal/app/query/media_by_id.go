@@ -18,7 +18,7 @@ func NewMediaByIdHandler(pr post.Repository) MediaByIdHandler {
 	return MediaByIdHandler{pr: pr}
 }
 
-func (h MediaByIdHandler) Handle(ctx context.Context, query MediaById) (*post.Media, error) {
+func (h MediaByIdHandler) Handle(ctx context.Context, query MediaById) (*post.Series, error) {
 
 	result, err := h.pr.GetMediaById(ctx, query.MediaId)
 

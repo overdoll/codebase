@@ -46,7 +46,7 @@ const mediaIndex = `
 
 const mediaIndexName = "media"
 
-func (r PostsIndexElasticSearchRepository) SearchMedias(ctx context.Context, cursor *paging.Cursor, search *string) ([]*post.Media, error) {
+func (r PostsIndexElasticSearchRepository) SearchMedias(ctx context.Context, cursor *paging.Cursor, search *string) ([]*post.Series, error) {
 
 	builder := r.client.Search().
 		Index(mediaIndexName)
@@ -69,7 +69,7 @@ func (r PostsIndexElasticSearchRepository) SearchMedias(ctx context.Context, cur
 		return nil, fmt.Errorf("failed search medias: %v", err)
 	}
 
-	var meds []*post.Media
+	var meds []*post.Series
 
 	for _, hit := range response.Hits.Hits {
 

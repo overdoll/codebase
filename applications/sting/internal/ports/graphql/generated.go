@@ -551,14 +551,14 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Entity.FindPostByID(childComplexity, args["id"].(relay.ID)), true
 
-	case "Media.id":
+	case "Series.id":
 		if e.complexity.Media.ID == nil {
 			break
 		}
 
 		return e.complexity.Media.ID(childComplexity), true
 
-	case "Media.posts":
+	case "Series.posts":
 		if e.complexity.Media.Posts == nil {
 			break
 		}
@@ -570,7 +570,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Media.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
 
-	case "Media.thumbnail":
+	case "Series.thumbnail":
 		if e.complexity.Media.Thumbnail == nil {
 			break
 		}
@@ -582,7 +582,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Media.Thumbnail(childComplexity, args["size"].(*int)), true
 
-	case "Media.title":
+	case "Series.title":
 		if e.complexity.Media.Title == nil {
 			break
 		}
@@ -982,7 +982,7 @@ extend type Post {
   """Categories that belong to this post"""
   categories: [Category!]!
 }`, BuiltIn: false},
-	{Name: "schema/character/schema.graphql", Input: `type Media implements Node & Object @key(fields: "id") {
+	{Name: "schema/character/schema.graphql", Input: `type Series implements Node & Object @key(fields: "id") {
   """An ID pointing to this media."""
   id: ID!
 
@@ -998,7 +998,7 @@ extend type Post {
 
 type MediaEdge {
   cursor: String!
-  node: Media!
+  node: Series!
 }
 
 type MediaConnection {
@@ -1020,7 +1020,7 @@ type Character implements Node & Object @key(fields: "id") {
   name: String!
 
   """The media linked to this character."""
-  media: Media!
+  media: Series!
 }
 
 type CharacterEdge {
@@ -1296,7 +1296,7 @@ extend type Character {
   ): PostConnection! @goField(forceResolver: true)
 }
 
-extend type Media {
+extend type Series {
   """Posts belonging to this media"""
   posts(
     """Returns the elements in the list that come after the specified cursor."""
@@ -1360,7 +1360,7 @@ directive @extends on OBJECT
 `, BuiltIn: true},
 	{Name: "federation/entity.graphql", Input: `
 # a union of all types that use the @key directive
-union _Entity = Account | Artist | Category | Character | Media | Post
+union _Entity = Account | Artist | Category | Character | Series | Post
 
 # fake type to build resolver interfaces for users to implement
 type Entity {
@@ -1368,7 +1368,7 @@ type Entity {
 	findArtistByID(id: ID!,): Artist!
 	findCategoryByID(id: ID!,): Category!
 	findCharacterByID(id: ID!,): Character!
-	findMediaByID(id: ID!,): Media!
+	findMediaByID(id: ID!,): Series!
 	findPostByID(id: ID!,): Post!
 
 }
@@ -3417,7 +3417,7 @@ func (ec *executionContext) _Media_id(ctx context.Context, field graphql.Collect
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "Media",
+		Object:     "Series",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -3452,7 +3452,7 @@ func (ec *executionContext) _Media_thumbnail(ctx context.Context, field graphql.
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "Media",
+		Object:     "Series",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -3494,7 +3494,7 @@ func (ec *executionContext) _Media_title(ctx context.Context, field graphql.Coll
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "Media",
+		Object:     "Series",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -3529,7 +3529,7 @@ func (ec *executionContext) _Media_posts(ctx context.Context, field graphql.Coll
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "Media",
+		Object:     "Series",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   true,
@@ -6714,7 +6714,7 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 	return out
 }
 
-var mediaImplementors = []string{"Media", "Node", "Object", "_Entity"}
+var mediaImplementors = []string{"Series", "Node", "Object", "_Entity"}
 
 func (ec *executionContext) _Media(ctx context.Context, sel ast.SelectionSet, obj *types.Media) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, mediaImplementors)
@@ -6724,7 +6724,7 @@ func (ec *executionContext) _Media(ctx context.Context, sel ast.SelectionSet, ob
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("Media")
+			out.Values[i] = graphql.MarshalString("Series")
 		case "id":
 			out.Values[i] = ec._Media_id(ctx, field, obj)
 			if out.Values[i] == graphql.Null {

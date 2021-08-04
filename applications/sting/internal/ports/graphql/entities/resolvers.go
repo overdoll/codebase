@@ -77,7 +77,7 @@ func (r EntityResolver) FindMediaByID(ctx context.Context, id relay.ID) (*types.
 
 	if err != nil {
 
-		if err == post.ErrMediaNotFound {
+		if err == post.ErrSeriesNotFound {
 			return nil, nil
 		}
 

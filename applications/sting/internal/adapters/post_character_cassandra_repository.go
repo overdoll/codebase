@@ -141,7 +141,7 @@ func (r PostsCassandraRepository) CreateCharacters(ctx context.Context, characte
 
 	for _, chars := range characters {
 
-		media := chars.Media()
+		media := chars.Series()
 
 		stmt, _ := characterTable.Insert()
 		batch.Query(

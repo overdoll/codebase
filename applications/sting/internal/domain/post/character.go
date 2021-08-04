@@ -16,21 +16,30 @@ type Character struct {
 	*paging.Node
 
 	id        string
+	slug      string
 	name      string
 	thumbnail string
-	media     *Media
+	series    *Series
 }
 
 func (c *Character) ID() string {
 	return c.id
 }
 
+func (c *Character) Slug() string {
+	return c.slug
+}
+
 func (c *Character) Name() string {
 	return c.name
 }
 
-func (c *Character) Media() *Media {
-	return c.media
+func (c *Character) Series() *Series {
+	return c.series
+}
+
+func (c *Character) Thumbnail() string {
+	return c.thumbnail
 }
 
 func (c *Character) ConvertThumbnailToURI() graphql.URI {
@@ -38,24 +47,12 @@ func (c *Character) ConvertThumbnailToURI() graphql.URI {
 	return graphql.NewURI(staticURL + "/thumbnails/" + c.thumbnail)
 }
 
-func (c *Character) Thumbnail() string {
-	return c.thumbnail
-}
-
-func NewCharacter(id, name string, media *Media) *Character {
+func UnmarshalCharacterFromDatabase(id, slug, name, thumbnail string, media *Series) *Character {
 	return &Character{
 		id:        id,
-		name:      name,
-		thumbnail: "",
-		media:     media,
-	}
-}
-
-func UnmarshalCharacterFromDatabase(id, name, thumbnail string, media *Media) *Character {
-	return &Character{
-		id:        id,
+		slug:      slug,
 		name:      name,
 		thumbnail: thumbnail,
-		media:     media,
+		series:    media,
 	}
 }

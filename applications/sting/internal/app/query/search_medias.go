@@ -20,7 +20,7 @@ func NewSearchMediasHandler(pr post.IndexRepository) SearchMediasHandler {
 	return SearchMediasHandler{pr: pr}
 }
 
-func (h SearchMediasHandler) Handle(ctx context.Context, query SearchMedias) ([]*post.Media, error) {
+func (h SearchMediasHandler) Handle(ctx context.Context, query SearchMedias) ([]*post.Series, error) {
 
 	results, err := h.pr.SearchMedias(ctx, query.Cursor, query.Title)
 

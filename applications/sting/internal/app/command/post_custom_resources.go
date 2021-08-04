@@ -43,7 +43,7 @@ func (h PostCustomResourcesHandler) Handle(ctx context.Context, cmd PostCustomRe
 			return err
 		}
 
-		// Create Media (from database)
+		// Create Series (from database)
 		return h.pr.CreateMedias(ctx, medias)
 	})
 

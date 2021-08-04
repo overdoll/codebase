@@ -16,12 +16,17 @@ type Category struct {
 	*paging.Node
 
 	id        string
+	slug      string
 	title     string
 	thumbnail string
 }
 
 func (c *Category) ID() string {
 	return c.id
+}
+
+func (c *Category) Slug() string {
+	return c.slug
 }
 
 func (c *Category) Title() string {
@@ -37,17 +42,10 @@ func (c *Category) ConvertThumbnailToURI() graphql.URI {
 	return graphql.NewURI(staticURL + "/thumbnails/" + c.thumbnail)
 }
 
-func NewCategory(id, title string) *Category {
+func UnmarshalCategoryFromDatabase(id, slug, title, thumbnail string) *Category {
 	return &Category{
 		id:        id,
-		title:     title,
-		thumbnail: "",
-	}
-}
-
-func UnmarshalCategoryFromDatabase(id, title, thumbnail string) *Category {
-	return &Category{
-		id:        id,
+		slug:      slug,
 		title:     title,
 		thumbnail: thumbnail,
 	}

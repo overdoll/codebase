@@ -192,7 +192,7 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 	return &postDocument{
 		Id:                 pst.ID(),
 		State:              string(pst.State()),
-		ArtistId:           pst.ArtistId(),
+		ArtistId:           pst.BrandId(),
 		ModeratorId:        pst.ModeratorId(),
 		ContributorId:      pst.ContributorId(),
 		Content:            pst.Content(),

@@ -66,7 +66,7 @@ const characterIndex = `
 const characterIndexName = "characters"
 
 func marshalCharacterToDocument(char *post.Character) (*characterDocument, error) {
-	media := char.Media()
+	media := char.Series()
 
 	parse, err := ksuid.Parse(char.ID())
 

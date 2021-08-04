@@ -13,7 +13,7 @@ type PostMock struct {
 	Artist      *post.Artist
 	Characters  []*post.Character
 	Categories  []*post.Category
-	Medias      []*post.Media
+	Medias      []*post.Series
 }
 
 func (p PostMock) GetPendingPost(ctx context.Context, s string) (*post.Post, error) {
@@ -54,15 +54,15 @@ func (p PostMock) CreateCharacters(ctx context.Context, characters []*post.Chara
 	return nil
 }
 
-func (p PostMock) CreateMedias(ctx context.Context, media []*post.Media) error {
+func (p PostMock) CreateMedias(ctx context.Context, media []*post.Series) error {
 	return nil
 }
 
-func (p PostMock) GetMediasById(ctx context.Context, strings []string) ([]*post.Media, error) {
+func (p PostMock) GetMediasById(ctx context.Context, strings []string) ([]*post.Series, error) {
 	return p.Medias, nil
 }
 
-func (p PostMock) GetMedias(ctx context.Context) ([]*post.Media, error) {
+func (p PostMock) GetMedias(ctx context.Context) ([]*post.Series, error) {
 	return p.Medias, nil
 }
 
@@ -89,7 +89,7 @@ func (p PostIndexMock) SearchCharacters(ctx context.Context, s string) ([]*post.
 	panic("implement me")
 }
 
-func (p PostIndexMock) SearchMedias(ctx context.Context, s string) ([]*post.Media, error) {
+func (p PostIndexMock) SearchMedias(ctx context.Context, s string) ([]*post.Series, error) {
 	panic("implement me")
 }
 
@@ -125,7 +125,7 @@ func (p PostIndexMock) DeleteCharacterIndex(ctx context.Context) error {
 	return nil
 }
 
-func (p PostIndexMock) BulkIndexMedia(ctx context.Context, media []*post.Media) error {
+func (p PostIndexMock) BulkIndexMedia(ctx context.Context, media []*post.Series) error {
 	return nil
 }
 

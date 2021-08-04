@@ -95,7 +95,7 @@ func (ec *executionContext) __resolve_entities(ctx context.Context, representati
 
 			list = append(list, entity)
 
-		case "Media":
+		case "Series":
 			id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
 			if err != nil {
 				return nil, errors.New(fmt.Sprintf("Field %s undefined in schema.", "id"))

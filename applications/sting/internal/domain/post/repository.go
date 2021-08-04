@@ -22,9 +22,9 @@ type Repository interface {
 	GetCharactersById(ctx context.Context, characterIds []string) ([]*Character, error)
 	CreateCharacters(ctx context.Context, characters []*Character) error
 
-	CreateMedias(ctx context.Context, medias []*Media) error
-	GetMediasById(ctx context.Context, mediaIds []string) ([]*Media, error)
-	GetMediaById(ctx context.Context, mediaId string) (*Media, error)
+	CreateMedias(ctx context.Context, medias []*Series) error
+	GetMediasById(ctx context.Context, mediaIds []string) ([]*Series, error)
+	GetMediaById(ctx context.Context, mediaId string) (*Series, error)
 
 	GetCategoryById(ctx context.Context, categoryId string) (*Category, error)
 	GetCategoriesById(ctx context.Context, categoryIds []string) ([]*Category, error)
@@ -45,7 +45,7 @@ type IndexRepository interface {
 
 	IndexAllMedia(ctx context.Context) error
 	DeleteMediaIndex(ctx context.Context) error
-	SearchMedias(ctx context.Context, cursor *paging.Cursor, title *string) ([]*Media, error)
+	SearchMedias(ctx context.Context, cursor *paging.Cursor, title *string) ([]*Series, error)
 
 	IndexAllCategories(ctx context.Context) error
 	IndexCategories(ctx context.Context, categories []*Category) error

@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS categories
 (
     id        text,
+    slug      text,
     title     text,
     thumbnail text,
     primary key ( id )
@@ -9,6 +10,7 @@ CREATE TABLE IF NOT EXISTS categories
 CREATE TABLE IF NOT EXISTS characters
 (
     id        text,
+    slug      text,
     name      text,
     thumbnail text,
     series_id text,
@@ -18,6 +20,7 @@ CREATE TABLE IF NOT EXISTS characters
 CREATE TABLE IF NOT EXISTS series
 (
     id        text,
+    slug      text,
     name      text,
     thumbnail text,
     media_id  text,
@@ -27,6 +30,7 @@ CREATE TABLE IF NOT EXISTS series
 CREATE TABLE IF NOT EXISTS media
 (
     id        text,
+    slug      text,
     title     text,
     thumbnail text,
     primary key ( id )
@@ -35,6 +39,7 @@ CREATE TABLE IF NOT EXISTS media
 CREATE TABLE IF NOT EXISTS brands
 (
     id        text,
+    slug      text,
     name      text,
     thumbnail text,
     primary key ( id )

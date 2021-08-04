@@ -88,7 +88,7 @@ func marshalPostToDatabase(pending *post.Post) *posts {
 		Content:            pending.Content(),
 		Categories:         pending.CategoryIds(),
 		Characters:         pending.CharacterIds(),
-		ArtistId:           pending.ArtistId(),
+		ArtistId:           pending.BrandId(),
 		CharactersRequests: characterRequests,
 		CategoriesRequests: categoryRequests,
 		MediaRequests:      mediaRequests,

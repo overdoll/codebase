@@ -27,7 +27,7 @@ type media struct {
 	Thumbnail string `db:"thumbnail"`
 }
 
-func (r PostsCassandraRepository) GetMediaById(ctx context.Context, mediaId string) (*post.Media, error) {
+func (r PostsCassandraRepository) GetMediaById(ctx context.Context, mediaId string) (*post.Series, error) {
 
 	queryMedia := r.session.
 		Query(mediaTable.Get()).
@@ -39,7 +39,7 @@ func (r PostsCassandraRepository) GetMediaById(ctx context.Context, mediaId stri
 	if err := queryMedia.Get(&med); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, post.ErrMediaNotFound
+			return nil, post.ErrSeriesNotFound
 		}
 
 		return nil, fmt.Errorf("failed to get media by id: %v", err)
@@ -52,9 +52,9 @@ func (r PostsCassandraRepository) GetMediaById(ctx context.Context, mediaId stri
 	), nil
 }
 
-func (r PostsCassandraRepository) GetMediasById(ctx context.Context, medi []string) ([]*post.Media, error) {
+func (r PostsCassandraRepository) GetMediasById(ctx context.Context, medi []string) ([]*post.Series, error) {
 
-	var medias []*post.Media
+	var medias []*post.Series
 
 	// if none then we get out or else the query will fail
 	if len(medi) == 0 {
@@ -84,7 +84,7 @@ func (r PostsCassandraRepository) GetMediasById(ctx context.Context, medi []stri
 	return medias, nil
 }
 
-func (r PostsCassandraRepository) CreateMedias(ctx context.Context, medias []*post.Media) error {
+func (r PostsCassandraRepository) CreateMedias(ctx context.Context, medias []*post.Series) error {
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
