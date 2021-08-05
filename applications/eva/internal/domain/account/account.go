@@ -16,10 +16,8 @@ type AccountRole string
 type LockReason string
 
 const (
-	Artist      AccountRole = "artist"
-	Contributor AccountRole = "contributor"
-	Moderator   AccountRole = "moderator"
-	Staff       AccountRole = "staff"
+	Staff    AccountRole = "staff"
+	Moderator AccountRole = "moderator"
 )
 
 const (
@@ -36,7 +34,6 @@ type Account struct {
 	roles     []AccountRole
 	verified  bool
 	avatar    string
-	unclaimed bool
 	locked    bool
 
 	lockedUntil  int
@@ -87,7 +84,6 @@ func NewAccount(id, username, email string) (*Account, error) {
 		id:        id,
 		username:  username,
 		email:     strings.ToLower(email),
-		unclaimed: email == "",
 	}, nil
 }
 
@@ -139,10 +135,6 @@ func (a *Account) LockedReason() string {
 
 func (a *Account) IsLockedDueToPostInfraction() bool {
 	return a.lockedReason == PostInfraction
-}
-
-func (a *Account) IsUnclaimed() bool {
-	return a.unclaimed
 }
 
 func (a *Account) MultiFactorEnabled() bool {
@@ -197,10 +189,6 @@ func (a *Account) isPrivileged() bool {
 
 func (a *Account) IsStaff() bool {
 	return a.hasRoles([]string{"staff"})
-}
-
-func (a *Account) IsArtist() bool {
-	return a.hasRoles([]string{"artist"})
 }
 
 func (a *Account) IsModerator() bool {

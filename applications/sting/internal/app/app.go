@@ -39,8 +39,9 @@ type Queries struct {
 	PostById      query.PostByIdHandler
 	CharacterById query.CharacterByIdHandler
 	CategoryById  query.CategoryByIdHandler
-	MediaById     query.MediaByIdHandler
-	ArtistById    query.ArtistByIdHandler
+	SeriesById    query.SeriesByIdHandler
+	AudienceById  query.AudienceByIdHandler
+	BrandById     query.BrandByIdHandler
 
 	SearchCategories query.SearchCategoriesHandler
 	SearchCharacters query.SearchCharactersHandler

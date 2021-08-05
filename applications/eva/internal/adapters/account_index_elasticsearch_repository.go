@@ -62,7 +62,7 @@ func NewAccountIndexElasticSearchRepository(client *elastic.Client, session gocq
 	return AccountIndexElasticSearchRepository{session: session, client: client}
 }
 
-func (r AccountIndexElasticSearchRepository) SearchAccounts(ctx context.Context, cursor *paging.Cursor, username string, artist bool) ([]*account.Account, error) {
+func (r AccountIndexElasticSearchRepository) SearchAccounts(ctx context.Context, cursor *paging.Cursor, username string) ([]*account.Account, error) {
 
 	builder := r.client.Search().
 		Index(accountIndexName)

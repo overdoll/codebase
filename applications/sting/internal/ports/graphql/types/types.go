@@ -17,12 +17,8 @@ type Object interface {
 }
 
 type Account struct {
-	// Artist status for this account
-	Artist *Artist `json:"artist"`
 	// Posts queue specific to this account (when moderator)
 	ModeratorPostsQueue *PostConnection `json:"moderatorPostsQueue"`
-	// Posts specific to this account
-	Posts *PostConnection `json:"posts"`
 	// Contributions specific to this account
 	Contributions *PostConnection `json:"contributions"`
 	ID            relay.ID        `json:"id"`
@@ -30,17 +26,65 @@ type Account struct {
 
 func (Account) IsEntity() {}
 
-type Artist struct {
-	ID              relay.ID `json:"id"`
-	DoNotPostReason *string  `json:"doNotPostReason"`
+type Audience struct {
+	// An ID pointing to this audience.
+	ID relay.ID `json:"id"`
+	// A url-friendly ID. Should be used when searching
+	Slug string `json:"slug"`
+	// A URL pointing to the object's thumbnail.
+	Thumbnail graphql1.URI `json:"thumbnail"`
+	// A title for this audience.
+	Title string `json:"title"`
+	// Posts belonging to this audience
+	Posts *PostConnection `json:"posts"`
 }
 
-func (Artist) IsNode()   {}
-func (Artist) IsEntity() {}
+func (Audience) IsNode()   {}
+func (Audience) IsObject() {}
+func (Audience) IsEntity() {}
+
+type AudienceConnection struct {
+	Edges    []*AudienceEdge `json:"edges"`
+	PageInfo *relay.PageInfo `json:"pageInfo"`
+}
+
+type AudienceEdge struct {
+	Cursor string `json:"cursor"`
+	Node   *Brand `json:"node"`
+}
+
+type Brand struct {
+	// An ID pointing to this brand.
+	ID relay.ID `json:"id"`
+	// A url-friendly ID. Should be used when searching
+	Slug string `json:"slug"`
+	// A URL pointing to the object's thumbnail.
+	Thumbnail graphql1.URI `json:"thumbnail"`
+	// A name for this brand.
+	Name string `json:"name"`
+	// Posts belonging to this brand
+	Posts *PostConnection `json:"posts"`
+}
+
+func (Brand) IsNode()   {}
+func (Brand) IsObject() {}
+func (Brand) IsEntity() {}
+
+type BrandConnection struct {
+	Edges    []*BrandEdge    `json:"edges"`
+	PageInfo *relay.PageInfo `json:"pageInfo"`
+}
+
+type BrandEdge struct {
+	Cursor string `json:"cursor"`
+	Node   *Brand `json:"node"`
+}
 
 type Category struct {
 	// An ID pointing to this category.
 	ID relay.ID `json:"id"`
+	// A url-friendly ID. Should be used when searching
+	Slug string `json:"slug"`
 	// A URL pointing to the object's thumbnail.
 	Thumbnail graphql1.URI `json:"thumbnail"`
 	// A title for this category.
@@ -66,12 +110,14 @@ type CategoryEdge struct {
 type Character struct {
 	// An ID pointing to this character.
 	ID relay.ID `json:"id"`
+	// A url-friendly ID. Should be used when searching
+	Slug string `json:"slug"`
 	// A URL pointing to the object's thumbnail.
 	Thumbnail graphql1.URI `json:"thumbnail"`
 	// A name for this character.
 	Name string `json:"name"`
-	// The media linked to this character.
-	Media *Media `json:"media"`
+	// The series linked to this character.
+	Series *Series `json:"series"`
 	// Posts belonging to this character
 	Posts *PostConnection `json:"posts"`
 }
@@ -90,71 +136,14 @@ type CharacterEdge struct {
 	Node   *Character `json:"node"`
 }
 
-type CharacterRequest struct {
-	Name            string    `json:"name"`
-	CustomMediaName *string   `json:"customMediaName"`
-	ExistingMediaID *relay.ID `json:"existingMediaId"`
-}
-
-type CharacterRequestType struct {
-	Name  string `json:"name"`
-	Media string `json:"media"`
-}
-
 type Content struct {
 	URL graphql1.URI `json:"url"`
-}
-
-// Create pending post.
-type CreatePostInput struct {
-	// Image IDs for the content
-	Content []string `json:"content"`
-	// Category IDs for this post
-	CategoryIds []relay.ID `json:"categoryIds"`
-	// Ids for all the characters
-	CharacterIds []relay.ID `json:"characterIds"`
-	// Requests (custom)
-	MediaRequests     []string            `json:"mediaRequests"`
-	CharacterRequests []*CharacterRequest `json:"characterRequests"`
-	// Existing artist's ID
-	ExistingArtist *relay.ID `json:"existingArtist"`
-	// Custom Artist's username
-	CustomArtistUsername *string `json:"customArtistUsername"`
-	// The author of this post is the artist, as well as contributor
-	PosterIsArtist *bool `json:"posterIsArtist"`
 }
 
 // Payload for a created pending post
 type CreatePostPayload struct {
 	// The pending post after the creation
 	Post *Post `json:"post"`
-	// If this pending post will be in review or not
-	Review *bool `json:"review"`
-}
-
-type Media struct {
-	// An ID pointing to this media.
-	ID relay.ID `json:"id"`
-	// A URL pointing to the object's thumbnail.
-	Thumbnail graphql1.URI `json:"thumbnail"`
-	// A title for this media.
-	Title string `json:"title"`
-	// Posts belonging to this media
-	Posts *PostConnection `json:"posts"`
-}
-
-func (Media) IsNode()   {}
-func (Media) IsObject() {}
-func (Media) IsEntity() {}
-
-type MediaConnection struct {
-	Edges    []*MediaEdge    `json:"edges"`
-	PageInfo *relay.PageInfo `json:"pageInfo"`
-}
-
-type MediaEdge struct {
-	Cursor string `json:"cursor"`
-	Node   *Media `json:"node"`
 }
 
 type Post struct {
@@ -163,22 +152,22 @@ type Post struct {
 	Reference string `json:"reference"`
 	// The state of the post
 	State PostState `json:"state"`
-	// Represents the account that this post belongs to
-	Artist *Account `json:"artist"`
 	// The moderator to whom this pending post was assigned
 	Moderator *Account `json:"moderator"`
 	// The contributor who contributed this post
 	Contributor *Account `json:"contributor"`
 	// Content belonging to this post
 	Content []*Content `json:"content"`
-	// The media that was requested.
-	MediaRequests []string `json:"mediaRequests"`
-	// The characters that were requested
-	CharacterRequests []*CharacterRequestType `json:"characterRequests"`
 	// The date and time of when this post was created
+	CreatedAt time.Time `json:"createdAt"`
+	// The date and time of when this post was posted
 	PostedAt time.Time `json:"postedAt"`
 	// The date at which this pending post will be reassigned
 	ReassignmentAt time.Time `json:"reassignmentAt"`
+	// Represents the audience that this post belongs to
+	Audience *Audience `json:"audience"`
+	// Represents the brand that this post belongs to
+	Brand *Brand `json:"brand"`
 	// Categories that belong to this post
 	Categories []*Category `json:"categories"`
 	// Characters that belong to this post
@@ -198,9 +187,121 @@ type PostEdge struct {
 	Node   *Post  `json:"node"`
 }
 
+type Series struct {
+	// An ID pointing to this media.
+	ID relay.ID `json:"id"`
+	// A url-friendly ID. Should be used when searching
+	Slug string `json:"slug"`
+	// A URL pointing to the object's thumbnail.
+	Thumbnail graphql1.URI `json:"thumbnail"`
+	// A title for this series.
+	Title string `json:"title"`
+	// Posts belonging to this series
+	Posts *PostConnection `json:"posts"`
+}
+
+func (Series) IsNode()   {}
+func (Series) IsObject() {}
+func (Series) IsEntity() {}
+
+type SeriesConnection struct {
+	Edges    []*SeriesEdge   `json:"edges"`
+	PageInfo *relay.PageInfo `json:"pageInfo"`
+}
+
+type SeriesEdge struct {
+	Cursor string  `json:"cursor"`
+	Node   *Series `json:"node"`
+}
+
+// Publish post.
+type SubmitPostInput struct {
+	// The post to publish
+	ID relay.ID `json:"id"`
+}
+
+// Payload for submitting a post
+type SubmitPostPayload struct {
+	// The post after being submitted
+	Post *Post `json:"post"`
+	// Whether or not the submitted post is going in review
+	InReview *bool `json:"inReview"`
+}
+
+// Update post audience.
+type UpdatePostAudienceInput struct {
+	// The post to update
+	ID relay.ID `json:"id"`
+	// The audience that this post belongs to
+	AudienceID relay.ID `json:"audienceId"`
+}
+
+// Payload for updating a post
+type UpdatePostAudiencePayload struct {
+	// The post after the update
+	Post *Post `json:"post"`
+}
+
+// Update post brand.
+type UpdatePostBrandInput struct {
+	// The post to update
+	ID relay.ID `json:"id"`
+	// The brand that this post belongs to
+	BrandID relay.ID `json:"brandId"`
+}
+
+// Payload for updating a post
+type UpdatePostBrandPayload struct {
+	// The post after the update
+	Post *Post `json:"post"`
+}
+
+// Update post audience.
+type UpdatePostCategoriesInput struct {
+	// The post to update
+	ID relay.ID `json:"id"`
+	// Category IDs for this post
+	CategoryIds []relay.ID `json:"categoryIds"`
+}
+
+// Payload for updating a post
+type UpdatePostCategoriesPayload struct {
+	// The post after the update
+	Post *Post `json:"post"`
+}
+
+// Update post characters.
+type UpdatePostCharactersInput struct {
+	// The post to update
+	ID relay.ID `json:"id"`
+	// Ids for all the characters
+	CharacterIds []relay.ID `json:"characterIds"`
+}
+
+// Payload for updating a post
+type UpdatePostCharactersPayload struct {
+	// The post after the update
+	Post *Post `json:"post"`
+}
+
+// Update post audience.
+type UpdatePostContentInput struct {
+	// The post to update
+	ID relay.ID `json:"id"`
+	// Image IDs for the content
+	Content []string `json:"content"`
+}
+
+// Payload for updating a post
+type UpdatePostContentPayload struct {
+	// The post after the update
+	Post *Post `json:"post"`
+}
+
 type PostState string
 
 const (
+	PostStateDraft      PostState = "Draft"
 	PostStatePublishing PostState = "Publishing"
 	PostStateReview     PostState = "Review"
 	PostStatePublished  PostState = "Published"
@@ -211,6 +312,7 @@ const (
 )
 
 var AllPostState = []PostState{
+	PostStateDraft,
 	PostStatePublishing,
 	PostStateReview,
 	PostStatePublished,
@@ -222,7 +324,7 @@ var AllPostState = []PostState{
 
 func (e PostState) IsValid() bool {
 	switch e {
-	case PostStatePublishing, PostStateReview, PostStatePublished, PostStateDiscarding, PostStateDiscarded, PostStateRejected, PostStateProcessing:
+	case PostStateDraft, PostStatePublishing, PostStateReview, PostStatePublished, PostStateDiscarding, PostStateDiscarded, PostStateRejected, PostStateProcessing:
 		return true
 	}
 	return false

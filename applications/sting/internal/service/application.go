@@ -68,8 +68,9 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			PostById:      query.NewPostByIdHandler(postRepo),
 			CharacterById: query.NewCharacterByIdHandler(postRepo),
 			CategoryById:  query.NewCategoryByIdHandler(postRepo),
-			ArtistById:    query.NewArtistByIdHandler(postRepo),
-			MediaById:     query.NewMediaByIdHandler(postRepo),
+			SeriesById:    query.NewSeriesByIdHandler(postRepo),
+			BrandById:     query.NewBrandByIdHandler(postRepo),
+			AudienceById:  query.NewAudienceByIdHandler(postRepo),
 
 			SearchSeries:     query.NewSearchSeriesHandler(indexRepo),
 			SearchCharacters: query.NewSearchCharactersHandler(indexRepo),

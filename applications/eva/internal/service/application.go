@@ -48,7 +48,6 @@ func createApplication(ctx context.Context, carrier command.CarrierService) app.
 			CreateAccountWithAuthenticationToken:      command.NewCreateAccountWithAuthenticationTokenHandler(tokenRepo, accountRepo),
 			GrantAuthenticationToken:                  command.NewGrantAuthenticationTokenHandler(tokenRepo, carrier),
 			LockAccountOperator:                       command.NewLockAccountOperatorHandler(accountRepo),
-			CreateAccountOperator:                     command.NewCreateAccountOperatorHandler(accountRepo),
 			UnlockAccount:                             command.NewUnlockUserHandler(accountRepo),
 			AddAccountEmail:                           command.NewAddAccountEmailHandler(accountRepo, carrier),
 			ConfirmAccountEmail:                       command.NewConfirmAccountEmailHandler(accountRepo),

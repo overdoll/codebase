@@ -3,10 +3,10 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "query",
     srcs = [
-        "artist_by_id.go",
+        "audience_by_id.go",
+        "brand_by_id.go",
         "category_by_id.go",
         "character_by_id.go",
-        "media_by_id.go",
         "post_by_id.go",
         "principal_by_id.go",
         "search_audience.go",
@@ -15,6 +15,7 @@ go_library(
         "search_characters.go",
         "search_posts.go",
         "search_series.go",
+        "series_by_id.go",
         "services.go",
     ],
     importpath = "overdoll/applications/sting/internal/app/query",

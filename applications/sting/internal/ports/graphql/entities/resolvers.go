@@ -71,8 +71,8 @@ func (r EntityResolver) FindCharacterByID(ctx context.Context, id relay.ID) (*ty
 
 func (r EntityResolver) FindMediaByID(ctx context.Context, id relay.ID) (*types.Media, error) {
 
-	media, err := r.App.Queries.MediaById.Handle(ctx, query.MediaById{
-		MediaId: id.GetID(),
+	media, err := r.App.Queries.SeriesById.Handle(ctx, query.SeriesById{
+		SeriesId: id.GetID(),
 	})
 
 	if err != nil {

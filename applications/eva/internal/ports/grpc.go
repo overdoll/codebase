@@ -57,17 +57,3 @@ func (s *Server) LockAccount(ctx context.Context, request *eva.LockAccountReques
 
 	return marshalAccountToProto(acc), nil
 }
-
-func (s *Server) CreateAccount(ctx context.Context, request *eva.CreateAccountRequest) (*eva.Account, error) {
-
-	acc, err := s.app.Commands.CreateAccountOperator.Handle(ctx, command.CreateAccountOperator{
-		Username: request.Username,
-		Email:    request.Email,
-	})
-
-	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
-	}
-
-	return marshalAccountToProto(acc), nil
-}
