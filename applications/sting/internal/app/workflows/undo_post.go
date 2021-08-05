@@ -2,7 +2,7 @@ package workflows
 
 import (
 	"go.temporal.io/sdk/workflow"
-	"overdoll/applications/sting/internal/app/activities"
+	"overdoll/applications/sting/internal/app/workflows/activities"
 )
 
 func UndoPost(ctx workflow.Context, id string) error {

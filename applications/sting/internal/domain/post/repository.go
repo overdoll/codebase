@@ -12,6 +12,13 @@ type Repository interface {
 	GetPostRequest(ctx context.Context, requester *principal.Principal, postId string) (*Post, error)
 	CreatePost(ctx context.Context, post *Post) error
 
+	// all of these are separated into different repositories because 1. we want to do permission checks and 2. we use separated commands and 3. we dont get issues with cassandra updates
+	UpdatePostContent(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
+	UpdatePostCategories(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
+	UpdatePostCharacters(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
+	UpdatePostBrand(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
+	UpdatePostAudience(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
+
 	UpdatePost(ctx context.Context, postId string, updateFn func(post *Post) error) (*Post, error)
 	DeletePost(ctx context.Context, postId string) error
 

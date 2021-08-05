@@ -4,25 +4,22 @@ type PostFilters struct {
 	moderatorId   *string
 	contributorId *string
 	brandId       *string
-	id            string
+	audienceId    *string
 	categoryIds   []string
 	characterIds  []string
 	seriesIds     []string
 }
 
-func NewPostFilters(moderatorId, contributorId, brandId *string, categoryIds, characterIds, seriesIds []string) (*PostFilters, error) {
+func NewPostFilters(moderatorId, contributorId, brandId, audienceId *string, categoryIds, characterIds, seriesIds []string) (*PostFilters, error) {
 	return &PostFilters{
 		moderatorId:   moderatorId,
+		audienceId:    audienceId,
 		contributorId: contributorId,
 		brandId:       brandId,
 		categoryIds:   categoryIds,
 		characterIds:  characterIds,
 		seriesIds:     seriesIds,
 	}, nil
-}
-
-func (e *PostFilters) ID() string {
-	return e.id
 }
 
 func (e *PostFilters) ModeratorId() *string {
@@ -35,6 +32,10 @@ func (e *PostFilters) ContributorId() *string {
 
 func (e *PostFilters) BrandId() *string {
 	return e.brandId
+}
+
+func (e *PostFilters) AudienceId() *string {
+	return e.audienceId
 }
 
 func (e *PostFilters) SeriesIds() []string {

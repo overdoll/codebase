@@ -207,8 +207,6 @@ func (r PostsCassandraRepository) UpdatePost(ctx context.Context, id string, upd
 			"moderator_reassignment_at",
 			"moderator_account_id",
 			"content",
-			"categories",
-			"characters",
 		)).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalPostToDatabase(currentPost))
@@ -218,4 +216,52 @@ func (r PostsCassandraRepository) UpdatePost(ctx context.Context, id string, upd
 	}
 
 	return currentPost, nil
+}
+
+func (r PostsCassandraRepository) updatePostRequest(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error, columns []string) (*post.Post, error) {
+
+	currentPost, err := r.GetPostRequest(ctx, requester, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	err = updateFn(currentPost)
+
+	if err != nil {
+		return nil, err
+	}
+
+	postQuery := r.session.
+		Query(postTable.Update(
+			columns...,
+		)).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(marshalPostToDatabase(currentPost))
+
+	if err := postQuery.ExecRelease(); err != nil {
+		return nil, fmt.Errorf("failed to update post: %v", err)
+	}
+
+	return currentPost, nil
+}
+
+func (r PostsCassandraRepository) UpdatePostContent(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
+	return r.updatePostRequest(ctx, requester, id, updateFn, []string{"content"})
+}
+
+func (r PostsCassandraRepository) UpdatePostAudience(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
+	return r.updatePostRequest(ctx, requester, id, updateFn, []string{"audience_id"})
+}
+
+func (r PostsCassandraRepository) UpdatePostBrand(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
+	return r.updatePostRequest(ctx, requester, id, updateFn, []string{"brand_id"})
+}
+
+func (r PostsCassandraRepository) UpdatePostCharacters(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
+	return r.updatePostRequest(ctx, requester, id, updateFn, []string{"character_ids"})
+}
+
+func (r PostsCassandraRepository) UpdatePostCategories(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
+	return r.updatePostRequest(ctx, requester, id, updateFn, []string{"category_ids"})
 }

@@ -3,12 +3,14 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "post",
     srcs = [
-        "artist.go",
+        "audience.go",
+        "brand.go",
         "category.go",
         "character.go",
-        "media.go",
         "post.go",
+        "post_filters.go",
         "repository.go",
+        "series.go",
     ],
     importpath = "overdoll/applications/sting/internal/domain/post",
     visibility = ["//visibility:public"],

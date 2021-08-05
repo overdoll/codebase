@@ -82,35 +82,6 @@ func UnmarshalPostFromDatabase(id, state, moderatorId, contributorId string, con
 	}
 }
 
-func (p *Post) UpdatePost(requester *principal.Principal, brand *Brand, audience *Audience, content []string, characters []*Character, categories []*Category) error {
-
-	if err := p.CanView(requester); err != nil {
-		return err
-	}
-
-	if brand != nil {
-		p.brand = brand
-	}
-
-	if audience != nil {
-		p.audience = audience
-	}
-
-	if content != nil {
-		p.content = content
-	}
-
-	if characters != nil {
-		p.characters = characters
-	}
-
-	if categories != nil {
-		p.categories = categories
-	}
-
-	return nil
-}
-
 func (p *Post) ID() string {
 	return p.id
 }
@@ -331,7 +302,7 @@ func (p *Post) MakeReview() error {
 	return nil
 }
 
-func (p *Post) SubmitPost(requester *principal.Principal, moderatorId string) error {
+func (p *Post) SubmitPostRequest(requester *principal.Principal, moderatorId string) error {
 
 	if err := p.CanView(requester); err != nil {
 		return err
@@ -341,6 +312,69 @@ func (p *Post) SubmitPost(requester *principal.Principal, moderatorId string) er
 	p.postedAt = time.Now()
 	p.reassignmentAt = time.Now().Add(time.Hour * 24)
 	p.state = processing
+
+	return nil
+}
+
+func (p *Post) UpdateBrandRequest(requester *principal.Principal, brand *Brand) error {
+
+	if err := p.CanUpdate(requester); err != nil {
+		return err
+	}
+
+	p.brand = brand
+	return nil
+}
+
+func (p *Post) UpdateAudienceRequest(requester *principal.Principal, audience *Audience, ) error {
+
+	if err := p.CanUpdate(requester); err != nil {
+		return err
+	}
+
+	p.audience = audience
+	return nil
+}
+
+func (p *Post) UpdateContentRequest(requester *principal.Principal, content []string) error {
+
+	if err := p.CanUpdate(requester); err != nil {
+		return err
+	}
+
+	p.content = content
+	return nil
+}
+
+func (p *Post) UpdateCharactersRequest(requester *principal.Principal, characters []*Character) error {
+
+	if err := p.CanUpdate(requester); err != nil {
+		return err
+	}
+
+	p.characters = characters
+	return nil
+}
+
+func (p *Post) UpdateCategoriesRequest(requester *principal.Principal, categories []*Category) error {
+
+	if err := p.CanUpdate(requester); err != nil {
+		return err
+	}
+
+	p.categories = categories
+	return nil
+}
+
+func (p *Post) CanUpdate(requester *principal.Principal) error {
+
+	if err := requester.BelongsToAccount(requester.AccountId()); err != nil {
+		return err
+	}
+
+	if p.state != draft {
+		return errors.New("can only update post in draft")
+	}
 
 	return nil
 }

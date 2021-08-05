@@ -10,6 +10,7 @@ go_library(
         "//applications/sting/internal/app",
         "//applications/sting/internal/app/command",
         "//applications/sting/internal/app/query",
+        "//applications/sting/internal/app/workflows/activities",
         "//libraries/bootstrap",
         "//libraries/clients",
     ],
@@ -22,9 +23,9 @@ go_test(
     deps = [
         ":service",
         "//applications/sting/internal/adapters",
+        "//applications/sting/internal/app/workflows",
         "//applications/sting/internal/ports",
         "//applications/sting/internal/ports/graphql/types",
-        "//applications/sting/internal/ports/temporal/workflows",
         "//applications/sting/proto:v1_go_proto",
         "//libraries/bootstrap",
         "//libraries/clients",

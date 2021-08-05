@@ -50,7 +50,7 @@ func (r *QueryResolver) Posts(ctx context.Context, after *string, before *string
 		ArtistId:      nil,
 		CategoryIds:   categoryIdsString,
 		CharacterIds:  characterIdsString,
-		MediaIds:      mediaIdsString,
+		SeriesIds:     mediaIdsString,
 		Principal:     principal.FromContext(ctx),
 	})
 
@@ -108,7 +108,7 @@ func (r *QueryResolver) Medias(ctx context.Context, after *string, before *strin
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	results, err := r.App.Queries.SearchMedias.Handle(ctx, query.SearchMedias{
+	results, err := r.App.Queries.SearchSeries.Handle(ctx, query.SearchSeries{
 		Cursor: cursor,
 		Title:  title,
 	})

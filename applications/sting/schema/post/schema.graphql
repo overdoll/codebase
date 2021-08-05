@@ -37,25 +37,49 @@ enum PostState {
   Processing
 }
 
-"""Update post."""
-input UpdatePostInput {
+"""Update post brand."""
+input UpdatePostBrandInput {
+  """The post to update"""
+  id: ID!
+
+  """The brand that this post belongs to"""
+  brandId: ID!
+}
+
+"""Update post audience."""
+input UpdatePostAudienceInput {
   """The post to update"""
   id: ID!
 
   """The audience that this post belongs to"""
-  audienceId: ID
+  audienceId: ID!
+}
 
-  """The brand that this post belongs to"""
-  brandId: ID
+"""Update post audience."""
+input UpdatePostContentInput {
+  """The post to update"""
+  id: ID!
 
   """Image IDs for the content"""
-  content: [String!]
+  content: [String!]!
+}
+
+"""Update post audience."""
+input UpdatePostCategoriesInput {
+  """The post to update"""
+  id: ID!
 
   """Category IDs for this post"""
-  categoryIds: [ID!]
+  categoryIds: [ID!]!
+}
+
+"""Update post characters."""
+input UpdatePostCharactersInput {
+  """The post to update"""
+  id: ID!
 
   """Ids for all the characters"""
-  characterIds: [ID!]
+  characterIds: [ID!]!
 }
 
 """Publish post."""
@@ -71,7 +95,31 @@ type CreatePostPayload {
 }
 
 """Payload for updating a post"""
-type UpdatePostPayload {
+type UpdatePostBrandPayload {
+  """The post after the update"""
+  post: Post
+}
+
+"""Payload for updating a post"""
+type UpdatePostAudiencePayload {
+  """The post after the update"""
+  post: Post
+}
+
+"""Payload for updating a post"""
+type UpdatePostContentPayload {
+  """The post after the update"""
+  post: Post
+}
+
+"""Payload for updating a post"""
+type UpdatePostCategoriesPayload {
+  """The post after the update"""
+  post: Post
+}
+
+"""Payload for updating a post"""
+type UpdatePostCharactersPayload {
   """The post after the update"""
   post: Post
 }
@@ -135,9 +183,29 @@ extend type Mutation {
   createPost: CreatePostPayload
 
   """
-  Update a post in draft status
+  Update a post in draft status - brand
   """
-  updatePost(input: UpdatePostInput!): UpdatePostPayload
+  updatePostBrand(input: UpdatePostBrandInput!): UpdatePostBrandPayload
+
+  """
+  Update a post in draft status - audience
+  """
+  updatePostAudience(input: UpdatePostAudienceInput!): UpdatePostAudiencePayload
+
+  """
+  Update a post in draft status - content
+  """
+  updatePostContent(input: UpdatePostContentInput!): UpdatePostContentPayload
+
+  """
+  Update a post in draft status - characters
+  """
+  updatePostCharacters(input: UpdatePostCharactersInput!): UpdatePostCharactersPayload
+
+  """
+  Update a post in draft status - categories
+  """
+  updatePostCategories(input: UpdatePostCategoriesInput!): UpdatePostCategoriesPayload
 
   """
   Submit a post. Will be either in review or instantly move to publishing if the account is verified

@@ -7,8 +7,8 @@ import (
 	"go.temporal.io/sdk/client"
 	"overdoll/applications/sting/internal/app"
 	"overdoll/applications/sting/internal/app/command"
+	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/applications/sting/internal/ports/graphql/types"
-	"overdoll/applications/sting/internal/ports/temporal/workflows"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
 )
@@ -66,7 +66,7 @@ func (r *MutationResolver) CreatePost(ctx context.Context, input types.CreatePos
 	pst, err := r.App.Commands.NewPost.
 		Handle(
 			ctx,
-			command.CreatePost{
+			command.NewPost{
 				Principal:            principal.FromContext(ctx),
 				ExistingArtistId:     artistId,
 				CustomArtistUsername: input.CustomArtistUsername,

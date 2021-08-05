@@ -8,7 +8,7 @@ import (
 	"overdoll/applications/sting/internal/app"
 	"overdoll/applications/sting/internal/app/command"
 	"overdoll/applications/sting/internal/app/query"
-	"overdoll/applications/sting/internal/ports/temporal/workflows"
+	"overdoll/applications/sting/internal/app/workflows"
 	sting "overdoll/applications/sting/proto"
 )
 

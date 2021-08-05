@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/viper"
 	"go.temporal.io/sdk/worker"
 	"overdoll/applications/sting/internal/app"
-	"overdoll/applications/sting/internal/ports/temporal/workflows"
+	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/libraries/clients"
 )
 

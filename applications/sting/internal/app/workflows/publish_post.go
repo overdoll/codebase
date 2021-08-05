@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"go.temporal.io/sdk/workflow"
-	"overdoll/applications/sting/internal/app/activities"
+	"overdoll/applications/sting/internal/app/workflows/activities"
 )
 
 func PublishPost(ctx workflow.Context, id string) error {

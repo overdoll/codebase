@@ -7,20 +7,20 @@ import (
 	"overdoll/libraries/paging"
 )
 
-type SearchMedias struct {
+type SearchSeries struct {
 	Cursor *paging.Cursor
 	Title  *string
 }
 
-type SearchMediasHandler struct {
+type SearchSeriesHandler struct {
 	pr post.IndexRepository
 }
 
-func NewSearchMediasHandler(pr post.IndexRepository) SearchMediasHandler {
-	return SearchMediasHandler{pr: pr}
+func NewSearchSeriesHandler(pr post.IndexRepository) SearchSeriesHandler {
+	return SearchSeriesHandler{pr: pr}
 }
 
-func (h SearchMediasHandler) Handle(ctx context.Context, query SearchMedias) ([]*post.Series, error) {
+func (h SearchSeriesHandler) Handle(ctx context.Context, query SearchSeries) ([]*post.Series, error) {
 
 	results, err := h.pr.SearchSeries(ctx, query.Cursor, query.Title)
 

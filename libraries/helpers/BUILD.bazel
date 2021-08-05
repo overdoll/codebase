@@ -5,7 +5,6 @@ go_library(
     srcs = [
         "get_ip.go",
         "gin.go",
-        "struct_name.go",
     ],
     importpath = "overdoll/libraries/helpers",
     visibility = ["//visibility:public"],

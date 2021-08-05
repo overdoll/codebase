@@ -13,10 +13,12 @@ type SearchPosts struct {
 	Cursor        *paging.Cursor
 	ModeratorId   *string
 	ContributorId *string
-	ArtistId      *string
-	CategoryIds   []string
-	CharacterIds  []string
-	MediaIds      []string
+
+	AudienceId   *string
+	BrandId      *string
+	CategoryIds  []string
+	CharacterIds []string
+	SeriesIds    []string
 }
 
 type SearchPostsHandler struct {
@@ -29,7 +31,7 @@ func NewSearchPostsHandler(pr post.IndexRepository) SearchPostsHandler {
 
 func (h SearchPostsHandler) Handle(ctx context.Context, query SearchPosts) ([]*post.Post, error) {
 
-	filters, err := post.NewPostFilters(query.ModeratorId, query.ContributorId, query.ArtistId, query.CategoryIds, query.CharacterIds, query.MediaIds)
+	filters, err := post.NewPostFilters(query.ModeratorId, query.ContributorId, query.AudienceId,  query.BrandId, query.CategoryIds, query.CharacterIds, query.SeriesIds)
 
 	if err != nil {
 		return nil, err

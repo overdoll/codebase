@@ -33,7 +33,7 @@ func (h SubmitPostHandler) Handle(ctx context.Context, cmd SubmitPost) (*post.Po
 			return errors.Wrap(err, "failed to get next moderator")
 		}
 
-		return post.SubmitPost(cmd.Principal, moderatorId)
+		return post.SubmitPostRequest(cmd.Principal, moderatorId)
 	})
 
 	if err != nil {
