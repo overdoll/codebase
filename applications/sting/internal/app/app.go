@@ -13,14 +13,15 @@ type Application struct {
 }
 
 type Commands struct {
+	// Tusd instance
+	TusComposer command.TusComposerHandler
+
 	CreatePost  command.CreatePostHandler
 	DiscardPost command.DiscardPostHandler
 	PublishPost command.PublishPostHandler
 	UndoPost    command.UndoPostHandler
 	RejectPost  command.RejectPostHandler
 	SubmitPost  command.SubmitPostHandler
-
-	HandleUpload command.HandleUploadHandler
 
 	UpdatePostContent    command.UpdatePostContentHandler
 	UpdatePostCategories command.UpdatePostCategoriesHandler

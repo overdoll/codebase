@@ -2,10 +2,9 @@ package post
 
 import (
 	"errors"
-	"os"
 	"time"
 
-	"overdoll/libraries/graphql"
+	resource "overdoll/applications/sting/internal/domain/resource"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/uuid"
@@ -48,7 +47,7 @@ type Post struct {
 	characters []*Character
 	categories []*Category
 
-	content        []*Resource
+	content        []*resource.Resource
 	createdAt      time.Time
 	postedAt       *time.Time
 	reassignmentAt *time.Time
@@ -66,9 +65,7 @@ func NewPost(contributor *principal.Principal) (*Post, error) {
 }
 
 func UnmarshalPostFromDatabase(id, state, moderatorId, contributorId string, content []map[string]string, brand *Brand, audience *Audience, characters []*Character, categories []*Category, createdAt time.Time, postedAt, reassignmentAt *time.Time) *Post {
-	var resources []*Resource
-
-	for _,
+	var resources []*resource.Resource
 
 
 	return &Post{
@@ -129,27 +126,8 @@ func (p *Post) State() string {
 	return string(p.state)
 }
 
-func (p *Post) Content() []string {
+func (p *Post) Content() []*resource.Resource {
 	return p.content
-}
-
-func (p *Post) ConvertContentToURI() []graphql.URI {
-
-	var generatedContent []graphql.URI
-
-	for _, image := range p.content {
-
-		baseUrl := os.Getenv("STATIC_URL") + "/" + "pending_posts"
-
-		if p.state == published {
-			baseUrl = os.Getenv("POSTS_URL")
-		}
-
-		// generate the proper content url
-		generatedContent = append(generatedContent, graphql.NewURI(baseUrl+"/"+p.contributorId+"/"+image))
-	}
-
-	return generatedContent
 }
 
 func (p *Post) UpdateModerator(moderatorId string) error {

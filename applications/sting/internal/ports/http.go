@@ -1,6 +1,7 @@
 package ports
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -41,47 +42,35 @@ func principalToContext(app *app.Application) gin.HandlerFunc {
 	}
 }
 
-func NewGraphQLServer(app *app.Application, client client.Client) http.Handler {
+func NewHttpServer(app *app.Application, client client.Client) http.Handler {
 	rtr := router.NewGinRouter()
 
+	// graphql
 	rtr.POST("/graphql", principalToContext(app), graphql.HandleGraphQL(gen.NewExecutableSchema(gen.Config{
 		Resolvers: gen.NewResolver(app, client),
 	})))
 
-	return rtr
-}
-
-func HandleTus(app *app.Application) http.Handler {
-
-	rtr := router.NewGinRouter()
-
-	handler, err := tusd.NewUnroutedHandler(config)
-
-	rtr.POST("", gin.HandlerFunc(handler.PostFile))
-	rtr.HEAD(":id", gin.HandlerFunc(handler.HeadFile))
-	rtr.PATCH(":id", gin.HandlerFunc(handler.PatchFile))
-	rtr.GET(":id", gin.HandlerFunc(handler.GetFile))
-
-	return rtr
-}
-
-func NewHttpServer(app app.Application) *http.ServeMux {
-	httpServer := &HttpServer{app: app}
-
-	mx := http.NewServeMux()
-	// Set up routes
-	mx.Handle("/api/upload/"))
-
-	return mx
-}
-
-func (h *HttpServer) HandleTUS() *tusd.Handler {
-
-	handler, err := h.app.Commands.HandleUpload.Handle(context.Background())
+	// tusd
+	composer, err := app.Commands.TusComposer.Handle(context.Background())
 
 	if err != nil {
-		log.Fatal(err)
+		zap.S().Fatal("failed to get composer ", zap.Error(err))
 	}
 
-	return handler
+	handler, err := tusd.NewHandler(tusd.Config{
+		BasePath:                "/upload/",
+		StoreComposer:           composer,
+		RespectForwardedHeaders: true,
+	})
+
+	if err != nil {
+		zap.S().Fatal("failed to create handler ", zap.Error(err))
+	}
+
+	rtr.POST("/upload", gin.WrapF(handler.PostFile))
+	rtr.HEAD("/upload/:id", gin.WrapF(handler.HeadFile))
+	rtr.PATCH("/upload/:id", gin.WrapF(handler.PatchFile))
+	rtr.GET("/upload/:id", gin.WrapF(handler.GetFile))
+
+	return rtr
 }

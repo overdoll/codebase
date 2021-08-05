@@ -83,7 +83,7 @@ func RunHttp(cmd *cobra.Command, args []string) {
 
 	defer client.Close()
 
-	srv := ports.NewGraphQLServer(&app, client)
+	srv := ports.NewHttpServer(&app, client)
 
 	bootstrap.InitializeHttpServer(":8000", srv, func() {})
 }

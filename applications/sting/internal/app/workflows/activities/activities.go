@@ -1,7 +1,7 @@
 package activities
 
 import (
-	"overdoll/applications/sting/internal/domain/content"
+	"overdoll/applications/sting/internal/domain/resource"
 	"overdoll/applications/sting/internal/domain/post"
 )
 
@@ -11,10 +11,10 @@ import (
 type Activities struct {
 	pr     post.Repository
 	pi     post.IndexRepository
-	cr     content.Repository
+	cr     resource.Repository
 	parley ParleyService
 }
 
-func NewActivitiesHandler(pr post.Repository, pi post.IndexRepository, cr content.Repository, parley ParleyService) *Activities {
+func NewActivitiesHandler(pr post.Repository, pi post.IndexRepository, cr resource.Repository, parley ParleyService) *Activities {
 	return &Activities{pr: pr, pi: pi, cr: cr, parley: parley}
 }
