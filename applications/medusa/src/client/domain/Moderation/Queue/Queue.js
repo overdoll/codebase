@@ -17,37 +17,22 @@ import {
 } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import Button from '@//:modules/form/button'
-import { graphql, usePreloadedQuery } from 'react-relay'
-import Posts from './Posts/Posts'
 import { useTranslation } from 'react-i18next'
-import type { QueueQuery } from '@//:artifacts/QueueQuery.graphql'
-
+import type { PreparedPostsQuery } from '@//:artifacts/PreparedPostsQuery.graphql'
 import InterfaceHelpQuestionCircle
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/help/interface-help-question-circle.svg'
-import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner'
+import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
+import PreparedPosts from './PreparedPosts/PreparedPosts'
+import type { PreloadedQueryInner } from 'react-relay/hooks'
 
 type Props = {
   prepared: {
-    stateQuery: QueueQuery,
+    postsQuery: PreloadedQueryInner<PreparedPostsQuery>,
   }
 }
 
-const PostsGQL = graphql`
-  query QueueQuery {
-    viewer {
-      ...PostsFragment
-    }
-    ...RejectionReasonsFragment
-  }
-`
-
 export default function Queue (props: Props): Node {
   const [t] = useTranslation('moderation')
-
-  const data = usePreloadedQuery<QueueQuery>(
-    PostsGQL,
-    props.prepared.stateQuery
-  )
 
   return (
     <>
@@ -91,12 +76,10 @@ export default function Queue (props: Props): Node {
             </Flex>
           </Flex>
           <Suspense fallback={
-            <CenteredSpinner />
+            <SkeletonStack />
           }
           >
-            <Posts
-              query={data} posts={data?.viewer}
-            />
+            <PreparedPosts query={props.prepared.postsQuery} />
           </Suspense>
         </Flex>
       </Center>

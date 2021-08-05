@@ -8,8 +8,8 @@ import {
   Button,
   Flex,
   HStack,
-  IconButton, MenuItem,
-  Spacer, Text
+  IconButton,
+  Spacer
 } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import { useTranslation } from 'react-i18next'
@@ -104,6 +104,7 @@ export default function NavigationBar (props: Props): Node {
             <HStack spacing={{ base: 2, md: 12, lg: 28 }}>
               {navigationSettings.map((item, index) => {
                 const route = item.firstRoute ? item.sidebar.routes[0].route : item.route
+                // const route = item.route
                 if (item.hidden) {
                   return null
                 }
@@ -113,9 +114,9 @@ export default function NavigationBar (props: Props): Node {
                       {({ match }) => (
                         <TopNavigationButton
                           exact={item.exact}
-                          match={match}
                           key={item.route}
                           icon={item.icon}
+                          match={!!match}
                           route={route} label={t(item.title)}
                         />
                       )}
@@ -132,7 +133,14 @@ export default function NavigationBar (props: Props): Node {
             >
               <Flex m={1}>
                 <TopRightMenu viewer={props.rootQuery}>
-                  <TopRightMenuButton route='/settings/profile' label='menu.settings' icon={InterfaceSettingCog} />
+                  <Route path='/settings'>
+                    {({ match }) => (
+                      <TopRightMenuButton
+                        match={!!match} route='/settings/profile' label='menu.settings'
+                        icon={InterfaceSettingCog}
+                      />
+                    )}
+                  </Route>
                 </TopRightMenu>
               </Flex>
             </Flex>

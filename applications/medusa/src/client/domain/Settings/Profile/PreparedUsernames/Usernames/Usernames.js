@@ -13,13 +13,9 @@ import {
   AccordionButton,
   AccordionPanel,
   AccordionIcon,
-  ListItem, UnorderedList,
   Text,
   ModalCloseButton,
-  useToast,
-  AlertIcon,
-  Alert,
-  AlertDescription
+  useToast
 } from '@chakra-ui/react'
 
 import { useTranslation } from 'react-i18next'
@@ -29,7 +25,7 @@ import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import type { UsernamesMutation } from '@//:artifacts/UsernamesMutation.graphql'
 import type { UsernamesSettingsFragment$key } from '@//:artifacts/UsernamesSettingsFragment.graphql'
 import ChangeUsernameForm from './ChangeUsernameForm/ChangeUsernameForm'
-import InfoTip from '../../../../components/InfoTip/InfoTip'
+import InfoTip from '../../../../../components/InfoTip/InfoTip'
 
 const UsernameFragmentGQL = graphql`
   fragment UsernamesSettingsFragment on Account {
@@ -65,11 +61,11 @@ type Props = {
 }
 
 export default function Usernames ({ usernames }: Props): Node {
+  const data = useFragment(UsernameFragmentGQL, usernames)
+
   const [changeUsername, isChangingUsername] = useMutation<UsernamesMutation>(
     UsernameMutationGQL
   )
-
-  const data = useFragment(UsernameFragmentGQL, usernames)
 
   const [t] = useTranslation('settings')
 

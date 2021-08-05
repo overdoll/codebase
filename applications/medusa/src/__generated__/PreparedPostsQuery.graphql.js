@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 660ed3a257fae78453f68eab0170530c
+ * @relayHash 5f67b6eba276cf13c5bb624f4aeb85b3
  */
 
 /* eslint-disable */
@@ -10,21 +10,21 @@
 import type { ConcreteRequest } from 'relay-runtime';
 import type { PostsFragment$ref } from "./PostsFragment.graphql";
 import type { RejectionReasonsFragment$ref } from "./RejectionReasonsFragment.graphql";
-export type QueueQueryVariables = {||};
-export type QueueQueryResponse = {|
+export type PreparedPostsQueryVariables = {||};
+export type PreparedPostsQueryResponse = {|
   +viewer: ?{|
     +$fragmentRefs: PostsFragment$ref
   |},
   +$fragmentRefs: RejectionReasonsFragment$ref,
 |};
-export type QueueQuery = {|
-  variables: QueueQueryVariables,
-  response: QueueQueryResponse,
+export type PreparedPostsQuery = {|
+  variables: PreparedPostsQueryVariables,
+  response: PreparedPostsQueryResponse,
 |};
 
 
 /*
-query QueueQuery {
+query PreparedPostsQuery {
   viewer {
     ...PostsFragment
     id
@@ -100,11 +100,11 @@ fragment PostsFragment on Account {
   moderatorPostsQueue(first: 1) {
     edges {
       node {
+        id
         ...PostHeaderFragment
         ...PostPreviewFragment
         ...ModeratePostFragment
         postedAt
-        id
         __typename
       }
       cursor
@@ -181,7 +181,7 @@ return {
     "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
-    "name": "QueueQuery",
+    "name": "PreparedPostsQuery",
     "selections": [
       {
         "alias": null,
@@ -212,7 +212,7 @@ return {
   "operation": {
     "argumentDefinitions": [],
     "kind": "Operation",
-    "name": "QueueQuery",
+    "name": "PreparedPostsQuery",
     "selections": [
       {
         "alias": null,
@@ -259,6 +259,7 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
+                      (v1/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -376,7 +377,6 @@ return {
                         "selections": (v5/*: any*/),
                         "storageKey": null
                       },
-                      (v1/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -502,14 +502,14 @@ return {
     ]
   },
   "params": {
-    "id": "660ed3a257fae78453f68eab0170530c",
+    "id": "5f67b6eba276cf13c5bb624f4aeb85b3",
     "metadata": {},
-    "name": "QueueQuery",
+    "name": "PreparedPostsQuery",
     "operationKind": "query",
     "text": null
   }
 };
 })();
 // prettier-ignore
-(node: any).hash = '534ac37cf372112f147dae12ea0c6362';
+(node: any).hash = 'e4e19ec2e9856fa1d1b77922c6c1aabf';
 module.exports = node;

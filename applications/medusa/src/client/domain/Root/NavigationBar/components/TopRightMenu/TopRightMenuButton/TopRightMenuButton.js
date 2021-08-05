@@ -10,15 +10,16 @@ type Props = {
   route: string,
   label: string,
   icon: () => void,
+  match: boolean,
 }
 
-export default function TopRightMenuButton ({ route, label, icon }: Props): Node {
+export default function TopRightMenuButton ({ route, label, icon, match }: Props): Node {
   const [t] = useTranslation('nav')
 
   return (
     <NavLink to={route}>
       {(isActive) => (
-        <MenuItem bg={isActive ? 'gray.700' : 'gray.800'}>
+        <MenuItem bg={match ? 'gray.700' : 'gray.800'}>
           <Icon
             pointerEvents='none'
             icon={icon} w='38px' h='38px' p={2}

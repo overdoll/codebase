@@ -4,17 +4,18 @@
 
 import type { Node } from 'react'
 import { graphql, usePaginationFragment } from 'react-relay'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import type { AuditLogsFragment, AuditLogsFragment$key } from '@//:artifacts/AuditLogsFragment.graphql'
 import {
   Button,
   Text,
   Flex,
-  Stack
+  Stack,
+  Accordion
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import AuditCard from './AuditCard/AuditCard'
-import AuditInspect from './AuditInspect/AuditInspect'
+import AuditInspect from './AuditCard/AuditInspect/AuditInspect'
 
 type Props = {
   auditLogs: AuditLogsFragment$key,
@@ -42,8 +43,6 @@ const AuditLogsGQL = graphql`
 export default function AuditLogs (props: Props): Node {
   const [t] = useTranslation('moderation')
 
-  const [selected, setSelected] = useState(null)
-
   const { data, loadNext, hasNext, isLoadingNext } = usePaginationFragment<AuditLogsFragment,
     _>(
       AuditLogsGQL,
@@ -55,13 +54,13 @@ export default function AuditLogs (props: Props): Node {
   return (
     <>
       <Stack mt={2} mb={3}>
-        {auditLogs.map((item, index) =>
-          <AuditCard
-            key={index} auditLog={auditLogs[index].node}
-            selected={selected === item}
-            setSelected={() => setSelected(item)}
-          />
-        )}
+        <Accordion allowToggle>
+          {auditLogs.map((item, index) =>
+            <AuditCard
+              key={index} auditLog={auditLogs[index].node}
+            />
+          )}
+        </Accordion>
       </Stack>
       <Flex justify='center'>
         {hasNext
@@ -74,8 +73,6 @@ export default function AuditLogs (props: Props): Node {
             {t('history.table.empty')}
           </Text>}
       </Flex>
-      {selected &&
-        <AuditInspect auditLog={selected?.node} selected={selected} onClose={() => setSelected(null)} />}
     </>
   )
 }

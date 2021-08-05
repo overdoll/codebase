@@ -9,34 +9,21 @@ import {
   Flex,
   Stack
 } from '@chakra-ui/react'
-import { graphql, usePreloadedQuery } from 'react-relay/hooks'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
-import type { ProfileSettingsQuery } from '@//:artifacts/ProfileSettingsQuery.graphql'
-import Usernames from './Usernames/Usernames'
-import Emails from './Emails/Emails'
-import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner'
+import type { PreparedUsernamesQuery } from '@//:artifacts/PreparedUsernamesQuery.graphql'
+import type { PreparedEmailsQuery } from '@//:artifacts/PreparedEmailsQuery.graphql'
+import PreparedEmails from './PreparedEmails/PreparedEmails'
+import PreparedUsernames from './PreparedUsernames/PreparedUsernames'
+import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
 
 type Props = {
   prepared: {
-    stateQuery: PreloadedQueryInner<ProfileSettingsQuery>,
+    usernamesQuery: PreloadedQueryInner<PreparedUsernamesQuery>,
+    emailsQuery: PreloadedQueryInner<PreparedEmailsQuery>,
   }
 };
 
-const ProfileSettingsGQL = graphql`
-  query ProfileSettingsQuery($first: Int) {
-    viewer {
-      ...UsernamesSettingsFragment
-      ...EmailsSettingsFragment
-    }
-  }
-`
-
 export default function Profile (props: Props): Node {
-  const data = usePreloadedQuery<ProfileSettingsQuery>(
-    ProfileSettingsGQL,
-    props.prepared.stateQuery
-  )
-
   return (
     <>
       <Helmet title='profile' />
@@ -48,18 +35,18 @@ export default function Profile (props: Props): Node {
           direction='column'
           mb={6}
         >
-          <Suspense fallback={<CenteredSpinner />}>
-            <Stack spacing={8}>
-              <Flex direction='column'>
-                <Usernames
-                  usernames={data?.viewer}
-                />
-              </Flex>
-              <Flex direction='column'>
-                <Emails emails={data?.viewer} />
-              </Flex>
-            </Stack>
-          </Suspense>
+          <Stack spacing={8}>
+            <Flex direction='column'>
+              <Suspense fallback={<SkeletonStack />}>
+                <PreparedUsernames query={props.prepared.usernamesQuery} />
+              </Suspense>
+            </Flex>
+            <Flex direction='column'>
+              <Suspense fallback={<SkeletonStack />}>
+                <PreparedEmails query={props.prepared.emailsQuery} />
+              </Suspense>
+            </Flex>
+          </Stack>
         </Flex>
       </Center>
     </>

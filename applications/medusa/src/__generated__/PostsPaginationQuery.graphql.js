@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 8f46bdcbe23c527ec5c22a5ebc9e9493
+ * @relayHash fb941be56e8c4d72f3184da61cbf6fa8
  */
 
 /* eslint-disable */
@@ -108,11 +108,11 @@ fragment PostsFragment_2HEEH6 on Account {
   moderatorPostsQueue(first: $first, after: $after) {
     edges {
       node {
+        id
         ...PostHeaderFragment
         ...PostPreviewFragment
         ...ModeratePostFragment
         postedAt
-        id
         __typename
       }
       cursor
@@ -284,6 +284,7 @@ return {
                         "name": "node",
                         "plural": false,
                         "selections": [
+                          (v4/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -401,7 +402,6 @@ return {
                             "selections": (v7/*: any*/),
                             "storageKey": null
                           },
-                          (v4/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -482,7 +482,7 @@ return {
     ]
   },
   "params": {
-    "id": "8f46bdcbe23c527ec5c22a5ebc9e9493",
+    "id": "fb941be56e8c4d72f3184da61cbf6fa8",
     "metadata": {},
     "name": "PostsPaginationQuery",
     "operationKind": "query",
@@ -491,5 +491,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '76682a7111f9934a66d06957a57f3b23';
+(node: any).hash = 'eac501d4218f19c33aa4b9339da6c7e7';
 module.exports = node;

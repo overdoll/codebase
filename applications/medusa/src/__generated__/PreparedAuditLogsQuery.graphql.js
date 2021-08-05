@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash c25bda2fd96df389b9261c273ca42f39
+ * @relayHash 1f605e4bd5e318c0847378549d290e1f
  */
 
 /* eslint-disable */
@@ -9,20 +9,20 @@
 
 import type { ConcreteRequest } from 'relay-runtime';
 import type { AuditLogsFragment$ref } from "./AuditLogsFragment.graphql";
-export type HistoryAuditQueryVariables = {||};
-export type HistoryAuditQueryResponse = {|
+export type PreparedAuditLogsQueryVariables = {||};
+export type PreparedAuditLogsQueryResponse = {|
   +viewer: ?{|
     +$fragmentRefs: AuditLogsFragment$ref
   |}
 |};
-export type HistoryAuditQuery = {|
-  variables: HistoryAuditQueryVariables,
-  response: HistoryAuditQueryResponse,
+export type PreparedAuditLogsQuery = {|
+  variables: PreparedAuditLogsQueryVariables,
+  response: PreparedAuditLogsQueryResponse,
 |};
 
 
 /*
-query HistoryAuditQuery {
+query PreparedAuditLogsQuery {
   viewer {
     ...AuditLogsFragment
     id
@@ -165,7 +165,7 @@ return {
     "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
-    "name": "HistoryAuditQuery",
+    "name": "PreparedAuditLogsQuery",
     "selections": [
       {
         "alias": null,
@@ -191,7 +191,7 @@ return {
   "operation": {
     "argumentDefinitions": [],
     "kind": "Operation",
-    "name": "HistoryAuditQuery",
+    "name": "PreparedAuditLogsQuery",
     "selections": [
       {
         "alias": null,
@@ -434,14 +434,14 @@ return {
     ]
   },
   "params": {
-    "id": "c25bda2fd96df389b9261c273ca42f39",
+    "id": "1f605e4bd5e318c0847378549d290e1f",
     "metadata": {},
-    "name": "HistoryAuditQuery",
+    "name": "PreparedAuditLogsQuery",
     "operationKind": "query",
     "text": null
   }
 };
 })();
 // prettier-ignore
-(node: any).hash = '6b659be723e066916ae59b491bf3533d';
+(node: any).hash = '31a13917363fe234a48ea468c847fd16';
 module.exports = node;

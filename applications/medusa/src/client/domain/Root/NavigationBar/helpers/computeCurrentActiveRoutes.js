@@ -27,26 +27,21 @@ export default function computeCurrentActiveRoutes ({ environment }) {
   // TODO rewrite the whole function to make it more readable
 
   /*
- const navRoutes2 =
-   activeRoutes.map((item) => {
-     if (item.navigation && isRouteValid({ environment }, item)) {
-       return ({
-         ...item,
-         ...(item.navigation?.side && item.routes.map((childItem) => {
-           if (childItem.navigation?.side && isRouteValid({ environment }, childItem.path)) {
-             return ({
-               ...childItem
-             })
-           }
-         }))
-       })
-     }
-     return null
-   })
-
-   console.log(navRoutes2)
-
-   */
+  top {
+  ... only links for top display
+  (firstRoute support)
+  (basePath)
+  }
+  menu {
+  ... only links for menu display
+  (firstRoute support)
+  (basePath)
+  }
+  sidebar {
+  ... only links (recursive?) for sidebar to render when path matches
+  ... includes "groupings" that are only words
+  }
+  */
 
   const navRoutes = (routes) => {
     const navHeaders = []

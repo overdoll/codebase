@@ -36,9 +36,9 @@ const EmailsFragmentGQL = graphql`
 `
 
 export default function Emails ({ emails }: Props): Node {
-  const [t] = useTranslation('settings')
-
   const data = useFragment(EmailsFragmentGQL, emails)
+
+  const [t] = useTranslation('settings')
 
   const emailsConnectionID = data?.emails?.__id
 

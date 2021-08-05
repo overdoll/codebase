@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash cc281904ed6fe764d570de27c967a161
+ * @relayHash e2b9e029f597eba6ddaf0b9de1ef41bf
  */
 
 /* eslint-disable */
@@ -9,18 +9,18 @@
 
 import type { ConcreteRequest } from 'relay-runtime';
 import type { QueueSettingsFragment$ref } from "./QueueSettingsFragment.graphql";
-export type ModerationSettingsQueryVariables = {||};
-export type ModerationSettingsQueryResponse = {|
+export type PreparedQueueSettingsQueryVariables = {||};
+export type PreparedQueueSettingsQueryResponse = {|
   +$fragmentRefs: QueueSettingsFragment$ref
 |};
-export type ModerationSettingsQuery = {|
-  variables: ModerationSettingsQueryVariables,
-  response: ModerationSettingsQueryResponse,
+export type PreparedQueueSettingsQuery = {|
+  variables: PreparedQueueSettingsQueryVariables,
+  response: PreparedQueueSettingsQueryResponse,
 |};
 
 
 /*
-query ModerationSettingsQuery {
+query PreparedQueueSettingsQuery {
   ...QueueSettingsFragment
 }
 
@@ -37,7 +37,7 @@ const node: ConcreteRequest = {
     "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
-    "name": "ModerationSettingsQuery",
+    "name": "PreparedQueueSettingsQuery",
     "selections": [
       {
         "args": null,
@@ -52,7 +52,7 @@ const node: ConcreteRequest = {
   "operation": {
     "argumentDefinitions": [],
     "kind": "Operation",
-    "name": "ModerationSettingsQuery",
+    "name": "PreparedQueueSettingsQuery",
     "selections": [
       {
         "alias": null,
@@ -82,13 +82,13 @@ const node: ConcreteRequest = {
     ]
   },
   "params": {
-    "id": "cc281904ed6fe764d570de27c967a161",
+    "id": "e2b9e029f597eba6ddaf0b9de1ef41bf",
     "metadata": {},
-    "name": "ModerationSettingsQuery",
+    "name": "PreparedQueueSettingsQuery",
     "operationKind": "query",
     "text": null
   }
 };
 // prettier-ignore
-(node: any).hash = '555045c3015fa2569090184eff56a879';
+(node: any).hash = 'cee13b9eff45fcaef6b3f977124d37ee';
 module.exports = node;

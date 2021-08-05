@@ -5,33 +5,20 @@ import type { Node } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Center, Flex, Heading, Table, Th, Thead, Tr } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
-import { graphql, usePreloadedQuery } from 'react-relay'
-import type { HistoryAuditQuery } from '@//:artifacts/HistoryAuditQuery.graphql'
 import { Suspense } from 'react'
-import AuditLogs from './AuditLogs/AuditLogs'
-import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner'
-
-const AuditLogsGQL = graphql`
-  query HistoryAuditQuery {
-    viewer {
-      ...AuditLogsFragment
-    }
-  }
-`
+import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
+import type { PreloadedQueryInner } from 'react-relay/hooks'
+import type { PreparedAuditLogsQuery } from '@//:artifacts/PreparedAuditLogsQuery.graphql'
+import PreparedAuditLogs from './PreparedAuditLogs/PreparedAuditLogs'
 
 type Props = {
   prepared: {
-    stateQuery: HistoryAuditQuery
+    auditLogsQuery: PreloadedQueryInner<PreparedAuditLogsQuery>,
   }
 }
 
 export default function History (props: Props): Node {
   const [t] = useTranslation('moderation')
-
-  const data = usePreloadedQuery<HistoryAuditQuery>(
-    AuditLogsGQL,
-    props.prepared.stateQuery
-  )
 
   return (
     <>
@@ -52,10 +39,10 @@ export default function History (props: Props): Node {
             </Thead>
           </Table>
           <Suspense fallback={
-            <CenteredSpinner />
+            <SkeletonStack />
           }
           >
-            <AuditLogs auditLogs={data?.viewer} />
+            <PreparedAuditLogs query={props.prepared.auditLogsQuery} />
           </Suspense>
         </Flex>
       </Center>

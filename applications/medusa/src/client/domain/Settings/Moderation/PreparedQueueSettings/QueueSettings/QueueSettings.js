@@ -53,7 +53,6 @@ export default function QueueSettings ({ account }: Props): Node {
       {
         variables: {},
         onCompleted (data) {
-          console.log(data)
           if (data.toggleModeratorSettingsInQueue.moderatorSettingsInQueue) {
             notify({
               status: 'success',
@@ -87,8 +86,8 @@ export default function QueueSettings ({ account }: Props): Node {
       <Flex align='center' direction='row'>
         <Switch onChange={onChangeSettings} isDisabled={isChangingSettings} mr={4} defaultChecked={status} />
         <Flex direction='column'>
-          <Heading color='gray.100' fontSize='xl'>{t('moderation.queue.toggle.header')}</Heading>
-          <Text color='gray.200' fontSize='md'>{t('moderation.queue.toggle.subheader')}</Text>
+          <Heading color='gray.100' fontSize='lg'>{t('moderation.queue.toggle.header')}</Heading>
+          <Text color='gray.200' fontSize='sm'>{t('moderation.queue.toggle.subheader')}</Text>
         </Flex>
       </Flex>
     </>

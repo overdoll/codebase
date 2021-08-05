@@ -7,7 +7,7 @@ import {
   Stack,
   Text,
   IconButton,
-  Heading
+  Heading, Box
 } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import { useState } from 'react'
@@ -46,6 +46,7 @@ const PostsGQL = graphql`
       __id
       edges {
         node {
+          id
           ...PostHeaderFragment
           ...PostPreviewFragment
           ...ModeratePostFragment
@@ -161,6 +162,11 @@ export default function Posts (props: Props): Node {
           <PostPreview post={currentPost} />
         </Flex>
         <ModeratePost connectionID={postsConnection} infractions={props.query} postID={currentPost} />
+        <Box pl={1} pr={1}>
+          <Text fontSize='xs' color='gray.500'>
+            {currentPost.id}
+          </Text>
+        </Box>
       </Flex>
     </>
   )

@@ -19,6 +19,7 @@ export type PostsFragment = {|
     +__id: string,
     +edges: $ReadOnlyArray<{|
       +node: {|
+        +id: string,
         +postedAt: any,
         +$fragmentRefs: PostHeaderFragment$ref & PostPreviewFragment$ref & ModeratePostFragment$ref,
       |}
@@ -39,7 +40,14 @@ export type PostsFragment$key = {
 const node: ReaderFragment = (function(){
 var v0 = [
   "moderatorPostsQueue"
-];
+],
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
 return {
   "argumentDefinitions": [
     {
@@ -105,6 +113,7 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
+                (v1/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -187,13 +196,7 @@ return {
       ],
       "storageKey": null
     },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    },
+    (v1/*: any*/),
     {
       "args": null,
       "kind": "FragmentSpread",
@@ -205,5 +208,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '76682a7111f9934a66d06957a57f3b23';
+(node: any).hash = 'eac501d4218f19c33aa4b9339da6c7e7';
 module.exports = node;
