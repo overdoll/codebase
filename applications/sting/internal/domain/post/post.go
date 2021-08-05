@@ -50,8 +50,8 @@ type Post struct {
 
 	content        []string
 	createdAt      time.Time
-	postedAt       time.Time
-	reassignmentAt time.Time
+	postedAt       *time.Time
+	reassignmentAt *time.Time
 }
 
 func NewPost(contributor *principal.Principal) (*Post, error) {
@@ -65,7 +65,7 @@ func NewPost(contributor *principal.Principal) (*Post, error) {
 	}, nil
 }
 
-func UnmarshalPostFromDatabase(id, state, moderatorId, contributorId string, content []string, brand *Brand, audience *Audience, characters []*Character, categories []*Category, createdAt, postedAt, reassignmentAt time.Time) *Post {
+func UnmarshalPostFromDatabase(id, state, moderatorId, contributorId string, content []string, brand *Brand, audience *Audience, characters []*Character, categories []*Category, createdAt time.Time, postedAt, reassignmentAt *time.Time) *Post {
 	return &Post{
 		id:             id,
 		moderatorId:    moderatorId,
@@ -153,8 +153,10 @@ func (p *Post) UpdateModerator(moderatorId string) error {
 		return ErrAlreadyModerated
 	}
 
+	newTime := time.Now().Add(time.Hour * 24)
+
 	p.moderatorId = moderatorId
-	p.reassignmentAt = time.Now().Add(time.Hour * 24)
+	p.reassignmentAt = &newTime
 
 	return nil
 }
@@ -193,11 +195,11 @@ func (p *Post) CreatedAt() time.Time {
 	return p.createdAt
 }
 
-func (p *Post) PostedAt() time.Time {
+func (p *Post) PostedAt() *time.Time {
 	return p.postedAt
 }
 
-func (p *Post) ReassignmentAt() time.Time {
+func (p *Post) ReassignmentAt() *time.Time {
 	return p.reassignmentAt
 }
 
@@ -264,6 +266,10 @@ func (p *Post) MakeProcessing() error {
 	return nil
 }
 
+func (p *Post) InDraft() bool {
+	return p.state == draft
+}
+
 func (p *Post) InReview() bool {
 	return p.state == review
 }
@@ -308,9 +314,12 @@ func (p *Post) SubmitPostRequest(requester *principal.Principal, moderatorId str
 		return err
 	}
 
+	postTime := time.Now()
+	reassignmentAt := time.Now().Add(time.Hour * 24)
+
 	p.moderatorId = moderatorId
-	p.postedAt = time.Now()
-	p.reassignmentAt = time.Now().Add(time.Hour * 24)
+	p.postedAt = &postTime
+	p.reassignmentAt = &reassignmentAt
 	p.state = processing
 
 	return nil

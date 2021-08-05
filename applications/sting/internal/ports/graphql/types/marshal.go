@@ -9,22 +9,6 @@ import (
 
 func MarshalPostToGraphQL(result *post.Post) *Post {
 
-	// Unmarshal our json into the correct model
-	var mediaRequests []string
-
-	for _, med := range result.MediaRequests() {
-		mediaRequests = append(mediaRequests, med.Title)
-	}
-
-	var characterRequests []*CharacterRequestType
-
-	for _, med := range result.CharacterRequests() {
-		characterRequests = append(characterRequests, &CharacterRequestType{
-			Name:  med.Name,
-			Media: med.Media,
-		})
-	}
-
 	var categories []*Category
 
 	for _, cat := range result.Categories() {
@@ -38,6 +22,10 @@ func MarshalPostToGraphQL(result *post.Post) *Post {
 	}
 
 	var state PostState
+
+	if result.InDraft() {
+		state = PostStateDraft
+	}
 
 	if result.InReview() {
 		state = PostStateReview
@@ -73,33 +61,64 @@ func MarshalPostToGraphQL(result *post.Post) *Post {
 		content = append(content, &Content{URL: graphql.NewURI(id)})
 	}
 
+	var brand *Brand
+
+	if result.Brand() != nil {
+		brand = MarshalBrandToGraphQL(result.Brand())
+	}
+
+	var audience *Audience
+
+	if result.Audience() != nil {
+		audience = MarshalAudienceToGraphQL(result.Audience())
+	}
+
+	var moderator *Account
+
+	if result.ModeratorId() != "" {
+		moderator = &Account{ID: relay.NewID(Account{}, result.ModeratorId())}
+	}
+
 	return &Post{
-		ID:                relay.NewID(Post{}, result.ID()),
-		Reference:         result.ID(),
-		Moderator:         &Account{ID: relay.NewID(Account{}, result.ModeratorId())},
-		Contributor:       &Account{ID: relay.NewID(Account{}, result.ContributorId())},
-		Artist:            &Account{ID: relay.NewID(Account{}, result.Brand())},
-		State:             state,
-		Content:           content,
-		Categories:        categories,
-		Characters:        characters,
-		MediaRequests:     mediaRequests,
-		CharacterRequests: characterRequests,
-		PostedAt:          result.PostedAt(),
-		ReassignmentAt:    result.ReassignmentAt(),
+		ID:             relay.NewID(Post{}, result.ID()),
+		Reference:      result.ID(),
+		Moderator:      moderator,
+		Contributor:    &Account{ID: relay.NewID(Account{}, result.ContributorId())},
+		Brand:          brand,
+		Audience:       audience,
+		State:          state,
+		Content:        content,
+		Categories:     categories,
+		Characters:     characters,
+		CreatedAt:      result.CreatedAt(),
+		PostedAt:       result.PostedAt(),
+		ReassignmentAt: result.ReassignmentAt(),
 	}
 }
 
-func MarshalArtistToGraphQL(result *post.Artist) *Artist {
-	return &Artist{
-		ID: relay.NewID(Artist{}, result.ID()),
+func MarshalBrandToGraphQL(result *post.Brand) *Brand {
+	return &Brand{
+		ID:        relay.NewID(Brand{}, result.ID()),
+		Name:      result.Name(),
+		Slug:      result.Slug(),
+		Thumbnail: result.ConvertThumbnailToURI(),
 	}
 }
 
-func MarshalMediaToGraphQL(result *post.Series) *Media {
-	return &Media{
-		ID:        relay.NewID(Media{}, result.ID()),
+func MarshalAudienceToGraphQL(result *post.Audience) *Audience {
+	return &Audience{
+		ID:        relay.NewID(Brand{}, result.ID()),
 		Title:     result.Title(),
+		Slug:      result.Slug(),
+		Thumbnail: result.ConvertThumbnailToURI(),
+	}
+}
+
+func MarshalSeriesToGraphQL(result *post.Series) *Series {
+	return &Series{
+		ID:        relay.NewID(Series{}, result.ID()),
+		Title:     result.Title(),
+		Slug:      result.Slug(),
 		Thumbnail: result.ConvertThumbnailToURI(),
 	}
 }
@@ -108,6 +127,7 @@ func MarshalCategoryToGraphQL(result *post.Category) *Category {
 	return &Category{
 		ID:        relay.NewID(Category{}, result.ID()),
 		Thumbnail: result.ConvertThumbnailToURI(),
+		Slug:      result.Slug(),
 		Title:     result.Title(),
 	}
 }
@@ -116,8 +136,9 @@ func MarshalCharacterToGraphQL(result *post.Character) *Character {
 	return &Character{
 		ID:        relay.NewID(Character{}, result.ID()),
 		Name:      result.Name(),
+		Slug:      result.Slug(),
 		Thumbnail: result.ConvertThumbnailToURI(),
-		Media:     MarshalMediaToGraphQL(result.Series()),
+		Series:    MarshalSeriesToGraphQL(result.Series()),
 	}
 }
 
@@ -181,67 +202,235 @@ func MarshalCategoryToGraphQLConnection(results []*post.Category, cursor *paging
 }
 
 func MarshalCharacterToGraphQLConnection(results []*post.Character, cursor *paging.Cursor) *CharacterConnection {
-	resp := make([]*CharacterEdge, 0)
+	var characters []*CharacterEdge
 
-	// Unmarshal our json into the correct model
-	for _, result := range results {
-		resp = append(resp, &CharacterEdge{
-			Cursor: result.Cursor(),
-			Node:   MarshalCharacterToGraphQL(result),
-		})
-	}
-
-	var startCursor *string
-	var endCursor *string
-
-	if len(results) > 0 {
-		res := results[0].Cursor()
-		startCursor = &res
-		res = results[len(results)-1].Cursor()
-		endCursor = &res
-	}
-
-	return &CharacterConnection{
-		Edges: resp,
+	conn := &CharacterConnection{
 		PageInfo: &relay.PageInfo{
 			HasNextPage:     false,
 			HasPreviousPage: false,
-			StartCursor:     startCursor,
-			EndCursor:       endCursor,
+			StartCursor:     nil,
+			EndCursor:       nil,
 		},
+		Edges: characters,
 	}
+
+	limit := cursor.GetLimit()
+
+	if len(results) == 0 {
+		return conn
+	}
+
+	if len(results) == limit {
+		conn.PageInfo.HasNextPage = cursor.First() != nil
+		conn.PageInfo.HasPreviousPage = cursor.Last() != nil
+		results = results[:len(results)-1]
+	}
+
+	var nodeAt func(int) *post.Character
+
+	if cursor != nil && cursor.Last() != nil {
+		n := len(results) - 1
+		nodeAt = func(i int) *post.Character {
+			return results[n-i]
+		}
+	} else {
+		nodeAt = func(i int) *post.Character {
+			return results[i]
+		}
+	}
+
+	for i := range results {
+		node := nodeAt(i)
+		characters = append(characters, &CharacterEdge{
+			Node:   MarshalCharacterToGraphQL(node),
+			Cursor: node.Cursor(),
+		})
+	}
+
+	conn.Edges = characters
+
+	if len(results) > 0 {
+		res := results[0].Cursor()
+		conn.PageInfo.StartCursor = &res
+		res = results[len(results)-1].Cursor()
+		conn.PageInfo.EndCursor = &res
+	}
+
+	return conn
 }
 
-func MarshalMediaToGraphQLConnection(results []*post.Series, cursor *paging.Cursor) *MediaConnection {
-	resp := make([]*MediaEdge, 0)
+func MarshalSeriesToGraphQLConnection(results []*post.Series, cursor *paging.Cursor) *SeriesConnection {
+	var series []*SeriesEdge
 
-	// Unmarshal our json into the correct model
-	for _, result := range results {
-		resp = append(resp, &MediaEdge{
-			Cursor: result.Cursor(),
-			Node:   MarshalMediaToGraphQL(result),
-		})
-	}
-
-	var startCursor *string
-	var endCursor *string
-
-	if len(results) > 0 {
-		res := results[0].Cursor()
-		startCursor = &res
-		res = results[len(results)-1].Cursor()
-		endCursor = &res
-	}
-
-	return &MediaConnection{
-		Edges: resp,
+	conn := &SeriesConnection{
 		PageInfo: &relay.PageInfo{
 			HasNextPage:     false,
 			HasPreviousPage: false,
-			StartCursor:     startCursor,
-			EndCursor:       endCursor,
+			StartCursor:     nil,
+			EndCursor:       nil,
 		},
+		Edges: series,
 	}
+
+	limit := cursor.GetLimit()
+
+	if len(results) == 0 {
+		return conn
+	}
+
+	if len(results) == limit {
+		conn.PageInfo.HasNextPage = cursor.First() != nil
+		conn.PageInfo.HasPreviousPage = cursor.Last() != nil
+		results = results[:len(results)-1]
+	}
+
+	var nodeAt func(int) *post.Series
+
+	if cursor != nil && cursor.Last() != nil {
+		n := len(results) - 1
+		nodeAt = func(i int) *post.Series {
+			return results[n-i]
+		}
+	} else {
+		nodeAt = func(i int) *post.Series {
+			return results[i]
+		}
+	}
+
+	for i := range results {
+		node := nodeAt(i)
+		series = append(series, &SeriesEdge{
+			Node:   MarshalSeriesToGraphQL(node),
+			Cursor: node.Cursor(),
+		})
+	}
+
+	conn.Edges = series
+
+	if len(results) > 0 {
+		res := results[0].Cursor()
+		conn.PageInfo.StartCursor = &res
+		res = results[len(results)-1].Cursor()
+		conn.PageInfo.EndCursor = &res
+	}
+
+	return conn
+}
+
+func MarshalBrandsToGraphQLConnection(results []*post.Brand, cursor *paging.Cursor) *BrandConnection {
+	var brands []*BrandEdge
+
+	conn := &BrandConnection{
+		PageInfo: &relay.PageInfo{
+			HasNextPage:     false,
+			HasPreviousPage: false,
+			StartCursor:     nil,
+			EndCursor:       nil,
+		},
+		Edges: brands,
+	}
+
+	limit := cursor.GetLimit()
+
+	if len(results) == 0 {
+		return conn
+	}
+
+	if len(results) == limit {
+		conn.PageInfo.HasNextPage = cursor.First() != nil
+		conn.PageInfo.HasPreviousPage = cursor.Last() != nil
+		results = results[:len(results)-1]
+	}
+
+	var nodeAt func(int) *post.Brand
+
+	if cursor != nil && cursor.Last() != nil {
+		n := len(results) - 1
+		nodeAt = func(i int) *post.Brand {
+			return results[n-i]
+		}
+	} else {
+		nodeAt = func(i int) *post.Brand {
+			return results[i]
+		}
+	}
+
+	for i := range results {
+		node := nodeAt(i)
+		brands = append(brands, &BrandEdge{
+			Node:   MarshalBrandToGraphQL(node),
+			Cursor: node.Cursor(),
+		})
+	}
+
+	conn.Edges = brands
+
+	if len(results) > 0 {
+		res := results[0].Cursor()
+		conn.PageInfo.StartCursor = &res
+		res = results[len(results)-1].Cursor()
+		conn.PageInfo.EndCursor = &res
+	}
+
+	return conn
+}
+
+func MarshalAudienceToGraphQLConnection(results []*post.Audience, cursor *paging.Cursor) *AudienceConnection {
+	var audiences []*AudienceEdge
+
+	conn := &AudienceConnection{
+		PageInfo: &relay.PageInfo{
+			HasNextPage:     false,
+			HasPreviousPage: false,
+			StartCursor:     nil,
+			EndCursor:       nil,
+		},
+		Edges: audiences,
+	}
+
+	limit := cursor.GetLimit()
+
+	if len(results) == 0 {
+		return conn
+	}
+
+	if len(results) == limit {
+		conn.PageInfo.HasNextPage = cursor.First() != nil
+		conn.PageInfo.HasPreviousPage = cursor.Last() != nil
+		results = results[:len(results)-1]
+	}
+
+	var nodeAt func(int) *post.Audience
+
+	if cursor != nil && cursor.Last() != nil {
+		n := len(results) - 1
+		nodeAt = func(i int) *post.Audience {
+			return results[n-i]
+		}
+	} else {
+		nodeAt = func(i int) *post.Audience {
+			return results[i]
+		}
+	}
+
+	for i := range results {
+		node := nodeAt(i)
+		audiences = append(audiences, &AudienceEdge{
+			Node:   MarshalAudienceToGraphQL(node),
+			Cursor: node.Cursor(),
+		})
+	}
+
+	conn.Edges = audiences
+
+	if len(results) > 0 {
+		res := results[0].Cursor()
+		conn.PageInfo.StartCursor = &res
+		res = results[len(results)-1].Cursor()
+		conn.PageInfo.EndCursor = &res
+	}
+
+	return conn
 }
 
 func MarshalPostToGraphQLConnection(results []*post.Post, cursor *paging.Cursor) *PostConnection {

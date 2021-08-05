@@ -62,8 +62,20 @@ func (r *Resolver) Character() CharacterResolver {
 	}
 }
 
-func (r *Resolver) Media() MediaResolver {
-	return &resolvers.MediaResolver{
+func (r *Resolver) Series() SeriesResolver {
+	return &resolvers.SeriesResolver{
+		App: r.app,
+	}
+}
+
+func (r *Resolver) Audience() AudienceResolver {
+	return &resolvers.AudienceResolver{
+		App: r.app,
+	}
+}
+
+func (r *Resolver) Brand() BrandResolver {
+	return &resolvers.BrandResolver{
 		App: r.app,
 	}
 }

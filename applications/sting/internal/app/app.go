@@ -13,7 +13,7 @@ type Application struct {
 }
 
 type Commands struct {
-	NewPost     command.NewPostHandler
+	CreatePost  command.CreatePostHandler
 	DiscardPost command.DiscardPostHandler
 	PublishPost command.PublishPostHandler
 	UndoPost    command.UndoPostHandler

@@ -7,7 +7,7 @@ import (
 	"overdoll/applications/sting/internal/app/workflows/activities"
 )
 
-func CreatePost(ctx workflow.Context, id string) error {
+func SubmitPost(ctx workflow.Context, id string) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
 

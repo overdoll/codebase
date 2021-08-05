@@ -327,9 +327,38 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 			categories = append(categories, post.UnmarshalCategoryFromDatabase(cat.Id, cat.Slug, cat.Title, cat.Thumbnail))
 		}
 
-		postedAt, err := strconv.ParseInt(pst.PostedAt, 10, 64)
-		reassignmentAt, err := strconv.ParseInt(pst.ReassignmentAt, 10, 64)
 		createdAt, err := strconv.ParseInt(pst.CreatedAt, 10, 64)
+
+		if err != nil {
+			return nil, err
+		}
+
+		var postedAtTime *time.Time
+		var reassignmentAtTime *time.Time
+
+		if pst.ReassignmentAt != "" {
+			reassignmentAt, err := strconv.ParseInt(pst.ReassignmentAt, 10, 64)
+
+			if err != nil {
+				return nil, err
+			}
+
+			newTime := time.Unix(reassignmentAt, 0)
+
+			reassignmentAtTime = &newTime
+		}
+
+		if pst.PostedAt != "" {
+			postedAt, err := strconv.ParseInt(pst.PostedAt, 10, 64)
+
+			if err != nil {
+				return nil, err
+			}
+
+			newTime := time.Unix(postedAt, 0)
+
+			postedAtTime = &newTime
+		}
 
 		createdPost := post.UnmarshalPostFromDatabase(
 			pst.Id,
@@ -342,8 +371,8 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 			characters,
 			categories,
 			time.Unix(createdAt, 0),
-			time.Unix(postedAt, 0),
-			time.Unix(reassignmentAt, 0),
+			postedAtTime,
+			reassignmentAtTime,
 		)
 
 		createdPost.Node = paging.NewNode(pst.CreatedAt)

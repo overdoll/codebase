@@ -9,7 +9,7 @@ import (
 
 type SearchBrands struct {
 	Cursor *paging.Cursor
-	Title  *string
+	Name  *string
 }
 
 type SearchBrandsHandler struct {
@@ -22,7 +22,7 @@ func NewSearchBrandsHandler(pr post.IndexRepository) SearchBrandsHandler {
 
 func (h SearchBrandsHandler) Handle(ctx context.Context, query SearchBrands) ([]*post.Brand, error) {
 
-	results, err := h.pr.SearchBrands(ctx, query.Cursor, query.Title)
+	results, err := h.pr.SearchBrands(ctx, query.Cursor, query.Name)
 
 	if err != nil {
 		return nil, err

@@ -17,7 +17,7 @@ type Audience implements Node & Object @key(fields: "id") {
 
 type AudienceEdge {
   cursor: String!
-  node: Brand!
+  node: Audience!
 }
 
 type AudienceConnection {
@@ -38,10 +38,13 @@ extend type Query {
 
     """Returns the last _n_ elements from the list."""
     last: Int
+
+    """Search by title of the audience."""
+    title: String
   ): AudienceConnection!
 }
 
 extend type Post {
   """Represents the audience that this post belongs to"""
-  audience: Audience!
+  audience: Audience
 }

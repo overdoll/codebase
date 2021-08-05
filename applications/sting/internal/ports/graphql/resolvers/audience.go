@@ -11,11 +11,11 @@ import (
 	"overdoll/libraries/principal"
 )
 
-type MediaResolver struct {
+type AudienceResolver struct {
 	App *app.Application
 }
 
-func (r MediaResolver) Posts(ctx context.Context, obj *types.Media, after *string, before *string, first *int, last *int) (*types.PostConnection, error) {
+func (r AudienceResolver) Posts(ctx context.Context, obj *types.Audience, after *string, before *string, first *int, last *int) (*types.PostConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)
 
@@ -23,10 +23,12 @@ func (r MediaResolver) Posts(ctx context.Context, obj *types.Media, after *strin
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
+	id := obj.ID.GetID()
+
 	results, err := r.App.Queries.SearchPosts.Handle(ctx, query.SearchPosts{
-		Cursor:    cursor,
-		SeriesIds: []string{obj.ID.GetID()},
-		Principal: principal.FromContext(ctx),
+		Cursor:     cursor,
+		AudienceId: &id,
+		Principal:  principal.FromContext(ctx),
 	})
 
 	if err != nil {

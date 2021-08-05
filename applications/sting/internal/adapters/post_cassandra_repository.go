@@ -33,18 +33,18 @@ var postTable = table.New(table.Metadata{
 })
 
 type posts struct {
-	Id             string    `db:"id"`
-	State          string    `db:"state"`
-	Content        []string  `db:"content"`
-	ModeratorId    string    `db:"moderator_account_id"`
-	ContributorId  string    `db:"contributor_account_id"`
-	BrandId        string    `db:"brand_id"`
-	AudienceId     string    `db:"audience_id"`
-	CategoryIds    []string  `db:"category_ids"`
-	CharacterIds   []string  `db:"character_ids"`
-	CreatedAt      time.Time `db:"created_at"`
-	PostedAt       time.Time `db:"posted_at"`
-	ReassignmentAt time.Time `db:"moderator_reassignment_at"`
+	Id             string     `db:"id"`
+	State          string     `db:"state"`
+	Content        []string   `db:"content"`
+	ModeratorId    string     `db:"moderator_account_id"`
+	ContributorId  string     `db:"contributor_account_id"`
+	BrandId        string     `db:"brand_id"`
+	AudienceId     string     `db:"audience_id"`
+	CategoryIds    []string   `db:"category_ids"`
+	CharacterIds   []string   `db:"character_ids"`
+	CreatedAt      time.Time  `db:"created_at"`
+	PostedAt       *time.Time `db:"posted_at"`
+	ReassignmentAt *time.Time `db:"moderator_reassignment_at"`
 }
 
 type PostsCassandraRepository struct {

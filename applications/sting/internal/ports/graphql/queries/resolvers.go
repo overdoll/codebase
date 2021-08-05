@@ -17,7 +17,87 @@ type QueryResolver struct {
 	App *app.Application
 }
 
-func (r *QueryResolver) Posts(ctx context.Context, after *string, before *string, first *int, last *int, categoryIds []relay.ID, characterIds []relay.ID, mediaIds []relay.ID) (*types.PostConnection, error) {
+func (r *QueryResolver) Audiences(ctx context.Context, after *string, before *string, first *int, last *int, title *string) (*types.AudienceConnection, error) {
+
+	cursor, err := paging.NewCursor(after, before, first, last)
+
+	if err != nil {
+		return nil, gqlerror.Errorf(err.Error())
+	}
+
+	results, err := r.App.Queries.SearchAudience.Handle(ctx, query.SearchAudience{
+		Cursor: cursor,
+		Title:  title,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return types.MarshalAudienceToGraphQLConnection(results, cursor), nil
+}
+
+func (r *QueryResolver) Brands(ctx context.Context, after *string, before *string, first *int, last *int, name *string) (*types.BrandConnection, error) {
+
+	cursor, err := paging.NewCursor(after, before, first, last)
+
+	if err != nil {
+		return nil, gqlerror.Errorf(err.Error())
+	}
+
+	results, err := r.App.Queries.SearchBrands.Handle(ctx, query.SearchBrands{
+		Cursor: cursor,
+		Name:   name,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return types.MarshalBrandsToGraphQLConnection(results, cursor), nil
+}
+
+func (r *QueryResolver) Series(ctx context.Context, after *string, before *string, first *int, last *int, title *string) (*types.SeriesConnection, error) {
+
+	cursor, err := paging.NewCursor(after, before, first, last)
+
+	if err != nil {
+		return nil, gqlerror.Errorf(err.Error())
+	}
+
+	results, err := r.App.Queries.SearchSeries.Handle(ctx, query.SearchSeries{
+		Cursor: cursor,
+		Title:  title,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return types.MarshalSeriesToGraphQLConnection(results, cursor), nil
+}
+
+func (r *QueryResolver) Characters(ctx context.Context, after *string, before *string, first *int, last *int, name *string) (*types.CharacterConnection, error) {
+
+	cursor, err := paging.NewCursor(after, before, first, last)
+
+	if err != nil {
+		return nil, gqlerror.Errorf(err.Error())
+	}
+
+	results, err := r.App.Queries.SearchCharacters.Handle(ctx, query.SearchCharacters{
+		Cursor: cursor,
+		Name:   name,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return types.MarshalCharacterToGraphQLConnection(results, cursor), nil
+}
+
+func (r *QueryResolver) Posts(ctx context.Context, after *string, before *string, first *int, last *int, categoryIds []relay.ID, characterIds []relay.ID, seriesIds []relay.ID) (*types.PostConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)
 
@@ -37,20 +117,19 @@ func (r *QueryResolver) Posts(ctx context.Context, after *string, before *string
 		characterIdsString = append(characterIdsString, character.GetID())
 	}
 
-	var mediaIdsString []string
+	var seriesIdsString []string
 
-	for _, media := range mediaIds {
-		mediaIdsString = append(mediaIdsString, media.GetID())
+	for _, series := range seriesIds {
+		seriesIdsString = append(seriesIdsString, series.GetID())
 	}
 
 	results, err := r.App.Queries.SearchPosts.Handle(ctx, query.SearchPosts{
 		Cursor:        cursor,
 		ModeratorId:   nil,
 		ContributorId: nil,
-		ArtistId:      nil,
 		CategoryIds:   categoryIdsString,
 		CharacterIds:  characterIdsString,
-		SeriesIds:     mediaIdsString,
+		SeriesIds:     seriesIdsString,
 		Principal:     principal.FromContext(ctx),
 	})
 
@@ -98,44 +177,4 @@ func (r *QueryResolver) Categories(ctx context.Context, after *string, before *s
 	}
 
 	return types.MarshalCategoryToGraphQLConnection(results, cursor), nil
-}
-
-func (r *QueryResolver) Medias(ctx context.Context, after *string, before *string, first *int, last *int, title *string) (*types.MediaConnection, error) {
-
-	cursor, err := paging.NewCursor(after, before, first, last)
-
-	if err != nil {
-		return nil, gqlerror.Errorf(err.Error())
-	}
-
-	results, err := r.App.Queries.SearchSeries.Handle(ctx, query.SearchSeries{
-		Cursor: cursor,
-		Title:  title,
-	})
-
-	if err != nil {
-		return nil, err
-	}
-
-	return types.MarshalMediaToGraphQLConnection(results, cursor), nil
-}
-
-func (r *QueryResolver) Characters(ctx context.Context, after *string, before *string, first *int, last *int, name *string, mediaTitle *string) (*types.CharacterConnection, error) {
-
-	cursor, err := paging.NewCursor(after, before, first, last)
-
-	if err != nil {
-		return nil, gqlerror.Errorf(err.Error())
-	}
-
-	results, err := r.App.Queries.SearchCharacters.Handle(ctx, query.SearchCharacters{
-		Cursor: cursor,
-		Name:   name,
-	})
-
-	if err != nil {
-		return nil, err
-	}
-
-	return types.MarshalCharacterToGraphQLConnection(results, cursor), nil
 }

@@ -15,22 +15,58 @@ type EntityResolver struct {
 	App *app.Application
 }
 
-func (r EntityResolver) FindArtistByID(ctx context.Context, id relay.ID) (*types.Artist, error) {
+func (r EntityResolver) FindAudienceByID(ctx context.Context, id relay.ID) (*types.Audience, error) {
 
-	artist, err := r.App.Queries.ArtistById.Handle(ctx, query.ArtistById{
-		AccountId: id.GetID(),
+	media, err := r.App.Queries.AudienceById.Handle(ctx, query.AudienceById{
+		AudienceId: id.GetID(),
 	})
 
 	if err != nil {
 
-		if err == post.ErrArtistNotFound {
+		if err == post.ErrAudienceNotFound {
 			return nil, nil
 		}
 
 		return nil, err
 	}
 
-	return types.MarshalArtistToGraphQL(artist), nil
+	return types.MarshalAudienceToGraphQL(media), nil
+}
+
+func (r EntityResolver) FindBrandByID(ctx context.Context, id relay.ID) (*types.Brand, error) {
+
+	media, err := r.App.Queries.BrandById.Handle(ctx, query.BrandById{
+		BrandId: id.GetID(),
+	})
+
+	if err != nil {
+
+		if err == post.ErrBrandNotFound {
+			return nil, nil
+		}
+
+		return nil, err
+	}
+
+	return types.MarshalBrandToGraphQL(media), nil
+}
+
+func (r EntityResolver) FindSeriesByID(ctx context.Context, id relay.ID) (*types.Series, error) {
+
+	media, err := r.App.Queries.SeriesById.Handle(ctx, query.SeriesById{
+		SeriesId: id.GetID(),
+	})
+
+	if err != nil {
+
+		if err == post.ErrSeriesNotFound {
+			return nil, nil
+		}
+
+		return nil, err
+	}
+
+	return types.MarshalSeriesToGraphQL(media), nil
 }
 
 func (r EntityResolver) FindCategoryByID(ctx context.Context, id relay.ID) (*types.Category, error) {
@@ -67,24 +103,6 @@ func (r EntityResolver) FindCharacterByID(ctx context.Context, id relay.ID) (*ty
 	}
 
 	return types.MarshalCharacterToGraphQL(character), nil
-}
-
-func (r EntityResolver) FindMediaByID(ctx context.Context, id relay.ID) (*types.Media, error) {
-
-	media, err := r.App.Queries.SeriesById.Handle(ctx, query.SeriesById{
-		SeriesId: id.GetID(),
-	})
-
-	if err != nil {
-
-		if err == post.ErrSeriesNotFound {
-			return nil, nil
-		}
-
-		return nil, err
-	}
-
-	return types.MarshalMediaToGraphQL(media), nil
 }
 
 func (r EntityResolver) FindAccountByID(ctx context.Context, id relay.ID) (*types.Account, error) {

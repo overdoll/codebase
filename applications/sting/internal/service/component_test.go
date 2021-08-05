@@ -156,7 +156,7 @@ func mCreatePost(t *testing.T, env *testsuite.TestWorkflowEnvironment, callback 
 	// when the timer is called (waited 24 hours to select a new moderator), we will update the post before the activity
 	// function executes so it doesn't keep looping forever
 	env.RegisterDelayedCallback(callback(postId), time.Hour*24)
-	env.ExecuteWorkflow(workflows.CreatePost, postId)
+	env.ExecuteWorkflow(workflows.SubmitPost, postId)
 
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())

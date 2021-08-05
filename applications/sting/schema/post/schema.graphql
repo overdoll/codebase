@@ -8,7 +8,7 @@ type Post implements Node @key(fields: "id") {
   state: PostState!
 
   """The moderator to whom this pending post was assigned"""
-  moderator: Account!
+  moderator: Account
 
   """The contributor who contributed this post"""
   contributor: Account!
@@ -20,10 +20,10 @@ type Post implements Node @key(fields: "id") {
   createdAt: Time!
 
   """The date and time of when this post was posted"""
-  postedAt: Time!
+  postedAt: Time
 
   """The date at which this pending post will be reassigned"""
-  reassignmentAt: Time!
+  reassignmentAt: Time
 }
 
 enum PostState {

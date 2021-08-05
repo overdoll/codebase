@@ -196,7 +196,7 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		Audiences          func(childComplexity int, after *string, before *string, first *int, last *int) int
+		Audiences          func(childComplexity int, after *string, before *string, first *int, last *int, title *string) int
 		Brands             func(childComplexity int, after *string, before *string, first *int, last *int, name *string) int
 		Categories         func(childComplexity int, after *string, before *string, first *int, last *int, title *string) int
 		Characters         func(childComplexity int, after *string, before *string, first *int, last *int, name *string) int
@@ -290,7 +290,7 @@ type MutationResolver interface {
 	SubmitPost(ctx context.Context, input types.SubmitPostInput) (*types.SubmitPostPayload, error)
 }
 type QueryResolver interface {
-	Audiences(ctx context.Context, after *string, before *string, first *int, last *int) (*types.AudienceConnection, error)
+	Audiences(ctx context.Context, after *string, before *string, first *int, last *int, title *string) (*types.AudienceConnection, error)
 	Brands(ctx context.Context, after *string, before *string, first *int, last *int, name *string) (*types.BrandConnection, error)
 	Categories(ctx context.Context, after *string, before *string, first *int, last *int, title *string) (*types.CategoryConnection, error)
 	Series(ctx context.Context, after *string, before *string, first *int, last *int, title *string) (*types.SeriesConnection, error)
@@ -981,7 +981,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Audiences(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
+		return e.complexity.Query.Audiences(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["title"].(*string)), true
 
 	case "Query.brands":
 		if e.complexity.Query.Brands == nil {
@@ -1286,7 +1286,7 @@ var sources = []*ast.Source{
 
 type AudienceEdge {
   cursor: String!
-  node: Brand!
+  node: Audience!
 }
 
 type AudienceConnection {
@@ -1307,12 +1307,15 @@ extend type Query {
 
     """Returns the last _n_ elements from the list."""
     last: Int
+
+    """Search by title of the audience."""
+    title: String
   ): AudienceConnection!
 }
 
 extend type Post {
   """Represents the audience that this post belongs to"""
-  audience: Audience!
+  audience: Audience
 }
 `, BuiltIn: false},
 	{Name: "schema/brand/schema.graphql", Input: `type Brand implements Node & Object @key(fields: "id") {
@@ -1363,7 +1366,7 @@ extend type Query {
 
 extend type Post {
   """Represents the brand that this post belongs to"""
-  brand: Brand!
+  brand: Brand
 }
 `, BuiltIn: false},
 	{Name: "schema/category/schema.graphql", Input: `type Category implements Node & Object @key(fields: "id") {
@@ -1417,7 +1420,7 @@ extend type Post {
   categories: [Category!]!
 }`, BuiltIn: false},
 	{Name: "schema/character/schema.graphql", Input: `type Series implements Node & Object @key(fields: "id") {
-  """An ID pointing to this media."""
+  """An ID pointing to this series."""
   id: ID!
 
   """A url-friendly ID. Should be used when searching"""
@@ -1525,7 +1528,7 @@ extend type Post {
   state: PostState!
 
   """The moderator to whom this pending post was assigned"""
-  moderator: Account!
+  moderator: Account
 
   """The contributor who contributed this post"""
   contributor: Account!
@@ -1537,10 +1540,10 @@ extend type Post {
   createdAt: Time!
 
   """The date and time of when this post was posted"""
-  postedAt: Time!
+  postedAt: Time
 
   """The date at which this pending post will be reassigned"""
-  reassignmentAt: Time!
+  reassignmentAt: Time
 }
 
 enum PostState {
@@ -2499,6 +2502,15 @@ func (ec *executionContext) field_Query_audiences_args(ctx context.Context, rawA
 		}
 	}
 	args["last"] = arg3
+	var arg4 *string
+	if tmp, ok := rawArgs["title"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
+		arg4, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["title"] = arg4
 	return args, nil
 }
 
@@ -3328,9 +3340,9 @@ func (ec *executionContext) _AudienceEdge_node(ctx context.Context, field graphq
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*types.Brand)
+	res := resTmp.(*types.Audience)
 	fc.Result = res
-	return ec.marshalNBrand2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐBrand(ctx, field.Selections, res)
+	return ec.marshalNAudience2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAudience(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Brand_id(ctx context.Context, field graphql.CollectedField, obj *types.Brand) (ret graphql.Marshaler) {
@@ -5246,14 +5258,11 @@ func (ec *executionContext) _Post_moderator(ctx context.Context, field graphql.C
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.(*types.Account)
 	fc.Result = res
-	return ec.marshalNAccount2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
+	return ec.marshalOAccount2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Post_contributor(ctx context.Context, field graphql.CollectedField, obj *types.Post) (ret graphql.Marshaler) {
@@ -5386,14 +5395,11 @@ func (ec *executionContext) _Post_postedAt(ctx context.Context, field graphql.Co
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(time.Time)
+	res := resTmp.(*time.Time)
 	fc.Result = res
-	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Post_reassignmentAt(ctx context.Context, field graphql.CollectedField, obj *types.Post) (ret graphql.Marshaler) {
@@ -5421,14 +5427,11 @@ func (ec *executionContext) _Post_reassignmentAt(ctx context.Context, field grap
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(time.Time)
+	res := resTmp.(*time.Time)
 	fc.Result = res
-	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Post_audience(ctx context.Context, field graphql.CollectedField, obj *types.Post) (ret graphql.Marshaler) {
@@ -5456,14 +5459,11 @@ func (ec *executionContext) _Post_audience(ctx context.Context, field graphql.Co
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.(*types.Audience)
 	fc.Result = res
-	return ec.marshalNAudience2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAudience(ctx, field.Selections, res)
+	return ec.marshalOAudience2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAudience(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Post_brand(ctx context.Context, field graphql.CollectedField, obj *types.Post) (ret graphql.Marshaler) {
@@ -5491,14 +5491,11 @@ func (ec *executionContext) _Post_brand(ctx context.Context, field graphql.Colle
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.(*types.Brand)
 	fc.Result = res
-	return ec.marshalNBrand2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐBrand(ctx, field.Selections, res)
+	return ec.marshalOBrand2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐBrand(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Post_categories(ctx context.Context, field graphql.CollectedField, obj *types.Post) (ret graphql.Marshaler) {
@@ -5736,7 +5733,7 @@ func (ec *executionContext) _Query_audiences(ctx context.Context, field graphql.
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Audiences(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
+		return ec.resolvers.Query().Audiences(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["title"].(*string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8962,9 +8959,6 @@ func (ec *executionContext) _Post(ctx context.Context, sel ast.SelectionSet, obj
 			}
 		case "moderator":
 			out.Values[i] = ec._Post_moderator(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "contributor":
 			out.Values[i] = ec._Post_contributor(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -8982,24 +8976,12 @@ func (ec *executionContext) _Post(ctx context.Context, sel ast.SelectionSet, obj
 			}
 		case "postedAt":
 			out.Values[i] = ec._Post_postedAt(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "reassignmentAt":
 			out.Values[i] = ec._Post_reassignmentAt(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "audience":
 			out.Values[i] = ec._Post_audience(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "brand":
 			out.Values[i] = ec._Post_brand(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "categories":
 			out.Values[i] = ec._Post_categories(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -10869,6 +10851,20 @@ func (ec *executionContext) marshalN__TypeKind2string(ctx context.Context, sel a
 	return res
 }
 
+func (ec *executionContext) marshalOAccount2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx context.Context, sel ast.SelectionSet, v *types.Account) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Account(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOAudience2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAudience(ctx context.Context, sel ast.SelectionSet, v *types.Audience) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Audience(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalOBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
 	res, err := graphql.UnmarshalBoolean(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -10891,6 +10887,13 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 		return graphql.Null
 	}
 	return graphql.MarshalBoolean(*v)
+}
+
+func (ec *executionContext) marshalOBrand2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐBrand(ctx context.Context, sel ast.SelectionSet, v *types.Brand) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Brand(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOCreatePostPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreatePostPayload(ctx context.Context, sel ast.SelectionSet, v *types.CreatePostPayload) graphql.Marshaler {
@@ -10987,6 +10990,21 @@ func (ec *executionContext) marshalOSubmitPostPayload2ᚖoverdollᚋapplications
 		return graphql.Null
 	}
 	return ec._SubmitPostPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOTime2ᚖtimeᚐTime(ctx context.Context, v interface{}) (*time.Time, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := graphql.UnmarshalTime(v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOTime2ᚖtimeᚐTime(ctx context.Context, sel ast.SelectionSet, v *time.Time) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return graphql.MarshalTime(*v)
 }
 
 func (ec *executionContext) marshalOUpdatePostAudiencePayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostAudiencePayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdatePostAudiencePayload) graphql.Marshaler {

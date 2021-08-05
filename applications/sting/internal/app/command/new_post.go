@@ -7,21 +7,21 @@ import (
 	"overdoll/libraries/principal"
 )
 
-type NewPost struct {
+type CreatePost struct {
 	Principal *principal.Principal
 }
 
-type NewPostHandler struct {
+type CreatePostHandler struct {
 	pr     post.Repository
 	parley ParleyService
 	eva    EvaService
 }
 
-func NewNewPostHandler(pr post.Repository, eva EvaService, parley ParleyService) NewPostHandler {
-	return NewPostHandler{pr: pr, eva: eva, parley: parley}
+func NewCreatePostHandler(pr post.Repository, eva EvaService, parley ParleyService) CreatePostHandler {
+	return CreatePostHandler{pr: pr, eva: eva, parley: parley}
 }
 
-func (h NewPostHandler) Handle(ctx context.Context, cmd NewPost) (*post.Post, error) {
+func (h CreatePostHandler) Handle(ctx context.Context, cmd CreatePost) (*post.Post, error) {
 
 	pendingPost, err := post.NewPost(cmd.Principal)
 

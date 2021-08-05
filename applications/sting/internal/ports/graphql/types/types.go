@@ -49,8 +49,8 @@ type AudienceConnection struct {
 }
 
 type AudienceEdge struct {
-	Cursor string `json:"cursor"`
-	Node   *Brand `json:"node"`
+	Cursor string    `json:"cursor"`
+	Node   *Audience `json:"node"`
 }
 
 type Brand struct {
@@ -161,9 +161,9 @@ type Post struct {
 	// The date and time of when this post was created
 	CreatedAt time.Time `json:"createdAt"`
 	// The date and time of when this post was posted
-	PostedAt time.Time `json:"postedAt"`
+	PostedAt *time.Time `json:"postedAt"`
 	// The date at which this pending post will be reassigned
-	ReassignmentAt time.Time `json:"reassignmentAt"`
+	ReassignmentAt *time.Time `json:"reassignmentAt"`
 	// Represents the audience that this post belongs to
 	Audience *Audience `json:"audience"`
 	// Represents the brand that this post belongs to
@@ -188,7 +188,7 @@ type PostEdge struct {
 }
 
 type Series struct {
-	// An ID pointing to this media.
+	// An ID pointing to this series.
 	ID relay.ID `json:"id"`
 	// A url-friendly ID. Should be used when searching
 	Slug string `json:"slug"`

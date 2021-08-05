@@ -3,10 +3,10 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "workflows",
     srcs = [
-        "create_post.go",
         "discard_post.go",
         "options.go",
         "publish_post.go",
+        "submit_post.go",
         "undo_post.go",
     ],
     importpath = "overdoll/applications/sting/internal/app/workflows",

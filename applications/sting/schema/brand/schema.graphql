@@ -46,5 +46,5 @@ extend type Query {
 
 extend type Post {
   """Represents the brand that this post belongs to"""
-  brand: Brand!
+  brand: Brand
 }

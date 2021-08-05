@@ -4,9 +4,11 @@ go_library(
     name = "resolvers",
     srcs = [
         "account.go",
+        "audience.go",
+        "brand.go",
         "category.go",
         "character.go",
-        "media.go",
+        "series.go",
     ],
     importpath = "overdoll/applications/sting/internal/ports/graphql/resolvers",
     visibility = ["//visibility:public"],

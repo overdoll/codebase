@@ -20,7 +20,7 @@ func NewSearchAudienceHandler(pr post.IndexRepository) SearchAudienceHandler {
 	return SearchAudienceHandler{pr: pr}
 }
 
-func (h SearchAudienceHandler) Handle(ctx context.Context, query SearchSeries) ([]*post.Audience, error) {
+func (h SearchAudienceHandler) Handle(ctx context.Context, query SearchAudience) ([]*post.Audience, error) {
 
 	results, err := h.pr.SearchAudience(ctx, query.Cursor, query.Title)
 

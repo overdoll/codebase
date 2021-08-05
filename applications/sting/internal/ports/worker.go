@@ -20,7 +20,7 @@ func NewWorker(app *app.Application) (worker.Worker, func()) {
 
 	w := worker.New(client, viper.GetString("temporal.queue"), worker.Options{})
 
-	w.RegisterWorkflow(workflows.CreatePost)
+	w.RegisterWorkflow(workflows.SubmitPost)
 	w.RegisterWorkflow(workflows.DiscardPost)
 	w.RegisterWorkflow(workflows.UndoPost)
 	w.RegisterWorkflow(workflows.PublishPost)
