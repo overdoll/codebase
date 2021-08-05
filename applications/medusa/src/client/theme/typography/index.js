@@ -40,8 +40,8 @@ const typography = {
 
   fonts: {
     heading: 'Nunito',
-    body: 'Noto Sans JP',
-    mono: 'Noto Sans JP'
+    body: 'Inter',
+    mono: 'Inter'
     // heading: `-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"`,
     // body: `-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"`,
     // mono: `SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace`,

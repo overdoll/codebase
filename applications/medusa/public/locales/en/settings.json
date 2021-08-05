@@ -36,19 +36,33 @@
         "hint2": "Receives login emails"
       },
       "confirmed": {
-        "hint1": "Can be set as a Primary email",
-        "query": {
-          "success": "{{email}} was set as your Primary email",
-          "error": "There was an error setting {{email}} to Primary"
-        }
+        "hint1": "Can be set as a Primary email"
       },
       "unconfirmed": {
         "hint1": "Needs to be confirmed through email link"
       },
       "options": {
-        "delete": "Remove",
-        "resend": "Resend Email",
-        "set_primary": "Set Primary"
+        "delete": {
+          "button": "Remove",
+          "query": {
+            "success": "{{email}} was removed",
+            "error": "There was an error removing {{email}}"
+          }
+        },
+        "resend": {
+          "button": "Resend Email",
+          "query": {
+            "success": "Confirmation email resent to {{email}}. Check your inbox/spam!",
+            "error": "There was an error resending a confirmation email to {{email}}"
+          }
+        },
+        "set_primary": {
+          "button": "Make Primary",
+          "query": {
+            "success": "{{email}} was set as your Primary email",
+            "error": "There was an error setting {{email}} to Primary"
+          }
+        }
       },
       "add": {
         "title": "Add an email",
@@ -62,8 +76,22 @@
           }
         },
         "query": {
-          "success": "A verification email was sent to {{email}}",
-          "error": "There was an error adding an email"
+          "success": "A confirmation email was sent to {{email}}. Check your inbox/spam!",
+          "error": "There was an error adding the email"
+        }
+      }
+    }
+  },
+  "moderation": {
+    "queue": {
+      "title": "Queue",
+      "toggle": {
+        "header": "Toggle Queue Status",
+        "subheader": "Change your status for receiving posts in your Moderation Queue",
+        "query": {
+          "success_on": "You are now in the Moderator Posts Queue",
+          "success_off": "You are no longer in the Moderator Posts Queue",
+          "error": "There was an error changing your Queue status"
         }
       }
     }

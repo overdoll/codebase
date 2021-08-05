@@ -17,7 +17,8 @@
     "categories": "Categories,"
   },
   "menu": {
-    "copy_link": "Copy Link"
+    "copy_link": "Copy Link",
+    "copied": "Copied to clipboard!"
   },
   "loading": {
     "header": "Hold on...",

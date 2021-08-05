@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 065a40d09104cbef63b7b38d10d9a994
+ * @relayHash 574f5574dae45ea1e14f97dd72d58f1c
  */
 
 /* eslint-disable */
@@ -8,19 +8,18 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
+import type { TopRightMenuFragment$ref } from "./TopRightMenuFragment.graphql";
 export type AccountLockReason = "PostInfraction" | "%future added value";
 export type RootQueryVariables = {||};
 export type RootQueryResponse = {|
   +viewer: ?{|
-    +username: string,
-    +isStaff: boolean,
-    +isArtist: boolean,
     +isModerator: boolean,
-    +avatar: any,
+    +isStaff: boolean,
     +lock: ?{|
       +reason: AccountLockReason,
       +expires: number,
     |},
+    +$fragmentRefs: TopRightMenuFragment$ref,
   |}
 |};
 export type RootQuery = {|
@@ -32,17 +31,25 @@ export type RootQuery = {|
 /*
 query RootQuery {
   viewer {
-    username
-    isStaff
-    isArtist
+    ...TopRightMenuFragment
     isModerator
-    avatar
+    isStaff
     lock {
       reason
       expires
     }
     id
   }
+}
+
+fragment ProfileButtonFragment on Account {
+  username
+  avatar
+}
+
+fragment TopRightMenuFragment on Account {
+  ...ProfileButtonFragment
+  avatar
 }
 */
 
@@ -51,7 +58,7 @@ var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "username",
+  "name": "isModerator",
   "storageKey": null
 },
 v1 = {
@@ -62,27 +69,6 @@ v1 = {
   "storageKey": null
 },
 v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "isArtist",
-  "storageKey": null
-},
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "isModerator",
-  "storageKey": null
-},
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "avatar",
-  "storageKey": null
-},
-v5 = {
   "alias": null,
   "args": null,
   "concreteType": "AccountLock",
@@ -125,9 +111,11 @@ return {
           (v0/*: any*/),
           (v1/*: any*/),
           (v2/*: any*/),
-          (v3/*: any*/),
-          (v4/*: any*/),
-          (v5/*: any*/)
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "TopRightMenuFragment"
+          }
         ],
         "storageKey": null
       }
@@ -149,12 +137,23 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "username",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "avatar",
+            "storageKey": null
+          },
           (v0/*: any*/),
           (v1/*: any*/),
           (v2/*: any*/),
-          (v3/*: any*/),
-          (v4/*: any*/),
-          (v5/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -168,7 +167,7 @@ return {
     ]
   },
   "params": {
-    "id": "065a40d09104cbef63b7b38d10d9a994",
+    "id": "574f5574dae45ea1e14f97dd72d58f1c",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",
@@ -177,5 +176,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = 'e271409e47560a7711400d307b498830';
+(node: any).hash = '42947105a094ca2897b2a40a413d297e';
 module.exports = node;

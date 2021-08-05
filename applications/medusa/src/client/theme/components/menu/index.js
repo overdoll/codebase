@@ -24,7 +24,7 @@ function baseStyleItem (props) {
       bg: mode('gray.100', 'gray.500')(props)
     },
     _active: {
-      bg: mode('gray.200', 'gray.300')(props)
+      bg: mode('gray.200', 'gray.700')(props)
     },
     _expanded: {
       bg: mode('gray.100', 'gray.700')(props)

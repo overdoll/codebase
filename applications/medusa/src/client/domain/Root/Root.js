@@ -22,11 +22,9 @@ type Props = {
 const RootQueryGQL = graphql`
   query RootQuery {
     viewer {
-      username
-      isStaff
-      isArtist
+      ...TopRightMenuFragment
       isModerator
-      avatar
+      isStaff
       lock {
         reason
         expires
@@ -41,7 +39,9 @@ export default function Root (props: Props): Node {
     props.prepared.stateQuery
   )
 
-  const ability = defineAbility(data.viewer)
+  const ability = defineAbility(
+    data?.viewer
+  )
 
   return (
     <>
@@ -49,9 +49,7 @@ export default function Root (props: Props): Node {
         title='overdoll'
       />
       <AbilityContext.Provider value={ability}>
-        <NavigationBar
-          account={data.viewer} refreshUserQuery={() => {}}
-        >
+        <NavigationBar rootQuery={data?.viewer}>
           <Suspense fallback={<CenteredSpinner />}>{props.children}</Suspense>
         </NavigationBar>
       </AbilityContext.Provider>
