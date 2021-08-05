@@ -4,23 +4,7 @@
 import JSResource from '@//:modules/utilities/JSResource'
 import type { Route } from '@//:modules/routing/router'
 import defineAbility from '@//:modules/utilities/functions/defineAbility/defineAbility'
-
-// hacky way to get the current viewer
-const getUserFromEnvironment = environment => {
-  const viewerRef = environment
-    .getStore()
-    .getSource()
-    .get('client:root')
-
-  if (viewerRef.viewer) {
-    return environment
-      .getStore()
-      .getSource()
-      .get(viewerRef.viewer.__ref)
-  }
-
-  return null
-}
+import getUserFromEnvironment from '@//:modules/routing/getUserFromEnvironment'
 
 const getAbilityFromUser = (environment) => {
   return defineAbility(getUserFromEnvironment(environment))
@@ -136,6 +120,29 @@ const routes: Array<Route> = [
         }
       },
       {
+        path: '/confirmation',
+        exact: true,
+        component: JSResource('ConfirmationRoot', () =>
+          import(
+            /* webpackChunkName: "ConfirmationRoot" */ './domain/Confirmation/Confirmation'
+          ),
+        module.hot
+        ),
+        // When user is logged in, we don't want them to be able to redeem any other tokens
+        middleware: [
+          ({ environment, history }) => {
+            const ability = getAbilityFromUser(environment)
+
+            if (ability.cannot('manage', 'account')) {
+              history.push('/')
+              return false
+            }
+
+            return true
+          }
+        ]
+      },
+      {
         path: '/',
         exact: true,
         component: JSResource('HomeRoot', () =>
@@ -146,7 +153,7 @@ const routes: Array<Route> = [
         )
       },
       {
-        path: '/m',
+        path: '/moderation',
         component: JSResource('ModRoot', () =>
           import(
             /* webpackChunkName: "ModRoot" */ './domain/Moderation/Moderation'
@@ -167,22 +174,46 @@ const routes: Array<Route> = [
         ],
         routes: [
           {
-            path: '/m/queue',
+            path: '/moderation/queue',
             component: JSResource('ModQueueRoot', () =>
               import(
-                /* webpackChunkName: "ModQueueRoot" */ './domain/Moderation/routes/Queue/Queue'
+                /* webpackChunkName: "ModQueueRoot" */ './domain/Moderation/Queue/Queue'
               ),
             module.hot
-            )
+            ),
+            prepare: params => {
+              const PreparedPostsQuery = require('@//:artifacts/PreparedPostsQuery.graphql')
+              return {
+                postsQuery: {
+                  query: PreparedPostsQuery,
+                  variables: {},
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
           },
           {
-            path: '/m/history',
+            path: '/moderation/history',
             component: JSResource('ModHistoryRoot', () =>
               import(
-                /* webpackChunkName: "ModHistoryRoot" */ './domain/Moderation/routes/History/History'
+                /* webpackChunkName: "ModHistoryRoot" */ './domain/Moderation/History/History'
               ),
             module.hot
-            )
+            ),
+            prepare: params => {
+              const PreparedAuditLogsQuery = require('@//:artifacts/PreparedAuditLogsQuery.graphql')
+              return {
+                auditLogsQuery: {
+                  query: PreparedAuditLogsQuery,
+                  variables: {},
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
           }
         ]
       },
@@ -208,7 +239,7 @@ const routes: Array<Route> = [
         ]
       },
       {
-        path: '/s',
+        path: '/settings',
         component: JSResource('SettingsRoot', () =>
           import(
             /* webpackChunkName: "SettingsRoot" */ './domain/Settings/Settings'
@@ -229,28 +260,49 @@ const routes: Array<Route> = [
         ],
         routes: [
           {
-            path: '/s/profile',
+            path: '/settings/profile',
             component: JSResource('SettingsProfileRoot', () =>
               import(
-                /* webpackChunkName: "SettingsProfileRoot" */ './domain/Settings/routes/Profile/Profile'
+                /* webpackChunkName: "SettingsProfileRoot" */ './domain/Settings/Profile/Profile'
               ),
             module.hot
-            )
+            ),
+            prepare: params => {
+              const PreparedUsernamesQuery = require('@//:artifacts/PreparedUsernamesQuery.graphql')
+              const PreparedEmailsQuery = require('@//:artifacts/PreparedEmailsQuery.graphql')
+
+              return {
+                usernamesQuery: {
+                  query: PreparedUsernamesQuery,
+                  variables: {},
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                },
+                emailsQuery: {
+                  query: PreparedEmailsQuery,
+                  variables: {},
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
           },
           {
-            path: '/s/security',
+            path: '/settings/security',
             component: JSResource('SettingsSecurityRoot', () =>
               import(
-                /* webpackChunkName: "SettingsSecurityRoot" */ './domain/Settings/routes/Security/Security'
+                /* webpackChunkName: "SettingsSecurityRoot" */ './domain/Settings/Security/Security'
               ),
             module.hot
             )
           },
           {
-            path: '/s/moderation',
+            path: '/settings/moderation',
             component: JSResource('SettingsModerationRoot', () =>
               import(
-                /* webpackChunkName: "SettingsModerationRoot" */ './domain/Settings/routes/Moderation/Moderation'
+                /* webpackChunkName: "SettingsModerationRoot" */ './domain/Settings/Moderation/Moderation'
               ),
             module.hot
             ),
@@ -263,7 +315,19 @@ const routes: Array<Route> = [
                 }
                 return false
               }
-            ]
+            ],
+            prepare: (params, query) => {
+              const PreparedQueueSettingsQuery = require('@//:artifacts/PreparedQueueSettingsQuery.graphql')
+              return {
+                queueQuery: {
+                  query: PreparedQueueSettingsQuery,
+                  variables: {},
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
           }
         ]
       },

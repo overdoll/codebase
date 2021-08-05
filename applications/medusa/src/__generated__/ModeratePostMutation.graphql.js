@@ -14,7 +14,8 @@ export type ModeratePostInput = {|
   notes: string,
 |};
 export type ModeratePostMutationVariables = {|
-  input: ModeratePostInput
+  input: ModeratePostInput,
+  connections: $ReadOnlyArray<string>,
 |};
 export type ModeratePostMutationResponse = {|
   +moderatePost: ?{|
@@ -42,66 +43,116 @@ mutation ModeratePostMutation(
 */
 
 const node: ConcreteRequest = (function(){
-var v0 = [
+var v0 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "connections"
+},
+v1 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "input"
+},
+v2 = [
   {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "input"
+    "kind": "Variable",
+    "name": "input",
+    "variableName": "input"
   }
 ],
-v1 = [
-  {
-    "alias": null,
-    "args": [
-      {
-        "kind": "Variable",
-        "name": "input",
-        "variableName": "input"
-      }
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
+return {
+  "fragment": {
+    "argumentDefinitions": [
+      (v0/*: any*/),
+      (v1/*: any*/)
     ],
-    "concreteType": "ModeratePostPayload",
-    "kind": "LinkedField",
-    "name": "moderatePost",
-    "plural": false,
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "ModeratePostMutation",
     "selections": [
       {
         "alias": null,
-        "args": null,
-        "concreteType": "PostAuditLog",
+        "args": (v2/*: any*/),
+        "concreteType": "ModeratePostPayload",
         "kind": "LinkedField",
-        "name": "postAuditLog",
+        "name": "moderatePost",
         "plural": false,
         "selections": [
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "id",
+            "concreteType": "PostAuditLog",
+            "kind": "LinkedField",
+            "name": "postAuditLog",
+            "plural": false,
+            "selections": [
+              (v3/*: any*/)
+            ],
             "storageKey": null
           }
         ],
         "storageKey": null
       }
     ],
-    "storageKey": null
-  }
-];
-return {
-  "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
-    "kind": "Fragment",
-    "metadata": null,
-    "name": "ModeratePostMutation",
-    "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [
+      (v1/*: any*/),
+      (v0/*: any*/)
+    ],
     "kind": "Operation",
     "name": "ModeratePostMutation",
-    "selections": (v1/*: any*/)
+    "selections": [
+      {
+        "alias": null,
+        "args": (v2/*: any*/),
+        "concreteType": "ModeratePostPayload",
+        "kind": "LinkedField",
+        "name": "moderatePost",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "PostAuditLog",
+            "kind": "LinkedField",
+            "name": "postAuditLog",
+            "plural": false,
+            "selections": [
+              (v3/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "filters": null,
+                "handle": "deleteEdge",
+                "key": "",
+                "kind": "ScalarHandle",
+                "name": "id",
+                "handleArgs": [
+                  {
+                    "kind": "Variable",
+                    "name": "connections",
+                    "variableName": "connections"
+                  }
+                ]
+              }
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ]
   },
   "params": {
     "id": "bc46e4f065e4d0a9b71911a575e429b2",
@@ -113,5 +164,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '6daad6ccb91a52a94aa3fc2c4124101f';
+(node: any).hash = 'f052735aabd0d413a09a03672a9be867';
 module.exports = node;

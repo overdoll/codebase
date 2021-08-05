@@ -3,14 +3,11 @@
  */
 
 import routes from '../routing/navigation'
-import createMockHistory from '../../../../../server/app/render/Domain/createMockHistory'
 
-export default function computeCurrentActiveRoutes ({ location, environment }) {
+export default function computeCurrentActiveRoutes ({ environment }) {
   const activeRoutes = routes
 
-  const context = {}
-  const history = createMockHistory({ context, location: location.pathname })
-
+  // Determine if route is valid by calling the middleware function in the route
   const isRouteValid = (data, route) => {
     if (Object.prototype.hasOwnProperty.call(route, 'middleware')) {
       for (let i = 0; i < route.middleware.length; i++) {
@@ -20,11 +17,31 @@ export default function computeCurrentActiveRoutes ({ location, environment }) {
     return true
   }
 
+  // Filter for all disabled routes
   const navDisabled = (routes) => {
     const disabled = routes.filter((item) => item.hidden)
     return disabled.map((item) => { return item.path }
     )
   }
+
+  // TODO rewrite the whole function to make it more readable
+
+  /*
+  top {
+  ... only links for top display
+  (firstRoute support)
+  (basePath)
+  }
+  menu {
+  ... only links for menu display
+  (firstRoute support)
+  (basePath)
+  }
+  sidebar {
+  ... only links (recursive?) for sidebar to render when path matches
+  ... includes "groupings" that are only words
+  }
+  */
 
   const navRoutes = (routes) => {
     const navHeaders = []
@@ -32,7 +49,7 @@ export default function computeCurrentActiveRoutes ({ location, environment }) {
     for (const route of routes) {
       const nav = {}
 
-      const valid = isRouteValid({ history, location: history.location, environment }, route)
+      const valid = isRouteValid({ environment }, route)
 
       if (route.navigation && valid) {
         Object.assign(nav, {
@@ -48,7 +65,7 @@ export default function computeCurrentActiveRoutes ({ location, environment }) {
             const parsed = []
 
             for (const route of childRoutes) {
-              const validChild = isRouteValid({ history, location }, route.path)
+              const validChild = isRouteValid({ environment }, route.path)
 
               if (route.navigation.side && validChild) {
                 parsed.push({

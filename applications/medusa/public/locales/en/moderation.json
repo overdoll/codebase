@@ -13,6 +13,7 @@
     },
     "post": {
       "content": "Post Uploads",
+      "title": "Posted on {{date}}",
       "reassignment": "Time you have left to take action on the post before it is reassigned to another moderator",
       "tags": {
         "title": "Post Tags",
@@ -34,10 +35,10 @@
             "error": "There was an error approving post {{id}}"
           }
         },
-        "deny": {
-          "button": "Deny",
+        "reject": {
+          "button": "Reject",
           "modal": {
-            "title": "Select a reason for denying the post",
+            "title": "Select a reason for rejecting this post",
             "form": {
               "textarea": {
                 "label": "Note",
@@ -55,7 +56,7 @@
                   "error": "Please enter a valid note. Maximum 255 characters."
                 }
               },
-              "submit": "Deny Post"
+              "submit": "Reject Post"
             },
             "infraction": "This rejection reason is an infraction. The poster's account will be temporarily suspended."
           },
@@ -65,9 +66,41 @@
           }
         }
       }
+    }
+  },
+  "history": {
+    "title": "Moderation History",
+    "table": {
+      "headers": {
+        "date": "Date Posted",
+        "id": "Request ID",
+        "contributor": "Contributor",
+        "status": "Status"
+      },
+      "load": "Load More",
+      "empty": "Only the last 7 days of logs are available"
     },
-    "history": {
-      "title": "Moderation History"
+    "inspect": {
+      "copy": "Copy Audit Log ID",
+      "status": "Case Status",
+      "content": "Post Content",
+      "artist": "Artist",
+      "characters": "Characters",
+      "categories": "Categories",
+      "revert": {
+        "query": {
+          "success": "This audit log was reverted. The post should appear back in your queue shortly.",
+          "failure": "There was an error reverting the audit log"
+        },
+        "alert": {
+          "reverted": "This case has been reverted",
+          "expired": "The time period to revert this audit log has expired"
+        },
+        "button": {
+          "action": "Revert Decision"
+        }
+      },
+      "note": "Note"
     }
   }
 }

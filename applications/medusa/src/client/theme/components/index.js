@@ -7,6 +7,7 @@ import tag from './tag'
 import tooltip from './tooltip'
 import select from './select'
 import textarea from './textarea'
+import table from './table'
 
 export default {
   Menu: menu,
@@ -18,6 +19,7 @@ export default {
   Tooltip: tooltip,
   Select: select,
   Textarea: textarea,
+  Table: table,
   FormLabel: {
     variants: {
       float: {

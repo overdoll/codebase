@@ -1,0 +1,6 @@
+{
+  "header": "Confirming Email",
+  "subheader": "Please wait while we confirm your email...",
+  "success": "{{email}} was confirmed successfully",
+  "error": "This confirmation link is either invalid or has expired"
+}

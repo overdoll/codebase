@@ -21,7 +21,6 @@ type Props = {
 const JoinTokenStatus = graphql`
   query JoinRootQuery {
     viewAuthenticationToken {
-      id
       ...LobbyFragment
       ...JoinRootFragment
       ...JoinFragment
