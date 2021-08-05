@@ -48,7 +48,7 @@ type Post struct {
 	characters []*Character
 	categories []*Category
 
-	content        []string
+	content        []*Resource
 	createdAt      time.Time
 	postedAt       *time.Time
 	reassignmentAt *time.Time
@@ -65,7 +65,12 @@ func NewPost(contributor *principal.Principal) (*Post, error) {
 	}, nil
 }
 
-func UnmarshalPostFromDatabase(id, state, moderatorId, contributorId string, content []string, brand *Brand, audience *Audience, characters []*Character, categories []*Category, createdAt time.Time, postedAt, reassignmentAt *time.Time) *Post {
+func UnmarshalPostFromDatabase(id, state, moderatorId, contributorId string, content []map[string]string, brand *Brand, audience *Audience, characters []*Character, categories []*Category, createdAt time.Time, postedAt, reassignmentAt *time.Time) *Post {
+	var resources []*Resource
+
+	for _,
+
+
 	return &Post{
 		id:             id,
 		moderatorId:    moderatorId,

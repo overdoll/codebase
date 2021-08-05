@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	tusd "github.com/tus/tusd/pkg/handler"
 	"go.temporal.io/sdk/client"
 	"go.uber.org/zap"
 	"overdoll/applications/sting/internal/app"
@@ -48,4 +49,39 @@ func NewGraphQLServer(app *app.Application, client client.Client) http.Handler {
 	})))
 
 	return rtr
+}
+
+func HandleTus(app *app.Application) http.Handler {
+
+	rtr := router.NewGinRouter()
+
+	handler, err := tusd.NewUnroutedHandler(config)
+
+	rtr.POST("", gin.HandlerFunc(handler.PostFile))
+	rtr.HEAD(":id", gin.HandlerFunc(handler.HeadFile))
+	rtr.PATCH(":id", gin.HandlerFunc(handler.PatchFile))
+	rtr.GET(":id", gin.HandlerFunc(handler.GetFile))
+
+	return rtr
+}
+
+func NewHttpServer(app app.Application) *http.ServeMux {
+	httpServer := &HttpServer{app: app}
+
+	mx := http.NewServeMux()
+	// Set up routes
+	mx.Handle("/api/upload/"))
+
+	return mx
+}
+
+func (h *HttpServer) HandleTUS() *tusd.Handler {
+
+	handler, err := h.app.Commands.HandleUpload.Handle(context.Background())
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return handler
 }

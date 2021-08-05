@@ -20,6 +20,8 @@ type Commands struct {
 	RejectPost  command.RejectPostHandler
 	SubmitPost  command.SubmitPostHandler
 
+	HandleUpload command.HandleUploadHandler
+
 	UpdatePostContent    command.UpdatePostContentHandler
 	UpdatePostCategories command.UpdatePostCategoriesHandler
 	UpdatePostCharacters command.UpdatePostCharactersHandler

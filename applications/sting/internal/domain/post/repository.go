@@ -35,6 +35,11 @@ type Repository interface {
 	GetCategoryById(ctx context.Context, categoryId string) (*Category, error)
 	GetCategoriesById(ctx context.Context, categoryIds []string) ([]*Category, error)
 	CreateCategories(ctx context.Context, categories []*Category) error
+
+	// processing and creating resources
+	CreateResourcesFromUpload(ctx context.Context, ids []string) ([]*Resource, error)
+	ProcessResources(ctx context.Context, resources []*Resource) ([]*Resource, error)
+	DeleteResources(ctx context.Context, resources []*Resource) error
 }
 
 type IndexRepository interface {

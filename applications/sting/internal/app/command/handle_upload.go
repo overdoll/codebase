@@ -4,7 +4,7 @@ import (
 	"context"
 
 	tusd "github.com/tus/tusd/pkg/handler"
-	"overdoll/applications/buffer/internal/domain/file"
+	"overdoll/applications/sting/internal/domain/file"
 )
 
 type HandleUploadHandler struct {
