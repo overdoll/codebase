@@ -23,18 +23,14 @@ var (
 type resourceType int
 
 const (
-	imageType resourceType = iota
-	videoType
+	imageType resourceType = 1
+	videoType              = 2
 )
 
+// accepted formats
 var (
 	imageAcceptedTypes = []string{"image/png"}
 	videoAcceptedTypes = []string{"video/png"}
-)
-
-var (
-	imageFormatToCreate = "image/webp"
-	videoFormatToCreate = "image/webm"
 )
 
 type marshalled struct {
@@ -89,11 +85,29 @@ type Resource struct {
 
 func NewResource(url, mimeType string) (*Resource, error) {
 
+	var rType resourceType
+
+	for _, m := range imageAcceptedTypes {
+		if m == mimeType {
+			rType = imageType
+		}
+	}
+
+	for _, m := range videoAcceptedTypes {
+		if m == mimeType {
+			rType = videoType
+		}
+	}
+
+	if rType == 0 {
+		return nil, ErrFileTypeNotAllowed
+	}
+
 	return &Resource{
 		url:          url,
 		mimeTypes:    []string{mimeType},
 		sizes:        []int{},
-		resourceType: imageType,
+		resourceType: rType,
 		processed:    false,
 	}, nil
 }
@@ -153,13 +167,8 @@ func (r *Resource) ProcessResource(prefix string, file *os.File) ([]*Move, error
 		r.resourceType = imageType
 
 	} else if kind.MIME.Value == "video/mp4" {
-		// video is in an accepted format - convert to webm
-
-		// our resource will contain 2 mimetypes - a webm and an mp4 as a fallback
-		mimeTypes = append(mimeTypes, "video/webm")
+		// TODO: video processing pipeline??
 		mimeTypes = append(mimeTypes, "video/mp4")
-
-		newFileExtension = ".webm"
 
 		r.resourceType = videoType
 
@@ -176,11 +185,13 @@ func (r *Resource) ProcessResource(prefix string, file *os.File) ([]*Move, error
 		remoteUrlTarget: fileKey + "." + kind.Extension,
 	})
 
-	// the first file that needs to be moved - a file that we created
-	moveTargets = append(moveTargets, &Move{
-		osFileLocation:  newFileName,
-		remoteUrlTarget: fileKey + newFileExtension,
-	})
+	if newFileExtension != "" {
+		// the first file that needs to be moved - a file that we created
+		moveTargets = append(moveTargets, &Move{
+			osFileLocation:  newFileName,
+			remoteUrlTarget: fileKey + newFileExtension,
+		})
+	}
 
 	r.url = fileKey
 	r.mimeTypes = mimeTypes

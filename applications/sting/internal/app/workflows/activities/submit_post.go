@@ -14,15 +14,13 @@ func (h *Activities) SubmitPost(ctx context.Context, postId string) error {
 			return err
 		}
 
-		// Process content (mime-type checks, etc...)
-		cnt, err := h.cr.ProcessResources(ctx, pending.ContributorId(), pending.Content())
+		postPrefix := "/posts/" + pending.ContributorId() + "/"
 
-		if err != nil {
+		// Process content (mime-type checks, etc...)
+		// add a prefix
+		if err := h.cr.ProcessResources(ctx, postPrefix, pending.Content()); err != nil {
 			return err
 		}
-
-		// update content
-		pending.UpdateContent(cnt)
 
 		return nil
 	})
