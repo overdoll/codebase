@@ -5,9 +5,12 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"testing"
 
+	"github.com/eventials/go-tus"
 	"github.com/shurcooL/graphql"
+	"github.com/stretchr/testify/require"
 	"go.temporal.io/sdk/testsuite"
 	"google.golang.org/grpc"
 	"overdoll/applications/sting/internal/ports"
@@ -24,16 +27,50 @@ const customCharacterName = "test"
 const customMediaName = "asdasd"
 
 const StingHttpAddr = ":6666"
-const StingHttpClientAddr = "http://:6666/graphql"
+const StingGraphqlClientAddr = "http://:6666/graphql"
+const StingTusClientAddr = "http://:6666/upload"
 
 const StingGrpcAddr = "localhost:6667"
 const StingGrpcClientAddr = "localhost:6667"
 
-func getHttpClient(t *testing.T, pass *passport.Passport) (*graphql.Client, *http.Client) {
+func getGraphqlClient(t *testing.T, pass *passport.Passport) (*graphql.Client, *http.Client) {
 
 	client, _ := clients.NewHTTPClientWithHeaders(pass)
 
-	return graphql.NewClient(StingHttpClientAddr, client), client
+	return graphql.NewClient(StingGraphqlClientAddr, client), client
+}
+
+func getTusClient(t *testing.T, pass *passport.Passport) (*tus.Client, *http.Client) {
+
+	cli, _ := clients.NewHTTPClientWithHeaders(pass)
+
+	client, _ := tus.NewClient(StingTusClientAddr, &tus.Config{HttpClient: cli})
+
+	return client, cli
+}
+
+func uploadFileWithTus(t *testing.T, tusClient *tus.Client, file string) string {
+
+	f, err := os.Open(file)
+	require.NoError(t, err)
+
+	defer f.Close()
+
+	// create the tus client.
+	// create an upload from a file.
+	upload, _ := tus.NewUploadFromFile(f)
+
+	// create the uploader.
+	uploader, _ := tusClient.CreateUpload(upload)
+
+	// start the uploading process.
+	err = uploader.Upload()
+	require.NoError(t, err)
+
+	split := strings.Split(uploader.Url(), "/")
+
+	// get last part of url = ID of the upload
+	return split[len(split)-1]
 }
 
 func getGrpcClient(t *testing.T) sting.StingClient {

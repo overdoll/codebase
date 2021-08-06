@@ -20,7 +20,7 @@ type SearchCharacters struct {
 func TestSearchCharacters(t *testing.T) {
 	t.Parallel()
 
-	client, _ := getHttpClient(t, nil)
+	client, _ := getGraphqlClient(t, nil)
 
 	var searchCharacters SearchCharacters
 
@@ -47,7 +47,7 @@ type SearchCategories struct {
 func TestSearchCategories(t *testing.T) {
 	t.Parallel()
 
-	client, _ := getHttpClient(t, nil)
+	client, _ := getGraphqlClient(t, nil)
 
 	var searchCategories SearchCategories
 
@@ -74,7 +74,7 @@ type SearchSeries struct {
 func TestSearchSeries(t *testing.T) {
 	t.Parallel()
 
-	client, _ := getHttpClient(t, nil)
+	client, _ := getGraphqlClient(t, nil)
 
 	var searchSeries SearchSeries
 
@@ -101,7 +101,7 @@ type SearchBrands struct {
 func TestSearchBrand(t *testing.T) {
 	t.Parallel()
 
-	client, _ := getHttpClient(t, nil)
+	client, _ := getGraphqlClient(t, nil)
 
 	var searchSeries SearchBrands
 

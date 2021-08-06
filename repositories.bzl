@@ -334,6 +334,14 @@ def go_repositories():
         version = "v0.1.0",
     )
     go_repository(
+        name = "com_github_eventials_go_tus",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/eventials/go-tus",
+        sum = "h1:t2+zxJPT/jq/YOx/JRsoByAZI/GHOxYJ7MKeillEX4U=",
+        version = "v0.0.0-20200718001131-45c7ec8f5d59",
+    )
+
+    go_repository(
         name = "com_github_facebookgo_clock",
         build_file_proto_mode = "disable",
         importpath = "github.com/facebookgo/clock",
@@ -1560,6 +1568,14 @@ def go_repositories():
         sum = "h1:Slr1R9HxAlEKefgq5jn9U+DnETlIUa6HfgEzj0g5d7s=",
         version = "v1.2.0",
     )
+    go_repository(
+        name = "com_github_syndtr_goleveldb",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/syndtr/goleveldb",
+        sum = "h1:fBdIW9lB4Iz0n9khmH8w27SJ3QEJ7+IgjPEwGSZiFdE=",
+        version = "v1.0.0",
+    )
+
     go_repository(
         name = "com_github_tmc_grpc_websocket_proxy",
         build_file_proto_mode = "disable",

@@ -72,7 +72,7 @@ func (r ResourceS3Repository) CreateResources(ctx context.Context, uploads []str
 		}
 
 		// create a new resource - our url + the content type that came back from S3
-		newResource, err := resource.NewResource(fileId, *resp.ContentType)
+		newResource, err := resource.NewResource(uploadId, *resp.ContentType)
 
 		if err != nil {
 			return nil, err
@@ -98,7 +98,10 @@ func (r ResourceS3Repository) ProcessResources(ctx context.Context, prefix strin
 			continue
 		}
 
-		file, err := os.Create(target.Url())
+
+		fileId := strings.Split(target.Url(), "+")[0]
+
+		file, err := os.Create(fileId)
 
 		if err != nil {
 			return fmt.Errorf("failed to create file: %v", err)
@@ -108,7 +111,7 @@ func (r ResourceS3Repository) ProcessResources(ctx context.Context, prefix strin
 		_, err = downloader.Download(file,
 			&s3.GetObjectInput{
 				Bucket: aws.String(UploadsBucket),
-				Key:    aws.String(target.Url()),
+				Key:    aws.String(fileId),
 			},
 		)
 
