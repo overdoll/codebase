@@ -23,13 +23,11 @@ import { useRelayEnvironment } from 'react-relay'
 
 import InterfaceArrowsTurnBackward
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-turn-backward.svg'
-import InterfaceSettingCog
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/setting/interface-setting-cog.svg'
 
 import TopNavigationButton from './components/TopNavigationButton/TopNavigationButton'
 import LeftSidebarButton from './components/LeftSidebar/LeftSidebarButton/LeftSidebarButton'
 import TopRightMenu from './components/TopRightMenu/TopRightMenu'
-import Sidebar from './components/LeftSidebar/LeftSidebar'
+import LeftSidebar from './components/LeftSidebar/LeftSidebar'
 import type { TopRightMenuFragment$key } from '@//:artifacts/TopRightMenuFragment.graphql'
 import TopRightMenuButton from './components/TopRightMenu/TopRightMenuButton/TopRightMenuButton'
 
@@ -152,16 +150,16 @@ export default function NavigationBar (props: Props): Node {
           </Flex>
         </Flex>
       </>
-      <Flex direction='row'>
+      <Flex direction={{ base: 'column', md: 'row' }}>
         {navigationSidebar.map((sidebarGroup, index) => {
           return (
             <Fragment key={index}>
               <Route exact={sidebarGroup.exact} path={sidebarGroup.path}>
-                <Sidebar title={t(sidebarGroup.navigation.title)}>
+                <LeftSidebar title={t(sidebarGroup.navigation.title)}>
                   {Object.keys(sidebarGroup.routes).map((grouping, groupingIndex) => {
                     return (
                       <Fragment key={groupingIndex}>
-                        {grouping !== 'undefined' && <Text>{grouping}</Text>}
+                        {grouping !== 'undefined' && <Text mb={1}>{grouping}</Text>}
                         {(sidebarGroup.routes[grouping]).map((sidebarItem, sidebarItemIndex) => (
                           <LeftSidebarButton
                             key={sidebarItemIndex}
@@ -173,7 +171,7 @@ export default function NavigationBar (props: Props): Node {
                       </Fragment>
                     )
                   })}
-                </Sidebar>
+                </LeftSidebar>
               </Route>
             </Fragment>
           )

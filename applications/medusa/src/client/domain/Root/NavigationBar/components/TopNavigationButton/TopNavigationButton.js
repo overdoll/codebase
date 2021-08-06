@@ -24,7 +24,7 @@ export default function TopNavigationButton ({ path, icon, label, exact, match }
           <Flex
             borderRadius={10}
             bg={match ? 'gray.500' : 'transparent'}
-            mt={2} mb={2} w='58px' h='40px' pl={4} pr={4}
+            mt={2} mb={2} w='58px' pl={4} pr={4}
             aria-label={label}
             position='relative'
           >

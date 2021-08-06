@@ -6,7 +6,9 @@ import {
   Accordion,
   Box, Button,
   Flex, Heading, IconButton, Stack, useDisclosure,
-  Slide
+  Slide,
+  Center,
+  useBreakpointValue
 } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 
@@ -20,9 +22,31 @@ type Props = {
   title: string,
 }
 
-export default function NavItem (props: Props): Node {
+export default function LeftSidebar (props: Props): Node {
   const { isOpen, onToggle } = useDisclosure()
 
+  const windowSize = useBreakpointValue({ base: 'mobile', md: 'desktop' })
+
+  // Render a mobile-friendly sidebar
+  if (windowSize === 'mobile') {
+    return (
+      <Center mt={4}>
+        <Flex
+          w={['full', 'sm', 'md', 'lg']}
+          pl={[1, 0]}
+          pr={[1, 0]}
+          direction='column'
+        >
+          <Heading mb={3} color='gray.00' ml={1} fontSize='2xl'>{props.title}</Heading>
+          <Stack spacing={2}>
+            {props.children}
+          </Stack>
+        </Flex>
+      </Center>
+    )
+  }
+
+  // Otherwise, render the normal sidebar
   return (
     <>
       <Flex

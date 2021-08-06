@@ -23,6 +23,7 @@ export default function LeftSidebarButton ({ path, title }: Props): Node {
         <Button
           borderRadius={5} pt={3} pb={3}
           textAlign='left' w='100%'
+          h={{ base: 9, md: 10 }}
           bg={isActive ? 'gray.700' : 'transparent'}
           variant='solid'
         >
