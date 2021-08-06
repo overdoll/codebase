@@ -1,8 +1,12 @@
 package adapters
 
 import (
+	"bytes"
 	"context"
 	"fmt"
+	"image/png"
+	"io/ioutil"
+	"net/http"
 	"net/url"
 	"os"
 	"strings"
@@ -11,36 +15,33 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+	"github.com/chai2010/webp"
 	"github.com/h2non/filetype"
 	tusd "github.com/tus/tusd/pkg/handler"
 	"github.com/tus/tusd/pkg/s3store"
+	"overdoll/applications/sting/internal/domain/resource"
 	"overdoll/libraries/uuid"
 )
 
 const (
-	ImageStaticBucket  = "overdoll-assets"
-	PostContentBucket  = "overdoll-posts"
-	ImageUploadsBucket = "overdoll-uploads"
+	StaticBucket  = "overdoll-assets"
+	UploadsBucket = "overdoll-uploads"
 )
 
-const (
-	PendingPostPrefix = "pending_posts/"
-)
-
-type ContentS3Repository struct {
+type ResourceS3Repository struct {
 	session *session.Session
 }
 
-func NewContentS3Repository(session *session.Session) ContentS3Repository {
-	return ContentS3Repository{session: session}
+func NewResourceS3Repository(session *session.Session) ResourceS3Repository {
+	return ResourceS3Repository{session: session}
 }
 
 // tusd composer for handling file uploads
-func (r ContentS3Repository) GetComposer(ctx context.Context) (*tusd.StoreComposer, error) {
+func (r ResourceS3Repository) GetComposer(ctx context.Context) (*tusd.StoreComposer, error) {
 	s3Client := s3.New(r.session)
 
 	store := s3store.S3Store{
-		Bucket:            ImageUploadsBucket,
+		Bucket:            UploadsBucket,
 		Service:           s3Client,
 		MaxPartSize:       5 * 1024 * 1024 * 1024,
 		PreferredPartSize: 5 * 1024 * 1024,
@@ -55,147 +56,197 @@ func (r ContentS3Repository) GetComposer(ctx context.Context) (*tusd.StoreCompos
 	return composer, nil
 }
 
-// ProcessContent - do filetype validation, move files to a user private bucket out of the uploading bucket
-func (r ContentS3Repository) ProcessContent(ctx context.Context, accountId string, oldContent []string) ([]string, error) {
+// CreateResources will create resources from a list of IDs passed
+func (r ResourceS3Repository) CreateResources(ctx context.Context, uploads []string) ([]*resource.Resource, error) {
+	var resources []*resource.Resource
+
+	return resources, nil
+}
+
+// ProcessResources - do filetype validation on each resource, and add to to the static bucket, with a specified prefix
+// expects that the resource that was passed into the method is a resource that originates in UploadsBucket, so in our case
+// it was uploaded through TUS
+func (r ResourceS3Repository) ProcessResources(ctx context.Context, prefix string, resources []*resource.Resource) error {
 	downloader := s3manager.NewDownloader(r.session)
 	s3Client := s3.New(r.session)
 
-	var content []string
+	for _, target := range resources {
 
-	for _, image := range oldContent {
+		// if target is processed, skip for now
+		if target.IsProcessed() {
+			continue
+		}
+
+		var mimeTypes []string
 
 		// the actual file ID is before the + since that's how tus handles it
-		fileId := strings.Split(image, "+")[0]
+		fileId := strings.Split(target.Url(), "+")[0]
 
 		file, err := os.Create(fileId)
 
 		if err != nil {
-			return nil, fmt.Errorf("failed to create file: %v", err)
+			return fmt.Errorf("failed to create file: %v", err)
 		}
 
 		// Download our file from the private bucket
 		_, err = downloader.Download(file,
 			&s3.GetObjectInput{
-				Bucket: aws.String(ImageUploadsBucket),
+				Bucket: aws.String(UploadsBucket),
 				Key:    aws.String(fileId),
 			},
 		)
 
 		if err != nil {
-			return nil, fmt.Errorf("failed to download file: %v", err)
+			return fmt.Errorf("failed to download file: %v", err)
 		}
 
 		head := make([]byte, 261)
 		_, err = file.Read(head)
 
 		if err != nil {
-			return nil, err
+			return err
 		}
 
 		// do a mime type check on the file to make sure its an accepted file and to get our extension
 		kind, _ := filetype.Match(head)
 		if kind == filetype.Unknown {
-			fmt.Println("unknown file type")
-			continue
+			return fmt.Errorf("uknown file type: %s", kind)
 		}
 
-		// Check that our mime type is an accepted one
-		if !(kind.MIME.Value == "image/jpeg" || kind.MIME.Value == "image/png" || kind.MIME.Value == "video/mp4") {
-			fmt.Println("invalid file mime type", err)
-			continue
+		// this is the file we need to move from our OS to our main bucket (we created an extra file - webp for image, webm for video)
+		var fileToMove string
+		var fileToMoveExtension string
+
+		if kind.MIME.Value == "image/png" {
+			// image is in an accepted format - convert to webp
+
+			var buf bytes.Buffer
+
+			src, err := png.Decode(file)
+
+			if err != nil {
+				return fmt.Errorf("failed to decode png %v", err)
+			}
+
+			// encode webp
+			if err = webp.Encode(&buf, src, &webp.Options{Lossless: true}); err != nil {
+				return fmt.Errorf("failed to encode webp %v", err)
+			}
+
+			fileToMove = fileId + ".webp"
+			fileToMoveExtension = ".webp"
+
+			// put on local OS system to be uploaded to S3
+			if err = ioutil.WriteFile(fileToMove, buf.Bytes(), 0666); err != nil {
+				return fmt.Errorf("failed to write output webp %v", err)
+			}
+
+			// our resource will contain 2 mimetypes - a PNG and a webp
+			mimeTypes = append(mimeTypes, "image/webp")
+			mimeTypes = append(mimeTypes, "image/png")
+
+			if err := target.MakeImage(); err != nil {
+				return err
+			}
+
+		} else if kind.MIME.Value == "video/mp4" {
+			// video is in an accepted format - convert to webm
+
+			// our resource will contain 2 mimetypes - a webm and an mp4 as a fallback
+			mimeTypes = append(mimeTypes, "video/webm")
+			mimeTypes = append(mimeTypes, "video/mp4")
+
+			if err := target.MakeVideo(); err != nil {
+				return err
+			}
+
+		} else {
+			return fmt.Errorf("invalid resource format: %s", kind.MIME.Value)
 		}
 
-		fileName := uuid.New().String() + "." + kind.Extension
-		fileKey := accountId + "/" + fileName
+		// original file that was uploaded, with extension
+		fileName := uuid.New().String()
+		fileKey := prefix + "/" + fileName
+
+		fileUploaded := fileKey + "." + kind.Extension
 
 		// move file to private bucket
-		_, err = s3Client.CopyObject(&s3.CopyObjectInput{Bucket: aws.String(ImageStaticBucket),
-			CopySource: aws.String(url.PathEscape(ImageUploadsBucket + "/" + fileId)), Key: aws.String(PendingPostPrefix + fileKey)})
+		_, err = s3Client.CopyObject(&s3.CopyObjectInput{Bucket: aws.String(StaticBucket),
+			CopySource: aws.String(url.PathEscape(UploadsBucket + "/" + fileId)), Key: aws.String(fileUploaded)})
 
 		if err != nil {
-			return nil, fmt.Errorf("failed to copy file: %v", err)
+			return fmt.Errorf("failed to copy file: %v", err)
 		}
 
 		// wait until file is available in private bucket
-		err = s3Client.WaitUntilObjectExists(&s3.HeadObjectInput{Bucket: aws.String(ImageStaticBucket), Key: aws.String(PendingPostPrefix + fileKey)})
+		err = s3Client.WaitUntilObjectExists(&s3.HeadObjectInput{Bucket: aws.String(StaticBucket), Key: aws.String(fileUploaded)})
 		if err != nil {
-			return nil, fmt.Errorf("failed to wait for file: %v", err)
+			return fmt.Errorf("failed to wait for file: %v", err)
 		}
 
-		// add to our list of files
-		content = append(content, fileName)
+		fileCreated := fileKey + "." + fileToMoveExtension
 
+		file2, err := os.Open(fileToMove)
+
+		if err != nil {
+			return err
+		}
+
+		// Get file size and read the file content into a buffer
+		fileInfo, _ := file2.Stat()
+		var size = fileInfo.Size()
+		buffer := make([]byte, size)
+		file2.Read(buffer)
+
+		// new file that was created
+		_, err = s3Client.PutObject(&s3.PutObjectInput{
+			Bucket:        aws.String(StaticBucket),
+			Key:           aws.String(fileCreated),
+			ACL:           aws.String("private"),
+			Body:          bytes.NewReader(buffer),
+			ContentLength: aws.Int64(size),
+			ContentType:   aws.String(http.DetectContentType(buffer)),
+		})
+
+		if err != nil {
+			return fmt.Errorf("failed to put file: %v", err)
+		}
+
+		// wait until file is available in private bucket
+		err = s3Client.WaitUntilObjectExists(&s3.HeadObjectInput{Bucket: aws.String(StaticBucket), Key: aws.String(fileCreated)})
+		if err != nil {
+			return fmt.Errorf("failed to wait for file: %v", err)
+		}
+
+		_ = file2.Close()
 		_ = file.Close()
 		_ = os.Remove(fileId)
-		// we dont have to worry about deleting the file from s3 since it will be deleted eventually (expiration)
-	}
+		_ = os.Remove(fileToMove)
 
-	return content, nil
-}
-
-func (r ContentS3Repository) MakeProcessedContentPublic(ctx context.Context, accountId string, oldContent []string) ([]string, error) {
-
-	s3Client := s3.New(r.session)
-	var content []string
-
-	for _, image := range oldContent {
-
-		newFileId := uuid.New().String()
-
-		// move file to private bucket
-		_, err := s3Client.CopyObject(&s3.CopyObjectInput{Bucket: aws.String(PostContentBucket),
-			CopySource: aws.String(url.PathEscape(ImageStaticBucket + "/" + PendingPostPrefix + accountId + "/" + image)), Key: aws.String(newFileId)})
-
-		if err != nil {
-			fmt.Printf("unable to copy file %s", err)
-			continue
-		}
-
-		// wait until file is available in private bucket
-		err = s3Client.WaitUntilObjectExists(&s3.HeadObjectInput{Bucket: aws.String(PostContentBucket), Key: aws.String(newFileId)})
-		if err != nil {
-			return nil, fmt.Errorf("error while waitint for item to be copied: %v", err)
-		}
-
-		// add to our list of files
-		content = append(content, newFileId)
-	}
-
-	return content, nil
-}
-
-func (r ContentS3Repository) DeletePublicContent(ctx context.Context, content []string) error {
-
-	s3Client := s3.New(r.session)
-
-	for _, image := range content {
-
-		// move file to private bucket
-		_, err := s3Client.DeleteObject(&s3.DeleteObjectInput{Bucket: aws.String(PostContentBucket), Key: aws.String(image)})
-
-		if err != nil {
-			fmt.Printf("unable to delete file %s", err)
-			continue
+		// update resource with new mimetypes
+		if err := target.ProcessResource(fileKey, mimeTypes); err != nil {
+			return err
 		}
 	}
 
 	return nil
 }
 
-func (r ContentS3Repository) DeleteProcessedContent(ctx context.Context, accountId string, content []string) error {
+func (r ResourceS3Repository) DeleteProcessedResources(ctx context.Context, resources []*resource.Resource) error {
 
 	s3Client := s3.New(r.session)
 
-	for _, image := range content {
+	for _, res := range resources {
 
-		id := aws.String(PendingPostPrefix + url.PathEscape(accountId+"/"+image))
+		if !res.IsProcessed() {
+			continue
+		}
 
-		// move file to private bucket
-		_, err := s3Client.DeleteObject(&s3.DeleteObjectInput{Bucket: aws.String(ImageStaticBucket), Key: id})
+		// delete object
+		_, err := s3Client.DeleteObject(&s3.DeleteObjectInput{Bucket: aws.String(StaticBucket), Key: aws.String(res.Url())})
 
 		if err != nil {
-			fmt.Printf("unable to delete file %s", err)
-			continue
+			return fmt.Errorf("unable to delete file %v", err)
 		}
 	}
 

@@ -58,9 +58,15 @@ func marshalCategoryToDocument(cat *post.Category) (*categoryDocument, error) {
 		return nil, err
 	}
 
+	marsh, err := cat.Thumbnail().MarshalResourceToDatabase()
+
+	if err != nil {
+		return nil, err
+	}
+
 	return &categoryDocument{
 		Id:        cat.ID(),
-		Thumbnail: cat.Thumbnail(),
+		Thumbnail: marsh,
 		Title:     cat.Title(),
 		CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
 	}, nil

@@ -195,6 +195,13 @@ def go_repositories():
         sum = "h1:6MnRN8NT7+YBpUIWxHtefFZOKTAPgGjpQSxqLNn0+qY=",
         version = "v2.1.1",
     )
+    go_repository(
+        name = "com_github_chai2010_webp",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/chai2010/webp",
+        sum = "h1:4Ei0/BRroMF9FaXDG2e4OxwFcuW2vcXd+A6tyqTJUQQ=",
+        version = "v1.1.0",
+    )
 
     go_repository(
         name = "com_github_client9_misspell",

@@ -39,7 +39,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 	postRepo := adapters.NewPostsCassandraRepository(session)
 	indexRepo := adapters.NewPostsIndexElasticSearchRepository(client, session)
 
-	contentRepo := adapters.NewContentS3Repository(awsSession)
+	contentRepo := adapters.NewResourceS3Repository(awsSession)
 
 	return app.Application{
 		Commands: app.Commands{

@@ -87,15 +87,27 @@ func marshalCharacterToDocument(char *post.Character) (*characterDocument, error
 		return nil, err
 	}
 
+	charThumb, err := char.Thumbnail().MarshalResourceToDatabase()
+
+	if err != nil {
+		return nil, err
+	}
+
+	seriesThumb, err := media.Thumbnail().MarshalResourceToDatabase()
+
+	if err != nil {
+		return nil, err
+	}
+
 	return &characterDocument{
 		Id:        char.ID(),
-		Thumbnail: char.Thumbnail(),
+		Thumbnail: charThumb,
 		Name:      char.Name(),
 		Slug:      char.Slug(),
 		CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
 		Series: seriesDocument{
 			Id:        media.ID(),
-			Thumbnail: media.Thumbnail(),
+			Thumbnail: seriesThumb,
 			Title:     media.Title(),
 			CreatedAt: strconv.FormatInt(parse2.Time().Unix(), 10),
 		},

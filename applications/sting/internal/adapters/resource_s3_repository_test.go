@@ -28,12 +28,12 @@ func TestContentS3Repository_ProcessContent(t *testing.T) {
 	fileId := ksuid.New().String()
 
 	// upload fixture
-	uploadFileFixture(t, adapters.ImageUploadsBucket, fileId, "applications/sting/internal/adapters/content_fixtures/test_file_1.png")
+	uploadFileFixture(t, adapters.UploadsBucket, fileId, "applications/sting/internal/adapters/content_fixtures/test_file_1.png")
 
 	content := newContentRepository(t)
 
 	// we need to add the "+" because the file is uploaded that way by tus
-	res, err := content.ProcessContent(context.Background(), prefix, []string{fileId + "+some-random-stuff"})
+	res, err := content.ProcessResources(context.Background(), prefix, []string{fileId + "+some-random-stuff"})
 
 	require.NoError(t, err)
 	// uploaded at least 1 file
@@ -87,11 +87,11 @@ func uploadFileFixture(t *testing.T, bucket, fileKey, filePath string) {
 	require.NoError(t, err)
 }
 
-func newContentRepository(t *testing.T) adapters.ContentS3Repository {
+func newContentRepository(t *testing.T) adapters.ResourceS3Repository {
 
 	s := bootstrap.InitializeAWSSession()
 
-	return adapters.NewContentS3Repository(s)
+	return adapters.NewResourceS3Repository(s)
 }
 
 // create buckets before running tests
@@ -102,7 +102,7 @@ func seedBuckets() bool {
 
 	s3c := s3.New(session)
 
-	buckets := []string{adapters.ImageStaticBucket, adapters.ImageUploadsBucket, adapters.PostContentBucket}
+	buckets := []string{adapters.StaticBucket, adapters.UploadsBucket, adapters.PostContentBucket}
 
 	for _, bucket := range buckets {
 		_, err := s3c.CreateBucket(&s3.CreateBucketInput{Bucket: aws.String(bucket)})

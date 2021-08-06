@@ -58,10 +58,16 @@ func marshalBrandToDocument(cat *post.Brand) (*brandDocument, error) {
 		return nil, err
 	}
 
+	marsh, err := cat.Thumbnail().MarshalResourceToDatabase()
+
+	if err != nil {
+		return nil, err
+	}
+
 	return &brandDocument{
 		Id:        cat.ID(),
 		Slug:      cat.Slug(),
-		Thumbnail: cat.Thumbnail(),
+		Thumbnail: marsh,
 		Name:      cat.Name(),
 		CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
 	}, nil

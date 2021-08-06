@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS posts
     audience_id               text,
     category_ids              list<text>,
     character_ids             list<text>,
-    content                   list<map<text,text>>,
+    content                   list<text>,
     created_at                timestamp,
     posted_at                 timestamp,
     moderator_reassignment_at timestamp,

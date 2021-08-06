@@ -232,6 +232,19 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 		}
 	}
 
+	var content []string
+
+	for _, cnt := range pst.Content() {
+
+		contentThumb, err := cnt.MarshalResourceToDatabase()
+
+		if err != nil {
+			return nil, err
+		}
+
+		content = append(content, contentThumb)
+	}
+
 	return &postDocument{
 		Id:             pst.ID(),
 		State:          pst.State(),
@@ -239,7 +252,7 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 		Brand:          brandDoc,
 		ModeratorId:    pst.ModeratorId(),
 		ContributorId:  pst.ContributorId(),
-		Content:        pst.Content(),
+		Content:        content,
 		Categories:     categoryDocuments,
 		Characters:     characterDocuments,
 		CreatedAt:      strconv.FormatInt(pst.CreatedAt().Unix(), 10),

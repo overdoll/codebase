@@ -65,10 +65,16 @@ func marshalAudienceToDocument(cat *post.Audience) (*audienceDocument, error) {
 		stnd = 1
 	}
 
+	marsh, err := cat.Thumbnail().MarshalResourceToDatabase()
+
+	if err != nil {
+		return nil, err
+	}
+
 	return &audienceDocument{
 		Id:        cat.ID(),
 		Slug:      cat.Slug(),
-		Thumbnail: cat.Thumbnail(),
+		Thumbnail: marsh,
 		Title:     cat.Title(),
 		CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
 		Standard:  stnd,

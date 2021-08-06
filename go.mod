@@ -12,6 +12,7 @@ require (
 	github.com/bazelbuild/rules_go v0.27.0
 	github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869
 	github.com/bxcodec/faker/v3 v3.6.0
+	github.com/chai2010/webp v1.1.0 // indirect
 	github.com/gin-gonic/gin v1.7.2
 	github.com/go-playground/validator/v10 v10.6.1
 	github.com/go-redis/redis/v8 v8.10.0

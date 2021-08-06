@@ -15,7 +15,7 @@ func (h *Activities) SubmitPost(ctx context.Context, postId string) error {
 		}
 
 		// Process content (mime-type checks, etc...)
-		cnt, err := h.cr.ProcessContent(ctx, pending.ContributorId(), pending.Content())
+		cnt, err := h.cr.ProcessResources(ctx, pending.ContributorId(), pending.Content())
 
 		if err != nil {
 			return err

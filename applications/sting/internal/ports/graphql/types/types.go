@@ -32,7 +32,7 @@ type Audience struct {
 	// A url-friendly ID. Should be used when searching
 	Slug string `json:"slug"`
 	// A URL pointing to the object's thumbnail.
-	Thumbnail graphql1.URI `json:"thumbnail"`
+	Thumbnail *Resource `json:"thumbnail"`
 	// A title for this audience.
 	Title string `json:"title"`
 	// Posts belonging to this audience
@@ -59,7 +59,7 @@ type Brand struct {
 	// A url-friendly ID. Should be used when searching
 	Slug string `json:"slug"`
 	// A URL pointing to the object's thumbnail.
-	Thumbnail graphql1.URI `json:"thumbnail"`
+	Thumbnail *Resource `json:"thumbnail"`
 	// A name for this brand.
 	Name string `json:"name"`
 	// Posts belonging to this brand
@@ -86,7 +86,7 @@ type Category struct {
 	// A url-friendly ID. Should be used when searching
 	Slug string `json:"slug"`
 	// A URL pointing to the object's thumbnail.
-	Thumbnail graphql1.URI `json:"thumbnail"`
+	Thumbnail *Resource `json:"thumbnail"`
 	// A title for this category.
 	Title string `json:"title"`
 	// Posts belonging to this category
@@ -113,7 +113,7 @@ type Character struct {
 	// A url-friendly ID. Should be used when searching
 	Slug string `json:"slug"`
 	// A URL pointing to the object's thumbnail.
-	Thumbnail graphql1.URI `json:"thumbnail"`
+	Thumbnail *Resource `json:"thumbnail"`
 	// A name for this character.
 	Name string `json:"name"`
 	// The series linked to this character.
@@ -136,10 +136,6 @@ type CharacterEdge struct {
 	Node   *Character `json:"node"`
 }
 
-type Content struct {
-	URL graphql1.URI `json:"url"`
-}
-
 // Payload for a created pending post
 type CreatePostPayload struct {
 	// The pending post after the creation
@@ -157,7 +153,7 @@ type Post struct {
 	// The contributor who contributed this post
 	Contributor *Account `json:"contributor"`
 	// Content belonging to this post
-	Content []*Content `json:"content"`
+	Content []*Resource `json:"content"`
 	// The date and time of when this post was created
 	CreatedAt time.Time `json:"createdAt"`
 	// The date and time of when this post was posted
@@ -187,13 +183,29 @@ type PostEdge struct {
 	Node   *Post  `json:"node"`
 }
 
+// A resource represents an image or a video format that contains an ID to uniquely identify it,
+// and urls to access the resources. We have many urls in order to provide a fallback for older browsers
+//
+// We also identify the type of resource (image or video) to make it easy to distinguish them
+type Resource struct {
+	ID   string         `json:"id"`
+	Type ResourceType   `json:"type"`
+	Urls []*ResourceURL `json:"urls"`
+}
+
+// A type representing a url to the resource and the mimetype
+type ResourceURL struct {
+	URL      graphql1.URI `json:"url"`
+	MimeType string       `json:"mimeType"`
+}
+
 type Series struct {
 	// An ID pointing to this series.
 	ID relay.ID `json:"id"`
 	// A url-friendly ID. Should be used when searching
 	Slug string `json:"slug"`
 	// A URL pointing to the object's thumbnail.
-	Thumbnail graphql1.URI `json:"thumbnail"`
+	Thumbnail *Resource `json:"thumbnail"`
 	// A title for this series.
 	Title string `json:"title"`
 	// Posts belonging to this series
@@ -348,5 +360,47 @@ func (e *PostState) UnmarshalGQL(v interface{}) error {
 }
 
 func (e PostState) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// Identifies the type of resource
+type ResourceType string
+
+const (
+	ResourceTypeImage ResourceType = "IMAGE"
+	ResourceTypeVideo ResourceType = "VIDEO"
+)
+
+var AllResourceType = []ResourceType{
+	ResourceTypeImage,
+	ResourceTypeVideo,
+}
+
+func (e ResourceType) IsValid() bool {
+	switch e {
+	case ResourceTypeImage, ResourceTypeVideo:
+		return true
+	}
+	return false
+}
+
+func (e ResourceType) String() string {
+	return string(e)
+}
+
+func (e *ResourceType) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = ResourceType(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid ResourceType", str)
+	}
+	return nil
+}
+
+func (e ResourceType) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }

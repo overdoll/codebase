@@ -2,6 +2,7 @@ package types
 
 import (
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/applications/sting/internal/domain/resource"
 	"overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/paging"
@@ -55,10 +56,10 @@ func MarshalPostToGraphQL(result *post.Post) *Post {
 		state = PostStateRejected
 	}
 
-	var content []*Content
+	var content []*Resource
 
 	for _, id := range result.Content() {
-		content = append(content, &Content{URL: graphql.NewURI(id)})
+		content = append(content, MarshalResourceToGraphQL(id))
 	}
 
 	var brand *Brand
@@ -101,7 +102,7 @@ func MarshalBrandToGraphQL(result *post.Brand) *Brand {
 		ID:        relay.NewID(Brand{}, result.ID()),
 		Name:      result.Name(),
 		Slug:      result.Slug(),
-		Thumbnail: result.ConvertThumbnailToURI(),
+		Thumbnail: MarshalResourceToGraphQL(result.Thumbnail()),
 	}
 }
 
@@ -110,7 +111,7 @@ func MarshalAudienceToGraphQL(result *post.Audience) *Audience {
 		ID:        relay.NewID(Brand{}, result.ID()),
 		Title:     result.Title(),
 		Slug:      result.Slug(),
-		Thumbnail: result.ConvertThumbnailToURI(),
+		Thumbnail: MarshalResourceToGraphQL(result.Thumbnail()),
 	}
 }
 
@@ -119,14 +120,14 @@ func MarshalSeriesToGraphQL(result *post.Series) *Series {
 		ID:        relay.NewID(Series{}, result.ID()),
 		Title:     result.Title(),
 		Slug:      result.Slug(),
-		Thumbnail: result.ConvertThumbnailToURI(),
+		Thumbnail: MarshalResourceToGraphQL(result.Thumbnail()),
 	}
 }
 
 func MarshalCategoryToGraphQL(result *post.Category) *Category {
 	return &Category{
 		ID:        relay.NewID(Category{}, result.ID()),
-		Thumbnail: result.ConvertThumbnailToURI(),
+		Thumbnail: MarshalResourceToGraphQL(result.Thumbnail()),
 		Slug:      result.Slug(),
 		Title:     result.Title(),
 	}
@@ -137,8 +138,35 @@ func MarshalCharacterToGraphQL(result *post.Character) *Character {
 		ID:        relay.NewID(Character{}, result.ID()),
 		Name:      result.Name(),
 		Slug:      result.Slug(),
-		Thumbnail: result.ConvertThumbnailToURI(),
+		Thumbnail: MarshalResourceToGraphQL(result.Thumbnail()),
 		Series:    MarshalSeriesToGraphQL(result.Series()),
+	}
+}
+
+func MarshalResourceToGraphQL(res *resource.Resource) *Resource {
+	var resourceType ResourceType
+
+	if res.IsImage() {
+		resourceType = ResourceTypeImage
+	}
+
+	if res.IsVideo() {
+		resourceType = ResourceTypeVideo
+	}
+
+	var urls []*ResourceURL
+
+	for _, url := range res.FullUrls() {
+		urls = append(urls, &ResourceURL{
+			URL:      graphql.URI(url.GetFullUrl()),
+			MimeType: url.GetMimeType(),
+		})
+	}
+
+	return &Resource{
+		ID:   res.Url(),
+		Type: resourceType,
+		Urls: urls,
 	}
 }
 

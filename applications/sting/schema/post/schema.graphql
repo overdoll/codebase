@@ -14,7 +14,7 @@ type Post implements Node @key(fields: "id") {
   contributor: Account!
 
   """Content belonging to this post"""
-  content: [Content!]!
+  content: [Resource!]!
 
   """The date and time of when this post was created"""
   createdAt: Time!

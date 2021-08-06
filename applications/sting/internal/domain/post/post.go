@@ -4,7 +4,7 @@ import (
 	"errors"
 	"time"
 
-	resource "overdoll/applications/sting/internal/domain/resource"
+	"overdoll/applications/sting/internal/domain/resource"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/uuid"
@@ -64,9 +64,13 @@ func NewPost(contributor *principal.Principal) (*Post, error) {
 	}, nil
 }
 
-func UnmarshalPostFromDatabase(id, state, moderatorId, contributorId string, content []map[string]string, brand *Brand, audience *Audience, characters []*Character, categories []*Category, createdAt time.Time, postedAt, reassignmentAt *time.Time) *Post {
+func UnmarshalPostFromDatabase(id, state, moderatorId, contributorId string, content []string, brand *Brand, audience *Audience, characters []*Character, categories []*Category, createdAt time.Time, postedAt, reassignmentAt *time.Time) *Post {
+
 	var resources []*resource.Resource
 
+	for _, res := range content {
+		resources = append(resources, resource.UnmarshalResourceFromDatabase(res))
+	}
 
 	return &Post{
 		id:             id,
@@ -75,7 +79,7 @@ func UnmarshalPostFromDatabase(id, state, moderatorId, contributorId string, con
 		brand:          brand,
 		audience:       audience,
 		contributorId:  contributorId,
-		content:        content,
+		content:        resources,
 		characters:     characters,
 		categories:     categories,
 		createdAt:      createdAt,
@@ -217,7 +221,7 @@ func (p *Post) MakeDiscarded() error {
 
 	p.state = discarded
 
-	p.content = []string{}
+	p.content = []*resource.Resource{}
 
 	return nil
 }
@@ -281,8 +285,8 @@ func (p *Post) IsDiscarding() bool {
 	return p.state == discarding
 }
 
-func (p *Post) UpdateContent(content []string) {
-	p.content = content
+func (p *Post) UpdateContent(resources []*resource.Resource) {
+	p.content = resources
 }
 
 func (p *Post) MakeReview() error {
@@ -328,7 +332,7 @@ func (p *Post) UpdateAudienceRequest(requester *principal.Principal, audience *A
 	return nil
 }
 
-func (p *Post) UpdateContentRequest(requester *principal.Principal, content []string) error {
+func (p *Post) UpdateContentRequest(requester *principal.Principal, content []*resource.Resource) error {
 
 	if err := p.CanUpdate(requester); err != nil {
 		return err

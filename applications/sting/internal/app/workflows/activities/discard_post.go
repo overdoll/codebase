@@ -11,7 +11,7 @@ func (h *Activities) DiscardPost(ctx context.Context, postId string) error {
 	pendingPost, err := h.pr.UpdatePost(ctx, postId, func(pending *post.Post) error {
 
 		// On discarded posts, delete the content from S3
-		if err := h.cr.DeleteProcessedContent(ctx, pending.ContributorId(), pending.Content()); err != nil {
+		if err := h.cr.DeleteProcessedResources(ctx, pending.ContributorId(), pending.Content()); err != nil {
 			return err
 		}
 

@@ -2,9 +2,8 @@ package post
 
 import (
 	"errors"
-	"os"
 
-	"overdoll/libraries/graphql"
+	"overdoll/applications/sting/internal/domain/resource"
 	"overdoll/libraries/paging"
 )
 
@@ -18,7 +17,7 @@ type Series struct {
 	id        string
 	slug      string
 	title     string
-	thumbnail string
+	thumbnail *resource.Resource
 }
 
 func (m *Series) ID() string {
@@ -33,20 +32,15 @@ func (m *Series) Title() string {
 	return m.title
 }
 
-func (m *Series) Thumbnail() string {
+func (m *Series) Thumbnail() *resource.Resource {
 	return m.thumbnail
 }
 
-func (m *Series) ConvertThumbnailToURI() graphql.URI {
-	var staticURL = os.Getenv("STATIC_URL")
-	return graphql.NewURI(staticURL + "/thumbnails/" + m.thumbnail)
-}
-
-func UnmarshalSeriesFromDatabase(id, slug, title, thumbnail string) *Series {
+func UnmarshalSeriesFromDatabase(id, slug, title string, thumbnail string) *Series {
 	return &Series{
 		id:        id,
 		slug:      slug,
 		title:     title,
-		thumbnail: thumbnail,
+		thumbnail: resource.UnmarshalResourceFromDatabase(thumbnail),
 	}
 }

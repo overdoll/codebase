@@ -9,7 +9,7 @@ type Category implements Node & Object @key(fields: "id") {
   thumbnail(
     """The size of the resulting square image."""
     size: Int
-  ): URI!
+  ): Resource!
 
   """A title for this category."""
   title: String!

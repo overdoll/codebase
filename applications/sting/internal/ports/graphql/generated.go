@@ -134,10 +134,6 @@ type ComplexityRoot struct {
 		Node   func(childComplexity int) int
 	}
 
-	Content struct {
-		URL func(childComplexity int) int
-	}
-
 	CreatePostPayload struct {
 		Post func(childComplexity int) int
 	}
@@ -205,6 +201,17 @@ type ComplexityRoot struct {
 		Series             func(childComplexity int, after *string, before *string, first *int, last *int, title *string) int
 		__resolve__service func(childComplexity int) int
 		__resolve_entities func(childComplexity int, representations []map[string]interface{}) int
+	}
+
+	Resource struct {
+		ID   func(childComplexity int) int
+		Type func(childComplexity int) int
+		Urls func(childComplexity int) int
+	}
+
+	ResourceURL struct {
+		MimeType func(childComplexity int) int
+		URL      func(childComplexity int) int
 	}
 
 	Series struct {
@@ -647,13 +654,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CharacterEdge.Node(childComplexity), true
 
-	case "Content.url":
-		if e.complexity.Content.URL == nil {
-			break
-		}
-
-		return e.complexity.Content.URL(childComplexity), true
-
 	case "CreatePostPayload.post":
 		if e.complexity.CreatePostPayload.Post == nil {
 			break
@@ -1074,6 +1074,41 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.__resolve_entities(childComplexity, args["representations"].([]map[string]interface{})), true
 
+	case "Resource.id":
+		if e.complexity.Resource.ID == nil {
+			break
+		}
+
+		return e.complexity.Resource.ID(childComplexity), true
+
+	case "Resource.type":
+		if e.complexity.Resource.Type == nil {
+			break
+		}
+
+		return e.complexity.Resource.Type(childComplexity), true
+
+	case "Resource.urls":
+		if e.complexity.Resource.Urls == nil {
+			break
+		}
+
+		return e.complexity.Resource.Urls(childComplexity), true
+
+	case "ResourceUrl.mimeType":
+		if e.complexity.ResourceURL.MimeType == nil {
+			break
+		}
+
+		return e.complexity.ResourceURL.MimeType(childComplexity), true
+
+	case "ResourceUrl.url":
+		if e.complexity.ResourceURL.URL == nil {
+			break
+		}
+
+		return e.complexity.ResourceURL.URL(childComplexity), true
+
 	case "Series.id":
 		if e.complexity.Series.ID == nil {
 			break
@@ -1278,7 +1313,7 @@ var sources = []*ast.Source{
   thumbnail(
     """The size of the resulting square image."""
     size: Int
-  ): URI!
+  ): Resource!
 
   """A title for this audience."""
   title: String!
@@ -1329,7 +1364,7 @@ extend type Post {
   thumbnail(
     """The size of the resulting square image."""
     size: Int
-  ): URI!
+  ): Resource!
 
   """A name for this brand."""
   name: String!
@@ -1380,7 +1415,7 @@ extend type Post {
   thumbnail(
     """The size of the resulting square image."""
     size: Int
-  ): URI!
+  ): Resource!
 
   """A title for this category."""
   title: String!
@@ -1430,7 +1465,7 @@ extend type Post {
   thumbnail(
     """The size of the resulting square image."""
     size: Int
-  ): URI!
+  ): Resource!
 
   """A title for this series."""
   title: String!
@@ -1457,7 +1492,7 @@ type Character implements Node & Object @key(fields: "id") {
   thumbnail(
     """The size of the resulting square image."""
     size: Int
-  ): URI!
+  ): Resource!
 
   """A name for this character."""
   name: String!
@@ -1534,7 +1569,7 @@ extend type Post {
   contributor: Account!
 
   """Content belonging to this post"""
-  content: [Content!]!
+  content: [Resource!]!
 
   """The date and time of when this post was created"""
   createdAt: Time!
@@ -1849,8 +1884,28 @@ extend type Audience {
     last: Int
   ): PostConnection! @goField(forceResolver: true)
 }`, BuiltIn: false},
-	{Name: "schema/schema.graphql", Input: `type Content {
+	{Name: "schema/schema.graphql", Input: `"""Identifies the type of resource"""
+enum ResourceType {
+  IMAGE
+  VIDEO
+}
+
+"""A type representing a url to the resource and the mimetype"""
+type ResourceUrl {
   url: URI!
+  mimeType: String!
+}
+
+"""
+A resource represents an image or a video format that contains an ID to uniquely identify it,
+and urls to access the resources. We have many urls in order to provide a fallback for older browsers
+
+We also identify the type of resource (image or video) to make it easy to distinguish them
+"""
+type Resource {
+  id: String!
+  type: ResourceType!
+  urls: [ResourceUrl!]!
 }
 
 extend type Account @key(fields: "id")  {
@@ -1865,7 +1920,7 @@ interface Object {
   thumbnail(
     """The size of the resulting square image."""
     size: Int
-  ): URI!
+  ): Resource!
 }`, BuiltIn: false},
 	{Name: "../../libraries/graphql/schema.graphql", Input: `scalar Time
 
@@ -3123,9 +3178,9 @@ func (ec *executionContext) _Audience_thumbnail(ctx context.Context, field graph
 		}
 		return graphql.Null
 	}
-	res := resTmp.(graphql1.URI)
+	res := resTmp.(*types.Resource)
 	fc.Result = res
-	return ec.marshalNURI2overdollᚋlibrariesᚋgraphqlᚐURI(ctx, field.Selections, res)
+	return ec.marshalNResource2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Audience_title(ctx context.Context, field graphql.CollectedField, obj *types.Audience) (ret graphql.Marshaler) {
@@ -3452,9 +3507,9 @@ func (ec *executionContext) _Brand_thumbnail(ctx context.Context, field graphql.
 		}
 		return graphql.Null
 	}
-	res := resTmp.(graphql1.URI)
+	res := resTmp.(*types.Resource)
 	fc.Result = res
-	return ec.marshalNURI2overdollᚋlibrariesᚋgraphqlᚐURI(ctx, field.Selections, res)
+	return ec.marshalNResource2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Brand_name(ctx context.Context, field graphql.CollectedField, obj *types.Brand) (ret graphql.Marshaler) {
@@ -3781,9 +3836,9 @@ func (ec *executionContext) _Category_thumbnail(ctx context.Context, field graph
 		}
 		return graphql.Null
 	}
-	res := resTmp.(graphql1.URI)
+	res := resTmp.(*types.Resource)
 	fc.Result = res
-	return ec.marshalNURI2overdollᚋlibrariesᚋgraphqlᚐURI(ctx, field.Selections, res)
+	return ec.marshalNResource2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Category_title(ctx context.Context, field graphql.CollectedField, obj *types.Category) (ret graphql.Marshaler) {
@@ -4110,9 +4165,9 @@ func (ec *executionContext) _Character_thumbnail(ctx context.Context, field grap
 		}
 		return graphql.Null
 	}
-	res := resTmp.(graphql1.URI)
+	res := resTmp.(*types.Resource)
 	fc.Result = res
-	return ec.marshalNURI2overdollᚋlibrariesᚋgraphqlᚐURI(ctx, field.Selections, res)
+	return ec.marshalNResource2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Character_name(ctx context.Context, field graphql.CollectedField, obj *types.Character) (ret graphql.Marshaler) {
@@ -4365,41 +4420,6 @@ func (ec *executionContext) _CharacterEdge_node(ctx context.Context, field graph
 	res := resTmp.(*types.Character)
 	fc.Result = res
 	return ec.marshalNCharacter2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharacter(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Content_url(ctx context.Context, field graphql.CollectedField, obj *types.Content) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Content",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.URL, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(graphql1.URI)
-	fc.Result = res
-	return ec.marshalNURI2overdollᚋlibrariesᚋgraphqlᚐURI(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CreatePostPayload_post(ctx context.Context, field graphql.CollectedField, obj *types.CreatePostPayload) (ret graphql.Marshaler) {
@@ -5330,9 +5350,9 @@ func (ec *executionContext) _Post_content(ctx context.Context, field graphql.Col
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*types.Content)
+	res := resTmp.([]*types.Resource)
 	fc.Result = res
-	return ec.marshalNContent2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐContentᚄ(ctx, field.Selections, res)
+	return ec.marshalNResource2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Post_createdAt(ctx context.Context, field graphql.CollectedField, obj *types.Post) (ret graphql.Marshaler) {
@@ -6147,6 +6167,181 @@ func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.C
 	return ec.marshalO__Schema2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐSchema(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Resource_id(ctx context.Context, field graphql.CollectedField, obj *types.Resource) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Resource",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Resource_type(ctx context.Context, field graphql.CollectedField, obj *types.Resource) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Resource",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Type, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(types.ResourceType)
+	fc.Result = res
+	return ec.marshalNResourceType2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceType(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Resource_urls(ctx context.Context, field graphql.CollectedField, obj *types.Resource) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Resource",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Urls, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*types.ResourceURL)
+	fc.Result = res
+	return ec.marshalNResourceUrl2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceURLᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResourceUrl_url(ctx context.Context, field graphql.CollectedField, obj *types.ResourceURL) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResourceUrl",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.URL, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(graphql1.URI)
+	fc.Result = res
+	return ec.marshalNURI2overdollᚋlibrariesᚋgraphqlᚐURI(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ResourceUrl_mimeType(ctx context.Context, field graphql.CollectedField, obj *types.ResourceURL) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ResourceUrl",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.MimeType, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Series_id(ctx context.Context, field graphql.CollectedField, obj *types.Series) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -6254,9 +6449,9 @@ func (ec *executionContext) _Series_thumbnail(ctx context.Context, field graphql
 		}
 		return graphql.Null
 	}
-	res := resTmp.(graphql1.URI)
+	res := resTmp.(*types.Resource)
 	fc.Result = res
-	return ec.marshalNURI2overdollᚋlibrariesᚋgraphqlᚐURI(ctx, field.Selections, res)
+	return ec.marshalNResource2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Series_title(ctx context.Context, field graphql.CollectedField, obj *types.Series) (ret graphql.Marshaler) {
@@ -8680,33 +8875,6 @@ func (ec *executionContext) _CharacterEdge(ctx context.Context, sel ast.Selectio
 	return out
 }
 
-var contentImplementors = []string{"Content"}
-
-func (ec *executionContext) _Content(ctx context.Context, sel ast.SelectionSet, obj *types.Content) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, contentImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("Content")
-		case "url":
-			out.Values[i] = ec._Content_url(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
 var createPostPayloadImplementors = []string{"CreatePostPayload"}
 
 func (ec *executionContext) _CreatePostPayload(ctx context.Context, sel ast.SelectionSet, obj *types.CreatePostPayload) graphql.Marshaler {
@@ -9209,6 +9377,75 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Values[i] = ec._Query___type(ctx, field)
 		case "__schema":
 			out.Values[i] = ec._Query___schema(ctx, field)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var resourceImplementors = []string{"Resource"}
+
+func (ec *executionContext) _Resource(ctx context.Context, sel ast.SelectionSet, obj *types.Resource) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, resourceImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Resource")
+		case "id":
+			out.Values[i] = ec._Resource_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "type":
+			out.Values[i] = ec._Resource_type(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "urls":
+			out.Values[i] = ec._Resource_urls(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var resourceUrlImplementors = []string{"ResourceUrl"}
+
+func (ec *executionContext) _ResourceUrl(ctx context.Context, sel ast.SelectionSet, obj *types.ResourceURL) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, resourceUrlImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ResourceUrl")
+		case "url":
+			out.Values[i] = ec._ResourceUrl_url(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "mimeType":
+			out.Values[i] = ec._ResourceUrl_mimeType(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -10158,53 +10395,6 @@ func (ec *executionContext) marshalNCharacterEdge2ᚖoverdollᚋapplicationsᚋs
 	return ec._CharacterEdge(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNContent2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐContentᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.Content) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNContent2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐContent(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-	return ret
-}
-
-func (ec *executionContext) marshalNContent2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐContent(ctx context.Context, sel ast.SelectionSet, v *types.Content) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	return ec._Content(ctx, sel, v)
-}
-
 func (ec *executionContext) unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx context.Context, v interface{}) (relay.ID, error) {
 	var res relay.ID
 	err := res.UnmarshalGQL(v)
@@ -10338,6 +10528,110 @@ func (ec *executionContext) unmarshalNPostState2overdollᚋapplicationsᚋsting�
 
 func (ec *executionContext) marshalNPostState2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostState(ctx context.Context, sel ast.SelectionSet, v types.PostState) graphql.Marshaler {
 	return v
+}
+
+func (ec *executionContext) marshalNResource2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.Resource) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNResource2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
+}
+
+func (ec *executionContext) marshalNResource2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx context.Context, sel ast.SelectionSet, v *types.Resource) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._Resource(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNResourceType2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceType(ctx context.Context, v interface{}) (types.ResourceType, error) {
+	var res types.ResourceType
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNResourceType2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceType(ctx context.Context, sel ast.SelectionSet, v types.ResourceType) graphql.Marshaler {
+	return v
+}
+
+func (ec *executionContext) marshalNResourceUrl2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceURLᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.ResourceURL) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNResourceUrl2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceURL(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
+}
+
+func (ec *executionContext) marshalNResourceUrl2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceURL(ctx context.Context, sel ast.SelectionSet, v *types.ResourceURL) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ResourceUrl(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNSeries2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSeries(ctx context.Context, sel ast.SelectionSet, v types.Series) graphql.Marshaler {
