@@ -19,7 +19,10 @@ go_library(
 go_test(
     name = "service_test",
     srcs = ["component_test.go"],
-    data = ["//applications/sting:config.toml"],
+    data = [
+        "//applications/sting:config.toml",
+        "//applications/sting/internal/service/file_fixtures:all",
+    ],
     deps = [
         ":service",
         "//applications/sting/internal/adapters",

@@ -30,15 +30,6 @@ func (h *Activities) PublishPost(ctx context.Context, postId string) error {
 			return err
 		}
 
-		// Update content - make the content public by moving it into the public bucket
-		newContent, err := h.cr.MakeProcessedContentPublic(ctx, pending.ContributorId(), pending.Content())
-
-		if err != nil {
-			return err
-		}
-
-		pending.UpdateContent(newContent)
-
 		return nil
 	})
 
