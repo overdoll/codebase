@@ -24,12 +24,14 @@ export default function TopNavigationButton ({ path, icon, label, exact, match }
           <Flex
             borderRadius={10}
             bg={match ? 'gray.500' : 'transparent'}
-            mt={2} mb={2} w='58px' pl={4} pr={4}
+            w='58px'
             aria-label={label}
             position='relative'
+            mt={1}
+            mb={1}
           >
             <Icon
-              icon={icon} w='fill' h='fill'
+              icon={icon} w='fill' h='fill' p={4}
               fill={match ? 'gray.100' : 'gray.300'}
             />
           </Flex>
