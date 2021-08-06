@@ -26,7 +26,7 @@ func NewWorker(app *app.Application) (worker.Worker, func()) {
 	w.RegisterWorkflow(workflows.PublishPost)
 
 	// register activities with our struct
-	w.RegisterActivity(&app.Activities)
+	w.RegisterActivity(app.Activities)
 
 	return w, func() {
 		client.Close()

@@ -85,7 +85,7 @@ func getWorkflowEnvironment(t *testing.T) *testsuite.TestWorkflowEnvironment {
 	env := new(testsuite.WorkflowTestSuite).NewTestWorkflowEnvironment()
 
 	newApp, _ := service.NewApplication(context.Background())
-	env.RegisterActivity(&newApp.Activities)
+	env.RegisterActivity(newApp.Activities)
 
 	return env
 }

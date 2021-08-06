@@ -50,7 +50,7 @@ func (r AccountResolver) Posts(ctx context.Context, obj *types.Account, after *s
 	if err != nil {
 		return nil, gqlerror.Errorf(err.Error())
 	}
-	
+
 	results, err := r.App.Queries.SearchPosts.Handle(ctx, query.SearchPosts{
 		Cursor:    cursor,
 		Principal: principal.FromContext(ctx),
