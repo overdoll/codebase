@@ -12,13 +12,13 @@ import InterfaceGeometricCircle
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/geometric-shape/interface-geometric-circle.svg'
 
 type Props = {
-  route: string,
+  path: string,
   title: string
 }
 
-export default function LeftSidebarButton ({ route, title }: Props): Node {
+export default function LeftSidebarButton ({ path, title }: Props): Node {
   return (
-    <NavLink to={route}>
+    <NavLink to={path}>
       {(isActive) => (
         <Button
           borderRadius={5} pt={3} pb={3}

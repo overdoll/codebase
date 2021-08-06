@@ -17,6 +17,15 @@ export default function computeCurrentActiveRoutes ({ environment }) {
     return true
   }
 
+  // Group objects by a dynamic key value
+  const groupByKey = (object, key) => {
+    return object.reduce((accumulator, currentValue) => {
+      accumulator[currentValue.navigation[key]] = accumulator[currentValue.navigation[key]] || []
+      accumulator[currentValue.navigation[key]].push(currentValue)
+      return accumulator
+    }, {})
+  }
+
   // Function for omitting a key from an object
   const omitKeyFromObject = (key, object) => {
     const { [key]: omit, ...rest } = object
@@ -71,11 +80,15 @@ export default function computeCurrentActiveRoutes ({ environment }) {
     const parsed = []
     for (const route of routes) {
       if (route.navigation[key]) {
+        const subRoutes = flattenNavigationKey(route.routes, key)
+
+        const reduced = groupByKey(subRoutes, 'grouping')
+
         parsed.push({
           path: route.path,
           ...(route.exact && { exact: route.exact }),
           navigation: route.navigation[key],
-          routes: flattenNavigationKey(route.routes, key)
+          routes: reduced
         })
       }
     }
@@ -90,57 +103,5 @@ export default function computeCurrentActiveRoutes ({ environment }) {
 
   const navigationSidebarRoutes = flattenSidebar(activeValidRoutes, 'side')
 
-  const navRoutes = (routes) => {
-    const navHeaders = []
-
-    for (const route of routes) {
-      const nav = {}
-
-      const valid = isRouteValid({ environment }, route)
-
-      if (route.navigation && valid) {
-        Object.assign(nav, {
-          route: route.path,
-          ...(route.navigation.top?.title && { title: route.navigation.top.title }),
-          ...(route.navigation.top?.icon && { icon: route.navigation.top.icon }),
-          ...(route.navigation.firstRoute && { firstRoute: route.navigation.firstRoute }),
-          ...(route.navigation.hidden && { hidden: route.navigation.hidden }),
-          ...(route.exact && { exact: route.exact })
-        })
-        if (route.navigation?.side) {
-          const parseRoutes = (childRoutes) => {
-            const parsed = []
-
-            for (const route of childRoutes) {
-              const validChild = isRouteValid({ environment }, route.path)
-
-              if (route.navigation.side && validChild) {
-                parsed.push({
-                  title: route.navigation.side.title,
-                  route: route.path,
-                  ...(route.navigation.side.icon && { icon: route.navigation.side.icon }),
-                  ...(route.navigation.firstRoute && { firstRoute: route.navigation.firstRoute }),
-                  ...(route.routes && { routes: parseRoutes(route.routes) })
-                })
-              }
-            }
-            return parsed
-          }
-
-          Object.assign(nav, {
-            sidebar: {
-              title: route.navigation.side.title,
-              routes: parseRoutes(route.routes)
-            }
-          })
-        }
-      }
-      if (Object.keys(nav).length > 0) {
-        navHeaders.push(nav)
-      }
-    }
-    return navHeaders
-  }
-
-  return [navRoutes(activeRoutes), navigationDisabled(activeRoutes)]
+  return [navigationTopRoutes, navigationMenuRoutes, navigationSidebarRoutes, navigationDisabled(activeRoutes)]
 }

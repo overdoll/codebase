@@ -7,17 +7,17 @@ import Icon from '@//:modules/content/Icon/Icon'
 import NavLink from '@//:modules/routing/NavLink'
 
 type Props = {
-  route: string,
+  path: string,
   label: string,
   icon: () => void,
   match: boolean,
 }
 
-export default function TopRightMenuButton ({ route, label, icon, match }: Props): Node {
+export default function TopRightMenuButton ({ path, label, icon, match }: Props): Node {
   const [t] = useTranslation('nav')
 
   return (
-    <NavLink to={route}>
+    <NavLink to={path}>
       {(isActive) => (
         <MenuItem bg={match ? 'gray.700' : 'gray.800'}>
           <Icon

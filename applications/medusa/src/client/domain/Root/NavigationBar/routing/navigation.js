@@ -67,11 +67,6 @@ const routes: Array<Route> = [
       }
     ],
     navigation: {
-      firstRoute: true,
-      top: {
-        title: 'nav.mod',
-        icon: LoginKeys
-      },
       side: {
         title: 'sidebar.mod.title'
       }
@@ -80,6 +75,10 @@ const routes: Array<Route> = [
       {
         path: '/moderation/queue',
         navigation: {
+          top: {
+            title: 'nav.mod',
+            icon: LoginKeys
+          },
           side: {
             title: 'sidebar.mod.queue'
           }
@@ -117,8 +116,6 @@ const routes: Array<Route> = [
   {
     path: '/settings',
     navigation: {
-      firstRoute: true,
-      hidden: true,
       side: {
         title: 'sidebar.settings.title'
       }

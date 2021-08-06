@@ -82,11 +82,9 @@ export default function NavItem (props: Props): Node {
             />
           </Flex>
         </Button>
-        <Accordion defaultIndex={[0]} allowMultiple allowToggle borderTop='transparent' borderBottom='transparent'>
-          <Stack spacing={2}>
-            {props.children}
-          </Stack>
-        </Accordion>
+        <Stack spacing={2}>
+          {props.children}
+        </Stack>
       </Box>
     </>
   )

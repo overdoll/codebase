@@ -9,7 +9,8 @@ import {
   Flex,
   HStack,
   IconButton,
-  Spacer
+  Spacer,
+  Text
 } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import { useTranslation } from 'react-i18next'
@@ -48,7 +49,11 @@ export default function NavigationBar (props: Props): Node {
 
   const ability = useContext(AbilityContext)
 
-  const [navigationSettings, navigationFiltered] = useMemo(() => computeCurrentActiveRoutes({
+  const getBasePath = (path) => {
+    return '/' + path.split('/')[1]
+  }
+
+  const [navigationTop, navigationMenu, navigationSidebar, navigationFiltered] = useMemo(() => computeCurrentActiveRoutes({
     environment
   }), [ability])
 
@@ -102,22 +107,16 @@ export default function NavigationBar (props: Props): Node {
             margin='auto'
           >
             <HStack spacing={{ base: 2, md: 12, lg: 28 }}>
-              {navigationSettings.map((item, index) => {
-                const route = item.firstRoute ? item.sidebar.routes[0].route : item.route
-                // const route = item.route
-                if (item.hidden) {
-                  return null
-                }
+              {navigationTop.map((item, index) => {
                 return (
                   <Fragment key={index}>
-                    <Route exact={item.exact} path={item.route}>
+                    <Route exact={item.exact} path={getBasePath(item.path)}>
                       {({ match }) => (
                         <TopNavigationButton
                           exact={item.exact}
-                          key={item.route}
-                          icon={item.icon}
+                          icon={item.navigation.icon}
                           match={!!match}
-                          route={route} label={t(item.title)}
+                          path={item.path} label={t(item.navigation.title)}
                         />
                       )}
                     </Route>
@@ -133,14 +132,20 @@ export default function NavigationBar (props: Props): Node {
             >
               <Flex m={1}>
                 <TopRightMenu viewer={props.rootQuery}>
-                  <Route path='/settings'>
-                    {({ match }) => (
-                      <TopRightMenuButton
-                        match={!!match} route='/settings/profile' label='menu.settings'
-                        icon={InterfaceSettingCog}
-                      />
-                    )}
-                  </Route>
+                  {navigationMenu.map((item, index) => {
+                    return (
+                      <Fragment key={index}>
+                        <Route path={getBasePath(item.path)}>
+                          {({ match }) => (
+                            <TopRightMenuButton
+                              match={!!match} path={item.path} label={item.navigation.title}
+                              icon={item.navigation.icon}
+                            />
+                          )}
+                        </Route>
+                      </Fragment>
+                    )
+                  })}
                 </TopRightMenu>
               </Flex>
             </Flex>
@@ -148,25 +153,30 @@ export default function NavigationBar (props: Props): Node {
         </Flex>
       </>
       <Flex direction='row'>
-        {navigationSettings.map((item, index) => {
-          if (item.sidebar) {
-            return (
-              <Fragment key={index}>
-                <Route exact={item.exact} path={item.route}>
-                  <Sidebar title={t(item.sidebar.title)}>
-                    {item.sidebar.routes?.map((item, index) => (
-                      <LeftSidebarButton
-                        key={index}
-                        title={t(item?.title)}
-                        route={item.route}
-                      />
-                    ))}
-                  </Sidebar>
-                </Route>
-              </Fragment>
-            )
-          }
-          return null
+        {navigationSidebar.map((sidebarGroup, index) => {
+          return (
+            <Fragment key={index}>
+              <Route exact={sidebarGroup.exact} path={sidebarGroup.path}>
+                <Sidebar title={t(sidebarGroup.navigation.title)}>
+                  {Object.keys(sidebarGroup.routes).map((grouping, groupingIndex) => {
+                    return (
+                      <Fragment key={groupingIndex}>
+                        {grouping !== 'undefined' && <Text>{grouping}</Text>}
+                        {(sidebarGroup.routes[grouping]).map((sidebarItem, sidebarItemIndex) => (
+                          <LeftSidebarButton
+                            key={sidebarItemIndex}
+                            title={t(sidebarItem.navigation.title)}
+                            path={sidebarItem.path}
+                          />
+                        )
+                        )}
+                      </Fragment>
+                    )
+                  })}
+                </Sidebar>
+              </Route>
+            </Fragment>
+          )
         })}
         <Box w='100%'>
           {props.children}

@@ -11,14 +11,14 @@ import Icon from '@//:modules/content/Icon/Icon'
 type Props = {
   icon: () => void,
   label: string,
-  route: string,
+  path: string,
   exact: boolean,
   match: boolean,
 }
 
-export default function TopNavigationButton ({ route, icon, label, exact, match }: Props): Node {
+export default function TopNavigationButton ({ path, icon, label, exact, match }: Props): Node {
   return (
-    <NavLink exact={exact} to={route}>
+    <NavLink exact={exact} to={path}>
       {(isActive) => (
         <Tooltip hasArrow label={label} placement='bottom'>
           <Flex
