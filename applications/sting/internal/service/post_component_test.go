@@ -3,10 +3,13 @@ package service_test
 import (
 	"context"
 	"testing"
+	"time"
 
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
+	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/applications/sting/internal/ports/graphql/types"
+	sting "overdoll/applications/sting/proto"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/passport"
 )
@@ -78,7 +81,7 @@ type AccountPosts struct {
 type CreatePost struct {
 	CreatePost *struct {
 		Post *PostModified
-	} `graphql:"createPost(input: $input)"`
+	} `graphql:"createPost()"`
 }
 
 type UpdatePostContent struct {
@@ -111,8 +114,16 @@ type UpdatePostAudience struct {
 	} `graphql:"updatePostAudience(input: $input)"`
 }
 
-// Test_CreatePost_Publish - do a complete post flow (create post, add all necessary options, and then submit it)
-func TestCreatePost_Submit(t *testing.T) {
+type SubmitPost struct {
+	SubmitPost *struct {
+		Post     *PostModified
+		InReview bool
+	} `graphql:"submitPost(input: $input)"`
+}
+
+// TestCreatePost_Submit_and_review - do a complete post flow (create post, add all necessary options, and then submit it)
+// then, we test our GRPC endpoints for revoking
+func TestCreatePost_Submit_and_publish(t *testing.T) {
 	t.Parallel()
 
 	pass := passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
@@ -125,6 +136,7 @@ func TestCreatePost_Submit(t *testing.T) {
 	require.NoError(t, err)
 
 	newPostId := createPost.CreatePost.Post.ID
+	newPostReference := createPost.CreatePost.Post.Reference
 
 	// check to make sure post is in a draft state
 	require.Equal(t, types.PostStateDraft, createPost.CreatePost.Post.State)
@@ -236,6 +248,50 @@ func TestCreatePost_Submit(t *testing.T) {
 
 	require.NotNil(t, updatePostAudience.UpdatePostAudience.Post.Audience)
 	require.Equal(t, "Standard Audience", updatePostAudience.UpdatePostAudience.Post.Audience.Title)
+
+	// finally, submit the post for review
+	var submitPost SubmitPost
+
+	err = client.Mutate(context.Background(), &submitPost, map[string]interface{}{
+		"input": types.SubmitPostInput{
+			ID: relay.ID(newPostId),
+		},
+	})
+
+	require.NoError(t, err)
+	require.Equal(t, types.PostStateProcessing, submitPost.SubmitPost.Post.State)
+	require.Equal(t, true, submitPost.SubmitPost.InReview)
+
+	// now, we do workflows for submissions
+	// submitPost comes after
+	env := getWorkflowEnvironment(t)
+
+	// we need to publish the post or else it will get stuck in an infinite loop (we reassign the moderator every 24 hours)
+	env.RegisterDelayedCallback(func() {
+
+		// setup another environment since we cant execute multiple workflows
+		newEnv := getWorkflowEnvironment(t)
+		stingClient := getGrpcClient(t)
+
+		// "publish" pending post
+		_, e := stingClient.PublishPost(context.Background(), &sting.PostRequest{Id: newPostReference})
+		require.NoError(t, e)
+
+		// execute workflow manually since it wont be executed right here
+		newEnv.ExecuteWorkflow(workflows.PublishPost, newPostReference)
+		require.True(t, newEnv.IsWorkflowCompleted())
+		require.NoError(t, newEnv.GetWorkflowError())
+
+	}, time.Hour*24)
+
+	env.ExecuteWorkflow(workflows.SubmitPost, newPostReference)
+
+	require.True(t, env.IsWorkflowCompleted())
+	require.NoError(t, env.GetWorkflowError())
+
+	// ensure that the post is now published
+	postState := getPost(t, newPostReference)
+	require.Equal(t, types.PostStatePublished, postState.Post.State)
 }
 
 //// Test_CreatePost_Discard - discard post
