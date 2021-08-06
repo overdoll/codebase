@@ -6,7 +6,7 @@ import { Suspense, unstable_useTransition as useTransition, useContext, useEffec
 import RoutingContext from '@//:modules/routing/RoutingContext'
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
 import type { PreparedEntry, RouterInit } from '@//:modules/routing/router'
-import { chakra, Progress } from '@chakra-ui/react'
+import { chakra, Progress, Fade } from '@chakra-ui/react'
 import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner'
 
 const SUSPENSE_CONFIG = { timeoutMs: 2000 }
@@ -109,8 +109,10 @@ export default function RouterRenderer (): Node {
     <ErrorBoundary>
       <Suspense fallback={<CenteredSpinner />}>
         {routeComponent}
-        <chakra.div zIndex='banner' position='fixed' w='100%' top='0' opacity={isPending ? 1 : 0}>
-          <Progress bg='transparent' colorScheme='red' size='xs' isIndeterminate />
+        <chakra.div zIndex='banner' position='fixed' w='100%' top='0'>
+          <Fade in={isPending}>
+            <Progress bg='transparent' colorScheme='red' size='xs' isIndeterminate />
+          </Fade>
         </chakra.div>
       </Suspense>
     </ErrorBoundary>
