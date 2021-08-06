@@ -3,7 +3,6 @@ package post
 import (
 	"context"
 
-	"overdoll/applications/sting/internal/domain/resource"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 )
@@ -36,11 +35,6 @@ type Repository interface {
 	GetCategoryById(ctx context.Context, categoryId string) (*Category, error)
 	GetCategoriesById(ctx context.Context, categoryIds []string) ([]*Category, error)
 	CreateCategories(ctx context.Context, categories []*Category) error
-
-	// processing and creating resources
-	CreateResourcesFromUpload(ctx context.Context, ids []string) ([]*resource.Resource, error)
-	ProcessResources(ctx context.Context, resources []*resource.Resource) ([]*resource.Resource, error)
-	DeleteResources(ctx context.Context, resources []*resource.Resource) error
 }
 
 type IndexRepository interface {

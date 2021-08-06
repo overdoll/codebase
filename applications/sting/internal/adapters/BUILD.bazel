@@ -3,7 +3,6 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 go_library(
     name = "adapters",
     srcs = [
-        "content_s3_repository.go",
         "eva_grpc.go",
         "parley_grpc.go",
         "post_audience_cassandra_repository.go",
@@ -18,6 +17,7 @@ go_library(
         "post_index_elasticsearch_repository.go",
         "post_series_cassandra_repository.go",
         "post_series_index_elasticsearch_repository.go",
+        "resource_s3_repository.go",
     ],
     importpath = "overdoll/applications/sting/internal/adapters",
     visibility = ["//visibility:public"],
@@ -25,27 +25,28 @@ go_library(
         "//applications/eva/proto:v1_go_proto",
         "//applications/parley/proto:v1_go_proto",
         "//applications/sting/internal/domain/post",
+        "//applications/sting/internal/domain/resource",
         "//libraries/paging",
         "//libraries/principal",
         "//libraries/scan",
-        "//libraries/uuid",
         "@com_github_aws_aws_sdk_go//aws",
         "@com_github_aws_aws_sdk_go//aws/session",
         "@com_github_aws_aws_sdk_go//service/s3",
         "@com_github_aws_aws_sdk_go//service/s3/s3manager",
         "@com_github_gocql_gocql//:gocql",
-        "@com_github_h2non_filetype//:filetype",
         "@com_github_olivere_elastic_v7//:elastic",
         "@com_github_scylladb_gocqlx_v2//:gocqlx",
         "@com_github_scylladb_gocqlx_v2//qb",
         "@com_github_scylladb_gocqlx_v2//table",
         "@com_github_segmentio_ksuid//:ksuid",
+        "@com_github_tus_tusd//pkg/handler",
+        "@com_github_tus_tusd//pkg/s3store",
     ],
 )
 
 go_test(
     name = "adapters_test",
-    srcs = ["content_s3_repository_test.go"],
+    srcs = ["resource_s3_repository_test.go"],
     data = [
         "//applications/sting:config.toml",
         "//applications/sting/internal/adapters/content_fixtures:all",

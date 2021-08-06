@@ -39,7 +39,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 	postRepo := adapters.NewPostsCassandraRepository(session)
 	indexRepo := adapters.NewPostsIndexElasticSearchRepository(client, session)
 
-	contentRepo := adapters.NewResourceS3Repository(awsSession)
+	resourceRepo := adapters.NewResourceS3Repository(awsSession)
 
 	return app.Application{
 		Commands: app.Commands{
@@ -79,6 +79,6 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			SearchBrands:     query.NewSearchBrandsHandler(indexRepo),
 			SearchAudience:   query.NewSearchAudienceHandler(indexRepo),
 		},
-		Activities: activities.NewActivitiesHandler(postRepo, indexRepo, contentRepo, parley),
+		Activities: activities.NewActivitiesHandler(postRepo, indexRepo, resourceRepo, parley),
 	}
 }

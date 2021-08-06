@@ -1,14 +1,23 @@
 package resource
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
+	"image/png"
+	"io/ioutil"
 	"mime"
 	"os"
+
+	"github.com/chai2010/webp"
+	"github.com/h2non/filetype"
+	"overdoll/libraries/uuid"
 )
 
 var (
-	ErrAlreadyProcessed = errors.New("resource already processed")
+	ErrAlreadyProcessed   = errors.New("resource already processed")
+	ErrFileTypeNotAllowed = errors.New("filetype not allowed")
 )
 
 type resourceType int
@@ -18,11 +27,37 @@ const (
 	videoType
 )
 
+var (
+	imageAcceptedTypes = []string{"image/png"}
+	videoAcceptedTypes = []string{"video/png"}
+)
+
+var (
+	imageFormatToCreate = "image/webp"
+	videoFormatToCreate = "image/webm"
+)
+
 type marshalled struct {
 	Url       string   `json:"url"`
 	MimeTypes []string `json:"mimeTypes"`
 	Sizes     []int    `json:"sizes"`
 	Type      int      `json:"type"`
+	Processed bool     `json:"processed"`
+}
+
+// Move is a struct that contains the info that would tell a repository where a file is located in the OS,
+// and where it needs to be moved in a remote storage (s3, etc...)
+type Move struct {
+	osFileLocation  string
+	remoteUrlTarget string
+}
+
+func (r *Move) OsFileLocation() string {
+	return r.osFileLocation
+}
+
+func (r *Move) RemoteUrlTarget() string {
+	return r.remoteUrlTarget
 }
 
 type Url struct {
@@ -49,33 +84,113 @@ type Resource struct {
 	mimeTypes    []string
 	sizes        []int
 	resourceType resourceType
+	processed    bool
 }
 
-// a new resource that has not been processed yet
-func NewResource(url string) (*Resource, error) {
-
-	// TODO: get type from Url?
+func NewResource(url, mimeType string) (*Resource, error) {
 
 	return &Resource{
 		url:          url,
-		mimeTypes:    []string{},
+		mimeTypes:    []string{mimeType},
 		sizes:        []int{},
 		resourceType: imageType,
+		processed:    false,
 	}, nil
 }
 
-// whether or not the resource is processed
-// unprocessed resources stay inside of one bucket and processed resource are in another, so
-// we need a way to differentiate this
-func (r *Resource) IsProcessed() bool {
-	return len(r.mimeTypes) > 0
-}
+// process resource - should be at a new Url and any additional mimetypes that are available
+// must pass the file that needs to be processed (usually the current file, gotten from Url())
+func (r *Resource) ProcessResource(prefix string, file *os.File) ([]*Move, error) {
 
-// process resource - should be at a new Url and now contains mimetypes
-func (r *Resource) ProcessResource(newUrl string, mimeTypes []string) error {
-	r.url = newUrl
+	var mimeTypes []string
+	var moveTargets []*Move
+
+	head := make([]byte, 261)
+	_, err := file.Read(head)
+
+	if err != nil {
+		return nil, err
+	}
+
+	// do a mime type check on the file to make sure its an accepted file and to get our extension
+	kind, _ := filetype.Match(head)
+	if kind == filetype.Unknown {
+		return nil, fmt.Errorf("uknown file type: %s", kind)
+	}
+
+	var newFileName string
+	var newFileExtension string
+	currentFileName := file.Name()
+
+	if kind.MIME.Value == "image/png" {
+		// image is in an accepted format - convert to webp
+
+		var buf bytes.Buffer
+
+		src, err := png.Decode(file)
+
+		if err != nil {
+			return nil, fmt.Errorf("failed to decode png %v", err)
+		}
+
+		// encode webp
+		if err = webp.Encode(&buf, src, &webp.Options{Lossless: true}); err != nil {
+			return nil, fmt.Errorf("failed to encode webp %v", err)
+		}
+
+		newFileExtension = ".webp"
+
+		newFileName = currentFileName + newFileExtension
+
+		// put on local OS system to be uploaded to S3
+		if err = ioutil.WriteFile(newFileName, buf.Bytes(), 0666); err != nil {
+			return nil, fmt.Errorf("failed to write output webp %v", err)
+		}
+
+		// our resource will contain 2 mimetypes - a PNG and a webp
+		mimeTypes = append(mimeTypes, "image/webp")
+		mimeTypes = append(mimeTypes, "image/png")
+		r.resourceType = imageType
+
+	} else if kind.MIME.Value == "video/mp4" {
+		// video is in an accepted format - convert to webm
+
+		// our resource will contain 2 mimetypes - a webm and an mp4 as a fallback
+		mimeTypes = append(mimeTypes, "video/webm")
+		mimeTypes = append(mimeTypes, "video/mp4")
+
+		newFileExtension = ".webm"
+
+		r.resourceType = videoType
+
+	} else {
+		return nil, fmt.Errorf("invalid resource format: %s", kind.MIME.Value)
+	}
+
+	fileName := uuid.New().String()
+	fileKey := prefix + "/" + fileName
+
+	// the second file we need to move - a file that was existing already
+	moveTargets = append(moveTargets, &Move{
+		osFileLocation:  currentFileName,
+		remoteUrlTarget: fileKey + "." + kind.Extension,
+	})
+
+	// the first file that needs to be moved - a file that we created
+	moveTargets = append(moveTargets, &Move{
+		osFileLocation:  newFileName,
+		remoteUrlTarget: fileKey + newFileExtension,
+	})
+
+	r.url = fileKey
 	r.mimeTypes = mimeTypes
-	return nil
+	r.processed = true
+
+	if err := file.Close(); err != nil {
+		return nil, fmt.Errorf("failed to close file: %v", err)
+	}
+
+	return moveTargets, nil
 }
 
 func (r *Resource) Url() string {
@@ -92,6 +207,10 @@ func (r *Resource) MakeVideo() error {
 	return nil
 }
 
+func (r *Resource) IsProcessed() bool {
+	return r.processed
+}
+
 func (r *Resource) IsImage() bool {
 	return r.resourceType == imageType
 }
@@ -104,23 +223,27 @@ func (r *Resource) FullUrls() []*Url {
 
 	var generatedContent []*Url
 
-	// mimetypes length is 0, which means that the resource is still in the upload phase
-	if !r.IsProcessed() {
-		return generatedContent
-	}
-
-	// TODO: get extension from mimeType
 	for _, m := range r.mimeTypes {
 
 		formats, _ := mime.ExtensionsByType(m)
 
+		extension := ""
+
 		if formats != nil {
-			// generate the proper content url
-			generatedContent = append(generatedContent, &Url{
-				fullUrl:  os.Getenv("STATIC_URL") + r.url + "." + formats[0],
-				mimeType: m,
-			})
+			extension = "." + formats[0]
 		}
+
+		domain := os.Getenv("APP_URL")
+
+		if r.processed {
+			domain = os.Getenv("STATIC_URL")
+		}
+
+		// generate the proper content url
+		generatedContent = append(generatedContent, &Url{
+			fullUrl:  domain + r.url + extension,
+			mimeType: m,
+		})
 	}
 
 	return generatedContent
@@ -139,6 +262,7 @@ func UnmarshalResourceFromDatabase(resource string) *Resource {
 		mimeTypes:    target.MimeTypes,
 		sizes:        target.Sizes,
 		resourceType: resourceType(target.Type),
+		processed:    target.Processed,
 	}
 }
 
@@ -151,6 +275,7 @@ func (r *Resource) MarshalResourceToDatabase() (string, error) {
 		MimeTypes: r.mimeTypes,
 		Sizes:     r.sizes,
 		Type:      int(r.resourceType),
+		Processed: r.processed,
 	}
 
 	b, err := json.Marshal(toMarshal)

@@ -9,3 +9,19 @@ go_library(
     importpath = "overdoll/applications/sting/internal/domain/content",
     visibility = ["//visibility:public"],
 )
+
+go_library(
+    name = "resource",
+    srcs = [
+        "repository.go",
+        "resource.go",
+    ],
+    importpath = "overdoll/applications/sting/internal/domain/resource",
+    visibility = ["//applications/sting:__subpackages__"],
+    deps = [
+        "//libraries/uuid",
+        "@com_github_chai2010_webp//:webp",
+        "@com_github_h2non_filetype//:filetype",
+        "@com_github_tus_tusd//pkg/handler",
+    ],
+)

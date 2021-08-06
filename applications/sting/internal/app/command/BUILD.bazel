@@ -15,6 +15,7 @@ go_library(
         "reject_post.go",
         "services.go",
         "submit_post.go",
+        "tus_composer.go",
         "undo_post.go",
         "update_post_audience.go",
         "update_post_brand.go",
@@ -26,7 +27,9 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//applications/sting/internal/domain/post",
+        "//applications/sting/internal/domain/resource",
         "//libraries/principal",
         "@com_github_pkg_errors//:errors",
+        "@com_github_tus_tusd//pkg/handler",
     ],
 )

@@ -14,8 +14,8 @@ go_library(
     importpath = "overdoll/applications/sting/internal/app/workflows/activities",
     visibility = ["//applications/sting:__subpackages__"],
     deps = [
-        "//applications/sting/internal/domain/content",
         "//applications/sting/internal/domain/post",
+        "//applications/sting/internal/domain/resource",
         "@com_github_pkg_errors//:errors",
     ],
 )
