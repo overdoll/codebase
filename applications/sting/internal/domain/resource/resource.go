@@ -1,16 +1,14 @@
 package resource
 
 import (
-	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"image/png"
-	"io/ioutil"
 	"mime"
 	"os"
 
-	"github.com/chai2010/webp"
+	"github.com/CapsLock-Studio/go-webpbin"
 	"github.com/h2non/filetype"
 	"overdoll/libraries/uuid"
 )
@@ -139,26 +137,24 @@ func (r *Resource) ProcessResource(prefix string, file *os.File) ([]*Move, error
 	if kind.MIME.Value == "image/png" {
 		// image is in an accepted format - convert to webp
 
-		var buf bytes.Buffer
-
 		src, err := png.Decode(file)
 
 		if err != nil {
 			return nil, fmt.Errorf("failed to decode png %v", err)
 		}
 
-		// encode webp
-		if err = webp.Encode(&buf, src, &webp.Options{Lossless: true}); err != nil {
-			return nil, fmt.Errorf("failed to encode webp %v", err)
-		}
-
 		newFileExtension = ".webp"
 
 		newFileName = currentFileName + newFileExtension
 
-		// put on local OS system to be uploaded to S3
-		if err = ioutil.WriteFile(newFileName, buf.Bytes(), 0666); err != nil {
-			return nil, fmt.Errorf("failed to write output webp %v", err)
+		newFile, err := os.Create(newFileName)
+		if err != nil {
+			return nil, err
+		}
+
+		if err := webpbin.Encode(newFile, src); err != nil {
+			_ = newFile.Close()
+			return nil, err
 		}
 
 		// our resource will contain 2 mimetypes - a PNG and a webp

@@ -50,12 +50,9 @@ func (r AccountResolver) Posts(ctx context.Context, obj *types.Account, after *s
 	if err != nil {
 		return nil, gqlerror.Errorf(err.Error())
 	}
-
-	artistId := obj.ID.GetID()
-
+	
 	results, err := r.App.Queries.SearchPosts.Handle(ctx, query.SearchPosts{
 		Cursor:    cursor,
-		ArtistId:  &artistId,
 		Principal: principal.FromContext(ctx),
 	})
 

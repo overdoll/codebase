@@ -20,7 +20,7 @@ go_library(
     visibility = ["//applications/sting:__subpackages__"],
     deps = [
         "//libraries/uuid",
-        "@com_github_chai2010_webp//:webp",
+        "@com_github_capslock_studio_go_webpbin//:go-webpbin",
         "@com_github_h2non_filetype//:filetype",
         "@com_github_tus_tusd//pkg/handler",
     ],

@@ -55,7 +55,20 @@ func NewPostsCassandraRepository(session gocqlx.Session) PostsCassandraRepositor
 	return PostsCassandraRepository{session: session}
 }
 
-func marshalPostToDatabase(pending *post.Post) *posts {
+func marshalPostToDatabase(pending *post.Post) (*posts, error) {
+
+	var marshalledContent []string
+
+	for _, c := range pending.Content() {
+
+		marshal, err := c.MarshalResourceToDatabase()
+
+		if err != nil {
+			return nil, err
+		}
+
+		marshalledContent = append(marshalledContent, marshal)
+	}
 
 	return &posts{
 		Id:             pending.ID(),
@@ -64,13 +77,13 @@ func marshalPostToDatabase(pending *post.Post) *posts {
 		BrandId:        pending.BrandId(),
 		AudienceId:     pending.AudienceId(),
 		ContributorId:  pending.ContributorId(),
-		Content:        pending.Content(),
+		Content:        marshalledContent,
 		CategoryIds:    pending.CategoryIds(),
 		CharacterIds:   pending.CharacterIds(),
 		CreatedAt:      pending.CreatedAt(),
 		PostedAt:       pending.PostedAt(),
 		ReassignmentAt: pending.ReassignmentAt(),
-	}
+	}, nil
 }
 
 func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending posts) (*post.Post, error) {
@@ -125,9 +138,15 @@ func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending
 
 func (r PostsCassandraRepository) CreatePost(ctx context.Context, pending *post.Post) error {
 
+	pst, err := marshalPostToDatabase(pending)
+
+	if err != nil {
+		return err
+	}
+
 	insertPost := r.session.
 		Query(postTable.Insert()).
-		BindStruct(marshalPostToDatabase(pending)).
+		BindStruct(pst).
 		Consistency(gocql.LocalQuorum)
 
 	if err := insertPost.ExecRelease(); err != nil {
@@ -201,6 +220,12 @@ func (r PostsCassandraRepository) UpdatePost(ctx context.Context, id string, upd
 		return nil, err
 	}
 
+	pst, err := marshalPostToDatabase(currentPost)
+
+	if err != nil {
+		return nil, err
+	}
+
 	postQuery := r.session.
 		Query(postTable.Update(
 			"state",
@@ -209,7 +234,7 @@ func (r PostsCassandraRepository) UpdatePost(ctx context.Context, id string, upd
 			"content",
 		)).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(marshalPostToDatabase(currentPost))
+		BindStruct(pst)
 
 	if err := postQuery.ExecRelease(); err != nil {
 		return nil, fmt.Errorf("failed to update post: %v", err)
@@ -232,12 +257,18 @@ func (r PostsCassandraRepository) updatePostRequest(ctx context.Context, request
 		return nil, err
 	}
 
+	pst, err := marshalPostToDatabase(currentPost)
+
+	if err != nil {
+		return nil, err
+	}
+
 	postQuery := r.session.
 		Query(postTable.Update(
 			columns...,
 		)).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(marshalPostToDatabase(currentPost))
+		BindStruct(pst)
 
 	if err := postQuery.ExecRelease(); err != nil {
 		return nil, fmt.Errorf("failed to update post: %v", err)
