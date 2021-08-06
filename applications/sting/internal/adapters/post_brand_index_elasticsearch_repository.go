@@ -127,7 +127,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllBrands(ctx context.Context) e
 		},
 	)
 
-	err := scanner.RunIterator(mediaTable, func(iter *gocqlx.Iterx) error {
+	err := scanner.RunIterator(ctx, seriesTable, func(iter *gocqlx.Iterx) error {
 
 		var m brand
 
@@ -155,7 +155,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllBrands(ctx context.Context) e
 				Do(ctx)
 
 			if err != nil {
-				return err
+				return fmt.Errorf("failed to index brands: %v", err)
 			}
 		}
 

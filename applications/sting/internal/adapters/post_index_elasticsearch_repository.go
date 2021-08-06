@@ -408,7 +408,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 
 	rep := NewPostsCassandraRepository(r.session)
 
-	err := scanner.RunIterator(postTable, func(iter *gocqlx.Iterx) error {
+	err := scanner.RunIterator(ctx, postTable, func(iter *gocqlx.Iterx) error {
 
 		var p posts
 

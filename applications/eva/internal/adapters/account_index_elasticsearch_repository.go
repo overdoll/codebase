@@ -119,7 +119,7 @@ func (r AccountIndexElasticSearchRepository) IndexAllAccounts(ctx context.Contex
 		},
 	)
 
-	err := scanner.RunIterator(accountTable, func(iter *gocqlx.Iterx) error {
+	err := scanner.RunIterator(ctx, accountTable, func(iter *gocqlx.Iterx) error {
 
 		var a accounts
 

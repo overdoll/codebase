@@ -10,7 +10,7 @@ import (
 	"overdoll/applications/sting/internal/domain/post"
 )
 
-var mediaTable = table.New(table.Metadata{
+var seriesTable = table.New(table.Metadata{
 	Name: "series",
 	Columns: []string{
 		"id",
@@ -32,7 +32,7 @@ type series struct {
 func (r PostsCassandraRepository) GetSingleSeriesById(ctx context.Context, seriesId string) (*post.Series, error) {
 
 	queryMedia := r.session.
-		Query(mediaTable.Get()).
+		Query(seriesTable.Get()).
 		Consistency(gocql.One).
 		BindStruct(series{Id: seriesId})
 
@@ -64,7 +64,7 @@ func (r PostsCassandraRepository) GetSeriesById(ctx context.Context, medi []stri
 		return medias, nil
 	}
 
-	queryMedia := qb.Select(mediaTable.Name()).
+	queryMedia := qb.Select(seriesTable.Name()).
 		Where(qb.In("id")).
 		Query(r.session).
 		Consistency(gocql.One).
@@ -93,7 +93,7 @@ func (r PostsCassandraRepository) CreateMedias(ctx context.Context, medias []*po
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
 	for _, med := range medias {
-		stmt, _ := mediaTable.Insert()
+		stmt, _ := seriesTable.Insert()
 		batch.Query(
 			stmt,
 			med.ID(),

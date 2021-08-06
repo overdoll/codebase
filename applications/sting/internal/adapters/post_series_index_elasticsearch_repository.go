@@ -104,7 +104,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllSeries(ctx context.Context) e
 		},
 	)
 
-	err := scanner.RunIterator(mediaTable, func(iter *gocqlx.Iterx) error {
+	err := scanner.RunIterator(ctx, seriesTable, func(iter *gocqlx.Iterx) error {
 
 		var m series
 
@@ -118,6 +118,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllSeries(ctx context.Context) e
 
 			doc := seriesDocument{
 				Id:        m.Id,
+				Slug:      m.Slug,
 				Thumbnail: m.Thumbnail,
 				Title:     m.Title,
 				CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
@@ -131,7 +132,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllSeries(ctx context.Context) e
 				Do(ctx)
 
 			if err != nil {
-				return err
+				return fmt.Errorf("failed to index series: %v", err)
 			}
 		}
 

@@ -63,7 +63,7 @@ func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars [
 		mediaIds = append(mediaIds, cat.SeriesId)
 	}
 
-	queryMedia := qb.Select(mediaTable.Name()).
+	queryMedia := qb.Select(seriesTable.Name()).
 		Where(qb.In("id")).
 		Query(r.session).
 		Consistency(gocql.One).

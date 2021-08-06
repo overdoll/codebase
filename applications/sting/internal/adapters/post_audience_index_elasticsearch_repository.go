@@ -38,7 +38,10 @@ const audienceIndex = `
 			"thumbnail": {
 				"type": "keyword"
 			},
-			"name": {
+			"standard": {
+				"type": "integer"
+			},
+			"title": {
 				"type": "text",
 				"analyzer": "english"
 			},
@@ -135,7 +138,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllAudience(ctx context.Context)
 		},
 	)
 
-	err := scanner.RunIterator(mediaTable, func(iter *gocqlx.Iterx) error {
+	err := scanner.RunIterator(ctx, seriesTable, func(iter *gocqlx.Iterx) error {
 
 		var m audience
 
@@ -164,7 +167,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllAudience(ctx context.Context)
 				Do(ctx)
 
 			if err != nil {
-				return err
+				return fmt.Errorf("failed to index audience: %v", err)
 			}
 		}
 

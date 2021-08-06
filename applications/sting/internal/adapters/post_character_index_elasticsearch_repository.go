@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"strconv"
 
 	"github.com/gocql/gocql"
@@ -20,7 +21,7 @@ type characterDocument struct {
 	Slug      string         `json:"slug"`
 	Thumbnail string         `json:"thumbnail"`
 	Name      string         `json:"name"`
-	Series    seriesDocument `json:"media"`
+	Series    seriesDocument `json:"series"`
 	CreatedAt string         `json:"created_at"`
 }
 
@@ -192,7 +193,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllCharacters(ctx context.Contex
 		},
 	)
 
-	err := scanner.RunIterator(characterTable, func(iter *gocqlx.Iterx) error {
+	err := scanner.RunIterator(ctx, characterTable, func(iter *gocqlx.Iterx) error {
 
 		var c character
 
@@ -201,7 +202,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllCharacters(ctx context.Contex
 			var m series
 
 			// get media connected to this character document
-			if err := r.session.Query(mediaTable.Get()).Consistency(gocql.One).Bind(c.SeriesId).Get(&m); err != nil {
+			if err := r.session.Query(seriesTable.Get()).Consistency(gocql.One).Bind(c.SeriesId).Get(&m); err != nil {
 				return err
 			}
 
@@ -240,7 +241,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllCharacters(ctx context.Contex
 				Do(ctx)
 
 			if err != nil {
-				return err
+				return fmt.Errorf("failed to index characters: %v", err)
 			}
 		}
 
