@@ -17,31 +17,78 @@ export default function computeCurrentActiveRoutes ({ environment }) {
     return true
   }
 
+  // Function for omitting a key from an object
+  const omitKeyFromObject = (key, object) => {
+    const { [key]: omit, ...rest } = object
+    return rest
+  }
+
+  // Recursively parse Middleware routes to make sure the user can actually access them
+  const validRoutes = (routes) => {
+    const parsed = []
+
+    routes?.forEach((route) => {
+      const isValid = isRouteValid({ environment }, route)
+
+      if (isValid) {
+        parsed.push({
+          ...omitKeyFromObject('middleware', route),
+          routes: validRoutes(route?.routes)
+        })
+      }
+    })
+    return parsed
+  }
+
   // Filter for all disabled routes
-  const navDisabled = (routes) => {
+  const navigationDisabled = (routes) => {
     const disabled = routes.filter((item) => item.hidden)
     return disabled.map((item) => { return item.path }
     )
   }
 
-  // TODO rewrite the whole function to make it more readable
+  // Recursively parse and flatten anything with a { navigation { key } }
+  const flattenNavigationKey = (routes, key) => {
+    let parsed = []
 
-  /*
-  top {
-  ... only links for top display
-  (firstRoute support)
-  (basePath)
+    for (const route of routes) {
+      if (route?.navigation[key]) {
+        parsed.push({
+          path: route.path,
+          ...(route.exact && { exact: route.exact }),
+          navigation: route.navigation[key]
+        })
+      }
+      if (route.routes) {
+        parsed = parsed.concat(flattenNavigationKey(route.routes, key))
+      }
+    }
+    return parsed
   }
-  menu {
-  ... only links for menu display
-  (firstRoute support)
-  (basePath)
+
+  // Slightly modified version of above function to allow for labelled groupings
+  const flattenSidebar = (routes, key) => {
+    const parsed = []
+    for (const route of routes) {
+      if (route.navigation[key]) {
+        parsed.push({
+          path: route.path,
+          ...(route.exact && { exact: route.exact }),
+          navigation: route.navigation[key],
+          routes: flattenNavigationKey(route.routes, key)
+        })
+      }
+    }
+    return parsed
   }
-  sidebar {
-  ... only links (recursive?) for sidebar to render when path matches
-  ... includes "groupings" that are only words
-  }
-  */
+
+  const activeValidRoutes = validRoutes(activeRoutes)
+
+  const navigationMenuRoutes = flattenNavigationKey(activeValidRoutes, 'menu')
+
+  const navigationTopRoutes = flattenNavigationKey(activeValidRoutes, 'top')
+
+  const navigationSidebarRoutes = flattenSidebar(activeValidRoutes, 'side')
 
   const navRoutes = (routes) => {
     const navHeaders = []
@@ -95,5 +142,5 @@ export default function computeCurrentActiveRoutes ({ environment }) {
     return navHeaders
   }
 
-  return [navRoutes(activeRoutes), navDisabled(activeRoutes)]
+  return [navRoutes(activeRoutes), navigationDisabled(activeRoutes)]
 }

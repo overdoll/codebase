@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 7d13e7a54d8d81f175dc5c8c3d9666db
+ * @relayHash 9a2b14d6b1fcc87a88391e8c8f9e7460
  */
 
 /* eslint-disable */
@@ -8,15 +8,17 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
+export type UpdateAccountUsernameAndRetainPreviousValidation = "USERNAME_TAKEN" | "%future added value";
 export type UpdateAccountUsernameAndRetainPreviousInput = {|
   username: string
 |};
-export type UsernamesMutationVariables = {|
+export type ChangeUsernameFormMutationVariables = {|
   input: UpdateAccountUsernameAndRetainPreviousInput,
   connections: $ReadOnlyArray<string>,
 |};
-export type UsernamesMutationResponse = {|
+export type ChangeUsernameFormMutationResponse = {|
   +updateAccountUsernameAndRetainPrevious: ?{|
+    +validation: ?UpdateAccountUsernameAndRetainPreviousValidation,
     +accountUsername: ?{|
       +id: string,
       +username: string,
@@ -24,20 +26,21 @@ export type UsernamesMutationResponse = {|
         +id: string,
         +username: string,
       |},
-    |}
+    |},
   |}
 |};
-export type UsernamesMutation = {|
-  variables: UsernamesMutationVariables,
-  response: UsernamesMutationResponse,
+export type ChangeUsernameFormMutation = {|
+  variables: ChangeUsernameFormMutationVariables,
+  response: ChangeUsernameFormMutationResponse,
 |};
 
 
 /*
-mutation UsernamesMutation(
+mutation ChangeUsernameFormMutation(
   $input: UpdateAccountUsernameAndRetainPreviousInput!
 ) {
   updateAccountUsernameAndRetainPrevious(input: $input) {
+    validation
     accountUsername {
       id
       username
@@ -72,17 +75,24 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "validation",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "username",
+  "name": "id",
   "storageKey": null
 },
 v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "username",
+  "storageKey": null
+},
+v6 = {
   "alias": null,
   "args": null,
   "concreteType": "Account",
@@ -90,8 +100,8 @@ v5 = {
   "name": "account",
   "plural": false,
   "selections": [
-    (v3/*: any*/),
-    (v4/*: any*/)
+    (v4/*: any*/),
+    (v5/*: any*/)
   ],
   "storageKey": null
 };
@@ -103,7 +113,7 @@ return {
     ],
     "kind": "Fragment",
     "metadata": null,
-    "name": "UsernamesMutation",
+    "name": "ChangeUsernameFormMutation",
     "selections": [
       {
         "alias": null,
@@ -113,6 +123,7 @@ return {
         "name": "updateAccountUsernameAndRetainPrevious",
         "plural": false,
         "selections": [
+          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -121,9 +132,9 @@ return {
             "name": "accountUsername",
             "plural": false,
             "selections": [
-              (v3/*: any*/),
               (v4/*: any*/),
-              (v5/*: any*/)
+              (v5/*: any*/),
+              (v6/*: any*/)
             ],
             "storageKey": null
           }
@@ -141,7 +152,7 @@ return {
       (v0/*: any*/)
     ],
     "kind": "Operation",
-    "name": "UsernamesMutation",
+    "name": "ChangeUsernameFormMutation",
     "selections": [
       {
         "alias": null,
@@ -151,6 +162,7 @@ return {
         "name": "updateAccountUsernameAndRetainPrevious",
         "plural": false,
         "selections": [
+          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -159,9 +171,9 @@ return {
             "name": "accountUsername",
             "plural": false,
             "selections": [
-              (v3/*: any*/),
               (v4/*: any*/),
               (v5/*: any*/),
+              (v6/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -192,14 +204,14 @@ return {
     ]
   },
   "params": {
-    "id": "7d13e7a54d8d81f175dc5c8c3d9666db",
+    "id": "9a2b14d6b1fcc87a88391e8c8f9e7460",
     "metadata": {},
-    "name": "UsernamesMutation",
+    "name": "ChangeUsernameFormMutation",
     "operationKind": "mutation",
     "text": null
   }
 };
 })();
 // prettier-ignore
-(node: any).hash = '2ae4900bfe88d42094064ec330f92bf7';
+(node: any).hash = 'fc3aaf214c317098946216b82fdeab00';
 module.exports = node;

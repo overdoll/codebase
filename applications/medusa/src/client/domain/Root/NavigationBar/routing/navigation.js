@@ -10,6 +10,8 @@ import LoginKeys
   from '@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/login-logout/login-keys.svg'
 import ContentBrushPen
   from '@streamlinehq/streamlinehq/img/streamline-bold/content/content-creation/content-brush-pen.svg'
+import InterfaceSettingCog
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/setting/interface-setting-cog.svg'
 
 const getAbilityFromUser = (environment) => {
   return defineAbility(getUserFromEnvironment(environment))
@@ -115,6 +117,7 @@ const routes: Array<Route> = [
   {
     path: '/settings',
     navigation: {
+      firstRoute: true,
       hidden: true,
       side: {
         title: 'sidebar.settings.title'
@@ -126,6 +129,10 @@ const routes: Array<Route> = [
         navigation: {
           side: {
             title: 'sidebar.settings.profile'
+          },
+          menu: {
+            title: 'menu.settings',
+            icon: InterfaceSettingCog
           }
         }
       },

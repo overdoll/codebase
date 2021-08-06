@@ -67,56 +67,54 @@ export default function RejectionReasons (props: Props): Node {
   })
 
   return (
-    <>
-      <form onSubmit={handleSubmit(props.onSubmit)}>
-        <Stack spacing={3}>
-          <FormControl isRequired isInvalid={errors.rejectionId}>
-            <FormLabel>
-              {t('queue.post.actions.reject.modal.form.dropdown.label')}
-            </FormLabel>
-            <Select
-              {...register('rejectionId', { required: true })}
-              onChange={(e) => findInfraction(e.target.value)}
-              placeholder={t('queue.post.actions.reject.modal.form.dropdown.placeholder')}
-            >
-              {data.postRejectionReasons.edges.map((item, index) =>
-                <option key={index} value={item.node.id}>{item.node.reason}</option>
-              )}
-            </Select>
-            <FormErrorMessage
-              color='orange.300'
-            >{t('queue.post.actions.reject.modal.form.validation.rejectionId.error')}
-            </FormErrorMessage>
-          </FormControl>
-          <FormControl isRequired isInvalid={errors.note}>
-            <FormLabel>
-              {t('queue.post.actions.reject.modal.form.textarea.label')}
-            </FormLabel>
-            <Textarea
-              resize='none'
-              isInvalid={errors.note} {...register('note', { maxLength: 255 })}
-              placeholder={t('queue.post.actions.reject.modal.form.textarea.placeholder')}
-            />
-            <FormErrorMessage
-              color='orange.300'
-            >{t('queue.post.actions.reject.modal.form.validation.note.error')}
-            </FormErrorMessage>
-          </FormControl>
-          {infraction &&
-            <Alert borderRadius={5} mt={1} mb={1} status='warning'>
-              <AlertIcon mt={1} mb={3} />
-              <AlertDescription>{t('queue.post.actions.reject.modal.infraction')}
-              </AlertDescription>
-            </Alert>}
-          <Flex justify='flex-end'>
-            <Button
-              isDisabled={errors.rejectionId || errors.note} isLoading={props.isModeratingPost} size='md'
-              colorScheme='orange' type='submit'
-            >{t('queue.post.actions.reject.modal.form.submit')}
-            </Button>
-          </Flex>
-        </Stack>
-      </form>
-    </>
+    <form onSubmit={handleSubmit(props.onSubmit)}>
+      <Stack spacing={3}>
+        <FormControl isRequired isInvalid={errors.rejectionId}>
+          <FormLabel>
+            {t('queue.post.actions.reject.modal.form.dropdown.label')}
+          </FormLabel>
+          <Select
+            {...register('rejectionId', { required: true })}
+            onChange={(e) => findInfraction(e.target.value)}
+            placeholder={t('queue.post.actions.reject.modal.form.dropdown.placeholder')}
+          >
+            {data.postRejectionReasons.edges.map((item, index) =>
+              <option key={index} value={item.node.id}>{item.node.reason}</option>
+            )}
+          </Select>
+          <FormErrorMessage
+            color='orange.300'
+          >{t('queue.post.actions.reject.modal.form.validation.rejectionId.error')}
+          </FormErrorMessage>
+        </FormControl>
+        <FormControl isRequired isInvalid={errors.note}>
+          <FormLabel>
+            {t('queue.post.actions.reject.modal.form.textarea.label')}
+          </FormLabel>
+          <Textarea
+            resize='none'
+            isInvalid={errors.note} {...register('note', { maxLength: 255 })}
+            placeholder={t('queue.post.actions.reject.modal.form.textarea.placeholder')}
+          />
+          <FormErrorMessage
+            color='orange.300'
+          >{t('queue.post.actions.reject.modal.form.validation.note.error')}
+          </FormErrorMessage>
+        </FormControl>
+        {infraction &&
+          <Alert borderRadius={5} mt={1} mb={1} status='warning'>
+            <AlertIcon mt={1} mb={3} />
+            <AlertDescription>{t('queue.post.actions.reject.modal.infraction')}
+            </AlertDescription>
+          </Alert>}
+        <Flex justify='flex-end'>
+          <Button
+            isDisabled={errors.rejectionId || errors.note} isLoading={props.isModeratingPost} size='md'
+            colorScheme='orange' type='submit'
+          >{t('queue.post.actions.reject.modal.form.submit')}
+          </Button>
+        </Flex>
+      </Stack>
+    </form>
   )
 }

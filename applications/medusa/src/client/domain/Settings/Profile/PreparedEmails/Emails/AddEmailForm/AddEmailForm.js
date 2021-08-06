@@ -10,8 +10,10 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
-  InputRightElement, useToast
+  InputRightElement, useToast,
+  FormLabel, FormErrorMessage
 } from '@chakra-ui/react'
+import { useState } from 'react'
 import Icon from '@//:modules/content/Icon/Icon'
 import type { AddEmailFormMutation } from '@//:artifacts/AddEmailFormMutation.graphql'
 
@@ -46,6 +48,7 @@ const schema = Joi.object({
 const AddEmailMutationGQL = graphql`
   mutation AddEmailFormMutation($input: AddAccountEmailInput!, $connections: [ID!]!) {
     addAccountEmail(input: $input) {
+      validation
       accountEmail @appendNode(connections: $connections, edgeTypeName: "updateEmailPrimaryEdge") {
         id
         email
@@ -58,7 +61,7 @@ const AddEmailMutationGQL = graphql`
 export default function AddEmailForm ({ connectionID }: Props): Node {
   const [t] = useTranslation('settings')
 
-  const { register, handleSubmit, formState: { errors, isDirty, isSubmitted } } = useForm<EmailValues>({
+  const { register, setError, handleSubmit, formState: { errors, isDirty, isSubmitted } } = useForm<EmailValues>({
     resolver: joiResolver(
       schema
     )
@@ -70,6 +73,8 @@ export default function AddEmailForm ({ connectionID }: Props): Node {
     AddEmailMutationGQL
   )
 
+  const formReveal = errors.email || success
+
   const notify = useToast()
 
   const onAddEmail = (formData) => {
@@ -80,7 +85,15 @@ export default function AddEmailForm ({ connectionID }: Props): Node {
         },
         connections: [connectionID]
       },
-      onCompleted () {
+      onCompleted (data) {
+        if (data.addAccountEmail.validation) {
+          setError('email', {
+            type: 'manual',
+            message: data.addAccountEmail.validation
+          })
+          return
+        }
+
         notify({
           status: 'success',
           title: t('profile.email.add.query.success', { email: formData.email }),
@@ -101,14 +114,10 @@ export default function AddEmailForm ({ connectionID }: Props): Node {
   return (
     <>
       <form onSubmit={handleSubmit(onAddEmail)}>
-        <Heading
-          color='gray.00'
-          mb={1}
-          size='sm'
-        >{t('profile.email.add.title')}
-        </Heading>
-        <Flex direction='row'>
-          <FormControl isInvalid={errors.email} id='email'>
+
+        <FormControl isInvalid={errors.email} id='email'>
+          <FormLabel>{t('profile.email.add.title')}</FormLabel>
+          <Flex direction='row'>
             <InputGroup>
               <InputLeftElement h='32px' pointerEvents='none'>
                 <Icon icon={MailSignAt} m={3} fill='gray.200' />
@@ -120,7 +129,7 @@ export default function AddEmailForm ({ connectionID }: Props): Node {
                 placeholder={t('profile.email.add.placeholder')}
                 variant='outline' mr={2}
               />
-              {(errors.email || success) && (
+              {formReveal && (
                 <InputRightElement zIndex={0} mr={2} h='32px' pointerEvents='none'>
                   <Icon
                     m={3}
@@ -130,26 +139,24 @@ export default function AddEmailForm ({ connectionID }: Props): Node {
                 </InputRightElement>
               )}
             </InputGroup>
-
-            {(errors.email || success) && (
-              <FormHelperText mt={1} fontSize='sm'>
-                {errors.email && t('profile.email.add.form.validation.email.pattern')}
-              </FormHelperText>
-            )}
-          </FormControl>
-          <IconButton
-            aria-label={t('profile.email.add.button')} type='submit' disabled={errors.email}
-            borderRadius={5}
-            isLoading={isAddingEmail}
-            size='sm' icon={
-              <Icon
-                m={2}
-                icon={InterfaceArrowsRight}
-                fill='gray.100'
-              />
-          }
-          />
-        </Flex>
+            <IconButton
+              aria-label={t('profile.email.add.button')} type='submit' disabled={errors.email}
+              borderRadius={5}
+              isLoading={isAddingEmail}
+              size='sm'
+              icon={
+                <Icon
+                  m={2}
+                  icon={InterfaceArrowsRight}
+                  fill='gray.100'
+                />
+              }
+            />
+          </Flex>
+          <FormErrorMessage>
+            {errors.email && errors.email.message}
+          </FormErrorMessage>
+        </FormControl>
       </form>
     </>
   )

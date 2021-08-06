@@ -15,7 +15,7 @@
       "modal": {
         "header": "Enter a new username",
         "input_title": "Username",
-        "submit": "Change my username",
+        "submit": "Submit",
         "query": {
           "success": "Username changed successfully",
           "error": "There was an error changing your username"

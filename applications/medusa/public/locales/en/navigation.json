@@ -1,5 +1,10 @@
 {
   "title": "overdoll",
+  "upload_locked": "You must be logged in to upload",
+  "logout": {
+    "success": "You have been logged out",
+    "error": "There was an error logging out"
+  },
   "nav": {
     "home": "Home",
     "mod": "Moderation",
@@ -7,17 +12,6 @@
     "profile": "Profile",
     "menu": "Menu",
     "join": "join"
-  },
-  "menu": {
-    "profile": "Go to my profile",
-    "settings": "Account Settings",
-    "logout": "Log Out",
-    "join": "Join The Community"
-  },
-  "upload_locked": "You must be logged in to upload",
-  "logout": {
-    "success": "You have been logged out",
-    "error": "There was an error logging out"
   },
   "sidebar": {
     "mod": {
@@ -31,5 +25,11 @@
       "security": "Security",
       "moderation": "Moderation"
     }
+  },
+  "menu": {
+    "profile": "Go to my profile",
+    "settings": "Account Settings",
+    "logout": "Log Out",
+    "join": "Join The Community"
   }
 }

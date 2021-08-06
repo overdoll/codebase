@@ -15,7 +15,9 @@ import {
   AccordionIcon,
   Text,
   ModalCloseButton,
-  useToast
+  useToast,
+  SlideFade,
+  Collapse
 } from '@chakra-ui/react'
 
 import { useTranslation } from 'react-i18next'
@@ -41,21 +43,6 @@ const UsernameFragmentGQL = graphql`
   }
 `
 
-const UsernameMutationGQL = graphql`
-  mutation UsernamesMutation($input: UpdateAccountUsernameAndRetainPreviousInput!, $connections: [ID!]!) {
-    updateAccountUsernameAndRetainPrevious(input: $input) {
-      accountUsername  {
-        id
-        username
-        account @appendNode(connections: $connections, edgeTypeName: "UsernamesEdge"){
-          id
-          username
-        }
-      }
-    }
-  }
-`
-
 type Props = {
   usernames: UsernamesSettingsFragment$key
 }
@@ -63,44 +50,11 @@ type Props = {
 export default function Usernames ({ usernames }: Props): Node {
   const data = useFragment(UsernameFragmentGQL, usernames)
 
-  const [changeUsername, isChangingUsername] = useMutation<UsernamesMutation>(
-    UsernameMutationGQL
-  )
-
   const [t] = useTranslation('settings')
 
-  const { isOpen, onOpen, onClose } = useDisclosure()
-
-  const notify = useToast()
+  const { isOpen, onOpen, onClose, onToggle } = useDisclosure()
 
   const usernamesConnectionID = data?.usernames?.__id
-
-  const onChangeUsername = (formData) => {
-    changeUsername({
-      variables: {
-        input: {
-          username: formData.username
-        },
-        connections: [usernamesConnectionID]
-      },
-      onCompleted (data) {
-        notify({
-          status: 'success',
-          title: t('profile.username.modal.query.success'),
-          isClosable: true
-        })
-        onClose()
-      },
-      onError () {
-        notify({
-          status: 'error',
-          title: t('profile.username.modal.query.error'),
-          isClosable: true
-        })
-      }
-    }
-    )
-  }
 
   return (
     <>
@@ -111,8 +65,13 @@ export default function Usernames ({ usernames }: Props): Node {
           <Heading size='sm' color='gray.100'>{t('profile.username.current.title')}</Heading>
           <Flex align='center' direction='row' justify='space-between'>
             <Heading size='md' color='red.500'>{data?.username}</Heading>
-            <Button onClick={onOpen} size='sm'>{t('profile.username.current.change')}</Button>
+            <Button onClick={onToggle} size='sm'>{t('profile.username.current.change')}</Button>
           </Flex>
+          <Collapse in={isOpen} animateOpacity>
+            <Flex mt={3}>
+              <ChangeUsernameForm usernamesConnectionID={usernamesConnectionID} />
+            </Flex>
+          </Collapse>
         </Flex>
         {data?.usernames.edges.length > 0 &&
           <Flex direction='column'>
@@ -143,17 +102,7 @@ export default function Usernames ({ usernames }: Props): Node {
             </Accordion>
           </Flex>}
       </Stack>
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent bg='gray.900'>
-          <ModalHeader fontSize='md'>{t('profile.username.modal.header')}</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <ChangeUsernameForm onSubmit={onChangeUsername} loading={isChangingUsername} />
-          </ModalBody>
-          <ModalFooter />
-        </ModalContent>
-      </Modal>
+
     </>
   )
 }
