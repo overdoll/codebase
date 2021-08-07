@@ -121,15 +121,7 @@ type SubmitPost struct {
 	} `graphql:"submitPost(input: $input)"`
 }
 
-// TestCreatePost_Submit_and_review - do a complete post flow (create post, add all necessary options, and then submit it)
-// then, we test our GRPC endpoints for revoking
-func TestCreatePost_Submit_and_publish(t *testing.T) {
-	t.Parallel()
-
-	pass := passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
-
-	client, _ := getGraphqlClient(t, pass)
-
+func createPost(t *testing.T, client *graphql.Client) {
 	var createPost CreatePost
 
 	err := client.Mutate(context.Background(), &createPost, nil)
@@ -142,7 +134,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	require.Equal(t, types.PostStateDraft, createPost.CreatePost.Post.State)
 
 	// upload some files - this is required before running update command
-	tusClient, _ := getTusClient(t, pass)
+	tusClient := getTusClient(t)
 	fileId := uploadFileWithTus(t, tusClient, "applications/sting/internal/service/file_fixtures/test_file_1.png")
 
 	// update with new content (1 file)
@@ -174,9 +166,9 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	require.NoError(t, err)
 
 	// properly identify the content and stuff
-	require.Len(t, updatePostCategories.UpdatePostCategories.Post.Characters, 3)
-	require.Equal(t, "Transmit", updatePostCategories.UpdatePostCategories.Post.Categories[0].Title)
-	require.Equal(t, "Alter", updatePostCategories.UpdatePostCategories.Post.Categories[1].Title)
+	require.Len(t, updatePostCategories.UpdatePostCategories.Post.Categories, 3)
+	require.Equal(t, "Alter", updatePostCategories.UpdatePostCategories.Post.Categories[0].Title)
+	require.Equal(t, "Transmit", updatePostCategories.UpdatePostCategories.Post.Categories[1].Title)
 	require.Equal(t, "Convict", updatePostCategories.UpdatePostCategories.Post.Categories[2].Title)
 
 	// update with new characters
@@ -200,7 +192,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	err = client.Mutate(context.Background(), &updatePostBrand, map[string]interface{}{
 		"input": types.UpdatePostBrandInput{
 			ID:      relay.ID(newPostId),
-			BrandID: "QnJhbmQ6MXBjS1p5b1lGeFpSeWlkVjlYSGQxV3lQYnJq",
+			BrandID: "QnJhbmQ6MXE3TUl3MFU2VEVwRUxIMEZxbnhyY1h0M0Uw",
 		},
 	})
 
@@ -267,6 +259,17 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	// ensure that the post is now published
 	postState := getPost(t, newPostReference)
 	require.Equal(t, types.PostStatePublished, postState.Post.State)
+}
+
+// TestCreatePost_Submit_and_review - do a complete post flow (create post, add all necessary options, and then submit it)
+// then, we test our GRPC endpoints for revoking
+func TestCreatePost_Submit_and_publish(t *testing.T) {
+	t.Parallel()
+
+	pass := passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
+
+	client, _ := getGraphqlClient(t, pass)
+
 }
 
 //// Test_CreatePost_Discard - discard post

@@ -62,7 +62,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			UpdatePostBrand:      command.NewUpdatePostBrandHandler(postRepo, indexRepo),
 			UpdatePostCategories: command.NewUpdatePostCategoriesHandler(postRepo, indexRepo),
 			UpdatePostCharacters: command.NewUpdatePostCharactersHandler(postRepo, indexRepo),
-			UpdatePostContent:    command.NewUpdatePostContentHandler(postRepo, indexRepo),
+			UpdatePostContent:    command.NewUpdatePostContentHandler(postRepo, indexRepo, resourceRepo),
 			UpdatePostAudience:   command.NewUpdatePostAudienceHandler(postRepo, indexRepo),
 		},
 		Queries: app.Queries{

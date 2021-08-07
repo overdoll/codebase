@@ -38,7 +38,7 @@ type Post struct {
 
 	state postState
 
-	moderatorId   string
+	moderatorId   *string
 	contributorId string
 
 	brand    *Brand
@@ -64,7 +64,7 @@ func NewPost(contributor *principal.Principal) (*Post, error) {
 	}, nil
 }
 
-func UnmarshalPostFromDatabase(id, state, moderatorId, contributorId string, content []string, brand *Brand, audience *Audience, characters []*Character, categories []*Category, createdAt time.Time, postedAt, reassignmentAt *time.Time) *Post {
+func UnmarshalPostFromDatabase(id, state string, moderatorId *string, contributorId string, content []string, brand *Brand, audience *Audience, characters []*Character, categories []*Category, createdAt time.Time, postedAt, reassignmentAt *time.Time) *Post {
 
 	var resources []*resource.Resource
 
@@ -92,30 +92,12 @@ func (p *Post) ID() string {
 	return p.id
 }
 
-func (p *Post) ModeratorId() string {
+func (p *Post) ModeratorId() *string {
 	return p.moderatorId
 }
 
 func (p *Post) ContributorId() string {
 	return p.contributorId
-}
-
-func (p *Post) BrandId() string {
-
-	if p.brand != nil {
-		return p.brand.id
-	}
-
-	return ""
-}
-
-func (p *Post) AudienceId() string {
-
-	if p.audience != nil {
-		return p.audience.id
-	}
-
-	return ""
 }
 
 func (p *Post) Audience() *Audience {
@@ -142,7 +124,7 @@ func (p *Post) UpdateModerator(moderatorId string) error {
 
 	newTime := time.Now().Add(time.Hour * 24)
 
-	p.moderatorId = moderatorId
+	p.moderatorId = &moderatorId
 	p.reassignmentAt = &newTime
 
 	return nil
@@ -304,7 +286,7 @@ func (p *Post) SubmitPostRequest(requester *principal.Principal, moderatorId str
 	postTime := time.Now()
 	reassignmentAt := time.Now().Add(time.Hour * 24)
 
-	p.moderatorId = moderatorId
+	p.moderatorId = &moderatorId
 	p.postedAt = &postTime
 	p.reassignmentAt = &reassignmentAt
 	p.state = processing

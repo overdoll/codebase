@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"image/png"
+	"image"
+	_ "image/png"
+	"io"
 	"mime"
 	"os"
 
@@ -28,7 +30,7 @@ const (
 // accepted formats
 var (
 	imageAcceptedTypes = []string{"image/png"}
-	videoAcceptedTypes = []string{"video/png"}
+	videoAcceptedTypes = []string{"video/mp4"}
 )
 
 type marshalled struct {
@@ -83,6 +85,7 @@ type Resource struct {
 
 func NewResource(url, mimeType string) (*Resource, error) {
 
+	// initial mimetype we dont care about until we do a processing step later that determines the type
 	var rType resourceType
 
 	for _, m := range imageAcceptedTypes {
@@ -134,10 +137,13 @@ func (r *Resource) ProcessResource(prefix string, file *os.File) ([]*Move, error
 	var newFileExtension string
 	currentFileName := file.Name()
 
+	// seek file so we can read it again (first time we only grab a few bytes)
+	_, _ = file.Seek(0, io.SeekStart)
+
 	if kind.MIME.Value == "image/png" {
 		// image is in an accepted format - convert to webp
 
-		src, err := png.Decode(file)
+		src, _, err := image.Decode(file)
 
 		if err != nil {
 			return nil, fmt.Errorf("failed to decode png %v", err)
@@ -173,7 +179,7 @@ func (r *Resource) ProcessResource(prefix string, file *os.File) ([]*Move, error
 	}
 
 	fileName := uuid.New().String()
-	fileKey := prefix + "/" + fileName
+	fileKey := prefix + fileName
 
 	// the second file we need to move - a file that was existing already
 	moveTargets = append(moveTargets, &Move{

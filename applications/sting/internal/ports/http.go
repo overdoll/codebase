@@ -58,7 +58,7 @@ func NewHttpServer(app *app.Application, client client.Client) http.Handler {
 	}
 
 	handler, err := tusd.NewHandler(tusd.Config{
-		BasePath:                "/upload/",
+		BasePath:                "/api/upload/",
 		StoreComposer:           composer,
 		RespectForwardedHeaders: true,
 	})
@@ -67,10 +67,10 @@ func NewHttpServer(app *app.Application, client client.Client) http.Handler {
 		zap.S().Fatal("failed to create handler ", zap.Error(err))
 	}
 
-	rtr.POST("/upload", gin.WrapF(handler.PostFile))
-	rtr.HEAD("/upload/:id", gin.WrapF(handler.HeadFile))
-	rtr.PATCH("/upload/:id", gin.WrapF(handler.PatchFile))
-	rtr.GET("/upload/:id", gin.WrapF(handler.GetFile))
+	rtr.POST("/api/upload/", gin.WrapF(handler.PostFile))
+	rtr.HEAD("/api/upload/:id", gin.WrapF(handler.HeadFile))
+	rtr.PATCH("/api/upload/:id", gin.WrapF(handler.PatchFile))
+	rtr.GET("/api/upload/:id", gin.WrapF(handler.GetFile))
 
 	return rtr
 }

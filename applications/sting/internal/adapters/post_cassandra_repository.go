@@ -36,10 +36,10 @@ type posts struct {
 	Id             string     `db:"id"`
 	State          string     `db:"state"`
 	Content        []string   `db:"content"`
-	ModeratorId    string     `db:"moderator_account_id"`
+	ModeratorId    *string    `db:"moderator_account_id"`
 	ContributorId  string     `db:"contributor_account_id"`
-	BrandId        string     `db:"brand_id"`
-	AudienceId     string     `db:"audience_id"`
+	BrandId        *string    `db:"brand_id"`
+	AudienceId     *string    `db:"audience_id"`
 	CategoryIds    []string   `db:"category_ids"`
 	CharacterIds   []string   `db:"character_ids"`
 	CreatedAt      time.Time  `db:"created_at"`
@@ -70,12 +70,26 @@ func marshalPostToDatabase(pending *post.Post) (*posts, error) {
 		marshalledContent = append(marshalledContent, marshal)
 	}
 
+	var brandId *string
+
+	if pending.Brand() != nil {
+		id := pending.Brand().ID()
+		brandId = &id
+	}
+
+	var audienceId *string
+
+	if pending.Audience() != nil {
+		id := pending.Audience().ID()
+		audienceId = &id
+	}
+
 	return &posts{
 		Id:             pending.ID(),
 		State:          pending.State(),
 		ModeratorId:    pending.ModeratorId(),
-		BrandId:        pending.BrandId(),
-		AudienceId:     pending.AudienceId(),
+		BrandId:        brandId,
+		AudienceId:     audienceId,
 		ContributorId:  pending.ContributorId(),
 		Content:        marshalledContent,
 		CategoryIds:    pending.CategoryIds(),
@@ -102,8 +116,8 @@ func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending
 
 	var brand *post.Brand
 
-	if postPending.BrandId != "" {
-		brand, err = r.GetBrandById(ctx, postPending.BrandId)
+	if postPending.BrandId != nil {
+		brand, err = r.GetBrandById(ctx, *postPending.BrandId)
 
 		if err != nil {
 			return nil, err
@@ -112,8 +126,8 @@ func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending
 
 	var audienc *post.Audience
 
-	if postPending.AudienceId != "" {
-		audienc, err = r.GetAudienceById(ctx, postPending.AudienceId)
+	if postPending.AudienceId != nil {
+		audienc, err = r.GetAudienceById(ctx, *postPending.AudienceId)
 
 		if err != nil {
 			return nil, err
@@ -230,6 +244,7 @@ func (r PostsCassandraRepository) UpdatePost(ctx context.Context, id string, upd
 		Query(postTable.Update(
 			"state",
 			"moderator_reassignment_at",
+			"posted_at",
 			"moderator_account_id",
 			"content",
 		)).

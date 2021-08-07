@@ -59,7 +59,9 @@ func MarshalPostToGraphQL(result *post.Post) *Post {
 	var content []*Resource
 
 	for _, id := range result.Content() {
-		content = append(content, MarshalResourceToGraphQL(id))
+		if id != nil {
+			content = append(content, MarshalResourceToGraphQL(id))
+		}
 	}
 
 	var brand *Brand
@@ -76,8 +78,8 @@ func MarshalPostToGraphQL(result *post.Post) *Post {
 
 	var moderator *Account
 
-	if result.ModeratorId() != "" {
-		moderator = &Account{ID: relay.NewID(Account{}, result.ModeratorId())}
+	if result.ModeratorId() != nil {
+		moderator = &Account{ID: relay.NewID(Account{}, *result.ModeratorId())}
 	}
 
 	return &Post{
@@ -98,57 +100,87 @@ func MarshalPostToGraphQL(result *post.Post) *Post {
 }
 
 func MarshalBrandToGraphQL(result *post.Brand) *Brand {
+
+	var res *Resource
+
+	if result.Thumbnail() != nil {
+		res = MarshalResourceToGraphQL(result.Thumbnail())
+	}
+
 	return &Brand{
 		ID:        relay.NewID(Brand{}, result.ID()),
 		Name:      result.Name(),
 		Slug:      result.Slug(),
-		Thumbnail: MarshalResourceToGraphQL(result.Thumbnail()),
+		Thumbnail: res,
 	}
 }
 
 func MarshalAudienceToGraphQL(result *post.Audience) *Audience {
+
+	var res *Resource
+
+	if result.Thumbnail() != nil {
+		res = MarshalResourceToGraphQL(result.Thumbnail())
+	}
+
 	return &Audience{
 		ID:        relay.NewID(Brand{}, result.ID()),
 		Title:     result.Title(),
 		Slug:      result.Slug(),
-		Thumbnail: MarshalResourceToGraphQL(result.Thumbnail()),
+		Thumbnail: res,
 	}
 }
 
 func MarshalSeriesToGraphQL(result *post.Series) *Series {
+
+	var res *Resource
+
+	if result.Thumbnail() != nil {
+		res = MarshalResourceToGraphQL(result.Thumbnail())
+	}
+
 	return &Series{
 		ID:        relay.NewID(Series{}, result.ID()),
 		Title:     result.Title(),
 		Slug:      result.Slug(),
-		Thumbnail: MarshalResourceToGraphQL(result.Thumbnail()),
+		Thumbnail: res,
 	}
 }
 
 func MarshalCategoryToGraphQL(result *post.Category) *Category {
+
+	var res *Resource
+
+	if result.Thumbnail() != nil {
+		res = MarshalResourceToGraphQL(result.Thumbnail())
+	}
+
 	return &Category{
 		ID:        relay.NewID(Category{}, result.ID()),
-		Thumbnail: MarshalResourceToGraphQL(result.Thumbnail()),
+		Thumbnail: res,
 		Slug:      result.Slug(),
 		Title:     result.Title(),
 	}
 }
 
 func MarshalCharacterToGraphQL(result *post.Character) *Character {
+
+	var res *Resource
+
+	if result.Thumbnail() != nil {
+		res = MarshalResourceToGraphQL(result.Thumbnail())
+	}
+
 	return &Character{
 		ID:        relay.NewID(Character{}, result.ID()),
 		Name:      result.Name(),
 		Slug:      result.Slug(),
-		Thumbnail: MarshalResourceToGraphQL(result.Thumbnail()),
+		Thumbnail: res,
 		Series:    MarshalSeriesToGraphQL(result.Series()),
 	}
 }
 
 func MarshalResourceToGraphQL(res *resource.Resource) *Resource {
-
-	if res == nil {
-		return nil
-	}
-
 	var resourceType ResourceType
 
 	if res.IsImage() {

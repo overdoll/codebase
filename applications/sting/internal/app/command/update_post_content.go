@@ -21,8 +21,8 @@ type UpdatePostContentHandler struct {
 	cr resource.Repository
 }
 
-func NewUpdatePostContentHandler(pr post.Repository, pi post.IndexRepository) UpdatePostContentHandler {
-	return UpdatePostContentHandler{pr: pr, pi: pi}
+func NewUpdatePostContentHandler(pr post.Repository, pi post.IndexRepository, cr resource.Repository) UpdatePostContentHandler {
+	return UpdatePostContentHandler{pr: pr, pi: pi, cr: cr}
 }
 
 func (h UpdatePostContentHandler) Handle(ctx context.Context, cmd UpdatePostContent) (*post.Post, error) {

@@ -10,7 +10,7 @@ import (
 type UpdatePostAudience struct {
 	Principal *principal.Principal
 
-	PostId  string
+	PostId     string
 	AudienceId string
 }
 
@@ -25,7 +25,7 @@ func NewUpdatePostAudienceHandler(pr post.Repository, pi post.IndexRepository) U
 
 func (h UpdatePostAudienceHandler) Handle(ctx context.Context, cmd UpdatePostAudience) (*post.Post, error) {
 
-	pendingPost, err := h.pr.UpdatePostContent(ctx, cmd.Principal, cmd.PostId, func(post *post.Post) error {
+	pendingPost, err := h.pr.UpdatePostAudience(ctx, cmd.Principal, cmd.PostId, func(post *post.Post) error {
 
 		audience, err := h.pr.GetAudienceById(ctx, cmd.AudienceId)
 

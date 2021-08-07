@@ -1,15 +1,6 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: stripprefix
-spec:
-  stripPrefix:
-    prefixes:
-      - /api
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: Middleware
-metadata:
   name: assetsprefix
 spec:
   addPrefix:
@@ -18,25 +9,9 @@ spec:
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: procesingprefix
-spec:
-  addPrefix:
-    prefix: /overdoll-processing
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: Middleware
-metadata:
   name: compression
 spec:
   compress: { }
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: Middleware
-metadata:
-  name: postsprefix
-spec:
-  addPrefix:
-    prefix: /overdoll-posts
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
@@ -55,17 +30,7 @@ spec:
   entrypoints:
     - websecure
   routes:
-    - match: Host(`overdoll.test`) &&  Path(`/api/upload/{document}`)
-      kind: Rule
-      services:
-        - name: sting
-          port: 8000
-    - match: Host(`overdoll.test`) &&  Path(`/api/uploads/{user}/{document}`)
-      kind: Rule
-      services:
-        - name: sting
-          port: 8000
-    - match: Host(`overdoll.test`) &&  Path(`/api/upload/`)
+    - match: Host(`overdoll.test`) && (PathPrefix(`/api/upload/{document}`) || PathPrefix(`/api/upload`) || PathPrefix(`/api/upload/`))
       kind: Rule
       services:
         - name: sting
@@ -86,22 +51,6 @@ spec:
       middlewares:
         - name: assetsprefix
         - name: compression
-    - match: Host(`posts.dollycdn.test`) && PathPrefix(`/`)
-      kind: Rule
-      services:
-        - name: minio
-          namespace: minio
-          port: 80
-      middlewares:
-        - name: postsprefix
-    - match: Host(`uploads.dollycdn.test`) && PathPrefix(`/`)
-      kind: Rule
-      services:
-        - name: minio
-          namespace: minio
-          port: 80
-      middlewares:
-        - name: postsprefix
   tls:
     secretName: overdoll-tls
 ---
@@ -113,21 +62,7 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: Host(`overdoll.test`) &&  Path(`/api/upload/{document}`)
-      kind: Rule
-      services:
-        - name: sting
-          port: 8000
-      middlewares:
-        - name: redirect-https
-    - match: Host(`overdoll.test`) &&  Path(`/api/uploads/{user}/{document}`)
-      kind: Rule
-      services:
-        - name: sting
-          port: 8000
-      middlewares:
-        - name: redirect-https
-    - match: Host(`overdoll.test`) && Path(`/api/upload/`)
+    - match: Host(`overdoll.test`) && (PathPrefix(`/api/upload/{document}`) || PathPrefix(`/api/upload`) || PathPrefix(`/api/upload/`))
       kind: Rule
       services:
         - name: sting

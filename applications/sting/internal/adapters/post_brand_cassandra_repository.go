@@ -35,7 +35,7 @@ func (r PostsCassandraRepository) GetBrandById(ctx context.Context, brandId stri
 		Consistency(gocql.One).
 		BindStruct(brand{Id: brandId})
 
-	var b *brand
+	var b brand
 
 	if err := queryBrand.Get(&b); err != nil {
 

@@ -34,5 +34,5 @@ interface Object {
   thumbnail(
     """The size of the resulting square image."""
     size: Int
-  ): Resource!
+  ): Resource
 }

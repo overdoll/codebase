@@ -37,7 +37,7 @@ func (r PostsCassandraRepository) GetAudienceById(ctx context.Context, audienceI
 		Consistency(gocql.One).
 		BindStruct(audience{Id: audienceId})
 
-	var b *audience
+	var b audience
 
 	if err := queryAudience.Get(&b); err != nil {
 

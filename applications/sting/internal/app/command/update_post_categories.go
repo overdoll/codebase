@@ -25,7 +25,7 @@ func NewUpdatePostCategoriesHandler(pr post.Repository, pi post.IndexRepository)
 
 func (h UpdatePostCategoriesHandler) Handle(ctx context.Context, cmd UpdatePostCategories) (*post.Post, error) {
 
-	pendingPost, err := h.pr.UpdatePostContent(ctx, cmd.Principal, cmd.PostId, func(post *post.Post) error {
+	pendingPost, err := h.pr.UpdatePostCategories(ctx, cmd.Principal, cmd.PostId, func(post *post.Post) error {
 
 		cats, err := h.pr.GetCategoriesById(ctx, cmd.CategoryIds)
 

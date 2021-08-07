@@ -1313,7 +1313,7 @@ var sources = []*ast.Source{
   thumbnail(
     """The size of the resulting square image."""
     size: Int
-  ): Resource!
+  ): Resource
 
   """A title for this audience."""
   title: String!
@@ -1364,7 +1364,7 @@ extend type Post {
   thumbnail(
     """The size of the resulting square image."""
     size: Int
-  ): Resource!
+  ): Resource
 
   """A name for this brand."""
   name: String!
@@ -1415,7 +1415,7 @@ extend type Post {
   thumbnail(
     """The size of the resulting square image."""
     size: Int
-  ): Resource!
+  ): Resource
 
   """A title for this category."""
   title: String!
@@ -1465,7 +1465,7 @@ extend type Post {
   thumbnail(
     """The size of the resulting square image."""
     size: Int
-  ): Resource!
+  ): Resource
 
   """A title for this series."""
   title: String!
@@ -1492,7 +1492,7 @@ type Character implements Node & Object @key(fields: "id") {
   thumbnail(
     """The size of the resulting square image."""
     size: Int
-  ): Resource!
+  ): Resource
 
   """A name for this character."""
   name: String!
@@ -1920,7 +1920,7 @@ interface Object {
   thumbnail(
     """The size of the resulting square image."""
     size: Int
-  ): Resource!
+  ): Resource
 }`, BuiltIn: false},
 	{Name: "../../libraries/graphql/schema.graphql", Input: `scalar Time
 
@@ -3173,14 +3173,11 @@ func (ec *executionContext) _Audience_thumbnail(ctx context.Context, field graph
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.(*types.Resource)
 	fc.Result = res
-	return ec.marshalNResource2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, field.Selections, res)
+	return ec.marshalOResource2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Audience_title(ctx context.Context, field graphql.CollectedField, obj *types.Audience) (ret graphql.Marshaler) {
@@ -3502,14 +3499,11 @@ func (ec *executionContext) _Brand_thumbnail(ctx context.Context, field graphql.
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.(*types.Resource)
 	fc.Result = res
-	return ec.marshalNResource2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, field.Selections, res)
+	return ec.marshalOResource2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Brand_name(ctx context.Context, field graphql.CollectedField, obj *types.Brand) (ret graphql.Marshaler) {
@@ -3831,14 +3825,11 @@ func (ec *executionContext) _Category_thumbnail(ctx context.Context, field graph
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.(*types.Resource)
 	fc.Result = res
-	return ec.marshalNResource2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, field.Selections, res)
+	return ec.marshalOResource2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Category_title(ctx context.Context, field graphql.CollectedField, obj *types.Category) (ret graphql.Marshaler) {
@@ -4160,14 +4151,11 @@ func (ec *executionContext) _Character_thumbnail(ctx context.Context, field grap
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.(*types.Resource)
 	fc.Result = res
-	return ec.marshalNResource2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, field.Selections, res)
+	return ec.marshalOResource2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Character_name(ctx context.Context, field graphql.CollectedField, obj *types.Character) (ret graphql.Marshaler) {
@@ -6444,14 +6432,11 @@ func (ec *executionContext) _Series_thumbnail(ctx context.Context, field graphql
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.(*types.Resource)
 	fc.Result = res
-	return ec.marshalNResource2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, field.Selections, res)
+	return ec.marshalOResource2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Series_title(ctx context.Context, field graphql.CollectedField, obj *types.Series) (ret graphql.Marshaler) {
@@ -8413,9 +8398,6 @@ func (ec *executionContext) _Audience(ctx context.Context, sel ast.SelectionSet,
 			}
 		case "thumbnail":
 			out.Values[i] = ec._Audience_thumbnail(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
 		case "title":
 			out.Values[i] = ec._Audience_title(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -8533,9 +8515,6 @@ func (ec *executionContext) _Brand(ctx context.Context, sel ast.SelectionSet, ob
 			}
 		case "thumbnail":
 			out.Values[i] = ec._Brand_thumbnail(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
 		case "name":
 			out.Values[i] = ec._Brand_name(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -8653,9 +8632,6 @@ func (ec *executionContext) _Category(ctx context.Context, sel ast.SelectionSet,
 			}
 		case "thumbnail":
 			out.Values[i] = ec._Category_thumbnail(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
 		case "title":
 			out.Values[i] = ec._Category_title(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -8773,9 +8749,6 @@ func (ec *executionContext) _Character(ctx context.Context, sel ast.SelectionSet
 			}
 		case "thumbnail":
 			out.Values[i] = ec._Character_thumbnail(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
 		case "name":
 			out.Values[i] = ec._Character_name(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -9480,9 +9453,6 @@ func (ec *executionContext) _Series(ctx context.Context, sel ast.SelectionSet, o
 			}
 		case "thumbnail":
 			out.Values[i] = ec._Series_thumbnail(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
 		case "title":
 			out.Values[i] = ec._Series_title(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -11253,6 +11223,13 @@ func (ec *executionContext) marshalOPost2ᚖoverdollᚋapplicationsᚋstingᚋin
 		return graphql.Null
 	}
 	return ec._Post(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOResource2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx context.Context, sel ast.SelectionSet, v *types.Resource) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Resource(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOString2string(ctx context.Context, v interface{}) (string, error) {

@@ -25,7 +25,7 @@ func NewUpdatePostCharactersHandler(pr post.Repository, pi post.IndexRepository)
 
 func (h UpdatePostCharactersHandler) Handle(ctx context.Context, cmd UpdatePostCharacters) (*post.Post, error) {
 
-	pendingPost, err := h.pr.UpdatePostContent(ctx, cmd.Principal, cmd.PostId, func(post *post.Post) error {
+	pendingPost, err := h.pr.UpdatePostCharacters(ctx, cmd.Principal, cmd.PostId, func(post *post.Post) error {
 
 		chars, err := h.pr.GetCharactersById(ctx, cmd.CharacterIds)
 

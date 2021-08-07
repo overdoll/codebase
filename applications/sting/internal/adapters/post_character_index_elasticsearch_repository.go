@@ -88,16 +88,25 @@ func marshalCharacterToDocument(char *post.Character) (*characterDocument, error
 		return nil, err
 	}
 
-	charThumb, err := char.Thumbnail().MarshalResourceToDatabase()
+	var charThumb string
+	var seriesThumb string
 
-	if err != nil {
-		return nil, err
+	if char.Thumbnail() != nil {
+
+		charThumb, err = char.Thumbnail().MarshalResourceToDatabase()
+
+		if err != nil {
+			return nil, err
+		}
 	}
 
-	seriesThumb, err := media.Thumbnail().MarshalResourceToDatabase()
+	if media.Thumbnail() != nil {
 
-	if err != nil {
-		return nil, err
+		seriesThumb, err = media.Thumbnail().MarshalResourceToDatabase()
+
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return &characterDocument{

@@ -9,7 +9,7 @@ type Series implements Node & Object @key(fields: "id") {
   thumbnail(
     """The size of the resulting square image."""
     size: Int
-  ): Resource!
+  ): Resource
 
   """A title for this series."""
   title: String!
@@ -36,7 +36,7 @@ type Character implements Node & Object @key(fields: "id") {
   thumbnail(
     """The size of the resulting square image."""
     size: Int
-  ): Resource!
+  ): Resource
 
   """A name for this character."""
   name: String!

@@ -133,7 +133,7 @@ const postIndex = `
 						"created_at": {
 							"type": "date"
 						},
-					    "media": {
+					    "series": {
 							"dynamic": "strict",
 							"properties": {
 								"id": {
@@ -185,6 +185,7 @@ func NewPostsIndexElasticSearchRepository(client *elastic.Client, session gocqlx
 }
 
 func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
+
 	var characterDocuments []*characterDocument
 	var err error
 
@@ -245,19 +246,41 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 		content = append(content, contentThumb)
 	}
 
+	var moderatorId string
+
+	if pst.ModeratorId() != nil {
+		moderatorId = *pst.ModeratorId()
+	}
+
+	var postedAt string
+
+	if pst.PostedAt() != nil {
+		postedAt = strconv.FormatInt(pst.PostedAt().Unix(), 10)
+	} else {
+		postedAt = strconv.FormatInt(0, 10)
+	}
+
+	var reassignmentAt string
+
+	if pst.ReassignmentAt() != nil {
+		reassignmentAt = strconv.FormatInt(pst.ReassignmentAt().Unix(), 10)
+	} else {
+		reassignmentAt = strconv.FormatInt(0, 10)
+	}
+
 	return &postDocument{
 		Id:             pst.ID(),
 		State:          pst.State(),
 		Audience:       audDoc,
 		Brand:          brandDoc,
-		ModeratorId:    pst.ModeratorId(),
+		ModeratorId:    moderatorId,
 		ContributorId:  pst.ContributorId(),
 		Content:        content,
 		Categories:     categoryDocuments,
 		Characters:     characterDocuments,
 		CreatedAt:      strconv.FormatInt(pst.CreatedAt().Unix(), 10),
-		PostedAt:       strconv.FormatInt(pst.PostedAt().Unix(), 10),
-		ReassignmentAt: strconv.FormatInt(pst.ReassignmentAt().Unix(), 10),
+		PostedAt:       postedAt,
+		ReassignmentAt: reassignmentAt,
 	}, nil
 }
 
@@ -273,7 +296,7 @@ func (r PostsIndexElasticSearchRepository) IndexPost(ctx context.Context, post *
 		Index().
 		Index(PostIndexName).
 		Id(post.ID()).
-		BodyJson(pst).
+		BodyJson(*pst).
 		Do(ctx)
 
 	if err != nil {
@@ -376,7 +399,7 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 		createdPost := post.UnmarshalPostFromDatabase(
 			pst.Id,
 			pst.State,
-			pst.ModeratorId,
+			&pst.ModeratorId,
 			pst.ContributorId,
 			pst.Content,
 			post.UnmarshalBrandFromDatabase(pst.Brand.Id, pst.Brand.Slug, pst.Brand.Name, pst.Brand.Thumbnail),
@@ -451,34 +474,48 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 				categoryDocuments = append(categoryDocuments, catDoc)
 			}
 
-			brnd, err := rep.GetBrandById(ctx, p.BrandId)
+			var brandDoc *brandDocument
 
-			if err != nil {
-				return err
+			if p.BrandId != nil {
+				brnd, err := rep.GetBrandById(ctx, *p.BrandId)
+
+				if err != nil {
+					return err
+				}
+
+				brandDoc, err = marshalBrandToDocument(brnd)
+
+				if err != nil {
+					return err
+				}
 			}
 
-			brandDoc, err := marshalBrandToDocument(brnd)
+			var audDoc *audienceDocument
 
-			if err != nil {
-				return err
+			if p.AudienceId != nil {
+				aud, err := rep.GetAudienceById(ctx, *p.AudienceId)
+
+				if err != nil {
+					return err
+				}
+
+				audDoc, err = marshalAudienceToDocument(aud)
+
+				if err != nil {
+					return err
+				}
 			}
 
-			aud, err := rep.GetAudienceById(ctx, p.AudienceId)
+			var moderatorId string
 
-			if err != nil {
-				return err
-			}
-
-			audDoc, err := marshalAudienceToDocument(aud)
-
-			if err != nil {
-				return err
+			if p.ModeratorId != nil {
+				moderatorId = *p.ModeratorId
 			}
 
 			doc := postDocument{
 				Id:             p.Id,
 				State:          p.State,
-				ModeratorId:    p.ModeratorId,
+				ModeratorId:    moderatorId,
 				ContributorId:  p.ContributorId,
 				Content:        p.Content,
 				Brand:          brandDoc,

@@ -25,7 +25,7 @@ func NewUpdatePostBrandHandler(pr post.Repository, pi post.IndexRepository) Upda
 
 func (h UpdatePostBrandHandler) Handle(ctx context.Context, cmd UpdatePostBrand) (*post.Post, error) {
 
-	pendingPost, err := h.pr.UpdatePostContent(ctx, cmd.Principal, cmd.PostId, func(post *post.Post) error {
+	pendingPost, err := h.pr.UpdatePostBrand(ctx, cmd.Principal, cmd.PostId, func(post *post.Post) error {
 
 		brand, err := h.pr.GetBrandById(ctx, cmd.BrandId)
 

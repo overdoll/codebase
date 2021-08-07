@@ -34,15 +34,7 @@ func NewResourceS3Repository(session *session.Session) ResourceS3Repository {
 func (r ResourceS3Repository) GetComposer(ctx context.Context) (*tusd.StoreComposer, error) {
 	s3Client := s3.New(r.session)
 
-	store := s3store.S3Store{
-		Bucket:            UploadsBucket,
-		Service:           s3Client,
-		MaxPartSize:       5 * 1024 * 1024 * 1024,
-		PreferredPartSize: 5 * 1024 * 1024,
-		MinPartSize:       0,
-		MaxObjectSize:     5 * 1024 * 1024 * 1024 * 1024,
-		MaxMultipartParts: 10,
-	}
+	store := s3store.New(UploadsBucket, s3Client)
 
 	composer := tusd.NewStoreComposer()
 	store.UseIn(composer)
@@ -72,7 +64,10 @@ func (r ResourceS3Repository) CreateResources(ctx context.Context, uploads []str
 		}
 
 		// create a new resource - our url + the content type that came back from S3
-		newResource, err := resource.NewResource(uploadId, *resp.ContentType)
+
+		fileType := resp.Metadata["Filetype"]
+
+		newResource, err := resource.NewResource(uploadId, *fileType)
 
 		if err != nil {
 			return nil, err
@@ -97,7 +92,6 @@ func (r ResourceS3Repository) ProcessResources(ctx context.Context, prefix strin
 		if target.IsProcessed() {
 			continue
 		}
-
 
 		fileId := strings.Split(target.Url(), "+")[0]
 
