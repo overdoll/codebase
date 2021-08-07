@@ -144,6 +144,11 @@ func MarshalCharacterToGraphQL(result *post.Character) *Character {
 }
 
 func MarshalResourceToGraphQL(res *resource.Resource) *Resource {
+
+	if res == nil {
+		return nil
+	}
+
 	var resourceType ResourceType
 
 	if res.IsImage() {

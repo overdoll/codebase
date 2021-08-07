@@ -15,8 +15,8 @@ import (
 )
 
 type CharacterModified struct {
-	Name  string
-	Media struct {
+	Name   string
+	Series struct {
 		Title string
 	}
 }
@@ -68,8 +68,8 @@ type _Any map[string]interface{}
 type AccountPosts struct {
 	Entities []struct {
 		Account struct {
-			ID    string
-			Posts *struct {
+			ID            string
+			Contributions *struct {
 				Edges []*struct {
 					Node PostModified
 				}
@@ -140,31 +140,6 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	// check to make sure post is in a draft state
 	require.Equal(t, types.PostStateDraft, createPost.CreatePost.Post.State)
-
-	// check to make sure post exists for our account
-	var accountPosts AccountPosts
-
-	err = client.Query(context.Background(), &accountPosts, map[string]interface{}{
-		"representations": []_Any{
-			{
-				"__typename": "Account",
-				"id":         "QWNjb3VudDoxcTdNSjVJeVJUVjBYNEoyN0YzbTV3R0Q1bWo=",
-			},
-		},
-	})
-
-	require.NoError(t, err)
-
-	exists := false
-
-	for _, post := range accountPosts.Entities[0].Account.Posts.Edges {
-		if post.Node.ID == newPostId {
-			exists = true
-		}
-	}
-
-	// ensure this post will exist and is assigned to our moderator
-	require.True(t, exists)
 
 	// upload some files - this is required before running update command
 	tusClient, _ := getTusClient(t, pass)
@@ -260,7 +235,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	require.NoError(t, err)
 	require.Equal(t, types.PostStateProcessing, submitPost.SubmitPost.Post.State)
-	require.Equal(t, true, submitPost.SubmitPost.InReview)
+	require.Equal(t, true, submitPost.SubmitPost.InReview, "expected post submitted to be in review")
 
 	// now, we do workflows for submissions
 	// submitPost comes after

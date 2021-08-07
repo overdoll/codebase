@@ -5,9 +5,11 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path"
 	"strings"
 	"testing"
 
+	"github.com/bazelbuild/rules_go/go/tools/bazel"
 	"github.com/eventials/go-tus"
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
@@ -41,14 +43,23 @@ func getTusClient(t *testing.T, pass *passport.Passport) (*tus.Client, *http.Cli
 
 	cli, _ := clients.NewHTTPClientWithHeaders(pass)
 
-	client, _ := tus.NewClient(StingTusClientAddr, &tus.Config{HttpClient: cli})
+	// use a custom http client so we can attach our passport
+	cfg := tus.DefaultConfig()
+	//cfg.HttpClient = cli
+
+	client, err := tus.NewClient(StingTusClientAddr, cfg)
+	require.NoError(t, err)
 
 	return client, cli
 }
 
-func uploadFileWithTus(t *testing.T, tusClient *tus.Client, file string) string {
+func uploadFileWithTus(t *testing.T, tusClient *tus.Client, filePath string) string {
 
-	f, err := os.Open(file)
+	// use bazel runfiles path
+	dir, err := bazel.RunfilesPath()
+	require.NoError(t, err)
+
+	f, err := os.Open(path.Join(dir, filePath))
 	require.NoError(t, err)
 
 	defer f.Close()

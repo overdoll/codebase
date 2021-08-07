@@ -106,10 +106,10 @@ func TestSearchBrand(t *testing.T) {
 	var searchSeries SearchBrands
 
 	err := client.Query(context.Background(), &searchSeries, map[string]interface{}{
-		"name": graphql.String("Default Brand"),
+		"name": graphql.String("Non-Default Brand"),
 	})
 
 	require.NoError(t, err)
 	require.Len(t, searchSeries.Brands.Edges, 1)
-	require.Equal(t, "Default Brand", searchSeries.Brands.Edges[0].Node.Name)
+	require.Equal(t, "Non-Default Brand", searchSeries.Brands.Edges[0].Node.Name)
 }
