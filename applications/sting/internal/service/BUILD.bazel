@@ -29,6 +29,7 @@ go_test(
     ],
     deps = [
         ":service",
+        "//applications/sting/internal/adapters",
         "//applications/sting/internal/app/workflows",
         "//applications/sting/internal/ports",
         "//applications/sting/internal/ports/graphql/types",

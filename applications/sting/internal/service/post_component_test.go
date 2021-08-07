@@ -253,11 +253,11 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	var newPostId string
 
 	env := getWorkflowEnvironment(t)
+	es := bootstrap.InitializeElasticSearchSession()
 
 	createPost(t, client, env, func(postId string) func() {
 		return func() {
 			// need to refresh the ES index or else the post wont be found
-			es := bootstrap.InitializeElasticSearchSession()
 			_, err := es.Refresh(adapters.PostIndexName).Do(context.Background())
 
 			newPostId = postId
@@ -272,7 +272,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 				"representations": []_Any{
 					{
 						"__typename": "Account",
-						"id":         "QWNjb3VudDoxcTdNSjVJeVJUVjBYNEoyN0YzbTV3R0Q1bWo=",
+						"id":         "QWNjb3VudDoxcTdNSjNKa2hjZGNKSk5xWmV6ZGZRdDVwWjY=",
 					},
 				},
 			})
@@ -282,7 +282,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 			exists := false
 
 			for _, post := range accountPosts.Entities[0].Account.ModeratorPostsQueue.Edges {
-				if post.Node.Reference == newPostId {
+				if post.Node.Reference == postId {
 					exists = true
 				}
 			}
@@ -308,9 +308,37 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	post := getPost(t, newPostId)
 
-	// check to make sure post is in rejected state
+	// check to make sure post is in published state
 	require.Equal(t, types.PostStatePublished, post.Post.State)
 
+	// refresh index
+	_, err := es.Refresh(adapters.PostIndexName).Do(context.Background())
+	require.NoError(t, err)
+
+	// query accountPosts once more, make sure post is no longer visible
+	var newAccountPosts AccountPosts
+
+	err = client.Query(context.Background(), &newAccountPosts, map[string]interface{}{
+		"representations": []_Any{
+			{
+				"__typename": "Account",
+				"id":         "QWNjb3VudDoxcTdNSjNKa2hjZGNKSk5xWmV6ZGZRdDVwWjY=",
+			},
+		},
+	})
+
+	require.NoError(t, err)
+
+	exists := false
+
+	for _, post := range newAccountPosts.Entities[0].Account.ModeratorPostsQueue.Edges {
+		if post.Node.Reference == newPostId {
+			exists = true
+			break
+		}
+	}
+
+	require.False(t, exists, "should no longer be in the moderator posts queue")
 }
 
 // Test_CreatePost_Discard - discard post
