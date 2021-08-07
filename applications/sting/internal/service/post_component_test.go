@@ -7,9 +7,12 @@ import (
 
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
+	"go.temporal.io/sdk/testsuite"
+	"overdoll/applications/sting/internal/adapters"
 	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	sting "overdoll/applications/sting/proto"
+	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/passport"
 )
@@ -65,19 +68,6 @@ func getPost(t *testing.T, id string) Post {
 
 type _Any map[string]interface{}
 
-type AccountPosts struct {
-	Entities []struct {
-		Account struct {
-			ID            string
-			Contributions *struct {
-				Edges []*struct {
-					Node PostModified
-				}
-			}
-		} `graphql:"... on Account"`
-	} `graphql:"_entities(representations: $representations)"`
-}
-
 type CreatePost struct {
 	CreatePost *struct {
 		Post *PostModified
@@ -121,7 +111,7 @@ type SubmitPost struct {
 	} `graphql:"submitPost(input: $input)"`
 }
 
-func createPost(t *testing.T, client *graphql.Client) {
+func createPost(t *testing.T, client *graphql.Client, env *testsuite.TestWorkflowEnvironment, callback func(string) func()) {
 	var createPost CreatePost
 
 	err := client.Mutate(context.Background(), &createPost, nil)
@@ -229,36 +219,26 @@ func createPost(t *testing.T, client *graphql.Client) {
 	require.Equal(t, types.PostStateProcessing, submitPost.SubmitPost.Post.State)
 	require.Equal(t, true, submitPost.SubmitPost.InReview, "expected post submitted to be in review")
 
-	// now, we do workflows for submissions
-	// submitPost comes after
-	env := getWorkflowEnvironment(t)
-
-	// we need to publish the post or else it will get stuck in an infinite loop (we reassign the moderator every 24 hours)
-	env.RegisterDelayedCallback(func() {
-
-		// setup another environment since we cant execute multiple workflows
-		newEnv := getWorkflowEnvironment(t)
-		stingClient := getGrpcClient(t)
-
-		// "publish" pending post
-		_, e := stingClient.PublishPost(context.Background(), &sting.PostRequest{Id: newPostReference})
-		require.NoError(t, e)
-
-		// execute workflow manually since it wont be executed right here
-		newEnv.ExecuteWorkflow(workflows.PublishPost, newPostReference)
-		require.True(t, newEnv.IsWorkflowCompleted())
-		require.NoError(t, newEnv.GetWorkflowError())
-
-	}, time.Hour*24)
+	// we need to submit the post, in which our tests will do an action
+	env.RegisterDelayedCallback(callback(newPostReference), time.Hour*24)
 
 	env.ExecuteWorkflow(workflows.SubmitPost, newPostReference)
 
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
+}
 
-	// ensure that the post is now published
-	postState := getPost(t, newPostReference)
-	require.Equal(t, types.PostStatePublished, postState.Post.State)
+type AccountPosts struct {
+	Entities []struct {
+		Account struct {
+			ID                  string
+			ModeratorPostsQueue *struct {
+				Edges []*struct {
+					Node PostModified
+				}
+			}
+		} `graphql:"... on Account"`
+	} `graphql:"_entities(representations: $representations)"`
 }
 
 // TestCreatePost_Submit_and_review - do a complete post flow (create post, add all necessary options, and then submit it)
@@ -270,92 +250,161 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	client, _ := getGraphqlClient(t, pass)
 
+	var newPostId string
+
+	env := getWorkflowEnvironment(t)
+
+	createPost(t, client, env, func(postId string) func() {
+		return func() {
+			// need to refresh the ES index or else the post wont be found
+			es := bootstrap.InitializeElasticSearchSession()
+			_, err := es.Refresh(adapters.PostIndexName).Do(context.Background())
+
+			newPostId = postId
+
+			// at this point, our post is put into the moderation queue. check for existence here
+			// grab all pending posts for our moderator
+			client, _ := getGraphqlClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+
+			var accountPosts AccountPosts
+
+			err = client.Query(context.Background(), &accountPosts, map[string]interface{}{
+				"representations": []_Any{
+					{
+						"__typename": "Account",
+						"id":         "QWNjb3VudDoxcTdNSjVJeVJUVjBYNEoyN0YzbTV3R0Q1bWo=",
+					},
+				},
+			})
+
+			require.NoError(t, err)
+
+			exists := false
+
+			for _, post := range accountPosts.Entities[0].Account.ModeratorPostsQueue.Edges {
+				if post.Node.Reference == newPostId {
+					exists = true
+				}
+			}
+
+			// ensure this post will exist and is assigned to our moderator
+			require.True(t, exists, "post exists for moderator")
+
+			// setup another environment since we cant execute multiple workflows
+			newEnv := getWorkflowEnvironment(t)
+
+			stingClient := getGrpcClient(t)
+
+			// "publish" pending post
+			_, e := stingClient.PublishPost(context.Background(), &sting.PostRequest{Id: postId})
+			require.NoError(t, e)
+
+			// execute workflow manually since it wont be executed right here
+			newEnv.ExecuteWorkflow(workflows.PublishPost, postId)
+			require.True(t, newEnv.IsWorkflowCompleted())
+			require.NoError(t, newEnv.GetWorkflowError())
+		}
+	})
+
+	post := getPost(t, newPostId)
+
+	// check to make sure post is in rejected state
+	require.Equal(t, types.PostStatePublished, post.Post.State)
+
 }
 
-//// Test_CreatePost_Discard - discard post
-//func TestCreatePost_Discard(t *testing.T) {
-//	t.Parallel()
-//
-//	env := getWorkflowEnvironment(t)
-//
-//	var newPostId string
-//
-//	createPost(t, env, func(postId string) func() {
-//		return func() {
-//			newPostId = postId
-//
-//			// setup another environment since we cant execute multiple workflows
-//			newEnv := getWorkflowEnvironment(t)
-//
-//			stingClient := getGrpcClient(t)
-//
-//			// "discard" pending post
-//			_, e := stingClient.DiscardPost(context.Background(), &sting.PostRequest{Id: postId})
-//			require.NoError(t, e)
-//
-//			// execute workflow manually since it wont be executed right here
-//			newEnv.ExecuteWorkflow(workflows.DiscardPost, postId)
-//
-//			require.True(t, newEnv.IsWorkflowCompleted())
-//			require.NoError(t, newEnv.GetWorkflowError())
-//		}
-//	})
-//
-//	pendingPost := getPost(t, newPostId)
-//
-//	// check to make sure post is in rejected state
-//	require.Equal(t, types.PostStateDiscarded, pendingPost.Post.State)
-//}
-//
-//// Test_CreatePost_Reject - reject post
-//func TestCreatePost_Reject_undo_reject(t *testing.T) {
-//	t.Parallel()
-//
-//	var newPostId string
-//
-//	env := getWorkflowEnvironment(t)
-//
-//	createPost(t, env, func(postId string) func() {
-//		return func() {
-//			newPostId = postId
-//			// setup another environment since we cant execute multiple workflows
-//
-//			stingClient := getGrpcClient(t)
-//
-//			// "reject" pending post
-//			_, e := stingClient.RejectPost(context.Background(), &sting.PostRequest{Id: postId})
-//			require.NoError(t, e)
-//
-//			pendingPost := getPost(t, newPostId)
-//
-//			// make sure post is in rejected state
-//			require.Equal(t, types.PostStateRejected, pendingPost.Post.State)
-//
-//			// UNDO
-//			_, e = stingClient.UndoPost(context.Background(), &sting.PostRequest{Id: postId})
-//			require.NoError(t, e)
-//
-//			newEnv := getWorkflowEnvironment(t)
-//			newEnv.ExecuteWorkflow(workflows.UndoPost, postId)
-//
-//			require.True(t, newEnv.IsWorkflowCompleted())
-//			require.NoError(t, newEnv.GetWorkflowError())
-//
-//			// CHECK STATUS
-//
-//			pendingPost = getPost(t, newPostId)
-//
-//			// check to make sure post is still in "review" state (since we did the undo)
-//			require.Equal(t, types.PostStateReview, pendingPost.Post.State)
-//
-//			// need to reject again, or else we will be in an infinite loop
-//			_, e = stingClient.RejectPost(context.Background(), &sting.PostRequest{Id: postId})
-//			require.NoError(t, e)
-//		}
-//	})
-//
-//	pendingPost := getPost(t, newPostId)
-//
-//	// check to make sure post is in rejected state
-//	require.Equal(t, types.PostStateRejected, pendingPost.Post.State)
-//}
+// Test_CreatePost_Discard - discard post
+func TestCreatePost_Discard(t *testing.T) {
+	t.Parallel()
+
+	pass := passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
+
+	client, _ := getGraphqlClient(t, pass)
+
+	env := getWorkflowEnvironment(t)
+
+	var newPostId string
+
+	createPost(t, client, env, func(postId string) func() {
+		return func() {
+			newPostId = postId
+
+			// setup another environment since we cant execute multiple workflows
+			newEnv := getWorkflowEnvironment(t)
+
+			stingClient := getGrpcClient(t)
+
+			// "discard" pending post
+			_, e := stingClient.DiscardPost(context.Background(), &sting.PostRequest{Id: postId})
+			require.NoError(t, e)
+
+			// execute workflow manually since it wont be executed right here
+			newEnv.ExecuteWorkflow(workflows.DiscardPost, postId)
+
+			require.True(t, newEnv.IsWorkflowCompleted())
+			require.NoError(t, newEnv.GetWorkflowError())
+		}
+	})
+
+	post := getPost(t, newPostId)
+
+	// check to make sure post is in a dicarded state
+	require.Equal(t, types.PostStateDiscarded, post.Post.State)
+	require.Len(t, post.Post.Content, 0)
+}
+
+// Test_CreatePost_Reject - reject post
+func TestCreatePost_Reject_undo_reject(t *testing.T) {
+	t.Parallel()
+
+	pass := passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
+
+	client, _ := getGraphqlClient(t, pass)
+
+	env := getWorkflowEnvironment(t)
+
+	var newPostId string
+
+	createPost(t, client, env, func(postId string) func() {
+		return func() {
+			newPostId = postId
+			// setup another environment since we cant execute multiple workflows
+
+			stingClient := getGrpcClient(t)
+
+			// "reject" pending post
+			_, e := stingClient.RejectPost(context.Background(), &sting.PostRequest{Id: postId})
+			require.NoError(t, e)
+
+			post := getPost(t, newPostId)
+
+			// make sure post is in rejected state
+			require.Equal(t, types.PostStateRejected, post.Post.State)
+
+			// UNDO
+			_, e = stingClient.UndoPost(context.Background(), &sting.PostRequest{Id: postId})
+			require.NoError(t, e)
+
+			newEnv := getWorkflowEnvironment(t)
+			newEnv.ExecuteWorkflow(workflows.UndoPost, postId)
+
+			require.True(t, newEnv.IsWorkflowCompleted())
+			require.NoError(t, newEnv.GetWorkflowError())
+
+			// CHECK STATUS
+			post = getPost(t, newPostId)
+
+			// check to make sure post is still in "review" state (since we did the undo)
+			require.Equal(t, types.PostStateReview, post.Post.State)
+
+			// need to reject again, or else we will be in an infinite loop
+			_, e = stingClient.RejectPost(context.Background(), &sting.PostRequest{Id: postId})
+			require.NoError(t, e)
+		}
+	})
+
+	post := getPost(t, newPostId)
+
+	// check to make sure post is in rejected state
+	require.Equal(t, types.PostStateRejected, post.Post.State)
+}
