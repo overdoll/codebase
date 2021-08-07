@@ -23,9 +23,6 @@ import (
 	"overdoll/libraries/tests"
 )
 
-const customCharacterName = "test"
-const customMediaName = "asdasd"
-
 const StingHttpAddr = ":6666"
 const StingGraphqlClientAddr = "http://:6666/graphql"
 const StingTusClientAddr = "http://:6666/upload"

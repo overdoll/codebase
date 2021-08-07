@@ -138,7 +138,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllAudience(ctx context.Context)
 		},
 	)
 
-	err := scanner.RunIterator(ctx, seriesTable, func(iter *gocqlx.Iterx) error {
+	err := scanner.RunIterator(ctx, audienceTable, func(iter *gocqlx.Iterx) error {
 
 		var m audience
 

@@ -127,7 +127,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllBrands(ctx context.Context) e
 		},
 	)
 
-	err := scanner.RunIterator(ctx, seriesTable, func(iter *gocqlx.Iterx) error {
+	err := scanner.RunIterator(ctx, brandTable, func(iter *gocqlx.Iterx) error {
 
 		var m brand
 

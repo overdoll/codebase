@@ -65,7 +65,7 @@ const postIndex = `
 							"analyzer": "english"
 						},
 						"standard": {
-							"type": "number"
+							"type": "integer"
 						},
 						"created_at": {
 							"type": "date"
