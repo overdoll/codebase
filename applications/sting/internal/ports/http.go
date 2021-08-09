@@ -50,14 +50,13 @@ func NewHttpServer(app *app.Application, client client.Client) http.Handler {
 		Resolvers: gen.NewResolver(app, client),
 	})))
 
-	// tusd
 	composer, err := app.Commands.TusComposer.Handle(context.Background())
 
 	if err != nil {
 		zap.S().Fatal("failed to get composer ", zap.Error(err))
 	}
 
-	handler, err := tusd.NewHandler(tusd.Config{
+	handler, err := tusd.NewUnroutedHandler(tusd.Config{
 		BasePath:                "/api/upload/",
 		StoreComposer:           composer,
 		RespectForwardedHeaders: true,
@@ -67,10 +66,14 @@ func NewHttpServer(app *app.Application, client client.Client) http.Handler {
 		zap.S().Fatal("failed to create handler ", zap.Error(err))
 	}
 
-	rtr.POST("/api/upload/", gin.WrapF(handler.PostFile))
-	rtr.HEAD("/api/upload/:id", gin.WrapF(handler.HeadFile))
-	rtr.PATCH("/api/upload/:id", gin.WrapF(handler.PatchFile))
-	rtr.GET("/api/upload/:id", gin.WrapF(handler.GetFile))
+	rtr.POST("/api/upload/", gin.WrapH(http.StripPrefix("/api/upload/", handler.Middleware(http.HandlerFunc(handler.PostFile)))))
+	rtr.HEAD("/api/upload/:id", gin.WrapH(http.StripPrefix("/api/upload/", handler.Middleware(http.HandlerFunc(handler.HeadFile)))))
+	rtr.PATCH("/api/upload/:id", gin.WrapH(http.StripPrefix("/api/upload/", handler.Middleware(http.HandlerFunc(handler.PatchFile)))))
+	rtr.GET("/api/upload/:id", gin.WrapH(http.StripPrefix("/api/upload/", handler.Middleware(http.HandlerFunc(handler.GetFile)))))
+
+	if composer.UsesTerminater {
+		rtr.DELETE("/api/upload/:id", gin.WrapH(http.StripPrefix("/api/upload/", handler.Middleware(http.HandlerFunc(handler.DelFile)))))
+	}
 
 	return rtr
 }

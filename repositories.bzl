@@ -202,13 +202,6 @@ def go_repositories():
         sum = "h1:6MnRN8NT7+YBpUIWxHtefFZOKTAPgGjpQSxqLNn0+qY=",
         version = "v2.1.1",
     )
-    go_repository(
-        name = "com_github_chai2010_webp",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/chai2010/webp",
-        sum = "h1:4Ei0/BRroMF9FaXDG2e4OxwFcuW2vcXd+A6tyqTJUQQ=",
-        version = "v1.1.0",
-    )
 
     go_repository(
         name = "com_github_client9_misspell",
@@ -383,6 +376,13 @@ def go_repositories():
         sum = "h1:u8491cBMTQ8ft8aeV+adlcytMZylmA5nnwwkRZjI8vw=",
         version = "v1.3.0",
     )
+    go_repository(
+        name = "com_github_frankban_quicktest",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/frankban/quicktest",
+        sum = "h1:yNZif1OkDfNoDfb9zZa9aXIpejNR4F23Wely0c+Qdqk=",
+        version = "v1.13.0",
+    )
 
     go_repository(
         name = "com_github_fsnotify_fsnotify",
@@ -398,6 +398,14 @@ def go_repositories():
         sum = "h1:wQHKEahhL6wmXdzwWG11gIVCkOv05bNOh+Rxn0yngAk=",
         version = "v1.0.0",
     )
+    go_repository(
+        name = "com_github_gin_contrib_cors",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/gin-contrib/cors",
+        sum = "h1:doAsuITavI4IOcd0Y19U4B+O0dNWihRyX//nn4sEmgA=",
+        version = "v1.3.1",
+    )
+
     go_repository(
         name = "com_github_gin_contrib_sse",
         build_file_proto_mode = "disable",
@@ -1878,6 +1886,20 @@ def go_repositories():
         importpath = "gopkg.in/fsnotify.v1",
         sum = "h1:xOHLXZwVvI9hhs+cLKq5+I5onOuwQLhQwiu63xxlHs4=",
         version = "v1.4.7",
+    )
+    go_repository(
+        name = "in_gopkg_go_playground_assert_v1",
+        build_file_proto_mode = "disable",
+        importpath = "gopkg.in/go-playground/assert.v1",
+        sum = "h1:xoYuJVE7KT85PYWrN730RguIQO0ePzVRfFMXadIrXTM=",
+        version = "v1.2.1",
+    )
+    go_repository(
+        name = "in_gopkg_go_playground_validator_v9",
+        build_file_proto_mode = "disable",
+        importpath = "gopkg.in/go-playground/validator.v9",
+        sum = "h1:SvGtYmN60a5CVKTOzMSyfzWDeZRxRuGvRQyEAKbw1xc=",
+        version = "v9.29.1",
     )
 
     go_repository(
