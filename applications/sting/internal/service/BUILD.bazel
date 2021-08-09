@@ -40,6 +40,7 @@ go_test(
         "//libraries/graphql/relay",
         "//libraries/passport",
         "//libraries/tests",
+        "@com_github_capslock_studio_go_webpbin//:go-webpbin",
         "@com_github_eventials_go_tus//:go-tus",
         "@com_github_shurcool_graphql//:graphql",
         "@com_github_stretchr_testify//require",

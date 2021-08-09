@@ -11,6 +11,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/CapsLock-Studio/go-webpbin"
 	"github.com/bazelbuild/rules_go/go/tools/bazel"
 	"github.com/eventials/go-tus"
 	"github.com/shurcooL/graphql"
@@ -120,7 +121,7 @@ func startService() bool {
 
 	ok := tests.WaitForPort(StingHttpAddr)
 	if !ok {
-		log.Println("Timed out waiting for sting HTTP to come up")
+		log.Println("timed out waiting for sting HTTP to come up")
 		return false
 	}
 
@@ -133,7 +134,16 @@ func startService() bool {
 	ok = tests.WaitForPort(StingGrpcAddr)
 
 	if !ok {
-		log.Println("Timed out waiting for sting GRPC to come up")
+		log.Println("timed out waiting for sting GRPC to come up")
+		return false
+	}
+
+	// pre-install webp so that our workflows dont have to
+	err := webpbin.NewCWebP().BinWrapper.Run()
+
+	if err != nil {
+		log.Printf("could not install webp: %v", err)
+		return false
 	}
 
 	return true

@@ -8,7 +8,7 @@ import { Helmet } from 'react-helmet-async'
 import { Alert, AlertDescription, AlertIcon, Box, Center, Flex, Heading, Text, useToast } from '@chakra-ui/react'
 import { Icon } from '@//:modules/content'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
-import { graphql, useMutation, usePreloadedQuery } from 'react-relay/hooks'
+import { graphql, useMutation, usePreloadedQuery, useRelayEnvironment } from 'react-relay/hooks'
 import SignBadgeCircle
   from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
 import { StringParam, useQueryParam } from 'use-query-params'
@@ -55,6 +55,8 @@ export default function Token ({ prepared }: Props): Node {
   const [verifyToken, isVerifyingToken] = useMutation(
     VerifyTokenMutationGQL
   )
+
+  const environment = useRelayEnvironment()
 
   const history = useHistory()
 

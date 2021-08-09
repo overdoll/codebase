@@ -313,6 +313,7 @@ const routes: Array<Route> = [
                 if (ability.can('manage', 'pendingPosts')) {
                   return true
                 }
+
                 return false
               }
             ],

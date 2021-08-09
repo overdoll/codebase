@@ -205,6 +205,9 @@ func createPost(t *testing.T, client *graphql.Client, env *testsuite.TestWorkflo
 
 	require.NotNil(t, updatePostAudience.UpdatePostAudience.Post.Audience)
 	require.Equal(t, "Standard Audience", updatePostAudience.UpdatePostAudience.Post.Audience.Title)
+	//fmt.Println(newPostId)
+	//require.False(t, true)
+	//return
 
 	// finally, submit the post for review
 	var submitPost SubmitPost

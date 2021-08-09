@@ -245,7 +245,7 @@ func (r *Resource) FullUrls() []*Url {
 		extension := ""
 
 		if formats != nil {
-			extension = "." + formats[0]
+			extension = formats[0]
 		}
 
 		domain := os.Getenv("APP_URL")

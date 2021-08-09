@@ -2,10 +2,12 @@ package service_test
 
 import (
 	"context"
+	"os"
 	"testing"
 
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
+	"overdoll/applications/sting/internal/ports/graphql/types"
 )
 
 type SearchCharacters struct {
@@ -91,13 +93,15 @@ type SearchBrands struct {
 	Brands struct {
 		Edges []struct {
 			Node struct {
-				Name string
+				Name      string
+				Thumbnail *types.Resource
 			}
 		}
 	} `graphql:"brands(name: $name)"`
 }
 
 // TestSearchBrand - search some brands
+// we also test the resources here too
 func TestSearchBrand(t *testing.T) {
 	t.Parallel()
 
@@ -112,4 +116,9 @@ func TestSearchBrand(t *testing.T) {
 	require.NoError(t, err)
 	require.Len(t, searchSeries.Brands.Edges, 1)
 	require.Equal(t, "Non-Default Brand", searchSeries.Brands.Edges[0].Node.Name)
+
+	// make sure correct URLs are generated
+	require.NotNil(t, searchSeries.Brands.Edges[0].Node.Thumbnail)
+	require.Equal(t, os.Getenv("STATIC_URL")+"/thumbnails/1pcKZyoYFxZRyidV9XHd1WyPbrj.png", string(searchSeries.Brands.Edges[0].Node.Thumbnail.Urls[0].URL))
+	require.Equal(t, "image/png", searchSeries.Brands.Edges[0].Node.Thumbnail.Urls[0].MimeType)
 }
