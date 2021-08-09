@@ -80,7 +80,7 @@ export default function LeftSidebar (props: Props): Node {
         boxShadow='md'
         overflowY='auto'
         flexShrink={0}
-        position='fixed'
+        position={{ base: 'fixed', xl: 'fixed' }}
         zIndex='sidebar'
         display={{
           base: isOpen ? 'block' : 'none',
@@ -110,6 +110,7 @@ export default function LeftSidebar (props: Props): Node {
           {props.children}
         </Stack>
       </Box>
+      <Box h='calc(100vh - 54px)' w='260px' display={{ base: 'initial', xl: 'none' }} />
     </>
   )
 }

@@ -21,7 +21,7 @@ const LogoutButtonGQL = graphql`
 export default function LogoutButton (): Node {
   const [logout, isLoggingOut] = useMutation(LogoutButtonGQL)
 
-  const [t] = useTranslation('nav')
+  const [t] = useTranslation('navigation')
 
   const history = useHistory()
 

@@ -10,7 +10,10 @@
       },
       "previous": {
         "title": "Previous Usernames",
-        "tooltip": "If a link with an old username is clicked, it will redirect to the new username. This behaviour may change in the future."
+        "tooltip": {
+          "title": "Your old usernames are replaced",
+          "hint": "If a link with an old username is clicked, it will redirect to the new username. This behaviour may change in the future."
+        }
       },
       "modal": {
         "header": "Enter a new username",

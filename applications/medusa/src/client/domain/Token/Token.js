@@ -96,6 +96,7 @@ export default function Token ({ prepared }: Props): Node {
   const refresh = () => {
     history.push('/join')
     history.go(0)
+    location.reload()
   }
 
   const data = query.viewAuthenticationToken

@@ -4,10 +4,8 @@
 
 import {
   Flex,
-  Stack,
   Text,
-  IconButton,
-  Heading, Box
+  IconButton, Box
 } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import { useState } from 'react'
@@ -20,7 +18,7 @@ import type { QueuePostsQuery } from '@//:artifacts/QueuePostsQuery.graphql'
 import ModeratePost from './ModeratePost/ModeratePost'
 import PostHeader from './PostHeader/PostHeader'
 import NoPostsPlaceholder from './NoPostsPlaceholder/NoPostsPlaceholder'
-import convertToMonthDay from '@//:modules/utilities/functions/date/convertToMonthDay'
+import convertToMonthDayTime from '@//:modules/utilities/functions/date/convertToMonthDayTime'
 
 import InterfaceArrowsButtonRight
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-button-right.svg'
@@ -136,7 +134,7 @@ export default function Posts (props: Props): Node {
           <Text
             color='gray.300' fontWeight='medium'
             size='md'
-          >{t('queue.post.title', { date: convertToMonthDay(currentPost.postedAt) })}
+          >{t('queue.post.title', { date: convertToMonthDayTime(currentPost.postedAt) })}
           </Text>
         </Flex>
         {(currentIndex + 1 !== data.moderatorPostsQueue?.edges.length || hasNext) &&

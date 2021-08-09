@@ -20,7 +20,7 @@ const ProfileButtonFragmentGQL = graphql`
 `
 
 export default function ProfileButton (props: Props): Node {
-  const [t] = useTranslation('nav')
+  const [t] = useTranslation('navigation')
 
   const viewer = useFragment(ProfileButtonFragmentGQL, props.viewer)
 

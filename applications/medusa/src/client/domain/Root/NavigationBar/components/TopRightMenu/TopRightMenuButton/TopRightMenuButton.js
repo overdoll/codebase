@@ -14,7 +14,7 @@ type Props = {
 }
 
 export default function TopRightMenuButton ({ path, label, icon, match }: Props): Node {
-  const [t] = useTranslation('nav')
+  const [t] = useTranslation('navigation')
 
   return (
     <NavLink to={path}>

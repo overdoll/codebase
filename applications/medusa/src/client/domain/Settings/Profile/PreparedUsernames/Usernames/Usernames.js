@@ -89,9 +89,9 @@ export default function Usernames ({ usernames }: Props): Node {
                 </AccordionButton>
                 <AccordionPanel pl={0} pr={0}>
                   <Flex mb={1}>
-                    <Text fontSize='sm' color='gray.100'>Your previous usernames are replaced</Text>
+                    <Text fontSize='sm' color='gray.100'>{t('profile.username.previous.tooltip.title')}</Text>
                     <InfoTip
-                      text={t('profile.username.previous.tooltip')}
+                      text={t('profile.username.previous.tooltip.hint')}
                     />
                   </Flex>
                   {data.usernames.edges.map((item, index) =>
