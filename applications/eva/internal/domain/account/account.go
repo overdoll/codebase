@@ -16,7 +16,7 @@ type AccountRole string
 type LockReason string
 
 const (
-	Staff    AccountRole = "staff"
+	Staff     AccountRole = "staff"
 	Moderator AccountRole = "moderator"
 )
 
@@ -29,12 +29,12 @@ type Account struct {
 
 	id string
 
-	username  string
-	email     string
-	roles     []AccountRole
-	verified  bool
-	avatar    string
-	locked    bool
+	username string
+	email    string
+	roles    []AccountRole
+	verified bool
+	avatar   string
+	locked   bool
 
 	lockedUntil  int
 	lockedReason LockReason
@@ -81,9 +81,9 @@ func NewAccount(id, username, email string) (*Account, error) {
 	}
 
 	return &Account{
-		id:        id,
-		username:  username,
-		email:     strings.ToLower(email),
+		id:       id,
+		username: username,
+		email:    strings.ToLower(email),
 	}, nil
 }
 
