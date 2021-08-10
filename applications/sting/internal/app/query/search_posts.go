@@ -31,7 +31,7 @@ func NewSearchPostsHandler(pr post.IndexRepository) SearchPostsHandler {
 
 func (h SearchPostsHandler) Handle(ctx context.Context, query SearchPosts) ([]*post.Post, error) {
 
-	filters, err := post.NewPostFilters(query.ModeratorId, query.ContributorId, query.AudienceId,  query.BrandId, query.CategoryIds, query.CharacterIds, query.SeriesIds)
+	filters, err := post.NewPostFilters(query.ModeratorId, query.ContributorId, query.AudienceId, query.BrandId, query.CategoryIds, query.CharacterIds, query.SeriesIds)
 
 	if err != nil {
 		return nil, err

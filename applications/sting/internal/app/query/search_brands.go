@@ -9,7 +9,7 @@ import (
 
 type SearchBrands struct {
 	Cursor *paging.Cursor
-	Name  *string
+	Name   *string
 }
 
 type SearchBrandsHandler struct {

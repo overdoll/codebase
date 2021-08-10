@@ -304,7 +304,7 @@ func (p *Post) UpdateBrandRequest(requester *principal.Principal, brand *Brand) 
 	return nil
 }
 
-func (p *Post) UpdateAudienceRequest(requester *principal.Principal, audience *Audience, ) error {
+func (p *Post) UpdateAudienceRequest(requester *principal.Principal, audience *Audience) error {
 
 	if err := p.CanUpdate(requester); err != nil {
 		return err
