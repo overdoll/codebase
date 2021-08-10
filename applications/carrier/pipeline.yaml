@@ -24,9 +24,9 @@ steps:
     coverage:
       - name: carrier.integration
         paths:
-          - ./applications/buffer/internal/adapters/**/coverage.dat
+          - ./applications/carrier/internal/adapters/**/coverage.dat
     targets:
-      - //applications/buffer/internal/adapters/...
+      - //applications/carrier/internal/adapters/...
 
   e2e_test:
     setup:
