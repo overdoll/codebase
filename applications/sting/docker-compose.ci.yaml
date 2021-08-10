@@ -5,7 +5,13 @@ services:
     entrypoint: ""
     command: /bin/sh -c "/app/applications/sting/internal/image.binary db migrate keyspace && /app/applications/sting/internal/image.binary db seed && /app/applications/sting/internal/image.binary index all && /app/applications/sting/internal/image.binary"
     env_file: ../../applications/sting/.env.ci
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.buffer.rule=Path(`/api/upload/{document}`) || Path(`/api/upload/`)"
+      - "traefik.http.routers.buffer.entrypoints=websecure"
+      - "traefik.http.routers.buffer.tls=true"
     depends_on:
+      - traefik
       - temporal
       - elasticsearch
       - minio

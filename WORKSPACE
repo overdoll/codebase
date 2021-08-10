@@ -112,5 +112,5 @@ container_pull(
     name = "go_base_image",
     registry = "docker.io",
     repository = "library/golang",
-    tag = "alpine",
+    tag = "1.16",
 )

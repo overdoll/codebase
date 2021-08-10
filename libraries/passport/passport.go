@@ -135,10 +135,11 @@ func AddToBody(r *http.Request, passport *Passport) error {
 // adding it to context so the application can access it
 func BodyToContext(c *gin.Context) *http.Request {
 	var body Body
-	var buf bytes.Buffer
 
+	var buf bytes.Buffer
 	tee := io.TeeReader(c.Request.Body, &buf)
-	err := json.NewDecoder(tee).Decode(&body)
+	bd, _ := ioutil.ReadAll(tee)
+	err := json.Unmarshal(bd, &body)
 	c.Request.Body = ioutil.NopCloser(&buf)
 
 	if err != nil {

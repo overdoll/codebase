@@ -8,8 +8,8 @@ go_library(
     deps = [
         "//applications/sting/internal/app",
         "//applications/sting/internal/app/command",
+        "//applications/sting/internal/app/workflows",
         "//applications/sting/internal/ports/graphql/types",
-        "//applications/sting/internal/ports/temporal/workflows",
         "//libraries/passport",
         "//libraries/principal",
         "@com_github_spf13_viper//:viper",

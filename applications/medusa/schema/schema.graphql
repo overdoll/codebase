@@ -20,9 +20,6 @@ type Account implements Node {
   """Whether or not this account is part of the moderation team"""
   isModerator: Boolean!
 
-  """Whether or not this account is an artist"""
-  isArtist: Boolean!
-
   """The details of the account lock"""
   lock: AccountLock
 
@@ -99,28 +96,8 @@ type Account implements Node {
   """
   recoveryCodes: [AccountMultiFactorRecoveryCode!]!
 
-  """Artist status for this account"""
-  artist: Artist
-
   """Posts queue specific to this account (when moderator)"""
   moderatorPostsQueue(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-  ): PostConnection!
-
-  """Posts specific to this account"""
-  posts(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
 
@@ -319,7 +296,10 @@ type AccountSession implements Node {
   """When the session was created"""
   created: String!
 
-  """If the session belongs to the currently authenticated account"""
+  """
+  If the session belongs to the currently authenticated account. This means that
+  the session cannot be revoked (or else we get weird stuff)
+  """
   current: Boolean!
 }
 
@@ -379,12 +359,48 @@ enum AddAccountEmailValidation {
   EMAIL_TAKEN
 }
 
-type Artist implements Node {
+type Audience implements Node & Object {
+  """An ID pointing to this audience."""
   id: ID!
-  doNotPostReason: String
 
-  """The account linked to this artist"""
-  account: Account!
+  """A url-friendly ID. Should be used when searching"""
+  slug: String!
+
+  """A URL pointing to the object's thumbnail."""
+  thumbnail(
+    """The size of the resulting square image."""
+    size: Int
+  ): Resource!
+
+  """A title for this audience."""
+  title: String!
+
+  """Posts belonging to this audience"""
+  posts(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): PostConnection!
+}
+
+type AudienceConnection {
+  edges: [AudienceEdge!]!
+  pageInfo: PageInfo!
+}
+
+type AudienceEdge {
+  cursor: String!
+  node: Audience!
 }
 
 type AuthenticationToken {
@@ -403,15 +419,62 @@ type AuthenticationTokenAccountStatus {
   multiFactor: [MultiFactorType!]
 }
 
-type Category implements Node & Object {
-  """An ID pointing to this category."""
+type Brand implements Node & Object {
+  """An ID pointing to this brand."""
   id: ID!
+
+  """A url-friendly ID. Should be used when searching"""
+  slug: String!
 
   """A URL pointing to the object's thumbnail."""
   thumbnail(
     """The size of the resulting square image."""
     size: Int
-  ): URI!
+  ): Resource!
+
+  """A name for this brand."""
+  name: String!
+
+  """Posts belonging to this brand"""
+  posts(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): PostConnection!
+}
+
+type BrandConnection {
+  edges: [BrandEdge!]!
+  pageInfo: PageInfo!
+}
+
+type BrandEdge {
+  cursor: String!
+  node: Brand!
+}
+
+type Category implements Node & Object {
+  """An ID pointing to this category."""
+  id: ID!
+
+  """A url-friendly ID. Should be used when searching"""
+  slug: String!
+
+  """A URL pointing to the object's thumbnail."""
+  thumbnail(
+    """The size of the resulting square image."""
+    size: Int
+  ): Resource!
 
   """A title for this category."""
   title: String!
@@ -448,17 +511,20 @@ type Character implements Node & Object {
   """An ID pointing to this character."""
   id: ID!
 
+  """A url-friendly ID. Should be used when searching"""
+  slug: String!
+
   """A URL pointing to the object's thumbnail."""
   thumbnail(
     """The size of the resulting square image."""
     size: Int
-  ): URI!
+  ): Resource!
 
   """A name for this character."""
   name: String!
 
-  """The media linked to this character."""
-  media: Media!
+  """The series linked to this character."""
+  series: Series!
 
   """Posts belonging to this character"""
   posts(
@@ -488,17 +554,6 @@ type CharacterEdge {
   node: Character!
 }
 
-input CharacterRequest {
-  name: String!
-  customMediaName: String
-  existingMediaId: ID
-}
-
-type CharacterRequestType {
-  name: String!
-  media: String!
-}
-
 """Input for confirming the account email"""
 input ConfirmAccountEmailInput {
   """The ID that is sent for confirmation"""
@@ -519,16 +574,9 @@ enum ConfirmAccountEmailValidation {
   TOKEN_EXPIRED
 }
 
-type Content {
-  url: URI!
-}
-
 type Contributor implements Node {
   """The ID of the contributor"""
   id: ID!
-
-  """The account linked to this contributor"""
-  account: Account!
 }
 
 """Payload for a created pending post"""
@@ -552,38 +600,10 @@ enum CreateAccountWithAuthenticationTokenValidation {
   TOKEN_EXPIRED
 }
 
-"""Create pending post."""
-input CreatePostInput {
-  """Image IDs for the content"""
-  content: [String!]!
-
-  """Category IDs for this post"""
-  categoryIds: [ID!]!
-
-  """Ids for all the characters"""
-  characterIds: [ID!]!
-
-  """Requests (custom)"""
-  mediaRequests: [String!]
-  characterRequests: [CharacterRequest!]
-
-  """Existing artist's ID"""
-  existingArtist: ID
-
-  """Custom Artist's username"""
-  customArtistUsername: String
-
-  """The author of this post is the artist, as well as contributor"""
-  posterIsArtist: Boolean
-}
-
 """Payload for a created pending post"""
 type CreatePostPayload {
   """The pending post after the creation"""
   post: Post
-
-  """If this pending post will be in review or not"""
-  review: Boolean
 }
 
 """Input for removing an email from an account"""
@@ -705,47 +725,6 @@ input GrantAuthenticationTokenInput {
 type GrantAuthenticationTokenPayload {
   """The authentication token after starting"""
   authenticationToken: AuthenticationToken
-}
-
-type Media implements Node & Object {
-  """An ID pointing to this media."""
-  id: ID!
-
-  """A URL pointing to the object's thumbnail."""
-  thumbnail(
-    """The size of the resulting square image."""
-    size: Int
-  ): URI!
-
-  """A title for this media."""
-  title: String!
-
-  """Posts belonging to this media"""
-  posts(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-  ): PostConnection!
-}
-
-type MediaConnection {
-  edges: [MediaEdge!]!
-  pageInfo: PageInfo!
-}
-
-type MediaEdge {
-  cursor: String!
-  node: Media!
 }
 
 """Moderate the pending post input"""
@@ -927,8 +906,28 @@ type Mutation {
   """
   verifyAuthenticationToken(input: VerifyAuthenticationTokenInput!): VerifyAuthenticationTokenPayload
 
-  """Create a new pending post"""
-  createPost(input: CreatePostInput!): CreatePostPayload
+  """Create a new post"""
+  createPost: CreatePostPayload
+
+  """Update a post in draft status - brand"""
+  updatePostBrand(input: UpdatePostBrandInput!): UpdatePostBrandPayload
+
+  """Update a post in draft status - audience"""
+  updatePostAudience(input: UpdatePostAudienceInput!): UpdatePostAudiencePayload
+
+  """Update a post in draft status - content"""
+  updatePostContent(input: UpdatePostContentInput!): UpdatePostContentPayload
+
+  """Update a post in draft status - characters"""
+  updatePostCharacters(input: UpdatePostCharactersInput!): UpdatePostCharactersPayload
+
+  """Update a post in draft status - categories"""
+  updatePostCategories(input: UpdatePostCategoriesInput!): UpdatePostCategoriesPayload
+
+  """
+  Submit a post. Will be either in review or instantly move to publishing if the account is verified
+  """
+  submitPost(input: SubmitPostInput!): SubmitPostPayload
 
   """
   Moderate a specific pending post
@@ -969,7 +968,7 @@ interface Object {
   thumbnail(
     """The size of the resulting square image."""
     size: Int
-  ): URI!
+  ): Resource!
 }
 
 type PageInfo {
@@ -990,29 +989,29 @@ type Post implements Node {
   """The state of the post"""
   state: PostState!
 
-  """Represents the account that this post belongs to"""
-  artist: Account!
-
   """The moderator to whom this pending post was assigned"""
-  moderator: Account!
+  moderator: Account
 
   """The contributor who contributed this post"""
   contributor: Account!
 
   """Content belonging to this post"""
-  content: [Content!]!
-
-  """The media that was requested."""
-  mediaRequests: [String!]
-
-  """The characters that were requested"""
-  characterRequests: [CharacterRequestType!]
+  content: [Resource!]!
 
   """The date and time of when this post was created"""
-  postedAt: Time!
+  createdAt: Time!
+
+  """The date and time of when this post was posted"""
+  postedAt: Time
 
   """The date at which this pending post will be reassigned"""
-  reassignmentAt: Time!
+  reassignmentAt: Time
+
+  """Represents the audience that this post belongs to"""
+  audience: Audience
+
+  """Represents the brand that this post belongs to"""
+  brand: Brand
 
   """Categories that belong to this post"""
   categories: [Category!]!
@@ -1131,6 +1130,7 @@ type PostRejectionReasonEdge {
 }
 
 enum PostState {
+  Draft
   Publishing
   Review
   Published
@@ -1168,9 +1168,6 @@ type Query {
 
     """Filter by the account username."""
     username: String
-
-    """Filter whether or not this account is an artist."""
-    isArtist: Boolean = false
   ): AccountConnection!
 
   """
@@ -1181,6 +1178,40 @@ type Query {
   However, if the token is provided, and the ID is valid, it will show the token
   """
   viewAuthenticationToken(token: String): AuthenticationToken
+  audiences(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Search by title of the audience."""
+    title: String
+  ): AudienceConnection!
+  brands(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+    name: String
+  ): BrandConnection!
   categories(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
@@ -1197,7 +1228,9 @@ type Query {
     last: Int
     title: String
   ): CategoryConnection!
-  medias(
+
+  """Get or search all series"""
+  series(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
 
@@ -1212,7 +1245,9 @@ type Query {
     """Returns the last _n_ elements from the list."""
     last: Int
     title: String
-  ): MediaConnection!
+  ): SeriesConnection!
+
+  """Get or search all characters"""
   characters(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
@@ -1228,7 +1263,6 @@ type Query {
     """Returns the last _n_ elements from the list."""
     last: Int
     name: String
-    mediaTitle: String
   ): CharacterConnection!
 
   """Look up a single post"""
@@ -1259,8 +1293,8 @@ type Query {
     """Search by charcter Ids."""
     characterIds: [ID!]
 
-    """Search by media Ids."""
-    mediaIds: [ID!]
+    """Search by series Ids."""
+    seriesIds: [ID!]
   ): PostConnection!
 
   """
@@ -1298,6 +1332,30 @@ type ReissueAuthenticationTokenPayload {
 """Validation for reissuing authentication token"""
 enum ReissueAuthenticationTokenValidation {
   TOKEN_EXPIRED
+}
+
+"""
+A resource represents an image or a video format that contains an ID to uniquely identify it,
+and urls to access the resources. We have many urls in order to provide a fallback for older browsers
+
+We also identify the type of resource (image or video) to make it easy to distinguish them
+"""
+type Resource {
+  id: String!
+  type: ResourceType!
+  urls: [ResourceUrl!]!
+}
+
+"""Identifies the type of resource"""
+enum ResourceType {
+  IMAGE
+  VIDEO
+}
+
+"""A type representing a url to the resource and the mimetype"""
+type ResourceUrl {
+  url: URI!
+  mimeType: String!
 }
 
 """Revert the pending post audit log input"""
@@ -1344,6 +1402,65 @@ input RevokeAuthenticationTokenInput {
 type RevokeAuthenticationTokenPayload {
   """The authentication token that was removed"""
   revokedAuthenticationTokenId: ID!
+}
+
+type Series implements Node & Object {
+  """An ID pointing to this series."""
+  id: ID!
+
+  """A url-friendly ID. Should be used when searching"""
+  slug: String!
+
+  """A URL pointing to the object's thumbnail."""
+  thumbnail(
+    """The size of the resulting square image."""
+    size: Int
+  ): Resource!
+
+  """A title for this series."""
+  title: String!
+
+  """Posts belonging to this series"""
+  posts(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): PostConnection!
+}
+
+type SeriesConnection {
+  edges: [SeriesEdge!]!
+  pageInfo: PageInfo!
+}
+
+type SeriesEdge {
+  cursor: String!
+  node: Series!
+}
+
+"""Publish post."""
+input SubmitPostInput {
+  """The post to publish"""
+  id: ID!
+}
+
+"""Payload for submitting a post"""
+type SubmitPostPayload {
+  """The post after being submitted"""
+  post: Post
+
+  """Whether or not the submitted post is going in review"""
+  inReview: Boolean
 }
 
 scalar Time
@@ -1395,6 +1512,81 @@ type UpdateAccountUsernameAndRetainPreviousPayload {
 """Validation message for updating account username"""
 enum UpdateAccountUsernameAndRetainPreviousValidation {
   USERNAME_TAKEN
+}
+
+"""Update post audience."""
+input UpdatePostAudienceInput {
+  """The post to update"""
+  id: ID!
+
+  """The audience that this post belongs to"""
+  audienceId: ID!
+}
+
+"""Payload for updating a post"""
+type UpdatePostAudiencePayload {
+  """The post after the update"""
+  post: Post
+}
+
+"""Update post brand."""
+input UpdatePostBrandInput {
+  """The post to update"""
+  id: ID!
+
+  """The brand that this post belongs to"""
+  brandId: ID!
+}
+
+"""Payload for updating a post"""
+type UpdatePostBrandPayload {
+  """The post after the update"""
+  post: Post
+}
+
+"""Update post audience."""
+input UpdatePostCategoriesInput {
+  """The post to update"""
+  id: ID!
+
+  """Category IDs for this post"""
+  categoryIds: [ID!]!
+}
+
+"""Payload for updating a post"""
+type UpdatePostCategoriesPayload {
+  """The post after the update"""
+  post: Post
+}
+
+"""Update post characters."""
+input UpdatePostCharactersInput {
+  """The post to update"""
+  id: ID!
+
+  """Ids for all the characters"""
+  characterIds: [ID!]!
+}
+
+"""Payload for updating a post"""
+type UpdatePostCharactersPayload {
+  """The post after the update"""
+  post: Post
+}
+
+"""Update post audience."""
+input UpdatePostContentInput {
+  """The post to update"""
+  id: ID!
+
+  """Image IDs for the content"""
+  content: [String!]!
+}
+
+"""Payload for updating a post"""
+type UpdatePostContentPayload {
+  """The post after the update"""
+  post: Post
 }
 
 """An RFC 3986, RFC 3987, and RFC 6570 (level 4) compliant URI string."""

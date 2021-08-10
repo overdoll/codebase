@@ -43,23 +43,6 @@ applications = {
             sync("applications/sting/database", "/app/applications/sting/internal/local-image.binary.runfiles/overdoll/applications/sting/database"),
         ],
     },
-    "buffer": {
-        "type": "go",
-        "directory": "buffer",
-        "image_reference": "buffer-image",
-        "image_target": "//applications/buffer/internal:local-image",
-        "binary_target": "//applications/buffer/internal:internal",
-        "binary_output": "applications/buffer/internal/internal_/internal",
-        "container_workdir": "/app/applications/buffer/internal/local-image.binary.runfiles/overdoll/",
-        "container_binary": "applications/buffer/internal/local-image.binary_/local-image.binary",
-        "bazel_image": "bazel/applications/buffer/internal:local-image",
-        "dependencies": [
-            "applications/buffer/.env",
-        ],
-        "live_update": [
-            sync("applications/buffer/.env", "/app/applications/buffer/internal/local-image.binary.runfiles/overdoll/applications/buffer/.env"),
-        ],
-    },
     "carrier": {
         "type": "go",
         "directory": "carrier",

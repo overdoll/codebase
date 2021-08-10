@@ -1,6 +1,8 @@
 package scan
 
 import (
+	"context"
+	"log"
 	"math"
 	"strings"
 
@@ -27,7 +29,7 @@ func New(session gocqlx.Session, config Config) *Scan {
 	return &Scan{config: config, session: session}
 }
 
-func (s *Scan) RunIterator(table *table.Table, run func(iter *gocqlx.Iterx) error) error {
+func (s *Scan) RunIterator(ctx context.Context, table *table.Table, run func(iter *gocqlx.Iterx) error) error {
 
 	workers := s.config.NodesInCluster * s.config.CoresInNode * s.config.SmudgeFactor
 
@@ -82,10 +84,12 @@ func (s *Scan) RunIterator(table *table.Table, run func(iter *gocqlx.Iterx) erro
 
 			if err := run(iter); err != nil {
 				_ = iter.Close()
+				log.Fatalf("error with iterator: %v", err)
 				return err
 			}
 
 			if err := iter.Close(); err != nil {
+				log.Fatalf("error with closing iterator: %v", err)
 				return err
 			}
 		}
@@ -96,6 +100,7 @@ func (s *Scan) RunIterator(table *table.Table, run func(iter *gocqlx.Iterx) erro
 	// Query and displays data.
 
 	var wg errgroup.Group
+
 	wg.Go(sequencer)
 	for i := 0; i < workers; i++ {
 		wg.Go(worker)

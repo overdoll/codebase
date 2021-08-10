@@ -15,6 +15,7 @@ var categoryTable = table.New(table.Metadata{
 	Columns: []string{
 		"id",
 		"title",
+		"slug",
 		"thumbnail",
 	},
 	PartKey: []string{"id"},
@@ -23,6 +24,7 @@ var categoryTable = table.New(table.Metadata{
 
 type category struct {
 	Id        string `db:"id"`
+	Slug      string `db:"slug"`
 	Title     string `db:"title"`
 	Thumbnail string `db:"thumbnail"`
 }
@@ -48,7 +50,7 @@ func (r PostsCassandraRepository) GetCategoriesById(ctx context.Context, cats []
 	}
 
 	for _, cat := range categoriesModels {
-		categories = append(categories, post.UnmarshalCategoryFromDatabase(cat.Id, cat.Title, cat.Thumbnail))
+		categories = append(categories, post.UnmarshalCategoryFromDatabase(cat.Id, cat.Slug, cat.Title, cat.Thumbnail))
 	}
 
 	return categories, nil
@@ -72,7 +74,7 @@ func (r PostsCassandraRepository) GetCategoryById(ctx context.Context, categoryI
 		return nil, fmt.Errorf("failed to get category by id: %v", err)
 	}
 
-	return post.UnmarshalCategoryFromDatabase(cat.Id, cat.Title, cat.Thumbnail), nil
+	return post.UnmarshalCategoryFromDatabase(cat.Id, cat.Slug, cat.Title, cat.Thumbnail), nil
 }
 
 func (r PostsCassandraRepository) CreateCategories(ctx context.Context, categories []*post.Category) error {
@@ -88,6 +90,7 @@ func (r PostsCassandraRepository) CreateCategories(ctx context.Context, categori
 		batch.Query(
 			stmt,
 			cat.ID(),
+			cat.Slug(),
 			cat.Title(),
 			cat.Thumbnail(),
 		)

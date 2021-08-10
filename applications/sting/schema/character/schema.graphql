@@ -1,24 +1,27 @@
-type Media implements Node & Object @key(fields: "id") {
-  """An ID pointing to this media."""
+type Series implements Node & Object @key(fields: "id") {
+  """An ID pointing to this series."""
   id: ID!
+
+  """A url-friendly ID. Should be used when searching"""
+  slug: String!
 
   """A URL pointing to the object's thumbnail."""
   thumbnail(
     """The size of the resulting square image."""
     size: Int
-  ): URI!
+  ): Resource
 
-  """A title for this media."""
+  """A title for this series."""
   title: String!
 }
 
-type MediaEdge {
+type SeriesEdge {
   cursor: String!
-  node: Media!
+  node: Series!
 }
 
-type MediaConnection {
-  edges: [MediaEdge!]!
+type SeriesConnection {
+  edges: [SeriesEdge!]!
   pageInfo: PageInfo!
 }
 
@@ -26,17 +29,20 @@ type Character implements Node & Object @key(fields: "id") {
   """An ID pointing to this character."""
   id: ID!
 
+  """A url-friendly ID. Should be used when searching"""
+  slug: String!
+
   """A URL pointing to the object's thumbnail."""
   thumbnail(
     """The size of the resulting square image."""
     size: Int
-  ): URI!
+  ): Resource
 
   """A name for this character."""
   name: String!
 
-  """The media linked to this character."""
-  media: Media!
+  """The series linked to this character."""
+  series: Series!
 }
 
 type CharacterEdge {
@@ -50,7 +56,8 @@ type CharacterConnection {
 }
 
 extend type Query {
-  medias(
+  """Get or search all series"""
+  series(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
 
@@ -63,10 +70,11 @@ extend type Query {
     """Returns the last _n_ elements from the list."""
     last: Int
 
-    # filter by the title of the media
+    # filter by the title of the series
     title: String
-  ): MediaConnection!
+  ): SeriesConnection!
 
+  """Get or search all characters"""
   characters(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
@@ -82,9 +90,6 @@ extend type Query {
 
     # Filter by the name of the character
     name: String
-
-    # filter by the title of the media
-    mediaTitle: String
   ): CharacterConnection!
 }
 

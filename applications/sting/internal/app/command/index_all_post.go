@@ -11,7 +11,7 @@ type IndexAllPostsHandler struct {
 	pi post.IndexRepository
 }
 
-func NewIndexAllPendingPostsHandler(pr post.Repository, pi post.IndexRepository) IndexAllPostsHandler {
+func NewIndexAllPostsHandler(pr post.Repository, pi post.IndexRepository) IndexAllPostsHandler {
 	return IndexAllPostsHandler{pr: pr, pi: pi}
 }
 

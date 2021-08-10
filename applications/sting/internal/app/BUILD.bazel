@@ -8,5 +8,6 @@ go_library(
     deps = [
         "//applications/sting/internal/app/command",
         "//applications/sting/internal/app/query",
+        "//applications/sting/internal/app/workflows/activities",
     ],
 )

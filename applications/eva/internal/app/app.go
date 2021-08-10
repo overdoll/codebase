@@ -32,8 +32,7 @@ type Commands struct {
 	GrantAccountAccessWithAuthenticationToken command.GrantAccountAccessWithAuthenticationTokenHandler
 
 	// operator handlers don't do any permission checks
-	CreateAccountOperator command.CreateAccountOperatorHandler
-	LockAccountOperator   command.LockAccountOperatorHandler
+	LockAccountOperator command.LockAccountOperatorHandler
 }
 
 type Queries struct {

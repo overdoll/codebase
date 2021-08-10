@@ -23,8 +23,6 @@ type Account struct {
 	IsStaff bool `json:"isStaff"`
 	// Whether or not this account is part of the moderation team
 	IsModerator bool `json:"isModerator"`
-	// Whether or not this account is an artist
-	IsArtist bool `json:"isArtist"`
 	// The details of the account lock
 	Lock *AccountLock `json:"lock"`
 	// Usernames for account (history)
@@ -121,7 +119,7 @@ type AccountSession struct {
 	IP string `json:"ip"`
 	// When the session was created
 	Created string `json:"created"`
-	// If the session belongs to the currently authenticated account
+	// If the session belongs to the currently authenticated account. This means that the session cannot be revoked (or else we get weird stuff)
 	Current bool `json:"current"`
 }
 
@@ -179,14 +177,6 @@ type AddAccountEmailPayload struct {
 	AccountEmail *AccountEmail `json:"accountEmail"`
 }
 
-type Artist struct {
-	ID relay.ID `json:"id"`
-	// The account linked to this artist
-	Account *Account `json:"account"`
-}
-
-func (Artist) IsEntity() {}
-
 type AuthenticationToken struct {
 	ID            relay.ID                          `json:"id"`
 	SameSession   bool                              `json:"sameSession"`
@@ -216,14 +206,6 @@ type ConfirmAccountEmailPayload struct {
 	// The account email that was confirmed
 	AccountEmail *AccountEmail `json:"accountEmail"`
 }
-
-type Contributor struct {
-	ID relay.ID `json:"id"`
-	// The account linked to this contributor
-	Account *Account `json:"account"`
-}
-
-func (Contributor) IsEntity() {}
 
 // Payload for a created pending post
 type CreateAccountWithAuthenticationTokenInput struct {

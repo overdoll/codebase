@@ -15,9 +15,10 @@ var characterTable = table.New(table.Metadata{
 	Name: "characters",
 	Columns: []string{
 		"id",
+		"slug",
 		"name",
 		"thumbnail",
-		"media_id",
+		"series_id",
 	},
 	PartKey: []string{"id"},
 	SortKey: []string{},
@@ -25,9 +26,10 @@ var characterTable = table.New(table.Metadata{
 
 type character struct {
 	Id        string `db:"id"`
+	Slug      string `db:"slug"`
 	Name      string `db:"name"`
 	Thumbnail string `db:"thumbnail"`
-	MediaId   string `db:"media_id"`
+	SeriesId  string `db:"series_id"`
 }
 
 func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars []string) ([]*post.Character, error) {
@@ -58,16 +60,16 @@ func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars [
 	var mediaIds []string
 
 	for _, cat := range characterModels {
-		mediaIds = append(mediaIds, cat.MediaId)
+		mediaIds = append(mediaIds, cat.SeriesId)
 	}
 
-	queryMedia := qb.Select(mediaTable.Name()).
+	queryMedia := qb.Select(seriesTable.Name()).
 		Where(qb.In("id")).
 		Query(r.session).
 		Consistency(gocql.One).
 		Bind(mediaIds)
 
-	var mediaModels []*media
+	var mediaModels []*series
 
 	if err := queryMedia.Select(&mediaModels); err != nil {
 		return nil, fmt.Errorf("failed to get medias by id: %v", err)
@@ -75,27 +77,29 @@ func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars [
 
 	for _, char := range characterModels {
 
-		var media *media
+		var serial *series
 
 		for _, med := range mediaModels {
-			if med.Id == char.MediaId {
-				media = med
+			if med.Id == char.SeriesId {
+				serial = med
 				break
 			}
 		}
 
-		if media == nil {
+		if serial == nil {
 			return nil, errors.New("no media found for character")
 		}
 
 		characters = append(characters, post.UnmarshalCharacterFromDatabase(
 			char.Id,
+			char.Slug,
 			char.Name,
 			char.Thumbnail,
-			post.UnmarshalMediaFromDatabase(
-				media.Id,
-				media.Title,
-				media.Thumbnail,
+			post.UnmarshalSeriesFromDatabase(
+				serial.Id,
+				serial.Slug,
+				serial.Title,
+				serial.Thumbnail,
 			),
 		))
 	}
@@ -121,7 +125,7 @@ func (r PostsCassandraRepository) GetCharacterById(ctx context.Context, characte
 		return nil, fmt.Errorf("failed to get characters by id: %v", err)
 	}
 
-	media, err := r.GetMediaById(ctx, char.MediaId)
+	media, err := r.GetSingleSeriesById(ctx, char.SeriesId)
 
 	if err != nil {
 		return nil, err
@@ -129,6 +133,7 @@ func (r PostsCassandraRepository) GetCharacterById(ctx context.Context, characte
 
 	return post.UnmarshalCharacterFromDatabase(
 		char.Id,
+		char.Slug,
 		char.Name,
 		char.Thumbnail,
 		media,
@@ -141,12 +146,13 @@ func (r PostsCassandraRepository) CreateCharacters(ctx context.Context, characte
 
 	for _, chars := range characters {
 
-		media := chars.Media()
+		media := chars.Series()
 
 		stmt, _ := characterTable.Insert()
 		batch.Query(
 			stmt,
 			chars.ID(),
+			chars.Slug(),
 			chars.Name(),
 			chars.Thumbnail(),
 			media.ID(),

@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"strconv"
 
 	"github.com/gocql/gocql"
@@ -16,11 +17,12 @@ import (
 )
 
 type characterDocument struct {
-	Id        string        `json:"id"`
-	Thumbnail string        `json:"thumbnail"`
-	Name      string        `json:"name"`
-	Media     mediaDocument `json:"media"`
-	CreatedAt string        `json:"created_at"`
+	Id        string         `json:"id"`
+	Slug      string         `json:"slug"`
+	Thumbnail string         `json:"thumbnail"`
+	Name      string         `json:"name"`
+	Series    seriesDocument `json:"series"`
+	CreatedAt string         `json:"created_at"`
 }
 
 const characterIndex = `
@@ -29,6 +31,9 @@ const characterIndex = `
 		"dynamic": "strict",
 		"properties": {
 			"id": {
+				"type": "keyword"
+			},
+			"slug": {
 				"type": "keyword"
 			},
 			"thumbnail": {
@@ -41,10 +46,13 @@ const characterIndex = `
 			"created_at": {
 				"type": "date"
 			},
-			"media": {
+			"series": {
 				"type": "nested",
 				"properties": {
 					"id": {
+						"type": "keyword"
+					},
+					"slug": {
 						"type": "keyword"
 					},
 					"thumbnail": {
@@ -66,7 +74,7 @@ const characterIndex = `
 const characterIndexName = "characters"
 
 func marshalCharacterToDocument(char *post.Character) (*characterDocument, error) {
-	media := char.Media()
+	media := char.Series()
 
 	parse, err := ksuid.Parse(char.ID())
 
@@ -80,14 +88,36 @@ func marshalCharacterToDocument(char *post.Character) (*characterDocument, error
 		return nil, err
 	}
 
+	var charThumb string
+	var seriesThumb string
+
+	if char.Thumbnail() != nil {
+
+		charThumb, err = char.Thumbnail().MarshalResourceToDatabase()
+
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	if media.Thumbnail() != nil {
+
+		seriesThumb, err = media.Thumbnail().MarshalResourceToDatabase()
+
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	return &characterDocument{
 		Id:        char.ID(),
-		Thumbnail: char.Thumbnail(),
+		Thumbnail: charThumb,
 		Name:      char.Name(),
+		Slug:      char.Slug(),
 		CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
-		Media: mediaDocument{
+		Series: seriesDocument{
 			Id:        media.ID(),
-			Thumbnail: media.Thumbnail(),
+			Thumbnail: seriesThumb,
 			Title:     media.Title(),
 			CreatedAt: strconv.FormatInt(parse2.Time().Unix(), 10),
 		},
@@ -153,7 +183,7 @@ func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context,
 			return nil, err
 		}
 
-		newCharacter := post.UnmarshalCharacterFromDatabase(chr.Id, chr.Name, chr.Thumbnail, post.UnmarshalMediaFromDatabase(chr.Media.Id, chr.Media.Title, chr.Media.Thumbnail))
+		newCharacter := post.UnmarshalCharacterFromDatabase(chr.Id, chr.Slug, chr.Name, chr.Thumbnail, post.UnmarshalSeriesFromDatabase(chr.Series.Id, chr.Series.Slug, chr.Series.Title, chr.Series.Thumbnail))
 		newCharacter.Node = paging.NewNode(chr.CreatedAt)
 
 		characters = append(characters, newCharacter)
@@ -172,16 +202,16 @@ func (r PostsIndexElasticSearchRepository) IndexAllCharacters(ctx context.Contex
 		},
 	)
 
-	err := scanner.RunIterator(characterTable, func(iter *gocqlx.Iterx) error {
+	err := scanner.RunIterator(ctx, characterTable, func(iter *gocqlx.Iterx) error {
 
 		var c character
 
 		for iter.StructScan(&c) {
 
-			var m media
+			var m series
 
 			// get media connected to this character document
-			if err := r.session.Query(mediaTable.Get()).Consistency(gocql.One).Bind(c.MediaId).Get(&m); err != nil {
+			if err := r.session.Query(seriesTable.Get()).Consistency(gocql.One).Bind(c.SeriesId).Get(&m); err != nil {
 				return err
 			}
 
@@ -201,11 +231,13 @@ func (r PostsIndexElasticSearchRepository) IndexAllCharacters(ctx context.Contex
 				Id:        c.Id,
 				Thumbnail: c.Thumbnail,
 				Name:      c.Name,
+				Slug:      c.Slug,
 				CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
-				Media: mediaDocument{
+				Series: seriesDocument{
 					Id:        m.Id,
 					Thumbnail: m.Thumbnail,
 					Title:     m.Title,
+					Slug:      m.Slug,
 					CreatedAt: strconv.FormatInt(parse2.Time().Unix(), 10),
 				},
 			}
@@ -218,7 +250,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllCharacters(ctx context.Contex
 				Do(ctx)
 
 			if err != nil {
-				return err
+				return fmt.Errorf("failed to index characters: %v", err)
 			}
 		}
 

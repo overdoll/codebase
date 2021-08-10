@@ -32,7 +32,15 @@ func init() {
 				log.Fatalf(err.Error())
 			}
 
-			if err := application.Commands.IndexAllMedia.Handle(ctx); err != nil {
+			if err := application.Commands.IndexAllSeries.Handle(ctx); err != nil {
+				log.Fatalf(err.Error())
+			}
+
+			if err := application.Commands.IndexAllAudience.Handle(ctx); err != nil {
+				log.Fatalf(err.Error())
+			}
+
+			if err := application.Commands.IndexAllBrands.Handle(ctx); err != nil {
 				log.Fatalf(err.Error())
 			}
 
@@ -77,8 +85,8 @@ func init() {
 	})
 
 	Cli.AddCommand(&cobra.Command{
-		Use:   "media",
-		Short: "Index the whole media table into elasticsearch",
+		Use:   "series",
+		Short: "Index the whole series table into elasticsearch",
 		Run: func(cmd *cobra.Command, args []string) {
 			ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
 			defer cancelFn()
@@ -87,7 +95,41 @@ func init() {
 
 			defer cleanup()
 
-			if err := application.Commands.IndexAllMedia.Handle(ctx); err != nil {
+			if err := application.Commands.IndexAllSeries.Handle(ctx); err != nil {
+				log.Fatalf(err.Error())
+			}
+		},
+	})
+
+	Cli.AddCommand(&cobra.Command{
+		Use:   "brands",
+		Short: "Index the whole brands table into elasticsearch",
+		Run: func(cmd *cobra.Command, args []string) {
+			ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
+			defer cancelFn()
+
+			application, cleanup := service.NewApplication(ctx)
+
+			defer cleanup()
+
+			if err := application.Commands.IndexAllBrands.Handle(ctx); err != nil {
+				log.Fatalf(err.Error())
+			}
+		},
+	})
+
+	Cli.AddCommand(&cobra.Command{
+		Use:   "audience",
+		Short: "Index the whole brands table into elasticsearch",
+		Run: func(cmd *cobra.Command, args []string) {
+			ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
+			defer cancelFn()
+
+			application, cleanup := service.NewApplication(ctx)
+
+			defer cleanup()
+
+			if err := application.Commands.IndexAllAudience.Handle(ctx); err != nil {
 				log.Fatalf(err.Error())
 			}
 		},

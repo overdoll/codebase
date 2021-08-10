@@ -12,19 +12,25 @@ type Repository interface {
 	GetPostRequest(ctx context.Context, requester *principal.Principal, postId string) (*Post, error)
 	CreatePost(ctx context.Context, post *Post) error
 
+	// all of these are separated into different repositories because 1. we want to do permission checks and 2. we use separated commands and 3. we dont get issues with cassandra updates
+	UpdatePostContent(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
+	UpdatePostCategories(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
+	UpdatePostCharacters(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
+	UpdatePostBrand(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
+	UpdatePostAudience(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
+
 	UpdatePost(ctx context.Context, postId string, updateFn func(post *Post) error) (*Post, error)
 	DeletePost(ctx context.Context, postId string) error
 
-	GetArtistById(ctx context.Context, artistId string) (*Artist, error)
-	CreateArtist(ctx context.Context, artist *Artist) error
-
 	GetCharacterById(ctx context.Context, characterId string) (*Character, error)
 	GetCharactersById(ctx context.Context, characterIds []string) ([]*Character, error)
-	CreateCharacters(ctx context.Context, characters []*Character) error
 
-	CreateMedias(ctx context.Context, medias []*Media) error
-	GetMediasById(ctx context.Context, mediaIds []string) ([]*Media, error)
-	GetMediaById(ctx context.Context, mediaId string) (*Media, error)
+	GetBrandById(ctx context.Context, brandId string) (*Brand, error)
+
+	GetAudienceById(ctx context.Context, audienceId string) (*Audience, error)
+
+	GetSeriesById(ctx context.Context, seriesIds []string) ([]*Series, error)
+	GetSingleSeriesById(ctx context.Context, serialId string) (*Series, error)
 
 	GetCategoryById(ctx context.Context, categoryId string) (*Category, error)
 	GetCategoriesById(ctx context.Context, categoryIds []string) ([]*Category, error)
@@ -43,9 +49,17 @@ type IndexRepository interface {
 	SearchCharacters(ctx context.Context, cursor *paging.Cursor, name *string) ([]*Character, error)
 	IndexCharacters(ctx context.Context, characters []*Character) error
 
-	IndexAllMedia(ctx context.Context) error
-	DeleteMediaIndex(ctx context.Context) error
-	SearchMedias(ctx context.Context, cursor *paging.Cursor, title *string) ([]*Media, error)
+	IndexAllBrands(ctx context.Context) error
+	DeleteBrandsIndex(ctx context.Context) error
+	SearchBrands(ctx context.Context, cursor *paging.Cursor, title *string) ([]*Brand, error)
+
+	IndexAllAudience(ctx context.Context) error
+	DeleteAudienceIndex(ctx context.Context) error
+	SearchAudience(ctx context.Context, cursor *paging.Cursor, title *string) ([]*Audience, error)
+
+	IndexAllSeries(ctx context.Context) error
+	DeleteSeriesIndex(ctx context.Context) error
+	SearchSeries(ctx context.Context, cursor *paging.Cursor, title *string) ([]*Series, error)
 
 	IndexAllCategories(ctx context.Context) error
 	IndexCategories(ctx context.Context, categories []*Category) error

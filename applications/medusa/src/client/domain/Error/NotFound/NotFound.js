@@ -8,9 +8,7 @@ import SignBadgeCircle
 import { useTranslation } from 'react-i18next'
 import { Center, Flex, Heading, Stack } from '@chakra-ui/react'
 import Button from '@//:modules/form/button'
-import { useLazyLoadQuery } from 'react-relay/hooks'
 import { Helmet } from 'react-helmet-async'
-import { graphql } from 'graphql'
 
 export default function NotFound (): Node {
   const [t] = useTranslation('empty')

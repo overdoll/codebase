@@ -53,7 +53,7 @@ func principalToContext(app *app.Application) gin.HandlerFunc {
 	}
 }
 
-func NewGraphQLServer(app *app.Application) *gin.Engine {
+func NewHttpServer(app *app.Application) *gin.Engine {
 	rtr := router.NewGinRouter()
 
 	rtr.POST("/graphql", dataLoaderToContext(app), principalToContext(app), graphql.HandleGraphQL(gen.NewExecutableSchema(gen.Config{

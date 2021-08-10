@@ -1,9 +1,0 @@
-type Artist implements Node @key(fields: "id") {
-  id: ID!
-  doNotPostReason: String
-}
-
-extend type Account {
-  """Artist status for this account"""
-  artist: Artist
-}

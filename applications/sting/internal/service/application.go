@@ -8,6 +8,7 @@ import (
 	"overdoll/applications/sting/internal/app"
 	"overdoll/applications/sting/internal/app/command"
 	"overdoll/applications/sting/internal/app/query"
+	"overdoll/applications/sting/internal/app/workflows/activities"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
 )
@@ -38,37 +39,48 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 	postRepo := adapters.NewPostsCassandraRepository(session)
 	indexRepo := adapters.NewPostsIndexElasticSearchRepository(client, session)
 
-	contentRepo := adapters.NewContentS3Repository(awsSession)
+	resourceRepo := adapters.NewResourceS3Repository(awsSession)
 
 	return app.Application{
 		Commands: app.Commands{
-			CreatePost:          command.NewCreatePostHandler(postRepo, eva, parley),
-			IndexAllPosts:       command.NewIndexAllPendingPostsHandler(postRepo, indexRepo),
-			IndexAllMedia:       command.NewIndexAllMediaHandler(postRepo, indexRepo),
-			IndexAllCharacters:  command.NewIndexAllCharactersHandler(postRepo, indexRepo),
-			IndexAllCategories:  command.NewIndexAllCategoriesHandler(postRepo, indexRepo),
-			StartUndoPost:       command.NewStartUndoPostHandler(postRepo, indexRepo),
-			StartPublishPost:    command.NewStartPublishPostHandler(postRepo, indexRepo, eva),
-			StartDiscardPost:    command.NewStartDiscardPostHandler(postRepo, indexRepo),
-			RejectPost:          command.NewRejectPostHandler(postRepo, indexRepo),
-			NewPost:             command.NewNewPostHandler(postRepo, indexRepo, contentRepo, eva),
-			PostCustomResources: command.NewPostCustomResourcesHandler(postRepo, indexRepo),
-			PublishPost:         command.NewPublishPostHandler(postRepo, indexRepo, contentRepo, eva),
-			DiscardPost:         command.NewDiscardPostHandler(postRepo, indexRepo, contentRepo, eva),
-			UndoPost:            command.NewUndoPostHandler(postRepo, indexRepo, contentRepo, eva),
-			ReassignModerator:   command.NewReassignModeratorHandler(postRepo, indexRepo, parley),
+			TusComposer: command.NewTusComposerHandler(resourceRepo),
+
+			CreatePost:  command.NewCreatePostHandler(postRepo, eva, parley),
+			UndoPost:    command.NewUndoPostHandler(postRepo, indexRepo),
+			PublishPost: command.NewPublishPostHandler(postRepo, indexRepo, eva),
+			DiscardPost: command.NewDiscardPostHandler(postRepo, indexRepo),
+			RejectPost:  command.NewRejectPostHandler(postRepo, indexRepo),
+			SubmitPost:  command.NewSubmitPostHandler(postRepo, indexRepo, parley),
+
+			IndexAllPosts:      command.NewIndexAllPostsHandler(postRepo, indexRepo),
+			IndexAllSeries:     command.NewIndexAllSeriesHandler(postRepo, indexRepo),
+			IndexAllCharacters: command.NewIndexAllCharactersHandler(postRepo, indexRepo),
+			IndexAllCategories: command.NewIndexAllCategoriesHandler(postRepo, indexRepo),
+			IndexAllBrands:     command.NewIndexAllBrandsHandler(postRepo, indexRepo),
+			IndexAllAudience:   command.NewIndexAllAudienceHandler(postRepo, indexRepo),
+
+			UpdatePostBrand:      command.NewUpdatePostBrandHandler(postRepo, indexRepo),
+			UpdatePostCategories: command.NewUpdatePostCategoriesHandler(postRepo, indexRepo),
+			UpdatePostCharacters: command.NewUpdatePostCharactersHandler(postRepo, indexRepo),
+			UpdatePostContent:    command.NewUpdatePostContentHandler(postRepo, indexRepo, resourceRepo),
+			UpdatePostAudience:   command.NewUpdatePostAudienceHandler(postRepo, indexRepo),
 		},
 		Queries: app.Queries{
-			PrincipalById:    query.NewPrincipalByIdHandler(eva),
-			SearchMedias:     query.NewSearchMediasHandler(indexRepo),
+			PrincipalById: query.NewPrincipalByIdHandler(eva),
+			PostById:      query.NewPostByIdHandler(postRepo),
+			CharacterById: query.NewCharacterByIdHandler(postRepo),
+			CategoryById:  query.NewCategoryByIdHandler(postRepo),
+			SeriesById:    query.NewSeriesByIdHandler(postRepo),
+			BrandById:     query.NewBrandByIdHandler(postRepo),
+			AudienceById:  query.NewAudienceByIdHandler(postRepo),
+
+			SearchSeries:     query.NewSearchSeriesHandler(indexRepo),
 			SearchCharacters: query.NewSearchCharactersHandler(indexRepo),
 			SearchCategories: query.NewSearchCategoriesHandler(indexRepo),
 			SearchPosts:      query.NewSearchPostsHandler(indexRepo),
-			PostById:         query.NewPostByIdHandler(postRepo),
-			CharacterById:    query.NewCharacterByIdHandler(postRepo),
-			CategoryById:     query.NewCategoryByIdHandler(postRepo),
-			ArtistById:       query.NewArtistByIdHandler(postRepo),
-			MediaById:        query.NewMediaByIdHandler(postRepo),
+			SearchBrands:     query.NewSearchBrandsHandler(indexRepo),
+			SearchAudience:   query.NewSearchAudienceHandler(indexRepo),
 		},
+		Activities: activities.NewActivitiesHandler(postRepo, indexRepo, resourceRepo, parley),
 	}
 }
