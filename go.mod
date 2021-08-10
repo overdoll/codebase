@@ -15,7 +15,6 @@ require (
 	github.com/bxcodec/faker/v3 v3.6.0
 	github.com/eventials/go-tus v0.0.0-20200718001131-45c7ec8f5d59
 	github.com/frankban/quicktest v1.13.0 // indirect
-	github.com/gin-contrib/cors v1.3.1 // indirect
 	github.com/gin-gonic/gin v1.7.2
 	github.com/go-playground/validator/v10 v10.6.1
 	github.com/go-redis/redis/v8 v8.10.0
@@ -45,7 +44,7 @@ require (
 	github.com/sendgrid/sendgrid-go v3.10.0+incompatible
 	github.com/shurcooL/graphql v0.0.0-20200928012149-18c5c3165e3a
 	github.com/spf13/cobra v1.1.3
-	github.com/spf13/viper v1.7.1
+	github.com/spf13/viper v1.8.1
 	github.com/stretchr/testify v1.7.0
 	github.com/tus/tusd v1.6.0
 	github.com/vanng822/go-premailer v1.20.1 // indirect
@@ -54,10 +53,8 @@ require (
 	go.uber.org/zap v1.17.0
 	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97 // indirect
 	golang.org/x/net v0.0.0-20210716203947-853a461950ff // indirect
-	golang.org/x/sync v0.0.0-20201020160332-67f06af15bc9
-	google.golang.org/genproto v0.0.0-20210505142820-a42aa055cf76 // indirect
+	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 	google.golang.org/grpc v1.38.0
-	google.golang.org/protobuf v1.26.0
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 )
 
