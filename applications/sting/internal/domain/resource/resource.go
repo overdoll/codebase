@@ -160,6 +160,7 @@ func (r *Resource) ProcessResource(prefix string, file *os.File) ([]*Move, error
 
 		// lossless encoder
 		enc := webpbin.Encoder{Quality: 100}
+
 		if err := enc.Encode(newFile, src); err != nil {
 			_ = newFile.Close()
 			return nil, err

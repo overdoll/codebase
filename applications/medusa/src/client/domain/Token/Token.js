@@ -56,8 +56,6 @@ export default function Token ({ prepared }: Props): Node {
     VerifyTokenMutationGQL
   )
 
-  const environment = useRelayEnvironment()
-
   const history = useHistory()
 
   const notify = useToast()
