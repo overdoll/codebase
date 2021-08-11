@@ -110,7 +110,7 @@ export default function LeftSidebar (props: Props): Node {
           {props.children}
         </Stack>
       </Box>
-      <Box h='calc(100vh - 54px)' w='260px' display={{ base: 'initial', xl: 'none' }} />
+      <Box pl={2} pr={4} h='calc(100vh - 54px)' w='290px' display={{ base: 'initial', xl: 'none' }} />
     </>
   )
 }

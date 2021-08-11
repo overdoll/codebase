@@ -2,9 +2,7 @@
  * @flow
  */
 
-import routes from '../routing/navigation'
-
-export default function computeCurrentActiveRoutes ({ environment }) {
+export default function computeCurrentActiveRoutes ({ environment, routes }) {
   const activeRoutes = routes
 
   // Determine if route is valid by calling the middleware function in the route

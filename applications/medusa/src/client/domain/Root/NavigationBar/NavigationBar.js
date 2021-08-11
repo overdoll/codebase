@@ -2,6 +2,7 @@
  * @flow
  */
 import type { Node } from 'react'
+import type { Route as RouteType } from '@//:modules/routing/router'
 import { Fragment, useContext, useMemo } from 'react'
 import {
   Box,
@@ -33,6 +34,7 @@ import TopRightMenuButton from './components/TopRightMenu/TopRightMenuButton/Top
 
 type Props = {
   children: Node,
+  routes: Array<RouteType>,
   rootQuery: TopRightMenuFragment$key
 }
 
@@ -52,7 +54,7 @@ export default function NavigationBar (props: Props): Node {
   }
 
   const [navigationTop, navigationMenu, navigationSidebar, navigationFiltered] = useMemo(() => computeCurrentActiveRoutes({
-    environment
+    environment, routes: props.routes
   }), [ability])
 
   // Show a simplified navigation bar if on a filtered route

@@ -11,6 +11,7 @@ import NavigationBar from './NavigationBar/NavigationBar'
 import defineAbility from '@//:modules/utilities/functions/defineAbility/defineAbility'
 import { AbilityContext } from './helpers/AbilityContext'
 import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner'
+import routes from './NavigationBar/routing/navigation'
 
 type Props = {
   prepared: {
@@ -49,7 +50,7 @@ export default function Root (props: Props): Node {
         title='overdoll'
       />
       <AbilityContext.Provider value={ability}>
-        <NavigationBar rootQuery={data?.viewer}>
+        <NavigationBar routes={routes} rootQuery={data?.viewer}>
           <Suspense fallback={<CenteredSpinner />}>{props.children}</Suspense>
         </NavigationBar>
       </AbilityContext.Provider>
