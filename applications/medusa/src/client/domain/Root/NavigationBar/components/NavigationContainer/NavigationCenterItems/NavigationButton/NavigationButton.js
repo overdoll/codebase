@@ -16,7 +16,7 @@ type Props = {
   match: boolean,
 }
 
-export default function TopNavigationButton ({ path, icon, label, exact, match }: Props): Node {
+export default function NavigationButton ({ path, icon, label, exact, match }: Props): Node {
   return (
     <NavLink exact={exact} to={path}>
       {(isActive) => (

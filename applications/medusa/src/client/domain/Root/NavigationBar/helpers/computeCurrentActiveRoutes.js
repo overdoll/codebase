@@ -2,8 +2,10 @@
  * @flow
  */
 
-export default function computeCurrentActiveRoutes ({ environment, routes }) {
-  const activeRoutes = routes
+import importedRoutes from '../routing/navigation'
+
+export default function computeCurrentActiveRoutes ({ environment }) {
+  const activeRoutes = importedRoutes
 
   // Determine if route is valid by calling the middleware function in the route
   const isRouteValid = (data, route) => {
@@ -59,7 +61,7 @@ export default function computeCurrentActiveRoutes ({ environment, routes }) {
     let parsed = []
 
     for (const route of routes) {
-      if (route?.navigation[key]) {
+      if (route?.navigation?.[key]) {
         parsed.push({
           path: route.path,
           ...(route.exact && { exact: route.exact }),
@@ -77,7 +79,7 @@ export default function computeCurrentActiveRoutes ({ environment, routes }) {
   const flattenSidebar = (routes, key) => {
     const parsed = []
     for (const route of routes) {
-      if (route.navigation[key]) {
+      if (route.navigation?.[key]) {
         const subRoutes = flattenNavigationKey(route.routes, key)
 
         const reduced = groupByKey(subRoutes, 'grouping')

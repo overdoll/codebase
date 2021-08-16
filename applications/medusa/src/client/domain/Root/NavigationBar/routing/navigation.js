@@ -45,6 +45,14 @@ const getAbilityFromUser = (environment) => {
 
 const routes: Array<Route> = [
   {
+    path: '/join',
+    hidden: true
+  },
+  {
+    path: '/join',
+    hidden: true
+  },
+  {
     path: '/',
     exact: true,
     navigation: {

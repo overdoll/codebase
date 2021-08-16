@@ -13,7 +13,7 @@ type Props = {
   match: boolean,
 }
 
-export default function TopRightMenuButton ({ path, label, icon, match }: Props): Node {
+export default function MenuButton ({ path, label, icon, match }: Props): Node {
   const [t] = useTranslation('navigation')
 
   return (

@@ -2,46 +2,45 @@
  * @flow
  */
 import type { Node } from 'react'
-import type { Route as RouteType } from '@//:modules/routing/router'
 import { Fragment, useContext, useMemo } from 'react'
 import {
   Box,
   Button,
   Flex,
-  HStack,
-  IconButton,
-  Spacer,
   Text
 } from '@chakra-ui/react'
-import Icon from '@//:modules/content/Icon/Icon'
 import { useTranslation } from 'react-i18next'
 import Link from '@//:modules/routing/Link'
 import { Route } from 'react-router'
-import { useHistory, useLocation } from '@//:modules/routing'
+import { useLocation } from '@//:modules/routing'
 import computeCurrentActiveRoutes from './helpers/computeCurrentActiveRoutes'
 import { AbilityContext } from '../helpers/AbilityContext'
 import { useRelayEnvironment } from 'react-relay'
-
-import InterfaceArrowsTurnBackward
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-turn-backward.svg'
-
-import TopNavigationButton from './components/TopNavigationButton/TopNavigationButton'
-import LeftSidebarButton from './components/LeftSidebar/LeftSidebarButton/LeftSidebarButton'
-import TopRightMenu from './components/TopRightMenu/TopRightMenu'
-import LeftSidebar from './components/LeftSidebar/LeftSidebar'
 import type { TopRightMenuFragment$key } from '@//:artifacts/TopRightMenuFragment.graphql'
-import TopRightMenuButton from './components/TopRightMenu/TopRightMenuButton/TopRightMenuButton'
+
+import NavigationButton
+  from './components/NavigationContainer/NavigationCenterItems/NavigationButton/NavigationButton'
+import SidebarButton from './components/NavigationContents/Sidebar/SidebarButton/SidebarButton'
+import NavigationMenu from './components/NavigationContainer/NavigationRightItems/NavigationMenu/NavigationMenu'
+import Sidebar from './components/NavigationContents/Sidebar/Sidebar'
+import MenuButton
+  from './components/NavigationContainer/NavigationRightItems/NavigationMenu/MenuButton/MenuButton'
+import NavigationContainer from './components/NavigationContainer/NavigationContainer'
+import NavigationLeftBrand from './components/NavigationContainer/NavigationLeftBrand/NavigationLeftBrand'
+import NavigationCenterItems from './components/NavigationContainer/NavigationCenterItems/NavigationCenterItems'
+import NavigationRightItems from './components/NavigationContainer/NavigationRightItems/NavigationRightItems'
+import SimplifiedNavigation from './components/SimplifiedNavigation/SimplifiedNavigation'
+import NavigationContents from './components/NavigationContents/NavigationContents'
+import PageContents from './components/NavigationContents/PageContents/PageContents'
+import SidebarGrouping from './components/NavigationContents/Sidebar/SidebarGrouping/SidebarGrouping'
 
 type Props = {
   children: Node,
-  routes: Array<RouteType>,
   rootQuery: TopRightMenuFragment$key
 }
 
 export default function NavigationBar (props: Props): Node {
   const [t] = useTranslation('navigation')
-
-  const history = useHistory()
 
   const location = useLocation()
 
@@ -54,134 +53,86 @@ export default function NavigationBar (props: Props): Node {
   }
 
   const [navigationTop, navigationMenu, navigationSidebar, navigationFiltered] = useMemo(() => computeCurrentActiveRoutes({
-    environment, routes: props.routes
+    environment
   }), [ability])
 
   // Show a simplified navigation bar if on a filtered route
-  if (navigationFiltered.includes(location.pathname)) {
+  if (navigationFiltered.includes(getBasePath(location.pathname))) {
     return (
-      <Flex
-        zIndex='docked' boxShadow='sm' align='center' right={0} left={0} top={0} position='fixed' h='54px'
-        bg='transparent'
-      >
-        <Link to='/'>
-          <Button ml={2}>{t('title')}</Button>
-        </Link>
-        <Spacer />
-        <IconButton
-          onClick={() => history.goBack()}
-          variant='solid'
-          colorScheme='red'
-          size='md'
-          mr={2}
-          icon={
-            <Icon
-              icon={InterfaceArrowsTurnBackward} m={2} w='fill' h='fill' p={1}
-              fill='gray.100'
-            />
-          }
-        />
-      </Flex>
+      <SimplifiedNavigation>
+        <PageContents>
+          {props.children}
+        </PageContents>
+      </SimplifiedNavigation>
     )
   }
 
   // Otherwise, show the regular navigation bar
   return (
     <>
-      <Flex
-        align='center' right={0} left={0} top={0} h='54px'
-      />
-      <>
-        <Flex
-          zIndex='docked' boxShadow='sm' align='center' right={0} left={0} top={0}
-          position='fixed' h='54px'
-          bg='gray.800'
-        >
-          <Flex display={{ base: 'none', md: 'flex' }} left={0} ml={3}>
-            <Link to='/'>
-              <Button textColor='red.500' variant='link' colorScheme='red'>{t('title')}</Button>
-            </Link>
-          </Flex>
-          <Flex
-            zIndex={-1} position='absolute' w='100%' justify='center'
-            margin='auto'
-          >
-            <HStack spacing={{ base: 2, md: 12, lg: 28 }}>
-              {navigationTop.map((item, index) => {
+      <NavigationContainer>
+        <NavigationLeftBrand>
+          <Link to='/'>
+            <Button textColor='red.500' variant='link' colorScheme='red'>{t('title')}</Button>
+          </Link>
+        </NavigationLeftBrand>
+        <NavigationCenterItems>
+          {navigationTop.map((item, index) => {
+            const match = getBasePath(location.pathname) === getBasePath(item.path)
+            return (
+              <NavigationButton
+                key={index}
+                exact={item.exact}
+                icon={item.navigation.icon}
+                match={match}
+                path={item.path} label={t(item.navigation.title)}
+              />
+            )
+          })}
+        </NavigationCenterItems>
+        <NavigationRightItems>
+          <NavigationMenu viewer={props.rootQuery}>
+            {navigationMenu.map((item, index) => {
+              const match = getBasePath(location.pathname) === getBasePath(item.path)
+              return (
+                <MenuButton
+                  key={index}
+                  match={match} path={item.path} label={item.navigation.title}
+                  icon={item.navigation.icon}
+                />
+              )
+            })}
+          </NavigationMenu>
+        </NavigationRightItems>
+      </NavigationContainer>
+      <NavigationContents>
+        {navigationSidebar.map((sidebarGroup, index) => {
+          if (getBasePath(location.pathname) !== sidebarGroup.path) {
+            return null
+          }
+          return (
+            <Sidebar key={index} title={t(sidebarGroup.navigation.title)}>
+              {Object.keys(sidebarGroup.routes).map((grouping, groupingIndex) => {
                 return (
-                  <Fragment key={index}>
-                    <Route exact={item.exact} path={getBasePath(item.path)}>
-                      {({ match }) => (
-                        <TopNavigationButton
-                          exact={item.exact}
-                          icon={item.navigation.icon}
-                          match={!!match}
-                          path={item.path} label={t(item.navigation.title)}
-                        />
-                      )}
-                    </Route>
-                  </Fragment>
+                  <SidebarGrouping key={groupingIndex} label={grouping}>
+                    {(sidebarGroup.routes[grouping]).map((sidebarItem, sidebarItemIndex) => (
+                      <SidebarButton
+                        key={sidebarItemIndex}
+                        title={t(sidebarItem.navigation.title)}
+                        path={sidebarItem.path}
+                      />
+                    )
+                    )}
+                  </SidebarGrouping>
                 )
               })}
-            </HStack>
-          </Flex>
-          <Flex m='auto' right={0} mr={1}>
-            <Flex
-              borderRadius={10} bg={{ base: 'transparent', md: 'gray.900' }}
-              align='center'
-            >
-              <Flex m={1}>
-                <TopRightMenu viewer={props.rootQuery}>
-                  {navigationMenu.map((item, index) => {
-                    return (
-                      <Fragment key={index}>
-                        <Route path={getBasePath(item.path)}>
-                          {({ match }) => (
-                            <TopRightMenuButton
-                              match={!!match} path={item.path} label={item.navigation.title}
-                              icon={item.navigation.icon}
-                            />
-                          )}
-                        </Route>
-                      </Fragment>
-                    )
-                  })}
-                </TopRightMenu>
-              </Flex>
-            </Flex>
-          </Flex>
-        </Flex>
-      </>
-      <Flex direction={{ base: 'column', md: 'row' }}>
-        {navigationSidebar.map((sidebarGroup, index) => {
-          return (
-            <Fragment key={index}>
-              <Route exact={sidebarGroup.exact} path={sidebarGroup.path}>
-                <LeftSidebar title={t(sidebarGroup.navigation.title)}>
-                  {Object.keys(sidebarGroup.routes).map((grouping, groupingIndex) => {
-                    return (
-                      <Fragment key={groupingIndex}>
-                        {grouping !== 'undefined' && <Text mb={1}>{grouping}</Text>}
-                        {(sidebarGroup.routes[grouping]).map((sidebarItem, sidebarItemIndex) => (
-                          <LeftSidebarButton
-                            key={sidebarItemIndex}
-                            title={t(sidebarItem.navigation.title)}
-                            path={sidebarItem.path}
-                          />
-                        )
-                        )}
-                      </Fragment>
-                    )
-                  })}
-                </LeftSidebar>
-              </Route>
-            </Fragment>
+            </Sidebar>
           )
         })}
-        <Box w='100%'>
+        <PageContents>
           {props.children}
-        </Box>
-      </Flex>
+        </PageContents>
+      </NavigationContents>
     </>
   )
 }

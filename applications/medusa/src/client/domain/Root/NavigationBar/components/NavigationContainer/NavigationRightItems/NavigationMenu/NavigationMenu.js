@@ -27,7 +27,7 @@ import Login2 from '@streamlinehq/streamlinehq/img/streamline-bold/interface-ess
 import NavLink from '@//:modules/routing/NavLink'
 import { graphql, useFragment } from 'react-relay/hooks'
 import { useContext } from 'react'
-import { AbilityContext } from '../../../helpers/AbilityContext'
+import { AbilityContext } from '../../../../../helpers/AbilityContext'
 import type { TopRightMenuFragment$key } from '@//:artifacts/TopRightMenuFragment.graphql'
 import LogoutButton from './LogoutButton/LogoutButton'
 import ProfileButton from './ProfileButton/ProfileButton'
@@ -44,7 +44,7 @@ type Props = {
   children: Node,
 }
 
-export default function TopRightMenu (props: Props): Node {
+export default function NavigationMenu (props: Props): Node {
   const [t] = useTranslation('navigation')
 
   const viewer = useFragment(AccountFragmentGQL, props.viewer)

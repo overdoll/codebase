@@ -16,7 +16,7 @@ type Props = {
   title: string
 }
 
-export default function LeftSidebarButton ({ path, title }: Props): Node {
+export default function SidebarButton ({ path, title }: Props): Node {
   return (
     <NavLink to={path}>
       {(isActive) => (

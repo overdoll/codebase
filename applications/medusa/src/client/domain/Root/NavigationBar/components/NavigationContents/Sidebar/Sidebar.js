@@ -22,7 +22,7 @@ type Props = {
   title: string,
 }
 
-export default function LeftSidebar (props: Props): Node {
+export default function Sidebar (props: Props): Node {
   const { isOpen, onToggle } = useDisclosure()
 
   const windowSize = useBreakpointValue({ base: 'mobile', md: 'desktop' })
