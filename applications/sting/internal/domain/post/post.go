@@ -24,6 +24,7 @@ const (
 )
 
 var (
+	ErrNotDraft         = errors.New("post must be in draft")
 	ErrNotPublishing    = errors.New("post must be publishing")
 	ErrNotReview        = errors.New("post must be in review")
 	ErrNotComplete      = errors.New("post is incomplete")
@@ -281,6 +282,10 @@ func (p *Post) SubmitPostRequest(requester *principal.Principal, moderatorId str
 
 	if err := p.CanView(requester); err != nil {
 		return err
+	}
+
+	if p.state != draft {
+		return ErrNotDraft
 	}
 
 	postTime := time.Now()

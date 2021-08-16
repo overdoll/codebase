@@ -68,11 +68,6 @@ type Moderator implements Node @key(fields: "id") {
   lastSelected: Time!
 }
 
-type Contributor implements Node @key(fields: "id") {
-  """The ID of the contributor"""
-  id: ID!
-}
-
 extend type Account {
   """
   Moderator settings and status for this account
@@ -80,9 +75,4 @@ extend type Account {
   Viewable by the currently authenticated account or staff+
   """
   moderator: Moderator @goField(forceResolver: true)
-
-  """
-  Contributor settings and status
-  """
-  contributor: Contributor @goField(forceResolver: true)
 }

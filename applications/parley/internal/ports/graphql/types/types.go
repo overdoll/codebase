@@ -23,9 +23,7 @@ type Account struct {
 	//
 	// Viewable by the currently authenticated account or staff+
 	Moderator *Moderator `json:"moderator"`
-	// Contributor settings and status
-	Contributor *Contributor `json:"contributor"`
-	ID          relay.ID     `json:"id"`
+	ID        relay.ID   `json:"id"`
 }
 
 func (Account) IsEntity() {}
@@ -52,14 +50,6 @@ type AccountInfractionHistoryEdge struct {
 	Node   *AccountInfractionHistory `json:"node"`
 	Cursor string                    `json:"cursor"`
 }
-
-type Contributor struct {
-	// The ID of the contributor
-	ID relay.ID `json:"id"`
-}
-
-func (Contributor) IsNode()   {}
-func (Contributor) IsEntity() {}
 
 // Moderate the pending post input
 type ModeratePostInput struct {

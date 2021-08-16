@@ -300,8 +300,11 @@ type RevokeAccountSessionPayload {
 
 """Payload of the updated account email"""
 type UpdateAccountEmailStatusToPrimaryPayload {
-  """The account email that was updated"""
-  accountEmail: AccountEmail
+  """The account email that was updated to primary"""
+  primaryAccountEmail: AccountEmail
+
+  """The account email that was updated to 'confirmed' status"""
+  updatedAccountEmail: AccountEmail
 }
 
 """Payload of the created account recovery codes"""

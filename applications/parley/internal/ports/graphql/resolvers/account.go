@@ -17,10 +17,6 @@ type AccountResolver struct {
 	App *app.Application
 }
 
-func (r AccountResolver) Contributor(ctx context.Context, obj *types.Account) (*types.Contributor, error) {
-	return &types.Contributor{ID: obj.ID}, nil
-}
-
 func (r AccountResolver) ModeratorPostAuditLogs(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostAuditLogConnection, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {

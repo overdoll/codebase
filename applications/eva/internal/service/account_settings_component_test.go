@@ -70,7 +70,8 @@ type DeleteAccountEmail struct {
 
 type UpdateAccountEmailStatusToPrimary struct {
 	UpdateAccountEmailStatusToPrimary struct {
-		AccountEmail *AccountEmailModified
+		PrimaryAccountEmail *AccountEmailModified
+		UpdatedAccountEmail *AccountEmailModified
 	} `graphql:"updateAccountEmailStatusToPrimary(input: $input)"`
 }
 
@@ -175,7 +176,9 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 	})
 
 	require.NoError(t, err)
-	require.NotNil(t, makeEmailPrimary.UpdateAccountEmailStatusToPrimary.AccountEmail)
+	require.NotNil(t, makeEmailPrimary.UpdateAccountEmailStatusToPrimary.PrimaryAccountEmail)
+
+	require.Equal(t, targetEmail, makeEmailPrimary.UpdateAccountEmailStatusToPrimary.PrimaryAccountEmail.Email)
 
 	// query account settings once more
 	settings = viewerAccountEmailUsernameSettings(t, client)

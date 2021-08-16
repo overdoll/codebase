@@ -383,8 +383,10 @@ type UpdateAccountEmailStatusToPrimaryInput struct {
 
 // Payload of the updated account email
 type UpdateAccountEmailStatusToPrimaryPayload struct {
-	// The account email that was updated
-	AccountEmail *AccountEmail `json:"accountEmail"`
+	// The account email that was updated to primary
+	PrimaryAccountEmail *AccountEmail `json:"primaryAccountEmail"`
+	// The account email that was updated to 'confirmed' status
+	UpdatedAccountEmail *AccountEmail `json:"updatedAccountEmail"`
 }
 
 // Input for updating an account's username

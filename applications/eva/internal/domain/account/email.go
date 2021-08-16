@@ -76,11 +76,9 @@ func (c *Email) MakePrimary() {
 	c.status = EmailPrimary
 }
 
-func (c *Email) MakeConfirmed() {
+func (c *Email) MakeConfirmed(requester *principal.Principal) error {
 	c.status = EmailConfirmed
-}
 
-func (c *Email) CanView(requester *principal.Principal) error {
 	if err := requester.BelongsToAccount(c.accountId); err != nil {
 		return err
 	}
@@ -88,7 +86,7 @@ func (c *Email) CanView(requester *principal.Principal) error {
 	return nil
 }
 
-func (c *Email) CanConfirm(requester *principal.Principal) error {
+func (c *Email) CanView(requester *principal.Principal) error {
 	if err := requester.BelongsToAccount(c.accountId); err != nil {
 		return err
 	}

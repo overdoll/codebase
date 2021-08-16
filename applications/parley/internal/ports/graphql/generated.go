@@ -51,7 +51,6 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Account struct {
-		Contributor            func(childComplexity int) int
 		ID                     func(childComplexity int) int
 		Infractions            func(childComplexity int, after *string, before *string, first *int, last *int) int
 		Moderator              func(childComplexity int) int
@@ -73,14 +72,9 @@ type ComplexityRoot struct {
 		Node   func(childComplexity int) int
 	}
 
-	Contributor struct {
-		ID func(childComplexity int) int
-	}
-
 	Entity struct {
 		FindAccountByID                  func(childComplexity int, id relay.ID) int
 		FindAccountInfractionHistoryByID func(childComplexity int, id relay.ID) int
-		FindContributorByID              func(childComplexity int, id relay.ID) int
 		FindModeratorByID                func(childComplexity int, id relay.ID) int
 		FindPostAuditLogByID             func(childComplexity int, id relay.ID) int
 		FindPostByID                     func(childComplexity int, id relay.ID) int
@@ -176,12 +170,10 @@ type AccountResolver interface {
 	ModeratorPostAuditLogs(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostAuditLogConnection, error)
 	Infractions(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountInfractionHistoryConnection, error)
 	Moderator(ctx context.Context, obj *types.Account) (*types.Moderator, error)
-	Contributor(ctx context.Context, obj *types.Account) (*types.Contributor, error)
 }
 type EntityResolver interface {
 	FindAccountByID(ctx context.Context, id relay.ID) (*types.Account, error)
 	FindAccountInfractionHistoryByID(ctx context.Context, id relay.ID) (*types.AccountInfractionHistory, error)
-	FindContributorByID(ctx context.Context, id relay.ID) (*types.Contributor, error)
 	FindModeratorByID(ctx context.Context, id relay.ID) (*types.Moderator, error)
 	FindPostByID(ctx context.Context, id relay.ID) (*types.Post, error)
 	FindPostAuditLogByID(ctx context.Context, id relay.ID) (*types.PostAuditLog, error)
@@ -213,13 +205,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	ec := executionContext{nil, e}
 	_ = ec
 	switch typeName + "." + field {
-
-	case "Account.contributor":
-		if e.complexity.Account.Contributor == nil {
-			break
-		}
-
-		return e.complexity.Account.Contributor(childComplexity), true
 
 	case "Account.id":
 		if e.complexity.Account.ID == nil {
@@ -301,13 +286,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AccountInfractionHistoryEdge.Node(childComplexity), true
 
-	case "Contributor.id":
-		if e.complexity.Contributor.ID == nil {
-			break
-		}
-
-		return e.complexity.Contributor.ID(childComplexity), true
-
 	case "Entity.findAccountByID":
 		if e.complexity.Entity.FindAccountByID == nil {
 			break
@@ -331,18 +309,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Entity.FindAccountInfractionHistoryByID(childComplexity, args["id"].(relay.ID)), true
-
-	case "Entity.findContributorByID":
-		if e.complexity.Entity.FindContributorByID == nil {
-			break
-		}
-
-		args, err := ec.field_Entity_findContributorByID_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Entity.FindContributorByID(childComplexity, args["id"].(relay.ID)), true
 
 	case "Entity.findModeratorByID":
 		if e.complexity.Entity.FindModeratorByID == nil {
@@ -1011,11 +977,6 @@ type Moderator implements Node @key(fields: "id") {
   lastSelected: Time!
 }
 
-type Contributor implements Node @key(fields: "id") {
-  """The ID of the contributor"""
-  id: ID!
-}
-
 extend type Account {
   """
   Moderator settings and status for this account
@@ -1023,11 +984,6 @@ extend type Account {
   Viewable by the currently authenticated account or staff+
   """
   moderator: Moderator @goField(forceResolver: true)
-
-  """
-  Contributor settings and status
-  """
-  contributor: Contributor @goField(forceResolver: true)
 }`, BuiltIn: false},
 	{Name: "schema/schema.graphql", Input: `extend type Account @key(fields: "id") {
   id: ID! @external
@@ -1061,13 +1017,12 @@ directive @extends on OBJECT
 `, BuiltIn: true},
 	{Name: "federation/entity.graphql", Input: `
 # a union of all types that use the @key directive
-union _Entity = Account | AccountInfractionHistory | Contributor | Moderator | Post | PostAuditLog | PostRejectionReason
+union _Entity = Account | AccountInfractionHistory | Moderator | Post | PostAuditLog | PostRejectionReason
 
 # fake type to build resolver interfaces for users to implement
 type Entity {
 		findAccountByID(id: ID!,): Account!
 	findAccountInfractionHistoryByID(id: ID!,): AccountInfractionHistory!
-	findContributorByID(id: ID!,): Contributor!
 	findModeratorByID(id: ID!,): Moderator!
 	findPostByID(id: ID!,): Post!
 	findPostAuditLogByID(id: ID!,): PostAuditLog!
@@ -1191,21 +1146,6 @@ func (ec *executionContext) field_Entity_findAccountByID_args(ctx context.Contex
 }
 
 func (ec *executionContext) field_Entity_findAccountInfractionHistoryByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 relay.ID
-	if tmp, ok := rawArgs["id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["id"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Entity_findContributorByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 relay.ID
@@ -1578,38 +1518,6 @@ func (ec *executionContext) _Account_moderator(ctx context.Context, field graphq
 	return ec.marshalOModerator2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐModerator(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Account_contributor(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Account",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Account().Contributor(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.Contributor)
-	fc.Result = res
-	return ec.marshalOContributor2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐContributor(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _Account_id(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -1855,41 +1763,6 @@ func (ec *executionContext) _AccountInfractionHistoryEdge_cursor(ctx context.Con
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Contributor_id(ctx context.Context, field graphql.CollectedField, obj *types.Contributor) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Contributor",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(relay.ID)
-	fc.Result = res
-	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _Entity_findAccountByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -1972,48 +1845,6 @@ func (ec *executionContext) _Entity_findAccountInfractionHistoryByID(ctx context
 	res := resTmp.(*types.AccountInfractionHistory)
 	fc.Result = res
 	return ec.marshalNAccountInfractionHistory2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountInfractionHistory(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Entity_findContributorByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Entity",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Entity_findContributorByID_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Entity().FindContributorByID(rctx, args["id"].(relay.ID))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*types.Contributor)
-	fc.Result = res
-	return ec.marshalNContributor2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐContributor(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Entity_findModeratorByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -4804,13 +4635,6 @@ func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj
 			return graphql.Null
 		}
 		return ec._Moderator(ctx, sel, obj)
-	case types.Contributor:
-		return ec._Contributor(ctx, sel, &obj)
-	case *types.Contributor:
-		if obj == nil {
-			return graphql.Null
-		}
-		return ec._Contributor(ctx, sel, obj)
 	default:
 		panic(fmt.Errorf("unexpected type %T", obj))
 	}
@@ -4834,13 +4658,6 @@ func (ec *executionContext) __Entity(ctx context.Context, sel ast.SelectionSet, 
 			return graphql.Null
 		}
 		return ec._AccountInfractionHistory(ctx, sel, obj)
-	case types.Contributor:
-		return ec._Contributor(ctx, sel, &obj)
-	case *types.Contributor:
-		if obj == nil {
-			return graphql.Null
-		}
-		return ec._Contributor(ctx, sel, obj)
 	case types.Moderator:
 		return ec._Moderator(ctx, sel, &obj)
 	case *types.Moderator:
@@ -4926,17 +4743,6 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 					}
 				}()
 				res = ec._Account_moderator(ctx, field, obj)
-				return res
-			})
-		case "contributor":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Account_contributor(ctx, field, obj)
 				return res
 			})
 		case "id":
@@ -5051,33 +4857,6 @@ func (ec *executionContext) _AccountInfractionHistoryEdge(ctx context.Context, s
 	return out
 }
 
-var contributorImplementors = []string{"Contributor", "Node", "_Entity"}
-
-func (ec *executionContext) _Contributor(ctx context.Context, sel ast.SelectionSet, obj *types.Contributor) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, contributorImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("Contributor")
-		case "id":
-			out.Values[i] = ec._Contributor_id(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
 var entityImplementors = []string{"Entity"}
 
 func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) graphql.Marshaler {
@@ -5116,20 +4895,6 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 					}
 				}()
 				res = ec._Entity_findAccountInfractionHistoryByID(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			})
-		case "findContributorByID":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Entity_findContributorByID(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -6094,20 +5859,6 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
-func (ec *executionContext) marshalNContributor2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐContributor(ctx context.Context, sel ast.SelectionSet, v types.Contributor) graphql.Marshaler {
-	return ec._Contributor(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNContributor2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐContributor(ctx context.Context, sel ast.SelectionSet, v *types.Contributor) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	return ec._Contributor(ctx, sel, v)
-}
-
 func (ec *executionContext) unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx context.Context, v interface{}) (relay.ID, error) {
 	var res relay.ID
 	err := res.UnmarshalGQL(v)
@@ -6714,13 +6465,6 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 		return graphql.Null
 	}
 	return graphql.MarshalBoolean(*v)
-}
-
-func (ec *executionContext) marshalOContributor2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐContributor(ctx context.Context, sel ast.SelectionSet, v *types.Contributor) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._Contributor(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOID2ᚖoverdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx context.Context, v interface{}) (*relay.ID, error) {

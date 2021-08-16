@@ -293,7 +293,8 @@ type ComplexityRoot struct {
 	}
 
 	UpdateAccountEmailStatusToPrimaryPayload struct {
-		AccountEmail func(childComplexity int) int
+		PrimaryAccountEmail func(childComplexity int) int
+		UpdatedAccountEmail func(childComplexity int) int
 	}
 
 	UpdateAccountUsernameAndRetainPreviousPayload struct {
@@ -1353,12 +1354,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.UnlockAccountPayload.Account(childComplexity), true
 
-	case "UpdateAccountEmailStatusToPrimaryPayload.accountEmail":
-		if e.complexity.UpdateAccountEmailStatusToPrimaryPayload.AccountEmail == nil {
+	case "UpdateAccountEmailStatusToPrimaryPayload.primaryAccountEmail":
+		if e.complexity.UpdateAccountEmailStatusToPrimaryPayload.PrimaryAccountEmail == nil {
 			break
 		}
 
-		return e.complexity.UpdateAccountEmailStatusToPrimaryPayload.AccountEmail(childComplexity), true
+		return e.complexity.UpdateAccountEmailStatusToPrimaryPayload.PrimaryAccountEmail(childComplexity), true
+
+	case "UpdateAccountEmailStatusToPrimaryPayload.updatedAccountEmail":
+		if e.complexity.UpdateAccountEmailStatusToPrimaryPayload.UpdatedAccountEmail == nil {
+			break
+		}
+
+		return e.complexity.UpdateAccountEmailStatusToPrimaryPayload.UpdatedAccountEmail(childComplexity), true
 
 	case "UpdateAccountUsernameAndRetainPreviousPayload.accountUsername":
 		if e.complexity.UpdateAccountUsernameAndRetainPreviousPayload.AccountUsername == nil {
@@ -1862,8 +1870,11 @@ type RevokeAccountSessionPayload {
 
 """Payload of the updated account email"""
 type UpdateAccountEmailStatusToPrimaryPayload {
-  """The account email that was updated"""
-  accountEmail: AccountEmail
+  """The account email that was updated to primary"""
+  primaryAccountEmail: AccountEmail
+
+  """The account email that was updated to 'confirmed' status"""
+  updatedAccountEmail: AccountEmail
 }
 
 """Payload of the created account recovery codes"""
@@ -7188,7 +7199,7 @@ func (ec *executionContext) _UnlockAccountPayload_account(ctx context.Context, f
 	return ec.marshalOAccount2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _UpdateAccountEmailStatusToPrimaryPayload_accountEmail(ctx context.Context, field graphql.CollectedField, obj *types.UpdateAccountEmailStatusToPrimaryPayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _UpdateAccountEmailStatusToPrimaryPayload_primaryAccountEmail(ctx context.Context, field graphql.CollectedField, obj *types.UpdateAccountEmailStatusToPrimaryPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7206,7 +7217,39 @@ func (ec *executionContext) _UpdateAccountEmailStatusToPrimaryPayload_accountEma
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.AccountEmail, nil
+		return obj.PrimaryAccountEmail, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.AccountEmail)
+	fc.Result = res
+	return ec.marshalOAccountEmail2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountEmail(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdateAccountEmailStatusToPrimaryPayload_updatedAccountEmail(ctx context.Context, field graphql.CollectedField, obj *types.UpdateAccountEmailStatusToPrimaryPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdateAccountEmailStatusToPrimaryPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UpdatedAccountEmail, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -10375,8 +10418,10 @@ func (ec *executionContext) _UpdateAccountEmailStatusToPrimaryPayload(ctx contex
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("UpdateAccountEmailStatusToPrimaryPayload")
-		case "accountEmail":
-			out.Values[i] = ec._UpdateAccountEmailStatusToPrimaryPayload_accountEmail(ctx, field, obj)
+		case "primaryAccountEmail":
+			out.Values[i] = ec._UpdateAccountEmailStatusToPrimaryPayload_primaryAccountEmail(ctx, field, obj)
+		case "updatedAccountEmail":
+			out.Values[i] = ec._UpdateAccountEmailStatusToPrimaryPayload_updatedAccountEmail(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

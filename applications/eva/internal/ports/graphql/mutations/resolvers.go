@@ -570,7 +570,7 @@ func (r *MutationResolver) UpdateAccountEmailStatusToPrimary(ctx context.Context
 		return nil, err
 	}
 
-	email, err := r.App.Commands.UpdateAccountEmailStatusToPrimary.Handle(ctx, command.UpdateAccountEmailStatusToPrimary{
+	oldEmail, email, err := r.App.Commands.UpdateAccountEmailStatusToPrimary.Handle(ctx, command.UpdateAccountEmailStatusToPrimary{
 		Principal: principal.FromContext(ctx),
 		Email:     input.AccountEmailID.GetID(),
 	})
@@ -579,7 +579,14 @@ func (r *MutationResolver) UpdateAccountEmailStatusToPrimary(ctx context.Context
 		return nil, err
 	}
 
-	return &types.UpdateAccountEmailStatusToPrimaryPayload{AccountEmail: types.MarshalAccountEmailToGraphQL(email)}, nil
+	return &types.UpdateAccountEmailStatusToPrimaryPayload{
+		PrimaryAccountEmail: types.MarshalAccountEmailToGraphQL(email),
+		UpdatedAccountEmail: &types.AccountEmail{
+			ID:     relay.NewID(types.AccountEmail{}, email.AccountId(), oldEmail),
+			Email:  oldEmail,
+			Status: types.AccountEmailStatusConfirmed,
+		},
+	}, nil
 }
 
 func (r *MutationResolver) GenerateAccountMultiFactorRecoveryCodes(ctx context.Context) (*types.GenerateAccountMultiFactorRecoveryCodesPayload, error) {

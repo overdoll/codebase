@@ -24,10 +24,6 @@ func (r EntityResolver) FindAccountByID(ctx context.Context, id relay.ID) (*type
 	return &types.Account{ID: id}, nil
 }
 
-func (r EntityResolver) FindContributorByID(ctx context.Context, id relay.ID) (*types.Contributor, error) {
-	return &types.Contributor{ID: id}, nil
-}
-
 func (r EntityResolver) FindAccountInfractionHistoryByID(ctx context.Context, id relay.ID) (*types.AccountInfractionHistory, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
