@@ -55,6 +55,9 @@ const UsernameMutationGQL = graphql`
 
 // TODO create a username validator so all usernames can't be whatever you want them to be
 
+// TODO look up custom messages for empty and invalid form errors
+
+// TODO no native browser form configuration
 const schema = Joi.object({
   username: Joi
     .string()

@@ -7,16 +7,21 @@ import {
 } from '@chakra-ui/react'
 import NavLink from '@//:modules/routing/NavLink'
 import Icon from '@//:modules/content/Icon/Icon'
+import { useLocation } from '@//:modules/routing'
+import getBasePath from '../../../../helpers/getBasePath'
 
 type Props = {
   icon: () => void,
   label: string,
   path: string,
-  exact: boolean,
-  match: boolean,
+  exact: boolean
 }
 
-export default function NavigationButton ({ path, icon, label, exact, match }: Props): Node {
+export default function NavigationButton ({ path, icon, label, exact }: Props): Node {
+  const location = useLocation()
+
+  const match = getBasePath(location.pathname) === getBasePath(path)
+
   return (
     <NavLink exact={exact} to={path}>
       {(isActive) => (

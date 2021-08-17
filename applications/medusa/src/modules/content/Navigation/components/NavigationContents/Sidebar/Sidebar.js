@@ -23,8 +23,6 @@ type Props = {
 }
 
 export default function Sidebar (props: Props): Node {
-  const { isOpen, onToggle } = useDisclosure()
-
   const windowSize = useBreakpointValue({ base: 'mobile', md: 'desktop' })
 
   // Render a mobile-friendly sidebar
@@ -49,26 +47,6 @@ export default function Sidebar (props: Props): Node {
   // Otherwise, render the normal sidebar
   return (
     <>
-      <Flex
-        display={{
-          base: !isOpen ? 'block' : 'none',
-          md: isOpen ? 'block' : 'none'
-        }} position='fixed'
-      >
-        <IconButton
-          mt={4}
-          ml={2}
-          bg='transparent'
-          onClick={onToggle}
-          h='42px' w='42px'
-          icon={
-            <Icon
-              icon={InterfaceArrowsButtonRight} fill='gray.300'
-              m={3}
-            />
-          }
-        />
-      </Flex>
       <Box
         bg='gray.800'
         w='260px'
@@ -82,28 +60,18 @@ export default function Sidebar (props: Props): Node {
         flexShrink={0}
         position={{ base: 'fixed', xl: 'fixed' }}
         zIndex='sidebar'
-        display={{
-          base: isOpen ? 'block' : 'none',
-          md: !isOpen ? 'block' : 'none'
-        }}
       >
         <Button
           bg='transparent'
           pl={1} w='100%'
           mb={4}
           pr={1}
-          onClick={onToggle}
         >
           <Flex
             w='100%'
             align='center' justify='space-between'
           >
             <Heading color='gray.00' ml={1} size='md'>{props.title}</Heading>
-            <Icon
-              mr={1}
-              icon={InterfaceArrowsButtonLeft} fill='gray.300'
-              h='18px' w='18px'
-            />
           </Flex>
         </Button>
         <Stack spacing={2}>

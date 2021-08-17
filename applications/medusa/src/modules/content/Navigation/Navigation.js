@@ -2,29 +2,24 @@
  * @flow
  */
 import type { Node } from 'react'
-import { Fragment, useContext, useMemo } from 'react'
+import { useContext, useMemo } from 'react'
 import {
-  Box,
-  Button,
-  Flex,
-  Text
+  Button, Box, MenuDivider
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import Link from '@//:modules/routing/Link'
-import { Route } from 'react-router'
-import { useLocation } from '@//:modules/routing'
 import computeCurrentActiveRoutes from './helpers/computeCurrentActiveRoutes'
-import { AbilityContext } from '../helpers/AbilityContext'
+import { AbilityContext } from '../../../client/domain/Root/helpers/AbilityContext'
 import { useRelayEnvironment } from 'react-relay'
-import type { TopRightMenuFragment$key } from '@//:artifacts/TopRightMenuFragment.graphql'
+import type { LoggedInMenuFragment$key } from '@//:artifacts/LoggedInMenuFragment.graphql'
+import getBasePath from './helpers/getBasePath'
 
 import NavigationButton
   from './components/NavigationContainer/NavigationCenterItems/NavigationButton/NavigationButton'
 import SidebarButton from './components/NavigationContents/Sidebar/SidebarButton/SidebarButton'
-import NavigationMenu from './components/NavigationContainer/NavigationRightItems/NavigationMenu/NavigationMenu'
 import Sidebar from './components/NavigationContents/Sidebar/Sidebar'
-import MenuButton
-  from './components/NavigationContainer/NavigationRightItems/NavigationMenu/MenuButton/MenuButton'
+import MenuItemButton
+  from './components/NavigationContainer/NavigationRightItems/NavigationMenu/MenuItemButton/MenuItemButton'
 import NavigationContainer from './components/NavigationContainer/NavigationContainer'
 import NavigationLeftBrand from './components/NavigationContainer/NavigationLeftBrand/NavigationLeftBrand'
 import NavigationCenterItems from './components/NavigationContainer/NavigationCenterItems/NavigationCenterItems'
@@ -33,24 +28,33 @@ import SimplifiedNavigation from './components/SimplifiedNavigation/SimplifiedNa
 import NavigationContents from './components/NavigationContents/NavigationContents'
 import PageContents from './components/NavigationContents/PageContents/PageContents'
 import SidebarGrouping from './components/NavigationContents/Sidebar/SidebarGrouping/SidebarGrouping'
+import NavigationMenu
+  from '@//:modules/content/Navigation/components/NavigationContainer/NavigationRightItems/NavigationMenu/NavigationMenu'
+import { useLocation } from '@//:modules/routing'
+import ProfileButton
+  from '@//:modules/content/Navigation/components/NavigationContainer/NavigationRightItems/NavigationMenu/ProfileButton/ProfileButton'
+import LogoutButton
+  from '@//:modules/content/Navigation/components/NavigationContainer/NavigationRightItems/NavigationMenu/LogoutButton/LogoutButton'
+import LoginButton
+  from '@//:modules/content/Navigation/components/NavigationContainer/NavigationRightItems/LoginButton/LoginButton'
+import AvatarButton
+  from '@//:modules/content/Navigation/components/NavigationContainer/NavigationRightItems/AvatarButton/AvatarButton'
+import LoggedOutPlaceholder
+  from '@//:modules/content/Navigation/components/NavigationContainer/NavigationRightItems/NavigationMenu/LoggedOutPlaceholder/LoggedOutPlaceholder'
 
 type Props = {
   children: Node,
-  rootQuery: TopRightMenuFragment$key
+  rootQuery: LoggedInMenuFragment$key
 }
 
-export default function NavigationBar (props: Props): Node {
+export default function Navigation (props: Props): Node {
   const [t] = useTranslation('navigation')
-
-  const location = useLocation()
 
   const environment = useRelayEnvironment()
 
-  const ability = useContext(AbilityContext)
+  const location = useLocation()
 
-  const getBasePath = (path) => {
-    return '/' + path.split('/')[1]
-  }
+  const ability = useContext(AbilityContext)
 
   const [navigationTop, navigationMenu, navigationSidebar, navigationFiltered] = useMemo(() => computeCurrentActiveRoutes({
     environment
@@ -78,32 +82,45 @@ export default function NavigationBar (props: Props): Node {
         </NavigationLeftBrand>
         <NavigationCenterItems>
           {navigationTop.map((item, index) => {
-            const match = getBasePath(location.pathname) === getBasePath(item.path)
             return (
               <NavigationButton
                 key={index}
                 exact={item.exact}
                 icon={item.navigation.icon}
-                match={match}
                 path={item.path} label={t(item.navigation.title)}
               />
             )
           })}
         </NavigationCenterItems>
-        <NavigationRightItems>
-          <NavigationMenu viewer={props.rootQuery}>
-            {navigationMenu.map((item, index) => {
-              const match = getBasePath(location.pathname) === getBasePath(item.path)
-              return (
-                <MenuButton
-                  key={index}
-                  match={match} path={item.path} label={item.navigation.title}
-                  icon={item.navigation.icon}
-                />
+        {
+          ability.can('manage', 'account')
+            ? (
+              <NavigationRightItems>
+                <AvatarButton viewer={props.rootQuery} />
+                <NavigationMenu>
+                  <ProfileButton viewer={props.rootQuery} />
+                  {navigationMenu.map((item, index) => {
+                    return (
+                      <MenuItemButton
+                        key={index}
+                        path={item.path} label={item.navigation.title}
+                        icon={item.navigation.icon}
+                      />
+                    )
+                  })}
+                  <LogoutButton />
+                </NavigationMenu>
+              </NavigationRightItems>
               )
-            })}
-          </NavigationMenu>
-        </NavigationRightItems>
+            : (
+              <NavigationRightItems>
+                <LoginButton />
+                <NavigationMenu>
+                  <LoggedOutPlaceholder />
+                </NavigationMenu>
+              </NavigationRightItems>
+              )
+        }
       </NavigationContainer>
       <NavigationContents>
         {navigationSidebar.map((sidebarGroup, index) => {

@@ -7,7 +7,7 @@ import type { PreloadedQueryInner } from 'react-relay/hooks'
 import { graphql, usePreloadedQuery } from 'react-relay/hooks'
 import type { RootQuery } from '@//:artifacts/RootQuery.graphql'
 import { Helmet } from 'react-helmet-async'
-import NavigationBar from './NavigationBar/NavigationBar'
+import Navigation from '../../../modules/content/Navigation/Navigation'
 import defineAbility from '@//:modules/utilities/functions/defineAbility/defineAbility'
 import { AbilityContext } from './helpers/AbilityContext'
 import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner'
@@ -22,7 +22,8 @@ type Props = {
 const RootQueryGQL = graphql`
   query RootQuery {
     viewer {
-      ...TopRightMenuFragment
+      ...AvatarButtonFragment
+      ...ProfileButtonFragment
       isModerator
       isStaff
       lock {
@@ -49,9 +50,9 @@ export default function Root (props: Props): Node {
         title='overdoll'
       />
       <AbilityContext.Provider value={ability}>
-        <NavigationBar rootQuery={data?.viewer}>
+        <Navigation rootQuery={data?.viewer}>
           <Suspense fallback={<CenteredSpinner />}>{props.children}</Suspense>
-        </NavigationBar>
+        </Navigation>
       </AbilityContext.Provider>
     </>
   )
