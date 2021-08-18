@@ -7,10 +7,8 @@ import SignBadgeCircle
   from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
 import { useTranslation } from 'react-i18next'
 import { Center, Flex, Heading, Stack } from '@chakra-ui/react'
-import Button from '@//:modules/form/Button'
-import { useLazyLoadQuery } from 'react-relay/hooks'
+import Button from '@//:modules/form/button'
 import { Helmet } from 'react-helmet-async'
-import { graphql } from 'graphql'
 
 export default function NotFound (): Node {
   const [t] = useTranslation('empty')

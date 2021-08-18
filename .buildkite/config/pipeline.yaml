@@ -20,3 +20,5 @@ steps:
         APP_KEY: AES256Key-32Characters1234567890
         SESSION_SECRET: AES256Key-32Characters1234567890
         REDIS_HOST: redis
+        STATIC_URL: https://traefik
+        LIBWEBP_VERSION: 1.1.0

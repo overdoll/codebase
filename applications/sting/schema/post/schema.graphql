@@ -7,32 +7,27 @@ type Post implements Node @key(fields: "id") {
   """The state of the post"""
   state: PostState!
 
-  """Represents the account that this post belongs to"""
-  artist: Account!
-
   """The moderator to whom this pending post was assigned"""
-  moderator: Account!
+  moderator: Account
 
   """The contributor who contributed this post"""
   contributor: Account!
 
   """Content belonging to this post"""
-  content: [Content!]!
-
-  """The media that was requested."""
-  mediaRequests: [String!]
-
-  """The characters that were requested"""
-  characterRequests: [CharacterRequestType!]
+  content: [Resource!]!
 
   """The date and time of when this post was created"""
-  postedAt: Time!
+  createdAt: Time!
+
+  """The date and time of when this post was posted"""
+  postedAt: Time
 
   """The date at which this pending post will be reassigned"""
-  reassignmentAt: Time!
+  reassignmentAt: Time
 }
 
 enum PostState {
+  Draft
   Publishing
   Review
   Published
@@ -42,51 +37,102 @@ enum PostState {
   Processing
 }
 
-type CharacterRequestType {
-  name: String!
-  media: String!
+"""Update post brand."""
+input UpdatePostBrandInput {
+  """The post to update"""
+  id: ID!
+
+  """The brand that this post belongs to"""
+  brandId: ID!
 }
 
-input CharacterRequest {
-  name: String!
-  customMediaName: String
-  existingMediaId: ID
+"""Update post audience."""
+input UpdatePostAudienceInput {
+  """The post to update"""
+  id: ID!
+
+  """The audience that this post belongs to"""
+  audienceId: ID!
 }
 
-"""Create pending post."""
-input CreatePostInput {
+"""Update post audience."""
+input UpdatePostContentInput {
+  """The post to update"""
+  id: ID!
 
   """Image IDs for the content"""
   content: [String!]!
+}
+
+"""Update post audience."""
+input UpdatePostCategoriesInput {
+  """The post to update"""
+  id: ID!
 
   """Category IDs for this post"""
   categoryIds: [ID!]!
+}
+
+"""Update post characters."""
+input UpdatePostCharactersInput {
+  """The post to update"""
+  id: ID!
 
   """Ids for all the characters"""
   characterIds: [ID!]!
+}
 
-  """Requests (custom)"""
-  mediaRequests: [String!]
-  characterRequests: [CharacterRequest!]
-
-  """Existing artist's ID"""
-  existingArtist: ID
-
-  """Custom Artist's username"""
-  customArtistUsername: String
-
-  """The author of this post is the artist, as well as contributor"""
-  posterIsArtist: Boolean
+"""Publish post."""
+input SubmitPostInput {
+  """The post to publish"""
+  id: ID!
 }
 
 """Payload for a created pending post"""
 type CreatePostPayload {
   """The pending post after the creation"""
   post: Post
-
-  """If this pending post will be in review or not"""
-  review: Boolean
 }
+
+"""Payload for updating a post"""
+type UpdatePostBrandPayload {
+  """The post after the update"""
+  post: Post
+}
+
+"""Payload for updating a post"""
+type UpdatePostAudiencePayload {
+  """The post after the update"""
+  post: Post
+}
+
+"""Payload for updating a post"""
+type UpdatePostContentPayload {
+  """The post after the update"""
+  post: Post
+}
+
+"""Payload for updating a post"""
+type UpdatePostCategoriesPayload {
+  """The post after the update"""
+  post: Post
+}
+
+"""Payload for updating a post"""
+type UpdatePostCharactersPayload {
+  """The post after the update"""
+  post: Post
+}
+
+"""Payload for submitting a post"""
+type SubmitPostPayload {
+  """The post after being submitted"""
+  post: Post
+
+  """Whether or not the submitted post is going in review"""
+  inReview: Boolean
+}
+
 
 type PostEdge {
   cursor: String!
@@ -101,21 +147,6 @@ type PostConnection {
 extend type Account {
   """Posts queue specific to this account (when moderator)"""
   moderatorPostsQueue(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """Returns the elements in the list that come before the specified cursor."""
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-  ): PostConnection! @goField(forceResolver: true)
-
-  """Posts specific to this account"""
-  posts(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
 
@@ -147,9 +178,39 @@ extend type Account {
 
 extend type Mutation {
   """
-  Create a new pending post
+  Create a new post
   """
-  createPost(input: CreatePostInput!): CreatePostPayload
+  createPost: CreatePostPayload
+
+  """
+  Update a post in draft status - brand
+  """
+  updatePostBrand(input: UpdatePostBrandInput!): UpdatePostBrandPayload
+
+  """
+  Update a post in draft status - audience
+  """
+  updatePostAudience(input: UpdatePostAudienceInput!): UpdatePostAudiencePayload
+
+  """
+  Update a post in draft status - content
+  """
+  updatePostContent(input: UpdatePostContentInput!): UpdatePostContentPayload
+
+  """
+  Update a post in draft status - characters
+  """
+  updatePostCharacters(input: UpdatePostCharactersInput!): UpdatePostCharactersPayload
+
+  """
+  Update a post in draft status - categories
+  """
+  updatePostCategories(input: UpdatePostCategoriesInput!): UpdatePostCategoriesPayload
+
+  """
+  Submit a post. Will be either in review or instantly move to publishing if the account is verified
+  """
+  submitPost(input: SubmitPostInput!): SubmitPostPayload
 }
 
 extend type Query {
@@ -179,8 +240,8 @@ extend type Query {
     """Search by charcter Ids."""
     characterIds: [ID!]
 
-    """Search by media Ids."""
-    mediaIds: [ID!]
+    """Search by series Ids."""
+    seriesIds: [ID!]
   ): PostConnection!
 }
 
@@ -218,8 +279,42 @@ extend type Character {
   ): PostConnection! @goField(forceResolver: true)
 }
 
-extend type Media {
-  """Posts belonging to this media"""
+extend type Series {
+  """Posts belonging to this series"""
+  posts(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): PostConnection! @goField(forceResolver: true)
+}
+
+extend type Brand {
+  """Posts belonging to this brand"""
+  posts(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): PostConnection! @goField(forceResolver: true)
+}
+
+extend type Audience {
+  """Posts belonging to this audience"""
   posts(
     """Returns the elements in the list that come after the specified cursor."""
     after: String

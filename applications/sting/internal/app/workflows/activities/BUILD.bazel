@@ -1,0 +1,21 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "activities",
+    srcs = [
+        "activities.go",
+        "discard_post.go",
+        "publish_post.go",
+        "reassign_moderator.go",
+        "services.go",
+        "submit_post.go",
+        "undo_post.go",
+    ],
+    importpath = "overdoll/applications/sting/internal/app/workflows/activities",
+    visibility = ["//applications/sting:__subpackages__"],
+    deps = [
+        "//applications/sting/internal/domain/post",
+        "//applications/sting/internal/domain/resource",
+        "@com_github_pkg_errors//:errors",
+    ],
+)

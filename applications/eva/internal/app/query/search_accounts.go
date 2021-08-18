@@ -10,7 +10,6 @@ import (
 type SearchAccounts struct {
 	Cursor   *paging.Cursor
 	Username string
-	IsArtist bool
 }
 
 type SearchAccountsHandler struct {
@@ -23,7 +22,7 @@ func NewSearchAccountsHandler(ar account.IndexRepository) SearchAccountsHandler 
 
 func (h SearchAccountsHandler) Handle(ctx context.Context, query SearchAccounts) ([]*account.Account, error) {
 
-	results, err := h.ar.SearchAccounts(ctx, query.Cursor, query.Username, query.IsArtist)
+	results, err := h.ar.SearchAccounts(ctx, query.Cursor, query.Username)
 
 	if err != nil {
 		return nil, err

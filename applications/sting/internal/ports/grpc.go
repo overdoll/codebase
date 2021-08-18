@@ -8,7 +8,7 @@ import (
 	"overdoll/applications/sting/internal/app"
 	"overdoll/applications/sting/internal/app/command"
 	"overdoll/applications/sting/internal/app/query"
-	"overdoll/applications/sting/internal/ports/temporal/workflows"
+	"overdoll/applications/sting/internal/app/workflows"
 	sting "overdoll/applications/sting/proto"
 )
 
@@ -34,8 +34,14 @@ func (s Server) GetPost(ctx context.Context, request *sting.PostRequest) (*sting
 		return nil, err
 	}
 
+	var moderatorId string
+
+	if post.ModeratorId() != nil {
+		moderatorId = ""
+	}
+
 	return &sting.Post{
-		ModeratorId:   post.ModeratorId(),
+		ModeratorId:   moderatorId,
 		ContributorId: post.ContributorId(),
 	}, nil
 }
@@ -53,7 +59,7 @@ func (s Server) RejectPost(ctx context.Context, request *sting.PostRequest) (*st
 
 func (s Server) PublishPost(ctx context.Context, request *sting.PostRequest) (*sting.UpdatePostResponse, error) {
 
-	if err := s.app.Commands.StartPublishPost.Handle(ctx, command.StartPublishPost{
+	if err := s.app.Commands.PublishPost.Handle(ctx, command.StartPublishPost{
 		PostId: request.Id,
 	}); err != nil {
 		return nil, err
@@ -75,7 +81,7 @@ func (s Server) PublishPost(ctx context.Context, request *sting.PostRequest) (*s
 
 func (s Server) DiscardPost(ctx context.Context, request *sting.PostRequest) (*sting.UpdatePostResponse, error) {
 
-	if err := s.app.Commands.StartDiscardPost.Handle(ctx, command.StartDiscardPost{
+	if err := s.app.Commands.DiscardPost.Handle(ctx, command.StartDiscardPost{
 		PostId: request.Id,
 	}); err != nil {
 		return nil, err
@@ -97,7 +103,7 @@ func (s Server) DiscardPost(ctx context.Context, request *sting.PostRequest) (*s
 
 func (s Server) UndoPost(ctx context.Context, request *sting.PostRequest) (*sting.UpdatePostResponse, error) {
 
-	if err := s.app.Commands.StartUndoPost.Handle(ctx, command.StartUndoPost{
+	if err := s.app.Commands.UndoPost.Handle(ctx, command.StartUndoPost{
 		PostId: request.Id,
 	}); err != nil {
 		return nil, err

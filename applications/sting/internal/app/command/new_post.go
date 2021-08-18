@@ -3,50 +3,36 @@ package command
 import (
 	"context"
 
-	"overdoll/applications/sting/internal/domain/content"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/principal"
 )
 
-type NewPost struct {
-	PostId string
+type CreatePost struct {
+	Principal *principal.Principal
 }
 
-type NewPostHandler struct {
-	pr  post.Repository
-	pi  post.IndexRepository
-	cr  content.Repository
-	eva EvaService
+type CreatePostHandler struct {
+	pr     post.Repository
+	parley ParleyService
+	eva    EvaService
 }
 
-func NewNewPostHandler(pr post.Repository, pi post.IndexRepository, cr content.Repository, eva EvaService) NewPostHandler {
-	return NewPostHandler{pr: pr, cr: cr, eva: eva, pi: pi}
+func NewCreatePostHandler(pr post.Repository, eva EvaService, parley ParleyService) CreatePostHandler {
+	return CreatePostHandler{pr: pr, eva: eva, parley: parley}
 }
 
-func (h NewPostHandler) Handle(ctx context.Context, cmd NewPost) error {
+func (h CreatePostHandler) Handle(ctx context.Context, cmd CreatePost) (*post.Post, error) {
 
-	pendingPost, err := h.pr.UpdatePost(ctx, cmd.PostId, func(pending *post.Post) error {
-		// make post in review
-		if err := pending.MakeReview(); err != nil {
-			return err
-		}
-
-		// Process content (mime-type checks, etc...)
-		cnt, err := h.cr.ProcessContent(ctx, pending.ContributorId(), pending.Content())
-
-		if err != nil {
-			return err
-		}
-
-		// update content
-		pending.UpdateContent(cnt)
-
-		return nil
-	})
+	pendingPost, err := post.NewPost(cmd.Principal)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	// Update pending post index
-	return h.pi.IndexPost(ctx, pendingPost)
+	// create a pending post in the database with all of the data
+	if err := h.pr.CreatePost(ctx, pendingPost); err != nil {
+		return nil, err
+	}
+
+	return pendingPost, nil
 }

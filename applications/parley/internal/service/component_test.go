@@ -102,7 +102,7 @@ func startService() bool {
 
 	application, _ := service.NewComponentTestApplication(context.Background())
 
-	srv := ports.NewGraphQLServer(&application)
+	srv := ports.NewHttpServer(&application)
 
 	go bootstrap.InitializeHttpServer(ParleyHttpAddr, srv, func() {})
 

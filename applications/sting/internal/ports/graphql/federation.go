@@ -53,13 +53,27 @@ func (ec *executionContext) __resolve_entities(ctx context.Context, representati
 
 			list = append(list, entity)
 
-		case "Artist":
+		case "Audience":
 			id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
 			if err != nil {
 				return nil, errors.New(fmt.Sprintf("Field %s undefined in schema.", "id"))
 			}
 
-			entity, err := ec.resolvers.Entity().FindArtistByID(ctx,
+			entity, err := ec.resolvers.Entity().FindAudienceByID(ctx,
+				id0)
+			if err != nil {
+				return nil, err
+			}
+
+			list = append(list, entity)
+
+		case "Brand":
+			id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
+			if err != nil {
+				return nil, errors.New(fmt.Sprintf("Field %s undefined in schema.", "id"))
+			}
+
+			entity, err := ec.resolvers.Entity().FindBrandByID(ctx,
 				id0)
 			if err != nil {
 				return nil, err
@@ -95,20 +109,6 @@ func (ec *executionContext) __resolve_entities(ctx context.Context, representati
 
 			list = append(list, entity)
 
-		case "Media":
-			id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
-			if err != nil {
-				return nil, errors.New(fmt.Sprintf("Field %s undefined in schema.", "id"))
-			}
-
-			entity, err := ec.resolvers.Entity().FindMediaByID(ctx,
-				id0)
-			if err != nil {
-				return nil, err
-			}
-
-			list = append(list, entity)
-
 		case "Post":
 			id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
 			if err != nil {
@@ -116,6 +116,20 @@ func (ec *executionContext) __resolve_entities(ctx context.Context, representati
 			}
 
 			entity, err := ec.resolvers.Entity().FindPostByID(ctx,
+				id0)
+			if err != nil {
+				return nil, err
+			}
+
+			list = append(list, entity)
+
+		case "Series":
+			id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
+			if err != nil {
+				return nil, errors.New(fmt.Sprintf("Field %s undefined in schema.", "id"))
+			}
+
+			entity, err := ec.resolvers.Entity().FindSeriesByID(ctx,
 				id0)
 			if err != nil {
 				return nil, err

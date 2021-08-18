@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "workflows",
+    srcs = [
+        "discard_post.go",
+        "options.go",
+        "publish_post.go",
+        "submit_post.go",
+        "undo_post.go",
+    ],
+    importpath = "overdoll/applications/sting/internal/app/workflows",
+    visibility = ["//applications/sting:__subpackages__"],
+    deps = [
+        "//applications/sting/internal/app/workflows/activities",
+        "@io_temporal_go_sdk//temporal",
+        "@io_temporal_go_sdk//workflow",
+    ],
+)

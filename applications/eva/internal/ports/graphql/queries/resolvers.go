@@ -18,7 +18,7 @@ type QueryResolver struct {
 	App *app.Application
 }
 
-func (r *QueryResolver) Accounts(ctx context.Context, after *string, before *string, first *int, last *int, username *string, isArtist *bool) (*types.AccountConnection, error) {
+func (r *QueryResolver) Accounts(ctx context.Context, after *string, before *string, first *int, last *int, username *string) (*types.AccountConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)
 
@@ -32,16 +32,9 @@ func (r *QueryResolver) Accounts(ctx context.Context, after *string, before *str
 		usrname = *username
 	}
 
-	artist := false
-
-	if isArtist != nil {
-		artist = *isArtist
-	}
-
 	results, err := r.App.Queries.SearchAccounts.Handle(ctx, query.SearchAccounts{
 		Cursor:   cursor,
 		Username: usrname,
-		IsArtist: artist,
 	})
 
 	if err != nil {

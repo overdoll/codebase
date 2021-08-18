@@ -45,7 +45,7 @@ type AccountSession implements Node @key(fields: "id") {
   """When the session was created"""
   created: String!
 
-  """If the session belongs to the currently authenticated account"""
+  """If the session belongs to the currently authenticated account. This means that the session cannot be revoked (or else we get weird stuff)"""
   current: Boolean!
 }
 

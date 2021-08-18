@@ -8,7 +8,6 @@ import (
 
 type EvaService interface {
 	GetAccount(context.Context, string) (*principal.Principal, error)
-	CreateAccount(context.Context, string, string) (*principal.Principal, error)
 }
 
 type ParleyService interface {

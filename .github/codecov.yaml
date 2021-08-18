@@ -34,10 +34,6 @@ coverage:
         informational: true
         paths:
           - "applications/eva"
-      buffer:
-        informational: true
-        paths:
-          - "applications/buffer"
       sting:
         informational: true
         paths:

@@ -55,7 +55,6 @@ type ComplexityRoot struct {
 		Avatar              func(childComplexity int, size *int) int
 		Emails              func(childComplexity int, after *string, before *string, first *int, last *int) int
 		ID                  func(childComplexity int) int
-		IsArtist            func(childComplexity int) int
 		IsModerator         func(childComplexity int) int
 		IsStaff             func(childComplexity int) int
 		Lock                func(childComplexity int) int
@@ -149,11 +148,6 @@ type ComplexityRoot struct {
 		Validation   func(childComplexity int) int
 	}
 
-	Artist struct {
-		Account func(childComplexity int) int
-		ID      func(childComplexity int) int
-	}
-
 	AuthenticationToken struct {
 		AccountStatus func(childComplexity int) int
 		Device        func(childComplexity int) int
@@ -173,11 +167,6 @@ type ComplexityRoot struct {
 	ConfirmAccountEmailPayload struct {
 		AccountEmail func(childComplexity int) int
 		Validation   func(childComplexity int) int
-	}
-
-	Contributor struct {
-		Account func(childComplexity int) int
-		ID      func(childComplexity int) int
 	}
 
 	CreateAccountWithAuthenticationTokenPayload struct {
@@ -203,8 +192,6 @@ type ComplexityRoot struct {
 		FindAccountEmailByID    func(childComplexity int, id relay.ID) int
 		FindAccountSessionByID  func(childComplexity int, id relay.ID) int
 		FindAccountUsernameByID func(childComplexity int, id relay.ID) int
-		FindArtistByID          func(childComplexity int, id relay.ID) int
-		FindContributorByID     func(childComplexity int, id relay.ID) int
 		FindModeratorByID       func(childComplexity int, id relay.ID) int
 	}
 
@@ -277,7 +264,7 @@ type ComplexityRoot struct {
 
 	Query struct {
 		Account                 func(childComplexity int, username string) int
-		Accounts                func(childComplexity int, after *string, before *string, first *int, last *int, username *string, isArtist *bool) int
+		Accounts                func(childComplexity int, after *string, before *string, first *int, last *int, username *string) int
 		ViewAuthenticationToken func(childComplexity int, token *string) int
 		Viewer                  func(childComplexity int) int
 		__resolve__service      func(childComplexity int) int
@@ -343,8 +330,6 @@ type EntityResolver interface {
 	FindAccountEmailByID(ctx context.Context, id relay.ID) (*types.AccountEmail, error)
 	FindAccountSessionByID(ctx context.Context, id relay.ID) (*types.AccountSession, error)
 	FindAccountUsernameByID(ctx context.Context, id relay.ID) (*types.AccountUsername, error)
-	FindArtistByID(ctx context.Context, id relay.ID) (*types.Artist, error)
-	FindContributorByID(ctx context.Context, id relay.ID) (*types.Contributor, error)
 	FindModeratorByID(ctx context.Context, id relay.ID) (*types.Moderator, error)
 }
 type MutationResolver interface {
@@ -373,7 +358,7 @@ type QueryResolver interface {
 	ViewAuthenticationToken(ctx context.Context, token *string) (*types.AuthenticationToken, error)
 	Viewer(ctx context.Context) (*types.Account, error)
 	Account(ctx context.Context, username string) (*types.Account, error)
-	Accounts(ctx context.Context, after *string, before *string, first *int, last *int, username *string, isArtist *bool) (*types.AccountConnection, error)
+	Accounts(ctx context.Context, after *string, before *string, first *int, last *int, username *string) (*types.AccountConnection, error)
 }
 
 type executableSchema struct {
@@ -421,13 +406,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Account.ID(childComplexity), true
-
-	case "Account.isArtist":
-		if e.complexity.Account.IsArtist == nil {
-			break
-		}
-
-		return e.complexity.Account.IsArtist(childComplexity), true
 
 	case "Account.isModerator":
 		if e.complexity.Account.IsModerator == nil {
@@ -761,20 +739,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AddAccountEmailPayload.Validation(childComplexity), true
 
-	case "Artist.account":
-		if e.complexity.Artist.Account == nil {
-			break
-		}
-
-		return e.complexity.Artist.Account(childComplexity), true
-
-	case "Artist.id":
-		if e.complexity.Artist.ID == nil {
-			break
-		}
-
-		return e.complexity.Artist.ID(childComplexity), true
-
 	case "AuthenticationToken.accountStatus":
 		if e.complexity.AuthenticationToken.AccountStatus == nil {
 			break
@@ -858,20 +822,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.ConfirmAccountEmailPayload.Validation(childComplexity), true
-
-	case "Contributor.account":
-		if e.complexity.Contributor.Account == nil {
-			break
-		}
-
-		return e.complexity.Contributor.Account(childComplexity), true
-
-	case "Contributor.id":
-		if e.complexity.Contributor.ID == nil {
-			break
-		}
-
-		return e.complexity.Contributor.ID(childComplexity), true
 
 	case "CreateAccountWithAuthenticationTokenPayload.account":
 		if e.complexity.CreateAccountWithAuthenticationTokenPayload.Account == nil {
@@ -962,30 +912,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Entity.FindAccountUsernameByID(childComplexity, args["id"].(relay.ID)), true
-
-	case "Entity.findArtistByID":
-		if e.complexity.Entity.FindArtistByID == nil {
-			break
-		}
-
-		args, err := ec.field_Entity_findArtistByID_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Entity.FindArtistByID(childComplexity, args["id"].(relay.ID)), true
-
-	case "Entity.findContributorByID":
-		if e.complexity.Entity.FindContributorByID == nil {
-			break
-		}
-
-		args, err := ec.field_Entity_findContributorByID_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Entity.FindContributorByID(childComplexity, args["id"].(relay.ID)), true
 
 	case "Entity.findModeratorByID":
 		if e.complexity.Entity.FindModeratorByID == nil {
@@ -1345,7 +1271,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Accounts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["username"].(*string), args["isArtist"].(*bool)), true
+		return e.complexity.Query.Accounts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["username"].(*string)), true
 
 	case "Query.viewAuthenticationToken":
 		if e.complexity.Query.ViewAuthenticationToken == nil {
@@ -1555,9 +1481,6 @@ var sources = []*ast.Source{
   """Whether or not this account is part of the moderation team"""
   isModerator: Boolean!
 
-  """Whether or not this account is an artist"""
-  isArtist: Boolean!
-
   """The details of the account lock"""
   lock: AccountLock @goField(forceResolver: true)
 }
@@ -1629,29 +1552,12 @@ extend type Query {
 
     """Filter by the account username."""
     username: String
-
-    """Filter whether or not this account is an artist."""
-    isArtist: Boolean = false
   ): AccountConnection!
 }`, BuiltIn: false},
 	{Name: "schema/extensions/schema.graphql", Input: `extend type Moderator @key(fields: "id") {
   id: ID! @external
 
   """The account linked to this moderator"""
-  account: Account!
-}
-
-extend type Contributor @key(fields: "id") {
-  id: ID! @external
-
-  """The account linked to this contributor"""
-  account: Account!
-}
-
-extend type Artist @key(fields: "id") {
-  id: ID! @external
-
-  """The account linked to this artist"""
   account: Account!
 }`, BuiltIn: false},
 	{Name: "schema/settings/schema.graphql", Input: `enum AccountEmailStatus {
@@ -1701,7 +1607,7 @@ type AccountSession implements Node @key(fields: "id") {
   """When the session was created"""
   created: String!
 
-  """If the session belongs to the currently authenticated account"""
+  """If the session belongs to the currently authenticated account. This means that the session cannot be revoked (or else we get weird stuff)"""
   current: Boolean!
 }
 
@@ -2350,7 +2256,7 @@ directive @extends on OBJECT
 `, BuiltIn: true},
 	{Name: "federation/entity.graphql", Input: `
 # a union of all types that use the @key directive
-union _Entity = Account | AccountEmail | AccountSession | AccountUsername | Artist | Contributor | Moderator
+union _Entity = Account | AccountEmail | AccountSession | AccountUsername | Moderator
 
 # fake type to build resolver interfaces for users to implement
 type Entity {
@@ -2358,8 +2264,6 @@ type Entity {
 	findAccountEmailByID(id: ID!,): AccountEmail!
 	findAccountSessionByID(id: ID!,): AccountSession!
 	findAccountUsernameByID(id: ID!,): AccountUsername!
-	findArtistByID(id: ID!,): Artist!
-	findContributorByID(id: ID!,): Contributor!
 	findModeratorByID(id: ID!,): Moderator!
 
 }
@@ -2567,36 +2471,6 @@ func (ec *executionContext) field_Entity_findAccountSessionByID_args(ctx context
 }
 
 func (ec *executionContext) field_Entity_findAccountUsernameByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 relay.ID
-	if tmp, ok := rawArgs["id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["id"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Entity_findArtistByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 relay.ID
-	if tmp, ok := rawArgs["id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["id"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Entity_findContributorByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 relay.ID
@@ -2914,15 +2788,6 @@ func (ec *executionContext) field_Query_accounts_args(ctx context.Context, rawAr
 		}
 	}
 	args["username"] = arg4
-	var arg5 *bool
-	if tmp, ok := rawArgs["isArtist"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("isArtist"))
-		arg5, err = ec.unmarshalOBoolean2ᚖbool(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["isArtist"] = arg5
 	return args, nil
 }
 
@@ -3180,41 +3045,6 @@ func (ec *executionContext) _Account_isModerator(ctx context.Context, field grap
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.IsModerator, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(bool)
-	fc.Result = res
-	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Account_isArtist(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Account",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.IsArtist, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4748,76 +4578,6 @@ func (ec *executionContext) _AddAccountEmailPayload_accountEmail(ctx context.Con
 	return ec.marshalOAccountEmail2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountEmail(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Artist_id(ctx context.Context, field graphql.CollectedField, obj *types.Artist) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Artist",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(relay.ID)
-	fc.Result = res
-	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Artist_account(ctx context.Context, field graphql.CollectedField, obj *types.Artist) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Artist",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Account, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*types.Account)
-	fc.Result = res
-	return ec.marshalNAccount2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _AuthenticationToken_id(ctx context.Context, field graphql.CollectedField, obj *types.AuthenticationToken) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -5226,76 +4986,6 @@ func (ec *executionContext) _ConfirmAccountEmailPayload_accountEmail(ctx context
 	return ec.marshalOAccountEmail2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountEmail(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Contributor_id(ctx context.Context, field graphql.CollectedField, obj *types.Contributor) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Contributor",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(relay.ID)
-	fc.Result = res
-	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Contributor_account(ctx context.Context, field graphql.CollectedField, obj *types.Contributor) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Contributor",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Account, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*types.Account)
-	fc.Result = res
-	return ec.marshalNAccount2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _CreateAccountWithAuthenticationTokenPayload_validation(ctx context.Context, field graphql.CollectedField, obj *types.CreateAccountWithAuthenticationTokenPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -5657,90 +5347,6 @@ func (ec *executionContext) _Entity_findAccountUsernameByID(ctx context.Context,
 	res := resTmp.(*types.AccountUsername)
 	fc.Result = res
 	return ec.marshalNAccountUsername2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountUsername(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Entity_findArtistByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Entity",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Entity_findArtistByID_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Entity().FindArtistByID(rctx, args["id"].(relay.ID))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*types.Artist)
-	fc.Result = res
-	return ec.marshalNArtist2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐArtist(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Entity_findContributorByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Entity",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Entity_findContributorByID_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Entity().FindContributorByID(rctx, args["id"].(relay.ID))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*types.Contributor)
-	fc.Result = res
-	return ec.marshalNContributor2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐContributor(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Entity_findModeratorByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -7216,7 +6822,7 @@ func (ec *executionContext) _Query_accounts(ctx context.Context, field graphql.C
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Accounts(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["username"].(*string), args["isArtist"].(*bool))
+		return ec.resolvers.Query().Accounts(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["username"].(*string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9214,20 +8820,6 @@ func (ec *executionContext) __Entity(ctx context.Context, sel ast.SelectionSet, 
 			return graphql.Null
 		}
 		return ec._AccountUsername(ctx, sel, obj)
-	case types.Artist:
-		return ec._Artist(ctx, sel, &obj)
-	case *types.Artist:
-		if obj == nil {
-			return graphql.Null
-		}
-		return ec._Artist(ctx, sel, obj)
-	case types.Contributor:
-		return ec._Contributor(ctx, sel, &obj)
-	case *types.Contributor:
-		if obj == nil {
-			return graphql.Null
-		}
-		return ec._Contributor(ctx, sel, obj)
 	case types.Moderator:
 		return ec._Moderator(ctx, sel, &obj)
 	case *types.Moderator:
@@ -9282,11 +8874,6 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 			}
 		case "isModerator":
 			out.Values[i] = ec._Account_isModerator(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
-		case "isArtist":
-			out.Values[i] = ec._Account_isArtist(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
@@ -9909,38 +9496,6 @@ func (ec *executionContext) _AddAccountEmailPayload(ctx context.Context, sel ast
 	return out
 }
 
-var artistImplementors = []string{"Artist", "_Entity"}
-
-func (ec *executionContext) _Artist(ctx context.Context, sel ast.SelectionSet, obj *types.Artist) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, artistImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("Artist")
-		case "id":
-			out.Values[i] = ec._Artist_id(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "account":
-			out.Values[i] = ec._Artist_account(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
 var authenticationTokenImplementors = []string{"AuthenticationToken"}
 
 func (ec *executionContext) _AuthenticationToken(ctx context.Context, sel ast.SelectionSet, obj *types.AuthenticationToken) graphql.Marshaler {
@@ -10044,38 +9599,6 @@ func (ec *executionContext) _ConfirmAccountEmailPayload(ctx context.Context, sel
 			out.Values[i] = ec._ConfirmAccountEmailPayload_validation(ctx, field, obj)
 		case "accountEmail":
 			out.Values[i] = ec._ConfirmAccountEmailPayload_accountEmail(ctx, field, obj)
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var contributorImplementors = []string{"Contributor", "_Entity"}
-
-func (ec *executionContext) _Contributor(ctx context.Context, sel ast.SelectionSet, obj *types.Contributor) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, contributorImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("Contributor")
-		case "id":
-			out.Values[i] = ec._Contributor_id(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "account":
-			out.Values[i] = ec._Contributor_account(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -10256,34 +9779,6 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 					}
 				}()
 				res = ec._Entity_findAccountUsernameByID(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			})
-		case "findArtistByID":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Entity_findArtistByID(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			})
-		case "findContributorByID":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Entity_findContributorByID(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -11600,20 +11095,6 @@ func (ec *executionContext) unmarshalNAddAccountEmailInput2overdollᚋapplicatio
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNArtist2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐArtist(ctx context.Context, sel ast.SelectionSet, v types.Artist) graphql.Marshaler {
-	return ec._Artist(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNArtist2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐArtist(ctx context.Context, sel ast.SelectionSet, v *types.Artist) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	return ec._Artist(ctx, sel, v)
-}
-
 func (ec *executionContext) unmarshalNBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
 	res, err := graphql.UnmarshalBoolean(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -11632,20 +11113,6 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 func (ec *executionContext) unmarshalNConfirmAccountEmailInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐConfirmAccountEmailInput(ctx context.Context, v interface{}) (types.ConfirmAccountEmailInput, error) {
 	res, err := ec.unmarshalInputConfirmAccountEmailInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNContributor2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐContributor(ctx context.Context, sel ast.SelectionSet, v types.Contributor) graphql.Marshaler {
-	return ec._Contributor(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNContributor2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐContributor(ctx context.Context, sel ast.SelectionSet, v *types.Contributor) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	return ec._Contributor(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNCreateAccountWithAuthenticationTokenInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateAccountWithAuthenticationTokenInput(ctx context.Context, v interface{}) (types.CreateAccountWithAuthenticationTokenInput, error) {

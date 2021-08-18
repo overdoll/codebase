@@ -27,17 +27,3 @@ func (s EvaGrpc) GetAccount(ctx context.Context, id string) (*principal.Principa
 
 	return principal.UnmarshalFromEvaProto(acc), nil
 }
-
-func (s EvaGrpc) CreateAccount(ctx context.Context, username, email string) (*principal.Principal, error) {
-
-	acc, err := s.client.CreateAccount(ctx, &eva.CreateAccountRequest{
-		Username: username,
-		Email:    email,
-	})
-
-	if err != nil {
-		return nil, err
-	}
-
-	return principal.UnmarshalFromEvaProto(acc), nil
-}

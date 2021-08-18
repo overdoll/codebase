@@ -1,17 +1,6 @@
 version: '3.9'
 services:
-  traefik:
-    image: traefik:v2.1
-    command:
-      - --entrypoints.web.address=:80
-      - --entrypoints.websecure.address=:443
-      - --providers.docker=true
-      - --providers.docker.exposedbydefault=false
-    ports:
-      - 8000:80
-      - 4343:443
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+
 
   run:
     working_dir: /workdir

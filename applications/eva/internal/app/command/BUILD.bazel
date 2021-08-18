@@ -5,7 +5,6 @@ go_library(
     srcs = [
         "add_account_email.go",
         "confirm_account_email.go",
-        "create_account.go",
         "create_account_with_authentication_token.go",
         "disable_account_multi_factor.go",
         "enroll_account_multi_factor_totp.go",

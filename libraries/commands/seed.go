@@ -110,7 +110,7 @@ var Seed = &cobra.Command{
 		}
 
 		zap.S().Infof(
-			"sucessfuly seeded [%s] rows in %s \n",
+			"sucessfuly seeded [%s] rows in %s ",
 			strconv.Itoa(count),
 			time.Since(start).Truncate(time.Millisecond),
 		)

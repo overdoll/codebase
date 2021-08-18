@@ -26,7 +26,6 @@ func MarshalAccountToGraphQL(result *account.Account) *Account {
 		Username:    result.Username(),
 		IsStaff:     result.IsStaff(),
 		IsModerator: result.IsModerator(),
-		IsArtist:    result.IsArtist(),
 	}
 }
 

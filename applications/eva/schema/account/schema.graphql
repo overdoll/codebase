@@ -20,9 +20,6 @@ type Account implements Node @key(fields: "id") {
   """Whether or not this account is part of the moderation team"""
   isModerator: Boolean!
 
-  """Whether or not this account is an artist"""
-  isArtist: Boolean!
-
   """The details of the account lock"""
   lock: AccountLock @goField(forceResolver: true)
 }
@@ -94,8 +91,5 @@ extend type Query {
 
     """Filter by the account username."""
     username: String
-
-    """Filter whether or not this account is an artist."""
-    isArtist: Boolean = false
   ): AccountConnection!
 }

@@ -20,34 +20,6 @@ func (r EntityResolver) FindAccountByID(ctx context.Context, id relay.ID) (*type
 	return dataloader.For(ctx).AccountById.Load(id.GetID())
 }
 
-func (r EntityResolver) FindArtistByID(ctx context.Context, id relay.ID) (*types.Artist, error) {
-
-	acc, err := dataloader.For(ctx).AccountById.Load(id.GetID())
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &types.Artist{
-		ID:      id,
-		Account: acc,
-	}, nil
-}
-
-func (r EntityResolver) FindContributorByID(ctx context.Context, id relay.ID) (*types.Contributor, error) {
-
-	acc, err := dataloader.For(ctx).AccountById.Load(id.GetID())
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &types.Contributor{
-		ID:      id,
-		Account: acc,
-	}, nil
-}
-
 func (r EntityResolver) FindModeratorByID(ctx context.Context, id relay.ID) (*types.Moderator, error) {
 
 	acc, err := dataloader.For(ctx).AccountById.Load(id.GetID())

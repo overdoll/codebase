@@ -239,7 +239,7 @@ func (r AccountRepository) CreateAccount(ctx context.Context, instance *account.
 	batch := r.session.NewBatch(gocql.LoggedBatch)
 
 	// TODO: it would be nice if this was part of the batch statement but it seems like gocql and cassandra
-	// are overloaded or timeout because it's a unique insert
+	// TODO: are overloaded or timeout because it's a unique insert
 	if err := r.createUniqueAccountUsername(ctx, instance, instance.Username()); err != nil {
 		return err
 	}
@@ -248,40 +248,32 @@ func (r AccountRepository) CreateAccount(ctx context.Context, instance *account.
 
 	batch.Query(stmt, instance.ID(), instance.Username())
 
-	email := ""
+	// At this point, we know our username is unique & captured, so we
+	// now do our insert, but this time with the email
+	// note: we don't do a unique check for the email first because if they're on this stage, we already
+	// did the check earlier if an account exists with this specific email. however, we will still
+	// do a rollback & deletion of the username if the email is already taken, just in case
+	if err := r.createUniqueAccountEmail(ctx, instance, instance.Email()); err != nil {
 
-	// Only add to email table if user is not unclaimed (email is assigned)
-	if !instance.IsUnclaimed() {
+		anotherErr := r.deleteAccountUsername(ctx, instance, instance.Username())
 
-		// At this point, we know our username is unique & captured, so we
-		// now do our insert, but this time with the email
-		// note: we don't do a unique check for the email first because if they're on this stage, we already
-		// did the check earlier if an account exists with this specific email. however, we will still
-		// do a rollback & deletion of the username if the email is already taken, just in case
-		if err := r.createUniqueAccountEmail(ctx, instance, instance.Email()); err != nil {
-
-			anotherErr := r.deleteAccountUsername(ctx, instance, instance.Username())
-
-			if anotherErr != nil {
-				return anotherErr
-			}
-
-			return err
+		if anotherErr != nil {
+			return anotherErr
 		}
 
-		// create a table that holds all of the user's emails
-		stmt, _ = emailByAccountTable.Insert()
-
-		batch.Query(stmt, instance.ID(), instance.Email(), 2)
-
-		email = instance.Username()
+		return err
 	}
+
+	// create a table that holds all of the user's emails
+	stmt, _ = emailByAccountTable.Insert()
+
+	batch.Query(stmt, instance.ID(), instance.Email(), 2)
 
 	// Create a lookup table that will be used to find the user using their unique ID
 	// Will also contain all major information about the user such as permissions, etc...
 	stmt, _ = accountTable.Insert()
 
-	batch.Query(stmt, instance.ID(), instance.Username(), email, []string{}, false, nil, false, 0, nil, nil, false)
+	batch.Query(stmt, instance.ID(), instance.Username(), instance.Email(), []string{}, false, nil, false, 0, nil, nil, false)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
 

@@ -158,7 +158,7 @@ func startService() bool {
 
 	app, _ := service.NewApplication(context.Background())
 
-	srv := ports.NewGraphQLServer(&app)
+	srv := ports.NewHttpServer(&app)
 
 	go bootstrap.InitializeHttpServer(EvaHttpAddr, srv, func() {})
 

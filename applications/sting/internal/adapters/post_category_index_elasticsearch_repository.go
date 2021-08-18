@@ -17,6 +17,7 @@ import (
 
 type categoryDocument struct {
 	Id        string `json:"id"`
+	Slug      string `json:"slug"`
 	Thumbnail string `json:"thumbnail"`
 	Title     string `json:"title"`
 	CreatedAt string `json:"created_at"`
@@ -28,6 +29,9 @@ const categoryIndex = `
 		"dynamic": "strict",
 		"properties": {
 			"id": {
+				"type": "keyword"
+			},
+			"slug": {
 				"type": "keyword"
 			},
 			"thumbnail": {
@@ -54,9 +58,20 @@ func marshalCategoryToDocument(cat *post.Category) (*categoryDocument, error) {
 		return nil, err
 	}
 
+	var thumbnail string
+
+	if cat.Thumbnail() != nil {
+
+		thumbnail, err = cat.Thumbnail().MarshalResourceToDatabase()
+
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	return &categoryDocument{
 		Id:        cat.ID(),
-		Thumbnail: cat.Thumbnail(),
+		Thumbnail: thumbnail,
 		Title:     cat.Title(),
 		CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
 	}, nil
@@ -122,7 +137,7 @@ func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context,
 			return nil, fmt.Errorf("failed to unmarshal document: %v", err)
 		}
 
-		newCategory := post.UnmarshalCategoryFromDatabase(pst.Id, pst.Title, pst.Thumbnail)
+		newCategory := post.UnmarshalCategoryFromDatabase(pst.Id, pst.Slug, pst.Title, pst.Thumbnail)
 		newCategory.Node = paging.NewNode(pst.CreatedAt)
 
 		cats = append(cats, newCategory)
@@ -141,7 +156,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllCategories(ctx context.Contex
 		},
 	)
 
-	err := scanner.RunIterator(categoryTable, func(iter *gocqlx.Iterx) error {
+	err := scanner.RunIterator(ctx, categoryTable, func(iter *gocqlx.Iterx) error {
 
 		var c category
 
@@ -155,6 +170,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllCategories(ctx context.Contex
 
 			doc := categoryDocument{
 				Id:        c.Id,
+				Slug:      c.Slug,
 				Thumbnail: c.Thumbnail,
 				Title:     c.Title,
 				CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
