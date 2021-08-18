@@ -2,7 +2,6 @@
  * @flow
  */
 import {
-  Button,
   Heading,
   ScaleFade
 } from '@chakra-ui/react'
@@ -10,6 +9,7 @@ import NavLink from '@//:modules/routing/NavLink'
 import Icon from '@//:modules/content/Icon/Icon'
 import InterfaceGeometricCircle
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/geometric-shape/interface-geometric-circle.svg'
+import Button from '@//:modules/form/Button'
 
 type Props = {
   path: string,

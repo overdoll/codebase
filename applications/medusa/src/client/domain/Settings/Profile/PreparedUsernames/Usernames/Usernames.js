@@ -3,28 +3,23 @@
  */
 import type { Node } from 'react'
 import {
-  Button, Divider, Flex, Heading, Stack, useDisclosure, Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody, Accordion,
+  Divider,
+  Flex,
+  Heading,
+  Stack,
+  useDisclosure,
+  Accordion,
   AccordionItem,
   AccordionButton,
   AccordionPanel,
   AccordionIcon,
   Text,
-  ModalCloseButton,
-  useToast,
-  SlideFade,
   Collapse
 } from '@chakra-ui/react'
 
 import { useTranslation } from 'react-i18next'
-
-import { graphql, useFragment, useMutation } from 'react-relay/hooks'
-
-import type { UsernamesMutation } from '@//:artifacts/UsernamesMutation.graphql'
+import Button from '@//:modules/form/Button'
+import { graphql, useFragment } from 'react-relay/hooks'
 import type { UsernamesSettingsFragment$key } from '@//:artifacts/UsernamesSettingsFragment.graphql'
 import ChangeUsernameForm from './ChangeUsernameForm/ChangeUsernameForm'
 import InfoTip from '../../../../../components/InfoTip/InfoTip'
@@ -52,7 +47,7 @@ export default function Usernames ({ usernames }: Props): Node {
 
   const [t] = useTranslation('settings')
 
-  const { isOpen, onOpen, onClose, onToggle } = useDisclosure()
+  const { isOpen, onToggle } = useDisclosure()
 
   const usernamesConnectionID = data?.usernames?.__id
 

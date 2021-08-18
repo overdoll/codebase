@@ -5,7 +5,6 @@ import Joi from 'joi'
 import { useTranslation } from 'react-i18next'
 import {
   FormControl,
-  FormHelperText,
   FormLabel,
   Flex,
   Input,
@@ -15,16 +14,13 @@ import {
 } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import { useForm } from 'react-hook-form'
-import AlertCircle from '@streamlinehq/streamlinehq/img/streamline-regular/interface-essential/alerts/alert-circle.svg'
-import CheckDouble1
-  from '@streamlinehq/streamlinehq/img/streamline-regular/interface-essential/form-validation/check-double-1.svg'
 import InterfaceAlertWarningTriangle
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/alerts/interface-alert-warning-triangle.svg'
 import InterfaceValidationCheck
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/validation/interface-validation-check.svg'
 import { joiResolver } from '@hookform/resolvers/joi'
 import type { Node } from 'react'
-import Button from '@//:modules/form/button'
+import Button from '@//:modules/form/Button'
 import { graphql, useMutation } from 'react-relay/hooks'
 import type { ChangeUsernameFormMutation } from '@//:artifacts/ChangeUsernameFormMutation.graphql'
 import type { UsernamesSettingsFragment$key } from '@//:artifacts/UsernamesSettingsFragment.graphql'
@@ -61,6 +57,9 @@ const UsernameMutationGQL = graphql`
 const schema = Joi.object({
   username: Joi
     .string()
+    .alphanum()
+    .min(3)
+    .max(15)
     .required()
 })
 
@@ -90,7 +89,7 @@ export default function ChangeUsernameForm ({ usernamesConnectionID }: Props): N
       onCompleted (data) {
         if (data.updateAccountUsernameAndRetainPrevious.validation) {
           setError('username', {
-            type: 'manual',
+            type: 'mutation',
             message: data.updateAccountUsernameAndRetainPrevious.validation
           })
           return
@@ -115,7 +114,7 @@ export default function ChangeUsernameForm ({ usernamesConnectionID }: Props): N
   const success = isDirty && !errors.username && isSubmitted
 
   return (
-    <form onSubmit={handleSubmit(onChangeUsername)}>
+    <form noValidate onSubmit={handleSubmit(onChangeUsername)}>
       <FormControl
         isInvalid={errors.username}
         id='username'
@@ -150,7 +149,11 @@ export default function ChangeUsernameForm ({ usernamesConnectionID }: Props): N
           </Button>
         </Flex>
         <FormErrorMessage>
-          {errors.username && errors.username.message}
+          {errors.username && errors.username.type === 'mutation' && errors.username.message}
+          {errors.username && errors.username.type === 'string.empty' && t('profile.username.modal.form.validation.username.empty')}
+          {errors.username && errors.username.type === 'string.min' && t('profile.username.modal.form.validation.username.min')}
+          {errors.username && errors.username.type === 'string.max' && t('profile.username.modal.form.validation.username.max')}
+          {errors.username && errors.username.type === 'string.alphanum' && t('profile.username.modal.form.validation.username.alphanum')}
         </FormErrorMessage>
       </FormControl>
     </form>

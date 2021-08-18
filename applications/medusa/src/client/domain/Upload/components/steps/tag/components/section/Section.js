@@ -15,7 +15,7 @@ import SignBadgeCircle
 import ArrowUp1 from '@streamlinehq/streamlinehq/img/streamline-bold/arrows-diagrams/arrows/arrow-up-1.svg'
 import ArrowDown1 from '@streamlinehq/streamlinehq/img/streamline-bold/arrows-diagrams/arrows/arrow-down-1.svg'
 import AddCircle1 from '@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/remove-add/add-circle-1.svg'
-import Button from '@//:modules/form/button'
+import Button from '@//:modules/form/Button'
 import { useTranslation } from 'react-i18next'
 
 type Props = {

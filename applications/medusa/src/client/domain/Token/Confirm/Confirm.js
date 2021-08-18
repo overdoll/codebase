@@ -7,7 +7,7 @@ import { Box, Center, Flex, Heading, Stack, Text } from '@chakra-ui/react'
 import { graphql, useMutation } from 'react-relay/hooks'
 import { StringParam, useQueryParam } from 'use-query-params'
 import { Node } from 'react'
-import Button from '@//:modules/form/button'
+import Button from '@//:modules/form/Button'
 
 type Props = {
   verify: () => void,

@@ -16,7 +16,7 @@ import {
   PopoverCloseButton
 } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
-import Button from '@//:modules/form/button'
+import Button from '@//:modules/form/Button'
 import { useTranslation } from 'react-i18next'
 import type { PreparedPostsQuery } from '@//:artifacts/PreparedPostsQuery.graphql'
 import InterfaceHelpQuestionCircle

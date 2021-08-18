@@ -4,10 +4,8 @@
 
 import type { Node } from 'react'
 import { graphql, usePaginationFragment } from 'react-relay'
-import { useState } from 'react'
 import type { AuditLogsFragment, AuditLogsFragment$key } from '@//:artifacts/AuditLogsFragment.graphql'
 import {
-  Button,
   Text,
   Flex,
   Stack,
@@ -15,7 +13,7 @@ import {
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import AuditCard from './AuditCard/AuditCard'
-import AuditInspect from './AuditCard/AuditInspect/AuditInspect'
+import Button from '@//:modules/form/Button'
 
 type Props = {
   auditLogs: AuditLogsFragment$key,

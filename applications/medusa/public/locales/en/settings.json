@@ -26,7 +26,10 @@
         "form": {
           "validation": {
             "username": {
-              "required": "Please enter a username"
+              "empty": "Please enter a username",
+              "min": "Username must be at least 3 characters long",
+              "max": "Username length cannot exceed 15 characters",
+              "alphanum": "Usernames can only contain numbers and letters"
             }
           }
         }
@@ -74,6 +77,7 @@
         "form": {
           "validation": {
             "email": {
+              "empty": "Please enter an email address",
               "pattern": "Please enter a valid email address"
             }
           }

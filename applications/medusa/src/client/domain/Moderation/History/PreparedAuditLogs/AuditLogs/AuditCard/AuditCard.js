@@ -3,7 +3,6 @@
  */
 
 import {
-  Button,
   Flex,
   Text,
   CircularProgress,

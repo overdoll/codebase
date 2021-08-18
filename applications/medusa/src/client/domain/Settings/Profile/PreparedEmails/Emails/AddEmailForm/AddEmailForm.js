@@ -5,15 +5,13 @@
 import { graphql, useMutation } from 'react-relay/hooks'
 import {
   Flex,
-  FormControl, FormHelperText,
-  Heading, IconButton,
+  FormControl,
   Input,
   InputGroup,
   InputLeftElement,
   InputRightElement, useToast,
   FormLabel, FormErrorMessage
 } from '@chakra-ui/react'
-import { useState } from 'react'
 import Icon from '@//:modules/content/Icon/Icon'
 import type { AddEmailFormMutation } from '@//:artifacts/AddEmailFormMutation.graphql'
 
@@ -29,6 +27,7 @@ import { joiResolver } from '@hookform/resolvers/joi'
 import Joi from 'joi'
 import { useTranslation } from 'react-i18next'
 import type { EmailsSettingsFragment$key } from '@//:artifacts/EmailsSettingsFragment.graphql'
+import IconButton from '@//:modules/form/IconButton'
 
 type EmailValues = {
   email: string,
@@ -88,7 +87,7 @@ export default function AddEmailForm ({ connectionID }: Props): Node {
       onCompleted (data) {
         if (data.addAccountEmail.validation) {
           setError('email', {
-            type: 'manual',
+            type: 'mutation',
             message: data.addAccountEmail.validation
           })
           return
@@ -113,8 +112,7 @@ export default function AddEmailForm ({ connectionID }: Props): Node {
 
   return (
     <>
-      <form onSubmit={handleSubmit(onAddEmail)}>
-
+      <form noValidate onSubmit={handleSubmit(onAddEmail)}>
         <FormControl isInvalid={errors.email} id='email'>
           <FormLabel>{t('profile.email.add.title')}</FormLabel>
           <Flex direction='row'>
@@ -154,7 +152,9 @@ export default function AddEmailForm ({ connectionID }: Props): Node {
             />
           </Flex>
           <FormErrorMessage>
-            {errors.email && errors.email.message}
+            {errors.email && errors.email.type === 'mutation' && errors.email.message}
+            {errors.email && errors.email.type === 'string.empty' && t('profile.email.add.form.validation.email.empty')}
+            {errors.email && errors.email.type === 'string.email' && t('profile.email.add.form.validation.email.pattern')}
           </FormErrorMessage>
         </FormControl>
       </form>

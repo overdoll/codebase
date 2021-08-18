@@ -2,16 +2,16 @@
  * @flow
  */
 import type { Node } from 'react'
-import { useContext, useMemo } from 'react'
+import { useContext, useMemo, Fragment } from 'react'
 import {
-  Button, Box, MenuDivider
+  Button
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import Link from '@//:modules/routing/Link'
 import computeCurrentActiveRoutes from './helpers/computeCurrentActiveRoutes'
 import { AbilityContext } from '../../../client/domain/Root/helpers/AbilityContext'
 import { useRelayEnvironment } from 'react-relay'
-import type { LoggedInMenuFragment$key } from '@//:artifacts/LoggedInMenuFragment.graphql'
+import type { NavigationFragment$key } from '@//:artifacts/NavigationFragment.graphql'
 import getBasePath from './helpers/getBasePath'
 
 import NavigationButton
@@ -41,11 +41,19 @@ import AvatarButton
   from '@//:modules/content/Navigation/components/NavigationContainer/NavigationRightItems/AvatarButton/AvatarButton'
 import LoggedOutPlaceholder
   from '@//:modules/content/Navigation/components/NavigationContainer/NavigationRightItems/NavigationMenu/LoggedOutPlaceholder/LoggedOutPlaceholder'
+import { graphql, useFragment } from 'react-relay/hooks'
 
 type Props = {
   children: Node,
-  rootQuery: LoggedInMenuFragment$key
+  rootQuery: NavigationFragment$key
 }
+
+const NavigationFragmentGQL = graphql`
+  fragment NavigationFragment on Account {
+    ...AvatarButtonFragment
+    ...ProfileButtonFragment
+  }
+`
 
 export default function Navigation (props: Props): Node {
   const [t] = useTranslation('navigation')
@@ -55,6 +63,8 @@ export default function Navigation (props: Props): Node {
   const location = useLocation()
 
   const ability = useContext(AbilityContext)
+
+  const data = useFragment(NavigationFragmentGQL, props.rootQuery)
 
   const [navigationTop, navigationMenu, navigationSidebar, navigationFiltered] = useMemo(() => computeCurrentActiveRoutes({
     environment
@@ -96,9 +106,9 @@ export default function Navigation (props: Props): Node {
           ability.can('manage', 'account')
             ? (
               <NavigationRightItems>
-                <AvatarButton viewer={props.rootQuery} />
+                <AvatarButton viewer={data} />
                 <NavigationMenu>
-                  <ProfileButton viewer={props.rootQuery} />
+                  <ProfileButton viewer={data} />
                   {navigationMenu.map((item, index) => {
                     return (
                       <MenuItemButton

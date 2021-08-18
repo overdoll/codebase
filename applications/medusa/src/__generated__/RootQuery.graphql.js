@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 3f03b2a885c9c90868b0ce26d9c8bac0
+ * @relayHash 12413b8c3a0746d4331b771a591fa7ac
  */
 
 /* eslint-disable */
@@ -8,8 +8,7 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-import type { AvatarButtonFragment$ref } from "./AvatarButtonFragment.graphql";
-import type { ProfileButtonFragment$ref } from "./ProfileButtonFragment.graphql";
+import type { NavigationFragment$ref } from "./NavigationFragment.graphql";
 export type AccountLockReason = "PostInfraction" | "%future added value";
 export type RootQueryVariables = {||};
 export type RootQueryResponse = {|
@@ -20,7 +19,7 @@ export type RootQueryResponse = {|
       +reason: AccountLockReason,
       +expires: number,
     |},
-    +$fragmentRefs: AvatarButtonFragment$ref & ProfileButtonFragment$ref,
+    +$fragmentRefs: NavigationFragment$ref,
   |}
 |};
 export type RootQuery = {|
@@ -32,8 +31,7 @@ export type RootQuery = {|
 /*
 query RootQuery {
   viewer {
-    ...AvatarButtonFragment
-    ...ProfileButtonFragment
+    ...NavigationFragment
     isModerator
     isStaff
     lock {
@@ -46,6 +44,11 @@ query RootQuery {
 
 fragment AvatarButtonFragment on Account {
   avatar
+}
+
+fragment NavigationFragment on Account {
+  ...AvatarButtonFragment
+  ...ProfileButtonFragment
 }
 
 fragment ProfileButtonFragment on Account {
@@ -115,12 +118,7 @@ return {
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "AvatarButtonFragment"
-          },
-          {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "ProfileButtonFragment"
+            "name": "NavigationFragment"
           }
         ],
         "storageKey": null
@@ -173,7 +171,7 @@ return {
     ]
   },
   "params": {
-    "id": "3f03b2a885c9c90868b0ce26d9c8bac0",
+    "id": "12413b8c3a0746d4331b771a591fa7ac",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",
@@ -182,5 +180,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '1950f651640e5159b2e99f1f63bbd601';
+(node: any).hash = 'da99c32d74bd2e3b510b66e361c08f99';
 module.exports = node;

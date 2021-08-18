@@ -22,8 +22,7 @@ type Props = {
 const RootQueryGQL = graphql`
   query RootQuery {
     viewer {
-      ...AvatarButtonFragment
-      ...ProfileButtonFragment
+      ...NavigationFragment
       isModerator
       isStaff
       lock {

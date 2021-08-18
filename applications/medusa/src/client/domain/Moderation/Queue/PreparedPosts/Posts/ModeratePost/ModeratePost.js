@@ -7,7 +7,6 @@ import type { ModeratePostMutation } from '@//:artifacts/ModeratePostMutation.gr
 import { graphql, useFragment } from 'react-relay'
 import { useMutation } from 'react-relay/hooks'
 import {
-  Button,
   HStack,
   CloseButton,
   Flex,
@@ -25,6 +24,7 @@ import Close from '@streamlinehq/streamlinehq/img/streamline-bold/interface-esse
 import InterfaceValidationCheck
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/validation/interface-validation-check.svg'
 import type { PendingPostsFragment$key } from '@//:artifacts/PendingPostsFragment.graphql'
+import Button from '@//:modules/form/Button'
 
 type Props = {
   infractions: PostContentFragment$key,

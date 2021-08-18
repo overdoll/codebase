@@ -3,19 +3,13 @@
  */
 
 import {
-  Accordion,
-  Box, Button,
-  Flex, Heading, IconButton, Stack, useDisclosure,
-  Slide,
-  Center,
-  useBreakpointValue
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Stack,
+  Center
 } from '@chakra-ui/react'
-import Icon from '@//:modules/content/Icon/Icon'
-
-import InterfaceArrowsButtonLeft
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-button-left.svg'
-import InterfaceArrowsButtonRight
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-button-right.svg'
 
 type Props = {
   children: Node,
@@ -23,12 +17,9 @@ type Props = {
 }
 
 export default function Sidebar (props: Props): Node {
-  const windowSize = useBreakpointValue({ base: 'mobile', md: 'desktop' })
-
-  // Render a mobile-friendly sidebar
-  if (windowSize === 'mobile') {
-    return (
-      <Center mt={4}>
+  return (
+    <>
+      <Center display={{ base: 'flex', md: 'none' }} mt={4}>
         <Flex
           w={['full', 'sm', 'md', 'lg']}
           pl={[1, 0]}
@@ -41,12 +32,6 @@ export default function Sidebar (props: Props): Node {
           </Stack>
         </Flex>
       </Center>
-    )
-  }
-
-  // Otherwise, render the normal sidebar
-  return (
-    <>
       <Box
         bg='gray.800'
         w='260px'
@@ -60,6 +45,7 @@ export default function Sidebar (props: Props): Node {
         flexShrink={0}
         position={{ base: 'fixed', xl: 'fixed' }}
         zIndex='sidebar'
+        display={{ base: 'none', md: 'initial' }}
       >
         <Button
           bg='transparent'
@@ -78,7 +64,7 @@ export default function Sidebar (props: Props): Node {
           {props.children}
         </Stack>
       </Box>
-      <Box pl={2} pr={4} h='calc(100vh - 54px)' w='290px' display={{ base: 'initial', xl: 'none' }} />
+      <Box pl={2} pr={4} h='calc(100vh - 54px)' w='290px' display={{ base: 'none', md: 'initial', xl: 'none' }} />
     </>
   )
 }

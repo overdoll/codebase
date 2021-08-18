@@ -46,7 +46,11 @@ const InfractionsGQL = graphql`
 
 const schema = Joi.object({
   rejectionId: Joi.string().required(),
-  note: Joi.string().required()
+  note: Joi
+    .string()
+    .min(1)
+    .max(255)
+    .required()
 })
 
 export default function RejectionReasons (props: Props): Node {
@@ -67,14 +71,14 @@ export default function RejectionReasons (props: Props): Node {
   })
 
   return (
-    <form onSubmit={handleSubmit(props.onSubmit)}>
+    <form noValidate onSubmit={handleSubmit(props.onSubmit)}>
       <Stack spacing={3}>
-        <FormControl isRequired isInvalid={errors.rejectionId}>
+        <FormControl isInvalid={errors.rejectionId}>
           <FormLabel>
             {t('queue.post.actions.reject.modal.form.dropdown.label')}
           </FormLabel>
           <Select
-            {...register('rejectionId', { required: true })}
+            {...register('rejectionId')}
             onChange={(e) => findInfraction(e.target.value)}
             placeholder={t('queue.post.actions.reject.modal.form.dropdown.placeholder')}
           >
@@ -82,23 +86,22 @@ export default function RejectionReasons (props: Props): Node {
               <option key={index} value={item.node.id}>{item.node.reason}</option>
             )}
           </Select>
-          <FormErrorMessage
-            color='orange.300'
-          >{t('queue.post.actions.reject.modal.form.validation.rejectionId.error')}
+          <FormErrorMessage>
+            {errors.rejectionId && errors.rejectionId.type === 'string.empty' && t('queue.post.actions.reject.modal.form.validation.rejectionId.empty')}
           </FormErrorMessage>
         </FormControl>
-        <FormControl isRequired isInvalid={errors.note}>
+        <FormControl isInvalid={errors.note}>
           <FormLabel>
             {t('queue.post.actions.reject.modal.form.textarea.label')}
           </FormLabel>
           <Textarea
             resize='none'
-            isInvalid={errors.note} {...register('note', { maxLength: 255 })}
+            isInvalid={errors.note} {...register('note')}
             placeholder={t('queue.post.actions.reject.modal.form.textarea.placeholder')}
           />
-          <FormErrorMessage
-            color='orange.300'
-          >{t('queue.post.actions.reject.modal.form.validation.note.error')}
+          <FormErrorMessage>
+            {errors.note && (errors.note.type === 'string.empty' || errors.note.type === 'string.min') && t('queue.post.actions.reject.modal.form.validation.note.empty')}
+            {errors.note && errors.note.type === 'string.max' && t('queue.post.actions.reject.modal.form.validation.note.max')}
           </FormErrorMessage>
         </FormControl>
         {infraction &&
