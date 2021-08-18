@@ -14,11 +14,15 @@ type SearchPosts struct {
 	ModeratorId   *string
 	ContributorId *string
 
-	AudienceId   *string
-	BrandId      *string
-	CategoryIds  []string
-	CharacterIds []string
-	SeriesIds    []string
+	AudienceSlugs  []string
+	BrandSlugs     []string
+	CategorySlugs  []string
+	CharacterSlugs []string
+	SeriesSlugs    []string
+
+	State *string
+
+	OrderBy string
 }
 
 type SearchPostsHandler struct {
@@ -31,7 +35,17 @@ func NewSearchPostsHandler(pr post.IndexRepository) SearchPostsHandler {
 
 func (h SearchPostsHandler) Handle(ctx context.Context, query SearchPosts) ([]*post.Post, error) {
 
-	filters, err := post.NewPostFilters(query.ModeratorId, query.ContributorId, query.AudienceId, query.BrandId, query.CategoryIds, query.CharacterIds, query.SeriesIds)
+	filters, err := post.NewPostFilters(
+		query.OrderBy,
+		query.State,
+		query.ModeratorId,
+		query.ContributorId,
+		query.AudienceSlugs,
+		query.BrandSlugs,
+		query.CategorySlugs,
+		query.CharacterSlugs,
+		query.SeriesSlugs,
+	)
 
 	if err != nil {
 		return nil, err

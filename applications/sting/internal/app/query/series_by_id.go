@@ -4,10 +4,12 @@ import (
 	"context"
 
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/principal"
 )
 
 type SeriesById struct {
-	SeriesId string
+	Principal *principal.Principal
+	Id        string
 }
 
 type SeriesByIdHandler struct {
@@ -20,7 +22,7 @@ func NewSeriesByIdHandler(pr post.Repository) SeriesByIdHandler {
 
 func (h SeriesByIdHandler) Handle(ctx context.Context, query SeriesById) (*post.Series, error) {
 
-	result, err := h.pr.GetSingleSeriesById(ctx, query.SeriesId)
+	result, err := h.pr.GetSingleSeriesById(ctx, query.Principal, query.Id)
 
 	if err != nil {
 		return nil, err

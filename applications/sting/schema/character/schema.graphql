@@ -6,10 +6,7 @@ type Series implements Node & Object @key(fields: "id") {
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail(
-    """The size of the resulting square image."""
-    size: Int
-  ): Resource
+  thumbnail: Resource
 
   """A title for this series."""
   title: String!
@@ -33,10 +30,7 @@ type Character implements Node & Object @key(fields: "id") {
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail(
-    """The size of the resulting square image."""
-    size: Int
-  ): Resource
+  thumbnail: Resource
 
   """A name for this character."""
   name: String!
@@ -55,6 +49,30 @@ type CharacterConnection {
   pageInfo: PageInfo!
 }
 
+"""Ordering options for characters"""
+input CharactersOrder {
+  """The field to order characters by."""
+  field: CharactersOrderField!
+}
+
+"""Properties by which character connections can be ordered."""
+enum CharactersOrderField {
+  """Character by created time"""
+  CREATED_AT
+}
+
+"""Ordering options for series"""
+input SeriesOrder {
+  """The field to order series by."""
+  field: SeriesOrderField!
+}
+
+"""Properties by which series connections can be ordered."""
+enum SeriesOrderField {
+  """Series by created time"""
+  CREATED_AT
+}
+
 extend type Query {
   """Get or search all series"""
   series(
@@ -70,9 +88,21 @@ extend type Query {
     """Returns the last _n_ elements from the list."""
     last: Int
 
-    # filter by the title of the series
+    """Search by series slugs."""
+    slugs: [String!]
+
+    """Filter by the title of the series."""
     title: String
+
+    """Ordering options for series."""
+    orderBy: SeriesOrder! = { field: CREATED_AT }
   ): SeriesConnection!
+
+  """Get a single serial."""
+  serial(
+    """Search by slug of the serial."""
+    slug: String!
+  ): Series
 
   """Get or search all characters"""
   characters(
@@ -88,9 +118,21 @@ extend type Query {
     """Returns the last _n_ elements from the list."""
     last: Int
 
-    # Filter by the name of the character
+    """Search by character slugs."""
+    slugs: [String!]
+
+    """Filter by the name of the character."""
     name: String
+
+    """Ordering options for characters."""
+    orderBy: CharactersOrder! = { field: CREATED_AT }
   ): CharacterConnection!
+
+  """Get a single character."""
+  character(
+    """Search by slug of the character."""
+    slug: String!
+  ): Character
 }
 
 extend type Post {

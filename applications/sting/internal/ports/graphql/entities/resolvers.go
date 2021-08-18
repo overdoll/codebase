@@ -18,7 +18,8 @@ type EntityResolver struct {
 func (r EntityResolver) FindAudienceByID(ctx context.Context, id relay.ID) (*types.Audience, error) {
 
 	media, err := r.App.Queries.AudienceById.Handle(ctx, query.AudienceById{
-		AudienceId: id.GetID(),
+		Principal: principal.FromContext(ctx),
+		Id:        id.GetID(),
 	})
 
 	if err != nil {
@@ -36,7 +37,8 @@ func (r EntityResolver) FindAudienceByID(ctx context.Context, id relay.ID) (*typ
 func (r EntityResolver) FindBrandByID(ctx context.Context, id relay.ID) (*types.Brand, error) {
 
 	media, err := r.App.Queries.BrandById.Handle(ctx, query.BrandById{
-		BrandId: id.GetID(),
+		Principal: principal.FromContext(ctx),
+		Id:        id.GetID(),
 	})
 
 	if err != nil {
@@ -54,7 +56,8 @@ func (r EntityResolver) FindBrandByID(ctx context.Context, id relay.ID) (*types.
 func (r EntityResolver) FindSeriesByID(ctx context.Context, id relay.ID) (*types.Series, error) {
 
 	media, err := r.App.Queries.SeriesById.Handle(ctx, query.SeriesById{
-		SeriesId: id.GetID(),
+		Principal: principal.FromContext(ctx),
+		Id:        id.GetID(),
 	})
 
 	if err != nil {
@@ -72,7 +75,8 @@ func (r EntityResolver) FindSeriesByID(ctx context.Context, id relay.ID) (*types
 func (r EntityResolver) FindCategoryByID(ctx context.Context, id relay.ID) (*types.Category, error) {
 
 	category, err := r.App.Queries.CategoryById.Handle(ctx, query.CategoryById{
-		CategoryId: id.GetID(),
+		Principal: principal.FromContext(ctx),
+		Id:        id.GetID(),
 	})
 
 	if err != nil {
@@ -90,7 +94,8 @@ func (r EntityResolver) FindCategoryByID(ctx context.Context, id relay.ID) (*typ
 func (r EntityResolver) FindCharacterByID(ctx context.Context, id relay.ID) (*types.Character, error) {
 
 	character, err := r.App.Queries.CharacterById.Handle(ctx, query.CharacterById{
-		CharacterId: id.GetID(),
+		Principal: principal.FromContext(ctx),
+		Id:        id.GetID(),
 	})
 
 	if err != nil {
@@ -114,7 +119,7 @@ func (r EntityResolver) FindAccountByID(ctx context.Context, id relay.ID) (*type
 func (r EntityResolver) FindPostByID(ctx context.Context, id relay.ID) (*types.Post, error) {
 
 	pendingPost, err := r.App.Queries.PostById.Handle(ctx, query.PostById{
-		PostId:    id.GetID(),
+		Id:        id.GetID(),
 		Principal: principal.FromContext(ctx),
 	})
 

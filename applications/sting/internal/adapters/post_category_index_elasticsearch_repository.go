@@ -12,6 +12,7 @@ import (
 	"github.com/segmentio/ksuid"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
 	"overdoll/libraries/scan"
 )
 
@@ -196,6 +197,10 @@ func (r PostsIndexElasticSearchRepository) IndexAllCategories(ctx context.Contex
 	}
 
 	return nil
+}
+
+func (r PostsIndexElasticSearchRepository) GetCategoryBySlug(ctx context.Context, requester *principal.Principal, slug string) (*post.Category, error) {
+	panic("implement me")
 }
 
 func (r PostsIndexElasticSearchRepository) DeleteCategoryIndex(ctx context.Context) error {

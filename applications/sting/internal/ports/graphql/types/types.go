@@ -20,8 +20,8 @@ type Account struct {
 	// Posts queue specific to this account (when moderator)
 	ModeratorPostsQueue *PostConnection `json:"moderatorPostsQueue"`
 	// Contributions specific to this account
-	Contributions *PostConnection `json:"contributions"`
-	ID            relay.ID        `json:"id"`
+	Posts *PostConnection `json:"posts"`
+	ID    relay.ID        `json:"id"`
 }
 
 func (Account) IsEntity() {}
@@ -53,6 +53,12 @@ type AudienceEdge struct {
 	Node   *Audience `json:"node"`
 }
 
+// Ordering options for audiences
+type AudiencesOrder struct {
+	// The field to order audiences by.
+	Field AudiencesOrderField `json:"field"`
+}
+
 type Brand struct {
 	// An ID pointing to this brand.
 	ID relay.ID `json:"id"`
@@ -78,6 +84,18 @@ type BrandConnection struct {
 type BrandEdge struct {
 	Cursor string `json:"cursor"`
 	Node   *Brand `json:"node"`
+}
+
+// Ordering options for brands
+type BrandsOrder struct {
+	// The field to order brands by.
+	Field BrandsOrderField `json:"field"`
+}
+
+// Ordering options for categories
+type CategoriesOrder struct {
+	// The field to order categories by.
+	Field CategoriesOrderField `json:"field"`
 }
 
 type Category struct {
@@ -136,6 +154,12 @@ type CharacterEdge struct {
 	Node   *Character `json:"node"`
 }
 
+// Ordering options for characters
+type CharactersOrder struct {
+	// The field to order characters by.
+	Field CharactersOrderField `json:"field"`
+}
+
 // Payload for a created pending post
 type CreatePostPayload struct {
 	// The pending post after the creation
@@ -183,6 +207,12 @@ type PostEdge struct {
 	Node   *Post  `json:"node"`
 }
 
+// Ordering options for posts
+type PostsOrder struct {
+	// The field to order security advisories by.
+	Field PostsOrderField `json:"field"`
+}
+
 // A resource represents an image or a video format that contains an ID to uniquely identify it,
 // and urls to access the resources. We have many urls in order to provide a fallback for older browsers
 //
@@ -224,6 +254,12 @@ type SeriesConnection struct {
 type SeriesEdge struct {
 	Cursor string  `json:"cursor"`
 	Node   *Series `json:"node"`
+}
+
+// Ordering options for series
+type SeriesOrder struct {
+	// The field to order series by.
+	Field SeriesOrderField `json:"field"`
 }
 
 // Publish post.
@@ -310,6 +346,170 @@ type UpdatePostContentPayload struct {
 	Post *Post `json:"post"`
 }
 
+// Properties by which audience connections can be ordered.
+type AudiencesOrderField string
+
+const (
+	// Audience by created time
+	AudiencesOrderFieldCreatedAt AudiencesOrderField = "CREATED_AT"
+)
+
+var AllAudiencesOrderField = []AudiencesOrderField{
+	AudiencesOrderFieldCreatedAt,
+}
+
+func (e AudiencesOrderField) IsValid() bool {
+	switch e {
+	case AudiencesOrderFieldCreatedAt:
+		return true
+	}
+	return false
+}
+
+func (e AudiencesOrderField) String() string {
+	return string(e)
+}
+
+func (e *AudiencesOrderField) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = AudiencesOrderField(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid AudiencesOrderField", str)
+	}
+	return nil
+}
+
+func (e AudiencesOrderField) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// Properties by which brand connections can be ordered.
+type BrandsOrderField string
+
+const (
+	// Brand by created time
+	BrandsOrderFieldCreatedAt BrandsOrderField = "CREATED_AT"
+)
+
+var AllBrandsOrderField = []BrandsOrderField{
+	BrandsOrderFieldCreatedAt,
+}
+
+func (e BrandsOrderField) IsValid() bool {
+	switch e {
+	case BrandsOrderFieldCreatedAt:
+		return true
+	}
+	return false
+}
+
+func (e BrandsOrderField) String() string {
+	return string(e)
+}
+
+func (e *BrandsOrderField) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = BrandsOrderField(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid BrandsOrderField", str)
+	}
+	return nil
+}
+
+func (e BrandsOrderField) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// Properties by which category connections can be ordered.
+type CategoriesOrderField string
+
+const (
+	// Category by created time
+	CategoriesOrderFieldCreatedAt CategoriesOrderField = "CREATED_AT"
+)
+
+var AllCategoriesOrderField = []CategoriesOrderField{
+	CategoriesOrderFieldCreatedAt,
+}
+
+func (e CategoriesOrderField) IsValid() bool {
+	switch e {
+	case CategoriesOrderFieldCreatedAt:
+		return true
+	}
+	return false
+}
+
+func (e CategoriesOrderField) String() string {
+	return string(e)
+}
+
+func (e *CategoriesOrderField) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = CategoriesOrderField(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid CategoriesOrderField", str)
+	}
+	return nil
+}
+
+func (e CategoriesOrderField) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// Properties by which character connections can be ordered.
+type CharactersOrderField string
+
+const (
+	// Character by created time
+	CharactersOrderFieldCreatedAt CharactersOrderField = "CREATED_AT"
+)
+
+var AllCharactersOrderField = []CharactersOrderField{
+	CharactersOrderFieldCreatedAt,
+}
+
+func (e CharactersOrderField) IsValid() bool {
+	switch e {
+	case CharactersOrderFieldCreatedAt:
+		return true
+	}
+	return false
+}
+
+func (e CharactersOrderField) String() string {
+	return string(e)
+}
+
+func (e *CharactersOrderField) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = CharactersOrderField(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid CharactersOrderField", str)
+	}
+	return nil
+}
+
+func (e CharactersOrderField) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 type PostState string
 
 const (
@@ -363,6 +563,47 @@ func (e PostState) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+// Properties by which posts connections can be ordered.
+type PostsOrderField string
+
+const (
+	// Posts by update time
+	PostsOrderFieldCreatedAt PostsOrderField = "CREATED_AT"
+)
+
+var AllPostsOrderField = []PostsOrderField{
+	PostsOrderFieldCreatedAt,
+}
+
+func (e PostsOrderField) IsValid() bool {
+	switch e {
+	case PostsOrderFieldCreatedAt:
+		return true
+	}
+	return false
+}
+
+func (e PostsOrderField) String() string {
+	return string(e)
+}
+
+func (e *PostsOrderField) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = PostsOrderField(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid PostsOrderField", str)
+	}
+	return nil
+}
+
+func (e PostsOrderField) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 // Identifies the type of resource
 type ResourceType string
 
@@ -402,5 +643,46 @@ func (e *ResourceType) UnmarshalGQL(v interface{}) error {
 }
 
 func (e ResourceType) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// Properties by which series connections can be ordered.
+type SeriesOrderField string
+
+const (
+	// Series by created time
+	SeriesOrderFieldCreatedAt SeriesOrderField = "CREATED_AT"
+)
+
+var AllSeriesOrderField = []SeriesOrderField{
+	SeriesOrderFieldCreatedAt,
+}
+
+func (e SeriesOrderField) IsValid() bool {
+	switch e {
+	case SeriesOrderFieldCreatedAt:
+		return true
+	}
+	return false
+}
+
+func (e SeriesOrderField) String() string {
+	return string(e)
+}
+
+func (e *SeriesOrderField) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SeriesOrderField(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SeriesOrderField", str)
+	}
+	return nil
+}
+
+func (e SeriesOrderField) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }

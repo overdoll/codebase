@@ -4,10 +4,12 @@ import (
 	"context"
 
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/principal"
 )
 
 type AudienceById struct {
-	AudienceId string
+	Principal *principal.Principal
+	Id        string
 }
 
 type AudienceByIdHandler struct {
@@ -20,7 +22,7 @@ func NewAudienceByIdHandler(pr post.Repository) AudienceByIdHandler {
 
 func (h AudienceByIdHandler) Handle(ctx context.Context, query AudienceById) (*post.Audience, error) {
 
-	result, err := h.pr.GetAudienceById(ctx, query.AudienceId)
+	result, err := h.pr.GetAudienceById(ctx, query.Principal, query.Id)
 
 	if err != nil {
 		return nil, err

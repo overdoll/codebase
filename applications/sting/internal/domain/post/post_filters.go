@@ -1,21 +1,25 @@
 package post
 
 type PostFilters struct {
+	orderBy       string
 	moderatorId   *string
 	contributorId *string
-	brandId       *string
-	audienceId    *string
+	state         *string
+	brandIds      []string
+	audienceIds   []string
 	categoryIds   []string
 	characterIds  []string
 	seriesIds     []string
 }
 
-func NewPostFilters(moderatorId, contributorId, brandId, audienceId *string, categoryIds, characterIds, seriesIds []string) (*PostFilters, error) {
+func NewPostFilters(orderBy string, state, moderatorId, contributorId *string, brandIds, audienceIds, categoryIds, characterIds, seriesIds []string) (*PostFilters, error) {
 	return &PostFilters{
+		orderBy:       orderBy,
+		state:         state,
 		moderatorId:   moderatorId,
-		audienceId:    audienceId,
+		audienceIds:   audienceIds,
 		contributorId: contributorId,
-		brandId:       brandId,
+		brandIds:      brandIds,
 		categoryIds:   categoryIds,
 		characterIds:  characterIds,
 		seriesIds:     seriesIds,
@@ -30,12 +34,20 @@ func (e *PostFilters) ContributorId() *string {
 	return e.contributorId
 }
 
-func (e *PostFilters) BrandId() *string {
-	return e.brandId
+func (e *PostFilters) State() *string {
+	return e.state
 }
 
-func (e *PostFilters) AudienceId() *string {
-	return e.audienceId
+func (e *PostFilters) OrderBy() string {
+	return e.orderBy
+}
+
+func (e *PostFilters) BrandIds() []string {
+	return e.brandIds
+}
+
+func (e *PostFilters) AudienceIds() []string {
+	return e.audienceIds
 }
 
 func (e *PostFilters) SeriesIds() []string {

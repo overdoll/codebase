@@ -15,7 +15,7 @@ type CategoryResolver struct {
 	App *app.Application
 }
 
-func (r CategoryResolver) Posts(ctx context.Context, obj *types.Category, after *string, before *string, first *int, last *int) (*types.PostConnection, error) {
+func (r CategoryResolver) Posts(ctx context.Context, obj *types.Category, after *string, before *string, first *int, last *int, brandSlugs []string, audienceSlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)
 
@@ -23,10 +23,23 @@ func (r CategoryResolver) Posts(ctx context.Context, obj *types.Category, after 
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
+	var stateModified *string
+
+	if state != nil {
+		str := state.String()
+		stateModified = &str
+	}
+
 	results, err := r.App.Queries.SearchPosts.Handle(ctx, query.SearchPosts{
-		Cursor:      cursor,
-		CategoryIds: []string{obj.ID.GetID()},
-		Principal:   principal.FromContext(ctx),
+		Cursor:         cursor,
+		BrandSlugs:     brandSlugs,
+		AudienceSlugs:  audienceSlugs,
+		CharacterSlugs: characterSlugs,
+		SeriesSlugs:    seriesSlugs,
+		State:          stateModified,
+		CategorySlugs:  []string{obj.Slug},
+		Principal:      principal.FromContext(ctx),
+		OrderBy:        orderBy.Field.String(),
 	})
 
 	if err != nil {

@@ -5,11 +5,15 @@ import (
 
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
 )
 
 type SearchSeries struct {
-	Cursor *paging.Cursor
-	Title  *string
+	Principal *principal.Principal
+	Cursor    *paging.Cursor
+	Slugs     []string
+	OrderBy   string
+	Title     *string
 }
 
 type SearchSeriesHandler struct {
@@ -22,7 +26,17 @@ func NewSearchSeriesHandler(pr post.IndexRepository) SearchSeriesHandler {
 
 func (h SearchSeriesHandler) Handle(ctx context.Context, query SearchSeries) ([]*post.Series, error) {
 
-	results, err := h.pr.SearchSeries(ctx, query.Cursor, query.Title)
+	filters, err := post.NewObjectFilters(
+		query.Title,
+		query.OrderBy,
+		query.Slugs,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	results, err := h.pr.SearchSeries(ctx, query.Principal, query.Cursor, filters)
 
 	if err != nil {
 		return nil, err

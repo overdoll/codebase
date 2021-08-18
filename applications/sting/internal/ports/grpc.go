@@ -27,7 +27,7 @@ func NewGrpcServer(application *app.Application, client client.Client) *Server {
 func (s Server) GetPost(ctx context.Context, request *sting.PostRequest) (*sting.Post, error) {
 
 	post, err := s.app.Queries.PostById.Handle(ctx, query.PostById{
-		PostId: request.Id,
+		Id: request.Id,
 	})
 
 	if err != nil {

@@ -12,6 +12,7 @@ import (
 	"github.com/segmentio/ksuid"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
 	"overdoll/libraries/scan"
 )
 
@@ -184,6 +185,10 @@ func (r PostsIndexElasticSearchRepository) IndexAllAudience(ctx context.Context)
 	}
 
 	return nil
+}
+
+func (r PostsIndexElasticSearchRepository) GetAudienceBySlug(ctx context.Context, requester *principal.Principal, slug string) (*post.Audience, error) {
+	panic("implement me")
 }
 
 func (r PostsIndexElasticSearchRepository) DeleteAudienceIndex(ctx context.Context) error {

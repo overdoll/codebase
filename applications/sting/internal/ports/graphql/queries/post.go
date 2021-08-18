@@ -1,21 +1,17 @@
-package resolvers
+package queries
 
 import (
 	"context"
 
 	"github.com/vektah/gqlparser/v2/gqlerror"
-	"overdoll/applications/sting/internal/app"
 	"overdoll/applications/sting/internal/app/query"
+	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 )
 
-type BrandResolver struct {
-	App *app.Application
-}
-
-func (r BrandResolver) Posts(ctx context.Context, obj *types.Brand, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error) {
+func (r *QueryResolver) Posts(ctx context.Context, after *string, before *string, first *int, last *int, brandSlugs []string, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)
 
@@ -32,14 +28,16 @@ func (r BrandResolver) Posts(ctx context.Context, obj *types.Brand, after *strin
 
 	results, err := r.App.Queries.SearchPosts.Handle(ctx, query.SearchPosts{
 		Cursor:         cursor,
-		BrandSlugs:     []string{obj.Slug},
-		Principal:      principal.FromContext(ctx),
+		ModeratorId:    nil,
+		ContributorId:  nil,
 		AudienceSlugs:  audienceSlugs,
+		BrandSlugs:     brandSlugs,
 		CategorySlugs:  categorySlugs,
 		CharacterSlugs: characterSlugs,
 		SeriesSlugs:    seriesSlugs,
 		State:          stateModified,
 		OrderBy:        orderBy.Field.String(),
+		Principal:      principal.FromContext(ctx),
 	})
 
 	if err != nil {
@@ -47,4 +45,23 @@ func (r BrandResolver) Posts(ctx context.Context, obj *types.Brand, after *strin
 	}
 
 	return types.MarshalPostToGraphQLConnection(results, cursor), nil
+}
+
+func (r *QueryResolver) Post(ctx context.Context, reference string) (*types.Post, error) {
+
+	pendingPost, err := r.App.Queries.PostById.Handle(ctx, query.PostById{
+		Id:        reference,
+		Principal: principal.FromContext(ctx),
+	})
+
+	if err != nil {
+
+		if err == post.ErrNotFound {
+			return nil, nil
+		}
+
+		return nil, err
+	}
+
+	return types.MarshalPostToGraphQL(pendingPost), nil
 }
