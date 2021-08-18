@@ -31,14 +31,12 @@ export default function Switch ({
 
   // for type=submit (forms), we show a loading state
   const fullDisable = (disableOverride) || (disabled || loading)
-  const fullLoading = disableOverride || loading
 
   return (
     <AnimatedSwitch
       {...rest}
       type={type}
       isDisabled={fullDisable}
-      isLoading={fullLoading}
     >
       {children}
     </AnimatedSwitch>
