@@ -9,6 +9,7 @@ import (
 	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/principal"
 )
 
 var characterTable = table.New(table.Metadata{
@@ -107,7 +108,7 @@ func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars [
 	return characters, nil
 }
 
-func (r PostsCassandraRepository) GetCharacterById(ctx context.Context, characterId string) (*post.Character, error) {
+func (r PostsCassandraRepository) GetCharacterById(ctx context.Context, requester *principal.Principal, characterId string) (*post.Character, error) {
 
 	queryCharacters := r.session.
 		Query(characterTable.Get()).
@@ -125,7 +126,7 @@ func (r PostsCassandraRepository) GetCharacterById(ctx context.Context, characte
 		return nil, fmt.Errorf("failed to get characters by id: %v", err)
 	}
 
-	media, err := r.GetSingleSeriesById(ctx, char.SeriesId)
+	media, err := r.GetSingleSeriesById(ctx, nil, char.SeriesId)
 
 	if err != nil {
 		return nil, err

@@ -477,7 +477,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 			var brandDoc *brandDocument
 
 			if p.BrandId != nil {
-				brnd, err := rep.GetBrandById(ctx, *p.BrandId)
+				brnd, err := rep.GetBrandById(ctx, nil, *p.BrandId)
 
 				if err != nil {
 					return err
@@ -493,7 +493,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 			var audDoc *audienceDocument
 
 			if p.AudienceId != nil {
-				aud, err := rep.GetAudienceById(ctx, *p.AudienceId)
+				aud, err := rep.GetAudienceById(ctx, nil, *p.AudienceId)
 
 				if err != nil {
 					return err

@@ -8,6 +8,7 @@ import (
 	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/principal"
 )
 
 var categoryTable = table.New(table.Metadata{
@@ -56,7 +57,7 @@ func (r PostsCassandraRepository) GetCategoriesById(ctx context.Context, cats []
 	return categories, nil
 }
 
-func (r PostsCassandraRepository) GetCategoryById(ctx context.Context, categoryId string) (*post.Category, error) {
+func (r PostsCassandraRepository) GetCategoryById(ctx context.Context, requester *principal.Principal, categoryId string) (*post.Category, error) {
 
 	queryCategories := r.session.
 		Query(categoryTable.Get()).

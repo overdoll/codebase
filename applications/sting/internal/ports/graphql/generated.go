@@ -1530,6 +1530,7 @@ enum CategoriesOrderField {
 }
 
 extend type Query {
+  """Search all categories."""
   categories(
     """Returns the elements in the list that come after the specified cursor."""
     after: String

@@ -8,6 +8,7 @@ import (
 	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/principal"
 )
 
 var seriesTable = table.New(table.Metadata{
@@ -29,7 +30,7 @@ type series struct {
 	Thumbnail string `db:"thumbnail"`
 }
 
-func (r PostsCassandraRepository) GetSingleSeriesById(ctx context.Context, seriesId string) (*post.Series, error) {
+func (r PostsCassandraRepository) GetSingleSeriesById(ctx context.Context, requester *principal.Principal, seriesId string) (*post.Series, error) {
 
 	queryMedia := r.session.
 		Query(seriesTable.Get()).

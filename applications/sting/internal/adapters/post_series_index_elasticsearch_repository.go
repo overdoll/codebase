@@ -51,7 +51,7 @@ const seriesIndex = `
 
 const seriesIndexName = "series"
 
-func (r PostsIndexElasticSearchRepository) SearchSeries(ctx context.Context, cursor *paging.Cursor, search *string) ([]*post.Series, error) {
+func (r PostsIndexElasticSearchRepository) SearchSeries(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *post.ObjectFilters) ([]*post.Series, error) {
 
 	builder := r.client.Search().
 		Index(seriesIndexName)
@@ -62,8 +62,8 @@ func (r PostsIndexElasticSearchRepository) SearchSeries(ctx context.Context, cur
 
 	query := cursor.BuildElasticsearch(builder, "created_at")
 
-	if search != nil {
-		query.Must(elastic.NewMultiMatchQuery(*search, "title").Operator("and"))
+	if filters.Search() != nil {
+		query.Must(elastic.NewMultiMatchQuery(*filters.Search(), "title").Operator("and"))
 	}
 
 	builder.Query(query)

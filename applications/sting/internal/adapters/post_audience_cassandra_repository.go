@@ -7,6 +7,7 @@ import (
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/principal"
 )
 
 var audienceTable = table.New(table.Metadata{
@@ -30,7 +31,7 @@ type audience struct {
 	Standard  int    `db:"standard"`
 }
 
-func (r PostsCassandraRepository) GetAudienceById(ctx context.Context, audienceId string) (*post.Audience, error) {
+func (r PostsCassandraRepository) GetAudienceById(ctx context.Context, requester *principal.Principal, audienceId string) (*post.Audience, error) {
 
 	queryAudience := r.session.
 		Query(audienceTable.Get()).

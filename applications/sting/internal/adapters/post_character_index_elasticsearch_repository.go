@@ -149,7 +149,7 @@ func (r PostsIndexElasticSearchRepository) IndexCharacters(ctx context.Context, 
 	return nil
 }
 
-func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context, cursor *paging.Cursor, search *string) ([]*post.Character, error) {
+func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *post.ObjectFilters) ([]*post.Character, error) {
 
 	builder := r.client.Search().
 		Index(characterIndexName)
@@ -160,8 +160,8 @@ func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context,
 
 	query := cursor.BuildElasticsearch(builder, "created_at")
 
-	if search != nil {
-		query.Must(elastic.NewMultiMatchQuery(*search, "name").Operator("and"))
+	if filters.Search() != nil {
+		query.Must(elastic.NewMultiMatchQuery(*filters.Search(), "name").Operator("and"))
 	}
 
 	builder.Query(query)

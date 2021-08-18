@@ -7,6 +7,7 @@ import (
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/principal"
 )
 
 var brandTable = table.New(table.Metadata{
@@ -28,7 +29,7 @@ type brand struct {
 	Thumbnail string `db:"thumbnail"`
 }
 
-func (r PostsCassandraRepository) GetBrandById(ctx context.Context, brandId string) (*post.Brand, error) {
+func (r PostsCassandraRepository) GetBrandById(ctx context.Context, requester *principal.Principal, brandId string) (*post.Brand, error) {
 
 	queryBrand := r.session.
 		Query(brandTable.Get()).

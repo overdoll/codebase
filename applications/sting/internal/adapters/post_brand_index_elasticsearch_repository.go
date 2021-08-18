@@ -79,7 +79,7 @@ func marshalBrandToDocument(cat *post.Brand) (*brandDocument, error) {
 	}, nil
 }
 
-func (r PostsIndexElasticSearchRepository) SearchBrands(ctx context.Context, cursor *paging.Cursor, search *string) ([]*post.Brand, error) {
+func (r PostsIndexElasticSearchRepository) SearchBrands(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *post.ObjectFilters) ([]*post.Brand, error) {
 
 	builder := r.client.Search().
 		Index(brandsIndexName)
@@ -90,8 +90,8 @@ func (r PostsIndexElasticSearchRepository) SearchBrands(ctx context.Context, cur
 
 	query := cursor.BuildElasticsearch(builder, "created_at")
 
-	if search != nil {
-		query.Must(elastic.NewMultiMatchQuery(*search, "name").Operator("and"))
+	if filters.Search() != nil {
+		query.Must(elastic.NewMultiMatchQuery(*filters.Search(), "name").Operator("and"))
 	}
 
 	builder.Query(query)

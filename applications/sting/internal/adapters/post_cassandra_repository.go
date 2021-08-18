@@ -117,7 +117,7 @@ func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending
 	var brand *post.Brand
 
 	if postPending.BrandId != nil {
-		brand, err = r.GetBrandById(ctx, *postPending.BrandId)
+		brand, err = r.GetBrandById(ctx, nil, *postPending.BrandId)
 
 		if err != nil {
 			return nil, err
@@ -127,7 +127,7 @@ func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending
 	var audienc *post.Audience
 
 	if postPending.AudienceId != nil {
-		audienc, err = r.GetAudienceById(ctx, *postPending.AudienceId)
+		audienc, err = r.GetAudienceById(ctx, nil, *postPending.AudienceId)
 
 		if err != nil {
 			return nil, err

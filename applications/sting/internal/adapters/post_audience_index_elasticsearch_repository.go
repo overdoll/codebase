@@ -90,7 +90,7 @@ func marshalAudienceToDocument(cat *post.Audience) (*audienceDocument, error) {
 	}, nil
 }
 
-func (r PostsIndexElasticSearchRepository) SearchAudience(ctx context.Context, cursor *paging.Cursor, search *string) ([]*post.Audience, error) {
+func (r PostsIndexElasticSearchRepository) SearchAudience(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *post.ObjectFilters) ([]*post.Audience, error) {
 
 	builder := r.client.Search().
 		Index(audienceIndexName)
@@ -101,8 +101,8 @@ func (r PostsIndexElasticSearchRepository) SearchAudience(ctx context.Context, c
 
 	query := cursor.BuildElasticsearch(builder, "created_at")
 
-	if search != nil {
-		query.Must(elastic.NewMultiMatchQuery(*search, "name").Operator("and"))
+	if filters.Search() != nil {
+		query.Must(elastic.NewMultiMatchQuery(*filters.Search(), "name").Operator("and"))
 	}
 
 	builder.Query(query)
