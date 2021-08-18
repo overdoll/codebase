@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash b3f6fca1bef52f676287226deb6b3f3b
+ * @relayHash 4736793e2ddb5a843128c385c65e7c87
  */
 
 /* eslint-disable */
@@ -8,37 +8,48 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-import type { UsernamesSettingsFragment$ref } from "./UsernamesSettingsFragment.graphql";
-export type PreparedUsernamesQueryVariables = {|
+import type { EmailsSettingsFragment$ref } from "./EmailsSettingsFragment.graphql";
+export type EmailsQueryVariables = {|
   first?: ?number
 |};
-export type PreparedUsernamesQueryResponse = {|
+export type EmailsQueryResponse = {|
   +viewer: ?{|
-    +$fragmentRefs: UsernamesSettingsFragment$ref
+    +$fragmentRefs: EmailsSettingsFragment$ref
   |}
 |};
-export type PreparedUsernamesQuery = {|
-  variables: PreparedUsernamesQueryVariables,
-  response: PreparedUsernamesQueryResponse,
+export type EmailsQuery = {|
+  variables: EmailsQueryVariables,
+  response: EmailsQueryResponse,
 |};
 
 
 /*
-query PreparedUsernamesQuery(
+query EmailsQuery(
   $first: Int
 ) {
   viewer {
-    ...UsernamesSettingsFragment
+    ...EmailsSettingsFragment
     id
   }
 }
 
-fragment UsernamesSettingsFragment on Account {
-  username
-  usernames(first: $first) {
+fragment DeleteFragment on AccountEmail {
+  id
+  email
+}
+
+fragment EmailCardFragment on AccountEmail {
+  ...DeleteFragment
+  ...MakePrimaryFragment
+  email
+  status
+}
+
+fragment EmailsSettingsFragment on Account {
+  emails(first: $first) {
     edges {
       node {
-        username
+        ...EmailCardFragment
         id
         __typename
       }
@@ -50,6 +61,11 @@ fragment UsernamesSettingsFragment on Account {
     }
   }
 }
+
+fragment MakePrimaryFragment on AccountEmail {
+  id
+  email
+}
 */
 
 const node: ConcreteRequest = (function(){
@@ -60,21 +76,14 @@ var v0 = [
     "name": "first"
   }
 ],
-v1 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "username",
-  "storageKey": null
-},
-v2 = [
+v1 = [
   {
     "kind": "Variable",
     "name": "first",
     "variableName": "first"
   }
 ],
-v3 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -86,7 +95,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "PreparedUsernamesQuery",
+    "name": "EmailsQuery",
     "selections": [
       {
         "alias": null,
@@ -99,7 +108,7 @@ return {
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "UsernamesSettingsFragment"
+            "name": "EmailsSettingsFragment"
           }
         ],
         "storageKey": null
@@ -112,7 +121,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "PreparedUsernamesQuery",
+    "name": "EmailsQuery",
     "selections": [
       {
         "alias": null,
@@ -122,19 +131,18 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          (v1/*: any*/),
           {
             "alias": null,
-            "args": (v2/*: any*/),
-            "concreteType": "AccountUsernameConnection",
+            "args": (v1/*: any*/),
+            "concreteType": "AccountEmailConnection",
             "kind": "LinkedField",
-            "name": "usernames",
+            "name": "emails",
             "plural": false,
             "selections": [
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "AccountUsernameEdge",
+                "concreteType": "AccountEmailEdge",
                 "kind": "LinkedField",
                 "name": "edges",
                 "plural": true,
@@ -142,13 +150,26 @@ return {
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "AccountUsername",
+                    "concreteType": "AccountEmail",
                     "kind": "LinkedField",
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v1/*: any*/),
-                      (v3/*: any*/),
+                      (v2/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "email",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "status",
+                        "storageKey": null
+                      },
                       {
                         "alias": null,
                         "args": null,
@@ -211,28 +232,28 @@ return {
           },
           {
             "alias": null,
-            "args": (v2/*: any*/),
+            "args": (v1/*: any*/),
             "filters": null,
             "handle": "connection",
-            "key": "UsernamesSettingsFragment_usernames",
+            "key": "EmailsSettingsFragment_emails",
             "kind": "LinkedHandle",
-            "name": "usernames"
+            "name": "emails"
           },
-          (v3/*: any*/)
+          (v2/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "b3f6fca1bef52f676287226deb6b3f3b",
+    "id": "4736793e2ddb5a843128c385c65e7c87",
     "metadata": {},
-    "name": "PreparedUsernamesQuery",
+    "name": "EmailsQuery",
     "operationKind": "query",
     "text": null
   }
 };
 })();
 // prettier-ignore
-(node: any).hash = '262976a4bf3eb7318688610bb7c62ada';
+(node: any).hash = '95e63a9269080eacad1ecc6fdafe28c3';
 module.exports = node;

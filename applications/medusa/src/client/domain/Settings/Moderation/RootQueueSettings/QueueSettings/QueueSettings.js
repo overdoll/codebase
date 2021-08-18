@@ -3,21 +3,27 @@
  */
 import type { Node } from 'react'
 import {
-  Divider,
   Heading,
   useToast,
-  Switch,
   Flex,
   Text
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
-import { graphql, useFragment, useMutation } from 'react-relay/hooks'
+import { graphql, useFragment, useMutation, usePreloadedQuery } from 'react-relay/hooks'
 import type { QueueSettingsFragment$key } from '@//:artifacts/QueueSettingsFragment.graphql'
 import type { QueueSettingsMutation } from '@//:artifacts/QueueSettingsMutation.graphql'
+import type { QueueSettingsQuery as QueueSettingsQueryType } from '@//:artifacts/QueueSettingsQuery.graphql'
+import Switch from '@//:modules/form/Switch'
 
 type Props = {
-  account: QueueSettingsFragment$key
+  query: QueueSettingsFragment$key
 }
+
+const PreparedQueueGQL = graphql`
+  query QueueSettingsQuery {
+    ...QueueSettingsFragment
+  }
+`
 
 const QueueSettingsFragmentGQL = graphql`
   fragment QueueSettingsFragment on Query {
@@ -35,8 +41,13 @@ const QueueSettingsMutationGQL = graphql`
   }
 `
 
-export default function QueueSettings ({ account }: Props): Node {
-  const data = useFragment(QueueSettingsFragmentGQL, account)
+export default function QueueSettings (props: Props): Node {
+  const queryData = usePreloadedQuery<QueueSettingsQueryType>(
+    PreparedQueueGQL,
+    props.query
+  )
+
+  const data = useFragment(QueueSettingsFragmentGQL, queryData)
 
   const [changeSettings, isChangingSettings] = useMutation<QueueSettingsMutation>(
     QueueSettingsMutationGQL
@@ -81,8 +92,6 @@ export default function QueueSettings ({ account }: Props): Node {
 
   return (
     <>
-      <Heading size='lg' color='gray.00'>{t('moderation.queue.title')}</Heading>
-      <Divider borderColor='gray.500' mt={1} mb={3} />
       <Flex align='center' direction='row'>
         <Switch onChange={onChangeSettings} isDisabled={isChangingSettings} mr={4} defaultChecked={status} />
         <Flex direction='column'>

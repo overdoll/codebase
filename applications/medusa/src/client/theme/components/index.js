@@ -10,6 +10,7 @@ import textarea from './textarea'
 import table from './table'
 import formerror from './form-error'
 import formlabel from './form-label'
+import Switch from './switch'
 
 export default {
   Menu: menu,
@@ -23,5 +24,6 @@ export default {
   Textarea: textarea,
   Table: table,
   FormError: formerror,
-  FormLabel: formlabel
+  FormLabel: formlabel,
+  Switch: Switch
 }

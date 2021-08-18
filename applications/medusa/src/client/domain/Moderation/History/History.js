@@ -8,16 +8,25 @@ import { useTranslation } from 'react-i18next'
 import { Suspense } from 'react'
 import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
-import type { PreparedAuditLogsQuery } from '@//:artifacts/PreparedAuditLogsQuery.graphql'
-import PreparedAuditLogs from './PreparedAuditLogs/PreparedAuditLogs'
+import type { AuditLogsQuery as AuditLogsQueryType } from '@//:artifacts/AuditLogsQuery.graphql'
+import AuditLogsQuery from '@//:artifacts/AuditLogsQuery.graphql'
+import AuditLogs from './AuditLogs/AuditLogs'
+import { useQueryLoader } from 'react-relay/hooks'
+import ErrorFallback from '../../../components/ErrorFallback/ErrorFallback'
+import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
 
 type Props = {
   prepared: {
-    auditLogsQuery: PreloadedQueryInner<PreparedAuditLogsQuery>,
+    auditLogsQuery: PreloadedQueryInner<AuditLogsQueryType>,
   }
 }
 
 export default function History (props: Props): Node {
+  const [queryRef, loadQuery] = useQueryLoader(
+    AuditLogsQuery,
+    props.prepared.auditLogsQuery
+  )
+
   const [t] = useTranslation('moderation')
 
   return (
@@ -38,11 +47,14 @@ export default function History (props: Props): Node {
               </Tr>
             </Thead>
           </Table>
-          <Suspense fallback={
-            <SkeletonStack />
-          }
-          >
-            <PreparedAuditLogs query={props.prepared.auditLogsQuery} />
+          <Suspense fallback={<SkeletonStack />}>
+            <ErrorBoundary
+              fallback={({ error, reset }) => (
+                <ErrorFallback error={error} reset={reset} refetch={loadQuery} />
+              )}
+            >
+              <AuditLogs query={queryRef} />
+            </ErrorBoundary>
           </Suspense>
         </Flex>
       </Center>

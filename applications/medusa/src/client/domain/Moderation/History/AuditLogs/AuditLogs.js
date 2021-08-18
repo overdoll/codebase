@@ -4,7 +4,7 @@
 
 import type { Node } from 'react'
 import { graphql, usePaginationFragment } from 'react-relay'
-import type { AuditLogsFragment, AuditLogsFragment$key } from '@//:artifacts/AuditLogsFragment.graphql'
+import type { AuditLogsFragment$key } from '@//:artifacts/AuditLogsFragment.graphql'
 import {
   Text,
   Flex,
@@ -14,10 +14,21 @@ import {
 import { useTranslation } from 'react-i18next'
 import AuditCard from './AuditCard/AuditCard'
 import Button from '@//:modules/form/Button'
+import { usePreloadedQuery } from 'react-relay/hooks'
+import type { PreloadedQueryInner } from 'react-relay/hooks'
+import type { AuditLogsQuery } from '@//:artifacts/AuditLogsQuery.graphql'
 
 type Props = {
-  auditLogs: AuditLogsFragment$key,
+  query: PreloadedQueryInner<AuditLogsQuery>,
 }
+
+const AuditLogsQueryGQL = graphql`
+  query AuditLogsQuery {
+    viewer {
+      ...AuditLogsFragment
+    }
+  }
+`
 
 const AuditLogsGQL = graphql`
   fragment AuditLogsFragment on Account
@@ -39,13 +50,18 @@ const AuditLogsGQL = graphql`
 `
 
 export default function AuditLogs (props: Props): Node {
-  const [t] = useTranslation('moderation')
+  const queryData = usePreloadedQuery<AuditLogsQuery>(
+    AuditLogsQueryGQL,
+    props.query
+  )
 
-  const { data, loadNext, hasNext, isLoadingNext } = usePaginationFragment<AuditLogsFragment,
+  const { data, loadNext, hasNext, isLoadingNext } = usePaginationFragment<AuditLogsFragment$key,
     _>(
       AuditLogsGQL,
-      props.auditLogs
+      queryData?.viewer
     )
+
+  const [t] = useTranslation('moderation')
 
   const auditLogs = data?.moderatorPostAuditLogs.edges
 
@@ -55,7 +71,7 @@ export default function AuditLogs (props: Props): Node {
         <Accordion allowToggle>
           {auditLogs.map((item, index) =>
             <AuditCard
-              key={index} auditLog={auditLogs[index].node}
+              key={index} auditLog={auditLogs[index]?.node}
             />
           )}
         </Accordion>

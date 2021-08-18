@@ -22,7 +22,7 @@ import { useTranslation } from 'react-i18next'
 import RotateBack from '@streamlinehq/streamlinehq/img/streamline-bold/design/rotate/rotate-back.svg'
 import { useMutation } from 'react-relay/hooks'
 import type { AuditInspectMutation } from '@//:artifacts/AuditInspectMutation.graphql'
-import PostPreview from '../../../../../Queue/PreparedPosts/Posts/PostPreview/PostPreview'
+import PostPreview from '../../../../Queue/Posts/PostPreview/PostPreview'
 import Button from '@//:modules/form/Button'
 
 type Props = {

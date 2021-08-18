@@ -19,10 +19,19 @@ import {
 
 import { useTranslation } from 'react-i18next'
 import Button from '@//:modules/form/Button'
-import { graphql, useFragment } from 'react-relay/hooks'
+import { graphql, useFragment, usePreloadedQuery } from 'react-relay/hooks'
 import type { UsernamesSettingsFragment$key } from '@//:artifacts/UsernamesSettingsFragment.graphql'
 import ChangeUsernameForm from './ChangeUsernameForm/ChangeUsernameForm'
 import InfoTip from '../../../../../components/InfoTip/InfoTip'
+import type { UsernamesQuery } from '@//:artifacts/UsernamesQuery.graphql'
+
+const UsernameQueryGQL = graphql`
+  query UsernamesQuery($first: Int) {
+    viewer {
+      ...UsernamesSettingsFragment
+    }
+  }
+`
 
 const UsernameFragmentGQL = graphql`
   fragment UsernamesSettingsFragment on Account {
@@ -39,11 +48,16 @@ const UsernameFragmentGQL = graphql`
 `
 
 type Props = {
-  usernames: UsernamesSettingsFragment$key
+  query: UsernamesSettingsFragment$key
 }
 
-export default function Usernames ({ usernames }: Props): Node {
-  const data = useFragment(UsernameFragmentGQL, usernames)
+export default function Usernames (props: Props): Node {
+  const queryData = usePreloadedQuery<UsernamesQuery>(
+    UsernameQueryGQL,
+    props.query
+  )
+
+  const data = useFragment(UsernameFragmentGQL, queryData?.viewer)
 
   const [t] = useTranslation('settings')
 
@@ -53,8 +67,7 @@ export default function Usernames ({ usernames }: Props): Node {
 
   return (
     <>
-      <Heading size='lg' color='gray.00'>{t('profile.username.title')}</Heading>
-      <Divider borderColor='gray.500' mt={1} mb={3} />
+
       <Stack spacing={3}>
         <Flex direction='column'>
           <Heading size='sm' color='gray.100'>{t('profile.username.current.title')}</Heading>

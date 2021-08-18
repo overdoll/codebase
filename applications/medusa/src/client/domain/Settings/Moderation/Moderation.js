@@ -4,15 +4,13 @@
 import type { Node } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Center, Flex } from '@chakra-ui/react'
-import { Suspense } from 'react'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
-import type { PreparedQueueSettingsQuery } from '@//:artifacts/PreparedQueueSettingsQuery.graphql'
-import PreparedQueueSettings from './PreparedQueueSettings/PreparedQueueSettings'
-import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
+import type { QueueSettingsQuery } from '@//:artifacts/QueueSettingsQuery.graphql'
+import RootQueueSettings from './RootQueueSettings/RootQueueSettings'
 
 type Props = {
   prepared: {
-    queueQuery: PreloadedQueryInner<PreparedQueueSettingsQuery>,
+    queueQuery: PreloadedQueryInner<QueueSettingsQuery>,
   }
 };
 
@@ -28,9 +26,7 @@ export default function Moderation (props: Props): Node {
           direction='column'
           mb={6}
         >
-          <Suspense fallback={<SkeletonStack />}>
-            <PreparedQueueSettings query={props.prepared.queueQuery} />
-          </Suspense>
+          <RootQueueSettings query={props.prepared.queueQuery} />
         </Flex>
       </Center>
     </>

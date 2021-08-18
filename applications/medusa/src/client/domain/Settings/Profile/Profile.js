@@ -2,7 +2,6 @@
  * @flow
  */
 import type { Node } from 'react'
-import { Suspense } from 'react'
 import { Helmet } from 'react-helmet-async'
 import {
   Center,
@@ -10,15 +9,14 @@ import {
   Stack
 } from '@chakra-ui/react'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
-import type { PreparedUsernamesQuery } from '@//:artifacts/PreparedUsernamesQuery.graphql'
+import type { UsernamesQuery } from '@//:artifacts/UsernamesQuery.graphql'
 import type { PreparedEmailsQuery } from '@//:artifacts/PreparedEmailsQuery.graphql'
-import PreparedEmails from './PreparedEmails/PreparedEmails'
-import PreparedUsernames from './PreparedUsernames/PreparedUsernames'
-import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
+import RootEmails from './RootEmails/RootEmails'
+import RootUsernames from './RootUsernames/RootUsernames'
 
 type Props = {
   prepared: {
-    usernamesQuery: PreloadedQueryInner<PreparedUsernamesQuery>,
+    usernamesQuery: PreloadedQueryInner<UsernamesQuery>,
     emailsQuery: PreloadedQueryInner<PreparedEmailsQuery>,
   }
 };
@@ -37,14 +35,10 @@ export default function Profile (props: Props): Node {
         >
           <Stack spacing={8}>
             <Flex direction='column'>
-              <Suspense fallback={<SkeletonStack />}>
-                <PreparedUsernames query={props.prepared.usernamesQuery} />
-              </Suspense>
+              <RootUsernames query={props.prepared.usernamesQuery} />
             </Flex>
             <Flex direction='column'>
-              <Suspense fallback={<SkeletonStack />}>
-                <PreparedEmails query={props.prepared.emailsQuery} />
-              </Suspense>
+              <RootEmails query={props.prepared.emailsQuery} />
             </Flex>
           </Stack>
         </Flex>

@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 5f67b6eba276cf13c5bb624f4aeb85b3
+ * @relayHash eafe1a2dcdee8fd2cde03a83ea560d87
  */
 
 /* eslint-disable */
@@ -10,21 +10,21 @@
 import type { ConcreteRequest } from 'relay-runtime';
 import type { PostsFragment$ref } from "./PostsFragment.graphql";
 import type { RejectionReasonsFragment$ref } from "./RejectionReasonsFragment.graphql";
-export type PreparedPostsQueryVariables = {||};
-export type PreparedPostsQueryResponse = {|
+export type PostsQueryVariables = {||};
+export type PostsQueryResponse = {|
   +viewer: ?{|
     +$fragmentRefs: PostsFragment$ref
   |},
   +$fragmentRefs: RejectionReasonsFragment$ref,
 |};
-export type PreparedPostsQuery = {|
-  variables: PreparedPostsQueryVariables,
-  response: PreparedPostsQueryResponse,
+export type PostsQuery = {|
+  variables: PostsQueryVariables,
+  response: PostsQueryResponse,
 |};
 
 
 /*
-query PreparedPostsQuery {
+query PostsQuery {
   viewer {
     ...PostsFragment
     id
@@ -181,7 +181,7 @@ return {
     "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
-    "name": "PreparedPostsQuery",
+    "name": "PostsQuery",
     "selections": [
       {
         "alias": null,
@@ -212,7 +212,7 @@ return {
   "operation": {
     "argumentDefinitions": [],
     "kind": "Operation",
-    "name": "PreparedPostsQuery",
+    "name": "PostsQuery",
     "selections": [
       {
         "alias": null,
@@ -502,14 +502,14 @@ return {
     ]
   },
   "params": {
-    "id": "5f67b6eba276cf13c5bb624f4aeb85b3",
+    "id": "eafe1a2dcdee8fd2cde03a83ea560d87",
     "metadata": {},
-    "name": "PreparedPostsQuery",
+    "name": "PostsQuery",
     "operationKind": "query",
     "text": null
   }
 };
 })();
 // prettier-ignore
-(node: any).hash = 'e4e19ec2e9856fa1d1b77922c6c1aabf';
+(node: any).hash = '329b3e5e9bad3e651d1cdbdce2be12bc';
 module.exports = node;

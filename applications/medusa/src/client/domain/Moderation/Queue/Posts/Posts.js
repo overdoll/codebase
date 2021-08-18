@@ -12,9 +12,7 @@ import { useState } from 'react'
 import { usePaginationFragment, graphql } from 'react-relay'
 
 import { useTranslation } from 'react-i18next'
-import type { PostsPaginationQuery } from '@//:artifacts/PostsPaginationQuery.graphql'
 import type { PostsFragment$key } from '@//:artifacts/PostsFragment.graphql'
-import type { QueuePostsQuery } from '@//:artifacts/QueuePostsQuery.graphql'
 import ModeratePost from './ModeratePost/ModeratePost'
 import PostHeader from './PostHeader/PostHeader'
 import NoPostsPlaceholder from './NoPostsPlaceholder/NoPostsPlaceholder'
@@ -25,11 +23,23 @@ import InterfaceArrowsButtonRight
 import InterfaceArrowsButtonLeft
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-button-left.svg'
 import PostPreview from './PostPreview/PostPreview'
+import type { PreloadedQueryInner } from 'react-relay/hooks'
+import type { PostsQuery } from '@//:artifacts/PostsQuery.graphql'
+import { usePreloadedQuery } from 'react-relay/hooks'
 
 type Props = {
-  query: QueuePostsQuery,
-  posts: PostsFragment$key
+  query: PreloadedQueryInner<PostsQuery>,
+
 }
+
+const PostsQueryGQL = graphql`
+  query PostsQuery {
+    viewer {
+      ...PostsFragment
+    }
+    ...RejectionReasonsFragment
+  }
+`
 
 const PostsGQL = graphql`
   fragment PostsFragment on Account
@@ -56,13 +66,18 @@ const PostsGQL = graphql`
 `
 
 export default function Posts (props: Props): Node {
-  const [t] = useTranslation('moderation')
+  const queryData = usePreloadedQuery<PostsQuery>(
+    PostsQueryGQL,
+    props.query
+  )
 
-  const { data, loadNext, hasNext, isLoadingNext } = usePaginationFragment<PostsPaginationQuery,
+  const { data, loadNext, hasNext, isLoadingNext } = usePaginationFragment<PostsFragment$key,
     _>(
       PostsGQL,
-      props.posts
+      queryData?.viewer
     )
+
+  const [t] = useTranslation('moderation')
 
   // TODO make pagination more dynamic/flexible because it will probably break when a node is deleted
 
@@ -159,7 +174,7 @@ export default function Posts (props: Props): Node {
           <PostHeader contributor={currentPost} />
           <PostPreview post={currentPost} />
         </Flex>
-        <ModeratePost connectionID={postsConnection} infractions={props.query} postID={currentPost} />
+        <ModeratePost connectionID={postsConnection} infractions={queryData} postID={currentPost} />
         <Box pl={1} pr={1}>
           <Text fontSize='xs' color='gray.500'>
             {currentPost.id}

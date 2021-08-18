@@ -182,10 +182,10 @@ const routes: Array<Route> = [
             module.hot
             ),
             prepare: params => {
-              const PreparedPostsQuery = require('@//:artifacts/PreparedPostsQuery.graphql')
+              const PostsQuery = require('@//:artifacts/PostsQuery.graphql')
               return {
                 postsQuery: {
-                  query: PreparedPostsQuery,
+                  query: PostsQuery,
                   variables: {},
                   options: {
                     fetchPolicy: 'store-or-network'
@@ -203,10 +203,10 @@ const routes: Array<Route> = [
             module.hot
             ),
             prepare: params => {
-              const PreparedAuditLogsQuery = require('@//:artifacts/PreparedAuditLogsQuery.graphql')
+              const AuditLogsQuery = require('@//:artifacts/AuditLogsQuery.graphql')
               return {
                 auditLogsQuery: {
-                  query: PreparedAuditLogsQuery,
+                  query: AuditLogsQuery,
                   variables: {},
                   options: {
                     fetchPolicy: 'store-or-network'
@@ -268,19 +268,19 @@ const routes: Array<Route> = [
             module.hot
             ),
             prepare: params => {
-              const PreparedUsernamesQuery = require('@//:artifacts/PreparedUsernamesQuery.graphql')
-              const PreparedEmailsQuery = require('@//:artifacts/PreparedEmailsQuery.graphql')
+              const UsernamesQuery = require('@//:artifacts/UsernamesQuery.graphql')
+              const EmailsQuery = require('@//:artifacts/EmailsQuery.graphql')
 
               return {
                 usernamesQuery: {
-                  query: PreparedUsernamesQuery,
+                  query: UsernamesQuery,
                   variables: {},
                   options: {
                     fetchPolicy: 'store-or-network'
                   }
                 },
                 emailsQuery: {
-                  query: PreparedEmailsQuery,
+                  query: EmailsQuery,
                   variables: {},
                   options: {
                     fetchPolicy: 'store-or-network'
@@ -317,10 +317,10 @@ const routes: Array<Route> = [
               }
             ],
             prepare: (params, query) => {
-              const PreparedQueueSettingsQuery = require('@//:artifacts/PreparedQueueSettingsQuery.graphql')
+              const QueueSettingsQuery = require('@//:artifacts/QueueSettingsQuery.graphql')
               return {
                 queueQuery: {
-                  query: PreparedQueueSettingsQuery,
+                  query: QueueSettingsQuery,
                   variables: {},
                   options: {
                     fetchPolicy: 'store-or-network'

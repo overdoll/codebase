@@ -9,17 +9,24 @@ import {
   Heading,
   Stack, useToast
 } from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
 import AddEmailForm from './AddEmailForm/AddEmailForm'
-
-import { graphql, useFragment } from 'react-relay/hooks'
+import { graphql, useFragment, usePreloadedQuery } from 'react-relay/hooks'
 import type { EmailsSettingsFragment$key } from '@//:artifacts/EmailsSettingsFragment.graphql'
 import EmailCard from './EmailCard/EmailCard'
 import { useFlash } from '@//:modules/flash'
+import type { EmailsQuery } from '@//:artifacts/EmailsQuery.graphql'
 
 type Props = {
-  emails: EmailsSettingsFragment$key
+  query: EmailsSettingsFragment$key
 }
+
+const EmailsQueryGQL = graphql`
+  query EmailsQuery($first: Int) {
+    viewer {
+      ...EmailsSettingsFragment
+    }
+  }
+`
 
 const EmailsFragmentGQL = graphql`
   fragment EmailsSettingsFragment on Account {
@@ -35,10 +42,13 @@ const EmailsFragmentGQL = graphql`
   }
 `
 
-export default function Emails ({ emails }: Props): Node {
-  const data = useFragment(EmailsFragmentGQL, emails)
+export default function Emails (props: Props): Node {
+  const queryData = usePreloadedQuery<EmailsQuery>(
+    EmailsQueryGQL,
+    props.query
+  )
 
-  const [t] = useTranslation('settings')
+  const data = useFragment(EmailsFragmentGQL, queryData?.viewer)
 
   const emailsConnectionID = data?.emails?.__id
 
@@ -73,8 +83,6 @@ export default function Emails ({ emails }: Props): Node {
 
   return (
     <>
-      <Heading size='lg' color='gray.00'>{t('profile.email.title')}</Heading>
-      <Divider borderColor='gray.500' mt={1} mb={3} />
       <Stack spacing={3} mb={3}>
         {data?.emails.edges.map((item, index) => {
           return (
