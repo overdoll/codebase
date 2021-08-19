@@ -149,7 +149,7 @@ func (r PostsIndexElasticSearchRepository) IndexCharacters(ctx context.Context, 
 	return nil
 }
 
-func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *post.ObjectFilters) ([]*post.Character, error) {
+func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.CharacterFilters) ([]*post.Character, error) {
 
 	builder := r.client.Search().
 		Index(characterIndexName)
@@ -158,10 +158,18 @@ func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context,
 		return nil, errors.New("cursor required")
 	}
 
-	query := cursor.BuildElasticsearch(builder, "created_at")
+	query := cursor.BuildElasticsearch(builder, filter.OrderBy())
 
-	if filters.Search() != nil {
-		query.Must(elastic.NewMultiMatchQuery(*filters.Search(), "name").Operator("and"))
+	if filter.Name() != nil {
+		query.Must(elastic.NewMultiMatchQuery(*filter.Name(), "name").Operator("and"))
+	}
+
+	if len(filter.Slugs()) > 0 {
+		for _, id := range filter.Slugs() {
+			query.Filter(elastic.NewTermQuery("slug", id))
+		}
+
+		query.Filter(elastic.NewTermQuery("series.slug", *filter.SeriesSlug()))
 	}
 
 	builder.Query(query)
@@ -263,10 +271,6 @@ func (r PostsIndexElasticSearchRepository) IndexAllCharacters(ctx context.Contex
 	}
 
 	return nil
-}
-
-func (r PostsIndexElasticSearchRepository) GetCharacterBySlug(ctx context.Context, requester *principal.Principal, slug string) (*post.Character, error) {
-	panic("implement me")
 }
 
 func (r PostsIndexElasticSearchRepository) DeleteCharacterIndex(ctx context.Context) error {

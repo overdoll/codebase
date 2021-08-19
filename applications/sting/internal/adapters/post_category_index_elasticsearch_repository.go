@@ -103,7 +103,7 @@ func (r PostsIndexElasticSearchRepository) IndexCategories(ctx context.Context, 
 	return nil
 }
 
-func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *post.ObjectFilters) ([]*post.Category, error) {
+func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.ObjectFilters) ([]*post.Category, error) {
 
 	builder := r.client.Search().
 		Index(categoryIndexName).ErrorTrace(true)
@@ -112,10 +112,16 @@ func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context,
 		return nil, errors.New("cursor required")
 	}
 
-	query := cursor.BuildElasticsearch(builder, "created_at")
+	query := cursor.BuildElasticsearch(builder, filter.OrderBy())
 
-	if filters.Search() != nil {
-		query.Must(elastic.NewMultiMatchQuery(*filters.Search(), "title").Operator("and"))
+	if filter.Search() != nil {
+		query.Must(elastic.NewMultiMatchQuery(*filter.Search(), "title").Operator("and"))
+	}
+
+	if len(filter.Slugs()) > 0 {
+		for _, id := range filter.Slugs() {
+			query.Filter(elastic.NewTermQuery("slug", id))
+		}
 	}
 
 	builder.Query(query)
@@ -197,10 +203,6 @@ func (r PostsIndexElasticSearchRepository) IndexAllCategories(ctx context.Contex
 	}
 
 	return nil
-}
-
-func (r PostsIndexElasticSearchRepository) GetCategoryBySlug(ctx context.Context, requester *principal.Principal, slug string) (*post.Category, error) {
-	panic("implement me")
 }
 
 func (r PostsIndexElasticSearchRepository) DeleteCategoryIndex(ctx context.Context) error {

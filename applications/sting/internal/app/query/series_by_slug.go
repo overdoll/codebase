@@ -13,16 +13,16 @@ type SeriesBySlug struct {
 }
 
 type SeriesBySlugHandler struct {
-	pi post.IndexRepository
+	pr post.Repository
 }
 
-func NewSeriesBySlugHandler(pi post.IndexRepository) SeriesBySlugHandler {
-	return SeriesBySlugHandler{pi: pi}
+func NewSeriesBySlugHandler(pr post.Repository) SeriesBySlugHandler {
+	return SeriesBySlugHandler{pr: pr}
 }
 
 func (h SeriesBySlugHandler) Handle(ctx context.Context, query SeriesBySlug) (*post.Series, error) {
 
-	result, err := h.pi.GetSeriesBySlug(ctx, query.Principal, query.Slug)
+	result, err := h.pr.GetSeriesBySlug(ctx, query.Principal, query.Slug)
 
 	if err != nil {
 		return nil, err

@@ -13,16 +13,16 @@ type BrandBySlug struct {
 }
 
 type BrandBySlugHandler struct {
-	pi post.IndexRepository
+	pr post.Repository
 }
 
-func NewBrandBySlugHandler(pi post.IndexRepository) BrandBySlugHandler {
-	return BrandBySlugHandler{pi: pi}
+func NewBrandBySlugHandler(pr post.Repository) BrandBySlugHandler {
+	return BrandBySlugHandler{pr: pr}
 }
 
 func (h BrandBySlugHandler) Handle(ctx context.Context, query BrandBySlug) (*post.Brand, error) {
 
-	result, err := h.pi.GetBrandBySlug(ctx, query.Principal, query.Slug)
+	result, err := h.pr.GetBrandBySlug(ctx, query.Principal, query.Slug)
 
 	if err != nil {
 		return nil, err

@@ -51,7 +51,7 @@ const seriesIndex = `
 
 const seriesIndexName = "series"
 
-func (r PostsIndexElasticSearchRepository) SearchSeries(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *post.ObjectFilters) ([]*post.Series, error) {
+func (r PostsIndexElasticSearchRepository) SearchSeries(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.ObjectFilters) ([]*post.Series, error) {
 
 	builder := r.client.Search().
 		Index(seriesIndexName)
@@ -60,10 +60,16 @@ func (r PostsIndexElasticSearchRepository) SearchSeries(ctx context.Context, req
 		return nil, errors.New("cursor required")
 	}
 
-	query := cursor.BuildElasticsearch(builder, "created_at")
+	query := cursor.BuildElasticsearch(builder, filter.OrderBy())
 
-	if filters.Search() != nil {
-		query.Must(elastic.NewMultiMatchQuery(*filters.Search(), "title").Operator("and"))
+	if filter.Search() != nil {
+		query.Must(elastic.NewMultiMatchQuery(*filter.Search(), "title").Operator("and"))
+	}
+
+	if len(filter.Slugs()) > 0 {
+		for _, id := range filter.Slugs() {
+			query.Filter(elastic.NewTermQuery("slug", id))
+		}
 	}
 
 	builder.Query(query)
@@ -93,10 +99,6 @@ func (r PostsIndexElasticSearchRepository) SearchSeries(ctx context.Context, req
 	}
 
 	return meds, nil
-}
-
-func (r PostsIndexElasticSearchRepository) GetSeriesBySlug(ctx context.Context, requester *principal.Principal, slug string) (*post.Series, error) {
-	panic("implement me")
 }
 
 func (r PostsIndexElasticSearchRepository) IndexAllSeries(ctx context.Context) error {

@@ -22,7 +22,7 @@ func NewPostByIdHandler(pr post.Repository) PostByIdHandler {
 
 func (h PostByIdHandler) Handle(ctx context.Context, query PostById) (*post.Post, error) {
 
-	pst, err := h.pr.GetPost(ctx, query.Principal, query.Id)
+	pst, err := h.pr.GetPostById(ctx, query.Principal, query.Id)
 
 	if err != nil {
 		return nil, err

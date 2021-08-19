@@ -62,6 +62,12 @@ func createApplication(ctx context.Context, carrier command.CarrierService) app.
 			RevokeAuthenticationToken:                 command.NewRevokeAuthenticationTokenHandler(tokenRepo),
 			ReissueAuthenticationToken:                command.NewReissueAuthenticationTokenHandler(tokenRepo, carrier),
 			IndexAllAccounts:                          command.NewIndexAllAccountsHandler(accountRepo, accountIndexRepo),
+
+			RevokeAccountModeratorRole: command.NewRevokeAccountModeratorRoleHandler(accountRepo),
+			RevokeAccountStaffRole:     command.NewRevokeAccountStaffRoleHandler(accountRepo),
+
+			AssignAccountModeratorRole: command.NewAssignAccountModeratorRoleHandler(accountRepo),
+			AssignAccountStaffRole:     command.NewAssignAccountStaffRoleHandler(accountRepo),
 		},
 		Queries: app.Queries{
 			SearchAccounts:                  query.NewSearchAccountsHandler(accountIndexRepo),

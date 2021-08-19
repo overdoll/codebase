@@ -121,6 +121,13 @@ extend type Query {
     """Search by character slugs."""
     slugs: [String!]
 
+    """
+    When searching for a character by slug, you need to include the series' slug since slugs are unique-per-series.
+
+    Only one slug is allowed for now since you don't want inaccurate results
+    """
+    seriesSlug: String
+
     """Filter by the name of the character."""
     name: String
 
@@ -132,6 +139,9 @@ extend type Query {
   character(
     """Search by slug of the character."""
     slug: String!
+
+    """A series slug is required since character slugs are unique-per-series."""
+    seriesSlug: String!
   ): Character
 }
 

@@ -128,11 +128,11 @@ func (c *Cursor) BuildElasticsearch(builder *elastic.SearchService, column strin
 	query := elastic.NewBoolQuery()
 
 	if c.After() != nil {
-		query.Must(elastic.NewRangeQuery(column).Lt(*c.After()))
+		query.Filter(elastic.NewRangeQuery(column).Lt(*c.After()))
 	}
 
 	if c.Before() != nil {
-		query.Must(elastic.NewRangeQuery(column).Gt(*c.Before()))
+		query.Filter(elastic.NewRangeQuery(column).Gt(*c.Before()))
 	}
 
 	if c.Last() != nil {

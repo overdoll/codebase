@@ -8,21 +8,22 @@ import (
 )
 
 type CharacterBySlug struct {
-	Principal *principal.Principal
-	Slug      string
+	Principal  *principal.Principal
+	Slug       string
+	SeriesSlug string
 }
 
 type CharacterBySlugHandler struct {
-	pi post.IndexRepository
+	pr post.Repository
 }
 
-func NewCharacterBySlugHandler(pi post.IndexRepository) CharacterBySlugHandler {
-	return CharacterBySlugHandler{pi: pi}
+func NewCharacterBySlugHandler(pr post.Repository) CharacterBySlugHandler {
+	return CharacterBySlugHandler{pr: pr}
 }
 
 func (h CharacterBySlugHandler) Handle(ctx context.Context, query CharacterBySlug) (*post.Character, error) {
 
-	result, err := h.pi.GetCharacterBySlug(ctx, query.Principal, query.Slug)
+	result, err := h.pr.GetCharacterBySlug(ctx, query.Principal, query.Slug, query.SeriesSlug)
 
 	if err != nil {
 		return nil, err

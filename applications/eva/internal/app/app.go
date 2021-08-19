@@ -11,8 +11,9 @@ type Application struct {
 }
 
 type Commands struct {
-	VerifyAuthenticationToken               command.VerifyAuthenticationTokenHandler
-	GrantAuthenticationToken                command.GrantAuthenticationTokenHandler
+	VerifyAuthenticationToken command.VerifyAuthenticationTokenHandler
+	GrantAuthenticationToken  command.GrantAuthenticationTokenHandler
+
 	UnlockAccount                           command.UnlockAccountHandler
 	AddAccountEmail                         command.AddAccountEmailHandler
 	UpdateAccountUsernameAndRetainPrevious  command.UpdateAccountUsernameAndRetainPreviousHandler
@@ -27,6 +28,12 @@ type Commands struct {
 	RevokeAuthenticationToken               command.RevokeAuthenticationTokenHandler
 	ReissueAuthenticationToken              command.ReissueAuthenticationTokenHandler
 	IndexAllAccounts                        command.IndexAllAccountsHandler
+
+	RevokeAccountModeratorRole command.RevokeAccountModeratorRoleHandler
+	RevokeAccountStaffRole     command.RevokeAccountStaffRoleHandler
+
+	AssignAccountModeratorRole command.AssignAccountModeratorRoleHandler
+	AssignAccountStaffRole     command.AssignAccountStaffRoleHandler
 
 	CreateAccountWithAuthenticationToken      command.CreateAccountWithAuthenticationTokenHandler
 	GrantAccountAccessWithAuthenticationToken command.GrantAccountAccessWithAuthenticationTokenHandler

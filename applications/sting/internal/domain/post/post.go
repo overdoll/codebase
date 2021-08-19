@@ -374,18 +374,3 @@ func (p *Post) CanView(requester *principal.Principal) error {
 
 	return nil
 }
-
-func CanViewWithFilters(requester *principal.Principal, filter *PostFilters) error {
-
-	// filtering by moderator
-	if filter.ModeratorId() != nil {
-
-		if requester.IsStaff() {
-			return nil
-		}
-
-		return requester.BelongsToAccount(*filter.ModeratorId())
-	}
-
-	return nil
-}

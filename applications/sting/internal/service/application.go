@@ -69,26 +69,26 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			PrincipalById: query.NewPrincipalByIdHandler(eva),
 
 			SearchCharacters: query.NewSearchCharactersHandler(indexRepo),
-			CharacterBySlug:  query.NewCharacterBySlugHandler(indexRepo),
+			CharacterBySlug:  query.NewCharacterBySlugHandler(postRepo),
 			CharacterById:    query.NewCharacterByIdHandler(postRepo),
 
 			SearchCategories: query.NewSearchCategoriesHandler(indexRepo),
-			CategoryBySlug:   query.NewCategoryBySlugHandler(indexRepo),
+			CategoryBySlug:   query.NewCategoryBySlugHandler(postRepo),
 			CategoryById:     query.NewCategoryByIdHandler(postRepo),
 
 			SearchPosts: query.NewSearchPostsHandler(indexRepo),
 			PostById:    query.NewPostByIdHandler(postRepo),
 
 			SearchBrands: query.NewSearchBrandsHandler(indexRepo),
-			BrandBySlug:  query.NewBrandBySlugHandler(indexRepo),
+			BrandBySlug:  query.NewBrandBySlugHandler(postRepo),
 			BrandById:    query.NewBrandByIdHandler(postRepo),
 
 			SearchAudience: query.NewSearchAudienceHandler(indexRepo),
-			AudienceBySlug: query.NewAudienceBySlugHandler(indexRepo),
+			AudienceBySlug: query.NewAudienceBySlugHandler(postRepo),
 			AudienceById:   query.NewAudienceByIdHandler(postRepo),
 
 			SearchSeries: query.NewSearchSeriesHandler(indexRepo),
-			SeriesBySlug: query.NewSeriesBySlugHandler(indexRepo),
+			SeriesBySlug: query.NewSeriesBySlugHandler(postRepo),
 			SeriesById:   query.NewSeriesByIdHandler(postRepo),
 		},
 		Activities: activities.NewActivitiesHandler(postRepo, indexRepo, resourceRepo, parley),

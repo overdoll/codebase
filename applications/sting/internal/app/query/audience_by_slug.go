@@ -13,16 +13,16 @@ type AudienceBySlug struct {
 }
 
 type AudienceBySlugHandler struct {
-	pi post.IndexRepository
+	pr post.Repository
 }
 
-func NewAudienceBySlugHandler(pi post.IndexRepository) AudienceBySlugHandler {
-	return AudienceBySlugHandler{pi: pi}
+func NewAudienceBySlugHandler(pr post.Repository) AudienceBySlugHandler {
+	return AudienceBySlugHandler{pr: pr}
 }
 
 func (h AudienceBySlugHandler) Handle(ctx context.Context, query AudienceBySlug) (*post.Audience, error) {
 
-	result, err := h.pi.GetAudienceBySlug(ctx, query.Principal, query.Slug)
+	result, err := h.pr.GetAudienceBySlug(ctx, query.Principal, query.Slug)
 
 	if err != nil {
 		return nil, err

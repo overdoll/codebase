@@ -9,11 +9,12 @@ import (
 )
 
 type SearchCharacters struct {
-	Principal *principal.Principal
-	Cursor    *paging.Cursor
-	Slugs     []string
-	OrderBy   string
-	Name      *string
+	Principal  *principal.Principal
+	Cursor     *paging.Cursor
+	Slugs      []string
+	OrderBy    string
+	Name       *string
+	SeriesSlug *string
 }
 
 type SearchCharactersHandler struct {
@@ -26,10 +27,11 @@ func NewSearchCharactersHandler(pr post.IndexRepository) SearchCharactersHandler
 
 func (h SearchCharactersHandler) Handle(ctx context.Context, query SearchCharacters) ([]*post.Character, error) {
 
-	filters, err := post.NewObjectFilters(
+	filters, err := post.NewCharacterFilters(
 		query.Name,
 		query.OrderBy,
 		query.Slugs,
+		query.SeriesSlug,
 	)
 
 	if err != nil {

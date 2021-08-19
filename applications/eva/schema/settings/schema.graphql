@@ -258,16 +258,8 @@ input ConfirmAccountEmailInput {
   id: String!
 }
 
-"""Validation message for adding account email"""
-enum AddAccountEmailValidation {
-  EMAIL_TAKEN
-}
-
 """Email to add the account"""
 type AddAccountEmailPayload {
-  """Validation for adding an email"""
-  validation: AddAccountEmailValidation
-
   """The account email that was added to"""
   accountEmail: AccountEmail
 }
@@ -342,6 +334,7 @@ type DisableAccountMultiFactorPayload {
 """Validation for confirming account email"""
 enum ConfirmAccountEmailValidation {
   TOKEN_EXPIRED
+  EMAIL_TAKEN
 }
 
 """Payload for confirming the account email"""

@@ -21,7 +21,7 @@ func NewUndoPostHandler(pr post.Repository, pi post.IndexRepository) UndoPostHan
 
 func (h UndoPostHandler) Handle(ctx context.Context, cmd StartUndoPost) error {
 
-	pst, err := h.pr.GetPostOperator(ctx, cmd.PostId)
+	pst, err := h.pr.GetPostByIdOperator(ctx, cmd.PostId)
 
 	if err != nil {
 		return err

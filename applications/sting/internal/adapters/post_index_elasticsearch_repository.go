@@ -319,16 +319,48 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 		return nil, err
 	}
 
-	query := cursor.BuildElasticsearch(builder, "posted_at")
+	query := cursor.BuildElasticsearch(builder, filter.OrderBy())
+
+	if filter.State() != nil {
+		query.Filter(elastic.NewTermQuery("state", *filter.State()))
+	}
 
 	if filter.ModeratorId() != nil {
-		query.Must(elastic.NewMultiMatchQuery(*filter.ModeratorId(), "moderator_id"))
-		// only show if post is in review when filtering by moderator ID
-		query.Must(elastic.NewMultiMatchQuery("review", "state"))
+		query.Filter(elastic.NewTermQuery("moderator_id", *filter.ModeratorId()))
 	}
 
 	if filter.ContributorId() != nil {
-		query.Must(elastic.NewMultiMatchQuery(*filter.ContributorId(), "contributor_id"))
+		query.Filter(elastic.NewTermQuery("contributor_id", *filter.ContributorId()))
+	}
+
+	if len(filter.CategorySlugs()) > 0 {
+		for _, id := range filter.CategorySlugs() {
+			query.Filter(elastic.NewTermQuery("categories.slug", id))
+		}
+	}
+
+	if len(filter.CharacterSlugs()) > 0 {
+		for _, id := range filter.CharacterSlugs() {
+			query.Filter(elastic.NewTermQuery("characters.slug", id))
+		}
+	}
+
+	if len(filter.BrandSlugs()) > 0 {
+		for _, id := range filter.BrandSlugs() {
+			query.Filter(elastic.NewTermQuery("brand.slug", id))
+		}
+	}
+
+	if len(filter.AudienceSlugs()) > 0 {
+		for _, id := range filter.AudienceSlugs() {
+			query.Filter(elastic.NewTermQuery("audience.slug", id))
+		}
+	}
+
+	if len(filter.SeriesSlugs()) > 0 {
+		for _, id := range filter.SeriesSlugs() {
+			query.Filter(elastic.NewTermQuery("characters.series.slug", id))
+		}
 	}
 
 	builder.Query(query)

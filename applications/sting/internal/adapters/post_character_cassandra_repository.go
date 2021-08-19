@@ -33,6 +33,54 @@ type character struct {
 	SeriesId  string `db:"series_id"`
 }
 
+var charactersSlugTable = table.New(table.Metadata{
+	Name: "characters_slugs",
+	Columns: []string{
+		"character_id",
+		"series_id",
+		"slug",
+	},
+	PartKey: []string{"slug", "series_id"},
+	SortKey: []string{},
+})
+
+type characterSlug struct {
+	SeriesId    string `db:"series_id"`
+	CharacterId string `db:"character_id"`
+	Slug        string `db:"slug"`
+}
+
+func (r PostsCassandraRepository) GetCharacterBySlug(ctx context.Context, requester *principal.Principal, seriesSlug string, slug string) (*post.Character, error) {
+
+	// get series first
+	series, err := r.getSeriesBySlug(ctx, requester, seriesSlug)
+
+	if err != nil {
+		return nil, err
+	}
+
+	queryCharacterSlug := r.session.
+		Query(charactersSlugTable.Get()).
+		Consistency(gocql.One).
+		BindStruct(characterSlug{
+			Slug:     slug,
+			SeriesId: series.SeriesId,
+	})
+
+	var b characterSlug
+
+	if err := queryCharacterSlug.Get(&b); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return nil, post.ErrCharacterNotFound
+		}
+
+		return nil, fmt.Errorf("failed to get character by slug: %v", err)
+	}
+
+	return r.GetCharacterById(ctx, requester, b.CharacterId)
+}
+
 func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars []string) ([]*post.Character, error) {
 
 	var characters []*post.Character
@@ -139,32 +187,4 @@ func (r PostsCassandraRepository) GetCharacterById(ctx context.Context, requeste
 		char.Thumbnail,
 		media,
 	), nil
-}
-
-func (r PostsCassandraRepository) CreateCharacters(ctx context.Context, characters []*post.Character) error {
-
-	batch := r.session.NewBatch(gocql.LoggedBatch)
-
-	for _, chars := range characters {
-
-		media := chars.Series()
-
-		stmt, _ := characterTable.Insert()
-		batch.Query(
-			stmt,
-			chars.ID(),
-			chars.Slug(),
-			chars.Name(),
-			chars.Thumbnail(),
-			media.ID(),
-		)
-	}
-
-	err := r.session.ExecuteBatch(batch)
-
-	if err != nil {
-		return fmt.Errorf("failed to create characters: %v", err)
-	}
-
-	return nil
 }

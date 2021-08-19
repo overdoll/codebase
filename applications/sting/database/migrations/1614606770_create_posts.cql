@@ -7,6 +7,13 @@ CREATE TABLE IF NOT EXISTS categories
     primary key ( id )
 );
 
+CREATE TABLE IF NOT EXISTS categories_slugs
+(
+    slug        text,
+    category_id text,
+    primary key ( slug )
+);
+
 CREATE TABLE IF NOT EXISTS characters
 (
     id        text,
@@ -14,7 +21,15 @@ CREATE TABLE IF NOT EXISTS characters
     name      text,
     thumbnail text,
     series_id text,
-    primary key ( id)
+    primary key ( id )
+);
+
+CREATE TABLE IF NOT EXISTS characters_slugs
+(
+    slug         text,
+    series_id    text,
+    character_id text,
+    primary key ( (slug, series_id) )
 );
 
 CREATE TABLE IF NOT EXISTS series
@@ -26,6 +41,13 @@ CREATE TABLE IF NOT EXISTS series
     primary key ( id )
 );
 
+CREATE TABLE IF NOT EXISTS series_slugs
+(
+    slug      text,
+    series_id text,
+    primary key ( slug )
+);
+
 CREATE TABLE IF NOT EXISTS brands
 (
     id        text,
@@ -33,6 +55,13 @@ CREATE TABLE IF NOT EXISTS brands
     name      text,
     thumbnail text,
     primary key ( id )
+);
+
+CREATE TABLE IF NOT EXISTS brands_slugs
+(
+    slug     text,
+    brand_id text,
+    primary key ( slug )
 );
 
 CREATE TABLE IF NOT EXISTS audience
@@ -43,6 +72,13 @@ CREATE TABLE IF NOT EXISTS audience
     thumbnail text,
     standard  int,
     primary key ( id )
+);
+
+CREATE TABLE IF NOT EXISTS audience_slugs
+(
+    slug text,
+    id   text,
+    primary key ( slug )
 );
 
 CREATE TABLE IF NOT EXISTS posts

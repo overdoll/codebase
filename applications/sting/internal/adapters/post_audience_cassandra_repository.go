@@ -31,6 +31,42 @@ type audience struct {
 	Standard  int    `db:"standard"`
 }
 
+var audienceSlugTable = table.New(table.Metadata{
+	Name: "audience_slugs",
+	Columns: []string{
+		"audience_id",
+		"slug",
+	},
+	PartKey: []string{"slug"},
+	SortKey: []string{},
+})
+
+type audienceSlug struct {
+	AudienceId string `db:"audience_id"`
+	Slug       string `db:"slug"`
+}
+
+func (r PostsCassandraRepository) GetAudienceBySlug(ctx context.Context, requester *principal.Principal, slug string) (*post.Audience, error) {
+
+	queryAudienceSlug := r.session.
+		Query(audienceSlugTable.Get()).
+		Consistency(gocql.One).
+		BindStruct(audienceSlug{Slug: slug})
+
+	var b audienceSlug
+
+	if err := queryAudienceSlug.Get(&b); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return nil, post.ErrAudienceNotFound
+		}
+
+		return nil, fmt.Errorf("failed to get audience by slug: %v", err)
+	}
+
+	return r.GetAudienceById(ctx, requester, b.AudienceId)
+}
+
 func (r PostsCassandraRepository) GetAudienceById(ctx context.Context, requester *principal.Principal, audienceId string) (*post.Audience, error) {
 
 	queryAudience := r.session.

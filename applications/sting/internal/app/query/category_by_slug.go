@@ -13,16 +13,16 @@ type CategoryBySlug struct {
 }
 
 type CategoryBySlugHandler struct {
-	pi post.IndexRepository
+	pr post.Repository
 }
 
-func NewCategoryBySlugHandler(pi post.IndexRepository) CategoryBySlugHandler {
-	return CategoryBySlugHandler{pi: pi}
+func NewCategoryBySlugHandler(pr post.Repository) CategoryBySlugHandler {
+	return CategoryBySlugHandler{pr: pr}
 }
 
 func (h CategoryBySlugHandler) Handle(ctx context.Context, query CategoryBySlug) (*post.Category, error) {
 
-	result, err := h.pi.GetCategoryBySlug(ctx, query.Principal, query.Slug)
+	result, err := h.pr.GetCategoryBySlug(ctx, query.Principal, query.Slug)
 
 	if err != nil {
 		return nil, err

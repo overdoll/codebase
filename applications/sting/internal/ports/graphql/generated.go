@@ -198,8 +198,8 @@ type ComplexityRoot struct {
 		Brands             func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, name *string, orderBy types.BrandsOrder) int
 		Categories         func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, title *string, orderBy types.CategoriesOrder) int
 		Category           func(childComplexity int, slug string) int
-		Character          func(childComplexity int, slug string) int
-		Characters         func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, name *string, orderBy types.CharactersOrder) int
+		Character          func(childComplexity int, slug string, seriesSlug string) int
+		Characters         func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, seriesSlug *string, name *string, orderBy types.CharactersOrder) int
 		Post               func(childComplexity int, reference string) int
 		Posts              func(childComplexity int, after *string, before *string, first *int, last *int, brandSlugs []string, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) int
 		Serial             func(childComplexity int, slug string) int
@@ -310,8 +310,8 @@ type QueryResolver interface {
 	Category(ctx context.Context, slug string) (*types.Category, error)
 	Series(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, title *string, orderBy types.SeriesOrder) (*types.SeriesConnection, error)
 	Serial(ctx context.Context, slug string) (*types.Series, error)
-	Characters(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, name *string, orderBy types.CharactersOrder) (*types.CharacterConnection, error)
-	Character(ctx context.Context, slug string) (*types.Character, error)
+	Characters(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, seriesSlug *string, name *string, orderBy types.CharactersOrder) (*types.CharacterConnection, error)
+	Character(ctx context.Context, slug string, seriesSlug string) (*types.Character, error)
 	Post(ctx context.Context, reference string) (*types.Post, error)
 	Posts(ctx context.Context, after *string, before *string, first *int, last *int, brandSlugs []string, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error)
 }
@@ -1043,7 +1043,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Character(childComplexity, args["slug"].(string)), true
+		return e.complexity.Query.Character(childComplexity, args["slug"].(string), args["seriesSlug"].(string)), true
 
 	case "Query.characters":
 		if e.complexity.Query.Characters == nil {
@@ -1055,7 +1055,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Characters(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["name"].(*string), args["orderBy"].(types.CharactersOrder)), true
+		return e.complexity.Query.Characters(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["seriesSlug"].(*string), args["name"].(*string), args["orderBy"].(types.CharactersOrder)), true
 
 	case "Query.post":
 		if e.complexity.Query.Post == nil {
@@ -1688,6 +1688,13 @@ extend type Query {
     """Search by character slugs."""
     slugs: [String!]
 
+    """
+    When searching for a character by slug, you need to include the series' slug since slugs are unique-per-series.
+
+    Only one slug is allowed for now since you don't want inaccurate results
+    """
+    seriesSlug: String
+
     """Filter by the name of the character."""
     name: String
 
@@ -1699,6 +1706,9 @@ extend type Query {
   character(
     """Search by slug of the character."""
     slug: String!
+
+    """A series slug is required since character slugs are unique-per-series."""
+    seriesSlug: String!
   ): Character
 }
 
@@ -3357,6 +3367,15 @@ func (ec *executionContext) field_Query_character_args(ctx context.Context, rawA
 		}
 	}
 	args["slug"] = arg0
+	var arg1 string
+	if tmp, ok := rawArgs["seriesSlug"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("seriesSlug"))
+		arg1, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["seriesSlug"] = arg1
 	return args, nil
 }
 
@@ -3409,23 +3428,32 @@ func (ec *executionContext) field_Query_characters_args(ctx context.Context, raw
 	}
 	args["slugs"] = arg4
 	var arg5 *string
-	if tmp, ok := rawArgs["name"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+	if tmp, ok := rawArgs["seriesSlug"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("seriesSlug"))
 		arg5, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["name"] = arg5
-	var arg6 types.CharactersOrder
-	if tmp, ok := rawArgs["orderBy"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
-		arg6, err = ec.unmarshalNCharactersOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharactersOrder(ctx, tmp)
+	args["seriesSlug"] = arg5
+	var arg6 *string
+	if tmp, ok := rawArgs["name"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+		arg6, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["orderBy"] = arg6
+	args["name"] = arg6
+	var arg7 types.CharactersOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg7, err = ec.unmarshalNCharactersOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharactersOrder(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["orderBy"] = arg7
 	return args, nil
 }
 
@@ -6852,7 +6880,7 @@ func (ec *executionContext) _Query_characters(ctx context.Context, field graphql
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Characters(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["name"].(*string), args["orderBy"].(types.CharactersOrder))
+		return ec.resolvers.Query().Characters(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["seriesSlug"].(*string), args["name"].(*string), args["orderBy"].(types.CharactersOrder))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6894,7 +6922,7 @@ func (ec *executionContext) _Query_character(ctx context.Context, field graphql.
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Character(rctx, args["slug"].(string))
+		return ec.resolvers.Query().Character(rctx, args["slug"].(string), args["seriesSlug"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)

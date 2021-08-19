@@ -90,7 +90,7 @@ func marshalAudienceToDocument(cat *post.Audience) (*audienceDocument, error) {
 	}, nil
 }
 
-func (r PostsIndexElasticSearchRepository) SearchAudience(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *post.ObjectFilters) ([]*post.Audience, error) {
+func (r PostsIndexElasticSearchRepository) SearchAudience(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.ObjectFilters) ([]*post.Audience, error) {
 
 	builder := r.client.Search().
 		Index(audienceIndexName)
@@ -99,10 +99,16 @@ func (r PostsIndexElasticSearchRepository) SearchAudience(ctx context.Context, r
 		return nil, errors.New("cursor required")
 	}
 
-	query := cursor.BuildElasticsearch(builder, "created_at")
+	query := cursor.BuildElasticsearch(builder, filter.OrderBy())
 
-	if filters.Search() != nil {
-		query.Must(elastic.NewMultiMatchQuery(*filters.Search(), "name").Operator("and"))
+	if filter.Search() != nil {
+		query.Must(elastic.NewMultiMatchQuery(*filter.Search(), "name").Operator("and"))
+	}
+
+	if len(filter.Slugs()) > 0 {
+		for _, id := range filter.Slugs() {
+			query.Filter(elastic.NewTermQuery("slug", id))
+		}
 	}
 
 	builder.Query(query)
@@ -185,10 +191,6 @@ func (r PostsIndexElasticSearchRepository) IndexAllAudience(ctx context.Context)
 	}
 
 	return nil
-}
-
-func (r PostsIndexElasticSearchRepository) GetAudienceBySlug(ctx context.Context, requester *principal.Principal, slug string) (*post.Audience, error) {
-	panic("implement me")
 }
 
 func (r PostsIndexElasticSearchRepository) DeleteAudienceIndex(ctx context.Context) error {

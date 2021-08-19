@@ -79,7 +79,7 @@ func marshalBrandToDocument(cat *post.Brand) (*brandDocument, error) {
 	}, nil
 }
 
-func (r PostsIndexElasticSearchRepository) SearchBrands(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *post.ObjectFilters) ([]*post.Brand, error) {
+func (r PostsIndexElasticSearchRepository) SearchBrands(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.ObjectFilters) ([]*post.Brand, error) {
 
 	builder := r.client.Search().
 		Index(brandsIndexName)
@@ -88,10 +88,16 @@ func (r PostsIndexElasticSearchRepository) SearchBrands(ctx context.Context, req
 		return nil, errors.New("cursor required")
 	}
 
-	query := cursor.BuildElasticsearch(builder, "created_at")
+	query := cursor.BuildElasticsearch(builder, filter.OrderBy())
 
-	if filters.Search() != nil {
-		query.Must(elastic.NewMultiMatchQuery(*filters.Search(), "name").Operator("and"))
+	if filter.Search() != nil {
+		query.Must(elastic.NewMultiMatchQuery(*filter.Search(), "name").Operator("and"))
+	}
+
+	if len(filter.Slugs()) > 0 {
+		for _, id := range filter.Slugs() {
+			query.Filter(elastic.NewTermQuery("slug", id))
+		}
 	}
 
 	builder.Query(query)
@@ -173,10 +179,6 @@ func (r PostsIndexElasticSearchRepository) IndexAllBrands(ctx context.Context) e
 	}
 
 	return nil
-}
-
-func (r PostsIndexElasticSearchRepository) GetBrandBySlug(ctx context.Context, requester *principal.Principal, slug string) (*post.Brand, error) {
-	panic("implement me")
 }
 
 func (r PostsIndexElasticSearchRepository) DeleteBrandsIndex(ctx context.Context) error {
