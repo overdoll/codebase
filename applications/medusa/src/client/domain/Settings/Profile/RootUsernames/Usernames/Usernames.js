@@ -3,7 +3,6 @@
  */
 import type { Node } from 'react'
 import {
-  Divider,
   Flex,
   Heading,
   Stack,

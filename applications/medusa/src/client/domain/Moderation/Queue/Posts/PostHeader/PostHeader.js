@@ -6,7 +6,6 @@ import { Avatar, CircularProgress, CircularProgressLabel, Flex, Text, Tooltip } 
 import type { Node } from 'react'
 import { useFragment, graphql } from 'react-relay'
 import type { PostHeaderFragment$key } from '@//:artifacts/PostHeaderFragment.graphql'
-import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 type Props = {
@@ -50,6 +49,7 @@ export default function PostHeader (props: Props): Node {
     } else if (percent > 0.4) {
       return 'orange.500'
     }
+    return 'green.500'
   }
   const clockColor = defineClockColor(reassignmentPercent)
 

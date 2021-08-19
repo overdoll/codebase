@@ -1,7 +1,7 @@
 describe('Settings - Change Username', () => {
   const id = Cypress._.random(0, 1e6)
-  const newUsername = 'newUsername' + id
-  const email = id + '@test.com'
+  const newUsername = `newUser${id}`
+  const email = `${id}@test.com`
 
   beforeEach(() => {
     cy.login(email)
@@ -9,7 +9,7 @@ describe('Settings - Change Username', () => {
 
     cy.visit('/settings/profile')
     cy.findByText(/Current Username/iu).should('exist')
-    cy.waitUntil(() => cy.get('button').contains(/Change Username/iu)).should('be.visible').click()
+    cy.get('button').contains(/Change Username/iu).should('be.visible').click()
     cy.findByText(/Enter a new username/iu)
   })
 

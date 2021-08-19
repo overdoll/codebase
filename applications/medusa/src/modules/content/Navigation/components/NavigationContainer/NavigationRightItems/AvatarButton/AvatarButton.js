@@ -1,12 +1,9 @@
 /**
  * @flow
  */
-import { Avatar, Button, IconButton, Tooltip } from '@chakra-ui/react'
+import { Avatar, Button, Tooltip } from '@chakra-ui/react'
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { Node } from 'react'
-import Icon from '@//:modules/content/Icon/Icon'
-import Login2 from '@streamlinehq/streamlinehq/img/streamline-bold/interface-essential/login-logout/login-2.svg'
-import Link from '@//:modules/routing/Link'
 import { useTranslation } from 'react-i18next'
 import NavLink from '@//:modules/routing/NavLink'
 import type { AvatarButtonFragment$key } from '@//:artifacts/AvatarButtonFragment.graphql'
