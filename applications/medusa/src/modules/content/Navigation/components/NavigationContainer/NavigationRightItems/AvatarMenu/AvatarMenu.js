@@ -18,7 +18,7 @@ const AccountFragmentGQL = graphql`
   }
 `
 
-export default function AvatarButton ({ viewer }: Props): Node {
+export default function AvatarMenu ({ viewer }: Props): Node {
   const [t] = useTranslation('navigation')
 
   const data = useFragment(AccountFragmentGQL, viewer)

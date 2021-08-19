@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next'
 
 type Props = {}
 
-export default function LoginButton (props: Props): Node {
+export default function LoginMenu (props: Props): Node {
   const [t] = useTranslation('navigation')
 
   return (

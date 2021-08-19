@@ -4,33 +4,33 @@
 
 import importedRoutes from '../routing/navigation'
 
+// Determine if route is valid by calling the middleware function in the route
+const isRouteValid = (data, route) => {
+  if (Object.prototype.hasOwnProperty.call(route, 'middleware')) {
+    for (let i = 0; i < route.middleware.length; i++) {
+      if (!route.middleware[i](data)) return false
+    }
+  }
+  return true
+}
+
+// Group objects by a dynamic key value
+const groupByKey = (object, key) => {
+  return object.reduce((accumulator, currentValue) => {
+    accumulator[currentValue.navigation[key]] = accumulator[currentValue.navigation[key]] || []
+    accumulator[currentValue.navigation[key]].push(currentValue)
+    return accumulator
+  }, {})
+}
+
+// Function for omitting a key from an object
+const omitKeyFromObject = (key, object) => {
+  const { [key]: omit, ...rest } = object
+  return rest
+}
+
 export default function computeCurrentActiveRoutes ({ environment }) {
   const activeRoutes = importedRoutes
-
-  // Determine if route is valid by calling the middleware function in the route
-  const isRouteValid = (data, route) => {
-    if (Object.prototype.hasOwnProperty.call(route, 'middleware')) {
-      for (let i = 0; i < route.middleware.length; i++) {
-        if (!route.middleware[i](data)) return false
-      }
-    }
-    return true
-  }
-
-  // Group objects by a dynamic key value
-  const groupByKey = (object, key) => {
-    return object.reduce((accumulator, currentValue) => {
-      accumulator[currentValue.navigation[key]] = accumulator[currentValue.navigation[key]] || []
-      accumulator[currentValue.navigation[key]].push(currentValue)
-      return accumulator
-    }, {})
-  }
-
-  // Function for omitting a key from an object
-  const omitKeyFromObject = (key, object) => {
-    const { [key]: omit, ...rest } = object
-    return rest
-  }
 
   // Recursively parse Middleware routes to make sure the user can actually access them
   const validRoutes = (routes) => {

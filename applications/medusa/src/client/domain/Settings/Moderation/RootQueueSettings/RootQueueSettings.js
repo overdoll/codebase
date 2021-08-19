@@ -9,7 +9,7 @@ import { Divider, Heading } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
-import ErrorFallback from '../../../../components/ErrorFallback/ErrorFallback'
+import ErrorFallback from '../../../../../modules/content/ErrorFallback/ErrorFallback'
 import { Suspense } from 'react'
 import QueueSettingsQuery from '@//:artifacts/QueueSettingsQuery.graphql'
 

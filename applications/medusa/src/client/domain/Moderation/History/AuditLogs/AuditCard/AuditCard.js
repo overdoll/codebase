@@ -25,9 +25,8 @@ import InterfaceArrowsMoveHorizontalCircle
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-move-horizontal-circle.svg'
 import InterfaceArrowsButtonDown
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-button-down.svg'
-
-import convertToMonthDayTime from '@//:modules/utilities/functions/date/convertToMonthDayTime'
 import AuditInspect from './AuditInspect/AuditInspect'
+import { format } from 'date-fns'
 
 type Props = {
   auditLog: AuditCardFragment$key,
@@ -64,6 +63,8 @@ export default function AuditCard ({ auditLog }: Props): Node {
 
   const expiryPercent = (expiryTime / 10) * 100
 
+  const formattedDate = format(new Date(data.post.postedAt), 'eeee h:m aaa')
+
   return (
     <AccordionItem bg='gray.800' borderRadius={5} border='none'>
       {({ isExpanded }) => (
@@ -74,7 +75,7 @@ export default function AuditCard ({ auditLog }: Props): Node {
           >
             <Flex align='center' justify='space-between' w='100%' direction='row'>
               <Text fontSize='md'>
-                {convertToMonthDayTime(data.post.postedAt)}
+                {formattedDate}
               </Text>
               <Text fontSize='md'>
                 {data.contributor.username}

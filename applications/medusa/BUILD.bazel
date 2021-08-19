@@ -121,6 +121,7 @@ _RUNTIME_DEPS = [
     "@npm//@casl/react",
     "@npm//mime-types",
     "@npm//apollo-server",
+    "@npm//date-fns",
 ]
 
 TEST_DEPS = [

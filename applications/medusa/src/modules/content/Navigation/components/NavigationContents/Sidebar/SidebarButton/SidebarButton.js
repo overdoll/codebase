@@ -19,7 +19,7 @@ type Props = {
 export default function SidebarButton ({ path, title }: Props): Node {
   return (
     <NavLink to={path}>
-      {(isActive) => (
+      {({ isActive }) => (
         <Button
           borderRadius={5} pt={3} pb={3}
           textAlign='left' w='100%'

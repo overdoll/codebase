@@ -8,6 +8,8 @@ import { useContext } from 'react'
 import { matchPath } from 'react-router'
 import Link from './Link'
 import { createLocation } from 'history'
+import getBasePath from '@//:modules/content/Navigation/helpers/getBasePath'
+import { useLocation } from '@//:modules/routing/useLocation'
 
 type Props = {
   children: Node,
@@ -33,6 +35,8 @@ const normalizeToLocation = (to, currentLocation) => {
 const NavLink = ({ children, to, exact = false, strict = false, sensitive = false, isActiveProp = null, ...rest }: Props): Node => {
   const router = useContext(RoutingContext)
 
+  const location = useLocation()
+
   const currentLocation = router.history.location
   const toLocation = normalizeToLocation(
     resolveToLocation(to, currentLocation),
@@ -43,6 +47,8 @@ const NavLink = ({ children, to, exact = false, strict = false, sensitive = fals
 
   const escapedPath =
     path && path.replace(/([.+*?=^!:${}()[\]|/\\])/g, '\\$1')
+
+  const isActiveBasePath = getBasePath(location.pathname) === getBasePath(path)
 
   const match = escapedPath
     ? matchPath(currentLocation.pathname, {
@@ -59,7 +65,7 @@ const NavLink = ({ children, to, exact = false, strict = false, sensitive = fals
 
   return (
     <Link {...rest} to={to}>
-      {children(isActive)}
+      {children({ isActive, isActiveBasePath })}
     </Link>
   )
 }
