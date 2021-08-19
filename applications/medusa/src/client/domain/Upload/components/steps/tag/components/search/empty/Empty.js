@@ -4,7 +4,7 @@
 import type { Node } from 'react'
 import { Flex, Heading } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
-import Button from '@//:modules/form/button'
+import Button from '@//:modules/form/Button'
 import CleaningBroom from '@streamlinehq/streamlinehq/img/streamline-regular/wayfinding/cleaning/cleaning-broom.svg'
 
 type Props = {

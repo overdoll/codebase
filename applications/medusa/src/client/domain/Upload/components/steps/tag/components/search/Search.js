@@ -13,7 +13,7 @@ import {
   ModalBody,
   ModalHeader, Modal, Heading, InputRightElement, IconButton
 } from '@chakra-ui/react'
-import Button from '@//:modules/form/button'
+import Button from '@//:modules/form/Button'
 import { useTranslation } from 'react-i18next'
 import Icon from '@//:modules/content/Icon/Icon'
 import SearchCircle

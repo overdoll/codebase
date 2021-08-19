@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 574f5574dae45ea1e14f97dd72d58f1c
+ * @relayHash 12413b8c3a0746d4331b771a591fa7ac
  */
 
 /* eslint-disable */
@@ -8,7 +8,7 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-import type { TopRightMenuFragment$ref } from "./TopRightMenuFragment.graphql";
+import type { NavigationFragment$ref } from "./NavigationFragment.graphql";
 export type AccountLockReason = "PostInfraction" | "%future added value";
 export type RootQueryVariables = {||};
 export type RootQueryResponse = {|
@@ -19,7 +19,7 @@ export type RootQueryResponse = {|
       +reason: AccountLockReason,
       +expires: number,
     |},
-    +$fragmentRefs: TopRightMenuFragment$ref,
+    +$fragmentRefs: NavigationFragment$ref,
   |}
 |};
 export type RootQuery = {|
@@ -31,7 +31,7 @@ export type RootQuery = {|
 /*
 query RootQuery {
   viewer {
-    ...TopRightMenuFragment
+    ...NavigationFragment
     isModerator
     isStaff
     lock {
@@ -42,13 +42,17 @@ query RootQuery {
   }
 }
 
-fragment ProfileButtonFragment on Account {
-  username
+fragment AvatarButtonFragment on Account {
   avatar
 }
 
-fragment TopRightMenuFragment on Account {
+fragment NavigationFragment on Account {
+  ...AvatarButtonFragment
   ...ProfileButtonFragment
+}
+
+fragment ProfileButtonFragment on Account {
+  username
   avatar
 }
 */
@@ -114,7 +118,7 @@ return {
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "TopRightMenuFragment"
+            "name": "NavigationFragment"
           }
         ],
         "storageKey": null
@@ -141,14 +145,14 @@ return {
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "username",
+            "name": "avatar",
             "storageKey": null
           },
           {
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "avatar",
+            "name": "username",
             "storageKey": null
           },
           (v0/*: any*/),
@@ -167,7 +171,7 @@ return {
     ]
   },
   "params": {
-    "id": "574f5574dae45ea1e14f97dd72d58f1c",
+    "id": "12413b8c3a0746d4331b771a591fa7ac",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",
@@ -176,5 +180,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '42947105a094ca2897b2a40a413d297e';
+(node: any).hash = 'da99c32d74bd2e3b510b66e361c08f99';
 module.exports = node;

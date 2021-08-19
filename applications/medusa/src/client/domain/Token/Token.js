@@ -14,7 +14,7 @@ import SignBadgeCircle
 import { StringParam, useQueryParam } from 'use-query-params'
 import { Node, useEffect } from 'react'
 import type { TokenQuery } from '@//:artifacts/TokenQuery.graphql'
-import Button from '@//:modules/form/button'
+import Button from '@//:modules/form/Button'
 import { useHistory } from '@//:modules/routing'
 import Confirm from './Confirm/Confirm'
 
@@ -96,6 +96,7 @@ export default function Token ({ prepared }: Props): Node {
   const refresh = () => {
     history.push('/join')
     history.go(0)
+    location.reload()
   }
 
   const data = query.viewAuthenticationToken

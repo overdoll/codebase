@@ -11,7 +11,7 @@ import CheckDouble1
   from '@streamlinehq/streamlinehq/img/streamline-regular/interface-essential/form-validation/check-double-1.svg'
 import { joiResolver } from '@hookform/resolvers/joi'
 import type { Node } from 'react'
-import Button from '@//:modules/form/button'
+import Button from '@//:modules/form/Button'
 
 type JoinValues = {
   email: string,
