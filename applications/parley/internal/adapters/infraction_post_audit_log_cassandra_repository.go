@@ -41,7 +41,7 @@ var postAuditLogByPostTable = table.New(table.Metadata{
 		"contributor_account_id",
 		"account_infraction_id",
 		"action",
-		"reason",
+		"post_rejection_reason_id",
 		"notes",
 		"reverted",
 	},
@@ -50,16 +50,16 @@ var postAuditLogByPostTable = table.New(table.Metadata{
 })
 
 type postAuditLogByPost struct {
-	Id                  string `db:"id"`
-	Bucket              int    `db:"bucket"`
-	PostId              string `db:"post_id"`
-	ContributorId       string `db:"contributor_account_id"`
-	ModeratorId         string `db:"moderator_account_id"`
-	AccountInfractionId string `db:"account_infraction_id"`
-	Action              string `db:"action"`
-	Reason              string `db:"reason"`
-	Notes               string `db:"notes"`
-	Reverted            bool   `db:"reverted"`
+	Id                    string  `db:"id"`
+	Bucket                int     `db:"bucket"`
+	PostId                string  `db:"post_id"`
+	ContributorId         string  `db:"contributor_account_id"`
+	ModeratorId           string  `db:"moderator_account_id"`
+	AccountInfractionId   string  `db:"account_infraction_id"`
+	Action                string  `db:"action"`
+	PostRejectionReasonId string  `db:"post_rejection_reason_id"`
+	Notes                 *string `db:"notes"`
+	Reverted              bool    `db:"reverted"`
 }
 
 var postAuditLogByModeratorTable = table.New(table.Metadata{
@@ -72,7 +72,7 @@ var postAuditLogByModeratorTable = table.New(table.Metadata{
 		"contributor_account_id",
 		"account_infraction_id",
 		"action",
-		"reason",
+		"post_rejection_reason_id",
 		"notes",
 		"reverted",
 	},
@@ -81,29 +81,31 @@ var postAuditLogByModeratorTable = table.New(table.Metadata{
 })
 
 type postAuditLogByModerator struct {
-	Id                  string `db:"id"`
-	Bucket              int    `db:"bucket"`
-	PostId              string `db:"post_id"`
-	ContributorId       string `db:"contributor_account_id"`
-	ModeratorId         string `db:"moderator_account_id"`
-	AccountInfractionId string `db:"account_infraction_id"`
-	Action              string `db:"action"`
-	Reason              string `db:"reason"`
-	Notes               string `db:"notes"`
-	Reverted            bool   `db:"reverted"`
+	Id                    string  `db:"id"`
+	Bucket                int     `db:"bucket"`
+	PostId                string  `db:"post_id"`
+	ContributorId         string  `db:"contributor_account_id"`
+	ModeratorId           string  `db:"moderator_account_id"`
+	AccountInfractionId   *string `db:"account_infraction_id"`
+	Action                string  `db:"action"`
+	PostRejectionReasonId *string `db:"post_rejection_reason_id"`
+	Notes                 *string `db:"notes"`
+	Reverted              bool    `db:"reverted"`
 }
 
 func marshalPostAuditLogToDatabase(auditLog *infraction.PostAuditLog) (*postAuditLogByModerator, error) {
 
-	userInfractionId := ""
-	reason := ""
+	var userInfractionId *string
+	var reason *string
 
 	if auditLog.IsDeniedWithInfraction() {
-		userInfractionId = auditLog.UserInfraction().ID()
+		id := auditLog.UserInfraction().ID()
+		userInfractionId = &id
 	}
 
 	if auditLog.IsDenied() {
-		reason = auditLog.RejectionReason().Reason()
+		id := auditLog.RejectionReason().ID()
+		reason = &id
 	}
 
 	buck, err := bucket.MakeBucketFromKSUID(auditLog.ID())
@@ -113,16 +115,16 @@ func marshalPostAuditLogToDatabase(auditLog *infraction.PostAuditLog) (*postAudi
 	}
 
 	return &postAuditLogByModerator{
-		Id:                  auditLog.ID(),
-		Bucket:              buck,
-		PostId:              auditLog.PostID(),
-		ModeratorId:         auditLog.ModeratorId(),
-		ContributorId:       auditLog.ContributorId(),
-		AccountInfractionId: userInfractionId,
-		Action:              auditLog.Status(),
-		Reason:              reason,
-		Notes:               auditLog.Notes(),
-		Reverted:            auditLog.Reverted(),
+		Id:                    auditLog.ID(),
+		Bucket:                buck,
+		PostId:                auditLog.PostID(),
+		ModeratorId:           auditLog.ModeratorId(),
+		ContributorId:         auditLog.ContributorId(),
+		AccountInfractionId:   userInfractionId,
+		Action:                auditLog.Status(),
+		PostRejectionReasonId: reason,
+		Notes:                 auditLog.Notes(),
+		Reverted:              auditLog.Reverted(),
 	}, nil
 }
 
@@ -154,7 +156,7 @@ func (r InfractionCassandraRepository) CreatePostAuditLog(ctx context.Context, a
 		marshalledAuditLog.ContributorId,
 		marshalledAuditLog.AccountInfractionId,
 		marshalledAuditLog.Action,
-		marshalledAuditLog.Reason,
+		marshalledAuditLog.PostRejectionReasonId,
 		marshalledAuditLog.Notes,
 		marshalledAuditLog.Reverted,
 	)
@@ -169,7 +171,7 @@ func (r InfractionCassandraRepository) CreatePostAuditLog(ctx context.Context, a
 		marshalledAuditLog.ContributorId,
 		marshalledAuditLog.AccountInfractionId,
 		marshalledAuditLog.Action,
-		marshalledAuditLog.Reason,
+		marshalledAuditLog.PostRejectionReasonId,
 		marshalledAuditLog.Notes,
 		marshalledAuditLog.Reverted,
 	)
@@ -230,12 +232,25 @@ func (r InfractionCassandraRepository) GetPostAuditLog(ctx context.Context, requ
 	var userInfractionHistory *infraction.AccountInfractionHistory
 	var err error
 
-	if pendingPostAuditLogByModerator.AccountInfractionId != "" {
+	if pendingPostAuditLogByModerator.AccountInfractionId != nil {
 		userInfractionHistory, err = r.GetAccountInfractionHistoryById(
 			ctx,
 			requester,
 			pendingPostAuditLogByModerator.ContributorId,
-			pendingPostAuditLogByModerator.AccountInfractionId,
+			*pendingPostAuditLogByModerator.AccountInfractionId,
+		)
+
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	var rejectionReason *infraction.PostRejectionReason
+	if pendingPostAuditLogByModerator.PostRejectionReasonId != nil {
+		rejectionReason, err = r.GetPostRejectionReason(
+			ctx,
+			requester,
+			*pendingPostAuditLogByModerator.PostRejectionReasonId,
 		)
 
 		if err != nil {
@@ -249,8 +264,7 @@ func (r InfractionCassandraRepository) GetPostAuditLog(ctx context.Context, requ
 		pendingPostAuditLogByModerator.ModeratorId,
 		pendingPostAuditLogByModerator.ContributorId,
 		pendingPostAuditLogByModerator.Action,
-		pendingPostAuditLogByModerator.AccountInfractionId,
-		pendingPostAuditLogByModerator.Reason,
+		rejectionReason,
 		pendingPostAuditLogByModerator.Notes,
 		pendingPostAuditLogByModerator.Reverted,
 		userInfractionHistory,
@@ -310,14 +324,17 @@ func (r InfractionCassandraRepository) SearchPostAuditLogs(ctx context.Context, 
 	for _, pendingPostAuditLog := range results {
 
 		var userInfractionHistory *infraction.AccountInfractionHistory
+		var postRejectionReason *infraction.PostRejectionReason
 
-		if pendingPostAuditLog.AccountInfractionId != "" {
-			userInfractionHistory = infraction.UnmarshalAccountInfractionHistoryFromDatabase(
-				pendingPostAuditLog.AccountInfractionId,
-				pendingPostAuditLog.ContributorId,
-				pendingPostAuditLog.Reason,
-				time.Now(),
-			)
+		// TODO: need an efficient way to grab all of these
+		// TODO: just store the object directly so we dont have to perform extra queries????
+		// TODO: data will never change so its ok to duplicate it
+		if pendingPostAuditLog.AccountInfractionId != nil {
+
+		}
+
+		if pendingPostAuditLog.PostRejectionReasonId != nil {
+
 		}
 
 		result := infraction.UnmarshalPostAuditLogFromDatabase(
@@ -326,8 +343,7 @@ func (r InfractionCassandraRepository) SearchPostAuditLogs(ctx context.Context, 
 			pendingPostAuditLog.ModeratorId,
 			pendingPostAuditLog.ContributorId,
 			pendingPostAuditLog.Action,
-			pendingPostAuditLog.AccountInfractionId,
-			pendingPostAuditLog.Reason,
+			postRejectionReason,
 			pendingPostAuditLog.Notes,
 			pendingPostAuditLog.Reverted,
 			userInfractionHistory,

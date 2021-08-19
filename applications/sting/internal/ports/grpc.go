@@ -122,3 +122,25 @@ func (s Server) UndoPost(ctx context.Context, request *sting.PostRequest) (*stin
 
 	return &sting.UpdatePostResponse{}, nil
 }
+
+func (s Server) RemovePost(ctx context.Context, request *sting.PostRequest) (*sting.UpdatePostResponse, error) {
+
+	if err := s.app.Commands.RemovePost.Handle(ctx, command.RemovePost{
+		PostId: request.Id,
+	}); err != nil {
+		return nil, err
+	}
+
+	options := client.StartWorkflowOptions{
+		TaskQueue: viper.GetString("temporal.queue"),
+		ID:        "NewRemovePostWorkflow_" + request.Id,
+	}
+
+	_, err := s.client.ExecuteWorkflow(ctx, options, workflows.RemovePost, request.Id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &sting.UpdatePostResponse{}, nil
+}

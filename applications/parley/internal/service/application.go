@@ -51,7 +51,9 @@ func createApplication(ctx context.Context, eva command.EvaService, sting comman
 	return app.Application{
 		Commands: app.Commands{
 			GetNextModerator:   command.NewGetNextModeratorHandler(moderatorRepo),
-			ModeratePost:       command.NewModeratePostHandler(infractionRepo, eva, sting),
+			RejectPost:         command.NewRejectPostHandler(infractionRepo, eva, sting),
+			ApprovePost:        command.NewApprovePostHandler(infractionRepo, eva, sting),
+			RemovePost:         command.NewRemovePostHandler(infractionRepo, eva, sting),
 			RevertModeratePost: command.NewRevertModeratePostHandler(infractionRepo, eva, sting),
 			ToggleModerator:    command.NewToggleModeratorHandler(moderatorRepo, eva),
 		},

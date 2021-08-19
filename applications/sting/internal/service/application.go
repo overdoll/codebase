@@ -51,6 +51,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			DiscardPost: command.NewDiscardPostHandler(postRepo, indexRepo),
 			RejectPost:  command.NewRejectPostHandler(postRepo, indexRepo),
 			SubmitPost:  command.NewSubmitPostHandler(postRepo, indexRepo, parley),
+			RemovePost:  command.NewRemovePostHandler(postRepo, indexRepo),
 
 			IndexAllPosts:      command.NewIndexAllPostsHandler(postRepo, indexRepo),
 			IndexAllSeries:     command.NewIndexAllSeriesHandler(postRepo, indexRepo),

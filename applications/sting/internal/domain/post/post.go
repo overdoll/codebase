@@ -21,12 +21,15 @@ const (
 	discarded  postState = "discarded"
 	rejected   postState = "rejected"
 	processing postState = "processing"
+	removed    postState = "removed"
+	removing   postState = "removing"
 )
 
 var (
 	ErrNotDraft         = errors.New("post must be in draft")
 	ErrNotPublishing    = errors.New("post must be publishing")
 	ErrNotReview        = errors.New("post must be in review")
+	ErrNotRemoving      = errors.New("post must be removing")
 	ErrNotComplete      = errors.New("post is incomplete")
 	ErrNotFound         = errors.New("post not found")
 	ErrAlreadyModerated = errors.New("already moderated")
@@ -212,6 +215,26 @@ func (p *Post) MakeDiscarded() error {
 func (p *Post) MakeRejected() error {
 
 	p.state = rejected
+
+	return nil
+}
+
+func (p *Post) MakeRemoving() error {
+
+	p.state = removing
+
+	return nil
+}
+
+func (p *Post) MakeRemoved() error {
+
+	if p.state != removing {
+		return ErrNotRemoving
+	}
+
+	p.state = removed
+
+	p.content = []*resource.Resource{}
 
 	return nil
 }

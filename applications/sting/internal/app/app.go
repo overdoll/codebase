@@ -22,6 +22,7 @@ type Commands struct {
 	UndoPost    command.UndoPostHandler
 	RejectPost  command.RejectPostHandler
 	SubmitPost  command.SubmitPostHandler
+	RemovePost  command.RemovePostHandler
 
 	UpdatePostContent    command.UpdatePostContentHandler
 	UpdatePostCategories command.UpdatePostCategoriesHandler

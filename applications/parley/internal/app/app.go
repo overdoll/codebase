@@ -11,8 +11,12 @@ type Application struct {
 }
 
 type Commands struct {
-	GetNextModerator   command.GetNextModeratorHandler
-	ModeratePost       command.ModeratePostHandler
+	GetNextModerator command.GetNextModeratorHandler
+
+	RejectPost  command.RejectPostHandler
+	ApprovePost command.ApprovePostHandler
+	RemovePost  command.RemovePostHandler
+
 	RevertModeratePost command.RevertModeratePostHandler
 	ToggleModerator    command.ToggleModeratorHandler
 }

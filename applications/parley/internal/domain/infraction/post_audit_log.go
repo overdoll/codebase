@@ -10,6 +10,7 @@ import (
 )
 
 const (
+	StatusRemoved  = "removed"
 	StatusApproved = "approved"
 	StatusDenied   = "denied"
 )
@@ -17,49 +18,6 @@ const (
 var (
 	ErrInvalidModerator = errors.New("moderator does not match")
 )
-
-type PostAuditLogFilters struct {
-	moderatorId *string
-	postId      *string
-	dateRange   []time.Time
-}
-
-func NewPostAuditLogFilters(moderatorId, postId *string, dateRange []int) (*PostAuditLogFilters, error) {
-
-	// DateRange will be UTC unix timestamps, so we check for that here
-	// if no date range is provided, we take the current time
-	var times []time.Time
-
-	if len(dateRange) == 0 {
-		times = append(times, time.Now())
-	} else {
-		for _, item := range dateRange {
-			times = append(times, time.Unix(int64(item), 0))
-		}
-	}
-
-	if postId == nil && moderatorId == nil {
-		return nil, errors.New("must select at least post or moderator")
-	}
-
-	return &PostAuditLogFilters{
-		moderatorId: moderatorId,
-		postId:      postId,
-		dateRange:   times,
-	}, nil
-}
-
-func (e *PostAuditLogFilters) ModeratorId() *string {
-	return e.moderatorId
-}
-
-func (e *PostAuditLogFilters) PostId() *string {
-	return e.postId
-}
-
-func (e *PostAuditLogFilters) DateRange() []time.Time {
-	return e.dateRange
-}
 
 // A class simply used to store the details of a PendingPost that we can use
 // later on
@@ -72,7 +30,7 @@ type PostAuditLog struct {
 	moderatorId   string
 	contributorId string
 
-	notes    string
+	notes    *string
 	reverted bool
 
 	status string
@@ -81,30 +39,29 @@ type PostAuditLog struct {
 	userInfraction  *AccountInfractionHistory
 }
 
-func NewPendingPostAuditLog(moderator *principal.Principal, userInfractionHistory []*AccountInfractionHistory, postId, moderatorId, contributorId string, rejectionReason *PostRejectionReason, notes string) (*PostAuditLog, error) {
-	// Do some permission checks here to make sure the proper user is doing everything
-
-	if !moderator.IsStaff() {
-		// ensure moderator is the same as the one who is doing the moderation
-		if moderator.AccountId() != moderatorId {
-			return nil, ErrInvalidModerator
-		}
+func NewRemovePostAuditLog(requester *principal.Principal, postId, contributorId string, rejectionReason *PostRejectionReason, notes *string) (*PostAuditLog, error) {
+	if !requester.IsStaff() {
+		return nil, principal.ErrNotAuthorized
 	}
 
-	var userInfraction *AccountInfractionHistory
-	var err error
+	return &PostAuditLog{
+		id:              ksuid.New().String(),
+		pendingPostId:   postId,
+		moderatorId:     requester.AccountId(),
+		contributorId:   contributorId,
+		status:          StatusRemoved,
+		rejectionReason: nil,
+		notes:           nil,
+		reverted:        false,
+		userInfraction:  nil,
+	}, nil
+}
 
-	status := StatusApproved
-
-	if rejectionReason != nil {
-		status = StatusDenied
-
-		if rejectionReason.Infraction() {
-			userInfraction, err = NewAccountInfractionHistory(moderator, contributorId, userInfractionHistory, rejectionReason.Reason())
-
-			if err != nil {
-				return nil, err
-			}
+func NewApprovePostAuditLog(requester *principal.Principal, postId, moderatorId, contributorId string) (*PostAuditLog, error) {
+	if !requester.IsStaff() {
+		// ensure moderator is the same as the one who is doing the moderation
+		if requester.AccountId() != moderatorId {
+			return nil, ErrInvalidModerator
 		}
 	}
 
@@ -113,7 +70,41 @@ func NewPendingPostAuditLog(moderator *principal.Principal, userInfractionHistor
 		pendingPostId:   postId,
 		moderatorId:     moderatorId,
 		contributorId:   contributorId,
-		status:          status,
+		status:          StatusApproved,
+		rejectionReason: nil,
+		notes:           nil,
+		reverted:        false,
+		userInfraction:  nil,
+	}, nil
+}
+
+func NewRejectPostAuditLog(requester *principal.Principal, userInfractionHistory []*AccountInfractionHistory, postId, moderatorId, contributorId string, rejectionReason *PostRejectionReason, notes *string) (*PostAuditLog, error) {
+	// Do some permission checks here to make sure the proper user is doing everything
+
+	if !requester.IsStaff() {
+		// ensure moderator is the same as the one who is doing the moderation
+		if requester.AccountId() != moderatorId {
+			return nil, ErrInvalidModerator
+		}
+	}
+
+	var userInfraction *AccountInfractionHistory
+	var err error
+
+	if rejectionReason.Infraction() {
+		userInfraction, err = NewAccountInfractionHistory(requester, contributorId, userInfractionHistory, rejectionReason.Reason())
+
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return &PostAuditLog{
+		id:              ksuid.New().String(),
+		pendingPostId:   postId,
+		moderatorId:     moderatorId,
+		contributorId:   contributorId,
+		status:          StatusDenied,
 		rejectionReason: rejectionReason,
 		notes:           notes,
 		reverted:        false,
@@ -121,14 +112,14 @@ func NewPendingPostAuditLog(moderator *principal.Principal, userInfractionHistor
 	}, nil
 }
 
-func UnmarshalPostAuditLogFromDatabase(id, postId, moderatorId, contributorId, status, userInfractionId, reason, notes string, reverted bool, userInfraction *AccountInfractionHistory) *PostAuditLog {
+func UnmarshalPostAuditLogFromDatabase(id, postId, moderatorId, contributorId, status string, rejectionReason *PostRejectionReason, notes *string, reverted bool, userInfraction *AccountInfractionHistory) *PostAuditLog {
 	return &PostAuditLog{
 		id:              id,
 		pendingPostId:   postId,
 		moderatorId:     moderatorId,
 		contributorId:   contributorId,
 		status:          status,
-		rejectionReason: UnmarshalPostRejectionReasonFromDatabase(ksuid.New().String(), reason, userInfractionId != ""),
+		rejectionReason: rejectionReason,
 		notes:           notes,
 		reverted:        reverted,
 		userInfraction:  userInfraction,
@@ -147,7 +138,7 @@ func (m *PostAuditLog) Status() string {
 	return m.status
 }
 
-func (m *PostAuditLog) Notes() string {
+func (m *PostAuditLog) Notes() *string {
 	return m.notes
 }
 
@@ -161,6 +152,10 @@ func (m *PostAuditLog) ContributorId() string {
 
 func (m *PostAuditLog) IsApproved() bool {
 	return m.status == StatusApproved
+}
+
+func (m *PostAuditLog) IsRemoved() bool {
+	return m.status == StatusRemoved
 }
 
 func (m *PostAuditLog) IsDenied() bool {
