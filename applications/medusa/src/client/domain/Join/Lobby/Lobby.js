@@ -7,7 +7,7 @@ import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import Icon from '@//:modules/content/Icon/Icon'
 import { Box, Center, Flex, Heading, Text, useToast } from '@chakra-ui/react'
-import Button from '@//:modules/form/button'
+import Button from '@//:modules/form/Button'
 import { useClickDelay } from '@//:modules/utilities/hooks'
 
 import SignBadgeCircle

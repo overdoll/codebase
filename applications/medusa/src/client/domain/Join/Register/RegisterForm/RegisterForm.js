@@ -3,7 +3,14 @@
  */
 import Joi from 'joi'
 import { useTranslation } from 'react-i18next'
-import { FormControl, FormHelperText, FormLabel, Input, InputGroup, InputRightElement } from '@chakra-ui/react'
+import {
+  FormControl,
+  FormHelperText,
+  FormLabel,
+  Input,
+  InputGroup,
+  InputRightElement
+} from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import { useForm } from 'react-hook-form'
 import AlertCircle from '@streamlinehq/streamlinehq/img/streamline-regular/interface-essential/alerts/alert-circle.svg'
@@ -11,7 +18,7 @@ import CheckDouble1
   from '@streamlinehq/streamlinehq/img/streamline-regular/interface-essential/form-validation/check-double-1.svg'
 import { joiResolver } from '@hookform/resolvers/joi'
 import type { Node } from 'react'
-import Button from '@//:modules/form/button'
+import Button from '@//:modules/form/Button'
 
 type RegisterValues = {
   username: string,
@@ -25,6 +32,9 @@ type Props = {
 const schema = Joi.object({
   username: Joi
     .string()
+    .alphanum()
+    .min(3)
+    .max(15)
     .required()
 })
 
@@ -74,7 +84,10 @@ export default function RegisterForm ({ onSubmit, loading }: Props): Node {
           )}
         </InputGroup>
         <FormHelperText>
-          {errors.username && t('authenticate.form.validation.username.required')}
+          {errors.username && errors.username.type === 'string.empty' && t('authenticate.form.validation.username.empty')}
+          {errors.username && errors.username.type === 'string.min' && t('authenticate.form.validation.username.min')}
+          {errors.username && errors.username.type === 'string.max' && t('authenticate.form.validation.username.max')}
+          {errors.username && errors.username.type === 'string.alphanum' && t('authenticate.form.validation.username.alphanum')}
         </FormHelperText>
       </FormControl>
       <Button

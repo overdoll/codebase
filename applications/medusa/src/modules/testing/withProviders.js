@@ -3,7 +3,7 @@
  */
 import { createMemoryHistory } from 'history'
 import type { ComponentType } from 'react'
-import type { RouterInstance } from '@//:modules/routing/router'
+import type { RouterInstance, Route } from '@//:modules/routing/router'
 import { createClientRouter } from '@//:modules/routing/router'
 import Bootstrap from '../../client/Bootstrap'
 import i18n from 'i18next'
@@ -14,6 +14,7 @@ import { EMOTION_CACHE_KEY } from '@//:modules/constants/emotion'
 type WithProviders = {
   environment: IEnvironment,
   Component: ComponentType,
+  routes: Array<Route>
 };
 
 // i18n specifically used for testing - no translations are provided here
@@ -31,10 +32,11 @@ i18n.init({
 
 export default function withProviders ({
   environment,
-  Component = () => null
+  Component = () => null,
+  routes = []
 }: WithProviders): [ComponentType<Node>, RouterInstance] {
   const router = createClientRouter(
-    [],
+    routes,
     createMemoryHistory({
       initialEntries: ['/'],
       initialIndex: 0

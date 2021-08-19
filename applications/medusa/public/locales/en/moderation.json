@@ -50,10 +50,11 @@
               },
               "validation": {
                 "rejectionId": {
-                  "error": "Please select a rejection option"
+                  "empty": "Please select a rejection option"
                 },
                 "note": {
-                  "error": "Please enter a valid note. Maximum 255 characters."
+                  "empty": "The note cannot be empty",
+                  "max": "The note cannot exceed 255 characters"
                 }
               },
               "submit": "Reject Post"
