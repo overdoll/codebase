@@ -34,9 +34,6 @@ func (r *MutationResolver) GrantAuthenticationToken(ctx context.Context, input t
 		return nil, err
 	}
 
-	// OTP login cookie - will determine if
-	// Opened in the same browser - log them in that browser if this cookie exists
-	// Otherwise, if opened in another browser (such as the phone), it will log them in on the original browser through a subscription
 	if err := cookies.SetCookie(ctx, &http.Cookie{
 		Name:    token.OTPKey,
 		Value:   instance.Token(),
