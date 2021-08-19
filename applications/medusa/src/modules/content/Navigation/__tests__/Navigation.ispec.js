@@ -1,5 +1,5 @@
 import { createMockEnvironment } from 'relay-test-utils'
-import { render, screen, prettyDOM } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import withProviders from '@//:modules/testing/withProviders'
 
 import Sidebar from '../components/NavigationContents/Sidebar/Sidebar'
@@ -122,16 +122,22 @@ it('sidebar renders & can see groupings & can see sub-item under grouping', asyn
   )
 
   // Expect the sidebar title to be visible
-  const sidebarTitle = screen.getByText('sidebar title')
-  expect(sidebarTitle).toBeVisible()
+  const sidebarTitle = screen.getAllByText('sidebar title')
+  for (const item of sidebarTitle) {
+    expect(item).toBeInTheDocument()
+  }
 
   // Expect the sidebar grouping to be visible
-  const sidebarGroup = screen.getByText('sidebar grouping')
-  expect(sidebarGroup).toBeVisible()
+  const sidebarGroup = screen.getAllByText('sidebar grouping')
+  for (const item of sidebarGroup) {
+    expect(item).toBeInTheDocument()
+  }
 
   // Expect the sidebar button to be visible
-  const sidebarButton = screen.getByText('sidebar path')
-  expect(sidebarButton).toBeVisible()
+  const sidebarButton = screen.getAllByText('sidebar path')
+  for (const item of sidebarButton) {
+    expect(item).toBeInTheDocument()
+  }
 
   // Expect page contents to be visible
   const pageContents = screen.getByText('i can see the page contents')
