@@ -15,7 +15,6 @@ var postRejectionReasonTable = table.New(table.Metadata{
 	Name: "post_rejection_reasons",
 	Columns: []string{
 		"id",
-		"reason",
 		"infraction",
 		"bucket",
 	},
@@ -25,7 +24,6 @@ var postRejectionReasonTable = table.New(table.Metadata{
 
 type postRejectionReason struct {
 	Id         string `db:"id"`
-	Reason     string `db:"reason"`
 	Infraction bool   `db:"infraction"`
 	Bucket     int    `db:"bucket"`
 }
@@ -48,7 +46,7 @@ func (r InfractionCassandraRepository) GetPostRejectionReason(ctx context.Contex
 		return nil, fmt.Errorf("failed to get post rejection reason: %v", err)
 	}
 
-	reason := infraction.UnmarshalPostRejectionReasonFromDatabase(rejectionReason.Id, rejectionReason.Reason, rejectionReason.Infraction)
+	reason := infraction.UnmarshalPostRejectionReasonFromDatabase(rejectionReason.Id, rejectionReason.Id, rejectionReason.Infraction)
 
 	if err := reason.CanView(requester); err != nil {
 		return nil, err
@@ -84,7 +82,7 @@ func (r InfractionCassandraRepository) GetPostRejectionReasons(ctx context.Conte
 
 	var rejectionReasons []*infraction.PostRejectionReason
 	for _, rejectionReason := range dbRejectionReasons {
-		reason := infraction.UnmarshalPostRejectionReasonFromDatabase(rejectionReason.Id, rejectionReason.Reason, rejectionReason.Infraction)
+		reason := infraction.UnmarshalPostRejectionReasonFromDatabase(rejectionReason.Id, rejectionReason.Id, rejectionReason.Infraction)
 		reason.Node = paging.NewNode(rejectionReason.Id)
 		rejectionReasons = append(rejectionReasons, reason)
 	}

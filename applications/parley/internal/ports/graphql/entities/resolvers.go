@@ -6,6 +6,7 @@ import (
 	"overdoll/applications/parley/internal/app"
 	"overdoll/applications/parley/internal/app/query"
 	"overdoll/applications/parley/internal/domain/infraction"
+	"overdoll/applications/parley/internal/domain/report"
 	"overdoll/applications/parley/internal/ports/graphql/types"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/passport"
@@ -115,4 +116,50 @@ func (r EntityResolver) FindModeratorByID(ctx context.Context, id relay.ID) (*ty
 	}
 
 	return types.MarshalModeratorToGraphQL(mod), nil
+}
+
+func (r EntityResolver) FindPostReportByID(ctx context.Context, id relay.ID) (*types.PostReport, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	mod, err := r.App.Queries.PostReportById.Handle(ctx, query.PostReportById{
+		Principal: principal.FromContext(ctx),
+		Id:        id.GetID(),
+	})
+
+	if err != nil {
+
+		if err == report.ErrPostReportNotFound {
+			return nil, nil
+		}
+
+		return nil, err
+	}
+
+	return types.MarshalPostReportToGraphQL(mod), nil
+}
+
+func (r EntityResolver) FindPostReportReasonByID(ctx context.Context, id relay.ID) (*types.PostReportReason, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	reportReason, err := r.App.Queries.PostReportReasonById.Handle(ctx, query.PostReportReasonById{
+		Principal:      principal.FromContext(ctx),
+		ReportReasonId: id.GetID(),
+	})
+
+	if err != nil {
+
+		if err == report.ErrPostReportReasonNotFound {
+			return nil, nil
+		}
+
+		return nil, err
+	}
+
+	return types.MarshalPostReportReasonToGraphQL(reportReason), nil
 }

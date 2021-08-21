@@ -32,8 +32,8 @@ func (Account) IsEntity() {}
 type AccountInfractionHistory struct {
 	// ID of the infraction history
 	ID relay.ID `json:"id"`
-	// The reason for this infraction
-	Reason string `json:"reason"`
+	// The reason for this infraction, as a post rejection reason
+	PostRejectionReason *PostRejectionReason `json:"postRejectionReason"`
 }
 
 func (AccountInfractionHistory) IsNode()   {}
@@ -74,9 +74,13 @@ func (Moderator) IsNode()   {}
 func (Moderator) IsEntity() {}
 
 type Post struct {
-	ID relay.ID `json:"id"`
 	// Audit logs belonging to this pending post
 	AuditLogs *PostAuditLogConnection `json:"auditLogs"`
+	// Whether or not the post was reported by the viewer.
+	ViewerReport *PostReport `json:"viewerReport"`
+	// Reports belonging to a post
+	Reports *PostReportConnection `json:"reports"`
+	ID      relay.ID              `json:"id"`
 }
 
 func (Post) IsEntity() {}
@@ -94,15 +98,13 @@ type PostAuditLog struct {
 	// The status or the action that was taken against the pending post
 	Action PostAuditLogAction `json:"action"`
 	// The reason the action was taken
-	Reason string `json:"reason"`
+	PostRejectionReason *PostRejectionReason `json:"postRejectionReason"`
 	// Additional notes by the moderator
-	Notes string `json:"notes"`
+	Notes *string `json:"notes"`
 	// If this audit log was reverted
 	Reverted bool `json:"reverted"`
 	// The time until which this audit log will be revertable
 	ReversibleUntil time.Time `json:"reversibleUntil"`
-	// The infraction that is linked to this audit log, mainly kept here as a reference so reverting will be easier
-	InfractionID *relay.ID `json:"infractionId"`
 	// The post linked to this audit log
 	Post *Post `json:"post"`
 }
@@ -147,6 +149,54 @@ type PostRejectionReasonEdge struct {
 	Cursor string               `json:"cursor"`
 }
 
+// Post report
+type PostReport struct {
+	// ID of the report
+	ID relay.ID `json:"id"`
+	// The account that initiated this report
+	Account *Account `json:"account"`
+	// The reason for this report
+	PostReportReason *PostReportReason `json:"postReportReason"`
+}
+
+func (PostReport) IsNode()   {}
+func (PostReport) IsEntity() {}
+
+// Connection of the post report
+type PostReportConnection struct {
+	Edges    []*PostReportEdge `json:"edges"`
+	PageInfo *relay.PageInfo   `json:"pageInfo"`
+}
+
+// Edge of the post report
+type PostReportEdge struct {
+	Node   *PostReport `json:"node"`
+	Cursor string      `json:"cursor"`
+}
+
+// Post report reason
+type PostReportReason struct {
+	// ID of the report reason
+	ID relay.ID `json:"id"`
+	// The reason for this report
+	Reason string `json:"reason"`
+}
+
+func (PostReportReason) IsNode()   {}
+func (PostReportReason) IsEntity() {}
+
+// Connection of the pending post rejection reason
+type PostReportReasonConnection struct {
+	Edges    []*PostReportReasonEdge `json:"edges"`
+	PageInfo *relay.PageInfo         `json:"pageInfo"`
+}
+
+// Edge of the pending post rejection reason
+type PostReportReasonEdge struct {
+	Node   *PostReportReason `json:"node"`
+	Cursor string            `json:"cursor"`
+}
+
 // Moderate the pending post input
 type RejectPostInput struct {
 	// Pending post to take action against
@@ -179,6 +229,20 @@ type RemovePostPayload struct {
 	PostAuditLog *PostAuditLog `json:"postAuditLog"`
 }
 
+// Report the post input
+type ReportPostInput struct {
+	// The post to report
+	PostID relay.ID `json:"postId"`
+	// The post report reason ID
+	PostReportReason relay.ID `json:"postReportReason"`
+}
+
+// Report the post payload
+type ReportPostPayload struct {
+	// The post report that was generated
+	PostReport *PostReport `json:"postReport"`
+}
+
 // Revert the pending post audit log input
 type RevertPostAuditLogInput struct {
 	// The audit log to revert
@@ -202,16 +266,18 @@ type PostAuditLogAction string
 const (
 	PostAuditLogActionApproved PostAuditLogAction = "Approved"
 	PostAuditLogActionDenied   PostAuditLogAction = "Denied"
+	PostAuditLogActionRemoved  PostAuditLogAction = "Removed"
 )
 
 var AllPostAuditLogAction = []PostAuditLogAction{
 	PostAuditLogActionApproved,
 	PostAuditLogActionDenied,
+	PostAuditLogActionRemoved,
 }
 
 func (e PostAuditLogAction) IsValid() bool {
 	switch e {
-	case PostAuditLogActionApproved, PostAuditLogActionDenied:
+	case PostAuditLogActionApproved, PostAuditLogActionDenied, PostAuditLogActionRemoved:
 		return true
 	}
 	return false

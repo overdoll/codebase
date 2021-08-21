@@ -16,7 +16,7 @@ type PostRejectionReasonByIdHandler struct {
 	ir infraction.Repository
 }
 
-func NewPendingPostsRejectionReasonByIdHandler(ir infraction.Repository) PostRejectionReasonByIdHandler {
+func NewPostsRejectionReasonByIdHandler(ir infraction.Repository) PostRejectionReasonByIdHandler {
 	return PostRejectionReasonByIdHandler{ir: ir}
 }
 

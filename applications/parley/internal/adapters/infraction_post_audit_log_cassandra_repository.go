@@ -326,15 +326,21 @@ func (r InfractionCassandraRepository) SearchPostAuditLogs(ctx context.Context, 
 		var userInfractionHistory *infraction.AccountInfractionHistory
 		var postRejectionReason *infraction.PostRejectionReason
 
-		// TODO: need an efficient way to grab all of these
-		// TODO: just store the object directly so we dont have to perform extra queries????
-		// TODO: data will never change so its ok to duplicate it
 		if pendingPostAuditLog.AccountInfractionId != nil {
-
+			userInfractionHistory = infraction.UnmarshalAccountInfractionHistoryFromDatabase(
+				*pendingPostAuditLog.AccountInfractionId,
+				pendingPostAuditLog.ContributorId,
+				*pendingPostAuditLog.PostRejectionReasonId,
+				time.Now(),
+			)
 		}
 
 		if pendingPostAuditLog.PostRejectionReasonId != nil {
-
+			postRejectionReason = infraction.UnmarshalPostRejectionReasonFromDatabase(
+				*pendingPostAuditLog.PostRejectionReasonId,
+				*pendingPostAuditLog.PostRejectionReasonId,
+				pendingPostAuditLog.AccountInfractionId != nil,
+			)
 		}
 
 		result := infraction.UnmarshalPostAuditLogFromDatabase(

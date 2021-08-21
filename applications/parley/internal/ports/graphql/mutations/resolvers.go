@@ -14,6 +14,25 @@ type MutationResolver struct {
 	App *app.Application
 }
 
+func (m MutationResolver) ReportPost(ctx context.Context, input types.ReportPostInput) (*types.ReportPostPayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	postReport, err := m.App.Commands.ReportPost.Handle(ctx, command.ReportPost{
+		Principal:          principal.FromContext(ctx),
+		PostId:             input.PostID.GetID(),
+		PostReportReasonId: input.PostReportReason.GetID(),
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.ReportPostPayload{PostReport: types.MarshalPostReportToGraphQL(postReport)}, nil
+}
+
 func (m MutationResolver) RejectPost(ctx context.Context, input types.RejectPostInput) (*types.RejectPostPayload, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {

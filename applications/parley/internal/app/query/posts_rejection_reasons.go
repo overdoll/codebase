@@ -18,7 +18,7 @@ type PostsRejectionReasonsHandler struct {
 	eva EvaService
 }
 
-func NewPendingPostsRejectionReasonsHandler(ir infraction.Repository, eva EvaService) PostsRejectionReasonsHandler {
+func NewPostsRejectionReasonsHandler(ir infraction.Repository, eva EvaService) PostsRejectionReasonsHandler {
 	return PostsRejectionReasonsHandler{ir: ir, eva: eva}
 }
 

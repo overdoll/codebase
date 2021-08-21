@@ -47,6 +47,7 @@ func createApplication(ctx context.Context, eva command.EvaService, sting comman
 
 	moderatorRepo := adapters.NewModeratorCassandraRepository(session)
 	infractionRepo := adapters.NewInfractionCassandraRepository(session)
+	reportRepo := adapters.NewReportCassandraRepository(session)
 
 	return app.Application{
 		Commands: app.Commands{
@@ -56,12 +57,18 @@ func createApplication(ctx context.Context, eva command.EvaService, sting comman
 			RemovePost:         command.NewRemovePostHandler(infractionRepo, eva, sting),
 			RevertModeratePost: command.NewRevertModeratePostHandler(infractionRepo, eva, sting),
 			ToggleModerator:    command.NewToggleModeratorHandler(moderatorRepo, eva),
+			ReportPost:         command.NewReportPostHandler(reportRepo, eva, sting),
 		},
 		Queries: app.Queries{
 			PrincipalById:                query.NewPrincipalByIdHandler(eva),
-			PostRejectionReasons:         query.NewPendingPostsRejectionReasonsHandler(infractionRepo, eva),
+			PostReportReasonById:         query.NewPostsReportReasonByIdHandler(reportRepo),
+			PostReportReasons:            query.NewPostReportReasonsHandler(reportRepo),
+			PostReportById:               query.NewPostReportByIdHandler(reportRepo),
+			PostReportByAccountAndPost:   query.NewPostReportByAccountAndPostHandler(reportRepo),
+			SearchPostReports:            query.NewSearchPostReportsHandler(reportRepo),
+			PostRejectionReasons:         query.NewPostsRejectionReasonsHandler(infractionRepo, eva),
 			SearchPostAuditLogs:          query.NewSearchPostAuditLogsHandler(infractionRepo, eva),
-			PostRejectionReasonById:      query.NewPendingPostsRejectionReasonByIdHandler(infractionRepo),
+			PostRejectionReasonById:      query.NewPostsRejectionReasonByIdHandler(infractionRepo),
 			AccountInfractionHistory:     query.NewAccountInfractionHistoryByAccountHandler(infractionRepo),
 			AccountInfractionHistoryById: query.NewAccountInfractionHistoryByIdHandler(infractionRepo),
 			PostAuditLogById:             query.NewPostAuditLogByIdHandler(infractionRepo),

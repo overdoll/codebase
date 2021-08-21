@@ -3,8 +3,8 @@ type AccountInfractionHistory implements Node @key(fields: "id") {
   """ID of the infraction history"""
   id: ID!
 
-  """The reason for this infraction"""
-  reason: String!
+  """The reason for this infraction, as a post rejection reason"""
+  postRejectionReason: PostRejectionReason!
 }
 
 """Edge of the infraction history"""

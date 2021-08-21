@@ -50,10 +50,9 @@ func NewRemovePostAuditLog(requester *principal.Principal, postId, contributorId
 		moderatorId:     requester.AccountId(),
 		contributorId:   contributorId,
 		status:          StatusRemoved,
-		rejectionReason: nil,
-		notes:           nil,
+		rejectionReason: rejectionReason,
+		notes:           notes,
 		reverted:        false,
-		userInfraction:  nil,
 	}, nil
 }
 
@@ -92,7 +91,7 @@ func NewRejectPostAuditLog(requester *principal.Principal, userInfractionHistory
 	var err error
 
 	if rejectionReason.Infraction() {
-		userInfraction, err = NewAccountInfractionHistory(requester, contributorId, userInfractionHistory, rejectionReason.Reason())
+		userInfraction, err = NewAccountInfractionHistory(requester, contributorId, userInfractionHistory, rejectionReason)
 
 		if err != nil {
 			return nil, err
@@ -196,7 +195,6 @@ func (m *PostAuditLog) Revert() error {
 	// remove infraction (else we have bad ids)
 	m.userInfraction = nil
 	m.reverted = true
-	m.rejectionReason = UnmarshalPostRejectionReasonFromDatabase(m.rejectionReason.ID(), m.rejectionReason.Reason(), false)
 
 	return nil
 }
