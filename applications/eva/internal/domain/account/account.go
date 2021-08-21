@@ -53,7 +53,6 @@ var (
 	ErrMultiFactorRequired   = errors.New("account needs to have multi factor enabled")
 	ErrAccountAlreadyHasRole = errors.New("account is already the assigned role")
 	ErrAccountNoRole         = errors.New("account does not have the assigned role")
-	ErrInvalidRole           = errors.New("account role is invalid")
 )
 
 func UnmarshalAccountFromDatabase(id, username, email string, roles []string, verified bool, avatar string, locked bool, lockedUntil int, lockedReason string, multiFactorEnabled bool) *Account {
@@ -299,7 +298,7 @@ func (a *Account) AssignModeratorRole(requester *principal.Principal) error {
 		return ErrAccountAlreadyHasRole
 	}
 
-	a.roles = append(a.roles, "moderator")
+	a.roles = append(a.roles, Moderator)
 
 	return nil
 }
@@ -314,7 +313,7 @@ func (a *Account) AssignStaffRole(requester *principal.Principal) error {
 		return ErrAccountAlreadyHasRole
 	}
 
-	a.roles = append(a.roles, "staff")
+	a.roles = append(a.roles, Staff)
 
 	return nil
 }
@@ -329,6 +328,27 @@ func (a *Account) revokeRoleCheck(requester *principal.Principal) error {
 	return nil
 }
 
+// remove from list of roles
+func (a *Account) removeRole(role AccountRole) error {
+	var ind int
+	found := false
+
+	for i, rl := range a.roles {
+		if rl == role {
+			ind = i
+			found = true
+			break
+		}
+	}
+
+	if found {
+		a.roles = append(a.roles[:ind], a.roles[ind+1:]...)
+		return nil
+	}
+
+	return ErrAccountNoRole
+}
+
 func (a *Account) RevokeStaffRole(requester *principal.Principal) error {
 
 	if err := a.revokeRoleCheck(requester); err != nil {
@@ -339,8 +359,9 @@ func (a *Account) RevokeStaffRole(requester *principal.Principal) error {
 		return ErrAccountNoRole
 	}
 
-	// TODO: remove item from array
-	a.roles = append(a.roles, "staff")
+	if err := a.removeRole(Staff); err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -355,8 +376,9 @@ func (a *Account) RevokeModeratorRole(requester *principal.Principal) error {
 		return ErrAccountNoRole
 	}
 
-	// TODO: remove item from array
-	a.roles = append(a.roles, "moderator")
+	if err := a.removeRole(Moderator); err != nil {
+		return err
+	}
 
 	return nil
 }

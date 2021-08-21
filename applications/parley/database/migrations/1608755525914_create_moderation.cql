@@ -57,6 +57,7 @@ CREATE TABLE IF NOT EXISTS post_rejection_reasons
 (
     bucket     int,
     id         text,
+    reason     text,
     infraction boolean,
     primary key ( bucket, id ),
 );
@@ -65,6 +66,7 @@ CREATE TABLE IF NOT EXISTS post_report_reasons
 (
     bucket int,
     id     text,
+    reason text,
     primary key ( bucket, id ),
 );
 

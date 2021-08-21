@@ -1,10 +1,12 @@
 [
   {
-    "id": "reason_1",
+    "id": "1q7MJ3JkhcdcJJNqZezdfQt5pZ6",
+    "reason": "Some report reason",
     "bucket": 0
   },
   {
-    "id": "reason_2",
+    "id": "1q7MJ5IyRTV0X4J27F3m5wGD5mj",
+    "reason": "Some report reason #2",
     "bucket": 0
   }
 ]
