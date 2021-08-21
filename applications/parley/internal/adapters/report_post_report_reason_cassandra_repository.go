@@ -16,6 +16,7 @@ var postReportReasonTable = table.New(table.Metadata{
 	Columns: []string{
 		"id",
 		"bucket",
+		"reason",
 	},
 	PartKey: []string{"bucket"},
 	SortKey: []string{"id"},
@@ -24,6 +25,7 @@ var postReportReasonTable = table.New(table.Metadata{
 type postReportReason struct {
 	Id     string `db:"id"`
 	Bucket int    `db:"bucket"`
+	Reason string `db:"reason"`
 }
 
 func (r ReportCassandraRepository) GetPostReportReason(ctx context.Context, requester *principal.Principal, id string) (*report.PostReportReason, error) {
@@ -44,7 +46,7 @@ func (r ReportCassandraRepository) GetPostReportReason(ctx context.Context, requ
 		return nil, fmt.Errorf("failed to get post report reason: %v", err)
 	}
 
-	reason := report.UnmarshalPostReportReasonFromDatabase(reportReason.Id, reportReason.Id)
+	reason := report.UnmarshalPostReportReasonFromDatabase(reportReason.Id, reportReason.Reason)
 
 	if err := reason.CanView(requester); err != nil {
 		return nil, err
@@ -80,10 +82,29 @@ func (r ReportCassandraRepository) GetPostReportReasons(ctx context.Context, req
 
 	var reportReasons []*report.PostReportReason
 	for _, reportReason := range dbReportReasons {
-		reason := report.UnmarshalPostReportReasonFromDatabase(reportReason.Id, reportReason.Id)
+		reason := report.UnmarshalPostReportReasonFromDatabase(reportReason.Id, reportReason.Reason)
 		reason.Node = paging.NewNode(reportReason.Id)
 		reportReasons = append(reportReasons, reason)
 	}
 
 	return reportReasons, nil
+}
+
+// since we dont want to duplicate report reasons (they're subject to changes like translations or updates) we can use this function to get all
+// rejection reasons as a map, which can then be used to map account reports to posts
+func (r ReportCassandraRepository) getPostReportReasonsAsMap(ctx context.Context, requester *principal.Principal) (map[string]*report.PostReportReason, error) {
+
+	reportReasons, err := r.GetPostReportReasons(ctx, requester, nil)
+
+	if err != nil {
+		return nil, err
+	}
+
+	reportReasonMap := make(map[string]*report.PostReportReason)
+
+	for _, reason := range reportReasons {
+		reportReasonMap[reason.ID()] = reason
+	}
+
+	return reportReasonMap, nil
 }

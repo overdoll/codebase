@@ -145,11 +145,17 @@ func (r ReportCassandraRepository) GetPostReport(ctx context.Context, requester 
 		return nil, fmt.Errorf("failed to get report for post: %v", err)
 	}
 
+	reportReason, err := r.GetPostReportReason(ctx, requester, postRep.PostReportReasonId)
+
+	if err != nil {
+		return nil, err
+	}
+
 	rep := report.UnmarshalPostReportFromDatabase(
 		postRep.Id,
 		postRep.PostId,
 		postRep.ReportingAccountId,
-		report.UnmarshalPostReportReasonFromDatabase(postRep.PostReportReasonId, postRep.PostReportReasonId),
+		reportReason,
 	)
 
 	if err := rep.CanView(requester); err != nil {
@@ -192,18 +198,28 @@ func (r ReportCassandraRepository) SearchPostReports(ctx context.Context, reques
 		return nil, fmt.Errorf("failed to search post reports: %v", err)
 	}
 
+	reportReasonMap, err := r.getPostReportReasonsAsMap(ctx, requester)
+	if err != nil {
+		return nil, err
+	}
+
 	for _, postRep := range results {
 
-		result := report.UnmarshalPostReportFromDatabase(
-			postRep.Id,
-			postRep.PostId,
-			postRep.ReportingAccountId,
-			report.UnmarshalPostReportReasonFromDatabase(postRep.PostReportReasonId, postRep.PostReportReasonId),
-		)
+		// grab report reason from the map
+		if reportReason, ok := reportReasonMap[postRep.PostReportReasonId]; ok {
+			result := report.UnmarshalPostReportFromDatabase(
+				postRep.Id,
+				postRep.PostId,
+				postRep.ReportingAccountId,
+				reportReason,
+			)
 
-		result.Node = paging.NewNode(postRep.Id)
+			result.Node = paging.NewNode(postRep.Id)
+			postReports = append(postReports, result)
 
-		postReports = append(postReports, result)
+		} else {
+			return nil, report.ErrPostReportReasonNotFound
+		}
 	}
 
 	return postReports, nil

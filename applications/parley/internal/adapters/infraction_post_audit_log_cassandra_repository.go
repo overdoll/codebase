@@ -319,6 +319,11 @@ func (r InfractionCassandraRepository) SearchPostAuditLogs(ctx context.Context, 
 		return nil, fmt.Errorf("failed to search audit logs: %v", err)
 	}
 
+	rejectionReasonMap, err := r.getPostRejectionReasonsAsMap(ctx, requester)
+	if err != nil {
+		return nil, err
+	}
+
 	var pendingPostAuditLogs []*infraction.PostAuditLog
 
 	for _, pendingPostAuditLog := range results {
@@ -326,21 +331,23 @@ func (r InfractionCassandraRepository) SearchPostAuditLogs(ctx context.Context, 
 		var userInfractionHistory *infraction.AccountInfractionHistory
 		var postRejectionReason *infraction.PostRejectionReason
 
-		if pendingPostAuditLog.AccountInfractionId != nil {
-			userInfractionHistory = infraction.UnmarshalAccountInfractionHistoryFromDatabase(
-				*pendingPostAuditLog.AccountInfractionId,
-				pendingPostAuditLog.ContributorId,
-				*pendingPostAuditLog.PostRejectionReasonId,
-				time.Now(),
-			)
-		}
-
+		// if rejection reason not nil, get it
 		if pendingPostAuditLog.PostRejectionReasonId != nil {
-			postRejectionReason = infraction.UnmarshalPostRejectionReasonFromDatabase(
-				*pendingPostAuditLog.PostRejectionReasonId,
-				*pendingPostAuditLog.PostRejectionReasonId,
-				pendingPostAuditLog.AccountInfractionId != nil,
-			)
+			if rejectionReason, ok := rejectionReasonMap[*pendingPostAuditLog.PostRejectionReasonId]; ok {
+				postRejectionReason = rejectionReason
+
+				// then, get infraction record
+				if pendingPostAuditLog.AccountInfractionId != nil {
+					userInfractionHistory = infraction.UnmarshalAccountInfractionHistoryFromDatabase(
+						*pendingPostAuditLog.AccountInfractionId,
+						pendingPostAuditLog.ContributorId,
+						postRejectionReason,
+						time.Now(),
+					)
+				}
+			} else {
+				return nil, infraction.ErrPostRejectionReasonNotFound
+			}
 		}
 
 		result := infraction.UnmarshalPostAuditLogFromDatabase(

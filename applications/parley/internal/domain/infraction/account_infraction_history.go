@@ -103,14 +103,11 @@ func (m *AccountInfractionHistory) CanDelete(requester *principal.Principal) err
 	return CanViewAccountInfractionHistory(requester)
 }
 
-func UnmarshalAccountInfractionHistoryFromDatabase(id, userId, reason string, expiration time.Time) *AccountInfractionHistory {
+func UnmarshalAccountInfractionHistoryFromDatabase(id, userId string, reason *PostRejectionReason, expiration time.Time) *AccountInfractionHistory {
 	return &AccountInfractionHistory{
 		id:         id,
-		accountId: userId,
-		reason: &PostRejectionReason{
-			id:         reason,
-			infraction: true,
-		},
+		accountId:  userId,
+		reason:     reason,
 		expiration: expiration,
 	}
 }
