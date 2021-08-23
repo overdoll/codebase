@@ -17,5 +17,5 @@ func (r *MutationResolver) UpdateLanguage(ctx context.Context, input types.Updat
 		return nil, err
 	}
 
-	return &types.UpdateLanguagePayload{Language: }, nil
+	return &types.UpdateLanguagePayload{Language: types.MarshalLanguageToGraphQL(lang)}, nil
 }

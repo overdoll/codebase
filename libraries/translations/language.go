@@ -17,6 +17,16 @@ var (
 	ErrInvalidLocale = errors.New("invalid locale")
 )
 
+var (
+	SupportedLanguages []*Language
+)
+
+func init() {
+	for _, t := range tags {
+		SupportedLanguages = append(SupportedLanguages, &Language{tag: t})
+	}
+}
+
 // Language contains information necessary to determine the language that should be used by the requesting user
 type Language struct {
 	tag language.Tag
