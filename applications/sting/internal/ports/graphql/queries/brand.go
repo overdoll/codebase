@@ -31,7 +31,7 @@ func (r *QueryResolver) Brands(ctx context.Context, after *string, before *strin
 		return nil, err
 	}
 
-	return types.MarshalBrandsToGraphQLConnection(results, cursor), nil
+	return types.MarshalBrandsToGraphQLConnection(ctx, results, cursor), nil
 }
 
 func (r *QueryResolver) Brand(ctx context.Context, slug string) (*types.Brand, error) {
@@ -50,5 +50,5 @@ func (r *QueryResolver) Brand(ctx context.Context, slug string) (*types.Brand, e
 		return nil, err
 	}
 
-	return types.MarshalBrandToGraphQL(media), nil
+	return types.MarshalBrandToGraphQL(ctx, media), nil
 }

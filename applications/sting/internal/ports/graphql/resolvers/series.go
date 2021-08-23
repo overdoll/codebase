@@ -46,5 +46,5 @@ func (r SeriesResolver) Posts(ctx context.Context, obj *types.Series, after *str
 		return nil, err
 	}
 
-	return types.MarshalPostToGraphQLConnection(results, cursor), nil
+	return types.MarshalPostToGraphQLConnection(ctx, results, cursor), nil
 }

@@ -1,6 +1,8 @@
 package types
 
 import (
+	"context"
+
 	"overdoll/applications/parley/internal/domain/infraction"
 	"overdoll/applications/parley/internal/domain/moderator"
 	"overdoll/applications/parley/internal/domain/report"
@@ -8,12 +10,12 @@ import (
 	"overdoll/libraries/paging"
 )
 
-func MarshalPostAuditLogToGraphQL(result *infraction.PostAuditLog) *PostAuditLog {
+func MarshalPostAuditLogToGraphQL(ctx context.Context, result *infraction.PostAuditLog) *PostAuditLog {
 
 	var reason *PostRejectionReason
 
 	if result.RejectionReason() != nil {
-		reason = MarshalPostRejectionReasonToGraphQL(result.RejectionReason())
+		reason = MarshalPostRejectionReasonToGraphQL(ctx, result.RejectionReason())
 	}
 
 	var action PostAuditLogAction
@@ -43,7 +45,7 @@ func MarshalPostAuditLogToGraphQL(result *infraction.PostAuditLog) *PostAuditLog
 	}
 }
 
-func MarshalPostAuditLogToGraphQLConnection(results []*infraction.PostAuditLog, cursor *paging.Cursor) *PostAuditLogConnection {
+func MarshalPostAuditLogToGraphQLConnection(ctx context.Context, results []*infraction.PostAuditLog, cursor *paging.Cursor) *PostAuditLogConnection {
 
 	var auditLogs []*PostAuditLogEdge
 
@@ -85,7 +87,7 @@ func MarshalPostAuditLogToGraphQLConnection(results []*infraction.PostAuditLog, 
 	for i := range results {
 		node := nodeAt(i)
 		auditLogs = append(auditLogs, &PostAuditLogEdge{
-			Node:   MarshalPostAuditLogToGraphQL(node),
+			Node:   MarshalPostAuditLogToGraphQL(ctx, node),
 			Cursor: node.Cursor(),
 		})
 	}
@@ -102,15 +104,15 @@ func MarshalPostAuditLogToGraphQLConnection(results []*infraction.PostAuditLog, 
 	return conn
 }
 
-func MarshalPostReportToGraphQL(result *report.PostReport) *PostReport {
+func MarshalPostReportToGraphQL(ctx context.Context, result *report.PostReport) *PostReport {
 	return &PostReport{
 		ID:               relay.NewID(PostReport{}, result.PostID(), result.ID()),
 		Account:          &Account{ID: relay.NewID(Account{}, result.ReportingAccountId())},
-		PostReportReason: MarshalPostReportReasonToGraphQL(result.ReportReason()),
+		PostReportReason: MarshalPostReportReasonToGraphQL(ctx, result.ReportReason()),
 	}
 }
 
-func MarshalPostReportToGraphQLConnection(results []*report.PostReport, cursor *paging.Cursor) *PostReportConnection {
+func MarshalPostReportToGraphQLConnection(ctx context.Context, results []*report.PostReport, cursor *paging.Cursor) *PostReportConnection {
 
 	var postReports []*PostReportEdge
 
@@ -152,7 +154,7 @@ func MarshalPostReportToGraphQLConnection(results []*report.PostReport, cursor *
 	for i := range results {
 		node := nodeAt(i)
 		postReports = append(postReports, &PostReportEdge{
-			Node:   MarshalPostReportToGraphQL(node),
+			Node:   MarshalPostReportToGraphQL(ctx, node),
 			Cursor: node.Cursor(),
 		})
 	}
@@ -169,21 +171,21 @@ func MarshalPostReportToGraphQLConnection(results []*report.PostReport, cursor *
 	return conn
 }
 
-func MarshalAccountInfractionHistoryToGraphQL(result *infraction.AccountInfractionHistory) *AccountInfractionHistory {
+func MarshalAccountInfractionHistoryToGraphQL(ctx context.Context, result *infraction.AccountInfractionHistory) *AccountInfractionHistory {
 	return &AccountInfractionHistory{
 		ID:                  relay.NewID(AccountInfractionHistory{}, result.AccountId(), result.ID()),
-		PostRejectionReason: MarshalPostRejectionReasonToGraphQL(result.Reason()),
+		PostRejectionReason: MarshalPostRejectionReasonToGraphQL(ctx, result.Reason()),
 	}
 }
 
-func MarshalPostReportReasonToGraphQL(result *report.PostReportReason) *PostReportReason {
+func MarshalPostReportReasonToGraphQL(ctx context.Context, result *report.PostReportReason) *PostReportReason {
 	return &PostReportReason{
 		ID:     relay.NewID(AccountInfractionHistory{}, result.ID()),
-		Reason: result.ID(),
+		Reason: result.Reason().TranslateFromContext(ctx),
 	}
 }
 
-func MarshalPostReportReasonToGraphQLConnection(results []*report.PostReportReason, cursor *paging.Cursor) *PostReportReasonConnection {
+func MarshalPostReportReasonToGraphQLConnection(ctx context.Context, results []*report.PostReportReason, cursor *paging.Cursor) *PostReportReasonConnection {
 
 	var reportReasons []*PostReportReasonEdge
 
@@ -225,7 +227,7 @@ func MarshalPostReportReasonToGraphQLConnection(results []*report.PostReportReas
 	for i := range results {
 		node := nodeAt(i)
 		reportReasons = append(reportReasons, &PostReportReasonEdge{
-			Node:   MarshalPostReportReasonToGraphQL(node),
+			Node:   MarshalPostReportReasonToGraphQL(ctx, node),
 			Cursor: node.Cursor(),
 		})
 	}
@@ -242,7 +244,7 @@ func MarshalPostReportReasonToGraphQLConnection(results []*report.PostReportReas
 	return conn
 }
 
-func MarshalAccountInfractionHistoryToGraphQLConnection(results []*infraction.AccountInfractionHistory, cursor *paging.Cursor) *AccountInfractionHistoryConnection {
+func MarshalAccountInfractionHistoryToGraphQLConnection(ctx context.Context, results []*infraction.AccountInfractionHistory, cursor *paging.Cursor) *AccountInfractionHistoryConnection {
 
 	var infractionHistory []*AccountInfractionHistoryEdge
 
@@ -284,7 +286,7 @@ func MarshalAccountInfractionHistoryToGraphQLConnection(results []*infraction.Ac
 	for i := range results {
 		node := nodeAt(i)
 		infractionHistory = append(infractionHistory, &AccountInfractionHistoryEdge{
-			Node:   MarshalAccountInfractionHistoryToGraphQL(node),
+			Node:   MarshalAccountInfractionHistoryToGraphQL(ctx, node),
 			Cursor: node.Cursor(),
 		})
 	}
@@ -308,15 +310,15 @@ func MarshalModeratorToGraphQL(result *moderator.Moderator) *Moderator {
 	}
 }
 
-func MarshalPostRejectionReasonToGraphQL(result *infraction.PostRejectionReason) *PostRejectionReason {
+func MarshalPostRejectionReasonToGraphQL(ctx context.Context, result *infraction.PostRejectionReason) *PostRejectionReason {
 	return &PostRejectionReason{
 		ID:         relay.NewID(PostRejectionReason{}, result.ID()),
-		Reason:     result.Reason(),
+		Reason:     result.Reason().TranslateFromContext(ctx),
 		Infraction: result.Infraction(),
 	}
 }
 
-func MarshalPostRejectionReasonToGraphQLConnection(results []*infraction.PostRejectionReason, cursor *paging.Cursor) *PostRejectionReasonConnection {
+func MarshalPostRejectionReasonToGraphQLConnection(ctx context.Context, results []*infraction.PostRejectionReason, cursor *paging.Cursor) *PostRejectionReasonConnection {
 
 	var rejectionReasons []*PostRejectionReasonEdge
 
@@ -358,7 +360,7 @@ func MarshalPostRejectionReasonToGraphQLConnection(results []*infraction.PostRej
 	for i := range results {
 		node := nodeAt(i)
 		rejectionReasons = append(rejectionReasons, &PostRejectionReasonEdge{
-			Node:   MarshalPostRejectionReasonToGraphQL(node),
+			Node:   MarshalPostRejectionReasonToGraphQL(ctx, node),
 			Cursor: node.Cursor(),
 		})
 	}

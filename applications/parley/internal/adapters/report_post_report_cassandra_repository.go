@@ -246,11 +246,17 @@ func (r ReportCassandraRepository) GetPostReportForAccount(ctx context.Context, 
 		return nil, fmt.Errorf("failed to get report for post: %v", err)
 	}
 
+	reportReason, err := r.GetPostReportReason(ctx, requester, postRep.PostReportReasonId)
+
+	if err != nil {
+		return nil, err
+	}
+
 	rep := report.UnmarshalPostReportFromDatabase(
 		postRep.Id,
 		postRep.PostId,
 		postRep.ReportingAccountId,
-		report.UnmarshalPostReportReasonFromDatabase(postRep.PostReportReasonId, postRep.PostReportReasonId),
+		reportReason,
 	)
 
 	if err := rep.CanView(requester); err != nil {

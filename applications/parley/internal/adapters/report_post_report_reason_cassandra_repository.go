@@ -23,9 +23,9 @@ var postReportReasonTable = table.New(table.Metadata{
 })
 
 type postReportReason struct {
-	Id     string `db:"id"`
-	Bucket int    `db:"bucket"`
-	Reason string `db:"reason"`
+	Id     string            `db:"id"`
+	Bucket int               `db:"bucket"`
+	Reason map[string]string `db:"reason"`
 }
 
 func (r ReportCassandraRepository) GetPostReportReason(ctx context.Context, requester *principal.Principal, id string) (*report.PostReportReason, error) {
@@ -82,7 +82,9 @@ func (r ReportCassandraRepository) GetPostReportReasons(ctx context.Context, req
 
 	var reportReasons []*report.PostReportReason
 	for _, reportReason := range dbReportReasons {
+
 		reason := report.UnmarshalPostReportReasonFromDatabase(reportReason.Id, reportReason.Reason)
+
 		reason.Node = paging.NewNode(reportReason.Id)
 		reportReasons = append(reportReasons, reason)
 	}

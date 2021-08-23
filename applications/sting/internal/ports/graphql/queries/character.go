@@ -32,7 +32,7 @@ func (r *QueryResolver) Characters(ctx context.Context, after *string, before *s
 		return nil, err
 	}
 
-	return types.MarshalCharacterToGraphQLConnection(results, cursor), nil
+	return types.MarshalCharacterToGraphQLConnection(ctx, results, cursor), nil
 }
 
 func (r *QueryResolver) Character(ctx context.Context, slug string, seriesSlug string) (*types.Character, error) {
@@ -52,5 +52,5 @@ func (r *QueryResolver) Character(ctx context.Context, slug string, seriesSlug s
 		return nil, err
 	}
 
-	return types.MarshalCharacterToGraphQL(character), nil
+	return types.MarshalCharacterToGraphQL(ctx, character), nil
 }

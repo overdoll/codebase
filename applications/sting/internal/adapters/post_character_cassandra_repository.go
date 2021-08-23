@@ -28,7 +28,7 @@ var characterTable = table.New(table.Metadata{
 type character struct {
 	Id        string `db:"id"`
 	Slug      string `db:"slug"`
-	Name      string `db:"name"`
+	Name      map[string]string `db:"name"`
 	Thumbnail string `db:"thumbnail"`
 	SeriesId  string `db:"series_id"`
 }

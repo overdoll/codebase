@@ -31,7 +31,7 @@ func (r *QueryResolver) Series(ctx context.Context, after *string, before *strin
 		return nil, err
 	}
 
-	return types.MarshalSeriesToGraphQLConnection(results, cursor), nil
+	return types.MarshalSeriesToGraphQLConnection(ctx, results, cursor), nil
 }
 
 func (r *QueryResolver) Serial(ctx context.Context, slug string) (*types.Series, error) {
@@ -50,5 +50,5 @@ func (r *QueryResolver) Serial(ctx context.Context, slug string) (*types.Series,
 		return nil, err
 	}
 
-	return types.MarshalSeriesToGraphQL(media), nil
+	return types.MarshalSeriesToGraphQL(ctx, media), nil
 }

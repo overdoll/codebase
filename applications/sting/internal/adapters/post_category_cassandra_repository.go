@@ -26,7 +26,7 @@ var categoryTable = table.New(table.Metadata{
 type category struct {
 	Id        string `db:"id"`
 	Slug      string `db:"slug"`
-	Title     string `db:"title"`
+	Title     map[string]string `db:"title"`
 	Thumbnail string `db:"thumbnail"`
 }
 

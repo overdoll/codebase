@@ -5,6 +5,7 @@ import (
 
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/translations"
 )
 
 var (
@@ -14,7 +15,7 @@ var (
 type PostReportReason struct {
 	*paging.Node
 
-	reason string
+	reason *translations.Translation
 	id     string
 }
 
@@ -22,7 +23,7 @@ func (m *PostReportReason) ID() string {
 	return m.id
 }
 
-func (m *PostReportReason) Reason() string {
+func (m *PostReportReason) Reason() *translations.Translation {
 	return m.reason
 }
 
@@ -38,9 +39,9 @@ func CanViewPostReportReasons(requester *principal.Principal) error {
 	return nil
 }
 
-func UnmarshalPostReportReasonFromDatabase(id, reason string) *PostReportReason {
+func UnmarshalPostReportReasonFromDatabase(id string, reason map[string]string) *PostReportReason {
 	return &PostReportReason{
 		id:     id,
-		reason: reason,
+		reason: translations.UnmarshalTranslationFromDatabase(reason),
 	}
 }

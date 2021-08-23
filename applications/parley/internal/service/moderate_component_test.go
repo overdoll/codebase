@@ -26,7 +26,7 @@ func TestPendingPostRejectionReasons(t *testing.T) {
 
 	require.NoError(t, err)
 	require.Len(t, search.PostRejectionReasons.Edges, 2)
-	require.Equal(t, "Reason with no infraction", search.PostRejectionReasons.Edges[0].Node.Reason)
+	require.Equal(t, "TranslateReason with no infraction", search.PostRejectionReasons.Edges[0].Node.Reason)
 }
 
 type AccountPostAuditLogs struct {
@@ -98,7 +98,7 @@ func TestModeratePost_reject(t *testing.T) {
 
 	require.Equal(t, types.PostAuditLogActionDenied, res.ModeratePost.PostAuditLog.Action)
 	require.Equal(t, "some additional notes", res.ModeratePost.PostAuditLog.Notes)
-	require.Equal(t, "Reason with no infraction", res.ModeratePost.PostAuditLog.Reason)
+	require.Equal(t, "TranslateReason with no infraction", res.ModeratePost.PostAuditLog.Reason)
 
 	undo := mRevertModeratePost(t, client, res.ModeratePost.PostAuditLog.ID)
 
@@ -121,7 +121,7 @@ func TestModeratePost_reject_infraction_and_undo(t *testing.T) {
 	val := "UG9zdFJlamVjdGlvblJlYXNvbjoxcTdNSjNKa2hjZGNKSk5xWmV6ZGZRdDVwWjY="
 
 	res := mModeratePost(t, client, &val, "some additional notes and stuff")
-	infractionReason := "Reason with infraction"
+	infractionReason := "TranslateReason with infraction"
 
 	require.Equal(t, types.PostAuditLogActionDenied, res.ModeratePost.PostAuditLog.Action)
 	require.Equal(t, "some additional notes and stuff", res.ModeratePost.PostAuditLog.Notes)

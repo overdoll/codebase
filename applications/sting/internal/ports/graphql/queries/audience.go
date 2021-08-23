@@ -31,7 +31,7 @@ func (r *QueryResolver) Audiences(ctx context.Context, after *string, before *st
 		return nil, err
 	}
 
-	return types.MarshalAudienceToGraphQLConnection(results, cursor), nil
+	return types.MarshalAudienceToGraphQLConnection(ctx, results, cursor), nil
 }
 
 func (r *QueryResolver) Audience(ctx context.Context, slug string) (*types.Audience, error) {
@@ -50,5 +50,5 @@ func (r *QueryResolver) Audience(ctx context.Context, slug string) (*types.Audie
 		return nil, err
 	}
 
-	return types.MarshalAudienceToGraphQL(media), nil
+	return types.MarshalAudienceToGraphQL(ctx, media), nil
 }

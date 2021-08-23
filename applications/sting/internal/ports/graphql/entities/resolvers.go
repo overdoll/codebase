@@ -31,7 +31,7 @@ func (r EntityResolver) FindAudienceByID(ctx context.Context, id relay.ID) (*typ
 		return nil, err
 	}
 
-	return types.MarshalAudienceToGraphQL(media), nil
+	return types.MarshalAudienceToGraphQL(ctx, media), nil
 }
 
 func (r EntityResolver) FindBrandByID(ctx context.Context, id relay.ID) (*types.Brand, error) {
@@ -50,7 +50,7 @@ func (r EntityResolver) FindBrandByID(ctx context.Context, id relay.ID) (*types.
 		return nil, err
 	}
 
-	return types.MarshalBrandToGraphQL(media), nil
+	return types.MarshalBrandToGraphQL(ctx, media), nil
 }
 
 func (r EntityResolver) FindSeriesByID(ctx context.Context, id relay.ID) (*types.Series, error) {
@@ -69,7 +69,7 @@ func (r EntityResolver) FindSeriesByID(ctx context.Context, id relay.ID) (*types
 		return nil, err
 	}
 
-	return types.MarshalSeriesToGraphQL(media), nil
+	return types.MarshalSeriesToGraphQL(ctx, media), nil
 }
 
 func (r EntityResolver) FindCategoryByID(ctx context.Context, id relay.ID) (*types.Category, error) {
@@ -88,7 +88,7 @@ func (r EntityResolver) FindCategoryByID(ctx context.Context, id relay.ID) (*typ
 		return nil, err
 	}
 
-	return types.MarshalCategoryToGraphQL(category), nil
+	return types.MarshalCategoryToGraphQL(ctx, category), nil
 }
 
 func (r EntityResolver) FindCharacterByID(ctx context.Context, id relay.ID) (*types.Character, error) {
@@ -107,7 +107,7 @@ func (r EntityResolver) FindCharacterByID(ctx context.Context, id relay.ID) (*ty
 		return nil, err
 	}
 
-	return types.MarshalCharacterToGraphQL(character), nil
+	return types.MarshalCharacterToGraphQL(ctx, character), nil
 }
 
 func (r EntityResolver) FindAccountByID(ctx context.Context, id relay.ID) (*types.Account, error) {
@@ -132,5 +132,5 @@ func (r EntityResolver) FindPostByID(ctx context.Context, id relay.ID) (*types.P
 		return nil, err
 	}
 
-	return types.MarshalPostToGraphQL(pendingPost), nil
+	return types.MarshalPostToGraphQL(ctx, pendingPost), nil
 }

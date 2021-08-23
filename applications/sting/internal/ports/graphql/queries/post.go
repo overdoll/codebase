@@ -44,7 +44,7 @@ func (r *QueryResolver) Posts(ctx context.Context, after *string, before *string
 		return nil, err
 	}
 
-	return types.MarshalPostToGraphQLConnection(results, cursor), nil
+	return types.MarshalPostToGraphQLConnection(ctx, results, cursor), nil
 }
 
 func (r *QueryResolver) Post(ctx context.Context, reference string) (*types.Post, error) {
@@ -63,5 +63,5 @@ func (r *QueryResolver) Post(ctx context.Context, reference string) (*types.Post
 		return nil, err
 	}
 
-	return types.MarshalPostToGraphQL(pendingPost), nil
+	return types.MarshalPostToGraphQL(ctx, pendingPost), nil
 }

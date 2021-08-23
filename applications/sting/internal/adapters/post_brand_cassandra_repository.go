@@ -25,7 +25,7 @@ var brandTable = table.New(table.Metadata{
 type brand struct {
 	Id        string `db:"id"`
 	Slug      string `db:"slug"`
-	Name      string `db:"name"`
+	Name      map[string]string `db:"name"`
 	Thumbnail string `db:"thumbnail"`
 }
 

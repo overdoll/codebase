@@ -45,5 +45,5 @@ func (r CharacterResolver) Posts(ctx context.Context, obj *types.Character, afte
 		return nil, err
 	}
 
-	return types.MarshalPostToGraphQLConnection(results, cursor), nil
+	return types.MarshalPostToGraphQLConnection(ctx, results, cursor), nil
 }

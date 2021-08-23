@@ -330,6 +330,10 @@ type GrantAuthenticationTokenPayload struct {
 	AuthenticationToken *AuthenticationToken `json:"authenticationToken"`
 }
 
+type Language struct {
+	LocaleBcp47 string `json:"localeBCP47"`
+}
+
 type Moderator struct {
 	ID relay.ID `json:"id"`
 	// The account linked to this moderator
@@ -447,6 +451,18 @@ type UpdateAccountUsernameAndRetainPreviousPayload struct {
 	Validation *UpdateAccountUsernameAndRetainPreviousValidation `json:"validation"`
 	// The account username that was added
 	AccountUsername *AccountUsername `json:"accountUsername"`
+}
+
+// Input for updating the current language
+type UpdateLanguageInput struct {
+	// The locale to update the language to
+	Locale string `json:"locale"`
+}
+
+// Payload of the language update
+type UpdateLanguagePayload struct {
+	// The new language that is now set
+	Language *Language `json:"language"`
 }
 
 // Input for verifying token account

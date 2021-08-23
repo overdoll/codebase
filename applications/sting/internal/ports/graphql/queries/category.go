@@ -31,7 +31,7 @@ func (r *QueryResolver) Categories(ctx context.Context, after *string, before *s
 		return nil, err
 	}
 
-	return types.MarshalCategoryToGraphQLConnection(results, cursor), nil
+	return types.MarshalCategoryToGraphQLConnection(ctx, results, cursor), nil
 }
 
 func (r *QueryResolver) Category(ctx context.Context, slug string) (*types.Category, error) {
@@ -50,5 +50,5 @@ func (r *QueryResolver) Category(ctx context.Context, slug string) (*types.Categ
 		return nil, err
 	}
 
-	return types.MarshalCategoryToGraphQL(category), nil
+	return types.MarshalCategoryToGraphQL(ctx, category), nil
 }

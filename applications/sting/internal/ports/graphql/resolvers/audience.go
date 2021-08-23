@@ -46,5 +46,5 @@ func (r AudienceResolver) Posts(ctx context.Context, obj *types.Audience, after 
 		return nil, err
 	}
 
-	return types.MarshalPostToGraphQLConnection(results, cursor), nil
+	return types.MarshalPostToGraphQLConnection(ctx, results, cursor), nil
 }

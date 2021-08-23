@@ -24,10 +24,10 @@ var postRejectionReasonTable = table.New(table.Metadata{
 })
 
 type postRejectionReason struct {
-	Id         string `db:"id"`
-	Infraction bool   `db:"infraction"`
-	Bucket     int    `db:"bucket"`
-	Reason     string `db:"reason"`
+	Id         string            `db:"id"`
+	Infraction bool              `db:"infraction"`
+	Bucket     int               `db:"bucket"`
+	Reason     map[string]string `db:"reason"`
 }
 
 func (r InfractionCassandraRepository) GetPostRejectionReason(ctx context.Context, requester *principal.Principal, id string) (*infraction.PostRejectionReason, error) {
@@ -84,7 +84,9 @@ func (r InfractionCassandraRepository) GetPostRejectionReasons(ctx context.Conte
 
 	var rejectionReasons []*infraction.PostRejectionReason
 	for _, rejectionReason := range dbRejectionReasons {
+
 		reason := infraction.UnmarshalPostRejectionReasonFromDatabase(rejectionReason.Id, rejectionReason.Reason, rejectionReason.Infraction)
+
 		reason.Node = paging.NewNode(rejectionReason.Id)
 		rejectionReasons = append(rejectionReasons, reason)
 	}

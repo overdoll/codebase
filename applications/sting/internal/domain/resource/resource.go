@@ -12,6 +12,7 @@ import (
 
 	"github.com/CapsLock-Studio/go-webpbin"
 	"github.com/h2non/filetype"
+	"go.uber.org/zap"
 	"overdoll/libraries/uuid"
 )
 
@@ -270,6 +271,7 @@ func UnmarshalResourceFromDatabase(resource string) *Resource {
 	var target marshalled
 
 	if err := json.Unmarshal([]byte(resource), &target); err != nil {
+		zap.S().Error("invalid resource: ", zap.String("resource", resource), zap.Error(err))
 		return nil
 	}
 

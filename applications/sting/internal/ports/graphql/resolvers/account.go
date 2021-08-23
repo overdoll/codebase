@@ -54,7 +54,7 @@ func (r AccountResolver) ModeratorPostsQueue(ctx context.Context, obj *types.Acc
 		return nil, err
 	}
 
-	return types.MarshalPostToGraphQLConnection(results, cursor), nil
+	return types.MarshalPostToGraphQLConnection(ctx, results, cursor), nil
 }
 
 func (r AccountResolver) Posts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, brandSlugs []string, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error) {
@@ -95,5 +95,5 @@ func (r AccountResolver) Posts(ctx context.Context, obj *types.Account, after *s
 		return nil, err
 	}
 
-	return types.MarshalPostToGraphQLConnection(results, cursor), nil
+	return types.MarshalPostToGraphQLConnection(ctx, results, cursor), nil
 }

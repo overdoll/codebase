@@ -5,6 +5,7 @@ import (
 
 	"overdoll/applications/sting/internal/domain/resource"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/translations"
 )
 
 var (
@@ -16,7 +17,7 @@ type Audience struct {
 
 	id        string
 	slug      string
-	title     string
+	title     *translations.Translation
 	thumbnail *resource.Resource
 
 	standard bool
@@ -30,7 +31,7 @@ func (m *Audience) Slug() string {
 	return m.slug
 }
 
-func (m *Audience) Title() string {
+func (m *Audience) Title() *translations.Translation {
 	return m.title
 }
 
@@ -43,11 +44,11 @@ func (m *Audience) IsStandard() bool {
 	return m.standard
 }
 
-func UnmarshalAudienceFromDatabase(id, slug, title string, thumbnail string, standard int) *Audience {
+func UnmarshalAudienceFromDatabase(id, slug string, title map[string]string, thumbnail string, standard int) *Audience {
 	return &Audience{
 		id:        id,
 		slug:      slug,
-		title:     title,
+		title:     translations.UnmarshalTranslationFromDatabase(title),
 		thumbnail: resource.UnmarshalResourceFromDatabase(thumbnail),
 		standard:  standard == 1,
 	}

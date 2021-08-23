@@ -1,0 +1,34 @@
+type Language {
+  localeBCP47: String!
+}
+
+extend type Query {
+  """
+  List of all available languages
+  """
+  languages: [Language!]!
+
+  """
+  The current language that is set
+  """
+  language: Language!
+}
+
+"""Input for updating the current language"""
+input UpdateLanguageInput {
+  """The locale to update the language to"""
+  locale: String!
+}
+
+"""Payload of the language update"""
+type UpdateLanguagePayload {
+  """The new language that is now set"""
+  language: Language
+}
+
+extend type Mutation {
+  """
+  Update the current language
+  """
+  updateLanguage(input: UpdateLanguageInput!): UpdateLanguagePayload
+}

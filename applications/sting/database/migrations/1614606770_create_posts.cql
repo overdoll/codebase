@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS categories
 (
     id        text,
     slug      text,
-    title     text,
+    title     map<text, text>,
     thumbnail text,
     primary key ( id )
 );
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS characters
 (
     id        text,
     slug      text,
-    name      text,
+    name      map<text, text>,
     thumbnail text,
     series_id text,
     primary key ( id )
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS series
 (
     id        text,
     slug      text,
-    title     text,
+    title     map<text, text>,
     thumbnail text,
     primary key ( id )
 );
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS brands
 (
     id        text,
     slug      text,
-    name      text,
+    name      map<text, text>,
     thumbnail text,
     primary key ( id )
 );
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS audience
 (
     id        text,
     slug      text,
-    title     text,
+    title     map<text, text>,
     thumbnail text,
     standard  int,
     primary key ( id )
