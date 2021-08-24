@@ -40,7 +40,7 @@ func MakeBucketsFromTimeRange(from, to time.Time) []int {
 
 	var rng []int
 
-	for i := startBucket; i <= endBucket; i++ {
+	for i := endBucket; i <= startBucket; i++ {
 		rng = append(rng, i)
 	}
 
