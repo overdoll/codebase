@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"go.uber.org/zap"
+	"golang.org/x/text/language"
 )
 
 // support carries all translations for a specific thing
@@ -13,19 +14,30 @@ type Translation struct {
 
 func (t *Translation) Translate(lang *Language, fallback string) string {
 
+	// english as a fallback if we dont find our target language
+	englishTag := ""
+
 	for _, item := range t.translations {
 		if item.tag == lang.tag {
 			return item.data
 		}
+
+		if item.tag == language.English {
+			englishTag = item.data
+		}
 	}
 
+	if englishTag != "" {
+		return englishTag
+	}
+
+	// fallback if for some reason we dont have english?
 	return fallback
 }
 
 func (t *Translation) TranslateFromContext(ctx context.Context, fallback string) string {
 	return t.Translate(FromContext(ctx), fallback)
 }
-
 
 func MarshalTranslationToDatabase(t *Translation) map[string]string {
 	tran := make(map[string]string)

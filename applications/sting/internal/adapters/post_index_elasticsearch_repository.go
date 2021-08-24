@@ -48,114 +48,10 @@ const postIndex = `
 				"contributor_id": {
 					"type": "keyword"
 				},
-				"audience": {
-					"type": "nested",
-					"properties": {
-						"id": {
-							"type": "keyword"
-						},
-						"slug": {
-							"type": "keyword"
-						},
-						"thumbnail": {
-							"type": "keyword"
-						},
-						"title": {
-							"type": "text",
-							"analyzer": "english"
-						},
-						"standard": {
-							"type": "integer"
-						},
-						"created_at": {
-							"type": "date"
-						}
-					}
-				},
-				"brand": {
-					"type": "nested",
-					"properties": {
-						"id": {
-							"type": "keyword"
-						},
-						"slug": {
-							"type": "keyword"
-						},
-						"thumbnail": {
-							"type": "keyword"
-						},
-						"name": {
-							"type": "text",
-							"analyzer": "english"
-						},
-						"created_at": {
-							"type": "date"
-						}
-					}
-				},
-				"categories": {
-					"type": "nested",
-					"properties": {
-						"id": {
-							"type": "keyword"
-						},
-						"slug": {
-							"type": "keyword"
-						},
-						"thumbnail": {
-							"type": "keyword"
-						},
-						"title": {
-							"type": "text",
-							"analyzer": "english"
-						},
-						"created_at": {
-							"type": "date"
-						}
-					}
-				},
-				"characters": {
-					"type": "nested",
-					"properties": {
-						"id": {
-							"type": "keyword"
-						},
-						"slug": {
-							"type": "keyword"
-						},
-						"thumbnail": {
-							"type": "keyword"
-						},
-						"name": {
-							"type": "text",
-							"analyzer": "english"
-						},
-						"created_at": {
-							"type": "date"
-						},
-					    "series": {
-							"dynamic": "strict",
-							"properties": {
-								"id": {
-									"type": "keyword"
-								},
-								"slug": {
-									"type": "keyword"
-								},
-								"thumbnail": {
-									"type": "keyword"
-								},
-								"title": {
-									"type": "text",
-									"analyzer": "english"
-								},
-								"created_at": {
-									"type": "date"
-								}
-							}		
-						}			
-					}
-				},
+				"audience": ` + audienceIndexProperties + `,
+				"brand": ` + brandsIndex + `,
+				"categories": ` + categoryIndex + `,
+				"characters": ` + characterIndex + `,
 				"content": {
                      "type": "keyword"
 				},
@@ -319,7 +215,7 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 		return nil, err
 	}
 
-	query := cursor.BuildElasticsearch(builder, filter.OrderBy())
+	query := cursor.BuildElasticsearch(builder, "created_at")
 
 	if filter.State() != nil {
 		query.Filter(elastic.NewTermQuery("state", *filter.State()))
@@ -361,6 +257,11 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 		for _, id := range filter.SeriesSlugs() {
 			query.Filter(elastic.NewTermQuery("characters.series.slug", id))
 		}
+	}
+
+	// if orderby another column
+	if filter.OrderBy() != "created_at" {
+		builder.Sort(filter.OrderBy(), false)
 	}
 
 	builder.Query(query)

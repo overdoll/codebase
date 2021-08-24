@@ -1,7 +1,7 @@
 package translations
 
 // elasticsearch index with language mappings
-const ElasticSearchIndex = `
+const ESIndex = `
 {
 	"properties": {
 		"language": {

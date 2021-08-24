@@ -26,28 +26,32 @@ type audienceDocument struct {
 	CreatedAt string            `json:"created_at"`
 }
 
+const audienceIndexProperties = `
+{
+	"id": {
+		"type": "keyword"
+	},
+	"slug": {
+		"type": "keyword"
+	},
+	"thumbnail": {
+		"type": "keyword"
+	},
+	"standard": {
+		"type": "integer"
+	},
+	"title": ` + translations.ESIndex + `
+	"created_at": {
+		"type": "date"
+	}
+}
+`
+
 const audienceIndex = `
 {
 	"mappings": {
 		"dynamic": "strict",
-		"properties": {
-			"id": {
-				"type": "keyword"
-			},
-			"slug": {
-				"type": "keyword"
-			},
-			"thumbnail": {
-				"type": "keyword"
-			},
-			"standard": {
-				"type": "integer"
-			},
-			"title": ` + translations.ElasticSearchIndex + `
-			"created_at": {
-				"type": "date"
-			}
-		}
+		"properties": ` + audienceIndexProperties + `
 	}
 }`
 
@@ -97,7 +101,7 @@ func (r PostsIndexElasticSearchRepository) SearchAudience(ctx context.Context, r
 		return nil, errors.New("cursor required")
 	}
 
-	query := cursor.BuildElasticsearch(builder, filter.OrderBy())
+	query := cursor.BuildElasticsearch(builder, "created_at")
 
 	if filter.Search() != nil {
 		query.Must(

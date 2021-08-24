@@ -25,25 +25,29 @@ type seriesDocument struct {
 	CreatedAt string            `json:"created_at"`
 }
 
+const seriesIndexProperties = `
+{
+	"id": {
+		"type": "keyword"
+	},
+	"slug": {
+		"type": "keyword"
+	},
+	"thumbnail": {
+		"type": "keyword"
+	},
+	"title":  ` + translations.ESIndex + `
+	"created_at": {
+		"type": "date"
+	}
+}
+`
+
 const seriesIndex = `
 {
 	"mappings": {
 		"dynamic": "strict",
-		"properties": {
-			"id": {
-				"type": "keyword"
-			},
-			"slug": {
-				"type": "keyword"
-			},
-			"thumbnail": {
-				"type": "keyword"
-			},
-			"title":  ` + translations.ElasticSearchIndex + `
-			"created_at": {
-				"type": "date"
-			}
-		}
+		"properties": ` + seriesIndexProperties + `
 	}
 }`
 
@@ -58,7 +62,7 @@ func (r PostsIndexElasticSearchRepository) SearchSeries(ctx context.Context, req
 		return nil, errors.New("cursor required")
 	}
 
-	query := cursor.BuildElasticsearch(builder, filter.OrderBy())
+	query := cursor.BuildElasticsearch(builder, "created_at")
 
 	if filter.Search() != nil {
 		query.Must(

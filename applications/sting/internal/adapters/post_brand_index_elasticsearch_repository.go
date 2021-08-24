@@ -25,25 +25,29 @@ type brandDocument struct {
 	CreatedAt string            `json:"created_at"`
 }
 
+const brandsIndexProperties = `
+{
+	"id": {
+		"type": "keyword"
+	},
+	"slug": {
+		"type": "keyword"
+	},
+	"thumbnail": {
+		"type": "keyword"
+	},
+	"name": ` + translations.ESIndex + `
+	"created_at": {
+		"type": "date"
+	}
+}
+`
+
 const brandsIndex = `
 {
 	"mappings": {
 		"dynamic": "strict",
-		"properties": {
-			"id": {
-				"type": "keyword"
-			},
-			"slug": {
-				"type": "keyword"
-			},
-			"thumbnail": {
-				"type": "keyword"
-			},
-			"name": ` + translations.ElasticSearchIndex + `
-			"created_at": {
-				"type": "date"
-			}
-		}
+		"properties":` + brandsIndexProperties + `
 	}
 }`
 
@@ -86,7 +90,7 @@ func (r PostsIndexElasticSearchRepository) SearchBrands(ctx context.Context, req
 		return nil, errors.New("cursor required")
 	}
 
-	query := cursor.BuildElasticsearch(builder, filter.OrderBy())
+	query := cursor.BuildElasticsearch(builder, "created_at")
 
 	if filter.Search() != nil {
 		query.Must(

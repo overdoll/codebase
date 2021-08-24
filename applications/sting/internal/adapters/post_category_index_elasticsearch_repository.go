@@ -25,25 +25,29 @@ type categoryDocument struct {
 	CreatedAt string            `json:"created_at"`
 }
 
+const categoryIndexProperties = `
+{
+	"id": {
+		"type": "keyword"
+	},
+	"slug": {
+		"type": "keyword"
+	},
+	"thumbnail": {
+		"type": "keyword"
+	},
+	"title":  ` + translations.ESIndex + `
+	"created_at": {
+		"type": "date"
+	}
+}
+`
+
 const categoryIndex = `
 {
 	"mappings": {
 		"dynamic": "strict",
-		"properties": {
-			"id": {
-				"type": "keyword"
-			},
-			"slug": {
-				"type": "keyword"
-			},
-			"thumbnail": {
-				"type": "keyword"
-			},
-			"title":  ` + translations.ElasticSearchIndex + `
-			"created_at": {
-				"type": "date"
-			}
-		}
+		"properties": ` + categoryIndexProperties + `
 	}
 }`
 
@@ -110,7 +114,7 @@ func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context,
 		return nil, errors.New("cursor required")
 	}
 
-	query := cursor.BuildElasticsearch(builder, filter.OrderBy())
+	query := cursor.BuildElasticsearch(builder, "created_at")
 
 	if filter.Search() != nil {
 		query.Must(

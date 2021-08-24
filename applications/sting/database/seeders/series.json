@@ -2,61 +2,81 @@
   {
     "id": "1pcKiQL7dgUW8CIN7uO1wqFaMql",
     "slug": "foreigner_on_mars",
-    "title": "Foreigner On Mars",
+    "title": {
+      "en-US": "Foreigner On Mars"
+    },
     "thumbnail": "{\"url\":\"/thumbnails/1pcKZyoYFxZRyidV9XHd1WyPbrj\",\"mimeTypes\":[\"image/png\"],\"sizes\":[],\"type\":1,\"processed\":true}"
   },
   {
     "id": "1pcKiTRBqURVEdcw1cKhyiejFp7",
     "slug": "veterans_of_our_future",
-    "title": "Veterans Of Our Future",
+    "title": {
+      "en-US": "Veterans Of Our Future"
+    },
     "thumbnail": "{\"url\":\"/thumbnails/1pcHdMMBixvJnJCigJMao5RTVFS\",\"mimeTypes\":[\"image/png\"],\"sizes\":[],\"type\":1,\"processed\":true}"
   },
   {
     "id": "1pcKiWXTyFUY0xHlNJjIz2x1pVP",
     "slug": "animal_of_the_ocean",
-    "title": "Animal Of The Ocean",
+    "title": {
+      "en-US": "Animal Of The Ocean"
+    },
     "thumbnail": "{\"url\":\"/thumbnails/1pcKZyoYFxZRyidV9XHd1WyPbrj\",\"mimeTypes\":[\"image/png\"],\"sizes\":[],\"type\":1,\"processed\":true}"
   },
   {
     "id": "1pcKic9sTP5KQpdGa1pTxgbDoKQ",
     "slug": "heroes_and_companions",
-    "title": "Heroes And Companions",
+    "title": {
+      "en-US": "Heroes And Companions"
+    },
     "thumbnail": "{\"url\":\"/thumbnails/1pcKZxqh6vKnun2ZBXxEKEi686B\",\"mimeTypes\":[\"image/png\"],\"sizes\":[],\"type\":1,\"processed\":true}"
   },
   {
     "id": "1pcKibRoqTAUgmOiNpGLIrztM9R",
     "slug": "cat_can_dance",
-    "title": "Cat Can Dance",
+    "title": {
+      "en-US": "Cat Can Dance"
+    },
     "thumbnail": "{\"url\":\"/thumbnails/1pcKitrRACXDRLpPoN3nVjo0p4j\",\"mimeTypes\":[\"image/png\"],\"sizes\":[],\"type\":1,\"processed\":true}"
   },
   {
     "id": "1pcKim45K1A3uvtZvPeYix5XO7T",
     "slug": "suspicious_of_the_universe",
-    "title": "Suspicious Of The Universe",
+    "title": {
+      "en-US": "Suspicious Of The Universe"
+    },
     "thumbnail": "{\"url\":\"/thumbnails/1pcHdTEWYUtvjU2QXImXMEQvKcR\",\"mimeTypes\":[\"image/png\"],\"sizes\":[],\"type\":1,\"processed\":true}"
   },
   {
     "id": "1pcKinX7wXHlvVvrELgOKcwNAKw",
     "slug": "fish_of_the_future",
-    "title": "Fish Of The Future",
+    "title": {
+      "en-US": "Fish Of The Future"
+    },
     "thumbnail": "{\"url\":\"/thumbnails/1pcHdMMBixvJnJCigJMao5RTVFS\",\"mimeTypes\":[\"image/png\"],\"sizes\":[],\"type\":1,\"processed\":true}"
   },
   {
     "id": "1pcKixJLZFPfPbQ3eF7Nc21DR7m",
     "slug": "wonders_of_chemistry",
-    "title": "Wonders Of Chemistry",
+    "title": {
+      "en-US": "Wonders Of Chemistry"
+    },
     "thumbnail": "{\"url\":\"/thumbnails/1pcKitrRACXDRLpPoN3nVjo0p4j\",\"mimeTypes\":[\"image/png\"],\"sizes\":[],\"type\":1,\"processed\":true}"
   },
   {
     "id": "1pcKitrRACXDRLpPoN3nVjo0p4j",
     "slug": "dawn_of_the_swamps",
-    "title": "Dawn Of The Swamps",
+    "title": {
+      "en-US": "Dawn Of The Swamps"
+    },
     "thumbnail": "{\"url\":\"/thumbnails/1pcHdTEWYUtvjU2QXImXMEQvKcR\",\"mimeTypes\":[\"image/png\"],\"sizes\":[],\"type\":1,\"processed\":true}"
   },
   {
     "id": "1pcKj395CsMusRZlJviwIG4qRCh",
     "slug": "pilots_of_a_star",
-    "title": "Pilots Of A Star",
+    "title": {
+      "en-US": "Pilots Of A Star"
+    },
     "thumbnail": "{\"url\":\"/thumbnails/1pcKZxqh6vKnun2ZBXxEKEi686B\",\"mimeTypes\":[\"image/png\"],\"sizes\":[],\"type\":1,\"processed\":true}"
   }
 ]
