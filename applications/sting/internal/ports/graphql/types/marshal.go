@@ -58,6 +58,14 @@ func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
 		state = PostStateRejected
 	}
 
+	if result.IsRemoving() {
+		state = PostStateRemoving
+	}
+
+	if result.IsRemoved() {
+		state = PostStateRemoved
+	}
+
 	var content []*Resource
 
 	for _, id := range result.Content() {

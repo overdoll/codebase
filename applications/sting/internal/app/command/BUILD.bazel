@@ -13,6 +13,7 @@ go_library(
         "new_post.go",
         "publish_post.go",
         "reject_post.go",
+        "remove_post.go",
         "services.go",
         "submit_post.go",
         "tus_composer.go",

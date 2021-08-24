@@ -11,7 +11,7 @@ type TranslatedSupport struct {
 
 func (p *TranslatedSupport) Locale() string {
 	base, _ := p.tag.Base()
-	return base.ISO3()
+	return base.String()
 }
 
 func (p *TranslatedSupport) Data() string {

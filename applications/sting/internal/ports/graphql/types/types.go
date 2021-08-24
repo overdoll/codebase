@@ -521,6 +521,8 @@ const (
 	PostStateDiscarded  PostState = "Discarded"
 	PostStateRejected   PostState = "Rejected"
 	PostStateProcessing PostState = "Processing"
+	PostStateRemoving   PostState = "Removing"
+	PostStateRemoved    PostState = "Removed"
 )
 
 var AllPostState = []PostState{
@@ -532,11 +534,13 @@ var AllPostState = []PostState{
 	PostStateDiscarded,
 	PostStateRejected,
 	PostStateProcessing,
+	PostStateRemoving,
+	PostStateRemoved,
 }
 
 func (e PostState) IsValid() bool {
 	switch e {
-	case PostStateDraft, PostStatePublishing, PostStateReview, PostStatePublished, PostStateDiscarding, PostStateDiscarded, PostStateRejected, PostStateProcessing:
+	case PostStateDraft, PostStatePublishing, PostStateReview, PostStatePublished, PostStateDiscarding, PostStateDiscarded, PostStateRejected, PostStateProcessing, PostStateRemoving, PostStateRemoved:
 		return true
 	}
 	return false

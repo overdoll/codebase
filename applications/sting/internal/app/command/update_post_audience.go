@@ -27,7 +27,7 @@ func (h UpdatePostAudienceHandler) Handle(ctx context.Context, cmd UpdatePostAud
 
 	pendingPost, err := h.pr.UpdatePostAudience(ctx, cmd.Principal, cmd.PostId, func(post *post.Post) error {
 
-		audience, err := h.pr.GetAudienceById(ctx, cmd.AudienceId)
+		audience, err := h.pr.GetAudienceById(ctx, cmd.Principal, cmd.AudienceId)
 
 		if err != nil {
 			return err

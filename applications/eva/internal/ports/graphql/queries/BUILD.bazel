@@ -2,7 +2,10 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "queries",
-    srcs = ["resolvers.go"],
+    srcs = [
+        "language.go",
+        "resolvers.go",
+    ],
     importpath = "overdoll/applications/eva/internal/ports/graphql/queries",
     visibility = ["//visibility:public"],
     deps = [
@@ -14,6 +17,7 @@ go_library(
         "//libraries/cookies",
         "//libraries/paging",
         "//libraries/passport",
+        "//libraries/translations",
         "@com_github_vektah_gqlparser_v2//gqlerror",
     ],
 )

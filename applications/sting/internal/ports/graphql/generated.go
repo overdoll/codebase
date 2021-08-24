@@ -1753,6 +1753,8 @@ enum PostState {
   Discarded
   Rejected
   Processing
+  Removing
+  Removed
 }
 
 """Update post brand."""

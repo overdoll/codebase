@@ -9,6 +9,7 @@ go_library(
         "//applications/parley/internal/app",
         "//applications/parley/internal/app/query",
         "//applications/parley/internal/domain/infraction",
+        "//applications/parley/internal/domain/report",
         "//applications/parley/internal/ports/graphql/types",
         "//libraries/graphql/relay",
         "//libraries/passport",

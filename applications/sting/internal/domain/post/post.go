@@ -271,6 +271,14 @@ func (p *Post) IsPublished() bool {
 	return p.state == published
 }
 
+func (p *Post) IsRemoving() bool {
+	return p.state == removing
+}
+
+func (p *Post) IsRemoved() bool {
+	return p.state == removed
+}
+
 func (p *Post) IsPublishing() bool {
 	return p.state == publishing
 }

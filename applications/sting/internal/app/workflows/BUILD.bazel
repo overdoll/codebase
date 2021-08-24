@@ -6,6 +6,7 @@ go_library(
         "discard_post.go",
         "options.go",
         "publish_post.go",
+        "remove_post.go",
         "submit_post.go",
         "undo_post.go",
     ],

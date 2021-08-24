@@ -2,7 +2,13 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "mutations",
-    srcs = ["resolvers.go"],
+    srcs = [
+        "language.go",
+        "resolvers.go",
+        "settings.go",
+        "staff.go",
+        "token.go",
+    ],
     importpath = "overdoll/applications/eva/internal/ports/graphql/mutations",
     visibility = ["//visibility:public"],
     deps = [
@@ -18,5 +24,6 @@ go_library(
         "//libraries/helpers",
         "//libraries/passport",
         "//libraries/principal",
+        "//libraries/translations",
     ],
 )

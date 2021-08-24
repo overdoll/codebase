@@ -14,13 +14,49 @@ const ESIndex = `
 			"type": "text",
 			"analyzer": "english"
 		},
-		"jp-JP": {
+		"es": {
+			"type": "text",
+			"analyzer": "spanish"
+		},
+		"fr": {
+			"type": "text",
+			"analyzer": "french"
+		},
+		"it": {
+			"type": "text",
+			"analyzer": "italian"
+		},
+		"pt": {
+			"type": "text",
+			"analyzer": "portuguese"
+		},
+		"ru": {
+			"type": "text",
+			"analyzer": "russian"
+		},
+		"ko": {
+			"type": "text",
+			"analyzer": "nori"
+		},
+		"de": {
+			"type": "text",
+			"analyzer": "german"
+		},
+		"cs": {
+			"type": "text",
+			"analyzer": "czech"
+		},
+		"ja": {
 			"type": "text",
 			"analyzer": "kuromoji"
 		},
-		"kr-KR": {
+		"zh-Hans": {
 			"type": "text",
-			"analyzer": "nori"
+			"analyzer": "smartcn"
+		},
+		"zh": {
+			"type": "text",
+			"analyzer": "smartcn"
 		}
 	}
 },

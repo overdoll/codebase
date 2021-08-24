@@ -5,12 +5,15 @@ import (
 )
 
 var tags = []language.Tag{
-	language.English,
+	language.AmericanEnglish,
 	language.Spanish,
 	language.French,
 	language.Italian,
-	language.Polish,
 	language.Portuguese,
+	language.Russian,
+	language.Korean,
+	language.German,
+	language.Japanese,
 	language.SimplifiedChinese,
 	language.Chinese,
 	language.Czech,

@@ -1,15 +1,22 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
-    name = "principal",
+    name = "translations",
     srcs = [
+        "elasticsearch_index.go",
+        "language.go",
         "middleware.go",
-        "principal.go",
+        "supported_locales.go",
+        "translated_support.go",
+        "translation.go",
     ],
-    importpath = "overdoll/libraries/principal",
+    importpath = "overdoll/libraries/translations",
     visibility = ["//visibility:public"],
     deps = [
-        "//applications/eva/proto:v1_go_proto",
+        "//libraries/cookies",
+        "//libraries/helpers",
         "@com_github_gin_gonic_gin//:gin",
+        "@org_golang_x_text//language",
+        "@org_uber_go_zap//:zap",
     ],
 )

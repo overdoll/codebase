@@ -27,7 +27,7 @@ func (h UpdatePostBrandHandler) Handle(ctx context.Context, cmd UpdatePostBrand)
 
 	pendingPost, err := h.pr.UpdatePostBrand(ctx, cmd.Principal, cmd.PostId, func(post *post.Post) error {
 
-		brand, err := h.pr.GetBrandById(ctx, cmd.BrandId)
+		brand, err := h.pr.GetBrandById(ctx, cmd.Principal, cmd.BrandId)
 
 		if err != nil {
 			return err

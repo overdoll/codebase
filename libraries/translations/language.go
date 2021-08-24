@@ -33,8 +33,7 @@ type Language struct {
 }
 
 func (p *Language) Locale() string {
-	base, _ := p.tag.Base()
-	return base.String()
+	return p.tag.String()
 }
 
 func (p *Language) SetLocale(locale string) error {

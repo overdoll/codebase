@@ -1032,7 +1032,7 @@ input PostAuditLogDateRange {
   to: Time!
 }
 
-extend type Post @key(fields: "id") {
+extend type Post {
   """Audit logs belonging to this pending post"""
   auditLogs(
     """Returns the elements in the list that come after the specified cursor."""
@@ -1362,7 +1362,7 @@ type PostReportConnection {
   pageInfo: PageInfo!
 }
 
-extend type Post @key(fields: "id") {
+extend type Post {
   """Whether or not the post was reported by the viewer."""
   viewerReport: PostReport @goField(forceResolver: true)
 
