@@ -46,7 +46,7 @@ func (r EntityResolver) FindAccountInfractionHistoryByID(ctx context.Context, id
 		return nil, err
 	}
 
-	return types.MarshalAccountInfractionHistoryToGraphQL(infractionHistory), nil
+	return types.MarshalAccountInfractionHistoryToGraphQL(ctx, infractionHistory), nil
 }
 
 func (r EntityResolver) FindPostAuditLogByID(ctx context.Context, id relay.ID) (*types.PostAuditLog, error) {
@@ -69,7 +69,7 @@ func (r EntityResolver) FindPostAuditLogByID(ctx context.Context, id relay.ID) (
 		return nil, err
 	}
 
-	return types.MarshalPostAuditLogToGraphQL(auditLog), nil
+	return types.MarshalPostAuditLogToGraphQL(ctx, auditLog), nil
 }
 
 func (r EntityResolver) FindPostRejectionReasonByID(ctx context.Context, id relay.ID) (*types.PostRejectionReason, error) {
@@ -92,7 +92,7 @@ func (r EntityResolver) FindPostRejectionReasonByID(ctx context.Context, id rela
 		return nil, err
 	}
 
-	return types.MarshalPostRejectionReasonToGraphQL(rejectionReason), nil
+	return types.MarshalPostRejectionReasonToGraphQL(ctx, rejectionReason), nil
 }
 
 func (r EntityResolver) FindModeratorByID(ctx context.Context, id relay.ID) (*types.Moderator, error) {
@@ -138,7 +138,7 @@ func (r EntityResolver) FindPostReportByID(ctx context.Context, id relay.ID) (*t
 		return nil, err
 	}
 
-	return types.MarshalPostReportToGraphQL(mod), nil
+	return types.MarshalPostReportToGraphQL(ctx, mod), nil
 }
 
 func (r EntityResolver) FindPostReportReasonByID(ctx context.Context, id relay.ID) (*types.PostReportReason, error) {
@@ -161,5 +161,5 @@ func (r EntityResolver) FindPostReportReasonByID(ctx context.Context, id relay.I
 		return nil, err
 	}
 
-	return types.MarshalPostReportReasonToGraphQL(reportReason), nil
+	return types.MarshalPostReportReasonToGraphQL(ctx, reportReason), nil
 }

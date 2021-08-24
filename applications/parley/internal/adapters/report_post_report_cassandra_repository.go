@@ -3,7 +3,6 @@ package adapters
 import (
 	"context"
 	"fmt"
-	"time"
 
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
@@ -177,7 +176,6 @@ func (r ReportCassandraRepository) SearchPostReports(ctx context.Context, reques
 	}
 
 	info := &postReport{
-		Bucket: bucket.MakeBucketFromTimestamp(time.Now()),
 		PostId: filters.PostId(),
 	}
 
@@ -194,6 +192,9 @@ func (r ReportCassandraRepository) SearchPostReports(ctx context.Context, reques
 	if err := builder.
 		Query(r.session).
 		BindStruct(info).
+		BindMap(map[string]interface{}{
+			"bucket": bucket.MakeBucketsFromTimeRange(filters.From(), filters.To()),
+		}).
 		Select(&results); err != nil {
 		return nil, fmt.Errorf("failed to search post reports: %v", err)
 	}

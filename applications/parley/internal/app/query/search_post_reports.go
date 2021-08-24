@@ -2,6 +2,7 @@ package query
 
 import (
 	"context"
+	"time"
 
 	"overdoll/applications/parley/internal/domain/report"
 	"overdoll/libraries/paging"
@@ -13,6 +14,9 @@ type SearchPostReports struct {
 
 	Cursor *paging.Cursor
 	PostId string
+
+	From time.Time
+	To   time.Time
 }
 
 type SearchPostReportsHandler struct {
@@ -25,7 +29,7 @@ func NewSearchPostReportsHandler(rr report.Repository) SearchPostReportsHandler 
 
 func (h SearchPostReportsHandler) Handle(ctx context.Context, query SearchPostReports) ([]*report.PostReport, error) {
 
-	filters, err := report.NewPostReportFilters(query.PostId, []int{})
+	filters, err := report.NewPostReportFilters(query.PostId, query.From, query.To)
 
 	if err != nil {
 		return nil, err

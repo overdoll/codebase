@@ -19,6 +19,16 @@ type PostReportReasonConnection {
   pageInfo: PageInfo!
 }
 
+
+"""Date range for post reports"""
+input PostReportDateRange {
+  """The starting date range"""
+  from: Time!
+
+  """The ending date range"""
+  to: Time!
+}
+
 extend type Query {
   """
   Get rejection reasons that can be used for pending posts
@@ -85,6 +95,9 @@ extend type Post @key(fields: "id") {
 
     """Returns the last _n_ elements from the list."""
     last: Int
+
+    """The date range for post reports. Required."""
+    dateRange: PostReportDateRange!
   ): PostReportConnection! @goField(forceResolver: true)
 }
 

@@ -8,31 +8,25 @@ import (
 type PostAuditLogFilters struct {
 	moderatorId *string
 	postId      *string
-	dateRange   []time.Time
+	from        time.Time
+	to          time.Time
 }
 
-func NewPostAuditLogFilters(moderatorId, postId *string, dateRange []int) (*PostAuditLogFilters, error) {
-
-	// DateRange will be UTC unix timestamps, so we check for that here
-	// if no date range is provided, we take the current time
-	var times []time.Time
-
-	if len(dateRange) == 0 {
-		times = append(times, time.Now())
-	} else {
-		for _, item := range dateRange {
-			times = append(times, time.Unix(int64(item), 0))
-		}
-	}
+func NewPostAuditLogFilters(moderatorId, postId *string, from, to time.Time) (*PostAuditLogFilters, error) {
 
 	if postId == nil && moderatorId == nil {
 		return nil, errors.New("must select at least post or moderator")
 	}
 
+	if to.Before(from) {
+		return nil, errors.New("to must be after from")
+	}
+
 	return &PostAuditLogFilters{
 		moderatorId: moderatorId,
 		postId:      postId,
-		dateRange:   times,
+		from:        from,
+		to:          to,
 	}, nil
 }
 
@@ -44,6 +38,10 @@ func (e *PostAuditLogFilters) PostId() *string {
 	return e.postId
 }
 
-func (e *PostAuditLogFilters) DateRange() []time.Time {
-	return e.dateRange
+func (e *PostAuditLogFilters) From() time.Time {
+	return e.from
+}
+
+func (e *PostAuditLogFilters) To() time.Time {
+	return e.to
 }

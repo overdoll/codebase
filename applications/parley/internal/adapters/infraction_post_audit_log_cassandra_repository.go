@@ -290,9 +290,7 @@ func (r InfractionCassandraRepository) SearchPostAuditLogs(ctx context.Context, 
 
 	var builder *qb.SelectBuilder
 
-	info := &postAuditLogByModerator{
-		Bucket: bucket.MakeBucketFromTimestamp(time.Now()),
-	}
+	info := &postAuditLogByModerator{}
 
 	if filter.ModeratorId() != nil {
 		builder = postAuditLogByModeratorTable.
@@ -312,9 +310,13 @@ func (r InfractionCassandraRepository) SearchPostAuditLogs(ctx context.Context, 
 
 	var results []*postAuditLogByModerator
 
+	// this say this may be nil but it would never actually happen because theres a validator on the filter level
 	if err := builder.
 		Query(r.session).
 		BindStruct(info).
+		BindMap(map[string]interface{}{
+			"bucket": bucket.MakeBucketsFromTimeRange(filter.From(), filter.To()),
+		}).
 		Select(&results); err != nil {
 		return nil, fmt.Errorf("failed to search audit logs: %v", err)
 	}

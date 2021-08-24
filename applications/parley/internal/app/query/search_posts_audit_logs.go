@@ -2,6 +2,7 @@ package query
 
 import (
 	"context"
+	"time"
 
 	"overdoll/applications/parley/internal/domain/infraction"
 	"overdoll/libraries/paging"
@@ -14,6 +15,9 @@ type SearchPostAuditLogs struct {
 	Cursor             *paging.Cursor
 	ModeratorAccountId *string
 	PostId             *string
+
+	From time.Time
+	To   time.Time
 }
 
 type SearchPostAuditLogsHandler struct {
@@ -27,7 +31,7 @@ func NewSearchPostAuditLogsHandler(ir infraction.Repository, eva EvaService) Sea
 
 func (h SearchPostAuditLogsHandler) Handle(ctx context.Context, query SearchPostAuditLogs) ([]*infraction.PostAuditLog, error) {
 
-	filters, err := infraction.NewPostAuditLogFilters(query.ModeratorAccountId, query.PostId, []int{})
+	filters, err := infraction.NewPostAuditLogFilters(query.ModeratorAccountId, query.PostId, query.From, query.To)
 
 	if err != nil {
 		return nil, err

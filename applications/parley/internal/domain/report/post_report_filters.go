@@ -1,31 +1,26 @@
 package report
 
 import (
+	"errors"
 	"time"
 )
 
 type PostReportFilters struct {
-	postId    string
-	dateRange []time.Time
+	postId string
+	from   time.Time
+	to     time.Time
 }
 
-func NewPostReportFilters(postId string, dateRange []int) (*PostReportFilters, error) {
+func NewPostReportFilters(postId string, from, to time.Time) (*PostReportFilters, error) {
 
-	// DateRange will be UTC unix timestamps, so we check for that here
-	// if no date range is provided, we take the current time
-	var times []time.Time
-
-	if len(dateRange) == 0 {
-		times = append(times, time.Now())
-	} else {
-		for _, item := range dateRange {
-			times = append(times, time.Unix(int64(item), 0))
-		}
+	if to.Before(from) {
+		return nil, errors.New("to must be after from")
 	}
 
 	return &PostReportFilters{
-		postId:    postId,
-		dateRange: times,
+		postId: postId,
+		from:   from,
+		to:     to,
 	}, nil
 }
 
@@ -33,6 +28,10 @@ func (e *PostReportFilters) PostId() string {
 	return e.postId
 }
 
-func (e *PostReportFilters) DateRange() []time.Time {
-	return e.dateRange
+func (e *PostReportFilters) From() time.Time {
+	return e.from
+}
+
+func (e *PostReportFilters) To() time.Time {
+	return e.to
 }

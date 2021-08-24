@@ -118,6 +118,12 @@ type PostAuditLogConnection struct {
 	PageInfo *relay.PageInfo     `json:"pageInfo"`
 }
 
+// Date range for audit logs
+type PostAuditLogDateRange struct {
+	From time.Time `json:"from"`
+	To   time.Time `json:"to"`
+}
+
 // Edge of the audit log
 type PostAuditLogEdge struct {
 	Node   *PostAuditLog `json:"node"`
@@ -166,6 +172,14 @@ func (PostReport) IsEntity() {}
 type PostReportConnection struct {
 	Edges    []*PostReportEdge `json:"edges"`
 	PageInfo *relay.PageInfo   `json:"pageInfo"`
+}
+
+// Date range for post reports
+type PostReportDateRange struct {
+	// The starting date range
+	From time.Time `json:"from"`
+	// The ending date range
+	To time.Time `json:"to"`
 }
 
 // Edge of the post report

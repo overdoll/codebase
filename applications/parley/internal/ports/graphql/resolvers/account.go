@@ -17,7 +17,7 @@ type AccountResolver struct {
 	App *app.Application
 }
 
-func (r AccountResolver) ModeratorPostAuditLogs(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostAuditLogConnection, error) {
+func (r AccountResolver) ModeratorPostAuditLogs(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, dateRange types.PostAuditLogDateRange) (*types.PostAuditLogConnection, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return nil, err
@@ -35,13 +35,15 @@ func (r AccountResolver) ModeratorPostAuditLogs(ctx context.Context, obj *types.
 		Cursor:             cursor,
 		ModeratorAccountId: &id,
 		Principal:          principal.FromContext(ctx),
+		From:               dateRange.From,
+		To:                 dateRange.To,
 	})
 
 	if err != nil {
 		return nil, err
 	}
 
-	return types.MarshalPostAuditLogToGraphQLConnection(logs, cursor), nil
+	return types.MarshalPostAuditLogToGraphQLConnection(ctx, logs, cursor), nil
 }
 
 func (r AccountResolver) Infractions(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountInfractionHistoryConnection, error) {
@@ -66,7 +68,7 @@ func (r AccountResolver) Infractions(ctx context.Context, obj *types.Account, af
 		return nil, err
 	}
 
-	return types.MarshalAccountInfractionHistoryToGraphQLConnection(history, cursor), nil
+	return types.MarshalAccountInfractionHistoryToGraphQLConnection(ctx, history, cursor), nil
 }
 
 func (r AccountResolver) Moderator(ctx context.Context, obj *types.Account) (*types.Moderator, error) {

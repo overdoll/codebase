@@ -37,7 +37,7 @@ func (r QueryResolver) PostReportReasons(ctx context.Context, after *string, bef
 		return nil, err
 	}
 
-	return types.MarshalPostReportReasonToGraphQLConnection(results, cursor), nil
+	return types.MarshalPostReportReasonToGraphQLConnection(ctx, results, cursor), nil
 }
 
 func (r QueryResolver) PostRejectionReasons(ctx context.Context, after *string, before *string, first *int, last *int) (*types.PostRejectionReasonConnection, error) {
@@ -61,5 +61,5 @@ func (r QueryResolver) PostRejectionReasons(ctx context.Context, after *string, 
 		return nil, err
 	}
 
-	return types.MarshalPostRejectionReasonToGraphQLConnection(results, cursor), nil
+	return types.MarshalPostRejectionReasonToGraphQLConnection(ctx, results, cursor), nil
 }

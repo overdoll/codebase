@@ -48,10 +48,22 @@ const postIndex = `
 				"contributor_id": {
 					"type": "keyword"
 				},
-				"audience": ` + audienceIndexProperties + `,
-				"brand": ` + brandsIndex + `,
-				"categories": ` + categoryIndex + `,
-				"characters": ` + characterIndex + `,
+				"audience": {
+					"type": "nested",
+					"properties": ` + audienceIndexProperties + ` 
+				},
+				"brand": {
+					"type": "nested",
+					"properties": ` + brandsIndexProperties + ` 
+				},
+				"categories": {
+					"type": "nested",
+					"properties": ` + categoryIndexProperties + ` 
+				},
+				"characters": {
+					"type": "nested",
+					"properties": ` + characterIndexProperties + ` 
+				},
 				"content": {
                      "type": "keyword"
 				},

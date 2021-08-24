@@ -181,7 +181,7 @@ func MarshalAccountInfractionHistoryToGraphQL(ctx context.Context, result *infra
 func MarshalPostReportReasonToGraphQL(ctx context.Context, result *report.PostReportReason) *PostReportReason {
 	return &PostReportReason{
 		ID:     relay.NewID(AccountInfractionHistory{}, result.ID()),
-		Reason: result.Reason().TranslateFromContext(ctx),
+		Reason: result.Reason().TranslateFromContext(ctx, result.ID()),
 	}
 }
 
@@ -313,7 +313,7 @@ func MarshalModeratorToGraphQL(result *moderator.Moderator) *Moderator {
 func MarshalPostRejectionReasonToGraphQL(ctx context.Context, result *infraction.PostRejectionReason) *PostRejectionReason {
 	return &PostRejectionReason{
 		ID:         relay.NewID(PostRejectionReason{}, result.ID()),
-		Reason:     result.Reason().TranslateFromContext(ctx),
+		Reason:     result.Reason().TranslateFromContext(ctx, result.ID()),
 		Infraction: result.Infraction(),
 	}
 }

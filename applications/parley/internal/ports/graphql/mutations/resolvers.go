@@ -30,7 +30,7 @@ func (m MutationResolver) ReportPost(ctx context.Context, input types.ReportPost
 		return nil, err
 	}
 
-	return &types.ReportPostPayload{PostReport: types.MarshalPostReportToGraphQL(postReport)}, nil
+	return &types.ReportPostPayload{PostReport: types.MarshalPostReportToGraphQL(ctx, postReport)}, nil
 }
 
 func (m MutationResolver) RejectPost(ctx context.Context, input types.RejectPostInput) (*types.RejectPostPayload, error) {
@@ -50,7 +50,7 @@ func (m MutationResolver) RejectPost(ctx context.Context, input types.RejectPost
 		return nil, err
 	}
 
-	return &types.RejectPostPayload{PostAuditLog: types.MarshalPostAuditLogToGraphQL(auditLog)}, nil
+	return &types.RejectPostPayload{PostAuditLog: types.MarshalPostAuditLogToGraphQL(ctx, auditLog)}, nil
 }
 
 func (m MutationResolver) RemovePost(ctx context.Context, input types.RemovePostInput) (*types.RemovePostPayload, error) {
@@ -70,7 +70,7 @@ func (m MutationResolver) RemovePost(ctx context.Context, input types.RemovePost
 		return nil, err
 	}
 
-	return &types.RemovePostPayload{PostAuditLog: types.MarshalPostAuditLogToGraphQL(auditLog)}, nil
+	return &types.RemovePostPayload{PostAuditLog: types.MarshalPostAuditLogToGraphQL(ctx, auditLog)}, nil
 }
 
 func (m MutationResolver) ApprovePost(ctx context.Context, input types.ApprovePostInput) (*types.ApprovePostPayload, error) {
@@ -88,7 +88,7 @@ func (m MutationResolver) ApprovePost(ctx context.Context, input types.ApprovePo
 		return nil, err
 	}
 
-	return &types.ApprovePostPayload{PostAuditLog: types.MarshalPostAuditLogToGraphQL(auditLog)}, nil
+	return &types.ApprovePostPayload{PostAuditLog: types.MarshalPostAuditLogToGraphQL(ctx, auditLog)}, nil
 }
 
 func (m MutationResolver) RevertPostAuditLog(ctx context.Context, input types.RevertPostAuditLogInput) (*types.RevertPostAuditLogPayload, error) {
@@ -106,7 +106,7 @@ func (m MutationResolver) RevertPostAuditLog(ctx context.Context, input types.Re
 		return nil, err
 	}
 
-	return &types.RevertPostAuditLogPayload{PostAuditLog: types.MarshalPostAuditLogToGraphQL(auditLog)}, nil
+	return &types.RevertPostAuditLogPayload{PostAuditLog: types.MarshalPostAuditLogToGraphQL(ctx, auditLog)}, nil
 }
 
 func (m MutationResolver) ToggleModeratorSettingsInQueue(ctx context.Context) (*types.ToggleModeratorSettingsInQueuePayload, error) {
