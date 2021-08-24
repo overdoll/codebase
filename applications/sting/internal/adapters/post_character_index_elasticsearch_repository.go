@@ -15,15 +15,16 @@ import (
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/scan"
+	"overdoll/libraries/translations"
 )
 
 type characterDocument struct {
-	Id        string         `json:"id"`
-	Slug      string         `json:"slug"`
-	Thumbnail string         `json:"thumbnail"`
-	Name      string         `json:"name"`
-	Series    seriesDocument `json:"series"`
-	CreatedAt string         `json:"created_at"`
+	Id        string            `json:"id"`
+	Slug      string            `json:"slug"`
+	Thumbnail string            `json:"thumbnail"`
+	Name      map[string]string `json:"name"`
+	Series    seriesDocument    `json:"series"`
+	CreatedAt string            `json:"created_at"`
 }
 
 const characterIndex = `
@@ -59,10 +60,7 @@ const characterIndex = `
 					"thumbnail": {
 						"type": "keyword"
 					},
-					"title": {
-						"type": "text",
-						"analyzer": "english"
-					},
+					"title": ` + translations.ElasticSearchIndex + `
 					"created_at": {
 						"type": "date"
 					}
@@ -113,13 +111,13 @@ func marshalCharacterToDocument(char *post.Character) (*characterDocument, error
 	return &characterDocument{
 		Id:        char.ID(),
 		Thumbnail: charThumb,
-		Name:      char.Name(),
+		Name:      translations.MarshalTranslationToDatabase(char.Name()),
 		Slug:      char.Slug(),
 		CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
 		Series: seriesDocument{
 			Id:        media.ID(),
 			Thumbnail: seriesThumb,
-			Title:     media.Title(),
+			Title:     translations.MarshalTranslationToDatabase(media.Title()),
 			CreatedAt: strconv.FormatInt(parse2.Time().Unix(), 10),
 		},
 	}, nil
@@ -161,7 +159,11 @@ func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context,
 	query := cursor.BuildElasticsearch(builder, filter.OrderBy())
 
 	if filter.Name() != nil {
-		query.Must(elastic.NewMultiMatchQuery(*filter.Name(), "name").Operator("and"))
+		query.Must(
+			elastic.
+				NewMultiMatchQuery(*filter.Name(), translations.GetESSearchFields("name")...).
+				Type("best_fields"),
+		)
 	}
 
 	if len(filter.Slugs()) > 0 {

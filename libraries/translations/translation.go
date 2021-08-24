@@ -26,6 +26,17 @@ func (t *Translation) TranslateFromContext(ctx context.Context, fallback string)
 	return t.Translate(FromContext(ctx), fallback)
 }
 
+
+func MarshalTranslationToDatabase(t *Translation) map[string]string {
+	tran := make(map[string]string)
+
+	for _, ts := range t.translations {
+		tran[ts.Locale()] = ts.data
+	}
+
+	return tran
+}
+
 func UnmarshalTranslationFromDatabase(translations map[string]string) *Translation {
 
 	var trans []*TranslatedSupport

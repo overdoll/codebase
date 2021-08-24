@@ -14,14 +14,15 @@ import (
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/scan"
+	"overdoll/libraries/translations"
 )
 
 type categoryDocument struct {
-	Id        string `json:"id"`
-	Slug      string `json:"slug"`
-	Thumbnail string `json:"thumbnail"`
-	Title     string `json:"title"`
-	CreatedAt string `json:"created_at"`
+	Id        string            `json:"id"`
+	Slug      string            `json:"slug"`
+	Thumbnail string            `json:"thumbnail"`
+	Title     map[string]string `json:"title"`
+	CreatedAt string            `json:"created_at"`
 }
 
 const categoryIndex = `
@@ -38,10 +39,7 @@ const categoryIndex = `
 			"thumbnail": {
 				"type": "keyword"
 			},
-			"title": {
-				"type": "text",
-				"analyzer": "english"
-			},
+			"title":  ` + translations.ElasticSearchIndex + `
 			"created_at": {
 				"type": "date"
 			}
@@ -73,7 +71,7 @@ func marshalCategoryToDocument(cat *post.Category) (*categoryDocument, error) {
 	return &categoryDocument{
 		Id:        cat.ID(),
 		Thumbnail: thumbnail,
-		Title:     cat.Title(),
+		Title:     translations.MarshalTranslationToDatabase(cat.Title()),
 		CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
 	}, nil
 }
@@ -115,7 +113,11 @@ func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context,
 	query := cursor.BuildElasticsearch(builder, filter.OrderBy())
 
 	if filter.Search() != nil {
-		query.Must(elastic.NewMultiMatchQuery(*filter.Search(), "title").Operator("and"))
+		query.Must(
+			elastic.
+				NewMultiMatchQuery(*filter.Search(), translations.GetESSearchFields("title")...).
+				Type("best_fields"),
+		)
 	}
 
 	if len(filter.Slugs()) > 0 {

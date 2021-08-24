@@ -14,14 +14,15 @@ import (
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/scan"
+	"overdoll/libraries/translations"
 )
 
 type seriesDocument struct {
-	Id        string `json:"id"`
-	Slug      string `json:"slug"`
-	Thumbnail string `json:"thumbnail"`
-	Title     string `json:"title"`
-	CreatedAt string `json:"created_at"`
+	Id        string            `json:"id"`
+	Slug      string            `json:"slug"`
+	Thumbnail string            `json:"thumbnail"`
+	Title     map[string]string `json:"title"`
+	CreatedAt string            `json:"created_at"`
 }
 
 const seriesIndex = `
@@ -38,10 +39,7 @@ const seriesIndex = `
 			"thumbnail": {
 				"type": "keyword"
 			},
-			"title": {
-				"type": "text",
-				"analyzer": "english"
-			},
+			"title":  ` + translations.ElasticSearchIndex + `
 			"created_at": {
 				"type": "date"
 			}
@@ -63,7 +61,11 @@ func (r PostsIndexElasticSearchRepository) SearchSeries(ctx context.Context, req
 	query := cursor.BuildElasticsearch(builder, filter.OrderBy())
 
 	if filter.Search() != nil {
-		query.Must(elastic.NewMultiMatchQuery(*filter.Search(), "title").Operator("and"))
+		query.Must(
+			elastic.
+				NewMultiMatchQuery(*filter.Search(), translations.GetESSearchFields("title")...).
+				Type("best_fields"),
+		)
 	}
 
 	if len(filter.Slugs()) > 0 {

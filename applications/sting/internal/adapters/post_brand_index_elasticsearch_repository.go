@@ -14,14 +14,15 @@ import (
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/scan"
+	"overdoll/libraries/translations"
 )
 
 type brandDocument struct {
-	Id        string `json:"id"`
-	Slug      string `json:"slug"`
-	Thumbnail string `json:"thumbnail"`
-	Name      string `json:"name"`
-	CreatedAt string `json:"created_at"`
+	Id        string            `json:"id"`
+	Slug      string            `json:"slug"`
+	Thumbnail string            `json:"thumbnail"`
+	Name      map[string]string `json:"name"`
+	CreatedAt string            `json:"created_at"`
 }
 
 const brandsIndex = `
@@ -38,10 +39,7 @@ const brandsIndex = `
 			"thumbnail": {
 				"type": "keyword"
 			},
-			"name": {
-				"type": "text",
-				"analyzer": "english"
-			},
+			"name": ` + translations.ElasticSearchIndex + `
 			"created_at": {
 				"type": "date"
 			}
@@ -74,7 +72,7 @@ func marshalBrandToDocument(cat *post.Brand) (*brandDocument, error) {
 		Id:        cat.ID(),
 		Slug:      cat.Slug(),
 		Thumbnail: thumbnail,
-		Name:      cat.Name(),
+		Name:      translations.MarshalTranslationToDatabase(cat.Name()),
 		CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
 	}, nil
 }
@@ -91,7 +89,11 @@ func (r PostsIndexElasticSearchRepository) SearchBrands(ctx context.Context, req
 	query := cursor.BuildElasticsearch(builder, filter.OrderBy())
 
 	if filter.Search() != nil {
-		query.Must(elastic.NewMultiMatchQuery(*filter.Search(), "name").Operator("and"))
+		query.Must(
+			elastic.
+				NewMultiMatchQuery(*filter.Search(), translations.GetESSearchFields("name")...).
+				Type("best_fields"),
+		)
 	}
 
 	if len(filter.Slugs()) > 0 {
