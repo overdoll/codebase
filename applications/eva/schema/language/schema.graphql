@@ -1,5 +1,8 @@
+# Localization formatted in BCP47
+scalar BCP47
+
 type Language {
-  localeBCP47: String!
+  locale: BCP47!
 }
 
 extend type Query {
@@ -17,7 +20,7 @@ extend type Query {
 """Input for updating the current language"""
 input UpdateLanguageInput {
   """The locale to update the language to"""
-  locale: String!
+  locale: BCP47!
 }
 
 """Payload of the language update"""

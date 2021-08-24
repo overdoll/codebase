@@ -331,7 +331,7 @@ type GrantAuthenticationTokenPayload struct {
 }
 
 type Language struct {
-	LocaleBcp47 string `json:"localeBCP47"`
+	Locale string `json:"locale"`
 }
 
 type Moderator struct {
