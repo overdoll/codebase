@@ -11,8 +11,8 @@ import type { FragmentReference } from "relay-runtime";
 declare export opaque type PostArtistFragment$ref: FragmentReference;
 declare export opaque type PostArtistFragment$fragmentType: PostArtistFragment$ref;
 export type PostArtistFragment = {|
-  +artist: {|
-    +username: string
+  +brand: ?{|
+    +name: string
   |},
   +$refType: PostArtistFragment$ref,
 |};
@@ -33,16 +33,16 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
-      "concreteType": "Account",
+      "concreteType": "Brand",
       "kind": "LinkedField",
-      "name": "artist",
+      "name": "brand",
       "plural": false,
       "selections": [
         {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "username",
+          "name": "name",
           "storageKey": null
         }
       ],
@@ -53,5 +53,5 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 // prettier-ignore
-(node: any).hash = 'ea4f2ad951ac943536ee03d21efd746e';
+(node: any).hash = '36b353b6f4f7f7611dec324d49b9cae7';
 module.exports = node;

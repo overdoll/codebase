@@ -14,17 +14,12 @@ type Props = {
 
 const PostCharacterFragmentGQL = graphql`
   fragment PostCharactersFragment on Post {
-    characterRequests {
-      name
-      media
-    }
     characters {
       name
-      media {
+      series {
         title
       }
     }
-    mediaRequests
   }
 `
 
@@ -42,17 +37,8 @@ export default function PostHeader (props: Props): Node {
       {data.characters.map((item, index) =>
         <WrapItem key={index}>
           <Tag size='lg' colorScheme='gray' borderRadius='full'>
-            <TagLabel>{item.name} ({item.media.title})</TagLabel>
+            <TagLabel>{item.name} ({item.series.title})</TagLabel>
           </Tag>
-        </WrapItem>
-      )}
-      {data.characterRequests?.map((item, index) =>
-        <WrapItem key={index}>
-          <Tooltip label={t('queue.post.tags.new')}>
-            <Tag size='lg' colorScheme='green' borderRadius='full'>
-              <TagLabel>{item.name} ({item.media})</TagLabel>
-            </Tag>
-          </Tooltip>
         </WrapItem>
       )}
     </Wrap>

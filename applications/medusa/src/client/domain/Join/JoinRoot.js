@@ -34,6 +34,7 @@ const JoinRootFragment = graphql`
     sameSession
     accountStatus {
       registered
+      multiFactor
     }
   }
 `
@@ -92,5 +93,8 @@ export default function JoinRoot (props: Props): Node {
     return <Register />
   }
 
+  // Add check for multifactor here - if array is greater than 0, display multifactor flow
+
+  // This one logs you in with the token - will error out if you try to login if multiFactor isn't an empty array
   return <Grant />
 }

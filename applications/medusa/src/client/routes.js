@@ -296,7 +296,20 @@ const routes: Array<Route> = [
                 /* webpackChunkName: "SettingsSecurityRoot" */ './domain/Settings/Security/Security'
               ),
             module.hot
-            )
+            ),
+            prepare: params => {
+              const MultiFactorQuery = require('@//:artifacts/MultiFactorQuery.graphql')
+
+              return {
+                multiFactorQuery: {
+                  query: MultiFactorQuery,
+                  variables: {},
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
           },
           {
             path: '/settings/moderation',

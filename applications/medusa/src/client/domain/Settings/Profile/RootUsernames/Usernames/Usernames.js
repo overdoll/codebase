@@ -66,7 +66,6 @@ export default function Usernames (props: Props): Node {
 
   return (
     <>
-
       <Stack spacing={3}>
         <Flex direction='column'>
           <Heading size='sm' color='gray.100'>{t('profile.username.current.title')}</Heading>
@@ -109,7 +108,6 @@ export default function Usernames (props: Props): Node {
             </Accordion>
           </Flex>}
       </Stack>
-
     </>
   )
 }

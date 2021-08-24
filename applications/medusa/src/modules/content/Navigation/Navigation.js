@@ -49,7 +49,7 @@ type Props = {
 
 const NavigationFragmentGQL = graphql`
   fragment NavigationFragment on Account {
-    ...AvatarButtonFragment
+    ...AvatarMenuFragment
     ...ProfileButtonFragment
   }
 `

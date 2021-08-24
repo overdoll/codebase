@@ -18,7 +18,7 @@ type Props = {
   onSelect: () => void,
   selected: Array<string>,
 };
-
+/*
 const CategoriesQueryGQL = graphql`
   query CategoriesQuery($title: String) {
     categories(title: $title) {
@@ -33,17 +33,24 @@ const CategoriesQueryGQL = graphql`
   }
 `
 
+ */
+
 export default function Categories ({ args, onSelect, selected }: Props): Node {
+  /*
   const data = useLazyLoadQuery<CategoriesQuery>(
     CategoriesQueryGQL,
     args.variables,
     args.options
   )
 
+   */
+
+  const data = null
+
   const [t] = useTranslation('upload')
 
   // We dont let users add custom categories
-  if (data.categories.edges.length === 0) {
+  if (data?.categories.edges.length === 0) {
     return (
       <Empty title={t('tag.category.not_found')} />
     )
@@ -51,7 +58,7 @@ export default function Categories ({ args, onSelect, selected }: Props): Node {
 
   return (
     <Wrap justify='center'>
-      {data.categories.edges.map(item => (
+      {data?.categories.edges.map(item => (
         <Element
           key={item.node.id}
           onSelect={() => onSelect(item.node)}

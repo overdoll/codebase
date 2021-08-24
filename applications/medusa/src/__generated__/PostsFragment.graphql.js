@@ -20,7 +20,7 @@ export type PostsFragment = {|
     +edges: $ReadOnlyArray<{|
       +node: {|
         +id: string,
-        +postedAt: any,
+        +postedAt: ?any,
         +$fragmentRefs: PostHeaderFragment$ref & PostPreviewFragment$ref & ModeratePostFragment$ref,
       |}
     |}>,

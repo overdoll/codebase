@@ -139,11 +139,12 @@ export default function Upload (): Node {
       </Flex>
     )
   }
+  // <Steps uppy={uppy} state={state} dispatch={dispatch} />
 
   return (
     <>
       <Helmet title='upload' />
-      <Steps uppy={uppy} state={state} dispatch={dispatch} />
+
     </>
   )
 }

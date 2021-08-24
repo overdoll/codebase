@@ -32,6 +32,8 @@ type Props = {
   dispatch: Dispatch,
 };
 
+/*
+
 const SubmitGraphQL = graphql`
   mutation StepsMutation($input: CreatePostInput!) {
     createPost(input: $input) {
@@ -43,9 +45,16 @@ const SubmitGraphQL = graphql`
   }
 `
 
+ */
+
 // Stepper - handles all stepping functions
 export default function Steps ({ uppy, state, dispatch }: Props): Node {
-  const [commit, isInFlight] = useMutation<StepsMutation>(SubmitGraphQL)
+  // const [commit, isInFlight] = useMutation<StepsMutation>(SubmitGraphQL)
+
+  const commit = () => {
+    return null
+  }
+  const isInFlight = true
 
   const notify = useToast()
 

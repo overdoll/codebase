@@ -8,16 +8,16 @@
 
 import type { ReaderFragment } from 'relay-runtime';
 import type { FragmentReference } from "relay-runtime";
-declare export opaque type AvatarButtonFragment$ref: FragmentReference;
-declare export opaque type AvatarButtonFragment$fragmentType: AvatarButtonFragment$ref;
-export type AvatarButtonFragment = {|
+declare export opaque type AvatarMenuFragment$ref: FragmentReference;
+declare export opaque type AvatarMenuFragment$fragmentType: AvatarMenuFragment$ref;
+export type AvatarMenuFragment = {|
   +avatar: any,
-  +$refType: AvatarButtonFragment$ref,
+  +$refType: AvatarMenuFragment$ref,
 |};
-export type AvatarButtonFragment$data = AvatarButtonFragment;
-export type AvatarButtonFragment$key = {
-  +$data?: AvatarButtonFragment$data,
-  +$fragmentRefs: AvatarButtonFragment$ref,
+export type AvatarMenuFragment$data = AvatarMenuFragment;
+export type AvatarMenuFragment$key = {
+  +$data?: AvatarMenuFragment$data,
+  +$fragmentRefs: AvatarMenuFragment$ref,
   ...
 };
 
@@ -26,7 +26,7 @@ const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "AvatarButtonFragment",
+  "name": "AvatarMenuFragment",
   "selections": [
     {
       "alias": null,
@@ -40,5 +40,5 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 // prettier-ignore
-(node: any).hash = '8304adcee9e6315b26337922d9e2dc26';
+(node: any).hash = 'b275200ab5968ae8fcffbbc29d2db8d7';
 module.exports = node;

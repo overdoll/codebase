@@ -15,7 +15,9 @@ type Props = {
 const PostContentFragmentGQL = graphql`
   fragment PostContentFragment on Post {
     content {
-      url
+      urls {
+        url
+      }
     }
   }
 `
@@ -25,7 +27,7 @@ export default function PostHeader (props: Props): Node {
 
   return (
     <Wrap justify='center'>
-      {data?.content.map((item, index) =>
+      {data?.content.urls.map((item, index) =>
         <WrapItem key={index} spacing={4} h={200} w={160}>
           <ContentItem src={item.url} />
         </WrapItem>

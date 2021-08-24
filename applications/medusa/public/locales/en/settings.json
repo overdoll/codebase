@@ -102,5 +102,19 @@
         }
       }
     }
+  },
+  "security": {
+    "multi_factor": {
+      "title": "Two-factor Authentication",
+      "totp": {
+        "title": "Authenticator App",
+        "button": {
+          "set_up": "Set Up"
+        },
+        "tags": {
+          "not_enabled": "Not Set Up"
+        }
+      }
+    }
   }
 }

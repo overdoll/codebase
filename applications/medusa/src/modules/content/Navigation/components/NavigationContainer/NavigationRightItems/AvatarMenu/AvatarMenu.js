@@ -6,14 +6,14 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import type { Node } from 'react'
 import { useTranslation } from 'react-i18next'
 import NavLink from '@//:modules/routing/NavLink'
-import type { AvatarButtonFragment$key } from '@//:artifacts/AvatarButtonFragment.graphql'
+import type { AvatarMenuFragment$key } from '@//:artifacts/AvatarMenuFragment.graphql'
 
 type Props = {
-  viewer: AvatarButtonFragment$key,
+  viewer: AvatarMenuFragment$key,
 }
 
 const AccountFragmentGQL = graphql`
-  fragment AvatarButtonFragment on Account {
+  fragment AvatarMenuFragment on Account {
     avatar
   }
 `
