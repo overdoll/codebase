@@ -5,11 +5,39 @@ import (
 	"testing"
 	"time"
 
+	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/parley/internal/ports/graphql/types"
 	parley "overdoll/applications/parley/proto"
+	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/passport"
 )
+
+type PostAuditLogModified struct {
+	PostRejectionReason types.PostRejectionReason
+	Notes               string
+	Reverted            bool
+	ID                  string
+	Action              types.PostAuditLogAction
+}
+
+type RevertPostAuditLog struct {
+	RevertPostAuditLog *struct {
+		PostAuditLog *PostAuditLogModified
+	} `graphql:"revertPostAuditLog(input: $input)"`
+}
+
+func revertModeratePost(t *testing.T, client *graphql.Client, id string) RevertPostAuditLog {
+	var search RevertPostAuditLog
+
+	err := client.Mutate(context.Background(), &search, map[string]interface{}{
+		"input": types.RevertPostAuditLogInput{PostAuditLogID: relay.ID(id)},
+	})
+
+	require.NoError(t, err)
+
+	return search
+}
 
 type PostRejectionReasons struct {
 	PostRejectionReasons *types.PostRejectionReasonConnection `graphql:"postRejectionReasons()"`
@@ -44,10 +72,10 @@ type AccountPostAuditLogs struct {
 }
 
 // TestPostAuditLogs - get some audit logs
-func TestPostAuditLogs(t *testing.T) {
+func TestAccountPostAuditLogs(t *testing.T) {
 	t.Parallel()
 
-	client := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ5IyRTV0X4J27F3m5wGD5mj"))
+	client := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 
 	var account AccountPostAuditLogs
 
@@ -65,6 +93,65 @@ func TestPostAuditLogs(t *testing.T) {
 	})
 
 	require.NoError(t, err)
+	require.Greater(t, account.Entities[0].Account.ModeratorPostAuditLogs.Edges, 0)
+}
+
+type PostAuditLogs struct {
+	Entities []struct {
+		Post struct {
+			ID        string
+			AuditLogs *struct {
+				Edges []struct {
+					Node PostAuditLogModified
+				}
+			} `graphql:"auditLogs(dateRange: $dateRange)"`
+		} `graphql:"... on Post"`
+	} `graphql:"_entities(representations: $representations)"`
+}
+
+func auditLogsForPost(t *testing.T, client *graphql.Client, postId string) PostAuditLogs {
+
+	var account PostAuditLogs
+
+	err := client.Query(context.Background(), &account, map[string]interface{}{
+		"representations": []_Any{
+			{
+				"__typename": "Post",
+				"id":         postId,
+			},
+		},
+		"dateRange": types.PostAuditLogDateRange{
+			From: time.Now(),
+			To:   time.Now(),
+		},
+	})
+
+	require.NoError(t, err)
+
+	return account
+}
+
+type RejectPost struct {
+	RejectPost *struct {
+		PostAuditLog PostAuditLogModified
+	} `graphql:"rejectPost(input: $input)"`
+}
+
+func rejectPost(t *testing.T, client *graphql.Client, postId, rejectionReason string, notes *string) RejectPost {
+
+	var modPost RejectPost
+
+	err := client.Mutate(context.Background(), &modPost, map[string]interface{}{
+		"input": types.RejectPostInput{
+			PostID:                relay.ID(postId),
+			PostRejectionReasonID: relay.ID(rejectionReason),
+			Notes:                 notes,
+		},
+	})
+
+	require.NoError(t, err)
+
+	return modPost
 }
 
 // TestGetNextModerator - get next mod id
@@ -92,9 +179,11 @@ func TestModeratePost_approve(t *testing.T) {
 
 	var approvePost ApprovePost
 
+	postId := "UG9zdDp0ZXN0LWlkLTE="
+
 	err := client.Mutate(context.Background(), &approvePost, map[string]interface{}{
 		"input": types.ApprovePostInput{
-			PostID: "UG9zdDoxcTdNSXFxbmt6ZXczM3E0ZWxYdU4xUmkyN2Q=",
+			PostID: relay.ID(postId),
 		},
 	})
 
@@ -105,6 +194,15 @@ func TestModeratePost_approve(t *testing.T) {
 
 	undo := revertModeratePost(t, client, approvePost.ApprovePost.PostAuditLog.ID)
 	require.Equal(t, true, undo.RevertPostAuditLog.PostAuditLog.Reverted)
+
+	posts := auditLogsForPost(t, client, postId)
+
+	// should be exactly 1 - a reverted audit log
+	require.Len(t, posts, 1)
+
+	// audit logs should exist for this action
+	require.Equal(t, types.PostAuditLogActionApproved, posts.Entities[0].Post.AuditLogs.Edges[0].Node.Action)
+	require.True(t, posts.Entities[0].Post.AuditLogs.Edges[0].Node.Reverted)
 }
 
 type RemovePost struct {
@@ -120,15 +218,24 @@ func TestModeratePost_remove(t *testing.T) {
 
 	var removePost RemovePost
 
+	postId := "UG9zdDp0ZXN0LWlkLTI="
+
 	err := client.Mutate(context.Background(), &removePost, map[string]interface{}{
 		"input": types.RemovePostInput{
-			PostID: "UG9zdDoxcTdNSXFxbmt6ZXczM3E0ZWxYdU4xUmkyN2Q=",
+			PostID: relay.NewID(postId),
 		},
 	})
 
 	require.NoError(t, err)
 
 	require.Equal(t, types.PostAuditLogActionRemoved, removePost.RemovePost.PostAuditLog.Action)
+
+	posts := auditLogsForPost(t, client, postId)
+
+	require.Len(t, posts, 1)
+
+	// audit logs should exist for this action
+	require.Equal(t, types.PostAuditLogActionRemoved, posts.Entities[0].Post.AuditLogs.Edges[0].Node.Action)
 }
 
 func TestModeratePost_reject(t *testing.T) {
@@ -137,15 +244,25 @@ func TestModeratePost_reject(t *testing.T) {
 	client := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 
 	notes := "some additional notes"
-	res := rejectPost(t, client, "UG9zdFJlamVjdGlvblJlYXNvbjoxcTdNSjVJeVJUVjBYNEoyN0YzbTV3R0Q1bWo=", &notes)
+	postId := "UG9zdDp0ZXN0LWlkLTM="
+	res := rejectPost(t, client, postId, "UG9zdFJlamVjdGlvblJlYXNvbjoxcTdNSjVJeVJUVjBYNEoyN0YzbTV3R0Q1bWo=", &notes)
 
 	require.Equal(t, types.PostAuditLogActionDenied, res.RejectPost.PostAuditLog.Action)
 	require.Equal(t, "some additional notes", res.RejectPost.PostAuditLog.Notes)
-	require.Equal(t, "TranslateReason with no infraction", res.RejectPost.PostAuditLog.PostRejectionReason.Reason)
+	require.Equal(t, "Reason with no infraction", res.RejectPost.PostAuditLog.PostRejectionReason.Reason)
 
 	undo := revertModeratePost(t, client, res.RejectPost.PostAuditLog.ID)
 
 	require.Equal(t, true, undo.RevertPostAuditLog.PostAuditLog.Reverted)
+
+	posts := auditLogsForPost(t, client, postId)
+
+	// should be exactly 1 - a reverted audit log
+	require.Len(t, posts, 1)
+
+	// audit logs should exist for this action
+	require.Equal(t, types.PostAuditLogActionDenied, posts.Entities[0].Post.AuditLogs.Edges[0].Node.Action)
+	require.True(t, posts.Entities[0].Post.AuditLogs.Edges[0].Node.Reverted)
 }
 
 type AccountInfractionHistory struct {
@@ -162,8 +279,10 @@ func TestModeratePost_reject_infraction_and_undo(t *testing.T) {
 
 	client := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 
-	res := rejectPost(t, client, "UG9zdFJlamVjdGlvblJlYXNvbjoxcTdNSjNKa2hjZGNKSk5xWmV6ZGZRdDVwWjY=", nil)
-	infractionReason := "TranslateReason with infraction"
+	postId := "UG9zdDp0ZXN0LWlkLTQ="
+
+	res := rejectPost(t, client, postId, "UG9zdFJlamVjdGlvblJlYXNvbjoxcTdNSjNKa2hjZGNKSk5xWmV6ZGZRdDVwWjY=", nil)
+	infractionReason := "Reason with infraction"
 
 	require.Equal(t, types.PostAuditLogActionDenied, res.RejectPost.PostAuditLog.Action)
 	require.Equal(t, "some additional notes and stuff", res.RejectPost.PostAuditLog.Notes)
@@ -202,4 +321,15 @@ func TestModeratePost_reject_infraction_and_undo(t *testing.T) {
 
 	// infraction should have been undone
 	require.Equal(t, true, undo.RevertPostAuditLog.PostAuditLog.Reverted)
+
+	// check audit log record exists
+	posts := auditLogsForPost(t, client, postId)
+
+	// should be exactly 1 - a reverted audit log
+	require.Len(t, posts, 1)
+
+	// audit logs should exist for this action
+	require.Equal(t, types.PostAuditLogActionDenied, posts.Entities[0].Post.AuditLogs.Edges[0].Node.Action)
+	require.Equal(t, "some additional notes and stuff", posts.Entities[0].Post.AuditLogs.Edges[0].Node.Notes)
+	require.True(t, posts.Entities[0].Post.AuditLogs.Edges[0].Node.Reverted)
 }

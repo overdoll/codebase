@@ -7,3 +7,4 @@ import (
 type QueryResolver struct {
 	App *app.Application
 }
+

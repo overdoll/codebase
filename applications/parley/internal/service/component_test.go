@@ -7,16 +7,13 @@ import (
 	"testing"
 
 	"github.com/shurcooL/graphql"
-	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc"
 	"overdoll/applications/parley/internal/ports"
-	"overdoll/applications/parley/internal/ports/graphql/types"
 	"overdoll/applications/parley/internal/service"
 	parley "overdoll/applications/parley/proto"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
 	"overdoll/libraries/config"
-	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/tests"
 )
@@ -26,55 +23,6 @@ const ParleyHttpClientAddr = "http://:8888/graphql"
 
 const ParleyGrpcAddr = "localhost:8889"
 const ParleyGrpcClientAddr = "localhost:8889"
-
-type PostAuditLogModified struct {
-	PostRejectionReason types.PostRejectionReason
-	Notes               string
-	Reverted            bool
-	ID                  string
-	Action              types.PostAuditLogAction
-}
-
-type RejectPost struct {
-	RejectPost *struct {
-		PostAuditLog PostAuditLogModified
-	} `graphql:"rejectPost(input: $input)"`
-}
-
-func rejectPost(t *testing.T, client *graphql.Client, rejectionReason string, notes *string) RejectPost {
-
-	var modPost RejectPost
-
-	err := client.Mutate(context.Background(), &modPost, map[string]interface{}{
-		"input": types.RejectPostInput{
-			PostID:                "UG9zdDoxcTdNSXFxbmt6ZXczM3E0ZWxYdU4xUmkyN2Q=",
-			PostRejectionReasonID: relay.ID(rejectionReason),
-			Notes:                 notes,
-		},
-	})
-
-	require.NoError(t, err)
-
-	return modPost
-}
-
-type RevertPostAuditLog struct {
-	RevertPostAuditLog *struct {
-		PostAuditLog *PostAuditLogModified
-	} `graphql:"revertPostAuditLog(input: $input)"`
-}
-
-func revertModeratePost(t *testing.T, client *graphql.Client, id string) RevertPostAuditLog {
-	var search RevertPostAuditLog
-
-	err := client.Mutate(context.Background(), &search, map[string]interface{}{
-		"input": types.RevertPostAuditLogInput{PostAuditLogID: relay.ID(id)},
-	})
-
-	require.NoError(t, err)
-
-	return search
-}
 
 func getHttpClient(t *testing.T, pass *passport.Passport) *graphql.Client {
 

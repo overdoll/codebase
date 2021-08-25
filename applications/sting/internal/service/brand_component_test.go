@@ -24,7 +24,7 @@ type SearchBrands struct {
 }
 
 type Brand struct {
-	Brand BrandModified `graphql:"brand(slug: $slug)"`
+	Brand *BrandModified `graphql:"brand(slug: $slug)"`
 }
 
 // TestSearchBrand - search some brands
@@ -63,5 +63,6 @@ func TestGetBrand(t *testing.T) {
 	})
 
 	require.NoError(t, err)
+	require.NotNil(t, getBrand.Brand)
 	require.Equal(t, "Non-Default Brand", getBrand.Brand.Name)
 }

@@ -26,11 +26,11 @@ var characterTable = table.New(table.Metadata{
 })
 
 type character struct {
-	Id        string `db:"id"`
-	Slug      string `db:"slug"`
+	Id        string            `db:"id"`
+	Slug      string            `db:"slug"`
 	Name      map[string]string `db:"name"`
-	Thumbnail string `db:"thumbnail"`
-	SeriesId  string `db:"series_id"`
+	Thumbnail string            `db:"thumbnail"`
+	SeriesId  string            `db:"series_id"`
 }
 
 var charactersSlugTable = table.New(table.Metadata{
@@ -50,7 +50,7 @@ type characterSlug struct {
 	Slug        string `db:"slug"`
 }
 
-func (r PostsCassandraRepository) GetCharacterBySlug(ctx context.Context, requester *principal.Principal, seriesSlug string, slug string) (*post.Character, error) {
+func (r PostsCassandraRepository) GetCharacterBySlug(ctx context.Context, requester *principal.Principal, slug, seriesSlug string) (*post.Character, error) {
 
 	// get series first
 	series, err := r.getSeriesBySlug(ctx, requester, seriesSlug)
@@ -65,7 +65,7 @@ func (r PostsCassandraRepository) GetCharacterBySlug(ctx context.Context, reques
 		BindStruct(characterSlug{
 			Slug:     slug,
 			SeriesId: series.SeriesId,
-	})
+		})
 
 	var b characterSlug
 
@@ -163,7 +163,7 @@ func (r PostsCassandraRepository) GetCharacterById(ctx context.Context, requeste
 		Consistency(gocql.One).
 		BindStruct(character{Id: characterId})
 
-	var char *character
+	var char character
 
 	if err := queryCharacters.Get(&char); err != nil {
 

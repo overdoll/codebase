@@ -22,7 +22,7 @@ type SearchCharacters struct {
 }
 
 type Character struct {
-	Character CharacterModified `graphql:"character(slug: $slug, seriesSlug: $slug)"`
+	Character *CharacterModified `graphql:"character(slug: $slug, seriesSlug: $seriesSlug)"`
 }
 
 // TestSearchCharacters - search some characters
@@ -52,9 +52,10 @@ func TestGetCharacter(t *testing.T) {
 
 	err := client.Query(context.Background(), &getCharacter, map[string]interface{}{
 		"slug":       graphql.String("margaret_lee"),
-		"seriesSlug": graphql.String("cat_can_dance"),
+		"seriesSlug": graphql.String("foreigner_on_mars"),
 	})
 
 	require.NoError(t, err)
+	require.NotNil(t, getCharacter.Character)
 	require.Equal(t, "Margaret Lee", getCharacter.Character.Name)
 }

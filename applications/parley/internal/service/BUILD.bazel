@@ -24,6 +24,7 @@ go_test(
         "account_settings_component_test.go",
         "component_test.go",
         "moderate_component_test.go",
+        "report_component_test.go",
     ],
     data = ["//applications/parley:config.toml"],
     deps = [

@@ -24,10 +24,10 @@ var seriesTable = table.New(table.Metadata{
 })
 
 type series struct {
-	Id        string `db:"id"`
-	Slug      string `db:"slug"`
+	Id        string            `db:"id"`
+	Slug      string            `db:"slug"`
 	Title     map[string]string `db:"title"`
-	Thumbnail string `db:"thumbnail"`
+	Thumbnail string            `db:"thumbnail"`
 }
 
 var seriesSlugTable = table.New(table.Metadata{
@@ -84,7 +84,7 @@ func (r PostsCassandraRepository) GetSingleSeriesById(ctx context.Context, reque
 		Consistency(gocql.One).
 		BindStruct(series{Id: seriesId})
 
-	var med *series
+	var med series
 
 	if err := queryMedia.Get(&med); err != nil {
 

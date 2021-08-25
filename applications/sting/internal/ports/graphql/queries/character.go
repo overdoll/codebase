@@ -35,7 +35,7 @@ func (r *QueryResolver) Characters(ctx context.Context, after *string, before *s
 	return types.MarshalCharacterToGraphQLConnection(ctx, results, cursor), nil
 }
 
-func (r *QueryResolver) Character(ctx context.Context, slug string, seriesSlug string) (*types.Character, error) {
+func (r *QueryResolver) Character(ctx context.Context, slug, seriesSlug string) (*types.Character, error) {
 
 	character, err := r.App.Queries.CharacterBySlug.Handle(ctx, query.CharacterBySlug{
 		Principal:  principal.FromContext(ctx),

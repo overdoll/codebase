@@ -23,7 +23,7 @@ type SearchCategories struct {
 }
 
 type Category struct {
-	Category CategoryModified `graphql:"category(slug: $slug)"`
+	Category *CategoryModified `graphql:"category(slug: $slug)"`
 }
 
 // TestSearchCategories - search some categories
@@ -56,5 +56,6 @@ func TestGetCategory(t *testing.T) {
 	})
 
 	require.NoError(t, err)
+	require.NotNil(t, getCategory.Category)
 	require.Equal(t, "Assure", getCategory.Category.Title)
 }

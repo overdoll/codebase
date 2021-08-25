@@ -21,7 +21,7 @@ type SearchSeries struct {
 }
 
 type Serial struct {
-	Serial SeriesModified `graphql:"serial(slug: $slug)"`
+	Serial *SeriesModified `graphql:"serial(slug: $slug)"`
 }
 
 // TestSearchSeries - search some series
@@ -53,5 +53,6 @@ func TestGetSerial(t *testing.T) {
 	})
 
 	require.NoError(t, err)
+	require.NotNil(t, getSerial.Serial)
 	require.Equal(t, "Veterans Of Our Future", getSerial.Serial.Title)
 }
