@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 83a17f651be56f7d014d2e5f59734266
+ * @relayHash e7ba09dd0a49f1312eba052635d9e5d5
  */
 
 /* eslint-disable */
@@ -8,38 +8,42 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-import type { MultiFactorTotpFragment$ref } from "./MultiFactorTotpFragment.graphql";
-export type MultiFactorQueryVariables = {||};
-export type MultiFactorQueryResponse = {|
+import type { MultiFactorTotpSettingsFragment$ref } from "./MultiFactorTotpSettingsFragment.graphql";
+import type { RecoveryCodesSettingsFragment$ref } from "./RecoveryCodesSettingsFragment.graphql";
+export type MultiFactorSettingsQueryVariables = {||};
+export type MultiFactorSettingsQueryResponse = {|
   +viewer: ?{|
     +multiFactorSettings: {|
       +multiFactorEnabled: boolean,
-      +recoveryCodesGenerated: boolean,
-      +$fragmentRefs: MultiFactorTotpFragment$ref,
+      +$fragmentRefs: MultiFactorTotpSettingsFragment$ref & RecoveryCodesSettingsFragment$ref,
     |}
   |}
 |};
-export type MultiFactorQuery = {|
-  variables: MultiFactorQueryVariables,
-  response: MultiFactorQueryResponse,
+export type MultiFactorSettingsQuery = {|
+  variables: MultiFactorSettingsQueryVariables,
+  response: MultiFactorSettingsQueryResponse,
 |};
 
 
 /*
-query MultiFactorQuery {
+query MultiFactorSettingsQuery {
   viewer {
     multiFactorSettings {
       multiFactorEnabled
-      ...MultiFactorTotpFragment
-      recoveryCodesGenerated
+      ...MultiFactorTotpSettingsFragment
+      ...RecoveryCodesSettingsFragment
     }
     id
   }
 }
 
-fragment MultiFactorTotpFragment on AccountMultiFactorSettings {
+fragment MultiFactorTotpSettingsFragment on AccountMultiFactorSettings {
   multiFactorTotpConfigured
-  canDisableMultiFactor
+  recoveryCodesGenerated
+}
+
+fragment RecoveryCodesSettingsFragment on AccountMultiFactorSettings {
+  recoveryCodesGenerated
 }
 */
 
@@ -50,20 +54,13 @@ var v0 = {
   "kind": "ScalarField",
   "name": "multiFactorEnabled",
   "storageKey": null
-},
-v1 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "recoveryCodesGenerated",
-  "storageKey": null
 };
 return {
   "fragment": {
     "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
-    "name": "MultiFactorQuery",
+    "name": "MultiFactorSettingsQuery",
     "selections": [
       {
         "alias": null,
@@ -82,11 +79,15 @@ return {
             "plural": false,
             "selections": [
               (v0/*: any*/),
-              (v1/*: any*/),
               {
                 "args": null,
                 "kind": "FragmentSpread",
-                "name": "MultiFactorTotpFragment"
+                "name": "MultiFactorTotpSettingsFragment"
+              },
+              {
+                "args": null,
+                "kind": "FragmentSpread",
+                "name": "RecoveryCodesSettingsFragment"
               }
             ],
             "storageKey": null
@@ -102,7 +103,7 @@ return {
   "operation": {
     "argumentDefinitions": [],
     "kind": "Operation",
-    "name": "MultiFactorQuery",
+    "name": "MultiFactorSettingsQuery",
     "selections": [
       {
         "alias": null,
@@ -132,10 +133,9 @@ return {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "canDisableMultiFactor",
+                "name": "recoveryCodesGenerated",
                 "storageKey": null
-              },
-              (v1/*: any*/)
+              }
             ],
             "storageKey": null
           },
@@ -152,14 +152,14 @@ return {
     ]
   },
   "params": {
-    "id": "83a17f651be56f7d014d2e5f59734266",
+    "id": "e7ba09dd0a49f1312eba052635d9e5d5",
     "metadata": {},
-    "name": "MultiFactorQuery",
+    "name": "MultiFactorSettingsQuery",
     "operationKind": "query",
     "text": null
   }
 };
 })();
 // prettier-ignore
-(node: any).hash = '8e86a5313fd621b5b28fe3fffc4bb3ac';
+(node: any).hash = '3e2c15210df4f1b451a70fc13d047f40';
 module.exports = node;

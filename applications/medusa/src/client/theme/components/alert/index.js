@@ -4,8 +4,10 @@ const parts = ['container', 'title', 'description', 'icon']
 
 const baseStyle = {
   container: {
-    px: 4,
-    py: 3
+    px: 3,
+    py: 3,
+    borderRadius: 5,
+    borderWidth: 1
   },
   title: {
     fontWeight: 'bold',
@@ -17,24 +19,37 @@ const baseStyle = {
   },
   icon: {
     flexShrink: 0,
-    marginEnd: 3,
+    mr: 3,
     w: 5,
-    h: 6
+    h: 5
   }
 }
 
 function getBg (props) {
   const { theme, colorScheme: c } = props
   const lightBg = getColor(theme, `${c}.100`, c)
-  const darkBg = transparentize(`${c}.200`, 0.16)(theme)
+  const darkBg = transparentize(`${c}.300`, 0.10)(theme)
+  return mode(lightBg, darkBg)(props)
+}
+
+function getBorder (props) {
+  const { theme, colorScheme: c } = props
+  const lightBg = getColor(theme, `${c}.100`, c)
+  const darkBg = transparentize(`${c}.300`, 0.5)(theme)
   return mode(lightBg, darkBg)(props)
 }
 
 function variantSubtle (props) {
   const { colorScheme: c } = props
   return {
-    container: { bg: getBg(props) },
-    icon: { color: mode(`${c}.500`, `${c}.200`)(props) }
+    container: {
+      bg: getBg(props),
+      borderColor: getBorder(props)
+    },
+    icon: { color: mode(`${c}.500`, `${c}.300`)(props) },
+    description: {
+      color: mode(`${c}.500`, `${c}.300`)(props)
+    }
   }
 }
 

@@ -122,6 +122,7 @@ _RUNTIME_DEPS = [
     "@npm//mime-types",
     "@npm//apollo-server",
     "@npm//date-fns",
+    "@npm//js-file-download",
 ]
 
 TEST_DEPS = [

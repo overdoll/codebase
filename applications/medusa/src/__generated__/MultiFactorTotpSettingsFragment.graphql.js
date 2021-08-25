@@ -8,17 +8,17 @@
 
 import type { ReaderFragment } from 'relay-runtime';
 import type { FragmentReference } from "relay-runtime";
-declare export opaque type MultiFactorTotpFragment$ref: FragmentReference;
-declare export opaque type MultiFactorTotpFragment$fragmentType: MultiFactorTotpFragment$ref;
-export type MultiFactorTotpFragment = {|
+declare export opaque type MultiFactorTotpSettingsFragment$ref: FragmentReference;
+declare export opaque type MultiFactorTotpSettingsFragment$fragmentType: MultiFactorTotpSettingsFragment$ref;
+export type MultiFactorTotpSettingsFragment = {|
   +multiFactorTotpConfigured: boolean,
-  +canDisableMultiFactor: boolean,
-  +$refType: MultiFactorTotpFragment$ref,
+  +recoveryCodesGenerated: boolean,
+  +$refType: MultiFactorTotpSettingsFragment$ref,
 |};
-export type MultiFactorTotpFragment$data = MultiFactorTotpFragment;
-export type MultiFactorTotpFragment$key = {
-  +$data?: MultiFactorTotpFragment$data,
-  +$fragmentRefs: MultiFactorTotpFragment$ref,
+export type MultiFactorTotpSettingsFragment$data = MultiFactorTotpSettingsFragment;
+export type MultiFactorTotpSettingsFragment$key = {
+  +$data?: MultiFactorTotpSettingsFragment$data,
+  +$fragmentRefs: MultiFactorTotpSettingsFragment$ref,
   ...
 };
 
@@ -27,7 +27,7 @@ const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "MultiFactorTotpFragment",
+  "name": "MultiFactorTotpSettingsFragment",
   "selections": [
     {
       "alias": null,
@@ -40,7 +40,7 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "canDisableMultiFactor",
+      "name": "recoveryCodesGenerated",
       "storageKey": null
     }
   ],
@@ -48,5 +48,5 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 // prettier-ignore
-(node: any).hash = '2a4ce9b0baaf4f0e7b1462a52045d303';
+(node: any).hash = '4e9c4bf0f59364ae3c7e64dfe199af50';
 module.exports = node;

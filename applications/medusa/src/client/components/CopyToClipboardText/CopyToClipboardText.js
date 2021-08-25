@@ -4,7 +4,8 @@
 
 import type { Node } from 'react'
 import { useState } from 'react'
-import { Button, useClipboard, useToast } from '@chakra-ui/react'
+import { useClipboard, useToast } from '@chakra-ui/react'
+import Button from '@//:modules/form/Button'
 import { useTranslation } from 'react-i18next'
 import Icon from '@//:modules/content/Icon/Icon'
 import InterfaceFileText
@@ -33,8 +34,7 @@ export default function CopyToClipboardText ({ text, children, ...rest }: Props)
       duration: 500,
       status: 'success',
       isClosable: true,
-      variant: 'solid',
-      position: 'bottom-left'
+      variant: 'solid'
     })
   }
 

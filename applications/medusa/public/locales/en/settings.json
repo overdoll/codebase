@@ -109,10 +109,23 @@
       "totp": {
         "title": "Authenticator App",
         "button": {
-          "set_up": "Set Up"
+          "set_up": "Set Up",
+          "restricted": "You cannot set up this authentication method until you generate a set of recovery codes"
         },
         "tags": {
-          "not_enabled": "Not Set Up"
+          "not_configured": "Not Set Up",
+          "configured": "Configured"
+        }
+      },
+      "recovery_codes": {
+        "title": "Recovery Codes",
+        "button": {
+          "set_up": "Generate",
+          "show": "Show"
+        },
+        "tags": {
+          "not_configured": "Not Generated",
+          "configured": "Generated"
         }
       }
     }

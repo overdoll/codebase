@@ -4,13 +4,13 @@
 import type { Node } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Center, Flex } from '@chakra-ui/react'
-import RootMultiFactor from './RootMultiFactor/RootMultiFactor'
+import RootMultiFactorSettings from './RootMultiFactorSettings/RootMultiFactorSettings'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
-import type { MultiFactorQuery } from '@//:artifacts/MultiFactorQuery.graphql'
+import type { MultiFactorSettingsQuery } from '@//:artifacts/MultiFactorSettingsQuery.graphql'
 
 type Props = {
   prepared: {
-    multiFactorQuery: PreloadedQueryInner<MultiFactorQuery>,
+    multiFactorQuery: PreloadedQueryInner<MultiFactorSettingsQuery>,
   }
 };
 
@@ -26,7 +26,7 @@ export default function Security (props: Props): Node {
           direction='column'
           mb={6}
         >
-          <RootMultiFactor query={props.prepared.multiFactorQuery} />
+          <RootMultiFactorSettings query={props.prepared.multiFactorQuery} />
         </Flex>
       </Center>
     </>

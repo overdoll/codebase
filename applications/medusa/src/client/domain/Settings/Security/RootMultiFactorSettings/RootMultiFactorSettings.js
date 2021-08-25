@@ -2,22 +2,22 @@
  * @flow
  */
 import type { PreloadedQueryInner } from 'react-relay/hooks'
-import type { MultiFactorQuery as MultiFactorQueryType } from '@//:artifacts/MultiFactorQuery.graphql'
-import MultiFactorQuery from '@//:artifacts/MultiFactorQuery.graphql'
+import type { MultiFactorSettingsQuery as MultiFactorSettingsQueryType } from '@//:artifacts/MultiFactorSettingsQuery.graphql'
+import MultiFactorSettingsQuery from '@//:artifacts/MultiFactorSettingsQuery.graphql'
 import { Divider, Heading } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
 import ErrorFallback from '../../../../../modules/content/ErrorFallback/ErrorFallback'
 import { Suspense } from 'react'
-import MultiFactor from './MultiFactor/MultiFactor'
+import MultiFactorSettings from './MultiFactorSettings/MultiFactorSettings'
 import { useQueryLoader } from 'react-relay/hooks'
 
 type Props = {
-  query: PreloadedQueryInner<MultiFactorQueryType>,
+  query: PreloadedQueryInner<MultiFactorSettingsQueryType>,
 }
 
-export default function RootMultiFactor (props: Props): Node {
+export default function RootMultiFactorSettings (props: Props): Node {
   const [queryRef, loadQuery] = useQueryLoader(
     MultiFactorQuery,
     props.query
@@ -35,7 +35,7 @@ export default function RootMultiFactor (props: Props): Node {
             <ErrorFallback error={error} reset={reset} refetch={loadQuery} />
           )}
         >
-          <MultiFactor query={queryRef} />
+          <MultiFactorSettings query={queryRef} />
         </ErrorBoundary>
       </Suspense>
     </>

@@ -11,6 +11,8 @@ import table from './table'
 import formerror from './form-error'
 import formlabel from './form-label'
 import Switch from './switch'
+import alert from './alert'
+import code from './code'
 
 export default {
   Menu: menu,
@@ -25,5 +27,7 @@ export default {
   Table: table,
   FormError: formerror,
   FormLabel: formlabel,
-  Switch: Switch
+  Switch: Switch,
+  Alert: alert,
+  Code: code
 }

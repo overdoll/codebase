@@ -298,7 +298,7 @@ const routes: Array<Route> = [
             module.hot
             ),
             prepare: params => {
-              const MultiFactorQuery = require('@//:artifacts/MultiFactorQuery.graphql')
+              const MultiFactorQuery = require('@//:artifacts/MultiFactorSettingsQuery.graphql')
 
               return {
                 multiFactorQuery: {
@@ -342,6 +342,59 @@ const routes: Array<Route> = [
                 }
               }
             }
+          }
+        ]
+      },
+      {
+        path: '/configure/multi_factor/totp',
+        component: JSResource('TotpSetup', () =>
+          import(
+            /* webpackChunkName: "TotpSetup" */ './domain/Configure/RootMultiFactorTotpSetup/RootMultiFactorTotpSetup'
+          ),
+        module.hot
+        ),
+        middleware: [
+          ({ environment, history }) => {
+            const ability = getAbilityFromUser(environment)
+
+            if (ability.can('manage', 'account')) {
+              return true
+            }
+            history.push('/join')
+            return false
+          }
+        ]
+      },
+      {
+        path: '/configure/multi_factor/recovery_codes',
+        component: JSResource('TotpSetup', () =>
+          import(
+            /* webpackChunkName: "TotpSetup" */ './domain/Configure/RootRecoveryCodesSetup/RootRecoveryCodesSetup'
+          ),
+        module.hot
+        ),
+        prepare: params => {
+          const RecoveryCodesQuery = require('@//:artifacts/RecoveryCodesSetupQuery.graphql')
+
+          return {
+            recoveryCodesQuery: {
+              query: RecoveryCodesQuery,
+              variables: {},
+              options: {
+                fetchPolicy: 'store-or-network'
+              }
+            }
+          }
+        },
+        middleware: [
+          ({ environment, history }) => {
+            const ability = getAbilityFromUser(environment)
+
+            if (ability.can('manage', 'account')) {
+              return true
+            }
+            history.push('/join')
+            return false
           }
         ]
       },

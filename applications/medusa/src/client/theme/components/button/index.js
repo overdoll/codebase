@@ -209,7 +209,7 @@ const sizes = {
     minW: 10,
     fontSize: 'md',
     px: 4,
-    borderRadius: 10
+    borderRadius: 7
   },
   sm: {
     h: 8,
