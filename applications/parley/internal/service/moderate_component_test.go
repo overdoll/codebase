@@ -3,6 +3,7 @@ package service_test
 import (
 	"context"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/parley/internal/ports/graphql/types"
@@ -14,8 +15,8 @@ type PostRejectionReasons struct {
 	PostRejectionReasons *types.PostRejectionReasonConnection `graphql:"postRejectionReasons()"`
 }
 
-// TestPendingPostRejectionReasons - get some rejection reasons
-func TestPendingPostRejectionReasons(t *testing.T) {
+// TestPostRejectionReasons - get some rejection reasons
+func TestPostRejectionReasons(t *testing.T) {
 	t.Parallel()
 
 	client := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
@@ -37,13 +38,13 @@ type AccountPostAuditLogs struct {
 				Edges []struct {
 					Node PostAuditLogModified
 				}
-			}
+			} `graphql:"moderatorPostAuditLogs(dateRange: $dateRange)"`
 		} `graphql:"... on Account"`
 	} `graphql:"_entities(representations: $representations)"`
 }
 
-// TestPendingPostAuditLogs - get some audit logs
-func TestPendingPostAuditLogs(t *testing.T) {
+// TestPostAuditLogs - get some audit logs
+func TestPostAuditLogs(t *testing.T) {
 	t.Parallel()
 
 	client := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ5IyRTV0X4J27F3m5wGD5mj"))
@@ -56,6 +57,10 @@ func TestPendingPostAuditLogs(t *testing.T) {
 				"__typename": "Account",
 				"id":         "QWNjb3VudDoxcTdNSjVJeVJUVjBYNEoyN0YzbTV3R0Q1bWo=",
 			},
+		},
+		"dateRange": types.PostAuditLogDateRange{
+			From: time.Now(),
+			To:   time.Now(),
 		},
 	})
 
@@ -74,33 +79,71 @@ func TestGetNextModerator(t *testing.T) {
 	require.Contains(t, []string{"1q7MJ3JkhcdcJJNqZezdfQt5pZ6", "1q7MJ5IyRTV0X4J27F3m5wGD5mj"}, item.Id)
 }
 
+type ApprovePost struct {
+	ApprovePost *struct {
+		PostAuditLog PostAuditLogModified
+	} `graphql:"approvePost(input: $input)"`
+}
+
 func TestModeratePost_approve(t *testing.T) {
 	t.Parallel()
 
 	client := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 
-	res := mModeratePost(t, client, nil, "some notes")
+	var approvePost ApprovePost
 
-	require.Equal(t, types.PostAuditLogActionApproved, res.ModeratePost.PostAuditLog.Action)
-	require.Equal(t, "some notes", res.ModeratePost.PostAuditLog.Notes)
+	err := client.Mutate(context.Background(), &approvePost, map[string]interface{}{
+		"input": types.ApprovePostInput{
+			PostID: "UG9zdDoxcTdNSXFxbmt6ZXczM3E0ZWxYdU4xUmkyN2Q=",
+		},
+	})
 
-	undo := mRevertModeratePost(t, client, res.ModeratePost.PostAuditLog.ID)
+	require.NoError(t, err)
+
+	require.Equal(t, types.PostAuditLogActionApproved, approvePost.ApprovePost.PostAuditLog.Action)
+	require.Equal(t, "some notes", approvePost.ApprovePost.PostAuditLog.Notes)
+
+	undo := revertModeratePost(t, client, approvePost.ApprovePost.PostAuditLog.ID)
 	require.Equal(t, true, undo.RevertPostAuditLog.PostAuditLog.Reverted)
+}
+
+type RemovePost struct {
+	RemovePost *struct {
+		PostAuditLog PostAuditLogModified
+	} `graphql:"removePost(input: $input)"`
+}
+
+func TestModeratePost_remove(t *testing.T) {
+	t.Parallel()
+
+	client := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+
+	var removePost RemovePost
+
+	err := client.Mutate(context.Background(), &removePost, map[string]interface{}{
+		"input": types.RemovePostInput{
+			PostID: "UG9zdDoxcTdNSXFxbmt6ZXczM3E0ZWxYdU4xUmkyN2Q=",
+		},
+	})
+
+	require.NoError(t, err)
+
+	require.Equal(t, types.PostAuditLogActionRemoved, removePost.RemovePost.PostAuditLog.Action)
 }
 
 func TestModeratePost_reject(t *testing.T) {
 	t.Parallel()
 
 	client := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
-	val := "UG9zdFJlamVjdGlvblJlYXNvbjoxcTdNSjVJeVJUVjBYNEoyN0YzbTV3R0Q1bWo="
 
-	res := mModeratePost(t, client, &val, "some additional notes")
+	notes := "some additional notes"
+	res := rejectPost(t, client, "UG9zdFJlamVjdGlvblJlYXNvbjoxcTdNSjVJeVJUVjBYNEoyN0YzbTV3R0Q1bWo=", &notes)
 
-	require.Equal(t, types.PostAuditLogActionDenied, res.ModeratePost.PostAuditLog.Action)
-	require.Equal(t, "some additional notes", res.ModeratePost.PostAuditLog.Notes)
-	require.Equal(t, "TranslateReason with no infraction", res.ModeratePost.PostAuditLog.Reason)
+	require.Equal(t, types.PostAuditLogActionDenied, res.RejectPost.PostAuditLog.Action)
+	require.Equal(t, "some additional notes", res.RejectPost.PostAuditLog.Notes)
+	require.Equal(t, "TranslateReason with no infraction", res.RejectPost.PostAuditLog.PostRejectionReason.Reason)
 
-	undo := mRevertModeratePost(t, client, res.ModeratePost.PostAuditLog.ID)
+	undo := revertModeratePost(t, client, res.RejectPost.PostAuditLog.ID)
 
 	require.Equal(t, true, undo.RevertPostAuditLog.PostAuditLog.Reverted)
 }
@@ -118,14 +161,13 @@ func TestModeratePost_reject_infraction_and_undo(t *testing.T) {
 	t.Parallel()
 
 	client := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
-	val := "UG9zdFJlamVjdGlvblJlYXNvbjoxcTdNSjNKa2hjZGNKSk5xWmV6ZGZRdDVwWjY="
 
-	res := mModeratePost(t, client, &val, "some additional notes and stuff")
+	res := rejectPost(t, client, "UG9zdFJlamVjdGlvblJlYXNvbjoxcTdNSjNKa2hjZGNKSk5xWmV6ZGZRdDVwWjY=", nil)
 	infractionReason := "TranslateReason with infraction"
 
-	require.Equal(t, types.PostAuditLogActionDenied, res.ModeratePost.PostAuditLog.Action)
-	require.Equal(t, "some additional notes and stuff", res.ModeratePost.PostAuditLog.Notes)
-	require.Equal(t, infractionReason, res.ModeratePost.PostAuditLog.Reason)
+	require.Equal(t, types.PostAuditLogActionDenied, res.RejectPost.PostAuditLog.Action)
+	require.Equal(t, "some additional notes and stuff", res.RejectPost.PostAuditLog.Notes)
+	require.Equal(t, infractionReason, res.RejectPost.PostAuditLog.PostRejectionReason.Reason)
 
 	client = getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ5IyRTV0X4J27F3m5wGD5mj"))
 
@@ -147,7 +189,7 @@ func TestModeratePost_reject_infraction_and_undo(t *testing.T) {
 
 	// look for the infraction that we created
 	for _, infra := range infractionHistory.Entities[0].Account.Infractions.Edges {
-		if infra.Node.Reason == infractionReason {
+		if infra.Node.PostRejectionReason.Reason == infractionReason {
 			foundInfraction = true
 		}
 	}
@@ -156,9 +198,8 @@ func TestModeratePost_reject_infraction_and_undo(t *testing.T) {
 
 	client = getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 
-	undo := mRevertModeratePost(t, client, res.ModeratePost.PostAuditLog.ID)
+	undo := revertModeratePost(t, client, res.RejectPost.PostAuditLog.ID)
 
 	// infraction should have been undone
-	require.Equal(t, "", undo.RevertPostAuditLog.PostAuditLog.InfractionID)
 	require.Equal(t, true, undo.RevertPostAuditLog.PostAuditLog.Reverted)
 }

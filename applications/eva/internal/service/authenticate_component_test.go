@@ -2,7 +2,6 @@ package service_test
 
 import (
 	"context"
-	"fmt"
 	"testing"
 	"time"
 
@@ -44,8 +43,6 @@ func TestAccountAuthenticate_existing(t *testing.T) {
 
 	redeemCookie, client, pass := authenticateAndVerifyToken(t, "i2fhz.poisonminion@inbox.testmail.app")
 
-	fmt.Println(redeemCookie.VerifyAuthenticationToken.AuthenticationToken.AccountStatus)
-
 	// the VerifyAuthenticationToken function will also log you in, if you redeem a cookie that's for a registered user
 	// so we check for that here
 	require.Equal(t, true, redeemCookie.VerifyAuthenticationToken.AuthenticationToken.AccountStatus.Registered)
@@ -63,11 +60,6 @@ func TestAccountAuthenticate_existing(t *testing.T) {
 	require.Equal(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6", modified.AccountID())
 }
 
-type ViewerAccount struct {
-	Viewer struct {
-		Username graphql.String
-	} `graphql:"viewer()"`
-}
 
 // TestAccountAuthenticate_from_another_session - we login, but redeem our cookie from another "session"
 func TestAccountAuthenticate_from_another_session(t *testing.T) {

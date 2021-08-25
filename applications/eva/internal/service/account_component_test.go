@@ -10,14 +10,8 @@ import (
 	"overdoll/libraries/passport"
 )
 
-type ViewerAcc struct {
-	Viewer struct {
-		Username graphql.String
-	} `graphql:"viewer()"`
-}
-
-func viewerAccount(t *testing.T, client *graphql.Client) ViewerAcc {
-	var settings ViewerAcc
+func viewerAccount(t *testing.T, client *graphql.Client) ViewerAccount {
+	var settings ViewerAccount
 	err := client.Query(context.Background(), &settings, nil)
 	require.NoError(t, err)
 	return settings

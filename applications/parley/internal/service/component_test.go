@@ -28,34 +28,27 @@ const ParleyGrpcAddr = "localhost:8889"
 const ParleyGrpcClientAddr = "localhost:8889"
 
 type PostAuditLogModified struct {
-	Reason       string
-	Notes        string
-	Reverted     bool
-	InfractionID string
-	ID           string
-	Action       types.PostAuditLogAction
+	PostRejectionReason types.PostRejectionReason
+	Notes               string
+	Reverted            bool
+	ID                  string
+	Action              types.PostAuditLogAction
 }
 
-type ModeratePost struct {
-	ModeratePost *struct {
+type RejectPost struct {
+	RejectPost *struct {
 		PostAuditLog PostAuditLogModified
-	} `graphql:"moderatePost(input: $input)"`
+	} `graphql:"rejectPost(input: $input)"`
 }
 
-func mModeratePost(t *testing.T, client *graphql.Client, rejectionReason *string, notes string) ModeratePost {
-	var modPost ModeratePost
+func rejectPost(t *testing.T, client *graphql.Client, rejectionReason string, notes *string) RejectPost {
 
-	var rejection *relay.ID
-
-	if rejectionReason != nil {
-		id := relay.ID(*rejectionReason)
-		rejection = &id
-	}
+	var modPost RejectPost
 
 	err := client.Mutate(context.Background(), &modPost, map[string]interface{}{
-		"input": types.ModeratePostInput{
+		"input": types.RejectPostInput{
 			PostID:                "UG9zdDoxcTdNSXFxbmt6ZXczM3E0ZWxYdU4xUmkyN2Q=",
-			PostRejectionReasonID: rejection,
+			PostRejectionReasonID: relay.ID(rejectionReason),
 			Notes:                 notes,
 		},
 	})
@@ -71,7 +64,7 @@ type RevertPostAuditLog struct {
 	} `graphql:"revertPostAuditLog(input: $input)"`
 }
 
-func mRevertModeratePost(t *testing.T, client *graphql.Client, id string) RevertPostAuditLog {
+func revertModeratePost(t *testing.T, client *graphql.Client, id string) RevertPostAuditLog {
 	var search RevertPostAuditLog
 
 	err := client.Mutate(context.Background(), &search, map[string]interface{}{
