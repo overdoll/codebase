@@ -76,8 +76,8 @@ CREATE TABLE IF NOT EXISTS audience
 
 CREATE TABLE IF NOT EXISTS audience_slugs
 (
-    slug text,
-    id   text,
+    slug        text,
+    audience_id text,
     primary key ( slug )
 );
 
@@ -92,6 +92,7 @@ CREATE TABLE IF NOT EXISTS posts
     category_ids              list<text>,
     character_ids             list<text>,
     content                   list<text>,
+    created_at                timestamp,
     posted_at                 timestamp,
     moderator_reassignment_at timestamp,
     primary key ( id )

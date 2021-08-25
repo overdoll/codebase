@@ -175,8 +175,9 @@ func (r ReportCassandraRepository) SearchPostReports(ctx context.Context, reques
 		return nil, err
 	}
 
-	info := &postReport{
-		PostId: filters.PostId(),
+	info := map[string]interface{}{
+		"bucket":  bucket.MakeBucketsFromTimeRange(filters.From(), filters.To()),
+		"post_id": filters.PostId(),
 	}
 
 	builder := postReportByPostTable.
@@ -191,10 +192,7 @@ func (r ReportCassandraRepository) SearchPostReports(ctx context.Context, reques
 
 	if err := builder.
 		Query(r.session).
-		BindStruct(info).
-		BindMap(map[string]interface{}{
-			"bucket": bucket.MakeBucketsFromTimeRange(filters.From(), filters.To()),
-		}).
+		BindMap(info).
 		Select(&results); err != nil {
 		return nil, fmt.Errorf("failed to search post reports: %v", err)
 	}

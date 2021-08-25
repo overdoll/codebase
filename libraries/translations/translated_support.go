@@ -10,8 +10,7 @@ type TranslatedSupport struct {
 }
 
 func (p *TranslatedSupport) Locale() string {
-	base, _ := p.tag.Base()
-	return base.String()
+	return p.tag.String()
 }
 
 func (p *TranslatedSupport) Data() string {

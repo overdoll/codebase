@@ -3,6 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "command",
     srcs = [
+        "create_post.go",
         "discard_post.go",
         "index_all_audience.go",
         "index_all_brands.go",
@@ -10,7 +11,6 @@ go_library(
         "index_all_characters.go",
         "index_all_post.go",
         "index_all_series.go",
-        "new_post.go",
         "publish_post.go",
         "reject_post.go",
         "remove_post.go",

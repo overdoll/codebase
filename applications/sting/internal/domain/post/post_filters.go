@@ -96,6 +96,10 @@ func CanViewWithFilters(requester *principal.Principal, filter *PostFilters) err
 			return requester.BelongsToAccount(*filter.ContributorId())
 		}
 
+		if filter.ModeratorId() != nil {
+			return requester.BelongsToAccount(*filter.ModeratorId())
+		}
+
 		if !requester.IsStaff() {
 			return principal.ErrNotAuthorized
 		}

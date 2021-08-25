@@ -229,45 +229,47 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 
 	query := cursor.BuildElasticsearch(builder, "created_at")
 
+	var filterQueries []elastic.Query
+
 	if filter.State() != nil {
-		query.Filter(elastic.NewTermQuery("state", *filter.State()))
+		filterQueries = append(filterQueries, elastic.NewTermQuery("state", *filter.State()))
 	}
 
 	if filter.ModeratorId() != nil {
-		query.Filter(elastic.NewTermQuery("moderator_id", *filter.ModeratorId()))
+		filterQueries = append(filterQueries, elastic.NewTermQuery("moderator_id", *filter.ModeratorId()))
 	}
 
 	if filter.ContributorId() != nil {
-		query.Filter(elastic.NewTermQuery("contributor_id", *filter.ContributorId()))
+		filterQueries = append(filterQueries, elastic.NewTermQuery("contributor_id", *filter.ContributorId()))
 	}
 
 	if len(filter.CategorySlugs()) > 0 {
 		for _, id := range filter.CategorySlugs() {
-			query.Filter(elastic.NewTermQuery("categories.slug", id))
+			filterQueries = append(filterQueries, elastic.NewNestedQuery("categories", elastic.NewTermQuery("categories.slug", id)))
 		}
 	}
 
 	if len(filter.CharacterSlugs()) > 0 {
 		for _, id := range filter.CharacterSlugs() {
-			query.Filter(elastic.NewTermQuery("characters.slug", id))
+			filterQueries = append(filterQueries, elastic.NewNestedQuery("characters", elastic.NewTermQuery("characters.slug", id)))
 		}
 	}
 
 	if len(filter.BrandSlugs()) > 0 {
 		for _, id := range filter.BrandSlugs() {
-			query.Filter(elastic.NewTermQuery("brand.slug", id))
+			filterQueries = append(filterQueries, elastic.NewNestedQuery("brand", elastic.NewTermQuery("brand.slug", id)))
 		}
 	}
 
 	if len(filter.AudienceSlugs()) > 0 {
 		for _, id := range filter.AudienceSlugs() {
-			query.Filter(elastic.NewTermQuery("audience.slug", id))
+			filterQueries = append(filterQueries, elastic.NewNestedQuery("audience", elastic.NewTermQuery("audience.slug", id)))
 		}
 	}
 
 	if len(filter.SeriesSlugs()) > 0 {
 		for _, id := range filter.SeriesSlugs() {
-			query.Filter(elastic.NewTermQuery("characters.series.slug", id))
+			filterQueries = append(filterQueries, elastic.NewNestedQuery("characters.series", elastic.NewTermQuery("characters.series.slug", id)))
 		}
 	}
 
@@ -276,6 +278,10 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 		builder.Sort(filter.OrderBy(), false)
 	}
 
+	if filterQueries != nil {
+		query.Filter(filterQueries...)
+	}
+	
 	builder.Query(query)
 
 	response, err := builder.Pretty(true).Do(ctx)

@@ -36,7 +36,7 @@ const ESIndex = `
 		},
 		"ko": {
 			"type": "text",
-			"analyzer": "nori"
+			"analyzer": "default"
 		},
 		"de": {
 			"type": "text",
@@ -48,15 +48,15 @@ const ESIndex = `
 		},
 		"ja": {
 			"type": "text",
-			"analyzer": "kuromoji"
+			"analyzer": "default"
 		},
 		"zh-Hans": {
 			"type": "text",
-			"analyzer": "smartcn"
+			"analyzer": "default"
 		},
 		"zh": {
 			"type": "text",
-			"analyzer": "smartcn"
+			"analyzer": "default"
 		}
 	}
 },

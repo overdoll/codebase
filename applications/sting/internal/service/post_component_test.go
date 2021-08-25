@@ -17,25 +17,6 @@ import (
 	"overdoll/libraries/passport"
 )
 
-type CharacterModified struct {
-	Name   string
-	Series struct {
-		Title string
-	}
-}
-
-type CategoryModified struct {
-	Title string
-}
-
-type AudienceModified struct {
-	Title string
-}
-
-type BrandModified struct {
-	Name string
-}
-
 type PostModified struct {
 	ID         string
 	Reference  string
