@@ -82,7 +82,7 @@ func TestAccountAuthenticate_from_another_session(t *testing.T) {
 
 	// after verifying the token, we need  to grant account access
 	grant := grantAccountAccessWithAuthenticationToken(t, client)
-	require.Equal(t, graphql.String("poisonminion"), grant.GrantAccountAccessWithAuthenticationToken.Account.Username)
+	require.Equal(t, "poisonminion", grant.GrantAccountAccessWithAuthenticationToken.Account.Username)
 
 	var settings ViewerAccount
 	err := client.Query(context.Background(), &settings, nil)
@@ -90,7 +90,7 @@ func TestAccountAuthenticate_from_another_session(t *testing.T) {
 
 	// since our user's cookie was redeemed from another session, when the user runs this query
 	// the next time, it should just log them in
-	require.Equal(t, graphql.String("poisonminion"), settings.Viewer.Username)
+	require.Equal(t, "poisonminion", settings.Viewer.Username)
 }
 
 type GenerateAccountMultiFactorRecoveryCodes struct {
@@ -112,7 +112,7 @@ type DisableAccountMultiFactor struct {
 type GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode struct {
 	GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode struct {
 		Account *struct {
-			Username graphql.String
+			Username string
 		}
 	} `graphql:"grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode(input: $input)"`
 }
@@ -120,7 +120,7 @@ type GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode struct 
 type GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotp struct {
 	GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotp struct {
 		Account *struct {
-			Username graphql.String
+			Username string
 		}
 	} `graphql:"grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp(input: $input)"`
 }
@@ -292,7 +292,7 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 type CreateAccountWithAuthenticationToken struct {
 	CreateAccountWithAuthenticationToken struct {
 		Account *struct {
-			Username graphql.String
+			Username string
 		}
 	} `graphql:"createAccountWithAuthenticationToken(input: $input)"`
 }

@@ -38,7 +38,7 @@ func TestGetAccountAuthentication_empty(t *testing.T) {
 	query := viewerAccount(t, client)
 
 	// at this point there is no account (since no passport is passed in) so expect that it doesnt send anything
-	require.Empty(t, query.Viewer.Username)
+	require.Nil(t, query.Viewer)
 
 	queryToken := viewAuthenticationToken(t, client)
 
@@ -57,7 +57,7 @@ func TestGetAccountAuthentication_user(t *testing.T) {
 
 	query := viewerAccount(t, client)
 
-	require.Equal(t, graphql.String("poisonminion"), query.Viewer.Username)
+	require.Equal(t, "poisonminion", query.Viewer.Username)
 
 	queryToken := viewAuthenticationToken(t, client)
 

@@ -19,7 +19,7 @@ type Languages struct {
 }
 
 type UpdateLanguage struct {
-	UpdateLanguage types.Language `graphql:"updateLanguage(input: $input)"`
+	UpdateLanguage types.UpdateLanguagePayload `graphql:"updateLanguage(input: $input)"`
 }
 
 func getLanguage(t *testing.T, client *graphql.Client) types.Language {
@@ -61,5 +61,5 @@ func TestGetRandomLanguageAndSet(t *testing.T) {
 
 	lang = getLanguage(t, client)
 
-	require.Equal(t, "fr", lang.Locale)
+	require.Equal(t, pickedLanguage.Locale, lang.Locale)
 }

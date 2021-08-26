@@ -35,7 +35,7 @@ type TestUser struct {
 }
 
 type AccountModified struct {
-	Username    graphql.String
+	Username    string
 	IsStaff     bool
 	IsModerator bool
 }
@@ -85,7 +85,7 @@ func verifyAuthenticationToken(t *testing.T, client *graphql.Client, cookie stri
 type GrantAccountAccessWithAuthenticationToken struct {
 	GrantAccountAccessWithAuthenticationToken *struct {
 		Account struct {
-			Username graphql.String
+			Username string
 		}
 	} `graphql:"grantAccountAccessWithAuthenticationToken()"`
 }

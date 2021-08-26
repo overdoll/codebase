@@ -24,7 +24,7 @@ type RevokeAccountModeratorRole struct {
 func TestAccountRole_assign_and_revoke_moderator(t *testing.T) {
 	t.Parallel()
 
-	client, _, _ := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	client, _, _ := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ5IyRTV0X4J27F3m5wGD5mj"))
 
 	var assignAccountModeratorRole AssignAccountModeratorRole
 
@@ -66,7 +66,7 @@ type RevokeAccountStaffRole struct {
 func TestAccountRole_assign_and_revoke_staff(t *testing.T) {
 	t.Parallel()
 
-	client, _, _ := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	client, _, _ := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ5IyRTV0X4J27F3m5wGD5mj"))
 
 	var assignAccountStaffRole AssignAccountStaffRole
 

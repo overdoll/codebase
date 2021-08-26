@@ -106,7 +106,7 @@ func (r PostsIndexElasticSearchRepository) SearchAudience(ctx context.Context, r
 	if filter.Search() != nil {
 		query.Must(
 			elastic.
-				NewMultiMatchQuery(*filter.Search(), translations.GetESSearchFields("name")...).
+				NewMultiMatchQuery(*filter.Search(), translations.GetESSearchFields("title")...).
 				Type("best_fields"),
 		)
 	}

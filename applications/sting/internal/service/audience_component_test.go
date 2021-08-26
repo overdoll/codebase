@@ -33,12 +33,12 @@ func TestSearchAudiences(t *testing.T) {
 	var searchAudiences SearchAudience
 
 	err := client.Query(context.Background(), &searchAudiences, map[string]interface{}{
-		"title": graphql.String("Standard Audience"),
+		"title": graphql.String("Non-"),
 	})
 
 	require.NoError(t, err)
 	require.Len(t, searchAudiences.Audiences.Edges, 1)
-	require.Equal(t, "Standard Audience", searchAudiences.Audiences.Edges[0].Node.Title)
+	require.Equal(t, "Non-Standard Audience", searchAudiences.Audiences.Edges[0].Node.Title)
 }
 
 func TestGetAudience(t *testing.T) {

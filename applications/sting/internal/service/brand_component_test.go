@@ -37,7 +37,7 @@ func TestSearchBrand(t *testing.T) {
 	var searchSeries SearchBrands
 
 	err := client.Query(context.Background(), &searchSeries, map[string]interface{}{
-		"name": graphql.String("Non-Default Brand"),
+		"name": graphql.String("Non-"),
 	})
 
 	require.NoError(t, err)
