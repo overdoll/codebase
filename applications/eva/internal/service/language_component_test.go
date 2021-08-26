@@ -48,7 +48,8 @@ func TestGetRandomLanguageAndSet(t *testing.T) {
 	require.NoError(t, err)
 
 	// pick a random language and set it as our current one
-	randomIndex := rand.Intn(len(languages.Languages))
+	// add "1" so we skip the first language (default)
+	randomIndex := rand.Intn(len(languages.Languages)-1) + 1
 	pickedLanguage := languages.Languages[randomIndex]
 
 	var updateLanguage UpdateLanguage

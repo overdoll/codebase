@@ -98,7 +98,7 @@ func marshalPostAuditLogToDatabase(auditLog *infraction.PostAuditLog) (*postAudi
 	var userInfractionId *string
 	var reason *string
 
-	if auditLog.IsDeniedWithInfraction() {
+	if auditLog.IsDeniedWithInfraction() && auditLog.UserInfraction() != nil {
 		id := auditLog.UserInfraction().ID()
 		userInfractionId = &id
 	}

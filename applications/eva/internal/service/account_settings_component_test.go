@@ -99,6 +99,41 @@ func viewerAccountEmailUsernameSettings(t *testing.T, client *graphql.Client) Vi
 	return settings
 }
 
+func addAccountEmail(t *testing.T, client *graphql.Client, targetEmail string) AddAccountEmail {
+	var addAccountEmail AddAccountEmail
+
+	// add an email to our account
+	err := client.Mutate(context.Background(), &addAccountEmail, map[string]interface{}{
+		"input": types.AddAccountEmailInput{Email: targetEmail},
+	})
+
+	require.NoError(t, err)
+	require.NotNil(t, addAccountEmail.AddAccountEmail.AccountEmail)
+	require.Equal(t, addAccountEmail.AddAccountEmail.AccountEmail.Email, targetEmail)
+	require.Equal(t, addAccountEmail.AddAccountEmail.AccountEmail.Status, types.AccountEmailStatusUnconfirmed)
+
+	return addAccountEmail
+}
+
+func confirmAccountEmail(t *testing.T, client *graphql.Client, email string) ConfirmAccountEmail {
+	// get confirmation key (this would be found in the email, but here we query our redis DB directly)
+	confirmationKey := getEmailConfirmation(t, email)
+
+	require.NotEmpty(t, confirmationKey)
+
+	var confirmAccountEmail ConfirmAccountEmail
+
+	// confirm the account's new email
+	err := client.Mutate(context.Background(), &confirmAccountEmail, map[string]interface{}{
+		"input": types.ConfirmAccountEmailInput{ID: confirmationKey},
+	})
+
+	require.NoError(t, err)
+	require.NotNil(t, confirmAccountEmail.ConfirmAccountEmail.AccountEmail)
+
+	return confirmAccountEmail
+}
+
 // Go through a full flow of adding a new email to an account, confirming the email and making it the primary email
 func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 	t.Parallel()
@@ -116,31 +151,9 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 
 	targetEmail := strings.ToLower(fake.Email)
 
-	var addAccountEmail AddAccountEmail
+	addAccountEmail(t, client, targetEmail)
 
-	// add an email to our account
-	err = client.Mutate(context.Background(), &addAccountEmail, map[string]interface{}{
-		"input": types.AddAccountEmailInput{Email: targetEmail},
-	})
-
-	require.NoError(t, err)
-	require.NotNil(t, addAccountEmail.AddAccountEmail.AccountEmail)
-	require.Equal(t, targetEmail, addAccountEmail.AddAccountEmail.AccountEmail.Email)
-
-	// get confirmation key (this would be found in the email, but here we query our redis DB directly)
-	confirmationKey := getEmailConfirmation(t, targetEmail)
-
-	require.NotEmpty(t, confirmationKey)
-
-	var confirmAccountEmail ConfirmAccountEmail
-
-	// confirm the account's new email
-	err = client.Mutate(context.Background(), &confirmAccountEmail, map[string]interface{}{
-		"input": types.ConfirmAccountEmailInput{ID: confirmationKey},
-	})
-
-	require.NoError(t, err)
-	require.NotNil(t, confirmAccountEmail.ConfirmAccountEmail.AccountEmail)
+	confirmAccountEmail := confirmAccountEmail(t, client, targetEmail)
 
 	settings := viewerAccountEmailUsernameSettings(t, client)
 
@@ -199,32 +212,9 @@ func TestAccountEmail_create_new_confirm_and_remove(t *testing.T) {
 
 	targetEmail := strings.ToLower(fake.Email)
 
-	var addAccountEmail AddAccountEmail
+	addAccountEmail := addAccountEmail(t, client, targetEmail)
 
-	// add an email to our account
-	err = client.Mutate(context.Background(), &addAccountEmail, map[string]interface{}{
-		"input": types.AddAccountEmailInput{Email: targetEmail},
-	})
-
-	require.NoError(t, err)
-	require.NotNil(t, addAccountEmail.AddAccountEmail.AccountEmail)
-	require.Equal(t, addAccountEmail.AddAccountEmail.AccountEmail.Email, targetEmail)
-	require.Equal(t, addAccountEmail.AddAccountEmail.AccountEmail.Status, types.AccountEmailStatusUnconfirmed)
-
-	// get confirmation key (this would be found in the email, but here we query our redis DB directly)
-	confirmationKey := getEmailConfirmation(t, targetEmail)
-
-	require.NotEmpty(t, confirmationKey)
-
-	var confirmAccountEmail ConfirmAccountEmail
-
-	// confirm the account's new email
-	err = client.Mutate(context.Background(), &confirmAccountEmail, map[string]interface{}{
-		"input": types.ConfirmAccountEmailInput{ID: confirmationKey},
-	})
-
-	require.NoError(t, err)
-	require.NotNil(t, confirmAccountEmail.ConfirmAccountEmail.AccountEmail)
+	confirmAccountEmail(t, client, targetEmail)
 
 	var removeAccountEmail DeleteAccountEmail
 

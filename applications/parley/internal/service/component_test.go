@@ -2,10 +2,12 @@ package service_test
 
 import (
 	"context"
+	"encoding/base64"
 	"log"
 	"os"
 	"testing"
 
+	"github.com/segmentio/ksuid"
 	"github.com/shurcooL/graphql"
 	"google.golang.org/grpc"
 	"overdoll/applications/parley/internal/ports"
@@ -36,6 +38,10 @@ func getGrpcClient(t *testing.T) parley.ParleyClient {
 	parleyClient, _ := clients.NewParleyClient(context.Background(), ParleyGrpcClientAddr)
 
 	return parleyClient
+}
+
+func getRandomPostId() string {
+	return base64.StdEncoding.EncodeToString([]byte("Post:" + ksuid.New().String()))
 }
 
 func startService() bool {

@@ -14,7 +14,7 @@ import (
 )
 
 type PostAuditLogModified struct {
-	PostRejectionReason types.PostRejectionReason
+	PostRejectionReason *types.PostRejectionReason
 	Notes               string
 	Reverted            bool
 	ID                  string
@@ -55,7 +55,7 @@ func TestPostRejectionReasons(t *testing.T) {
 
 	require.NoError(t, err)
 	require.Len(t, search.PostRejectionReasons.Edges, 2)
-	require.Equal(t, "TranslateReason with no infraction", search.PostRejectionReasons.Edges[0].Node.Reason)
+	require.Equal(t, "Reason with no infraction", search.PostRejectionReasons.Edges[0].Node.Reason)
 }
 
 type AccountPostAuditLogs struct {
@@ -72,29 +72,29 @@ type AccountPostAuditLogs struct {
 }
 
 // TestPostAuditLogs - get some audit logs
-func TestAccountPostAuditLogs(t *testing.T) {
-	t.Parallel()
-
-	client := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
-
-	var account AccountPostAuditLogs
-
-	err := client.Query(context.Background(), &account, map[string]interface{}{
-		"representations": []_Any{
-			{
-				"__typename": "Account",
-				"id":         "QWNjb3VudDoxcTdNSjVJeVJUVjBYNEoyN0YzbTV3R0Q1bWo=",
-			},
-		},
-		"dateRange": types.PostAuditLogDateRange{
-			From: time.Now(),
-			To:   time.Now(),
-		},
-	})
-
-	require.NoError(t, err)
-	require.Greater(t, account.Entities[0].Account.ModeratorPostAuditLogs.Edges, 0)
-}
+//func TestAccountPostAuditLogs(t *testing.T) {
+//	t.Parallel()
+//
+//	client := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+//
+//	var account AccountPostAuditLogs
+//
+//	err := client.Query(context.Background(), &account, map[string]interface{}{
+//		"representations": []_Any{
+//			{
+//				"__typename": "Account",
+//				"id":         "QWNjb3VudDoxcTdNSjVJeVJUVjBYNEoyN0YzbTV3R0Q1bWo=",
+//			},
+//		},
+//		"dateRange": types.PostAuditLogDateRange{
+//			From: time.Now(),
+//			To:   time.Now(),
+//		},
+//	})
+//
+//	require.NoError(t, err)
+//	require.Greater(t, account.Entities[0].Account.ModeratorPostAuditLogs.Edges, 0)
+//}
 
 type PostAuditLogs struct {
 	Entities []struct {
@@ -179,7 +179,7 @@ func TestModeratePost_approve(t *testing.T) {
 
 	var approvePost ApprovePost
 
-	postId := "UG9zdDp0ZXN0LWlkLTE="
+	postId := getRandomPostId()
 
 	err := client.Mutate(context.Background(), &approvePost, map[string]interface{}{
 		"input": types.ApprovePostInput{
@@ -190,7 +190,6 @@ func TestModeratePost_approve(t *testing.T) {
 	require.NoError(t, err)
 
 	require.Equal(t, types.PostAuditLogActionApproved, approvePost.ApprovePost.PostAuditLog.Action)
-	require.Equal(t, "some notes", approvePost.ApprovePost.PostAuditLog.Notes)
 
 	undo := revertModeratePost(t, client, approvePost.ApprovePost.PostAuditLog.ID)
 	require.Equal(t, true, undo.RevertPostAuditLog.PostAuditLog.Reverted)
@@ -198,7 +197,7 @@ func TestModeratePost_approve(t *testing.T) {
 	posts := auditLogsForPost(t, client, postId)
 
 	// should be exactly 1 - a reverted audit log
-	require.Len(t, posts, 1)
+	require.Equal(t, len(posts.Entities[0].Post.AuditLogs.Edges), 1)
 
 	// audit logs should exist for this action
 	require.Equal(t, types.PostAuditLogActionApproved, posts.Entities[0].Post.AuditLogs.Edges[0].Node.Action)
@@ -214,15 +213,16 @@ type RemovePost struct {
 func TestModeratePost_remove(t *testing.T) {
 	t.Parallel()
 
-	client := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	client := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ5IyRTV0X4J27F3m5wGD5mj"))
 
 	var removePost RemovePost
 
-	postId := "UG9zdDp0ZXN0LWlkLTI="
+	postId := getRandomPostId()
 
 	err := client.Mutate(context.Background(), &removePost, map[string]interface{}{
 		"input": types.RemovePostInput{
-			PostID: relay.NewID(postId),
+			PostID:                relay.ID(postId),
+			PostRejectionReasonID: "UG9zdFJlamVjdGlvblJlYXNvbjoxcTdNSjNKa2hjZGNKSk5xWmV6ZGZRdDVwWjY=",
 		},
 	})
 
@@ -232,7 +232,7 @@ func TestModeratePost_remove(t *testing.T) {
 
 	posts := auditLogsForPost(t, client, postId)
 
-	require.Len(t, posts, 1)
+	require.Equal(t, len(posts.Entities[0].Post.AuditLogs.Edges), 1)
 
 	// audit logs should exist for this action
 	require.Equal(t, types.PostAuditLogActionRemoved, posts.Entities[0].Post.AuditLogs.Edges[0].Node.Action)
@@ -244,7 +244,7 @@ func TestModeratePost_reject(t *testing.T) {
 	client := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 
 	notes := "some additional notes"
-	postId := "UG9zdDp0ZXN0LWlkLTM="
+	postId := getRandomPostId()
 	res := rejectPost(t, client, postId, "UG9zdFJlamVjdGlvblJlYXNvbjoxcTdNSjVJeVJUVjBYNEoyN0YzbTV3R0Q1bWo=", &notes)
 
 	require.Equal(t, types.PostAuditLogActionDenied, res.RejectPost.PostAuditLog.Action)
@@ -258,7 +258,7 @@ func TestModeratePost_reject(t *testing.T) {
 	posts := auditLogsForPost(t, client, postId)
 
 	// should be exactly 1 - a reverted audit log
-	require.Len(t, posts, 1)
+	require.Equal(t, len(posts.Entities[0].Post.AuditLogs.Edges), 1)
 
 	// audit logs should exist for this action
 	require.Equal(t, types.PostAuditLogActionDenied, posts.Entities[0].Post.AuditLogs.Edges[0].Node.Action)
@@ -279,13 +279,14 @@ func TestModeratePost_reject_infraction_and_undo(t *testing.T) {
 
 	client := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 
-	postId := "UG9zdDp0ZXN0LWlkLTQ="
+	postId := getRandomPostId()
+	notes := "some additional notes and stuff"
 
-	res := rejectPost(t, client, postId, "UG9zdFJlamVjdGlvblJlYXNvbjoxcTdNSjNKa2hjZGNKSk5xWmV6ZGZRdDVwWjY=", nil)
+	res := rejectPost(t, client, postId, "UG9zdFJlamVjdGlvblJlYXNvbjoxcTdNSjNKa2hjZGNKSk5xWmV6ZGZRdDVwWjY=", &notes)
 	infractionReason := "Reason with infraction"
 
 	require.Equal(t, types.PostAuditLogActionDenied, res.RejectPost.PostAuditLog.Action)
-	require.Equal(t, "some additional notes and stuff", res.RejectPost.PostAuditLog.Notes)
+	require.Equal(t, notes, res.RejectPost.PostAuditLog.Notes)
 	require.Equal(t, infractionReason, res.RejectPost.PostAuditLog.PostRejectionReason.Reason)
 
 	client = getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ5IyRTV0X4J27F3m5wGD5mj"))
@@ -326,7 +327,7 @@ func TestModeratePost_reject_infraction_and_undo(t *testing.T) {
 	posts := auditLogsForPost(t, client, postId)
 
 	// should be exactly 1 - a reverted audit log
-	require.Len(t, posts, 1)
+	require.Equal(t, len(posts.Entities[0].Post.AuditLogs.Edges), 1)
 
 	// audit logs should exist for this action
 	require.Equal(t, types.PostAuditLogActionDenied, posts.Entities[0].Post.AuditLogs.Edges[0].Node.Action)

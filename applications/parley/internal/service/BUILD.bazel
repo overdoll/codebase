@@ -38,6 +38,7 @@ go_test(
         "//libraries/graphql/relay",
         "//libraries/passport",
         "//libraries/tests",
+        "@com_github_segmentio_ksuid//:ksuid",
         "@com_github_shurcool_graphql//:graphql",
         "@com_github_stretchr_testify//require",
         "@org_golang_google_grpc//:go_default_library",

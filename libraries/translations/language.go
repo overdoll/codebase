@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"golang.org/x/text/language"
-	"overdoll/libraries/helpers"
+	"overdoll/libraries/cookies"
 )
 
 const (
@@ -46,6 +46,7 @@ func (p *Language) SetLocale(locale string) error {
 
 	for _, l := range tags {
 		if l == lang {
+			p.tag = l
 			return nil
 		}
 	}
@@ -62,15 +63,8 @@ func (p *Language) MutateLanguage(ctx context.Context, updateFn func(language *L
 		return err
 	}
 
-	gc := helpers.GinContextFromContext(ctx)
-
-	http.SetCookie(gc.Writer, &http.Cookie{
-		Name:     cookie,
-		Value:    p.Locale(),
-		HttpOnly: true,
-		Secure:   true,
-		Path:     "/",
+	return cookies.SetCookie(ctx, &http.Cookie{
+		Name:  cookie,
+		Value: p.Locale(),
 	})
-
-	return nil
 }

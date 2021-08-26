@@ -27,7 +27,7 @@ func FromContext(ctx context.Context) *Language {
 
 // CookieToContext - parse the language cookie and determine the language
 func CookieToContext(c *gin.Context) *http.Request {
-	
+
 	ck, err := cookies.ReadCookie(c.Request.Context(), cookie)
 
 	acceptedValue := ""

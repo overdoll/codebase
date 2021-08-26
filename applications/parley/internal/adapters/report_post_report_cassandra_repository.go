@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/gocql/gocql"
-	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/parley/internal/domain/report"
 	"overdoll/libraries/bucket"
@@ -180,9 +179,7 @@ func (r ReportCassandraRepository) SearchPostReports(ctx context.Context, reques
 		"post_id": filters.PostId(),
 	}
 
-	builder := postReportByPostTable.
-		SelectBuilder().
-		Where(qb.Eq(filters.PostId()))
+	builder := postReportByPostTable.SelectBuilder()
 
 	if cursor != nil {
 		cursor.BuildCassandra(builder, "id")
@@ -192,6 +189,7 @@ func (r ReportCassandraRepository) SearchPostReports(ctx context.Context, reques
 
 	if err := builder.
 		Query(r.session).
+		Consistency(gocql.LocalQuorum).
 		BindMap(info).
 		Select(&results); err != nil {
 		return nil, fmt.Errorf("failed to search post reports: %v", err)

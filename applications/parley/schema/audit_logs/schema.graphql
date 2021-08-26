@@ -23,7 +23,7 @@ type PostAuditLog implements Node @key(fields: "id") {
   action: PostAuditLogAction!
 
   """The reason the action was taken"""
-  postRejectionReason: PostRejectionReason!
+  postRejectionReason: PostRejectionReason
 
   """Additional notes by the moderator"""
   notes: String

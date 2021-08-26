@@ -999,7 +999,7 @@ type PostAuditLog implements Node @key(fields: "id") {
   action: PostAuditLogAction!
 
   """The reason the action was taken"""
-  postRejectionReason: PostRejectionReason!
+  postRejectionReason: PostRejectionReason
 
   """Additional notes by the moderator"""
   notes: String
@@ -3493,14 +3493,11 @@ func (ec *executionContext) _PostAuditLog_postRejectionReason(ctx context.Contex
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.(*types.PostRejectionReason)
 	fc.Result = res
-	return ec.marshalNPostRejectionReason2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostRejectionReason(ctx, field.Selections, res)
+	return ec.marshalOPostRejectionReason2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostRejectionReason(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _PostAuditLog_notes(ctx context.Context, field graphql.CollectedField, obj *types.PostAuditLog) (ret graphql.Marshaler) {
@@ -6840,9 +6837,6 @@ func (ec *executionContext) _PostAuditLog(ctx context.Context, sel ast.Selection
 			}
 		case "postRejectionReason":
 			out.Values[i] = ec._PostAuditLog_postRejectionReason(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "notes":
 			out.Values[i] = ec._PostAuditLog_notes(ctx, field, obj)
 		case "reverted":
@@ -8629,6 +8623,13 @@ func (ec *executionContext) marshalOPostAuditLog2ᚖoverdollᚋapplicationsᚋpa
 		return graphql.Null
 	}
 	return ec._PostAuditLog(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOPostRejectionReason2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostRejectionReason(ctx context.Context, sel ast.SelectionSet, v *types.PostRejectionReason) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._PostRejectionReason(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOPostReport2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostReport(ctx context.Context, sel ast.SelectionSet, v *types.PostReport) graphql.Marshaler {
