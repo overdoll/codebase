@@ -295,14 +295,16 @@ func (r InfractionCassandraRepository) SearchPostAuditLogs(ctx context.Context, 
 	}
 
 	if filter.ModeratorId() != nil {
-		builder = postAuditLogByModeratorTable.
-			SelectBuilder()
+		builder = qb.Select(postAuditLogByModeratorTable.Name()).
+			Where(qb.In("bucket"), qb.Eq("moderator_id"))
+
 		info["moderator_id"] = *filter.ModeratorId()
 	}
 
 	if filter.PostId() != nil {
-		builder = postAuditLogByPostTable.
-			SelectBuilder()
+		builder = qb.Select(postAuditLogByPostTable.Name()).
+			Where(qb.In("bucket"), qb.Eq("post_id"))
+
 		info["post_id"] = *filter.PostId()
 	}
 
