@@ -8,13 +8,12 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-export type RecoveryCodesListMutationVariables = {|
-  connections: $ReadOnlyArray<string>
-|};
+export type RecoveryCodesListMutationVariables = {||};
 export type RecoveryCodesListMutationResponse = {|
   +generateAccountMultiFactorRecoveryCodes: ?{|
     +accountMultiFactorRecoveryCodes: $ReadOnlyArray<{|
-      +code: string
+      +__id: string,
+      +code: string,
     |}>
   |}
 |};
@@ -37,92 +36,63 @@ mutation RecoveryCodesListMutation {
 const node: ConcreteRequest = (function(){
 var v0 = [
   {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "connections"
-  }
-],
-v1 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "AccountMultiFactorRecoveryCode",
-  "kind": "LinkedField",
-  "name": "accountMultiFactorRecoveryCodes",
-  "plural": true,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "code",
-      "storageKey": null
-    }
-  ],
-  "storageKey": null
-};
-return {
-  "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
-    "kind": "Fragment",
-    "metadata": null,
-    "name": "RecoveryCodesListMutation",
+    "alias": null,
+    "args": null,
+    "concreteType": "GenerateAccountMultiFactorRecoveryCodesPayload",
+    "kind": "LinkedField",
+    "name": "generateAccountMultiFactorRecoveryCodes",
+    "plural": false,
     "selections": [
       {
         "alias": null,
         "args": null,
-        "concreteType": "GenerateAccountMultiFactorRecoveryCodesPayload",
+        "concreteType": "AccountMultiFactorRecoveryCode",
         "kind": "LinkedField",
-        "name": "generateAccountMultiFactorRecoveryCodes",
-        "plural": false,
+        "name": "accountMultiFactorRecoveryCodes",
+        "plural": true,
         "selections": [
-          (v1/*: any*/)
-        ],
-        "storageKey": null
-      }
-    ],
-    "type": "Mutation",
-    "abstractKey": null
-  },
-  "kind": "Request",
-  "operation": {
-    "argumentDefinitions": (v0/*: any*/),
-    "kind": "Operation",
-    "name": "RecoveryCodesListMutation",
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "GenerateAccountMultiFactorRecoveryCodesPayload",
-        "kind": "LinkedField",
-        "name": "generateAccountMultiFactorRecoveryCodes",
-        "plural": false,
-        "selections": [
-          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
-            "filters": null,
-            "handle": "appendNode",
-            "key": "",
-            "kind": "LinkedHandle",
-            "name": "accountMultiFactorRecoveryCodes",
-            "handleArgs": [
+            "kind": "ScalarField",
+            "name": "code",
+            "storageKey": null
+          },
+          {
+            "kind": "ClientExtension",
+            "selections": [
               {
-                "kind": "Variable",
-                "name": "connections",
-                "variableName": "connections"
-              },
-              {
-                "kind": "Literal",
-                "name": "edgeTypeName",
-                "value": "RecoveryCodesEdge"
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "__id",
+                "storageKey": null
               }
             ]
           }
         ],
         "storageKey": null
       }
-    ]
+    ],
+    "storageKey": null
+  }
+];
+return {
+  "fragment": {
+    "argumentDefinitions": [],
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "RecoveryCodesListMutation",
+    "selections": (v0/*: any*/),
+    "type": "Mutation",
+    "abstractKey": null
+  },
+  "kind": "Request",
+  "operation": {
+    "argumentDefinitions": [],
+    "kind": "Operation",
+    "name": "RecoveryCodesListMutation",
+    "selections": (v0/*: any*/)
   },
   "params": {
     "id": "b7326e750441d0b9f4799be4f284216a",
@@ -134,5 +104,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '2ef0865ffdadfaf57cd92ec0114e2fca';
+(node: any).hash = '0e330a44bcb5fdfe15dba82fd15957f2';
 module.exports = node;

@@ -22,6 +22,10 @@
       },
       "copy": {
         "button": "Copy"
+      },
+      "generate": {
+        "title": "Generate new recovery codes",
+        "description": "Generating a new set of recovery codes will invalidate your old codes, meaning you will need to save them again."
       }
     },
     "back": "Go back to settings"

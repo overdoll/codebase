@@ -42,8 +42,11 @@ export default function MultiFactorTotpSettings (props: Props): Node {
         {data.multiFactorTotpConfigured
           ? <></>
           : (
-            <Tooltip shouldWrapChildren label={t('security.multi_factor.totp.button.restricted')}>
-              <Link to='/configure/multi_factor/recovery_codes'>
+            <Tooltip
+              isDisabled={data.recoveryCodesGenerated} shouldWrapChildren
+              label={t('security.multi_factor.totp.button.restricted')}
+            >
+              <Link to='/configure/multi_factor/totp'>
                 <Button disabled={!data.recoveryCodesGenerated} colorScheme='gray' size='md'>
                   {t('security.multi_factor.totp.button.set_up')}
                 </Button>

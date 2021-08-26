@@ -49,6 +49,18 @@ var v0 = {
   "kind": "ScalarField",
   "name": "code",
   "storageKey": null
+},
+v1 = {
+  "kind": "ClientExtension",
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "__id",
+      "storageKey": null
+    }
+  ]
 };
 return {
   "fragment": {
@@ -112,18 +124,7 @@ return {
             "plural": true,
             "selections": [
               (v0/*: any*/),
-              {
-                "kind": "ClientExtension",
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "__id",
-                    "storageKey": null
-                  }
-                ]
-              }
+              (v1/*: any*/)
             ],
             "storageKey": null
           },
@@ -133,7 +134,8 @@ return {
             "kind": "ScalarField",
             "name": "id",
             "storageKey": null
-          }
+          },
+          (v1/*: any*/)
         ],
         "storageKey": null
       }

@@ -10,7 +10,7 @@ const baseStyle = {
 
 function variantSolid (props) {
   const { colorScheme: c, theme } = props
-  const dark = transparentize(`${c}.500`, 0.6)(theme)
+  const dark = transparentize(`${c}.500`, 0.3)(theme)
   return {
     bg: mode(`${c}.500`, dark)(props),
     color: mode('white', 'whiteAlpha.800')(props)

@@ -31,7 +31,7 @@ export default function CopyToClipboardText ({ text, children, ...rest }: Props)
     onCopy()
     notify({
       title: t('menu.copied'),
-      duration: 500,
+      duration: 1000,
       status: 'success',
       isClosable: true,
       variant: 'solid'

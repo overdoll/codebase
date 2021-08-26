@@ -41,7 +41,11 @@ export default function RecoveryCodesSettings (props: Props): Node {
 
         </Box>
         {data.recoveryCodesGenerated
-          ? <></>
+          ? <Link to='/configure/multi_factor/recovery_codes'>
+            <Button colorScheme='gray' size='md'>
+              {t('security.multi_factor.recovery_codes.button.show')}
+            </Button>
+          </Link>
           : (
             <Link to='/configure/multi_factor/recovery_codes'>
               <Button colorScheme='gray' size='md'>

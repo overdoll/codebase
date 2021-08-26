@@ -19,7 +19,7 @@ type Props = {
 
 export default function RootMultiFactorSettings (props: Props): Node {
   const [queryRef, loadQuery] = useQueryLoader(
-    MultiFactorQuery,
+    MultiFactorSettingsQuery,
     props.query
   )
 

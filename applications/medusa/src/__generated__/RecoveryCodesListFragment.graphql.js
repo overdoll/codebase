@@ -11,6 +11,7 @@ import type { FragmentReference } from "relay-runtime";
 declare export opaque type RecoveryCodesListFragment$ref: FragmentReference;
 declare export opaque type RecoveryCodesListFragment$fragmentType: RecoveryCodesListFragment$ref;
 export type RecoveryCodesListFragment = {|
+  +__id: string,
   +recoveryCodes: $ReadOnlyArray<{|
     +__id: string,
     +code: string,
@@ -25,7 +26,20 @@ export type RecoveryCodesListFragment$key = {
 };
 
 
-const node: ReaderFragment = {
+const node: ReaderFragment = (function(){
+var v0 = {
+  "kind": "ClientExtension",
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "__id",
+      "storageKey": null
+    }
+  ]
+};
+return {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
@@ -46,25 +60,16 @@ const node: ReaderFragment = {
           "name": "code",
           "storageKey": null
         },
-        {
-          "kind": "ClientExtension",
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "__id",
-              "storageKey": null
-            }
-          ]
-        }
+        (v0/*: any*/)
       ],
       "storageKey": null
-    }
+    },
+    (v0/*: any*/)
   ],
   "type": "Account",
   "abstractKey": null
 };
+})();
 // prettier-ignore
-(node: any).hash = '8add049e7ef34f73fc54050ce113bba4';
+(node: any).hash = 'ef143c7a28ab61ff083b6d359fe1ec02';
 module.exports = node;

@@ -7,7 +7,7 @@ import type { MultiFactorSettingsQuery } from '@//:artifacts/MultiFactorSettings
 import { useTranslation } from 'react-i18next'
 import MultiFactorTotpSettings from './MultiFactorTotpSettings/MultiFactorTotpSettings'
 import { graphql, usePreloadedQuery } from 'react-relay/hooks'
-import RecoveryCodesSettings from './RecoveryCodes/RecoveryCodesSettings'
+import RecoveryCodesSettings from './RecoveryCodesSettings/RecoveryCodesSettings'
 
 type Props = {
   query: PreloadedQueryInner<MultiFactorSettingsQuery>,

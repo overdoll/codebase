@@ -6,8 +6,7 @@ const baseStyle = {
   container: {
     px: 3,
     py: 3,
-    borderRadius: 5,
-    borderWidth: 1
+    borderRadius: 5
   },
   title: {
     fontWeight: 'bold',
@@ -44,6 +43,7 @@ function variantSubtle (props) {
   return {
     container: {
       bg: getBg(props),
+      borderWidth: 1,
       borderColor: getBorder(props)
     },
     icon: { color: mode(`${c}.500`, `${c}.300`)(props) },
@@ -83,7 +83,7 @@ function variantTopAccent (props) {
   }
 }
 
-function variantSolid (props) {
+function variantSolidOriginal (props) {
   const { colorScheme: c } = props
   return {
     container: {
@@ -93,8 +93,32 @@ function variantSolid (props) {
   }
 }
 
+function variantSolid (props) {
+  const { colorScheme: c } = props
+  return {
+    boxShadow: 'none',
+    container: {
+      paddingStart: 3,
+      borderStartWidth: '4px',
+      borderStartColor: mode(`${c}.500`, `${c}.500`)(props),
+      bg: mode(`${c}.500`, 'gray.800')(props),
+      color: mode('white', 'gray.00')(props)
+    },
+    icon: {
+      color: mode(`${c}.500`, `${c}.500`)(props),
+      width: 4,
+      height: 4,
+      marginTop: 1
+    },
+    title: {
+      fontWeight: 'normal'
+    }
+  }
+}
+
 const variants = {
   subtle: variantSubtle,
+  'solid-base': variantSolidOriginal,
   'left-accent': variantLeftAccent,
   'top-accent': variantTopAccent,
   solid: variantSolid

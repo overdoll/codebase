@@ -44,9 +44,9 @@ export default function RootRecoveryCodesSetup (props: Props): Node {
           direction='column'
           mb={6}
         >
-          <Heading fontSize='2xl' color='gray.00'>{t('recovery_codes.title')}</Heading>
-          <Divider borderColor='gray.500' mt={1} mb={3} />
-          <Text mb={3} fontSize='md' color='gray.100'>{t('recovery_codes.description')}</Text>
+          <Heading fontSize='xl' color='gray.00'>{t('recovery_codes.title')}</Heading>
+          <Divider borderColor='gray.500' mt={1} mb={1} />
+          <Text mb={3} fontSize='sm' color='gray.100'>{t('recovery_codes.description')}</Text>
           <Suspense fallback={<SkeletonStack />}>
             <ErrorBoundary
               fallback={({ error, reset }) => (
