@@ -274,7 +274,7 @@ export default function Steps ({ uppy, state, dispatch }: Props): Node {
                     <Button
                       size='lg'
                       onClick={onSubmit}
-                      colorScheme='red'
+                      colorScheme='primary'
                       variant='outline'
                       disabled={SubmitDisabled || isInFlight}
                     >

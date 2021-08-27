@@ -86,7 +86,7 @@ export default function Navigation (props: Props): Node {
       <NavigationContainer>
         <NavigationLeftBrand>
           <Link to='/'>
-            <Button textColor='red.500' variant='link' colorScheme='red'>{t('title')}</Button>
+            <Button textColor='primary.500' variant='link' colorScheme='primary'>{t('title')}</Button>
           </Link>
         </NavigationLeftBrand>
         <NavigationCenterItems>

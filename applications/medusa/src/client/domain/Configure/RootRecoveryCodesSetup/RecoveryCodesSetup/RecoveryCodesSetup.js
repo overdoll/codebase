@@ -14,9 +14,6 @@ const RecoveryCodesSetupQueryGQL = graphql`
   query RecoveryCodesSetupQuery {
     viewer {
       ...RecoveryCodesListFragment
-      recoveryCodes {
-        code
-      }
     }
   }
 `

@@ -29,5 +29,13 @@
       }
     },
     "back": "Go back to settings"
+  },
+  "totp": {
+    "title": "Set up two-factor authentication",
+    "description": "Improve the security of your account in three easy steps by enabling two-factor authentication."
+    "empty": {
+      "alert": "You must generate a set of recovery codes before you can set up two-factor authentication"
+      "button": "Go to recovery codes"
+    }
   }
 }

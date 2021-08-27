@@ -32,7 +32,7 @@ export default function SimplifiedNavigation ({ children }: Props): Node {
         <IconButton
           onClick={() => history.goBack()}
           variant='solid'
-          colorScheme='red'
+          colorScheme='primary'
           size='md'
           mr={2}
           icon={

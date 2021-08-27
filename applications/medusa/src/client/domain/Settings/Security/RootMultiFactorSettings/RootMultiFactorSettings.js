@@ -12,6 +12,8 @@ import ErrorFallback from '../../../../../modules/content/ErrorFallback/ErrorFal
 import { Suspense } from 'react'
 import MultiFactorSettings from './MultiFactorSettings/MultiFactorSettings'
 import { useQueryLoader } from 'react-relay/hooks'
+import MultiFactorTotpFlow
+  from '../../../Configure/RootMultiFactorTotpSetup/MultiFactorTotpFlow/MultiFactorTotpFlow'
 
 type Props = {
   query: PreloadedQueryInner<MultiFactorSettingsQueryType>,
@@ -38,6 +40,7 @@ export default function RootMultiFactorSettings (props: Props): Node {
           <MultiFactorSettings query={queryRef} />
         </ErrorBoundary>
       </Suspense>
+      <MultiFactorTotpFlow />
     </>
   )
 }

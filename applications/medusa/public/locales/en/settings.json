@@ -113,8 +113,8 @@
           "restricted": "You cannot set up this authentication method until you generate a set of recovery codes"
         },
         "tags": {
-          "not_configured": "Not Set Up",
-          "configured": "Configured"
+          "not_configured": "Not Configured",
+          "configured": "Active"
         }
       },
       "recovery_codes": {

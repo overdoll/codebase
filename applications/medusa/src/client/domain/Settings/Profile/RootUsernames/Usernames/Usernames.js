@@ -70,7 +70,7 @@ export default function Usernames (props: Props): Node {
         <Flex direction='column'>
           <Heading size='sm' color='gray.100'>{t('profile.username.current.title')}</Heading>
           <Flex align='center' direction='row' justify='space-between'>
-            <Heading size='md' color='red.500'>{data?.username}</Heading>
+            <Heading size='md' color='primary.500'>{data?.username}</Heading>
             <Button onClick={onToggle} size='sm'>{t('profile.username.current.change')}</Button>
           </Flex>
           <Collapse in={isOpen} animateOpacity>

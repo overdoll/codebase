@@ -4,7 +4,7 @@
 
 import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet-async'
-import { Center, Divider, Flex, Heading, Text } from '@chakra-ui/react'
+import { Center, Divider, Flex, Heading, Text, CloseButton } from '@chakra-ui/react'
 import { Suspense } from 'react'
 import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
@@ -22,7 +22,6 @@ type Props = {
   prepared: {
     recoveryCodesQuery: RecoveryCodesSetupQueryType
   }
-
 }
 
 export default function RootRecoveryCodesSetup (props: Props): Node {
@@ -44,7 +43,12 @@ export default function RootRecoveryCodesSetup (props: Props): Node {
           direction='column'
           mb={6}
         >
-          <Heading fontSize='xl' color='gray.00'>{t('recovery_codes.title')}</Heading>
+          <Flex justify='space-between' align='center'>
+            <Heading fontSize='xl' color='gray.00'>{t('recovery_codes.title')}</Heading>
+            <Link to='/settings/security'>
+              <CloseButton aria-label={t('recovery_codes.back')} />
+            </Link>
+          </Flex>
           <Divider borderColor='gray.500' mt={1} mb={1} />
           <Text mb={3} fontSize='sm' color='gray.100'>{t('recovery_codes.description')}</Text>
           <Suspense fallback={<SkeletonStack />}>
@@ -56,14 +60,6 @@ export default function RootRecoveryCodesSetup (props: Props): Node {
               <RecoveryCodesSetup query={queryRef} />
             </ErrorBoundary>
           </Suspense>
-          <Divider borderColor='gray.500' mt={3} mb={3} />
-          <Link to='/settings/security'>
-            <Button
-              leftIcon={<Icon w={3} h={3} icon={ArrowLeft1} fill='gray.100' />}
-              variant='link'
-            >{t('recovery_codes.back')}
-            </Button>
-          </Link>
         </Flex>
       </Center>
     </>

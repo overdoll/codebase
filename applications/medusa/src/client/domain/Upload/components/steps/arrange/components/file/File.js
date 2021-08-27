@@ -41,7 +41,7 @@ export default function File ({
           borderWidth={2}
           overflow='hidden'
           objectFit='cover'
-          borderColor={snapshot.isDragging ? 'red.500' : 'gray.900'}
+          borderColor={snapshot.isDragging ? 'primary.500' : 'gray.900'}
           userSelect='none'
           ref={provided.innerRef}
           {...provided.draggableProps}

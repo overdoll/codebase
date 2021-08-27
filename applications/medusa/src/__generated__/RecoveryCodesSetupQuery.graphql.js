@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 02937eb4168667b6e20b7b7f530e6d9c
+ * @relayHash 9097a2936461090daa359d77db6f3c6e
  */
 
 /* eslint-disable */
@@ -12,10 +12,7 @@ import type { RecoveryCodesListFragment$ref } from "./RecoveryCodesListFragment.
 export type RecoveryCodesSetupQueryVariables = {||};
 export type RecoveryCodesSetupQueryResponse = {|
   +viewer: ?{|
-    +recoveryCodes: $ReadOnlyArray<{|
-      +code: string
-    |}>,
-    +$fragmentRefs: RecoveryCodesListFragment$ref,
+    +$fragmentRefs: RecoveryCodesListFragment$ref
   |}
 |};
 export type RecoveryCodesSetupQuery = {|
@@ -28,9 +25,6 @@ export type RecoveryCodesSetupQuery = {|
 query RecoveryCodesSetupQuery {
   viewer {
     ...RecoveryCodesListFragment
-    recoveryCodes {
-      code
-    }
     id
   }
 }
@@ -44,13 +38,6 @@ fragment RecoveryCodesListFragment on Account {
 
 const node: ConcreteRequest = (function(){
 var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "code",
-  "storageKey": null
-},
-v1 = {
   "kind": "ClientExtension",
   "selections": [
     {
@@ -77,18 +64,6 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "AccountMultiFactorRecoveryCode",
-            "kind": "LinkedField",
-            "name": "recoveryCodes",
-            "plural": true,
-            "selections": [
-              (v0/*: any*/)
-            ],
-            "storageKey": null
-          },
           {
             "args": null,
             "kind": "FragmentSpread",
@@ -123,8 +98,14 @@ return {
             "name": "recoveryCodes",
             "plural": true,
             "selections": [
-              (v0/*: any*/),
-              (v1/*: any*/)
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "code",
+                "storageKey": null
+              },
+              (v0/*: any*/)
             ],
             "storageKey": null
           },
@@ -135,14 +116,14 @@ return {
             "name": "id",
             "storageKey": null
           },
-          (v1/*: any*/)
+          (v0/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "02937eb4168667b6e20b7b7f530e6d9c",
+    "id": "9097a2936461090daa359d77db6f3c6e",
     "metadata": {},
     "name": "RecoveryCodesSetupQuery",
     "operationKind": "query",
@@ -151,5 +132,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '51021e92b99995cae4ec8f3995e6ed23';
+(node: any).hash = '88c415f5d7183030bead5730eb37d3d1';
 module.exports = node;

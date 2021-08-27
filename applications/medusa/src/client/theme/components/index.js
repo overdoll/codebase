@@ -13,6 +13,7 @@ import formlabel from './form-label'
 import Switch from './switch'
 import alert from './alert'
 import code from './code'
+import progress from './progress'
 
 export default {
   Menu: menu,
@@ -29,5 +30,6 @@ export default {
   FormLabel: formlabel,
   Switch: Switch,
   Alert: alert,
-  Code: code
+  Code: code,
+  Progress: progress
 }

@@ -20,8 +20,10 @@ import {
   Box,
   ButtonGroup,
   useToast,
-  Heading
+  Heading, Fade,
+  Skeleton
 } from '@chakra-ui/react'
+import { useState } from 'react'
 import fileDownload from 'js-file-download'
 import Button from '@//:modules/form/Button'
 import type { RecoveryCodesListMutation } from '@//:artifacts/RecoveryCodesListMutation.graphql'
@@ -72,7 +74,9 @@ export default function RecoveryCodesSetup (props: Props): Node {
 
   const notify = useToast()
 
-  const plainRecoveryCodes = data?.recoveryCodes.map((item) => {
+  const sortedRecoveryCodes = data?.recoveryCodes.slice().sort((a, b) => a.code.localeCompare(b.code))
+
+  const plainRecoveryCodes = sortedRecoveryCodes.map((item) => {
     return item.code + '\r\n'
   }).join('')
 
@@ -96,7 +100,8 @@ export default function RecoveryCodesSetup (props: Props): Node {
             isClosable: true
           })
         },
-        onError () {
+        onError (data) {
+          console.log(data)
           notify({
             status: 'error',
             title: t('recovery_codes.generate.query.error'),
@@ -105,20 +110,15 @@ export default function RecoveryCodesSetup (props: Props): Node {
         },
         updater: (store) => {
           const node = store.get(data.__id)
-          // const payload = store.getRoot.getLinkedRecord('generateAccountMultiFactorRecoveryCodes')
-          // const recoveryCodes = node.getLinkedRecords('recoveryCodes')
-          // const newRecoveryCodes = payload.generateAccountMultiFactorRecoveryCodes.accountMultiFactorRecoveryCodes
-          // const eeee = [...recoveryCodes, newRecoveryCodes]
-          if (data?.recoveryCodes.length > 0) {
-            // node.setLinkedRecord(recoveryCodes, 'recoveryCodes')
-          }
+          const payload = store.getRootField('generateAccountMultiFactorRecoveryCodes').getLinkedRecords('accountMultiFactorRecoveryCodes')
+          node.setLinkedRecords(payload, 'recoveryCodes')
         }
       }
     )
   }
 
   // Return a placeholder to generate recovery codes if you don't have any
-  if (data?.recoveryCodes.length < 1) {
+  if (sortedRecoveryCodes.length < 1) {
     return (
       <>
         <Flex direction='column' align='center'>
@@ -151,10 +151,16 @@ export default function RecoveryCodesSetup (props: Props): Node {
           </Flex>
         </Alert>
         <SimpleGrid columns={2} spacing={4} mx={3} mt={6} mb={6}>
-          {data?.recoveryCodes.map((item, index) => {
+          {sortedRecoveryCodes.map((item, index) => {
             return (
-              <Flex justify='center' align='center' key={index}>
-                <Code colorScheme='green' fontSize='lg'>{item.code}</Code>
+              <Flex h={8} position='relative' justify='center' align='center' key={index}>
+                {isGeneratingCodes
+                  ? <Skeleton w='100%' h='100%' />
+                  : <Code
+                      colorScheme='green'
+                      fontSize='lg'
+                    >{item.code}
+                  </Code>}
               </Flex>
             )
           })}

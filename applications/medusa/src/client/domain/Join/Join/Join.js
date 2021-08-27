@@ -83,7 +83,7 @@ export default function Join ({ queryRef, hadGrant, clearGrant }: Props): Node {
             icon={SignBadgeCircle}
             w={100}
             h={100}
-            color='red.500'
+            color='primary.500'
             ml='auto'
             mr='auto'
             mb={8}

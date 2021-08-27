@@ -20,7 +20,7 @@ export default function NotFound (): Node {
         <Flex w={['sm', 'md', 'lg']} direction='column'>
           <Icon
             icon={SignBadgeCircle}
-            color='red.500'
+            color='primary.500'
             w={100}
             h={100}
             ml='auto'
@@ -42,7 +42,7 @@ export default function NotFound (): Node {
               </Button>
               <Button
                 size='lg'
-                colorScheme='red'
+                colorScheme='primary'
                 onClick={() => {
                   history.back()
                 }}

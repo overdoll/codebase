@@ -32,12 +32,12 @@ export default function VoteMenu ({ onClick, hasVoted, voteCount, disabled }: Pr
           <Icon
             p={2}
             icon={hasVoted ? InterfaceYesFavoriteStar : InterfaceNoFavoriteStar} w='inherit' h='inherit'
-            color={hasVoted ? 'transparent' : 'gray.500'} fill={hasVoted ? 'red.500' : 'transparent'}
+            color={hasVoted ? 'transparent' : 'gray.500'} fill={hasVoted ? 'primary.500' : 'transparent'}
           />
         }
       />
       <Heading
-        display={disabled ? 'none' : 'initial'} color={hasVoted ? 'red.500' : 'gray.500'} pl={2}
+        display={disabled ? 'none' : 'initial'} color={hasVoted ? 'primary.500' : 'gray.500'} pl={2}
         mt={1} size='lg'
       >
         {abbreviateNumber(voteCount, 2)}

@@ -1,7 +1,7 @@
 /**
  * @flow
  */
-import { Flex, Text, Heading, Box, Tooltip } from '@chakra-ui/react'
+import { Flex, Text, Heading, Box, Tooltip, Badge } from '@chakra-ui/react'
 import Link from '@//:modules/routing/Link'
 import { useTranslation } from 'react-i18next'
 import Button from '@//:modules/form/Button'
@@ -27,18 +27,16 @@ export default function MultiFactorTotpSettings (props: Props): Node {
   return (
     <>
       <Flex align='center' justify='space-between'>
-        <Box>
-          <Heading color='gray.100' fontSize='lg'>
+        <Flex align='flex-start' justify='center' direction='column'>
+          <Heading mb={1} color='gray.100' fontSize='lg'>
             {t('security.multi_factor.totp.title')}
           </Heading>
-          {data.multiFactorTotpConfigured
-            ? <Text color='gray.200' fontSize='sm'>
-              {t('security.multi_factor.totp.tags.configured')}
-            </Text>
-            : <Text color='gray.200' fontSize='sm'>
-              {t('security.multi_factor.totp.tags.not_configured')}
-            </Text>}
-        </Box>
+          <Badge fontSize='xs' colorScheme={data.multiFactorTotpConfigured ? 'green' : 'orange'}>
+            {data.multiFactorTotpConfigured
+              ? t('security.multi_factor.totp.tags.configured')
+              : t('security.multi_factor.totp.tags.not_configured')}
+          </Badge>
+        </Flex>
         {data.multiFactorTotpConfigured
           ? <></>
           : (

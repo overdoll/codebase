@@ -30,7 +30,7 @@ export default function ErrorDisplay ({ error }: Props): Node {
         <Flex w={['sm', 'md', 'lg']} direction='column'>
           <Icon
             icon={SignBadgeCircle}
-            color='red.500'
+            color='primary.500'
             w={100}
             h={100}
             ml='auto'

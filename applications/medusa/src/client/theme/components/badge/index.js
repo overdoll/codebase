@@ -5,7 +5,7 @@ const baseStyle = {
   textTransform: 'uppercase',
   fontSize: 'xs',
   borderRadius: 'sm',
-  fontWeight: 'bold'
+  fontWeight: 500
 }
 
 function variantSolid (props) {

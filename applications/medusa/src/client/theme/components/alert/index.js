@@ -43,7 +43,7 @@ function variantSubtle (props) {
   return {
     container: {
       bg: getBg(props),
-      borderWidth: 1,
+      borderWidth: 2,
       borderColor: getBorder(props)
     },
     icon: { color: mode(`${c}.500`, `${c}.300`)(props) },

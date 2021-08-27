@@ -81,7 +81,7 @@ export default function JoinForm ({ onSubmit, loading }: Props): Node {
         variant='outline'
         type='submit'
         loading={loading}
-        colorScheme='red'
+        colorScheme='primary'
         w='100%'
       >
         {t('authenticate.form.continue')}

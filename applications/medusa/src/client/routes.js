@@ -353,6 +353,19 @@ const routes: Array<Route> = [
           ),
         module.hot
         ),
+        prepare: params => {
+          const TotpQuery = require('@//:artifacts/MultiFactorTotpSetupQuery.graphql')
+
+          return {
+            totpQuery: {
+              query: TotpQuery,
+              variables: {},
+              options: {
+                fetchPolicy: 'store-or-network'
+              }
+            }
+          }
+        },
         middleware: [
           ({ environment, history }) => {
             const ability = getAbilityFromUser(environment)

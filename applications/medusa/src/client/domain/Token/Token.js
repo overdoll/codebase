@@ -156,7 +156,12 @@ export default function Token ({ prepared }: Props): Node {
     <>
       <Helmet title='complete' />
       <Center mt={8}>
-        <Flex w={['fill', 'sm']} direction='column'>
+        <Flex
+          pl={[1, 0]}
+          pr={[1, 0]}
+          w={['fill', 'sm']}
+          direction='column'
+        >
           <Icon
             icon={SignBadgeCircle}
             w={100}
@@ -178,8 +183,9 @@ export default function Token ({ prepared }: Props): Node {
           </Box>
           <Alert mt={4} borderRadius={5}>
             <AlertIcon />
-            {t('close')}
-            <AlertDescription />
+            <AlertDescription>
+              {t('close')}
+            </AlertDescription>
           </Alert>
           {data.sameSession
             ? (

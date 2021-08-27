@@ -3,7 +3,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { Box, Flex, Text, Heading } from '@chakra-ui/react'
+import { Box, Flex, Text, Heading, Badge } from '@chakra-ui/react'
 import Link from '@//:modules/routing/Link'
 import Button from '@//:modules/form/Button'
 import { graphql, useFragment } from 'react-relay/hooks'
@@ -27,32 +27,23 @@ export default function RecoveryCodesSettings (props: Props): Node {
   return (
     <>
       <Flex align='center' justify='space-between'>
-        <Box>
-          <Heading color='gray.100' fontSize='lg'>
+        <Flex align='flex-start' justify='center' direction='column'>
+          <Heading mb={1} color='gray.100' fontSize='lg'>
             {t('security.multi_factor.recovery_codes.title')}
           </Heading>
-          {data.recoveryCodesGenerated
-            ? <Text color='gray.200' fontSize='sm'>
-              {t('security.multi_factor.recovery_codes.tags.configured')}
-            </Text>
-            : <Text color='gray.200' fontSize='sm'>
-              {t('security.multi_factor.recovery_codes.tags.not_configured')}
-            </Text>}
-
-        </Box>
-        {data.recoveryCodesGenerated
-          ? <Link to='/configure/multi_factor/recovery_codes'>
-            <Button colorScheme='gray' size='md'>
-              {t('security.multi_factor.recovery_codes.button.show')}
-            </Button>
-          </Link>
-          : (
-            <Link to='/configure/multi_factor/recovery_codes'>
-              <Button colorScheme='gray' size='md'>
-                {t('security.multi_factor.recovery_codes.button.set_up')}
-              </Button>
-            </Link>
-            )}
+          <Badge fontSize='xs' colorScheme={data.recoveryCodesGenerated ? 'green' : 'orange'}>
+            {data.recoveryCodesGenerated
+              ? t('security.multi_factor.recovery_codes.tags.configured')
+              : t('security.multi_factor.recovery_codes.tags.not_configured')}
+          </Badge>
+        </Flex>
+        <Link to='/configure/multi_factor/recovery_codes'>
+          <Button colorScheme='gray' size='md'>
+            {data.recoveryCodesGenerated
+              ? t('security.multi_factor.recovery_codes.button.show')
+              : t('security.multi_factor.recovery_codes.button.set_up')}
+          </Button>
+        </Link>
       </Flex>
     </>
   )
