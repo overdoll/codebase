@@ -47,6 +47,9 @@ function variantSubtle (props) {
       borderColor: getBorder(props)
     },
     icon: { color: mode(`${c}.500`, `${c}.300`)(props) },
+    title: {
+      color: mode(`${c}.500`, `${c}.300`)(props)
+    },
     description: {
       color: mode(`${c}.500`, `${c}.300`)(props)
     }

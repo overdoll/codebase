@@ -74,6 +74,7 @@ export default function RecoveryCodesSetup (props: Props): Node {
 
   const notify = useToast()
 
+  // Sort the codes so the order stays the same when the user generates and refreshes the page
   const sortedRecoveryCodes = data?.recoveryCodes.slice().sort((a, b) => a.code.localeCompare(b.code))
 
   const plainRecoveryCodes = sortedRecoveryCodes.map((item) => {
@@ -157,7 +158,7 @@ export default function RecoveryCodesSetup (props: Props): Node {
                 {isGeneratingCodes
                   ? <Skeleton w='100%' h='100%' />
                   : <Code
-                      colorScheme='green'
+                      colorScheme='gray'
                       fontSize='lg'
                     >{item.code}
                   </Code>}

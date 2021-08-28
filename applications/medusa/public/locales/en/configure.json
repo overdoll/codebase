@@ -32,10 +32,51 @@
   },
   "totp": {
     "title": "Set up two-factor authentication",
-    "description": "Improve the security of your account in three easy steps by enabling two-factor authentication."
+    "description": "Improve the security of your account in three easy steps by enabling two-factor authentication.",
     "empty": {
-      "alert": "You must generate a set of recovery codes before you can set up two-factor authentication"
+      "alert": "You must generate a set of recovery codes before you can set up two-factor authentication",
       "button": "Go to recovery codes"
+    },
+    "configured": {
+      "description": "You're about to reconfigure your two-factor authentication device. This will invalidate your current two-factor device configuration."
+    },
+    "flow": {
+      "generating": "Generating two-factor flow...",
+      "app_step": {
+        "title": "Download an Authenticator App",
+        "description": "Install an authenticator app for your mobile device.",
+        "options": {
+          "authy": "Authy",
+          "google_authenticator": "Google Authenticator"
+        }
+      },
+      "scan_step": {
+        "title": "Scan the QR Code",
+        "description": "Open the authenticator app and scan the image. You must scan the code through the app or it won't work.",
+        "alternative": "Alternatively, you can enter the following secret code into the app",
+        "copy": "Copy Secret"
+      },
+      "code_step": {
+        "title": "Enter the code",
+        "description": "Enter the 6-digit verification code that the authenticator app generated.",
+        "form": {
+          "submit": "Activate",
+          "query": {
+            "success": "Two-factor authentication was successfully set up",
+            "error": "There was an error setting up two-factor authentication"
+          },
+          "validation": {
+            "empty": "Please enter a 6-digit authentication code",
+            "length": "The code must be 6 digits long",
+            "pattern": "The code can only contain numbers"
+          }
+        }
+      },
+      "success": {
+        "title": "You have successfully set up two-factor authentication!",
+        "description": "The next time you login, you'll be asked to enter another 6-digit code using the same device you used to set this up.",
+        "button": "Go back to settings"
+      }
     }
   }
 }

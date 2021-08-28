@@ -2,16 +2,32 @@
  * @flow
  */
 
-import type { MultiFactorTotpSetupQuery } from '@//:artifacts/MultiFactorTotpSetupQuery.graphql'
-import { graphql, usePreloadedQuery, useMutation } from 'react-relay/hooks'
+import { graphql, useMutation } from 'react-relay/hooks'
 import { useState, useEffect } from 'react'
 import type { MultiFactorTotpFlowMutation } from '@//:artifacts/MultiFactorTotpFlowMutation.graphql'
-import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
-import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback'
-import { Alert, AlertDescription, AlertIcon, Flex } from '@chakra-ui/react'
-import Button from '@//:modules/form/Button'
+import {
+  Flex,
+  SimpleGrid,
+  Box,
+  Heading,
+  Text,
+  List,
+  ListItem,
+  AlertTitle,
+  Divider, Skeleton, Code, Spinner, Alert, AlertIcon, AlertDescription
+} from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
+import ExternalLink from '../../../../components/ExternalLink/ExternalLink'
+import Icon from '@//:modules/content/Icon/Icon'
+import SuspenseImage from '@//:modules/utilities/SuspenseImage'
+import CopyToClipboardText from '../../../../components/CopyToClipboardText/CopyToClipboardText'
+import Typing from '@streamlinehq/streamlinehq/img/streamline-regular/interface-essential/form-edition/typing.svg'
+import PhoneActionDownload
+  from '@streamlinehq/streamlinehq/img/streamline-regular/phones-mobile-devices/content-actions/phone-action-download.svg'
+import TotpSubmissionForm from './TotpSubmissionForm/TotpSubmissionForm'
+import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback'
 import Link from '@//:modules/routing/Link'
+import Button from '@//:modules/form/Button'
 
 type Props = {}
 
@@ -46,44 +62,160 @@ export default function MultiFactorTotpFlow (props: Props): Node {
   }
 
   useEffect(() => {
-    generateTotpSetup()
+    !isSuccessful && generateTotpSetup()
   }, [])
 
   const [totp, setTotp] = useState(null)
 
   const [hasError, setHasError] = useState(false)
 
-  console.log(totp)
+  const [isSuccessful, setIsSuccessful] = useState(false)
 
-  if (hasError) {
+  // If the two factor method is successfully activated we want to remove the entire flow and replace it with a
+  // "success" alert so the user understands the authentication was successful and doesn't try
+  // submitting the flow again
+  if (isSuccessful) {
     return (
-      <>
+      <Flex justify='center' p={4} borderRadius={5} borderWidth={2} borderColor='gray.800'>
         <Flex direction='column' align='center'>
-          <Alert mb={3} status='warning'>
-            <AlertIcon />
-            <AlertDescription>
-              {t('totp.empty.alert')}
-            </AlertDescription>
+          <Alert mb={3} status='success'>
+            <Flex align='center' direction='column'>
+              <AlertIcon mr={0} mb={2} />
+              <AlertDescription align='center' mb={1} lineHeight={5} fontSize='sm'>
+                {t('totp.flow.success.title')}
+              </AlertDescription>
+              <AlertDescription align='center' lineHeight={5} fontSize='sm'>
+                {t('totp.flow.success.description')}
+              </AlertDescription>
+            </Flex>
           </Alert>
-          <Link to='/configure/multi_factor/recovery_codes'>
+          <Link to='/settings/security'>
             <Button
-              colorScheme='gray' size='lg'
+              colorScheme='gray' size='md'
             >
-              {t('recovery_codes.empty.button')}
+              {t('totp.flow.success.button')}
             </Button>
           </Link>
         </Flex>
-      </>
+      </Flex>
     )
   }
 
-  if (isGeneratingTotp && !totp && !hasError) {
-    return <SkeletonStack />
+  // If the mutation returns an error, allow the user to run it again
+  if (hasError) {
+    return (
+      <ErrorFallback refetch={generateTotp} />
+    )
+  }
+
+  // If TOTP codes are still generating, show placeholder
+  if ((isGeneratingTotp && !totp) || !totp) {
+    return (
+      <Flex mt={6} align='center' direction='column' justify='center'>
+        <Spinner mb={3} thickness={4} size='lg' color='primary.500' />
+        <Heading size='md' color='gray.00'>{t('totp.flow.generating')}</Heading>
+      </Flex>
+    )
   }
 
   return (
-    <Flex>
-      totp flow
+    <Flex direction='column'>
+      <SimpleGrid
+        borderRadius={5} borderWidth={2} borderColor='gray.800' columns={1}
+        spacing={1}
+      >
+        <Box>
+          <Flex m={2} align={{ base: 'initial', md: 'center' }} direction={{ base: 'column', md: 'row' }}>
+            <Flex m={2} justify='center' align='center'>
+              <Box borderRadius={5} h={32} w={32} p={6} bg='gray.800'>
+                <Icon icon={PhoneActionDownload} color='gray.100' />
+              </Box>
+            </Flex>
+            <Box m={2}>
+              <Heading fontSize='lg' color='gray.00'>
+                {t('totp.flow.app_step.title')}
+              </Heading>
+              <Text color='gray.100' fontSize='sm'>
+                {t('totp.flow.app_step.description')}
+              </Text>
+              <List spacing={1} mt={2}>
+                <ListItem>
+                  <ExternalLink path='https://support.google.com/accounts/answer/1066447'>
+                    {t('totp.flow.app_step.options.google_authenticator')}
+                  </ExternalLink>
+                </ListItem>
+                <ListItem>
+                  <ExternalLink path='https://authy.com/features/setup/'>
+                    {t('totp.flow.app_step.options.authy')}
+                  </ExternalLink>
+                </ListItem>
+              </List>
+            </Box>
+          </Flex>
+        </Box>
+        <Divider />
+        <Box>
+          <Flex align={{ base: 'initial', md: 'center' }} m={2} direction={{ base: 'column', md: 'row' }}>
+            <Flex m={2} justify='center' align='center'>
+              <Flex
+                h={32}
+                w={32} borderRadius={5} bg='gray.00'
+                align='center'
+                justify='center'
+              >
+                <SuspenseImage
+                  alt='thumbnail'
+                  src={totp?.generateAccountMultiFactorTotp.multiFactorTotp.imageSrc}
+                  fallback={<Skeleton w='100%' h='100%' />}
+                />
+              </Flex>
+            </Flex>
+            <Box m={2}>
+              <Heading fontSize='lg' color='gray.00'>
+                {t('totp.flow.scan_step.title')}
+              </Heading>
+              <Text color='gray.100' fontSize='sm'>
+                {t('totp.flow.scan_step.description')}
+              </Text>
+              <Text mt={2} color='gray.100' fontSize='sm'>
+                {t('totp.flow.scan_step.alternative')}
+              </Text>
+              <CopyToClipboardText
+                borderRadius={2}
+                fontWeight='normal'
+                fontStyle='mono' mt={2}
+                text={totp?.generateAccountMultiFactorTotp.multiFactorTotp.secret}
+              >
+                <Code
+                  whiteSpace='normal'
+                  wordBreak='break-word'
+                  fontSize='sm'
+                >{totp?.generateAccountMultiFactorTotp.multiFactorTotp.secret}
+                </Code>
+              </CopyToClipboardText>
+            </Box>
+          </Flex>
+        </Box>
+        <Divider />
+        <Box>
+          <Flex m={2} align={{ base: 'initial', md: 'center' }} direction={{ base: 'column', md: 'row' }}>
+            <Flex m={2} justify='center' align='center'>
+              <Box borderRadius={5} h={32} w={32} p={6} bg='gray.800'>
+                <Icon icon={Typing} color='gray.100' />
+              </Box>
+            </Flex>
+            <Box m={2}>
+              <Heading fontSize='lg' color='gray.00'>
+                {t('totp.flow.code_step.title')}
+              </Heading>
+              <Text mb={2} color='gray.100' fontSize='sm'>
+                {t('totp.flow.code_step.description')}
+              </Text>
+              <TotpSubmissionForm setIsSuccessful={() => setIsSuccessful(true)} />
+            </Box>
+          </Flex>
+        </Box>
+      </SimpleGrid>
     </Flex>
   )
 }

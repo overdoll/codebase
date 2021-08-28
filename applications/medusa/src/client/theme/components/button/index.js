@@ -51,17 +51,17 @@ function variantSolid (props) {
 
   return {
     bg: background,
-    color: mode(color, `${c}.300`)(props),
+    color: mode(color, `${c}.500`)(props),
     _hover: {
       bg: background,
-      color: mode(hoverBg, `${c}.200`)(props),
+      color: mode(hoverBg, `${c}.400`)(props),
       _disabled: {
         bg: background
       }
     },
     _active: {
       bg: background,
-      color: mode(activeBg, `${c}.500`)(props)
+      color: mode(activeBg, `${c}.600`)(props)
     }
   }
 }
@@ -94,14 +94,34 @@ function variantGhost (props) {
 }
 
 function variantOutline (props) {
-  const { colorScheme: c } = props
+  const { colorScheme: c, size } = props
   const borderColor = mode('gray.200', 'gray.300')(props)
   const combinedColor = mode(`${c}.200`, `${c}.500`)(props)
+
+  console.log(props)
+
+  const determineBorderWidth = (size) => {
+    console.log('ran')
+    switch (size) {
+      case 'xs':
+        return 1
+      case 'sm':
+        return 2
+      case 'md':
+        return 2
+      case 'lg':
+        return 3
+      case 'xl':
+        return 3.5
+      default:
+        return 1
+    }
+  }
 
   if (c === 'gray') {
     return {
       borderStyle: 'solid',
-      borderWidth: 3.5,
+      borderWidth: determineBorderWidth(size),
       color: mode('inherit', 'gray.100')(props),
       _hover: {
         bg: mode('gray.100', 'gray.500')(props)
@@ -114,7 +134,7 @@ function variantOutline (props) {
 
   return {
     borderStyle: 'solid',
-    borderWidth: 3.5,
+    borderWidth: determineBorderWidth(size),
     color: c === 'gray' ? borderColor : combinedColor,
     bg: 'transparent',
     _hover: {

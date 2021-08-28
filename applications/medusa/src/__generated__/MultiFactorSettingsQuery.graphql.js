@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash e7ba09dd0a49f1312eba052635d9e5d5
+ * @relayHash c1dbf4ac78ac09a4379666b7073c25a2
  */
 
 /* eslint-disable */
@@ -8,6 +8,7 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
+import type { DisableMultiFactorFragment$ref } from "./DisableMultiFactorFragment.graphql";
 import type { MultiFactorTotpSettingsFragment$ref } from "./MultiFactorTotpSettingsFragment.graphql";
 import type { RecoveryCodesSettingsFragment$ref } from "./RecoveryCodesSettingsFragment.graphql";
 export type MultiFactorSettingsQueryVariables = {||};
@@ -15,7 +16,7 @@ export type MultiFactorSettingsQueryResponse = {|
   +viewer: ?{|
     +multiFactorSettings: {|
       +multiFactorEnabled: boolean,
-      +$fragmentRefs: MultiFactorTotpSettingsFragment$ref & RecoveryCodesSettingsFragment$ref,
+      +$fragmentRefs: DisableMultiFactorFragment$ref & MultiFactorTotpSettingsFragment$ref & RecoveryCodesSettingsFragment$ref,
     |}
   |}
 |};
@@ -30,11 +31,16 @@ query MultiFactorSettingsQuery {
   viewer {
     multiFactorSettings {
       multiFactorEnabled
+      ...DisableMultiFactorFragment
       ...MultiFactorTotpSettingsFragment
       ...RecoveryCodesSettingsFragment
     }
     id
   }
+}
+
+fragment DisableMultiFactorFragment on AccountMultiFactorSettings {
+  canDisableMultiFactor
 }
 
 fragment MultiFactorTotpSettingsFragment on AccountMultiFactorSettings {
@@ -82,6 +88,11 @@ return {
               {
                 "args": null,
                 "kind": "FragmentSpread",
+                "name": "DisableMultiFactorFragment"
+              },
+              {
+                "args": null,
+                "kind": "FragmentSpread",
                 "name": "MultiFactorTotpSettingsFragment"
               },
               {
@@ -126,6 +137,13 @@ return {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
+                "name": "canDisableMultiFactor",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
                 "name": "multiFactorTotpConfigured",
                 "storageKey": null
               },
@@ -152,7 +170,7 @@ return {
     ]
   },
   "params": {
-    "id": "e7ba09dd0a49f1312eba052635d9e5d5",
+    "id": "c1dbf4ac78ac09a4379666b7073c25a2",
     "metadata": {},
     "name": "MultiFactorSettingsQuery",
     "operationKind": "query",
@@ -161,5 +179,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '3e2c15210df4f1b451a70fc13d047f40';
+(node: any).hash = '8f86ba0f09653be6676894e5e486d292';
 module.exports = node;

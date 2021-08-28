@@ -10,8 +10,8 @@ import { useTranslation } from 'react-i18next'
 import Icon from '@//:modules/content/Icon/Icon'
 
 type Props = {
-  error: Error,
-  reset: () => void,
+  error?: Error,
+  reset?: () => void,
   refetch: () => void,
 };
 
@@ -24,7 +24,7 @@ export default function ErrorFallback ({ error, reset, refetch }: Props): Node {
     refetch()
 
     // reset error boundary to re-render
-    reset()
+    reset && reset()
   }
 
   return (
@@ -32,7 +32,7 @@ export default function ErrorFallback ({ error, reset, refetch }: Props): Node {
       <Heading fontSize='lg' color='gray.100' mb={4}>
         {t('fallback.header')}
       </Heading>
-      <Text size='sm' color='gray.300'>{error.Error}</Text>
+      {error && <Text size='sm' color='gray.300'>{error.Error}</Text>}
       <Button
         variant='solid'
         size='md'

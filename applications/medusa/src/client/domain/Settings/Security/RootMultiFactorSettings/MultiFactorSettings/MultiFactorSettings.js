@@ -1,13 +1,16 @@
 /**
  * @flow
  */
-import { Flex, Stack } from '@chakra-ui/react'
+import { Badge, Flex, Heading, Stack, Text } from '@chakra-ui/react'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
 import type { MultiFactorSettingsQuery } from '@//:artifacts/MultiFactorSettingsQuery.graphql'
-import { useTranslation } from 'react-i18next'
 import MultiFactorTotpSettings from './MultiFactorTotpSettings/MultiFactorTotpSettings'
 import { graphql, usePreloadedQuery } from 'react-relay/hooks'
 import RecoveryCodesSettings from './RecoveryCodesSettings/RecoveryCodesSettings'
+import Link from '@//:modules/routing/Link'
+import Button from '@//:modules/form/Button'
+import { useTranslation } from 'react-i18next'
+import DisableMultiFactor from './DisableMultiFactor/DisableMultiFactor'
 
 type Props = {
   query: PreloadedQueryInner<MultiFactorSettingsQuery>,
@@ -18,6 +21,7 @@ const MultiFactorQueryGQL = graphql`
     viewer {
       multiFactorSettings {
         multiFactorEnabled
+        ...DisableMultiFactorFragment
         ...MultiFactorTotpSettingsFragment
         ...RecoveryCodesSettingsFragment
       }
@@ -26,7 +30,7 @@ const MultiFactorQueryGQL = graphql`
 `
 
 export default function MultiFactorSettings (props: Props): Node {
-  const queryData = usePreloadedQuery<MultiFactorSettingsQuery>(
+  const data = usePreloadedQuery<MultiFactorSettingsQuery>(
     MultiFactorQueryGQL,
     props.query
   )
@@ -36,8 +40,10 @@ export default function MultiFactorSettings (props: Props): Node {
   return (
     <>
       <Stack spacing={3}>
-        <MultiFactorTotpSettings data={queryData?.viewer.multiFactorSettings} />
-        <RecoveryCodesSettings data={queryData?.viewer.multiFactorSettings} />
+        <MultiFactorTotpSettings data={data?.viewer.multiFactorSettings} />
+        <RecoveryCodesSettings data={data?.viewer.multiFactorSettings} />
+        {data.viewer.multiFactorSettings.multiFactorEnabled &&
+          <DisableMultiFactor data={data?.viewer.multiFactorSettings} />}
       </Stack>
     </>
   )

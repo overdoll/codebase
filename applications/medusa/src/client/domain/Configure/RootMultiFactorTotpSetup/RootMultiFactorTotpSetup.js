@@ -12,18 +12,18 @@ import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
 import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback'
 import MultiFactorTotpSetup from './MultiFactorTotpHeader/MultiFactorTotpHeader'
 import { useQueryLoader } from 'react-relay/hooks'
-import type { MultiFactorTotpSetupQuery as MultiFactorTotpSetupQueryType } from '@//:artifacts/MultiFactorTotpSetupQuery.graphql'
-import MultiFactorTotpSetupQuery from '@//:artifacts/MultiFactorTotpSetupQuery.graphql'
+import type { MultiFactorTotpHeaderQuery as MultiFactorTotpHeaderQueryType } from '@//:artifacts/MultiFactorTotpHeaderQuery.graphql'
+import MultiFactorTotpHeaderQuery from '@//:artifacts/MultiFactorTotpHeaderQuery.graphql'
 
 type Props = {
   prepared: {
-    totpQuery: MultiFactorTotpSetupQueryType
+    totpQuery: MultiFactorTotpHeaderQueryType
   }
 }
 
 export default function RootMultiFactorTotpSetup (props: Props): Node {
   const [queryRef, loadQuery] = useQueryLoader(
-    MultiFactorTotpSetupQuery,
+    MultiFactorTotpHeaderQuery,
     props.prepared.totpQuery
   )
 
@@ -41,13 +41,13 @@ export default function RootMultiFactorTotpSetup (props: Props): Node {
           mb={6}
         >
           <Flex justify='space-between' align='center'>
-            <Heading fontSize='xl' color='gray.00'>{t('totp.title')}</Heading>
+            <Heading fontSize='2xl' color='gray.00'>{t('totp.title')}</Heading>
             <Link to='/settings/security'>
               <CloseButton aria-label={t('recovery_codes.back')} />
             </Link>
           </Flex>
           <Divider borderColor='gray.500' mt={1} mb={1} />
-          <Text mb={3} fontSize='sm' color='gray.100'>{t('totp.description')}</Text>
+          <Text mb={2} fontSize='md' color='gray.100'>{t('totp.description')}</Text>
           <Suspense fallback={<SkeletonStack />}>
             <ErrorBoundary
               fallback={({ error, reset }) => (
@@ -57,6 +57,7 @@ export default function RootMultiFactorTotpSetup (props: Props): Node {
               <MultiFactorTotpSetup query={queryRef} />
             </ErrorBoundary>
           </Suspense>
+
         </Flex>
       </Center>
     </>

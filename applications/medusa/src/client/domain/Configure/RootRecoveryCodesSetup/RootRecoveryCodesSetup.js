@@ -17,6 +17,7 @@ import Button from '@//:modules/form/Button'
 import Link from '@//:modules/routing/Link'
 import Icon from '@//:modules/content/Icon/Icon'
 import ArrowLeft1 from '@streamlinehq/streamlinehq/img/streamline-bold/arrows-diagrams/arrows/arrow-left-1.svg'
+import MultiFactorTotpFlow from '../RootMultiFactorTotpSetup/MultiFactorTotpFlow/MultiFactorTotpFlow'
 
 type Props = {
   prepared: {
@@ -60,6 +61,7 @@ export default function RootRecoveryCodesSetup (props: Props): Node {
               <RecoveryCodesSetup query={queryRef} />
             </ErrorBoundary>
           </Suspense>
+
         </Flex>
       </Center>
     </>

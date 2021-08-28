@@ -38,7 +38,7 @@ const size = {
     fontSize: 'md',
     px: 4,
     h: 10,
-    borderRadius: 'md'
+    borderRadius: 7
   },
 
   sm: {
@@ -97,7 +97,7 @@ function variantOutline (props) {
 
   return {
     field: {
-      border: '1px solid',
+      borderWidth: 2,
       borderColor: 'gray.500',
       bg: 'inherit',
       _hover: {
@@ -113,12 +113,16 @@ function variantOutline (props) {
       },
       _invalid: {
         borderColor: getColor(theme, ec),
-        boxShadow: `0 0 0 1px ${getColor(theme, ec)}`
+        boxShadow: `0 0 0 0.5px ${getColor(theme, ec)}`
       },
       _focus: {
         zIndex: 1,
         borderColor: getColor(theme, fc),
-        boxShadow: `0 0 0 1px ${getColor(theme, fc)}`
+        boxShadow: `0 0 0 0.5px ${getColor(theme, fc)}`,
+        _invalid: {
+          borderColor: getColor(theme, ec),
+          boxShadow: `0 0 0 1px ${getColor(theme, ec)}`
+        }
       }
     },
     addon: {

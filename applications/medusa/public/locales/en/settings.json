@@ -106,10 +106,12 @@
   "security": {
     "multi_factor": {
       "title": "Two-factor Authentication",
+      "description": "Setting up two-factor authentication adds an extra layer of security in case your account is compromised.",
       "totp": {
         "title": "Authenticator App",
         "button": {
           "set_up": "Set Up",
+          "modify": "Reconfigure",
           "restricted": "You cannot set up this authentication method until you generate a set of recovery codes"
         },
         "tags": {
@@ -126,6 +128,17 @@
         "tags": {
           "not_configured": "Not Generated",
           "configured": "Generated"
+        }
+      },
+      "disable": {
+        "title": "Disable Two-Factor Authentication",
+        "button": "Disable",
+        "tooltip": "Your account role prevents you from disabling two-factor authentication",
+        "modal": {
+          "header": "Disable Two-Factor Authentication",
+          "description": "Disabling two-factor authentication will remove the extra layer of security on your account. Are you sure?",
+          "confirm": "Disable Two-Factor",
+          "cancel": "Cancel"
         }
       }
     }

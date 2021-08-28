@@ -28,7 +28,7 @@ export default function RecoveryCodesSettings (props: Props): Node {
     <>
       <Flex align='center' justify='space-between'>
         <Flex align='flex-start' justify='center' direction='column'>
-          <Heading mb={1} color='gray.100' fontSize='lg'>
+          <Heading mb={1} color='gray.00' fontSize='lg'>
             {t('security.multi_factor.recovery_codes.title')}
           </Heading>
           <Badge fontSize='xs' colorScheme={data.recoveryCodesGenerated ? 'green' : 'orange'}>

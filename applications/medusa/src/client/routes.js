@@ -354,7 +354,7 @@ const routes: Array<Route> = [
         module.hot
         ),
         prepare: params => {
-          const TotpQuery = require('@//:artifacts/MultiFactorTotpSetupQuery.graphql')
+          const TotpQuery = require('@//:artifacts/MultiFactorTotpHeaderQuery.graphql')
 
           return {
             totpQuery: {

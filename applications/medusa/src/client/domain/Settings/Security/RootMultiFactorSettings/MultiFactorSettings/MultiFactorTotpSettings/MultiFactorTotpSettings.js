@@ -28,7 +28,7 @@ export default function MultiFactorTotpSettings (props: Props): Node {
     <>
       <Flex align='center' justify='space-between'>
         <Flex align='flex-start' justify='center' direction='column'>
-          <Heading mb={1} color='gray.100' fontSize='lg'>
+          <Heading mb={1} color='gray.00' fontSize='lg'>
             {t('security.multi_factor.totp.title')}
           </Heading>
           <Badge fontSize='xs' colorScheme={data.multiFactorTotpConfigured ? 'green' : 'orange'}>
@@ -38,7 +38,11 @@ export default function MultiFactorTotpSettings (props: Props): Node {
           </Badge>
         </Flex>
         {data.multiFactorTotpConfigured
-          ? <></>
+          ? (<Link to='/configure/multi_factor/totp'>
+            <Button colorScheme='gray' size='md'>
+              {t('security.multi_factor.totp.button.modify')}
+            </Button>
+          </Link>)
           : (
             <Tooltip
               isDisabled={data.recoveryCodesGenerated} shouldWrapChildren

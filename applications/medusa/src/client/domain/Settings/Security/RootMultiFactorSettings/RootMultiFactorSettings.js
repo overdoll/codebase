@@ -4,7 +4,7 @@
 import type { PreloadedQueryInner } from 'react-relay/hooks'
 import type { MultiFactorSettingsQuery as MultiFactorSettingsQueryType } from '@//:artifacts/MultiFactorSettingsQuery.graphql'
 import MultiFactorSettingsQuery from '@//:artifacts/MultiFactorSettingsQuery.graphql'
-import { Divider, Heading } from '@chakra-ui/react'
+import { Divider, Heading, Text } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
@@ -12,8 +12,6 @@ import ErrorFallback from '../../../../../modules/content/ErrorFallback/ErrorFal
 import { Suspense } from 'react'
 import MultiFactorSettings from './MultiFactorSettings/MultiFactorSettings'
 import { useQueryLoader } from 'react-relay/hooks'
-import MultiFactorTotpFlow
-  from '../../../Configure/RootMultiFactorTotpSetup/MultiFactorTotpFlow/MultiFactorTotpFlow'
 
 type Props = {
   query: PreloadedQueryInner<MultiFactorSettingsQueryType>,
@@ -29,8 +27,9 @@ export default function RootMultiFactorSettings (props: Props): Node {
 
   return (
     <>
-      <Heading size='lg' color='gray.00'>{t('security.multi_factor.title')}</Heading>
-      <Divider borderColor='gray.500' mt={1} mb={3} />
+      <Heading fontSize='2xl' color='gray.00'>{t('security.multi_factor.title')}</Heading>
+      <Divider borderColor='gray.500' mt={1} mb={1} />
+      <Text mb={2} fontSize='md' color='gray.100'>{t('security.multi_factor.description')}</Text>
       <Suspense fallback={<SkeletonStack />}>
         <ErrorBoundary
           fallback={({ error, reset }) => (
@@ -40,7 +39,6 @@ export default function RootMultiFactorSettings (props: Props): Node {
           <MultiFactorSettings query={queryRef} />
         </ErrorBoundary>
       </Suspense>
-      <MultiFactorTotpFlow />
     </>
   )
 }

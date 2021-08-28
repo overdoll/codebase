@@ -14,6 +14,8 @@ import Switch from './switch'
 import alert from './alert'
 import code from './code'
 import progress from './progress'
+import link from './link'
+import divider from './divider'
 
 export default {
   Menu: menu,
@@ -31,5 +33,7 @@ export default {
   Switch: Switch,
   Alert: alert,
   Code: code,
-  Progress: progress
+  Progress: progress,
+  Link: link,
+  Divider: divider
 }
