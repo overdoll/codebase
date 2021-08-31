@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 41b50a70d4808b24aece3f20b2eb755d
+ * @relayHash b88eee9a0c8e1f15046d8a893982bea2
  */
 
 /* eslint-disable */
@@ -43,11 +43,16 @@ fragment JoinRootFragment on AuthenticationToken {
   accountStatus {
     registered
     multiFactor
+    ...MultiFactorFragment
   }
 }
 
 fragment LobbyFragment on AuthenticationToken {
   email
+}
+
+fragment MultiFactorFragment on AuthenticationTokenAccountStatus {
+  multiFactor
 }
 */
 
@@ -161,7 +166,7 @@ const node: ConcreteRequest = {
     ]
   },
   "params": {
-    "id": "41b50a70d4808b24aece3f20b2eb755d",
+    "id": "b88eee9a0c8e1f15046d8a893982bea2",
     "metadata": {},
     "name": "JoinRootQuery",
     "operationKind": "query",

@@ -98,10 +98,7 @@ function variantOutline (props) {
   const borderColor = mode('gray.200', 'gray.300')(props)
   const combinedColor = mode(`${c}.200`, `${c}.500`)(props)
 
-  console.log(props)
-
   const determineBorderWidth = (size) => {
-    console.log('ran')
     switch (size) {
       case 'xs':
         return 1
