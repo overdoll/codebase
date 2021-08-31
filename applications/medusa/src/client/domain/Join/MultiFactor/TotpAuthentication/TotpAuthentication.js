@@ -17,8 +17,9 @@ import {
   Spinner,
   SlideFade,
   Collapse,
+  Box,
   useDisclosure,
-  useBreakpointValue, useToast
+  useBreakpointValue, useToast, AlertIcon, AlertDescription, Alert
 } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import SignBadgeCircle
@@ -64,7 +65,8 @@ export default function TotpAuthentication (): Node {
         }
         console.log('success')
       },
-      onError () {
+      onError (data) {
+        console.log(data)
         notify({
           status: 'error',
           title: t('multi_factor.submit.form.query.error'),
@@ -134,9 +136,15 @@ export default function TotpAuthentication (): Node {
           </Flex>
           <Button onClick={onToggle} size='md' variant='link'>{t('multi_factor.recovery.button')}</Button>
           <Collapse animateOpacity in={isOpen}>
-            <Flex mt={3}>
+            <Box mt={3}>
+              <Alert mb={3} status='info'>
+                <AlertIcon />
+                <AlertDescription align='center' lineHeight={5} fontSize='sm'>
+                  {t('multi_factor.recovery.alert.description')}
+                </AlertDescription>
+              </Alert>
               <RecoveryCodeForm />
-            </Flex>
+            </Box>
           </Collapse>
         </Flex>
       </Center>

@@ -2,7 +2,16 @@
  * @flow
  */
 import { graphql, useMutation } from 'react-relay/hooks'
-import { Flex, FormControl, FormErrorMessage, Input, InputGroup, InputRightElement, useToast } from '@chakra-ui/react'
+import {
+  Flex,
+  FormLabel,
+  FormControl,
+  FormErrorMessage,
+  Input,
+  InputGroup,
+  InputRightElement,
+  useToast
+} from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import Button from '@//:modules/form/Button'
 import { useForm } from 'react-hook-form'
@@ -53,7 +62,7 @@ export default function RecoveryCodeForm (): Node {
     submitCode({
       variables: {
         input: {
-          code: formData.code
+          recoveryCode: formData.code
         }
       },
       onCompleted (data) {
@@ -66,14 +75,14 @@ export default function RecoveryCodeForm (): Node {
         }
         notify({
           status: 'success',
-          title: t('totp.flow.code_step.form.query.success'),
+          title: t('multi_factor.recovery.form.query.success'),
           isClosable: true
         })
       },
       onError () {
         notify({
           status: 'error',
-          title: t('totp.flow.code_step.form.query.error'),
+          title: t('multi_factor.recovery.form.query.error'),
           isClosable: true
         })
       }
@@ -88,13 +97,14 @@ export default function RecoveryCodeForm (): Node {
         <FormControl
           isInvalid={errors.code}
         >
+          <FormLabel>{t('multi_factor.recovery.form.header')}</FormLabel>
           <Flex justify='center'>
             <InputGroup mr={2} size='sm'>
               <Input
                 {...register('code')}
                 variant='outline'
                 size='md'
-                placeholder='123456'
+                placeholder={t('multi_factor.recovery.form.placeholder')}
               />
               {(errors.code || success) && (
                 <InputRightElement h='100%' mr={1}>
@@ -110,18 +120,18 @@ export default function RecoveryCodeForm (): Node {
               size='md'
               variant='solid'
               type='submit'
-              colorScheme='primary'
+              colorScheme='gray'
               disabled={errors.code}
               isLoading={isSubmittingCode}
             >
-              {t('totp.flow.code_step.form.submit')}
+              {t('multi_factor.recovery.form.submit')}
             </Button>
           </Flex>
           <FormErrorMessage>
             {errors.code && errors.code.type === 'mutation' && errors.code.message}
-            {errors.code && errors.code.type === 'string.empty' && t('totp.flow.code_step.form.validation.empty')}
-            {errors.code && errors.code.type === 'string.length' && t('totp.flow.code_step.form.validation.length')}
-            {errors.code && errors.code.type === 'string.alphanum' && t('totp.flow.code_step.form.validation.pattern')}
+            {errors.code && errors.code.type === 'string.empty' && t('multi_factor.recovery.form.validation.code.empty')}
+            {errors.code && errors.code.type === 'string.length' && t('multi_factor.recovery.form.validation.code.length')}
+            {errors.code && errors.code.type === 'string.alphanum' && t('multi_factor.recovery.form.validation.code.alphanum')}
           </FormErrorMessage>
         </FormControl>
       </form>
