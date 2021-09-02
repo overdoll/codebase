@@ -27,6 +27,7 @@ import SignBadgeCircle
 import { useTranslation } from 'react-i18next'
 import Button from '@//:modules/form/Button'
 import RecoveryCodeForm from './RecoveryCodeForm/RecoveryCodeForm'
+import { useHistory } from '@//:modules/routing'
 
 const SubmitTotpMutationGQL = graphql`
   mutation TotpAuthenticationMutation($input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput!) {
@@ -36,7 +37,9 @@ const SubmitTotpMutationGQL = graphql`
   }
 `
 
-export default function TotpAuthentication (): Node {
+type Props = {}
+
+export default function TotpAuthentication (props: Props): Node {
   const [submitTotp, isSubmittingTotp] = useMutation(SubmitTotpMutationGQL)
 
   const [t] = useTranslation('auth')
@@ -46,6 +49,8 @@ export default function TotpAuthentication (): Node {
   const breakPoint = useBreakpointValue({ base: 'md', sm: 'lg' })
 
   const notify = useToast()
+
+  const history = useHistory()
 
   const onSubmitTotp = (code) => {
     submitTotp({
@@ -61,9 +66,8 @@ export default function TotpAuthentication (): Node {
             title: data.grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp.validation,
             isClosable: true
           })
-          return
+          history.push('/join')
         }
-        console.log('success')
       },
       onError (data) {
         console.log(data)
@@ -79,7 +83,7 @@ export default function TotpAuthentication (): Node {
   return (
     <>
       <Helmet title='totp authentication' />
-      <Center mt={40}>
+      <Center mt={8}>
         <Flex w={['sm', 'md']} ml={[1, 0]} mr={[1, 0]} direction='column' align='center'>
           <Icon
             icon={SignBadgeCircle}
@@ -136,7 +140,7 @@ export default function TotpAuthentication (): Node {
           </Flex>
           <Button onClick={onToggle} size='md' variant='link'>{t('multi_factor.recovery.button')}</Button>
           <Collapse animateOpacity in={isOpen}>
-            <Box mt={3}>
+            <Box mt={5}>
               <Alert mb={3} status='info'>
                 <AlertIcon />
                 <AlertDescription align='center' lineHeight={5} fontSize='sm'>

@@ -12,7 +12,7 @@ const MultiFactorFragmentGQL = graphql`
 `
 
 type Props = {
-  query: MultiFactorFragment$key
+  query: MultiFactorFragment$key,
 }
 
 export default function MultiFactor (props: Props): Node {

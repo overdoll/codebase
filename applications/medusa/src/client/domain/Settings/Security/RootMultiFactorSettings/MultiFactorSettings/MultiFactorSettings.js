@@ -7,9 +7,6 @@ import type { MultiFactorSettingsQuery } from '@//:artifacts/MultiFactorSettings
 import MultiFactorTotpSettings from './MultiFactorTotpSettings/MultiFactorTotpSettings'
 import { graphql, usePreloadedQuery } from 'react-relay/hooks'
 import RecoveryCodesSettings from './RecoveryCodesSettings/RecoveryCodesSettings'
-import Link from '@//:modules/routing/Link'
-import Button from '@//:modules/form/Button'
-import { useTranslation } from 'react-i18next'
 import DisableMultiFactor from './DisableMultiFactor/DisableMultiFactor'
 
 type Props = {
@@ -35,15 +32,18 @@ export default function MultiFactorSettings (props: Props): Node {
     props.query
   )
 
-  const [t] = useTranslation('settings')
+  // Fix an error that happens if a user logs out from the multi factor page
+  if (!data?.viewer?.multiFactorSettings) {
+    return null
+  }
 
   return (
     <>
       <Stack spacing={3}>
-        <MultiFactorTotpSettings data={data?.viewer.multiFactorSettings} />
-        <RecoveryCodesSettings data={data?.viewer.multiFactorSettings} />
-        {data.viewer.multiFactorSettings.multiFactorEnabled &&
-          <DisableMultiFactor data={data?.viewer.multiFactorSettings} />}
+        <MultiFactorTotpSettings data={data?.viewer?.multiFactorSettings} />
+        <RecoveryCodesSettings data={data?.viewer?.multiFactorSettings} />
+        {data?.viewer?.multiFactorSettings.multiFactorEnabled &&
+          <DisableMultiFactor data={data?.viewer?.multiFactorSettings} />}
       </Stack>
     </>
   )

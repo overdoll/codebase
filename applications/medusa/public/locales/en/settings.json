@@ -138,7 +138,11 @@
           "header": "Disable Two-Factor Authentication",
           "description": "Disabling two-factor authentication will remove the extra layer of security on your account. Are you sure?",
           "confirm": "Disable Two-Factor",
-          "cancel": "Cancel"
+          "cancel": "Cancel",
+          "query": {
+            "success": "Two-factor authentication has been disabled for your account",
+            "error": "There was an error disabling two-factor authentication"
+          }
         }
       }
     }

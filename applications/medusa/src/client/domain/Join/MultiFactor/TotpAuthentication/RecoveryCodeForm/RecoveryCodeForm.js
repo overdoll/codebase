@@ -22,10 +22,13 @@ import InterfaceAlertWarningTriangle
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/alerts/interface-alert-warning-triangle.svg'
 import InterfaceValidationCheck
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/validation/interface-validation-check.svg'
+import { useHistory } from '@//:modules/routing'
 
 type CodeValues = {
   code: string,
 }
+
+type Props = {}
 
 const RecoveryCodeMutationGQL = graphql`
   mutation RecoveryCodeFormMutation($input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput!) {
@@ -43,7 +46,7 @@ const schema = Joi.object({
     .required()
 })
 
-export default function RecoveryCodeForm (): Node {
+export default function RecoveryCodeForm (props: Props): Node {
   const [submitCode, isSubmittingCode] = useMutation(
     RecoveryCodeMutationGQL
   )
@@ -57,6 +60,8 @@ export default function RecoveryCodeForm (): Node {
   })
 
   const notify = useToast()
+
+  const history = useHistory()
 
   const onSubmitCode = (formData) => {
     submitCode({
@@ -78,6 +83,7 @@ export default function RecoveryCodeForm (): Node {
           title: t('multi_factor.recovery.form.query.success'),
           isClosable: true
         })
+        history.push('/join')
       },
       onError () {
         notify({

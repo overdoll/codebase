@@ -4,19 +4,16 @@
 import {
   Flex,
   Text,
-  Heading,
-  Box,
   Tooltip,
-  Badge,
   AlertDialogOverlay,
   AlertDialogContent,
-  AlertDialogHeader, AlertDialogBody, AlertDialogFooter, AlertDialog, useDisclosure
+  AlertDialogHeader, AlertDialogBody, AlertDialogFooter, AlertDialog, useDisclosure, useToast
 } from '@chakra-ui/react'
-import Link from '@//:modules/routing/Link'
 import { useTranslation } from 'react-i18next'
 import Button from '@//:modules/form/Button'
-import { graphql, useFragment } from 'react-relay/hooks'
+import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import type { DisableMultiFactorFragment$key } from '@//:artifacts/DisableMultiFactorFragment.graphql'
+import type { DisableMultiFactorMutation } from '@//:artifacts/DisableMultiFactorMutation.graphql'
 
 type Props = {
   data: DisableMultiFactorFragment$key
@@ -24,21 +21,50 @@ type Props = {
 
 const DisableMultiFactorFragmentGQL = graphql`
   fragment DisableMultiFactorFragment on AccountMultiFactorSettings {
-
     canDisableMultiFactor
+  }
+`
+
+const DisableMultiFactorMutationGQL = graphql`
+  mutation DisableMultiFactorMutation {
+    disableAccountMultiFactor {
+      accountMultiFactorTotpEnabled
+    }
   }
 `
 
 export default function DisableMultiFactor (props: Props): Node {
   const data = useFragment(DisableMultiFactorFragmentGQL, props.data)
 
-  const { isOpen, onOpen, onClose } = useDisclosure()
-
-  const onDisable = () => {
-
-  }
+  const [disableMultiFactor, isDisablingMultiFactor] = useMutation<DisableMultiFactorMutation>(
+    DisableMultiFactorMutationGQL
+  )
 
   const [t] = useTranslation('settings')
+
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
+  const notify = useToast()
+
+  const onDisable = () => {
+    disableMultiFactor({
+      variables: {},
+      onCompleted () {
+        notify({
+          status: 'info',
+          title: t('security.multi_factor.disable.modal.query.success')
+        })
+        onClose()
+      },
+      onError () {
+        notify({
+          status: 'error',
+          title: t('security.multi_factor.disable.modal.query.error'),
+          isClosable: true
+        })
+      }
+    })
+  }
 
   return (
     <>
@@ -52,7 +78,10 @@ export default function DisableMultiFactor (props: Props): Node {
           isDisabled={data.canDisableMultiFactor} shouldWrapChildren
           label={t('security.multi_factor.disable.tooltip')}
         >
-          <Button isDisabled={!data.canDisableMultiFactor} variant='outline' colorScheme='orange' size='sm'>
+          <Button
+            onClick={onOpen} isDisabled={!data.canDisableMultiFactor} variant='outline' colorScheme='orange'
+            size='sm'
+          >
             {t('security.multi_factor.disable.button')}
           </Button>
         </Tooltip>
@@ -75,7 +104,10 @@ export default function DisableMultiFactor (props: Props): Node {
               <Button size='lg' onClick={onClose}>
                 {t('security.multi_factor.disable.modal.cancel')}
               </Button>
-              <Button size='lg' variant='outline' colorScheme='orange' onClick={onDisable} ml={3}>
+              <Button
+                isLoading={isDisablingMultiFactor} size='lg' variant='outline' colorScheme='orange'
+                onClick={onDisable} ml={3}
+              >
                 {t('security.multi_factor.disable.modal.confirm')}
               </Button>
             </AlertDialogFooter>

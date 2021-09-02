@@ -17,6 +17,7 @@ import type { TokenQuery } from '@//:artifacts/TokenQuery.graphql'
 import Button from '@//:modules/form/Button'
 import { useHistory } from '@//:modules/routing'
 import Confirm from './Confirm/Confirm'
+import Link from '@//:modules/routing/Link'
 
 type Props = {
   prepared: {
@@ -108,14 +109,24 @@ export default function Token ({ prepared }: Props): Node {
     }
   }, [data])
 
+  // If the token is invalid, show the user this feedback
   if (!data) {
     return (
       <Center mt={8}>
-        <Flex w={['fill', 'sm']} direction='column'>
-          <Alert mb={2} status='error'>
+        <Flex w={['fill', 'sm']} align='center' direction='column'>
+          <Alert mb={4} status='warning'>
             <AlertIcon />
             <AlertDescription>{t('expired')}</AlertDescription>
           </Alert>
+          <Link to='/join'>
+            <Button
+              size='lg'
+              colorScheme='gray'
+              variant='solid'
+            >
+              {t('back')}
+            </Button>
+          </Link>
         </Flex>
       </Center>
     )

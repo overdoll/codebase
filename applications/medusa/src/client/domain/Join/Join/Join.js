@@ -78,7 +78,7 @@ export default function Join ({ queryRef, hadGrant, clearGrant }: Props): Node {
     <>
       <Helmet title='join' />
       <Center mt={40}>
-        <Flex w={['sm', 'md']} direction='column' align='center'>
+        <Flex w={['sm', 'md']} ml={[1, 0]} mr={[1, 0]} direction='column' align='center'>
           <Icon
             icon={SignBadgeCircle}
             w={100}

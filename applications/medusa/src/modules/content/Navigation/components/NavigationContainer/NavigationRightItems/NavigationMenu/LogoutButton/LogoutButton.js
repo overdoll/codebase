@@ -34,6 +34,7 @@ export default function LogoutButton (): Node {
           title: t('logout.success'),
           isClosable: true
         })
+        history.push('/')
       },
       updater: (store, payload) => {
         const viewer = store
@@ -41,7 +42,6 @@ export default function LogoutButton (): Node {
           .getLinkedRecord('viewer')
 
         viewer.invalidateRecord()
-        history.push('/')
       },
       onError () {
         notify({

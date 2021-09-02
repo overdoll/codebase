@@ -2,7 +2,7 @@
  * @flow
  */
 import { graphql, useMutation } from 'react-relay/hooks'
-import { useToast } from '@chakra-ui/react'
+import { Flex, Heading, Spinner, Text, useToast } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner'
 import { useEffect } from 'react'
@@ -20,7 +20,7 @@ const GrantAction = graphql`
 `
 
 export default function Grant (): Node {
-  const [commit] = useMutation(GrantAction)
+  const [commit, isGrantingAccess] = useMutation(GrantAction)
 
   const notify = useToast()
 
@@ -30,40 +30,56 @@ export default function Grant (): Node {
 
   // grant account access
   useEffect(() => {
-    commit({
-      variables: {},
-      updater: (store, payload) => {
-        if (payload.grantAccountAccessWithAuthenticationToken.validation) {
+    if (!isGrantingAccess) {
+      commit({
+        variables: {},
+        onCompleted (data) {
+          // If there's an error with the token, bring user back to login page
+          if (data.grantAccountAccessWithAuthenticationToken.validation) {
+            notify({
+              status: 'error',
+              title: data.grantAccountAccessWithAuthenticationToken.validation,
+              isClosable: true
+            })
+            history.push('/join')
+            return
+          }
           notify({
-            status: 'error',
-            title: payload.grantAccountAccessWithAuthenticationToken.validation,
+            status: 'success',
+            title: t('grant.success'),
             isClosable: true
           })
-          return
+          history.push('/profile')
+        },
+        updater: (store, payload) => {
+          // basically just invalidate the viewer so it can be re-fetched
+          const viewer = store
+            .getRoot()
+            .getLinkedRecord('viewer')
+
+          if (viewer != null) {
+            viewer.invalidateRecord()
+          }
+        },
+        onError (data) {
+          console.log(data)
+          notify({
+            status: 'error',
+            title: t('grant.error'),
+            isClosable: true
+          })
+          history.push('/join')
         }
-
-        // basically just invalidate the viewer so it can be re-fetched
-        const viewer = store
-          .getRoot()
-          .getLinkedRecord('viewer')
-
-        if (viewer != null) {
-          viewer.invalidateRecord()
-        }
-
-        history.push('/profile')
-      },
-      onError (data) {
-        console.log(data)
-        notify({
-          status: 'error',
-          title: t('register.error'),
-          isClosable: true
-        })
-      }
-    })
+      })
+    }
   }, [])
 
   // Ask user to authenticate
-  return <CenteredSpinner />
+  return (
+    <Flex mt={40} h='100%' align='center' justify='center' direction='column'>
+      <Spinner mb={6} thickness={4} size='xl' color='primary.500' />
+      <Heading mb={1} size='md' color='gray.00'>{t('grant.header')}</Heading>
+      <Text size='sm' color='gray.100'>{t('grant.subheader')}</Text>
+    </Flex>
+  )
 }
