@@ -113,6 +113,9 @@ export default function RecoveryCodesSetup (props: Props): Node {
           const node = store.get(data.__id)
           const payload = store.getRootField('generateAccountMultiFactorRecoveryCodes').getLinkedRecords('accountMultiFactorRecoveryCodes')
           node.setLinkedRecords(payload, 'recoveryCodes')
+
+          const viewer = store.getRoot().getLinkedRecord('viewer').getLinkedRecord('multiFactorSettings')
+          viewer.setValue(true, 'recoveryCodesGenerated')
         }
       }
     )

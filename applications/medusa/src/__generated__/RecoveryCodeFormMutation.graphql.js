@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash df7523bf2433b7229bb0dda3059af4c3
+ * @relayHash a7a70b7ed0206bd13f1791246c052a5c
  */
 
 /* eslint-disable */
@@ -17,7 +17,10 @@ export type RecoveryCodeFormMutationVariables = {|
 |};
 export type RecoveryCodeFormMutationResponse = {|
   +grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode: ?{|
-    +validation: ?GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation
+    +validation: ?GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation,
+    +account: ?{|
+      +id: string
+    |},
   |}
 |};
 export type RecoveryCodeFormMutation = {|
@@ -32,6 +35,9 @@ mutation RecoveryCodeFormMutation(
 ) {
   grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode(input: $input) {
     validation
+    account {
+      id
+    }
   }
 }
 */
@@ -65,6 +71,24 @@ v1 = [
         "kind": "ScalarField",
         "name": "validation",
         "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Account",
+        "kind": "LinkedField",
+        "name": "account",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "id",
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
       }
     ],
     "storageKey": null
@@ -88,7 +112,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "df7523bf2433b7229bb0dda3059af4c3",
+    "id": "a7a70b7ed0206bd13f1791246c052a5c",
     "metadata": {},
     "name": "RecoveryCodeFormMutation",
     "operationKind": "mutation",
@@ -97,5 +121,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '755a771bc44a593b9fdb93a02a662d8a';
+(node: any).hash = '24991b5f7aaa4a31aa83abaf81e20c67';
 module.exports = node;

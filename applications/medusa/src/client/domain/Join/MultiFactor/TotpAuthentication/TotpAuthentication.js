@@ -28,11 +28,15 @@ import { useTranslation } from 'react-i18next'
 import Button from '@//:modules/form/Button'
 import RecoveryCodeForm from './RecoveryCodeForm/RecoveryCodeForm'
 import { useHistory } from '@//:modules/routing'
+import PrepareViewer from '../../helpers/PrepareViewer'
 
 const SubmitTotpMutationGQL = graphql`
   mutation TotpAuthenticationMutation($input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput!) {
     grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp(input: $input) {
       validation
+      account {
+        id
+      }
     }
   }
 `
@@ -66,8 +70,18 @@ export default function TotpAuthentication (props: Props): Node {
             title: data.grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp.validation,
             isClosable: true
           })
-          history.push('/join')
+          return
         }
+        notify({
+          status: 'success',
+          title: t('multi_factor.submit.form.query.success'),
+          isClosable: true
+        })
+        history.push('/profile')
+      },
+      updater: (store) => {
+        const payload = store.getRootField('grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp').getLinkedRecord('account')
+        PrepareViewer(store, payload)
       },
       onError (data) {
         console.log(data)

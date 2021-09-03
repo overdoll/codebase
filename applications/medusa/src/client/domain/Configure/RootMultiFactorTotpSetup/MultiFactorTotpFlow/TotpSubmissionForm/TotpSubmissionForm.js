@@ -29,6 +29,7 @@ import InterfaceAlertWarningTriangle
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/alerts/interface-alert-warning-triangle.svg'
 import InterfaceValidationCheck
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/validation/interface-validation-check.svg'
+import PrepareViewer from '../../../../Join/helpers/PrepareViewer'
 
 type CodeValues = {
   code: string
@@ -91,6 +92,10 @@ export default function TotpSubmissionForm (props: Props): Node {
           isClosable: true
         })
         props.setIsSuccessful()
+      },
+      updater: (store, payload) => {
+        const viewer = store.getRoot().getLinkedRecord('viewer').getLinkedRecord('multiFactorSettings')
+        viewer.setValue(payload.enrollAccountMultiFactorTotp.accountMultiFactorTotpEnabled, 'multiFactorTotpConfigured')
       },
       onError () {
         notify({

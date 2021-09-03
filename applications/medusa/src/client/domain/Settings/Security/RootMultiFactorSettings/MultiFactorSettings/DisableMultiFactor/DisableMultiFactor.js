@@ -51,10 +51,15 @@ export default function DisableMultiFactor (props: Props): Node {
       variables: {},
       onCompleted () {
         notify({
-          status: 'info',
-          title: t('security.multi_factor.disable.modal.query.success')
+          status: 'success',
+          title: t('security.multi_factor.disable.modal.query.success'),
+          isClosable: true
         })
         onClose()
+      },
+      updater: (store, payload) => {
+        const viewer = store.getRoot().getLinkedRecord('viewer').getLinkedRecord('multiFactorSettings')
+        viewer.setValue(payload.disableAccountMultiFactor.accountMultiFactorTotpEnabled, 'multiFactorTotpConfigured')
       },
       onError () {
         notify({

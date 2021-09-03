@@ -105,9 +105,5 @@ export default function JoinRoot (props: Props): Node {
 
   // This one logs you in with the token - will error out if you try to login if multiFactor isn't an empty array
 
-  return (
-    <Suspense fallback={null}>
-      <Grant />
-    </Suspense>
-  )
+  return (<Grant />)
 }

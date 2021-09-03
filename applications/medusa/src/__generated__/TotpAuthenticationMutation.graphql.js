@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 0402b82cbd53bb0ec56d9fdf1e67d405
+ * @relayHash 10311543ae1b66f83e9a27af064cd534
  */
 
 /* eslint-disable */
@@ -17,7 +17,10 @@ export type TotpAuthenticationMutationVariables = {|
 |};
 export type TotpAuthenticationMutationResponse = {|
   +grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp: ?{|
-    +validation: ?GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation
+    +validation: ?GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation,
+    +account: ?{|
+      +id: string
+    |},
   |}
 |};
 export type TotpAuthenticationMutation = {|
@@ -32,6 +35,9 @@ mutation TotpAuthenticationMutation(
 ) {
   grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp(input: $input) {
     validation
+    account {
+      id
+    }
   }
 }
 */
@@ -65,6 +71,24 @@ v1 = [
         "kind": "ScalarField",
         "name": "validation",
         "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Account",
+        "kind": "LinkedField",
+        "name": "account",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "id",
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
       }
     ],
     "storageKey": null
@@ -88,7 +112,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "0402b82cbd53bb0ec56d9fdf1e67d405",
+    "id": "10311543ae1b66f83e9a27af064cd534",
     "metadata": {},
     "name": "TotpAuthenticationMutation",
     "operationKind": "mutation",
@@ -97,5 +121,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '8ad475b67dd763163f089f78bdf45d95';
+(node: any).hash = '677b3c5fd8048cdfdb8a4d53f7deba59';
 module.exports = node;

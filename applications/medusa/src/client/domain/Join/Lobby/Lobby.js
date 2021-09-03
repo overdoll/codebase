@@ -102,13 +102,15 @@ export default function Lobby ({ queryRef, refresh }: Props): Node {
         <Heading mb={8} align='center' size='md' color='gray.00'>
           {t('lobby.header')}
         </Heading>
-        <Box mb={8} pt={3} pb={3} borderRadius={5} bg='gray.800' w='100%'>
-          <Center>
-            <Text fontSize='lg' color='purple.300'>
-              {data.email}
-            </Text>
-          </Center>
-        </Box>
+        <Flex
+          justify='center' wordBreak='break-all' mb={8} pt={3} pb={3} pr={2} borderRadius={5}
+          bg='gray.800'
+          w='100%'
+        >
+          <Text fontSize='lg' color='purple.300'>
+            {data.email}
+          </Text>
+        </Flex>
         <Button
           size='lg'
           loading={isInFlight}

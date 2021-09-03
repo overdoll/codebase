@@ -23,6 +23,7 @@ import InterfaceAlertWarningTriangle
 import InterfaceValidationCheck
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/validation/interface-validation-check.svg'
 import { useHistory } from '@//:modules/routing'
+import PrepareViewer from '../../../helpers/PrepareViewer'
 
 type CodeValues = {
   code: string,
@@ -34,6 +35,9 @@ const RecoveryCodeMutationGQL = graphql`
   mutation RecoveryCodeFormMutation($input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput!) {
     grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode(input: $input) {
       validation
+      account {
+        id
+      }
     }
   }
 `
@@ -80,12 +84,18 @@ export default function RecoveryCodeForm (props: Props): Node {
         }
         notify({
           status: 'success',
-          title: t('multi_factor.recovery.form.query.success'),
-          isClosable: true
+          isClosable: true,
+          title: t('multi_factor.recovery.form.query.success')
         })
-        history.push('/join')
+        history.push('/profile')
       },
-      onError () {
+      updater: (store) => {
+        const payload = store.getRootField('grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode').getLinkedRecord('account')
+
+        PrepareViewer(store, payload)
+      },
+      onError (data) {
+        console.log(data)
         notify({
           status: 'error',
           title: t('multi_factor.recovery.form.query.error'),

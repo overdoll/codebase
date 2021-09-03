@@ -17,7 +17,7 @@ const MultiFactorQueryGQL = graphql`
   query MultiFactorSettingsQuery {
     viewer {
       multiFactorSettings {
-        multiFactorEnabled
+        multiFactorTotpConfigured
         ...DisableMultiFactorFragment
         ...MultiFactorTotpSettingsFragment
         ...RecoveryCodesSettingsFragment
@@ -42,7 +42,7 @@ export default function MultiFactorSettings (props: Props): Node {
       <Stack spacing={3}>
         <MultiFactorTotpSettings data={data?.viewer?.multiFactorSettings} />
         <RecoveryCodesSettings data={data?.viewer?.multiFactorSettings} />
-        {data?.viewer?.multiFactorSettings.multiFactorEnabled &&
+        {data?.viewer?.multiFactorSettings.multiFactorTotpConfigured &&
           <DisableMultiFactor data={data?.viewer?.multiFactorSettings} />}
       </Stack>
     </>

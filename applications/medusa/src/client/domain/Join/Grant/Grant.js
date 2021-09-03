@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner'
 import { useEffect } from 'react'
 import { useHistory } from '@//:modules/routing'
+import PrepareViewer from '../helpers/PrepareViewer'
 
 const GrantAction = graphql`
   mutation GrantMutation {
@@ -20,7 +21,7 @@ const GrantAction = graphql`
 `
 
 export default function Grant (): Node {
-  const [commit, isGrantingAccess] = useMutation(GrantAction)
+  const [commit] = useMutation(GrantAction)
 
   const notify = useToast()
 
@@ -30,48 +31,38 @@ export default function Grant (): Node {
 
   // grant account access
   useEffect(() => {
-    if (!isGrantingAccess) {
-      commit({
-        variables: {},
-        onCompleted (data) {
-          // If there's an error with the token, bring user back to login page
-          if (data.grantAccountAccessWithAuthenticationToken.validation) {
-            notify({
-              status: 'error',
-              title: data.grantAccountAccessWithAuthenticationToken.validation,
-              isClosable: true
-            })
-            history.push('/join')
-            return
-          }
-          notify({
-            status: 'success',
-            title: t('grant.success'),
-            isClosable: true
-          })
-          history.push('/profile')
-        },
-        updater: (store, payload) => {
-          // basically just invalidate the viewer so it can be re-fetched
-          const viewer = store
-            .getRoot()
-            .getLinkedRecord('viewer')
-
-          if (viewer != null) {
-            viewer.invalidateRecord()
-          }
-        },
-        onError (data) {
-          console.log(data)
+    commit({
+      variables: {},
+      onCompleted (data) {
+        // If there's an error with the token, bring user back to login page
+        if (data.grantAccountAccessWithAuthenticationToken.validation) {
           notify({
             status: 'error',
-            title: t('grant.error'),
+            title: data.grantAccountAccessWithAuthenticationToken.validation,
             isClosable: true
           })
-          history.push('/join')
+          return
         }
-      })
-    }
+        notify({
+          status: 'success',
+          title: t('grant.success'),
+          isClosable: true
+        })
+        history.push('/profile')
+      },
+      updater: (store) => {
+        const payload = store.getRootField('grantAccountAccessWithAuthenticationToken').getLinkedRecord('account')
+        PrepareViewer(store, payload)
+      },
+      onError (data) {
+        console.log(data)
+        notify({
+          status: 'error',
+          title: t('grant.error'),
+          isClosable: true
+        })
+      }
+    })
   }, [])
 
   // Ask user to authenticate

@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash c1dbf4ac78ac09a4379666b7073c25a2
+ * @relayHash 5b5160d34dcb5834074b91976301cf80
  */
 
 /* eslint-disable */
@@ -15,7 +15,7 @@ export type MultiFactorSettingsQueryVariables = {||};
 export type MultiFactorSettingsQueryResponse = {|
   +viewer: ?{|
     +multiFactorSettings: {|
-      +multiFactorEnabled: boolean,
+      +multiFactorTotpConfigured: boolean,
       +$fragmentRefs: DisableMultiFactorFragment$ref & MultiFactorTotpSettingsFragment$ref & RecoveryCodesSettingsFragment$ref,
     |}
   |}
@@ -30,7 +30,7 @@ export type MultiFactorSettingsQuery = {|
 query MultiFactorSettingsQuery {
   viewer {
     multiFactorSettings {
-      multiFactorEnabled
+      multiFactorTotpConfigured
       ...DisableMultiFactorFragment
       ...MultiFactorTotpSettingsFragment
       ...RecoveryCodesSettingsFragment
@@ -58,7 +58,7 @@ var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "multiFactorEnabled",
+  "name": "multiFactorTotpConfigured",
   "storageKey": null
 };
 return {
@@ -144,13 +144,6 @@ return {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "multiFactorTotpConfigured",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
                 "name": "recoveryCodesGenerated",
                 "storageKey": null
               }
@@ -170,7 +163,7 @@ return {
     ]
   },
   "params": {
-    "id": "c1dbf4ac78ac09a4379666b7073c25a2",
+    "id": "5b5160d34dcb5834074b91976301cf80",
     "metadata": {},
     "name": "MultiFactorSettingsQuery",
     "operationKind": "query",
@@ -179,5 +172,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '8f86ba0f09653be6676894e5e486d292';
+(node: any).hash = 'e0d21af380ea23e53f6f016467952bba';
 module.exports = node;
