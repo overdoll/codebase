@@ -35,8 +35,8 @@ type PostAuditLog struct {
 
 	status string
 
-	rejectionReason *PostRejectionReason
-	userInfraction  *AccountInfractionHistory
+	rejectionReason   *PostRejectionReason
+	accountInfraction *AccountInfractionHistory
 }
 
 func NewRemovePostAuditLog(requester *principal.Principal, postId, contributorId string, rejectionReason *PostRejectionReason, notes *string) (*PostAuditLog, error) {
@@ -65,15 +65,15 @@ func NewApprovePostAuditLog(requester *principal.Principal, postId, moderatorId,
 	}
 
 	return &PostAuditLog{
-		id:              ksuid.New().String(),
-		pendingPostId:   postId,
-		moderatorId:     moderatorId,
-		contributorId:   contributorId,
-		status:          StatusApproved,
-		rejectionReason: nil,
-		notes:           nil,
-		reverted:        false,
-		userInfraction:  nil,
+		id:                ksuid.New().String(),
+		pendingPostId:     postId,
+		moderatorId:       moderatorId,
+		contributorId:     contributorId,
+		status:            StatusApproved,
+		rejectionReason:   nil,
+		notes:             nil,
+		reverted:          false,
+		accountInfraction: nil,
 	}, nil
 }
 
@@ -87,11 +87,11 @@ func NewRejectPostAuditLog(requester *principal.Principal, userInfractionHistory
 		}
 	}
 
-	var userInfraction *AccountInfractionHistory
+	var accountInfraction *AccountInfractionHistory
 	var err error
 
 	if rejectionReason.Infraction() {
-		userInfraction, err = NewAccountInfractionHistory(requester, contributorId, userInfractionHistory, rejectionReason)
+		accountInfraction, err = NewAccountInfractionHistory(requester, contributorId, userInfractionHistory, rejectionReason)
 
 		if err != nil {
 			return nil, err
@@ -99,29 +99,29 @@ func NewRejectPostAuditLog(requester *principal.Principal, userInfractionHistory
 	}
 
 	return &PostAuditLog{
-		id:              ksuid.New().String(),
-		pendingPostId:   postId,
-		moderatorId:     moderatorId,
-		contributorId:   contributorId,
-		status:          StatusDenied,
-		rejectionReason: rejectionReason,
-		notes:           notes,
-		reverted:        false,
-		userInfraction:  userInfraction,
+		id:                ksuid.New().String(),
+		pendingPostId:     postId,
+		moderatorId:       moderatorId,
+		contributorId:     contributorId,
+		status:            StatusDenied,
+		rejectionReason:   rejectionReason,
+		notes:             notes,
+		reverted:          false,
+		accountInfraction: accountInfraction,
 	}, nil
 }
 
 func UnmarshalPostAuditLogFromDatabase(id, postId, moderatorId, contributorId, status string, rejectionReason *PostRejectionReason, notes *string, reverted bool, userInfraction *AccountInfractionHistory) *PostAuditLog {
 	return &PostAuditLog{
-		id:              id,
-		pendingPostId:   postId,
-		moderatorId:     moderatorId,
-		contributorId:   contributorId,
-		status:          status,
-		rejectionReason: rejectionReason,
-		notes:           notes,
-		reverted:        reverted,
-		userInfraction:  userInfraction,
+		id:                id,
+		pendingPostId:     postId,
+		moderatorId:       moderatorId,
+		contributorId:     contributorId,
+		status:            status,
+		rejectionReason:   rejectionReason,
+		notes:             notes,
+		reverted:          reverted,
+		accountInfraction: userInfraction,
 	}
 }
 
@@ -193,7 +193,7 @@ func (m *PostAuditLog) Revert() error {
 	}
 
 	// remove infraction (else we have bad ids)
-	m.userInfraction = nil
+	m.accountInfraction = nil
 	m.reverted = true
 
 	return nil
@@ -216,8 +216,8 @@ func (m *PostAuditLog) RejectionReason() *PostRejectionReason {
 	return m.rejectionReason
 }
 
-func (m *PostAuditLog) UserInfraction() *AccountInfractionHistory {
-	return m.userInfraction
+func (m *PostAuditLog) AccountInfraction() *AccountInfractionHistory {
+	return m.accountInfraction
 }
 
 func (m *PostAuditLog) IsDeniedWithInfraction() bool {

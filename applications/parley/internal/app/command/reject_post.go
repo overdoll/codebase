@@ -71,7 +71,7 @@ func (h RejectPostHandler) Handle(ctx context.Context, cmd RejectPost) (*infract
 		}
 
 		// Lock user account
-		if err := h.eva.LockAccount(ctx, infractionAuditLog.ContributorId(), infractionAuditLog.UserInfraction().UserLockLength()); err != nil {
+		if err := h.eva.LockAccount(ctx, infractionAuditLog.ContributorId(), infractionAuditLog.AccountInfraction().UserLockLength()); err != nil {
 			return nil, errors.Wrap(err, "failed to lock account")
 		}
 	} else {

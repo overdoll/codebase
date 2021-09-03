@@ -183,16 +183,14 @@ func (r ReportCassandraRepository) SearchPostReports(ctx context.Context, reques
 	builder := qb.Select(postReportByPostTable.Name()).
 		Where(qb.In("bucket"), qb.Eq("post_id"))
 
-	fmt.Println(builder.ToCql())
-
-	if cursor != nil {
-		cursor.BuildCassandra(builder, "id")
-	}
+	cursor.BuildCassandra(builder, "id")
 
 	var results []*postReport
 
 	if err := builder.
 		Query(r.session).
+		// need to disable paging since we do orderBy and IN queries
+		PageSize(0).
 		BindMap(info).
 		Select(&results); err != nil {
 		return nil, fmt.Errorf("failed to search post reports: %v", err)

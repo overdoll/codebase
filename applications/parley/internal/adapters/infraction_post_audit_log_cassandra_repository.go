@@ -98,8 +98,8 @@ func marshalPostAuditLogToDatabase(auditLog *infraction.PostAuditLog) (*postAudi
 	var userInfractionId *string
 	var reason *string
 
-	if auditLog.IsDeniedWithInfraction() && auditLog.UserInfraction() != nil {
-		id := auditLog.UserInfraction().ID()
+	if auditLog.IsDeniedWithInfraction() && auditLog.AccountInfraction() != nil {
+		id := auditLog.AccountInfraction().ID()
 		userInfractionId = &id
 	}
 
@@ -182,7 +182,7 @@ func (r InfractionCassandraRepository) CreatePostAuditLog(ctx context.Context, a
 
 	// if denied with infraction, add to infraction history for this user
 	if auditLog.IsDeniedWithInfraction() {
-		if err := r.CreateAccountInfractionHistory(ctx, auditLog.UserInfraction()); err != nil {
+		if err := r.CreateAccountInfractionHistory(ctx, auditLog.AccountInfraction()); err != nil {
 			return err
 		}
 	}
@@ -303,20 +303,20 @@ func (r InfractionCassandraRepository) SearchPostAuditLogs(ctx context.Context, 
 
 	if filter.PostId() != nil {
 		builder = qb.Select(postAuditLogByPostTable.Name()).
-			Where(qb.In("bucket"), qb.Eq("post_id"))
+			Where(qb.Eq("post_id"))
 
 		info["post_id"] = *filter.PostId()
 	}
 
-	if cursor != nil {
-		cursor.BuildCassandra(builder, "id")
-	}
+	cursor.BuildCassandra(builder, "id")
 
 	var results []*postAuditLogByModerator
 
-	// this say this may be nil but it would never actually happen because theres a validator on the filter level
 	if err := builder.
+		// this say this may be nil but it would never actually happen because theres a validator on the filter level
 		Query(r.session).
+		// need to disable paging since we do orderBy and IN queries
+		PageSize(0).
 		BindMap(info).
 		Select(&results); err != nil {
 		return nil, fmt.Errorf("failed to search audit logs: %v", err)

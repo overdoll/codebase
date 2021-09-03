@@ -32,7 +32,7 @@ func (h RevertModeratePostHandler) Handle(ctx context.Context, cmd RevertModerat
 
 		// save infraction ID so we can delete it after the revert
 		if log.IsDeniedWithInfraction() {
-			infractionId = log.UserInfraction().ID()
+			infractionId = log.AccountInfraction().ID()
 		}
 
 		if err := log.Revert(); err != nil {
