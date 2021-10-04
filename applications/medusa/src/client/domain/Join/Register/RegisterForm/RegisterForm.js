@@ -84,10 +84,10 @@ export default function RegisterForm ({ onSubmit, loading }: Props): Node {
           )}
         </InputGroup>
         <FormHelperText>
-          {errors.username && errors.username.type === 'string.empty' && t('authenticate.form.validation.username.empty')}
-          {errors.username && errors.username.type === 'string.min' && t('authenticate.form.validation.username.min')}
-          {errors.username && errors.username.type === 'string.max' && t('authenticate.form.validation.username.max')}
-          {errors.username && errors.username.type === 'string.alphanum' && t('authenticate.form.validation.username.alphanum')}
+          {errors.username && errors.username.type === 'string.empty' && t('register.form.validation.username.empty')}
+          {errors.username && errors.username.type === 'string.min' && t('register.form.validation.username.min')}
+          {errors.username && errors.username.type === 'string.max' && t('register.form.validation.username.max')}
+          {errors.username && errors.username.type === 'string.alphanum' && t('register.form.validation.username.alphanum')}
         </FormHelperText>
       </FormControl>
       <Button

@@ -109,14 +109,10 @@
       "description": "Setting up two-factor authentication adds an extra layer of security in case your account is compromised.",
       "totp": {
         "title": "Authenticator App",
-        "button": {
-          "set_up": "Set Up",
-          "modify": "Reconfigure",
-          "restricted": "You cannot set up this authentication method until you generate a set of recovery codes"
-        },
-        "tags": {
-          "not_configured": "Not Configured",
-          "configured": "Active"
+        "description": {
+          "not_configured": "Configure authenticator app",
+          "configured": "Reconfigure authenticator app",
+          "restricted": "Recovery codes must be generated first"
         }
       },
       "recovery_codes": {
@@ -125,9 +121,9 @@
           "set_up": "Generate",
           "show": "Show"
         },
-        "tags": {
-          "not_configured": "Not Generated",
-          "configured": "Generated"
+        "description": {
+          "not_configured": "Generate recovery codes",
+          "configured": "View or regenerate recovery codes"
         }
       },
       "disable": {

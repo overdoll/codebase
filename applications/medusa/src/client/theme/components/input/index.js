@@ -154,7 +154,13 @@ function variantFilled (props) {
         borderColor: getColor(theme, ec)
       },
       _focus: {
-        borderColor: getColor(theme, fc), bg: mode('gray.100', 'whiteAlpha.50')(props)
+        zIndex: 1,
+        borderColor: getColor(theme, fc),
+        boxShadow: `0 0 0 0.5px ${getColor(theme, fc)}`,
+        _invalid: {
+          borderColor: getColor(theme, ec),
+          boxShadow: `0 0 0 1px ${getColor(theme, ec)}`
+        }
       }
     },
     addon: {

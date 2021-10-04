@@ -188,6 +188,58 @@ function variantLink (props) {
   }
 }
 
+function variantPanel (props) {
+  const { colorScheme: c } = props
+
+  if (c === 'gray') {
+    const bg = mode('gray.500', 'gray.800')(props)
+
+    return {
+      bg,
+      display: 'inline',
+      lineHeight: 'inherit',
+      m: 0,
+      p: 3,
+      _hover: {
+        bg: mode('gray.200', 'gray.800')(props),
+        _disabled: {
+          bg
+        }
+      },
+      _active: { bg: mode('gray.300', 'gray.800')(props) }
+    }
+  }
+
+  const {
+    bg = `${c}.500`,
+    color = 'white',
+    hoverBg = `${c}.600`,
+    activeBg = `${c}.700`
+  } = accessibleColorMap[c] || {}
+
+  const background = mode(bg, 'gray.800')(props)
+
+  return {
+    bg: background,
+    color: mode(color, `${c}.500`)(props),
+    display: 'inline',
+    lineHeight: 'inherit',
+    m: 0,
+    p: 3,
+    _hover: {
+      bg: background,
+      color: mode(hoverBg, `${c}.400`)(props),
+      _disabled: {
+        bg: background
+      }
+    },
+    _active: {
+      bg: background,
+      color: mode(activeBg, `${c}.600`)(props)
+    }
+  }
+}
+
 const variantUnstyled = {
   bg: 'none',
   color: 'inherit',
@@ -202,6 +254,7 @@ const variants = {
   outline: variantOutline,
   solid: variantSolid,
   link: variantLink,
+  panel: variantPanel,
   unstyled: variantUnstyled
 }
 
