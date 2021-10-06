@@ -29,16 +29,17 @@ import Button from '@//:modules/form/Button'
 import RecoveryCodeForm from './RecoveryCodeForm/RecoveryCodeForm'
 import { useHistory } from '@//:modules/routing'
 import PrepareViewer from '../../helpers/PrepareViewer'
+import { PageWrapper } from '../../../../components/PageLayout'
 
 const SubmitTotpMutationGQL = graphql`
-  mutation TotpAuthenticationMutation($input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput!) {
-    grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp(input: $input) {
-      validation
-      account {
-        id
-      }
+    mutation TotpAuthenticationMutation($input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput!) {
+        grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp(input: $input) {
+            validation
+            account {
+                id
+            }
+        }
     }
-  }
 `
 
 type Props = {}
@@ -97,75 +98,75 @@ export default function TotpAuthentication (props: Props): Node {
   return (
     <>
       <Helmet title='totp authentication' />
-      <Center mt={8}>
-        <Flex w={['sm', 'md']} ml={[1, 0]} mr={[1, 0]} direction='column' align='center'>
-          <Icon
-            icon={SignBadgeCircle}
-            w={100}
-            h={100}
-            color='primary.500'
-            ml='auto'
-            mr='auto'
-            mb={8}
-          />
-          <Heading align='center' fontSize='xl' color='gray.00'>
-            {t('multi_factor.header')}
-          </Heading>
-          <Text mb={6} align='center' fontSize='sm' color='gray.200'>
-            {t('multi_factor.subheader')}
-          </Text>
-          <Flex mb={5} position='relative' align='center'>
-            <form>
-              <Wrap>
-                <PinInput
-                  onComplete={(value) => { onSubmitTotp(value) }} isDisabled={isSubmittingTotp}
-                  size={breakPoint || 'md'} otp
-                >
-                  <PinInputField filter={isSubmittingTotp && 'blur(1px)'} />
-                  <PinInputField filter={isSubmittingTotp && 'blur(1px)'} />
-                  <PinInputField filter={isSubmittingTotp && 'blur(1px)'} />
-                  <PinInputField filter={isSubmittingTotp && 'blur(1px)'} />
-                  <PinInputField filter={isSubmittingTotp && 'blur(1px)'} />
-                  <PinInputField filter={isSubmittingTotp && 'blur(1px)'} />
-                </PinInput>
-              </Wrap>
-            </form>
-            <Flex
-              position='absolute'
-              w='100%' h='100%'
-              pointerEvents={isSubmittingTotp ? 'initial' : 'none'}
-            >
-              <Fade in={isSubmittingTotp}>
-                <Flex
-                  p={4}
-                  w='100%' h='100%'
-                  position='absolute'
-                  align='center'
-                  justify='center'
-                  direction='row'
-                >
-                  <Text mr={2} color='gray.00'>
-                    {t('multi_factor.submit.form.submitting')}
-                  </Text>
-                  <Spinner color='gray.00' size='sm' />
-                </Flex>
-              </Fade>
-            </Flex>
+      <PageWrapper>
+        <Icon
+          icon={SignBadgeCircle}
+          w={100}
+          h={100}
+          color='primary.500'
+          ml='auto'
+          mr='auto'
+          mb={8}
+        />
+        <Heading align='center' fontSize='xl' color='gray.00'>
+          {t('multi_factor.header')}
+        </Heading>
+        <Text mb={6} align='center' fontSize='sm' color='gray.200'>
+          {t('multi_factor.subheader')}
+        </Text>
+        <Flex mb={5} position='relative' align='center'>
+          <form>
+            <Wrap>
+              <PinInput
+                onComplete={(value) => {
+                  onSubmitTotp(value)
+                }} isDisabled={isSubmittingTotp}
+                size={breakPoint || 'md'} otp
+              >
+                <PinInputField filter={isSubmittingTotp && 'blur(1px)'} />
+                <PinInputField filter={isSubmittingTotp && 'blur(1px)'} />
+                <PinInputField filter={isSubmittingTotp && 'blur(1px)'} />
+                <PinInputField filter={isSubmittingTotp && 'blur(1px)'} />
+                <PinInputField filter={isSubmittingTotp && 'blur(1px)'} />
+                <PinInputField filter={isSubmittingTotp && 'blur(1px)'} />
+              </PinInput>
+            </Wrap>
+          </form>
+          <Flex
+            position='absolute'
+            w='100%' h='100%'
+            pointerEvents={isSubmittingTotp ? 'initial' : 'none'}
+          >
+            <Fade in={isSubmittingTotp}>
+              <Flex
+                p={4}
+                w='100%' h='100%'
+                position='absolute'
+                align='center'
+                justify='center'
+                direction='row'
+              >
+                <Text mr={2} color='gray.00'>
+                  {t('multi_factor.submit.form.submitting')}
+                </Text>
+                <Spinner color='gray.00' size='sm' />
+              </Flex>
+            </Fade>
           </Flex>
-          <Button onClick={onToggle} size='md' variant='link'>{t('multi_factor.recovery.button')}</Button>
-          <Collapse animateOpacity in={isOpen}>
-            <Box mt={5}>
-              <Alert mb={3} status='info'>
-                <AlertIcon />
-                <AlertDescription align='center' lineHeight={5} fontSize='sm'>
-                  {t('multi_factor.recovery.alert.description')}
-                </AlertDescription>
-              </Alert>
-              <RecoveryCodeForm />
-            </Box>
-          </Collapse>
         </Flex>
-      </Center>
+        <Button onClick={onToggle} size='md' variant='link'>{t('multi_factor.recovery.button')}</Button>
+        <Collapse animateOpacity in={isOpen}>
+          <Box mt={5}>
+            <Alert mb={3} status='info'>
+              <AlertIcon />
+              <AlertDescription align='center' lineHeight={5} fontSize='sm'>
+                {t('multi_factor.recovery.alert.description')}
+              </AlertDescription>
+            </Alert>
+            <RecoveryCodeForm />
+          </Box>
+        </Collapse>
+      </PageWrapper>
     </>
   )
 }

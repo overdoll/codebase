@@ -12,6 +12,7 @@ import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
 import ErrorFallback from '../../../../../modules/content/ErrorFallback/ErrorFallback'
 import { Suspense } from 'react'
 import QueueSettingsQuery from '@//:artifacts/QueueSettingsQuery.graphql'
+import { PageSectionTitle, PageSectionWrap } from '../../../../components/PageLayout'
 
 type Props = {
   query: PreloadedQueryInner<QueueSettingsQueryType>,
@@ -27,8 +28,9 @@ export default function RootQueueSettings (props: Props): Node {
 
   return (
     <>
-      <Heading size='lg' color='gray.00'>{t('moderation.queue.title')}</Heading>
-      <Divider borderColor='gray.500' mt={1} mb={3} />
+      <PageSectionWrap>
+        <PageSectionTitle>{t('moderation.queue.title')}</PageSectionTitle>
+      </PageSectionWrap>
       <Suspense fallback={<SkeletonStack />}>
         <ErrorBoundary
           fallback={({ error, reset }) => (

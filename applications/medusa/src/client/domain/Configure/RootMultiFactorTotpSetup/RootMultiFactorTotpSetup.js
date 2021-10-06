@@ -14,6 +14,8 @@ import MultiFactorTotpSetup from './MultiFactorTotpHeader/MultiFactorTotpHeader'
 import { useQueryLoader } from 'react-relay/hooks'
 import type { MultiFactorTotpHeaderQuery as MultiFactorTotpHeaderQueryType } from '@//:artifacts/MultiFactorTotpHeaderQuery.graphql'
 import MultiFactorTotpHeaderQuery from '@//:artifacts/MultiFactorTotpHeaderQuery.graphql'
+import { PageWrapper, PageSectionWrap, PageSectionTitle, PageSectionDescription } from '../../../components/PageLayout'
+import Button from '@//:modules/form/Button'
 
 type Props = {
   prepared: {
@@ -32,34 +34,26 @@ export default function RootMultiFactorTotpSetup (props: Props): Node {
   return (
     <>
       <Helmet title='authenticator setup' />
-      <Center mt={8}>
-        <Flex
-          w={['full', 'sm', 'md', 'lg']}
-          pl={[1, 0]}
-          pr={[1, 0]}
-          direction='column'
-          mb={6}
-        >
-          <Flex justify='space-between' align='center'>
-            <Heading fontSize='2xl' color='gray.00'>{t('totp.title')}</Heading>
-            <Link to='/settings/security'>
-              <CloseButton aria-label={t('recovery_codes.back')} />
-            </Link>
-          </Flex>
-          <Divider borderColor='gray.500' mt={1} mb={1} />
-          <Text mb={2} fontSize='md' color='gray.100'>{t('totp.description')}</Text>
-          <Suspense fallback={<SkeletonStack />}>
-            <ErrorBoundary
-              fallback={({ error, reset }) => (
-                <ErrorFallback error={error} reset={reset} refetch={loadQuery} />
-              )}
-            >
-              <MultiFactorTotpSetup query={queryRef} />
-            </ErrorBoundary>
-          </Suspense>
-
+      <PageWrapper>
+        <PageSectionWrap>
+          <PageSectionTitle>{t('totp.title')}</PageSectionTitle>
+          <PageSectionDescription>{t('totp.description')}</PageSectionDescription>
+        </PageSectionWrap>
+        <Suspense fallback={<SkeletonStack />}>
+          <ErrorBoundary
+            fallback={({ error, reset }) => (
+              <ErrorFallback error={error} reset={reset} refetch={loadQuery} />
+            )}
+          >
+            <MultiFactorTotpSetup query={queryRef} />
+          </ErrorBoundary>
+        </Suspense>
+        <Flex justify='center'>
+          <Link to='/settings/security'>
+            <Button mt={8} size='sm' variant='link'>{t('recovery_codes.back')}</Button>
+          </Link>
         </Flex>
-      </Center>
+      </PageWrapper>
     </>
   )
 }

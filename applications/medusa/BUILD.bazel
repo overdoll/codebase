@@ -123,6 +123,7 @@ _RUNTIME_DEPS = [
     "@npm//apollo-server",
     "@npm//date-fns",
     "@npm//js-file-download",
+    "@npm//cypress-otp",
 ]
 
 TEST_DEPS = [

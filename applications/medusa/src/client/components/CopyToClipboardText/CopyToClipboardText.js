@@ -44,6 +44,7 @@ export default function CopyToClipboardText ({ text, children, ...rest }: Props)
       size='md'
       leftIcon={<Icon w={3} h={3} icon={hasCopied ? InterfaceFileCheck : InterfaceFileText} fill='gray.100' />}
       colorScheme='gray' variant='link'
+      alia-label={t('button.copy')}
       onClick={onClickButton} {...rest}
     >
       {children}

@@ -12,6 +12,7 @@ import { Suspense } from 'react'
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
 import EmailsQuery from '@//:artifacts/EmailsQuery.graphql'
 import type { EmailsQuery as EmailsQueryType } from '@//:artifacts/EmailsQuery.graphql'
+import { PageSectionTitle, PageSectionWrap } from '../../../../components/PageLayout'
 
 type Props = {
   query: PreloadedQueryInner<EmailsQueryType>,
@@ -27,8 +28,9 @@ export default function RootEmails (props: Props): Node {
 
   return (
     <>
-      <Heading size='lg' color='gray.00'>{t('profile.email.title')}</Heading>
-      <Divider borderColor='gray.500' mt={1} mb={3} />
+      <PageSectionWrap>
+        <PageSectionTitle>{t('profile.email.title')}</PageSectionTitle>
+      </PageSectionWrap>
       <Suspense fallback={<SkeletonStack />}>
         <ErrorBoundary
           fallback={({ error, reset }) => (

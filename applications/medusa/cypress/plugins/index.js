@@ -18,7 +18,9 @@
 // eslint-disable-next-line no-unused-vars
 module.exports = (on, config) => {
   require('@cypress/code-coverage/task')(on, config)
-
+  on('task', {
+    generateOTP: require('cypress-otp')
+  })
   // add other tasks to be registered here
 
   // IMPORTANT to return the config object

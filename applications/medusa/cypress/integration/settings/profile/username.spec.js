@@ -9,7 +9,7 @@ describe('Settings - Change Username', () => {
 
     cy.visit('/settings/profile')
     cy.findByText(/Current Username/iu).should('exist')
-    cy.get('button').contains(/Change Username/iu).should('be.visible').click()
+    cy.get('[data-cy=username-form-toggle]').should('be.visible').click()
     cy.findByText(/Enter a new username/iu)
   })
 

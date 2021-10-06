@@ -12,16 +12,17 @@ import SignBadgeCircle
   from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
 import { Helmet } from 'react-helmet-async'
 import RegisterForm from './RegisterForm/RegisterForm'
+import { PageWrapper } from '../../../components/PageLayout'
 
 const RegisterMutationGQL = graphql`
-  mutation RegisterMutation($input: CreateAccountWithAuthenticationTokenInput!) {
-    createAccountWithAuthenticationToken(input: $input) {
-      validation
-      account {
-        id
-      }
+    mutation RegisterMutation($input: CreateAccountWithAuthenticationTokenInput!) {
+        createAccountWithAuthenticationToken(input: $input) {
+            validation
+            account {
+                id
+            }
+        }
     }
-  }
 `
 
 export default function Register (): Node {
@@ -75,20 +76,18 @@ export default function Register (): Node {
   return (
     <>
       <Helmet title='register' />
-      <Center mt={40}>
-        <Flex w={['sm', 'md']} direction='column' align='center'>
-          <Icon
-            icon={SignBadgeCircle}
-            w={100}
-            h={100}
-            color='green.500'
-            ml='auto'
-            mr='auto'
-            mb={8}
-          />
-          <RegisterForm onSubmit={onSubmit} loading={isInFlight} />
-        </Flex>
-      </Center>
+      <PageWrapper>
+        <Icon
+          icon={SignBadgeCircle}
+          w={100}
+          h={100}
+          color='green.500'
+          ml='auto'
+          mr='auto'
+          mb={8}
+        />
+        <RegisterForm onSubmit={onSubmit} loading={isInFlight} />
+      </PageWrapper>
     </>
   )
 }

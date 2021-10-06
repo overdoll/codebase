@@ -2,7 +2,7 @@
  * @flow
  */
 import type { Node } from 'react'
-import { Flex, Text } from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import Link from '@//:modules/routing/Link'
 import InterfaceArrowsButtonRight
@@ -13,7 +13,7 @@ type Props = {
   children: string,
   path: string,
   disabled?: boolean,
-};
+}
 
 export default function PagePanelWrap ({ path, children, disabled }: Props): Node {
   return (
