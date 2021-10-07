@@ -4,7 +4,7 @@
 import type { Node } from 'react'
 import { Helmet } from 'react-helmet-async'
 import {
-  Center,
+  Box,
   Flex,
   Stack
 } from '@chakra-ui/react'
@@ -13,6 +13,7 @@ import type { UsernamesQuery } from '@//:artifacts/UsernamesQuery.graphql'
 import type { PreparedEmailsQuery } from '@//:artifacts/PreparedEmailsQuery.graphql'
 import RootEmails from './RootEmails/RootEmails'
 import RootUsernames from './RootUsernames/RootUsernames'
+import { PageWrapper } from '../../../components/PageLayout'
 
 type Props = {
   prepared: {
@@ -24,25 +25,17 @@ type Props = {
 export default function Profile (props: Props): Node {
   return (
     <>
-      <Helmet title='profile' />
-      <Center mt={8}>
-        <Flex
-          w={['full', 'sm', 'md', 'lg']}
-          pl={[1, 0]}
-          pr={[1, 0]}
-          direction='column'
-          mb={6}
-        >
-          <Stack spacing={8}>
-            <Flex direction='column'>
-              <RootUsernames query={props.prepared.usernamesQuery} />
-            </Flex>
-            <Flex direction='column'>
-              <RootEmails query={props.prepared.emailsQuery} />
-            </Flex>
-          </Stack>
-        </Flex>
-      </Center>
+      <Helmet title='profile settings' />
+      <PageWrapper>
+        <Stack spacing={8}>
+          <Box>
+            <RootUsernames query={props.prepared.usernamesQuery} />
+          </Box>
+          <Box>
+            <RootEmails query={props.prepared.emailsQuery} />
+          </Box>
+        </Stack>
+      </PageWrapper>
     </>
   )
 }

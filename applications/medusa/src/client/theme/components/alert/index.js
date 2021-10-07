@@ -4,8 +4,9 @@ const parts = ['container', 'title', 'description', 'icon']
 
 const baseStyle = {
   container: {
-    px: 4,
-    py: 3
+    px: 3,
+    py: 3,
+    borderRadius: 5
   },
   title: {
     fontWeight: 'bold',
@@ -17,24 +18,41 @@ const baseStyle = {
   },
   icon: {
     flexShrink: 0,
-    marginEnd: 3,
+    mr: 3,
     w: 5,
-    h: 6
+    h: 5
   }
 }
 
 function getBg (props) {
   const { theme, colorScheme: c } = props
   const lightBg = getColor(theme, `${c}.100`, c)
-  const darkBg = transparentize(`${c}.200`, 0.16)(theme)
+  const darkBg = transparentize(`${c}.300`, 0.10)(theme)
+  return mode(lightBg, darkBg)(props)
+}
+
+function getBorder (props) {
+  const { theme, colorScheme: c } = props
+  const lightBg = getColor(theme, `${c}.100`, c)
+  const darkBg = transparentize(`${c}.300`, 0.5)(theme)
   return mode(lightBg, darkBg)(props)
 }
 
 function variantSubtle (props) {
   const { colorScheme: c } = props
   return {
-    container: { bg: getBg(props) },
-    icon: { color: mode(`${c}.500`, `${c}.200`)(props) }
+    container: {
+      bg: getBg(props),
+      borderWidth: 2,
+      borderColor: getBorder(props)
+    },
+    icon: { color: mode(`${c}.500`, `${c}.300`)(props) },
+    title: {
+      color: mode(`${c}.500`, `${c}.300`)(props)
+    },
+    description: {
+      color: mode(`${c}.500`, `${c}.300`)(props)
+    }
   }
 }
 
@@ -68,7 +86,7 @@ function variantTopAccent (props) {
   }
 }
 
-function variantSolid (props) {
+function variantSolidOriginal (props) {
   const { colorScheme: c } = props
   return {
     container: {
@@ -78,8 +96,32 @@ function variantSolid (props) {
   }
 }
 
+function variantSolid (props) {
+  const { colorScheme: c } = props
+  return {
+    boxShadow: 'none',
+    container: {
+      paddingStart: 3,
+      borderStartWidth: '4px',
+      borderStartColor: mode(`${c}.500`, `${c}.500`)(props),
+      bg: mode(`${c}.500`, 'gray.800')(props),
+      color: mode('white', 'gray.00')(props)
+    },
+    icon: {
+      color: mode(`${c}.500`, `${c}.500`)(props),
+      width: 4,
+      height: 4,
+      marginTop: 1
+    },
+    title: {
+      fontWeight: 'normal'
+    }
+  }
+}
+
 const variants = {
   subtle: variantSubtle,
+  'solid-base': variantSolidOriginal,
   'left-accent': variantLeftAccent,
   'top-accent': variantTopAccent,
   solid: variantSolid

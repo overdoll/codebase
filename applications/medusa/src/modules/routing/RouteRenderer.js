@@ -111,7 +111,7 @@ export default function RouterRenderer (): Node {
         {routeComponent}
         <chakra.div zIndex='banner' position='fixed' w='100%' top='0'>
           <Fade in={isPending}>
-            <Progress bg='transparent' colorScheme='red' size='xs' isIndeterminate />
+            <Progress bg='transparent' colorScheme='primary' size='xs' isIndeterminate />
           </Fade>
         </chakra.div>
       </Suspense>

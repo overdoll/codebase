@@ -28,6 +28,7 @@ import Joi from 'joi'
 import { useTranslation } from 'react-i18next'
 import type { EmailsSettingsFragment$key } from '@//:artifacts/EmailsSettingsFragment.graphql'
 import IconButton from '@//:modules/form/IconButton'
+import { emailSchema } from '@//:modules/constants/schemas/FormSchemas'
 
 type EmailValues = {
   email: string,
@@ -38,23 +39,20 @@ type Props = {
 }
 
 const schema = Joi.object({
-  email: Joi
-    .string()
-    .email({ minDomainSegments: 2, tlds: {} })
-    .required()
+  email: emailSchema
 })
 
 const AddEmailMutationGQL = graphql`
-  mutation AddEmailFormMutation($input: AddAccountEmailInput!, $connections: [ID!]!) {
-    addAccountEmail(input: $input) {
-      validation
-      accountEmail @appendNode(connections: $connections, edgeTypeName: "updateEmailPrimaryEdge") {
-        id
-        email
-        status
-      }
+    mutation AddEmailFormMutation($input: AddAccountEmailInput!, $connections: [ID!]!) {
+        addAccountEmail(input: $input) {
+            validation
+            accountEmail @appendNode(connections: $connections, edgeTypeName: "updateEmailPrimaryEdge") {
+                id
+                email
+                status
+            }
+        }
     }
-  }
 `
 
 export default function AddEmailForm ({ connectionID }: Props): Node {

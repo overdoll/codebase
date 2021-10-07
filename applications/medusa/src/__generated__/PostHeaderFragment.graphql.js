@@ -15,7 +15,7 @@ export type PostHeaderFragment = {|
     +username: string,
     +avatar: any,
   |},
-  +reassignmentAt: any,
+  +reassignmentAt: ?any,
   +$refType: PostHeaderFragment$ref,
 |};
 export type PostHeaderFragment$data = PostHeaderFragment;

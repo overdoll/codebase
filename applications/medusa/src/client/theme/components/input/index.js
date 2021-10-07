@@ -4,6 +4,23 @@
 
 import { getColor, mode } from '@chakra-ui/theme-tools'
 
+const determineBorderWidth = (size) => {
+  switch (size) {
+    case 'xs':
+      return 1
+    case 'sm':
+      return 2
+    case 'md':
+      return 2
+    case 'lg':
+      return 3
+    case 'xl':
+      return 3
+    default:
+      return 1
+  }
+}
+
 const parts = ['field', 'addon']
 
 const baseStyle = {
@@ -24,7 +41,8 @@ const size = {
     pt: 5,
     px: 3,
     h: 16,
-    borderRadius: 'lg'
+    borderRadius: 'lg',
+    fontWeight: 'semibold'
   },
 
   lg: {
@@ -38,7 +56,7 @@ const size = {
     fontSize: 'md',
     px: 4,
     h: 10,
-    borderRadius: 'md'
+    borderRadius: 7
   },
 
   sm: {
@@ -92,12 +110,12 @@ function getDefaults (props) {
 }
 
 function variantOutline (props) {
-  const { theme } = props
+  const { theme, size } = props
   const { focusBorderColor: fc, errorBorderColor: ec } = getDefaults(props)
 
   return {
     field: {
-      border: '1px solid',
+      borderWidth: determineBorderWidth(size),
       borderColor: 'gray.500',
       bg: 'inherit',
       _hover: {
@@ -113,12 +131,16 @@ function variantOutline (props) {
       },
       _invalid: {
         borderColor: getColor(theme, ec),
-        boxShadow: `0 0 0 1px ${getColor(theme, ec)}`
+        boxShadow: `0 0 0 0.5px ${getColor(theme, ec)}`
       },
       _focus: {
         zIndex: 1,
         borderColor: getColor(theme, fc),
-        boxShadow: `0 0 0 1px ${getColor(theme, fc)}`
+        boxShadow: `0 0 0 0.5px ${getColor(theme, fc)}`,
+        _invalid: {
+          borderColor: getColor(theme, ec),
+          boxShadow: `0 0 0 1px ${getColor(theme, ec)}`
+        }
       }
     },
     addon: {
@@ -130,12 +152,13 @@ function variantOutline (props) {
 }
 
 function variantFilled (props) {
-  const { theme } = props
+  const { theme, size } = props
   const { focusBorderColor: fc, errorBorderColor: ec } = getDefaults(props)
 
   return {
     field: {
-      border: '2px solid',
+      borderStyle: 'solid',
+      borderWidth: determineBorderWidth(size),
       borderColor: 'transparent',
       bg: mode('gray.100', 'whiteAlpha.50')(props),
       _readOnly: {
@@ -150,7 +173,13 @@ function variantFilled (props) {
         borderColor: getColor(theme, ec)
       },
       _focus: {
-        borderColor: getColor(theme, fc), bg: mode('gray.100', 'whiteAlpha.50')(props)
+        zIndex: 1,
+        borderColor: getColor(theme, fc),
+        boxShadow: `0 0 0 0.5px ${getColor(theme, fc)}`,
+        _invalid: {
+          borderColor: getColor(theme, ec),
+          boxShadow: `0 0 0 1px ${getColor(theme, ec)}`
+        }
       }
     },
     addon: {

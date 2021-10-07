@@ -10,13 +10,12 @@ import {
 import Icon from '@//:modules/content/Icon/Icon'
 import { useState } from 'react'
 import { usePaginationFragment, graphql } from 'react-relay'
-
+import { format } from 'date-fns'
 import { useTranslation } from 'react-i18next'
 import type { PostsFragment$key } from '@//:artifacts/PostsFragment.graphql'
 import ModeratePost from './ModeratePost/ModeratePost'
 import PostHeader from './PostHeader/PostHeader'
 import NoPostsPlaceholder from './NoPostsPlaceholder/NoPostsPlaceholder'
-import convertToMonthDayTime from '@//:modules/utilities/functions/date/convertToMonthDayTime'
 
 import InterfaceArrowsButtonRight
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/arrows/interface-arrows-button-right.svg'
@@ -127,6 +126,8 @@ export default function Posts (props: Props): Node {
     )
   }
 
+  const formattedDate = format(new Date(currentPost.postedAt), 'eeee h:m aaa')
+
   // Otherwise, show a post queue if the user has one
   return (
     <>
@@ -149,7 +150,7 @@ export default function Posts (props: Props): Node {
           <Text
             color='gray.300' fontWeight='medium'
             size='md'
-          >{t('queue.post.title', { date: convertToMonthDayTime(currentPost.postedAt) })}
+          >{t('queue.post.title', { date: formattedDate })}
           </Text>
         </Flex>
         {(currentIndex + 1 !== data.moderatorPostsQueue?.edges.length || hasNext) &&

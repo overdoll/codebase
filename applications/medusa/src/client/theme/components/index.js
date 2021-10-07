@@ -11,6 +11,13 @@ import table from './table'
 import formerror from './form-error'
 import formlabel from './form-label'
 import Switch from './switch'
+import alert from './alert'
+import code from './code'
+import progress from './progress'
+import link from './link'
+import divider from './divider'
+import pininput from './pin-input'
+import heading from './heading'
 
 export default {
   Menu: menu,
@@ -25,5 +32,12 @@ export default {
   Table: table,
   FormError: formerror,
   FormLabel: formlabel,
-  Switch: Switch
+  Switch: Switch,
+  Alert: alert,
+  Code: code,
+  Progress: progress,
+  Link: link,
+  Divider: divider,
+  PinInput: pininput,
+  Heading: heading
 }

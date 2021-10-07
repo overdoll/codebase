@@ -4,7 +4,8 @@
 
 import type { Node } from 'react'
 import { useState } from 'react'
-import { Button, useClipboard, useToast } from '@chakra-ui/react'
+import { useClipboard, useToast } from '@chakra-ui/react'
+import Button from '@//:modules/form/Button'
 import { useTranslation } from 'react-i18next'
 import Icon from '@//:modules/content/Icon/Icon'
 import InterfaceFileText
@@ -30,11 +31,10 @@ export default function CopyToClipboardText ({ text, children, ...rest }: Props)
     onCopy()
     notify({
       title: t('menu.copied'),
-      duration: 500,
+      duration: 1000,
       status: 'success',
       isClosable: true,
-      variant: 'solid',
-      position: 'bottom-left'
+      variant: 'solid'
     })
   }
 
@@ -44,6 +44,7 @@ export default function CopyToClipboardText ({ text, children, ...rest }: Props)
       size='md'
       leftIcon={<Icon w={3} h={3} icon={hasCopied ? InterfaceFileCheck : InterfaceFileText} fill='gray.100' />}
       colorScheme='gray' variant='link'
+      aria-label={t('button.copy')}
       onClick={onClickButton} {...rest}
     >
       {children}

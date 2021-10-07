@@ -17,7 +17,7 @@ type Props = {
   },
   onSelect: () => void,
 };
-
+/*
 const MediaQueryGQL = graphql`
   query MediaQuery($title: String) {
     medias(title: $title) {
@@ -32,14 +32,20 @@ const MediaQueryGQL = graphql`
   }
 `
 
+ */
+
 export default function Media ({ args, onSelect }: Props): Node {
   const [t] = useTranslation('upload')
+  /*
+   const data = useLazyLoadQuery<MediaQuery>(
+     MediaQueryGQL,
+     args.variables,
+     args.options
+   )
 
-  const data = useLazyLoadQuery<MediaQuery>(
-    MediaQueryGQL,
-    args.variables,
-    args.options
-  )
+   */
+
+  const data = null
 
   // add a new media with a custom tag telling us it's custom
   const onAddNewMedia = () => {
@@ -49,7 +55,7 @@ export default function Media ({ args, onSelect }: Props): Node {
 
   return (
     <>
-      {data.medias.edges.length === 0
+      {data?.medias.edges.length === 0
         ? (
           <Empty
             title={t('tag.character.media.not_found')}
@@ -58,7 +64,7 @@ export default function Media ({ args, onSelect }: Props): Node {
           )
         : (
           <Wrap justify='center'>
-            {data.medias.edges.map(item => (
+            {data?.medias.edges.map(item => (
               <Element
                 key={item.node.id}
                 onSelect={() => onSelect(item.node)}

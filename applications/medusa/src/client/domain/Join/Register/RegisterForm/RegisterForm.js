@@ -13,12 +13,15 @@ import {
 } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import { useForm } from 'react-hook-form'
-import AlertCircle from '@streamlinehq/streamlinehq/img/streamline-regular/interface-essential/alerts/alert-circle.svg'
-import CheckDouble1
-  from '@streamlinehq/streamlinehq/img/streamline-regular/interface-essential/form-validation/check-double-1.svg'
+import InterfaceValidationCheck
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/validation/interface-validation-check.svg'
+
+import InterfaceAlertWarningTriangle
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/alerts/interface-alert-warning-triangle.svg'
 import { joiResolver } from '@hookform/resolvers/joi'
 import type { Node } from 'react'
 import Button from '@//:modules/form/Button'
+import { usernameSchema } from '@//:modules/constants/schemas/FormSchemas'
 
 type RegisterValues = {
   username: string,
@@ -30,12 +33,7 @@ type Props = {
 }
 
 const schema = Joi.object({
-  username: Joi
-    .string()
-    .alphanum()
-    .min(3)
-    .max(15)
-    .required()
+  username: usernameSchema
 })
 
 export default function RegisterForm ({ onSubmit, loading }: Props): Node {
@@ -76,18 +74,19 @@ export default function RegisterForm ({ onSubmit, loading }: Props): Node {
           {(errors.username || success) && (
             <InputRightElement>
               <Icon
-                icon={success ? CheckDouble1 : AlertCircle}
-                color={success ? 'green.600' : 'orange.500'}
-                m={4}
+                w={6}
+                h={6}
+                icon={success ? InterfaceValidationCheck : InterfaceAlertWarningTriangle}
+                fill={success ? 'green.600' : 'orange.500'}
               />
             </InputRightElement>
           )}
         </InputGroup>
         <FormHelperText>
-          {errors.username && errors.username.type === 'string.empty' && t('authenticate.form.validation.username.empty')}
-          {errors.username && errors.username.type === 'string.min' && t('authenticate.form.validation.username.min')}
-          {errors.username && errors.username.type === 'string.max' && t('authenticate.form.validation.username.max')}
-          {errors.username && errors.username.type === 'string.alphanum' && t('authenticate.form.validation.username.alphanum')}
+          {errors.username && errors.username.type === 'string.empty' && t('register.form.validation.username.empty')}
+          {errors.username && errors.username.type === 'string.min' && t('register.form.validation.username.min')}
+          {errors.username && errors.username.type === 'string.max' && t('register.form.validation.username.max')}
+          {errors.username && errors.username.type === 'string.alphanum' && t('register.form.validation.username.alphanum')}
         </FormHelperText>
       </FormControl>
       <Button

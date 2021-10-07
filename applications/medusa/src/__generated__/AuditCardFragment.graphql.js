@@ -18,7 +18,7 @@ export type AuditCardFragment = {|
     +username: string
   |},
   +post: {|
-    +postedAt: any
+    +postedAt: ?any
   |},
   +action: PostAuditLogAction,
   +$refType: AuditCardFragment$ref,

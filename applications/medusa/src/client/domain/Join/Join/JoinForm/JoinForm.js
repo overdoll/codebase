@@ -6,12 +6,14 @@ import { useTranslation } from 'react-i18next'
 import { FormControl, FormHelperText, FormLabel, Input, InputGroup, InputRightElement } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import { useForm } from 'react-hook-form'
-import AlertCircle from '@streamlinehq/streamlinehq/img/streamline-regular/interface-essential/alerts/alert-circle.svg'
-import CheckDouble1
-  from '@streamlinehq/streamlinehq/img/streamline-regular/interface-essential/form-validation/check-double-1.svg'
+import InterfaceValidationCheck
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/validation/interface-validation-check.svg'
 import { joiResolver } from '@hookform/resolvers/joi'
 import type { Node } from 'react'
 import Button from '@//:modules/form/Button'
+import InterfaceAlertWarningTriangle
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/alerts/interface-alert-warning-triangle.svg'
+import { emailSchema } from '@//:modules/constants/schemas/FormSchemas'
 
 type JoinValues = {
   email: string,
@@ -23,10 +25,7 @@ type Props = {
 }
 
 const schema = Joi.object({
-  email: Joi
-    .string()
-    .email({ minDomainSegments: 2, tlds: {} })
-    .required()
+  email: emailSchema
 })
 
 export default function JoinForm ({ onSubmit, loading }: Props): Node {
@@ -64,10 +63,10 @@ export default function JoinForm ({ onSubmit, loading }: Props): Node {
           {(errors.email || success) && (
             <InputRightElement>
               <Icon
-                w={8}
-                h={8}
-                icon={success ? CheckDouble1 : AlertCircle}
-                color={success ? 'green.600' : 'orange.500'}
+                w={6}
+                h={6}
+                icon={success ? InterfaceValidationCheck : InterfaceAlertWarningTriangle}
+                fill={success ? 'green.600' : 'orange.500'}
               />
             </InputRightElement>
           )}
@@ -81,7 +80,7 @@ export default function JoinForm ({ onSubmit, loading }: Props): Node {
         variant='outline'
         type='submit'
         loading={loading}
-        colorScheme='red'
+        colorScheme='primary'
         w='100%'
       >
         {t('authenticate.form.continue')}

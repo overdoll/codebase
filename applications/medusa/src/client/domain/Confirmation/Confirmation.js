@@ -68,7 +68,7 @@ export default function Confirmation (props: Props): Node {
 
   return (
     <Flex mt={40} h='100%' align='center' justify='center' direction='column'>
-      <Spinner mb={6} thickness={4} size='xl' color='red.500' />
+      <Spinner mb={6} thickness={4} size='xl' color='primary.500' />
       <Heading mb={1} size='md' color='gray.00'>{t('header')}</Heading>
       <Text size='sm' color='gray.100'>{t('subheader')}</Text>
     </Flex>

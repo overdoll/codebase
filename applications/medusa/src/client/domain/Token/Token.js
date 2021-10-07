@@ -17,6 +17,8 @@ import type { TokenQuery } from '@//:artifacts/TokenQuery.graphql'
 import Button from '@//:modules/form/Button'
 import { useHistory } from '@//:modules/routing'
 import Confirm from './Confirm/Confirm'
+import Link from '@//:modules/routing/Link'
+import { PageWrapper } from '../../components/PageLayout'
 
 type Props = {
   prepared: {
@@ -25,28 +27,28 @@ type Props = {
 };
 
 const VerifyTokenMutationGQL = graphql`
-  mutation TokenVerifyMutation($input: VerifyAuthenticationTokenInput!) {
-    verifyAuthenticationToken(input: $input) {
-      validation
-      authenticationToken {
-        id
-        verified
-      }
+    mutation TokenVerifyMutation($input: VerifyAuthenticationTokenInput!) {
+        verifyAuthenticationToken(input: $input) {
+            validation
+            authenticationToken {
+                id
+                verified
+            }
+        }
     }
-  }
 `
 
 const TokenStatus = graphql`
-  query TokenQuery($token: String) {
-    viewAuthenticationToken(token: $token) {
-      id
-      verified
-      sameSession
-      location
-      device
-      secure
+    query TokenQuery($token: String) {
+        viewAuthenticationToken(token: $token) {
+            id
+            verified
+            sameSession
+            location
+            device
+            secure
+        }
     }
-  }
 `
 
 export default function Token ({ prepared }: Props): Node {
@@ -108,16 +110,26 @@ export default function Token ({ prepared }: Props): Node {
     }
   }, [data])
 
+  // If the token is invalid, show the user this feedback
   if (!data) {
     return (
-      <Center mt={8}>
-        <Flex w={['fill', 'sm']} direction='column'>
-          <Alert mb={2} status='error'>
-            <AlertIcon />
-            <AlertDescription>{t('expired')}</AlertDescription>
-          </Alert>
+      <PageWrapper>
+        <Alert mb={4} status='warning'>
+          <AlertIcon />
+          <AlertDescription>{t('expired')}</AlertDescription>
+        </Alert>
+        <Flex justify='center'>
+          <Link to='/join'>
+            <Button
+              size='lg'
+              colorScheme='gray'
+              variant='solid'
+            >
+              {t('back')}
+            </Button>
+          </Link>
         </Flex>
-      </Center>
+      </PageWrapper>
     )
   }
 
@@ -155,34 +167,35 @@ export default function Token ({ prepared }: Props): Node {
   return (
     <>
       <Helmet title='complete' />
-      <Center mt={8}>
-        <Flex w={['fill', 'sm']} direction='column'>
-          <Icon
-            icon={SignBadgeCircle}
-            w={100}
-            h={100}
-            color='green.500'
-            ml='auto'
-            mr='auto'
-            mb={8}
-          />
-          <Heading mb={8} align='center' size='md' color='gray.100'>
-            {t('header')}
-          </Heading>
-          <Box pt={3} pb={3} borderRadius={5} bg='gray.800'>
-            <Center>
-              <Text fontSize='lg' color='green.300'>
-                {renderDevice()}
-              </Text>
-            </Center>
-          </Box>
-          <Alert mt={4} borderRadius={5}>
-            <AlertIcon />
+      <PageWrapper>
+        <Icon
+          icon={SignBadgeCircle}
+          w={100}
+          h={100}
+          color='green.500'
+          ml='auto'
+          mr='auto'
+          mb={8}
+        />
+        <Heading mb={8} align='center' size='md' color='gray.100'>
+          {t('header')}
+        </Heading>
+        <Box pt={3} pb={3} borderRadius={5} bg='gray.800'>
+          <Center>
+            <Text fontSize='lg' color='green.300'>
+              {renderDevice()}
+            </Text>
+          </Center>
+        </Box>
+        <Alert mt={4} borderRadius={5}>
+          <AlertIcon />
+          <AlertDescription>
             {t('close')}
-            <AlertDescription />
-          </Alert>
-          {data.sameSession
-            ? (
+          </AlertDescription>
+        </Alert>
+        {data.sameSession
+          ? (
+            <Flex justify='center'>
               <Button
                 mt={8}
                 size='md'
@@ -190,16 +203,16 @@ export default function Token ({ prepared }: Props): Node {
                 variant='link'
               >
                 {t('closed_original_device')}
-              </Button>)
-            : (
-              <Center mt={4}>
-                <Text align='center' fontSize='md' color='pink.300'>
-                  {t('closed_original_device_hint')}
-                </Text>
-              </Center>
-              )}
-        </Flex>
-      </Center>
+              </Button>
+            </Flex>)
+          : (
+            <Center mt={4}>
+              <Text align='center' fontSize='md' color='pink.300'>
+                {t('closed_original_device_hint')}
+              </Text>
+            </Center>
+            )}
+      </PageWrapper>
     </>
   )
 }

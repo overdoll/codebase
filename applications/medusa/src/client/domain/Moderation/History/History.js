@@ -12,7 +12,7 @@ import type { AuditLogsQuery as AuditLogsQueryType } from '@//:artifacts/AuditLo
 import AuditLogsQuery from '@//:artifacts/AuditLogsQuery.graphql'
 import AuditLogs from './AuditLogs/AuditLogs'
 import { useQueryLoader } from 'react-relay/hooks'
-import ErrorFallback from '../../../components/ErrorFallback/ErrorFallback'
+import ErrorFallback from '../../../../modules/content/ErrorFallback/ErrorFallback'
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
 
 type Props = {

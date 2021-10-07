@@ -1,13 +1,14 @@
 /**
  * @flow
  */
-import { Center, Flex, Heading, Text } from '@chakra-ui/react'
+import { Heading, Text } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
 import type { Node } from 'react'
 import Icon from '@//:modules/content/Icon/Icon'
 import SignBadgeCircle
   from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
 import { useTranslation } from 'react-i18next'
+import { PageWrapper } from '../../../components/PageLayout'
 
 type Props = {
   error: Error
@@ -26,25 +27,23 @@ export default function ErrorDisplay ({ error }: Props): Node {
   return (
     <>
       <Helmet title='error' />
-      <Center mt={40}>
-        <Flex w={['sm', 'md', 'lg']} direction='column'>
-          <Icon
-            icon={SignBadgeCircle}
-            color='red.500'
-            w={100}
-            h={100}
-            ml='auto'
-            mr='auto'
-            mb={8}
-          />
-          <Heading size='md' align='center' color='gray.00'>
-            {t('page.header')}
-          </Heading>
-          <Text size='md' align='center' color='gray.200'>
-            {t('page.subheader')}
-          </Text>
-        </Flex>
-      </Center>
+      <PageWrapper>
+        <Icon
+          icon={SignBadgeCircle}
+          color='primary.500'
+          w={100}
+          h={100}
+          ml='auto'
+          mr='auto'
+          mb={8}
+        />
+        <Heading size='md' align='center' color='gray.00'>
+          {t('page.header')}
+        </Heading>
+        <Text size='md' align='center' color='gray.200'>
+          {t('page.subheader')}
+        </Text>
+      </PageWrapper>
     </>
   )
 }

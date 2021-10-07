@@ -26,7 +26,7 @@ export default function ProfileButton (props: Props): Node {
   return (
     <>
       <NavLink to='/profile'>
-        {(isActive) => (
+        {({ isActive }) => (
           <MenuItem bg={isActive ? 'gray.700' : 'gray.800'}>
             <Avatar
               src={viewer.avatar} pointerEvents='none' mr={4} borderRadius='25%' w='60px'

@@ -4,7 +4,7 @@
 import type { Node } from 'react'
 import { Suspense, useCallback, useState } from 'react'
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
-import ErrorFallback from '../../../../../../../components/ErrorFallback/ErrorFallback'
+import ErrorFallback from '../../../../../../../../modules/content/ErrorFallback/ErrorFallback'
 import LoadingSearch from '../loading/LoadingSearch'
 import {
   Center, Flex, Input, InputGroup, InputLeftElement, ModalOverlay,
@@ -140,7 +140,7 @@ export default function Search ({
             >
               <InputGroup>
                 <InputLeftElement pointerEvents='none'>
-                  <Icon h={6} w={6} icon={SearchCircle} color='red.500' />
+                  <Icon h={6} w={6} icon={SearchCircle} color='primary.500' />
                 </InputLeftElement>
                 <Input
                   size='md'
@@ -169,7 +169,7 @@ export default function Search ({
                   />
                 </InputRightElement>
               </InputGroup>
-              <Button size='lg' w='100%' colorScheme='red' onClick={onClose}>
+              <Button size='lg' w='100%' colorScheme='primary' onClick={onClose}>
                 {t('tag.search.close')}
               </Button>
             </Flex>

@@ -4,12 +4,14 @@
 import type { PreloadedQueryInner } from 'react-relay/hooks'
 import { graphql, useFragment, usePreloadedQuery, useQueryLoader } from 'react-relay/hooks'
 import type { Node } from 'react'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, Suspense } from 'react'
 import Register from './Register/Register'
 import Lobby from './Lobby/Lobby'
 import type { JoinRootQuery } from '@//:artifacts/JoinRootQuery.graphql'
 import Join from './Join/Join'
 import Grant from './Grant/Grant'
+import MultiFactor from './MultiFactor/MultiFactor'
+import type { JoinRootFragment$key } from '@//:artifacts/JoinRootFragment.graphql'
 
 type Props = {
   prepared: {
@@ -34,6 +36,8 @@ const JoinRootFragment = graphql`
     sameSession
     accountStatus {
       registered
+      multiFactor
+      ...MultiFactorFragment
     }
   }
 `
@@ -49,6 +53,8 @@ export default function JoinRoot (props: Props): Node {
   const tokenData = ref.viewAuthenticationToken
 
   const data = useFragment(JoinRootFragment, tokenData)
+
+  const multiFactorEnabled = data?.accountStatus?.multiFactor?.length > 0
 
   const authenticationInitiated = !!tokenData
   const authenticationTokenVerified = data?.verified === true
@@ -92,5 +98,12 @@ export default function JoinRoot (props: Props): Node {
     return <Register />
   }
 
-  return <Grant />
+  // Check if the user has multi-factor enabled and show them the flow if they do
+  if (multiFactorEnabled) {
+    return <MultiFactor query={data.accountStatus} />
+  }
+
+  // This one logs you in with the token - will error out if you try to login if multiFactor isn't an empty array
+
+  return (<Grant />)
 }

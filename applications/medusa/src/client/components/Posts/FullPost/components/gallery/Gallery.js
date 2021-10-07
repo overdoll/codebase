@@ -191,7 +191,7 @@ export default function Gallery ({ files, urls, thumbnails, setSwiper }: Props):
       >
         {currentSlide
           ? currentSlide.type.split('/')[0] === 'video'
-            ? <Spinner size='xl' color='red.500' />
+            ? <Spinner size='xl' color='primary.500' />
             : <SuspenseImage
                 alt='thumbnail'
                 h={!previewExpand ? '100%' : 'auto'}
@@ -200,7 +200,7 @@ export default function Gallery ({ files, urls, thumbnails, setSwiper }: Props):
                 zIndex='hide'
                 src={urls[currentSlide.id]} fallback={<Skeleton w='100%' h='100%' />}
               />
-          : <Spinner size='xl' color='red.500' />}
+          : <Spinner size='xl' color='primary.500' />}
       </InspectModal>
     </>
   )

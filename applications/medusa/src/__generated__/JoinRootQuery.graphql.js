@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash e4ed5f18e4c0f13b0c5a5cbc4e02fa4c
+ * @relayHash b88eee9a0c8e1f15046d8a893982bea2
  */
 
 /* eslint-disable */
@@ -42,11 +42,17 @@ fragment JoinRootFragment on AuthenticationToken {
   sameSession
   accountStatus {
     registered
+    multiFactor
+    ...MultiFactorFragment
   }
 }
 
 fragment LobbyFragment on AuthenticationToken {
   email
+}
+
+fragment MultiFactorFragment on AuthenticationTokenAccountStatus {
+  multiFactor
 }
 */
 
@@ -136,6 +142,13 @@ const node: ConcreteRequest = {
                 "kind": "ScalarField",
                 "name": "registered",
                 "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "multiFactor",
+                "storageKey": null
               }
             ],
             "storageKey": null
@@ -153,7 +166,7 @@ const node: ConcreteRequest = {
     ]
   },
   "params": {
-    "id": "e4ed5f18e4c0f13b0c5a5cbc4e02fa4c",
+    "id": "b88eee9a0c8e1f15046d8a893982bea2",
     "metadata": {},
     "name": "JoinRootQuery",
     "operationKind": "query",
