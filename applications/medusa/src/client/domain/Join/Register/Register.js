@@ -62,6 +62,11 @@ export default function Register (): Node {
         }
 
         history.push('/profile')
+        notify({
+          status: 'success',
+          title: t('register.success'),
+          isClosable: true
+        })
       },
       onError (data) {
         notify({

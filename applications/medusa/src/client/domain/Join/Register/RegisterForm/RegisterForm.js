@@ -13,12 +13,14 @@ import {
 } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import { useForm } from 'react-hook-form'
-import AlertCircle from '@streamlinehq/streamlinehq/img/streamline-regular/interface-essential/alerts/alert-circle.svg'
 import CheckDouble1
   from '@streamlinehq/streamlinehq/img/streamline-regular/interface-essential/form-validation/check-double-1.svg'
+import InterfaceAlertWarningTriangle
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/alerts/interface-alert-warning-triangle.svg'
 import { joiResolver } from '@hookform/resolvers/joi'
 import type { Node } from 'react'
 import Button from '@//:modules/form/Button'
+import { usernameSchema } from '@//:modules/constants/schemas/FormSchemas'
 
 type RegisterValues = {
   username: string,
@@ -30,12 +32,7 @@ type Props = {
 }
 
 const schema = Joi.object({
-  username: Joi
-    .string()
-    .alphanum()
-    .min(3)
-    .max(15)
-    .required()
+  username: usernameSchema
 })
 
 export default function RegisterForm ({ onSubmit, loading }: Props): Node {
@@ -76,7 +73,7 @@ export default function RegisterForm ({ onSubmit, loading }: Props): Node {
           {(errors.username || success) && (
             <InputRightElement>
               <Icon
-                icon={success ? CheckDouble1 : AlertCircle}
+                icon={success ? CheckDouble1 : InterfaceAlertWarningTriangle}
                 color={success ? 'green.600' : 'orange.500'}
                 m={4}
               />

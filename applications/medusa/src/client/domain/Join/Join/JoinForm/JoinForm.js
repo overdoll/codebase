@@ -12,6 +12,9 @@ import CheckDouble1
 import { joiResolver } from '@hookform/resolvers/joi'
 import type { Node } from 'react'
 import Button from '@//:modules/form/Button'
+import InterfaceAlertWarningTriangle
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/alerts/interface-alert-warning-triangle.svg'
+import { emailSchema } from '@//:modules/constants/schemas/FormSchemas'
 
 type JoinValues = {
   email: string,
@@ -23,10 +26,7 @@ type Props = {
 }
 
 const schema = Joi.object({
-  email: Joi
-    .string()
-    .email({ minDomainSegments: 2, tlds: {} })
-    .required()
+  email: emailSchema
 })
 
 export default function JoinForm ({ onSubmit, loading }: Props): Node {
@@ -66,7 +66,7 @@ export default function JoinForm ({ onSubmit, loading }: Props): Node {
               <Icon
                 w={8}
                 h={8}
-                icon={success ? CheckDouble1 : AlertCircle}
+                icon={success ? CheckDouble1 : InterfaceAlertWarningTriangle}
                 color={success ? 'green.600' : 'orange.500'}
               />
             </InputRightElement>
