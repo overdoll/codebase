@@ -2,7 +2,7 @@
  * @flow
  */
 import type { Node } from 'react'
-import { Divider, Heading } from '@chakra-ui/react'
+import { Heading } from '@chakra-ui/react'
 
 type Props = {
   children: string

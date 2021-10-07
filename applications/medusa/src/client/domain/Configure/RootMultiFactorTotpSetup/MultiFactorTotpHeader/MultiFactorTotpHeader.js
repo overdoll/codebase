@@ -2,10 +2,10 @@
  * @flow
  */
 
-import { graphql, usePreloadedQuery, useMutation } from 'react-relay/hooks'
+import { graphql, usePreloadedQuery } from 'react-relay/hooks'
 import type { MultiFactorTotpHeaderQuery } from '@//:artifacts/MultiFactorTotpHeaderQuery.graphql'
 import MultiFactorTotpFlow from '../MultiFactorTotpFlow/MultiFactorTotpFlow'
-import { Alert, AlertDescription, AlertIcon, Flex, Box } from '@chakra-ui/react'
+import { Alert, AlertDescription, AlertIcon, Flex } from '@chakra-ui/react'
 import Link from '@//:modules/routing/Link'
 import Button from '@//:modules/form/Button'
 import { useTranslation } from 'react-i18next'
@@ -15,14 +15,14 @@ type Props = {
 }
 
 const MultiFactorTotpHeaderQueryGQL = graphql`
-  query MultiFactorTotpHeaderQuery {
-    viewer {
-      multiFactorSettings {
-        multiFactorTotpConfigured
-        recoveryCodesGenerated
-      }
+    query MultiFactorTotpHeaderQuery {
+        viewer {
+            multiFactorSettings {
+                multiFactorTotpConfigured
+                recoveryCodesGenerated
+            }
+        }
     }
-  }
 `
 
 export default function MultiFactorTotpHeader (props: Props): Node {

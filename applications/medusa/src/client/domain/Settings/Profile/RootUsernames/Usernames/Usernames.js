@@ -18,7 +18,6 @@ import {
 } from '@chakra-ui/react'
 
 import { useTranslation } from 'react-i18next'
-import Button from '@//:modules/form/Button'
 import { graphql, useFragment, usePreloadedQuery } from 'react-relay/hooks'
 import type { UsernamesSettingsFragment$key } from '@//:artifacts/UsernamesSettingsFragment.graphql'
 import ChangeUsernameForm from './ChangeUsernameForm/ChangeUsernameForm'

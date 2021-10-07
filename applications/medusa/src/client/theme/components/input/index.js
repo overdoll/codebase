@@ -4,6 +4,23 @@
 
 import { getColor, mode } from '@chakra-ui/theme-tools'
 
+const determineBorderWidth = (size) => {
+  switch (size) {
+    case 'xs':
+      return 1
+    case 'sm':
+      return 2
+    case 'md':
+      return 2
+    case 'lg':
+      return 3
+    case 'xl':
+      return 3
+    default:
+      return 1
+  }
+}
+
 const parts = ['field', 'addon']
 
 const baseStyle = {
@@ -93,12 +110,12 @@ function getDefaults (props) {
 }
 
 function variantOutline (props) {
-  const { theme } = props
+  const { theme, size } = props
   const { focusBorderColor: fc, errorBorderColor: ec } = getDefaults(props)
 
   return {
     field: {
-      borderWidth: 2,
+      borderWidth: determineBorderWidth(size),
       borderColor: 'gray.500',
       bg: 'inherit',
       _hover: {
@@ -135,12 +152,13 @@ function variantOutline (props) {
 }
 
 function variantFilled (props) {
-  const { theme } = props
+  const { theme, size } = props
   const { focusBorderColor: fc, errorBorderColor: ec } = getDefaults(props)
 
   return {
     field: {
-      border: '2px solid',
+      borderStyle: 'solid',
+      borderWidth: determineBorderWidth(size),
       borderColor: 'transparent',
       bg: mode('gray.100', 'whiteAlpha.50')(props),
       _readOnly: {

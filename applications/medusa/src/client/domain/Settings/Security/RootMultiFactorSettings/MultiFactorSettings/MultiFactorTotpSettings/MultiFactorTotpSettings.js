@@ -1,10 +1,7 @@
 /**
  * @flow
  */
-import { Flex, Text, Heading, Box, Tooltip, Badge } from '@chakra-ui/react'
-import Link from '@//:modules/routing/Link'
 import { useTranslation } from 'react-i18next'
-import Button from '@//:modules/form/Button'
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { MultiFactorTotpSettingsFragment$key } from '@//:artifacts/MultiFactorTotpSettingsFragment.graphql'
 import { PagePanelWrap, PagePanelTitle, PagePanelDescription } from '../../../../../../components/PageLayout'

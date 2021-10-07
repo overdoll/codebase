@@ -4,20 +4,19 @@
 import { graphql, useMutation } from 'react-relay/hooks'
 import { Flex, Heading, Spinner, Text, useToast } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
-import CenteredSpinner from '@//:modules/content/CenteredSpinner/CenteredSpinner'
 import { useEffect } from 'react'
 import { useHistory } from '@//:modules/routing'
 import PrepareViewer from '../helpers/PrepareViewer'
 
 const GrantAction = graphql`
-  mutation GrantMutation {
-    grantAccountAccessWithAuthenticationToken {
-      validation
-      account {
-        id
-      }
+    mutation GrantMutation {
+        grantAccountAccessWithAuthenticationToken {
+            validation
+            account {
+                id
+            }
+        }
     }
-  }
 `
 
 export default function Grant (): Node {

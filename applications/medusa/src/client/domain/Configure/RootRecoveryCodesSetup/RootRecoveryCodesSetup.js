@@ -4,7 +4,7 @@
 
 import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet-async'
-import { Center, Flex } from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/react'
 import { Suspense } from 'react'
 import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'

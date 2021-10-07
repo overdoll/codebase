@@ -1,7 +1,7 @@
 /**
  * @flow
  */
-import { Badge, Flex, Heading, Stack, Text } from '@chakra-ui/react'
+import { Stack } from '@chakra-ui/react'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
 import type { MultiFactorSettingsQuery } from '@//:artifacts/MultiFactorSettingsQuery.graphql'
 import MultiFactorTotpSettings from './MultiFactorTotpSettings/MultiFactorTotpSettings'

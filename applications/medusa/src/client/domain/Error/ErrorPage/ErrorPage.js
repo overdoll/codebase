@@ -1,7 +1,7 @@
 /**
  * @flow
  */
-import { Center, Flex, Heading, Text } from '@chakra-ui/react'
+import { Heading, Text } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
 import type { Node } from 'react'
 import Icon from '@//:modules/content/Icon/Icon'

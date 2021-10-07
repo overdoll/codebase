@@ -2,22 +2,11 @@
  * @flow
  */
 
-import { graphql, usePreloadedQuery, useMutation } from 'react-relay/hooks'
-import { useState, useEffect } from 'react'
+import { graphql, useMutation } from 'react-relay/hooks'
 import type { TotpSubmissionFormMutation } from '@//:artifacts/TotpSubmissionFormMutation.graphql'
-import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
 import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
   Flex,
-  SimpleGrid,
-  Box,
-  Heading,
-  Text,
-  List,
-  ListItem,
-  Divider, Skeleton, Code, useToast, FormControl, FormLabel, InputGroup, Input, InputRightElement, FormErrorMessage
+  useToast, FormControl, InputGroup, Input, InputRightElement, FormErrorMessage
 } from '@chakra-ui/react'
 import Button from '@//:modules/form/Button'
 import { useTranslation } from 'react-i18next'
@@ -29,7 +18,6 @@ import InterfaceAlertWarningTriangle
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/alerts/interface-alert-warning-triangle.svg'
 import InterfaceValidationCheck
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/validation/interface-validation-check.svg'
-import PrepareViewer from '../../../../Join/helpers/PrepareViewer'
 
 type CodeValues = {
   code: string
@@ -40,12 +28,12 @@ type Props = {
 }
 
 const TotpSubmissionFormMutationGQL = graphql`
-  mutation TotpSubmissionFormMutation($input: EnrollAccountMultiFactorTotpInput!) {
-    enrollAccountMultiFactorTotp(input: $input) {
-      validation
-      accountMultiFactorTotpEnabled
+    mutation TotpSubmissionFormMutation($input: EnrollAccountMultiFactorTotpInput!) {
+        enrollAccountMultiFactorTotp(input: $input) {
+            validation
+            accountMultiFactorTotpEnabled
+        }
     }
-  }
 `
 
 const schema = Joi.object({

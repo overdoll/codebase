@@ -6,7 +6,7 @@ import Icon from '@//:modules/content/Icon/Icon'
 import SignBadgeCircle
   from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
 import { useTranslation } from 'react-i18next'
-import { Center, Flex, Heading, Stack } from '@chakra-ui/react'
+import { Center, Heading, Stack } from '@chakra-ui/react'
 import Button from '@//:modules/form/Button'
 import { Helmet } from 'react-helmet-async'
 import { PageWrapper } from '../../../components/PageLayout'

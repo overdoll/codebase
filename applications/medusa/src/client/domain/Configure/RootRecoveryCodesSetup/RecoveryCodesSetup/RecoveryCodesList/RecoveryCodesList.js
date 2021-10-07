@@ -2,41 +2,29 @@
  * @flow
  */
 
-import { useFragment, usePreloadedQuery, graphql, useMutation, ConnectionHandler } from 'react-relay/hooks'
+import { useFragment, graphql, useMutation } from 'react-relay/hooks'
 import type { RecoveryCodesListFragment$key } from '@//:artifacts/RecoveryCodesListFragment.graphql'
 import { useTranslation } from 'react-i18next'
 import {
-  Wrap,
-  WrapItem,
-  Stack,
   Alert,
-  CloseButton,
   SimpleGrid,
   AlertDescription,
   AlertIcon,
   Flex,
   Text,
   Code,
-  Box,
   ButtonGroup,
   useToast,
-  Heading, Fade,
+  Heading,
   Skeleton
 } from '@chakra-ui/react'
-import { useState } from 'react'
 import fileDownload from 'js-file-download'
 import Button from '@//:modules/form/Button'
 import type { RecoveryCodesListMutation } from '@//:artifacts/RecoveryCodesListMutation.graphql'
 import Icon from '@//:modules/content/Icon/Icon'
-import InterfaceGeometricCircle
-  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/geometric-shape/interface-geometric-circle.svg'
 import CopyToClipboardText from '../../../../../components/CopyToClipboardText/CopyToClipboardText'
 import DownloadDashArrow
   from '@streamlinehq/streamlinehq/img/streamline-bold/internet-networks-servers/upload-download/download-dash-arrow.svg'
-import ArrowButtonRight2Alternate
-  from '@streamlinehq/streamlinehq/img/streamline-bold/arrows-diagrams/arrows/arrow-button-right-2-alternate.svg'
-import ArrowButtonRight2
-  from '@streamlinehq/streamlinehq/img/streamline-bold/arrows-diagrams/arrows/arrow-button-right-2.svg'
 
 type Props = {
   data: RecoveryCodesListFragment$key
@@ -78,7 +66,7 @@ export default function RecoveryCodesSetup (props: Props): Node {
   const sortedRecoveryCodes = data?.recoveryCodes.slice().sort((a, b) => a.code.localeCompare(b.code))
 
   const plainRecoveryCodes = sortedRecoveryCodes.map((item) => {
-    return item.code + '\r\n'
+    return `${item.code}\r\n`
   }).join('')
 
   const onDownloadCodes = () => {

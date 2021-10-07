@@ -4,7 +4,7 @@
 
 import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet-async'
-import { Center, CloseButton, Divider, Flex, Heading, Text } from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/react'
 import Link from '@//:modules/routing/Link'
 import { Suspense } from 'react'
 import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'

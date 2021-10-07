@@ -3,7 +3,7 @@
  */
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { useTranslation } from 'react-i18next'
-import { Alert, AlertDescription, AlertIcon, Center, CloseButton, Flex, useToast } from '@chakra-ui/react'
+import { Alert, AlertDescription, AlertIcon, CloseButton, useToast } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
 import Icon from '@//:modules/content/Icon/Icon'
 import JoinForm from './JoinForm/JoinForm'

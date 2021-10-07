@@ -13,7 +13,6 @@ import {
   Text,
   List,
   ListItem,
-  AlertTitle,
   Divider, Skeleton, Code, Spinner, Alert, AlertIcon, AlertDescription
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
@@ -26,8 +25,6 @@ import PhoneActionDownload
   from '@streamlinehq/streamlinehq/img/streamline-regular/phones-mobile-devices/content-actions/phone-action-download.svg'
 import TotpSubmissionForm from './TotpSubmissionForm/TotpSubmissionForm'
 import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback'
-import Link from '@//:modules/routing/Link'
-import Button from '@//:modules/form/Button'
 
 type Props = {}
 

@@ -3,7 +3,6 @@
  */
 import type { Node } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { Center, Flex } from '@chakra-ui/react'
 import RootMultiFactorSettings from './RootMultiFactorSettings/RootMultiFactorSettings'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
 import type { MultiFactorSettingsQuery } from '@//:artifacts/MultiFactorSettingsQuery.graphql'
