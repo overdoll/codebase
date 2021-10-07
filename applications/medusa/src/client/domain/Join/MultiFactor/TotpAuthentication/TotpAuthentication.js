@@ -114,23 +114,25 @@ export default function TotpAuthentication (props: Props): Node {
         <Text mb={6} align='center' fontSize='sm' color='gray.200'>
           {t('multi_factor.subheader')}
         </Text>
-        <Flex mb={5} position='relative' align='center'>
-          <form>
-            <Wrap>
-              <PinInput
-                onComplete={(value) => {
-                  onSubmitTotp(value)
-                }} isDisabled={isSubmittingTotp}
-                size={breakPoint || 'md'} otp
-              >
-                <PinInputField filter={isSubmittingTotp && 'blur(1px)'} />
-                <PinInputField filter={isSubmittingTotp && 'blur(1px)'} />
-                <PinInputField filter={isSubmittingTotp && 'blur(1px)'} />
-                <PinInputField filter={isSubmittingTotp && 'blur(1px)'} />
-                <PinInputField filter={isSubmittingTotp && 'blur(1px)'} />
-                <PinInputField filter={isSubmittingTotp && 'blur(1px)'} />
-              </PinInput>
-            </Wrap>
+        <Flex mb={5} position='relative' justify='center'>
+          <form style={{ width: '100%' }}>
+            <Flex justify='center'>
+              <Wrap>
+                <PinInput
+                  onComplete={(value) => {
+                    onSubmitTotp(value)
+                  }} isDisabled={isSubmittingTotp}
+                  size={breakPoint || 'md'} otp
+                >
+                  <PinInputField filter={isSubmittingTotp && 'blur(1px)'} />
+                  <PinInputField filter={isSubmittingTotp && 'blur(1px)'} />
+                  <PinInputField filter={isSubmittingTotp && 'blur(1px)'} />
+                  <PinInputField filter={isSubmittingTotp && 'blur(1px)'} />
+                  <PinInputField filter={isSubmittingTotp && 'blur(1px)'} />
+                  <PinInputField filter={isSubmittingTotp && 'blur(1px)'} />
+                </PinInput>
+              </Wrap>
+            </Flex>
           </form>
           <Flex
             position='absolute'
@@ -154,7 +156,9 @@ export default function TotpAuthentication (props: Props): Node {
             </Fade>
           </Flex>
         </Flex>
-        <Button onClick={onToggle} size='md' variant='link'>{t('multi_factor.recovery.button')}</Button>
+        <Flex justify='center'>
+          <Button onClick={onToggle} size='md' variant='link'>{t('multi_factor.recovery.button')}</Button>
+        </Flex>
         <Collapse animateOpacity in={isOpen}>
           <Box mt={5}>
             <Alert mb={3} status='info'>
@@ -166,6 +170,7 @@ export default function TotpAuthentication (props: Props): Node {
             <RecoveryCodeForm />
           </Box>
         </Collapse>
+
       </PageWrapper>
     </>
   )

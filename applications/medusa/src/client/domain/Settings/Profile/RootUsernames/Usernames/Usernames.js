@@ -13,7 +13,8 @@ import {
   AccordionPanel,
   AccordionIcon,
   Text,
-  Collapse
+  Collapse,
+  Button as ChakraButton
 } from '@chakra-ui/react'
 
 import { useTranslation } from 'react-i18next'
@@ -25,25 +26,25 @@ import InfoTip from '../../../../../components/InfoTip/InfoTip'
 import type { UsernamesQuery } from '@//:artifacts/UsernamesQuery.graphql'
 
 const UsernameQueryGQL = graphql`
-  query UsernamesQuery($first: Int) {
-    viewer {
-      ...UsernamesSettingsFragment
+    query UsernamesQuery($first: Int) {
+        viewer {
+            ...UsernamesSettingsFragment
+        }
     }
-  }
 `
 
 const UsernameFragmentGQL = graphql`
-  fragment UsernamesSettingsFragment on Account {
-    username
-    usernames(first: $first) @connection(key: "UsernamesSettingsFragment_usernames" ) {
-      __id
-      edges {
-        node {
-          username
+    fragment UsernamesSettingsFragment on Account {
+        username
+        usernames(first: $first) @connection(key: "UsernamesSettingsFragment_usernames" ) {
+            __id
+            edges {
+                node {
+                    username
+                }
+            }
         }
-      }
     }
-  }
 `
 
 type Props = {
@@ -71,7 +72,7 @@ export default function Usernames (props: Props): Node {
           <Heading size='sm' color='gray.100'>{t('profile.username.current.title')}</Heading>
           <Flex align='center' direction='row' justify='space-between'>
             <Heading size='md' color='primary.500'>{data?.username}</Heading>
-            <Button data-cy='username-form-toggle' onClick={onToggle} size='sm'>{t('profile.username.current.change')}</Button>
+            <ChakraButton onClick={onToggle} size='sm'>{t('profile.username.current.change')}</ChakraButton>
           </Flex>
           <Collapse in={isOpen} animateOpacity>
             <Flex mt={3}>

@@ -193,14 +193,16 @@ export default function Token ({ prepared }: Props): Node {
         </Alert>
         {data.sameSession
           ? (
-            <Button
-              mt={8}
-              size='md'
-              onClick={refresh}
-              variant='link'
-            >
-              {t('closed_original_device')}
-            </Button>)
+            <Flex justify='center'>
+              <Button
+                mt={8}
+                size='md'
+                onClick={refresh}
+                variant='link'
+              >
+                {t('closed_original_device')}
+              </Button>
+            </Flex>)
           : (
             <Center mt={4}>
               <Text align='center' fontSize='md' color='pink.300'>

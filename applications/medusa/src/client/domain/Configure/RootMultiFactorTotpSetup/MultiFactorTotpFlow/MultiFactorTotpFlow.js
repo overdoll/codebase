@@ -32,14 +32,14 @@ import Button from '@//:modules/form/Button'
 type Props = {}
 
 const MultiFactorTotpFlowMutationGQL = graphql`
-  mutation MultiFactorTotpFlowMutation {
-    generateAccountMultiFactorTotp {
-      multiFactorTotp {
-        secret
-        imageSrc
-      }
+    mutation MultiFactorTotpFlowMutation {
+        generateAccountMultiFactorTotp {
+            multiFactorTotp {
+                secret
+                imageSrc
+            }
+        }
     }
-  }
 `
 
 export default function MultiFactorTotpFlow (props: Props): Node {
@@ -78,7 +78,7 @@ export default function MultiFactorTotpFlow (props: Props): Node {
     return (
       <Flex justify='center' p={4} borderRadius={5} borderWidth={2} borderColor='gray.800'>
         <Flex direction='column' align='center'>
-          <Alert mb={3} status='success'>
+          <Alert status='success'>
             <Flex align='center' direction='column'>
               <AlertIcon mr={0} mb={2} />
               <AlertDescription align='center' mb={1} lineHeight={5} fontSize='sm'>
@@ -89,13 +89,6 @@ export default function MultiFactorTotpFlow (props: Props): Node {
               </AlertDescription>
             </Flex>
           </Alert>
-          <Link to='/settings/security'>
-            <Button
-              colorScheme='gray' size='md'
-            >
-              {t('totp.flow.success.button')}
-            </Button>
-          </Link>
         </Flex>
       </Flex>
     )
