@@ -16,7 +16,7 @@
     "@hookform/resolvers": "^2.5.1",
     "@loadable/component": "^5.14.1",
     "@loadable/server": "^5.15.0",
-    "@streamlinehq/streamlinehq": "^3.0.3",
+    "@streamlinehq/streamlinehq": "^3.0.4",
     "@uppy/core": "^1.16.2",
     "@uppy/drag-drop": "^1.4.27",
     "@uppy/drop-target": "^0.2.3",
