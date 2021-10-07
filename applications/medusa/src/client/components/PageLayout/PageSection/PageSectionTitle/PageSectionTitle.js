@@ -12,7 +12,6 @@ export default function PageSectionTitle ({ children }: Props): Node {
   return (
     <>
       <Heading fontSize='2xl' color='gray.00'>{children}</Heading>
-      <Divider borderColor='gray.500' mt={1} mb={1} />
     </>
   )
 }

@@ -118,15 +118,17 @@ export default function Token ({ prepared }: Props): Node {
           <AlertIcon />
           <AlertDescription>{t('expired')}</AlertDescription>
         </Alert>
-        <Link to='/join'>
-          <Button
-            size='lg'
-            colorScheme='gray'
-            variant='solid'
-          >
-            {t('back')}
-          </Button>
-        </Link>
+        <Flex justify='center'>
+          <Link to='/join'>
+            <Button
+              size='lg'
+              colorScheme='gray'
+              variant='solid'
+            >
+              {t('back')}
+            </Button>
+          </Link>
+        </Flex>
       </PageWrapper>
     )
   }

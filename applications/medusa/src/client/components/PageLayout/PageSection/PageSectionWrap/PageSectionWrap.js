@@ -10,7 +10,7 @@ type Props = {
 
 export default function PageSectionWrap ({ children }: Props): Node {
   return (
-    <Box mb={3}>
+    <Box mb={2}>
       {children}
     </Box>
   )

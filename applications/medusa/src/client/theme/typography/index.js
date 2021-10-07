@@ -39,7 +39,7 @@ const typography = {
   },
 
   fonts: {
-    heading: 'Nunito',
+    heading: 'Nunito Sans',
     body: 'Inter',
     mono: 'Source Code Pro'
     // heading: `-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"`,

@@ -13,8 +13,9 @@ import {
 } from '@chakra-ui/react'
 import Icon from '@//:modules/content/Icon/Icon'
 import { useForm } from 'react-hook-form'
-import CheckDouble1
-  from '@streamlinehq/streamlinehq/img/streamline-regular/interface-essential/form-validation/check-double-1.svg'
+import InterfaceValidationCheck
+  from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/validation/interface-validation-check.svg'
+
 import InterfaceAlertWarningTriangle
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/alerts/interface-alert-warning-triangle.svg'
 import { joiResolver } from '@hookform/resolvers/joi'
@@ -73,9 +74,10 @@ export default function RegisterForm ({ onSubmit, loading }: Props): Node {
           {(errors.username || success) && (
             <InputRightElement>
               <Icon
-                icon={success ? CheckDouble1 : InterfaceAlertWarningTriangle}
-                color={success ? 'green.600' : 'orange.500'}
-                m={4}
+                w={6}
+                h={6}
+                icon={success ? InterfaceValidationCheck : InterfaceAlertWarningTriangle}
+                fill={success ? 'green.600' : 'orange.500'}
               />
             </InputRightElement>
           )}

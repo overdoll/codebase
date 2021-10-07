@@ -10,7 +10,8 @@ type Props = {
 
 export default function PagePanelDescription ({ children }: Props): Node {
   return (
-    <Text textAlign='left' color='gray.200' fontSize='md'>
+
+    <Text fontFamily='body' fontWeight='semibold' textAlign='left' color='gray.200' fontSize='sm'>
       {children}
     </Text>
   )

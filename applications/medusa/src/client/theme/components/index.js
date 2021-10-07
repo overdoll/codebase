@@ -17,6 +17,7 @@ import progress from './progress'
 import link from './link'
 import divider from './divider'
 import pininput from './pin-input'
+import heading from './heading'
 
 export default {
   Menu: menu,
@@ -37,5 +38,6 @@ export default {
   Progress: progress,
   Link: link,
   Divider: divider,
-  PinInput: pininput
+  PinInput: pininput,
+  Heading: heading
 }

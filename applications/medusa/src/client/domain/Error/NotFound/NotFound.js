@@ -10,6 +10,7 @@ import { Center, Flex, Heading, Stack } from '@chakra-ui/react'
 import Button from '@//:modules/form/Button'
 import { Helmet } from 'react-helmet-async'
 import { PageWrapper } from '../../../components/PageLayout'
+import Link from '@//:modules/routing/Link'
 
 export default function NotFound (): Node {
   const [t] = useTranslation('empty')
@@ -40,15 +41,14 @@ export default function NotFound (): Node {
             >
               {t('empty.leave')}
             </Button>
-            <Button
-              size='lg'
-              colorScheme='primary'
-              onClick={() => {
-                history.back()
-              }}
-            >
-              {t('empty.home')}
-            </Button>
+            <Link to='/'>
+              <Button
+                size='lg'
+                colorScheme='primary'
+              >
+                {t('empty.home')}
+              </Button>
+            </Link>
           </Stack>
         </Center>
       </PageWrapper>

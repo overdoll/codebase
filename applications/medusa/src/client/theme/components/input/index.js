@@ -24,7 +24,8 @@ const size = {
     pt: 5,
     px: 3,
     h: 16,
-    borderRadius: 'lg'
+    borderRadius: 'lg',
+    fontWeight: 'semibold'
   },
 
   lg: {

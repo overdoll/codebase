@@ -1,4 +1,4 @@
-import { create } from '@storybook/theming'
+import { create } from '@storybook/theming';
 
 export default create({
   base: 'dark',
@@ -12,7 +12,7 @@ export default create({
 
   // Typography
   fontBase: [
-    '"Nunito"',
+    '"Nunito Sans"',
     '-apple-system',
     '".SFNSText-Regular"',
     '"San Francisco"',
@@ -21,7 +21,7 @@ export default create({
     '"Helvetica Neue"',
     'Helvetica',
     'Arial',
-    'sans-serif'
+    'sans-serif',
   ].join(', '),
   fontCode: [
     '"Operator Mono"',
@@ -32,10 +32,10 @@ export default create({
     '"Lucida Console"',
     'Consolas',
     'Monaco',
-    'monospace'
+    'monospace',
   ].join(', '),
 
   brandTitle: 'overdoll',
   brandUrl: '',
-  brandImage: '/favicon.ico'
-})
+  brandImage: '/favicon.ico',
+});

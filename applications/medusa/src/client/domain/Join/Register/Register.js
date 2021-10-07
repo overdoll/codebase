@@ -2,7 +2,7 @@
  * @flow
  */
 import { graphql, useMutation } from 'react-relay/hooks'
-import { Center, Flex, useToast } from '@chakra-ui/react'
+import { useToast } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import type { RegisterMutation } from '@//:artifacts/RegisterMutation.graphql'
 import type { Node } from 'react'

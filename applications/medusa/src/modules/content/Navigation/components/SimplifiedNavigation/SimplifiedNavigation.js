@@ -35,7 +35,7 @@ export default function SimplifiedNavigation ({ children }: Props): Node {
         <IconButton
           onClick={() => history.goBack()}
           variant='solid'
-          colorScheme='primary'
+          colorScheme='gray'
           size='md'
           mr={2}
           icon={
