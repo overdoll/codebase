@@ -148,6 +148,7 @@
       "accessed": "Last login on {{date}}",
       "show": "Show IP",
       "current": "Current Session",
+      "load": "Load More",
       "revoke": "Revoke",
       "on": "{{browser}} on {{device}}",
       "query": {

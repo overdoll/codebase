@@ -19,6 +19,7 @@ function baseStyleItem (props) {
   return {
     py: '0.4rem',
     px: '0.8rem',
+    letterSpacing: 'wide',
     transition: 'background 50ms ease-in 0s',
     fontWeight: 'semibold',
     _focus: {
