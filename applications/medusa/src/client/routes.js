@@ -230,7 +230,7 @@ const routes: Array<Route> = [
           ({ environment, history }) => {
             const ability = getAbilityFromUser(environment)
 
-            if (ability.can('manage', 'account')) {
+            if (ability.can('manage', 'uploads')) {
               return true
             }
             history.push('/join')
@@ -250,6 +250,10 @@ const routes: Array<Route> = [
         middleware: [
           ({ environment, history }) => {
             const ability = getAbilityFromUser(environment)
+            if (ability.can('read', 'locked')) {
+              history.push('/locked')
+              return false
+            }
 
             if (ability.can('manage', 'account')) {
               return true
@@ -379,7 +383,7 @@ const routes: Array<Route> = [
           ({ environment, history }) => {
             const ability = getAbilityFromUser(environment)
 
-            if (ability.can('manage', 'account')) {
+            if (ability.can('manage', 'accountSettings')) {
               return true
             }
             history.push('/join')
@@ -412,10 +416,57 @@ const routes: Array<Route> = [
           ({ environment, history }) => {
             const ability = getAbilityFromUser(environment)
 
-            if (ability.can('manage', 'account')) {
+            if (ability.can('manage', 'accountSettings')) {
               return true
             }
             history.push('/join')
+            return false
+          }
+        ]
+      },
+      {
+        path: '/locked',
+        exact: true,
+        component: JSResource('LockedRoot', () =>
+          import(
+            /* webpackChunkName: "LockedRoot" */ './domain/Locked/Locked'
+          ),
+        module.hot
+        ),
+        middleware: [
+          ({ environment, history }) => {
+            const ability = getAbilityFromUser(environment)
+
+            if (ability.can('read', 'locked')) {
+              return true
+            }
+            history.push('/')
+            return false
+          }
+        ]
+      },
+      {
+        path: '/profile',
+        exact: true,
+        component: JSResource('ProfileRoot', () =>
+          import(
+            /* webpackChunkName: "ProfileRoot" */ './domain/Profile/Profile'
+          ),
+        module.hot
+        ),
+        middleware: [
+          ({ environment, history }) => {
+            const ability = getAbilityFromUser(environment)
+
+            if (ability.can('read', 'locked')) {
+              history.push('/locked')
+              return false
+            }
+
+            if (ability.can('manage', 'account')) {
+              return true
+            }
+            history.push('/')
             return false
           }
         ]

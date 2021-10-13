@@ -68,6 +68,10 @@ const routes: Array<Route> = [
       ({ environment }) => {
         const ability = getAbilityFromUser(environment)
 
+        if (ability.can('read', 'locked')) {
+          return false
+        }
+
         if (ability.can('read', 'pendingPosts')) {
           return true
         }
@@ -108,7 +112,11 @@ const routes: Array<Route> = [
       ({ environment }) => {
         const ability = getAbilityFromUser(environment)
 
-        if (ability.can('manage', 'account')) {
+        if (ability.can('read', 'locked')) {
+          return false
+        }
+
+        if (ability.can('manage', 'uploads')) {
           return true
         }
         return false
@@ -128,6 +136,21 @@ const routes: Array<Route> = [
         title: 'sidebar.settings.title'
       }
     },
+    middleware: [
+      ({ environment }) => {
+        const ability = getAbilityFromUser(environment)
+
+        if (ability.can('read', 'locked')) {
+          return false
+        }
+
+        if (ability.can('manage', 'account')) {
+          return true
+        }
+
+        return false
+      }
+    ],
     routes: [
       {
         path: '/settings/profile',

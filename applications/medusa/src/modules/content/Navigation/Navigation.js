@@ -48,10 +48,10 @@ type Props = {
 }
 
 const NavigationFragmentGQL = graphql`
-  fragment NavigationFragment on Account {
-    ...AvatarMenuFragment
-    ...ProfileButtonFragment
-  }
+    fragment NavigationFragment on Account {
+        ...AvatarMenuFragment
+        ...ProfileButtonFragment
+    }
 `
 
 export default function Navigation (props: Props): Node {
@@ -105,9 +105,11 @@ export default function Navigation (props: Props): Node {
           ability.can('manage', 'account')
             ? (
               <NavigationRightItems>
-                <AvatarMenu viewer={data} />
+                {!ability.can('read', 'locked') &&
+                  <AvatarMenu viewer={data} />}
                 <NavigationMenu>
-                  <ProfileButton viewer={data} />
+                  {!ability.can('read', 'locked') &&
+                    <ProfileButton viewer={data} />}
                   {navigationMenu.map((item, index) => {
                     return (
                       <MenuItemButton
@@ -156,6 +158,7 @@ export default function Navigation (props: Props): Node {
           )
         })}
         <PageContents>
+          {ability.can('read', 'locked') && 'your account is locked'}
           {props.children}
         </PageContents>
       </NavigationContents>
