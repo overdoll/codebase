@@ -141,6 +141,19 @@
           }
         }
       }
+    },
+    "sessions": {
+      "title": "Sessions",
+      "description": "Here is a list of devices that have logged into your account. You can revoke any that you don't recognize.",
+      "accessed": "Last login on {{date}}",
+      "show": "Show IP",
+      "current": "Current Session",
+      "revoke": "Revoke",
+      "on": "{{browser}} on {{device}}",
+      "query": {
+        "success": "Session revoked successfully",
+        "error": "There was an error revoking the session"
+      }
     }
   }
 }

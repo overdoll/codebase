@@ -300,9 +300,18 @@ const routes: Array<Route> = [
             prepare: params => {
               const MultiFactorQuery = require('@//:artifacts/MultiFactorSettingsQuery.graphql')
 
+              const SessionsQuery = require('@//:artifacts/SessionsSettingsQuery.graphql')
+
               return {
                 multiFactorQuery: {
                   query: MultiFactorQuery,
+                  variables: {},
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                },
+                sessionsQuery: {
+                  query: SessionsQuery,
                   variables: {},
                   options: {
                     fetchPolicy: 'store-or-network'
