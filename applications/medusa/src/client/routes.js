@@ -221,11 +221,11 @@ const routes: Array<Route> = [
         path: '/upload',
         component: JSResource('UploadRoot', () =>
           import(
-            /* webpackChunkName: "UploadRoot" */ './domain/Upload/Upload'
+            /* webpackChunkName: "UploadRoot" */ './domain/Uploadold/Upload'
           ),
         module.hot
         ),
-        // If user is not logged in, they can't post - so we redirect to join page
+
         middleware: [
           ({ environment, history }) => {
             const ability = getAbilityFromUser(environment)
@@ -235,6 +235,46 @@ const routes: Array<Route> = [
             }
             history.push('/join')
             return false
+          }
+        ]
+      },
+      {
+        path: '/manage',
+        component: JSResource('ManageRoot', () =>
+          import(
+            /* webpackChunkName: "ManageRoot" */ './domain/Manage/Manage'
+          ),
+        module.hot
+        ),
+        middleware: [
+          ({ environment, history }) => {
+            const ability = getAbilityFromUser(environment)
+
+            if (ability.can('manage', 'posting')) {
+              return true
+            }
+            history.push('/join')
+            return false
+          }
+        ],
+        routes: [
+          {
+            path: '/manage/posts',
+            component: JSResource('ManagePostsRoot', () =>
+              import(
+                /* webpackChunkName: "ManagePostsRoot" */ './domain/Manage/Posts/Posts'
+              ),
+            module.hot
+            )
+          },
+          {
+            path: '/manage/brands',
+            component: JSResource('ManageBrandsRoot', () =>
+              import(
+                /* webpackChunkName: "ManageBrandsRoot" */ './domain/Manage/Brands/Brands'
+              ),
+            module.hot
+            )
           }
         ]
       },

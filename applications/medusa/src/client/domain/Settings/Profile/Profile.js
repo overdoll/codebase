@@ -5,7 +5,6 @@ import type { Node } from 'react'
 import { Helmet } from 'react-helmet-async'
 import {
   Box,
-  Flex,
   Stack
 } from '@chakra-ui/react'
 import type { PreloadedQueryInner } from 'react-relay/hooks'

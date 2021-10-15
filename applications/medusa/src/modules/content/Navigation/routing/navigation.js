@@ -107,7 +107,7 @@ const routes: Array<Route> = [
     ]
   },
   {
-    path: '/upload',
+    path: '/manage',
     middleware: [
       ({ environment }) => {
         const ability = getAbilityFromUser(environment)
@@ -116,18 +116,39 @@ const routes: Array<Route> = [
           return false
         }
 
-        if (ability.can('manage', 'uploads')) {
+        if (ability.can('manage', 'posting')) {
           return true
         }
         return false
       }
     ],
     navigation: {
-      top: {
-        title: 'nav.upload',
-        icon: ContentBrushPen
+      side: {
+        title: 'sidebar.manage.title'
       }
-    }
+    },
+    routes: [
+      {
+        path: '/manage/posts',
+        navigation: {
+          top: {
+            title: 'nav.posts',
+            icon: ContentBrushPen
+          },
+          side: {
+            title: 'sidebar.manage.posts'
+          }
+        }
+      },
+      {
+        path: '/manage/brands',
+        navigation: {
+          side: {
+            title: 'sidebar.manage.brands'
+          }
+        }
+      }
+    ]
   },
   {
     path: '/settings',

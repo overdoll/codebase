@@ -6,7 +6,7 @@ export default function defineAbility (user) {
   // Check if user is logged in
   if (user) {
     can('manage', 'account')
-    can('manage', 'uploads')
+    can('manage', 'posting')
 
     // Check if user is a moderator and give permissions accordingly
     if (user.isModerator) {
@@ -22,7 +22,7 @@ export default function defineAbility (user) {
     // Check if the user is banned
     if (user.lock) {
       can('read', 'locked')
-      cannot('manage', 'uploads')
+      cannot('manage', 'posting')
     }
   }
 

@@ -3,7 +3,6 @@
  */
 import type { Node } from 'react'
 import { useEffect, useReducer } from 'react'
-import Steps from './components/steps/Steps'
 import type { Action, State } from '@//:types/upload'
 import { EVENTS, INITIAL_STATE, STEPS } from './constants/constants'
 import reducer from './reducer'

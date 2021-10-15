@@ -1,0 +1,11 @@
+{
+  "posts": {
+    "title": "My Posts",
+    "create": {
+      "title": "Create a Post"
+    },
+    "draft": {
+      "title": "Drafts"
+    }
+  }
+}

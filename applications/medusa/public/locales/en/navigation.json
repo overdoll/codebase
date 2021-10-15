@@ -8,7 +8,7 @@
   "nav": {
     "home": "Home",
     "mod": "Moderation",
-    "upload": "Upload",
+    "posts": "Posts",
     "profile": "Profile",
     "menu": "Menu",
     "join": "join"
@@ -24,6 +24,11 @@
       "profile": "Profile",
       "security": "Security",
       "moderation": "Moderation"
+    },
+    "manage": {
+      "title": "Post Management",
+      "posts": "My Posts",
+      "brands": "Manage Brands"
     }
   },
   "menu": {
