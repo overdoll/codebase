@@ -7,6 +7,7 @@ const baseStyle = {
   color: 'gray.00',
   transitionProperty: 'common',
   transitionDuration: 'normal',
+  letterSpacing: 'wide',
   opacity: 1,
   _disabled: {
     opacity: 0.4

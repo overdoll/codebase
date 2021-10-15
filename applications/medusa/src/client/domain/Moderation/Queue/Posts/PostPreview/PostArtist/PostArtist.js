@@ -12,11 +12,11 @@ type Props = {
 }
 
 const PostArtistFragmentGQL = graphql`
-  fragment PostArtistFragment on Post {
-    brand {
-      name
+    fragment PostArtistFragment on Post {
+        brand {
+            name
+        }
     }
-  }
 `
 
 export default function PostHeader (props: Props): Node {

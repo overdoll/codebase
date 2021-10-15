@@ -140,10 +140,6 @@ const routes: Array<Route> = [
       ({ environment }) => {
         const ability = getAbilityFromUser(environment)
 
-        if (ability.can('read', 'locked')) {
-          return false
-        }
-
         if (ability.can('manage', 'account')) {
           return true
         }

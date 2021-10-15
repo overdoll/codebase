@@ -13,9 +13,9 @@ type Props = {
 }
 
 const AccountFragmentGQL = graphql`
-  fragment AvatarMenuFragment on Account {
-    avatar
-  }
+    fragment AvatarMenuFragment on Account {
+        avatar
+    }
 `
 
 export default function AvatarMenu ({ viewer }: Props): Node {
@@ -35,7 +35,8 @@ export default function AvatarMenu ({ viewer }: Props): Node {
             aria-label={t('nav.profile')}
           >
             <Avatar
-              src={data.avatar} m={0} borderRadius='25%'
+              borderRadius='25%'
+              src={data.avatar} m={0}
               w='38px' h='38px'
             />
           </Button>

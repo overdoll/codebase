@@ -13,13 +13,13 @@ type Props = {
 }
 
 const ContributorFragmentGQL = graphql`
-  fragment PostHeaderFragment on Post {
-    contributor {
-      username
-      avatar
+    fragment PostHeaderFragment on Post {
+        contributor {
+            username
+            avatar
+        }
+        reassignmentAt
     }
-    reassignmentAt
-  }
 `
 
 export default function PostHeader (props: Props): Node {
@@ -56,7 +56,7 @@ export default function PostHeader (props: Props): Node {
   return (
     <Flex align='center' w='100%' justify='space-between'>
       <Flex align='center'>
-        <Avatar src={data?.contributor.avatar} w={10} h={10} mr={2} borderRadius='25%' />
+        <Avatar src={data?.contributor.avatar} w={10} h={10} mr={2} />
         <Text color='gray.100' fontWeight='medium' size='md'>{data?.contributor.username}</Text>
       </Flex>
       <Tooltip label={t('queue.post.reassignment')}>

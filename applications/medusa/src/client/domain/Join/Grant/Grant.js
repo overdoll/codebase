@@ -47,7 +47,7 @@ export default function Grant (): Node {
           title: t('grant.success'),
           isClosable: true
         })
-        history.push('/profile')
+        history.push('/')
       },
       updater: (store) => {
         const payload = store.getRootField('grantAccountAccessWithAuthenticationToken').getLinkedRecord('account')

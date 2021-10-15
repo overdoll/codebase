@@ -54,17 +54,17 @@ function variantSolid (props) {
 
   return {
     fontWeight: 'extrabold',
-    bg: mode(bg, 'gray.00')(props),
-    color: mode(color, `${c}.500`)(props),
+    bg: mode(color, `${c}.400`)(props),
+    color: mode(color, `${c}.900`)(props),
     _hover: {
-      bg: mode(bg, transparentize('gray.00', 0.9)(theme))(props),
+      bg: mode(bg, transparentize(`${c}.400`, 0.9)(theme))(props),
       _disabled: {
         bg: mode(bg, `${c}.100`)(props)
       }
     },
     _active: {
-      bg: mode(bg, 'gray.00')(props),
-      boxShadow: `0 0 0 3px ${getColor(theme, transparentize(`${c}.500`, 1)(theme))}`
+      bg: mode(color, `${c}.400`)(props),
+      boxShadow: `0 0 0 2.5px ${getColor(theme, transparentize(`${c}.600`, 1)(theme))}`
     }
   }
 }
@@ -74,11 +74,16 @@ function variantGhost (props) {
 
   if (c === 'gray') {
     return {
+      bg: 'transparent',
       color: mode('inherit', 'gray.100')(props),
       _hover: {
-        bg: mode('gray.200', 'gray.600')(props)
+        bg: 'transparent',
+        color: mode('gray.200', 'gray.100')(props)
       },
-      _active: { bg: mode('gray.300', 'gray.800')(props) }
+      _active: {
+        bg: 'transparent',
+        color: mode('gray.300', 'gray.100')(props)
+      }
     }
   }
 
@@ -86,12 +91,10 @@ function variantGhost (props) {
     color: mode(`${c}.600`, `${c}.300`)(props),
     bg: 'transparent',
     _hover: {
-      color: mode(`${c}.50`, `${c}.200`)(props),
-      bg: mode('gray.200', 'gray.600')(props)
+      color: mode(`${c}.50`, `${c}.200`)(props)
     },
     _active: {
-      color: mode(`${c}.50`, `${c}.500`)(props),
-      bg: mode('gray.200', 'gray.600')(props)
+      color: mode(`${c}.50`, `${c}.500`)(props)
     }
   }
 }

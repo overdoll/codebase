@@ -20,18 +20,18 @@ type Props = {
 };
 
 const RootQueryGQL = graphql`
-  query RootQuery {
-    viewer {
-      id
-      ...NavigationFragment
-      isModerator
-      isStaff
-      lock {
-        reason
-        expires
-      }
+    query RootQuery {
+        viewer {
+            id
+            ...NavigationFragment
+            isModerator
+            isStaff
+            lock {
+                reason
+                expires
+            }
+        }
     }
-  }
 `
 
 export default function Root (props: Props): Node {

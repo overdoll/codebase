@@ -250,10 +250,6 @@ const routes: Array<Route> = [
         middleware: [
           ({ environment, history }) => {
             const ability = getAbilityFromUser(environment)
-            if (ability.can('read', 'locked')) {
-              history.push('/locked')
-              return false
-            }
 
             if (ability.can('manage', 'account')) {
               return true
@@ -383,7 +379,7 @@ const routes: Array<Route> = [
           ({ environment, history }) => {
             const ability = getAbilityFromUser(environment)
 
-            if (ability.can('manage', 'accountSettings')) {
+            if (ability.can('manage', 'account')) {
               return true
             }
             history.push('/join')
@@ -416,7 +412,7 @@ const routes: Array<Route> = [
           ({ environment, history }) => {
             const ability = getAbilityFromUser(environment)
 
-            if (ability.can('manage', 'accountSettings')) {
+            if (ability.can('manage', 'account')) {
               return true
             }
             history.push('/join')
@@ -429,10 +425,23 @@ const routes: Array<Route> = [
         exact: true,
         component: JSResource('LockedRoot', () =>
           import(
-            /* webpackChunkName: "LockedRoot" */ './domain/Locked/Locked'
+            /* webpackChunkName: "LockedRoot" */ './domain/Locked/RootLocked'
           ),
         module.hot
         ),
+        prepare: params => {
+          const LockedQuery = require('@//:artifacts/LockedQuery.graphql')
+
+          return {
+            lockedQuery: {
+              query: LockedQuery,
+              variables: {},
+              options: {
+                fetchPolicy: 'store-or-network'
+              }
+            }
+          }
+        },
         middleware: [
           ({ environment, history }) => {
             const ability = getAbilityFromUser(environment)

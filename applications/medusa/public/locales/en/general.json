@@ -7,7 +7,8 @@
     "submit": "Submit",
     "add": "Add",
     "modify": "Modify",
-    "copy": "Copy"
+    "copy": "Copy",
+    "guidelines": "Community Guidelines"
   },
   "input": {
     "search": "Search something you know..."

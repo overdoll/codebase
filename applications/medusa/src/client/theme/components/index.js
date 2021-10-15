@@ -18,6 +18,7 @@ import link from './link'
 import divider from './divider'
 import pininput from './pin-input'
 import heading from './heading'
+import avatar from './avatar'
 
 export default {
   Menu: menu,
@@ -39,5 +40,6 @@ export default {
   Link: link,
   Divider: divider,
   PinInput: pininput,
-  Heading: heading
+  Heading: heading,
+  Avatar: avatar
 }

@@ -13,14 +13,14 @@ type Props = {
 }
 
 const PostCharacterFragmentGQL = graphql`
-  fragment PostCharactersFragment on Post {
-    characters {
-      name
-      series {
-        title
-      }
+    fragment PostCharactersFragment on Post {
+        characters {
+            name
+            series {
+                title
+            }
+        }
     }
-  }
 `
 
 export default function PostHeader (props: Props): Node {

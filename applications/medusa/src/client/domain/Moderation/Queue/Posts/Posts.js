@@ -32,36 +32,36 @@ type Props = {
 }
 
 const PostsQueryGQL = graphql`
-  query PostsQuery {
-    viewer {
-      ...PostsFragment
+    query PostsQuery {
+        viewer {
+            ...PostsFragment
+        }
+        ...RejectionReasonsFragment
     }
-    ...RejectionReasonsFragment
-  }
 `
 
 const PostsGQL = graphql`
-  fragment PostsFragment on Account
-  @argumentDefinitions(
-    first: {type: Int, defaultValue: 1}
-    after: {type: String}
-  )
-  @refetchable(queryName: "PostsPaginationQuery" ) {
-    ...NoPostsPlaceholderFragment
-    moderatorPostsQueue (first: $first, after: $after)
-    @connection(key: "Posts_moderatorPostsQueue") {
-      __id
-      edges {
-        node {
-          id
-          ...PostHeaderFragment
-          ...PostPreviewFragment
-          ...ModeratePostFragment
-          postedAt
+    fragment PostsFragment on Account
+    @argumentDefinitions(
+        first: {type: Int, defaultValue: 1}
+        after: {type: String}
+    )
+    @refetchable(queryName: "PostsPaginationQuery" ) {
+        ...NoPostsPlaceholderFragment
+        moderatorPostsQueue (first: $first, after: $after)
+        @connection(key: "Posts_moderatorPostsQueue") {
+            __id
+            edges {
+                node {
+                    id
+                    ...PostHeaderFragment
+                    ...PostPreviewFragment
+                    ...ModeratePostFragment
+                    postedAt
+                }
+            }
         }
-      }
     }
-  }
 `
 
 export default function Posts (props: Props): Node {

@@ -28,6 +28,7 @@ import Posts from './Posts/Posts'
 import { useQueryLoader } from 'react-relay/hooks'
 import ErrorFallback from '../../../../modules/content/ErrorFallback/ErrorFallback'
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
+import CommunityGuidelines from '../../../components/CommunityGuidelines/CommunityGuidelines'
 
 type Props = {
   prepared: {
@@ -74,11 +75,7 @@ export default function Queue (props: Props): Node {
                   <PopoverCloseButton />
                   <PopoverBody pr={2}>{t('queue.post.actions.notice.description')}</PopoverBody>
                   <PopoverFooter pb={2} justify='flex-start' border={0}>
-                    <Button
-                      colorScheme='blue' variant='link'
-                      size='md'
-                    >{t('queue.post.actions.notice.link')}
-                    </Button>
+                    <CommunityGuidelines />
                   </PopoverFooter>
                 </PopoverContent>
               </Popover>

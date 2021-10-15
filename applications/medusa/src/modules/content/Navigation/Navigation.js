@@ -15,6 +15,7 @@ import computeCurrentActiveRoutes from './helpers/computeCurrentActiveRoutes'
 import { useRelayEnvironment } from 'react-relay'
 import type { NavigationFragment$key } from '@//:artifacts/NavigationFragment.graphql'
 import getBasePath from './helpers/getBasePath'
+import LockedAccountBanner from './components/NavigationContents/PageContents/LockedAccountBanner/LockedAccountBanner'
 
 import {
   NavigationContainer,
@@ -133,6 +134,7 @@ export default function Navigation (props: Props): Node {
               )
         }
       </NavigationContainer>
+      {(ability.can('read', 'locked') && getBasePath(location.pathname) !== '/locked') && <LockedAccountBanner />}
       <NavigationContents>
         {navigationSidebar.map((sidebarGroup, index) => {
           if (getBasePath(location.pathname) !== sidebarGroup.path) {
@@ -158,7 +160,6 @@ export default function Navigation (props: Props): Node {
           )
         })}
         <PageContents>
-          {ability.can('read', 'locked') && 'your account is locked'}
           {props.children}
         </PageContents>
       </NavigationContents>
