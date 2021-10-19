@@ -15,7 +15,7 @@ type Props = {
 /**
  * File picker - select files and add them to the list
  */
-export default function Picker ({ uppy, onSelect, children, ...rest }: Props): Node {
+export default function FilePicker ({ uppy, onSelect, children, ...rest }: Props): Node {
   const notify = useToast()
 
   const onChange = e => {

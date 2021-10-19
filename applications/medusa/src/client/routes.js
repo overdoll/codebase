@@ -262,10 +262,23 @@ const routes: Array<Route> = [
             path: '/manage/posts',
             component: JSResource('ManagePostsRoot', () =>
               import(
-                /* webpackChunkName: "ManagePostsRoot" */ './domain/Manage/Posts/Posts'
+                /* webpackChunkName: "ManagePostsRoot" */ './domain/Manage/Posts/RootPosts'
               ),
             module.hot
-            )
+            ),
+            prepare: params => {
+              const ViewerDraftPostsQuery = require('@//:artifacts/ViewerDraftPostsQuery.graphql')
+
+              return {
+                viewerDraftPostsQuery: {
+                  query: ViewerDraftPostsQuery,
+                  variables: {},
+                  options: {
+                    fetchPolicy: 'store-or-network'
+                  }
+                }
+              }
+            }
           },
           {
             path: '/manage/brands',

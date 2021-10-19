@@ -77,7 +77,7 @@ const size = {
 const sizes = {
   xl: {
     field: size.xl,
-    addon: size.lg
+    addon: size.xl
   },
   lg: {
     field: size.lg,
@@ -175,10 +175,9 @@ function variantFilled (props) {
       _focus: {
         zIndex: 1,
         borderColor: getColor(theme, fc),
-        boxShadow: `0 0 0 0.5px ${getColor(theme, fc)}`,
         _invalid: {
           borderColor: getColor(theme, ec),
-          boxShadow: `0 0 0 1px ${getColor(theme, ec)}`
+          boxShadow: `0 0 0 0.5px ${getColor(theme, ec)}`
         }
       }
     },

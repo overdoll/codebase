@@ -3,12 +3,19 @@
  */
 import { UppyFile } from '@uppy/core'
 
-export type Thumbnails = {
-  [string]: string,
+export type Urls = {
+  [string]: {
+    url: string,
+    mimeType: string,
+  },
 };
 
-export type Urls = {
-  [string]: string,
+export type Thumbnails = {
+  [string]: {
+    id: string,
+    type: string,
+    urls: Urls
+  },
 };
 
 export type Progress = {
@@ -18,24 +25,41 @@ export type Progress = {
   },
 };
 
-export type Artist = {
+export type Audience = {
   id?: string,
-  username?: string,
+  slug?: string,
+  thumbnail?: Thumbnails,
+  title: string,
+}
+
+export type Audiences = {
+  [string]: Audience
+}
+
+export type Brand = {
+  id?: string,
+  slug?: string,
+  thumbnail?: Thumbnails,
+  title: string,
 };
 
-export type Media = {
+export type Brands = {
+  [string]: Brand
+}
+
+export type Series = {
   id: string,
+  slug: string,
+  thumbnail: Thumbnails,
   title: string,
-  thumbnail: ?string,
-  request?: boolean,
 };
 
 export type Character = {
   id: string,
+  slug: string,
+  thumbnail: Thumbnails,
   name: string,
-  thumbnail: string,
-  request?: boolean,
-  media: Media,
+  series: Series
 };
 
 export type Characters = {
@@ -44,8 +68,9 @@ export type Characters = {
 
 export type Category = {
   id: string,
+  slug: string,
+  thumbnail: Thumbnails,
   title: string,
-  thumbnail: string,
 };
 
 export type Categories = {
@@ -65,7 +90,8 @@ export type Event =
   | 'step'
   | 'progress'
   | 'characters'
-  | 'artist'
+  | 'audiences'
+  | 'brands'
   | 'categories'
   | 'submit'
   | 'cleanup'
@@ -77,7 +103,7 @@ export type State = {
   urls: Urls,
   step: ?Step,
   progress: Progress,
-  artist: Artist,
+  brands: Brands,
   characters: Characters,
   categories: Categories,
   submit: Submit,

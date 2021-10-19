@@ -9,8 +9,8 @@ import File from './components/file/File'
 import type { Dispatch, State } from '@//:types/upload'
 import { EVENTS } from '../../../constants/constants'
 import { useTranslation } from 'react-i18next'
-import Picker from '../../picker/Picker'
-import DragOver from '../../dragover/DragOver'
+import FilePicker from '../../../../Manage/Posts/ViewerDraftPosts/CreatePost/Upload/components/FilePicker/FilePicker'
+import DragOverFileInput from '../../../../Manage/Posts/ViewerDraftPosts/CreatePost/Upload/components/DragOverFileInput/DragOverFileInput'
 import Icon from '@//:modules/content/Icon/Icon'
 import InterfaceUploadBox2
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/upload-download/interface-upload-box-2.svg'
@@ -93,17 +93,17 @@ export default function Arrange ({
       <Heading fontSize='3xl' color='gray.00' mb={4}>
         {t('arrange.header')}
       </Heading>
-      <DragOver w='100%' uppy={uppy}>
+      <DragOverFileInput w='100%' uppy={uppy}>
         <Box w='100%' align='right'>
           <Flex p={1} borderRadius={5} bg='gray.800' mb={2} align='center' justify='space-between'>
             <Text pl={2} color='gray.100'>{t('arrange.count', { count: state.files.length })}</Text>
-            <Picker w='auto' uppy={uppy}>
+            <FilePicker w='auto' uppy={uppy}>
               <IconButton
                 variant='ghost'
                 aria-label='add files'
                 icon={<Icon h={5} w={5} icon={InterfaceUploadBox2} fill='gray.100' />}
               />
-            </Picker>
+            </FilePicker>
           </Flex>
           <DragDropContext nonce={window.__webpack_nonce__} onDragEnd={onDragEnd}>
             <Droppable droppableId='upload'>
@@ -131,7 +131,7 @@ export default function Arrange ({
             </Droppable>
           </DragDropContext>
         </Box>
-      </DragOver>
+      </DragOverFileInput>
     </>
   )
 }

@@ -16,7 +16,7 @@ type Props = {
   children: Node
 };
 
-export default function DragOver ({ uppy, onSelect, children, ...rest }: Props): Node {
+export default function DragOverFileInput ({ uppy, onSelect, children, ...rest }: Props): Node {
   const notify = useToast()
 
   const [t] = useTranslation('upload')

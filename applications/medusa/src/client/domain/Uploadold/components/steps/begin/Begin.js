@@ -4,9 +4,9 @@
 import type { Node } from 'react'
 import { Heading, Text, Box, ListItem, UnorderedList, Flex, Center } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
-import Picker from '../../picker/Picker'
+import FilePicker from '../../../../Manage/Posts/ViewerDraftPosts/CreatePost/Upload/components/FilePicker/FilePicker'
 import Icon from '@//:modules/content/Icon/Icon'
-import DragOver from '../../dragover/DragOver'
+import DragOverFileInput from '../../../../Manage/Posts/ViewerDraftPosts/CreatePost/Upload/components/DragOverFileInput/DragOverFileInput'
 
 import Cloud from '@streamlinehq/streamlinehq/img/streamline-regular/internet-networks-servers/cloud/cloud.svg'
 
@@ -25,8 +25,8 @@ export default function Begin ({ uppy }: Props): Node {
         </Heading>
       </Box>
       <Center mt={8} mb={8}>
-        <Picker uppy={uppy}>
-          <DragOver uppy={uppy}>
+        <FilePicker uppy={uppy}>
+          <DragOverFileInput uppy={uppy}>
 
             <Box
               w='100%' boxShadow='md' bg='gray.800' p={4}
@@ -55,8 +55,8 @@ export default function Begin ({ uppy }: Props): Node {
                 </Flex>
               </Box>
             </Box>
-          </DragOver>
-        </Picker>
+          </DragOverFileInput>
+        </FilePicker>
       </Center>
       <Box>
         <Heading fontSize='2xl' color='gray.00'>

@@ -15,6 +15,12 @@ describe('Settings - Configure Two-Factor', () => {
     cy.logout()
   })
 
+  // TODO fix flakiness in usernames expand button and clicking into the page
+  // TODO components where it expected the component to not be disposed
+  // TODO issue is that the h2 is being selected and not the button
+
+  // TODO add test for removing two factor
+
   beforeEach(() => {
     Cypress.Cookies.preserveOnce('cypressTestRecoveryCode', 'cypressTestOtpSecret')
     cy.login(email)
