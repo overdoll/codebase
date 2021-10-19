@@ -16,8 +16,8 @@ type SearchPostAuditLogs struct {
 	ModeratorAccountId *string
 	PostId             *string
 
-	From time.Time
-	To   time.Time
+	From *time.Time
+	To   *time.Time
 }
 
 type SearchPostAuditLogsHandler struct {

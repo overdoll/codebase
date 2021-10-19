@@ -2,7 +2,6 @@ package service_test
 
 import (
 	"context"
-	"math/rand"
 	"testing"
 
 	"github.com/shurcooL/graphql"
@@ -47,10 +46,8 @@ func TestGetRandomLanguageAndSet(t *testing.T) {
 
 	require.NoError(t, err)
 
-	// pick a random language and set it as our current one
-	// add "1" so we skip the first language (default)
-	randomIndex := rand.Intn(len(languages.Languages)-1) + 1
-	pickedLanguage := languages.Languages[randomIndex]
+	// pick 3rd language
+	pickedLanguage := languages.Languages[2]
 
 	var updateLanguage UpdateLanguage
 

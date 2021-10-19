@@ -2172,7 +2172,7 @@ input AssignAccountModeratorRole {
   """
   The account ID that the role needs to be assigned to
   """
-  accountId: String!
+  accountId: ID!
 }
 
 """Assigned account"""
@@ -2186,7 +2186,7 @@ input AssignAccountStaffRole {
   """
   The account ID that the role needs to be assigned to
   """
-  accountId: String!
+  accountId: ID!
 }
 
 """Revoked account"""
@@ -2200,7 +2200,7 @@ input RevokeAccountModeratorRole {
   """
   The account ID that the role needs to be revoked from
   """
-  accountId: String!
+  accountId: ID!
 }
 
 """Revoked account"""
@@ -2214,7 +2214,7 @@ input RevokeAccountStaffRole {
   """
   The account ID that the role needs to be revoked from
   """
-  accountId: String!
+  accountId: ID!
 }
 
 extend type Mutation {
@@ -2237,7 +2237,8 @@ extend type Mutation {
   Revoke the staff role from the account
   """
   revokeAccountStaffRole(input: RevokeAccountStaffRole!): RevokeAccountStaffRolePayload
-}`, BuiltIn: false},
+}
+`, BuiltIn: false},
 	{Name: "schema/token/schema.graphql", Input: `enum MultiFactorType {
   TOTP
 }
@@ -9296,7 +9297,7 @@ func (ec *executionContext) unmarshalInputAssignAccountModeratorRole(ctx context
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("accountId"))
-			it.AccountID, err = ec.unmarshalNString2string(ctx, v)
+			it.AccountID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -9316,7 +9317,7 @@ func (ec *executionContext) unmarshalInputAssignAccountStaffRole(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("accountId"))
-			it.AccountID, err = ec.unmarshalNString2string(ctx, v)
+			it.AccountID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -9476,7 +9477,7 @@ func (ec *executionContext) unmarshalInputRevokeAccountModeratorRole(ctx context
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("accountId"))
-			it.AccountID, err = ec.unmarshalNString2string(ctx, v)
+			it.AccountID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -9516,7 +9517,7 @@ func (ec *executionContext) unmarshalInputRevokeAccountStaffRole(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("accountId"))
-			it.AccountID, err = ec.unmarshalNString2string(ctx, v)
+			it.AccountID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}

@@ -109,7 +109,7 @@ type ComplexityRoot struct {
 	}
 
 	Post struct {
-		AuditLogs    func(childComplexity int, after *string, before *string, first *int, last *int, dateRange types.PostAuditLogDateRange) int
+		AuditLogs    func(childComplexity int, after *string, before *string, first *int, last *int) int
 		ID           func(childComplexity int) int
 		Reports      func(childComplexity int, after *string, before *string, first *int, last *int, dateRange types.PostReportDateRange) int
 		ViewerReport func(childComplexity int) int
@@ -240,7 +240,7 @@ type MutationResolver interface {
 	ReportPost(ctx context.Context, input types.ReportPostInput) (*types.ReportPostPayload, error)
 }
 type PostResolver interface {
-	AuditLogs(ctx context.Context, obj *types.Post, after *string, before *string, first *int, last *int, dateRange types.PostAuditLogDateRange) (*types.PostAuditLogConnection, error)
+	AuditLogs(ctx context.Context, obj *types.Post, after *string, before *string, first *int, last *int) (*types.PostAuditLogConnection, error)
 	ViewerReport(ctx context.Context, obj *types.Post) (*types.PostReport, error)
 	Reports(ctx context.Context, obj *types.Post, after *string, before *string, first *int, last *int, dateRange types.PostReportDateRange) (*types.PostReportConnection, error)
 }
@@ -566,7 +566,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Post.AuditLogs(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["dateRange"].(types.PostAuditLogDateRange)), true
+		return e.complexity.Post.AuditLogs(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
 
 	case "Post.id":
 		if e.complexity.Post.ID == nil {
@@ -1048,9 +1048,6 @@ extend type Post {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-
-    """The date range for audit logs. Required."""
-    dateRange: PostAuditLogDateRange!
   ): PostAuditLogConnection! @goField(forceResolver: true)
 }
 
@@ -1078,7 +1075,8 @@ extend type Account {
     """The date range for audit logs. Required."""
     dateRange: PostAuditLogDateRange!
   ): PostAuditLogConnection! @goField(forceResolver: true)
-}`, BuiltIn: false},
+}
+`, BuiltIn: false},
 	{Name: "schema/infraction/schema.graphql", Input: `"""Infraction history belonging to an account"""
 type AccountInfractionHistory implements Node @key(fields: "id") {
   """ID of the infraction history"""
@@ -1802,15 +1800,6 @@ func (ec *executionContext) field_Post_auditLogs_args(ctx context.Context, rawAr
 		}
 	}
 	args["last"] = arg3
-	var arg4 types.PostAuditLogDateRange
-	if tmp, ok := rawArgs["dateRange"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("dateRange"))
-		arg4, err = ec.unmarshalNPostAuditLogDateRange2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostAuditLogDateRange(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["dateRange"] = arg4
 	return args, nil
 }
 
@@ -3202,7 +3191,7 @@ func (ec *executionContext) _Post_auditLogs(ctx context.Context, field graphql.C
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Post().AuditLogs(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["dateRange"].(types.PostAuditLogDateRange))
+		return ec.resolvers.Post().AuditLogs(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)

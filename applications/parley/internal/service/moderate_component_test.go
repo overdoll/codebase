@@ -2,15 +2,14 @@ package service_test
 
 import (
 	"context"
-	"testing"
-	"time"
-
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/parley/internal/ports/graphql/types"
 	parley "overdoll/applications/parley/proto"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/passport"
+	"testing"
+	"time"
 )
 
 type PostAuditLogModified struct {
@@ -18,7 +17,10 @@ type PostAuditLogModified struct {
 	Notes               string
 	Reverted            bool
 	ID                  string
-	Action              types.PostAuditLogAction
+	Post                struct {
+		ID string
+	}
+	Action types.PostAuditLogAction
 }
 
 type RevertPostAuditLog struct {
@@ -71,30 +73,27 @@ type AccountPostAuditLogs struct {
 	} `graphql:"_entities(representations: $representations)"`
 }
 
-// TestPostAuditLogs - get some audit logs
-//func TestAccountPostAuditLogs(t *testing.T) {
-//	t.Parallel()
-//
-//	client := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
-//
-//	var account AccountPostAuditLogs
-//
-//	err := client.Query(context.Background(), &account, map[string]interface{}{
-//		"representations": []_Any{
-//			{
-//				"__typename": "Account",
-//				"id":         "QWNjb3VudDoxcTdNSjVJeVJUVjBYNEoyN0YzbTV3R0Q1bWo=",
-//			},
-//		},
-//		"dateRange": types.PostAuditLogDateRange{
-//			From: time.Now(),
-//			To:   time.Now(),
-//		},
-//	})
-//
-//	require.NoError(t, err)
-//	require.Greater(t, account.Entities[0].Account.ModeratorPostAuditLogs.Edges, 0)
-//}
+func auditLogsForModeratorAccount(t *testing.T, client *graphql.Client, accountId string) AccountPostAuditLogs {
+
+	var account AccountPostAuditLogs
+
+	err := client.Query(context.Background(), &account, map[string]interface{}{
+		"representations": []_Any{
+			{
+				"__typename": "Account",
+				"id":         accountId,
+			},
+		},
+		"dateRange": types.PostAuditLogDateRange{
+			From: time.Now(),
+			To:   time.Now(),
+		},
+	})
+
+	require.NoError(t, err)
+
+	return account
+}
 
 type PostAuditLogs struct {
 	Entities []struct {
@@ -104,7 +103,7 @@ type PostAuditLogs struct {
 				Edges []struct {
 					Node PostAuditLogModified
 				}
-			} `graphql:"auditLogs(dateRange: $dateRange)"`
+			} `graphql:"auditLogs()"`
 		} `graphql:"... on Post"`
 	} `graphql:"_entities(representations: $representations)"`
 }
@@ -119,10 +118,6 @@ func auditLogsForPost(t *testing.T, client *graphql.Client, postId string) PostA
 				"__typename": "Post",
 				"id":         postId,
 			},
-		},
-		"dateRange": types.PostAuditLogDateRange{
-			From: time.Now(),
-			To:   time.Now(),
 		},
 	})
 
@@ -191,8 +186,24 @@ func TestModeratePost_approve(t *testing.T) {
 
 	require.Equal(t, types.PostAuditLogActionApproved, approvePost.ApprovePost.PostAuditLog.Action)
 
+	// make sure it shows up in the moderator logs as well
+	logs := auditLogsForModeratorAccount(t, client, "QWNjb3VudDoxcTdNSjNKa2hjZGNKSk5xWmV6ZGZRdDVwWjY=")
+
+	var moderatorAuditLog *PostAuditLogModified
+
+	for _, l := range logs.Entities[0].Account.ModeratorPostAuditLogs.Edges {
+		if l.Node.Post.ID == postId {
+			moderatorAuditLog = &l.Node
+			break
+		}
+	}
+
+	require.NotNil(t, moderatorAuditLog, "should have found moderator post audit logs")
+	require.Equal(t, types.PostAuditLogActionApproved, moderatorAuditLog.Action)
+	require.False(t, moderatorAuditLog.Reverted, "moderator log should not be reverted")
+
 	undo := revertModeratePost(t, client, approvePost.ApprovePost.PostAuditLog.ID)
-	require.Equal(t, true, undo.RevertPostAuditLog.PostAuditLog.Reverted)
+	require.Equal(t, true, undo.RevertPostAuditLog.PostAuditLog.Reverted, "moderator log should be reverted")
 
 	posts := auditLogsForPost(t, client, postId)
 

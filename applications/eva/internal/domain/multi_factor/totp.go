@@ -14,10 +14,12 @@ import (
 
 type TOTP struct {
 	secret string
+	name   string
 }
 
 const (
 	TOTPCookieKey = "enroll-totp"
+	issuer        = "overdoll"
 )
 
 var (
@@ -32,6 +34,7 @@ var (
 func UnmarshalTOTPFromDatabase(secret string) *TOTP {
 	return &TOTP{
 		secret: secret,
+		name:   "",
 	}
 }
 
@@ -56,11 +59,12 @@ func (c *TOTP) Secret() string {
 // Image - returns an image URL that can be easily used in HTML as an image SRC (base64 encoded)
 func (c *TOTP) Image() (string, error) {
 
-	key, err := otp.NewKeyFromURL(c.secret)
-
-	if err != nil {
-		return "", err
-	}
+	key, _ := totp.Generate(totp.GenerateOpts{
+		Issuer:      issuer,
+		AccountName: c.name,
+		Secret:      []byte(c.secret),
+		Digits:      otp.DigitsEight,
+	})
 
 	img, err := key.Image(100, 100)
 
@@ -86,12 +90,14 @@ func NewTOTP(recoveryCodes []*RecoveryCode, username string) (*TOTP, error) {
 	}
 
 	key, _ := totp.Generate(totp.GenerateOpts{
-		Issuer:      "overdoll",
+		Issuer:      issuer,
 		AccountName: username,
+		Digits:      otp.DigitsEight,
 	})
 
 	return &TOTP{
 		secret: key.Secret(),
+		name:   username,
 	}, nil
 }
 

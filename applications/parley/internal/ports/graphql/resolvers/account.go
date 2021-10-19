@@ -35,8 +35,8 @@ func (r AccountResolver) ModeratorPostAuditLogs(ctx context.Context, obj *types.
 		Cursor:             cursor,
 		ModeratorAccountId: &id,
 		Principal:          principal.FromContext(ctx),
-		From:               dateRange.From,
-		To:                 dateRange.To,
+		From:               &dateRange.From,
+		To:                 &dateRange.To,
 	})
 
 	if err != nil {

@@ -21,15 +21,15 @@ type RevokeAccountModeratorRole struct {
 	} `graphql:"revokeAccountModeratorRole(input: $input)"`
 }
 
+// NOTE: do not run these in parallel - they overwrite each other when ran almost at the same time (consistency error)
 func TestAccountRole_assign_and_revoke_moderator(t *testing.T) {
-	t.Parallel()
 
 	client, _, _ := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ5IyRTV0X4J27F3m5wGD5mj"))
 
 	var assignAccountModeratorRole AssignAccountModeratorRole
 
 	err := client.Mutate(context.Background(), &assignAccountModeratorRole, map[string]interface{}{
-		"input": types.AssignAccountModeratorRole{AccountID: "QWNjb3VudDoxcTdNSXcwVTZURXBFTEgwRnFueHJjWHQzRTA="},
+		"input": types.AssignAccountModeratorRole{AccountID: "QWNjb3VudDoxcGNLaWJSb3FUQVVnbU9pTnBHTElyenRNOVI="},
 	})
 
 	require.NoError(t, err)
@@ -41,7 +41,7 @@ func TestAccountRole_assign_and_revoke_moderator(t *testing.T) {
 	var revokeAccountModeratorRole RevokeAccountModeratorRole
 
 	err = client.Mutate(context.Background(), &revokeAccountModeratorRole, map[string]interface{}{
-		"input": types.RevokeAccountModeratorRole{AccountID: "QWNjb3VudDoxcTdNSXcwVTZURXBFTEgwRnFueHJjWHQzRTA="},
+		"input": types.RevokeAccountModeratorRole{AccountID: "QWNjb3VudDoxcGNLaWJSb3FUQVVnbU9pTnBHTElyenRNOVI="},
 	})
 
 	require.NoError(t, err)
@@ -64,14 +64,13 @@ type RevokeAccountStaffRole struct {
 }
 
 func TestAccountRole_assign_and_revoke_staff(t *testing.T) {
-	t.Parallel()
 
 	client, _, _ := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ5IyRTV0X4J27F3m5wGD5mj"))
 
 	var assignAccountStaffRole AssignAccountStaffRole
 
 	err := client.Mutate(context.Background(), &assignAccountStaffRole, map[string]interface{}{
-		"input": types.AssignAccountStaffRole{AccountID: "QWNjb3VudDoxcTdNSXcwVTZURXBFTEgwRnFueHJjWHQzRTA="},
+		"input": types.AssignAccountStaffRole{AccountID: "QWNjb3VudDoxcGNLaWJSb3FUQVVnbU9pTnBHTElyenRNOVI="},
 	})
 
 	require.NoError(t, err)
@@ -83,7 +82,7 @@ func TestAccountRole_assign_and_revoke_staff(t *testing.T) {
 	var revokeAccountStaffRole RevokeAccountStaffRole
 
 	err = client.Mutate(context.Background(), &revokeAccountStaffRole, map[string]interface{}{
-		"input": types.RevokeAccountStaffRole{AccountID: "QWNjb3VudDoxcTdNSXcwVTZURXBFTEgwRnFueHJjWHQzRTA="},
+		"input": types.RevokeAccountStaffRole{AccountID: "QWNjb3VudDoxcGNLaWJSb3FUQVVnbU9pTnBHTElyenRNOVI="},
 	})
 
 	require.NoError(t, err)

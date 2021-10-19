@@ -16,7 +16,8 @@ func (r *MutationResolver) AssignAccountModeratorRole(ctx context.Context, input
 	}
 
 	acc, err := r.App.Commands.AssignAccountModeratorRole.Handle(ctx, command.AssignAccountModeratorRole{
-		Principal: principal.FromContext(ctx),
+		Principal:       principal.FromContext(ctx),
+		TargetAccountId: input.AccountID.GetID(),
 	})
 
 	if err != nil {
@@ -33,7 +34,8 @@ func (r *MutationResolver) AssignAccountStaffRole(ctx context.Context, input typ
 	}
 
 	acc, err := r.App.Commands.AssignAccountStaffRole.Handle(ctx, command.AssignAccountStaffRole{
-		Principal: principal.FromContext(ctx),
+		Principal:       principal.FromContext(ctx),
+		TargetAccountId: input.AccountID.GetID(),
 	})
 
 	if err != nil {
@@ -50,7 +52,8 @@ func (r *MutationResolver) RevokeAccountModeratorRole(ctx context.Context, input
 	}
 
 	acc, err := r.App.Commands.RevokeAccountModeratorRole.Handle(ctx, command.RevokeAccountModeratorRole{
-		Principal: principal.FromContext(ctx),
+		Principal:       principal.FromContext(ctx),
+		TargetAccountId: input.AccountID.GetID(),
 	})
 
 	if err != nil {
@@ -67,7 +70,8 @@ func (r *MutationResolver) RevokeAccountStaffRole(ctx context.Context, input typ
 	}
 
 	acc, err := r.App.Commands.RevokeAccountStaffRole.Handle(ctx, command.RevokeAccountStaffRole{
-		Principal: principal.FromContext(ctx),
+		Principal:       principal.FromContext(ctx),
+		TargetAccountId: input.AccountID.GetID(),
 	})
 
 	if err != nil {

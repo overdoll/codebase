@@ -68,7 +68,7 @@ func (r PostResolver) Reports(ctx context.Context, obj *types.Post, after *strin
 	return types.MarshalPostReportToGraphQLConnection(ctx, logs, cursor), nil
 }
 
-func (r PostResolver) AuditLogs(ctx context.Context, obj *types.Post, after *string, before *string, first *int, last *int, dateRange types.PostAuditLogDateRange) (*types.PostAuditLogConnection, error) {
+func (r PostResolver) AuditLogs(ctx context.Context, obj *types.Post, after *string, before *string, first *int, last *int) (*types.PostAuditLogConnection, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return nil, err
@@ -86,8 +86,6 @@ func (r PostResolver) AuditLogs(ctx context.Context, obj *types.Post, after *str
 		Cursor:    cursor,
 		PostId:    &id,
 		Principal: principal.FromContext(ctx),
-		From:      dateRange.From,
-		To:        dateRange.To,
 	})
 
 	if err != nil {

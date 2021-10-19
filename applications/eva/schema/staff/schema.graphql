@@ -9,7 +9,7 @@ input AssignAccountModeratorRole {
   """
   The account ID that the role needs to be assigned to
   """
-  accountId: String!
+  accountId: ID!
 }
 
 """Assigned account"""
@@ -23,7 +23,7 @@ input AssignAccountStaffRole {
   """
   The account ID that the role needs to be assigned to
   """
-  accountId: String!
+  accountId: ID!
 }
 
 """Revoked account"""
@@ -37,7 +37,7 @@ input RevokeAccountModeratorRole {
   """
   The account ID that the role needs to be revoked from
   """
-  accountId: String!
+  accountId: ID!
 }
 
 """Revoked account"""
@@ -51,7 +51,7 @@ input RevokeAccountStaffRole {
   """
   The account ID that the role needs to be revoked from
   """
-  accountId: String!
+  accountId: ID!
 }
 
 extend type Mutation {

@@ -178,7 +178,7 @@ type AddAccountEmailPayload struct {
 // Input to assign account to a moderator role
 type AssignAccountModeratorRole struct {
 	// The account ID that the role needs to be assigned to
-	AccountID string `json:"accountId"`
+	AccountID relay.ID `json:"accountId"`
 }
 
 // Assigned account
@@ -190,7 +190,7 @@ type AssignAccountModeratorRolePayload struct {
 // Input to assign account to a staff role
 type AssignAccountStaffRole struct {
 	// The account ID that the role needs to be assigned to
-	AccountID string `json:"accountId"`
+	AccountID relay.ID `json:"accountId"`
 }
 
 // Assigned account
@@ -367,7 +367,7 @@ type RevokeAccountAccessPayload struct {
 // Input to revoke moderator role
 type RevokeAccountModeratorRole struct {
 	// The account ID that the role needs to be revoked from
-	AccountID string `json:"accountId"`
+	AccountID relay.ID `json:"accountId"`
 }
 
 // Revoked account
@@ -391,7 +391,7 @@ type RevokeAccountSessionPayload struct {
 // Input to revoke staff role
 type RevokeAccountStaffRole struct {
 	// The account ID that the role needs to be revoked from
-	AccountID string `json:"accountId"`
+	AccountID relay.ID `json:"accountId"`
 }
 
 // Revoked account

@@ -60,7 +60,6 @@ func TestAccountAuthenticate_existing(t *testing.T) {
 	require.Equal(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6", modified.AccountID())
 }
 
-
 // TestAccountAuthenticate_from_another_session - we login, but redeem our cookie from another "session"
 func TestAccountAuthenticate_from_another_session(t *testing.T) {
 	t.Parallel()
@@ -114,6 +113,7 @@ type GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode struct 
 		Account *struct {
 			Username string
 		}
+		Validation *types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation
 	} `graphql:"grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode(input: $input)"`
 }
 
@@ -247,6 +247,21 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 	require.NotNil(t, redeemCookie.VerifyAuthenticationToken.AuthenticationToken.AccountStatus.MultiFactor)
 
 	var authenticateRecoveryCode GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode
+
+	// try an invalid recovery code first
+	err = client.Mutate(context.Background(), &authenticateRecoveryCode, map[string]interface{}{
+		"input": types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput{
+			RecoveryCode: "some random recovery code",
+		},
+	})
+
+	require.NoError(t, err)
+
+	// make sure that it gives an invalid validation
+	require.NotNil(t, authenticateRecoveryCode.GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode.Validation, "should have validation error in recovery code")
+	require.Equal(t, *authenticateRecoveryCode.GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode.Validation, types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidationInvalidRecoveryCode)
+
+	// this time, do an actual valid recovery code
 	err = client.Mutate(context.Background(), &authenticateRecoveryCode, map[string]interface{}{
 		"input": types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput{
 			RecoveryCode: settings.Viewer.RecoveryCodes[0].Code,
@@ -254,6 +269,7 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 	})
 
 	require.NoError(t, err)
+	require.Nil(t, authenticateRecoveryCode.GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode.Validation, "should have no validation errors for recovery code")
 
 	modified = pass.GetPassport()
 

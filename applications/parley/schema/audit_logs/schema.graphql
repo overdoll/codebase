@@ -72,9 +72,6 @@ extend type Post {
 
     """Returns the last _n_ elements from the list."""
     last: Int
-
-    """The date range for audit logs. Required."""
-    dateRange: PostAuditLogDateRange!
   ): PostAuditLogConnection! @goField(forceResolver: true)
 }
 

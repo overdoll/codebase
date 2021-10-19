@@ -8,7 +8,8 @@ import (
 )
 
 type AssignAccountStaffRole struct {
-	Principal *principal.Principal
+	Principal       *principal.Principal
+	TargetAccountId string
 }
 
 type AssignAccountStaffRoleHandler struct {
@@ -21,7 +22,7 @@ func NewAssignAccountStaffRoleHandler(ur account.Repository) AssignAccountStaffR
 
 func (h AssignAccountStaffRoleHandler) Handle(ctx context.Context, cmd AssignAccountStaffRole) (*account.Account, error) {
 
-	usr, err := h.ur.UpdateAccount(ctx, cmd.Principal.AccountId(), func(u *account.Account) error {
+	usr, err := h.ur.UpdateAccount(ctx, cmd.TargetAccountId, func(u *account.Account) error {
 		return u.AssignStaffRole(cmd.Principal)
 	})
 

@@ -5783,10 +5783,10 @@
     resolve-from "^5.0.0"
     store2 "^2.7.1"
 
-"@streamlinehq/streamlinehq@^3.0.3":
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/@streamlinehq/streamlinehq/-/streamlinehq-3.0.3.tgz#2c3f66d9c5a9a2305ba6a49ecbfd2ceb7dd9c09d"
-  integrity sha512-+Y+gHVsrSv+TgoA+7Q6hKUZnELs/QsK+C+G9QYy2x+iAYMM6H4pjxB15fIWRSqnW1Vg1cmsKp5v8ApbFQGpDwQ==
+"@streamlinehq/streamlinehq@^3.0.4":
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/@streamlinehq/streamlinehq/-/streamlinehq-3.0.4.tgz#4857e69f515cba3dc72a9740e9418957f2d9e5db"
+  integrity sha512-E2fi0DuJJB8KXLN33LHRYFXUFne8Lw9p6e3beyayM14xB/1GTCKTh7L+fSpkO698Sed0BquMouCdIP5HrgYwjQ==
   dependencies:
     dotenv "^8.2.0"
 

@@ -129,25 +129,48 @@ func (r MultiFactorCassandraRepository) GetAccountRecoveryCodes(ctx context.Cont
 // RedeemAccountRecoveryCode - redeem recovery code - basically just deletes the recovery code from the database
 func (r MultiFactorCassandraRepository) VerifyAccountRecoveryCode(ctx context.Context, accountId string, recoveryCode *multi_factor.RecoveryCode) error {
 
-	encryptedCode, err := crypt.Encrypt(recoveryCode.Code())
+	// get all recovery codes for this account
+	var recoveryCodes []*accountMultiFactorRecoveryCodes
 
-	if err != nil {
-		return fmt.Errorf("failed to encrypt recovery code: %v", err)
+	getAccountMultiFactorRecoveryCodes := r.session.
+		Query(accountMultiFactorRecoveryCodeTable.Select()).
+		BindStruct(&accountMultiFactorRecoveryCodes{
+			AccountId: accountId,
+		})
+
+	if err := getAccountMultiFactorRecoveryCodes.Select(&recoveryCodes); err != nil {
+		return fmt.Errorf("failed to get recovery codes for account: %v", err)
+	}
+
+	var foundCode *accountMultiFactorRecoveryCodes
+
+	// go through each recover code, decrypt and figure out if it matches
+	for _, cd := range recoveryCodes {
+		decryptedCode, err := crypt.Decrypt(cd.Code)
+
+		if err != nil {
+			return fmt.Errorf("failed to decrypt recovery codes for account: %v", err)
+		}
+
+		// if recovery code matches, make it part of our codes
+		if decryptedCode == recoveryCode.Code() {
+			foundCode = cd
+			break
+		}
+	}
+
+	if foundCode == nil {
+		return multi_factor.ErrRecoveryCodeInvalid
 	}
 
 	deleteAccountMultiFactorCodes := r.session.
 		Query(accountMultiFactorRecoveryCodeTable.Delete()).
 		BindStruct(&accountMultiFactorRecoveryCodes{
 			AccountId: accountId,
-			Code:      encryptedCode,
+			Code:      foundCode.Code,
 		})
 
 	if err := deleteAccountMultiFactorCodes.ExecRelease(); err != nil {
-
-		if err == gocql.ErrNotFound {
-			return multi_factor.ErrRecoveryCodeInvalid
-		}
-
 		return fmt.Errorf("failed to verify recovery code: %v", err)
 	}
 

@@ -8,7 +8,8 @@ import (
 )
 
 type RevokeAccountStaffRole struct {
-	Principal *principal.Principal
+	Principal       *principal.Principal
+	TargetAccountId string
 }
 
 type RevokeAccountStaffRoleHandler struct {
@@ -21,7 +22,7 @@ func NewRevokeAccountStaffRoleHandler(ur account.Repository) RevokeAccountStaffR
 
 func (h RevokeAccountStaffRoleHandler) Handle(ctx context.Context, cmd RevokeAccountStaffRole) (*account.Account, error) {
 
-	usr, err := h.ur.UpdateAccount(ctx, cmd.Principal.AccountId(), func(u *account.Account) error {
+	usr, err := h.ur.UpdateAccount(ctx, cmd.TargetAccountId, func(u *account.Account) error {
 		return u.RevokeStaffRole(cmd.Principal)
 	})
 

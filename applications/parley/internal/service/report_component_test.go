@@ -85,7 +85,7 @@ func TestReportPost(t *testing.T) {
 		"representations": []_Any{
 			{
 				"__typename": "Post",
-				"id":         "UG9zdDoxcTdNSXFxbmt6ZXczM3E0ZWxYdU4xUmkyN2Q=",
+				"id":         postId,
 			},
 		},
 		"dateRange": types.PostReportDateRange{
@@ -99,5 +99,5 @@ func TestReportPost(t *testing.T) {
 	// will contain reports
 	require.Greater(t, len(postReports.Entities[0].Post.Reports.Edges), 0)
 	// reporting account is correct
-	require.Equal(t, "QWNjb3VudDoxcTdNSjNKa2hjZGNKSk5xWmV6ZGZRdDVwWjY=", postReports.Entities[0].Post.Reports.Edges[0].Node.Account.Id)
+	require.Equal(t, "QWNjb3VudDoxcTdNSjVJeVJUVjBYNEoyN0YzbTV3R0Q1bWo=", postReports.Entities[0].Post.Reports.Edges[0].Node.Account.Id)
 }

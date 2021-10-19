@@ -290,15 +290,14 @@ func (r InfractionCassandraRepository) SearchPostAuditLogs(ctx context.Context, 
 
 	var builder *qb.SelectBuilder
 
-	info := map[string]interface{}{
-		"bucket": bucket.MakeBucketsFromTimeRange(filter.From(), filter.To()),
-	}
+	info := map[string]interface{}{}
 
 	if filter.ModeratorId() != nil {
 		builder = qb.Select(postAuditLogByModeratorTable.Name()).
-			Where(qb.In("bucket"), qb.Eq("moderator_id"))
+			Where(qb.In("bucket"), qb.Eq("moderator_account_id"))
 
-		info["moderator_id"] = *filter.ModeratorId()
+		info["bucket"] = bucket.MakeBucketsFromTimeRange(*filter.From(), *filter.To())
+		info["moderator_account_id"] = *filter.ModeratorId()
 	}
 
 	if filter.PostId() != nil {

@@ -31,7 +31,6 @@ type Commands struct {
 
 	RevokeAccountModeratorRole command.RevokeAccountModeratorRoleHandler
 	RevokeAccountStaffRole     command.RevokeAccountStaffRoleHandler
-
 	AssignAccountModeratorRole command.AssignAccountModeratorRoleHandler
 	AssignAccountStaffRole     command.AssignAccountStaffRoleHandler
 
