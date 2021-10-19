@@ -24,11 +24,11 @@ var audienceTable = table.New(table.Metadata{
 })
 
 type audience struct {
-	Id        string `db:"id"`
-	Slug      string `db:"slug"`
+	Id        string            `db:"id"`
+	Slug      string            `db:"slug"`
 	Title     map[string]string `db:"title"`
-	Thumbnail string `db:"thumbnail"`
-	Standard  int    `db:"standard"`
+	Thumbnail string            `db:"thumbnail"`
+	Standard  int               `db:"standard"`
 }
 
 var audienceSlugTable = table.New(table.Metadata{

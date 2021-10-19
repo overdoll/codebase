@@ -60,7 +60,6 @@ type ConfirmAccountEmail struct {
 	ConfirmAccountEmail struct {
 		AccountEmail *AccountEmailModified
 	} `graphql:"confirmAccountEmail(input: $input)"`
-
 }
 
 type DeleteAccountEmail struct {

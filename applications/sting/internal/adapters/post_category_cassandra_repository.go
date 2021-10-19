@@ -24,10 +24,10 @@ var categoryTable = table.New(table.Metadata{
 })
 
 type category struct {
-	Id        string `db:"id"`
-	Slug      string `db:"slug"`
+	Id        string            `db:"id"`
+	Slug      string            `db:"slug"`
 	Title     map[string]string `db:"title"`
-	Thumbnail string `db:"thumbnail"`
+	Thumbnail string            `db:"thumbnail"`
 }
 
 var categorySlugTable = table.New(table.Metadata{
