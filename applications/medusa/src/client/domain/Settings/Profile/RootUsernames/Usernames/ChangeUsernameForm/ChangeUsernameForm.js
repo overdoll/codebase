@@ -24,6 +24,7 @@ import Button from '@//:modules/form/Button'
 import { graphql, useMutation } from 'react-relay/hooks'
 import type { ChangeUsernameFormMutation } from '@//:artifacts/ChangeUsernameFormMutation.graphql'
 import type { UsernamesSettingsFragment$key } from '@//:artifacts/UsernamesSettingsFragment.graphql'
+import { usernameSchema } from '@//:modules/constants/schemas/FormSchemas'
 
 type UsernameValues = {
   username: string,
@@ -34,19 +35,19 @@ type Props = {
 }
 
 const UsernameMutationGQL = graphql`
-  mutation ChangeUsernameFormMutation($input: UpdateAccountUsernameAndRetainPreviousInput!, $connections: [ID!]!) {
-    updateAccountUsernameAndRetainPrevious(input: $input) {
-      validation
-      accountUsername  {
-        id
-        username
-        account @appendNode(connections: $connections, edgeTypeName: "UsernamesEdge"){
-          id
-          username
+    mutation ChangeUsernameFormMutation($input: UpdateAccountUsernameAndRetainPreviousInput!, $connections: [ID!]!) {
+        updateAccountUsernameAndRetainPrevious(input: $input) {
+            validation
+            accountUsername  {
+                id
+                username
+                account @appendNode(connections: $connections, edgeTypeName: "UsernamesEdge"){
+                    id
+                    username
+                }
+            }
         }
-      }
     }
-  }
 `
 
 // TODO create a username validator so all usernames can't be whatever you want them to be
@@ -55,12 +56,7 @@ const UsernameMutationGQL = graphql`
 
 // TODO no native browser form configuration
 const schema = Joi.object({
-  username: Joi
-    .string()
-    .alphanum()
-    .min(3)
-    .max(15)
-    .required()
+  username: usernameSchema
 })
 
 export default function ChangeUsernameForm ({ usernamesConnectionID }: Props): Node {

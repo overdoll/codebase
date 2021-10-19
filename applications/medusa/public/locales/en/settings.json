@@ -102,5 +102,45 @@
         }
       }
     }
+  },
+  "security": {
+    "multi_factor": {
+      "title": "Two-factor Authentication",
+      "description": "Setting up two-factor authentication adds an extra layer of security in case your account is compromised.",
+      "totp": {
+        "title": "Authenticator App",
+        "description": {
+          "not_configured": "Configure authenticator app",
+          "configured": "Reconfigure authenticator app",
+          "restricted": "Recovery codes must be generated first"
+        }
+      },
+      "recovery_codes": {
+        "title": "Recovery Codes",
+        "button": {
+          "set_up": "Generate",
+          "show": "Show"
+        },
+        "description": {
+          "not_configured": "Generate recovery codes",
+          "configured": "View or regenerate recovery codes"
+        }
+      },
+      "disable": {
+        "title": "Disable Two-Factor Authentication",
+        "button": "Disable",
+        "tooltip": "Your account role prevents you from disabling two-factor authentication",
+        "modal": {
+          "header": "Disable Two-Factor Authentication",
+          "description": "Disabling two-factor authentication will remove the extra layer of security on your account. Are you sure?",
+          "confirm": "Disable Two-Factor",
+          "cancel": "Cancel",
+          "query": {
+            "success": "Two-factor authentication has been disabled for your account",
+            "error": "There was an error disabling two-factor authentication"
+          }
+        }
+      }
+    }
   }
 }

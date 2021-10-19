@@ -7,6 +7,7 @@ import { Center, Flex } from '@chakra-ui/react'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
 import type { QueueSettingsQuery } from '@//:artifacts/QueueSettingsQuery.graphql'
 import RootQueueSettings from './RootQueueSettings/RootQueueSettings'
+import { PageWrapper } from '../../../components/PageLayout'
 
 type Props = {
   prepared: {
@@ -17,18 +18,10 @@ type Props = {
 export default function Moderation (props: Props): Node {
   return (
     <>
-      <Helmet title='moderation' />
-      <Center mt={8}>
-        <Flex
-          w={['full', 'sm', 'md', 'lg']}
-          pl={[1, 0]}
-          pr={[1, 0]}
-          direction='column'
-          mb={6}
-        >
-          <RootQueueSettings query={props.prepared.queueQuery} />
-        </Flex>
-      </Center>
+      <Helmet title='moderation settings' />
+      <PageWrapper>
+        <RootQueueSettings query={props.prepared.queueQuery} />
+      </PageWrapper>
     </>
   )
 }

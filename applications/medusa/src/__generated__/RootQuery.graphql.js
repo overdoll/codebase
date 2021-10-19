@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 12413b8c3a0746d4331b771a591fa7ac
+ * @relayHash 855ae9c1fe7deaa2c3c9e312de23343b
  */
 
 /* eslint-disable */
@@ -13,6 +13,7 @@ export type AccountLockReason = "PostInfraction" | "%future added value";
 export type RootQueryVariables = {||};
 export type RootQueryResponse = {|
   +viewer: ?{|
+    +id: string,
     +isModerator: boolean,
     +isStaff: boolean,
     +lock: ?{|
@@ -31,6 +32,7 @@ export type RootQuery = {|
 /*
 query RootQuery {
   viewer {
+    id
     ...NavigationFragment
     isModerator
     isStaff
@@ -38,16 +40,15 @@ query RootQuery {
       reason
       expires
     }
-    id
   }
 }
 
-fragment AvatarButtonFragment on Account {
+fragment AvatarMenuFragment on Account {
   avatar
 }
 
 fragment NavigationFragment on Account {
-  ...AvatarButtonFragment
+  ...AvatarMenuFragment
   ...ProfileButtonFragment
 }
 
@@ -62,17 +63,24 @@ var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "isModerator",
+  "name": "id",
   "storageKey": null
 },
 v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "isStaff",
+  "name": "isModerator",
   "storageKey": null
 },
 v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "isStaff",
+  "storageKey": null
+},
+v3 = {
   "alias": null,
   "args": null,
   "concreteType": "AccountLock",
@@ -115,6 +123,7 @@ return {
           (v0/*: any*/),
           (v1/*: any*/),
           (v2/*: any*/),
+          (v3/*: any*/),
           {
             "args": null,
             "kind": "FragmentSpread",
@@ -141,6 +150,7 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
+          (v0/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -155,23 +165,16 @@ return {
             "name": "username",
             "storageKey": null
           },
-          (v0/*: any*/),
           (v1/*: any*/),
           (v2/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          }
+          (v3/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "12413b8c3a0746d4331b771a591fa7ac",
+    "id": "855ae9c1fe7deaa2c3c9e312de23343b",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",
@@ -180,5 +183,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = 'da99c32d74bd2e3b510b66e361c08f99';
+(node: any).hash = '042a913a555a0211a5b396045227a1c5';
 module.exports = node;

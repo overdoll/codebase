@@ -18,6 +18,7 @@ type Props = {
   onSelect: () => void,
   selected: Array<string>,
 };
+/*
 
 const CharactersQueryGQL = graphql`
   query CharactersQuery($name: String) {
@@ -38,12 +39,17 @@ const CharactersQueryGQL = graphql`
   }
 `
 
+ */
+
 export default function Characters ({ args, onSelect, selected }: Props): Node {
+  /*
   const data = useLazyLoadQuery<CharactersQuery>(
     CharactersQueryGQL,
     args.variables,
     args.options
   )
+
+   */
 
   // When we add a "new" character, we will open a modal so that the user can select the media
   const onAddNewCharacter = () => {

@@ -7,6 +7,8 @@
 'use strict';
 
 import type { ReaderFragment } from 'relay-runtime';
+import type { MultiFactorFragment$ref } from "./MultiFactorFragment.graphql";
+export type MultiFactorType = "TOTP" | "%future added value";
 import type { FragmentReference } from "relay-runtime";
 declare export opaque type JoinRootFragment$ref: FragmentReference;
 declare export opaque type JoinRootFragment$fragmentType: JoinRootFragment$ref;
@@ -14,7 +16,9 @@ export type JoinRootFragment = {|
   +verified: boolean,
   +sameSession: boolean,
   +accountStatus: ?{|
-    +registered: boolean
+    +registered: boolean,
+    +multiFactor: ?$ReadOnlyArray<MultiFactorType>,
+    +$fragmentRefs: MultiFactorFragment$ref,
   |},
   +$refType: JoinRootFragment$ref,
 |};
@@ -60,6 +64,18 @@ const node: ReaderFragment = {
           "kind": "ScalarField",
           "name": "registered",
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "multiFactor",
+          "storageKey": null
+        },
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "MultiFactorFragment"
         }
       ],
       "storageKey": null
@@ -69,5 +85,5 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 // prettier-ignore
-(node: any).hash = '7d003904689485204986de6bf1f63351';
+(node: any).hash = '422ae20ab8b3734a1f344f902f48563b';
 module.exports = node;

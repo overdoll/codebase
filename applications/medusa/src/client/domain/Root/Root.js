@@ -2,7 +2,7 @@
  * @flow
  */
 import type { Node } from 'react'
-import { Suspense } from 'react'
+import { Suspense, useEffect, useMemo, useState } from 'react'
 import type { PreloadedQueryInner } from 'react-relay/hooks'
 import { graphql, usePreloadedQuery } from 'react-relay/hooks'
 import type { RootQuery } from '@//:artifacts/RootQuery.graphql'
@@ -22,6 +22,7 @@ type Props = {
 const RootQueryGQL = graphql`
   query RootQuery {
     viewer {
+      id
       ...NavigationFragment
       isModerator
       isStaff
@@ -39,9 +40,7 @@ export default function Root (props: Props): Node {
     props.prepared.stateQuery
   )
 
-  const ability = defineAbility(
-    data?.viewer
-  )
+  const ability = useMemo(() => defineAbility(data?.viewer), [data?.viewer])
 
   return (
     <>

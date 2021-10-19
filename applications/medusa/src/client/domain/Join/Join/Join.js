@@ -3,13 +3,14 @@
  */
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { useTranslation } from 'react-i18next'
-import { Alert, AlertDescription, AlertIcon, Center, CloseButton, Flex, useToast } from '@chakra-ui/react'
+import { Alert, AlertDescription, AlertIcon, CloseButton, useToast } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet-async'
 import Icon from '@//:modules/content/Icon/Icon'
 import JoinForm from './JoinForm/JoinForm'
 import SignBadgeCircle
   from '@streamlinehq/streamlinehq/img/streamline-regular/maps-navigation/sign-shapes/sign-badge-circle.svg'
 import type { JoinFragment$key } from '@//:artifacts/JoinFragment.graphql'
+import { PageWrapper } from '../../../components/PageLayout'
 
 type Props = {
   queryRef: JoinFragment$key,
@@ -18,21 +19,21 @@ type Props = {
 }
 
 const JoinAction = graphql`
-  mutation JoinMutation($input: GrantAuthenticationTokenInput!) {
-    grantAuthenticationToken(input: $input) {
-      authenticationToken {
-        id
-        email
-        sameSession
-      }
+    mutation JoinMutation($input: GrantAuthenticationTokenInput!) {
+        grantAuthenticationToken(input: $input) {
+            authenticationToken {
+                id
+                email
+                sameSession
+            }
+        }
     }
-  }
 `
 
 const JoinFragment = graphql`
-  fragment JoinFragment on AuthenticationToken {
-    email
-  }
+    fragment JoinFragment on AuthenticationToken {
+        email
+    }
 `
 
 export default function Join ({ queryRef, hadGrant, clearGrant }: Props): Node {
@@ -77,35 +78,33 @@ export default function Join ({ queryRef, hadGrant, clearGrant }: Props): Node {
   return (
     <>
       <Helmet title='join' />
-      <Center mt={40}>
-        <Flex w={['sm', 'md']} direction='column' align='center'>
-          <Icon
-            icon={SignBadgeCircle}
-            w={100}
-            h={100}
-            color='red.500'
-            ml='auto'
-            mr='auto'
-            mb={8}
-          />
-          {(!data && hadGrant) && (
-            <Alert mb={2} status='error'>
-              <AlertIcon />
-              <AlertDescription>{t('expired')}</AlertDescription>
-              <CloseButton
-                position='absolute'
-                right={2}
-                top={2}
-                onClick={clearGrant}
-              />
-            </Alert>
-          )}
-          <JoinForm
-            onSubmit={onSubmit}
-            loading={isInFlight}
-          />
-        </Flex>
-      </Center>
+      <PageWrapper>
+        <Icon
+          icon={SignBadgeCircle}
+          w={100}
+          h={100}
+          color='primary.500'
+          ml='auto'
+          mr='auto'
+          mb={8}
+        />
+        {(!data && hadGrant) && (
+          <Alert mb={2} status='error'>
+            <AlertIcon />
+            <AlertDescription>{t('expired')}</AlertDescription>
+            <CloseButton
+              position='absolute'
+              right={2}
+              top={2}
+              onClick={clearGrant}
+            />
+          </Alert>
+        )}
+        <JoinForm
+          onSubmit={onSubmit}
+          loading={isInFlight}
+        />
+      </PageWrapper>
     </>
   )
 }

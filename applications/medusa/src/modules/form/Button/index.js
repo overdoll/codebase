@@ -35,10 +35,10 @@ export default function Button ({
 
   return (
     <AnimatedButton
-      {...rest}
       type={type}
       isDisabled={fullDisable}
       isLoading={fullLoading}
+      {...rest}
     >
       {children}
     </AnimatedButton>

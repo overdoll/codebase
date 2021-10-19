@@ -7,6 +7,7 @@ import { useCallback, useContext } from 'react'
 
 type Props = {
   children: Node,
+  disabled?: boolean,
   to: string,
 }
 
@@ -39,6 +40,14 @@ export default function Link (props: Props): Node {
   const preloadRoute = useCallback(() => {
     router.preload(props.to)
   }, [props.to, router])
+
+  if (props.disabled) {
+    return (
+      <span>
+        {props.children}
+      </span>
+    )
+  }
 
   return (
     <a

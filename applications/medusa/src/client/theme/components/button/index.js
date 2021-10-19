@@ -1,13 +1,14 @@
 /**
  * @flow
  */
-import { mode } from '@chakra-ui/theme-tools'
+import { getColor, mode, transparentize } from '@chakra-ui/theme-tools'
 
 const baseStyle = {
   lineHeight: '1.2',
   borderRadius: 'md',
   fontWeight: 'bold',
-  fontFamily: 'Nunito',
+  fontFamily: 'heading',
+  letterSpacing: 'wide',
   _focus: {
     boxShadow: 'outline'
   },
@@ -24,6 +25,7 @@ const baseStyle = {
 
 function variantSolid (props) {
   const { colorScheme: c } = props
+  const { theme } = props
 
   if (c === 'gray') {
     const bg = mode('gray.500', 'gray.700')(props)
@@ -32,36 +34,37 @@ function variantSolid (props) {
       bg,
       _hover: {
         bg: mode('gray.200', 'gray.600')(props),
+        color: mode('gray.200', 'gray.100')(props),
         _disabled: {
-          bg
+          bg,
+          color: mode('gray.200', 'gray.100')(props)
         }
       },
-      _active: { bg: mode('gray.300', 'gray.800')(props) }
+      _active: {
+        bg: mode('gray.300', 'gray.800')(props),
+        color: mode('gray.200', 'gray.200')(props)
+      }
     }
   }
 
   const {
     bg = `${c}.500`,
-    color = 'white',
-    hoverBg = `${c}.600`,
-    activeBg = `${c}.700`
+    color = 'white'
   } = accessibleColorMap[c] || {}
 
-  const background = mode(bg, 'gray.700')(props)
-
   return {
-    bg: background,
-    color: mode(color, `${c}.300`)(props),
+    fontWeight: 'extrabold',
+    bg: mode(bg, 'gray.00')(props),
+    color: mode(color, `${c}.500`)(props),
     _hover: {
-      bg: background,
-      color: mode(hoverBg, `${c}.200`)(props),
+      bg: mode(bg, transparentize('gray.00', 0.9)(theme))(props),
       _disabled: {
-        bg: background
+        bg: mode(bg, `${c}.100`)(props)
       }
     },
     _active: {
-      bg: background,
-      color: mode(activeBg, `${c}.500`)(props)
+      bg: mode(bg, 'gray.00')(props),
+      boxShadow: `0 0 0 3px ${getColor(theme, transparentize(`${c}.500`, 1)(theme))}`
     }
   }
 }
@@ -94,14 +97,32 @@ function variantGhost (props) {
 }
 
 function variantOutline (props) {
-  const { colorScheme: c } = props
+  const { colorScheme: c, size } = props
+  const { theme } = props
   const borderColor = mode('gray.200', 'gray.300')(props)
   const combinedColor = mode(`${c}.200`, `${c}.500`)(props)
+
+  const determineBorderWidth = (size) => {
+    switch (size) {
+      case 'xs':
+        return 1
+      case 'sm':
+        return 2
+      case 'md':
+        return 2
+      case 'lg':
+        return 3
+      case 'xl':
+        return 4
+      default:
+        return 1
+    }
+  }
 
   if (c === 'gray') {
     return {
       borderStyle: 'solid',
-      borderWidth: 3.5,
+      borderWidth: determineBorderWidth(size),
       color: mode('inherit', 'gray.100')(props),
       _hover: {
         bg: mode('gray.100', 'gray.500')(props)
@@ -114,7 +135,7 @@ function variantOutline (props) {
 
   return {
     borderStyle: 'solid',
-    borderWidth: 3.5,
+    borderWidth: determineBorderWidth(size),
     color: c === 'gray' ? borderColor : combinedColor,
     bg: 'transparent',
     _hover: {
@@ -122,8 +143,12 @@ function variantOutline (props) {
       bg: 'transparent'
     },
     _active: {
-      color: mode(`${c}.100`, `${c}.600`)(props),
-      bg: 'transparent'
+      color: mode(`${c}.100`, `${c}.500`)(props),
+      bg: 'transparent',
+      boxShadow: `0 0 0 3px ${getColor(theme, transparentize(`${c}.400`, 0.25)(theme))}`
+    },
+    _disabled: {
+      borderStyle: 'dashed'
     }
   }
 }
@@ -153,6 +178,26 @@ const accessibleColorMap: { [key: string]: AccessibleColor } = {
 
 function variantLink (props) {
   const { colorScheme: c } = props
+
+  if (c === 'gray') {
+    return {
+      padding: 0,
+      height: 'auto',
+      lineHeight: 'normal',
+      verticalAlign: 'baseline',
+      color: mode(`${c}.500`, 'gray.100')(props),
+      _hover: {
+        textDecoration: 'underline',
+        _disabled: {
+          textDecoration: 'none'
+        }
+      },
+      _active: {
+        color: mode(`${c}.700`, 'gray.200')(props)
+      }
+    }
+  }
+
   return {
     padding: 0,
     height: 'auto',
@@ -171,6 +216,58 @@ function variantLink (props) {
   }
 }
 
+function variantPanel (props) {
+  const { colorScheme: c } = props
+
+  if (c === 'gray') {
+    const bg = mode('gray.500', 'gray.800')(props)
+
+    return {
+      bg,
+      display: 'inline',
+      lineHeight: 'inherit',
+      m: 0,
+      p: 3,
+      _hover: {
+        bg: mode('gray.200', 'gray.800')(props),
+        _disabled: {
+          bg
+        }
+      },
+      _active: { bg: mode('gray.300', 'gray.800')(props) }
+    }
+  }
+
+  const {
+    bg = `${c}.500`,
+    color = 'white',
+    hoverBg = `${c}.600`,
+    activeBg = `${c}.700`
+  } = accessibleColorMap[c] || {}
+
+  const background = mode(bg, 'gray.800')(props)
+
+  return {
+    bg: background,
+    color: mode(color, `${c}.500`)(props),
+    display: 'inline',
+    lineHeight: 'inherit',
+    m: 0,
+    p: 3,
+    _hover: {
+      bg: background,
+      color: mode(hoverBg, `${c}.400`)(props),
+      _disabled: {
+        bg: background
+      }
+    },
+    _active: {
+      bg: background,
+      color: mode(activeBg, `${c}.600`)(props)
+    }
+  }
+}
+
 const variantUnstyled = {
   bg: 'none',
   color: 'inherit',
@@ -185,6 +282,7 @@ const variants = {
   outline: variantOutline,
   solid: variantSolid,
   link: variantLink,
+  panel: variantPanel,
   unstyled: variantUnstyled
 }
 
@@ -193,9 +291,10 @@ const sizes = {
     h: 16,
     minW: 14,
     fontSize: '2xl',
-    fontWeight: 'medium',
+    fontWeight: 'extrabold',
     px: 6,
     borderRadius: 15
+
   },
   lg: {
     h: 12,
@@ -208,22 +307,24 @@ const sizes = {
     h: 10,
     minW: 10,
     fontSize: 'md',
-    px: 4,
-    borderRadius: 10
+    px: 5,
+    borderRadius: 7
   },
   sm: {
     h: 8,
     minW: 8,
     fontSize: 'sm',
     px: 3,
-    borderRadius: 5
+    borderRadius: 5,
+    fontWeight: 'normal'
   },
   xs: {
     h: 6,
     minW: 6,
     fontSize: 'xs',
     px: 2,
-    borderRadius: 5
+    borderRadius: 5,
+    fontWeight: 'normal'
   }
 }
 

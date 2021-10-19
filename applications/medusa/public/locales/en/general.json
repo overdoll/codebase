@@ -6,7 +6,8 @@
     "back": "Back",
     "submit": "Submit",
     "add": "Add",
-    "modify": "Modify"
+    "modify": "Modify",
+    "copy": "Copy"
   },
   "input": {
     "search": "Search something you know..."

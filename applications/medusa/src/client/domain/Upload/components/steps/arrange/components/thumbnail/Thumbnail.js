@@ -60,7 +60,7 @@ export default function Thumbnail ({ thumbnail, progress, type }: Props): Node {
             ? (
               <CircularProgress
                 value={(progress['0'] / progress['1']) * 100}
-                color='red.500'
+                color='primary.500'
                 size='100px'
                 thickness={4}
               >

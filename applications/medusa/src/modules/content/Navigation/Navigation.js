@@ -2,46 +2,45 @@
  * @flow
  */
 import type { Node } from 'react'
-import { useContext, useMemo, Fragment } from 'react'
+import { useMemo } from 'react'
 import {
   Button
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
+import { useLocation } from '@//:modules/routing'
+import { graphql, useFragment } from 'react-relay/hooks'
+import { useAbilityContext } from '@//:modules/utilities/hooks'
 import Link from '@//:modules/routing/Link'
 import computeCurrentActiveRoutes from './helpers/computeCurrentActiveRoutes'
-import { AbilityContext } from '../../../client/domain/Root/helpers/AbilityContext'
 import { useRelayEnvironment } from 'react-relay'
 import type { NavigationFragment$key } from '@//:artifacts/NavigationFragment.graphql'
 import getBasePath from './helpers/getBasePath'
 
-import NavigationButton
-  from './components/NavigationContainer/NavigationCenterItems/NavigationButton/NavigationButton'
-import SidebarButton from './components/NavigationContents/Sidebar/SidebarButton/SidebarButton'
-import Sidebar from './components/NavigationContents/Sidebar/Sidebar'
-import MenuItemButton
-  from './components/NavigationContainer/NavigationRightItems/NavigationMenu/MenuItemButton/MenuItemButton'
-import NavigationContainer from './components/NavigationContainer/NavigationContainer'
-import NavigationLeftBrand from './components/NavigationContainer/NavigationLeftBrand/NavigationLeftBrand'
-import NavigationCenterItems from './components/NavigationContainer/NavigationCenterItems/NavigationCenterItems'
-import NavigationRightItems from './components/NavigationContainer/NavigationRightItems/NavigationRightItems'
-import SimplifiedNavigation from './components/SimplifiedNavigation/SimplifiedNavigation'
-import NavigationContents from './components/NavigationContents/NavigationContents'
-import PageContents from './components/NavigationContents/PageContents/PageContents'
-import SidebarGrouping from './components/NavigationContents/Sidebar/SidebarGrouping/SidebarGrouping'
-import NavigationMenu
-  from '@//:modules/content/Navigation/components/NavigationContainer/NavigationRightItems/NavigationMenu/NavigationMenu'
-import { useLocation } from '@//:modules/routing'
-import ProfileButton
-  from '@//:modules/content/Navigation/components/NavigationContainer/NavigationRightItems/NavigationMenu/ProfileButton/ProfileButton'
-import LogoutButton
-  from '@//:modules/content/Navigation/components/NavigationContainer/NavigationRightItems/NavigationMenu/LogoutButton/LogoutButton'
-import LoginButton
-  from '@//:modules/content/Navigation/components/NavigationContainer/NavigationRightItems/LoginButton/LoginButton'
-import AvatarButton
-  from '@//:modules/content/Navigation/components/NavigationContainer/NavigationRightItems/AvatarButton/AvatarButton'
-import LoggedOutPlaceholder
-  from '@//:modules/content/Navigation/components/NavigationContainer/NavigationRightItems/NavigationMenu/LoggedOutPlaceholder/LoggedOutPlaceholder'
-import { graphql, useFragment } from 'react-relay/hooks'
+import {
+  NavigationContainer,
+  NavigationCenterItems,
+  NavigationLeftBrand,
+  NavigationRightItems,
+  SimplifiedNavigation,
+  NavigationButton,
+  NavigationContents,
+  PageContents
+} from '@//:modules/content/Navigation/components'
+import {
+  SidebarButton,
+  Sidebar,
+  SidebarGrouping
+} from '@//:modules/content/Navigation/components/NavigationContents/Sidebar'
+
+import {
+  LoggedOutPlaceholder,
+  LogoutButton,
+  MenuItemButton,
+  ProfileButton,
+  NavigationMenu,
+  LoginMenu,
+  AvatarMenu
+} from '@//:modules/content/Navigation/components/NavigationContainer/NavigationRightItems'
 
 type Props = {
   children: Node,
@@ -50,7 +49,7 @@ type Props = {
 
 const NavigationFragmentGQL = graphql`
   fragment NavigationFragment on Account {
-    ...AvatarButtonFragment
+    ...AvatarMenuFragment
     ...ProfileButtonFragment
   }
 `
@@ -62,9 +61,9 @@ export default function Navigation (props: Props): Node {
 
   const location = useLocation()
 
-  const ability = useContext(AbilityContext)
-
   const data = useFragment(NavigationFragmentGQL, props.rootQuery)
+
+  const ability = useAbilityContext()
 
   const [navigationTop, navigationMenu, navigationSidebar, navigationFiltered] = useMemo(() => computeCurrentActiveRoutes({
     environment
@@ -87,7 +86,7 @@ export default function Navigation (props: Props): Node {
       <NavigationContainer>
         <NavigationLeftBrand>
           <Link to='/'>
-            <Button textColor='red.500' variant='link' colorScheme='red'>{t('title')}</Button>
+            <Button textColor='primary.500' variant='link' colorScheme='primary'>{t('title')}</Button>
           </Link>
         </NavigationLeftBrand>
         <NavigationCenterItems>
@@ -106,7 +105,7 @@ export default function Navigation (props: Props): Node {
           ability.can('manage', 'account')
             ? (
               <NavigationRightItems>
-                <AvatarButton viewer={data} />
+                <AvatarMenu viewer={data} />
                 <NavigationMenu>
                   <ProfileButton viewer={data} />
                   {navigationMenu.map((item, index) => {
@@ -124,7 +123,7 @@ export default function Navigation (props: Props): Node {
               )
             : (
               <NavigationRightItems>
-                <LoginButton />
+                <LoginMenu />
                 <NavigationMenu>
                   <LoggedOutPlaceholder />
                 </NavigationMenu>

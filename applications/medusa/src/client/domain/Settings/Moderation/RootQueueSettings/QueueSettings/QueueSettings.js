@@ -93,11 +93,11 @@ export default function QueueSettings (props: Props): Node {
   return (
     <>
       <Flex align='center' direction='row'>
-        <Switch onChange={onChangeSettings} isDisabled={isChangingSettings} mr={4} defaultChecked={status} />
         <Flex direction='column'>
           <Heading color='gray.100' fontSize='lg'>{t('moderation.queue.toggle.header')}</Heading>
           <Text color='gray.200' fontSize='sm'>{t('moderation.queue.toggle.subheader')}</Text>
         </Flex>
+        <Switch onChange={onChangeSettings} isDisabled={isChangingSettings} ml={4} defaultChecked={status} />
       </Flex>
     </>
   )

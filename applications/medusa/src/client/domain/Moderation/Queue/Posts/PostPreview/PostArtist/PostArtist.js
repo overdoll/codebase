@@ -13,8 +13,8 @@ type Props = {
 
 const PostArtistFragmentGQL = graphql`
   fragment PostArtistFragment on Post {
-    artist {
-      username
+    brand {
+      name
     }
   }
 `
@@ -27,7 +27,7 @@ export default function PostHeader (props: Props): Node {
     <Wrap direction='column'>
       <WrapItem>
         <Tag size='lg' colorScheme='gray' borderRadius='full'>
-          <TagLabel>{data?.artist.username}</TagLabel>
+          <TagLabel>{data?.brand.name}</TagLabel>
         </Tag>
       </WrapItem>
     </Wrap>

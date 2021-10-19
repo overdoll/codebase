@@ -1,7 +1,7 @@
 /**
  * @flow
  */
-import { Flex, HStack } from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/react'
 import type { Node } from 'react'
 
 type Props = {
@@ -15,9 +15,9 @@ export default function NavigationRightItems ({ children }: Props): Node {
         borderRadius={10} bg={{ base: 'transparent', md: 'gray.900' }}
         align='center'
       >
-        <HStack spacing={1} m={1}>
+        <Flex m={1}>
           {children}
-        </HStack>
+        </Flex>
       </Flex>
     </Flex>
   )

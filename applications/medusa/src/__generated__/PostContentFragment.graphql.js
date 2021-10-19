@@ -12,7 +12,9 @@ declare export opaque type PostContentFragment$ref: FragmentReference;
 declare export opaque type PostContentFragment$fragmentType: PostContentFragment$ref;
 export type PostContentFragment = {|
   +content: $ReadOnlyArray<{|
-    +url: any
+    +urls: $ReadOnlyArray<{|
+      +url: any
+    |}>
   |}>,
   +$refType: PostContentFragment$ref,
 |};
@@ -33,7 +35,7 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
-      "concreteType": "Content",
+      "concreteType": "Resource",
       "kind": "LinkedField",
       "name": "content",
       "plural": true,
@@ -41,8 +43,19 @@ const node: ReaderFragment = {
         {
           "alias": null,
           "args": null,
-          "kind": "ScalarField",
-          "name": "url",
+          "concreteType": "ResourceUrl",
+          "kind": "LinkedField",
+          "name": "urls",
+          "plural": true,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "url",
+              "storageKey": null
+            }
+          ],
           "storageKey": null
         }
       ],
@@ -53,5 +66,5 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 // prettier-ignore
-(node: any).hash = '6cf0548456b2a1b412de3d4fabf3779f';
+(node: any).hash = 'a5bd43bd0350c63b9575f2dd95c3244a';
 module.exports = node;

@@ -17,10 +17,10 @@ export default function (props) {
       wordWrap: 'break-word'
     },
     '*::focus': {
-      color: 'red.500'
+      color: 'primary.500'
     },
     '.swiper-pagination-bullet-active': {
-      background: 'red.500',
+      background: 'primary.500',
       opacity: 0.5
     },
     '.swiper-pagination-bullets': {
@@ -48,6 +48,12 @@ export default function (props) {
     },
     form: {
       width: '100%'
+    },
+    '::selection': {
+      background: 'gray.300'
+    },
+    '::-moz-selection': {
+      background: 'gray.300'
     }
   }
 }

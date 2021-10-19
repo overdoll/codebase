@@ -49,7 +49,7 @@ const routes: Array<Route> = [
     hidden: true
   },
   {
-    path: '/join',
+    path: '/token',
     hidden: true
   },
   {

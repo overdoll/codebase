@@ -20,6 +20,7 @@ function baseStyleItem (props) {
     py: '0.4rem',
     px: '0.8rem',
     transition: 'background 50ms ease-in 0s',
+    fontWeight: 'semibold',
     _focus: {
       bg: mode('gray.100', 'gray.500')(props)
     },

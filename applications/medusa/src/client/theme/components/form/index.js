@@ -5,7 +5,7 @@ const parts = ['requiredIndicator', 'helperText']
 function baseStyleRequiredIndicator (props) {
   return {
     marginStart: 1,
-    color: mode('red.500', 'red.300')(props)
+    color: mode('red.500', 'orange.300')(props)
   }
 }
 
