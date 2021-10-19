@@ -29,21 +29,21 @@ type Props = {
 };
 
 const RootCreatePostFlowQueryGQL = graphql`
-    query RootCreatePostFlowQuery ($reference: String!) {
-        post (reference: $reference) {
-            __typename
-        }
+  query RootCreatePostFlowQuery ($reference: String!) {
+    post (reference: $reference) {
+      __typename
     }
+  }
 `
 
 const RootCreatePostFlowMutationGQL = graphql`
-    mutation RootCreatePostFlowMutation {
-        createPost {
-            post {
-                reference
-            }
-        }
+  mutation RootCreatePostFlowMutation {
+    createPost {
+      post {
+        reference
+      }
     }
+  }
 `
 
 export default function RootCreatePostFlow ({ uppy, state, dispatch }: Props): Node {
