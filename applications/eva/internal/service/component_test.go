@@ -82,7 +82,6 @@ func verifyAuthenticationToken(t *testing.T, client *graphql.Client, cookie stri
 	return redeemCookie
 }
 
-
 type GrantAccountAccessWithAuthenticationToken struct {
 	GrantAccountAccessWithAuthenticationToken *struct {
 		Account struct {

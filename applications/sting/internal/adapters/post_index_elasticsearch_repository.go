@@ -281,7 +281,7 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 	if filterQueries != nil {
 		query.Filter(filterQueries...)
 	}
-	
+
 	builder.Query(query)
 
 	response, err := builder.Pretty(true).Do(ctx)

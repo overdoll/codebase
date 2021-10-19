@@ -23,10 +23,10 @@ var brandTable = table.New(table.Metadata{
 })
 
 type brand struct {
-	Id        string `db:"id"`
-	Slug      string `db:"slug"`
+	Id        string            `db:"id"`
+	Slug      string            `db:"slug"`
 	Name      map[string]string `db:"name"`
-	Thumbnail string `db:"thumbnail"`
+	Thumbnail string            `db:"thumbnail"`
 }
 
 var brandSlugTable = table.New(table.Metadata{
