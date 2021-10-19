@@ -13,61 +13,47 @@ import (
 	"github.com/segmentio/ksuid"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
 	"overdoll/libraries/scan"
+	"overdoll/libraries/translations"
 )
 
 type characterDocument struct {
-	Id        string         `json:"id"`
-	Slug      string         `json:"slug"`
-	Thumbnail string         `json:"thumbnail"`
-	Name      string         `json:"name"`
-	Series    seriesDocument `json:"series"`
-	CreatedAt string         `json:"created_at"`
+	Id        string            `json:"id"`
+	Slug      string            `json:"slug"`
+	Thumbnail string            `json:"thumbnail"`
+	Name      map[string]string `json:"name"`
+	Series    seriesDocument    `json:"series"`
+	CreatedAt string            `json:"created_at"`
 }
+
+const characterIndexProperties = `
+{
+	"id": {
+		"type": "keyword"
+	},
+	"slug": {
+		"type": "keyword"
+	},
+	"thumbnail": {
+		"type": "keyword"
+	},
+	"name": ` + translations.ESIndex + `
+	"created_at": {
+		"type": "date"
+	},
+	"series": {
+		"type": "nested",
+		"properties": ` + seriesIndexProperties + ` 
+	}
+}
+`
 
 const characterIndex = `
 {
 	"mappings": {
 		"dynamic": "strict",
-		"properties": {
-			"id": {
-				"type": "keyword"
-			},
-			"slug": {
-				"type": "keyword"
-			},
-			"thumbnail": {
-				"type": "keyword"
-			},
-			"name": {
-				"type": "text",
-				"analyzer": "english"
-			},
-			"created_at": {
-				"type": "date"
-			},
-			"series": {
-				"type": "nested",
-				"properties": {
-					"id": {
-						"type": "keyword"
-					},
-					"slug": {
-						"type": "keyword"
-					},
-					"thumbnail": {
-						"type": "keyword"
-					},
-					"title": {
-						"type": "text",
-						"analyzer": "english"
-					},
-					"created_at": {
-						"type": "date"
-					}
-				}
-			}
-		}
+		"properties": ` + characterIndexProperties + `
 	}
 }`
 
@@ -112,13 +98,13 @@ func marshalCharacterToDocument(char *post.Character) (*characterDocument, error
 	return &characterDocument{
 		Id:        char.ID(),
 		Thumbnail: charThumb,
-		Name:      char.Name(),
+		Name:      translations.MarshalTranslationToDatabase(char.Name()),
 		Slug:      char.Slug(),
 		CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
 		Series: seriesDocument{
 			Id:        media.ID(),
 			Thumbnail: seriesThumb,
-			Title:     media.Title(),
+			Title:     translations.MarshalTranslationToDatabase(media.Title()),
 			CreatedAt: strconv.FormatInt(parse2.Time().Unix(), 10),
 		},
 	}, nil
@@ -148,7 +134,7 @@ func (r PostsIndexElasticSearchRepository) IndexCharacters(ctx context.Context, 
 	return nil
 }
 
-func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context, cursor *paging.Cursor, search *string) ([]*post.Character, error) {
+func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.CharacterFilters) ([]*post.Character, error) {
 
 	builder := r.client.Search().
 		Index(characterIndexName)
@@ -159,8 +145,20 @@ func (r PostsIndexElasticSearchRepository) SearchCharacters(ctx context.Context,
 
 	query := cursor.BuildElasticsearch(builder, "created_at")
 
-	if search != nil {
-		query.Must(elastic.NewMultiMatchQuery(*search, "name").Operator("and"))
+	if filter.Name() != nil {
+		query.Must(
+			elastic.
+				NewMultiMatchQuery(*filter.Name(), translations.GetESSearchFields("name")...).
+				Type("best_fields"),
+		)
+	}
+
+	if len(filter.Slugs()) > 0 {
+		for _, id := range filter.Slugs() {
+			query.Filter(elastic.NewTermQuery("slug", id))
+		}
+
+		query.Filter(elastic.NewTermQuery("series.slug", *filter.SeriesSlug()))
 	}
 
 	builder.Query(query)

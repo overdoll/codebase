@@ -145,7 +145,14 @@ type ComplexityRoot struct {
 
 	AddAccountEmailPayload struct {
 		AccountEmail func(childComplexity int) int
-		Validation   func(childComplexity int) int
+	}
+
+	AssignAccountModeratorRolePayload struct {
+		Account func(childComplexity int) int
+	}
+
+	AssignAccountStaffRolePayload struct {
+		Account func(childComplexity int) int
 	}
 
 	AuthenticationToken struct {
@@ -222,6 +229,10 @@ type ComplexityRoot struct {
 		AuthenticationToken func(childComplexity int) int
 	}
 
+	Language struct {
+		Locale func(childComplexity int) int
+	}
+
 	Moderator struct {
 		Account func(childComplexity int) int
 		ID      func(childComplexity int) int
@@ -234,6 +245,8 @@ type ComplexityRoot struct {
 
 	Mutation struct {
 		AddAccountEmail                                                     func(childComplexity int, input types.AddAccountEmailInput) int
+		AssignAccountModeratorRole                                          func(childComplexity int, input types.AssignAccountModeratorRole) int
+		AssignAccountStaffRole                                              func(childComplexity int, input types.AssignAccountStaffRole) int
 		ConfirmAccountEmail                                                 func(childComplexity int, input types.ConfirmAccountEmailInput) int
 		CreateAccountWithAuthenticationToken                                func(childComplexity int, input types.CreateAccountWithAuthenticationTokenInput) int
 		DeleteAccountEmail                                                  func(childComplexity int, input types.DeleteAccountEmailInput) int
@@ -247,11 +260,14 @@ type ComplexityRoot struct {
 		GrantAuthenticationToken                                            func(childComplexity int, input types.GrantAuthenticationTokenInput) int
 		ReissueAuthenticationToken                                          func(childComplexity int) int
 		RevokeAccountAccess                                                 func(childComplexity int) int
+		RevokeAccountModeratorRole                                          func(childComplexity int, input types.RevokeAccountModeratorRole) int
 		RevokeAccountSession                                                func(childComplexity int, input types.RevokeAccountSessionInput) int
+		RevokeAccountStaffRole                                              func(childComplexity int, input types.RevokeAccountStaffRole) int
 		RevokeAuthenticationToken                                           func(childComplexity int, input types.RevokeAuthenticationTokenInput) int
 		UnlockAccount                                                       func(childComplexity int) int
 		UpdateAccountEmailStatusToPrimary                                   func(childComplexity int, input types.UpdateAccountEmailStatusToPrimaryInput) int
 		UpdateAccountUsernameAndRetainPrevious                              func(childComplexity int, input types.UpdateAccountUsernameAndRetainPreviousInput) int
+		UpdateLanguage                                                      func(childComplexity int, input types.UpdateLanguageInput) int
 		VerifyAuthenticationToken                                           func(childComplexity int, input types.VerifyAuthenticationTokenInput) int
 	}
 
@@ -265,6 +281,8 @@ type ComplexityRoot struct {
 	Query struct {
 		Account                 func(childComplexity int, username string) int
 		Accounts                func(childComplexity int, after *string, before *string, first *int, last *int, username *string) int
+		Language                func(childComplexity int) int
+		Languages               func(childComplexity int) int
 		ViewAuthenticationToken func(childComplexity int, token *string) int
 		Viewer                  func(childComplexity int) int
 		__resolve__service      func(childComplexity int) int
@@ -280,8 +298,16 @@ type ComplexityRoot struct {
 		RevokedAccountID func(childComplexity int) int
 	}
 
+	RevokeAccountModeratorRolePayload struct {
+		Account func(childComplexity int) int
+	}
+
 	RevokeAccountSessionPayload struct {
 		AccountSessionID func(childComplexity int) int
+	}
+
+	RevokeAccountStaffRolePayload struct {
+		Account func(childComplexity int) int
 	}
 
 	RevokeAuthenticationTokenPayload struct {
@@ -293,12 +319,17 @@ type ComplexityRoot struct {
 	}
 
 	UpdateAccountEmailStatusToPrimaryPayload struct {
-		AccountEmail func(childComplexity int) int
+		PrimaryAccountEmail func(childComplexity int) int
+		UpdatedAccountEmail func(childComplexity int) int
 	}
 
 	UpdateAccountUsernameAndRetainPreviousPayload struct {
 		AccountUsername func(childComplexity int) int
 		Validation      func(childComplexity int) int
+	}
+
+	UpdateLanguagePayload struct {
+		Language func(childComplexity int) int
 	}
 
 	VerifyAuthenticationTokenPayload struct {
@@ -343,6 +374,7 @@ type MutationResolver interface {
 	GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode(ctx context.Context, input types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput) (*types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodePayload, error)
 	VerifyAuthenticationToken(ctx context.Context, input types.VerifyAuthenticationTokenInput) (*types.VerifyAuthenticationTokenPayload, error)
 	UnlockAccount(ctx context.Context) (*types.UnlockAccountPayload, error)
+	UpdateLanguage(ctx context.Context, input types.UpdateLanguageInput) (*types.UpdateLanguagePayload, error)
 	AddAccountEmail(ctx context.Context, input types.AddAccountEmailInput) (*types.AddAccountEmailPayload, error)
 	DeleteAccountEmail(ctx context.Context, input types.DeleteAccountEmailInput) (*types.DeleteAccountEmailPayload, error)
 	UpdateAccountUsernameAndRetainPrevious(ctx context.Context, input types.UpdateAccountUsernameAndRetainPreviousInput) (*types.UpdateAccountUsernameAndRetainPreviousPayload, error)
@@ -353,12 +385,18 @@ type MutationResolver interface {
 	EnrollAccountMultiFactorTotp(ctx context.Context, input types.EnrollAccountMultiFactorTotpInput) (*types.EnrollAccountMultiFactorTotpPayload, error)
 	DisableAccountMultiFactor(ctx context.Context) (*types.DisableAccountMultiFactorPayload, error)
 	ConfirmAccountEmail(ctx context.Context, input types.ConfirmAccountEmailInput) (*types.ConfirmAccountEmailPayload, error)
+	AssignAccountModeratorRole(ctx context.Context, input types.AssignAccountModeratorRole) (*types.AssignAccountModeratorRolePayload, error)
+	AssignAccountStaffRole(ctx context.Context, input types.AssignAccountStaffRole) (*types.AssignAccountStaffRolePayload, error)
+	RevokeAccountModeratorRole(ctx context.Context, input types.RevokeAccountModeratorRole) (*types.RevokeAccountModeratorRolePayload, error)
+	RevokeAccountStaffRole(ctx context.Context, input types.RevokeAccountStaffRole) (*types.RevokeAccountStaffRolePayload, error)
 }
 type QueryResolver interface {
 	ViewAuthenticationToken(ctx context.Context, token *string) (*types.AuthenticationToken, error)
 	Viewer(ctx context.Context) (*types.Account, error)
 	Account(ctx context.Context, username string) (*types.Account, error)
 	Accounts(ctx context.Context, after *string, before *string, first *int, last *int, username *string) (*types.AccountConnection, error)
+	Languages(ctx context.Context) ([]*types.Language, error)
+	Language(ctx context.Context) (*types.Language, error)
 }
 
 type executableSchema struct {
@@ -732,12 +770,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AddAccountEmailPayload.AccountEmail(childComplexity), true
 
-	case "AddAccountEmailPayload.validation":
-		if e.complexity.AddAccountEmailPayload.Validation == nil {
+	case "AssignAccountModeratorRolePayload.account":
+		if e.complexity.AssignAccountModeratorRolePayload.Account == nil {
 			break
 		}
 
-		return e.complexity.AddAccountEmailPayload.Validation(childComplexity), true
+		return e.complexity.AssignAccountModeratorRolePayload.Account(childComplexity), true
+
+	case "AssignAccountStaffRolePayload.account":
+		if e.complexity.AssignAccountStaffRolePayload.Account == nil {
+			break
+		}
+
+		return e.complexity.AssignAccountStaffRolePayload.Account(childComplexity), true
 
 	case "AuthenticationToken.accountStatus":
 		if e.complexity.AuthenticationToken.AccountStatus == nil {
@@ -988,6 +1033,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.GrantAuthenticationTokenPayload.AuthenticationToken(childComplexity), true
 
+	case "Language.locale":
+		if e.complexity.Language.Locale == nil {
+			break
+		}
+
+		return e.complexity.Language.Locale(childComplexity), true
+
 	case "Moderator.account":
 		if e.complexity.Moderator.Account == nil {
 			break
@@ -1027,6 +1079,30 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.AddAccountEmail(childComplexity, args["input"].(types.AddAccountEmailInput)), true
+
+	case "Mutation.assignAccountModeratorRole":
+		if e.complexity.Mutation.AssignAccountModeratorRole == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_assignAccountModeratorRole_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.AssignAccountModeratorRole(childComplexity, args["input"].(types.AssignAccountModeratorRole)), true
+
+	case "Mutation.assignAccountStaffRole":
+		if e.complexity.Mutation.AssignAccountStaffRole == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_assignAccountStaffRole_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.AssignAccountStaffRole(childComplexity, args["input"].(types.AssignAccountStaffRole)), true
 
 	case "Mutation.confirmAccountEmail":
 		if e.complexity.Mutation.ConfirmAccountEmail == nil {
@@ -1154,6 +1230,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.RevokeAccountAccess(childComplexity), true
 
+	case "Mutation.revokeAccountModeratorRole":
+		if e.complexity.Mutation.RevokeAccountModeratorRole == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_revokeAccountModeratorRole_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.RevokeAccountModeratorRole(childComplexity, args["input"].(types.RevokeAccountModeratorRole)), true
+
 	case "Mutation.revokeAccountSession":
 		if e.complexity.Mutation.RevokeAccountSession == nil {
 			break
@@ -1165,6 +1253,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.RevokeAccountSession(childComplexity, args["input"].(types.RevokeAccountSessionInput)), true
+
+	case "Mutation.revokeAccountStaffRole":
+		if e.complexity.Mutation.RevokeAccountStaffRole == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_revokeAccountStaffRole_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.RevokeAccountStaffRole(childComplexity, args["input"].(types.RevokeAccountStaffRole)), true
 
 	case "Mutation.revokeAuthenticationToken":
 		if e.complexity.Mutation.RevokeAuthenticationToken == nil {
@@ -1208,6 +1308,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.UpdateAccountUsernameAndRetainPrevious(childComplexity, args["input"].(types.UpdateAccountUsernameAndRetainPreviousInput)), true
+
+	case "Mutation.updateLanguage":
+		if e.complexity.Mutation.UpdateLanguage == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateLanguage_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateLanguage(childComplexity, args["input"].(types.UpdateLanguageInput)), true
 
 	case "Mutation.verifyAuthenticationToken":
 		if e.complexity.Mutation.VerifyAuthenticationToken == nil {
@@ -1273,6 +1385,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.Accounts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["username"].(*string)), true
 
+	case "Query.language":
+		if e.complexity.Query.Language == nil {
+			break
+		}
+
+		return e.complexity.Query.Language(childComplexity), true
+
+	case "Query.languages":
+		if e.complexity.Query.Languages == nil {
+			break
+		}
+
+		return e.complexity.Query.Languages(childComplexity), true
+
 	case "Query.viewAuthenticationToken":
 		if e.complexity.Query.ViewAuthenticationToken == nil {
 			break
@@ -1332,12 +1458,26 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.RevokeAccountAccessPayload.RevokedAccountID(childComplexity), true
 
+	case "RevokeAccountModeratorRolePayload.account":
+		if e.complexity.RevokeAccountModeratorRolePayload.Account == nil {
+			break
+		}
+
+		return e.complexity.RevokeAccountModeratorRolePayload.Account(childComplexity), true
+
 	case "RevokeAccountSessionPayload.accountSessionId":
 		if e.complexity.RevokeAccountSessionPayload.AccountSessionID == nil {
 			break
 		}
 
 		return e.complexity.RevokeAccountSessionPayload.AccountSessionID(childComplexity), true
+
+	case "RevokeAccountStaffRolePayload.account":
+		if e.complexity.RevokeAccountStaffRolePayload.Account == nil {
+			break
+		}
+
+		return e.complexity.RevokeAccountStaffRolePayload.Account(childComplexity), true
 
 	case "RevokeAuthenticationTokenPayload.revokedAuthenticationTokenId":
 		if e.complexity.RevokeAuthenticationTokenPayload.RevokedAuthenticationTokenID == nil {
@@ -1353,12 +1493,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.UnlockAccountPayload.Account(childComplexity), true
 
-	case "UpdateAccountEmailStatusToPrimaryPayload.accountEmail":
-		if e.complexity.UpdateAccountEmailStatusToPrimaryPayload.AccountEmail == nil {
+	case "UpdateAccountEmailStatusToPrimaryPayload.primaryAccountEmail":
+		if e.complexity.UpdateAccountEmailStatusToPrimaryPayload.PrimaryAccountEmail == nil {
 			break
 		}
 
-		return e.complexity.UpdateAccountEmailStatusToPrimaryPayload.AccountEmail(childComplexity), true
+		return e.complexity.UpdateAccountEmailStatusToPrimaryPayload.PrimaryAccountEmail(childComplexity), true
+
+	case "UpdateAccountEmailStatusToPrimaryPayload.updatedAccountEmail":
+		if e.complexity.UpdateAccountEmailStatusToPrimaryPayload.UpdatedAccountEmail == nil {
+			break
+		}
+
+		return e.complexity.UpdateAccountEmailStatusToPrimaryPayload.UpdatedAccountEmail(childComplexity), true
 
 	case "UpdateAccountUsernameAndRetainPreviousPayload.accountUsername":
 		if e.complexity.UpdateAccountUsernameAndRetainPreviousPayload.AccountUsername == nil {
@@ -1373,6 +1520,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.UpdateAccountUsernameAndRetainPreviousPayload.Validation(childComplexity), true
+
+	case "UpdateLanguagePayload.language":
+		if e.complexity.UpdateLanguagePayload.Language == nil {
+			break
+		}
+
+		return e.complexity.UpdateLanguagePayload.Language(childComplexity), true
 
 	case "VerifyAuthenticationTokenPayload.authenticationToken":
 		if e.complexity.VerifyAuthenticationTokenPayload.AuthenticationToken == nil {
@@ -1559,6 +1713,43 @@ extend type Query {
 
   """The account linked to this moderator"""
   account: Account!
+}`, BuiltIn: false},
+	{Name: "schema/language/schema.graphql", Input: `# Localization formatted in BCP47
+scalar BCP47
+
+type Language {
+  locale: BCP47!
+}
+
+extend type Query {
+  """
+  List of all available languages
+  """
+  languages: [Language!]!
+
+  """
+  The current language that is set
+  """
+  language: Language!
+}
+
+"""Input for updating the current language"""
+input UpdateLanguageInput {
+  """The locale to update the language to"""
+  locale: BCP47!
+}
+
+"""Payload of the language update"""
+type UpdateLanguagePayload {
+  """The new language that is now set"""
+  language: Language
+}
+
+extend type Mutation {
+  """
+  Update the current language
+  """
+  updateLanguage(input: UpdateLanguageInput!): UpdateLanguagePayload
 }`, BuiltIn: false},
 	{Name: "schema/settings/schema.graphql", Input: `enum AccountEmailStatus {
   CONFIRMED
@@ -1820,16 +2011,8 @@ input ConfirmAccountEmailInput {
   id: String!
 }
 
-"""Validation message for adding account email"""
-enum AddAccountEmailValidation {
-  EMAIL_TAKEN
-}
-
 """Email to add the account"""
 type AddAccountEmailPayload {
-  """Validation for adding an email"""
-  validation: AddAccountEmailValidation
-
   """The account email that was added to"""
   accountEmail: AccountEmail
 }
@@ -1862,8 +2045,11 @@ type RevokeAccountSessionPayload {
 
 """Payload of the updated account email"""
 type UpdateAccountEmailStatusToPrimaryPayload {
-  """The account email that was updated"""
-  accountEmail: AccountEmail
+  """The account email that was updated to primary"""
+  primaryAccountEmail: AccountEmail
+
+  """The account email that was updated to 'confirmed' status"""
+  updatedAccountEmail: AccountEmail
 }
 
 """Payload of the created account recovery codes"""
@@ -1901,6 +2087,7 @@ type DisableAccountMultiFactorPayload {
 """Validation for confirming account email"""
 enum ConfirmAccountEmailValidation {
   TOKEN_EXPIRED
+  EMAIL_TAKEN
 }
 
 """Payload for confirming the account email"""
@@ -1974,6 +2161,84 @@ extend type Mutation {
   """
   confirmAccountEmail(input: ConfirmAccountEmailInput!): ConfirmAccountEmailPayload
 }`, BuiltIn: false},
+	{Name: "schema/staff/schema.graphql", Input: `"""Assigned account"""
+type AssignAccountModeratorRolePayload {
+  """The account that the role was assigned to"""
+  account: Account
+}
+
+"""Input to assign account to a moderator role"""
+input AssignAccountModeratorRole {
+  """
+  The account ID that the role needs to be assigned to
+  """
+  accountId: ID!
+}
+
+"""Assigned account"""
+type AssignAccountStaffRolePayload {
+  """The account that the role was assigned to"""
+  account: Account
+}
+
+"""Input to assign account to a staff role"""
+input AssignAccountStaffRole {
+  """
+  The account ID that the role needs to be assigned to
+  """
+  accountId: ID!
+}
+
+"""Revoked account"""
+type RevokeAccountModeratorRolePayload {
+  """The account that the role was revoked from"""
+  account: Account
+}
+
+"""Input to revoke moderator role"""
+input RevokeAccountModeratorRole {
+  """
+  The account ID that the role needs to be revoked from
+  """
+  accountId: ID!
+}
+
+"""Revoked account"""
+type RevokeAccountStaffRolePayload {
+  """The account that the role was revoked from"""
+  account: Account
+}
+
+"""Input to revoke staff role"""
+input RevokeAccountStaffRole {
+  """
+  The account ID that the role needs to be revoked from
+  """
+  accountId: ID!
+}
+
+extend type Mutation {
+  """
+  Assign a moderator role to the account
+  """
+  assignAccountModeratorRole(input: AssignAccountModeratorRole!): AssignAccountModeratorRolePayload
+
+  """
+  Assign a staff role to the account
+  """
+  assignAccountStaffRole(input: AssignAccountStaffRole!): AssignAccountStaffRolePayload
+
+  """
+  Revoke the moderator role from the account
+  """
+  revokeAccountModeratorRole(input: RevokeAccountModeratorRole!): RevokeAccountModeratorRolePayload
+
+  """
+  Revoke the staff role from the account
+  """
+  revokeAccountStaffRole(input: RevokeAccountStaffRole!): RevokeAccountStaffRolePayload
+}
+`, BuiltIn: false},
 	{Name: "schema/token/schema.graphql", Input: `enum MultiFactorType {
   TOTP
 }
@@ -2515,6 +2780,36 @@ func (ec *executionContext) field_Mutation_addAccountEmail_args(ctx context.Cont
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_assignAccountModeratorRole_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.AssignAccountModeratorRole
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNAssignAccountModeratorRole2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAssignAccountModeratorRole(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_assignAccountStaffRole_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.AssignAccountStaffRole
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNAssignAccountStaffRole2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAssignAccountStaffRole(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_confirmAccountEmail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -2620,6 +2915,21 @@ func (ec *executionContext) field_Mutation_grantAuthenticationToken_args(ctx con
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_revokeAccountModeratorRole_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.RevokeAccountModeratorRole
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNRevokeAccountModeratorRole2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐRevokeAccountModeratorRole(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_revokeAccountSession_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -2627,6 +2937,21 @@ func (ec *executionContext) field_Mutation_revokeAccountSession_args(ctx context
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNRevokeAccountSessionInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐRevokeAccountSessionInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_revokeAccountStaffRole_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.RevokeAccountStaffRole
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNRevokeAccountStaffRole2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐRevokeAccountStaffRole(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2672,6 +2997,21 @@ func (ec *executionContext) field_Mutation_updateAccountUsernameAndRetainPreviou
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNUpdateAccountUsernameAndRetainPreviousInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAccountUsernameAndRetainPreviousInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateLanguage_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdateLanguageInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateLanguageInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateLanguageInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4514,38 +4854,6 @@ func (ec *executionContext) _AccountUsernameEdge_node(ctx context.Context, field
 	return ec.marshalNAccountUsername2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountUsername(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AddAccountEmailPayload_validation(ctx context.Context, field graphql.CollectedField, obj *types.AddAccountEmailPayload) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "AddAccountEmailPayload",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Validation, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.AddAccountEmailValidation)
-	fc.Result = res
-	return ec.marshalOAddAccountEmailValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAddAccountEmailValidation(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _AddAccountEmailPayload_accountEmail(ctx context.Context, field graphql.CollectedField, obj *types.AddAccountEmailPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -4576,6 +4884,70 @@ func (ec *executionContext) _AddAccountEmailPayload_accountEmail(ctx context.Con
 	res := resTmp.(*types.AccountEmail)
 	fc.Result = res
 	return ec.marshalOAccountEmail2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountEmail(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AssignAccountModeratorRolePayload_account(ctx context.Context, field graphql.CollectedField, obj *types.AssignAccountModeratorRolePayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AssignAccountModeratorRolePayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Account, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Account)
+	fc.Result = res
+	return ec.marshalOAccount2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AssignAccountStaffRolePayload_account(ctx context.Context, field graphql.CollectedField, obj *types.AssignAccountStaffRolePayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AssignAccountStaffRolePayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Account, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Account)
+	fc.Result = res
+	return ec.marshalOAccount2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AuthenticationToken_id(ctx context.Context, field graphql.CollectedField, obj *types.AuthenticationToken) (ret graphql.Marshaler) {
@@ -5682,6 +6054,41 @@ func (ec *executionContext) _GrantAuthenticationTokenPayload_authenticationToken
 	return ec.marshalOAuthenticationToken2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAuthenticationToken(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Language_locale(ctx context.Context, field graphql.CollectedField, obj *types.Language) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Language",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Locale, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNBCP472string(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Moderator_id(ctx context.Context, field graphql.CollectedField, obj *types.Moderator) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -6184,6 +6591,45 @@ func (ec *executionContext) _Mutation_unlockAccount(ctx context.Context, field g
 	return ec.marshalOUnlockAccountPayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUnlockAccountPayload(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_updateLanguage(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updateLanguage_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateLanguage(rctx, args["input"].(types.UpdateLanguageInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdateLanguagePayload)
+	fc.Result = res
+	return ec.marshalOUpdateLanguagePayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateLanguagePayload(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Mutation_addAccountEmail(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -6553,6 +6999,162 @@ func (ec *executionContext) _Mutation_confirmAccountEmail(ctx context.Context, f
 	return ec.marshalOConfirmAccountEmailPayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐConfirmAccountEmailPayload(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_assignAccountModeratorRole(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_assignAccountModeratorRole_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().AssignAccountModeratorRole(rctx, args["input"].(types.AssignAccountModeratorRole))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.AssignAccountModeratorRolePayload)
+	fc.Result = res
+	return ec.marshalOAssignAccountModeratorRolePayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAssignAccountModeratorRolePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_assignAccountStaffRole(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_assignAccountStaffRole_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().AssignAccountStaffRole(rctx, args["input"].(types.AssignAccountStaffRole))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.AssignAccountStaffRolePayload)
+	fc.Result = res
+	return ec.marshalOAssignAccountStaffRolePayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAssignAccountStaffRolePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_revokeAccountModeratorRole(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_revokeAccountModeratorRole_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().RevokeAccountModeratorRole(rctx, args["input"].(types.RevokeAccountModeratorRole))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.RevokeAccountModeratorRolePayload)
+	fc.Result = res
+	return ec.marshalORevokeAccountModeratorRolePayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐRevokeAccountModeratorRolePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_revokeAccountStaffRole(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_revokeAccountStaffRole_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().RevokeAccountStaffRole(rctx, args["input"].(types.RevokeAccountStaffRole))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.RevokeAccountStaffRolePayload)
+	fc.Result = res
+	return ec.marshalORevokeAccountStaffRolePayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐRevokeAccountStaffRolePayload(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _PageInfo_hasNextPage(ctx context.Context, field graphql.CollectedField, obj *relay.PageInfo) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -6839,6 +7441,76 @@ func (ec *executionContext) _Query_accounts(ctx context.Context, field graphql.C
 	return ec.marshalNAccountConnection2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountConnection(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Query_languages(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Languages(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*types.Language)
+	fc.Result = res
+	return ec.marshalNLanguage2ᚕᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐLanguageᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_language(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Language(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.Language)
+	fc.Result = res
+	return ec.marshalNLanguage2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐLanguage(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Query__entities(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -7086,6 +7758,38 @@ func (ec *executionContext) _RevokeAccountAccessPayload_revokedAccountId(ctx con
 	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _RevokeAccountModeratorRolePayload_account(ctx context.Context, field graphql.CollectedField, obj *types.RevokeAccountModeratorRolePayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "RevokeAccountModeratorRolePayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Account, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Account)
+	fc.Result = res
+	return ec.marshalOAccount2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _RevokeAccountSessionPayload_accountSessionId(ctx context.Context, field graphql.CollectedField, obj *types.RevokeAccountSessionPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -7119,6 +7823,38 @@ func (ec *executionContext) _RevokeAccountSessionPayload_accountSessionId(ctx co
 	res := resTmp.(relay.ID)
 	fc.Result = res
 	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _RevokeAccountStaffRolePayload_account(ctx context.Context, field graphql.CollectedField, obj *types.RevokeAccountStaffRolePayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "RevokeAccountStaffRolePayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Account, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Account)
+	fc.Result = res
+	return ec.marshalOAccount2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _RevokeAuthenticationTokenPayload_revokedAuthenticationTokenId(ctx context.Context, field graphql.CollectedField, obj *types.RevokeAuthenticationTokenPayload) (ret graphql.Marshaler) {
@@ -7188,7 +7924,7 @@ func (ec *executionContext) _UnlockAccountPayload_account(ctx context.Context, f
 	return ec.marshalOAccount2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _UpdateAccountEmailStatusToPrimaryPayload_accountEmail(ctx context.Context, field graphql.CollectedField, obj *types.UpdateAccountEmailStatusToPrimaryPayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _UpdateAccountEmailStatusToPrimaryPayload_primaryAccountEmail(ctx context.Context, field graphql.CollectedField, obj *types.UpdateAccountEmailStatusToPrimaryPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7206,7 +7942,39 @@ func (ec *executionContext) _UpdateAccountEmailStatusToPrimaryPayload_accountEma
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.AccountEmail, nil
+		return obj.PrimaryAccountEmail, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.AccountEmail)
+	fc.Result = res
+	return ec.marshalOAccountEmail2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountEmail(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdateAccountEmailStatusToPrimaryPayload_updatedAccountEmail(ctx context.Context, field graphql.CollectedField, obj *types.UpdateAccountEmailStatusToPrimaryPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdateAccountEmailStatusToPrimaryPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UpdatedAccountEmail, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7282,6 +8050,38 @@ func (ec *executionContext) _UpdateAccountUsernameAndRetainPreviousPayload_accou
 	res := resTmp.(*types.AccountUsername)
 	fc.Result = res
 	return ec.marshalOAccountUsername2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountUsername(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdateLanguagePayload_language(ctx context.Context, field graphql.CollectedField, obj *types.UpdateLanguagePayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdateLanguagePayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Language, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Language)
+	fc.Result = res
+	return ec.marshalOLanguage2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐLanguage(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _VerifyAuthenticationTokenPayload_validation(ctx context.Context, field graphql.CollectedField, obj *types.VerifyAuthenticationTokenPayload) (ret graphql.Marshaler) {
@@ -8487,6 +9287,46 @@ func (ec *executionContext) unmarshalInputAddAccountEmailInput(ctx context.Conte
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputAssignAccountModeratorRole(ctx context.Context, obj interface{}) (types.AssignAccountModeratorRole, error) {
+	var it types.AssignAccountModeratorRole
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "accountId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("accountId"))
+			it.AccountID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputAssignAccountStaffRole(ctx context.Context, obj interface{}) (types.AssignAccountStaffRole, error) {
+	var it types.AssignAccountStaffRole
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "accountId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("accountId"))
+			it.AccountID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputConfirmAccountEmailInput(ctx context.Context, obj interface{}) (types.ConfirmAccountEmailInput, error) {
 	var it types.ConfirmAccountEmailInput
 	var asMap = obj.(map[string]interface{})
@@ -8627,6 +9467,26 @@ func (ec *executionContext) unmarshalInputGrantAuthenticationTokenInput(ctx cont
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputRevokeAccountModeratorRole(ctx context.Context, obj interface{}) (types.RevokeAccountModeratorRole, error) {
+	var it types.RevokeAccountModeratorRole
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "accountId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("accountId"))
+			it.AccountID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputRevokeAccountSessionInput(ctx context.Context, obj interface{}) (types.RevokeAccountSessionInput, error) {
 	var it types.RevokeAccountSessionInput
 	var asMap = obj.(map[string]interface{})
@@ -8638,6 +9498,26 @@ func (ec *executionContext) unmarshalInputRevokeAccountSessionInput(ctx context.
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("accountSessionId"))
 			it.AccountSessionID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputRevokeAccountStaffRole(ctx context.Context, obj interface{}) (types.RevokeAccountStaffRole, error) {
+	var it types.RevokeAccountStaffRole
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "accountId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("accountId"))
+			it.AccountID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -8718,6 +9598,26 @@ func (ec *executionContext) unmarshalInputUpdateAccountUsernameAndRetainPrevious
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("username"))
 			it.Username, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateLanguageInput(ctx context.Context, obj interface{}) (types.UpdateLanguageInput, error) {
+	var it types.UpdateLanguageInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "locale":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("locale"))
+			it.Locale, err = ec.unmarshalNBCP472string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -9481,10 +10381,56 @@ func (ec *executionContext) _AddAccountEmailPayload(ctx context.Context, sel ast
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("AddAccountEmailPayload")
-		case "validation":
-			out.Values[i] = ec._AddAccountEmailPayload_validation(ctx, field, obj)
 		case "accountEmail":
 			out.Values[i] = ec._AddAccountEmailPayload_accountEmail(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var assignAccountModeratorRolePayloadImplementors = []string{"AssignAccountModeratorRolePayload"}
+
+func (ec *executionContext) _AssignAccountModeratorRolePayload(ctx context.Context, sel ast.SelectionSet, obj *types.AssignAccountModeratorRolePayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, assignAccountModeratorRolePayloadImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("AssignAccountModeratorRolePayload")
+		case "account":
+			out.Values[i] = ec._AssignAccountModeratorRolePayload_account(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var assignAccountStaffRolePayloadImplementors = []string{"AssignAccountStaffRolePayload"}
+
+func (ec *executionContext) _AssignAccountStaffRolePayload(ctx context.Context, sel ast.SelectionSet, obj *types.AssignAccountStaffRolePayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, assignAccountStaffRolePayloadImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("AssignAccountStaffRolePayload")
+		case "account":
+			out.Values[i] = ec._AssignAccountStaffRolePayload_account(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -9962,6 +10908,33 @@ func (ec *executionContext) _GrantAuthenticationTokenPayload(ctx context.Context
 	return out
 }
 
+var languageImplementors = []string{"Language"}
+
+func (ec *executionContext) _Language(ctx context.Context, sel ast.SelectionSet, obj *types.Language) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, languageImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Language")
+		case "locale":
+			out.Values[i] = ec._Language_locale(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var moderatorImplementors = []string{"Moderator", "_Entity"}
 
 func (ec *executionContext) _Moderator(ctx context.Context, sel ast.SelectionSet, obj *types.Moderator) graphql.Marshaler {
@@ -10061,6 +11034,8 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_verifyAuthenticationToken(ctx, field)
 		case "unlockAccount":
 			out.Values[i] = ec._Mutation_unlockAccount(ctx, field)
+		case "updateLanguage":
+			out.Values[i] = ec._Mutation_updateLanguage(ctx, field)
 		case "addAccountEmail":
 			out.Values[i] = ec._Mutation_addAccountEmail(ctx, field)
 		case "deleteAccountEmail":
@@ -10081,6 +11056,14 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_disableAccountMultiFactor(ctx, field)
 		case "confirmAccountEmail":
 			out.Values[i] = ec._Mutation_confirmAccountEmail(ctx, field)
+		case "assignAccountModeratorRole":
+			out.Values[i] = ec._Mutation_assignAccountModeratorRole(ctx, field)
+		case "assignAccountStaffRole":
+			out.Values[i] = ec._Mutation_assignAccountStaffRole(ctx, field)
+		case "revokeAccountModeratorRole":
+			out.Values[i] = ec._Mutation_revokeAccountModeratorRole(ctx, field)
+		case "revokeAccountStaffRole":
+			out.Values[i] = ec._Mutation_revokeAccountStaffRole(ctx, field)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -10190,6 +11173,34 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				}
 				return res
 			})
+		case "languages":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_languages(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
+		case "language":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_language(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		case "_entities":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -10286,6 +11297,30 @@ func (ec *executionContext) _RevokeAccountAccessPayload(ctx context.Context, sel
 	return out
 }
 
+var revokeAccountModeratorRolePayloadImplementors = []string{"RevokeAccountModeratorRolePayload"}
+
+func (ec *executionContext) _RevokeAccountModeratorRolePayload(ctx context.Context, sel ast.SelectionSet, obj *types.RevokeAccountModeratorRolePayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, revokeAccountModeratorRolePayloadImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("RevokeAccountModeratorRolePayload")
+		case "account":
+			out.Values[i] = ec._RevokeAccountModeratorRolePayload_account(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var revokeAccountSessionPayloadImplementors = []string{"RevokeAccountSessionPayload"}
 
 func (ec *executionContext) _RevokeAccountSessionPayload(ctx context.Context, sel ast.SelectionSet, obj *types.RevokeAccountSessionPayload) graphql.Marshaler {
@@ -10302,6 +11337,30 @@ func (ec *executionContext) _RevokeAccountSessionPayload(ctx context.Context, se
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var revokeAccountStaffRolePayloadImplementors = []string{"RevokeAccountStaffRolePayload"}
+
+func (ec *executionContext) _RevokeAccountStaffRolePayload(ctx context.Context, sel ast.SelectionSet, obj *types.RevokeAccountStaffRolePayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, revokeAccountStaffRolePayloadImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("RevokeAccountStaffRolePayload")
+		case "account":
+			out.Values[i] = ec._RevokeAccountStaffRolePayload_account(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -10375,8 +11434,10 @@ func (ec *executionContext) _UpdateAccountEmailStatusToPrimaryPayload(ctx contex
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("UpdateAccountEmailStatusToPrimaryPayload")
-		case "accountEmail":
-			out.Values[i] = ec._UpdateAccountEmailStatusToPrimaryPayload_accountEmail(ctx, field, obj)
+		case "primaryAccountEmail":
+			out.Values[i] = ec._UpdateAccountEmailStatusToPrimaryPayload_primaryAccountEmail(ctx, field, obj)
+		case "updatedAccountEmail":
+			out.Values[i] = ec._UpdateAccountEmailStatusToPrimaryPayload_updatedAccountEmail(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -10403,6 +11464,30 @@ func (ec *executionContext) _UpdateAccountUsernameAndRetainPreviousPayload(ctx c
 			out.Values[i] = ec._UpdateAccountUsernameAndRetainPreviousPayload_validation(ctx, field, obj)
 		case "accountUsername":
 			out.Values[i] = ec._UpdateAccountUsernameAndRetainPreviousPayload_accountUsername(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var updateLanguagePayloadImplementors = []string{"UpdateLanguagePayload"}
+
+func (ec *executionContext) _UpdateLanguagePayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateLanguagePayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updateLanguagePayloadImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdateLanguagePayload")
+		case "language":
+			out.Values[i] = ec._UpdateLanguagePayload_language(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -11095,6 +12180,31 @@ func (ec *executionContext) unmarshalNAddAccountEmailInput2overdollᚋapplicatio
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNAssignAccountModeratorRole2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAssignAccountModeratorRole(ctx context.Context, v interface{}) (types.AssignAccountModeratorRole, error) {
+	res, err := ec.unmarshalInputAssignAccountModeratorRole(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNAssignAccountStaffRole2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAssignAccountStaffRole(ctx context.Context, v interface{}) (types.AssignAccountStaffRole, error) {
+	res, err := ec.unmarshalInputAssignAccountStaffRole(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNBCP472string(ctx context.Context, v interface{}) (string, error) {
+	res, err := graphql.UnmarshalString(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNBCP472string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
+	res := graphql.MarshalString(v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
+}
+
 func (ec *executionContext) unmarshalNBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
 	res, err := graphql.UnmarshalBoolean(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -11170,6 +12280,57 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 	return res
 }
 
+func (ec *executionContext) marshalNLanguage2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐLanguage(ctx context.Context, sel ast.SelectionSet, v types.Language) graphql.Marshaler {
+	return ec._Language(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNLanguage2ᚕᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐLanguageᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.Language) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNLanguage2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐLanguage(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
+}
+
+func (ec *executionContext) marshalNLanguage2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐLanguage(ctx context.Context, sel ast.SelectionSet, v *types.Language) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._Language(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNModerator2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐModerator(ctx context.Context, sel ast.SelectionSet, v types.Moderator) graphql.Marshaler {
 	return ec._Moderator(ctx, sel, &v)
 }
@@ -11204,8 +12365,18 @@ func (ec *executionContext) marshalNPageInfo2ᚖoverdollᚋlibrariesᚋgraphql�
 	return ec._PageInfo(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNRevokeAccountModeratorRole2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐRevokeAccountModeratorRole(ctx context.Context, v interface{}) (types.RevokeAccountModeratorRole, error) {
+	res, err := ec.unmarshalInputRevokeAccountModeratorRole(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNRevokeAccountSessionInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐRevokeAccountSessionInput(ctx context.Context, v interface{}) (types.RevokeAccountSessionInput, error) {
 	res, err := ec.unmarshalInputRevokeAccountSessionInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNRevokeAccountStaffRole2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐRevokeAccountStaffRole(ctx context.Context, v interface{}) (types.RevokeAccountStaffRole, error) {
+	res, err := ec.unmarshalInputRevokeAccountStaffRole(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -11246,6 +12417,11 @@ func (ec *executionContext) unmarshalNUpdateAccountEmailStatusToPrimaryInput2ove
 
 func (ec *executionContext) unmarshalNUpdateAccountUsernameAndRetainPreviousInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAccountUsernameAndRetainPreviousInput(ctx context.Context, v interface{}) (types.UpdateAccountUsernameAndRetainPreviousInput, error) {
 	res, err := ec.unmarshalInputUpdateAccountUsernameAndRetainPreviousInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdateLanguageInput2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateLanguageInput(ctx context.Context, v interface{}) (types.UpdateLanguageInput, error) {
+	res, err := ec.unmarshalInputUpdateLanguageInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -11625,20 +12801,18 @@ func (ec *executionContext) marshalOAddAccountEmailPayload2ᚖoverdollᚋapplica
 	return ec._AddAccountEmailPayload(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOAddAccountEmailValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAddAccountEmailValidation(ctx context.Context, v interface{}) (*types.AddAccountEmailValidation, error) {
-	if v == nil {
-		return nil, nil
-	}
-	var res = new(types.AddAccountEmailValidation)
-	err := res.UnmarshalGQL(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalOAddAccountEmailValidation2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAddAccountEmailValidation(ctx context.Context, sel ast.SelectionSet, v *types.AddAccountEmailValidation) graphql.Marshaler {
+func (ec *executionContext) marshalOAssignAccountModeratorRolePayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAssignAccountModeratorRolePayload(ctx context.Context, sel ast.SelectionSet, v *types.AssignAccountModeratorRolePayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
-	return v
+	return ec._AssignAccountModeratorRolePayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOAssignAccountStaffRolePayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAssignAccountStaffRolePayload(ctx context.Context, sel ast.SelectionSet, v *types.AssignAccountStaffRolePayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._AssignAccountStaffRolePayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOAuthenticationToken2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAuthenticationToken(ctx context.Context, sel ast.SelectionSet, v *types.AuthenticationToken) graphql.Marshaler {
@@ -11867,6 +13041,13 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 	return graphql.MarshalInt(*v)
 }
 
+func (ec *executionContext) marshalOLanguage2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐLanguage(ctx context.Context, sel ast.SelectionSet, v *types.Language) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Language(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalOMultiFactorTotp2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐMultiFactorTotp(ctx context.Context, sel ast.SelectionSet, v *types.MultiFactorTotp) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -11968,11 +13149,25 @@ func (ec *executionContext) marshalORevokeAccountAccessPayload2ᚖoverdollᚋapp
 	return ec._RevokeAccountAccessPayload(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalORevokeAccountModeratorRolePayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐRevokeAccountModeratorRolePayload(ctx context.Context, sel ast.SelectionSet, v *types.RevokeAccountModeratorRolePayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._RevokeAccountModeratorRolePayload(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalORevokeAccountSessionPayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐRevokeAccountSessionPayload(ctx context.Context, sel ast.SelectionSet, v *types.RevokeAccountSessionPayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._RevokeAccountSessionPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalORevokeAccountStaffRolePayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐRevokeAccountStaffRolePayload(ctx context.Context, sel ast.SelectionSet, v *types.RevokeAccountStaffRolePayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._RevokeAccountStaffRolePayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalORevokeAuthenticationTokenPayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐRevokeAuthenticationTokenPayload(ctx context.Context, sel ast.SelectionSet, v *types.RevokeAuthenticationTokenPayload) graphql.Marshaler {
@@ -12041,6 +13236,13 @@ func (ec *executionContext) marshalOUpdateAccountUsernameAndRetainPreviousValida
 		return graphql.Null
 	}
 	return v
+}
+
+func (ec *executionContext) marshalOUpdateLanguagePayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateLanguagePayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateLanguagePayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdateLanguagePayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOVerifyAuthenticationTokenPayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐVerifyAuthenticationTokenPayload(ctx context.Context, sel ast.SelectionSet, v *types.VerifyAuthenticationTokenPayload) graphql.Marshaler {

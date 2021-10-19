@@ -9,6 +9,7 @@ import (
 	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/principal"
 )
 
 var characterTable = table.New(table.Metadata{
@@ -25,11 +26,59 @@ var characterTable = table.New(table.Metadata{
 })
 
 type character struct {
-	Id        string `db:"id"`
-	Slug      string `db:"slug"`
-	Name      string `db:"name"`
-	Thumbnail string `db:"thumbnail"`
-	SeriesId  string `db:"series_id"`
+	Id        string            `db:"id"`
+	Slug      string            `db:"slug"`
+	Name      map[string]string `db:"name"`
+	Thumbnail string            `db:"thumbnail"`
+	SeriesId  string            `db:"series_id"`
+}
+
+var charactersSlugTable = table.New(table.Metadata{
+	Name: "characters_slugs",
+	Columns: []string{
+		"character_id",
+		"series_id",
+		"slug",
+	},
+	PartKey: []string{"slug", "series_id"},
+	SortKey: []string{},
+})
+
+type characterSlug struct {
+	SeriesId    string `db:"series_id"`
+	CharacterId string `db:"character_id"`
+	Slug        string `db:"slug"`
+}
+
+func (r PostsCassandraRepository) GetCharacterBySlug(ctx context.Context, requester *principal.Principal, slug, seriesSlug string) (*post.Character, error) {
+
+	// get series first
+	series, err := r.getSeriesBySlug(ctx, requester, seriesSlug)
+
+	if err != nil {
+		return nil, err
+	}
+
+	queryCharacterSlug := r.session.
+		Query(charactersSlugTable.Get()).
+		Consistency(gocql.One).
+		BindStruct(characterSlug{
+			Slug:     slug,
+			SeriesId: series.SeriesId,
+		})
+
+	var b characterSlug
+
+	if err := queryCharacterSlug.Get(&b); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return nil, post.ErrCharacterNotFound
+		}
+
+		return nil, fmt.Errorf("failed to get character by slug: %v", err)
+	}
+
+	return r.GetCharacterById(ctx, requester, b.CharacterId)
 }
 
 func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars []string) ([]*post.Character, error) {
@@ -107,14 +156,14 @@ func (r PostsCassandraRepository) GetCharactersById(ctx context.Context, chars [
 	return characters, nil
 }
 
-func (r PostsCassandraRepository) GetCharacterById(ctx context.Context, characterId string) (*post.Character, error) {
+func (r PostsCassandraRepository) GetCharacterById(ctx context.Context, requester *principal.Principal, characterId string) (*post.Character, error) {
 
 	queryCharacters := r.session.
 		Query(characterTable.Get()).
 		Consistency(gocql.One).
 		BindStruct(character{Id: characterId})
 
-	var char *character
+	var char character
 
 	if err := queryCharacters.Get(&char); err != nil {
 
@@ -125,7 +174,7 @@ func (r PostsCassandraRepository) GetCharacterById(ctx context.Context, characte
 		return nil, fmt.Errorf("failed to get characters by id: %v", err)
 	}
 
-	media, err := r.GetSingleSeriesById(ctx, char.SeriesId)
+	media, err := r.GetSingleSeriesById(ctx, nil, char.SeriesId)
 
 	if err != nil {
 		return nil, err
@@ -138,32 +187,4 @@ func (r PostsCassandraRepository) GetCharacterById(ctx context.Context, characte
 		char.Thumbnail,
 		media,
 	), nil
-}
-
-func (r PostsCassandraRepository) CreateCharacters(ctx context.Context, characters []*post.Character) error {
-
-	batch := r.session.NewBatch(gocql.LoggedBatch)
-
-	for _, chars := range characters {
-
-		media := chars.Series()
-
-		stmt, _ := characterTable.Insert()
-		batch.Query(
-			stmt,
-			chars.ID(),
-			chars.Slug(),
-			chars.Name(),
-			chars.Thumbnail(),
-			media.ID(),
-		)
-	}
-
-	err := r.session.ExecuteBatch(batch)
-
-	if err != nil {
-		return fmt.Errorf("failed to create characters: %v", err)
-	}
-
-	return nil
 }

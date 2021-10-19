@@ -2,61 +2,81 @@
   {
     "id": "1q7MJ9eXjRsgWJNIbOMJ9qzg2S3",
     "slug": "assure",
-    "title": "Assure",
+    "title": {
+      "en-US": "Assure"
+    },
     "thumbnail": "{\"url\":\"/thumbnails/1pcHdMMBixvJnJCigJMao5RTVFS\",\"mimeTypes\":[\"image/png\"],\"sizes\":[],\"type\":1,\"processed\":true}"
   },
   {
     "id": "1q7MJFMVgDPo4mFjsfNag6rRwRy",
     "slug": "alter",
-    "title": "Alter",
+    "title": {
+      "en-US": "Alter"
+    },
     "thumbnail": "{\"url\":\"/thumbnails/1pcKZxqh6vKnun2ZBXxEKEi686B\",\"mimeTypes\":[\"image/png\"],\"sizes\":[],\"type\":1,\"processed\":true}"
   },
   {
     "id": "1q7MJFk9Wof1qyQQORKBrJxGFhJ",
     "slug": "transmit",
-    "title": "Transmit",
+    "title": {
+      "en-US": "Transmit"
+    },
     "thumbnail": "{\"url\":\"/thumbnails/1pcKZyoYFxZRyidV9XHd1WyPbrj\",\"mimeTypes\":[\"image/png\"],\"sizes\":[],\"type\":1,\"processed\":true}"
   },
   {
     "id": "1q7MJH8d6MsebSFJ8UwTM0kHaYb",
     "slug": "weaken",
-    "title": "Weaken",
+    "title": {
+      "en-US": "Weaken"
+    },
     "thumbnail": "{\"url\":\"/thumbnails/1pcKitrRACXDRLpPoN3nVjo0p4j\",\"mimeTypes\":[\"image/png\"],\"sizes\":[],\"type\":1,\"processed\":true}"
   },
   {
     "id": "1q7MJPDSErn08c2FqRUVGvHLaOo",
     "slug": "feel",
-    "title": "Feel",
+    "title": {
+      "en-US": "Feel"
+    },
     "thumbnail": "{\"url\":\"/thumbnails/1pcKZyoYFxZRyidV9XHd1WyPbrj\",\"mimeTypes\":[\"image/png\"],\"sizes\":[],\"type\":1,\"processed\":true}"
   },
   {
     "id": "1q7MJSeEiai3yFN6Ps65eACFde9",
     "slug": "convict",
-    "title": "Convict",
+    "title": {
+      "en-US": "Convict"
+    },
     "thumbnail": "{\"url\":\"/thumbnails/1pcHdMMBixvJnJCigJMao5RTVFS\",\"mimeTypes\":[\"image/png\"],\"sizes\":[],\"type\":1,\"processed\":true}"
   },
   {
     "id": "1q7MJPetzOm0Ty8EJV68pYVDMoK",
     "slug": "reinforce",
-    "title": "Reinforce",
+    "title": {
+      "en-US": "Reinforce"
+    },
     "thumbnail": "{\"url\":\"/thumbnails/1pcHdTEWYUtvjU2QXImXMEQvKcR\",\"mimeTypes\":[\"image/png\"],\"sizes\":[],\"type\":1,\"processed\":true}"
   },
   {
     "id": "1q7MJbXvgFBTgdh65MfYhRz3wPI",
     "slug": "signal",
-    "title": "Signal",
+    "title": {
+      "en-US": "Signal"
+    },
     "thumbnail": "{\"url\":\"/thumbnails/1pcHdTEWYUtvjU2QXImXMEQvKcR\",\"mimeTypes\":[\"image/png\"],\"sizes\":[],\"type\":1,\"processed\":true}"
   },
   {
     "id": "1q7MJVxjP626oETUKlGFdiEzue4",
     "slug": "carry",
-    "title": "Carry",
+    "title": {
+      "en-US": "Carry"
+    },
     "thumbnail": "{\"url\":\"/thumbnails/1pcKitrRACXDRLpPoN3nVjo0p4j\",\"mimeTypes\":[\"image/png\"],\"sizes\":[],\"type\":1,\"processed\":true}"
   },
   {
     "id": "1q7MJh3y6DDNvwbuZBD5MbcG8lk",
     "slug": "relate",
-    "title": "Relate",
+    "title": {
+      "en-US": "Relate"
+    },
     "thumbnail": "{\"url\":\"/thumbnails/1pcKZxqh6vKnun2ZBXxEKEi686B\",\"mimeTypes\":[\"image/png\"],\"sizes\":[],\"type\":1,\"processed\":true}"
   }
 ]

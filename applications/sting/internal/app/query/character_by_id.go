@@ -4,10 +4,12 @@ import (
 	"context"
 
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/principal"
 )
 
 type CharacterById struct {
-	CharacterId string
+	Principal *principal.Principal
+	Id        string
 }
 
 type CharacterByIdHandler struct {
@@ -20,7 +22,7 @@ func NewCharacterByIdHandler(pr post.Repository) CharacterByIdHandler {
 
 func (h CharacterByIdHandler) Handle(ctx context.Context, query CharacterById) (*post.Character, error) {
 
-	result, err := h.pr.GetCharacterById(ctx, query.CharacterId)
+	result, err := h.pr.GetCharacterById(ctx, query.Principal, query.Id)
 
 	if err != nil {
 		return nil, err

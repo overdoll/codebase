@@ -7,6 +7,7 @@ import (
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/principal"
 )
 
 var audienceTable = table.New(table.Metadata{
@@ -23,14 +24,50 @@ var audienceTable = table.New(table.Metadata{
 })
 
 type audience struct {
-	Id        string `db:"id"`
-	Slug      string `db:"slug"`
-	Title     string `db:"title"`
-	Thumbnail string `db:"thumbnail"`
-	Standard  int    `db:"standard"`
+	Id        string            `db:"id"`
+	Slug      string            `db:"slug"`
+	Title     map[string]string `db:"title"`
+	Thumbnail string            `db:"thumbnail"`
+	Standard  int               `db:"standard"`
 }
 
-func (r PostsCassandraRepository) GetAudienceById(ctx context.Context, audienceId string) (*post.Audience, error) {
+var audienceSlugTable = table.New(table.Metadata{
+	Name: "audience_slugs",
+	Columns: []string{
+		"audience_id",
+		"slug",
+	},
+	PartKey: []string{"slug"},
+	SortKey: []string{},
+})
+
+type audienceSlug struct {
+	AudienceId string `db:"audience_id"`
+	Slug       string `db:"slug"`
+}
+
+func (r PostsCassandraRepository) GetAudienceBySlug(ctx context.Context, requester *principal.Principal, slug string) (*post.Audience, error) {
+
+	queryAudienceSlug := r.session.
+		Query(audienceSlugTable.Get()).
+		Consistency(gocql.One).
+		BindStruct(audienceSlug{Slug: slug})
+
+	var b audienceSlug
+
+	if err := queryAudienceSlug.Get(&b); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return nil, post.ErrAudienceNotFound
+		}
+
+		return nil, fmt.Errorf("failed to get audience by slug: %v", err)
+	}
+
+	return r.GetAudienceById(ctx, requester, b.AudienceId)
+}
+
+func (r PostsCassandraRepository) GetAudienceById(ctx context.Context, requester *principal.Principal, audienceId string) (*post.Audience, error) {
 
 	queryAudience := r.session.
 		Query(audienceTable.Get()).

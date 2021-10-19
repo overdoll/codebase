@@ -1,24 +1,53 @@
 package post
 
+import (
+	"errors"
+	"strings"
+
+	"overdoll/libraries/principal"
+)
+
+var (
+	ErrInvalidOrderBy = errors.New("invalid order_by column")
+)
+
 type PostFilters struct {
-	moderatorId   *string
-	contributorId *string
-	brandId       *string
-	audienceId    *string
-	categoryIds   []string
-	characterIds  []string
-	seriesIds     []string
+	orderBy        string
+	moderatorId    *string
+	contributorId  *string
+	state          *string
+	brandSlugs     []string
+	audienceSlugs  []string
+	categorySlugs  []string
+	characterSlugs []string
+	seriesSlugs    []string
 }
 
-func NewPostFilters(moderatorId, contributorId, brandId, audienceId *string, categoryIds, characterIds, seriesIds []string) (*PostFilters, error) {
+func NewPostFilters(orderBy string, state, moderatorId, contributorId *string, brandSlugs, audienceSlugs, categorySlugs, characterSlugs, seriesSlugs []string) (*PostFilters, error) {
+
+	var newState *string
+
+	if state != nil {
+		s := strings.ToLower(*state)
+		newState = &s
+	}
+
+	newOrderBy := strings.ToLower(orderBy)
+
+	if newOrderBy != "created_at" {
+		return nil, ErrInvalidOrderBy
+	}
+
 	return &PostFilters{
-		moderatorId:   moderatorId,
-		audienceId:    audienceId,
-		contributorId: contributorId,
-		brandId:       brandId,
-		categoryIds:   categoryIds,
-		characterIds:  characterIds,
-		seriesIds:     seriesIds,
+		orderBy:        newOrderBy,
+		state:          newState,
+		moderatorId:    moderatorId,
+		contributorId:  contributorId,
+		audienceSlugs:  audienceSlugs,
+		brandSlugs:     brandSlugs,
+		categorySlugs:  categorySlugs,
+		characterSlugs: characterSlugs,
+		seriesSlugs:    seriesSlugs,
 	}, nil
 }
 
@@ -30,22 +59,61 @@ func (e *PostFilters) ContributorId() *string {
 	return e.contributorId
 }
 
-func (e *PostFilters) BrandId() *string {
-	return e.brandId
+func (e *PostFilters) State() *string {
+	return e.state
 }
 
-func (e *PostFilters) AudienceId() *string {
-	return e.audienceId
+func (e *PostFilters) OrderBy() string {
+	return e.orderBy
 }
 
-func (e *PostFilters) SeriesIds() []string {
-	return e.seriesIds
+func (e *PostFilters) BrandSlugs() []string {
+	return e.brandSlugs
 }
 
-func (e *PostFilters) CategoryIds() []string {
-	return e.categoryIds
+func (e *PostFilters) AudienceSlugs() []string {
+	return e.audienceSlugs
 }
 
-func (e *PostFilters) CharacterIds() []string {
-	return e.characterIds
+func (e *PostFilters) SeriesSlugs() []string {
+	return e.seriesSlugs
+}
+
+func (e *PostFilters) CategorySlugs() []string {
+	return e.categorySlugs
+}
+
+func (e *PostFilters) CharacterSlugs() []string {
+	return e.characterSlugs
+}
+
+// permission checks to gate what can actually be filtered
+func CanViewWithFilters(requester *principal.Principal, filter *PostFilters) error {
+
+	// any state that isnt published needs permission checks
+	if (filter.state == nil) || (filter.state != nil && *filter.state != "published") {
+		if filter.ContributorId() != nil {
+			return requester.BelongsToAccount(*filter.ContributorId())
+		}
+
+		if filter.ModeratorId() != nil {
+			return requester.BelongsToAccount(*filter.ModeratorId())
+		}
+
+		if !requester.IsStaff() {
+			return principal.ErrNotAuthorized
+		}
+	}
+
+	// filtering by moderator
+	if filter.ModeratorId() != nil {
+
+		if requester.IsStaff() {
+			return nil
+		}
+
+		return requester.BelongsToAccount(*filter.ModeratorId())
+	}
+
+	return nil
 }

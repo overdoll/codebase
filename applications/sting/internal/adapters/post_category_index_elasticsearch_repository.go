@@ -12,39 +12,42 @@ import (
 	"github.com/segmentio/ksuid"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
 	"overdoll/libraries/scan"
+	"overdoll/libraries/translations"
 )
 
 type categoryDocument struct {
-	Id        string `json:"id"`
-	Slug      string `json:"slug"`
-	Thumbnail string `json:"thumbnail"`
-	Title     string `json:"title"`
-	CreatedAt string `json:"created_at"`
+	Id        string            `json:"id"`
+	Slug      string            `json:"slug"`
+	Thumbnail string            `json:"thumbnail"`
+	Title     map[string]string `json:"title"`
+	CreatedAt string            `json:"created_at"`
 }
+
+const categoryIndexProperties = `
+{
+	"id": {
+		"type": "keyword"
+	},
+	"slug": {
+		"type": "keyword"
+	},
+	"thumbnail": {
+		"type": "keyword"
+	},
+	"title":  ` + translations.ESIndex + `
+	"created_at": {
+		"type": "date"
+	}
+}
+`
 
 const categoryIndex = `
 {
 	"mappings": {
 		"dynamic": "strict",
-		"properties": {
-			"id": {
-				"type": "keyword"
-			},
-			"slug": {
-				"type": "keyword"
-			},
-			"thumbnail": {
-				"type": "keyword"
-			},
-			"title": {
-				"type": "text",
-				"analyzer": "english"
-			},
-			"created_at": {
-				"type": "date"
-			}
-		}
+		"properties": ` + categoryIndexProperties + `
 	}
 }`
 
@@ -72,7 +75,7 @@ func marshalCategoryToDocument(cat *post.Category) (*categoryDocument, error) {
 	return &categoryDocument{
 		Id:        cat.ID(),
 		Thumbnail: thumbnail,
-		Title:     cat.Title(),
+		Title:     translations.MarshalTranslationToDatabase(cat.Title()),
 		CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
 	}, nil
 }
@@ -102,7 +105,7 @@ func (r PostsIndexElasticSearchRepository) IndexCategories(ctx context.Context, 
 	return nil
 }
 
-func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context, cursor *paging.Cursor, search *string) ([]*post.Category, error) {
+func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.ObjectFilters) ([]*post.Category, error) {
 
 	builder := r.client.Search().
 		Index(categoryIndexName).ErrorTrace(true)
@@ -113,8 +116,18 @@ func (r PostsIndexElasticSearchRepository) SearchCategories(ctx context.Context,
 
 	query := cursor.BuildElasticsearch(builder, "created_at")
 
-	if search != nil {
-		query.Must(elastic.NewMultiMatchQuery(*search, "title").Operator("and"))
+	if filter.Search() != nil {
+		query.Must(
+			elastic.
+				NewMultiMatchQuery(*filter.Search(), translations.GetESSearchFields("title")...).
+				Type("best_fields"),
+		)
+	}
+
+	if len(filter.Slugs()) > 0 {
+		for _, id := range filter.Slugs() {
+			query.Filter(elastic.NewTermQuery("slug", id))
+		}
 	}
 
 	builder.Query(query)

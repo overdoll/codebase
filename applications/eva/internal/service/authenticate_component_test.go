@@ -2,7 +2,6 @@ package service_test
 
 import (
 	"context"
-	"fmt"
 	"testing"
 	"time"
 
@@ -44,8 +43,6 @@ func TestAccountAuthenticate_existing(t *testing.T) {
 
 	redeemCookie, client, pass := authenticateAndVerifyToken(t, "i2fhz.poisonminion@inbox.testmail.app")
 
-	fmt.Println(redeemCookie.VerifyAuthenticationToken.AuthenticationToken.AccountStatus)
-
 	// the VerifyAuthenticationToken function will also log you in, if you redeem a cookie that's for a registered user
 	// so we check for that here
 	require.Equal(t, true, redeemCookie.VerifyAuthenticationToken.AuthenticationToken.AccountStatus.Registered)
@@ -61,12 +58,6 @@ func TestAccountAuthenticate_existing(t *testing.T) {
 	// that the user is logged into the correct one
 	require.NoError(t, modified.Authenticated())
 	require.Equal(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6", modified.AccountID())
-}
-
-type ViewerAccount struct {
-	Viewer struct {
-		Username graphql.String
-	} `graphql:"viewer()"`
 }
 
 // TestAccountAuthenticate_from_another_session - we login, but redeem our cookie from another "session"
@@ -90,7 +81,7 @@ func TestAccountAuthenticate_from_another_session(t *testing.T) {
 
 	// after verifying the token, we need  to grant account access
 	grant := grantAccountAccessWithAuthenticationToken(t, client)
-	require.Equal(t, graphql.String("poisonminion"), grant.GrantAccountAccessWithAuthenticationToken.Account.Username)
+	require.Equal(t, "poisonminion", grant.GrantAccountAccessWithAuthenticationToken.Account.Username)
 
 	var settings ViewerAccount
 	err := client.Query(context.Background(), &settings, nil)
@@ -98,7 +89,7 @@ func TestAccountAuthenticate_from_another_session(t *testing.T) {
 
 	// since our user's cookie was redeemed from another session, when the user runs this query
 	// the next time, it should just log them in
-	require.Equal(t, graphql.String("poisonminion"), settings.Viewer.Username)
+	require.Equal(t, "poisonminion", settings.Viewer.Username)
 }
 
 type GenerateAccountMultiFactorRecoveryCodes struct {
@@ -120,15 +111,16 @@ type DisableAccountMultiFactor struct {
 type GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode struct {
 	GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode struct {
 		Account *struct {
-			Username graphql.String
+			Username string
 		}
+		Validation *types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation
 	} `graphql:"grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode(input: $input)"`
 }
 
 type GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotp struct {
 	GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotp struct {
 		Account *struct {
-			Username graphql.String
+			Username string
 		}
 	} `graphql:"grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp(input: $input)"`
 }
@@ -255,6 +247,21 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 	require.NotNil(t, redeemCookie.VerifyAuthenticationToken.AuthenticationToken.AccountStatus.MultiFactor)
 
 	var authenticateRecoveryCode GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode
+
+	// try an invalid recovery code first
+	err = client.Mutate(context.Background(), &authenticateRecoveryCode, map[string]interface{}{
+		"input": types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput{
+			RecoveryCode: "some random recovery code",
+		},
+	})
+
+	require.NoError(t, err)
+
+	// make sure that it gives an invalid validation
+	require.NotNil(t, authenticateRecoveryCode.GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode.Validation, "should have validation error in recovery code")
+	require.Equal(t, *authenticateRecoveryCode.GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode.Validation, types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidationInvalidRecoveryCode)
+
+	// this time, do an actual valid recovery code
 	err = client.Mutate(context.Background(), &authenticateRecoveryCode, map[string]interface{}{
 		"input": types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput{
 			RecoveryCode: settings.Viewer.RecoveryCodes[0].Code,
@@ -262,6 +269,7 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 	})
 
 	require.NoError(t, err)
+	require.Nil(t, authenticateRecoveryCode.GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode.Validation, "should have no validation errors for recovery code")
 
 	modified = pass.GetPassport()
 
@@ -300,7 +308,7 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 type CreateAccountWithAuthenticationToken struct {
 	CreateAccountWithAuthenticationToken struct {
 		Account *struct {
-			Username graphql.String
+			Username string
 		}
 	} `graphql:"createAccountWithAuthenticationToken(input: $input)"`
 }

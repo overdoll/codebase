@@ -5,11 +5,16 @@ import (
 
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
 )
 
 type SearchCharacters struct {
-	Cursor *paging.Cursor
-	Name   *string
+	Principal  *principal.Principal
+	Cursor     *paging.Cursor
+	Slugs      []string
+	OrderBy    string
+	Name       *string
+	SeriesSlug *string
 }
 
 type SearchCharactersHandler struct {
@@ -22,7 +27,18 @@ func NewSearchCharactersHandler(pr post.IndexRepository) SearchCharactersHandler
 
 func (h SearchCharactersHandler) Handle(ctx context.Context, query SearchCharacters) ([]*post.Character, error) {
 
-	results, err := h.pr.SearchCharacters(ctx, query.Cursor, query.Name)
+	filters, err := post.NewCharacterFilters(
+		query.Name,
+		query.OrderBy,
+		query.Slugs,
+		query.SeriesSlug,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	results, err := h.pr.SearchCharacters(ctx, query.Principal, query.Cursor, filters)
 
 	if err != nil {
 		return nil, err

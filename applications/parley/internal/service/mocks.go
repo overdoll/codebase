@@ -26,3 +26,7 @@ func (t StingServiceMock) DiscardPost(ctx context.Context, s string) error {
 func (t StingServiceMock) UndoPost(ctx context.Context, s string) error {
 	return nil
 }
+
+func (t StingServiceMock) RemovePost(ctx context.Context, s string) error {
+	return nil
+}

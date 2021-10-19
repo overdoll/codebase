@@ -8,6 +8,7 @@ import (
 	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/principal"
 )
 
 var categoryTable = table.New(table.Metadata{
@@ -23,10 +24,46 @@ var categoryTable = table.New(table.Metadata{
 })
 
 type category struct {
-	Id        string `db:"id"`
-	Slug      string `db:"slug"`
-	Title     string `db:"title"`
-	Thumbnail string `db:"thumbnail"`
+	Id        string            `db:"id"`
+	Slug      string            `db:"slug"`
+	Title     map[string]string `db:"title"`
+	Thumbnail string            `db:"thumbnail"`
+}
+
+var categorySlugTable = table.New(table.Metadata{
+	Name: "categories_slugs",
+	Columns: []string{
+		"category_id",
+		"slug",
+	},
+	PartKey: []string{"slug"},
+	SortKey: []string{},
+})
+
+type categorySlugs struct {
+	CategoryId string `db:"category_id"`
+	Slug       string `db:"slug"`
+}
+
+func (r PostsCassandraRepository) GetCategoryBySlug(ctx context.Context, requester *principal.Principal, slug string) (*post.Category, error) {
+
+	queryCategorySlug := r.session.
+		Query(categorySlugTable.Get()).
+		Consistency(gocql.One).
+		BindStruct(categorySlugs{Slug: slug})
+
+	var b categorySlugs
+
+	if err := queryCategorySlug.Get(&b); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return nil, post.ErrCategoryNotFound
+		}
+
+		return nil, fmt.Errorf("failed to get category by slug: %v", err)
+	}
+
+	return r.GetCategoryById(ctx, requester, b.CategoryId)
 }
 
 func (r PostsCassandraRepository) GetCategoriesById(ctx context.Context, cats []string) ([]*post.Category, error) {
@@ -56,7 +93,7 @@ func (r PostsCassandraRepository) GetCategoriesById(ctx context.Context, cats []
 	return categories, nil
 }
 
-func (r PostsCassandraRepository) GetCategoryById(ctx context.Context, categoryId string) (*post.Category, error) {
+func (r PostsCassandraRepository) GetCategoryById(ctx context.Context, requester *principal.Principal, categoryId string) (*post.Category, error) {
 
 	queryCategories := r.session.
 		Query(categoryTable.Get()).
@@ -75,32 +112,4 @@ func (r PostsCassandraRepository) GetCategoryById(ctx context.Context, categoryI
 	}
 
 	return post.UnmarshalCategoryFromDatabase(cat.Id, cat.Slug, cat.Title, cat.Thumbnail), nil
-}
-
-func (r PostsCassandraRepository) CreateCategories(ctx context.Context, categories []*post.Category) error {
-
-	// Begin BATCH operation:
-	// Will insert categories, characters, media
-	batch := r.session.NewBatch(gocql.LoggedBatch)
-
-	// Go through each category request
-	for _, cat := range categories {
-		// Create new categories query
-		stmt, _ := categoryTable.Insert()
-		batch.Query(
-			stmt,
-			cat.ID(),
-			cat.Slug(),
-			cat.Title(),
-			cat.Thumbnail(),
-		)
-	}
-
-	err := r.session.ExecuteBatch(batch)
-
-	if err != nil {
-		return fmt.Errorf("failed to create categories: %v", err)
-	}
-
-	return nil
 }

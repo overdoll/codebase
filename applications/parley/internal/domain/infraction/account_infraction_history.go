@@ -14,7 +14,7 @@ type AccountInfractionHistory struct {
 
 	id             string
 	accountId      string
-	reason         string
+	reason         *PostRejectionReason
 	expiration     time.Time
 	userLockLength int64
 }
@@ -27,7 +27,7 @@ var (
 	ErrAccountInfractionHistoryNotFound = errors.New("account infraction history not found")
 )
 
-func NewAccountInfractionHistory(requester *principal.Principal, accountId string, pastUserInfractionHistory []*AccountInfractionHistory, reason string) (*AccountInfractionHistory, error) {
+func NewAccountInfractionHistory(requester *principal.Principal, accountId string, pastUserInfractionHistory []*AccountInfractionHistory, reason *PostRejectionReason) (*AccountInfractionHistory, error) {
 
 	if !(requester.IsStaff() || requester.IsModerator()) {
 		return nil, principal.ErrNotAuthorized
@@ -87,7 +87,7 @@ func (m *AccountInfractionHistory) UserLockLength() int64 {
 	return m.userLockLength
 }
 
-func (m *AccountInfractionHistory) Reason() string {
+func (m *AccountInfractionHistory) Reason() *PostRejectionReason {
 	return m.reason
 }
 
@@ -103,7 +103,7 @@ func (m *AccountInfractionHistory) CanDelete(requester *principal.Principal) err
 	return CanViewAccountInfractionHistory(requester)
 }
 
-func UnmarshalAccountInfractionHistoryFromDatabase(id, userId, reason string, expiration time.Time) *AccountInfractionHistory {
+func UnmarshalAccountInfractionHistoryFromDatabase(id, userId string, reason *PostRejectionReason, expiration time.Time) *AccountInfractionHistory {
 	return &AccountInfractionHistory{
 		id:         id,
 		accountId:  userId,

@@ -1,6 +1,7 @@
 enum PostAuditLogAction {
   Approved
   Denied
+  Removed
 }
 
 """
@@ -22,19 +23,16 @@ type PostAuditLog implements Node @key(fields: "id") {
   action: PostAuditLogAction!
 
   """The reason the action was taken"""
-  reason: String!
+  postRejectionReason: PostRejectionReason
 
   """Additional notes by the moderator"""
-  notes: String!
+  notes: String
 
   """If this audit log was reverted"""
   reverted: Boolean!
 
   """The time until which this audit log will be revertable"""
   reversibleUntil: Time!
-
-  """The infraction that is linked to this audit log, mainly kept here as a reference so reverting will be easier"""
-  infractionId: ID
 
   """The post linked to this audit log"""
   post: Post!
@@ -52,9 +50,13 @@ type PostAuditLogConnection {
   pageInfo: PageInfo!
 }
 
-extend type Post @key(fields: "id") {
-  id: ID! @external
+"""Date range for audit logs"""
+input PostAuditLogDateRange {
+  from: Time!
+  to: Time!
+}
 
+extend type Post {
   """Audit logs belonging to this pending post"""
   auditLogs(
     """Returns the elements in the list that come after the specified cursor."""
@@ -93,5 +95,8 @@ extend type Account {
 
     """Returns the last _n_ elements from the list."""
     last: Int
+
+    """The date range for audit logs. Required."""
+    dateRange: PostAuditLogDateRange!
   ): PostAuditLogConnection! @goField(forceResolver: true)
 }

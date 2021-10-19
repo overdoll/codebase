@@ -1,6 +1,8 @@
 package types
 
 import (
+	"context"
+
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/applications/sting/internal/domain/resource"
 	"overdoll/libraries/graphql"
@@ -8,18 +10,18 @@ import (
 	"overdoll/libraries/paging"
 )
 
-func MarshalPostToGraphQL(result *post.Post) *Post {
+func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
 
 	var categories []*Category
 
 	for _, cat := range result.Categories() {
-		categories = append(categories, MarshalCategoryToGraphQL(cat))
+		categories = append(categories, MarshalCategoryToGraphQL(ctx, cat))
 	}
 
 	var characters []*Character
 
 	for _, char := range result.Characters() {
-		characters = append(characters, MarshalCharacterToGraphQL(char))
+		characters = append(characters, MarshalCharacterToGraphQL(ctx, char))
 	}
 
 	var state PostState
@@ -56,24 +58,32 @@ func MarshalPostToGraphQL(result *post.Post) *Post {
 		state = PostStateRejected
 	}
 
+	if result.IsRemoving() {
+		state = PostStateRemoving
+	}
+
+	if result.IsRemoved() {
+		state = PostStateRemoved
+	}
+
 	var content []*Resource
 
 	for _, id := range result.Content() {
 		if id != nil {
-			content = append(content, MarshalResourceToGraphQL(id))
+			content = append(content, MarshalResourceToGraphQL(ctx, id))
 		}
 	}
 
 	var brand *Brand
 
 	if result.Brand() != nil {
-		brand = MarshalBrandToGraphQL(result.Brand())
+		brand = MarshalBrandToGraphQL(ctx, result.Brand())
 	}
 
 	var audience *Audience
 
 	if result.Audience() != nil {
-		audience = MarshalAudienceToGraphQL(result.Audience())
+		audience = MarshalAudienceToGraphQL(ctx, result.Audience())
 	}
 
 	var moderator *Account
@@ -99,88 +109,88 @@ func MarshalPostToGraphQL(result *post.Post) *Post {
 	}
 }
 
-func MarshalBrandToGraphQL(result *post.Brand) *Brand {
+func MarshalBrandToGraphQL(ctx context.Context, result *post.Brand) *Brand {
 
 	var res *Resource
 
 	if result.Thumbnail() != nil {
-		res = MarshalResourceToGraphQL(result.Thumbnail())
+		res = MarshalResourceToGraphQL(ctx, result.Thumbnail())
 	}
 
 	return &Brand{
 		ID:        relay.NewID(Brand{}, result.ID()),
-		Name:      result.Name(),
+		Name:      result.Name().TranslateFromContext(ctx, ""),
 		Slug:      result.Slug(),
 		Thumbnail: res,
 	}
 }
 
-func MarshalAudienceToGraphQL(result *post.Audience) *Audience {
+func MarshalAudienceToGraphQL(ctx context.Context, result *post.Audience) *Audience {
 
 	var res *Resource
 
 	if result.Thumbnail() != nil {
-		res = MarshalResourceToGraphQL(result.Thumbnail())
+		res = MarshalResourceToGraphQL(ctx, result.Thumbnail())
 	}
 
 	return &Audience{
 		ID:        relay.NewID(Brand{}, result.ID()),
-		Title:     result.Title(),
+		Title:     result.Title().TranslateFromContext(ctx, ""),
 		Slug:      result.Slug(),
 		Thumbnail: res,
 	}
 }
 
-func MarshalSeriesToGraphQL(result *post.Series) *Series {
+func MarshalSeriesToGraphQL(ctx context.Context, result *post.Series) *Series {
 
 	var res *Resource
 
 	if result.Thumbnail() != nil {
-		res = MarshalResourceToGraphQL(result.Thumbnail())
+		res = MarshalResourceToGraphQL(ctx, result.Thumbnail())
 	}
 
 	return &Series{
 		ID:        relay.NewID(Series{}, result.ID()),
-		Title:     result.Title(),
+		Title:     result.Title().TranslateFromContext(ctx, ""),
 		Slug:      result.Slug(),
 		Thumbnail: res,
 	}
 }
 
-func MarshalCategoryToGraphQL(result *post.Category) *Category {
+func MarshalCategoryToGraphQL(ctx context.Context, result *post.Category) *Category {
 
 	var res *Resource
 
 	if result.Thumbnail() != nil {
-		res = MarshalResourceToGraphQL(result.Thumbnail())
+		res = MarshalResourceToGraphQL(ctx, result.Thumbnail())
 	}
 
 	return &Category{
 		ID:        relay.NewID(Category{}, result.ID()),
 		Thumbnail: res,
 		Slug:      result.Slug(),
-		Title:     result.Title(),
+		Title:     result.Title().TranslateFromContext(ctx, ""),
 	}
 }
 
-func MarshalCharacterToGraphQL(result *post.Character) *Character {
+func MarshalCharacterToGraphQL(ctx context.Context, result *post.Character) *Character {
 
 	var res *Resource
 
 	if result.Thumbnail() != nil {
-		res = MarshalResourceToGraphQL(result.Thumbnail())
+		res = MarshalResourceToGraphQL(ctx, result.Thumbnail())
 	}
 
 	return &Character{
 		ID:        relay.NewID(Character{}, result.ID()),
-		Name:      result.Name(),
+		Name:      result.Name().TranslateFromContext(ctx, ""),
 		Slug:      result.Slug(),
 		Thumbnail: res,
-		Series:    MarshalSeriesToGraphQL(result.Series()),
+		Series:    MarshalSeriesToGraphQL(ctx, result.Series()),
 	}
 }
 
-func MarshalResourceToGraphQL(res *resource.Resource) *Resource {
+func MarshalResourceToGraphQL(ctx context.Context, res *resource.Resource) *Resource {
 	var resourceType ResourceType
 
 	if res.IsImage() {
@@ -207,7 +217,7 @@ func MarshalResourceToGraphQL(res *resource.Resource) *Resource {
 	}
 }
 
-func MarshalCategoryToGraphQLConnection(results []*post.Category, cursor *paging.Cursor) *CategoryConnection {
+func MarshalCategoryToGraphQLConnection(ctx context.Context, results []*post.Category, cursor *paging.Cursor) *CategoryConnection {
 
 	var categories []*CategoryEdge
 
@@ -249,7 +259,7 @@ func MarshalCategoryToGraphQLConnection(results []*post.Category, cursor *paging
 	for i := range results {
 		node := nodeAt(i)
 		categories = append(categories, &CategoryEdge{
-			Node:   MarshalCategoryToGraphQL(node),
+			Node:   MarshalCategoryToGraphQL(ctx, node),
 			Cursor: node.Cursor(),
 		})
 	}
@@ -266,7 +276,7 @@ func MarshalCategoryToGraphQLConnection(results []*post.Category, cursor *paging
 	return conn
 }
 
-func MarshalCharacterToGraphQLConnection(results []*post.Character, cursor *paging.Cursor) *CharacterConnection {
+func MarshalCharacterToGraphQLConnection(ctx context.Context, results []*post.Character, cursor *paging.Cursor) *CharacterConnection {
 	var characters []*CharacterEdge
 
 	conn := &CharacterConnection{
@@ -307,7 +317,7 @@ func MarshalCharacterToGraphQLConnection(results []*post.Character, cursor *pagi
 	for i := range results {
 		node := nodeAt(i)
 		characters = append(characters, &CharacterEdge{
-			Node:   MarshalCharacterToGraphQL(node),
+			Node:   MarshalCharacterToGraphQL(ctx, node),
 			Cursor: node.Cursor(),
 		})
 	}
@@ -324,7 +334,7 @@ func MarshalCharacterToGraphQLConnection(results []*post.Character, cursor *pagi
 	return conn
 }
 
-func MarshalSeriesToGraphQLConnection(results []*post.Series, cursor *paging.Cursor) *SeriesConnection {
+func MarshalSeriesToGraphQLConnection(ctx context.Context, results []*post.Series, cursor *paging.Cursor) *SeriesConnection {
 	var series []*SeriesEdge
 
 	conn := &SeriesConnection{
@@ -365,7 +375,7 @@ func MarshalSeriesToGraphQLConnection(results []*post.Series, cursor *paging.Cur
 	for i := range results {
 		node := nodeAt(i)
 		series = append(series, &SeriesEdge{
-			Node:   MarshalSeriesToGraphQL(node),
+			Node:   MarshalSeriesToGraphQL(ctx, node),
 			Cursor: node.Cursor(),
 		})
 	}
@@ -382,7 +392,7 @@ func MarshalSeriesToGraphQLConnection(results []*post.Series, cursor *paging.Cur
 	return conn
 }
 
-func MarshalBrandsToGraphQLConnection(results []*post.Brand, cursor *paging.Cursor) *BrandConnection {
+func MarshalBrandsToGraphQLConnection(ctx context.Context, results []*post.Brand, cursor *paging.Cursor) *BrandConnection {
 	var brands []*BrandEdge
 
 	conn := &BrandConnection{
@@ -423,7 +433,7 @@ func MarshalBrandsToGraphQLConnection(results []*post.Brand, cursor *paging.Curs
 	for i := range results {
 		node := nodeAt(i)
 		brands = append(brands, &BrandEdge{
-			Node:   MarshalBrandToGraphQL(node),
+			Node:   MarshalBrandToGraphQL(ctx, node),
 			Cursor: node.Cursor(),
 		})
 	}
@@ -440,7 +450,7 @@ func MarshalBrandsToGraphQLConnection(results []*post.Brand, cursor *paging.Curs
 	return conn
 }
 
-func MarshalAudienceToGraphQLConnection(results []*post.Audience, cursor *paging.Cursor) *AudienceConnection {
+func MarshalAudienceToGraphQLConnection(ctx context.Context, results []*post.Audience, cursor *paging.Cursor) *AudienceConnection {
 	var audiences []*AudienceEdge
 
 	conn := &AudienceConnection{
@@ -481,7 +491,7 @@ func MarshalAudienceToGraphQLConnection(results []*post.Audience, cursor *paging
 	for i := range results {
 		node := nodeAt(i)
 		audiences = append(audiences, &AudienceEdge{
-			Node:   MarshalAudienceToGraphQL(node),
+			Node:   MarshalAudienceToGraphQL(ctx, node),
 			Cursor: node.Cursor(),
 		})
 	}
@@ -498,7 +508,7 @@ func MarshalAudienceToGraphQLConnection(results []*post.Audience, cursor *paging
 	return conn
 }
 
-func MarshalPostToGraphQLConnection(results []*post.Post, cursor *paging.Cursor) *PostConnection {
+func MarshalPostToGraphQLConnection(ctx context.Context, results []*post.Post, cursor *paging.Cursor) *PostConnection {
 	var posts []*PostEdge
 
 	conn := &PostConnection{
@@ -539,7 +549,7 @@ func MarshalPostToGraphQLConnection(results []*post.Post, cursor *paging.Cursor)
 	for i := range results {
 		node := nodeAt(i)
 		posts = append(posts, &PostEdge{
-			Node:   MarshalPostToGraphQL(node),
+			Node:   MarshalPostToGraphQL(ctx, node),
 			Cursor: node.Cursor(),
 		})
 	}

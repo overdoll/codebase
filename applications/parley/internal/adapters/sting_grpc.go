@@ -43,6 +43,15 @@ func (s StingGrpc) RejectPost(ctx context.Context, id string) error {
 	return nil
 }
 
+func (s StingGrpc) RemovePost(ctx context.Context, id string) error {
+
+	if _, err := s.client.RemovePost(ctx, &sting.PostRequest{Id: id}); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (s StingGrpc) DiscardPost(ctx context.Context, id string) error {
 
 	if _, err := s.client.DiscardPost(ctx, &sting.PostRequest{Id: id}); err != nil {

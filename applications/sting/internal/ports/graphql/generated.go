@@ -56,16 +56,16 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Account struct {
-		Contributions       func(childComplexity int, after *string, before *string, first *int, last *int) int
 		ID                  func(childComplexity int) int
-		ModeratorPostsQueue func(childComplexity int, after *string, before *string, first *int, last *int) int
+		ModeratorPostsQueue func(childComplexity int, after *string, before *string, first *int, last *int, brandSlugs []string, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) int
+		Posts               func(childComplexity int, after *string, before *string, first *int, last *int, brandSlugs []string, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) int
 	}
 
 	Audience struct {
 		ID        func(childComplexity int) int
-		Posts     func(childComplexity int, after *string, before *string, first *int, last *int) int
+		Posts     func(childComplexity int, after *string, before *string, first *int, last *int, brandSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) int
 		Slug      func(childComplexity int) int
-		Thumbnail func(childComplexity int, size *int) int
+		Thumbnail func(childComplexity int) int
 		Title     func(childComplexity int) int
 	}
 
@@ -82,9 +82,9 @@ type ComplexityRoot struct {
 	Brand struct {
 		ID        func(childComplexity int) int
 		Name      func(childComplexity int) int
-		Posts     func(childComplexity int, after *string, before *string, first *int, last *int) int
+		Posts     func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) int
 		Slug      func(childComplexity int) int
-		Thumbnail func(childComplexity int, size *int) int
+		Thumbnail func(childComplexity int) int
 	}
 
 	BrandConnection struct {
@@ -99,9 +99,9 @@ type ComplexityRoot struct {
 
 	Category struct {
 		ID        func(childComplexity int) int
-		Posts     func(childComplexity int, after *string, before *string, first *int, last *int) int
+		Posts     func(childComplexity int, after *string, before *string, first *int, last *int, brandSlugs []string, audienceSlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) int
 		Slug      func(childComplexity int) int
-		Thumbnail func(childComplexity int, size *int) int
+		Thumbnail func(childComplexity int) int
 		Title     func(childComplexity int) int
 	}
 
@@ -118,10 +118,10 @@ type ComplexityRoot struct {
 	Character struct {
 		ID        func(childComplexity int) int
 		Name      func(childComplexity int) int
-		Posts     func(childComplexity int, after *string, before *string, first *int, last *int) int
+		Posts     func(childComplexity int, after *string, before *string, first *int, last *int, brandSlugs []string, audienceSlugs []string, categorySlugs []string, state *types.PostState, orderBy types.PostsOrder) int
 		Series    func(childComplexity int) int
 		Slug      func(childComplexity int) int
-		Thumbnail func(childComplexity int, size *int) int
+		Thumbnail func(childComplexity int) int
 	}
 
 	CharacterConnection struct {
@@ -192,13 +192,18 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		Audiences          func(childComplexity int, after *string, before *string, first *int, last *int, title *string) int
-		Brands             func(childComplexity int, after *string, before *string, first *int, last *int, name *string) int
-		Categories         func(childComplexity int, after *string, before *string, first *int, last *int, title *string) int
-		Characters         func(childComplexity int, after *string, before *string, first *int, last *int, name *string) int
+		Audience           func(childComplexity int, slug string) int
+		Audiences          func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, title *string, orderBy types.AudiencesOrder) int
+		Brand              func(childComplexity int, slug string) int
+		Brands             func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, name *string, orderBy types.BrandsOrder) int
+		Categories         func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, title *string, orderBy types.CategoriesOrder) int
+		Category           func(childComplexity int, slug string) int
+		Character          func(childComplexity int, slug string, seriesSlug string) int
+		Characters         func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, seriesSlug *string, name *string, orderBy types.CharactersOrder) int
 		Post               func(childComplexity int, reference string) int
-		Posts              func(childComplexity int, after *string, before *string, first *int, last *int, categoryIds []relay.ID, characterIds []relay.ID, seriesIds []relay.ID) int
-		Series             func(childComplexity int, after *string, before *string, first *int, last *int, title *string) int
+		Posts              func(childComplexity int, after *string, before *string, first *int, last *int, brandSlugs []string, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) int
+		Serial             func(childComplexity int, slug string) int
+		Series             func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, title *string, orderBy types.SeriesOrder) int
 		__resolve__service func(childComplexity int) int
 		__resolve_entities func(childComplexity int, representations []map[string]interface{}) int
 	}
@@ -216,9 +221,9 @@ type ComplexityRoot struct {
 
 	Series struct {
 		ID        func(childComplexity int) int
-		Posts     func(childComplexity int, after *string, before *string, first *int, last *int) int
+		Posts     func(childComplexity int, after *string, before *string, first *int, last *int, brandSlugs []string, audienceSlugs []string, categorySlugs []string, characterSlugs []string, state *types.PostState, orderBy types.PostsOrder) int
 		Slug      func(childComplexity int) int
-		Thumbnail func(childComplexity int, size *int) int
+		Thumbnail func(childComplexity int) int
 		Title     func(childComplexity int) int
 	}
 
@@ -263,20 +268,20 @@ type ComplexityRoot struct {
 }
 
 type AccountResolver interface {
-	ModeratorPostsQueue(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostConnection, error)
-	Contributions(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostConnection, error)
+	ModeratorPostsQueue(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, brandSlugs []string, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error)
+	Posts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, brandSlugs []string, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error)
 }
 type AudienceResolver interface {
-	Posts(ctx context.Context, obj *types.Audience, after *string, before *string, first *int, last *int) (*types.PostConnection, error)
+	Posts(ctx context.Context, obj *types.Audience, after *string, before *string, first *int, last *int, brandSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error)
 }
 type BrandResolver interface {
-	Posts(ctx context.Context, obj *types.Brand, after *string, before *string, first *int, last *int) (*types.PostConnection, error)
+	Posts(ctx context.Context, obj *types.Brand, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error)
 }
 type CategoryResolver interface {
-	Posts(ctx context.Context, obj *types.Category, after *string, before *string, first *int, last *int) (*types.PostConnection, error)
+	Posts(ctx context.Context, obj *types.Category, after *string, before *string, first *int, last *int, brandSlugs []string, audienceSlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error)
 }
 type CharacterResolver interface {
-	Posts(ctx context.Context, obj *types.Character, after *string, before *string, first *int, last *int) (*types.PostConnection, error)
+	Posts(ctx context.Context, obj *types.Character, after *string, before *string, first *int, last *int, brandSlugs []string, audienceSlugs []string, categorySlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error)
 }
 type EntityResolver interface {
 	FindAccountByID(ctx context.Context, id relay.ID) (*types.Account, error)
@@ -297,16 +302,21 @@ type MutationResolver interface {
 	SubmitPost(ctx context.Context, input types.SubmitPostInput) (*types.SubmitPostPayload, error)
 }
 type QueryResolver interface {
-	Audiences(ctx context.Context, after *string, before *string, first *int, last *int, title *string) (*types.AudienceConnection, error)
-	Brands(ctx context.Context, after *string, before *string, first *int, last *int, name *string) (*types.BrandConnection, error)
-	Categories(ctx context.Context, after *string, before *string, first *int, last *int, title *string) (*types.CategoryConnection, error)
-	Series(ctx context.Context, after *string, before *string, first *int, last *int, title *string) (*types.SeriesConnection, error)
-	Characters(ctx context.Context, after *string, before *string, first *int, last *int, name *string) (*types.CharacterConnection, error)
+	Audiences(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, title *string, orderBy types.AudiencesOrder) (*types.AudienceConnection, error)
+	Audience(ctx context.Context, slug string) (*types.Audience, error)
+	Brands(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, name *string, orderBy types.BrandsOrder) (*types.BrandConnection, error)
+	Brand(ctx context.Context, slug string) (*types.Brand, error)
+	Categories(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, title *string, orderBy types.CategoriesOrder) (*types.CategoryConnection, error)
+	Category(ctx context.Context, slug string) (*types.Category, error)
+	Series(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, title *string, orderBy types.SeriesOrder) (*types.SeriesConnection, error)
+	Serial(ctx context.Context, slug string) (*types.Series, error)
+	Characters(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, seriesSlug *string, name *string, orderBy types.CharactersOrder) (*types.CharacterConnection, error)
+	Character(ctx context.Context, slug string, seriesSlug string) (*types.Character, error)
 	Post(ctx context.Context, reference string) (*types.Post, error)
-	Posts(ctx context.Context, after *string, before *string, first *int, last *int, categoryIds []relay.ID, characterIds []relay.ID, seriesIds []relay.ID) (*types.PostConnection, error)
+	Posts(ctx context.Context, after *string, before *string, first *int, last *int, brandSlugs []string, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error)
 }
 type SeriesResolver interface {
-	Posts(ctx context.Context, obj *types.Series, after *string, before *string, first *int, last *int) (*types.PostConnection, error)
+	Posts(ctx context.Context, obj *types.Series, after *string, before *string, first *int, last *int, brandSlugs []string, audienceSlugs []string, categorySlugs []string, characterSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error)
 }
 
 type executableSchema struct {
@@ -323,18 +333,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	ec := executionContext{nil, e}
 	_ = ec
 	switch typeName + "." + field {
-
-	case "Account.contributions":
-		if e.complexity.Account.Contributions == nil {
-			break
-		}
-
-		args, err := ec.field_Account_contributions_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Account.Contributions(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
 
 	case "Account.id":
 		if e.complexity.Account.ID == nil {
@@ -353,7 +351,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Account.ModeratorPostsQueue(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
+		return e.complexity.Account.ModeratorPostsQueue(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["brandSlugs"].([]string), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder)), true
+
+	case "Account.posts":
+		if e.complexity.Account.Posts == nil {
+			break
+		}
+
+		args, err := ec.field_Account_posts_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Account.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["brandSlugs"].([]string), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder)), true
 
 	case "Audience.id":
 		if e.complexity.Audience.ID == nil {
@@ -372,7 +382,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Audience.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
+		return e.complexity.Audience.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["brandSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder)), true
 
 	case "Audience.slug":
 		if e.complexity.Audience.Slug == nil {
@@ -386,12 +396,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		args, err := ec.field_Audience_thumbnail_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Audience.Thumbnail(childComplexity, args["size"].(*int)), true
+		return e.complexity.Audience.Thumbnail(childComplexity), true
 
 	case "Audience.title":
 		if e.complexity.Audience.Title == nil {
@@ -452,7 +457,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Brand.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
+		return e.complexity.Brand.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder)), true
 
 	case "Brand.slug":
 		if e.complexity.Brand.Slug == nil {
@@ -466,12 +471,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		args, err := ec.field_Brand_thumbnail_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Brand.Thumbnail(childComplexity, args["size"].(*int)), true
+		return e.complexity.Brand.Thumbnail(childComplexity), true
 
 	case "BrandConnection.edges":
 		if e.complexity.BrandConnection.Edges == nil {
@@ -518,7 +518,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Category.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
+		return e.complexity.Category.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["brandSlugs"].([]string), args["audienceSlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder)), true
 
 	case "Category.slug":
 		if e.complexity.Category.Slug == nil {
@@ -532,12 +532,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		args, err := ec.field_Category_thumbnail_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Category.Thumbnail(childComplexity, args["size"].(*int)), true
+		return e.complexity.Category.Thumbnail(childComplexity), true
 
 	case "Category.title":
 		if e.complexity.Category.Title == nil {
@@ -598,7 +593,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Character.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
+		return e.complexity.Character.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["brandSlugs"].([]string), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder)), true
 
 	case "Character.series":
 		if e.complexity.Character.Series == nil {
@@ -619,12 +614,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		args, err := ec.field_Character_thumbnail_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Character.Thumbnail(childComplexity, args["size"].(*int)), true
+		return e.complexity.Character.Thumbnail(childComplexity), true
 
 	case "CharacterConnection.edges":
 		if e.complexity.CharacterConnection.Edges == nil {
@@ -971,6 +961,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.PostEdge.Node(childComplexity), true
 
+	case "Query.audience":
+		if e.complexity.Query.Audience == nil {
+			break
+		}
+
+		args, err := ec.field_Query_audience_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Audience(childComplexity, args["slug"].(string)), true
+
 	case "Query.audiences":
 		if e.complexity.Query.Audiences == nil {
 			break
@@ -981,7 +983,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Audiences(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["title"].(*string)), true
+		return e.complexity.Query.Audiences(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["title"].(*string), args["orderBy"].(types.AudiencesOrder)), true
+
+	case "Query.brand":
+		if e.complexity.Query.Brand == nil {
+			break
+		}
+
+		args, err := ec.field_Query_brand_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Brand(childComplexity, args["slug"].(string)), true
 
 	case "Query.brands":
 		if e.complexity.Query.Brands == nil {
@@ -993,7 +1007,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Brands(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["name"].(*string)), true
+		return e.complexity.Query.Brands(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["name"].(*string), args["orderBy"].(types.BrandsOrder)), true
 
 	case "Query.categories":
 		if e.complexity.Query.Categories == nil {
@@ -1005,7 +1019,31 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Categories(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["title"].(*string)), true
+		return e.complexity.Query.Categories(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["title"].(*string), args["orderBy"].(types.CategoriesOrder)), true
+
+	case "Query.category":
+		if e.complexity.Query.Category == nil {
+			break
+		}
+
+		args, err := ec.field_Query_category_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Category(childComplexity, args["slug"].(string)), true
+
+	case "Query.character":
+		if e.complexity.Query.Character == nil {
+			break
+		}
+
+		args, err := ec.field_Query_character_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Character(childComplexity, args["slug"].(string), args["seriesSlug"].(string)), true
 
 	case "Query.characters":
 		if e.complexity.Query.Characters == nil {
@@ -1017,7 +1055,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Characters(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["name"].(*string)), true
+		return e.complexity.Query.Characters(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["seriesSlug"].(*string), args["name"].(*string), args["orderBy"].(types.CharactersOrder)), true
 
 	case "Query.post":
 		if e.complexity.Query.Post == nil {
@@ -1041,7 +1079,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["categoryIds"].([]relay.ID), args["characterIds"].([]relay.ID), args["seriesIds"].([]relay.ID)), true
+		return e.complexity.Query.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["brandSlugs"].([]string), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder)), true
+
+	case "Query.serial":
+		if e.complexity.Query.Serial == nil {
+			break
+		}
+
+		args, err := ec.field_Query_serial_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Serial(childComplexity, args["slug"].(string)), true
 
 	case "Query.series":
 		if e.complexity.Query.Series == nil {
@@ -1053,7 +1103,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Series(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["title"].(*string)), true
+		return e.complexity.Query.Series(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["title"].(*string), args["orderBy"].(types.SeriesOrder)), true
 
 	case "Query._service":
 		if e.complexity.Query.__resolve__service == nil {
@@ -1126,7 +1176,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Series.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
+		return e.complexity.Series.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["brandSlugs"].([]string), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder)), true
 
 	case "Series.slug":
 		if e.complexity.Series.Slug == nil {
@@ -1140,12 +1190,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		args, err := ec.field_Series_thumbnail_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Series.Thumbnail(childComplexity, args["size"].(*int)), true
+		return e.complexity.Series.Thumbnail(childComplexity), true
 
 	case "Series.title":
 		if e.complexity.Series.Title == nil {
@@ -1310,10 +1355,7 @@ var sources = []*ast.Source{
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail(
-    """The size of the resulting square image."""
-    size: Int
-  ): Resource
+  thumbnail: Resource
 
   """A title for this audience."""
   title: String!
@@ -1329,7 +1371,20 @@ type AudienceConnection {
   pageInfo: PageInfo!
 }
 
+"""Ordering options for audiences"""
+input AudiencesOrder {
+  """The field to order audiences by."""
+  field: AudiencesOrderField!
+}
+
+"""Properties by which audience connections can be ordered."""
+enum AudiencesOrderField {
+  """Audience by created time"""
+  CREATED_AT
+}
+
 extend type Query {
+  """Search all audiences."""
   audiences(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
@@ -1343,9 +1398,21 @@ extend type Query {
     """Returns the last _n_ elements from the list."""
     last: Int
 
+    """Search by audience slugs."""
+    slugs: [String!]
+
     """Search by title of the audience."""
     title: String
+
+    """Ordering options for audiences."""
+    orderBy: AudiencesOrder! = { field: CREATED_AT }
   ): AudienceConnection!
+
+  """Get a single audience."""
+  audience(
+    """Search by slug of the audience."""
+    slug: String!
+  ): Audience
 }
 
 extend type Post {
@@ -1361,10 +1428,7 @@ extend type Post {
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail(
-    """The size of the resulting square image."""
-    size: Int
-  ): Resource
+  thumbnail: Resource
 
   """A name for this brand."""
   name: String!
@@ -1380,7 +1444,20 @@ type BrandConnection {
   pageInfo: PageInfo!
 }
 
+"""Ordering options for brands"""
+input BrandsOrder {
+  """The field to order brands by."""
+  field: BrandsOrderField!
+}
+
+"""Properties by which brand connections can be ordered."""
+enum BrandsOrderField {
+  """Brand by created time"""
+  CREATED_AT
+}
+
 extend type Query {
+  """Search multiple brands."""
   brands(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
@@ -1394,9 +1471,21 @@ extend type Query {
     """Returns the last _n_ elements from the list."""
     last: Int
 
-    # filter by the name of the brand
+    """Search by brand slugs."""
+    slugs: [String!]
+
+    """Filter by the name of the brand."""
     name: String
+
+    """Ordering options for brands."""
+    orderBy: BrandsOrder! = { field: CREATED_AT }
   ): BrandConnection!
+
+  """Get a single brand."""
+  brand(
+    """Search by slug of the brand."""
+    slug: String!
+  ): Brand
 }
 
 extend type Post {
@@ -1412,10 +1501,7 @@ extend type Post {
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail(
-    """The size of the resulting square image."""
-    size: Int
-  ): Resource
+  thumbnail: Resource
 
   """A title for this category."""
   title: String!
@@ -1431,7 +1517,20 @@ type CategoryConnection {
   pageInfo: PageInfo!
 }
 
+"""Ordering options for categories"""
+input CategoriesOrder {
+  """The field to order categories by."""
+  field: CategoriesOrderField!
+}
+
+"""Properties by which category connections can be ordered."""
+enum CategoriesOrderField {
+  """Category by created time"""
+  CREATED_AT
+}
+
 extend type Query {
+  """Search all categories."""
   categories(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
@@ -1445,9 +1544,21 @@ extend type Query {
     """Returns the last _n_ elements from the list."""
     last: Int
 
-    # filter by the name of the category
+    """Search by category slugs."""
+    slugs: [String!]
+
+    """Filter by the title of the category."""
     title: String
+
+    """Ordering options for categories."""
+    orderBy: CategoriesOrder! = { field: CREATED_AT }
   ): CategoryConnection!
+
+  """Get a single category."""
+  category(
+    """Search by slug of the category."""
+    slug: String!
+  ): Category
 }
 
 extend type Post {
@@ -1462,10 +1573,7 @@ extend type Post {
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail(
-    """The size of the resulting square image."""
-    size: Int
-  ): Resource
+  thumbnail: Resource
 
   """A title for this series."""
   title: String!
@@ -1489,10 +1597,7 @@ type Character implements Node & Object @key(fields: "id") {
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail(
-    """The size of the resulting square image."""
-    size: Int
-  ): Resource
+  thumbnail: Resource
 
   """A name for this character."""
   name: String!
@@ -1511,6 +1616,30 @@ type CharacterConnection {
   pageInfo: PageInfo!
 }
 
+"""Ordering options for characters"""
+input CharactersOrder {
+  """The field to order characters by."""
+  field: CharactersOrderField!
+}
+
+"""Properties by which character connections can be ordered."""
+enum CharactersOrderField {
+  """Character by created time"""
+  CREATED_AT
+}
+
+"""Ordering options for series"""
+input SeriesOrder {
+  """The field to order series by."""
+  field: SeriesOrderField!
+}
+
+"""Properties by which series connections can be ordered."""
+enum SeriesOrderField {
+  """Series by created time"""
+  CREATED_AT
+}
+
 extend type Query {
   """Get or search all series"""
   series(
@@ -1526,9 +1655,21 @@ extend type Query {
     """Returns the last _n_ elements from the list."""
     last: Int
 
-    # filter by the title of the series
+    """Search by series slugs."""
+    slugs: [String!]
+
+    """Filter by the title of the series."""
     title: String
+
+    """Ordering options for series."""
+    orderBy: SeriesOrder! = { field: CREATED_AT }
   ): SeriesConnection!
+
+  """Get a single serial."""
+  serial(
+    """Search by slug of the serial."""
+    slug: String!
+  ): Series
 
   """Get or search all characters"""
   characters(
@@ -1544,9 +1685,31 @@ extend type Query {
     """Returns the last _n_ elements from the list."""
     last: Int
 
-    # Filter by the name of the character
+    """Search by character slugs."""
+    slugs: [String!]
+
+    """
+    When searching for a character by slug, you need to include the series' slug since slugs are unique-per-series.
+
+    Only one slug is allowed for now since you don't want inaccurate results
+    """
+    seriesSlug: String
+
+    """Filter by the name of the character."""
     name: String
+
+    """Ordering options for characters."""
+    orderBy: CharactersOrder! = { field: CREATED_AT }
   ): CharacterConnection!
+
+  """Get a single character."""
+  character(
+    """Search by slug of the character."""
+    slug: String!
+
+    """A series slug is required since character slugs are unique-per-series."""
+    seriesSlug: String!
+  ): Character
 }
 
 extend type Post {
@@ -1590,6 +1753,8 @@ enum PostState {
   Discarded
   Rejected
   Processing
+  Removing
+  Removed
 }
 
 """Update post brand."""
@@ -1688,7 +1853,6 @@ type SubmitPostPayload {
   inReview: Boolean
 }
 
-
 type PostEdge {
   cursor: String!
   node: Post!
@@ -1697,6 +1861,18 @@ type PostEdge {
 type PostConnection {
   edges: [PostEdge!]!
   pageInfo: PageInfo!
+}
+
+"""Ordering options for posts"""
+input PostsOrder {
+  """The field to order security advisories by."""
+  field: PostsOrderField!
+}
+
+"""Properties by which posts connections can be ordered."""
+enum PostsOrderField {
+  """Posts by update time"""
+  CREATED_AT
 }
 
 extend type Account {
@@ -1713,10 +1889,31 @@ extend type Account {
 
     """Returns the last _n_ elements from the list."""
     last: Int
+
+    """Search by brand slugs."""
+    brandSlugs: [String!]
+
+    """Search by audience slugs."""
+    audienceSlugs: [String!]
+
+    """Search by category slugs."""
+    categorySlugs: [String!]
+
+    """Search by character slugs."""
+    characterSlugs: [String!]
+
+    """Search by series slugs."""
+    seriesSlugs: [String!]
+
+    """Search by a post state."""
+    state: PostState = Review
+
+    """Ordering options for posts."""
+    orderBy: PostsOrder! = { field: CREATED_AT }
   ): PostConnection! @goField(forceResolver: true)
 
   """Contributions specific to this account"""
-  contributions(
+  posts(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
 
@@ -1728,6 +1925,27 @@ extend type Account {
 
     """Returns the last _n_ elements from the list."""
     last: Int
+
+    """Search by brand slugs."""
+    brandSlugs: [String!]
+
+    """Search by audience slugs."""
+    audienceSlugs: [String!]
+
+    """Search by category slugs."""
+    categorySlugs: [String!]
+
+    """Search by character slugs."""
+    characterSlugs: [String!]
+
+    """Search by series slugs."""
+    seriesSlugs: [String!]
+
+    """Search by a post state."""
+    state: PostState = Published
+
+    """Ordering options for posts."""
+    orderBy: PostsOrder! = { field: CREATED_AT }
   ): PostConnection! @goField(forceResolver: true)
 }
 
@@ -1789,14 +2007,26 @@ extend type Query {
     """Returns the last _n_ elements from the list."""
     last: Int
 
-    """Search by category Ids."""
-    categoryIds: [ID!]
+    """Search by brand slugs."""
+    brandSlugs: [String!]
 
-    """Search by charcter Ids."""
-    characterIds: [ID!]
+    """Search by audience slugs."""
+    audienceSlugs: [String!]
 
-    """Search by series Ids."""
-    seriesIds: [ID!]
+    """Search by category slugs."""
+    categorySlugs: [String!]
+
+    """Search by character slugs."""
+    characterSlugs: [String!]
+
+    """Search by series slugs."""
+    seriesSlugs: [String!]
+
+    """Search by a post state."""
+    state: PostState = Published
+
+    """Ordering options for posts."""
+    orderBy: PostsOrder! = { field: CREATED_AT }
   ): PostConnection!
 }
 
@@ -1814,6 +2044,24 @@ extend type Category {
 
     """Returns the last _n_ elements from the list."""
     last: Int
+
+    """Search by brand slugs."""
+    brandSlugs: [String!]
+
+    """Search by audience slugs."""
+    audienceSlugs: [String!]
+
+    """Search by character slugs."""
+    characterSlugs: [String!]
+
+    """Search by series slugs."""
+    seriesSlugs: [String!]
+
+    """Search by a post state."""
+    state: PostState = Published
+
+    """Ordering options for posts."""
+    orderBy: PostsOrder! = { field: CREATED_AT }
   ): PostConnection! @goField(forceResolver: true)
 }
 
@@ -1831,6 +2079,21 @@ extend type Character {
 
     """Returns the last _n_ elements from the list."""
     last: Int
+
+    """Search by brand slugs."""
+    brandSlugs: [String!]
+
+    """Search by audience slugs."""
+    audienceSlugs: [String!]
+
+    """Search by category slugs."""
+    categorySlugs: [String!]
+
+    """Search by a post state."""
+    state: PostState = Published
+
+    """Ordering options for posts."""
+    orderBy: PostsOrder! = { field: CREATED_AT }
   ): PostConnection! @goField(forceResolver: true)
 }
 
@@ -1848,6 +2111,24 @@ extend type Series {
 
     """Returns the last _n_ elements from the list."""
     last: Int
+
+    """Search by brand slugs."""
+    brandSlugs: [String!]
+
+    """Search by audience slugs."""
+    audienceSlugs: [String!]
+
+    """Search by category slugs."""
+    categorySlugs: [String!]
+
+    """Search by character slugs."""
+    characterSlugs: [String!]
+
+    """Search by a post state."""
+    state: PostState = Published
+
+    """Ordering options for posts."""
+    orderBy: PostsOrder! = { field: CREATED_AT }
   ): PostConnection! @goField(forceResolver: true)
 }
 
@@ -1865,6 +2146,24 @@ extend type Brand {
 
     """Returns the last _n_ elements from the list."""
     last: Int
+
+    """Search by audience slugs."""
+    audienceSlugs: [String!]
+
+    """Search by category slugs."""
+    categorySlugs: [String!]
+
+    """Search by character slugs."""
+    characterSlugs: [String!]
+
+    """Search by series slugs."""
+    seriesSlugs: [String!]
+
+    """Search by a post state."""
+    state: PostState = Published
+
+    """Ordering options for posts."""
+    orderBy: PostsOrder! = { field: CREATED_AT }
   ): PostConnection! @goField(forceResolver: true)
 }
 
@@ -1882,6 +2181,24 @@ extend type Audience {
 
     """Returns the last _n_ elements from the list."""
     last: Int
+
+    """Search by brand slugs."""
+    brandSlugs: [String!]
+
+    """Search by category slugs."""
+    categorySlugs: [String!]
+
+    """Search by character slugs."""
+    characterSlugs: [String!]
+
+    """Search by series slugs."""
+    seriesSlugs: [String!]
+
+    """Search by a post state."""
+    state: PostState = Published
+
+    """Ordering options for posts."""
+    orderBy: PostsOrder! = { field: CREATED_AT }
   ): PostConnection! @goField(forceResolver: true)
 }`, BuiltIn: false},
 	{Name: "schema/schema.graphql", Input: `"""Identifies the type of resource"""
@@ -1917,10 +2234,7 @@ Represents an account
 """
 interface Object {
   """A URL pointing to the object's thumbnail."""
-  thumbnail(
-    """The size of the resulting square image."""
-    size: Int
-  ): Resource
+  thumbnail: Resource
 }`, BuiltIn: false},
 	{Name: "../../libraries/graphql/schema.graphql", Input: `scalar Time
 
@@ -1981,48 +2295,6 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 
 // region    ***************************** args.gotpl *****************************
 
-func (ec *executionContext) field_Account_contributions_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *string
-	if tmp, ok := rawArgs["after"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
-		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["after"] = arg0
-	var arg1 *string
-	if tmp, ok := rawArgs["before"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
-		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["before"] = arg1
-	var arg2 *int
-	if tmp, ok := rawArgs["first"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
-		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["first"] = arg2
-	var arg3 *int
-	if tmp, ok := rawArgs["last"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
-		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["last"] = arg3
-	return args, nil
-}
-
 func (ec *executionContext) field_Account_moderatorPostsQueue_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -2062,6 +2334,174 @@ func (ec *executionContext) field_Account_moderatorPostsQueue_args(ctx context.C
 		}
 	}
 	args["last"] = arg3
+	var arg4 []string
+	if tmp, ok := rawArgs["brandSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("brandSlugs"))
+		arg4, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["brandSlugs"] = arg4
+	var arg5 []string
+	if tmp, ok := rawArgs["audienceSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("audienceSlugs"))
+		arg5, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["audienceSlugs"] = arg5
+	var arg6 []string
+	if tmp, ok := rawArgs["categorySlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("categorySlugs"))
+		arg6, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["categorySlugs"] = arg6
+	var arg7 []string
+	if tmp, ok := rawArgs["characterSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("characterSlugs"))
+		arg7, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["characterSlugs"] = arg7
+	var arg8 []string
+	if tmp, ok := rawArgs["seriesSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("seriesSlugs"))
+		arg8, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["seriesSlugs"] = arg8
+	var arg9 *types.PostState
+	if tmp, ok := rawArgs["state"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("state"))
+		arg9, err = ec.unmarshalOPostState2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostState(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["state"] = arg9
+	var arg10 types.PostsOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg10, err = ec.unmarshalNPostsOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsOrder(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["orderBy"] = arg10
+	return args, nil
+}
+
+func (ec *executionContext) field_Account_posts_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["after"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["after"] = arg0
+	var arg1 *string
+	if tmp, ok := rawArgs["before"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
+		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["before"] = arg1
+	var arg2 *int
+	if tmp, ok := rawArgs["first"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
+		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["first"] = arg2
+	var arg3 *int
+	if tmp, ok := rawArgs["last"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
+		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["last"] = arg3
+	var arg4 []string
+	if tmp, ok := rawArgs["brandSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("brandSlugs"))
+		arg4, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["brandSlugs"] = arg4
+	var arg5 []string
+	if tmp, ok := rawArgs["audienceSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("audienceSlugs"))
+		arg5, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["audienceSlugs"] = arg5
+	var arg6 []string
+	if tmp, ok := rawArgs["categorySlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("categorySlugs"))
+		arg6, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["categorySlugs"] = arg6
+	var arg7 []string
+	if tmp, ok := rawArgs["characterSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("characterSlugs"))
+		arg7, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["characterSlugs"] = arg7
+	var arg8 []string
+	if tmp, ok := rawArgs["seriesSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("seriesSlugs"))
+		arg8, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["seriesSlugs"] = arg8
+	var arg9 *types.PostState
+	if tmp, ok := rawArgs["state"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("state"))
+		arg9, err = ec.unmarshalOPostState2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostState(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["state"] = arg9
+	var arg10 types.PostsOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg10, err = ec.unmarshalNPostsOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsOrder(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["orderBy"] = arg10
 	return args, nil
 }
 
@@ -2104,21 +2544,60 @@ func (ec *executionContext) field_Audience_posts_args(ctx context.Context, rawAr
 		}
 	}
 	args["last"] = arg3
-	return args, nil
-}
-
-func (ec *executionContext) field_Audience_thumbnail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *int
-	if tmp, ok := rawArgs["size"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("size"))
-		arg0, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+	var arg4 []string
+	if tmp, ok := rawArgs["brandSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("brandSlugs"))
+		arg4, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["size"] = arg0
+	args["brandSlugs"] = arg4
+	var arg5 []string
+	if tmp, ok := rawArgs["categorySlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("categorySlugs"))
+		arg5, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["categorySlugs"] = arg5
+	var arg6 []string
+	if tmp, ok := rawArgs["characterSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("characterSlugs"))
+		arg6, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["characterSlugs"] = arg6
+	var arg7 []string
+	if tmp, ok := rawArgs["seriesSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("seriesSlugs"))
+		arg7, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["seriesSlugs"] = arg7
+	var arg8 *types.PostState
+	if tmp, ok := rawArgs["state"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("state"))
+		arg8, err = ec.unmarshalOPostState2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostState(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["state"] = arg8
+	var arg9 types.PostsOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg9, err = ec.unmarshalNPostsOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsOrder(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["orderBy"] = arg9
 	return args, nil
 }
 
@@ -2161,21 +2640,60 @@ func (ec *executionContext) field_Brand_posts_args(ctx context.Context, rawArgs 
 		}
 	}
 	args["last"] = arg3
-	return args, nil
-}
-
-func (ec *executionContext) field_Brand_thumbnail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *int
-	if tmp, ok := rawArgs["size"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("size"))
-		arg0, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+	var arg4 []string
+	if tmp, ok := rawArgs["audienceSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("audienceSlugs"))
+		arg4, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["size"] = arg0
+	args["audienceSlugs"] = arg4
+	var arg5 []string
+	if tmp, ok := rawArgs["categorySlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("categorySlugs"))
+		arg5, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["categorySlugs"] = arg5
+	var arg6 []string
+	if tmp, ok := rawArgs["characterSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("characterSlugs"))
+		arg6, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["characterSlugs"] = arg6
+	var arg7 []string
+	if tmp, ok := rawArgs["seriesSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("seriesSlugs"))
+		arg7, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["seriesSlugs"] = arg7
+	var arg8 *types.PostState
+	if tmp, ok := rawArgs["state"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("state"))
+		arg8, err = ec.unmarshalOPostState2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostState(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["state"] = arg8
+	var arg9 types.PostsOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg9, err = ec.unmarshalNPostsOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsOrder(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["orderBy"] = arg9
 	return args, nil
 }
 
@@ -2218,21 +2736,60 @@ func (ec *executionContext) field_Category_posts_args(ctx context.Context, rawAr
 		}
 	}
 	args["last"] = arg3
-	return args, nil
-}
-
-func (ec *executionContext) field_Category_thumbnail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *int
-	if tmp, ok := rawArgs["size"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("size"))
-		arg0, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+	var arg4 []string
+	if tmp, ok := rawArgs["brandSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("brandSlugs"))
+		arg4, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["size"] = arg0
+	args["brandSlugs"] = arg4
+	var arg5 []string
+	if tmp, ok := rawArgs["audienceSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("audienceSlugs"))
+		arg5, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["audienceSlugs"] = arg5
+	var arg6 []string
+	if tmp, ok := rawArgs["characterSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("characterSlugs"))
+		arg6, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["characterSlugs"] = arg6
+	var arg7 []string
+	if tmp, ok := rawArgs["seriesSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("seriesSlugs"))
+		arg7, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["seriesSlugs"] = arg7
+	var arg8 *types.PostState
+	if tmp, ok := rawArgs["state"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("state"))
+		arg8, err = ec.unmarshalOPostState2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostState(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["state"] = arg8
+	var arg9 types.PostsOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg9, err = ec.unmarshalNPostsOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsOrder(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["orderBy"] = arg9
 	return args, nil
 }
 
@@ -2275,21 +2832,51 @@ func (ec *executionContext) field_Character_posts_args(ctx context.Context, rawA
 		}
 	}
 	args["last"] = arg3
-	return args, nil
-}
-
-func (ec *executionContext) field_Character_thumbnail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *int
-	if tmp, ok := rawArgs["size"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("size"))
-		arg0, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+	var arg4 []string
+	if tmp, ok := rawArgs["brandSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("brandSlugs"))
+		arg4, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["size"] = arg0
+	args["brandSlugs"] = arg4
+	var arg5 []string
+	if tmp, ok := rawArgs["audienceSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("audienceSlugs"))
+		arg5, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["audienceSlugs"] = arg5
+	var arg6 []string
+	if tmp, ok := rawArgs["categorySlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("categorySlugs"))
+		arg6, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["categorySlugs"] = arg6
+	var arg7 *types.PostState
+	if tmp, ok := rawArgs["state"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("state"))
+		arg7, err = ec.unmarshalOPostState2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostState(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["state"] = arg7
+	var arg8 types.PostsOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg8, err = ec.unmarshalNPostsOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsOrder(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["orderBy"] = arg8
 	return args, nil
 }
 
@@ -2518,6 +3105,21 @@ func (ec *executionContext) field_Query__entities_args(ctx context.Context, rawA
 	return args, nil
 }
 
+func (ec *executionContext) field_Query_audience_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["slug"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("slug"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["slug"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Query_audiences_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -2557,15 +3159,48 @@ func (ec *executionContext) field_Query_audiences_args(ctx context.Context, rawA
 		}
 	}
 	args["last"] = arg3
-	var arg4 *string
-	if tmp, ok := rawArgs["title"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
-		arg4, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+	var arg4 []string
+	if tmp, ok := rawArgs["slugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("slugs"))
+		arg4, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["title"] = arg4
+	args["slugs"] = arg4
+	var arg5 *string
+	if tmp, ok := rawArgs["title"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
+		arg5, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["title"] = arg5
+	var arg6 types.AudiencesOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg6, err = ec.unmarshalNAudiencesOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAudiencesOrder(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["orderBy"] = arg6
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_brand_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["slug"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("slug"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["slug"] = arg0
 	return args, nil
 }
 
@@ -2608,15 +3243,33 @@ func (ec *executionContext) field_Query_brands_args(ctx context.Context, rawArgs
 		}
 	}
 	args["last"] = arg3
-	var arg4 *string
-	if tmp, ok := rawArgs["name"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
-		arg4, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+	var arg4 []string
+	if tmp, ok := rawArgs["slugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("slugs"))
+		arg4, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["name"] = arg4
+	args["slugs"] = arg4
+	var arg5 *string
+	if tmp, ok := rawArgs["name"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+		arg5, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["name"] = arg5
+	var arg6 types.BrandsOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg6, err = ec.unmarshalNBrandsOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐBrandsOrder(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["orderBy"] = arg6
 	return args, nil
 }
 
@@ -2659,15 +3312,72 @@ func (ec *executionContext) field_Query_categories_args(ctx context.Context, raw
 		}
 	}
 	args["last"] = arg3
-	var arg4 *string
-	if tmp, ok := rawArgs["title"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
-		arg4, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+	var arg4 []string
+	if tmp, ok := rawArgs["slugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("slugs"))
+		arg4, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["title"] = arg4
+	args["slugs"] = arg4
+	var arg5 *string
+	if tmp, ok := rawArgs["title"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
+		arg5, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["title"] = arg5
+	var arg6 types.CategoriesOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg6, err = ec.unmarshalNCategoriesOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCategoriesOrder(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["orderBy"] = arg6
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_category_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["slug"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("slug"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["slug"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_character_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["slug"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("slug"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["slug"] = arg0
+	var arg1 string
+	if tmp, ok := rawArgs["seriesSlug"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("seriesSlug"))
+		arg1, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["seriesSlug"] = arg1
 	return args, nil
 }
 
@@ -2710,15 +3420,42 @@ func (ec *executionContext) field_Query_characters_args(ctx context.Context, raw
 		}
 	}
 	args["last"] = arg3
-	var arg4 *string
-	if tmp, ok := rawArgs["name"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
-		arg4, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+	var arg4 []string
+	if tmp, ok := rawArgs["slugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("slugs"))
+		arg4, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["name"] = arg4
+	args["slugs"] = arg4
+	var arg5 *string
+	if tmp, ok := rawArgs["seriesSlug"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("seriesSlug"))
+		arg5, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["seriesSlug"] = arg5
+	var arg6 *string
+	if tmp, ok := rawArgs["name"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+		arg6, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["name"] = arg6
+	var arg7 types.CharactersOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg7, err = ec.unmarshalNCharactersOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharactersOrder(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["orderBy"] = arg7
 	return args, nil
 }
 
@@ -2776,33 +3513,84 @@ func (ec *executionContext) field_Query_posts_args(ctx context.Context, rawArgs 
 		}
 	}
 	args["last"] = arg3
-	var arg4 []relay.ID
-	if tmp, ok := rawArgs["categoryIds"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("categoryIds"))
-		arg4, err = ec.unmarshalOID2ᚕoverdollᚋlibrariesᚋgraphqlᚋrelayᚐIDᚄ(ctx, tmp)
+	var arg4 []string
+	if tmp, ok := rawArgs["brandSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("brandSlugs"))
+		arg4, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["categoryIds"] = arg4
-	var arg5 []relay.ID
-	if tmp, ok := rawArgs["characterIds"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("characterIds"))
-		arg5, err = ec.unmarshalOID2ᚕoverdollᚋlibrariesᚋgraphqlᚋrelayᚐIDᚄ(ctx, tmp)
+	args["brandSlugs"] = arg4
+	var arg5 []string
+	if tmp, ok := rawArgs["audienceSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("audienceSlugs"))
+		arg5, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["characterIds"] = arg5
-	var arg6 []relay.ID
-	if tmp, ok := rawArgs["seriesIds"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("seriesIds"))
-		arg6, err = ec.unmarshalOID2ᚕoverdollᚋlibrariesᚋgraphqlᚋrelayᚐIDᚄ(ctx, tmp)
+	args["audienceSlugs"] = arg5
+	var arg6 []string
+	if tmp, ok := rawArgs["categorySlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("categorySlugs"))
+		arg6, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["seriesIds"] = arg6
+	args["categorySlugs"] = arg6
+	var arg7 []string
+	if tmp, ok := rawArgs["characterSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("characterSlugs"))
+		arg7, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["characterSlugs"] = arg7
+	var arg8 []string
+	if tmp, ok := rawArgs["seriesSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("seriesSlugs"))
+		arg8, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["seriesSlugs"] = arg8
+	var arg9 *types.PostState
+	if tmp, ok := rawArgs["state"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("state"))
+		arg9, err = ec.unmarshalOPostState2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostState(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["state"] = arg9
+	var arg10 types.PostsOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg10, err = ec.unmarshalNPostsOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsOrder(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["orderBy"] = arg10
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_serial_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["slug"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("slug"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["slug"] = arg0
 	return args, nil
 }
 
@@ -2845,15 +3633,33 @@ func (ec *executionContext) field_Query_series_args(ctx context.Context, rawArgs
 		}
 	}
 	args["last"] = arg3
-	var arg4 *string
-	if tmp, ok := rawArgs["title"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
-		arg4, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+	var arg4 []string
+	if tmp, ok := rawArgs["slugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("slugs"))
+		arg4, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["title"] = arg4
+	args["slugs"] = arg4
+	var arg5 *string
+	if tmp, ok := rawArgs["title"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
+		arg5, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["title"] = arg5
+	var arg6 types.SeriesOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg6, err = ec.unmarshalNSeriesOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSeriesOrder(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["orderBy"] = arg6
 	return args, nil
 }
 
@@ -2896,21 +3702,60 @@ func (ec *executionContext) field_Series_posts_args(ctx context.Context, rawArgs
 		}
 	}
 	args["last"] = arg3
-	return args, nil
-}
-
-func (ec *executionContext) field_Series_thumbnail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *int
-	if tmp, ok := rawArgs["size"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("size"))
-		arg0, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+	var arg4 []string
+	if tmp, ok := rawArgs["brandSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("brandSlugs"))
+		arg4, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["size"] = arg0
+	args["brandSlugs"] = arg4
+	var arg5 []string
+	if tmp, ok := rawArgs["audienceSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("audienceSlugs"))
+		arg5, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["audienceSlugs"] = arg5
+	var arg6 []string
+	if tmp, ok := rawArgs["categorySlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("categorySlugs"))
+		arg6, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["categorySlugs"] = arg6
+	var arg7 []string
+	if tmp, ok := rawArgs["characterSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("characterSlugs"))
+		arg7, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["characterSlugs"] = arg7
+	var arg8 *types.PostState
+	if tmp, ok := rawArgs["state"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("state"))
+		arg8, err = ec.unmarshalOPostState2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostState(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["state"] = arg8
+	var arg9 types.PostsOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg9, err = ec.unmarshalNPostsOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsOrder(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["orderBy"] = arg9
 	return args, nil
 }
 
@@ -2977,7 +3822,7 @@ func (ec *executionContext) _Account_moderatorPostsQueue(ctx context.Context, fi
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Account().ModeratorPostsQueue(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
+		return ec.resolvers.Account().ModeratorPostsQueue(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["brandSlugs"].([]string), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2994,7 +3839,7 @@ func (ec *executionContext) _Account_moderatorPostsQueue(ctx context.Context, fi
 	return ec.marshalNPostConnection2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostConnection(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Account_contributions(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
+func (ec *executionContext) _Account_posts(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3011,7 +3856,7 @@ func (ec *executionContext) _Account_contributions(ctx context.Context, field gr
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Account_contributions_args(ctx, rawArgs)
+	args, err := ec.field_Account_posts_args(ctx, rawArgs)
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
@@ -3019,7 +3864,7 @@ func (ec *executionContext) _Account_contributions(ctx context.Context, field gr
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Account().Contributions(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
+		return ec.resolvers.Account().Posts(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["brandSlugs"].([]string), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3157,13 +4002,6 @@ func (ec *executionContext) _Audience_thumbnail(ctx context.Context, field graph
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Audience_thumbnail_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.Thumbnail, nil
@@ -3240,7 +4078,7 @@ func (ec *executionContext) _Audience_posts(ctx context.Context, field graphql.C
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Audience().Posts(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
+		return ec.resolvers.Audience().Posts(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["brandSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3483,13 +4321,6 @@ func (ec *executionContext) _Brand_thumbnail(ctx context.Context, field graphql.
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Brand_thumbnail_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.Thumbnail, nil
@@ -3566,7 +4397,7 @@ func (ec *executionContext) _Brand_posts(ctx context.Context, field graphql.Coll
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Brand().Posts(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
+		return ec.resolvers.Brand().Posts(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3809,13 +4640,6 @@ func (ec *executionContext) _Category_thumbnail(ctx context.Context, field graph
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Category_thumbnail_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.Thumbnail, nil
@@ -3892,7 +4716,7 @@ func (ec *executionContext) _Category_posts(ctx context.Context, field graphql.C
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Category().Posts(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
+		return ec.resolvers.Category().Posts(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["brandSlugs"].([]string), args["audienceSlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4135,13 +4959,6 @@ func (ec *executionContext) _Character_thumbnail(ctx context.Context, field grap
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Character_thumbnail_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.Thumbnail, nil
@@ -4253,7 +5070,7 @@ func (ec *executionContext) _Character_posts(ctx context.Context, field graphql.
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Character().Posts(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
+		return ec.resolvers.Character().Posts(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["brandSlugs"].([]string), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5741,7 +6558,7 @@ func (ec *executionContext) _Query_audiences(ctx context.Context, field graphql.
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Audiences(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["title"].(*string))
+		return ec.resolvers.Query().Audiences(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["title"].(*string), args["orderBy"].(types.AudiencesOrder))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5756,6 +6573,45 @@ func (ec *executionContext) _Query_audiences(ctx context.Context, field graphql.
 	res := resTmp.(*types.AudienceConnection)
 	fc.Result = res
 	return ec.marshalNAudienceConnection2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAudienceConnection(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_audience(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_audience_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Audience(rctx, args["slug"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Audience)
+	fc.Result = res
+	return ec.marshalOAudience2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAudience(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_brands(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -5783,7 +6639,7 @@ func (ec *executionContext) _Query_brands(ctx context.Context, field graphql.Col
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Brands(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["name"].(*string))
+		return ec.resolvers.Query().Brands(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["name"].(*string), args["orderBy"].(types.BrandsOrder))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5798,6 +6654,45 @@ func (ec *executionContext) _Query_brands(ctx context.Context, field graphql.Col
 	res := resTmp.(*types.BrandConnection)
 	fc.Result = res
 	return ec.marshalNBrandConnection2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐBrandConnection(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_brand(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_brand_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Brand(rctx, args["slug"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Brand)
+	fc.Result = res
+	return ec.marshalOBrand2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐBrand(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_categories(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -5825,7 +6720,7 @@ func (ec *executionContext) _Query_categories(ctx context.Context, field graphql
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Categories(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["title"].(*string))
+		return ec.resolvers.Query().Categories(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["title"].(*string), args["orderBy"].(types.CategoriesOrder))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5840,6 +6735,45 @@ func (ec *executionContext) _Query_categories(ctx context.Context, field graphql
 	res := resTmp.(*types.CategoryConnection)
 	fc.Result = res
 	return ec.marshalNCategoryConnection2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCategoryConnection(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_category(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_category_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Category(rctx, args["slug"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Category)
+	fc.Result = res
+	return ec.marshalOCategory2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCategory(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_series(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -5867,7 +6801,7 @@ func (ec *executionContext) _Query_series(ctx context.Context, field graphql.Col
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Series(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["title"].(*string))
+		return ec.resolvers.Query().Series(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["title"].(*string), args["orderBy"].(types.SeriesOrder))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5882,6 +6816,45 @@ func (ec *executionContext) _Query_series(ctx context.Context, field graphql.Col
 	res := resTmp.(*types.SeriesConnection)
 	fc.Result = res
 	return ec.marshalNSeriesConnection2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSeriesConnection(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_serial(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_serial_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Serial(rctx, args["slug"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Series)
+	fc.Result = res
+	return ec.marshalOSeries2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSeries(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_characters(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -5909,7 +6882,7 @@ func (ec *executionContext) _Query_characters(ctx context.Context, field graphql
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Characters(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["name"].(*string))
+		return ec.resolvers.Query().Characters(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["seriesSlug"].(*string), args["name"].(*string), args["orderBy"].(types.CharactersOrder))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5924,6 +6897,45 @@ func (ec *executionContext) _Query_characters(ctx context.Context, field graphql
 	res := resTmp.(*types.CharacterConnection)
 	fc.Result = res
 	return ec.marshalNCharacterConnection2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharacterConnection(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_character(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_character_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Character(rctx, args["slug"].(string), args["seriesSlug"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Character)
+	fc.Result = res
+	return ec.marshalOCharacter2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharacter(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_post(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -5990,7 +7002,7 @@ func (ec *executionContext) _Query_posts(ctx context.Context, field graphql.Coll
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Posts(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["categoryIds"].([]relay.ID), args["characterIds"].([]relay.ID), args["seriesIds"].([]relay.ID))
+		return ec.resolvers.Query().Posts(rctx, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["brandSlugs"].([]string), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6416,13 +7428,6 @@ func (ec *executionContext) _Series_thumbnail(ctx context.Context, field graphql
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Series_thumbnail_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.Thumbnail, nil
@@ -6499,7 +7504,7 @@ func (ec *executionContext) _Series_posts(ctx context.Context, field graphql.Col
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Series().Posts(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int))
+		return ec.resolvers.Series().Posts(rctx, obj, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["brandSlugs"].([]string), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["state"].(*types.PostState), args["orderBy"].(types.PostsOrder))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7999,6 +9004,126 @@ func (ec *executionContext) ___Type_ofType(ctx context.Context, field graphql.Co
 
 // region    **************************** input.gotpl *****************************
 
+func (ec *executionContext) unmarshalInputAudiencesOrder(ctx context.Context, obj interface{}) (types.AudiencesOrder, error) {
+	var it types.AudiencesOrder
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "field":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("field"))
+			it.Field, err = ec.unmarshalNAudiencesOrderField2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAudiencesOrderField(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputBrandsOrder(ctx context.Context, obj interface{}) (types.BrandsOrder, error) {
+	var it types.BrandsOrder
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "field":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("field"))
+			it.Field, err = ec.unmarshalNBrandsOrderField2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐBrandsOrderField(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputCategoriesOrder(ctx context.Context, obj interface{}) (types.CategoriesOrder, error) {
+	var it types.CategoriesOrder
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "field":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("field"))
+			it.Field, err = ec.unmarshalNCategoriesOrderField2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCategoriesOrderField(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputCharactersOrder(ctx context.Context, obj interface{}) (types.CharactersOrder, error) {
+	var it types.CharactersOrder
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "field":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("field"))
+			it.Field, err = ec.unmarshalNCharactersOrderField2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharactersOrderField(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputPostsOrder(ctx context.Context, obj interface{}) (types.PostsOrder, error) {
+	var it types.PostsOrder
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "field":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("field"))
+			it.Field, err = ec.unmarshalNPostsOrderField2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsOrderField(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputSeriesOrder(ctx context.Context, obj interface{}) (types.SeriesOrder, error) {
+	var it types.SeriesOrder
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "field":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("field"))
+			it.Field, err = ec.unmarshalNSeriesOrderField2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSeriesOrderField(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputSubmitPostInput(ctx context.Context, obj interface{}) (types.SubmitPostInput, error) {
 	var it types.SubmitPostInput
 	var asMap = obj.(map[string]interface{})
@@ -8345,7 +9470,7 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 				}
 				return res
 			})
-		case "contributions":
+		case "posts":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
 				defer func() {
@@ -8353,7 +9478,7 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Account_contributions(ctx, field, obj)
+				res = ec._Account_posts(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -9237,6 +10362,17 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				}
 				return res
 			})
+		case "audience":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_audience(ctx, field)
+				return res
+			})
 		case "brands":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -9249,6 +10385,17 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
+				return res
+			})
+		case "brand":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_brand(ctx, field)
 				return res
 			})
 		case "categories":
@@ -9265,6 +10412,17 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				}
 				return res
 			})
+		case "category":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_category(ctx, field)
+				return res
+			})
 		case "series":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -9279,6 +10437,17 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				}
 				return res
 			})
+		case "serial":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_serial(ctx, field)
+				return res
+			})
 		case "characters":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -9291,6 +10460,17 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
+				return res
+			})
+		case "character":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_character(ctx, field)
 				return res
 			})
 		case "post":
@@ -10051,6 +11231,21 @@ func (ec *executionContext) marshalNAudienceEdge2ᚖoverdollᚋapplicationsᚋst
 	return ec._AudienceEdge(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNAudiencesOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAudiencesOrder(ctx context.Context, v interface{}) (types.AudiencesOrder, error) {
+	res, err := ec.unmarshalInputAudiencesOrder(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNAudiencesOrderField2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAudiencesOrderField(ctx context.Context, v interface{}) (types.AudiencesOrderField, error) {
+	var res types.AudiencesOrderField
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNAudiencesOrderField2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAudiencesOrderField(ctx context.Context, sel ast.SelectionSet, v types.AudiencesOrderField) graphql.Marshaler {
+	return v
+}
+
 func (ec *executionContext) unmarshalNBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
 	res, err := graphql.UnmarshalBoolean(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -10139,6 +11334,36 @@ func (ec *executionContext) marshalNBrandEdge2ᚖoverdollᚋapplicationsᚋsting
 		return graphql.Null
 	}
 	return ec._BrandEdge(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNBrandsOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐBrandsOrder(ctx context.Context, v interface{}) (types.BrandsOrder, error) {
+	res, err := ec.unmarshalInputBrandsOrder(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNBrandsOrderField2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐBrandsOrderField(ctx context.Context, v interface{}) (types.BrandsOrderField, error) {
+	var res types.BrandsOrderField
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNBrandsOrderField2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐBrandsOrderField(ctx context.Context, sel ast.SelectionSet, v types.BrandsOrderField) graphql.Marshaler {
+	return v
+}
+
+func (ec *executionContext) unmarshalNCategoriesOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCategoriesOrder(ctx context.Context, v interface{}) (types.CategoriesOrder, error) {
+	res, err := ec.unmarshalInputCategoriesOrder(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNCategoriesOrderField2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCategoriesOrderField(ctx context.Context, v interface{}) (types.CategoriesOrderField, error) {
+	var res types.CategoriesOrderField
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNCategoriesOrderField2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCategoriesOrderField(ctx context.Context, sel ast.SelectionSet, v types.CategoriesOrderField) graphql.Marshaler {
+	return v
 }
 
 func (ec *executionContext) marshalNCategory2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCategory(ctx context.Context, sel ast.SelectionSet, v types.Category) graphql.Marshaler {
@@ -10365,6 +11590,21 @@ func (ec *executionContext) marshalNCharacterEdge2ᚖoverdollᚋapplicationsᚋs
 	return ec._CharacterEdge(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNCharactersOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharactersOrder(ctx context.Context, v interface{}) (types.CharactersOrder, error) {
+	res, err := ec.unmarshalInputCharactersOrder(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNCharactersOrderField2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharactersOrderField(ctx context.Context, v interface{}) (types.CharactersOrderField, error) {
+	var res types.CharactersOrderField
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNCharactersOrderField2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharactersOrderField(ctx context.Context, sel ast.SelectionSet, v types.CharactersOrderField) graphql.Marshaler {
+	return v
+}
+
 func (ec *executionContext) unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx context.Context, v interface{}) (relay.ID, error) {
 	var res relay.ID
 	err := res.UnmarshalGQL(v)
@@ -10497,6 +11737,21 @@ func (ec *executionContext) unmarshalNPostState2overdollᚋapplicationsᚋsting�
 }
 
 func (ec *executionContext) marshalNPostState2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostState(ctx context.Context, sel ast.SelectionSet, v types.PostState) graphql.Marshaler {
+	return v
+}
+
+func (ec *executionContext) unmarshalNPostsOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsOrder(ctx context.Context, v interface{}) (types.PostsOrder, error) {
+	res, err := ec.unmarshalInputPostsOrder(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNPostsOrderField2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsOrderField(ctx context.Context, v interface{}) (types.PostsOrderField, error) {
+	var res types.PostsOrderField
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNPostsOrderField2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsOrderField(ctx context.Context, sel ast.SelectionSet, v types.PostsOrderField) graphql.Marshaler {
 	return v
 }
 
@@ -10677,6 +11932,21 @@ func (ec *executionContext) marshalNSeriesEdge2ᚖoverdollᚋapplicationsᚋstin
 		return graphql.Null
 	}
 	return ec._SeriesEdge(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNSeriesOrder2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSeriesOrder(ctx context.Context, v interface{}) (types.SeriesOrder, error) {
+	res, err := ec.unmarshalInputSeriesOrder(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNSeriesOrderField2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSeriesOrderField(ctx context.Context, v interface{}) (types.SeriesOrderField, error) {
+	var res types.SeriesOrderField
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNSeriesOrderField2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSeriesOrderField(ctx context.Context, sel ast.SelectionSet, v types.SeriesOrderField) graphql.Marshaler {
+	return v
 }
 
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {
@@ -11160,47 +12430,25 @@ func (ec *executionContext) marshalOBrand2ᚖoverdollᚋapplicationsᚋstingᚋi
 	return ec._Brand(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalOCategory2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCategory(ctx context.Context, sel ast.SelectionSet, v *types.Category) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Category(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOCharacter2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharacter(ctx context.Context, sel ast.SelectionSet, v *types.Character) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Character(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalOCreatePostPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreatePostPayload(ctx context.Context, sel ast.SelectionSet, v *types.CreatePostPayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._CreatePostPayload(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalOID2ᚕoverdollᚋlibrariesᚋgraphqlᚋrelayᚐIDᚄ(ctx context.Context, v interface{}) ([]relay.ID, error) {
-	if v == nil {
-		return nil, nil
-	}
-	var vSlice []interface{}
-	if v != nil {
-		if tmp1, ok := v.([]interface{}); ok {
-			vSlice = tmp1
-		} else {
-			vSlice = []interface{}{v}
-		}
-	}
-	var err error
-	res := make([]relay.ID, len(vSlice))
-	for i := range vSlice {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, vSlice[i])
-		if err != nil {
-			return nil, err
-		}
-	}
-	return res, nil
-}
-
-func (ec *executionContext) marshalOID2ᚕoverdollᚋlibrariesᚋgraphqlᚋrelayᚐIDᚄ(ctx context.Context, sel ast.SelectionSet, v []relay.ID) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	ret := make(graphql.Array, len(v))
-	for i := range v {
-		ret[i] = ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, sel, v[i])
-	}
-
-	return ret
 }
 
 func (ec *executionContext) unmarshalOInt2ᚖint(ctx context.Context, v interface{}) (*int, error) {
@@ -11225,11 +12473,34 @@ func (ec *executionContext) marshalOPost2ᚖoverdollᚋapplicationsᚋstingᚋin
 	return ec._Post(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalOPostState2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostState(ctx context.Context, v interface{}) (*types.PostState, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(types.PostState)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOPostState2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostState(ctx context.Context, sel ast.SelectionSet, v *types.PostState) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
+}
+
 func (ec *executionContext) marshalOResource2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐResource(ctx context.Context, sel ast.SelectionSet, v *types.Resource) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Resource(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOSeries2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSeries(ctx context.Context, sel ast.SelectionSet, v *types.Series) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Series(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOString2string(ctx context.Context, v interface{}) (string, error) {
@@ -11239,6 +12510,42 @@ func (ec *executionContext) unmarshalOString2string(ctx context.Context, v inter
 
 func (ec *executionContext) marshalOString2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
 	return graphql.MarshalString(v)
+}
+
+func (ec *executionContext) unmarshalOString2ᚕstringᚄ(ctx context.Context, v interface{}) ([]string, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var vSlice []interface{}
+	if v != nil {
+		if tmp1, ok := v.([]interface{}); ok {
+			vSlice = tmp1
+		} else {
+			vSlice = []interface{}{v}
+		}
+	}
+	var err error
+	res := make([]string, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNString2string(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) marshalOString2ᚕstringᚄ(ctx context.Context, sel ast.SelectionSet, v []string) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	for i := range v {
+		ret[i] = ec.marshalNString2string(ctx, sel, v[i])
+	}
+
+	return ret
 }
 
 func (ec *executionContext) unmarshalOString2ᚖstring(ctx context.Context, v interface{}) (*string, error) {

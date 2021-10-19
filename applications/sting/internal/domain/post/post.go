@@ -21,11 +21,15 @@ const (
 	discarded  postState = "discarded"
 	rejected   postState = "rejected"
 	processing postState = "processing"
+	removed    postState = "removed"
+	removing   postState = "removing"
 )
 
 var (
+	ErrNotDraft         = errors.New("post must be in draft")
 	ErrNotPublishing    = errors.New("post must be publishing")
 	ErrNotReview        = errors.New("post must be in review")
+	ErrNotRemoving      = errors.New("post must be removing")
 	ErrNotComplete      = errors.New("post is incomplete")
 	ErrNotFound         = errors.New("post not found")
 	ErrAlreadyModerated = errors.New("already moderated")
@@ -215,6 +219,26 @@ func (p *Post) MakeRejected() error {
 	return nil
 }
 
+func (p *Post) MakeRemoving() error {
+
+	p.state = removing
+
+	return nil
+}
+
+func (p *Post) MakeRemoved() error {
+
+	if p.state != removing {
+		return ErrNotRemoving
+	}
+
+	p.state = removed
+
+	p.content = []*resource.Resource{}
+
+	return nil
+}
+
 func (p *Post) MakeUndo() error {
 
 	if p.state == discarded || p.state == published {
@@ -245,6 +269,14 @@ func (p *Post) InReview() bool {
 
 func (p *Post) IsPublished() bool {
 	return p.state == published
+}
+
+func (p *Post) IsRemoving() bool {
+	return p.state == removing
+}
+
+func (p *Post) IsRemoved() bool {
+	return p.state == removed
 }
 
 func (p *Post) IsPublishing() bool {
@@ -281,6 +313,10 @@ func (p *Post) SubmitPostRequest(requester *principal.Principal, moderatorId str
 
 	if err := p.CanView(requester); err != nil {
 		return err
+	}
+
+	if p.state != draft {
+		return ErrNotDraft
 	}
 
 	postTime := time.Now()
@@ -365,21 +401,6 @@ func (p *Post) CanView(requester *principal.Principal) error {
 		}
 
 		return requester.BelongsToAccount(requester.AccountId())
-	}
-
-	return nil
-}
-
-func CanViewWithFilters(requester *principal.Principal, filter *PostFilters) error {
-
-	// filtering by moderator
-	if filter.ModeratorId() != nil {
-
-		if requester.IsStaff() {
-			return nil
-		}
-
-		return requester.BelongsToAccount(*filter.ModeratorId())
 	}
 
 	return nil

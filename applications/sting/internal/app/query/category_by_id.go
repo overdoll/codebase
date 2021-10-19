@@ -4,10 +4,12 @@ import (
 	"context"
 
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/principal"
 )
 
 type CategoryById struct {
-	CategoryId string
+	Principal *principal.Principal
+	Id        string
 }
 
 type CategoryByIdHandler struct {
@@ -20,7 +22,7 @@ func NewCategoryByIdHandler(pr post.Repository) CategoryByIdHandler {
 
 func (h CategoryByIdHandler) Handle(ctx context.Context, query CategoryById) (*post.Category, error) {
 
-	result, err := h.pr.GetCategoryById(ctx, query.CategoryId)
+	result, err := h.pr.GetCategoryById(ctx, query.Principal, query.Id)
 
 	if err != nil {
 		return nil, err

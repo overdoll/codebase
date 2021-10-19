@@ -171,10 +171,32 @@ type AddAccountEmailInput struct {
 
 // Email to add the account
 type AddAccountEmailPayload struct {
-	// Validation for adding an email
-	Validation *AddAccountEmailValidation `json:"validation"`
 	// The account email that was added to
 	AccountEmail *AccountEmail `json:"accountEmail"`
+}
+
+// Input to assign account to a moderator role
+type AssignAccountModeratorRole struct {
+	// The account ID that the role needs to be assigned to
+	AccountID relay.ID `json:"accountId"`
+}
+
+// Assigned account
+type AssignAccountModeratorRolePayload struct {
+	// The account that the role was assigned to
+	Account *Account `json:"account"`
+}
+
+// Input to assign account to a staff role
+type AssignAccountStaffRole struct {
+	// The account ID that the role needs to be assigned to
+	AccountID relay.ID `json:"accountId"`
+}
+
+// Assigned account
+type AssignAccountStaffRolePayload struct {
+	// The account that the role was assigned to
+	Account *Account `json:"account"`
 }
 
 type AuthenticationToken struct {
@@ -308,6 +330,10 @@ type GrantAuthenticationTokenPayload struct {
 	AuthenticationToken *AuthenticationToken `json:"authenticationToken"`
 }
 
+type Language struct {
+	Locale string `json:"locale"`
+}
+
 type Moderator struct {
 	ID relay.ID `json:"id"`
 	// The account linked to this moderator
@@ -338,6 +364,18 @@ type RevokeAccountAccessPayload struct {
 	RevokedAccountID relay.ID `json:"revokedAccountId"`
 }
 
+// Input to revoke moderator role
+type RevokeAccountModeratorRole struct {
+	// The account ID that the role needs to be revoked from
+	AccountID relay.ID `json:"accountId"`
+}
+
+// Revoked account
+type RevokeAccountModeratorRolePayload struct {
+	// The account that the role was revoked from
+	Account *Account `json:"account"`
+}
+
 // Input for updating an account's username
 type RevokeAccountSessionInput struct {
 	// Session ID that should be revoked
@@ -348,6 +386,18 @@ type RevokeAccountSessionInput struct {
 type RevokeAccountSessionPayload struct {
 	// The ID of the session that was revoked
 	AccountSessionID relay.ID `json:"accountSessionId"`
+}
+
+// Input to revoke staff role
+type RevokeAccountStaffRole struct {
+	// The account ID that the role needs to be revoked from
+	AccountID relay.ID `json:"accountId"`
+}
+
+// Revoked account
+type RevokeAccountStaffRolePayload struct {
+	// The account that the role was revoked from
+	Account *Account `json:"account"`
 }
 
 // Input for revoking an authentication token
@@ -383,8 +433,10 @@ type UpdateAccountEmailStatusToPrimaryInput struct {
 
 // Payload of the updated account email
 type UpdateAccountEmailStatusToPrimaryPayload struct {
-	// The account email that was updated
-	AccountEmail *AccountEmail `json:"accountEmail"`
+	// The account email that was updated to primary
+	PrimaryAccountEmail *AccountEmail `json:"primaryAccountEmail"`
+	// The account email that was updated to 'confirmed' status
+	UpdatedAccountEmail *AccountEmail `json:"updatedAccountEmail"`
 }
 
 // Input for updating an account's username
@@ -399,6 +451,18 @@ type UpdateAccountUsernameAndRetainPreviousPayload struct {
 	Validation *UpdateAccountUsernameAndRetainPreviousValidation `json:"validation"`
 	// The account username that was added
 	AccountUsername *AccountUsername `json:"accountUsername"`
+}
+
+// Input for updating the current language
+type UpdateLanguageInput struct {
+	// The locale to update the language to
+	Locale string `json:"locale"`
+}
+
+// Payload of the language update
+type UpdateLanguagePayload struct {
+	// The new language that is now set
+	Language *Language `json:"language"`
 }
 
 // Input for verifying token account
@@ -496,60 +560,22 @@ func (e AccountLockReason) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
-// Validation message for adding account email
-type AddAccountEmailValidation string
-
-const (
-	AddAccountEmailValidationEmailTaken AddAccountEmailValidation = "EMAIL_TAKEN"
-)
-
-var AllAddAccountEmailValidation = []AddAccountEmailValidation{
-	AddAccountEmailValidationEmailTaken,
-}
-
-func (e AddAccountEmailValidation) IsValid() bool {
-	switch e {
-	case AddAccountEmailValidationEmailTaken:
-		return true
-	}
-	return false
-}
-
-func (e AddAccountEmailValidation) String() string {
-	return string(e)
-}
-
-func (e *AddAccountEmailValidation) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = AddAccountEmailValidation(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid AddAccountEmailValidation", str)
-	}
-	return nil
-}
-
-func (e AddAccountEmailValidation) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
-}
-
 // Validation for confirming account email
 type ConfirmAccountEmailValidation string
 
 const (
 	ConfirmAccountEmailValidationTokenExpired ConfirmAccountEmailValidation = "TOKEN_EXPIRED"
+	ConfirmAccountEmailValidationEmailTaken   ConfirmAccountEmailValidation = "EMAIL_TAKEN"
 )
 
 var AllConfirmAccountEmailValidation = []ConfirmAccountEmailValidation{
 	ConfirmAccountEmailValidationTokenExpired,
+	ConfirmAccountEmailValidationEmailTaken,
 }
 
 func (e ConfirmAccountEmailValidation) IsValid() bool {
 	switch e {
-	case ConfirmAccountEmailValidationTokenExpired:
+	case ConfirmAccountEmailValidationTokenExpired, ConfirmAccountEmailValidationEmailTaken:
 		return true
 	}
 	return false

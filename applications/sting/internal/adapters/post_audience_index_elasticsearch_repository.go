@@ -12,43 +12,46 @@ import (
 	"github.com/segmentio/ksuid"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
 	"overdoll/libraries/scan"
+	"overdoll/libraries/translations"
 )
 
 type audienceDocument struct {
-	Id        string `json:"id"`
-	Slug      string `json:"slug"`
-	Title     string `json:"title"`
-	Thumbnail string `json:"thumbnail"`
-	Standard  int    `json:"standard"`
-	CreatedAt string `json:"created_at"`
+	Id        string            `json:"id"`
+	Slug      string            `json:"slug"`
+	Title     map[string]string `json:"title"`
+	Thumbnail string            `json:"thumbnail"`
+	Standard  int               `json:"standard"`
+	CreatedAt string            `json:"created_at"`
 }
+
+const audienceIndexProperties = `
+{
+	"id": {
+		"type": "keyword"
+	},
+	"slug": {
+		"type": "keyword"
+	},
+	"thumbnail": {
+		"type": "keyword"
+	},
+	"standard": {
+		"type": "integer"
+	},
+	"title": ` + translations.ESIndex + `
+	"created_at": {
+		"type": "date"
+	}
+}
+`
 
 const audienceIndex = `
 {
 	"mappings": {
 		"dynamic": "strict",
-		"properties": {
-			"id": {
-				"type": "keyword"
-			},
-			"slug": {
-				"type": "keyword"
-			},
-			"thumbnail": {
-				"type": "keyword"
-			},
-			"standard": {
-				"type": "integer"
-			},
-			"title": {
-				"type": "text",
-				"analyzer": "english"
-			},
-			"created_at": {
-				"type": "date"
-			}
-		}
+		"properties": ` + audienceIndexProperties + `
 	}
 }`
 
@@ -83,13 +86,13 @@ func marshalAudienceToDocument(cat *post.Audience) (*audienceDocument, error) {
 		Id:        cat.ID(),
 		Slug:      cat.Slug(),
 		Thumbnail: thumbnail,
-		Title:     cat.Title(),
+		Title:     translations.MarshalTranslationToDatabase(cat.Title()),
 		CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
 		Standard:  stnd,
 	}, nil
 }
 
-func (r PostsIndexElasticSearchRepository) SearchAudience(ctx context.Context, cursor *paging.Cursor, search *string) ([]*post.Audience, error) {
+func (r PostsIndexElasticSearchRepository) SearchAudience(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.ObjectFilters) ([]*post.Audience, error) {
 
 	builder := r.client.Search().
 		Index(audienceIndexName)
@@ -100,8 +103,18 @@ func (r PostsIndexElasticSearchRepository) SearchAudience(ctx context.Context, c
 
 	query := cursor.BuildElasticsearch(builder, "created_at")
 
-	if search != nil {
-		query.Must(elastic.NewMultiMatchQuery(*search, "name").Operator("and"))
+	if filter.Search() != nil {
+		query.Must(
+			elastic.
+				NewMultiMatchQuery(*filter.Search(), translations.GetESSearchFields("title")...).
+				Type("best_fields"),
+		)
+	}
+
+	if len(filter.Slugs()) > 0 {
+		for _, id := range filter.Slugs() {
+			query.Filter(elastic.NewTermQuery("slug", id))
+		}
 	}
 
 	builder.Query(query)

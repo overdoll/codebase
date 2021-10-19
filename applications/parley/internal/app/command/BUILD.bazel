@@ -3,8 +3,11 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "command",
     srcs = [
+        "approve_post.go",
         "get_next_moderator.go",
-        "moderate_post.go",
+        "reject_post.go",
+        "remove_post.go",
+        "report_post.go",
         "revert_moderate_post_audit_log.go",
         "services.go",
         "toggle_moderator.go",
@@ -14,6 +17,7 @@ go_library(
     deps = [
         "//applications/parley/internal/domain/infraction",
         "//applications/parley/internal/domain/moderator",
+        "//applications/parley/internal/domain/report",
         "//libraries/principal",
         "@com_github_pkg_errors//:errors",
     ],

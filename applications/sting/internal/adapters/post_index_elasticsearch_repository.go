@@ -50,111 +50,19 @@ const postIndex = `
 				},
 				"audience": {
 					"type": "nested",
-					"properties": {
-						"id": {
-							"type": "keyword"
-						},
-						"slug": {
-							"type": "keyword"
-						},
-						"thumbnail": {
-							"type": "keyword"
-						},
-						"title": {
-							"type": "text",
-							"analyzer": "english"
-						},
-						"standard": {
-							"type": "integer"
-						},
-						"created_at": {
-							"type": "date"
-						}
-					}
+					"properties": ` + audienceIndexProperties + ` 
 				},
 				"brand": {
 					"type": "nested",
-					"properties": {
-						"id": {
-							"type": "keyword"
-						},
-						"slug": {
-							"type": "keyword"
-						},
-						"thumbnail": {
-							"type": "keyword"
-						},
-						"name": {
-							"type": "text",
-							"analyzer": "english"
-						},
-						"created_at": {
-							"type": "date"
-						}
-					}
+					"properties": ` + brandsIndexProperties + ` 
 				},
 				"categories": {
 					"type": "nested",
-					"properties": {
-						"id": {
-							"type": "keyword"
-						},
-						"slug": {
-							"type": "keyword"
-						},
-						"thumbnail": {
-							"type": "keyword"
-						},
-						"title": {
-							"type": "text",
-							"analyzer": "english"
-						},
-						"created_at": {
-							"type": "date"
-						}
-					}
+					"properties": ` + categoryIndexProperties + ` 
 				},
 				"characters": {
 					"type": "nested",
-					"properties": {
-						"id": {
-							"type": "keyword"
-						},
-						"slug": {
-							"type": "keyword"
-						},
-						"thumbnail": {
-							"type": "keyword"
-						},
-						"name": {
-							"type": "text",
-							"analyzer": "english"
-						},
-						"created_at": {
-							"type": "date"
-						},
-					    "series": {
-							"dynamic": "strict",
-							"properties": {
-								"id": {
-									"type": "keyword"
-								},
-								"slug": {
-									"type": "keyword"
-								},
-								"thumbnail": {
-									"type": "keyword"
-								},
-								"title": {
-									"type": "text",
-									"analyzer": "english"
-								},
-								"created_at": {
-									"type": "date"
-								}
-							}		
-						}			
-					}
+					"properties": ` + characterIndexProperties + ` 
 				},
 				"content": {
                      "type": "keyword"
@@ -319,16 +227,59 @@ func (r PostsIndexElasticSearchRepository) SearchPosts(ctx context.Context, requ
 		return nil, err
 	}
 
-	query := cursor.BuildElasticsearch(builder, "posted_at")
+	query := cursor.BuildElasticsearch(builder, "created_at")
+
+	var filterQueries []elastic.Query
+
+	if filter.State() != nil {
+		filterQueries = append(filterQueries, elastic.NewTermQuery("state", *filter.State()))
+	}
 
 	if filter.ModeratorId() != nil {
-		query.Must(elastic.NewMultiMatchQuery(*filter.ModeratorId(), "moderator_id"))
-		// only show if post is in review when filtering by moderator ID
-		query.Must(elastic.NewMultiMatchQuery("review", "state"))
+		filterQueries = append(filterQueries, elastic.NewTermQuery("moderator_id", *filter.ModeratorId()))
 	}
 
 	if filter.ContributorId() != nil {
-		query.Must(elastic.NewMultiMatchQuery(*filter.ContributorId(), "contributor_id"))
+		filterQueries = append(filterQueries, elastic.NewTermQuery("contributor_id", *filter.ContributorId()))
+	}
+
+	if len(filter.CategorySlugs()) > 0 {
+		for _, id := range filter.CategorySlugs() {
+			filterQueries = append(filterQueries, elastic.NewNestedQuery("categories", elastic.NewTermQuery("categories.slug", id)))
+		}
+	}
+
+	if len(filter.CharacterSlugs()) > 0 {
+		for _, id := range filter.CharacterSlugs() {
+			filterQueries = append(filterQueries, elastic.NewNestedQuery("characters", elastic.NewTermQuery("characters.slug", id)))
+		}
+	}
+
+	if len(filter.BrandSlugs()) > 0 {
+		for _, id := range filter.BrandSlugs() {
+			filterQueries = append(filterQueries, elastic.NewNestedQuery("brand", elastic.NewTermQuery("brand.slug", id)))
+		}
+	}
+
+	if len(filter.AudienceSlugs()) > 0 {
+		for _, id := range filter.AudienceSlugs() {
+			filterQueries = append(filterQueries, elastic.NewNestedQuery("audience", elastic.NewTermQuery("audience.slug", id)))
+		}
+	}
+
+	if len(filter.SeriesSlugs()) > 0 {
+		for _, id := range filter.SeriesSlugs() {
+			filterQueries = append(filterQueries, elastic.NewNestedQuery("characters.series", elastic.NewTermQuery("characters.series.slug", id)))
+		}
+	}
+
+	// if orderby another column
+	if filter.OrderBy() != "created_at" {
+		builder.Sort(filter.OrderBy(), false)
+	}
+
+	if filterQueries != nil {
+		query.Filter(filterQueries...)
 	}
 
 	builder.Query(query)
@@ -477,7 +428,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 			var brandDoc *brandDocument
 
 			if p.BrandId != nil {
-				brnd, err := rep.GetBrandById(ctx, *p.BrandId)
+				brnd, err := rep.GetBrandById(ctx, nil, *p.BrandId)
 
 				if err != nil {
 					return err
@@ -493,7 +444,7 @@ func (r PostsIndexElasticSearchRepository) IndexAllPosts(ctx context.Context) er
 			var audDoc *audienceDocument
 
 			if p.AudienceId != nil {
-				aud, err := rep.GetAudienceById(ctx, *p.AudienceId)
+				aud, err := rep.GetAudienceById(ctx, nil, *p.AudienceId)
 
 				if err != nil {
 					return err

@@ -17,7 +17,7 @@ var accountInfractionHistoryTable = table.New(table.Metadata{
 	Columns: []string{
 		"id",
 		"account_id",
-		"reason",
+		"post_rejection_reason_id",
 		"expiration",
 	},
 	PartKey: []string{"account_id"},
@@ -25,24 +25,24 @@ var accountInfractionHistoryTable = table.New(table.Metadata{
 })
 
 type accountInfractionHistory struct {
-	Id         string    `db:"id"`
-	AccountId  string    `db:"account_id"`
-	Reason     string    `db:"reason"`
-	Expiration time.Time `db:"expiration"`
+	Id                    string    `db:"id"`
+	AccountId             string    `db:"account_id"`
+	PostRejectionReasonId string    `db:"post_rejection_reason_id"`
+	Expiration            time.Time `db:"expiration"`
 }
 
 func marshalAccountInfractionHistoryToDatabase(infractionHistory *infraction.AccountInfractionHistory) *accountInfractionHistory {
 	return &accountInfractionHistory{
-		Id:         infractionHistory.ID(),
-		AccountId:  infractionHistory.AccountId(),
-		Reason:     infractionHistory.Reason(),
-		Expiration: infractionHistory.Expiration(),
+		Id:                    infractionHistory.ID(),
+		AccountId:             infractionHistory.AccountId(),
+		PostRejectionReasonId: infractionHistory.Reason().ID(),
+		Expiration:            infractionHistory.Expiration(),
 	}
 }
 
 func (r InfractionCassandraRepository) DeleteAccountInfractionHistory(ctx context.Context, requester *principal.Principal, userId, id string) error {
 
-	history, err := r.getAccountInfractionHistoryById(ctx, userId, id)
+	history, err := r.getAccountInfractionHistoryById(ctx, requester, userId, id)
 
 	if err != nil {
 		return err
@@ -66,7 +66,7 @@ func (r InfractionCassandraRepository) DeleteAccountInfractionHistory(ctx contex
 
 func (r InfractionCassandraRepository) GetAccountInfractionHistoryById(ctx context.Context, requester *principal.Principal, userId, id string) (*infraction.AccountInfractionHistory, error) {
 
-	history, err := r.getAccountInfractionHistoryById(ctx, userId, id)
+	history, err := r.getAccountInfractionHistoryById(ctx, requester, userId, id)
 
 	if err != nil {
 		return nil, err
@@ -79,7 +79,7 @@ func (r InfractionCassandraRepository) GetAccountInfractionHistoryById(ctx conte
 	return history, nil
 }
 
-func (r InfractionCassandraRepository) getAccountInfractionHistoryById(ctx context.Context, userId, id string) (*infraction.AccountInfractionHistory, error) {
+func (r InfractionCassandraRepository) getAccountInfractionHistoryById(ctx context.Context, requester *principal.Principal, userId, id string) (*infraction.AccountInfractionHistory, error) {
 
 	infractionHistoryQuery := r.session.
 		Query(accountInfractionHistoryTable.Select()).
@@ -97,7 +97,13 @@ func (r InfractionCassandraRepository) getAccountInfractionHistoryById(ctx conte
 		return nil, fmt.Errorf("failed to get account infraction history: %v", err)
 	}
 
-	return infraction.UnmarshalAccountInfractionHistoryFromDatabase(dbUserInfractionHistory.Id, dbUserInfractionHistory.AccountId, dbUserInfractionHistory.Reason, dbUserInfractionHistory.Expiration), nil
+	rejectionReason, err := r.GetPostRejectionReason(ctx, requester, dbUserInfractionHistory.PostRejectionReasonId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return infraction.UnmarshalAccountInfractionHistoryFromDatabase(dbUserInfractionHistory.Id, dbUserInfractionHistory.AccountId, rejectionReason, dbUserInfractionHistory.Expiration), nil
 }
 
 func (r InfractionCassandraRepository) GetAccountInfractionHistory(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*infraction.AccountInfractionHistory, error) {
@@ -125,11 +131,21 @@ func (r InfractionCassandraRepository) GetAccountInfractionHistory(ctx context.C
 		return nil, fmt.Errorf("failed to get infraction history for account: %v", err)
 	}
 
+	rejectionReasonMap, err := r.getPostRejectionReasonsAsMap(ctx, requester)
+
+	if err != nil {
+		return nil, err
+	}
+
 	var infractionHistory []*infraction.AccountInfractionHistory
 	for _, infractionHist := range dbUserInfractionHistory {
-		infract := infraction.UnmarshalAccountInfractionHistoryFromDatabase(infractionHist.Id, infractionHist.AccountId, infractionHist.Reason, infractionHist.Expiration)
-		infract.Node = paging.NewNode(infractionHist.Id)
-		infractionHistory = append(infractionHistory, infract)
+		if rejectionReason, ok := rejectionReasonMap[infractionHist.PostRejectionReasonId]; ok {
+			infract := infraction.UnmarshalAccountInfractionHistoryFromDatabase(infractionHist.Id, infractionHist.AccountId, rejectionReason, infractionHist.Expiration)
+			infract.Node = paging.NewNode(infractionHist.Id)
+			infractionHistory = append(infractionHistory, infract)
+		} else {
+			return nil, infraction.ErrPostRejectionReasonNotFound
+		}
 	}
 
 	return infractionHistory, nil

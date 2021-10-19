@@ -50,7 +50,8 @@ type emailByAccount struct {
 }
 
 type emailConfirmation struct {
-	Email string `json:"email"`
+	Email     string `json:"email"`
+	AccountId string `json:"account_id"`
 }
 
 const (
@@ -93,7 +94,8 @@ func (r AccountRepository) AddAccountEmail(ctx context.Context, acc *account.Acc
 	}
 
 	authCookie := &emailConfirmation{
-		Email: confirm.Email(),
+		Email:     confirm.Email(),
+		AccountId: acc.ID(),
 	}
 
 	val, err := json.Marshal(authCookie)
@@ -116,26 +118,6 @@ func (r AccountRepository) AddAccountEmail(ctx context.Context, acc *account.Acc
 
 	if !ok {
 		return nil, fmt.Errorf("failed to add account email - duplicate key: %s", confirmEmailPrefix+confirm.ID())
-	}
-
-	// create a unique email
-	if err := r.createUniqueAccountEmail(ctx, acc, confirm.Email()); err != nil {
-		return nil, err
-	}
-
-	insertEmailByAccount := r.session.
-		Query(emailByAccountTable.Insert()).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(emailByAccount{
-			Email:     confirm.Email(),
-			AccountId: acc.ID(),
-			Status:    0,
-		})
-
-	if err := insertEmailByAccount.ExecRelease(); err != nil {
-		_ = r.deleteAccountEmail(ctx, acc, confirm.Email())
-
-		return nil, fmt.Errorf("failed to add account email - cassandra: %v", err)
 	}
 
 	return account.UnmarshalEmailFromDatabase(confirm.Email(), acc.ID(), 0), nil
@@ -204,33 +186,36 @@ func (r AccountRepository) ConfirmAccountEmail(ctx context.Context, requester *p
 		return nil, fmt.Errorf("failed to confirm email - unmarshal: %v", err)
 	}
 
-	acc, err := r.GetAccountByEmail(ctx, confirmItem.Email)
+	acc, err := r.GetAccountById(ctx, confirmItem.AccountId)
 
 	if err != nil {
 		return nil, err
 	}
 
-	em, err := r.GetAccountEmail(ctx, requester, acc.ID(), confirmItem.Email)
+	// create with confirmed status
+	em := account.UnmarshalEmailFromDatabase(confirmItem.Email, confirmItem.AccountId, 0)
 
-	if err != nil {
+	if err := em.MakeConfirmed(requester); err != nil {
 		return nil, err
 	}
 
-	if err := em.CanConfirm(requester); err != nil {
+	// create a unique email - will error out if not unique
+	if err := r.createUniqueAccountEmail(ctx, acc, em.Email()); err != nil {
 		return nil, err
 	}
 
-	updateAccountEmail := r.session.
-		Query(emailByAccountTable.Update("status")).
+	insertEmailByAccount := r.session.
+		Query(emailByAccountTable.Insert()).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(emailByAccount{
-			Email:     confirmItem.Email,
+			Email:     em.Email(),
 			AccountId: acc.ID(),
 			Status:    1,
 		})
 
-	if err := updateAccountEmail.ExecRelease(); err != nil {
-		return nil, fmt.Errorf("failed to confirm email - account email update: %v", err)
+	if err := insertEmailByAccount.ExecRelease(); err != nil {
+		_ = r.deleteAccountEmail(ctx, acc, em.Email())
+		return nil, fmt.Errorf("failed to add account email - cassandra: %v", err)
 	}
 
 	// delete confirmation (it has been used up)

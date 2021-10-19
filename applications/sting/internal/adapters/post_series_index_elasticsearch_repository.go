@@ -12,45 +12,48 @@ import (
 	"github.com/segmentio/ksuid"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
 	"overdoll/libraries/scan"
+	"overdoll/libraries/translations"
 )
 
 type seriesDocument struct {
-	Id        string `json:"id"`
-	Slug      string `json:"slug"`
-	Thumbnail string `json:"thumbnail"`
-	Title     string `json:"title"`
-	CreatedAt string `json:"created_at"`
+	Id        string            `json:"id"`
+	Slug      string            `json:"slug"`
+	Thumbnail string            `json:"thumbnail"`
+	Title     map[string]string `json:"title"`
+	CreatedAt string            `json:"created_at"`
 }
+
+const seriesIndexProperties = `
+{
+	"id": {
+		"type": "keyword"
+	},
+	"slug": {
+		"type": "keyword"
+	},
+	"thumbnail": {
+		"type": "keyword"
+	},
+	"title":  ` + translations.ESIndex + `
+	"created_at": {
+		"type": "date"
+	}
+}
+`
 
 const seriesIndex = `
 {
 	"mappings": {
 		"dynamic": "strict",
-		"properties": {
-			"id": {
-				"type": "keyword"
-			},
-			"slug": {
-				"type": "keyword"
-			},
-			"thumbnail": {
-				"type": "keyword"
-			},
-			"title": {
-				"type": "text",
-				"analyzer": "english"
-			},
-			"created_at": {
-				"type": "date"
-			}
-		}
+		"properties": ` + seriesIndexProperties + `
 	}
 }`
 
 const seriesIndexName = "series"
 
-func (r PostsIndexElasticSearchRepository) SearchSeries(ctx context.Context, cursor *paging.Cursor, search *string) ([]*post.Series, error) {
+func (r PostsIndexElasticSearchRepository) SearchSeries(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.ObjectFilters) ([]*post.Series, error) {
 
 	builder := r.client.Search().
 		Index(seriesIndexName)
@@ -61,8 +64,18 @@ func (r PostsIndexElasticSearchRepository) SearchSeries(ctx context.Context, cur
 
 	query := cursor.BuildElasticsearch(builder, "created_at")
 
-	if search != nil {
-		query.Must(elastic.NewMultiMatchQuery(*search, "title").Operator("and"))
+	if filter.Search() != nil {
+		query.Must(
+			elastic.
+				NewMultiMatchQuery(*filter.Search(), translations.GetESSearchFields("title")...).
+				Type("best_fields"),
+		)
+	}
+
+	if len(filter.Slugs()) > 0 {
+		for _, id := range filter.Slugs() {
+			query.Filter(elastic.NewTermQuery("slug", id))
+		}
 	}
 
 	builder.Query(query)

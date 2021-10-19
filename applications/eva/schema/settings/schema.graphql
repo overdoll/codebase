@@ -258,16 +258,8 @@ input ConfirmAccountEmailInput {
   id: String!
 }
 
-"""Validation message for adding account email"""
-enum AddAccountEmailValidation {
-  EMAIL_TAKEN
-}
-
 """Email to add the account"""
 type AddAccountEmailPayload {
-  """Validation for adding an email"""
-  validation: AddAccountEmailValidation
-
   """The account email that was added to"""
   accountEmail: AccountEmail
 }
@@ -300,8 +292,11 @@ type RevokeAccountSessionPayload {
 
 """Payload of the updated account email"""
 type UpdateAccountEmailStatusToPrimaryPayload {
-  """The account email that was updated"""
-  accountEmail: AccountEmail
+  """The account email that was updated to primary"""
+  primaryAccountEmail: AccountEmail
+
+  """The account email that was updated to 'confirmed' status"""
+  updatedAccountEmail: AccountEmail
 }
 
 """Payload of the created account recovery codes"""
@@ -339,6 +334,7 @@ type DisableAccountMultiFactorPayload {
 """Validation for confirming account email"""
 enum ConfirmAccountEmailValidation {
   TOKEN_EXPIRED
+  EMAIL_TAKEN
 }
 
 """Payload for confirming the account email"""

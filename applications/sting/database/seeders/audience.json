@@ -2,14 +2,18 @@
   {
     "id": "1pcKiQL7dgUW8CIN7uO1wqFaMql",
     "slug": "standard_audience",
-    "title": "Standard Audience",
+    "title": {
+      "en-US": "Standard Audience"
+    },
     "thumbnail": "{\"url\":\"/thumbnails/1pcKZyoYFxZRyidV9XHd1WyPbrj\",\"mimeTypes\":[\"image/png\"],\"sizes\":[],\"type\":1,\"processed\":true}",
     "standard": 1
   },
   {
     "id": "1pcKiTRBqURVEdcw1cKhyiejFp7",
     "slug": "non_standard_audience",
-    "title": "Non-Standard Audience",
+    "title": {
+      "en-US": "Non-Standard Audience"
+    },
     "thumbnail": "{\"url\":\"/thumbnails/1pcKZyoYFxZRyidV9XHd1WyPbrj\",\"mimeTypes\":[\"image/png\"],\"sizes\":[],\"type\":1,\"processed\":true}",
     "standard": 0
   }

@@ -5,6 +5,7 @@ import (
 
 	"overdoll/applications/sting/internal/domain/resource"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/translations"
 )
 
 var (
@@ -16,7 +17,7 @@ type Brand struct {
 
 	id        string
 	slug      string
-	name      string
+	name      *translations.Translation
 	thumbnail *resource.Resource
 }
 
@@ -28,7 +29,7 @@ func (m *Brand) Slug() string {
 	return m.slug
 }
 
-func (m *Brand) Name() string {
+func (m *Brand) Name() *translations.Translation {
 	return m.name
 }
 
@@ -36,11 +37,11 @@ func (m *Brand) Thumbnail() *resource.Resource {
 	return m.thumbnail
 }
 
-func UnmarshalBrandFromDatabase(id, slug, name string, thumbnail string) *Brand {
+func UnmarshalBrandFromDatabase(id, slug string, name map[string]string, thumbnail string) *Brand {
 	return &Brand{
 		id:        id,
 		slug:      slug,
-		name:      name,
+		name:      translations.UnmarshalTranslationFromDatabase(name),
 		thumbnail: resource.UnmarshalResourceFromDatabase(thumbnail),
 	}
 }

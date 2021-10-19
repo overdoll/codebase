@@ -17,25 +17,6 @@ import (
 	"overdoll/libraries/passport"
 )
 
-type CharacterModified struct {
-	Name   string
-	Series struct {
-		Title string
-	}
-}
-
-type CategoryModified struct {
-	Title string
-}
-
-type AudienceModified struct {
-	Title string
-}
-
-type BrandModified struct {
-	Name string
-}
-
 type PostModified struct {
 	ID         string
 	Reference  string
@@ -435,4 +416,41 @@ func TestCreatePost_Reject_undo_reject(t *testing.T) {
 
 	// check to make sure post is in rejected state
 	require.Equal(t, types.PostStateRejected, post.Post.State)
+}
+
+// TestCreatePost_Remove - remove post
+func TestCreatePost_Remove(t *testing.T) {
+	t.Parallel()
+
+	pass := passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
+
+	client, _ := getGraphqlClient(t, pass)
+
+	env := getWorkflowEnvironment(t)
+
+	var newPostId string
+
+	createPost(t, client, env, func(postId string) func() {
+		return func() {
+			newPostId = postId
+			// setup another environment since we cant execute multiple workflows
+
+			stingClient := getGrpcClient(t)
+
+			// "remove" pending post
+			_, e := stingClient.RemovePost(context.Background(), &sting.PostRequest{Id: postId})
+			require.NoError(t, e)
+
+			newEnv := getWorkflowEnvironment(t)
+			newEnv.ExecuteWorkflow(workflows.RemovePost, postId)
+
+			require.True(t, newEnv.IsWorkflowCompleted())
+			require.NoError(t, newEnv.GetWorkflowError())
+		}
+	})
+
+	post := getPost(t, newPostId)
+
+	// check to make sure post is in rejected state
+	require.Equal(t, types.PostStateRemoved, post.Post.State)
 }
