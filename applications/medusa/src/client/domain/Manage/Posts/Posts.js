@@ -3,34 +3,26 @@
  */
 import type { Node } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { PageSectionTitle, PageSectionWrap, PageWrapper } from '../../../components/PageLayout'
-import { useTranslation } from 'react-i18next'
-import {
-  Tabs,
-  TabList,
-  Tab,
-  TabPanels,
-  TabPanel
-} from '@chakra-ui/react'
+import { PageWrapper } from '../../../components/PageLayout'
 import SkeletonStack from '@//:modules/content/SkeletonStack/SkeletonStack'
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
 import ErrorFallback from '@//:modules/content/ErrorFallback/ErrorFallback'
 import { Suspense } from 'react'
 import { useQueryLoader } from 'react-relay/hooks'
-import type { ViewerDraftPostsQuery as ViewerDraftPostsQueryType } from '@//:artifacts/ViewerDraftPostsQuery.graphql'
-import ViewerDraftPostsQuery from '@//:artifacts/ViewerDraftPostsQuery.graphql'
-import ViewerDraftPosts from './ViewerDraftPosts/ViewerDraftPosts'
+import type { DraftPostsQuery as DraftPostsQueryType } from '@//:artifacts/DraftPostsQuery.graphql'
+import PostsQuery from '@//:artifacts/PostsQuery.graphql'
+import DraftPosts from './DraftPosts/DraftPosts'
 
 type Props = {
   prepared: {
-    viewerDraftPostsQuery: ViewerDraftPostsQueryType
+    draftPostsQuery: DraftPostsQueryType
   }
 }
 
-export default function RootPosts (props: Props): Node {
+export default function Posts (props: Props): Node {
   const [queryRef, loadQuery] = useQueryLoader(
-    ViewerDraftPostsQuery,
-    props.prepared.viewerDraftPostsQuery
+    PostsQuery,
+    props.prepared.draftPostsQuery
   )
 
   return (
@@ -43,7 +35,7 @@ export default function RootPosts (props: Props): Node {
               <ErrorFallback error={error} reset={reset} refetch={loadQuery} />
             )}
           >
-            <ViewerDraftPosts query={queryRef} />
+            <DraftPosts query={queryRef} />
           </ErrorBoundary>
         </Suspense>
       </PageWrapper>

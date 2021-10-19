@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 3063199f3ea8a21545a231429a3035ae
+ * @relayHash 419bfd6d6db48c69d7ea015adeb9730f
  */
 
 /* eslint-disable */
@@ -8,22 +8,22 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-export type RootCreatePostFlowMutationVariables = {||};
-export type RootCreatePostFlowMutationResponse = {|
+export type CreatePostMutationVariables = {||};
+export type CreatePostMutationResponse = {|
   +createPost: ?{|
     +post: ?{|
       +reference: string
     |}
   |}
 |};
-export type RootCreatePostFlowMutation = {|
-  variables: RootCreatePostFlowMutationVariables,
-  response: RootCreatePostFlowMutationResponse,
+export type CreatePostMutation = {|
+  variables: CreatePostMutationVariables,
+  response: CreatePostMutationResponse,
 |};
 
 
 /*
-mutation RootCreatePostFlowMutation {
+mutation CreatePostMutation {
   createPost {
     post {
       reference
@@ -46,7 +46,7 @@ return {
     "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
-    "name": "RootCreatePostFlowMutation",
+    "name": "CreatePostMutation",
     "selections": [
       {
         "alias": null,
@@ -79,7 +79,7 @@ return {
   "operation": {
     "argumentDefinitions": [],
     "kind": "Operation",
-    "name": "RootCreatePostFlowMutation",
+    "name": "CreatePostMutation",
     "selections": [
       {
         "alias": null,
@@ -114,14 +114,14 @@ return {
     ]
   },
   "params": {
-    "id": "3063199f3ea8a21545a231429a3035ae",
+    "id": "419bfd6d6db48c69d7ea015adeb9730f",
     "metadata": {},
-    "name": "RootCreatePostFlowMutation",
+    "name": "CreatePostMutation",
     "operationKind": "mutation",
     "text": null
   }
 };
 })();
 // prettier-ignore
-(node: any).hash = 'a6326438e586f925e31ab87f442a9b57';
+(node: any).hash = '870abfceeddd4cd4b118d8215fc1d2dd';
 module.exports = node;

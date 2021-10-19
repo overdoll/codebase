@@ -4,9 +4,9 @@
 import type { Node } from 'react'
 import { Heading, Text, Box, ListItem, UnorderedList, Flex, Center } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
-import FilePicker from '../../../../Manage/Posts/ViewerDraftPosts/CreatePost/Upload/components/FilePicker/FilePicker'
+import FilePicker from '../../../../Manage/Posts/DraftPosts/FileUploader/components/FilePicker/FilePicker'
 import Icon from '@//:modules/content/Icon/Icon'
-import DragOverFileInput from '../../../../Manage/Posts/ViewerDraftPosts/CreatePost/Upload/components/DragOverFileInput/DragOverFileInput'
+import DragOverFileInput from '../../../../Manage/Posts/DraftPosts/FileUploader/components/DragOverFileInput/DragOverFileInput'
 
 import Cloud from '@streamlinehq/streamlinehq/img/streamline-regular/internet-networks-servers/cloud/cloud.svg'
 

@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash ded8b390ff42221eed982c82395652a6
+ * @relayHash 9e7b34ff1058b8cbf21001b3357baa5a
  */
 
 /* eslint-disable */
@@ -8,28 +8,28 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-import type { ViewerDraftPostsFragment$ref } from "./ViewerDraftPostsFragment.graphql";
-export type ViewerDraftPostsQueryVariables = {||};
-export type ViewerDraftPostsQueryResponse = {|
+import type { DraftPostsFragment$ref } from "./DraftPostsFragment.graphql";
+export type DraftPostsQueryVariables = {||};
+export type DraftPostsQueryResponse = {|
   +viewer: ?{|
-    +$fragmentRefs: ViewerDraftPostsFragment$ref
+    +$fragmentRefs: DraftPostsFragment$ref
   |}
 |};
-export type ViewerDraftPostsQuery = {|
-  variables: ViewerDraftPostsQueryVariables,
-  response: ViewerDraftPostsQueryResponse,
+export type DraftPostsQuery = {|
+  variables: DraftPostsQueryVariables,
+  response: DraftPostsQueryResponse,
 |};
 
 
 /*
-query ViewerDraftPostsQuery {
+query DraftPostsQuery {
   viewer {
-    ...ViewerDraftPostsFragment
+    ...DraftPostsFragment
     id
   }
 }
 
-fragment ViewerDraftPostsFragment on Account {
+fragment DraftPostsFragment on Account {
   contributions(first: 4) {
     edges {
       node {
@@ -67,7 +67,7 @@ return {
     "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
-    "name": "ViewerDraftPostsQuery",
+    "name": "DraftPostsQuery",
     "selections": [
       {
         "alias": null,
@@ -80,7 +80,7 @@ return {
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "ViewerDraftPostsFragment"
+            "name": "DraftPostsFragment"
           }
         ],
         "storageKey": null
@@ -93,7 +93,7 @@ return {
   "operation": {
     "argumentDefinitions": [],
     "kind": "Operation",
-    "name": "ViewerDraftPostsQuery",
+    "name": "DraftPostsQuery",
     "selections": [
       {
         "alias": null,
@@ -192,14 +192,14 @@ return {
     ]
   },
   "params": {
-    "id": "ded8b390ff42221eed982c82395652a6",
+    "id": "9e7b34ff1058b8cbf21001b3357baa5a",
     "metadata": {},
-    "name": "ViewerDraftPostsQuery",
+    "name": "DraftPostsQuery",
     "operationKind": "query",
     "text": null
   }
 };
 })();
 // prettier-ignore
-(node: any).hash = 'f5d5982984effacd6e449f19fcbfb060';
+(node: any).hash = '359e345e7904867f929a5f0f5a972aaa';
 module.exports = node;

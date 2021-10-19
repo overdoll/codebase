@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 911400ae48d85a09af216cfcb7166b11
+ * @relayHash 6b53913b0e270b98b78c7ce9b5da5458
  */
 
 /* eslint-disable */
@@ -8,22 +8,22 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-export type RootCreatePostFlowQueryVariables = {|
+export type CreatePostQueryVariables = {|
   reference: string
 |};
-export type RootCreatePostFlowQueryResponse = {|
+export type CreatePostQueryResponse = {|
   +post: ?{|
     +__typename: string
   |}
 |};
-export type RootCreatePostFlowQuery = {|
-  variables: RootCreatePostFlowQueryVariables,
-  response: RootCreatePostFlowQueryResponse,
+export type CreatePostQuery = {|
+  variables: CreatePostQueryVariables,
+  response: CreatePostQueryResponse,
 |};
 
 
 /*
-query RootCreatePostFlowQuery(
+query CreatePostQuery(
   $reference: String!
 ) {
   post(reference: $reference) {
@@ -60,7 +60,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "RootCreatePostFlowQuery",
+    "name": "CreatePostQuery",
     "selections": [
       {
         "alias": null,
@@ -82,7 +82,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "RootCreatePostFlowQuery",
+    "name": "CreatePostQuery",
     "selections": [
       {
         "alias": null,
@@ -106,14 +106,14 @@ return {
     ]
   },
   "params": {
-    "id": "911400ae48d85a09af216cfcb7166b11",
+    "id": "6b53913b0e270b98b78c7ce9b5da5458",
     "metadata": {},
-    "name": "RootCreatePostFlowQuery",
+    "name": "CreatePostQuery",
     "operationKind": "query",
     "text": null
   }
 };
 })();
 // prettier-ignore
-(node: any).hash = 'ca8fcfeb53e6f11d4a69ce9d8f5d706f';
+(node: any).hash = 'f15ec3aa684db4c3d1b7e245199d6bbb';
 module.exports = node;

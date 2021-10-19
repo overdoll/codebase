@@ -9,11 +9,11 @@ import reducer from './reducer'
 import useUpload from './hooks'
 import { useToast } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
-import RootCreatePostFlow from './components/RootCreatePostFlow/RootCreatePostFlow'
+import CreatePost from './components/CreatePost/CreatePost'
 
 // Main upload component - handles all events from Uppy and renders the stepper
 // also contains the main state and is responsible for recovering state when rendered (if state is available)
-export default function Upload (): Node {
+export default function FileUploader (): Node {
   const [state, dispatch] = useReducer<State, Action>(
     reducer,
     INITIAL_STATE
@@ -59,6 +59,7 @@ export default function Upload (): Node {
   // Event for errors
   useEffect(() => {
     uppy.on('upload-error', data => {
+      // TODO remove this as this is redundant?
       /*
       notify({
         status: 'error',
@@ -69,6 +70,7 @@ export default function Upload (): Node {
     })
 
     uppy.on('restriction-failed', (file, error) => {
+      // TODO remove this as this is redundant?
       /*
       notify({
         status: 'error',
@@ -100,6 +102,6 @@ export default function Upload (): Node {
   }, [notify, uppy])
 
   return (
-    <RootCreatePostFlow uppy={uppy} state={state} dispatch={dispatch} />
+    <CreatePost uppy={uppy} state={state} dispatch={dispatch} />
   )
 }

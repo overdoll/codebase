@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 13670ce3449dff8e9ff7747c4815ab0f
+ * @relayHash 4fe8e0a4e80ada61af8d250129fe3f06
  */
 
 /* eslint-disable */
@@ -9,38 +9,38 @@
 
 import type { ConcreteRequest } from 'relay-runtime';
 import type { FragmentReference } from "relay-runtime";
-declare export opaque type ViewerDraftPostsFragment$ref: FragmentReference;
-declare export opaque type ViewerDraftPostsFragment$fragmentType: ViewerDraftPostsFragment$ref;
-export type DraftPostsQueryQueryVariables = {|
+declare export opaque type DraftPostsFragment$ref: FragmentReference;
+declare export opaque type DraftPostsFragment$fragmentType: DraftPostsFragment$ref;
+export type DraftPostsPaginationQueryVariables = {|
   after?: ?string,
   first?: ?number,
   id: string,
 |};
-export type DraftPostsQueryQueryResponse = {|
+export type DraftPostsPaginationQueryResponse = {|
   +node: ?{|
-    +$fragmentRefs: ViewerDraftPostsFragment$ref
+    +$fragmentRefs: DraftPostsFragment$ref
   |}
 |};
-export type DraftPostsQueryQuery = {|
-  variables: DraftPostsQueryQueryVariables,
-  response: DraftPostsQueryQueryResponse,
+export type DraftPostsPaginationQuery = {|
+  variables: DraftPostsPaginationQueryVariables,
+  response: DraftPostsPaginationQueryResponse,
 |};
 
 
 /*
-query DraftPostsQueryQuery(
+query DraftPostsPaginationQuery(
   $after: String
   $first: Int = 4
   $id: ID!
 ) {
   node(id: $id) {
     __typename
-    ...ViewerDraftPostsFragment_2HEEH6
+    ...DraftPostsFragment_2HEEH6
     id
   }
 }
 
-fragment ViewerDraftPostsFragment_2HEEH6 on Account {
+fragment DraftPostsFragment_2HEEH6 on Account {
   contributions(first: $first, after: $after) {
     edges {
       node {
@@ -114,7 +114,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "DraftPostsQueryQuery",
+    "name": "DraftPostsPaginationQuery",
     "selections": [
       {
         "alias": null,
@@ -127,7 +127,7 @@ return {
           {
             "args": (v2/*: any*/),
             "kind": "FragmentSpread",
-            "name": "ViewerDraftPostsFragment"
+            "name": "DraftPostsFragment"
           }
         ],
         "storageKey": null
@@ -140,7 +140,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "DraftPostsQueryQuery",
+    "name": "DraftPostsPaginationQuery",
     "selections": [
       {
         "alias": null,
@@ -241,14 +241,14 @@ return {
     ]
   },
   "params": {
-    "id": "13670ce3449dff8e9ff7747c4815ab0f",
+    "id": "4fe8e0a4e80ada61af8d250129fe3f06",
     "metadata": {},
-    "name": "DraftPostsQueryQuery",
+    "name": "DraftPostsPaginationQuery",
     "operationKind": "query",
     "text": null
   }
 };
 })();
 // prettier-ignore
-(node: any).hash = '37dde74df5a8d3c9b9916dcc435ec1b1';
+(node: any).hash = 'd644075d0fb8ede17f68ac6f3dc48d2c';
 module.exports = node;

@@ -8,9 +8,9 @@
 
 import type { ReaderFragment } from 'relay-runtime';
 import type { FragmentReference } from "relay-runtime";
-import type { ViewerDraftPostsFragment$ref, ViewerDraftPostsFragment$fragmentType } from "./DraftPostsQueryQuery.graphql";
-export type { ViewerDraftPostsFragment$ref, ViewerDraftPostsFragment$fragmentType };
-export type ViewerDraftPostsFragment = {|
+import type { DraftPostsFragment$ref, DraftPostsFragment$fragmentType } from "./DraftPostsPaginationQuery.graphql";
+export type { DraftPostsFragment$ref, DraftPostsFragment$fragmentType };
+export type DraftPostsFragment = {|
   +contributions: {|
     +edges: $ReadOnlyArray<{|
       +node: {|
@@ -19,12 +19,12 @@ export type ViewerDraftPostsFragment = {|
     |}>
   |},
   +id: string,
-  +$refType: ViewerDraftPostsFragment$ref,
+  +$refType: DraftPostsFragment$ref,
 |};
-export type ViewerDraftPostsFragment$data = ViewerDraftPostsFragment;
-export type ViewerDraftPostsFragment$key = {
-  +$data?: ViewerDraftPostsFragment$data,
-  +$fragmentRefs: ViewerDraftPostsFragment$ref,
+export type DraftPostsFragment$data = DraftPostsFragment;
+export type DraftPostsFragment$key = {
+  +$data?: DraftPostsFragment$data,
+  +$fragmentRefs: DraftPostsFragment$ref,
   ...
 };
 
@@ -75,11 +75,11 @@ return {
       "fragmentPathInResult": [
         "node"
       ],
-      "operation": require('./DraftPostsQueryQuery.graphql.js'),
+      "operation": require('./DraftPostsPaginationQuery.graphql.js'),
       "identifierField": "id"
     }
   },
-  "name": "ViewerDraftPostsFragment",
+  "name": "DraftPostsFragment",
   "selections": [
     {
       "alias": "contributions",
@@ -161,5 +161,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '37dde74df5a8d3c9b9916dcc435ec1b1';
+(node: any).hash = 'd644075d0fb8ede17f68ac6f3dc48d2c';
 module.exports = node;

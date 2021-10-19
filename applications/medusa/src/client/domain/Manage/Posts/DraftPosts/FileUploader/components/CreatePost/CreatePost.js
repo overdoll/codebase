@@ -5,21 +5,14 @@ import type { Node } from 'react'
 import { graphql, useLazyLoadQuery, useMutation } from 'react-relay/hooks'
 import type { Dispatch, State } from '@//:types/upload'
 import {
-  useToast, Flex, Spacer, Center, AlertDialog,
-  AlertDialogBody,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogContent,
-  AlertDialogOverlay, useDisclosure, Box
+  Flex, Center, Box
 } from '@chakra-ui/react'
-import Button from '@//:modules/form/Button'
-import { useTranslation } from 'react-i18next'
 import type { Uppy } from '@uppy/core'
 import FilePicker from '../FilePicker/FilePicker'
 import DragOverFileInput from '../DragOverFileInput/DragOverFileInput'
-import PostFlow from '../UpdatePost/UpdatePost'
+import UpdatePostFlow from '../UpdatePostFlow/UpdatePostFlow'
 import { StringParam, useQueryParam } from 'use-query-params'
-import type RootCreatePostFlowQuery from '@//:artifacts/RootCreatePostFlowQuery.graphql'
+import type CreatePostQuery from '@//:artifacts/CreatePostQuery.graphql'
 import { useEffect, useState } from 'react'
 
 type Props = {
@@ -29,7 +22,7 @@ type Props = {
 };
 
 const RootCreatePostFlowQueryGQL = graphql`
-  query RootCreatePostFlowQuery ($reference: String!) {
+  query CreatePostQuery ($reference: String!) {
     post (reference: $reference) {
       __typename
     }
@@ -37,7 +30,7 @@ const RootCreatePostFlowQueryGQL = graphql`
 `
 
 const RootCreatePostFlowMutationGQL = graphql`
-  mutation RootCreatePostFlowMutation {
+  mutation CreatePostMutation {
     createPost {
       post {
         reference
@@ -46,16 +39,10 @@ const RootCreatePostFlowMutationGQL = graphql`
   }
 `
 
-export default function RootCreatePostFlow ({ uppy, state, dispatch }: Props): Node {
-  /*
-  load URL params here into a query
-  if nothing found or no URL params specified for id?=
-  show the initial uploader
-   */
-
+export default function CreatePost ({ uppy, state, dispatch }: Props): Node {
   const [postReference, setPostReference] = useQueryParam('id', StringParam)
 
-  const data = useLazyLoadQuery<RootCreatePostFlowQuery>(
+  const data = useLazyLoadQuery<CreatePostQuery>(
     RootCreatePostFlowQueryGQL,
     { reference: postReference || '' }
   )
@@ -72,8 +59,12 @@ export default function RootCreatePostFlow ({ uppy, state, dispatch }: Props): N
       if (!validPostFound) {
         createPost({
           onCompleted (payload) {
-            setPostReference(payload.createPost.post.reference)
-            setValidPostFound(true)
+            setPostReference(x => {
+              setValidPostFound(!!payload.createPost.post)
+              // TODO dispatch post data here into the post flow
+              return payload.createPost.post.reference
+            })
+
             console.log('success')
           },
           onError () {
@@ -87,7 +78,7 @@ export default function RootCreatePostFlow ({ uppy, state, dispatch }: Props): N
   // Load the post into the creator on page refresh
   useEffect(() => {
     if (postData) {
-      console.log('load post')
+      // TODO dispatch post data here into the post flow
     }
   }, [])
 
@@ -96,6 +87,7 @@ export default function RootCreatePostFlow ({ uppy, state, dispatch }: Props): N
     return <>post being created</>
   }
 
+  // If there is no post found from the URL parameter, show create post initiator
   if (!validPostFound) {
     return (
       <Center>
@@ -115,5 +107,6 @@ export default function RootCreatePostFlow ({ uppy, state, dispatch }: Props): N
     )
   }
 
-  return (<PostFlow uppy={uppy} state={state} dispatch={dispatch} />)
+  // When there is a valid post we load the post creator flow
+  return (<UpdatePostFlow uppy={uppy} state={state} dispatch={dispatch} />)
 }
