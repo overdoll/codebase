@@ -37,7 +37,7 @@ func (r *MutationResolver) CreatePost(ctx context.Context) (*types.CreatePostPay
 	}
 
 	return &types.CreatePostPayload{
-		Post: types.MarshalPostToGraphQL(pst),
+		Post: types.MarshalPostToGraphQL(ctx, pst),
 	}, err
 }
 
@@ -74,7 +74,7 @@ func (r *MutationResolver) SubmitPost(ctx context.Context, input types.SubmitPos
 	inReview := true
 
 	return &types.SubmitPostPayload{
-		Post:     types.MarshalPostToGraphQL(pst),
+		Post:     types.MarshalPostToGraphQL(ctx, pst),
 		InReview: &inReview,
 	}, err
 }
@@ -100,7 +100,7 @@ func (r *MutationResolver) UpdatePostBrand(ctx context.Context, input types.Upda
 	}
 
 	return &types.UpdatePostBrandPayload{
-		Post: types.MarshalPostToGraphQL(pst),
+		Post: types.MarshalPostToGraphQL(ctx, pst),
 	}, err
 }
 
@@ -125,7 +125,7 @@ func (r *MutationResolver) UpdatePostAudience(ctx context.Context, input types.U
 	}
 
 	return &types.UpdatePostAudiencePayload{
-		Post: types.MarshalPostToGraphQL(pst),
+		Post: types.MarshalPostToGraphQL(ctx, pst),
 	}, err
 }
 
@@ -150,7 +150,7 @@ func (r *MutationResolver) UpdatePostContent(ctx context.Context, input types.Up
 	}
 
 	return &types.UpdatePostContentPayload{
-		Post: types.MarshalPostToGraphQL(pst),
+		Post: types.MarshalPostToGraphQL(ctx, pst),
 	}, err
 }
 
@@ -181,7 +181,7 @@ func (r *MutationResolver) UpdatePostCharacters(ctx context.Context, input types
 	}
 
 	return &types.UpdatePostCharactersPayload{
-		Post: types.MarshalPostToGraphQL(pst),
+		Post: types.MarshalPostToGraphQL(ctx, pst),
 	}, err
 }
 
@@ -212,6 +212,6 @@ func (r *MutationResolver) UpdatePostCategories(ctx context.Context, input types
 	}
 
 	return &types.UpdatePostCategoriesPayload{
-		Post: types.MarshalPostToGraphQL(pst),
+		Post: types.MarshalPostToGraphQL(ctx, pst),
 	}, err
 }

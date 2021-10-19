@@ -117,7 +117,7 @@ func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending
 	var brand *post.Brand
 
 	if postPending.BrandId != nil {
-		brand, err = r.GetBrandById(ctx, *postPending.BrandId)
+		brand, err = r.GetBrandById(ctx, nil, *postPending.BrandId)
 
 		if err != nil {
 			return nil, err
@@ -127,7 +127,7 @@ func (r PostsCassandraRepository) unmarshalPost(ctx context.Context, postPending
 	var audienc *post.Audience
 
 	if postPending.AudienceId != nil {
-		audienc, err = r.GetAudienceById(ctx, *postPending.AudienceId)
+		audienc, err = r.GetAudienceById(ctx, nil, *postPending.AudienceId)
 
 		if err != nil {
 			return nil, err
@@ -184,7 +184,7 @@ func (r PostsCassandraRepository) DeletePost(ctx context.Context, id string) err
 	return nil
 }
 
-func (r PostsCassandraRepository) GetPost(ctx context.Context, id string) (*post.Post, error) {
+func (r PostsCassandraRepository) GetPostByIdOperator(ctx context.Context, id string) (*post.Post, error) {
 
 	postQuery := r.session.
 		Query(postTable.Get()).
@@ -205,9 +205,9 @@ func (r PostsCassandraRepository) GetPost(ctx context.Context, id string) (*post
 	return r.unmarshalPost(ctx, postPending)
 }
 
-func (r PostsCassandraRepository) GetPostRequest(ctx context.Context, requester *principal.Principal, id string) (*post.Post, error) {
+func (r PostsCassandraRepository) GetPostById(ctx context.Context, requester *principal.Principal, id string) (*post.Post, error) {
 
-	pst, err := r.GetPost(ctx, id)
+	pst, err := r.GetPostByIdOperator(ctx, id)
 
 	if err != nil {
 		return nil, err
@@ -222,7 +222,7 @@ func (r PostsCassandraRepository) GetPostRequest(ctx context.Context, requester 
 
 func (r PostsCassandraRepository) UpdatePost(ctx context.Context, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
 
-	currentPost, err := r.GetPost(ctx, id)
+	currentPost, err := r.GetPostByIdOperator(ctx, id)
 
 	if err != nil {
 		return nil, err
@@ -260,7 +260,7 @@ func (r PostsCassandraRepository) UpdatePost(ctx context.Context, id string, upd
 
 func (r PostsCassandraRepository) updatePostRequest(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error, columns []string) (*post.Post, error) {
 
-	currentPost, err := r.GetPostRequest(ctx, requester, id)
+	currentPost, err := r.GetPostById(ctx, requester, id)
 
 	if err != nil {
 		return nil, err

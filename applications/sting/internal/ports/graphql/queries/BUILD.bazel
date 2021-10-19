@@ -2,7 +2,15 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "queries",
-    srcs = ["resolvers.go"],
+    srcs = [
+        "audience.go",
+        "brand.go",
+        "category.go",
+        "character.go",
+        "post.go",
+        "resolvers.go",
+        "series.go",
+    ],
     importpath = "overdoll/applications/sting/internal/ports/graphql/queries",
     visibility = ["//visibility:public"],
     deps = [
@@ -10,7 +18,6 @@ go_library(
         "//applications/sting/internal/app/query",
         "//applications/sting/internal/domain/post",
         "//applications/sting/internal/ports/graphql/types",
-        "//libraries/graphql/relay",
         "//libraries/paging",
         "//libraries/principal",
         "@com_github_vektah_gqlparser_v2//gqlerror",

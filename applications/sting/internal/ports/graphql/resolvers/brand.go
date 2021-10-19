@@ -15,7 +15,7 @@ type BrandResolver struct {
 	App *app.Application
 }
 
-func (r BrandResolver) Posts(ctx context.Context, obj *types.Brand, after *string, before *string, first *int, last *int) (*types.PostConnection, error) {
+func (r BrandResolver) Posts(ctx context.Context, obj *types.Brand, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, orderBy types.PostsOrder) (*types.PostConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)
 
@@ -23,17 +23,28 @@ func (r BrandResolver) Posts(ctx context.Context, obj *types.Brand, after *strin
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	id := obj.ID.GetID()
+	var stateModified *string
+
+	if state != nil {
+		str := state.String()
+		stateModified = &str
+	}
 
 	results, err := r.App.Queries.SearchPosts.Handle(ctx, query.SearchPosts{
-		Cursor:    cursor,
-		BrandId:   &id,
-		Principal: principal.FromContext(ctx),
+		Cursor:         cursor,
+		BrandSlugs:     []string{obj.Slug},
+		Principal:      principal.FromContext(ctx),
+		AudienceSlugs:  audienceSlugs,
+		CategorySlugs:  categorySlugs,
+		CharacterSlugs: characterSlugs,
+		SeriesSlugs:    seriesSlugs,
+		State:          stateModified,
+		OrderBy:        orderBy.Field.String(),
 	})
 
 	if err != nil {
 		return nil, err
 	}
 
-	return types.MarshalPostToGraphQLConnection(results, cursor), nil
+	return types.MarshalPostToGraphQLConnection(ctx, results, cursor), nil
 }

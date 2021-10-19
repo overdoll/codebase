@@ -19,9 +19,13 @@ go_library(
 go_test(
     name = "service_test",
     srcs = [
+        "audience_component_test.go",
+        "brand_component_test.go",
+        "category_component_test.go",
+        "character_component_test.go",
         "component_test.go",
         "post_component_test.go",
-        "search_component_test.go",
+        "series_component_test.go",
     ],
     data = [
         "//applications/sting:config.toml",

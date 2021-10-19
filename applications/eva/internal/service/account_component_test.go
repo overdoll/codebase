@@ -10,14 +10,8 @@ import (
 	"overdoll/libraries/passport"
 )
 
-type ViewerAcc struct {
-	Viewer struct {
-		Username graphql.String
-	} `graphql:"viewer()"`
-}
-
-func viewerAccount(t *testing.T, client *graphql.Client) ViewerAcc {
-	var settings ViewerAcc
+func viewerAccount(t *testing.T, client *graphql.Client) ViewerAccount {
+	var settings ViewerAccount
 	err := client.Query(context.Background(), &settings, nil)
 	require.NoError(t, err)
 	return settings
@@ -44,7 +38,7 @@ func TestGetAccountAuthentication_empty(t *testing.T) {
 	query := viewerAccount(t, client)
 
 	// at this point there is no account (since no passport is passed in) so expect that it doesnt send anything
-	require.Empty(t, query.Viewer.Username)
+	require.Nil(t, query.Viewer)
 
 	queryToken := viewAuthenticationToken(t, client)
 
@@ -63,7 +57,7 @@ func TestGetAccountAuthentication_user(t *testing.T) {
 
 	query := viewerAccount(t, client)
 
-	require.Equal(t, graphql.String("poisonminion"), query.Viewer.Username)
+	require.Equal(t, "poisonminion", query.Viewer.Username)
 
 	queryToken := viewAuthenticationToken(t, client)
 

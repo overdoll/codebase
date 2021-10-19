@@ -11,16 +11,31 @@ type Application struct {
 }
 
 type Commands struct {
-	GetNextModerator   command.GetNextModeratorHandler
-	ModeratePost       command.ModeratePostHandler
+	GetNextModerator command.GetNextModeratorHandler
+
+	RejectPost  command.RejectPostHandler
+	ApprovePost command.ApprovePostHandler
+	RemovePost  command.RemovePostHandler
+
+	ReportPost command.ReportPostHandler
+
 	RevertModeratePost command.RevertModeratePostHandler
 	ToggleModerator    command.ToggleModeratorHandler
 }
 
 type Queries struct {
-	PrincipalById                query.PrincipalByIdHandler
-	PostRejectionReasons         query.PostsRejectionReasonsHandler
-	PostRejectionReasonById      query.PostRejectionReasonByIdHandler
+	PrincipalById query.PrincipalByIdHandler
+
+	PostRejectionReasons    query.PostsRejectionReasonsHandler
+	PostRejectionReasonById query.PostRejectionReasonByIdHandler
+
+	PostReportReasons    query.PostsReportReasonsHandler
+	PostReportReasonById query.PostReportReasonByIdHandler
+
+	SearchPostReports          query.SearchPostReportsHandler
+	PostReportById             query.PostReportByIdHandler
+	PostReportByAccountAndPost query.PostReportByAccountAndPostHandler
+
 	SearchPostAuditLogs          query.SearchPostAuditLogsHandler
 	AccountInfractionHistory     query.AccountInfractionHistoryByAccountHandler
 	AccountInfractionHistoryById query.AccountInfractionHistoryByIdHandler

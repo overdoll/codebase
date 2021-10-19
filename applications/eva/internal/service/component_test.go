@@ -34,6 +34,20 @@ type TestUser struct {
 	Username string `faker:"username"`
 }
 
+type AccountModified struct {
+	Username    string
+	IsStaff     bool
+	IsModerator bool
+}
+
+type AccountByUsername struct {
+	Account *AccountModified `graphql:"account(username: $username)"`
+}
+
+type ViewerAccount struct {
+	Viewer *AccountModified `graphql:"viewer()"`
+}
+
 type GrantAuthenticationToken struct {
 	GrantAuthenticationToken types.GrantAuthenticationTokenPayload `graphql:"grantAuthenticationToken(input: $input)"`
 }
@@ -71,7 +85,7 @@ func verifyAuthenticationToken(t *testing.T, client *graphql.Client, cookie stri
 type GrantAccountAccessWithAuthenticationToken struct {
 	GrantAccountAccessWithAuthenticationToken *struct {
 		Account struct {
-			Username graphql.String
+			Username string
 		}
 	} `graphql:"grantAccountAccessWithAuthenticationToken()"`
 }
@@ -118,6 +132,18 @@ func viewAuthenticationToken(t *testing.T, client *graphql.Client) ViewAuthentic
 	require.NoError(t, err)
 
 	return authRedeemed
+}
+
+func getAccountByUsername(t *testing.T, client *graphql.Client, username string) *AccountModified {
+	var accountByUsername AccountByUsername
+
+	err := client.Query(context.Background(), &accountByUsername, map[string]interface{}{
+		"username": graphql.String(username),
+	})
+
+	require.NoError(t, err)
+
+	return accountByUsername.Account
 }
 
 func getOTPTokenFromJar(t *testing.T, jar http.CookieJar) *http.Cookie {

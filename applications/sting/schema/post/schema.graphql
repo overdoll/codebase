@@ -35,6 +35,8 @@ enum PostState {
   Discarded
   Rejected
   Processing
+  Removing
+  Removed
 }
 
 """Update post brand."""
@@ -133,7 +135,6 @@ type SubmitPostPayload {
   inReview: Boolean
 }
 
-
 type PostEdge {
   cursor: String!
   node: Post!
@@ -142,6 +143,18 @@ type PostEdge {
 type PostConnection {
   edges: [PostEdge!]!
   pageInfo: PageInfo!
+}
+
+"""Ordering options for posts"""
+input PostsOrder {
+  """The field to order security advisories by."""
+  field: PostsOrderField!
+}
+
+"""Properties by which posts connections can be ordered."""
+enum PostsOrderField {
+  """Posts by update time"""
+  CREATED_AT
 }
 
 extend type Account {
@@ -158,10 +171,31 @@ extend type Account {
 
     """Returns the last _n_ elements from the list."""
     last: Int
+
+    """Search by brand slugs."""
+    brandSlugs: [String!]
+
+    """Search by audience slugs."""
+    audienceSlugs: [String!]
+
+    """Search by category slugs."""
+    categorySlugs: [String!]
+
+    """Search by character slugs."""
+    characterSlugs: [String!]
+
+    """Search by series slugs."""
+    seriesSlugs: [String!]
+
+    """Search by a post state."""
+    state: PostState = Review
+
+    """Ordering options for posts."""
+    orderBy: PostsOrder! = { field: CREATED_AT }
   ): PostConnection! @goField(forceResolver: true)
 
   """Contributions specific to this account"""
-  contributions(
+  posts(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
 
@@ -173,6 +207,27 @@ extend type Account {
 
     """Returns the last _n_ elements from the list."""
     last: Int
+
+    """Search by brand slugs."""
+    brandSlugs: [String!]
+
+    """Search by audience slugs."""
+    audienceSlugs: [String!]
+
+    """Search by category slugs."""
+    categorySlugs: [String!]
+
+    """Search by character slugs."""
+    characterSlugs: [String!]
+
+    """Search by series slugs."""
+    seriesSlugs: [String!]
+
+    """Search by a post state."""
+    state: PostState = Published
+
+    """Ordering options for posts."""
+    orderBy: PostsOrder! = { field: CREATED_AT }
   ): PostConnection! @goField(forceResolver: true)
 }
 
@@ -234,14 +289,26 @@ extend type Query {
     """Returns the last _n_ elements from the list."""
     last: Int
 
-    """Search by category Ids."""
-    categoryIds: [ID!]
+    """Search by brand slugs."""
+    brandSlugs: [String!]
 
-    """Search by charcter Ids."""
-    characterIds: [ID!]
+    """Search by audience slugs."""
+    audienceSlugs: [String!]
 
-    """Search by series Ids."""
-    seriesIds: [ID!]
+    """Search by category slugs."""
+    categorySlugs: [String!]
+
+    """Search by character slugs."""
+    characterSlugs: [String!]
+
+    """Search by series slugs."""
+    seriesSlugs: [String!]
+
+    """Search by a post state."""
+    state: PostState = Published
+
+    """Ordering options for posts."""
+    orderBy: PostsOrder! = { field: CREATED_AT }
   ): PostConnection!
 }
 
@@ -259,6 +326,24 @@ extend type Category {
 
     """Returns the last _n_ elements from the list."""
     last: Int
+
+    """Search by brand slugs."""
+    brandSlugs: [String!]
+
+    """Search by audience slugs."""
+    audienceSlugs: [String!]
+
+    """Search by character slugs."""
+    characterSlugs: [String!]
+
+    """Search by series slugs."""
+    seriesSlugs: [String!]
+
+    """Search by a post state."""
+    state: PostState = Published
+
+    """Ordering options for posts."""
+    orderBy: PostsOrder! = { field: CREATED_AT }
   ): PostConnection! @goField(forceResolver: true)
 }
 
@@ -276,6 +361,21 @@ extend type Character {
 
     """Returns the last _n_ elements from the list."""
     last: Int
+
+    """Search by brand slugs."""
+    brandSlugs: [String!]
+
+    """Search by audience slugs."""
+    audienceSlugs: [String!]
+
+    """Search by category slugs."""
+    categorySlugs: [String!]
+
+    """Search by a post state."""
+    state: PostState = Published
+
+    """Ordering options for posts."""
+    orderBy: PostsOrder! = { field: CREATED_AT }
   ): PostConnection! @goField(forceResolver: true)
 }
 
@@ -293,6 +393,24 @@ extend type Series {
 
     """Returns the last _n_ elements from the list."""
     last: Int
+
+    """Search by brand slugs."""
+    brandSlugs: [String!]
+
+    """Search by audience slugs."""
+    audienceSlugs: [String!]
+
+    """Search by category slugs."""
+    categorySlugs: [String!]
+
+    """Search by character slugs."""
+    characterSlugs: [String!]
+
+    """Search by a post state."""
+    state: PostState = Published
+
+    """Ordering options for posts."""
+    orderBy: PostsOrder! = { field: CREATED_AT }
   ): PostConnection! @goField(forceResolver: true)
 }
 
@@ -310,6 +428,24 @@ extend type Brand {
 
     """Returns the last _n_ elements from the list."""
     last: Int
+
+    """Search by audience slugs."""
+    audienceSlugs: [String!]
+
+    """Search by category slugs."""
+    categorySlugs: [String!]
+
+    """Search by character slugs."""
+    characterSlugs: [String!]
+
+    """Search by series slugs."""
+    seriesSlugs: [String!]
+
+    """Search by a post state."""
+    state: PostState = Published
+
+    """Ordering options for posts."""
+    orderBy: PostsOrder! = { field: CREATED_AT }
   ): PostConnection! @goField(forceResolver: true)
 }
 
@@ -327,5 +463,23 @@ extend type Audience {
 
     """Returns the last _n_ elements from the list."""
     last: Int
+
+    """Search by brand slugs."""
+    brandSlugs: [String!]
+
+    """Search by category slugs."""
+    categorySlugs: [String!]
+
+    """Search by character slugs."""
+    characterSlugs: [String!]
+
+    """Search by series slugs."""
+    seriesSlugs: [String!]
+
+    """Search by a post state."""
+    state: PostState = Published
+
+    """Ordering options for posts."""
+    orderBy: PostsOrder! = { field: CREATED_AT }
   ): PostConnection! @goField(forceResolver: true)
 }

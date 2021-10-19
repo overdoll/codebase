@@ -22,6 +22,8 @@ go_test(
         "account_settings_component_test.go",
         "authenticate_component_test.go",
         "component_test.go",
+        "language_component_test.go",
+        "staff_component_test.go",
     ],
     data = ["//applications/eva:config.toml"],
     deps = [

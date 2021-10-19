@@ -6,10 +6,7 @@ type Audience implements Node & Object @key(fields: "id") {
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail(
-    """The size of the resulting square image."""
-    size: Int
-  ): Resource
+  thumbnail: Resource
 
   """A title for this audience."""
   title: String!
@@ -25,7 +22,20 @@ type AudienceConnection {
   pageInfo: PageInfo!
 }
 
+"""Ordering options for audiences"""
+input AudiencesOrder {
+  """The field to order audiences by."""
+  field: AudiencesOrderField!
+}
+
+"""Properties by which audience connections can be ordered."""
+enum AudiencesOrderField {
+  """Audience by created time"""
+  CREATED_AT
+}
+
 extend type Query {
+  """Search all audiences."""
   audiences(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
@@ -39,9 +49,21 @@ extend type Query {
     """Returns the last _n_ elements from the list."""
     last: Int
 
+    """Search by audience slugs."""
+    slugs: [String!]
+
     """Search by title of the audience."""
     title: String
+
+    """Ordering options for audiences."""
+    orderBy: AudiencesOrder! = { field: CREATED_AT }
   ): AudienceConnection!
+
+  """Get a single audience."""
+  audience(
+    """Search by slug of the audience."""
+    slug: String!
+  ): Audience
 }
 
 extend type Post {

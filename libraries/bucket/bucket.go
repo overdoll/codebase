@@ -33,6 +33,20 @@ func MakeBucketFromKSUID(target string) (int, error) {
 	return timestampToBucket(int(id.Time().Unix())), nil
 }
 
+func MakeBucketsFromTimeRange(from, to time.Time) []int {
+
+	startBucket := MakeBucketFromTimestamp(from)
+	endBucket := MakeBucketFromTimestamp(to)
+
+	var rng []int
+
+	for i := endBucket; i <= startBucket; i++ {
+		rng = append(rng, i)
+	}
+
+	return rng
+}
+
 func MakeBucket() int {
 	return timestampToBucket(int(time.Now().Unix())*1000 - OverdollEpoch)
 }

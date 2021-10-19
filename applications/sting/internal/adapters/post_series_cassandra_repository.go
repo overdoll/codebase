@@ -8,6 +8,7 @@ import (
 	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/principal"
 )
 
 var seriesTable = table.New(table.Metadata{
@@ -23,20 +24,67 @@ var seriesTable = table.New(table.Metadata{
 })
 
 type series struct {
-	Id        string `db:"id"`
-	Slug      string `db:"slug"`
-	Title     string `db:"title"`
-	Thumbnail string `db:"thumbnail"`
+	Id        string            `db:"id"`
+	Slug      string            `db:"slug"`
+	Title     map[string]string `db:"title"`
+	Thumbnail string            `db:"thumbnail"`
 }
 
-func (r PostsCassandraRepository) GetSingleSeriesById(ctx context.Context, seriesId string) (*post.Series, error) {
+var seriesSlugTable = table.New(table.Metadata{
+	Name: "series_slugs",
+	Columns: []string{
+		"series_id",
+		"slug",
+	},
+	PartKey: []string{"slug"},
+	SortKey: []string{},
+})
+
+type seriesSlug struct {
+	SeriesId string `db:"series_id"`
+	Slug     string `db:"slug"`
+}
+
+func (r PostsCassandraRepository) getSeriesBySlug(ctx context.Context, requester *principal.Principal, slug string) (*seriesSlug, error) {
+
+	querySeriesSlug := r.session.
+		Query(seriesSlugTable.Get()).
+		Consistency(gocql.One).
+		BindStruct(seriesSlug{Slug: slug})
+
+	var b seriesSlug
+
+	if err := querySeriesSlug.Get(&b); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return nil, post.ErrSeriesNotFound
+		}
+
+		return nil, fmt.Errorf("failed to get series by slug: %v", err)
+	}
+
+	return &b, nil
+}
+
+func (r PostsCassandraRepository) GetSeriesBySlug(ctx context.Context, requester *principal.Principal, slug string) (*post.Series, error) {
+
+	seriesSlug, err := r.getSeriesBySlug(ctx, requester, slug)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return r.GetSingleSeriesById(ctx, requester, seriesSlug.SeriesId)
+}
+
+func (r PostsCassandraRepository) GetSingleSeriesById(ctx context.Context, requester *principal.Principal, seriesId string) (*post.Series, error) {
 
 	queryMedia := r.session.
 		Query(seriesTable.Get()).
 		Consistency(gocql.One).
 		BindStruct(series{Id: seriesId})
 
-	var med *series
+	var med series
 
 	if err := queryMedia.Get(&med); err != nil {
 
@@ -86,28 +134,4 @@ func (r PostsCassandraRepository) GetSeriesById(ctx context.Context, medi []stri
 	}
 
 	return medias, nil
-}
-
-func (r PostsCassandraRepository) CreateMedias(ctx context.Context, medias []*post.Series) error {
-
-	batch := r.session.NewBatch(gocql.LoggedBatch)
-
-	for _, med := range medias {
-		stmt, _ := seriesTable.Insert()
-		batch.Query(
-			stmt,
-			med.ID(),
-			med.Slug(),
-			med.Title(),
-			med.Thumbnail(),
-		)
-	}
-
-	err := r.session.ExecuteBatch(batch)
-
-	if err != nil {
-		return fmt.Errorf("failed to create medias: %v", err)
-	}
-
-	return nil
 }

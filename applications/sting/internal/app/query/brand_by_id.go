@@ -4,10 +4,12 @@ import (
 	"context"
 
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/principal"
 )
 
 type BrandById struct {
-	BrandId string
+	Principal *principal.Principal
+	Id        string
 }
 
 type BrandByIdHandler struct {
@@ -20,7 +22,7 @@ func NewBrandByIdHandler(pr post.Repository) BrandByIdHandler {
 
 func (h BrandByIdHandler) Handle(ctx context.Context, query BrandById) (*post.Brand, error) {
 
-	result, err := h.pr.GetBrandById(ctx, query.BrandId)
+	result, err := h.pr.GetBrandById(ctx, query.Principal, query.Id)
 
 	if err != nil {
 		return nil, err

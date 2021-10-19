@@ -51,6 +51,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 			DiscardPost: command.NewDiscardPostHandler(postRepo, indexRepo),
 			RejectPost:  command.NewRejectPostHandler(postRepo, indexRepo),
 			SubmitPost:  command.NewSubmitPostHandler(postRepo, indexRepo, parley),
+			RemovePost:  command.NewRemovePostHandler(postRepo, indexRepo),
 
 			IndexAllPosts:      command.NewIndexAllPostsHandler(postRepo, indexRepo),
 			IndexAllSeries:     command.NewIndexAllSeriesHandler(postRepo, indexRepo),
@@ -67,19 +68,29 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 		},
 		Queries: app.Queries{
 			PrincipalById: query.NewPrincipalByIdHandler(eva),
-			PostById:      query.NewPostByIdHandler(postRepo),
-			CharacterById: query.NewCharacterByIdHandler(postRepo),
-			CategoryById:  query.NewCategoryByIdHandler(postRepo),
-			SeriesById:    query.NewSeriesByIdHandler(postRepo),
-			BrandById:     query.NewBrandByIdHandler(postRepo),
-			AudienceById:  query.NewAudienceByIdHandler(postRepo),
 
-			SearchSeries:     query.NewSearchSeriesHandler(indexRepo),
 			SearchCharacters: query.NewSearchCharactersHandler(indexRepo),
+			CharacterBySlug:  query.NewCharacterBySlugHandler(postRepo),
+			CharacterById:    query.NewCharacterByIdHandler(postRepo),
+
 			SearchCategories: query.NewSearchCategoriesHandler(indexRepo),
-			SearchPosts:      query.NewSearchPostsHandler(indexRepo),
-			SearchBrands:     query.NewSearchBrandsHandler(indexRepo),
-			SearchAudience:   query.NewSearchAudienceHandler(indexRepo),
+			CategoryBySlug:   query.NewCategoryBySlugHandler(postRepo),
+			CategoryById:     query.NewCategoryByIdHandler(postRepo),
+
+			SearchPosts: query.NewSearchPostsHandler(indexRepo),
+			PostById:    query.NewPostByIdHandler(postRepo),
+
+			SearchBrands: query.NewSearchBrandsHandler(indexRepo),
+			BrandBySlug:  query.NewBrandBySlugHandler(postRepo),
+			BrandById:    query.NewBrandByIdHandler(postRepo),
+
+			SearchAudience: query.NewSearchAudienceHandler(indexRepo),
+			AudienceBySlug: query.NewAudienceBySlugHandler(postRepo),
+			AudienceById:   query.NewAudienceByIdHandler(postRepo),
+
+			SearchSeries: query.NewSearchSeriesHandler(indexRepo),
+			SeriesBySlug: query.NewSeriesBySlugHandler(postRepo),
+			SeriesById:   query.NewSeriesByIdHandler(postRepo),
 		},
 		Activities: activities.NewActivitiesHandler(postRepo, indexRepo, resourceRepo, parley),
 	}

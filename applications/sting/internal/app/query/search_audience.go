@@ -5,11 +5,15 @@ import (
 
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
 )
 
 type SearchAudience struct {
-	Cursor *paging.Cursor
-	Title  *string
+	Principal *principal.Principal
+	Cursor    *paging.Cursor
+	Title     *string
+	Slugs     []string
+	OrderBy   string
 }
 
 type SearchAudienceHandler struct {
@@ -22,7 +26,17 @@ func NewSearchAudienceHandler(pr post.IndexRepository) SearchAudienceHandler {
 
 func (h SearchAudienceHandler) Handle(ctx context.Context, query SearchAudience) ([]*post.Audience, error) {
 
-	results, err := h.pr.SearchAudience(ctx, query.Cursor, query.Title)
+	filters, err := post.NewObjectFilters(
+		query.Title,
+		query.OrderBy,
+		query.Slugs,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	results, err := h.pr.SearchAudience(ctx, query.Principal, query.Cursor, filters)
 
 	if err != nil {
 		return nil, err

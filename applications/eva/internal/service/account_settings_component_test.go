@@ -41,13 +41,13 @@ func createSession(t *testing.T, accountId, userAgent, ip string) {
 
 type AccountEmailModified struct {
 	ID     relay.ID
-	Email  graphql.String
+	Email  string
 	Status types.AccountEmailStatus
 }
 
 type AccountUsernameModified struct {
 	ID       relay.ID
-	Username graphql.String
+	Username string
 }
 
 type AddAccountEmail struct {
@@ -70,13 +70,14 @@ type DeleteAccountEmail struct {
 
 type UpdateAccountEmailStatusToPrimary struct {
 	UpdateAccountEmailStatusToPrimary struct {
-		AccountEmail *AccountEmailModified
+		PrimaryAccountEmail *AccountEmailModified
+		UpdatedAccountEmail *AccountEmailModified
 	} `graphql:"updateAccountEmailStatusToPrimary(input: $input)"`
 }
 
 type ViewerAccountEmailUsernameSettings struct {
 	Viewer struct {
-		Username graphql.String
+		Username string
 		Emails   *struct {
 			Edges []*struct {
 				Node *AccountEmailModified
@@ -98,6 +99,41 @@ func viewerAccountEmailUsernameSettings(t *testing.T, client *graphql.Client) Vi
 	return settings
 }
 
+func addAccountEmail(t *testing.T, client *graphql.Client, targetEmail string) AddAccountEmail {
+	var addAccountEmail AddAccountEmail
+
+	// add an email to our account
+	err := client.Mutate(context.Background(), &addAccountEmail, map[string]interface{}{
+		"input": types.AddAccountEmailInput{Email: targetEmail},
+	})
+
+	require.NoError(t, err)
+	require.NotNil(t, addAccountEmail.AddAccountEmail.AccountEmail)
+	require.Equal(t, addAccountEmail.AddAccountEmail.AccountEmail.Email, targetEmail)
+	require.Equal(t, addAccountEmail.AddAccountEmail.AccountEmail.Status, types.AccountEmailStatusUnconfirmed)
+
+	return addAccountEmail
+}
+
+func confirmAccountEmail(t *testing.T, client *graphql.Client, email string) ConfirmAccountEmail {
+	// get confirmation key (this would be found in the email, but here we query our redis DB directly)
+	confirmationKey := getEmailConfirmation(t, email)
+
+	require.NotEmpty(t, confirmationKey)
+
+	var confirmAccountEmail ConfirmAccountEmail
+
+	// confirm the account's new email
+	err := client.Mutate(context.Background(), &confirmAccountEmail, map[string]interface{}{
+		"input": types.ConfirmAccountEmailInput{ID: confirmationKey},
+	})
+
+	require.NoError(t, err)
+	require.NotNil(t, confirmAccountEmail.ConfirmAccountEmail.AccountEmail)
+
+	return confirmAccountEmail
+}
+
 // Go through a full flow of adding a new email to an account, confirming the email and making it the primary email
 func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 	t.Parallel()
@@ -115,52 +151,17 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 
 	targetEmail := strings.ToLower(fake.Email)
 
-	var addAccountEmail AddAccountEmail
+	addAccountEmail(t, client, targetEmail)
 
-	// add an email to our account
-	err = client.Mutate(context.Background(), &addAccountEmail, map[string]interface{}{
-		"input": types.AddAccountEmailInput{Email: targetEmail},
-	})
-
-	require.NoError(t, err)
-	require.NotNil(t, addAccountEmail.AddAccountEmail.AccountEmail)
-	require.Equal(t, graphql.String(targetEmail), addAccountEmail.AddAccountEmail.AccountEmail.Email)
+	confirmAccountEmail := confirmAccountEmail(t, client, targetEmail)
 
 	settings := viewerAccountEmailUsernameSettings(t, client)
-
-	foundUnconfirmedEmail := false
-
-	// query account's settings and ensure this email is here, and unconfirmed
-	for _, email := range settings.Viewer.Emails.Edges {
-		if email.Node.Email == graphql.String(targetEmail) && email.Node.Status == types.AccountEmailStatusUnconfirmed {
-			foundUnconfirmedEmail = true
-		}
-	}
-
-	require.True(t, foundUnconfirmedEmail)
-
-	// get confirmation key (this would be found in the email, but here we query our redis DB directly)
-	confirmationKey := getEmailConfirmation(t, targetEmail)
-
-	require.NotEmpty(t, confirmationKey)
-
-	var confirmAccountEmail ConfirmAccountEmail
-
-	// confirm the account's new email
-	err = client.Mutate(context.Background(), &confirmAccountEmail, map[string]interface{}{
-		"input": types.ConfirmAccountEmailInput{ID: confirmationKey},
-	})
-
-	require.NoError(t, err)
-	require.NotNil(t, confirmAccountEmail.ConfirmAccountEmail.AccountEmail)
-
-	settings = viewerAccountEmailUsernameSettings(t, client)
 
 	foundConfirmedEmail := false
 
 	// go through account settings and make sure that this email is now confirmed
 	for _, email := range settings.Viewer.Emails.Edges {
-		if email.Node.Email == graphql.String(targetEmail) && email.Node.Status == types.AccountEmailStatusConfirmed {
+		if email.Node.Email == targetEmail && email.Node.Status == types.AccountEmailStatusConfirmed {
 			foundConfirmedEmail = true
 		}
 	}
@@ -175,7 +176,9 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 	})
 
 	require.NoError(t, err)
-	require.NotNil(t, makeEmailPrimary.UpdateAccountEmailStatusToPrimary.AccountEmail)
+	require.NotNil(t, makeEmailPrimary.UpdateAccountEmailStatusToPrimary.PrimaryAccountEmail)
+
+	require.Equal(t, targetEmail, makeEmailPrimary.UpdateAccountEmailStatusToPrimary.PrimaryAccountEmail.Email)
 
 	// query account settings once more
 	settings = viewerAccountEmailUsernameSettings(t, client)
@@ -184,7 +187,7 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 
 	// go through account settings and make sure that this email is now the primary email
 	for _, email := range settings.Viewer.Emails.Edges {
-		if email.Node.Email == graphql.String(targetEmail) && email.Node.Status == types.AccountEmailStatusPrimary {
+		if email.Node.Email == targetEmail && email.Node.Status == types.AccountEmailStatusPrimary {
 			foundPrimaryEmail = true
 		}
 	}
@@ -192,7 +195,8 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 	require.True(t, foundPrimaryEmail)
 }
 
-func TestAccountEmail_create_new_and_remove(t *testing.T) {
+// adds an email
+func TestAccountEmail_create_new_confirm_and_remove(t *testing.T) {
 	t.Parallel()
 
 	testAccountId := "1pcKibRoqTAUgmOiNpGLIrztM9R"
@@ -208,15 +212,9 @@ func TestAccountEmail_create_new_and_remove(t *testing.T) {
 
 	targetEmail := strings.ToLower(fake.Email)
 
-	var addAccountEmail AddAccountEmail
+	addAccountEmail := addAccountEmail(t, client, targetEmail)
 
-	// add an email to our account
-	err = client.Mutate(context.Background(), &addAccountEmail, map[string]interface{}{
-		"input": types.AddAccountEmailInput{Email: targetEmail},
-	})
-
-	require.NoError(t, err)
-	require.NotNil(t, addAccountEmail.AddAccountEmail.AccountEmail)
+	confirmAccountEmail(t, client, targetEmail)
 
 	var removeAccountEmail DeleteAccountEmail
 
@@ -234,7 +232,7 @@ func TestAccountEmail_create_new_and_remove(t *testing.T) {
 
 	// go through account settings and make sure email is not found
 	for _, email := range settings.Viewer.Emails.Edges {
-		if email.Node.Email == graphql.String(targetEmail) {
+		if email.Node.Email == targetEmail {
 			foundNewEmail = true
 		}
 	}
@@ -279,7 +277,7 @@ func TestAccountUsername_modify(t *testing.T) {
 
 	// go through the account's usernames and make sure the username exists here
 	for _, username := range settings.Viewer.Usernames.Edges {
-		if username.Node.Username == graphql.String(targetUsername) {
+		if username.Node.Username == targetUsername {
 			foundNewUsername = true
 		}
 	}
@@ -287,7 +285,7 @@ func TestAccountUsername_modify(t *testing.T) {
 	require.True(t, foundNewUsername)
 
 	// make sure that the username is modified as well for the "authentication" query
-	require.Equal(t, graphql.String(targetUsername), settings.Viewer.Username)
+	require.Equal(t, targetUsername, settings.Viewer.Username)
 }
 
 type TestSession struct {

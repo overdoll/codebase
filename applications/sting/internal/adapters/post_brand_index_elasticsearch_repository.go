@@ -12,39 +12,42 @@ import (
 	"github.com/segmentio/ksuid"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/principal"
 	"overdoll/libraries/scan"
+	"overdoll/libraries/translations"
 )
 
 type brandDocument struct {
-	Id        string `json:"id"`
-	Slug      string `json:"slug"`
-	Thumbnail string `json:"thumbnail"`
-	Name      string `json:"name"`
-	CreatedAt string `json:"created_at"`
+	Id        string            `json:"id"`
+	Slug      string            `json:"slug"`
+	Thumbnail string            `json:"thumbnail"`
+	Name      map[string]string `json:"name"`
+	CreatedAt string            `json:"created_at"`
 }
+
+const brandsIndexProperties = `
+{
+	"id": {
+		"type": "keyword"
+	},
+	"slug": {
+		"type": "keyword"
+	},
+	"thumbnail": {
+		"type": "keyword"
+	},
+	"name": ` + translations.ESIndex + `
+	"created_at": {
+		"type": "date"
+	}
+}
+`
 
 const brandsIndex = `
 {
 	"mappings": {
 		"dynamic": "strict",
-		"properties": {
-			"id": {
-				"type": "keyword"
-			},
-			"slug": {
-				"type": "keyword"
-			},
-			"thumbnail": {
-				"type": "keyword"
-			},
-			"name": {
-				"type": "text",
-				"analyzer": "english"
-			},
-			"created_at": {
-				"type": "date"
-			}
-		}
+		"properties":` + brandsIndexProperties + `
 	}
 }`
 
@@ -73,12 +76,12 @@ func marshalBrandToDocument(cat *post.Brand) (*brandDocument, error) {
 		Id:        cat.ID(),
 		Slug:      cat.Slug(),
 		Thumbnail: thumbnail,
-		Name:      cat.Name(),
+		Name:      translations.MarshalTranslationToDatabase(cat.Name()),
 		CreatedAt: strconv.FormatInt(parse.Time().Unix(), 10),
 	}, nil
 }
 
-func (r PostsIndexElasticSearchRepository) SearchBrands(ctx context.Context, cursor *paging.Cursor, search *string) ([]*post.Brand, error) {
+func (r PostsIndexElasticSearchRepository) SearchBrands(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.ObjectFilters) ([]*post.Brand, error) {
 
 	builder := r.client.Search().
 		Index(brandsIndexName)
@@ -89,8 +92,18 @@ func (r PostsIndexElasticSearchRepository) SearchBrands(ctx context.Context, cur
 
 	query := cursor.BuildElasticsearch(builder, "created_at")
 
-	if search != nil {
-		query.Must(elastic.NewMultiMatchQuery(*search, "name").Operator("and"))
+	if filter.Search() != nil {
+		query.Must(
+			elastic.
+				NewMultiMatchQuery(*filter.Search(), translations.GetESSearchFields("name")...).
+				Type("best_fields"),
+		)
+	}
+
+	if len(filter.Slugs()) > 0 {
+		for _, id := range filter.Slugs() {
+			query.Filter(elastic.NewTermQuery("slug", id))
+		}
 	}
 
 	builder.Query(query)

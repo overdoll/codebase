@@ -5,6 +5,7 @@ go_library(
     srcs = [
         "account_infraction_history.go",
         "post_audit_log.go",
+        "post_audit_log_filters.go",
         "post_rejection_reason.go",
         "repository.go",
     ],
@@ -13,6 +14,7 @@ go_library(
     deps = [
         "//libraries/paging",
         "//libraries/principal",
+        "//libraries/translations",
         "@com_github_segmentio_ksuid//:ksuid",
     ],
 )

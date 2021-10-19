@@ -22,6 +22,7 @@ type Commands struct {
 	UndoPost    command.UndoPostHandler
 	RejectPost  command.RejectPostHandler
 	SubmitPost  command.SubmitPostHandler
+	RemovePost  command.RemovePostHandler
 
 	UpdatePostContent    command.UpdatePostContentHandler
 	UpdatePostCategories command.UpdatePostCategoriesHandler
@@ -39,17 +40,27 @@ type Commands struct {
 
 type Queries struct {
 	PrincipalById query.PrincipalByIdHandler
-	PostById      query.PostByIdHandler
-	CharacterById query.CharacterByIdHandler
-	CategoryById  query.CategoryByIdHandler
-	SeriesById    query.SeriesByIdHandler
-	AudienceById  query.AudienceByIdHandler
-	BrandById     query.BrandByIdHandler
+
+	SearchPosts query.SearchPostsHandler
+	PostById    query.PostByIdHandler
+
+	SearchCharacters query.SearchCharactersHandler
+	CharacterBySlug  query.CharacterBySlugHandler
+	CharacterById    query.CharacterByIdHandler
 
 	SearchCategories query.SearchCategoriesHandler
-	SearchCharacters query.SearchCharactersHandler
-	SearchSeries     query.SearchSeriesHandler
-	SearchPosts      query.SearchPostsHandler
-	SearchBrands     query.SearchBrandsHandler
-	SearchAudience   query.SearchAudienceHandler
+	CategoryBySlug   query.CategoryBySlugHandler
+	CategoryById     query.CategoryByIdHandler
+
+	SearchSeries query.SearchSeriesHandler
+	SeriesBySlug query.SeriesBySlugHandler
+	SeriesById   query.SeriesByIdHandler
+
+	SearchAudience query.SearchAudienceHandler
+	AudienceBySlug query.AudienceBySlugHandler
+	AudienceById   query.AudienceByIdHandler
+
+	SearchBrands query.SearchBrandsHandler
+	BrandBySlug  query.BrandBySlugHandler
+	BrandById    query.BrandByIdHandler
 }

@@ -39,6 +39,7 @@
     "id": "1pcKibRoqTAUgmOiNpGLIrztM9R",
     "username": "testaccountforstuff",
     "email": "i2fhz.test-account@inbox.testmail.app",
-    "roles": []
+    "roles": [],
+    "multi_factor_enabled": true
   }
 ]

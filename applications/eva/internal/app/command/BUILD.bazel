@@ -4,6 +4,8 @@ go_library(
     name = "command",
     srcs = [
         "add_account_email.go",
+        "assign_account_moderator_role.go",
+        "assign_account_staff_role.go",
         "confirm_account_email.go",
         "create_account_with_authentication_token.go",
         "disable_account_multi_factor.go",
@@ -17,7 +19,9 @@ go_library(
         "redeem_authentication_token.go",
         "reissue_authentication_token.go",
         "remove_account_email.go",
+        "revoke_account_moderator_role.go",
         "revoke_account_session.go",
+        "revoke_account_staff_role.go",
         "revoke_authentication_token.go",
         "services.go",
         "unlock_account.go",

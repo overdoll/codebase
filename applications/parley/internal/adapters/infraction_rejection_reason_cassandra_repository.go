@@ -15,19 +15,19 @@ var postRejectionReasonTable = table.New(table.Metadata{
 	Name: "post_rejection_reasons",
 	Columns: []string{
 		"id",
-		"reason",
 		"infraction",
 		"bucket",
+		"reason",
 	},
 	PartKey: []string{"bucket"},
 	SortKey: []string{"id"},
 })
 
 type postRejectionReason struct {
-	Id         string `db:"id"`
-	Reason     string `db:"reason"`
-	Infraction bool   `db:"infraction"`
-	Bucket     int    `db:"bucket"`
+	Id         string            `db:"id"`
+	Infraction bool              `db:"infraction"`
+	Bucket     int               `db:"bucket"`
+	Reason     map[string]string `db:"reason"`
 }
 
 func (r InfractionCassandraRepository) GetPostRejectionReason(ctx context.Context, requester *principal.Principal, id string) (*infraction.PostRejectionReason, error) {
@@ -84,10 +84,31 @@ func (r InfractionCassandraRepository) GetPostRejectionReasons(ctx context.Conte
 
 	var rejectionReasons []*infraction.PostRejectionReason
 	for _, rejectionReason := range dbRejectionReasons {
+
 		reason := infraction.UnmarshalPostRejectionReasonFromDatabase(rejectionReason.Id, rejectionReason.Reason, rejectionReason.Infraction)
+
 		reason.Node = paging.NewNode(rejectionReason.Id)
 		rejectionReasons = append(rejectionReasons, reason)
 	}
 
 	return rejectionReasons, nil
+}
+
+// since we dont want to duplicate rejection reasons (they're subject to changes like translations or updates) we can use this function to get all
+// rejection reasons as a map, which can then be used to map audit logs and infraction history without a performance penalty on hitting multiple partitions
+func (r InfractionCassandraRepository) getPostRejectionReasonsAsMap(ctx context.Context, requester *principal.Principal) (map[string]*infraction.PostRejectionReason, error) {
+
+	rejectionReasons, err := r.GetPostRejectionReasons(ctx, requester, nil)
+
+	if err != nil {
+		return nil, err
+	}
+
+	rejectionReasonMap := make(map[string]*infraction.PostRejectionReason)
+
+	for _, reason := range rejectionReasons {
+		rejectionReasonMap[reason.ID()] = reason
+	}
+
+	return rejectionReasonMap, nil
 }

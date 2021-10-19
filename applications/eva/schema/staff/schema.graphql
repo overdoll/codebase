@@ -1,0 +1,77 @@
+"""Assigned account"""
+type AssignAccountModeratorRolePayload {
+  """The account that the role was assigned to"""
+  account: Account
+}
+
+"""Input to assign account to a moderator role"""
+input AssignAccountModeratorRole {
+  """
+  The account ID that the role needs to be assigned to
+  """
+  accountId: ID!
+}
+
+"""Assigned account"""
+type AssignAccountStaffRolePayload {
+  """The account that the role was assigned to"""
+  account: Account
+}
+
+"""Input to assign account to a staff role"""
+input AssignAccountStaffRole {
+  """
+  The account ID that the role needs to be assigned to
+  """
+  accountId: ID!
+}
+
+"""Revoked account"""
+type RevokeAccountModeratorRolePayload {
+  """The account that the role was revoked from"""
+  account: Account
+}
+
+"""Input to revoke moderator role"""
+input RevokeAccountModeratorRole {
+  """
+  The account ID that the role needs to be revoked from
+  """
+  accountId: ID!
+}
+
+"""Revoked account"""
+type RevokeAccountStaffRolePayload {
+  """The account that the role was revoked from"""
+  account: Account
+}
+
+"""Input to revoke staff role"""
+input RevokeAccountStaffRole {
+  """
+  The account ID that the role needs to be revoked from
+  """
+  accountId: ID!
+}
+
+extend type Mutation {
+  """
+  Assign a moderator role to the account
+  """
+  assignAccountModeratorRole(input: AssignAccountModeratorRole!): AssignAccountModeratorRolePayload
+
+  """
+  Assign a staff role to the account
+  """
+  assignAccountStaffRole(input: AssignAccountStaffRole!): AssignAccountStaffRolePayload
+
+  """
+  Revoke the moderator role from the account
+  """
+  revokeAccountModeratorRole(input: RevokeAccountModeratorRole!): RevokeAccountModeratorRolePayload
+
+  """
+  Revoke the staff role from the account
+  """
+  revokeAccountStaffRole(input: RevokeAccountStaffRole!): RevokeAccountStaffRolePayload
+}

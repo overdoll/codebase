@@ -11,7 +11,12 @@ import (
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/helpers"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/translations"
 )
+
+func MarshalLanguageToGraphQL(result *translations.Language) *Language {
+	return &Language{Locale: result.Locale()}
+}
 
 func MarshalAccountToGraphQL(result *account.Account) *Account {
 

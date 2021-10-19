@@ -5,6 +5,7 @@ import (
 
 	"overdoll/applications/sting/internal/domain/resource"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/translations"
 )
 
 var (
@@ -16,7 +17,7 @@ type Character struct {
 
 	id        string
 	slug      string
-	name      string
+	name      *translations.Translation
 	thumbnail *resource.Resource
 	series    *Series
 }
@@ -29,7 +30,7 @@ func (c *Character) Slug() string {
 	return c.slug
 }
 
-func (c *Character) Name() string {
+func (c *Character) Name() *translations.Translation {
 	return c.name
 }
 
@@ -41,11 +42,11 @@ func (c *Character) Thumbnail() *resource.Resource {
 	return c.thumbnail
 }
 
-func UnmarshalCharacterFromDatabase(id, slug, name string, thumbnail string, media *Series) *Character {
+func UnmarshalCharacterFromDatabase(id, slug string, name map[string]string, thumbnail string, media *Series) *Character {
 	return &Character{
 		id:        id,
 		slug:      slug,
-		name:      name,
+		name:      translations.UnmarshalTranslationFromDatabase(name),
 		thumbnail: resource.UnmarshalResourceFromDatabase(thumbnail),
 		series:    media,
 	}

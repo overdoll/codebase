@@ -1,3 +1,7 @@
 extend type Account @key(fields: "id") {
   id: ID! @external
 }
+
+extend type Post @key(fields: "id") {
+  id: ID! @external
+}

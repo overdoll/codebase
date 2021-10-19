@@ -7,6 +7,7 @@ go_library(
         "discard_post.go",
         "publish_post.go",
         "reassign_moderator.go",
+        "remove_post.go",
         "services.go",
         "submit_post.go",
         "undo_post.go",

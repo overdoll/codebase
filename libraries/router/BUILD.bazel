@@ -4,6 +4,7 @@ go_library(
     name = "router",
     srcs = [
         "gin.go",
+        "language.go",
         "passport.go",
         "query_observer.go",
         "router.go",
@@ -14,6 +15,7 @@ go_library(
         "//libraries/bootstrap",
         "//libraries/helpers",
         "//libraries/passport",
+        "//libraries/translations",
         "@com_github_gin_gonic_gin//:gin",
     ],
 )

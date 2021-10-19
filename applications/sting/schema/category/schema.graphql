@@ -6,10 +6,7 @@ type Category implements Node & Object @key(fields: "id") {
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail(
-    """The size of the resulting square image."""
-    size: Int
-  ): Resource
+  thumbnail: Resource
 
   """A title for this category."""
   title: String!
@@ -25,7 +22,20 @@ type CategoryConnection {
   pageInfo: PageInfo!
 }
 
+"""Ordering options for categories"""
+input CategoriesOrder {
+  """The field to order categories by."""
+  field: CategoriesOrderField!
+}
+
+"""Properties by which category connections can be ordered."""
+enum CategoriesOrderField {
+  """Category by created time"""
+  CREATED_AT
+}
+
 extend type Query {
+  """Search all categories."""
   categories(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
@@ -39,9 +49,21 @@ extend type Query {
     """Returns the last _n_ elements from the list."""
     last: Int
 
-    # filter by the name of the category
+    """Search by category slugs."""
+    slugs: [String!]
+
+    """Filter by the title of the category."""
     title: String
+
+    """Ordering options for categories."""
+    orderBy: CategoriesOrder! = { field: CREATED_AT }
   ): CategoryConnection!
+
+  """Get a single category."""
+  category(
+    """Search by slug of the category."""
+    slug: String!
+  ): Category
 }
 
 extend type Post {
