@@ -45,7 +45,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley comma
 		Commands: app.Commands{
 			TusComposer: command.NewTusComposerHandler(resourceRepo),
 
-			CreatePost:  command.NewCreatePostHandler(postRepo, eva, parley),
+			CreatePost:  command.NewCreatePostHandler(postRepo, indexRepo, eva, parley),
 			UndoPost:    command.NewUndoPostHandler(postRepo, indexRepo),
 			PublishPost: command.NewPublishPostHandler(postRepo, indexRepo, eva),
 			DiscardPost: command.NewDiscardPostHandler(postRepo, indexRepo),
