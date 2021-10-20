@@ -3,22 +3,42 @@ enum MultiFactorType {
 }
 
 type AuthenticationTokenAccountStatus {
+  """When verified, whether or not there is an account belonging to this token."""
   registered: Boolean!
+
+  """If multi-factor is enabled for this account"""
   multiFactor: [MultiFactorType!]
 }
 
+"""Authentication token. Used for logging in."""
 type AuthenticationToken {
+  """Unique ID of the token"""
   id: ID!
+
+  """Whether or not the token belongs to the same session as it was created in"""
   sameSession: Boolean!
+
+  """Whether or not the token is verified"""
   verified: Boolean!
-  # Whether or not this token is "secure"
-  # Secure means that the token has been viewed from the same network as originally created
-  # if it wasn't viewed in the same network, the interface should take care and double-check with
-  # the user that they want to verify the token.
+
+  """
+  Whether or not this token is "secure"
+  Secure means that the token has been viewed from the same network as originally created
+  if it wasn't viewed in the same network, the interface should take care and double-check with
+  the user that they want to verify the token.
+  """
   secure: Boolean!
+
+  """The device this token was created from."""
   device: String!
+
+  """The location where this token was created at."""
   location: String!
+
+  """The email that belongs to this token."""
   email: String!
+
+  """Once the token is verified, you can see the status of the account"""
   accountStatus: AuthenticationTokenAccountStatus
 }
 
@@ -47,12 +67,19 @@ input CreateAccountWithAuthenticationTokenInput {
   username: String!
 }
 
+"""Validation for granting an authentication token"""
+enum GrantAuthenticationTokenValidation {
+  INVALID_EMAIL
+}
+
 """Payload for starting an authentication"""
 type GrantAuthenticationTokenPayload {
   """The authentication token after starting"""
   authenticationToken: AuthenticationToken
-}
 
+  """Validation for granting an authentication token"""
+  validation: GrantAuthenticationTokenValidation
+}
 
 """Validation for creating an account with an authentication token"""
 enum CreateAccountWithAuthenticationTokenValidation {

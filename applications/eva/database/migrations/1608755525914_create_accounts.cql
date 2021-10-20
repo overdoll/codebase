@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS accounts
     roles                list<text>,
     verified             boolean,
     avatar               text,
+    language             text,
     locked               boolean,
     locked_until         int,
     locked_reason        text,

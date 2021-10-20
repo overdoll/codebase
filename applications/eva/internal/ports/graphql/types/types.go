@@ -25,6 +25,13 @@ type Account struct {
 	IsModerator bool `json:"isModerator"`
 	// The details of the account lock
 	Lock *AccountLock `json:"lock"`
+	// The language of the account.
+	//
+	// Note: this is the language that will be used to determine which emails should be sent where.
+	//
+	// You should make sure that the root level "langauge" is the same when the user loads the app, so they get a
+	// consistent experience. Use "UpdateLanguage" when the languages are mismatched.
+	Language *Language `json:"Language"`
 	// Usernames for account (history)
 	Usernames *AccountUsernameConnection `json:"usernames"`
 	// Emails for account (multiple emails per account)
@@ -173,6 +180,8 @@ type AddAccountEmailInput struct {
 type AddAccountEmailPayload struct {
 	// The account email that was added to
 	AccountEmail *AccountEmail `json:"accountEmail"`
+	// Any validation errors from the backend
+	Validation *AddAccountEmailValidation `json:"validation"`
 }
 
 // Input to assign account to a moderator role
@@ -199,19 +208,33 @@ type AssignAccountStaffRolePayload struct {
 	Account *Account `json:"account"`
 }
 
+// Authentication token. Used for logging in.
 type AuthenticationToken struct {
-	ID            relay.ID                          `json:"id"`
-	SameSession   bool                              `json:"sameSession"`
-	Verified      bool                              `json:"verified"`
-	Secure        bool                              `json:"secure"`
-	Device        string                            `json:"device"`
-	Location      string                            `json:"location"`
-	Email         string                            `json:"email"`
+	// Unique ID of the token
+	ID relay.ID `json:"id"`
+	// Whether or not the token belongs to the same session as it was created in
+	SameSession bool `json:"sameSession"`
+	// Whether or not the token is verified
+	Verified bool `json:"verified"`
+	// Whether or not this token is "secure"
+	// Secure means that the token has been viewed from the same network as originally created
+	// if it wasn't viewed in the same network, the interface should take care and double-check with
+	// the user that they want to verify the token.
+	Secure bool `json:"secure"`
+	// The device this token was created from.
+	Device string `json:"device"`
+	// The location where this token was created at.
+	Location string `json:"location"`
+	// The email that belongs to this token.
+	Email string `json:"email"`
+	// Once the token is verified, you can see the status of the account
 	AccountStatus *AuthenticationTokenAccountStatus `json:"accountStatus"`
 }
 
 type AuthenticationTokenAccountStatus struct {
-	Registered  bool              `json:"registered"`
+	// When verified, whether or not there is an account belonging to this token.
+	Registered bool `json:"registered"`
+	// If multi-factor is enabled for this account
 	MultiFactor []MultiFactorType `json:"multiFactor"`
 }
 
@@ -328,6 +351,8 @@ type GrantAuthenticationTokenInput struct {
 type GrantAuthenticationTokenPayload struct {
 	// The authentication token after starting
 	AuthenticationToken *AuthenticationToken `json:"authenticationToken"`
+	// Validation for granting an authentication token
+	Validation *GrantAuthenticationTokenValidation `json:"validation"`
 }
 
 type Language struct {
@@ -437,6 +462,20 @@ type UpdateAccountEmailStatusToPrimaryPayload struct {
 	PrimaryAccountEmail *AccountEmail `json:"primaryAccountEmail"`
 	// The account email that was updated to 'confirmed' status
 	UpdatedAccountEmail *AccountEmail `json:"updatedAccountEmail"`
+}
+
+// Input for updating the account language
+type UpdateAccountLanguageInput struct {
+	// The locale to update the language to
+	Locale string `json:"locale"`
+}
+
+// Payload of the account language update
+type UpdateAccountLanguagePayload struct {
+	// The new language that is now set
+	Language *Language `json:"language"`
+	// The account that has the updated language
+	Account *Account `json:"Account"`
 }
 
 // Input for updating an account's username
@@ -557,6 +596,46 @@ func (e *AccountLockReason) UnmarshalGQL(v interface{}) error {
 }
 
 func (e AccountLockReason) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// Validation message for adding account email
+type AddAccountEmailValidation string
+
+const (
+	AddAccountEmailValidationInvalidEmail AddAccountEmailValidation = "INVALID_EMAIL"
+)
+
+var AllAddAccountEmailValidation = []AddAccountEmailValidation{
+	AddAccountEmailValidationInvalidEmail,
+}
+
+func (e AddAccountEmailValidation) IsValid() bool {
+	switch e {
+	case AddAccountEmailValidationInvalidEmail:
+		return true
+	}
+	return false
+}
+
+func (e AddAccountEmailValidation) String() string {
+	return string(e)
+}
+
+func (e *AddAccountEmailValidation) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = AddAccountEmailValidation(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid AddAccountEmailValidation", str)
+	}
+	return nil
+}
+
+func (e AddAccountEmailValidation) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
@@ -806,6 +885,46 @@ func (e *GrantAccountAccessWithAuthenticationTokenValidation) UnmarshalGQL(v int
 }
 
 func (e GrantAccountAccessWithAuthenticationTokenValidation) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// Validation for granting an authentication token
+type GrantAuthenticationTokenValidation string
+
+const (
+	GrantAuthenticationTokenValidationInvalidEmail GrantAuthenticationTokenValidation = "INVALID_EMAIL"
+)
+
+var AllGrantAuthenticationTokenValidation = []GrantAuthenticationTokenValidation{
+	GrantAuthenticationTokenValidationInvalidEmail,
+}
+
+func (e GrantAuthenticationTokenValidation) IsValid() bool {
+	switch e {
+	case GrantAuthenticationTokenValidationInvalidEmail:
+		return true
+	}
+	return false
+}
+
+func (e GrantAuthenticationTokenValidation) String() string {
+	return string(e)
+}
+
+func (e *GrantAuthenticationTokenValidation) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = GrantAuthenticationTokenValidation(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid GrantAuthenticationTokenValidation", str)
+	}
+	return nil
+}
+
+func (e GrantAuthenticationTokenValidation) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

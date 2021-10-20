@@ -24,6 +24,7 @@ var accountTable = table.New(table.Metadata{
 		"avatar",
 		"locked",
 		"locked_until",
+		"language",
 		"locked_reason",
 		"last_username_edit",
 		"multi_factor_enabled",
@@ -39,6 +40,7 @@ type accounts struct {
 	Roles              []string `db:"roles"`
 	Verified           bool     `db:"verified"`
 	Avatar             string   `db:"avatar"`
+	Language           string   `db:"language"`
 	Locked             bool     `db:"locked"`
 	LockedUntil        int      `db:"locked_until"`
 	LockedReason       string   `db:"locked_reason"`
@@ -65,6 +67,7 @@ func marshalUserToDatabase(usr *account.Account) *accounts {
 		Verified:           usr.Verified(),
 		LockedUntil:        usr.LockedUntil(),
 		Locked:             usr.IsLocked(),
+		Language:           usr.Language().Locale(),
 		LockedReason:       usr.LockedReason(),
 		MultiFactorEnabled: usr.MultiFactorEnabled(),
 	}
@@ -98,6 +101,7 @@ func (r AccountRepository) GetAccountById(ctx context.Context, id string) (*acco
 		accountInstance.Roles,
 		accountInstance.Verified,
 		accountInstance.Avatar,
+		accountInstance.Language,
 		accountInstance.Locked,
 		accountInstance.LockedUntil,
 		accountInstance.LockedReason,
@@ -136,6 +140,7 @@ func (r AccountRepository) GetAccountsById(ctx context.Context, ids []string) ([
 			accountInstance.Roles,
 			accountInstance.Verified,
 			accountInstance.Avatar,
+			accountInstance.Language,
 			accountInstance.Locked,
 			accountInstance.LockedUntil,
 			accountInstance.LockedReason,
@@ -318,6 +323,7 @@ func (r AccountRepository) UpdateAccount(ctx context.Context, id string, updateF
 					"roles",
 					"verified",
 					"locked_until",
+					"langauge",
 					"locked",
 					"locked_reason",
 					"avatar",

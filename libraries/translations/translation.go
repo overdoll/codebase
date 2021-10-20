@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"go.uber.org/zap"
-	"golang.org/x/text/language"
 )
 
 // support carries all translations for a specific thing
@@ -22,7 +21,7 @@ func (t *Translation) Translate(lang *Language, fallback string) string {
 			return item.data
 		}
 
-		if item.tag == language.English {
+		if item.tag == defaultLanguage {
 			englishTag = item.data
 		}
 	}

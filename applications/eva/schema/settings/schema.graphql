@@ -262,6 +262,14 @@ input ConfirmAccountEmailInput {
 type AddAccountEmailPayload {
   """The account email that was added to"""
   accountEmail: AccountEmail
+
+  """Any validation errors from the backend"""
+  validation: AddAccountEmailValidation
+}
+
+"""Validation message for adding account email"""
+enum AddAccountEmailValidation {
+  INVALID_EMAIL
 }
 
 """Email to add the account"""

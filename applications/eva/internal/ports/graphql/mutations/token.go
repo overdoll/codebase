@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/sha256"
 	"net/http"
+	"overdoll/libraries/validation"
 	"strings"
 	"time"
 
@@ -31,6 +32,12 @@ func (r *MutationResolver) GrantAuthenticationToken(ctx context.Context, input t
 	})
 
 	if err != nil {
+
+		if err == validation.ErrInvalidEmail {
+			invalid := types.GrantAuthenticationTokenValidationInvalidEmail
+			return &types.GrantAuthenticationTokenPayload{Validation: &invalid}, nil
+		}
+
 		return nil, err
 	}
 

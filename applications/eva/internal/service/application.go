@@ -43,6 +43,7 @@ func createApplication(ctx context.Context, carrier command.CarrierService) app.
 
 	return app.Application{
 		Commands: app.Commands{
+			UpdateAccountLanguage:                     command.NewUpdateAccountLanguageHandler(accountRepo),
 			VerifyAuthenticationToken:                 command.NewVerifyAuthenticationTokenHandler(tokenRepo, accountRepo),
 			GrantAccountAccessWithAuthenticationToken: command.NewGrantAccountAccessWithAuthenticationTokenHandler(tokenRepo, accountRepo, mfaRepo),
 			CreateAccountWithAuthenticationToken:      command.NewCreateAccountWithAuthenticationTokenHandler(tokenRepo, accountRepo),
