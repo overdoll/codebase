@@ -199,7 +199,7 @@ func (r AccountRepository) ConfirmAccountEmail(ctx context.Context, requester *p
 		return nil, err
 	}
 
-	// create a unique email - will error out if not unique
+	// create a unique email - will error out if not uniques
 	if err := r.createUniqueAccountEmail(ctx, acc, em.Email()); err != nil {
 		return nil, err
 	}
