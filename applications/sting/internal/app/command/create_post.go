@@ -30,7 +30,7 @@ func (h CreatePostHandler) Handle(ctx context.Context, cmd CreatePost) (*post.Po
 		return nil, err
 	}
 
-	// create a pending post in the database with all of the data
+	// create a pending post in the database with all the data
 	if err := h.pr.CreatePost(ctx, pendingPost); err != nil {
 		return nil, err
 	}
