@@ -4,22 +4,20 @@
 import type { Node } from 'react'
 import { EVENTS, INITIAL_STATE, STEPS } from '../../constants/constants'
 import { graphql, useMutation } from 'react-relay/hooks'
-import type {
-  CharacterRequest,
-  StepsMutation
-} from '@//:artifacts/StepsMutation.graphql'
 import type { Dispatch, State } from '@//:types/upload'
-import {
-  useToast, Flex, Spacer, Center, AlertDialog,
-  AlertDialogBody,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogContent,
-  AlertDialogOverlay, useDisclosure
-} from '@chakra-ui/react'
+import { useToast, Flex, Stack, Box, Spacer } from '@chakra-ui/react'
+import type { Uppy } from '@uppy/core'
+import Audience from './Audience/Audience'
+import Brand from './Brand/Brand'
+import Category from './Category/Category'
+import Character from './Character/Character'
+import Arrange from './Arrange/Arrange'
+import Review from './Review/Review'
+import Submit from './Submit/Submit'
+import ProgressIndicator from '../ProgressIndicator/ProgressIndicator'
 import Button from '@//:modules/form/Button'
 import { useTranslation } from 'react-i18next'
-import type { Uppy } from '@uppy/core'
+import { StringParam, useQueryParam } from 'use-query-params'
 
 type Props = {
   uppy: Uppy,
@@ -27,6 +25,8 @@ type Props = {
   dispatch: Dispatch,
 };
 
+// TODO all the mutations go here
+// TODO dispatch only responsible for stepping and uploads
 /*
 
 const SubmitGraphQL = graphql`
@@ -46,18 +46,15 @@ const SubmitGraphQL = graphql`
 export default function UpdatePostFlow ({ uppy, state, dispatch }: Props): Node {
   // const [commit, isInFlight] = useMutation<StepsMutation>(SubmitGraphQL)
 
+  const [t] = useTranslation('upload')
+
+  const [postReference, setPostReference] = useQueryParam('id', StringParam)
+
   const commit = () => {
     return null
   }
-  const isInFlight = true
 
   const notify = useToast()
-
-  const { isOpen, onOpen, onClose } = useDisclosure()
-
-  const [t] = useTranslation('general')
-
-  const [u] = useTranslation('upload')
 
   // Tagging step - disabled if the conditions aren't met
   const NextDisabled =
@@ -69,36 +66,56 @@ export default function UpdatePostFlow ({ uppy, state, dispatch }: Props): Node 
   // If the amount of files != the amount of urls (not all files were uploaded), then we can't submit yet
   const SubmitDisabled = state.files.length !== Object.keys(state.urls).length
 
-  const Step = (): Node => {
+  const CurrentStep = (): Node => {
     switch (state.step) {
       case STEPS.ARRANGE:
 
-        // <Arrange uppy={uppy} dispatch={dispatch} state={state} />
+        return <Arrange uppy={uppy} dispatch={dispatch} state={state} />
 
-      case STEPS.TAG:
+      case STEPS.AUDIENCE:
 
-        // <Tag disabled={NextDisabled} dispatch={dispatch} state={state} />
+        return <Audience />
+
+      case STEPS.BRAND:
+
+        return <Brand />
+
+      case STEPS.CATEGORY:
+
+        return <Category />
+
+      case STEPS.CHARACTER:
+
+        return <Character />
 
       case STEPS.REVIEW:
 
-        // Review disabled={SubmitDisabled} state={state} /
+        return <Review />
 
-      case STEPS.FINISH:
+      case STEPS.SUBMIT:
 
-        // <Finish state={state} />
+        return <Submit />
 
       default:
-
-      // <Begin uppy={uppy} />
+        return <Arrange uppy={uppy} dispatch={dispatch} state={state} />
     }
   }
 
-  const NextStep = (): void => {
+  const goForward = (): void => {
     switch (state.step) {
       case STEPS.ARRANGE:
-        dispatch({ type: EVENTS.STEP, value: STEPS.TAG })
+        dispatch({ type: EVENTS.STEP, value: STEPS.AUDIENCE })
         break
-      case STEPS.TAG:
+      case STEPS.AUDIENCE:
+        dispatch({ type: EVENTS.STEP, value: STEPS.BRAND })
+        break
+      case STEPS.BRAND:
+        dispatch({ type: EVENTS.STEP, value: STEPS.CATEGORY })
+        break
+      case STEPS.CATEGORY:
+        dispatch({ type: EVENTS.STEP, value: STEPS.CHARACTER })
+        break
+      case STEPS.CHARACTER:
         dispatch({ type: EVENTS.STEP, value: STEPS.REVIEW })
         break
       default:
@@ -106,17 +123,54 @@ export default function UpdatePostFlow ({ uppy, state, dispatch }: Props): Node 
     }
   }
 
-  const PrevStep = (): void => {
+  const ForwardButton = () => {
     switch (state.step) {
-      case STEPS.TAG:
+      case STEPS.REVIEW:
+        return <Button colorScheme='primary' size='lg' onClick={onSubmitPost}>submit</Button>
+      case STEPS.SUBMIT:
+        return <></>
+      default:
+        return <Button colorScheme='gray' size='lg' onClick={goForward}>forward</Button>
+    }
+  }
+
+  const goBack = (): void => {
+    switch (state.step) {
+      case STEPS.AUDIENCE:
         dispatch({ type: EVENTS.STEP, value: STEPS.ARRANGE })
         break
+      case STEPS.BRAND:
+        dispatch({ type: EVENTS.STEP, value: STEPS.AUDIENCE })
+        break
+      case STEPS.CATEGORY:
+        dispatch({ type: EVENTS.STEP, value: STEPS.BRAND })
+        break
+      case STEPS.CHARACTER:
+        dispatch({ type: EVENTS.STEP, value: STEPS.CATEGORY })
+        break
       case STEPS.REVIEW:
-        dispatch({ type: EVENTS.STEP, value: STEPS.TAG })
+        dispatch({ type: EVENTS.STEP, value: STEPS.CHARACTER })
         break
       default:
         break
     }
+  }
+
+  const BackButton = () => {
+    switch (state.step) {
+      case STEPS.SUBMIT:
+        return <></>
+      case STEPS.ARRANGE:
+        return <></>
+      default:
+        return <Button colorScheme='gray' size='lg' onClick={goBack}>back</Button>
+    }
+  }
+
+  // When user submits the post
+  const onSubmitPost = () => {
+    dispatch({ type: EVENTS.STEP, value: STEPS.SUBMIT })
+    onCleanup()
   }
 
   // onSubmit - submit post
@@ -190,13 +244,27 @@ export default function UpdatePostFlow ({ uppy, state, dispatch }: Props): Node 
   }
 
   // Cleanup - reset uppy uploads and state
-  const onCancel = () => {
-    onClose()
+  const onCleanup = () => {
     uppy.reset()
     dispatch({ type: EVENTS.CLEANUP, value: INITIAL_STATE })
+    setPostReference(undefined)
+    // URL param cleared here to set it to original state
+    // or just clear the store?
   }
 
   return (
-    <>post flow</>
+    <Stack spacing={4}>
+      <Box>
+        <ProgressIndicator state={state} />
+      </Box>
+      <Box>
+        {CurrentStep()}
+      </Box>
+      <Flex>
+        <BackButton />
+        <Spacer />
+        <ForwardButton />
+      </Flex>
+    </Stack>
   )
 }

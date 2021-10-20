@@ -7,14 +7,16 @@
 'use strict';
 
 import type { ReaderFragment } from 'relay-runtime';
+export type PostState = "Discarded" | "Discarding" | "Draft" | "Processing" | "Published" | "Publishing" | "Rejected" | "Review" | "%future added value";
 import type { FragmentReference } from "relay-runtime";
 import type { DraftPostsFragment$ref, DraftPostsFragment$fragmentType } from "./DraftPostsPaginationQuery.graphql";
 export type { DraftPostsFragment$ref, DraftPostsFragment$fragmentType };
 export type DraftPostsFragment = {|
-  +contributions: {|
+  +posts: {|
     +edges: $ReadOnlyArray<{|
       +node: {|
-        +id: string
+        +id: string,
+        +state: PostState,
       |}
     |}>
   |},
@@ -31,7 +33,7 @@ export type DraftPostsFragment$key = {
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "contributions"
+  "posts"
 ],
 v1 = {
   "alias": null,
@@ -82,11 +84,11 @@ return {
   "name": "DraftPostsFragment",
   "selections": [
     {
-      "alias": "contributions",
+      "alias": "posts",
       "args": null,
       "concreteType": "PostConnection",
       "kind": "LinkedField",
-      "name": "__contributions_contributions_connection",
+      "name": "__DraftPostsPaginationQuery_posts_connection",
       "plural": false,
       "selections": [
         {
@@ -106,6 +108,13 @@ return {
               "plural": false,
               "selections": [
                 (v1/*: any*/),
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "state",
+                  "storageKey": null
+                },
                 {
                   "alias": null,
                   "args": null,
@@ -161,5 +170,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = 'd644075d0fb8ede17f68ac6f3dc48d2c';
+(node: any).hash = '193163415c042e2d98cb44d3edafdcdf';
 module.exports = node;

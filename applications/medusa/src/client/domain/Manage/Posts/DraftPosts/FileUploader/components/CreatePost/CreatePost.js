@@ -61,7 +61,6 @@ export default function CreatePost ({ uppy, state, dispatch }: Props): Node {
           onCompleted (payload) {
             setPostReference(x => {
               setValidPostFound(!!payload.createPost.post)
-              // TODO dispatch post data here into the post flow
               return payload.createPost.post.reference
             })
 
@@ -74,13 +73,6 @@ export default function CreatePost ({ uppy, state, dispatch }: Props): Node {
       }
     })
   }, [uppy])
-
-  // Load the post into the creator on page refresh
-  useEffect(() => {
-    if (postData) {
-      // TODO dispatch post data here into the post flow
-    }
-  }, [])
 
   // Show a loading placeholder for post being created
   if (isCreatingPost) {

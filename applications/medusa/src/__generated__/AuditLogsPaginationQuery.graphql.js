@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash c774183ac7199e27f069ed58e5827f02
+ * @relayHash a438308c837d1eb5ed3af333ed6eb918
  */
 
 /* eslint-disable */
@@ -67,7 +67,7 @@ fragment AuditInspectFragment on PostAuditLog {
 }
 
 fragment AuditLogsFragment_2HEEH6 on Account {
-  moderatorPostAuditLogs(first: $first, after: $after) {
+  moderatorPostAuditLogs(first: $first, after: $after, dateRange: {from: "Time", to: "Time"}) {
     edges {
       node {
         ...AuditCardFragment
@@ -151,40 +151,50 @@ v1 = [
     "variableName": "id"
   }
 ],
-v2 = [
-  {
-    "kind": "Variable",
-    "name": "after",
-    "variableName": "after"
-  },
-  {
-    "kind": "Variable",
-    "name": "first",
-    "variableName": "first"
-  }
-],
+v2 = {
+  "kind": "Variable",
+  "name": "after",
+  "variableName": "after"
+},
 v3 = {
+  "kind": "Variable",
+  "name": "first",
+  "variableName": "first"
+},
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
 },
-v4 = {
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v5 = {
+v6 = [
+  (v2/*: any*/),
+  {
+    "kind": "Literal",
+    "name": "dateRange",
+    "value": {
+      "from": "Time",
+      "to": "Time"
+    }
+  },
+  (v3/*: any*/)
+],
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v6 = [
+v8 = [
   {
     "alias": null,
     "args": null,
@@ -192,7 +202,7 @@ v6 = [
     "name": "title",
     "storageKey": null
   },
-  (v4/*: any*/)
+  (v5/*: any*/)
 ];
 return {
   "fragment": {
@@ -210,7 +220,10 @@ return {
         "plural": false,
         "selections": [
           {
-            "args": (v2/*: any*/),
+            "args": [
+              (v2/*: any*/),
+              (v3/*: any*/)
+            ],
             "kind": "FragmentSpread",
             "name": "AuditLogsFragment"
           }
@@ -235,14 +248,14 @@ return {
         "name": "node",
         "plural": false,
         "selections": [
-          (v3/*: any*/),
           (v4/*: any*/),
+          (v5/*: any*/),
           {
             "kind": "InlineFragment",
             "selections": [
               {
                 "alias": null,
-                "args": (v2/*: any*/),
+                "args": (v6/*: any*/),
                 "concreteType": "PostAuditLogConnection",
                 "kind": "LinkedField",
                 "name": "moderatorPostAuditLogs",
@@ -293,7 +306,7 @@ return {
                                 "name": "username",
                                 "storageKey": null
                               },
-                              (v4/*: any*/)
+                              (v5/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -312,7 +325,7 @@ return {
                                 "name": "postedAt",
                                 "storageKey": null
                               },
-                              (v4/*: any*/),
+                              (v5/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -350,8 +363,8 @@ return {
                                 "name": "brand",
                                 "plural": false,
                                 "selections": [
-                                  (v5/*: any*/),
-                                  (v4/*: any*/)
+                                  (v7/*: any*/),
+                                  (v5/*: any*/)
                                 ],
                                 "storageKey": null
                               },
@@ -363,7 +376,7 @@ return {
                                 "name": "characters",
                                 "plural": true,
                                 "selections": [
-                                  (v5/*: any*/),
+                                  (v7/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -371,10 +384,10 @@ return {
                                     "kind": "LinkedField",
                                     "name": "series",
                                     "plural": false,
-                                    "selections": (v6/*: any*/),
+                                    "selections": (v8/*: any*/),
                                     "storageKey": null
                                   },
-                                  (v4/*: any*/)
+                                  (v5/*: any*/)
                                 ],
                                 "storageKey": null
                               },
@@ -385,7 +398,7 @@ return {
                                 "kind": "LinkedField",
                                 "name": "categories",
                                 "plural": true,
-                                "selections": (v6/*: any*/),
+                                "selections": (v8/*: any*/),
                                 "storageKey": null
                               }
                             ],
@@ -398,7 +411,7 @@ return {
                             "name": "action",
                             "storageKey": null
                           },
-                          (v4/*: any*/),
+                          (v5/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -406,7 +419,7 @@ return {
                             "name": "notes",
                             "storageKey": null
                           },
-                          (v3/*: any*/)
+                          (v4/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -450,8 +463,10 @@ return {
               },
               {
                 "alias": null,
-                "args": (v2/*: any*/),
-                "filters": null,
+                "args": (v6/*: any*/),
+                "filters": [
+                  "dateRange"
+                ],
                 "handle": "connection",
                 "key": "AuditLogs_moderatorPostAuditLogs",
                 "kind": "LinkedHandle",
@@ -467,7 +482,7 @@ return {
     ]
   },
   "params": {
-    "id": "c774183ac7199e27f069ed58e5827f02",
+    "id": "a438308c837d1eb5ed3af333ed6eb918",
     "metadata": {},
     "name": "AuditLogsPaginationQuery",
     "operationKind": "query",
@@ -476,5 +491,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '21ec0a122e914ae15dbd436176bfd66b';
+(node: any).hash = '80380685261fcbeb2397bc633eb329e5';
 module.exports = node;

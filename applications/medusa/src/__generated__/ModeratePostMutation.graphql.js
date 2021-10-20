@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash bc46e4f065e4d0a9b71911a575e429b2
+ * @relayHash 6ce7a4c61fb41cd336413e1537bb1afd
  */
 
 /* eslint-disable */
@@ -8,17 +8,15 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
-export type ModeratePostInput = {|
-  postId: string,
-  postRejectionReasonId?: ?string,
-  notes: string,
+export type ApprovePostInput = {|
+  postId: string
 |};
 export type ModeratePostMutationVariables = {|
-  input: ModeratePostInput,
+  input: ApprovePostInput,
   connections: $ReadOnlyArray<string>,
 |};
 export type ModeratePostMutationResponse = {|
-  +moderatePost: ?{|
+  +approvePost: ?{|
     +postAuditLog: ?{|
       +id: string
     |}
@@ -32,9 +30,9 @@ export type ModeratePostMutation = {|
 
 /*
 mutation ModeratePostMutation(
-  $input: ModeratePostInput!
+  $input: ApprovePostInput!
 ) {
-  moderatePost(input: $input) {
+  approvePost(input: $input) {
     postAuditLog {
       id
     }
@@ -80,9 +78,9 @@ return {
       {
         "alias": null,
         "args": (v2/*: any*/),
-        "concreteType": "ModeratePostPayload",
+        "concreteType": "ApprovePostPayload",
         "kind": "LinkedField",
-        "name": "moderatePost",
+        "name": "approvePost",
         "plural": false,
         "selections": [
           {
@@ -116,9 +114,9 @@ return {
       {
         "alias": null,
         "args": (v2/*: any*/),
-        "concreteType": "ModeratePostPayload",
+        "concreteType": "ApprovePostPayload",
         "kind": "LinkedField",
-        "name": "moderatePost",
+        "name": "approvePost",
         "plural": false,
         "selections": [
           {
@@ -155,7 +153,7 @@ return {
     ]
   },
   "params": {
-    "id": "bc46e4f065e4d0a9b71911a575e429b2",
+    "id": "6ce7a4c61fb41cd336413e1537bb1afd",
     "metadata": {},
     "name": "ModeratePostMutation",
     "operationKind": "mutation",
@@ -164,5 +162,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = 'f052735aabd0d413a09a03672a9be867';
+(node: any).hash = '43274ace47e1ec3ecfe138dd7b10d7cc';
 module.exports = node;

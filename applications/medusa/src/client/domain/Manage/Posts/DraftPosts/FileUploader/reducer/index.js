@@ -3,6 +3,10 @@
  */
 import type { Action, State } from '@//:types/upload'
 import { EVENTS, INITIAL_STATE, STEPS } from '../constants/constants'
+import { graphql, useMutation } from 'react-relay/hooks'
+
+// TODO remove reducer completely
+// TODO for adding a category, do optimistic update so everything is in store and the query runs in the background
 
 // reducer maintains the whole state of the upload form so that we can
 // easily update our indexeddb state in the case of a crash

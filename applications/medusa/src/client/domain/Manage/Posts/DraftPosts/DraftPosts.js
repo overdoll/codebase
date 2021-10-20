@@ -29,11 +29,12 @@ const DraftPostsFragmentGQL = graphql`
     after: {type: String}
   )
   @refetchable(queryName: "DraftPostsPaginationQuery" ) {
-    contributions (first: $first, after: $after)
-    @connection(key: "contributions_contributions") {
+    posts (first: $first, after: $after)
+    @connection(key: "DraftPostsPaginationQuery_posts") {
       edges {
         node {
           id
+          state
         }
       }
     }
@@ -54,9 +55,11 @@ export default function DraftPosts (props: Props): Node {
 
   const [t] = useTranslation('manage')
 
-  const posts = data?.contributions.edges
+  const posts = data?.posts.edges
 
   const CreatePostComponent = () => <FileUploader />
+
+  console.log(data)
 
   if (posts.length < 1) {
     return CreatePostComponent()

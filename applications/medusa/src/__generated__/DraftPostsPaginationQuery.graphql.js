@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 4fe8e0a4e80ada61af8d250129fe3f06
+ * @relayHash 8bd6424cb3d24229a42c143b57d05d4b
  */
 
 /* eslint-disable */
@@ -41,10 +41,11 @@ query DraftPostsPaginationQuery(
 }
 
 fragment DraftPostsFragment_2HEEH6 on Account {
-  contributions(first: $first, after: $after) {
+  posts(first: $first, after: $after) {
     edges {
       node {
         id
+        state
         __typename
       }
       cursor
@@ -160,7 +161,7 @@ return {
                 "args": (v2/*: any*/),
                 "concreteType": "PostConnection",
                 "kind": "LinkedField",
-                "name": "contributions",
+                "name": "posts",
                 "plural": false,
                 "selections": [
                   {
@@ -180,6 +181,13 @@ return {
                         "plural": false,
                         "selections": [
                           (v4/*: any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "state",
+                            "storageKey": null
+                          },
                           (v3/*: any*/)
                         ],
                         "storageKey": null
@@ -227,9 +235,9 @@ return {
                 "args": (v2/*: any*/),
                 "filters": null,
                 "handle": "connection",
-                "key": "contributions_contributions",
+                "key": "DraftPostsPaginationQuery_posts",
                 "kind": "LinkedHandle",
-                "name": "contributions"
+                "name": "posts"
               }
             ],
             "type": "Account",
@@ -241,7 +249,7 @@ return {
     ]
   },
   "params": {
-    "id": "4fe8e0a4e80ada61af8d250129fe3f06",
+    "id": "8bd6424cb3d24229a42c143b57d05d4b",
     "metadata": {},
     "name": "DraftPostsPaginationQuery",
     "operationKind": "query",
@@ -250,5 +258,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = 'd644075d0fb8ede17f68ac6f3dc48d2c';
+(node: any).hash = '193163415c042e2d98cb44d3edafdcdf';
 module.exports = node;

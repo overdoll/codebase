@@ -39,6 +39,7 @@ export default function FileUploader (): Node {
   useEffect(() => {
     uppy.on('upload-success', (file, response) => {
       // dispatch({ type: EVENTS.URLS, value: { [file.id]: response.uploadURL } })
+      // buffer these for uploading or periodically check internal state
     })
   }, [uppy])
 

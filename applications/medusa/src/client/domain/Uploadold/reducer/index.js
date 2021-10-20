@@ -4,9 +4,11 @@
 import type { Action, State } from '@//:types/upload'
 import { EVENTS, INITIAL_STATE, STEPS } from '../constants/constants'
 import db from '../storage'
+import { graphql, useMutation } from 'react-relay/hooks'
 
 // reducer maintains the whole state of the upload form so that we can
 // easily update our indexeddb state in the case of a crash
+
 const reducer: {} = (state: State, action: Action): State => {
   const act: string = action.type
 

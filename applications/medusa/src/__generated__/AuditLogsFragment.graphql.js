@@ -78,7 +78,16 @@ return {
   "selections": [
     {
       "alias": "moderatorPostAuditLogs",
-      "args": null,
+      "args": [
+        {
+          "kind": "Literal",
+          "name": "dateRange",
+          "value": {
+            "from": "Time",
+            "to": "Time"
+          }
+        }
+      ],
       "concreteType": "PostAuditLogConnection",
       "kind": "LinkedField",
       "name": "__AuditLogs_moderatorPostAuditLogs_connection",
@@ -156,7 +165,7 @@ return {
           "storageKey": null
         }
       ],
-      "storageKey": null
+      "storageKey": "__AuditLogs_moderatorPostAuditLogs_connection(dateRange:{\"from\":\"Time\",\"to\":\"Time\"})"
     },
     {
       "alias": null,
@@ -171,5 +180,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '21ec0a122e914ae15dbd436176bfd66b';
+(node: any).hash = '80380685261fcbeb2397bc633eb329e5';
 module.exports = node;

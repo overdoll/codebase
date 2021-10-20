@@ -7,7 +7,7 @@
 'use strict';
 
 import type { ReaderFragment } from 'relay-runtime';
-export type PostAuditLogAction = "Approved" | "Denied" | "%future added value";
+export type PostAuditLogAction = "Approved" | "Denied" | "Removed" | "%future added value";
 import type { FragmentReference } from "relay-runtime";
 declare export opaque type AuditCardFragment$ref: FragmentReference;
 declare export opaque type AuditCardFragment$fragmentType: AuditCardFragment$ref;

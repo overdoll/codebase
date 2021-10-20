@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 9e7b34ff1058b8cbf21001b3357baa5a
+ * @relayHash 349c291be9a283376c4835028deb7941
  */
 
 /* eslint-disable */
@@ -30,10 +30,11 @@ query DraftPostsQuery {
 }
 
 fragment DraftPostsFragment on Account {
-  contributions(first: 4) {
+  posts(first: 4) {
     edges {
       node {
         id
+        state
         __typename
       }
       cursor
@@ -108,7 +109,7 @@ return {
             "args": (v0/*: any*/),
             "concreteType": "PostConnection",
             "kind": "LinkedField",
-            "name": "contributions",
+            "name": "posts",
             "plural": false,
             "selections": [
               {
@@ -128,6 +129,13 @@ return {
                     "plural": false,
                     "selections": [
                       (v1/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "state",
+                        "storageKey": null
+                      },
                       {
                         "alias": null,
                         "args": null,
@@ -174,16 +182,16 @@ return {
                 "storageKey": null
               }
             ],
-            "storageKey": "contributions(first:4)"
+            "storageKey": "posts(first:4)"
           },
           {
             "alias": null,
             "args": (v0/*: any*/),
             "filters": null,
             "handle": "connection",
-            "key": "contributions_contributions",
+            "key": "DraftPostsPaginationQuery_posts",
             "kind": "LinkedHandle",
-            "name": "contributions"
+            "name": "posts"
           },
           (v1/*: any*/)
         ],
@@ -192,7 +200,7 @@ return {
     ]
   },
   "params": {
-    "id": "9e7b34ff1058b8cbf21001b3357baa5a",
+    "id": "349c291be9a283376c4835028deb7941",
     "metadata": {},
     "name": "DraftPostsQuery",
     "operationKind": "query",

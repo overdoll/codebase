@@ -10,7 +10,7 @@ const STEPS = {
   CATEGORY: 'CATEGORY',
   CHARACTER: 'CHARACTER',
   REVIEW: 'REVIEW',
-  FINISH: 'FINISH'
+  SUBMIT: 'SUBMIT'
 }
 
 const EVENTS = {
@@ -32,7 +32,7 @@ const INITIAL_STATE: State = {
   thumbnails: {},
   files: [],
   urls: {},
-  step: null,
+  step: STEPS.ARRANGE,
   progress: {},
   audiences: {},
   brands: {},

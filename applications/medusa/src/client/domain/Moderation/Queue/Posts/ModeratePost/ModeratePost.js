@@ -33,8 +33,8 @@ type Props = {
 }
 
 const ModeratePostGQL = graphql`
-  mutation ModeratePostMutation($input: ModeratePostInput!, $connections: [ID!]!) {
-    moderatePost(input: $input) {
+  mutation ModeratePostMutation($input: ApprovePostInput!, $connections: [ID!]!) {
+    approvePost(input: $input) {
       postAuditLog {
         id @deleteEdge(connections: $connections)
       }

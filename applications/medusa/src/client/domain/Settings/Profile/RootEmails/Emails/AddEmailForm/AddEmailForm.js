@@ -43,16 +43,15 @@ const schema = Joi.object({
 })
 
 const AddEmailMutationGQL = graphql`
-    mutation AddEmailFormMutation($input: AddAccountEmailInput!, $connections: [ID!]!) {
-        addAccountEmail(input: $input) {
-            validation
-            accountEmail @appendNode(connections: $connections, edgeTypeName: "updateEmailPrimaryEdge") {
-                id
-                email
-                status
-            }
-        }
+  mutation AddEmailFormMutation($input: AddAccountEmailInput!, $connections: [ID!]!) {
+    addAccountEmail(input: $input) {
+      accountEmail @appendNode(connections: $connections, edgeTypeName: "updateEmailPrimaryEdge") {
+        id
+        email
+        status
+      }
     }
+  }
 `
 
 export default function AddEmailForm ({ connectionID }: Props): Node {
@@ -82,15 +81,7 @@ export default function AddEmailForm ({ connectionID }: Props): Node {
         },
         connections: [connectionID]
       },
-      onCompleted (data) {
-        if (data.addAccountEmail.validation) {
-          setError('email', {
-            type: 'mutation',
-            message: data.addAccountEmail.validation
-          })
-          return
-        }
-
+      onCompleted () {
         notify({
           status: 'success',
           title: t('profile.email.add.query.success', { email: formData.email }),
@@ -150,7 +141,6 @@ export default function AddEmailForm ({ connectionID }: Props): Node {
             />
           </Flex>
           <FormErrorMessage>
-            {errors.email && errors.email.type === 'mutation' && errors.email.message}
             {errors.email && errors.email.type === 'string.empty' && t('profile.email.add.form.validation.email.empty')}
             {errors.email && errors.email.type === 'string.email' && t('profile.email.add.form.validation.email.pattern')}
           </FormErrorMessage>

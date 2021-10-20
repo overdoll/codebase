@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 92eaed3074a45f7d4d0d714a02246e37
+ * @relayHash 6c1e6d54553782732d29183152738867
  */
 
 /* eslint-disable */
@@ -56,7 +56,7 @@ fragment AuditInspectFragment on PostAuditLog {
 }
 
 fragment AuditLogsFragment on Account {
-  moderatorPostAuditLogs(first: 5) {
+  moderatorPostAuditLogs(first: 5, dateRange: {from: "Time", to: "Time"}) {
     edges {
       node {
         ...AuditCardFragment
@@ -117,6 +117,14 @@ fragment PostPreviewFragment on Post {
 
 const node: ConcreteRequest = (function(){
 var v0 = [
+  {
+    "kind": "Literal",
+    "name": "dateRange",
+    "value": {
+      "from": "Time",
+      "to": "Time"
+    }
+  },
   {
     "kind": "Literal",
     "name": "first",
@@ -400,12 +408,14 @@ return {
                 "storageKey": null
               }
             ],
-            "storageKey": "moderatorPostAuditLogs(first:5)"
+            "storageKey": "moderatorPostAuditLogs(dateRange:{\"from\":\"Time\",\"to\":\"Time\"},first:5)"
           },
           {
             "alias": null,
             "args": (v0/*: any*/),
-            "filters": null,
+            "filters": [
+              "dateRange"
+            ],
             "handle": "connection",
             "key": "AuditLogs_moderatorPostAuditLogs",
             "kind": "LinkedHandle",
@@ -418,7 +428,7 @@ return {
     ]
   },
   "params": {
-    "id": "92eaed3074a45f7d4d0d714a02246e37",
+    "id": "6c1e6d54553782732d29183152738867",
     "metadata": {},
     "name": "AuditLogsQuery",
     "operationKind": "query",

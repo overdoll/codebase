@@ -31,12 +31,13 @@ const baseStyleLabel = {
   lineHeight: '1',
   fontSize: '0.25em',
   fontWeight: 'bold',
-  color: 'white'
+  fontFamily: 'heading',
+  color: 'gray.300'
 }
 
 function baseStyleTrack (props) {
   return {
-    bg: mode('gray.100', 'whiteAlpha.300')(props)
+    bg: mode('gray.300', 'gray.500')(props)
   }
 }
 
