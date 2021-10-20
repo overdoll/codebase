@@ -9,14 +9,14 @@ import { useHistory } from '@//:modules/routing'
 import PrepareViewer from '../helpers/PrepareViewer'
 
 const GrantAction = graphql`
-    mutation GrantMutation {
-        grantAccountAccessWithAuthenticationToken {
-            validation
-            account {
-                id
-            }
-        }
+  mutation GrantMutation {
+    grantAccountAccessWithAuthenticationToken {
+      validation
+      account {
+        id
+      }
     }
+  }
 `
 
 export default function Grant (): Node {

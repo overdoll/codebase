@@ -31,24 +31,24 @@ type Props = {
 }
 
 const RecoveryCodesListFragmentGQL = graphql`
-    fragment RecoveryCodesListFragment on Account {
-        __id
-        recoveryCodes {
-            __id
-            code
-        }
+  fragment RecoveryCodesListFragment on Account {
+    __id
+    recoveryCodes {
+      __id
+      code
     }
+  }
 `
 
 const RecoveryCodesListMutationGQL = graphql`
-    mutation RecoveryCodesListMutation {
-        generateAccountMultiFactorRecoveryCodes {
-            accountMultiFactorRecoveryCodes {
-                __id
-                code
-            }
-        }
+  mutation RecoveryCodesListMutation {
+    generateAccountMultiFactorRecoveryCodes {
+      accountMultiFactorRecoveryCodes {
+        __id
+        code
+      }
     }
+  }
 `
 
 export default function RecoveryCodesSetup (props: Props): Node {

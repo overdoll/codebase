@@ -15,14 +15,14 @@ import RegisterForm from './RegisterForm/RegisterForm'
 import { PageWrapper } from '../../../components/PageLayout'
 
 const RegisterMutationGQL = graphql`
-    mutation RegisterMutation($input: CreateAccountWithAuthenticationTokenInput!) {
-        createAccountWithAuthenticationToken(input: $input) {
-            validation
-            account {
-                id
-            }
-        }
+  mutation RegisterMutation($input: CreateAccountWithAuthenticationTokenInput!) {
+    createAccountWithAuthenticationToken(input: $input) {
+      validation
+      account {
+        id
+      }
     }
+  }
 `
 
 export default function Register (): Node {

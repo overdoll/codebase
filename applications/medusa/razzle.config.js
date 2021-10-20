@@ -36,10 +36,10 @@ module.exports = {
       config.urlLoaderOutputName = `${options.razzleOptions.mediaPrefix}/[contenthash].[ext]`
 
       config.cssOutputFilename = `${options.razzleOptions.cssPrefix}/[contenthash].css`
-      config.cssOutputChunkFilename = `${options.razzleOptions.cssPrefix}/[contenthash].c.css`
+      config.cssOutputChunkFilename = `${options.razzleOptions.cssPrefix}/[contenthash].css`
 
       config.jsOutputFilename = `${options.razzleOptions.jsPrefix}/[contenthash].js`
-      config.jsOutputChunkFilename = `${options.razzleOptions.jsPrefix}/[contenthash].c.js`
+      config.jsOutputChunkFilename = `${options.razzleOptions.jsPrefix}/[contenthash].js`
     }
 
     return config
