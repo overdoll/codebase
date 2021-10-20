@@ -2,14 +2,13 @@ package adapters
 
 import (
 	"context"
+	"fmt"
+	"os"
 
 	"github.com/sendgrid/sendgrid-go"
 	"github.com/sendgrid/sendgrid-go/helpers/mail"
 	"overdoll/applications/carrier/internal/domain/mailing"
 )
-
-// all of our emails are sent from a no-reply address
-var from = mail.NewEmail("overdoll", "no-reply@overdoll.com")
 
 type MailingSendgridRepository struct {
 	client *sendgrid.Client
@@ -19,18 +18,35 @@ func NewMailingSendgridRepository(client *sendgrid.Client) MailingSendgridReposi
 	return MailingSendgridRepository{client: client}
 }
 
-func (r MailingSendgridRepository) SendEmail(ctx context.Context, recipient *mailing.Recipient, email *mailing.Email) error {
+func (r MailingSendgridRepository) SendEmail(ctx context.Context, recipient *mailing.Recipient, email *mailing.Template) error {
 
-	to := mail.NewEmail(recipient.Username(), recipient.Email())
+	m := mail.NewV3Mail()
 
-	_ = mail.NewSingleEmail(from, email.Subject(), to, email.PlainText(), email.HTML())
+	from := mail.NewEmail(os.Getenv("EMAIL_FROM_NAME"), os.Getenv("EMAIL_FROM_ADDRESS"))
 
-	// TODO: add back when API key is available
-	//_, err := r.client.Send(message)
-	//
-	//if err != nil {
-	//	return fmt.Errorf("could not send sendgrid email: %v", err)
-	//}
+	m.SetFrom(from)
+
+	m.SetTemplateID(email.TemplateId())
+
+	tos := []*mail.Email{
+		mail.NewEmail(recipient.Username(), recipient.Email()),
+	}
+
+	p := mail.NewPersonalization()
+
+	p.AddTos(tos...)
+
+	p.DynamicTemplateData = email.Variables()
+
+	p.SetDynamicTemplateData("language", recipient.Language())
+
+	m.AddPersonalizations(p)
+
+	_, err := r.client.Send(m)
+
+	if err != nil {
+		return fmt.Errorf("could not send sendgrid email: %v", err)
+	}
 
 	return nil
 }

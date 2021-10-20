@@ -22,6 +22,17 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 		}
 }
 
+func NewComponentTestApplication(ctx context.Context) (app.Application, func()) {
+
+	// mock sting, because it performs destructive operations and we dont want to
+	// re-seed data every single time we run this test
+	// also, the endpoints are already tested on sting, so we don't worry about potential failures
+	return createApplication(ctx, CarrierServiceMock{}),
+		func() {
+
+		}
+}
+
 func createApplication(ctx context.Context, carrier command.CarrierService) app.Application {
 
 	bootstrap.NewBootstrap(ctx)

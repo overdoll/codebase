@@ -3,7 +3,7 @@ package validation
 import (
 	"errors"
 	"net/mail"
-	"overdoll/libraries/helpers"
+	"os"
 	"strings"
 )
 
@@ -20,11 +20,13 @@ func ValidateEmail(email string) (string, error) {
 		return "", err
 	}
 
+	domainWhitelist := os.Getenv("EMAIL_DOMAIN_WHITELIST")
+
 	// in debug mode, only allow testmail.app so developers don't enter real emails
-	if helpers.IsDebug() {
+	if domainWhitelist != "" {
 		components := strings.Split(email, "@")
 		domain := components[1]
-		if domain != "testmail.app" {
+		if domain != domainWhitelist {
 			return "", ErrInvalidEmail
 		}
 	}

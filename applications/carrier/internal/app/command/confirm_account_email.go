@@ -6,7 +6,6 @@ import (
 	"os"
 	"path"
 
-	"github.com/matcornic/hermes/v2"
 	"overdoll/applications/carrier/internal/domain/mailing"
 )
 
@@ -41,36 +40,22 @@ func (h ConfirmAccountEmailHandler) Handle(ctx context.Context, cmd ConfirmAccou
 
 	u.Path = path.Join(u.Path, "confirm-email", cmd.EmailToken)
 
-	email := hermes.Email{
-		Body: hermes.Body{
-			Name: acc.Username(),
-			Intros: []string{
-				"Confirm email!",
-			},
-			Actions: []hermes.Action{
-				{
-					Instructions: "To confirm your email, click here:",
-					Button: hermes.Button{
-						Color: "#22BC66", // Optional action button color
-						Text:  "Confirm Email",
-						Link:  u.String(),
-					},
-				},
-			},
-		},
-	}
-
-	subject := "confirm email"
-
-	template, err := mailing.EmailFromTemplate(subject, email)
+	template, err := mailing.NewTemplate("d-5c81a4ac00d44a9dba2dd58ebed8bcf6", map[string]interface{}{
+		"link": u.String(),
+	})
 
 	if err != nil {
 		return err
 	}
 
-	recipient, err := mailing.NewRecipient(acc.Username(), cmd.AccountEmail)
+	recipient, err := mailing.NewRecipientFromIdentifier(acc)
 
 	if err != nil {
+		return err
+	}
+
+	// custom recipient from
+	if err := recipient.SetEmail(cmd.EmailToken); err != nil {
 		return err
 	}
 

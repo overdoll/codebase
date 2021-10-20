@@ -5,5 +5,5 @@ import (
 )
 
 type Repository interface {
-	SendEmail(ctx context.Context, recipient *Recipient, email *Email) error
+	SendEmail(ctx context.Context, recipient *Recipient, email *Template) error
 }

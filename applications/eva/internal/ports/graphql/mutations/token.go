@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/sha256"
 	"net/http"
+	"overdoll/libraries/translations"
 	"overdoll/libraries/validation"
 	"strings"
 	"time"
@@ -29,6 +30,9 @@ func (r *MutationResolver) GrantAuthenticationToken(ctx context.Context, input t
 		Email:     input.Email,
 		UserAgent: userAgent,
 		IP:        helpers.GetIp(ctx),
+
+		// manually send the language because we need it for the email
+		Language: translations.FromContext(ctx).Locale(),
 	})
 
 	if err != nil {

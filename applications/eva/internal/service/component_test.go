@@ -182,7 +182,7 @@ func startService() bool {
 	// config file location (specified in BUILD file) will be absolute from repository path
 	config.Read("applications/eva")
 
-	app, _ := service.NewApplication(context.Background())
+	app, _ := service.NewComponentTestApplication(context.Background())
 
 	srv := ports.NewHttpServer(&app)
 

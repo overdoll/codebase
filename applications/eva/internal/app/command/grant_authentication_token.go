@@ -11,6 +11,7 @@ type GrantAuthenticationToken struct {
 	Email     string
 	UserAgent string
 	IP        string
+	Language  string
 }
 
 type GrantAuthenticationTokenHandler struct {
@@ -38,7 +39,7 @@ func (h GrantAuthenticationTokenHandler) Handle(ctx context.Context, cmd GrantAu
 	}
 
 	// send login token notification
-	if err := h.carrier.NewLoginToken(ctx, instance.Email(), instance.Token()); err != nil {
+	if err := h.carrier.NewLoginToken(ctx, instance.Email(), instance.Token(), cmd.Language); err != nil {
 		return nil, err
 	}
 
