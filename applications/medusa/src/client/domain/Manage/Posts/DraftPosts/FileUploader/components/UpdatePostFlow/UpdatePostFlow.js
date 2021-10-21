@@ -7,17 +7,12 @@ import { graphql, useMutation } from 'react-relay/hooks'
 import type { Dispatch, State } from '@//:types/upload'
 import { useToast, Flex, Stack, Box, Spacer } from '@chakra-ui/react'
 import type { Uppy } from '@uppy/core'
-import Audience from './Audience/Audience'
-import Brand from './Brand/Brand'
-import Category from './Category/Category'
-import Character from './Character/Character'
-import Arrange from './Arrange/Arrange'
-import Review from './Review/Review'
-import Submit from './Submit/Submit'
-import ProgressIndicator from '../ProgressIndicator/ProgressIndicator'
 import Button from '@//:modules/form/Button'
 import { useTranslation } from 'react-i18next'
 import { StringParam, useQueryParam } from 'use-query-params'
+import FlowProgressIndicator from './FlowProgressIndicator/FlowProgressIndicator'
+import FlowSteps from './FlowSteps/FlowSteps'
+import FlowForwardButton from './FlowForwardButton/FlowForwardButton'
 
 type Props = {
   uppy: Uppy,
@@ -25,8 +20,7 @@ type Props = {
   dispatch: Dispatch,
 };
 
-// TODO all the mutations go here
-// TODO dispatch only responsible for stepping and uploads
+// TODO mutation for submitting post goes here
 /*
 
 const SubmitGraphQL = graphql`
@@ -46,94 +40,13 @@ const SubmitGraphQL = graphql`
 export default function UpdatePostFlow ({ uppy, state, dispatch }: Props): Node {
   // const [commit, isInFlight] = useMutation<StepsMutation>(SubmitGraphQL)
 
-  const [t] = useTranslation('upload')
+  const [t] = useTranslation('manage')
 
   const [postReference, setPostReference] = useQueryParam('id', StringParam)
 
-  const commit = () => {
-    return null
-  }
-
   const notify = useToast()
 
-  // Tagging step - disabled if the conditions aren't met
-  const NextDisabled =
-    state.step === STEPS.TAG &&
-    (Object.keys(state.characters).length < 1 ||
-      Object.keys(state.artist).length < 1 ||
-      Object.keys(state.categories).length < 3)
-
-  // If the amount of files != the amount of urls (not all files were uploaded), then we can't submit yet
-  const SubmitDisabled = state.files.length !== Object.keys(state.urls).length
-
-  const CurrentStep = (): Node => {
-    switch (state.step) {
-      case STEPS.ARRANGE:
-
-        return <Arrange uppy={uppy} dispatch={dispatch} state={state} />
-
-      case STEPS.AUDIENCE:
-
-        return <Audience />
-
-      case STEPS.BRAND:
-
-        return <Brand />
-
-      case STEPS.CATEGORY:
-
-        return <Category />
-
-      case STEPS.CHARACTER:
-
-        return <Character />
-
-      case STEPS.REVIEW:
-
-        return <Review />
-
-      case STEPS.SUBMIT:
-
-        return <Submit />
-
-      default:
-        return <Arrange uppy={uppy} dispatch={dispatch} state={state} />
-    }
-  }
-
-  const goForward = (): void => {
-    switch (state.step) {
-      case STEPS.ARRANGE:
-        dispatch({ type: EVENTS.STEP, value: STEPS.AUDIENCE })
-        break
-      case STEPS.AUDIENCE:
-        dispatch({ type: EVENTS.STEP, value: STEPS.BRAND })
-        break
-      case STEPS.BRAND:
-        dispatch({ type: EVENTS.STEP, value: STEPS.CATEGORY })
-        break
-      case STEPS.CATEGORY:
-        dispatch({ type: EVENTS.STEP, value: STEPS.CHARACTER })
-        break
-      case STEPS.CHARACTER:
-        dispatch({ type: EVENTS.STEP, value: STEPS.REVIEW })
-        break
-      default:
-        break
-    }
-  }
-
-  const ForwardButton = () => {
-    switch (state.step) {
-      case STEPS.REVIEW:
-        return <Button colorScheme='primary' size='lg' onClick={onSubmitPost}>submit</Button>
-      case STEPS.SUBMIT:
-        return <></>
-      default:
-        return <Button colorScheme='gray' size='lg' onClick={goForward}>forward</Button>
-    }
-  }
-
+  // Determine what happens when you click the "back" button
   const goBack = (): void => {
     switch (state.step) {
       case STEPS.AUDIENCE:
@@ -156,6 +69,7 @@ export default function UpdatePostFlow ({ uppy, state, dispatch }: Props): Node 
     }
   }
 
+  // Component to calculate the "back" button in the flow
   const BackButton = () => {
     switch (state.step) {
       case STEPS.SUBMIT:
@@ -163,84 +77,45 @@ export default function UpdatePostFlow ({ uppy, state, dispatch }: Props): Node 
       case STEPS.ARRANGE:
         return <></>
       default:
-        return <Button colorScheme='gray' size='lg' onClick={goBack}>back</Button>
+        return <Button colorScheme='gray' size='lg' onClick={goBack}>{t('posts.flow.steps.footer.back')}</Button>
     }
   }
 
-  // When user submits the post
-  const onSubmitPost = () => {
-    dispatch({ type: EVENTS.STEP, value: STEPS.SUBMIT })
-    onCleanup()
+  // A steps footer component
+  const FlowFooter = () => {
+    if (state.step !== STEPS.SUBMIT) {
+      return (
+        <>
+          <BackButton />
+          <Spacer />
+          <FlowForwardButton uppy={uppy} dispatch={dispatch} state={state} onSubmit={onSubmitPost} />
+        </>
+      )
+    }
+    return (
+      <Button
+        colorScheme='gray' size='lg' onClick={() => dispatch({
+          type: EVENTS.CLEANUP,
+          value: INITIAL_STATE
+        })}
+      >{t('posts.flow.steps.footer.retry')}
+      </Button>
+    )
   }
 
-  // onSubmit - submit post
-  const onSubmit = (): void => {
-    const urls: Array<string> = []
+  // A header for the post
+  const FlowHeader = () => {
+    if (state.step !== STEPS.SUBMIT) {
+      return <FlowProgressIndicator state={state} onCancel={onCleanup} />
+    }
+    return <></>
+  }
 
-    // make sure our urls keep their order
-    state.files.forEach((file) => {
-      // get actual upload ID
-      const url = state.urls[file.id].split('/').slice(-1)[0]
-
-      urls.push(url)
-    })
-
-    const characterRequests: Array<CharacterRequest> = []
-    const mediaRequests: Array<string> = []
-
-    // Sort all characters - if they're a requested character, then filter them out
-    // also filter them out if the media is requested
-    const characters = Object.keys(state.characters).filter((item) => {
-      const character = state.characters[item]
-
-      // if the media is custom, use the name. otherwise use the id
-      // the check is done on the backend against mediaRequests
-      if (character.request) {
-        const request = {
-          name: character.name
-        }
-
-        if (character.media.request) {
-          request.customMediaName = character.media.title
-        } else {
-          request.existingMediaId = character.media.id
-        }
-
-        characterRequests.push(request)
-      }
-
-      // if the media is requested, add it to our list
-      if (character.media.request) {
-        mediaRequests.push(character.media.title)
-      }
-
-      return !(character.media.request || character.request)
-    })
-
-    commit({
-      variables: {
-        input: {
-          customArtistUsername: state.artist.username ?? '',
-          existingArtist: state.artist.id,
-          categoryIds: Object.keys(state.categories),
-          characterIds: characters,
-          content: urls,
-          characterRequests: characterRequests,
-          mediaRequests: mediaRequests
-        }
-      },
-      onCompleted (data) {
-        dispatch({ type: EVENTS.SUBMIT, value: data.post })
-      },
-      onError (data) {
-        const message = JSON.parse(data?.message)
-        notify({
-          status: 'error',
-          title: message[0].message,
-          isClosable: true
-        })
-      }
-    })
+  // When user submits the post or cancels the flow
+  const onSubmitPost = () => {
+    // query for submitting post. on success, runs the functions below
+    onCleanup()
+    dispatch({ type: EVENTS.STEP, value: STEPS.SUBMIT })
   }
 
   // Cleanup - reset uppy uploads and state
@@ -248,22 +123,18 @@ export default function UpdatePostFlow ({ uppy, state, dispatch }: Props): Node 
     uppy.reset()
     dispatch({ type: EVENTS.CLEANUP, value: INITIAL_STATE })
     setPostReference(undefined)
-    // URL param cleared here to set it to original state
-    // or just clear the store?
   }
 
   return (
     <Stack spacing={4}>
       <Box>
-        <ProgressIndicator state={state} />
+        <FlowHeader />
       </Box>
       <Box>
-        {CurrentStep()}
+        <FlowSteps uppy={uppy} dispatch={dispatch} state={state} />
       </Box>
-      <Flex>
-        <BackButton />
-        <Spacer />
-        <ForwardButton />
+      <Flex justify='center'>
+        <FlowFooter />
       </Flex>
     </Stack>
   )

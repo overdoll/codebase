@@ -11,6 +11,8 @@ import { useToast } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import CreatePost from './components/CreatePost/CreatePost'
 
+// TODO mutation for file uploads goes here
+
 // Main upload component - handles all events from Uppy and renders the stepper
 // also contains the main state and is responsible for recovering state when rendered (if state is available)
 export default function FileUploader (): Node {
@@ -21,10 +23,6 @@ export default function FileUploader (): Node {
 
   // hook controls lifecycle of uppy & restoring indexeddb state
   const [uppy] = useUpload(state, dispatch)
-
-  const [t] = useTranslation('general')
-  // load the upload namespace
-  useTranslation('upload')
 
   const notify = useToast()
 
@@ -38,8 +36,10 @@ export default function FileUploader (): Node {
   // Urls - when upload is complete we have semi-public urls (you need to know the URL for it to work, and you need to be logged in to see it)
   useEffect(() => {
     uppy.on('upload-success', (file, response) => {
+      // TODO buffer these for uploading or periodically check internal state?
+      // TODO this needs to use the mutation on all successful files
+      // TODO files that are uploading should not be "re-arrangeable"?
       // dispatch({ type: EVENTS.URLS, value: { [file.id]: response.uploadURL } })
-      // buffer these for uploading or periodically check internal state
     })
   }, [uppy])
 
@@ -60,22 +60,11 @@ export default function FileUploader (): Node {
   // Event for errors
   useEffect(() => {
     uppy.on('upload-error', data => {
-      // TODO remove this as this is redundant?
+      // TODO highlight file with error and have a "retry" button
       /*
       notify({
         status: 'error',
         title: 'upload error',
-        isClosable: true
-      })
-       */
-    })
-
-    uppy.on('restriction-failed', (file, error) => {
-      // TODO remove this as this is redundant?
-      /*
-      notify({
-        status: 'error',
-        title: 'restriction error',
         isClosable: true
       })
        */

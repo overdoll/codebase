@@ -5,7 +5,7 @@ import type { Node } from 'react'
 import { graphql, useLazyLoadQuery, useMutation } from 'react-relay/hooks'
 import type { Dispatch, State } from '@//:types/upload'
 import {
-  Flex, Center, Box
+  Flex, Center, Box, Spinner, Heading, Text, useToast
 } from '@chakra-ui/react'
 import type { Uppy } from '@uppy/core'
 import FilePicker from '../FilePicker/FilePicker'
@@ -14,6 +14,8 @@ import UpdatePostFlow from '../UpdatePostFlow/UpdatePostFlow'
 import { StringParam, useQueryParam } from 'use-query-params'
 import type CreatePostQuery from '@//:artifacts/CreatePostQuery.graphql'
 import { useEffect, useState } from 'react'
+import { STEPS } from '../../constants/constants'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
   uppy: Uppy,
@@ -47,27 +49,35 @@ export default function CreatePost ({ uppy, state, dispatch }: Props): Node {
     { reference: postReference || '' }
   )
 
-  const postData = data?.post
-
   const [createPost, isCreatingPost] = useMutation(RootCreatePostFlowMutationGQL)
 
-  const [validPostFound, setValidPostFound] = useState(!!postData)
+  const [t] = useTranslation('manage')
+
+  const notify = useToast()
+
+  const postData = data?.post
 
   // After the user initially uploads a file, we create a new post
   useEffect(() => {
     uppy.on('file-added', file => {
-      if (!validPostFound) {
+      if (!postData) {
         createPost({
           onCompleted (payload) {
             setPostReference(x => {
-              setValidPostFound(!!payload.createPost.post)
               return payload.createPost.post.reference
             })
-
-            console.log('success')
+            notify({
+              status: 'success',
+              title: t('posts.flow.create.query.success'),
+              isClosable: true
+            })
           },
           onError () {
-            console.log('error')
+            notify({
+              status: 'error',
+              title: t('posts.flow.create.query.error'),
+              isClosable: true
+            })
           }
         })
       }
@@ -76,11 +86,16 @@ export default function CreatePost ({ uppy, state, dispatch }: Props): Node {
 
   // Show a loading placeholder for post being created
   if (isCreatingPost) {
-    return <>post being created</>
+    return (
+      <Flex h='100%' align='center' justify='center' direction='column'>
+        <Spinner mb={6} thickness={4} size='lg' color='primary.500' />
+        <Text size='sm' color='gray.100'>{t('posts.flow.create.creating')}</Text>
+      </Flex>
+    )
   }
 
   // If there is no post found from the URL parameter, show create post initiator
-  if (!validPostFound) {
+  if (!postData && (state.step !== STEPS.SUBMIT)) {
     return (
       <Center>
         <FilePicker uppy={uppy}>

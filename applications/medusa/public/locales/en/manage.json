@@ -1,11 +1,49 @@
 {
   "posts": {
     "title": "My Posts",
-    "create": {
-      "title": "Create a Post"
-    },
-    "draft": {
-      "title": "Drafts"
+    "flow": {
+      "title": "Drafts",
+      "create": {
+        "creating": "Creating your draft post",
+        "query": {
+          "success": "A draft post was created",
+          "error": "There was an error creating a draft post"
+        }
+      },
+      "drafts": {
+      },
+      "steps": {
+        "footer": {
+          "forward": "Next",
+          "back": "Back",
+          "submit": "Submit",
+          "retry": "Post Again"
+        },
+        "arrange": {
+          "header": "Step 1",
+          "subheader": "Arrange your uploads"
+        },
+        "audience": {
+          "header": "Step 2",
+          "subheader": "Select an audience"
+        },
+        "brand": {
+          "header": "Step 3",
+          "subheader": "Select a brand"
+        },
+        "category": {
+          "header": "Step 4",
+          "subheader": "Add categories"
+        },
+        "character": {
+          "header": "Step 5",
+          "subheader": "Add characters"
+        },
+        "review": {
+          "header": "Step 6",
+          "subheader": "Review your post"
+        }
+      }
     }
   }
 }

@@ -59,8 +59,6 @@ export default function DraftPosts (props: Props): Node {
 
   const CreatePostComponent = () => <FileUploader />
 
-  console.log(data)
-
   if (posts.length < 1) {
     return CreatePostComponent()
   }

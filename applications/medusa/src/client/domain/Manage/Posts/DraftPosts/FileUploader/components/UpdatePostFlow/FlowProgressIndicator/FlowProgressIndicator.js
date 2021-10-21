@@ -14,7 +14,7 @@ import {
   Text,
   CloseButton
 } from '@chakra-ui/react'
-import { STEPS } from '../../constants/constants'
+import { STEPS } from '../../../constants/constants'
 import { useTranslation } from 'react-i18next'
 
 type Props = {
@@ -22,7 +22,7 @@ type Props = {
   onCancel: () => void,
 }
 
-export default function ProgressIndicator ({ state, onCancel }: Props): Node {
+export default function FlowProgressIndicator ({ state, onCancel }: Props): Node {
   const [t] = useTranslation('manage')
 
   const findText = () => {
