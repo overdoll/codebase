@@ -25,7 +25,7 @@ export default function SimplifiedNavigation ({ children }: Props): Node {
         align='center' right={0} left={0} top={0} h='54px'
       />
       <Flex
-        zIndex='docked' boxShadow='sm' align='center' right={0} left={0} top={0} position='fixed' h='54px'
+        zIndex='docked' align='center' right={0} left={0} top={0} position='fixed' h='54px'
         bg='transparent'
       >
         <Link to='/'>

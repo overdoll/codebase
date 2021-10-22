@@ -56,18 +56,10 @@ const reducer: {} = (state: State, action: Action): State => {
       const id: string = Object.keys(action.value)[0]
 
       if (action.remove) {
-        // delete item from database
-        // db.table(act).delete(id)
-
         delete copy[id]
 
         return { ...state, [act]: copy }
       }
-
-      // add item to database
-      /*
-      db.table(act).put({ id, value: action.value[id] })
-       */
 
       return { ...state, [act]: { ...copy, [id]: action.value[id] } }
     }
@@ -118,18 +110,11 @@ const reducer: {} = (state: State, action: Action): State => {
       if (action.remove) {
         const id: string = action.value.id
 
-        // delete item from database
-        // db.table(act).delete(id)
-
         files = files.filter(file => file.id !== id)
 
         return { ...state, [act]: files }
       }
 
-      // add item to database
-      /*
-      db.table(act).put({ id: action.value.id, type: action.value.type, index: files.length + 1 })
-       */
       return {
         ...state,
         [act]: [...files, action.value]
@@ -169,6 +154,9 @@ const reducer: {} = (state: State, action: Action): State => {
       })
        */
       return { ...state, submit: action.value, step: STEPS.FINISH }
+    case EVENTS.PENDING: {
+      return { ...state, pending: action.value }
+    }
     default:
       return state
   }

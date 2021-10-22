@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 6b53913b0e270b98b78c7ce9b5da5458
+ * @relayHash a9c7a61618fbe6a55dd39b2c56d4bd12
  */
 
 /* eslint-disable */
@@ -8,12 +8,15 @@
 'use strict';
 
 import type { ConcreteRequest } from 'relay-runtime';
+import type { ArrangeFragment$ref } from "./ArrangeFragment.graphql";
+import type { UpdatePostFlowFragment$ref } from "./UpdatePostFlowFragment.graphql";
 export type CreatePostQueryVariables = {|
   reference: string
 |};
 export type CreatePostQueryResponse = {|
   +post: ?{|
-    +__typename: string
+    +__typename: string,
+    +$fragmentRefs: ArrangeFragment$ref & UpdatePostFlowFragment$ref,
   |}
 |};
 export type CreatePostQuery = {|
@@ -28,8 +31,24 @@ query CreatePostQuery(
 ) {
   post(reference: $reference) {
     __typename
+    ...ArrangeFragment
+    ...UpdatePostFlowFragment
     id
   }
+}
+
+fragment ArrangeFragment on Post {
+  id
+  content {
+    urls {
+      url
+    }
+  }
+}
+
+fragment UpdatePostFlowFragment on Post {
+  id
+  ...ArrangeFragment
 }
 */
 
@@ -70,7 +89,17 @@ return {
         "name": "post",
         "plural": false,
         "selections": [
-          (v2/*: any*/)
+          (v2/*: any*/),
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "ArrangeFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "UpdatePostFlowFragment"
+          }
         ],
         "storageKey": null
       }
@@ -99,6 +128,35 @@ return {
             "kind": "ScalarField",
             "name": "id",
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Resource",
+            "kind": "LinkedField",
+            "name": "content",
+            "plural": true,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "ResourceUrl",
+                "kind": "LinkedField",
+                "name": "urls",
+                "plural": true,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "url",
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -106,7 +164,7 @@ return {
     ]
   },
   "params": {
-    "id": "6b53913b0e270b98b78c7ce9b5da5458",
+    "id": "a9c7a61618fbe6a55dd39b2c56d4bd12",
     "metadata": {},
     "name": "CreatePostQuery",
     "operationKind": "query",
@@ -115,5 +173,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = 'f15ec3aa684db4c3d1b7e245199d6bbb';
+(node: any).hash = '4c8125807c6150664d86d1bb07d23fa8';
 module.exports = node;

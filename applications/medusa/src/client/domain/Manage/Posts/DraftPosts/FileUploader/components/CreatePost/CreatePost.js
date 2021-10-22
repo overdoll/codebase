@@ -16,17 +16,20 @@ import type CreatePostQuery from '@//:artifacts/CreatePostQuery.graphql'
 import { useEffect, useState } from 'react'
 import { STEPS } from '../../constants/constants'
 import { useTranslation } from 'react-i18next'
+import type DraftPostsQuery from '@//:artifacts/DraftPostsQuery.graphql'
 
 type Props = {
   uppy: Uppy,
   state: State,
-  dispatch: Dispatch,
+  dispatch: Dispatch
 };
 
 const RootCreatePostFlowQueryGQL = graphql`
   query CreatePostQuery ($reference: String!) {
     post (reference: $reference) {
       __typename
+      ...ArrangeFragment
+      ...UpdatePostFlowFragment
     }
   }
 `
@@ -110,5 +113,5 @@ export default function CreatePost ({ uppy, state, dispatch }: Props): Node {
   }
 
   // When there is a valid post we load the post creator flow
-  return (<UpdatePostFlow uppy={uppy} state={state} dispatch={dispatch} />)
+  return (<UpdatePostFlow uppy={uppy} state={state} dispatch={dispatch} query={postData} />)
 }

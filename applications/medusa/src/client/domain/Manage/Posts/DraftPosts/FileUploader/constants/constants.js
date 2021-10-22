@@ -25,7 +25,8 @@ const EVENTS = {
   TAG_CHARACTERS: 'characters',
   TAG_CATEGORIES: 'categories',
   SUBMIT: 'submit',
-  CLEANUP: 'cleanup'
+  CLEANUP: 'cleanup',
+  PENDING: 'pending'
 }
 
 const INITIAL_STATE: State = {
@@ -39,7 +40,8 @@ const INITIAL_STATE: State = {
   characters: {},
   categories: {},
   submit: {},
-  cleanup: null
+  cleanup: null,
+  pending: false
 }
 
 export { STEPS, EVENTS, INITIAL_STATE }

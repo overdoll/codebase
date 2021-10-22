@@ -8,87 +8,101 @@ import type { Dispatch, State } from '@//:types/upload'
 import { useToast, Flex, Stack, Box, Spacer } from '@chakra-ui/react'
 import type { Uppy } from '@uppy/core'
 import Button from '@//:modules/form/Button'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StringParam, useQueryParam } from 'use-query-params'
 import FlowProgressIndicator from './FlowProgressIndicator/FlowProgressIndicator'
 import FlowSteps from './FlowSteps/FlowSteps'
 import FlowForwardButton from './FlowForwardButton/FlowForwardButton'
+import FlowBackwardButton from './FlowBackwardButton/FlowBackwardButton'
+import type CreatePostQuery from '@//:artifacts/CreatePostQuery.graphql'
+import type UpdatePostFlowContentMutation from '@//:artifacts/UpdatePostFlowContentMutation.graphql'
+import { useFragment } from 'react-relay'
+import type { UpdatePostFlowFragment$key } from '@//:artifacts/UpdatePostFlowFragment.graphql'
 
 type Props = {
   uppy: Uppy,
   state: State,
   dispatch: Dispatch,
+  query: UpdatePostFlowFragment$key
 };
 
-// TODO mutation for submitting post goes here
-/*
+const UpdatePostFlowFragmentGQL = graphql`
+  fragment UpdatePostFlowFragment on Post {
+    id
+    ...ArrangeFragment
+  }
+`
 
-const SubmitGraphQL = graphql`
-  mutation StepsMutation($input: CreatePostInput!) {
-    createPost(input: $input) {
-      review
+const UpdatePostFlowContentMutationGQL = graphql`
+  mutation UpdatePostFlowContentMutation($input: UpdatePostContentInput!) {
+    updatePostContent(input: $input) {
       post {
         id
+        content {
+          id
+          type
+          urls {
+            url
+            mimeType
+          }
+        }
       }
     }
   }
 `
 
- */
-
 // Stepper - handles all stepping functions
-export default function UpdatePostFlow ({ uppy, state, dispatch }: Props): Node {
-  // const [commit, isInFlight] = useMutation<StepsMutation>(SubmitGraphQL)
+export default function UpdatePostFlow ({ uppy, state, dispatch, query }: Props): Node {
+  const data = useFragment(UpdatePostFlowFragmentGQL, query)
+
+  const [updateContent, isUpdatingContent] = useMutation<UpdatePostFlowContentMutation>(UpdatePostFlowContentMutationGQL)
+
+  const onUpdateContent = () => {
+    // add current files on top of here as well
+
+    if (Object.keys(state.urls).length > 0) {
+      const fileIDs = Object.keys(state.urls)
+      const fileURLs = Object.values(state.urls)
+
+      updateContent({
+        variables: {
+          input: {
+            id: data.id,
+            content: fileURLs
+          }
+        },
+        onCompleted (data) {
+          // when successful, clear uppy uploaded files by key
+          console.log(data)
+        },
+        onError (data) {
+          console.log(data)
+        }
+      })
+    }
+  }
+
+  useEffect(() => {
+    dispatch({ type: EVENTS.PENDING, value: isUpdatingContent })
+  }, [isUpdatingContent])
+
+  useEffect(() => {
+    onUpdateContent()
+  }, [state.urls])
 
   const [t] = useTranslation('manage')
 
   const [postReference, setPostReference] = useQueryParam('id', StringParam)
-
-  const notify = useToast()
-
-  // Determine what happens when you click the "back" button
-  const goBack = (): void => {
-    switch (state.step) {
-      case STEPS.AUDIENCE:
-        dispatch({ type: EVENTS.STEP, value: STEPS.ARRANGE })
-        break
-      case STEPS.BRAND:
-        dispatch({ type: EVENTS.STEP, value: STEPS.AUDIENCE })
-        break
-      case STEPS.CATEGORY:
-        dispatch({ type: EVENTS.STEP, value: STEPS.BRAND })
-        break
-      case STEPS.CHARACTER:
-        dispatch({ type: EVENTS.STEP, value: STEPS.CATEGORY })
-        break
-      case STEPS.REVIEW:
-        dispatch({ type: EVENTS.STEP, value: STEPS.CHARACTER })
-        break
-      default:
-        break
-    }
-  }
-
-  // Component to calculate the "back" button in the flow
-  const BackButton = () => {
-    switch (state.step) {
-      case STEPS.SUBMIT:
-        return <></>
-      case STEPS.ARRANGE:
-        return <></>
-      default:
-        return <Button colorScheme='gray' size='lg' onClick={goBack}>{t('posts.flow.steps.footer.back')}</Button>
-    }
-  }
 
   // A steps footer component
   const FlowFooter = () => {
     if (state.step !== STEPS.SUBMIT) {
       return (
         <>
-          <BackButton />
+          <FlowBackwardButton uppy={uppy} dispatch={dispatch} state={state} />
           <Spacer />
-          <FlowForwardButton uppy={uppy} dispatch={dispatch} state={state} onSubmit={onSubmitPost} />
+          <FlowForwardButton uppy={uppy} dispatch={dispatch} state={state} />
         </>
       )
     }
@@ -111,13 +125,6 @@ export default function UpdatePostFlow ({ uppy, state, dispatch }: Props): Node 
     return <></>
   }
 
-  // When user submits the post or cancels the flow
-  const onSubmitPost = () => {
-    // query for submitting post. on success, runs the functions below
-    onCleanup()
-    dispatch({ type: EVENTS.STEP, value: STEPS.SUBMIT })
-  }
-
   // Cleanup - reset uppy uploads and state
   const onCleanup = () => {
     uppy.reset()
@@ -131,7 +138,7 @@ export default function UpdatePostFlow ({ uppy, state, dispatch }: Props): Node 
         <FlowHeader />
       </Box>
       <Box>
-        <FlowSteps uppy={uppy} dispatch={dispatch} state={state} />
+        <FlowSteps uppy={uppy} dispatch={dispatch} state={state} query={data} />
       </Box>
       <Flex justify='center'>
         <FlowFooter />

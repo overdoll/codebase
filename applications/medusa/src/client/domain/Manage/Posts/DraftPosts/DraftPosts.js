@@ -11,9 +11,7 @@ import { usePaginationFragment } from 'react-relay'
 import FileUploader from './FileUploader/FileUploader'
 import type { DraftPostsFragment$key } from '@//:artifacts/DraftPostsFragment.graphql'
 
-type Props = {
-  query: DraftPostsQuery
-}
+type Props = {}
 const DraftPostsQueryGQL = graphql`
   query DraftPostsQuery {
     viewer {
@@ -75,7 +73,7 @@ export default function DraftPosts (props: Props): Node {
         </TabList>
         <TabPanels>
           <TabPanel>
-            <CreatePostComponent />
+            <CreatePostComponent query={data} />
           </TabPanel>
           <TabPanel>
             <p>click to open draft</p>

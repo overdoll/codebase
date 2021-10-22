@@ -2,34 +2,31 @@
  * @flow
  */
 import type { Node } from 'react'
-import { EVENTS, STEPS } from '../../../constants/constants'
+import { EVENTS, INITIAL_STATE, STEPS } from '../../../constants/constants'
 import Button from '@//:modules/form/Button'
 import type { Uppy } from '@uppy/core'
 import type { Dispatch, State } from '@//:types/upload'
 import { useTranslation } from 'react-i18next'
+import { StringParam, useQueryParam } from 'use-query-params'
 
 type Props = {
   uppy: Uppy,
   state: State,
   dispatch: Dispatch,
-  onSubmit: () => void,
 }
 
-// TODO mutations for audience, brand, category, character go here
-// TODO when removing a tag, wait 5 seconds and if there are no changes then it runs?
+export default function FlowForwardButton ({ uppy, dispatch, state }: Props): Node {
+  const [postReference, setPostReference] = useQueryParam('id', StringParam)
 
-export default function FlowForwardButton ({ uppy, dispatch, state, onSubmit }: Props): Node {
   const [t] = useTranslation('manage')
 
-  // Tagging step - disabled if the conditions aren't met
-  const NextDisabled =
-    state.step === STEPS.TAG &&
-    (Object.keys(state.characters).length < 1 ||
-      Object.keys(state.artist).length < 1 ||
-      Object.keys(state.categories).length < 3)
-
-  // If the amount of files != the amount of urls (not all files were uploaded), then we can't submit yet
-  const SubmitDisabled = state.files.length !== Object.keys(state.urls).length
+  const onSubmitPost = () => {
+    // query for submitting post. on success, runs the functions below
+    uppy.reset()
+    dispatch({ type: EVENTS.CLEANUP, value: INITIAL_STATE })
+    setPostReference(undefined)
+    dispatch({ type: EVENTS.STEP, value: STEPS.SUBMIT })
+  }
 
   const goForward = (): void => {
     switch (state.step) {
@@ -53,18 +50,34 @@ export default function FlowForwardButton ({ uppy, dispatch, state, onSubmit }: 
     }
   }
 
+  const buttonDisabled = () => {
+    switch (state.step) {
+      case STEPS.ARRANGE:
+        return (state.files.length !== (Object.keys(state.urls)).length) || (state.files.length > 0)
+      default:
+        return false
+    }
+  }
+
   switch (state.step) {
     case STEPS.REVIEW:
       return (
         <Button
           colorScheme='primary' size='lg'
-          onClick={onSubmit}
+          isDisabled={buttonDisabled()}
+          onClick={onSubmitPost}
         >{t('posts.flow.steps.footer.submit')}
         </Button>
       )
     case STEPS.SUBMIT:
       return <></>
     default:
-      return <Button colorScheme='gray' size='lg' onClick={goForward}>{t('posts.flow.steps.footer.forward')}</Button>
+      return (
+        <Button
+          isDisabled={buttonDisabled()} colorScheme='gray' size='lg'
+          onClick={goForward}
+        >{t('posts.flow.steps.footer.forward')}
+        </Button>
+      )
   }
 }

@@ -2,7 +2,7 @@
  * @flow
  */
 import type { Node } from 'react'
-import { STEPS } from '../../../constants/constants'
+import { EVENTS, STEPS } from '../../../constants/constants'
 import Arrange from './Arrange/Arrange'
 import Audience from './Audience/Audience'
 import Brand from './Brand/Brand'
@@ -12,18 +12,24 @@ import Review from './Review/Review'
 import Submit from './Submit/Submit'
 import type { Uppy } from '@uppy/core'
 import type { Dispatch, State } from '@//:types/upload'
+import { graphql, useMutation } from 'react-relay/hooks'
+import type CreatePostQuery from '@//:artifacts/CreatePostQuery.graphql'
+import type FlowStepsMutation from '@//:artifacts/FlowStepsMutation.graphql'
+import { useEffect } from 'react'
+import type { UpdatePostFlowFragment$key } from '@//:artifacts/UpdatePostFlowFragment.graphql'
 
 type Props = {
   uppy: Uppy,
   state: State,
   dispatch: Dispatch,
+  query: UpdatePostFlowFragment$key
 };
 
-export default function FlowSteps ({ uppy, dispatch, state }: Props): Node {
+export default function FlowSteps ({ uppy, dispatch, state, query }: Props): Node {
   switch (state.step) {
     case STEPS.ARRANGE:
 
-      return <Arrange uppy={uppy} dispatch={dispatch} state={state} />
+      return <Arrange uppy={uppy} dispatch={dispatch} state={state} query={query} />
 
     case STEPS.AUDIENCE:
 
@@ -50,6 +56,6 @@ export default function FlowSteps ({ uppy, dispatch, state }: Props): Node {
       return <Submit />
 
     default:
-      return <Arrange uppy={uppy} dispatch={dispatch} state={state} />
+      return <Arrange uppy={uppy} dispatch={dispatch} state={state} query={query} />
   }
 }

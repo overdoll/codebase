@@ -21,7 +21,18 @@
         },
         "arrange": {
           "header": "Step 1",
-          "subheader": "Arrange your uploads"
+          "subheader": "Arrange your uploads",
+          "uploader": {
+            "processing": {
+              "in_progress": "Processing file",
+              "error": {
+                "message": "There was an error processing your files",
+                "button": "Retry"
+              }
+            },
+            "error": "There was an error processing your files",
+            "retry": "Retry"
+          }
         },
         "audience": {
           "header": "Step 2",
