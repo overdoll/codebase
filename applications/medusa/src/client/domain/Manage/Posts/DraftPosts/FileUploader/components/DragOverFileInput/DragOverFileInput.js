@@ -19,8 +19,6 @@ type Props = {
 export default function DragOverFileInput ({ uppy, onSelect, children, ...rest }: Props): Node {
   const notify = useToast()
 
-  const [t] = useTranslation('upload')
-
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const [timeOut, changeTimeOut] = useState(null)
@@ -85,7 +83,7 @@ export default function DragOverFileInput ({ uppy, onSelect, children, ...rest }
         borderWidth={4} pointerEvents='none' display={isOpen ? 'flex' : 'none'}
       >
         <Icon m={4} w={10} h={10} icon={InterfaceContentArchive} fill='green.500' />
-        <Heading ml={16} mr={16} color='green.500' size='lg' align='center'>{t('begin.dropper')}
+        <Heading ml={16} mr={16} color='green.500' size='lg' align='center'>begin.dropper
         </Heading>
       </Flex>
     </Flex>

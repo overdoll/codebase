@@ -66,11 +66,6 @@ export default function CreatePost ({ uppy, state, dispatch }: Props): Node {
             setPostReference(x => {
               return payload.createPost.post.reference
             })
-            notify({
-              status: 'success',
-              title: t('posts.flow.create.query.success'),
-              isClosable: true
-            })
           },
           onError () {
             notify({
