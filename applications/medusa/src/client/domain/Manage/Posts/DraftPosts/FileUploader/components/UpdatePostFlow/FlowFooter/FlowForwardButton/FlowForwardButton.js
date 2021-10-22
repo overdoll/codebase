@@ -2,7 +2,7 @@
  * @flow
  */
 import type { Node } from 'react'
-import { EVENTS, INITIAL_STATE, STEPS } from '../../../constants/constants'
+import { EVENTS, INITIAL_STATE, STEPS } from '../../../../constants/constants'
 import Button from '@//:modules/form/Button'
 import type { Uppy } from '@uppy/core'
 import type { Dispatch, State } from '@//:types/upload'
@@ -13,9 +13,10 @@ type Props = {
   uppy: Uppy,
   state: State,
   dispatch: Dispatch,
+  isDisabled: boolean,
 }
 
-export default function FlowForwardButton ({ uppy, dispatch, state }: Props): Node {
+export default function FlowForwardButton ({ uppy, dispatch, state, isDisabled }: Props): Node {
   const [postReference, setPostReference] = useQueryParam('id', StringParam)
 
   const [t] = useTranslation('manage')
@@ -51,6 +52,9 @@ export default function FlowForwardButton ({ uppy, dispatch, state }: Props): No
   }
 
   const buttonDisabled = () => {
+    if (isDisabled) {
+      return true
+    }
     switch (state.step) {
       case STEPS.ARRANGE:
         return (state.files.length !== (Object.keys(state.urls)).length) || (state.files.length > 0)
@@ -64,7 +68,7 @@ export default function FlowForwardButton ({ uppy, dispatch, state }: Props): No
       return (
         <Button
           colorScheme='primary' size='lg'
-          isDisabled={buttonDisabled()}
+          isLoading={buttonDisabled()}
           onClick={onSubmitPost}
         >{t('posts.flow.steps.footer.submit')}
         </Button>
@@ -74,7 +78,7 @@ export default function FlowForwardButton ({ uppy, dispatch, state }: Props): No
     default:
       return (
         <Button
-          isDisabled={buttonDisabled()} colorScheme='gray' size='lg'
+          isLoading={buttonDisabled()} colorScheme='gray' size='lg'
           onClick={goForward}
         >{t('posts.flow.steps.footer.forward')}
         </Button>

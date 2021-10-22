@@ -3,7 +3,7 @@
  */
 import type { Node } from 'react'
 import { useState } from 'react'
-import type { State } from '@//:types/upload'
+import type { Dispatch, State } from '@//:types/upload'
 import {
   Box,
   CircularProgress,
@@ -14,16 +14,27 @@ import {
   Text,
   CloseButton
 } from '@chakra-ui/react'
-import { STEPS } from '../../../constants/constants'
+import { EVENTS, INITIAL_STATE, STEPS } from '../../../constants/constants'
 import { useTranslation } from 'react-i18next'
+import { StringParam, useQueryParam } from 'use-query-params'
+import type { Uppy } from '@uppy/core'
 
 type Props = {
+  uppy: Uppy,
   state: State,
-  onCancel: () => void,
+  dispatch: Dispatch,
 }
 
-export default function FlowProgressIndicator ({ state, onCancel }: Props): Node {
+export default function FlowHeader ({ state, uppy, dispatch }: Props): Node {
   const [t] = useTranslation('manage')
+
+  const [postReference, setPostReference] = useQueryParam('id', StringParam)
+
+  const onCleanup = () => {
+    uppy.reset()
+    dispatch({ type: EVENTS.CLEANUP, value: INITIAL_STATE })
+    setPostReference(undefined)
+  }
 
   const findText = () => {
     switch (state.step) {
@@ -45,6 +56,9 @@ export default function FlowProgressIndicator ({ state, onCancel }: Props): Node
         return ['', '']
     }
   }
+  if (state.step === STEPS.SUBMIT) {
+    return <></>
+  }
 
   return (
     <Flex bg='gray.800' p={2} borderRadius={15} align='center' justify='space-between'>
@@ -63,7 +77,7 @@ export default function FlowProgressIndicator ({ state, onCancel }: Props): Node
           </>
         </Box>
       </Flex>
-      <CloseButton size='lg' onClick={onCancel} />
+      <CloseButton size='lg' onClick={onCleanup} />
     </Flex>
   )
 }

@@ -51,22 +51,24 @@ const ArrangeFragmentGQL = graphql`
 export default function Arrange ({ uppy, dispatch, state, query }: Props): Node {
   const data = useFragment(ArrangeFragmentGQL, query)
 
-  console.log(data)
-
   const [t] = useTranslation('manage')
 
   return (
     <Stack spacing={4}>
-      <FilePicker w='auto' uppy={uppy}>
-        <IconButton
-          variant='ghost'
-          aria-label='add files'
-          icon={<Icon h={5} w={5} icon={InterfaceUploadBox2} fill='gray.100' />}
-        />
-      </FilePicker>
-      <ProcessUploads uppy={uppy} state={state} dispatch={dispatch} />
+      <Box>
+        <FilePicker w='auto' uppy={uppy}>
+          <Flex mb={2}>
+            <IconButton
+              variant='ghost'
+              aria-label='add files'
+              icon={<Icon h={5} w={5} icon={InterfaceUploadBox2} fill='gray.100' />}
+            />
+          </Flex>
+        </FilePicker>
+        <ProcessUploads uppy={uppy} state={state} dispatch={dispatch} />
+      </Box>
       {data.content.map((item, index) => {
-        return (<Flex key={index}>{item.id}</Flex>)
+        return (<Flex key={index}>item {index}</Flex>)
       })}
     </Stack>
   )

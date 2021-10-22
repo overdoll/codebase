@@ -11,14 +11,15 @@ import Button from '@//:modules/form/Button'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StringParam, useQueryParam } from 'use-query-params'
-import FlowProgressIndicator from './FlowProgressIndicator/FlowProgressIndicator'
+import FlowHeader from './FlowHeader/FlowHeader'
 import FlowSteps from './FlowSteps/FlowSteps'
-import FlowForwardButton from './FlowForwardButton/FlowForwardButton'
-import FlowBackwardButton from './FlowBackwardButton/FlowBackwardButton'
+import FlowForwardButton from './FlowFooter/FlowForwardButton/FlowForwardButton'
+import FlowBackwardButton from './FlowFooter/FlowBackwardButton/FlowBackwardButton'
 import type CreatePostQuery from '@//:artifacts/CreatePostQuery.graphql'
 import type UpdatePostFlowContentMutation from '@//:artifacts/UpdatePostFlowContentMutation.graphql'
 import { useFragment } from 'react-relay'
 import type { UpdatePostFlowFragment$key } from '@//:artifacts/UpdatePostFlowFragment.graphql'
+import FlowFooter from './FlowFooter/FlowFooter'
 
 type Props = {
   uppy: Uppy,
@@ -30,6 +31,11 @@ type Props = {
 const UpdatePostFlowFragmentGQL = graphql`
   fragment UpdatePostFlowFragment on Post {
     id
+    content {
+      urls {
+        url
+      }
+    }
     ...ArrangeFragment
   }
 `
@@ -56,27 +62,51 @@ const UpdatePostFlowContentMutationGQL = graphql`
 export default function UpdatePostFlow ({ uppy, state, dispatch, query }: Props): Node {
   const data = useFragment(UpdatePostFlowFragmentGQL, query)
 
+  const postContent = data.content
+
   const [updateContent, isUpdatingContent] = useMutation<UpdatePostFlowContentMutation>(UpdatePostFlowContentMutationGQL)
 
+  // figure out how to make this function "importable"
   const onUpdateContent = () => {
     // add current files on top of here as well
 
     if (Object.keys(state.urls).length > 0) {
-      const fileIDs = Object.keys(state.urls)
-      const fileURLs = Object.values(state.urls)
+      const uploadedIDs = Object.keys(state.urls)
+      const uploadedURLs = Object.values(state.urls)
+      const currentURLs = postContent?.map((item) =>
+        item.urls[0].url) || []
+      const combinedUpload = [...currentURLs, ...uploadedURLs]
 
       updateContent({
         variables: {
           input: {
             id: data.id,
-            content: fileURLs
+            content: combinedUpload
           }
         },
         onCompleted (data) {
-          // when successful, clear uppy uploaded files by key
-          console.log(data)
+          uploadedIDs.forEach((item) => {
+            uppy.removeFile(item)
+            dispatch({ type: EVENTS.FILES, value: { id: item }, remove: true })
+            dispatch({
+              type: EVENTS.PROGRESS,
+              value: { [item]: state.progress[item] },
+              remove: true
+            })
+            dispatch({
+              type: EVENTS.THUMBNAILS,
+              value: { [item]: state.thumbnails[item] },
+              remove: true
+            })
+            dispatch({
+              type: EVENTS.URLS,
+              value: { [item]: state.urls[item] },
+              remove: true
+            })
+          })
         },
         onError (data) {
+          // what happens if there is an error? give retry button as notification
           console.log(data)
         }
       })
@@ -84,64 +114,26 @@ export default function UpdatePostFlow ({ uppy, state, dispatch, query }: Props)
   }
 
   useEffect(() => {
-    dispatch({ type: EVENTS.PENDING, value: isUpdatingContent })
-  }, [isUpdatingContent])
-
-  useEffect(() => {
-    onUpdateContent()
+    // buffer these so it runs after 3 seconds
+    if ((Object.keys(state.urls)).length === state.files.length) {
+      onUpdateContent()
+    }
   }, [state.urls])
 
+  const disableNavigation = isUpdatingContent
+
   const [t] = useTranslation('manage')
-
-  const [postReference, setPostReference] = useQueryParam('id', StringParam)
-
-  // A steps footer component
-  const FlowFooter = () => {
-    if (state.step !== STEPS.SUBMIT) {
-      return (
-        <>
-          <FlowBackwardButton uppy={uppy} dispatch={dispatch} state={state} />
-          <Spacer />
-          <FlowForwardButton uppy={uppy} dispatch={dispatch} state={state} />
-        </>
-      )
-    }
-    return (
-      <Button
-        colorScheme='gray' size='lg' onClick={() => dispatch({
-          type: EVENTS.CLEANUP,
-          value: INITIAL_STATE
-        })}
-      >{t('posts.flow.steps.footer.retry')}
-      </Button>
-    )
-  }
-
-  // A header for the post
-  const FlowHeader = () => {
-    if (state.step !== STEPS.SUBMIT) {
-      return <FlowProgressIndicator state={state} onCancel={onCleanup} />
-    }
-    return <></>
-  }
-
-  // Cleanup - reset uppy uploads and state
-  const onCleanup = () => {
-    uppy.reset()
-    dispatch({ type: EVENTS.CLEANUP, value: INITIAL_STATE })
-    setPostReference(undefined)
-  }
 
   return (
     <Stack spacing={4}>
       <Box>
-        <FlowHeader />
+        <FlowHeader uppy={uppy} dispatch={dispatch} state={state} />
       </Box>
       <Box>
         <FlowSteps uppy={uppy} dispatch={dispatch} state={state} query={data} />
       </Box>
       <Flex justify='center'>
-        <FlowFooter />
+        <FlowFooter uppy={uppy} dispatch={dispatch} state={state} disableNavigation={disableNavigation} />
       </Flex>
     </Stack>
   )

@@ -42,7 +42,9 @@ export default function FileUploader (props: Props): Node {
       // TODO this needs to use the mutation on all successful files
       // TODO files that are uploading should not be "re-arrangeable"?
       // only want the ID from URL
-      dispatch({ type: EVENTS.URLS, value: { [file.id]: response.uploadURL } })
+      const url = response.uploadURL
+      const fileId = url.substring(url.lastIndexOf('/') + 1)
+      dispatch({ type: EVENTS.URLS, value: { [file.id]: fileId } })
     })
   }, [uppy])
 

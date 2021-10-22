@@ -2,7 +2,7 @@
  * @flow
  */
 import type { Node } from 'react'
-import { EVENTS, STEPS } from '../../../constants/constants'
+import { EVENTS, STEPS } from '../../../../constants/constants'
 import Button from '@//:modules/form/Button'
 import type { Uppy } from '@uppy/core'
 import type { Dispatch, State } from '@//:types/upload'
@@ -12,12 +12,13 @@ type Props = {
   uppy: Uppy,
   state: State,
   dispatch: Dispatch,
+  isDisabled: boolean,
 }
 
 // TODO mutations for audience, brand, category, character go here
 // TODO when removing a tag, wait 5 seconds and if there are no changes then it runs?
 
-export default function FlowBackwardButton ({ uppy, dispatch, state, onSubmit }: Props): Node {
+export default function FlowBackwardButton ({ uppy, dispatch, state, isDisabled }: Props): Node {
   const [t] = useTranslation('manage')
 
   const goBack = (): void => {
@@ -48,6 +49,12 @@ export default function FlowBackwardButton ({ uppy, dispatch, state, onSubmit }:
     case STEPS.ARRANGE:
       return <></>
     default:
-      return <Button colorScheme='gray' size='lg' onClick={goBack}>{t('posts.flow.steps.footer.back')}</Button>
+      return (
+        <Button
+          isLoading={isDisabled} colorScheme='gray' size='lg'
+          onClick={goBack}
+        >{t('posts.flow.steps.footer.back')}
+        </Button>
+      )
   }
 }

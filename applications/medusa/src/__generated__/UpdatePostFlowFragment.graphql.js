@@ -13,6 +13,11 @@ declare export opaque type UpdatePostFlowFragment$ref: FragmentReference;
 declare export opaque type UpdatePostFlowFragment$fragmentType: UpdatePostFlowFragment$ref;
 export type UpdatePostFlowFragment = {|
   +id: string,
+  +content: $ReadOnlyArray<{|
+    +urls: $ReadOnlyArray<{|
+      +url: any
+    |}>
+  |}>,
   +$fragmentRefs: ArrangeFragment$ref,
   +$refType: UpdatePostFlowFragment$ref,
 |};
@@ -38,6 +43,35 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
+      "alias": null,
+      "args": null,
+      "concreteType": "Resource",
+      "kind": "LinkedField",
+      "name": "content",
+      "plural": true,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "ResourceUrl",
+          "kind": "LinkedField",
+          "name": "urls",
+          "plural": true,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "url",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "ArrangeFragment"
@@ -47,5 +81,5 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 // prettier-ignore
-(node: any).hash = 'e82cd9ab275bfa0dac7f878b9e5335bc';
+(node: any).hash = '9f486eea5d3f523d30f0e0f969b54b75';
 module.exports = node;
