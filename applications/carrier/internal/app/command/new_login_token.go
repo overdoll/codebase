@@ -31,7 +31,12 @@ func (h NewLoginTokenHandler) Handle(ctx context.Context, cmd NewLoginToken) err
 		return err
 	}
 
-	u.Path = path.Join(u.Path, "token", cmd.Token)
+	u.Path = path.Join(u.Path, "token")
+
+	q := u.Query()
+	q.Set("id", cmd.Token)
+
+	u.RawQuery = q.Encode()
 
 	template, err := mailing.NewTemplate("d-900a6f535312497d837ceee347799859", map[string]interface{}{
 		"link": u.String(),

@@ -158,6 +158,9 @@ func (r *MutationResolver) ReissueAuthenticationToken(ctx context.Context) (*typ
 
 	if err := r.App.Commands.ReissueAuthenticationToken.Handle(ctx, command.ReissueAuthenticationToken{
 		TokenId: tk.Value,
+
+		// manually send the language because we need it for the email
+		Language: translations.FromContext(ctx).Locale(),
 	}); err != nil {
 
 		if err == token.ErrTokenNotFound {

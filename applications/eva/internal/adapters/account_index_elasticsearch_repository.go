@@ -19,6 +19,7 @@ type accountDocument struct {
 	Id        string   `json:"id"`
 	Avatar    string   `json:"avatar"`
 	Username  string   `json:"username"`
+	Language  string   `json:"language"`
 	Verified  bool     `json:"verified"`
 	Roles     []string `json:"roles"`
 	CreatedAt string   `json:"created_at"`
@@ -36,6 +37,9 @@ const accountIndex = `
 				"type": "keyword"
 			},
 			"username": {
+				"type": "text"
+			},
+			"language": {
 				"type": "text"
 			},
 			"verified": {
@@ -98,7 +102,7 @@ func (r AccountIndexElasticSearchRepository) SearchAccounts(ctx context.Context,
 		}
 
 		// note that the index only contains partial info for the account so it should never be used for domain objects
-		acc := account.UnmarshalAccountFromDatabase(ac.Id, ac.Username, "", ac.Roles, ac.Verified, ac.Avatar, false, 0, "", false)
+		acc := account.UnmarshalAccountFromDatabase(ac.Id, ac.Username, "", ac.Roles, ac.Verified, ac.Avatar, "", false, 0, "", false)
 		acc.Node = paging.NewNode(ac.CreatedAt)
 
 		accounts = append(accounts, acc)

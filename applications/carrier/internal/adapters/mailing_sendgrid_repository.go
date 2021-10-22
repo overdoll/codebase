@@ -3,6 +3,7 @@ package adapters
 import (
 	"context"
 	"fmt"
+	"go.uber.org/zap"
 	"os"
 
 	"github.com/sendgrid/sendgrid-go"
@@ -19,6 +20,12 @@ func NewMailingSendgridRepository(client *sendgrid.Client) MailingSendgridReposi
 }
 
 func (r MailingSendgridRepository) SendEmail(ctx context.Context, recipient *mailing.Recipient, email *mailing.Template) error {
+
+	// empty API key, just dump the console outputs
+	if os.Getenv("SENDGRID_API_KEY") == "" {
+		zap.S().Info("api key not configured, dumping output")
+		fmt.Println()
+	}
 
 	m := mail.NewV3Mail()
 
@@ -42,6 +49,7 @@ func (r MailingSendgridRepository) SendEmail(ctx context.Context, recipient *mai
 
 	m.AddPersonalizations(p)
 
+	// TODO: need to capture response and make sure it was successful
 	_, err := r.client.Send(m)
 
 	if err != nil {

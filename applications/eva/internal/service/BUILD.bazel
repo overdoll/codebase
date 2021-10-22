@@ -2,7 +2,10 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
     name = "service",
-    srcs = ["application.go"],
+    srcs = [
+        "application.go",
+        "mocks.go",
+    ],
     importpath = "overdoll/applications/eva/internal/service",
     visibility = ["//visibility:public"],
     deps = [

@@ -29,7 +29,7 @@ func (r *Recipient) Username() string {
 }
 
 func (r *Recipient) Email() string {
-	return r.username
+	return r.email
 }
 
 func (r *Recipient) Language() string {

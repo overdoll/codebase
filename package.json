@@ -83,7 +83,7 @@
     "relay": "cd ./applications/medusa && relay-compiler",
     "graphql": "NODE_TLS_REJECT_UNAUTHORIZED=0 yarn graphql-codegen",
     "analyze": "cd ./applications/medusa && ANALYZE_BUNDLE=true razzle build",
-    "proxy:medusa": "telepresence --swap-deployment medusa --run yarn run service:medusa --expose 8080",
+    "proxy:medusa": "telepresence intercept medusa --port 8081 -- yarn run service:medusa",
     "service:medusa": "cd ./applications/medusa && razzle start",
     "storybook": "cd ./applications/medusa && start-storybook -p 6006 -s public,../../development/assets",
     "test:unit": "bazel coverage --test_output=all //applications/medusa:unit",

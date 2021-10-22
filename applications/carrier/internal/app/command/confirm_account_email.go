@@ -38,7 +38,12 @@ func (h ConfirmAccountEmailHandler) Handle(ctx context.Context, cmd ConfirmAccou
 		return err
 	}
 
-	u.Path = path.Join(u.Path, "confirm-email", cmd.EmailToken)
+	u.Path = path.Join(u.Path, "confirmation")
+
+	q := u.Query()
+	q.Set("id", cmd.EmailToken)
+
+	u.RawQuery = q.Encode()
 
 	template, err := mailing.NewTemplate("d-5c81a4ac00d44a9dba2dd58ebed8bcf6", map[string]interface{}{
 		"link": u.String(),
