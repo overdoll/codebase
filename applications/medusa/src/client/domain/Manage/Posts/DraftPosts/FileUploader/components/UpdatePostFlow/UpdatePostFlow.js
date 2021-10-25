@@ -66,7 +66,6 @@ export default function UpdatePostFlow ({ uppy, state, dispatch, query }: Props)
 
   const [updateContent, isUpdatingContent] = useMutation<UpdatePostFlowContentMutation>(UpdatePostFlowContentMutationGQL)
 
-  // figure out how to make this function "importable"
   const onUpdateContent = () => {
     // add current files on top of here as well
 
@@ -91,11 +90,6 @@ export default function UpdatePostFlow ({ uppy, state, dispatch, query }: Props)
             dispatch({
               type: EVENTS.PROGRESS,
               value: { [item]: state.progress[item] },
-              remove: true
-            })
-            dispatch({
-              type: EVENTS.THUMBNAILS,
-              value: { [item]: state.thumbnails[item] },
               remove: true
             })
             dispatch({

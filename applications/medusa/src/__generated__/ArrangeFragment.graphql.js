@@ -7,16 +7,13 @@
 'use strict';
 
 import type { ReaderFragment } from 'relay-runtime';
+import type { ArrangeUploadsFragment$ref } from "./ArrangeUploadsFragment.graphql";
 import type { FragmentReference } from "relay-runtime";
 declare export opaque type ArrangeFragment$ref: FragmentReference;
 declare export opaque type ArrangeFragment$fragmentType: ArrangeFragment$ref;
 export type ArrangeFragment = {|
   +id: string,
-  +content: $ReadOnlyArray<{|
-    +urls: $ReadOnlyArray<{|
-      +url: any
-    |}>
-  |}>,
+  +$fragmentRefs: ArrangeUploadsFragment$ref,
   +$refType: ArrangeFragment$ref,
 |};
 export type ArrangeFragment$data = ArrangeFragment;
@@ -41,38 +38,14 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
-      "alias": null,
       "args": null,
-      "concreteType": "Resource",
-      "kind": "LinkedField",
-      "name": "content",
-      "plural": true,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "ResourceUrl",
-          "kind": "LinkedField",
-          "name": "urls",
-          "plural": true,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "url",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
+      "kind": "FragmentSpread",
+      "name": "ArrangeUploadsFragment"
     }
   ],
   "type": "Post",
   "abstractKey": null
 };
 // prettier-ignore
-(node: any).hash = '33d11e9ef908778c670af4bb1b225fd7';
+(node: any).hash = '4a7a30ec90f287a7f4bb7d4aabecad69';
 module.exports = node;

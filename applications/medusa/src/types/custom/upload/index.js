@@ -81,13 +81,14 @@ export type Submit = {
   review?: boolean,
 };
 
-export type Step = 'REVIEW' | 'ARRANGE' | 'FINISH' | 'TAG';
+export type Step = 'ARRANGE' | 'AUDIENCE' | 'BRAND' | 'CATEGORY' | 'CHARACTER' | 'REVIEW' | 'SUBMIT';
 
 export type Event =
   | 'thumbnails'
   | 'urls'
   | 'files'
   | 'step'
+  | 'content'
   | 'progress'
   | 'characters'
   | 'audiences'
@@ -102,6 +103,7 @@ export type State = {
   files: Array<UppyFile>,
   urls: Urls,
   step: ?Step,
+  content: Array<string>,
   progress: Progress,
   brands: Brands,
   characters: Characters,

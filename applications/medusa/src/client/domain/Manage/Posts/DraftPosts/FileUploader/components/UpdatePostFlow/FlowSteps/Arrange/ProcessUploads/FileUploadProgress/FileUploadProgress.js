@@ -39,11 +39,6 @@ export default function FileUploadProgress ({ state, file, dispatch, uppy, disab
       remove: true
     })
     dispatch({
-      type: EVENTS.THUMBNAILS,
-      value: { [id]: state.thumbnails[id] },
-      remove: true
-    })
-    dispatch({
       type: EVENTS.URLS,
       value: { [id]: state.urls[id] },
       remove: true

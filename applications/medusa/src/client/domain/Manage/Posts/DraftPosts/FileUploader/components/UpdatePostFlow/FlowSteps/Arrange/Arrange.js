@@ -29,6 +29,7 @@ import { useTranslation } from 'react-i18next'
 import { useEffect, useState } from 'react'
 import type { ArrangeFragment$key } from '@//:artifacts/ArrangeFragment.graphql'
 import ProcessUploads from './ProcessUploads/ProcessUploads'
+import ArrangeUploads from './ArrangeUploads/ArrangeUploads'
 
 type Props = {
   uppy: Uppy,
@@ -40,11 +41,7 @@ type Props = {
 const ArrangeFragmentGQL = graphql`
   fragment ArrangeFragment on Post {
     id
-    content {
-      urls {
-        url
-      }
-    }
+    ...ArrangeUploadsFragment
   }
 `
 
@@ -67,9 +64,7 @@ export default function Arrange ({ uppy, dispatch, state, query }: Props): Node 
         </FilePicker>
         <ProcessUploads uppy={uppy} state={state} dispatch={dispatch} />
       </Box>
-      {data.content.map((item, index) => {
-        return (<Flex key={index}>item {index}</Flex>)
-      })}
+      <ArrangeUploads uppy={uppy} state={state} dispatch={dispatch} query={data} />
     </Stack>
   )
 }

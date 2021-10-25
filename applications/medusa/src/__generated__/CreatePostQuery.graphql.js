@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash ed08321530b8aba17479251b8151ff88
+ * @relayHash f393d12c1d49d3c5bc736f6f33591f59
  */
 
 /* eslint-disable */
@@ -39,6 +39,10 @@ query CreatePostQuery(
 
 fragment ArrangeFragment on Post {
   id
+  ...ArrangeUploadsFragment
+}
+
+fragment ArrangeUploadsFragment on Post {
   content {
     urls {
       url
@@ -169,7 +173,7 @@ return {
     ]
   },
   "params": {
-    "id": "ed08321530b8aba17479251b8151ff88",
+    "id": "f393d12c1d49d3c5bc736f6f33591f59",
     "metadata": {},
     "name": "CreatePostQuery",
     "operationKind": "query",

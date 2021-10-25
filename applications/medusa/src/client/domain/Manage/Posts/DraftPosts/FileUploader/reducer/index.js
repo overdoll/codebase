@@ -16,41 +16,6 @@ const reducer: {} = (state: State, action: Action): State => {
   const copy = { ...state[act] }
 
   switch (action.type) {
-    case EVENTS.THUMBNAILS: {
-      const id: string = Object.keys(action.value)[0]
-
-      if (action.remove) {
-        // delete item from database
-        // db.table(act).delete(id)
-
-        delete copy[id]
-
-        return { ...state, [act]: copy }
-      }
-
-      const url = action.value[id]
-
-      fetch(url)
-        .then(response => response.blob())
-        .then(async blob => {
-          const result = await new Promise((resolve, reject) => {
-            const reader = new FileReader()
-            reader.onloadend = () => resolve(reader.result)
-            reader.onerror = reject
-            reader.readAsDataURL(blob)
-          })
-
-          /*
-
-          // add thumbnail to database && convert blob url to data string so it can be saved in indexedDB and read later
-          db.transaction('rw', db.table('thumbnails'), async () => {
-            db.table(act).put({ id, value: result })
-          })
-           */
-        })
-
-      return { ...state, [act]: { ...copy, [id]: url } }
-    }
     case EVENTS.URLS:
     case EVENTS.PROGRESS: {
       const id: string = Object.keys(action.value)[0]
@@ -85,23 +50,20 @@ const reducer: {} = (state: State, action: Action): State => {
 
       return { ...state, [act]: { ...copy, [id]: action.value } }
     }
-    case EVENTS.ARRANGE_FILES: {
-      // when we arrange files, we need to clear the whole database since we update the order
-      /*
-      db.transaction('rw', db.files, async () => {
-        db.table('files').clear()
-        db.table('files').bulkPut(
-          action.value.map((file, index) => ({
-            id: file.id,
-            type: file.type,
-            index
-          }))
-        )
-      })
-       */
+    case EVENTS.CONTENT: {
+      let content = state.content
+
+      if (action.remove) {
+        const url: string = action.value.url
+
+        content = content.filter(file => file !== url)
+
+        return { ...state, [act]: content }
+      }
+
       return {
         ...state,
-        files: action.value
+        [act]: [...action.value]
       }
     }
     case EVENTS.FILES: {
@@ -120,10 +82,6 @@ const reducer: {} = (state: State, action: Action): State => {
         [act]: [...files, action.value]
       }
     }
-
-    case EVENTS.TAG_ARTIST:
-      // db.table('artist').put({ id: 1, artist: action.value })
-      return { ...state, artist: action.value }
     case EVENTS.STEP:
       // going back to first step - clear all data
       if (EVENTS.STEP === null) {
@@ -154,9 +112,6 @@ const reducer: {} = (state: State, action: Action): State => {
       })
        */
       return { ...state, submit: action.value, step: STEPS.FINISH }
-    case EVENTS.PENDING: {
-      return { ...state, pending: action.value }
-    }
     default:
       return state
   }

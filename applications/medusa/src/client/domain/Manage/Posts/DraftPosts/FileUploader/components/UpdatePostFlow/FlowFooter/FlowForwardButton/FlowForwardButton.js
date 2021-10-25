@@ -52,9 +52,6 @@ export default function FlowForwardButton ({ uppy, dispatch, state, isDisabled }
   }
 
   const buttonDisabled = () => {
-    if (isDisabled) {
-      return true
-    }
     switch (state.step) {
       case STEPS.ARRANGE:
         return (state.files.length !== (Object.keys(state.urls)).length) || (state.files.length > 0)
@@ -68,7 +65,8 @@ export default function FlowForwardButton ({ uppy, dispatch, state, isDisabled }
       return (
         <Button
           colorScheme='primary' size='lg'
-          isLoading={buttonDisabled()}
+          isDisabled={buttonDisabled()}
+          isLoading={isDisabled}
           onClick={onSubmitPost}
         >{t('posts.flow.steps.footer.submit')}
         </Button>
@@ -78,7 +76,8 @@ export default function FlowForwardButton ({ uppy, dispatch, state, isDisabled }
     default:
       return (
         <Button
-          isLoading={buttonDisabled()} colorScheme='gray' size='lg'
+          isDisabled={buttonDisabled()}
+          isLoading={isDisabled} colorScheme='gray' size='lg'
           onClick={goForward}
         >{t('posts.flow.steps.footer.forward')}
         </Button>

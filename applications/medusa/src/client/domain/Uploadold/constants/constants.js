@@ -11,7 +11,8 @@ const STEPS = {
 }
 
 const EVENTS = {
-  ARRANGE_FILES: 'arrange_files',
+  ARRANGE_CONTENT: 'arrange_content',
+  REMOVE_CONTENT: 'remove_content',
   THUMBNAILS: 'thumbnails',
   URLS: 'urls',
   FILES: 'files',
@@ -28,6 +29,7 @@ const INITIAL_STATE: State = {
   thumbnails: {},
   files: [],
   urls: {},
+  content: [],
   step: null,
   progress: {},
   artist: {},
