@@ -31,7 +31,7 @@ const EVENTS = {
 const INITIAL_STATE: State = {
   files: [],
   urls: {},
-  content: [],
+  content: null,
   step: STEPS.ARRANGE,
   progress: {},
   audiences: {},

@@ -39,7 +39,7 @@ export default function EmailCard ({ emails, connectionID }: Props): Node {
 
   return (
     <Box
-      borderWidth={data.status === 'PRIMARY' ? 1 : 2}
+      borderWidth={2}
       borderColor={data.status === 'PRIMARY' ? 'green.500' : 'gray.800'} p={4}
       borderRadius={5}
       bg={data.status === 'PRIMARY' ? 'gray.800' : 'transparent'}

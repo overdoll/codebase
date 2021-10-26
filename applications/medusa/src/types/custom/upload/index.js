@@ -10,6 +10,12 @@ export type Urls = {
   },
 };
 
+export type Content = {
+  id: string,
+  type: string,
+  urls: Array<{ url: string, mimeType: string }>
+}
+
 export type Thumbnails = {
   [string]: {
     id: string,
@@ -103,7 +109,7 @@ export type State = {
   files: Array<UppyFile>,
   urls: Urls,
   step: ?Step,
-  content: Array<string>,
+  content: Array<Content>,
   progress: Progress,
   brands: Brands,
   characters: Characters,

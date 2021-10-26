@@ -54,9 +54,9 @@ const reducer: {} = (state: State, action: Action): State => {
       let content = state.content
 
       if (action.remove) {
-        const url: string = action.value.url
+        const id: string = action.value
 
-        content = content.filter(file => file !== url)
+        content = content.filter(item => item.id !== id)
 
         return { ...state, [act]: content }
       }

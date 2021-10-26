@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash f393d12c1d49d3c5bc736f6f33591f59
+ * @relayHash fc18e1e6da8b13e968b6f6f948268c83
  */
 
 /* eslint-disable */
@@ -44,8 +44,11 @@ fragment ArrangeFragment on Post {
 
 fragment ArrangeUploadsFragment on Post {
   content {
+    id
+    type
     urls {
       url
+      mimeType
     }
   }
 }
@@ -81,6 +84,13 @@ v2 = {
   "args": null,
   "kind": "ScalarField",
   "name": "__typename",
+  "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
   "storageKey": null
 };
 return {
@@ -131,13 +141,7 @@ return {
         "plural": false,
         "selections": [
           (v2/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          },
+          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -146,6 +150,14 @@ return {
             "name": "content",
             "plural": true,
             "selections": [
+              (v3/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "type",
+                "storageKey": null
+              },
               {
                 "alias": null,
                 "args": null,
@@ -160,6 +172,13 @@ return {
                     "kind": "ScalarField",
                     "name": "url",
                     "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "mimeType",
+                    "storageKey": null
                   }
                 ],
                 "storageKey": null
@@ -173,7 +192,7 @@ return {
     ]
   },
   "params": {
-    "id": "f393d12c1d49d3c5bc736f6f33591f59",
+    "id": "fc18e1e6da8b13e968b6f6f948268c83",
     "metadata": {},
     "name": "CreatePostQuery",
     "operationKind": "query",

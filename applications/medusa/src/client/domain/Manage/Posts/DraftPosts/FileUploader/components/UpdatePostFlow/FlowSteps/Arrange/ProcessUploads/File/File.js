@@ -3,6 +3,7 @@
  */
 import type { Node } from 'react'
 import type { Uppy } from '@uppy/core'
+import { UppyFile } from '@uppy/core'
 import type { Dispatch, State } from '@//:types/upload'
 import {
   Flex,
@@ -18,12 +19,12 @@ import { EVENTS } from '../../../../../../../../../../Uploadold/constants/consta
 type Props = {
   uppy: Uppy,
   state: State,
-  file: State[files],
+  file: Array<UppyFile>,
   dispatch: Dispatch,
   disabled: boolean,
 };
 
-export default function FileUploadProgress ({ state, file, dispatch, uppy, disabled }: Props): Node {
+export default function File ({ state, file, dispatch, uppy, disabled }: Props): Node {
   const [t] = useTranslation('manage')
 
   const progress = state.progress[file.id]

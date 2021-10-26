@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import Icon from '@//:modules/content/Icon/Icon'
-import FileUploadProgress from './FileUploadProgress/FileUploadProgress'
+import File from './File/File'
 import { useEffect, useState } from 'react'
 import { graphql, useMutation } from 'react-relay/hooks'
 import type { ProcessUploadsMutation } from '@//:artifacts/ProcessUploadsMutation.graphql'
@@ -65,7 +65,7 @@ export default function ProcessUploads ({ state, dispatch, uppy }: Props): Node 
       <Stack spacing={2}>
         {state.files.map((file, index) => {
           return (
-            <FileUploadProgress
+            <File
               disabled={false} key={index} uppy={uppy}
               state={state} file={file}
               dispatch={dispatch}
