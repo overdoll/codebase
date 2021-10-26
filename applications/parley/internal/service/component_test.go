@@ -17,7 +17,7 @@ import (
 	"overdoll/libraries/clients"
 	"overdoll/libraries/config"
 	"overdoll/libraries/passport"
-	"overdoll/libraries/tests"
+	"overdoll/libraries/testing_tools"
 )
 
 const ParleyHttpAddr = ":8888"
@@ -53,7 +53,7 @@ func startService() bool {
 
 	go bootstrap.InitializeHttpServer(ParleyHttpAddr, srv, func() {})
 
-	ok := tests.WaitForPort(ParleyHttpAddr)
+	ok := testing_tools.WaitForPort(ParleyHttpAddr)
 	if !ok {
 		log.Println("Timed out waiting for parley HTTP to come up")
 		return false
@@ -65,7 +65,7 @@ func startService() bool {
 		parley.RegisterParleyServer(server, s)
 	})
 
-	ok = tests.WaitForPort(ParleyGrpcAddr)
+	ok = testing_tools.WaitForPort(ParleyGrpcAddr)
 
 	if !ok {
 		log.Println("Timed out waiting for parley GRPC to come up")

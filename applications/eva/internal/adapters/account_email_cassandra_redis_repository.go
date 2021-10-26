@@ -123,43 +123,6 @@ func (r AccountRepository) AddAccountEmail(ctx context.Context, acc *account.Acc
 	return account.UnmarshalEmailFromDatabase(confirm.Email(), acc.ID(), 0), nil
 }
 
-// GetEmailConfirmationByEmail - a method that is used to get the email confirmation ID by only passing the email
-// NOTE: this should only be used in tests! This is here purely because it is used for testing and any future
-// changes to how email confirmations will work would make this change easier
-func (r AccountRepository) GetEmailConfirmationByEmail(ctx context.Context, email string) (string, error) {
-	keys, err := r.client.Keys(ctx, confirmEmailPrefix+"*").Result()
-
-	if err != nil {
-		return "", err
-	}
-
-	for _, key := range keys {
-
-		// get each key's value
-		val, err := r.client.Get(ctx, key).Result()
-		if err != nil {
-			return "", err
-		}
-
-		val, err = crypt.Decrypt(val)
-
-		if err != nil {
-			return "", err
-		}
-
-		var emailConfirmation emailConfirmation
-		if err := json.Unmarshal([]byte(val), &emailConfirmation); err != nil {
-			return "", err
-		}
-
-		if emailConfirmation.Email == email {
-			return strings.Split(key, ":")[1], nil
-		}
-	}
-
-	return "", account.ErrEmailCodeInvalid
-}
-
 // ConfirmAccountEmail - confirm account email
 func (r AccountRepository) ConfirmAccountEmail(ctx context.Context, requester *principal.Principal, confirmId string) (*account.Email, error) {
 

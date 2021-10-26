@@ -3,15 +3,12 @@ package service_test
 import (
 	"context"
 	"log"
-	"net/http"
-	"net/url"
 	"os"
 	"testing"
 
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc"
-	"overdoll/applications/eva/internal/domain/token"
 	"overdoll/applications/eva/internal/ports"
 	"overdoll/applications/eva/internal/ports/graphql/types"
 	"overdoll/applications/eva/internal/service"
@@ -20,7 +17,7 @@ import (
 	"overdoll/libraries/clients"
 	"overdoll/libraries/config"
 	"overdoll/libraries/passport"
-	"overdoll/libraries/tests"
+	"overdoll/libraries/testing_tools"
 )
 
 const EvaHttpAddr = ":7777"
@@ -103,16 +100,14 @@ func grantAccountAccessWithAuthenticationToken(t *testing.T, client *graphql.Cli
 // helper function - basically runs the "authentication" flow - run authenticate mutation, grab cookie from jar, and redeem the cookie
 func authenticateAndVerifyToken(t *testing.T, email string) (VerifyAuthenticationToken, *graphql.Client, *clients.ClientPassport) {
 
-	client, httpUser, pass := getHttpClient(t, passport.FreshPassport())
+	client, pass := getHttpClient(t, passport.FreshPassport())
 
 	authenticate := grantAuthenticationToken(t, client, email)
-
-	otpCookie := getOTPTokenFromJar(t, httpUser.Jar)
 
 	require.NotNil(t, authenticate.GrantAuthenticationToken.AuthenticationToken)
 	require.Equal(t, email, authenticate.GrantAuthenticationToken.AuthenticationToken.Email)
 
-	ck := verifyAuthenticationToken(t, client, otpCookie.Value)
+	ck := verifyAuthenticationToken(t, client, getAuthTokenFromEmail(t, email))
 
 	// make sure cookie is valid
 	require.NotNil(t, ck.VerifyAuthenticationToken)
@@ -146,29 +141,18 @@ func getAccountByUsername(t *testing.T, client *graphql.Client, username string)
 	return accountByUsername.Account
 }
 
-func getOTPTokenFromJar(t *testing.T, jar http.CookieJar) *http.Cookie {
-	// get cookies
-	cookies := jar.Cookies(&url.URL{
-		Scheme: "http",
-	})
-
-	var otpCookie *http.Cookie
-
-	// need to grab value from cookie, so we can redeem it
-	for _, ck := range cookies {
-		if ck.Name == token.OTPKey {
-			otpCookie = ck
-		}
-	}
-
-	return otpCookie
+func getAuthTokenFromEmail(t *testing.T, email string) string {
+	util := testing_tools.NewMailingRedisUtility()
+	res, err := util.ReadEmail(context.Background(), email)
+	require.NoError(t, err)
+	return res["token"].(string)
 }
 
-func getHttpClient(t *testing.T, pass *passport.Passport) (*graphql.Client, *http.Client, *clients.ClientPassport) {
+func getHttpClient(t *testing.T, pass *passport.Passport) (*graphql.Client, *clients.ClientPassport) {
 
 	client, transport := clients.NewHTTPClientWithHeaders(pass)
 
-	return graphql.NewClient(EvaHttpClientAddr, client), client, transport
+	return graphql.NewClient(EvaHttpClientAddr, client), transport
 }
 
 func getGrpcClient(t *testing.T) eva.EvaClient {
@@ -188,7 +172,7 @@ func startService() bool {
 
 	go bootstrap.InitializeHttpServer(EvaHttpAddr, srv, func() {})
 
-	ok := tests.WaitForPort(EvaHttpAddr)
+	ok := testing_tools.WaitForPort(EvaHttpAddr)
 	if !ok {
 		log.Println("Timed out waiting for eva HTTP to come up")
 		return false
@@ -199,7 +183,7 @@ func startService() bool {
 		eva.RegisterEvaServer(server, s)
 	})
 
-	ok = tests.WaitForPort(EvaGrpcAddr)
+	ok = testing_tools.WaitForPort(EvaGrpcAddr)
 
 	if !ok {
 		log.Println("Timed out waiting for eva GRPC to come up")
@@ -209,6 +193,7 @@ func startService() bool {
 }
 
 func TestMain(m *testing.M) {
+
 	if !startService() {
 		os.Exit(1)
 	}

@@ -4,7 +4,6 @@ import (
 	"context"
 	"log"
 	"mime"
-	"net/http"
 	"os"
 	"path"
 	"path/filepath"
@@ -25,7 +24,7 @@ import (
 	"overdoll/libraries/clients"
 	"overdoll/libraries/config"
 	"overdoll/libraries/passport"
-	"overdoll/libraries/tests"
+	"overdoll/libraries/testing_tools"
 )
 
 const StingHttpAddr = ":6666"
@@ -35,11 +34,11 @@ const StingTusClientAddr = "http://:6666/api/upload/"
 const StingGrpcAddr = "localhost:6667"
 const StingGrpcClientAddr = "localhost:6667"
 
-func getGraphqlClient(t *testing.T, pass *passport.Passport) (*graphql.Client, *http.Client) {
+func getGraphqlClient(t *testing.T, pass *passport.Passport) *graphql.Client {
 
 	client, _ := clients.NewHTTPClientWithHeaders(pass)
 
-	return graphql.NewClient(StingGraphqlClientAddr, client), client
+	return graphql.NewClient(StingGraphqlClientAddr, client)
 }
 
 func getTusClient(t *testing.T) *tus.Client {
@@ -119,7 +118,7 @@ func startService() bool {
 
 	go bootstrap.InitializeHttpServer(StingHttpAddr, srv, func() {})
 
-	ok := tests.WaitForPort(StingHttpAddr)
+	ok := testing_tools.WaitForPort(StingHttpAddr)
 	if !ok {
 		log.Println("timed out waiting for sting HTTP to come up")
 		return false
@@ -131,7 +130,7 @@ func startService() bool {
 		sting.RegisterStingServer(server, s)
 	})
 
-	ok = tests.WaitForPort(StingGrpcAddr)
+	ok = testing_tools.WaitForPort(StingGrpcAddr)
 
 	if !ok {
 		log.Println("timed out waiting for sting GRPC to come up")

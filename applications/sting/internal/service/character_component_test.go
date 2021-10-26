@@ -29,7 +29,7 @@ type Character struct {
 func TestSearchCharacters(t *testing.T) {
 	t.Parallel()
 
-	client, _ := getGraphqlClient(t, nil)
+	client := getGraphqlClient(t, nil)
 
 	var searchCharacters SearchCharacters
 
@@ -46,7 +46,7 @@ func TestSearchCharacters(t *testing.T) {
 func TestGetCharacter(t *testing.T) {
 	t.Parallel()
 
-	client, _ := getGraphqlClient(t, nil)
+	client := getGraphqlClient(t, nil)
 
 	var getCharacter Character
 

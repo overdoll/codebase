@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"os"
+	"overdoll/libraries/testing_tools"
 
 	"overdoll/applications/eva/internal/adapters"
 	"overdoll/applications/eva/internal/app"
@@ -25,9 +26,11 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 func NewComponentTestApplication(ctx context.Context) (app.Application, func()) {
 
 	// mock out carrier so we don't have to send emails in tests
-	return createApplication(ctx, CarrierServiceMock{}),
+	// we "send" emails by placing them inside of a redis DB to be read later from tests
+	return createApplication(ctx, CarrierServiceMock{
+			util: testing_tools.NewMailingRedisUtility(),
+		}),
 		func() {
-
 		}
 }
 

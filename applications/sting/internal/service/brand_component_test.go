@@ -32,7 +32,7 @@ type Brand struct {
 func TestSearchBrand(t *testing.T) {
 	t.Parallel()
 
-	client, _ := getGraphqlClient(t, nil)
+	client := getGraphqlClient(t, nil)
 
 	var searchSeries SearchBrands
 
@@ -54,7 +54,7 @@ func TestSearchBrand(t *testing.T) {
 func TestGetBrand(t *testing.T) {
 	t.Parallel()
 
-	client, _ := getGraphqlClient(t, nil)
+	client := getGraphqlClient(t, nil)
 
 	var getBrand Brand
 

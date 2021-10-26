@@ -34,7 +34,7 @@ type Post struct {
 
 func getPost(t *testing.T, id string) Post {
 
-	client, _ := getGraphqlClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	client := getGraphqlClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 
 	var post Post
 
@@ -229,7 +229,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	pass := passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
 
-	client, _ := getGraphqlClient(t, pass)
+	client := getGraphqlClient(t, pass)
 
 	var newPostId string
 
@@ -245,7 +245,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 			// at this point, our post is put into the moderation queue. check for existence here
 			// grab all pending posts for our moderator
-			client, _ := getGraphqlClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+			client := getGraphqlClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 
 			var accountPosts AccountPosts
 
@@ -328,7 +328,7 @@ func TestCreatePost_Discard(t *testing.T) {
 
 	pass := passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
 
-	client, _ := getGraphqlClient(t, pass)
+	client := getGraphqlClient(t, pass)
 
 	env := getWorkflowEnvironment(t)
 
@@ -368,7 +368,7 @@ func TestCreatePost_Reject_undo_reject(t *testing.T) {
 
 	pass := passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
 
-	client, _ := getGraphqlClient(t, pass)
+	client := getGraphqlClient(t, pass)
 
 	env := getWorkflowEnvironment(t)
 
@@ -424,7 +424,7 @@ func TestCreatePost_Remove(t *testing.T) {
 
 	pass := passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6")
 
-	client, _ := getGraphqlClient(t, pass)
+	client := getGraphqlClient(t, pass)
 
 	env := getWorkflowEnvironment(t)
 

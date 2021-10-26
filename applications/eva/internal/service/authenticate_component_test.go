@@ -21,7 +21,7 @@ type RevokeAccountAccess struct {
 func TestLogout_user(t *testing.T) {
 	t.Parallel()
 
-	client, _, pass := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
+	client, pass := getHttpClient(t, passport.FreshPassportWithAccount("1q7MJ3JkhcdcJJNqZezdfQt5pZ6"))
 
 	var mutation RevokeAccountAccess
 
@@ -64,17 +64,19 @@ func TestAccountAuthenticate_existing(t *testing.T) {
 func TestAccountAuthenticate_from_another_session(t *testing.T) {
 	t.Parallel()
 
-	client, httpUser, _ := getHttpClient(t, passport.FreshPassport())
+	client, _ := getHttpClient(t, passport.FreshPassport())
 
-	authenticate := grantAuthenticationToken(t, client, "i2fhz.poisonminion@inbox.testmail.app")
+	email := "i2fhz.poisonminion@inbox.testmail.app"
 
-	otpCookie := getOTPTokenFromJar(t, httpUser.Jar)
+	authenticate := grantAuthenticationToken(t, client, email)
+
+	authToken := getAuthTokenFromEmail(t, email)
 
 	require.NotNil(t, authenticate.GrantAuthenticationToken.AuthenticationToken)
 
-	clientFromAnotherSession, _, _ := getHttpClient(t, passport.FreshPassport())
+	clientFromAnotherSession, _ := getHttpClient(t, passport.FreshPassport())
 
-	redeemCookie := verifyAuthenticationToken(t, clientFromAnotherSession, otpCookie.Value)
+	redeemCookie := verifyAuthenticationToken(t, clientFromAnotherSession, authToken)
 
 	// should have indicated that it was redeemed by another session
 	require.Equal(t, false, redeemCookie.VerifyAuthenticationToken.AuthenticationToken.SameSession)
@@ -152,7 +154,7 @@ func TestAccountLogin_setup_multi_factor_and_login(t *testing.T) {
 	testAccountEmail := "i2fhz.artist_verified@inbox.testmail.app"
 
 	// use passport with user
-	client, _, _ := getHttpClient(t, passport.FreshPassportWithAccount(testAccountId))
+	client, _ := getHttpClient(t, passport.FreshPassportWithAccount(testAccountId))
 
 	var generateAccountRecoveryCodes GenerateAccountMultiFactorRecoveryCodes
 
@@ -318,7 +320,7 @@ type CreateAccountWithAuthenticationToken struct {
 func TestAccountRegistration_complete(t *testing.T) {
 	t.Parallel()
 
-	client, httpUser, _ := getHttpClient(t, nil)
+	client, _ := getHttpClient(t, nil)
 
 	fake := TestUser{}
 
@@ -329,10 +331,7 @@ func TestAccountRegistration_complete(t *testing.T) {
 	authenticate := grantAuthenticationToken(t, client, fake.Email)
 
 	// get cookies
-	otpCookie := getOTPTokenFromJar(t, httpUser.Jar)
-
-	// make sure OTPKey is not empty
-	require.True(t, otpCookie != nil)
+	authToken := getAuthTokenFromEmail(t, fake.Email)
 
 	require.NotNil(t, true, authenticate.GrantAuthenticationToken.AuthenticationToken)
 
@@ -342,7 +341,7 @@ func TestAccountRegistration_complete(t *testing.T) {
 	// expect that the cookie is not redeemed
 	require.Equal(t, false, authenticationToken.ViewAuthenticationToken.Verified)
 
-	redeemCookie := verifyAuthenticationToken(t, client, otpCookie.Value)
+	redeemCookie := verifyAuthenticationToken(t, client, authToken)
 
 	// make sure cookie is redeemed
 	require.Equal(t, true, redeemCookie.VerifyAuthenticationToken.AuthenticationToken.Verified)
@@ -364,8 +363,4 @@ func TestAccountRegistration_complete(t *testing.T) {
 
 	require.NoError(t, err)
 	require.NotNil(t, register.CreateAccountWithAuthenticationToken.Account)
-
-	otpCookie = getOTPTokenFromJar(t, httpUser.Jar)
-	// Making sure that with "register" the OTP cookie is removed
-	require.Nil(t, otpCookie)
 }
