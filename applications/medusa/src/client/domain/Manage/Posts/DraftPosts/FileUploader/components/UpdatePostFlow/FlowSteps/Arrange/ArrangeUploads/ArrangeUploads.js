@@ -63,6 +63,7 @@ export default function ArrangeUploads ({ state, uppy, dispatch, query }: Props)
   const dragDisabled = (state.files.length !== (Object.keys(state.urls)).length) || (state.files.length > 0)
 
   const onRemoveFile = id => {
+    uppy.removeFile(id)
     if (state.content) {
       dispatch({
         type: EVENTS.CONTENT,
@@ -70,7 +71,6 @@ export default function ArrangeUploads ({ state, uppy, dispatch, query }: Props)
         remove: true
       })
     }
-
     dispatch({ type: EVENTS.CONTENT, value: displayData })
     dispatch({
       type: EVENTS.CONTENT,

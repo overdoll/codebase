@@ -18,6 +18,7 @@ import {
 import { Draggable } from 'react-beautiful-dnd'
 import ContentItem from '../../../../../../../../../../../components/Posts/components/ContentItem/ContentItem'
 import { graphql, useFragment } from 'react-relay/hooks'
+import Icon from '@//:modules/content/Icon/Icon'
 
 type Props = {
   content: Array<ContentType>,
@@ -40,12 +41,17 @@ export default function Content ({ content, onRemove, index, dragDisabled }: Pro
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
-          <Box w='6%' />
-          <Flex align='center' justify='center' w='40%'>
+          <Flex align='center' w='12%' justify='center'>
+            <Heading fontSize='lg'>
+              {index + 1}
+            </Heading>
+          </Flex>
+          <Flex align='center' justify='center' w='38%'>
             <ContentItem content={content} />
           </Flex>
-          <Flex w='54%' justify='flex-end' m={2}>
-            <CloseButton isDisabled={dragDisabled} onClick={() => onRemove(content.id)} />
+          <Flex w='38%' />
+          <Flex align='center' bg='gray.700' w='12%' justify='flex-end'>
+            <CloseButton m={2} isDisabled={dragDisabled} onClick={() => onRemove(content.id)} />
           </Flex>
         </Flex>
       )}

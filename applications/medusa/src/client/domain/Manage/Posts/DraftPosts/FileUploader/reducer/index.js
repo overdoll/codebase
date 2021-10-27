@@ -5,11 +5,7 @@ import type { Action, State } from '@//:types/upload'
 import { EVENTS, INITIAL_STATE, STEPS } from '../constants/constants'
 import { graphql, useMutation } from 'react-relay/hooks'
 
-// TODO remove reducer part for non-uploads
-// TODO for adding a category, do optimistic update so everything is in store and the query runs in the background
-
-// reducer maintains the whole state of the upload form so that we can
-// easily update our indexeddb state in the case of a crash
+// reducer maintains the whole state of the upload form
 const reducer: {} = (state: State, action: Action): State => {
   const act: string = action.type
 
@@ -33,20 +29,10 @@ const reducer: {} = (state: State, action: Action): State => {
       const id: string = action.value.id
 
       if (action.remove) {
-        // delete item from database
-        /*
-        db.table(act).delete(id)
-         */
-
         delete copy[id]
 
         return { ...state, [act]: copy }
       }
-
-      // add item to database
-      /*
-      db.table(act).put(action.value)
-       */
 
       return { ...state, [act]: { ...copy, [id]: action.value } }
     }
@@ -69,6 +55,9 @@ const reducer: {} = (state: State, action: Action): State => {
     case EVENTS.CLEAR_CONTENT: {
       return { ...state, content: null }
     }
+    case EVENTS.FILE_LIMIT: {
+      return { ...state, file_limit: action.value }
+    }
     case EVENTS.FILES: {
       let files = [...state.files]
 
@@ -88,32 +77,15 @@ const reducer: {} = (state: State, action: Action): State => {
     case EVENTS.STEP:
       // going back to first step - clear all data
       if (EVENTS.STEP === null) {
-        /*
-        db.transaction('rw', ...db.tables, async () => {
-          db.tables.forEach(table => table.clear())
-
-        })
-        */
-
-        return { ...state, step: null }
+        return { ...state, step: STEPS.ARRANGE }
       }
 
-      // db.table('step').put({ id: 1, step: action.value })
       return { ...state, step: action.value }
     case EVENTS.CLEANUP:
-      /*
-      db.transaction('rw', ...db.tables, async () => {
-        db.tables.forEach(table => table.clear())
-      })
-       */
 
       return INITIAL_STATE
     case EVENTS.SUBMIT:
-      /*
-      db.transaction('rw', ...db.tables, async () => {
-        db.tables.forEach(table => table.clear())
-      })
-       */
+
       return { ...state, submit: action.value, step: STEPS.FINISH }
     default:
       return state

@@ -18,6 +18,7 @@ import { EVENTS, INITIAL_STATE, STEPS } from '../../../constants/constants'
 import { useTranslation } from 'react-i18next'
 import { StringParam, useQueryParam } from 'use-query-params'
 import type { Uppy } from '@uppy/core'
+import { graphql } from 'react-relay/hooks'
 
 type Props = {
   uppy: Uppy,

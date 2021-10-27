@@ -107,6 +107,7 @@ export type Event =
   | 'brands'
   | 'categories'
   | 'submit'
+  | 'file_limit'
   | 'cleanup'
   | 'arrange_files';
 
@@ -121,6 +122,7 @@ export type State = {
   characters: Characters,
   categories: Categories,
   submit: Submit,
+  file_limit: number,
   cleanup: () => void,
 };
 

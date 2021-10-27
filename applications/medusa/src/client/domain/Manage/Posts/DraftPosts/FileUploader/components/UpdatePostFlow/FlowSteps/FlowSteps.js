@@ -16,20 +16,29 @@ import { graphql, useMutation } from 'react-relay/hooks'
 import type CreatePostQuery from '@//:artifacts/CreatePostQuery.graphql'
 import type FlowStepsMutation from '@//:artifacts/FlowStepsMutation.graphql'
 import { useEffect } from 'react'
-import type { UpdatePostFlowFragment$key } from '@//:artifacts/UpdatePostFlowFragment.graphql'
+import type { FlowStepsFragment$key } from '@//:artifacts/FlowStepsFragment.graphql'
+import { useFragment } from 'react-relay'
 
 type Props = {
   uppy: Uppy,
   state: State,
   dispatch: Dispatch,
-  query: UpdatePostFlowFragment$key
+  query: FlowStepsFragment$key
 };
 
+const FlowStepsFragmentGQL = graphql`
+  fragment FlowStepsFragment on Post {
+    ...ArrangeFragment
+  }
+`
+
 export default function FlowSteps ({ uppy, dispatch, state, query }: Props): Node {
+  const data = useFragment(FlowStepsFragmentGQL, query)
+
   switch (state.step) {
     case STEPS.ARRANGE:
 
-      return <Arrange uppy={uppy} dispatch={dispatch} state={state} query={query} />
+      return <Arrange uppy={uppy} dispatch={dispatch} state={state} query={data} />
 
     case STEPS.AUDIENCE:
 

@@ -12,7 +12,6 @@ type Props = {
   uppy: Uppy,
   state: State,
   dispatch: Dispatch,
-  isDisabled: boolean,
 }
 
 // TODO mutations for audience, brand, category, character go here
@@ -51,7 +50,7 @@ export default function FlowBackwardButton ({ uppy, dispatch, state, isDisabled 
     default:
       return (
         <Button
-          isLoading={isDisabled} colorScheme='gray' size='lg'
+          colorScheme='gray' size='lg'
           onClick={goBack}
         >{t('posts.flow.steps.footer.back')}
         </Button>

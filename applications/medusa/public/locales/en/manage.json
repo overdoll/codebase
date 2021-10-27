@@ -24,6 +24,8 @@
           "subheader": "Arrange your uploads",
           "uploader": {
             "picker": "Upload Files",
+            "hint": "Posting {{count}} Media",
+            "upload_limit": "You can only upload a maximum of {{count}} files",
             "processing": {
               "in_progress": "Processing file",
               "error": {

@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 71f0bc90c3feec00b1258ff1ed39de0b
+ * @relayHash cbf909776622d238b544b983f0948ed1
  */
 
 /* eslint-disable */
@@ -38,7 +38,15 @@ query CreatePostQuery(
 }
 
 fragment ArrangeFragment on Post {
+  content {
+    id
+    urls {
+      url
+      mimeType
+    }
+  }
   ...ArrangeUploadsFragment
+  ...ProcessUploadsFragment
 }
 
 fragment ArrangeUploadsFragment on Post {
@@ -58,16 +66,26 @@ fragment FlowFooterFragment on Post {
 
 fragment FlowForwardButtonFragment on Post {
   id
+  content {
+    id
+  }
 }
 
-fragment UpdatePostFlowFragment on Post {
+fragment FlowStepsFragment on Post {
+  ...ArrangeFragment
+}
+
+fragment ProcessUploadsFragment on Post {
   id
   content {
     urls {
       url
     }
   }
-  ...ArrangeFragment
+}
+
+fragment UpdatePostFlowFragment on Post {
+  ...FlowStepsFragment
   ...FlowFooterFragment
 }
 */
@@ -161,13 +179,6 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "kind": "ScalarField",
-                "name": "type",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
                 "concreteType": "ResourceUrl",
                 "kind": "LinkedField",
                 "name": "urls",
@@ -189,6 +200,13 @@ return {
                   }
                 ],
                 "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "type",
+                "storageKey": null
               }
             ],
             "storageKey": null
@@ -200,7 +218,7 @@ return {
     ]
   },
   "params": {
-    "id": "71f0bc90c3feec00b1258ff1ed39de0b",
+    "id": "cbf909776622d238b544b983f0948ed1",
     "metadata": {},
     "name": "CreatePostQuery",
     "operationKind": "query",

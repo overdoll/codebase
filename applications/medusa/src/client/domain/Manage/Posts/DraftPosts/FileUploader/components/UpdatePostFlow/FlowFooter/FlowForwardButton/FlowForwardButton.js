@@ -18,13 +18,15 @@ type Props = {
   uppy: Uppy,
   state: State,
   dispatch: Dispatch,
-  isDisabled: boolean,
   query: FlowForwardButtonFragment$key
 }
 
 const FlowForwardButtonFragmentGQL = graphql`
   fragment FlowForwardButtonFragment on Post {
     id
+    content {
+      id
+    }
   }
 `
 
@@ -60,6 +62,12 @@ export default function FlowForwardButton ({ uppy, dispatch, state, isDisabled, 
   const onUpdateContent = () => {
     const currentURLs = state.content.map((item) =>
       item.urls[0].url)
+    /*
+    const differenceIDs = data.content.filter((dataItem) => {
+      return state.content.filter((stateItem) => dataItem.id === stateItem.id)
+    })
+
+     */
 
     updateContent({
       variables: {
@@ -69,6 +77,7 @@ export default function FlowForwardButton ({ uppy, dispatch, state, isDisabled, 
         }
       },
       onCompleted (data) {
+        // .forEach((item) => uppy.removeFile(item.id))
         dispatch({ type: EVENTS.CLEAR_CONTENT })
         dispatch({ type: EVENTS.STEP, value: STEPS.AUDIENCE })
       },
@@ -126,7 +135,7 @@ export default function FlowForwardButton ({ uppy, dispatch, state, isDisabled, 
   }
 
   const buttonLoading = () => {
-    return isDisabled || isUpdatingContent
+    return isUpdatingContent
   }
 
   switch (state.step) {

@@ -17,6 +17,7 @@ const EVENTS = {
   URLS: 'urls',
   FILES: 'files',
   CONTENT: 'content',
+  FILE_LIMIT: 'file_limit',
   CLEAR_CONTENT: 'clear_content',
   STEP: 'step',
   PROGRESS: 'progress',
@@ -25,13 +26,13 @@ const EVENTS = {
   TAG_CHARACTERS: 'characters',
   TAG_CATEGORIES: 'categories',
   SUBMIT: 'submit',
-  CLEANUP: 'cleanup',
-  PENDING: 'pending'
+  CLEANUP: 'cleanup'
 }
 
 const INITIAL_STATE: State = {
   files: [],
   urls: {},
+  file_limit: 0,
   content: null,
   step: STEPS.ARRANGE,
   progress: {},
@@ -40,8 +41,7 @@ const INITIAL_STATE: State = {
   characters: {},
   categories: {},
   submit: {},
-  cleanup: null,
-  pending: false
+  cleanup: null
 }
 
 export { STEPS, EVENTS, INITIAL_STATE }

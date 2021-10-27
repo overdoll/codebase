@@ -28,7 +28,6 @@ type Props = {
   uppy: Uppy,
   state: State,
   dispatch: Dispatch,
-  disableNavigation: boolean,
   query: FlowFooterFragment$key
 }
 
@@ -38,7 +37,7 @@ const FlowFooterFragmentGQL = graphql`
   }
 `
 
-export default function FlowFooter ({ state, uppy, dispatch, disableNavigation, query }: Props): Node {
+export default function FlowFooter ({ state, uppy, dispatch, query }: Props): Node {
   const data = useFragment(FlowFooterFragmentGQL, query)
 
   const [t] = useTranslation('manage')
@@ -46,9 +45,9 @@ export default function FlowFooter ({ state, uppy, dispatch, disableNavigation, 
   if (state.step !== STEPS.SUBMIT) {
     return (
       <>
-        <FlowBackwardButton uppy={uppy} dispatch={dispatch} state={state} isDisabled={disableNavigation} />
+        <FlowBackwardButton uppy={uppy} dispatch={dispatch} state={state} />
         <Spacer />
-        <FlowForwardButton uppy={uppy} dispatch={dispatch} state={state} query={data} isDisabled={disableNavigation} />
+        <FlowForwardButton uppy={uppy} dispatch={dispatch} state={state} query={data} />
       </>
     )
   }

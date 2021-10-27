@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 41d24a061a2300f25a8fd0c4e16dc6ba
+ * @relayHash 2e15b44f5346a5b4ffcf9d52789e7ef4
  */
 
 /* eslint-disable */
@@ -13,10 +13,10 @@ export type UpdatePostContentInput = {|
   id: string,
   content: $ReadOnlyArray<string>,
 |};
-export type UpdatePostFlowContentMutationVariables = {|
+export type ProcessUploadsMutationVariables = {|
   input: UpdatePostContentInput
 |};
-export type UpdatePostFlowContentMutationResponse = {|
+export type ProcessUploadsMutationResponse = {|
   +updatePostContent: ?{|
     +post: ?{|
       +id: string,
@@ -31,14 +31,14 @@ export type UpdatePostFlowContentMutationResponse = {|
     |}
   |}
 |};
-export type UpdatePostFlowContentMutation = {|
-  variables: UpdatePostFlowContentMutationVariables,
-  response: UpdatePostFlowContentMutationResponse,
+export type ProcessUploadsMutation = {|
+  variables: ProcessUploadsMutationVariables,
+  response: ProcessUploadsMutationResponse,
 |};
 
 
 /*
-mutation UpdatePostFlowContentMutation(
+mutation ProcessUploadsMutation(
   $input: UpdatePostContentInput!
 ) {
   updatePostContent(input: $input) {
@@ -152,7 +152,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "UpdatePostFlowContentMutation",
+    "name": "ProcessUploadsMutation",
     "selections": (v2/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -161,18 +161,18 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "UpdatePostFlowContentMutation",
+    "name": "ProcessUploadsMutation",
     "selections": (v2/*: any*/)
   },
   "params": {
-    "id": "41d24a061a2300f25a8fd0c4e16dc6ba",
+    "id": "2e15b44f5346a5b4ffcf9d52789e7ef4",
     "metadata": {},
-    "name": "UpdatePostFlowContentMutation",
+    "name": "ProcessUploadsMutation",
     "operationKind": "mutation",
     "text": null
   }
 };
 })();
 // prettier-ignore
-(node: any).hash = '4bf2f12ee1495c7fb70980c9b35f0cfd';
+(node: any).hash = '90f291d8a24e708f204b7e749a7af8a3';
 module.exports = node;
