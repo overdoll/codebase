@@ -2,7 +2,7 @@ package service_test
 
 import (
 	"context"
-	"overdoll/libraries/testing_tools"
+	"overdoll/applications/eva/internal/service"
 	"strings"
 	"testing"
 
@@ -18,10 +18,9 @@ import (
 )
 
 func getEmailConfirmationTokenFromEmail(t *testing.T, email string) string {
-	util := testing_tools.NewMailingRedisUtility()
-	res, err := util.ReadEmail(context.Background(), email)
+	res, err := service.GetEmailConfirmationTokenFromEmail(email)
 	require.NoError(t, err)
-	return res["token"].(string)
+	return res
 }
 
 func createSession(t *testing.T, accountId, userAgent, ip string) {

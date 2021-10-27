@@ -2,6 +2,7 @@ package command
 
 import (
 	"context"
+	"overdoll/libraries/translations"
 
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/token"
@@ -11,6 +12,7 @@ import (
 type CreateAccountWithAuthenticationToken struct {
 	TokenId  string
 	Username string
+	Language *translations.Language
 }
 
 type CreateAccountWithAuthenticationTokenHandler struct {
@@ -35,7 +37,7 @@ func (h CreateAccountWithAuthenticationTokenHandler) Handle(ctx context.Context,
 		return nil, err
 	}
 
-	instance, err := account.NewAccount(uuid.New().String(), cmd.Username, ck.Email())
+	instance, err := account.NewAccount(cmd.Language, uuid.New().String(), cmd.Username, ck.Email())
 
 	if err != nil {
 		return nil, err

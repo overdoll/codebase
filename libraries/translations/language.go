@@ -38,15 +38,11 @@ func NewLanguage(locale string) *Language {
 	return &Language{tag: tag}
 }
 
-func NewDefaultLanguage() *Language {
-	return &Language{tag: defaultLanguage}
-}
-
 func (p *Language) Locale() string {
 	return p.tag.String()
 }
 
-func (p *Language) SetLocale(locale string) error {
+func (p *Language) setLocale(locale string) error {
 
 	lang, err := language.Parse(locale)
 

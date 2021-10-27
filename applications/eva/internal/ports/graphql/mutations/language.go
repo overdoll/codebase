@@ -14,9 +14,7 @@ func (r *MutationResolver) UpdateLanguage(ctx context.Context, input types.Updat
 
 	lang := translations.FromContext(ctx)
 
-	if err := translations.MutateLanguageContext(ctx, lang, func(language *translations.Language) error {
-		return language.SetLocale(input.Locale)
-	}); err != nil {
+	if err := translations.MutateLanguageLocaleContext(ctx, lang, input.Locale); err != nil {
 		return nil, err
 	}
 

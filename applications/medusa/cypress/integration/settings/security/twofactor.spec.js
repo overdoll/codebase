@@ -12,12 +12,10 @@ describe('Settings - Configure Two-Factor', () => {
   before(() => {
     cy.login(email)
     cy.register(email, id)
-    cy.logout()
   })
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('cypressTestRecoveryCode', 'cypressTestOtpSecret')
-    cy.login(email)
+    Cypress.Cookies.preserveOnce('cypressTestRecoveryCode', 'cypressTestOtpSecret', 'connect.sid')
   })
 
   it('can set up recovery codes', () => {

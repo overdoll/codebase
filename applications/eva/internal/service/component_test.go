@@ -64,6 +64,7 @@ func grantAuthenticationToken(t *testing.T, client *graphql.Client, email string
 type VerifyAuthenticationToken struct {
 	VerifyAuthenticationToken *struct {
 		AuthenticationToken *types.AuthenticationToken
+		Validation          *types.VerifyAuthenticationTokenValidation
 	} `graphql:"verifyAuthenticationToken(input: $input)"`
 }
 
@@ -84,6 +85,7 @@ type GrantAccountAccessWithAuthenticationToken struct {
 		Account struct {
 			Username string
 		}
+		Validation *types.GrantAccountAccessWithAuthenticationTokenValidation
 	} `graphql:"grantAccountAccessWithAuthenticationToken()"`
 }
 
@@ -142,10 +144,9 @@ func getAccountByUsername(t *testing.T, client *graphql.Client, username string)
 }
 
 func getAuthTokenFromEmail(t *testing.T, email string) string {
-	util := testing_tools.NewMailingRedisUtility()
-	res, err := util.ReadEmail(context.Background(), email)
+	res, err := service.GetAuthTokenFromEmail(email)
 	require.NoError(t, err)
-	return res["token"].(string)
+	return res
 }
 
 func getHttpClient(t *testing.T, pass *passport.Passport) (*graphql.Client, *clients.ClientPassport) {

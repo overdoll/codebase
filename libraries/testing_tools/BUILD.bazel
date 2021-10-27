@@ -6,3 +6,17 @@ go_library(
     importpath = "overdoll/libraries/tests",
     visibility = ["//visibility:public"],
 )
+
+go_library(
+    name = "testing_tools",
+    srcs = [
+        "mailing.go",
+        "wait.go",
+    ],
+    importpath = "overdoll/libraries/testing_tools",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libraries/bootstrap",
+        "@com_github_go_redis_redis_v8//:redis",
+    ],
+)

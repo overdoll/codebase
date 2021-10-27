@@ -2,6 +2,7 @@ package service_test
 
 import (
 	"context"
+	"os"
 	"testing"
 	"time"
 
@@ -123,6 +124,7 @@ func createPost(t *testing.T, client *graphql.Client, env *testsuite.TestWorkflo
 	// properly identify the content and stuff
 	require.Len(t, updatePostContent.UpdatePostContent.Post.Content, 1)
 	require.Equal(t, types.ResourceTypeImage, updatePostContent.UpdatePostContent.Post.Content[0].Type)
+	require.Equal(t, os.Getenv("APP_URL")+"/api/uploads/"+fileId+".png", string(updatePostContent.UpdatePostContent.Post.Content[0].Urls[0].URL))
 
 	// update with new categories
 	var updatePostCategories UpdatePostCategories

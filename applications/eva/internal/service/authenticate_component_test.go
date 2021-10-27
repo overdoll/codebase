@@ -41,7 +41,7 @@ func TestLogout_user(t *testing.T) {
 func TestAccountAuthenticate_existing(t *testing.T) {
 	t.Parallel()
 
-	redeemCookie, client, pass := authenticateAndVerifyToken(t, "i2fhz.poisonminion@inbox.testmail.app")
+	redeemCookie, client, pass := authenticateAndVerifyToken(t, "i2fhz.artist_unverified@inbox.testmail.app")
 
 	// the VerifyAuthenticationToken function will also log you in, if you redeem a cookie that's for a registered user
 	// so we check for that here
@@ -57,7 +57,7 @@ func TestAccountAuthenticate_existing(t *testing.T) {
 	// since our passport is a pointer that is modified from a response, we can use it to check to make sure
 	// that the user is logged into the correct one
 	require.NoError(t, modified.Authenticated())
-	require.Equal(t, "1q7MJ3JkhcdcJJNqZezdfQt5pZ6", modified.AccountID())
+	require.Equal(t, "1q7MIqqnkzew33q4elXuN1Ri27d", modified.AccountID())
 }
 
 // TestAccountAuthenticate_from_another_session - we login, but redeem our cookie from another "session"

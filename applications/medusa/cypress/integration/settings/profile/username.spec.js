@@ -3,9 +3,13 @@ describe('Settings - Change Username', () => {
   const newUsername = `newUser${id}`
   const email = `${id}@test.com`
 
-  beforeEach(() => {
+  before(() => {
     cy.login(email)
     cy.register(email, id)
+  })
+
+  beforeEach(() => {
+    Cypress.Cookies.preserveOnce('connect.sid')
 
     cy.visit('/settings/profile')
     cy.findByText(/Current Username/iu).should('exist')

@@ -278,7 +278,7 @@ func (r AccountRepository) CreateAccount(ctx context.Context, instance *account.
 	// Will also contain all major information about the user such as permissions, etc...
 	stmt, _ = accountTable.Insert()
 
-	batch.Query(stmt, instance.ID(), instance.Username(), instance.Email(), []string{}, false, nil, false, 0, nil, nil, false)
+	batch.Query(stmt, instance.ID(), instance.Username(), instance.Email(), []string{}, false, nil, false, 0, instance.Language().Locale(), nil, nil, false)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
 
@@ -323,7 +323,7 @@ func (r AccountRepository) UpdateAccount(ctx context.Context, id string, updateF
 					"roles",
 					"verified",
 					"locked_until",
-					"langauge",
+					"language",
 					"locked",
 					"locked_reason",
 					"avatar",

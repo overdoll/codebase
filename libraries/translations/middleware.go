@@ -48,9 +48,9 @@ func LanguageToContext(c *gin.Context) *http.Request {
 	return addLanguageToRequest(c, &Language{tag: tag})
 }
 
-func MutateLanguageContext(ctx context.Context, p *Language, updateFn func(language *Language) error) error {
+func MutateLanguageLocaleContext(ctx context.Context, p *Language, locale string) error {
 
-	err := updateFn(p)
+	err := p.setLocale(locale)
 
 	if err != nil {
 		return err

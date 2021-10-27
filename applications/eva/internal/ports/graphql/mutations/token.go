@@ -32,7 +32,7 @@ func (r *MutationResolver) GrantAuthenticationToken(ctx context.Context, input t
 		IP:        helpers.GetIp(ctx),
 
 		// manually send the language because we need it for the email
-		Language: translations.FromContext(ctx).Locale(),
+		Language: translations.FromContext(ctx),
 	})
 
 	if err != nil {
@@ -220,6 +220,7 @@ func (r *MutationResolver) CreateAccountWithAuthenticationToken(ctx context.Cont
 	acc, err := r.App.Commands.CreateAccountWithAuthenticationToken.Handle(ctx, command.CreateAccountWithAuthenticationToken{
 		TokenId:  currentCookie.Value,
 		Username: input.Username,
+		Language: translations.FromContext(ctx),
 	})
 
 	if err != nil {

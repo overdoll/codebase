@@ -12,8 +12,9 @@ import (
 )
 
 const (
-	CookieKey      = "COOKIE_KEY"
-	CookieBlockKey = "COOKIE_BLOCK_KEY"
+	CookieKey         = "COOKIE_KEY"
+	CookieBlockKey    = "COOKIE_BLOCK_KEY"
+	CookieInsecureKey = "COOKIE_INSECURE"
 )
 
 var (
@@ -43,6 +44,10 @@ func SetCookie(ctx context.Context, cookie *http.Cookie) error {
 	// only secure if cookies are encrypted
 	cookie.Secure = true
 	cookie.Path = "/"
+
+	if os.Getenv(CookieInsecureKey) == "true" {
+		cookie.Secure = false
+	}
 
 	var secureCookie = securecookie.New([]byte(cookieKey), []byte(os.Getenv(CookieBlockKey)))
 	encodedValue, err := secureCookie.Encode(name, value)

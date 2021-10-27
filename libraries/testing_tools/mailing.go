@@ -7,7 +7,7 @@ import (
 	"github.com/go-redis/redis/v8"
 	"os"
 	"overdoll/libraries/bootstrap"
-	"overdoll/libraries/crypt"
+	"strings"
 )
 
 const (
@@ -29,7 +29,7 @@ func NewMailingRedisUtility() *MailingRedisUtility {
 	}
 }
 
-func (u *MailingRedisUtility) SendEmail(ctx context.Context, email string, variables map[string]interface{}) error {
+func (u *MailingRedisUtility) SendEmail(ctx context.Context, prefix, email string, variables map[string]interface{}) error {
 
 	val, err := json.Marshal(variables)
 
@@ -37,21 +37,18 @@ func (u *MailingRedisUtility) SendEmail(ctx context.Context, email string, varia
 		return fmt.Errorf("failed to marshal email variables: %v", err)
 	}
 
-	_, err = u.client.Set(ctx, mailingRedisUtilityPrefix+u.sessionId+email, val, -1).Result()
+	_, err = u.client.Set(ctx, mailingRedisUtilityPrefix+u.sessionId+":"+prefix+":"+strings.ToLower(email), val, -1).Result()
 
 	return err
 }
 
-func (u *MailingRedisUtility) ReadEmail(ctx context.Context, email string) (map[string]interface{}, error) {
+func (u *MailingRedisUtility) ReadEmail(ctx context.Context, prefix, email string) (map[string]interface{}, error) {
 
-	val, err := u.client.Get(ctx, mailingRedisUtilityPrefix+u.sessionId+email).Result()
-	if err != nil {
-		return nil, err
-	}
-
-	val, err = crypt.Decrypt(val)
+	val, err := u.client.Get(ctx, mailingRedisUtilityPrefix+u.sessionId+":"+prefix+":"+strings.ToLower(email)).Result()
 
 	if err != nil {
+		fmt.Println(val)
+		fmt.Println(err)
 		return nil, err
 	}
 

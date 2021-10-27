@@ -37,6 +37,7 @@ go_library(
         "//applications/eva/internal/domain/session",
         "//applications/eva/internal/domain/token",
         "//libraries/principal",
+        "//libraries/translations",
         "//libraries/uuid",
     ],
 )

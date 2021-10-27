@@ -2,6 +2,7 @@ package command
 
 import (
 	"context"
+	"overdoll/libraries/translations"
 
 	"overdoll/applications/eva/internal/domain/token"
 	"overdoll/libraries/uuid"
@@ -11,7 +12,7 @@ type GrantAuthenticationToken struct {
 	Email     string
 	UserAgent string
 	IP        string
-	Language  string
+	Language  *translations.Language
 }
 
 type GrantAuthenticationTokenHandler struct {
@@ -39,7 +40,7 @@ func (h GrantAuthenticationTokenHandler) Handle(ctx context.Context, cmd GrantAu
 	}
 
 	// send login token notification
-	if err := h.carrier.NewLoginToken(ctx, instance.Email(), instance.Token(), cmd.Language); err != nil {
+	if err := h.carrier.NewLoginToken(ctx, instance.Email(), instance.Token(), cmd.Language.Locale()); err != nil {
 		return nil, err
 	}
 

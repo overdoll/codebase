@@ -79,7 +79,7 @@ func UnmarshalAccountFromDatabase(id, username, email string, roles []string, ve
 	}
 }
 
-func NewAccount(id, username, email string) (*Account, error) {
+func NewAccount(lang *translations.Language, id, username, email string) (*Account, error) {
 
 	if err := validateUsername(username); err != nil {
 		return nil, err
@@ -88,7 +88,7 @@ func NewAccount(id, username, email string) (*Account, error) {
 	return &Account{
 		id:       id,
 		username: username,
-		language: translations.NewDefaultLanguage(),
+		language: lang,
 		email:    email,
 	}, nil
 }
