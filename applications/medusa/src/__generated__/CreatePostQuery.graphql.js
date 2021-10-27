@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash fc18e1e6da8b13e968b6f6f948268c83
+ * @relayHash 71f0bc90c3feec00b1258ff1ed39de0b
  */
 
 /* eslint-disable */
@@ -38,7 +38,6 @@ query CreatePostQuery(
 }
 
 fragment ArrangeFragment on Post {
-  id
   ...ArrangeUploadsFragment
 }
 
@@ -53,6 +52,14 @@ fragment ArrangeUploadsFragment on Post {
   }
 }
 
+fragment FlowFooterFragment on Post {
+  ...FlowForwardButtonFragment
+}
+
+fragment FlowForwardButtonFragment on Post {
+  id
+}
+
 fragment UpdatePostFlowFragment on Post {
   id
   content {
@@ -61,6 +68,7 @@ fragment UpdatePostFlowFragment on Post {
     }
   }
   ...ArrangeFragment
+  ...FlowFooterFragment
 }
 */
 
@@ -141,7 +149,6 @@ return {
         "plural": false,
         "selections": [
           (v2/*: any*/),
-          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -185,14 +192,15 @@ return {
               }
             ],
             "storageKey": null
-          }
+          },
+          (v3/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "fc18e1e6da8b13e968b6f6f948268c83",
+    "id": "71f0bc90c3feec00b1258ff1ed39de0b",
     "metadata": {},
     "name": "CreatePostQuery",
     "operationKind": "query",

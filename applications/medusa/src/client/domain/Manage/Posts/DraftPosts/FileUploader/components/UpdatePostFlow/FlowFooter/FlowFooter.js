@@ -20,15 +20,27 @@ import type { Uppy } from '@uppy/core'
 import FlowBackwardButton from './FlowBackwardButton/FlowBackwardButton'
 import FlowForwardButton from './FlowForwardButton/FlowForwardButton'
 import Button from '@//:modules/form/Button'
+import { graphql } from 'react-relay/hooks'
+import type { FlowFooterFragment$key } from '@//:artifacts/FlowFooterFragment.graphql'
+import { useFragment } from 'react-relay'
 
 type Props = {
   uppy: Uppy,
   state: State,
   dispatch: Dispatch,
   disableNavigation: boolean,
+  query: FlowFooterFragment$key
 }
 
-export default function FlowFooter ({ state, uppy, dispatch, disableNavigation }: Props): Node {
+const FlowFooterFragmentGQL = graphql`
+  fragment FlowFooterFragment on Post {
+    ...FlowForwardButtonFragment
+  }
+`
+
+export default function FlowFooter ({ state, uppy, dispatch, disableNavigation, query }: Props): Node {
+  const data = useFragment(FlowFooterFragmentGQL, query)
+
   const [t] = useTranslation('manage')
 
   if (state.step !== STEPS.SUBMIT) {
@@ -36,7 +48,7 @@ export default function FlowFooter ({ state, uppy, dispatch, disableNavigation }
       <>
         <FlowBackwardButton uppy={uppy} dispatch={dispatch} state={state} isDisabled={disableNavigation} />
         <Spacer />
-        <FlowForwardButton uppy={uppy} dispatch={dispatch} state={state} isDisabled={disableNavigation} />
+        <FlowForwardButton uppy={uppy} dispatch={dispatch} state={state} query={data} isDisabled={disableNavigation} />
       </>
     )
   }

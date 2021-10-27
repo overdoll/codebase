@@ -60,6 +60,8 @@ export default function ArrangeUploads ({ state, uppy, dispatch, query }: Props)
 
   const displayData = state.content || data.content
 
+  const dragDisabled = (state.files.length !== (Object.keys(state.urls)).length) || (state.files.length > 0)
+
   const onRemoveFile = id => {
     if (state.content) {
       dispatch({
@@ -97,12 +99,12 @@ export default function ArrangeUploads ({ state, uppy, dispatch, query }: Props)
       <Droppable droppableId='upload'>
         {(provided, snapshot) => (
           <Stack
-            spacing={1}
+            spacing={2}
             {...provided.droppableProps}
             ref={provided.innerRef}
           >
             {displayData.map((item, index) => (
-              <Content key={index} content={item} index={index} onRemove={onRemoveFile} />
+              <Content dragDisabled={dragDisabled} key={index} content={item} index={index} onRemove={onRemoveFile} />
             ))}
             {provided.placeholder}
           </Stack>

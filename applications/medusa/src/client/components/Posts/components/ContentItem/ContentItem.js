@@ -2,8 +2,8 @@
  * @flow
  */
 import type { Node } from 'react'
+import type { Content as ContentType } from '@//:types/upload'
 import { useRef } from 'react'
-import mime from 'mime-types'
 import { Box, Flex, IconButton, useDisclosure } from '@chakra-ui/react'
 import ImageSnippet from './ImageSnippet/ImageSnippet'
 import InspectModal from '../modal/InspectModal'
@@ -16,13 +16,11 @@ import InterfaceArrowsVerticalExpand1
 import VideoSnippet from './VideoSnippet/VideoSnippet'
 
 type Props = {
-  src: string,
+  content: Array<ContentType>,
 }
 
-export default function ContentItem ({ src, ...rest }: Props): Node {
-  const mimeType = mime.lookup(src)
-
-  const fileType = mimeType.split('/')[0]
+export default function ContentItem ({ content, ...rest }: Props): Node {
+  const fileType = content.type
 
   const videoContent = useRef(null)
 
@@ -39,7 +37,7 @@ export default function ContentItem ({ src, ...rest }: Props): Node {
 
   const onOpenModal = () => {
     onPreviewOpen()
-    if (fileType === 'video' && videoContent.current) {
+    if (fileType === 'VIDEO' && videoContent.current) {
       videoContent.current.pause()
     }
   }
@@ -47,17 +45,16 @@ export default function ContentItem ({ src, ...rest }: Props): Node {
   return (
     <>
       <Flex
-        h='100%'
         position='relative'
         align='center'
         justify='center'
         userSelect='none'
         {...rest}
       >
-        {fileType === 'image' &&
-          <ImageSnippet src={src} />}
-        {fileType === 'video' &&
-          <VideoSnippet innerRef={videoContent} src={src} type={mimeType} />}
+        {fileType === 'IMAGE' &&
+          <ImageSnippet urls={content.urls} />}
+        {fileType === 'VIDEO' &&
+          <VideoSnippet innerRef={videoContent} urls={content.urls} />}
         <Box
           bg='transparent'
           w='40%'
@@ -87,12 +84,11 @@ export default function ContentItem ({ src, ...rest }: Props): Node {
           />
         } isOpen={isPreviewOpen} onClose={onPreviewClose}
       >
-        {fileType === 'image' &&
-          <ImageSnippet objectFit={previewExpand ? 'cover' : 'contain'} src={src} />}
-        {fileType === 'video' &&
+        {fileType === 'IMAGE' &&
+          <ImageSnippet objectFit={previewExpand ? 'cover' : 'contain'} urls={content.urls} />}
+        {fileType === 'VIDEO' &&
           <VideoSnippet
-            autoPlay objectFit={previewExpand ? 'cover' : 'contain'} src={src}
-            type={mimeType}
+            autoPlay controls objectFit={previewExpand ? 'cover' : 'contain'} urls={content.urls}
           />}
       </InspectModal>
     </>

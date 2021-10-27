@@ -5,10 +5,10 @@ import type { Node } from 'react'
 import { EVENTS, INITIAL_STATE, STEPS } from '../../constants/constants'
 import { graphql, useMutation } from 'react-relay/hooks'
 import type { Dispatch, State } from '@//:types/upload'
-import { useToast, Flex, Stack, Box, Spacer } from '@chakra-ui/react'
+import { useToast, Flex, Stack, Box, Spacer, AlertIcon, AlertDescription, Alert } from '@chakra-ui/react'
 import type { Uppy } from '@uppy/core'
 import Button from '@//:modules/form/Button'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StringParam, useQueryParam } from 'use-query-params'
 import FlowHeader from './FlowHeader/FlowHeader'
@@ -20,6 +20,7 @@ import type UpdatePostFlowContentMutation from '@//:artifacts/UpdatePostFlowCont
 import { useFragment } from 'react-relay'
 import type { UpdatePostFlowFragment$key } from '@//:artifacts/UpdatePostFlowFragment.graphql'
 import FlowFooter from './FlowFooter/FlowFooter'
+import Link from '@//:modules/routing/Link'
 
 type Props = {
   uppy: Uppy,
@@ -37,6 +38,7 @@ const UpdatePostFlowFragmentGQL = graphql`
       }
     }
     ...ArrangeFragment
+    ...FlowFooterFragment
   }
 `
 
@@ -66,10 +68,15 @@ export default function UpdatePostFlow ({ uppy, state, dispatch, query }: Props)
 
   const [updateContent, isUpdatingContent] = useMutation<UpdatePostFlowContentMutation>(UpdatePostFlowContentMutationGQL)
 
+  const [hasProcessingError, setProcessingError] = useState(false)
+
+  const disableNavigation = isUpdatingContent
+
   const onUpdateContent = () => {
     // add current files on top of here as well
 
     if (Object.keys(state.urls).length > 0) {
+      setProcessingError(false)
       const uploadedIDs = Object.keys(state.urls)
       const uploadedURLs = Object.values(state.urls)
       const currentURLs = postContent?.map((item) =>
@@ -97,24 +104,46 @@ export default function UpdatePostFlow ({ uppy, state, dispatch, query }: Props)
               value: { [item]: state.urls[item] },
               remove: true
             })
+            dispatch({
+              type: EVENTS.CLEAR_CONTENT
+            })
           })
         },
         onError (data) {
-          // what happens if there is an error? give retry button as notification
+          setProcessingError(true)
           console.log(data)
         }
       })
     }
   }
 
+  // When all the uploads are complete, we commit the post content
   useEffect(() => {
-    // buffer these so it runs after 3 seconds
     if ((Object.keys(state.urls)).length === state.files.length) {
       onUpdateContent()
     }
   }, [state.urls])
 
-  const disableNavigation = isUpdatingContent
+  // Need to create a limit to uploading files
+  // Emit all current files to uppy?
+
+  const ErrorMessage = () => {
+    return (
+      <Alert status='warning'>
+        <Flex w='100%' align='center' justify='space-between'>
+          <Flex>
+            <AlertIcon />
+            <AlertDescription>
+              {t('posts.flow.steps.arrange.uploader.processing.error.message')}
+            </AlertDescription>
+          </Flex>
+          <Button size='sm' onClick={onUpdateContent} colorScheme='orange' variant='solid'>
+            {t('posts.flow.steps.arrange.uploader.processing.error.button')}
+          </Button>
+        </Flex>
+      </Alert>
+    )
+  }
 
   const [t] = useTranslation('manage')
 
@@ -123,11 +152,12 @@ export default function UpdatePostFlow ({ uppy, state, dispatch, query }: Props)
       <Box>
         <FlowHeader uppy={uppy} dispatch={dispatch} state={state} />
       </Box>
+      {hasProcessingError && <ErrorMessage />}
       <Box>
         <FlowSteps uppy={uppy} dispatch={dispatch} state={state} query={data} />
       </Box>
       <Flex justify='center'>
-        <FlowFooter uppy={uppy} dispatch={dispatch} state={state} disableNavigation={disableNavigation} />
+        <FlowFooter uppy={uppy} dispatch={dispatch} state={state} query={data} disableNavigation={disableNavigation} />
       </Flex>
     </Stack>
   )

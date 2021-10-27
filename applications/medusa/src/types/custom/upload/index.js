@@ -10,10 +10,15 @@ export type Urls = {
   },
 };
 
+export type ResourceUrl = {
+  url: string,
+  mimeType: string
+}
+
 export type Content = {
   id: string,
   type: string,
-  urls: Array<{ url: string, mimeType: string }>
+  urls: Array<ResourceUrl>
 }
 
 export type Thumbnails = {
@@ -94,6 +99,7 @@ export type Event =
   | 'urls'
   | 'files'
   | 'step'
+  | 'clear_content'
   | 'content'
   | 'progress'
   | 'characters'

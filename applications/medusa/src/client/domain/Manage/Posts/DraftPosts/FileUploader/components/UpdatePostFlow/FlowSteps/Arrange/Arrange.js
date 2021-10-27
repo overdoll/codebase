@@ -4,32 +4,20 @@
 import type { Node } from 'react'
 import type { Uppy } from '@uppy/core'
 import type { Dispatch, State } from '@//:types/upload'
-import { graphql, useFragment, useMutation } from 'react-relay/hooks'
+import { graphql, useFragment } from 'react-relay/hooks'
 import {
-  Box,
   Flex,
-  Heading,
-  IconButton,
-  Stack,
-  Text,
-  CloseButton,
-  Progress,
-  HStack,
-  CircularProgress,
-  Spinner, AlertIcon, AlertDescription, Button, Alert, Fade,
-  useDisclosure
+  Stack
 } from '@chakra-ui/react'
-import DragOverFileInput from '../../../DragOverFileInput/DragOverFileInput'
 import FilePicker from '../../../FilePicker/FilePicker'
 import Icon from '@//:modules/content/Icon/Icon'
-import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import InterfaceUploadBox2
   from '@streamlinehq/streamlinehq/img/streamline-mini-bold/interface-essential/upload-download/interface-upload-box-2.svg'
 import { useTranslation } from 'react-i18next'
-import { useEffect, useState } from 'react'
 import type { ArrangeFragment$key } from '@//:artifacts/ArrangeFragment.graphql'
 import ProcessUploads from './ProcessUploads/ProcessUploads'
 import ArrangeUploads from './ArrangeUploads/ArrangeUploads'
+import Button from '@//:modules/form/Button'
 
 type Props = {
   uppy: Uppy,
@@ -40,7 +28,6 @@ type Props = {
 
 const ArrangeFragmentGQL = graphql`
   fragment ArrangeFragment on Post {
-    id
     ...ArrangeUploadsFragment
   }
 `
@@ -51,20 +38,20 @@ export default function Arrange ({ uppy, dispatch, state, query }: Props): Node 
   const [t] = useTranslation('manage')
 
   return (
-    <Stack spacing={4}>
-      <Box>
-        <FilePicker w='auto' uppy={uppy}>
-          <Flex mb={2}>
-            <IconButton
-              variant='ghost'
-              aria-label='add files'
-              icon={<Icon h={5} w={5} icon={InterfaceUploadBox2} fill='gray.100' />}
-            />
-          </Flex>
-        </FilePicker>
-        <ProcessUploads uppy={uppy} state={state} dispatch={dispatch} />
-      </Box>
+
+    <Stack spacing={2}>
+      <FilePicker w='auto' uppy={uppy}>
+        <Flex w='100%' align='center' justify='flex-end'>
+          <Button
+            w='100%'
+            rightIcon={<Icon h={4} w={4} icon={InterfaceUploadBox2} fill='gray.100' />}
+          >{t('posts.flow.steps.arrange.uploader.picker')}
+          </Button>
+        </Flex>
+      </FilePicker>
+      <ProcessUploads uppy={uppy} state={state} dispatch={dispatch} />
       <ArrangeUploads uppy={uppy} state={state} dispatch={dispatch} query={data} />
     </Stack>
+
   )
 }

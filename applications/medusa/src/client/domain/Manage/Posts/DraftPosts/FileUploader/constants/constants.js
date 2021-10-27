@@ -17,6 +17,7 @@ const EVENTS = {
   URLS: 'urls',
   FILES: 'files',
   CONTENT: 'content',
+  CLEAR_CONTENT: 'clear_content',
   STEP: 'step',
   PROGRESS: 'progress',
   TAG_AUDIENCES: 'audiences',

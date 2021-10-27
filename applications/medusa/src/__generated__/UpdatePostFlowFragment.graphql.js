@@ -8,6 +8,7 @@
 
 import type { ReaderFragment } from 'relay-runtime';
 import type { ArrangeFragment$ref } from "./ArrangeFragment.graphql";
+import type { FlowFooterFragment$ref } from "./FlowFooterFragment.graphql";
 import type { FragmentReference } from "relay-runtime";
 declare export opaque type UpdatePostFlowFragment$ref: FragmentReference;
 declare export opaque type UpdatePostFlowFragment$fragmentType: UpdatePostFlowFragment$ref;
@@ -18,7 +19,7 @@ export type UpdatePostFlowFragment = {|
       +url: any
     |}>
   |}>,
-  +$fragmentRefs: ArrangeFragment$ref,
+  +$fragmentRefs: ArrangeFragment$ref & FlowFooterFragment$ref,
   +$refType: UpdatePostFlowFragment$ref,
 |};
 export type UpdatePostFlowFragment$data = UpdatePostFlowFragment;
@@ -75,11 +76,16 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "ArrangeFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "FlowFooterFragment"
     }
   ],
   "type": "Post",
   "abstractKey": null
 };
 // prettier-ignore
-(node: any).hash = '9f486eea5d3f523d30f0e0f969b54b75';
+(node: any).hash = '86509a3939e4556bb98fc273d7e70885';
 module.exports = node;

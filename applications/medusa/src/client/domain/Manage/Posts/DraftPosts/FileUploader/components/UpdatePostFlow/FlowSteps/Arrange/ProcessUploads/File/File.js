@@ -70,9 +70,9 @@ export default function File ({ state, file, dispatch, uppy, disabled }: Props):
   }
 
   return (
-    <HStack py={2} bg='gray.800' px={4} borderRadius='md' spacing={4}>
+    <HStack py={2} bg='gray.800' pr={2} pl={4} borderRadius='md' spacing={4}>
       <FileMessage />
-      <CloseButton isDisabled={disabled} onClick={() => onRemoveFile(file.id)} />
+      <CloseButton isDisabled={disabled || url} onClick={() => onRemoveFile(file.id)} />
     </HStack>
   )
 }

@@ -12,7 +12,6 @@ import type { FragmentReference } from "relay-runtime";
 declare export opaque type ArrangeFragment$ref: FragmentReference;
 declare export opaque type ArrangeFragment$fragmentType: ArrangeFragment$ref;
 export type ArrangeFragment = {|
-  +id: string,
   +$fragmentRefs: ArrangeUploadsFragment$ref,
   +$refType: ArrangeFragment$ref,
 |};
@@ -31,13 +30,6 @@ const node: ReaderFragment = {
   "name": "ArrangeFragment",
   "selections": [
     {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    },
-    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "ArrangeUploadsFragment"
@@ -47,5 +39,5 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 // prettier-ignore
-(node: any).hash = '4a7a30ec90f287a7f4bb7d4aabecad69';
+(node: any).hash = 'fa8991ab73a525285c1bdf548903f51b';
 module.exports = node;

@@ -23,6 +23,7 @@
           "header": "Step 1",
           "subheader": "Arrange your uploads",
           "uploader": {
+            "picker": "Upload Files",
             "processing": {
               "in_progress": "Processing file",
               "error": {
@@ -32,6 +33,11 @@
             },
             "error": "There was an error processing your files",
             "retry": "Retry"
+          },
+          "arranger": {
+            "query": {
+              "error": "There was an error saving the post content"
+            }
           }
         },
         "audience": {

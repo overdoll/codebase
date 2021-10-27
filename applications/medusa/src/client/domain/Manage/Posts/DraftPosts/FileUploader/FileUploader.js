@@ -13,7 +13,6 @@ import CreatePost from './components/CreatePost/CreatePost'
 import type DraftPostsQuery from '@//:artifacts/DraftPostsQuery.graphql'
 
 type Props = {}
-// TODO mutation for file uploads goes here
 
 // Main upload component - handles all events from Uppy and renders the stepper
 // also contains the main state and is responsible for recovering state when rendered (if state is available)
@@ -28,19 +27,9 @@ export default function FileUploader (props: Props): Node {
 
   const notify = useToast()
 
-  // Add to thumbnails state when a new thumbnail is added
-  useEffect(() => {
-    uppy.on('thumbnail:generated', (file, preview) => {
-      // dispatch({ type: EVENTS.THUMBNAILS, value: { [file.id]: preview } })
-    })
-  }, [uppy])
-
   // Urls - when upload is complete we have semi-public urls (you need to know the URL for it to work, and you need to be logged in to see it)
   useEffect(() => {
     uppy.on('upload-success', (file, response) => {
-      // TODO buffer these for uploading or periodically check internal state?
-      // TODO this needs to use the mutation on all successful files
-      // TODO files that are uploading should not be "re-arrangeable"?
       // only want the ID from URL
       const url = response.uploadURL
       const fileId = url.substring(url.lastIndexOf('/') + 1)
