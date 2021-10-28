@@ -1,6 +1,6 @@
 describe('Settings - Configure Two-Factor', () => {
-  const id = Cypress._.random(0, 1e6)
-  const email = `${id}@test.com`
+  const username = cy.account.username()
+  const email = cy.account.email(username)
 
   const gotoSettingsPage = () => cy.waitUntil(() =>
     cy.url().should('include', '/profile').then(() => {
@@ -10,12 +10,12 @@ describe('Settings - Configure Two-Factor', () => {
   )
 
   before(() => {
-    cy.login(email)
-    cy.register(email, id)
+    cy.join(email).newAccount(username)
   })
 
   beforeEach(() => {
-    Cypress.Cookies.preserveOnce('cypressTestRecoveryCode', 'cypressTestOtpSecret', 'connect.sid')
+    cy.preserveAuth()
+    Cypress.Cookies.preserveOnce('cypressTestRecoveryCode', 'cypressTestOtpSecret')
   })
 
   it('can set up recovery codes', () => {

@@ -1,25 +1,14 @@
 describe('Join', () => {
-  const email = 'i2fhz.artist_verified@inbox.testmail.app'
+  it('check join on existing account', () => {
+    const email = cy.account.email('artist_verified')
 
-  it('asks to check email when joining', () => {
-    cy.login(email, false)
-
-    // our email is shown on the page - we are asked to check it
-    cy.findByText(email).should('exist')
+    cy.join(email).existingAccount()
   })
 
-  it('persists state when refreshing', () => {
-    cy.login(email, false)
+  it('check join on new account', () => {
+    const username = cy.account.username()
+    const email = cy.account.email()
 
-    cy.reload()
-
-    // after a reload, we should still see our email on the page
-    cy.findByText(email).should('exist')
-  })
-
-  it('redirects to profile when redeeming an existing user token, and ensures account is correctly set up', () => {
-    cy.login(email)
-
-    cy.url().should('include', '/profile')
+    cy.join(email).newAccount(username)
   })
 })

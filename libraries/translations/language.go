@@ -42,7 +42,7 @@ func (p *Language) Locale() string {
 	return p.tag.String()
 }
 
-func (p *Language) setLocale(locale string) error {
+func (p *Language) SetLocale(locale string) error {
 
 	lang, err := language.Parse(locale)
 

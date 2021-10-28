@@ -50,7 +50,7 @@ func LanguageToContext(c *gin.Context) *http.Request {
 
 func MutateLanguageLocaleContext(ctx context.Context, p *Language, locale string) error {
 
-	err := p.setLocale(locale)
+	err := p.SetLocale(locale)
 
 	if err != nil {
 		return err
