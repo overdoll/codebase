@@ -7,7 +7,7 @@ describe('Join', () => {
 
   it('check join on new account', () => {
     const username = cy.account.username()
-    const email = cy.account.email()
+    const email = cy.account.email(username)
 
     cy.join(email).newAccount(username)
   })

@@ -1,4 +1,5 @@
 import { GraphQLClient } from '@testmail.app/graphql-request'
+import ChanceJS from 'chance'
 
 const testmailClient = new GraphQLClient(
   // API endpoint:
@@ -8,6 +9,8 @@ const testmailClient = new GraphQLClient(
 )
 
 const startTimestamp = Date.now()
+
+const chance = new ChanceJS()
 
 Cypress.Commands.add('displayLastEmail', (alias, email) => {
   // grab "tag" from email
@@ -56,10 +59,11 @@ Cypress.Commands.add('displayLastEmail', (alias, email) => {
 })
 
 cy.account = {
-  email: (name) => {
-    return `${Cypress.env('TESTMAIL_NAMESPACE')}.${name}@inbox.testmail.app`
-  },
-  username: (prefix = '') => {
-    return `${prefix}${Cypress._.random(0, 1e6)}`
-  }
+  email: (name) => `${Cypress.env('TESTMAIL_NAMESPACE')}.${name}@inbox.testmail.app`,
+  username: (prefix = '') => `${prefix}${
+    chance.string({
+      length: 12,
+      pool: 'abcdefghijklmnopqrstuvwxyz0123456789'
+    })
+  }`
 }

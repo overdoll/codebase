@@ -21,16 +21,14 @@ Cypress.Commands.add('join', (email) => {
   })
 
   cy.url().should('include', '/token')
-})
 
-Cypress.Commands.add('existingAccount', () => {
   cy.waitUntil(() => cy.findByRole('button', { name: /I closed the original tab/iu }).should('not.be.disabled'))
 
   cy.findByRole('button', { name: /I closed the original tab/iu })
     .click()
+})
 
-  cy.url().should('include', '/profile')
-
+Cypress.Commands.add('existingAccount', () => {
   cy.url().should('include', '/profile')
 })
 
