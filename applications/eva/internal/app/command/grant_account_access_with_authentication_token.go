@@ -2,7 +2,6 @@ package command
 
 import (
 	"context"
-
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/multi_factor"
 	"overdoll/applications/eva/internal/domain/token"

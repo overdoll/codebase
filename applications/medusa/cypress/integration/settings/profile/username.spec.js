@@ -1,6 +1,6 @@
 describe('Settings - Change Username', () => {
   const username = cy.account.username()
-  const newUsername = cy.account.username('newUser')
+  const newUsername = cy.account.username('new')
   const email = cy.account.email(username)
 
   before(() => {

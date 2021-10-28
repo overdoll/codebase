@@ -8,6 +8,7 @@ import (
 	"os"
 	"overdoll/libraries/bootstrap"
 	"strings"
+	"time"
 )
 
 const (
@@ -37,7 +38,7 @@ func (u *MailingRedisUtility) SendEmail(ctx context.Context, prefix, email strin
 		return fmt.Errorf("failed to marshal email variables: %v", err)
 	}
 
-	_, err = u.client.Set(ctx, mailingRedisUtilityPrefix+u.sessionId+":"+prefix+":"+strings.ToLower(email), val, -1).Result()
+	_, err = u.client.Set(ctx, mailingRedisUtilityPrefix+u.sessionId+":"+prefix+":"+strings.ToLower(email), val, time.Minute*5).Result()
 
 	return err
 }

@@ -3,6 +3,7 @@ package mutations
 import (
 	"context"
 	"crypto/sha256"
+	"fmt"
 	"net/http"
 	"overdoll/libraries/translations"
 	"overdoll/libraries/validation"
@@ -71,6 +72,8 @@ func (r *MutationResolver) GrantAccountAccessWithAuthenticationToken(ctx context
 
 		return nil, err
 	}
+
+	fmt.Println(tk.Value)
 
 	acc, err := r.App.Commands.GrantAccountAccessWithAuthenticationToken.Handle(ctx, command.GrantAccountAccessWithAuthenticationToken{
 		TokenId: tk.Value,
