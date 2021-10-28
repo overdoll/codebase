@@ -15,13 +15,18 @@ import FlowSteps from './FlowSteps/FlowSteps'
 import type UpdatePostFlowContentMutation from '@//:artifacts/UpdatePostFlowContentMutation.graphql'
 import { useFragment } from 'react-relay'
 import type { UpdatePostFlowFragment$key } from '@//:artifacts/UpdatePostFlowFragment.graphql'
+import type { UpdatePostFlowTagFragment$key } from '@//:artifacts/UpdatePostFlowTagFragment.graphql'
+
 import FlowFooter from './FlowFooter/FlowFooter'
 
 type Props = {
   uppy: Uppy,
   state: State,
   dispatch: Dispatch,
-  query: UpdatePostFlowFragment$key
+  query: {
+    post: UpdatePostFlowFragment$key,
+    tag: UpdatePostFlowTagFragment$key
+  }
 };
 
 const UpdatePostFlowFragmentGQL = graphql`
@@ -31,9 +36,16 @@ const UpdatePostFlowFragmentGQL = graphql`
   }
 `
 
+const UpdatePostFlowTagFragmentGQL = graphql`
+  fragment UpdatePostFlowTagFragment on Query {
+    ...FlowStepsTagFragment
+  }
+`
+
 // Stepper - handles all stepping functions
 export default function UpdatePostFlow ({ uppy, state, dispatch, query }: Props): Node {
-  const data = useFragment(UpdatePostFlowFragmentGQL, query)
+  const data = useFragment(UpdatePostFlowFragmentGQL, query.post)
+  const tagData = useFragment(UpdatePostFlowTagFragmentGQL, query.tag)
 
   const [t] = useTranslation('manage')
 
@@ -43,7 +55,7 @@ export default function UpdatePostFlow ({ uppy, state, dispatch, query }: Props)
         <FlowHeader uppy={uppy} dispatch={dispatch} state={state} query={data} />
       </Box>
       <Box>
-        <FlowSteps uppy={uppy} dispatch={dispatch} state={state} query={data} />
+        <FlowSteps uppy={uppy} dispatch={dispatch} state={state} query={{ post: data, tag: tagData }} />
       </Box>
       <Flex justify='center'>
         <FlowFooter uppy={uppy} dispatch={dispatch} state={state} query={data} />

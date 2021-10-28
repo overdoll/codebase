@@ -5,7 +5,7 @@ import type { Node } from 'react'
 import { graphql, useLazyLoadQuery, useMutation } from 'react-relay/hooks'
 import type { Dispatch, State } from '@//:types/upload'
 import {
-  Flex, Center, Box, Spinner, Heading, Text, useToast
+  Flex, Center, Box, Spinner, Heading, Text, useToast, Stack, ListItem, UnorderedList
 } from '@chakra-ui/react'
 import type { Uppy } from '@uppy/core'
 import FilePicker from '../FilePicker/FilePicker'
@@ -16,7 +16,7 @@ import type CreatePostQuery from '@//:artifacts/CreatePostQuery.graphql'
 import { useEffect, useState } from 'react'
 import { STEPS } from '../../constants/constants'
 import { useTranslation } from 'react-i18next'
-import type DraftPostsQuery from '@//:artifacts/DraftPostsQuery.graphql'
+import CommunityGuidelines from '../../../../../../../components/CommunityGuidelines/CommunityGuidelines'
 
 type Props = {
   uppy: Uppy,
@@ -31,6 +31,7 @@ const RootCreatePostFlowQueryGQL = graphql`
       ...ArrangeFragment
       ...UpdatePostFlowFragment
     }
+    ...UpdatePostFlowTagFragment
   }
 `
 
@@ -95,23 +96,49 @@ export default function CreatePost ({ uppy, state, dispatch }: Props): Node {
   // If there is no post found from the URL parameter, show create post initiator
   if (!postData && (state.step !== STEPS.SUBMIT)) {
     return (
-      <Center>
+      <Stack spacing={4}>
         <FilePicker uppy={uppy}>
           <DragOverFileInput uppy={uppy}>
-            <Box
-              w='100%' boxShadow='md' bg='gray.800' p={4}
+            <Flex
+              w='100%' bg='gray.800' p={4}
               borderRadius={15}
+              align='center'
+              justify='center'
+              h={400}
             >
-              <Box p={4} borderRadius={15} borderStyle='dashed' borderColor='gray.50' borderWidth={4}>
-                <Flex ml={2} mr={2} mt={12} mb={12} flexDirection='column' alignItems='center' />
-              </Box>
-            </Box>
+              <Heading textAlign='center' color='gray.00' fontSize='4xl'>
+                {t('posts.flow.create.uploader.title')}
+              </Heading>
+            </Flex>
           </DragOverFileInput>
         </FilePicker>
-      </Center>
+        <Box>
+          <Heading mb={1} color='gray.100' fontSize='xl'>
+            {t('posts.flow.create.uploader.rules.heading')}
+          </Heading>
+          <Box ml={4}>
+            <Text>{t('posts.flow.create.uploader.rules.rule_one')}</Text>
+            <Text>{t('posts.flow.create.uploader.rules.rule_two')}</Text>
+            <Text>{t('posts.flow.create.uploader.rules.rule_three')}</Text>
+          </Box>
+        </Box>
+        <Box>
+          <Text fontSize='md' color='gray.200'>
+            {t('posts.flow.create.uploader.rules.hint')}
+          </Text>
+          <CommunityGuidelines colorScheme='gray' size='md' />
+        </Box>
+      </Stack>
     )
   }
 
   // When there is a valid post we load the post creator flow
-  return (<UpdatePostFlow uppy={uppy} state={state} dispatch={dispatch} query={postData} />)
+  return (
+    <UpdatePostFlow
+      uppy={uppy} state={state} dispatch={dispatch} query={{
+        post: postData,
+        tag: data
+      }}
+    />
+  )
 }

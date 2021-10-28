@@ -51,40 +51,43 @@ export default function Arrange ({ uppy, dispatch, state, query }: Props): Node 
 
   const disableUploads = (state.files.length !== (Object.keys(state.urls)).length) || (state.files.length > 0)
 
+  const contentData = state.content || data.content
+
   // We clear all uploads and re-add them when post content changes
   // so that we can keep the uppy file state and restrict uploads
   useEffect(() => {
-    uppy.cancelAll()
-
-    data.content.forEach(file => {
-      const resource = file.urls[0]
-      const tempUrl = 'https://overdoll.test/api/upload/' + resource.url
-      fetch(tempUrl)
-        .then((response) => response.blob()) // returns a Blob
-        .then((blob) => {
-          const uppyFileId = uppy.addFile({
-            id: file.id,
-            name: file.id,
-            type: blob.type,
-            data: blob,
-            source: 'already-uploaded'
+    if (state.files.length < 1 && state.urls.length < 1) {
+      uppy.cancelAll()
+      data.content.forEach(file => {
+        const resource = file.urls[0]
+        const tempUrl = 'https://overdoll.test/api/upload/' + resource.url
+        fetch(tempUrl)
+          .then((response) => response.blob()) // returns a Blob
+          .then((blob) => {
+            const uppyFileId = uppy.addFile({
+              id: file.id,
+              name: file.id,
+              type: blob.type,
+              data: blob,
+              source: 'already-uploaded'
+            })
+            const fileFromUppy = uppy.getFile(uppyFileId)
+            uppy.emit('upload-started', fileFromUppy)
+            uppy.emit('upload-progress', fileFromUppy, {
+              bytesUploaded: blob.size,
+              bytesTotal: blob.size
+            })
+            uppy.emit('upload-success', fileFromUppy, 'success')
           })
-          const fileFromUppy = uppy.getFile(uppyFileId)
-          uppy.emit('upload-started', fileFromUppy)
-          uppy.emit('upload-progress', fileFromUppy, {
-            bytesUploaded: blob.size,
-            bytesTotal: blob.size
-          })
-          uppy.emit('upload-success', fileFromUppy, 'success')
-        })
-    })
+      })
+    }
   }, [data.content])
 
   return (
     <Stack spacing={2}>
       <Flex p={3} bg='gray.800' borderRadius='md' align='center' justify='space-between'>
         <Heading fontSize='md'>
-          {t('posts.flow.steps.arrange.uploader.hint', { count: data.content.length })}
+          {t('posts.flow.steps.arrange.uploader.hint', { count: contentData.length })}
         </Heading>
         <FilePicker w='auto' uppy={uppy}>
           <Flex w='100%' align='center' justify='flex-end'>
@@ -99,7 +102,6 @@ export default function Arrange ({ uppy, dispatch, state, query }: Props): Node 
           </Flex>
         </FilePicker>
       </Flex>
-
       <ProcessUploads uppy={uppy} state={state} dispatch={dispatch} query={data} />
       <ArrangeUploads uppy={uppy} state={state} dispatch={dispatch} query={data} />
     </Stack>

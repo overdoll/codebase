@@ -5,6 +5,16 @@
       "title": "Drafts",
       "create": {
         "creating": "Creating your draft post",
+        "uploader": {
+          "title": "Upload one or more files",
+          "rules": {
+            "heading": "As a reminder of the guidelines...",
+            "rule_one": "Nothing extremely offensive or shocking",
+            "rule_two": "All characters must be of legal age",
+            "rule_three": "Use common sense at all times",
+            "hint": "Upstanding netizens shall read all the rules before posting"
+          }
+        },
         "query": {
           "success": "A draft post was created",
           "error": "There was an error creating a draft post"
@@ -37,6 +47,7 @@
             "retry": "Retry"
           },
           "arranger": {
+            "empty": "You'll need to upload at least one file before you can continue",
             "query": {
               "error": "There was an error saving the post content"
             }
@@ -44,7 +55,11 @@
         },
         "audience": {
           "header": "Step 2",
-          "subheader": "Select an audience"
+          "subheader": "Select an audience",
+          "selector": {
+            "prompt": "Who is the target audience?",
+            "description": "The audience is the group of people that you intended this post for. This will determine whether or not a user can see your post based on their set preferences."
+          }
         },
         "brand": {
           "header": "Step 3",

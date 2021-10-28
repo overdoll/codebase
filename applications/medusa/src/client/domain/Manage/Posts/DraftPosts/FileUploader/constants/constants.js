@@ -34,12 +34,12 @@ const INITIAL_STATE: State = {
   urls: {},
   file_limit: 0,
   content: null,
-  step: STEPS.ARRANGE,
+  step: STEPS.AUDIENCE,
   progress: {},
-  audiences: {},
-  brands: {},
-  characters: {},
-  categories: {},
+  audiences: [],
+  brands: [],
+  characters: [],
+  categories: [],
   submit: {},
   cleanup: null
 }

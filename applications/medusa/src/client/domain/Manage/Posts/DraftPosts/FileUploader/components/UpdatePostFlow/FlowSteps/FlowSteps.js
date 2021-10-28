@@ -18,22 +18,34 @@ import type FlowStepsMutation from '@//:artifacts/FlowStepsMutation.graphql'
 import { useEffect } from 'react'
 import type { FlowStepsFragment$key } from '@//:artifacts/FlowStepsFragment.graphql'
 import { useFragment } from 'react-relay'
+import type { FlowStepsTagFragment$key } from '@//:artifacts/FlowStepsTagFragment.graphql'
 
 type Props = {
   uppy: Uppy,
   state: State,
   dispatch: Dispatch,
-  query: FlowStepsFragment$key
+  query: {
+    post: FlowStepsFragment$key,
+    tag: FlowStepsTagFragment$key
+  }
 };
 
 const FlowStepsFragmentGQL = graphql`
   fragment FlowStepsFragment on Post {
     ...ArrangeFragment
+    ...AudienceFragment
+  }
+`
+
+const FlowStepsTagFragmentGQL = graphql`
+  fragment FlowStepsTagFragment on Query {
+    ...AudienceTagFragment
   }
 `
 
 export default function FlowSteps ({ uppy, dispatch, state, query }: Props): Node {
-  const data = useFragment(FlowStepsFragmentGQL, query)
+  const data = useFragment(FlowStepsFragmentGQL, query.post)
+  const tagData = useFragment(FlowStepsTagFragmentGQL, query.tag)
 
   switch (state.step) {
     case STEPS.ARRANGE:
@@ -42,7 +54,7 @@ export default function FlowSteps ({ uppy, dispatch, state, query }: Props): Nod
 
     case STEPS.AUDIENCE:
 
-      return <Audience />
+      return <Audience uppy={uppy} dispatch={dispatch} state={state} query={{ post: data, tag: tagData }} />
 
     case STEPS.BRAND:
 

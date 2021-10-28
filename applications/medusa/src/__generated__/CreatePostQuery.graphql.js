@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash cbf909776622d238b544b983f0948ed1
+ * @relayHash 1b7fbcb46fe8ce2118cf9fd6946331ab
  */
 
 /* eslint-disable */
@@ -10,6 +10,7 @@
 import type { ConcreteRequest } from 'relay-runtime';
 import type { ArrangeFragment$ref } from "./ArrangeFragment.graphql";
 import type { UpdatePostFlowFragment$ref } from "./UpdatePostFlowFragment.graphql";
+import type { UpdatePostFlowTagFragment$ref } from "./UpdatePostFlowTagFragment.graphql";
 export type CreatePostQueryVariables = {|
   reference: string
 |};
@@ -17,7 +18,8 @@ export type CreatePostQueryResponse = {|
   +post: ?{|
     +__typename: string,
     +$fragmentRefs: ArrangeFragment$ref & UpdatePostFlowFragment$ref,
-  |}
+  |},
+  +$fragmentRefs: UpdatePostFlowTagFragment$ref,
 |};
 export type CreatePostQuery = {|
   variables: CreatePostQueryVariables,
@@ -35,6 +37,7 @@ query CreatePostQuery(
     ...UpdatePostFlowFragment
     id
   }
+  ...UpdatePostFlowTagFragment
 }
 
 fragment ArrangeFragment on Post {
@@ -60,6 +63,23 @@ fragment ArrangeUploadsFragment on Post {
   }
 }
 
+fragment AudienceFragment on Post {
+  audience {
+    id
+    title
+  }
+}
+
+fragment AudienceTagFragment on Query {
+  audiences {
+    edges {
+      node {
+        id
+      }
+    }
+  }
+}
+
 fragment FlowFooterFragment on Post {
   ...FlowForwardButtonFragment
 }
@@ -73,6 +93,11 @@ fragment FlowForwardButtonFragment on Post {
 
 fragment FlowStepsFragment on Post {
   ...ArrangeFragment
+  ...AudienceFragment
+}
+
+fragment FlowStepsTagFragment on Query {
+  ...AudienceTagFragment
 }
 
 fragment ProcessUploadsFragment on Post {
@@ -87,6 +112,10 @@ fragment ProcessUploadsFragment on Post {
 fragment UpdatePostFlowFragment on Post {
   ...FlowStepsFragment
   ...FlowFooterFragment
+}
+
+fragment UpdatePostFlowTagFragment on Query {
+  ...FlowStepsTagFragment
 }
 */
 
@@ -147,6 +176,11 @@ return {
           }
         ],
         "storageKey": null
+      },
+      {
+        "args": null,
+        "kind": "FragmentSpread",
+        "name": "UpdatePostFlowTagFragment"
       }
     ],
     "type": "Query",
@@ -211,14 +245,67 @@ return {
             ],
             "storageKey": null
           },
-          (v3/*: any*/)
+          (v3/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Audience",
+            "kind": "LinkedField",
+            "name": "audience",
+            "plural": false,
+            "selections": [
+              (v3/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "title",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "AudienceConnection",
+        "kind": "LinkedField",
+        "name": "audiences",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AudienceEdge",
+            "kind": "LinkedField",
+            "name": "edges",
+            "plural": true,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Audience",
+                "kind": "LinkedField",
+                "name": "node",
+                "plural": false,
+                "selections": [
+                  (v3/*: any*/)
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "cbf909776622d238b544b983f0948ed1",
+    "id": "1b7fbcb46fe8ce2118cf9fd6946331ab",
     "metadata": {},
     "name": "CreatePostQuery",
     "operationKind": "query",
@@ -227,5 +314,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '4c8125807c6150664d86d1bb07d23fa8';
+(node: any).hash = 'daf866e7354660002319bc5db666248d';
 module.exports = node;

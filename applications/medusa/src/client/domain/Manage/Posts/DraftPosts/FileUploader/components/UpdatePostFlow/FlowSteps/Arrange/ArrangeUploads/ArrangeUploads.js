@@ -58,6 +58,8 @@ const reorder = (
 export default function ArrangeUploads ({ state, uppy, dispatch, query }: Props): Node {
   const data = useFragment(ArrangeUploadsFragmentGQL, query)
 
+  const [t] = useTranslation('manage')
+
   const displayData = state.content || data.content
 
   const dragDisabled = (state.files.length !== (Object.keys(state.urls)).length) || (state.files.length > 0)
@@ -92,6 +94,14 @@ export default function ArrangeUploads ({ state, uppy, dispatch, query }: Props)
     )
 
     dispatch({ type: EVENTS.CONTENT, value: content })
+  }
+
+  if (displayData.length < 1) {
+    return (
+      <Flex bg='gray.800' align='center' justify='center' p={2} h={100} borderRadius='md'>
+        <Text>{t('posts.flow.steps.arrange.arranger.empty')}</Text>
+      </Flex>
+    )
   }
 
   return (

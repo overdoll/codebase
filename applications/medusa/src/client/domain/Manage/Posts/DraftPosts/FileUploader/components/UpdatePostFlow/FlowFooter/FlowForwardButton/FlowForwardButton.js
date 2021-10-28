@@ -51,6 +51,8 @@ const FlowForwardButtonMutationGQL = graphql`
 export default function FlowForwardButton ({ uppy, dispatch, state, isDisabled, query }: Props): Node {
   const data = useFragment(FlowForwardButtonFragmentGQL, query)
 
+  const contentData = state.content || data.content
+
   const [updateContent, isUpdatingContent] = useMutation<FlowForwardButtonMutation>(FlowForwardButtonMutationGQL)
 
   const [postReference, setPostReference] = useQueryParam('id', StringParam)
@@ -62,12 +64,6 @@ export default function FlowForwardButton ({ uppy, dispatch, state, isDisabled, 
   const onUpdateContent = () => {
     const currentURLs = state.content.map((item) =>
       item.urls[0].url)
-    /*
-    const differenceIDs = data.content.filter((dataItem) => {
-      return state.content.filter((stateItem) => dataItem.id === stateItem.id)
-    })
-
-     */
 
     updateContent({
       variables: {
@@ -77,7 +73,6 @@ export default function FlowForwardButton ({ uppy, dispatch, state, isDisabled, 
         }
       },
       onCompleted (data) {
-        // .forEach((item) => uppy.removeFile(item.id))
         dispatch({ type: EVENTS.CLEAR_CONTENT })
         dispatch({ type: EVENTS.STEP, value: STEPS.AUDIENCE })
       },
@@ -120,7 +115,7 @@ export default function FlowForwardButton ({ uppy, dispatch, state, isDisabled, 
   const buttonDisabled = () => {
     switch (state.step) {
       case STEPS.ARRANGE:
-        return (state.files.length !== (Object.keys(state.urls)).length) || (state.files.length > 0)
+        return (state.files.length !== (Object.keys(state.urls)).length) || (state.files.length > 0) || contentData.length < 1
       default:
         return false
     }
