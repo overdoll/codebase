@@ -40,10 +40,8 @@ func LanguageToContext(c *gin.Context) *http.Request {
 		acceptedValue = ck.Value
 	}
 
-	accept := c.Request.Header.Get("Accept-Language")
-
 	// cookie available, match language
-	tag, _ := language.MatchStrings(matcher, acceptedValue, accept)
+	tag, _ := language.MatchStrings(matcher, acceptedValue)
 
 	return addLanguageToRequest(c, &Language{tag: tag})
 }
