@@ -8,7 +8,7 @@ describe('Settings - Change Username', () => {
   })
 
   beforeEach(() => {
-    cy.preserveAuth()
+    cy.preserveAccount()
 
     cy.visit('/settings/profile')
     cy.findByText(/Current Username/iu).should('exist')

@@ -14,7 +14,7 @@ describe('Settings - Configure Two-Factor', () => {
   })
 
   beforeEach(() => {
-    cy.preserveAuth()
+    cy.preserveAccount()
     Cypress.Cookies.preserveOnce('cypressTestRecoveryCode', 'cypressTestOtpSecret')
   })
 
