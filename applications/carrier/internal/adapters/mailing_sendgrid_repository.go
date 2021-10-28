@@ -23,7 +23,11 @@ func (r MailingSendgridRepository) SendEmail(ctx context.Context, recipient *mai
 
 	// empty API key, just dump the console outputs
 	if os.Getenv("SENDGRID_API_KEY") == "" {
-		zap.S().Info("sendgrid api key not configured, dumping output: ", email.Variables())
+		fields := make([]zap.Field, 0, len(email.Variables()))
+		for k, v := range email.Variables() {
+			fields = append(fields, zap.Any(k, v))
+		}
+		zap.S().Info("sendgrid api key not configured, dumping output: ", fields)
 		return nil
 	}
 

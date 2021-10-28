@@ -2,12 +2,11 @@ describe('Settings - Configure Two-Factor', () => {
   const username = cy.account.username()
   const email = cy.account.email(username)
 
-  const gotoSettingsPage = () => cy.waitUntil(() =>
-    cy.url().should('include', '/profile').then(() => {
-      cy.visit('/settings/security')
-      cy.findByText(/Two-factor Authentication/).should('exist')
-    })
-  )
+  const gotoSettingsPage = () => {
+    cy.visit('/settings/security')
+    cy.findByText(/Two-factor Authentication/).should('exist')
+    cy.waitUntil(() => cy.findByText(/Recovery Codes/).should('not.be.disabled'))
+  }
 
   before(() => {
     cy.join(email).newAccount(username)
@@ -22,7 +21,6 @@ describe('Settings - Configure Two-Factor', () => {
     gotoSettingsPage()
 
     // Create recovery codes
-    cy.waitUntil(() => cy.findByText(/Recovery Codes/).should('not.be.disabled'))
     cy.findByText(/Recovery Codes/).click()
     cy.findByText(/No recovery codes/iu).should('exist')
     cy.findByRole('button', { name: /Generate Recovery Codes/iu }).click()
@@ -33,7 +31,6 @@ describe('Settings - Configure Two-Factor', () => {
     gotoSettingsPage()
 
     // Generate new codes and check to see if they are equal to the new ones
-    cy.waitUntil(() => cy.findByText(/Recovery Codes/).should('not.be.disabled'))
     cy.findByText(/Recovery Codes/).click()
     cy.findByText(/Your recovery codes/iu).parent().get('code').invoke('text').then(initialText => {
       cy.findByRole('button', { name: /Generate Recovery Codes/iu }).click()
