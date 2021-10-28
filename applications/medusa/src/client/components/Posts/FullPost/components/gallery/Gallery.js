@@ -25,7 +25,7 @@ import ArrowButtonLeft2
   from '@streamlinehq/streamlinehq/img/streamline-bold/arrows-diagrams/arrows/arrow-button-left-2.svg'
 
 import SuspenseImage from '@//:modules/utilities/SuspenseImage'
-import ImageSnippet from '../../../components/ContentItem/ImageSnippet/ImageSnippet'
+import ImageSnippet from '../../../../DataDisplay/ContentItem/ImageSnippet/ImageSnippet'
 
 type File = {
   id: string,

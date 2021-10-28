@@ -16,10 +16,10 @@ import {
   Divider, Skeleton, Code, Spinner, Alert, AlertIcon, AlertDescription
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
-import ExternalLink from '../../../../components/ExternalLink/ExternalLink'
+import ExternalLink from '../../../../components/ContentHints/ExternalLink/ExternalLink'
 import Icon from '@//:modules/content/Icon/Icon'
 import SuspenseImage from '@//:modules/utilities/SuspenseImage'
-import CopyToClipboardText from '../../../../components/CopyToClipboardText/CopyToClipboardText'
+import CopyToClipboardText from '../../../../components/ContentHints/CopyToClipboardText/CopyToClipboardText'
 import Typing from '@streamlinehq/streamlinehq/img/streamline-regular/interface-essential/form-edition/typing.svg'
 import PhoneActionDownload
   from '@streamlinehq/streamlinehq/img/streamline-regular/phones-mobile-devices/content-actions/phone-action-download.svg'

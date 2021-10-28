@@ -7,6 +7,8 @@
 'use strict';
 
 import type { ReaderFragment } from 'relay-runtime';
+import type { useUpdateAudienceFragment$ref } from "./useUpdateAudienceFragment.graphql";
+import type { useUpdateContentFragment$ref } from "./useUpdateContentFragment.graphql";
 import type { FragmentReference } from "relay-runtime";
 declare export opaque type FlowForwardButtonFragment$ref: FragmentReference;
 declare export opaque type FlowForwardButtonFragment$fragmentType: FlowForwardButtonFragment$ref;
@@ -15,6 +17,10 @@ export type FlowForwardButtonFragment = {|
   +content: $ReadOnlyArray<{|
     +id: string
   |}>,
+  +audience: ?{|
+    +id: string
+  |},
+  +$fragmentRefs: useUpdateContentFragment$ref & useUpdateAudienceFragment$ref,
   +$refType: FlowForwardButtonFragment$ref,
 |};
 export type FlowForwardButtonFragment$data = FlowForwardButtonFragment;
@@ -32,7 +38,10 @@ var v0 = {
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
-};
+},
+v1 = [
+  (v0/*: any*/)
+];
 return {
   "argumentDefinitions": [],
   "kind": "Fragment",
@@ -47,10 +56,28 @@ return {
       "kind": "LinkedField",
       "name": "content",
       "plural": true,
-      "selections": [
-        (v0/*: any*/)
-      ],
+      "selections": (v1/*: any*/),
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "Audience",
+      "kind": "LinkedField",
+      "name": "audience",
+      "plural": false,
+      "selections": (v1/*: any*/),
+      "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "useUpdateContentFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "useUpdateAudienceFragment"
     }
   ],
   "type": "Post",
@@ -58,5 +85,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '9484d1c87f64a48aeb684b34fa10f62e';
+(node: any).hash = '457fbfec029b2b8ae40a7a03ce837d4c';
 module.exports = node;

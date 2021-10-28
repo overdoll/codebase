@@ -36,6 +36,17 @@ export type Progress = {
   },
 };
 
+export type Resource = {
+  id?: string,
+  slug?: string,
+  thumbnail?: Thumbnails,
+  title: string,
+}
+
+export type Resources = {
+  [string]: Resource
+}
+
 export type Audience = {
   id?: string,
   slug?: string,
@@ -103,7 +114,7 @@ export type Event =
   | 'content'
   | 'progress'
   | 'characters'
-  | 'audiences'
+  | 'audience'
   | 'brands'
   | 'categories'
   | 'submit'
@@ -119,6 +130,7 @@ export type State = {
   content: Array<Content>,
   progress: Progress,
   brands: Brands,
+  audience: string,
   characters: Characters,
   categories: Categories,
   submit: Submit,

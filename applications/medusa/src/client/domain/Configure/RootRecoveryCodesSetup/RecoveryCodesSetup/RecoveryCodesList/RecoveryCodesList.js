@@ -22,7 +22,7 @@ import fileDownload from 'js-file-download'
 import Button from '@//:modules/form/Button'
 import type { RecoveryCodesListMutation } from '@//:artifacts/RecoveryCodesListMutation.graphql'
 import Icon from '@//:modules/content/Icon/Icon'
-import CopyToClipboardText from '../../../../../components/CopyToClipboardText/CopyToClipboardText'
+import CopyToClipboardText from '../../../../../components/ContentHints/CopyToClipboardText/CopyToClipboardText'
 import DownloadDashArrow
   from '@streamlinehq/streamlinehq/img/streamline-bold/internet-networks-servers/upload-download/download-dash-arrow.svg'
 

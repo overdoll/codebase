@@ -52,11 +52,21 @@ const reducer: {} = (state: State, action: Action): State => {
         [act]: [...action.value]
       }
     }
+    case EVENTS.AUDIENCE: {
+      if (action.remove) {
+        return {
+          ...state,
+          [act]: null
+        }
+      }
+
+      return {
+        ...state,
+        [act]: action.value
+      }
+    }
     case EVENTS.CLEAR_CONTENT: {
       return { ...state, content: null }
-    }
-    case EVENTS.FILE_LIMIT: {
-      return { ...state, file_limit: action.value }
     }
     case EVENTS.FILES: {
       let files = [...state.files]

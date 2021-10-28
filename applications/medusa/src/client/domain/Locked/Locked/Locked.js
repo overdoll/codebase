@@ -4,7 +4,7 @@
 import { graphql, usePreloadedQuery } from 'react-relay/hooks'
 import type LockedQuery from '@//:artifacts/LockedQuery.graphql'
 import { useTranslation } from 'react-i18next'
-import CommunityGuidelines from '../../../components/CommunityGuidelines/CommunityGuidelines'
+import CommunityGuidelines from '../../../components/ContentHints/CommunityGuidelines/CommunityGuidelines'
 import { Alert, AlertDescription, Text, Heading, Stack, Box } from '@chakra-ui/react'
 
 type Props = {

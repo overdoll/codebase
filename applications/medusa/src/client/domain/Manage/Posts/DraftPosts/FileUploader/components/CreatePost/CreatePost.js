@@ -10,13 +10,13 @@ import {
 import type { Uppy } from '@uppy/core'
 import FilePicker from '../FilePicker/FilePicker'
 import DragOverFileInput from '../DragOverFileInput/DragOverFileInput'
-import UpdatePostFlow from '../UpdatePostFlow/UpdatePostFlow'
+import UpdatePostFlow from './UpdatePostFlow/UpdatePostFlow'
 import { StringParam, useQueryParam } from 'use-query-params'
 import type CreatePostQuery from '@//:artifacts/CreatePostQuery.graphql'
 import { useEffect, useState } from 'react'
 import { STEPS } from '../../constants/constants'
 import { useTranslation } from 'react-i18next'
-import CommunityGuidelines from '../../../../../../../components/CommunityGuidelines/CommunityGuidelines'
+import CommunityGuidelines from '../../../../../../../components/ContentHints/CommunityGuidelines/CommunityGuidelines'
 
 type Props = {
   uppy: Uppy,

@@ -7,6 +7,7 @@
 'use strict';
 
 import type { ReaderFragment } from 'relay-runtime';
+export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 import type { FragmentReference } from "relay-runtime";
 declare export opaque type AudienceTagFragment$ref: FragmentReference;
 declare export opaque type AudienceTagFragment$fragmentType: AudienceTagFragment$ref;
@@ -14,7 +15,15 @@ export type AudienceTagFragment = {|
   +audiences: {|
     +edges: $ReadOnlyArray<{|
       +node: {|
-        +id: string
+        +id: string,
+        +title: string,
+        +thumbnail: ?{|
+          +type: ResourceType,
+          +urls: $ReadOnlyArray<{|
+            +mimeType: string,
+            +url: any,
+          |}>,
+        |},
       |}
     |}>
   |},
@@ -64,6 +73,56 @@ const node: ReaderFragment = {
                   "kind": "ScalarField",
                   "name": "id",
                   "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "title",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "Resource",
+                  "kind": "LinkedField",
+                  "name": "thumbnail",
+                  "plural": false,
+                  "selections": [
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "type",
+                      "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "concreteType": "ResourceUrl",
+                      "kind": "LinkedField",
+                      "name": "urls",
+                      "plural": true,
+                      "selections": [
+                        {
+                          "alias": null,
+                          "args": null,
+                          "kind": "ScalarField",
+                          "name": "mimeType",
+                          "storageKey": null
+                        },
+                        {
+                          "alias": null,
+                          "args": null,
+                          "kind": "ScalarField",
+                          "name": "url",
+                          "storageKey": null
+                        }
+                      ],
+                      "storageKey": null
+                    }
+                  ],
+                  "storageKey": null
                 }
               ],
               "storageKey": null
@@ -79,5 +138,5 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 // prettier-ignore
-(node: any).hash = '1a980bcf9749fe94342b4e5a5766d17c';
+(node: any).hash = '023599c58ba6511034a8b0f7a932a023';
 module.exports = node;

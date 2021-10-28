@@ -28,7 +28,7 @@ import Posts from './Posts/Posts'
 import { useQueryLoader } from 'react-relay/hooks'
 import ErrorFallback from '../../../../modules/content/ErrorFallback/ErrorFallback'
 import ErrorBoundary from '@//:modules/utilities/ErrorBoundary'
-import CommunityGuidelines from '../../../components/CommunityGuidelines/CommunityGuidelines'
+import CommunityGuidelines from '../../../components/ContentHints/CommunityGuidelines/CommunityGuidelines'
 
 type Props = {
   prepared: {

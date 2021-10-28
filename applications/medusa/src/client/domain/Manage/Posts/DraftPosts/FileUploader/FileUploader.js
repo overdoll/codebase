@@ -53,13 +53,6 @@ export default function FileUploader (props: Props): Node {
   useEffect(() => {
     uppy.on('file-added', file => {
       // remove uploaded file and emit error if upload limit is hit
-      if ((state.file_limit + 1) > uppy.opts.restrictions.maxNumberOfFiles) {
-        uppy.removeFile(file.id)
-        uppy.info({
-          message: t('posts.flow.steps.arrange.uploader.upload_limit', { count: uppy.opts.restrictions.maxNumberOfFiles })
-        }, 'error')
-        return
-      }
       if (file.source !== 'already-uploaded') {
         dispatch({ type: EVENTS.FILES, value: { id: file.id, type: file.type } })
       }
