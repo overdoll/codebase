@@ -1,11 +1,14 @@
 describe('Settings - Change Username', () => {
-  const id = Cypress._.random(0, 1e6)
-  const newUsername = `newUser${id}`
-  const email = `${id}@test.com`
+  const username = cy.account.username()
+  const newUsername = cy.account.username('new')
+  const email = cy.account.email(username)
+
+  before(() => {
+    cy.join(email).newAccount(username)
+  })
 
   beforeEach(() => {
-    cy.login(email)
-    cy.register(email, id)
+    cy.preserveAccount()
 
     cy.visit('/settings/profile')
     cy.findByText(/Current Username/iu).should('exist')
@@ -25,7 +28,7 @@ describe('Settings - Change Username', () => {
     cy.findByText(/Previous Usernames/iu).click()
 
     cy.findByText(/Previous Usernames/iu).parent('div').parent('button').parent('div').within(() => {
-      cy.findByText(id).should('exist')
+      cy.findByText(username).should('exist')
       cy.findByText(newUsername).should('exist')
     })
 

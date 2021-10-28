@@ -52,7 +52,13 @@ func (r ResourceS3Repository) CreateResources(ctx context.Context, uploads []str
 
 	for _, uploadId := range uploads {
 
-		fileId := strings.Split(uploadId, "+")[0]
+		// strip any urls or extensions
+		splitPath := strings.Split(uploadId, "/")
+		idWithOrWithoutExtension := splitPath[len(strings.Split(uploadId, "/"))-1]
+
+		idWithoutExtension := strings.Split(idWithOrWithoutExtension, ".")[0]
+
+		fileId := strings.Split(idWithoutExtension, "+")[0]
 
 		resp, err := s3Client.HeadObject(&s3.HeadObjectInput{
 			Bucket: aws.String(UploadsBucket),
@@ -67,7 +73,7 @@ func (r ResourceS3Repository) CreateResources(ctx context.Context, uploads []str
 
 		fileType := resp.Metadata["Filetype"]
 
-		newResource, err := resource.NewResource(uploadId, *fileType)
+		newResource, err := resource.NewResource(idWithoutExtension, *fileType)
 
 		if err != nil {
 			return nil, err

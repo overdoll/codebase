@@ -28,7 +28,7 @@ type Audience struct {
 func TestSearchAudiences(t *testing.T) {
 	t.Parallel()
 
-	client, _ := getGraphqlClient(t, nil)
+	client := getGraphqlClient(t, nil)
 
 	var searchAudiences SearchAudience
 
@@ -44,7 +44,7 @@ func TestSearchAudiences(t *testing.T) {
 func TestGetAudience(t *testing.T) {
 	t.Parallel()
 
-	client, _ := getGraphqlClient(t, nil)
+	client := getGraphqlClient(t, nil)
 
 	var getAudience Audience
 

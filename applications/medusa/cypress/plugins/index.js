@@ -12,6 +12,8 @@
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 
+require('dotenv').config()
+
 /**
  * @type {Cypress.PluginConfig}
  */
@@ -22,6 +24,10 @@ module.exports = (on, config) => {
     generateOTP: require('cypress-otp')
   })
   // add other tasks to be registered here
+
+  // copy any needed variables from process.env to config.env
+  config.env.TESTMAIL_API_KEY = process.env.CYPRESS_TESTMAIL_API_KEY
+  config.env.TESTMAIL_NAMESPACE = process.env.CYPRESS_TESTMAIL_NAMESPACE
 
   // IMPORTANT to return the config object
   // with the any changed environment variables

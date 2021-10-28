@@ -36,10 +36,10 @@ module.exports = {
       config.urlLoaderOutputName = `${options.razzleOptions.mediaPrefix}/[contenthash].[ext]`
 
       config.cssOutputFilename = `${options.razzleOptions.cssPrefix}/[contenthash].css`
-      config.cssOutputChunkFilename = `${options.razzleOptions.cssPrefix}/[contenthash].c.css`
+      config.cssOutputChunkFilename = `${options.razzleOptions.cssPrefix}/[contenthash].css`
 
       config.jsOutputFilename = `${options.razzleOptions.jsPrefix}/[contenthash].js`
-      config.jsOutputChunkFilename = `${options.razzleOptions.jsPrefix}/[contenthash].c.js`
+      config.jsOutputChunkFilename = `${options.razzleOptions.jsPrefix}/[contenthash].js`
     }
 
     return config
@@ -87,7 +87,7 @@ module.exports = {
       if (opts.env.dev) {
         config.devServer.proxy = {
           context: () => true,
-          target: 'http://localhost:8080'
+          target: 'http://127.0.0.1:8080'
         }
 
         config.devServer.index = ''

@@ -1,22 +1,21 @@
 package mailing
 
-import (
-	"os"
+type Template struct {
+	templateId string
+	variables  map[string]interface{}
+}
 
-	"github.com/matcornic/hermes/v2"
-)
+func NewTemplate(templateId string, variables map[string]interface{}) (*Template, error) {
+	return &Template{
+		templateId: templateId,
+		variables:  variables,
+	}, nil
+}
 
-func NewTemplate() hermes.Hermes {
-	return hermes.Hermes{
-		// Optional Theme
-		Theme: new(DarkMode),
-		Product: hermes.Product{
-			// Appears in header & footer of e-mails
-			Name: "overdoll",
-			Link: os.Getenv("APP_URL"),
-			// Optional product logo
-			Logo:      os.Getenv("APP_LOGO"),
-			Copyright: "",
-		},
-	}
+func (r *Template) TemplateId() string {
+	return r.templateId
+}
+
+func (r *Template) Variables() map[string]interface{} {
+	return r.variables
 }

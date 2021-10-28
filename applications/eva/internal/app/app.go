@@ -14,6 +14,7 @@ type Commands struct {
 	VerifyAuthenticationToken command.VerifyAuthenticationTokenHandler
 	GrantAuthenticationToken  command.GrantAuthenticationTokenHandler
 
+	UpdateAccountLanguage                   command.UpdateAccountLanguageHandler
 	UnlockAccount                           command.UnlockAccountHandler
 	AddAccountEmail                         command.AddAccountEmailHandler
 	UpdateAccountUsernameAndRetainPrevious  command.UpdateAccountUsernameAndRetainPreviousHandler

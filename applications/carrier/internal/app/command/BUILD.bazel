@@ -12,6 +12,5 @@ go_library(
     deps = [
         "//applications/carrier/internal/domain/identifier",
         "//applications/carrier/internal/domain/mailing",
-        "@com_github_matcornic_hermes_v2//:hermes",
     ],
 )

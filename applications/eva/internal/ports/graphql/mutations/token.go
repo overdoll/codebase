@@ -3,7 +3,10 @@ package mutations
 import (
 	"context"
 	"crypto/sha256"
+	"fmt"
 	"net/http"
+	"overdoll/libraries/translations"
+	"overdoll/libraries/validation"
 	"strings"
 	"time"
 
@@ -28,9 +31,18 @@ func (r *MutationResolver) GrantAuthenticationToken(ctx context.Context, input t
 		Email:     input.Email,
 		UserAgent: userAgent,
 		IP:        helpers.GetIp(ctx),
+
+		// manually send the language because we need it for the email
+		Language: translations.FromContext(ctx),
 	})
 
 	if err != nil {
+
+		if err == validation.ErrInvalidEmail {
+			invalid := types.GrantAuthenticationTokenValidationInvalidEmail
+			return &types.GrantAuthenticationTokenPayload{Validation: &invalid}, nil
+		}
+
 		return nil, err
 	}
 
@@ -60,6 +72,8 @@ func (r *MutationResolver) GrantAccountAccessWithAuthenticationToken(ctx context
 
 		return nil, err
 	}
+
+	fmt.Println(tk.Value)
 
 	acc, err := r.App.Commands.GrantAccountAccessWithAuthenticationToken.Handle(ctx, command.GrantAccountAccessWithAuthenticationToken{
 		TokenId: tk.Value,
@@ -147,6 +161,9 @@ func (r *MutationResolver) ReissueAuthenticationToken(ctx context.Context) (*typ
 
 	if err := r.App.Commands.ReissueAuthenticationToken.Handle(ctx, command.ReissueAuthenticationToken{
 		TokenId: tk.Value,
+
+		// manually send the language because we need it for the email
+		Language: translations.FromContext(ctx).Locale(),
 	}); err != nil {
 
 		if err == token.ErrTokenNotFound {
@@ -206,6 +223,7 @@ func (r *MutationResolver) CreateAccountWithAuthenticationToken(ctx context.Cont
 	acc, err := r.App.Commands.CreateAccountWithAuthenticationToken.Handle(ctx, command.CreateAccountWithAuthenticationToken{
 		TokenId:  currentCookie.Value,
 		Username: input.Username,
+		Language: translations.FromContext(ctx),
 	})
 
 	if err != nil {

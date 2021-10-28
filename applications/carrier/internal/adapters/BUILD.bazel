@@ -14,5 +14,6 @@ go_library(
         "//applications/eva/proto:v1_go_proto",
         "@com_github_sendgrid_sendgrid_go//:sendgrid-go",
         "@com_github_sendgrid_sendgrid_go//helpers/mail",
+        "@org_uber_go_zap//:zap",
     ],
 )

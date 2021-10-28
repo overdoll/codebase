@@ -27,8 +27,7 @@ const typeDefs = gql`
   }
 `
 
-const toTypeDefs = name =>
-  gql`
+const toTypeDefs = name => gql`
   extend type ${name} implements Node @key(fields: "id") {
   id: ID! @external
   }
@@ -38,8 +37,6 @@ const resolvers = {
   Node: {
     __resolveType ({ id }) {
       // TODO: Add validation around `fromId`
-      console.log('resolving type')
-      console.log(id)
       const [typename] = fromId(id)
       return typename
     }
@@ -58,8 +55,6 @@ const resolvers = {
 const fromId = (id) => {
   const b = Buffer.from(id, 'base64')
   const i = b.indexOf(DIVIDER_TOKEN)
-
-  console.log(id)
 
   if (i === -1) {
     throw new RangeError('Invalid Node ID')
@@ -169,7 +164,10 @@ class NodeGateway extends ApolloGateway {
     const nodeSchema = buildFederatedSchema([
       // The Node service must include the Node interface and a module for
       // translating the IDs into concrete types
-      { resolvers, typeDefs },
+      {
+        resolvers,
+        typeDefs
+      },
       new RootModule(seenNodeTypes),
 
       // The Node service must also have concrete types for each type. This
@@ -213,15 +211,25 @@ class CookieDataSource extends RemoteGraphQLDataSource {
    * Processes set-cookie headers from the service back to the
    * client, so the cookies are set within their browser
    */
-  async process ({ request, context }) {
-    const response = await super.process({ request, context })
+  async process ({
+    request,
+    context
+  }) {
+    const response = await super.process({
+      request,
+      context
+    })
 
     const cookie = response.http?.headers.get('set-cookie')
     const passport = response.http?.headers.get('X-Modified-Passport')
 
     if (cookie) {
       const cookies = parseCookies(cookie)
-      cookies.forEach(({ cookieName, cookieValue, options }) => {
+      cookies.forEach(({
+        cookieName,
+        cookieValue,
+        options
+      }) => {
         if (context && context.res) {
           context.res.cookie(cookieName, cookieValue, options)
         }
@@ -330,7 +338,13 @@ const gateway = new NodeGateway({
 const server = new ApolloServer({
   gateway,
   subscriptions: false,
-  context: ({ req, res }) => ({ req, res }),
+  context: ({
+    req,
+    res
+  }) => ({
+    req,
+    res
+  }),
   playground: {
     settings: {
       'request.credentials': 'same-origin'

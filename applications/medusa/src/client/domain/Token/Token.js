@@ -27,28 +27,28 @@ type Props = {
 };
 
 const VerifyTokenMutationGQL = graphql`
-    mutation TokenVerifyMutation($input: VerifyAuthenticationTokenInput!) {
-        verifyAuthenticationToken(input: $input) {
-            validation
-            authenticationToken {
-                id
-                verified
-            }
-        }
+  mutation TokenVerifyMutation($input: VerifyAuthenticationTokenInput!) {
+    verifyAuthenticationToken(input: $input) {
+      validation
+      authenticationToken {
+        id
+        verified
+      }
     }
+  }
 `
 
 const TokenStatus = graphql`
-    query TokenQuery($token: String) {
-        viewAuthenticationToken(token: $token) {
-            id
-            verified
-            sameSession
-            location
-            device
-            secure
-        }
+  query TokenQuery($token: String) {
+    viewAuthenticationToken(token: $token) {
+      id
+      verified
+      sameSession
+      location
+      device
+      secure
     }
+  }
 `
 
 export default function Token ({ prepared }: Props): Node {
@@ -96,9 +96,7 @@ export default function Token ({ prepared }: Props): Node {
 
   // TODO do a proper refresh (recall ability?) as another refresh is needed to see the nav bar correctly
   const refresh = () => {
-    history.push('/join')
-    history.go(0)
-    location.reload()
+    window.location.pathname = '/join'
   }
 
   const data = query.viewAuthenticationToken

@@ -2,6 +2,7 @@ package token
 
 import (
 	"errors"
+	"overdoll/libraries/validation"
 	"time"
 
 	"overdoll/applications/eva/internal/domain/account"
@@ -37,6 +38,12 @@ var (
 )
 
 func NewAuthenticationToken(id, email, device, location, ip string) (*AuthenticationToken, error) {
+
+	email, err := validation.ValidateEmail(email)
+
+	if err != nil {
+		return nil, err
+	}
 
 	ck := &AuthenticationToken{
 		cookie:     id,

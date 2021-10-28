@@ -8,6 +8,7 @@ type Identifier struct {
 	accountId string
 	username  string
 	email     string
+	language  string
 }
 
 func (i *Identifier) AccountId() string {
@@ -18,14 +19,19 @@ func (i *Identifier) Username() string {
 	return i.username
 }
 
+func (i *Identifier) Language() string {
+	return i.language
+}
+
 func (i *Identifier) Email() string {
 	return i.email
 }
 
-func UnmarshalIdentifierFromDatabase(accountId, username, email string) *Identifier {
+func UnmarshalIdentifierFromDatabase(accountId, username, email, language string) *Identifier {
 	return &Identifier{
 		accountId: accountId,
 		username:  username,
 		email:     email,
+		language:  language,
 	}
 }

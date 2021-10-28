@@ -26,6 +26,7 @@ go_library(
         "services.go",
         "unlock_account.go",
         "update_account_email_status_to_primary.go",
+        "update_account_language.go",
         "update_account_username_and_retain_previous.go",
     ],
     importpath = "overdoll/applications/eva/internal/app/command",
@@ -36,6 +37,7 @@ go_library(
         "//applications/eva/internal/domain/session",
         "//applications/eva/internal/domain/token",
         "//libraries/principal",
+        "//libraries/translations",
         "//libraries/uuid",
     ],
 )

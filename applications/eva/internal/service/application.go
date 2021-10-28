@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	"os"
-
 	"overdoll/applications/eva/internal/adapters"
 	"overdoll/applications/eva/internal/app"
 	"overdoll/applications/eva/internal/app/command"
@@ -19,6 +18,15 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 	return createApplication(ctx, adapters.NewCarrierGrpc(carrierClient)),
 		func() {
 			cleanup()
+		}
+}
+
+func NewComponentTestApplication(ctx context.Context) (app.Application, func()) {
+
+	// mock out carrier so we don't have to send emails in tests
+	// we "send" emails by placing them inside of a redis DB to be read later from tests
+	return createApplication(ctx, NewCarrierServiceMock()),
+		func() {
 		}
 }
 
@@ -43,6 +51,7 @@ func createApplication(ctx context.Context, carrier command.CarrierService) app.
 
 	return app.Application{
 		Commands: app.Commands{
+			UpdateAccountLanguage:                     command.NewUpdateAccountLanguageHandler(accountRepo),
 			VerifyAuthenticationToken:                 command.NewVerifyAuthenticationTokenHandler(tokenRepo, accountRepo),
 			GrantAccountAccessWithAuthenticationToken: command.NewGrantAccountAccessWithAuthenticationTokenHandler(tokenRepo, accountRepo, mfaRepo),
 			CreateAccountWithAuthenticationToken:      command.NewCreateAccountWithAuthenticationTokenHandler(tokenRepo, accountRepo),
