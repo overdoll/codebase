@@ -80,7 +80,14 @@
         },
         "category": {
           "header": "Step 4",
-          "subheader": "Add categories"
+          "subheader": "Add categories",
+          "selector": {
+            "description": "Select the categories that would be most applicable to the content you have uploaded."
+          },
+          "query": {
+            "error": "There was an error saving the post categories"
+          },
+          "required_prompt": "Categories allow us to implement discoverability and give your fans a chance to easily find your content."
         },
         "character": {
           "header": "Step 5",

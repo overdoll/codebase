@@ -36,6 +36,7 @@ const FlowStepsFragmentGQL = graphql`
     ...ArrangeFragment
     ...AudienceFragment
     ...BrandFragment
+    ...CategoryFragment
   }
 `
 
@@ -43,6 +44,7 @@ const FlowStepsTagFragmentGQL = graphql`
   fragment FlowStepsTagFragment on Query {
     ...AudienceTagFragment
     ...BrandTagFragment
+    ...CategoryTagFragment
   }
 `
 
@@ -61,7 +63,7 @@ export default function FlowSteps ({ uppy, dispatch, state, query }: Props): Nod
 
     case STEPS.CATEGORY:
 
-      return <Category />
+      return <Category uppy={uppy} dispatch={dispatch} state={state} query={{ post: data, tag: tagData }} />
 
     case STEPS.CHARACTER:
 

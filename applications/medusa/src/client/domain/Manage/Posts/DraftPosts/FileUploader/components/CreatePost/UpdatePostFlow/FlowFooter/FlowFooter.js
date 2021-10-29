@@ -44,11 +44,11 @@ export default function FlowFooter ({ state, uppy, dispatch, query }: Props): No
 
   if (state.step !== STEPS.SUBMIT) {
     return (
-      <>
+      <Flex w='100%' bottom={0} position='sticky'>
         <FlowBackwardButton uppy={uppy} dispatch={dispatch} state={state} />
         <Spacer />
         <FlowForwardButton uppy={uppy} dispatch={dispatch} state={state} query={data} />
-      </>
+      </Flex>
     )
   }
   return (

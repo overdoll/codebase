@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 32b7ff8428e250b181a5aeed03e23fe2
+ * @relayHash 1ee591d31a8b0a0520e880788009f6b4
  */
 
 /* eslint-disable */
@@ -114,6 +114,32 @@ fragment BrandTagFragment on Query {
   }
 }
 
+fragment CategoryFragment on Post {
+  categories {
+    id
+    title
+  }
+}
+
+fragment CategoryTagFragment on Query {
+  categories {
+    edges {
+      node {
+        id
+        title
+        slug
+        thumbnail {
+          type
+          urls {
+            mimeType
+            url
+          }
+        }
+      }
+    }
+  }
+}
+
 fragment FlowFooterFragment on Post {
   ...FlowForwardButtonFragment
 }
@@ -138,11 +164,13 @@ fragment FlowStepsFragment on Post {
   ...ArrangeFragment
   ...AudienceFragment
   ...BrandFragment
+  ...CategoryFragment
 }
 
 fragment FlowStepsTagFragment on Query {
   ...AudienceTagFragment
   ...BrandTagFragment
+  ...CategoryTagFragment
 }
 
 fragment ProcessUploadsFragment on Post {
@@ -233,14 +261,18 @@ v7 = {
   "name": "title",
   "storageKey": null
 },
-v8 = {
+v8 = [
+  (v3/*: any*/),
+  (v7/*: any*/)
+],
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v9 = {
+v10 = {
   "alias": null,
   "args": null,
   "concreteType": "Resource",
@@ -263,6 +295,13 @@ v9 = {
       "storageKey": null
     }
   ],
+  "storageKey": null
+},
+v11 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "slug",
   "storageKey": null
 };
 return {
@@ -352,10 +391,7 @@ return {
             "kind": "LinkedField",
             "name": "audience",
             "plural": false,
-            "selections": [
-              (v3/*: any*/),
-              (v7/*: any*/)
-            ],
+            "selections": (v8/*: any*/),
             "storageKey": null
           },
           {
@@ -367,8 +403,18 @@ return {
             "plural": false,
             "selections": [
               (v3/*: any*/),
-              (v8/*: any*/)
+              (v9/*: any*/)
             ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Category",
+            "kind": "LinkedField",
+            "name": "categories",
+            "plural": true,
+            "selections": (v8/*: any*/),
             "storageKey": null
           }
         ],
@@ -400,7 +446,7 @@ return {
                 "selections": [
                   (v3/*: any*/),
                   (v7/*: any*/),
-                  (v9/*: any*/)
+                  (v10/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -435,15 +481,46 @@ return {
                 "plural": false,
                 "selections": [
                   (v3/*: any*/),
-                  (v8/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "slug",
-                    "storageKey": null
-                  },
-                  (v9/*: any*/)
+                  (v9/*: any*/),
+                  (v11/*: any*/),
+                  (v10/*: any*/)
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "CategoryConnection",
+        "kind": "LinkedField",
+        "name": "categories",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "CategoryEdge",
+            "kind": "LinkedField",
+            "name": "edges",
+            "plural": true,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Category",
+                "kind": "LinkedField",
+                "name": "node",
+                "plural": false,
+                "selections": [
+                  (v3/*: any*/),
+                  (v7/*: any*/),
+                  (v11/*: any*/),
+                  (v10/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -456,7 +533,7 @@ return {
     ]
   },
   "params": {
-    "id": "32b7ff8428e250b181a5aeed03e23fe2",
+    "id": "1ee591d31a8b0a0520e880788009f6b4",
     "metadata": {},
     "name": "CreatePostQuery",
     "operationKind": "query",
