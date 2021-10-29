@@ -19,24 +19,28 @@ type Props = {
 }
 
 const JoinAction = graphql`
-    mutation JoinMutation($input: GrantAuthenticationTokenInput!) {
-        grantAuthenticationToken(input: $input) {
-            authenticationToken {
-                id
-                email
-                sameSession
-            }
-        }
+  mutation JoinMutation($input: GrantAuthenticationTokenInput!) {
+    grantAuthenticationToken(input: $input) {
+      authenticationToken {
+        id
+        email
+        sameSession
+      }
     }
+  }
 `
 
 const JoinFragment = graphql`
-    fragment JoinFragment on AuthenticationToken {
-        email
-    }
+  fragment JoinFragment on AuthenticationToken {
+    email
+  }
 `
 
-export default function Join ({ queryRef, hadGrant, clearGrant }: Props): Node {
+export default function Join ({
+  queryRef,
+  hadGrant,
+  clearGrant
+}: Props): Node {
   const [commit, isInFlight] = useMutation(JoinAction)
 
   const data = useFragment(JoinFragment, queryRef)

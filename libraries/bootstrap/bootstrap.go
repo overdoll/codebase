@@ -3,7 +3,7 @@ package bootstrap
 import (
 	"context"
 	"log"
-	"os"
+	"overdoll/libraries/helpers"
 
 	"go.uber.org/zap"
 )
@@ -12,7 +12,7 @@ func NewBootstrap(ctx context.Context) {
 
 	logger, err := zap.NewProduction()
 
-	if os.Getenv("APP_DEBUG") == "true" {
+	if helpers.IsDebug() {
 		logger, err = zap.NewDevelopment()
 	}
 

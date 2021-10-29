@@ -5,6 +5,18 @@ type Language {
   locale: BCP47!
 }
 
+extend type Account {
+  """
+  The language of the account.
+
+  Note: this is the language that will be used to determine which emails should be sent where.
+
+  You should make sure that the root level "langauge" is the same when the user loads the app, so they get a
+  consistent experience. Use "UpdateLanguage" when the languages are mismatched.
+  """
+  Language: Language!
+}
+
 extend type Query {
   """
   List of all available languages
@@ -13,6 +25,10 @@ extend type Query {
 
   """
   The current language that is set
+
+  Note: this is only temporary, per-browser language
+
+  For a permanent language on an account level, see "Language" as part of viewer
   """
   language: Language!
 }
@@ -29,9 +45,31 @@ type UpdateLanguagePayload {
   language: Language
 }
 
+"""Input for updating the account language"""
+input UpdateAccountLanguageInput {
+  """The locale to update the language to"""
+  locale: BCP47!
+}
+
+"""Payload of the account language update"""
+type UpdateAccountLanguagePayload {
+  """The new language that is now set"""
+  language: Language
+
+  """The account that has the updated language"""
+  Account: Account
+}
+
 extend type Mutation {
   """
-  Update the current language
+  Update the current language.
   """
   updateLanguage(input: UpdateLanguageInput!): UpdateLanguagePayload
+
+  """
+  Update the language of the account.
+
+  Note: that this is only a value, and in order to see anything in the browser, you should use the "UpdateLanguage" mutation.
+  """
+  updateAccountLanguage(input: UpdateAccountLanguageInput!): UpdateAccountLanguagePayload
 }

@@ -7,7 +7,8 @@
       "moderator"
     ],
     "avatar": "1pcKa98Yh8UrjoN8b14yodwV8AM.png",
-    "verified": true
+    "verified": true,
+    "language": "en-US"
   },
   {
     "id": "1q7MJ5IyRTV0X4J27F3m5wGD5mj",
@@ -17,7 +18,8 @@
       "staff"
     ],
     "avatar": "1pcKaGUjkwnQmrD6v4XquttgnVo.png",
-    "verified": true
+    "verified": true,
+    "language": "en-US"
   },
   {
     "id": "1q7MIqqnkzew33q4elXuN1Ri27d",
@@ -25,7 +27,8 @@
     "email": "i2fhz.artist_unverified@inbox.testmail.app",
     "roles": [],
     "avatar": "1pcKaM9zDCZB3TTVYChSqsJZVqt.png",
-    "verified": false
+    "verified": false,
+    "language": "en-US"
   },
   {
     "id": "1q7MIw0U6TEpELH0FqnxrcXt3E0",
@@ -33,13 +36,15 @@
     "email": "i2fhz.artist_verified@inbox.testmail.app",
     "roles": [],
     "avatar": "1pcKZxqh6vKnun2ZBXxEKEi686B.png",
-    "verified": true
+    "verified": true,
+    "language": "en-US"
   },
   {
     "id": "1pcKibRoqTAUgmOiNpGLIrztM9R",
     "username": "testaccountforstuff",
     "email": "i2fhz.test-account@inbox.testmail.app",
     "roles": [],
-    "multi_factor_enabled": true
+    "multi_factor_enabled": true,
+    "language": "en-US"
   }
 ]

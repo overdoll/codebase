@@ -8,6 +8,8 @@ services:
     depends_on:
       - temporal
       - redis
+    environment:
+      - SENDGRID_API_KEY=${SENDGRID_API_KEY}
     ports:
       - 5030:8080
     deploy:

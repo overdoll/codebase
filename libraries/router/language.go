@@ -7,7 +7,7 @@ import (
 
 func LanguageToContext() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		req := translations.CookieToContext(c)
+		req := translations.LanguageToContext(c)
 		if req != nil {
 			c.Request = req
 		}

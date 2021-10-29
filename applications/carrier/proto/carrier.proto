@@ -22,4 +22,5 @@ message ConfirmAccountEmailRequest {
 message NewLoginTokenRequest {
   string email = 1;
   string token = 2;
+  string language = 3;
 }

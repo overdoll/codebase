@@ -2,7 +2,6 @@ package ports
 
 import (
 	"context"
-
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"overdoll/applications/eva/internal/app"

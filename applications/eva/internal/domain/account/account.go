@@ -3,7 +3,7 @@ package account
 import (
 	"errors"
 	"os"
-	"strings"
+	"overdoll/libraries/translations"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -35,6 +35,7 @@ type Account struct {
 	verified bool
 	avatar   string
 	locked   bool
+	language *translations.Language
 
 	lockedUntil  int
 	lockedReason LockReason
@@ -55,7 +56,7 @@ var (
 	ErrAccountNoRole         = errors.New("account does not have the assigned role")
 )
 
-func UnmarshalAccountFromDatabase(id, username, email string, roles []string, verified bool, avatar string, locked bool, lockedUntil int, lockedReason string, multiFactorEnabled bool) *Account {
+func UnmarshalAccountFromDatabase(id, username, email string, roles []string, verified bool, avatar, locale string, locked bool, lockedUntil int, lockedReason string, multiFactorEnabled bool) *Account {
 
 	var newRoles []AccountRole
 
@@ -72,12 +73,13 @@ func UnmarshalAccountFromDatabase(id, username, email string, roles []string, ve
 		avatar:             avatar,
 		lockedUntil:        lockedUntil,
 		locked:             locked,
+		language:           translations.NewLanguage(locale),
 		lockedReason:       LockReason(lockedReason),
 		multiFactorEnabled: multiFactorEnabled,
 	}
 }
 
-func NewAccount(id, username, email string) (*Account, error) {
+func NewAccount(lang *translations.Language, id, username, email string) (*Account, error) {
 
 	if err := validateUsername(username); err != nil {
 		return nil, err
@@ -86,7 +88,8 @@ func NewAccount(id, username, email string) (*Account, error) {
 	return &Account{
 		id:       id,
 		username: username,
-		email:    strings.ToLower(email),
+		language: lang,
+		email:    email,
 	}, nil
 }
 
@@ -100,6 +103,10 @@ func (a *Account) Email() string {
 
 func (a *Account) Username() string {
 	return a.username
+}
+
+func (a *Account) Language() *translations.Language {
+	return a.language
 }
 
 func (a *Account) Verified() bool {
@@ -230,6 +237,10 @@ func (a *Account) RolesAsString() []string {
 	}
 
 	return n
+}
+
+func (a *Account) UpdateLanguage(locale string) error {
+	return a.language.SetLocale(locale)
 }
 
 func (a *Account) UpdateEmail(emails []*Email, email string) error {

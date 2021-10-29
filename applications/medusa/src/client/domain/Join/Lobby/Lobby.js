@@ -21,23 +21,26 @@ type Props = {
 };
 
 const LobbyEmail = graphql`
-    mutation LobbyMutation {
-        reissueAuthenticationToken {
-            validation
-            authenticationToken {
-                email
-            }
-        }
+  mutation LobbyMutation {
+    reissueAuthenticationToken {
+      validation
+      authenticationToken {
+        email
+      }
     }
+  }
 `
 
 const LobbyFragment = graphql`
-    fragment LobbyFragment on AuthenticationToken {
-        email
-    }
+  fragment LobbyFragment on AuthenticationToken {
+    email
+  }
 `
 
-export default function Lobby ({ queryRef, refresh }: Props): Node {
+export default function Lobby ({
+  queryRef,
+  refresh
+}: Props): Node {
   const data = useFragment(LobbyFragment, queryRef)
 
   const [commit, isInFlight] = useMutation(LobbyEmail)

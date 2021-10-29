@@ -2,6 +2,7 @@ package service_test
 
 import (
 	"context"
+	"overdoll/applications/eva/internal/service"
 	"strings"
 	"testing"
 
@@ -16,16 +17,9 @@ import (
 	"overdoll/libraries/passport"
 )
 
-func getEmailConfirmation(t *testing.T, targetEmail string) string {
-
-	client := bootstrap.InitializeRedisSession()
-	sess := bootstrap.InitializeDatabaseSession()
-
-	accountRepo := adapters.NewAccountCassandraRedisRepository(sess, client)
-
-	res, err := accountRepo.GetEmailConfirmationByEmail(context.Background(), targetEmail)
+func getEmailConfirmationTokenFromEmail(t *testing.T, email string) string {
+	res, err := service.GetEmailConfirmationTokenFromEmail(email)
 	require.NoError(t, err)
-
 	return res
 }
 
@@ -117,7 +111,7 @@ func addAccountEmail(t *testing.T, client *graphql.Client, targetEmail string) A
 
 func confirmAccountEmail(t *testing.T, client *graphql.Client, email string) ConfirmAccountEmail {
 	// get confirmation key (this would be found in the email, but here we query our redis DB directly)
-	confirmationKey := getEmailConfirmation(t, email)
+	confirmationKey := getEmailConfirmationTokenFromEmail(t, email)
 
 	require.NotEmpty(t, confirmationKey)
 
@@ -141,7 +135,7 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 	testAccountId := "1pcKibRoqTAUgmOiNpGLIrztM9R"
 
 	// use passport with user
-	client, _, _ := getHttpClient(t, passport.FreshPassportWithAccount(testAccountId))
+	client, _ := getHttpClient(t, passport.FreshPassportWithAccount(testAccountId))
 
 	fake := TestUser{}
 
@@ -202,7 +196,7 @@ func TestAccountEmail_create_new_confirm_and_remove(t *testing.T) {
 	testAccountId := "1pcKibRoqTAUgmOiNpGLIrztM9R"
 
 	// use passport with user
-	client, _, _ := getHttpClient(t, passport.FreshPassportWithAccount(testAccountId))
+	client, _ := getHttpClient(t, passport.FreshPassportWithAccount(testAccountId))
 
 	fake := TestUser{}
 
@@ -251,7 +245,7 @@ func TestAccountUsername_modify(t *testing.T) {
 
 	testAccountId := "1pcKibRoqTAUgmOiNpGLIrztM9R"
 
-	client, _, _ := getHttpClient(t, passport.FreshPassportWithAccount(testAccountId))
+	client, _ := getHttpClient(t, passport.FreshPassportWithAccount(testAccountId))
 
 	fake := TestUser{}
 
@@ -308,7 +302,7 @@ func TestAccountSessions_view_and_revoke(t *testing.T) {
 
 	createSession(t, testAccountId, "user-agent", fakeSession.Ip)
 
-	client, _, _ := getHttpClient(t, passport.FreshPassportWithAccount(testAccountId))
+	client, _ := getHttpClient(t, passport.FreshPassportWithAccount(testAccountId))
 
 	// query account settings once more
 	settings := viewerAccountEmailUsernameSettings(t, client)

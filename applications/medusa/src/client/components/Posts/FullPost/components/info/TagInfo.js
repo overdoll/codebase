@@ -12,8 +12,16 @@ type Props = {
   children: Node,
 }
 
-export default function TagInfo ({ count, icon, children }: Props): Node {
-  const { isOpen, onOpen, onClose } = useDisclosure()
+export default function TagInfo ({
+  count,
+  icon,
+  children
+}: Props): Node {
+  const {
+    isOpen,
+    onOpen,
+    onClose
+  } = useDisclosure()
 
   return (
     <>
@@ -32,7 +40,8 @@ export default function TagInfo ({ count, icon, children }: Props): Node {
           }
         />
         <Flex
-          transform='translateX(25%) translateY(-25%)' userSelect='none' pointerEvents='none' w={6} h={6}
+          transform='translateX(25%) translateY(-25%)'
+          userSelect='none' pointerEvents='none' w={6} h={6}
           borderRadius='full' bg='gray.500' right={0}
           position='absolute' align='center' justify='center'
         >

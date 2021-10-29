@@ -1,12 +1,8 @@
 package translations
 
 import (
-	"context"
 	"errors"
-	"net/http"
-
 	"golang.org/x/text/language"
-	"overdoll/libraries/cookies"
 )
 
 const (
@@ -32,6 +28,16 @@ type Language struct {
 	tag language.Tag
 }
 
+func NewLanguage(locale string) *Language {
+	tag, err := language.Parse(locale)
+
+	if err != nil {
+		return &Language{tag: defaultLanguage}
+	}
+
+	return &Language{tag: tag}
+}
+
 func (p *Language) Locale() string {
 	return p.tag.String()
 }
@@ -52,19 +58,4 @@ func (p *Language) SetLocale(locale string) error {
 	}
 
 	return ErrInvalidLocale
-}
-
-// Mutate the language
-func (p *Language) MutateLanguage(ctx context.Context, updateFn func(language *Language) error) error {
-
-	err := updateFn(p)
-
-	if err != nil {
-		return err
-	}
-
-	return cookies.SetCookie(ctx, &http.Cookie{
-		Name:  cookie,
-		Value: p.Locale(),
-	})
 }

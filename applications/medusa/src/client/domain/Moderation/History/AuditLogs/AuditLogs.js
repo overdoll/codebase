@@ -55,7 +55,12 @@ export default function AuditLogs (props: Props): Node {
     props.query
   )
 
-  const { data, loadNext, hasNext, isLoadingNext } = usePaginationFragment<AuditLogsFragment$key,
+  const {
+    data,
+    loadNext,
+    hasNext,
+    isLoadingNext
+  } = usePaginationFragment<AuditLogsFragment$key,
     _>(
       AuditLogsGQL,
       queryData?.viewer

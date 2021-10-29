@@ -1,7 +1,7 @@
 package router
 
 import (
-	"os"
+	"overdoll/libraries/helpers"
 
 	"github.com/gin-gonic/gin"
 )
@@ -10,7 +10,7 @@ func NewGinRouter() *gin.Engine {
 
 	router := gin.Default()
 
-	if os.Getenv("APP_DEBUG") == "true" {
+	if helpers.IsDebug() {
 		gin.SetMode(gin.DebugMode)
 	} else {
 		gin.SetMode(gin.ReleaseMode)

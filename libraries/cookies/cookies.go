@@ -12,8 +12,9 @@ import (
 )
 
 const (
-	CookieKey      = "COOKIE_KEY"
-	CookieBlockKey = "COOKIE_BLOCK_KEY"
+	CookieKey         = "COOKIE_KEY"
+	CookieBlockKey    = "COOKIE_BLOCK_KEY"
+	CookieInsecureKey = "COOKIE_INSECURE"
 )
 
 var (
@@ -30,7 +31,6 @@ var (
 func SetCookie(ctx context.Context, cookie *http.Cookie) error {
 
 	cookieKey := os.Getenv(CookieKey)
-	encrypt := cookieKey != ""
 
 	gc := helpers.GinContextFromContext(ctx)
 
@@ -42,23 +42,22 @@ func SetCookie(ctx context.Context, cookie *http.Cookie) error {
 	cookie.HttpOnly = true
 
 	// only secure if cookies are encrypted
-	cookie.Secure = encrypt
+	cookie.Secure = true
 	cookie.Path = "/"
 
-	if encrypt {
-		var secureCookie = securecookie.New([]byte(cookieKey), []byte(os.Getenv(CookieBlockKey)))
-		encodedValue, err := secureCookie.Encode(name, value)
-
-		if err != nil {
-			zap.S().Errorf("failed to encode cookie: %s", err)
-			return ErrCookieError
-		}
-
-		cookie.Value = encodedValue
-
-	} else {
-		cookie.Value = value
+	if os.Getenv(CookieInsecureKey) == "true" {
+		cookie.Secure = false
 	}
+
+	var secureCookie = securecookie.New([]byte(cookieKey), []byte(os.Getenv(CookieBlockKey)))
+	encodedValue, err := secureCookie.Encode(name, value)
+
+	if err != nil {
+		zap.S().Errorf("failed to encode cookie: %s", err)
+		return ErrCookieError
+	}
+
+	cookie.Value = encodedValue
 
 	http.SetCookie(gc.Writer, cookie)
 
@@ -69,7 +68,6 @@ func SetCookie(ctx context.Context, cookie *http.Cookie) error {
 func ReadCookie(ctx context.Context, name string) (*http.Cookie, error) {
 
 	cookieKey := os.Getenv(CookieKey)
-	encrypt := cookieKey != ""
 
 	gc := helpers.GinContextFromContext(ctx)
 
@@ -86,21 +84,17 @@ func ReadCookie(ctx context.Context, name string) (*http.Cookie, error) {
 	}
 
 	var value string
-	if encrypt {
-		secureCookie := securecookie.New([]byte(cookieKey), []byte(os.Getenv(CookieBlockKey)))
+	secureCookie := securecookie.New([]byte(cookieKey), []byte(os.Getenv(CookieBlockKey)))
 
-		// no restriction on maxAge
-		secureCookie.MaxAge(0)
-		if err = secureCookie.Decode(name, currentCookie.Value, &value); err == nil {
-			currentCookie.Value = value
-			return currentCookie, nil
-		}
-
-		zap.S().Errorf("failed to decode cookie: %s", err)
-		return nil, ErrCookieError
+	// no restriction on maxAge
+	secureCookie.MaxAge(0)
+	if err = secureCookie.Decode(name, currentCookie.Value, &value); err == nil {
+		currentCookie.Value = value
+		return currentCookie, nil
 	}
 
-	return currentCookie, nil
+	zap.S().Errorf("failed to decode cookie: %s", err)
+	return nil, ErrCookieError
 }
 
 func DeleteCookie(ctx context.Context, name string) {
