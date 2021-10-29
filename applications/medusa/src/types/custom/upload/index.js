@@ -115,7 +115,7 @@ export type Event =
   | 'progress'
   | 'characters'
   | 'audience'
-  | 'brands'
+  | 'brand'
   | 'categories'
   | 'submit'
   | 'file_limit'
@@ -129,7 +129,7 @@ export type State = {
   step: ?Step,
   content: Array<Content>,
   progress: Progress,
-  brands: Brands,
+  brand: string,
   audience: string,
   characters: Characters,
   categories: Categories,

@@ -65,6 +65,19 @@ const reducer: {} = (state: State, action: Action): State => {
         [act]: action.value
       }
     }
+    case EVENTS.BRAND: {
+      if (action.remove) {
+        return {
+          ...state,
+          [act]: null
+        }
+      }
+
+      return {
+        ...state,
+        [act]: action.value
+      }
+    }
     case EVENTS.CLEAR_CONTENT: {
       return { ...state, content: null }
     }

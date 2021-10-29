@@ -8,6 +8,7 @@
 
 import type { ReaderFragment } from 'relay-runtime';
 import type { useUpdateAudienceFragment$ref } from "./useUpdateAudienceFragment.graphql";
+import type { useUpdateBrandFragment$ref } from "./useUpdateBrandFragment.graphql";
 import type { useUpdateContentFragment$ref } from "./useUpdateContentFragment.graphql";
 import type { FragmentReference } from "relay-runtime";
 declare export opaque type FlowForwardButtonFragment$ref: FragmentReference;
@@ -20,7 +21,10 @@ export type FlowForwardButtonFragment = {|
   +audience: ?{|
     +id: string
   |},
-  +$fragmentRefs: useUpdateContentFragment$ref & useUpdateAudienceFragment$ref,
+  +brand: ?{|
+    +id: string
+  |},
+  +$fragmentRefs: useUpdateContentFragment$ref & useUpdateAudienceFragment$ref & useUpdateBrandFragment$ref,
   +$refType: FlowForwardButtonFragment$ref,
 |};
 export type FlowForwardButtonFragment$data = FlowForwardButtonFragment;
@@ -70,6 +74,16 @@ return {
       "storageKey": null
     },
     {
+      "alias": null,
+      "args": null,
+      "concreteType": "Brand",
+      "kind": "LinkedField",
+      "name": "brand",
+      "plural": false,
+      "selections": (v1/*: any*/),
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "useUpdateContentFragment"
@@ -78,6 +92,11 @@ return {
       "args": null,
       "kind": "FragmentSpread",
       "name": "useUpdateAudienceFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "useUpdateBrandFragment"
     }
   ],
   "type": "Post",
@@ -85,5 +104,5 @@ return {
 };
 })();
 // prettier-ignore
-(node: any).hash = '457fbfec029b2b8ae40a7a03ce837d4c';
+(node: any).hash = '99603b08ad5f057fccf9beff45d7170c';
 module.exports = node;

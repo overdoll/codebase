@@ -11,7 +11,7 @@ import { StringParam, useQueryParam } from 'use-query-params'
 import { graphql, useMutation } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import type { FlowForwardButtonFragment$key } from '@//:artifacts/FlowForwardButtonFragment.graphql'
-import { useUpdateContent, useUpdateAudience } from './queries'
+import { useUpdateContent, useUpdateAudience, useUpdateBrand } from './queries'
 
 type Props = {
   uppy: Uppy,
@@ -29,8 +29,12 @@ const FlowForwardButtonFragmentGQL = graphql`
     audience {
       id
     }
+    brand {
+      id
+    }
     ...useUpdateContentFragment
     ...useUpdateAudienceFragment
+    ...useUpdateBrandFragment
   }
 `
 
@@ -40,6 +44,7 @@ export default function FlowForwardButton ({ uppy, dispatch, state, isDisabled, 
 
   const [onUpdateContent, isUpdatingContent] = useUpdateContent({ uppy, dispatch, state, query: data })
   const [onUpdateAudience, isUpdatingAudience] = useUpdateAudience({ uppy, dispatch, state, query: data })
+  const [onUpdateBrand, isUpdatingBrand] = useUpdateBrand({ uppy, dispatch, state, query: data })
 
   const contentData = state.content || data.content
 
@@ -63,6 +68,10 @@ export default function FlowForwardButton ({ uppy, dispatch, state, isDisabled, 
         dispatch({ type: EVENTS.STEP, value: STEPS.BRAND })
         break
       case STEPS.BRAND:
+        if (state.brand !== data.brand?.id) {
+          onUpdateBrand()
+          break
+        }
         dispatch({ type: EVENTS.STEP, value: STEPS.CATEGORY })
         break
       case STEPS.CATEGORY:
@@ -89,6 +98,9 @@ export default function FlowForwardButton ({ uppy, dispatch, state, isDisabled, 
       case STEPS.AUDIENCE:
         // Check if there are no audience selections
         return (!state.audience)
+      case STEPS.BRAND:
+        // Check if there are no brand selections
+        return (!state.brand)
       default:
         return false
     }
@@ -103,7 +115,7 @@ export default function FlowForwardButton ({ uppy, dispatch, state, isDisabled, 
   }
 
   const buttonLoading = () => {
-    return isUpdatingContent || isUpdatingAudience
+    return isUpdatingContent || isUpdatingAudience || isUpdatingBrand
   }
 
   switch (state.step) {

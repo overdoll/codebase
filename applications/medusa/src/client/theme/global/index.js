@@ -54,6 +54,9 @@ export default function (props) {
     },
     '::-moz-selection': {
       background: 'gray.300'
+    },
+    'chakra-progress__track': {
+      stroke: 'gray.700'
     }
   }
 }

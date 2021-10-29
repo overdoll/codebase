@@ -38,7 +38,7 @@ const baseStyleLabel = {
 function baseStyleTrack (props) {
   return {
     borderRadius: 'md',
-    bg: mode('gray.300', 'gray.500')(props)
+    bg: mode('gray.300', 'gray.700')(props)
   }
 }
 

@@ -68,7 +68,15 @@
         },
         "brand": {
           "header": "Step 3",
-          "subheader": "Select a brand"
+          "subheader": "Select a brand",
+          "selector": {
+            "title": "What is the brand?",
+            "description": "A brand is the artist or group of artists that created the content that belongs to the post."
+          },
+          "query": {
+            "error": "There was an error saving the post brand"
+          },
+          "required_prompt": "Brands are an easy way to manage your content and allow you to have a unique link."
         },
         "category": {
           "header": "Step 4",
