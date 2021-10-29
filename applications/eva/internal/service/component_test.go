@@ -35,6 +35,7 @@ type AccountModified struct {
 	Username    string
 	IsStaff     bool
 	IsModerator bool
+	Lock        *types.AccountLock
 }
 
 type AccountByUsername struct {
@@ -75,7 +76,7 @@ func verifyAuthenticationToken(t *testing.T, client *graphql.Client, cookie stri
 		"input": types.VerifyAuthenticationTokenInput{AuthenticationTokenID: cookie},
 	})
 
-	require.NoError(t, err)
+	require.NoError(t, err, "no error for verifying authentication token")
 
 	return redeemCookie
 }

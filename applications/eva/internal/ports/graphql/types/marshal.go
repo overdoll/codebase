@@ -33,6 +33,7 @@ func MarshalAccountToGraphQL(result *account.Account) *Account {
 		Language:    MarshalLanguageToGraphQL(result.Language()),
 		IsStaff:     result.IsStaff(),
 		IsModerator: result.IsModerator(),
+		Lock:        MarshalAccountLockToGraphQL(result),
 	}
 }
 
@@ -101,8 +102,6 @@ func MarshalAccountLockToGraphQL(result *account.Account) *AccountLock {
 		return nil
 	}
 
-	var lock *AccountLock
-
 	if result.IsLocked() {
 		var reason AccountLockReason
 
@@ -110,13 +109,13 @@ func MarshalAccountLockToGraphQL(result *account.Account) *AccountLock {
 			reason = AccountLockReasonPostInfraction
 		}
 
-		lock = &AccountLock{
+		return &AccountLock{
 			Expires: result.LockedUntil(),
 			Reason:  reason,
 		}
 	}
 
-	return lock
+	return nil
 }
 
 func MarshalAccountEmailToGraphQL(result *account.Email) *AccountEmail {
@@ -174,15 +173,14 @@ func MarshalAuthenticationTokenToGraphQL(ctx context.Context, result *token.Auth
 	// this will only be populated if the token is verified anyways
 	if result.Verified() {
 
-		var multiFactorTypes []MultiFactorType
-
-		if result.IsTOTPRequired() {
-			multiFactorTypes = append(multiFactorTypes, MultiFactorTypeTotp)
+		accountStatus = &AuthenticationTokenAccountStatus{
+			Registered: result.Registered(),
 		}
 
-		accountStatus = &AuthenticationTokenAccountStatus{
-			Registered:  result.Registered(),
-			MultiFactor: multiFactorTypes,
+		if result.IsTOTPRequired() {
+			accountStatus.MultiFactor = &MultiFactor{
+				Totp: true,
+			}
 		}
 	}
 

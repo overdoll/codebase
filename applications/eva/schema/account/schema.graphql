@@ -21,7 +21,7 @@ type Account implements Node @key(fields: "id") {
   isModerator: Boolean!
 
   """The details of the account lock"""
-  lock: AccountLock @goField(forceResolver: true)
+  lock: AccountLock
 }
 
 """Edge of the account"""

@@ -21,7 +21,7 @@ const (
 )
 
 const (
-	PostInfraction LockReason = "post_infraction"
+	PostInfraction LockReason = "POST_INFRACTION"
 )
 
 type Account struct {
@@ -34,9 +34,9 @@ type Account struct {
 	roles    []AccountRole
 	verified bool
 	avatar   string
-	locked   bool
 	language *translations.Language
 
+	locked       bool
 	lockedUntil  int
 	lockedReason LockReason
 

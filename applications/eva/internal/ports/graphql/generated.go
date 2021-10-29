@@ -241,6 +241,10 @@ type ComplexityRoot struct {
 		ID      func(childComplexity int) int
 	}
 
+	MultiFactor struct {
+		Totp func(childComplexity int) int
+	}
+
 	MultiFactorTotp struct {
 		ImageSrc func(childComplexity int) int
 		Secret   func(childComplexity int) int
@@ -352,8 +356,6 @@ type ComplexityRoot struct {
 }
 
 type AccountResolver interface {
-	Lock(ctx context.Context, obj *types.Account) (*types.AccountLock, error)
-
 	Usernames(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountUsernameConnection, error)
 	Emails(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountEmailConnection, error)
 	Sessions(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountSessionConnection, error)
@@ -1086,6 +1088,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Moderator.ID(childComplexity), true
 
+	case "MultiFactor.totp":
+		if e.complexity.MultiFactor.Totp == nil {
+			break
+		}
+
+		return e.complexity.MultiFactor.Totp(childComplexity), true
+
 	case "MultiFactorTotp.imageSrc":
 		if e.complexity.MultiFactorTotp.ImageSrc == nil {
 			break
@@ -1694,7 +1703,7 @@ var sources = []*ast.Source{
   isModerator: Boolean!
 
   """The details of the account lock"""
-  lock: AccountLock @goField(forceResolver: true)
+  lock: AccountLock
 }
 
 """Edge of the account"""
@@ -2350,8 +2359,9 @@ extend type Mutation {
   revokeAccountStaffRole(input: RevokeAccountStaffRole!): RevokeAccountStaffRolePayload
 }
 `, BuiltIn: false},
-	{Name: "schema/token/schema.graphql", Input: `enum MultiFactorType {
-  TOTP
+	{Name: "schema/token/schema.graphql", Input: `"""Types of multi factor enabled for this account"""
+type MultiFactor {
+  totp: Boolean!
 }
 
 type AuthenticationTokenAccountStatus {
@@ -2359,7 +2369,7 @@ type AuthenticationTokenAccountStatus {
   registered: Boolean!
 
   """If multi-factor is enabled for this account"""
-  multiFactor: [MultiFactorType!]
+  multiFactor: MultiFactor
 }
 
 """Authentication token. Used for logging in."""
@@ -3565,14 +3575,14 @@ func (ec *executionContext) _Account_lock(ctx context.Context, field graphql.Col
 		Object:     "Account",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Account().Lock(rctx, obj)
+		return obj.Lock, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5506,9 +5516,9 @@ func (ec *executionContext) _AuthenticationTokenAccountStatus_multiFactor(ctx co
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.([]types.MultiFactorType)
+	res := resTmp.(*types.MultiFactor)
 	fc.Result = res
-	return ec.marshalOMultiFactorType2ᚕoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐMultiFactorTypeᚄ(ctx, field.Selections, res)
+	return ec.marshalOMultiFactor2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐMultiFactor(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _ConfirmAccountEmailPayload_validation(ctx context.Context, field graphql.CollectedField, obj *types.ConfirmAccountEmailPayload) (ret graphql.Marshaler) {
@@ -6406,6 +6416,41 @@ func (ec *executionContext) _Moderator_account(ctx context.Context, field graphq
 	res := resTmp.(*types.Account)
 	fc.Result = res
 	return ec.marshalNAccount2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _MultiFactor_totp(ctx context.Context, field graphql.CollectedField, obj *types.MultiFactor) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "MultiFactor",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Totp, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _MultiFactorTotp_secret(ctx context.Context, field graphql.CollectedField, obj *types.MultiFactorTotp) (ret graphql.Marshaler) {
@@ -10150,16 +10195,7 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 				atomic.AddUint32(&invalids, 1)
 			}
 		case "lock":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Account_lock(ctx, field, obj)
-				return res
-			})
+			out.Values[i] = ec._Account_lock(ctx, field, obj)
 		case "language":
 			out.Values[i] = ec._Account_language(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -11331,6 +11367,33 @@ func (ec *executionContext) _Moderator(ctx context.Context, sel ast.SelectionSet
 			}
 		case "account":
 			out.Values[i] = ec._Moderator_account(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var multiFactorImplementors = []string{"MultiFactor"}
+
+func (ec *executionContext) _MultiFactor(ctx context.Context, sel ast.SelectionSet, obj *types.MultiFactor) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, multiFactorImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("MultiFactor")
+		case "totp":
+			out.Values[i] = ec._MultiFactor_totp(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -12751,16 +12814,6 @@ func (ec *executionContext) marshalNModerator2ᚖoverdollᚋapplicationsᚋeva�
 	return ec._Moderator(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNMultiFactorType2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐMultiFactorType(ctx context.Context, v interface{}) (types.MultiFactorType, error) {
-	var res types.MultiFactorType
-	err := res.UnmarshalGQL(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNMultiFactorType2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐMultiFactorType(ctx context.Context, sel ast.SelectionSet, v types.MultiFactorType) graphql.Marshaler {
-	return v
-}
-
 func (ec *executionContext) marshalNPageInfo2ᚖoverdollᚋlibrariesᚋgraphqlᚋrelayᚐPageInfo(ctx context.Context, sel ast.SelectionSet, v *relay.PageInfo) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -13491,75 +13544,18 @@ func (ec *executionContext) marshalOLanguage2ᚖoverdollᚋapplicationsᚋevaᚋ
 	return ec._Language(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalOMultiFactor2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐMultiFactor(ctx context.Context, sel ast.SelectionSet, v *types.MultiFactor) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._MultiFactor(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalOMultiFactorTotp2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐMultiFactorTotp(ctx context.Context, sel ast.SelectionSet, v *types.MultiFactorTotp) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._MultiFactorTotp(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalOMultiFactorType2ᚕoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐMultiFactorTypeᚄ(ctx context.Context, v interface{}) ([]types.MultiFactorType, error) {
-	if v == nil {
-		return nil, nil
-	}
-	var vSlice []interface{}
-	if v != nil {
-		if tmp1, ok := v.([]interface{}); ok {
-			vSlice = tmp1
-		} else {
-			vSlice = []interface{}{v}
-		}
-	}
-	var err error
-	res := make([]types.MultiFactorType, len(vSlice))
-	for i := range vSlice {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNMultiFactorType2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐMultiFactorType(ctx, vSlice[i])
-		if err != nil {
-			return nil, err
-		}
-	}
-	return res, nil
-}
-
-func (ec *executionContext) marshalOMultiFactorType2ᚕoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐMultiFactorTypeᚄ(ctx context.Context, sel ast.SelectionSet, v []types.MultiFactorType) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNMultiFactorType2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐMultiFactorType(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-	return ret
 }
 
 func (ec *executionContext) marshalOReissueAuthenticationTokenPayload2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐReissueAuthenticationTokenPayload(ctx context.Context, sel ast.SelectionSet, v *types.ReissueAuthenticationTokenPayload) graphql.Marshaler {

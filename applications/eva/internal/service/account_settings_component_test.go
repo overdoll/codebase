@@ -19,7 +19,7 @@ import (
 
 func getEmailConfirmationTokenFromEmail(t *testing.T, email string) string {
 	res, err := service.GetEmailConfirmationTokenFromEmail(email)
-	require.NoError(t, err)
+	require.NoError(t, err, "no error for grabbing confirmation token")
 	return res
 }
 
@@ -89,7 +89,7 @@ type ViewerAccountEmailUsernameSettings struct {
 func viewerAccountEmailUsernameSettings(t *testing.T, client *graphql.Client) ViewerAccountEmailUsernameSettings {
 	var settings ViewerAccountEmailUsernameSettings
 	err := client.Query(context.Background(), &settings, nil)
-	require.NoError(t, err)
+	require.NoError(t, err, "no error for grabbing viewer account email settings")
 	return settings
 }
 
@@ -101,10 +101,10 @@ func addAccountEmail(t *testing.T, client *graphql.Client, targetEmail string) A
 		"input": types.AddAccountEmailInput{Email: targetEmail},
 	})
 
-	require.NoError(t, err)
-	require.NotNil(t, addAccountEmail.AddAccountEmail.AccountEmail)
-	require.Equal(t, addAccountEmail.AddAccountEmail.AccountEmail.Email, targetEmail)
-	require.Equal(t, addAccountEmail.AddAccountEmail.AccountEmail.Status, types.AccountEmailStatusUnconfirmed)
+	require.NoError(t, err, "no error for adding account email")
+	require.NotNil(t, addAccountEmail.AddAccountEmail.AccountEmail, "account email should be available")
+	require.Equal(t, addAccountEmail.AddAccountEmail.AccountEmail.Email, targetEmail, "emails should match")
+	require.Equal(t, addAccountEmail.AddAccountEmail.AccountEmail.Status, types.AccountEmailStatusUnconfirmed, "email should be unconfirmed")
 
 	return addAccountEmail
 }
@@ -122,8 +122,8 @@ func confirmAccountEmail(t *testing.T, client *graphql.Client, email string) Con
 		"input": types.ConfirmAccountEmailInput{ID: confirmationKey},
 	})
 
-	require.NoError(t, err)
-	require.NotNil(t, confirmAccountEmail.ConfirmAccountEmail.AccountEmail)
+	require.NoError(t, err, "no error for confirming account")
+	require.NotNil(t, confirmAccountEmail.ConfirmAccountEmail.AccountEmail, "email should be available")
 
 	return confirmAccountEmail
 }
@@ -141,7 +141,7 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 
 	err := faker.FakeData(&fake)
 
-	require.NoError(t, err)
+	require.NoError(t, err, "no error generating fake account")
 
 	targetEmail := strings.ToLower(fake.Email)
 
@@ -160,7 +160,7 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 		}
 	}
 
-	require.True(t, foundConfirmedEmail)
+	require.True(t, foundConfirmedEmail, "should have found a confirmed account email in list")
 
 	var makeEmailPrimary UpdateAccountEmailStatusToPrimary
 
@@ -169,10 +169,10 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 		"input": types.UpdateAccountEmailStatusToPrimaryInput{AccountEmailID: confirmAccountEmail.ConfirmAccountEmail.AccountEmail.ID},
 	})
 
-	require.NoError(t, err)
-	require.NotNil(t, makeEmailPrimary.UpdateAccountEmailStatusToPrimary.PrimaryAccountEmail)
+	require.NoError(t, err, "no error for updating status to primary")
+	require.NotNil(t, makeEmailPrimary.UpdateAccountEmailStatusToPrimary.PrimaryAccountEmail, "email is available")
 
-	require.Equal(t, targetEmail, makeEmailPrimary.UpdateAccountEmailStatusToPrimary.PrimaryAccountEmail.Email)
+	require.Equal(t, targetEmail, makeEmailPrimary.UpdateAccountEmailStatusToPrimary.PrimaryAccountEmail.Email, "emails should be equal")
 
 	// query account settings once more
 	settings = viewerAccountEmailUsernameSettings(t, client)
@@ -186,7 +186,7 @@ func TestAccountEmail_create_new_and_confirm_make_primary(t *testing.T) {
 		}
 	}
 
-	require.True(t, foundPrimaryEmail)
+	require.True(t, foundPrimaryEmail, "should have found an email that is primary")
 }
 
 // adds an email
@@ -231,7 +231,7 @@ func TestAccountEmail_create_new_confirm_and_remove(t *testing.T) {
 		}
 	}
 
-	require.False(t, foundNewEmail)
+	require.False(t, foundNewEmail, "should have found an email as part of the viewer's emails")
 }
 
 type UpdateAccountUsernameAndRetainPrevious struct {
@@ -276,10 +276,10 @@ func TestAccountUsername_modify(t *testing.T) {
 		}
 	}
 
-	require.True(t, foundNewUsername)
+	require.True(t, foundNewUsername, "should have found a username in the list")
 
 	// make sure that the username is modified as well for the "authentication" query
-	require.Equal(t, targetUsername, settings.Viewer.Username)
+	require.Equal(t, targetUsername, settings.Viewer.Username, "username is modified")
 }
 
 type TestSession struct {
@@ -318,7 +318,7 @@ func TestAccountSessions_view_and_revoke(t *testing.T) {
 		}
 	}
 
-	require.True(t, foundSession)
+	require.True(t, foundSession, "should have found a matching session")
 
 	var revokeAccountSession RevokeAccountSession
 
@@ -341,5 +341,5 @@ func TestAccountSessions_view_and_revoke(t *testing.T) {
 	}
 
 	// make sure its false
-	require.False(t, foundSession)
+	require.False(t, foundSession, "session should not have been found")
 }

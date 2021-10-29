@@ -237,7 +237,7 @@ type AuthenticationTokenAccountStatus struct {
 	// When verified, whether or not there is an account belonging to this token.
 	Registered bool `json:"registered"`
 	// If multi-factor is enabled for this account
-	MultiFactor []MultiFactorType `json:"multiFactor"`
+	MultiFactor *MultiFactor `json:"multiFactor"`
 }
 
 // Input for confirming the account email
@@ -368,6 +368,11 @@ type Moderator struct {
 }
 
 func (Moderator) IsEntity() {}
+
+// Types of multi factor enabled for this account
+type MultiFactor struct {
+	Totp bool `json:"totp"`
+}
 
 // TOTP secret + image combination
 type MultiFactorTotp struct {
@@ -927,45 +932,6 @@ func (e *GrantAuthenticationTokenValidation) UnmarshalGQL(v interface{}) error {
 }
 
 func (e GrantAuthenticationTokenValidation) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
-}
-
-type MultiFactorType string
-
-const (
-	MultiFactorTypeTotp MultiFactorType = "TOTP"
-)
-
-var AllMultiFactorType = []MultiFactorType{
-	MultiFactorTypeTotp,
-}
-
-func (e MultiFactorType) IsValid() bool {
-	switch e {
-	case MultiFactorTypeTotp:
-		return true
-	}
-	return false
-}
-
-func (e MultiFactorType) String() string {
-	return string(e)
-}
-
-func (e *MultiFactorType) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = MultiFactorType(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid MultiFactorType", str)
-	}
-	return nil
-}
-
-func (e MultiFactorType) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

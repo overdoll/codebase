@@ -19,22 +19,6 @@ type AccountResolver struct {
 	App *app.Application
 }
 
-func (r AccountResolver) Lock(ctx context.Context, obj *types.Account) (*types.AccountLock, error) {
-
-	acc, err := r.App.Queries.AccountById.Handle(ctx, obj.ID.GetID())
-
-	if err != nil {
-
-		if err == account.ErrAccountNotFound {
-			return nil, nil
-		}
-
-		return nil, err
-	}
-
-	return types.MarshalAccountLockToGraphQL(acc), nil
-}
-
 func (r AccountResolver) Emails(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountEmailConnection, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
