@@ -1,0 +1,120 @@
+diff --git a/query.go b/query.go
+index a6b6aac..97cf3a5 100644
+--- a/query.go
++++ b/query.go
+@@ -3,6 +3,7 @@ package graphql
+ import (
+ 	"bytes"
+ 	"encoding/json"
++	"fmt"
+ 	"io"
+ 	"reflect"
+ 	"sort"
+@@ -88,16 +89,23 @@ func writeArgumentType(w io.Writer, t reflect.Type, value bool) {
+ // E.g., struct{Foo Int, BarBaz *Boolean} -> "{foo,barBaz}".
+ func query(v interface{}) string {
+ 	var buf bytes.Buffer
+-	writeQuery(&buf, reflect.TypeOf(v), false)
++	writeQuery(&buf, reflect.TypeOf(v), map[edge]int{}, false)
+ 	return buf.String()
+ }
+
++// edge is simply a tuple to key the visitation map that we use to keep
++// writeQuery from recursing without bound on recursive types.
++type edge struct {
++	t  reflect.Type
++	fn int
++}
++
+ // writeQuery writes a minified query for t to w.
+ // If inline is true, the struct fields of t are inlined into parent struct.
+-func writeQuery(w io.Writer, t reflect.Type, inline bool) {
++func writeQuery(w io.Writer, t reflect.Type, visited map[edge]int, inline bool) {
+ 	switch t.Kind() {
+ 	case reflect.Ptr, reflect.Slice:
+-		writeQuery(w, t.Elem(), false)
++		writeQuery(w, t.Elem(), visited, false)
+ 	case reflect.Struct:
+ 		// If the type implements json.Unmarshaler, it's a scalar. Don't expand it.
+ 		if reflect.PtrTo(t).Implements(jsonUnmarshaler) {
+@@ -111,6 +119,14 @@ func writeQuery(w io.Writer, t reflect.Type, inline bool) {
+ 				io.WriteString(w, ",")
+ 			}
+ 			f := t.Field(i)
++
++			// Check how many times we've traversed this before (recursion limit).
++			edge := edge{t, i}
++			visited[edge]++
++			if visited[edge] > 1 {
++				panic(fmt.Errorf("cycle found"))
++			}
++
+ 			value, ok := f.Tag.Lookup("graphql")
+ 			inlineField := f.Anonymous && !ok
+ 			if !inlineField {
+@@ -120,7 +136,8 @@ func writeQuery(w io.Writer, t reflect.Type, inline bool) {
+ 					io.WriteString(w, ident.ParseMixedCaps(f.Name).ToLowerCamelCase())
+ 				}
+ 			}
+-			writeQuery(w, f.Type, inlineField)
++			writeQuery(w, f.Type, visited, inlineField)
++			visited[edge]--
+ 		}
+ 		if !inline {
+ 			io.WriteString(w, "}")
+diff --git a/query_test.go b/query_test.go
+index 4de8cb5..e195fb2 100644
+--- a/query_test.go
++++ b/query_test.go
+@@ -1,6 +1,7 @@
+ package graphql
+
+ import (
++	"fmt"
+ 	"net/url"
+ 	"testing"
+ 	"time"
+@@ -322,6 +323,40 @@ func TestQueryArguments(t *testing.T) {
+ 	}
+ }
+
++func TestConstructRecursiveQuery(t *testing.T) {
++	t.Run("recursive types should panic", func(t *testing.T) {
++		type Recurser struct {
++			Children []Recurser
++		}
++		err := gatherPanic(func() {
++			got := query(Recurser{})
++			if got != "" {
++				t.Errorf("\ngot:  %q\nwant: an error!\n", got)
++			}
++		})
++		expect := fmt.Errorf("cycle found")
++		if err.Error() != expect.Error() {
++			t.Errorf("\ngot err:  %q\nwant err: %q\n", err, expect)
++		}
++	})
++}
++
++func gatherPanic(fn func()) (err error) {
++	defer func() {
++		rcvr := recover()
++		switch e := rcvr.(type) {
++		case nil:
++			err = nil
++		case error:
++			err = e
++		default:
++			err = fmt.Errorf("non-error panic: %v", e)
++		}
++	}()
++	fn()
++	return
++}
++
+ // Custom GraphQL types for testing.
+ type (
+ 	// DateTime is an ISO-8601 encoded UTC date.
+--
+2.25.1
+
