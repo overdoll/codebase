@@ -197,11 +197,5 @@ func (r AccountResolver) RecoveryCodes(ctx context.Context, obj *types.Account) 
 		return nil, err
 	}
 
-	var recoveryCodes []*types.AccountMultiFactorRecoveryCode
-
-	for _, code := range codes {
-		recoveryCodes = append(recoveryCodes, &types.AccountMultiFactorRecoveryCode{Code: code.Code()})
-	}
-
-	return recoveryCodes, nil
+	return types.MarshalRecoveryCodesToGraphql(ctx, codes), nil
 }

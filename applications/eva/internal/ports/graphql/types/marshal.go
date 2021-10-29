@@ -3,8 +3,8 @@ package types
 import (
 	"context"
 	"crypto/sha256"
-
 	"overdoll/applications/eva/internal/domain/account"
+	"overdoll/applications/eva/internal/domain/multi_factor"
 	"overdoll/applications/eva/internal/domain/session"
 	"overdoll/applications/eva/internal/domain/token"
 	"overdoll/libraries/cookies"
@@ -12,6 +12,7 @@ import (
 	"overdoll/libraries/helpers"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/translations"
+	"sort"
 )
 
 func MarshalLanguageToGraphQL(result *translations.Language) *Language {
@@ -386,4 +387,20 @@ func MarshalAccountSessionToGraphQLConnection(results []*session.Session, cursor
 	}
 
 	return conn
+}
+
+func MarshalRecoveryCodesToGraphql(ctx context.Context, codes []*multi_factor.RecoveryCode) []*AccountMultiFactorRecoveryCode {
+
+	// sort so the order is consistent
+	sort.SliceStable(codes, func(i, j int) bool {
+		return codes[i].Code() < codes[j].Code()
+	})
+
+	var recoveryCodes []*AccountMultiFactorRecoveryCode
+
+	for _, code := range codes {
+		recoveryCodes = append(recoveryCodes, &AccountMultiFactorRecoveryCode{Code: code.Code()})
+	}
+
+	return recoveryCodes
 }

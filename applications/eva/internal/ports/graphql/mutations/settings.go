@@ -275,13 +275,9 @@ func (r *MutationResolver) GenerateAccountMultiFactorRecoveryCodes(ctx context.C
 		return nil, err
 	}
 
-	var recoveryCodes []*types.AccountMultiFactorRecoveryCode
-
-	for _, code := range codes {
-		recoveryCodes = append(recoveryCodes, &types.AccountMultiFactorRecoveryCode{Code: code.Code()})
-	}
-
-	return &types.GenerateAccountMultiFactorRecoveryCodesPayload{AccountMultiFactorRecoveryCodes: recoveryCodes}, nil
+	return &types.GenerateAccountMultiFactorRecoveryCodesPayload{
+		AccountMultiFactorRecoveryCodes: types.MarshalRecoveryCodesToGraphql(ctx, codes),
+	}, nil
 }
 
 func (r *MutationResolver) DisableAccountMultiFactor(ctx context.Context) (*types.DisableAccountMultiFactorPayload, error) {
