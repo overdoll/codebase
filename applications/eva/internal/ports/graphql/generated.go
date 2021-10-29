@@ -470,7 +470,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Account.IsStaff(childComplexity), true
 
-	case "Account.Language":
+	case "Account.language":
 		if e.complexity.Account.Language == nil {
 			break
 		}
@@ -1789,7 +1789,7 @@ extend type Account {
   You should make sure that the root level "langauge" is the same when the user loads the app, so they get a
   consistent experience. Use "UpdateLanguage" when the languages are mismatched.
   """
-  Language: Language!
+  language: Language!
 }
 
 extend type Query {
@@ -1866,8 +1866,12 @@ type AccountEmail implements Node @key(fields: "id") {
   """The current status of the account email"""
   status: AccountEmailStatus!
 
-  """The account that this email belongs to"""
-  account: Account! @goField(forceResolver: true)
+  """
+  The account that this email belongs to
+
+  May be null because unconfirmed emails are not yet actually attached to the account
+  """
+  account: Account @goField(forceResolver: true)
 }
 
 """Edge of the account email"""
@@ -3582,7 +3586,7 @@ func (ec *executionContext) _Account_lock(ctx context.Context, field graphql.Col
 	return ec.marshalOAccountLock2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccountLock(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Account_Language(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
+func (ec *executionContext) _Account_language(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -4083,14 +4087,11 @@ func (ec *executionContext) _AccountEmail_account(ctx context.Context, field gra
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.(*types.Account)
 	fc.Result = res
-	return ec.marshalNAccount2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
+	return ec.marshalOAccount2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAccount(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccountEmailConnection_pageInfo(ctx context.Context, field graphql.CollectedField, obj *types.AccountEmailConnection) (ret graphql.Marshaler) {
@@ -10159,8 +10160,8 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 				res = ec._Account_lock(ctx, field, obj)
 				return res
 			})
-		case "Language":
-			out.Values[i] = ec._Account_Language(ctx, field, obj)
+		case "language":
+			out.Values[i] = ec._Account_language(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
@@ -10344,9 +10345,6 @@ func (ec *executionContext) _AccountEmail(ctx context.Context, sel ast.Selection
 					}
 				}()
 				res = ec._AccountEmail_account(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
 				return res
 			})
 		default:

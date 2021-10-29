@@ -1366,9 +1366,6 @@ def go_repositories():
         importpath = "github.com/shurcooL/graphql",
         sum = "h1:KikTa6HtAK8cS1qjvUvvq4QO21QnwC+EfvB+OAuZ/ZU=",
         version = "v0.0.0-20200928012149-18c5c3165e3a",
-        patches = [
-            "//.patches/com_github_shurcool_graphql:patch",
-        ],
     )
     go_repository(
         name = "com_github_shurcool_httpfs",

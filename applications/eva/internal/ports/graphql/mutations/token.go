@@ -3,10 +3,8 @@ package mutations
 import (
 	"context"
 	"crypto/sha256"
-	"fmt"
 	"net/http"
 	"overdoll/libraries/translations"
-	"overdoll/libraries/validation"
 	"strings"
 	"time"
 
@@ -38,10 +36,11 @@ func (r *MutationResolver) GrantAuthenticationToken(ctx context.Context, input t
 
 	if err != nil {
 
-		if err == validation.ErrInvalidEmail {
-			invalid := types.GrantAuthenticationTokenValidationInvalidEmail
-			return &types.GrantAuthenticationTokenPayload{Validation: &invalid}, nil
-		}
+		// TODO: detect invalid email??
+		//if err == validation.ErrInvalidEmail {
+		//	invalid := types.GrantAuthenticationTokenValidationInvalidEmail
+		//	return &types.GrantAuthenticationTokenPayload{Validation: &invalid}, nil
+		//}
 
 		return nil, err
 	}
@@ -72,8 +71,6 @@ func (r *MutationResolver) GrantAccountAccessWithAuthenticationToken(ctx context
 
 		return nil, err
 	}
-
-	fmt.Println(tk.Value)
 
 	acc, err := r.App.Commands.GrantAccountAccessWithAuthenticationToken.Handle(ctx, command.GrantAccountAccessWithAuthenticationToken{
 		TokenId: tk.Value,

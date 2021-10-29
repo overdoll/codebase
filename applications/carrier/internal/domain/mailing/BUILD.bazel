@@ -7,6 +7,7 @@ go_library(
         "recipient.go",
         "repository.go",
         "template.go",
+        "validate_email.go",
     ],
     importpath = "overdoll/applications/carrier/internal/domain/mailing",
     visibility = ["//applications/carrier:__subpackages__"],

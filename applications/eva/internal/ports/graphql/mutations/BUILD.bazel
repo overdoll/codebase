@@ -25,6 +25,5 @@ go_library(
         "//libraries/passport",
         "//libraries/principal",
         "//libraries/translations",
-        "//libraries/validation",
     ],
 )

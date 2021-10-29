@@ -49,13 +49,17 @@ func (i ID) GetID() string {
 // GetCompositePartID(0) will get "SomeID2"
 // GetCompositePartID(1) will get "SomeID1"
 func (i ID) GetCompositePartID(pos int) string {
-	splits := decode(i)
+	s := decode(i)
 
-	if len(splits) < len(splits)-pos {
+	if len(s) < len(s)-pos {
 		return ""
 	}
 
-	return splits[len(splits)-1-(-1*pos)]
+	for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
+		s[i], s[j] = s[j], s[i]
+	}
+
+	return s[pos]
 }
 
 func (i ID) GetTypeName() string {

@@ -1,7 +1,7 @@
 package account
 
 import (
-	"overdoll/libraries/validation"
+	"strings"
 	"time"
 
 	"github.com/segmentio/ksuid"
@@ -14,16 +14,9 @@ type EmailConfirmation struct {
 }
 
 func NewEmailConfirmation(email string) (*EmailConfirmation, error) {
-
-	email, err := validation.ValidateEmail(email)
-
-	if err != nil {
-		return nil, err
-	}
-
 	return &EmailConfirmation{
 		id:      ksuid.New().String(),
-		email:   email,
+		email:   strings.ToLower(email),
 		expires: time.Minute * 10,
 	}, nil
 }

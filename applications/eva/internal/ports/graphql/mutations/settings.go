@@ -3,7 +3,6 @@ package mutations
 import (
 	"context"
 	"net/http"
-	"overdoll/libraries/validation"
 
 	"overdoll/applications/eva/internal/app/command"
 	"overdoll/applications/eva/internal/domain/account"
@@ -169,10 +168,11 @@ func (r *MutationResolver) AddAccountEmail(ctx context.Context, input types.AddA
 
 	if err != nil {
 
-		if err == validation.ErrInvalidEmail {
-			invalid := types.AddAccountEmailValidationInvalidEmail
-			return &types.AddAccountEmailPayload{Validation: &invalid}, nil
-		}
+		// TODO: detect invalid email??
+		//if err == validation.ErrInvalidEmail {
+		//	invalid := types.AddAccountEmailValidationInvalidEmail
+		//	return &types.AddAccountEmailPayload{Validation: &invalid}, nil
+		//}
 
 		return nil, err
 	}

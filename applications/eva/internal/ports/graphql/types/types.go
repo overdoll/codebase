@@ -31,7 +31,7 @@ type Account struct {
 	//
 	// You should make sure that the root level "langauge" is the same when the user loads the app, so they get a
 	// consistent experience. Use "UpdateLanguage" when the languages are mismatched.
-	Language *Language `json:"Language"`
+	Language *Language `json:"language"`
 	// Usernames for account (history)
 	Usernames *AccountUsernameConnection `json:"usernames"`
 	// Emails for account (multiple emails per account)
@@ -76,6 +76,8 @@ type AccountEmail struct {
 	// The current status of the account email
 	Status AccountEmailStatus `json:"status"`
 	// The account that this email belongs to
+	//
+	// May be null because unconfirmed emails are not yet actually attached to the account
 	Account *Account `json:"account"`
 }
 

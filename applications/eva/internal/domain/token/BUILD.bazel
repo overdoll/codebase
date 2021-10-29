@@ -8,8 +8,5 @@ go_library(
     ],
     importpath = "overdoll/applications/eva/internal/domain/token",
     visibility = ["//visibility:public"],
-    deps = [
-        "//applications/eva/internal/domain/account",
-        "//libraries/validation",
-    ],
+    deps = ["//applications/eva/internal/domain/account"],
 )

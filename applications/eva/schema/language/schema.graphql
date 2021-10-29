@@ -14,7 +14,7 @@ extend type Account {
   You should make sure that the root level "langauge" is the same when the user loads the app, so they get a
   consistent experience. Use "UpdateLanguage" when the languages are mismatched.
   """
-  Language: Language!
+  language: Language!
 }
 
 extend type Query {

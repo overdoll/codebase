@@ -16,7 +16,6 @@ go_library(
         "//libraries/paging",
         "//libraries/principal",
         "//libraries/translations",
-        "//libraries/validation",
         "@com_github_go_playground_validator_v10//:validator",
         "@com_github_segmentio_ksuid//:ksuid",
     ],

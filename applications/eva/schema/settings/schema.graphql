@@ -15,8 +15,12 @@ type AccountEmail implements Node @key(fields: "id") {
   """The current status of the account email"""
   status: AccountEmailStatus!
 
-  """The account that this email belongs to"""
-  account: Account! @goField(forceResolver: true)
+  """
+  The account that this email belongs to
+
+  May be null because unconfirmed emails are not yet actually attached to the account
+  """
+  account: Account @goField(forceResolver: true)
 }
 
 """Edge of the account email"""
